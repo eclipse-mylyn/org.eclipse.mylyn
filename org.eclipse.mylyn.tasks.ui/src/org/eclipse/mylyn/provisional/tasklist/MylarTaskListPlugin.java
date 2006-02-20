@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasklist;
+package org.eclipse.mylar.provisional.tasklist;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,9 +22,10 @@ import java.util.ResourceBundle;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.MylarPreferenceContstants;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
+import org.eclipse.mylar.internal.tasklist.TaskListRefreshManager;
 import org.eclipse.mylar.internal.tasklist.planner.ReminderRequiredCollector;
 import org.eclipse.mylar.internal.tasklist.planner.TaskReportGenerator;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
@@ -38,6 +39,7 @@ import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.internal.tasklist.util.TaskListExtensionReader;
 import org.eclipse.mylar.internal.tasklist.util.TaskListSaveManager;
 import org.eclipse.mylar.internal.tasklist.util.TaskListWriter;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.graphics.Image;

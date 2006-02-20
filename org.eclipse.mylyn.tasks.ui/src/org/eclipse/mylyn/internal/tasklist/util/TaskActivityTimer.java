@@ -13,12 +13,12 @@ package org.eclipse.mylar.internal.tasklist.util;
 
 import java.util.Calendar;
 
-import org.eclipse.mylar.core.IInteractionEventListener;
-import org.eclipse.mylar.core.InteractionEvent;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.util.ITimerThreadListener;
 import org.eclipse.mylar.internal.core.util.TimerThread;
-import org.eclipse.mylar.internal.tasklist.ITask;
+import org.eclipse.mylar.provisional.core.IInteractionEventListener;
+import org.eclipse.mylar.provisional.core.InteractionEvent;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
 import org.eclipse.ui.PlatformUI;

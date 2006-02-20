@@ -19,7 +19,15 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryClient;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.provisional.tasklist.TaskList;
+import org.eclipse.mylar.provisional.tasklist.TaskListManager;
 
+/**
+ * @author Robert Elves
+ */
 public class ScheduledTaskListRefreshJob extends Job {
 
 	private static final String JOB_NAME = "Scheduled Tasklist Refresh Job";

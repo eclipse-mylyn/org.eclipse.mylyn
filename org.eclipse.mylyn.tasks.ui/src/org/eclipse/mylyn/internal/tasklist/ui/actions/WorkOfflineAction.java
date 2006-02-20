@@ -11,8 +11,8 @@
 package org.eclipse.mylar.internal.tasklist.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 
 public class WorkOfflineAction extends Action {
 

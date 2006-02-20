@@ -74,7 +74,7 @@
 			Mylar JIRA Task Decorator
 		 </description>
          <enablement>
-            <objectClass name="org.eclipse.mylar.internal.tasklist.ITaskListElement"/>
+            <objectClass name="org.eclipse.mylar.provisional.tasklist.ITaskListElement"/>
          </enablement>
       </decorator>
    </extension>
@@ -212,10 +212,10 @@
                tooltip="Synchronize with Repository">
             <enablement>
                <or>
-                    <objectClass name="org.eclipse.mylar.internal.tasklist.AbstractQueryHit"/>
-					<objectClass name="org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery"/>
-               		<objectClass name="org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask"/>
-                 <objectClass name="org.eclipse.mylar.internal.tasklist.ITaskContainer"/>
+                    <objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractQueryHit"/>
+					<objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery"/>
+               		<objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask"/>
+                 <objectClass name="org.eclipse.mylar.provisional.tasklist.ITaskContainer"/>
                </or>
             </enablement>
          </action>

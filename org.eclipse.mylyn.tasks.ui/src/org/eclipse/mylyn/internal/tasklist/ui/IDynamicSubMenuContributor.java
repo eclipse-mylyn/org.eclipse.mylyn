@@ -11,8 +11,8 @@
 package org.eclipse.mylar.internal.tasklist.ui;
 
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
+import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 
 public interface IDynamicSubMenuContributor {
 

@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasklist;
+package org.eclipse.mylar.provisional.tasklist;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.TaskExternalizationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -344,7 +345,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		if (element.getAttribute(KEY_ACTIVE).compareTo(VAL_TRUE) == 0) {
 			task.setActive(true);
 			taskList.setActive(task, true);
-		} else {
+		} else { 
 			task.setActive(false);
 		}
 		if (element.hasAttribute(KEY_ISSUEURL)) {

@@ -11,13 +11,13 @@
 /*
  * Created on Jan 13, 2005
  */
-package org.eclipse.mylar.internal.tasklist;
+package org.eclipse.mylar.provisional.tasklist;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.mylar.internal.tasklist.Task.TaskStatus;
+import org.eclipse.mylar.provisional.tasklist.Task.TaskStatus;
 
 /**
  * @author Mik Kersten

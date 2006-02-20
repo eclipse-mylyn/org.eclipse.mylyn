@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.internal.tasklist.planner.ui;
 
-import org.eclipse.mylar.internal.tasklist.ITask;
+import org.eclipse.mylar.provisional.tasklist.ITask;
 
 public interface ITaskPlannerContentProvider {
 

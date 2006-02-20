@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.mylar.internal.tasklist.ITask;
+import org.eclipse.mylar.provisional.tasklist.ITask;
 
 /**
  * @author Ken Sueda

@@ -8,14 +8,28 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+package org.eclipse.mylar.provisional.tasklist;
 
-package org.eclipse.mylar.internal.tasklist;
 
 /**
  * @author Mik Kersten
  */
-public interface ITaskRepositoryListener {
+public interface ITaskListElement {
 
-	public abstract void repositorySetUpdated();
+	public abstract String getPriority();
+
+	public abstract String getDescription();
+
+	public abstract void setDescription(String description);
+
+	public abstract String getHandleIdentifier();
+
+	public abstract void setHandleIdentifier(String id);
+
+	/**
+	 * TODO: refactor to use repository kinds?
+	 */
+	public abstract boolean isLocal();
 
 }
+

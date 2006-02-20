@@ -8,22 +8,14 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasklist;
 
-import java.util.Set;
-
+package org.eclipse.mylar.provisional.tasklist;
 
 /**
- * Manipulate containers via TaskListManager
- * 
  * @author Mik Kersten
  */
-public interface ITaskContainer extends ITaskListElement {
+public interface ITaskRepositoryListener {
 
-	public Set<ITask> getChildren();
-
-	public boolean isArchive();
-
-	public void setIsArchive(boolean isArchive);
+	public abstract void repositorySetUpdated();
 
 }

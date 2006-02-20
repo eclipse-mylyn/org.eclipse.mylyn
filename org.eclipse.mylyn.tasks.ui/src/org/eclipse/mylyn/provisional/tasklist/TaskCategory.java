@@ -11,7 +11,7 @@
 /*
  * Created on Dec 26, 2004
  */
-package org.eclipse.mylar.internal.tasklist;
+package org.eclipse.mylar.provisional.tasklist;
 
 import java.util.HashSet;
 import java.util.Set;

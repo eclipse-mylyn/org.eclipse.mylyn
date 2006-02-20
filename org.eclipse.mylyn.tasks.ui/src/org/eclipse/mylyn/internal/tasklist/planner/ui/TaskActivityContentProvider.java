@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylar.internal.tasklist.ITask;
+import org.eclipse.mylar.provisional.tasklist.ITask;
 
 public class TaskActivityContentProvider implements IStructuredContentProvider, ITaskPlannerContentProvider {
 

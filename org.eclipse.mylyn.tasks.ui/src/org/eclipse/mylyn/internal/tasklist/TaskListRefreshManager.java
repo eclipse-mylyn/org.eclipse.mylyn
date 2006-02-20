@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.tasklist;
 
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 
 /**
  * @author Rob Elves

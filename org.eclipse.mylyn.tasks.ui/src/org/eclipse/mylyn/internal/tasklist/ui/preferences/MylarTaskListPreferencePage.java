@@ -11,9 +11,9 @@
 package org.eclipse.mylar.internal.tasklist.ui.preferences;
 
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;

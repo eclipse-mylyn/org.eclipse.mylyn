@@ -14,8 +14,8 @@ package org.eclipse.mylar.internal.tasklist.planner.ui;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
+import org.eclipse.mylar.provisional.tasklist.ITask;
 
 /**
  * @author Rob Elves

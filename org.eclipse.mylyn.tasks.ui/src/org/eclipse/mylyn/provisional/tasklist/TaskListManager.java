@@ -11,7 +11,7 @@
 /*
  * Created on Dec 26, 2004
  */
-package org.eclipse.mylar.internal.tasklist;
+package org.eclipse.mylar.provisional.tasklist;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,11 +20,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.TimerThread;
+import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.util.TaskActivityTimer;
 import org.eclipse.mylar.internal.tasklist.util.TaskListWriter;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
 
 /**
  * @author Mik Kersten
