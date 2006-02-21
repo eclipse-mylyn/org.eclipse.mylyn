@@ -18,9 +18,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskCategory;
 import org.eclipse.swt.widgets.TreeItem;
@@ -61,18 +59,20 @@ public class RemoveFromCategoryAction extends Action {
 						MylarTaskListPlugin.getTaskListManager().removeFromCategory(category, task);
 					} else {
 						MylarTaskListPlugin.getTaskListManager().removeFromRoot(task);
-					}
-					ITaskContainer cat = task.getCategory();
-					if (cat != null) {
-						String message = DeleteAction.genDeleteConfirmationMessage(task);
-						boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench()
-								.getActiveWorkbenchWindow().getShell(), "Confirm delete", message);
-						if (!deleteConfirmed)
-							return;
-
-						MylarTaskListPlugin.getTaskListManager().deleteTask(task);
-						MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier()); // task.getContextPath());
-					}
+					} 
+					// just in case, should already be there
+					MylarTaskListPlugin.getTaskListManager().getTaskList().addTaskToArchive(task);
+//					ITaskContainer cat = task.getCategory();
+//					if (cat != null) {
+//						String message = DeleteAction.genDeleteConfirmationMessage(task);
+//						boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench()
+//								.getActiveWorkbenchWindow().getShell(), "Confirm delete", message);
+//						if (!deleteConfirmed)
+//							return;
+//
+//						MylarTaskListPlugin.getTaskListManager().deleteTask(task);
+//						MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier()); // task.getContextPath());
+//					}
 				}
 			}
 		} catch (NullPointerException npe) {
