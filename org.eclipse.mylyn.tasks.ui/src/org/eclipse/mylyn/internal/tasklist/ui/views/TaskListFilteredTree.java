@@ -33,6 +33,8 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
  */
 public class TaskListFilteredTree extends FilteredTree {
 
+	private static final int LABEL_MAX_SIZE = 30;
+
 	private static final int DELAY_REFRESH = 700;
 
 	private static final String LABEL_FIND = " Find:";
@@ -74,7 +76,7 @@ public class TaskListFilteredTree extends FilteredTree {
 
 		activeTaskLabel = new Hyperlink(container, SWT.RIGHT);
 		activeTaskLabel.setText(LABEL_NO_ACTIVE);
-		activeTaskLabel.setSize(120, activeTaskLabel.getSize().y);
+//		activeTaskLabel.setSize(LABEL_SIZE, activeTaskLabel.getSize().y);
 		activeTaskLabel.addMouseListener(new MouseListener() {
 
 			public void mouseDoubleClick(MouseEvent e) {
@@ -107,7 +109,12 @@ public class TaskListFilteredTree extends FilteredTree {
     }
 
     public void indicateActiveTask(ITask task) {
-    	activeTaskLabel.setText(task.getDescription());
+    	String text = task.getDescription();
+    	if (text.length() > LABEL_MAX_SIZE) {
+    		text = text.substring(0, LABEL_MAX_SIZE);
+    	}
+    	activeTaskLabel.setText(text);
+//    	activeTaskLabel.setSize(LABEL_SIZE, activeTaskLabel.getSize().y);
     	activeTaskLabel.redraw();
 		activeTaskLabel.setUnderlined(true);
     }
