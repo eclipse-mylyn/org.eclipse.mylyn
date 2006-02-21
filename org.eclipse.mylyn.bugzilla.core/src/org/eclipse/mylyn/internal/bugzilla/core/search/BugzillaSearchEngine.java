@@ -233,8 +233,6 @@ public class BugzillaSearchEngine {
 					if (query == null)
 						query = "";
 
-					// String server =
-					// BugzillaPlugin.getDefault().getServerName();
 					String server = repository.getUrl().toExternalForm();
 
 					BugzillaSearchHit hit = new BugzillaSearchHit(server, id, description, severity, priority,
@@ -353,16 +351,18 @@ public class BugzillaSearchEngine {
 		line = in.readLine();
 
 		String description = "<activate to view description>";
-		if (line != null)
+		if (line != null) {
 			description = line.substring(8);
+		} 
+		if (description.startsWith(">")) {
+			description = description.substring(1);
+		}
 
 		String query = "";
-		// String server = "<unknown server>";
 		try {
 			String recentQuery = BugzillaPlugin.getMostRecentQuery();
 			if (recentQuery != null)
 				query = recentQuery;
-			// server = BugzillaPlugin.getDefault().getServerName();
 		} catch (Exception e) {
 			// ignore, for testing
 		}

@@ -134,7 +134,6 @@ public abstract class AbstractRepositoryTask extends Task {
 			return TaskRepositoryManager.MISSING_REPOSITORY_HANDLE + taskId;
 		} else {
 			// MylarContextManager.CONTEXT_HANDLE_DELIM + taskId);
-			// System.err.println(">> handle: " + repositoryUrl +
 			return repositoryUrl + MylarContextManager.CONTEXT_HANDLE_DELIM + taskId;
 		}
 	}

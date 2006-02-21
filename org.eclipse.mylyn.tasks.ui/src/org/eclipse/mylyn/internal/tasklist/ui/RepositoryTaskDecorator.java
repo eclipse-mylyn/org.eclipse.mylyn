@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
+import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 
 /**
@@ -49,7 +50,12 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 				decoration.addOverlay(TaskListImages.OVERLAY_CONFLICT, IDecoration.TOP_RIGHT);
 			}
 		} else if (element instanceof AbstractQueryHit) {
-			decorate(((AbstractQueryHit)element).getCorrespondingTask(), decoration);
+			ITask correspondingTask = ((AbstractQueryHit)element).getCorrespondingTask();
+			if (correspondingTask == null) {
+				decoration.addOverlay(TaskListImages.OVERLAY_INCOMMING, IDecoration.TOP_RIGHT);
+			} else {
+				decorate(correspondingTask, decoration);
+			}
 		}
 	}
 

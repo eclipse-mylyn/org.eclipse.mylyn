@@ -104,8 +104,8 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 
 		public void searchCompleted(BugzillaResultCollector collector) {
 			for (BugzillaSearchHit hit : collector.getResults()) {
-
-				query.addHit(new BugzillaQueryHit(hit.getId() + ": " + hit.getDescription(), hit.getPriority(), query
+				String description = hit.getId() + ": " + hit.getDescription();
+				query.addHit(new BugzillaQueryHit(description, hit.getPriority(), query
 						.getRepositoryUrl(), hit.getId(), null, hit.getState()));
 			}
 		}
