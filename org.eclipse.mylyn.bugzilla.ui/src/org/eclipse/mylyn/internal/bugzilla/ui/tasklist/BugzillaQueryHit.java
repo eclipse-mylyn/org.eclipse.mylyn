@@ -12,11 +12,9 @@
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.swt.graphics.Color;
 
 /**
  * @author Ken Sueda
@@ -83,20 +81,12 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 		return true;
 	}
 
-	public Color getForeground() {
-		if ((task != null && task.isCompleted())) {
-			return TaskListImages.GRAY_LIGHT;
-		} else {
-			return null;
-		}
-	}
-
 	public boolean isCompleted() {
 		if (status != null
 				&& (status.startsWith("RESO") || status.startsWith("CLO") || status.startsWith("VERI") || status
 						.startsWith("FIXED"))) {
 			return true;
-		}
+		} 
 		return false;
 	}
 

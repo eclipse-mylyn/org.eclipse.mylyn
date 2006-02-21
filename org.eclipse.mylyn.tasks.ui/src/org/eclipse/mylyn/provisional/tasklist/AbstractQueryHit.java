@@ -38,12 +38,14 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 	}
 
 	public abstract AbstractRepositoryTask getOrCreateCorrespondingTask();
-
+ 
 	/**
 	 * @return null if there is no corresponding report
 	 */
 	public abstract AbstractRepositoryTask getCorrespondingTask();
 
+	public abstract boolean isCompleted();
+	
 	public abstract void setCorrespondingTask(AbstractRepositoryTask task);
 
 	public String getHandleIdentifier() {

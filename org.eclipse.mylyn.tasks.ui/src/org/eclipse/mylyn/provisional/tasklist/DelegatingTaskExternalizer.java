@@ -510,11 +510,11 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		node.setAttribute(KEY_NAME, queryHit.getDescription());
 		node.setAttribute(KEY_HANDLE, queryHit.getHandleIdentifier());
 		node.setAttribute(KEY_PRIORITY, queryHit.getPriority());
-		// if (queryHit.isCompleted()) {
-		// node.setAttribute(COMPLETE, TRUE);
-		// } else {
-		// node.setAttribute(COMPLETE, FALSE);
-		// }
+		 if (queryHit.isCompleted()) {
+			node.setAttribute(KEY_COMPLETE, VAL_TRUE);
+		} else {
+			node.setAttribute(KEY_COMPLETE, VAL_FALSE);
+		}
 		parent.appendChild(node);
 		return null;
 	}

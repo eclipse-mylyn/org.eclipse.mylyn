@@ -99,7 +99,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			}
 		} else if (object instanceof AbstractQueryHit && ((AbstractQueryHit) object).getCorrespondingTask() == null) {
 			AbstractQueryHit hit = (AbstractQueryHit) object;
-			if (hit.getCorrespondingTask() != null && hit.getCorrespondingTask().isCompleted()) {
+			if ((hit.getCorrespondingTask() != null && hit.getCorrespondingTask().isCompleted())
+				 || hit.isCompleted()) {
 				return TaskListImages.COLOR_TASK_COMPLETED;
 			}
 		} else if (object instanceof ITaskListElement) {

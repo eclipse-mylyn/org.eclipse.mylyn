@@ -36,8 +36,6 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 
 	private static final String STATUS_NEW = "NEW";
 
-//	private static final String BUGZILLA = "Bugzilla";
-
 	private static final String LAST_DATE = "LastDate";
 
 	private static final String DIRTY = "Dirty";
@@ -128,7 +126,6 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	public Element createTaskElement(ITask task, Document doc, Element parent) {
 		Element node = super.createTaskElement(task, doc, parent);
 		BugzillaTask bugzillaTask = (BugzillaTask) task;
-//		node.setAttribute(BUGZILLA, VAL_TRUE);
 		if (bugzillaTask.getLastRefresh() != null) {
 			node.setAttribute(LAST_DATE, new Long(bugzillaTask.getLastRefresh().getTime()).toString());
 		} else {
@@ -169,7 +166,6 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		BugzillaTask task = new BugzillaTask(handle, label, false);
 		readTaskInfo(task, taskList, element, parent, category);
 
-//		task.setBugzillaTaskState(BugzillaTaskState.FREE);
 		task.setCurrentlyDownloading(false);
 		task.setLastRefresh(new Date(new Long(element.getAttribute("LastDate")).longValue()));
 
@@ -233,7 +229,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		if (element.hasAttribute(KEY_COMPLETE)) {
 			status = element.getAttribute(KEY_COMPLETE);
 			if (status.equals(VAL_TRUE)) {
-				status = STATUS_RESO;
+				status = STATUS_RESO; 
 			} 
 		} 
 		BugzillaQueryHit hit = new BugzillaQueryHit(label, priority, query.getRepositoryUrl(), AbstractRepositoryTask
