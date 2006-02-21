@@ -3,13 +3,6 @@
 <?eclipse version="3.0"?>
 <plugin>
    
-   <extension point="org.eclipse.mylar.tasklist.providers">
-      <taskHandler 
-            externalizerClass="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskExternalizer"
-            id="org.eclipse.mylar.bugzilla.ui.tasklist">
-      </taskHandler>
-   </extension>
-  
    <extension
          id="org.eclipse.mylar.bugzilla.repository" 
          name="Bugzilla Repository"
@@ -21,6 +14,10 @@
             id="org.eclipse.mylar.bugzilla.tasklist.repositories"
             name="Bugzilla Repository Client"
             type="bugzilla"/>
+             
+		<externalizer 
+            class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskExternalizer"
+            id="org.eclipse.mylar.bugzilla.tasklist.externalizer"/>
    </extension> 
   
    <extension

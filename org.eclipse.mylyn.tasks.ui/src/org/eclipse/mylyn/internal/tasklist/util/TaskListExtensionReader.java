@@ -37,8 +37,10 @@ public class TaskListExtensionReader {
 
 	public static final String EXTENSION_REPOSITORIES = "org.eclipse.mylar.tasklist.repositories";
 
-	public static final String ELMNT_REPOSITORY_CLIENT = "repositoryType";
+	public static final String ELMNT_REPOSITORY_TYPE = "repositoryType";
 
+	public static final String ELMNT_EXTERNALIZER = "externalizer";
+	
 	public static final String ATTR_BRANDING_ICON = "brandingIcon";
 
 	public static final String ELMNT_TYPE = "type";
@@ -49,9 +51,9 @@ public class TaskListExtensionReader {
 
 	public static final String EXTENSION_TASK_CONTRIBUTOR = "org.eclipse.mylar.tasklist.providers";
 
-	public static final String ELMNT_TASK_HANDLER = "taskHandler";
+//	public static final String ELMNT_TASK_HANDLER = "taskHandler";
 
-	public static final String ATTR_EXTERNALIZER_CLASS = "externalizerClass";
+//	public static final String ATTR_EXTERNALIZER_CLASS = "externalizerClass";
 
 	public static final String ATTR_ACTION_CONTRIBUTOR_CLASS = "taskHandlerClass";
 
@@ -84,8 +86,10 @@ public class TaskListExtensionReader {
 			for (int i = 0; i < repositoryExtensions.length; i++) {
 				IConfigurationElement[] elements = repositoryExtensions[i].getConfigurationElements();
 				for (int j = 0; j < elements.length; j++) {
-					if (elements[j].getName().compareTo(ELMNT_REPOSITORY_CLIENT) == 0) {
+					if (elements[j].getName().equals(ELMNT_REPOSITORY_TYPE)) {
 						readRepositoryClient(elements[j]);
+					} else if (elements[j].getName().equals(ELMNT_EXTERNALIZER)) {
+						readExternalizer(elements[j], externalizers);
 					}
 				}
 			}
@@ -95,9 +99,10 @@ public class TaskListExtensionReader {
 			for (int i = 0; i < extensions.length; i++) {
 				IConfigurationElement[] elements = extensions[i].getConfigurationElements();
 				for (int j = 0; j < elements.length; j++) {
-					if (elements[j].getName().compareTo(ELMNT_TASK_HANDLER) == 0) {
-						readExternalizer(elements[j], externalizers);
-					} else if (elements[j].getName().compareTo(DYNAMIC_POPUP_ELEMENT) == 0) {
+//					if (elements[j].getName().compareTo(ELMNT_TASK_HANDLER) == 0) {
+//						readExternalizer(elements[j], externalizers);
+//					} else 
+					if (elements[j].getName().equals(DYNAMIC_POPUP_ELEMENT)) {
 						readDynamicPopupContributor(elements[j]);
 					}
 				}
@@ -118,7 +123,7 @@ public class TaskListExtensionReader {
 			for (int i = 0; i < editors.length; i++) {
 				IConfigurationElement[] elements = editors[i].getConfigurationElements();
 				for (int j = 0; j < elements.length; j++) {
-					if (elements[j].getName().compareTo(EDITOR_FACTORY) == 0) {
+					if (elements[j].getName().equals(EDITOR_FACTORY)) {
 						readEditorFactory(elements[j]);
 					}
 				}
@@ -186,7 +191,7 @@ public class TaskListExtensionReader {
 
 	private static void readExternalizer(IConfigurationElement element, List<ITaskListExternalizer> externalizers) {
 		try {
-			Object externalizerObject = element.createExecutableExtension(ATTR_EXTERNALIZER_CLASS);
+			Object externalizerObject = element.createExecutableExtension(ATTR_CLASS);
 			if (externalizerObject instanceof ITaskListExternalizer) {
 				ITaskListExternalizer externalizer = (ITaskListExternalizer) externalizerObject;
 				externalizers.add((ITaskListExternalizer) externalizer);
