@@ -57,6 +57,8 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.dialogs.PreferenceLinkArea;
+import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 /**
  * Preference page for mylar. Allows for adding / removing highlighters and
@@ -139,10 +141,6 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 
 		return entryTable;
 	}
-
-	/**
-	 * init workbench
-	 */
 	public void init(IWorkbench workbench) {
 		// don't have anything to initialize
 	}
@@ -727,6 +725,12 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 			autoOpenEditorsNum.setStringValue("" + num);
 			autoOpenEditorsNum.setEmptyStringAllowed(false);
 		}
+		
+		String message = "See <a>''{0}''</a> for the workbench max open editors setting.";
+		new PreferenceLinkArea(group, SWT.NONE,
+				"org.eclipse.ui.preferencePages.Editors", message,
+				(IWorkbenchPreferenceContainer) getContainer(), null);
+		new Label(group, SWT.NULL);
 		return;
 	}
 
