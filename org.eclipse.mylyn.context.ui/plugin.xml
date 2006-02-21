@@ -253,7 +253,7 @@
    </extension>
    
    <extension point="org.eclipse.mylar.tasklist.providers"> 
-    <dynamicPopupMenu class="org.eclipse.mylar.internal.ui.TaskListHighlighterMenuContributor"/>
+      <dynamicPopupMenu class="org.eclipse.mylar.internal.ui.TaskListHighlighterMenuContributor"/>
    </extension>
  
       <extension point="org.eclipse.ui.workingSets">
