@@ -37,7 +37,7 @@ public class TaskListFilteredTree extends FilteredTree {
 
 	private static final String LABEL_FIND = " Find:";
 
-	private static final String LABEL_NO_ACTIVE = "<no active task>            ";
+	private static final String LABEL_NO_ACTIVE = "          <no active task>";
 	
 	private Job refreshJob;
 	
@@ -72,7 +72,7 @@ public class TaskListFilteredTree extends FilteredTree {
 		super.createFilterControls(container);
 //		patternFilter.setSize(100, patternFilter.getSize().y);
 
-		activeTaskLabel = new Hyperlink(container, SWT.LEFT);
+		activeTaskLabel = new Hyperlink(container, SWT.RIGHT);
 		activeTaskLabel.setText(LABEL_NO_ACTIVE);
 		activeTaskLabel.setSize(120, activeTaskLabel.getSize().y);
 		activeTaskLabel.addMouseListener(new MouseListener() {
