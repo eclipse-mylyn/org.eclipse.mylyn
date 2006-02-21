@@ -18,6 +18,10 @@
       [Enter License Description here.]
    </license>
 
+   <url>
+      <update label="Mylar for Eclipse 3.2" url="http://download.eclipse.org/technology/mylar/update-site/e3.2"/>
+   </url>
+
    <requires>
       <import feature="org.eclipse.mylar_feature" version="0.4.8.v20060215-1930"/>
       <import plugin="org.eclipse.ui"/>
