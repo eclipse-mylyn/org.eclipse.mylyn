@@ -54,31 +54,31 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 	public void run() {
 		if (query != null) {
 			AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(query.getRepositoryKind());
-			client.synchronize(query);
+			if (client != null) client.synchronize(query);
 		} else if (TaskListView.getDefault() != null) {			
 			ISelection selection = TaskListView.getDefault().getViewer().getSelection();
 			for (Object obj : ((IStructuredSelection) selection).toList()) {
 				if (obj instanceof AbstractRepositoryQuery) {
 					AbstractRepositoryQuery repositoryQuery = (AbstractRepositoryQuery) obj;
 					AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(repositoryQuery.getRepositoryKind());
-					client.synchronize(repositoryQuery);
+					if (client != null) client.synchronize(repositoryQuery);
 				} else if (obj instanceof TaskCategory) {
 					TaskCategory cat = (TaskCategory) obj;
 					for (ITask task : cat.getChildren()) {
 						if (task instanceof AbstractRepositoryTask) {
 							AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(task.getRepositoryKind());
-							client.requestRefresh((AbstractRepositoryTask)task);
+							if (client != null) client.requestRefresh((AbstractRepositoryTask)task);
 						}
 					}
 				} else if (obj instanceof AbstractRepositoryTask) {
 					AbstractRepositoryTask bugTask = (AbstractRepositoryTask)obj;
 					AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(bugTask.getRepositoryKind());
-					client.requestRefresh(bugTask);
+					if (client != null) client.requestRefresh(bugTask);
 				} else if (obj instanceof AbstractQueryHit) {
 					AbstractQueryHit hit = (AbstractQueryHit) obj;
 					if (hit.getCorrespondingTask() != null) {
 						AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(hit.getCorrespondingTask().getRepositoryKind());
-						client.requestRefresh(hit.getCorrespondingTask());
+						if (client != null) client.requestRefresh(hit.getCorrespondingTask());
 					}
 				} 
 			}
