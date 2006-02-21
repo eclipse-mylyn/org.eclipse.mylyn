@@ -3,8 +3,9 @@
     <h2>Mylar Manual Tests</h2>
 	<p>Bugzilla Client</p>
 	<ul>
-		<li>No repositories added<ul>
-		<li>Search via search page</li>
+		<li>Test of Search &gt; Search... &gt; Bugzilla Search tab <ul>
+		<li><font color="#FF0000">Requires that a bugzilla repository is 
+		configured in the Mylar Task Repositories view</font></li>
 	</ul>
 		</li>
 		<li>New Bug submission (invalid credentials)<ul>
@@ -21,8 +22,8 @@
 		<li>Make repository password invalid in Task Repositories view.</li>
 		<li>Initiate new repository task action.</li>
 		<li>Select repository with invalid password</li>
-		<li>Dialog: Unable to get products.&nbsp; Ensure 
-		proper repository configuration in Task Repositories view.</li>
+		<li>Error Dialog presented on product update or selection of Next: The 
+		user name or password you entered is not valid...</li>
 	</ul></li>
 		<li>Submission of changes to existing bug with invalid repository 
 		credentials<ul>
@@ -35,7 +36,7 @@
 		configuration in Task Repositories view.</li>
 	</ul>
 		</li>
-		<li>Product configuration catching<ul>
+		<li>Product configuration caching<ul>
 		<li>Run new bug wizard</li>
 		<li>Restart, rerun, products should appear immediately</li>
 	</ul>
@@ -70,6 +71,8 @@
 		<li>Open report&nbsp; in external editor and add a comment.<ul>
 		<li>Case synchronize: incoming decoration should appear on task<ul>
 		<li>Case open: task opens with new content, no decoration</li>
+		<li><font color="#FF9900">Case open (bug editor already open):&nbsp; 
+		Editor should close and reopen with new data.</font></li>
 	</ul></li>
 		<li>Case open: task opens with new content, no decoration<br>
 &nbsp;</li>
@@ -77,24 +80,14 @@
 		<li>Open, modify, save, should have outgoing decorator, open report in 
 		external browser, add comment<ul>
 		<li>Case open: Outgoing decorator remains</li>
-		<li><font color="#FF0000">Case Submit: Failed to submit bug dialog, 
-		Possible Bugzilla Client Failure with &quot;Mid-air collision&quot; 
-		(Currently also getting &quot;Could not post bug. Check repository 
-		credentials..&quot;)</font></li>
+		<li>Case Submit: Dialog:Possible problem posting Bugzilla report... HTML 
+		mid-air collision dialog (outgoing state remains)</li>
 		<li>Case synchronize: should get option to override local changes<ul>
 		<li>If overriding, overlay and changes go away</li>
 		<li>If no override, get conflict icon to show<br>
 &nbsp;</li>
 	</ul></li>
 	</ul></li>
-		<li>Test failure handling<ul>
-		<li>Make sure HTML page showing failure to submit shows on failure<ul>
-		<li>Open a bug, change with browser, try to submit, should get &quot;mid air 
-		collision&quot; HTML page in dialog</li>
-	</ul>
-		</li>
-	</ul>
-		</li>
 		<li>Copy report to a local category, repeat above tests ensuring 
 		decoration always </li>
 		<li>Copy report to root category, repeat tests ensuring decoration 
