@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Documentation Plugin
 Bundle-SymbolicName: org.eclipse.mylar.doc; singleton:=true
-Bundle-Version: 0.4.8.v20060220-1300
+Bundle-Version: 0.4.8.v20060220-2030
 Bundle-Localization: plugin
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
