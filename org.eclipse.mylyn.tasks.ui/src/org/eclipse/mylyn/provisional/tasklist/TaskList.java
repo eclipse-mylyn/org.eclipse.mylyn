@@ -84,8 +84,13 @@ public class TaskList {
 		}
 	}
 
+	/**
+	 * TODO: refactor around querying containers for their tasks
+	 */
 	void deleteTask(ITask task) {
+		deleteTaskHelper(archiveCategory.getChildren(), task);
 		boolean deleted = deleteTaskHelper(rootTasks, task);
+		task.setCategory(null);
 		if (!deleted) {
 			for (TaskCategory cat : getTaskCategories()) {
 				deleted = deleteTaskHelper(cat.getChildren(), task);
@@ -94,7 +99,6 @@ public class TaskList {
 				}
 			}
 		}
-		deleteTaskHelper(archiveCategory.getChildren(), task);
 	}
 
 	private boolean deleteTaskHelper(Set<ITask> tasks, ITask toDelete) {
