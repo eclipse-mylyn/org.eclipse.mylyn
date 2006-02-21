@@ -48,16 +48,14 @@ public class TaskListSaveManager implements ITaskActivityListener, DisposeListen
 
 	public TaskListSaveManager() {
 		saveTimer = new BackgroundSaveTimer(this);
-
 		saveTimer.setSaveIntervalMillis(DEFAULT_SAVE_INTERVAL);
-		saveTimer.start();
+		saveTimer.start(); 
 	}
 
 	/**
 	 * Called periodically by the save timer
 	 */
 	public void saveRequested() {
-		MylarStatusHandler.log("auto saved task list", this);
 		if (!MylarTaskListPlugin.getDefault().isInitialized()) {
 			if (PlatformUI.getWorkbench() != null && PlatformUI.getWorkbench().getDisplay() != null) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), MylarTaskListPlugin.TITLE_DIALOG,
@@ -66,8 +64,8 @@ public class TaskListSaveManager implements ITaskActivityListener, DisposeListen
 						"Then, check the Error Log view for messages, and the FAQ for solutions.\n\n" +
 						MylarTaskListPlugin.URL_HOMEPAGE);
 			}
-		}
-		
+		} 
+		 
 		if (MylarTaskListPlugin.getDefault() != null && MylarTaskListPlugin.getDefault().isShellActive()
 				|| forceBackgroundSave) {
 			try {
