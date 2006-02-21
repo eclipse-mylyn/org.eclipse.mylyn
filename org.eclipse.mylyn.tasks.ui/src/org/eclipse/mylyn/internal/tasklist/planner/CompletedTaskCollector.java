@@ -11,11 +11,11 @@
 
 package org.eclipse.mylar.internal.tasklist.planner;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.mylar.provisional.tasklist.ITask;
 
@@ -44,8 +44,8 @@ public class CompletedTaskCollector implements ITaskCollector {
 		}
 	}
 
-	public List<ITask> getTasks() {
-		List<ITask> tasks = new ArrayList<ITask>();
+	public Set<ITask> getTasks() {
+		Set<ITask> tasks = new HashSet<ITask>();
 		tasks.addAll(completedTasks.values());
 		return tasks;
 	}

@@ -11,11 +11,11 @@
 
 package org.eclipse.mylar.internal.tasklist.ui;
 
-import java.util.List;
+import java.util.Set;
 
 
 public interface ITaskListNotificationProvider {
 
-	List<ITaskListNotification> getNotifications();
+	Set<ITaskListNotification> getNotifications();
 	
 }

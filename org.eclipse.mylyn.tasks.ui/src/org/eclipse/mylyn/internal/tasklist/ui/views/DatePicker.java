@@ -193,14 +193,18 @@ public class DatePicker extends Composite {
 			updateDateText();
 		}
 
-		for (SelectionListener listener : pickerListeners) {
-			listener.widgetSelected(null);
-		}
+		notifyPickerListeners();
 		pickButton.setEnabled(true);
 		dateText.setEnabled(true);
 		pickerShell.close();
 	}
 
+	private void notifyPickerListeners() {
+		for (SelectionListener listener : pickerListeners) {
+			listener.widgetSelected(null);
+		}
+	}
+	
 	private void updateDateText() {
 		if (date != null) {
 			Date currentDate = new Date(date.getTimeInMillis());
@@ -211,6 +215,7 @@ public class DatePicker extends Composite {
 			dateText.setText(initialText);
 			dateText.setEnabled(true);
 		}
+		notifyPickerListeners();
 	}
 
 	public void setEnabled(boolean enabled) {

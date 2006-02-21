@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IMenuListener;
@@ -501,7 +502,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 		addIncomplete.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				List<ITask> incompleteTasks = editorInput.getInProgressTasks();
+				Set<ITask> incompleteTasks = editorInput.getInProgressTasks();
 				for (ITask task : incompleteTasks) {
 					contentProvider.addTask(task);
 					viewer.refresh();

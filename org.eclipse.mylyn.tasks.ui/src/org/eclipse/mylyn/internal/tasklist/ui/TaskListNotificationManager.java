@@ -56,16 +56,16 @@ public class TaskListNotificationManager {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
 							if ((popup != null && popup.close()) || popup == null) {
-								closeJob.cancel();
-								cleanNotified();
+								closeJob.cancel();							
 								collectNotifications();
 								synchronized (TaskListNotificationManager.class) {
 									if (currentlyNotifying.size() > 0) {
 										popup = new TaskListNotificationPopup(PlatformUI.getWorkbench().getDisplay()
 												.getActiveShell());
 										popup.setContents(new ArrayList<ITaskListNotification>(currentlyNotifying));
+										cleanNotified();
 										popup.setBlockOnOpen(false);
-										popup.open();										
+										popup.open();
 										closeJob.setSystem(runSystem);
 										closeJob.schedule(CLOSE_POPUP_DELAY);										
 										popup.getShell().addShellListener(SHELL_LISTENER);

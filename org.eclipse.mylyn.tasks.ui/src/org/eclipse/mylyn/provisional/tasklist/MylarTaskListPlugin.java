@@ -14,10 +14,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
@@ -26,8 +28,6 @@ import org.eclipse.mylar.internal.core.MylarPreferenceContstants;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.TaskListRefreshManager;
-import org.eclipse.mylar.internal.tasklist.planner.ReminderRequiredCollector;
-import org.eclipse.mylar.internal.tasklist.planner.TaskReportGenerator;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskEditorFactory;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskHighlighter;
@@ -208,16 +208,14 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	
 	private static ITaskListNotificationProvider NOTIFICATION_PROVIDER = new ITaskListNotificationProvider() {
 
-		public List<ITaskListNotification> getNotifications() {
-			final TaskReportGenerator parser = new TaskReportGenerator(MylarTaskListPlugin.getTaskListManager()
-					.getTaskList());
-			parser.addCollector(new ReminderRequiredCollector());
-			parser.collectTasks();
-			List<ITaskListNotification> reminders = new ArrayList<ITaskListNotification>();
-			if (!parser.getAllCollectedTasks().isEmpty()) {				
-				for (ITask task: parser.getAllCollectedTasks()) {
+		public Set<ITaskListNotification> getNotifications() {
+			Date currentDate = new Date();
+			Set<ITask> allTasks = MylarTaskListPlugin.getTaskListManager().getTaskList().getAllTasks();
+			Set<ITaskListNotification> reminders = new HashSet<ITaskListNotification>();
+			for (ITask task : allTasks) {
+				if (task.getReminderDate() != null && !task.hasBeenReminded() && task.getReminderDate().compareTo(currentDate) < 0) {			
 					reminders.add(new TaskListNotificationReminder(task));
-				}				
+				}	
 			}
 			return reminders;
 		} };

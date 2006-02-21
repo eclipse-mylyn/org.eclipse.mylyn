@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.internal.tasklist.planner;
 
-import java.util.List;
+import java.util.Set;
 
 import org.eclipse.mylar.provisional.tasklist.ITask;
 
@@ -22,5 +22,5 @@ public interface ITaskCollector {
 
 	public abstract void consumeTask(ITask task);
 
-	public abstract List<ITask> getTasks();
+	public abstract Set<ITask> getTasks();
 }

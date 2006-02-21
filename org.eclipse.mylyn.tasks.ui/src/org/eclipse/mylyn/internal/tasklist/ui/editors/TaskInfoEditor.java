@@ -539,6 +539,7 @@ public class TaskInfoEditor extends EditorPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				datePicker.setDate(null);
+				task.setReminded(false);
 				TaskInfoEditor.this.markDirty(true);
 			}
 		});

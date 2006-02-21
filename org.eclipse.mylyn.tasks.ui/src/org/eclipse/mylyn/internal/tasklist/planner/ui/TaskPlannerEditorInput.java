@@ -12,9 +12,8 @@
 package org.eclipse.mylar.internal.tasklist.planner.ui;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -37,11 +36,11 @@ import org.eclipse.ui.progress.IProgressService;
  */
 public class TaskPlannerEditorInput implements IEditorInput {
 
-	private List<ITask> completedTasks = new ArrayList<ITask>();
+	private Set<ITask> completedTasks = new HashSet<ITask>();
 
-	private List<ITask> inProgressTasks = new ArrayList<ITask>();
+	private Set<ITask> inProgressTasks = new HashSet<ITask>();
 	
-	private List<ITask> plannedTasks = new ArrayList<ITask>();
+	private Set<ITask> plannedTasks = new HashSet<ITask>();
 
 	private TaskReportGenerator taskReportGenerator = null;
 
@@ -72,7 +71,7 @@ public class TaskPlannerEditorInput implements IEditorInput {
 
 		completedTasks = completedTaskCollector.getTasks();
 		inProgressTasks = inProgressTaskCollector.getTasks();
-		plannedTasks = new ArrayList<ITask>();
+		plannedTasks = new HashSet<ITask>();
 	}
 
 	public boolean exists() {
@@ -99,15 +98,15 @@ public class TaskPlannerEditorInput implements IEditorInput {
 		return null;
 	}
 
-	public List<ITask> getCompletedTasks() {
+	public Set<ITask> getCompletedTasks() {
 		return completedTasks;
 	}
 
-	public List<ITask> getInProgressTasks() {
+	public Set<ITask> getInProgressTasks() {
 		return inProgressTasks;
 	}
 	
-	public List<ITask> getPlannedTasks() {
+	public Set<ITask> getPlannedTasks() {
 		return plannedTasks;
 	}
 

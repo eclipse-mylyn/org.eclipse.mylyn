@@ -11,8 +11,9 @@
 
 package org.eclipse.mylar.tasklist.tests;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -54,7 +55,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 		TaskListNotificationReminder reminder1 = new TaskListNotificationReminder(task1);
 		TaskListNotificationReminder reminder2 = new TaskListNotificationReminder(task2);
 		
-		final List<ITaskListNotification> notifications = new ArrayList<ITaskListNotification>();
+		final Set<ITaskListNotification> notifications = new HashSet<ITaskListNotification>();
 		notifications.add(reminder0);
 		notifications.add(reminder1);
 		notifications.add(reminder2);
@@ -65,7 +66,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 		
 		ITaskListNotificationProvider provider = new ITaskListNotificationProvider() {
 
-			public List<ITaskListNotification> getNotifications() {
+			public Set<ITaskListNotification> getNotifications() {
 				return notifications;
 			}
 			

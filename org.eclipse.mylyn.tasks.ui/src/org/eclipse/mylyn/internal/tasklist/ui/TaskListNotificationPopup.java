@@ -44,7 +44,7 @@ public class TaskListNotificationPopup extends PopupDialog {
 
 	private static final int BUTTON_FONT_SIZE = 7;
 
-	static boolean takeFocusOnOpen = false;
+	static boolean takeFocusOnOpen = true;
 
 	static boolean persistBounds = false;
 
@@ -69,7 +69,7 @@ public class TaskListNotificationPopup extends PopupDialog {
 	private Composite sectionClient;
 
 	public TaskListNotificationPopup(Shell parent) {
-		super(parent, PopupDialog.INFOPOPUP_SHELLSTYLE, takeFocusOnOpen, persistBounds, showDialogMenu,
+		super(parent, PopupDialog.INFOPOPUP_SHELLSTYLE | SWT.ON_TOP, takeFocusOnOpen, persistBounds, showDialogMenu,
 				showPersistAction, titleText, infoText);
 	}
 
@@ -109,7 +109,8 @@ public class TaskListNotificationPopup extends PopupDialog {
 					if (window != null) {
 						Shell windowShell = window.getShell();
 						if (windowShell != null) {
-							windowShell.moveAbove(null);
+//							windowShell.moveAbove(null);
+							windowShell.setMaximized(true);
 							windowShell.open();
 						}
 					}
@@ -142,6 +143,7 @@ public class TaskListNotificationPopup extends PopupDialog {
 				if (window != null) {
 					Shell windowShell = window.getShell();
 					if (windowShell != null) {
+						windowShell.setMaximized(true);
 						windowShell.open();
 					}
 				}
@@ -222,4 +224,7 @@ public class TaskListNotificationPopup extends PopupDialog {
 		return bounds;
 	}
 
+	
+	public void adjustBounds() {
+	}
 }
