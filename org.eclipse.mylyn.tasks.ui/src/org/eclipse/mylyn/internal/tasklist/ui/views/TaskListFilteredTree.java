@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
+import org.eclipse.ui.forms.widgets.Hyperlink;
 
 /**
  * @author Mik Kersten
@@ -40,7 +41,7 @@ public class TaskListFilteredTree extends FilteredTree {
 	
 	private Job refreshJob;
 	
-	private Label activeTaskLabel;
+	private Hyperlink activeTaskLabel;
 	
 	public TaskListFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
 		super(parent, treeStyle, filter);
@@ -66,12 +67,12 @@ public class TaskListFilteredTree extends FilteredTree {
 		container.setLayout(gridLayout); 
 		
 		Label label = new Label(container, SWT.LEFT);
-		label.setText(LABEL_FIND); 
+		label.setText(LABEL_FIND);
 				
 		super.createFilterControls(container);
-//		patternComposite.setSize(100, patternComposite.getSize().y);
-		
-		activeTaskLabel = new Label(container, SWT.LEFT);
+//		patternFilter.setSize(100, patternFilter.getSize().y);
+
+		activeTaskLabel = new Hyperlink(container, SWT.LEFT);
 		activeTaskLabel.setText(LABEL_NO_ACTIVE);
 		activeTaskLabel.setSize(120, activeTaskLabel.getSize().y);
 		activeTaskLabel.addMouseListener(new MouseListener() {
@@ -89,7 +90,6 @@ public class TaskListFilteredTree extends FilteredTree {
 			public void mouseUp(MouseEvent e) {
 				// ignore
 			}
-			
 		});
 		
 		return container;
@@ -109,10 +109,12 @@ public class TaskListFilteredTree extends FilteredTree {
     public void indicateActiveTask(ITask task) {
     	activeTaskLabel.setText(task.getDescription());
     	activeTaskLabel.redraw();
+		activeTaskLabel.setUnderlined(true);
     }
     
     public void indicateNoActiveTask() {
     	activeTaskLabel.setText(LABEL_NO_ACTIVE);
+		activeTaskLabel.setUnderlined(false);
     }
     
 }

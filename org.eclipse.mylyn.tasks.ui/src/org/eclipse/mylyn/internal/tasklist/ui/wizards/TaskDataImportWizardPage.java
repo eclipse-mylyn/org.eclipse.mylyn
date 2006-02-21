@@ -40,7 +40,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TaskDataImportWizardPage extends WizardPage {
 
-	protected final static String PAGE_TITLE = "Import Mylar Task Data";
+	private final static String PAGE_TITLE = "Import Mylar Task Data";
 
 	public final static String PAGE_NAME = PAGE_TITLE;
 
@@ -138,7 +138,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 		taskContextsCheckBox = createCheckBox(group, "Task Contexts");
 		
 		importViaFolderButton = new Button(group, SWT.RADIO);
-		importViaFolderButton.setText("Import task data from folder");
+		importViaFolderButton.setText("Import task data from .mylar folder");
 		importViaZipButton = new Button(group, SWT.RADIO);
 		importViaZipButton.setText("Import task data from zip file");	
 		

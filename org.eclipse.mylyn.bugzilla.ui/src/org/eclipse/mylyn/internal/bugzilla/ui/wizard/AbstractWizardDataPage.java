@@ -707,8 +707,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 			java2buzillaOSMap.put("solaris", "Solaris");
 			java2buzillaOSMap.put("win32", "Windows All");
 
-			// Get OS
-			// Lookup Map
+			// Get OS Lookup Map
 			// Check that the result is in Values, if it is not, set it to other
 			Attribute opSysAttribute = newBugModel.getAttribute(BugReport.ATTRIBUTE_OS);
 			Attribute platformAttribute = newBugModel.getAttribute(BugReport.ATTRIBUTE_PLATFORM);
@@ -719,7 +718,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 			String bugzillaOS = null; // Bugzilla String for OS
 			String bugzillaPlatform = null; // Bugzilla String for Platform
 
-			if (java2buzillaOSMap.containsKey(OS) && opSysAttribute.getOptionValues() != null) {
+			if (java2buzillaOSMap != null && java2buzillaOSMap.containsKey(OS) && opSysAttribute != null && opSysAttribute.getOptionValues() != null) {
 				bugzillaOS = java2buzillaOSMap.get(OS);
 				if (!opSysAttribute.getOptionValues().values().contains(bugzillaOS)) {
 					// If the OS we found is not in the list of available
