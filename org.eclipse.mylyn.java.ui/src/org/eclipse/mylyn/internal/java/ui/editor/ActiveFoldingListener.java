@@ -74,12 +74,12 @@ public class ActiveFoldingListener implements IMylarContextListener {
 
 		enabled = MylarPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPrefConstants.AUTO_FOLDING_ENABLED);
 		try {
-//			Field field = JavaEditor.class.getDeclaredField("fProjectionModelUpdater");
-//			field.setAccessible(true);
-//			Object fieldValue = field.get(editor);
 			Object adapter = editor.getAdapter(IJavaFoldingStructureProvider.class);
 			if (adapter instanceof IJavaFoldingStructureProviderExtension) {
-				updater = (IJavaFoldingStructureProviderExtension)adapter;
+				updater = (IJavaFoldingStructureProviderExtension) adapter;
+			} else {
+				MylarStatusHandler.log("Could not install active folding on provider: " + adapter + ", must extend "
+						+ IJavaFoldingStructureProviderExtension.class.getName(), this);
 			}
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "could not install auto folding, reflection denied", false);
@@ -122,8 +122,10 @@ public class ActiveFoldingListener implements IMylarContextListener {
 						}
 					}
 				}
-				updater.collapseMembers();
-				updater.expandElements(toExpand.toArray(new IJavaElement[toExpand.size()]));
+				if (updater != null) {
+					updater.collapseMembers();
+					updater.expandElements(toExpand.toArray(new IJavaElement[toExpand.size()]));
+				}
 			} catch (Exception e) {
 				MylarStatusHandler.fail(e, "couldn't update folding", false);
 			}
