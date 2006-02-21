@@ -13,6 +13,10 @@
  */
 package org.eclipse.mylar.internal.java.ui;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.StringTokenizer;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -25,6 +29,8 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.jdt.ui.JavaElementImageDescriptor;
+import org.eclipse.jdt.ui.PreferenceConstants;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.ui.MylarUiPrefContstants;
@@ -62,6 +68,41 @@ public class JavaUiUtil {
 
 	private static final Point SMALL_SIZE = new Point(16, 16);
 
+	private static final String SEPARATOR_CODEASSIST = "\0"; //$NON-NLS-1$
+
+	public static final String ASSIST_MYLAR_TYPE = "org.eclipse.mylar.java.javaTypeProposalCategory";
+
+	public static final String ASSIST_MYLAR_NOTYPE = "org.eclipse.mylar.java.javaNoTypeProposalCategory";
+
+	public static final String ASSIST_JDT_TYPE = "org.eclipse.jdt.ui.javaTypeProposalCategory";
+
+	public static final String ASSIST_JDT_NOTYPE = "org.eclipse.jdt.ui.javaNoTypeProposalCategory";
+
+	public static void installContentAssist(IPreferenceStore javaPrefs, boolean mylarContentAssist) {
+		String oldValue = javaPrefs.getString(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES);
+		StringTokenizer tokenizer = new StringTokenizer(oldValue, SEPARATOR_CODEASSIST);
+		Set<String> disabledIds = new HashSet<String>();
+		while (tokenizer.hasMoreTokens()) {
+			disabledIds.add((String) tokenizer.nextElement());
+		}
+		if (!mylarContentAssist) {
+			disabledIds.remove(ASSIST_JDT_TYPE);
+			disabledIds.remove(ASSIST_JDT_NOTYPE);
+			disabledIds.add(ASSIST_MYLAR_NOTYPE);
+			disabledIds.add(ASSIST_MYLAR_TYPE);
+		} else {
+			disabledIds.add(ASSIST_JDT_TYPE);
+			disabledIds.add(ASSIST_JDT_NOTYPE);
+			disabledIds.remove(ASSIST_MYLAR_NOTYPE);
+			disabledIds.remove(ASSIST_MYLAR_TYPE);
+		}
+		String newValue = "";
+		for (String id : disabledIds) {
+			newValue += id + SEPARATOR_CODEASSIST;
+		}
+		javaPrefs.setValue(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES, newValue);
+	}
+	
 	public static ImageDescriptor decorate(ImageDescriptor base, int decorations) {
 		ImageDescriptor imageDescriptor = new JavaElementImageDescriptor(base, decorations, SMALL_SIZE);
 		return imageDescriptor;
@@ -151,4 +192,5 @@ public class JavaUiUtil {
 			}
 		}
 	}
+
 }

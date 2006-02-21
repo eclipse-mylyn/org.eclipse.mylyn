@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.java.ui.wizards;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.StringTokenizer;
 
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.ui.PreferenceConstants;
@@ -23,6 +20,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
 import org.eclipse.mylar.internal.java.MylarJavaPrefConstants;
+import org.eclipse.mylar.internal.java.ui.JavaUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.internal.ui.MylarImages;
 import org.eclipse.mylar.internal.ui.MylarUiPrefContstants;
@@ -40,16 +38,6 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 
 	private MylarPreferenceWizardPage preferencePage;
 
-	private static final String SEPARATOR_CODEASSIST = "\0"; //$NON-NLS-1$
-	
-	private static final String ASSIST_MYLAR_TYPE = "org.eclipse.mylar.java.javaTypeProposalCategory";
-	
-	private static final String ASSIST_MYLAR_NOTYPE = "org.eclipse.mylar.java.javaNoTypeProposalCategory";
-	
-	private static final String ASSIST_JDT_TYPE = "org.eclipse.jdt.ui.javaTypeProposalCategory";
-	
-	private static final String ASSIST_JDT_NOTYPE = "org.eclipse.jdt.ui.javaNoTypeProposalCategory";
-	
 	public static final String MYLAR_FIRST_RUN = "org.eclipse.mylar.ui.first.run.0_4_9";
 
 	private IPreferenceStore javaPrefs = JavaPlugin.getDefault().getPreferenceStore();
@@ -82,39 +70,15 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 	}
 
 	private void setPreferences() {
-//		if (preferencePage.isMylarContentAssistDefault()) {
-			String oldValue = javaPrefs.getString(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES);
-			StringTokenizer tokenizer = new StringTokenizer(oldValue, SEPARATOR_CODEASSIST);
-			Set<String> disabledIds = new HashSet<String>();
-			while (tokenizer.hasMoreTokens()) {
-				disabledIds.add((String)tokenizer.nextElement());
-			}
-			if (!preferencePage.isMylarContentAssistDefault()) {
-				disabledIds.remove(ASSIST_JDT_TYPE);
-				disabledIds.remove(ASSIST_JDT_NOTYPE);
-				disabledIds.add(ASSIST_MYLAR_NOTYPE);
-				disabledIds.add(ASSIST_MYLAR_TYPE);
-			} else {
-				disabledIds.add(ASSIST_JDT_TYPE);
-				disabledIds.add(ASSIST_JDT_NOTYPE);
-				disabledIds.remove(ASSIST_MYLAR_NOTYPE);
-				disabledIds.remove(ASSIST_MYLAR_TYPE);
-			}
-			String newValue = "";
-			for (String id : disabledIds) {
-				newValue += id + SEPARATOR_CODEASSIST;
-			}
-			javaPrefs.setValue(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES, newValue);
-//		} 
-//		else {
-//			MylarJavaPlugin.setDefaultEditorForJavaFiles(false);
-//		}
+		boolean mylarContentAssist = preferencePage.isMylarContentAssistDefault();
+		JavaUiUtil.installContentAssist(javaPrefs, mylarContentAssist);
 
 		if (preferencePage.isAutoFolding()) {
-			MylarPlugin.getDefault().getPreferenceStore().setValue(MylarJavaPrefConstants.AUTO_FOLDING_ENABLED, true); 
+			MylarPlugin.getDefault().getPreferenceStore().setValue(MylarJavaPrefConstants.AUTO_FOLDING_ENABLED, true);
 			javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, true);
 		} else {
-			MylarPlugin.getDefault().getPreferenceStore().setValue(MylarJavaPrefConstants.AUTO_FOLDING_ENABLED, false); 		}
+			MylarPlugin.getDefault().getPreferenceStore().setValue(MylarJavaPrefConstants.AUTO_FOLDING_ENABLED, false);
+		}
 
 		if (preferencePage.closeEditors()) {
 			MylarUiPlugin.getPrefs().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, true); //$NON-NLS-1$
