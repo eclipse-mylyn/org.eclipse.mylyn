@@ -239,12 +239,14 @@ litigation.
          id="org.eclipse.mylar.core"
          download-size="0"
          install-size="0"
-         version="0.4.8.v20060220-2030"/>
+         version="0.4.8.v20060220-2030"
+         unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.tasklist"
          download-size="0"
          install-size="0"
-         version="0.4.8.v20060220-2030"/>
+         version="0.4.8.v20060220-2030"
+         unpack="false"/>
 
 </feature>
