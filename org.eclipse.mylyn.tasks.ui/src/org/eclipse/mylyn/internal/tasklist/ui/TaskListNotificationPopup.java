@@ -44,7 +44,7 @@ public class TaskListNotificationPopup extends PopupDialog {
 
 	private static final int BUTTON_FONT_SIZE = 7;
 
-	static boolean takeFocusOnOpen = true;
+	static boolean takeFocusOnOpen = false;
 
 	static boolean persistBounds = false;
 
@@ -224,7 +224,4 @@ public class TaskListNotificationPopup extends PopupDialog {
 		return bounds;
 	}
 
-	
-	public void adjustBounds() {
-	}
 }

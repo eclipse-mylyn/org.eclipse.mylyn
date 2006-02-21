@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -60,8 +61,7 @@ public class TaskListNotificationManager {
 								collectNotifications();
 								synchronized (TaskListNotificationManager.class) {
 									if (currentlyNotifying.size() > 0) {
-										popup = new TaskListNotificationPopup(PlatformUI.getWorkbench().getDisplay()
-												.getActiveShell());
+										popup = new TaskListNotificationPopup(new Shell(PlatformUI.getWorkbench().getDisplay()));
 										popup.setContents(new ArrayList<ITaskListNotification>(currentlyNotifying));
 										cleanNotified();
 										popup.setBlockOnOpen(false);
