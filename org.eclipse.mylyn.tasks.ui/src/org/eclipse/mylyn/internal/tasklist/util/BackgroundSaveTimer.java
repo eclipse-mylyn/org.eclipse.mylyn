@@ -25,7 +25,7 @@ import org.eclipse.mylar.internal.core.util.TimerThread;
  */
 public class BackgroundSaveTimer implements ITimerThreadListener {
 
-	private final static int DEFAULT_SAVE_INTERVAL = 1 * 60 * 1000;
+	private final static int DEFAULT_SAVE_INTERVAL = 5 * 60 * 1000;
 
 	private int saveInterval = DEFAULT_SAVE_INTERVAL;
 
@@ -37,8 +37,7 @@ public class BackgroundSaveTimer implements ITimerThreadListener {
 
 	public BackgroundSaveTimer(IBackgroundSaveListener listener) {
 		this.listener = listener;
-		timer = new TimerThread(saveInterval / 1000); // This constructor
-		// wants seconds
+		timer = new TimerThread(saveInterval); 
 		timer.addListener(this);
 	}
 

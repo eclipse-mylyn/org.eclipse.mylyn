@@ -28,6 +28,7 @@ import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -47,6 +48,7 @@ public class TaskListSaveManager implements ITaskActivityListener, DisposeListen
 
 	public TaskListSaveManager() {
 		saveTimer = new BackgroundSaveTimer(this);
+
 		saveTimer.setSaveIntervalMillis(DEFAULT_SAVE_INTERVAL);
 		saveTimer.start();
 	}
@@ -55,12 +57,15 @@ public class TaskListSaveManager implements ITaskActivityListener, DisposeListen
 	 * Called periodically by the save timer
 	 */
 	public void saveRequested() {
+		MylarStatusHandler.log("auto saved task list", this);
 		if (!MylarTaskListPlugin.getDefault().isInitialized()) {
-			MessageDialog.openInformation(null, MylarTaskListPlugin.TITLE_DIALOG,
-					"If task list is blank, Mylar Task List may have failed to initialize.\n\n" +
-					"First, try restarting to see if that corrects the problem.\n\n" +
-					"Then, check the Error Log view for messages, and the FAQ for solutions.\n\n" +
-					MylarTaskListPlugin.URL_HOMEPAGE);
+			if (PlatformUI.getWorkbench() != null && PlatformUI.getWorkbench().getDisplay() != null) {
+				MessageDialog.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), MylarTaskListPlugin.TITLE_DIALOG,
+						"If task list is blank, Mylar Task List may have failed to initialize.\n\n" +
+						"First, try restarting to see if that corrects the problem.\n\n" +
+						"Then, check the Error Log view for messages, and the FAQ for solutions.\n\n" +
+						MylarTaskListPlugin.URL_HOMEPAGE);
+			}
 		}
 		
 		if (MylarTaskListPlugin.getDefault() != null && MylarTaskListPlugin.getDefault().isShellActive()
