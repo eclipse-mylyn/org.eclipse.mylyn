@@ -76,7 +76,10 @@ public class TaskListFilteredTree extends FilteredTree {
 
 		activeTaskLabel = new Hyperlink(container, SWT.RIGHT);
 		activeTaskLabel.setText(LABEL_NO_ACTIVE);
-//		activeTaskLabel.setSize(LABEL_SIZE, activeTaskLabel.getSize().y);
+		ITask activeTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTask();
+		if (activeTask != null) {
+			indicateActiveTask(activeTask);
+		}
 		activeTaskLabel.addMouseListener(new MouseListener() {
 
 			public void mouseDoubleClick(MouseEvent e) {
@@ -114,8 +117,6 @@ public class TaskListFilteredTree extends FilteredTree {
     		text = text.substring(0, LABEL_MAX_SIZE);
     	}
     	activeTaskLabel.setText(text);
-//    	activeTaskLabel.setSize(LABEL_SIZE, activeTaskLabel.getSize().y);
-    	activeTaskLabel.redraw();
 		activeTaskLabel.setUnderlined(true);
     }
     
