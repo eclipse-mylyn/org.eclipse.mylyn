@@ -72,7 +72,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 				element.getAttribute(KEY_REPOSITORY_URL), 
 				element.getAttribute(KEY_QUERY_STRING), 
 				element.getAttribute(KEY_NAME),
-				element.getAttribute(KEY_QUERY_MAX_HITS));;
+				element.getAttribute(KEY_QUERY_MAX_HITS));
 		if (node.getNodeName().equals(TAG_BUGZILLA_CUSTOM_QUERY)) {
 			query.setCustomQuery(true);
 		} 
