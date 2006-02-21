@@ -210,7 +210,7 @@ litigation.
    </license>
 
    <url>
-      <update label="Mylar Bugzilla Client" url="http://download.eclipse.org/technology/mylar/update-site/e3.2"/>
+      <update label="Mylar for Eclipse 3.2" url="http://download.eclipse.org/technology/mylar/update-site/e3.2"/>
    </url>
 
    <requires>
