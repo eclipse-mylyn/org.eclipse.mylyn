@@ -32,7 +32,7 @@ public class AddRepositoryWizard extends AbstractRepositoryClientWizard {
 	@Override
 	public boolean performFinish() {
 		if (canFinish()) {
-			TaskRepository repository = new TaskRepository(repositoryClient.getKind(),
+			TaskRepository repository = new TaskRepository(repositoryClient.getRepositoryType(),
 					super.abstractRepositorySettingsPage.getServerUrl());
 			if (repository != null) {
 				repository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(),

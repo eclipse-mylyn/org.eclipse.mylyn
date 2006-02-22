@@ -27,9 +27,9 @@ public class AddExistingTaskWizard extends MultiRepositoryAwareWizard {
 
 			@Override
 			protected IWizard createWizard(TaskRepository taskRepository) {
-				AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
+				AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
 						taskRepository.getKind());
-				return client.getAddExistingTaskWizard(taskRepository);
+				return connector.getAddExistingTaskWizard(taskRepository);
 			}
 
 		});

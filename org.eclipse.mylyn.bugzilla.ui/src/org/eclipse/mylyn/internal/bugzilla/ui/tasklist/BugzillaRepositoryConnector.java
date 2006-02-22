@@ -77,7 +77,7 @@ import org.eclipse.ui.progress.IProgressConstants;
  * @author Mik Kersten
  * @author Rob Elves
  */
-public class BugzillaRepositoryClient extends AbstractRepositoryConnector {
+public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private static final String LABEL_JOB_SUBMIT = "Submitting to Bugzilla repository";
 
@@ -112,7 +112,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryConnector {
 		}
 	}
 
-	public BugzillaRepositoryClient() {
+	public BugzillaRepositoryConnector() {
 		super();
 		offlineReportsFile = BugzillaPlugin.getDefault().getOfflineReports();
 	}
@@ -125,7 +125,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryConnector {
 		return new BugzillaRepositorySettingsPage();
 	}
 
-	public String getKind() {
+	public String getRepositoryType() {
 		return BugzillaPlugin.REPOSITORY_KIND;
 	}
 

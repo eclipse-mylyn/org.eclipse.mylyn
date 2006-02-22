@@ -29,8 +29,8 @@ public class NewRepositoryTaskWizard extends SelectRepositoryPage {
 
 	@Override
 	protected IWizard createWizard(TaskRepository taskRepository) {
-		AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
+		AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
 				taskRepository.getKind());
-		return client.getNewTaskWizard(taskRepository);
+		return connector.getNewTaskWizard(taskRepository);
 	}
 }

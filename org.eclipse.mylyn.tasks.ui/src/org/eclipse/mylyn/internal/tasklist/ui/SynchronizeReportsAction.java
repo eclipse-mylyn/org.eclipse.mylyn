@@ -53,8 +53,8 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 	@Override
 	public void run() {
 		if (query != null) {
-			AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(query.getRepositoryKind());
-			if (client != null) client.synchronize(query);
+			AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(query.getRepositoryKind());
+			if (connector != null) connector.synchronize(query);
 		} else if (TaskListView.getDefault() != null) {			
 			ISelection selection = TaskListView.getDefault().getViewer().getSelection();
 			for (Object obj : ((IStructuredSelection) selection).toList()) {

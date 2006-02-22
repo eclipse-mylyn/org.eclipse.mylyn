@@ -58,10 +58,10 @@ public class OpenTaskListElementAction extends Action {
 			//element instanceof IQueryHit;
 			boolean forceUpdate = false;
 
-			final AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
+			final AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
 					task.getRepositoryKind());
-			if (!task.isLocal() && client != null) {
-				Job refreshJob = client.synchronize(task, forceUpdate, new IJobChangeListener() {
+			if (!task.isLocal() && connector != null) {
+				Job refreshJob = connector.synchronize(task, forceUpdate, new IJobChangeListener() {
 
 					public void done(IJobChangeEvent event) {
 						TaskListUiUtil.openEditor(task);

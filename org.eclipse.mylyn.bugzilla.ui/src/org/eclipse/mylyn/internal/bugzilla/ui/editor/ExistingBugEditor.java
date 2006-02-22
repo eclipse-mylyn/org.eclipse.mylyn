@@ -46,7 +46,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.compare.BugzillaCompareInput;
 import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryClient;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -309,7 +309,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 		final BugzillaReportSubmitForm bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeExistingBugPost(bug,
 				repository, removeCC);
-		final BugzillaRepositoryClient bugzillaRepositoryClient = (BugzillaRepositoryClient) MylarTaskListPlugin
+		final BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) MylarTaskListPlugin
 				.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
 
 		IJobChangeListener closeEditorListener = new IJobChangeListener() {

@@ -27,7 +27,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryClient;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.ITask;
@@ -44,7 +44,7 @@ public class BugzillaRepositoryClientTest extends TestCase {
 
 	private static final String TEST_REPOSITORY_URL = "https://bugs.eclipse.org/bugs";
 
-	BugzillaRepositoryClient client;
+	BugzillaRepositoryConnector client;
 
 	TaskRepositoryManager manager;
 
@@ -65,9 +65,9 @@ public class BugzillaRepositoryClientTest extends TestCase {
 
 		AbstractRepositoryConnector abstractRepositoryClient = manager.getRepositoryClient(DEFAULT_KIND);
 
-		assertEquals(abstractRepositoryClient.getKind(), DEFAULT_KIND);
+		assertEquals(abstractRepositoryClient.getRepositoryType(), DEFAULT_KIND);
 
-		client = (BugzillaRepositoryClient) abstractRepositoryClient;
+		client = (BugzillaRepositoryConnector) abstractRepositoryClient;
 		client.setForceSyncExec(true);
 	}
 

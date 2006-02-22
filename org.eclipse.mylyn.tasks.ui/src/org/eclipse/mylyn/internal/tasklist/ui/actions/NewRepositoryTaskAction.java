@@ -48,14 +48,14 @@ public class NewRepositoryTaskAction extends Action implements IViewActionDelega
 		}
 		// TaskRepository repository =
 		// MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
-		List<String> clientKinds = new ArrayList<String>();
+		List<String> connectorKinds = new ArrayList<String>();
 		for (AbstractRepositoryConnector client: MylarTaskListPlugin.getRepositoryManager().getRepositoryClients()) {
 			if (client.canCreateTaskFromId()) {
-				clientKinds.add(client.getKind());
+				connectorKinds.add(client.getRepositoryType());
 			}
 		}
 		 
-		IWizard wizard = new MultiRepositoryAwareWizard(new NewRepositoryTaskWizard(clientKinds));
+		IWizard wizard = new MultiRepositoryAwareWizard(new NewRepositoryTaskWizard(connectorKinds));
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		if (wizard != null && shell != null && !shell.isDisposed()) {

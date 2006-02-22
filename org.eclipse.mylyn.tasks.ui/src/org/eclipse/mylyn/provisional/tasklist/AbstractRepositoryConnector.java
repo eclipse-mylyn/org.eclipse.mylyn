@@ -29,8 +29,6 @@ public abstract class AbstractRepositoryConnector {
 
 	private static final int MAX_REFRESH_JOBS = 5;
 	
-//	private TaskCategory archiveCategory = null;
-	
 	private List<AbstractRepositoryTask> toBeRefreshed = new LinkedList<AbstractRepositoryTask>();
 
 	private Map<AbstractRepositoryTask, Job> currentlyRefreshing = new HashMap<AbstractRepositoryTask, Job>();
@@ -88,7 +86,7 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * @return the unique type of the repository, e.g. "bugzilla"
 	 */
-	public abstract String getKind();
+	public abstract String getRepositoryType();
 	
 	/**
 	 * @param id

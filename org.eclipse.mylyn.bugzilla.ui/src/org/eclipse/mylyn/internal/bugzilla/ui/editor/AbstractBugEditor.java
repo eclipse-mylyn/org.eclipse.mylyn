@@ -42,7 +42,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaTools;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaAttributeListener;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaReportSelection;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryClient;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor;
@@ -1222,7 +1222,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 //			} else {
 //				BugzillaPlugin.getDefault().fireOfflineStatusChanged(bug, BugzillaOfflineStaus.SAVED);
 //			}
-			final BugzillaRepositoryClient bugzillaRepositoryClient = (BugzillaRepositoryClient)MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+			final BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector)MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
 			changeDirtyStatus(false);
 			bugzillaRepositoryClient.saveBugReport(bug);//OfflineView.saveOffline(getBug(), true);
 		} catch (Exception e) {

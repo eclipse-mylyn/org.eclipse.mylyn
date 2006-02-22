@@ -22,7 +22,7 @@ import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugModel;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryClient;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
@@ -144,7 +144,7 @@ public class NewBugEditor extends AbstractBugEditor {
 
 		final BugzillaReportSubmitForm bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeNewBugPost(repository, bug);
 	
-		final BugzillaRepositoryClient bugzillaRepositoryClient = (BugzillaRepositoryClient) MylarTaskListPlugin
+		final BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) MylarTaskListPlugin
 				.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
 
 		IJobChangeListener closeEditorListener = new IJobChangeListener() {

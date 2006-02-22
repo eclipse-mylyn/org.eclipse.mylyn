@@ -32,9 +32,9 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 		super();
 		oldRepository = repository;
 		// super.setForcePreviousAndNextButtons(true);
-		AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
+		AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
 				repository.getKind());
-		abstractRepositorySettingsPage = client.getSettingsPage();
+		abstractRepositorySettingsPage = connector.getSettingsPage();
 		abstractRepositorySettingsPage.setRepository(repository);
 		abstractRepositorySettingsPage.setWizard(this);
 	}
