@@ -22,7 +22,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.MultiRepositoryAwareWizard;
-import org.eclipse.mylar.internal.tasklist.ui.wizards.NewRepositoryTaskWizard;
+import org.eclipse.mylar.internal.tasklist.ui.wizards.NewRepositoryTaskPage;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.widgets.Shell;
@@ -55,7 +55,7 @@ public class NewRepositoryTaskAction extends Action implements IViewActionDelega
 			}
 		}
 		 
-		IWizard wizard = new MultiRepositoryAwareWizard(new NewRepositoryTaskWizard(connectorKinds));
+		IWizard wizard = new MultiRepositoryAwareWizard(new NewRepositoryTaskPage(connectorKinds));
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		if (wizard != null && shell != null && !shell.isDisposed()) {

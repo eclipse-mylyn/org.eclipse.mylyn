@@ -21,9 +21,9 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 /**
  * @author Mik Kersten
  */
-public class NewRepositoryTaskWizard extends SelectRepositoryPage {
+public class NewRepositoryTaskPage extends SelectRepositoryPage {
 	
-	public NewRepositoryTaskWizard(List<String> kinds) {
+	public NewRepositoryTaskPage(List<String> kinds) {
 		super(kinds);
 	}
 
