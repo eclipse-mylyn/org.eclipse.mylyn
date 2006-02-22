@@ -601,7 +601,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 									readMonitors(elements[j]);
 								}
 							}
-							customizingPlugin = extensions[i].getNamespaceIdentifier();
+							customizingPlugin = extensions[i].getNamespace();
 							getPreferenceStore().setValue(PREF_MONITORING_ENABLED, true);
 						}
 						extensionsRead = true;
