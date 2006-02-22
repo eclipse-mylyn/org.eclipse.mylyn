@@ -26,9 +26,11 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryClient;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryClient;
+import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskList;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
@@ -47,7 +49,7 @@ public class BugzillaRepositoryClientTest extends TestCase {
 	TaskRepositoryManager manager;
 
 	TaskRepository repository;
-	
+
 	TaskList taskList;
 
 	@Override
@@ -157,6 +159,18 @@ public class BugzillaRepositoryClientTest extends TestCase {
 		assertEquals(task.getBugReport().getId(), bugReport.getId());
 	}
 
+	public void testUniqueTaskObjects() {
+		String repositoryURL = "repositoryURL";
+		BugzillaQueryHit hit1 = new BugzillaQueryHit("description", "P1", repositoryURL, 1, null, "status");
+		ITask task1 = hit1.getOrCreateCorrespondingTask();
+		assertNotNull(task1);
+		task1.setDescription("testing");
+
+		BugzillaQueryHit hit1Twin = new BugzillaQueryHit("description", "P1", repositoryURL, 1, null, "status");
+		ITask task2 = hit1Twin.getOrCreateCorrespondingTask();
+		assertEquals(task1.getDescription(), task2.getDescription());
+	}
+
 	class MockBugzillaReportSubmitForm extends BugzillaReportSubmitForm {
 
 		@Override
@@ -166,131 +180,6 @@ public class BugzillaRepositoryClientTest extends TestCase {
 		}
 
 	}
-
-	//
-	// /*
-	// * Test method for
-	// 'org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryClient.synchronize()'
-	// */
-	// public void testSynchronize() {
-	//
-	// }
-	//
-	// /*
-	// * Test method for
-	// 'org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryClient.synchronize(ITask,
-	// boolean)'
-	// */
-	// public void testSynchronizeITaskBoolean() {
-	//
-	// }
-	//
-	// /*
-	// * Test method for
-	// 'org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryClient.clearAllRefreshes()'
-	// */
-	// public void testClearAllRefreshes() {
-	//
-	// }
-	//
-	// /*
-	// * Test method for
-	// 'org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient.getTaskFromArchive(String)'
-	// */
-	// public void testGetTaskFromArchive() {
-	//
-	// }
-	//
-	// /*
-	// * Test method for
-	// 'org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient.getArchiveTasks()'
-	// */
-	// public void testGetArchiveTasks() {
-	//
-	// }
-
-	// Utility Methods for testing purposes
-
-	// private void populatePostHandler(BugzillaReportSubmitForm
-	// bugReportPostHandler, BugReport bug) {
-	//
-	// // set the url for the bug to be submitted to
-	// AbstractBugEditor.setURL(bugReportPostHandler, repository,
-	// "process_bug.cgi");
-	//
-	// if (bug.getCharset() != null) {
-	// bugReportPostHandler.setCharset(bug.getCharset());
-	// }
-	//
-	// // Add the user's address to the CC list if they haven't specified a CC
-	// Attribute newCCattr = bug.getAttributeForKnobName("newcc");
-	// Attribute owner = bug.getAttribute("Assigned To");
-	//
-	// // Don't add the cc if the user is the bug owner
-	// if (repository.getUserName() != null && !(owner != null &&
-	// owner.getValue().indexOf(repository.getUserName()) > -1)) {
-	// // Add the user to the cc list
-	// if (newCCattr != null) {
-	// if (newCCattr.getNewValue().equals("")) {
-	// newCCattr.setNewValue(repository.getUserName());
-	// }
-	// }
-	// }
-	//
-	// // go through all of the attributes and add them to the bug post
-	// for (Iterator<Attribute> it = bug.getAttributes().iterator();
-	// it.hasNext();) {
-	// Attribute a = it.next();
-	// if (a != null && a.getParameterName() != null &&
-	// a.getParameterName().compareTo("") != 0 && !a.isHidden()) {
-	// String value = a.getNewValue();
-	// // add the attribute to the bug post
-	// bugReportPostHandler.add(a.getParameterName(),
-	// AbstractBugEditor.checkText(value));
-	// } else if (a != null && a.getParameterName() != null &&
-	// a.getParameterName().compareTo("") != 0
-	// && a.isHidden()) {
-	// // we have a hidden attribute and we should send it back.
-	// bugReportPostHandler.add(a.getParameterName(), a.getValue());
-	// }
-	// }
-	//
-	// // make sure that the comment is broken up into 80 character lines
-	// bug.setNewNewComment(AbstractBugEditor.formatText(bug.getNewNewComment()));
-	//
-	// // add the summary to the bug post
-	// bugReportPostHandler.add(ATTR_SHORT_DESC,
-	// bug.getAttribute(BugReport.ATTR_SUMMARY).getNewValue());
-	//
-	// // if (removeCC != null && removeCC.size() > 0) {
-	// // String[] s = new String[removeCC.size()];
-	// // bugReportPostHandler.add("cc",
-	// // toCommaSeparatedList(removeCC.toArray(s)));
-	// // bugReportPostHandler.add("removecc", "true");
-	// // }
-	//
-	// // add the operation to the bug post
-	// Operation o = bug.getSelectedOperation();
-	// if (o == null)
-	// bugReportPostHandler.add(ATTR_KNOB, VAL_NONE);
-	// else {
-	// bugReportPostHandler.add(ATTR_KNOB, o.getKnobName());
-	// if (o.hasOptions()) {
-	// String sel = o.getOptionValue(o.getOptionSelection());
-	// bugReportPostHandler.add(o.getOptionName(), sel);
-	// } else if (o.isInput()) {
-	// String sel = o.getInputValue();
-	// bugReportPostHandler.add(o.getInputName(), sel);
-	// }
-	// }
-	// bugReportPostHandler.add(ATTR_FORM_NAME, VAL_PROCESS_BUG);
-	//
-	// // add the new comment to the bug post if there is some text in it
-	// if (bug.getNewNewComment().length() != 0) {
-	// bugReportPostHandler.add(ATTR_COMMENT, bug.getNewNewComment());
-	// }
-	//
-	// }
 
 	protected void updateBug(BugReport bug) {
 

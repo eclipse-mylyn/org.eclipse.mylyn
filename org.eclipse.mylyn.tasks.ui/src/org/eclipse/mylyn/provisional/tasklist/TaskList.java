@@ -18,6 +18,8 @@ import java.util.Set;
 
 
 /**
+ * TODO: in need of refactoring since there is duplication between categories and fields.
+ * 
  * @author Mik Kersten
  */
 public class TaskList {
@@ -99,8 +101,9 @@ public class TaskList {
 				}
 			}
 		}
+		
 	}
-
+	
 	private boolean deleteTaskHelper(Set<ITask> tasks, ITask toDelete) {
 		for (ITask task : tasks) {
 			if (task.getHandleIdentifier().equals(toDelete.getHandleIdentifier())) {
@@ -368,4 +371,34 @@ public class TaskList {
 	public TaskCategory getArchiveCategory() {
 		return archiveCategory;
 	}
+
+	/** if handle == null or no queries found an empty set is returned **/	 
+	public Set<AbstractRepositoryQuery> getQueriesForHandle(String handle) {
+		Set<AbstractRepositoryQuery> queriesForHandle = new HashSet<AbstractRepositoryQuery>();
+		if (handle == null) {
+			return queriesForHandle;
+		}
+		for (AbstractRepositoryQuery query : queries) {
+			if ((findQueryHitHelper(query.getHits(), handle)) != null) {
+				queriesForHandle.add(query);
+			}
+		}
+		return queriesForHandle;
+	}
+
+	/** if handle == null or no query hits found an empty set is returned **/
+	public Set<AbstractQueryHit> getQueryHitsForHandle(String handle) {
+		Set<AbstractQueryHit> hitsForHandle = new HashSet<AbstractQueryHit>();
+		if (handle == null) {
+			return hitsForHandle;
+		}
+		AbstractQueryHit foundHit = null;
+		for (AbstractRepositoryQuery query : queries) {
+			if ((foundHit = findQueryHitHelper(query.getHits(), handle)) != null) {
+				hitsForHandle.add(foundHit);
+			}
+		}
+		return hitsForHandle;
+	}
+
 }

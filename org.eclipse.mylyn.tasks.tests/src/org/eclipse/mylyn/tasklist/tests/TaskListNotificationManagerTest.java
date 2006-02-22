@@ -80,7 +80,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 		for (ITaskListNotification notification : notified) {
 			assertTrue(notification.isNotified());
 		}
-		
+		notificationManager.stopNotification();
 	}
 	
 	

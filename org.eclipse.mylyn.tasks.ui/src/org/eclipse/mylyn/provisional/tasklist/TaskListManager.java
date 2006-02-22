@@ -142,7 +142,11 @@ public class TaskListManager {
 	}
 
 	public void moveToCategory(TaskCategory category, ITask task) {
-		taskList.removeFromRoot(task);
+		if(category.equals(taskList.getRootCategory())) {
+			moveToRoot(task);
+		} else {
+			taskList.removeFromRoot(task);	
+		}		
 		if (task.getCategory() instanceof TaskCategory) {
 			((TaskCategory) task.getCategory()).removeTask(task);
 		}

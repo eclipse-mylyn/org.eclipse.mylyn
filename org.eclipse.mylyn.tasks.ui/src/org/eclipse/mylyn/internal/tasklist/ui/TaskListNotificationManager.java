@@ -156,6 +156,10 @@ public class TaskListNotificationManager {
 
 	public void stopNotification() {
 		openJob.cancel();
+		closeJob.cancel();
+		if(popup != null) {
+			popup.close();
+		}
 	}
 
 	public void addNotificationProvider(ITaskListNotificationProvider notification_provider) {

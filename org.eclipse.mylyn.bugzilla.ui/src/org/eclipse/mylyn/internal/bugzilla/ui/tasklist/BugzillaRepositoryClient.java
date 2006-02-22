@@ -502,7 +502,13 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 			removeReport(bugReport);
 			String handle = AbstractRepositoryTask.getHandle(bugReport.getRepositoryUrl(), bugReport.getId());
 			ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, false);
+			
+			Set<AbstractRepositoryQuery> queriesWithHandle = MylarTaskListPlugin.getTaskListManager().getTaskList().getQueriesForHandle(task.getHandleIdentifier());	
+			for (AbstractRepositoryQuery query : queriesWithHandle) {
+				synchronize(query);
+			} 
 			synchronize(task, true, null);
+
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
