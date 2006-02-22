@@ -583,6 +583,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		// private MonitorExtensionPointReader thisReader = new
 		// MonitorExtensionPointReader();
 
+		@SuppressWarnings("deprecation")
 		public void initExtensions() {
 			try {
 				if (!extensionsRead) {

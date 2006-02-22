@@ -120,6 +120,7 @@ public class GetNewUserIdPage extends WizardPage {
 		setControl(container);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void createBrowserSection(Composite parent) {
 		if (extendedMonitor) {
 			Label label = new Label(parent, SWT.NULL);
