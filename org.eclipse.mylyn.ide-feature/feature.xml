@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.mylar.ide_feature"
-      label="Mylar IDE Integration"
+      label="Mylar UI: Java Development"
       version="0.4.8.v20060221-1550"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylar">
 
    <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+      Facilities and
    </description>
 
    <copyright url="http://www.example.com/copyright">
@@ -88,13 +88,6 @@
 
    <plugin
          id="org.eclipse.mylar.hypertext"
-         download-size="0"
-         install-size="0"
-         version="0.4.8.v20060221-1550"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylar.monitor"
          download-size="0"
          install-size="0"
          version="0.4.8.v20060221-1550"
