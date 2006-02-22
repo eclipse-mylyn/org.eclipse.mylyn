@@ -85,10 +85,10 @@
               class="org.eclipse.mylar.internal.ide.ui.actions.CommitContextAction"
               enablesFor="*"
               icon="icons/elcl16/cvs_persp.gif"
-              id="org.eclipse.mylar.ui.clear.context"
+              id="org.eclipse.mylar.ide.ui.team.context.commit"
               label="Commit Task Context..."
               menubarPath="context"
-              tooltip="Commit All ">
+              tooltip="Commit Task Context...">
            <enablement>
               <or> 
                  <objectClass name="org.eclipse.mylar.provisional.tasklist.ITask"/>
