@@ -25,6 +25,7 @@ import javax.security.auth.login.LoginException;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Path;
+import org.eclipse.mylar.core.tests.support.FileTool;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.internal.ProductParser;

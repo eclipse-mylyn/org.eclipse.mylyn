@@ -20,6 +20,7 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.bugzilla.core.BugReport;
+import org.eclipse.mylar.core.tests.support.FileTool;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugModel;
 import org.eclipse.mylar.internal.bugzilla.core.internal.NewBugParser;
 import org.eclipse.mylar.internal.bugzilla.ui.wizard.AbstractWizardDataPage;
