@@ -47,6 +47,7 @@ import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchHit;
 import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaCategorySearchOperation.ICategorySearchListener;
+import org.eclipse.mylar.internal.bugzilla.ui.wizard.NewBugzillaReportWizard;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.ui.SynchronizeReportsAction;
@@ -58,7 +59,7 @@ import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettings
 import org.eclipse.mylar.internal.tasklist.ui.wizards.ExistingTaskWizardPage;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryClient;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
@@ -76,7 +77,7 @@ import org.eclipse.ui.progress.IProgressConstants;
  * @author Mik Kersten
  * @author Rob Elves
  */
-public class BugzillaRepositoryClient extends AbstractRepositoryClient {
+public class BugzillaRepositoryClient extends AbstractRepositoryConnector {
 
 	private static final String LABEL_JOB_SUBMIT = "Submitting to Bugzilla repository";
 
@@ -678,4 +679,18 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 		BugzillaPlugin.getDefault().getOfflineReports().remove(bugList);
 	}
 
+	@Override
+	public boolean canCreateTaskFromId() {
+		return true;
+	}
+
+	@Override
+	public boolean canCreateNewTask() {
+		return true;
+	}
+
+	@Override
+	public IWizard getNewTaskWizard(TaskRepository taskRepository) {
+		return new NewBugzillaReportWizard(taskRepository);
+	} 
 }

@@ -18,7 +18,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryClient;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryClient;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskCategory;
@@ -116,7 +116,7 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 			MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);
 		}
 		
-		AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+		AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
 //		client.addTaskToArchive(newTask);
 		TaskListUiUtil.openEditor(newTask);
 		

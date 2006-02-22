@@ -14,7 +14,7 @@ package org.eclipse.mylar.internal.tasklist.ui.views;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryClient;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.graphics.Image;
@@ -28,8 +28,8 @@ public class TaskRepositoryLabelProvider extends LabelProvider implements ITable
 		if (object instanceof TaskRepository) {
 			TaskRepository repository = (TaskRepository) object;
 			return repository.getKind() + ": " + repository.getUrl().toExternalForm();
-		} else if (object instanceof AbstractRepositoryClient) {
-			return ((AbstractRepositoryClient)object).getLabel();
+		} else if (object instanceof AbstractRepositoryConnector) {
+			return ((AbstractRepositoryConnector)object).getLabel();
 		} else {
 			return getText(object);
 		}
@@ -40,8 +40,8 @@ public class TaskRepositoryLabelProvider extends LabelProvider implements ITable
 	}
 
 	public Image getImage(Object object) {
-		if (object instanceof AbstractRepositoryClient) {
-			AbstractRepositoryClient repositoryClient = (AbstractRepositoryClient)object;
+		if (object instanceof AbstractRepositoryConnector) {
+			AbstractRepositoryConnector repositoryClient = (AbstractRepositoryConnector)object;
 			Image image = MylarTaskListPlugin.getDefault().getBrandingIcons().get(repositoryClient);
 			if (image != null) {
 				return image;

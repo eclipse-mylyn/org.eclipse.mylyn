@@ -29,7 +29,7 @@ import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryClient;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryClient;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskList;
@@ -63,7 +63,7 @@ public class BugzillaRepositoryClientTest extends TestCase {
 		assertNotNull(manager);
 		taskList = MylarTaskListPlugin.getTaskListManager().getTaskList();
 
-		AbstractRepositoryClient abstractRepositoryClient = manager.getRepositoryClient(DEFAULT_KIND);
+		AbstractRepositoryConnector abstractRepositoryClient = manager.getRepositoryClient(DEFAULT_KIND);
 
 		assertEquals(abstractRepositoryClient.getKind(), DEFAULT_KIND);
 

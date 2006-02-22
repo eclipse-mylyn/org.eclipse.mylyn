@@ -147,54 +147,6 @@
             searchResultClass="org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchResult"
             id="org.eclipse.mylar.bugzilla.BugzillaSearchResultPage"/>
    </extension>
-   
-   <extension point="org.eclipse.ui.viewActions"> 
-		<viewContribution 
-			id="org.eclipse.mylar.bugzilla.ui.tasklist.actions" 
-	   		targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
-  		 
-         <action
-               class="org.eclipse.mylar.internal.bugzilla.ui.actions.CreateNewBugzillaTaskAction"
-               enablesFor="*"
-               icon="icons/etool16/task-repository-new.gif"
-               id="org.eclipse.mylar.bugzilla.tasklist.addNew"
-               label="New Repository Task"
-               style="push"
-               toolbarPath="reports"
-               tooltip="New Repository Task"> 
-  		</action>
-  			
-	    </viewContribution> 
-	</extension>
-	
-	<extension point="org.eclipse.ui.popupMenus">
-      <viewerContribution
-            id="org.eclipse.mylar.bugzilla.ui.viewerContribution"
-            targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
-		<action
-               class="org.eclipse.mylar.internal.bugzilla.ui.actions.CreateNewBugzillaTaskAction"
-               enablesFor="*"
-               icon="icons/etool16/task-repository-new.gif"
-               id="org.eclipse.mylar.bugzilla.tasklist.popup.addNew"
-               label="New Repository Task"
-               menubarPath="reports"
-               tooltip="New Repository Task"> 
-  		</action>
-          
-          <!--
-        <action
-           class="org.eclipse.mylar.bugzilla.ui.actions.AddBugzillaQueryAction"
-           enablesFor="*"
-           icon="icons/etool16/category-query-new.gif"
-           id="org.eclipse.mylar.bugzilla.tasklist.addQuery"
-           label="Add Bugzilla Query"
-           menubarPath="reports"
-           style="push"
-           tooltip="Add Bugzilla Query"> 
-  			</action>
-  		  -->
-      </viewerContribution>
-   </extension>
 </plugin>
 
 

@@ -20,7 +20,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoryLabelProvider;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryClient;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -78,8 +78,8 @@ public class SelectRepositoryClientPage extends WizardPage {
 
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-				if (selection.getFirstElement() instanceof AbstractRepositoryClient) {
-					wizard.setRepositoryClient((AbstractRepositoryClient) selection.getFirstElement());
+				if (selection.getFirstElement() instanceof AbstractRepositoryConnector) {
+					wizard.setRepositoryClient((AbstractRepositoryConnector) selection.getFirstElement());
 					SelectRepositoryClientPage.this.setPageComplete(true);
 					wizard.getContainer().updateButtons();
 				}

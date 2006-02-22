@@ -98,7 +98,7 @@
             name="Task Repositories">
       </view>
   	</extension>
-
+	
     <extension point="org.eclipse.ui.perspectiveExtensions">
           <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
                <viewShortcut id="org.eclipse.mylar.tasks.ui.views.TaskListView"/>
@@ -164,6 +164,17 @@
 	   		targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
   		
   		<action
+               class="org.eclipse.mylar.internal.tasklist.ui.actions.NewRepositoryTaskAction"
+               enablesFor="*"
+               icon="icons/etool16/task-repository-new.gif"
+               id="org.eclipse.mylar.bugzilla.tasklist.addNew"
+               label="New Repository Task"
+               style="push"
+               toolbarPath="reports"
+               tooltip="New Repository Task"> 
+  		</action>
+  		
+  		<action
                class="org.eclipse.mylar.internal.tasklist.ui.SynchronizeReportsAction"
                enablesFor="*"
                icon="icons/etool16/repository-synchronize.gif"
@@ -190,7 +201,18 @@
               label="Add Existing Repository Task"
               style="push"
               tooltip="Add Repository Task"> 
-  		</action>          
+  		</action>
+  		
+  				<action
+        class="org.eclipse.mylar.internal.tasklist.ui.actions.NewRepositoryTaskAction"
+        enablesFor="*"
+        icon="icons/etool16/task-repository-new.gif"
+        id="org.eclipse.mylar.bugzilla.tasklist.popup.addNew"
+        label="New Repository Task"
+        menubarPath="reports"
+        tooltip="New Repository Task"/>
+        
+                  
 		<action
               class="org.eclipse.mylar.internal.tasklist.ui.actions.NewQueryAction"
               enablesFor="*"

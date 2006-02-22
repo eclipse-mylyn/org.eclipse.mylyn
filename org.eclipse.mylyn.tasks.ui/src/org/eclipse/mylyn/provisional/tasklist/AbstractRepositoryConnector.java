@@ -25,7 +25,7 @@ import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettings
 /**
  * @author Mik Kersten
  */
-public abstract class AbstractRepositoryClient {
+public abstract class AbstractRepositoryConnector {
 
 	private static final int MAX_REFRESH_JOBS = 5;
 	
@@ -34,6 +34,10 @@ public abstract class AbstractRepositoryClient {
 	private List<AbstractRepositoryTask> toBeRefreshed = new LinkedList<AbstractRepositoryTask>();
 
 	private Map<AbstractRepositoryTask, Job> currentlyRefreshing = new HashMap<AbstractRepositoryTask, Job>();
+	
+	public abstract boolean canCreateTaskFromId();
+	
+	public abstract boolean canCreateNewTask(); 
 	
 	public void requestRefresh(AbstractRepositoryTask task) {
 		if (!currentlyRefreshing.containsKey(task) && !toBeRefreshed.contains(task)) {
@@ -113,5 +117,7 @@ public abstract class AbstractRepositoryClient {
 	public abstract void openEditQueryDialog(AbstractRepositoryQuery query);
 
 	public abstract IWizard getAddExistingTaskWizard(TaskRepository repository);
+
+	public abstract IWizard getNewTaskWizard(TaskRepository taskRepository);
 
 }

@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryClient;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskList;
@@ -55,7 +55,7 @@ public class ScheduledTaskListRefreshJob extends Job {
 				List<AbstractRepositoryQuery> queries = Collections.unmodifiableList(taskList.getQueries());
 
 				for (AbstractRepositoryQuery query : queries) {
-					AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
+					AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
 							query.getRepositoryKind());
 					client.synchronize(query);
 					if (monitor.isCanceled())

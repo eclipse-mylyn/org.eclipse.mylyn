@@ -11,13 +11,15 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.wizards;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.IWizard;
@@ -45,7 +47,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
 	protected MultiRepositoryAwareWizard wizard;
 
-	private String repositoryKind = null;
+	private List<String> repositoryKinds = null;
 
 	class RepositoryContentProvider implements IStructuredContentProvider {
 
@@ -56,8 +58,12 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		}
 
 		public Object[] getElements(Object parent) {
-			if (repositoryKind != null) {
-				return MylarTaskListPlugin.getRepositoryManager().getRepositories(repositoryKind).toArray();
+			if (repositoryKinds != null) {
+				List<TaskRepository> repositories = new ArrayList<TaskRepository>();
+				for (String repositoryKind : repositoryKinds) {
+					repositories.addAll(MylarTaskListPlugin.getRepositoryManager().getRepositories(repositoryKind));
+				}
+				return repositories.toArray();
 			} else {
 				return MylarTaskListPlugin.getRepositoryManager().getAllRepositories().toArray();
 			}
@@ -70,9 +76,9 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		setDescription(DESCRIPTION);
 	}
 
-	public SelectRepositoryPage(String repositoryKind) {
+	public SelectRepositoryPage(List<String> repositoryKinds) {
 		this();
-		this.repositoryKind = repositoryKind;
+		this.repositoryKinds = repositoryKinds;
 	}
 
 	public void createControl(Composite parent) {
@@ -104,11 +110,11 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
 		});
 		viewer.getTable().setFocus();
-		TaskRepository defaultRepository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
-				repositoryKind);
-		if (defaultRepository != null) {
-			viewer.setSelection(new StructuredSelection(defaultRepository));
-		}
+//		TaskRepository defaultRepository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
+//				repositoryKind);
+//		if (defaultRepository != null) {
+//			viewer.setSelection(new StructuredSelection(defaultRepository));
+//		}
 
 		setControl(container);
 	}

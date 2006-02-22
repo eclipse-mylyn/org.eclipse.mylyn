@@ -17,7 +17,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryClient;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -68,7 +68,7 @@ public class NewBugzillaQueryWizard extends Wizard {
 				protected void execute(IProgressMonitor monitor) throws CoreException {
 					monitor.beginTask("Executing query", 50);
 					try {
-						AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+						AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
 						client.synchronize(queryCategory);
 //						if (TaskListView.getDefault() != null) {
 //							TaskListView.getDefault().getViewer().refresh();

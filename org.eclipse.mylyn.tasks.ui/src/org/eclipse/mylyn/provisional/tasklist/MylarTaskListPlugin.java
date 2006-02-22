@@ -94,7 +94,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	
 	private boolean initialized = false;
 	
-	private Map<AbstractRepositoryClient, Image> brandingIcons = new HashMap<AbstractRepositoryClient, Image>();
+	private Map<AbstractRepositoryConnector, Image> brandingIcons = new HashMap<AbstractRepositoryConnector, Image>();
 	
 	public enum TaskListSaveMode {
 		ONE_HOUR, THREE_HOURS, DAY;
@@ -291,7 +291,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					migrateHandlesToRepositorySupport();
 
 					if (getPrefs().getBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP)) {
-						for (AbstractRepositoryClient repositoryClient : taskRepositoryManager.getRepositoryClients()) {
+						for (AbstractRepositoryConnector repositoryClient : taskRepositoryManager.getRepositoryClients()) {
 							repositoryClient.synchronize();
 						}
 					}
@@ -575,7 +575,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		return taskRepositoryManager;
 	}
 
-	public Map<AbstractRepositoryClient, Image> getBrandingIcons() {
+	public Map<AbstractRepositoryConnector, Image> getBrandingIcons() {
 		return brandingIcons;
 	}
 
