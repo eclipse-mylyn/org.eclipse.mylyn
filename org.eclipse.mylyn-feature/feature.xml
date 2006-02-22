@@ -7,7 +7,7 @@
       plugin="org.eclipse.mylar">
 
    <description url="http://eclipse.org/mylar">
-      Mylar UI and support for the Eclipse SDK.
+      Mylar Task List, personal task management facilities, and task repository integration support.
    </description>
 
    <license url="http://www.eclipse.org/legal/epl-v10.html">
