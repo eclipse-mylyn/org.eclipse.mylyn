@@ -111,6 +111,8 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 					}
 
 					return childHandles;
+				} catch (JavaModelException e) {
+					// ignore these, usually indicate no-existent element
 				} catch (Exception e) {
 					MylarStatusHandler.fail(e, "could not get child", false);
 				}
