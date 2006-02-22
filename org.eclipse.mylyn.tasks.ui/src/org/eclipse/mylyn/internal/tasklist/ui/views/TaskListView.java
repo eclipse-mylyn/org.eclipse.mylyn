@@ -14,6 +14,7 @@ package org.eclipse.mylar.internal.tasklist.ui.views;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
@@ -624,6 +625,10 @@ public class TaskListView extends ViewPart {
 		 */
 		@Override
 		public int compare(Viewer compareViewer, Object o1, Object o2) {
+			if (o1 instanceof ITaskContainer && o2 instanceof ITaskContainer && ((ITaskContainer)o2).isArchive()) {
+				return -1;
+			} 
+			
 			if (o1 instanceof ITaskContainer && o2 instanceof ITask) {
 				return 1;
 			} 
@@ -1353,10 +1358,12 @@ public class TaskListView extends ViewPart {
 		} else {
 			refresh(task.getCategory());
 		}
-		AbstractQueryHit hit = MylarTaskListPlugin.getTaskListManager().getTaskList().getQueryHitForHandle(task.getHandleIdentifier());
-		if (hit != null) {
-			refresh(hit);
+		
+		Set<AbstractQueryHit> hits = MylarTaskListPlugin.getTaskListManager().getTaskList().getQueryHitsForHandle(task.getHandleIdentifier());
+		for (AbstractQueryHit hit : hits) {
+			refresh(hit);			
 		}
+		
 	}
 	
 	private void refresh(final ITaskListElement element) {

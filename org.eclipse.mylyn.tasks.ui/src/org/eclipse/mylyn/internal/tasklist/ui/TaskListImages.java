@@ -34,7 +34,7 @@ public class TaskListImages {
 
 	public static final Color BACKGROUND_WHITE = new Color(Display.getDefault(), 255, 255, 255);
 
-	public static final Color BACKGROUND_ARCHIVE = new Color(Display.getDefault(), 148, 148, 181);
+	public static final Color BACKGROUND_ARCHIVE = new Color(Display.getDefault(), 199, 199, 237);
 
 	public static final Color GRAY_LIGHT = new Color(Display.getDefault(), 170, 170, 170);
 
