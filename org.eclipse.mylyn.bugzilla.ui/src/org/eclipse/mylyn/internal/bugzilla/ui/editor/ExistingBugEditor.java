@@ -306,9 +306,10 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 		submitButton.setEnabled(false);
 		ExistingBugEditor.this.showBusy(true);
-
+				
 		final BugzillaReportSubmitForm bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeExistingBugPost(bug,
 				repository, removeCC);
+		
 		final BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) MylarTaskListPlugin
 				.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
 

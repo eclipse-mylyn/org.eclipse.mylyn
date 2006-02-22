@@ -129,7 +129,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 						BugzillaReportSubmitForm form = BugzillaReportSubmitForm.makeNewBugPost2(repository, model);
 						try {
 							id = form.submitReportToRepository();
-
+							
 							if (id != null) {
 								sentSuccessfully = true;
 							}

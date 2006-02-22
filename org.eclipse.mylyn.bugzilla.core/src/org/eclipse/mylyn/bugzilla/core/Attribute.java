@@ -172,4 +172,7 @@ public class Attribute implements Serializable {
 		hidden = b;
 	}
 
+	public String toString() {
+		return "(" + getName() + " : " + getValue() + ")";
+	}
 }

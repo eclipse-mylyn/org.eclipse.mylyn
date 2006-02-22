@@ -210,23 +210,4 @@ public class BugzillaNewBugParserTestCDT extends TestCase {
 		assertEquals("No priority options", 0, options.length);
 
 	}
-
-	// private void printList(List<Attribute> attributes) {
-	//
-	// Iterator<Attribute> itr = attributes.iterator();
-	// System.out.println("Attributes for this Product:");
-	// System.out.println("============================");
-	//
-	// while (itr.hasNext()) {
-	// Attribute attr = itr.next();
-	// System.out.println();
-	// System.out.println(attr.getName() + ": ");
-	// System.out.println("-----------");
-	//
-	// Map<String, String> options = attr.getOptionValues();
-	// Object[] it = options.keySet().toArray();
-	// for (int i = 0; i < it.length; i++)
-	// System.out.println((String) it[i]);
-	// }
-	// }
 }

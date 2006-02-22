@@ -195,9 +195,8 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 		BugzillaCompareNode topNode = new BugzillaCompareNode("Bug #" + bug.getId(), null, defaultImage);
 		Date creationDate = bug.getCreated();
 		if (creationDate == null) {
-			creationDate = Calendar.getInstance().getTime(); // XXX: this
-																// could be
-																// backwards
+			// XXX: this could be backwards
+			creationDate = Calendar.getInstance().getTime(); 
 		}
 		BugzillaCompareNode child = new BugzillaCompareNode("Creation Date", creationDate.toString(), defaultImage);
 		topNode.addChild(child);
@@ -220,6 +219,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 			// Since the bug report may not be saved offline, get the
 			// attribute's new
 			// value, which is what is in the submit viewer.
+			
 			attributes.addChild(new BugzillaCompareNode(attribute.getName(), attribute.getNewValue(), attributeImage));
 		}
 		topNode.addChild(attributes);

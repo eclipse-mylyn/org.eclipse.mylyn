@@ -45,6 +45,14 @@ import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer.Tok
  */
 public class BugParser {
 
+	private static final String KEY_BUG_NUM = "Bug#";
+
+	private static final String KEY_RESOLUTION = "resolution";
+
+	private static final String KEY_VALUE = "value";
+
+	private static final String KEY_NAME = "name";
+
 	private static final String ATTR_CHARSET = "charset";
 
 	/** Parser for dates in the report */
@@ -83,13 +91,19 @@ public class BugParser {
 	 *            The name of the attribute
 	 * @throws IOException
 	 */
-	private static void parseAttributeValue(BugReport bug, String attributeName, HtmlStreamTokenizer tokenizer,
+	private static void parseAttributeValue(BugReport bug, String originalAttributeName, HtmlStreamTokenizer tokenizer,
 			String serverUrl, String userName, String password) throws IOException, ParseException {
-
+		
+		// NOTE: special rule to deal with change in 2.20.1
+		String attributeName = originalAttributeName;
+		if (attributeName.endsWith(KEY_BUG_NUM) && attributeName.length() > KEY_BUG_NUM.length()) {
+			attributeName = originalAttributeName.substring(attributeName.length()-KEY_BUG_NUM.length(), attributeName.length());
+		}
+				
 		Token token = tokenizer.nextToken();
 		if (token.getType() == Token.TAG) {
 			HtmlTag tag = (HtmlTag) token.getValue();
-
+			
 			// make sure that we are on a tag that we care about, not a label
 			// fix added so that we can parse the mozilla bug pages
 			if (tag.getTagType() == HtmlTag.Type.LABEL) {
@@ -106,12 +120,12 @@ public class BugParser {
 			}
 
 			if (tag.getTagType() == HtmlTag.Type.SELECT && !tag.isEndTag()) {
-				String parameterName = tag.getAttribute("name");
+				String parameterName = tag.getAttribute(KEY_NAME);
 				parseSelect(bug, attributeName, parameterName, tokenizer);
 			} else if (tag.getTagType() == HtmlTag.Type.INPUT && !tag.isEndTag()) {
 				parseInput(bug, attributeName, tag, serverUrl, userName, password);
-			} else if (!tag.isEndTag() || attributeName.equalsIgnoreCase("resolution")) {
-				if (tag.isEndTag() && attributeName.equalsIgnoreCase("resolution")) {
+			} else if (!tag.isEndTag() || attributeName.equalsIgnoreCase(KEY_RESOLUTION)) {
+				if (tag.isEndTag() && attributeName.equalsIgnoreCase(KEY_RESOLUTION)) {
 					Attribute a = new Attribute(attributeName);
 					a.setValue("");
 					bug.addAttribute(a);
@@ -160,7 +174,7 @@ public class BugParser {
 		if (attributeName.toLowerCase().startsWith("attachments")) {
 			// do nothing
 		} else {
-			if (attributeName.equals("Bug#"))
+			if (attributeName.equals(KEY_BUG_NUM))
 				a.setValue(a.getValue().replaceFirst("alias:", ""));
 			bug.addAttribute(a);
 		}
@@ -228,7 +242,7 @@ public class BugParser {
 				if (tag.getTagType() == HtmlTag.Type.SELECT && tag.isEndTag())
 					break;
 				if (tag.getTagType() == HtmlTag.Type.OPTION && !tag.isEndTag()) {
-					String optionName = tag.getAttribute("value");
+					String optionName = tag.getAttribute(KEY_VALUE);
 					boolean selected = tag.hasAttribute("selected");
 					StringBuffer optionText = new StringBuffer();
 					for (token = tokenizer.nextToken(); token.getType() == Token.TEXT; token = tokenizer.nextToken()) {
@@ -277,9 +291,9 @@ public class BugParser {
 			String password) throws IOException {
   
 		Attribute a = new Attribute(attributeName);
-		a.setParameterName(tag.getAttribute("name"));
-		String name = tag.getAttribute("name");
-		String value = tag.getAttribute("value");
+		a.setParameterName(tag.getAttribute(KEY_NAME));
+		String name = tag.getAttribute(KEY_NAME);
+		String value = tag.getAttribute(KEY_VALUE);
 		if (value == null)
 			value = "";
 
@@ -327,8 +341,7 @@ public class BugParser {
 					bug.setKeywords(keywords);
 
 				} catch (Exception e) {
-					// throw an exception if there is a problem reading the bug
-					// from the server
+					// throw an exception if there is a problem reading the bug from the server
 					throw new IOException("Exception while fetching the list of keywords from the server: "
 							+ e.getMessage());
 				} finally {
@@ -533,13 +546,14 @@ public class BugParser {
 		HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
 
 		boolean isTitle = false;
+		boolean isScript = false;
 		boolean possibleBadLogin = false;
 		boolean checkBody = false;
 		String title = "";
 		StringBuffer body = new StringBuffer();
 
 		for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-
+			
 			// get the charset from the HTML if not specified
 			if (!contentTypeResolved) {
 				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == HtmlTag.Type.META
@@ -556,7 +570,7 @@ public class BugParser {
 				isTitle = true;
 				continue;
 			}
-
+			
 			if (isTitle) {
 				// get all of the data in the title tag
 				if (token.getType() != Token.TAG) {
@@ -593,6 +607,21 @@ public class BugParser {
 				body.append((StringBuffer) token.getValue());
 				body.append(" ");
 			}
+//		    // NOTE: this checks for the script and skips it	
+//			if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == HtmlTag.Type.SCRIPT
+//					&& !((HtmlTag) (token.getValue())).isEndTag()) {
+//				isScript = true;
+//				continue;
+//			}
+//			if (isScript) {				
+//				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == HtmlTag.Type.SCRIPT
+//						&& ((HtmlTag) (token.getValue())).isEndTag()) {
+//					isScript = false;
+//					continue;
+//				} else {
+//					continue;
+//				}
+//			}
 
 			// we have found the start of an attribute name
 			if ((state == ParserState.ATT_NAME || state == ParserState.START) && token.getType() == Token.TAG) {
@@ -600,7 +629,9 @@ public class BugParser {
 				if (tag.getTagType() == HtmlTag.Type.TD && "right".equalsIgnoreCase(tag.getAttribute("align"))) {
 					// parse the attribute's name
 					attribute = parseAttributeName(tokenizer);
-
+					if(attribute != null && attribute.endsWith("EclipsebugsBugzilla2.20.1 ")) {
+						continue;
+					}
 					if (attribute.toLowerCase().startsWith("opened")) {
 						// find the colon so we can get the date
 						int index = attribute.toLowerCase().indexOf(":");
@@ -640,7 +671,7 @@ public class BugParser {
 					state = ParserState.ATT_VALUE;
 					continue;
 				} else if (tag.getTagType() == HtmlTag.Type.INPUT && "radio".equalsIgnoreCase(tag.getAttribute("type"))
-						&& "knob".equalsIgnoreCase(tag.getAttribute("name"))) {
+						&& "knob".equalsIgnoreCase(tag.getAttribute(KEY_NAME))) {
 					// we found a radio button
 					parseOperations(bug, tokenizer, tag, is218);
 				}
@@ -697,14 +728,15 @@ public class BugParser {
 			}
 
 			// parse hidden fields
+			
 			if ((state == ParserState.ATT_NAME || state == ParserState.START) && token.getType() == Token.TAG) {
 				HtmlTag tag = (HtmlTag) token.getValue();
 				if (tag.getTagType() == HtmlTag.Type.INPUT && tag.getAttribute("type") != null
 						&& "hidden".equalsIgnoreCase(tag.getAttribute("type").trim())) {
 
-					Attribute a = new Attribute(tag.getAttribute("name"));
-					a.setParameterName(tag.getAttribute("name"));
-					a.setValue(tag.getAttribute("value"));
+					Attribute a = new Attribute(tag.getAttribute(KEY_NAME));
+					a.setParameterName(tag.getAttribute(KEY_NAME));
+					a.setValue(tag.getAttribute(KEY_VALUE));
 					a.setHidden(true);
 					bug.addAttribute(a);
 					continue;
@@ -769,7 +801,7 @@ public class BugParser {
 	private static void parseOperations(BugReport bug, HtmlStreamTokenizer tokenizer, HtmlTag tag, boolean is218)
 			throws ParseException, IOException {
 
-		String knobName = tag.getAttribute("value");
+		String knobName = tag.getAttribute(KEY_VALUE);
 		boolean isChecked = false;
 		if (tag.getAttribute("checked") != null && tag.getAttribute("checked").equals("checked"))
 			isChecked = true;
@@ -810,16 +842,16 @@ public class BugParser {
 				tokenizer.pushback(lastTag);
 				if (tag.getTagType() == HtmlTag.Type.INPUT
 						&& !("radio".equalsIgnoreCase(tag.getAttribute("type")) && "knob".equalsIgnoreCase(tag
-								.getAttribute("name")))) {
-					o.setInputName(((HtmlTag) lastTag.getValue()).getAttribute("name"));
-					o.setInputValue(((HtmlTag) lastTag.getValue()).getAttribute("value"));
+								.getAttribute(KEY_NAME)))) {
+					o.setInputName(((HtmlTag) lastTag.getValue()).getAttribute(KEY_NAME));
+					o.setInputValue(((HtmlTag) lastTag.getValue()).getAttribute(KEY_VALUE));
 				}
 			} else {
 				Token token = tokenizer.nextToken();
 				// parse the options
 
 				tag = (HtmlTag) token.getValue();
-				o.setUpOptions(((HtmlTag) lastTag.getValue()).getAttribute("name"));
+				o.setUpOptions(((HtmlTag) lastTag.getValue()).getAttribute(KEY_NAME));
 
 				while (token.getType() != Token.EOF) {
 					if (token.getType() == Token.TAG) {
@@ -827,7 +859,7 @@ public class BugParser {
 						if (tag.getTagType() == HtmlTag.Type.SELECT && tag.isEndTag())
 							break;
 						if (tag.getTagType() == HtmlTag.Type.OPTION && !tag.isEndTag()) {
-							String optionName = tag.getAttribute("value");
+							String optionName = tag.getAttribute(KEY_VALUE);
 							StringBuffer optionText = new StringBuffer();
 							for (token = tokenizer.nextToken(); token.getType() == Token.TEXT; token = tokenizer
 									.nextToken()) {
