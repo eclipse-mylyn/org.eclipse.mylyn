@@ -403,6 +403,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 			}
 		}
 
+		@SuppressWarnings("deprecation")
 		private static void readBridge(IConfigurationElement element) {
 			try {
 				Object object = element

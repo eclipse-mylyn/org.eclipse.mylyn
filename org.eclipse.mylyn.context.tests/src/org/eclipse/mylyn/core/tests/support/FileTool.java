@@ -195,6 +195,7 @@ public class FileTool {
 			transferData(src, dst);
 	}
 
+	@SuppressWarnings("deprecation")
 	public static File getFileInPlugin(Plugin plugin, IPath path) {
 		try {
 			URL installURL = plugin.getBundle().getEntry(path.toString());
