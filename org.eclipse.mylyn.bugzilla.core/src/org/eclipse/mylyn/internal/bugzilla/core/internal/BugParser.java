@@ -275,7 +275,7 @@ public class BugParser {
 	 */
 	private static void parseInput(BugReport bug, String attributeName, HtmlTag tag, String serverUrl, String userName,
 			String password) throws IOException {
-
+  
 		Attribute a = new Attribute(attributeName);
 		a.setParameterName(tag.getAttribute("name"));
 		String name = tag.getAttribute("name");
