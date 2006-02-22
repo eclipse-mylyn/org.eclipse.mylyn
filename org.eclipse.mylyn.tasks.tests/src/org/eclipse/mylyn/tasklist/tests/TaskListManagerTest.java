@@ -25,9 +25,11 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.tasklist.ScheduledTaskListRefreshJob;
+import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
@@ -371,6 +373,65 @@ public class TaskListManagerTest extends TestCase {
 		job.run(new NullProgressMonitor());
 		Thread.sleep(1500);
 	    assertEquals(counter, job.getCount());		
+	}
+
+	public void testgetQueriesAndHitsForHandle() {
+
+		
+		BugzillaQueryHit hit1 = new BugzillaQueryHit("description1", "P1", "repositoryURL", 1, null, "status");
+		BugzillaQueryHit hit2 = new BugzillaQueryHit("description2", "P1", "repositoryURL", 2, null, "status");
+		BugzillaQueryHit hit3 = new BugzillaQueryHit("description3", "P1", "repositoryURL", 3, null, "status");
+		
+		BugzillaQueryHit hit1twin = new BugzillaQueryHit("description1", "P1", "repositoryURL", 1, null, "status");
+		BugzillaQueryHit hit2twin = new BugzillaQueryHit("description2", "P1", "repositoryURL", 2, null, "status");
+		BugzillaQueryHit hit3twin = new BugzillaQueryHit("description3", "P1", "repositoryURL", 3, null, "status");
+
+		AbstractRepositoryQuery query1 = new AbstractRepositoryQuery() {
+			@Override
+			public String getRepositoryKind() {
+				// ignore
+				return "newkind";
+			}
+		};
+
+		AbstractRepositoryQuery query2 = new AbstractRepositoryQuery() {
+			@Override
+			public String getRepositoryKind() {
+				// ignore
+				return "newkind";
+			}
+		};
+
+		query1.addHit(hit1);
+		query1.addHit(hit2);
+		query1.addHit(hit3);
+		assertEquals(query1.getHits().size(), 3);
+		
+
+		query2.addHit(hit1twin);
+		query2.addHit(hit2twin);
+		query2.addHit(hit3twin);
+		assertEquals(query2.getHits().size(), 3);
+		
+		manager.addQuery(query1);
+		manager.addQuery(query2);
+
+		TaskList taskList = manager.getTaskList();
+		Set<AbstractRepositoryQuery> queriesReturned = taskList.getQueriesForHandle(AbstractRepositoryTask
+				.getHandle("repositoryURL", 1));
+		assertNotNull(queriesReturned);
+		assertEquals(queriesReturned.size(), 2);
+		assertTrue(queriesReturned.contains(query1));
+		assertTrue(queriesReturned.contains(query2));	
+		
+		Set<AbstractQueryHit> hitsReturned = taskList.getQueryHitsForHandle(AbstractRepositoryTask
+				.getHandle("repositoryURL", 2));
+		assertNotNull(hitsReturned);
+		assertEquals(hitsReturned.size(), 2);
+		assertTrue(hitsReturned.contains(hit2));
+		assertTrue(hitsReturned.contains(hit2twin));
+		
+
 	}
 	
 }
