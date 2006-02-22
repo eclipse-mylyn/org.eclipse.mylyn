@@ -277,6 +277,7 @@ public class BugzillaQueryDialog extends Dialog {
 				public void setSelectedWorkingSets(IWorkingSet[] workingSets) {
 				}
 
+				@SuppressWarnings("unused")
 				public String[] getSelectedProjectNames() {
 					return null;
 				}
