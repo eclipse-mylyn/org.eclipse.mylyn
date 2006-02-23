@@ -14,7 +14,6 @@ package org.eclipse.mylar.internal.ui.actions;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.ITask;
@@ -34,49 +33,18 @@ public class ClearContextAction implements IViewActionDelegate {
 	}
 
 	public void run(IAction action) {
-		if (TaskListView.getDefault() == null)
-			return;
-		Object selectedObject = ((IStructuredSelection) TaskListView.getDefault().getViewer().getSelection())
-				.getFirstElement();
-		if (selectedObject != null && selectedObject instanceof ITask) {
+		ITask task = TaskListView.getDefault().getSelectedTask();
+		if (task instanceof ITask) {
 			boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 					.getShell(), "Confirm clear context", "Clear context for the selected task?");
 			if (!deleteConfirmed)
 				return;
 
-			MylarPlugin.getContextManager().contextDeleted(((ITask) selectedObject).getHandleIdentifier());// ,
-																											// ((Task)selectedObject).getContextPath());
-			MylarPlugin.getContextManager().contextActivated(((ITask) selectedObject).getHandleIdentifier());// ,
+			MylarPlugin.getContextManager().contextDeleted((task).getHandleIdentifier());																					// ((Task)selectedObject).getContextPath());
+			MylarPlugin.getContextManager().contextActivated((task).getHandleIdentifier());
 																												// ((Task)selectedObject).getContextPath());
-
-			// MylarPlugin.getContextManager().contextDeleted(((ITask)selectedObject).getHandleIdentifier(),
-			// ((Task)selectedObject).getPath());
 			TaskListView.getDefault().getViewer().refresh();
 		}
-		// TODO add this back in
-		// else if (selectedObject != null && selectedObject instanceof
-		// BugzillaHit &&
-		// ((BugzillaHit)selectedObject).hasAssociatedActivatibleTask()) {
-		// BugzillaTask task =
-		// ((BugzillaHit)selectedObject).getAssociatedTask();
-		// if(task != null){
-		// if (task.isActive()) {
-		// MessageDialog.openError(PlatformUI.getWorkbench()
-		// .getActiveWorkbenchWindow().getShell(), "Clear context failed",
-		// "Task must be deactivated before clearing task context.");
-		// return;
-		// }
-		// boolean deleteConfirmed = MessageDialog.openQuestion(
-		// PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-		// "Confirm clear context",
-		// "Clear context for the selected task?");
-		// if (!deleteConfirmed)
-		// return;
-		// MylarPlugin.getContextManager().taskDeleted(task.getHandle(),
-		// task.getPath());
-		// }
-		// TaskListView.getDefault().getViewer().refresh();
-		// }
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
