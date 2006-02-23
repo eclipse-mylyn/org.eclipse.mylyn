@@ -296,8 +296,6 @@ public class BugzillaReportSubmitForm {
 				bugReportPostHandler.add(a.getParameterName(), a.getValue());
 			}
 		}
-		
-		System.err.println(">>> " + bug.getAttributes());
 
 		// add the operation to the bug post
 		Operation o = bug.getSelectedOperation();

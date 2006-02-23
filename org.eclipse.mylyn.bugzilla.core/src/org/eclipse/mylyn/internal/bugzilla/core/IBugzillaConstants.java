@@ -71,6 +71,26 @@ public interface IBugzillaConstants {
 	static final String SERVER_218 = "2.18";
 
 	static final String SERVER_216 = "2.16";
+	
+	/** Supported bugzilla repository versions */
+	static public enum BugzillaServerVersion {
+		SERVER_220, SERVER_218, SERVER_216;
+
+		@Override
+		public String toString() {
+			switch (this) {
+			case SERVER_220:
+				return "2.20";
+			case SERVER_218:
+				return "2.18";
+			case SERVER_216:
+				return "2.16";
+			default:
+				return "null";
+			}
+		}
+	}
+	
 
 	// static final String IS_216 = "BUGZILLA_IS_216";
 	// static final String IS_218 = "BUGZILLA_IS_218";
@@ -136,5 +156,7 @@ public interface IBugzillaConstants {
 	public static final String TITLE_MESSAGE_DIALOG = "Mylar Bugzilla Client";
 
 	public static final String MESSAGE_LOGIN_FAILURE = "Bugzilla login information or repository version incorrect";
+
+	public static final String INVALID_2201_ATTRIBUTE_IGNORED = "EclipsebugsBugzilla2.20.1 ";
 
 }

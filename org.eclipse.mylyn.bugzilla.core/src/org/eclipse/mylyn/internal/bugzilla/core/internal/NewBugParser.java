@@ -18,6 +18,7 @@ import java.text.ParseException;
 import javax.security.auth.login.LoginException;
 
 import org.eclipse.mylar.bugzilla.core.Attribute;
+import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugModel;
 import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer.Token;
 
@@ -105,10 +106,13 @@ public class NewBugParser {
 
 			// we have found the start of an attribute name
 			if ((state == ParserState.ATT_NAME || state == ParserState.START) && token.getType() == Token.TAG) {
-				HtmlTag tag = (HtmlTag) token.getValue();
+				HtmlTag tag = (HtmlTag) token.getValue();				
 				if (tag.getTagType() == HtmlTag.Type.TD && "right".equalsIgnoreCase(tag.getAttribute("align"))) {
 					// parse the attribute's name
 					attribute = parseAttributeName();
+					if(attribute != null && attribute.endsWith(IBugzillaConstants.INVALID_2201_ATTRIBUTE_IGNORED)) {
+						continue;
+					}					
 					if (attribute == null)
 						continue;
 					state = ParserState.ATT_VALUE;

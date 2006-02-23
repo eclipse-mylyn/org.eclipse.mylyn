@@ -1,0 +1,441 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                      "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Enter Bug: TestProduct</title>
+
+
+<link rel="Top" href="http://you-havent-visited-editparams.cgi-yet/">
+
+  
+
+
+  
+
+
+  
+    <link rel="Saved&nbsp;Searches" title="My Bugs"
+          href="buglist.cgi?bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;email1=relves%40cs.ubc.ca&amp;emailtype1=exact&amp;emailassigned_to1=1&amp;emailreporter1=1">
+
+
+   <link rel="Administration" title="Parameters"    
+                  href="editparams.cgi"><link rel="Administration" title="Users"    
+                  href="editusers.cgi"><link rel="Administration" title="Products"      
+                  href="editproducts.cgi"><link rel="Administration" title="Flag Types"   
+                  href="editflagtypes.cgi"><link rel="Administration" title="Groups"        
+                  href="editgroups.cgi"><link rel="Administration" title="Keywords"      
+                  href="editkeywords.cgi"><link rel="Administration" title="Whining"       
+                  href="editwhines.cgi"><link rel="Administration" title="Sanity Check"  
+                  href="sanitycheck.cgi">
+
+    
+
+    <script type="text/javascript">
+  <!--
+  
+  function initHelp() {}
+  // -->
+  </script>
+
+    <link href="skins/standard/global.css" rel="stylesheet" type="text/css">
+    <link href="skins/custom/global.css" rel="stylesheet" type="text/css">
+
+
+
+    
+
+  </head>
+
+
+
+  <body onload="set_assign_to();"
+        class="you-havent-visited-editparams-cgi-yet">
+
+
+<div id="banner">
+    <div class="intro"></div>
+      <p id="banner-name">
+        <span>This is Bugzilla</span>
+      </p>
+      <p id="banner-version">
+        <a href="http://www.bugzilla.org/"><span>Bugzilla</span></a>
+
+        <span>Version 2.20</span>
+      </p>
+    <div class="outro"></div>
+    </div>
+
+<div id="header">
+    <h1>Enter Bug: TestProduct</h1>
+
+    <h2>This page lets you enter a new bug into Bugzilla.</h2>
+
+</div>
+
+<script type="text/javascript">
+<!--
+
+var initialowners = new Array(1);
+var last_initialowner;
+var components = new Array(1);
+    components[0] = "TestComponent";
+    initialowners[0] = "relves\x40cs.ubc.ca";
+
+function set_assign_to() {
+    // Based on the selected component, fill the "Assign To:" field
+    // with the default component owner, and the the "QA Contact:" field
+    // with the default QA Contact.
+    var form = document.Create;
+    var assigned_to = form.assigned_to.value;
+
+
+    var index = -1;
+    if (form.component.type == 'select-one') {
+        index = form.component.selectedIndex;
+    } else if (form.component.type == 'hidden') {
+        // Assume there is only one component in the list
+        index = 0;
+    }
+    if (index != -1) {
+        var owner = initialowners[index];
+        var component = components[index];
+        if (assigned_to == last_initialowner
+            || assigned_to == owner
+            || assigned_to == '') {
+            form.assigned_to.value = owner;
+            last_initialowner = owner;
+        }
+    }
+}
+-->
+</script>
+
+<form name="Create" id="Create" method="post" action="post_bug.cgi">
+<input type="hidden" name="product" value="TestProduct">
+
+<table cellspacing="2" cellpadding="0" border="0">
+
+  <tr>
+    <td><br></td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td colspan="3">
+    Before reporting a bug, please read the 
+<a href="page.cgi?id=bug-writing.html">bug writing guidelines</a>, please look at the list of
+<a href="duplicates.cgi">most frequently reported bugs</a>, and please
+<a href="query.cgi">search</a> for the bug.
+    </td>
+
+  </tr>
+
+  <tr>
+    <td><br></td>
+  </tr>
+
+  <tr>
+    <td align="right" valign="top"><strong>Reporter:</strong></td>
+    <td valign="top">relves&#64;cs.ubc.ca</td>
+
+    <td align="right" valign="top"><strong>Product:</strong></td>
+    <td valign="top">TestProduct</td>
+  </tr>
+
+  
+  <tr>
+    <td align="right" valign="top">
+      <strong>Version:</strong>
+
+    </td>
+    <td>
+      <select name="version" size="5">
+          <option value="other" selected="selected">other          </option>
+      </select>
+    </td>
+
+    <td align="right" valign="top">
+      <strong>
+
+        <a href="describecomponents.cgi?product=TestProduct">
+          Component</a>:
+      </strong>
+    </td>
+    <td>
+      <select name="component" onchange="set_assign_to();" size="5">
+          <option value="TestComponent" selected="selected">TestComponent          </option>
+      </select>
+
+    </td>
+  </tr>
+
+  <tr>
+    <td>&nbsp;</td>
+    <td colspan="3"></td>
+  </tr>
+
+  <tr><td align="right">
+    <strong>
+
+      <a href="page.cgi?id=fields.html#rep_platform">Platform</a>:
+    </strong>
+  </td>
+
+  <td>
+    <select name="rep_platform">
+      <option value="All">All</option>
+      <option value="PC" selected="selected">PC</option>
+
+      <option value="Macintosh">Macintosh</option>
+      <option value="Other">Other</option>
+    </select>
+  </td>
+<td align="right">
+    <strong>
+      <a href="page.cgi?id=fields.html#op_sys">OS</a>:
+    </strong>
+
+  </td>
+
+  <td>
+    <select name="op_sys">
+      <option value="All">All</option>
+      <option value="Windows" selected="selected">Windows</option>
+      <option value="Mac OS">Mac OS</option>
+      <option value="Linux">Linux</option>
+
+      <option value="Other">Other</option>
+    </select>
+  </td>
+  </tr>
+
+  <tr><td align="right">
+    <strong>
+      <a href="page.cgi?id=fields.html#priority">Priority</a>:
+    </strong>
+
+  </td>
+
+  <td>
+    <select name="priority">
+      <option value="P1">P1</option>
+      <option value="P2" selected="selected">P2</option>
+      <option value="P3">P3</option>
+      <option value="P4">P4</option>
+
+      <option value="P5">P5</option>
+    </select>
+  </td>
+<td align="right">
+    <strong>
+      <a href="page.cgi?id=fields.html#bug_severity">Severity</a>:
+    </strong>
+  </td>
+
+  <td>
+    <select name="bug_severity">
+      <option value="blocker">blocker</option>
+      <option value="critical">critical</option>
+      <option value="major">major</option>
+      <option value="normal" selected="selected">normal</option>
+      <option value="minor">minor</option>
+
+      <option value="trivial">trivial</option>
+      <option value="enhancement">enhancement</option>
+    </select>
+  </td>
+  </tr>
+
+
+  <tr>
+    <td>&nbsp;</td>
+
+    <td colspan="3"></td>
+  </tr>
+
+  <tr>
+  <input type="hidden" name="bug_status" 
+         value="NEW">
+    <td align="right" valign="top"><strong>Initial State:</strong></td>
+    <td valign="top">NEW</td>
+    <td colspan="2"></td>
+
+  </tr>
+
+  <tr>
+    <td align="right">
+      <strong>
+        <a href="page.cgi?id=fields.html#assigned_to">Assign To</a>:
+      </strong>
+    </td>
+    <td colspan="3"><input
+  name="assigned_to"
+  value="" size="32" 
+>
+
+      <noscript>(Leave blank to assign to component's default assignee)</noscript>
+    </td>
+  </tr>
+
+
+  <tr>
+    <td align="right"><strong>Cc:</strong></td>
+    <td colspan="3"><input
+  name="cc"
+  value="" size="45" 
+>
+    </td>
+
+  </tr>
+  
+  <tr>
+    <td>&nbsp;</td>
+    <td colspan="3"></td>
+  </tr>
+
+
+  <tr>
+    <td align="right"><strong>URL:</strong></td>
+
+    <td colspan="3">
+      <input name="bug_file_loc" size="60"
+             value="http://">
+    </td>
+  </tr>
+
+  <tr>
+    <td align="right"><strong>Summary:</strong></td>
+    <td colspan="3">
+      <input name="short_desc" size="60" value="">
+
+    </td>
+  </tr>
+
+  <tr><td align="right" valign="top"><strong>Description:</strong></td>
+    <td colspan="3">
+      <textarea name="comment" rows="10" cols="80"></textarea>
+      <br>
+    </td>
+
+  </tr>
+
+    <input type="hidden" name="commentprivacy" value="0">
+
+    <tr>
+      <td align="right">
+        <strong>Depends on:</strong>
+      </td>
+      <td>
+
+        <input name="dependson" accesskey="d" value="">
+      </td>
+    </tr>
+    <tr>
+      <td align="right">
+        <strong>Blocks:</strong>
+      </td>
+      <td>
+
+        <input name="blocked" accesskey="b" value="">
+      </td>
+    </tr>
+
+  <tr>
+    <td></td>
+    <td colspan="3">
+    </td>
+  </tr>
+
+  
+
+  <tr>
+    <td></td>
+    <td colspan="3">
+      <input type="submit" value="    Commit    "
+             onclick="if (this.form.short_desc.value == '')
+             { alert('Please enter a summary sentence for this bug.');
+               return false; } return true;">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <input type="submit" name="maketemplate"
+             value="Remember values as bookmarkable template">
+    </td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td colspan="3">
+      <br>
+      We've made a guess at your
+      operating system and platform. Please check them
+      and, if we got it wrong, email
+      THE MAINTAINER HAS NOT YET BEEN SET.
+    </td>
+  </tr>
+
+  </table>
+
+  <input type="hidden" name="form_name" value="enter_bug">
+</form>
+
+
+<div id="footer">
+  <div class="intro"></div>
+
+
+
+
+<form method="get" action="show_bug.cgi">
+<div id="useful-links">
+  <div id="links-actions">
+    <div class="label">Actions:</div>
+
+    <div class="links">
+        <a href="./">Home</a> | 
+        <a href="enter_bug.cgi">New</a> | 
+        <a href="query.cgi">Search</a> |
+        bug # <input class="txt" name="id" size="6">
+        <input class="btn" type="submit" value="Find"> | 
+        
+        <a href="report.cgi">Reports</a> 
+        
+          | <a href="request.cgi?requester=relves%40cs.ubc.ca&amp;requestee=relves%40cs.ubc.ca&amp;do_union=1&amp;group=type">My Requests</a>
+
+        
+          | <a href="votes.cgi?action=show_user">My&nbsp;Votes</a>      
+          | <a href="sanitycheck.cgi">Sanity&nbsp;check</a>
+              | <a href="relogin.cgi">Log&nbsp;out</a>&nbsp;relves&#64;cs.ubc.ca
+    </div>
+  </div>
+
+       
+  <div id="links-edit">
+    <div class="label">Edit:</div>
+    <div class="links">
+
+        <a href="userprefs.cgi">Prefs</a> | <a href="editparams.cgi">Parameters</a>  | <a href="editsettings.cgi">User Preferences</a> | <a href="editusers.cgi">Users</a>  | <a href="editproducts.cgi">Products</a> | <a href="editflagtypes.cgi">Flags</a> | <a href="editvalues.cgi">Field Values</a> | <a href="editgroups.cgi">Groups</a> | <a href="editkeywords.cgi">Keywords</a> | <a href="editwhines.cgi">Whining</a>
+
+    </div>
+  </div>
+    
+
+    
+    
+  <div id="links-saved">
+    <div class="label">
+          Saved&nbsp;Searches:
+    </div>
+    <div class="links">
+          <a href="buglist.cgi?bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;email1=relves%40cs.ubc.ca&amp;emailtype1=exact&amp;emailassigned_to1=1&amp;emailreporter1=1">My&nbsp;Bugs</a>
+
+    </div>
+  </div>
+
+  
+</div>
+</form>
+
+  <div class="outro"></div>
+</div>
+
+</body>
+</html>

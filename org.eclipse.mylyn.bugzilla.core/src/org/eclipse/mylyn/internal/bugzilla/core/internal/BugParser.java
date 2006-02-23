@@ -546,7 +546,6 @@ public class BugParser {
 		HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
 
 		boolean isTitle = false;
-		boolean isScript = false;
 		boolean possibleBadLogin = false;
 		boolean checkBody = false;
 		String title = "";
@@ -607,21 +606,7 @@ public class BugParser {
 				body.append((StringBuffer) token.getValue());
 				body.append(" ");
 			}
-//		    // NOTE: this checks for the script and skips it	
-//			if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == HtmlTag.Type.SCRIPT
-//					&& !((HtmlTag) (token.getValue())).isEndTag()) {
-//				isScript = true;
-//				continue;
-//			}
-//			if (isScript) {				
-//				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == HtmlTag.Type.SCRIPT
-//						&& ((HtmlTag) (token.getValue())).isEndTag()) {
-//					isScript = false;
-//					continue;
-//				} else {
-//					continue;
-//				}
-//			}
+			
 
 			// we have found the start of an attribute name
 			if ((state == ParserState.ATT_NAME || state == ParserState.START) && token.getType() == Token.TAG) {
@@ -629,7 +614,7 @@ public class BugParser {
 				if (tag.getTagType() == HtmlTag.Type.TD && "right".equalsIgnoreCase(tag.getAttribute("align"))) {
 					// parse the attribute's name
 					attribute = parseAttributeName(tokenizer);
-					if(attribute != null && attribute.endsWith("EclipsebugsBugzilla2.20.1 ")) {
+					if(attribute != null && attribute.endsWith(IBugzillaConstants.INVALID_2201_ATTRIBUTE_IGNORED)) {
 						continue;
 					}
 					if (attribute.toLowerCase().startsWith("opened")) {

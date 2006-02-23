@@ -60,7 +60,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 			HttpURLConnection serverConnection = (HttpURLConnection) cntx;
 			serverConnection.connect();
-			TaskRepository tempRepository = new TaskRepository(repository.getKind(), getServerUrl());
+			TaskRepository tempRepository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, getServerUrl());
 			tempRepository.setAuthenticationCredentials(getUserName(), getPassword());
 			new BugzillaQueryPageParser(tempRepository, new NullProgressMonitor());
 		} catch (MalformedURLException e) {
