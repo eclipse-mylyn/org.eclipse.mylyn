@@ -19,10 +19,11 @@
 		<font color="#FFFFFF" size="1">Community Contributions</font></b></td>
 	</tr>
 	<tr>
-		<td bgcolor="#FAF7FB"><font size="1">0.4.9 (tbd)</font></td>
+		<td bgcolor="#FAF7FB"><font size="1">0.4.9<br>
+		<i>Feb. 22, 2005</i></font></td>
 		<td bgcolor="#FAF7FB" align="center">
-		<a href="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&product=Mylar&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&bug_status=RESOLVED&bug_status=VERIFIED&bug_status=CLOSED&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=2006-01-31&chfieldto=2006-02-17&chfield=resolution&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=">
-		<font size="1">x reports</font></a></td>
+		<a href="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&product=Mylar&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&bug_status=RESOLVED&bug_status=VERIFIED&bug_status=CLOSED&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=2006-01-31&chfieldto=2006-02-23&chfield=resolution&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=">
+		<font size="1">50 reports</font></a></td>
 		<td bgcolor="#FAF7FB"><font size="1">[Tom Eicher and Daniel Megert for 
 		extensibility improvements in editor folding support, Karice McIntyre 
 		(Platform UI) for FilteredTree API],&nbsp;&nbsp; Wang Binfor a patch 
@@ -118,21 +119,28 @@
 		improvements to the Task List. </font></td>
 	</tr>
 </table>
-<p>&nbsp;<span style="background-color: #E0D0E6">&nbsp;Additions since 0.4.8 are 
-highlighted.</span> Also see the <b><a href="new-0.3.html">New &amp; Noteworthy for the Mylar 0.3.x</a>
+<p>Also see the <b><a href="new-0.3.html">New &amp; Noteworthy for the Mylar 0.3.x</a>
 </b>preview 
 release.</p>
-<p><br>
-</p>
-<h3>Task Context</h3>
+<h3>Additions since 0.4.8</h3>
 
-<table cellpadding="10" cellspacing="0" width="600" id="table133">
+<table cellpadding="10" cellspacing="0" width="600" id="table137">
 		<tr>
-			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>JIRA Integration (Experimental)</b></p>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>JIRA integration (Experimental)</b></p>
 			</td>
 			<td valign="top" width="70%">
-			&nbsp;</td>
+			JIRA tasks and queries are now supported in the task list.&nbsp; Add 
+			a new JIRA repository via the Task Repositories view, then 
+			right-click in the task list to Add a New Repository Query, and 
+			select from one of your existing JIRA filters.&nbsp; Note that on 
+			very large repositories (e.g. Codehaus the very first query that's 
+			run on a newly added repository will be slow).<p>Note that the task list now provides icon overlays indicating 
+			type/severity, and text overlays indicating the repository. </p>
+			<p>
+			<img border="0" src="images/0.4.9/jira-select-type.gif"></p>
+			<p>
+			<img border="0" src="images/0.4.9/jira-query.gif"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -141,14 +149,34 @@ release.</p>
 		</tr>
 </table>
 
-<table cellpadding="10" cellspacing="0" width="600" id="table134">
+<table cellpadding="10" cellspacing="0" width="600" id="table141">
 		<tr>
-			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Task data import</b></p>
+			</td>
+			<td valign="top" width="70%">
+			Task date can now be imported from an existing .mylar directory, or 
+			from a backup zip file created by the Mylar export wizard.<p>
+			<img border="0" src="images/0.4.9/tasklist-import.gif"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table144">
+		<tr>
+			<td align="left" valign="top" width="30%">
 			<p align="right"><b>Active task indication<br>
 			(3.2 only)</b></p>
 			</td>
 			<td valign="top" width="70%">
-			Next to filter bar and in mouseover</td>
+			The currently active task is indicated with a hyperlink below the 
+			toolbar that can be used to bring the task into focus (Eclipse 3.2 
+			only).<p>
+			<img border="0" src="images/0.4.9/tasklist-indication-active.gif"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -157,49 +185,19 @@ release.</p>
 		</tr>
 </table>
 
-<table cellpadding="10" cellspacing="0" width="600" id="table132">
+<table cellpadding="10" cellspacing="0" width="600" id="table142">
 		<tr>
-			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Task overlays</b></p>
-			</td>
-			<td valign="top" width="70%">
-			..
-			</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table135">
-		<tr>
-			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Persistent archive</b></p>
-			</td>
-			<td valign="top" width="70%">
-			..
-			</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table131">
-		<tr>
-			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Integrated reminders<br>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Notification popups<br>
 			(3.2 only)</b></p>
 			</td>
 			<td valign="top" width="70%">
-			The tasklist popup 
-			<p>No more popup window, now rely on toasters and task list decoration, 
-			overdue tasks always show.</p>
-			<p><img src=images/0.4.9/tasklist-notification.gif"></td>
+			Task reminders no longer appear in a separate dialog windows.&nbsp; 
+			When a task becomes overdue, a notification 'toaster' pops up that 
+			can be used to bring the task up.&nbsp; The notification will not 
+			come up again, since the overdue task will be colored red and always 
+			visible in the task list until the reminder is reset.<p>
+			<img border="0" src="images/0.4.9/tasklist-notification.gif"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -208,13 +206,13 @@ release.</p>
 		</tr>
 </table>
 
-<table cellpadding="10" cellspacing="0" width="600" id="table130">
+<table cellpadding="10" cellspacing="0" width="600" id="table143">
 		<tr>
-			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Task data import/export</b></p>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>No more custom Mylar Java Editor (3.2 only)</b></p>
 			</td>
 			<td valign="top" width="70%">
-			Import task list data...</td>
+			The </td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -223,20 +221,9 @@ release.</p>
 		</tr>
 </table>
 
-<table cellpadding="10" cellspacing="0" width="600" id="table129">
-		<tr>
-			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Custom Mylar Editor is gone (3.2 only)</b></p>
-			</td>
-			<td valign="top" width="70%">
-			Content assist is now integrated...</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
+<p><br>
+</p>
+<h3>Task Context</h3>
 
 <table cellpadding="10" cellspacing="0" width="600" id="table127">
 		<tr>
