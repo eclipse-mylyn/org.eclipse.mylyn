@@ -24,11 +24,14 @@
 		<td bgcolor="#FAF7FB" align="center">
 		<a href="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&product=Mylar&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&bug_status=RESOLVED&bug_status=VERIFIED&bug_status=CLOSED&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=2006-01-31&chfieldto=2006-02-23&chfield=resolution&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=">
 		<font size="1">50 reports</font></a></td>
-		<td bgcolor="#FAF7FB"><font size="1">[Tom Eicher and Daniel Megert for 
-		extensibility improvements in editor folding support, Karice McIntyre 
-		(Platform UI) for FilteredTree API],&nbsp;&nbsp; Wang Binfor a patch 
-		fixing to the active test suite [and other patches], Eugene for 
-		debugging the JIRA support, Robert Elves... Wesley, Brock</font></td>
+		<td bgcolor="#FAF7FB"><font size="1">Robert Elves provided patches that 
+		resolved 17 reports. The JIRA support was made possible by Brock 
+		Janiczak's help and his JIRA Core Services feature. Wesley Coelho 
+		provided initial integration patches and 10 very valuable JIRA test 
+		cases, and Eugene Kuleshov helped with debugging. Wang Bin provided 
+		patches for JUnit integration and code quality. Tom Eicher and Daniel 
+		Megert made tighter editor integration possible with new SDK content 
+		assist and folding APIs.</font></td>
 	</tr>
 	<tr>
 		<td bgcolor="#FAF7FB"><font size="1">0.4.8 
@@ -120,10 +123,23 @@
 		improvements to the Task List. </font></td>
 	</tr>
 </table>
+<h3>Additions since 0.4.8</h3>
 <p>Also see the <b><a href="new-0.3.html">New &amp; Noteworthy for the Mylar 0.3.x</a>
 </b>preview 
-release.</p>
-<h3>Additions since 0.4.8</h3>
+release.&nbsp; </p>
+<ul>
+	<li>This release supports Eclipse 3.2M5 (M4 is no longer supported) and 
+	Bugzilla 2.20.1. Please note the changes in feature packaging:
+	<a href="http://eclipse.org/mylar/dl.php">http://eclipse.org/mylar/dl.php</a> </li>
+	<li>Note that changing versions of Eclipse causes repository credentials to 
+	get cleared (they're stored in the Platform key ring), so reset passwords in 
+	the Task Repositories view.</li>
+	<li>3.2M5: Custom Mylar editor is gone (see below), so before restarting 
+	deactivate the current task or close all active editors, and run the New -&gt; 
+	Mylar -&gt; Preference Configuration wizard (it should pop up automatically)</li>
+	<li>3.2M5: If auto folding doesn't work reset the folding provider (see 
+	<a href="#active-folding">Active Folding</a>).</li>
+</ul>
 
 <table cellpadding="10" cellspacing="0" width="600" id="table137">
 		<tr>
@@ -141,7 +157,7 @@ release.</p>
 			<p>
 			<img border="0" src="http://eclipse.org/mylar/doc/images/0.4.9/jira-select-type.gif"></p>
 			<p>
-			<img border="0" src="images/0.4.9/jira-query.gif"></td>
+			<img border="0" src="http://eclipse.org/mylar/doc/images/0.4.9/jira-query.gif"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -158,7 +174,7 @@ release.</p>
 			<td valign="top" width="70%">
 			Task date can now be imported from an existing .mylar directory, or 
 			from a backup zip file created by the Mylar export wizard.<p>
-			<img border="0" src="images/0.4.9/tasklist-import.gif"></td>
+			<img border="0" src="http://eclipse.org/mylar/doc/images/0.4.9/tasklist-import.gif"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -177,7 +193,7 @@ release.</p>
 			The currently active task is indicated with a hyperlink below the 
 			toolbar that can be used to bring the task into focus (Eclipse 3.2 
 			only). <p>
-			<img border="0" src="images/0.4.9/tasklist-indication-active.gif"></td>
+			<img border="0" src="http://eclipse.org/mylar/doc/images/0.4.9/tasklist-indication-active.gif"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -198,7 +214,7 @@ release.</p>
 			can be used to bring the task up.&nbsp; The notification will not 
 			come up again, since the overdue task will be colored red and always 
 			visible in the task list until the reminder is reset.<p>
-			<img border="0" src="images/0.4.9/tasklist-notification.gif"></td>
+			<img border="0" src="http://eclipse.org/mylar/doc/images/0.4.9/tasklist-notification.gif"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -231,7 +247,7 @@ release.</p>
 <table cellpadding="10" cellspacing="0" width="600" id="table127">
 		<tr>
 			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Active Folding Improvements (Eclipse 3.2 only)</b></p>
+			<p align="right"><b><a name="active-folding">Active Folding Improvements (Eclipse 3.2 only)</a></b></p>
 			</td>
 			<td valign="top" width="70%">
 			Active folding has been improved, no longer requires the Mylar Java 
