@@ -20,14 +20,15 @@
 	</tr>
 	<tr>
 		<td bgcolor="#FAF7FB"><font size="1">0.4.9<br>
-		<i>Feb. 22, 2005</i></font></td>
+		<i>Feb. 23, 2005</i></font></td>
 		<td bgcolor="#FAF7FB" align="center">
 		<a href="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&product=Mylar&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&bug_status=RESOLVED&bug_status=VERIFIED&bug_status=CLOSED&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=2006-01-31&chfieldto=2006-02-23&chfield=resolution&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=">
 		<font size="1">50 reports</font></a></td>
 		<td bgcolor="#FAF7FB"><font size="1">[Tom Eicher and Daniel Megert for 
 		extensibility improvements in editor folding support, Karice McIntyre 
 		(Platform UI) for FilteredTree API],&nbsp;&nbsp; Wang Binfor a patch 
-		fixing to the active test suite [and other patches]</font></td>
+		fixing to the active test suite [and other patches], Eugene for 
+		debugging the JIRA support, Robert Elves...</font></td>
 	</tr>
 	<tr>
 		<td bgcolor="#FAF7FB"><font size="1">0.4.8 
@@ -135,8 +136,8 @@ release.</p>
 			right-click in the task list to Add a New Repository Query, and 
 			select from one of your existing JIRA filters.&nbsp; Note that on 
 			very large repositories (e.g. Codehaus the very first query that's 
-			run on a newly added repository will be slow).<p>Note that the task list now provides icon overlays indicating 
-			type/severity, and text overlays indicating the repository. </p>
+			run on a newly added repository will be slow).<p>Also note that the task list now provides icon overlays indicating 
+			repository task type/severity, and text overlays for queries indicating the repository. </p>
 			<p>
 			<img border="0" src="images/0.4.9/jira-select-type.gif"></p>
 			<p>
@@ -175,7 +176,7 @@ release.</p>
 			<td valign="top" width="70%">
 			The currently active task is indicated with a hyperlink below the 
 			toolbar that can be used to bring the task into focus (Eclipse 3.2 
-			only).<p>
+			only). <p>
 			<img border="0" src="images/0.4.9/tasklist-indication-active.gif"></td>
 		</tr>
 		<tr>
@@ -206,13 +207,15 @@ release.</p>
 		</tr>
 </table>
 
-<table cellpadding="10" cellspacing="0" width="600" id="table143">
+<table cellpadding="10" cellspacing="0" width="601" id="table143">
 		<tr>
 			<td align="left" valign="top" width="30%">
-			<p align="right"><b>No more custom Mylar Java Editor (3.2 only)</b></p>
+			<p align="right"><b>No more custom Java Editor (3.2 only)</b></p>
 			</td>
 			<td valign="top" width="70%">
-			The </td>
+			The custom Mylar Java editor is gone, and the automatic folding and 
+			content assist integration will now work with any Java editor, e.g. 
+			AJDT's, thanks to new Eclipse APIs.</td>
 		</tr>
 		<tr>
 			<td colspan="2">
