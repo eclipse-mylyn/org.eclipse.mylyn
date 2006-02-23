@@ -39,7 +39,9 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 	private MylarPreferenceWizardPage preferencePage;
 
 	public static final String MYLAR_FIRST_RUN = "org.eclipse.mylar.ui.first.run.0_4_9";
-
+	
+	private static final String DEFAULT_FOLDING_PROVIDER = "org.eclipse.jdt.ui.text.defaultFoldingProvider";
+    
 	private IPreferenceStore javaPrefs = JavaPlugin.getDefault().getPreferenceStore();
 
 	public void init(String htmlDocs) {
@@ -75,7 +77,8 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 
 		if (preferencePage.isAutoFolding()) {
 			MylarPlugin.getDefault().getPreferenceStore().setValue(MylarJavaPrefConstants.AUTO_FOLDING_ENABLED, true);
-			javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, true);
+			javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, true);  
+			javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_PROVIDER, DEFAULT_FOLDING_PROVIDER); 
 		} else {
 			MylarPlugin.getDefault().getPreferenceStore().setValue(MylarJavaPrefConstants.AUTO_FOLDING_ENABLED, false);
 		}

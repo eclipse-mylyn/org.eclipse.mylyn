@@ -67,15 +67,14 @@ public class NavigatorRefreshListener implements IMylarContextListener {
 //	}
 
 	public void contextActivated(IMylarContext taskscape) {
-//		refresh(null);
-
 		try {
 			if (MylarPlugin.getContextManager().isContextActive() && ApplyMylarToNavigatorAction.getDefault() != null
 					&& ApplyMylarToNavigatorAction.getDefault().isChecked()) {
-				TreeViewer viewer = getResourceNavigator().getTreeViewer();
-				if (viewer != null) {
+				ResourceNavigator navigator = getResourceNavigator();
+				if (navigator != null && navigator.getTreeViewer() != null) {
+					TreeViewer viewer = navigator.getTreeViewer();
 					viewer.expandAll();
-				}
+				} 
 			}
 		} catch (Throwable t) {
 			MylarStatusHandler.log(t, "Could not update package explorer");
