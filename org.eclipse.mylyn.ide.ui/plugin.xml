@@ -92,6 +92,7 @@
            <enablement>
               <or> 
                  <objectClass name="org.eclipse.mylar.provisional.tasklist.ITask"/>
+                 <objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractQueryHit"/>
               </or>
            </enablement>
         </action>
