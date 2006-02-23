@@ -115,6 +115,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 			if (!sourceZipFile.exists()) {
 				MessageDialog
 						.openError(getShell(), "File not found", sourceZipFile.toString() + " could not be found.");
+				return false;
 			}
 
 			Enumeration entries;
@@ -170,10 +171,8 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 			// Get file paths to check for existence
 			String sourceDir = importPage.getSourceDirectory();
 			sourceDirFile = new File(sourceDir);
-			if (!sourceDirFile.exists() || !sourceDirFile.isDirectory()) {
-				// This should never happen
-				MylarStatusHandler.fail(new Exception("File Import Exception"),
-						"Could not import data because specified location does not exist or is not a folder", true);
+			if (!sourceDirFile.exists() || !sourceDirFile.isDirectory()) {		
+				MessageDialog.openError(getShell(), "Location not found", sourceZipFile.toString() + " could not be found or is not a folder.");		
 				return false;
 			}
 
