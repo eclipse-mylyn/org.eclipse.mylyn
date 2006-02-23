@@ -66,7 +66,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	private static TaskRepositoryManager taskRepositoryManager;
 
-	private TaskListSaveManager taskListSaveManager = new TaskListSaveManager();
+	private TaskListSaveManager taskListSaveManager;
 	
 	private TaskListRefreshManager taskListRefreshManager;
 	
@@ -284,8 +284,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					taskRepositoryManager.readRepositories();
 
 					taskListManager.addListener(CONTEXT_TASK_ACTIVITY_LISTENER);
-					taskListManager.addListener(taskListSaveManager);
-
 					taskListManager.readExistingOrCreateNewList();
 					initialized = true;
 					migrateHandlesToRepositorySupport();
@@ -304,6 +302,9 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					
 					taskListRefreshManager = new TaskListRefreshManager();
 					taskListRefreshManager.startRefreshJob();	
+					
+					taskListSaveManager = new TaskListSaveManager();
+					taskListManager.addListener(taskListSaveManager); 
 					
 					MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);					
 					getPrefs().addPropertyChangeListener(taskListRefreshManager);
@@ -582,7 +583,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	public boolean isInitialized() {
 		return initialized;
 	}
-}
+} 
 
 // /**
 // * Sets the directory containing the task list file to use.

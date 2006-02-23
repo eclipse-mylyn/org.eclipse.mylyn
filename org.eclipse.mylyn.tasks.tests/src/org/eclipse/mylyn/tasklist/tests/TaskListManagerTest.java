@@ -75,25 +75,25 @@ public class TaskListManagerTest extends TestCase {
 		File legacyListFile = new File("temptasklist.xml");
 		legacyListFile.deleteOnExit();
 		TaskTestUtil.copy(TaskTestUtil.getLocalFile("testdata/legacy/tasklist_0_4_8.xml"), legacyListFile);
-		
+
 		assertEquals(362445, legacyListFile.length());
 		assertTrue(legacyListFile.exists());
-		 
+
 		manager.setTaskListFile(legacyListFile);
 		manager.readExistingOrCreateNewList();
 		manager.setTaskListFile(originalFile);
-		
+
 		Set<ITask> allTasks = manager.getTaskList().getAllTasks();
 		Set<ITask> allRootTasks = manager.getTaskList().getRootTasks();
 		Set<ITaskContainer> allCategories = manager.getTaskList().getCategories();
-		Set<ITaskListElement> allRoots = manager.getTaskList().getRootElements(); 
+		Set<ITaskListElement> allRoots = manager.getTaskList().getRootElements();
 		assertEquals(0, allRootTasks.size());
-		
+
 		manager.saveTaskList();
 		TaskList list = new TaskList();
 		manager.setTaskList(list);
 		manager.readExistingOrCreateNewList();
-		
+
 		assertEquals(allRootTasks.size(), manager.getTaskList().getRootTasks().size());
 		assertEquals(allCategories, manager.getTaskList().getCategories());
 		assertEquals(allRoots.size(), manager.getTaskList().getRootElements().size());
@@ -104,15 +104,15 @@ public class TaskListManagerTest extends TestCase {
 		list = new TaskList();
 		manager.setTaskList(list);
 		manager.readExistingOrCreateNewList();
-		
+
 		assertEquals(allRootTasks.size(), manager.getTaskList().getRootTasks().size());
 		assertEquals(allCategories, manager.getTaskList().getCategories());
 		assertEquals(allRoots.size(), manager.getTaskList().getRootElements().size());
 		assertEquals(allTasks.size(), manager.getTaskList().getAllTasks().size());
-		
+
 		manager.deactivateTask(manager.getTaskList().getActiveTask());
 	}
-	
+
 	public void testRepositoryUrlHandles() {
 
 		String repository = IBugzillaConstants.ECLIPSE_BUGZILLA_URL;
@@ -138,7 +138,7 @@ public class TaskListManagerTest extends TestCase {
 		Task task1 = new Task("t1", "t1", true);
 		manager.moveToRoot(task1);
 		assertEquals(1, manager.getTaskList().getRootTasks().size());
-		assertEquals(TaskList.LABEL_ROOT, task1.getCategory().getHandleIdentifier()); 
+		assertEquals(TaskList.LABEL_ROOT, task1.getCategory().getHandleIdentifier());
 
 		TaskCategory cat1 = new TaskCategory("c1");
 		manager.addCategory(cat1);
@@ -175,9 +175,9 @@ public class TaskListManagerTest extends TestCase {
 		TaskList list = new TaskList();
 		assertTrue(list.isEmpty());
 		list.internalAddRootTask(new Task("", "", true));
-		assertFalse(list.isEmpty()); 
+		assertFalse(list.isEmpty());
 	}
-	
+
 	public void testCategories() {
 		BugzillaTask task = new BugzillaTask("b1", "b 1", true);
 		TaskCategory category = new TaskCategory("cat");
@@ -188,8 +188,8 @@ public class TaskListManagerTest extends TestCase {
 		TaskList list = new TaskList();
 		manager.setTaskList(list);
 		manager.readExistingOrCreateNewList();
-		assertEquals(2, manager.getTaskList().getCategories().size());	
-		assertEquals(1, manager.getTaskList().getAllTasks().size());		
+		assertEquals(2, manager.getTaskList().getCategories().size());
+		assertEquals(1, manager.getTaskList().getAllTasks().size());
 	}
 
 	public void testDelete() {
@@ -199,7 +199,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.deleteTask(task);
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
 	}
-	
+
 	public void testBugzillaCustomQueryExternalization() {
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1");
 		query.setCustomQuery(true);
@@ -211,10 +211,10 @@ public class TaskListManagerTest extends TestCase {
 		manager.setTaskList(list);
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getQueries().size());
-		BugzillaRepositoryQuery readQuery = (BugzillaRepositoryQuery)manager.getTaskList().getQueries().get(0);
+		BugzillaRepositoryQuery readQuery = (BugzillaRepositoryQuery) manager.getTaskList().getQueries().get(0);
 		assertTrue(readQuery.isCustomQuery());
 	}
-	
+
 	public void testQueryExternalization() {
 		AbstractRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1");
 		assertEquals("repositoryUrl", query.getRepositoryUrl());
@@ -236,17 +236,17 @@ public class TaskListManagerTest extends TestCase {
 		BugzillaTask repositoryTask = new BugzillaTask("handle", "label", true);
 		repositoryTask.setKind("kind");
 		manager.getTaskList().addTaskToArchive(repositoryTask);
-//		repositoryTask.setCategory(manager.getTaskList().getArchiveCategory());
+		// repositoryTask.setCategory(manager.getTaskList().getArchiveCategory());
 		assertEquals(1, manager.getTaskList().getArchiveTasks().size());
 		assertEquals(0, manager.getTaskList().getRootTasks().size());
 		manager.saveTaskList();
-  
+
 		manager.setTaskList(new TaskList());
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getArchiveTasks().size());
 		assertEquals(0, manager.getTaskList().getRootTasks().size());
 	}
-	
+
 	public void testRepositoryTaskExternalization() {
 		BugzillaTask repositoryTask = new BugzillaTask("handle", "label", true);
 		repositoryTask.setKind("kind");
@@ -257,8 +257,9 @@ public class TaskListManagerTest extends TestCase {
 		manager.setTaskList(list);
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getRootTasks().size());
-		AbstractRepositoryTask readTask = (AbstractRepositoryTask)manager.getTaskList().getRootTasks().iterator().next();
-		
+		AbstractRepositoryTask readTask = (AbstractRepositoryTask) manager.getTaskList().getRootTasks().iterator()
+				.next();
+
 		assertEquals(repositoryTask.getHandleIdentifier(), readTask.getHandleIdentifier());
 		assertEquals(repositoryTask.getDescription(), readTask.getDescription());
 		assertEquals(repositoryTask.getKind(), readTask.getKind());
@@ -283,23 +284,23 @@ public class TaskListManagerTest extends TestCase {
 		Iterator<TaskCategory> iterator = readCats.iterator();
 		TaskCategory readCat1 = iterator.next();
 		assertEquals(cat1, readCat1);
-		assertEquals(1, readCat1.getChildren().size()); 
-		
+		assertEquals(1, readCat1.getChildren().size());
+
 		manager.saveTaskList();
-		assertNotNull(manager.getTaskList()); 
+		assertNotNull(manager.getTaskList());
 		manager.setTaskList(new TaskList());
 		manager.readExistingOrCreateNewList();
 
 		// read again
 		readCats = manager.getTaskList().getTaskCategories();
 		assertTrue(manager.getTaskList().getCategories().contains(cat1));
-		
+
 		iterator = readCats.iterator();
 		readCat1 = iterator.next();
 		assertEquals(cat1, readCat1);
 		assertEquals(1, readCat1.getChildren().size());
 	}
-	
+
 	public void testCreationAndExternalization() {
 		Set<ITask> rootTasks = new HashSet<ITask>();
 		Task task1 = new Task(manager.genUniqueTaskHandle(), "task 1", true);
@@ -337,7 +338,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.moveToRoot(reportInRoot);
 		rootTasks.add(reportInRoot);
 
-		assertEquals(""+ manager.getTaskList().getRootElements(), 5, manager.getTaskList().getRootElements().size());
+		assertEquals("" + manager.getTaskList().getRootElements(), 5, manager.getTaskList().getRootElements().size());
 
 		manager.saveTaskList();
 		assertNotNull(manager.getTaskList());
@@ -346,13 +347,13 @@ public class TaskListManagerTest extends TestCase {
 		manager.readExistingOrCreateNewList();
 
 		assertNotNull(manager.getTaskList());
-		assertEquals(rootTasks, manager.getTaskList().getRootTasks()); 
-		
+		assertEquals(rootTasks, manager.getTaskList().getRootTasks());
+
 		Set<ITask> readList = manager.getTaskList().getRootTasks();
 		for (ITask task : readList) {
 			if (task.equals(task1)) {
 				assertEquals(task1.getDescription(), task.getDescription());
-				assertEquals(1, task.getChildren().size());		
+				assertEquals(1, task.getChildren().size());
 			}
 			if (task.equals(reportInRoot)) {
 				assertEquals(reportInRoot.getDescription(), task.getDescription());
@@ -372,16 +373,15 @@ public class TaskListManagerTest extends TestCase {
 		ScheduledTaskListRefreshJob job = new ScheduledTaskListRefreshJob(500, manager);
 		job.run(new NullProgressMonitor());
 		Thread.sleep(1500);
-	    assertEquals(counter, job.getCount());		
+		assertEquals(counter, job.getCount());
 	}
 
 	public void testgetQueriesAndHitsForHandle() {
 
-		
 		BugzillaQueryHit hit1 = new BugzillaQueryHit("description1", "P1", "repositoryURL", 1, null, "status");
 		BugzillaQueryHit hit2 = new BugzillaQueryHit("description2", "P1", "repositoryURL", 2, null, "status");
 		BugzillaQueryHit hit3 = new BugzillaQueryHit("description3", "P1", "repositoryURL", 3, null, "status");
-		
+
 		BugzillaQueryHit hit1twin = new BugzillaQueryHit("description1", "P1", "repositoryURL", 1, null, "status");
 		BugzillaQueryHit hit2twin = new BugzillaQueryHit("description2", "P1", "repositoryURL", 2, null, "status");
 		BugzillaQueryHit hit3twin = new BugzillaQueryHit("description3", "P1", "repositoryURL", 3, null, "status");
@@ -406,32 +406,30 @@ public class TaskListManagerTest extends TestCase {
 		query1.addHit(hit2);
 		query1.addHit(hit3);
 		assertEquals(query1.getHits().size(), 3);
-		
 
 		query2.addHit(hit1twin);
 		query2.addHit(hit2twin);
 		query2.addHit(hit3twin);
 		assertEquals(query2.getHits().size(), 3);
-		
+
 		manager.addQuery(query1);
 		manager.addQuery(query2);
 
 		TaskList taskList = manager.getTaskList();
-		Set<AbstractRepositoryQuery> queriesReturned = taskList.getQueriesForHandle(AbstractRepositoryTask
-				.getHandle("repositoryURL", 1));
+		Set<AbstractRepositoryQuery> queriesReturned = taskList.getQueriesForHandle(AbstractRepositoryTask.getHandle(
+				"repositoryURL", 1));
 		assertNotNull(queriesReturned);
 		assertEquals(queriesReturned.size(), 2);
 		assertTrue(queriesReturned.contains(query1));
-		assertTrue(queriesReturned.contains(query2));	
-		
-		Set<AbstractQueryHit> hitsReturned = taskList.getQueryHitsForHandle(AbstractRepositoryTask
-				.getHandle("repositoryURL", 2));
+		assertTrue(queriesReturned.contains(query2));
+
+		Set<AbstractQueryHit> hitsReturned = taskList.getQueryHitsForHandle(AbstractRepositoryTask.getHandle(
+				"repositoryURL", 2));
 		assertNotNull(hitsReturned);
 		assertEquals(hitsReturned.size(), 2);
 		assertTrue(hitsReturned.contains(hit2));
 		assertTrue(hitsReturned.contains(hit2twin));
-		
 
 	}
-	
+
 }

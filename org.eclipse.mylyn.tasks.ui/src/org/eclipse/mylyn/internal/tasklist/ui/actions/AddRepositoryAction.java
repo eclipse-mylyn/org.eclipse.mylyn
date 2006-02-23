@@ -47,6 +47,7 @@ public class AddRepositoryAction extends Action {
 			if (wizard != null && shell != null && !shell.isDisposed()) {
 				WizardDialog dialog = new WizardDialog(shell, wizard);
 				dialog.create();
+				dialog.getShell().setText("Add New Task Repository");
 				// dialog.getShell().setText("Mylar Tasks");
 				dialog.setBlockOnOpen(true);
 				if (dialog.open() == Dialog.CANCEL) {

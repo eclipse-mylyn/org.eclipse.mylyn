@@ -100,13 +100,18 @@ public class TaskListWriter {
 
 		for (AbstractRepositoryQuery query : taskList.getQueries()) {
 			Element element = null;
-			for (ITaskListExternalizer externalizer : externalizers) {
-				if (externalizer.canCreateElementFor(query))
-					element = externalizer.createQueryElement(query, doc, root);
-			}
-			if (element == null && delagatingExternalizer.canCreateElementFor(query)) {
-				delagatingExternalizer.createQueryElement(query, doc, root);
-			} else if (element == null) {
+			try {
+				for (ITaskListExternalizer externalizer : externalizers) {
+					if (externalizer.canCreateElementFor(query))
+						element = externalizer.createQueryElement(query, doc, root);
+				}
+				if (element == null && delagatingExternalizer.canCreateElementFor(query)) {
+					delagatingExternalizer.createQueryElement(query, doc, root);
+				} 
+			} catch (Throwable t) {
+				MylarStatusHandler.fail(t, "Did not externalize: " + query.getDescription(), true);
+			} 
+			if (element == null) {
 				MylarStatusHandler.log("Did not externalize: " + query, this);
 			}
 		}
@@ -115,13 +120,6 @@ public class TaskListWriter {
 			createTaskElement(doc, root, task);  
 		}  
 
-//		for (ITask task : taskList.getArchiveTasks()) {
-//			createTaskElement(doc, root, task);  
-//		}  
-		
-//		for (ITask task : taskList.getRootTasks()) {
-//			createTaskElement(doc, root, task);
-//		}
 		doc.appendChild(root);
 		writeDOMtoFile(doc, outFile);
 		return;
@@ -307,16 +305,13 @@ public class TaskListWriter {
 
 		// A factory API that enables applications to obtain a parser
 		// that produces DOM object trees from XML documents
-		//
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
 		// Using DocumentBuilder, obtain a Document from XML file.
-		//
 		DocumentBuilder builder = null;
 		Document document = null;
 		try {
 			// create new instance of DocumentBuilder
-			//
 			builder = factory.newDocumentBuilder();
 		} catch (ParserConfigurationException pce) {
 			inputFile.renameTo(new File(inputFile.getName() + FILE_SUFFIX_SAVE));
