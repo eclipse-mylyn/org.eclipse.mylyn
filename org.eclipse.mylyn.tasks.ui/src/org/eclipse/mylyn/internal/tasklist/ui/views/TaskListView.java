@@ -113,6 +113,14 @@ import org.eclipse.ui.part.ViewPart;
  */
 public class TaskListView extends ViewPart {
 
+	private static final String MEMENTO_KEY_SORT_DIRECTION = "sortDirection";
+
+	private static final String MEMENTO_KEY_SORTER = "sorter";
+
+	private static final String MEMENTO_KEY_SORT_INDEX = "sortIndex";
+
+	private static final String MEMENTO_KEY_WIDTH = "width";
+
 	private static final String SEPARATOR_LOCAL = "local";
 
 	private static final String SEPARATOR_CONTEXT = "context";
@@ -626,6 +634,8 @@ public class TaskListView extends ViewPart {
 		public int compare(Viewer compareViewer, Object o1, Object o2) {
 			if (o1 instanceof ITaskContainer && o2 instanceof ITaskContainer && ((ITaskContainer)o2).isArchive()) {
 				return -1;
+			} else if (o2 instanceof ITaskContainer && o1 instanceof ITaskContainer && ((ITaskContainer)o2).isArchive()) {
+				return 1;
 			} 
 			
 			if (o1 instanceof ITaskContainer && o2 instanceof ITask) {
@@ -683,19 +693,20 @@ public class TaskListView extends ViewPart {
 
 		for (int i = 0; i < columnWidths.length; i++) {
 			IMemento m = colMemento.createChild("col" + i);
-			m.putInteger("width", columnWidths[i]);
+			m.putInteger(MEMENTO_KEY_WIDTH, columnWidths[i]);
 		}
 
 		IMemento sorter = memento.createChild(tableSortIdentifier);
-		IMemento m = sorter.createChild("sorter");
-		m.putInteger("sortIndex", sortIndex);
-		m.putInteger("sortDirection", sortDirection);
-		MylarTaskListPlugin.getDefault().getTaskListSaveManager().createTaskListBackupFile();
+		IMemento m = sorter.createChild(MEMENTO_KEY_SORTER);
+		m.putInteger(MEMENTO_KEY_SORT_INDEX, sortIndex);
+		m.putInteger(MEMENTO_KEY_SORT_DIRECTION, sortDirection);
 
-		if (MylarTaskListPlugin.getDefault() != null) {
+		// TODO: move to task list save policy
+		if (MylarTaskListPlugin.getDefault() != null && MylarTaskListPlugin.getDefault().getTaskListSaveManager() != null) {
+			MylarTaskListPlugin.getDefault().getTaskListSaveManager().createTaskListBackupFile();
 			MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskListAndContexts();
 		}
-	}
+	} 
 
 	private void restoreState() {
 		if (taskListMemento != null) {
@@ -704,7 +715,7 @@ public class TaskListView extends ViewPart {
 				for (int i = 0; i < columnWidths.length; i++) {
 					IMemento m = taskListWidth.getChild("col" + i);
 					if (m != null) {
-						int width = m.getInteger("width");
+						int width = m.getInteger(MEMENTO_KEY_WIDTH);
 						columnWidths[i] = width;
 						columns[i].setWidth(width);
 					}
@@ -712,10 +723,10 @@ public class TaskListView extends ViewPart {
 			}
 			IMemento sorterMemento = taskListMemento.getChild(tableSortIdentifier);
 			if (sorterMemento != null) {
-				IMemento m = sorterMemento.getChild("sorter");
+				IMemento m = sorterMemento.getChild(MEMENTO_KEY_SORTER);
 				if (m != null) {
-					sortIndex = m.getInteger("sortIndex");
-					Integer sortDirInt = m.getInteger("sortDirection");
+					sortIndex = m.getInteger(MEMENTO_KEY_SORT_INDEX);
+					Integer sortDirInt = m.getInteger(MEMENTO_KEY_SORT_DIRECTION);
 					if (sortDirInt != null) {
 						sortDirection = sortDirInt.intValue();
 					}
