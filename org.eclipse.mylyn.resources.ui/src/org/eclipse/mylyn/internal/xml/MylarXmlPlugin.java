@@ -127,6 +127,6 @@ public class MylarXmlPlugin extends AbstractUIPlugin {
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.internal.xml", path);
-	}
+		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.xml", path);
+	} 
 }

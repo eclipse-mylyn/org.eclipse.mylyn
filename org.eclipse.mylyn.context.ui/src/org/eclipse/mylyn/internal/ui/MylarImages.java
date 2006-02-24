@@ -102,11 +102,6 @@ public class MylarImages {
 
 	public static final ImageDescriptor EDGE_ACCESS_WRITE = create(T_ELCL, "edge-write.gif");
 
-	// public static ImageDescriptor EDGE_REF_XML = create(T_ELCL,
-	// "edge-ref-xml.gif");
-	// public static ImageDescriptor EDGE_REF_JUNIT = create(T_ELCL,
-	// "edge-ref-junit.gif");
-
 	public static final ImageDescriptor WEB_DOCUMENT = create(T_ELCL, "web-document.gif");
 
 	public static final ImageDescriptor IMPORT_ZIP = create(T_ELCL, "import-zip.gif");
@@ -155,8 +150,11 @@ public class MylarImages {
 	 * Lazily initializes image map.
 	 */
 	public static Image getImage(ImageDescriptor imageDescriptor) {
+		if (imageDescriptor == null) {
+			return null;
+		} 
+		
 		ImageRegistry imageRegistry = getImageRegistry();
-
 		Image image = imageRegistry.get("" + imageDescriptor.hashCode());
 		if (image == null) {
 			image = imageDescriptor.createImage();
