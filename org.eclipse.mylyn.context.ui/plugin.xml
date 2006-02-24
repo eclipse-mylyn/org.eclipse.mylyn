@@ -75,8 +75,10 @@
    </extension> 
   
   <extension point="org.eclipse.ui.editors.annotationTypes">
-  	<type name="org.eclipse.mylar.ui.landmark.annotation"
-  		markerType="org.eclipse.mylar.ui.landmark"/> 
+  	<type
+         markerSeverity="0"
+         markerType="org.eclipse.mylar.ui.landmark"
+         name="org.eclipse.mylar.ui.landmark.annotation"/> 
   </extension> 
    
   <extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
@@ -94,7 +96,7 @@
   		verticalRulerPreferenceValue="true" 
   		colorPreferenceKey="landmarkIndicationColor" 
   		colorPreferenceValue="255,255,255" 
-  		presentationLayer="4" 
+  		presentationLayer="0" 
   		showInNextPrevDropdownToolbarActionKey="showLandmarkInNextPrevDropdownToolbarAction" 
   		showInNextPrevDropdownToolbarAction="true" /> 
   </extension>
