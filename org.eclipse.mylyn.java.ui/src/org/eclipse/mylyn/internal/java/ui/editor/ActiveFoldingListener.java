@@ -63,13 +63,9 @@ public class ActiveFoldingListener implements IMylarContextListener {
 		}
 	};
 
-	/**
-	 * HACK: using reflection to gain access
-	 */
 	public ActiveFoldingListener(JavaEditor editor) {
 		this.editor = editor;
 		MylarPlugin.getContextManager().addListener(this);
-		JavaPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 		MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 
 		enabled = MylarPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPrefConstants.AUTO_FOLDING_ENABLED);
