@@ -53,13 +53,14 @@ public class DeleteAction extends Action {
 				}
 				if (task == null) {
 					MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							"Mylar Tasks", "No task data to delte.");
+							"Mylar Tasks", "No task data to delete.");
 					return;
 				}
+
 				if (task.isActive()) {
-					MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							"Mylar Tasks", "Task must be deactivated in order to delete.");
-					return;
+					MylarTaskListPlugin.getTaskListManager().deactivateTask(task);
+					TaskListView.getDefault().refreshAndFocus();
+					TaskListUiUtil.closeEditorInActivePage(task);					
 				}
 
 				String message = genDeleteConfirmationMessage(task);
