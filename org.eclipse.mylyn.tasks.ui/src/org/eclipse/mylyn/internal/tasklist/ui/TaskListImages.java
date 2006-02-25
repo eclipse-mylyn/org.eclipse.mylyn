@@ -38,7 +38,7 @@ public class TaskListImages {
 
 	public static final Color GRAY_LIGHT = new Color(Display.getDefault(), 170, 170, 170);
 
-	public static final Color COLOR_TASK_COMPLETED = new Color(Display.getDefault(), 170, 170, 170); // TODO:
+	public static final Color COLOR_TASK_COMPLETED = new Color(Display.getDefault(), 170, 170, 170); 
 
 	public static final Color COLOR_TASK_ACTIVE = new Color(Display.getDefault(), 36, 22, 50);
 
