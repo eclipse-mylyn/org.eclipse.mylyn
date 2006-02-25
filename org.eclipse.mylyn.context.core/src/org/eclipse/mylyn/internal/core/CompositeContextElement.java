@@ -30,7 +30,6 @@ public class CompositeContextElement implements IMylarElement {
 	private String handle = "<no handle>";
 
 	public CompositeContextElement(String handle, Set<MylarContextElement> nodes) {
-		assert (handle != null);
 		this.nodes = nodes;
 		this.handle = handle;
 	}
