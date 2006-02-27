@@ -64,7 +64,7 @@ public class TaskListManagerTest extends TestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
+		super.tearDown();		
 		manager.createNewTaskList();
 		MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskListAndContexts();
 		MylarTaskListPlugin.getRepositoryManager().removeRepository(repository);
@@ -373,7 +373,7 @@ public class TaskListManagerTest extends TestCase {
 		ScheduledTaskListRefreshJob job = new ScheduledTaskListRefreshJob(500, manager);
 		job.run(new NullProgressMonitor());
 		Thread.sleep(1500);
-		assertEquals(counter, job.getCount());
+		assertTrue(job.getCount() >= counter);
 	}
 
 	public void testgetQueriesAndHitsForHandle() {
@@ -386,21 +386,10 @@ public class TaskListManagerTest extends TestCase {
 		BugzillaQueryHit hit2twin = new BugzillaQueryHit("description2", "P1", "repositoryURL", 2, null, "status");
 		BugzillaQueryHit hit3twin = new BugzillaQueryHit("description3", "P1", "repositoryURL", 3, null, "status");
 
-		AbstractRepositoryQuery query1 = new AbstractRepositoryQuery() {
-			@Override
-			public String getRepositoryKind() {
-				// ignore
-				return "newkind";
-			}
-		};
+		BugzillaRepositoryQuery query1 = new BugzillaRepositoryQuery("url","url", "queryl", "10");
 
-		AbstractRepositoryQuery query2 = new AbstractRepositoryQuery() {
-			@Override
-			public String getRepositoryKind() {
-				// ignore
-				return "newkind";
-			}
-		};
+		BugzillaRepositoryQuery query2 = new BugzillaRepositoryQuery("url2", "url2", "query2", "10");
+		
 
 		query1.addHit(hit1);
 		query1.addHit(hit2);
