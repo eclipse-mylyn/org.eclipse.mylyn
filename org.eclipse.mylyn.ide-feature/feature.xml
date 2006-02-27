@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.mylar.ide_feature"
-      label="Mylar Focused UI"
+      label="Mylar Focused UI (Recommended)"
       version="0.4.9"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylar">
