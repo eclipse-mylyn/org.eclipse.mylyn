@@ -23,7 +23,6 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IParent;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProvider;
@@ -85,8 +84,6 @@ public class ActiveFoldingListener implements IMylarContextListener {
 
 	public void dispose() {
 		MylarPlugin.getContextManager().removeListener(this);
-
-		JavaPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
 		MylarPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
 	}
 
