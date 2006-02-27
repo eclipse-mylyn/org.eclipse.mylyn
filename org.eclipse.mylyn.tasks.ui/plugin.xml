@@ -97,6 +97,13 @@
             icon="icons/eview16/repositories.gif"
             name="Task Repositories">
       </view>
+      <view
+            allowMultiple="false"
+            category="org.eclipse.mylar"
+            class="org.eclipse.mylar.internal.tasklist.history.ui.TaskHistoryView"
+            icon="icons/eview16/task-list.gif"
+            id="org.eclipse.mylar.tasks.ui.views.TaskHistoryView"
+            name="Task History"/>
   	</extension>
 	
     <extension point="org.eclipse.ui.perspectiveExtensions">
