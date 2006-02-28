@@ -231,9 +231,11 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 		IMylarElement parent = MylarPlugin.getContextManager().getElement(
 				structureBridge.getParentHandle(node.getHandleIdentifier()));
 		ArrayList<IMylarElement> toRefresh = new ArrayList<IMylarElement>();
-
-		toRefresh.add(parent);
-		refreshViewers(toRefresh, false);
+  
+		if (parent != null) {
+			toRefresh.add(parent);
+			refreshViewers(toRefresh, false);
+		}
 	}
 
 	public void landmarkAdded(IMylarElement node) {
