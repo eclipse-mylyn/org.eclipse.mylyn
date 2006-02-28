@@ -408,14 +408,14 @@ public class TaskListManagerTest extends TestCase {
 		Set<AbstractRepositoryQuery> queriesReturned = taskList.getQueriesForHandle(AbstractRepositoryTask.getHandle(
 				"repositoryURL", 1));
 		assertNotNull(queriesReturned);
-		assertEquals(queriesReturned.size(), 2);
+		assertEquals(2, queriesReturned.size()); 
 		assertTrue(queriesReturned.contains(query1));
 		assertTrue(queriesReturned.contains(query2));
 
 		Set<AbstractQueryHit> hitsReturned = taskList.getQueryHitsForHandle(AbstractRepositoryTask.getHandle(
 				"repositoryURL", 2));
 		assertNotNull(hitsReturned);
-		assertEquals(hitsReturned.size(), 2);
+		assertEquals(2, hitsReturned.size());
 		assertTrue(hitsReturned.contains(hit2));
 		assertTrue(hitsReturned.contains(hit2twin));
 
