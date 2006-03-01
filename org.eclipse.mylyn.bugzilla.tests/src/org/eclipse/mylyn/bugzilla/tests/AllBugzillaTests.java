@@ -22,7 +22,7 @@ public class AllBugzillaTests {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.bugzilla.tests");
 		// $JUnit-BEGIN$
 		suite.addTestSuite(Bugzilla220ParserTest.class);
-		suite.addTestSuite(BugzillaRepositoryClientTest.class);
+		suite.addTestSuite(BugzillaRepositoryConnectorTest.class);
 		suite.addTestSuite(EncodingTest.class);
 		suite.addTestSuite(NewBugWizardTest.class);
 		suite.addTestSuite(RegularExpressionMatchTest.class);
