@@ -153,7 +153,7 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 					// BugzillaPlugin.getDefault().getProductConfiguration(repositoryUrl).getProducts();
 					products = Arrays.asList(storedProducts);
 				} else {
-					products = BugzillaRepositoryUtil.getProductList(repositoryUrl);
+					products = BugzillaRepositoryUtil.getProductList(repository);
 				}
 				// bugWizard.model.setConnected(true);
 				bugWizard.model.setParsedProductsStatus(true);

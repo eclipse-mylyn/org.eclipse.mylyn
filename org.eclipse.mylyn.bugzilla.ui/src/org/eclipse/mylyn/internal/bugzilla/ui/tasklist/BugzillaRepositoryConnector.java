@@ -41,6 +41,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
+import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
 import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile;
 import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile.BugzillaOfflineStatus;
 import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchHit;
@@ -90,6 +91,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	private static final String LABEL_SYNCHRONIZE_JOB = "Synchronizing Bugzilla query";
 
 	private boolean forceSyncExecForTesting = false;
+	
+	private List<String> supportedVersions;
 
 	private OfflineReportsFile offlineReportsFile;
 
@@ -122,7 +125,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	public AbstractRepositorySettingsPage getSettingsPage() {
-		return new BugzillaRepositorySettingsPage();
+		return new BugzillaRepositorySettingsPage(this);
 	}
 
 	public String getRepositoryType() {
@@ -693,4 +696,15 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	public IWizard getNewTaskWizard(TaskRepository taskRepository) {
 		return new NewBugzillaReportWizard(taskRepository);
 	} 
+	
+	public List<String> getSupportedVersions() {
+		if (supportedVersions == null) {
+			supportedVersions = new ArrayList<String>();
+			for (BugzillaServerVersion version : BugzillaServerVersion.values()) {
+				supportedVersions.add(version.toString());
+			}
+		}
+		return supportedVersions;
+	}
+	
 }

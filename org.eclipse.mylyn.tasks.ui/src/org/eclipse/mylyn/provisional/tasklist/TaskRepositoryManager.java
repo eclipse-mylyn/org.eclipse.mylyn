@@ -31,6 +31,10 @@ import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
  */
 public class TaskRepositoryManager {
 
+	public static final String PROPERTY_VERSION = "version";
+
+	public static final String PROPERTY_DELIM = ":";
+
 	public static final String PREF_REPOSITORIES = "org.eclipse.mylar.tasklist.repositories.";
 
 	private Map<String, AbstractRepositoryConnector> repositoryClients = new HashMap<String, AbstractRepositoryConnector>();
@@ -171,8 +175,17 @@ public class TaskRepositoryManager {
 					String urlString = st.nextToken();
 					try {
 						URL url = new URL(urlString);
-						repositoryMap.put(repositoryClient.getRepositoryType(), repositories);
-						repositories.add(new TaskRepository(repositoryClient.getRepositoryType(), url));
+						repositoryMap.put(repositoryClient.getRepositoryType(), repositories);						
+						String prefIdVersion = urlString + PROPERTY_DELIM + PROPERTY_VERSION;
+						String version = MylarTaskListPlugin.getPrefs().getString(prefIdVersion);
+						if(version.equals("")) {
+							List<String> versions = repositoryClient.getSupportedVersions();
+							if(versions != null && versions.size() > 0) {
+								version = versions.get(0);
+							}
+						}
+						repositories.add(new TaskRepository(repositoryClient.getRepositoryType(), url, version));
+						
 					} catch (MalformedURLException e) {
 						MylarStatusHandler.fail(e, "could not restore URL: " + urlString, false);
 					}
@@ -191,6 +204,9 @@ public class TaskRepositoryManager {
 				String repositoriesToStore = "";
 				for (TaskRepository repository : repositoryMap.get(repositoryClient.getRepositoryType())) {
 					repositoriesToStore += repository.getUrl().toExternalForm() + PREF_STORE_DELIM;
+
+					String prefIdVersion = repository.getUrl().toExternalForm() + PROPERTY_DELIM + PROPERTY_VERSION;
+					MylarTaskListPlugin.getPrefs().setValue(prefIdVersion, repository.getVersion());
 				}
 				String prefId = PREF_REPOSITORIES + repositoryClient.getRepositoryType();
 				MylarTaskListPlugin.getPrefs().setValue(prefId, repositoriesToStore);

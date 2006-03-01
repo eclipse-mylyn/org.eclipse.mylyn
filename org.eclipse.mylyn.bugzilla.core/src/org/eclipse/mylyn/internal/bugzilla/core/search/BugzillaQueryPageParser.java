@@ -46,6 +46,11 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
  * 
  */
 public class BugzillaQueryPageParser {
+	
+	private static final String POST_ARGS_PASSWORD = "&Bugzilla_password=";
+
+	private static final String POST_ARGS_LOGIN_FIRST = "&GoAheadAndLogIn=1&Bugzilla_login=";
+
 	/** The name of the bugzilla server */
 	private String urlString;
 
@@ -90,11 +95,13 @@ public class BugzillaQueryPageParser {
 		// get the servers url
 		urlString = repository.getUrl().toExternalForm() + "/query.cgi";
 
-		// if we are dealing with 2.18 we need to use the folowing in the
+		// if we are dealing with 2.18 or higher we need to use the folowing in the
 		// query string to get the right search page
-		if (BugzillaPlugin.getDefault().isServerCompatability218()) {
+		// UPDATE: There doesn't appear to be any harm in appending this to 2.16, 2.18, 2.20, 2.20.1 and without it we
+		// don't get the advanced view so 2.20 and 2.20.1 break
+		//if (repository.getVersion().equals(BugzillaServerVersion.SERVER_218.toString())) {
 			urlString += "?format=advanced";
-		}
+		//}
 
 		// use the user name and password if we have it
 		if (repository.hasCredentials()) {
@@ -102,14 +109,14 @@ public class BugzillaQueryPageParser {
 				// if we are dealing with 2.18 we already have the ? from before
 				// so we need
 				// an & instead. If other version, still add ?
-				if (BugzillaPlugin.getDefault().isServerCompatability218())
-					urlString += "&";
-				else
-					urlString += "?";
+				// if (repository.getVersion().equals(BugzillaServerVersion.SERVER_218.toString()))
+				//	urlString += "&";
+				// else
+				// urlString += "?";
 
-				urlString += "GoAheadAndLogIn=1&Bugzilla_login="
+				urlString += POST_ARGS_LOGIN_FIRST
 						+ URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8)
-						+ "&Bugzilla_password="
+						+ POST_ARGS_PASSWORD
 						+ URLEncoder.encode(repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
 			} catch (UnsupportedEncodingException e) {
 				/*

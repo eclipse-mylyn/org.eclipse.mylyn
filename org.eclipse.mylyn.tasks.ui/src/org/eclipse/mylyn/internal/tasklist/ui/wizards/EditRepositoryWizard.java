@@ -36,6 +36,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 				repository.getKind());
 		abstractRepositorySettingsPage = connector.getSettingsPage();
 		abstractRepositorySettingsPage.setRepository(repository);
+		abstractRepositorySettingsPage.setVersion(repository.getVersion());
 		abstractRepositorySettingsPage.setWizard(this);
 	}
 
@@ -47,6 +48,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 			if (repository != null) {
 				repository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(),
 						abstractRepositorySettingsPage.getPassword());
+				repository.setVersion(abstractRepositorySettingsPage.getVersion());
 				MylarTaskListPlugin.getRepositoryManager().removeRepository(oldRepository);
 				MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
 				return true;

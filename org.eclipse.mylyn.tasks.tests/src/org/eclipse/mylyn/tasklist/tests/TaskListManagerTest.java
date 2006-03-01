@@ -374,6 +374,7 @@ public class TaskListManagerTest extends TestCase {
 		job.run(new NullProgressMonitor());
 		Thread.sleep(1500);
 		assertTrue(job.getCount() >= counter);
+		job.cancel();
 	}
 
 	public void testgetQueriesAndHitsForHandle() {

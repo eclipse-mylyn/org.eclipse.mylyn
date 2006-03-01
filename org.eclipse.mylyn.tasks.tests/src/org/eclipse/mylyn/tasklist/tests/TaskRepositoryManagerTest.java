@@ -96,6 +96,27 @@ public class TaskRepositoryManagerTest extends TestCase {
 		assertEquals(repositoryList, manager.getAllRepositories());
 	}
 	
+	public void testRepositoryVersionPersistance() throws MalformedURLException {
+		assertEquals("", MylarTaskListPlugin.getPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
+
+		String version = "123";
+		
+		TaskRepository repository1 = new TaskRepository("bugzilla", new URL("http://bugzilla"));
+		repository1.setVersion(version);		
+		manager.addRepository(repository1);
+		
+		String prefIdVersion = repository1.getUrl().toExternalForm() + TaskRepositoryManager.PROPERTY_DELIM + TaskRepositoryManager.PROPERTY_VERSION;
+
+		assertEquals(version, MylarTaskListPlugin.getPrefs().getString(prefIdVersion));		
+		
+		manager.readRepositories();
+		TaskRepository temp = manager.getRepository(repository1.getKind(), repository1.getUrl().toExternalForm());
+		assertNotNull(temp);
+		assertEquals(temp.getVersion(), version);
+		
+	}
+	
+	
 	public void testRepositoryPersistanceAfterDelete() throws MalformedURLException {
 		manager.clearRepositories();
 

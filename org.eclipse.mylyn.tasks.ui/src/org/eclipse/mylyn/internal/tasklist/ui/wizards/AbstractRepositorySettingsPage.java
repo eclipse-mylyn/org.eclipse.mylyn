@@ -41,17 +41,19 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	protected static final String URL_PREFIX_HTTPS = "https://";
 
 	protected static final String URL_PREFIX_HTTP = "http://";
-
+	
 	protected StringFieldEditor serverUrlEditor;
 
 	protected StringFieldEditor userNameEditor;
 
+	private String serverVersion = TaskRepository.NO_VERSION_SPECIFIED;
+	
 	protected RepositoryStringFieldEditor passwordEditor;
 
 	protected TaskRepository repository;
-	
+		
 	private Button validateServerButton;
-
+	
 	public AbstractRepositorySettingsPage(String title, String description) {
 		super(title);
 		super.setTitle(title);
@@ -81,13 +83,15 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		userNameEditor = new StringFieldEditor("", LABEL_USER, StringFieldEditor.UNLIMITED, container);
 		passwordEditor = new RepositoryStringFieldEditor("", LABEL_PASSWORD, StringFieldEditor.UNLIMITED, container);
 		passwordEditor.getTextControl().setEchoChar('*');
-
-		if (repository != null) {
+		
+		if (repository != null) {			
 			serverUrlEditor.setStringValue(repository.getUrl().toExternalForm());
 			userNameEditor.setStringValue(repository.getUserName());
 			passwordEditor.setStringValue(repository.getPassword());
 		}
 
+		createAdditionalControls(container);
+		
 		validateServerButton = new Button(container, SWT.PUSH);
 		validateServerButton.setText("Validate Settings");
 		validateServerButton.addMouseListener(new MouseListener() {
@@ -107,7 +111,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			}
 		});
 		
-		createAdditionalControls(container);
+		
 		setControl(container);
 	}
 
@@ -182,7 +186,19 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	public void setRepository(TaskRepository repository) {
 		this.repository = repository;
 	}
-
+	
+	public void setVersion(String previousVersion) {
+		if(previousVersion == null) {
+			serverVersion = TaskRepository.NO_VERSION_SPECIFIED;
+		} else {
+			serverVersion = previousVersion;
+		}		
+	}
+	
+	public String getVersion() {
+		return serverVersion;
+	}
+	
 	public TaskRepository getRepository() {
 		return repository;
 	}

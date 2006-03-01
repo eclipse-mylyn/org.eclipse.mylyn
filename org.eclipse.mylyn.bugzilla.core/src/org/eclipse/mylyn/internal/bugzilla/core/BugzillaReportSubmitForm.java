@@ -36,6 +36,7 @@ import org.eclipse.mylar.bugzilla.core.Attribute;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.bugzilla.core.Operation;
+import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
 import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlTag;
 import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer.Token;
@@ -190,7 +191,7 @@ public class BugzillaReportSubmitForm {
 
 		// add the summary to the bug post
 		bugzillaReportSubmitForm.add(KEY_SHORT_DESC, bug.getSummary());
-		bug.setDescription(formatTextToLineWrap(bug.getDescription()));
+		bug.setDescription(formatTextToLineWrap(bug.getDescription(), repository));
 		if (bug.getDescription().length() != 0) {
 			bugzillaReportSubmitForm.add(KEY_COMMENT, bug.getDescription());
 		}
@@ -252,11 +253,11 @@ public class BugzillaReportSubmitForm {
 		// add the summary to the bug post
 		form.add("short_desc", model.getSummary());
 
-		if (BugzillaPlugin.getDefault().isServerCompatability220()) {
+		if (repository.getVersion().equals(BugzillaServerVersion.SERVER_220.toString())) {
 			form.add("bug_status", "NEW");
 		}
 
-		String formattedDescription = formatTextToLineWrap(model.getDescription());
+		String formattedDescription = formatTextToLineWrap(model.getDescription(), repository);
 		model.setDescription(formattedDescription);
 
 		if (model.getDescription().length() != 0) {
@@ -312,7 +313,7 @@ public class BugzillaReportSubmitForm {
 			}
 		}
 		bugReportPostHandler.add(KEY_FORM_NAME, VAL_PROCESS_BUG);
-		bug.setNewNewComment(formatTextToLineWrap(bug.getNewNewComment()));
+		bug.setNewNewComment(formatTextToLineWrap(bug.getNewNewComment(), repository));
 		bugReportPostHandler.add(KEY_SHORT_DESC, bug.getAttribute(BugReport.ATTR_SUMMARY).getNewValue());
 
 		// add the new comment to the bug post if there is some text in it
@@ -617,13 +618,10 @@ public class BugzillaReportSubmitForm {
 	/**
 	 * Break text up into lines of about 80 characters so that it is displayed
 	 * properly in bugzilla
-	 * 
-	 * @param origText
-	 *            The string to be formatted
-	 * @return The formatted text
 	 */
-	private static String formatTextToLineWrap(String origText) {
-		if (BugzillaPlugin.getDefault().isServerCompatability220()) {
+	private static String formatTextToLineWrap(String origText, TaskRepository repository) {
+		
+		if (repository.getVersion().equals(BugzillaServerVersion.SERVER_220.toString())) {
 			return origText;
 		}
 

@@ -21,9 +21,6 @@ import org.eclipse.ui.IWorkbench;
  */
 public class AddRepositoryWizard extends AbstractRepositoryClientWizard {
 
-	// private AbstractRepositorySettingsPage abstractRepositorySettingsPage;//
-	// = new AbstractRepositorySettingsPage();
-
 	public AddRepositoryWizard() {
 		super();
 		super.setForcePreviousAndNextButtons(true);
@@ -37,6 +34,7 @@ public class AddRepositoryWizard extends AbstractRepositoryClientWizard {
 			if (repository != null) {
 				repository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(),
 						abstractRepositorySettingsPage.getPassword());
+				repository.setVersion(abstractRepositorySettingsPage.getVersion());
 				MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
 				return true;
 			}

@@ -21,12 +21,13 @@
       <attribute name="query"/>
    </extension>
    
-   <extension point="org.eclipse.ui.preferencePages">
+<!--   <extension point="org.eclipse.ui.preferencePages">
    	  <page
    	  		name="Bugzilla Client"
    	  		class="org.eclipse.mylar.internal.bugzilla.core.BugzillaPreferencePage"
    	  		id="org.eclipse.mylar.bugzilla.bugzillaPreferences"
    	  		category="org.eclipse.mylar.ui.preferences"/>
    </extension>
+   -->
 </plugin>
 

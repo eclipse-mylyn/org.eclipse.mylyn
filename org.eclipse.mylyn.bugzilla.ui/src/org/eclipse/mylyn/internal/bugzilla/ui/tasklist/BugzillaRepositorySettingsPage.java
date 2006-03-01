@@ -19,14 +19,18 @@ import java.net.URLConnection;
 
 import javax.security.auth.login.LoginException;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaQueryPageParser;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 
 /**
  * @author Mik Kersten
@@ -36,13 +40,37 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	private static final String TITLE = "Bugzilla Repository Settings";
 
 	private static final String DESCRIPTION = "Example: https://bugs.eclipse.org/bugs (do not include index.cgi)";
-
-	public BugzillaRepositorySettingsPage() {
+	private BugzillaRepositoryConnector connector;
+	protected Combo repositoryVersionCombo;
+	
+	public BugzillaRepositorySettingsPage(BugzillaRepositoryConnector connector) {
 		super(TITLE, DESCRIPTION);
+		this.connector = connector;
 	}
-
+	
 	protected void createAdditionalControls(Composite parent) {
-		// ignore
+		Label repositoryVersionLabel = new Label(parent, SWT.NONE);
+		repositoryVersionLabel.setText("Repository Version: ");
+		repositoryVersionCombo = new Combo (parent, SWT.READ_ONLY);
+		
+		for (String version : connector.getSupportedVersions()) {
+			repositoryVersionCombo.add(version);			
+		}	
+		if(repository != null) {
+			repositoryVersionCombo.select(repositoryVersionCombo.indexOf(repository.getVersion()));
+		}
+		
+		repositoryVersionCombo.addSelectionListener(new SelectionListener() {
+
+			public void widgetSelected(SelectionEvent e) {
+				setVersion(repositoryVersionCombo.getItem(repositoryVersionCombo.getSelectionIndex()));
+				
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// ignore
+				
+			} });
 	}
 
 	@Override
@@ -62,7 +90,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			serverConnection.connect();
 			TaskRepository tempRepository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, getServerUrl());
 			tempRepository.setAuthenticationCredentials(getUserName(), getPassword());
-			new BugzillaQueryPageParser(tempRepository, new NullProgressMonitor());
+			BugzillaRepositoryUtil.getProductList(tempRepository);
 		} catch (MalformedURLException e) {
 			MessageDialog.openWarning(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, "Server URL is invalid.");
 			return;

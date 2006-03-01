@@ -10,32 +10,22 @@
  *******************************************************************************/
 package org.eclipse.mylar.bugzilla.tests;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
 import java.net.URL;
-import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.security.auth.login.LoginException;
-
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.Path;
-import org.eclipse.mylar.core.tests.support.FileTool;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.core.internal.ProductParser;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
 /**
  * Tests for parsing Product Page for new Bugzilla reports
  * 
  * @author Mik Kersten
+ * @author Rob Elves
  */
 public class BugzillaProductParserTest extends TestCase {
 
@@ -44,90 +34,69 @@ public class BugzillaProductParserTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
-				new URL(IBugzillaConstants.ECLIPSE_BUGZILLA_URL));
-		MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
+		// repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
+		// new URL(IBugzillaConstants.ECLIPSE_BUGZILLA_URL));
+		// MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		MylarTaskListPlugin.getRepositoryManager().removeRepository(repository);
+		// MylarTaskListPlugin.getRepositoryManager().removeRepository(repository);
 	}
 
 	public BugzillaProductParserTest(String arg0) {
 		super(arg0);
 	}
 
-	public void test220Products() throws LoginException, IOException, ParseException {
-		BugzillaPlugin.getDefault().getPluginPreferences().setValue(IBugzillaConstants.SERVER_VERSION,
-				IBugzillaConstants.SERVER_220);
+	public void test2201Products() throws Exception {
 
-		File file = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path(
-				"testdata/pages/test-products-220.html"));
-		Reader in = new FileReader(file);
-		List<String> productList = new ArrayList<String>();
-		productList = new ProductParser(in).getProducts(repository);
+		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(
+				IBugzillaConstants.TEST_BUGZILLA_2201_URL), IBugzillaConstants.BugzillaServerVersion.SERVER_2201
+				.toString());
 
+		List<String> productList = BugzillaRepositoryUtil.getProductList(repository);
 		Iterator<String> itr = productList.iterator();
 		assertTrue(itr.hasNext());
-		assertEquals("AJDT", "AJDT", itr.next());
-		assertEquals("ALF", "ALF", itr.next());
-		assertEquals("AspectJ", "AspectJ", itr.next());
-		assertEquals("BIRT", "BIRT", itr.next());
+		assertEquals("TestProduct", "TestProduct", itr.next());
+
 	}
 
-	public void test218Products() throws LoginException, IOException, ParseException {
-		BugzillaPlugin.getDefault().getPluginPreferences().setValue(IBugzillaConstants.SERVER_VERSION,
-				IBugzillaConstants.SERVER_218);
+	public void test220Products() throws Exception {
 
-		File file = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path(
-				"testdata/pages/test-products-218.html"));
-		Reader in = new FileReader(file);
-		List<String> productList = new ArrayList<String>();
-		productList = new ProductParser(in).getProducts(repository);
+		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(
+				IBugzillaConstants.TEST_BUGZILLA_220_URL), IBugzillaConstants.BugzillaServerVersion.SERVER_220
+				.toString());
 
+		List<String> productList = BugzillaRepositoryUtil.getProductList(repository);
 		Iterator<String> itr = productList.iterator();
 		assertTrue(itr.hasNext());
-		assertEquals("AJDT", "AJDT", itr.next());
-		assertEquals("ALF", "ALF", itr.next());
-		assertEquals("AspectJ", "AspectJ", itr.next());
-		assertEquals("BIRT", "BIRT", itr.next());
+		assertEquals("TestProduct", "TestProduct", itr.next());
+
 	}
 
-	public void testFullReportBugNoBug() throws Exception {
+	public void test218Products() throws Exception {
 
-		BugzillaPlugin.getDefault().getPluginPreferences().setValue(IBugzillaConstants.SERVER_VERSION,
-				IBugzillaConstants.SERVER_218);
+		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(
+				IBugzillaConstants.TEST_BUGZILLA_218_URL), IBugzillaConstants.BugzillaServerVersion.SERVER_218
+				.toString());
 
-		File file = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path(
-				"testdata/pages/product-page.html"));
-		Reader in = new FileReader(file);
-		List<String> productList = new ArrayList<String>();
-		productList = new ProductParser(in).getProducts(repository);
-
+		List<String> productList = BugzillaRepositoryUtil.getProductList(repository);
 		Iterator<String> itr = productList.iterator();
 		assertTrue(itr.hasNext());
-		assertEquals("AJDT", "AJDT", itr.next());
-		assertEquals("ALF", "ALF", itr.next());
-		assertEquals("AspectJ", "AspectJ", itr.next());
-		assertEquals("BIRT", "BIRT", itr.next());
-
-		// assertEquals("CME", "CME", itr.next());
-		// assertEquals("ECESIS", "ECESIS", itr.next());
-		// assertEquals("EMF", "EMF", itr.next());
-		// assertEquals("Equinox", "Equinox", itr.next());
-		// assertEquals("GEF", "GEF", itr.next());
-		// assertEquals("GMT", "GMT", itr.next());
-		// assertEquals("Hyades", "Hyades", itr.next());
-		// assertEquals("JDT", "JDT", itr.next());
-		// assertEquals("PDE", "PDE", itr.next());
-		// assertEquals("Platform", "Platform", itr.next());
-		// assertEquals("Stellation", "Stellation", itr.next());
-		// assertEquals("UML2", "UML2", itr.next());
-		// assertEquals("VE", "VE", itr.next());
-		// assertEquals("WSVT", "WSVT", itr.next());
-		// assertEquals("XSD", "XSD", itr.next());
-		// }
+		assertEquals("TestProduct", "TestProduct", itr.next());
 	}
+
+	public void test216Products() throws Exception {
+
+		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(
+				IBugzillaConstants.TEST_BUGZILLA_216_URL), IBugzillaConstants.BugzillaServerVersion.SERVER_216
+				.toString());
+
+		List<String> productList = BugzillaRepositoryUtil.getProductList(repository);
+		Iterator<String> itr = productList.iterator();
+		assertTrue(itr.hasNext());
+		assertEquals("TestProduct", "TestProduct", itr.next());
+	}
+
 }

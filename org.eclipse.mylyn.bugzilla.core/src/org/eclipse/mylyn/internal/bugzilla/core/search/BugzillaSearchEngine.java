@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.search.ui.NewSearchUI;
 
@@ -242,7 +243,7 @@ public class BugzillaSearchEngine {
 
 				} else if (re.matches(line, match)) {
 					RegularExpression regularExpression;
-					if (BugzillaPlugin.getDefault().isServerCompatability220()) {
+					if (repository.getVersion().equals(BugzillaServerVersion.SERVER_220.toString())) {
 						regularExpression = reValueBugzilla220;
 					} else {
 						regularExpression = reValue;

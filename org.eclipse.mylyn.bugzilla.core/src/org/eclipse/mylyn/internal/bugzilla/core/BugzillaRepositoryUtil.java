@@ -22,6 +22,7 @@ import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,16 +30,17 @@ import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.bugzilla.core.Attribute;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
+import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
 import org.eclipse.mylar.internal.bugzilla.core.internal.BugParser;
 import org.eclipse.mylar.internal.bugzilla.core.internal.NewBugParser;
 import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile;
-import org.eclipse.mylar.internal.bugzilla.core.internal.ProductParser;
 import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaQueryPageParser;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
@@ -56,8 +58,6 @@ public class BugzillaRepositoryUtil {
 	public static final char PREF_DELIM_REPOSITORY = ':';
 
 	public static final String POST_ARGS_SHOW_BUG = "/show_bug.cgi?id=";
-
-	private static final String POST_ARGS_LOGIN_FIRST = "?GoAheadAndLogIn=1&Bugzilla_login=";
 
 	private static final String POST_ARGS_LOGIN = "&GoAheadAndLogIn=1&Bugzilla_login=";
 
@@ -96,9 +96,9 @@ public class BugzillaRepositoryUtil {
 					in = new BufferedReader(new InputStreamReader(input));
 
 					// get the actual bug fron the server and return it
-					BugReport bug = BugParser.parseBug(in, id, repository.getUrl().toExternalForm(), BugzillaPlugin
-							.getDefault().isServerCompatability218(), repository.getUserName(), repository
-							.getPassword(), connection.getContentType());
+					BugReport bug = BugParser.parseBug(in, id, repository.getUrl().toExternalForm(), repository
+							.getVersion().equals(BugzillaServerVersion.SERVER_218.toString()),
+							repository.getUserName(), repository.getPassword(), connection.getContentType());
 					return bug;
 				}
 			}
@@ -156,45 +156,55 @@ public class BugzillaRepositoryUtil {
 	}
 
 	/**
-	 * Get the list of products when creating a new bug
+	 * Get the list of products
 	 * 
 	 * @return The list of valid products a bug can be logged against
-	 * @throws IOException
+	 * @throws IOException LoginException Exception
 	 */
-	public static List<String> getProductList(String repositoryUrl) throws IOException, LoginException, Exception {
-		BufferedReader in = null;
-		try {
-			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
-					BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
-			String urlText = "";
-			if (repository.hasCredentials()) {
-				urlText += POST_ARGS_LOGIN_FIRST
-						+ URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8)
-						+ POST_ARGS_PASSWORD
-						+ URLEncoder.encode(repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
+	public static List<String> getProductList(TaskRepository repository) throws IOException, LoginException, Exception {
+//		BufferedReader in = null;
+//		try {
+//			 repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+//					BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
+//			String urlText = "";
+//			if (repository.hasCredentials()) {
+//				urlText += POST_ARGS_LOGIN_FIRST
+//						+ URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8)
+//						+ POST_ARGS_PASSWORD
+//						+ URLEncoder.encode(repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
+//			}
+//
+//			URL url = new URL(repository.getUrl().toExternalForm() + "/enter_bug.cgi" + urlText);
+//
+//			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(url);
+//			if (cntx != null) {
+//				InputStream input = cntx.getInputStream();
+//				if (input != null) {
+//					in = new BufferedReader(new InputStreamReader(input));
+//
+//					
+//					
+//					return new ProductParser(in).getProducts(repository);
+//				}
+//			}
+			
+			BugzillaQueryPageParser parser = new BugzillaQueryPageParser(repository, new NullProgressMonitor());
+			if (!parser.wasSuccessful()) {
+				throw new RuntimeException("Couldn't get products");
+			} else {
+				return Arrays.asList(parser.getProductValues());
 			}
-
-			URL url = new URL(repository.getUrl().toExternalForm() + "/enter_bug.cgi" + urlText);
-
-			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(url);
-			if (cntx != null) {
-				InputStream input = cntx.getInputStream();
-				if (input != null) {
-					in = new BufferedReader(new InputStreamReader(input));
-
-					return new ProductParser(in).getProducts(repository);
-				}
-			}
-			return null;
-		} finally {
-			try {
-				if (in != null)
-					in.close();
-			} catch (IOException e) {
-				BugzillaPlugin.log(new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
-						"Problem closing the stream", e));
-			}
-		}
+			
+//			return null;
+//		} finally {
+//			try {
+//				if (in != null)
+//					in.close();
+//			} catch (IOException e) {
+//				BugzillaPlugin.log(new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
+//						"Problem closing the stream", e));
+//			}
+//		}
 	}
 
 	/**

@@ -27,6 +27,8 @@ public class TaskRepository {
 
 	public static final String AUTH_USERNAME = "org.eclipse.mylar.tasklist.repositories.username"; //$NON-NLS-1$ 
 
+	public static final String NO_VERSION_SPECIFIED = "";
+	
 	private static final String AUTH_SCHEME = "Basic";
 
 	private static final String AUTH_REALM = "";
@@ -34,19 +36,21 @@ public class TaskRepository {
 	private URL serverUrl;
 
 	private String kind;
+	
+	private String version = NO_VERSION_SPECIFIED;
 
 	public TaskRepository(String kind, URL serverUrl) {
 		this.serverUrl = serverUrl;
 		this.kind = kind;
 	}
 
+	public TaskRepository(String kind, URL serverUrl, String version) {
+		this(kind, serverUrl);
+		this.version = version;
+	}
+	
 	public URL getUrl() {
 		return serverUrl;
-	}
-
-	@SuppressWarnings("unchecked")
-	public Map<String, String> getCredentials() {
-		return Platform.getAuthorizationInfo(serverUrl, AUTH_REALM, AUTH_SCHEME);
 	}
 
 	public boolean hasCredentials() {
@@ -121,5 +125,18 @@ public class TaskRepository {
 
 	public String getKind() {
 		return kind;
+	}
+
+	
+	public String getVersion() {
+		return version;
+	}
+	
+	public void setVersion(String ver) {
+		if(ver == null) {
+			version = NO_VERSION_SPECIFIED;
+		} else {
+			version = ver;
+		}
 	}
 }

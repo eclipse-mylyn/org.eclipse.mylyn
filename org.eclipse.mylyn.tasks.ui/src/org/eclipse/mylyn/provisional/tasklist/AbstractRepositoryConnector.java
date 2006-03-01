@@ -118,4 +118,5 @@ public abstract class AbstractRepositoryConnector {
 
 	public abstract IWizard getNewTaskWizard(TaskRepository taskRepository);
 
+	public abstract List<String> getSupportedVersions();
 }
