@@ -74,13 +74,11 @@ public interface IBugzillaConstants {
 	
 	/** Supported bugzilla repository versions */
 	static public enum BugzillaServerVersion {
-		SERVER_2201, SERVER_220, SERVER_218, SERVER_216;
+		SERVER_220, SERVER_218, SERVER_216;
 
 		@Override
 		public String toString() {
 			switch (this) {
-			case SERVER_2201:
-				return "2.20.1";
 			case SERVER_220:
 				return "2.20";
 			case SERVER_218:

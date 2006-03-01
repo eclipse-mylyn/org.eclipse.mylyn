@@ -64,6 +64,7 @@ import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskCategory;
@@ -118,6 +119,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	public BugzillaRepositoryConnector() {
 		super();
 		offlineReportsFile = BugzillaPlugin.getDefault().getOfflineReports();
+		if(!BugzillaPlugin.getDefault().getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION).equals("")) {		
+			MylarTaskListPlugin.getTaskListManager().addListener(new BugzillaVersionMigrator());
+		}
 	}
 
 	public String getLabel() {
@@ -707,4 +711,51 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return supportedVersions;
 	}
 	
+	/** Migrates legacy bugzilla version setting from preference page to 
+	 *  associated TaskRepository 
+	 *  @author Rob Elves
+	 */
+	private class BugzillaVersionMigrator implements ITaskActivityListener {
+
+		public void taskActivated(ITask task) {
+			// ignore
+		}
+
+		public void tasksActivated(List<ITask> tasks) {
+			// ignore
+		}
+
+		public void taskDeactivated(ITask task) {
+			// ignore
+		}
+
+		public void localInfoChanged(ITask task) {
+			// ignore
+		}
+
+		public void repositoryInfoChanged(ITask task) {
+			// ignore
+		}
+
+		public void tasklistRead() {
+
+			String oldVersionSetting = BugzillaPlugin.getDefault().getPreferenceStore().getString(
+					IBugzillaConstants.SERVER_VERSION);
+
+			Set<TaskRepository> existingBugzillaRepositories = MylarTaskListPlugin.getRepositoryManager()
+					.getRepositories(BugzillaPlugin.REPOSITORY_KIND);
+			for (TaskRepository repository : existingBugzillaRepositories) {
+				repository.setVersion(oldVersionSetting);
+			}
+			BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.SERVER_VERSION, "");
+
+			MylarTaskListPlugin.getTaskListManager().removeListener(this);
+
+		}
+
+		public void taskListModified() {
+			// ignore
+
+		}
+	}
 }

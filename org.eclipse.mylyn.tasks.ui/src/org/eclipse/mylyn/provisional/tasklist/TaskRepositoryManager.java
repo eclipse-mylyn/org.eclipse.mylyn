@@ -178,12 +178,6 @@ public class TaskRepositoryManager {
 						repositoryMap.put(repositoryClient.getRepositoryType(), repositories);						
 						String prefIdVersion = urlString + PROPERTY_DELIM + PROPERTY_VERSION;
 						String version = MylarTaskListPlugin.getPrefs().getString(prefIdVersion);
-						if(version.equals("")) {
-							List<String> versions = repositoryClient.getSupportedVersions();
-							if(versions != null && versions.size() > 0) {
-								version = versions.get(0);
-							}
-						}
 						repositories.add(new TaskRepository(repositoryClient.getRepositoryType(), url, version));
 						
 					} catch (MalformedURLException e) {

@@ -96,8 +96,8 @@ public class BugzillaRepositoryUtil {
 					in = new BufferedReader(new InputStreamReader(input));
 
 					// get the actual bug fron the server and return it
-					BugReport bug = BugParser.parseBug(in, id, repository.getUrl().toExternalForm(), repository
-							.getVersion().equals(BugzillaServerVersion.SERVER_218.toString()),
+					BugReport bug = BugParser.parseBug(in, id, repository.getUrl().toExternalForm(), !repository
+							.getVersion().equals(BugzillaServerVersion.SERVER_216.toString()),
 							repository.getUserName(), repository.getPassword(), connection.getContentType());
 					return bug;
 				}

@@ -116,10 +116,11 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 		for (TaskRepository repository : repositories) {
 			readCachedProductConfiguration(repository.getUrl().toExternalForm());
 		}
-
+		
 		migrateOldAuthenticationData();
 	}
 
+	
 	@SuppressWarnings("unchecked")
 	private void migrateOldAuthenticationData() {
 		String OLD_PREF_SERVER = "BUGZILLA_SERVER";
@@ -188,24 +189,24 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 		BugzillaPreferencePage.initDefaults(store);
 	}
 
-	/**
-	 * // * Get the name of the bugzilla server // * // *
-	 * 
-	 * @return A string containing the prefered name of the bugzilla server //
-	 */
-	// public String getServerName() {
-	// return
-	// plugin.getPreferenceStore().getString(IBugzillaConstants.BUGZILLA_SERVER);
-	// }
-	public boolean isServerCompatability218() {
-		return IBugzillaConstants.SERVER_218.equals(getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION))
-				|| IBugzillaConstants.SERVER_220.equals(getPreferenceStore().getString(
-						IBugzillaConstants.SERVER_VERSION));
-	}
-
-	public boolean isServerCompatability220() {
-		return IBugzillaConstants.SERVER_220.equals(getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION));
-	}
+//	/**
+//	 * // * Get the name of the bugzilla server // * // *
+//	 * 
+//	 * @return A string containing the prefered name of the bugzilla server //
+//	 */
+//	// public String getServerName() {
+//	// return
+//	// plugin.getPreferenceStore().getString(IBugzillaConstants.BUGZILLA_SERVER);
+//	// }
+//	public boolean isServerCompatability218() {
+//		return IBugzillaConstants.SERVER_218.equals(getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION))
+//				|| IBugzillaConstants.SERVER_220.equals(getPreferenceStore().getString(
+//						IBugzillaConstants.SERVER_VERSION));
+//	}
+//
+//	public boolean isServerCompatability220() {
+//		return IBugzillaConstants.SERVER_220.equals(getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION));
+//	}
 
 	/**
 	 * Get the most recent query key for the preferences
@@ -451,5 +452,5 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 		prefs.setDefault(IBugzillaConstants.VALUES_TARGET, BugzillaRepositoryUtil
 				.queryOptionsToString(IBugzillaConstants.DEFAULT_TARGET_VALUES));
 	}
-
+	
 }
