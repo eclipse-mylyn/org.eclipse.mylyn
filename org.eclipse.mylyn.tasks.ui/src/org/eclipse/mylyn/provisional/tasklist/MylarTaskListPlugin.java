@@ -56,6 +56,8 @@ import org.osgi.framework.BundleContext;
  */
 public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
+	private static final int NOTIFICATION_DELAY = 5000;
+
 	public static final String PLUGIN_ID = "org.eclipse.mylar.tasklist";
 
 	public static final String URL_HOMEPAGE = "http://eclipse.org/mylar";
@@ -298,7 +300,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					
 					taskListNotificationManager = new TaskListNotificationManager();
 					taskListNotificationManager.addNotificationProvider(NOTIFICATION_PROVIDER);
-					taskListNotificationManager.startNotification(5000);	
+					taskListNotificationManager.startNotification(NOTIFICATION_DELAY);	
 					
 					taskListRefreshManager = new TaskListRefreshManager();
 					taskListRefreshManager.startRefreshJob();	

@@ -92,7 +92,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	private static final String LABEL_SYNCHRONIZE_JOB = "Synchronizing Bugzilla query";
 
 	private boolean forceSyncExecForTesting = false;
-	
+
 	private List<String> supportedVersions;
 
 	private OfflineReportsFile offlineReportsFile;
@@ -110,8 +110,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		public void searchCompleted(BugzillaResultCollector collector) {
 			for (BugzillaSearchHit hit : collector.getResults()) {
 				String description = hit.getId() + ": " + hit.getDescription();
-				query.addHit(new BugzillaQueryHit(description, hit.getPriority(), query
-						.getRepositoryUrl(), hit.getId(), null, hit.getState()));
+				query.addHit(new BugzillaQueryHit(description, hit.getPriority(), query.getRepositoryUrl(),
+						hit.getId(), null, hit.getState()));
 			}
 		}
 	}
@@ -119,8 +119,46 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	public BugzillaRepositoryConnector() {
 		super();
 		offlineReportsFile = BugzillaPlugin.getDefault().getOfflineReports();
-		if(!BugzillaPlugin.getDefault().getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION).equals("")) {		
-			MylarTaskListPlugin.getTaskListManager().addListener(new BugzillaVersionMigrator());
+		if (!BugzillaPlugin.getDefault().getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION).equals("")) {
+			MylarTaskListPlugin.getTaskListManager().addListener(new ITaskActivityListener() {
+
+				public void tasklistRead() {
+					String oldVersionSetting = BugzillaPlugin.getDefault().getPreferenceStore().getString(
+							IBugzillaConstants.SERVER_VERSION);
+
+					Set<TaskRepository> existingBugzillaRepositories = MylarTaskListPlugin.getRepositoryManager()
+							.getRepositories(BugzillaPlugin.REPOSITORY_KIND);
+					for (TaskRepository repository : existingBugzillaRepositories) {
+						repository.setVersion(oldVersionSetting);
+					} 
+					BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.SERVER_VERSION, ""); 
+					MylarTaskListPlugin.getTaskListManager().removeListener(this);
+				}
+
+				public void taskActivated(ITask task) {
+					// ignore
+				}
+
+				public void tasksActivated(List<ITask> tasks) {
+					// ignore
+				}
+
+				public void taskDeactivated(ITask task) {
+					// ignore
+				}
+
+				public void localInfoChanged(ITask task) {
+					// ignore
+				}
+
+				public void repositoryInfoChanged(ITask task) {
+					// ignore
+				}
+
+				public void taskListModified() {
+					// ignore
+				}
+			});
 		}
 	}
 
@@ -234,15 +272,14 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	private BugReport downloadReport(final BugzillaTask bugzillaTask) {
-		try {			
+		try {
 			return BugzillaRepositoryUtil.getBug(bugzillaTask.getRepositoryUrl(), AbstractRepositoryTask
 					.getTaskIdAsInt(bugzillaTask.getHandleIdentifier()));
 		} catch (final LoginException e) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {					
-					MessageDialog
-							.openError(Display.getDefault().getActiveShell(), "Report Download Failed",
-									"Ensure proper repository configuration in "+TaskRepositoriesView.NAME+".");
+				public void run() {
+					MessageDialog.openError(Display.getDefault().getActiveShell(), "Report Download Failed",
+							"Ensure proper repository configuration in " + TaskRepositoriesView.NAME + ".");
 				}
 			});
 		} catch (IOException e) {
@@ -349,7 +386,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				bugId), DESCRIPTION_DEFAULT, true);
 
 		MylarTaskListPlugin.getTaskListManager().getTaskList().addTaskToArchive(newTask);
-		
+
 		synchronize(newTask, true, null);
 		return newTask;
 	}
@@ -381,10 +418,11 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		if (!(query instanceof BugzillaRepositoryQuery)) {
 			return;
 		}
-		BugzillaRepositoryQuery queryCategory = (BugzillaRepositoryQuery)query;
-		
+		BugzillaRepositoryQuery queryCategory = (BugzillaRepositoryQuery) query;
+
 		if (queryCategory.isCustomQuery()) {
-//			BugzillaCustomRepositoryQuery queryCategory = (BugzillaCustomRepositoryQuery) query;
+			// BugzillaCustomRepositoryQuery queryCategory =
+			// (BugzillaCustomRepositoryQuery) query;
 			BugzillaCustomQueryDialog sqd = new BugzillaCustomQueryDialog(Display.getCurrent().getActiveShell(),
 					queryCategory.getQueryUrl(), queryCategory.getDescription(), queryCategory.getMaxHits() + "");
 			if (sqd.open() == Dialog.OK) {
@@ -400,7 +438,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				synchronize(queryCategory);
 			}
 		} else {
-//			BugzillaRepositoryQuery queryCategory = (BugzillaRepositoryQuery) query;
+			// BugzillaRepositoryQuery queryCategory = (BugzillaRepositoryQuery)
+			// query;
 			BugzillaQueryDialog queryDialog = new BugzillaQueryDialog(Display.getCurrent().getActiveShell(),
 					queryCategory.getRepositoryUrl(), queryCategory.getQueryUrl(), queryCategory.getDescription(),
 					queryCategory.getMaxHits() + "");
@@ -486,7 +525,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 								} else if (throwable.getCause() instanceof LoginException) {
 									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 											"Bugzilla could not post your bug since your login name or password is incorrect."
-													+ " Ensure proper repository configuration in " + TaskRepositoriesView.NAME + ".");
+													+ " Ensure proper repository configuration in "
+													+ TaskRepositoriesView.NAME + ".");
 								} else {
 									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 											"Could not post bug.  Check repository credentials and connectivity.");
@@ -510,11 +550,12 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			removeReport(bugReport);
 			String handle = AbstractRepositoryTask.getHandle(bugReport.getRepositoryUrl(), bugReport.getId());
 			ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, false);
-			
-			Set<AbstractRepositoryQuery> queriesWithHandle = MylarTaskListPlugin.getTaskListManager().getTaskList().getQueriesForHandle(task.getHandleIdentifier());	
+
+			Set<AbstractRepositoryQuery> queriesWithHandle = MylarTaskListPlugin.getTaskListManager().getTaskList()
+					.getQueriesForHandle(task.getHandleIdentifier());
 			for (AbstractRepositoryQuery query : queriesWithHandle) {
 				synchronize(query);
-			} 
+			}
 			synchronize(task, true, null);
 
 		} catch (Exception e) {
@@ -699,8 +740,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public IWizard getNewTaskWizard(TaskRepository taskRepository) {
 		return new NewBugzillaReportWizard(taskRepository);
-	} 
-	
+	}
+
 	public List<String> getSupportedVersions() {
 		if (supportedVersions == null) {
 			supportedVersions = new ArrayList<String>();
@@ -709,53 +750,5 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			}
 		}
 		return supportedVersions;
-	}
-	
-	/** Migrates legacy bugzilla version setting from preference page to 
-	 *  associated TaskRepository 
-	 *  @author Rob Elves
-	 */
-	private class BugzillaVersionMigrator implements ITaskActivityListener {
-
-		public void taskActivated(ITask task) {
-			// ignore
-		}
-
-		public void tasksActivated(List<ITask> tasks) {
-			// ignore
-		}
-
-		public void taskDeactivated(ITask task) {
-			// ignore
-		}
-
-		public void localInfoChanged(ITask task) {
-			// ignore
-		}
-
-		public void repositoryInfoChanged(ITask task) {
-			// ignore
-		}
-
-		public void tasklistRead() {
-
-			String oldVersionSetting = BugzillaPlugin.getDefault().getPreferenceStore().getString(
-					IBugzillaConstants.SERVER_VERSION);
-
-			Set<TaskRepository> existingBugzillaRepositories = MylarTaskListPlugin.getRepositoryManager()
-					.getRepositories(BugzillaPlugin.REPOSITORY_KIND);
-			for (TaskRepository repository : existingBugzillaRepositories) {
-				repository.setVersion(oldVersionSetting);
-			}
-			BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.SERVER_VERSION, "");
-
-			MylarTaskListPlugin.getTaskListManager().removeListener(this);
-
-		}
-
-		public void taskListModified() {
-			// ignore
-
-		}
 	}
 }
