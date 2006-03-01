@@ -39,8 +39,6 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.internal.core.dt.MylarWebRef;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
@@ -185,15 +183,11 @@ public class TaskListView extends ViewPart {
 
 	private NextTaskDropDownAction nextTaskAction;
 
-	// private WorkOfflineAction workOffline;
-
-	// private ManageEditorsAction autoClose;
-
 	private static TaskPriorityFilter PRIORITY_FILTER = new TaskPriorityFilter();
 
 	private static TaskCompleteFilter COMPLETE_FILTER = new TaskCompleteFilter();
 
-	List<AbstractTaskFilter> filters = new ArrayList<AbstractTaskFilter>();
+	private List<AbstractTaskFilter> filters = new ArrayList<AbstractTaskFilter>();
 
 	static final String FILTER_LABEL = "<filter>";
 
@@ -213,7 +207,7 @@ public class TaskListView extends ViewPart {
 
 	private int sortIndex = 2;
 
-	private int sortDirection = DEFAULT_SORT_DIRECTION;
+	int sortDirection = DEFAULT_SORT_DIRECTION;
 
 	private TaskActivationHistory taskHistory = new TaskActivationHistory();
 
@@ -617,70 +611,6 @@ public class TaskListView extends ViewPart {
 		taskHistory.clear();
 	}
 
-	private class TaskListTableSorter extends ViewerSorter {
-
-		private String column;
-
-		public TaskListTableSorter(String column) {
-			super();
-			this.column = column;
-		}
-
-		/**
-		 * compare - invoked when column is selected calls the actual comparison
-		 * method for particular criteria
-		 */
-		@Override
-		public int compare(Viewer compareViewer, Object o1, Object o2) {
-			if (o1 instanceof ITaskContainer && o2 instanceof ITaskContainer && ((ITaskContainer)o2).isArchive()) {
-				return -1;
-			} else if (o2 instanceof ITaskContainer && o1 instanceof ITaskContainer && ((ITaskContainer)o2).isArchive()) {
-				return 1;
-			} 
-			
-			if (o1 instanceof ITaskContainer && o2 instanceof ITask) {
-				return 1;
-			} 
-			if (o1 instanceof ITaskContainer || o1 instanceof AbstractRepositoryQuery) {
-				if (o2 instanceof ITaskContainer || o2 instanceof AbstractRepositoryQuery) {
-					return sortDirection
-							* ((ITaskListElement) o1).getDescription().compareTo(
-									((ITaskListElement) o2).getDescription());
-				} else {
-					return -1;
-				}
-			} else if (o1 instanceof ITaskListElement) {
-				if (o2 instanceof ITaskContainer || o2 instanceof AbstractRepositoryQuery) {
-					return -1;
-				} else if (o2 instanceof ITaskListElement) {
-					ITaskListElement element1 = (ITaskListElement) o1;
-					ITaskListElement element2 = (ITaskListElement) o2;
-
-					if (column != null && column.equals(columnNames[1])) {
-						return 0;
-					} else if (column == columnNames[2]) {
-						return sortDirection * element1.getPriority().compareTo(element2.getPriority());
-					} else if (column == columnNames[3]) {
-						String c1 = element1.getDescription();
-						String c2 = element2.getDescription();
-						try {
-							return new Integer(c1).compareTo(new Integer(c2));
-						} catch (Exception e) {
-						}
-
-						return sortDirection * c1.compareTo(c2);
-
-					} else {
-						return 0;
-					}
-				}
-			} else {
-				return 0;
-			}
-			return 0;
-		}
-	}
-
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		init(site);
@@ -739,7 +669,7 @@ public class TaskListView extends ViewPart {
 				sortIndex = 2; // default priority
 				sortDirection = DEFAULT_SORT_DIRECTION;
 			}
-			getViewer().setSorter(new TaskListTableSorter(columnNames[sortIndex]));
+			getViewer().setSorter(new TaskListTableSorter(this, columnNames[sortIndex]));
 		}
 		addFilter(PRIORITY_FILTER);
 		// if (MylarTaskListPlugin.getDefault().isFilterInCompleteMode())
@@ -777,7 +707,7 @@ public class TaskListView extends ViewPart {
 				public void widgetSelected(SelectionEvent e) {
 					sortIndex = index;
 					sortDirection *= DEFAULT_SORT_DIRECTION;
-					getViewer().setSorter(new TaskListTableSorter(columnNames[sortIndex]));
+					getViewer().setSorter(new TaskListTableSorter(TaskListView.this, columnNames[sortIndex]));
 				}
 			});
 			columns[i].addControlListener(new ControlListener() {
@@ -808,7 +738,7 @@ public class TaskListView extends ViewPart {
 		editors[3] = textEditor;
 		getViewer().setCellEditors(editors);
 		getViewer().setCellModifier(new TaskListCellModifier());
-		getViewer().setSorter(new TaskListTableSorter(columnNames[sortIndex]));
+		getViewer().setSorter(new TaskListTableSorter(this, columnNames[sortIndex]));
 
 		drillDownAdapter = new DrillDownAdapter(getViewer());
 		getViewer().setContentProvider(new TaskListContentProvider(this));
@@ -1404,5 +1334,10 @@ public class TaskListView extends ViewPart {
 			images[i] = taskListTableLabelProvider.getImageForPriority(Task.PriorityLevel.values()[i]);
 		}
 		return images;
+	}
+
+
+	public List<AbstractTaskFilter> getFilters() {
+		return filters;
 	}
 }

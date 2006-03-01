@@ -244,7 +244,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 	}
 
 	private boolean filter(Object obj) {
-		for (AbstractTaskFilter filter : this.view.filters) {
+		for (AbstractTaskFilter filter : this.view.getFilters()) {
 			if (!filter.select(obj)) {
 				return true;
 			}
