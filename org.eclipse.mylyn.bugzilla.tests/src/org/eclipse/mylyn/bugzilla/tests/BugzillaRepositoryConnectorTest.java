@@ -38,19 +38,23 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.ui.PartInitException;
 
-public class BugzillaRepositoryClientTest extends TestCase {
+/**
+ * @author Mik Kersten
+ * @author Robert Elves
+ */
+public class BugzillaRepositoryConnectorTest extends TestCase {
 
 	private static final String DEFAULT_KIND = BugzillaPlugin.REPOSITORY_KIND;
 
 	private static final String TEST_REPOSITORY_URL = "https://bugs.eclipse.org/bugs";
 
-	BugzillaRepositoryConnector client;
+	private BugzillaRepositoryConnector client;
 
-	TaskRepositoryManager manager;
+	private TaskRepositoryManager manager;
 
-	TaskRepository repository;
+	private TaskRepository repository;
 
-	TaskList taskList;
+	private TaskList taskList;
 
 	@Override
 	protected void setUp() throws Exception {
