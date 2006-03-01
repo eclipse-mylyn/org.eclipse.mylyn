@@ -78,8 +78,10 @@ public class TaskInfoEditor extends EditorPart {
 
 	private static final String NO_TIME_ELAPSED = "0 seconds";
 
-	private static final String DESCRIPTION_OVERVIEW = "Task Summary";
-
+	private static final String LABEL_OVERVIEW = "Task Summary";
+ 
+	private static final String LABEL_NOTES = "nOTES";
+	
 	private DatePicker datePicker;
 
 	private ITask task;
@@ -324,7 +326,7 @@ public class TaskInfoEditor extends EditorPart {
 	private void createSummarySection(Composite parent, FormToolkit toolkit) {
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.DESCRIPTION
 				| Section.TWISTIE);
-		section.setText(DESCRIPTION_OVERVIEW);
+		section.setText(LABEL_OVERVIEW);
 		section.setExpanded(true);
 		if (!task.isLocal()) {
 			section.setDescription("To modify these fields use the repository editor.");
@@ -453,7 +455,7 @@ public class TaskInfoEditor extends EditorPart {
 
 	private void createDocumentationSection(Composite parent, FormToolkit toolkit) {
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
-		section.setText("Documentation");
+		section.setText(LABEL_NOTES);
 		section.setExpanded(true);
 		section.setLayout(new GridLayout());
 		section.setLayoutData(new GridData(GridData.FILL_BOTH));
