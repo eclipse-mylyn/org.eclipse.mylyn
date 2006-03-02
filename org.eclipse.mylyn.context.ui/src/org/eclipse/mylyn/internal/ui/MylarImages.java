@@ -30,6 +30,8 @@ public class MylarImages {
 
 	public static final String T_TOOL = "etool16";
 
+	public static final String T_VIEW = "eview16";
+	
 	private static final URL baseURL = MylarUiPlugin.getDefault().getBundle().getEntry("/icons/");
 
 	public static final ImageDescriptor MYLAR = create(T_ELCL, "mylar.gif");
@@ -66,32 +68,6 @@ public class MylarImages {
 
 	public static final ImageDescriptor CONTENT_ASSIST_SEPARATOR = create(T_TOOL, "content-assist-separator.gif");
 
-	public static final ImageDescriptor TASK_BUGZILLA = create(T_TOOL, "task-repository.gif");
-
-	public static final ImageDescriptor TASK_BUGZILLA_NEW = create(T_TOOL, "task-repository-new.gif");
-
-	public static final ImageDescriptor TASK = create(T_TOOL, "task.gif");
-
-	public static final ImageDescriptor TASK_NEW = create(T_TOOL, "task-new.gif");
-
-	public static final ImageDescriptor CATEGORY = create(T_TOOL, "category.gif");
-
-	public static final ImageDescriptor CATEGORY_NEW = create(T_TOOL, "category-new.gif");
-
-	public static final ImageDescriptor CATEGORY_QUERY = create(T_TOOL, "category-query.gif");
-
-	public static final ImageDescriptor CATEGORY_QUERY_NEW = create(T_TOOL, "category-query-new.gif");
-
-	public static final ImageDescriptor TASK_ACTIVE = create(T_TOOL, "task-active.gif");
-
-	public static final ImageDescriptor TASK_INACTIVE = create(T_TOOL, "task-inactive.gif");
-
-	public static final ImageDescriptor TASK_COMPLETE = create(T_TOOL, "task-complete.gif");
-
-	public static final ImageDescriptor TASK_INCOMPLETE = create(T_TOOL, "task-incomplete.gif");
-
-	public static final ImageDescriptor TASK_BUG_REFRESH = create(T_TOOL, "task-bug-refresh.gif");
-
 	public static final ImageDescriptor QUALIFY_NAMES = create(T_TOOL, "qualify-names.gif");
 
 	public static final ImageDescriptor EDGE_INHERITANCE = create(T_ELCL, "edge-inheritance.gif");
@@ -114,6 +90,8 @@ public class MylarImages {
 
 	public static final ImageDescriptor LINK_WITH_EDITOR = create(T_ELCL, "link-with-editor.gif");
 
+	public static final ImageDescriptor OVERLAY_MYLAR = create(T_VIEW, "overlay-mylar.gif");
+	
 	public static final ImageDescriptor BLANK = create(T_ELCL, "blank.gif");
 
 	public static ImageDescriptor create(String prefix, String name) {

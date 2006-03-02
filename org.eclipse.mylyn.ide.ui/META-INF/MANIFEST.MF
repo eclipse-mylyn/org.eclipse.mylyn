@@ -18,7 +18,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylar.tasklist,
  org.eclipse.team.core,
  org.eclipse.team.cvs.ui,
- org.eclipse.team.cvs.core
+ org.eclipse.team.cvs.core,
+ org.eclipse.team.ui
 Eclipse-AutoStart: true
 Export-Package: org.eclipse.mylar.internal.ide,
  org.eclipse.mylar.internal.ide.team,

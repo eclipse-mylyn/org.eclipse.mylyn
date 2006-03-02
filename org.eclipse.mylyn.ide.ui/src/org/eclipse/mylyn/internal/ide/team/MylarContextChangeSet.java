@@ -35,22 +35,23 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 
 	private static final String PREFIX_HTTPS = "https://";
 
-	private static final String LABEL_PREFIX = "Mylar Task";
+	private static final String PREFIX_DELIM = ": ";
+	
+//	private static final String LABEL_PREFIX = "Mylar Task";
 
-	private static final String LABEL_BUG = "Bug ";
+//	private static final String LABEL_BUG = "Bug ";
 
-	private static final String CTX_TITLE = "title"; // HACK: copied from
+	// HACK: copied from super
+	private static final String CTX_TITLE = "title"; 
 
-	// super
+	public static final String SOURCE_ID = "org.eclipse.mylar.java.context.changeset.add";
 
 	private boolean suppressInterestContribution = false;
 
 	private ITask task;
 
-	public static final String SOURCE_ID = "org.eclipse.mylar.java.context.changeset.add";
-
 	public MylarContextChangeSet(ITask task, SubscriberChangeSetCollector collector) {
-		super(collector, LABEL_PREFIX);
+		super(collector, task.getDescription());
 		this.task = task;
 		initTitle();
 	}
@@ -59,7 +60,8 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 //		if (task instanceof AbstractRepositoryTask) {
 //			super.setTitle(LABEL_PREFIX + ": " + LABEL_BUG + this.task.getDescription());
 //		} else {
-			super.setTitle(LABEL_PREFIX + ": " + this.task.getDescription());
+//			super.setTitle(LABEL_PREFIX + " " + this.task.getDescription());
+			super.setTitle(this.task.getDescription());
 //		}
 	}
 
@@ -175,10 +177,12 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 
 	public static String generateComment(ITask task, String completedPrefix, String progressPrefix) {
 		String comment;
+		completedPrefix = fixUpDelimIfPresent(completedPrefix);
+		progressPrefix = fixUpDelimIfPresent(progressPrefix);
 		if (task.isCompleted()) {
-			comment = completedPrefix + " ";
+			comment = completedPrefix + PREFIX_DELIM;
 		} else {
-			comment = progressPrefix + " ";
+			comment = progressPrefix + PREFIX_DELIM;
 		}
 //		if (task.isLocal()) {
 			comment += task.getDescription();
@@ -192,11 +196,18 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 		return comment;
 	}
 
-	public static String getIssueIdFromComment(String comment) {
-		int bugIndex = comment.indexOf(LABEL_BUG);
-		if (bugIndex != -1) {
-			int idEnd = comment.indexOf(':', bugIndex);
-			int idStart = bugIndex + LABEL_BUG.length();
+	private static String fixUpDelimIfPresent(String prefix) {
+		if (prefix.endsWith(":") || prefix.endsWith(PREFIX_DELIM)) {
+			prefix = prefix.substring(0, prefix.lastIndexOf(':'));
+		}
+		return prefix;
+	}
+
+	public static String getTaskIdFromComment(String comment) {
+		int firstDelimIndex = comment.indexOf(PREFIX_DELIM);
+		if (firstDelimIndex != -1) {
+			int idStart = firstDelimIndex + PREFIX_DELIM.length();
+			int idEnd = comment.indexOf(PREFIX_DELIM, firstDelimIndex + PREFIX_DELIM.length());//comment.indexOf(PREFIX_DELIM);
 			if (idEnd != -1 && idStart < idEnd) {
 				String id = comment.substring(idStart, idEnd);
 				if (id != null)
@@ -204,7 +215,7 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 			}
 		}
 		return null;
-	}
+	} 
 
 	public static String getUrlFromComment(String comment) {
 		int httpIndex = comment.indexOf(PREFIX_HTTP);
