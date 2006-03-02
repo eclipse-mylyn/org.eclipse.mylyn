@@ -236,26 +236,26 @@ public class BugzillaSearchPluginTest extends TestCase {
 
 		manager.moveToCategory(cat, bugTask1);
 		// cat.addTask(bugTask1);
-		while (bugTask1.isCurrentlyDownloading()) {
+		while (bugTask1.isCurrentlySynchronizing()) {
 			Thread.sleep(500);
 		}
 		BugzillaTask bugTask2 = new BugzillaTask(bugPrefix + 3692, "<bugzilla info>", true);
 		manager.moveToCategory(cat, bugTask2);
 		// cat.addTask(bugTask2);
-		while (bugTask2.isCurrentlyDownloading()) {
+		while (bugTask2.isCurrentlySynchronizing()) {
 			Thread.sleep(500);
 		}
 		BugzillaTask bugTask3 = new BugzillaTask(bugPrefix + 3693, "<bugzilla info>", true);
 		manager.moveToCategory(cat, bugTask3);
 		// cat.addTask(bugTask3);
-		while (bugTask3.isCurrentlyDownloading()) {
+		while (bugTask3.isCurrentlySynchronizing()) {
 			Thread.sleep(500);
 		}
 
 		BugzillaTask bugTask4 = new BugzillaTask(bugPrefix + 9583, "<bugzilla info>", true);
 		manager.moveToCategory(cat, bugTask4);
 		// cat.addTask(bugTask4);
-		while (bugTask4.isCurrentlyDownloading()) {
+		while (bugTask4.isCurrentlySynchronizing()) {
 			Thread.sleep(500);
 		}
 
@@ -302,20 +302,20 @@ public class BugzillaSearchPluginTest extends TestCase {
 		BugzillaTask bugTask1 = new BugzillaTask(bugPrefix + 94185, "<bugzilla info>", true);
 		manager.moveToCategory(cat, bugTask1);
 		// cat.addTask(bugTask1);
-		while (bugTask1.isCurrentlyDownloading()) {
+		while (bugTask1.isCurrentlySynchronizing()) {
 			Thread.sleep(500);
 		}
 
 		BugzillaTask bugTask2 = new BugzillaTask(bugPrefix + 9583, "<bugzilla info>", true);
 		manager.moveToCategory(cat, bugTask2);
 		// cat.addTask(bugTask2);
-		while (bugTask2.isCurrentlyDownloading()) {
+		while (bugTask2.isCurrentlySynchronizing()) {
 			Thread.sleep(500);
 		}
 		BugzillaTask bugTask3 = new BugzillaTask(bugPrefix + 3693, "<bugzilla info>", true);
 		manager.moveToCategory(cat, bugTask3);
 		// cat.addTask(bugTask3);
-		while (bugTask3.isCurrentlyDownloading()) {
+		while (bugTask3.isCurrentlySynchronizing()) {
 			Thread.sleep(500);
 		}
 
