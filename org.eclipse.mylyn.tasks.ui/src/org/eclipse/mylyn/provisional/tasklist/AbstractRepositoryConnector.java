@@ -138,26 +138,7 @@ public abstract class AbstractRepositoryConnector {
 			MultiStatus queryStatus = new MultiStatus(MylarTaskListPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
 
 			hits = performQuery(repositoryQuery, monitor, queryStatus);
-			// final IStatus[] status = new IStatus[1];
-
 			repositoryQuery.setLastRefresh(new Date());
-
-			// try {
-			// status[0] = categorySearch.getStatus();
-			// } catch (LoginException e) {
-			// // TODO: Set some form of disconnect status on Query?
-			// return new Status(IStatus.OK, MylarTaskListPlugin.PLUGIN_ID,
-			// IStatus.OK,
-			// "Could not log in", e);
-			// }
-			//
-			// if (!status[0].isOK()) {
-			// // TODO: Set some form of disconnect status on Query?
-			// return new Status(IStatus.OK, MylarTaskListPlugin.PLUGIN_ID,
-			// IStatus.OK,
-			// status[0].getMessage(), status[0]
-			// .getException());
-			// }
 
 			if (queryStatus.getChildren() != null && queryStatus.getChildren().length > 0) {
 				if (queryStatus.getChildren()[0].getException() == null) {

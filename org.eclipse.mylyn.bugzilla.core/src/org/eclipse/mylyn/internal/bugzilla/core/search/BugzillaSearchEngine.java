@@ -271,7 +271,7 @@ public class BugzillaSearchEngine {
 			status = new Status(IStatus.CANCEL, IBugzillaConstants.PLUGIN_ID, IStatus.CANCEL, "", null);
 		} catch (Exception e) {
 			status = new MultiStatus(IBugzillaConstants.PLUGIN_ID, IStatus.ERROR, "An error occurred while querying Bugzilla Server " + repository.getUrl().toExternalForm() + ".\n"
-					+ "\nEnsure proper repository configuration in Task Repositories view.", e);
+					+ "\nCheck network connection repository configuration in Task Repositories view.", e);
 
 			IStatus s = new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.ERROR, e.getClass().toString()
 					+ ":  ", e);
