@@ -56,11 +56,11 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 	}
 
 	public void initTitle() {
-		if (task.isLocal()) {
+//		if (task instanceof AbstractRepositoryTask) {
+//			super.setTitle(LABEL_PREFIX + ": " + LABEL_BUG + this.task.getDescription());
+//		} else {
 			super.setTitle(LABEL_PREFIX + ": " + this.task.getDescription());
-		} else {
-			super.setTitle(LABEL_PREFIX + ": " + LABEL_BUG + this.task.getDescription());
-		}
+//		}
 	}
 
 	/**
@@ -180,11 +180,11 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 		} else {
 			comment = progressPrefix + " ";
 		}
-		if (task.isLocal()) {
+//		if (task.isLocal()) {
 			comment += task.getDescription();
-		} else { // bug report
-			comment += LABEL_BUG + task.getDescription();
-		}
+//		} else { // bug report
+//			comment += LABEL_BUG + task.getDescription();
+//		}
 		String url = task.getUrl();
 		if (url != null && !url.equals("") && !url.endsWith("//")) {
 			comment += " \n" + url;
