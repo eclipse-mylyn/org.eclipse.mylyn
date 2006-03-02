@@ -88,7 +88,7 @@
          class="org.eclipse.mylar.internal.tasklist.ui.views.TaskListView"
          icon="icons/eview16/task-list.gif"
          id="org.eclipse.mylar.tasks.ui.views.TaskListView"
-         name="Mylar Tasks"/> 
+         name="Task List"/> 
       <view
             id="org.eclipse.mylar.tasklist.repositories"
             allowMultiple="false"
@@ -103,7 +103,7 @@
             class="org.eclipse.mylar.internal.tasklist.history.ui.TaskHistoryView"
             icon="icons/eview16/task-list.gif"
             id="org.eclipse.mylar.tasks.ui.views.TaskHistoryView"
-            name="Task History"/>
+            name="Mylar Task Activity"/>
   	</extension>
 	
     <extension point="org.eclipse.ui.perspectiveExtensions">

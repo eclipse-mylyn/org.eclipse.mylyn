@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  */
 public class TaskKeyComparator implements Comparator {
 
-	public Pattern pattern = Pattern.compile("(?:([A-Za-z]*[:_\\-]?)(\\d+))?(.*)");
+	public static final Pattern PATTERN = Pattern.compile("(?:([A-Za-z]*[:_\\-]?)(\\d+))?(.*)");
 
 	public int compare(Object o1, Object o2) {
 		String[] a1 = split((String) o1);
@@ -42,16 +42,16 @@ public class TaskKeyComparator implements Comparator {
 	}
 
 	public String[] split(String s) {
-		Matcher m = pattern.matcher(s);
-
-		if (!m.find()) {
-			return new String[] { s };
+		Matcher matcher = PATTERN.matcher(s);
+ 
+		if (!matcher.find()) {
+			return new String[] { null, null, s };
 		}
 
-		int n = m.groupCount();
+		int n = matcher.groupCount();
 		String[] res = new String[n];
 		for (int i = 1; i < n + 1; i++) {
-			res[i - 1] = m.group(i);
+			res[i - 1] = matcher.group(i);
 		}
 		return res;
 	}

@@ -13,6 +13,7 @@
 <!--	<li>Building</li>-->
 		</a></li>
 		<li><a href="#building-dist">Building a distribution</a></li>
+		<li>Additional References</li>
 	</ul>
 	<p><b>Extending Mylar</b></p>
 	<ul>
@@ -40,6 +41,27 @@ and leave the password blank.</li>
 		<li>Add the following to the test configuration under Arguments -&gt; VM 
 		Arguments: -enableassertions -Xmx384M</li>
 	</ul>
+		</li>
+	</ul>
+	<p><b>JIRA Integration</b></p>
+	<ul>
+		<li>Get the latest <a href="http://subclipse.tigris.org/download.html">
+		Subclipse</a> plug-in, e.g. from the following update site: 
+		subclipse.tigris.org/update_1.0.x</li>
+		<li>Set up a Subversion repository for
+		<a href="http://jira-dashboard.tigris.org/">JIRA Dashboard</a>:<ul>
+			<li>username: <code>guest</code> </li>
+			<li>password: (leave blank) </li>
+			<li>repository: <code>
+			<a href="http://jira-dashboard.tigris.org/svn/jira-dashboard/trunk">
+			http://jira-dashboard.tigris.org/svn/jira-dashboard/trunk</a></code></li>
+		</ul>
+		</li>
+		<li>Check out the JIRA Dashboard Core featureres:<ul>
+			<li>org.tigris.jira.core</li>
+			<li>org.tigris.jira.core.soap</li>
+			<li>org.tigris.jira.core-feature</li>
+		</ul>
 		</li>
 	</ul>
 <h3>&nbsp;</h3>
@@ -79,6 +101,40 @@ and leave the password blank.</li>
 	of Bugzilla reports.</i></p>
 	<h3>&nbsp;</h3>
 <h3><a name=building-dist>Building a distribution</a></h3>
+<ul>
+	<li>Using PDE Build support to create a Mylar distribution from HEAD, using 
+	a plain Eclipse 3.2<ul>
+	<li>org.eclipse.mylar-feature/feature.xml -&gt; Overview -&gt; change version 
+	number to current date (e.g. 0.4.7.v20060125-0800)<ul>
+	<li>On Plug-ins tab -&gt; Versions... -&gt; Force feature version into plug-in and 
+	fragment manifests</li>
+	<li>Repeat above for org.eclipse.mylar-bugzilla-feature.xml</li>
+</ul>
+	</li>
+	<li>org.eclipse.mylar-site/e3.2/site.xml<ul>
+	<li>Delete old features (grayed out)</li>
+	<li>Add new mylar-bugzilla and mylar features</li>
+	<li>Hit Build All (if this fails restart Eclipse and try again)</li>
+</ul>
+	</li>
+</ul>
+	</li>
+	<li>To install, add the path of org.eclipse.mylar-site/e3.2/site.xml as a 
+	local update site</li>
+	<li>Bugzilla support can be built independently of the Mylar UI by checking 
+	out the following projects mylar.bugzilla.core, mylar.bugzilla.ui, 
+	mylar.tasklist, mylar.core </li>
+</ul>
+	<p><b>To build the 3.1 branch </b>of the source, follow above steps </p>
+	<ul>
+		<li>Right-click the org.eclipse.mylar.java, mylar.ide, and mylar.xml
+		project, Team -&gt; Switch to Another Branch..., then 
+		Refresh the Branches and select <b>e_3_1 </b></li>
+		<li>The list of files that should not be overwritten is in: 
+		org.eclipse.mylar/build/merge-eclipse-3.1.txt</li>
+	</ul>
+	<p>&nbsp;</p>
+<h3><a name="references-additional">Additional References</a></h3>
 <ul>
 	<li>Using PDE Build support to create a Mylar distribution from HEAD, using 
 	a plain Eclipse 3.2<ul>

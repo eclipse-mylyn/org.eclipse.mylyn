@@ -80,7 +80,7 @@ public class TaskInfoEditor extends EditorPart {
 
 	private static final String LABEL_OVERVIEW = "Task Summary";
  
-	private static final String LABEL_NOTES = "nOTES";
+	private static final String LABEL_NOTES = "Notes";
 	
 	private DatePicker datePicker;
 
