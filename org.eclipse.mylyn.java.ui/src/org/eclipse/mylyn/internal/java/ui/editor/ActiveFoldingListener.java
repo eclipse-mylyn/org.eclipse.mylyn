@@ -50,15 +50,14 @@ public class ActiveFoldingListener implements IMylarContextListener {
 
 	private IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
-
 			if (event.getProperty().equals(MylarJavaPrefConstants.AUTO_FOLDING_ENABLED)) {
 				if (event.getNewValue().equals(Boolean.TRUE.toString())) {
 					enabled = true;
 				} else {
 					enabled = false;
 				}
-			}
-			updateFolding();
+				updateFolding();
+			} 
 		}
 	};
 
