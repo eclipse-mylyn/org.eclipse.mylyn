@@ -140,8 +140,9 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 				boolean found = false;
 				for (int i = 0; i < viewer.getFilters().length; i++) {
 					ViewerFilter viewerFilter = viewer.getFilters()[i];
-					if (viewerFilter instanceof InterestFilter)
+					if (viewerFilter instanceof InterestFilter) {
 						found = true;
+					}
 				}
 				if (!found) {
 					viewer.getControl().setRedraw(false);
