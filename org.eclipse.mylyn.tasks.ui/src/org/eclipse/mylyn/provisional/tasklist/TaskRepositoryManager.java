@@ -192,6 +192,11 @@ public class TaskRepositoryManager {
 		return repositoryMap;
 	}
 
+	public void setVersion(TaskRepository repository, String version) {
+		repository.setVersion(version);
+		saveRepositories();
+	}
+	
 	private void saveRepositories() {
 		for (AbstractRepositoryConnector repositoryConnector : repositoryConnectors.values()) {
 			if (repositoryMap.containsKey(repositoryConnector.getRepositoryType())) {

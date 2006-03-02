@@ -102,7 +102,8 @@ public class TaskRepositoryManagerTest extends TestCase {
 		String version = "123";
 		
 		TaskRepository repository1 = new TaskRepository("bugzilla", new URL("http://bugzilla"));
-		repository1.setVersion(version);		
+//		repository1.setVersion(version);	
+		MylarTaskListPlugin.getRepositoryManager().setVersion(repository1, version);
 		manager.addRepository(repository1);
 		
 		String prefIdVersion = repository1.getUrl().toExternalForm() + TaskRepositoryManager.PROPERTY_DELIM + TaskRepositoryManager.PROPERTY_VERSION;

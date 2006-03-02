@@ -93,7 +93,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					Set<TaskRepository> existingBugzillaRepositories = MylarTaskListPlugin.getRepositoryManager()
 							.getRepositories(BugzillaPlugin.REPOSITORY_KIND);
 					for (TaskRepository repository : existingBugzillaRepositories) {
-						repository.setVersion(oldVersionSetting);
+						MylarTaskListPlugin.getRepositoryManager().setVersion(repository, oldVersionSetting);
 					}
 					BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.SERVER_VERSION, "");
 					MylarTaskListPlugin.getTaskListManager().removeListener(this);

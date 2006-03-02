@@ -56,15 +56,16 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		for (String version : connector.getSupportedVersions()) {
 			repositoryVersionCombo.add(version);			
 		}	
-		if(repository != null) {
+		if(repository != null && repositoryVersionCombo.indexOf(repository.getVersion()) >= 0) {
 			repositoryVersionCombo.select(repositoryVersionCombo.indexOf(repository.getVersion()));
 		}
 		
 		repositoryVersionCombo.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent e) {
-				setVersion(repositoryVersionCombo.getItem(repositoryVersionCombo.getSelectionIndex()));
-				
+				if(repositoryVersionCombo.getSelectionIndex() >= 0) {
+					setVersion(repositoryVersionCombo.getItem(repositoryVersionCombo.getSelectionIndex()));
+				}
 			}
 
 			public void widgetDefaultSelected(SelectionEvent e) {

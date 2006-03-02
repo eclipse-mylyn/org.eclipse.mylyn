@@ -132,7 +132,7 @@ public class TaskRepository {
 		return version;
 	}
 	
-	public void setVersion(String ver) {
+	void setVersion(String ver) {
 		if(ver == null) {
 			version = NO_VERSION_SPECIFIED;
 		} else {
