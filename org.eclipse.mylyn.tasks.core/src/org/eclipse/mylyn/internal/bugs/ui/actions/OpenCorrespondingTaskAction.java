@@ -39,6 +39,7 @@ public class OpenCorrespondingTaskAction implements IViewActionDelegate {
 	}
 
 	public void run(IAction action) {
+		
 		if (action instanceof ObjectPluginAction) {
 			ObjectPluginAction objectAction = (ObjectPluginAction) action;
 			if (objectAction.getSelection() instanceof StructuredSelection) {
@@ -46,13 +47,14 @@ public class OpenCorrespondingTaskAction implements IViewActionDelegate {
 				Object firstElement = selection.getFirstElement();
 				String comment = null;
 				boolean resolved = false;
+				System.err.println(">>> " + firstElement.getClass());
 				if (firstElement instanceof ChangeSetDiffNode) {
 					comment = ((ChangeSetDiffNode) firstElement).getName();
 				} else if (firstElement instanceof LogEntry) {
 					comment = ((LogEntry) firstElement).getComment();
 				}
 				if (comment != null) {
-					String idString = MylarContextChangeSet.getIssueIdFromComment(comment);
+					String idString = MylarContextChangeSet.getTaskIdFromComment(comment);
 					String url = MylarContextChangeSet.getUrlFromComment(comment);
 					String repositoryUrl = getRepositoryUrlFromComment(url);
 					int id = -1;
@@ -86,6 +88,7 @@ public class OpenCorrespondingTaskAction implements IViewActionDelegate {
 	}
 
 	private String getRepositoryUrlFromComment(String comment) {
+		System.err.println(">>> " + comment);
 		int index = comment.indexOf(BugzillaRepositoryUtil.POST_ARGS_SHOW_BUG);
 		if (index != -1) {
 			return comment.substring(0, index);
