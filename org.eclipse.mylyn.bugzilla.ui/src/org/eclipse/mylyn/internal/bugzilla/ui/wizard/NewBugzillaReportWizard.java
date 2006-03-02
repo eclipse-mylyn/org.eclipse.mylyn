@@ -120,7 +120,7 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 //		client.addTaskToArchive(newTask);
 		TaskListUiUtil.openEditor(newTask);
 		
-		if (!newTask.isBugDownloaded()) {
+		if (!newTask.isDownloaded()) {
 			client.synchronize(newTask, true, null);
 		}
 

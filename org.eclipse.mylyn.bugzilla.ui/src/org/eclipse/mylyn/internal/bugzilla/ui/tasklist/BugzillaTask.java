@@ -36,12 +36,6 @@ public class BugzillaTask extends AbstractRepositoryTask {
 	 */
 	protected transient BugReport bugReport = null;
 
-	/**
-	 * Value is <code>true</code> if the bug report has saved changes that
-	 * need synchronizing with the Bugzilla server.
-	 */
-	private boolean isDirty;
-
 	public BugzillaTask(String handle, String label, boolean newTask) {
 		super(handle, label, newTask);
 		isDirty = false;
@@ -85,7 +79,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 
 	@Override
 	public String getDescription() {
-		if (this.isBugDownloaded() || !super.getDescription().startsWith("<")) {
+		if (this.isDownloaded() || !super.getDescription().startsWith("<")) {
 			return super.getDescription();
 		} else {
 			if (!isCurrentlyDownloading()) {
@@ -123,21 +117,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		}
 	}
 
-	public boolean isDirty() {
-		return isDirty;
-	}
-
-	public void setDirty(boolean isDirty) {
-		this.isDirty = isDirty;
-		// MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(this);
-		// notifyTaskDataChange();
-	}
-
-	/**
-	 * @return <code>true</code> if the bug report for this BugzillaTask was
-	 *         successfully downloaded.
-	 */
-	public boolean isBugDownloaded() {
+	public boolean isDownloaded() {
 		return bugReport != null;
 	}
 

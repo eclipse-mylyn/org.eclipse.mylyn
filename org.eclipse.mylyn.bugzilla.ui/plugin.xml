@@ -26,13 +26,15 @@
    </extension>
   
    
-   <extension point="org.eclipse.ui.perspectiveExtensions">
+   <extension 
+   		point="org.eclipse.ui.perspectiveExtensions">
           <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
                <newWizardShortcut id="org.eclipse.mylar.bugzilla.bugWizard"/>
           </perspectiveExtension>
 	</extension>
 
-   <extension point="org.eclipse.ui.decorators">
+   <extension 
+   		point="org.eclipse.ui.decorators">
       <decorator
             class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskDecorator"
             id="org.eclipse.mylar.bugzilla.ui.decorator.task"

@@ -96,7 +96,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		assertNotNull(retrievedTask);
 		assertEquals(task.getHandleIdentifier(), retrievedTask.getHandleIdentifier());
 
-		assertTrue(task.isBugDownloaded());
+		assertTrue(task.isDownloaded());
 		assertEquals(1, task.getBugReport().getId());
 	}
 
@@ -106,7 +106,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		// Get the task
 		BugzillaTask task = (BugzillaTask) client.createTaskFromExistingId(repository, "1");
 		MylarTaskListPlugin.getTaskListManager().moveToRoot(task);
-		assertTrue(task.isBugDownloaded());
+		assertTrue(task.isDownloaded());
 		// (The initial local copy from server)
 		client.saveBugReport(task.getBugReport());
 		assertEquals(task.getSyncState(), RepositoryTaskSyncState.SYNCHRONIZED);

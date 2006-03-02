@@ -22,6 +22,7 @@ import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -60,8 +61,8 @@ public class OpenTaskListElementAction extends Action {
 
 			final AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
 					task.getRepositoryKind());
-			if (!task.isLocal() && connector != null) {
-				Job refreshJob = connector.synchronize(task, forceUpdate, new IJobChangeListener() {
+			if (task instanceof AbstractRepositoryTask && connector != null) {
+				Job refreshJob = connector.synchronize((AbstractRepositoryTask)task, forceUpdate, new IJobChangeListener() {
 
 					public void done(IJobChangeEvent event) {
 						TaskListUiUtil.openEditor(task);

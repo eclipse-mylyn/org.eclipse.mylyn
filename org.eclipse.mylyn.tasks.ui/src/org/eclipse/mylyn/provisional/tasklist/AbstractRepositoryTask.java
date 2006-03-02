@@ -24,6 +24,12 @@ public abstract class AbstractRepositoryTask extends Task {
 	protected Date lastRefresh;
 	
 	protected boolean currentlyDownloading;
+	
+	/**
+	 * Value is <code>true</code> if the bug report has saved changes that
+	 * need synchronizing with the repository.
+	 */
+	protected boolean isDirty;
 
 	public enum RepositoryTaskSyncState {
 		OUTGOING, SYNCHRONIZED, INCOMING, CONFLICT
@@ -41,6 +47,8 @@ public abstract class AbstractRepositoryTask extends Task {
 	 * @return	true	if the task can be queried and manipulated without connecting to the server
 	 */
 	public abstract boolean isPersistentInWorkspace();
+	
+	public abstract boolean isDownloaded();
 	
 	public Date getLastRefresh() {
 		return lastRefresh;
@@ -140,5 +148,13 @@ public abstract class AbstractRepositoryTask extends Task {
 
 	public static String getHandle(String repositoryUrl, int taskId) {
 		return AbstractRepositoryTask.getHandle(repositoryUrl, "" + taskId);
+	}
+
+	public boolean isDirty() {
+		return isDirty;
+	}
+
+	public void setDirty(boolean isDirty) {
+		this.isDirty = isDirty;
 	}
 }
