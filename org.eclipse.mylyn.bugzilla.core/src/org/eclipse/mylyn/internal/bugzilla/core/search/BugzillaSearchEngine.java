@@ -18,6 +18,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.security.auth.login.LoginException;
 
@@ -34,9 +36,6 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServe
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.search.ui.NewSearchUI;
 
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.RegularExpression;
-
 /**
  * Queries the Bugzilla server for the list of bugs matching search criteria.
  * 
@@ -47,19 +46,16 @@ public class BugzillaSearchEngine {
 	protected static final String QUERYING_SERVER = "Querying Bugzilla Server...";
 
 	/** regular expression matching Bugzilla query results format used in Eclipse.org Bugzilla */
-	protected static final RegularExpression re = new RegularExpression("<a href=\"show_bug.cgi\\?id=(\\d+)\">", "i");
+	protected static final Pattern re = Pattern.compile("<a href=\"show_bug.cgi\\?id=(\\d+)\">", Pattern.CASE_INSENSITIVE);
 
 	/** regular expression matching values of query matches' attributes in Eclipse.org Bugzilla */
-	public static final RegularExpression reValue = new RegularExpression("<td><nobr>([^<]*)</nobr>");
+	public static final Pattern reValue = Pattern.compile("<td><nobr>([^<]*)</nobr>");
 
-	public static final RegularExpression reValueBugzilla220 = new RegularExpression(
-			"<td style=\"white-space: nowrap\">([^<]*)");
-
+	public static final Pattern reValueBugzilla220 = Pattern.compile("<td style=\"white-space: nowrap\">([^<]*)");
+	
 	/** regular expression matching Bugzilla query results format used in v2.12 */
-	protected static final RegularExpression reOld = new RegularExpression(
-			"<a href=\"show_bug.cgi\\?id=(\\d+)\">\\d+</a>\\s*<td class=severity><nobr>([^>]+)</nobr><td class=priority><nobr>([^>]+)</nobr><td class=platform><nobr>([^>]*)</nobr><td class=owner><nobr>([^>]*)</nobr><td class=status><nobr>([^>]*)</nobr><td class=resolution><nobr>([^>]*)</nobr><td class=summary>(.*)$",
-			"i");
-
+	protected static final Pattern reOld = Pattern.compile("<a href=\"show_bug.cgi\\?id=(\\d+)\">\\d+</a>\\s*<td class=severity><nobr>([^>]+)</nobr><td class=priority><nobr>([^>]+)</nobr><td class=platform><nobr>([^>]*)</nobr><td class=owner><nobr>([^>]*)</nobr><td class=status><nobr>([^>]*)</nobr><td class=resolution><nobr>([^>]*)</nobr><td class=summary>(.*)$", Pattern.CASE_INSENSITIVE);
+	
 	private String urlString;
 
 	private TaskRepository repository;
@@ -193,7 +189,6 @@ public class BugzillaSearchEngine {
 				throw new OperationCanceledException("Search cancelled");
 			}
 
-			Match match = new Match();
 			String line;
 			while ((line = in.readLine()) != null) {
 				if (maxMatches != -1 && numCollected >= maxMatches) {
@@ -208,28 +203,29 @@ public class BugzillaSearchEngine {
 				// create regular expressions that can be mathced to check if we
 				// have
 				// bad login information
-				RegularExpression loginRe = new RegularExpression("<title>.*login.*</title>.*");
-				RegularExpression invalidRe = new RegularExpression(".*<title>.*invalid.*password.*</title>.*");
-				RegularExpression passwordRe = new RegularExpression(".*<title>.*password.*invalid.*</title>.*");
-				RegularExpression emailRe = new RegularExpression(".*<title>.*check e-mail.*</title>.*");
-				RegularExpression errorRe = new RegularExpression(".*<title>.*error.*</title>.*");
+				Pattern loginRe = Pattern.compile("<title>.*login.*</title>.*");
+				Pattern invalidRe = Pattern.compile(".*<title>.*invalid.*password.*</title>.*");
+				Pattern passwordRe = Pattern.compile(".*<title>.*password.*invalid.*</title>.*");
+				Pattern emailRe = Pattern.compile(".*<title>.*check e-mail.*</title>.*");
+				Pattern errorRe = Pattern.compile(".*<title>.*error.*</title>.*");
 
 				String lowerLine = line.toLowerCase();
 
 				// check if we have anything that suggests bad login info
-				if (loginRe.matches(lowerLine) || invalidRe.matches(lowerLine) || passwordRe.matches(lowerLine)
-						|| emailRe.matches(lowerLine) || errorRe.matches(lowerLine))
+				if (loginRe.matcher(lowerLine).find() || invalidRe.matcher(lowerLine).find() || passwordRe.matcher(lowerLine).find()
+						|| emailRe.matcher(lowerLine).find() || errorRe.matcher(lowerLine).find())
 					possibleBadLogin = true;
 
-				if (reOld.matches(line, match)) {
-					int id = Integer.parseInt(match.getCapturedText(1));
-					String severity = match.getCapturedText(2);
-					String priority = match.getCapturedText(3);
-					String platform = match.getCapturedText(4);
-					String owner = match.getCapturedText(5);
-					String state = match.getCapturedText(6);
-					String result = match.getCapturedText(7);
-					String description = match.getCapturedText(8);
+				Matcher matcher = reOld.matcher(line);
+				if (matcher.find()) {
+					int id = Integer.parseInt(matcher.group(1));
+					String severity = matcher.group(2);
+					String priority = matcher.group(3);
+					String platform = matcher.group(4);
+					String owner = matcher.group(5);
+					String state = matcher.group(6);
+					String result = matcher.group(7);
+					String description = matcher.group(8);
 					String query = BugzillaPlugin.getMostRecentQuery();
 					if (query == null)
 						query = "";
@@ -241,20 +237,39 @@ public class BugzillaSearchEngine {
 					collector.accept(hit);
 					numCollected++;
 
-				} else if (re.matches(line, match)) {
-					RegularExpression regularExpression;
-					if (repository.getVersion().equals(BugzillaServerVersion.SERVER_220.toString())) {
-						regularExpression = reValueBugzilla220;
-					} else {
-						regularExpression = reValue;
-					}
-
-					int id = Integer.parseInt(match.getCapturedText(1));
-					BugzillaSearchHit hit = createHit(regularExpression, monitor, in, match, repository.getUrl()
-							.toExternalForm(), id);
-					collector.accept(hit);
-					numCollected++;
+				} else {
+					matcher = re.matcher(line);
+					if (matcher.find()) {
+						Pattern regularExpression;
+						
+						if (repository.getVersion().equals(BugzillaServerVersion.SERVER_220.toString())) {
+							regularExpression = reValueBugzilla220;
+						} else {
+							regularExpression = reValue;
+						}
+	
+						int id = Integer.parseInt(matcher.group(1));
+						BugzillaSearchHit hit = createHit(regularExpression, monitor, in, repository.getUrl()
+								.toExternalForm(), id);
+						collector.accept(hit);
+						numCollected++;
+ 					}
 				}
+				
+//				} else if (re.matches(line, match)) {
+//					RegularExpression regularExpression;
+//					if (repository.getVersion().equals(BugzillaServerVersion.SERVER_220.toString())) {
+//						regularExpression = reValueBugzilla220;
+//					} else {
+//						regularExpression = reValue;
+//					}
+//
+//					int id = Integer.parseInt(match.getCapturedText(1));
+//					BugzillaSearchHit hit = createHit(regularExpression, monitor, in, match, repository.getUrl()
+//							.toExternalForm(), id);
+//					collector.accept(hit);
+//					numCollected++;
+//				}
 				if (monitor.isCanceled()) {
 					throw new OperationCanceledException("Search cancelled");
 				}
@@ -306,8 +321,8 @@ public class BugzillaSearchEngine {
 			return status;
 	}
 
-	public static BugzillaSearchHit createHit(RegularExpression regularExpression, IProgressMonitor monitor,
-			BufferedReader in, Match match, String serverUrl, int id) throws IOException {
+	public static BugzillaSearchHit createHit(Pattern regularExpression, IProgressMonitor monitor,
+			BufferedReader in, String serverUrl, int id) throws IOException {
 		String line;
 		String severity = null;
 		String priority = null;
@@ -316,7 +331,9 @@ public class BugzillaSearchEngine {
 		String state = null;
 		String result = null;
 		for (int i = 0; i < 6; i++) {
+			Matcher matcher;
 			do {
+				matcher = null;
 				if (monitor.isCanceled()) {
 					throw new OperationCanceledException("Search cancelled");
 				}
@@ -324,26 +341,29 @@ public class BugzillaSearchEngine {
 				if (line == null)
 					break;
 				line = line.trim();
-			} while (!regularExpression.matches(line, match));
-			switch (i) {
-			case 0:
-				severity = match.getCapturedText(1);
-				break;
-			case 1:
-				priority = match.getCapturedText(1);
-				break;
-			case 2:
-				platform = match.getCapturedText(1);
-				break;
-			case 3:
-				owner = match.getCapturedText(1);
-				break;
-			case 4:
-				state = match.getCapturedText(1);
-				break;
-			case 5:
-				result = match.getCapturedText(1);
-				break;
+				matcher = regularExpression.matcher(line);
+			} while (!matcher.find());
+			if (null != matcher) {
+				switch (i) {
+				case 0:
+					severity = matcher.group(1);
+					break;
+				case 1:
+					priority = matcher.group(1);
+					break;
+				case 2:
+					platform = matcher.group(1);
+					break;
+				case 3:
+					owner = matcher.group(1);
+					break;
+				case 4:
+					state = matcher.group(1);
+					break;
+				case 5:
+					result = matcher.group(1);
+					break;
+				}
 			}
 		}
 

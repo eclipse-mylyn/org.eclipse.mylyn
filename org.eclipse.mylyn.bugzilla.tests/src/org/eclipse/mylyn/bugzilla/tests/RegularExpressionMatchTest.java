@@ -22,24 +22,20 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchEngine;
 import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchHit;
 
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
-
 public class RegularExpressionMatchTest extends TestCase {
 
 	public void testMatchV218() throws IOException {
 		BufferedReader in = new BufferedReader(new StringReader(BUGZILLA_218));
-		Match match = new Match();
 		BugzillaSearchHit hit = BugzillaSearchEngine.createHit(BugzillaSearchEngine.reValue, new NullProgressMonitor(),
-				in, match, IBugzillaConstants.ECLIPSE_BUGZILLA_URL, 123);
+				in, IBugzillaConstants.ECLIPSE_BUGZILLA_URL, 123);
 		assertEquals("nor", hit.getSeverity());
 		assertEquals("P2", hit.getPriority());
 	}
 
 	public void testMatchV220() throws IOException {
 		BufferedReader in = new BufferedReader(new StringReader(BUGZILLA_220));
-		Match match = new Match();
 		BugzillaSearchHit hit = BugzillaSearchEngine.createHit(BugzillaSearchEngine.reValueBugzilla220,
-				new NullProgressMonitor(), in, match, IBugzillaConstants.ECLIPSE_BUGZILLA_URL, 123);
+				new NullProgressMonitor(), in, IBugzillaConstants.ECLIPSE_BUGZILLA_URL, 123);
 		assertEquals("nor", hit.getSeverity());
 		assertEquals("P2", hit.getPriority());
 	}
