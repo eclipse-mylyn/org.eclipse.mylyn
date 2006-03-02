@@ -49,7 +49,7 @@ public class NewRepositoryTaskAction extends Action implements IViewActionDelega
 		// TaskRepository repository =
 		// MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
 		List<String> connectorKinds = new ArrayList<String>();
-		for (AbstractRepositoryConnector client: MylarTaskListPlugin.getRepositoryManager().getRepositoryClients()) {
+		for (AbstractRepositoryConnector client: MylarTaskListPlugin.getRepositoryManager().getRepositoryConnectors()) {
 			if (client.canCreateTaskFromId()) {
 				connectorKinds.add(client.getRepositoryType());
 			}

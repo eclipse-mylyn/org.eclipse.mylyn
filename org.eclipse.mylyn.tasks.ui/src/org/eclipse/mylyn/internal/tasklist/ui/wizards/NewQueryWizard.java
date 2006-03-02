@@ -26,7 +26,7 @@ public class NewQueryWizard extends MultiRepositoryAwareWizard {
 
 			@Override
 			protected IWizard createWizard(TaskRepository taskRepository) {
-				AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
+				AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
 						taskRepository.getKind());
 				return connector.getQueryWizard(taskRepository);
 			}

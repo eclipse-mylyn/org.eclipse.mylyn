@@ -145,7 +145,7 @@ public class NewBugEditor extends AbstractBugEditor {
 		final BugzillaReportSubmitForm bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeNewBugPost(repository, bug);
 	
 		final BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) MylarTaskListPlugin
-				.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+				.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
 
 		IJobChangeListener closeEditorListener = new IJobChangeListener() {
 

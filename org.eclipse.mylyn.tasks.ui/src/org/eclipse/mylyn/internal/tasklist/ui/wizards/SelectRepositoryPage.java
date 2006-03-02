@@ -89,7 +89,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		viewer = new TableViewer(container, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		viewer.setContentProvider(new RepositoryContentProvider());
 		viewer.setLabelProvider(new TaskRepositoryLabelProvider());
-		viewer.setInput(MylarTaskListPlugin.getRepositoryManager().getRepositoryClients());
+		viewer.setInput(MylarTaskListPlugin.getRepositoryManager().getRepositoryConnectors());
 
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {

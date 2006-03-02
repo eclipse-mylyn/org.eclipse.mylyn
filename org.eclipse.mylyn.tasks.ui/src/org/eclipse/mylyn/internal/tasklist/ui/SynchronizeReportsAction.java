@@ -67,7 +67,7 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 	@Override
 	public void run() {
 		if (query != null) {
-			AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
+			AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
 					query.getRepositoryKind());
 			if (connector != null)
 				connector.synchronize(query, new JobChangeAdapter() {
@@ -82,7 +82,7 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 				if (obj instanceof AbstractRepositoryQuery) {
 					final AbstractRepositoryQuery repositoryQuery = (AbstractRepositoryQuery) obj;
 					AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager()
-							.getRepositoryClient(repositoryQuery.getRepositoryKind());
+							.getRepositoryConnector(repositoryQuery.getRepositoryKind());
 					if (client != null)
 						client.synchronize(repositoryQuery, new JobChangeAdapter() {
 							public void done(IJobChangeEvent event) {
@@ -94,7 +94,7 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 					for (ITask task : cat.getChildren()) {
 						if (task instanceof AbstractRepositoryTask) {
 							AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager()
-									.getRepositoryClient(task.getRepositoryKind());
+									.getRepositoryConnector(task.getRepositoryKind());
 							if (client != null)
 								client.requestRefresh((AbstractRepositoryTask) task);
 						}
@@ -102,14 +102,14 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 				} else if (obj instanceof AbstractRepositoryTask) {
 					AbstractRepositoryTask bugTask = (AbstractRepositoryTask) obj;
 					AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager()
-							.getRepositoryClient(bugTask.getRepositoryKind());
+							.getRepositoryConnector(bugTask.getRepositoryKind());
 					if (client != null)
 						client.requestRefresh(bugTask);
 				} else if (obj instanceof AbstractQueryHit) {
 					AbstractQueryHit hit = (AbstractQueryHit) obj;
 					if (hit.getCorrespondingTask() != null) {
 						AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager()
-								.getRepositoryClient(hit.getCorrespondingTask().getRepositoryKind());
+								.getRepositoryConnector(hit.getCorrespondingTask().getRepositoryKind());
 						if (client != null)
 							client.requestRefresh(hit.getCorrespondingTask());
 					}

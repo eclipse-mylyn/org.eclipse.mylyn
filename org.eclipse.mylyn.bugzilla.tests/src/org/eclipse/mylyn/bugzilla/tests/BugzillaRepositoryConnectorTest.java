@@ -67,7 +67,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		assertNotNull(manager);
 		taskList = MylarTaskListPlugin.getTaskListManager().getTaskList();
 
-		AbstractRepositoryConnector abstractRepositoryClient = manager.getRepositoryClient(DEFAULT_KIND);
+		AbstractRepositoryConnector abstractRepositoryClient = manager.getRepositoryConnector(DEFAULT_KIND);
 
 		assertEquals(abstractRepositoryClient.getRepositoryType(), DEFAULT_KIND);
 

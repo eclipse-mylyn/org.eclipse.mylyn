@@ -102,19 +102,27 @@ public abstract class AbstractRepositoryConnector {
 //				return new Status(IStatus.OK, MylarTaskListPlugin.PLUGIN_ID, IStatus.OK, status[0].getMessage(), status[0]
 //						.getException());
 //			}
-
-			repositoryQuery.clearHits();
-			for (AbstractQueryHit newHit : hits) {
-				repositoryQuery.addHit(newHit);
-			}
+	
 			if (queryStatus.getChildren() != null && queryStatus.getChildren().length > 0) {
-				return queryStatus.getChildren()[0];
-			} else {
-				return Status.OK_STATUS;
-			}
+				if (queryStatus.getChildren()[0].getException() == null) {
+					repositoryQuery.clearHits();
+					for (AbstractQueryHit newHit : hits) {
+						repositoryQuery.addHit(newHit);
+					}
+				} else {					
+					return queryStatus.getChildren()[0];
+				}
+			} 
+			return Status.OK_STATUS;
 		}
 	}
 	
+	/**
+	 * 
+	 * @param query
+	 * @param monitor
+	 * @param queryStatus	set an exception on queryStatus.getChildren[0] to indicate failure
+	 */
 	protected abstract List<AbstractQueryHit> performQuery(AbstractRepositoryQuery query, IProgressMonitor monitor, MultiStatus queryStatus);
 	
 	public abstract String getLabel();

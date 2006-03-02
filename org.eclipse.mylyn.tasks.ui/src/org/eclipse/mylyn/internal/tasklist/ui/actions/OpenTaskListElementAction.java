@@ -58,7 +58,7 @@ public class OpenTaskListElementAction extends Action {
 			//element instanceof IQueryHit;
 			boolean forceUpdate = false;
 
-			final AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
+			final AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
 					task.getRepositoryKind());
 			if (!task.isLocal() && connector != null) {
 				Job refreshJob = connector.synchronize(task, forceUpdate, new IJobChangeListener() {
@@ -97,7 +97,7 @@ public class OpenTaskListElementAction extends Action {
 			TaskListUiUtil.openEditor((ITaskContainer) element);
 		} else if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
-			AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
+			AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
 					query.getRepositoryKind());
 			client.openEditQueryDialog(query);
 		}

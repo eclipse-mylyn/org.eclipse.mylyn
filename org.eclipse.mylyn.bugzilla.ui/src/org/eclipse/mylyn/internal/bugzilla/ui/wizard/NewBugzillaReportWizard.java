@@ -60,7 +60,7 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 
 	@Override
 	protected void saveBugOffline() {
-		BugzillaRepositoryConnector client = (BugzillaRepositoryConnector)MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+		BugzillaRepositoryConnector client = (BugzillaRepositoryConnector)MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
 		client.saveOffline(model, true);
 	}
 
@@ -116,7 +116,7 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 			MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);
 		}
 		
-		AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+		AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
 //		client.addTaskToArchive(newTask);
 		TaskListUiUtil.openEditor(newTask);
 		

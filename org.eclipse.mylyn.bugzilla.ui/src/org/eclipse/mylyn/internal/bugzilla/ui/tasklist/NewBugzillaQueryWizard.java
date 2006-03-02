@@ -68,7 +68,7 @@ public class NewBugzillaQueryWizard extends Wizard {
 				protected void execute(IProgressMonitor monitor) throws CoreException {
 					monitor.beginTask("Executing query", 50);
 					try {
-						AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+						AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
 						client.synchronize(queryCategory, null);
 //						if (TaskListView.getDefault() != null) {
 //							TaskListView.getDefault().getViewer().refresh();

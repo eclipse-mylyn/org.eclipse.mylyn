@@ -152,7 +152,7 @@ public class TaskListExtensionReader {
 			Object type = element.getAttribute(ELMNT_TYPE);
 			Object repository = element.createExecutableExtension(ATTR_CLASS);
 			if (repository instanceof AbstractRepositoryConnector && type != null) {
-				MylarTaskListPlugin.getRepositoryManager().addRepositoryClient((AbstractRepositoryConnector) repository);
+				MylarTaskListPlugin.getRepositoryManager().addRepositoryConnector((AbstractRepositoryConnector) repository);
 				
 				String iconPath = element.getAttribute(ATTR_BRANDING_ICON);
 				if (iconPath != null) {

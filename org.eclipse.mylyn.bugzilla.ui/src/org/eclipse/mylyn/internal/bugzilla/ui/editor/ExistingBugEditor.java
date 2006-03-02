@@ -311,7 +311,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				repository, removeCC);
 		
 		final BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) MylarTaskListPlugin
-				.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+				.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
 
 		IJobChangeListener closeEditorListener = new IJobChangeListener() {
 

@@ -48,7 +48,7 @@ public class SelectRepositoryClientPage extends WizardPage {
 		}
 
 		public Object[] getElements(Object parent) {
-			return MylarTaskListPlugin.getRepositoryManager().getRepositoryClients().toArray();
+			return MylarTaskListPlugin.getRepositoryManager().getRepositoryConnectors().toArray();
 		}
 	}
 
@@ -73,7 +73,7 @@ public class SelectRepositoryClientPage extends WizardPage {
 		viewer = new TableViewer(container, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		viewer.setContentProvider(new RepositoryContentProvider());
 		viewer.setLabelProvider(new TaskRepositoryLabelProvider());
-		viewer.setInput(MylarTaskListPlugin.getRepositoryManager().getRepositoryClients());
+		viewer.setInput(MylarTaskListPlugin.getRepositoryManager().getRepositoryConnectors());
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			public void selectionChanged(SelectionChangedEvent event) {

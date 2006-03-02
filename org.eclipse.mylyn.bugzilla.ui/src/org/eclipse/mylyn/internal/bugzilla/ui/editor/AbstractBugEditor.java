@@ -1222,7 +1222,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 //			} else {
 //				BugzillaPlugin.getDefault().fireOfflineStatusChanged(bug, BugzillaOfflineStaus.SAVED);
 //			}
-			final BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector)MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+			final BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector)MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
 			changeDirtyStatus(false);
 			bugzillaRepositoryClient.saveBugReport(bug);//OfflineView.saveOffline(getBug(), true);
 		} catch (Exception e) {

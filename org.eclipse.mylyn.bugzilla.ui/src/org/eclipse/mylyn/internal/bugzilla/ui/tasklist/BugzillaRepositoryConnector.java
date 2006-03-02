@@ -89,6 +89,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private OfflineReportsFile offlineReportsFile;
 
+	/**
+	 * TODO: refactor to abstract class
+	 */
 	private class SynchronizeTaskJob extends Job {
 
 		private BugzillaTask bugzillaTask;
@@ -135,7 +138,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			removeRefreshingTask(bugzillaTask);
 			return new Status(IStatus.OK, MylarPlugin.PLUGIN_ID, IStatus.OK, "", null);
 		}
-
 	}
 	
 	public BugzillaRepositoryConnector() {
@@ -604,11 +606,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			// TODO: Set some form of disconnect status on Query?
 			status.add(new Status(IStatus.OK, MylarTaskListPlugin.PLUGIN_ID, IStatus.OK, "Could not log in", e));
 		}
-
-//		if (!status[0].isOK()) {
-//			// TODO: Set some form of disconnect status on Query?
-//			return 
-//		}
 		
 		return newHits;
 	}
