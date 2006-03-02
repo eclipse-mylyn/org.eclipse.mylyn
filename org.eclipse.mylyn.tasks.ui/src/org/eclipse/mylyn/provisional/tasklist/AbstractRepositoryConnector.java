@@ -50,9 +50,9 @@ public abstract class AbstractRepositoryConnector {
 
 	private static final int MAX_REFRESH_JOBS = 5;
 
-	private static final String LABEL_SYNCHRONIZE_JOB = "Synchronizing task repository query";
+	private static final String LABEL_SYNCHRONIZE_QUERY = "Synchronizing query";
 
-	private static final String SYNCHRONIZING_TASK_LABEL = "Synchronizing repository task";
+	private static final String LABEL_SYNCHRONIZE_TASK = "Synchronizing task";
 
 	private List<AbstractRepositoryTask> toBeRefreshed = new LinkedList<AbstractRepositoryTask>();
 
@@ -71,7 +71,7 @@ public abstract class AbstractRepositoryConnector {
 		boolean forceSync = false;
 
 		public SynchronizeTaskJob(AbstractRepositoryTask repositoryTask) {
-			super(SYNCHRONIZING_TASK_LABEL);
+			super(LABEL_SYNCHRONIZE_TASK + ": " + repositoryTask.getDescription());
 			this.repositoryTask = repositoryTask;
 		}
 
@@ -113,7 +113,7 @@ public abstract class AbstractRepositoryConnector {
 		private List<AbstractQueryHit> hits = new ArrayList<AbstractQueryHit>();
 
 		public SynchronizeQueryJob(AbstractRepositoryQuery query) {
-			super("Synchronizing Query");
+			super(LABEL_SYNCHRONIZE_QUERY + ": " + query.getDescription());
 			repositoryQuery = query;
 		}
 
@@ -121,7 +121,7 @@ public abstract class AbstractRepositoryConnector {
 		protected IStatus run(IProgressMonitor monitor) {
 
 			setProperty(IProgressConstants.ICON_PROPERTY, TaskListImages.REPOSITORY_SYNCHRONIZE);
-
+			repositoryQuery.setCurrentlySynchronizing(true);
 			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
 					repositoryQuery.getRepositoryKind(), repositoryQuery.getRepositoryUrl());
 			if (repository == null) {
@@ -147,9 +147,11 @@ public abstract class AbstractRepositoryConnector {
 						repositoryQuery.addHit(newHit);
 					}
 				} else {
+					repositoryQuery.setCurrentlySynchronizing(false);
 					return queryStatus.getChildren()[0];
 				}
 			}
+			repositoryQuery.setCurrentlySynchronizing(false);
 			return Status.OK_STATUS;
 		}
 	}
@@ -220,7 +222,7 @@ public abstract class AbstractRepositoryConnector {
 			}
 		}
 		clearAllRefreshes();
-		Job synchronizeJob = new Job(LABEL_SYNCHRONIZE_JOB) {
+		Job synchronizeJob = new Job(LABEL_SYNCHRONIZE_QUERY) {
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
@@ -238,7 +240,7 @@ public abstract class AbstractRepositoryConnector {
 	 */
 	public Job synchronize(AbstractRepositoryTask repositoryTask, boolean forceSynch, IJobChangeListener listener) {
 		// TODO: refactor these conditions
-		boolean canNotSynch = repositoryTask.isDirty() || repositoryTask.isCurrentlyDownloading();
+		boolean canNotSynch = repositoryTask.isDirty() || repositoryTask.isCurrentlySynchronizing();
 		// || bugzillaTask.getBugzillaTaskState() != BugzillaTaskState.FREE;
 		boolean hasLocalChanges = repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING
 				|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT;

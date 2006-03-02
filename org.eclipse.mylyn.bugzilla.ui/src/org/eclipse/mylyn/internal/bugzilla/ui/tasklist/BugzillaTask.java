@@ -82,7 +82,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		if (this.isDownloaded() || !super.getDescription().startsWith("<")) {
 			return super.getDescription();
 		} else {
-			if (!isCurrentlyDownloading()) {
+			if (!isCurrentlySynchronizing()) {
 				return AbstractRepositoryTask.getTaskIdAsInt(getHandleIdentifier()) + ": <Could not find bug>";
 			} else {
 				return AbstractRepositoryTask.getTaskIdAsInt(getHandleIdentifier()) + ":";

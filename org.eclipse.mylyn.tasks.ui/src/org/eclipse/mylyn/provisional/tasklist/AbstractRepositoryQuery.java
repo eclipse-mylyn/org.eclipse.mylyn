@@ -35,6 +35,8 @@ public abstract class AbstractRepositoryQuery implements ITaskContainer {
 	protected String description = "";
 
 	private String handle = "";
+	
+	private boolean currentlySynchronizing = false;
 
 	public abstract String getRepositoryKind();
 
@@ -144,5 +146,13 @@ public abstract class AbstractRepositoryQuery implements ITaskContainer {
 
 	public void setLastRefresh(Date lastRefresh) {
 		this.lastRefresh = lastRefresh;
+	}
+
+	public boolean isCurrentlySynchronizing() {
+		return currentlySynchronizing;
+	}
+
+	public void setCurrentlySynchronizing(boolean currentlySynchronizing) {
+		this.currentlySynchronizing = currentlySynchronizing;
 	}
 }

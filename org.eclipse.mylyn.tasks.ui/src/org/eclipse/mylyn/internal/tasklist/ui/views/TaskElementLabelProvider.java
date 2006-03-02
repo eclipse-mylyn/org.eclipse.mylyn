@@ -149,11 +149,16 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		ITask task = getCorrespondingTask((ITaskListElement) element);
 		if (task instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)task;
-			if (repositoryTask.isCurrentlyDownloading()) {
+			if (repositoryTask.isCurrentlySynchronizing()) {
 				return TaskListImages.ITALIC;
 			}
 		}
 		if (element instanceof ITaskContainer) {
+			if (element instanceof AbstractRepositoryQuery) {
+				if (((AbstractRepositoryQuery)element).isCurrentlySynchronizing()) {
+					return TaskListImages.ITALIC;
+				}
+			}
 			for (ITask child : ((ITaskContainer) element).getChildren()) {
 				if (child.isActive())
 					return TaskListImages.BOLD;

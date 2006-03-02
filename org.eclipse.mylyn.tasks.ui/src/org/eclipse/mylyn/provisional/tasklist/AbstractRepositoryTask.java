@@ -23,7 +23,7 @@ public abstract class AbstractRepositoryTask extends Task {
 	/** The last time this task's bug report was downloaded from the server. */
 	protected Date lastRefresh;
 	
-	protected boolean currentlyDownloading;
+	protected boolean currentlySynchronizing;
 	
 	/**
 	 * Value is <code>true</code> if the bug report has saved changes that
@@ -92,12 +92,12 @@ public abstract class AbstractRepositoryTask extends Task {
 		return timeDifference;
 	}
 
-	public boolean isCurrentlyDownloading() {
-		return currentlyDownloading;
+	public boolean isCurrentlySynchronizing() {
+		return currentlySynchronizing;
 	}
 
 	public void setCurrentlyDownloading(boolean currentlyDownloading) {
-		this.currentlyDownloading = currentlyDownloading;
+		this.currentlySynchronizing = currentlyDownloading;
 	}
 
 	public static String getTaskId(String taskHandle) {
