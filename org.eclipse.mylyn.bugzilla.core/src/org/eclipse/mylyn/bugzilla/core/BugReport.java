@@ -182,7 +182,7 @@ public class BugReport implements Serializable, IBugzillaBug {
 
 	private String decodeStringFromCharset(String string) {
 		String decoded = string;
-		if (charset != null && Charset.availableCharsets().containsKey(charset)) {
+		if (charset != null && string != null && Charset.availableCharsets().containsKey(charset)) {
 			try {
 				decoded = new String(string.getBytes(), charset);
 			} catch (UnsupportedEncodingException e) {
