@@ -55,8 +55,8 @@ public class TaskRepositoriesView extends ViewPart {
 	private final ITaskRepositoryListener REPOSITORY_LISTENER = new ITaskRepositoryListener() {
 
 		public void repositorySetUpdated() {
-			TaskRepositoriesView.this.getViewer().refresh();
-		}
+			refresh();
+		} 
 	};
 
 	class ViewContentProvider implements IStructuredContentProvider {
@@ -138,6 +138,12 @@ public class TaskRepositoriesView extends ViewPart {
 		viewer.getControl().setFocus();
 	}
 
+	public void refresh() {
+		if (viewer != null && !viewer.getControl().isDisposed()) {
+			viewer.refresh();
+		} 
+	} 
+	
 	public TableViewer getViewer() {
 		return viewer;
 	}
