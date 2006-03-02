@@ -68,6 +68,7 @@ import org.eclipse.mylar.internal.tasklist.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
@@ -132,7 +133,7 @@ public class TaskListView extends ViewPart {
 	public static final String[] PRIORITY_LEVELS = { Task.PriorityLevel.P1.toString(),
 			Task.PriorityLevel.P2.toString(), Task.PriorityLevel.P3.toString(), Task.PriorityLevel.P4.toString(),
 			Task.PriorityLevel.P5.toString() };
-	
+
 	private static final String SEPARATOR_ID_REPORTS = SEPARATOR_REPORTS;
 
 	private static final String PART_NAME = "Mylar Tasks";
@@ -395,7 +396,6 @@ public class TaskListView extends ViewPart {
 		}
 	}
 
-
 	public TaskListView() {
 		INSTANCE = this;
 		MylarTaskListPlugin.getTaskListManager().addListener(TASK_REFERESH_LISTENER);
@@ -445,12 +445,14 @@ public class TaskListView extends ViewPart {
 				return element instanceof ITask || element instanceof AbstractQueryHit;
 				// return ((ITaskListElement) element).isActivatable();
 			} else if (columnIndex == 2 && element instanceof ITask) {
-				return ((ITask) element).isLocal();
+				return !(element instanceof AbstractRepositoryTask);
 			} else if (element instanceof ITaskListElement && isInRenameAction) {
-				ITaskListElement taskListElement = (ITaskListElement) element;
+//				ITaskListElement taskListElement = (ITaskListElement) element;
 				switch (columnIndex) {
 				case 3:
-					return taskListElement.isLocal();
+					return element instanceof TaskCategory || 
+						(element instanceof ITask && !(element instanceof AbstractRepositoryTask));
+//					return taskListElement.isLocal();
 				}
 			}
 			return false;
@@ -576,14 +578,14 @@ public class TaskListView extends ViewPart {
 					case 1:
 						break;
 					case 2:
-						if (task.isLocal()) {
+						if (!(task instanceof AbstractRepositoryTask)) {
 							Integer intVal = (Integer) value;
 							task.setPriority("P" + (intVal + 1));
 							MylarTaskListPlugin.getTaskListManager().notifyLocalInfoChanged(task);
 						}
 						break;
 					case 3:
-						if (task.isLocal()) {
+						if (!(task instanceof AbstractRepositoryTask)) {
 							task.setDescription(((String) value).trim());
 							// MylarTaskListPlugin.getTaskListManager().notifyTaskPropertyChanged(task,
 							// columnNames[3]);
@@ -632,11 +634,12 @@ public class TaskListView extends ViewPart {
 		m.putInteger(MEMENTO_KEY_SORT_DIRECTION, sortDirection);
 
 		// TODO: move to task list save policy
-		if (MylarTaskListPlugin.getDefault() != null && MylarTaskListPlugin.getDefault().getTaskListSaveManager() != null) {
+		if (MylarTaskListPlugin.getDefault() != null
+				&& MylarTaskListPlugin.getDefault().getTaskListSaveManager() != null) {
 			MylarTaskListPlugin.getDefault().getTaskListSaveManager().createTaskListBackupFile();
 			MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskListAndContexts();
 		}
-	} 
+	}
 
 	private void restoreState() {
 		if (taskListMemento != null) {
@@ -724,17 +727,18 @@ public class TaskListView extends ViewPart {
 				}
 			});
 		}
-		
-		taskListTableLabelProvider = new TaskListTableLabelProvider(new TaskElementLabelProvider(), PlatformUI.getWorkbench()
-				.getDecoratorManager().getLabelDecorator(), parent.getBackground());
-		
+
+		taskListTableLabelProvider = new TaskListTableLabelProvider(new TaskElementLabelProvider(), PlatformUI
+				.getWorkbench().getDecoratorManager().getLabelDecorator(), parent.getBackground());
+
 		CellEditor[] editors = new CellEditor[columnNames.length];
 		TextCellEditor textEditor = new TextCellEditor(getViewer().getTree());
 		((Text) textEditor.getControl()).setOrientation(SWT.LEFT_TO_RIGHT);
 		editors[0] = new CheckboxCellEditor();
 		editors[1] = textEditor;
-		editors[2] = new ComboBoxCellEditor(getViewer().getTree(), PRIORITY_LEVELS, SWT.READ_ONLY);		
-//		editors[2] = new ImageTableCellEditor(getViewer().getTree(), getPirorityImages());
+		editors[2] = new ComboBoxCellEditor(getViewer().getTree(), PRIORITY_LEVELS, SWT.READ_ONLY);
+		// editors[2] = new ImageTableCellEditor(getViewer().getTree(),
+		// getPirorityImages());
 		editors[3] = textEditor;
 		getViewer().setCellEditors(editors);
 		getViewer().setCellModifier(new TaskListCellModifier());
@@ -876,7 +880,7 @@ public class TaskListView extends ViewPart {
 			addAction(openUrlInExternal, manager, element);
 
 			if (task != null) {
-				if (task.isLocal()) {
+				if (!(task instanceof AbstractRepositoryTask)) {
 					if (task.isCompleted()) {
 						addAction(markCompleteAction, manager, element);
 					} else {
@@ -890,9 +894,9 @@ public class TaskListView extends ViewPart {
 					manager.add(activateAction);
 				}
 
-//				if (!task.isLocal()) {
+				// if (!task.isLocal()) {
 				addAction(removeFromCategoryAction, manager, element);
-//				}
+				// }
 				addAction(deleteAction, manager, element);
 			} else {
 				manager.add(activateAction);
@@ -901,7 +905,7 @@ public class TaskListView extends ViewPart {
 			addAction(deleteAction, manager, element);
 		}
 
-		if ((element instanceof ITask && ((ITask) element).isLocal()) || element instanceof ITaskContainer
+		if ((element instanceof ITask && !(element instanceof AbstractRepositoryTask)) || element instanceof ITaskContainer
 				|| element instanceof AbstractRepositoryQuery) {
 			addAction(renameAction, manager, element);
 		}
@@ -1103,11 +1107,6 @@ public class TaskListView extends ViewPart {
 		});
 	}
 
-	// public void showMessage(String message) {
-	// MessageDialog.openInformation(getViewer().getControl().getShell(),
-	// "TaskList Message", message);
-	// }
-
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
@@ -1126,14 +1125,6 @@ public class TaskListView extends ViewPart {
 			return null;
 		}
 	}
-
-	// public void notifyTaskDataChanged(ITask task) {
-	// if (getViewer().getTree() != null && !getViewer().getTree().isDisposed())
-	// {
-	// getViewer().refresh();
-	// expandToActiveTasks();
-	// }
-	// }
 
 	public static TaskListView getDefault() {
 		return INSTANCE;
@@ -1265,11 +1256,9 @@ public class TaskListView extends ViewPart {
 		return drilledIntoCategory;
 	}
 
-	
 	public TaskListFilteredTree getFilteredTree() {
 		return filteredTree;
 	}
-	
 
 	public void selectedAndFocusTask(ITask task) {
 		if (task == null)
@@ -1290,7 +1279,7 @@ public class TaskListView extends ViewPart {
 			}
 		}
 	}
-	
+
 	protected void refreshTask(ITask task) {
 		refresh(task);
 		if (task.getCategory() == null || task.getCategory().getHandleIdentifier().equals(TaskList.LABEL_ARCHIVE)) {
@@ -1298,14 +1287,15 @@ public class TaskListView extends ViewPart {
 		} else {
 			refresh(task.getCategory());
 		}
-		
-		Set<AbstractQueryHit> hits = MylarTaskListPlugin.getTaskListManager().getTaskList().getQueryHitsForHandle(task.getHandleIdentifier());
+
+		Set<AbstractQueryHit> hits = MylarTaskListPlugin.getTaskListManager().getTaskList().getQueryHitsForHandle(
+				task.getHandleIdentifier());
 		for (AbstractQueryHit hit : hits) {
-			refresh(hit);			
+			refresh(hit);
 		}
-		
+
 	}
-	
+
 	private void refresh(final ITaskListElement element) {
 		if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -1326,8 +1316,7 @@ public class TaskListView extends ViewPart {
 			});
 		}
 	}
-	
-	
+
 	public Image[] getPirorityImages() {
 		Image[] images = new Image[Task.PriorityLevel.values().length];
 		for (int i = 0; i < Task.PriorityLevel.values().length; i++) {
@@ -1335,7 +1324,6 @@ public class TaskListView extends ViewPart {
 		}
 		return images;
 	}
-
 
 	public List<AbstractTaskFilter> getFilters() {
 		return filters;

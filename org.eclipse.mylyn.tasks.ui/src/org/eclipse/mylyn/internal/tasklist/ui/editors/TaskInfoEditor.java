@@ -24,6 +24,7 @@ import org.eclipse.mylar.internal.tasklist.ui.actions.TaskEditorCopyAction;
 import org.eclipse.mylar.internal.tasklist.ui.views.DatePicker;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -171,7 +172,7 @@ public class TaskInfoEditor extends EditorPart {
 								int selectionIndex = statusCombo.indexOf(updateTask.getStatus().toString());
 								statusCombo.select(selectionIndex);
 							}
-							if (updateTask.isLocal() && !endDate.isDisposed()) {
+							if (!(updateTask instanceof AbstractRepositoryTask) && !endDate.isDisposed()) {
 								endDate.setText(getTaskDateString(updateTask));
 							}
 						}
@@ -328,7 +329,7 @@ public class TaskInfoEditor extends EditorPart {
 				| Section.TWISTIE);
 		section.setText(LABEL_OVERVIEW);
 		section.setExpanded(true);
-		if (!task.isLocal()) {
+		if (task instanceof AbstractRepositoryTask) {
 			section.setDescription("To modify these fields use the repository editor.");
 		}
 
@@ -359,7 +360,7 @@ public class TaskInfoEditor extends EditorPart {
 		description.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		toolkit.paintBordersFor(container);
 
-		if (!task.isLocal()) {
+		if (task instanceof AbstractRepositoryTask) {
 			description.setEnabled(false);
 		} else {
 			description.addKeyListener(new KeyListener() {
@@ -382,7 +383,7 @@ public class TaskInfoEditor extends EditorPart {
 		issueReportURL = toolkit.createText(container, task.getUrl(), SWT.NONE);
 		issueReportURL.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		if (!task.isLocal()) {
+		if (task instanceof AbstractRepositoryTask) {
 			issueReportURL.setEditable(false);
 		} else {
 			issueReportURL.addModifyListener(new ModifyListener() {
@@ -408,7 +409,7 @@ public class TaskInfoEditor extends EditorPart {
 		int prioritySelectionIndex = priorityCombo.indexOf(task.getPriority());
 		priorityCombo.select(prioritySelectionIndex);
 
-		if (!task.isLocal()) {
+		if (task instanceof AbstractRepositoryTask) {
 			priorityCombo.setEnabled(false);
 		} else {
 			priorityCombo.addSelectionListener(new SelectionListener() {
@@ -433,7 +434,7 @@ public class TaskInfoEditor extends EditorPart {
 
 		int selectionIndex = statusCombo.indexOf(task.getStatus().toString());
 		statusCombo.select(selectionIndex);
-		if (!task.isLocal()) {
+		if (task instanceof AbstractRepositoryTask) {
 			statusCombo.setEnabled(false);
 		} else {
 			statusCombo.addSelectionListener(new SelectionListener() {

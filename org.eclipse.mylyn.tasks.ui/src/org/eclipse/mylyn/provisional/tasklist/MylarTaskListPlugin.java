@@ -366,7 +366,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					}
 				}
 				for (ITask task : taskListManager.getTaskList().getAllTasks()) {
-					if (!task.isLocal()) {
+					if (task instanceof AbstractRepositoryTask) {
 						String id = AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
 						String newHandle = AbstractRepositoryTask.getHandle(repositoryUrl, id);
 						task.setHandleIdentifier(newHandle);

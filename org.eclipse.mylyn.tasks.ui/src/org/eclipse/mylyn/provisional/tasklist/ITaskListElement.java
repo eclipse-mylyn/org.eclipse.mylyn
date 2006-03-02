@@ -29,7 +29,7 @@ public interface ITaskListElement {
 	/**
 	 * TODO: refactor to use repository kinds?
 	 */
-	public abstract boolean isLocal();
+//	public abstract boolean isLocal();
 
 }
 

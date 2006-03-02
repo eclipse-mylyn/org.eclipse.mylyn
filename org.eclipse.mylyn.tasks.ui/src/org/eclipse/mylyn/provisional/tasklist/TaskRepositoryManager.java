@@ -134,7 +134,7 @@ public class TaskRepositoryManager {
 		List<ITask> activeTasks = MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTasks();
 		if (activeTasks.size() == 1) {
 			ITask activeTask = activeTasks.get(0);
-			if (!activeTask.isLocal()) {
+			if (activeTask instanceof AbstractRepositoryTask) {
 				String repositoryUrl = AbstractRepositoryTask.getRepositoryUrl(activeTask.getHandleIdentifier());
 				for (TaskRepository repository : getRepositories(repositoryKind)) {
 					if (repository.getUrl().toExternalForm().equals(repositoryUrl)) {
