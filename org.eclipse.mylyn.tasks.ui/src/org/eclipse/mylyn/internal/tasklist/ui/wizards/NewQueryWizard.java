@@ -30,7 +30,8 @@ public class NewQueryWizard extends MultiRepositoryAwareWizard {
 						taskRepository.getKind());
 				return connector.getQueryWizard(taskRepository);
 			}
-
 		});
 	}
+	
+	
 }

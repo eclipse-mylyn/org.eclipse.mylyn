@@ -18,10 +18,12 @@ import org.osgi.framework.BundleContext;
 /**
  * The main plugin class to be used in the desktop.
  * 
- * @author Mik Kersten (hardening of prototype)
+ * @author Mik Kersten
  */
 public class BugzillaUiPlugin extends AbstractUIPlugin {
 
+	public static final String PLUGIN_ID = "org.eclipse.mylar.bugzilla.ui";
+	
 	private static BugzillaUiPlugin plugin;
 
 	public BugzillaUiPlugin() {

@@ -11,8 +11,11 @@
 
 package org.eclipse.mylar.internal.tasklist.ui;
 
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
@@ -26,6 +29,7 @@ import org.eclipse.mylar.provisional.tasklist.TaskCategory;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Ken Sueda and Mik Kersten
@@ -50,37 +54,66 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 		this.query = query;
 	}
 
+	private void checkSyncResult(final IJobChangeEvent event, final AbstractRepositoryQuery problemQuery) {
+		if (event.getResult().getException() != null) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					MessageDialog.openError(Display.getDefault().getActiveShell(), "Synchronize Reports Error", event.getResult().getMessage());
+				}
+			});
+		}
+	}
+
 	@Override
 	public void run() {
 		if (query != null) {
-			AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(query.getRepositoryKind());
-			if (connector != null) connector.synchronize(query);
-		} else if (TaskListView.getDefault() != null) {			
+			AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
+					query.getRepositoryKind());
+			if (connector != null)
+				connector.synchronize(query, new JobChangeAdapter() {
+					public void done(IJobChangeEvent event) {
+						checkSyncResult(event, query);
+					}
+				});
+
+		} else if (TaskListView.getDefault() != null) {
 			ISelection selection = TaskListView.getDefault().getViewer().getSelection();
 			for (Object obj : ((IStructuredSelection) selection).toList()) {
 				if (obj instanceof AbstractRepositoryQuery) {
-					AbstractRepositoryQuery repositoryQuery = (AbstractRepositoryQuery) obj;
-					AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(repositoryQuery.getRepositoryKind());
-					if (client != null) client.synchronize(repositoryQuery);
+					final AbstractRepositoryQuery repositoryQuery = (AbstractRepositoryQuery) obj;
+					AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager()
+							.getRepositoryClient(repositoryQuery.getRepositoryKind());
+					if (client != null)
+						client.synchronize(repositoryQuery, new JobChangeAdapter() {
+							public void done(IJobChangeEvent event) {
+								checkSyncResult(event, repositoryQuery);
+							}
+						});
 				} else if (obj instanceof TaskCategory) {
 					TaskCategory cat = (TaskCategory) obj;
 					for (ITask task : cat.getChildren()) {
 						if (task instanceof AbstractRepositoryTask) {
-							AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(task.getRepositoryKind());
-							if (client != null) client.requestRefresh((AbstractRepositoryTask)task);
+							AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager()
+									.getRepositoryClient(task.getRepositoryKind());
+							if (client != null)
+								client.requestRefresh((AbstractRepositoryTask) task);
 						}
 					}
 				} else if (obj instanceof AbstractRepositoryTask) {
-					AbstractRepositoryTask bugTask = (AbstractRepositoryTask)obj;
-					AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(bugTask.getRepositoryKind());
-					if (client != null) client.requestRefresh(bugTask);
+					AbstractRepositoryTask bugTask = (AbstractRepositoryTask) obj;
+					AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager()
+							.getRepositoryClient(bugTask.getRepositoryKind());
+					if (client != null)
+						client.requestRefresh(bugTask);
 				} else if (obj instanceof AbstractQueryHit) {
 					AbstractQueryHit hit = (AbstractQueryHit) obj;
 					if (hit.getCorrespondingTask() != null) {
-						AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(hit.getCorrespondingTask().getRepositoryKind());
-						if (client != null) client.requestRefresh(hit.getCorrespondingTask());
+						AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager()
+								.getRepositoryClient(hit.getCorrespondingTask().getRepositoryKind());
+						if (client != null)
+							client.requestRefresh(hit.getCorrespondingTask());
 					}
-				} 
+				}
 			}
 		}
 		Display.getDefault().asyncExec(new Runnable() {

@@ -25,7 +25,6 @@ import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchEngine;
 import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchQuery;
 import org.eclipse.mylar.internal.bugzilla.core.search.IBugzillaSearchOperation;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
@@ -106,11 +105,11 @@ public class BugzillaCategorySearchOperation extends WorkspaceModifyOperation im
 			// check the status so that we don't keep searching if there
 			// is a problem
 			if (status.getCode() == IStatus.CANCEL) {
-				MylarStatusHandler.log("search cancelled", this);
+//				MylarStatusHandler.log("search cancelled", this);
 				return null;
 			} else if (!status.isOK()) {
-				MylarStatusHandler.log("search error", this);
-				MylarStatusHandler.log(status);
+//				MylarStatusHandler.log("search error", this);
+//				MylarStatusHandler.log(status);
 				return null;
 			}
 			isMaxReached = engine.isMaxReached();

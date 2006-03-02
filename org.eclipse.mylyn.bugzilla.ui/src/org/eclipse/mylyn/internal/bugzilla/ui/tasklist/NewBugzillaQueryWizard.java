@@ -69,7 +69,7 @@ public class NewBugzillaQueryWizard extends Wizard {
 					monitor.beginTask("Executing query", 50);
 					try {
 						AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
-						client.synchronize(queryCategory);
+						client.synchronize(queryCategory, null);
 //						if (TaskListView.getDefault() != null) {
 //							TaskListView.getDefault().getViewer().refresh();
 //						}
