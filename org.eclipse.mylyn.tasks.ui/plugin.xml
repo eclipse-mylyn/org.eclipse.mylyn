@@ -103,7 +103,7 @@
             class="org.eclipse.mylar.internal.tasklist.ui.views.TaskActivityView"
             icon="icons/eview16/calendar.gif"
             id="org.eclipse.mylar.tasklist.activity"
-            name="Task Activity"/>
+            name="Task Activity (Experimental)"/>
   	</extension>
 	
     <extension point="org.eclipse.ui.perspectiveExtensions">
