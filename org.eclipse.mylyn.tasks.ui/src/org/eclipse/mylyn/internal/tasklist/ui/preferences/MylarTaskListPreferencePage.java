@@ -44,7 +44,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 
 	private Button browse = null;
 
-	private Button copyExistingDataCheckbox = null;
+//	private Button copyExistingDataCheckbox = null;
 
 	private Button reportEditor = null;
 
@@ -106,17 +106,14 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		if (!taskDirectory.equals(MylarPlugin.getDefault().getDataDirectory())) {
 			// Order matters:
 			MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskListAndContexts();
-			if (copyExistingDataCheckbox.getSelection()) {
-				MylarTaskListPlugin.getDefault().getTaskListSaveManager().copyDataDirContentsTo(taskDirectory);
-			}
+//			if (copyExistingDataCheckbox.getSelection()) {
+			MylarTaskListPlugin.getDefault().getTaskListSaveManager().copyDataDirContentsTo(taskDirectory);
+//			}
 			MylarPlugin.getDefault().setDataDirectory(taskDirectory);
-			// getPreferenceStore().setValue(MylarPlugin.PREF_DATA_DIR,
-			// taskDirectory);
-			// MylarTaskListPlugin.getDefault().setDataDirectory(MylarPlugin.getDefault().getDataDirectory());
 		}
 
-		getPreferenceStore().setValue(TaskListPreferenceConstants.COPY_TASK_DATA,
-				copyExistingDataCheckbox.getSelection());
+//		getPreferenceStore().setValue(TaskListPreferenceConstants.COPY_TASK_DATA,
+//				copyExistingDataCheckbox.getSelection());
 		getPreferenceStore().setValue(TaskListPreferenceConstants.REPORT_OPEN_EDITOR, reportEditor.getSelection());
 		getPreferenceStore().setValue(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL, reportInternal.getSelection());
 		// getPreferenceStore().setValue(MylarTaskListPlugin.REPORT_OPEN_EXTERNAL,
@@ -150,7 +147,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 
 	public void performDefaults() {
 		super.performDefaults();
-		copyExistingDataCheckbox.setSelection(true);
+//		copyExistingDataCheckbox.setSelection(true);
 		// IPath rootPath =
 		// ResourcesPlugin.getWorkspace().getRoot().getLocation();
 		// String taskDirectory = rootPath.toString() + "/" +
@@ -226,10 +223,10 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 			}
 		});
 
-		copyExistingDataCheckbox = new Button(taskDirComposite, SWT.CHECK);
-		copyExistingDataCheckbox.setText("Copy existing data to new location");
-		copyExistingDataCheckbox.setSelection(getPreferenceStore()
-				.getBoolean(TaskListPreferenceConstants.COPY_TASK_DATA));
+//		copyExistingDataCheckbox = new Button(taskDirComposite, SWT.CHECK);
+//		copyExistingDataCheckbox.setText("Copy existing data to new location");
+//		copyExistingDataCheckbox.setSelection(getPreferenceStore()
+//				.getBoolean(TaskListPreferenceConstants.COPY_TASK_DATA));
 
 	}
 
