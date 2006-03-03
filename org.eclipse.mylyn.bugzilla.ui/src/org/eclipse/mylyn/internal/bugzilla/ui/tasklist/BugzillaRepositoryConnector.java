@@ -341,7 +341,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 													+ TaskRepositoriesView.NAME + ".");
 								} else {
 									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-											"Could not post bug.  Check repository credentials and connectivity.");
+											"Could not post bug.  Check repository credentials and connectivity.\n\n"
+											+ throwable); 
 								}
 							}
 						});
@@ -471,8 +472,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return supportedVersions;
 	}
 
+	/** public for testing purposes **/
 	@Override
-	protected List<AbstractQueryHit> performQuery(final AbstractRepositoryQuery repositoryQuery, IProgressMonitor monitor, MultiStatus status) {
+	public List<AbstractQueryHit> performQuery(final AbstractRepositoryQuery repositoryQuery, IProgressMonitor monitor, MultiStatus status) {
 		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
 				repositoryQuery.getRepositoryKind(), repositoryQuery.getRepositoryUrl());
 		
