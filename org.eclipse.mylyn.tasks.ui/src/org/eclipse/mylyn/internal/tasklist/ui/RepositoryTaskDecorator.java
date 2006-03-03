@@ -21,7 +21,6 @@ import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 
 /**
  * @author Mik Kersten
@@ -40,23 +39,17 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 					decoration.addSuffix("    [ <unknown host> ]");
 				}
 			} 
-		} else if (element instanceof AbstractRepositoryTask) {
+		} else if (element instanceof AbstractRepositoryTask) { 
 			decoration.addOverlay(TaskListImages.OVERLAY_REPOSITORY, IDecoration.BOTTOM_LEFT);
-			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)element;		
-			if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
-				decoration.addOverlay(TaskListImages.OVERLAY_OUTGOING, IDecoration.TOP_RIGHT);
-			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
-				decoration.addOverlay(TaskListImages.OVERLAY_INCOMMING, IDecoration.TOP_RIGHT);
-			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
-				decoration.addOverlay(TaskListImages.OVERLAY_CONFLICT, IDecoration.TOP_RIGHT);
-			}
 		} else if (element instanceof AbstractQueryHit) {
-			ITask correspondingTask = ((AbstractQueryHit)element).getCorrespondingTask();
-			if (correspondingTask == null) {
-				decoration.addOverlay(TaskListImages.OVERLAY_INCOMMING, IDecoration.TOP_RIGHT);
-			} else {
-				decorate(correspondingTask, decoration);
-			}
+			decoration.addOverlay(TaskListImages.OVERLAY_REPOSITORY, IDecoration.BOTTOM_LEFT);
+			
+//			ITask correspondingTask = ((AbstractQueryHit)element).getCorrespondingTask();
+//			if (correspondingTask == null) {
+//				decoration.addOverlay(TaskListImages.OVERLAY_INCOMMING, IDecoration.TOP_RIGHT);
+//			} else {
+//				decorate(correspondingTask, decoration);
+//			} 
 		} else if (element instanceof ITask) {
 			String url = ((ITask)element).getUrl();
 			if (url != null && !url.trim().equals("") && !url.equals("http://")) {

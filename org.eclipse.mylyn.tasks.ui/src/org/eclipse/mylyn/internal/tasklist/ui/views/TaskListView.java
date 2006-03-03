@@ -191,9 +191,9 @@ public class TaskListView extends ViewPart {
 
 	static final String FILTER_LABEL = "<filter>";
 
-	protected String[] columnNames = new String[] { "", ".", "!", "Description" };
+	protected String[] columnNames = new String[] { "", " ", " ", "!", "Description" };
 
-	protected int[] columnWidths = new int[] { 60, 20, 10, 160 };
+	protected int[] columnWidths = new int[] { 60, 16, 8, 8, 160 };
 
 	private TreeColumn[] columns;
 
@@ -693,7 +693,8 @@ public class TaskListView extends ViewPart {
   
 	@Override
 	public void createPartControl(Composite parent) {
-		filteredTree = new TaskListFilteredTree(parent, SWT.MULTI | SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL
+		filteredTree = new TaskListFilteredTree(parent, 
+				SWT.MULTI | SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL
 				| SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new TaskListPatternFilter());
 		filteredTree.setInitialText("");
 
