@@ -26,7 +26,7 @@
             class="org.eclipse.mylar.internal.tasklist.planner.ui.TaskPlannerWizard"
             icon="icons/eview16/task-list.gif"
             id="org.eclipse.mylar.tasklist.report.ui.planningGameWizard"
-            name="Mylar Task Planner (Experimental)">
+            name="Task Activity Report (Experimental)">
       </wizard>
 	</extension>
   <extension
@@ -100,10 +100,10 @@
       <view
             allowMultiple="false"
             category="org.eclipse.mylar"
-            class="org.eclipse.mylar.internal.tasklist.history.ui.TaskHistoryView"
-            icon="icons/eview16/task-list.gif"
-            id="org.eclipse.mylar.tasks.ui.views.TaskHistoryView"
-            name="Mylar Task Activity"/>
+            class="org.eclipse.mylar.internal.tasklist.ui.views.TaskActivityView"
+            icon="icons/eview16/calendar.gif"
+            id="org.eclipse.mylar.tasklist.activity"
+            name="Task Activity"/>
   	</extension>
 	
     <extension point="org.eclipse.ui.perspectiveExtensions">

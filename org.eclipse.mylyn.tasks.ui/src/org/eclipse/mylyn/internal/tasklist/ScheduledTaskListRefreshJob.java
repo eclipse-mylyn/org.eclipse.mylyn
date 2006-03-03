@@ -26,7 +26,7 @@ import org.eclipse.mylar.provisional.tasklist.TaskList;
 import org.eclipse.mylar.provisional.tasklist.TaskListManager;
 
 /**
- * @author Robert Elves
+ * @author Rob Elves
  */
 public class ScheduledTaskListRefreshJob extends Job {
 

@@ -9,7 +9,9 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasklist.history.ui;
+package org.eclipse.mylar.internal.tasklist.ui.views;
+
+import java.util.List;
 
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -19,10 +21,17 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.internal.tasklist.ui.actions.OpenTaskListElementAction;
+import org.eclipse.mylar.provisional.core.IMylarContext;
+import org.eclipse.mylar.provisional.core.IMylarContextListener;
+import org.eclipse.mylar.provisional.core.IMylarElement;
+import org.eclipse.mylar.provisional.core.InteractionEvent;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
@@ -36,11 +45,11 @@ import org.eclipse.ui.part.ViewPart;
 /**
  * @author Rob Elves
  */
-public class TaskHistoryView extends ViewPart {
+public class TaskActivityView extends ViewPart {
 
-	public static final String ID = "org.eclipse.mylar.tasks.ui.views.TaskHistoryView";
+	public static final String ID = "org.eclipse.mylar.tasklist.activity";
 
-	private static TaskHistoryView INSTANCE;
+	private static TaskActivityView INSTANCE;
 
 	private OpenTaskListElementAction openTaskEditor;
 
@@ -58,26 +67,111 @@ public class TaskHistoryView extends ViewPart {
 
 	private int sortDirection = DEFAULT_SORT_DIRECTION;
 
-	private TaskHistoryLabelProvider taskHistoryTreeLabelProvider;
+	private TaskActivityLabelProvider taskHistoryTreeLabelProvider;
 
 	private TreeViewer treeViewer;
 
-	public static TaskHistoryView openInActivePerspective() {
+	private final ITaskActivityListener TASK_LISTENER = new ITaskActivityListener() {
+
+		public void taskActivated(ITask task) {
+			// ignore
+			
+		}
+
+		public void tasksActivated(List<ITask> tasks) {
+			// ignore
+			
+		}
+
+		public void taskDeactivated(ITask task) {
+			// ignore
+			
+		}
+
+		public void localInfoChanged(ITask task) {
+			// ignore
+			
+		}
+
+		public void repositoryInfoChanged(ITask task) {
+			// ignore
+			
+		}
+
+		public void tasklistRead() {
+			getViewer().setInput(getViewSite());
+		}
+
+		public void taskListModified() {
+			// ignore	
+		}
+	};
+	
+	private final IMylarContextListener CONTEXT_LISTENER = new IMylarContextListener() {
+
+		public void contextActivated(IMylarContext context) {
+			getViewer().setInput(getViewSite());
+		}
+
+		public void contextDeactivated(IMylarContext context) {
+			
+		}
+
+		public void interestChanged(IMylarElement element) {
+			String taskHandle = element.getHandleIdentifier();
+			List<InteractionEvent> events = MylarPlugin.getContextManager().getActivityHistoryMetaContext().getInteractionHistory();
+			InteractionEvent event = events.get(events.size()-1);
+		}
+		
+		public void presentationSettingsChanging(UpdateKind kind) {
+			// ignore
+		}
+
+		public void presentationSettingsChanged(UpdateKind kind) {
+			// ignore
+		}
+
+
+		public void interestChanged(List<IMylarElement> elements) {
+			// ignore		
+		}
+
+		public void nodeDeleted(IMylarElement element) {
+			// ignore	
+		}
+
+		public void landmarkAdded(IMylarElement element) {
+			// ignore	
+		}
+
+		public void landmarkRemoved(IMylarElement element) {
+			// ignore	
+		}
+
+		public void edgesChanged(IMylarElement element) {
+			// ignore	
+		}
+	};
+	
+	public static TaskActivityView openInActivePerspective() {
 		try {
-			return (TaskHistoryView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ID);
+			return (TaskActivityView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ID);
 		} catch (Exception e) {
 			return null;
 		}
 	}
 
-	public TaskHistoryView() {
+	public TaskActivityView() {
 		INSTANCE = this;
-
+		MylarTaskListPlugin.getTaskListManager().addListener(TASK_LISTENER);
+		MylarPlugin.getContextManager().addActivityMetaContextListener(CONTEXT_LISTENER);
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
+		MylarTaskListPlugin.getTaskListManager().removeListener(TASK_LISTENER);
+		MylarPlugin.getContextManager().removeActivityMetaContextListener(CONTEXT_LISTENER);
 	}
 
 	private class TaskHistoryTableSorter extends ViewerSorter {
@@ -187,10 +281,13 @@ public class TaskHistoryView extends ViewPart {
 		// taskListTableLabelProvider = new TaskListTableLabelProvider(new
 		// TaskElementLabelProvider(), PlatformUI.getWorkbench()
 		// .getDecoratorManager().getLabelDecorator(), parent.getBackground());
-		taskHistoryTreeLabelProvider = new TaskHistoryLabelProvider();
+//		taskHistoryTreeLabelProvider = new TaskActivityLabelProvider();
+		taskHistoryTreeLabelProvider = new TaskActivityLabelProvider(new TaskElementLabelProvider(), PlatformUI
+				.getWorkbench().getDecoratorManager().getLabelDecorator(), parent.getBackground());
+
 
 		getViewer().setSorter(new TaskHistoryTableSorter(columnNames[sortIndex]));
-		getViewer().setContentProvider(new TaskHistoryContentProvider(this));
+		getViewer().setContentProvider(new TaskActivityContentProvider(this));
 		getViewer().setLabelProvider(taskHistoryTreeLabelProvider);
 		getViewer().setInput(getViewSite());
 
@@ -212,7 +309,7 @@ public class TaskHistoryView extends ViewPart {
 		});
 	}
 
-	public static TaskHistoryView getDefault() {
+	public static TaskActivityView getDefault() {
 		return INSTANCE;
 	}
 

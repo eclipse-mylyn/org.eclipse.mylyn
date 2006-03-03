@@ -34,7 +34,7 @@ import org.eclipse.swt.dnd.TransferData;
 
 /**
  * @author Mik Kersten
- * @author Robert Elves (added URL based task creation support)
+ * @author Rob Elves (added URL based task creation support)
  */
 public class TaskListDropAdapter extends ViewerDropAdapter {
 

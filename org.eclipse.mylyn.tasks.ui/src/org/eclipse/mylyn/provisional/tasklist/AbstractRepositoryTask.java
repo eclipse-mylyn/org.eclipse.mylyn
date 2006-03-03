@@ -16,7 +16,8 @@ import java.util.Date;
 import org.eclipse.mylar.internal.core.MylarContextManager;
 
 /**
- * @author Mik Kersten and Robert Elves
+ * @author Mik Kersten
+ * @author Rob Elves
  */
 public abstract class AbstractRepositoryTask extends Task {
 

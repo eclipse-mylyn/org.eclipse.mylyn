@@ -23,7 +23,7 @@ import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskListManager;
 
 /**
- * @author Robert Elves
+ * @author Rob Elves
  * @author Mik Kersten
  */
 public class TaskListDnDTest extends TestCase {

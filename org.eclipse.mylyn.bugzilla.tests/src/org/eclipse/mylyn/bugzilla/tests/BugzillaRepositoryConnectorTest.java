@@ -40,7 +40,7 @@ import org.eclipse.ui.PartInitException;
 
 /**
  * @author Mik Kersten
- * @author Robert Elves
+ * @author Rob Elves
  */
 public class BugzillaRepositoryConnectorTest extends TestCase {
 

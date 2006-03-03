@@ -49,7 +49,7 @@ public class TaskActivationHistory {
 	protected void loadPersistentHistory() {
 		int tasksAdded = 0;
 
-		for (int i = MylarPlugin.getContextManager().getActivityHistory().getInteractionHistory().size() - 1; i >= 0; i--) {
+		for (int i = MylarPlugin.getContextManager().getActivityHistoryMetaContext().getInteractionHistory().size() - 1; i >= 0; i--) {
 			ITask prevTask = getHistoryTaskAt(i);
 
 			if (prevTask != null && !isDuplicate(prevTask, i + 1)) {
@@ -70,7 +70,7 @@ public class TaskActivationHistory {
 	 * @author Wesley Coelho
 	 */
 	protected boolean isDuplicate(ITask task, int startingIndex) {
-		for (int i = startingIndex; i < MylarPlugin.getContextManager().getActivityHistory().getInteractionHistory()
+		for (int i = startingIndex; i < MylarPlugin.getContextManager().getActivityHistoryMetaContext().getInteractionHistory()
 				.size(); i++) {
 			ITask currTask = getHistoryTaskAt(i);
 			if (currTask != null && currTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
@@ -87,7 +87,7 @@ public class TaskActivationHistory {
 	 * @author Wesley Coelho
 	 */
 	protected ITask getHistoryTaskAt(int pos) {
-		InteractionEvent event = MylarPlugin.getContextManager().getActivityHistory().getInteractionHistory().get(pos);
+		InteractionEvent event = MylarPlugin.getContextManager().getActivityHistoryMetaContext().getInteractionHistory().get(pos);
 		return MylarTaskListPlugin.getTaskListManager().getTaskForHandle(event.getStructureHandle(), false);
 	}
 

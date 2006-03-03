@@ -25,7 +25,7 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
 /**
  * @author Mik Kersten
- * @author Robert Elves
+ * @author Rob Elves
  */
 public class OpenTaskInExternalBrowserAction extends Action {
 

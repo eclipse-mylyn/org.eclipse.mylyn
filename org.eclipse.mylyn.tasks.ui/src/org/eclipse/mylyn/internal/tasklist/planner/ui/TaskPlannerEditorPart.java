@@ -213,7 +213,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 		final TableViewer activityViewer = createTableSection(sashForm, toolkit, label, activityColumnNames,
 				activityColumnWidths, activitySortConstants);
 		activityViewer.setContentProvider(activityContentProvider);
-		activityViewer.setLabelProvider(new TaskActivityLabelProvider());
+		activityViewer.setLabelProvider(new TaskPlannerLabelProvider());
 		setSorters(activityColumnNames, activitySortConstants, activityViewer.getTable(), activityViewer, false);
 		activityViewer.setInput(editorInput);
 

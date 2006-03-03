@@ -25,7 +25,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Ken Sueda
  */
-public class TaskActivityLabelProvider extends TaskElementLabelProvider implements ITableLabelProvider, IColorProvider {
+public class TaskPlannerLabelProvider extends TaskElementLabelProvider implements ITableLabelProvider, IColorProvider {
 
 	private TaskElementLabelProvider taskListLabelProvider = new TaskElementLabelProvider();
 

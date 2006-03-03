@@ -139,7 +139,7 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 		} else if (element instanceof AbstractRepositoryQuery) {
 			return parentBackgroundColor;
 		}
-		
+
 		return super.getBackground(element);
 	}
 }

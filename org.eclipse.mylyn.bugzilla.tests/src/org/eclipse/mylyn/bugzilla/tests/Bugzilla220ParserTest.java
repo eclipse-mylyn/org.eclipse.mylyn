@@ -27,7 +27,7 @@ import org.eclipse.mylar.internal.bugzilla.core.internal.NewBugParser;
 
 /**
  * @author Mik Kersten
- * @author Robert Elves
+ * @author Rob Elves
  */
 public class Bugzilla220ParserTest extends TestCase {
 

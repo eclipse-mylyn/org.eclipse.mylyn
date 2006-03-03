@@ -125,7 +125,6 @@ public class TaskCategory implements ITaskContainer {
 
 	public void setIsArchive(boolean isArchive) {
 		this.isArchive = isArchive;
-		;
 	}
 
 	public String getStringForSortingDescription() {

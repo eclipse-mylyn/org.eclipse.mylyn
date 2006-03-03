@@ -9,28 +9,45 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasklist.history.ui;
+package org.eclipse.mylar.internal.tasklist.ui.views;
 
 import java.text.DateFormat;
 
+import org.eclipse.jface.viewers.DecoratingLabelProvider;
+import org.eclipse.jface.viewers.IColorProvider;
+import org.eclipse.jface.viewers.ILabelDecorator;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.history.ui.TaskHistoryContentProvider.DateRangeTaskCategory;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskElementLabelProvider;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
+import org.eclipse.mylar.provisional.tasklist.DateRangeTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Rob Elves
  */
-public class TaskHistoryLabelProvider extends TaskElementLabelProvider implements ITableLabelProvider {
+public class TaskActivityLabelProvider extends DecoratingLabelProvider implements ITableLabelProvider, IColorProvider {
 
 	private static final String NO_MINUTES = "0 minutes";
 
+	private Color parentBackgroundColor;
+	
+	public TaskActivityLabelProvider(ILabelProvider provider, ILabelDecorator decorator, Color parentBacground) {
+		super(provider, decorator);
+		this.parentBackgroundColor = parentBacground;
+	}
+	
 	public Image getColumnImage(Object element, int columnIndex) {
 		if (columnIndex == 0) {
-			return super.getImage(element);
+			if (element instanceof DateRangeTaskContainer) {
+				return TaskListImages.getImage(TaskListImages.CALENDAR);
+			} else {
+				return super.getImage(element);
+			}
 		} else {
 			return null;
 		}
@@ -55,13 +72,13 @@ public class TaskHistoryLabelProvider extends TaskElementLabelProvider implement
 					return "";
 				}
 			}
-		} else if (element instanceof DateRangeTaskCategory) {
-			DateRangeTaskCategory taskCategory = (DateRangeTaskCategory)element;		
+		} else if (element instanceof DateRangeTaskContainer) {
+			DateRangeTaskContainer taskCategory = (DateRangeTaskContainer) element;
 			switch (columnIndex) {
 			case 2:
 				return taskCategory.getDescription();
 			case 3:
-				
+
 				String elapsedTimeString = NO_MINUTES;
 				try {
 					elapsedTimeString = DateUtil.getFormattedDuration(taskCategory.getTotalElapsed(), false);
@@ -69,12 +86,23 @@ public class TaskHistoryLabelProvider extends TaskElementLabelProvider implement
 						elapsedTimeString = NO_MINUTES;
 				} catch (RuntimeException e) {
 					MylarStatusHandler.fail(e, "Could not format elapsed time", true);
-				}				
+				}
 				return elapsedTimeString;
 			case 4:
-				return taskCategory.getTotalEstimated()+" hours";
+				return taskCategory.getTotalEstimated() + " hours";
 			}
 		}
 		return null;
 	}
+
+	@Override
+	public Color getBackground(Object element) {
+		if (element instanceof ITaskContainer) {
+			return parentBackgroundColor;
+		} else {
+			return super.getBackground(element);
+		}
+	}
+	
+	
 }
