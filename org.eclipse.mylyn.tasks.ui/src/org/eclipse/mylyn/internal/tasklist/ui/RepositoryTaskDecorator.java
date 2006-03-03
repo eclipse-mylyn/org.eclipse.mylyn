@@ -70,7 +70,7 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 	}
 
 	public boolean isLabelProperty(Object element, String property) {
-		// ignore
+		System.err.println(">> " + property);
 		return false;
 	}
 

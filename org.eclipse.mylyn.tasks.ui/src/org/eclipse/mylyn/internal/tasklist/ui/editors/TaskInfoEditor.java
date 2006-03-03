@@ -151,6 +151,7 @@ public class TaskInfoEditor extends EditorPart {
 				if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
+							if (description == null) return;
 							if (!description.isDisposed()) {
 								description.setText(updateTask.getDescription());
 								// TaskInfoEditor.this.setPartName(updateTask.getDescription(true));
