@@ -24,7 +24,6 @@ import org.eclipse.mylar.internal.tasklist.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylar.provisional.core.IMylarContext;
 import org.eclipse.mylar.provisional.core.IMylarContextListener;
 import org.eclipse.mylar.provisional.core.IMylarElement;
-import org.eclipse.mylar.provisional.core.InteractionEvent;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.ITask;
@@ -118,9 +117,9 @@ public class TaskActivityView extends ViewPart {
 		}
 
 		public void interestChanged(IMylarElement element) {
-			String taskHandle = element.getHandleIdentifier();
-			List<InteractionEvent> events = MylarPlugin.getContextManager().getActivityHistoryMetaContext().getInteractionHistory();
-			InteractionEvent event = events.get(events.size()-1);
+//			String taskHandle = element.getHandleIdentifier();
+//			List<InteractionEvent> events = MylarPlugin.getContextManager().getActivityHistoryMetaContext().getInteractionHistory();
+//			InteractionEvent event = events.get(events.size()-1);
 		}
 		
 		public void presentationSettingsChanging(UpdateKind kind) {
