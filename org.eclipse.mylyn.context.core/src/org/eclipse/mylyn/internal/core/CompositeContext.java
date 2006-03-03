@@ -18,7 +18,7 @@ import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.InteractionEvent;
 
 /**
- * Delegates to contained Taskscapes.
+ * Delegates to contained contexts.
  * 
  * TODO: should info be propagated proportionally to number of taskscapes?
  * 
