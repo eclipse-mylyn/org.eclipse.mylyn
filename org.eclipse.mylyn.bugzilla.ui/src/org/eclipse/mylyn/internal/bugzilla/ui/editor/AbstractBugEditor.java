@@ -507,8 +507,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		String keywords = "";
 		String url = "";
 
-		// Attributes Composite- this holds all the combo fiels and text
-		// fields
+		// Attributes Composite- this holds all the combo fiels and text fields
 		Composite attributesComposite = new Composite(infoArea, SWT.NONE);
 		GridLayout attributesLayout = new GridLayout();
 		attributesLayout.numColumns = 4;
