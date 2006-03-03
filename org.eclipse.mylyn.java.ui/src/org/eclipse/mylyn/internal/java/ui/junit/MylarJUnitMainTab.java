@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.Label;
  */
 class MylarJUnitMainTab extends JUnitLaunchConfigurationTab {
 
-	private static final String DESCRIPTION = "All interesting subclasses of TestCase will be added to the test suite.";
+	private static final String DESCRIPTION = "Subclasses of TestCase in the active task context automatically added to suite.";
 
 	private boolean isPdeMode = false;
 
@@ -47,6 +47,7 @@ class MylarJUnitMainTab extends JUnitLaunchConfigurationTab {
 		topLayout.numColumns = 3;
 		comp.setLayout(topLayout);
 
+		new Label(comp, SWT.NONE);
 		Label label = new Label(comp, SWT.NONE);
 		GridData gd = new GridData();
 		gd.horizontalSpan = 3;

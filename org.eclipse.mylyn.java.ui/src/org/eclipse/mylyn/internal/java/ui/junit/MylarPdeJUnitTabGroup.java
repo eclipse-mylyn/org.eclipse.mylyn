@@ -32,6 +32,7 @@ public class MylarPdeJUnitTabGroup extends AbstractPDELaunchConfigurationTabGrou
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
 		ILaunchConfigurationTab[] tabs = null;
 		tabs = new ILaunchConfigurationTab[]{
+				new MylarJUnitMainTab(true),
 //				new JUnitMainTab(),
 				new PluginJUnitMainTab(), 
 				new JavaArgumentsTab(),
