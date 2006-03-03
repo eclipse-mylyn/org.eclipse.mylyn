@@ -48,13 +48,13 @@ public class MylarContextManager {
 
 	private static final String CONTEXT_FILENAME_ENCODING = "UTF-8";
 
-	private static final String ACTIVITY_DEACTIVATED = "deactivated";
+	public static final String ACTIVITY_DEACTIVATED = "deactivated";
 
-	private static final String ACTIVITY_ACTIVATED = "activated";
+	public static final String ACTIVITY_ACTIVATED = "activated";
 
 	private static final String ACTIVITY_ID = "org.eclipse.mylar.core";
 
-	private static final String ACTIVITY_HANDLE = "attention";
+	public static final String ACTIVITY_HANDLE = "attention";
 
 	private static final String ACTIVITY_KIND = "context";
 
@@ -84,14 +84,16 @@ public class MylarContextManager {
 
 	private CompositeContext currentContext = new CompositeContext();
 
-	private MylarContext activityHistory = null;
-
+	private MylarContext activityMetaContext = null;
+	
 	private ActivityListener activityListener;
 
 	private int inactivityTimeout = INACTIVITY_TIMEOUT_MILLIS;
 
-	private List<IMylarContextListener> listeners = new ArrayList<IMylarContextListener>();
+	private List<IMylarContextListener> activityMetaContextListeners = new ArrayList<IMylarContextListener>();
 
+	private List<IMylarContextListener> listeners = new ArrayList<IMylarContextListener>();
+	
 	private List<IMylarContextListener> waitingListeners = new ArrayList<IMylarContextListener>();
 
 	// TODO: move
@@ -122,7 +124,7 @@ public class MylarContextManager {
 
 		public void fireTimedOut() {
 			if (!isStalled) {
-				activityHistory.parseEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND, ACTIVITY_KIND,
+				handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND, ACTIVITY_KIND,
 						ACTIVITY_HANDLE, ACTIVITY_ID, null, ACTIVITY_DEACTIVATED, 1f));
 			}
 			isStalled = true;
@@ -136,7 +138,7 @@ public class MylarContextManager {
 		public void interactionObserved(InteractionEvent event) {
 			timer.resetTimer();
 			if (isStalled) {
-				activityHistory.parseEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND, ACTIVITY_KIND,
+				handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND, ACTIVITY_KIND,
 						ACTIVITY_HANDLE, ACTIVITY_ID, null, ACTIVITY_ACTIVATED, 1f));
 			}
 			isStalled = false;
@@ -166,17 +168,31 @@ public class MylarContextManager {
 		File storeDir = new File(MylarPlugin.getDefault().getDataDirectory());
 		storeDir.mkdirs();
 
-		activityHistory = externalizer.readContextFromXML(CONTEXT_HISTORY_FILE_NAME,
+		activityMetaContext = externalizer.readContextFromXML(CONTEXT_HISTORY_FILE_NAME,
 				getFileForContext(CONTEXT_HISTORY_FILE_NAME));
-		if (activityHistory == null) {
+		if (activityMetaContext == null) {
 			resetActivityHistory();
+		}
+		for (IMylarContextListener listener : activityMetaContextListeners) {
+			listener.contextActivated(activityMetaContext);
 		}
 
 		activityListener = new ActivityListener(INACTIVITY_TIMEOUT_MILLIS);// INACTIVITY_TIMEOUT_MILLIS);
 		activityListener.startObserving();
 	}
 
-	public void setInactivityTimeout(int millis) {
+	public void handleActivityMetaContextEvent(InteractionEvent event) {
+		IMylarElement element = activityMetaContext.parseEvent(event);
+		for (IMylarContextListener listener : activityMetaContextListeners) {
+			try {
+				listener.interestChanged(element);
+			} catch (Throwable t) {
+				MylarStatusHandler.fail(t, "context listener failed", false);
+			}
+		}
+	} 
+
+ 	public void setInactivityTimeout(int millis) {
 		inactivityTimeout = millis;
 		activityListener.setTimeout(millis);
 	}
@@ -383,11 +399,18 @@ public class MylarContextManager {
 	public void removeListener(IMylarContextListener listener) {
 		listeners.remove(listener);
 	}
-
+	
+	public void addActivityMetaContextListener(IMylarContextListener listener) {
+		activityMetaContextListeners.add(listener);
+	}
+	
+	public void removeActivityMetaContextListener(IMylarContextListener listener) {
+		activityMetaContextListeners.remove(listener);
+	}
+	 
 	public void removeAllListeners() {
 		listeners.clear();
 	}
-
 	public void notifyPostPresentationSettingsChange(IMylarContextListener.UpdateKind kind) {
 		for (IMylarContextListener listener : listeners)
 			listener.presentationSettingsChanged(kind);
@@ -404,7 +427,7 @@ public class MylarContextManager {
 	public void contextActivated(MylarContext context) {
 		currentContext.getContextMap().put(context.getHandleIdentifier(), context);
 		if (!activationHistorySuppressed) {
-			activityHistory.parseEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND, ACTIVITY_KIND, context
+			handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND, ACTIVITY_KIND, context
 					.getHandleIdentifier(), ACTIVITY_ID, null, ACTIVITY_ACTIVATED, 1f));
 		}
 	}
@@ -466,7 +489,7 @@ public class MylarContextManager {
 				setContextCapturePaused(false);
 			}
 			if (!activationHistorySuppressed) {
-				activityHistory.parseEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND, ACTIVITY_KIND,
+				handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND, ACTIVITY_KIND,
 						handleIdentifier, ACTIVITY_ID, null, ACTIVITY_DEACTIVATED, 1f));
 			}
 			saveActivityHistoryContext();
@@ -539,7 +562,7 @@ public class MylarContextManager {
 	public void saveActivityHistoryContext() {
 		try {
 			setContextCapturePaused(true);
-			externalizer.writeContextToXML(activityHistory, getFileForContext(CONTEXT_HISTORY_FILE_NAME));
+			externalizer.writeContextToXML(activityMetaContext, getFileForContext(CONTEXT_HISTORY_FILE_NAME));
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "could not save activity history", false);
 		} finally {
@@ -714,12 +737,12 @@ public class MylarContextManager {
 		return actionExecutionListeners;
 	}
 
-	public MylarContext getActivityHistory() {
-		return activityHistory;
+	public MylarContext getActivityHistoryMetaContext() {
+		return activityMetaContext;
 	}
 
 	public void resetActivityHistory() {
-		activityHistory = new MylarContext(CONTEXT_HISTORY_FILE_NAME, MylarContextManager.getScalingFactors());
+		activityMetaContext = new MylarContext(CONTEXT_HISTORY_FILE_NAME, MylarContextManager.getScalingFactors());
 		saveActivityHistoryContext();
 	}
 

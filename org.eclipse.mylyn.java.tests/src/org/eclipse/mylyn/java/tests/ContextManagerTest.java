@@ -134,15 +134,15 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 
 	public void testActivityHistory() {
 		manager.resetActivityHistory();
-		MylarContext history = manager.getActivityHistory();
+		MylarContext history = manager.getActivityHistoryMetaContext();
 		assertNotNull(history);
-		assertEquals(0, manager.getActivityHistory().getInteractionHistory().size());
+		assertEquals(0, manager.getActivityHistoryMetaContext().getInteractionHistory().size());
 
 		manager.contextActivated(manager.loadContext("1"));
-		assertEquals(1, manager.getActivityHistory().getInteractionHistory().size());
+		assertEquals(1, manager.getActivityHistoryMetaContext().getInteractionHistory().size());
 
 		manager.contextDeactivated("2");
-		assertEquals(2, manager.getActivityHistory().getInteractionHistory().size());
+		assertEquals(2, manager.getActivityHistoryMetaContext().getInteractionHistory().size());
 	}
 
 	public void testChangeHandle() {
