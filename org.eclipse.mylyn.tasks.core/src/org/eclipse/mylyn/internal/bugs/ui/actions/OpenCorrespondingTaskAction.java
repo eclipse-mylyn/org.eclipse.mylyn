@@ -47,7 +47,6 @@ public class OpenCorrespondingTaskAction implements IViewActionDelegate {
 				Object firstElement = selection.getFirstElement();
 				String comment = null;
 				boolean resolved = false;
-				System.err.println(">>> " + firstElement.getClass());
 				if (firstElement instanceof ChangeSetDiffNode) {
 					comment = ((ChangeSetDiffNode) firstElement).getName();
 				} else if (firstElement instanceof LogEntry) {
