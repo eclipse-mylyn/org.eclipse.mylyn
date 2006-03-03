@@ -690,7 +690,7 @@ public class TaskListView extends ViewPart {
 
 		getViewer().refresh();
 	}
-
+  
 	@Override
 	public void createPartControl(Composite parent) {
 		filteredTree = new TaskListFilteredTree(parent, SWT.MULTI | SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL
