@@ -20,7 +20,7 @@ import org.eclipse.swt.graphics.Point;
 /**
  * @author Mik Kersten
  */
-public class TaskListOverlayDescriptor extends CompositeImageDescriptor {
+public class TaskListImageDescriptor extends CompositeImageDescriptor {
 
 	private ImageData base;
 
@@ -32,7 +32,7 @@ public class TaskListOverlayDescriptor extends CompositeImageDescriptor {
 
 	private boolean left;
 
-	public TaskListOverlayDescriptor(ImageDescriptor baseDesc, ImageDescriptor overlayDesc, boolean top,
+	public TaskListImageDescriptor(ImageDescriptor baseDesc, ImageDescriptor overlayDesc, boolean top,
 			boolean left) {
 		this.base = getImageData(baseDesc);
 		this.top = top;
@@ -43,7 +43,7 @@ public class TaskListOverlayDescriptor extends CompositeImageDescriptor {
 		setImageSize(size);
 	}
 
-	public TaskListOverlayDescriptor(ImageDescriptor baseDesc, Point size) {
+	public TaskListImageDescriptor(ImageDescriptor baseDesc, Point size) {
 		this.base = getImageData(baseDesc);
 		setImageSize(size);
 	}

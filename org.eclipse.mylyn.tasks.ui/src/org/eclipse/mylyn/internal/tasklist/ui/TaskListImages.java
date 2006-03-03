@@ -57,7 +57,7 @@ public class TaskListImages {
 	
 //	public static final Point SIZE_SMALL = new Point(16, 16);
 	
-	public static final Point SIZE_WIDE = new Point(20, 16);
+	public static final Point SIZE_WIDE = new Point(22, 16);
 	
 	private static final URL baseURL = MylarTaskListPlugin.getDefault().getBundle().getEntry("/icons/");
 
@@ -169,12 +169,12 @@ public class TaskListImages {
 	}
 
 	private static ImageDescriptor createSize(ImageDescriptor base, Point size) {
-		return new TaskListOverlayDescriptor(base, size);
+		return new TaskListImageDescriptor(base, size);
 	}
 	
 	private static ImageDescriptor createWithOverlay(ImageDescriptor base, ImageDescriptor overlay, boolean top,
 			boolean left) {
-		return new TaskListOverlayDescriptor(base, overlay, top, left);
+		return new TaskListImageDescriptor(base, overlay, top, left);
 	}
 
 	private static URL makeIconFileURL(String prefix, String name) throws MalformedURLException {

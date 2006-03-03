@@ -60,7 +60,7 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 		} else if (element instanceof ITask) {
 			String url = ((ITask)element).getUrl();
 			if (url != null && !url.trim().equals("") && !url.equals("http://")) {
-				decoration.addOverlay(TaskListImages.OVERLAY_WEB, IDecoration.TOP_RIGHT);
+				decoration.addOverlay(TaskListImages.OVERLAY_WEB, IDecoration.BOTTOM_LEFT);
 			}
 		} 
 	} 
