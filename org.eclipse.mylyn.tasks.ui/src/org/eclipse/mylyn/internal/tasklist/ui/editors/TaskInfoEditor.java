@@ -216,9 +216,13 @@ public class TaskInfoEditor extends EditorPart {
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		String label = description.getText();
-		task.setDescription(label);
-		task.setUrl(issueReportURL.getText());
+		if (!(task instanceof AbstractRepositoryTask)) {
+			String label = description.getText();
+			task.setDescription(label);
+			task.setUrl(issueReportURL.getText());
+			task.setPriority(priorityCombo.getItem(priorityCombo.getSelectionIndex()));
+		}
+		
 		String note = notes.getText();
 		task.setNotes(note);
 		task.setEstimatedTimeHours(estimated.getSelection());
@@ -227,8 +231,7 @@ public class TaskInfoEditor extends EditorPart {
 		} else {
 			task.setReminderDate(null);
 		}
-		task.setPriority(priorityCombo.getItem(priorityCombo.getSelectionIndex()));
-
+		
 		// Method not implemented yet
 		// task.setStatus(statusCombo.getItem(statusCombo.getSelectionIndex()));
 
