@@ -26,6 +26,7 @@ import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.mylar.provisional.tasklist.Task;
+import org.eclipse.mylar.provisional.tasklist.Task.PriorityLevel;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -46,34 +47,35 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 	public Image getImageForPriority(Task.PriorityLevel priorityLevel) {
 		switch (priorityLevel) {
 		case P1: 
-			return TaskListImages.getImage(TaskListImages.TASK_ACTIVE);
+			return TaskListImages.getImage(TaskListImages.PRIORITY_1);
 		case P2:
-			return TaskListImages.getImage(TaskListImages.NAVIGATE_NEXT);
+			return TaskListImages.getImage(TaskListImages.PRIORITY_2);
 		case P3:
-			return TaskListImages.getImage(TaskListImages.NAVIGATE_PREVIOUS);
+			return TaskListImages.getImage(TaskListImages.PRIORITY_3);
 		case P4:
-			return TaskListImages.getImage(TaskListImages.GO_UP);
+			return TaskListImages.getImage(TaskListImages.PRIORITY_4);
 		case P5:
-			return TaskListImages.getImage(TaskListImages.GO_INTO);
+			return TaskListImages.getImage(TaskListImages.PRIORITY_5);
 		default:
-			return TaskListImages.getImage(TaskListImages.OVERLAY_INCOMMING);
+			return null;
 		}
 	}
 	
 	public String getColumnText(Object obj, int columnIndex) {
 		if (obj instanceof ITaskListElement) {
-			ITaskListElement element = (ITaskListElement) obj;
+//			ITaskListElement element = (ITaskListElement) obj;
 			switch (columnIndex) {
 			case 0:
 				return null;
 			case 1:
 				return null;
 			case 2:
-				if (element instanceof ITaskContainer || element instanceof AbstractRepositoryQuery) {
-					return null;
-				} else {
-					return element.getPriority();
-				}
+				return null;
+//				if (element instanceof ITaskContainer || element instanceof AbstractRepositoryQuery) {
+//					return null;
+//				} else {
+//					return element.getPriority();
+//				}
 			case 3:
 				return super.getText(obj);
 			}
@@ -109,11 +111,11 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 				return null;
 			}
 			return super.getImage(element);
-//		} else if (columnIndex == 2) {
-//			if (element instanceof ITaskListElement && !(element instanceof ITaskContainer)) {
-//				ITaskListElement taskElement = (ITaskListElement) element;
-//				return getImageForPriority(PriorityLevel.fromString(taskElement.getPriority()));
-//			}
+		} else if (columnIndex == 2) {
+			if (element instanceof ITaskListElement && !(element instanceof ITaskContainer)) {
+				ITaskListElement taskElement = (ITaskListElement) element;
+				return getImageForPriority(PriorityLevel.fromString(taskElement.getPriority()));
+			}
 		}
 		return null;
 	}

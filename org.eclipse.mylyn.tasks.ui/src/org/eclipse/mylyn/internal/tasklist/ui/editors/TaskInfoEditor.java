@@ -77,12 +77,14 @@ import org.eclipse.ui.part.EditorPart;
  */
 public class TaskInfoEditor extends EditorPart {
 
+	private static final String LABEL_PLAN = "Personal Planning";
+
 	private static final String NO_TIME_ELAPSED = "0 seconds";
 
-	private static final String LABEL_OVERVIEW = "Task Summary";
- 
+	private static final String LABEL_OVERVIEW = "Task Info";
+
 	private static final String LABEL_NOTES = "Notes";
-	
+
 	private DatePicker datePicker;
 
 	private ITask task;
@@ -127,12 +129,7 @@ public class TaskInfoEditor extends EditorPart {
 
 	private ITaskActivityListener TASK_LIST_LISTENER = new ITaskActivityListener() {
 		public void taskActivated(ITask activeTask) {
-			// if (task != null && !browse.isDisposed()
-			// &&
-			// activeTask.getHandleIdentifier().equals(task.getHandleIdentifier()))
-			// {
-			// browse.setEnabled(false);
-			// }
+			// ignore
 		}
 
 		public void tasksActivated(List<ITask> tasks) {
@@ -142,12 +139,7 @@ public class TaskInfoEditor extends EditorPart {
 		}
 
 		public void taskDeactivated(ITask deactiveTask) {
-			// if (task != null && !browse.isDisposed()
-			// &&
-			// deactiveTask.getHandleIdentifier().equals(task.getHandleIdentifier()))
-			// {
-			// browse.setEnabled(true);
-			// }
+			// ignore
 		}
 
 		public void tasklistRead() {
@@ -177,14 +169,14 @@ public class TaskInfoEditor extends EditorPart {
 							}
 						}
 					});
-				}				
+				}
 			}
 		}
 
 		public void repositoryInfoChanged(ITask task) {
-			localInfoChanged(task);	
+			localInfoChanged(task);
 		}
-		
+
 		public void taskListModified() {
 			// TODO Auto-generated method stub
 
@@ -242,7 +234,7 @@ public class TaskInfoEditor extends EditorPart {
 		// MylarTaskListPlugin.getTaskListManager().setStatus(task,
 		// statusCombo.getItem(statusCombo.getSelectionIndex()));
 
-//		refreshTaskListView(task);
+		// refreshTaskListView(task);
 		MylarTaskListPlugin.getTaskListManager().notifyLocalInfoChanged(task);
 
 		markDirty(false);
@@ -313,7 +305,9 @@ public class TaskInfoEditor extends EditorPart {
 		}
 
 		try {
-			createSummarySection(parent, toolkit);
+			if (!(task instanceof AbstractRepositoryTask)) {
+				createSummarySection(parent, toolkit);
+			}
 			createPlanningSection(parent, toolkit);
 			createDocumentationSection(parent, toolkit);
 			// // createRelatedLinksSection(parent, toolkit);
@@ -325,13 +319,13 @@ public class TaskInfoEditor extends EditorPart {
 	}
 
 	private void createSummarySection(Composite parent, FormToolkit toolkit) {
-		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.DESCRIPTION
-				| Section.TWISTIE);
+		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText(LABEL_OVERVIEW);
 		section.setExpanded(true);
-		if (task instanceof AbstractRepositoryTask) {
-			section.setDescription("To modify these fields use the repository editor.");
-		}
+		// if (task instanceof AbstractRepositoryTask) {
+		// section.setDescription("To modify these fields use the repository
+		// editor.");
+		// }
 
 		section.setLayout(new GridLayout());
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -489,7 +483,7 @@ public class TaskInfoEditor extends EditorPart {
 	private void createPlanningSection(Composite parent, FormToolkit toolkit) {
 
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
-		section.setText("Planning");
+		section.setText(LABEL_PLAN);
 		section.setLayout(new GridLayout());
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		section.setExpanded(true);
@@ -537,7 +531,7 @@ public class TaskInfoEditor extends EditorPart {
 		});
 		datePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 
-		removeReminder = toolkit.createButton(sectionClient, "Clear", SWT.PUSH | SWT.CENTER);		
+		removeReminder = toolkit.createButton(sectionClient, "Clear", SWT.PUSH | SWT.CENTER);
 		removeReminder.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -553,7 +547,7 @@ public class TaskInfoEditor extends EditorPart {
 		dummyLabelDataLayout.horizontalSpan = 1;
 		dummyLabelDataLayout.widthHint = 30;
 		dummy.setLayoutData(dummyLabelDataLayout);
-		
+
 		// Creation date
 		label = toolkit.createLabel(sectionClient, "Creation date:");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
@@ -572,7 +566,6 @@ public class TaskInfoEditor extends EditorPart {
 		creationDate.setEditable(false);
 		creationDate.setEnabled(true);
 
-		
 		// Estimated time
 
 		label = toolkit.createLabel(sectionClient, "Estimated time:");
@@ -598,7 +591,6 @@ public class TaskInfoEditor extends EditorPart {
 		label = toolkit.createLabel(sectionClient, "hours ");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
-
 		// 1 Blank column
 		Label blankLabel2 = toolkit.createLabel(sectionClient, "");
 		GridData blankLabl2Layout = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
@@ -619,7 +611,6 @@ public class TaskInfoEditor extends EditorPart {
 		endDateDataLayout.widthHint = 120;
 		endDate.setLayoutData(endDateDataLayout);
 
-		
 		endDate.setEditable(false);
 		endDate.setEnabled(true);
 		toolkit.paintBordersFor(sectionClient);
@@ -628,7 +619,7 @@ public class TaskInfoEditor extends EditorPart {
 
 		label = toolkit.createLabel(sectionClient, "Elapsed time:");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		
+
 		Composite elapsedComposite = toolkit.createComposite(sectionClient);
 		GridLayout elapsedLayout = new GridLayout();
 		elapsedLayout.numColumns = 2;
@@ -638,8 +629,6 @@ public class TaskInfoEditor extends EditorPart {
 		GridData elapsedCompositeGridData = new GridData();
 		elapsedCompositeGridData.horizontalSpan = 5;
 		elapsedComposite.setLayoutData(elapsedCompositeGridData);
-		
-
 
 		String elapsedTimeString = NO_TIME_ELAPSED;
 		try {

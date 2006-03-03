@@ -28,7 +28,6 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
-import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -294,7 +293,7 @@ public class TaskListView extends ViewPart {
 		}
 
 		public void addActionsToMenu() {
-			Action P1 = new Action(PRIORITY_LEVELS[0], AS_CHECK_BOX) {
+			Action P1 = new Action("", AS_CHECK_BOX) {
 				@Override
 				public void run() {
 					MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P1);
@@ -303,11 +302,12 @@ public class TaskListView extends ViewPart {
 				}
 			};
 			P1.setEnabled(true);
-			P1.setToolTipText(PRIORITY_LEVELS[0]);
+//			P1.setToolTipText(PRIORITY_LEVELS[0]);
+			P1.setImageDescriptor(TaskListImages.PRIORITY_1);
 			ActionContributionItem item = new ActionContributionItem(P1);
 			item.fill(dropDownMenu, -1);
 
-			Action P2 = new Action(PRIORITY_LEVELS[1], AS_CHECK_BOX) {
+			Action P2 = new Action("", AS_CHECK_BOX) {
 				@Override
 				public void run() {
 					MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P2);
@@ -316,11 +316,12 @@ public class TaskListView extends ViewPart {
 				}
 			};
 			P2.setEnabled(true);
-			P2.setToolTipText(PRIORITY_LEVELS[1]);
+//			P2.setToolTipText(PRIORITY_LEVELS[1]);
+			P2.setImageDescriptor(TaskListImages.PRIORITY_2);
 			item = new ActionContributionItem(P2);
 			item.fill(dropDownMenu, -1);
 
-			Action P3 = new Action(PRIORITY_LEVELS[2], AS_CHECK_BOX) {
+			Action P3 = new Action("", AS_CHECK_BOX) {
 				@Override
 				public void run() {
 					MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P3);
@@ -329,11 +330,12 @@ public class TaskListView extends ViewPart {
 				}
 			};
 			P3.setEnabled(true);
-			P3.setToolTipText(PRIORITY_LEVELS[2]);
+//			P3.setToolTipText(PRIORITY_LEVELS[2]);
+			P3.setImageDescriptor(TaskListImages.PRIORITY_3);
 			item = new ActionContributionItem(P3);
 			item.fill(dropDownMenu, -1);
 
-			Action P4 = new Action(PRIORITY_LEVELS[3], AS_CHECK_BOX) {
+			Action P4 = new Action("", AS_CHECK_BOX) {
 				@Override
 				public void run() {
 					MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P4);
@@ -342,11 +344,12 @@ public class TaskListView extends ViewPart {
 				}
 			};
 			P4.setEnabled(true);
-			P4.setToolTipText(PRIORITY_LEVELS[3]);
+//			P4.setToolTipText(PRIORITY_LEVELS[3]);
+			P4.setImageDescriptor(TaskListImages.PRIORITY_4);
 			item = new ActionContributionItem(P4);
 			item.fill(dropDownMenu, -1);
 
-			Action P5 = new Action(PRIORITY_LEVELS[4], AS_CHECK_BOX) {
+			Action P5 = new Action("", AS_CHECK_BOX) {
 				@Override
 				public void run() {
 					MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P5);
@@ -355,7 +358,8 @@ public class TaskListView extends ViewPart {
 				}
 			};
 			P5.setEnabled(true);
-			P5.setToolTipText(PRIORITY_LEVELS[4]);
+			P5.setImageDescriptor(TaskListImages.PRIORITY_5);
+//			P5.setToolTipText(PRIORITY_LEVELS[4]);
 			item = new ActionContributionItem(P5);
 			item.fill(dropDownMenu, -1);
 
@@ -736,9 +740,9 @@ public class TaskListView extends ViewPart {
 		((Text) textEditor.getControl()).setOrientation(SWT.LEFT_TO_RIGHT);
 		editors[0] = new CheckboxCellEditor();
 		editors[1] = textEditor;
-		editors[2] = new ComboBoxCellEditor(getViewer().getTree(), PRIORITY_LEVELS, SWT.READ_ONLY);
-		// editors[2] = new ImageTableCellEditor(getViewer().getTree(),
-		// getPirorityImages());
+//		editors[2] = new ComboBoxCellEditor(getViewer().getTree(), PRIORITY_LEVELS, SWT.READ_ONLY);
+		editors[2] = new ImageTableCellEditor(getViewer().getTree(),
+		 getPirorityImages());
 		editors[3] = textEditor;
 		getViewer().setCellEditors(editors);
 		getViewer().setCellModifier(new TaskListCellModifier());

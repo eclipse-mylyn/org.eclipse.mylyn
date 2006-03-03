@@ -139,6 +139,17 @@ public class TaskListImages {
 
 	public static final ImageDescriptor COLLAPSE_ALL = create(T_ELCL, "collapseall.png");
 
+	public static final ImageDescriptor PRIORITY_1 = create(T_EVIEW, "priority-1.gif");
+	
+	public static final ImageDescriptor PRIORITY_2 = create(T_EVIEW, "priority-2.gif");
+	
+	public static final ImageDescriptor PRIORITY_3 = create(T_EVIEW, "priority-3.gif");
+	
+	public static final ImageDescriptor PRIORITY_4 = create(T_EVIEW, "priority-4.gif");
+	
+	public static final ImageDescriptor PRIORITY_5 = create(T_EVIEW, "priority-5.gif");
+	
+	
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));
