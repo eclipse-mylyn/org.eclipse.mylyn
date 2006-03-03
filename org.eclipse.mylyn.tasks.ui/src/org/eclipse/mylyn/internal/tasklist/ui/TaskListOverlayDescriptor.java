@@ -43,6 +43,11 @@ public class TaskListOverlayDescriptor extends CompositeImageDescriptor {
 		setImageSize(size);
 	}
 
+	public TaskListOverlayDescriptor(ImageDescriptor baseDesc, Point size) {
+		this.base = getImageData(baseDesc);
+		setImageSize(size);
+	}
+	
 	@Override
 	protected void drawCompositeImage(int width, int height) {
 		drawImage(base, 0, 0);

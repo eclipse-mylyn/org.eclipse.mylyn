@@ -193,7 +193,7 @@ public class TaskListView extends ViewPart {
 
 	protected String[] columnNames = new String[] { "", ".", "!", "Description" };
 
-	protected int[] columnWidths = new int[] { 60, 20, 20, 150 };
+	protected int[] columnWidths = new int[] { 60, 20, 10, 160 };
 
 	private TreeColumn[] columns;
 

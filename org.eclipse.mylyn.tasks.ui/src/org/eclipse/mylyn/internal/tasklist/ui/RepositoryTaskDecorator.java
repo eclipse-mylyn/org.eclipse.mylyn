@@ -41,7 +41,8 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 				}
 			} 
 		} else if (element instanceof AbstractRepositoryTask) {
-			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)element;			 
+			decoration.addOverlay(TaskListImages.OVERLAY_REPOSITORY, IDecoration.BOTTOM_LEFT);
+			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)element;		
 			if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
 				decoration.addOverlay(TaskListImages.OVERLAY_OUTGOING, IDecoration.TOP_RIGHT);
 			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
@@ -56,8 +57,13 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 			} else {
 				decorate(correspondingTask, decoration);
 			}
-		}
-	}
+		} else if (element instanceof ITask) {
+			String url = ((ITask)element).getUrl();
+			if (url != null && !url.trim().equals("") && !url.equals("http://")) {
+				decoration.addOverlay(TaskListImages.OVERLAY_WEB, IDecoration.TOP_RIGHT);
+			}
+		} 
+	} 
 
 	public void addListener(ILabelProviderListener listener) {
 		// ignore

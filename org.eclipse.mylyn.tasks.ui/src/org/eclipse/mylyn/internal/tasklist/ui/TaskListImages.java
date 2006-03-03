@@ -23,6 +23,7 @@ import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -54,6 +55,10 @@ public class TaskListImages {
 		
 	private static final String T_TOOL = "etool16";
 	
+//	public static final Point SIZE_SMALL = new Point(16, 16);
+	
+	public static final Point SIZE_WIDE = new Point(20, 16);
+	
 	private static final URL baseURL = MylarTaskListPlugin.getDefault().getBundle().getEntry("/icons/");
 
 	public static final ImageDescriptor TASKLIST = create("eview16", "task-list.gif");
@@ -72,8 +77,10 @@ public class TaskListImages {
 
 	public static final ImageDescriptor COLOR_PALETTE = create(T_ELCL, "color-palette.gif");
 
-	public static final ImageDescriptor TASK = create(T_TOOL, "task.gif");
+	public static final ImageDescriptor TASK = createSize(create(T_TOOL, "task.gif"), SIZE_WIDE);
 
+	public static final ImageDescriptor TASK_NOTES = createSize(create(T_TOOL, "task-notes.gif"), SIZE_WIDE);
+	
 	public static final ImageDescriptor TASK_NEW = create(T_TOOL, "task-new.gif");
 
 	public static final ImageDescriptor OVERLAY_WEB = create(T_TOOL, "overlay-web.gif");
@@ -82,16 +89,18 @@ public class TaskListImages {
 
 	public static final ImageDescriptor TASK_WEB_REMOTE = create(T_TOOL, "overlay-web.gif");
 		
-	public static final ImageDescriptor CATEGORY = create(T_TOOL, "category.gif");
+	public static final ImageDescriptor CATEGORY = createSize(create(T_TOOL, "category.gif"), SIZE_WIDE);
 
 	public static final ImageDescriptor CATEGORY_NEW = create(T_TOOL, "category-new.gif");
 
-	public static final ImageDescriptor CATEGORY_ARCHIVE = create(T_TOOL, "category-archive.gif");
+	public static final ImageDescriptor CATEGORY_ARCHIVE = createSize(create(T_TOOL, "category-archive.gif"), SIZE_WIDE);
 
-	public static final ImageDescriptor TASK_REMOTE = create(T_TOOL, "task-remote.gif");
 
+	public static final ImageDescriptor TASK_REMOTE = createSize(create(T_TOOL, "task-remote.gif"), SIZE_WIDE);
 	public static final ImageDescriptor TASK_REPOSITORY = create(T_TOOL, "task-repository.gif");
 
+//	public static final ImageDescriptor TASK_REPOSITORY_NOTES = create(T_TOOL, "task-repository-notes.gif");
+	
 	public static final ImageDescriptor TASK_REPOSITORY_NEW = create(T_TOOL, "task-repository-new.gif");
 
 	public static final ImageDescriptor OVERLAY_INCOMMING = create(T_EVIEW, "overlay-incoming.gif");
@@ -111,7 +120,7 @@ public class TaskListImages {
 	public static final ImageDescriptor TASK_REPOSITORY_OUTGOING = createWithOverlay(TASK_REPOSITORY, OVERLAY_OUTGOING,
 			true, false);
 
-	public static final ImageDescriptor QUERY = create(T_TOOL, "query.gif");
+	public static final ImageDescriptor QUERY = createSize(create(T_TOOL, "query.gif"), SIZE_WIDE);
 
 	public static final ImageDescriptor QUERY_NEW = create(T_TOOL, "query-new.gif");
 
@@ -127,11 +136,11 @@ public class TaskListImages {
 
 	public static final ImageDescriptor GO_INTO = create(T_TOOL, "go-into.gif");
 
-	public static final ImageDescriptor TASK_ACTIVE = create(T_TOOL, "task-active.gif");
+	public static final ImageDescriptor TASK_ACTIVE = createSize(create(T_TOOL, "task-active.gif"), SIZE_WIDE);
 
-	public static final ImageDescriptor TASK_INACTIVE = create(T_TOOL, "task-inactive.gif");
+	public static final ImageDescriptor TASK_INACTIVE = createSize(create(T_TOOL, "task-inactive.gif"), SIZE_WIDE);
 
-	public static final ImageDescriptor TASK_INACTIVE_CONTEXT = create(T_TOOL, "task-context.gif");
+	public static final ImageDescriptor TASK_INACTIVE_CONTEXT = createSize(create(T_TOOL, "task-context.gif"), SIZE_WIDE);
 
 	public static final ImageDescriptor TASK_COMPLETE = create(T_TOOL, "task-complete.gif");
 
@@ -139,15 +148,15 @@ public class TaskListImages {
 
 	public static final ImageDescriptor COLLAPSE_ALL = create(T_ELCL, "collapseall.png");
 
-	public static final ImageDescriptor PRIORITY_1 = create(T_EVIEW, "priority-1.gif");
+	public static final ImageDescriptor PRIORITY_1 = createSize(create(T_EVIEW, "priority-1.gif"), SIZE_WIDE);
 	
-	public static final ImageDescriptor PRIORITY_2 = create(T_EVIEW, "priority-2.gif");
+	public static final ImageDescriptor PRIORITY_2 = createSize(create(T_EVIEW, "priority-2.gif"), SIZE_WIDE);
 	
-	public static final ImageDescriptor PRIORITY_3 = create(T_EVIEW, "priority-3.gif");
+	public static final ImageDescriptor PRIORITY_3 = createSize(create(T_EVIEW, "priority-3.gif"), SIZE_WIDE);
 	
-	public static final ImageDescriptor PRIORITY_4 = create(T_EVIEW, "priority-4.gif");
+	public static final ImageDescriptor PRIORITY_4 = createSize(create(T_EVIEW, "priority-4.gif"), SIZE_WIDE);
 	
-	public static final ImageDescriptor PRIORITY_5 = create(T_EVIEW, "priority-5.gif");
+	public static final ImageDescriptor PRIORITY_5 = createSize(create(T_EVIEW, "priority-5.gif"), SIZE_WIDE);
 	
 	public static final ImageDescriptor CALENDAR = create(T_EVIEW, "task-activity.gif");
 		
@@ -159,6 +168,10 @@ public class TaskListImages {
 		}
 	}
 
+	private static ImageDescriptor createSize(ImageDescriptor base, Point size) {
+		return new TaskListOverlayDescriptor(base, size);
+	}
+	
 	private static ImageDescriptor createWithOverlay(ImageDescriptor base, ImageDescriptor overlay, boolean top,
 			boolean left) {
 		return new TaskListOverlayDescriptor(base, overlay, top, left);
@@ -196,3 +209,24 @@ public class TaskListImages {
 		return image;
 	}
 }
+
+//class TaskImageDescriptor extends CompositeImageDescriptor {
+//	  
+//	private Point size;
+//	
+//	private ImageDescriptor contents;
+//	
+//	public TaskImageDescriptor(ImageDescriptor contents, Point size) {
+//		this.contents = contents;
+//	}
+//
+//	@Override
+//	protected void drawCompositeImage(int width, int height) {
+//		super.drawImage(contents.getImageData(), width, height);
+//	}
+//
+//	@Override
+//	protected Point getSize() {
+//		return size;
+//	}
+//}

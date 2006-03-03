@@ -25,9 +25,9 @@ public class BugzillaTaskDecorator implements ILightweightLabelDecorator {
 		if (element instanceof BugzillaTask) {
 			String kind = ((BugzillaTask)element).getKind();
 			if ("major".equals(kind) || "blocker".equals(kind)) {
-				decoration.addOverlay(BugzillaImages.OVERLAY_MAJOR, IDecoration.BOTTOM_RIGHT);
+				decoration.addOverlay(BugzillaImages.OVERLAY_MAJOR, IDecoration.TOP_LEFT);
 			} else if ("enhancement".equals(kind)){
-				decoration.addOverlay(BugzillaImages.OVERLAY_ENHANCEMENT, IDecoration.BOTTOM_RIGHT);
+				decoration.addOverlay(BugzillaImages.OVERLAY_ENHANCEMENT, IDecoration.TOP_LEFT);
 			}
 		} else if (element instanceof BugzillaQueryHit) {
 			BugzillaQueryHit hit = (BugzillaQueryHit)element;
