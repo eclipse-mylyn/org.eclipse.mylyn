@@ -22,9 +22,9 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * @author Mik Kersten and Ken Sueda
+ * @author Mik Kersten
  */
-public class ClearContextAction implements IViewActionDelegate {
+public class ContextClearAction implements IViewActionDelegate {
 
 	public static final String ID = "org.eclipse.mylar.ui.clear.context";
 

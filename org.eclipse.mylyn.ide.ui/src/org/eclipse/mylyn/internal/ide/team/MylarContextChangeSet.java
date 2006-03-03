@@ -36,13 +36,9 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 	private static final String PREFIX_HTTPS = "https://";
 
 	private static final String PREFIX_DELIM = ": ";
-	
-//	private static final String LABEL_PREFIX = "Mylar Task";
-
-//	private static final String LABEL_BUG = "Bug ";
 
 	// HACK: copied from super
-	private static final String CTX_TITLE = "title"; 
+	private static final String CTX_TITLE = "title";
 
 	public static final String SOURCE_ID = "org.eclipse.mylar.java.context.changeset.add";
 
@@ -57,12 +53,7 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 	}
 
 	public void initTitle() {
-//		if (task instanceof AbstractRepositoryTask) {
-//			super.setTitle(LABEL_PREFIX + ": " + LABEL_BUG + this.task.getDescription());
-//		} else {
-//			super.setTitle(LABEL_PREFIX + " " + this.task.getDescription());
-			super.setTitle(this.task.getDescription());
-//		}
+		super.setTitle(this.task.getDescription());
 	}
 
 	/**
@@ -103,14 +94,11 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 	@Override
 	public void remove(IResource resource) {
 		super.remove(resource);
-		// resources.remove(resource);
 	}
 
 	@Override
 	public void remove(IResource[] newResources) {
 		super.remove(newResources);
-		// for (int i = 0; i < newResources.length; i++)
-		// resources.remove(newResources[i]);
 	}
 
 	@Override
@@ -119,7 +107,6 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 		if (!suppressInterestContribution) {
 			MylarIdePlugin.getDefault().getInterestUpdater().addResourceToContext(info.getLocal());
 		}
-		// resources.add(info.getLocal());
 	}
 
 	@Override
@@ -130,18 +117,12 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 	@Override
 	public void add(IResource[] newResources) throws TeamException {
 		super.add(newResources);
-		// for (int i = 0; i < newResources.length; i++)
-		// resources.add(newResources[i]);
 	}
 
 	public void restoreResources(IResource[] newResources) throws TeamException {
 		suppressInterestContribution = true;
 		try {
 			super.add(newResources);
-			// resources = new ArrayList<IResource>();
-			// for (int i = 0; i < newResources.length; i++) {
-			// resources.add(newResources[i]);
-			// }
 			setComment(getComment());
 		} catch (TeamException e) {
 			throw e;
@@ -152,7 +133,6 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 
 	@Override
 	public IResource[] getResources() {
-		// return super.getResources();
 		List<IResource> allResources = getAllResourcesInChangeContext();
 		return allResources.toArray(new IResource[allResources.size()]);
 	}
@@ -161,8 +141,7 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 		Set<IResource> allResources = new HashSet<IResource>();
 		allResources.addAll(Arrays.asList(super.getResources()));
 		if (MylarIdePlugin.getDefault() != null && task.isActive()) {
-			// TODO: if super is always managed correctly should remove
-			// following line
+			// TODO: if super is always managed correctly should remove following line
 			allResources.addAll(MylarIdePlugin.getDefault().getInterestingResources());
 		}
 		return new ArrayList<IResource>(allResources);
@@ -184,11 +163,7 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 		} else {
 			comment = progressPrefix + PREFIX_DELIM;
 		}
-//		if (task.isLocal()) {
-			comment += task.getDescription();
-//		} else { // bug report
-//			comment += LABEL_BUG + task.getDescription();
-//		}
+		comment += task.getDescription();
 		String url = task.getUrl();
 		if (url != null && !url.equals("") && !url.endsWith("//")) {
 			comment += " \n" + url;
@@ -207,7 +182,7 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 		int firstDelimIndex = comment.indexOf(PREFIX_DELIM);
 		if (firstDelimIndex != -1) {
 			int idStart = firstDelimIndex + PREFIX_DELIM.length();
-			int idEnd = comment.indexOf(PREFIX_DELIM, firstDelimIndex + PREFIX_DELIM.length());//comment.indexOf(PREFIX_DELIM);
+			int idEnd = comment.indexOf(PREFIX_DELIM, firstDelimIndex + PREFIX_DELIM.length());// comment.indexOf(PREFIX_DELIM);
 			if (idEnd != -1 && idStart < idEnd) {
 				String id = comment.substring(idStart, idEnd);
 				if (id != null)
@@ -215,7 +190,7 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 			}
 		}
 		return null;
-	} 
+	}
 
 	public static String getUrlFromComment(String comment) {
 		int httpIndex = comment.indexOf(PREFIX_HTTP);

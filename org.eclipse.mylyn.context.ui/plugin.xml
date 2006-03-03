@@ -30,7 +30,7 @@
            id="org.eclipse.mylar.ui.tasklist.contribution"
            targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
         <action
-              class="org.eclipse.mylar.internal.ui.actions.ClearContextAction"
+              class="org.eclipse.mylar.internal.ui.actions.ContextClearAction"
               enablesFor="1"
               icon="icons/elcl16/context-clear.gif"
               id="org.eclipse.mylar.ui.clear.context"
@@ -41,6 +41,34 @@
               <or>
                  <objectClass name="org.eclipse.mylar.provisional.tasklist.ITask"/>
                  <objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractQueryHit"/>
+              </or>
+           </enablement>
+        </action>
+        <action
+              class="org.eclipse.mylar.internal.ui.actions.ContextAttachAction"
+              enablesFor="1"
+              icon="icons/etool16/context-attach.gif"
+              id="org.eclipse.mylar.ui.context.repository.attach"
+              label="Attach Context"
+              menubarPath="context">
+           <enablement>
+              <or>
+                 <objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask"/>
+                 <objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractQueryHit"/>
+              </or>
+           </enablement>
+        </action>
+        <action
+              class="org.eclipse.mylar.internal.ui.actions.ContextRetrieveAction"
+              enablesFor="1"
+              icon="icons/etool16/context-retrieve.gif"
+              id="org.eclipse.mylar.ui.context.repository.retrieve"
+              label="Retrieve Context"
+              menubarPath="context">
+           <enablement>
+              <or>
+                 <objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractQueryHit"/>
+                 <objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask"/>
               </or>
            </enablement>
         </action>
