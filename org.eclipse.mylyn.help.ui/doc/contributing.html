@@ -13,7 +13,7 @@
 <!--	<li>Building</li>-->
 		</a></li>
 		<li><a href="#building-dist">Building a distribution</a></li>
-		<li>Additional References</li>
+		<li><a href="#references-additional">Additional References</a></li>
 	</ul>
 	<p><b>Extending Mylar</b></p>
 	<ul>
@@ -135,40 +135,29 @@ and leave the password blank.</li>
 	</ul>
 	<p>&nbsp;</p>
 <h3><a name="references-additional">Additional References</a></h3>
-<ul>
-	<li>Using PDE Build support to create a Mylar distribution from HEAD, using 
-	a plain Eclipse 3.2<ul>
-	<li>org.eclipse.mylar-feature/feature.xml -&gt; Overview -&gt; change version 
-	number to current date (e.g. 0.4.7.v20060125-0800)<ul>
-	<li>On Plug-ins tab -&gt; Versions... -&gt; Force feature version into plug-in and 
-	fragment manifests</li>
-	<li>Repeat above for org.eclipse.mylar-bugzilla-feature.xml</li>
-</ul>
-	</li>
-	<li>org.eclipse.mylar-site/e3.2/site.xml<ul>
-	<li>Delete old features (grayed out)</li>
-	<li>Add new mylar-bugzilla and mylar features</li>
-	<li>Hit Build All (if this fails restart Eclipse and try again)</li>
-</ul>
-	</li>
-</ul>
-	</li>
-	<li>To install, add the path of org.eclipse.mylar-site/e3.2/site.xml as a 
-	local update site</li>
-	<li>Bugzilla support can be built independently of the Mylar UI by checking 
-	out the following projects mylar.bugzilla.core, mylar.bugzilla.ui, 
-	mylar.tasklist, mylar.core </li>
-</ul>
-	<p><b>To build the 3.1 branch </b>of the source, follow above steps </p>
-	<ul>
-		<li>Right-click the org.eclipse.mylar.java, mylar.ide, and mylar.xml
-		project, Team -&gt; Switch to Another Branch..., then 
-		Refresh the Branches and select <b>e_3_1 </b></li>
-		<li>The list of files that should not be overwritten is in: 
-		org.eclipse.mylar/build/merge-eclipse-3.1.txt</li>
-	</ul>
-	<p>&nbsp;</p>
-<h3><a name="extending-overview">Extensibility Overview</a></h3>
+<table border="0" cellpadding="2" style="border-collapse: collapse" width="100%" id="table1">
+	<tr>
+		<td align="center">Eclipse Programming</td>
+		<td align="center">Java Programming</td>
+		<td align="center">Planning</td>
+		<td align="center">Task Management</td>
+	</tr>
+	<tr>
+		<td align="center">
+		<a href="http://www.amazon.com/gp/product/0321205758/qid=1141413262/sr=2-1/ref=pd_bbs_b_2_1/002-8351358-2684047?s=books&v=glance&n=283155"><img border=0 src="images/reference/book-gamma-eclipse.gif"></a></td>
+		<td align="center">
+		<a href="http://www.amazon.com/gp/product/0201310058/qid=1141413064/sr=2-1/ref=pd_bbs_b_2_1/002-8351358-2684047?s=books&v=glance&n=283155"><img border=0 src="images/reference/book-bloch-effectiveJava.gif"></a></td>
+		<td align="center">
+		<a href="http://www.amazon.com/gp/product/0321278658/ref=pd_bxgy_img_b/002-8351358-2684047?_encoding=UTF8"><img border=0 src="images/reference/book-beck-xp.gif"></a></td>
+		<td align="center">
+		<a href="http://www.amazon.com/gp/product/0670899240/qid=1141413385/sr=2-2/ref=pd_bbs_b_2_2/002-8351358-2684047?s=books&v=glance&n=283155"><img border=0 src="images/reference/book-allen-gettingThingsDone.gif"></a></td>
+	</tr>
+</table>
+	<p>Also see the developer links at:
+	<a href="http://www.eclipse.org/mylar/dev.php">
+	http://www.eclipse.org/mylar/dev.php</a> </p>
+	<h3>&nbsp;</h3>
+	<h3><a name="extending-overview">Extensibility Overview</a></h3>
 <p>Following the Eclipse conventions, Mylar will not make any API guarantees 
 until the 1.0 release.&nbsp; However, a driving goal of the Mylar project is to 
 provide a task management and focused UI framework that can be easily extended 
