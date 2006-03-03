@@ -101,7 +101,7 @@
             allowMultiple="false"
             category="org.eclipse.mylar"
             class="org.eclipse.mylar.internal.tasklist.ui.views.TaskActivityView"
-            icon="icons/eview16/calendar.gif"
+            icon="icons/eview16/task-activity.gif"
             id="org.eclipse.mylar.tasklist.activity"
             name="Task Activity (Experimental)"/>
   	</extension>

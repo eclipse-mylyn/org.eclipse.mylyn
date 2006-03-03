@@ -149,7 +149,7 @@ public class TaskListImages {
 	
 	public static final ImageDescriptor PRIORITY_5 = create(T_EVIEW, "priority-5.gif");
 	
-	public static final ImageDescriptor CALENDAR = create(T_EVIEW, "calendar.gif");
+	public static final ImageDescriptor CALENDAR = create(T_EVIEW, "task-activity.gif");
 		
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
