@@ -11,7 +11,9 @@
 
 package org.eclipse.mylar.internal.ui;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.core.IMylarElement;
@@ -31,7 +33,7 @@ public class Highlighter {
 
 	private static final int NUM_LEVELS = 40;
 
-	private final List<Color> ELEVATIONS = new ArrayList<Color>();
+	private final List<Color> gradients = new ArrayList<Color>();
 
 	private String name;
 
@@ -40,10 +42,6 @@ public class Highlighter {
 	private Color landmarkColor;
 
 	private Color highlightColor;
-
-	private Color black = new Color(Display.getCurrent(), 0, 0, 0);
-
-	private Color base = new Color(Display.getCurrent(), 255, 255, 255);
 
 	private boolean isGradient;
 
@@ -81,6 +79,12 @@ public class Highlighter {
 		}
 	}
 
+	public void dispose() {
+		for (Color color: gradients) {
+			color.dispose();
+		}
+	}
+	
 	public Color getHighlightColor() {
 		return highlightColor;
 	}
@@ -101,19 +105,19 @@ public class Highlighter {
 				}
 			}
 		} else {
-			return base;
+			return ColorMap.COLOR_WHITE;
 		}
 	}
 
 	public Color mapDoiToElevation(IMylarElement info) {
 		if (info == null)
-			return base;
+			return ColorMap.COLOR_WHITE;
 		if (info.getInterest().getValue() < 0)
 			return highlightColor;
 
 		int step = 2;
-		Color color = base;
-		for (Iterator<Color> it = ELEVATIONS.iterator(); it.hasNext();) {
+		Color color = ColorMap.COLOR_WHITE;
+		for (Iterator<Color> it = gradients.iterator(); it.hasNext();) {
 			color = it.next();
 			if (info.getInterest().getValue() < step)
 				return color;
@@ -125,9 +129,9 @@ public class Highlighter {
 
 	private void initializeHighlight() {
 		try {
-			int redStep = (int) Math.ceil((core.getRed() + 2 * base.getRed()) / 3);
-			int greenStep = (int) Math.ceil((core.getGreen() + 2 * base.getGreen()) / 3);
-			int blueStep = (int) Math.ceil((core.getBlue() + 2 * base.getBlue()) / 3);
+			int redStep = (int) Math.ceil((core.getRed() + 2 * ColorMap.COLOR_WHITE.getRed()) / 3);
+			int greenStep = (int) Math.ceil((core.getGreen() + 2 * ColorMap.COLOR_WHITE.getGreen()) / 3);
+			int blueStep = (int) Math.ceil((core.getBlue() + 2 * ColorMap.COLOR_WHITE.getBlue()) / 3);
 
 			highlightColor = new Color(Display.getDefault(), redStep, greenStep, blueStep);
 		} catch (Throwable t) {
@@ -137,9 +141,9 @@ public class Highlighter {
 
 	private void initializeLandmark() {
 		try {
-			int redStep = (int) Math.ceil((2 * core.getRed() + black.getRed()) / 3);
-			int greenStep = (int) Math.ceil((2 * core.getGreen() + black.getGreen()) / 3);
-			int blueStep = (int) Math.ceil((2 * core.getBlue() + black.getBlue()) / 3);
+			int redStep = (int) Math.ceil((2 * core.getRed() + ColorMap.COLOR_BLACK.getRed()) / 3);
+			int greenStep = (int) Math.ceil((2 * core.getGreen() + ColorMap.COLOR_BLACK.getGreen()) / 3);
+			int blueStep = (int) Math.ceil((2 * core.getBlue() + ColorMap.COLOR_BLACK.getBlue()) / 3);
 
 			landmarkColor = new Color(Display.getDefault(), redStep, greenStep, blueStep);
 		} catch (Throwable t) {
@@ -149,14 +153,14 @@ public class Highlighter {
 
 	private void initializeGradients() {
 		try {
-			int redStep = (int) Math.ceil((core.getRed() - base.getRed()) / NUM_LEVELS);
-			int greenStep = (int) Math.ceil((core.getGreen() - base.getGreen()) / NUM_LEVELS);
-			int blueStep = (int) Math.ceil((core.getBlue() - base.getBlue()) / NUM_LEVELS);
+			int redStep = (int) Math.ceil((core.getRed() - ColorMap.COLOR_WHITE.getRed()) / NUM_LEVELS);
+			int greenStep = (int) Math.ceil((core.getGreen() - ColorMap.COLOR_WHITE.getGreen()) / NUM_LEVELS);
+			int blueStep = (int) Math.ceil((core.getBlue() - ColorMap.COLOR_WHITE.getBlue()) / NUM_LEVELS);
 
 			int OFFSET = 5;
-			int red = base.getRed() + redStep * OFFSET;
-			int green = base.getGreen() + greenStep * OFFSET;
-			int blue = base.getBlue() + blueStep * OFFSET;
+			int red = ColorMap.COLOR_WHITE.getRed() + redStep * OFFSET;
+			int green = ColorMap.COLOR_WHITE.getGreen() + greenStep * OFFSET;
+			int blue = ColorMap.COLOR_WHITE.getBlue() + blueStep * OFFSET;
 			for (int i = 0; i < NUM_LEVELS - OFFSET; i++) {
 				if (red > 255)
 					red = 255; // TODO: fix this mess
@@ -170,7 +174,7 @@ public class Highlighter {
 					green = 0;
 				if (blue < 0)
 					blue = 0;
-				ELEVATIONS.add(new Color(Display.getDefault(), red, green, blue));
+				gradients.add(new Color(Display.getDefault(), red, green, blue));
 				red += redStep;
 				blue += blueStep;
 				green += greenStep;
@@ -194,11 +198,11 @@ public class Highlighter {
 	}
 
 	public Color getBase() {
-		return base;
+		return ColorMap.COLOR_WHITE;
 	}
 
 	public void setBase(Color base) {
-		this.base = base;
+		ColorMap.COLOR_WHITE = base;
 	}
 
 	public static Color blend(List<Highlighter> highlighters, IMylarElement info, boolean isLandmark) {

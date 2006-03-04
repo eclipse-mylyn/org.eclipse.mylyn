@@ -30,6 +30,12 @@ public class HighlighterImageDescriptor extends ImageDescriptor {
 	}
 
 	@Override
+	public void destroyResource(Object previouslyCreatedObject) {
+		image.dispose();
+		super.destroyResource(previouslyCreatedObject);
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		return obj instanceof HighlighterImageDescriptor && image.equals(((HighlighterImageDescriptor) obj).image);
 	}

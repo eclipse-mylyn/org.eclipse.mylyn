@@ -48,6 +48,12 @@ public class HighlighterList {
 		this.internalizeFromString(attributes);
 	}
 
+	public void dispose() {
+		for (Highlighter highlighter : highlighters) {
+			highlighter.dispose();
+		}
+	}
+	
 	public void setToDefaultList() {
 		this.highlighters.clear();
 		highlighters.add(DEFAULT_HIGHLIGHTER);
@@ -70,8 +76,6 @@ public class HighlighterList {
 
 		MylarPlugin.getContextManager().notifyPostPresentationSettingsChange(
 				IMylarContextListener.UpdateKind.HIGHLIGHTER);
-		// MylarUiPlugin.getDefault().setDefaultHighlighter(
-		// highlighters.get(0));
 	}
 
 	public void add(Highlighter hl) {

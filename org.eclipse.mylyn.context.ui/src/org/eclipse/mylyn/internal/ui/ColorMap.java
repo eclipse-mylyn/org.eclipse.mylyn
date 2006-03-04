@@ -13,7 +13,7 @@
  */
 package org.eclipse.mylar.internal.ui;
 
-import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
@@ -22,57 +22,20 @@ import org.eclipse.swt.widgets.Display;
  */
 public class ColorMap {
 
-	public Color LANDMARK = TaskListImages.COLOR_TASK_ACTIVE;
+	// TODO: use themes?
+	public Color LANDMARK = TaskListColorsAndFonts.COLOR_TASK_ACTIVE;
 
-	public Color HYPERLINK = new Color(Display.getDefault(), 0, 0, 255); // TODO:
-																			// use
-																			// theme?
+	public Color BACKGROUND_COLOR = new Color(Display.getDefault(), 255, 255, 255); 
 
-	public Color PACKAGE_LABEL = new Color(Display.getDefault(), 100, 100, 100);
+	public Color WHITE = new Color(Display.getDefault(), 255, 255, 255); 
 
-	public Color TEXT = new Color(Display.getDefault(), 0, 0, 0);
+	public Color GRAY_DARK = new Color(Display.getDefault(), 70, 70, 70); 
 
-	public Color TRAIL_0 = new Color(Display.getDefault(), 50, 50, 50);
+	public Color GRAY_MEDIUM = new Color(Display.getDefault(), 105, 105, 105); 
 
-	public Color TRAIL_1 = new Color(Display.getDefault(), 90, 90, 90);
+	public Color GRAY_LIGHT = new Color(Display.getDefault(), 145, 145, 145); 
 
-	public Color TRAIL_2 = new Color(Display.getDefault(), 130, 130, 130);
-
-	public Color TRAIL_3 = new Color(Display.getDefault(), 170, 170, 170);
-
-	public Color BORDER = new Color(Display.getDefault(), 255, 0, 0);
-
-	public Color CURRENT = new Color(Display.getDefault(), 255, 154, 49);
-
-	public Color DIRTY = new Color(Display.getDefault(), 255, 255, 190);
-
-	public Color BACKGROUND_COLOR = new Color(Display.getDefault(), 255, 255, 255); // TODO:
-																					// use
-																					// theme?
-
-	public Color WHITE = new Color(Display.getDefault(), 255, 255, 255); // TODO:
-																			// use
-																			// theme?
-
-	public Color GRAY_DARK = new Color(Display.getDefault(), 70, 70, 70); // TODO:
-																			// use
-																			// theme?
-
-	public Color GRAY_MEDIUM = new Color(Display.getDefault(), 105, 105, 105); // TODO:
-																				// use
-																				// theme?
-
-	public Color GRAY_LIGHT = new Color(Display.getDefault(), 145, 145, 145); // TODO:
-																				// use
-																				// theme?
-
-	public Color GRAY_VERY_LIGHT = new Color(Display.getDefault(), 200, 200, 200); // TODO:
-																					// use
-																					// theme?
-
-	public Color ACTIVE = new Color(Display.getDefault(), 255, 50, 50); // TODO:
-																		// use
-																		// theme?
+	public Color GRAY_VERY_LIGHT = new Color(Display.getDefault(), 200, 200, 200); 
 
 	public Color RELATIONSHIP = new Color(Display.getDefault(), 32, 104, 157);
 
@@ -96,7 +59,31 @@ public class ColorMap {
 
 	public Color PANTONE_PASTERL_GREEN = new Color(Display.getDefault(), 162, 231, 215);
 
+	public void dispose() {
+		LANDMARK.dispose();
+		BACKGROUND_COLOR.dispose();
+		WHITE.dispose();
+		GRAY_DARK.dispose();
+		GRAY_MEDIUM.dispose();
+		GRAY_LIGHT.dispose();
+		GRAY_VERY_LIGHT.dispose();
+		RELATIONSHIP.dispose();
+		HIGLIGHTER_RED_INTERSECTION.dispose();
+		HIGHLIGHTER_ORANGE_GRADIENT.dispose();
+		HIGHLIGHTER_YELLOW.dispose();
+		PANTONE_PASTERL_GREEN.dispose();
+		PANTONE_PASTEL_BLUE.dispose();
+		PANTONE_PASTEL_MAUVE.dispose();
+		PANTONE_PASTEL_PURPLE.dispose();
+		PANTONE_PASTEL_ROSE.dispose();
+		PANTONE_PASTEL_YELLOW.dispose();
+	}
+	
 	private GammaSetting gammaSetting = GammaSetting.STANDARD;
+
+	public static Color COLOR_WHITE = new Color(Display.getCurrent(), 255, 255, 255);
+
+	public static Color COLOR_BLACK = new Color(Display.getCurrent(), 0, 0, 0);
 
 	public enum GammaSetting {
 		LIGHTEN, DARKEN, STANDARD;
