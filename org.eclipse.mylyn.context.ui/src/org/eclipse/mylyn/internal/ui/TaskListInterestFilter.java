@@ -19,6 +19,7 @@ import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.provisional.tasklist.Task;
 import org.eclipse.mylar.provisional.ui.InterestFilter;
 
 /**
@@ -80,6 +81,9 @@ public class TaskListInterestFilter extends InterestFilter {
 		if (element instanceof ITask) {
 			ITask task = (ITask)element;
 			if (task.isPastReminder()) {
+				return true;
+			}
+			if (task.getPriority().equals(Task.PriorityLevel.P1.toString())) {
 				return true;
 			}
 		}
