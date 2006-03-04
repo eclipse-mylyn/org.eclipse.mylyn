@@ -238,30 +238,6 @@ public class GetNewUserIdPage extends WizardPage {
 		});
 	}
 
-	// private void createTermsSection(Composite parent) {
-	// terms = new Hyperlink(parent, SWT.None);
-	// GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-	// terms.setLayoutData(gd);
-	// terms.setText("Terms of Early Release");
-	// terms.setUnderlined(true);
-	// terms.setForeground(new Color(Display.getDefault(), 0, 0, 200));
-	//        
-	// terms.addHyperlinkListener(new IHyperlinkListener(){
-	// public void linkEntered(HyperlinkEvent e) {
-	// // don't care about this event
-	// }
-	// public void linkExited(HyperlinkEvent e) {
-	// // don't care about this event
-	// }
-	// public void linkActivated(HyperlinkEvent e) {
-	// termsMessage = "http://www.cs.ubc.ca/~mylar/";
-	// WebBrowserDialog.openAcceptAgreement(null, "Terms of Early Release", "",
-	// termsMessage, true);
-	// }
-	//        
-	// });
-	// }
-
 	private void createJobDetailSection(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout();
