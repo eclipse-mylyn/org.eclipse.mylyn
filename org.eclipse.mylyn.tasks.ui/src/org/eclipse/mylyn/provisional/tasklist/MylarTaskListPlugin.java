@@ -33,6 +33,7 @@ import org.eclipse.mylar.internal.tasklist.ui.ITaskEditorFactory;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskHighlighter;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskListNotification;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskListNotificationProvider;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListNotificationManager;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListNotificationReminder;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
@@ -339,6 +340,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().removeDisposeListener(
 						taskListSaveManager);
 			}
+			TaskListColorsAndFonts.dispose();
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Mylar Task List stop failed", false);
 		}

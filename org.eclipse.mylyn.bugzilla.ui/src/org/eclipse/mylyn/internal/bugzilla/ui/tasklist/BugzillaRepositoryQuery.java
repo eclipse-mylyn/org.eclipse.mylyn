@@ -12,7 +12,7 @@
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.swt.graphics.Font;
@@ -50,7 +50,7 @@ public class BugzillaRepositoryQuery extends AbstractRepositoryQuery {
 				BugzillaQueryHit hit = (BugzillaQueryHit) child;
 				BugzillaTask task = hit.getCorrespondingTask();
 				if (task != null && task.isActive()) {
-					return TaskListImages.BOLD;
+					return TaskListColorsAndFonts.BOLD;
 				}
 			}
 		}

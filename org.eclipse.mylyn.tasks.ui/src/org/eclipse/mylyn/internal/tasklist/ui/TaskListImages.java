@@ -18,13 +18,9 @@ import java.net.URL;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Mik Kersten
@@ -33,29 +29,11 @@ public class TaskListImages {
 
 	private static ImageRegistry imageRegistry;
 
-	public static final Color BACKGROUND_WHITE = new Color(Display.getDefault(), 255, 255, 255);
-
-	public static final Color BACKGROUND_ARCHIVE = new Color(Display.getDefault(), 199, 199, 237);
-
-	public static final Color GRAY_LIGHT = new Color(Display.getDefault(), 170, 170, 170);
-
-	public static final Color COLOR_TASK_COMPLETED = new Color(Display.getDefault(), 170, 170, 170);
-
-	public static final Color COLOR_TASK_ACTIVE = new Color(Display.getDefault(), 36, 22, 50);
-
-	public static final Color COLOR_TASK_OVERDUE = new Color(Display.getDefault(), 200, 10, 30);
-
-	public static final Font BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
-
-	public static final Font ITALIC = JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT);
-
 	private static final String T_ELCL = "elcl16";
 
 	private static final String T_EVIEW = "eview16";
 
 	private static final String T_TOOL = "etool16";
-
-//	public static final Point SIZE_SMALL = new Point(16, 16);
 
 	public static final Point SIZE = new Point(16, 16);
 
@@ -99,9 +77,6 @@ public class TaskListImages {
 
 	public static final ImageDescriptor TASK_REPOSITORY = create(T_TOOL, "task-repository.gif");
 
-	// public static final ImageDescriptor TASK_REPOSITORY_NOTES =
-	// create(T_TOOL, "task-repository-notes.gif");
-
 	public static final ImageDescriptor TASK_REPOSITORY_NEW = create(T_TOOL, "task-repository-new.gif");
 
 	public static final ImageDescriptor OVERLAY_INCOMMING = create(T_EVIEW, "overlay-incoming.gif");
@@ -111,7 +86,6 @@ public class TaskListImages {
 	public static final ImageDescriptor OVERLAY_CONFLICT = create(T_EVIEW, "overlay-conflicting.gif");
 
 	public static final ImageDescriptor OVERLAY_REPOSITORY = create(T_EVIEW, "overlay-repository.gif");
-
 	
 	public static final ImageDescriptor STATUS_NORMAL = create(T_EVIEW, "status-normal.gif");
 	
@@ -232,23 +206,3 @@ public class TaskListImages {
 	}
 }
 
-// class TaskImageDescriptor extends CompositeImageDescriptor {
-//	  
-// private Point size;
-//	
-// private ImageDescriptor contents;
-//	
-// public TaskImageDescriptor(ImageDescriptor contents, Point size) {
-// this.contents = contents;
-// }
-//
-// @Override
-// protected void drawCompositeImage(int width, int height) {
-// super.drawImage(contents.getImageData(), width, height);
-// }
-//
-// @Override
-// protected Point getSize() {
-// return size;
-// }
-// }

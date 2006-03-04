@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
@@ -165,7 +166,7 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 		if (element instanceof ITaskContainer) {
 			ITaskContainer category = (ITaskContainer) element;
 			if (category.isArchive()) {
-				return TaskListImages.BACKGROUND_ARCHIVE;
+				return TaskListColorsAndFonts.BACKGROUND_ARCHIVE;
 			} else {
 				return parentBackgroundColor;
 			}

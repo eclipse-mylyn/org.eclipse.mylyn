@@ -201,7 +201,7 @@ public class TaskListToolTipHandler {
 
 			@Override
 			public void mouseExit(MouseEvent e) {
-				if (tipShell != null && tipShell.isVisible()) {
+				if (tipShell != null && !tipShell.isDisposed() && tipShell.isVisible()) {
 					tipShell.setVisible(false);
 				}
 				tipWidget = null;

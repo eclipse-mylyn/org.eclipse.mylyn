@@ -15,6 +15,7 @@ import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskHighlighter;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
@@ -78,9 +79,9 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		if (object instanceof ITaskContainer) {
 			for (ITask child : ((ITaskContainer) object).getChildren()) {
 				if (child.isActive()) {
-					return TaskListImages.COLOR_TASK_ACTIVE;
+					return TaskListColorsAndFonts.COLOR_TASK_ACTIVE;
 				} else if (child.isPastReminder() && !child.isCompleted()) {
-					return TaskListImages.COLOR_TASK_OVERDUE;
+					return TaskListColorsAndFonts.COLOR_TASK_OVERDUE;
 				}
 			}
 		} else if (object instanceof AbstractRepositoryQuery) {
@@ -88,7 +89,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				if (child instanceof AbstractQueryHit) {
 					ITask task = ((AbstractQueryHit) child).getCorrespondingTask();
 					if (task != null && task.isActive()) {
-						return TaskListImages.COLOR_TASK_ACTIVE;
+						return TaskListColorsAndFonts.COLOR_TASK_ACTIVE;
 					}
 				}
 			}
@@ -96,17 +97,17 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			AbstractQueryHit hit = (AbstractQueryHit) object;
 			if ((hit.getCorrespondingTask() != null && hit.getCorrespondingTask().isCompleted())
 				 || hit.isCompleted()) {
-				return TaskListImages.COLOR_TASK_COMPLETED;
+				return TaskListColorsAndFonts.COLOR_TASK_COMPLETED;
 			}
 		} else if (object instanceof ITaskListElement) {
 			ITask task = getCorrespondingTask((ITaskListElement) object);
 			if (task != null) {
 				if (task.isCompleted()) {
-					return TaskListImages.COLOR_TASK_COMPLETED;
+					return TaskListColorsAndFonts.COLOR_TASK_COMPLETED;
 				} else if (task.isActive()) {
-					return TaskListImages.COLOR_TASK_ACTIVE;
+					return TaskListColorsAndFonts.COLOR_TASK_ACTIVE;
 				} else if (task.isPastReminder()) {
-					return TaskListImages.COLOR_TASK_OVERDUE;
+					return TaskListColorsAndFonts.COLOR_TASK_OVERDUE;
 				}
 			}
 		}
@@ -134,7 +135,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				return highlighter.getHighlightColor(task);
 			}
 		}
-		return TaskListImages.BACKGROUND_WHITE;
+		return TaskListColorsAndFonts.BACKGROUND_WHITE;
 	}
 
 	public Font getFont(Object element) {
@@ -145,26 +146,26 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		if (task instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)task;
 			if (repositoryTask.isCurrentlySynchronizing()) {
-				return TaskListImages.ITALIC;
+				return TaskListColorsAndFonts.ITALIC;
 			}
 		}
 		if (element instanceof ITaskContainer) {
 			if (element instanceof AbstractRepositoryQuery) {
 				if (((AbstractRepositoryQuery)element).isCurrentlySynchronizing()) {
-					return TaskListImages.ITALIC;
+					return TaskListColorsAndFonts.ITALIC;
 				}
 			}
 			for (ITask child : ((ITaskContainer) element).getChildren()) {
 				if (child.isActive())
-					return TaskListImages.BOLD;
+					return TaskListColorsAndFonts.BOLD;
 			}
 		}
 		if (task != null) {
 			if (task.isActive())
-				return TaskListImages.BOLD;
+				return TaskListColorsAndFonts.BOLD;
 			for (ITask child : task.getChildren()) {
 				if (child.isActive())
-					return TaskListImages.BOLD;
+					return TaskListColorsAndFonts.BOLD;
 			}
 		}
 		return null;
