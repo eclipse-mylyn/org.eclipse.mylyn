@@ -69,15 +69,10 @@ class TaskListTableSorter extends ViewerSorter {
 					return 0;
 				} else if (column == this.view.columnNames[2]) {
 					return this.view.sortDirection * element1.getPriority().compareTo(element2.getPriority());
-				} else if (column == this.view.columnNames[3]) {
+				} else if (column == this.view.columnNames[4]) {
 					String c1 = element1.getDescription();
 					String c2 = element2.getDescription();
 					return this.view.sortDirection * taskKeyComparator.compare(c1, c2);
-//					try {
-//						return new Integer(c1).compareTo(new Integer(c2));
-//					} catch (Exception e) {
-//					}
-//					return this.view.sortDirection * c1.compareTo(c2);
 				} else {
 					return 0;
 				}
