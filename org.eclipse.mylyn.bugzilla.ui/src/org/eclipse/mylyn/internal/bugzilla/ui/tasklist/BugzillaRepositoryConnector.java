@@ -170,8 +170,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						((ApplicationWindow) PlatformUI.getWorkbench().getActiveWorkbenchWindow())
-								.setStatus("Download of bug: " + bugzillaTask + " failed due to I/O exception");
+						if (!PlatformUI.getWorkbench().isClosing()) {
+							((ApplicationWindow) PlatformUI.getWorkbench().getActiveWorkbenchWindow())
+									.setStatus("Download of bug: " + bugzillaTask + " failed due to I/O exception");
+						}
 					}
 				});
 			}
@@ -342,7 +344,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 								} else {
 									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 											"Could not post bug.  Check repository credentials and connectivity.\n\n"
-											+ throwable); 
+													+ throwable);
 								}
 							}
 						});
@@ -370,7 +372,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				synchronize(query, null);
 			}
 			if (task instanceof AbstractRepositoryTask) {
-				synchronize((AbstractRepositoryTask)task, true, null);
+				synchronize((AbstractRepositoryTask) task, true, null);
 			}
 
 		} catch (Exception e) {
@@ -472,12 +474,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return supportedVersions;
 	}
 
-	/** public for testing purposes **/
+	/** public for testing purposes * */
 	@Override
-	public List<AbstractQueryHit> performQuery(final AbstractRepositoryQuery repositoryQuery, IProgressMonitor monitor, MultiStatus status) {
+	public List<AbstractQueryHit> performQuery(final AbstractRepositoryQuery repositoryQuery, IProgressMonitor monitor,
+			MultiStatus status) {
 		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
 				repositoryQuery.getRepositoryKind(), repositoryQuery.getRepositoryUrl());
-		
+
 		final BugzillaCategorySearchOperation categorySearch = new BugzillaCategorySearchOperation(repository,
 				repositoryQuery.getQueryUrl(), repositoryQuery.getMaxHits());
 
@@ -488,33 +491,33 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					String description = hit.getId() + ": " + hit.getDescription();
 
 					// TODO: Associate new hit with task (if already exists)
-					newHits.add(new BugzillaQueryHit(description, hit.getPriority(), repositoryQuery
-							.getRepositoryUrl(), hit.getId(), null, hit.getState()));
+					newHits.add(new BugzillaQueryHit(description, hit.getPriority(),
+							repositoryQuery.getRepositoryUrl(), hit.getId(), null, hit.getState()));
 				}
 			}
 		});
-		
+
 		categorySearch.execute(monitor);
 		try {
 			IStatus queryStatus = categorySearch.getStatus();
 			if (!queryStatus.isOK()) {
-				 status.add(new Status(IStatus.OK, MylarTaskListPlugin.PLUGIN_ID, IStatus.OK, queryStatus.getMessage(), queryStatus
-					.getException()));
-			} else {				
+				status.add(new Status(IStatus.OK, MylarTaskListPlugin.PLUGIN_ID, IStatus.OK, queryStatus.getMessage(),
+						queryStatus.getException()));
+			} else {
 				status.add(queryStatus);
 			}
 		} catch (LoginException e) {
 			// TODO: Set some form of disconnect status on Query?
 			status.add(new Status(IStatus.OK, MylarTaskListPlugin.PLUGIN_ID, IStatus.OK, "Could not log in", e));
 		}
-		
+
 		return newHits;
 	}
 
 	@Override
 	protected void updateOfflineState(AbstractRepositoryTask repositoryTask, boolean forceSync) {
 		if (repositoryTask instanceof BugzillaTask) {
-			BugzillaTask bugzillaTask = (BugzillaTask)repositoryTask;
+			BugzillaTask bugzillaTask = (BugzillaTask) repositoryTask;
 			BugReport downloadedReport = downloadReport(bugzillaTask);
 			if (downloadedReport != null) {
 				bugzillaTask.setBugReport(downloadedReport);
