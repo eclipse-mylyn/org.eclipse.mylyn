@@ -34,11 +34,14 @@ public class TaskListColorsAndFonts {
 	public static final Color COLOR_TASK_OVERDUE = new Color(Display.getDefault(), 200, 10, 30);
 
 	public static final Color COLOR_HYPERLINK = new Color(Display.getDefault(), 0, 0, 255);
-	
+
 	public static final Font BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
 
 	public static final Font ITALIC = JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT);
 
+	/**
+	 * NOTE: disposal of JFaceResources fonts handled by registry.
+	 */
 	public static void dispose() {
 		BACKGROUND_WHITE.dispose();
 		BACKGROUND_ARCHIVE.dispose();
@@ -47,8 +50,6 @@ public class TaskListColorsAndFonts {
 		COLOR_TASK_ACTIVE.dispose();
 		COLOR_TASK_OVERDUE.dispose();
 		COLOR_HYPERLINK.dispose();
-		BOLD.dispose();
-		ITALIC.dispose();
-	}
+	} 
 
 }
