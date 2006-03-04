@@ -30,7 +30,6 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 
@@ -73,17 +72,23 @@ public class ResourceUiBridge implements IMylarUiBridge {
 		}
 	}
 
-	public void close(IMylarElement node) {
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		if (page != null) {
-			IEditorReference[] references = page.getEditorReferences();
-			for (int i = 0; i < references.length; i++) {
-				IEditorPart part = references[i].getEditor(false);
-				if (part != null) {
-					if (part instanceof AbstractTextEditor) {
-						((AbstractTextEditor) part).close(false);
-					} else if (part instanceof FormEditor) {
-						((FormEditor) part).close(false);
+	public void close(IMylarElement element) {
+		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
+		Object object = bridge.getObjectForHandle(element.getHandleIdentifier());
+		if (object instanceof IFile) {
+			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			if (page != null) {
+				IEditorReference[] references = page.getEditorReferences();
+				for (int i = 0; i < references.length; i++) {
+					IEditorPart part = references[i].getEditor(false);
+					if (part != null) {
+						if (part instanceof AbstractTextEditor) {
+							AbstractTextEditor editor = (AbstractTextEditor)part;
+							Object adapter = editor.getEditorInput().getAdapter(IResource.class);
+							if (adapter instanceof IFile && ((IFile)adapter).equals(object)) {
+								editor.close(true);
+							}
+						} 
 					}
 				}
 			}

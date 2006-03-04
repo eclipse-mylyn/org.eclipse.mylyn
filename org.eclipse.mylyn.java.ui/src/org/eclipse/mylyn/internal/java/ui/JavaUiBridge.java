@@ -110,9 +110,6 @@ public class JavaUiBridge implements IMylarUiBridge {
 		}
 	}
 
-	/**
-	 * TODO: implement if needed
-	 */
 	public void close(IMylarElement node) {
 		try {
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -121,13 +118,12 @@ public class JavaUiBridge implements IMylarUiBridge {
 				for (int i = 0; i < references.length; i++) {
 					IEditorPart part = references[i].getEditor(false);
 					if (part != null && part instanceof JavaEditor) {
-						MylarStatusHandler.log("editor closing not implemented", this);
-						// JavaEditor editor = (JavaEditor)part;
-						// String name =
-						// MylarJavaPlugin.getStructureBridge().getName(
-						// MylarJavaPlugin.getStructureBridge().getObjectForHandle(node.getElementHandle()));
-						// if (editor.getTitle().equals(name))
-						// editor.close(true);
+						JavaEditor editor = (JavaEditor) part;
+						Object adapter = editor.getEditorInput().getAdapter(IJavaElement.class);
+						if (adapter instanceof IJavaElement
+								&& node.getHandleIdentifier().equals(((IJavaElement) adapter).getHandleIdentifier())) {
+							editor.close(true);
+						}
 					}
 				}
 			}

@@ -19,6 +19,7 @@ import org.eclipse.mylar.internal.ui.MylarUiPrefContstants;
 import org.eclipse.mylar.provisional.core.IMylarContext;
 import org.eclipse.mylar.provisional.core.IMylarContextListener;
 import org.eclipse.mylar.provisional.core.IMylarElement;
+import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.ui.IMylarUiBridge;
 import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
@@ -90,12 +91,21 @@ public class MylarEditorManager implements IMylarContextListener {
 		// ignore
 	}
 
-	public void interestChanged(IMylarElement node) {
-		// ignore
+	public void interestChanged(IMylarElement element) {
+		if (MylarUiPlugin.getPrefs().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)) {
+			if (!element.getInterest().isInteresting()) {
+				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
+				if (bridge.isDocument(element.getHandleIdentifier())) {
+					MylarUiPlugin.getDefault().getUiBridge(element.getContentType()).close(element);
+				}
+			}
+		}
 	}
 
-	public void interestChanged(List<IMylarElement> nodes) {
-		// ignore
+	public void interestChanged(List<IMylarElement> elements) {
+		for (IMylarElement element : elements) {
+			interestChanged(element);
+		}
 	}
 
 	public void nodeDeleted(IMylarElement node) {
