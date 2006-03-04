@@ -123,7 +123,7 @@ public class TaskListImages {
 	
 	public static final ImageDescriptor STATUS_NORMAL_OUTGOING = createWithOverlay(
 			STATUS_NORMAL,
-			OVERLAY_CONFLICT, true, true);
+			OVERLAY_OUTGOING, true, true);
 	
 	public static final ImageDescriptor STATUS_NORMAL_CONFLICT = createWithOverlay(
 			STATUS_NORMAL,
@@ -135,7 +135,7 @@ public class TaskListImages {
 	
 	public static final ImageDescriptor STATUS_CONTEXT_OUTGOING = createWithOverlay(
 			STATUS_CONTEXT,
-			OVERLAY_CONFLICT, true, true);
+			OVERLAY_OUTGOING, true, true);
 	
 	public static final ImageDescriptor STATUS_CONTEXT_CONFLICT = createWithOverlay(
 			STATUS_CONTEXT,
