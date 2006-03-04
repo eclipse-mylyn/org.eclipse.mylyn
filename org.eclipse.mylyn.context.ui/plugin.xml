@@ -280,7 +280,7 @@
            toolbarPath="mylar"
            tooltip="Apply Mylar"> 
   		</action> 
-  		</viewContribution>
+  	</viewContribution>	
   	<viewContribution 
 		id="org.eclipse.mylar.ui.tasklist.apply" 
    		targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
