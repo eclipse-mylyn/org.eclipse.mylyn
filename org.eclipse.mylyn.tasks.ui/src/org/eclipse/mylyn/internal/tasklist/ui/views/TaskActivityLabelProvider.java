@@ -12,25 +12,29 @@
 package org.eclipse.mylar.internal.tasklist.ui.views;
 
 import java.text.DateFormat;
+import java.util.Calendar;
 
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.IColorProvider;
+import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.provisional.tasklist.DateRangeTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Rob Elves
  */
-public class TaskActivityLabelProvider extends DecoratingLabelProvider implements ITableLabelProvider, IColorProvider {
+public class TaskActivityLabelProvider extends DecoratingLabelProvider implements ITableLabelProvider, IColorProvider, IFontProvider {
 
 	private static final String NO_MINUTES = "0 minutes";
 
@@ -104,5 +108,14 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 		}
 	}
 	
-	
+    public Font getFont(Object element) {
+    	if (element instanceof DateRangeTaskContainer) {
+    		DateRangeTaskContainer container = (DateRangeTaskContainer)element;
+    		if (container.getStart().before(Calendar.getInstance())
+    				&& container.getEnd().after(Calendar.getInstance())) {
+    			return TaskListColorsAndFonts.BOLD;
+    		}
+    	} 
+    	return super.getFont(element);
+    }
 }

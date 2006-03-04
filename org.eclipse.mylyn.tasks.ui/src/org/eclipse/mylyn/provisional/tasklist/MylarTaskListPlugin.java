@@ -67,6 +67,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	private static TaskListManager taskListManager;
 
+	private static TaskActivityManager taskActivityManager;
+	
 	private static TaskRepositoryManager taskRepositoryManager;
 
 	private TaskListSaveManager taskListSaveManager;
@@ -298,6 +300,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					}
 
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(SHELL_LISTENER);
+					
+					taskActivityManager = new TaskActivityManager();
 					
 					taskListNotificationManager = new TaskListNotificationManager();
 					taskListNotificationManager.addNotificationProvider(NOTIFICATION_PROVIDER);
@@ -586,6 +590,10 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	public boolean isInitialized() {
 		return initialized;
+	}
+
+	public static TaskActivityManager getTaskActivityManager() {
+		return taskActivityManager;
 	}
 } 
 

@@ -108,23 +108,19 @@ public class TaskActivityContentProvider implements IStructuredContentProvider, 
 	private final ITaskActivityListener TASK_LISTENER = new ITaskActivityListener() {
 
 		public void taskActivated(ITask task) {
-			// ignore
-
+			treeViewer.refresh(task);
 		}
 
 		public void tasksActivated(List<ITask> tasks) {
-			// ignore
-
+			treeViewer.refresh();
 		}
 
 		public void taskDeactivated(ITask task) {
-			// ignore
-
+			treeViewer.refresh(task);
 		}
 
 		public void localInfoChanged(ITask task) {
-			// ignore
-
+			treeViewer.refresh(task);
 		}
 
 		public void repositoryInfoChanged(ITask task) {
@@ -137,7 +133,7 @@ public class TaskActivityContentProvider implements IStructuredContentProvider, 
 		}
 
 		public void taskListModified() {
-			// ignore
+			treeViewer.refresh();
 		}
 	};
 
