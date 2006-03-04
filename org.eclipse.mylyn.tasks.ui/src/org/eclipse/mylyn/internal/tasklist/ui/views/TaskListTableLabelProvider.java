@@ -117,6 +117,11 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 			}
 			return super.getImage(element); 
 		} else if (columnIndex == 2) {
+			if (element instanceof ITaskListElement && !(element instanceof ITaskContainer)) {
+				ITaskListElement taskElement = (ITaskListElement) element;
+				return getImageForPriority(PriorityLevel.fromString(taskElement.getPriority()));
+			}
+		} else if (columnIndex == 3) {
 			AbstractRepositoryTask repositoryTask = null;
 			if (element instanceof AbstractQueryHit) {
 				repositoryTask = ((AbstractQueryHit)element).getCorrespondingTask();
@@ -141,15 +146,10 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 						return TaskListImages.getImage(TaskListImages.STATUS_CONTEXT_CONFLICT);
 					}
 				}
+			}
 			} else {
 				return null;
 			}
-		} else if (columnIndex == 3) {
-			if (element instanceof ITaskListElement && !(element instanceof ITaskContainer)) {
-				ITaskListElement taskElement = (ITaskListElement) element;
-				return getImageForPriority(PriorityLevel.fromString(taskElement.getPriority()));
-			}
-		}
 		return null;
 	}
 	

@@ -191,7 +191,7 @@ public class TaskListView extends ViewPart {
 
 	static final String FILTER_LABEL = "<filter>";
 
-	protected String[] columnNames = new String[] { "", " ", "i", "!", "Description" };
+	protected String[] columnNames = new String[] { "", " ", "!", "i", "Description" };
 
 	protected int[] columnWidths = new int[] { 52, 20, 12, 12, 160 };
 
