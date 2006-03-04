@@ -160,6 +160,6 @@ public abstract class AbstractRepositoryTask extends Task {
 	}
 
 	public boolean hasServerContext() {
-		return true;
+		return false;
 	}
 }
