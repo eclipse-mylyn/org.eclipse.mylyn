@@ -60,7 +60,7 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 				if (!bridge.canFilter(element)) {
 					return true;
 				}
-				if (matchesExclusion(element, bridge))
+				if (isImplicitlyInteresting(element, bridge))
 					return true;
 
 				String handle = bridge.getHandleIdentifier(element);
@@ -95,7 +95,7 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element);
 				if (!bridge.canFilter(element))
 					return true;
-				if (matchesExclusion(element, bridge))
+				if (isImplicitlyInteresting(element, bridge))
 					return true;
 
 				String handle = bridge.getHandleIdentifier(element);
@@ -114,7 +114,7 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 		return false;
 	}
 
-	private boolean matchesExclusion(Object element, IMylarStructureBridge bridge) {
+	protected boolean isImplicitlyInteresting(Object element, IMylarStructureBridge bridge) {
 		if (excludedMatches == null)
 			return false;
 		if (excludedMatches.equals("*"))
@@ -127,7 +127,7 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 		}
 	}
 
-	private boolean containsMylarInterestFilter(StructuredViewer viewer) {
+	protected boolean containsMylarInterestFilter(StructuredViewer viewer) {
 		boolean found = false;
 		for (int i = 0; i < viewer.getFilters().length; i++) {
 			ViewerFilter filter = viewer.getFilters()[i];

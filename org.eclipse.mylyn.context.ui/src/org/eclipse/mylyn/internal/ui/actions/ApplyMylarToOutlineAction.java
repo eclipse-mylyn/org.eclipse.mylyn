@@ -76,7 +76,6 @@ public class ApplyMylarToOutlineAction extends AbstractApplyMylarAction {
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {
-		// TODO Auto-generated method stub
-
+		// ignore
 	}
 }

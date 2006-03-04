@@ -4,6 +4,18 @@
 <plugin>
     <extension-point id="context" name="context" schema="schema/context.exsd"/>
  
+    <extension
+         point="org.eclipse.mylar.core.context">
+      <structureBridge class="org.eclipse.mylar.internal.ui.TaskStructureBridge"/> 
+   </extension>
+   <extension
+         point="org.eclipse.mylar.ui.context">
+      <uiBridge
+            class="org.eclipse.mylar.internal.ui.TaskUiBridge"
+            contentType="meta/task"/>
+   </extension>  
+ 
+ 
   	<extension point = "org.eclipse.ui.popupMenus">
      <objectContribution
         id="org.eclipse.mylar.ui.interest"
@@ -266,6 +278,21 @@
            menubarPath="mylar"
            style="toggle"
            toolbarPath="mylar"
+           tooltip="Apply Mylar"> 
+  		</action> 
+  		</viewContribution>
+  	<viewContribution 
+		id="org.eclipse.mylar.ui.tasklist.apply" 
+   		targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
+    	<action
+           class="org.eclipse.mylar.internal.ui.actions.ApplyMylarToTaskListAction"
+           enablesFor="*"
+           icon="icons/elcl16/interest-filtering.gif"
+           id="org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction"
+           label="Apply Mylar"
+           menubarPath="context"
+           style="toggle"
+           toolbarPath="context"
            tooltip="Apply Mylar"> 
   		</action> 
   		</viewContribution>
