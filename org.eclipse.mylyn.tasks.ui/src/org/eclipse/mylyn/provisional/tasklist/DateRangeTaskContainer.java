@@ -13,6 +13,7 @@ package org.eclipse.mylar.provisional.tasklist;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
@@ -57,8 +58,16 @@ public class DateRangeTaskContainer implements ITaskContainer {
 		tasks.add(task);
 	}
 
+	public DateRangeTaskContainer(Date time, Date time2, String description) {
+		startDate = new GregorianCalendar();
+		startDate.setTime(time);
+		endDate = new GregorianCalendar();
+		endDate.setTime(time2);
+		this.description = description; 
+	}
+
 	public boolean includes(DateRangeTaskContainer cal) {
-		return startDate.before(cal.getStart()) && endDate.after(cal.getEnd());
+		return (startDate.getTimeInMillis() < cal.getStart().getTimeInMillis()) && (endDate.getTimeInMillis() > cal.getEnd().getTimeInMillis());
 	}
 
 	public void addTask(DateRangeTaskContainer taskContainer) {

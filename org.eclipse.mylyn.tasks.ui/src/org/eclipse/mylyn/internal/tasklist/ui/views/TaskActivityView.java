@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.views;
 
-import java.util.List;
+import java.util.Calendar;
 
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -21,21 +21,12 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.internal.tasklist.ui.actions.OpenTaskListElementAction;
-import org.eclipse.mylar.provisional.core.IMylarContext;
-import org.eclipse.mylar.provisional.core.IMylarContextListener;
-import org.eclipse.mylar.provisional.core.IMylarElement;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
+import org.eclipse.mylar.provisional.tasklist.DateRangeTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
-import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.PlatformUI;
@@ -60,98 +51,12 @@ public class TaskActivityView extends ViewPart {
 
 	private TreeColumn[] columns;
 
-	private static final int DEFAULT_SORT_DIRECTION = -1;
-
-	private int sortIndex = 2;
-
-	private int sortDirection = DEFAULT_SORT_DIRECTION;
-
 	private TaskActivityLabelProvider taskHistoryTreeLabelProvider;
 
 	private TreeViewer treeViewer;
 
-	private final ITaskActivityListener TASK_LISTENER = new ITaskActivityListener() {
+	private TaskActivityContentProvider taskActivityTableContentProvider;
 
-		public void taskActivated(ITask task) {
-			// ignore
-			
-		}
-
-		public void tasksActivated(List<ITask> tasks) {
-			// ignore
-			
-		}
-
-		public void taskDeactivated(ITask task) {
-			// ignore
-			
-		}
-
-		public void localInfoChanged(ITask task) {
-			// ignore
-			
-		}
-
-		public void repositoryInfoChanged(ITask task) {
-			// ignore
-			
-		}
-
-		public void tasklistRead() {
-			getViewer().setInput(getViewSite());
-		}
-
-		public void taskListModified() {
-			// ignore	
-		}
-	};
-	
-	private final IMylarContextListener CONTEXT_LISTENER = new IMylarContextListener() {
-
-		public void contextActivated(IMylarContext context) {
-			getViewer().setInput(getViewSite());
-		}
-
-		public void contextDeactivated(IMylarContext context) {
-			
-		}
-
-		public void interestChanged(IMylarElement element) {
-//			String taskHandle = element.getHandleIdentifier();
-//			List<InteractionEvent> events = MylarPlugin.getContextManager().getActivityHistoryMetaContext().getInteractionHistory();
-//			InteractionEvent event = events.get(events.size()-1);
-		}
-		
-		public void presentationSettingsChanging(UpdateKind kind) {
-			// ignore
-		}
-
-		public void presentationSettingsChanged(UpdateKind kind) {
-			// ignore
-		}
-
-
-		public void interestChanged(List<IMylarElement> elements) {
-			// ignore		
-		}
-
-		public void nodeDeleted(IMylarElement element) {
-			// ignore	
-		}
-
-		public void landmarkAdded(IMylarElement element) {
-			// ignore	
-		}
-
-		public void landmarkRemoved(IMylarElement element) {
-			// ignore	
-		}
-
-		public void edgesChanged(IMylarElement element) {
-			// ignore	
-		}
-	};
-	
 	public static TaskActivityView openInActivePerspective() {
 		try {
 			return (TaskActivityView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ID);
@@ -162,80 +67,11 @@ public class TaskActivityView extends ViewPart {
 
 	public TaskActivityView() {
 		INSTANCE = this;
-		MylarTaskListPlugin.getTaskListManager().addListener(TASK_LISTENER);
-		MylarPlugin.getContextManager().addActivityMetaContextListener(CONTEXT_LISTENER);
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
-		MylarTaskListPlugin.getTaskListManager().removeListener(TASK_LISTENER);
-		MylarPlugin.getContextManager().removeActivityMetaContextListener(CONTEXT_LISTENER);
-	}
-
-	private class TaskHistoryTableSorter extends ViewerSorter {
-
-		private String column;
-
-		public TaskHistoryTableSorter(String column) {
-			super();
-			this.column = column;
-		}
-
-		/**
-		 * compare - invoked when column is selected calls the actual comparison
-		 * method for particular criteria
-		 */
-		@Override
-		public int compare(Viewer compareViewer, Object o1, Object o2) {
-			if (o1 instanceof ITaskContainer && o2 instanceof ITaskContainer && ((ITaskContainer) o2).isArchive()) {
-				return -1;
-			} else if (o2 instanceof ITaskContainer && o1 instanceof ITaskContainer
-					&& ((ITaskContainer) o2).isArchive()) {
-				return 1;
-			}
-
-			if (o1 instanceof ITaskContainer && o2 instanceof ITask) {
-				return 1;
-			}
-			if (o1 instanceof ITaskContainer || o1 instanceof AbstractRepositoryQuery) {
-				if (o2 instanceof ITaskContainer || o2 instanceof AbstractRepositoryQuery) {
-					return sortDirection
-							* ((ITaskListElement) o1).getDescription().compareTo(
-									((ITaskListElement) o2).getDescription());
-				} else {
-					return -1;
-				}
-			} else if (o1 instanceof ITaskListElement) {
-				if (o2 instanceof ITaskContainer || o2 instanceof AbstractRepositoryQuery) {
-					return -1;
-				} else if (o2 instanceof ITaskListElement) {
-					ITaskListElement element1 = (ITaskListElement) o1;
-					ITaskListElement element2 = (ITaskListElement) o2;
-
-					if (column != null && column.equals(columnNames[1])) {
-						return 0;
-					} else if (column == columnNames[2]) {
-						return sortDirection * element1.getPriority().compareTo(element2.getPriority());
-					} else if (column == columnNames[3]) {
-						String c1 = element1.getDescription();
-						String c2 = element2.getDescription();
-						try {
-							return new Integer(c1).compareTo(new Integer(c2));
-						} catch (Exception e) {
-						}
-
-						return sortDirection * c1.compareTo(c2);
-
-					} else {
-						return 0;
-					}
-				}
-			} else {
-				return 0;
-			}
-			return 0;
-		}
 	}
 
 	@Override
@@ -253,15 +89,15 @@ public class TaskActivityView extends ViewPart {
 			columns[i] = new TreeColumn(getViewer().getTree(), SWT.LEFT);
 			columns[i].setText(columnNames[i]);
 			columns[i].setWidth(columnWidths[i]);
-			final int index = i;
-			columns[i].addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					sortIndex = index;
-					sortDirection *= DEFAULT_SORT_DIRECTION;
-					getViewer().setSorter(new TaskHistoryTableSorter(columnNames[sortIndex]));
-				}
-			});
+			// final int index = i;
+			// columns[i].addSelectionListener(new SelectionAdapter() {
+			// @Override
+			// public void widgetSelected(SelectionEvent e) {
+			// sortIndex = index;
+			// sortDirection *= DEFAULT_SORT_DIRECTION;
+			// getViewer().setSorter(new TaskActivityTableSorter());
+			// }
+			// });
 			columns[i].addControlListener(new ControlListener() {
 				public void controlResized(ControlEvent e) {
 					for (int j = 0; j < columnWidths.length; j++) {
@@ -277,16 +113,12 @@ public class TaskActivityView extends ViewPart {
 			});
 		}
 
-		// taskListTableLabelProvider = new TaskListTableLabelProvider(new
-		// TaskElementLabelProvider(), PlatformUI.getWorkbench()
-		// .getDecoratorManager().getLabelDecorator(), parent.getBackground());
-//		taskHistoryTreeLabelProvider = new TaskActivityLabelProvider();
 		taskHistoryTreeLabelProvider = new TaskActivityLabelProvider(new TaskElementLabelProvider(), PlatformUI
 				.getWorkbench().getDecoratorManager().getLabelDecorator(), parent.getBackground());
 
-
-		getViewer().setSorter(new TaskHistoryTableSorter(columnNames[sortIndex]));
-		getViewer().setContentProvider(new TaskActivityContentProvider(this));
+		getViewer().setSorter(new TaskActivityTableSorter());
+		taskActivityTableContentProvider = new TaskActivityContentProvider(getViewer());
+		getViewer().setContentProvider(taskActivityTableContentProvider);
 		getViewer().setLabelProvider(taskHistoryTreeLabelProvider);
 		getViewer().setInput(getViewSite());
 
@@ -337,7 +169,41 @@ public class TaskActivityView extends ViewPart {
 	@Override
 	public void setFocus() {
 		// ignore
+	}
 
+	private class TaskActivityTableSorter extends ViewerSorter {
+
+		public TaskActivityTableSorter() {
+			super();
+		}
+
+		@Override
+		public int compare(Viewer compareViewer, Object o1, Object o2) {
+			if (o1 instanceof DateRangeTaskContainer) {
+				if (o2 instanceof DateRangeTaskContainer) {
+					DateRangeTaskContainer dateRangeTaskContainer1 = (DateRangeTaskContainer) o1;
+					DateRangeTaskContainer dateRangeTaskContainer2 = (DateRangeTaskContainer) o2;
+					return dateRangeTaskContainer2.getStart().compareTo(dateRangeTaskContainer1.getStart());
+				} else {
+					return 1;
+				}
+			} else if (o1 instanceof ITask) {
+				if (o2 instanceof ITaskContainer) {
+					return -1;
+				} else if (o2 instanceof ITask) {
+					ITask task1 = (ITask) o1;
+					ITask task2 = (ITask) o2;
+					Calendar calendar1 = taskActivityTableContentProvider
+							.getLastOccurrence(task1.getHandleIdentifier());
+					Calendar calendar2 = taskActivityTableContentProvider
+							.getLastOccurrence(task2.getHandleIdentifier());
+					if (calendar1 != null && calendar2 != null) {
+						return calendar2.compareTo(calendar1);
+					}
+				}
+			}
+			return 0;
+		}
 	}
 
 }
