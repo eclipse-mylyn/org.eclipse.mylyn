@@ -86,9 +86,9 @@
               enablesFor="*"
               icon="icons/elcl16/cvs_persp.gif"
               id="org.eclipse.mylar.ide.ui.team.context.commit"
-              label="Commit Task Context..."
+              label="Commit Context..."
               menubarPath="context"
-              tooltip="Commit Task Context...">
+              tooltip="Commit Context...">
            <enablement>
               <or> 
                  <objectClass name="org.eclipse.mylar.provisional.tasklist.ITask"/>
