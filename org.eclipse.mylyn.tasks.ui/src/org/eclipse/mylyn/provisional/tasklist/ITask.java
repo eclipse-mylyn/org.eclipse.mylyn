@@ -17,8 +17,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.mylar.provisional.tasklist.Task.TaskStatus;
-
 /**
  * @author Mik Kersten
  */
@@ -45,8 +43,6 @@ public interface ITask extends ITaskListElement {
 	public List<String> getPlans();
 	
 	public abstract boolean isCompleted();
-
-	public abstract TaskStatus getStatus();
 
 	public abstract void setCompleted(boolean completed);
 

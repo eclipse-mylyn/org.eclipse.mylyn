@@ -28,24 +28,6 @@ public class Task implements ITask {
 
 	private static final String REPOSITORY_KIND_LOCAL = "local";
 
-	public enum TaskStatus {
-		NOT_STARTED, IN_PROGRESS, COMPLETED;
-
-		@Override
-		public String toString() {
-			switch (this) {
-			case NOT_STARTED:
-				return "Not Started";
-			case IN_PROGRESS:
-				return "In Progress";
-			case COMPLETED:
-				return "Completed";
-			default:
-				return "null";
-			}
-		}
-	}
-
 	public enum PriorityLevel {
 		P1, P2, P3, P4, P5;
 
@@ -371,14 +353,6 @@ public class Task implements ITask {
 			}
 		}
 		return false;
-	}
-
-	public TaskStatus getStatus() {
-		if (isCompleted()) {
-			return TaskStatus.COMPLETED;
-		} else {
-			return TaskStatus.NOT_STARTED;
-		}
 	}
 
 	public String getRepositoryKind() {

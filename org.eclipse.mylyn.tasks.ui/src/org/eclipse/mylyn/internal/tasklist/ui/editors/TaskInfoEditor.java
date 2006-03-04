@@ -28,8 +28,6 @@ import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.Task;
-import org.eclipse.mylar.provisional.tasklist.Task.TaskStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.KeyEvent;
@@ -76,6 +74,10 @@ import org.eclipse.ui.part.EditorPart;
  * @author Rob Elves (added additional fields)
  */
 public class TaskInfoEditor extends EditorPart {
+
+	private static final String LABEL_INCOMPLETE = "Incomplete";
+
+	private static final String LABEL_COMPLETE = "Complete";
 
 	private static final String LABEL_PLAN = "Personal Planning";
 
@@ -151,7 +153,8 @@ public class TaskInfoEditor extends EditorPart {
 				if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
-							if (description == null) return;
+							if (description == null)
+								return;
 							if (!description.isDisposed()) {
 								description.setText(updateTask.getDescription());
 								// TaskInfoEditor.this.setPartName(updateTask.getDescription(true));
@@ -162,8 +165,13 @@ public class TaskInfoEditor extends EditorPart {
 								priorityCombo.select(selectionIndex);
 							}
 							if (!statusCombo.isDisposed()) {
-								int selectionIndex = statusCombo.indexOf(updateTask.getStatus().toString());
-								statusCombo.select(selectionIndex);
+								if (task.isCompleted()) {
+									statusCombo.select(0);
+								} else {
+									statusCombo.select(1);
+								}
+//								int selectionIndex = statusCombo.indexOf(updateTask.getStatus().toString());
+//								statusCombo.select(selectionIndex);
 							}
 							if (!(updateTask instanceof AbstractRepositoryTask) && !endDate.isDisposed()) {
 								endDate.setText(getTaskDateString(updateTask));
@@ -221,8 +229,14 @@ public class TaskInfoEditor extends EditorPart {
 			task.setDescription(label);
 			task.setUrl(issueReportURL.getText());
 			task.setPriority(priorityCombo.getItem(priorityCombo.getSelectionIndex()));
+			
+			if (statusCombo.getSelectionIndex() == 0) {
+				task.setCompleted(true);
+			} else {
+				task.setCompleted(false);
+			}
 		}
-		
+
 		String note = notes.getText();
 		task.setNotes(note);
 		task.setEstimatedTimeHours(estimated.getSelection());
@@ -231,7 +245,7 @@ public class TaskInfoEditor extends EditorPart {
 		} else {
 			task.setReminderDate(null);
 		}
-		
+
 		// Method not implemented yet
 		// task.setStatus(statusCombo.getItem(statusCombo.getSelectionIndex()));
 
@@ -426,20 +440,25 @@ public class TaskInfoEditor extends EditorPart {
 
 		statusCombo = new Combo(statusComposite, SWT.READ_ONLY);
 
-		for (TaskStatus status : Task.TaskStatus.values()) {
-			statusCombo.add(status.toString());
+		statusCombo.add(LABEL_COMPLETE);
+		statusCombo.add(LABEL_INCOMPLETE);
+		if (task.isCompleted()) {
+			statusCombo.select(0);
+		} else {
+			statusCombo.select(1);
 		}
-
-		int selectionIndex = statusCombo.indexOf(task.getStatus().toString());
-		statusCombo.select(selectionIndex);
 		if (task instanceof AbstractRepositoryTask) {
 			statusCombo.setEnabled(false);
 		} else {
 			statusCombo.addSelectionListener(new SelectionListener() {
 
 				public void widgetSelected(SelectionEvent e) {
+					if (statusCombo.getSelectionIndex() == 0) {
+						task.setCompleted(true);
+					} else {
+						task.setCompleted(false);
+					}
 					TaskInfoEditor.this.markDirty(true);
-
 				}
 
 				public void widgetDefaultSelected(SelectionEvent e) {
@@ -448,7 +467,7 @@ public class TaskInfoEditor extends EditorPart {
 				}
 			});
 		}
-		statusCombo.setEnabled(false);
+//		statusCombo.setEnabled(false);
 
 	}
 
