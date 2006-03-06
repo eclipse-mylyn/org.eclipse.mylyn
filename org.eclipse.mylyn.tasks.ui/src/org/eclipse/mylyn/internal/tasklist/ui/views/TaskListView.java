@@ -191,7 +191,7 @@ public class TaskListView extends ViewPart {
 
 	static final String FILTER_LABEL = "<filter>";
 
-	protected String[] columnNames = new String[] { "", "", " !", " ", "Description" };
+	protected String[] columnNames = new String[] { "", "", " !", " i", "Description" };
 
 	protected int[] columnWidths = new int[] { 52, 20, 12, 12, 160 };
 
@@ -302,7 +302,7 @@ public class TaskListView extends ViewPart {
 				}
 			};
 			P1.setEnabled(true);
-//			P1.setToolTipText(PRIORITY_LEVELS[0]);
+			P1.setText(Task.PriorityLevel.P1.getDescription());
 			P1.setImageDescriptor(TaskListImages.PRIORITY_1);
 			ActionContributionItem item = new ActionContributionItem(P1);
 			item.fill(dropDownMenu, -1);
@@ -316,7 +316,7 @@ public class TaskListView extends ViewPart {
 				}
 			};
 			P2.setEnabled(true);
-//			P2.setToolTipText(PRIORITY_LEVELS[1]);
+			P2.setText(Task.PriorityLevel.P2.getDescription());
 			P2.setImageDescriptor(TaskListImages.PRIORITY_2);
 			item = new ActionContributionItem(P2);
 			item.fill(dropDownMenu, -1);
@@ -330,7 +330,7 @@ public class TaskListView extends ViewPart {
 				}
 			};
 			P3.setEnabled(true);
-//			P3.setToolTipText(PRIORITY_LEVELS[2]);
+			P3.setText(Task.PriorityLevel.P3.getDescription());
 			P3.setImageDescriptor(TaskListImages.PRIORITY_3);
 			item = new ActionContributionItem(P3);
 			item.fill(dropDownMenu, -1);
@@ -344,7 +344,7 @@ public class TaskListView extends ViewPart {
 				}
 			};
 			P4.setEnabled(true);
-//			P4.setToolTipText(PRIORITY_LEVELS[3]);
+			P4.setText(Task.PriorityLevel.P4.getDescription());
 			P4.setImageDescriptor(TaskListImages.PRIORITY_4);
 			item = new ActionContributionItem(P4);
 			item.fill(dropDownMenu, -1);
@@ -359,7 +359,7 @@ public class TaskListView extends ViewPart {
 			};
 			P5.setEnabled(true);
 			P5.setImageDescriptor(TaskListImages.PRIORITY_5);
-//			P5.setToolTipText(PRIORITY_LEVELS[4]);
+			P5.setText(Task.PriorityLevel.P5.getDescription());
 			item = new ActionContributionItem(P5);
 			item.fill(dropDownMenu, -1);
 

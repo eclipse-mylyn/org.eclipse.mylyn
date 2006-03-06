@@ -45,7 +45,24 @@ public class Task implements ITask {
 			case P5:
 				return "P5";
 			default:
-				return "P5";
+				return "P3";
+			}
+		}
+		
+		public String getDescription() {
+			switch (this) {
+			case P1:
+				return "Very High"; 
+			case P2:
+				return "High";
+			case P3:
+				return "Normal";
+			case P4:
+				return "Low";
+			case P5:
+				return "Very Low";
+			default:
+				return "";
 			}
 		}
 
