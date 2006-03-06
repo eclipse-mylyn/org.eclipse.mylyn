@@ -15,6 +15,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.ui.actions.ApplyMylarToOutlineAction;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.ui.IMylarUiBridge;
@@ -63,11 +64,16 @@ public class ContentOutlineManager implements IPartListener, IPageListener {
 			return;
 		IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
 		List<TreeViewer> viewers = bridge.getContentOutlineViewers(editorPart);
-		for (TreeViewer viewer : viewers) {
-			if (viewer != null) {
-				if (!(viewer.getLabelProvider() instanceof DecoratingLabelProvider)) {
-					viewer.setLabelProvider(new DecoratingLabelProvider((ILabelProvider) viewer.getLabelProvider(),
-							PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
+		if (viewers == null) {
+			MylarStatusHandler.log("null viewer list from bridge: " + bridge + " for editor: " + editorPart, this);
+			return;
+		} else {
+			for (TreeViewer viewer : viewers) {
+				if (viewer != null) {
+					if (!(viewer.getLabelProvider() instanceof DecoratingLabelProvider)) {
+						viewer.setLabelProvider(new DecoratingLabelProvider((ILabelProvider) viewer.getLabelProvider(),
+								PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
+					}
 				}
 			}
 		}
