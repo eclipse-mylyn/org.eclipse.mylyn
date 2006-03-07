@@ -210,17 +210,17 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 					viewer.getControl().setRedraw(false);
 					viewer.refresh(minor);
 					viewer.getControl().setRedraw(true);
-				} else { // don't need to worry about content changes
+				} else { // don't need to worry about content changes 
+					viewer.getControl().setRedraw(false);
 					for (IMylarElement node : nodesToRefresh) {
 						IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(
 								node.getContentType());
 						Object objectToRefresh = structureBridge.getObjectForHandle(node.getHandleIdentifier());
 						if (objectToRefresh != null) {
-							viewer.getControl().setRedraw(false);
 							viewer.update(objectToRefresh, null);
-							viewer.getControl().setRedraw(true);
 						}
 					}
+					viewer.getControl().setRedraw(true);
 				}
 			}
 		}
