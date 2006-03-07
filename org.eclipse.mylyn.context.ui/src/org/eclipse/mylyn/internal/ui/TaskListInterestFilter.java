@@ -79,10 +79,7 @@ public class TaskListInterestFilter extends InterestFilter {
 	protected boolean isImplicitlyInteresting(Object element, IMylarStructureBridge bridge) {
 		if (element instanceof ITask) {
 			ITask task = (ITask)element;
-			return task.isPastReminder()|| MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task);
-//			if (task.getPriority().equals(Task.PriorityLevel.P1.toString())) {
-//				return true;
-//			}
+			return task.isActive() || task.isPastReminder()|| MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task);
 		}
 		return false;
 	}
