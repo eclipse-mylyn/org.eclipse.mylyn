@@ -141,8 +141,16 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 		this.temporarilyUnfiltered = temprarilyUnfiltered;
 	}
 
-	public void resetTemporarilyUnfiltered() {
-		this.temporarilyUnfiltered = null;
+	/**
+	 * @return	true if there was an unfiltered node
+	 */
+	public boolean resetTemporarilyUnfiltered() {
+		if (temporarilyUnfiltered != null) {
+			this.temporarilyUnfiltered = null;
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public Object getTemporarilyUnfiltered() {

@@ -59,7 +59,7 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 				}
 			}
 		} else {
-			filter.resetTemporarilyUnfiltered();
+			viewer.refresh();
 		}
 	}
 
@@ -86,7 +86,9 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 				}
 			}
 		} else {
-			filter.resetTemporarilyUnfiltered();
+			if (filter.resetTemporarilyUnfiltered()) {
+				viewer.refresh(false);
+			}
 		}
 	}
 
