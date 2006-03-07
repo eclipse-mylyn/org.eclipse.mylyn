@@ -64,7 +64,7 @@ public class TaskActivityView extends ViewPart {
 	private final ITaskActivityListener ACTIVITY_LISTENER = new ITaskActivityListener() {
 
 		public void taskActivated(ITask task) {
-			TaskActivityView.this.treeViewer.refresh();
+			TaskActivityView.this.treeViewer.refresh(true);
 //			TaskActivityView.this.treeViewer.refresh(task);
 		}
 
@@ -75,7 +75,7 @@ public class TaskActivityView extends ViewPart {
 		}
 
 		public void taskDeactivated(ITask task) {
-			TaskActivityView.this.treeViewer.refresh();
+			TaskActivityView.this.treeViewer.refresh(true);
 //			TaskActivityView.this.treeViewer.refresh(task);
 		}
 

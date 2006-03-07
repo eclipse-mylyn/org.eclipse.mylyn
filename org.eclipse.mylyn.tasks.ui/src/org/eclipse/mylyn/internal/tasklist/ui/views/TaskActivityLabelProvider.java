@@ -62,15 +62,15 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 
 	public String getColumnText(Object element, int columnIndex) {
 		if (element instanceof DateRangeActivityDelegate) {
-			DateRangeActivityDelegate durationDelegate = (DateRangeActivityDelegate) element;
-			ITask task = durationDelegate.getCorrespondingTask();
+			DateRangeActivityDelegate activityDelegate = (DateRangeActivityDelegate) element;
+			ITask task = activityDelegate.getCorrespondingTask();
 			switch (columnIndex) {
 			case 1:
 				return task.getPriority();
 			case 2:
 				return task.getDescription();
 			case 3:
-				return DateUtil.getFormattedDurationShort(durationDelegate.getContainer().getElapsed(durationDelegate));
+				return DateUtil.getFormattedDurationShort(activityDelegate.getContainer().getElapsed(activityDelegate));
 			case 4:
 				return task.getEstimateTimeHours() + " hours";
 			case 5:
