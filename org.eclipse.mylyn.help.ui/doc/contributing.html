@@ -10,7 +10,7 @@
 	<ul>
 		<li><a href="#contributing-intro">Introduction</a></li>
 		<li><a href="#contributing-setup">Workspace setup</a></li>
-		<li><a href="#contributing-patches">Creating patches</li>
+		<li><a href="#contributing-patches">Contributing patches</li>
 <!--	<li>Building</li>-->
 		</a></li>
 		<li><a href="#building-dist">Building a distribution</a></li>
@@ -25,14 +25,9 @@
 <p>Those interested in contributing should start out by emailing
 <a href="mailto:mylar-dev@eclipse.org">mylar-dev@eclipse.org</a> in order to get 
 an idea of the current priorities.&nbsp; Also refer to the list of <a href="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&product=Mylar&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&keywords_type=allwords&keywords=helpwanted&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=">
-reports marked help wanted</a>.&nbsp; Any significant patches should be 
-accompanied by unit tests, and in general unit tests are one of the most 
-valuable contributions.&nbsp; If you are having trouble writing a test (e.g. one 
-that involves verifying what happened in the UI) please email mylar-dev so that 
-we can point you at similar test cases or consider extending the test harness if 
-needed. </p>
-	<p>&nbsp;</p>
-<h3><a name="contributing-setup">Setup</a></h3>
+reports marked help wanted</a>.&nbsp; </p>
+<h3>&nbsp;</h3>
+	<h3><a name="contributing-setup">Setup</a></h3>
 	<ul>
 		<li>Building Mylar feature from HEAD requires
 		the latest Eclipse milestone release and
@@ -79,20 +74,25 @@ and leave the password blank.</li>
 		</li>
 	</ul>
 <h3>&nbsp;</h3>
-<h3><a name="contributing-patches">Writing patches</a> </h3>
+<h3><a name="contributing-patches">Contributing patches</a> </h3>
 	<p>All but the most minor patches to Mylar should be made using the latest 
 	release or development build of Mylar.&nbsp; In order to ensure what we 
 	produce and help the Mylar evolve gracefully all contributors must be also 
 	be Mylar users.</p>
 	<ul>
-		<li>Each patch should correspond to a single new bug report.&nbsp; </li>
-		<li>Please minimize the amount of changes to existing code to make review 
+		<li>Each patch should correspond to a single bug report.&nbsp; </li>
+		<li>With few exceptions patches should be accompanied by a JUnit test, 
+		and in general unit tests are one of the most valuable and long-lived 
+		contributions.&nbsp; If you are having trouble writing a test (e.g. 
+		trickiness verifying what happens in the UI) comment on the 
+		corresponding bug report so that we can point you at similar test cases 
+		or consider extending the test harness if needed. </li>
+		<li>Minimize the amount of changes to existing code to make review 
 		easier.&nbsp; </li>
 		<li>Synchronize often to ensure you have the latest code.&nbsp; Once you 
 		start modifying resources, put the Synchronize view in Outgoing mode and press 
 		the Change Set button so that Mylar tracks the context for the patch.</li>
-		<li>For most patches, a failing unit test should be written first.&nbsp; 
-		Before creating a new JUnit test class class check the components test 
+		<li>Before creating a new JUnit test class class check the components test 
 		suite (e.g. <tt>AllTasklistTests</tt>) for similar test cases (e.g. 
 		<tt>AllTasklistTests.suite()</tt>).</li>
 		<li>Set the formatter by importing org.eclipse.mylar/developer/javaFormatterSettings.xml 
