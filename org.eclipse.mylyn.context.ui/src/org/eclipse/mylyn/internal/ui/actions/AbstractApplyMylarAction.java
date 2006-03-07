@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.internal.ui.actions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
@@ -135,24 +136,23 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 	public abstract List<StructuredViewer> getViewers();
 
 	protected boolean installInterestFilter(StructuredViewer viewer) {
-		try {
-			if (viewer != null) {
-				boolean found = false;
-				for (int i = 0; i < viewer.getFilters().length; i++) {
-					ViewerFilter viewerFilter = viewer.getFilters()[i];
-					if (viewerFilter instanceof InterestFilter) {
-						found = true;
-					}
-				}
-				if (!found) {
-					viewer.getControl().setRedraw(false);
-					viewer.addFilter(interestFilter);
-					viewer.getControl().setRedraw(true);
-					return true;
-				}
-			} else {
-				MylarStatusHandler.log("Could not install interest filter", this);
+		if (viewer == null) {
+			MylarStatusHandler.log("The viewer to install InterestFilter is null", this);
+			return false;
+		}
+		
+		for (ViewerFilter viewerFilter : viewer.getFilters()) {
+			if (viewerFilter != null && viewerFilter.equals(interestFilter)) {
+				// already have this filter installed
+				return false;
 			}
+		}
+		
+		try {
+			viewer.getControl().setRedraw(false);
+			viewer.addFilter(interestFilter);
+			viewer.getControl().setRedraw(true);
+			return true;
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "Could not install viewer fitler on: " + prefId, false);
 		}
@@ -160,19 +160,28 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 	}
 
 	protected void uninstallInterestFilter(StructuredViewer viewer) {
-		if (viewer != null) {
-			for (int i = 0; i < viewer.getFilters().length; i++) {
-				ViewerFilter filter = viewer.getFilters()[i];
-				if (filter instanceof InterestFilter) {
-					viewer.getControl().setRedraw(false);
-					viewer.removeFilter(filter);
-					viewer.getControl().setRedraw(true);
-				}
-			}
-		} else {
-			MylarStatusHandler.log("Could not uninstall interest filter", this);
-		}
-	}
+		if (viewer == null) {
+            MylarStatusHandler.log("Could not uninstall interest filter", this);
+            return;
+        }
+
+        List<ViewerFilter> filtersToRemove = new ArrayList<ViewerFilter>();
+        for (ViewerFilter filter : viewer.getFilters()) {
+            if (filter instanceof InterestFilter) {
+                filtersToRemove.add(filter);
+            }
+        }
+
+        if (filtersToRemove.isEmpty()) {
+            return;
+        }
+
+        viewer.getControl().setRedraw(false);
+        for (ViewerFilter filter : filtersToRemove) {
+            viewer.removeFilter(filter);
+        }
+        viewer.getControl().setRedraw(true);
+    }
 
 	public void selectionChanged(IAction action, ISelection selection) {
 		// ignore
