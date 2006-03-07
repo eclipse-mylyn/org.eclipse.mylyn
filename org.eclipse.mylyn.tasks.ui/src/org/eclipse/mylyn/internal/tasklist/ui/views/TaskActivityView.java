@@ -23,7 +23,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.internal.tasklist.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylar.provisional.tasklist.DateRangeContainer;
-import org.eclipse.mylar.provisional.tasklist.TaskActivityDurationDelegate;
+import org.eclipse.mylar.provisional.tasklist.DateRangeActivityDelegate;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
@@ -157,7 +157,9 @@ public class TaskActivityView extends ViewPart {
 	}
 
 	private void makeActions() {
-		openTaskEditor = new OpenTaskListElementAction(this.getViewer());
+		openTaskEditor = new OpenTaskListElementAction(this.getViewer()) {
+			
+		};
 		// openUrlInExternal = new OpenTaskInExternalBrowserAction();
 	}
 
@@ -219,9 +221,9 @@ public class TaskActivityView extends ViewPart {
 			} else if (o1 instanceof ITask) {
 				if (o2 instanceof ITaskContainer) {
 					return -1;
-				} else if (o2 instanceof TaskActivityDurationDelegate) {
-					TaskActivityDurationDelegate task1 = (TaskActivityDurationDelegate) o1;
-					TaskActivityDurationDelegate task2 = (TaskActivityDurationDelegate) o2;
+				} else if (o2 instanceof DateRangeActivityDelegate) {
+					DateRangeActivityDelegate task1 = (DateRangeActivityDelegate) o1;
+					DateRangeActivityDelegate task2 = (DateRangeActivityDelegate) o2;
 					Calendar calendar1 = task1.getStart();//MylarTaskListPlugin.getTaskActivityManager().getLastOccurrence(task1.getHandleIdentifier());
 					Calendar calendar2 = task2.getStart();//MylarTaskListPlugin.getTaskActivityManager().getLastOccurrence(task2.getHandleIdentifier());
 					if (calendar1 != null && calendar2 != null) {

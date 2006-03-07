@@ -28,7 +28,7 @@ public class DateRangeContainer implements ITaskContainer {
 
 	private Set<ITask> children = new HashSet<ITask>();
 
-	private Map<TaskActivityDurationDelegate, Long> taskToDuration = new HashMap<TaskActivityDurationDelegate, Long>();
+	private Map<DateRangeActivityDelegate, Long> taskToDuration = new HashMap<DateRangeActivityDelegate, Long>();
 
 	private GregorianCalendar startDate;
 
@@ -68,7 +68,7 @@ public class DateRangeContainer implements ITaskContainer {
 				&& (endDate.getTimeInMillis() > cal.getTimeInMillis());
 	}
 
-	public void addTask(TaskActivityDurationDelegate taskWrapper) {
+	public void addTask(DateRangeActivityDelegate taskWrapper) {
 		totalElapsed += taskWrapper.getEnd().getTimeInMillis() - taskWrapper.getStart().getTimeInMillis();
 		// totalEstimated += taskWrapper.getTask().getEstimateTimeHours();
 		children.add(taskWrapper);
@@ -95,7 +95,7 @@ public class DateRangeContainer implements ITaskContainer {
 		return totalElapsed;
 	}
 
-	public long getElapsed(TaskActivityDurationDelegate taskWrapper) {
+	public long getElapsed(DateRangeActivityDelegate taskWrapper) {
 		if (taskToDuration.containsKey(taskWrapper)) {
 			return taskToDuration.get(taskWrapper);
 		} else {

@@ -19,7 +19,7 @@ import java.util.Set;
  * @author 	Rob Elves
  * @author 	Mik Kersten
  */
-public class TaskActivityDurationDelegate implements ITask {
+public class DateRangeActivityDelegate implements ITask {
 	
 	private ITask task = null;
 
@@ -29,7 +29,7 @@ public class TaskActivityDurationDelegate implements ITask {
 
 	private DateRangeContainer parent;
 
-	public TaskActivityDurationDelegate(DateRangeContainer parent, ITask task, Calendar start, Calendar end) {
+	public DateRangeActivityDelegate(DateRangeContainer parent, ITask task, Calendar start, Calendar end) {
 		this.task = task;
 		this.start = start;
 		this.end = end;
@@ -44,9 +44,9 @@ public class TaskActivityDurationDelegate implements ITask {
 		return start;
 	}
 
-//	public ITask getTask() {
-//		return task;
-//	}
+	public ITask getCorrespondingTask() {
+		return task;
+	}
 
 	@Override
 	public int hashCode() {
@@ -65,7 +65,7 @@ public class TaskActivityDurationDelegate implements ITask {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final TaskActivityDurationDelegate other = (TaskActivityDurationDelegate) obj;
+		final DateRangeActivityDelegate other = (DateRangeActivityDelegate) obj;
 		if (task == null) {
 			if (other.task != null)
 				return false;

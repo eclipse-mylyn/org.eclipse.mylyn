@@ -15,7 +15,7 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.provisional.tasklist.DateRangeContainer;
-import org.eclipse.mylar.provisional.tasklist.TaskActivityDurationDelegate;
+import org.eclipse.mylar.provisional.tasklist.DateRangeActivityDelegate;
 import org.eclipse.mylar.provisional.tasklist.TaskListManager;
 
 /**
@@ -48,8 +48,8 @@ public class TaskActivityContentProvider implements IStructuredContentProvider, 
 	}
 
 	public Object getParent(Object child) {
-		if (child instanceof TaskActivityDurationDelegate) {
-			TaskActivityDurationDelegate dateRangeTaskWrapper = (TaskActivityDurationDelegate) child;
+		if (child instanceof DateRangeActivityDelegate) {
+			DateRangeActivityDelegate dateRangeTaskWrapper = (DateRangeActivityDelegate) child;
 			return dateRangeTaskWrapper.getParent();
 		} else {
 			return new Object[0];

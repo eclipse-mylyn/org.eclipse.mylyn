@@ -23,9 +23,10 @@ import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
+import org.eclipse.mylar.provisional.tasklist.DateRangeActivityDelegate;
 import org.eclipse.mylar.provisional.tasklist.DateRangeContainer;
+import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
-import org.eclipse.mylar.provisional.tasklist.TaskActivityDurationDelegate;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -49,6 +50,8 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 		if (columnIndex == 0) {
 			if (element instanceof DateRangeContainer) {
 				return TaskListImages.getImage(TaskListImages.CALENDAR);
+			} else if (element instanceof DateRangeActivityDelegate) {
+				return super.getImage(((DateRangeActivityDelegate)element).getCorrespondingTask());
 			} else {
 				return super.getImage(element);
 			}
@@ -58,21 +61,21 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 	}
 
 	public String getColumnText(Object element, int columnIndex) {
-		if (element instanceof TaskActivityDurationDelegate) {
-			TaskActivityDurationDelegate durationDelegate = (TaskActivityDurationDelegate) element;
-//			ITask task = dateRangeTask.getTask();
+		if (element instanceof DateRangeActivityDelegate) {
+			DateRangeActivityDelegate durationDelegate = (DateRangeActivityDelegate) element;
+			ITask task = durationDelegate.getCorrespondingTask();
 			switch (columnIndex) {
 			case 1:
-				return durationDelegate.getPriority();
+				return task.getPriority();
 			case 2:
-				return durationDelegate.getDescription();
+				return task.getDescription();
 			case 3:
 				return DateUtil.getFormattedDurationShort(durationDelegate.getContainer().getElapsed(durationDelegate));
 			case 4:
-				return durationDelegate.getEstimateTimeHours() + " hours";
+				return task.getEstimateTimeHours() + " hours";
 			case 5:
-				if (durationDelegate.getReminderDate() != null) {
-					return DateFormat.getDateInstance(DateFormat.MEDIUM).format(durationDelegate.getReminderDate());
+				if (task.getReminderDate() != null) {
+					return DateFormat.getDateInstance(DateFormat.MEDIUM).format(task.getReminderDate());
 				} else {
 					return "";
 				}
@@ -115,9 +118,9 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 			if (container.isPresent()) {
 				return TaskListColorsAndFonts.BOLD;
 			}
-		} else if (element instanceof TaskActivityDurationDelegate) {
-			TaskActivityDurationDelegate durationDelegate = (TaskActivityDurationDelegate) element;
-			return super.getFont(durationDelegate);
+		} else if (element instanceof DateRangeActivityDelegate) {
+			DateRangeActivityDelegate durationDelegate = (DateRangeActivityDelegate) element;
+			return super.getFont(durationDelegate.getCorrespondingTask());
 		}
 		return super.getFont(element);
 	}

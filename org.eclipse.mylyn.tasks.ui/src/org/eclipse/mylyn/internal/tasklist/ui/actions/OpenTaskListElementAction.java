@@ -23,6 +23,7 @@ import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
+import org.eclipse.mylar.provisional.tasklist.DateRangeActivityDelegate;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -48,10 +49,12 @@ public class OpenTaskListElementAction extends Action {
 	public void run() {
 		ISelection selection = viewer.getSelection();
 		Object element = ((IStructuredSelection) selection).getFirstElement();
-		if (element instanceof ITask || element instanceof AbstractQueryHit) {
+		if (element instanceof ITask || element instanceof AbstractQueryHit || element instanceof DateRangeActivityDelegate) {
 			final ITask task;
 			if (element instanceof AbstractQueryHit) {
 				task = ((AbstractQueryHit) element).getOrCreateCorrespondingTask();
+			} else if (element instanceof DateRangeActivityDelegate) {
+				task = ((DateRangeActivityDelegate)element).getCorrespondingTask();
 			} else {
 				task = (ITask) element;
 			}

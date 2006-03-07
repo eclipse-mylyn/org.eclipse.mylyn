@@ -176,7 +176,7 @@ public class TaskListManager {
 
 			for (DateRangeContainer week : dateRangeContainers) {
 				if (week.includes(currentTaskStart)) {
-					week.addTask(new TaskActivityDurationDelegate(week, currentTask, currentTaskStart, currentTaskEnd));
+					week.addTask(new DateRangeActivityDelegate(week, currentTask, currentTaskStart, currentTaskEnd));
 					for (ITaskActivityListener listener : activityListeners) {
 						listener.activityChanged(week);
 					}
