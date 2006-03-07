@@ -30,7 +30,6 @@
       </wizard>
 	</extension>
 
-
    <extension point="org.eclipse.ui.decorators">
       <decorator
             class="org.eclipse.mylar.internal.tasklist.ui.RepositoryTaskDecorator"
@@ -39,14 +38,14 @@
             lightweight="true"
             state="true">
          <description>
-			Mylar JIRA Task Decorator
+			Mylar Repository Task Decorator
 		 </description>
          <enablement>
             <objectClass name="org.eclipse.mylar.provisional.tasklist.ITaskListElement"/>
          </enablement>
       </decorator>
    </extension>
-   
+	
   
    <extension
          point="org.eclipse.ui.views">
@@ -253,6 +252,24 @@
             	value="org.eclipse.mylar.tasks.ui.views.TaskListView"/>
       </key>
   </extension>
+  
+   <extension
+         point="org.eclipse.ui.themes">
+      <themeElementCategory
+           id="org.eclipse.mylar.tasklist.ui.presentation"
+           label="Mylar"/>
+     <colorDefinition
+           categoryId="org.eclipse.mylar.tasklist.ui.presentation"
+           id="org.eclipse.mylar.tasklist.ui.colors.background.category"
+           isEditable="true"
+           label="Task List Category Background"
+           value="234,233,237"> 
+         <description>
+            Background color of Task List categories and queries.
+         </description>
+     </colorDefinition>
+   </extension>
+  
 </plugin>
 
 

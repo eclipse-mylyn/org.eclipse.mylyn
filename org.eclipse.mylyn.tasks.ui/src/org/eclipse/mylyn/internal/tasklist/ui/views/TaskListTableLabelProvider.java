@@ -41,11 +41,11 @@ import org.eclipse.swt.graphics.Image;
 public class TaskListTableLabelProvider extends DecoratingLabelProvider implements ITableLabelProvider,
 		ITableColorProvider, ITableFontProvider {
 	
-	private Color parentBackgroundColor;
+	private Color categoryBackgroundColor;
 		
 	public TaskListTableLabelProvider(ILabelProvider provider, ILabelDecorator decorator, Color parentBacground) {
 		super(provider, decorator);
-		this.parentBackgroundColor = parentBacground;
+		this.categoryBackgroundColor = parentBacground;
 	}
 	
 	public Image getImageForPriority(Task.PriorityLevel priorityLevel) {
@@ -168,12 +168,17 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 			if (category.isArchive()) {
 				return TaskListColorsAndFonts.BACKGROUND_ARCHIVE;
 			} else {
-				return parentBackgroundColor;
+				return categoryBackgroundColor;
 			}
 		} else if (element instanceof AbstractRepositoryQuery) {
-			return parentBackgroundColor;
+			return categoryBackgroundColor;
 		}
 
 		return super.getBackground(element);
+	}
+
+	
+	public void setCategoryBackgroundColor(Color parentBackgroundColor) {
+		this.categoryBackgroundColor = parentBackgroundColor;
 	}
 }

@@ -31,6 +31,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.dialogs.PreferenceLinkArea;
+import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 /**
  * @author Mik Kersten
@@ -68,6 +70,13 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		Composite container = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout(1, false);
 		container.setLayout(layout);
+		
+		String message = "See <a>''{0}''</a> for configuring Mylar colors.";
+		new PreferenceLinkArea(container, SWT.NONE,
+				"org.eclipse.ui.preferencePages.ColorsAndFonts", message,
+				(IWorkbenchPreferenceContainer) getContainer(), null);
+//		new Label(group, SWT.NULL);
+
 
 		createCreationGroup(container);
 		createTaskDirectoryControl(container);

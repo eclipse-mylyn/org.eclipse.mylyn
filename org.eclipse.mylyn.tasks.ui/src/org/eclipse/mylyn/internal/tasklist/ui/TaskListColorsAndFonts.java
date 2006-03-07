@@ -50,6 +50,8 @@ public class TaskListColorsAndFonts {
 		COLOR_TASK_ACTIVE.dispose();
 		COLOR_TASK_OVERDUE.dispose();
 		COLOR_HYPERLINK.dispose();
-	} 
+	}
+
+	public static final String THEME_COLOR_ID_TASKLIST_CATEGORY = "org.eclipse.mylar.tasklist.ui.colors.background.category"; 
 
 }

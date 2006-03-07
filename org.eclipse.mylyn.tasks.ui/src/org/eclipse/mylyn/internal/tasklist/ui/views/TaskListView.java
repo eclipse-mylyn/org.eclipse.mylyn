@@ -26,6 +26,8 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -44,6 +46,7 @@ import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.AbstractTaskFilter;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.internal.tasklist.ui.TaskCompleteFilter;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListPatternFilter;
 import org.eclipse.mylar.internal.tasklist.ui.TaskPriorityFilter;
@@ -88,6 +91,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -106,6 +110,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * @author Mik Kersten
@@ -141,6 +146,8 @@ public class TaskListView extends ViewPart {
 
 	private static TaskListView INSTANCE;
 
+	private IThemeManager themeManager;
+	
 	private TaskListFilteredTree filteredTree;
 
 	private DrillDownAdapter drillDownAdapter;
@@ -193,7 +200,7 @@ public class TaskListView extends ViewPart {
 
 	static final String FILTER_LABEL = "<filter>";
 
-	protected String[] columnNames = new String[] { "", "", " !", " i", "Description" };
+	protected String[] columnNames = new String[] { "", "", " !", "  ", "Description" };
 
 	protected int[] columnWidths = new int[] { 52, 20, 12, 12, 160 };
 
@@ -240,9 +247,9 @@ public class TaskListView extends ViewPart {
 
 		public void activityChanged(DateRangeContainer week) {
 			// ignore
-		}		
+		}
 	};
-	
+
 	private final ITaskChangeListener TASK_REFERESH_LISTENER = new ITaskChangeListener() {
 
 		public void localInfoChanged(ITask task) {
@@ -262,6 +269,16 @@ public class TaskListView extends ViewPart {
 		}
 	};
 
+	private final IPropertyChangeListener THEME_CHANGE_LISTENER = new IPropertyChangeListener() {
+		public void propertyChange(PropertyChangeEvent event) {
+			if (event.getProperty().equals(IThemeManager.CHANGE_CURRENT_THEME)
+					|| event.getProperty().equals(TaskListColorsAndFonts.THEME_COLOR_ID_TASKLIST_CATEGORY)) {
+				taskListTableLabelProvider.setCategoryBackgroundColor(themeManager.getCurrentTheme().getColorRegistry().get(TaskListColorsAndFonts.THEME_COLOR_ID_TASKLIST_CATEGORY));
+				refreshAndFocus();
+			} 
+		}
+	};
+	
 	private TaskListTableLabelProvider taskListTableLabelProvider;
 
 	private final class PriorityDropDownAction extends Action implements IMenuCreator {
@@ -419,6 +436,11 @@ public class TaskListView extends ViewPart {
 		super.dispose();
 		MylarTaskListPlugin.getTaskListManager().removeChangeListener(TASK_REFERESH_LISTENER);
 		MylarTaskListPlugin.getTaskListManager().removeActivityListener(TASK_ACTIVITY_LISTENER);
+		
+		final IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+		if (themeManager != null) {
+			themeManager.removePropertyChangeListener(THEME_CHANGE_LISTENER);
+		}
 	}
 
 	/**
@@ -462,8 +484,8 @@ public class TaskListView extends ViewPart {
 			} else if (element instanceof ITaskListElement && isInRenameAction) {
 				switch (columnIndex) {
 				case 4:
-					return element instanceof TaskCategory || element instanceof AbstractRepositoryQuery || 
-						(element instanceof ITask && !(element instanceof AbstractRepositoryTask));
+					return element instanceof TaskCategory || element instanceof AbstractRepositoryQuery
+							|| (element instanceof ITask && !(element instanceof AbstractRepositoryTask));
 				}
 			}
 			return false;
@@ -697,11 +719,13 @@ public class TaskListView extends ViewPart {
 
 		getViewer().refresh();
 	}
-  
+
 	@Override
 	public void createPartControl(Composite parent) {
-		filteredTree = new TaskListFilteredTree(parent, 
-				SWT.MULTI | SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL
+		themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+		themeManager.addPropertyChangeListener(THEME_CHANGE_LISTENER);
+		
+		filteredTree = new TaskListFilteredTree(parent, SWT.MULTI | SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL
 				| SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new TaskListPatternFilter());
 		filteredTree.setInitialText("");
 
@@ -740,19 +764,23 @@ public class TaskListView extends ViewPart {
 			});
 		}
 
+		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
+				TaskListColorsAndFonts.THEME_COLOR_ID_TASKLIST_CATEGORY);
+
 		taskListTableLabelProvider = new TaskListTableLabelProvider(new TaskElementLabelProvider(), PlatformUI
-				.getWorkbench().getDecoratorManager().getLabelDecorator(), parent.getBackground());
+				.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground);
 
 		CellEditor[] editors = new CellEditor[columnNames.length];
 		TextCellEditor textEditor = new TextCellEditor(getViewer().getTree());
 		((Text) textEditor.getControl()).setOrientation(SWT.LEFT_TO_RIGHT);
 		editors[0] = new CheckboxCellEditor();
 		editors[1] = textEditor;
-//		editors[2] = new ComboBoxCellEditor(getViewer().getTree(), PRIORITY_LEVELS, SWT.READ_ONLY);
-		editors[2] = new ImageTableCellEditor(getViewer().getTree(),
-		 getPirorityImages());
+		// editors[2] = new ComboBoxCellEditor(getViewer().getTree(),
+		// PRIORITY_LEVELS, SWT.READ_ONLY);
+		editors[2] = new ImageTableCellEditor(getViewer().getTree(), getPirorityImages());
 		editors[3] = textEditor;
-		editors[4] = textEditor; 
+		editors[4] = textEditor;
 		getViewer().setCellEditors(editors);
 		getViewer().setCellModifier(new TaskListCellModifier());
 		getViewer().setSorter(new TaskListTableSorter(this, columnNames[sortIndex]));
@@ -918,8 +946,8 @@ public class TaskListView extends ViewPart {
 			addAction(deleteAction, manager, element);
 		}
 
-		if ((element instanceof ITask && !(element instanceof AbstractRepositoryTask)) || element instanceof ITaskContainer
-				|| element instanceof AbstractRepositoryQuery) {
+		if ((element instanceof ITask && !(element instanceof AbstractRepositoryTask))
+				|| element instanceof ITaskContainer || element instanceof AbstractRepositoryQuery) {
 			addAction(renameAction, manager, element);
 		}
 		if (element instanceof ITaskContainer) {
