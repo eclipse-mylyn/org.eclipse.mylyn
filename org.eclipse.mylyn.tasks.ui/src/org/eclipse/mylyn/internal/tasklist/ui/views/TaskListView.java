@@ -457,16 +457,13 @@ public class TaskListView extends ViewPart {
 			int columnIndex = Arrays.asList(columnNames).indexOf(property);
 			if (columnIndex == 0 && element instanceof ITaskListElement) {
 				return element instanceof ITask || element instanceof AbstractQueryHit;
-				// return ((ITaskListElement) element).isActivatable();
 			} else if (columnIndex == 2 && element instanceof ITask) {
 				return !(element instanceof AbstractRepositoryTask);
 			} else if (element instanceof ITaskListElement && isInRenameAction) {
-//				ITaskListElement taskListElement = (ITaskListElement) element;
 				switch (columnIndex) {
 				case 3:
-					return element instanceof TaskCategory || 
+					return element instanceof TaskCategory || element instanceof AbstractRepositoryQuery || 
 						(element instanceof ITask && !(element instanceof AbstractRepositoryTask));
-//					return taskListElement.isLocal();
 				}
 			}
 			return false;
@@ -970,25 +967,12 @@ public class TaskListView extends ViewPart {
 	 */
 	private void updateActionEnablement(Action action, ITaskListElement element) {
 		if (element instanceof ITask) {
-			// if (action instanceof MarkTaskCompleteAction) {
-			// if (element.isCompleted()) {
-			// action.setEnabled(false);
-			// } else {
-			// action.setEnabled(true);
-			// }
-			// } else
 			if (action instanceof OpenTaskInExternalBrowserAction) {
 				if (((ITask) element).hasValidUrl()) {
 					action.setEnabled(true);
 				} else {
 					action.setEnabled(false);
 				}
-				// } else if (action instanceof MarkTaskIncompleteAction) {
-				// if (element.isCompleted()) {
-				// action.setEnabled(true);
-				// } else {
-				// action.setEnabled(false);
-				// }
 			} else if (action instanceof DeleteAction) {
 				action.setEnabled(true);
 			} else if (action instanceof NewLocalTaskAction) {

@@ -34,9 +34,9 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 			if (repositoryUrl != null) {
 				try {
 					URL url = new URL(repositoryUrl);
-					decoration.addSuffix("    [" + url.getHost() + "]");
+					decoration.addSuffix("   [" + url.getHost() + "]");
 				} catch (MalformedURLException e) {
-					decoration.addSuffix("    [ <unknown host> ]");
+					decoration.addSuffix("   [ <unknown host> ]");
 				}
 			} 
 		} else if (element instanceof AbstractRepositoryTask) { 

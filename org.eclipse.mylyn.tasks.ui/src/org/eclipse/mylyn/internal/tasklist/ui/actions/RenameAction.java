@@ -16,6 +16,9 @@ import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.swt.SWT;
 
+/**
+ * @author Mik Kersten
+ */
 public class RenameAction extends Action {
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.rename";
