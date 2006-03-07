@@ -200,7 +200,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 
 	private void createTaskDirectoryControl(Composite parent) {
 		Group taskDirComposite = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		taskDirComposite.setText("Mylar Data Directory (task list and contexts)");
+		taskDirComposite.setText("Mylar Data Directory (moves with workspace if default)");
 		taskDirComposite.setLayout(new GridLayout(2, false));
 		taskDirComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
