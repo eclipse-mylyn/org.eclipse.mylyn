@@ -128,13 +128,12 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 	}
 
 	protected boolean containsMylarInterestFilter(StructuredViewer viewer) {
-		boolean found = false;
-		for (int i = 0; i < viewer.getFilters().length; i++) {
-			ViewerFilter filter = viewer.getFilters()[i];
-			if (filter instanceof InterestFilter)
-				found = true;
-		}
-		return found;
+	    for (ViewerFilter filter : viewer.getFilters()) {
+	        if (filter instanceof InterestFilter) {
+				return true;
+	        }
+		} 
+		return false;
 	}
 
 	public void setTemporarilyUnfiltered(Object temprarilyUnfiltered) {
