@@ -461,7 +461,7 @@ public class TaskListView extends ViewPart {
 				return !(element instanceof AbstractRepositoryTask);
 			} else if (element instanceof ITaskListElement && isInRenameAction) {
 				switch (columnIndex) {
-				case 3:
+				case 4:
 					return element instanceof TaskCategory || element instanceof AbstractRepositoryQuery || 
 						(element instanceof ITask && !(element instanceof AbstractRepositoryTask));
 				}
@@ -752,6 +752,7 @@ public class TaskListView extends ViewPart {
 		editors[2] = new ImageTableCellEditor(getViewer().getTree(),
 		 getPirorityImages());
 		editors[3] = textEditor;
+		editors[4] = textEditor; 
 		getViewer().setCellEditors(editors);
 		getViewer().setCellModifier(new TaskListCellModifier());
 		getViewer().setSorter(new TaskListTableSorter(this, columnNames[sortIndex]));

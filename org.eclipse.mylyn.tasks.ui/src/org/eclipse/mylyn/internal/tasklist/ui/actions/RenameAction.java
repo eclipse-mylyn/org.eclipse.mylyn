@@ -38,7 +38,7 @@ public class RenameAction extends Action {
 		if (selectedObject instanceof ITaskListElement) {
 			ITaskListElement element = (ITaskListElement) selectedObject;
 			view.setInRenameAction(true);
-			view.getViewer().editElement(element, 3);
+			view.getViewer().editElement(element, 4);
 			view.setInRenameAction(false);
 		}
 	}
