@@ -258,7 +258,7 @@ public class MylarContextManager {
 	}
 
 	public IMylarElement handleInteractionEvent(InteractionEvent event, boolean propagateToParents) {
-		return handleInteractionEvent(event, true, true);
+		return handleInteractionEvent(event, propagateToParents, true);
 	}
 
 	/**
@@ -277,7 +277,7 @@ public class MylarContextManager {
 		float decayOffset = 0;
 		if (previous != null) {
 			previousInterest = previous.getInterest().getValue();
-			previouslyPredicted = previous.getInterest().isPropagated();
+			previouslyPredicted = previous.getInterest().isPredicted();
 			previouslyPropagated = previous.getInterest().isPropagated();
 		}
 		if (event.getKind().isUserEvent()) {
