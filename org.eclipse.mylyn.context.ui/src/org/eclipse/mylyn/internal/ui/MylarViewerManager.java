@@ -88,7 +88,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 		VIEWER_PART_TRACKER.install(PlatformUI.getWorkbench());
 	}
 	
-	public void displose() {
+	public void dispose() {
 		VIEWER_PART_TRACKER.dispose(PlatformUI.getWorkbench());
 	}
 

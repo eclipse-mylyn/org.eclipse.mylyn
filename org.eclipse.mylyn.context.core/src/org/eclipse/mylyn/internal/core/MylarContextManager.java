@@ -261,14 +261,27 @@ public class MylarContextManager {
 		return handleInteractionEvent(event, propagateToParents, true);
 	}
 
-	/**
-	 * TODO: consider moving this into the context?
-	 */
+	public void handleInteractionEvents(List<InteractionEvent> events, boolean propagateToParents) {
+		Set<IMylarElement> compositeDelta = new HashSet<IMylarElement>();
+		for (InteractionEvent event : events) {
+			compositeDelta.addAll(internalHandleInteractionEvent(event, propagateToParents));			
+		}
+		notifyInterestDelta(new ArrayList<IMylarElement>(compositeDelta));
+	}
+
 	public IMylarElement handleInteractionEvent(InteractionEvent event, boolean propagateToParents,
 			boolean notifyListeners) {
+		List<IMylarElement> interestDelta = internalHandleInteractionEvent(event, propagateToParents);
+		if (notifyListeners) {
+			notifyInterestDelta(interestDelta);
+		}
+		return currentContext.get(event.getStructureHandle());
+	}
+	
+	private List<IMylarElement> internalHandleInteractionEvent(InteractionEvent event, boolean propagateToParents) {
 		if (contextCapturePaused || event.getKind() == InteractionEvent.Kind.COMMAND || !isContextActive()
 				|| suppressListenerNotification)
-			return null;
+			return Collections.emptyList();
 
 		IMylarElement previous = currentContext.get(event.getStructureHandle());
 		float previousInterest = 0;
@@ -287,26 +300,28 @@ public class MylarContextManager {
 						event.getContentType(), event.getStructureHandle(), SOURCE_ID_DECAY_CORRECTION, decayOffset));
 			}
 		}
-		IMylarElement node = currentContext.addEvent(event);
+		IMylarElement element = currentContext.addEvent(event);
 		List<IMylarElement> interestDelta = new ArrayList<IMylarElement>();
 		if (propagateToParents && !event.getKind().equals(InteractionEvent.Kind.MANIPULATION)) {
-			propegateDoiToParents(node, previousInterest, decayOffset, 1, interestDelta);
+			propegateDoiToParents(element, previousInterest, decayOffset, 1, interestDelta);
 		}
 		if (event.getKind().isUserEvent())
-			currentContext.setActiveElement(node);
+			currentContext.setActiveElement(element);
 
-		if (isInterestDelta(previousInterest, previouslyPredicted, previouslyPropagated, node)) {
-			interestDelta.add(node); // TODO: check that the order of these
-			// is sensible
+		if (isInterestDelta(previousInterest, previouslyPredicted, previouslyPropagated, element)) {
+			interestDelta.add(element); 
 		}
-		if (notifyListeners && !interestDelta.isEmpty()) {
+
+		checkForLandmarkDeltaAndNotify(previousInterest, element);
+		return interestDelta;
+	}
+	
+	private void notifyInterestDelta(List<IMylarElement> interestDelta) {
+		if (!interestDelta.isEmpty()) {
 			for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
 				listener.interestChanged(interestDelta);
 			}
 		}
-
-		checkForLandmarkDeltaAndNotify(previousInterest, node);
-		return node;
 	}
 
 	protected boolean isInterestDelta(float previousInterest, boolean previouslyPredicted, boolean previouslyPropagated,
@@ -340,7 +355,7 @@ public class MylarContextManager {
 	}
 
 	private void propegateDoiToParents(IMylarElement node, float previousInterest, float decayOffset, int level,
-			List<IMylarElement> elementDelta) {
+			List<IMylarElement> interestDelta) {
 		if (level > MAX_PROPAGATION || node == null || node.getInterest().getValue() <= 0)
 			return;// || "/".equals(node.getElementHandle())) return;
 
@@ -365,9 +380,9 @@ public class MylarContextManager {
 			CompositeContextElement parentNode = (CompositeContextElement) currentContext.addEvent(propagationEvent);
 			if (isInterestDelta(previousInterest, previous.getInterest().isPredicted(), previous.getInterest()
 					.isPropagated(), parentNode)) {
-				elementDelta.add(0, parentNode);
+				interestDelta.add(0, parentNode);
 			}
-			propegateDoiToParents(parentNode, previousInterest, decayOffset, level, elementDelta);// adapter.getResourceExtension(),
+			propegateDoiToParents(parentNode, previousInterest, decayOffset, level, interestDelta);// adapter.getResourceExtension(),
 			// adapter.getParentHandle(parentHandle),
 			// level,
 			// doi,

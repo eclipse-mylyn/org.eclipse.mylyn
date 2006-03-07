@@ -46,7 +46,7 @@
               enablesFor="1"
               icon="icons/elcl16/context-clear.gif"
               id="org.eclipse.mylar.ui.clear.context"
-              label="Clear Task Context"
+              label="Clear Context"
               menubarPath="context"
               tooltip="Clear Context">
            <enablement>

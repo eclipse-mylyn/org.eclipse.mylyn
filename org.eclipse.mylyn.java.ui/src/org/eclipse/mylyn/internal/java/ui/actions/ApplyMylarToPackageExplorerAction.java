@@ -32,14 +32,15 @@ public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction 
 
 	public static ApplyMylarToPackageExplorerAction INSTANCE;
 
-	public void init(IAction action) {
-		super.init(action);
-	}
-
 	public ApplyMylarToPackageExplorerAction() {
 		super(new InterestFilter());
 		INSTANCE = this;
 		configureAction();
+		MylarJavaPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
+	} 
+	
+	public void init(IAction action) {
+		super.init(action);
 	}
 
 	@Override

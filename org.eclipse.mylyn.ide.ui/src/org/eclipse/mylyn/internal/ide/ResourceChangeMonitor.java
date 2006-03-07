@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.ide;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -28,10 +31,13 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 
 	public void resourceChanged(IResourceChangeEvent event) {
 		if (!enabled || !MylarPlugin.getContextManager().isContextActive()
-				|| MylarPlugin.getContextManager().isContextCapturePaused())
+				|| MylarPlugin.getContextManager().isContextCapturePaused()) {
 			return;
-		if (event.getType() != IResourceChangeEvent.POST_CHANGE)
+		}
+		if (event.getType() != IResourceChangeEvent.POST_CHANGE) {
 			return;
+		}
+		final List<IResource> resources = new ArrayList<IResource>();
 		IResourceDelta rootDelta = event.getDelta();
 		IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
 			public boolean visit(IResourceDelta delta) {
@@ -39,15 +45,16 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 				IResourceDelta[] added = delta.getAffectedChildren(IResourceDelta.ADDED);
 				for (int i = 0; i < added.length; i++) {
 					IResource resource = added[i].getResource();
-					MylarIdePlugin.getDefault().getInterestUpdater().addResourceToContext(resource);
+					resources.add(resource);
 				}
 				return true;
 			}
 		};
 		try {
 			rootDelta.accept(visitor);
+			MylarIdePlugin.getDefault().getInterestUpdater().addResourceToContext(resources);
 		} catch (CoreException e) {
-			MylarStatusHandler.log(e, "could not accet marker visitor");
+			MylarStatusHandler.log(e, "could not accept marker visitor");
 		}
 	}
 

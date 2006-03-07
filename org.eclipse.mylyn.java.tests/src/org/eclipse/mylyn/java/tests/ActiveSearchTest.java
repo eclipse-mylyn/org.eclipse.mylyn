@@ -137,8 +137,9 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
 	}
 
 	public List<?> search(int dos, IMylarElement node) {
-		if (node == null)
-			return null;
+		if (node == null) {
+			fail("null element");
+		}
 
 		JavaReferencesProvider prov = new JavaReferencesProvider();
 

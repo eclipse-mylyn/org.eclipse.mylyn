@@ -110,12 +110,9 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 					MylarPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
 					installEditorTracker(workbench);
 
+					// TODO: race conditions prevents this from running?
 					if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
 						ApplyMylarToPackageExplorerAction.getDefault().update();
-						getPreferenceStore().addPropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
-					}
-					if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
-						ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
 					}
 					if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
 						ApplyMylarToBrowsingPerspectiveAction.getDefault().update();

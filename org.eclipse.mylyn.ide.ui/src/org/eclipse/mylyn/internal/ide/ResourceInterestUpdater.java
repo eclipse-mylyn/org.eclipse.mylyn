@@ -11,6 +11,9 @@
 
 package org.eclipse.mylar.internal.ide;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.core.IMylarElement;
@@ -29,39 +32,46 @@ public class ResourceInterestUpdater {
 
 	private boolean syncExec = false;
 
-	public void addResourceToContext(final IResource resource) {
+	public void addResourceToContext(final List<IResource> resources) {
 		try {
 			if (syncExec) {
-				internalAddResourceToContext(resource);
+				internalAddResourceToContext(resources);
 			} else {
 				final IWorkbench workbench = PlatformUI.getWorkbench();
 				workbench.getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						internalAddResourceToContext(resource);
+						internalAddResourceToContext(resources);
 					}
 				});
 			}
 		} catch (Throwable t) {
-			MylarStatusHandler.fail(t, "could not add resource to context: " + resource, false);
+			MylarStatusHandler.fail(t, "could not add resource to context: " + resources, false);
 		}
 	}
 
-	private void internalAddResourceToContext(IResource resource) {
-		if (!acceptResource(resource))
-			return;
-
-		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(resource);
-		String handle = bridge.getHandleIdentifier(resource);
-
-		if (handle != null) {
-			IMylarElement element = MylarPlugin.getContextManager().getElement(handle);
-			if (element != null && !element.getInterest().isInteresting()) {
-				InteractionEvent interactionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, bridge
-						.getContentType(), handle, SOURCE_ID);
-				MylarPlugin.getContextManager().handleInteractionEvent(interactionEvent, true);
+	private void internalAddResourceToContext(List<IResource> resources) {
+		List<IResource> toAdd = new ArrayList<IResource>();
+		for (IResource resource : resources) {
+			if (acceptResource(resource)) {
+				toAdd.add(resource);
 			}
 		}
-	}
+		
+		List<InteractionEvent> interactionEvents = new ArrayList<InteractionEvent>();
+		for (IResource resource : toAdd) {
+			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(resource);
+			String handle = bridge.getHandleIdentifier(resource);
+			if (handle != null) {
+				IMylarElement element = MylarPlugin.getContextManager().getElement(handle);
+				if (element != null && !element.getInterest().isInteresting()) {
+					InteractionEvent interactionEvent = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, bridge
+							.getContentType(), handle, SOURCE_ID);
+					interactionEvents.add(interactionEvent);
+				}
+			}	
+		}
+		MylarPlugin.getContextManager().handleInteractionEvents(interactionEvents, true);
+	} 
 
 	private boolean acceptResource(IResource resource) {
 		return resource.isAccessible() && !resource.isDerived() && !resource.isPhantom();

@@ -105,7 +105,9 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 	public void add(SyncInfo info) {
 		super.add(info);
 		if (!suppressInterestContribution) {
-			MylarIdePlugin.getDefault().getInterestUpdater().addResourceToContext(info.getLocal());
+			List<IResource> resources = new ArrayList<IResource>();
+			resources.add(info.getLocal());
+			MylarIdePlugin.getDefault().getInterestUpdater().addResourceToContext(resources);
 		}
 	}
 

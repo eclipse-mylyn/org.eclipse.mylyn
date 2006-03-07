@@ -208,7 +208,7 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 		try {
 			super.stop(context);
 			MylarPlugin.getContextManager().removeListener(viewerManager);
-			viewerManager.displose();
+			viewerManager.dispose();
 			colorMap.dispose(); 
 			highlighters.dispose();
 		} catch (Exception e) { 
