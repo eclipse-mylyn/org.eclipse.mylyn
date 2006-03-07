@@ -41,49 +41,52 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 		if (targetObject != null) {
 			filter.setTemporarilyUnfiltered(targetObject);
 			treeViewer.refresh(targetObject, true);
-			treeViewer.expandToLevel(targetObject, 2);
+			treeViewer.expandToLevel(targetObject, 1);
 		}
 	}
 
 	public void keyPressed(KeyEvent event) {
-		final InterestFilter filter = getFilter(viewer);
-		if (filter == null)
-			return;
-		if (keyboardInteractionAccepted(event)) {
-			if (viewer instanceof TreeViewer) {
-				final TreeViewer treeViewer = (TreeViewer) viewer;
-				ISelection selection = treeViewer.getSelection();
-				if (selection instanceof IStructuredSelection) {
-					Object targetObject = ((IStructuredSelection) selection).getFirstElement();
-					unfilter(filter, treeViewer, targetObject);
-				}
-			}
-		} else {
-			viewer.refresh();
-		}
+		// ignore
 	}
 
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
+	public void keyReleased(KeyEvent event) {
+		final InterestFilter filter = getFilter(viewer);
+		if (filter == null || !(viewer instanceof TreeViewer)) {
+			return;
+		}
+
+		if (isUnfilterEvent(event)) {
+			final TreeViewer treeViewer = (TreeViewer) viewer;
+			ISelection selection = treeViewer.getSelection();
+			if (selection instanceof IStructuredSelection) {
+				Object targetObject = ((IStructuredSelection) selection).getFirstElement();
+				unfilter(filter, treeViewer, targetObject);
+			}
+		} else if (event.keyCode != SWT.ARROW_DOWN && event.keyCode != SWT.ARROW_DOWN) {
+			// filter.resetTemporarilyUnfiltered();
+			if (filter.resetTemporarilyUnfiltered()) {
+				viewer.refresh(false);
+			}
+		}
 	}
 
 	public void mouseDown(MouseEvent event) {
 		final InterestFilter filter = getFilter(viewer);
-		if (filter == null)
+		if (filter == null || !(viewer instanceof TreeViewer)) {
 			return;
-		if (mouseInteractionAccepted(event)) {
-			if (viewer instanceof TreeViewer) {
-				final TreeViewer treeViewer = (TreeViewer) viewer;
-				ISelection selection = treeViewer.getSelection();
-				if (selection instanceof IStructuredSelection) {
-					Object targetObject = null;
-					if (getClickedItem(event) != null) {
-						targetObject = ((IStructuredSelection) selection).getFirstElement();
-					} else if (treeViewer.getTree().getTopItem() != null) {
-						targetObject = treeViewer.getTree().getTopItem().getData();
-					}
-					unfilter(filter, treeViewer, targetObject);
+		}
+
+		if (isUnfilterEvent(event)) {
+			final TreeViewer treeViewer = (TreeViewer) viewer;
+			ISelection selection = treeViewer.getSelection();
+			if (selection instanceof IStructuredSelection) {
+				Object targetObject = null;
+				if (getClickedItem(event) != null) {
+					targetObject = ((IStructuredSelection) selection).getFirstElement();
+				} else if (treeViewer.getTree().getTopItem() != null) {
+					targetObject = treeViewer.getTree().getTopItem().getData();
 				}
+				unfilter(filter, treeViewer, targetObject);
 			}
 		} else {
 			if (filter.resetTemporarilyUnfiltered()) {
@@ -101,14 +104,14 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 		return null;
 	}
 
-	private boolean mouseInteractionAccepted(MouseEvent event) {
+	private boolean isUnfilterEvent(MouseEvent event) {
 		return (event.stateMask & SWT.ALT) != 0;
 	}
-
-	private boolean keyboardInteractionAccepted(KeyEvent event) {
-		return event.keyCode == SWT.ARROW_RIGHT;
+	
+	private boolean isUnfilterEvent(KeyEvent event) {
+		return (event.keyCode == SWT.ARROW_RIGHT) && (event.stateMask == SWT.ALT);
 	}
-
+	
 	private InterestFilter getFilter(StructuredViewer structuredViewer) {
 		ViewerFilter[] filters = structuredViewer.getFilters();
 		for (int i = 0; i < filters.length; i++) {

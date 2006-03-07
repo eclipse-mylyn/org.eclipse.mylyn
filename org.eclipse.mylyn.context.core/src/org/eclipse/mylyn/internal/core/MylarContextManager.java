@@ -282,7 +282,7 @@ public class MylarContextManager {
 		if (contextCapturePaused || event.getKind() == InteractionEvent.Kind.COMMAND || !isContextActive()
 				|| suppressListenerNotification)
 			return Collections.emptyList();
-
+ 
 		IMylarElement previous = currentContext.get(event.getStructureHandle());
 		float previousInterest = 0;
 		boolean previouslyPredicted = false;
