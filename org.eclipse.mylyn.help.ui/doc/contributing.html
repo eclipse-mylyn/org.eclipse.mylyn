@@ -30,7 +30,7 @@ accompanied by unit tests, and in general unit tests are one of the most
 valuable contributions.&nbsp; If you are having trouble writing a test (e.g. one 
 that involves verifying what happened in the UI) please email mylar-dev so that 
 we can point you at similar test cases or consider extending the test harness if 
-needed.</p>
+needed. </p>
 	<p>&nbsp;</p>
 <h3><a name="contributing-setup">Setup</a></h3>
 	<ul>
@@ -85,6 +85,9 @@ and leave the password blank.</li>
 	produce and help the Mylar evolve gracefully all contributors must be also 
 	be Mylar users.</p>
 	<ul>
+		<li>Each patch should correspond to a single new bug report.&nbsp; </li>
+		<li>Please minimize the amount of changes to existing code to make review 
+		easier.&nbsp; </li>
 		<li>Synchronize often to ensure you have the latest code.&nbsp; Once you 
 		start modifying resources, put the Synchronize view in Outgoing mode and press 
 		the Change Set button so that Mylar tracks the context for the patch.</li>
@@ -96,8 +99,6 @@ and leave the password blank.</li>
 		into Window -&gt; Preferences -&gt; Java -&gt; Code Style -&gt; Formatter.&nbsp; 
 		Format code using Eclipse's formatter (Ctrl+Shift+F) 
 		and ensure that no&nbsp; have been added.</li>
-		<li>Minimize the amount of changes to existing code to make review 
-		easier.&nbsp; </li>
 		<li>Ensure that there is no console output.&nbsp; For logging errors use 
 		<tt>MylarStatusHandler</tt>.</li>
 		<li>To submit a patch<ul>
