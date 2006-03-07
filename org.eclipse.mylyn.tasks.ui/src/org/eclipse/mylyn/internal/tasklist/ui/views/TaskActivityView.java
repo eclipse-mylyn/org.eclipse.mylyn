@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.tasklist.ui.views;
 
 import java.util.Calendar;
+import java.util.List;
 
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -21,9 +22,12 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.internal.tasklist.ui.actions.OpenTaskListElementAction;
-import org.eclipse.mylar.provisional.tasklist.DateRangeTaskContainer;
+import org.eclipse.mylar.provisional.tasklist.DateRangeContainer;
+import org.eclipse.mylar.provisional.tasklist.TaskActivityDurationDelegate;
 import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
@@ -57,6 +61,29 @@ public class TaskActivityView extends ViewPart {
 
 	private TaskActivityContentProvider taskActivityTableContentProvider;
 
+	private final ITaskActivityListener ACTIVITY_LISTENER = new ITaskActivityListener() {
+
+		public void taskActivated(ITask task) {
+			TaskActivityView.this.treeViewer.refresh();
+//			TaskActivityView.this.treeViewer.refresh(task);
+		}
+
+		public void tasksActivated(List<ITask> tasks) {
+			for (ITask task : tasks) {
+				taskActivated(task);
+			}
+		}
+
+		public void taskDeactivated(ITask task) {
+			TaskActivityView.this.treeViewer.refresh();
+//			TaskActivityView.this.treeViewer.refresh(task);
+		}
+
+		public void activityChanged(DateRangeContainer week) {
+			TaskActivityView.this.treeViewer.refresh(week);
+		}	
+	};
+	
 	public static TaskActivityView openInActivePerspective() {
 		try {
 			return (TaskActivityView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ID);
@@ -67,11 +94,13 @@ public class TaskActivityView extends ViewPart {
 
 	public TaskActivityView() {
 		INSTANCE = this;
+		MylarTaskListPlugin.getTaskListManager().addActivityListener(ACTIVITY_LISTENER);
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
+		MylarTaskListPlugin.getTaskListManager().removeActivityListener(ACTIVITY_LISTENER);
 	}
 
 	@Override
@@ -117,7 +146,7 @@ public class TaskActivityView extends ViewPart {
 				.getWorkbench().getDecoratorManager().getLabelDecorator(), parent.getBackground());
 
 		getViewer().setSorter(new TaskActivityTableSorter());
-		taskActivityTableContentProvider = new TaskActivityContentProvider(getViewer());
+		taskActivityTableContentProvider = new TaskActivityContentProvider(MylarTaskListPlugin.getTaskListManager());
 		getViewer().setContentProvider(taskActivityTableContentProvider);
 		getViewer().setLabelProvider(taskHistoryTreeLabelProvider);
 		getViewer().setInput(getViewSite());
@@ -179,10 +208,10 @@ public class TaskActivityView extends ViewPart {
 
 		@Override
 		public int compare(Viewer compareViewer, Object o1, Object o2) {
-			if (o1 instanceof DateRangeTaskContainer) {
-				if (o2 instanceof DateRangeTaskContainer) {
-					DateRangeTaskContainer dateRangeTaskContainer1 = (DateRangeTaskContainer) o1;
-					DateRangeTaskContainer dateRangeTaskContainer2 = (DateRangeTaskContainer) o2;
+			if (o1 instanceof DateRangeContainer) {
+				if (o2 instanceof DateRangeContainer) {
+					DateRangeContainer dateRangeTaskContainer1 = (DateRangeContainer) o1;
+					DateRangeContainer dateRangeTaskContainer2 = (DateRangeContainer) o2;
 					return dateRangeTaskContainer2.getStart().compareTo(dateRangeTaskContainer1.getStart());
 				} else {
 					return 1;
@@ -190,13 +219,11 @@ public class TaskActivityView extends ViewPart {
 			} else if (o1 instanceof ITask) {
 				if (o2 instanceof ITaskContainer) {
 					return -1;
-				} else if (o2 instanceof ITask) {
-					ITask task1 = (ITask) o1;
-					ITask task2 = (ITask) o2;
-					Calendar calendar1 = taskActivityTableContentProvider
-							.getLastOccurrence(task1.getHandleIdentifier());
-					Calendar calendar2 = taskActivityTableContentProvider
-							.getLastOccurrence(task2.getHandleIdentifier());
+				} else if (o2 instanceof TaskActivityDurationDelegate) {
+					TaskActivityDurationDelegate task1 = (TaskActivityDurationDelegate) o1;
+					TaskActivityDurationDelegate task2 = (TaskActivityDurationDelegate) o2;
+					Calendar calendar1 = task1.getStart();//MylarTaskListPlugin.getTaskActivityManager().getLastOccurrence(task1.getHandleIdentifier());
+					Calendar calendar2 = task2.getStart();//MylarTaskListPlugin.getTaskActivityManager().getLastOccurrence(task2.getHandleIdentifier());
 					if (calendar1 != null && calendar2 != null) {
 						return calendar2.compareTo(calendar1);
 					}

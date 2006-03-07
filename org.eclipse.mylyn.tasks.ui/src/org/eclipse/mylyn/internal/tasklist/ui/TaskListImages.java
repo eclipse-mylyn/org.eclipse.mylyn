@@ -144,7 +144,7 @@ public class TaskListImages {
 
 	public static final ImageDescriptor COLLAPSE_ALL = create(T_ELCL, "collapseall.png");
 
-	public static final ImageDescriptor PRIORITY_1 = createSize(create(T_EVIEW, "priority-1.png"), SIZE);
+	public static final ImageDescriptor PRIORITY_1 = createSize(create(T_EVIEW, "priority-1.gif"), SIZE);
 
 	public static final ImageDescriptor PRIORITY_2 = createSize(create(T_EVIEW, "priority-2.gif"), SIZE);
 

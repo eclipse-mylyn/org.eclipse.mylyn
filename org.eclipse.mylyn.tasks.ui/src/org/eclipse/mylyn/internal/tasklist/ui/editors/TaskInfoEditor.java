@@ -14,7 +14,6 @@ package org.eclipse.mylar.internal.tasklist.ui.editors;
 import java.io.File;
 import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -26,7 +25,7 @@ import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
+import org.eclipse.mylar.provisional.tasklist.ITaskChangeListener;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
@@ -129,20 +128,7 @@ public class TaskInfoEditor extends EditorPart {
 
 	private MylarTaskEditor parentEditor = null;
 
-	private ITaskActivityListener TASK_LIST_LISTENER = new ITaskActivityListener() {
-		public void taskActivated(ITask activeTask) {
-			// ignore
-		}
-
-		public void tasksActivated(List<ITask> tasks) {
-			for (ITask t : tasks) {
-				taskActivated(t);
-			}
-		}
-
-		public void taskDeactivated(ITask deactiveTask) {
-			// ignore
-		}
+	private ITaskChangeListener TASK_LIST_LISTENER = new ITaskChangeListener() {
 
 		public void tasklistRead() {
 			// ignore
@@ -219,7 +205,7 @@ public class TaskInfoEditor extends EditorPart {
 		copyAction.setAccelerator(SWT.CTRL | 'c');
 
 		copyAction.setEnabled(false);
-		MylarTaskListPlugin.getTaskListManager().addListener(TASK_LIST_LISTENER);
+		MylarTaskListPlugin.getTaskListManager().addChangeListener(TASK_LIST_LISTENER);
 	}
 
 	@Override
@@ -798,7 +784,7 @@ public class TaskInfoEditor extends EditorPart {
 
 	@Override
 	public void dispose() {
-		MylarTaskListPlugin.getTaskListManager().removeListener(TASK_LIST_LISTENER);
+		MylarTaskListPlugin.getTaskListManager().removeChangeListener(TASK_LIST_LISTENER);
 	}
 
 	@Override

@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * @author Mik Kersten
+ * @author Rob Elves
  */
 public interface ITaskActivityListener {
 
@@ -24,11 +25,6 @@ public interface ITaskActivityListener {
 
 	public abstract void taskDeactivated(ITask task);
 
-	public abstract void localInfoChanged(ITask task);
+	public abstract void activityChanged(DateRangeContainer week);
 
-	public abstract void repositoryInfoChanged(ITask task);
-	
-	public abstract void tasklistRead();
-
-	public abstract void taskListModified();
 }

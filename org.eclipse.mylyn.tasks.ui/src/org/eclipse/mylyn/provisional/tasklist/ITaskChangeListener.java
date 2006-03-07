@@ -11,10 +11,19 @@
 
 package org.eclipse.mylar.provisional.tasklist;
 
-/**
- * @author Mik Kersten
- * @author Rob Elves
- */
-public class TaskActivityManager {
 
+/**
+ * Listener for task list modifications and task content modifications.
+ * 
+ * @author Mik Kersten
+ */
+public interface ITaskChangeListener {
+
+	public abstract void localInfoChanged(ITask task);
+
+	public abstract void repositoryInfoChanged(ITask task);
+	
+	public abstract void tasklistRead();
+
+	public abstract void taskListModified();
 }

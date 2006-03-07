@@ -24,7 +24,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
+import org.eclipse.mylar.provisional.tasklist.ITaskChangeListener;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -33,7 +33,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Mik Kersten
  */
-public class TaskListSaveManager implements ITaskActivityListener, DisposeListener, IBackgroundSaveListener {
+public class TaskListSaveManager implements ITaskChangeListener, DisposeListener, IBackgroundSaveListener {
 
 	private final static int DEFAULT_SAVE_INTERVAL = 5 * 60 * 1000;
 

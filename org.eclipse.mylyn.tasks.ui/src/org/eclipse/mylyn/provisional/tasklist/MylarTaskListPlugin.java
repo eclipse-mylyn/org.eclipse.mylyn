@@ -66,8 +66,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	private static MylarTaskListPlugin INSTANCE;
 
 	private static TaskListManager taskListManager;
-
-	private static TaskActivityManager taskActivityManager;
 	
 	private static TaskRepositoryManager taskRepositoryManager;
 
@@ -164,19 +162,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			MylarPlugin.getContextManager().contextDeactivated(task.getHandleIdentifier());
 		}
 
-		public void tasklistRead() {
-			// ignore
-		}
-
-		public void localInfoChanged(ITask task) {
-			// ignore
-		}
-
-		public void repositoryInfoChanged(ITask task) {
-			// ignore
-		}
-		
-		public void taskListModified() {
+		public void activityChanged(DateRangeContainer week) {
 			// ignore
 		}
 	};
@@ -272,6 +258,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 			taskListManager = new TaskListManager(taskListWriter, taskListFile, nextTaskId);
 			taskRepositoryManager = new TaskRepositoryManager();
+//			taskActivityManager = new TaskActivityManager();
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Mylar Task List initialization failed", false);
 		} 
@@ -288,7 +275,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					TaskListExtensionReader.initExtensions(taskListWriter);
 					taskRepositoryManager.readRepositories();
 
-					taskListManager.addListener(CONTEXT_TASK_ACTIVITY_LISTENER);
+					taskListManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
 					taskListManager.readExistingOrCreateNewList();
 					initialized = true;
 					migrateHandlesToRepositorySupport();
@@ -301,8 +288,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(SHELL_LISTENER);
 					
-					taskActivityManager = new TaskActivityManager();
-					
 					taskListNotificationManager = new TaskListNotificationManager();
 					taskListNotificationManager.addNotificationProvider(NOTIFICATION_PROVIDER);
 					taskListNotificationManager.startNotification(NOTIFICATION_DELAY);	
@@ -311,7 +296,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					taskListRefreshManager.startRefreshJob();	
 					
 					taskListSaveManager = new TaskListSaveManager();
-					taskListManager.addListener(taskListSaveManager); 
+					taskListManager.addChangeListener(taskListSaveManager); 
 					
 					MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);					
 					getPrefs().addPropertyChangeListener(taskListRefreshManager);
@@ -335,7 +320,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		INSTANCE = null;
 		resourceBundle = null;
 		try {
-			taskListManager.removeListener(taskListSaveManager);
+			taskListManager.removeChangeListener(taskListSaveManager);
+			taskListManager.dispose();
 			if (MylarPlugin.getDefault() != null) {
 				MylarPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
 			}
@@ -590,10 +576,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	public boolean isInitialized() {
 		return initialized;
-	}
-
-	public static TaskActivityManager getTaskActivityManager() {
-		return taskActivityManager;
 	}
 } 
 

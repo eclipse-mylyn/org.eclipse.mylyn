@@ -195,18 +195,18 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		} else {
 			node.setAttribute(KEY_REMINDED, VAL_FALSE);
 		}
-		List<String> rl = task.getRelatedLinks();
-		int i = 0;
-		for (String link : rl) {
-			node.setAttribute(KEY_LINK + i, link);
-			i++;
-		}
-		List<String> plans = task.getPlans();
-		int currPlan = 0;
-		for (String plan : plans) {
-			node.setAttribute(KEY_PLAN + currPlan, plan);
-			currPlan++;
-		}
+//		List<String> rl = task.getRelatedLinks();
+//		int i = 0;
+//		for (String link : rl) {
+//			node.setAttribute(KEY_LINK + i, link);
+//			i++;
+//		}
+//		List<String> plans = task.getPlans();
+//		int currPlan = 0;
+//		for (String plan : plans) {
+//			node.setAttribute(KEY_PLAN + currPlan, plan);
+//			currPlan++;
+//		}
 
 		for (ITask t : task.getChildren()) {
 			createTaskElement(t, doc, node);
@@ -411,16 +411,16 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		} else {
 			task.setReminded(false);
 		}
-		int i = 0;
-		while (element.hasAttribute(KEY_LINK + i)) {
-			task.getRelatedLinks().add(element.getAttribute(KEY_LINK + i));
-			i++;
-		}
-		int ii = 0;
-		while (element.hasAttribute(KEY_PLAN + ii)) {
-			task.getPlans().add(element.getAttribute(KEY_PLAN + i));
-			ii++;
-		}
+//		int i = 0;
+//		while (element.hasAttribute(KEY_LINK + i)) {
+//			task.getRelatedLinks().add(element.getAttribute(KEY_LINK + i));
+//			i++;
+//		}
+//		int ii = 0;
+//		while (element.hasAttribute(KEY_PLAN + ii)) {
+//			task.getPlans().add(element.getAttribute(KEY_PLAN + i));
+//			ii++;
+//		}
 
 		NodeList list = element.getChildNodes();
 		for (int j = 0; j < list.getLength(); j++) {

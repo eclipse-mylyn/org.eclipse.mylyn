@@ -14,7 +14,6 @@
 package org.eclipse.mylar.provisional.tasklist;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -38,21 +37,9 @@ public interface ITask extends ITaskListElement {
 
 	public void setKind(String kind);
 	
-	public abstract void addPlan(String plan);
-
-	public List<String> getPlans();
-	
 	public abstract boolean isCompleted();
 
 	public abstract void setCompleted(boolean completed);
-
-	public abstract List<String> getRelatedLinks();
-
-	public abstract void setRelatedLinks(List<String> relatedLinks);
-
-	public abstract void addLink(String url);
-
-	public abstract void removeLink(String url);
 
 	public abstract boolean hasValidUrl();
 
@@ -65,8 +52,7 @@ public interface ITask extends ITaskListElement {
 	public abstract void setNotes(String notes);
 
 	/**
-	 * @param time
-	 *            in milliseconds
+	 * @param time in milliseconds
 	 */
 	public abstract void setElapsedTime(long elapsed);
 

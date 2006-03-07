@@ -13,10 +13,8 @@ package org.eclipse.mylar.provisional.tasklist;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
@@ -101,9 +99,9 @@ public class Task implements ITask {
 
 	private boolean completed;
 
-	private List<String> links = new ArrayList<String>();
-
-	private List<String> plans = new ArrayList<String>();
+//	private List<String> links = new ArrayList<String>();
+//
+//	private List<String> plans = new ArrayList<String>();
 
 	private String url = "";
 
@@ -211,25 +209,24 @@ public class Task implements ITask {
 		this.priority = priority;
 	}
 
-	public List<String> getRelatedLinks() {
-		// TODO: removed check for null once xml updated.
-		if (links == null) {
-			links = new ArrayList<String>();
-		}
-		return links;
-	}
+//	public List<String> getRelatedLinks() {
+//		if (links == null) {
+//			links = new ArrayList<String>();
+//		}
+//		return links;
+//	}
 
-	public void setRelatedLinks(List<String> relatedLinks) {
-		this.links = relatedLinks;
-	}
+//	public void setRelatedLinks(List<String> relatedLinks) {
+//		this.links = relatedLinks;
+//	}
 
-	public void addLink(String link) {
-		links.add(link);
-	}
+//	public void addLink(String link) {
+//		links.add(link);
+//	}
 
-	public void removeLink(String link) {
-		links.remove(link);
-	}
+//	public void removeLink(String link) {
+//		links.remove(link);
+//	}
 
 	public void setUrl(String url) {
 		this.url = url;
@@ -333,14 +330,14 @@ public class Task implements ITask {
 		this.description = description;
 	}
 
-	public void addPlan(String plan) {
-		if (plan != null && !plans.contains(plan))
-			plans.add(plan);
-	}
-
-	public List<String> getPlans() {
-		return plans;
-	}
+//	public void addPlan(String plan) {
+//		if (plan != null && !plans.contains(plan))
+//			plans.add(plan);
+//	}
+//
+//	public List<String> getPlans() {
+//		return plans;
+//	}
 
 	public void setCompletionDate(Date completionDate) {
 		this.completionDate = completionDate;

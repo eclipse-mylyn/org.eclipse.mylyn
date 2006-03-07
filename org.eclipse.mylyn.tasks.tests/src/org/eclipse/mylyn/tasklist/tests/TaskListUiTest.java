@@ -20,7 +20,7 @@ import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.TaskPriorityFilter;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
+import org.eclipse.mylar.provisional.tasklist.ITaskChangeListener;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.Task;
 import org.eclipse.mylar.provisional.tasklist.TaskCategory;
@@ -194,7 +194,7 @@ public class TaskListUiTest extends TestCase {
 		int numListenersAfter = 0;
 
 		TaskListManager manager = MylarTaskListPlugin.getTaskListManager();
-		List<ITaskActivityListener> listeners = manager.getListeners();
+		List<ITaskChangeListener> listeners = manager.getChangeListeners();
 		numListenersBefore = listeners.size();
 
 		// open a task in editor
@@ -205,7 +205,7 @@ public class TaskListUiTest extends TestCase {
 //		cat1task2.openTaskInEditor(false);
 		TaskListUiUtil.openEditor(cat1task2, false);
 
-		listeners = manager.getListeners();
+		listeners = manager.getChangeListeners();
 		numListenersDuring = listeners.size();
 
 		assertEquals(numListenersDuring, numListenersBefore + 2);
@@ -213,7 +213,7 @@ public class TaskListUiTest extends TestCase {
 		MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(
 				false);
 
-		listeners = manager.getListeners();
+		listeners = manager.getChangeListeners();
 		numListenersAfter = listeners.size();
 		assertEquals(numListenersBefore, numListenersAfter);
 

@@ -153,23 +153,23 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(TaskList.LABEL_ROOT, task1.getCategory().getHandleIdentifier());
 	}
 
-	public void testPlans() {
-		Task task1 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1", true);
-		task1.addPlan("default");
-		manager.moveToRoot(task1);
-
-		manager.saveTaskList();
-		assertNotNull(manager.getTaskList());
-		TaskList list = new TaskList();
-		manager.setTaskList(list);
-		manager.readExistingOrCreateNewList();
-		assertNotNull(manager.getTaskList());
-
-		Set<ITask> readList = manager.getTaskList().getRootTasks();
-		ITask task = readList.iterator().next();
-		assertEquals(1, task.getPlans().size());
-		assertTrue(task.getPlans().get(0).equals("default"));
-	}
+//	public void testPlans() {
+//		Task task1 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1", true);
+//		task1.addPlan("default");
+//		manager.moveToRoot(task1);
+//
+//		manager.saveTaskList();
+//		assertNotNull(manager.getTaskList());
+//		TaskList list = new TaskList();
+//		manager.setTaskList(list);
+//		manager.readExistingOrCreateNewList();
+//		assertNotNull(manager.getTaskList());
+//
+//		Set<ITask> readList = manager.getTaskList().getRootTasks();
+//		ITask task = readList.iterator().next();
+//		assertEquals(1, task.getPlans().size());
+//		assertTrue(task.getPlans().get(0).equals("default"));
+//	}
 
 	public void testEmpty() {
 		TaskList list = new TaskList();

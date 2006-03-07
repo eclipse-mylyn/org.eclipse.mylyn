@@ -68,8 +68,10 @@ import org.eclipse.mylar.internal.tasklist.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
+import org.eclipse.mylar.provisional.tasklist.DateRangeContainer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
+import org.eclipse.mylar.provisional.tasklist.ITaskChangeListener;
 import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -216,8 +218,7 @@ public class TaskListView extends ViewPart {
 	 */
 	protected boolean isPaused = false;
 
-	private final ITaskActivityListener TASK_REFERESH_LISTENER = new ITaskActivityListener() {
-
+	private final ITaskActivityListener TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
 		public void taskActivated(ITask task) {
 			if (task != null) {
 				updateDescription(task);
@@ -236,6 +237,13 @@ public class TaskListView extends ViewPart {
 			updateDescription(null);
 			filteredTree.indicateNoActiveTask();
 		}
+
+		public void activityChanged(DateRangeContainer week) {
+			// ignore
+		}		
+	};
+	
+	private final ITaskChangeListener TASK_REFERESH_LISTENER = new ITaskChangeListener() {
 
 		public void localInfoChanged(ITask task) {
 			refreshTask(task);
@@ -402,13 +410,15 @@ public class TaskListView extends ViewPart {
 
 	public TaskListView() {
 		INSTANCE = this;
-		MylarTaskListPlugin.getTaskListManager().addListener(TASK_REFERESH_LISTENER);
+		MylarTaskListPlugin.getTaskListManager().addChangeListener(TASK_REFERESH_LISTENER);
+		MylarTaskListPlugin.getTaskListManager().addActivityListener(TASK_ACTIVITY_LISTENER);
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
-		MylarTaskListPlugin.getTaskListManager().removeListener(TASK_REFERESH_LISTENER);
+		MylarTaskListPlugin.getTaskListManager().removeChangeListener(TASK_REFERESH_LISTENER);
+		MylarTaskListPlugin.getTaskListManager().removeActivityListener(TASK_ACTIVITY_LISTENER);
 	}
 
 	/**
