@@ -136,7 +136,7 @@ for instructions on how to change the 1.4 default.</p>
 This can also be the result of using an <b>incompatible version of Eclipse</b>.&nbsp; 
 Separate versions and update sites exist
 <a href="http://eclipse.org/mylar/dl.php">for Eclipse 3.1 and for the latest 3.2 
-milestone</a>), in which case you'll see errors like the following in your 
+milestone</a>), in which case you may see errors like the following in your 
 &lt;workspace&gt;/.metadata/.log file or in a Mylar view:</p>
 <p>
 <tt>java.lang.NoSuchMethodError:
@@ -145,9 +145,12 @@ milestone</a>), in which case you'll see errors like the following in your
    org.osgi.framework.BundleException: The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.mylar.java is invalid
 </tt>
 </p>
-<p>In this case the easiest thing to do is reinstall Mylar.&nbsp; <b>Your tasks won't be 
+<p>If you have verified that you are using the right version of Eclipse but are 
+still seeing install problems it could also be that there is a <b>Mylar feature 
+configuration problem</b>.&nbsp; In either case case the easiest thing to do is 
+uninstall any old versions and update to the latest Mylar.&nbsp; <b>Your tasks won't be 
 lost</b>, by default they are stored in the &lt;workspace&gt;/.mylar/tasklist.xml file 
-which will be read next time Mylar starts.&nbsp;First, uninstall the old version of Mylar using Help -&gt; 
+which will be read next time Mylar starts correctly.&nbsp;First, uninstall the old version of Mylar using Help -&gt; 
 Software Updates -&gt; Manage Configuration.&nbsp; You need to first Disable on all 
 Mylar features by right-clicking them, allow Eclipse to restart after the last 
 is disabled, and after restart.&nbsp; Then ensure that the 3rd toolbar button is 
