@@ -26,7 +26,7 @@ import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
+import org.eclipse.mylar.provisional.tasklist.ITaskChangeListener;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.team.internal.ccvs.ui.CVSUIPlugin;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
@@ -73,7 +73,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 
 	private Map<String, MylarContextChangeSet> activeChangeSets = new HashMap<String, MylarContextChangeSet>();
 
-	private ITaskActivityListener TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
+	private ITaskChangeListener TASK_ACTIVITY_LISTENER = new ITaskChangeListener() {
 
 		public void tasklistRead() {
 			initContextChangeSets();
@@ -90,18 +90,6 @@ public class MylarChangeSetManager implements IMylarContextListener {
 					}
 				}
 			}
-		}
-
-		public void tasksActivated(List<ITask> task) {
-			// ignore
-		}
-
-		public void taskActivated(ITask task) {
-			// ignore
-		}
-
-		public void taskDeactivated(ITask task) {
-			// ignore
 		}
 
 		public void taskListModified() {
@@ -122,7 +110,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 	public void enable() {
 		if (!isEnabled) {
 			MylarPlugin.getContextManager().addListener(this);
-			MylarTaskListPlugin.getTaskListManager().addListener(TASK_ACTIVITY_LISTENER);
+			MylarTaskListPlugin.getTaskListManager().addChangeListener(TASK_ACTIVITY_LISTENER);
 			if (MylarTaskListPlugin.getTaskListManager().isTaskListInitialized()) {
 				initContextChangeSets(); // otherwise listener will do it
 			}
@@ -133,7 +121,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 
 	public void disable() {
 		MylarPlugin.getContextManager().removeListener(this);
-		MylarTaskListPlugin.getTaskListManager().removeListener(TASK_ACTIVITY_LISTENER);
+		MylarTaskListPlugin.getTaskListManager().removeChangeListener(TASK_ACTIVITY_LISTENER);
 		collector.removeListener(CHANGE_SET_LISTENER);
 		isEnabled = false;
 	}

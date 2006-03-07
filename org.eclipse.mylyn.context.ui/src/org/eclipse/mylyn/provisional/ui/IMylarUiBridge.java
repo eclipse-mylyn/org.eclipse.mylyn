@@ -36,6 +36,8 @@ public interface IMylarUiBridge {
 	/**
 	 * Note that a single editor part can correspond to multipe outlines (e.g.
 	 * the PDE manifest editor).
+	 * 
+	 * @return	an empty list if none
 	 */
 	public abstract List<TreeViewer> getContentOutlineViewers(IEditorPart editorPart);
 

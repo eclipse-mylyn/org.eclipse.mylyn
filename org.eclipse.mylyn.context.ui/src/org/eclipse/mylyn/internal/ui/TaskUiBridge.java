@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.internal.ui;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jface.text.TextSelection;
@@ -46,7 +47,7 @@ public class TaskUiBridge implements IMylarUiBridge {
 	}
 
 	public List<TreeViewer> getContentOutlineViewers(IEditorPart editorPart) {
-		return null;
+		return Collections.emptyList();
 	}
 
 	public Object getObjectForTextSelection(TextSelection selection, IEditorPart editor) {

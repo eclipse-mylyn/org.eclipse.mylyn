@@ -19,6 +19,7 @@ import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.ui.InterestFilter;
 
 /**
@@ -78,9 +79,7 @@ public class TaskListInterestFilter extends InterestFilter {
 	protected boolean isImplicitlyInteresting(Object element, IMylarStructureBridge bridge) {
 		if (element instanceof ITask) {
 			ITask task = (ITask)element;
-			if (task.isPastReminder()) {
-				return true;
-			}
+			return task.isPastReminder()|| MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task);
 //			if (task.getPriority().equals(Task.PriorityLevel.P1.toString())) {
 //				return true;
 //			}
