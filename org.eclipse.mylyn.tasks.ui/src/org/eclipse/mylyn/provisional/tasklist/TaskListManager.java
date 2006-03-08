@@ -516,19 +516,31 @@ public class TaskListManager {
 	 */
 	public void notifyLocalInfoChanged(ITask task) {
 		for (ITaskChangeListener listener : new ArrayList<ITaskChangeListener>(changeListeners)) {
-			listener.localInfoChanged(task);
+			try {
+				listener.localInfoChanged(task);
+			} catch (Throwable t) {
+				MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
+			}
 		}
 	}
 
 	public void notifyRepositoryInfoChanged(ITask task) {
 		for (ITaskChangeListener listener : new ArrayList<ITaskChangeListener>(changeListeners)) {
-			listener.repositoryInfoChanged(task);
+			try {
+				listener.repositoryInfoChanged(task);
+			} catch (Throwable t) {
+				MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
+			}
 		}
 	}
 
 	public void notifyListUpdated() {
 		for (ITaskChangeListener listener : new ArrayList<ITaskChangeListener>(changeListeners)) {
-			listener.taskListModified();
+			try {
+				listener.taskListModified();
+			} catch (Throwable t) {
+				MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
+			}
 		}
 	}
 

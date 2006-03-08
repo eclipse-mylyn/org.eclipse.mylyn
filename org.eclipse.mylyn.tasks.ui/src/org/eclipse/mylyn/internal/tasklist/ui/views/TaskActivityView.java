@@ -108,11 +108,11 @@ public class TaskActivityView extends ViewPart {
 	private ITaskChangeListener TASK_CHANGE_LISTENER = new ITaskChangeListener() {
 
 		public void tasklistRead() {
-			TaskActivityView.this.treeViewer.refresh(true);
+			refresh();
 		}
 
 		public void localInfoChanged(final ITask updateTask) {
-			TaskActivityView.this.treeViewer.refresh(true);
+			refresh();
 		}
 
 		public void repositoryInfoChanged(ITask task) {
@@ -121,6 +121,18 @@ public class TaskActivityView extends ViewPart {
 
 		public void taskListModified() {
 			// ignore
+		}
+
+		private void refresh() {
+			if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						if (getViewer().getControl() != null && !getViewer().getControl().isDisposed()) {
+							TaskActivityView.this.treeViewer.refresh(true);
+						}
+					}
+				});
+			}
 		}
 	};
 
@@ -330,8 +342,8 @@ public class TaskActivityView extends ViewPart {
 			public void applyEditorValue() {
 				Object selection = ((IStructuredSelection) treeViewer.getSelection()).getFirstElement();
 				if (selection instanceof DateRangeActivityDelegate) {
-//					((ITask) selection).setReminderDate(reminderEditor.getReminderDate());
-//					treeViewer.refresh();
+// ((ITask) selection).setReminderDate(reminderEditor.getReminderDate());
+// treeViewer.refresh();
 					DateRangeActivityDelegate dateRangeActivityDelegate = (DateRangeActivityDelegate)selection;
 					MylarTaskListPlugin.getTaskListManager().setReminder(dateRangeActivityDelegate.getCorrespondingTask(), reminderEditor.getReminderDate());
 					// MylarTaskListPlugin.getTaskListManager().notifyLocalInfoChanged((ITask)
