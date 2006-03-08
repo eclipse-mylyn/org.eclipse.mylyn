@@ -226,11 +226,15 @@ public class TaskListView extends ViewPart {
 	protected boolean isPaused = false;
 
 	private final ITaskActivityListener TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
-		public void taskActivated(ITask task) {
+		public void taskActivated(final ITask task) {
 			if (task != null) {
-				updateDescription(task);
-				selectedAndFocusTask(task);
-				filteredTree.indicateActiveTask(task);
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						updateDescription(task);
+						selectedAndFocusTask(task);
+						filteredTree.indicateActiveTask(task);
+					}
+				});
 			}
 		}
 
@@ -241,8 +245,12 @@ public class TaskListView extends ViewPart {
 		}
 
 		public void taskDeactivated(ITask task) {
-			updateDescription(null);
-			filteredTree.indicateNoActiveTask();
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					updateDescription(null);
+					filteredTree.indicateNoActiveTask();
+				}
+			});
 		}
 
 		public void activityChanged(DateRangeContainer week) {
