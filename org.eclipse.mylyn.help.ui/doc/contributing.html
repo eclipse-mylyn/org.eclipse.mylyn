@@ -37,7 +37,7 @@ reports marked help wanted</a>.&nbsp; </p>
 		<b>HOST =</b> dev.eclipse.org&nbsp; <b>Repository Path</b>: 
 		/cvsroot/technology.<br>If you do not have an account you may enter <b>anonymous</b> for the user name 
 and leave the password blank.</li>
-		<li>Check out all of the projects under org.eclipse.mylar (except myar.aspectj, 
+		<li>Check out all of the projects under org.eclipse.mylar (except myar.jira, 
 		mylar.sandbox, mylar.viz, and mylar.zest.* which have additional 
 		dependencies).&nbsp; There should be no errors or warnings.</li>
 		<li>Run org.eclipse.mylar.tests.AllTests as a JUnit Plug-in Test, with 
@@ -50,7 +50,7 @@ and leave the password blank.</li>
 	</ul>
 		</li>
 	</ul>
-	<p><b>Building JIRA Integration</b></p>
+	<p><b>Working with JIRA Integration</b></p>
 	<ul>
 		<li>Get the latest <a href="http://subclipse.tigris.org/download.html">
 		Subclipse</a> plug-in, e.g. from the following update site: 
@@ -73,7 +73,15 @@ and leave the password blank.</li>
 		</ul>
 		</li>
 	</ul>
-<h3>&nbsp;</h3>
+	<p><b>Working with the 3.1 branch</b></p>
+	<ul>
+		<li>Right-click the org.eclipse.mylar.java, mylar.ide, and mylar.xml 
+		project, Team -&gt; Switch to Another Branch..., then Refresh the Branches 
+		and select <b>e_3_1 </b></li>
+		<li>The list of files that should not be overwritten is in: 
+		org.eclipse.mylar/build/merge-eclipse-3.1.txt</li>
+	</ul>
+	<p>&nbsp;</p>
 <h3><a name="contributing-patches">Contributing patches</a> </h3>
 	<p>All but the most minor patches to Mylar should be made using the latest 
 	release or development build of Mylar.&nbsp; In order to ensure what we 
@@ -136,14 +144,6 @@ and leave the password blank.</li>
 	out the following projects mylar.bugzilla.core, mylar.bugzilla.ui, 
 	mylar.tasklist, mylar.core </li>
 </ul>
-	<p><b>To build the 3.1 branch </b>of the source, follow above steps </p>
-	<ul>
-		<li>Right-click the org.eclipse.mylar.java, mylar.ide, and mylar.xml
-		project, Team -&gt; Switch to Another Branch..., then 
-		Refresh the Branches and select <b>e_3_1 </b></li>
-		<li>The list of files that should not be overwritten is in: 
-		org.eclipse.mylar/build/merge-eclipse-3.1.txt</li>
-	</ul>
 	<p>&nbsp;</p>
 <h3><a name="references-additional">Additional References</a></h3>
 <table border="0" cellpadding="2" style="border-collapse: collapse" width="100%" id="table1">
