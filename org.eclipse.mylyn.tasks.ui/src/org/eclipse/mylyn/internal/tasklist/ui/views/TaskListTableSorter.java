@@ -22,7 +22,7 @@ import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 /**
  * @author Mik Kersten
  */
-class TaskListTableSorter extends ViewerSorter {
+public class TaskListTableSorter extends ViewerSorter {
 
 	private final TaskListView view;
 
@@ -65,21 +65,25 @@ class TaskListTableSorter extends ViewerSorter {
 				ITaskListElement element1 = (ITaskListElement) o1;
 				ITaskListElement element2 = (ITaskListElement) o2;
 
-				if (column != null && column.equals(this.view.columnNames[1])) {
-					return 0;
-				} else if (column == this.view.columnNames[2]) {
-					return this.view.sortDirection * element1.getPriority().compareTo(element2.getPriority());
-				} else if (column == this.view.columnNames[4]) {
-					String c1 = element1.getDescription();
-					String c2 = element2.getDescription();
-					return this.view.sortDirection * taskKeyComparator.compare(c1, c2);
-				} else {
-					return 0;
-				}
+				return compareElements(element1, element2);
 			}
 		} else {
 			return 0;
 		}
 		return 0;
+	}
+
+	private int compareElements(ITaskListElement element1, ITaskListElement element2) {
+		if (column != null && column.equals(this.view.columnNames[1])) {
+			return 0;
+		} else if (column == this.view.columnNames[2]) {
+			return this.view.sortDirection * element1.getPriority().compareTo(element2.getPriority());
+		} else if (column == this.view.columnNames[4]) {
+			String c1 = element1.getDescription();
+			String c2 = element2.getDescription();
+			return this.view.sortDirection * taskKeyComparator.compare(c1, c2);
+		} else {
+			return 0;
+		}
 	}
 }

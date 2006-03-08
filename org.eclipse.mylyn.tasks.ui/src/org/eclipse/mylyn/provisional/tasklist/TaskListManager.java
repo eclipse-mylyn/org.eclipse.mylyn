@@ -482,24 +482,24 @@ public class TaskListManager {
 		activityListeners.remove(listener);
 	}
 
-	/**
-	 * Deactivates previously active tasks if not in multiple active mode.
-	 * 
-	 * @param task
-	 */
 	public void activateTask(ITask task) {
 		if (!MylarTaskListPlugin.getDefault().isMultipleActiveTasksMode()) {
 			for (ITask activeTask : new ArrayList<ITask>(taskList.getActiveTasks())) {
 				deactivateTask(activeTask);
 			}
 		}
-		taskList.setActive(task, true);
-		int timeout = MylarPlugin.getContextManager().getInactivityTimeout();
-		TaskActivityTimer activityTimer = new TaskActivityTimer(task, timeout, timerSleepInterval);
-		activityTimer.startTimer();
-		timerMap.put(task, activityTimer);
-		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
-			listener.taskActivated(task);
+		
+		try {
+			int timeout = MylarPlugin.getContextManager().getInactivityTimeout();
+			TaskActivityTimer activityTimer = new TaskActivityTimer(task, timeout, timerSleepInterval);
+			activityTimer.startTimer();
+			timerMap.put(task, activityTimer);
+			taskList.setActive(task, true);
+			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
+				listener.taskActivated(task);
+			}
+		} catch (Throwable t) {
+			MylarStatusHandler.fail(t, "could not activate task", false);
 		}
 	}
 
@@ -509,7 +509,11 @@ public class TaskListManager {
 			taskTimer.stopTimer();
 		taskList.setActive(task, false);
 		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
-			listener.taskDeactivated(task);
+			try {
+				listener.taskDeactivated(task);
+			} catch (Throwable t) {
+				MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
+			}	
 		}
 	}
 
