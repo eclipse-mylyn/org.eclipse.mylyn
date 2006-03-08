@@ -30,6 +30,39 @@
       </wizard>
 	</extension>
 
+  <extension
+        point="org.eclipse.ui.importWizards">
+     <wizard
+           category="org.eclipse.mylar.tasklist.importcategory"
+           class="org.eclipse.mylar.internal.tasklist.ui.wizards.TaskDataImportWizard"
+           icon="icons/eview16/task-list.gif"
+           id="org.eclipse.mylar.tasklist.ui.importWizard"
+           name="Mylar Task Data">
+        <description>
+           Import Mylar task data files from file system.
+        </description>
+     </wizard>
+     <category
+           id="org.eclipse.mylar.tasklist.importcategory"
+           name="Mylar"/>
+  </extension>
+
+     <extension point="org.eclipse.ui.exportWizards"> 
+      <wizard
+            category="org.eclipse.mylar.tasklist.exportcategory"
+            class="org.eclipse.mylar.internal.tasklist.ui.wizards.TaskDataExportWizard"
+            icon="icons/eview16/task-list.gif"
+            id="org.eclipse.mylar.tasklist.ui.exportWizard"
+            name="Mylar Task Data"> 
+         <description> 
+            Export Mylar task data files to the file system.
+         </description> 
+      </wizard>
+      <category
+            id="org.eclipse.mylar.tasklist.exportcategory"
+            name="Mylar"/> 
+    </extension> 
+
    <extension point="org.eclipse.ui.decorators">
       <decorator
             class="org.eclipse.mylar.internal.tasklist.ui.RepositoryTaskDecorator"
