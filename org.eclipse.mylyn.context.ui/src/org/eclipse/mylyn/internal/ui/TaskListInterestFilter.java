@@ -18,7 +18,9 @@ import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.ui.InterestFilter;
 
@@ -40,18 +42,35 @@ public class TaskListInterestFilter extends InterestFilter {
 			IMylarElement node = null;
 			if (element instanceof IMylarElement) {
 				node = (IMylarElement) element;
-			} else {
-				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element);
-				if (!bridge.canFilter(element)) {
-					return true;
+			} else if (element instanceof ITaskContainer) {
+				ITaskContainer container = (ITaskContainer) element;
+				// TODO: get rid of this work-around to look down?
+				for (ITask task : container.getChildren()) {
+					if (select(viewer, this, task)) {
+						return true;
+					}
 				}
-				if (isImplicitlyInteresting(element, bridge))
-					return true;
-//				if (isImplicitlyUninteresting(element, bridge))
-//					return true;
-				
-				String handle = bridge.getHandleIdentifier(element);
-				node = MylarPlugin.getContextManager().getActivityHistoryMetaContext().get(handle);
+				return false;
+			} else {
+				ITask task = null;
+				if (element instanceof ITask) {
+					task = (ITask) element;
+				} else if (element instanceof AbstractQueryHit) {
+					task = ((AbstractQueryHit) element).getCorrespondingTask();
+				}
+				if (task != null) {
+					if (isImplicitlyInteresting(task)) {
+						return true;
+					}
+					
+					IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(task);
+					if (!bridge.canFilter(task)) {
+						return true;
+					}
+
+					String handle = bridge.getHandleIdentifier(element);
+					node = MylarPlugin.getContextManager().getActivityHistoryMetaContext().get(handle);
+				}
 			}
 			if (node != null) {
 				if (node.getInterest().isPredicted()) {
@@ -65,22 +84,16 @@ public class TaskListInterestFilter extends InterestFilter {
 		}
 		return false;
 	}
-	
-	protected boolean isImplicitlyUninteresting(Object element, IMylarStructureBridge bridge) {
-		if (element instanceof ITask) {
-			ITask task = (ITask)element;
-			if (task.isCompleted()) {
-				return true;
-			}
+
+	protected boolean isImplicitlyUninteresting(ITask task) {
+		if (task.isCompleted()) {
+			return true;
 		}
 		return false;
 	}
 
-	protected boolean isImplicitlyInteresting(Object element, IMylarStructureBridge bridge) {
-		if (element instanceof ITask) {
-			ITask task = (ITask)element;
-			return task.isActive() || task.isPastReminder()|| MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task);
-		}
-		return false;
+	protected boolean isImplicitlyInteresting(ITask task) {
+		return task.isActive() || task.isPastReminder()
+				|| MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task);
 	}
 }
