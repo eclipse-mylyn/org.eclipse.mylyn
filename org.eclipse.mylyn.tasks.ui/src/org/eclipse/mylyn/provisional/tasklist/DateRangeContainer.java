@@ -64,8 +64,12 @@ public class DateRangeContainer implements ITaskContainer {
 	}
 
 	public boolean includes(Calendar cal) {
-		return (startDate.getTimeInMillis() < cal.getTimeInMillis())
-				&& (endDate.getTimeInMillis() > cal.getTimeInMillis());
+		return (startDate.getTimeInMillis() <= cal.getTimeInMillis())
+				&& (endDate.getTimeInMillis() >= cal.getTimeInMillis());
+	}
+	
+	public void clear() {
+		children.clear();
 	}
 
 	public void addTask(DateRangeActivityDelegate taskWrapper) {
@@ -151,10 +155,14 @@ public class DateRangeContainer implements ITaskContainer {
 //		return emptySet;
 	}
 
+	public boolean isFuture() {
+		return !isPresent() && getStart().after(Calendar.getInstance());
+	}
+	
 	public boolean isPresent() {
 		return getStart().before(Calendar.getInstance()) && getEnd().after(Calendar.getInstance());
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int PRIME = 31;

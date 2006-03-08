@@ -11,24 +11,42 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.views;
 
+import java.text.DateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.ICellEditorListener;
+import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.mylar.internal.core.dt.MylarWebRef;
+import org.eclipse.mylar.internal.tasklist.planner.ui.ReminderCellEditor;
 import org.eclipse.mylar.internal.tasklist.ui.actions.OpenTaskListElementAction;
-import org.eclipse.mylar.provisional.tasklist.DateRangeContainer;
+import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.DateRangeActivityDelegate;
+import org.eclipse.mylar.provisional.tasklist.DateRangeContainer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
+import org.eclipse.mylar.provisional.tasklist.ITaskChangeListener;
 import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.provisional.tasklist.TaskListManager;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.widgets.Composite;
@@ -68,7 +86,7 @@ public class TaskActivityView extends ViewPart {
 
 		public void taskActivated(ITask task) {
 			TaskActivityView.this.treeViewer.refresh(true);
-//			TaskActivityView.this.treeViewer.refresh(task);
+			// TaskActivityView.this.treeViewer.refresh(task);
 		}
 
 		public void tasksActivated(List<ITask> tasks) {
@@ -79,14 +97,33 @@ public class TaskActivityView extends ViewPart {
 
 		public void taskDeactivated(ITask task) {
 			TaskActivityView.this.treeViewer.refresh(true);
-//			TaskActivityView.this.treeViewer.refresh(task);
+			// TaskActivityView.this.treeViewer.refresh(task);
 		}
 
 		public void activityChanged(DateRangeContainer week) {
 			TaskActivityView.this.treeViewer.refresh(week);
-		}	
+		}
 	};
-	
+
+	private ITaskChangeListener TASK_CHANGE_LISTENER = new ITaskChangeListener() {
+
+		public void tasklistRead() {
+			TaskActivityView.this.treeViewer.refresh(true);
+		}
+
+		public void localInfoChanged(final ITask updateTask) {
+			TaskActivityView.this.treeViewer.refresh(true);
+		}
+
+		public void repositoryInfoChanged(ITask task) {
+			localInfoChanged(task);
+		}
+
+		public void taskListModified() {
+			// ignore
+		}
+	};
+
 	public static TaskActivityView openInActivePerspective() {
 		try {
 			return (TaskActivityView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ID);
@@ -98,18 +135,20 @@ public class TaskActivityView extends ViewPart {
 	public TaskActivityView() {
 		INSTANCE = this;
 		MylarTaskListPlugin.getTaskListManager().addActivityListener(ACTIVITY_LISTENER);
+		MylarTaskListPlugin.getTaskListManager().addChangeListener(TASK_CHANGE_LISTENER);
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
 		MylarTaskListPlugin.getTaskListManager().removeActivityListener(ACTIVITY_LISTENER);
+		MylarTaskListPlugin.getTaskListManager().removeChangeListener(TASK_CHANGE_LISTENER);
 	}
 
 	@Override
 	public void createPartControl(Composite parent) {
-
-		treeViewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+		int treeStyle = SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION;
+		treeViewer = new TreeViewer(parent, treeStyle);
 
 		getViewer().getTree().setHeaderVisible(true);
 		getViewer().getTree().setLinesVisible(true);
@@ -150,19 +189,90 @@ public class TaskActivityView extends ViewPart {
 
 		getViewer().setSorter(new TaskActivityTableSorter());
 		taskActivityTableContentProvider = new TaskActivityContentProvider(MylarTaskListPlugin.getTaskListManager());
+
 		getViewer().setContentProvider(taskActivityTableContentProvider);
 		getViewer().setLabelProvider(taskHistoryTreeLabelProvider);
 		getViewer().setInput(getViewSite());
-
+		createCellEditorListener();
 		makeActions();
+		initDrop();
 		hookOpenAction();
 
 	}
 
+	@MylarWebRef(name = "Drag and drop article", url = "http://www.eclipse.org/articles/Article-Workbench-DND/drag_drop.html")
+	private void initDrop() {
+		Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
+
+		treeViewer.addDropSupport(DND.DROP_MOVE, types, new ViewerDropAdapter(treeViewer) {
+			{
+				setFeedbackEnabled(false);
+			}
+
+			@Override
+			public boolean performDrop(Object data) {
+
+				IStructuredSelection selection = ((IStructuredSelection) TaskListView.getDefault().getViewer()
+						.getSelection());
+
+				Object target = getCurrentTarget();
+				DateRangeContainer container;
+				Calendar reminderCalendar;
+				if (target instanceof DateRangeContainer) {
+					container = (DateRangeContainer) target;
+					reminderCalendar = container.getStart();
+				} else if (target instanceof DateRangeActivityDelegate) {
+					DateRangeActivityDelegate dateRangeActivityDelegate = (DateRangeActivityDelegate) target;
+					reminderCalendar = dateRangeActivityDelegate.getContainer().getStart();
+				} else {
+					return false;
+				}
+
+				for (Iterator iter = selection.iterator(); iter.hasNext();) {
+					Object selectedObject = iter.next();
+					ITask task = null;
+					if (selectedObject instanceof ITask) {
+						task = (ITask) selectedObject;
+					} else if (selectedObject instanceof AbstractQueryHit) {
+						task = ((AbstractQueryHit) selectedObject).getOrCreateCorrespondingTask();
+					}
+					if (task != null) {
+						MylarTaskListPlugin.getTaskListManager().setReminder(task, reminderCalendar.getTime());						
+					}
+				}
+
+				// treeViewer.refresh();
+				return true;
+			}
+
+			@Override
+			public boolean validateDrop(Object targetObject, int operation, TransferData transferType) {
+				Object selectedObject = ((IStructuredSelection) TaskListView.getDefault().getViewer().getSelection())
+						.getFirstElement();
+
+				if (selectedObject instanceof ITaskContainer) {
+					return false;
+				}
+
+				Object target = getCurrentTarget();
+				DateRangeContainer dateRangeContainer = null;
+				if (target instanceof DateRangeContainer) {
+					dateRangeContainer = (DateRangeContainer) target;
+				} else if (target instanceof DateRangeActivityDelegate) {
+					DateRangeActivityDelegate dateRangeActivityDelegate = (DateRangeActivityDelegate) target;
+					dateRangeContainer = dateRangeActivityDelegate.getContainer();
+				}
+
+				if (dateRangeContainer != null && (dateRangeContainer.isPresent() || dateRangeContainer.isFuture())) {
+					return true;
+				}
+				return false;
+			}
+		});
+	}
+
 	private void makeActions() {
-		openTaskEditor = new OpenTaskListElementAction(this.getViewer()) {
-			
-		};
+		openTaskEditor = new OpenTaskListElementAction(this.getViewer());
 		// openUrlInExternal = new OpenTaskInExternalBrowserAction();
 	}
 
@@ -205,6 +315,114 @@ public class TaskActivityView extends ViewPart {
 		// ignore
 	}
 
+	private void createCellEditorListener() {
+		CellEditor[] editors = new CellEditor[columnNames.length];
+		final ComboBoxCellEditor estimateEditor = new ComboBoxCellEditor(treeViewer.getTree(),
+				TaskListManager.ESTIMATE_TIMES, SWT.READ_ONLY);
+		final ReminderCellEditor reminderEditor = new ReminderCellEditor(treeViewer.getTree());
+		editors[0] = null; // not used
+		editors[1] = null;// not used
+		editors[2] = null;// not used
+		editors[3] = null;// not used
+		editors[4] = estimateEditor;
+		editors[5] = reminderEditor;
+		reminderEditor.addListener(new ICellEditorListener() {
+			public void applyEditorValue() {
+				Object selection = ((IStructuredSelection) treeViewer.getSelection()).getFirstElement();
+				if (selection instanceof DateRangeActivityDelegate) {
+//					((ITask) selection).setReminderDate(reminderEditor.getReminderDate());
+//					treeViewer.refresh();
+					DateRangeActivityDelegate dateRangeActivityDelegate = (DateRangeActivityDelegate)selection;
+					MylarTaskListPlugin.getTaskListManager().setReminder(dateRangeActivityDelegate.getCorrespondingTask(), reminderEditor.getReminderDate());
+					// MylarTaskListPlugin.getTaskListManager().notifyLocalInfoChanged((ITask)
+					// selection);
+				}
+			}
+
+			public void cancelEditor() {
+			}
+
+			public void editorValueChanged(boolean oldValidState, boolean newValidState) {
+			}
+
+		});
+		estimateEditor.addListener(new ICellEditorListener() {
+			public void applyEditorValue() {
+				Object selection = ((IStructuredSelection) treeViewer.getSelection()).getFirstElement();
+				if (selection instanceof ITask) {
+					ITask task = (ITask) selection;
+					int estimate = (Integer) estimateEditor.getValue();
+					if (estimate == -1) {
+						estimate = 0;
+					}
+					task.setEstimatedTimeHours(estimate);
+					// updateLabels();
+					treeViewer.refresh();
+				}
+			}
+
+			public void cancelEditor() {
+			}
+
+			public void editorValueChanged(boolean oldValidState, boolean newValidState) {
+			}
+
+		});
+		treeViewer.setCellEditors(editors);
+		getViewer().setCellModifier(new TaskActivityCellModifier(treeViewer));
+	}
+
+	private class TaskActivityCellModifier implements ICellModifier {
+
+		private TreeViewer treeViewer;
+
+		public TaskActivityCellModifier(TreeViewer tableViewer) {
+			this.treeViewer = tableViewer;
+		}
+
+		public boolean canModify(Object element, String property) {
+			int columnIndex = Arrays.asList(columnNames).indexOf(property);
+			if (columnIndex == 4 || columnIndex == 5) {
+				return true;
+			}
+			return false;
+		}
+
+		public Object getValue(Object element, String property) {
+			if (element instanceof ITask) {
+				int columnIndex = Arrays.asList(columnNames).indexOf(property);
+				if (element instanceof ITask) {
+					if (columnIndex == 5) {
+						if (((ITask) element).getReminderDate() != null) {
+							return DateFormat.getDateInstance(DateFormat.MEDIUM).format(
+									((ITask) element).getReminderDate());
+						} else {
+							return null;
+						}
+					} else if (columnIndex == 4) {
+						return new Integer(Arrays.asList(TaskListManager.ESTIMATE_TIMES).indexOf(
+								((ITask) element).getEstimateTimeHours()));
+					}
+				}
+			}
+			return null;
+		}
+
+		public void modify(Object element, String property, Object value) {
+			int columnIndex = Arrays.asList(columnNames).indexOf(property);
+			if (element instanceof ITask) {
+				ITask task = (ITask) element;
+				if (columnIndex == 4) {
+					if (value instanceof Integer) {
+						task.setEstimatedTimeHours(((Integer) value).intValue() * 10);
+						treeViewer.refresh();
+					}
+				}
+			}
+		}
+	}
+
+	
 	private class TaskActivityTableSorter extends ViewerSorter {
 
 		public TaskActivityTableSorter() {
@@ -227,8 +445,8 @@ public class TaskActivityView extends ViewPart {
 				} else if (o2 instanceof DateRangeActivityDelegate) {
 					DateRangeActivityDelegate task1 = (DateRangeActivityDelegate) o1;
 					DateRangeActivityDelegate task2 = (DateRangeActivityDelegate) o2;
-					Calendar calendar1 = task1.getStart();//MylarTaskListPlugin.getTaskActivityManager().getLastOccurrence(task1.getHandleIdentifier());
-					Calendar calendar2 = task2.getStart();//MylarTaskListPlugin.getTaskActivityManager().getLastOccurrence(task2.getHandleIdentifier());
+					Calendar calendar1 = task1.getStart();// MylarTaskListPlugin.getTaskActivityManager().getLastOccurrence(task1.getHandleIdentifier());
+					Calendar calendar2 = task2.getStart();// MylarTaskListPlugin.getTaskActivityManager().getLastOccurrence(task2.getHandleIdentifier());
 					if (calendar1 != null && calendar2 != null) {
 						return calendar2.compareTo(calendar1);
 					}

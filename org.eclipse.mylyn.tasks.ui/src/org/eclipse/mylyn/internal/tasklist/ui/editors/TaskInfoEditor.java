@@ -227,7 +227,8 @@ public class TaskInfoEditor extends EditorPart {
 		task.setNotes(note);
 		task.setEstimatedTimeHours(estimated.getSelection());
 		if (datePicker != null && datePicker.getDate() != null) {
-			task.setReminderDate(datePicker.getDate().getTime());
+			MylarTaskListPlugin.getTaskListManager().setReminder(task, datePicker.getDate().getTime());
+//			task.setReminderDate(datePicker.getDate().getTime());
 		} else {
 			task.setReminderDate(null);
 		}

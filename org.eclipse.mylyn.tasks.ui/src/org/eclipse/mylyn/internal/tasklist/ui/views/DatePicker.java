@@ -147,6 +147,9 @@ public class DatePicker extends Composite {
 		pickerListeners.add(listener);
 	}
 
+	/**
+	 * must check for null return value
+	 */
 	public Calendar getDate() {
 		return date;
 	}

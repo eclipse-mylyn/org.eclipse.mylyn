@@ -64,7 +64,9 @@ public class ReminderCellEditor extends DialogCellEditor {
 			final DatePicker datePicker = new DatePicker(composite, SWT.NULL, "<reminder>");
 			datePicker.addPickerSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent arg0) {
-					reminderDate = datePicker.getDate().getTime();
+					if(datePicker.getDate() != null) {
+						reminderDate = datePicker.getDate().getTime();
+					}
 				}
 
 				public void widgetDefaultSelected(SelectionEvent arg0) {

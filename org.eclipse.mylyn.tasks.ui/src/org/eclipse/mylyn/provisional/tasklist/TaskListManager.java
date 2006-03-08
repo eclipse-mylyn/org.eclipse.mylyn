@@ -20,8 +20,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.mylar.internal.core.MylarContextManager;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
@@ -42,6 +44,18 @@ import org.eclipse.mylar.provisional.core.MylarPlugin;
  */
 public class TaskListManager {
 
+	private static final int NUM_WEEKS_PREVIOUS = -1;
+
+	private static final int NUM_WEEKS_NEXT = 1;
+
+	private static final int NUM_WEEKS_FUTURE_START = 2;
+
+	private static final int NUM_WEEKS_PAST_END = -2;
+
+	private static final int NUM_WEEKS_FUTURE_END = 8;
+
+	private static final int NUM_WEEKS_PAST_START = -8;
+
 	public static final String ARCHIVE_CATEGORY_DESCRIPTION = "Archive";
 
 	private static final String DESCRIPTION_THIS_WEEK = "This Week";
@@ -50,10 +64,23 @@ public class TaskListManager {
 
 	private static final String DESCRIPTION_NEXT_WEEK = "Next Week";
 
+	private static final String DESCRIPTION_FUTURE = "Future";
+
+	private static final String DESCRIPTION_PAST = "Past";
+
+	public static final String[] ESTIMATE_TIMES = new String[] { "0 Hours", "1 Hours", "2 Hours", "3 Hours", "4 Hours",
+			"5 Hours", "6 Hours", "7 Hours", "8 Hours", "9 Hours", "10 Hours" };
+
 	private DateRangeContainer thisWeek;
 
+	private DateRangeContainer nextWeek;
+
+	private DateRangeContainer future;
+
 	private ArrayList<DateRangeContainer> dateRangeContainers = new ArrayList<DateRangeContainer>();
-	
+
+	private Set<ITask> tasksWithReminders = new HashSet<ITask>();
+
 	private ITask currentTask = null;
 
 	private String currentHandle = "";
@@ -61,13 +88,13 @@ public class TaskListManager {
 	private Calendar currentTaskStart = null;
 
 	private Calendar currentTaskEnd = null;
-	
+
 	private Map<ITask, TaskActivityTimer> timerMap = new HashMap<ITask, TaskActivityTimer>();
 
 	private List<ITaskChangeListener> changeListeners = new ArrayList<ITaskChangeListener>();
 
 	private List<ITaskActivityListener> activityListeners = new ArrayList<ITaskActivityListener>();
-	
+
 	private TaskListWriter taskListWriter;
 
 	private File taskListFile;
@@ -126,16 +153,16 @@ public class TaskListManager {
 			// ignore
 		}
 	};
-	
+
 	public TaskListManager(TaskListWriter taskListWriter, File file, int startId) {
 		this.taskListFile = file;
 		this.taskListWriter = taskListWriter;
 		this.nextTaskId = startId;
-		
+
 		setupCalendarRanges();
 		MylarPlugin.getContextManager().addActivityMetaContextListener(CONTEXT_LISTENER);
 	}
-	
+
 	public void dispose() {
 		MylarPlugin.getContextManager().removeActivityMetaContextListener(CONTEXT_LISTENER);
 	}
@@ -154,7 +181,21 @@ public class TaskListManager {
 				.getInteractionHistory();
 		for (InteractionEvent event : events) {
 			parseInteractionEvent(event);
-		}
+		}		
+	}
+
+	private void parseFutureReminders() {
+		future.clear();
+		nextWeek.clear();
+		GregorianCalendar tempCalendar = new GregorianCalendar();
+		for (ITask task : tasksWithReminders) {
+			tempCalendar.setTime(task.getReminderDate());
+			if (nextWeek.includes(tempCalendar)) {
+				nextWeek.addTask(new DateRangeActivityDelegate(nextWeek, task, tempCalendar, tempCalendar));
+			} else if (future.includes(tempCalendar)) {
+				future.addTask(new DateRangeActivityDelegate(future, task, tempCalendar, tempCalendar));
+			}
+		}		
 	}
 
 	private void parseInteractionEvent(InteractionEvent event) {
@@ -180,7 +221,7 @@ public class TaskListManager {
 					for (ITaskActivityListener listener : activityListeners) {
 						listener.activityChanged(week);
 					}
-//					notifyChange(week);
+					// notifyChange(week);
 				}
 			}
 
@@ -188,10 +229,9 @@ public class TaskListManager {
 			currentHandle = "";
 		}
 	}
-	
+
 	private void setupCalendarRanges() {
 
-		// Current week
 		GregorianCalendar currentBegin = new GregorianCalendar();
 		Date startTime = new Date();
 		currentBegin.setTime(startTime);
@@ -203,28 +243,48 @@ public class TaskListManager {
 
 		GregorianCalendar previousStart = new GregorianCalendar();
 		previousStart.setTime(new Date());
-		previousStart.add(Calendar.WEEK_OF_YEAR, -1);
+		previousStart.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_PREVIOUS);
 		snapToStartOfWeek(previousStart);
 		GregorianCalendar previousEnd = new GregorianCalendar();
 		previousEnd.setTime(new Date());
-		previousEnd.add(Calendar.WEEK_OF_YEAR, -1);
+		previousEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_PREVIOUS);
 		snapToEndOfWeek(previousEnd);
 		dateRangeContainers.add(new DateRangeContainer(previousStart.getTime(), previousEnd.getTime(),
 				DESCRIPTION_PREVIOUS_WEEK));
 
 		GregorianCalendar nextStart = new GregorianCalendar();
 		nextStart.setTime(new Date());
-		nextStart.add(Calendar.WEEK_OF_YEAR, 1);
+		nextStart.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_NEXT);
 		snapToStartOfWeek(nextStart);
 		GregorianCalendar nextEnd = new GregorianCalendar();
 		nextEnd.setTime(new Date());
-		nextEnd.add(Calendar.WEEK_OF_YEAR, 1);
+		nextEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_NEXT);
 		snapToEndOfWeek(nextEnd);
-		dateRangeContainers.add(new DateRangeContainer(nextStart.getTime(), nextEnd.getTime(),
-				DESCRIPTION_NEXT_WEEK));
+		nextWeek = new DateRangeContainer(nextStart.getTime(), nextEnd.getTime(), DESCRIPTION_NEXT_WEEK);
+		dateRangeContainers.add(nextWeek);
 
+		GregorianCalendar futureStart = new GregorianCalendar();
+		futureStart.setTime(new Date());
+		futureStart.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_FUTURE_START);
+		snapToStartOfWeek(futureStart);
+		GregorianCalendar futureEnd = new GregorianCalendar();
+		futureEnd.setTime(new Date());
+		futureEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_FUTURE_END);
+		snapToEndOfWeek(futureEnd);
+		future = new DateRangeContainer(futureStart.getTime(), futureEnd.getTime(), DESCRIPTION_FUTURE);
+		dateRangeContainers.add(future);
+
+		GregorianCalendar pastStart = new GregorianCalendar();
+		pastStart.setTime(new Date());
+		pastStart.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_PAST_START);
+		snapToStartOfWeek(pastStart);
+		GregorianCalendar pastEnd = new GregorianCalendar();
+		pastEnd.setTime(new Date());
+		pastEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_PAST_END);
+		snapToEndOfWeek(pastEnd);
+		dateRangeContainers.add(new DateRangeContainer(pastEnd.getTime(), pastEnd.getTime(), DESCRIPTION_PAST));
 	}
-	
+
 	private void snapToStartOfWeek(GregorianCalendar cal) {
 		cal.getTime();
 		cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
@@ -244,11 +304,12 @@ public class TaskListManager {
 		cal.set(Calendar.MILLISECOND, cal.getMaximum(Calendar.MILLISECOND));
 		cal.getTime();
 	}
-	
+
 	public Object[] getDateRanges() {
+//		parseFutureReminders();
 		return dateRangeContainers.toArray();
 	}
-	
+
 	/**
 	 * Exposed for unit testing
 	 * 
@@ -274,16 +335,23 @@ public class TaskListManager {
 			} else {
 				createNewTaskList();
 			}
+
+			for (ITask task : taskList.getAllTasks()) {
+				if (task.getReminderDate() != null)
+					tasksWithReminders.add(task);
+			}
+			parseFutureReminders();			
 			taskListInitialized = true;
 			for (ITaskChangeListener listener : new ArrayList<ITaskChangeListener>(changeListeners)) {
 				listener.tasklistRead();
 			}
+
 			// only activate the first task to avoid confusion of mutliple
 			// active tasks on startup
 			List<ITask> activeTasks = taskList.getActiveTasks();
 			if (activeTasks.size() > 0) {
 				activateTask(activeTasks.get(0));
-			}
+			}		
 			parseTaskActivityInteractionHistory();
 		} catch (Exception e) {
 			MylarStatusHandler.log(e, "Could not read task list");
@@ -300,7 +368,8 @@ public class TaskListManager {
 			if (taskListInitialized) {
 				if (!taskList.isEmpty()) {
 					taskListWriter.writeTaskList(taskList, taskListFile);
-					MylarPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.TASK_ID, nextTaskId);
+					MylarPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.TASK_ID,
+							nextTaskId);
 				}
 			} else {
 				MylarStatusHandler.log("task list save attempted before initialization", this);
@@ -321,20 +390,20 @@ public class TaskListManager {
 	public void moveToRoot(ITask task) {
 		if (task.getCategory() instanceof TaskCategory) {
 			((TaskCategory) task.getCategory()).removeTask(task);
-		} 
-//		task.setCategory(null);
-//		if (!taskList.getRootTasks().contains(task))
+		}
+		// task.setCategory(null);
+		// if (!taskList.getRootTasks().contains(task))
 		taskList.internalAddRootTask(task);
 		for (ITaskChangeListener listener : changeListeners)
 			listener.taskListModified();
 	}
 
 	public void moveToCategory(TaskCategory category, ITask task) {
-		if(category.equals(taskList.getRootCategory())) {
+		if (category.equals(taskList.getRootCategory())) {
 			moveToRoot(task);
 		} else {
-			taskList.removeFromRoot(task);	
-		}		
+			taskList.removeFromRoot(task);
+		}
 		if (task.getCategory() instanceof TaskCategory) {
 			((TaskCategory) task.getCategory()).removeTask(task);
 		}
@@ -410,7 +479,7 @@ public class TaskListManager {
 	public void removeActivityListener(ITaskActivityListener listener) {
 		activityListeners.remove(listener);
 	}
-	
+
 	/**
 	 * Deactivates previously active tasks if not in multiple active mode.
 	 * 
@@ -450,7 +519,7 @@ public class TaskListManager {
 			listener.localInfoChanged(task);
 		}
 	}
-	
+
 	public void notifyRepositoryInfoChanged(ITask task) {
 		for (ITaskChangeListener listener : new ArrayList<ITaskChangeListener>(changeListeners)) {
 			listener.repositoryInfoChanged(task);
@@ -473,7 +542,6 @@ public class TaskListManager {
 		return taskList.getTaskForHandle(handle, lookInArchives);
 	}
 
-	
 	public boolean isTaskListInitialized() {
 		return taskListInitialized;
 	}
@@ -496,7 +564,8 @@ public class TaskListManager {
 	public void markComplete(ITask task, boolean complete) {
 		task.setCompleted(complete);
 		for (ITaskChangeListener listener : new ArrayList<ITaskChangeListener>(changeListeners)) {
-			listener.localInfoChanged(task); // to ensure comleted filter notices
+			listener.localInfoChanged(task); // to ensure comleted filter
+			// notices
 		}
 	}
 
@@ -516,5 +585,20 @@ public class TaskListManager {
 			}
 		}
 		return false;
-	} 
+	}
+
+	/** TODO: Need to migrate to use of this method for 
+	 *  setting of reminders
+	 */
+	public void setReminder(ITask task, Date reminderDate) {
+		task.setReminderDate(reminderDate);
+		task.setReminded(false);
+		if (reminderDate == null) {
+			tasksWithReminders.remove(task);
+		} else {
+			tasksWithReminders.add(task);
+		}
+		parseFutureReminders();
+		notifyLocalInfoChanged(task);
+	}
 }
