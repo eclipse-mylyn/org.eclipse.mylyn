@@ -189,11 +189,13 @@ public class TaskListManager {
 		nextWeek.clear();
 		GregorianCalendar tempCalendar = new GregorianCalendar();
 		for (ITask task : tasksWithReminders) {
-			tempCalendar.setTime(task.getReminderDate());
-			if (nextWeek.includes(tempCalendar)) {
-				nextWeek.addTask(new DateRangeActivityDelegate(nextWeek, task, tempCalendar, tempCalendar));
-			} else if (future.includes(tempCalendar)) {
-				future.addTask(new DateRangeActivityDelegate(future, task, tempCalendar, tempCalendar));
+			if (task.getReminderDate() != null) {
+				tempCalendar.setTime(task.getReminderDate());
+				if (nextWeek.includes(tempCalendar)) {
+					nextWeek.addTask(new DateRangeActivityDelegate(nextWeek, task, tempCalendar, tempCalendar));
+				} else if (future.includes(tempCalendar)) {
+					future.addTask(new DateRangeActivityDelegate(future, task, tempCalendar, tempCalendar));
+				}
 			}
 		}		
 	}
