@@ -20,7 +20,9 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
+import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
+import org.eclipse.mylar.provisional.tasklist.Task;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -105,9 +107,10 @@ public class TaskListToolTipHandler {
 
 	protected String getToolTipText(Object object) {
 		ITaskListElement element = getTaskListElement(object);
+		String tooltip = "";
+		String priority = "";
 		if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
-			String tooltip = "";
 			if (query.getHits().size() == 1) {
 				tooltip += "1 hit";
 			} else {
@@ -118,23 +121,38 @@ public class TaskListToolTipHandler {
 			}
 			tooltip += formatLastRefreshTime(query.getLastRefresh());
 			return tooltip;
-		} else if (element instanceof AbstractRepositoryTask || element instanceof AbstractQueryHit) {
+		}
+		if (element instanceof ITask || element instanceof AbstractQueryHit) {
+			ITask task = null;
+			if (element instanceof ITask) {
+				task = (ITask)element;
+			} else {
+				task = ((AbstractQueryHit)element).getCorrespondingTask();
+			}
+			if (task != null) {
+				priority += "\nPriority: " + Task.PriorityLevel.fromString(task.getPriority()).getDescription();
+			}
+		}
+		
+		if (element instanceof AbstractRepositoryTask || element instanceof AbstractQueryHit) {
 			AbstractRepositoryTask repositoryTask;
 			if (element instanceof AbstractQueryHit) {
 				repositoryTask = ((AbstractQueryHit)element).getCorrespondingTask();
 			} else {
 				repositoryTask = (AbstractRepositoryTask) element;
 			}
-			String toolTip = ((ITaskListElement)element).getDescription();
+			tooltip += ((ITaskListElement)element).getDescription();
+			tooltip += priority;
 			if (repositoryTask != null) {
 				Date lastRefresh = repositoryTask.getLastRefresh();
 				if (lastRefresh != null) {
-					toolTip += formatLastRefreshTime(repositoryTask.getLastRefresh());
+					tooltip += formatLastRefreshTime(repositoryTask.getLastRefresh());
 				}
 			}
-			return toolTip;	
+			return tooltip;	
 		} else if (element != null) {
-			return ((ITaskListElement) element).getDescription();
+			tooltip += ((ITaskListElement) element).getDescription();
+			return tooltip + priority;
 		} else if (object instanceof Control) {
 			return (String) ((Control) object).getData("TIP_TEXT");
 		}
@@ -252,31 +270,6 @@ public class TaskListToolTipHandler {
 				tipShell.setVisible(true);
 			}
 		});
-		// /*
-		// * Trap F1 Help to pop up a custom help box
-		// */
-		// control.addHelpListener(new HelpListener() {
-		// public void helpRequested(HelpEvent event) {
-		// if (tipWidget == null)
-		// return;
-		// Object help = getToolTipHelp(tipWidget);
-		// if (help == null)
-		// return;
-		// if (help.getClass() != String.class) {
-		// return;
-		// }
-		// if (tipShell.isVisible()) {
-		// tipShell.setVisible(false);
-		// Shell helpShell = new Shell(parentShell, SWT.SHELL_TRIM);
-		// helpShell.setLayout(new FillLayout());
-		// Label label = new Label(helpShell, SWT.NONE);
-		// label.setText((String) help);
-		// helpShell.pack();
-		// setHoverLocation(helpShell, tipPosition);
-		// helpShell.open();
-		// }
-		// }
-		// });
 	}
 
 	/**
@@ -296,3 +289,30 @@ public class TaskListToolTipHandler {
 		shell.setBounds(shellBounds);
 	}
 }
+
+
+// /*
+// * Trap F1 Help to pop up a custom help box
+// */
+// control.addHelpListener(new HelpListener() {
+// public void helpRequested(HelpEvent event) {
+// if (tipWidget == null)
+// return;
+// Object help = getToolTipHelp(tipWidget);
+// if (help == null)
+// return;
+// if (help.getClass() != String.class) {
+// return;
+// }
+// if (tipShell.isVisible()) {
+// tipShell.setVisible(false);
+// Shell helpShell = new Shell(parentShell, SWT.SHELL_TRIM);
+// helpShell.setLayout(new FillLayout());
+// Label label = new Label(helpShell, SWT.NONE);
+// label.setText((String) help);
+// helpShell.pack();
+// setHoverLocation(helpShell, tipPosition);
+// helpShell.open();
+// }
+// }
+// });
