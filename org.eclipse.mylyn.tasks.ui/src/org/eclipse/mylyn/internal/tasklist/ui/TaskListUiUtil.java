@@ -22,6 +22,8 @@ import org.eclipse.mylar.internal.tasklist.ui.editors.TaskEditorInput;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.provisional.tasklist.Task;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart; 
@@ -36,6 +38,26 @@ import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
  */
 public class TaskListUiUtil {
 
+	/**
+	 * TODO: move
+	 */
+	public static Image getImageForPriority(Task.PriorityLevel priorityLevel) {
+		switch (priorityLevel) {
+		case P1: 
+			return TaskListImages.getImage(TaskListImages.PRIORITY_1);
+		case P2:
+			return TaskListImages.getImage(TaskListImages.PRIORITY_2);
+		case P3:
+			return TaskListImages.getImage(TaskListImages.PRIORITY_3);
+		case P4:
+			return TaskListImages.getImage(TaskListImages.PRIORITY_4);
+		case P5:
+			return TaskListImages.getImage(TaskListImages.PRIORITY_5);
+		default:
+			return null;
+		}
+	}
+	
 	public static void closeEditorInActivePage(ITask task) {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (page == null) {

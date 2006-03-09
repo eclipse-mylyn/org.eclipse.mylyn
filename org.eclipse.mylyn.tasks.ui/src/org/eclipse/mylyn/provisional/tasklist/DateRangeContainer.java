@@ -30,9 +30,9 @@ public class DateRangeContainer implements ITaskContainer {
 
 	private Map<DateRangeActivityDelegate, Long> taskToDuration = new HashMap<DateRangeActivityDelegate, Long>();
 
-	private GregorianCalendar startDate;
+	private Calendar startDate;
 
-	private GregorianCalendar endDate;
+	private Calendar endDate;
 
 	private long totalElapsed = 0;
 
@@ -41,6 +41,12 @@ public class DateRangeContainer implements ITaskContainer {
 	private String description;
 
 	public DateRangeContainer(GregorianCalendar startDate, GregorianCalendar endDate, String description) {
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.setDescription(description);
+	}
+	
+	public DateRangeContainer(Calendar startDate, Calendar endDate, String description) {
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.setDescription(description);
@@ -73,17 +79,17 @@ public class DateRangeContainer implements ITaskContainer {
 	}
 
 	public void addTask(DateRangeActivityDelegate taskWrapper) {
-		totalElapsed += taskWrapper.getEnd().getTimeInMillis() - taskWrapper.getStart().getTimeInMillis();
-		// totalEstimated += taskWrapper.getTask().getEstimateTimeHours();
+		long taskDuration = taskWrapper.getEnd().getTimeInMillis() - taskWrapper.getStart().getTimeInMillis()
+				- taskWrapper.getInactivity();
+		if(taskDuration < 0) taskDuration = 0;
+		totalElapsed += taskDuration;
 		children.add(taskWrapper);
 		if (taskToDuration.containsKey(taskWrapper)) {
 			long previous = taskToDuration.get(taskWrapper);
-			long newDuration = previous
-					+ (taskWrapper.getEnd().getTimeInMillis() - taskWrapper.getStart().getTimeInMillis());
+			long newDuration = previous + taskDuration;
 			taskToDuration.put(taskWrapper, newDuration);
 		} else {
-			taskToDuration.put(taskWrapper, taskWrapper.getEnd().getTimeInMillis()
-					- taskWrapper.getStart().getTimeInMillis());
+			taskToDuration.put(taskWrapper, taskDuration);
 		}
 	}
 

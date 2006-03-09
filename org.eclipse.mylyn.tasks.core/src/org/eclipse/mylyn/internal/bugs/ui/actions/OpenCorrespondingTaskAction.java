@@ -87,7 +87,6 @@ public class OpenCorrespondingTaskAction implements IViewActionDelegate {
 	}
 
 	private String getRepositoryUrlFromComment(String comment) {
-		System.err.println(">>> " + comment);
 		int index = comment.indexOf(BugzillaRepositoryUtil.POST_ARGS_SHOW_BUG);
 		if (index != -1) {
 			return comment.substring(0, index);

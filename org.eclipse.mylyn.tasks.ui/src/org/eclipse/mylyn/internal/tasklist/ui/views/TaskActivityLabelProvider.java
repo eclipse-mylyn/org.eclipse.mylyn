@@ -23,10 +23,12 @@ import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
 import org.eclipse.mylar.provisional.tasklist.DateRangeActivityDelegate;
 import org.eclipse.mylar.provisional.tasklist.DateRangeContainer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
+import org.eclipse.mylar.provisional.tasklist.Task.PriorityLevel;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -37,13 +39,15 @@ import org.eclipse.swt.graphics.Image;
 public class TaskActivityLabelProvider extends DecoratingLabelProvider implements ITableLabelProvider, IColorProvider,
 		IFontProvider {
 
+	private static final String UNITS_HOURS = " hours";
+
 	private static final String NO_MINUTES = "0 minutes";
 
-	private Color parentBackgroundColor;
+	private Color categoryBackgroundColor;
 
 	public TaskActivityLabelProvider(ILabelProvider provider, ILabelDecorator decorator, Color parentBacground) {
 		super(provider, decorator);
-		this.parentBackgroundColor = parentBacground;
+		this.categoryBackgroundColor = parentBacground;
 	}
 
 	public Image getColumnImage(Object element, int columnIndex) {
@@ -51,28 +55,30 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 			if (element instanceof DateRangeContainer) {
 				return TaskListImages.getImage(TaskListImages.CALENDAR);
 			} else if (element instanceof DateRangeActivityDelegate) {
-				return super.getImage(((DateRangeActivityDelegate)element).getCorrespondingTask());
+				return super.getImage(((DateRangeActivityDelegate) element).getCorrespondingTask());
 			} else {
 				return super.getImage(element);
 			}
-		} else {
-			return null;
+		} else if (columnIndex == 1) {
+			if (element instanceof DateRangeActivityDelegate) {
+				DateRangeActivityDelegate taskElement = (DateRangeActivityDelegate) element;
+				return TaskListUiUtil.getImageForPriority(PriorityLevel.fromString(taskElement.getPriority()));
+			}
 		}
+		return null;
 	}
 
 	public String getColumnText(Object element, int columnIndex) {
 		if (element instanceof DateRangeActivityDelegate) {
 			DateRangeActivityDelegate activityDelegate = (DateRangeActivityDelegate) element;
 			ITask task = activityDelegate.getCorrespondingTask();
-			switch (columnIndex) {
-			case 1:
-				return task.getPriority();
+			switch (columnIndex) {			
 			case 2:
 				return task.getDescription();
 			case 3:
 				return DateUtil.getFormattedDurationShort(activityDelegate.getContainer().getElapsed(activityDelegate));
 			case 4:
-				return task.getEstimateTimeHours() + " hours";
+				return task.getEstimateTimeHours() + UNITS_HOURS;
 			case 5:
 				if (task.getReminderDate() != null) {
 					return DateFormat.getDateInstance(DateFormat.MEDIUM).format(task.getReminderDate());
@@ -86,7 +92,6 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 			case 2:
 				return taskCategory.getDescription();
 			case 3:
-
 				String elapsedTimeString = NO_MINUTES;
 				try {
 					elapsedTimeString = DateUtil.getFormattedDurationShort(taskCategory.getTotalElapsed());
@@ -97,7 +102,7 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 				}
 				return elapsedTimeString;
 			case 4:
-				return taskCategory.getTotalEstimated() + " hours";
+				return taskCategory.getTotalEstimated() + UNITS_HOURS;
 			}
 		}
 		return null;
@@ -106,7 +111,7 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 	@Override
 	public Color getBackground(Object element) {
 		if (element instanceof ITaskContainer) {
-			return parentBackgroundColor;
+			return categoryBackgroundColor;
 		} else {
 			return super.getBackground(element);
 		}
@@ -123,5 +128,9 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 			return super.getFont(durationDelegate.getCorrespondingTask());
 		}
 		return super.getFont(element);
+	}
+
+	public void setCategoryBackgroundColor(Color categoryBackgroundColor) {
+		this.categoryBackgroundColor = categoryBackgroundColor;
 	}
 }

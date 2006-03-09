@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.ITableFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
@@ -28,7 +29,6 @@ import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
-import org.eclipse.mylar.provisional.tasklist.Task;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.provisional.tasklist.Task.PriorityLevel;
 import org.eclipse.swt.graphics.Color;
@@ -48,26 +48,8 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 		this.categoryBackgroundColor = parentBacground;
 	}
 	
-	public Image getImageForPriority(Task.PriorityLevel priorityLevel) {
-		switch (priorityLevel) {
-		case P1: 
-			return TaskListImages.getImage(TaskListImages.PRIORITY_1);
-		case P2:
-			return TaskListImages.getImage(TaskListImages.PRIORITY_2);
-		case P3:
-			return TaskListImages.getImage(TaskListImages.PRIORITY_3);
-		case P4:
-			return TaskListImages.getImage(TaskListImages.PRIORITY_4);
-		case P5:
-			return TaskListImages.getImage(TaskListImages.PRIORITY_5);
-		default:
-			return null;
-		}
-	}
-	
 	public String getColumnText(Object obj, int columnIndex) {
 		if (obj instanceof ITaskListElement) {
-//			ITaskListElement element = (ITaskListElement) obj;
 			switch (columnIndex) {
 			case 0:
 				return null;
@@ -77,11 +59,6 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 				return null;
 			case 3:
 				return null;
-//				if (element instanceof ITaskContainer || element instanceof AbstractRepositoryQuery) {
-//					return null;
-//				} else {
-//					return element.getPriority();
-//				}
 			case 4:
 				return super.getText(obj);
 			}
@@ -120,7 +97,7 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 		} else if (columnIndex == 2) {
 			if (element instanceof ITaskListElement && !(element instanceof ITaskContainer)) {
 				ITaskListElement taskElement = (ITaskListElement) element;
-				return getImageForPriority(PriorityLevel.fromString(taskElement.getPriority()));
+				return TaskListUiUtil.getImageForPriority(PriorityLevel.fromString(taskElement.getPriority()));
 			}
 		} else if (columnIndex == 3) {
 			AbstractRepositoryTask repositoryTask = null;
@@ -176,7 +153,6 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 
 		return super.getBackground(element);
 	}
-
 	
 	public void setCategoryBackgroundColor(Color parentBackgroundColor) {
 		this.categoryBackgroundColor = parentBackgroundColor;

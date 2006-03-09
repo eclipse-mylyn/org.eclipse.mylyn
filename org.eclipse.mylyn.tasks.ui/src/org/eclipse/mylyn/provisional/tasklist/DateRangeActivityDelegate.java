@@ -29,11 +29,18 @@ public class DateRangeActivityDelegate implements ITask {
 
 	private DateRangeContainer parent;
 
+	private long inactivity = 0;
+	
 	public DateRangeActivityDelegate(DateRangeContainer parent, ITask task, Calendar start, Calendar end) {
+		this(parent, task, start, end, 0);
+	}
+	
+	public DateRangeActivityDelegate(DateRangeContainer parent, ITask task, Calendar start, Calendar end, long inactivity) {
 		this.task = task;
 		this.start = start;
 		this.end = end;
 		this.parent = parent;
+		this.inactivity = inactivity;
 	}
 
 	public Calendar getEnd() {
@@ -44,6 +51,10 @@ public class DateRangeActivityDelegate implements ITask {
 		return start;
 	}
 
+	public long getInactivity() {
+		return inactivity;
+	}
+	
 	public ITask getCorrespondingTask() {
 		return task;
 	}

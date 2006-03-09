@@ -49,6 +49,7 @@ import org.eclipse.mylar.internal.tasklist.ui.TaskCompleteFilter;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListPatternFilter;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.TaskPriorityFilter;
 import org.eclipse.mylar.internal.tasklist.ui.actions.CollapseAllAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.CopyDescriptionAction;
@@ -1356,7 +1357,7 @@ public class TaskListView extends ViewPart {
 	public Image[] getPirorityImages() {
 		Image[] images = new Image[Task.PriorityLevel.values().length];
 		for (int i = 0; i < Task.PriorityLevel.values().length; i++) {
-			images[i] = taskListTableLabelProvider.getImageForPriority(Task.PriorityLevel.values()[i]);
+			images[i] = TaskListUiUtil.getImageForPriority(Task.PriorityLevel.values()[i]);
 		}
 		return images;
 	}

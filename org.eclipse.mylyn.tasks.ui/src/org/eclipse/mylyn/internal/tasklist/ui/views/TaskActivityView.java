@@ -17,6 +17,8 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -32,6 +34,7 @@ import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.internal.core.dt.MylarWebRef;
 import org.eclipse.mylar.internal.tasklist.planner.ui.ReminderCellEditor;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasklist.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.DateRangeActivityDelegate;
@@ -49,10 +52,12 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * @author Rob Elves
@@ -69,7 +74,7 @@ public class TaskActivityView extends ViewPart {
 
 	private String[] columnNames = new String[] { " ", " !", "Description", "Elapsed", "Estimated", "Reminder" };
 
-	private int[] columnWidths = new int[] { 60, 30, 340, 90, 90, 100 };
+	private int[] columnWidths = new int[] { 60, 12, 160, 60, 70, 100 };
 
 	private TreeColumn[] columns;
 
@@ -79,6 +84,18 @@ public class TaskActivityView extends ViewPart {
 
 	private TaskActivityContentProvider taskActivityTableContentProvider;
 
+	private IThemeManager themeManager;
+	
+	private final IPropertyChangeListener THEME_CHANGE_LISTENER = new IPropertyChangeListener() {
+		public void propertyChange(PropertyChangeEvent event) {
+			if (event.getProperty().equals(IThemeManager.CHANGE_CURRENT_THEME)
+					|| event.getProperty().equals(TaskListColorsAndFonts.THEME_COLOR_ID_TASKLIST_CATEGORY)) {
+				taskHistoryTreeLabelProvider.setCategoryBackgroundColor(themeManager.getCurrentTheme().getColorRegistry().get(TaskListColorsAndFonts.THEME_COLOR_ID_TASKLIST_CATEGORY));
+				refresh();
+			} 
+		}
+	};
+	
 	/**
 	 * TODO: need lazier refresh policy.
 	 */
@@ -122,18 +139,6 @@ public class TaskActivityView extends ViewPart {
 		public void taskListModified() {
 			// ignore
 		}
-
-		private void refresh() {
-			if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (getViewer().getControl() != null && !getViewer().getControl().isDisposed()) {
-							TaskActivityView.this.treeViewer.refresh(true);
-						}
-					}
-				});
-			}
-		}
 	};
 
 	public static TaskActivityView openInActivePerspective() {
@@ -159,6 +164,9 @@ public class TaskActivityView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
+		themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+		themeManager.addPropertyChangeListener(THEME_CHANGE_LISTENER);
+		
 		int treeStyle = SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION;
 		treeViewer = new TreeViewer(parent, treeStyle);
 
@@ -196,8 +204,12 @@ public class TaskActivityView extends ViewPart {
 			});
 		}
 
+		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
+				TaskListColorsAndFonts.THEME_COLOR_ID_TASKLIST_CATEGORY);
+		
 		taskHistoryTreeLabelProvider = new TaskActivityLabelProvider(new TaskElementLabelProvider(), PlatformUI
-				.getWorkbench().getDecoratorManager().getLabelDecorator(), parent.getBackground());
+				.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground);
 
 		getViewer().setSorter(new TaskActivityTableSorter());
 		taskActivityTableContentProvider = new TaskActivityContentProvider(MylarTaskListPlugin.getTaskListManager());
@@ -211,7 +223,7 @@ public class TaskActivityView extends ViewPart {
 		hookOpenAction();
 
 	}
-
+	
 	@MylarWebRef(name = "Drag and drop article", url = "http://www.eclipse.org/articles/Article-Workbench-DND/drag_drop.html")
 	private void initDrop() {
 		Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
@@ -304,9 +316,17 @@ public class TaskActivityView extends ViewPart {
 		return treeViewer;
 	}
 
-	public void refresh() {
-		treeViewer.refresh();
-	}
+	private void refresh() {
+		if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					if (getViewer().getControl() != null && !getViewer().getControl().isDisposed()) {
+						TaskActivityView.this.treeViewer.refresh(true);
+					}
+				}
+			});
+		}
+	}	
 
 	public ITask getSelectedTask() {
 		ISelection selection = getViewer().getSelection();
@@ -467,5 +487,4 @@ public class TaskActivityView extends ViewPart {
 			return 0;
 		}
 	}
-
 }
