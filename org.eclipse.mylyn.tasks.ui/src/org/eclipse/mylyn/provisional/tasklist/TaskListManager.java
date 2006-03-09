@@ -665,14 +665,7 @@ public class TaskListManager {
 	}
 
 	public boolean isActiveThisWeek(ITask task) {
-		for (DateRangeContainer container : dateRangeContainers) {
-			if (container.isPresent()) {
-				if (container.getChildren().contains(task)) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return activityThisWeek.getChildren().contains(task);
 	}
 
 	/**
