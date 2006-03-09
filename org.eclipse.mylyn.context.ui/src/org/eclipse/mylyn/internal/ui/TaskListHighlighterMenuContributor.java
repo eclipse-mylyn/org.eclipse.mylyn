@@ -11,8 +11,6 @@
 
 package org.eclipse.mylar.internal.ui;
 
-import java.util.Iterator;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -37,8 +35,7 @@ public class TaskListHighlighterMenuContributor implements IDynamicSubMenuContri
 		final ITaskListElement selectedElement = selection;
 		final TaskListView taskListView = view;
 		final MenuManager subMenuManager = new MenuManager(CHOOSE_HIGHLIGHTER);
-		for (Iterator<Highlighter> it = MylarUiPlugin.getDefault().getHighlighters().iterator(); it.hasNext();) {
-			final Highlighter highlighter = it.next();
+		for (final Highlighter highlighter : MylarUiPlugin.getDefault().getHighlighters()) {
 			if (selectedElement instanceof ITaskListElement) {
 				Action action = new Action() {
 					@Override
@@ -51,21 +48,11 @@ public class TaskListHighlighterMenuContributor implements IDynamicSubMenuContri
 								task = ((AbstractQueryHit) selectedElement).getCorrespondingTask();
 							}
 						}
-
-						// if (!task.isActive()) {
-						// MessageDialog.openError(PlatformUI.getWorkbench()
-						// .getActiveWorkbenchWindow().getShell(), "Mylar
-						// Highlighting",
-						// "Please activate the task before setting a
-						// highlighter.");
-						// return;
-						// } else {
 						MylarUiPlugin.getDefault().setHighlighterMapping(task.getHandleIdentifier(),
 								highlighter.getName());
 						taskListView.getViewer().refresh();
 						MylarPlugin.getContextManager().notifyPostPresentationSettingsChange(
 								IMylarContextListener.UpdateKind.HIGHLIGHTER);
-						// }
 					}
 				};
 				if (highlighter.isGradient()) {
