@@ -796,10 +796,10 @@ public class MylarContextManager {
 		} else {
 			if (!forceLandmark && (originalValue > MylarContextManager.getScalingFactors().getLandmark())) {
 				changeValue = 0;
-			} else { // make it a landmark
+			} else { // make it a landmark by setting interest to 2 x landmark interest
 				if (element != null && bridge.canBeLandmark(element.getHandleIdentifier())
 						&& !bridge.getContentType(element.getHandleIdentifier()).equals(MylarPlugin.CONTENT_TYPE_ANY)) {
-					changeValue = MylarContextManager.getScalingFactors().getLandmark() - originalValue + 1;
+					changeValue = (2*MylarContextManager.getScalingFactors().getLandmark()) - originalValue + 1;
 				} else {
 					// TODO: move this to UI?
 					MessageDialog
