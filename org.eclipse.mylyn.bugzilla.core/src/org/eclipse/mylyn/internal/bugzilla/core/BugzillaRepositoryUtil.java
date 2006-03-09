@@ -59,7 +59,7 @@ public class BugzillaRepositoryUtil {
 
 	public static final String POST_ARGS_SHOW_BUG = "/show_bug.cgi?id=";
 
-	private static final String POST_ARGS_LOGIN = "&GoAheadAndLogIn=1&Bugzilla_login=";
+	private static final String POST_ARGS_LOGIN = "GoAheadAndLogIn=1&Bugzilla_login=";
 
 	public static BugReport getBug(String repositoryUrl, int id) throws IOException, MalformedURLException,
 			LoginException {
@@ -83,7 +83,7 @@ public class BugzillaRepositoryUtil {
 			String url = repositoryUrl + POST_ARGS_SHOW_BUG + id;
 
 			if (repository.hasCredentials()) {
-				url += POST_ARGS_LOGIN + URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8)
+				url += "&"+ POST_ARGS_LOGIN + URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8)
 						+ POST_ARGS_PASSWORD
 						+ URLEncoder.encode(repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
 			}
@@ -354,7 +354,7 @@ public class BugzillaRepositoryUtil {
 		String url = repository.getUrl().toExternalForm() + POST_ARGS_SHOW_BUG + id;
 		try {
 			if (repository.hasCredentials()) {
-				url += POST_ARGS_LOGIN + URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8)
+				url += "&"+POST_ARGS_LOGIN + URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8)
 						+ POST_ARGS_PASSWORD
 						+ URLEncoder.encode(repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
 			}
@@ -416,8 +416,9 @@ public class BugzillaRepositoryUtil {
 	 * 
 	 * @param monitor
 	 *            A reference to a progress monitor
+	 * @throws IOException 
 	 */
-	public static void updateQueryOptions(TaskRepository repository, IProgressMonitor monitor) throws LoginException {
+	public static void updateQueryOptions(TaskRepository repository, IProgressMonitor monitor) throws LoginException, IOException {
 
 		String repositoryUrl = repository.getUrl().toExternalForm();
 		BugzillaQueryPageParser parser = new BugzillaQueryPageParser(repository, monitor);

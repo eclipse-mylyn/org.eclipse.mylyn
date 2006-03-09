@@ -252,8 +252,10 @@ public class BugzillaReportSubmitForm {
 
 		// add the summary to the bug post
 		form.add("short_desc", model.getSummary());
-
-		if (repository.getVersion().equals(BugzillaServerVersion.SERVER_220.toString())) {
+		
+		BugzillaServerVersion bugzillaServerVersion = IBugzillaConstants.BugzillaServerVersion.fromString(repository.getVersion());
+		if (bugzillaServerVersion != null && bugzillaServerVersion.compareTo(BugzillaServerVersion.SERVER_220) >= 0) {
+//		if (repository.getVersion().equals(BugzillaServerVersion.SERVER_220.toString())) {
 			form.add("bug_status", "NEW");
 		}
 
@@ -620,8 +622,9 @@ public class BugzillaReportSubmitForm {
 	 * properly in bugzilla
 	 */
 	private static String formatTextToLineWrap(String origText, TaskRepository repository) {
-		
-		if (repository.getVersion().equals(BugzillaServerVersion.SERVER_220.toString())) {
+		BugzillaServerVersion bugzillaServerVersion = IBugzillaConstants.BugzillaServerVersion.fromString(repository.getVersion());
+		if (bugzillaServerVersion != null && bugzillaServerVersion.compareTo(BugzillaServerVersion.SERVER_220) >= 0) {
+//		if (repository.getVersion().equals(BugzillaServerVersion.SERVER_220.toString())) {
 			return origText;
 		}
 

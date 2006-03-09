@@ -36,7 +36,7 @@ public class BugzillaSearchEngineTest extends TestCase {
 
 	private static final String MAX_HITS = "100";
 	private static final String QUERY_NAME = "Query Page Name";
-	private static final String BUG_DESC_SUBSTRING_SEARCH = "/buglist.cgi?short_desc_type=substring&amp;short_desc=";//search-match-test&amp";
+	private static final String BUG_DESC_SUBSTRING_SEARCH = "/buglist.cgi?short_desc_type=allwordssubstr&short_desc=";//search-match-test&amp";
 	private static final String SEARCH_DESCRIPTION = "search-match-test";
 	private static final int NUM_EXPECTED_HITS = 2;
 	private static final int NUM_REPOSITORIES = 0;
@@ -56,7 +56,8 @@ public class BugzillaSearchEngineTest extends TestCase {
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(
 				IBugzillaConstants.TEST_BUGZILLA_216_URL), IBugzillaConstants.BugzillaServerVersion.SERVER_216.toString());
 		MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
-		assertEquals(NUM_EXPECTED_HITS, runQuery(IBugzillaConstants.TEST_BUGZILLA_216_URL, SEARCH_DESCRIPTION).size());		
+		List<AbstractQueryHit> hits = runQuery(IBugzillaConstants.TEST_BUGZILLA_216_URL, SEARCH_DESCRIPTION);
+		assertEquals(NUM_EXPECTED_HITS, hits.size());		
 	}
 	
 	public void testSearching218() throws MalformedURLException {
@@ -78,6 +79,14 @@ public class BugzillaSearchEngineTest extends TestCase {
 				IBugzillaConstants.TEST_BUGZILLA_2201_URL), IBugzillaConstants.BugzillaServerVersion.SERVER_220.toString());
 		MylarTaskListPlugin.getRepositoryManager().addRepository(repository);		
 		assertEquals(NUM_EXPECTED_HITS, runQuery(IBugzillaConstants.TEST_BUGZILLA_2201_URL, SEARCH_DESCRIPTION).size());		
+	}
+	
+	public void testSearching222() throws MalformedURLException {
+		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(
+				IBugzillaConstants.TEST_BUGZILLA_222_URL), IBugzillaConstants.BugzillaServerVersion.SERVER_222.toString());
+		MylarTaskListPlugin.getRepositoryManager().addRepository(repository);		
+		List<AbstractQueryHit> hits = runQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL, SEARCH_DESCRIPTION);
+		assertEquals(NUM_EXPECTED_HITS, hits.size());		
 	}
 		
 	private List<AbstractQueryHit> runQuery(String repositoryURL, String SearchString) {

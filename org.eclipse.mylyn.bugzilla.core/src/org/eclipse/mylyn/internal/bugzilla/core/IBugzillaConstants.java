@@ -74,11 +74,13 @@ public interface IBugzillaConstants {
 	
 	/** Supported bugzilla repository versions */
 	static public enum BugzillaServerVersion {
-		SERVER_220, SERVER_218, SERVER_216;
+		SERVER_216, SERVER_218, SERVER_220, SERVER_222;
 
 		@Override
 		public String toString() {
 			switch (this) {
+			case SERVER_222:
+				return "2.22";
 			case SERVER_220:
 				return "2.20";
 			case SERVER_218:
@@ -88,6 +90,15 @@ public interface IBugzillaConstants {
 			default:
 				return "null";
 			}
+		}
+		
+		/** returns null if version string unknown**/
+		static public BugzillaServerVersion fromString(String version) {
+			if(version.equals(SERVER_222.toString())) return SERVER_222;
+			if(version.equals(SERVER_220.toString())) return SERVER_220;
+			if(version.equals(SERVER_218.toString())) return SERVER_218;
+			if(version.equals(SERVER_216.toString())) return SERVER_216;
+			return null;
 		}
 	}
 	
@@ -129,7 +140,7 @@ public interface IBugzillaConstants {
 	static final String TEST_BUGZILLA_218_URL = "http://mylar.eclipse.org/bugs218";
 	static final String TEST_BUGZILLA_220_URL = "http://mylar.eclipse.org/bugs220";
 	static final String TEST_BUGZILLA_2201_URL = "http://mylar.eclipse.org/bugs2201";
-	
+	static final String TEST_BUGZILLA_222_URL = "http://mylar.eclipse.org/bugs222";
 	// Default values for keys
 
 	static final String[] DEFAULT_STATUS_VALUES = { "Unconfirmed", "New", "Assigned", "Reopened", "Resolved",

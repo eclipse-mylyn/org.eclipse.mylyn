@@ -242,7 +242,9 @@ public class BugzillaSearchEngine {
 					if (matcher.find()) {
 						Pattern regularExpression;
 						
-						if (repository.getVersion().equals(BugzillaServerVersion.SERVER_220.toString())) {
+						BugzillaServerVersion bugzillaServerVersion = IBugzillaConstants.BugzillaServerVersion.fromString(repository.getVersion());
+						if (bugzillaServerVersion != null && bugzillaServerVersion.compareTo(BugzillaServerVersion.SERVER_220) >= 0) {
+//						if (repository.getVersion().equals(BugzillaServerVersion.SERVER_220.toString())) {
 							regularExpression = reValueBugzilla220;
 						} else {
 							regularExpression = reValue;

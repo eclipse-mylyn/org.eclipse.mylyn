@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui.wizard;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -131,6 +132,12 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 									"Login Error",
 									"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
 					BugzillaPlugin.log(exception);
+				} catch (IOException exception) {
+					MessageDialog
+					.openError(
+							null,
+							"Connection Error",
+							exception.getMessage()+"\nPlease check your settings in the bugzilla preferences. ");
 				} finally {
 					monitor.done();
 					monitorDialog.close();

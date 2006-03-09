@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui.search;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -1198,7 +1199,13 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 							null,
 							"Login Error",
 							"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
-			BugzillaPlugin.log(exception);
+			//BugzillaPlugin.log(exception);
+		} catch (IOException e) {
+			MessageDialog
+			.openError(
+					null,
+					"Connection Error",
+					e.getMessage()+"\nPlease check your settings in the bugzilla preferences. ");
 		} finally {
 			monitor.done();
 			monitorDialog.close();

@@ -89,7 +89,7 @@ public class BugzillaQueryPageParser {
 
 	private ArrayList<String> targetValues = new ArrayList<String>();
 
-	public BugzillaQueryPageParser(TaskRepository repository, IProgressMonitor monitor) throws LoginException {
+	public BugzillaQueryPageParser(TaskRepository repository, IProgressMonitor monitor) throws LoginException, IOException {
 		this.monitor = monitor;
 
 		// get the servers url
@@ -160,8 +160,9 @@ public class BugzillaQueryPageParser {
 
 	/**
 	 * Parse the data from the server for the query options
+	 * @throws IOException 
 	 */
-	private void parseDocument() throws LoginException {
+	private void parseDocument() throws LoginException, IOException {
 		try {
 			// if the operation has been cancelled already, return
 			if (monitor.isCanceled()) {
@@ -203,6 +204,8 @@ public class BugzillaQueryPageParser {
 			}
 
 		} catch (LoginException e) {
+			throw e;
+		} catch (IOException e) {
 			throw e;
 		} catch (Exception e) {
 			// if we can't connect, log the problem and save the exception to

@@ -48,6 +48,18 @@ public class BugzillaProductParserTest extends TestCase {
 	public BugzillaProductParserTest(String arg0) {
 		super(arg0);
 	}
+	
+	public void test222Products() throws Exception {
+
+		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(
+				IBugzillaConstants.TEST_BUGZILLA_222_URL), IBugzillaConstants.BugzillaServerVersion.SERVER_220.toString());
+
+		List<String> productList = BugzillaRepositoryUtil.getProductList(repository);
+		Iterator<String> itr = productList.iterator();
+		assertTrue(itr.hasNext());
+		assertEquals("TestProduct", "TestProduct", itr.next());
+
+	}
 
 	public void test2201Products() throws Exception {
 
