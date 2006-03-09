@@ -126,27 +126,27 @@ public class MylarChangeSetManager implements IMylarContextListener {
 		isEnabled = false;
 	}
 
-private void initContextChangeSets() {
-	ChangeSet[] sets = collector.getSets();
-	for (int i = 0; i < sets.length; i++) {
-		ChangeSet restoredSet = sets[i];
-		if (!(restoredSet instanceof MylarContextChangeSet)) {
-			String encodedTitle = restoredSet.getName();
-			String taskHandle = MylarContextChangeSet.getHandleFromPersistedTitle(encodedTitle);
-			ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(taskHandle, true);
-			if (task != null) {
-				try {
-					MylarContextChangeSet contextChangeSet = new MylarContextChangeSet(task, collector);
-					contextChangeSet.restoreResources(restoredSet.getResources());
-					collector.remove(restoredSet);
-					collector.add(contextChangeSet);
-				} catch (Exception e) {
-					MylarStatusHandler.fail(e, "could not restore change set", false);
+	private void initContextChangeSets() {
+		ChangeSet[] sets = collector.getSets();
+		for (int i = 0; i < sets.length; i++) {
+			ChangeSet restoredSet = sets[i];
+			if (!(restoredSet instanceof MylarContextChangeSet)) {
+				String encodedTitle = restoredSet.getName();
+				String taskHandle = MylarContextChangeSet.getHandleFromPersistedTitle(encodedTitle);
+				ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(taskHandle, true);
+				if (task != null) {
+					try {
+						MylarContextChangeSet contextChangeSet = new MylarContextChangeSet(task, collector);
+						contextChangeSet.restoreResources(restoredSet.getResources());
+						collector.remove(restoredSet);
+						collector.add(contextChangeSet);
+					} catch (Exception e) {
+						MylarStatusHandler.fail(e, "could not restore change set", false);
+					}
 				}
 			}
 		}
 	}
-}
 
 	/**
 	 * For testing.
