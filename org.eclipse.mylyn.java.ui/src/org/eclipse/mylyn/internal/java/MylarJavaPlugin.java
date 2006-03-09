@@ -16,7 +16,6 @@ import java.util.ResourceBundle;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
-import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
@@ -28,18 +27,12 @@ import org.eclipse.mylar.internal.java.ui.editor.ActiveFoldingListener;
 import org.eclipse.mylar.internal.java.ui.wizards.MylarPreferenceWizard;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IEditorRegistry;
-import org.eclipse.ui.IFileEditorMapping;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.WorkbenchPlugin;
-import org.eclipse.ui.internal.registry.EditorRegistry;
-import org.eclipse.ui.internal.registry.FileEditorMapping;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -253,36 +246,36 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 		return AbstractUIPlugin.imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
 
-	public static boolean isMylarEditorDefault() {
-		IEditorRegistry editorRegistry = WorkbenchPlugin.getDefault().getEditorRegistry();
-		IEditorDescriptor desc = editorRegistry.getDefaultEditor("*.java");
+//	public static boolean isMylarEditorDefault() {
+//		IEditorRegistry editorRegistry = WorkbenchPlugin.getDefault().getEditorRegistry();
+//		IEditorDescriptor desc = editorRegistry.getDefaultEditor("*.java");
+//
+//		return MylarJavaPrefConstants.MYLAR_JAVA_EDITOR_ID.equals(desc.getLabel());
+//	}
 
-		return MylarJavaPrefConstants.MYLAR_JAVA_EDITOR_ID.equals(desc.getLabel());
-	}
-
-	public static void setDefaultEditorForJavaFiles(boolean mylar) {
-
-		EditorRegistry editorRegistry = (EditorRegistry) WorkbenchPlugin.getDefault().getEditorRegistry();
-		// HACK: cast to allow save to be called
-		IFileEditorMapping[] array = WorkbenchPlugin.getDefault().getEditorRegistry().getFileEditorMappings();
-
-		// HACK: cast to allow set to be called
-		editorRegistry.setFileEditorMappings((FileEditorMapping[]) array);
-		String defaultEditor = editorRegistry.getDefaultEditor("*.java").getId();
-
-		if (mylar) {
-
-			if (!(defaultEditor.equals(MylarJavaPrefConstants.MYLAR_JAVA_EDITOR_ID))) {
-				editorRegistry.setDefaultEditor("*.java", MylarJavaPrefConstants.MYLAR_JAVA_EDITOR_ID);
-				editorRegistry.saveAssociations();
-			}
-		} else {
-			if (!(defaultEditor.equals(JavaUI.ID_CU_EDITOR))) {
-				editorRegistry.setDefaultEditor("*.java", JavaUI.ID_CU_EDITOR);
-				editorRegistry.saveAssociations();
-			}
-		}
-	}
+//	public static void setDefaultEditorForJavaFiles(boolean mylar) {
+//
+//		EditorRegistry editorRegistry = (EditorRegistry) WorkbenchPlugin.getDefault().getEditorRegistry();
+//		// HACK: cast to allow save to be called
+//		IFileEditorMapping[] array = WorkbenchPlugin.getDefault().getEditorRegistry().getFileEditorMappings();
+//
+//		// HACK: cast to allow set to be called
+//		editorRegistry.setFileEditorMappings((FileEditorMapping[]) array);
+//		String defaultEditor = editorRegistry.getDefaultEditor("*.java").getId();
+//
+//		if (mylar) {
+//
+//			if (!(defaultEditor.equals(MylarJavaPrefConstants.MYLAR_JAVA_EDITOR_ID))) {
+//				editorRegistry.setDefaultEditor("*.java", MylarJavaPrefConstants.MYLAR_JAVA_EDITOR_ID);
+//				editorRegistry.saveAssociations();
+//			}
+//		} else {
+//			if (!(defaultEditor.equals(JavaUI.ID_CU_EDITOR))) {
+//				editorRegistry.setDefaultEditor("*.java", JavaUI.ID_CU_EDITOR);
+//				editorRegistry.saveAssociations();
+//			}
+//		}
+//	}
 
 	public TypeHistoryManager getTypeHistoryManager() {
 		return typeHistoryManager;

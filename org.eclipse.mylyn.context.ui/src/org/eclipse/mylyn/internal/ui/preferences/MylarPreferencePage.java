@@ -726,11 +726,13 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 			autoOpenEditorsNum.setEmptyStringAllowed(false);
 		}
 		
-		String message = "See <a>''{0}''</a> for the workbench max open editors setting.";
-		new PreferenceLinkArea(group, SWT.NONE,
-				"org.eclipse.ui.preferencePages.Editors", message,
-				(IWorkbenchPreferenceContainer) getContainer(), null);
-		new Label(group, SWT.NULL);
+		if (getContainer() instanceof IWorkbenchPreferenceContainer) {
+			String message = "See <a>''{0}''</a> for the workbench max open editors setting.";
+			new PreferenceLinkArea(group, SWT.NONE,
+					"org.eclipse.ui.preferencePages.Editors", message,
+					(IWorkbenchPreferenceContainer) getContainer(), null);
+			new Label(group, SWT.NULL);
+		}
 		return;
 	}
 
