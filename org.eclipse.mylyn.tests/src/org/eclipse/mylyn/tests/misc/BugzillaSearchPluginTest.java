@@ -13,7 +13,6 @@
  */
 package org.eclipse.mylar.tests.misc;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +69,7 @@ public class BugzillaSearchPluginTest extends TestCase {
 	protected void setUp() throws Exception {
 		WorkspaceSetupHelper.setupWorkspace();
 		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
-				new URL(IBugzillaConstants.ECLIPSE_BUGZILLA_URL));
+				IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
 		MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
 
 		IJavaProject jp = WorkspaceSetupHelper.getJdtCoreDomProject();
