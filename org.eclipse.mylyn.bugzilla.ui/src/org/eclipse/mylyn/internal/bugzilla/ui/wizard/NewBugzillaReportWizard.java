@@ -97,7 +97,7 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 			return false;
 		} 
 
-		BugzillaTask newTask = new BugzillaTask(AbstractRepositoryTask.getHandle(repository.getUrl().toExternalForm(),
+		BugzillaTask newTask = new BugzillaTask(AbstractRepositoryTask.getHandle(repository.getUrl(),
 				bugId), "<bugzilla info>", true);
 		Object selectedObject = null;
 		if (TaskListView.getDefault() != null)

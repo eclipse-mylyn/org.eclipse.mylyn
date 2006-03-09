@@ -79,6 +79,17 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		return super.isPageComplete();
 	}
 
+	protected boolean isValidUrl(String name) {
+		if (name.startsWith(URL_PREFIX_HTTPS) || name.startsWith(URL_PREFIX_HTTP)) {
+			try {
+				new URL(name);
+				return true;
+			} catch (MalformedURLException e) {
+			}
+		}
+		return false;
+	}
+
 	protected void validateSettings() {
 		try {
 			URL serverURL = new URL(super.serverUrlEditor.getStringValue());

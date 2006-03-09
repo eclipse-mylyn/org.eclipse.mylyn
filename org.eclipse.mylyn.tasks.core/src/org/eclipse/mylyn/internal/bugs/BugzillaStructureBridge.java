@@ -124,7 +124,7 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 					public void run(IProgressMonitor monitor) {
 						monitor.beginTask("Downloading Bug# " + id, IProgressMonitor.UNKNOWN);
 						try {
-							result = BugzillaRepositoryUtil.getCurrentBug(repository.getUrl().toExternalForm(), id);
+							result = BugzillaRepositoryUtil.getCurrentBug(repository.getUrl(), id);
 							if (result != null) {
 								MylarBugsPlugin.getDefault().getCache().cache(bugHandle, result);
 							}

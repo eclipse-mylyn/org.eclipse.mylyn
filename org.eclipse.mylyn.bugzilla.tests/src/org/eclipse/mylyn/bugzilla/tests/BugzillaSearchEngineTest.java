@@ -12,7 +12,6 @@
 package org.eclipse.mylar.bugzilla.tests;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,37 +52,37 @@ public class BugzillaSearchEngineTest extends TestCase {
 	}
 
 	public void testSearching216() throws MalformedURLException {
-		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(
-				IBugzillaConstants.TEST_BUGZILLA_216_URL), IBugzillaConstants.BugzillaServerVersion.SERVER_216.toString());
+		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, 
+				IBugzillaConstants.TEST_BUGZILLA_216_URL, IBugzillaConstants.BugzillaServerVersion.SERVER_216.toString());
 		MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
 		List<AbstractQueryHit> hits = runQuery(IBugzillaConstants.TEST_BUGZILLA_216_URL, SEARCH_DESCRIPTION);
 		assertEquals(NUM_EXPECTED_HITS, hits.size());		
 	}
 	
 	public void testSearching218() throws MalformedURLException {
-		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(
-				IBugzillaConstants.TEST_BUGZILLA_218_URL), IBugzillaConstants.BugzillaServerVersion.SERVER_218.toString());
+		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
+				IBugzillaConstants.TEST_BUGZILLA_218_URL, IBugzillaConstants.BugzillaServerVersion.SERVER_218.toString());
 		MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
 		assertEquals(NUM_EXPECTED_HITS, runQuery(IBugzillaConstants.TEST_BUGZILLA_218_URL, SEARCH_DESCRIPTION).size());		
 	}
 		
 	public void testSearching220() throws MalformedURLException {
-		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(
-				IBugzillaConstants.TEST_BUGZILLA_220_URL), IBugzillaConstants.BugzillaServerVersion.SERVER_220.toString());
+		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
+				IBugzillaConstants.TEST_BUGZILLA_220_URL, IBugzillaConstants.BugzillaServerVersion.SERVER_220.toString());
 		MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
 		assertEquals(NUM_EXPECTED_HITS, runQuery(IBugzillaConstants.TEST_BUGZILLA_220_URL, SEARCH_DESCRIPTION).size());		
 	}
 		
 	public void testSearching2201() throws MalformedURLException {
-		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(
-				IBugzillaConstants.TEST_BUGZILLA_2201_URL), IBugzillaConstants.BugzillaServerVersion.SERVER_220.toString());
+		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
+				IBugzillaConstants.TEST_BUGZILLA_2201_URL, IBugzillaConstants.BugzillaServerVersion.SERVER_220.toString());
 		MylarTaskListPlugin.getRepositoryManager().addRepository(repository);		
 		assertEquals(NUM_EXPECTED_HITS, runQuery(IBugzillaConstants.TEST_BUGZILLA_2201_URL, SEARCH_DESCRIPTION).size());		
 	}
 	
 	public void testSearching222() throws MalformedURLException {
-		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(
-				IBugzillaConstants.TEST_BUGZILLA_222_URL), IBugzillaConstants.BugzillaServerVersion.SERVER_222.toString());
+		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, 
+				IBugzillaConstants.TEST_BUGZILLA_222_URL, IBugzillaConstants.BugzillaServerVersion.SERVER_222.toString());
 		MylarTaskListPlugin.getRepositoryManager().addRepository(repository);		
 		List<AbstractQueryHit> hits = runQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL, SEARCH_DESCRIPTION);
 		assertEquals(NUM_EXPECTED_HITS, hits.size());		
@@ -95,8 +94,8 @@ public class BugzillaSearchEngineTest extends TestCase {
 		assertNotNull(repository);		
 		
 		final BugzillaRepositoryQuery repositoryQuery = new BugzillaRepositoryQuery(
-				repository.getUrl().toExternalForm(), 
-				repository.getUrl().toExternalForm()+BUG_DESC_SUBSTRING_SEARCH+SearchString, 
+				repository.getUrl(), 
+				repository.getUrl() + BUG_DESC_SUBSTRING_SEARCH+SearchString, 
 				QUERY_NAME, 
 				MAX_HITS);
 		

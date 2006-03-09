@@ -168,7 +168,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 
 		IEditorInput input = null;
 		try {
-			input = new ExistingBugEditorInput(repository.getUrl().toExternalForm(), Integer.parseInt(id));
+			input = new ExistingBugEditorInput(repository.getUrl(), Integer.parseInt(id));
 			BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(input,
 					IBugzillaConstants.EXISTING_BUG_EDITOR_ID, false);
 		} catch (LoginException e) {

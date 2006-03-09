@@ -171,7 +171,7 @@ public class BugzillaSearchEngine {
 			if (responseCode != HttpURLConnection.HTTP_OK) {
 				String msg;
 				if (responseCode == -1 || responseCode == HttpURLConnection.HTTP_FORBIDDEN)
-					msg = repository.getUrl().toExternalForm()
+					msg = repository.getUrl()
 							+ " does not seem to be a valid Bugzilla server.  Check Bugzilla preferences.";
 				else
 					msg = "HTTP Error " + responseCode + " (" + connect.getResponseMessage()
@@ -230,7 +230,7 @@ public class BugzillaSearchEngine {
 					if (query == null)
 						query = "";
 
-					String server = repository.getUrl().toExternalForm();
+					String server = repository.getUrl();
 
 					BugzillaSearchHit hit = new BugzillaSearchHit(server, id, description, severity, priority,
 							platform, state, result, owner, query);
@@ -251,8 +251,7 @@ public class BugzillaSearchEngine {
 						}
 	
 						int id = Integer.parseInt(matcher.group(1));
-						BugzillaSearchHit hit = createHit(regularExpression, monitor, in, repository.getUrl()
-								.toExternalForm(), id);
+						BugzillaSearchHit hit = createHit(regularExpression, monitor, in, repository.getUrl(), id);
 						collector.accept(hit);
 						numCollected++;
  					}
@@ -278,7 +277,7 @@ public class BugzillaSearchEngine {
 			}
 		} catch (CoreException e) {
 			status = new MultiStatus(IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
-					"Core Exception occurred while querying Bugzilla Server " + repository.getUrl().toExternalForm()
+					"Core Exception occurred while querying Bugzilla Server " + repository.getUrl()
 							+ ".\n" + "\nClick Details for more information.", e);
 			((MultiStatus) status).add(e.getStatus());
 
@@ -287,7 +286,7 @@ public class BugzillaSearchEngine {
 		} catch (OperationCanceledException e) {
 			status = new Status(IStatus.CANCEL, IBugzillaConstants.PLUGIN_ID, IStatus.CANCEL, "", null);
 		} catch (Exception e) {
-			status = new MultiStatus(IBugzillaConstants.PLUGIN_ID, IStatus.ERROR, "An error occurred while querying Bugzilla Server " + repository.getUrl().toExternalForm() + ".\n"
+			status = new MultiStatus(IBugzillaConstants.PLUGIN_ID, IStatus.ERROR, "An error occurred while querying Bugzilla Server " + repository.getUrl() + ".\n"
 					+ "\nCheck network connection repository configuration in Task Repositories view.", e);
 
 			IStatus s = new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.ERROR, e.getClass().toString()

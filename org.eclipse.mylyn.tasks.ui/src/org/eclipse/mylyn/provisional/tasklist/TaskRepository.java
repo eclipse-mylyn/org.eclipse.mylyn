@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.provisional.tasklist;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
@@ -33,26 +34,37 @@ public class TaskRepository {
 
 	private static final String AUTH_REALM = "";
 
-	private URL serverUrl;
+    private static final URL DEFAULT_URL;
+    static {
+      URL u = null;
+      try {
+        u = new URL("http://eclipse.org/mylar");
+      } catch(Exception ex) {
+        // TODO ?
+      }
+      DEFAULT_URL = u; 
+    }
+
+	private String serverUrl;
 
 	private String kind;
 	
 	private String version = NO_VERSION_SPECIFIED;
 
-	public TaskRepository(String kind, URL serverUrl) {
+	public TaskRepository(String kind, String serverUrl) {
 		this.serverUrl = serverUrl;
 		this.kind = kind;
 	}
 
-	public TaskRepository(String kind, URL serverUrl, String version) {
+	public TaskRepository(String kind, String serverUrl, String version) {
 		this(kind, serverUrl);
 		this.version = version;
 	}
 	
-	public URL getUrl() {
+	public String getUrl() {
 		return serverUrl;
 	}
-
+	
 	public boolean hasCredentials() {
 		String username = getUserName();
 		String password = getPassword();
@@ -61,7 +73,7 @@ public class TaskRepository {
 
 	@SuppressWarnings("unchecked")
 	public String getUserName() {
-		Map<String, String> map = Platform.getAuthorizationInfo(serverUrl, AUTH_REALM, AUTH_SCHEME);
+		Map<String, String> map = getAuthInfo();
 		if (map != null && map.containsKey(AUTH_USERNAME)) {
 			return map.get(AUTH_USERNAME);
 		} else {
@@ -71,7 +83,7 @@ public class TaskRepository {
 
 	@SuppressWarnings("unchecked")
 	public String getPassword() {
-		Map<String, String> map = Platform.getAuthorizationInfo(serverUrl, AUTH_REALM, AUTH_SCHEME);
+		Map<String, String> map = getAuthInfo();
 		if (map != null && map.containsKey(AUTH_PASSWORD)) {
 			return map.get(AUTH_PASSWORD);
 		} else {
@@ -81,7 +93,7 @@ public class TaskRepository {
 
 	@SuppressWarnings("unchecked")
 	public void setAuthenticationCredentials(String username, String password) {
-		Map<String, String> map = Platform.getAuthorizationInfo(serverUrl, AUTH_REALM, AUTH_SCHEME);
+		Map<String, String> map = getAuthInfo();
 
 		if (map == null) {
 			map = new java.util.HashMap<String, String>();
@@ -95,16 +107,40 @@ public class TaskRepository {
 		}
 		try {
 			// write the map to the keyring
-			Platform.addAuthorizationInfo(serverUrl, AUTH_REALM, AUTH_SCHEME, map);
+			try {
+				Platform.addAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME, map);
+			} catch (MalformedURLException ex) {
+				Platform.addAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME, map);
+			}
+		} catch (CoreException e) {
+			MylarStatusHandler.fail(e, "could not set authorization", true);
+		}
+	}
+	
+	public void flushAuthenticationCredentials() {
+		try {
+			try {
+				Platform.flushAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME);
+			} catch (MalformedURLException ex) {
+				Platform.flushAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME);
+			}
 		} catch (CoreException e) {
 			MylarStatusHandler.fail(e, "could not set authorization", true);
 		}
 	}
 
+	private Map getAuthInfo() {
+		try {
+			return Platform.getAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME);
+		} catch(MalformedURLException ex) {
+			return Platform.getAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME);
+		}
+    }
+
 	@Override
 	public boolean equals(Object object) {
-		if (serverUrl != null && object instanceof TaskRepository) {
-			return serverUrl.equals(((TaskRepository) object).getUrl());
+		if (object instanceof TaskRepository && getUrl() != null) {
+			return getUrl().equals(((TaskRepository) object).getUrl());
 		} else {
 			return super.equals(object);
 		}
@@ -120,7 +156,7 @@ public class TaskRepository {
 	}
 
 	public String toString() {
-		return serverUrl.toExternalForm();
+		return serverUrl;
 	}
 
 	public String getKind() {
@@ -139,4 +175,5 @@ public class TaskRepository {
 			version = ver;
 		}
 	}
+
 }

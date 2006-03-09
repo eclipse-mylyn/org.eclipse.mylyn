@@ -344,7 +344,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			TaskRepository defaultRepository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
 					TaskRepositoryManager.PREFIX_REPOSITORY_OLD.toLowerCase());
 			if (defaultRepository != null) {
-				String repositoryUrl = defaultRepository.getUrl().toExternalForm();
+				String repositoryUrl = defaultRepository.getUrl();
 				migrated = true;
 				if (dataDir.exists() && dataDir.isDirectory()) {
 					for (File file : dataDir.listFiles()) {

@@ -182,7 +182,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			return null;
 		}
 
-		BugzillaTask newTask = new BugzillaTask(AbstractRepositoryTask.getHandle(repository.getUrl().toExternalForm(),
+		BugzillaTask newTask = new BugzillaTask(AbstractRepositoryTask.getHandle(repository.getUrl(),
 				bugId), DESCRIPTION_DEFAULT, true);
 
 		MylarTaskListPlugin.getTaskListManager().getTaskList().addTaskToArchive(newTask);
@@ -246,7 +246,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			if (queryDialog.open() == Dialog.OK) {
 				queryCategory.setDescription(queryDialog.getName());
 				queryCategory.setQueryUrl(queryDialog.getUrl());
-				queryCategory.setRepositoryUrl(queryDialog.getRepository().getUrl().toExternalForm());
+				queryCategory.setRepositoryUrl(queryDialog.getRepository().getUrl());
 				int maxHits = -1;
 				try {
 					maxHits = Integer.parseInt(queryDialog.getMaxHits());

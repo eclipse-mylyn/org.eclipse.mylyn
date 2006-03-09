@@ -13,7 +13,6 @@ package org.eclipse.mylar.internal.bugzilla.core;
 import java.io.IOException;
 import java.net.Authenticator;
 import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
@@ -43,7 +42,6 @@ import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile;
 import org.eclipse.mylar.internal.bugzilla.core.internal.ProductConfiguration;
 import org.eclipse.mylar.internal.bugzilla.core.internal.ProductConfigurationFactory;
 import org.eclipse.mylar.internal.bugzilla.core.search.IBugzillaResultEditorMatchAdapter;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -114,7 +112,7 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 		final Set<TaskRepository> repositories = MylarTaskListPlugin.getRepositoryManager().getRepositories(
 				REPOSITORY_KIND);
 		for (TaskRepository repository : repositories) {
-			readCachedProductConfiguration(repository.getUrl().toExternalForm());
+			readCachedProductConfiguration(repository.getUrl());
 		}
 		
 		migrateOldAuthenticationData();
@@ -142,14 +140,14 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 					password = pwd;
 			}
 			TaskRepository repository;
-			try {
-				repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(serverUrl));
+//			try {
+				repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, serverUrl);
 				repository.setAuthenticationCredentials(user, password);
 				MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
 				BugzillaPlugin.getDefault().getPreferenceStore().setValue(OLD_PREF_SERVER, "");  
-			} catch (MalformedURLException e) {
-				MylarStatusHandler.fail(e, "could not create default repository", true);
-			}
+//			} catch (MalformedURLException e) {
+//				MylarStatusHandler.fail(e, "could not create default repository", true);
+//			}
 			try {
 				// reset the authorization
 				Platform.addAuthorizationInfo(BugzillaPreferencePage.FAKE_URL, "Bugzilla",

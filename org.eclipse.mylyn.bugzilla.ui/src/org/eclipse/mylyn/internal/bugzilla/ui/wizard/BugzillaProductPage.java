@@ -118,7 +118,7 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 
 					products = new ArrayList<String>();
 					for (String product : BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT,
-							repository.getUrl().toExternalForm())) {
+							repository.getUrl())) {
 						products.add(product);
 					}
 					monitor.worked(1);
@@ -149,7 +149,7 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 	private void initProducts() {
 		// try to get the list of products from the server
 		if (!bugWizard.model.hasParsedProducts()) {
-			String repositoryUrl = repository.getUrl().toExternalForm();
+			String repositoryUrl = repository.getUrl();
 			try {
 				// ProductConfiguration productConfiguration =
 				// BugzillaPlugin.getDefault().getProductConfiguration(repositoryUrl);
@@ -227,7 +227,7 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 		// try to get the attributes from the bugzilla server
 		try {
 			if (!model.hasParsedAttributes() || !prevProduct.equals(model.getProduct())) {
-				String serverUrl = repository.getUrl().toExternalForm();
+				String serverUrl = repository.getUrl();
 				if (model.isConnected()) {
 					BugzillaRepositoryUtil.setupNewBugAttributes(serverUrl, model, false);
 				} else {

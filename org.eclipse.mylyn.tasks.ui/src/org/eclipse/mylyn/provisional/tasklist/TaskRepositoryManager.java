@@ -11,8 +11,6 @@
 
 package org.eclipse.mylar.provisional.tasklist;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -24,7 +22,6 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.eclipse.mylar.internal.core.MylarContextManager;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 
 /**
  * @author Mik Kersten
@@ -88,6 +85,7 @@ public class TaskRepositoryManager {
 	public void removeRepository(TaskRepository repository) {
 		Set<TaskRepository> repositories = repositoryMap.get(repository.getKind());
 		if (repositories != null) {
+			repository.flushAuthenticationCredentials();
 			repositories.remove(repository);
 		}
 		saveRepositories();
@@ -104,7 +102,7 @@ public class TaskRepositoryManager {
 	public TaskRepository getRepository(String kind, String urlString) {
 		if (repositoryMap.containsKey(kind)) {
 			for (TaskRepository repository : repositoryMap.get(kind)) {
-				if (repository.getUrl().toExternalForm().equals(urlString)) {
+				if (repository.getUrl().equals(urlString)) {
 					return repository;
 				}
 			}
@@ -137,7 +135,7 @@ public class TaskRepositoryManager {
 			if (activeTask instanceof AbstractRepositoryTask) {
 				String repositoryUrl = AbstractRepositoryTask.getRepositoryUrl(activeTask.getHandleIdentifier());
 				for (TaskRepository repository : getRepositories(repositoryKind)) {
-					if (repository.getUrl().toExternalForm().equals(repositoryUrl)) {
+					if (repository.getUrl().equals(repositoryUrl)) {
 						return repository;
 					}
 				}
@@ -173,16 +171,11 @@ public class TaskRepositoryManager {
 				StringTokenizer st = new StringTokenizer(read, PREF_STORE_DELIM);
 				while (st.hasMoreTokens()) {
 					String urlString = st.nextToken();
-					try {
-						URL url = new URL(urlString);
-						repositoryMap.put(repositoryConnector.getRepositoryType(), repositories);						
-						String prefIdVersion = urlString + PROPERTY_DELIM + PROPERTY_VERSION;
-						String version = MylarTaskListPlugin.getPrefs().getString(prefIdVersion);
-						repositories.add(new TaskRepository(repositoryConnector.getRepositoryType(), url, version));
-						
-					} catch (MalformedURLException e) {
-						MylarStatusHandler.fail(e, "could not restore URL: " + urlString, false);
-					}
+
+					repositoryMap.put(repositoryConnector.getRepositoryType(), repositories);						
+					String prefIdVersion = urlString + PROPERTY_DELIM + PROPERTY_VERSION;
+					String version = MylarTaskListPlugin.getPrefs().getString(prefIdVersion);
+					repositories.add(new TaskRepository(repositoryConnector.getRepositoryType(), urlString, version));
 				}
 			}
 		}
@@ -202,9 +195,9 @@ public class TaskRepositoryManager {
 			if (repositoryMap.containsKey(repositoryConnector.getRepositoryType())) {
 				String repositoriesToStore = "";
 				for (TaskRepository repository : repositoryMap.get(repositoryConnector.getRepositoryType())) {
-					repositoriesToStore += repository.getUrl().toExternalForm() + PREF_STORE_DELIM;
+					repositoriesToStore += repository.getUrl() + PREF_STORE_DELIM;
 
-					String prefIdVersion = repository.getUrl().toExternalForm() + PROPERTY_DELIM + PROPERTY_VERSION;
+					String prefIdVersion = repository.getUrl() + PROPERTY_DELIM + PROPERTY_VERSION;
 					MylarTaskListPlugin.getPrefs().setValue(prefIdVersion, repository.getVersion());
 				}
 				String prefId = PREF_REPOSITORIES + repositoryConnector.getRepositoryType();

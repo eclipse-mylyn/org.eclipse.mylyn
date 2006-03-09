@@ -120,7 +120,7 @@ public abstract class AbstractRepositoryTask extends Task {
 			String repositoryKind = TaskRepositoryManager.PREFIX_REPOSITORY_OLD.toLowerCase();
 			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(repositoryKind);
 			if (repository != null) {
-				url = repository.getUrl().toExternalForm();
+				url = repository.getUrl();
 			}
 		}
 		return url;

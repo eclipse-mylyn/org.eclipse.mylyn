@@ -11,9 +11,6 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.wizards;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
@@ -85,7 +82,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		passwordEditor.getTextControl().setEchoChar('*');
 		
 		if (repository != null) {			
-			serverUrlEditor.setStringValue(repository.getUrl().toExternalForm());
+			serverUrlEditor.setStringValue(repository.getUrl());
 			userNameEditor.setStringValue(repository.getUserName());
 			passwordEditor.setStringValue(repository.getPassword());
 		}
@@ -119,13 +116,10 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	protected abstract void validateSettings();
 	
-	public URL getServerUrl() {
-		try {
-			return new URL(serverUrlEditor.getStringValue());
-		} catch (MalformedURLException e) {
-			MylarStatusHandler.fail(e, "could not create url", true);
-			return null;
-		}
+	protected abstract boolean isValidUrl(String name);
+	
+	public String getServerUrl() {
+		return serverUrlEditor.getStringValue();
 	}
 
 	public String getUserName() {
@@ -134,19 +128,6 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	public String getPassword() {
 		return passwordEditor.getStringValue();
-	}
-
-	private boolean isValidUrl(String name) {
-		if (name.startsWith(URL_PREFIX_HTTPS) || name.startsWith(URL_PREFIX_HTTP)) {
-			try {
-				new URL(name);
-			} catch (MalformedURLException e) {
-				return false;
-			}
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	public void init(IWorkbench workbench) {

@@ -96,7 +96,7 @@ public class BugzillaRepositoryUtil {
 					in = new BufferedReader(new InputStreamReader(input));
 
 					// get the actual bug fron the server and return it
-					BugReport bug = BugParser.parseBug(in, id, repository.getUrl().toExternalForm(), !repository
+					BugReport bug = BugParser.parseBug(in, id, repository.getUrl(), !repository
 							.getVersion().equals(BugzillaServerVersion.SERVER_216.toString()),
 							repository.getUserName(), repository.getPassword(), connection.getContentType());
 					return bug;
@@ -174,7 +174,7 @@ public class BugzillaRepositoryUtil {
 //						+ URLEncoder.encode(repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
 //			}
 //
-//			URL url = new URL(repository.getUrl().toExternalForm() + "/enter_bug.cgi" + urlText);
+//			URL url = new URL(repository.getUrl() + "/enter_bug.cgi" + urlText);
 //
 //			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(url);
 //			if (cntx != null) {
@@ -230,7 +230,7 @@ public class BugzillaRepositoryUtil {
 				throw new LoginException("Login credentials missing.");					
 			}			
 			
-			String url = repository.getUrl().toExternalForm() + "/enter_bug.cgi";
+			String url = repository.getUrl() + "/enter_bug.cgi";
 
 			// use the proper url if we dont know the product yet
 			if (!getProd)
@@ -351,7 +351,7 @@ public class BugzillaRepositoryUtil {
 	public static String getBugUrl(String repositoryUrl, int id) {
 		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
 				BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
-		String url = repository.getUrl().toExternalForm() + POST_ARGS_SHOW_BUG + id;
+		String url = repository.getUrl() + POST_ARGS_SHOW_BUG + id;
 		try {
 			if (repository.hasCredentials()) {
 				url += "&"+POST_ARGS_LOGIN + URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8)
@@ -420,7 +420,7 @@ public class BugzillaRepositoryUtil {
 	 */
 	public static void updateQueryOptions(TaskRepository repository, IProgressMonitor monitor) throws LoginException, IOException {
 
-		String repositoryUrl = repository.getUrl().toExternalForm();
+		String repositoryUrl = repository.getUrl();
 		BugzillaQueryPageParser parser = new BugzillaQueryPageParser(repository, monitor);
 		if (!parser.wasSuccessful())
 			return;

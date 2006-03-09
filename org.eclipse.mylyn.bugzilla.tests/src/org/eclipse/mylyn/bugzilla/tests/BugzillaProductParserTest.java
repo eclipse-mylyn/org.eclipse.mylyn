@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylar.bugzilla.tests;
 
-import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
@@ -48,11 +47,11 @@ public class BugzillaProductParserTest extends TestCase {
 	public BugzillaProductParserTest(String arg0) {
 		super(arg0);
 	}
-	
+
 	public void test222Products() throws Exception {
 
-		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(
-				IBugzillaConstants.TEST_BUGZILLA_222_URL), IBugzillaConstants.BugzillaServerVersion.SERVER_220.toString());
+		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL,
+				IBugzillaConstants.BugzillaServerVersion.SERVER_220.toString());
 
 		List<String> productList = BugzillaRepositoryUtil.getProductList(repository);
 		Iterator<String> itr = productList.iterator();
@@ -63,8 +62,8 @@ public class BugzillaProductParserTest extends TestCase {
 
 	public void test2201Products() throws Exception {
 
-		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(
-				IBugzillaConstants.TEST_BUGZILLA_2201_URL), IBugzillaConstants.BugzillaServerVersion.SERVER_220.toString());
+		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_2201_URL,
+				IBugzillaConstants.BugzillaServerVersion.SERVER_220.toString());
 
 		List<String> productList = BugzillaRepositoryUtil.getProductList(repository);
 		Iterator<String> itr = productList.iterator();
@@ -75,9 +74,8 @@ public class BugzillaProductParserTest extends TestCase {
 
 	public void test220Products() throws Exception {
 
-		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(
-				IBugzillaConstants.TEST_BUGZILLA_220_URL), IBugzillaConstants.BugzillaServerVersion.SERVER_220
-				.toString());
+		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_220_URL,
+				IBugzillaConstants.BugzillaServerVersion.SERVER_220.toString());
 
 		List<String> productList = BugzillaRepositoryUtil.getProductList(repository);
 		Iterator<String> itr = productList.iterator();
@@ -88,9 +86,8 @@ public class BugzillaProductParserTest extends TestCase {
 
 	public void test218Products() throws Exception {
 
-		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(
-				IBugzillaConstants.TEST_BUGZILLA_218_URL), IBugzillaConstants.BugzillaServerVersion.SERVER_218
-				.toString());
+		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_218_URL,
+				IBugzillaConstants.BugzillaServerVersion.SERVER_218.toString());
 
 		List<String> productList = BugzillaRepositoryUtil.getProductList(repository);
 		Iterator<String> itr = productList.iterator();
@@ -100,9 +97,8 @@ public class BugzillaProductParserTest extends TestCase {
 
 	public void test216Products() throws Exception {
 
-		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(
-				IBugzillaConstants.TEST_BUGZILLA_216_URL), IBugzillaConstants.BugzillaServerVersion.SERVER_216
-				.toString());
+		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_216_URL,
+				IBugzillaConstants.BugzillaServerVersion.SERVER_216.toString());
 
 		List<String> productList = BugzillaRepositoryUtil.getProductList(repository);
 		Iterator<String> itr = productList.iterator();

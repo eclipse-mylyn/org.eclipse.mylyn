@@ -47,7 +47,7 @@ public class NewBugzillaQueryWizard extends Wizard {
 	public boolean performFinish() {
 		queryPage.getQueryDialog().okPressed();
 		final BugzillaRepositoryQuery queryCategory = new BugzillaRepositoryQuery(
-				repository.getUrl().toExternalForm(), 
+				repository.getUrl(), 
 				queryPage.getQueryDialog().getUrl(), 
 				queryPage.getQueryDialog().getName(), 
 				queryPage.getQueryDialog().getMaxHits());

@@ -15,7 +15,6 @@ package org.eclipse.mylar.tasklist.tests;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -58,7 +57,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.createNewTaskList();
 
 		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
-				new URL(IBugzillaConstants.ECLIPSE_BUGZILLA_URL));
+				IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
 		MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
 	}
 

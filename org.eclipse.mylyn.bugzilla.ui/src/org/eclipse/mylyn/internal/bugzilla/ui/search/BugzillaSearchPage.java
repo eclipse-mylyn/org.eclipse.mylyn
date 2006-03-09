@@ -727,7 +727,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 			@Override
 			public void mouseUp(MouseEvent e) {
 				if (repository != null) {
-					updateAttributesFromRepository(repository.getUrl().toExternalForm(), true);
+					updateAttributesFromRepository(repository.getUrl(), true);
 				} else {
 					MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
 							IBugzillaConstants.TITLE_MESSAGE_DIALOG, TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
@@ -784,7 +784,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		try {
 			// if the summary contains a single bug id, open the bug directly
 			int id = Integer.parseInt(summaryText);
-			return BugzillaUITools.show(repository.getUrl().toExternalForm(), id);
+			return BugzillaUITools.show(repository.getUrl(), id);
 		} catch (NumberFormatException ignored) {
 			// ignore this since this means that the text is not a bug id
 		}
@@ -841,7 +841,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 					if (repository != null && repository.equals(currRepsitory)) {
 						indexToSelect = i;
 					}
-					repositoryUrls[i] = currRepsitory.getUrl().toExternalForm();
+					repositoryUrls[i] = currRepsitory.getUrl();
 					i++;
 				}
 				if (repositoryCombo != null) {
@@ -933,7 +933,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 	private StringBuffer getQueryURLStart(TaskRepository repository) {
 		// StringBuffer sb = new
 		// StringBuffer(BugzillaPlugin.getDefault().getServerName());
-		StringBuffer sb = new StringBuffer(repository.getUrl().toExternalForm());
+		StringBuffer sb = new StringBuffer(repository.getUrl());
 
 		if (sb.charAt(sb.length() - 1) != '/') {
 			sb.append('/');
@@ -1149,7 +1149,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 			// TaskRepository repository =
 			// MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
 			// BugzillaPlugin.REPOSITORY_KIND);
-			// String repositoryUrl = repository.getUrl().toExternalForm();
+			// String repositoryUrl = repository.getUrl();
 			if (connect) {
 				BugzillaRepositoryUtil.updateQueryOptions(repository, monitor);
 			}

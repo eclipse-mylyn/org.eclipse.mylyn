@@ -578,7 +578,7 @@ public class BugzillaReportSubmitForm {
 	}
 
 	private static void setURL(BugzillaReportSubmitForm form, TaskRepository repository, String formName) {
-		String baseURL = repository.getUrl().toExternalForm();
+		String baseURL = repository.getUrl();
 		if (!baseURL.endsWith("/"))
 			baseURL += "/";
 		try {

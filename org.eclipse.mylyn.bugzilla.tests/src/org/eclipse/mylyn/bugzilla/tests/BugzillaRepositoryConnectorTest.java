@@ -12,7 +12,6 @@
 package org.eclipse.mylar.bugzilla.tests;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -61,7 +60,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		super.setUp();
 		manager = MylarTaskListPlugin.getRepositoryManager();
 		manager.clearRepositories();
-		repository = new TaskRepository(DEFAULT_KIND, new URL(TEST_REPOSITORY_URL));
+		repository = new TaskRepository(DEFAULT_KIND, TEST_REPOSITORY_URL);
 		// repository.setAuthenticationCredentials("userid", "password");
 		manager.addRepository(repository);
 		assertNotNull(manager);
