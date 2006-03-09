@@ -972,6 +972,7 @@ public class TaskListView extends ViewPart {
 		manager.add(new Separator(SEPARATOR_REPORTS));
 
 		manager.add(new Separator(SEPARATOR_CONTEXT));
+		
 		for (IDynamicSubMenuContributor contributor : MylarTaskListPlugin.getDefault().getDynamicMenuContributers()) {
 			MenuManager subMenuManager = contributor.getSubMenuManager(this, (ITaskListElement) selectedObject);
 			if (subMenuManager != null)
@@ -982,10 +983,10 @@ public class TaskListView extends ViewPart {
 	}
 
 	private void addMenuManager(IMenuManager menuToAdd, IMenuManager manager, ITaskListElement element) {
-		if (element != null && element instanceof ITask) {
+		if (element instanceof ITask || element instanceof AbstractQueryHit) {
 			manager.add(menuToAdd);
 		}
-	}
+	} 
 
 	private void addAction(Action action, IMenuManager manager, ITaskListElement element) {
 		manager.add(action);
