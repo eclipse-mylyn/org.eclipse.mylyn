@@ -112,6 +112,8 @@ public class TaskListManager {
 	private TaskList taskList = new TaskList();
 
 	private boolean taskListInitialized = false;
+	
+	private boolean taskActivityHistoryInitialized = false;
 
 	private int nextTaskId;
 
@@ -198,6 +200,7 @@ public class TaskListManager {
 		for (InteractionEvent event : events) {
 			parseInteractionEvent(event);
 		}
+		taskActivityHistoryInitialized = true;
 	}
 
 	private void parseFutureReminders() {
@@ -254,8 +257,10 @@ public class TaskListManager {
 					if (week.includes(currentTaskStart)) {
 						week.addTask(new DateRangeActivityDelegate(week, currentTask, currentTaskStart, currentTaskEnd,
 								totalInactive));
-						for (ITaskActivityListener listener : activityListeners) {
-							listener.activityChanged(week);
+						if (taskActivityHistoryInitialized) {
+							for (ITaskActivityListener listener : activityListeners) {
+								listener.activityChanged(week);
+							}
 						}
 					}
 				}

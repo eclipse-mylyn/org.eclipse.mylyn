@@ -102,7 +102,7 @@ public class TaskActivityView extends ViewPart {
 	private final ITaskActivityListener ACTIVITY_LISTENER = new ITaskActivityListener() {
 
 		public void taskActivated(ITask task) {
-			TaskActivityView.this.treeViewer.refresh(true);
+			refresh();
 			// TaskActivityView.this.treeViewer.refresh(task);
 		}
 
@@ -113,12 +113,13 @@ public class TaskActivityView extends ViewPart {
 		}
 
 		public void taskDeactivated(ITask task) {
-			TaskActivityView.this.treeViewer.refresh(true);
+			// don't need to refresh here
 			// TaskActivityView.this.treeViewer.refresh(task);
 		}
 
 		public void activityChanged(DateRangeContainer week) {
-			TaskActivityView.this.treeViewer.refresh(week);
+			refresh();
+//			TaskActivityView.this.treeViewer.refresh(week);
 		}
 	};
 
@@ -312,16 +313,16 @@ public class TaskActivityView extends ViewPart {
 		return INSTANCE;
 	}
 
-	public TreeViewer getViewer() {
+	private TreeViewer getViewer() {
 		return treeViewer;
 	}
 
-	private void refresh() {
+	private void refresh() {	
 		if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					if (getViewer().getControl() != null && !getViewer().getControl().isDisposed()) {
-						TaskActivityView.this.treeViewer.refresh(true);
+						TaskActivityView.this.treeViewer.refresh();
 					}
 				}
 			});
@@ -389,7 +390,8 @@ public class TaskActivityView extends ViewPart {
 					}
 					task.setEstimatedTimeHours(estimate);
 					// updateLabels();
-					treeViewer.refresh();
+					refresh();
+//					treeViewer.refresh();
 				}
 			}
 
