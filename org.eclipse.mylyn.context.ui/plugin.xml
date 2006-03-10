@@ -13,8 +13,7 @@
       <uiBridge
             class="org.eclipse.mylar.internal.ui.TaskUiBridge"
             contentType="meta/task"/>
-   </extension>  
- 
+   </extension>   
  
   	<extension point = "org.eclipse.ui.popupMenus">
      <objectContribution
@@ -56,6 +55,7 @@
               </or>
            </enablement>
         </action>
+        <!--
         <action
               class="org.eclipse.mylar.internal.ui.actions.ContextAttachAction"
               enablesFor="1"
@@ -84,6 +84,7 @@
               </or>
            </enablement>
         </action>
+        -->
         <!--
         <action
               class="org.eclipse.mylar.tasklist.ui.actions.TaskActivateAction"
