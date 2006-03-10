@@ -30,16 +30,14 @@ import org.eclipse.ui.PlatformUI;
  */
 public class NewLocalTaskAction extends Action {
 
-	private static final String LABEL = "New Personal Task";
-
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.create.task";
 
 	private final TaskListView view;
 
 	public NewLocalTaskAction(TaskListView view) {
 		this.view = view;
-		setText(LABEL);
-		setToolTipText(LABEL);
+		setText(TaskInputDialog.LABEL_SHELL);
+		setToolTipText(TaskInputDialog.LABEL_SHELL);
 		setId(ID);
 		setImageDescriptor(TaskListImages.TASK_NEW);
 	}
