@@ -55,6 +55,7 @@ import org.eclipse.mylar.internal.tasklist.ui.TaskPriorityFilter;
 import org.eclipse.mylar.internal.tasklist.ui.actions.CollapseAllAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.CopyDescriptionAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.DeleteAction;
+import org.eclipse.mylar.internal.tasklist.ui.actions.ExpandAllAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.FilterCompletedTasksAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.GoIntoAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.GoUpAction;
@@ -178,6 +179,8 @@ public class TaskListView extends ViewPart {
 
 	private CollapseAllAction collapseAll;
 
+	private ExpandAllAction expandAll;
+	
 	private DeleteAction deleteAction;
 
 	private RemoveFromCategoryAction removeFromCategoryAction;
@@ -894,6 +897,7 @@ public class TaskListView extends ViewPart {
 		updateDrillDownActions();
 		manager.add(goUpAction);
 		manager.add(collapseAll);
+		manager.add(expandAll);
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
@@ -1081,6 +1085,7 @@ public class TaskListView extends ViewPart {
 
 		deleteAction = new DeleteAction();
 		collapseAll = new CollapseAllAction(this);
+		expandAll = new ExpandAllAction(this);
 		// autoClose = new ManageEditorsAction();
 		markIncompleteAction = new MarkTaskCompleteAction(this);
 		markCompleteAction = new MarkTaskIncompleteAction(this);
