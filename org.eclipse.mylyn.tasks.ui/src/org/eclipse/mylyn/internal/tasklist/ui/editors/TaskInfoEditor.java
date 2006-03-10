@@ -27,6 +27,7 @@ import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskChangeListener;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.provisional.tasklist.Task.PriorityLevel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.KeyEvent;
@@ -147,17 +148,23 @@ public class TaskInfoEditor extends EditorPart {
 								parentEditor.changeTitle();
 							}
 							if (!priorityCombo.isDisposed()) {
-								int selectionIndex = priorityCombo.indexOf(updateTask.getPriority());
-								priorityCombo.select(selectionIndex);
+								PriorityLevel level = PriorityLevel.fromString(updateTask.getPriority());
+								if (level != null) {
+									int prioritySelectionIndex = priorityCombo.indexOf(level.getDescription());
+									priorityCombo.select(prioritySelectionIndex);
+								}
+								// int selectionIndex =
+								// priorityCombo.indexOf(updateTask.getPriority());
+								// priorityCombo.select(selectionIndex);
 							}
 							if (!statusCombo.isDisposed()) {
 								if (task.isCompleted()) {
 									statusCombo.select(0);
 								} else {
 									statusCombo.select(1);
-								}
-//								int selectionIndex = statusCombo.indexOf(updateTask.getStatus().toString());
-//								statusCombo.select(selectionIndex);
+								}								
+								// statusCombo.indexOf(updateTask.getStatus().toString());
+								// statusCombo.select(selectionIndex);
 							}
 							if (!(updateTask instanceof AbstractRepositoryTask) && !endDate.isDisposed()) {
 								endDate.setText(getTaskDateString(updateTask));
@@ -214,8 +221,11 @@ public class TaskInfoEditor extends EditorPart {
 			String label = description.getText();
 			task.setDescription(label);
 			task.setUrl(issueReportURL.getText());
-			task.setPriority(priorityCombo.getItem(priorityCombo.getSelectionIndex()));
-			
+			String priorityDescription = priorityCombo.getItem(priorityCombo.getSelectionIndex());
+			PriorityLevel level = PriorityLevel.fromDescription(priorityDescription);
+			if (level != null) {
+				task.setPriority(level.toString());
+			}
 			if (statusCombo.getSelectionIndex() == 0) {
 				task.setCompleted(true);
 			} else {
@@ -228,7 +238,7 @@ public class TaskInfoEditor extends EditorPart {
 		task.setEstimatedTimeHours(estimated.getSelection());
 		if (datePicker != null && datePicker.getDate() != null) {
 			MylarTaskListPlugin.getTaskListManager().setReminder(task, datePicker.getDate().getTime());
-//			task.setReminderDate(datePicker.getDate().getTime());
+			// task.setReminderDate(datePicker.getDate().getTime());
 		} else {
 			task.setReminderDate(null);
 		}
@@ -401,12 +411,15 @@ public class TaskInfoEditor extends EditorPart {
 		priorityCombo = new Combo(statusComposite, SWT.READ_ONLY);
 
 		// Populate the combo box with priority levels
-		for (String priorityLevel : TaskListView.PRIORITY_LEVELS) {
+		for (String priorityLevel : TaskListView.PRIORITY_LEVEL_DESCRIPTIONS) {
 			priorityCombo.add(priorityLevel);
 		}
 
-		int prioritySelectionIndex = priorityCombo.indexOf(task.getPriority());
-		priorityCombo.select(prioritySelectionIndex);
+		PriorityLevel level = PriorityLevel.fromString(task.getPriority());
+		if (level != null) {
+			int prioritySelectionIndex = priorityCombo.indexOf(level.getDescription());
+			priorityCombo.select(prioritySelectionIndex);
+		}
 
 		if (task instanceof AbstractRepositoryTask) {
 			priorityCombo.setEnabled(false);
@@ -454,7 +467,7 @@ public class TaskInfoEditor extends EditorPart {
 				}
 			});
 		}
-//		statusCombo.setEnabled(false);
+		// statusCombo.setEnabled(false);
 
 	}
 

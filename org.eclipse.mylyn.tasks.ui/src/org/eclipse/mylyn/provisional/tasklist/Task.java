@@ -79,6 +79,23 @@ public class Task implements ITask {
 				return P5;
 			return null;
 		}
+		
+		public static PriorityLevel fromDescription(String string) {
+			if (string == null)
+				return null;
+			if (string.equals("Very High"))
+				return P1;
+			if (string.equals("High"))
+				return P2;
+			if (string.equals("Normal"))
+				return P3;
+			if (string.equals("Low"))
+				return P4;
+			if (string.equals("Very Low"))
+				return P5;
+			return null;
+		}
+		
 	}
 
 	private boolean active = false;

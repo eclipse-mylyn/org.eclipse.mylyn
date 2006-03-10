@@ -30,6 +30,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
+import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -140,6 +141,10 @@ public class TaskListView extends ViewPart {
 	public static final String[] PRIORITY_LEVELS = { Task.PriorityLevel.P1.toString(),
 			Task.PriorityLevel.P2.toString(), Task.PriorityLevel.P3.toString(), Task.PriorityLevel.P4.toString(),
 			Task.PriorityLevel.P5.toString() };
+	
+	public static final String[] PRIORITY_LEVEL_DESCRIPTIONS = { Task.PriorityLevel.P1.getDescription(),
+		Task.PriorityLevel.P2.getDescription(), Task.PriorityLevel.P3.getDescription(), Task.PriorityLevel.P4.getDescription(),
+		Task.PriorityLevel.P5.getDescription()};
 
 	private static final String SEPARATOR_ID_REPORTS = SEPARATOR_REPORTS;
 
@@ -785,9 +790,7 @@ public class TaskListView extends ViewPart {
 		((Text) textEditor.getControl()).setOrientation(SWT.LEFT_TO_RIGHT);
 		editors[0] = new CheckboxCellEditor();
 		editors[1] = textEditor;
-		// editors[2] = new ComboBoxCellEditor(getViewer().getTree(),
-		// PRIORITY_LEVELS, SWT.READ_ONLY);
-		editors[2] = new ImageTableCellEditor(getViewer().getTree(), getPirorityImages());
+		editors[2] = new ComboBoxCellEditor(getViewer().getTree(), PRIORITY_LEVEL_DESCRIPTIONS, SWT.READ_ONLY);
 		editors[3] = textEditor;
 		editors[4] = textEditor;
 		getViewer().setCellEditors(editors);
