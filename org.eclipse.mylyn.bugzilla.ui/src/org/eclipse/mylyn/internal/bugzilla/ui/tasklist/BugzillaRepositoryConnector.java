@@ -328,6 +328,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 													+ " Ensure proper repository configuration in "
 													+ TaskRepositoriesView.NAME + ".");
 								} else {
+									MylarStatusHandler.fail(throwable, "could not post bug", false);
 									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 											"Could not post bug.  Check repository credentials and connectivity.\n\n"
 											+ throwable); 

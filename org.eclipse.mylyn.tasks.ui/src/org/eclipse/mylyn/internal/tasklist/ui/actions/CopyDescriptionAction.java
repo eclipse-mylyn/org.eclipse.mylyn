@@ -15,13 +15,16 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
+import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
+import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 
+/**
+ * @author Mik Kersten
+ */
 public class CopyDescriptionAction extends Action {
-
-	private static final String DESCRIPTION_PREFIX = "Bugzilla Bug ";
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.copy";
 
@@ -39,17 +42,33 @@ public class CopyDescriptionAction extends Action {
 	@Override
 	public void run() {
 		ISelection selection = this.view.getViewer().getSelection();
-		Object obj = ((IStructuredSelection) selection).getFirstElement();
-		if (obj instanceof ITaskListElement) {
-			ITaskListElement element = (ITaskListElement) obj;
-			String description = DESCRIPTION_PREFIX + element.getDescription();
+		Object object = ((IStructuredSelection) selection).getFirstElement();
+		String text = "";
+		if (object instanceof ITask || object instanceof AbstractQueryHit) {
+			ITask task = null;
+			if (object instanceof AbstractQueryHit) {
+				task = ((AbstractQueryHit)object).getCorrespondingTask();
+			} else if (object instanceof ITask) {
+				task = (ITask)object;
+			}
+			if (task != null) {
+				text = task.getDescription();
+				if (task.hasValidUrl()) {
+					text += "\n" + task.getUrl();
+				} 
+			} else {
+				text += ((AbstractQueryHit)object).getDescription();
+			}
+		} else if (object instanceof ITaskListElement) {
+			ITaskListElement element = (ITaskListElement) object;
+			text = element.getDescription();
+		} 
 
-			// HACK: this should be done using proper copying
-			StyledText styledText = new StyledText(view.getDummyComposite(), SWT.NULL);
-			styledText.setText(description);
-			styledText.selectAll();
-			styledText.copy();
-			styledText.dispose();
-		}
+		// HACK: this should be done using proper copying
+		StyledText styledText = new StyledText(view.getDummyComposite(), SWT.NULL);
+		styledText.setText(text);
+		styledText.selectAll();
+		styledText.copy();
+		styledText.dispose();
 	}
 }

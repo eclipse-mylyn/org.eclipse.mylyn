@@ -935,6 +935,7 @@ public class TaskListView extends ViewPart {
 			}
 
 			addAction(openUrlInExternal, manager, element);
+			addAction(copyDescriptionAction, manager, element);
 
 			if (task != null) {
 				if (!(task instanceof AbstractRepositoryTask)) {
