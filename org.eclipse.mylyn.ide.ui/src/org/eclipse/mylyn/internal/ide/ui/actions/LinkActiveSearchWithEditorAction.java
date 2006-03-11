@@ -49,8 +49,8 @@ public class LinkActiveSearchWithEditorAction extends Action {
 		setImageDescriptor(MylarImages.LINK_WITH_EDITOR);
 		setText(LABEL);
 		setToolTipText(LABEL);
-		MylarUiPlugin.getDefault().getPreferenceStore().setDefault(ID, true);
-		update(MylarUiPlugin.getDefault().getPreferenceStore().getBoolean(ID));
+		MylarUiPlugin.getPrefs().setDefault(ID, true);
+		update(MylarUiPlugin.getPrefs().getBoolean(ID));
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class LinkActiveSearchWithEditorAction extends Action {
 
 	public void update(boolean on) {
 		setChecked(on);
-		MylarUiPlugin.getDefault().getPreferenceStore().setValue(ID, on);
+		MylarUiPlugin.getPrefs().setValue(ID, on);
 		ISelectionService service = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
 		if (on) {
 			service.addPostSelectionListener(selectionTracker);

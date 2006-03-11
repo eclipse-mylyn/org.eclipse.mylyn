@@ -291,7 +291,6 @@
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction"
            label="Apply Mylar"
-           menubarPath="context"
            style="toggle"
            toolbarPath="context"
            tooltip="Apply Mylar"> 
