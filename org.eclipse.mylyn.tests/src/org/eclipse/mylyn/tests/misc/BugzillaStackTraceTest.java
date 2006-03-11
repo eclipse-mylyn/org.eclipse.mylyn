@@ -54,7 +54,8 @@ public class BugzillaStackTraceTest extends TestCase {
 	// * Test parsing the bug for multiple stacks in in
 	// */
 	// public void testMultipleStacksDiffComments(){
-	// // REPORT_REPOSITORY 4862 - 2 stack traces - 1 in description, 1 in comment - text
+	// // REPORT_REPOSITORY 4862 - 2 stack traces - 1 in description, 1 in
+	// comment - text
 	// before and after
 	// performParse(4862, "4862.html", 2, false);
 	// }
@@ -64,7 +65,8 @@ public class BugzillaStackTraceTest extends TestCase {
 	// * text before it
 	// */
 	// public void testSingleStackCodeBeforeInDescription(){
-	// // REPORT_REPOSITORY 76388 - 1 stack trace - description - text before and formatted
+	// // REPORT_REPOSITORY 76388 - 1 stack trace - description - text before
+	// and formatted
 	// ugly
 	// performParse(76388, "76388.html", 1, false);
 	// }
@@ -75,7 +77,8 @@ public class BugzillaStackTraceTest extends TestCase {
 	 */
 	public void testSingleStackCodeBeforeAndAfterInDescription() {
 
-		// REPORT_REPOSITORY 76146 - 1 stack trace - description - text before and code after
+		// REPORT_REPOSITORY 76146 - 1 stack trace - description - text before
+		// and code after
 		performParse(76146, "76146.html", 1, false);
 	}
 
@@ -84,7 +87,8 @@ public class BugzillaStackTraceTest extends TestCase {
 	 * extra text, but has lines in it that span 3 lines
 	 */
 	public void testSingleStackPoorFormatInDescription() {
-		// REPORT_REPOSITORY 67395 - 1 stack trace - description - no extra text, 1 at line
+		// REPORT_REPOSITORY 67395 - 1 stack trace - description - no extra
+		// text, 1 at line
 		// spans 3 lines
 		performParse(67395, "67395.html", 1, false);
 	}
@@ -93,7 +97,8 @@ public class BugzillaStackTraceTest extends TestCase {
 	 * Test parsing a bug with no stack traces and no qualified exception names
 	 */
 	public void testNoStackNoQualified() {
-		// REPORT_REPOSITORY 4548 - no stack traces, no qualified reference to an exception
+		// REPORT_REPOSITORY 4548 - no stack traces, no qualified reference to
+		// an exception
 		performParse(4548, "4548.html", 0, false);
 	}
 
@@ -102,7 +107,8 @@ public class BugzillaStackTraceTest extends TestCase {
 	 * exception
 	 */
 	public void testNoStackQual() {
-		// REPORT_REPOSITORY 1 - no stack traces, qualified reference to exception - made up
+		// REPORT_REPOSITORY 1 - no stack traces, qualified reference to
+		// exception - made up
 		// bug
 		performParse(1, "1.html", 0, false);
 	}
@@ -112,7 +118,8 @@ public class BugzillaStackTraceTest extends TestCase {
 	 * references
 	 */
 	public void testSingleStackQual() {
-		// REPORT_REPOSITORY 2 - 1 stack trace- 2 qual ref, stack trace, 1 qual ref - made up
+		// REPORT_REPOSITORY 2 - 1 stack trace- 2 qual ref, stack trace, 1 qual
+		// ref - made up
 		// bug
 		performParse(2, "2.html", 1, false);
 	}
@@ -121,7 +128,8 @@ public class BugzillaStackTraceTest extends TestCase {
 	 * Test parsing of a bug with many stacks traces in a single comment
 	 */
 	public void testMultipleStackSingleComment() {
-		// REPORT_REPOSITORY 40152 - 1 stack trace- 2 qual ref, stack trace, 1 qual ref - made
+		// REPORT_REPOSITORY 40152 - 1 stack trace- 2 qual ref, stack trace, 1
+		// qual ref - made
 		// up bug
 		performParse(40152, "40152.html", 33, false);
 	}
@@ -146,11 +154,11 @@ public class BugzillaStackTraceTest extends TestCase {
 	private void performParse(int bugNumber, String bugFileName, int numTracesExpected, boolean printStackTraces) {
 
 		BugzillaSearchHit hit = new BugzillaSearchHit("<TEST-SERVER>", bugNumber, "", "", "", "", "", "", "", ""); // stack
-																													// trace
-																													// in
-																													// desc
-																													// and
-																													// com
+		// trace
+		// in
+		// desc
+		// and
+		// com
 
 		// create a new doi info
 		BugzillaReportNode doi = new BugzillaReportNode(0, hit, false);
@@ -158,11 +166,11 @@ public class BugzillaStackTraceTest extends TestCase {
 
 			// read the bug in from a file
 			File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path(TEST_FILE_LOC + bugFileName)); // used
-																														// if
-																														// run
-																														// as a
-																														// plugin
-																														// test
+			// if
+			// run
+			// as a
+			// plugin
+			// test
 			// File f = new File(TEST_FILE_LOC+bugFileName); // used if run as a
 			// standalone test
 			Reader reader = new FileReader(f);
