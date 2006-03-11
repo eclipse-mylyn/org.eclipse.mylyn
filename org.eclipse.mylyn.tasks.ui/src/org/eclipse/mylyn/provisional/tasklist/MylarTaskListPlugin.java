@@ -338,8 +338,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	private void migrateHandlesToRepositorySupport() {
 		boolean migrated = false;
-		getPreferenceStore().setDefault(TaskListPreferenceConstants.CONTEXTS_MIGRATED, false);
-		if (!getPreferenceStore().getBoolean(TaskListPreferenceConstants.CONTEXTS_MIGRATED)) {
+		getPrefs().setDefault(TaskListPreferenceConstants.CONTEXTS_MIGRATED, false);
+		if (!getPrefs().getBoolean(TaskListPreferenceConstants.CONTEXTS_MIGRATED)) {
 			File dataDir = new File(MylarPlugin.getDefault().getDataDirectory());
 			TaskRepository defaultRepository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
 					TaskRepositoryManager.PREFIX_REPOSITORY_OLD.toLowerCase());
@@ -377,7 +377,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		}
 		if (migrated) {
 			MylarStatusHandler.log("Migrated context files to repository-aware paths", this);
-			getPreferenceStore().setValue(TaskListPreferenceConstants.CONTEXTS_MIGRATED, true);
+			getPrefs().setValue(TaskListPreferenceConstants.CONTEXTS_MIGRATED, true);
 		}
 	}
 	
@@ -393,6 +393,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, ""+(30 * 60 * 1000));
 
+		store.setDefault(TaskListPreferenceConstants.FILTER_ARCHIVE_MODE, true);
 		store.setDefault(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS, false);
 		store.setValue(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS, false);
 
@@ -460,44 +461,33 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		}
 	}
 
-	/**
-	 * TODO: move
-	 */
-	public static void setCurrentPriorityLevel(Task.PriorityLevel pl) {
-		getPrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY, pl.toString());
-	}
+//	public static void setCurrentPriorityLevel(Task.PriorityLevel pl) {
+//		getPrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY, pl.toString());
+//	}
 
-	public static String getCurrentPriorityLevel() {
-		if (getPrefs().contains(TaskListPreferenceConstants.SELECTED_PRIORITY)) {
-			return getPrefs().getString(TaskListPreferenceConstants.SELECTED_PRIORITY);
-		} else {
-			return Task.PriorityLevel.P5.toString();
-		}
-	}
+//	public void setFilterCompleteMode(boolean isFilterOn) {
+//		getPrefs().setValue(TaskListPreferenceConstants.FILTER_COMPLETE_MODE, isFilterOn);
+//	} 
+	 
+//	public boolean isFilterCompleteMode() {
+//		if (getPrefs().contains(TaskListPreferenceConstants.FILTER_COMPLETE_MODE)) {
+//			return getPrefs().getBoolean(TaskListPreferenceConstants.FILTER_COMPLETE_MODE);
+//		} else {
+//			return false;
+//		}
+//	}
 
-	public void setFilterCompleteMode(boolean isFilterOn) {
-		getPrefs().setValue(TaskListPreferenceConstants.FILTER_COMPLETE_MODE, isFilterOn);
-	}
+//	public void setFilterInCompleteMode(boolean isFilterOn) {
+//		getPrefs().setValue(TaskListPreferenceConstants.FILTER_INCOMPLETE_MODE, isFilterOn);
+//	}
 
-	public boolean isFilterCompleteMode() {
-		if (getPrefs().contains(TaskListPreferenceConstants.FILTER_COMPLETE_MODE)) {
-			return getPrefs().getBoolean(TaskListPreferenceConstants.FILTER_COMPLETE_MODE);
-		} else {
-			return false;
-		}
-	}
-
-	public void setFilterInCompleteMode(boolean isFilterOn) {
-		getPrefs().setValue(TaskListPreferenceConstants.FILTER_INCOMPLETE_MODE, isFilterOn);
-	}
-
-	public boolean isFilterInCompleteMode() {
-		if (getPrefs().contains(TaskListPreferenceConstants.FILTER_INCOMPLETE_MODE)) {
-			return getPrefs().getBoolean(TaskListPreferenceConstants.FILTER_INCOMPLETE_MODE);
-		} else {
-			return false;
-		}
-	}
+//	public boolean isFilterInCompleteMode() {
+//		if (getPrefs().contains(TaskListPreferenceConstants.FILTER_INCOMPLETE_MODE)) {
+//			return getPrefs().getBoolean(TaskListPreferenceConstants.FILTER_INCOMPLETE_MODE);
+//		} else {
+//			return false;
+//		}
+//	}
 
 	// public List<ITaskHandler> getTaskHandlers() {
 	// return taskHandlers;

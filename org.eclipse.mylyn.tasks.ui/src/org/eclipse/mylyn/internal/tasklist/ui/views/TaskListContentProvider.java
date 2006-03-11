@@ -102,12 +102,11 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 		if (containsNoFilterText(filterText)) {
 			List<ITaskListElement> filteredRoots = new ArrayList<ITaskListElement>();
 			for (ITaskListElement element : roots) {
-//			for (int i = 0; i < list.size(); i++) {
 				if (element instanceof ITask) {
 					if (!filter(element)) {
 						filteredRoots.add(element);
 					}
-				} else if (element instanceof TaskCategory) {
+				} else if (element instanceof TaskCategory) { 
 					if (selectCategory((TaskCategory)element)) {
 						filteredRoots.add(element);
 					}
@@ -140,15 +139,11 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 				return true;
 			}
 		}
-//		for (int i = 0; i < list.size(); i++) {
-//			if (!filter(list.get(i))) {
-//				return true;
-//			}
-//		}
 		return false;
 	}
 
 	private boolean selectCategory(ITaskContainer cat) {
+ 
 		if (cat.isArchive()) {
 			for (ITask task : cat.getChildren()) {
 				if (contentTaskFilter.shouldAlwaysShow(task)) {
@@ -169,11 +164,6 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 				return true;
 			}
 		}
-//		for (int i = 0; i < list.size(); i++) {
-//			if (!filter(list.get(i))) {
-//				return true;
-//			}
-//		}
 		return false;
 	}
 
@@ -190,7 +180,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 							if (t == null)
 								children.add(task);
 						}
-					}
+					} 
 					return children;
 				}
 				Set<? extends ITaskListElement> list = ((ITaskContainer) parent).getChildren();
@@ -199,11 +189,6 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 						children.add(element);
 					}
 				}
-//				for (int i = 0; i < list.size(); i++) {
-//					if (!filter(list.get(i))) {
-//						children.add(list.get(i));
-//					}
-//				}
 				return children;
 			} else if (parent instanceof AbstractRepositoryQuery) {
 				Set<? extends ITaskListElement> list = ((AbstractRepositoryQuery) parent).getHits();
@@ -212,11 +197,6 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 						children.add(element);
 					}
 				}
-//				for (int i = 0; i < list.size(); i++) {
-//					if (!filter(list.get(i))) {
-//						children.add(list.get(i));
-//					}
-//				}
 				return children;
 			} else if (parent instanceof Task) {
 				Set<ITask> subTasks = ((Task) parent).getChildren();

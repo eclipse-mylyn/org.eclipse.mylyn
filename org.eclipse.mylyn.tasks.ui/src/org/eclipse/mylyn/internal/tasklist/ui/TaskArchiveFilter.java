@@ -8,21 +8,23 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.provisional.tasklist;
+package org.eclipse.mylar.internal.tasklist.ui;
 
-import java.util.Set;
+import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
 
 /**
- * Manipulate containers via TaskListManager
- * 
  * @author Mik Kersten
  */
-public interface ITaskContainer extends ITaskListElement {
+public class TaskArchiveFilter extends AbstractTaskFilter {
 
-	public Set<ITask> getChildren();
-
-	public boolean isArchive();
-
-	public void setIsArchive(boolean isArchive);
-
+	public boolean select(Object element) {
+//		return false;
+//		System.err.println(">>> " + element.getClass());
+		if (element instanceof ITaskContainer) {
+			System.err.println("!!!");
+			ITaskContainer container = (ITaskContainer)element;
+			return !container.isArchive();
+		} 
+		return true;
+	}
 }

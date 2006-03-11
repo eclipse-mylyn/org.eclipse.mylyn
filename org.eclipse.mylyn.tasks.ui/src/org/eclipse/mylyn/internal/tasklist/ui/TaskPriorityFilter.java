@@ -10,13 +10,14 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasklist.ui;
 
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.Task;
 
 /**
+ * @author Mik Kersten
  * @author Ken Sueda
  */
 public class TaskPriorityFilter extends AbstractTaskFilter {
@@ -26,15 +27,14 @@ public class TaskPriorityFilter extends AbstractTaskFilter {
 	private String priorityLevel = Task.PriorityLevel.P5.toString();
 
 	public TaskPriorityFilter() {
-		displayPrioritiesAbove(MylarTaskListPlugin.getCurrentPriorityLevel());
+		displayPrioritiesAbove(TaskListView.getCurrentPriorityLevel());
 	}
-
+ 
 	public void displayPrioritiesAbove(String level) {
 		priorityLevel = level;
 	}
 
 	public boolean select(Object element) {
-		// System.out.println("Priority: " + priorityLevel);
 		if (element instanceof ITaskListElement) {
 			if (element instanceof AbstractQueryHit && ((AbstractQueryHit) element).getCorrespondingTask() != null) {
 				element = ((AbstractQueryHit) element).getCorrespondingTask();

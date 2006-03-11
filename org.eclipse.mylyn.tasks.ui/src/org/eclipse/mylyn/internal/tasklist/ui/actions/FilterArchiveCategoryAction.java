@@ -18,32 +18,32 @@ import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 
 /**
- * @author Mik Kersten
+ * @author Mik Kersten 
  */
-public class FilterCompletedTasksAction extends Action {
+public class FilterArchiveCategoryAction extends Action {
 
-	public static final String ID = "org.eclipse.mylar.tasklist.actions.filter.completed";
+	public static final String ID = "org.eclipse.mylar.tasklist.actions.filter.archive";
+
+	private static final String LABEL = "Filter Archive Category";
 	
-	private static final String LABEL = "Filter Completed Tasks";
-
 	private final TaskListView view;
 
-	public FilterCompletedTasksAction(TaskListView view) {
+	public FilterArchiveCategoryAction(TaskListView view) {
 		this.view = view;
 		setText(LABEL);
 		setToolTipText(LABEL);
-		setId(ID);
-		setImageDescriptor(TaskListImages.FILTER_COMPLETE);
-		setChecked(MylarTaskListPlugin.getPrefs().contains(TaskListPreferenceConstants.FILTER_COMPLETE_MODE));
+		setId(ID); 
+		setImageDescriptor(TaskListImages.FILTER_ARCHIVE);
+		setChecked(MylarTaskListPlugin.getPrefs().contains(TaskListPreferenceConstants.FILTER_ARCHIVE_MODE));
 	}
 
 	@Override
 	public void run() {
-		MylarTaskListPlugin.getPrefs().setValue(TaskListPreferenceConstants.FILTER_COMPLETE_MODE, isChecked());
+		MylarTaskListPlugin.getPrefs().setValue(TaskListPreferenceConstants.FILTER_ARCHIVE_MODE, isChecked());
 		if (isChecked()) {
-			view.addFilter(view.getCompleteFilter());
+			view.addFilter(view.getArchiveFilter());
 		} else {
-			view.removeFilter(view.getCompleteFilter());
+			view.removeFilter(view.getArchiveFilter());
 		}
 		this.view.getViewer().refresh();
 	}

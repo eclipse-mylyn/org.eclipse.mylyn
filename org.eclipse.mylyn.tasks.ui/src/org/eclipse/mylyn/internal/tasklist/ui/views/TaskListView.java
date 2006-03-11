@@ -44,9 +44,11 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.internal.core.dt.MylarWebRef;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.ui.AbstractTaskFilter;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
-import org.eclipse.mylar.internal.tasklist.ui.TaskCompleteFilter;
+import org.eclipse.mylar.internal.tasklist.ui.TaskArchiveFilter;
+import org.eclipse.mylar.internal.tasklist.ui.TaskCompletionFilter;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListPatternFilter;
@@ -56,6 +58,7 @@ import org.eclipse.mylar.internal.tasklist.ui.actions.CollapseAllAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.CopyDescriptionAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.DeleteAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.ExpandAllAction;
+import org.eclipse.mylar.internal.tasklist.ui.actions.FilterArchiveCategoryAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.FilterCompletedTasksAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.GoIntoAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.GoUpAction;
@@ -133,6 +136,8 @@ public class TaskListView extends ViewPart {
 
 	private static final String SEPARATOR_CONTEXT = "context";
 
+	private static final String SEPARATOR_FILTERS = "filters";
+	
 	private static final String SEPARATOR_REPORTS = "reports";
 
 	private static final String LABEL_NO_TASKS = "no task active";
@@ -195,16 +200,20 @@ public class TaskListView extends ViewPart {
 
 	private FilterCompletedTasksAction filterCompleteTask;
 
+	private FilterArchiveCategoryAction filterArchiveCategory;
+	
 	private PriorityDropDownAction filterOnPriority;
 
 	private PreviousTaskDropDownAction previousTaskAction;
 
 	private NextTaskDropDownAction nextTaskAction;
 
-	private static TaskPriorityFilter PRIORITY_FILTER = new TaskPriorityFilter();
+	private static TaskPriorityFilter FILTER_PRIORITY = new TaskPriorityFilter();
 
-	private static TaskCompleteFilter COMPLETE_FILTER = new TaskCompleteFilter();
+	private static TaskCompletionFilter FILTER_COMPLETE = new TaskCompletionFilter();
 
+	private static TaskArchiveFilter FILTER_ARCHIVE = new TaskArchiveFilter();
+	
 	private List<AbstractTaskFilter> filters = new ArrayList<AbstractTaskFilter>();
 
 	static final String FILTER_LABEL = "<filter>";
@@ -338,8 +347,9 @@ public class TaskListView extends ViewPart {
 			Action P1 = new Action("", AS_CHECK_BOX) {
 				@Override
 				public void run() {
-					MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P1);
-					PRIORITY_FILTER.displayPrioritiesAbove(PRIORITY_LEVELS[0]);
+					MylarTaskListPlugin.getPrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P1.toString());
+//					MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P1);
+					FILTER_PRIORITY.displayPrioritiesAbove(PRIORITY_LEVELS[0]);
 					getViewer().refresh();
 				}
 			};
@@ -352,8 +362,9 @@ public class TaskListView extends ViewPart {
 			Action P2 = new Action("", AS_CHECK_BOX) {
 				@Override
 				public void run() {
-					MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P2);
-					PRIORITY_FILTER.displayPrioritiesAbove(PRIORITY_LEVELS[1]);
+					MylarTaskListPlugin.getPrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P2.toString());
+//					MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P2);
+					FILTER_PRIORITY.displayPrioritiesAbove(PRIORITY_LEVELS[1]);
 					getViewer().refresh();
 				}
 			};
@@ -366,8 +377,9 @@ public class TaskListView extends ViewPart {
 			Action P3 = new Action("", AS_CHECK_BOX) {
 				@Override
 				public void run() {
-					MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P3);
-					PRIORITY_FILTER.displayPrioritiesAbove(PRIORITY_LEVELS[2]);
+					MylarTaskListPlugin.getPrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P3.toString());
+//					MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P3);
+					FILTER_PRIORITY.displayPrioritiesAbove(PRIORITY_LEVELS[2]);
 					getViewer().refresh();
 				}
 			};
@@ -380,8 +392,9 @@ public class TaskListView extends ViewPart {
 			Action P4 = new Action("", AS_CHECK_BOX) {
 				@Override
 				public void run() {
-					MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P4);
-					PRIORITY_FILTER.displayPrioritiesAbove(PRIORITY_LEVELS[3]);
+					MylarTaskListPlugin.getPrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P4.toString());
+//					MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P4);
+					FILTER_PRIORITY.displayPrioritiesAbove(PRIORITY_LEVELS[3]);
 					getViewer().refresh();
 				}
 			};
@@ -394,8 +407,9 @@ public class TaskListView extends ViewPart {
 			Action P5 = new Action("", AS_CHECK_BOX) {
 				@Override
 				public void run() {
-					MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P5);
-					PRIORITY_FILTER.displayPrioritiesAbove(PRIORITY_LEVELS[4]);
+					MylarTaskListPlugin.getPrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P5.toString());
+//					MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P5);
+					FILTER_PRIORITY.displayPrioritiesAbove(PRIORITY_LEVELS[4]);
 					getViewer().refresh();
 				}
 			};
@@ -405,7 +419,7 @@ public class TaskListView extends ViewPart {
 			item = new ActionContributionItem(P5);
 			item.fill(dropDownMenu, -1);
 
-			String priority = MylarTaskListPlugin.getCurrentPriorityLevel();
+			String priority = getCurrentPriorityLevel();
 			if (priority.equals(PRIORITY_LEVELS[0])) {
 				P1.setChecked(true);
 			} else if (priority.equals(PRIORITY_LEVELS[1])) {
@@ -724,11 +738,15 @@ public class TaskListView extends ViewPart {
 			}
 			getViewer().setSorter(new TaskListTableSorter(this, columnNames[sortIndex]));
 		}
-		addFilter(PRIORITY_FILTER);
+		addFilter(FILTER_PRIORITY);
 		// if (MylarTaskListPlugin.getDefault().isFilterInCompleteMode())
 		// MylarTaskListPlugin.getTaskListManager().getTaskList().addFilter(inCompleteFilter);
-		if (MylarTaskListPlugin.getDefault().isFilterCompleteMode())
-			addFilter(COMPLETE_FILTER);
+		if (MylarTaskListPlugin.getPrefs().contains(TaskListPreferenceConstants.FILTER_COMPLETE_MODE))
+			addFilter(FILTER_COMPLETE);
+		
+		if (MylarTaskListPlugin.getPrefs().contains(TaskListPreferenceConstants.FILTER_ARCHIVE_MODE))
+			addFilter(FILTER_ARCHIVE);
+		
 		if (MylarTaskListPlugin.getDefault().isMultipleActiveTasksMode()) {
 			togglePreviousAction(false);
 			toggleNextAction(false);
@@ -898,6 +916,9 @@ public class TaskListView extends ViewPart {
 		manager.add(goUpAction);
 		manager.add(collapseAll);
 		manager.add(expandAll);
+		manager.add(new Separator(SEPARATOR_FILTERS));		
+		manager.add(filterCompleteTask);
+		manager.add(filterArchiveCategory);
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
@@ -905,8 +926,7 @@ public class TaskListView extends ViewPart {
 		manager.add(new Separator(SEPARATOR_ID_REPORTS));
 		manager.add(newLocalTaskAction);
 		// manager.add(newCategoryAction);
-		manager.add(new Separator());
-		manager.add(filterCompleteTask);
+//		manager.add(new Separator());
 		manager.add(filterOnPriority);
 		manager.add(new Separator("navigation"));
 		manager.add(previousTaskAction);
@@ -1093,6 +1113,7 @@ public class TaskListView extends ViewPart {
 		openTaskEditor = new OpenTaskListElementAction(this.getViewer());
 		openUrlInExternal = new OpenTaskInExternalBrowserAction();
 		filterCompleteTask = new FilterCompletedTasksAction(this);
+		filterArchiveCategory = new FilterArchiveCategoryAction(this);
 		filterOnPriority = new PriorityDropDownAction();
 		previousTaskAction = new PreviousTaskDropDownAction(this, taskHistory);
 		nextTaskAction = new NextTaskDropDownAction(this, taskHistory);
@@ -1186,12 +1207,12 @@ public class TaskListView extends ViewPart {
 		return filteredTree.getViewer();
 	}
 
-	public TaskCompleteFilter getCompleteFilter() {
-		return COMPLETE_FILTER;
+	public TaskCompletionFilter getCompleteFilter() {
+		return FILTER_COMPLETE;
 	}
 
 	public TaskPriorityFilter getPriorityFilter() {
-		return PRIORITY_FILTER;
+		return FILTER_PRIORITY;
 	}
 
 	public void addFilter(AbstractTaskFilter filter) {
@@ -1374,5 +1395,17 @@ public class TaskListView extends ViewPart {
 
 	public List<AbstractTaskFilter> getFilters() {
 		return filters;
+	}
+	
+	public static String getCurrentPriorityLevel() {
+		if (MylarTaskListPlugin.getPrefs().contains(TaskListPreferenceConstants.SELECTED_PRIORITY)) {
+			return MylarTaskListPlugin.getPrefs().getString(TaskListPreferenceConstants.SELECTED_PRIORITY);
+		} else {
+			return Task.PriorityLevel.P5.toString();
+		}
+	}
+
+	public TaskArchiveFilter getArchiveFilter() {
+		return FILTER_ARCHIVE;
 	}
 }

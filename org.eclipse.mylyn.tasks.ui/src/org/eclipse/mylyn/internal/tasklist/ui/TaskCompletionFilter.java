@@ -14,9 +14,9 @@ import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 
 /**
- * @author Ken Sueda
+ * @author Mik Kersten
  */
-public class TaskCompleteFilter extends AbstractTaskFilter {
+public class TaskCompletionFilter extends AbstractTaskFilter {
 
 	public boolean select(Object element) {
 		if (element instanceof ITask) {
@@ -36,11 +36,7 @@ public class TaskCompleteFilter extends AbstractTaskFilter {
 			} else {
 				return true;
 			}
-		} 
-//		else if (element instanceof ITaskListElement) {
-//			ITaskListElement taskElement = (ITaskListElement) element;
-//			return !taskElement.isCompleted();
-//		}
+		}
 		return false;
 	}
 }

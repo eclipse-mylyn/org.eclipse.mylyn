@@ -255,11 +255,13 @@ public class TaskListManager {
 				}
 				for (DateRangeContainer week : dateRangeContainers) {
 					if (week.includes(currentTaskStart)) {
-						week.addTask(new DateRangeActivityDelegate(week, currentTask, currentTaskStart, currentTaskEnd,
-								totalInactive));
-						if (taskActivityHistoryInitialized) {
-							for (ITaskActivityListener listener : activityListeners) {
-								listener.activityChanged(week);
+						if (currentTask != null) {
+							week.addTask(new DateRangeActivityDelegate(week, currentTask, currentTaskStart, currentTaskEnd,
+									totalInactive));
+							if (taskActivityHistoryInitialized) {
+								for (ITaskActivityListener listener : activityListeners) {
+									listener.activityChanged(week);
+								}
 							}
 						}
 					}

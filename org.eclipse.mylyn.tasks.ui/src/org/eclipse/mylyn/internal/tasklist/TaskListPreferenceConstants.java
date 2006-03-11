@@ -40,6 +40,8 @@ public class TaskListPreferenceConstants {
 
 	public static final String FILTER_COMPLETE_MODE = "org.eclipse.mylar.tasklist.filter.complete";
 
+	public static final String FILTER_ARCHIVE_MODE = "org.eclipse.mylar.tasklist.filter.archive";
+	
 	public static final String FILTER_INCOMPLETE_MODE = "org.eclipse.mylar.tasklist.filter.incomplete";
 
 	public static final String SAVE_TASKLIST_MODE = "org.eclipse.mylar.tasklist.save.mode";

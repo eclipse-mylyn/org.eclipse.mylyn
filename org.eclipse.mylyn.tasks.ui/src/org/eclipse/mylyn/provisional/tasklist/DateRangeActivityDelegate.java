@@ -36,6 +36,9 @@ public class DateRangeActivityDelegate implements ITask {
 	}
 	
 	public DateRangeActivityDelegate(DateRangeContainer parent, ITask task, Calendar start, Calendar end, long inactivity) {
+		if (task == null) {
+			throw new RuntimeException("attempted to instantiated with null task: " + parent);
+		}
 		this.task = task;
 		this.start = start;
 		this.end = end;

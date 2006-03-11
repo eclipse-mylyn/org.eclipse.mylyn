@@ -51,6 +51,8 @@ public class TaskListImages {
 
 	public static final ImageDescriptor FILTER_COMPLETE = create(T_ELCL, "filter-complete.gif");
 
+	public static final ImageDescriptor FILTER_ARCHIVE = create(T_ELCL, "filter-archive.gif");
+	
 	public static final ImageDescriptor FILTER_PRIORITY = create(T_ELCL, "filter-priority.gif");
 
 	public static final ImageDescriptor COLOR_PALETTE = create(T_ELCL, "color-palette.gif");
