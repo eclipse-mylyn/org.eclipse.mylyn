@@ -18,10 +18,7 @@ import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
 public class TaskArchiveFilter extends AbstractTaskFilter {
 
 	public boolean select(Object element) {
-//		return false;
-//		System.err.println(">>> " + element.getClass());
 		if (element instanceof ITaskContainer) {
-			System.err.println("!!!");
 			ITaskContainer container = (ITaskContainer)element;
 			return !container.isArchive();
 		} 

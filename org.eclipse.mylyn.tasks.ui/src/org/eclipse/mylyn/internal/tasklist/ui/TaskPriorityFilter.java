@@ -55,7 +55,7 @@ public class TaskPriorityFilter extends AbstractTaskFilter {
 			}
 			return false;
 		}
-		return false;
+		return true;
 	}
 
 }

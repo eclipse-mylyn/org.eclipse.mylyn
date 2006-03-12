@@ -142,24 +142,28 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 		return false;
 	}
 
-	private boolean selectCategory(ITaskContainer cat) {
- 
-		if (cat.isArchive()) {
-			for (ITask task : cat.getChildren()) {
-				if (contentTaskFilter.shouldAlwaysShow(task)) {
-					ITask t = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(task.getHandleIdentifier(),
-							false);
-					if (t == null)
-						return true;
-				}
-			}
+	private boolean selectCategory(ITaskContainer container) {
+		if (filter(container)) {
 			return false;
 		}
-		Set<? extends ITaskListElement> list = cat.getChildren();
-		if (list.size() == 0) {
+//		return false;
+//		if (cat.isArchive()) {
+//			for (ITask task : cat.getChildren()) {
+//				if (contentTaskFilter.shouldAlwaysShow(task)) {
+//					ITask t = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(task.getHandleIdentifier(),
+//							false);
+//					if (t == null)
+//						return true;
+//				}
+//			}
+//			return false;
+//		}
+		
+		Set<ITask> children = container.getChildren();
+		if (children.size() == 0) {
 			return true;
 		}
-		for (ITaskListElement element : list) {
+		for (ITaskListElement element : children) {
 			if (!filter(element)) {
 				return true;
 			}
@@ -172,17 +176,17 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 				|| ((Text) this.view.getFilteredTree().getFilterControl()).getText().startsWith(TaskListView.FILTER_LABEL)) {
 			List<Object> children = new ArrayList<Object>();
 			if (parent instanceof TaskCategory) { 
-				if (((ITaskContainer) parent).isArchive()) {
-					for (ITask task : ((ITaskContainer) parent).getChildren()) {
-						if (contentTaskFilter.shouldAlwaysShow(task)) {
-							ITask t = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(
-									task.getHandleIdentifier(), false);
-							if (t == null)
-								children.add(task);
-						}
-					} 
-					return children;
-				}
+//				if (((ITaskContainer) parent).isArchive()) {
+//					for (ITask task : ((ITaskContainer) parent).getChildren()) {
+//						if (contentTaskFilter.shouldAlwaysShow(task)) {
+//							ITask t = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(
+//									task.getHandleIdentifier(), false);
+//							if (t == null)
+//								children.add(task);
+//						}
+//					} 
+//					return children;
+//				}
 				Set<? extends ITaskListElement> list = ((ITaskContainer) parent).getChildren();
 				for (ITaskListElement element : list) {
 					if (!filter(element)) {

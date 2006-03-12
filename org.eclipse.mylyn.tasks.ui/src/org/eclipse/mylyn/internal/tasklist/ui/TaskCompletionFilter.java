@@ -37,6 +37,6 @@ public class TaskCompletionFilter extends AbstractTaskFilter {
 				return true;
 			}
 		}
-		return false;
+		return true;
 	}
 }
