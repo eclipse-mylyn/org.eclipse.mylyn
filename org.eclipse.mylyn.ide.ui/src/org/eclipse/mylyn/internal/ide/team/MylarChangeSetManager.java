@@ -25,8 +25,11 @@ import org.eclipse.mylar.provisional.core.IMylarContextListener;
 import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.provisional.tasklist.DateRangeContainer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.ITaskChangeListener;
+import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
+import org.eclipse.mylar.provisional.tasklist.ITaskListChangeListener;
+import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.team.internal.ccvs.ui.CVSUIPlugin;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
@@ -73,11 +76,30 @@ public class MylarChangeSetManager implements IMylarContextListener {
 
 	private Map<String, MylarContextChangeSet> activeChangeSets = new HashMap<String, MylarContextChangeSet>();
 
-	private ITaskChangeListener TASK_ACTIVITY_LISTENER = new ITaskChangeListener() {
-
+	private ITaskActivityListener TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
+		
 		public void tasklistRead() {
 			initContextChangeSets();
 		}
+		
+		public void taskActivated(ITask task) {
+			// ignore
+		}
+
+		public void tasksActivated(List<ITask> tasks) {
+			// ignore
+		}
+
+		public void taskDeactivated(ITask task) {
+			// ignore			
+		}
+
+		public void activityChanged(DateRangeContainer week) {
+			// ignore	
+		}
+	};
+	
+	private ITaskListChangeListener TASK_CHANGE_LISTENER = new ITaskListChangeListener() {
 
 		public void localInfoChanged(ITask task) {
 			ChangeSet[] sets = collector.getSets();
@@ -92,11 +114,23 @@ public class MylarChangeSetManager implements IMylarContextListener {
 			}
 		}
 
-		public void taskListModified() {
+		public void repositoryInfoChanged(ITask task) {
 			// ignore
 		}
 
-		public void repositoryInfoChanged(ITask task) {
+		public void taskMoved(ITask task, ITaskContainer fromContainer, ITaskContainer toContainer) {
+			// ignore
+		}
+
+		public void taskDeleted(ITask task) {
+			// ignore
+		}
+
+		public void containerAdded(ITaskContainer container) {
+			// ignore
+		}
+
+		public void containerDeleted(ITaskContainer container) {
 			// ignore
 		}
 	};
@@ -110,7 +144,8 @@ public class MylarChangeSetManager implements IMylarContextListener {
 	public void enable() {
 		if (!isEnabled) {
 			MylarPlugin.getContextManager().addListener(this);
-			MylarTaskListPlugin.getTaskListManager().addChangeListener(TASK_ACTIVITY_LISTENER);
+			MylarTaskListPlugin.getTaskListManager().getTaskList().addChangeListener(TASK_CHANGE_LISTENER);
+			MylarTaskListPlugin.getTaskListManager().addActivityListener(TASK_ACTIVITY_LISTENER);
 			if (MylarTaskListPlugin.getTaskListManager().isTaskListInitialized()) {
 				initContextChangeSets(); // otherwise listener will do it
 			}
@@ -121,7 +156,8 @@ public class MylarChangeSetManager implements IMylarContextListener {
 
 	public void disable() {
 		MylarPlugin.getContextManager().removeListener(this);
-		MylarTaskListPlugin.getTaskListManager().removeChangeListener(TASK_ACTIVITY_LISTENER);
+		MylarTaskListPlugin.getTaskListManager().removeActivityListener(TASK_ACTIVITY_LISTENER);
+		MylarTaskListPlugin.getTaskListManager().getTaskList().removeChangeListener(TASK_CHANGE_LISTENER);
 		collector.removeListener(CHANGE_SET_LISTENER);
 		isEnabled = false;
 	}
