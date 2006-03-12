@@ -57,7 +57,7 @@ public class ActiveFoldingListener implements IMylarContextListener {
 					enabled = false;
 				}
 				updateFolding();
-			} 
+			}
 		}
 	};
 
@@ -148,18 +148,22 @@ public class ActiveFoldingListener implements IMylarContextListener {
 				IMember member = (IMember) object;
 				if (element.getInterest().isInteresting()) {
 					updater.expandElements(new IJavaElement[] { member });
-					// expand the next child (e.g. for anonymous types)
-					if (member instanceof IParent) {
-						IParent parent = (IParent) member;
-						IJavaElement[] children;
-						try {
-							children = parent.getChildren();
+					// expand the next 2 children down (e.g. anonymous types)
+					try {
+						if (member instanceof IParent) {
+							IJavaElement[] children = ((IParent)member).getChildren();
 							if (children.length == 1) {
 								updater.expandElements(new IJavaElement[] { children[0] });
+								if (children[0] instanceof IParent) {
+									IJavaElement[] childsChildren = ((IParent)children[0]).getChildren();
+									if (childsChildren.length == 1) {
+										updater.expandElements(new IJavaElement[] { childsChildren[0] });
+									}
+								}
 							}
-						} catch (JavaModelException e) {
-							// ignore
 						}
+					} catch (JavaModelException e) {
+						// ignore
 					}
 				} else {
 					updater.collapseElements(new IJavaElement[] { member });
