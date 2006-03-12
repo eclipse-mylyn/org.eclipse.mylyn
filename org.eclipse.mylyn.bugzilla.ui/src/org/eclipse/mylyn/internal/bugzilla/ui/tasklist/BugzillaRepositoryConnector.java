@@ -363,7 +363,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			}
 
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			MylarStatusHandler.fail(e, "possible problem submitting bugzilla report", true);
 		}
 	}
 
