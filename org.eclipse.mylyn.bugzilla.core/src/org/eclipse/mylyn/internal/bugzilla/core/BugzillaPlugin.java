@@ -42,6 +42,7 @@ import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile;
 import org.eclipse.mylar.internal.bugzilla.core.internal.ProductConfiguration;
 import org.eclipse.mylar.internal.bugzilla.core.internal.ProductConfigurationFactory;
 import org.eclipse.mylar.internal.bugzilla.core.search.IBugzillaResultEditorMatchAdapter;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -249,9 +250,15 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 		try {
 			offlineReportsFile = new OfflineReportsFile(offlineReportsPath.toFile());
 		} catch (Exception e) {
-			logAndShowExceptionDetailsDialog(e, "occurred while restoring saved offline Bugzilla reports.",
-					"Bugzilla Offline Reports Error");
+			MylarStatusHandler.fail(e, "could not restore offline Bugzilla reports file", true);
+//			logAndShowExceptionDetailsDialog(e, "occurred while restoring saved offline Bugzilla reports.",
+//					"Bugzilla Offline Reports Error");
 			offlineReportsPath.toFile().delete();
+			try {
+				offlineReportsFile = new OfflineReportsFile(offlineReportsPath.toFile());
+			} catch (IOException e1) {
+				MylarStatusHandler.fail(e, "could not reset offline Bugzilla reports file", true);
+			}
 		}
 	}
 

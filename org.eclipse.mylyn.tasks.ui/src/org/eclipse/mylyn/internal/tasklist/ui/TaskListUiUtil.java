@@ -42,6 +42,9 @@ public class TaskListUiUtil {
 	 * TODO: move
 	 */
 	public static Image getImageForPriority(Task.PriorityLevel priorityLevel) {
+		if (priorityLevel == null) {
+			return null;
+		}
 		switch (priorityLevel) {
 		case P1: 
 			return TaskListImages.getImage(TaskListImages.PRIORITY_1);

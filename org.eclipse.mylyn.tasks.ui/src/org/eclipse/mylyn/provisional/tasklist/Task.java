@@ -77,7 +77,7 @@ public class Task implements ITask {
 				return P4;
 			if (string.equals("P5"))
 				return P5;
-			return null;
+			return P3;
 		}
 		
 		public static PriorityLevel fromDescription(String string) {
