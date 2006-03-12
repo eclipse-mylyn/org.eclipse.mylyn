@@ -51,7 +51,7 @@ public class ChangeDataDirTest extends TestCase {
 		File dir = new File(newDataDir);
 		dir.mkdir();
 		dir.deleteOnExit();
-		MylarTaskListPlugin.getTaskListManager().createNewTaskList();
+		MylarTaskListPlugin.getTaskListManager().resetTaskList();
 		MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskListAndContexts();
 	}
 
@@ -95,7 +95,7 @@ public class ChangeDataDirTest extends TestCase {
 	public void testTaskMove() {
 		String handle = "task-1";
 		ITask task = new Task(handle, "label", true);
-		manager.moveToRoot(task);
+		manager.getTaskList().moveToRoot(task);
 
 		ITask readTaskBeforeMove = manager.getTaskForHandle(handle, true);
 		MylarTaskListPlugin.getDefault().getTaskListSaveManager().copyDataDirContentsTo(newDataDir);
@@ -132,7 +132,7 @@ public class ChangeDataDirTest extends TestCase {
 		MylarTaskListPlugin.getTaskListManager().getTaskList().addTaskToArchive(newTask);
 //		BugzillaTaskHandler handler = new BugzillaTaskHandler();
 //		handler.addTaskToArchive(newTask);
-		MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);
+		MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(newTask);
 	}
 
 	// /**

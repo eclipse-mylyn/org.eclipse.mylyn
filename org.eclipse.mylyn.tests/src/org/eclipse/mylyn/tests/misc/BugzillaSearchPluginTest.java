@@ -230,29 +230,29 @@ public class BugzillaSearchPluginTest extends TestCase {
 		// MylarTaskListPlugin.getTaskListManager().setTaskList(t);
 		TaskListManager manager = MylarTaskListPlugin.getTaskListManager();
 		TaskCategory cat = new TaskCategory("Testing Category");
-		manager.addCategory(cat);
+		manager.getTaskList().addCategory(cat);
 		BugzillaTask bugTask1 = new BugzillaTask(bugPrefix + 94185, "<bugzilla info>", true);
 
-		manager.moveToCategory(cat, bugTask1);
+		manager.getTaskList().moveToCategory(cat, bugTask1);
 		// cat.addTask(bugTask1);
 		while (bugTask1.isCurrentlySynchronizing()) {
 			Thread.sleep(500);
 		}
 		BugzillaTask bugTask2 = new BugzillaTask(bugPrefix + 3692, "<bugzilla info>", true);
-		manager.moveToCategory(cat, bugTask2);
+		manager.getTaskList().moveToCategory(cat, bugTask2);
 		// cat.addTask(bugTask2);
 		while (bugTask2.isCurrentlySynchronizing()) {
 			Thread.sleep(500);
 		}
 		BugzillaTask bugTask3 = new BugzillaTask(bugPrefix + 3693, "<bugzilla info>", true);
-		manager.moveToCategory(cat, bugTask3);
+		manager.getTaskList().moveToCategory(cat, bugTask3);
 		// cat.addTask(bugTask3);
 		while (bugTask3.isCurrentlySynchronizing()) {
 			Thread.sleep(500);
 		}
 
 		BugzillaTask bugTask4 = new BugzillaTask(bugPrefix + 9583, "<bugzilla info>", true);
-		manager.moveToCategory(cat, bugTask4);
+		manager.getTaskList().moveToCategory(cat, bugTask4);
 		// cat.addTask(bugTask4);
 		while (bugTask4.isCurrentlySynchronizing()) {
 			Thread.sleep(500);
@@ -283,7 +283,7 @@ public class BugzillaSearchPluginTest extends TestCase {
 		assertEquals("Results not the right size", 3, c.size());
 
 		MylarBugsPlugin.getBridge().removeFromLandmarksHash(astNodeType);
-		MylarTaskListPlugin.getTaskListManager().deleteCategory(cat);
+		MylarTaskListPlugin.getTaskListManager().getTaskList().deleteCategory(cat);
 	}
 
 	// TODO need to test a bug that wraps...should fail since we can only search
@@ -297,22 +297,22 @@ public class BugzillaSearchPluginTest extends TestCase {
 		// MylarTaskListPlugin.getTaskListManager().setTaskList(t);
 		TaskListManager manager = MylarTaskListPlugin.getTaskListManager();
 		TaskCategory cat = new TaskCategory("Testing Category");
-		manager.addCategory(cat);
+		manager.getTaskList().addCategory(cat);
 		BugzillaTask bugTask1 = new BugzillaTask(bugPrefix + 94185, "<bugzilla info>", true);
-		manager.moveToCategory(cat, bugTask1);
+		manager.getTaskList().moveToCategory(cat, bugTask1);
 		// cat.addTask(bugTask1);
 		while (bugTask1.isCurrentlySynchronizing()) {
 			Thread.sleep(500);
 		}
 
 		BugzillaTask bugTask2 = new BugzillaTask(bugPrefix + 9583, "<bugzilla info>", true);
-		manager.moveToCategory(cat, bugTask2);
+		manager.getTaskList().moveToCategory(cat, bugTask2);
 		// cat.addTask(bugTask2);
 		while (bugTask2.isCurrentlySynchronizing()) {
 			Thread.sleep(500);
 		}
 		BugzillaTask bugTask3 = new BugzillaTask(bugPrefix + 3693, "<bugzilla info>", true);
-		manager.moveToCategory(cat, bugTask3);
+		manager.getTaskList().moveToCategory(cat, bugTask3);
 		// cat.addTask(bugTask3);
 		while (bugTask3.isCurrentlySynchronizing()) {
 			Thread.sleep(500);
@@ -343,7 +343,7 @@ public class BugzillaSearchPluginTest extends TestCase {
 		assertEquals("Results not the right size", 1, c.size());
 
 		MylarBugsPlugin.getBridge().removeFromLandmarksHash(astNodeType);
-		MylarTaskListPlugin.getTaskListManager().deleteCategory(cat);
+		MylarTaskListPlugin.getTaskListManager().getTaskList().deleteCategory(cat);
 	}
 
 }
