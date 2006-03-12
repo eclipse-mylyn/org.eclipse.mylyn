@@ -24,7 +24,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.ITaskChangeListener;
+import org.eclipse.mylar.provisional.tasklist.ITaskListChangeListener;
+import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -33,7 +34,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Mik Kersten
  */
-public class TaskListSaveManager implements ITaskChangeListener, DisposeListener, IBackgroundSaveListener {
+public class TaskListSaveManager implements ITaskListChangeListener, DisposeListener, IBackgroundSaveListener {
 
 	private final static int DEFAULT_SAVE_INTERVAL = 5 * 60 * 1000;
 
@@ -151,13 +152,8 @@ public class TaskListSaveManager implements ITaskChangeListener, DisposeListener
 		}
 	}
 
-	/** For testing only * */
-	public BackgroundSaveTimer getSaveTimer() {
-		return saveTimer;
-	}
-
 	public void taskActivated(ITask task) {
-
+		// ignore
 	}
 
 	public void tasksActivated(List<ITask> tasks) {
@@ -180,10 +176,6 @@ public class TaskListSaveManager implements ITaskChangeListener, DisposeListener
 		// ignore
 	}
 
-	public void taskListModified() {
-		saveTaskListAndContexts();
-	}
-
 	public void widgetDisposed(DisposeEvent e) {
 		saveTaskListAndContexts();
 	}
@@ -194,5 +186,26 @@ public class TaskListSaveManager implements ITaskChangeListener, DisposeListener
 	public void setForceBackgroundSave(boolean on) {
 		forceBackgroundSave = on;
 		saveTimer.setForceSyncExec(on);
+	}
+
+	public void taskMoved(ITask task, ITaskContainer fromContainer, ITaskContainer toContainer) {
+		saveTaskListAndContexts();
+	}
+
+	public void taskDeleted(ITask task) {
+		saveTaskListAndContexts();
+	}
+
+	public void containerAdded(ITaskContainer container) {
+		saveTaskListAndContexts();
+	}
+
+	public void containerDeleted(ITaskContainer container) {
+		saveTaskListAndContexts();
+	}
+	
+	/** For testing only * */
+	public BackgroundSaveTimer getSaveTimer() {
+		return saveTimer;
 	}
 }

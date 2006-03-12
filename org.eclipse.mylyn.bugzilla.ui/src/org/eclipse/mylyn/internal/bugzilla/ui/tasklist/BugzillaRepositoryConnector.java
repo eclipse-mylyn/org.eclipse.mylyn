@@ -55,8 +55,9 @@ import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
+import org.eclipse.mylar.provisional.tasklist.DateRangeContainer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.ITaskChangeListener;
+import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
@@ -84,7 +85,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		super();
 		offlineReportsFile = BugzillaPlugin.getDefault().getOfflineReports();
 		if (!BugzillaPlugin.getDefault().getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION).equals("")) {
-			MylarTaskListPlugin.getTaskListManager().addChangeListener(new ITaskChangeListener() {
+			MylarTaskListPlugin.getTaskListManager().addActivityListener(new ITaskActivityListener() {
 
 				public void tasklistRead() {
 					String oldVersionSetting = BugzillaPlugin.getDefault().getPreferenceStore().getString(
@@ -96,19 +97,23 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 						MylarTaskListPlugin.getRepositoryManager().setVersion(repository, oldVersionSetting);
 					}
 					BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.SERVER_VERSION, "");
-					MylarTaskListPlugin.getTaskListManager().removeChangeListener(this);
+					MylarTaskListPlugin.getTaskListManager().removeActivityListener(this);
 				}
 
-				public void localInfoChanged(ITask task) {
+				public void taskActivated(ITask task) {
 					// ignore
 				}
 
-				public void repositoryInfoChanged(ITask task) {
+				public void tasksActivated(List<ITask> tasks) {
 					// ignore
 				}
 
-				public void taskListModified() {
+				public void taskDeactivated(ITask task) {
 					// ignore
+				}
+
+				public void activityChanged(DateRangeContainer week) {
+					// ignore	
 				}
 			});
 		}
@@ -289,7 +294,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		if (task != null && task instanceof BugzillaTask) {
 			BugzillaTask bugTask = (BugzillaTask) task;
 			bugTask.setSyncState(state);
-			MylarTaskListPlugin.getTaskListManager().notifyRepositoryInfoChanged(bugTask);
+			MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(bugTask);
 		}
 	}
 
@@ -363,7 +368,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			}
 
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "possible problem submitting bugzilla report", true);
+			throw new RuntimeException(e);
 		}
 	}
 

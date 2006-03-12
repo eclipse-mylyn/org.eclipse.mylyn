@@ -12,7 +12,6 @@
 package org.eclipse.mylar.internal.tasklist.ui.editors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -33,6 +32,7 @@ import org.eclipse.ui.part.EditorPart;
 
 /**
  * @author Ken Sueda
+ * @author Mik Kersten
  */
 public class CategoryEditor extends EditorPart {
 
@@ -46,9 +46,8 @@ public class CategoryEditor extends EditorPart {
 	public void doSave(IProgressMonitor monitor) {
 		input.setCategoryName(description.getText());
 		isDirty = false;
-		MylarTaskListPlugin.getTaskListManager().notifyListUpdated();
-//		if (TaskListView.getDefault() != null)
-//			TaskListView.getDefault().notifyTaskDataChanged(null);
+		// TODO: save the list
+//		MylarTaskListPlugin.getTaskListManager().notifyListUpdated();
 		firePropertyChange(PROP_DIRTY);
 	}
 

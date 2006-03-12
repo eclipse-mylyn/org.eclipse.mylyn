@@ -80,7 +80,7 @@ import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.DateRangeContainer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
-import org.eclipse.mylar.provisional.tasklist.ITaskChangeListener;
+import org.eclipse.mylar.provisional.tasklist.ITaskListChangeListener;
 import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -274,9 +274,13 @@ public class TaskListView extends ViewPart {
 		public void activityChanged(DateRangeContainer week) {
 			// ignore
 		}
+
+		public void tasklistRead() {
+			refresh(null);
+		}
 	};
 
-	private final ITaskChangeListener TASK_REFERESH_LISTENER = new ITaskChangeListener() {
+	private final ITaskListChangeListener TASK_REFERESH_LISTENER = new ITaskListChangeListener() {
 
 		public void localInfoChanged(ITask task) {
 			refreshTask(task);
@@ -286,13 +290,24 @@ public class TaskListView extends ViewPart {
 			refreshTask(task);
 		}
 
-		public void tasklistRead() {
+		public void taskMoved(ITask task, ITaskContainer fromContainer, ITaskContainer toContainer) {
+			refresh(toContainer);
+			refresh(task);
+			refresh(fromContainer);
+		}
+
+		public void taskDeleted(ITask task) {
 			refresh(null);
 		}
 
-		public void taskListModified() {
+		public void containerAdded(ITaskContainer container) {
 			refresh(null);
 		}
+
+		public void containerDeleted(ITaskContainer container) {
+			refresh(null);
+		}
+		
 	};
 
 	private final IPropertyChangeListener THEME_CHANGE_LISTENER = new IPropertyChangeListener() {
@@ -458,14 +473,14 @@ public class TaskListView extends ViewPart {
 
 	public TaskListView() {
 		INSTANCE = this;
-		MylarTaskListPlugin.getTaskListManager().addChangeListener(TASK_REFERESH_LISTENER);
+		MylarTaskListPlugin.getTaskListManager().getTaskList().addChangeListener(TASK_REFERESH_LISTENER);
 		MylarTaskListPlugin.getTaskListManager().addActivityListener(TASK_ACTIVITY_LISTENER);
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
-		MylarTaskListPlugin.getTaskListManager().removeChangeListener(TASK_REFERESH_LISTENER);
+		MylarTaskListPlugin.getTaskListManager().getTaskList().removeChangeListener(TASK_REFERESH_LISTENER);
 		MylarTaskListPlugin.getTaskListManager().removeActivityListener(TASK_ACTIVITY_LISTENER);
 		
 		final IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
@@ -645,7 +660,7 @@ public class TaskListView extends ViewPart {
 						if (!(task instanceof AbstractRepositoryTask)) {
 							Integer intVal = (Integer) value;
 							task.setPriority("P" + (intVal + 1));
-							MylarTaskListPlugin.getTaskListManager().notifyLocalInfoChanged(task);
+							MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
 						}
 						break;
 					case 3:
@@ -653,7 +668,7 @@ public class TaskListView extends ViewPart {
 							task.setDescription(((String) value).trim());
 							// MylarTaskListPlugin.getTaskListManager().notifyTaskPropertyChanged(task,
 							// columnNames[3]);
-							MylarTaskListPlugin.getTaskListManager().notifyLocalInfoChanged(task);
+							MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
 						}
 						break;
 					}

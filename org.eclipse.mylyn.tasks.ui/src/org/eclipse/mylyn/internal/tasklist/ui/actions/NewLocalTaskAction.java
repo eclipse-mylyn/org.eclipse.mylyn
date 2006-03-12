@@ -56,22 +56,22 @@ public class NewLocalTaskAction extends Action {
 			Object selectedObject = ((IStructuredSelection) view.getViewer().getSelection()).getFirstElement();
 
 			if (selectedObject instanceof TaskCategory) {
-				MylarTaskListPlugin.getTaskListManager().moveToCategory((TaskCategory) selectedObject, newTask);
+				MylarTaskListPlugin.getTaskListManager().getTaskList().moveToCategory((TaskCategory) selectedObject, newTask);
 			} else if (selectedObject instanceof ITask) {
 				ITask task = (ITask) selectedObject;
 				if (task.getCategory() != null) {
-					MylarTaskListPlugin.getTaskListManager().moveToCategory((TaskCategory) task.getCategory(), newTask);
+					MylarTaskListPlugin.getTaskListManager().getTaskList().moveToCategory((TaskCategory) task.getCategory(), newTask);
 				} else if (view.getDrilledIntoCategory() != null) {
-					MylarTaskListPlugin.getTaskListManager().moveToCategory(
+					MylarTaskListPlugin.getTaskListManager().getTaskList().moveToCategory(
 							(TaskCategory) view.getDrilledIntoCategory(), newTask);
 				} else {
-					MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);
+					MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(newTask);
 				}
 			} else if (view.getDrilledIntoCategory() != null) {
-				MylarTaskListPlugin.getTaskListManager().moveToCategory((TaskCategory) view.getDrilledIntoCategory(),
+				MylarTaskListPlugin.getTaskListManager().getTaskList().moveToCategory((TaskCategory) view.getDrilledIntoCategory(),
 						newTask);
 			} else {
-				MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);
+				MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(newTask);
 			}
 			MylarTaskListPlugin.getTaskListManager().getTaskList().addTaskToArchive(newTask);
 			TaskListUiUtil.openEditor(newTask);

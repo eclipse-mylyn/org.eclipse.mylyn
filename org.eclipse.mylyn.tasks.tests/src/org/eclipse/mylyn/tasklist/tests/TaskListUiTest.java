@@ -20,7 +20,7 @@ import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.TaskPriorityFilter;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.ITaskChangeListener;
+import org.eclipse.mylar.provisional.tasklist.ITaskListChangeListener;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.Task;
 import org.eclipse.mylar.provisional.tasklist.TaskCategory;
@@ -81,7 +81,7 @@ public class TaskListUiTest extends TestCase {
 			cat1task1.setPriority(Task.PriorityLevel.P1.toString());
 			cat1task1.setCompleted(true);
 			cat1task1.setCategory(cat1);
-			manager.moveToCategory(cat1, cat1task1);
+			manager.getTaskList().moveToCategory(cat1, cat1task1);
 
 			cat1task1sub1 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "sub task 1", true);
 			cat1task1sub1.setPriority(Task.PriorityLevel.P1.toString());
@@ -92,26 +92,26 @@ public class TaskListUiTest extends TestCase {
 			cat1task2 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 2", true);
 			cat1task2.setPriority(Task.PriorityLevel.P2.toString());
 			cat1task2.setCategory(cat1);
-			manager.moveToCategory(cat1, cat1task2);
+			manager.getTaskList().moveToCategory(cat1, cat1task2);
 
 			cat1task3 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 3", true);
 			cat1task3.setPriority(Task.PriorityLevel.P3.toString());
 			cat1task3.setCompleted(true);
 			cat1task3.setCategory(cat1);
-			manager.moveToCategory(cat1, cat1task3);
+			manager.getTaskList().moveToCategory(cat1, cat1task3);
 
 			cat1task4 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 4", true);
 			cat1task4.setPriority(Task.PriorityLevel.P4.toString());
 			cat1task4.setCategory(cat1);
-			manager.moveToCategory(cat1, cat1task4);
+			manager.getTaskList().moveToCategory(cat1, cat1task4);
 
 			cat1task5 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 5", true);
 			cat1task5.setPriority(Task.PriorityLevel.P5.toString());
 			cat1task5.setCompleted(true);
 			cat1task5.setCategory(cat1);
-			manager.moveToCategory(cat1, cat1task5);
+			manager.getTaskList().moveToCategory(cat1, cat1task5);
 
-			manager.addCategory(cat1);
+			manager.getTaskList().addCategory(cat1);
 			assertEquals(cat1.getChildren().size(), 5);
 
 			cat2 = new TaskCategory("Second Category");
@@ -119,7 +119,7 @@ public class TaskListUiTest extends TestCase {
 			cat2task1 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1", true);
 			cat2task1.setPriority(Task.PriorityLevel.P1.toString());
 			cat2task1.setCategory(cat2);
-			manager.moveToCategory(cat2, cat2task1);
+			manager.getTaskList().moveToCategory(cat2, cat2task1);
 
 			cat2task1sub1 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "sub task 1", true);
 			cat2task1sub1.setPriority(Task.PriorityLevel.P1.toString());
@@ -130,25 +130,25 @@ public class TaskListUiTest extends TestCase {
 			cat2task2.setPriority(Task.PriorityLevel.P2.toString());
 			cat2task2.setCompleted(true);
 			cat2task2.setCategory(cat2);
-			manager.moveToCategory(cat2, cat2task2);
+			manager.getTaskList().moveToCategory(cat2, cat2task2);
 
 			cat2task3 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 3", true);
 			cat2task3.setPriority(Task.PriorityLevel.P3.toString());
 			cat2task3.setCategory(cat2);
-			manager.moveToCategory(cat2, cat2task3);
+			manager.getTaskList().moveToCategory(cat2, cat2task3);
 
 			cat2task4 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 4", true);
 			cat2task4.setPriority(Task.PriorityLevel.P4.toString());
 			cat2task4.setCompleted(true);
 			cat2task4.setCategory(cat2);
-			manager.moveToCategory(cat2, cat2task4);
+			manager.getTaskList().moveToCategory(cat2, cat2task4);
 
 			cat2task5 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 5", true);
 			cat2task5.setPriority(Task.PriorityLevel.P5.toString());
 			cat2task5.setCategory(cat2);
-			manager.moveToCategory(cat2, cat2task5);
+			manager.getTaskList().moveToCategory(cat2, cat2task5);
 
-			manager.addCategory(cat2);
+			manager.getTaskList().addCategory(cat2);
 			manager.saveTaskList();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -194,7 +194,7 @@ public class TaskListUiTest extends TestCase {
 		int numListenersAfter = 0;
 
 		TaskListManager manager = MylarTaskListPlugin.getTaskListManager();
-		List<ITaskChangeListener> listeners = manager.getChangeListeners();
+		List<ITaskListChangeListener> listeners = manager.getTaskList().getChangeListeners();
 		numListenersBefore = listeners.size();
 
 		// open a task in editor
@@ -205,7 +205,7 @@ public class TaskListUiTest extends TestCase {
 //		cat1task2.openTaskInEditor(false);
 		TaskListUiUtil.openEditor(cat1task2, false);
 
-		listeners = manager.getChangeListeners();
+		listeners = manager.getTaskList().getChangeListeners();
 		numListenersDuring = listeners.size();
 
 		assertEquals(numListenersDuring, numListenersBefore + 2);
@@ -213,7 +213,7 @@ public class TaskListUiTest extends TestCase {
 		MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(
 				false);
 
-		listeners = manager.getChangeListeners();
+		listeners = manager.getTaskList().getChangeListeners();
 		numListenersAfter = listeners.size();
 		assertEquals(numListenersBefore, numListenersAfter);
 

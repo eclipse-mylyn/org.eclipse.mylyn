@@ -85,7 +85,7 @@ public abstract class AbstractRepositoryConnector {
 				setProperty(IProgressConstants.ICON_PROPERTY, TaskListImages.REPOSITORY_SYNCHRONIZE);
 				repositoryTask.setCurrentlyDownloading(true);
 				repositoryTask.setLastRefresh(new Date());
-				MylarTaskListPlugin.getTaskListManager().notifyRepositoryInfoChanged(repositoryTask);
+				MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 
 				updateOfflineState(repositoryTask, forceSync);
 
@@ -97,7 +97,7 @@ public abstract class AbstractRepositoryConnector {
 					repositoryTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
 				}
 
-				MylarTaskListPlugin.getTaskListManager().notifyRepositoryInfoChanged(repositoryTask);
+				MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 			} catch (Exception e) {
 				MylarStatusHandler.fail(e, "Could not download report", false);
 			}
@@ -210,7 +210,7 @@ public abstract class AbstractRepositoryConnector {
 				ITask found = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(task.getHandleIdentifier(),
 						false);
 				if (found == null) {
-					MylarTaskListPlugin.getTaskListManager().moveToRoot(task);
+					MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(task);
 					MessageDialog
 							.openInformation(
 									Display.getCurrent().getActiveShell(),

@@ -25,7 +25,8 @@ import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.ITaskChangeListener;
+import org.eclipse.mylar.provisional.tasklist.ITaskListChangeListener;
+import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.Task.PriorityLevel;
 import org.eclipse.swt.SWT;
@@ -129,11 +130,7 @@ public class TaskInfoEditor extends EditorPart {
 
 	private MylarTaskEditor parentEditor = null;
 
-	private ITaskChangeListener TASK_LIST_LISTENER = new ITaskChangeListener() {
-
-		public void tasklistRead() {
-			// ignore
-		}
+	private ITaskListChangeListener TASK_LIST_LISTENER = new ITaskListChangeListener() {
 
 		public void localInfoChanged(final ITask updateTask) {
 			if (updateTask != null && updateTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
@@ -179,10 +176,22 @@ public class TaskInfoEditor extends EditorPart {
 			localInfoChanged(task);
 		}
 
-		public void taskListModified() {
-			// TODO Auto-generated method stub
-
+		public void taskMoved(ITask task, ITaskContainer fromContainer, ITaskContainer toContainer) {
+			// ignore			
 		}
+
+		public void taskDeleted(ITask task) {
+			// ignore
+		}
+
+		public void containerAdded(ITaskContainer container) {
+			// ignore
+		}
+
+		public void containerDeleted(ITaskContainer container) {
+			// ignore
+		}
+
 	};
 
 	public TaskInfoEditor() {
@@ -212,7 +221,7 @@ public class TaskInfoEditor extends EditorPart {
 		copyAction.setAccelerator(SWT.CTRL | 'c');
 
 		copyAction.setEnabled(false);
-		MylarTaskListPlugin.getTaskListManager().addChangeListener(TASK_LIST_LISTENER);
+		MylarTaskListPlugin.getTaskListManager().getTaskList().addChangeListener(TASK_LIST_LISTENER);
 	}
 
 	@Override
@@ -250,7 +259,7 @@ public class TaskInfoEditor extends EditorPart {
 		// statusCombo.getItem(statusCombo.getSelectionIndex()));
 
 		// refreshTaskListView(task);
-		MylarTaskListPlugin.getTaskListManager().notifyLocalInfoChanged(task);
+		MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
 
 		markDirty(false);
 	}
@@ -798,7 +807,7 @@ public class TaskInfoEditor extends EditorPart {
 
 	@Override
 	public void dispose() {
-		MylarTaskListPlugin.getTaskListManager().removeChangeListener(TASK_LIST_LISTENER);
+		MylarTaskListPlugin.getTaskListManager().getTaskList().removeChangeListener(TASK_LIST_LISTENER);
 	}
 
 	@Override

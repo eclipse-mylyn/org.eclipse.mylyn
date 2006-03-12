@@ -12,18 +12,30 @@
 package org.eclipse.mylar.provisional.tasklist;
 
 
+
+
 /**
  * Listener for task list modifications and task content modifications.
  * 
  * @author Mik Kersten
  */
-public interface ITaskChangeListener {
+public interface ITaskListChangeListener {
 
 	public abstract void localInfoChanged(ITask task);
 
 	public abstract void repositoryInfoChanged(ITask task);
 	
-	public abstract void tasklistRead();
+	public abstract void taskDeleted(ITask task);
+	
+	public abstract void containerAdded(ITaskContainer container);
+		
+	public abstract void containerDeleted(ITaskContainer container);
 
-	public abstract void taskListModified();
+	/**
+	 * @param task
+	 * @param fromContainer	can be null
+	 * @param toContainer	can be null
+	 */
+	public abstract void taskMoved(ITask task, ITaskContainer fromContainer, ITaskContainer toContainer);
+	
 }

@@ -25,7 +25,6 @@ import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskListExternalizer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.Task;
-import org.eclipse.mylar.provisional.tasklist.TaskList;
 import org.eclipse.mylar.provisional.tasklist.TaskListManager;
 
 /**
@@ -53,14 +52,16 @@ public class TaskListStandaloneTest extends TestCase {
 		file = new File("foo" + MylarTaskListPlugin.FILE_EXTENSION);
 		file.deleteOnExit();
 		manager = new TaskListManager(writer, file, 1);
-		manager.createNewTaskList();
+		manager.resetTaskList();
 		assertEquals("should be empty: " + manager.getTaskList().getRootTasks(), 0, manager.getTaskList()
 				.getRootTasks().size());
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
-		manager.setTaskList(new TaskList());
+//		manager.getTaskList().clear();
+		manager.resetTaskList();
+//		manager.setTaskList(new TaskList());
 		super.tearDown();
 	}
 
@@ -83,7 +84,7 @@ public class TaskListStandaloneTest extends TestCase {
 		Date creation = new Date();
 		Task task = new Task("1", "task 1", true);
 
-		manager.moveToRoot(task);
+		manager.getTaskList().moveToRoot(task);
 		assertDatesCloseEnough(task.getCreationDate(), start);
 
 		task.setCompleted(true);

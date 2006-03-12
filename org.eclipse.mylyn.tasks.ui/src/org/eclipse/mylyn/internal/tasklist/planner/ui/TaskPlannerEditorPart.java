@@ -659,7 +659,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 					TaskCategory taskCategory = (TaskCategory) destinationCategory;
 					for (ITask task : editorInput.getPlannedTasks()) {
 						if (!taskCategory.getChildren().contains(task)) {
-							MylarTaskListPlugin.getTaskListManager().moveToCategory(taskCategory, task);
+							MylarTaskListPlugin.getTaskListManager().getTaskList().moveToCategory(taskCategory, task);
 						}
 					}
 					if (TaskListView.getDefault() != null) {

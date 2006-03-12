@@ -56,9 +56,9 @@ public class RemoveFromCategoryAction extends Action {
 					TreeItem item = this.view.getViewer().getTree().getSelection()[0];
 					if (item.getParentItem() != null && item.getParentItem().getData() instanceof TaskCategory) {
 						TaskCategory category = (TaskCategory) item.getParentItem().getData();
-						MylarTaskListPlugin.getTaskListManager().removeFromCategory(category, task);
+						MylarTaskListPlugin.getTaskListManager().getTaskList().removeFromCategory(category, task);
 					} else {
-						MylarTaskListPlugin.getTaskListManager().removeFromRoot(task);
+						MylarTaskListPlugin.getTaskListManager().getTaskList().removeFromRoot(task);
 					} 
 					// just in case, should already be there
 					MylarTaskListPlugin.getTaskListManager().getTaskList().addTaskToArchive(task);

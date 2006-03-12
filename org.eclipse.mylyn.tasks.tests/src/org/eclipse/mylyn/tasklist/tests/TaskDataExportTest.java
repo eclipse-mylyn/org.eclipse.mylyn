@@ -62,7 +62,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 
 		// Create a task and context with an interaction event to be saved
 		task1 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "Export Test Task", true);
-		manager.moveToRoot(task1);
+		manager.getTaskList().moveToRoot(task1);
 		mockContext = MylarPlugin.getContextManager().loadContext(task1.getHandleIdentifier());
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.EDIT, "structureKind", "handle", "originId");
 		mockContext.parseEvent(event);

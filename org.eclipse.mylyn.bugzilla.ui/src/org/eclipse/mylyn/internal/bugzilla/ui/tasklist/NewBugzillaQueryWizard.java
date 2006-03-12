@@ -61,7 +61,7 @@ public class NewBugzillaQueryWizard extends Wizard {
 //					queryPage.getQueryDialog().getUrl(), 
 //					queryPage.getQueryDialog().getMaxHits());
 //		}
-		MylarTaskListPlugin.getTaskListManager().addQuery(queryCategory);
+		MylarTaskListPlugin.getTaskListManager().getTaskList().addQuery(queryCategory);
 		boolean offline = MylarTaskListPlugin.getPrefs().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
 		if (!offline) {
 			WorkspaceModifyOperation op = new WorkspaceModifyOperation() {

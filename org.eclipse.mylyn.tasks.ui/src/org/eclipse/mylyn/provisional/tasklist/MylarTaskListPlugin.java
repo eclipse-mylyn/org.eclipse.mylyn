@@ -165,6 +165,10 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		public void activityChanged(DateRangeContainer week) {
 			// ignore
 		}
+
+		public void tasklistRead() {
+			// ignore
+		}
 	};
 
 	/**
@@ -228,7 +232,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 					getTaskListSaveManager().saveTaskListAndContexts();
 					getTaskListManager().setTaskListFile(new File(taskListFilePath));
-					getTaskListManager().createNewTaskList();
+					getTaskListManager().resetTaskList();
 					getTaskListManager().readExistingOrCreateNewList();
 
 					if (TaskListView.getDefault() != null)
@@ -296,7 +300,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					taskListRefreshManager.startRefreshJob();	
 					
 					taskListSaveManager = new TaskListSaveManager();
-					taskListManager.addChangeListener(taskListSaveManager); 
+					taskListManager.getTaskList().addChangeListener(taskListSaveManager); 
 					
 					MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);					
 					getPrefs().addPropertyChangeListener(taskListRefreshManager);
@@ -320,7 +324,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		INSTANCE = null;
 		resourceBundle = null;
 		try {
-			taskListManager.removeChangeListener(taskListSaveManager);
+			taskListManager.getTaskList().removeChangeListener(taskListSaveManager);
 			taskListManager.dispose();
 			if (MylarPlugin.getDefault() != null) {
 				MylarPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);

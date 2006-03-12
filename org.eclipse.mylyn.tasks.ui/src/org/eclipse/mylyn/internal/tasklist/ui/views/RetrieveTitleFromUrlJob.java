@@ -89,8 +89,10 @@ public abstract class RetrieveTitleFromUrlJob extends Job implements TitleListen
 		} else {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					MessageDialog.openError(Display.getDefault().getActiveShell(), "Task Description Error",
-							"Could not retrieve a description from the specified web page.");
+					if (Display.getDefault().getActiveShell().isDisposed()) {
+						MessageDialog.openError(Display.getDefault().getActiveShell(), "Task Description Error",
+								"Could not retrieve a description from the specified web page.");
+					}
 				}
 			});
 			return Status.CANCEL_STATUS;

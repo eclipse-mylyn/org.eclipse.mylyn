@@ -44,7 +44,7 @@ public class NewCategoryAction extends Action {
 		int dialogResult = dialog.open();
 		if (dialogResult == Window.OK) {
 			TaskCategory cat = new TaskCategory(dialog.getValue());
-			MylarTaskListPlugin.getTaskListManager().addCategory(cat);
+			MylarTaskListPlugin.getTaskListManager().getTaskList().addCategory(cat);
 			this.view.getViewer().refresh();
 		}
 	}

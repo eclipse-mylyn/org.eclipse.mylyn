@@ -16,7 +16,6 @@ package org.eclipse.mylar.provisional.tasklist;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -101,8 +100,6 @@ public class TaskListManager {
 
 	private Map<ITask, TaskActivityTimer> timerMap = new HashMap<ITask, TaskActivityTimer>();
 
-	private List<ITaskChangeListener> changeListeners = new ArrayList<ITaskChangeListener>();
-
 	private List<ITaskActivityListener> activityListeners = new ArrayList<ITaskActivityListener>();
 
 	private TaskListWriter taskListWriter;
@@ -179,7 +176,7 @@ public class TaskListManager {
 		MylarPlugin.getContextManager().removeActivityMetaContextListener(CONTEXT_LISTENER);
 	}
 
-	public TaskList createNewTaskList() {
+	public TaskList resetTaskList() {
 		resetActivity();
 		taskList = new TaskList();
 		taskListInitialized = true;
@@ -383,14 +380,7 @@ public class TaskListManager {
 		return dateRangeContainers.toArray();
 	}
 
-	/**
-	 * Exposed for unit testing
-	 * 
-	 * @return unmodifiable collection of ITaskActivityListeners
-	 */
-	public List<ITaskChangeListener> getChangeListeners() {
-		return Collections.unmodifiableList(changeListeners);
-	}
+
 
 	public String genUniqueTaskHandle() {
 		return TaskRepositoryManager.PREFIX_LOCAL + nextTaskId++;
@@ -406,7 +396,7 @@ public class TaskListManager {
 					nextTaskId = maxHandle + 1;
 				}
 			} else {
-				createNewTaskList();
+				resetTaskList();
 			}
 
 			for (ITask task : taskList.getAllTasks()) {
@@ -416,7 +406,7 @@ public class TaskListManager {
 			resetActivity();
 			parseFutureReminders();
 			taskListInitialized = true;
-			for (ITaskChangeListener listener : new ArrayList<ITaskChangeListener>(changeListeners)) {
+			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
 				listener.tasklistRead();
 			}
 
@@ -457,94 +447,7 @@ public class TaskListManager {
 		return taskList;
 	}
 
-	public void setTaskList(TaskList taskList) {
-		this.taskList = taskList;
-	}
 
-	public void moveToRoot(ITask task) {
-		if (task.getCategory() instanceof TaskCategory) {
-			((TaskCategory) task.getCategory()).removeTask(task);
-		}
-		// task.setCategory(null);
-		// if (!taskList.getRootTasks().contains(task))
-		taskList.internalAddRootTask(task);
-		for (ITaskChangeListener listener : changeListeners)
-			listener.taskListModified();
-	}
-
-	public void moveToCategory(TaskCategory category, ITask task) {
-		if (category.equals(taskList.getRootCategory())) {
-			moveToRoot(task);
-		} else {
-			taskList.removeFromRoot(task);
-		}
-		if (task.getCategory() instanceof TaskCategory) {
-			((TaskCategory) task.getCategory()).removeTask(task);
-		}
-		if (!category.getChildren().contains(task)) {
-			category.addTask(task);
-		}
-		task.setCategory(category);
-		for (ITaskChangeListener listener : changeListeners)
-			listener.taskListModified();
-	}
-
-	public void addCategory(ITaskContainer cat) {
-		taskList.addCategory(cat);
-		for (ITaskChangeListener listener : changeListeners)
-			listener.taskListModified();
-	}
-
-	public void removeFromCategory(TaskCategory category, ITask task) {
-		if (!category.isArchive()) {
-			category.removeTask(task);
-			task.setCategory(null);
-		}
-		for (ITaskChangeListener listener : changeListeners)
-			listener.taskListModified();
-	}
-
-	public void removeFromRoot(ITask task) {
-		taskList.removeFromRoot(task);
-		for (ITaskChangeListener listener : changeListeners)
-			listener.taskListModified();
-	}
-
-	public void addQuery(AbstractRepositoryQuery cat) {
-		taskList.addQuery(cat);
-		for (ITaskChangeListener listener : changeListeners)
-			listener.taskListModified();
-	}
-
-	public void deleteTask(ITask task) {
-		TaskActivityTimer taskTimer = timerMap.remove(task);
-		if (taskTimer != null)
-			taskTimer.stopTimer();
-		taskList.setActive(task, false);
-		taskList.deleteTask(task);
-		for (ITaskChangeListener listener : changeListeners)
-			listener.taskListModified();
-	}
-
-	public void deleteCategory(ITaskContainer cat) {
-		taskList.deleteCategory(cat);
-		for (ITaskChangeListener listener : changeListeners)
-			listener.taskListModified();
-	}
-
-	public void deleteQuery(AbstractRepositoryQuery query) {
-		taskList.deleteQuery(query);
-		for (ITaskChangeListener listener : changeListeners)
-			listener.taskListModified();
-	}
-
-	public void addChangeListener(ITaskChangeListener listener) {
-		changeListeners.add(listener);
-	}
-
-	public void removeChangeListener(ITaskChangeListener listener) {
-		changeListeners.remove(listener);
-	}
 
 	public void addActivityListener(ITaskActivityListener listener) {
 		activityListeners.add(listener);
@@ -575,52 +478,33 @@ public class TaskListManager {
 		}
 	}
 
-	public void deactivateTask(ITask task) {
+	public void deactivateTask(ITask task) {		
 		TaskActivityTimer taskTimer = timerMap.remove(task);
-		if (taskTimer != null)
+		if (taskTimer != null) {
 			taskTimer.stopTimer();
-		taskList.setActive(task, false);
-		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
-			try {
-				listener.taskDeactivated(task);
-			} catch (Throwable t) {
-				MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
+		}
+		if (task.isActive()) {
+			taskList.setActive(task, false);
+			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
+				try {
+					listener.taskDeactivated(task);
+				} catch (Throwable t) {
+					MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
+				}
 			}
 		}
 	}
 
-	/**
-	 * TODO: refactor into task deltas?
-	 */
-	public void notifyLocalInfoChanged(ITask task) {
-		for (ITaskChangeListener listener : new ArrayList<ITaskChangeListener>(changeListeners)) {
-			try {
-				listener.localInfoChanged(task);
-			} catch (Throwable t) {
-				MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
-			}
-		}
-	}
-
-	public void notifyRepositoryInfoChanged(ITask task) {
-		for (ITaskChangeListener listener : new ArrayList<ITaskChangeListener>(changeListeners)) {
-			try {
-				listener.repositoryInfoChanged(task);
-			} catch (Throwable t) {
-				MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
-			}
-		}
-	}
-
-	public void notifyListUpdated() {
-		for (ITaskChangeListener listener : new ArrayList<ITaskChangeListener>(changeListeners)) {
-			try {
-				listener.taskListModified();
-			} catch (Throwable t) {
-				MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
-			}
-		}
-	}
+	
+//	public void notifyListUpdated() {
+//		for (ITaskChangeListener listener : new ArrayList<ITaskChangeListener>(changeListeners)) {
+//			try {
+//				listener.taskListModified();
+//			} catch (Throwable t) {
+//				MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
+//			}
+//		}
+//	}
 
 	public void setTaskListFile(File f) {
 		this.taskListFile = f;
@@ -651,13 +535,6 @@ public class TaskListManager {
 		return timerMap;
 	}
 
-	public void markComplete(ITask task, boolean complete) {
-		task.setCompleted(complete);
-		for (ITaskChangeListener listener : new ArrayList<ITaskChangeListener>(changeListeners)) {
-			listener.localInfoChanged(task); // to ensure comleted filter
-			// notices
-		}
-	}
 
 	/**
 	 * For testing
@@ -682,6 +559,6 @@ public class TaskListManager {
 			tasksWithReminders.add(task);
 		}
 		parseFutureReminders();
-		notifyLocalInfoChanged(task);
+		taskList.notifyLocalInfoChanged(task);
 	}
 }

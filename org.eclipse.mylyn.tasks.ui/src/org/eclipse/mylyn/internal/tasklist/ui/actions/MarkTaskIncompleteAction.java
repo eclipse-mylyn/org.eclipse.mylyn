@@ -39,7 +39,7 @@ public class MarkTaskIncompleteAction extends Action {
 	public void run() {
 		for (Object selectedObject : ((IStructuredSelection) this.view.getViewer().getSelection()).toList()) {
 			if (selectedObject instanceof ITask) {
-				MylarTaskListPlugin.getTaskListManager().markComplete(((ITask) selectedObject), false);
+				MylarTaskListPlugin.getTaskListManager().getTaskList().markComplete(((ITask) selectedObject), false);
 			}
 		}
 	}

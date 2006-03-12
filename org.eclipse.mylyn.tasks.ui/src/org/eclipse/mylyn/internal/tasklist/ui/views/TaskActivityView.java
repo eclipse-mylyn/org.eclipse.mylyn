@@ -41,7 +41,7 @@ import org.eclipse.mylar.provisional.tasklist.DateRangeActivityDelegate;
 import org.eclipse.mylar.provisional.tasklist.DateRangeContainer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
-import org.eclipse.mylar.provisional.tasklist.ITaskChangeListener;
+import org.eclipse.mylar.provisional.tasklist.ITaskListChangeListener;
 import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskListManager;
@@ -121,13 +121,13 @@ public class TaskActivityView extends ViewPart {
 			refresh();
 //			TaskActivityView.this.treeViewer.refresh(week);
 		}
-	};
-
-	private ITaskChangeListener TASK_CHANGE_LISTENER = new ITaskChangeListener() {
 
 		public void tasklistRead() {
 			refresh();
 		}
+	};
+
+	private ITaskListChangeListener TASK_CHANGE_LISTENER = new ITaskListChangeListener() {
 
 		public void localInfoChanged(final ITask updateTask) {
 			refresh();
@@ -137,7 +137,19 @@ public class TaskActivityView extends ViewPart {
 			localInfoChanged(task);
 		}
 
-		public void taskListModified() {
+		public void taskMoved(ITask task, ITaskContainer fromContainer, ITaskContainer toContainer) {
+			// ignore
+		}
+
+		public void taskDeleted(ITask task) {
+			// ignore
+		}
+
+		public void containerAdded(ITaskContainer container) {
+			// ignore
+		}
+
+		public void containerDeleted(ITaskContainer container) {
 			// ignore
 		}
 	};
@@ -153,14 +165,14 @@ public class TaskActivityView extends ViewPart {
 	public TaskActivityView() {
 		INSTANCE = this;
 		MylarTaskListPlugin.getTaskListManager().addActivityListener(ACTIVITY_LISTENER);
-		MylarTaskListPlugin.getTaskListManager().addChangeListener(TASK_CHANGE_LISTENER);
+		MylarTaskListPlugin.getTaskListManager().getTaskList().addChangeListener(TASK_CHANGE_LISTENER);
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
 		MylarTaskListPlugin.getTaskListManager().removeActivityListener(ACTIVITY_LISTENER);
-		MylarTaskListPlugin.getTaskListManager().removeChangeListener(TASK_CHANGE_LISTENER);
+		MylarTaskListPlugin.getTaskListManager().getTaskList().removeChangeListener(TASK_CHANGE_LISTENER);
 	}
 
 	@Override

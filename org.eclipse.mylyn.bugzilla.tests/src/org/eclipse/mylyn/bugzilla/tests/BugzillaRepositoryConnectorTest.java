@@ -104,7 +104,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 
 		// Get the task
 		BugzillaTask task = (BugzillaTask) client.createTaskFromExistingId(repository, "1");
-		MylarTaskListPlugin.getTaskListManager().moveToRoot(task);
+		MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(task);
 		assertTrue(task.isDownloaded());
 		// (The initial local copy from server)
 		client.saveBugReport(task.getBugReport());
