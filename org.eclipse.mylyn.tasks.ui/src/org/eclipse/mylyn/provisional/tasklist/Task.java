@@ -297,7 +297,7 @@ public class Task implements ITask {
 		children.remove(t);
 	}
 
-	public void setCategory(AbstractTaskContainer cat) {
+	public void setContainer(AbstractTaskContainer cat) {
 		this.parentCategory = cat;
 	}
 

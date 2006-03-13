@@ -17,9 +17,9 @@ import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskExternalizationException;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
+import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.DelegatingTaskExternalizer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.TaskCategory;
 import org.eclipse.mylar.provisional.tasklist.TaskList;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.w3c.dom.Document;
@@ -148,7 +148,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	}
 
 	@Override
-	public ITask readTask(Node node, TaskList taskList, TaskCategory category, ITask parent)
+	public ITask readTask(Node node, TaskList taskList, AbstractTaskContainer category, ITask parent)
 			throws TaskExternalizationException {
 		Element element = (Element) node;
 		String handle;
@@ -195,7 +195,8 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 			}
 		}
 
-		taskList.internalAddTask(task);
+		// TODO: put back, checking for null category?
+//		taskList.internalAddTask(task, category);
 		return task;
 	}
 
@@ -234,7 +235,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		} 
 		BugzillaQueryHit hit = new BugzillaQueryHit(label, priority, query.getRepositoryUrl(), AbstractRepositoryTask
 				.getTaskIdAsInt(handle), null, status);
-		ITask correspondingTask = taskList.getTaskForHandle(hit.getHandleIdentifier(), true);
+		ITask correspondingTask = taskList.getTask(hit.getHandleIdentifier());
 		if (correspondingTask instanceof BugzillaTask) {
 			hit.setCorrespondingTask((BugzillaTask)correspondingTask);
 		}

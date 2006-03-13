@@ -20,10 +20,11 @@ import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
-import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
+import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.provisional.tasklist.TaskArchive;
 import org.eclipse.mylar.provisional.tasklist.TaskCategory;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -36,13 +37,10 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 	@Override
 	public Image getImage(Object element) {
-		if (element instanceof TaskCategory) {
-			TaskCategory category = (TaskCategory) element;
-			if (category.isArchive()) {
-				return TaskListImages.getImage(TaskListImages.CATEGORY_ARCHIVE);
-			} else {
-				return TaskListImages.getImage(TaskListImages.CATEGORY);
-			}
+		if (element instanceof TaskArchive) {
+			return TaskListImages.getImage(TaskListImages.CATEGORY_ARCHIVE);
+		} else if (element instanceof TaskCategory) {
+			return TaskListImages.getImage(TaskListImages.CATEGORY);
 		} else if (element instanceof AbstractRepositoryQuery) {
 			return TaskListImages.getImage(TaskListImages.QUERY);
 		} else if (element instanceof AbstractQueryHit) {

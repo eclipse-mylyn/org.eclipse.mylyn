@@ -45,7 +45,7 @@ public abstract class AbstractAddExistingTaskWizard extends Wizard {
 					.getFirstElement();
 
 			if (selectedObject instanceof TaskCategory) {
-				MylarTaskListPlugin.getTaskListManager().getTaskList().moveToCategory(((TaskCategory) selectedObject), newTask);
+				MylarTaskListPlugin.getTaskListManager().getTaskList().moveToContainer(((TaskCategory) selectedObject), newTask);
 			} else {
 				MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(newTask);
 			}

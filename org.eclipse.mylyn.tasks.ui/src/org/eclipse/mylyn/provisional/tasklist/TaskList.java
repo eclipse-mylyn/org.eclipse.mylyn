@@ -12,6 +12,7 @@
 package org.eclipse.mylar.provisional.tasklist;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,13 +23,11 @@ import java.util.Set;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 
 /**
- * TODO: in need of refactoring since there is duplication between categories and fields.
+ * TODO: some asymetry left between query containers and other task containers
  * 
  * @author Mik Kersten
  */
 public class TaskList {
-
-	public static final String LABEL_ARCHIVE = "Archive (all tasks)";
 
 	public static final String LABEL_ROOT = "Root (automatic)";
 
@@ -36,20 +35,20 @@ public class TaskList {
 	
 	private Map<String, ITask> tasks = new HashMap<String, ITask>();
 	
-	private TaskCategory archiveContainer = new TaskCategory(LABEL_ARCHIVE, this);
+	private TaskArchive archiveContainer = new TaskArchive(this);
 
 	private TaskCategory rootCategory = new TaskCategory(LABEL_ROOT, this);
 	
 	private Set<AbstractTaskContainer> categories = new HashSet<AbstractTaskContainer>();
 
-	private Set<ITask> rootTasks = new HashSet<ITask>();
+//	private Set<ITask> rootTasks = new HashSet<ITask>();
 
 	private List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
 
 	private List<ITask> activeTasks = new ArrayList<ITask>();
 		
 	public TaskList() {
-		archiveContainer.setIsArchive(true);
+//		archiveContainer.setIsArchive(true);
 		categories.add(archiveContainer);
 	} 
 	
@@ -57,15 +56,16 @@ public class TaskList {
 		addTask(task, archiveContainer);
 	}
 	
-	public void addTask(ITask task, TaskCategory category) {
+	public void addTask(ITask task, AbstractTaskContainer category) {
 		tasks.put(task.getHandleIdentifier(), task);
-		archiveContainer.addTask(task);
+		 
+//		archiveContainer.add(task);
 		if (category != null) {
-			category.addTask(task);
-			task.setCategory(category);
-		} else {
-			rootTasks.add(task);
-			task.setCategory(rootCategory);
+			category.add(task);
+			task.setContainer(category);
+		} else { 
+			rootCategory.add(task);
+			task.setContainer(rootCategory);
 		}
 		for (ITaskListChangeListener listener : changeListeners) {
 			listener.taskAdded(task);
@@ -73,40 +73,44 @@ public class TaskList {
 	}
 	
 	public void moveToRoot(ITask task) {
-		if (!tasks.containsKey(task.getHandleIdentifier())) {
-			internalAddTask(task);
-		}
-		
-		AbstractTaskContainer currentCategory = task.getCategory();
-		if (currentCategory instanceof TaskCategory) {
-			((TaskCategory)currentCategory).removeTask(task);
-		} 
-		internalAddRootTask(task);
-		for (ITaskListChangeListener listener : changeListeners) {
-			listener.taskMoved(task, currentCategory, getRootCategory());
-		}
+		moveToContainer(rootCategory, task);
+//		if (!tasks.containsKey(task.getHandleIdentifier())) {
+//			tasks.put(task.getHandleIdentifier(), task);
+//		}
+//		
+//		AbstractTaskContainer currentCategory = task.getCategory();
+//		if (currentCategory != null) {
+//			((AbstractTaskContainer)currentCategory).remove(task);
+//		} 
+//		internalAddRootTask(task);
+//		for (ITaskListChangeListener listener : changeListeners) {
+//			listener.taskMoved(task, currentCategory, getRootCategory());
+//		}
 	}
 
-	public void moveToCategory(TaskCategory toCategory, ITask task) {
+	public void moveToContainer(AbstractTaskContainer toContainer, ITask task) {
 		if (!tasks.containsKey(task.getHandleIdentifier())) {
-			internalAddTask(task);
+			tasks.put(task.getHandleIdentifier(), task);
 		}
 		
-		AbstractTaskContainer fromCategory = task.getCategory();
-		if (toCategory.equals(getRootCategory())) {
-			moveToRoot(task);
+		AbstractTaskContainer fromContainer = task.getCategory();
+//		if (toCategory.equals(getRootCategory())) {
+//			moveToRoot(task);
+//		} else {
+//			removeFromRoot(task);
+//		}
+		if (fromContainer instanceof AbstractTaskContainer) {
+			((AbstractTaskContainer)fromContainer).remove(task);
+		} 
+		if (toContainer != null) {
+			internalAddTask(task, toContainer);
+//			toCategory.add(task);
+//			task.setContainer(toCategory);
 		} else {
-			removeFromRoot(task);
+			internalAddTask(task, archiveContainer);
 		}
-		if (fromCategory instanceof TaskCategory) {
-			((TaskCategory)fromCategory).removeTask(task);
-		}
-		if (!toCategory.getChildren().contains(task)) {
-			toCategory.addTask(task);
-		}
-		task.setCategory(toCategory);
 		for (ITaskListChangeListener listener : changeListeners) {
-			listener.taskMoved(task, fromCategory, toCategory);
+			listener.taskMoved(task, fromContainer, toContainer);
 		}
 	}
 
@@ -118,22 +122,25 @@ public class TaskList {
 	}
 
 	public void removeFromCategory(TaskCategory category, ITask task) {
-		if (!category.isArchive()) {
-			category.removeTask(task);
-			task.setCategory(null);
-		}
-		for (ITaskListChangeListener listener : changeListeners) {
-			listener.taskMoved(task, category, null);
-		}
+		moveToContainer(archiveContainer, task);
+//		category.remove(task);
+//		archiveContainer.add(task);
+//		task.setContainer(archiveContainer); 
+//		for (ITaskListChangeListener listener : changeListeners) {
+//			listener.taskMoved(task, category, null);
+//		}
 	}
 
 	public void removeFromRoot(ITask task) {
-		rootTasks.remove(task);
-		task.setCategory(archiveContainer);
-		
-		for (ITaskListChangeListener listener : changeListeners) {
-			listener.taskMoved(task, null, null);
-		}
+		moveToContainer(archiveContainer, task);
+//		rootCategory.remove(task);
+////		rootTasks.remove(task);
+//		archiveContainer.add(task);
+//		task.setContainer(archiveContainer);
+//		
+//		for (ITaskListChangeListener listener : changeListeners) {
+//			listener.taskMoved(task, null, null);
+//		}
 	}
 
 	public void addQuery(AbstractRepositoryQuery query) {
@@ -148,10 +155,10 @@ public class TaskList {
 	 */
 	public void deleteTask(ITask task) {
 		deleteTaskHelper(archiveContainer.getChildren(), task);
-		boolean deleted = deleteTaskHelper(rootTasks, task);
-		task.setCategory(null);
+		boolean deleted = deleteTaskHelper(rootCategory.getChildren(), task);
+		task.setContainer(null);
 		if (!deleted) {
-			for (TaskCategory cat : getTaskCategories()) {
+			for (AbstractTaskContainer cat : getTaskContainers()) {
 				deleted = deleteTaskHelper(cat.getChildren(), task);
 				if (deleted) {
 					return;
@@ -201,16 +208,24 @@ public class TaskList {
 		categories.add(cat);
 	}
 	
-	public void internalAddTask(ITask task) {
-//		archiveCategory.internalAddTask(task);
+	public void internalAddTask(ITask task, AbstractTaskContainer container) {
+		if (container == null) {
+			System.err.println("!!!!");
+		}
 		tasks.put(task.getHandleIdentifier(), task);
-		archiveContainer.addTask(task);
+		task.setContainer(container);
+		container.add(task);
+//		archiveCategory.internalAddTask(task);
+//		archiveContainer.add(task);
 	}
 	
 	public void internalAddRootTask(ITask task) {
-		rootTasks.add(task);
-		task.setCategory(rootCategory); 
-	}
+		internalAddTask(task, rootCategory);
+//		tasks.put(task.getHandleIdentifier(), task);
+//		rootCategory.add(task);
+//		task.setContainer(rootCategory); 
+//		archiveContainer.add(task);
+	} 
 
 	public void internalAddQuery(AbstractRepositoryQuery query) {
 		queries.add(query);
@@ -238,22 +253,22 @@ public class TaskList {
 		return false;
 	}
 
-	public ITask getTaskForHandle(String handle, boolean lookInArchives) {
-		ITask foundTask = null;
-		for (AbstractTaskContainer cat : categories) {
-			if (!lookInArchives && cat.isArchive())
-				continue;
-			if ((foundTask = findTaskHelper(cat.getChildren(), handle)) != null) {
-				return foundTask;
-			}
-		}
-		for (AbstractRepositoryQuery query : queries) {
-			if ((foundTask = findTaskHelper(query.getHits(), handle)) != null) {
-				return foundTask;
-			}
-		}
-		return findTaskHelper(rootTasks, handle);
-	}
+//	public ITask getTaskForHandle(String handle, boolean lookInArchives) {
+//		ITask foundTask = null;
+//		for (AbstractTaskContainer cat : categories) {
+//			if (!lookInArchives && cat.isArchive())
+//				continue;
+//			if ((foundTask = findTaskHelper(cat.getChildren(), handle)) != null) {
+//				return foundTask;
+//			}
+//		}
+//		for (AbstractRepositoryQuery query : queries) {
+//			if ((foundTask = findTaskHelper(query.getHits(), handle)) != null) {
+//				return foundTask;
+//			}
+//		}
+//		return findTaskHelper(rootTasks, handle);
+//	}
 
 	private AbstractQueryHit findQueryHitHelper(Set<? extends ITaskListElement> elements, String handle) {
 		if (handle == null)
@@ -263,32 +278,6 @@ public class TaskList {
 				AbstractQueryHit hit = (AbstractQueryHit) element;
 				if (hit.getHandleIdentifier().compareTo(handle) == 0) {
 					return hit;
-				}
-			}
-		}
-		return null;
-	}
-
-	private ITask findTaskHelper(Set<? extends ITaskListElement> elements, String handle) {
-		if (handle == null)
-			return null;
-		for (ITaskListElement element : elements) {
-			if (element instanceof ITask) {
-				if (element.getHandleIdentifier().compareTo(handle) == 0)
-					return (ITask) element;
-			} else if (element instanceof AbstractQueryHit) {
-				AbstractQueryHit hit = (AbstractQueryHit) element;
-				if (hit.getHandleIdentifier().compareTo(handle) == 0 && hit.getCorrespondingTask() != null) {
-					return hit.getCorrespondingTask();
-				}
-			}
-
-			// for subtasks
-			if (element instanceof ITask) {
-				ITask searchTask = (ITask) element;
-				ITask t = findTaskHelper(searchTask.getChildren(), handle);
-				if (t != null) {
-					return t;
 				}
 			}
 		}
@@ -313,7 +302,7 @@ public class TaskList {
 	}
 
 	public Set<ITask> getRootTasks() {
-		return rootTasks;
+		return rootCategory.getChildren();
 	}
 
 	public Set<AbstractTaskContainer> getCategories() {
@@ -336,14 +325,14 @@ public class TaskList {
 
 	public int findLargestTaskHandle() {
 		int max = 0;
-		max = Math.max(largestTaskHandleHelper(rootTasks), max);
-		for (TaskCategory cat : getTaskCategories()) {
+		max = Math.max(largestTaskHandleHelper(tasks.values()), max);
+		for (AbstractTaskContainer cat : getTaskContainers()) {
 			max = Math.max(largestTaskHandleHelper(cat.getChildren()), max);
 		}
 		return max;
 	}
 
-	private int largestTaskHandleHelper(Set<ITask> tasks) {
+	private int largestTaskHandleHelper(Collection<ITask> tasks) {
 		int ihandle = 0;
 		int max = 0;
 		for (ITask task : tasks) {
@@ -364,7 +353,7 @@ public class TaskList {
 	public Set<ITaskListElement> getRootElements() {
 		Set<ITaskListElement> roots = new HashSet<ITaskListElement>();
 		// roots.add(archiveCategory);
-		for (ITask task : rootTasks)
+		for (ITask task : rootCategory.getChildren())
 			roots.add(task);
 		for (AbstractTaskContainer cat : categories)
 			roots.add(cat);
@@ -373,23 +362,24 @@ public class TaskList {
 		return roots;
 	}
 
-	public Set<ITask> getAllTasks() {
-		Set<ITask> allTasks = new HashSet<ITask>();
-		allTasks.addAll(rootTasks);
-		for (AbstractTaskContainer container : categories) {
-			allTasks.addAll(container.getChildren());
-		}
-		return allTasks;
+	public Collection<ITask> getAllTasks() {
+		return tasks.values();
+//		Set<ITask> allTasks = new HashSet<ITask>();
+//		allTasks.addAll(rootTasks);
+//		for (AbstractTaskContainer container : categories) {
+//			allTasks.addAll(container.getChildren());
+//		}
+//		return allTasks;
 	}
 
-	public Set<TaskCategory> getTaskCategories() {
-		Set<TaskCategory> cats = new HashSet<TaskCategory>();
-		for (AbstractTaskContainer cat : categories) {
-			if (cat instanceof TaskCategory) {
-				cats.add((TaskCategory) cat);
+	public Set<AbstractTaskContainer> getTaskContainers() {
+		Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>();
+		for (AbstractTaskContainer container : categories) {
+			if (container instanceof TaskCategory || container instanceof TaskArchive) {
+				containers.add((AbstractTaskContainer) container);
 			}
-		}
-		return cats;
+		} 
+		return containers;
 	}
 
 	public AbstractRepositoryQuery getQueryForHandle(String handle) {
@@ -454,11 +444,11 @@ public class TaskList {
 //		// archiveMap.clear();
 //	}
 
-	public TaskCategory getCategoryForHandle(String categoryHandle) {
+	public AbstractTaskContainer getContainerForHandle(String categoryHandle) {
 		for (AbstractTaskContainer cat : categories) {
-			if (cat instanceof TaskCategory) {
+			if (cat instanceof AbstractTaskContainer) {
 				if (cat.getHandleIdentifier().equals(categoryHandle)) {
-					return (TaskCategory) cat;
+					return (AbstractTaskContainer) cat;
 				}
 			}
 		}
@@ -469,7 +459,7 @@ public class TaskList {
 		return rootCategory;
 	}
 
-	public TaskCategory getArchiveContainer() {
+	public TaskArchive getArchiveContainer() {
 		return archiveContainer;
 	}
 
@@ -533,6 +523,33 @@ public class TaskList {
 			}
 		}
 	}
+}
+
+//private ITask findTaskHelper(Set<? extends ITaskListElement> elements, String handle) {
+//if (handle == null)
+//	return null;
+//for (ITaskListElement element : elements) {
+//	if (element instanceof ITask) {
+//		if (element.getHandleIdentifier().compareTo(handle) == 0)
+//			return (ITask) element;
+//	} else if (element instanceof AbstractQueryHit) {
+//		AbstractQueryHit hit = (AbstractQueryHit) element;
+//		if (hit.getHandleIdentifier().compareTo(handle) == 0 && hit.getCorrespondingTask() != null) {
+//			return hit.getCorrespondingTask();
+//		}
+//	}
+//
+//	// for subtasks
+//	if (element instanceof ITask) {
+//		ITask searchTask = (ITask) element;
+//		ITask t = findTaskHelper(searchTask.getChildren(), handle);
+//		if (t != null) {
+//			return t;
+//		}
+//	}
+//}
+//return null;
+//}
 
 //	/**
 //	 * For testing.
@@ -545,4 +562,4 @@ public class TaskList {
 //		queries.clear();
 //		activeTasks.clear();
 //	}
-}
+

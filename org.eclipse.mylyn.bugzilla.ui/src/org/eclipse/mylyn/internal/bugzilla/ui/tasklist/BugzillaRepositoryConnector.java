@@ -133,7 +133,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	public void saveBugReport(IBugzillaBug bugzillaBug) {
 		String handle = AbstractRepositoryTask.getHandle(bugzillaBug.getRepositoryUrl(), bugzillaBug.getId());
-		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, false);
+		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
 		if (task instanceof BugzillaTask) {
 			BugzillaTask bugzillaTask = (BugzillaTask) task;
 			bugzillaTask.setBugReport((BugReport) bugzillaBug);
@@ -296,7 +296,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 
 		String handle = AbstractRepositoryTask.getHandle(bug.getRepositoryUrl(), bug.getId());
-		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, true);
+		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
 		if (task != null && task instanceof BugzillaTask) {
 			BugzillaTask bugTask = (BugzillaTask) task;
 			bugTask.setSyncState(state);
@@ -362,7 +362,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			form.submitReportToRepository();
 			removeReport(bugReport);
 			String handle = AbstractRepositoryTask.getHandle(bugReport.getRepositoryUrl(), bugReport.getId());
-			ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, false);
+			// TODO: avoid getting archive tasks?
+			ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
 
 			Set<AbstractRepositoryQuery> queriesWithHandle = MylarTaskListPlugin.getTaskListManager().getTaskList()
 					.getQueriesForHandle(task.getHandleIdentifier());

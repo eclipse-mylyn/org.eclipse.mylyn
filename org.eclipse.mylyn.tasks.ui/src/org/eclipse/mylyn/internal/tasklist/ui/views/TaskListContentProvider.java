@@ -25,6 +25,7 @@ import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.Task;
+import org.eclipse.mylar.provisional.tasklist.TaskArchive;
 import org.eclipse.mylar.provisional.tasklist.TaskCategory;
 import org.eclipse.swt.widgets.Text;
 
@@ -146,13 +147,15 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 		if (filter(container)) {
 			return false;
 		}
-		if (container.isArchive()) {
+		if (container instanceof TaskArchive) {
 			for (ITask task : container.getChildren()) {
 				if (contentTaskFilter.shouldAlwaysShow(task)) {
-					ITask t = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(task.getHandleIdentifier(),
-							false);
-					if (t == null)
+					// TODO: archive logic?
+					
+					ITask t = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(task.getHandleIdentifier());
+					if (t == null) {
 						return true;
+					}
 				}
 			}
 			return false;
@@ -175,11 +178,12 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 				|| ((Text) this.view.getFilteredTree().getFilterControl()).getText().startsWith(TaskListView.FILTER_LABEL)) {
 			List<Object> children = new ArrayList<Object>();
 			if (parent instanceof TaskCategory) { 
-				if (((AbstractTaskContainer) parent).isArchive()) {
+				if (((AbstractTaskContainer) parent) instanceof TaskArchive) {
 					for (ITask task : ((AbstractTaskContainer) parent).getChildren()) {
 						if (contentTaskFilter.shouldAlwaysShow(task)) {
-							ITask t = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(
-									task.getHandleIdentifier(), false);
+							// TODO: archive logic?
+							ITask t = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(
+									task.getHandleIdentifier());
 							if (t == null)
 								children.add(task);
 						}

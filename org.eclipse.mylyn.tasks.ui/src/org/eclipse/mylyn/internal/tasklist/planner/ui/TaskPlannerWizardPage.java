@@ -194,7 +194,7 @@ public class TaskPlannerWizardPage extends WizardPage {
 		rootItem.setData(ROOT_CATEGORY_HACK);
 
 		// populate categories
-		for (AbstractTaskContainer category : manager.getTaskList().getTaskCategories()) {
+		for (AbstractTaskContainer category : manager.getTaskList().getTaskContainers()) {
 			TableItem item = new TableItem(filtersTable, SWT.NONE);
 			item.setImage(labelProvider.getImage(category));
 			item.setText(category.getDescription());

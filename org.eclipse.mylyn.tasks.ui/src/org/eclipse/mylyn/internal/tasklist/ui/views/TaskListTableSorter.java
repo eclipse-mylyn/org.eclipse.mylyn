@@ -18,6 +18,7 @@ import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
+import org.eclipse.mylar.provisional.tasklist.TaskArchive;
 
 /**
  * @author Mik Kersten
@@ -42,9 +43,9 @@ public class TaskListTableSorter extends ViewerSorter {
 	 */
 	@Override
 	public int compare(Viewer compareViewer, Object o1, Object o2) {
-		if (o1 instanceof AbstractTaskContainer && o2 instanceof AbstractTaskContainer && ((AbstractTaskContainer) o2).isArchive()) {
+		if (o1 instanceof AbstractTaskContainer && o2 instanceof TaskArchive) {
 			return -1;
-		} else if (o2 instanceof AbstractTaskContainer && o1 instanceof AbstractTaskContainer && ((AbstractTaskContainer) o2).isArchive()) {
+		} else if (o2 instanceof AbstractTaskContainer && o1 instanceof TaskArchive) {
 			return 1;
 		}
 

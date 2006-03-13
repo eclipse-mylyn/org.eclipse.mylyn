@@ -39,7 +39,7 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 	private boolean currentlySynchronizing = false;
 
 	public abstract String getRepositoryKind();
-
+	
 	public AbstractRepositoryQuery(String description, TaskList taskList) {
 		super(description, taskList);
 	}
@@ -146,6 +146,11 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 
 	public void setCurrentlySynchronizing(boolean currentlySynchronizing) {
 		this.currentlySynchronizing = currentlySynchronizing;
+	}
+	
+	@Override
+	final void add(ITask task) {
+		// ignore, can not add tasks to a query
 	}
 }
 

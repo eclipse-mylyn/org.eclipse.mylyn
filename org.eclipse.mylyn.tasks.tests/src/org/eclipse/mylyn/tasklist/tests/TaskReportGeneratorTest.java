@@ -124,7 +124,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		generator.run(new NullProgressMonitor());
 		assertEquals(0, generator.getAllCollectedTasks().size());
 
-		manager.getTaskList().moveToCategory(cat1, task1);
+		manager.getTaskList().moveToContainer(cat1, task1);
 
 		generator.run(new NullProgressMonitor());
 		assertEquals(1, generator.getAllCollectedTasks().size());
@@ -148,7 +148,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		generator.run(new NullProgressMonitor());
 		assertEquals(0, generator.getAllCollectedTasks().size());
 
-		manager.getTaskList().moveToCategory(cat1, task1);
+		manager.getTaskList().moveToContainer(cat1, task1);
 
 		generator.run(new NullProgressMonitor());
 		assertEquals(1, generator.getAllCollectedTasks().size());

@@ -77,16 +77,16 @@ import org.eclipse.mylar.internal.tasklist.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
+import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.DateRangeContainer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.provisional.tasklist.ITaskListChangeListener;
-import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.Task;
+import org.eclipse.mylar.provisional.tasklist.TaskArchive;
 import org.eclipse.mylar.provisional.tasklist.TaskCategory;
-import org.eclipse.mylar.provisional.tasklist.TaskList;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -1076,12 +1076,12 @@ public class TaskListView extends ViewPart {
 			} else if (action instanceof MarkTaskIncompleteAction) {
 				action.setEnabled(false);
 			} else if (action instanceof DeleteAction) {
-				if (((AbstractTaskContainer) element).isArchive())
+				if (element instanceof TaskArchive)
 					action.setEnabled(false);
 				else
 					action.setEnabled(true);
 			} else if (action instanceof NewLocalTaskAction) {
-				if (((AbstractTaskContainer) element).isArchive())
+				if (element instanceof TaskArchive)
 					action.setEnabled(false);
 				else
 					action.setEnabled(true);
@@ -1097,7 +1097,7 @@ public class TaskListView extends ViewPart {
 			} else if (action instanceof CopyDescriptionAction) {
 				action.setEnabled(true);
 			} else if (action instanceof RenameAction) {
-				if (((AbstractTaskContainer) element).isArchive())
+				if (element instanceof TaskArchive)
 					action.setEnabled(false);
 				else
 					action.setEnabled(true);
@@ -1166,7 +1166,7 @@ public class TaskListView extends ViewPart {
 	 *         children
 	 */
 	protected boolean lookForId(String taskId) {
-		return (MylarTaskListPlugin.getTaskListManager().getTaskForHandle(taskId, true) == null);
+		return (MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(taskId) == null);
 		// for (ITask task :
 		// MylarTaskListPlugin.getTaskListManager().getTaskList().getRootTasks())
 		// {
@@ -1369,7 +1369,7 @@ public class TaskListView extends ViewPart {
 
 	protected void refreshTask(ITask task) {
 		refresh(task);
-		if (task.getCategory() == null || task.getCategory().getHandleIdentifier().equals(TaskList.LABEL_ARCHIVE)) {
+		if (task.getCategory() == null || task.getCategory() instanceof TaskArchive) {
 			refresh(null);
 		} else {
 			refresh(task.getCategory());

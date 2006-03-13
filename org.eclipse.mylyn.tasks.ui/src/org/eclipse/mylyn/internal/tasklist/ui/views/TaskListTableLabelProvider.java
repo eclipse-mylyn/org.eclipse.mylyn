@@ -29,6 +29,7 @@ import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
+import org.eclipse.mylar.provisional.tasklist.TaskArchive;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.provisional.tasklist.Task.PriorityLevel;
 import org.eclipse.swt.graphics.Color;
@@ -142,7 +143,7 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 	public Color getBackground(Object element, int columnIndex) {
 		if (element instanceof AbstractTaskContainer) {
 			AbstractTaskContainer category = (AbstractTaskContainer) element;
-			if (category.isArchive()) {
+			if (category instanceof TaskArchive) {
 				return TaskListColorsAndFonts.BACKGROUND_ARCHIVE;
 			} else {
 				return categoryBackgroundColor;

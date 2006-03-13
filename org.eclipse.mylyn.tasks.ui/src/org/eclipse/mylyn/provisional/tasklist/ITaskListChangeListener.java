@@ -11,9 +11,6 @@
 
 package org.eclipse.mylar.provisional.tasklist;
 
-
-
-
 /**
  * Listener for task list modifications and task content modifications.
  * 

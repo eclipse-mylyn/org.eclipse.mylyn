@@ -53,7 +53,7 @@ public interface ITaskListExternalizer {
 
 	public abstract boolean canReadTask(Node node);
 
-	public abstract ITask readTask(Node node, TaskList tlist, TaskCategory category, ITask parent)
+	public abstract ITask readTask(Node node, TaskList tlist, AbstractTaskContainer category, ITask parent)
 			throws TaskExternalizationException;
 
 	public abstract boolean canCreateElementFor(AbstractRepositoryQuery category);

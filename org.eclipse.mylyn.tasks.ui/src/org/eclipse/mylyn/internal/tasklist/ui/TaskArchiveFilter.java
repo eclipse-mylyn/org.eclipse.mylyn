@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasklist.ui;
 
-import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
+import org.eclipse.mylar.provisional.tasklist.TaskArchive;
 
 /**
  * @author Mik Kersten
@@ -18,9 +18,8 @@ import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 public class TaskArchiveFilter extends AbstractTaskFilter {
 
 	public boolean select(Object element) {
-		if (element instanceof AbstractTaskContainer) {
-			AbstractTaskContainer container = (AbstractTaskContainer)element;
-			return !container.isArchive();
+		if (element instanceof TaskArchive) {
+			return false;
 		} 
 		return true;
 	}

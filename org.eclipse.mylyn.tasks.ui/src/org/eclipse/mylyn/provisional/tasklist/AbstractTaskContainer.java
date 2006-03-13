@@ -26,12 +26,11 @@ public abstract class AbstractTaskContainer implements ITaskListElement {
 
 	private TaskList taskList;
 	
-	public abstract boolean isArchive();
-
-	public abstract void setIsArchive(boolean isArchive);
+//	public abstract boolean isArchive();
+//
+//	public abstract void setIsArchive(boolean isArchive);
 
 	public AbstractTaskContainer(String handleAndDescription, TaskList taskList) {
-//		System.err.println(">>> " + handle);
 		assert handle != null;
 		this.handle = handleAndDescription;
 		this.taskList = taskList;
@@ -64,11 +63,11 @@ public abstract class AbstractTaskContainer implements ITaskListElement {
 		this.handle = handle;
 	}
 	
-	void addTask(ITask task) {
+	void add(ITask task) {
 		childHandles.add(task.getHandleIdentifier());
 	}
 	
-	public void removeTask(ITask task) {
+	void remove(ITask task) {
 		childHandles.remove(task.getHandleIdentifier());
 	}
 	

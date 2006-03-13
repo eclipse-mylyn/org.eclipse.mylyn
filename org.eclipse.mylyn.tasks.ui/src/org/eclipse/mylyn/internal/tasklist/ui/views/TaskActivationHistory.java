@@ -83,12 +83,10 @@ public class TaskActivationHistory {
 	/**
 	 * Returns the task corresponding to the interaction event history item at
 	 * the specified position
-	 * 
-	 * @author Wesley Coelho
 	 */
 	protected ITask getHistoryTaskAt(int pos) {
 		InteractionEvent event = MylarPlugin.getContextManager().getActivityHistoryMetaContext().getInteractionHistory().get(pos);
-		return MylarTaskListPlugin.getTaskListManager().getTaskForHandle(event.getStructureHandle(), false);
+		return MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(event.getStructureHandle());
 	}
 
 	public void addTask(ITask task) {

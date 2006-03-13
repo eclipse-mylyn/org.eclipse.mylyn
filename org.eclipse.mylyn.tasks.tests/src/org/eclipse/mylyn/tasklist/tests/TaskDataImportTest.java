@@ -63,8 +63,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 		assertTrue(sourceZipFile.exists());
 
 		// make sure no tasks and categories exist prior to import tests
-		assertEquals(manager.getTaskList().getTaskCategories().size(), 1);
-
+		assertEquals(1, manager.getTaskList().getTaskContainers().size()); 
 	}
 
 	protected void tearDown() throws Exception {

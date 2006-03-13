@@ -71,7 +71,7 @@ public interface ITask extends ITaskListElement {
 
 	public abstract void setPriority(String priority);
 
-	public abstract void setCategory(AbstractTaskContainer category);
+	public abstract void setContainer(AbstractTaskContainer category);
 
 	/**
 	 * @return null if root task

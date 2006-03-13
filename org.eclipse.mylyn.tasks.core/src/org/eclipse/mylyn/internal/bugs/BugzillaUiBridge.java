@@ -60,7 +60,7 @@ public class BugzillaUiBridge implements IMylarUiBridge {
 			bugHandle = bugHandle.substring(0, next);
 		}
 
-		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, true);
+		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
 		// ITask task =
 		// MylarTaskListPlugin.getTaskListManager().getTaskForHandle(BugTaskUtil.getHandle(bugId),
 		// true);

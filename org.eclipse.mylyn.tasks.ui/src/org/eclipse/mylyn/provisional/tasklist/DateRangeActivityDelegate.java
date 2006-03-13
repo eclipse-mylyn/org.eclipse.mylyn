@@ -189,8 +189,8 @@ public class DateRangeActivityDelegate implements ITask {
 		task.setActive(active);
 	}
 
-	public void setCategory(AbstractTaskContainer category) {
-		task.setCategory(category);
+	public void setContainer(AbstractTaskContainer category) {
+		task.setContainer(category);
 	}
 
 	public void setCompleted(boolean completed) {

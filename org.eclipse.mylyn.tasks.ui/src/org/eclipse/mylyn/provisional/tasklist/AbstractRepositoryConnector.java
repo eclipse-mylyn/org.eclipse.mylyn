@@ -205,22 +205,22 @@ public abstract class AbstractRepositoryConnector {
 					"Unable to refresh the query since you are currently offline");
 			return;
 		}
-		for (ITask task : MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTasks()) {
-			if (task instanceof AbstractRepositoryTask) {
-				ITask found = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(task.getHandleIdentifier(),
-						false);
-				if (found == null) {
-					MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(task);
-					MessageDialog
-							.openInformation(
-									Display.getCurrent().getActiveShell(),
-									MylarTaskListPlugin.TITLE_DIALOG,
-									"Repository Task "
-											+ AbstractRepositoryTask.getTaskIdAsInt(task.getHandleIdentifier())
-											+ " has been moved to the root since it is activated and has disappeared from a query.");
-				}
-			}
-		}
+//		for (ITask task : MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTasks()) {
+//			if (task instanceof AbstractRepositoryTask) {
+//				ITask found = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(task.getHandleIdentifier(),
+//						false);
+//				if (found == null) {
+//					MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(task);
+//					MessageDialog
+//							.openInformation(
+//									Display.getCurrent().getActiveShell(),
+//									MylarTaskListPlugin.TITLE_DIALOG,
+//									"Repository Task "
+//											+ AbstractRepositoryTask.getTaskIdAsInt(task.getHandleIdentifier())
+//											+ " has been moved to the root since it is activated and has disappeared from a query.");
+//				}
+//			}
+//		}
 		clearAllRefreshes();
 		Job synchronizeJob = new Job(LABEL_SYNCHRONIZE_QUERY) {
 

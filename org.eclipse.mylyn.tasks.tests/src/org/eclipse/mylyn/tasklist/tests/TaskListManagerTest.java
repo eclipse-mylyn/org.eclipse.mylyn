@@ -15,6 +15,7 @@ package org.eclipse.mylar.tasklist.tests;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -31,8 +32,8 @@ import org.eclipse.mylar.internal.tasklist.ScheduledTaskListRefreshJob;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
-import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
+import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.Task;
@@ -82,7 +83,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.readExistingOrCreateNewList();
 		manager.setTaskListFile(originalFile);
 
-		Set<ITask> allTasks = manager.getTaskList().getAllTasks();
+		Collection<ITask> allTasks = manager.getTaskList().getAllTasks();
 		Set<ITask> allRootTasks = manager.getTaskList().getRootTasks();
 		Set<AbstractTaskContainer> allCategories = manager.getTaskList().getCategories();
 		Set<ITaskListElement> allRoots = manager.getTaskList().getRootElements();
@@ -125,7 +126,6 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(repository, bugTask.getRepositoryUrl());
 
 		manager.getTaskList().moveToRoot(bugTask);
-
 		manager.saveTaskList();
 //		manager.getTaskList().clear();
 		manager.resetTaskList();
@@ -158,13 +158,13 @@ public class TaskListManagerTest extends TestCase {
 		TaskCategory cat2 = new TaskCategory("cat2", manager.getTaskList());
 		manager.getTaskList().addCategory(cat2);
 		
-		manager.getTaskList().moveToCategory(cat1, task1);
-		assertEquals(1, manager.getTaskList().getCategoryForHandle("cat1").getChildren().size());
-		assertEquals(0, manager.getTaskList().getCategoryForHandle("cat2").getChildren().size());
+		manager.getTaskList().moveToContainer(cat1, task1);
+		assertEquals(1, manager.getTaskList().getContainerForHandle("cat1").getChildren().size());
+		assertEquals(0, manager.getTaskList().getContainerForHandle("cat2").getChildren().size());
 
-		manager.getTaskList().moveToCategory(cat2, task1);
-		assertEquals(0, manager.getTaskList().getCategoryForHandle("cat1").getChildren().size());
-		assertEquals(1, manager.getTaskList().getCategoryForHandle("cat2").getChildren().size());				
+		manager.getTaskList().moveToContainer(cat2, task1);
+		assertEquals(0, manager.getTaskList().getContainerForHandle("cat1").getChildren().size());
+		assertEquals(1, manager.getTaskList().getContainerForHandle("cat2").getChildren().size());				
 	}
 	
 	public void testMoveToRoot() {
@@ -177,7 +177,7 @@ public class TaskListManagerTest extends TestCase {
 		TaskCategory cat1 = new TaskCategory("c1", manager.getTaskList());
 		manager.getTaskList().addCategory(cat1);
 
-		manager.getTaskList().moveToCategory(cat1, task1);
+		manager.getTaskList().moveToContainer(cat1, task1);
 		assertEquals(0, manager.getTaskList().getRootTasks().size());
 		assertEquals(cat1, task1.getCategory());
 
@@ -216,7 +216,7 @@ public class TaskListManagerTest extends TestCase {
 		BugzillaTask task = new BugzillaTask("b1", "b 1", true);
 		TaskCategory category = new TaskCategory("cat", manager.getTaskList());
 		manager.getTaskList().addCategory(category);
-		manager.getTaskList().moveToCategory(category, task);
+		manager.getTaskList().moveToContainer(category, task);
 		assertNotNull(manager.getTaskList());
 
 		manager.resetTaskList();
@@ -274,18 +274,15 @@ public class TaskListManagerTest extends TestCase {
 		BugzillaTask repositoryTask = new BugzillaTask("handle", "label", true);
 		repositoryTask.setKind("kind");
 		manager.getTaskList().addTask(repositoryTask);
-		// repositoryTask.setCategory(manager.getTaskList().getArchiveCategory());
 		assertEquals(1, manager.getTaskList().getArchiveContainer().getChildren().size());
 		assertEquals(0, manager.getTaskList().getRootTasks().size());
 		manager.saveTaskList();
 
 		manager.resetTaskList();
-//		manager.getTaskList().clear();
-//		manager.setTaskList(new TaskList());
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getArchiveContainer().getChildren().size());
 		assertEquals(0, manager.getTaskList().getRootTasks().size());
-	}
+	} 
 
 	public void testRepositoryTaskExternalization() {
 		BugzillaTask repositoryTask = new BugzillaTask("handle", "label", true);
@@ -297,7 +294,7 @@ public class TaskListManagerTest extends TestCase {
 //		manager.getTaskList().clear();
 //		TaskList list = new TaskList();
 //		manager.setTaskList(list);
-		manager.readExistingOrCreateNewList();
+		manager.readExistingOrCreateNewList(); 
 		assertEquals(1, manager.getTaskList().getRootTasks().size());
 		AbstractRepositoryTask readTask = (AbstractRepositoryTask) manager.getTaskList().getRootTasks().iterator()
 				.next();
@@ -312,7 +309,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.getTaskList().addCategory(cat1);
 
 		BugzillaTask reportInCat1 = new BugzillaTask("123", "label 123", true);
-		manager.getTaskList().moveToCategory(cat1, reportInCat1);
+		manager.getTaskList().moveToContainer(cat1, reportInCat1);
 		assertEquals(cat1, reportInCat1.getCategory());
 
 		manager.saveTaskList();
@@ -323,10 +320,10 @@ public class TaskListManagerTest extends TestCase {
 		manager.readExistingOrCreateNewList();
 
 		// read once
-		Set<TaskCategory> readCats = manager.getTaskList().getTaskCategories();
+		Set<AbstractTaskContainer> readCats = manager.getTaskList().getTaskContainers();
 		assertTrue(manager.getTaskList().getCategories().contains(cat1));
-		Iterator<TaskCategory> iterator = readCats.iterator();
-		TaskCategory readCat1 = iterator.next();
+		Iterator<AbstractTaskContainer> iterator = readCats.iterator();
+		AbstractTaskContainer readCat1 = iterator.next();
 		assertEquals(cat1, readCat1);
 		assertEquals(1, readCat1.getChildren().size());
 
@@ -338,7 +335,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.readExistingOrCreateNewList();
 
 		// read again
-		readCats = manager.getTaskList().getTaskCategories();
+		readCats = manager.getTaskList().getTaskContainers();
 		assertTrue(manager.getTaskList().getCategories().contains(cat1));
 
 		iterator = readCats.iterator();
@@ -365,18 +362,18 @@ public class TaskListManagerTest extends TestCase {
 		manager.getTaskList().addCategory(cat1);
 		categories.add(cat1);
 		Task task3 = new Task(manager.genUniqueTaskHandle(), "task 3", true);
-		manager.getTaskList().moveToCategory(cat1, task3);
+		manager.getTaskList().moveToContainer(cat1, task3);
 		cat1Contents.add(task3);
 		assertEquals(cat1, task3.getCategory());
 		Task sub2 = new Task(manager.genUniqueTaskHandle(), "sub 2", true);
 		task3.addSubTask(sub2);
 		sub2.setParent(task3);
 		Task task4 = new Task(manager.genUniqueTaskHandle(), "task 4", true);
-		manager.getTaskList().moveToCategory(cat1, task4);
+		manager.getTaskList().moveToContainer(cat1, task4);
 		cat1Contents.add(task4);
 
 		BugzillaTask reportInCat1 = new BugzillaTask("123", "label 123", true);
-		manager.getTaskList().moveToCategory(cat1, reportInCat1);
+		manager.getTaskList().moveToContainer(cat1, reportInCat1);
 		assertEquals(cat1, reportInCat1.getCategory());
 		cat1Contents.add(reportInCat1);
 
@@ -408,10 +405,10 @@ public class TaskListManagerTest extends TestCase {
 			}
 		}
 
-		Set<TaskCategory> readCats = manager.getTaskList().getTaskCategories();
+		Set<AbstractTaskContainer> readCats = manager.getTaskList().getTaskContainers();
 		assertTrue(manager.getTaskList().getCategories().contains(cat1));
-		Iterator<TaskCategory> iterator = readCats.iterator();
-		TaskCategory readCat1 = iterator.next();
+		Iterator<AbstractTaskContainer> iterator = readCats.iterator();
+		AbstractTaskContainer readCat1 = iterator.next();
 		assertEquals(cat1, readCat1);
 		assertEquals(cat1Contents, readCat1.getChildren());
 	}

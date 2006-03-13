@@ -8,33 +8,29 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Dec 26, 2004
- */
+
 package org.eclipse.mylar.provisional.tasklist;
 
-import java.util.Set;
 
 /**
  * @author Mik Kersten
  */
-public class TaskCategory extends AbstractTaskContainer {
+public class TaskArchive extends AbstractTaskContainer {
 
-	public TaskCategory(String handleAndDescription, TaskList taskList) {
-		super(handleAndDescription, taskList);
-	}	
+	public static final String HANDLE = "archive";
+	
+	public static final String LABEL_ARCHIVE = "Archive (all tasks)";
+	
+	public TaskArchive(TaskList taskList) {
+		super(LABEL_ARCHIVE, taskList);
+	}
 
 	public String getPriority() {
-		String highestPriority = Task.PriorityLevel.P5.toString();
-		Set<ITask> tasks = getChildren();
-		if (tasks.isEmpty()) {
-			return Task.PriorityLevel.P1.toString();
-		}
-		for (ITask task : tasks) {
-			if (highestPriority.compareTo(task.getPriority()) > 0) {
-				highestPriority = task.getPriority();
-			}
-		}
-		return highestPriority;
+		return Task.PriorityLevel.P5.toString();
+	}
+
+	@Override
+	public String getHandleIdentifier() {
+		return HANDLE;
 	}
 }

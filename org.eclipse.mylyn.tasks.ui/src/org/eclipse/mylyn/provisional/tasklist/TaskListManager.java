@@ -227,8 +227,7 @@ public class TaskListManager {
 					totalInactive = 0;
 					startInactive = 0;
 				}
-				currentTask = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(event.getStructureHandle(),
-						true);
+				currentTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(event.getStructureHandle());
 				if (currentTask != null) {
 					GregorianCalendar calendar = new GregorianCalendar();
 					calendar.setTime(event.getDate());
@@ -510,11 +509,11 @@ public class TaskListManager {
 		this.taskListFile = f;
 	}
 
-	public ITask getTaskForHandle(String handle, boolean lookInArchives) {
-		if (handle == null)
-			return null;
-		return taskList.getTaskForHandle(handle, lookInArchives);
-	}
+//	public ITask getTaskForHandle(String handle, boolean lookInArchives) {
+//		if (handle == null)
+//			return null;
+//		return taskList.getTask(handle, lookInArchives);
+//	}
 
 	public boolean isTaskListInitialized() {
 		return taskListInitialized;

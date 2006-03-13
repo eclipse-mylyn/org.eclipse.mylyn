@@ -68,8 +68,7 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 
 	}
 
-	public boolean isLabelProperty(Object element, String property) {
-		System.err.println(">> " + property);
+	public boolean isLabelProperty(Object element, String property) { 
 		return false;
 	}
 

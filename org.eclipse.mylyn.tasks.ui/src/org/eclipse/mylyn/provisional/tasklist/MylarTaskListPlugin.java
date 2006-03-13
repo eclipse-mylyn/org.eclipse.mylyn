@@ -12,6 +12,7 @@ package org.eclipse.mylar.provisional.tasklist;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -205,7 +206,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 		public Set<ITaskListNotification> getNotifications() {
 			Date currentDate = new Date();
-			Set<ITask> allTasks = MylarTaskListPlugin.getTaskListManager().getTaskList().getAllTasks();
+			Collection<ITask> allTasks = MylarTaskListPlugin.getTaskListManager().getTaskList().getAllTasks();
 			Set<ITaskListNotification> reminders = new HashSet<ITaskListNotification>();
 			for (ITask task : allTasks) {
 				if (task.getReminderDate() != null && !task.hasBeenReminded() && task.getReminderDate().compareTo(currentDate) < 0) {			

@@ -49,7 +49,7 @@ public class NewLocalTaskAction extends Action {
 		if (dialogResult == Window.OK) {
 			Task newTask = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), dialog
 					.getTaskname(), true);
-			MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask);
+//			MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask);
 			newTask.setPriority(dialog.getSelectedPriority());
 			newTask.setReminderDate(dialog.getReminderDate());
 			newTask.setUrl(dialog.getIssueURL());
@@ -57,22 +57,22 @@ public class NewLocalTaskAction extends Action {
 			Object selectedObject = ((IStructuredSelection) view.getViewer().getSelection()).getFirstElement();
 
 			if (selectedObject instanceof TaskCategory) {
-				MylarTaskListPlugin.getTaskListManager().getTaskList().moveToCategory((TaskCategory) selectedObject, newTask);
+				MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask, (TaskCategory) selectedObject);
 			} else if (selectedObject instanceof ITask) {
 				ITask task = (ITask) selectedObject;
 				if (task.getCategory() != null) {
-					MylarTaskListPlugin.getTaskListManager().getTaskList().moveToCategory((TaskCategory) task.getCategory(), newTask);
+					MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask, (TaskCategory) task.getCategory());
 				} else if (view.getDrilledIntoCategory() != null) {
-					MylarTaskListPlugin.getTaskListManager().getTaskList().moveToCategory(
-							(TaskCategory) view.getDrilledIntoCategory(), newTask);
+					MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(
+							newTask, (TaskCategory) view.getDrilledIntoCategory());
 				} else {
-					MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(newTask);
+					MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask, MylarTaskListPlugin.getTaskListManager().getTaskList().getRootCategory());
+//					MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(newTask);
 				}
 			} else if (view.getDrilledIntoCategory() != null) {
-				MylarTaskListPlugin.getTaskListManager().getTaskList().moveToCategory((TaskCategory) view.getDrilledIntoCategory(),
-						newTask);
+				MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask, (TaskCategory) view.getDrilledIntoCategory());
 			} else {
-				MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(newTask);
+				MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask, MylarTaskListPlugin.getTaskListManager().getTaskList().getRootCategory());
 			}
 			TaskListUiUtil.openEditor(newTask);
 //			newTask.openTaskInEditor(false);

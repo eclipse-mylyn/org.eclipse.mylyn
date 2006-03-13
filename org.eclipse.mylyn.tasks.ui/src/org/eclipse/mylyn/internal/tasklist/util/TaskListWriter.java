@@ -35,9 +35,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskExternalizationException;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
+import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.DelegatingTaskExternalizer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITaskListExternalizer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskList;
@@ -93,9 +93,9 @@ public class TaskListWriter {
 
 		// create the categories
 		for (AbstractTaskContainer category : taskList.getCategories()) {
-			if (!category.getHandleIdentifier().equals(TaskList.LABEL_ARCHIVE)) {
+//			if (!category.getHandleIdentifier().equals(TaskArchive.HANDLE)) {
 				delagatingExternalizer.createCategoryElement(category, doc, root);
-			}
+//			}
 		}
 
 		for (AbstractRepositoryQuery query : taskList.getQueries()) {
