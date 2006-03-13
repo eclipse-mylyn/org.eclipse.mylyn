@@ -61,6 +61,8 @@ public class TaskListImages {
 
 	public static final ImageDescriptor TASK_NOTES = createSize(create(T_TOOL, "task-notes.gif"), SIZE);
 
+	public static final ImageDescriptor TASK_REPOSITORY_NOTES = createSize(create(T_TOOL, "task-repository-notes.gif"), SIZE);
+	
 	public static final ImageDescriptor TASK_NEW = create(T_TOOL, "task-new.gif");
 
 	public static final ImageDescriptor OVERLAY_WEB = create(T_TOOL, "overlay-web.gif");

@@ -285,8 +285,6 @@ public class TaskActivityView extends ViewPart {
 						MylarTaskListPlugin.getTaskListManager().setReminder(task, reminderCalendar.getTime());						
 					}
 				}
-
-				// treeViewer.refresh();
 				return true;
 			}
 

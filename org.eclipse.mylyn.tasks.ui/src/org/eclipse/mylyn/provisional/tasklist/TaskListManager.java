@@ -214,6 +214,9 @@ public class TaskListManager {
 				} else if (activityFuture.includes(tempCalendar)) {
 					activityFuture.addTask(new DateRangeActivityDelegate(activityFuture, task, tempCalendar,
 							tempCalendar));
+				} else if (activityThisWeek.includes(tempCalendar)) {
+					activityThisWeek.addTask(new DateRangeActivityDelegate(activityThisWeek, task, tempCalendar,
+							tempCalendar));
 				}
 			}
 		}
