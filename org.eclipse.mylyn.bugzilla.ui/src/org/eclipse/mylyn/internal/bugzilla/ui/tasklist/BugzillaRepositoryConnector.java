@@ -508,7 +508,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			}
 		} catch (LoginException e) {
 			// TODO: Set some form of disconnect status on Query?
-			MylarStatusHandler.fail(e, "login failure", false);
+			MylarStatusHandler.fail(e, "login failure for repository url: " + repository, false);
 			status.add(new Status(IStatus.OK, MylarTaskListPlugin.PLUGIN_ID, IStatus.OK, "Could not log in", e));
 		}
 		
