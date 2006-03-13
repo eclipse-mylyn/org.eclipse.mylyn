@@ -137,6 +137,10 @@ public class MylarChangeSetManager implements IMylarContextListener {
 		public void taskAdded(ITask task) {
 			// ignore
 		}
+
+		public void containerInfoChanged(AbstractTaskContainer container) {
+			// ignore
+		}
 	};
 
 	private boolean isEnabled = false;
