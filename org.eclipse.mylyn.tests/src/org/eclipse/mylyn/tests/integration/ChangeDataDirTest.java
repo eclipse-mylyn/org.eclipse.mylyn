@@ -97,11 +97,11 @@ public class ChangeDataDirTest extends TestCase {
 		ITask task = new Task(handle, "label", true);
 		manager.getTaskList().moveToRoot(task);
 
-		ITask readTaskBeforeMove = manager.getTaskForHandle(handle, true);
+		ITask readTaskBeforeMove = manager.getTaskList().getTask(handle);
 		MylarTaskListPlugin.getDefault().getTaskListSaveManager().copyDataDirContentsTo(newDataDir);
 		MylarPlugin.getDefault().setDataDirectory(newDataDir);
 
-		ITask readTaskAfterMove = manager.getTaskForHandle(handle, true);
+		ITask readTaskAfterMove = manager.getTaskList().getTask(handle);
 		assertNotNull(readTaskAfterMove);
 		assertEquals(readTaskBeforeMove.getCreationDate(), readTaskAfterMove.getCreationDate());
 	}
@@ -113,14 +113,14 @@ public class ChangeDataDirTest extends TestCase {
 		Date refreshDate = new Date();
 		bugzillaTask.setLastRefresh(refreshDate);
 
-		BugzillaTask readTaskBeforeMove = (BugzillaTask) manager.getTaskForHandle(handle, true);
+		BugzillaTask readTaskBeforeMove = (BugzillaTask) manager.getTaskList().getTask(handle);
 		assertNotNull(readTaskBeforeMove);
 		assertEquals(refreshDate, readTaskBeforeMove.getLastRefresh());
 
 		MylarTaskListPlugin.getDefault().getTaskListSaveManager().copyDataDirContentsTo(newDataDir);
 		MylarPlugin.getDefault().setDataDirectory(newDataDir);
 
-		BugzillaTask readTaskAfterMove = (BugzillaTask) manager.getTaskForHandle(handle, true);
+		BugzillaTask readTaskAfterMove = (BugzillaTask) manager.getTaskList().getTask(handle);
 		assertNotNull(readTaskAfterMove);
 		// HACK: shoudl be checking date equality, but millis seem to differ?
 		assertEquals(refreshDate.toString(), readTaskAfterMove.getLastRefresh().toString());
@@ -129,7 +129,10 @@ public class ChangeDataDirTest extends TestCase {
 	private void addBugzillaTask(BugzillaTask newTask) {
 //		AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
 //		client.addTaskToArchive(newTask);
-		MylarTaskListPlugin.getTaskListManager().getTaskList().internalAddTask(newTask);
+		
+		// TODO: put back?
+//		MylarTaskListPlugin.getTaskListManager().getTaskList().internalAddTask(newTask);
+
 //		BugzillaTaskHandler handler = new BugzillaTaskHandler();
 //		handler.addTaskToArchive(newTask);
 		MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(newTask);
