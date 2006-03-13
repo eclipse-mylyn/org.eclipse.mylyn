@@ -62,7 +62,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 	
 	public MylarTaskListPreferencePage() {
 		super();
-		setPreferenceStore(MylarTaskListPlugin.getPrefs());
+		setPreferenceStore(MylarTaskListPlugin.getMylarPrefs());
 	}
 
 	@Override

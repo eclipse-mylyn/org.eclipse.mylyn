@@ -40,7 +40,7 @@ public class NewRepositoryTaskAction extends Action implements IViewActionDelega
 	@Override
 	public void run() {
 
-		boolean offline = MylarTaskListPlugin.getPrefs().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
+		boolean offline = MylarTaskListPlugin.getMylarPrefs().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
 		if (offline) {
 			MessageDialog.openInformation(null, "Unable to create bug report",
 					"Unable to create a new bug report since you are currently offline");

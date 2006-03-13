@@ -71,7 +71,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 	}
 
 	public void testGet() throws MalformedURLException {
-		assertEquals("", MylarTaskListPlugin.getPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
+		assertEquals("", MylarTaskListPlugin.getMylarPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
 
 		TaskRepository repository = new TaskRepository(DEFAULT_KIND, DEFAULT_URL);
 		manager.addRepository(repository);
@@ -81,14 +81,14 @@ public class TaskRepositoryManagerTest extends TestCase {
 	}
 	
 	public void testRepositoryPersistance() throws MalformedURLException {
-		assertEquals("", MylarTaskListPlugin.getPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
+		assertEquals("", MylarTaskListPlugin.getMylarPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
 
 		TaskRepository repository1 = new TaskRepository("bugzilla", "http://bugzilla");
 		TaskRepository repository2 = new TaskRepository("jira", "http://jira");
 		manager.addRepository(repository1);
 		manager.addRepository(repository2);
 
-		assertNotNull(MylarTaskListPlugin.getPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
+		assertNotNull(MylarTaskListPlugin.getMylarPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
 		
 		List<TaskRepository> repositoryList = new ArrayList<TaskRepository>();
 		repositoryList.add(repository2);
@@ -98,7 +98,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 	}
 	
 	public void testRepositoryVersionPersistance() throws MalformedURLException {
-		assertEquals("", MylarTaskListPlugin.getPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
+		assertEquals("", MylarTaskListPlugin.getMylarPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
 
 		String version = "123";
 		
@@ -109,7 +109,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		
 		String prefIdVersion = repository1.getUrl() + TaskRepositoryManager.PROPERTY_DELIM + TaskRepositoryManager.PROPERTY_VERSION;
 
-		assertEquals(version, MylarTaskListPlugin.getPrefs().getString(prefIdVersion));		
+		assertEquals(version, MylarTaskListPlugin.getMylarPrefs().getString(prefIdVersion));		
 		
 		manager.readRepositories();
 		TaskRepository temp = manager.getRepository(repository1.getKind(), repository1.getUrl());
@@ -122,22 +122,22 @@ public class TaskRepositoryManagerTest extends TestCase {
 	public void testRepositoryPersistanceAfterDelete() throws MalformedURLException {
 		manager.clearRepositories();
 
-		assertEquals("", MylarTaskListPlugin.getPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES + DEFAULT_KIND));
+		assertEquals("", MylarTaskListPlugin.getMylarPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES + DEFAULT_KIND));
 		
 		TaskRepository repository = new TaskRepository(DEFAULT_KIND, DEFAULT_URL);
 		manager.addRepository(repository);
 		
-		assertFalse(MylarTaskListPlugin.getPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES + DEFAULT_KIND).equals(""));
+		assertFalse(MylarTaskListPlugin.getMylarPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES + DEFAULT_KIND).equals(""));
 		
 		TaskRepository repository2 = new TaskRepository(DEFAULT_KIND, ANOTHER_URL);
 		manager.addRepository(repository2);
 		
-		String saveString = MylarTaskListPlugin.getPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES + DEFAULT_KIND);
+		String saveString = MylarTaskListPlugin.getMylarPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES + DEFAULT_KIND);
 		assertNotNull(saveString);
 		
 		manager.removeRepository(repository2); 
 		
-		String newSaveString = MylarTaskListPlugin.getPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES + DEFAULT_KIND);
+		String newSaveString = MylarTaskListPlugin.getMylarPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES + DEFAULT_KIND);
 		
 		assertFalse(saveString.equals(newSaveString));
 	}

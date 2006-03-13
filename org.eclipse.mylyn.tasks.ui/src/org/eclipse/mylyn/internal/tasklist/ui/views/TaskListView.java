@@ -369,7 +369,7 @@ public class TaskListView extends ViewPart {
 			Action P1 = new Action("", AS_CHECK_BOX) {
 				@Override
 				public void run() {
-					MylarTaskListPlugin.getPrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P1.toString());
+					MylarTaskListPlugin.getMylarPrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P1.toString());
 //					MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P1);
 					FILTER_PRIORITY.displayPrioritiesAbove(PRIORITY_LEVELS[0]);
 					getViewer().refresh();
@@ -384,7 +384,7 @@ public class TaskListView extends ViewPart {
 			Action P2 = new Action("", AS_CHECK_BOX) {
 				@Override
 				public void run() {
-					MylarTaskListPlugin.getPrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P2.toString());
+					MylarTaskListPlugin.getMylarPrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P2.toString());
 //					MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P2);
 					FILTER_PRIORITY.displayPrioritiesAbove(PRIORITY_LEVELS[1]);
 					getViewer().refresh();
@@ -399,7 +399,7 @@ public class TaskListView extends ViewPart {
 			Action P3 = new Action("", AS_CHECK_BOX) {
 				@Override
 				public void run() {
-					MylarTaskListPlugin.getPrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P3.toString());
+					MylarTaskListPlugin.getMylarPrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P3.toString());
 //					MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P3);
 					FILTER_PRIORITY.displayPrioritiesAbove(PRIORITY_LEVELS[2]);
 					getViewer().refresh();
@@ -414,7 +414,7 @@ public class TaskListView extends ViewPart {
 			Action P4 = new Action("", AS_CHECK_BOX) {
 				@Override
 				public void run() {
-					MylarTaskListPlugin.getPrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P4.toString());
+					MylarTaskListPlugin.getMylarPrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P4.toString());
 //					MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P4);
 					FILTER_PRIORITY.displayPrioritiesAbove(PRIORITY_LEVELS[3]);
 					getViewer().refresh();
@@ -429,7 +429,7 @@ public class TaskListView extends ViewPart {
 			Action P5 = new Action("", AS_CHECK_BOX) {
 				@Override
 				public void run() {
-					MylarTaskListPlugin.getPrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P5.toString());
+					MylarTaskListPlugin.getMylarPrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P5.toString());
 //					MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P5);
 					FILTER_PRIORITY.displayPrioritiesAbove(PRIORITY_LEVELS[4]);
 					getViewer().refresh();
@@ -537,8 +537,9 @@ public class TaskListView extends ViewPart {
 			} else if (element instanceof ITaskListElement && isInRenameAction) {
 				switch (columnIndex) {
 				case 4:
-					return element instanceof TaskCategory || element instanceof AbstractRepositoryQuery
-							|| (element instanceof ITask && !(element instanceof AbstractRepositoryTask));
+//					return element instanceof TaskCategory || element instanceof AbstractRepositoryQuery
+					return element instanceof AbstractTaskContainer
+						|| (element instanceof ITask && !(element instanceof AbstractRepositoryTask));
 				}
 			}
 			return false;
@@ -609,7 +610,7 @@ public class TaskListView extends ViewPart {
 			try {
 				columnIndex = Arrays.asList(columnNames).indexOf(property);
 				if (((TreeItem) element).getData() instanceof AbstractTaskContainer) {
-					AbstractTaskContainer cat = (AbstractTaskContainer) ((TreeItem) element).getData();
+					AbstractTaskContainer container = (AbstractTaskContainer) ((TreeItem) element).getData();
 					switch (columnIndex) {
 					case 0:
 						break;
@@ -618,7 +619,7 @@ public class TaskListView extends ViewPart {
 					case 2:
 						break;
 					case 3:
-						cat.setDescription(((String) value).trim());
+						container.setDescription(((String) value).trim());
 						break;
 					}
 				} else if (((TreeItem) element).getData() instanceof AbstractRepositoryQuery) {
@@ -763,10 +764,10 @@ public class TaskListView extends ViewPart {
 		addFilter(FILTER_PRIORITY);
 		// if (MylarTaskListPlugin.getDefault().isFilterInCompleteMode())
 		// MylarTaskListPlugin.getTaskListManager().getTaskList().addFilter(inCompleteFilter);
-		if (MylarTaskListPlugin.getPrefs().contains(TaskListPreferenceConstants.FILTER_COMPLETE_MODE))
+		if (MylarTaskListPlugin.getMylarPrefs().contains(TaskListPreferenceConstants.FILTER_COMPLETE_MODE))
 			addFilter(FILTER_COMPLETE);
 		
-		if (MylarTaskListPlugin.getPrefs().contains(TaskListPreferenceConstants.FILTER_ARCHIVE_MODE))
+		if (MylarTaskListPlugin.getMylarPrefs().contains(TaskListPreferenceConstants.FILTER_ARCHIVE_MODE))
 			addFilter(FILTER_ARCHIVE);
 		
 		if (MylarTaskListPlugin.getDefault().isMultipleActiveTasksMode()) {
@@ -1420,8 +1421,8 @@ public class TaskListView extends ViewPart {
 	}
 	
 	public static String getCurrentPriorityLevel() {
-		if (MylarTaskListPlugin.getPrefs().contains(TaskListPreferenceConstants.SELECTED_PRIORITY)) {
-			return MylarTaskListPlugin.getPrefs().getString(TaskListPreferenceConstants.SELECTED_PRIORITY);
+		if (MylarTaskListPlugin.getMylarPrefs().contains(TaskListPreferenceConstants.SELECTED_PRIORITY)) {
+			return MylarTaskListPlugin.getMylarPrefs().getString(TaskListPreferenceConstants.SELECTED_PRIORITY);
 		} else {
 			return Task.PriorityLevel.P5.toString();
 		}

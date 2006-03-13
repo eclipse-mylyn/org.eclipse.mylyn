@@ -79,18 +79,6 @@ public class BugzillaSearchEngine {
 				 */
 			}
 		}
-		// use the username and password if we have it to log into bugzilla
-		//		if(BugzillaPreferencePage.getUserName() != null && !BugzillaPreferencePage.getUserName().equals("") && BugzillaPreferencePage.getPassword() != null && !BugzillaPreferencePage.getPassword().equals(""))
-		//		{
-		//			try {
-		//				url += "&GoAheadAndLogIn=1&Bugzilla_login=" + URLEncoder.encode(BugzillaPreferencePage.getUserName(), "UTF-8") + "&Bugzilla_password=" + URLEncoder.encode(BugzillaPreferencePage.getPassword(), "UTF-8");
-		//			} catch (UnsupportedEncodingException e) {
-		//				/*
-		//				 * Do nothing. Every implementation of the Java platform is required
-		//				 * to support the standard charset "UTF-8"
-		//				 */
-		//			}
-		//		}
 	}
 
 	/**

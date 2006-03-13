@@ -186,7 +186,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 			setPageText(index, ISSUE_WEB_PAGE_LABEL);
 			webBrowser.setUrl(task.getUrl());
 
-			boolean openWithBrowser = MylarTaskListPlugin.getPrefs().getBoolean(
+			boolean openWithBrowser = MylarTaskListPlugin.getMylarPrefs().getBoolean(
 					TaskListPreferenceConstants.REPORT_OPEN_INTERNAL);
 			if (!(task instanceof AbstractRepositoryTask) || openWithBrowser) {
 				setActivePage(index);

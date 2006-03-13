@@ -63,7 +63,7 @@ public class NewBugzillaQueryWizard extends Wizard {
 //					queryPage.getQueryDialog().getMaxHits());
 //		}
 		MylarTaskListPlugin.getTaskListManager().getTaskList().addQuery(queryCategory);
-		boolean offline = MylarTaskListPlugin.getPrefs().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
+		boolean offline = MylarTaskListPlugin.getMylarPrefs().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
 		if (!offline) {
 			WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
 				protected void execute(IProgressMonitor monitor) throws CoreException {
