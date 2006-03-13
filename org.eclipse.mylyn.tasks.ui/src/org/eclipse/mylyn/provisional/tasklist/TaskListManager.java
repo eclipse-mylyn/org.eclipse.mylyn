@@ -389,13 +389,13 @@ public class TaskListManager {
 	public boolean readExistingOrCreateNewList() {
 		try {
 			if (taskListFile.exists()) {
-				taskList = new TaskList();
+//				taskList = new TaskList();
 				taskListWriter.readTaskList(taskList, taskListFile);
 				int maxHandle = taskList.findLargestTaskHandle();
 				if (maxHandle >= nextLocalTaskId) {
 					nextLocalTaskId = maxHandle + 1;
 				}
-			} else {
+			} else { 
 				resetTaskList();
 			}
 
@@ -506,8 +506,8 @@ public class TaskListManager {
 //		}
 //	}
 
-	public void setTaskListFile(File f) {
-		this.taskListFile = f;
+	public void setTaskListFile(File file) {
+		this.taskListFile = file;
 	}
 
 //	public ITask getTaskForHandle(String handle, boolean lookInArchives) {

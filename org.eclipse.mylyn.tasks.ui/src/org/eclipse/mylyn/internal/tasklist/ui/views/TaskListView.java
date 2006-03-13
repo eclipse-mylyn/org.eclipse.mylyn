@@ -236,6 +236,9 @@ public class TaskListView extends ViewPart {
 
 	int sortDirection = DEFAULT_SORT_DIRECTION;
 
+	/**
+	 * TODO: move out of UI.
+	 */
 	private TaskActivationHistory taskHistory = new TaskActivationHistory();
 
 	/**

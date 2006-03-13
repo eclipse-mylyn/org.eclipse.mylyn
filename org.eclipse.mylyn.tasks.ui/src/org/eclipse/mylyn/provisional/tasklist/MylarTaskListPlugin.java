@@ -232,12 +232,13 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					String taskListFilePath = newDirPath + File.separator + DEFAULT_TASK_LIST_FILE;
 
 					getTaskListSaveManager().saveTaskListAndContexts();
+					getTaskListManager().resetTaskList(); 
 					getTaskListManager().setTaskListFile(new File(taskListFilePath));
-					getTaskListManager().resetTaskList();
 					getTaskListManager().readExistingOrCreateNewList();
 
-					if (TaskListView.getDefault() != null)
+					if (TaskListView.getDefault() != null) {
 						TaskListView.getDefault().clearTaskHistory();
+					}
 				}
 			}
 		}

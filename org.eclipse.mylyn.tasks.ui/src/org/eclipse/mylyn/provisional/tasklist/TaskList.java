@@ -45,7 +45,7 @@ public class TaskList {
 
 	private List<ITask> activeTasks;
 		
-	public TaskList() {
+	TaskList() {
 		reset();
 	} 
 
@@ -85,18 +85,6 @@ public class TaskList {
 	
 	public void moveToRoot(ITask task) {
 		moveToContainer(rootCategory, task);
-//		if (!tasks.containsKey(task.getHandleIdentifier())) {
-//			tasks.put(task.getHandleIdentifier(), task);
-//		}
-//		
-//		AbstractTaskContainer currentCategory = task.getCategory();
-//		if (currentCategory != null) {
-//			((AbstractTaskContainer)currentCategory).remove(task);
-//		} 
-//		internalAddRootTask(task);
-//		for (ITaskListChangeListener listener : changeListeners) {
-//			listener.taskMoved(task, currentCategory, getRootCategory());
-//		}
 	}
 
 	public void moveToContainer(AbstractTaskContainer toContainer, ITask task) {
@@ -105,18 +93,11 @@ public class TaskList {
 		}
 		
 		AbstractTaskContainer fromContainer = task.getContainer();
-//		if (toCategory.equals(getRootCategory())) {
-//			moveToRoot(task);
-//		} else {
-//			removeFromRoot(task);
-//		}
 		if (fromContainer instanceof AbstractTaskContainer) {
 			((AbstractTaskContainer)fromContainer).remove(task);
 		} 
 		if (toContainer != null) {
 			internalAddTask(task, toContainer);
-//			toCategory.add(task);
-//			task.setContainer(toCategory);
 		} else {
 			internalAddTask(task, archiveContainer);
 		}
@@ -134,24 +115,10 @@ public class TaskList {
 
 	public void removeFromCategory(TaskCategory category, ITask task) {
 		moveToContainer(archiveContainer, task);
-//		category.remove(task);
-//		archiveContainer.add(task);
-//		task.setContainer(archiveContainer); 
-//		for (ITaskListChangeListener listener : changeListeners) {
-//			listener.taskMoved(task, category, null);
-//		}
 	}
 
 	public void removeFromRoot(ITask task) {
 		moveToContainer(archiveContainer, task);
-//		rootCategory.remove(task);
-////		rootTasks.remove(task);
-//		archiveContainer.add(task);
-//		task.setContainer(archiveContainer);
-//		
-//		for (ITaskListChangeListener listener : changeListeners) {
-//			listener.taskMoved(task, null, null);
-//		}
 	}
 
 	public void addQuery(AbstractRepositoryQuery query) {
@@ -199,8 +166,7 @@ public class TaskList {
 	public void markComplete(ITask task, boolean complete) {
 		task.setCompleted(complete);
 		for (ITaskListChangeListener listener : new ArrayList<ITaskListChangeListener>(changeListeners)) {
-			listener.localInfoChanged(task); // to ensure comleted filter
-			// notices
+			listener.localInfoChanged(task); 
 		}
 	}
 
@@ -213,29 +179,25 @@ public class TaskList {
 	}
 	
 	/**
-	 * XXX Only public so that other externalizers can use it
+	 * NOTE: Only public so that other externalizers can use it
 	 */
 	public void internalAddCategory(AbstractTaskContainer cat) {
 		categories.add(cat);
 	}
 	
 	public void internalAddTask(ITask task, AbstractTaskContainer container) {
-		if (container == null) {
-			System.err.println("!!!!");
-		}
 		tasks.put(task.getHandleIdentifier(), task);
-		task.setContainer(container);
-		container.add(task);
-//		archiveCategory.internalAddTask(task);
-//		archiveContainer.add(task);
+		if (container != null) {
+			task.setContainer(container);
+			container.add(task);
+		} else {
+			task.setContainer(rootCategory);
+			rootCategory.add(task);
+		}
 	}
 	
 	public void internalAddRootTask(ITask task) {
 		internalAddTask(task, rootCategory);
-//		tasks.put(task.getHandleIdentifier(), task);
-//		rootCategory.add(task);
-//		task.setContainer(rootCategory); 
-//		archiveContainer.add(task);
 	} 
 
 	public void internalAddQuery(AbstractRepositoryQuery query) {
@@ -263,23 +225,6 @@ public class TaskList {
 		}
 		return false;
 	}
-
-//	public ITask getTaskForHandle(String handle, boolean lookInArchives) {
-//		ITask foundTask = null;
-//		for (AbstractTaskContainer cat : categories) {
-//			if (!lookInArchives && cat.isArchive())
-//				continue;
-//			if ((foundTask = findTaskHelper(cat.getChildren(), handle)) != null) {
-//				return foundTask;
-//			}
-//		}
-//		for (AbstractRepositoryQuery query : queries) {
-//			if ((foundTask = findTaskHelper(query.getHits(), handle)) != null) {
-//				return foundTask;
-//			}
-//		}
-//		return findTaskHelper(rootTasks, handle);
-//	}
 
 	private AbstractQueryHit findQueryHitHelper(Set<? extends ITaskListElement> elements, String handle) {
 		if (handle == null)
@@ -363,7 +308,6 @@ public class TaskList {
 
 	public Set<ITaskListElement> getRootElements() {
 		Set<ITaskListElement> roots = new HashSet<ITaskListElement>();
-		// roots.add(archiveCategory);
 		for (ITask task : rootCategory.getChildren())
 			roots.add(task);
 		for (AbstractTaskContainer cat : categories)
@@ -375,12 +319,6 @@ public class TaskList {
 
 	public Collection<ITask> getAllTasks() {
 		return tasks.values();
-//		Set<ITask> allTasks = new HashSet<ITask>();
-//		allTasks.addAll(rootTasks);
-//		for (AbstractTaskContainer container : categories) {
-//			allTasks.addAll(container.getChildren());
-//		}
-//		return allTasks;
 	}
 
 	public Set<AbstractTaskContainer> getTaskContainers() {
@@ -430,30 +368,7 @@ public class TaskList {
 
 	public ITask getTask(String handleIdentifier) {
 		return tasks.get(handleIdentifier);
-//		for (ITask task : archiveContainer.getChildren()) {
-//			if (task.getHandleIdentifier().equals(handleIdentifier)) {
-//				return task;
-//			}
-//		}
-//		return null;
-		// return archiveMap.get(handleIdentifier);
 	}
-
-//	public Set<ITask> getArchiveTasks() {
-//		return archiveContainer.getChildren();
-//	}
-
-//	public void setArchiveCategory(TaskCategory category) {
-//		this.archiveContainer = category;
-//	}
-
-//	/**
-//	 * For testing.
-//	 */
-//	public void clearArchive() {
-//		archiveContainer.getChildren().clear();
-//		// archiveMap.clear();
-//	}
 
 	public AbstractTaskContainer getContainerForHandle(String categoryHandle) {
 		for (AbstractTaskContainer cat : categories) {
@@ -535,6 +450,24 @@ public class TaskList {
 		}
 	}
 }
+
+
+//public ITask getTaskForHandle(String handle, boolean lookInArchives) {
+//	ITask foundTask = null;
+//	for (AbstractTaskContainer cat : categories) {
+//		if (!lookInArchives && cat.isArchive())
+//			continue;
+//		if ((foundTask = findTaskHelper(cat.getChildren(), handle)) != null) {
+//			return foundTask;
+//		}
+//	}
+//	for (AbstractRepositoryQuery query : queries) {
+//		if ((foundTask = findTaskHelper(query.getHits(), handle)) != null) {
+//			return foundTask;
+//		}
+//	}
+//	return findTaskHelper(rootTasks, handle);
+//}
 
 //private ITask findTaskHelper(Set<? extends ITaskListElement> elements, String handle) {
 //if (handle == null)
