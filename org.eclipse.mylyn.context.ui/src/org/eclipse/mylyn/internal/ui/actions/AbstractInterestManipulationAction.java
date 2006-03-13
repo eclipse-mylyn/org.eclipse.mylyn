@@ -12,12 +12,14 @@
 package org.eclipse.mylar.internal.ui.actions;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -29,6 +31,8 @@ import org.eclipse.ui.internal.ObjectPluginAction;
  * @author Mik Kersten
  */
 public abstract class AbstractInterestManipulationAction implements IViewActionDelegate, IWorkbenchWindowActionDelegate {
+
+	private static final String MESSAGE_NO_CONTEXT = "No task context is active, or element not found in context";
 
 	public static final String SOURCE_ID = "org.eclipse.mylar.ui.interest.user";
 
@@ -72,7 +76,8 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 				if (node != null) {
 					MylarPlugin.getContextManager().manipulateInterestForNode(node, increment, false, SOURCE_ID);
 				} else {
-					MylarStatusHandler.log("no element for interest manipulation", this);
+					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), 
+							MylarTaskListPlugin.TITLE_DIALOG, MESSAGE_NO_CONTEXT);
 				}
 			}
 		} else {
@@ -80,7 +85,9 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 			if (node != null) {
 				MylarPlugin.getContextManager().manipulateInterestForNode(node, increment, false, SOURCE_ID);
 			} else {
-				MylarStatusHandler.log("no active element for interest manipulation", this);
+				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), 
+						MylarTaskListPlugin.TITLE_DIALOG, MESSAGE_NO_CONTEXT);
+//				MylarStatusHandler.log("no active element for interest manipulation", this);
 			}
 		}
 	}
