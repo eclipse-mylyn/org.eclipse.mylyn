@@ -343,11 +343,11 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	private void migrateHandlesToRepositorySupport() {
-		boolean migrated = false;
+		boolean migrated = false; 
 		getMylarCorePrefs().setDefault(TaskListPreferenceConstants.CONTEXTS_MIGRATED, false);
 		// NOTE: gets/checks preference in both stores to accidental migration
 		if (!(getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.CONTEXTS_MIGRATED)
-			&& getPreferenceStore().getBoolean(TaskListPreferenceConstants.CONTEXTS_MIGRATED))) {   
+				|| getPreferenceStore().getBoolean(TaskListPreferenceConstants.CONTEXTS_MIGRATED))) {   
 			File dataDir = new File(MylarPlugin.getDefault().getDataDirectory());
 			TaskRepository defaultRepository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
 					TaskRepositoryManager.PREFIX_REPOSITORY_OLD.toLowerCase());
