@@ -212,4 +212,8 @@ public class TaskListSaveManager implements ITaskListChangeListener, DisposeList
 	public BackgroundSaveTimer getSaveTimer() {
 		return saveTimer;
 	}
+
+	public void containerInfoChanged(AbstractTaskContainer container) {
+		saveTaskListAndContexts();
+	}
 }

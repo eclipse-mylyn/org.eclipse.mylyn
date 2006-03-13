@@ -20,7 +20,7 @@ public interface ITaskListElement {
 
 	public abstract String getDescription();
 
-	public abstract void setDescription(String description);
+//	public abstract void setDescription(String description);
 
 	public abstract String getHandleIdentifier();
 

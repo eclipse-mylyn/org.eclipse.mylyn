@@ -156,6 +156,10 @@ public class TaskActivityView extends ViewPart {
 		public void taskAdded(ITask task) {
 			// ignore	
 		}
+
+		public void containerInfoChanged(AbstractTaskContainer container) {
+			// ignore
+		}
 	};
 
 	public static TaskActivityView openInActivePerspective() {

@@ -205,9 +205,9 @@ public class DateRangeActivityDelegate implements ITask {
 		task.setCreationDate(date);
 	}
 
-	public void setDescription(String description) {
-		task.setDescription(description);
-	}
+//	public void setDescription(String description) {
+//		task.setDescription(description);
+//	}
 
 	public void setElapsedTime(long elapsed) {
 		task.setElapsedTime(elapsed);

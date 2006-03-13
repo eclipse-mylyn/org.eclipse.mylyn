@@ -34,12 +34,12 @@ public class FilterCompletedTasksAction extends Action {
 		setToolTipText(LABEL);
 		setId(ID);
 		setImageDescriptor(TaskListImages.FILTER_COMPLETE);
-		setChecked(MylarTaskListPlugin.getMylarPrefs().contains(TaskListPreferenceConstants.FILTER_COMPLETE_MODE));
+		setChecked(MylarTaskListPlugin.getMylarCorePrefs().contains(TaskListPreferenceConstants.FILTER_COMPLETE_MODE));
 	}
 
 	@Override
 	public void run() {
-		MylarTaskListPlugin.getMylarPrefs().setValue(TaskListPreferenceConstants.FILTER_COMPLETE_MODE, isChecked());
+		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.FILTER_COMPLETE_MODE, isChecked());
 		if (isChecked()) {
 			view.addFilter(view.getCompleteFilter());
 		} else {

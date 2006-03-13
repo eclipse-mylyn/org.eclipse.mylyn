@@ -165,7 +165,7 @@ public class TaskRepositoryManager {
 
 	public Map<String, Set<TaskRepository>> readRepositories() {
 		for (AbstractRepositoryConnector repositoryConnector : repositoryConnectors.values()) {
-			String read = MylarTaskListPlugin.getMylarPrefs().getString(PREF_REPOSITORIES + repositoryConnector.getRepositoryType());
+			String read = MylarTaskListPlugin.getMylarCorePrefs().getString(PREF_REPOSITORIES + repositoryConnector.getRepositoryType());
 			Set<TaskRepository> repositories = new HashSet<TaskRepository>();
 			if (read != null) {
 				StringTokenizer st = new StringTokenizer(read, PREF_STORE_DELIM);
@@ -174,7 +174,7 @@ public class TaskRepositoryManager {
 
 					repositoryMap.put(repositoryConnector.getRepositoryType(), repositories);						
 					String prefIdVersion = urlString + PROPERTY_DELIM + PROPERTY_VERSION;
-					String version = MylarTaskListPlugin.getMylarPrefs().getString(prefIdVersion);
+					String version = MylarTaskListPlugin.getMylarCorePrefs().getString(prefIdVersion);
 					repositories.add(new TaskRepository(repositoryConnector.getRepositoryType(), urlString, version));
 				}
 			}
@@ -198,10 +198,10 @@ public class TaskRepositoryManager {
 					repositoriesToStore += repository.getUrl() + PREF_STORE_DELIM;
 
 					String prefIdVersion = repository.getUrl() + PROPERTY_DELIM + PROPERTY_VERSION;
-					MylarTaskListPlugin.getMylarPrefs().setValue(prefIdVersion, repository.getVersion());
+					MylarTaskListPlugin.getMylarCorePrefs().setValue(prefIdVersion, repository.getVersion());
 				}
 				String prefId = PREF_REPOSITORIES + repositoryConnector.getRepositoryType();
-				MylarTaskListPlugin.getMylarPrefs().setValue(prefId, repositoriesToStore);
+				MylarTaskListPlugin.getMylarCorePrefs().setValue(prefId, repositoriesToStore);
 			} 
 		}
 
@@ -217,7 +217,7 @@ public class TaskRepositoryManager {
 		repositoryMap.clear();
 		for (AbstractRepositoryConnector repositoryConnector : repositoryConnectors.values()) {
 			String prefId = PREF_REPOSITORIES + repositoryConnector.getRepositoryType();
-			MylarTaskListPlugin.getMylarPrefs().setValue(prefId, "");
+			MylarTaskListPlugin.getMylarCorePrefs().setValue(prefId, "");
 		}
 	}
 }

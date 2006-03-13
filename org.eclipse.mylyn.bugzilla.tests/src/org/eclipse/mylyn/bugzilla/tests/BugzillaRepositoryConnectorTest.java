@@ -167,8 +167,9 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		String repositoryURL = "repositoryURL";
 		BugzillaQueryHit hit1 = new BugzillaQueryHit("description", "P1", repositoryURL, 1, null, "status");
 		ITask task1 = hit1.getOrCreateCorrespondingTask();
-		assertNotNull(task1);
-		task1.setDescription("testing");
+		assertNotNull(task1); 
+//		taskList.renameTask(task1, "testing");
+//		task1.setDescription("testing"); 
 
 		BugzillaQueryHit hit1Twin = new BugzillaQueryHit("description", "P1", repositoryURL, 1, null, "status");
 		ITask task2 = hit1Twin.getOrCreateCorrespondingTask();

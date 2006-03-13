@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.tasklist.ui.editors;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
@@ -56,6 +57,7 @@ public class CategoryEditorInput implements IEditorInput {
 	}
 
 	public void setCategoryName(String description) {
-		category.setDescription(description);
+		MylarTaskListPlugin.getTaskListManager().getTaskList().renameContainer(category, description);
+//		category.setDescription(description);
 	}
 }

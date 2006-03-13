@@ -237,7 +237,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			BugzillaCustomQueryDialog sqd = new BugzillaCustomQueryDialog(Display.getCurrent().getActiveShell(),
 					queryCategory.getQueryUrl(), queryCategory.getDescription(), queryCategory.getMaxHits() + "");
 			if (sqd.open() == Dialog.OK) {
-				queryCategory.setDescription(sqd.getName());
+				MylarTaskListPlugin.getTaskListManager().getTaskList().renameContainer(queryCategory, sqd.getName());
+//				queryCategory.setDescription(sqd.getName());
 				queryCategory.setQueryUrl(sqd.getUrl());
 				int maxHits = -1;
 				try {
@@ -255,7 +256,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					queryCategory.getRepositoryUrl(), queryCategory.getQueryUrl(), queryCategory.getDescription(),
 					queryCategory.getMaxHits() + "");
 			if (queryDialog.open() == Dialog.OK) {
-				queryCategory.setDescription(queryDialog.getName());
+				MylarTaskListPlugin.getTaskListManager().getTaskList().renameContainer(queryCategory, queryDialog.getName());
+//				queryCategory.setDescription(queryDialog.getName());
 				queryCategory.setQueryUrl(queryDialog.getUrl());
 				queryCategory.setRepositoryUrl(queryDialog.getRepository().getUrl());
 				int maxHits = -1;

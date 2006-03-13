@@ -27,11 +27,11 @@ public class TaskListRefreshManager implements IPropertyChangeListener {
 			refreshJob.cancel();
 		}
 
-		boolean enabled = MylarTaskListPlugin.getMylarPrefs().getBoolean(
+		boolean enabled = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED);
 
 		if (enabled) {
-			long miliseconds = MylarTaskListPlugin.getMylarPrefs().getLong(
+			long miliseconds = MylarTaskListPlugin.getMylarCorePrefs().getLong(
 					TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
 
 			refreshJob = new ScheduledTaskListRefreshJob(miliseconds, MylarTaskListPlugin.getTaskListManager());

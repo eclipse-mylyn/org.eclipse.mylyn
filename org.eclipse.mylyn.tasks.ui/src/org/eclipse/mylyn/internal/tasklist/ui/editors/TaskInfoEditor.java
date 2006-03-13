@@ -24,10 +24,11 @@ import org.eclipse.mylar.internal.tasklist.ui.views.DatePicker;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
+import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskListChangeListener;
-import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.provisional.tasklist.Task;
 import org.eclipse.mylar.provisional.tasklist.Task.PriorityLevel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
@@ -196,6 +197,10 @@ public class TaskInfoEditor extends EditorPart {
 			// ignore
 		}
 
+		public void containerInfoChanged(AbstractTaskContainer container) {
+			// ignore
+		}
+
 	};
 
 	public TaskInfoEditor() {
@@ -232,7 +237,10 @@ public class TaskInfoEditor extends EditorPart {
 	public void doSave(IProgressMonitor monitor) {
 		if (!(task instanceof AbstractRepositoryTask)) {
 			String label = description.getText();
-			task.setDescription(label);
+//			task.setDescription(label);
+			MylarTaskListPlugin.getTaskListManager().getTaskList().renameTask((Task)task, label);
+			
+			// TODO: refactor mutation into TaskList?
 			task.setUrl(issueReportURL.getText());
 			String priorityDescription = priorityCombo.getItem(priorityCombo.getSelectionIndex());
 			PriorityLevel level = PriorityLevel.fromDescription(priorityDescription);
@@ -255,7 +263,8 @@ public class TaskInfoEditor extends EditorPart {
 		} else {
 			task.setReminderDate(null);
 		}
-
+		MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
+		
 		// Method not implemented yet
 		// task.setStatus(statusCombo.getItem(statusCombo.getSelectionIndex()));
 
@@ -263,7 +272,7 @@ public class TaskInfoEditor extends EditorPart {
 		// statusCombo.getItem(statusCombo.getSelectionIndex()));
 
 		// refreshTaskListView(task);
-		MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
+
 
 		markDirty(false);
 	}

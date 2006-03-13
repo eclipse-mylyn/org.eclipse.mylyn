@@ -121,6 +121,22 @@ public class TaskList {
 		moveToContainer(archiveContainer, task);
 	}
 
+	public void renameTask(Task task, String description) {
+		task.setDescription(description);
+		for (ITaskListChangeListener listener : changeListeners) {
+			listener.localInfoChanged(task);
+		}
+	}
+	
+	public void renameContainer(AbstractTaskContainer container, String newDescription) {
+		if (!(container instanceof TaskArchive)) {
+			container.setDescription(newDescription);
+		}
+		for (ITaskListChangeListener listener : changeListeners) {
+			listener.containerInfoChanged(container);
+		}
+	}
+	
 	public void addQuery(AbstractRepositoryQuery query) {
 		queries.add(query);
 		for (ITaskListChangeListener listener : changeListeners) {

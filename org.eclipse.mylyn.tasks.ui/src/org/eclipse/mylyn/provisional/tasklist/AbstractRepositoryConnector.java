@@ -199,7 +199,7 @@ public abstract class AbstractRepositoryConnector {
 	 * Synchronize state with the repository (e.g. queries, task contents)
 	 */
 	public void synchronize() {
-		boolean offline = MylarTaskListPlugin.getMylarPrefs().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
+		boolean offline = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
 		if (offline) {
 			MessageDialog.openInformation(null, MylarTaskListPlugin.TITLE_DIALOG,
 					"Unable to refresh the query since you are currently offline");

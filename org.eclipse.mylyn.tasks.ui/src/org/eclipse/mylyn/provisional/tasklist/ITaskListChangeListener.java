@@ -28,6 +28,8 @@ public interface ITaskListChangeListener {
 		
 	public abstract void containerDeleted(AbstractTaskContainer container);
 
+	public abstract void containerInfoChanged(AbstractTaskContainer container);
+	
 	/**
 	 * @param task
 	 * @param fromContainer	can be null
