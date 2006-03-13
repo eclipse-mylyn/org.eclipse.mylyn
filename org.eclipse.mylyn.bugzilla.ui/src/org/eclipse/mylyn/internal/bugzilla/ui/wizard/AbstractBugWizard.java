@@ -201,7 +201,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 	/**
 	 * @return the last page of this wizard
 	 */
-	abstract protected AbstractWizardDataPage getWizardDataPage();
+	abstract protected AbstractBugzillaWizardPage getWizardDataPage();
 
 	public TaskRepository getRepository() {
 		return repository;

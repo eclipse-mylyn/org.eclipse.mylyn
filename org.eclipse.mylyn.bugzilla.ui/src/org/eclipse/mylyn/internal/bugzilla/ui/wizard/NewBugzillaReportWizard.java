@@ -65,7 +65,7 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 	}
 
 	@Override
-	protected AbstractWizardDataPage getWizardDataPage() {
+	protected AbstractBugzillaWizardPage getWizardDataPage() {
 		return attributePage;
 	}
 

@@ -23,7 +23,7 @@ import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.core.tests.support.FileTool;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugModel;
 import org.eclipse.mylar.internal.bugzilla.core.internal.NewBugParser;
-import org.eclipse.mylar.internal.bugzilla.ui.wizard.AbstractWizardDataPage;
+import org.eclipse.mylar.internal.bugzilla.ui.wizard.AbstractBugzillaWizardPage;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -38,7 +38,7 @@ public class NewBugWizardTest extends TestCase {
 		Reader in = new FileReader(f);
 
 		NewBugModel model = new NewBugModel();
-		AbstractWizardDataPage page = new TestWizardDataPage();
+		AbstractBugzillaWizardPage page = new TestWizardDataPage();
 		new NewBugParser(in).parseBugAttributes(model, true); // ** TRUE vs
 																// FALSE **
 		page.setPlatformOptions(model);
@@ -75,7 +75,7 @@ public class NewBugWizardTest extends TestCase {
 
 	}
 
-	static class TestWizardDataPage extends AbstractWizardDataPage {
+	static class TestWizardDataPage extends AbstractBugzillaWizardPage {
 
 		public TestWizardDataPage() {
 			super("", "", "", PlatformUI.getWorkbench());

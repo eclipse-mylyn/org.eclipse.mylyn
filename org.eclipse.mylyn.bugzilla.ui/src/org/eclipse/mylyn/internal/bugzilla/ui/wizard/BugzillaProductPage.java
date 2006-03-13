@@ -50,8 +50,6 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 
 	private static final String NEW_BUGZILLA_TASK_ERROR_TITLE = "New Bugzilla Task Error";
 
-	private static final String TITLE = "New Bugzilla Task";
-
 	private static final String DESCRIPTION = "Pick a product on which to enter a bug.\n"
 			+ "Press the Update button if you do not see the desired product.";
 
@@ -85,7 +83,7 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 	 *            The repository the data is coming from
 	 */
 	public BugzillaProductPage(IWorkbench workbench, NewBugzillaReportWizard bugWiz, TaskRepository repository) {
-		super("Page1", TITLE, DESCRIPTION, workbench);
+		super("Page1", IBugzillaConstants.TITLE_NEW_BUG, DESCRIPTION, workbench);
 		this.bugWizard = bugWiz;
 		this.repository = repository;
 		setImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.bugzilla.ui",

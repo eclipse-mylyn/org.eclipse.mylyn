@@ -49,7 +49,7 @@ import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
  * 
  * @author Mik Kersten (hardening of initial prototype)
  */
-public abstract class AbstractWizardDataPage extends WizardPage implements Listener {
+public abstract class AbstractBugzillaWizardPage extends WizardPage implements Listener {
 
 	/** The instance of the workbench */
 	protected IWorkbench workbench;
@@ -120,7 +120,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 	 * @param workbench
 	 *            the instance of the workbench
 	 */
-	public AbstractWizardDataPage(String pageName, String title, String description, IWorkbench workbench) {
+	public AbstractBugzillaWizardPage(String pageName, String title, String description, IWorkbench workbench) {
 		super(pageName);
 		setTitle(title);
 		setDescription(description);
@@ -582,7 +582,8 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 
 		newLayout(textComposite, 1, "Assigned To", PROPERTY);
 		Label l = new Label(textComposite, SWT.NONE);
-		l.setText("NOTE: If e-mail incorrect, submit will fail silently");
+//		l.setText("                             ");
+		l.setText("(if email is incorrect submit will not proceed)");
 		summaryTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		summaryTextData.horizontalSpan = 1;
 		l.setLayoutData(summaryTextData);

@@ -11,15 +11,23 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.wizard;
 
+import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.ui.IWorkbench;
 
 /**
  * Wizard page shown when the user has chosen a product to log a bug for.
+ * 
+ * @author Mik Kersten
  */
-public class WizardAttributesPage extends AbstractWizardDataPage {
+public class WizardAttributesPage extends AbstractBugzillaWizardPage {
+
+	private static final String DESCRIPTION = "Enter Bugzilla report details";
 
 	public WizardAttributesPage(IWorkbench workbench) {
-		super("Page2", "New Bug Report", "Enter Bug", workbench);
+		super("Page2", IBugzillaConstants.TITLE_NEW_BUG, DESCRIPTION, workbench);
+		setImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.bugzilla.ui",
+			"icons/wizban/bug-wizard.gif"));
 	}
 
 }
