@@ -20,7 +20,7 @@ import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
+import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.ui.InterestFilter;
 
@@ -42,8 +42,8 @@ public class TaskListInterestFilter extends InterestFilter {
 			IMylarElement node = null;
 			if (element instanceof IMylarElement) {
 				node = (IMylarElement) element;
-			} else if (element instanceof ITaskContainer) {
-				ITaskContainer container = (ITaskContainer) element;
+			} else if (element instanceof AbstractTaskContainer) {
+				AbstractTaskContainer container = (AbstractTaskContainer) element;
 				// TODO: get rid of this work-around to look down?
 				for (ITask task : container.getChildren()) {
 					if (select(viewer, this, task)) {

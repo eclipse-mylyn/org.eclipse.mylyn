@@ -29,7 +29,7 @@ import org.eclipse.mylar.provisional.tasklist.DateRangeContainer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.provisional.tasklist.ITaskListChangeListener;
-import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
+import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.team.internal.ccvs.ui.CVSUIPlugin;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
@@ -118,7 +118,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 			// ignore
 		}
 
-		public void taskMoved(ITask task, ITaskContainer fromContainer, ITaskContainer toContainer) {
+		public void taskMoved(ITask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
 			// ignore
 		}
 
@@ -126,11 +126,15 @@ public class MylarChangeSetManager implements IMylarContextListener {
 			// ignore
 		}
 
-		public void containerAdded(ITaskContainer container) {
+		public void containerAdded(AbstractTaskContainer container) {
 			// ignore
 		}
 
-		public void containerDeleted(ITaskContainer container) {
+		public void containerDeleted(AbstractTaskContainer container) {
+			// ignore
+		}
+
+		public void taskAdded(ITask task) {
 			// ignore
 		}
 	};
