@@ -122,7 +122,7 @@ public class Task implements ITask {
 
 	private String url = "";
 
-	private ITaskContainer parentCategory = null;
+	private AbstractTaskContainer parentCategory = null;
 
 	private long timeActive = 0;
 
@@ -297,11 +297,11 @@ public class Task implements ITask {
 		children.remove(t);
 	}
 
-	public void setCategory(ITaskContainer cat) {
+	public void setCategory(AbstractTaskContainer cat) {
 		this.parentCategory = cat;
 	}
 
-	public ITaskContainer getCategory() {
+	public AbstractTaskContainer getCategory() {
 		return parentCategory;
 	}
 

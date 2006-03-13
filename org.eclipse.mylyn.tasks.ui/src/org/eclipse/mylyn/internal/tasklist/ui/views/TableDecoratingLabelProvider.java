@@ -19,7 +19,7 @@ import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
+import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.swt.graphics.Image;
 
@@ -37,7 +37,7 @@ public class TableDecoratingLabelProvider extends DecoratingLabelProvider implem
 			return null;
 		}
 		if (columnIndex == 0) {
-			if (element instanceof ITaskContainer) {
+			if (element instanceof AbstractTaskContainer) {
 				return super.getImage(element);
 			} else {
 				ITask task = TaskElementLabelProvider.getCorrespondingTask((ITaskListElement)element);
@@ -56,7 +56,7 @@ public class TableDecoratingLabelProvider extends DecoratingLabelProvider implem
 				}
 			}
 		} else if (columnIndex == 1) {
-			if (element instanceof ITaskContainer || element instanceof AbstractRepositoryQuery) {
+			if (element instanceof AbstractTaskContainer || element instanceof AbstractRepositoryQuery) {
 				return null;
 			}
 			return super.getImage(element);

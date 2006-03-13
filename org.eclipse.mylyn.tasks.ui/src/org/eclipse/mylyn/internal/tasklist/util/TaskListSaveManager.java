@@ -25,7 +25,7 @@ import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskListChangeListener;
-import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
+import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -188,7 +188,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, DisposeList
 		saveTimer.setForceSyncExec(on);
 	}
 
-	public void taskMoved(ITask task, ITaskContainer fromContainer, ITaskContainer toContainer) {
+	public void taskMoved(ITask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
 		saveTaskListAndContexts();
 	}
 
@@ -196,11 +196,15 @@ public class TaskListSaveManager implements ITaskListChangeListener, DisposeList
 		saveTaskListAndContexts();
 	}
 
-	public void containerAdded(ITaskContainer container) {
+	public void containerAdded(AbstractTaskContainer container) {
 		saveTaskListAndContexts();
 	}
 
-	public void containerDeleted(ITaskContainer container) {
+	public void containerDeleted(AbstractTaskContainer container) {
+		saveTaskListAndContexts();
+	}
+	
+	public void taskAdded(ITask task) {
 		saveTaskListAndContexts();
 	}
 	

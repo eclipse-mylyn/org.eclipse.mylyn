@@ -65,14 +65,14 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		return node.getNodeName().equals(TAG_BUGZILLA_CUSTOM_QUERY) || node.getNodeName().equals(TAG_BUGZILLA_QUERY);
 	}
 
-	public AbstractRepositoryQuery readQuery(Node node, TaskList tlist) throws TaskExternalizationException {
+	public AbstractRepositoryQuery readQuery(Node node, TaskList taskList) throws TaskExternalizationException {
 		boolean hasCaughtException = false;
 		Element element = (Element) node;
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(
 				element.getAttribute(KEY_REPOSITORY_URL), 
 				element.getAttribute(KEY_QUERY_STRING), 
 				element.getAttribute(KEY_NAME),
-				element.getAttribute(KEY_QUERY_MAX_HITS));
+				element.getAttribute(KEY_QUERY_MAX_HITS), taskList);
 		if (node.getNodeName().equals(TAG_BUGZILLA_CUSTOM_QUERY)) {
 			query.setCustomQuery(true);
 		} 
@@ -80,7 +80,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		for (int i = 0; i < list.getLength(); i++) {
 			Node child = list.item(i);
 			try {
-				readQueryHit(child, tlist, query);
+				readQueryHit(child, taskList, query);
 			} catch (TaskExternalizationException e) {
 				hasCaughtException = true;
 			}
@@ -195,7 +195,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 			}
 		}
 
-		taskList.addTaskToArchive(task);
+		taskList.internalAddTask(task);
 		return task;
 	}
 

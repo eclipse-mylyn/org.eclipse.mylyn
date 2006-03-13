@@ -112,7 +112,7 @@ public class TaskListManager {
 	
 	private boolean taskActivityHistoryInitialized = false;
 
-	private int nextTaskId;
+	private int nextLocalTaskId;
 
 	private int timerSleepInterval = TimerThread.DEFAULT_SLEEP_INTERVAL;
 
@@ -166,7 +166,7 @@ public class TaskListManager {
 	public TaskListManager(TaskListWriter taskListWriter, File file, int startId) {
 		this.taskListFile = file;
 		this.taskListWriter = taskListWriter;
-		this.nextTaskId = startId;
+		this.nextLocalTaskId = startId;
 
 		setupCalendarRanges();
 		MylarPlugin.getContextManager().addActivityMetaContextListener(CONTEXT_LISTENER);
@@ -306,7 +306,7 @@ public class TaskListManager {
 		snapToStartOfWeek(currentBegin);
 		GregorianCalendar currentEnd = new GregorianCalendar();
 		snapToEndOfWeek(currentEnd);
-		activityThisWeek = new DateRangeContainer(currentBegin, currentEnd, DESCRIPTION_THIS_WEEK);
+		activityThisWeek = new DateRangeContainer(currentBegin, currentEnd, DESCRIPTION_THIS_WEEK, taskList);
 		dateRangeContainers.add(activityThisWeek);
 
 		GregorianCalendar previousStart = new GregorianCalendar();
@@ -318,7 +318,7 @@ public class TaskListManager {
 		previousEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_PREVIOUS);
 		snapToEndOfWeek(previousEnd);
 		activityPreviousWeek = new DateRangeContainer(previousStart.getTime(), previousEnd.getTime(),
-				DESCRIPTION_PREVIOUS_WEEK);
+				DESCRIPTION_PREVIOUS_WEEK, taskList);
 		dateRangeContainers.add(activityPreviousWeek);
 
 		GregorianCalendar nextStart = new GregorianCalendar();
@@ -329,7 +329,7 @@ public class TaskListManager {
 		nextEnd.setTime(new Date());
 		nextEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_NEXT);
 		snapToEndOfWeek(nextEnd);
-		activityNextWeek = new DateRangeContainer(nextStart.getTime(), nextEnd.getTime(), DESCRIPTION_NEXT_WEEK);
+		activityNextWeek = new DateRangeContainer(nextStart.getTime(), nextEnd.getTime(), DESCRIPTION_NEXT_WEEK, taskList);
 		dateRangeContainers.add(activityNextWeek);
 
 		GregorianCalendar futureStart = new GregorianCalendar();
@@ -340,7 +340,7 @@ public class TaskListManager {
 		futureEnd.setTime(new Date());
 		futureEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_FUTURE_END);
 		snapToEndOfWeek(futureEnd);
-		activityFuture = new DateRangeContainer(futureStart.getTime(), futureEnd.getTime(), DESCRIPTION_FUTURE);
+		activityFuture = new DateRangeContainer(futureStart.getTime(), futureEnd.getTime(), DESCRIPTION_FUTURE, taskList);
 		dateRangeContainers.add(activityFuture);
 
 		GregorianCalendar pastStart = new GregorianCalendar();
@@ -351,7 +351,7 @@ public class TaskListManager {
 		pastEnd.setTime(new Date());
 		pastEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_PAST_END);
 		snapToEndOfWeek(pastEnd);
-		activityPast = new DateRangeContainer(pastStart.getTime(), pastEnd.getTime(), DESCRIPTION_PAST);
+		activityPast = new DateRangeContainer(pastStart.getTime(), pastEnd.getTime(), DESCRIPTION_PAST, taskList);
 		dateRangeContainers.add(activityPast);
 	}
 
@@ -383,7 +383,7 @@ public class TaskListManager {
 
 
 	public String genUniqueTaskHandle() {
-		return TaskRepositoryManager.PREFIX_LOCAL + nextTaskId++;
+		return TaskRepositoryManager.PREFIX_LOCAL + nextLocalTaskId++;
 	}
 
 	public boolean readExistingOrCreateNewList() {
@@ -392,8 +392,8 @@ public class TaskListManager {
 				taskList = new TaskList();
 				taskListWriter.readTaskList(taskList, taskListFile);
 				int maxHandle = taskList.findLargestTaskHandle();
-				if (maxHandle >= nextTaskId) {
-					nextTaskId = maxHandle + 1;
+				if (maxHandle >= nextLocalTaskId) {
+					nextLocalTaskId = maxHandle + 1;
 				}
 			} else {
 				resetTaskList();
@@ -433,7 +433,7 @@ public class TaskListManager {
 				if (!taskList.isEmpty()) {
 					taskListWriter.writeTaskList(taskList, taskListFile);
 					MylarPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.TASK_ID,
-							nextTaskId);
+							nextLocalTaskId);
 				}
 			} else {
 				MylarStatusHandler.log("task list save attempted before initialization", this);

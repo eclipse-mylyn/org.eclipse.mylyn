@@ -81,7 +81,7 @@ import org.eclipse.mylar.provisional.tasklist.DateRangeContainer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.provisional.tasklist.ITaskListChangeListener;
-import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
+import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.Task;
@@ -164,7 +164,7 @@ public class TaskListView extends ViewPart {
 
 	private DrillDownAdapter drillDownAdapter;
 
-	private ITaskContainer drilledIntoCategory = null;
+	private AbstractTaskContainer drilledIntoCategory = null;
 
 	private GoIntoAction goIntoAction;
 
@@ -290,7 +290,7 @@ public class TaskListView extends ViewPart {
 			refreshTask(task);
 		}
 
-		public void taskMoved(ITask task, ITaskContainer fromContainer, ITaskContainer toContainer) {
+		public void taskMoved(ITask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
 			refresh(toContainer);
 			refresh(task);
 			refresh(fromContainer);
@@ -300,11 +300,15 @@ public class TaskListView extends ViewPart {
 			refresh(null);
 		}
 
-		public void containerAdded(ITaskContainer container) {
+		public void containerAdded(AbstractTaskContainer container) {
 			refresh(null);
 		}
 
-		public void containerDeleted(ITaskContainer container) {
+		public void containerDeleted(AbstractTaskContainer container) {
+			refresh(null);
+		}
+
+		public void taskAdded(ITask task) {
 			refresh(null);
 		}
 		
@@ -566,8 +570,8 @@ public class TaskListView extends ViewPart {
 					case 3:
 						return taskListElement.getDescription();
 					}
-				} else if (element instanceof ITaskContainer) {
-					ITaskContainer cat = (ITaskContainer) element;
+				} else if (element instanceof AbstractTaskContainer) {
+					AbstractTaskContainer cat = (AbstractTaskContainer) element;
 					switch (columnIndex) {
 					case 0:
 						return new Boolean(false);
@@ -601,8 +605,8 @@ public class TaskListView extends ViewPart {
 			int columnIndex = -1;
 			try {
 				columnIndex = Arrays.asList(columnNames).indexOf(property);
-				if (((TreeItem) element).getData() instanceof ITaskContainer) {
-					ITaskContainer cat = (ITaskContainer) ((TreeItem) element).getData();
+				if (((TreeItem) element).getData() instanceof AbstractTaskContainer) {
+					AbstractTaskContainer cat = (AbstractTaskContainer) ((TreeItem) element).getData();
 					switch (columnIndex) {
 					case 0:
 						break;
@@ -994,15 +998,15 @@ public class TaskListView extends ViewPart {
 			} else {
 				manager.add(activateAction);
 			}
-		} else if (element instanceof ITaskContainer || element instanceof AbstractRepositoryQuery) {
+		} else if (element instanceof AbstractTaskContainer || element instanceof AbstractRepositoryQuery) {
 			addAction(deleteAction, manager, element);
 		}
 
 		if ((element instanceof ITask && !(element instanceof AbstractRepositoryTask))
-				|| element instanceof ITaskContainer || element instanceof AbstractRepositoryQuery) {
+				|| element instanceof AbstractTaskContainer || element instanceof AbstractRepositoryQuery) {
 			addAction(renameAction, manager, element);
 		}
-		if (element instanceof ITaskContainer) {
+		if (element instanceof AbstractTaskContainer) {
 			manager.add(goIntoAction);
 		}
 		if (drilledIntoCategory != null) {
@@ -1066,18 +1070,18 @@ public class TaskListView extends ViewPart {
 			} else if (action instanceof RenameAction) {
 				action.setEnabled(true);
 			}
-		} else if (element instanceof ITaskContainer) {
+		} else if (element instanceof AbstractTaskContainer) {
 			if (action instanceof MarkTaskCompleteAction) {
 				action.setEnabled(false);
 			} else if (action instanceof MarkTaskIncompleteAction) {
 				action.setEnabled(false);
 			} else if (action instanceof DeleteAction) {
-				if (((ITaskContainer) element).isArchive())
+				if (((AbstractTaskContainer) element).isArchive())
 					action.setEnabled(false);
 				else
 					action.setEnabled(true);
 			} else if (action instanceof NewLocalTaskAction) {
-				if (((ITaskContainer) element).isArchive())
+				if (((AbstractTaskContainer) element).isArchive())
 					action.setEnabled(false);
 				else
 					action.setEnabled(true);
@@ -1093,7 +1097,7 @@ public class TaskListView extends ViewPart {
 			} else if (action instanceof CopyDescriptionAction) {
 				action.setEnabled(true);
 			} else if (action instanceof RenameAction) {
-				if (((ITaskContainer) element).isArchive())
+				if (((AbstractTaskContainer) element).isArchive())
 					action.setEnabled(false);
 				else
 					action.setEnabled(true);
@@ -1272,8 +1276,8 @@ public class TaskListView extends ViewPart {
 		if (selection instanceof StructuredSelection) {
 			StructuredSelection structuredSelection = (StructuredSelection) selection;
 			Object element = structuredSelection.getFirstElement();
-			if (element instanceof ITaskContainer) {
-				drilledIntoCategory = (ITaskContainer) element;
+			if (element instanceof AbstractTaskContainer) {
+				drilledIntoCategory = (AbstractTaskContainer) element;
 				drillDownAdapter.goInto();
 				updateDrillDownActions();
 			}
@@ -1335,7 +1339,7 @@ public class TaskListView extends ViewPart {
 
 	}
 
-	public ITaskContainer getDrilledIntoCategory() {
+	public AbstractTaskContainer getDrilledIntoCategory() {
 		return drilledIntoCategory;
 	}
 

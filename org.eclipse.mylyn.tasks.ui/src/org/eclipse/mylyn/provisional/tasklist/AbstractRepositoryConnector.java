@@ -310,7 +310,7 @@ public abstract class AbstractRepositoryConnector {
 				requestRefresh((AbstractRepositoryTask) task);
 			}
 		}
-		for (ITaskContainer cat : MylarTaskListPlugin.getTaskListManager().getTaskList().getCategories()) {
+		for (AbstractTaskContainer cat : MylarTaskListPlugin.getTaskListManager().getTaskList().getCategories()) {
 
 			if (cat instanceof TaskCategory) {
 				for (ITask task : ((TaskCategory) cat).getChildren()) {

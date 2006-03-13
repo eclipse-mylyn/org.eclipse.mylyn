@@ -244,7 +244,7 @@
                     <objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractQueryHit"/>
 					<objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery"/>
                		<objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask"/>
-                 <objectClass name="org.eclipse.mylar.provisional.tasklist.ITaskContainer"/>
+                 <objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer"/>
                </or>
             </enablement>
          </action>

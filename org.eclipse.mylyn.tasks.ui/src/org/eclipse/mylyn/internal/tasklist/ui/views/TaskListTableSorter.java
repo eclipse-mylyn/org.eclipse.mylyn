@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
+import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 
 /**
@@ -42,24 +42,24 @@ public class TaskListTableSorter extends ViewerSorter {
 	 */
 	@Override
 	public int compare(Viewer compareViewer, Object o1, Object o2) {
-		if (o1 instanceof ITaskContainer && o2 instanceof ITaskContainer && ((ITaskContainer) o2).isArchive()) {
+		if (o1 instanceof AbstractTaskContainer && o2 instanceof AbstractTaskContainer && ((AbstractTaskContainer) o2).isArchive()) {
 			return -1;
-		} else if (o2 instanceof ITaskContainer && o1 instanceof ITaskContainer && ((ITaskContainer) o2).isArchive()) {
+		} else if (o2 instanceof AbstractTaskContainer && o1 instanceof AbstractTaskContainer && ((AbstractTaskContainer) o2).isArchive()) {
 			return 1;
 		}
 
-		if (o1 instanceof ITaskContainer && o2 instanceof ITask) {
+		if (o1 instanceof AbstractTaskContainer && o2 instanceof ITask) {
 			return 1;
 		}
-		if (o1 instanceof ITaskContainer || o1 instanceof AbstractRepositoryQuery) {
-			if (o2 instanceof ITaskContainer || o2 instanceof AbstractRepositoryQuery) {
+		if (o1 instanceof AbstractTaskContainer || o1 instanceof AbstractRepositoryQuery) {
+			if (o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
 				return this.view.sortDirection
 						* ((ITaskListElement) o1).getDescription().compareTo(((ITaskListElement) o2).getDescription());
 			} else {
 				return -1;
 			}
 		} else if (o1 instanceof ITaskListElement) {
-			if (o2 instanceof ITaskContainer || o2 instanceof AbstractRepositoryQuery) {
+			if (o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
 				return -1;
 			} else if (o2 instanceof ITaskListElement) {
 				ITaskListElement element1 = (ITaskListElement) o1;

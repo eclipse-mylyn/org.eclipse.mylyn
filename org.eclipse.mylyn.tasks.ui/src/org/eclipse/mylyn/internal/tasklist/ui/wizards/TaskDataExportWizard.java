@@ -36,7 +36,7 @@ import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.ZipFileUtil;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
+import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskList;
 import org.eclipse.ui.IExportWizard;
@@ -332,7 +332,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 
 		allTasks.addAll(taskList.getRootTasks());
 
-		for (ITaskContainer category : taskList.getCategories()) {
+		for (AbstractTaskContainer category : taskList.getCategories()) {
 			allTasks.addAll(category.getChildren());
 		}
 

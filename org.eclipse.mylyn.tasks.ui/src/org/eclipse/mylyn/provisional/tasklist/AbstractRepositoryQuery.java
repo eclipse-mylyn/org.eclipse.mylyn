@@ -20,7 +20,7 @@ import java.util.Set;
 /**
  * @author Mik Kersten
  */
-public abstract class AbstractRepositoryQuery implements ITaskContainer {
+public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 
 	protected String repositoryUrl;
 
@@ -32,17 +32,21 @@ public abstract class AbstractRepositoryQuery implements ITaskContainer {
 
 	protected Date lastRefresh;
 
-	protected String description = "";
+//	protected String description = "";
 
-	private String handle = "";
+//	private String handle = "";
 	
 	private boolean currentlySynchronizing = false;
 
 	public abstract String getRepositoryKind();
 
-	public String getDescription() {
-		return description;
+	public AbstractRepositoryQuery(String description, TaskList taskList) {
+		super(description, taskList);
 	}
+	
+//	public String getDescription() {
+//		return description;
+//	}
 
 	public String getQueryUrl() {
 		return queryUrl;
@@ -76,7 +80,7 @@ public abstract class AbstractRepositoryQuery implements ITaskContainer {
 	}
 	
 	public void addHit(AbstractQueryHit hit) {
-		ITask correspondingTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getTaskFromArchive(hit.getHandleIdentifier());
+		ITask correspondingTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(hit.getHandleIdentifier());
 		if (correspondingTask instanceof AbstractRepositoryTask) {
 			hit.setCorrespondingTask((AbstractRepositoryTask) correspondingTask);
 		}
@@ -120,18 +124,6 @@ public abstract class AbstractRepositoryQuery implements ITaskContainer {
 		this.maxHits = maxHits;
 	}
 
-	public String getHandleIdentifier() {
-		return handle;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public void setHandleIdentifier(String id) {
-		this.handle = id;
-	}
-
 	public String getRepositoryUrl() {
 		return repositoryUrl;
 	}
@@ -156,3 +148,25 @@ public abstract class AbstractRepositoryQuery implements ITaskContainer {
 		this.currentlySynchronizing = currentlySynchronizing;
 	}
 }
+
+//public String getHandleIdentifier() {
+//return handle;
+//}
+//
+//public void setDescription(String description) {
+//this.description = description;
+//}
+//
+//public void setHandleIdentifier(String id) {
+//this.handle = id;
+//}//	public String getHandleIdentifier() {
+//return handle;
+//}
+//
+//public void setDescription(String description) {
+//	this.description = description;
+//}
+//
+//public void setHandleIdentifier(String id) {
+//	this.handle = id;
+//}

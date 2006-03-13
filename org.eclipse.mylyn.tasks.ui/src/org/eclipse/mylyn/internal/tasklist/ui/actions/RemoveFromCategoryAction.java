@@ -61,7 +61,7 @@ public class RemoveFromCategoryAction extends Action {
 						MylarTaskListPlugin.getTaskListManager().getTaskList().removeFromRoot(task);
 					} 
 					// just in case, should already be there
-					MylarTaskListPlugin.getTaskListManager().getTaskList().addTaskToArchive(task);
+//					MylarTaskListPlugin.getTaskListManager().getTaskList().addTaskToArchive(task);
 //					ITaskContainer cat = task.getCategory();
 //					if (cat != null) {
 //						String message = DeleteAction.genDeleteConfirmationMessage(task);

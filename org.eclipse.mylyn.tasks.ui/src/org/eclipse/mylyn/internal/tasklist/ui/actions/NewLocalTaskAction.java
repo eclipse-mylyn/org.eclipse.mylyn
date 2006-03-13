@@ -49,6 +49,7 @@ public class NewLocalTaskAction extends Action {
 		if (dialogResult == Window.OK) {
 			Task newTask = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), dialog
 					.getTaskname(), true);
+			MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask);
 			newTask.setPriority(dialog.getSelectedPriority());
 			newTask.setReminderDate(dialog.getReminderDate());
 			newTask.setUrl(dialog.getIssueURL());
@@ -73,7 +74,6 @@ public class NewLocalTaskAction extends Action {
 			} else {
 				MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(newTask);
 			}
-			MylarTaskListPlugin.getTaskListManager().getTaskList().addTaskToArchive(newTask);
 			TaskListUiUtil.openEditor(newTask);
 //			newTask.openTaskInEditor(false);
 			view.getViewer().refresh();

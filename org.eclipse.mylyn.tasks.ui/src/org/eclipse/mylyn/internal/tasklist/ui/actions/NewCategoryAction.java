@@ -43,7 +43,7 @@ public class NewCategoryAction extends Action {
 				"Enter name", "Enter a name for the Category: ", "", null);
 		int dialogResult = dialog.open();
 		if (dialogResult == Window.OK) {
-			TaskCategory cat = new TaskCategory(dialog.getValue());
+			TaskCategory cat = new TaskCategory(dialog.getValue(), MylarTaskListPlugin.getTaskListManager().getTaskList());
 			MylarTaskListPlugin.getTaskListManager().getTaskList().addCategory(cat);
 			this.view.getViewer().refresh();
 		}

@@ -187,13 +187,19 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			return null;
 		}
 
-		BugzillaTask newTask = new BugzillaTask(AbstractRepositoryTask.getHandle(repository.getUrl(),
-				bugId), DESCRIPTION_DEFAULT, true);
+		String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), bugId);
+		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
+		 
+		if (task == null) {
+			task = new BugzillaTask(handle, DESCRIPTION_DEFAULT, true);
+			MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task);			
+		} 	
 
-		MylarTaskListPlugin.getTaskListManager().getTaskList().addTaskToArchive(newTask);
-
-		synchronize(newTask, true, null);
-		return newTask;
+//		MylarTaskListPlugin.BgetTaskListManager().getTaskList().addTaskToArchive(newTask);
+		if (task instanceof AbstractRepositoryTask) {
+			synchronize((AbstractRepositoryTask)task, true, null);
+		}
+		return task;
 	}
 
 	public IWizard getQueryWizard(TaskRepository repository) {
@@ -499,6 +505,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			}
 		} catch (LoginException e) {
 			// TODO: Set some form of disconnect status on Query?
+			MylarStatusHandler.fail(e, "login failure", false);
 			status.add(new Status(IStatus.OK, MylarTaskListPlugin.PLUGIN_ID, IStatus.OK, "Could not log in", e));
 		}
 		

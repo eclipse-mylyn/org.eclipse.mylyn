@@ -112,7 +112,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		Task task1 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1", true);
 		manager.getTaskList().moveToRoot(task1);
 		task1.setCompleted(true);
-		TaskCategory cat1 = new TaskCategory("TaskReportGeneratorTest Category");
+		TaskCategory cat1 = new TaskCategory("TaskReportGeneratorTest Category", manager.getTaskList());
 		manager.getTaskList().addCategory(cat1);
 
 		Set<ITaskListElement> catagories = new HashSet<ITaskListElement>();
@@ -136,7 +136,7 @@ public class TaskReportGeneratorTest extends TestCase {
 				true);
 		manager.getTaskList().moveToRoot(task1);
 		TaskTestUtil.setBugTaskCompleted(task1, true);
-		TaskCategory cat1 = new TaskCategory("TaskReportGeneratorTest Category");
+		TaskCategory cat1 = new TaskCategory("TaskReportGeneratorTest Category", manager.getTaskList());
 		manager.getTaskList().addCategory(cat1);
 
 		Set<ITaskListElement> catagories = new HashSet<ITaskListElement>();
@@ -162,7 +162,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		TaskTestUtil.setBugTaskCompleted(task1, false);
 
 		BugzillaRepositoryQuery bugQuery = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl",
-				"TaskReportGeneratorBugzillaQueryCategory", "maxHits");
+				"TaskReportGeneratorBugzillaQueryCategory", "maxHits", manager.getTaskList());
 
 		manager.getTaskList().addQuery(bugQuery);
 

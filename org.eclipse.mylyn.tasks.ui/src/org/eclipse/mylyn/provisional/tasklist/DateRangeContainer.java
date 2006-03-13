@@ -24,7 +24,7 @@ import java.util.Set;
  * @author Rob Elves
  * @author Mik Kersten
  */
-public class DateRangeContainer implements ITaskContainer {
+public class DateRangeContainer extends AbstractTaskContainer {
 
 	private Set<ITask> children = new HashSet<ITask>();
 
@@ -38,35 +38,40 @@ public class DateRangeContainer implements ITaskContainer {
 
 	private long totalEstimated = 0;
 
-	private String description;
+//	private String description;
 
-	public DateRangeContainer(GregorianCalendar startDate, GregorianCalendar endDate, String description) {
+	public DateRangeContainer(GregorianCalendar startDate, GregorianCalendar endDate, String description, TaskList taskList) {
+		super(description, taskList);
 		this.startDate = startDate;
 		this.endDate = endDate;
-		this.setDescription(description);
 	}
 	
-	public DateRangeContainer(Calendar startDate, Calendar endDate, String description) {
+	public DateRangeContainer(Calendar startDate, Calendar endDate, String description, TaskList taskList) {
+		super(description, taskList);
 		this.startDate = startDate;
 		this.endDate = endDate;
-		this.setDescription(description);
 	}
 
-	public DateRangeContainer(GregorianCalendar startDate, GregorianCalendar endDate) {
+	public DateRangeContainer(GregorianCalendar startDate, GregorianCalendar endDate, TaskList taskList) {
+		super(DateFormat.getDateInstance(DateFormat.FULL).format(startDate.getTime()) 
+				+ " to " 
+				+ DateFormat.getDateInstance(DateFormat.FULL).format(endDate.getTime()), 
+				taskList);
 		// super(startDate.hashCode() + endDate.hashCode() + "");
-		String start = DateFormat.getDateInstance(DateFormat.FULL).format(startDate.getTime());
-		String end = DateFormat.getDateInstance(DateFormat.FULL).format(endDate.getTime());
-		this.description = start + " to " + end;
+//		String start = DateFormat.getDateInstance(DateFormat.FULL).format(startDate.getTime());
+//		String end = DateFormat.getDateInstance(DateFormat.FULL).format(endDate.getTime());
+//		this.description = start + " to " + end;
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
 
-	public DateRangeContainer(Date time, Date time2, String description) {
+	public DateRangeContainer(Date time, Date time2, String description, TaskList taskList) {
+		super(description, taskList);
 		startDate = new GregorianCalendar();
 		startDate.setTime(time);
 		endDate = new GregorianCalendar();
 		endDate.setTime(time2);
-		this.description = description;
+//		this.description = description;
 	}
 
 	public boolean includes(Calendar cal) {
@@ -137,17 +142,17 @@ public class DateRangeContainer implements ITaskContainer {
 		return "";
 	}
 
-	public String getDescription() {
-		return description;
-	}
+//	public String getDescription() {
+//		return description;
+//	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+//	public void setDescription(String description) {
+//		this.description = description;
+//	}
 
-	public String getHandleIdentifier() {
-		return description;
-	}
+//	public String getHandleIdentifier() {
+//		return description;
+//	}
 
 	public void setHandleIdentifier(String id) {
 		// ignore

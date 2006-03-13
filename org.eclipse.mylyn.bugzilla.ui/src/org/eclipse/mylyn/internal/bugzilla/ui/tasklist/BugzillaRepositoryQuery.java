@@ -12,10 +12,8 @@
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
-import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
-import org.eclipse.swt.graphics.Font;
+import org.eclipse.mylar.provisional.tasklist.TaskList;
 
 /**
  * @author Shawn Minto
@@ -25,8 +23,9 @@ public class BugzillaRepositoryQuery extends AbstractRepositoryQuery {
 
 	private boolean customQuery = false;
 
-	public BugzillaRepositoryQuery(String repositoryUrl, String queryUrl, String label, String maxHits) {
-		this.description = label;
+	public BugzillaRepositoryQuery(String repositoryUrl, String queryUrl, String description, String maxHits, TaskList taskList) {
+		super(description, taskList);
+//		this.description = label;
 		this.queryUrl = queryUrl;
 		this.repositoryUrl = repositoryUrl;
 		try {
@@ -40,22 +39,22 @@ public class BugzillaRepositoryQuery extends AbstractRepositoryQuery {
 		return BugzillaPlugin.REPOSITORY_KIND;
 	}
 
-	public boolean isDragAndDropEnabled() {
-		return false;
-	}
-
-	public Font getFont() {
-		for (ITaskListElement child : getHits()) {
-			if (child instanceof BugzillaQueryHit) {
-				BugzillaQueryHit hit = (BugzillaQueryHit) child;
-				BugzillaTask task = hit.getCorrespondingTask();
-				if (task != null && task.isActive()) {
-					return TaskListColorsAndFonts.BOLD;
-				}
-			}
-		}
-		return null;
-	}
+//	public boolean isDragAndDropEnabled() {
+//		return false;
+//	}
+//
+//	public Font getFont() {
+//		for (ITaskListElement child : getHits()) {
+//			if (child instanceof BugzillaQueryHit) {
+//				BugzillaQueryHit hit = (BugzillaQueryHit) child;
+//				BugzillaTask task = hit.getCorrespondingTask();
+//				if (task != null && task.isActive()) {
+//					return TaskListColorsAndFonts.BOLD;
+//				}
+//			}
+//		}
+//		return null;
+//	}
 
 	public boolean isCustomQuery() {
 		return customQuery;

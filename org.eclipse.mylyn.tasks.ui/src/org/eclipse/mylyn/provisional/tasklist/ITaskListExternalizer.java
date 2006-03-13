@@ -38,7 +38,7 @@ public interface ITaskListExternalizer {
 	/**
 	 * @return the element that was created, null if failed
 	 */
-	public abstract Element createCategoryElement(ITaskContainer category, Document doc, Element parent);
+	public abstract Element createCategoryElement(AbstractTaskContainer category, Document doc, Element parent);
 
 	public abstract boolean canCreateElementFor(ITask task);
 

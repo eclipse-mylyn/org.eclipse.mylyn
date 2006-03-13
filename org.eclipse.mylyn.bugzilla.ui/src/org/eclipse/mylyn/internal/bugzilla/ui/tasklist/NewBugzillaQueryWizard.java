@@ -50,7 +50,8 @@ public class NewBugzillaQueryWizard extends Wizard {
 				repository.getUrl(), 
 				queryPage.getQueryDialog().getUrl(), 
 				queryPage.getQueryDialog().getName(), 
-				queryPage.getQueryDialog().getMaxHits());
+				queryPage.getQueryDialog().getMaxHits(), 
+				MylarTaskListPlugin.getTaskListManager().getTaskList());
 		if (queryPage.getQueryDialog().isCustom()) {
 			queryCategory.setCustomQuery(true);
 		} 

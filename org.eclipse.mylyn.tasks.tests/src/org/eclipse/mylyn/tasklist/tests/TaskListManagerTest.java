@@ -32,7 +32,7 @@ import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
+import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.Task;
@@ -68,7 +68,7 @@ public class TaskListManagerTest extends TestCase {
 		MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskListAndContexts();
 		MylarTaskListPlugin.getRepositoryManager().removeRepository(repository);
 	}
-
+	
 	public void testLegacyTaskListReading() throws IOException {
 		File originalFile = manager.getTaskListFile();
 		File legacyListFile = new File("temptasklist.xml");
@@ -84,7 +84,7 @@ public class TaskListManagerTest extends TestCase {
 
 		Set<ITask> allTasks = manager.getTaskList().getAllTasks();
 		Set<ITask> allRootTasks = manager.getTaskList().getRootTasks();
-		Set<ITaskContainer> allCategories = manager.getTaskList().getCategories();
+		Set<AbstractTaskContainer> allCategories = manager.getTaskList().getCategories();
 		Set<ITaskListElement> allRoots = manager.getTaskList().getRootElements();
 		assertEquals(0, allRootTasks.size());
 
@@ -138,13 +138,24 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(readReport.getRepositoryUrl(), readReport.getRepositoryUrl());
 	}
 
+	public void testDeleteQuery() {
+		AbstractRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1", manager.getTaskList());
+		manager.getTaskList().addQuery(query);
+
+		AbstractRepositoryQuery readQuery = manager.getTaskList().getQueries().get(0);
+		assertEquals(query, readQuery);
+
+		manager.getTaskList().deleteQuery(query);
+		assertEquals(0, manager.getTaskList().getQueries().size());
+	}
+	
 	public void testMoveCategories() {
 		assertEquals(0, manager.getTaskList().getRootTasks().size());
 		Task task1 = new Task("t1", "t1", true);
 		
-		TaskCategory cat1 = new TaskCategory("cat1");
+		TaskCategory cat1 = new TaskCategory("cat1", manager.getTaskList());
 		manager.getTaskList().addCategory(cat1);
-		TaskCategory cat2 = new TaskCategory("cat2");
+		TaskCategory cat2 = new TaskCategory("cat2", manager.getTaskList());
 		manager.getTaskList().addCategory(cat2);
 		
 		manager.getTaskList().moveToCategory(cat1, task1);
@@ -163,7 +174,7 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(1, manager.getTaskList().getRootTasks().size());
 		assertEquals(TaskList.LABEL_ROOT, task1.getCategory().getHandleIdentifier());
 
-		TaskCategory cat1 = new TaskCategory("c1");
+		TaskCategory cat1 = new TaskCategory("c1", manager.getTaskList());
 		manager.getTaskList().addCategory(cat1);
 
 		manager.getTaskList().moveToCategory(cat1, task1);
@@ -203,7 +214,7 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testCategoryPersistance() {
 		BugzillaTask task = new BugzillaTask("b1", "b 1", true);
-		TaskCategory category = new TaskCategory("cat");
+		TaskCategory category = new TaskCategory("cat", manager.getTaskList());
 		manager.getTaskList().addCategory(category);
 		manager.getTaskList().moveToCategory(category, task);
 		assertNotNull(manager.getTaskList());
@@ -219,14 +230,14 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testDelete() {
 		ITask task = new Task("handle", "label", true);
-		manager.getTaskList().addTaskToArchive(task);
+		manager.getTaskList().addTask(task);
 		manager.getTaskList().internalAddRootTask(task);
 		manager.getTaskList().deleteTask(task);
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
 	}
 
 	public void testBugzillaCustomQueryExternalization() {
-		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1");
+		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1", manager.getTaskList());
 		query.setCustomQuery(true);
 		manager.getTaskList().addQuery(query);
 		manager.saveTaskList();
@@ -243,7 +254,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testQueryExternalization() {
-		AbstractRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1");
+		AbstractRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1", manager.getTaskList());
 		assertEquals("repositoryUrl", query.getRepositoryUrl());
 		assertEquals("queryUrl", query.getQueryUrl());
 		manager.getTaskList().addQuery(query);
@@ -251,8 +262,6 @@ public class TaskListManagerTest extends TestCase {
 		assertNotNull(manager.getTaskList());
 
 		manager.resetTaskList();
-//		manager.getTaskList().clear();
-//		manager.setTaskList(new TaskList());
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getQueries().size());
 		AbstractRepositoryQuery readQuery = manager.getTaskList().getQueries().get(0);
@@ -264,9 +273,9 @@ public class TaskListManagerTest extends TestCase {
 	public void testArchiveRepositoryTaskExternalization() {
 		BugzillaTask repositoryTask = new BugzillaTask("handle", "label", true);
 		repositoryTask.setKind("kind");
-		manager.getTaskList().addTaskToArchive(repositoryTask);
+		manager.getTaskList().addTask(repositoryTask);
 		// repositoryTask.setCategory(manager.getTaskList().getArchiveCategory());
-		assertEquals(1, manager.getTaskList().getArchiveTasks().size());
+		assertEquals(1, manager.getTaskList().getArchiveContainer().getChildren().size());
 		assertEquals(0, manager.getTaskList().getRootTasks().size());
 		manager.saveTaskList();
 
@@ -274,7 +283,7 @@ public class TaskListManagerTest extends TestCase {
 //		manager.getTaskList().clear();
 //		manager.setTaskList(new TaskList());
 		manager.readExistingOrCreateNewList();
-		assertEquals(1, manager.getTaskList().getArchiveTasks().size());
+		assertEquals(1, manager.getTaskList().getArchiveContainer().getChildren().size());
 		assertEquals(0, manager.getTaskList().getRootTasks().size());
 	}
 
@@ -299,7 +308,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testRepositoryTasksAndCategoriesMultiRead() {
-		TaskCategory cat1 = new TaskCategory("Category 1");
+		TaskCategory cat1 = new TaskCategory("Category 1", manager.getTaskList());
 		manager.getTaskList().addCategory(cat1);
 
 		BugzillaTask reportInCat1 = new BugzillaTask("123", "label 123", true);
@@ -352,7 +361,7 @@ public class TaskListManagerTest extends TestCase {
 
 		Set<TaskCategory> categories = new HashSet<TaskCategory>();
 		Set<ITask> cat1Contents = new HashSet<ITask>();
-		TaskCategory cat1 = new TaskCategory("Category 1");
+		TaskCategory cat1 = new TaskCategory("Category 1", manager.getTaskList());
 		manager.getTaskList().addCategory(cat1);
 		categories.add(cat1);
 		Task task3 = new Task(manager.genUniqueTaskHandle(), "task 3", true);
@@ -426,9 +435,9 @@ public class TaskListManagerTest extends TestCase {
 		BugzillaQueryHit hit2twin = new BugzillaQueryHit("description2", "P1", "repositoryURL", 2, null, "status");
 		BugzillaQueryHit hit3twin = new BugzillaQueryHit("description3", "P1", "repositoryURL", 3, null, "status");
 
-		BugzillaRepositoryQuery query1 = new BugzillaRepositoryQuery("url","url", "queryl", "10");
+		BugzillaRepositoryQuery query1 = new BugzillaRepositoryQuery("url","url", "queryl", "10", manager.getTaskList());
 
-		BugzillaRepositoryQuery query2 = new BugzillaRepositoryQuery("url2", "url2", "query2", "10");
+		BugzillaRepositoryQuery query2 = new BugzillaRepositoryQuery("url2", "url2", "query2", "10", manager.getTaskList());
 		
 
 		query1.addHit(hit1);

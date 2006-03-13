@@ -72,14 +72,14 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 
 	public AbstractRepositoryTask getOrCreateCorrespondingTask() { 
 		
-		ITask existingTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getTaskFromArchive(
+		ITask existingTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(
 				getHandleIdentifier());
 		 
 		if (existingTask instanceof BugzillaTask) {
 			this.task = (BugzillaTask)existingTask;
 		} else {
 			task = new BugzillaTask(this, true);
-			MylarTaskListPlugin.getTaskListManager().getTaskList().addTaskToArchive(task);			
+			MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task);			
 		} 	
 		return task;
 	}

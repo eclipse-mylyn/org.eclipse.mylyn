@@ -20,7 +20,7 @@ import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.ui.editors.CategoryEditorInput;
 import org.eclipse.mylar.internal.tasklist.ui.editors.TaskEditorInput;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
+import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.Task;
 import org.eclipse.swt.graphics.Image;
@@ -106,7 +106,7 @@ public class TaskListUiUtil {
 		return null;
 	}
 
-	public static void openEditor(ITaskContainer category) {
+	public static void openEditor(AbstractTaskContainer category) {
 		final IEditorInput input = new CategoryEditorInput(category);
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {

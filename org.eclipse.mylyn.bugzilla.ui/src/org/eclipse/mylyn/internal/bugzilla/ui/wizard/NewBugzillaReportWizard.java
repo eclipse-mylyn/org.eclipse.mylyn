@@ -104,11 +104,7 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 			selectedObject = ((IStructuredSelection) TaskListView.getDefault().getViewer().getSelection())
 					.getFirstElement();
 
-//		AbstractRepositoryClient repositoryClient = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
-//		if (repositoryClient != null) {
-			MylarTaskListPlugin.getTaskListManager().getTaskList().addTaskToArchive(newTask);
-//			repositoryClient.addTaskToArchive(newTask);
-//		}
+		MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask);
 
 		if (selectedObject instanceof TaskCategory) {
 			MylarTaskListPlugin.getTaskListManager().getTaskList().moveToCategory(((TaskCategory) selectedObject), newTask);

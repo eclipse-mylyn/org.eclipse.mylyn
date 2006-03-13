@@ -118,7 +118,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	// return category instanceof TaskCategory;
 	// }
 
-	public Element createCategoryElement(ITaskContainer category, Document doc, Element parent) {
+	public Element createCategoryElement(AbstractTaskContainer category, Document doc, Element parent) {
 		if (category.isArchive())
 			return parent;
 		Element node = doc.createElement(getCategoryTagName());
@@ -233,11 +233,11 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 
 		TaskCategory category;
 		if (element.hasAttribute(KEY_NAME)) {
-			category = new TaskCategory(element.getAttribute(KEY_NAME));
+			category = new TaskCategory(element.getAttribute(KEY_NAME), taskList);
 			taskList.internalAddCategory(category);
 		} else {
 			// LEGACY: registry categories did not have names
-			category = taskList.getArchiveCategory();
+			category = taskList.getArchiveContainer();
 		}
 
 		NodeList list = node.getChildNodes();
@@ -259,7 +259,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 					}
 				}
 				if (!read && canReadTask(child)) {
-					category.internalAddTask(readTask(child, taskList, category, null));
+					category.addTask(readTask(child, taskList, category, null));
 				}
 			} catch (TaskExternalizationException e) {
 				hasCaughtException = true;
@@ -306,8 +306,8 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			} 
 			
 			if (category != null) {
-				if (category.equals(taskList.getArchiveCategory())) {
-					taskList.addTaskToArchive(task);
+				if (category.equals(taskList.getArchiveContainer())) {
+					taskList.internalAddTask(task);
 				} else if (category.equals(VAL_ROOT)) {
 					taskList.internalAddRootTask(task);
 				} else {
@@ -322,14 +322,14 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			legacyCategory.addTask(task);
 		} else if (legacyCategory == null && parent == null) { 
 			if (task instanceof AbstractRepositoryTask) {
-				taskList.addTaskToArchive(task);
+				taskList.internalAddTask(task);
 			} else {
 				taskList.internalAddRootTask(task);
 			}
 		} else if (parent != null) {
 			task.setParent(parent);
 		} 
-		taskList.addTaskToArchive(task);
+		taskList.internalAddTask(task);
 		
 	
 		if (element.hasAttribute(KEY_PRIORITY)) {

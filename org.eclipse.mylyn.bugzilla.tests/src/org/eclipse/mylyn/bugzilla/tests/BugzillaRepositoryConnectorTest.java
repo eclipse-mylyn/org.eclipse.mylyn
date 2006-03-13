@@ -77,8 +77,9 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		taskList.clearArchive();
+//		taskList.clearArchive();
 		client.clearAllRefreshes();
+		MylarTaskListPlugin.getTaskListManager().resetTaskList();
 		manager.clearRepositories();
 
 	}
@@ -91,7 +92,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		assertNotNull(task);
 		assertEquals(task.getSyncState(), RepositoryTaskSyncState.SYNCHRONIZED);
 
-		BugzillaTask retrievedTask = (BugzillaTask) taskList.getTaskFromArchive(task.getHandleIdentifier());
+		BugzillaTask retrievedTask = (BugzillaTask) taskList.getTask(task.getHandleIdentifier());
 		assertNotNull(retrievedTask);
 		assertEquals(task.getHandleIdentifier(), retrievedTask.getHandleIdentifier());
 

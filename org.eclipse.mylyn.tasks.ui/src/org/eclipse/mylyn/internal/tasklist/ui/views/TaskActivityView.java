@@ -42,7 +42,7 @@ import org.eclipse.mylar.provisional.tasklist.DateRangeContainer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.provisional.tasklist.ITaskListChangeListener;
-import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
+import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskListManager;
 import org.eclipse.swt.SWT;
@@ -137,7 +137,7 @@ public class TaskActivityView extends ViewPart {
 			localInfoChanged(task);
 		}
 
-		public void taskMoved(ITask task, ITaskContainer fromContainer, ITaskContainer toContainer) {
+		public void taskMoved(ITask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
 			// ignore
 		}
 
@@ -145,12 +145,16 @@ public class TaskActivityView extends ViewPart {
 			// ignore
 		}
 
-		public void containerAdded(ITaskContainer container) {
+		public void containerAdded(AbstractTaskContainer container) {
 			// ignore
 		}
 
-		public void containerDeleted(ITaskContainer container) {
+		public void containerDeleted(AbstractTaskContainer container) {
 			// ignore
+		}
+
+		public void taskAdded(ITask task) {
+			// ignore	
 		}
 	};
 
@@ -287,7 +291,7 @@ public class TaskActivityView extends ViewPart {
 				Object selectedObject = ((IStructuredSelection) TaskListView.getDefault().getViewer().getSelection())
 						.getFirstElement();
 
-				if (selectedObject instanceof ITaskContainer) {
+				if (selectedObject instanceof AbstractTaskContainer) {
 					return false;
 				}
 
@@ -486,7 +490,7 @@ public class TaskActivityView extends ViewPart {
 					return 1;
 				}
 			} else if (o1 instanceof ITask) {
-				if (o2 instanceof ITaskContainer) {
+				if (o2 instanceof AbstractTaskContainer) {
 					return -1;
 				} else if (o2 instanceof DateRangeActivityDelegate) {
 					DateRangeActivityDelegate task1 = (DateRangeActivityDelegate) o1;

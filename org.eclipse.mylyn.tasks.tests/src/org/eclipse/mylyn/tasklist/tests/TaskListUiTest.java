@@ -75,7 +75,7 @@ public class TaskListUiTest extends TestCase {
 			MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(
 					"org.eclipse.mylar.tasks.ui.views.TaskListView");
 			TaskListManager manager = MylarTaskListPlugin.getTaskListManager();
-			cat1 = new TaskCategory("First Category");
+			cat1 = new TaskCategory("First Category", manager.getTaskList());
 
 			cat1task1 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1", true);
 			cat1task1.setPriority(Task.PriorityLevel.P1.toString());
@@ -114,7 +114,7 @@ public class TaskListUiTest extends TestCase {
 			manager.getTaskList().addCategory(cat1);
 			assertEquals(cat1.getChildren().size(), 5);
 
-			cat2 = new TaskCategory("Second Category");
+			cat2 = new TaskCategory("Second Category", manager.getTaskList());
 
 			cat2task1 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1", true);
 			cat2task1.setPriority(Task.PriorityLevel.P1.toString());

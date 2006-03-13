@@ -14,6 +14,8 @@ package org.eclipse.mylar.tasklist.tests;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import junit.framework.TestCase;
+
 import org.eclipse.mylar.internal.core.MylarContextManager;
 import org.eclipse.mylar.provisional.core.InteractionEvent;
 import org.eclipse.mylar.provisional.tasklist.DateRangeActivityDelegate;
@@ -21,8 +23,7 @@ import org.eclipse.mylar.provisional.tasklist.DateRangeContainer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.Task;
-
-import junit.framework.TestCase;
+import org.eclipse.mylar.provisional.tasklist.TaskList;
 
 /**
  * @author Rob Elves
@@ -33,12 +34,16 @@ public class TaskActivityViewTest extends TestCase {
 
 	private long currentEndMili = 1900;
 
+	private TaskList taskList;
+	
 	protected void setUp() throws Exception {
 		super.setUp();
+		taskList = MylarTaskListPlugin.getTaskListManager().getTaskList();
 	}
 
 	protected void tearDown() throws Exception {
-		MylarTaskListPlugin.getTaskListManager().readExistingOrCreateNewList();
+//		MylarTaskListPlugin.getTaskListManager().readExistingOrCreateNewList();
+		MylarTaskListPlugin.getTaskListManager().resetTaskList();
 		super.tearDown();
 	}
 
@@ -49,7 +54,7 @@ public class TaskActivityViewTest extends TestCase {
 		Calendar endDate = GregorianCalendar.getInstance();
 		endDate.setTimeInMillis(2000);
 
-		DateRangeContainer testContainer = new DateRangeContainer(startDate, endDate, "test date range container");
+		DateRangeContainer testContainer = new DateRangeContainer(startDate, endDate, "test date range container", taskList);
 		assertTrue(testContainer.includes(startDate));
 		assertTrue(testContainer.includes(endDate));
 		Calendar midTime = GregorianCalendar.getInstance();
@@ -81,7 +86,7 @@ public class TaskActivityViewTest extends TestCase {
 		Calendar endDate = GregorianCalendar.getInstance();
 		endDate.setTimeInMillis(2000);
 		ITask task1 = new Task("task 1", "Task 1", true);
-		DateRangeContainer testContainer = new DateRangeContainer(startDate, endDate, "test date range container");
+		DateRangeContainer testContainer = new DateRangeContainer(startDate, endDate, "test date range container", taskList);
 		testContainer.addTask(new DateRangeActivityDelegate(testContainer, task1, startDate, endDate, 3000));
 		assertEquals(0, testContainer.getTotalElapsed());
 	}
@@ -90,8 +95,8 @@ public class TaskActivityViewTest extends TestCase {
 
 		ITask task1 = new Task("task 1", "Task 1", true);
 		ITask task2 = new Task("task 2", "Task 2", true);
-		MylarTaskListPlugin.getTaskListManager().getTaskList().addTaskToArchive(task1);
-		MylarTaskListPlugin.getTaskListManager().getTaskList().addTaskToArchive(task2);
+		MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task1);
+		MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task2);
 
 		// test this week
 		DateRangeContainer thisWeekActivity = MylarTaskListPlugin.getTaskListManager().getActivityThisWeek();
@@ -203,7 +208,7 @@ public class TaskActivityViewTest extends TestCase {
 	public void testTaskListManagerInactivity() {
 
 		ITask task1 = new Task("task 1", "Task 1", true);
-		MylarTaskListPlugin.getTaskListManager().getTaskList().addTaskToArchive(task1);
+		MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task1);
 
 		DateRangeContainer activityThisWeek = MylarTaskListPlugin.getTaskListManager().getActivityThisWeek();
 		assertNotNull(activityThisWeek);
@@ -247,7 +252,7 @@ public class TaskActivityViewTest extends TestCase {
 	public void testInterleavedActivation() {
 
 		ITask task1 = new Task("task 1", "Task 1", true);
-		MylarTaskListPlugin.getTaskListManager().getTaskList().addTaskToArchive(task1);
+		MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task1);
 
 		DateRangeContainer activityThisWeek = MylarTaskListPlugin.getTaskListManager().getActivityThisWeek();
 		assertNotNull(activityThisWeek);
@@ -294,7 +299,7 @@ public class TaskActivityViewTest extends TestCase {
 	public void testInterleavedActivation2() {
 
 		ITask task1 = new Task("task 1", "Task 1", true);
-		MylarTaskListPlugin.getTaskListManager().getTaskList().addTaskToArchive(task1);
+		MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task1);
 
 		DateRangeContainer activityThisWeek = MylarTaskListPlugin.getTaskListManager().getActivityThisWeek();
 		assertNotNull(activityThisWeek);

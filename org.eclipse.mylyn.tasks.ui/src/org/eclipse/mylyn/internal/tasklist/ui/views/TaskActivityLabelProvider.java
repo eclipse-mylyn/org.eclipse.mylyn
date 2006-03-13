@@ -27,7 +27,7 @@ import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
 import org.eclipse.mylar.provisional.tasklist.DateRangeActivityDelegate;
 import org.eclipse.mylar.provisional.tasklist.DateRangeContainer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
+import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.Task.PriorityLevel;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -110,7 +110,7 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 
 	@Override
 	public Color getBackground(Object element) {
-		if (element instanceof ITaskContainer) {
+		if (element instanceof AbstractTaskContainer) {
 			return categoryBackgroundColor;
 		} else {
 			return super.getBackground(element);

@@ -97,7 +97,7 @@ public class BugzillaSearchEngineTest extends TestCase {
 				repository.getUrl(), 
 				repository.getUrl() + BUG_DESC_SUBSTRING_SEARCH+SearchString, 
 				QUERY_NAME, 
-				MAX_HITS);
+				MAX_HITS, MylarTaskListPlugin.getTaskListManager().getTaskList());
 		
 		BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
 		results.addAll(connector.performQuery(repositoryQuery, new NullProgressMonitor(), new MultiStatus(MylarTaskListPlugin.PLUGIN_ID, IStatus.OK, "Query result", null)));

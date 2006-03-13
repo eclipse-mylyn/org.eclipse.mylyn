@@ -26,7 +26,7 @@ import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskListChangeListener;
-import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
+import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.Task.PriorityLevel;
 import org.eclipse.swt.SWT;
@@ -176,7 +176,7 @@ public class TaskInfoEditor extends EditorPart {
 			localInfoChanged(task);
 		}
 
-		public void taskMoved(ITask task, ITaskContainer fromContainer, ITaskContainer toContainer) {
+		public void taskMoved(ITask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
 			// ignore			
 		}
 
@@ -184,11 +184,15 @@ public class TaskInfoEditor extends EditorPart {
 			// ignore
 		}
 
-		public void containerAdded(ITaskContainer container) {
+		public void containerAdded(AbstractTaskContainer container) {
 			// ignore
 		}
 
-		public void containerDeleted(ITaskContainer container) {
+		public void containerDeleted(AbstractTaskContainer container) {
+			// ignore
+		}
+
+		public void taskAdded(ITask task) {
 			// ignore
 		}
 

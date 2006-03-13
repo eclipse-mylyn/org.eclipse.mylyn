@@ -27,7 +27,7 @@ import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
+import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.provisional.tasklist.Task.PriorityLevel;
@@ -71,7 +71,7 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 			return null;
 		}
 		if (columnIndex == 0) {
-			if (element instanceof ITaskContainer) {
+			if (element instanceof AbstractTaskContainer) {
 				return super.getImage(element);
 			} else {
 				ITask task = TaskElementLabelProvider.getCorrespondingTask((ITaskListElement)element);
@@ -90,12 +90,12 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 				}
 			}
 		} else if (columnIndex == 1) {
-			if (element instanceof ITaskContainer || element instanceof AbstractRepositoryQuery) {
+			if (element instanceof AbstractTaskContainer || element instanceof AbstractRepositoryQuery) {
 				return null;
 			}
 			return super.getImage(element); 
 		} else if (columnIndex == 2) {
-			if (element instanceof ITaskListElement && !(element instanceof ITaskContainer)) {
+			if (element instanceof ITaskListElement && !(element instanceof AbstractTaskContainer)) {
 				ITaskListElement taskElement = (ITaskListElement) element;
 				return TaskListUiUtil.getImageForPriority(PriorityLevel.fromString(taskElement.getPriority()));
 			}
@@ -140,8 +140,8 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 	}
 
 	public Color getBackground(Object element, int columnIndex) {
-		if (element instanceof ITaskContainer) {
-			ITaskContainer category = (ITaskContainer) element;
+		if (element instanceof AbstractTaskContainer) {
+			AbstractTaskContainer category = (AbstractTaskContainer) element;
 			if (category.isArchive()) {
 				return TaskListColorsAndFonts.BACKGROUND_ARCHIVE;
 			} else {

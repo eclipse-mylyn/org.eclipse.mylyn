@@ -21,7 +21,7 @@ import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.ITaskContainer;
+import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskCategory;
@@ -76,8 +76,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	}
 
 	public Color getForeground(Object object) {
-		if (object instanceof ITaskContainer) {
-			for (ITask child : ((ITaskContainer) object).getChildren()) {
+		if (object instanceof AbstractTaskContainer) {
+			for (ITask child : ((AbstractTaskContainer) object).getChildren()) {
 				if (child.isActive()) {
 					return TaskListColorsAndFonts.COLOR_TASK_ACTIVE;
 				} else if (child.isPastReminder() && !child.isCompleted()) {
@@ -149,13 +149,13 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				return TaskListColorsAndFonts.ITALIC;
 			}
 		}
-		if (element instanceof ITaskContainer) {
+		if (element instanceof AbstractTaskContainer) {
 			if (element instanceof AbstractRepositoryQuery) {
 				if (((AbstractRepositoryQuery)element).isCurrentlySynchronizing()) {
 					return TaskListColorsAndFonts.ITALIC;
 				}
 			}
-			for (ITask child : ((ITaskContainer) element).getChildren()) {
+			for (ITask child : ((AbstractTaskContainer) element).getChildren()) {
 				if (child.isActive())
 					return TaskListColorsAndFonts.BOLD;
 			}
