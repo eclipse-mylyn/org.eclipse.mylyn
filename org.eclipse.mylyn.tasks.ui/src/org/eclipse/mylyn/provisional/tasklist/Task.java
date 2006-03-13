@@ -301,7 +301,7 @@ public class Task implements ITask {
 		this.parentCategory = cat;
 	}
 
-	public AbstractTaskContainer getCategory() {
+	public AbstractTaskContainer getContainer() {
 		return parentCategory;
 	}
 

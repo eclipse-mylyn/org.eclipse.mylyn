@@ -73,10 +73,10 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				MylarTaskListPlugin.getTaskListManager().getTaskList().moveToContainer((TaskCategory) currentTarget, task);
 			} else if (currentTarget instanceof ITask) {
 				ITask targetTask = (ITask) currentTarget;
-				if (targetTask.getCategory() == null) {
+				if (targetTask.getContainer() == null) {
 					MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(task);
 				} else {
-					MylarTaskListPlugin.getTaskListManager().getTaskList().moveToContainer((TaskCategory) targetTask.getCategory(),
+					MylarTaskListPlugin.getTaskListManager().getTaskList().moveToContainer((TaskCategory) targetTask.getContainer(),
 							task);
 				}
 			} else if (currentTarget == null) {

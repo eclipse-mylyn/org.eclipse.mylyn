@@ -93,7 +93,7 @@ public class DateRangeActivityDelegate implements ITask {
 		return true;
 	}
 
-	public DateRangeContainer getContainer() {
+	public DateRangeContainer getDateRangeContainer() {
 		return parent;
 	}
 
@@ -101,8 +101,8 @@ public class DateRangeActivityDelegate implements ITask {
 		task.addSubTask(task);
 	}
 
-	public AbstractTaskContainer getCategory() {
-		return task.getCategory();
+	public AbstractTaskContainer getContainer() {
+		return task.getContainer();
 	}
 
 	public Set<ITask> getChildren() {

@@ -94,4 +94,9 @@ public abstract class AbstractTaskContainer implements ITaskListElement {
 			return false;
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return "container: " + handle;
+	}
 }

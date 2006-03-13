@@ -264,7 +264,7 @@ public class TaskActivityView extends ViewPart {
 					reminderCalendar = container.getStart();
 				} else if (target instanceof DateRangeActivityDelegate) {
 					DateRangeActivityDelegate dateRangeActivityDelegate = (DateRangeActivityDelegate) target;
-					reminderCalendar = dateRangeActivityDelegate.getContainer().getStart();
+					reminderCalendar = dateRangeActivityDelegate.getDateRangeContainer().getStart();
 				} else {
 					return false;
 				}
@@ -301,7 +301,7 @@ public class TaskActivityView extends ViewPart {
 					dateRangeContainer = (DateRangeContainer) target;
 				} else if (target instanceof DateRangeActivityDelegate) {
 					DateRangeActivityDelegate dateRangeActivityDelegate = (DateRangeActivityDelegate) target;
-					dateRangeContainer = dateRangeActivityDelegate.getContainer();
+					dateRangeContainer = dateRangeActivityDelegate.getDateRangeContainer();
 				}
 
 				if (dateRangeContainer != null && (dateRangeContainer.isPresent() || dateRangeContainer.isFuture())) {

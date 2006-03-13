@@ -60,8 +60,8 @@ public class NewLocalTaskAction extends Action {
 				MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask, (TaskCategory) selectedObject);
 			} else if (selectedObject instanceof ITask) {
 				ITask task = (ITask) selectedObject;
-				if (task.getCategory() != null) {
-					MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask, (TaskCategory) task.getCategory());
+				if (task.getContainer() != null) {
+					MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask, (TaskCategory) task.getContainer());
 				} else if (view.getDrilledIntoCategory() != null) {
 					MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(
 							newTask, (TaskCategory) view.getDrilledIntoCategory());

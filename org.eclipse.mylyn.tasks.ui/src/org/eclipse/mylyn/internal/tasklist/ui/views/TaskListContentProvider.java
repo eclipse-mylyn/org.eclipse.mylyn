@@ -74,7 +74,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 			if (((ITask) child).getParent() != null) {
 				return ((ITask) child).getParent();
 			} else {
-				return ((ITask) child).getCategory();
+				return ((ITask) child).getContainer();
 			}
 		}
 		return null;

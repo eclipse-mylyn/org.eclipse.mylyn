@@ -22,7 +22,7 @@ public class TaskArchive extends AbstractTaskContainer {
 	public static final String LABEL_ARCHIVE = "Archive (all tasks)";
 	
 	public TaskArchive(TaskList taskList) {
-		super(LABEL_ARCHIVE, taskList);
+		super(HANDLE, taskList);
 	}
 
 	public String getPriority() {
@@ -32,5 +32,10 @@ public class TaskArchive extends AbstractTaskContainer {
 	@Override
 	public String getHandleIdentifier() {
 		return HANDLE;
+	}
+	
+
+	public String getDescription() {
+		return LABEL_ARCHIVE;
 	}
 }

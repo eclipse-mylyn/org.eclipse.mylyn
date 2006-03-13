@@ -76,7 +76,7 @@ public interface ITask extends ITaskListElement {
 	/**
 	 * @return null if root task
 	 */
-	public abstract AbstractTaskContainer getCategory();
+	public abstract AbstractTaskContainer getContainer();
 
 	public abstract long getElapsedTime();
 

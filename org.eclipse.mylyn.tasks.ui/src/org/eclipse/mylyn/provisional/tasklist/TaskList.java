@@ -31,26 +31,37 @@ public class TaskList {
 
 	public static final String LABEL_ROOT = "Root (automatic)";
 
-	private static List<ITaskListChangeListener> changeListeners = new ArrayList<ITaskListChangeListener>();
+	private List<ITaskListChangeListener> changeListeners = new ArrayList<ITaskListChangeListener>();
 	
-	private Map<String, ITask> tasks = new HashMap<String, ITask>();
+	private Map<String, ITask> tasks;
 	
-	private TaskArchive archiveContainer = new TaskArchive(this);
+	private TaskArchive archiveContainer;
 
-	private TaskCategory rootCategory = new TaskCategory(LABEL_ROOT, this);
+	private TaskCategory rootCategory;
 	
-	private Set<AbstractTaskContainer> categories = new HashSet<AbstractTaskContainer>();
+	private Set<AbstractTaskContainer> categories;
 
-//	private Set<ITask> rootTasks = new HashSet<ITask>();
+	private List<AbstractRepositoryQuery> queries;
 
-	private List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
-
-	private List<ITask> activeTasks = new ArrayList<ITask>();
+	private List<ITask> activeTasks;
 		
 	public TaskList() {
-//		archiveContainer.setIsArchive(true);
-		categories.add(archiveContainer);
+		reset();
 	} 
+
+	/**
+	 * Public for testing.
+	 */
+	public void reset() {
+		tasks = new HashMap<String, ITask>();
+		archiveContainer = new TaskArchive(this);
+		rootCategory = new TaskCategory(LABEL_ROOT, this);
+		categories = new HashSet<AbstractTaskContainer>();
+		queries = new ArrayList<AbstractRepositoryQuery>();
+		activeTasks = new ArrayList<ITask>();
+		
+		categories.add(archiveContainer);
+	}
 	
 	public void addTask(ITask task) {
 		addTask(task, archiveContainer);
@@ -93,7 +104,7 @@ public class TaskList {
 			tasks.put(task.getHandleIdentifier(), task);
 		}
 		
-		AbstractTaskContainer fromContainer = task.getCategory();
+		AbstractTaskContainer fromContainer = task.getContainer();
 //		if (toCategory.equals(getRootCategory())) {
 //			moveToRoot(task);
 //		} else {

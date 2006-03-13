@@ -21,7 +21,6 @@ import java.util.Locale;
 
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskExternalizationException;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -152,14 +151,14 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		node.setAttribute(KEY_LABEL, task.getDescription());
 		node.setAttribute(KEY_HANDLE, task.getHandleIdentifier());
 		
-		if (task.getCategory() != null) {
+		if (task.getContainer() != null) {
 //			if (task.getCategory().getHandleIdentifier().equals(TaskList.LABEL_ARCHIVE)) {				
 //				node.setAttribute(KEY_CATEGORY, VAL_ARCHIVE);
 //			} else 
-			if (task.getCategory().getHandleIdentifier().equals(TaskList.LABEL_ROOT)) {				
+			if (task.getContainer().getHandleIdentifier().equals(TaskList.LABEL_ROOT)) {				
 				node.setAttribute(KEY_CATEGORY, VAL_ROOT);
 			} else {
-				node.setAttribute(KEY_CATEGORY, task.getCategory().getHandleIdentifier());
+				node.setAttribute(KEY_CATEGORY, task.getContainer().getHandleIdentifier());
 			}
 		} else {
 			// TODO: if/when subtasks are supported this should be handled
@@ -342,7 +341,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			task.setParent(parent);
 		} else {
 			taskList.internalAddTask(task, taskList.getArchiveContainer());
-		}
+		} 
 //		taskList.internalAddTask(task, taskList.getArchiveContainer());
 //		taskList.internalAddTask(task);
 		

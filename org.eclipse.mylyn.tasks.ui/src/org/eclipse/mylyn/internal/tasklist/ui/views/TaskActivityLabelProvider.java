@@ -76,7 +76,7 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 			case 2:
 				return task.getDescription();
 			case 3:
-				return DateUtil.getFormattedDurationShort(activityDelegate.getContainer().getElapsed(activityDelegate));
+				return DateUtil.getFormattedDurationShort(activityDelegate.getDateRangeContainer().getElapsed(activityDelegate));
 			case 4:
 				return task.getEstimateTimeHours() + UNITS_HOURS;
 			case 5:

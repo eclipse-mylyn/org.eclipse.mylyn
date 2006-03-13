@@ -1361,18 +1361,18 @@ public class TaskListView extends ViewPart {
 			getViewer().expandToLevel(query, 1);
 			getViewer().setSelection(new StructuredSelection(hit), true);
 		} else {
-			if (task.getCategory() != null) {
-				getViewer().expandToLevel(task.getCategory(), 1);
+			if (task.getContainer() != null) {
+				getViewer().expandToLevel(task.getContainer(), 1);
 			}
 		}
 	}
 
 	protected void refreshTask(ITask task) {
 		refresh(task);
-		if (task.getCategory() == null || task.getCategory() instanceof TaskArchive) {
+		if (task.getContainer() == null || task.getContainer() instanceof TaskArchive) {
 			refresh(null);
 		} else {
-			refresh(task.getCategory());
+			refresh(task.getContainer());
 		}
 
 		Set<AbstractQueryHit> hits = MylarTaskListPlugin.getTaskListManager().getTaskList().getQueryHitsForHandle(

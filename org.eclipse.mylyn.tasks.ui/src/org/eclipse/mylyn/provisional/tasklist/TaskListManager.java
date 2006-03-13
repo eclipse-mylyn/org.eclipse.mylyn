@@ -178,7 +178,8 @@ public class TaskListManager {
 
 	public TaskList resetTaskList() {
 		resetActivity();
-		taskList = new TaskList();
+//		taskList = new TaskList();
+		taskList.reset();
 		taskListInitialized = true;
 		return taskList;
 	}
