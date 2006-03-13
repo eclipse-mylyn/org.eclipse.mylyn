@@ -16,7 +16,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-
 /**
  * @author Mik Kersten
  */
@@ -32,10 +31,6 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 
 	protected Date lastRefresh;
 
-//	protected String description = "";
-
-//	private String handle = "";
-	
 	private boolean currentlySynchronizing = false;
 
 	public abstract String getRepositoryKind();
@@ -44,10 +39,6 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		super(description, taskList);
 	}
 	
-//	public String getDescription() {
-//		return description;
-//	}
-
 	public String getQueryUrl() {
 		return queryUrl;
 	}
@@ -109,7 +100,7 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 	}
 
 	public boolean isLocal() {
-		return true;
+		return false;
 	}
 
 	public boolean isCompleted() {
@@ -153,25 +144,3 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		// ignore, can not add tasks to a query
 	}
 }
-
-//public String getHandleIdentifier() {
-//return handle;
-//}
-//
-//public void setDescription(String description) {
-//this.description = description;
-//}
-//
-//public void setHandleIdentifier(String id) {
-//this.handle = id;
-//}//	public String getHandleIdentifier() {
-//return handle;
-//}
-//
-//public void setDescription(String description) {
-//	this.description = description;
-//}
-//
-//public void setHandleIdentifier(String id) {
-//	this.handle = id;
-//}

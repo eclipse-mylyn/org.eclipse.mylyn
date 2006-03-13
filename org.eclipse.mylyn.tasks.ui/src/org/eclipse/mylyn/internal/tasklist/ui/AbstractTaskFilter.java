@@ -13,7 +13,9 @@ package org.eclipse.mylar.internal.tasklist.ui;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 
 /**
- * @author Ken Sueda
+ * TODO: move to viewer filter
+ * 
+ * @author Mik Kersten
  */
 public abstract class AbstractTaskFilter {
 

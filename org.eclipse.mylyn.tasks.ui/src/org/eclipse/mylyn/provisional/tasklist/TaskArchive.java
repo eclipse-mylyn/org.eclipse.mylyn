@@ -38,4 +38,9 @@ public class TaskArchive extends AbstractTaskContainer {
 	public String getDescription() {
 		return LABEL_ARCHIVE;
 	}
+
+	@Override
+	public boolean isLocal() {
+		return true;
+	}
 }

@@ -37,4 +37,9 @@ public class TaskCategory extends AbstractTaskContainer {
 		}
 		return highestPriority;
 	}
+
+	@Override
+	public boolean isLocal() {
+		return true;
+	}
 }

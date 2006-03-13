@@ -20,7 +20,7 @@ import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 /**
  * @author Mik Kersten 
  */
-public class FilterArchiveCategoryAction extends Action {
+public class FilterArchiveContainerAction extends Action {
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.filter.archive";
 
@@ -28,7 +28,7 @@ public class FilterArchiveCategoryAction extends Action {
 	
 	private final TaskListView view;
 
-	public FilterArchiveCategoryAction(TaskListView view) {
+	public FilterArchiveContainerAction(TaskListView view) {
 		this.view = view;
 		setText(LABEL);
 		setToolTipText(LABEL);

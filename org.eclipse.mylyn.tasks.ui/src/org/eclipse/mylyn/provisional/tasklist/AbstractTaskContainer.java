@@ -36,6 +36,8 @@ public abstract class AbstractTaskContainer implements ITaskListElement {
 		this.taskList = taskList;
 	}
 	
+	public abstract boolean isLocal();
+	
 	public Set<ITask> getChildren() {
 		Set<ITask> children = new HashSet<ITask>();
 		for (String childHandle : childHandles) {
@@ -69,10 +71,6 @@ public abstract class AbstractTaskContainer implements ITaskListElement {
 	
 	void remove(ITask task) {
 		childHandles.remove(task.getHandleIdentifier());
-	}
-	
-	public boolean isLocal() {
-		return true;
 	}
 
 	public boolean isCompleted() {

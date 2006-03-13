@@ -58,7 +58,7 @@ import org.eclipse.mylar.internal.tasklist.ui.actions.CollapseAllAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.CopyDescriptionAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.DeleteAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.ExpandAllAction;
-import org.eclipse.mylar.internal.tasklist.ui.actions.FilterArchiveCategoryAction;
+import org.eclipse.mylar.internal.tasklist.ui.actions.FilterArchiveContainerAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.FilterCompletedTasksAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.GoIntoAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.GoUpAction;
@@ -200,7 +200,7 @@ public class TaskListView extends ViewPart {
 
 	private FilterCompletedTasksAction filterCompleteTask;
 
-	private FilterArchiveCategoryAction filterArchiveCategory;
+	private FilterArchiveContainerAction filterArchiveCategory;
 	
 	private PriorityDropDownAction filterOnPriority;
 
@@ -1135,7 +1135,7 @@ public class TaskListView extends ViewPart {
 		openTaskEditor = new OpenTaskListElementAction(this.getViewer());
 		openUrlInExternal = new OpenTaskInExternalBrowserAction();
 		filterCompleteTask = new FilterCompletedTasksAction(this);
-		filterArchiveCategory = new FilterArchiveCategoryAction(this);
+		filterArchiveCategory = new FilterArchiveContainerAction(this);
 		filterOnPriority = new PriorityDropDownAction();
 		previousTaskAction = new PreviousTaskDropDownAction(this, taskHistory);
 		nextTaskAction = new NextTaskDropDownAction(this, taskHistory);

@@ -23,7 +23,7 @@ public class TaskListColorsAndFonts {
 
 	public static final Color BACKGROUND_WHITE = new Color(Display.getDefault(), 255, 255, 255);
 
-	public static final Color BACKGROUND_ARCHIVE = new Color(Display.getDefault(), 199, 199, 237);
+	public static final Color BACKGROUND_ARCHIVE = new Color(Display.getDefault(), 225, 226, 246);
 
 	public static final Color COLOR_GRAY_LIGHT = new Color(Display.getDefault(), 170, 170, 170);
 

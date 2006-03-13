@@ -204,4 +204,9 @@ public class DateRangeContainer extends AbstractTaskContainer {
 			return false;
 		return true;
 	}
+
+	@Override
+	public boolean isLocal() {
+		return true;
+	}
 }
