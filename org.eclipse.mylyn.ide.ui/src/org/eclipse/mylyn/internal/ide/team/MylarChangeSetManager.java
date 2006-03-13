@@ -173,7 +173,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 			if (!(restoredSet instanceof MylarContextChangeSet)) {
 				String encodedTitle = restoredSet.getName();
 				String taskHandle = MylarContextChangeSet.getHandleFromPersistedTitle(encodedTitle);
-				ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(taskHandle, true);
+				ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(taskHandle);
 				if (task != null) {
 					try {
 						MylarContextChangeSet contextChangeSet = new MylarContextChangeSet(task, collector);

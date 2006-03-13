@@ -50,7 +50,7 @@ public class TaskStructureBridge implements IMylarStructureBridge {
 	}
 
 	public Object getObjectForHandle(String handle) {
-		return MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, true);
+		return MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
 	}
 
 	public List<String> getChildHandles(String handle) {
