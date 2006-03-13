@@ -345,8 +345,9 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	private void migrateHandlesToRepositorySupport() {
 		boolean migrated = false;
 		getMylarPrefs().setDefault(TaskListPreferenceConstants.CONTEXTS_MIGRATED, false);
+		// NOTE: gets/checks preference in both stores to accidental migration
 		if (!getMylarPrefs().getBoolean(TaskListPreferenceConstants.CONTEXTS_MIGRATED)
-			|| getPreferenceStore().getBoolean(TaskListPreferenceConstants.CONTEXTS_MIGRATED)) {   
+			|| !getPreferenceStore().getBoolean(TaskListPreferenceConstants.CONTEXTS_MIGRATED)) {   
 			File dataDir = new File(MylarPlugin.getDefault().getDataDirectory());
 			TaskRepository defaultRepository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
 					TaskRepositoryManager.PREFIX_REPOSITORY_OLD.toLowerCase());
@@ -385,6 +386,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		if (migrated) {
 			MylarStatusHandler.log("Migrated context files to repository-aware paths", this);
 			getMylarPrefs().setValue(TaskListPreferenceConstants.CONTEXTS_MIGRATED, true);
+			getPreferenceStore().setValue(TaskListPreferenceConstants.CONTEXTS_MIGRATED, true);
 		}
 	}
 	
