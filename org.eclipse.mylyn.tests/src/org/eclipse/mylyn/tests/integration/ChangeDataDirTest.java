@@ -129,7 +129,7 @@ public class ChangeDataDirTest extends TestCase {
 	private void addBugzillaTask(BugzillaTask newTask) {
 //		AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
 //		client.addTaskToArchive(newTask);
-		MylarTaskListPlugin.getTaskListManager().getTaskList().addTaskToArchive(newTask);
+		MylarTaskListPlugin.getTaskListManager().getTaskList().internalAddTask(newTask);
 //		BugzillaTaskHandler handler = new BugzillaTaskHandler();
 //		handler.addTaskToArchive(newTask);
 		MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(newTask);
