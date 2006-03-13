@@ -51,12 +51,14 @@ public class ChangeDataDirTest extends TestCase {
 		File dir = new File(newDataDir);
 		dir.mkdir();
 		dir.deleteOnExit();
-		MylarTaskListPlugin.getTaskListManager().resetTaskList();
+		manager.resetTaskList();
+		assertTrue(manager.getTaskList().isEmpty());
 		MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskListAndContexts();
 	}
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
+		manager.resetTaskList();
 		MylarPlugin.getDefault().setDataDirectory(defaultDir);
 	}
 
@@ -119,7 +121,7 @@ public class ChangeDataDirTest extends TestCase {
 
 		MylarTaskListPlugin.getDefault().getTaskListSaveManager().copyDataDirContentsTo(newDataDir);
 		MylarPlugin.getDefault().setDataDirectory(newDataDir);
-
+  
 		BugzillaTask readTaskAfterMove = (BugzillaTask) manager.getTaskList().getTask(handle);
 		assertNotNull(readTaskAfterMove);
 		// HACK: shoudl be checking date equality, but millis seem to differ?
