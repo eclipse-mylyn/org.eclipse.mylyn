@@ -69,8 +69,6 @@ public class TaskList {
 	
 	public void addTask(ITask task, AbstractTaskContainer category) {
 		tasks.put(task.getHandleIdentifier(), task);
-		 
-//		archiveContainer.add(task);
 		if (category != null) {
 			category.add(task);
 			task.setContainer(category);
@@ -466,60 +464,4 @@ public class TaskList {
 		}
 	}
 }
-
-
-//public ITask getTaskForHandle(String handle, boolean lookInArchives) {
-//	ITask foundTask = null;
-//	for (AbstractTaskContainer cat : categories) {
-//		if (!lookInArchives && cat.isArchive())
-//			continue;
-//		if ((foundTask = findTaskHelper(cat.getChildren(), handle)) != null) {
-//			return foundTask;
-//		}
-//	}
-//	for (AbstractRepositoryQuery query : queries) {
-//		if ((foundTask = findTaskHelper(query.getHits(), handle)) != null) {
-//			return foundTask;
-//		}
-//	}
-//	return findTaskHelper(rootTasks, handle);
-//}
-
-//private ITask findTaskHelper(Set<? extends ITaskListElement> elements, String handle) {
-//if (handle == null)
-//	return null;
-//for (ITaskListElement element : elements) {
-//	if (element instanceof ITask) {
-//		if (element.getHandleIdentifier().compareTo(handle) == 0)
-//			return (ITask) element;
-//	} else if (element instanceof AbstractQueryHit) {
-//		AbstractQueryHit hit = (AbstractQueryHit) element;
-//		if (hit.getHandleIdentifier().compareTo(handle) == 0 && hit.getCorrespondingTask() != null) {
-//			return hit.getCorrespondingTask();
-//		}
-//	}
-//
-//	// for subtasks
-//	if (element instanceof ITask) {
-//		ITask searchTask = (ITask) element;
-//		ITask t = findTaskHelper(searchTask.getChildren(), handle);
-//		if (t != null) {
-//			return t;
-//		}
-//	}
-//}
-//return null;
-//}
-
-//	/**
-//	 * For testing.
-//	 */
-//	public void clear() {
-//		archiveCategory.getChildren().clear();
-//		rootCategory.getChildren().clear();
-//		categories.clear();
-//		rootTasks.clear();
-//		queries.clear();
-//		activeTasks.clear();
-//	}
 
