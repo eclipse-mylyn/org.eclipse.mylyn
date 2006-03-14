@@ -45,7 +45,7 @@ public class TaskList {
 
 	private List<ITask> activeTasks;
 		
-	TaskList() {
+	public TaskList() {
 		reset();
 	} 
 

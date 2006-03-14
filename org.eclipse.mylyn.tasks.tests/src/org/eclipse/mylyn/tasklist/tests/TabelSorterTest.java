@@ -14,9 +14,9 @@ package org.eclipse.mylar.tasklist.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListTableSorter;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.Task;
 import org.eclipse.mylar.provisional.tasklist.TaskCategory;
+import org.eclipse.mylar.provisional.tasklist.TaskList;
 
 /**
  * @author Mik Kersten
@@ -27,7 +27,7 @@ public class TabelSorterTest extends TestCase {
 		TaskListTableSorter sorter = new TaskListTableSorter(null, "description");
 		 		
 		Task task = new Task("1", "", true);
-		TaskCategory category = new TaskCategory("cat", MylarTaskListPlugin.getTaskListManager().getTaskList());
+		TaskCategory category = new TaskCategory("cat", new TaskList());
 		
 		assertEquals(-1, sorter.compare(null, task, category));
 		assertEquals(1, sorter.compare(null, category, task));
