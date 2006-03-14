@@ -153,7 +153,7 @@ public class TaskList {
 			for (AbstractTaskContainer cat : getTaskContainers()) {
 				deleted = deleteTaskHelper(cat.getChildren(), task);
 				if (deleted) {
-					return;
+					break;
 				}
 			}
 		}
