@@ -306,8 +306,7 @@ public class PdeUiBridge implements IMylarUiBridge {
 	}
 
 	public void restoreEditor(IMylarElement document) {
-		// TODO Auto-generated method stub
-
+		open(document);
 	}
 
 	public void setContextCapturePaused(boolean paused) {
