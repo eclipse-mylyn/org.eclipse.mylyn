@@ -547,7 +547,13 @@ public class TaskListManager {
 	}
 
 	public boolean isActiveThisWeek(ITask task) {
-		return activityThisWeek.getChildren().contains(task);
+		for (ITask activityDelegateTask : activityThisWeek.getChildren()) {
+			if (activityDelegateTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
+				return true;
+			}
+		}
+		return false;
+//		return activityThisWeek.getChildren().contains(task);
 	}
 
 	/**
