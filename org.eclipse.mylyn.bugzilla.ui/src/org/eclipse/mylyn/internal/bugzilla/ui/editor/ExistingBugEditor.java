@@ -40,8 +40,8 @@ import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.Comment;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.bugzilla.core.Operation;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.compare.BugzillaCompareInput;
@@ -49,7 +49,6 @@ import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -70,6 +69,13 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.events.IExpansionListener;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
+import org.eclipse.ui.forms.widgets.FormText;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * An editor used to view a bug report that exists on a server. It uses a
@@ -78,6 +84,10 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten (hardening of prototype)
  */
 public class ExistingBugEditor extends AbstractBugEditor {
+
+	private static final String LABEL_SECTION_COMMENTS = "Comments";
+
+//	private static final String LABEL_SECTION_DESCRIPTION = "Description";
 
 	protected Set<String> removeCC = new HashSet<String>();
 
@@ -193,7 +203,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 			opName = opName.replaceAll("<.*>", "");
 			radios[i].setText(opName);
 			radios[i].setLayoutData(radioData);
-			radios[i].setBackground(background);
+//			radios[i].setBackground(background);
 			radios[i].addSelectionListener(new RadioButtonListener());
 			radios[i].addListener(SWT.FocusIn, new GenericListener());
 
@@ -206,7 +216,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 						| SWT.READ_ONLY);
 				radioOptions[i].setFont(TEXT_FONT);
 				radioOptions[i].setLayoutData(radioData);
-				radioOptions[i].setBackground(background);
+//				radioOptions[i].setBackground(background);
 
 				Object[] a = o.getOptionNames().toArray();
 				Arrays.sort(a);
@@ -222,7 +232,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				radioOptions[i] = new Text(buttonComposite, SWT.BORDER | SWT.SINGLE);
 				radioOptions[i].setFont(TEXT_FONT);
 				radioOptions[i].setLayoutData(radioData);
-				radioOptions[i].setBackground(background);
+//				radioOptions[i].setBackground(background);
 				((Text) radioOptions[i]).setText(o.getInputValue());
 				((Text) radioOptions[i]).addModifyListener(new RadioButtonListener());
 			}
@@ -250,14 +260,15 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 	@Override
 	protected void addActionButtons(Composite buttonComposite) {
+		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
 		super.addActionButtons(buttonComposite);
 
-		compareButton = new Button(buttonComposite, SWT.NONE);
+		compareButton = toolkit.createButton(buttonComposite, "Compare", SWT.NONE);
 		compareButton.setFont(TEXT_FONT);
 		GridData compareButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		compareButtonData.widthHint = 100;
 		compareButtonData.heightHint = 20;
-		compareButton.setText("Compare");
+//		compareButton.setText("Compare");
 		compareButton.setLayoutData(compareButtonData);
 		compareButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
@@ -352,20 +363,56 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	}
 
 	@Override
-	protected void createDescriptionLayout() {
+	protected void createDescriptionLayout(FormToolkit toolkit, final ScrolledForm form) {
+
+		
+		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+		section.setText(LABEL_SECTION_DESCRIPTION);
+		section.setExpanded(true);
+		section.setLayout(new GridLayout());
+		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+		section.addExpansionListener(new IExpansionListener() {
+			public void expansionStateChanging(ExpansionEvent e) {
+				form.reflow(true);
+			}
+
+			public void expansionStateChanged(ExpansionEvent e) {
+				form.reflow(true);
+			}
+		});
+
+	
+		
+//		GridLayout compLayout = new GridLayout();
+//		compLayout.numColumns = 2;
+//		container.setLayout(compLayout);
+//		container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		// Description Area
-		Composite descriptionComposite = new Composite(infoArea, SWT.NONE);
+		Composite descriptionComposite = toolkit.createComposite(section);
 		GridLayout descriptionLayout = new GridLayout();
 		descriptionLayout.numColumns = 4;
 		descriptionComposite.setLayout(descriptionLayout);
-		descriptionComposite.setBackground(background);
-		GridData descriptionData = new GridData(GridData.FILL_BOTH);
+//		descriptionComposite.setBackground(background);
+		GridData descriptionData = new GridData(GridData.FILL_HORIZONTAL);
 		descriptionData.horizontalSpan = 1;
 		descriptionData.grabExcessVerticalSpace = false;
 		descriptionComposite.setLayoutData(descriptionData);
 		// End Description Area
 
-		StyledText t = newLayout(descriptionComposite, 4, "Description:", HEADER);
+		section.setClient(descriptionComposite);
+		
+		FormText t = newLayout(descriptionComposite, 4, "Description:", HEADER);
 		t.addListener(SWT.FocusIn, new DescriptionListener());
 		t = newLayout(descriptionComposite, 4, bug.getDescription(), VALUE);
 		t.setFont(COMMENT_FONT);
@@ -378,28 +425,52 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	}
 
 	@Override
-	protected void createCommentLayout() {
+	protected void createCommentLayout(FormToolkit toolkit, final ScrolledForm form) {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
+		
+
+		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+		section.setText(LABEL_SECTION_COMMENTS);
+		section.setExpanded(true);
+		section.setLayout(new GridLayout());
+		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		
+		section.addExpansionListener(new IExpansionListener() {
+			public void expansionStateChanging(ExpansionEvent e) {
+				form.reflow(true);
+			}
+
+			public void expansionStateChanged(ExpansionEvent e) {
+				form.reflow(true);
+			}
+		});
+		
+		
 		// Additional (read-only) Comments Area
-		Composite addCommentsComposite = new Composite(infoArea, SWT.NONE);
+		Composite addCommentsComposite = toolkit.createComposite(section);
+		section.setClient(addCommentsComposite);
 		GridLayout addCommentsLayout = new GridLayout();
 		addCommentsLayout.numColumns = 4;
 		addCommentsComposite.setLayout(addCommentsLayout);
-		addCommentsComposite.setBackground(background);
+//		addCommentsComposite.setBackground(background);
 		GridData addCommentsData = new GridData(GridData.FILL_BOTH);
 		addCommentsData.horizontalSpan = 1;
 		addCommentsData.grabExcessVerticalSpace = false;
 		addCommentsComposite.setLayoutData(addCommentsData);
 		// End Additional (read-only) Comments Area
 
-		StyledText t = null;
+	
+		
+		FormText t = null;
 		for (Iterator<Comment> it = bug.getComments().iterator(); it.hasNext();) {
 			Comment comment = it.next();
 			String commentHeader = "Additional comment #" + comment.getNumber() + " from " + comment.getAuthorName()
 					+ " on " + df.format(comment.getCreated());
 			t = newLayout(addCommentsComposite, 4, commentHeader, HEADER);
 			t.addListener(SWT.FocusIn, new CommentListener(comment));
+			
+			
+			
 			t = newLayout(addCommentsComposite, 4, comment.getText(), VALUE);
 			t.setFont(COMMENT_FONT);
 			t.addListener(SWT.FocusIn, new CommentListener(comment));
@@ -416,7 +487,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		addCommentsTitleLayout.horizontalSpacing = 0;
 		addCommentsTitleLayout.marginWidth = 0;
 		addCommentsTitleComposite.setLayout(addCommentsTitleLayout);
-		addCommentsTitleComposite.setBackground(background);
+//		addCommentsTitleComposite.setBackground(background);
 		GridData addCommentsTitleData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		addCommentsTitleData.horizontalSpan = 4;
 		addCommentsTitleData.grabExcessVerticalSpace = false;
@@ -447,25 +518,27 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		// End Additional Comments Text
 
 		addCommentsTextBox = addCommentsText;
-
-		this.createSeparatorSpace(addCommentsComposite);
+		
+		this.createSeparatorSpace(addCommentsComposite);		
 	}
 
 	@Override
-	protected void addKeywordsList(String keywords, Composite attributesComposite) {
-		newLayout(attributesComposite, 1, "Keywords:", PROPERTY);
-		keywordsText = new Text(attributesComposite, SWT.BORDER);
+	protected void addKeywordsList(FormToolkit toolkit, String keywords, Composite attributesComposite) {
+//		newLayout(attributesComposite, 1, "Keywords:", PROPERTY);
+		toolkit.createLabel(attributesComposite, "Keywords:");
+		keywordsText = toolkit.createText(attributesComposite, keywords);
 		keywordsText.setFont(TEXT_FONT);
 		keywordsText.setEditable(false);
-		keywordsText.setForeground(foreground);
+//		keywordsText.setForeground(foreground);
 		keywordsText.setBackground(JFaceColors.getErrorBackground(display));
 		GridData keywordsData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		keywordsData.horizontalSpan = 2;
 		keywordsData.widthHint = 200;
 		keywordsText.setLayoutData(keywordsData);
-		keywordsText.setText(keywords);
+//		keywordsText.setText(keywords);
 		keywordsText.addListener(SWT.FocusIn, new GenericListener());
-		keyWordsList = new List(attributesComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
+		keyWordsList = new List(attributesComposite, SWT.MULTI | SWT.V_SCROLL);
+		keyWordsList.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		keyWordsList.setFont(TEXT_FONT);
 		GridData keyWordsTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		keyWordsTextData.horizontalSpan = 1;
@@ -505,18 +578,18 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	}
 
 	@Override
-	protected void addCCList(String ccValue, Composite attributesComposite) {
+	protected void addCCList(FormToolkit toolkit, String ccValue, Composite attributesComposite) {
 		newLayout(attributesComposite, 1, "Add CC:", PROPERTY);
-		ccText = new Text(attributesComposite, SWT.BORDER);
+		ccText = toolkit.createText(attributesComposite, ccValue);
 		ccText.setFont(TEXT_FONT);
 		ccText.setEditable(true);
-		ccText.setForeground(foreground);
-		ccText.setBackground(background);
+//		ccText.setForeground(foreground);
+//		ccText.setBackground(background);
 		GridData ccData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		ccData.horizontalSpan = 1;
 		ccData.widthHint = 200;
 		ccText.setLayoutData(ccData);
-		ccText.setText(ccValue);
+//		ccText.setText(ccValue);
 		ccText.addListener(SWT.FocusIn, new GenericListener());
 		ccText.addModifyListener(new ModifyListener() {
 
@@ -530,9 +603,10 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 		});
 
-		newLayout(attributesComposite, 1, "CC: (Select to remove)", PROPERTY);
-
-		ccList = new List(attributesComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
+		//newLayout(attributesComposite, 1, "CC: (Select to remove)", PROPERTY);
+		toolkit.createLabel(attributesComposite, "CC: (Select to remove)");
+		ccList = new List(attributesComposite, SWT.MULTI | SWT.V_SCROLL);//SWT.BORDER
+		ccList.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		ccList.setFont(TEXT_FONT);
 		GridData ccListData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		ccListData.horizontalSpan = 1;
@@ -704,7 +778,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider,
 					new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getRepositoryUrl(),
-							"Description", true, bug.getSummary()))));
+							LABEL_SECTION_DESCRIPTION, true, bug.getSummary()))));
 		}
 	}
 
@@ -931,4 +1005,5 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	// "Spell Checking Finished", "The spell check has finished");
 	// }
 	// }
+
 }

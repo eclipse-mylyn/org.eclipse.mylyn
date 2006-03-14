@@ -35,6 +35,12 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.events.IExpansionListener;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * An editor used to view a locally created bug that does not yet exist on a
@@ -63,32 +69,51 @@ public class NewBugEditor extends AbstractBugEditor {
 	}
 
 	@Override
-	protected void addKeywordsList(String keywords, Composite attributesComposite) {
+	protected void addKeywordsList(FormToolkit toolkit, String keywords, Composite attributesComposite) {
 		// Since NewBugModels have no keywords, there is no
 		// GUI for them.
 	}
 
 	@Override
-	protected void createDescriptionLayout() {
+	protected void createDescriptionLayout(FormToolkit toolkit, final ScrolledForm form) {
 
+		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+		section.setText(LABEL_SECTION_DESCRIPTION);
+		section.setExpanded(true);
+		section.setLayout(new GridLayout());
+		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+		section.addExpansionListener(new IExpansionListener() {
+			public void expansionStateChanging(ExpansionEvent e) {
+				form.reflow(true);
+			}
+
+			public void expansionStateChanged(ExpansionEvent e) {
+				form.reflow(true);
+			}
+		});
+		
+		
+		
 		// Description Area
-		Composite descriptionComposite = new Composite(infoArea, SWT.NONE);
+		Composite descriptionComposite = toolkit.createComposite(form.getBody());
 		GridLayout descriptionLayout = new GridLayout();
 		descriptionLayout.numColumns = 4;
 		descriptionComposite.setLayout(descriptionLayout);
-		descriptionComposite.setBackground(background);
+//		descriptionComposite.setBackground(background);
 		GridData descriptionData = new GridData(GridData.FILL_BOTH);
 		descriptionData.horizontalSpan = 1;
 		descriptionData.grabExcessVerticalSpace = false;
 		descriptionComposite.setLayoutData(descriptionData);
 		// End Description Area
-
-		Composite descriptionTitleComposite = new Composite(descriptionComposite, SWT.NONE);
+		section.setClient(descriptionComposite);
+		
+		Composite descriptionTitleComposite = toolkit.createComposite(descriptionComposite, SWT.NONE);
 		GridLayout descriptionTitleLayout = new GridLayout();
 		descriptionTitleLayout.horizontalSpacing = 0;
 		descriptionTitleLayout.marginWidth = 0;
 		descriptionTitleComposite.setLayout(descriptionTitleLayout);
-		descriptionTitleComposite.setBackground(background);
+//		descriptionTitleComposite.setBackground(background);
 		GridData descriptionTitleData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		descriptionTitleData.horizontalSpan = 4;
 		descriptionTitleData.grabExcessVerticalSpace = false;
@@ -121,7 +146,7 @@ public class NewBugEditor extends AbstractBugEditor {
 	}
 
 	@Override
-	protected void createCommentLayout() {
+	protected void createCommentLayout(FormToolkit toolkit, final ScrolledForm form) {
 		// Since NewBugModels have no comments, there is no
 		// GUI for them.
 	}
@@ -304,7 +329,7 @@ public class NewBugEditor extends AbstractBugEditor {
 	}
 
 	@Override
-	protected void addCCList(String value, Composite attributesComposite) {
+	protected void addCCList(FormToolkit toolkit, String value, Composite attributesComposite) {
 		// do nothing here right now
 	}
 
