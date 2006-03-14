@@ -294,9 +294,14 @@ public class TaskListView extends ViewPart {
 		}
 
 		public void taskMoved(ITask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
-			refresh(toContainer);
-			refresh(task);
-			refresh(fromContainer);
+			AbstractTaskContainer rootCategory = MylarTaskListPlugin.getTaskListManager().getTaskList().getRootCategory();
+			if (rootCategory.equals(fromContainer) || rootCategory.equals(toContainer)) {
+				refresh(null);
+			} else {
+				refresh(toContainer);
+				refresh(task);
+				refresh(fromContainer);
+			}
 		}
 
 		public void taskDeleted(ITask task) {
