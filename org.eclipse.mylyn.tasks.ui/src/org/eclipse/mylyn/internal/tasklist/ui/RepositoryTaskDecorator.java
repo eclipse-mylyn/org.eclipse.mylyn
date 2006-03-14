@@ -44,15 +44,15 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 			}
 		} else if (element instanceof AbstractRepositoryTask) { 
 			decoration.addOverlay(TaskListImages.OVERLAY_REPOSITORY, IDecoration.BOTTOM_LEFT);
+			if (((AbstractRepositoryTask)element).isSynchronizing()) {
+				decoration.addOverlay(TaskListImages.OVERLAY_SYNCHRONIZING, IDecoration.TOP_LEFT);
+			}
 		} else if (element instanceof AbstractQueryHit) {
 			decoration.addOverlay(TaskListImages.OVERLAY_REPOSITORY, IDecoration.BOTTOM_LEFT);
-			
-//			ITask correspondingTask = ((AbstractQueryHit)element).getCorrespondingTask();
-//			if (correspondingTask == null) {
-//				decoration.addOverlay(TaskListImages.OVERLAY_INCOMMING, IDecoration.TOP_RIGHT);
-//			} else {
-//				decorate(correspondingTask, decoration);
-//			} 
+			ITask correspondingTask = ((AbstractQueryHit)element).getCorrespondingTask();
+			if (correspondingTask instanceof AbstractRepositoryTask && ((AbstractRepositoryTask)correspondingTask).isSynchronizing()) {
+				decoration.addOverlay(TaskListImages.OVERLAY_SYNCHRONIZING, IDecoration.TOP_LEFT);
+			}
 		} else if (element instanceof ITask) {
 			String url = ((ITask)element).getUrl();
 			if (url != null && !url.trim().equals("") && !url.equals("http://")) {
