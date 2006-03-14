@@ -622,7 +622,7 @@ public class TaskListView extends ViewPart {
 						break;
 					case 2:
 						break;
-					case 3:
+					case 4:
 						MylarTaskListPlugin.getTaskListManager().getTaskList().renameContainer(container, ((String) value).trim());
 //						container.setDescription(((String) value).trim());
 						break;
@@ -636,7 +636,7 @@ public class TaskListView extends ViewPart {
 						break;
 					case 2:
 						break;
-					case 3:
+					case 4:
 						MylarTaskListPlugin.getTaskListManager().getTaskList().renameContainer(query, ((String) value).trim());
 //						cat.setDescription(((String) value).trim());
 						break;
@@ -677,7 +677,7 @@ public class TaskListView extends ViewPart {
 							MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
 						}
 						break;
-					case 3:
+					case 4:
 						if (!(task instanceof AbstractRepositoryTask)) {
 							MylarTaskListPlugin.getTaskListManager().getTaskList().renameTask((Task)task, ((String) value).trim());
 //							task.setDescription(((String) value).trim());
