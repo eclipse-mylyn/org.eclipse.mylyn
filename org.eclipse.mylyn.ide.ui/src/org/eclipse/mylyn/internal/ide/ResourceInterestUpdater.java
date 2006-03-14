@@ -38,11 +38,13 @@ public class ResourceInterestUpdater {
 				internalAddResourceToContext(resources);
 			} else {
 				final IWorkbench workbench = PlatformUI.getWorkbench();
-				workbench.getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						internalAddResourceToContext(resources);
-					}
-				});
+				if (!workbench.isClosing() && !workbench.getDisplay().isDisposed()) {
+					workbench.getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							internalAddResourceToContext(resources);
+						}
+					}); 
+				}
 			}
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "could not add resource to context: " + resources, false);
@@ -56,7 +58,7 @@ public class ResourceInterestUpdater {
 				toAdd.add(resource);
 			}
 		}
-		
+
 		List<InteractionEvent> interactionEvents = new ArrayList<InteractionEvent>();
 		for (IResource resource : toAdd) {
 			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(resource);
@@ -68,10 +70,10 @@ public class ResourceInterestUpdater {
 							.getContentType(), handle, SOURCE_ID);
 					interactionEvents.add(interactionEvent);
 				}
-			}	
+			}
 		}
 		MylarPlugin.getContextManager().handleInteractionEvents(interactionEvents, true);
-	} 
+	}
 
 	private boolean acceptResource(IResource resource) {
 		return resource.isAccessible() && !resource.isDerived() && !resource.isPhantom();
