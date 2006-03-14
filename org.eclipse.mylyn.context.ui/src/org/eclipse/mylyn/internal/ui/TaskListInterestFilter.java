@@ -61,7 +61,7 @@ public class TaskListInterestFilter extends InterestFilter {
 				if (task != null) {
 					if (isImplicitlyInteresting(task)) {
 						return true;
-					}
+					} 
 					
 					IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(task);
 					if (!bridge.canFilter(task)) {
