@@ -131,7 +131,7 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		this.lastRefresh = lastRefresh;
 	}
 
-	public boolean isCurrentlySynchronizing() {
+	public boolean isSynchronizing() {
 		return currentlySynchronizing;
 	}
 

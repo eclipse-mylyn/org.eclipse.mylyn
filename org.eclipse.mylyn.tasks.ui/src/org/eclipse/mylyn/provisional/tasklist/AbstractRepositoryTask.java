@@ -95,7 +95,7 @@ public abstract class AbstractRepositoryTask extends Task {
 		return timeDifference;
 	}
 
-	public boolean isCurrentlySynchronizing() {
+	public boolean isSynchronizing() {
 		return currentlySynchronizing;
 	}
 

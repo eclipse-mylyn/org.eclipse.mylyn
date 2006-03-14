@@ -240,7 +240,7 @@ public abstract class AbstractRepositoryConnector {
 	 */
 	public Job synchronize(AbstractRepositoryTask repositoryTask, boolean forceSynch, IJobChangeListener listener) {
 		// TODO: refactor these conditions
-		boolean canNotSynch = repositoryTask.isDirty() || repositoryTask.isCurrentlySynchronizing();
+		boolean canNotSynch = repositoryTask.isDirty() || repositoryTask.isSynchronizing();
 		// || bugzillaTask.getBugzillaTaskState() != BugzillaTaskState.FREE;
 		boolean hasLocalChanges = repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING
 				|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT;

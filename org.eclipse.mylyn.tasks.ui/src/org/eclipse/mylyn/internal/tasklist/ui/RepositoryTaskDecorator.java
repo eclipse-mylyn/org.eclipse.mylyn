@@ -39,6 +39,9 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 					decoration.addSuffix("   [ <unknown host> ]");
 				}
 			} 
+			if (query.isSynchronizing()) {
+				decoration.addOverlay(TaskListImages.OVERLAY_SYNCHRONIZING, IDecoration.TOP_LEFT);
+			}
 		} else if (element instanceof AbstractRepositoryTask) { 
 			decoration.addOverlay(TaskListImages.OVERLAY_REPOSITORY, IDecoration.BOTTOM_LEFT);
 		} else if (element instanceof AbstractQueryHit) {
