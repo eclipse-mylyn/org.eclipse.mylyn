@@ -88,6 +88,9 @@ public class TaskListFilteredTree extends FilteredTree {
 
 			public void mouseDown(MouseEvent e) {
 				TaskListFilteredTree.super.filterText.setText("");
+				if (TaskListView.getDefault().getDrilledIntoCategory() != null) {
+					TaskListView.getDefault().goUpToRoot();
+				}
 				TaskListFilteredTree.this.textChanged(0);
 				TaskListView.getDefault().selectedAndFocusTask(
 						MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTask()
@@ -127,4 +130,10 @@ public class TaskListFilteredTree extends FilteredTree {
 		activeTaskLabel.setUnderlined(false);
     }
     
+	public void setFilterText(String string) {
+		if (filterText != null){
+			filterText.setText(string);
+			selectAll();		
+		}
+	}
 }

@@ -24,6 +24,7 @@ import org.eclipse.ui.IViewPart;
  */
 public class GoIntoAction extends Action implements IViewActionDelegate {
 
+	private static final String LABEL = "Go Into";
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.view.go.into";
 
 	//		
@@ -31,8 +32,8 @@ public class GoIntoAction extends Action implements IViewActionDelegate {
 	//	
 	public GoIntoAction() {
 		setId(ID);
-		setText("Go Into Category");
-		setToolTipText("Go Into Category");
+		setText(LABEL);
+		setToolTipText(LABEL);
 		setImageDescriptor(TaskListImages.GO_INTO);
 	}
 
@@ -43,6 +44,7 @@ public class GoIntoAction extends Action implements IViewActionDelegate {
 
 	public void run() {
 		if (TaskListView.getDefault() != null) {
+			TaskListView.getDefault().getFilteredTree().setFilterText("");
 			TaskListView.getDefault().goIntoCategory();
 		}
 	}
