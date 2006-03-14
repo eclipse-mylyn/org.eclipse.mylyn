@@ -288,7 +288,7 @@
     	<action
            class="org.eclipse.mylar.internal.ui.actions.ApplyMylarToTaskListAction"
            enablesFor="*"
-           icon="icons/elcl16/interest-filtering.gif"
+           icon="icons/eview16/mylar-apply.gif"
            id="org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction"
            label="Apply Mylar"
            style="toggle"
