@@ -308,6 +308,12 @@ public class TaskInfoEditor extends EditorPart {
 	public void createPartControl(Composite parent) {
 		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
 		form = toolkit.createScrolledForm(parent);
+		String trucatedDescription = task.getDescription();
+		int maxLength = 50;
+		if (trucatedDescription.length() > maxLength) {
+			trucatedDescription = trucatedDescription.substring(0, maxLength) + "...";
+		}
+		form.setText(trucatedDescription);
 
 		editorComposite = form.getBody();
 		editorComposite.setLayout(new GridLayout());
