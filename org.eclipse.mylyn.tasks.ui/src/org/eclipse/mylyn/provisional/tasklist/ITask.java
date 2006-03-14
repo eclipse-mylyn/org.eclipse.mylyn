@@ -23,8 +23,6 @@ public interface ITask extends ITaskListElement {
 
 	public abstract String getHandleIdentifier();
 
-	public String getRepositoryKind();
-
 	public abstract ITask getParent();
 
 	public abstract void setParent(ITask parent);

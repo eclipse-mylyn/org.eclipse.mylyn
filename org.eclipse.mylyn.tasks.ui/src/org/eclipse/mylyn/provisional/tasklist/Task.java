@@ -46,11 +46,11 @@ public class Task implements ITask {
 				return "P3";
 			}
 		}
-		
+
 		public String getDescription() {
 			switch (this) {
 			case P1:
-				return "Very High"; 
+				return "Very High";
 			case P2:
 				return "High";
 			case P3:
@@ -79,7 +79,7 @@ public class Task implements ITask {
 				return P5;
 			return P3;
 		}
-		
+
 		public static PriorityLevel fromDescription(String string) {
 			if (string == null)
 				return null;
@@ -95,7 +95,7 @@ public class Task implements ITask {
 				return P5;
 			return null;
 		}
-		
+
 	}
 
 	private boolean active = false;
@@ -115,10 +115,6 @@ public class Task implements ITask {
 	private int estimatedTimeHours = 0;
 
 	private boolean completed;
-
-//	private List<String> links = new ArrayList<String>();
-//
-//	private List<String> plans = new ArrayList<String>();
 
 	private String url = "";
 
@@ -226,25 +222,6 @@ public class Task implements ITask {
 		this.priority = priority;
 	}
 
-//	public List<String> getRelatedLinks() {
-//		if (links == null) {
-//			links = new ArrayList<String>();
-//		}
-//		return links;
-//	}
-
-//	public void setRelatedLinks(List<String> relatedLinks) {
-//		this.links = relatedLinks;
-//	}
-
-//	public void addLink(String link) {
-//		links.add(link);
-//	}
-
-//	public void removeLink(String link) {
-//		links.remove(link);
-//	}
-
 	public void setUrl(String url) {
 		this.url = url;
 	}
@@ -347,15 +324,6 @@ public class Task implements ITask {
 		this.description = description;
 	}
 
-//	public void addPlan(String plan) {
-//		if (plan != null && !plans.contains(plan))
-//			plans.add(plan);
-//	}
-//
-//	public List<String> getPlans() {
-//		return plans;
-//	}
-
 	public void setCompletionDate(Date completionDate) {
 		this.completionDate = completionDate;
 	}
@@ -390,7 +358,6 @@ public class Task implements ITask {
 		return REPOSITORY_KIND_LOCAL;
 	}
 
-	
 	public String getKind() {
 		return kind;
 	}

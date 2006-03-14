@@ -94,7 +94,7 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 					for (ITask task : cat.getChildren()) {
 						if (task instanceof AbstractRepositoryTask) {
 							AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager()
-									.getRepositoryConnector(task.getRepositoryKind());
+									.getRepositoryConnector(((AbstractRepositoryTask)task).getRepositoryKind());
 							if (client != null)
 								client.requestRefresh((AbstractRepositoryTask) task);
 						}

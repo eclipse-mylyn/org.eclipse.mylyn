@@ -49,51 +49,53 @@ public class OpenTaskListElementAction extends Action {
 	public void run() {
 		ISelection selection = viewer.getSelection();
 		Object element = ((IStructuredSelection) selection).getFirstElement();
-		if (element instanceof ITask || element instanceof AbstractQueryHit || element instanceof DateRangeActivityDelegate) {
+		if (element instanceof ITask || element instanceof AbstractQueryHit
+				|| element instanceof DateRangeActivityDelegate) {
 			final ITask task;
 			if (element instanceof AbstractQueryHit) {
 				task = ((AbstractQueryHit) element).getOrCreateCorrespondingTask();
 			} else if (element instanceof DateRangeActivityDelegate) {
-				task = ((DateRangeActivityDelegate)element).getCorrespondingTask();
+				task = ((DateRangeActivityDelegate) element).getCorrespondingTask();
 			} else {
 				task = (ITask) element;
 			}
-			
-			//element instanceof IQueryHit;
+
 			boolean forceUpdate = false;
+			if (task instanceof AbstractRepositoryTask) {
+				final AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager()
+						.getRepositoryConnector(((AbstractRepositoryTask) task).getRepositoryKind());
+				if (connector != null) {
+					Job refreshJob = connector.synchronize((AbstractRepositoryTask) task, forceUpdate,
+							new IJobChangeListener() {
 
-			final AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
-					task.getRepositoryKind());
-			if (task instanceof AbstractRepositoryTask && connector != null) {
-				Job refreshJob = connector.synchronize((AbstractRepositoryTask)task, forceUpdate, new IJobChangeListener() {
+								public void done(IJobChangeEvent event) {
+									TaskListUiUtil.openEditor(task);
+								}
 
-					public void done(IJobChangeEvent event) {
+								public void aboutToRun(IJobChangeEvent event) {
+									// ignore
+								}
+
+								public void awake(IJobChangeEvent event) {
+									// ignore
+								}
+
+								public void running(IJobChangeEvent event) {
+									// ignore
+								}
+
+								public void scheduled(IJobChangeEvent event) {
+									// ignore
+								}
+
+								public void sleeping(IJobChangeEvent event) {
+									// ignore
+								}
+							});
+					if (refreshJob == null) {
 						TaskListUiUtil.openEditor(task);
 					}
-
-					public void aboutToRun(IJobChangeEvent event) {
-						// ignore
-					}
-
-					public void awake(IJobChangeEvent event) {
-						// ignore
-					}
-
-					public void running(IJobChangeEvent event) {
-						// ignore
-					}
-
-					public void scheduled(IJobChangeEvent event) {
-						// ignore
-					}
-
-					public void sleeping(IJobChangeEvent event) {
-						// ignore
-					}
-				}); 
-				if (refreshJob == null) {
-					TaskListUiUtil.openEditor(task);
-				} 
+				}
 			} else {
 				TaskListUiUtil.openEditor(task);
 			}

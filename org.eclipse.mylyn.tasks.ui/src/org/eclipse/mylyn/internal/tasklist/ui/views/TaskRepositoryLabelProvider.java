@@ -41,8 +41,8 @@ public class TaskRepositoryLabelProvider extends LabelProvider implements ITable
 
 	public Image getImage(Object object) {
 		if (object instanceof AbstractRepositoryConnector) {
-			AbstractRepositoryConnector repositoryClient = (AbstractRepositoryConnector)object;
-			Image image = MylarTaskListPlugin.getDefault().getBrandingIcons().get(repositoryClient);
+			AbstractRepositoryConnector repositoryConnector = (AbstractRepositoryConnector)object;
+			Image image = MylarTaskListPlugin.getDefault().getBrandingIcons().get(repositoryConnector);
 			if (image != null) {
 				return image;
 			}

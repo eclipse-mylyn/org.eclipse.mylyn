@@ -153,10 +153,6 @@ public class DateRangeActivityDelegate implements ITask {
 		return task.getReminderDate();
 	}
 
-	public String getRepositoryKind() {
-		return task.getRepositoryKind();
-	}
-
 	public String getUrl() {
 		return task.getUrl();
 	}

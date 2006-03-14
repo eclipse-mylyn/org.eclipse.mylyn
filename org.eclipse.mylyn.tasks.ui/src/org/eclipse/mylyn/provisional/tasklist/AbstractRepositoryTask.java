@@ -44,6 +44,8 @@ public abstract class AbstractRepositoryTask extends Task {
 		super(handle, label, newTask);
 	}
 
+	public abstract String getRepositoryKind();
+	
 	/**
 	 * @return	true	if the task can be queried and manipulated without connecting to the server
 	 */
