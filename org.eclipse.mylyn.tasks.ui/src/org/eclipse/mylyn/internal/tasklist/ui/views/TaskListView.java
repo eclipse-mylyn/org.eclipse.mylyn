@@ -316,9 +316,12 @@ public class TaskListView extends ViewPart {
 		}
 
 		public void containerInfoChanged(AbstractTaskContainer container) {
-			refresh(container);
-		}
-		
+			if (container.equals(MylarTaskListPlugin.getTaskListManager().getTaskList().getRootCategory())) {
+				refresh(null);
+			} else {
+				refresh(container);
+			}
+		} 
 	};
 
 	private final IPropertyChangeListener THEME_CHANGE_LISTENER = new IPropertyChangeListener() {

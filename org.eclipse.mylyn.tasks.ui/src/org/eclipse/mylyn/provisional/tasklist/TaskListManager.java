@@ -109,7 +109,7 @@ public class TaskListManager {
 	private TaskList taskList = new TaskList();
 
 	private boolean taskListInitialized = false;
-	
+
 	private boolean taskActivityHistoryInitialized = false;
 
 	private int nextLocalTaskId;
@@ -178,7 +178,6 @@ public class TaskListManager {
 
 	public TaskList resetTaskList() {
 		resetActivity();
-//		taskList = new TaskList();
 		taskList.reset();
 		taskListInitialized = true;
 		return taskList;
@@ -222,7 +221,7 @@ public class TaskListManager {
 		}
 	}
 
-	/** public for testing **/
+	/** public for testing * */
 	public void parseInteractionEvent(InteractionEvent event) {
 		if (event.getDelta().equals(MylarContextManager.ACTIVITY_ACTIVATED)) {
 			if (!event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE)) {
@@ -231,7 +230,8 @@ public class TaskListManager {
 					totalInactive = 0;
 					startInactive = 0;
 				}
-				currentTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(event.getStructureHandle());
+				currentTask = MylarTaskListPlugin.getTaskListManager().getTaskList()
+						.getTask(event.getStructureHandle());
 				if (currentTask != null) {
 					GregorianCalendar calendar = new GregorianCalendar();
 					calendar.setTime(event.getDate());
@@ -256,8 +256,8 @@ public class TaskListManager {
 				for (DateRangeContainer week : dateRangeContainers) {
 					if (week.includes(currentTaskStart)) {
 						if (currentTask != null) {
-							week.addTask(new DateRangeActivityDelegate(week, currentTask, currentTaskStart, currentTaskEnd,
-									totalInactive));
+							week.addTask(new DateRangeActivityDelegate(week, currentTask, currentTaskStart,
+									currentTaskEnd, totalInactive));
 							if (taskActivityHistoryInitialized) {
 								for (ITaskActivityListener listener : activityListeners) {
 									listener.activityChanged(week);
@@ -276,27 +276,28 @@ public class TaskListManager {
 			}
 		}
 	}
-	
-	/** public for testing **/
+
+	/** public for testing * */
 	public DateRangeContainer getActivityThisWeek() {
 		return activityThisWeek;
 	}
 
-	/** public for testing **/
+	/** public for testing * */
 	public DateRangeContainer getActivityPast() {
 		return activityPast;
 	}
-	/** public for testing **/
+
+	/** public for testing * */
 	public DateRangeContainer getActivityFuture() {
 		return activityFuture;
 	}
 
-	/** public for testing **/
+	/** public for testing * */
 	public DateRangeContainer getActivityNextWeek() {
 		return activityNextWeek;
 	}
 
-	/** public for testing **/
+	/** public for testing * */
 	public DateRangeContainer getActivityPrevious() {
 		return activityPreviousWeek;
 	}
@@ -332,7 +333,8 @@ public class TaskListManager {
 		nextEnd.setTime(new Date());
 		nextEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_NEXT);
 		snapToEndOfWeek(nextEnd);
-		activityNextWeek = new DateRangeContainer(nextStart.getTime(), nextEnd.getTime(), DESCRIPTION_NEXT_WEEK, taskList);
+		activityNextWeek = new DateRangeContainer(nextStart.getTime(), nextEnd.getTime(), DESCRIPTION_NEXT_WEEK,
+				taskList);
 		dateRangeContainers.add(activityNextWeek);
 
 		GregorianCalendar futureStart = new GregorianCalendar();
@@ -343,7 +345,8 @@ public class TaskListManager {
 		futureEnd.setTime(new Date());
 		futureEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_FUTURE_END);
 		snapToEndOfWeek(futureEnd);
-		activityFuture = new DateRangeContainer(futureStart.getTime(), futureEnd.getTime(), DESCRIPTION_FUTURE, taskList);
+		activityFuture = new DateRangeContainer(futureStart.getTime(), futureEnd.getTime(), DESCRIPTION_FUTURE,
+				taskList);
 		dateRangeContainers.add(activityFuture);
 
 		GregorianCalendar pastStart = new GregorianCalendar();
@@ -383,8 +386,6 @@ public class TaskListManager {
 		return dateRangeContainers.toArray();
 	}
 
-
-
 	public String genUniqueTaskHandle() {
 		return TaskRepositoryManager.PREFIX_LOCAL + nextLocalTaskId++;
 	}
@@ -392,13 +393,13 @@ public class TaskListManager {
 	public boolean readExistingOrCreateNewList() {
 		try {
 			if (taskListFile.exists()) {
-//				taskList = new TaskList();
+				// taskList = new TaskList();
 				taskListWriter.readTaskList(taskList, taskListFile);
 				int maxHandle = taskList.findLargestTaskHandle();
 				if (maxHandle >= nextLocalTaskId) {
 					nextLocalTaskId = maxHandle + 1;
 				}
-			} else { 
+			} else {
 				resetTaskList();
 			}
 
@@ -450,8 +451,6 @@ public class TaskListManager {
 		return taskList;
 	}
 
-
-
 	public void addActivityListener(ITaskActivityListener listener) {
 		activityListeners.add(listener);
 	}
@@ -481,7 +480,7 @@ public class TaskListManager {
 		}
 	}
 
-	public void deactivateTask(ITask task) {		
+	public void deactivateTask(ITask task) {
 		TaskActivityTimer taskTimer = timerMap.remove(task);
 		if (taskTimer != null) {
 			taskTimer.stopTimer();
@@ -498,26 +497,9 @@ public class TaskListManager {
 		}
 	}
 
-	
-//	public void notifyListUpdated() {
-//		for (ITaskChangeListener listener : new ArrayList<ITaskChangeListener>(changeListeners)) {
-//			try {
-//				listener.taskListModified();
-//			} catch (Throwable t) {
-//				MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
-//			}
-//		}
-//	}
-
 	public void setTaskListFile(File file) {
 		this.taskListFile = file;
 	}
-
-//	public ITask getTaskForHandle(String handle, boolean lookInArchives) {
-//		if (handle == null)
-//			return null;
-//		return taskList.getTask(handle, lookInArchives);
-//	}
 
 	public boolean isTaskListInitialized() {
 		return taskListInitialized;
@@ -538,7 +520,6 @@ public class TaskListManager {
 		return timerMap;
 	}
 
-
 	/**
 	 * For testing
 	 */
@@ -553,7 +534,6 @@ public class TaskListManager {
 			}
 		}
 		return false;
-//		return activityThisWeek.getChildren().contains(task);
 	}
 
 	/**
