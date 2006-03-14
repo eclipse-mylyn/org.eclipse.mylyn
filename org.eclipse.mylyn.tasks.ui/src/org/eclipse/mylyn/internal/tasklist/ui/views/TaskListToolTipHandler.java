@@ -206,11 +206,13 @@ public class TaskListToolTipHandler {
 			} else {
 				repositoryTask = (AbstractRepositoryTask) element;
 			}
-			AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
-					repositoryTask.getRepositoryKind());
-			if (connector != null) {
-				return MylarTaskListPlugin.getDefault().getBrandingIcons().get(connector);
-			}
+			if (repositoryTask != null) {
+				AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
+						repositoryTask.getRepositoryKind());
+				if (connector != null) {
+					return MylarTaskListPlugin.getDefault().getBrandingIcons().get(connector);
+				}
+			} 
 		}
 		return null;
 	}
