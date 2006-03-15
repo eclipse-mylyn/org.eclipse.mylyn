@@ -82,12 +82,9 @@ import org.eclipse.ui.forms.widgets.Section;
  * <code>BugReport</code> object to store the data.
  * 
  * @author Mik Kersten (hardening of prototype)
+ * @author Rob Elves (adaption to Eclipse Forms)
  */
 public class ExistingBugEditor extends AbstractBugEditor {
-
-	private static final String LABEL_SECTION_COMMENTS = "Comments";
-
-//	private static final String LABEL_SECTION_DESCRIPTION = "Description";
 
 	protected Set<String> removeCC = new HashSet<String>();
 
@@ -144,7 +141,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		setInput(input);
 		bugzillaInput = editorInput;
 		bugzillaOutlineModel = BugzillaOutlineNode.parseBugReport(bugzillaInput.getBug());
-		
+
 		bug = editorInput.getBug();
 		restoreBug();
 		isDirty = false;
@@ -191,7 +188,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		radioOptions = new Control[bug.getOperations().size()];
 		for (Iterator<Operation> it = bug.getOperations().iterator(); it.hasNext();) {
 			Operation o = it.next();
-			radios[i] = toolkit.createButton(buttonComposite,"", SWT.RADIO);
+			radios[i] = toolkit.createButton(buttonComposite, "", SWT.RADIO);
 			radios[i].setFont(TEXT_FONT);
 			GridData radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 			if (!o.hasOptions() && !o.isInput())
@@ -204,7 +201,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 			opName = opName.replaceAll("<.*>", "");
 			radios[i].setText(opName);
 			radios[i].setLayoutData(radioData);
-//			radios[i].setBackground(background);
+			// radios[i].setBackground(background);
 			radios[i].addSelectionListener(new RadioButtonListener());
 			radios[i].addListener(SWT.FocusIn, new GenericListener());
 
@@ -213,14 +210,17 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				radioData.horizontalSpan = 1;
 				radioData.heightHint = 20;
 				radioData.widthHint = AbstractBugEditor.WRAP_LENGTH;
-				radioOptions[i] = new Combo(buttonComposite, SWT.NONE);
-//				radioOptions[i] = new Combo(buttonComposite, SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);
-//				radioOptions[i].setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-//				radioOptions[i] = new Combo(buttonComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
-//						| SWT.READ_ONLY);
+				radioOptions[i] = new Combo(buttonComposite, SWT.NULL);
+				// radioOptions[i] = new Combo(buttonComposite, SWT.MULTI |
+				// SWT.V_SCROLL | SWT.READ_ONLY);
+				// radioOptions[i].setData(FormToolkit.KEY_DRAW_BORDER,
+				// FormToolkit.TEXT_BORDER);
+				// radioOptions[i] = new Combo(buttonComposite,
+				// SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
+				// | SWT.READ_ONLY);
 				radioOptions[i].setFont(TEXT_FONT);
 				radioOptions[i].setLayoutData(radioData);
-//				radioOptions[i].setBackground(background);
+				// radioOptions[i].setBackground(background);
 
 				Object[] a = o.getOptionNames().toArray();
 				Arrays.sort(a);
@@ -233,10 +233,11 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 				radioData.horizontalSpan = 1;
 				radioData.widthHint = 120;
-				radioOptions[i] = toolkit.createText(buttonComposite, "");//, SWT.SINGLE);
+				radioOptions[i] = toolkit.createText(buttonComposite, "");// ,
+				// SWT.SINGLE);
 				radioOptions[i].setFont(TEXT_FONT);
 				radioOptions[i].setLayoutData(radioData);
-//				radioOptions[i].setBackground(background);
+				// radioOptions[i].setBackground(background);
 				((Text) radioOptions[i]).setText(o.getInputValue());
 				((Text) radioOptions[i]).addModifyListener(new RadioButtonListener());
 			}
@@ -273,7 +274,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		GridData compareButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		compareButtonData.widthHint = 100;
 		compareButtonData.heightHint = 20;
-//		compareButton.setText("Compare");
+		// compareButton.setText("Compare");
 		compareButton.setLayoutData(compareButtonData);
 		compareButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
@@ -322,10 +323,10 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 		submitButton.setEnabled(false);
 		ExistingBugEditor.this.showBusy(true);
-				
+
 		final BugzillaReportSubmitForm bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeExistingBugPost(bug,
 				repository, removeCC);
-		
+
 		final BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) MylarTaskListPlugin
 				.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
 
@@ -370,7 +371,6 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	@Override
 	protected void createDescriptionLayout(FormToolkit toolkit, final ScrolledForm form) {
 
-		
 		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText(LABEL_SECTION_DESCRIPTION);
 		section.setExpanded(true);
@@ -387,39 +387,24 @@ public class ExistingBugEditor extends AbstractBugEditor {
 			}
 		});
 
-	
-		
-//		GridLayout compLayout = new GridLayout();
-//		compLayout.numColumns = 2;
-//		container.setLayout(compLayout);
-//		container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		// Description Area
 		Composite descriptionComposite = toolkit.createComposite(section);
 		GridLayout descriptionLayout = new GridLayout();
 		descriptionLayout.numColumns = 4;
 		descriptionComposite.setLayout(descriptionLayout);
-//		descriptionComposite.setBackground(background);
+		// descriptionComposite.setBackground(background);
 		GridData descriptionData = new GridData(GridData.FILL_HORIZONTAL);
 		descriptionData.horizontalSpan = 1;
 		descriptionData.grabExcessVerticalSpace = false;
-//		descriptionComposite.setLayoutData(descriptionData);
+		// descriptionComposite.setLayoutData(descriptionData);
 		// End Description Area
 
 		section.setClient(descriptionComposite);
-		
-//		FormText t = newLayout(descriptionComposite, 4, "Description:", HEADER);
-		
-//		t.addListener(SWT.FocusIn, new DescriptionListener());
+
+		// FormText t = newLayout(descriptionComposite, 4, "Description:",
+		// HEADER);
+
+		// t.addListener(SWT.FocusIn, new DescriptionListener());
 		FormText t = newLayout(descriptionComposite, 4, bug.getDescription(), VALUE);
 		t.setFont(COMMENT_FONT);
 		t.addListener(SWT.FocusIn, new DescriptionListener());
@@ -434,13 +419,11 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	protected void createCommentLayout(FormToolkit toolkit, final ScrolledForm form) {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-		
-
 		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText(LABEL_SECTION_COMMENTS);
 		section.setExpanded(true);
 		section.setLayout(new GridLayout());
-		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		
+		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		section.addExpansionListener(new IExpansionListener() {
 			public void expansionStateChanging(ExpansionEvent e) {
 				form.reflow(true);
@@ -450,52 +433,52 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				form.reflow(true);
 			}
 		});
-		
-		
+
 		// Additional (read-only) Comments Area
 		Composite addCommentsComposite = toolkit.createComposite(section);
 		section.setClient(addCommentsComposite);
 		GridLayout addCommentsLayout = new GridLayout();
 		addCommentsLayout.numColumns = 4;
 		addCommentsComposite.setLayout(addCommentsLayout);
-//		addCommentsComposite.setBackground(background);
+		// addCommentsComposite.setBackground(background);
 		GridData addCommentsData = new GridData(GridData.FILL_BOTH);
 		addCommentsData.horizontalSpan = 1;
 		addCommentsData.grabExcessVerticalSpace = false;
 		addCommentsComposite.setLayoutData(addCommentsData);
 		// End Additional (read-only) Comments Area
 
-	
-		
-		FormText t = null;
+		FormText formText = null;
 		for (Iterator<Comment> it = bug.getComments().iterator(); it.hasNext();) {
 			Comment comment = it.next();
-			String commentHeader = "<b>"+comment.getNumber() + ": " + comment.getAuthorName()+", "+ df.format(comment.getCreated())+"</b>";
-			t = newLayout(addCommentsComposite, 4, commentHeader, HEADER);
-			t.addListener(SWT.FocusIn, new CommentListener(comment));
-			t = newLayout(addCommentsComposite, 4, comment.getText(), VALUE);
-			t.setFont(COMMENT_FONT);
-			t.addListener(SWT.FocusIn, new CommentListener(comment));
+			String commentHeader = "<b>" + comment.getNumber() + ": " + comment.getAuthorName() + ", "
+					+ df.format(comment.getCreated()) + "</b>";
+			formText = newLayout(addCommentsComposite, 4, commentHeader, HEADER);
+			formText.addListener(SWT.FocusIn, new CommentListener(comment));
+			formText = newLayout(addCommentsComposite, 4, comment.getText(), VALUE);
+			formText.setFont(COMMENT_FONT);
+			formText.addListener(SWT.FocusIn, new CommentListener(comment));
+
 			Label spacer = toolkit.createLabel(addCommentsComposite, "");
+
 			GridData spacerGridData = new GridData();
 			spacerGridData.horizontalSpan = 4;
+			spacerGridData.heightHint = 18;
 			spacer.setLayoutData(spacerGridData);
 			// code for outline
-			texts.add(textsindex, t);
-			textHash.put(comment, t);
-			textsindex++;			
+			texts.add(textsindex, formText);
+			textHash.put(comment, formText);
+			textsindex++;
 		}
 
-		
-		
-		Section sectionAdditionalComments = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+		Section sectionAdditionalComments = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR
+				| Section.TWISTIE);
 		sectionAdditionalComments.setText(LABEL_SECTION_NEW_COMMENT);
 		sectionAdditionalComments.setExpanded(true);
-//		sectionAdditionalComments.setLayout(new GridLayout());
-//		GridData newCommentCommentLayoutData = new GridData();
-//		newCommentCommentLayoutData.widthHint = DESCRIPTION_WIDTH;
-//		sectionAdditionalComments.setLayoutData(newCommentCommentLayoutData);
-		sectionAdditionalComments.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		
+		// sectionAdditionalComments.setLayout(new GridLayout());
+		// GridData newCommentCommentLayoutData = new GridData();
+		// newCommentCommentLayoutData.widthHint = DESCRIPTION_WIDTH;
+		// sectionAdditionalComments.setLayoutData(newCommentCommentLayoutData);
+		sectionAdditionalComments.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		sectionAdditionalComments.addExpansionListener(new IExpansionListener() {
 			public void expansionStateChanging(ExpansionEvent e) {
 				form.reflow(true);
@@ -505,11 +488,11 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				form.reflow(true);
 			}
 		});
-		
 
-		Composite newCommentsComposite = toolkit.createComposite(sectionAdditionalComments);		
+		Composite newCommentsComposite = toolkit.createComposite(sectionAdditionalComments);
 		newCommentsComposite.setLayout(new GridLayout());
-		addCommentsText = toolkit.createText(newCommentsComposite, bug.getNewComment(), SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
+		addCommentsText = toolkit.createText(newCommentsComposite, bug.getNewComment(), SWT.MULTI | SWT.V_SCROLL
+				| SWT.WRAP);
 		addCommentsText.setFont(COMMENT_FONT);
 		toolkit.paintBordersFor(newCommentsComposite);
 		GridData addCommentsTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
@@ -518,7 +501,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		addCommentsTextData.heightHint = DESCRIPTION_HEIGHT;
 
 		addCommentsText.setLayoutData(addCommentsTextData);
-//		addCommentsText.setText(bug.getNewComment());
+		// addCommentsText.setText(bug.getNewComment());
 		addCommentsText.addListener(SWT.KeyUp, new Listener() {
 
 			public void handleEvent(Event event) {
@@ -534,25 +517,25 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		// End Additional Comments Text
 
 		addCommentsTextBox = addCommentsText;
-		
+
 		this.createSeparatorSpace(addCommentsComposite);
 		sectionAdditionalComments.setClient(newCommentsComposite);
 	}
 
 	@Override
 	protected void addKeywordsList(FormToolkit toolkit, String keywords, Composite attributesComposite) {
-//		newLayout(attributesComposite, 1, "Keywords:", PROPERTY);
+		// newLayout(attributesComposite, 1, "Keywords:", PROPERTY);
 		toolkit.createLabel(attributesComposite, "Keywords:");
 		keywordsText = toolkit.createText(attributesComposite, keywords);
 		keywordsText.setFont(TEXT_FONT);
 		keywordsText.setEditable(false);
-//		keywordsText.setForeground(foreground);
-//		keywordsText.setBackground(JFaceColors.getErrorBackground(display));
+		// keywordsText.setForeground(foreground);
+		// keywordsText.setBackground(JFaceColors.getErrorBackground(display));
 		GridData keywordsData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		keywordsData.horizontalSpan = 2;
 		keywordsData.widthHint = 200;
 		keywordsText.setLayoutData(keywordsData);
-//		keywordsText.setText(keywords);
+		// keywordsText.setText(keywords);
 		keywordsText.addListener(SWT.FocusIn, new GenericListener());
 		keyWordsList = new List(attributesComposite, SWT.MULTI | SWT.V_SCROLL);
 		keyWordsList.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
@@ -600,13 +583,13 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		ccText = toolkit.createText(attributesComposite, ccValue);
 		ccText.setFont(TEXT_FONT);
 		ccText.setEditable(true);
-//		ccText.setForeground(foreground);
-//		ccText.setBackground(background);
+		// ccText.setForeground(foreground);
+		// ccText.setBackground(background);
 		GridData ccData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		ccData.horizontalSpan = 1;
 		ccData.widthHint = 200;
 		ccText.setLayoutData(ccData);
-//		ccText.setText(ccValue);
+		// ccText.setText(ccValue);
 		ccText.addListener(SWT.FocusIn, new GenericListener());
 		ccText.addModifyListener(new ModifyListener() {
 
@@ -620,9 +603,10 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 		});
 
-		//newLayout(attributesComposite, 1, "CC: (Select to remove)", PROPERTY);
+		// newLayout(attributesComposite, 1, "CC: (Select to remove)",
+		// PROPERTY);
 		toolkit.createLabel(attributesComposite, "CC: (Select to remove)");
-		ccList = new List(attributesComposite, SWT.MULTI | SWT.V_SCROLL);//SWT.BORDER
+		ccList = new List(attributesComposite, SWT.MULTI | SWT.V_SCROLL);// SWT.BORDER
 		ccList.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		ccList.setFont(TEXT_FONT);
 		GridData ccListData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
@@ -793,9 +777,9 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	 */
 	protected class DescriptionListener implements Listener {
 		public void handleEvent(Event event) {
-			fireSelectionChanged(new SelectionChangedEvent(selectionProvider,
-					new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getRepositoryUrl(),
-							LABEL_SECTION_DESCRIPTION, true, bug.getSummary()))));
+			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
+					new BugzillaReportSelection(bug.getId(), bug.getRepositoryUrl(), LABEL_SECTION_DESCRIPTION, true,
+							bug.getSummary()))));
 		}
 	}
 
