@@ -48,11 +48,13 @@ public class TaskListHighlighterMenuContributor implements IDynamicSubMenuContri
 								task = ((AbstractQueryHit) selectedElement).getCorrespondingTask();
 							}
 						}
-						MylarUiPlugin.getDefault().setHighlighterMapping(task.getHandleIdentifier(),
-								highlighter.getName());
-						taskListView.getViewer().refresh();
-						MylarPlugin.getContextManager().notifyPostPresentationSettingsChange(
-								IMylarContextListener.UpdateKind.HIGHLIGHTER);
+						if (task != null) {
+							MylarUiPlugin.getDefault().setHighlighterMapping(task.getHandleIdentifier(),
+									highlighter.getName());
+							taskListView.getViewer().refresh();
+							MylarPlugin.getContextManager().notifyPostPresentationSettingsChange(
+									IMylarContextListener.UpdateKind.HIGHLIGHTER);
+						}
 					}
 				};
 				if (highlighter.isGradient()) {

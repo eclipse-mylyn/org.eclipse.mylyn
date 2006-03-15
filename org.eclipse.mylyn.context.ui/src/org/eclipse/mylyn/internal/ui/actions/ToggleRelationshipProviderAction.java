@@ -34,7 +34,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 	// "org.eclipse.mylar.internal.ui.relatedElements.providers";
 	// private String prefId = "org.eclipse.mylar.ui.relatedElements.providers";
 
-	private static final String LABEL_DEGREE_OF_SEPARATION = "Select Degree Of Separation:";
+	private static final String LABEL_DEGREE_OF_SEPARATION = "Degree of Separation:";
 
 	public static final String ID = "org.eclipse.mylar.ui.actions.active.search.toggle";
 
