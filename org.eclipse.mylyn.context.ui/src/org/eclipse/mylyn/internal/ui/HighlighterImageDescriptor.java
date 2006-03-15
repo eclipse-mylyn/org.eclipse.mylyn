@@ -14,7 +14,12 @@
 package org.eclipse.mylar.internal.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.PaletteData;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
 public class HighlighterImageDescriptor extends ImageDescriptor {
@@ -23,7 +28,12 @@ public class HighlighterImageDescriptor extends ImageDescriptor {
 
 	public HighlighterImageDescriptor(Color fromColor, Color toColor) {
 		super();
-
+		if (fromColor == null) {
+			fromColor = Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
+		}
+		if (toColor == null) {
+			toColor = Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
+		}
 		ImageData band = createGradientBand(50, 20, false, new RGB(fromColor.getRed(), fromColor.getGreen(), fromColor
 				.getBlue()), new RGB(toColor.getRed(), toColor.getGreen(), toColor.getBlue()), 4, 4, 4);
 		image = new Image(Display.getCurrent(), band);

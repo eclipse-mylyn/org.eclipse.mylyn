@@ -27,7 +27,7 @@ public class ColorMap {
 
 	public Color BACKGROUND_COLOR = new Color(Display.getDefault(), 255, 255, 255); 
 
-	public Color WHITE = new Color(Display.getDefault(), 255, 255, 255); 
+	public Color DEFAULT = null;//Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);//new Color(Display.getDefault(), 255, 255, 255); 
 
 	public Color GRAY_DARK = new Color(Display.getDefault(), 70, 70, 70); 
 
@@ -59,10 +59,13 @@ public class ColorMap {
 
 	public Color PANTONE_PASTERL_GREEN = new Color(Display.getDefault(), 162, 231, 215);
 
+	public static Color COLOR_WHITE = new Color(Display.getCurrent(), 255, 255, 255);
+
+	public static Color COLOR_BLACK = new Color(Display.getCurrent(), 0, 0, 0);
+	
 	public void dispose() {
 		LANDMARK.dispose();
 		BACKGROUND_COLOR.dispose();
-		WHITE.dispose();
 		GRAY_DARK.dispose();
 		GRAY_MEDIUM.dispose();
 		GRAY_LIGHT.dispose();
@@ -77,13 +80,14 @@ public class ColorMap {
 		PANTONE_PASTEL_PURPLE.dispose();
 		PANTONE_PASTEL_ROSE.dispose();
 		PANTONE_PASTEL_YELLOW.dispose();
+		COLOR_WHITE.dispose();
+		COLOR_BLACK.dispose();
+		
+		// below disposed by registry
+		// DEFAULT.dispose();
 	}
 	
 	private GammaSetting gammaSetting = GammaSetting.STANDARD;
-
-	public static Color COLOR_WHITE = new Color(Display.getCurrent(), 255, 255, 255);
-
-	public static Color COLOR_BLACK = new Color(Display.getCurrent(), 0, 0, 0);
 
 	public enum GammaSetting {
 		LIGHTEN, DARKEN, STANDARD;

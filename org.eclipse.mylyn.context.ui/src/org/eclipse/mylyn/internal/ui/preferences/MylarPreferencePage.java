@@ -34,6 +34,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.internal.ui.Highlighter;
 import org.eclipse.mylar.internal.ui.HighlighterImageDescriptor;
+import org.eclipse.mylar.internal.ui.HighlighterList;
 import org.eclipse.mylar.internal.ui.MylarUiPrefContstants;
 import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
 import org.eclipse.swt.SWT;
@@ -399,9 +400,14 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 		}
 
 		public boolean canModify(Object element, String property) {
-			return true;
+			if (element instanceof Highlighter) {
+				if (!((Highlighter)element).getName().equals(HighlighterList.DEFAULT_HIGHLIGHTER.getName())) {
+					return true;
+				}
+			}
+			return false;
 		}
-
+ 
 		/**
 		 * getValue - returns content of the current selection
 		 */
@@ -417,7 +423,11 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 					break;
 				case 1: // COLOR_COLUMN
 					selection = hl;
-					return selection.getCore().getRGB();
+					if (selection.getCore() != null) {
+						return selection.getCore().getRGB();
+					} else {
+						return Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND).getRGB();
+					}
 				case 2: // KIND_COLUMN
 					// return index of current value
 					if (hl.isGradient()) {

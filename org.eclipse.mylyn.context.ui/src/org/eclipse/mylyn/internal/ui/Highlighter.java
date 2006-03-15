@@ -33,6 +33,8 @@ public class Highlighter {
 
 	private static final int NUM_LEVELS = 40;
 
+	private static final String VAL_DEFAULT = "";
+
 	private final List<Color> gradients = new ArrayList<Color>();
 
 	private String name;
@@ -59,8 +61,10 @@ public class Highlighter {
 		this.name = name;
 		this.core = coreColor;
 		this.isGradient = isGradient;
-		initializeGradients();
-		initializeHighlight();
+		if (coreColor != null) {
+			initializeGradients();
+			initializeHighlight();
+		}
 		if (!isGradient) {
 			this.landmarkColor = coreColor;
 		} else {
@@ -69,22 +73,23 @@ public class Highlighter {
 	}
 
 	public Highlighter(String attributes) {
-		this.initializeFromString(attributes);
-		initializeGradients();
-		initializeHighlight();
-		if (!isGradient) {
-			this.landmarkColor = highlightColor;
-		} else {
-			initializeLandmark();
-		}
-	}
+		if (initializeFromString(attributes)) {
+			initializeGradients();
+			initializeHighlight();
+			if (!isGradient) {
+				this.landmarkColor = highlightColor;
+			} else {
+				initializeLandmark();
+			}
+		} 
+	} 
 
 	public void dispose() {
-		for (Color color: gradients) {
+		for (Color color : gradients) {
 			color.dispose();
 		}
 	}
-	
+
 	public Color getHighlightColor() {
 		return highlightColor;
 	}
@@ -240,7 +245,7 @@ public class Highlighter {
 	}
 
 	public String getHighlightKind() {
-		String res = "";
+		String res = VAL_DEFAULT;
 		if (this.isGradient) {
 			res = LABEL_GRADIENT;
 		} else if (this.isIntersection) {
@@ -252,29 +257,39 @@ public class Highlighter {
 	}
 
 	public String externalizeToString() {
-		Integer r = new Integer(this.core.getRed());
-		Integer g = new Integer(this.core.getGreen());
-		Integer b = new Integer(this.core.getBlue());
-		return r.toString() + ";" + g.toString() + ";" + b.toString() + ";" + this.name + ";" + this.getHighlightKind();
-	}
-
-	private void initializeFromString(String attributes) {
-		String[] data = attributes.split(";");
-
-		Integer r = new Integer(data[0]);
-		Integer g = new Integer(data[1]);
-		Integer b = new Integer(data[2]);
-		this.core = new Color(Display.getCurrent(), r.intValue(), g.intValue(), b.intValue());
-		this.name = data[3];
-		if (data[4].compareTo(LABEL_GRADIENT) == 0) {
-			this.isGradient = true;
-			this.isIntersection = false;
-		} else if (data[4].compareTo(LABEL_INTERSECTION) == 0) {
-			this.isGradient = false;
-			this.isIntersection = true;
+		if (core == null) {
+			return VAL_DEFAULT;
 		} else {
-			this.isGradient = false;
-			this.isIntersection = false;
+			Integer r = new Integer(this.core.getRed());
+			Integer g = new Integer(this.core.getGreen());
+			Integer b = new Integer(this.core.getBlue());
+			return r.toString() + ";" + g.toString() + ";" + b.toString() + ";" + this.name + ";"
+					+ this.getHighlightKind();
 		}
 	}
-}
+
+private boolean initializeFromString(String attributes) {
+		if (!VAL_DEFAULT.equals(attributes)) {
+			String[] data = attributes.split(";");
+			Integer r = new Integer(data[0]);
+			Integer g = new Integer(data[1]);
+			Integer b = new Integer(data[2]);
+			this.core = new Color(Display.getCurrent(), r.intValue(), g.intValue(), b.intValue());
+			this.name = data[3];
+			if (data[4].compareTo(LABEL_GRADIENT) == 0) {
+				this.isGradient = true;
+				this.isIntersection = false;
+			} else if (data[4].compareTo(LABEL_INTERSECTION) == 0) {
+				this.isGradient = false;
+				this.isIntersection = true;
+			} else {
+				this.isGradient = false;
+				this.isIntersection = false;
+			}
+			return true;
+		} else {
+			this.name = HighlighterList.DEFAULT_HIGHLIGHTER.getName();
+			this.core = HighlighterList.DEFAULT_HIGHLIGHTER.getCore();
+			return false;
+		}
+	}}

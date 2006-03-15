@@ -26,8 +26,8 @@ import org.eclipse.swt.widgets.Display;
  */
 public class HighlighterList {
 
-	public static final Highlighter DEFAULT_HIGHLIGHTER = new Highlighter("white (default)", MylarUiPlugin.getDefault()
-			.getColorMap().WHITE, false);
+	public static final Highlighter DEFAULT_HIGHLIGHTER = new Highlighter("<default>", MylarUiPlugin.getDefault()
+			.getColorMap().DEFAULT, false);
 
 	private List<Highlighter> highlighters;
 
