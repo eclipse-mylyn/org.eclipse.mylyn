@@ -32,7 +32,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.resource.JFaceColors;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.bugzilla.core.Attribute;
@@ -60,6 +59,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
@@ -184,13 +184,14 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 	@Override
 	protected void addRadioButtons(Composite buttonComposite) {
+		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
 		int i = 0;
 		Button selected = null;
 		radios = new Button[bug.getOperations().size()];
 		radioOptions = new Control[bug.getOperations().size()];
 		for (Iterator<Operation> it = bug.getOperations().iterator(); it.hasNext();) {
 			Operation o = it.next();
-			radios[i] = new Button(buttonComposite, SWT.RADIO);
+			radios[i] = toolkit.createButton(buttonComposite,"", SWT.RADIO);
 			radios[i].setFont(TEXT_FONT);
 			GridData radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 			if (!o.hasOptions() && !o.isInput())
@@ -212,8 +213,11 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				radioData.horizontalSpan = 1;
 				radioData.heightHint = 20;
 				radioData.widthHint = AbstractBugEditor.WRAP_LENGTH;
-				radioOptions[i] = new Combo(buttonComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
-						| SWT.READ_ONLY);
+				radioOptions[i] = new Combo(buttonComposite, SWT.NONE);
+//				radioOptions[i] = new Combo(buttonComposite, SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);
+//				radioOptions[i].setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+//				radioOptions[i] = new Combo(buttonComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
+//						| SWT.READ_ONLY);
 				radioOptions[i].setFont(TEXT_FONT);
 				radioOptions[i].setLayoutData(radioData);
 //				radioOptions[i].setBackground(background);
@@ -229,7 +233,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 				radioData.horizontalSpan = 1;
 				radioData.widthHint = 120;
-				radioOptions[i] = new Text(buttonComposite, SWT.BORDER | SWT.SINGLE);
+				radioOptions[i] = toolkit.createText(buttonComposite, "");//, SWT.SINGLE);
 				radioOptions[i].setFont(TEXT_FONT);
 				radioOptions[i].setLayoutData(radioData);
 //				radioOptions[i].setBackground(background);
@@ -256,6 +260,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 			i++;
 		}
+		toolkit.paintBordersFor(buttonComposite);
 	}
 
 	@Override
@@ -407,14 +412,15 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		GridData descriptionData = new GridData(GridData.FILL_HORIZONTAL);
 		descriptionData.horizontalSpan = 1;
 		descriptionData.grabExcessVerticalSpace = false;
-		descriptionComposite.setLayoutData(descriptionData);
+//		descriptionComposite.setLayoutData(descriptionData);
 		// End Description Area
 
 		section.setClient(descriptionComposite);
 		
-		FormText t = newLayout(descriptionComposite, 4, "Description:", HEADER);
-		t.addListener(SWT.FocusIn, new DescriptionListener());
-		t = newLayout(descriptionComposite, 4, bug.getDescription(), VALUE);
+//		FormText t = newLayout(descriptionComposite, 4, "Description:", HEADER);
+		
+//		t.addListener(SWT.FocusIn, new DescriptionListener());
+		FormText t = newLayout(descriptionComposite, 4, bug.getDescription(), VALUE);
 		t.setFont(COMMENT_FONT);
 		t.addListener(SWT.FocusIn, new DescriptionListener());
 
@@ -464,45 +470,55 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		FormText t = null;
 		for (Iterator<Comment> it = bug.getComments().iterator(); it.hasNext();) {
 			Comment comment = it.next();
-			String commentHeader = "Additional comment #" + comment.getNumber() + " from " + comment.getAuthorName()
-					+ " on " + df.format(comment.getCreated());
+			String commentHeader = "<b>"+comment.getNumber() + ": " + comment.getAuthorName()+", "+ df.format(comment.getCreated())+"</b>";
 			t = newLayout(addCommentsComposite, 4, commentHeader, HEADER);
 			t.addListener(SWT.FocusIn, new CommentListener(comment));
-			
-			
-			
 			t = newLayout(addCommentsComposite, 4, comment.getText(), VALUE);
 			t.setFont(COMMENT_FONT);
 			t.addListener(SWT.FocusIn, new CommentListener(comment));
-
+			Label spacer = toolkit.createLabel(addCommentsComposite, "");
+			GridData spacerGridData = new GridData();
+			spacerGridData.horizontalSpan = 4;
+			spacer.setLayoutData(spacerGridData);
 			// code for outline
 			texts.add(textsindex, t);
 			textHash.put(comment, t);
-			textsindex++;
+			textsindex++;			
 		}
 
-		// Additional Comments Text
-		Composite addCommentsTitleComposite = new Composite(addCommentsComposite, SWT.NONE);
-		GridLayout addCommentsTitleLayout = new GridLayout();
-		addCommentsTitleLayout.horizontalSpacing = 0;
-		addCommentsTitleLayout.marginWidth = 0;
-		addCommentsTitleComposite.setLayout(addCommentsTitleLayout);
-//		addCommentsTitleComposite.setBackground(background);
-		GridData addCommentsTitleData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		addCommentsTitleData.horizontalSpan = 4;
-		addCommentsTitleData.grabExcessVerticalSpace = false;
-		addCommentsTitleComposite.setLayoutData(addCommentsTitleData);
-		newLayout(addCommentsTitleComposite, 4, "Additional Comments:", HEADER).addListener(SWT.FocusIn,
-				new NewCommentListener());
-		addCommentsText = new Text(addCommentsComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
+		
+		
+		Section sectionAdditionalComments = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+		sectionAdditionalComments.setText(LABEL_SECTION_NEW_COMMENT);
+		sectionAdditionalComments.setExpanded(true);
+//		sectionAdditionalComments.setLayout(new GridLayout());
+//		GridData newCommentCommentLayoutData = new GridData();
+//		newCommentCommentLayoutData.widthHint = DESCRIPTION_WIDTH;
+//		sectionAdditionalComments.setLayoutData(newCommentCommentLayoutData);
+		sectionAdditionalComments.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		
+		sectionAdditionalComments.addExpansionListener(new IExpansionListener() {
+			public void expansionStateChanging(ExpansionEvent e) {
+				form.reflow(true);
+			}
+
+			public void expansionStateChanged(ExpansionEvent e) {
+				form.reflow(true);
+			}
+		});
+		
+
+		Composite newCommentsComposite = toolkit.createComposite(sectionAdditionalComments);		
+		newCommentsComposite.setLayout(new GridLayout());
+		addCommentsText = toolkit.createText(newCommentsComposite, bug.getNewComment(), SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
 		addCommentsText.setFont(COMMENT_FONT);
+		toolkit.paintBordersFor(newCommentsComposite);
 		GridData addCommentsTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		addCommentsTextData.horizontalSpan = 4;
 		addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
 		addCommentsTextData.heightHint = DESCRIPTION_HEIGHT;
 
 		addCommentsText.setLayoutData(addCommentsTextData);
-		addCommentsText.setText(bug.getNewComment());
+//		addCommentsText.setText(bug.getNewComment());
 		addCommentsText.addListener(SWT.KeyUp, new Listener() {
 
 			public void handleEvent(Event event) {
@@ -519,7 +535,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 		addCommentsTextBox = addCommentsText;
 		
-		this.createSeparatorSpace(addCommentsComposite);		
+		this.createSeparatorSpace(addCommentsComposite);
+		sectionAdditionalComments.setClient(newCommentsComposite);
 	}
 
 	@Override
@@ -530,7 +547,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		keywordsText.setFont(TEXT_FONT);
 		keywordsText.setEditable(false);
 //		keywordsText.setForeground(foreground);
-		keywordsText.setBackground(JFaceColors.getErrorBackground(display));
+//		keywordsText.setBackground(JFaceColors.getErrorBackground(display));
 		GridData keywordsData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		keywordsData.horizontalSpan = 2;
 		keywordsData.widthHint = 200;

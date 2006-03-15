@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -24,6 +26,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
@@ -58,16 +61,20 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.RetargetAction;
+import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormText;
@@ -77,7 +84,6 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.internal.help.WorkbenchHelpSystem;
-import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -97,6 +103,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	private static final String LABEL_SECTION_ATTRIBUTES = "Attributes";
 
 	protected static final String LABEL_SECTION_DESCRIPTION = "Description";
+	
+	protected static final String LABEL_SECTION_NEW_COMMENT = "New Comment";
 	
 	private FormToolkit toolkit;
 
@@ -340,25 +348,29 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	public void createPartControl(Composite parent) {
 		toolkit = new FormToolkit(parent.getDisplay());
 		form = toolkit.createScrolledForm(parent);
-		form.setText(getBug().getLabel());
-
-		// // editorComposite = new Composite(form.getBody(), SWT.NONE);
+		String truncatedSummary = getBug().getSummary();
+		int maxLength = 50;
+		if (truncatedSummary.length() > maxLength) {
+			truncatedSummary = truncatedSummary.substring(0, maxLength) + "...";
+		}
+		form.setText("Bugzilla Bug: "+truncatedSummary);		
+		
 		editorComposite = form.getBody();
 		editorComposite.setLayout(new GridLayout());
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		// GridLayout layout = new GridLayout();
-		// layout.marginHeight = 0;
-		// layout.marginWidth = 0;
-		// layout.verticalSpacing = 0;
-		// layout.horizontalSpacing = 0;
-		// editorComposite.setLayout(layout);
-
-		display = parent.getDisplay();
+//		display = parent.getDisplay();
 //		background = JFaceColors.getBannerBackground(display);
 //		foreground = JFaceColors.getBannerForeground(display);
 
-		createInfoArea(editorComposite);
+//		createInfoArea(editorComposite);
+
+
+		createContextMenu();
+		createAttributeLayout();
+		createDescriptionLayout(toolkit, form);
+		createCommentLayout(toolkit, form);
+		createButtonLayouts(toolkit, form.getBody());
 
 		WorkbenchHelpSystem.getInstance().setHelp(parent, IBugzillaConstants.EDITOR_PAGE_CONTEXT);
 
@@ -368,111 +380,63 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		getSite().setSelectionProvider(selectionProvider);
 	}
 
-	// protected Composite createTitleArea(Composite parent) {
-	// // Get the background color for the title area
-	//
-	// // Create the title area which will contain
-	// // a title, message, and image.
-	// Composite titleArea = new Composite(parent, SWT.NO_FOCUS);
-	// GridLayout layout = new GridLayout();
-	// layout.marginHeight = 0;
-	// layout.marginWidth = 0;
-	// layout.verticalSpacing = 0;
-	// layout.horizontalSpacing = 0;
-	// layout.numColumns = 2;
-	// titleArea.setLayout(layout);
-	// titleArea.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-	// titleArea.setBackground(background);
-	//
-	// // Message label
-	// titleLabel = new CLabel(titleArea, SWT.LEFT);
-	// JFaceColors.setColors(titleLabel, foreground, background);
-	// titleLabel.setFont(TITLE_FONT);
-	//
-	// final IPropertyChangeListener fontListener = new
-	// IPropertyChangeListener() {
-	// public void propertyChange(PropertyChangeEvent event) {
-	// if (JFaceResources.HEADER_FONT.equals(event.getProperty())) {
-	// titleLabel.setFont(TITLE_FONT);
-	// }
-	// }
-	// };
-	// titleLabel.addDisposeListener(new DisposeListener() {
-	// public void widgetDisposed(DisposeEvent event) {
-	// JFaceResources.getFontRegistry().removeListener(fontListener);
-	// }
-	// });
-	// JFaceResources.getFontRegistry().addListener(fontListener);
-	// GridData gd = new GridData(GridData.FILL_BOTH);
-	// titleLabel.setLayoutData(gd);
-	//
-	// // Title image
-	// Label titleImage = new Label(titleArea, SWT.LEFT);
-	// titleImage.setBackground(background);
-	// titleImage.setImage(WorkbenchImages.getImage(IDEInternalWorkbenchImages.IMG_OBJS_WELCOME_BANNER));
-	// gd = new GridData();
-	// gd.horizontalAlignment = GridData.END;
-	// titleImage.setLayoutData(gd);
-	// return titleArea;
-	// }
-
-	/**
-	 * Creates the part of the editor that contains the information about the
-	 * the bug.
-	 * 
-	 * @param parent
-	 *            The composite to put the info area into.
-	 * @return The info area composite.
-	 */
-	protected Composite createInfoArea(Composite parent) {
-
-		createContextMenu();
-
-		// scrolledComposite = new ScrolledComposite(parent, SWT.V_SCROLL |
-		// SWT.H_SCROLL);
-		// scrolledComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-		// if (getBug() == null) {
-		// // close();
-		// MessageDialog.openError(Display.getDefault().getActiveShell(),
-		// "Bugzilla Client Errror",
-		// "Could not resolve the requested bug, check Bugzilla server and
-		// version.");
-		//
-		// Composite composite = new Composite(parent, SWT.NULL);
-		// Label noBugLabel = new Label(composite, SWT.NULL);
-		// noBugLabel.setText("Could not resolve bug");
-		// return composite;
-		// }
-
-		createLayouts();
-
-		// this.scrolledComposite.setContent(editorComposite);
-		// Point p = editorComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT,
-		// true);
-		// this.scrolledComposite.setMinHeight(p.y);
-		// this.scrolledComposite.setMinWidth(p.x);
-		// this.scrolledComposite.setExpandHorizontal(true);
-		// this.scrolledComposite.setExpandVertical(true);
-		//
-		// // make the editor scroll properly with a scroll editor
-		// scrolledComposite.addControlListener(new ControlListener() {
-		// public void controlMoved(ControlEvent e) {
-		// // don't care when the control moved
-		// }
-		//
-		// public void controlResized(ControlEvent e) {
-		// scrolledComposite.getVerticalBar().setIncrement(scrollIncrement);
-		// scrolledComposite.getHorizontalBar().setIncrement(scrollIncrement);
-		// scrollVertPageIncrement = scrolledComposite.getClientArea().height;
-		// scrollHorzPageIncrement = scrolledComposite.getClientArea().width;
-		// scrolledComposite.getVerticalBar().setPageIncrement(scrollVertPageIncrement);
-		// scrolledComposite.getHorizontalBar().setPageIncrement(scrollHorzPageIncrement);
-		// }
-		// });
-
-		return editorComposite;
-	}
+//	/**
+//	 * Creates the part of the editor that contains the information about the
+//	 * the bug.
+//	 * 
+//	 * @param parent
+//	 *            The composite to put the info area into.
+//	 * @return The info area composite.
+//	 */
+//	protected Composite createInfoArea(Composite parent) {
+//
+//		createContextMenu();
+//
+//		// scrolledComposite = new ScrolledComposite(parent, SWT.V_SCROLL |
+//		// SWT.H_SCROLL);
+//		// scrolledComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+//
+//		// if (getBug() == null) {
+//		// // close();
+//		// MessageDialog.openError(Display.getDefault().getActiveShell(),
+//		// "Bugzilla Client Errror",
+//		// "Could not resolve the requested bug, check Bugzilla server and
+//		// version.");
+//		//
+//		// Composite composite = new Composite(parent, SWT.NULL);
+//		// Label noBugLabel = new Label(composite, SWT.NULL);
+//		// noBugLabel.setText("Could not resolve bug");
+//		// return composite;
+//		// }
+//
+//		createLayouts();
+//
+//		// this.scrolledComposite.setContent(editorComposite);
+//		// Point p = editorComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT,
+//		// true);
+//		// this.scrolledComposite.setMinHeight(p.y);
+//		// this.scrolledComposite.setMinWidth(p.x);
+//		// this.scrolledComposite.setExpandHorizontal(true);
+//		// this.scrolledComposite.setExpandVertical(true);
+//		//
+//		// // make the editor scroll properly with a scroll editor
+//		// scrolledComposite.addControlListener(new ControlListener() {
+//		// public void controlMoved(ControlEvent e) {
+//		// // don't care when the control moved
+//		// }
+//		//
+//		// public void controlResized(ControlEvent e) {
+//		// scrolledComposite.getVerticalBar().setIncrement(scrollIncrement);
+//		// scrolledComposite.getHorizontalBar().setIncrement(scrollIncrement);
+//		// scrollVertPageIncrement = scrolledComposite.getClientArea().height;
+//		// scrollHorzPageIncrement = scrolledComposite.getClientArea().width;
+//		// scrolledComposite.getVerticalBar().setPageIncrement(scrollVertPageIncrement);
+//		// scrolledComposite.getHorizontalBar().setPageIncrement(scrollHorzPageIncrement);
+//		// }
+//		// });
+//
+//		return editorComposite;
+//	}
 
 	/**
 	 * Create a context menu for this editor.
@@ -498,15 +462,15 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		getSite().registerContextMenu("#BugEditor", contextMenuManager, getSite().getSelectionProvider());
 	}
 
-	/**
-	 * Creates all of the layouts that display the information on the bug.
-	 */
-	protected void createLayouts() {
-		createAttributeLayout();
-		createDescriptionLayout(toolkit, form);
-		createCommentLayout(toolkit, form);
-		createButtonLayouts(toolkit, form.getBody());
-	}
+//	/**
+//	 * Creates all of the layouts that display the information on the bug.
+//	 */
+//	protected void createLayouts() {
+//		createAttributeLayout();
+//		createDescriptionLayout(toolkit, form);
+//		createCommentLayout(toolkit, form);
+//		createButtonLayouts(toolkit, form.getBody());
+//	}
 
 	/**
 	 * Creates the attribute layout, which contains most of the basic attributes
@@ -575,7 +539,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		String ccValue = null;
 
 		// Populate Attributes
-		for (Iterator<Attribute> it = getBug().getAttributes().iterator(); it.hasNext();) {
+		for (Iterator<Attribute> it = getBug().getAttributes().iterator(); it.hasNext();) {			
 			Attribute attribute = it.next();
 			String key = attribute.getParameterName();
 			String name = attribute.getName();
@@ -604,7 +568,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 					ccValue = "";
 			} else if (key.equals("bug_file_loc")) {
 				url = value;
-			} else if (key.equals("op_sys")) {
+			} else if (key.equals("op_sys")) {				
 //				newLayout(attributesComposite, 1, name, PROPERTY);
 				toolkit.createLabel(attributesComposite, name);
 //				oSCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);//SWT.NONE
@@ -781,7 +745,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			} else if (values.isEmpty()) {
 //				newLayout(attributesComposite, 1, name, PROPERTY);
 				toolkit.createLabel(attributesComposite, name);
-				toolkit.createLabel(attributesComposite, value);
+				toolkit.createLabel(attributesComposite, value);				
 //				newLayout(attributesComposite, 1, value, VALUE).addListener(SWT.FocusIn, new GenericListener());
 				currentCol += 2;
 			}
@@ -1016,7 +980,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			formText.setText(checkText(text), false, true);
 //			formText.setBackground(background);
 			data.horizontalIndent = HORZ_INDENT;
-			formText.setLayoutData(data);
+			data.widthHint = DESCRIPTION_WIDTH;
+			formText.setLayoutData(data);			
 //			formText.setEditable(false);
 //			formText.getCaret().setVisible(false);
 
@@ -1031,15 +996,31 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 				}
 			});
+			
+			formText.addHyperlinkListener(new HyperlinkAdapter() {
+				  public void linkActivated(HyperlinkEvent event) {
+					  try {
+						  // Perhaps should use TaskListUiUtil.openUrl instead?
+					  	URL url = new URL((String)event.getHref());
+						IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
+						
+							support.getExternalBrowser().openURL(url);
+						} catch (PartInitException e1) {
+							MessageDialog.openError(null, "Link error", "Could not open browser");
+						} catch (MalformedURLException e) {
+							MessageDialog.openError(null, "Link error", "Hyperlink address is malformed");
+						}
+				  }
+				 });
 
 			formText.setMenu(contextMenuManager.createContextMenu(formText));
 			resultText = formText;
 		} else if (style.equalsIgnoreCase(PROPERTY)) {
-			FormText formText = toolkit.createFormText(composite, false);//new StyledText(composite, SWT.MULTI | SWT.READ_ONLY);
+			FormText formText = toolkit.createFormText(composite, true);//new StyledText(composite, SWT.MULTI | SWT.READ_ONLY);
 //			formText.setFont(TEXT_FONT);
 			formText.setText(checkText(text), false, false);
 //			formText.setBackground(background);
-//			data.horizontalIndent = HORZ_INDENT;
+			data.horizontalIndent = HORZ_INDENT;
 //			formText.setLayoutData(data);
 //			StyleRange sr = new StyleRange(0, text.length(), foreground, background,
 //					SWT.BOLD);
@@ -1050,124 +1031,85 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			formText.setMenu(contextMenuManager.createContextMenu(formText));
 			resultText = formText;
 		} else {
-			Composite generalTitleGroup = toolkit.createComposite(composite);
-			generalTitleGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			generalTitleGroup.setLayoutData(data);
-			GridLayout generalTitleLayout = new GridLayout();
-			generalTitleLayout.numColumns = 2;
-			generalTitleLayout.marginWidth = 0;
-			generalTitleLayout.marginHeight = 9;
-			generalTitleGroup.setLayout(generalTitleLayout);
-//			generalTitleGroup.setBackground(background);
+			// For a description of how tags work see:
+			// http://www.eclipse.org/articles/Article-Forms/article.html
+			 StringBuffer buf = new StringBuffer();
+			 buf.append("<form>");
+			 buf.append("<p>");
+//			 buf.append("<span color=\"header\" font=\"header\">");
+			 buf.append(text);
+//			 buf.append("</span>");
+			 buf.append("</p>");
+			 buf.append("</form>");
+			 FormText formText = toolkit.createFormText(composite, true);
+			 formText.setWhitespaceNormalized(true);
 
-			Label image = toolkit.createLabel(generalTitleGroup, "");
-//			image.setBackground(background);
-			image.setImage(WorkbenchImages.getImage(IDEInternalWorkbenchImages.IMG_OBJS_WELCOME_ITEM));
+			 formText.setFont("header", JFaceResources.getDialogFont());
+			 formText.setFont("code", JFaceResources.getTextFont());
+			 formText.setText(buf.toString(), true, false);
 
-			GridData gd = new GridData(GridData.FILL_BOTH);
-			gd.verticalAlignment = GridData.VERTICAL_ALIGN_BEGINNING;
-			image.setLayoutData(gd);
-//			StyledText titleText = new StyledText(generalTitleGroup, SWT.MULTI | SWT.READ_ONLY);
-			FormText titleText = toolkit.createFormText(generalTitleGroup, true);//new StyledText(composite, SWT.MULTI | SWT.READ_ONLY);
-			titleText.setText(checkText(text), false, true);
-			titleText.setFont(HEADER_FONT);
-//			titleText.setBackground(background);
-//			StyleRange sr = new StyleRange(titleText.getOffsetAtLine(0), text.length(), foreground, background,
-//					SWT.BOLD);
-//			titleText.setStyleRange(sr);
-//			titleText.getCaret().setVisible(false);
-//			titleText.setEditable(false);
-			titleText.addSelectionListener(new SelectionAdapter() {
-
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					FormText c = (FormText) e.widget;
-//					if (c != null && c.getSelectionCount() > 0) {
-					if (c != null && c.canCopy()) {
-//						if (currentSelectedText != null) {
-							if (!c.equals(currentSelectedText)) {
-								currentSelectedText = c;							
-//								currentSelectedText.setSelectionRange(0, 0);
-							}
-//						}
-					}
-//					currentSelectedText = c;
-				}
-			});
-			// create context menu
-			generalTitleGroup.setMenu(contextMenuManager.createContextMenu(generalTitleGroup));
-			titleText.setMenu(contextMenuManager.createContextMenu(titleText));
-			image.setMenu(contextMenuManager.createContextMenu(image));
-//			addHyperlinks(titleText);
-			resultText = titleText;
+			 resultText = formText;
+			
 		}
+//		} else {
+//			Composite generalTitleGroup = toolkit.createComposite(composite);
+//			generalTitleGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+//			generalTitleGroup.setLayoutData(data);
+//			GridLayout generalTitleLayout = new GridLayout();
+//			generalTitleLayout.numColumns = 2;
+//			generalTitleLayout.marginWidth = 0;
+//			generalTitleLayout.marginHeight = 9;
+//			generalTitleGroup.setLayout(generalTitleLayout);
+////			generalTitleGroup.setBackground(background);
+//
+//			Label image = toolkit.createLabel(generalTitleGroup, "");
+////			image.setBackground(background);
+//			image.setImage(WorkbenchImages.getImage(IDEInternalWorkbenchImages.IMG_OBJS_WELCOME_ITEM));
+//
+//			GridData gd = new GridData(GridData.FILL_BOTH);
+//			gd.verticalAlignment = GridData.VERTICAL_ALIGN_BEGINNING;
+//			image.setLayoutData(gd);
+////			StyledText titleText = new StyledText(generalTitleGroup, SWT.MULTI | SWT.READ_ONLY);
+//			FormText titleText = toolkit.createFormText(generalTitleGroup, true);//new StyledText(composite, SWT.MULTI | SWT.READ_ONLY);
+////			titleText.setText(checkText(text), false, true);
+//			titleText.setText("<form>hello</form>", true, false);
+//			titleText.setFont(HEADER_FONT);
+//			titleText.setLayout(new TableWrapLayout());
+////			titleText.setBackground(background);
+////			StyleRange sr = new StyleRange(titleText.getOffsetAtLine(0), text.length(), foreground, background,
+////					SWT.BOLD);
+////			titleText.setStyleRange(sr);
+////			titleText.getCaret().setVisible(false);
+////			titleText.setEditable(false);
+//			titleText.addSelectionListener(new SelectionAdapter() {
+//
+//				@Override
+//				public void widgetSelected(SelectionEvent e) {
+//					FormText c = (FormText) e.widget;
+////					if (c != null && c.getSelectionCount() > 0) {
+//					if (c != null && c.canCopy()) {
+////						if (currentSelectedText != null) {
+//							if (!c.equals(currentSelectedText)) {
+//								currentSelectedText = c;							
+////								currentSelectedText.setSelectionRange(0, 0);
+//							}
+////						}
+//					}
+////					currentSelectedText = c;
+//				}
+//			});
+//			// create context menu
+//			generalTitleGroup.setMenu(contextMenuManager.createContextMenu(generalTitleGroup));
+//			titleText.setMenu(contextMenuManager.createContextMenu(titleText));
+//			image.setMenu(contextMenuManager.createContextMenu(image));
+////			addHyperlinks(titleText);
+//			resultText = titleText;
+//		}
 		composite.setMenu(contextMenuManager.createContextMenu(composite));
 		return resultText;
 	}
 
-	// /**
-	// * This creates the title header for the info area. Its style is similar
-	// to
-	// * one from calling the function <code>newLayout</code> with the style
-	// * <code>HEADER</code>.
-	// *
-	// * @param composite
-	// * The composite to put this text field into. Its layout style
-	// * should be a grid with columns.
-	// */
-	// protected void newAttributesLayout(Composite composite) {
-	// GridData data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-	// data.horizontalSpan = 4;
-	// Composite generalTitleGroup = new Composite(composite, SWT.NONE);
-	// generalTitleGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-	// generalTitleGroup.setLayoutData(data);
-	// GridLayout generalTitleLayout = new GridLayout();
-	// generalTitleLayout.numColumns = 3;
-	// generalTitleLayout.marginWidth = 0;
-	// generalTitleLayout.marginHeight = 9;
-	// generalTitleGroup.setLayout(generalTitleLayout);
-	// generalTitleGroup.setBackground(background);
-	//
-	// Label image = new Label(generalTitleGroup, SWT.NONE);
-	// image.setBackground(background);
-	// image.setImage(WorkbenchImages.getImage(IDEInternalWorkbenchImages.IMG_OBJS_WELCOME_ITEM));
-	//
-	// GridData gd = new GridData(GridData.FILL_BOTH);
-	// gd.verticalAlignment = GridData.VERTICAL_ALIGN_BEGINNING;
-	// image.setLayoutData(gd);
 
-	// generalTitleText = new StyledText(generalTitleGroup, SWT.MULTI |
-	// SWT.READ_ONLY);
-	// generalTitleText.setBackground(background);
-	// generalTitleText.getCaret().setVisible(false);
-	// generalTitleText.setEditable(false);
-	// generalTitleText.addSelectionListener(new SelectionAdapter() {
-	//
-	// @Override
-	// public void widgetSelected(SelectionEvent e) {
-	// StyledText c = (StyledText) e.widget;
-	// if (c != null && c.getSelectionCount() > 0) {
-	// if (currentSelectedText != null) {
-	// if (!c.equals(currentSelectedText)) {
-	// currentSelectedText.setSelectionRange(0, 0);
-	// }
-	// }
-	// }
-	// currentSelectedText = c;
-	// }
-	// });
-	// create context menu
-	// generalTitleGroup.setMenu(contextMenuManager.createContextMenu(generalTitleGroup));
-	// generalTitleText.setMenu(contextMenuManager.createContextMenu(generalTitleText));
-
-	// linkToBug = new Hyperlink(generalTitleGroup, SWT.MULTI | SWT.READ_ONLY);
-	// linkToBug.setBackground(background);
-
-	// setGeneralTitleText();
-
-	// image.setMenu(contextMenuManager.createContextMenu(image));
-	// composite.setMenu(contextMenuManager.createContextMenu(composite));
-	// }
 
 	/**
 	 * This refreshes the text in the title label of the info area (it contains
