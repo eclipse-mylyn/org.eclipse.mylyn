@@ -39,7 +39,7 @@ public class OpenCorrespondingTaskAction implements IViewActionDelegate {
 	}
 
 	public void run(IAction action) {
-		
+
 		if (action instanceof ObjectPluginAction) {
 			ObjectPluginAction objectAction = (ObjectPluginAction) action;
 			if (objectAction.getSelection() instanceof StructuredSelection) {
@@ -87,11 +87,15 @@ public class OpenCorrespondingTaskAction implements IViewActionDelegate {
 	}
 
 	private String getRepositoryUrlFromComment(String comment) {
-		int index = comment.indexOf(BugzillaRepositoryUtil.POST_ARGS_SHOW_BUG);
-		if (index != -1) {
-			return comment.substring(0, index);
-		} else {
+		if (comment == null) {
 			return null;
+		} else {
+			int index = comment.indexOf(BugzillaRepositoryUtil.POST_ARGS_SHOW_BUG);
+			if (index != -1) {
+				return comment.substring(0, index);
+			} else {
+				return null;
+			}
 		}
 	}
 
