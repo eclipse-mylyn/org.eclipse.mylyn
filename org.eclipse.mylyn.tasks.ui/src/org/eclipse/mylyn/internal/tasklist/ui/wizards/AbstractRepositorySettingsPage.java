@@ -14,6 +14,7 @@ package org.eclipse.mylar.internal.tasklist.ui.wizards;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -82,9 +83,13 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		passwordEditor.getTextControl().setEchoChar('*');
 		
 		if (repository != null) {			
+			try {
 			serverUrlEditor.setStringValue(repository.getUrl());
 			userNameEditor.setStringValue(repository.getUserName());
 			passwordEditor.setStringValue(repository.getPassword());
+			} catch (Throwable t) {
+				MylarStatusHandler.fail(t, "could not set field value for: " + repository, false);
+			}
 		}
 
 		createAdditionalControls(container);
