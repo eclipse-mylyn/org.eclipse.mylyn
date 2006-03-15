@@ -247,7 +247,7 @@ public class TaskListToolTipHandler {
 		 * Trap hover events to pop-up tooltip
 		 */
 		control.addMouseTrackListener(new MouseTrackAdapter() {
-
+ 
 			@Override
 			public void mouseExit(MouseEvent e) {
 				if (tipShell != null && !tipShell.isDisposed() && tipShell.isVisible()) {
