@@ -34,16 +34,18 @@ public class ResourceInterestUpdater {
 
 	public void addResourceToContext(final List<IResource> resources) {
 		try {
-			if (syncExec) {
-				internalAddResourceToContext(resources);
-			} else {
-				final IWorkbench workbench = PlatformUI.getWorkbench();
-				if (!workbench.isClosing() && !workbench.getDisplay().isDisposed()) {
-					workbench.getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							internalAddResourceToContext(resources);
-						}
-					}); 
+			if (!resources.isEmpty()) {
+				if (syncExec) {
+					internalAddResourceToContext(resources);
+				} else {
+					final IWorkbench workbench = PlatformUI.getWorkbench();
+					if (!workbench.isClosing() && !workbench.getDisplay().isDisposed()) {
+						workbench.getDisplay().asyncExec(new Runnable() {
+							public void run() {
+								internalAddResourceToContext(resources);
+							}
+						});
+					}
 				}
 			}
 		} catch (Throwable t) {
