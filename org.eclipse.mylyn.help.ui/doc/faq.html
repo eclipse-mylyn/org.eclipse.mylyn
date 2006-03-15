@@ -16,14 +16,16 @@
 		<li><a href="#setup-linux-browser">Configuring Eclipse's Internal Browser on Linux</a>&nbsp; 
 		</li>
 	</ul>
-	<p><b>Task Management and Bugzilla</b></p>
+	<p><b>Task Management and Repository Connectors</b></p>
 	<ul>
 		<li><a href="#repositories-unsupported">What if Mylar doesn't 
 		support my task/bug/issue tracker?</a></li>
-		<li><a href="#upgrading-repositories">How do I upgrade to multiple task repository support?</a>
+		<li><a href="#upgrading-repositories">How do I upgrade to multiple task repository support?</a> 
 		</li>
 		<li><a href="#versions-repositories">Why is only one task appearing in Bugzilla queries?</a>
 		</li>
+		<li><a href="#repositories-jira-config">Is there any configuration 
+		needed to make Mylar work with my JIRA repository?</a></li>
 	</ul>
 	<p><b>Java Development</b></p>
 	<ul>
@@ -262,11 +264,20 @@ on the corresponding dialog, since this URL will be used for the migration.</li>
 </ul>
 	<hr>
 	<p>&nbsp;</p>
-<h3><a name="versions-repositories">Why is only one task appearing in Bugzilla queries?</a></h3>
+<h3><a name="versions-repositories">Why is only one task appearing in Bugzilla 
+queries?</a></h3>
 	<p>This is a symptom of the wrong Bugzilla version selected in your Mylar 
 	Bugzilla preferences ( Window -&gt; Preferences -&gt; Mylar -&gt; Bugzilla Client ). 
-	For example, if you are connecting to the
-	Eclipse.org Bugzilla then the 2.20 option must be selected.</p>
+	For example, if you are connecting to the Eclipse.org Bugzilla then the 2.20 
+	option must be selected.</p>
+	<hr>
+<h3>&nbsp;</h3>
+<h3><a name="repositories-jira-config">Is there any configuration needed to make 
+Mylar work with my JIRA repository?</a></h3>
+	<p>Yes, JIRA SOAP/RPC services have to be running on the server.&nbsp; For 
+	additional details see the Requirements at:
+	<a href="http://jira-dashboard.tigris.org/">
+	http://jira-dashboard.tigris.org/</a> </p>
 	<hr>
 <p>&nbsp;</p>
 	<h3><a name="filtering-declarations">How do I stop declarations from showing up in the Package Explorer?</a></h3>
