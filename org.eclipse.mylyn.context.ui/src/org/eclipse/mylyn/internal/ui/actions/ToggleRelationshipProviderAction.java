@@ -30,10 +30,6 @@ import org.eclipse.swt.widgets.MenuItem;
  */
 public class ToggleRelationshipProviderAction extends Action implements IMenuCreator {
 
-	// private final String PREFIX =
-	// "org.eclipse.mylar.internal.ui.relatedElements.providers";
-	// private String prefId = "org.eclipse.mylar.ui.relatedElements.providers";
-
 	private static final String LABEL_DEGREE_OF_SEPARATION = "Degree of Separation:";
 
 	public static final String ID = "org.eclipse.mylar.ui.actions.active.search.toggle";
