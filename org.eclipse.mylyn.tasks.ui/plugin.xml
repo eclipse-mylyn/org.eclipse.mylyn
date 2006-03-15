@@ -302,6 +302,14 @@
          </description>
      </colorDefinition>
    </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.eclipse.mylar.internal.tasklist.ui.PlanningPerspectiveFactory"
+            icon="icons/eview16/task-activity.gif"
+            id="org.eclipse.mylar.tasklist.ui.perspectives.planning"
+            name="Planning"/>
+   </extension>
   
 </plugin>
 
