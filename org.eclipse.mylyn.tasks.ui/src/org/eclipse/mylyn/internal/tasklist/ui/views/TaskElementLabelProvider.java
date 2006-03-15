@@ -141,7 +141,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		} else if (element instanceof AbstractQueryHit) {
 			return getBackground(((AbstractQueryHit)element).getCorrespondingTask());
 		}
-		return TaskListColorsAndFonts.BACKGROUND_WHITE;
+		return null;
+//		return Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
 	} 
 
 	public Font getFont(Object element) {

@@ -21,8 +21,6 @@ import org.eclipse.swt.widgets.Display;
  */
 public class TaskListColorsAndFonts {
 
-	public static final Color BACKGROUND_WHITE = new Color(Display.getDefault(), 255, 255, 255);
-
 	public static final Color BACKGROUND_ARCHIVE = new Color(Display.getDefault(), 225, 226, 246);
 
 	public static final Color COLOR_GRAY_LIGHT = new Color(Display.getDefault(), 170, 170, 170);
@@ -43,7 +41,6 @@ public class TaskListColorsAndFonts {
 	 * NOTE: disposal of JFaceResources fonts handled by registry.
 	 */
 	public static void dispose() {
-		BACKGROUND_WHITE.dispose();
 		BACKGROUND_ARCHIVE.dispose();
 		COLOR_GRAY_LIGHT.dispose();
 		COLOR_TASK_COMPLETED.dispose();
