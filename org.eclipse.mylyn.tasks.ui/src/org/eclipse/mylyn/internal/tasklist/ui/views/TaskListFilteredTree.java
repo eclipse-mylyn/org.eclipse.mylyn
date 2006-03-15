@@ -39,8 +39,10 @@ public class TaskListFilteredTree extends FilteredTree {
 
 	private static final String LABEL_FIND = " Find:";
 
-	private static final String LABEL_NO_ACTIVE = "          <no active task>";
+//	private static final String LABEL_NO_ACTIVE = "          <no active task>";
 	
+	private static final String LABEL_NO_ACTIVE = "     <no active task>";
+		
 	private Job refreshJob;
 	
 	private Hyperlink activeTaskLabel;
