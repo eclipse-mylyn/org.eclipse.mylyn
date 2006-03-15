@@ -31,7 +31,7 @@ public class MylarStatusHandler {
 	private static boolean dumpErrors = false;
 
 	private static final String ERROR_MESSAGE = "Please report the following error by following the bugs link at:\n"
-			+ "https://eclipse.org/mylar\n\n"
+			+ "http://eclipse.org/mylar\n\n"
 			+ "For details on this error please open the PDE Runtime -> Error Log view";
 
 	public static PrintStream logStream = null;
