@@ -97,7 +97,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 
 		container.setText("Open Repository Tasks With");
 		reportEditor = new Button(container, SWT.RADIO);
-		reportEditor.setText("Bug editor");
+		reportEditor.setText("Editor if available (Recommended)");
 		reportEditor.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPORT_OPEN_EDITOR));
 		reportInternal = new Button(container, SWT.RADIO);
 		reportInternal.setText("Internal browser");
@@ -257,7 +257,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 	// reference: org.eclipse.team.internal.ui.synchronize.ConfigureSynchronizeScheduleComposite
 	private void createTaskRefreshScheduleGroup(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		group.setText("Refresh Schedule");
+		group.setText("Repository Refresh");
 		group.setLayout(new GridLayout(1, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -266,7 +266,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 			final GridData gridData = new GridData();
 			gridData.horizontalSpan = 2;
 			userRefreshOnly.setLayoutData(gridData);
-			userRefreshOnly.setText("Do not schedule periodic background synchronization");
+			userRefreshOnly.setText("Do not schedule background synchronization");
 			userRefreshOnly.setSelection(!getPreferenceStore().getBoolean(
 					TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
 			userRefreshOnly.addSelectionListener(new SelectionListener() {
@@ -284,7 +284,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 			final GridData gridData = new GridData();
 			gridData.horizontalSpan = 2;
 			enableBackgroundRefresh.setLayoutData(gridData);
-			enableBackgroundRefresh.setText("Use the following schedule:");
+			enableBackgroundRefresh.setText("Use the following schedule (Experimental)");
 			enableBackgroundRefresh.setSelection(getPreferenceStore().getBoolean(
 					TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
 			enableBackgroundRefresh.addSelectionListener(new SelectionListener() {

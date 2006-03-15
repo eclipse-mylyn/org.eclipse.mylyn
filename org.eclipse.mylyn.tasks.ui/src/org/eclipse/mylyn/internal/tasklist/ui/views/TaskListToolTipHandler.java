@@ -207,12 +207,12 @@ public class TaskListToolTipHandler {
 				repositoryTask = (AbstractRepositoryTask) element;
 			}
 			if (repositoryTask != null) {
-				AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
-						repositoryTask.getRepositoryKind());
+				AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager()
+						.getRepositoryConnector(repositoryTask.getRepositoryKind());
 				if (connector != null) {
 					return MylarTaskListPlugin.getDefault().getBrandingIcons().get(connector);
 				}
-			} 
+			}
 		}
 		return null;
 	}
@@ -247,10 +247,12 @@ public class TaskListToolTipHandler {
 		 * Trap hover events to pop-up tooltip
 		 */
 		control.addMouseTrackListener(new MouseTrackAdapter() {
- 
+
 			@Override
 			public void mouseExit(MouseEvent e) {
-				if (tipShell != null && !tipShell.isDisposed() && tipShell.isVisible()) {
+				// TODO: can these conditions be simplified?  see bug 131776
+				if (tipShell != null && !tipShell.isDisposed() && tipShell.getDisplay() != null
+						&& !tipShell.getDisplay().isDisposed() && tipShell.isVisible()) {
 					tipShell.setVisible(false);
 				}
 				tipWidget = null;
