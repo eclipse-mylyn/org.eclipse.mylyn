@@ -138,9 +138,11 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			if (highlighter != null) {
 				return highlighter.getHighlightColor(task);
 			}
+		} else if (element instanceof AbstractQueryHit) {
+			return getBackground(((AbstractQueryHit)element).getCorrespondingTask());
 		}
 		return TaskListColorsAndFonts.BACKGROUND_WHITE;
-	}
+	} 
 
 	public Font getFont(Object element) {
 		if (!(element instanceof ITaskListElement)) {
