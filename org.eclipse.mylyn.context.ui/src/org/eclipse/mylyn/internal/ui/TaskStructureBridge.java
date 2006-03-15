@@ -31,6 +31,7 @@ public class TaskStructureBridge implements IMylarStructureBridge {
 	public static final String CONTENT_TYPE = "meta/task";
 	
 	public void setParentBridge(IMylarStructureBridge bridge) {
+		// ignore
 	}
 
 	public String getContentType() {
