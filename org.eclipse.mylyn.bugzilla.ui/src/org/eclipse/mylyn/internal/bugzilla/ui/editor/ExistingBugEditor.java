@@ -48,6 +48,7 @@ import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -55,7 +56,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -210,7 +210,9 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				radioData.horizontalSpan = 1;
 				radioData.heightHint = 20;
 				radioData.widthHint = AbstractBugEditor.WRAP_LENGTH;
-				radioOptions[i] = new Combo(buttonComposite, SWT.NULL);
+				// radioOptions[i] = new Combo(buttonComposite, SWT.NULL);
+				radioOptions[i] = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY);
+				toolkit.adapt(radioOptions[i], true, true);
 				// radioOptions[i] = new Combo(buttonComposite, SWT.MULTI |
 				// SWT.V_SCROLL | SWT.READ_ONLY);
 				// radioOptions[i].setData(FormToolkit.KEY_DRAW_BORDER,
@@ -225,10 +227,10 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				Object[] a = o.getOptionNames().toArray();
 				Arrays.sort(a);
 				for (int j = 0; j < a.length; j++) {
-					((Combo) radioOptions[i]).add((String) a[j]);
+					((CCombo) radioOptions[i]).add((String) a[j]);
 				}
-				((Combo) radioOptions[i]).select(0);
-				((Combo) radioOptions[i]).addSelectionListener(new RadioButtonListener());
+				((CCombo) radioOptions[i]).select(0);
+				((CCombo) radioOptions[i]).addSelectionListener(new RadioButtonListener());
 			} else if (o.isInput()) {
 				radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 				radioData.horizontalSpan = 1;
@@ -249,9 +251,9 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				radios[i].setSelection(true);
 				if (o.hasOptions() && o.getOptionSelection() != null) {
 					int j = 0;
-					for (String s : ((Combo) radioOptions[i]).getItems()) {
+					for (String s : ((CCombo) radioOptions[i]).getItems()) {
 						if (s.compareTo(o.getOptionSelection()) == 0) {
-							((Combo) radioOptions[i]).select(j);
+							((CCombo) radioOptions[i]).select(j);
 						}
 						j++;
 					}
@@ -445,6 +447,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		// addCommentsComposite.setBackground(background);
 		GridData addCommentsData = new GridData(GridData.FILL_BOTH);
 		addCommentsData.horizontalSpan = 1;
+		addCommentsData.widthHint = DESCRIPTION_WIDTH;
+		addCommentsData.heightHint = DESCRIPTION_HEIGHT;
 		addCommentsData.grabExcessVerticalSpace = false;
 		addCommentsComposite.setLayoutData(addCommentsData);
 		// End Additional (read-only) Comments Area
@@ -493,14 +497,16 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 		Composite newCommentsComposite = toolkit.createComposite(sectionAdditionalComments);
 		newCommentsComposite.setLayout(new GridLayout());
+		newCommentsComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		addCommentsText = toolkit.createText(newCommentsComposite, bug.getNewComment(), SWT.MULTI | SWT.V_SCROLL
 				| SWT.WRAP);
 		addCommentsText.setFont(COMMENT_FONT);
 		toolkit.paintBordersFor(newCommentsComposite);
 		GridData addCommentsTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		addCommentsTextData.horizontalSpan = 4;
+		// addCommentsTextData.horizontalSpan = 4;
 		addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
 		addCommentsTextData.heightHint = DESCRIPTION_HEIGHT;
+		// addCommentsTextData.grabExcessHorizontalSpace = true;
 
 		addCommentsText.setLayoutData(addCommentsTextData);
 		// addCommentsText.setText(bug.getNewComment());
@@ -849,7 +855,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 					ExistingBugEditor.this.changeDirtyStatus(true);
 				} else if (e.widget == radioOptions[i]) {
 					Operation o = bug.getOperation(radios[i].getText());
-					o.setOptionSelection(((Combo) radioOptions[i]).getItem(((Combo) radioOptions[i])
+					o.setOptionSelection(((CCombo) radioOptions[i]).getItem(((CCombo) radioOptions[i])
 							.getSelectionIndex()));
 
 					if (bug.getSelectedOperation() != null)

@@ -48,6 +48,7 @@ import org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -56,7 +57,6 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -123,11 +123,11 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 	public static final Font TEXT_FONT = JFaceResources.getDefaultFont();
 
-	public static final Font COMMENT_FONT = JFaceResources.getFontRegistry().get(JFaceResources.TEXT_FONT);
+	public static final Font COMMENT_FONT = JFaceResources.getDefaultFont();// JFaceResources.getFontRegistry().get(JFaceResources.TEXT_FONT);
 
 	public static final Font HEADER_FONT = JFaceResources.getDefaultFont();
 
-	public static final int DESCRIPTION_WIDTH = 79 * 7;
+	public static final int DESCRIPTION_WIDTH = 79 * 11;// 7
 
 	public static final int DESCRIPTION_HEIGHT = 10 * 14;
 
@@ -162,19 +162,19 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 	protected final int HORZ_INDENT = 0;
 
-	protected Combo oSCombo;
+	protected CCombo oSCombo;
 
-	protected Combo versionCombo;
+	protected CCombo versionCombo;
 
-	protected Combo platformCombo;
+	protected CCombo platformCombo;
 
-	protected Combo priorityCombo;
+	protected CCombo priorityCombo;
 
-	protected Combo severityCombo;
+	protected CCombo severityCombo;
 
-	protected Combo milestoneCombo;
+	protected CCombo milestoneCombo;
 
-	protected Combo componentCombo;
+	protected CCombo componentCombo;
 
 	protected Text urlText;
 
@@ -247,7 +247,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 	protected List<ISelectionChangedListener> selectionChangedListeners = new ArrayList<ISelectionChangedListener>();
 
-	protected HashMap<Combo, String> comboListenerMap = new HashMap<Combo, String>();
+	protected HashMap<CCombo, String> comboListenerMap = new HashMap<CCombo, String>();
 
 	private IBugzillaReportSelection lastSelected = null;
 
@@ -588,7 +588,10 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 				toolkit.createLabel(attributesComposite, name);
 				// oSCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND |
 				// SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);//SWT.NONE
-				oSCombo = new Combo(attributesComposite, SWT.NONE | SWT.READ_ONLY);
+				oSCombo = new CCombo(attributesComposite, SWT.FLAT | SWT.READ_ONLY);
+				// oSCombo = new Combo(attributesComposite, SWT.FLAT |
+				// SWT.READ_ONLY);
+				toolkit.adapt(oSCombo, true, true);
 				oSCombo.setFont(TEXT_FONT);
 				oSCombo.setLayoutData(data);
 				// oSCombo.setBackground(background);
@@ -607,12 +610,12 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 				comboListenerMap.put(oSCombo, name);
 				oSCombo.addListener(SWT.FocusIn, new GenericListener());
 				currentCol += 2;
-				toolkit.paintBordersFor(oSCombo);
 			} else if (key.equals("version")) {
 				// newLayout(attributesComposite, 1, name, PROPERTY);
 				toolkit.createLabel(attributesComposite, name);
-				versionCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
+				versionCombo = new CCombo(attributesComposite, SWT.FLAT | SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
 						| SWT.READ_ONLY);
+				toolkit.adapt(versionCombo, true, true);
 				versionCombo.setFont(TEXT_FONT);
 				versionCombo.setLayoutData(data);
 				// versionCombo.setBackground(background);
@@ -630,8 +633,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			} else if (key.equals("priority")) {
 				// newLayout(attributesComposite, 1, "Priority", PROPERTY);
 				toolkit.createLabel(attributesComposite, name);
-				priorityCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
-						| SWT.READ_ONLY);
+				priorityCombo = new CCombo(attributesComposite, SWT.FLAT | SWT.V_SCROLL | SWT.READ_ONLY);
+				toolkit.adapt(priorityCombo, true, true);
 				priorityCombo.setFont(TEXT_FONT);
 				priorityCombo.setLayoutData(data);
 				// priorityCombo.setBackground(background);
@@ -649,9 +652,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			} else if (key.equals("bug_severity")) {
 				// newLayout(attributesComposite, 1, name, PROPERTY);
 				toolkit.createLabel(attributesComposite, name);
-				severityCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
-						| SWT.READ_ONLY);
-
+				severityCombo = new CCombo(attributesComposite, SWT.FLAT | SWT.READ_ONLY);
+				toolkit.adapt(severityCombo, true, true);
 				severityCombo.setFont(TEXT_FONT);
 				severityCombo.setLayoutData(data);
 				// severityCombo.setBackground(background);
@@ -669,9 +671,9 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			} else if (key.equals("target_milestone")) {
 				// newLayout(attributesComposite, 1, name, PROPERTY);
 				toolkit.createLabel(attributesComposite, name);
-				milestoneCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
-						| SWT.READ_ONLY);
-
+				milestoneCombo = new CCombo(attributesComposite, SWT.FLAT | SWT.NO_BACKGROUND | SWT.MULTI
+						| SWT.V_SCROLL | SWT.READ_ONLY);
+				toolkit.adapt(milestoneCombo, true, true);
 				milestoneCombo.setFont(TEXT_FONT);
 				milestoneCombo.setLayoutData(data);
 				// milestoneCombo.setBackground(background);
@@ -689,9 +691,9 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			} else if (key.equals("rep_platform")) {
 				// newLayout(attributesComposite, 1, name, PROPERTY);
 				toolkit.createLabel(attributesComposite, name);
-				platformCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
+				platformCombo = new CCombo(attributesComposite, SWT.FLAT | SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
 						| SWT.READ_ONLY);
-
+				toolkit.adapt(platformCombo, true, true);
 				platformCombo.setFont(TEXT_FONT);
 				platformCombo.setLayoutData(data);
 				// platformCombo.setBackground(background);
@@ -739,9 +741,9 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			} else if (key.equals("component")) {
 				// newLayout(attributesComposite, 1, name, PROPERTY);
 				toolkit.createLabel(attributesComposite, name);
-				componentCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
-						| SWT.READ_ONLY);
-
+				componentCombo = new CCombo(attributesComposite, SWT.FLAT | SWT.NO_BACKGROUND | SWT.MULTI
+						| SWT.V_SCROLL | SWT.READ_ONLY);
+				toolkit.adapt(componentCombo, true, true);
 				componentCombo.setFont(TEXT_FONT);
 				componentCombo.setLayoutData(data);
 				// componentCombo.setBackground(background);
@@ -1414,8 +1416,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	}
 
 	public void handleEvent(Event event) {
-		if (event.widget instanceof Combo) {
-			Combo combo = (Combo) event.widget;
+		if (event.widget instanceof CCombo) {
+			CCombo combo = (CCombo) event.widget;
 			if (comboListenerMap.containsKey(combo)) {
 				String sel = combo.getItem(combo.getSelectionIndex());
 				Attribute attribute = getBug().getAttribute(comboListenerMap.get(combo));
