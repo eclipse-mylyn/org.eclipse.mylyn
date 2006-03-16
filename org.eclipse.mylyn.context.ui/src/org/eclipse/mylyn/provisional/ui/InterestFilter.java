@@ -60,11 +60,16 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 				if (!bridge.canFilter(element)) {
 					return true;
 				}
-				if (isImplicitlyInteresting(element, bridge))
+				if (isImplicitlyInteresting(element, bridge)) {
 					return true;
-
-				String handle = bridge.getHandleIdentifier(element);
-				node = MylarPlugin.getContextManager().getElement(handle);
+				}
+				 
+				if (!element.getClass().getName().equals("java.lang.Object")) {
+					String handle = bridge.getHandleIdentifier(element);
+					node = MylarPlugin.getContextManager().getElement(handle);
+				} else {
+					return true;
+				}
 			}
 			if (node != null) {
 				if (node.getInterest().isPredicted()) {

@@ -35,6 +35,7 @@ import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
 import org.eclipse.pde.internal.core.text.build.BuildEntry;
 import org.eclipse.pde.internal.core.text.plugin.PluginObjectNode;
+import org.eclipse.pde.internal.ui.editor.PDEFormPage;
 import org.eclipse.pde.internal.ui.editor.plugin.ManifestEditor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
@@ -206,9 +207,6 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 		return null;
 	}
 
-	/**
-	 * @see org.eclipse.mylar.provisional.core.IMylarStructureBridge#getName(java.lang.Object)
-	 */
 	public String getName(Object object) {
 		if (object instanceof PluginObjectNode) {
 			PluginObjectNode node = (PluginObjectNode) object;
@@ -226,8 +224,6 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.provisional.core.IMylarStructureBridge#canBeLandmark(Object)
-	 * 
 	 * TODO: make a non-handle based test
 	 */
 	public boolean canBeLandmark(String handle) {
@@ -238,12 +234,9 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 		}
 	}
 
-	/**
-	 * @see org.eclipse.mylar.provisional.core.IMylarStructureBridge#acceptsObject(java.lang.Object)
-	 */
 	public boolean acceptsObject(Object object) {
 		// we only accept PluginObjectNodes and plugin.xml Files
-		if (object instanceof PluginObjectNode || object instanceof BuildEntry) {
+		if (object instanceof PluginObjectNode || object instanceof BuildEntry || object instanceof PDEFormPage) {
 			return true;
 		} else if (object instanceof XmlNodeHelper) {
 			if (((XmlNodeHelper) object).getFilename().endsWith("plugin.xml"))
@@ -256,23 +249,14 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 		return false;
 	}
 
-	/**
-	 * @see org.eclipse.mylar.provisional.core.IMylarStructureBridge#canFilter(java.lang.Object)
-	 */
 	public boolean canFilter(Object element) {
 		return true;
 	}
 
-	/**
-	 * @see org.eclipse.mylar.provisional.core.IMylarStructureBridge#isDocument(java.lang.String)
-	 */
 	public boolean isDocument(String handle) {
 		return handle.indexOf(';') == -1;
 	}
 
-	/**
-	 * @see org.eclipse.mylar.provisional.core.IMylarStructureBridge#getHandleForMarker(org.eclipse.ui.views.markers.internal.ProblemMarker)
-	 */
 	public String getHandleForOffsetInObject(Object resource, int offset) {
 		if (resource == null)
 			return null;
