@@ -9,6 +9,7 @@
          point="org.eclipse.ui.startup">
    </extension>   
    
+   <!--
    <extension point="org.eclipse.ui.newWizards">
       <wizard
             category="org.eclipse.mylar.wizards"
@@ -18,7 +19,8 @@
             name="Usage Feedback">
       </wizard>
    </extension>
-   
+   -->
+    
    <extension point="org.eclipse.ui.preferencePages">
       <page 
          name="Monitor"
