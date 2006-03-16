@@ -41,7 +41,7 @@ public class TaskList {
 	
 	private Set<AbstractTaskContainer> categories;
 
-	private List<AbstractRepositoryQuery> queries;
+	private Set<AbstractRepositoryQuery> queries;
 
 	private List<ITask> activeTasks;
 		
@@ -57,7 +57,7 @@ public class TaskList {
 		archiveContainer = new TaskArchive(this);
 		rootCategory = new TaskCategory(LABEL_ROOT, this);
 		categories = new HashSet<AbstractTaskContainer>();
-		queries = new ArrayList<AbstractRepositoryQuery>();
+		queries = new HashSet<AbstractRepositoryQuery>();
 		activeTasks = new ArrayList<ITask>();
 		
 		categories.add(archiveContainer);
@@ -289,7 +289,7 @@ public class TaskList {
 		return included;
 	}
 
-	public List<AbstractRepositoryQuery> getQueries() {
+	public Set<AbstractRepositoryQuery> getQueries() {
 		return queries;
 	}
 
@@ -415,6 +415,20 @@ public class TaskList {
 			}
 		}
 		return queriesForHandle;
+	}
+	/**
+	 *  return all queries for the given repository url
+	 */
+	public Set<AbstractRepositoryQuery> getRepositoryQueries(String repositoryUrl) {
+		Set<AbstractRepositoryQuery> repositoryQueries = new HashSet<AbstractRepositoryQuery>();
+		if (repositoryUrl != null) {
+			for (AbstractRepositoryQuery query : queries) {
+				if (query.getRepositoryUrl().equals(repositoryUrl)) {
+					repositoryQueries.add(query);
+				}
+			}
+		}
+		return repositoryQueries;
 	}
 
 	/** if handle == null or no query hits found an empty set is returned **/

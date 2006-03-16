@@ -142,7 +142,7 @@ public class TaskListManagerTest extends TestCase {
 		AbstractRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1", manager.getTaskList());
 		manager.getTaskList().addQuery(query);
 
-		AbstractRepositoryQuery readQuery = manager.getTaskList().getQueries().get(0);
+		AbstractRepositoryQuery readQuery = manager.getTaskList().getQueries().iterator().next();
 		assertEquals(query, readQuery);
 
 		manager.getTaskList().deleteQuery(query);
@@ -251,7 +251,7 @@ public class TaskListManagerTest extends TestCase {
 //		manager.setTaskList(list);
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getQueries().size());
-		BugzillaRepositoryQuery readQuery = (BugzillaRepositoryQuery) manager.getTaskList().getQueries().get(0);
+		BugzillaRepositoryQuery readQuery = (BugzillaRepositoryQuery) manager.getTaskList().getQueries().iterator().next();
 		assertTrue(readQuery.isCustomQuery());
 	}
 
@@ -266,7 +266,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.resetTaskList();
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getQueries().size());
-		AbstractRepositoryQuery readQuery = manager.getTaskList().getQueries().get(0);
+		AbstractRepositoryQuery readQuery = manager.getTaskList().getQueries().iterator().next();
 		assertEquals(query.getQueryUrl(), readQuery.getQueryUrl());
 		assertEquals(query.getRepositoryUrl(), readQuery.getRepositoryUrl());
 		assertEquals("repositoryUrl", readQuery.getRepositoryUrl());

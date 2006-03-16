@@ -74,7 +74,7 @@ public class TaskActivityTimingTest extends TestCase {
 		MylarTaskListPlugin.getTaskListManager().activateTask(task1);
 		Thread.sleep(SLEEP_NOTIMEOUT);
 		MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
-		assertTrue("elapsed: " + task1.getElapsedTime(), task1.getElapsedTime() >= SLEEP_NOTIMEOUT);
+		assertTrue("elapsed: " + task1.getElapsedTime(), task1.getElapsedTime() >= SLEEP_NOTIMEOUT - 2*SLOP);
 	}
 
 	public void testTimerMap() throws InterruptedException {
