@@ -35,6 +35,8 @@ public class TaskListImages {
 
 	private static final String T_TOOL = "etool16";
 
+	private static final String T_WIZBAN = "wizban";
+	
 	public static final Point SIZE = new Point(16, 16);
 
 	private static final URL baseURL = MylarTaskListPlugin.getDefault().getBundle().getEntry("/icons/");
@@ -164,6 +166,8 @@ public class TaskListImages {
 
 	public static final ImageDescriptor CALENDAR = create(T_EVIEW, "task-activity.gif");
 
+	public static final ImageDescriptor BANNER_REPOSITORY = create(T_WIZBAN, "banner-repository.gif");
+	
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));

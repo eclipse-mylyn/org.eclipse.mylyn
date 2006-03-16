@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.tasklist.ui.wizards;
 
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.ui.INewWizard;
 
@@ -26,6 +27,11 @@ public abstract class AbstractRepositoryClientWizard extends Wizard implements I
 
 	protected AbstractRepositoryConnector repositoryClient;
 
+	public AbstractRepositoryClientWizard() {
+		super();
+		setDefaultPageImageDescriptor(TaskListImages.BANNER_REPOSITORY);
+	} 
+	
 	public void setRepositoryClient(AbstractRepositoryConnector repository) {
 		this.repositoryClient = repository;
 	}

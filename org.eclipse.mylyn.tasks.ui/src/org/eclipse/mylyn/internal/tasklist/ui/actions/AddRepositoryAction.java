@@ -28,11 +28,12 @@ import org.eclipse.ui.PlatformUI;
  */
 public class AddRepositoryAction extends Action {
 
+	private static final String TITLE = "Add Task Repository";
 	private static final String ID = "org.eclipse.mylar.tasklist.repositories.add";
 
 	public AddRepositoryAction() {
 		setImageDescriptor(TaskListImages.REPOSITORY_NEW);
-		setText("Add Repository");
+		setText(TITLE);
 		setId(ID);
 	}
 
@@ -47,7 +48,7 @@ public class AddRepositoryAction extends Action {
 			if (wizard != null && shell != null && !shell.isDisposed()) {
 				WizardDialog dialog = new WizardDialog(shell, wizard);
 				dialog.create();
-				dialog.getShell().setText("Add New Task Repository");
+				dialog.getShell().setText(TITLE);
 				// dialog.getShell().setText("Mylar Tasks");
 				dialog.setBlockOnOpen(true);
 				if (dialog.open() == Dialog.CANCEL) {
