@@ -32,7 +32,7 @@ public class TaskListTableSorter extends ViewerSorter {
 	private TaskKeyComparator taskKeyComparator = new TaskKeyComparator();
 
 	public TaskListTableSorter(TaskListView view, String column) {
-		super();
+		super();  
 		this.view = view;
 		this.column = column;
 	}

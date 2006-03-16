@@ -21,7 +21,7 @@ import org.eclipse.mylar.provisional.tasklist.TaskList;
 /**
  * @author Mik Kersten
  */
-public class TabelSorterTest extends TestCase {
+public class TableSorterTest extends TestCase {
 
 	public void testRootTaskSorting() {
 		TaskListTableSorter sorter = new TaskListTableSorter(null, "description");
