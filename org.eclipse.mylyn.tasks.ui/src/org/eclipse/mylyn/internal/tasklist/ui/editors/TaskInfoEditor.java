@@ -19,8 +19,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.ui.actions.TaskEditorCopyAction;
 import org.eclipse.mylar.internal.tasklist.ui.views.DatePicker;
+import org.eclipse.mylar.internal.tasklist.ui.views.RetrieveTitleFromUrlJob;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
@@ -127,6 +129,8 @@ public class TaskInfoEditor extends EditorPart {
 
 	private Spinner estimated;
 
+	private Button getDescButton;
+
 	private boolean isDirty = false;
 
 	private MylarTaskEditor parentEditor = null;
@@ -160,7 +164,7 @@ public class TaskInfoEditor extends EditorPart {
 									statusCombo.select(0);
 								} else {
 									statusCombo.select(1);
-								}								
+								}
 								// statusCombo.indexOf(updateTask.getStatus().toString());
 								// statusCombo.select(selectionIndex);
 							}
@@ -178,7 +182,7 @@ public class TaskInfoEditor extends EditorPart {
 		}
 
 		public void taskMoved(ITask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
-			// ignore			
+			// ignore
 		}
 
 		public void taskDeleted(ITask task) {
@@ -237,9 +241,9 @@ public class TaskInfoEditor extends EditorPart {
 	public void doSave(IProgressMonitor monitor) {
 		if (!(task instanceof AbstractRepositoryTask)) {
 			String label = description.getText();
-//			task.setDescription(label);
-			MylarTaskListPlugin.getTaskListManager().getTaskList().renameTask((Task)task, label);
-			
+			// task.setDescription(label);
+			MylarTaskListPlugin.getTaskListManager().getTaskList().renameTask((Task) task, label);
+
 			// TODO: refactor mutation into TaskList?
 			task.setUrl(issueReportURL.getText());
 			String priorityDescription = priorityCombo.getItem(priorityCombo.getSelectionIndex());
@@ -264,7 +268,7 @@ public class TaskInfoEditor extends EditorPart {
 			task.setReminderDate(null);
 		}
 		MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
-		
+
 		// Method not implemented yet
 		// task.setStatus(statusCombo.getItem(statusCombo.getSelectionIndex()));
 
@@ -272,7 +276,6 @@ public class TaskInfoEditor extends EditorPart {
 		// statusCombo.getItem(statusCombo.getSelectionIndex()));
 
 		// refreshTaskListView(task);
-
 
 		markDirty(false);
 	}
@@ -417,8 +420,17 @@ public class TaskInfoEditor extends EditorPart {
 
 		Label urlLabel = toolkit.createLabel(container, "Web Link:");
 		urlLabel.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		issueReportURL = toolkit.createText(container, task.getUrl(), SWT.NONE);
-		issueReportURL.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+		Composite urlComposite = toolkit.createComposite(container);
+		GridLayout urlLayout = new GridLayout(2, false);
+		urlLayout.marginWidth = 1;
+		urlComposite.setLayout(urlLayout);
+		GridData urlGridData = new GridData(GridData.FILL_HORIZONTAL);
+		urlComposite.setLayoutData(urlGridData);
+
+		issueReportURL = toolkit.createText(urlComposite, task.getUrl(), SWT.NONE);
+		GridData gridLayout = new GridData(GridData.FILL_HORIZONTAL);
+		issueReportURL.setLayoutData(gridLayout);
 
 		if (task instanceof AbstractRepositoryTask) {
 			issueReportURL.setEditable(false);
@@ -429,6 +441,30 @@ public class TaskInfoEditor extends EditorPart {
 				}
 			});
 		}
+
+		getDescButton = toolkit.createButton(urlComposite, "Get Description", SWT.PUSH);
+		getDescButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+		toolkit.paintBordersFor(urlComposite);
+		setButtonStatus();
+
+		issueReportURL.addKeyListener(new KeyListener() {
+			public void keyPressed(KeyEvent e) {
+				setButtonStatus();
+			}
+
+			public void keyReleased(KeyEvent e) {
+				setButtonStatus();
+			}
+		});
+
+		getDescButton.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				retrieveTaskDescription(issueReportURL.getText());
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
 
 		Label label = toolkit.createLabel(container, "Status:");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
@@ -497,6 +533,48 @@ public class TaskInfoEditor extends EditorPart {
 		}
 		// statusCombo.setEnabled(false);
 
+	}
+
+	/**
+	 * Attempts to set the task pageTitle to the title from the specified url
+	 */
+	protected void retrieveTaskDescription(final String url) {
+
+		try {
+			RetrieveTitleFromUrlJob job = new RetrieveTitleFromUrlJob(issueReportURL.getText()) {
+
+				@Override
+				protected void setTitle(final String pageTitle) {
+					description.setText(pageTitle);
+					TaskInfoEditor.this.markDirty(true);
+				}
+
+			};
+			job.schedule();
+
+		} catch (RuntimeException e) {
+			MylarStatusHandler.fail(e, "could not open task web page", false);
+		}
+	}
+
+	/**
+	 * Sets the Get Description button enabled or not depending on whether there
+	 * is a URL specified
+	 */
+	protected void setButtonStatus() {
+		String url = issueReportURL.getText();
+
+		if (url.length() > 10 && (url.startsWith("http://") || url.startsWith("https://"))) {
+			String defaultPrefix = MylarPlugin.getDefault().getPreferenceStore().getString(
+					TaskListPreferenceConstants.DEFAULT_URL_PREFIX);
+			if (url.equals(defaultPrefix)) {
+				getDescButton.setEnabled(false);
+			} else {
+				getDescButton.setEnabled(true);
+			}
+		} else {
+			getDescButton.setEnabled(false);
+		}
 	}
 
 	private void createDocumentationSection(Composite parent, FormToolkit toolkit) {

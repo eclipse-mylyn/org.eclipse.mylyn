@@ -31,12 +31,14 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * @author Mik Kersten and Ken Sueda
+ * @author Mik Kersten
  */
 public class NewRepositoryTaskAction extends Action implements IViewActionDelegate {
 
 	public static final String ID = "org.eclipse.mylar.tasklist.ui.repositories.actions.create";
 
+	private static final String TITLE = "New Repostiory Task";
+			
 	@Override
 	public void run() {
 
@@ -55,7 +57,7 @@ public class NewRepositoryTaskAction extends Action implements IViewActionDelega
 			}
 		}
 		 
-		IWizard wizard = new MultiRepositoryAwareWizard(new NewRepositoryTaskPage(connectorKinds));
+		IWizard wizard = new MultiRepositoryAwareWizard(new NewRepositoryTaskPage(connectorKinds), TITLE);
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		if (wizard != null && shell != null && !shell.isDisposed()) {
@@ -65,7 +67,7 @@ public class NewRepositoryTaskAction extends Action implements IViewActionDelega
 			dialog.open();
 
 		} else {
-			// TODO handle not good
+			// ignore
 		}
 	}
 

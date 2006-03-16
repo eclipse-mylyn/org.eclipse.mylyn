@@ -22,6 +22,8 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
  */
 public class AddExistingTaskWizard extends MultiRepositoryAwareWizard {
 
+	private static final String TITLE = "Add Existing Repository Task";
+	
 	public AddExistingTaskWizard() {
 		super(new SelectRepositoryPage() {
 
@@ -35,6 +37,6 @@ public class AddExistingTaskWizard extends MultiRepositoryAwareWizard {
 					return null;
 				}
 			}
-		});
+		}, TITLE);
 	}
 }

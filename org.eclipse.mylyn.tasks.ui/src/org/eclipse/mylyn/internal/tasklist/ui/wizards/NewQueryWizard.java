@@ -21,6 +21,8 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
  */
 public class NewQueryWizard extends MultiRepositoryAwareWizard {
 
+	private static final String TITLE = "New Repository Query";
+		
 	public NewQueryWizard() {
 		super(new SelectRepositoryPage() {
 
@@ -30,7 +32,7 @@ public class NewQueryWizard extends MultiRepositoryAwareWizard {
 						taskRepository.getKind());
 				return connector.getQueryWizard(taskRepository);
 			}
-		});
+		}, TITLE);
 	}
 	
 	

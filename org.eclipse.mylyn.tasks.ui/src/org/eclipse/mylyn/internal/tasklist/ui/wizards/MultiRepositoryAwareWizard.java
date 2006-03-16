@@ -24,10 +24,11 @@ public class MultiRepositoryAwareWizard extends Wizard implements INewWizard {
 
 	private SelectRepositoryPage selectRepositoryPage;
 
-	public MultiRepositoryAwareWizard(SelectRepositoryPage page) {
+	public MultiRepositoryAwareWizard(SelectRepositoryPage page, String title) {
 		selectRepositoryPage = page;
 		setForcePreviousAndNextButtons(true);
 		setNeedsProgressMonitor(true);
+		setWindowTitle(title);
 	}
 
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
