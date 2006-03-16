@@ -68,12 +68,12 @@ public class ResourceInterestUpdater {
 			if (handle != null) {
 				IMylarElement element = MylarPlugin.getContextManager().getElement(handle);
 				if (element != null && !element.getInterest().isInteresting()) {
-					InteractionEvent interactionEvent = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, bridge
+					InteractionEvent interactionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, bridge
 							.getContentType(), handle, SOURCE_ID);
 					interactionEvents.add(interactionEvent);
 				}
 			}
-		}
+		} 
 		MylarPlugin.getContextManager().handleInteractionEvents(interactionEvents, true);
 	}
 
