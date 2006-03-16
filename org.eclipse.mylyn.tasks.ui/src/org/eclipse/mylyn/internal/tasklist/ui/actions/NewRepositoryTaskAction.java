@@ -54,7 +54,7 @@ public class NewRepositoryTaskAction extends Action implements IViewActionDelega
 		for (AbstractRepositoryConnector client: MylarTaskListPlugin.getRepositoryManager().getRepositoryConnectors()) {
 			if (client.canCreateTaskFromId()) {
 				connectorKinds.add(client.getRepositoryType());
-			}
+			} 
 		}
 		 
 		IWizard wizard = new MultiRepositoryAwareWizard(new NewRepositoryTaskPage(connectorKinds), TITLE);
