@@ -331,7 +331,7 @@
             hasPages="true"
             icon="icons/etool16/wizard-prefs.gif"
             id="org.eclipse.mylar.java.ui.wizards.preferences"
-            name="Preference Configuration"
+            name="Recommended Preferences"
             project="false">
       </wizard>
    </extension>
