@@ -111,7 +111,8 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
 			try {
 				return workspace.getRoot().getProject(projectName);
 			} catch (IllegalArgumentException e) {
-				MylarStatusHandler.fail(e, "bad path for handle: " + handle, false);
+				// not a file 
+//				MylarStatusHandler.fail(e, "bad path for handle: " + handle, false);
 				return null;
 			}
 		} else if (path.segmentCount() > 1) {
