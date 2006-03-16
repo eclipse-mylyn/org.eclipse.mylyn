@@ -123,7 +123,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 	public static final Font TEXT_FONT = JFaceResources.getDefaultFont();
 
-	public static final Font COMMENT_FONT = JFaceResources.getDefaultFont();// JFaceResources.getFontRegistry().get(JFaceResources.TEXT_FONT);
+	public static final Font COMMENT_FONT = JFaceResources.getFontRegistry().get(JFaceResources.TEXT_FONT);
 
 	public static final Font HEADER_FONT = JFaceResources.getDefaultFont();
 
@@ -1005,9 +1005,16 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			formText.setFont(TEXT_FONT);
 			formText.setWhitespaceNormalized(false);
 			formText.setText(checkText(text), false, true);
+
+			// Trying to fingure out how to reduce the space between lines
+			// see FormText class.
+			// GC gc = new GC(formText);
+			// FontMetrics fm = gc.setgetFontMetrics();
+			// int lineHeight = fm.getHeight();
+
 			// formText.setBackground(background);
 			data.horizontalIndent = HORZ_INDENT;
-			data.widthHint = DESCRIPTION_WIDTH;
+			// data.widthHint = DESCRIPTION_WIDTH;
 			formText.setLayoutData(data);
 			// formText.setEditable(false);
 			// formText.getCaret().setVisible(false);
@@ -1661,7 +1668,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	// //replace hyperlinked portions...
 	// }
 	// }
-	//
+	//	
 	// return text;
 	// }
 }

@@ -504,9 +504,9 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		toolkit.paintBordersFor(newCommentsComposite);
 		GridData addCommentsTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		// addCommentsTextData.horizontalSpan = 4;
-		addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
+		//addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
 		addCommentsTextData.heightHint = DESCRIPTION_HEIGHT;
-		// addCommentsTextData.grabExcessHorizontalSpace = true;
+		addCommentsTextData.grabExcessHorizontalSpace = true;
 
 		addCommentsText.setLayoutData(addCommentsTextData);
 		// addCommentsText.setText(bug.getNewComment());
