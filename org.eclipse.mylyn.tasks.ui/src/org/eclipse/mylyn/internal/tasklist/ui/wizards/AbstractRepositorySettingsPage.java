@@ -79,8 +79,6 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 		userNameEditor = new StringFieldEditor("", LABEL_USER, StringFieldEditor.UNLIMITED, container);
 		passwordEditor = new RepositoryStringFieldEditor("", LABEL_PASSWORD, StringFieldEditor.UNLIMITED, container);
-		passwordEditor.getTextControl().setEchoChar('*');
-		
 		if (repository != null) {			
 			try {
 			serverUrlEditor.setStringValue(repository.getUrl());
@@ -90,7 +88,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				MylarStatusHandler.fail(t, "could not set field value for: " + repository, false);
 			}
 		}
-
+		// bug 131656: must set echo char after setting value on Mac
+		passwordEditor.getTextControl().setEchoChar('*');
+		
 		createAdditionalControls(container);
 		
 		validateServerButton = new Button(container, SWT.PUSH);
