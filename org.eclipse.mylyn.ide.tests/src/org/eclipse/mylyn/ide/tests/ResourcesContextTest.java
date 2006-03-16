@@ -85,7 +85,7 @@ public class ResourcesContextTest extends AbstractResourceContextTest {
 		assertTrue(fileElement.getInterest().isInteresting());
 		assertTrue(folderElement.getInterest().isInteresting());
 
-		MylarPlugin.getContextManager().manipulateInterestForNode(folderElement, false, false, "test");
+		assertTrue(MylarPlugin.getContextManager().manipulateInterestForNode(folderElement, false, false, "test"));
 
 		assertFalse(folderElement.getInterest().isInteresting());
 		assertFalse(fileElement.getInterest().isInteresting());

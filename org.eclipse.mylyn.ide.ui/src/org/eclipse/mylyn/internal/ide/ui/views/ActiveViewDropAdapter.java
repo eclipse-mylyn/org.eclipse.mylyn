@@ -14,6 +14,7 @@ package org.eclipse.mylar.internal.ide.ui.views;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
+import org.eclipse.mylar.internal.ui.UiUtil;
 import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
@@ -39,8 +40,11 @@ public class ActiveViewDropAdapter extends ViewerDropAdapter {
 			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(firstElement);
 			String handle = bridge.getHandleIdentifier(firstElement);
 			IMylarElement node = MylarPlugin.getContextManager().getElement(handle);
-			if (node != null)
-				MylarPlugin.getContextManager().manipulateInterestForNode(node, true, true, ID_MANIPULATION);
+			boolean manipulated = MylarPlugin.getContextManager().manipulateInterestForNode(node, true, true,
+					ID_MANIPULATION);
+			if (!manipulated) {
+				UiUtil.displayInterestManipulationFailure();
+			}
 		}
 		return false; // to ensure that the sender doesn't treat this as a
 		// move

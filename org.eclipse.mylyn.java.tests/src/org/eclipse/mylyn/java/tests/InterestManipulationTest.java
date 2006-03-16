@@ -82,8 +82,8 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		assertTrue(fileElement.getInterest().isInteresting());
 		assertTrue(method.getInterest().isInteresting());
 
-		MylarPlugin.getContextManager().manipulateInterestForNode(projectElement, false, false, "test");
-
+		assertTrue(MylarPlugin.getContextManager().manipulateInterestForNode(projectElement, false, false, "test"));
+ 
 		assertFalse(fileElement.getInterest().isInteresting());
 		// TODO: re-enable, fails in AllTests
 		// assertFalse(method.getInterest().isInteresting());
@@ -102,8 +102,8 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		assertTrue(clazz.getInterest().isInteresting());
 		assertTrue(cu.getInterest().isInteresting());
 
-		MylarPlugin.getContextManager().manipulateInterestForNode(packageNode, false, false, "test");
-		assertFalse(packageNode.getInterest().isInteresting());
+		assertTrue(MylarPlugin.getContextManager().manipulateInterestForNode(packageNode, false, false, "test"));
+		assertFalse(packageNode.getInterest().isInteresting()); 
 		assertFalse(cu.getInterest().isInteresting());
 		assertFalse(clazz.getInterest().isInteresting());
 		assertFalse(method.getInterest().isInteresting());
@@ -144,8 +144,8 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		}
 
 		public void changeInterestForSelected(boolean increment) {
-			MylarPlugin.getContextManager().manipulateInterestForNode(
-					MylarPlugin.getContextManager().getActiveElement(), increment, false, "");
+			assertTrue(MylarPlugin.getContextManager().manipulateInterestForNode(
+					MylarPlugin.getContextManager().getActiveElement(), increment, false, ""));
 		}
 	}
 }

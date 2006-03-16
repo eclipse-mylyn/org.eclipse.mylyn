@@ -11,16 +11,23 @@
 
 package org.eclipse.mylar.internal.ui;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.core.MylarContextManager;
 import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Mik Kersten
  */
 public class UiUtil {
+
+	public static void displayInterestManipulationFailure() {
+		MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Mylar Interest Manipulation",
+				"Not a valid landmark, select an element within this resource instead.");
+	}
 
 	public static Color getBackgroundForElement(IMylarElement node) {
 		return getBackgroundForElement(node, false);

@@ -51,9 +51,7 @@ public class InterestManipulatingEditorTracker extends AbstractEditorTracker {
 					element = MylarPlugin.getContextManager().getElement(resourceBridge.getHandleIdentifier(resource));
 				}
 			}
-			if (element != null) {
-				MylarPlugin.getContextManager().manipulateInterestForNode(element, false, false, SOURCE_ID);
-			}
+			MylarPlugin.getContextManager().manipulateInterestForNode(element, false, false, SOURCE_ID);
 		}
 	}
 

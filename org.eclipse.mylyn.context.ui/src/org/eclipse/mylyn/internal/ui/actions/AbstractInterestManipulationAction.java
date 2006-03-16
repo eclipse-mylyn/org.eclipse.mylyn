@@ -15,6 +15,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylar.internal.ui.UiUtil;
 import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
@@ -74,7 +75,10 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 					node = MylarPlugin.getContextManager().getElement(handle);
 				}
 				if (node != null) {
-					MylarPlugin.getContextManager().manipulateInterestForNode(node, increment, false, SOURCE_ID);
+					boolean manipulated = MylarPlugin.getContextManager().manipulateInterestForNode(node, increment, false, SOURCE_ID);
+					if (!manipulated) {
+						UiUtil.displayInterestManipulationFailure();
+					}
 				} else {
 					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), 
 							MylarTaskListPlugin.TITLE_DIALOG, MESSAGE_NO_CONTEXT);
@@ -83,7 +87,10 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 		} else {
 			IMylarElement node = MylarPlugin.getContextManager().getActiveElement();
 			if (node != null) {
-				MylarPlugin.getContextManager().manipulateInterestForNode(node, increment, false, SOURCE_ID);
+				boolean manipulated = MylarPlugin.getContextManager().manipulateInterestForNode(node, increment, false, SOURCE_ID);
+				if (!manipulated) {
+					UiUtil.displayInterestManipulationFailure();
+				}
 			} else {
 				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), 
 						MylarTaskListPlugin.TITLE_DIALOG, MESSAGE_NO_CONTEXT);
