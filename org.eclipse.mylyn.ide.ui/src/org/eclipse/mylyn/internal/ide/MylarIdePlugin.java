@@ -125,7 +125,6 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 
 	private void initPreferenceDefaults() {
 		getPreferenceStore().setDefault(CHANGE_SET_MANAGE, true);
-
 		getPreferenceStore().setDefault(COMMIT_PREFIX_COMPLETED, DEFAULT_PREFIX_COMPLETED);
 		getPreferenceStore().setDefault(COMMIT_PREFIX_PROGRESS, DEFAULT_PREFIX_PROGRESS);
 
