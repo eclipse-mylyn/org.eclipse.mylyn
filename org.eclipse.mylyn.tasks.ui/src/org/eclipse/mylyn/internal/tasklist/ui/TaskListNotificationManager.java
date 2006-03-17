@@ -154,13 +154,12 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 	}
 
 	public void startNotification(long initialStartupTime) {
-		if ( MylarTaskListPlugin.getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.NOTIFICATIONS_ENABLED)) {
-			openJob.setSystem(runSystem);
+		if (MylarTaskListPlugin.getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.NOTIFICATIONS_ENABLED)) {
+			if (openJob.cancel()) {
+				openJob.setSystem(runSystem);
+			}
 			openJob.schedule(initialStartupTime);
-		} else {
-			stopNotification();
 		}
-		
 	}
 
 	public void stopNotification() {
@@ -189,9 +188,12 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {
-		if (event.getProperty().equals(TaskListPreferenceConstants.NOTIFICATIONS_ENABLED)
-		    && "true".equals(event.getNewValue())) {
-			startNotification(OPEN_POPUP_DELAY);
+		if (event.getProperty().equals(TaskListPreferenceConstants.NOTIFICATIONS_ENABLED)) {
+			if ("true".equals(event.getNewValue())) {
+				startNotification(OPEN_POPUP_DELAY);
+			} else {
+				stopNotification();
+			}
 		}
 	}
 }
