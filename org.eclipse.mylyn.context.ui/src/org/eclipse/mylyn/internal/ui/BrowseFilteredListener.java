@@ -63,7 +63,6 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 				unfilter(filter, treeViewer, targetObject);
 			}
 		} else if (event.keyCode != SWT.ARROW_DOWN && event.keyCode != SWT.ARROW_DOWN) {
-			// filter.resetTemporarilyUnfiltered();
 			if (filter.resetTemporarilyUnfiltered()) {
 				viewer.refresh(false);
 			}
