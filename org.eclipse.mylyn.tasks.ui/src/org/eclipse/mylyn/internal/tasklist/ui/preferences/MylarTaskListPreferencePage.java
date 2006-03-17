@@ -46,20 +46,22 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 
 	private Button browse = null;
 
-//	private Button copyExistingDataCheckbox = null;
+	// private Button copyExistingDataCheckbox = null;
 
 	private Button reportEditor = null;
 
 	private Button reportInternal = null;
 
 	private Button refreshQueries = null;
-	
+
+	private Button notificationEnabledButton = null;
+
 	private Text refreshScheduleTime = null;
-	
+
 	private Button userRefreshOnly;
 
 	private Button enableBackgroundRefresh;
-	
+
 	public MylarTaskListPreferencePage() {
 		super();
 		setPreferenceStore(MylarTaskListPlugin.getMylarCorePrefs());
@@ -70,24 +72,22 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		Composite container = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout(1, false);
 		container.setLayout(layout);
-		
-		String message = "See <a>''{0}''</a> for configuring Mylar colors.";
-		new PreferenceLinkArea(container, SWT.NONE,
-				"org.eclipse.ui.preferencePages.ColorsAndFonts", message,
-				(IWorkbenchPreferenceContainer) getContainer(), null);
-//		new Label(group, SWT.NULL);
 
+		String message = "See <a>''{0}''</a> for configuring Mylar colors.";
+		new PreferenceLinkArea(container, SWT.NONE, "org.eclipse.ui.preferencePages.ColorsAndFonts", message,
+				(IWorkbenchPreferenceContainer) getContainer(), null);
 
 		createCreationGroup(container);
-		createTaskDirectoryControl(container);
+		createNotificationsGroup(container);
 		createBugzillaReportOption(container);
 		createTaskRefreshScheduleGroup(container);
+		createTaskDirectoryControl(container);
 		updateRefreshGroupEnablements();
 		return container;
 	}
 
 	public void init(IWorkbench workbench) {
-		// TODO Auto-generated method stub		
+		// TODO Auto-generated method stub
 	}
 
 	private void createBugzillaReportOption(Composite parent) {
@@ -115,27 +115,32 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		if (!taskDirectory.equals(MylarPlugin.getDefault().getDataDirectory())) {
 			// Order matters:
 			MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskListAndContexts();
-//			if (copyExistingDataCheckbox.getSelection()) {
+			// if (copyExistingDataCheckbox.getSelection()) {
 			MylarTaskListPlugin.getDefault().getTaskListSaveManager().copyDataDirContentsTo(taskDirectory);
-//			}
+			// }
 			MylarPlugin.getDefault().setDataDirectory(taskDirectory);
 		}
 
-//		getPreferenceStore().setValue(TaskListPreferenceConstants.COPY_TASK_DATA,
-//				copyExistingDataCheckbox.getSelection());
+		// getPreferenceStore().setValue(TaskListPreferenceConstants.COPY_TASK_DATA,
+		// copyExistingDataCheckbox.getSelection());
 		getPreferenceStore().setValue(TaskListPreferenceConstants.REPORT_OPEN_EDITOR, reportEditor.getSelection());
 		getPreferenceStore().setValue(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL, reportInternal.getSelection());
 		// getPreferenceStore().setValue(MylarTaskListPlugin.REPORT_OPEN_EXTERNAL,
 		// reportExternal.getSelection());
 		getPreferenceStore().setValue(TaskListPreferenceConstants.DEFAULT_URL_PREFIX, taskURLPrefixText.getText());
-		getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP, refreshQueries.getSelection());
+		getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP,
+				refreshQueries.getSelection());
 
-		
+		getPreferenceStore().setValue(TaskListPreferenceConstants.NOTIFICATIONS_ENABLED,
+				notificationEnabledButton.getSelection());
+
 		// Set refresh schedule preferences and start/stop as necessary
-		getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, enableBackgroundRefresh.getSelection());
-		long miliseconds = 60000*Long.parseLong(refreshScheduleTime.getText());
-		getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, ""+miliseconds);
-		
+		getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
+				enableBackgroundRefresh.getSelection());
+		long miliseconds = 60000 * Long.parseLong(refreshScheduleTime.getText());
+		getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS,
+				"" + miliseconds);
+
 		return true;
 	}
 
@@ -145,49 +150,50 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		reportEditor.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPORT_OPEN_EDITOR));
 		reportInternal.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL));
 		// reportExternal.setSelection(getPreferenceStore().getBoolean(MylarTaskListPlugin.REPORT_OPEN_EXTERNAL));
-		refreshQueries.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
+		refreshQueries.setSelection(getPreferenceStore().getBoolean(
+				TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
 		// saveCombo.setText(getPreferenceStore().getString(MylarTaskListPlugin.SAVE_TASKLIST_MODE));
-		
-		enableBackgroundRefresh.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
+
+		enableBackgroundRefresh.setSelection(getPreferenceStore().getBoolean(
+				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
 		refreshScheduleTime.setText(getMinutesString());
-		
+		notificationEnabledButton.setSelection(getPreferenceStore().getBoolean(
+				TaskListPreferenceConstants.NOTIFICATIONS_ENABLED));
 		return true;
 	}
 
 	public void performDefaults() {
 		super.performDefaults();
-//		copyExistingDataCheckbox.setSelection(true);
-		// IPath rootPath =
-		// ResourcesPlugin.getWorkspace().getRoot().getLocation();
-		// String taskDirectory = rootPath.toString() + "/" +
-		// MylarPlugin.DATA_DIR_NAME;
-		taskDirectoryText.setText(MylarPlugin.getDefault().getDefaultDataDirectory());
 
+		taskDirectoryText.setText(MylarPlugin.getDefault().getDefaultDataDirectory());
 		// copyExistingDataCheckbox.setSelection(getPreferenceStore().getDefaultBoolean(MylarTaskListPlugin.COPY_TASK_DATA));
-		reportEditor
-				.setSelection(getPreferenceStore().getDefaultBoolean(TaskListPreferenceConstants.REPORT_OPEN_EDITOR));
+		reportEditor.setSelection(getPreferenceStore()
+				.getDefaultBoolean(TaskListPreferenceConstants.REPORT_OPEN_EDITOR));
 		reportInternal.setSelection(getPreferenceStore().getDefaultBoolean(
 				TaskListPreferenceConstants.REPORT_OPEN_INTERNAL));
 		// reportExternal.setSelection(getPreferenceStore().getDefaultBoolean(MylarTaskListPlugin.REPORT_OPEN_EXTERNAL));
-		taskURLPrefixText.setText(getPreferenceStore().getDefaultString(TaskListPreferenceConstants.DEFAULT_URL_PREFIX));
+		taskURLPrefixText
+				.setText(getPreferenceStore().getDefaultString(TaskListPreferenceConstants.DEFAULT_URL_PREFIX));
 
 		refreshQueries.setSelection(getPreferenceStore().getDefaultBoolean(
-				TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));		
-		
-		enableBackgroundRefresh.setSelection(getPreferenceStore().getDefaultBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
+				TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
+		notificationEnabledButton.setSelection(getPreferenceStore().getDefaultBoolean(
+				TaskListPreferenceConstants.NOTIFICATIONS_ENABLED));
+		enableBackgroundRefresh.setSelection(getPreferenceStore().getDefaultBoolean(
+				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
 		userRefreshOnly.setSelection(!enableBackgroundRefresh.getSelection());
-		refreshScheduleTime.setText(getPreferenceStore().getDefaultString(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS));
-		
+		refreshScheduleTime.setText(getPreferenceStore().getDefaultString(
+				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS));
+
 	}
 
-	
-	private String getMinutesString() {		
-		long miliseconds = getPreferenceStore().getLong(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
+	private String getMinutesString() {
+		long miliseconds = getPreferenceStore().getLong(
+				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
 		long minutes = miliseconds / 60000;
-		return ""+minutes;
+		return "" + minutes;
 	}
-	
-	
+
 	private Label createLabel(Composite parent, String text) {
 		Label label = new Label(parent, SWT.LEFT);
 		label.setText(text);
@@ -232,10 +238,11 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 			}
 		});
 
-//		copyExistingDataCheckbox = new Button(taskDirComposite, SWT.CHECK);
-//		copyExistingDataCheckbox.setText("Copy existing data to new location");
-//		copyExistingDataCheckbox.setSelection(getPreferenceStore()
-//				.getBoolean(TaskListPreferenceConstants.COPY_TASK_DATA));
+		// copyExistingDataCheckbox = new Button(taskDirComposite, SWT.CHECK);
+		// copyExistingDataCheckbox.setText("Copy existing data to new
+		// location");
+		// copyExistingDataCheckbox.setSelection(getPreferenceStore()
+		// .getBoolean(TaskListPreferenceConstants.COPY_TASK_DATA));
 
 	}
 
@@ -247,14 +254,37 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 
 		Label urlLabel = createLabel(group, "Web link prefix (e.g. https://bugs.eclipse.org/bugs/show_bug.cgi?id=)");
 		urlLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
-		
+
 		String taskURLPrefix = getPreferenceStore().getString(TaskListPreferenceConstants.DEFAULT_URL_PREFIX);
 		taskURLPrefixText = new Text(group, SWT.BORDER);
 		taskURLPrefixText.setText(taskURLPrefix);
 		taskURLPrefixText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 	}
-	
-	// reference: org.eclipse.team.internal.ui.synchronize.ConfigureSynchronizeScheduleComposite
+
+	private void createNotificationsGroup(Composite parent) {
+		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
+		group.setText("Notifications");
+		group.setLayout(new GridLayout(1, false));
+		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		notificationEnabledButton = new Button(group, SWT.CHECK);
+		notificationEnabledButton.setText("Notifications enabled");
+		notificationEnabledButton.setSelection(getPreferenceStore().getBoolean(
+				TaskListPreferenceConstants.NOTIFICATIONS_ENABLED));
+		// Label notificationEnabledLabel = createLabel(group, "Notifications
+		// enabled: ");
+		// notificationEnabledLabel.setLayoutData(new
+		// GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
+		//		
+		// String taskURLPrefix =
+		// getPreferenceStore().getString(TaskListPreferenceConstants.DEFAULT_URL_PREFIX);
+		// taskURLPrefixText = new Text(group, SWT.BORDER);
+		// taskURLPrefixText.setText(taskURLPrefix);
+		// taskURLPrefixText.setLayoutData(new
+		// GridData(GridData.FILL_HORIZONTAL));
+	}
+
+	// reference:
+	// org.eclipse.team.internal.ui.synchronize.ConfigureSynchronizeScheduleComposite
 	private void createTaskRefreshScheduleGroup(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
 		group.setText("Repository Refresh");
@@ -314,7 +344,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 			final GridData gridData_1 = new GridData();
 			gridData_1.widthHint = 35;
 			refreshScheduleTime.setLayoutData(gridData_1);
-			
+
 			refreshScheduleTime.setText(getMinutesString());
 			refreshScheduleTime.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
@@ -334,7 +364,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
 
 	}
-	
+
 	public void updateRefreshGroupEnablements() {
 		if (enableBackgroundRefresh.getSelection()) {
 			try {
@@ -355,11 +385,9 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 			this.setErrorMessage(null);
 		}
 		refreshScheduleTime.setEnabled(enableBackgroundRefresh.getSelection());
-//		hoursOrMinutes.setEnabled(enableBackgroundRefresh.getSelection());
+		// hoursOrMinutes.setEnabled(enableBackgroundRefresh.getSelection());
 	}
-	
 
-	
 	private Button createButton(Composite parent, String text) {
 		Button button = new Button(parent, SWT.TRAIL);
 		button.setText(text);

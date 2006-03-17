@@ -85,6 +85,12 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 				} else {
 					return "";
 				}
+			case 6:
+				if (activityDelegate.getStart() > 0) {
+					return DateFormat.getDateInstance(DateFormat.MEDIUM).format(activityDelegate.getStart());
+				} else {
+					return "";
+				}
 			}
 		} else if (element instanceof DateRangeContainer) {
 			DateRangeContainer taskCategory = (DateRangeContainer) element;

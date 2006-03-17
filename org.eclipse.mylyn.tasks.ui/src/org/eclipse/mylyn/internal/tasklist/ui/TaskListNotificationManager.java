@@ -19,6 +19,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.widgets.Shell;
@@ -27,7 +31,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Rob Elves
  */
-public class TaskListNotificationManager {
+public class TaskListNotificationManager implements IPropertyChangeListener {
 
 	private static final String CLOSE_NOTIFICATION_JOB = "Close Notification Job";
 
@@ -50,24 +54,24 @@ public class TaskListNotificationManager {
 	private Job openJob = new Job(OPEN_NOTIFICATION_JOB) {
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
-
 			try {
 
 				if (!PlatformUI.getWorkbench().getDisplay().isDisposed()) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
 							if ((popup != null && popup.close()) || popup == null) {
-								closeJob.cancel();							
+								closeJob.cancel();
 								collectNotifications();
 								synchronized (TaskListNotificationManager.class) {
 									if (currentlyNotifying.size() > 0) {
-										popup = new TaskListNotificationPopup(new Shell(PlatformUI.getWorkbench().getDisplay()));
+										popup = new TaskListNotificationPopup(new Shell(PlatformUI.getWorkbench()
+												.getDisplay()));
 										popup.setContents(new ArrayList<ITaskListNotification>(currentlyNotifying));
 										cleanNotified();
 										popup.setBlockOnOpen(false);
 										popup.open();
 										closeJob.setSystem(runSystem);
-										closeJob.schedule(CLOSE_POPUP_DELAY);										
+										closeJob.schedule(CLOSE_POPUP_DELAY);
 										popup.getShell().addShellListener(SHELL_LISTENER);
 									}
 								}
@@ -137,27 +141,32 @@ public class TaskListNotificationManager {
 	};
 
 	private void cleanNotified() {
-		 for (ITaskListNotification notification : currentlyNotifying) {
+		for (ITaskListNotification notification : currentlyNotifying) {
 			notification.setNotified(true);
-		 }
+		}
 		currentlyNotifying.clear();
 	}
 
 	private void collectNotifications() {
 		for (ITaskListNotificationProvider provider : notificationProviders) {
 			currentlyNotifying.addAll(provider.getNotifications());
-		}		
+		}
 	}
 
 	public void startNotification(long initialStartupTime) {
-		openJob.setSystem(runSystem);
-		openJob.schedule(initialStartupTime);
+		if ( MylarTaskListPlugin.getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.NOTIFICATIONS_ENABLED)) {
+			openJob.setSystem(runSystem);
+			openJob.schedule(initialStartupTime);
+		} else {
+			stopNotification();
+		}
+		
 	}
 
 	public void stopNotification() {
 		openJob.cancel();
 		closeJob.cancel();
-		if(popup != null) {
+		if (popup != null) {
 			popup.close();
 		}
 	}
@@ -179,4 +188,7 @@ public class TaskListNotificationManager {
 		}
 	}
 
+	public void propertyChange(PropertyChangeEvent event) {
+		startNotification(OPEN_POPUP_DELAY);
+	}
 }

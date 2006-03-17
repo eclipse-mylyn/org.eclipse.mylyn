@@ -59,5 +59,7 @@ public class TaskListPreferenceConstants {
 	public static final String REPOSITORY_SYNCH_SCHEDULE_ENABLED = "org.eclipse.mylar.tasklist.repositories.synch.schedule.enabled";
 	
 	public static final String REPOSITORY_SYNCH_SCHEDULE_MILISECONDS = "org.eclipse.mylar.tasklist.repositories.synch.schedule.miliseconds";
+
+	public static final String NOTIFICATIONS_ENABLED = "org.eclipse.mylar.tasklist.notifications.enabled";
 	
 }

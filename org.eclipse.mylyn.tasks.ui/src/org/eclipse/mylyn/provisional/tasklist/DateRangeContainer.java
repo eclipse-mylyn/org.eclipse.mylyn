@@ -84,17 +84,17 @@ public class DateRangeContainer extends AbstractTaskContainer {
 	}
 
 	public void addTask(DateRangeActivityDelegate taskWrapper) {
-		long taskDuration = taskWrapper.getEnd().getTimeInMillis() - taskWrapper.getStart().getTimeInMillis()
-				- taskWrapper.getInactivity();
-		if(taskDuration < 0) taskDuration = 0;
-		totalElapsed += taskDuration;
+		long taskActivity = taskWrapper.getActivity();		
+		if(taskActivity < 0) taskActivity = 0;
+		totalElapsed += taskActivity;
+		children.remove(taskWrapper);
 		children.add(taskWrapper);
 		if (taskToDuration.containsKey(taskWrapper)) {
 			long previous = taskToDuration.get(taskWrapper);
-			long newDuration = previous + taskDuration;
+			long newDuration = previous + taskActivity;
 			taskToDuration.put(taskWrapper, newDuration);
 		} else {
-			taskToDuration.put(taskWrapper, taskDuration);
+			taskToDuration.put(taskWrapper, taskActivity);
 		}
 	}
 

@@ -297,7 +297,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					taskListNotificationManager = new TaskListNotificationManager();
 					taskListNotificationManager.addNotificationProvider(NOTIFICATION_PROVIDER);
 					taskListNotificationManager.startNotification(NOTIFICATION_DELAY);	
-					
+					getMylarCorePrefs().addPropertyChangeListener(taskListNotificationManager);
 					taskListRefreshManager = new TaskListRefreshManager();
 					taskListRefreshManager.startRefreshJob();	
 					
@@ -326,6 +326,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		INSTANCE = null;
 		resourceBundle = null;
 		try {
+			getMylarCorePrefs().removePropertyChangeListener(taskListNotificationManager);
 			taskListManager.getTaskList().removeChangeListener(taskListSaveManager);
 			taskListManager.dispose();
 			if (MylarPlugin.getDefault() != null) {
@@ -393,6 +394,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
 //		store.setDefault(TaskListPreferenceConstants.AUTO_MANAGE_EDITORS, true);
+		store.setDefault(TaskListPreferenceConstants.NOTIFICATIONS_ENABLED, true);
 		store.setDefault(TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P5.toString());
 		store.setDefault(TaskListPreferenceConstants.REPORT_OPEN_EDITOR, true);
 		store.setDefault(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL, false);

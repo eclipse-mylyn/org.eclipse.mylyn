@@ -23,12 +23,14 @@ public class DateRangeActivityDelegate implements ITask {
 	
 	private ITask task = null;
 
-	private Calendar start = null;
-
-	private Calendar end = null;
+//	private Calendar start = null;
+//
+//	private Calendar end = null;
 
 	private DateRangeContainer parent;
 
+	private long startMili = 0;
+	private long endMili = 0;
 	private long inactivity = 0;
 	
 	public DateRangeActivityDelegate(DateRangeContainer parent, ITask task, Calendar start, Calendar end) {
@@ -40,22 +42,32 @@ public class DateRangeActivityDelegate implements ITask {
 			throw new RuntimeException("attempted to instantiated with null task: " + parent);
 		}
 		this.task = task;
-		this.start = start;
-		this.end = end;
+		if(start != null) {
+			this.startMili = start.getTimeInMillis();
+		}
+		if(end != null) {
+			this.endMili = end.getTimeInMillis();
+		}
+//		this.start = start;
+//		this.end = end;
 		this.parent = parent;
 		this.inactivity = inactivity;
 	}
 
-	public Calendar getEnd() {
-		return end;
+	public long getEnd() {
+		return endMili;
 	}
 
-	public Calendar getStart() {
-		return start;
+	public long getStart() {
+		return startMili;
 	}
 
 	public long getInactivity() {
 		return inactivity;
+	}
+	
+	public long getActivity() {
+		return (endMili - startMili) - inactivity;
 	}
 	
 	public ITask getCorrespondingTask() {
