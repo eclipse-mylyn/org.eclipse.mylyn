@@ -52,12 +52,14 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		Label repositoryVersionLabel = new Label(parent, SWT.NONE);
 		repositoryVersionLabel.setText("Repository Version: ");
 		repositoryVersionCombo = new Combo (parent, SWT.READ_ONLY);
-		
+		 
 		for (String version : connector.getSupportedVersions()) {
 			repositoryVersionCombo.add(version);			
 		}	
 		if(repository != null && repositoryVersionCombo.indexOf(repository.getVersion()) >= 0) {
 			repositoryVersionCombo.select(repositoryVersionCombo.indexOf(repository.getVersion()));
+		} else {
+			repositoryVersionCombo.select(connector.getSupportedVersions().size()-1);
 		}
 		
 		repositoryVersionCombo.addSelectionListener(new SelectionListener() {
@@ -70,8 +72,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// ignore
-				
-			} });
+			} 
+		});
 	}
 
 	@Override
