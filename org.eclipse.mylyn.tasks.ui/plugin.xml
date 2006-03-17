@@ -111,8 +111,27 @@
             id="org.eclipse.mylar.tasklist.activity"
             name="Task Activity (Experimental)"/>
   	</extension>
-	
-    <extension point="org.eclipse.ui.perspectiveExtensions">
+
+  	<extension
+        point="org.eclipse.ui.editors">
+     <editor
+           icon="icons/etool16/task.gif"
+           class="org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor"
+           name="Task Viewer"
+           id="org.eclipse.mylar.tasklist.ui.taskEditor"/>
+	    <editor
+           icon="icons/etool16/task.gif"
+           class="org.eclipse.mylar.internal.tasklist.ui.editors.CategoryEditor"
+           name="Category Editor"
+           id="org.eclipse.mylar.tasklist.ui.catEditor"/>
+    <editor
+           icon="icons/eview16/task-list.gif"
+           class="org.eclipse.mylar.internal.tasklist.planner.ui.TaskPlannerEditorPart"
+           name="Mylar Task Planner"
+           id="org.eclipse.mylar.tasklist.ui.planner.editor"/>                      
+  </extension>
+  
+      <extension point="org.eclipse.ui.perspectiveExtensions">
           <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
                <viewShortcut id="org.eclipse.mylar.tasks.ui.views.TaskListView"/>
                <view id="org.eclipse.mylar.tasks.ui.views.TaskListView"
@@ -151,25 +170,6 @@
         <viewShortcut id="org.eclipse.mylar.tasklist.repositories"/>
      </perspectiveExtension>
 	</extension>
-
-  	<extension
-        point="org.eclipse.ui.editors">
-     <editor
-           icon="icons/etool16/task.gif"
-           class="org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor"
-           name="Task Viewer"
-           id="org.eclipse.mylar.tasklist.ui.taskEditor"/>
-	    <editor
-           icon="icons/etool16/task.gif"
-           class="org.eclipse.mylar.internal.tasklist.ui.editors.CategoryEditor"
-           name="Category Editor"
-           id="org.eclipse.mylar.tasklist.ui.catEditor"/>
-    <editor
-           icon="icons/eview16/task-list.gif"
-           class="org.eclipse.mylar.internal.tasklist.planner.ui.TaskPlannerEditorPart"
-           name="Mylar Task Planner"
-           id="org.eclipse.mylar.tasklist.ui.planner.editor"/>                      
-  </extension>
   
    <extension point="org.eclipse.ui.viewActions"> 
 		<viewContribution 
