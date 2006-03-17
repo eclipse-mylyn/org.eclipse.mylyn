@@ -49,7 +49,6 @@ import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
@@ -711,12 +710,13 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			} else if (key.equals("product")) {
 				// newLayout(attributesComposite, 1, name, PROPERTY);
 				toolkit.createLabel(attributesComposite, name);
-//				toolkit.createLabel(attributesComposite, value);
+				// toolkit.createLabel(attributesComposite, value);
 				Composite uneditableComp = toolkit.createComposite(attributesComposite);
 				GridLayout textLayout = new GridLayout();
-				textLayout.marginWidth = 1;				
+				textLayout.marginWidth = 1;
 				uneditableComp.setLayout(textLayout);
-				toolkit.createText(uneditableComp, value, SWT.READ_ONLY );//Label(attributesComposite, value);
+				toolkit.createText(uneditableComp, value, SWT.READ_ONLY);// Label(attributesComposite,
+																			// value);
 				// newLayout(attributesComposite, 1, value,
 				// VALUE).addListener(SWT.FocusIn, new GenericListener());
 				currentCol += 2;
@@ -771,9 +771,10 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 				toolkit.createLabel(attributesComposite, name);
 				Composite uneditableComp = toolkit.createComposite(attributesComposite);
 				GridLayout textLayout = new GridLayout();
-				textLayout.marginWidth = 1;				
+				textLayout.marginWidth = 1;
 				uneditableComp.setLayout(textLayout);
-				toolkit.createText(uneditableComp, value, SWT.READ_ONLY );//Label(attributesComposite, value);
+				toolkit.createText(uneditableComp, value, SWT.READ_ONLY);// Label(attributesComposite,
+																			// value);
 				// newLayout(attributesComposite, 1, value,
 				// VALUE).addListener(SWT.FocusIn, new GenericListener());
 				currentCol += 2;
@@ -1512,7 +1513,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 	protected Text descriptionTextBox = null;
 
-	private StyledText previousText = null;
+	// private FormText previousText = null;
 
 	/**
 	 * Selects the given object in the editor.
@@ -1575,19 +1576,20 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	 *            The StyledText to scroll to
 	 */
 	private void focusOn(Control selectionComposite, boolean highlight) {
-
 		int pos = 0;
-		if (previousText != null && !previousText.isDisposed()) {
-			previousText.setSelection(0);
-		}
+		// if (previousText != null && !previousText.isDisposed()) {
+		// previousText.setsetSelection(0);
+		// }
 
-		if (selectionComposite instanceof StyledText)
-			previousText = (StyledText) selectionComposite;
+		// if (selectionComposite instanceof FormText)
+		// previousText = (FormText) selectionComposite;
 
 		if (selectionComposite != null) {
 
-			if (highlight && selectionComposite instanceof StyledText && !selectionComposite.isDisposed())
-				((StyledText) selectionComposite).setSelection(0, ((StyledText) selectionComposite).getText().length());
+			// if (highlight && selectionComposite instanceof FormText &&
+			// !selectionComposite.isDisposed())
+			// ((FormText) selectionComposite).set.setSelection(0, ((FormText)
+			// selectionComposite).getText().length());
 
 			// get the position of the text in the composite
 			pos = 0;
@@ -1604,9 +1606,10 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 				}
 			}
 
-			pos = form.getOrigin().y + pos - 60;
+			pos = pos - 60; // form.getOrigin().y;
+
 		}
-		if (!form.isDisposed())
+		if (!form.getBody().isDisposed())
 			form.setOrigin(0, pos);
 	}
 
