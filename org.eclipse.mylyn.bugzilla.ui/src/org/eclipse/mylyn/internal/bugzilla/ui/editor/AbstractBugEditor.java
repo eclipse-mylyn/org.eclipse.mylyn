@@ -711,7 +711,12 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			} else if (key.equals("product")) {
 				// newLayout(attributesComposite, 1, name, PROPERTY);
 				toolkit.createLabel(attributesComposite, name);
-				toolkit.createLabel(attributesComposite, value);
+//				toolkit.createLabel(attributesComposite, value);
+				Composite uneditableComp = toolkit.createComposite(attributesComposite);
+				GridLayout textLayout = new GridLayout();
+				textLayout.marginWidth = 1;				
+				uneditableComp.setLayout(textLayout);
+				toolkit.createText(uneditableComp, value, SWT.READ_ONLY );//Label(attributesComposite, value);
 				// newLayout(attributesComposite, 1, value,
 				// VALUE).addListener(SWT.FocusIn, new GenericListener());
 				currentCol += 2;
@@ -764,7 +769,11 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			} else if (values.isEmpty()) {
 				// newLayout(attributesComposite, 1, name, PROPERTY);
 				toolkit.createLabel(attributesComposite, name);
-				toolkit.createLabel(attributesComposite, value);
+				Composite uneditableComp = toolkit.createComposite(attributesComposite);
+				GridLayout textLayout = new GridLayout();
+				textLayout.marginWidth = 1;				
+				uneditableComp.setLayout(textLayout);
+				toolkit.createText(uneditableComp, value, SWT.READ_ONLY );//Label(attributesComposite, value);
 				// newLayout(attributesComposite, 1, value,
 				// VALUE).addListener(SWT.FocusIn, new GenericListener());
 				currentCol += 2;
@@ -1426,14 +1435,16 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		if (event.widget instanceof CCombo) {
 			CCombo combo = (CCombo) event.widget;
 			if (comboListenerMap.containsKey(combo)) {
-				String sel = combo.getItem(combo.getSelectionIndex());
-				Attribute attribute = getBug().getAttribute(comboListenerMap.get(combo));
-				if (sel != null && !(sel.equals(attribute.getNewValue()))) {
-					attribute.setNewValue(sel);
-					for (IBugzillaAttributeListener client : attributesListeners) {
-						client.attributeChanged(attribute.getName(), sel);
+				if (combo.getSelectionIndex() > -1) {
+					String sel = combo.getItem(combo.getSelectionIndex());
+					Attribute attribute = getBug().getAttribute(comboListenerMap.get(combo));
+					if (sel != null && !(sel.equals(attribute.getNewValue()))) {
+						attribute.setNewValue(sel);
+						for (IBugzillaAttributeListener client : attributesListeners) {
+							client.attributeChanged(attribute.getName(), sel);
+						}
+						changeDirtyStatus(true);
 					}
-					changeDirtyStatus(true);
 				}
 			}
 		}
