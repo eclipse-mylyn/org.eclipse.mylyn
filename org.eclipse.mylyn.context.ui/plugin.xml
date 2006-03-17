@@ -270,6 +270,7 @@
 	  <viewContribution 
 		id="org.eclipse.mylar.outline.contribution.filter" 
    		targetID="org.eclipse.ui.views.ContentOutline">
+   		<!--
     	<action
            class="org.eclipse.mylar.internal.ui.actions.ApplyMylarToOutlineAction"
            enablesFor="*"
@@ -281,6 +282,7 @@
            toolbarPath="mylar"
            tooltip="Apply Mylar"> 
   		</action> 
+  		-->
   	</viewContribution>	
   	<viewContribution 
 		id="org.eclipse.mylar.ui.tasklist.apply" 
