@@ -23,7 +23,7 @@ public class BugzillaQueryWizardPage extends WizardPage {
 
 	private static final String TITLE = "New Bugzilla Query";
 
-	private static final String DESCRIPTION = "Enter the parameters for this query.";
+	private static final String DESCRIPTION = "Enter query parameters. If attributes are blank or stale press the Update button.";
 
 	private BugzillaQueryDialog queryDialog;
 

@@ -59,8 +59,10 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		if(repository != null && repositoryVersionCombo.indexOf(repository.getVersion()) >= 0) {
 			repositoryVersionCombo.select(repositoryVersionCombo.indexOf(repository.getVersion()));
 		} else {
-			repositoryVersionCombo.select(connector.getSupportedVersions().size()-1);
-		}
+			int defaultIndex = connector.getSupportedVersions().size()-1;
+			repositoryVersionCombo.select(defaultIndex);
+			setVersion(repositoryVersionCombo.getItem(defaultIndex));
+		} 
 		
 		repositoryVersionCombo.addSelectionListener(new SelectionListener() {
 
