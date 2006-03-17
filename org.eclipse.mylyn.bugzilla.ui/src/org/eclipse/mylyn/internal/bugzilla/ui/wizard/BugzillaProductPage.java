@@ -134,8 +134,7 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 					MessageDialog
 					.openError(
 							null,
-							"Connection Error",
-							exception.getMessage()+"\nPlease check your settings in the bugzilla preferences. ");
+							"Connection Error","\nPlease check your settings in the bugzilla preferences. ");
 				} finally {
 					monitor.done();
 					monitorDialog.close();

@@ -127,7 +127,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 	public static final Font HEADER_FONT = JFaceResources.getDefaultFont();
 
-	public static final int DESCRIPTION_WIDTH = 79 * 11;// 7
+	public static final int DESCRIPTION_WIDTH = 79 * 7;
 
 	public static final int DESCRIPTION_HEIGHT = 10 * 14;
 
