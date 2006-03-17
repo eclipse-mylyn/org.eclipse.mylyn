@@ -26,7 +26,7 @@ public class TaskArchive extends AbstractTaskContainer {
 	}
 
 	public String getPriority() {
-		return Task.PriorityLevel.P5.toString();
+		return Task.PriorityLevel.P1.toString();
 	}
 
 	@Override
@@ -34,7 +34,6 @@ public class TaskArchive extends AbstractTaskContainer {
 		return HANDLE;
 	}
 	
-
 	public String getDescription() {
 		return LABEL_ARCHIVE;
 	}
