@@ -157,25 +157,19 @@
 	</tr>
 </table>
 <p>Also see the <b><a href="new-0.3.html">New &amp; Noteworthy for the Mylar 0.3.x</a>
-</b>preview release.&nbsp; </p>
-<h3>Additions <span style="background-color: #E0D0E6">&nbsp;since 0.4.9&nbsp;</span></h3>
-<p>Bugzilla Connector users: If you get a &quot;Could not log in&quot; error when 
+</b>preview release.&nbsp; </p><hr>
+<p><b>Bugzilla Connector users</b>: after updating, if you get a &quot;Could not log in&quot; error when 
 synchronizing a query, open it, verify that it is associated to the correct 
-repository, and click OK (some older task lists did not properly associated 
+repository, and click OK (some older task lists did not properly associate 
 queries with repositories). </p>
-<p>JIRA Connector users: JIRA Core Services 0.8.0 (from Tigris.org) will get 
+<p><b>JIRA Connector users</b>: JIRA Core Services 0.8.0 (from Tigris.org) will get 
 installed with this release.</p>
-<p>Eclipse 3.2 users</p>
-<ul>
-	<li>This release supports Eclipse 3.2M5 (M4 is no longer supported). Please note the changes in feature packaging:
-	<a href="http://eclipse.org/mylar/dl.php">http://eclipse.org/mylar/dl.php</a>
-	</li>
-	<li>3.2M5: Custom Mylar editor is gone (see below), so before restarting 
+<p><b>Eclipse 3.2 users</b>: this release supports Eclipse 3.2M5 (M4 is no 
+longer supported). The ustom Mylar editor is gone (see below), so before restarting 
 	deactivate the current task or close all active editors, and run the New -&gt; 
-	Mylar -&gt; Preference Configuration wizard (it should pop up automatically)</li>
-	<li>3.2M5: If auto folding doesn't work reset the folding provider (see 
-	<a href="#active-folding">Active Folding</a>).</li>
-</ul>
+	Mylar -&gt; Preference Configuration wizard (it should pop up automatically).&nbsp; If auto folding doesn't work reset the folding provider (see
+<a href="#active-folding">Active Folding</a>).</p>
+<h3>Additions <span style="background-color: #E0D0E6">&nbsp;since 0.4.9&nbsp;</span></h3>
 
 <table cellpadding="10" cellspacing="0" width="600" id="table145">
 		<tr>
@@ -186,7 +180,7 @@ installed with this release.</p>
 			Bugzilla versions are now associated with each repository, and can 
 			be set from the Task Repositories view.&nbsp; Bugzilla 2.22rc1 is 
 			also supported.<p>
-			<img border="0" src="images/0.4.10/bugzilla-versions.gif"></td>
+			<img border="0" src="http://eclipse.org/mylar/doc/images/0.4.10/bugzilla-versions.gif"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -215,7 +209,7 @@ installed with this release.</p>
 			<p>NOTE: on Eclipse 3.1 you may need to resize your columns after&nbsp; 
 			updating.</p>
 			<p>
-			<img border="0" src="images/0.4.10/tasklist-status.gif"></td>
+			<img border="0" src="http://eclipse.org/mylar/doc/images/0.4.10/tasklist-status.gif"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -231,7 +225,7 @@ installed with this release.</p>
 			</td>
 			<td valign="top" width="70%">
 			The Bugzilla editor now uses Eclipse forms.<p>
-			<img border="0" src="images/0.4.10/bugzilla-editor.gif"></td>
+			<img border="0" src="http://eclipse.org/mylar/doc/images/0.4.10/bugzilla-editor.gif"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -247,12 +241,14 @@ installed with this release.</p>
 			(Experimental)</b></p>
 			</td>
 			<td valign="top" width="70%">
-			The experimental Task Activity view replaces the Task Planner wizard 
-			to provide feedback on activity and estimation (note that elapsed times are still approximate).&nbsp; 
-			It appears by default in the new Planning perspective.&nbsp; Tasks 
-			can be dragged to the current, next, or future week to set reminders 
-			for those weeks.<p>
-			<img border="0" src="images/0.4.10/task-activity.gif"></td>
+			The experimental Task Activity view and will replaces the Task 
+			Planner wizard for viewing task activity, and appears in the new 
+			Planning perspective. This view shows the task activity context, 
+			which will drive the Apply Mylar to Task List action coming in 0.5. 
+			Note that elapsed times are still approximate, and will be more 
+			configurable for 0.5. Tasks can be dragged to the current, next, or 
+			future week to set reminders for those weeks.<p>
+			<img border="0" src="http://eclipse.org/mylar/doc/images/0.4.10/task-activity.gif"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -263,92 +259,9 @@ installed with this release.</p>
 
 <br>&nbsp;
 
-<table cellpadding="10" cellspacing="0" width="600" id="table137">
-		<tr>
-			<td align="left" valign="top" width="30%">
-			<p align="right"><b>JIRA integration (Experimental)</b></p>
-			</td>
-			<td valign="top" width="70%">
-			JIRA tasks and queries are now supported in the task list.&nbsp; Add 
-			a new JIRA repository via the Task Repositories view, then 
-			right-click in the task list to Add a New Repository Query, and 
-			select from one of your existing JIRA filters.&nbsp; Note that on 
-			very large repositories (e.g. Codehaus the very first query that's 
-			run on a newly added repository will be slow).&nbsp; 
-			<p>Refer to the <a href="http://www.eclipse.org/mylar/start.php">
-			Getting Started</a> page for an integration overview.&nbsp; Also note that the task list now provides icon overlays indicating 
-			repository task type/severity, and text overlays for queries indicating the repository. 
-			</p>
-			<p>
-			<img border="0" src="http://eclipse.org/mylar/doc/images/0.4.9/jira-select-type.gif"></p>
-			<p>
-			<img border="0" src="http://eclipse.org/mylar/doc/images/0.4.9/jira-query.gif"></td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
+<h3>Task Context</h3>
 
-<table cellpadding="10" cellspacing="0" width="600" id="table141">
-		<tr>
-			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Task data import</b></p>
-			</td>
-			<td valign="top" width="70%">
-			Task date can now be imported from an existing .mylar directory, or 
-			from a backup zip file created by the Mylar export wizard.<p>
-			<img border="0" src="http://eclipse.org/mylar/doc/images/0.4.9/tasklist-import.gif"></td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table144">
-		<tr>
-			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Active task indication<br>
-			(3.2 only)</b></p>
-			</td>
-			<td valign="top" width="70%">
-			The currently active task is indicated with a hyperlink below the 
-			toolbar that can be used to bring the task into focus (Eclipse 3.2 
-			only). <p>
-			<img border="0" src="http://eclipse.org/mylar/doc/images/0.4.9/tasklist-indication-active.gif"></td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table142">
-		<tr>
-			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Notification popups<br>
-			(3.2 only)</b></p>
-			</td>
-			<td valign="top" width="70%">
-			Task reminders no longer appear in a separate dialog windows.&nbsp; 
-			When a task becomes overdue, a notification 'toaster' pops up that 
-			can be used to bring the task up.&nbsp; The notification will not 
-			come up again, since the overdue task will be colored red and always 
-			visible in the task list until the reminder is reset.<p>
-			<img border="0" src="http://eclipse.org/mylar/doc/images/0.4.9/tasklist-notification.gif"></td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="601" id="table143">
+<table cellpadding="10" cellspacing="0" width="601" id="table149">
 		<tr>
 			<td align="left" valign="top" width="30%">
 			<p align="right"><b>No more custom Java Editor (3.2 only)</b></p>
@@ -364,10 +277,6 @@ installed with this release.</p>
 			</td>
 		</tr>
 </table>
-
-<p><br>
-</p>
-<h3>Task Context</h3>
 
 <table cellpadding="10" cellspacing="0" width="600" id="table127">
 		<tr>
@@ -610,6 +519,91 @@ installed with this release.</p>
 
 <h3>&nbsp;</h3>
 <h3>Task List</h3>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table153">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>JIRA Connector</b></p>
+			</td>
+			<td valign="top" width="70%">
+			JIRA tasks and queries are now supported in the task list.&nbsp; Add 
+			a new JIRA repository via the Task Repositories view, then 
+			right-click in the task list to Add a New Repository Query, and 
+			select from one of your existing JIRA filters.&nbsp; Note that on 
+			very large repositories (e.g. Codehaus the very first query that's 
+			run on a newly added repository will be slow).&nbsp; 
+			<p>Refer to the <a href="http://www.eclipse.org/mylar/start.php">
+			Getting Started</a> page for an integration overview.&nbsp; Also note that the task list now provides icon overlays indicating 
+			repository task type/severity, and text overlays for queries indicating the repository. 
+			</p>
+			<p>
+			<img border="0" src="http://eclipse.org/mylar/doc/images/0.4.9/jira-select-type.gif"></p>
+			<p>
+			<img border="0" src="http://eclipse.org/mylar/doc/images/0.4.9/jira-query.gif"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table151">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Task data import</b></p>
+			</td>
+			<td valign="top" width="70%">
+			Task date can now be imported from an existing .mylar directory, or 
+			from a backup zip file created by the Mylar export wizard.<p>
+			<img border="0" src="http://eclipse.org/mylar/doc/images/0.4.9/tasklist-import.gif"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table152">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Active task indication<br>
+			(3.2 only)</b></p>
+			</td>
+			<td valign="top" width="70%">
+			The currently active task is indicated with a hyperlink below the 
+			toolbar that can be used to bring the task into focus (Eclipse 3.2 
+			only). <p>
+			<img border="0" src="http://eclipse.org/mylar/doc/images/0.4.9/tasklist-indication-active.gif"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table150">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Notification popups<br>
+			(3.2 only)</b></p>
+			</td>
+			<td valign="top" width="70%">
+			Task reminders no longer appear in a separate dialog windows.&nbsp; 
+			When a task becomes overdue, a notification 'toaster' pops up that 
+			can be used to bring the task up.&nbsp; The notification will not 
+			come up again, since the overdue task will be colored red and always 
+			visible in the task list until the reminder is reset.<p>
+			<img border="0" src="http://eclipse.org/mylar/doc/images/0.4.9/tasklist-notification.gif"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
 
 <table cellpadding="10" cellspacing="0" width="600" id="table126">
 		<tr>
