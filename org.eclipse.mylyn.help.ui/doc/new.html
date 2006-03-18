@@ -22,8 +22,8 @@
 		<td bgcolor="#FAF7FB"><font size="1">0.4.10<br>
 		<i>March 17, 2006</i></font></td>
 		<td bgcolor="#FAF7FB" align="center">
-		<a href="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&product=Mylar&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&bug_status=RESOLVED&bug_status=VERIFIED&bug_status=CLOSED&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=2006-02-24&chfieldto=2006-03-15&chfield=resolution&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=">
-		<font size="1">x</font></a><font size="1"><a href="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&product=Mylar&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&bug_status=RESOLVED&bug_status=VERIFIED&bug_status=CLOSED&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=2006-02-23&chfieldto=2006-03-17&chfield=resolution&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=">
+		<a href="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&product=Mylar&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&bug_status=RESOLVED&bug_status=VERIFIED&bug_status=CLOSED&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=2006-02-24&chfieldto=2006-03-18&chfield=resolution&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=">
+		<font size="1">80
 		<br>
 		reports</a></font></td>
 		<td bgcolor="#FAF7FB"><font size="1">peik.aschan (assertion test case, 
@@ -157,12 +157,11 @@
 </b>preview release.&nbsp; </p>
 <h3>Additions <span style="background-color: #E0D0E6">&nbsp;since 0.4.9&nbsp;</span></h3>
 <ul>
+	<li>More docs for 0.5, this will be final release before then</li>
+	<li>JIRA Core Services 0.8.0 (from Tigris.org) will get installed.</li>
 	<li>This release supports Eclipse 3.2M5 (M4 is no longer supported) and 
 	Bugzilla 2.20.1. Please note the changes in feature packaging:
 	<a href="http://eclipse.org/mylar/dl.php">http://eclipse.org/mylar/dl.php</a> </li>
-	<li>Note that changing versions of Eclipse causes repository credentials to 
-	get cleared (they're stored in the Platform key ring). Reset in the Task 
-	Repositories view after updating Eclipse.</li>
 	<li>3.2M5: Custom Mylar editor is gone (see below), so before restarting 
 	deactivate the current task or close all active editors, and run the New -&gt; 
 	Mylar -&gt; Preference Configuration wizard (it should pop up automatically)</li>
@@ -173,11 +172,13 @@
 <table cellpadding="10" cellspacing="0" width="600" id="table145">
 		<tr>
 			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Bugzilla versions associated with repository</b></p>
+			<p align="right"><b>Multiple Bugzilla versions supported</b></p>
 			</td>
 			<td valign="top" width="70%">
-			Configure using Task Repositories view.<p>
-			Form-based editor for bug reports</td>
+			Bugzilla versions are now associated with each repository, and can 
+			be set from the Task Repositories view.&nbsp; Bugzilla 2.22rc1 is 
+			also supported.<p>
+			<img border="0" src="images/0.4.10/bugzilla-versions.gif"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -189,14 +190,23 @@
 <table cellpadding="10" cellspacing="0" width="600" id="table146">
 		<tr>
 			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Icons and overlays</b></p>
+			<p align="right"><b>Task priorities and status indication</b></p>
 			</td>
 			<td valign="top" width="70%">
-			Overlay descriptions, priority, notes, status<p>Need to change your 
-			column widths (maybe).&nbsp; Takes a bit to get used to, but easier 
-			overall.</p>
+			Task priorities are now icon based instead of using the Bugzilla 
+			P1..5 scheme, and the default priority has no icon (you may need to 
+			resize your columns after&nbsp; updating).&nbsp;&nbsp;&nbsp;More 
+			task status is indicated:<ul>
+				<li>Notes are overlaid on top (see &quot;long: ui issues&quot; below)</li>
+				<li>Severity is overlaid in the bottom right (for Bugzilla green 
+				triangle means enhancement, red circle means blocker/major, for 
+				JIRA additional task types appear).</li>
+				<li>For Bugzilla incoming/outgoing state is in a separate 
+				column.</li>
+				<li>Tooltips indicate the repository connector branding icon.</li>
+			</ul>
 			<p>
-			New tooltips for repository tasks</td>
+			<img border="0" src="images/0.4.10/tasklist-status.gif"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -208,16 +218,27 @@
 <table cellpadding="10" cellspacing="0" width="600" id="table147">
 		<tr>
 			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Misc</b></p>
+			<p align="right"><b>Task Activity view<br>
+			(Experimental)</b></p>
 			</td>
 			<td valign="top" width="70%">
-			More consistency in editor management: making files less interesting 
-			causes them to close.<p>
-			Improved Alt+Click interaction, turns off if you let go of Alt<p>
-			Copying task description includes URL.<p>
-			Support for Bugzilla 2.22<p>
-			Archive category filtering, completed filtering<p>
-			Color/theme improvements</td>
+			&nbsp;<p>
+			<img border="0" src="images/0.4.10/task-activity.gif"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table148">
+		<tr>
+			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
+			<p align="right"><b>Form-based Bugzilla Editor</b></p>
+			</td>
+			<td valign="top" width="70%">
+			...</td>
 		</tr>
 		<tr>
 			<td colspan="2">
