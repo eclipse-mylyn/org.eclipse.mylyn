@@ -1002,8 +1002,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	 * @see HEADER
 	 */
 	protected FormText newLayout(Composite composite, int colSpan, String text, String style) {
-		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		data.horizontalSpan = colSpan;
+//		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+//		data.horizontalSpan = colSpan;
 
 		FormText resultText;
 		if (style.equalsIgnoreCase(VALUE)) {
@@ -1014,7 +1014,12 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			// SWT.READ_ONLY);
 			formText.setFont(TEXT_FONT);
 			formText.setWhitespaceNormalized(false);
-			formText.setText(checkText(text), false, true);
+			// The extra newline at beginning of text is a hack.
+			// FormText is not displaying short strings unless it
+			// is there.
+			String result = checkText(text);
+			result = "\n"+result+"\n";
+			formText.setText(result, false, true);
 
 			// Trying to fingure out how to reduce the space between lines
 			// see FormText class.
@@ -1023,9 +1028,9 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			// int lineHeight = fm.getHeight();
 
 			// formText.setBackground(background);
-			data.horizontalIndent = HORZ_INDENT;
+//			data.horizontalIndent = HORZ_INDENT;
 			// data.widthHint = DESCRIPTION_WIDTH;
-			formText.setLayoutData(data);
+//			formText.setLayoutData(data);
 			// formText.setEditable(false);
 			// formText.getCaret().setVisible(false);
 
@@ -1068,7 +1073,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			// formText.setFont(TEXT_FONT);
 			formText.setText(checkText(text), false, false);
 			// formText.setBackground(background);
-			data.horizontalIndent = HORZ_INDENT;
+			
 			// formText.setLayoutData(data);
 			// StyleRange sr = new StyleRange(0, text.length(), foreground,
 			// background,

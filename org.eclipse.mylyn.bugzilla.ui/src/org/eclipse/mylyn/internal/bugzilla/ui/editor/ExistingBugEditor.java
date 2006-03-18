@@ -59,7 +59,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
@@ -442,7 +441,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		Composite addCommentsComposite = toolkit.createComposite(section);
 		section.setClient(addCommentsComposite);
 		GridLayout addCommentsLayout = new GridLayout();
-		addCommentsLayout.numColumns = 4;
+		addCommentsLayout.numColumns = 1;
 		addCommentsComposite.setLayout(addCommentsLayout);
 		// addCommentsComposite.setBackground(background);
 		GridData addCommentsData = new GridData(GridData.FILL_BOTH);
@@ -458,18 +457,18 @@ public class ExistingBugEditor extends AbstractBugEditor {
 			Comment comment = it.next();
 			String commentHeader = "<b>" + comment.getNumber() + ": " + comment.getAuthorName() + ", "
 					+ df.format(comment.getCreated()) + "</b>";
-			formText = newLayout(addCommentsComposite, 4, commentHeader, HEADER);
+			formText = newLayout(addCommentsComposite, 1, commentHeader, HEADER);
 			formText.addListener(SWT.FocusIn, new CommentListener(comment));
-			formText = newLayout(addCommentsComposite, 4, comment.getText(), VALUE);
+			formText = newLayout(addCommentsComposite, 1, comment.getText(), VALUE);
 			formText.setFont(COMMENT_FONT);
 			formText.addListener(SWT.FocusIn, new CommentListener(comment));
 
-			Label spacer = toolkit.createLabel(addCommentsComposite, "");
-
-			GridData spacerGridData = new GridData();
-			spacerGridData.horizontalSpan = 4;
-			spacerGridData.heightHint = 18;
-			spacer.setLayoutData(spacerGridData);
+//			Label spacer = toolkit.createLabel(addCommentsComposite, "");
+//
+//			GridData spacerGridData = new GridData();
+//			spacerGridData.horizontalSpan = 4;
+//			spacerGridData.heightHint = 18;
+//			spacer.setLayoutData(spacerGridData);
 			// code for outline
 			texts.add(textsindex, formText);
 			textHash.put(comment, formText);
