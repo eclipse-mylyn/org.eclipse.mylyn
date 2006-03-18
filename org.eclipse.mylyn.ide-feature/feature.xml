@@ -53,7 +53,7 @@
       <import plugin="org.eclipse.ant.ui"/>
       <import plugin="org.eclipse.ui.forms"/>
       <import plugin="org.eclipse.ui.browser"/>
-      <import feature="org.eclipse.mylar_feature" version="0.4.9" match="greaterOrEqual"/>
+      <import feature="org.eclipse.mylar_feature" version="0.4.10" match="greaterOrEqual"/>
    </requires>
 
    <plugin
