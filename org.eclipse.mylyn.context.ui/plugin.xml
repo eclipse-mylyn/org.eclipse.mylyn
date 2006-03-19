@@ -282,7 +282,6 @@
            tooltip="Apply Mylar"> 
   		</action> 
   	</viewContribution>
-  	<!--	
   	<viewContribution 
 		id="org.eclipse.mylar.ui.tasklist.apply" 
    		targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
@@ -296,9 +295,8 @@
            toolbarPath="context"
            tooltip="Apply Mylar"> 
   		</action> 
-  		</viewContribution>
-  	-->
-   <viewContribution
+  	</viewContribution>
+    <viewContribution
          id="org.eclipse.mylar.tasklist.contribution.context"
          targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
       <action
