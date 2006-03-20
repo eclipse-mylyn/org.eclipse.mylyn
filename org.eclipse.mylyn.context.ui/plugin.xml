@@ -54,8 +54,7 @@
                  <objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractQueryHit"/>
               </or>
            </enablement>
-        </action>
-        <!--
+        </action> 
         <action
               class="org.eclipse.mylar.internal.ui.actions.ContextAttachAction"
               enablesFor="1"
@@ -84,7 +83,6 @@
               </or>
            </enablement>
         </action>
-        -->
         <!--
         <action
               class="org.eclipse.mylar.tasklist.ui.actions.TaskActivateAction"
