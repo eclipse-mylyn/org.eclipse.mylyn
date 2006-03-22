@@ -29,6 +29,8 @@
 	</ul>
 	<p><b>Java Development</b></p>
 	<ul>
+		<li><a href="#content-assist-duplication">Why do elements appear twice in the 
+		content assist popup?</a></li>
 		<li><a href="#filtering-declarations">How do I stop declarations from showing up in the Package Explorer?</a></li>
 		<li><a href="#active-search-empty">Why does nothing show up in the Active Search or Active Hierarchy?</a></li>
 	</ul>
@@ -278,6 +280,19 @@ Mylar work with my JIRA repository?</a></h3>
 	additional details see the Requirements at:
 	<a href="http://jira-dashboard.tigris.org/">
 	http://jira-dashboard.tigris.org/</a> </p>
+	<hr>
+<p>&nbsp;</p>
+	<h3><a name="content-assist-duplication">Why do elements appear twice in the content assist popup?</a></h3>
+<p>In Eclipse 3.2, Mylar uses extended content assist processors in order to 
+rank and separate the elements in the current task context.&nbsp; <i>If both the 
+Mylar and the Java proposals are enabled in the list visible below you will see 
+duplicates</i>, so disable &quot;Java Completions&quot; and &quot;Java Types&quot; since the Mylar 
+versions will provide those elements.&nbsp; Running New -&gt; Mylar -&gt; Recommended 
+Preferences will do this for you automatically, or you can set toggle them 
+manually in the preference page.&nbsp; As of Eclipse 3.2M5 applying this change 
+requires a restart.</p>
+<p>
+			<img border="0" src="images/faq/content-assist.gif"></p>
 	<hr>
 <p>&nbsp;</p>
 	<h3><a name="filtering-declarations">How do I stop declarations from showing up in the Package Explorer?</a></h3>
