@@ -32,7 +32,7 @@ public interface ITask extends ITaskListElement {
 	public abstract void setActive(boolean active);
 
 //	abstract void setDescription(String description);
-	
+	  
 	public String getKind();
 
 	public void setKind(String kind);
