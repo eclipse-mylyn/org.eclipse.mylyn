@@ -38,14 +38,15 @@ public class DateRangeContainer extends AbstractTaskContainer {
 
 	private long totalEstimated = 0;
 
-//	private String description;
+	// private String description;
 
-	public DateRangeContainer(GregorianCalendar startDate, GregorianCalendar endDate, String description, TaskList taskList) {
+	public DateRangeContainer(GregorianCalendar startDate, GregorianCalendar endDate, String description,
+			TaskList taskList) {
 		super(description, taskList);
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
-	
+
 	public DateRangeContainer(Calendar startDate, Calendar endDate, String description, TaskList taskList) {
 		super(description, taskList);
 		this.startDate = startDate;
@@ -53,14 +54,14 @@ public class DateRangeContainer extends AbstractTaskContainer {
 	}
 
 	public DateRangeContainer(GregorianCalendar startDate, GregorianCalendar endDate, TaskList taskList) {
-		super(DateFormat.getDateInstance(DateFormat.FULL).format(startDate.getTime()) 
-				+ " to " 
-				+ DateFormat.getDateInstance(DateFormat.FULL).format(endDate.getTime()), 
-				taskList);
+		super(DateFormat.getDateInstance(DateFormat.FULL).format(startDate.getTime()) + " to "
+				+ DateFormat.getDateInstance(DateFormat.FULL).format(endDate.getTime()), taskList);
 		// super(startDate.hashCode() + endDate.hashCode() + "");
-//		String start = DateFormat.getDateInstance(DateFormat.FULL).format(startDate.getTime());
-//		String end = DateFormat.getDateInstance(DateFormat.FULL).format(endDate.getTime());
-//		this.description = start + " to " + end;
+		// String start =
+		// DateFormat.getDateInstance(DateFormat.FULL).format(startDate.getTime());
+		// String end =
+		// DateFormat.getDateInstance(DateFormat.FULL).format(endDate.getTime());
+		// this.description = start + " to " + end;
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
@@ -71,21 +72,22 @@ public class DateRangeContainer extends AbstractTaskContainer {
 		startDate.setTime(time);
 		endDate = new GregorianCalendar();
 		endDate.setTime(time2);
-//		this.description = description;
+		// this.description = description;
 	}
 
 	public boolean includes(Calendar cal) {
 		return (startDate.getTimeInMillis() <= cal.getTimeInMillis())
 				&& (endDate.getTimeInMillis() >= cal.getTimeInMillis());
 	}
-	
+
 	public void clear() {
 		children.clear();
 	}
 
 	public void addTask(DateRangeActivityDelegate taskWrapper) {
-		long taskActivity = taskWrapper.getActivity();		
-		if(taskActivity < 0) taskActivity = 0;
+		long taskActivity = taskWrapper.getActivity();
+		if (taskActivity < 0)
+			taskActivity = 0;
 		totalElapsed += taskActivity;
 		children.remove(taskWrapper);
 		children.add(taskWrapper);
@@ -96,6 +98,10 @@ public class DateRangeContainer extends AbstractTaskContainer {
 		} else {
 			taskToDuration.put(taskWrapper, taskActivity);
 		}
+	}
+
+	void remove(DateRangeActivityDelegate taskWrapper) {
+		children.remove(taskWrapper);
 	}
 
 	public Calendar getStart() {
@@ -126,9 +132,9 @@ public class DateRangeContainer extends AbstractTaskContainer {
 		return totalEstimated;
 	}
 
-//	public Set<TaskActivityDurationDelegate> getElements() {
-//		return tasks;
-//	}
+	// public Set<TaskActivityDurationDelegate> getElements() {
+	// return tasks;
+	// }
 
 	public boolean isArchive() {
 		return false;
@@ -142,38 +148,38 @@ public class DateRangeContainer extends AbstractTaskContainer {
 		return "";
 	}
 
-//	public String getDescription() {
-//		return description;
-//	}
+	// public String getDescription() {
+	// return description;
+	// }
 
-//	public void setDescription(String description) {
-//		this.description = description;
-//	}
+	// public void setDescription(String description) {
+	// this.description = description;
+	// }
 
-//	public String getHandleIdentifier() {
-//		return description;
-//	}
+	// public String getHandleIdentifier() {
+	// return description;
+	// }
 
 	public void setHandleIdentifier(String id) {
 		// ignore
 	}
 
 	public Set<ITask> getChildren() {
-//		Set<ITask> taskSet = new HashSet<ITask>();
-//		taskSet.addAll(tasks);
+		// Set<ITask> taskSet = new HashSet<ITask>();
+		// taskSet.addAll(tasks);
 		return children;
-//		Set<ITask> emptySet = Collections.emptySet();
-//		return emptySet;
+		// Set<ITask> emptySet = Collections.emptySet();
+		// return emptySet;
 	}
 
 	public boolean isFuture() {
 		return !isPresent() && getStart().after(Calendar.getInstance());
 	}
-	
+
 	public boolean isPresent() {
 		return getStart().before(Calendar.getInstance()) && getEnd().after(Calendar.getInstance());
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int PRIME = 31;

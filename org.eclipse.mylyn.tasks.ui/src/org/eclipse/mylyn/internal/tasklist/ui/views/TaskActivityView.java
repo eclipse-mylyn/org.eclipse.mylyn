@@ -14,6 +14,7 @@ package org.eclipse.mylar.internal.tasklist.ui.views;
 import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -291,11 +292,20 @@ public class TaskActivityView extends ViewPart {
 				Calendar reminderCalendar;
 				if (target instanceof DateRangeContainer) {
 					container = (DateRangeContainer) target;
-					reminderCalendar = container.getStart();
-
+					if (container.isPresent()) {
+						reminderCalendar = GregorianCalendar.getInstance();
+						MylarTaskListPlugin.getTaskListManager().setTomorrow(reminderCalendar);
+					} else {
+						reminderCalendar = container.getStart();
+					}
 				} else if (target instanceof DateRangeActivityDelegate) {
 					DateRangeActivityDelegate dateRangeActivityDelegate = (DateRangeActivityDelegate) target;
-					reminderCalendar = dateRangeActivityDelegate.getDateRangeContainer().getStart();
+					if (dateRangeActivityDelegate.getDateRangeContainer().isPresent()) {
+						reminderCalendar = GregorianCalendar.getInstance();
+						MylarTaskListPlugin.getTaskListManager().setTomorrow(reminderCalendar);
+					} else {
+						reminderCalendar = dateRangeActivityDelegate.getDateRangeContainer().getStart();
+					}
 				} else {
 					return false;
 				}

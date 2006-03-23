@@ -317,6 +317,11 @@
             name="Planning"/>
    </extension>
   
+     
+   <extension point="org.eclipse.mylar.tasklist.providers">    
+      <dynamicPopupMenu class="org.eclipse.mylar.internal.tasklist.ui.TaskReminderMenuContributor"/>
+   </extension>
+  
 </plugin>
 
 
