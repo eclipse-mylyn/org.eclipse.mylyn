@@ -65,11 +65,11 @@ public class TaskListToolTipHandler {
 	public TaskListToolTipHandler(Shell parentShell) {
 		if (parentShell != null) {
 			tipShell = createTipShell(parentShell);
-		}
+		} 
 	}
 
 	private Shell createTipShell(Shell parent) {
-		Shell tipShell = new Shell(parent, SWT.NONE);
+		Shell tipShell = new Shell(parent.getDisplay(), SWT.NO_FOCUS | SWT.ON_TOP | SWT.MODELESS);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
 		gridLayout.marginWidth = 2;
