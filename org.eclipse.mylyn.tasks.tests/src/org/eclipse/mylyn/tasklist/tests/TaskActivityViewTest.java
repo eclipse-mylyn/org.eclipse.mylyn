@@ -102,9 +102,11 @@ public class TaskActivityViewTest extends TestCase {
 		DateRangeContainer thisWeekActivity = MylarTaskListPlugin.getTaskListManager().getActivityThisWeek();
 		assertNotNull(thisWeekActivity);
 		assertEquals(0, thisWeekActivity.getChildren().size());
-
+		assertEquals(0, thisWeekActivity.getTotalElapsed());
 		Calendar thisWeekCalendarStart = GregorianCalendar.getInstance();
+		thisWeekCalendarStart.setTime(thisWeekActivity.getStart().getTime());
 		Calendar thisWeekCalendarStop = GregorianCalendar.getInstance();
+		thisWeekCalendarStop.setTime(thisWeekActivity.getStart().getTime());
 		thisWeekCalendarStop.add(Calendar.MILLISECOND, 2);
 		assertTrue(thisWeekActivity.includes(thisWeekCalendarStart));
 
