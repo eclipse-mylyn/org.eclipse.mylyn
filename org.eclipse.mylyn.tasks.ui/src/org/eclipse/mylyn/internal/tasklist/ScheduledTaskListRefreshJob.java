@@ -68,21 +68,6 @@ public class ScheduledTaskListRefreshJob extends Job {
 					}
 				}
 				
-//				Set<AbstractRepositoryQuery> queries = Collections.unmodifiableSet(taskList.getQueries());
-				
-				// HERE lies the problem.  We may have multiple different query types (connectors) so we need to
-				// aggregate the diferent types into their respective sets... this is not very smooth. what do we do?
-				
-				
-//				connector.synchronize(queries, null);
-//				for (AbstractRepositoryQuery query : queries) {
-//					AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
-//							query.getRepositoryKind());
-//					connector.synchronize(query, null);
-//					if (monitor.isCanceled())
-//						return Status.CANCEL_STATUS;
-//				}
-
 			} finally {
 				count++;
 				if (count == Long.MAX_VALUE)

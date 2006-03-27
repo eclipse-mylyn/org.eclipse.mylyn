@@ -263,7 +263,12 @@
          class="org.eclipse.mylar.internal.tasklist.ui.preferences.MylarTaskListPreferencePage"
          id="org.eclipse.mylar.tasklist.ui.preferences"
          category="org.eclipse.mylar.ui.preferences">
-      </page> 
+      </page>
+      <page
+            category="org.eclipse.mylar.tasklist.ui.preferences"
+            class="org.eclipse.mylar.internal.tasklist.ui.preferences.MylarRepositoriesPreferencePage"
+            id="org.eclipse.mylar.tasklist.ui.preferences.repositories"
+            name="Repository Tasks"/> 
    </extension>
 
 

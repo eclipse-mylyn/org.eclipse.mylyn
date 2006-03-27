@@ -13,7 +13,9 @@ package org.eclipse.mylar.internal.tasklist.ui;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -45,9 +47,9 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 
 	private TaskListNotificationPopup popup;
 
-	private List<ITaskListNotification> notifications = new ArrayList<ITaskListNotification>();
+	private Set<ITaskListNotification> notifications = new HashSet<ITaskListNotification>();
 
-	private List<ITaskListNotification> currentlyNotifying = Collections.synchronizedList(notifications);
+	private Set<ITaskListNotification> currentlyNotifying = Collections.synchronizedSet(notifications);
 
 	private List<ITaskListNotificationProvider> notificationProviders = new ArrayList<ITaskListNotificationProvider>();
 
@@ -62,6 +64,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 							if ((popup != null && popup.close()) || popup == null) {
 								closeJob.cancel();
 								collectNotifications();
+								setNotified();
 								synchronized (TaskListNotificationManager.class) {
 									if (currentlyNotifying.size() > 0) {
 										popup = new TaskListNotificationPopup(new Shell(PlatformUI.getWorkbench()
@@ -140,10 +143,14 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 		}
 	};
 
-	private void cleanNotified() {
+	
+	private void setNotified() {
 		for (ITaskListNotification notification : currentlyNotifying) {
 			notification.setNotified(true);
 		}
+	}
+	
+	private void cleanNotified() {
 		currentlyNotifying.clear();
 	}
 
@@ -181,7 +188,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 	/**
 	 * public for testing purposes
 	 */
-	public List<ITaskListNotification> getNotifications() {
+	public Set<ITaskListNotification> getNotifications() {
 		synchronized (TaskListNotificationManager.class) {
 			return currentlyNotifying;
 		}
@@ -189,7 +196,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 
 	public void propertyChange(PropertyChangeEvent event) {
 		if (event.getProperty().equals(TaskListPreferenceConstants.NOTIFICATIONS_ENABLED)) {
-			if ("true".equals(event.getNewValue())) {
+			if ((Boolean)event.getNewValue() == true) {
 				startNotification(OPEN_POPUP_DELAY);
 			} else {
 				stopNotification();

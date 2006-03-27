@@ -12,7 +12,6 @@
 package org.eclipse.mylar.tasklist.tests;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import junit.framework.TestCase;
@@ -76,7 +75,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 		notificationManager.addNotificationProvider(provider);	
 		notificationManager.startNotification(1);
 		Thread.sleep(500);
-		List<ITaskListNotification> notified = notificationManager.getNotifications();
+		Set<ITaskListNotification> notified = notificationManager.getNotifications();
 		for (ITaskListNotification notification : notified) {
 			assertTrue(notification.isNotified());
 		}

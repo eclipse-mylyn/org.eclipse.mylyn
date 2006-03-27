@@ -61,5 +61,13 @@ public class TaskListPreferenceConstants {
 	public static final String REPOSITORY_SYNCH_SCHEDULE_MILISECONDS = "org.eclipse.mylar.tasklist.repositories.synch.schedule.miliseconds";
 
 	public static final String NOTIFICATIONS_ENABLED = "org.eclipse.mylar.tasklist.notifications.enabled";
+
+	public static final String ARCHIVE_AUTOMATICALLY = "org.eclipse.mylar.tasklist.archive.enabled";
+
+	public static final String ARCHIVE_SCHEDULE = "org.eclipse.mylar.tasklist.archive.schedule";
+
+	public static final String ARCHIVE_FOLDER = "org.eclipse.mylar.tasklist.archive.folder";
+
+	public static final String ARCHIVE_LAST = "org.eclipse.mylar.tasklist.archive.lastarchived";
 	
 }

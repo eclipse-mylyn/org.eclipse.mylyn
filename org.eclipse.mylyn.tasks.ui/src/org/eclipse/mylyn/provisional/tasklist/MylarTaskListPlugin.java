@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.internal.core.MylarPreferenceContstants;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.TaskListAutoArchiveManager;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.TaskListRefreshManager;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
@@ -75,6 +76,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	private TaskListRefreshManager taskListRefreshManager;
 	
 	private TaskListNotificationManager taskListNotificationManager;
+	
+	private TaskListAutoArchiveManager taskListArchiveManager;
 	
 	private List<ITaskEditorFactory> taskEditors = new ArrayList<ITaskEditorFactory>();
 
@@ -298,6 +301,10 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					taskListNotificationManager.addNotificationProvider(NOTIFICATION_PROVIDER);
 					taskListNotificationManager.startNotification(NOTIFICATION_DELAY);	
 					getMylarCorePrefs().addPropertyChangeListener(taskListNotificationManager);
+					
+					taskListArchiveManager = new TaskListAutoArchiveManager();
+					getMylarCorePrefs().addPropertyChangeListener(taskListArchiveManager);	
+					
 					taskListRefreshManager = new TaskListRefreshManager();
 					taskListRefreshManager.startRefreshJob();	
 					
@@ -327,6 +334,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		resourceBundle = null;
 		try {
 			getMylarCorePrefs().removePropertyChangeListener(taskListNotificationManager);
+			getMylarCorePrefs().removePropertyChangeListener(taskListArchiveManager);
 			taskListManager.getTaskList().removeChangeListener(taskListSaveManager);
 			taskListManager.dispose();
 			TaskListColorsAndFonts.dispose();
@@ -403,7 +411,11 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		
 		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, ""+(30 * 60 * 1000));
-
+		
+		store.setDefault(TaskListPreferenceConstants.ARCHIVE_AUTOMATICALLY, false);
+		store.setDefault(TaskListPreferenceConstants.ARCHIVE_SCHEDULE, 5);
+		store.setDefault(TaskListPreferenceConstants.ARCHIVE_LAST, 0);
+		
 		store.setDefault(TaskListPreferenceConstants.FILTER_ARCHIVE_MODE, true);
 		store.setDefault(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS, false);
 		store.setValue(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS, false);

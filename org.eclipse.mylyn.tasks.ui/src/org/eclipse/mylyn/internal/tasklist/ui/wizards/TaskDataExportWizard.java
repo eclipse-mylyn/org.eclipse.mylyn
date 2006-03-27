@@ -11,34 +11,21 @@
 package org.eclipse.mylar.internal.tasklist.ui.wizards;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.core.MylarContextManager;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.core.util.ZipFileUtil;
+import org.eclipse.mylar.internal.tasklist.util.TaskDataExportJob;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskList;
 import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -160,7 +147,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 				}
 
 				if (exportPage.exportTaskContexts()) {
-					for (ITask task : getAllTasks()) {
+					for (ITask task : MylarTaskListPlugin.getTaskListManager().getTaskList().getAllTasks()) {
 						File contextFile = MylarPlugin.getContextManager()
 								.getFileForContext(task.getHandleIdentifier());
 						File destTaskFile = new File(destDir + File.separator + contextFile.getName());
@@ -178,7 +165,10 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 			}
 		}
 
-		FileCopyJob job = new FileCopyJob(destZipFile, destTaskListFile, destActivationHistoryFile);
+		// FileCopyJob job = new FileCopyJob(destZipFile, destTaskListFile,
+		// destActivationHistoryFile);
+		TaskDataExportJob job = new TaskDataExportJob(exportPage.getDestinationDirectory(), exportPage.exportTaskList(), exportPage
+				.exportActivationHistory(), exportPage.exportTaskContexts(), exportPage.zip(), destZipFile.getName());
 		IProgressService service = PlatformUI.getWorkbench().getProgressService();
 
 		try {
@@ -193,170 +183,183 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 		return true;
 	}
 
-	/** Job that performs the file copying and zipping */
-	class FileCopyJob implements IRunnableWithProgress {
+	// /** Job that performs the file copying and zipping */
+	// class FileCopyJob implements IRunnableWithProgress {
+	//
+	// private static final String JOB_LABEL = "Exporting Data";
+	//
+	// private File destZipFile = null;
+	//
+	// private File destTaskListFile = null;
+	//
+	// private File destActivationHistoryFile = null;
+	//
+	// private boolean zip;
+	//
+	// private boolean exportTaskList;
+	//
+	// private boolean exportActivationHistory;
+	//
+	// private boolean exportTaskContexts;
+	//
+	// private String destinationDirectory;
+	//
+	// public FileCopyJob(File destZipFile, File destTaskListFile, File
+	// destActivationHistoryFile) {
+	// this.destZipFile = destZipFile;
+	// this.destTaskListFile = destTaskListFile;
+	// this.destActivationHistoryFile = destActivationHistoryFile;
+	//
+	// // Get parameters here to avoid accessing the UI thread
+	// this.zip = exportPage.zip();
+	// this.exportTaskList = exportPage.exportTaskList();
+	// this.exportActivationHistory = exportPage.exportActivationHistory();
+	// this.exportTaskContexts = exportPage.exportTaskContexts();
+	// this.destinationDirectory = exportPage.getDestinationDirectory();
+	// }
+	//
+	// public void run(final IProgressMonitor monitor) throws
+	// InvocationTargetException, InterruptedException {
+	// List<ITask> tasks = getAllTasks();
+	// monitor.beginTask(JOB_LABEL, tasks.size() + 2);
+	//
+	// // List of files to add to the zip archive
+	// List<File> filesToZip = new ArrayList<File>();
+	//
+	// // Map of file paths used to avoid duplicates
+	// Map<String, String> filesToZipMap = new HashMap<String, String>();
+	//
+	// if (exportTaskList) {
+	// MylarTaskListPlugin.getTaskListManager().saveTaskList();
+	//
+	// String sourceTaskListPath = MylarPlugin.getDefault().getDataDirectory() +
+	// File.separator
+	// + MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE;
+	// File sourceTaskListFile = new File(sourceTaskListPath);
+	//
+	// if (zip) {
+	// filesToZip.add(sourceTaskListFile);
+	// } else {
+	// if (!copy(sourceTaskListFile, destTaskListFile)) {
+	// MylarStatusHandler.fail(new Exception("Export Exception"), "Could not
+	// export task list file.",
+	// false);
+	// }
+	// monitor.worked(1);
+	// }
+	//
+	// }
+	//
+	// if (exportActivationHistory) {
+	// try {
+	// File sourceActivationHistoryFile = new
+	// File(MylarPlugin.getDefault().getDataDirectory()
+	// + File.separator + MylarContextManager.CONTEXT_HISTORY_FILE_NAME
+	// + MylarContextManager.CONTEXT_FILE_EXTENSION);
+	//
+	// MylarPlugin.getContextManager().saveActivityHistoryContext();
+	//
+	// if (zip) {
+	// filesToZip.add(sourceActivationHistoryFile);
+	// } else {
+	// copy(sourceActivationHistoryFile, destActivationHistoryFile);
+	// monitor.worked(1);
+	// }
+	// } catch (RuntimeException e) {
+	// MylarStatusHandler.fail(e, "Could not export activity history context
+	// file", true);
+	// }
+	// }
+	//
+	// if (exportTaskContexts) {
+	// boolean errorDisplayed = false; // Prevent many repeated error
+	// // messages
+	// for (ITask task : tasks) {
+	//
+	// if
+	// (!MylarPlugin.getContextManager().hasContext(task.getHandleIdentifier()))
+	// {
+	// continue; // Tasks without a context have no file to
+	// // copy
+	// }
+	//
+	// File contextFile =
+	// MylarPlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+	//
+	// File destTaskFile = new File(destinationDirectory + File.separator +
+	// contextFile.getName());
+	// File sourceTaskFile = contextFile;
+	// // new File(MylarPlugin.getDefault().getDataDirectory() +
+	// // File.separator + task.getContextPath()
+	// // + MylarContextManager.CONTEXT_FILE_EXTENSION);
+	//
+	// if (zip) {
+	// if (!filesToZipMap.containsKey(task.getHandleIdentifier())) {
+	// filesToZip.add(sourceTaskFile);
+	// filesToZipMap.put(task.getHandleIdentifier(), null);
+	// }
+	// } else {
+	// if (!copy(sourceTaskFile, destTaskFile) && !errorDisplayed) {
+	// MylarStatusHandler.fail(new Exception("Export Exception: " +
+	// sourceTaskFile.getPath()
+	// + " -> " + destTaskFile.getPath()),
+	// "Could not export one or more task context files.", true);
+	// errorDisplayed = true;
+	// }
+	// monitor.worked(1);
+	// }
+	// }
+	// }
+	//
+	// if (zip) {
+	// try {
+	// if (destZipFile.exists()) {
+	// destZipFile.delete();
+	// }
+	// ZipFileUtil.createZipFile(destZipFile, filesToZip, monitor);
+	// } catch (Exception e) {
+	// MylarStatusHandler.fail(e, "Could not create zip file.", true);
+	// }
+	// }
+	// monitor.done();
+	//
+	// }
+	// }
 
-		private static final String JOB_LABEL = "Exporting Data";
+	// /** Returns all tasks in the task list root or a category in the task
+	// list */
+	// protected List<ITask> getAllTasks() {
+	// List<ITask> allTasks = new ArrayList<ITask>();
+	// TaskList taskList =
+	// MylarTaskListPlugin.getTaskListManager().getTaskList();
+	//
+	// allTasks.addAll(taskList.getRootTasks());
+	//
+	// for (AbstractTaskContainer category : taskList.getCategories()) {
+	// allTasks.addAll(category.getChildren());
+	// }
+	//
+	// return allTasks;
+	// }
 
-		private File destZipFile = null;
-
-		private File destTaskListFile = null;
-
-		private File destActivationHistoryFile = null;
-
-		private boolean zip;
-
-		private boolean exportTaskList;
-
-		private boolean exportActivationHistory;
-
-		private boolean exportTaskContexts;
-
-		private String destinationDirectory;
-
-		public FileCopyJob(File destZipFile, File destTaskListFile, File destActivationHistoryFile) {
-			this.destZipFile = destZipFile;
-			this.destTaskListFile = destTaskListFile;
-			this.destActivationHistoryFile = destActivationHistoryFile;
-
-			// Get parameters here to avoid accessing the UI thread
-			this.zip = exportPage.zip();
-			this.exportTaskList = exportPage.exportTaskList();
-			this.exportActivationHistory = exportPage.exportActivationHistory();
-			this.exportTaskContexts = exportPage.exportTaskContexts();
-			this.destinationDirectory = exportPage.getDestinationDirectory();
-		}
-
-		public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-			List<ITask> tasks = getAllTasks();
-			monitor.beginTask(JOB_LABEL, tasks.size() + 2);
-
-			// List of files to add to the zip archive
-			List<File> filesToZip = new ArrayList<File>();
-
-			// Map of file paths used to avoid duplicates
-			Map<String, String> filesToZipMap = new HashMap<String, String>();
-
-			if (exportTaskList) {
-				MylarTaskListPlugin.getTaskListManager().saveTaskList();
-
-				String sourceTaskListPath = MylarPlugin.getDefault().getDataDirectory() + File.separator
-						+ MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE;
-				File sourceTaskListFile = new File(sourceTaskListPath);
-
-				if (zip) {
-					filesToZip.add(sourceTaskListFile);
-				} else {
-					if (!copy(sourceTaskListFile, destTaskListFile)) {
-						MylarStatusHandler.fail(new Exception("Export Exception"), "Could not export task list file.",
-								false);
-					}
-					monitor.worked(1);
-				}
-
-			}
-
-			if (exportActivationHistory) {
-				try {
-					File sourceActivationHistoryFile = new File(MylarPlugin.getDefault().getDataDirectory()
-							+ File.separator + MylarContextManager.CONTEXT_HISTORY_FILE_NAME
-							+ MylarContextManager.CONTEXT_FILE_EXTENSION);
-
-					MylarPlugin.getContextManager().saveActivityHistoryContext();
-
-					if (zip) {
-						filesToZip.add(sourceActivationHistoryFile);
-					} else {
-						copy(sourceActivationHistoryFile, destActivationHistoryFile);
-						monitor.worked(1);
-					}
-				} catch (RuntimeException e) {
-					MylarStatusHandler.fail(e, "Could not export activity history context file", true);
-				}
-			}
-
-			if (exportTaskContexts) {
-				boolean errorDisplayed = false; // Prevent many repeated error
-				// messages
-				for (ITask task : tasks) {
-
-					if (!MylarPlugin.getContextManager().hasContext(task.getHandleIdentifier())) {
-						continue; // Tasks without a context have no file to
-						// copy
-					}
-
-					File contextFile = MylarPlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
-
-					File destTaskFile = new File(destinationDirectory + File.separator + contextFile.getName());
-					File sourceTaskFile = contextFile;
-					// new File(MylarPlugin.getDefault().getDataDirectory() +
-					// File.separator + task.getContextPath()
-					// + MylarContextManager.CONTEXT_FILE_EXTENSION);
-
-					if (zip) {
-						if (!filesToZipMap.containsKey(task.getHandleIdentifier())) {
-							filesToZip.add(sourceTaskFile);
-							filesToZipMap.put(task.getHandleIdentifier(), null);
-						}
-					} else {
-						if (!copy(sourceTaskFile, destTaskFile) && !errorDisplayed) {
-							MylarStatusHandler.fail(new Exception("Export Exception: " + sourceTaskFile.getPath()
-									+ " -> " + destTaskFile.getPath()),
-									"Could not export one or more task context files.", true);
-							errorDisplayed = true;
-						}
-						monitor.worked(1);
-					}
-				}
-			}
-
-			if (zip) {
-				try {
-					if (destZipFile.exists()) {
-						destZipFile.delete();
-					}
-					ZipFileUtil.createZipFile(destZipFile, filesToZip, monitor);
-				} catch (Exception e) {
-					MylarStatusHandler.fail(e, "Could not create zip file.", true);
-				}
-			}
-			monitor.done();
-
-		}
-	}
-
-	/** Returns all tasks in the task list root or a category in the task list */
-	protected List<ITask> getAllTasks() {
-		List<ITask> allTasks = new ArrayList<ITask>();
-		TaskList taskList = MylarTaskListPlugin.getTaskListManager().getTaskList();
-
-		allTasks.addAll(taskList.getRootTasks());
-
-		for (AbstractTaskContainer category : taskList.getCategories()) {
-			allTasks.addAll(category.getChildren());
-		}
-
-		return allTasks;
-	}
-
-	// Note: Copied from MylarTaskListPlugin
-	private boolean copy(File src, File dst) {
-		try {
-			InputStream in = new FileInputStream(src);
-			OutputStream out = new FileOutputStream(dst);
-
-			// Transfer bytes from in to out
-			byte[] buf = new byte[1024];
-			int len;
-			while ((len = in.read(buf)) > 0) {
-				out.write(buf, 0, len);
-			}
-			in.close();
-			out.close();
-			return true;
-		} catch (IOException ioe) {
-			return false;
-		}
-	}
+	// // Note: Copied from MylarTaskListPlugin
+	// private boolean copy(File src, File dst) {
+	// try {
+	// InputStream in = new FileInputStream(src);
+	// OutputStream out = new FileOutputStream(dst);
+	//
+	// // Transfer bytes from in to out
+	// byte[] buf = new byte[1024];
+	// int len;
+	// while ((len = in.read(buf)) > 0) {
+	// out.write(buf, 0, len);
+	// }
+	// in.close();
+	// out.close();
+	// return true;
+	// } catch (IOException ioe) {
+	// return false;
+	// }
+	// }
 
 }
