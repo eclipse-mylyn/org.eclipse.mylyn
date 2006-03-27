@@ -107,16 +107,17 @@ public class MylarContextManager {
 
 	private static ScalingFactors scalingFactors = new ScalingFactors();
 
-	private class ActivityListener implements ITimerThreadListener, IInteractionEventListener {
+	private class ActivityListener implements ITimerThreadListener, IInteractionEventListener, IMylarContextListener {
 
 		private TimerThread timer;
-
+		private int sleepPeriod = 60000;
 		private boolean isStalled;
 
 		public ActivityListener(int millis) {
 			timer = new TimerThread(millis);
 			timer.addListener(this);
 			timer.start();
+			sleepPeriod = millis;
 			MylarPlugin.getDefault().addInteractionListener(this);
 		}
 
@@ -155,10 +156,64 @@ public class MylarContextManager {
 
 		public void setTimeout(int millis) {
 			timer.kill();
-
+			sleepPeriod = millis;
 			timer = new TimerThread(millis);
 			timer.addListener(this);
 			timer.start();
+		}
+
+		public void contextActivated(IMylarContext context) {
+			interactionObserved(null);
+			timer.kill();
+			timer = new TimerThread(sleepPeriod);
+			timer.addListener(this);
+			timer.start();
+			
+		}
+
+		public void contextDeactivated(IMylarContext context) {
+			interactionObserved(null);
+			timer.kill();
+		}
+
+		public void presentationSettingsChanging(UpdateKind kind) {
+			// ignore
+			
+		}
+
+		public void presentationSettingsChanged(UpdateKind kind) {
+			// ignore
+			
+		}
+
+		public void interestChanged(IMylarElement element) {
+			// ignore
+			
+		}
+
+		public void interestChanged(List<IMylarElement> elements) {
+			// ignore
+			
+		}
+
+		public void nodeDeleted(IMylarElement element) {
+			// ignore
+			
+		}
+
+		public void landmarkAdded(IMylarElement element) {
+			// ignore
+			
+		}
+
+		public void landmarkRemoved(IMylarElement element) {
+			// ignore
+			
+		}
+
+		public void edgesChanged(IMylarElement element) {
+			// ignore
+			
 		}
 	}
 
@@ -176,6 +231,7 @@ public class MylarContextManager {
 		}
 
 		activityListener = new ActivityListener(INACTIVITY_TIMEOUT_MILLIS);// INACTIVITY_TIMEOUT_MILLIS);
+		this.addListener(activityListener);
 		activityListener.startObserving();
 	}
 
@@ -487,7 +543,7 @@ public class MylarContextManager {
 	public void contextDeactivated(String handleIdentifier) {
 		try {
 			IMylarContext context = currentContext.getContextMap().get(handleIdentifier);
-			if (context != null) {
+			if (context != null) {			
 				saveContext(handleIdentifier);
 				currentContext.getContextMap().remove(handleIdentifier);
 
