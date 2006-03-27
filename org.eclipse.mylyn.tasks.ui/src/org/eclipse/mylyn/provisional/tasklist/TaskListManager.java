@@ -213,9 +213,15 @@ public class TaskListManager {
 		for (ITask activity : toRemove) {
 			DateRangeActivityDelegate delegate = (DateRangeActivityDelegate) activity;
 			Calendar calendar = GregorianCalendar.getInstance();
-			calendar.setTime(delegate.getReminderDate());
-			if (!activityThisWeek.includes(calendar) && delegate.getActivity() == 0) {
-				activityThisWeek.remove(delegate);
+			if (delegate.getReminderDate() != null) {
+				calendar.setTime(delegate.getReminderDate());
+				if (!activityThisWeek.includes(calendar) && activityThisWeek.getElapsed(delegate) == 0) {
+					activityThisWeek.remove(delegate);
+				}
+			} else {
+				if (activityThisWeek.getElapsed(delegate) == 0) {
+					activityThisWeek.remove(delegate);
+				}
 			}
 		}
 		GregorianCalendar tempCalendar = new GregorianCalendar();
@@ -229,7 +235,7 @@ public class TaskListManager {
 				} else if (activityFuture.includes(tempCalendar)) {
 					activityFuture.addTask(new DateRangeActivityDelegate(activityFuture, task, tempCalendar,
 							tempCalendar));
-				} else if (activityThisWeek.includes(tempCalendar)) {
+				} else if (activityThisWeek.includes(tempCalendar) && !activityThisWeek.getChildren().contains(task)) {
 					activityThisWeek.addTask(new DateRangeActivityDelegate(activityThisWeek, task, tempCalendar,
 							tempCalendar));
 				}

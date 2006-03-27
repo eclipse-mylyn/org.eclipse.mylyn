@@ -265,7 +265,8 @@ public class TaskInfoEditor extends EditorPart {
 			MylarTaskListPlugin.getTaskListManager().setReminder(task, datePicker.getDate().getTime());
 			// task.setReminderDate(datePicker.getDate().getTime());
 		} else {
-			task.setReminderDate(null);
+//			task.setReminderDate(null);
+			MylarTaskListPlugin.getTaskListManager().setReminder(task, null);
 		}
 		MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
 
@@ -596,7 +597,8 @@ public class TaskInfoEditor extends EditorPart {
 		section.setClient(container);
 		container.setLayout(new GridLayout());
 
-		notes = toolkit.createText(container, task.getNotes(), SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		notes = toolkit.createText(container, task.getNotes(), SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		notes.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 
 		GridData notesDataLayout = new GridData(GridData.FILL_BOTH);
 		notes.setLayoutData(notesDataLayout);

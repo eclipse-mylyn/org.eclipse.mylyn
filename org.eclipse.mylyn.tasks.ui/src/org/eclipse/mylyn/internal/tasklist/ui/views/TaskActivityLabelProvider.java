@@ -86,7 +86,7 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 					return "";
 				}
 			case 6:
-				if (activityDelegate.getStart() > 0) {
+				if (activityDelegate.getStart() > 0 && activityDelegate.getDateRangeContainer().getElapsed(activityDelegate) > 0) {
 					return DateFormat.getDateInstance(DateFormat.MEDIUM).format(activityDelegate.getStart());
 				} else {
 					return "";

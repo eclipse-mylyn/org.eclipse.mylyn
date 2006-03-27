@@ -18,7 +18,8 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylar.internal.tasklist.planner.ui.ReminderDialog;
+import org.eclipse.mylar.internal.tasklist.planner.ui.DateSelectionDialog;
+import org.eclipse.mylar.internal.tasklist.planner.ui.ReminderCellEditor;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.ITask;
@@ -94,7 +95,11 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 		action = new Action() {
 			@Override
 			public void run() {
-				ReminderDialog reminderDialog = new ReminderDialog(taskListView.getSite().getShell());
+				Calendar theCalendar = GregorianCalendar.getInstance();
+				if(task.getReminderDate() != null) {
+					theCalendar.setTime(task.getReminderDate());
+				}
+				DateSelectionDialog reminderDialog = new DateSelectionDialog(taskListView.getSite().getShell(), theCalendar, ReminderCellEditor.REMINDER_DIALOG_TITLE);
 				int result = reminderDialog.open();
 				if (result == Window.OK) {
 					MylarTaskListPlugin.getTaskListManager().setReminder(task, reminderDialog.getDate());
