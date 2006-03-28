@@ -43,7 +43,7 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 	}
 
 	@Override
-	public boolean select(Viewer viewer, Object parent, Object element) {
+	public boolean select(Viewer viewer, Object parent, Object object) {
 		try {
 			if (!(viewer instanceof StructuredViewer))
 				return true;
@@ -52,34 +52,34 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 			if (temporarilyUnfiltered != null && temporarilyUnfiltered.equals(parent))
 				return true;
 
-			IMylarElement node = null;
-			if (element instanceof IMylarElement) {
-				node = (IMylarElement) element;
+			IMylarElement element = null;
+			if (object instanceof IMylarElement) {
+				element = (IMylarElement) object;
 			} else {
-				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element);
-				if (!bridge.canFilter(element)) {
+				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(object);
+				if (!bridge.canFilter(object)) {
 					return true;
 				}
-				if (isImplicitlyInteresting(element, bridge)) {
+				if (isImplicitlyInteresting(object, bridge)) {
 					return true;
 				}
 				 
-				if (!element.getClass().getName().equals("java.lang.Object")) {
-					String handle = bridge.getHandleIdentifier(element);
-					node = MylarPlugin.getContextManager().getElement(handle);
+				if (!object.getClass().getName().equals("java.lang.Object")) {
+					String handle = bridge.getHandleIdentifier(object);
+					element = MylarPlugin.getContextManager().getElement(handle);
 				} else {
 					return true;
 				}
 			}
-			if (node != null) {
-				if (node.getInterest().isPredicted()) {
+			if (element != null) {
+				if (element.getInterest().isPredicted()) {
 					return false;
 				} else {
-					return node.getInterest().getValue() > MylarContextManager.getScalingFactors().getInteresting();
+					return element.getInterest().getValue() > MylarContextManager.getScalingFactors().getInteresting();
 				}
 			}
 		} catch (Throwable t) {
-			MylarStatusHandler.log(t, "interest filter failed on viewer: " + viewer.getClass());
+			MylarStatusHandler.fail(t, "interest filter failed on viewer: " + viewer.getClass(), false);
 		}
 		return false;
 	}

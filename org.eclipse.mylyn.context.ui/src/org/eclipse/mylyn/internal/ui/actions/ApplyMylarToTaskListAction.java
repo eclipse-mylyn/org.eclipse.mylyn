@@ -18,16 +18,21 @@ import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.internal.ui.TaskListInterestFilter;
+import org.eclipse.mylar.provisional.ui.InterestFilter;
 
 /**
+ * TODO: abuses contract from super class
+ * 
  * @author Mik Kersten
  */
 public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction {
 
 	private static ApplyMylarToTaskListAction INSTANCE;
-		
+	
+	private TaskListInterestFilter taskListInterestFilter = new TaskListInterestFilter();
+	
 	public ApplyMylarToTaskListAction() {
-		super(new TaskListInterestFilter());
+		super(new InterestFilter());
 		INSTANCE = this;
 	}
 	
@@ -40,6 +45,20 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction {
 		return viewers;
 	}
 
+	@Override
+	protected boolean installInterestFilter(StructuredViewer viewer) {
+		TaskListView.getDefault().addFilter(taskListInterestFilter);
+		TaskListView.getDefault().refreshAndFocus();
+		return true;
+	}
+
+	@Override
+	protected void uninstallInterestFilter(StructuredViewer viewer) {
+		TaskListView.getDefault().removeFilter(taskListInterestFilter);
+		TaskListView.getDefault().getViewer().collapseAll();
+		TaskListView.getDefault().refreshAndFocus();
+	}
+
 	public void propertyChange(PropertyChangeEvent event) {
 		// ignore
 	}
@@ -47,5 +66,4 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction {
 	public static ApplyMylarToTaskListAction getDefault() {
 		return INSTANCE;
 	}
-	
 }

@@ -11,86 +11,76 @@
 
 package org.eclipse.mylar.internal.ui;
 
-import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.internal.core.MylarContextManager;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.ui.AbstractTaskListFilter;
 import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.ui.InterestFilter;
 
 /**
  * Goal is to have this reuse as much of the super as possible.
  * 
  * @author Mik Kersten
  */
-public class TaskListInterestFilter extends InterestFilter {
+public class TaskListInterestFilter extends AbstractTaskListFilter {
+
+	// private InterestFilter interestFilter = new InterestFilter();
 
 	@Override
-	public boolean select(Viewer viewer, Object parent, Object element) {
+	public boolean select(Object object) {
 		try {
-			if (!(viewer instanceof StructuredViewer))
-				return true;
-			if (!containsMylarInterestFilter((StructuredViewer) viewer))
-				return true;
-
-			IMylarElement node = null;
-			if (element instanceof IMylarElement) {
-				node = (IMylarElement) element;
-			} else if (element instanceof AbstractTaskContainer) {
-				AbstractTaskContainer container = (AbstractTaskContainer) element;
-				// TODO: get rid of this work-around to look down?
-				for (ITask task : container.getChildren()) {
-					if (select(viewer, this, task)) {
-						return true;
-					}
-				}
-				return false;
-			} else {
+			// if (element instanceof AbstractTaskContainer) {
+			// AbstractTaskContainer container = (AbstractTaskContainer)
+			// element;
+			// // TODO: get rid of this work-around to look down?
+			// for (ITask task : container.getChildren()) {
+			// if (select(viewer, this, task)) {
+			// return true;
+			// }
+			// }
+			IMylarElement element = null;
+			if (object instanceof ITask || object instanceof AbstractQueryHit) {
 				ITask task = null;
-				if (element instanceof ITask) {
-					task = (ITask) element;
-				} else if (element instanceof AbstractQueryHit) {
-					task = ((AbstractQueryHit) element).getCorrespondingTask();
+				if (object instanceof ITask) {
+					task = (ITask) object;
+				} else if (object instanceof AbstractQueryHit) {
+					task = ((AbstractQueryHit) object).getCorrespondingTask();
 				}
 				if (task != null) {
 					if (isImplicitlyInteresting(task)) {
 						return true;
-					} 
-					
+					}
 					IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(task);
 					if (!bridge.canFilter(task)) {
 						return true;
 					}
-
-					String handle = bridge.getHandleIdentifier(element);
-					node = MylarPlugin.getContextManager().getActivityHistoryMetaContext().get(handle);
+					String handle = bridge.getHandleIdentifier(task.getHandleIdentifier());
+					element = MylarPlugin.getContextManager().getActivityHistoryMetaContext().get(handle);
 				}
 			}
-			if (node != null) {
-				if (node.getInterest().isPredicted()) {
+			if (element != null) {
+				if (element.getInterest().isPredicted()) {
 					return false;
 				} else {
-					return node.getInterest().getValue() > MylarContextManager.getScalingFactors().getInteresting();
+					return element.getInterest().getValue() > MylarContextManager.getScalingFactors().getInteresting();
 				}
 			}
 		} catch (Throwable t) {
-			MylarStatusHandler.log(t, "interest filter failed on viewer: " + viewer.getClass());
+			MylarStatusHandler.fail(t, "interest filter failed", false);
 		}
 		return false;
 	}
 
-	protected boolean isImplicitlyUninteresting(ITask task) {
-		if (task.isCompleted()) {
-			return true;
-		}
-		return false;
-	}
+	// protected boolean isImplicitlyUninteresting(ITask task) {
+	// if (task.isCompleted()) {
+	// return true;
+	// }
+	// return false;
+	// }
 
 	protected boolean isImplicitlyInteresting(ITask task) {
 		return task.isActive() || task.isPastReminder()
