@@ -18,7 +18,7 @@ import java.util.Set;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylar.internal.tasklist.ui.AbstractTaskFilter;
+import org.eclipse.mylar.internal.tasklist.ui.AbstractTaskListFilter;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
@@ -38,7 +38,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 
 	private final TaskListView view;
 
-	private static class ContentTaskFilter extends AbstractTaskFilter {
+	private static class ContentTaskFilter extends AbstractTaskListFilter {
 		@Override
 		public boolean select(Object element) {
 			return true;
@@ -255,7 +255,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 	}
 
 	private boolean filter(Object obj) {
-		for (AbstractTaskFilter filter : this.view.getFilters()) {
+		for (AbstractTaskListFilter filter : this.view.getFilters()) {
 			if (!filter.select(obj)) {
 				return true;
 			}

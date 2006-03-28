@@ -45,7 +45,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.internal.core.dt.MylarWebRef;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasklist.ui.AbstractTaskFilter;
+import org.eclipse.mylar.internal.tasklist.ui.AbstractTaskListFilter;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.internal.tasklist.ui.TaskArchiveFilter;
 import org.eclipse.mylar.internal.tasklist.ui.TaskCompletionFilter;
@@ -214,7 +214,7 @@ public class TaskListView extends ViewPart {
 
 	private static TaskArchiveFilter FILTER_ARCHIVE = new TaskArchiveFilter();
 	
-	private List<AbstractTaskFilter> filters = new ArrayList<AbstractTaskFilter>();
+	private List<AbstractTaskListFilter> filters = new ArrayList<AbstractTaskListFilter>();
 
 	static final String FILTER_LABEL = "<filter>";
 
@@ -1253,12 +1253,13 @@ public class TaskListView extends ViewPart {
 		return FILTER_PRIORITY;
 	}
 
-	public void addFilter(AbstractTaskFilter filter) {
-		if (!filters.contains(filter))
+	public void addFilter(AbstractTaskListFilter filter) {
+		if (!filters.contains(filter)) {
 			filters.add(filter);
+		}
 	}
 
-	public void removeFilter(AbstractTaskFilter filter) {
+	public void removeFilter(AbstractTaskListFilter filter) {
 		filters.remove(filter);
 	}
 
@@ -1431,7 +1432,7 @@ public class TaskListView extends ViewPart {
 		return images;
 	}
 
-	public List<AbstractTaskFilter> getFilters() {
+	public List<AbstractTaskListFilter> getFilters() {
 		return filters;
 	}
 	

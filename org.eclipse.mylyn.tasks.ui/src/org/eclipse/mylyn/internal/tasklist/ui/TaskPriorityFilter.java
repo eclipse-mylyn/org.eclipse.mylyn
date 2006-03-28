@@ -20,7 +20,7 @@ import org.eclipse.mylar.provisional.tasklist.Task;
  * @author Mik Kersten
  * @author Ken Sueda
  */
-public class TaskPriorityFilter extends AbstractTaskFilter {
+public class TaskPriorityFilter extends AbstractTaskListFilter {
 
 	private static final String PRIORITY_PREFIX = "P";
 

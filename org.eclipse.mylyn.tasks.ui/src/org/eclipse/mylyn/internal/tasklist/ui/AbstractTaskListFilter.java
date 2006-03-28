@@ -13,11 +13,12 @@ package org.eclipse.mylar.internal.tasklist.ui;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 
 /**
- * TODO: move to viewer filter
+ * Custom filters are used so that the "Find:" filter can 'see through'
+ * any filters that may have been applied.
  * 
  * @author Mik Kersten
  */
-public abstract class AbstractTaskFilter {
+public abstract class AbstractTaskListFilter {
 
 	public abstract boolean select(Object element);
 
