@@ -735,7 +735,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 				bugzillaOS = null;
 			}
 
-			if (java2buzillaPlatformMap.containsKey(platform)) {
+			if (platform != null && java2buzillaPlatformMap.containsKey(platform)) {
 				bugzillaPlatform = java2buzillaPlatformMap.get(platform);
 				if (!platformAttribute.getOptionValues().values().contains(bugzillaPlatform)) {
 					// If the platform we found is not int the list of available
@@ -755,7 +755,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 			if (bugzillaPlatform != null)
 				platformAttribute.setValue(bugzillaPlatform);
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "could not set platform options", false);
+			MylarStatusHandler.fail(e, "could not set platform options", false); 
 		}
 	}
 
