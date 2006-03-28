@@ -11,9 +11,6 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.actions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -21,9 +18,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasklist.ui.wizards.MultiRepositoryAwareWizard;
-import org.eclipse.mylar.internal.tasklist.ui.wizards.NewRepositoryTaskPage;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
+import org.eclipse.mylar.internal.tasklist.ui.wizards.NewRepositoryTaskWizard;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
@@ -36,8 +31,6 @@ import org.eclipse.ui.PlatformUI;
 public class NewRepositoryTaskAction extends Action implements IViewActionDelegate {
 
 	public static final String ID = "org.eclipse.mylar.tasklist.ui.repositories.actions.create";
-
-	private static final String TITLE = "New Repostiory Task";
 			
 	@Override
 	public void run() {
@@ -48,17 +41,10 @@ public class NewRepositoryTaskAction extends Action implements IViewActionDelega
 					"Unable to create a new bug report since you are currently offline");
 			return;
 		}
-		// TaskRepository repository =
-		// MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
-		List<String> connectorKinds = new ArrayList<String>();
-		for (AbstractRepositoryConnector client: MylarTaskListPlugin.getRepositoryManager().getRepositoryConnectors()) {
-			if (client.canCreateTaskFromId()) {
-				connectorKinds.add(client.getRepositoryType());
-			} 
-		}
 		 
-		IWizard wizard = new MultiRepositoryAwareWizard(new NewRepositoryTaskPage(connectorKinds), TITLE);
-
+//		IWizard wizard = new MultiRepositoryAwareWizard(new NewRepositoryTaskPage(connectorKinds), TITLE);
+		IWizard wizard = new NewRepositoryTaskWizard();
+		
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		if (wizard != null && shell != null && !shell.isDisposed()) {
 

@@ -11,27 +11,30 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.wizards;
 
-import org.eclipse.jface.wizard.IWizard;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
 /**
  * @author Mik Kersten
  */
-public class NewQueryWizard extends MultiRepositoryAwareWizard {
+public class NewRepositoryTaskWizard extends MultiRepositoryAwareWizard {
 
-	private static final String TITLE = "New Repository Query";
-		
-	public NewQueryWizard() {
-		super(new SelectRepositoryPage() {
+	private static final String TITLE = "New Repostiory Task";
+	
+	public NewRepositoryTaskWizard() {
+		super(new NewRepositoryTaskPage(getConnectorKinds()), TITLE);
+	}
 
-			@Override
-			protected IWizard createWizard(TaskRepository taskRepository) {
-				AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
-						taskRepository.getKind());
-				return connector.getQueryWizard(taskRepository);
-			}
-		}, TITLE);
+	private static List<String> getConnectorKinds() {
+		List<String> connectorKinds = new ArrayList<String>();
+		for (AbstractRepositoryConnector client: MylarTaskListPlugin.getRepositoryManager().getRepositoryConnectors()) {
+			if (client.canCreateTaskFromId()) {
+				connectorKinds.add(client.getRepositoryType());
+			} 
+		} 
+		return connectorKinds;
 	}
 }
