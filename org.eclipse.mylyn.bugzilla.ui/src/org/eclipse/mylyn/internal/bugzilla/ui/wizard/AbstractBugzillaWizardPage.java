@@ -30,7 +30,6 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -66,11 +65,12 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 	/** Text field for the assignedTo of the bug */
 	protected Text assignedToText;
 
-	/** Radio button to select when sending the new bug report to the server */
-	protected Button serverButton;
-
-	/** Radio button to select when saving the new bug report offline */
-	protected Button offlineButton;
+	// /** Radio button to select when sending the new bug report to the server
+	// */
+	// protected Button serverButton;
+	//
+	// /** Radio button to select when saving the new bug report offline */
+	// protected Button offlineButton;
 
 	/** Combo box for the component that caused the bug */
 	protected Combo componentCombo;
@@ -628,42 +628,44 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 		descriptionText.setLayoutData(descriptionTextData);
 		descriptionText.addListener(SWT.Modify, this);
 
-		serverButton = new Button(attributesComposite, SWT.RADIO);
-		serverButton.setText("Submit bug report to the server.");
-		GridData toServerButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		toServerButtonData.horizontalSpan = 4;
-		serverButton.setLayoutData(toServerButtonData);
-		serverButton.setSelection(true);
+		// serverButton = new Button(attributesComposite, SWT.RADIO);
+		// serverButton.setText("Submit bug report to the server.");
+		// GridData toServerButtonData = new
+		// GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		// toServerButtonData.horizontalSpan = 4;
+		// serverButton.setLayoutData(toServerButtonData);
+		// serverButton.setSelection(true);
+		//
+		// offlineButton = new Button(attributesComposite, SWT.RADIO);
+		// offlineButton.setText("Save bug report offline.");
+		// GridData offlineButtonData = new
+		// GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		// offlineButtonData.horizontalSpan = 4;
+		// offlineButton.setLayoutData(offlineButtonData);
+		// offlineButton.setSelection(false);
 
-		offlineButton = new Button(attributesComposite, SWT.RADIO);
-		offlineButton.setText("Save bug report offline.");
-		GridData offlineButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		offlineButtonData.horizontalSpan = 4;
-		offlineButton.setLayoutData(offlineButtonData);
-		offlineButton.setSelection(false);
-
-		if (wizard.fromDialog)
-			offlineButton.setEnabled(false);
+		// if (wizard.fromDialog)
+		// offlineButton.setEnabled(false);
 
 		setControl(attributesComposite);
 		return;
 	}
 
-	/**
-	 * @return <code>true</code> if the radio button to submit the bug to the
-	 *         server is selected.
-	 */
-	public boolean serverSelected() {
-		return (serverButton == null) ? false : serverButton.getSelection();
-	}
-
-	/**
-	 * @return <code>true</code> if the radio button to save the bug offline
-	 *         is selected.
-	 */
-	public boolean offlineSelected() {
-		return (offlineButton == null) ? false : offlineButton.getSelection();
-	}
+	// /**
+	// * @return <code>true</code> if the radio button to submit the bug to the
+	// * server is selected.
+	// */
+	// public boolean serverSelected() {
+	// return (serverButton == null) ? false : serverButton.getSelection();
+	// }
+	//
+	// /**
+	// * @return <code>true</code> if the radio button to save the bug offline
+	// * is selected.
+	// */
+	// public boolean offlineSelected() {
+	// return (offlineButton == null) ? false : offlineButton.getSelection();
+	//	}
 
 	/*
 	 * The following are Bugzilla's: OS's All AIX Windows 95 Windows 98 Windows

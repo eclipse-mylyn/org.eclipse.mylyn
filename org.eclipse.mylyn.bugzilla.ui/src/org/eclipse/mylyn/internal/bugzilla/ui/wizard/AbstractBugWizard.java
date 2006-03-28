@@ -88,28 +88,28 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 
 	@Override
 	public boolean performFinish() {
-		if (getWizardDataPage().serverSelected()) {
-			getWizardDataPage().saveDataToModel();
-			// If the bug report is sent successfully,
-			// then close the wizard and open the bug in an editor
-			if (postBug()) {
-				// if (!fromDialog)
-				// openBugEditor();
-				return true;
-			}
-			// If the report was not sent, keep the wizard open
-			else {
-				return false;
-			}
-		}
-
-		if (getWizardDataPage().offlineSelected()) {
-			saveBugOffline();
+		// if (getWizardDataPage().serverSelected()) {
+		getWizardDataPage().saveDataToModel();
+		// If the bug report is sent successfully,
+		// then close the wizard and open the bug in an editor
+		if (postBug()) {
+			// if (!fromDialog)
+			// openBugEditor();
 			return true;
 		}
+		// If the report was not sent, keep the wizard open
+		else {
+			return false;
+		}
+		// }
+
+		// if (getWizardDataPage().offlineSelected()) {
+		// saveBugOffline();
+		// return true;
+		// }
 
 		// If no action was selected, keep the wizard open.
-		return false;
+		// return false;
 	}
 
 	// Flag to indicate if the bug was successfully sent
@@ -129,7 +129,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 						BugzillaReportSubmitForm form = BugzillaReportSubmitForm.makeNewBugPost2(repository, model);
 						try {
 							id = form.submitReportToRepository();
-							
+
 							if (id != null) {
 								sentSuccessfully = true;
 							}
