@@ -12,7 +12,6 @@
 package org.eclipse.mylar.internal.ide.ui.wizards;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.team.internal.ccvs.core.CVSException;
 import org.eclipse.team.internal.ccvs.ui.wizards.CommitWizard;
@@ -31,32 +30,7 @@ public class MylarCommitWizard extends CommitWizard {
 		try {
 			super.dispose();
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "failure on disposing commit wizard", false);
+			// ignore, see bug 132888
 		}
 	}
-
-	// protected void setComment(String comment, CommitWizardCommitPage page) {
-	// try { // HACK: using reflection to gain accessibility
-	// Class clazz = page.getClass();
-	// Field field = clazz.getDeclaredField("fCommentArea");
-	// field.setAccessible(true);
-	// Object commentArea = field.get(page);
-	// if (commentArea != null && commentArea instanceof CommitCommentArea) {
-	// ((CommitCommentArea)commentArea).setProposedComment(comment);
-	// }
-	// } catch (Exception e) {
-	// MylarPlugin.log(e, "could not set comment");
-	// }
-	// }
-
-	// @Override
-	// public void addPages() {
-	// super.addPages();
-	// commitPage = super.getCommitPage();
-	// // setComment(generateComment(task), commitPage);
-	// }
-
-	// public boolean canFinish() {
-	// return super.canFinish();
-	// }
 }
