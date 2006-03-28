@@ -17,6 +17,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageDeclaration;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jface.text.TextSelection;
@@ -124,6 +125,8 @@ public class JavaEditingMonitor extends AbstractUserInteractionMonitor {
 			}
 			if (selectedElement != null)
 				lastSelectedElement = selectedElement;
+		} catch (JavaModelException e) {
+			// ignore, fine to fail to resolve an element if the model is not up-to-date
 		} catch (Throwable t) {
 			MylarStatusHandler.log(t, "Failed to update model based on selection.");
 		}
