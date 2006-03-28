@@ -94,7 +94,11 @@ public class TaskRepositoryManagerTest extends TestCase {
 		repositoryList.add(repository2);
 		repositoryList.add(repository1);
 		manager.readRepositories();
-		assertEquals(repositoryList, manager.getAllRepositories());
+		if (manager.getRepositoryConnectors().size() == 2) {
+			assertEquals(repositoryList, manager.getAllRepositories());
+		} else {
+			assertEquals(1, manager.getAllRepositories().size());
+		}
 	}
 	
 	public void testRepositoryVersionPersistance() throws MalformedURLException {
