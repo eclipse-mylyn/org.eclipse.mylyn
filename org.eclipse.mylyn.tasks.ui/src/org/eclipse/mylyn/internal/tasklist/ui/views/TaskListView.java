@@ -1037,13 +1037,13 @@ public class TaskListView extends ViewPart {
 		manager.add(newLocalTaskAction);
 		manager.add(new Separator(SEPARATOR_REPORTS));
 
-		manager.add(new Separator(SEPARATOR_CONTEXT));
-		
 		for (IDynamicSubMenuContributor contributor : MylarTaskListPlugin.getDefault().getDynamicMenuContributers()) {
 			MenuManager subMenuManager = contributor.getSubMenuManager(this, (ITaskListElement) selectedObject);
 			if (subMenuManager != null)
 				addMenuManager(subMenuManager, manager, element);
 		}
+		
+		manager.add(new Separator(SEPARATOR_CONTEXT));
 
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}

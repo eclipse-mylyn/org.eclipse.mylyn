@@ -31,22 +31,24 @@ import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
  */
 public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 
-	private static final String LABEL_CALENDAR = "Calendar";
+	private static final String LABEL_CALENDAR = "Choose Date...";
 
+	private static final String LABEL_CLEAR = "Clear";
+	
 	private static final String LABEL_FUTURE = "Future";
 
 	private static final String LABEL_NEXT_WEEK = "Next week";
 
 	private static final String LABEL_TOMORROW = "Tomorrow";
 
-	private static final String SET_REMINDER = "Set Reminder";
+	private static final String LABEL_REMINDER = "Reminder";
 
 	private ITask task = null;
 
 	public MenuManager getSubMenuManager(TaskListView view, ITaskListElement selection) {
 		final ITaskListElement selectedElement = selection;
 		final TaskListView taskListView = view;
-		final MenuManager subMenuManager = new MenuManager(SET_REMINDER);
+		final MenuManager subMenuManager = new MenuManager(LABEL_REMINDER);
 
 		if (selectedElement instanceof ITask) {
 			task = (ITask) selectedElement;
@@ -109,7 +111,16 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 		action.setText(LABEL_CALENDAR);
 		action.setEnabled(task != null);
 		subMenuManager.add(action);
+		
+		action = new Action() {
+			@Override
+			public void run() {
+				MylarTaskListPlugin.getTaskListManager().setReminder(task, null);
+			}
+		};
+		action.setText(LABEL_CLEAR);
+		action.setEnabled(task != null);
+		subMenuManager.add(action);
 		return subMenuManager;
 	}
-
 }
