@@ -110,7 +110,7 @@ public class NewBugParser {
 				if (tag.getTagType() == HtmlTag.Type.TD && "right".equalsIgnoreCase(tag.getAttribute("align"))) {
 					// parse the attribute's name
 					attribute = parseAttributeName();
-					if(attribute != null && attribute.endsWith(IBugzillaConstants.INVALID_2201_ATTRIBUTE_IGNORED)) {
+					if(attribute != null && attribute.contains(IBugzillaConstants.INVALID_2201_ATTRIBUTE_IGNORED)) {
 						continue;
 					}					
 					if (attribute == null)

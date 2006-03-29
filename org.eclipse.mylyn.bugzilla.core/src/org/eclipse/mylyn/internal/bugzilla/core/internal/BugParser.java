@@ -40,10 +40,18 @@ import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer.Tok
 /**
  * @author Shawn Minto
  * @author Mik Kersten (hardening of prototype)
- * 
- * This class parses bugs so that they can be displayed using the bug editor
+ * @author Rob Elves (attachments) This class parses bugs so that they can be
+ *         displayed using the bug editor
  */
 public class BugParser {
+
+	private static final String TAG_SPAN = "span";
+
+	private static final String ATTRIBUTE_ID_TITLE = "title";
+
+	private static final String ATTRIBUTE_ID_HREF = "href";
+
+	private static final String ATTACHMENT_CGI_ID = "attachment.cgi?id=";
 
 	private static final String KEY_BUG_NUM = "Bug#";
 
@@ -93,17 +101,18 @@ public class BugParser {
 	 */
 	private static void parseAttributeValue(BugReport bug, String originalAttributeName, HtmlStreamTokenizer tokenizer,
 			String serverUrl, String userName, String password) throws IOException, ParseException {
-		
+
 		// NOTE: special rule to deal with change in 2.20.1
 		String attributeName = originalAttributeName;
 		if (attributeName.endsWith(KEY_BUG_NUM) && attributeName.length() > KEY_BUG_NUM.length()) {
-			attributeName = originalAttributeName.substring(attributeName.length()-KEY_BUG_NUM.length(), attributeName.length());
+			attributeName = originalAttributeName.substring(attributeName.length() - KEY_BUG_NUM.length(),
+					attributeName.length());
 		}
-				
+
 		Token token = tokenizer.nextToken();
 		if (token.getType() == Token.TAG) {
 			HtmlTag tag = (HtmlTag) token.getValue();
-			
+
 			// make sure that we are on a tag that we care about, not a label
 			// fix added so that we can parse the mozilla bug pages
 			if (tag.getTagType() == HtmlTag.Type.LABEL) {
@@ -289,7 +298,7 @@ public class BugParser {
 	 */
 	private static void parseInput(BugReport bug, String attributeName, HtmlTag tag, String serverUrl, String userName,
 			String password) throws IOException {
-  
+
 		Attribute a = new Attribute(attributeName);
 		a.setParameterName(tag.getAttribute(KEY_NAME));
 		String name = tag.getAttribute(KEY_NAME);
@@ -341,7 +350,8 @@ public class BugParser {
 					bug.setKeywords(keywords);
 
 				} catch (Exception e) {
-					// throw an exception if there is a problem reading the bug from the server
+					// throw an exception if there is a problem reading the bug
+					// from the server
 					throw new IOException("Exception while fetching the list of keywords from the server: "
 							+ e.getMessage());
 				} finally {
@@ -386,6 +396,33 @@ public class BugParser {
 		bug.setDescription(text);
 	}
 
+	// /**
+	// * parses the description of an attachment on the report
+	// */
+	// private static String parseAttachementDescription(HtmlStreamTokenizer
+	// tokenizer) throws IOException,
+	// ParseException {
+	//
+	// StringBuffer sb = new StringBuffer();
+	// for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF;
+	// token = tokenizer.nextToken()) {
+	// if (token.getType() == Token.TAG) {
+	// HtmlTag tag = (HtmlTag) token.getValue();
+	// if (tag.getTagType() == HtmlTag.Type.A && tag.isEndTag())
+	// break;
+	// } else if (token.getType() == Token.TEXT) {
+	// if (sb.length() > 0) {
+	// sb.append(token.getWhitespace());
+	// }
+	// sb.append((StringBuffer) token.getValue());
+	// }
+	// }
+	//
+	// // set the bug to have the description we retrieved
+	// String text = HtmlStreamTokenizer.unescape(sb).toString();
+	// return text;
+	// }
+
 	/**
 	 * Parse the case where we have found the start of a comment
 	 * 
@@ -409,7 +446,7 @@ public class BugParser {
 			if (token.getType() == Token.TAG) {
 				HtmlTag tag = (HtmlTag) token.getValue();
 				if (tag.getTagType() == HtmlTag.Type.A) {
-					String href = tag.getAttribute("href");
+					String href = tag.getAttribute(ATTRIBUTE_ID_HREF);
 					if (href != null) {
 						int index = href.toLowerCase().indexOf("#c");
 						if (index == -1)
@@ -426,7 +463,7 @@ public class BugParser {
 			if (token.getType() == Token.TAG) {
 				HtmlTag tag = (HtmlTag) token.getValue();
 				if (tag.getTagType() == HtmlTag.Type.A) {
-					String href = tag.getAttribute("href");
+					String href = tag.getAttribute(ATTRIBUTE_ID_HREF);
 					if (href != null) {
 						int index = href.toLowerCase().indexOf("mailto");
 						if (index == -1)
@@ -493,27 +530,76 @@ public class BugParser {
 	private static void parseCommentText(BugReport bug, Comment comment, HtmlStreamTokenizer tokenizer)
 			throws IOException, ParseException {
 
-		StringBuffer sb = new StringBuffer();
+		StringBuffer commentStringBuffer = new StringBuffer();
 		for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 			if (token.getType() == Token.TAG) {
 				HtmlTag tag = (HtmlTag) token.getValue();
-				if (sb.length() > 0) { // added to ensure whitespace is not
-					// lost if adding a tag within a tag
-					sb.append(token.getWhitespace());
+				if (tag.getTagName().equals(TAG_SPAN)) {
+					parseAttachment(commentStringBuffer, comment, tokenizer);
+					continue;
+				}
+				// added to ensure whitespace is not
+				// lost if adding a tag within a tag
+				if (commentStringBuffer.length() > 0) {
+					commentStringBuffer.append(token.getWhitespace());
 				}
 				if (tag.getTagType() == HtmlTag.Type.PRE && tag.isEndTag())
 					break;
 			} else if (token.getType() == Token.TEXT) {
-				if (sb.length() > 0) {
-					sb.append(token.getWhitespace());
+				if (commentStringBuffer.length() > 0) {
+					commentStringBuffer.append(token.getWhitespace());
 				}
-				sb.append((StringBuffer) token.getValue());
+				commentStringBuffer.append((StringBuffer) token.getValue());
+			}
+			// remove attachment description from comment body
+			if (comment.hasAttachment() && commentStringBuffer.indexOf(comment.getAttachmentDescription()) == 0) {
+				commentStringBuffer = new StringBuffer();
 			}
 		}
 
-		HtmlStreamTokenizer.unescape(sb);
-		comment.setText(sb.toString());
+		HtmlStreamTokenizer.unescape(commentStringBuffer);
+		comment.setText(commentStringBuffer.toString());
 		bug.addComment(comment);
+	}
+
+	private static void parseAttachment(StringBuffer stringBuffer, Comment comment, HtmlStreamTokenizer tokenizer)
+			throws IOException, ParseException {
+
+		int attachmentID = -1;
+		String attachmentDescription = "";
+		for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+			if (token.getType() == Token.TAG) {
+				HtmlTag tag = (HtmlTag) token.getValue();
+
+				if (tag.getTagType() == HtmlTag.Type.A && !comment.hasAttachment()) {
+					if (tag.getAttribute(ATTRIBUTE_ID_HREF) != null) {
+						String link = tag.getAttribute(ATTRIBUTE_ID_HREF);
+						if (link.startsWith(ATTACHMENT_CGI_ID)) {
+							try {
+								int endIndex = link.indexOf("&");
+								if (endIndex > 0 && endIndex < link.length()) {
+									attachmentID = Integer.parseInt(link
+											.substring(ATTACHMENT_CGI_ID.length(), endIndex));
+								}
+							} catch (NumberFormatException e) {
+								return;
+							}
+						}
+						if (tag.getAttribute(ATTRIBUTE_ID_TITLE) != null) {
+							attachmentDescription = tag.getAttribute(ATTRIBUTE_ID_TITLE);
+						}
+						if (attachmentID > 0) {
+							comment.setHasAttachment(true);
+							comment.setAttachmentId(attachmentID);
+							comment.setAttachmentDescription(attachmentDescription);
+						}
+
+					}
+				}
+				if (tag.getTagName().equals(TAG_SPAN) && tag.isEndTag())
+					break;
+			}
+		}
 	}
 
 	/**
@@ -552,7 +638,7 @@ public class BugParser {
 		StringBuffer body = new StringBuffer();
 
 		for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-			
+
 			// get the charset from the HTML if not specified
 			if (!contentTypeResolved) {
 				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == HtmlTag.Type.META
@@ -569,7 +655,7 @@ public class BugParser {
 				isTitle = true;
 				continue;
 			}
-			
+
 			if (isTitle) {
 				// get all of the data in the title tag
 				if (token.getType() != Token.TAG) {
@@ -606,7 +692,6 @@ public class BugParser {
 				body.append((StringBuffer) token.getValue());
 				body.append(" ");
 			}
-			
 
 			// we have found the start of an attribute name
 			if ((state == ParserState.ATT_NAME || state == ParserState.START) && token.getType() == Token.TAG) {
@@ -614,7 +699,7 @@ public class BugParser {
 				if (tag.getTagType() == HtmlTag.Type.TD && "right".equalsIgnoreCase(tag.getAttribute("align"))) {
 					// parse the attribute's name
 					attribute = parseAttributeName(tokenizer);
-					if(attribute != null && attribute.endsWith(IBugzillaConstants.INVALID_2201_ATTRIBUTE_IGNORED)) {
+					if (attribute != null && attribute.contains(IBugzillaConstants.INVALID_2201_ATTRIBUTE_IGNORED)) {
 						continue;
 					}
 					if (attribute.toLowerCase().startsWith("opened")) {
@@ -713,7 +798,7 @@ public class BugParser {
 			}
 
 			// parse hidden fields
-			
+
 			if ((state == ParserState.ATT_NAME || state == ParserState.START) && token.getType() == Token.TAG) {
 				HtmlTag tag = (HtmlTag) token.getValue();
 				if (tag.getTagType() == HtmlTag.Type.INPUT && tag.getAttribute("type") != null
@@ -727,6 +812,22 @@ public class BugParser {
 					continue;
 				}
 			}
+
+			// // parse out attachments
+			// if(token.getType() == Token.TAG) {
+			// HtmlTag tag = (HtmlTag) token.getValue();
+			// if(tag.getTagType() == HtmlTag.Type.A && tag.getAttribute("href")
+			// != null) {
+			// String link = tag.getAttribute("href");
+			// if(link.startsWith("attachment.cgi?id=") &&
+			// !link.contains("action")) {
+			// int attachmentID = Integer.parseInt(link.substring(18));
+			// String description = parseAttachementDescription(tokenizer);
+			// bug.addAttachment(attachmentID, description);
+			// }
+			// }
+			// }
+
 		}
 
 		// if we are to check the body, make sure that there wasn't a bad login
