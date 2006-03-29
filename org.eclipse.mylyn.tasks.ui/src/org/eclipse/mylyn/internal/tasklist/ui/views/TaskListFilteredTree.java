@@ -47,7 +47,6 @@ public class TaskListFilteredTree extends FilteredTree {
 		super(parent, treeStyle, filter);
 //		Field refreshField;
 //		try {
-//			// HACK: using reflection to gain access
 //			refreshField = FilteredTree.class.getDeclaredField("refreshJob");
 //			refreshField.setAccessible(true);
 //			refreshJob = (Job)refreshField.get(this);
