@@ -14,6 +14,8 @@ package org.eclipse.mylar.internal.tasklist.ui.views;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.GridData;
@@ -70,6 +72,19 @@ public class TaskListFilteredTree extends FilteredTree {
 				
 		super.createFilterControls(container);
 //		patternFilter.setSize(100, patternFilter.getSize().y);
+		
+		filterText.addKeyListener(new KeyListener() {
+
+			public void keyPressed(KeyEvent e) {
+				if (e.character == SWT.ESC) {
+					setFilterText("");
+				}
+			}
+
+			public void keyReleased(KeyEvent e) {
+				// ignore
+			}
+		});
 
 		activeTaskLabel = new Hyperlink(container, SWT.RIGHT);
 		activeTaskLabel.setText(LABEL_NO_ACTIVE);
