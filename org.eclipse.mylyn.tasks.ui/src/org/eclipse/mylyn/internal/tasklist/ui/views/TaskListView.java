@@ -1366,8 +1366,9 @@ public class TaskListView extends ViewPart {
 	}
 
 	public void selectedAndFocusTask(ITask task) {
-		if (task == null)
+		if (task == null || getViewer().getControl().isDisposed()) {
 			return;
+		}
 		getViewer().setSelection(new StructuredSelection(task));
 		// if no task exists, select the query hit if exists
 		AbstractQueryHit hit = null;

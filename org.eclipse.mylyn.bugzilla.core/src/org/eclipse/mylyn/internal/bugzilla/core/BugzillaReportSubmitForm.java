@@ -316,8 +316,10 @@ public class BugzillaReportSubmitForm {
 		}
 		bugReportPostHandler.add(KEY_FORM_NAME, VAL_PROCESS_BUG);
 		bug.setNewNewComment(formatTextToLineWrap(bug.getNewNewComment(), repository));
-		bugReportPostHandler.add(KEY_SHORT_DESC, bug.getAttribute(BugReport.ATTR_SUMMARY).getNewValue());
-
+		if (bug.getAttribute(BugReport.ATTR_SUMMARY) != null) {
+			bugReportPostHandler.add(KEY_SHORT_DESC, bug.getAttribute(BugReport.ATTR_SUMMARY).getNewValue());
+		}
+		
 		// add the new comment to the bug post if there is some text in it
 		if (bug.getNewNewComment().length() != 0) {
 			bugReportPostHandler.add(KEY_COMMENT, bug.getNewNewComment());

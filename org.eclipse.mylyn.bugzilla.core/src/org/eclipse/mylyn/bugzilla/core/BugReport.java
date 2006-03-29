@@ -165,7 +165,7 @@ public class BugReport implements Serializable, IBugzillaBug {
 	public String getSummary() {
 		if (getAttribute(ATTR_SUMMARY) == null) {
 			BugzillaPlugin.log(new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
-					"null summar for: " + id, null));
+					"null summary for: " + id, null));
 			return "";
 		}
 		return getAttribute(ATTR_SUMMARY).getValue();
