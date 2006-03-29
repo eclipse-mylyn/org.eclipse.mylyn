@@ -32,9 +32,9 @@ public class TaskRepositoryManagerTest extends TestCase {
 	private static final String DEFAULT_KIND = BugzillaPlugin.REPOSITORY_KIND;
 
 	private static final String DEFAULT_URL = "http://eclipse.org";
-	
+
 	private static final String ANOTHER_URL = "http://codehaus.org";
-	
+
 	private TaskRepositoryManager manager;
 
 	@Override
@@ -48,7 +48,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		if(manager!=null) {
+		if (manager != null) {
 			manager.clearRepositories();
 		}
 	}
@@ -79,7 +79,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		assertNull(manager.getRepository(DEFAULT_KIND, "foo"));
 		assertNull(manager.getRepository("foo", DEFAULT_URL));
 	}
-	
+
 	public void testRepositoryPersistance() throws MalformedURLException {
 		assertEquals("", MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
 
@@ -89,68 +89,75 @@ public class TaskRepositoryManagerTest extends TestCase {
 		manager.addRepository(repository2);
 
 		assertNotNull(MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
-		
+
 		List<TaskRepository> repositoryList = new ArrayList<TaskRepository>();
 		repositoryList.add(repository2);
 		repositoryList.add(repository1);
 		manager.readRepositories();
 		if (manager.getRepositoryConnectors().size() == 2) {
-			assertEquals(repositoryList, manager.getAllRepositories());
+			assertTrue(manager.getAllRepositories().contains(repository1));
+			assertTrue(manager.getAllRepositories().contains(repository2));
+			// assertEquals(repositoryList, manager.getAllRepositories());
 		} else {
 			assertEquals(1, manager.getAllRepositories().size());
 		}
 	}
-	
+
 	public void testRepositoryVersionPersistance() throws MalformedURLException {
 		assertEquals("", MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
 
 		String version = "123";
-		
+
 		TaskRepository repository1 = new TaskRepository("bugzilla", "http://bugzilla");
-//		repository1.setVersion(version);	
+		// repository1.setVersion(version);
 		MylarTaskListPlugin.getRepositoryManager().setVersion(repository1, version);
 		manager.addRepository(repository1);
-		
-		String prefIdVersion = repository1.getUrl() + TaskRepositoryManager.PROPERTY_DELIM + TaskRepositoryManager.PROPERTY_VERSION;
 
-		assertEquals(version, MylarTaskListPlugin.getMylarCorePrefs().getString(prefIdVersion));		
-		
+		String prefIdVersion = repository1.getUrl() + TaskRepositoryManager.PROPERTY_DELIM
+				+ TaskRepositoryManager.PROPERTY_VERSION;
+
+		assertEquals(version, MylarTaskListPlugin.getMylarCorePrefs().getString(prefIdVersion));
+
 		manager.readRepositories();
 		TaskRepository temp = manager.getRepository(repository1.getKind(), repository1.getUrl());
 		assertNotNull(temp);
 		assertEquals(temp.getVersion(), version);
-		
+
 	}
-	
-	
+
 	public void testRepositoryPersistanceAfterDelete() throws MalformedURLException {
 		manager.clearRepositories();
 
-		assertEquals("", MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES + DEFAULT_KIND));
-		
+		assertEquals("", MylarTaskListPlugin.getMylarCorePrefs().getString(
+				TaskRepositoryManager.PREF_REPOSITORIES + DEFAULT_KIND));
+
 		TaskRepository repository = new TaskRepository(DEFAULT_KIND, DEFAULT_URL);
 		manager.addRepository(repository);
-		
-		assertFalse(MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES + DEFAULT_KIND).equals(""));
-		
+
+		assertFalse(MylarTaskListPlugin.getMylarCorePrefs().getString(
+				TaskRepositoryManager.PREF_REPOSITORIES + DEFAULT_KIND).equals(""));
+
 		TaskRepository repository2 = new TaskRepository(DEFAULT_KIND, ANOTHER_URL);
 		manager.addRepository(repository2);
-		
-		String saveString = MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES + DEFAULT_KIND);
+
+		String saveString = MylarTaskListPlugin.getMylarCorePrefs().getString(
+				TaskRepositoryManager.PREF_REPOSITORIES + DEFAULT_KIND);
 		assertNotNull(saveString);
-		
-		manager.removeRepository(repository2); 
-		
-		String newSaveString = MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES + DEFAULT_KIND);
-		
+
+		manager.removeRepository(repository2);
+
+		String newSaveString = MylarTaskListPlugin.getMylarCorePrefs().getString(
+				TaskRepositoryManager.PREF_REPOSITORIES + DEFAULT_KIND);
+
 		assertFalse(saveString.equals(newSaveString));
 	}
-	
+
 	public void testRepositoryWithUnnownUrlHandler() {
-		TaskRepository repository = new TaskRepository("eclipse.technology.mylar", "nntp://news.eclipse.org/eclipse.technology.mylar");
-		
+		TaskRepository repository = new TaskRepository("eclipse.technology.mylar",
+				"nntp://news.eclipse.org/eclipse.technology.mylar");
+
 		repository.setAuthenticationCredentials("testUser", "testPassword");
-		
+
 		assertEquals("testUser", repository.getUserName());
 		assertEquals("testPassword", repository.getPassword());
 	}

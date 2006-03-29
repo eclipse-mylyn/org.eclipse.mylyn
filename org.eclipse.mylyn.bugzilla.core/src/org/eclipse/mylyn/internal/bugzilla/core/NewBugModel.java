@@ -12,6 +12,7 @@ package org.eclipse.mylar.internal.bugzilla.core;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -208,6 +209,11 @@ public class NewBugModel implements Serializable, IBugzillaBug {
 
 	public boolean hasChanges() {
 		return true;
+	}
+
+	/** returns null */
+	public Date getCreated() {		
+		return null;
 	}
 
 }

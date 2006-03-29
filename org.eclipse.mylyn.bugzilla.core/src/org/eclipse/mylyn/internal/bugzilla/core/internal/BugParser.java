@@ -784,6 +784,53 @@ public class BugParser {
 					continue;
 				}
 			}
+			
+			// last modification date
+			if (bug.getCreated() == null && (state == ParserState.ATT_NAME || state == ParserState.START) && token.getType() == Token.TAG) {
+				HtmlTag tag = (HtmlTag) token.getValue();
+				if (tag.getTagType() == HtmlTag.Type.DIV && tag.getAttribute("id") != null && "header".equalsIgnoreCase(tag.getAttribute("id"))) {
+					StringBuffer sb = new StringBuffer();
+					parseLastModified(sb, tokenizer);					
+					if(sb.length() > 0) {
+						int index = sb.indexOf(":");
+						String date;
+						if (index != -1)
+							date = sb.substring(index + 1).trim();
+						else
+							date = sb.substring(6).trim();
+
+						// create a new attribute and set the date
+						Attribute t = new Attribute("Last Modified");
+						t.setValue(date);
+
+						// add the attribute to the bug report
+						bug.addAttribute(t);
+					}
+					continue;
+				}
+			}
+			
+
+			// look for date opened field
+			if (bug.getCreated() == null && (state == ParserState.ATT_NAME || state == ParserState.START) && token.getType() == Token.TAG) {
+				HtmlTag tag = (HtmlTag) token.getValue();
+				if (tag.getTagType() == HtmlTag.Type.TD && tag.getAttribute("align") != null && "left".equalsIgnoreCase(tag.getAttribute("align")) && tag.getAttribute("width") != null && "30%".equals(tag.getAttribute("width"))) {
+					StringBuffer sb = new StringBuffer();
+					parseDateOpened(sb, tokenizer);					
+					if(sb.length() > 0) {
+						int index = sb.indexOf(":");
+						String date;
+						if (index != -1)
+							date = sb.substring(index + 1).trim();
+						else
+							date = sb.substring(6).trim();
+
+						// set the bugs opened date to be the date we parsed
+						bug.setCreated(df.parse(date));
+					}
+					continue;
+				}
+			}
 
 			// we have found the description of the bug
 			if ((state == ParserState.ATT_NAME || state == ParserState.START) && token.getType() == Token.TAG) {
@@ -853,6 +900,43 @@ public class BugParser {
 		}
 		// we are done...return the bug
 		return bug;
+	}
+
+	private static void parseDateOpened(StringBuffer sb, HtmlStreamTokenizer tokenizer) throws IOException, ParseException {
+		for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+			if (token.getType() == Token.TAG) {
+				HtmlTag tag = (HtmlTag) token.getValue();
+				if (tag.getTagType() == HtmlTag.Type.TD && tag.isEndTag())
+					break;
+			} else if (token.getType() == Token.TEXT) {
+				if (sb.length() > 0) {
+					sb.append(' ');
+				}
+				sb.append((StringBuffer) token.getValue());
+			}
+		}
+		
+	}
+	
+	private static void parseLastModified(StringBuffer sb, HtmlStreamTokenizer tokenizer) throws IOException, ParseException {
+		boolean inH3 = false;
+		for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+			if (token.getType() == Token.TAG) {
+				HtmlTag tag = (HtmlTag) token.getValue();				
+				if (tag.getTagType() == HtmlTag.Type.H3 && !tag.isEndTag()) {
+					inH3 = true;
+					continue;
+				} else if (tag.getTagType() == HtmlTag.Type.DIV && tag.isEndTag()) {
+					break;
+				}
+			} else if (token.getType() == Token.TEXT && inH3) {
+				if (sb.length() > 0) {
+					sb.append(' ');
+				}
+				sb.append((StringBuffer) token.getValue());
+			}
+		}
+		
 	}
 
 	public static String getCharsetFromString(String string) {

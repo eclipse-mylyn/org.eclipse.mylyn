@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -369,6 +370,13 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		editorComposite.setLayout(new GridLayout());
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
+		String openedDateString = "";
+		if(getBug().getCreated() != null) {
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			openedDateString = simpleDateFormat.format(getBug().getCreated());
+		}
+		Text openedText = toolkit.createText(editorComposite, "Opened: "+openedDateString);
+		openedText.setFont(TITLE_FONT);
 		// display = parent.getDisplay();
 		// background = JFaceColors.getBannerBackground(display);
 		// foreground = JFaceColors.getBannerForeground(display);

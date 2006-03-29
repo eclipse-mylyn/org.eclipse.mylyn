@@ -11,6 +11,7 @@
 package org.eclipse.mylar.bugzilla.core;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 
@@ -90,4 +91,11 @@ public interface IBugzillaBug extends Serializable {
 	public void setOfflineState(boolean newOfflineState);
 
 	public boolean hasChanges();
+
+	/**
+	 * Get the date that the bug was created
+	 * 
+	 * @return The bugs creation date
+	 */
+	public Date getCreated();
 }
