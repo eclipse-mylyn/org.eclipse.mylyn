@@ -40,8 +40,12 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 	private void unfilter(final InterestFilter filter, final TreeViewer treeViewer, Object targetObject) {
 		if (targetObject != null) {
 			filter.setTemporarilyUnfiltered(targetObject);
-			treeViewer.refresh(targetObject, true);
-			treeViewer.expandToLevel(targetObject, 1);
+			if (targetObject instanceof Tree) {
+				treeViewer.refresh();
+			} else {
+				treeViewer.refresh(targetObject, true);
+				treeViewer.expandToLevel(targetObject, 1);
+			}
 		}
 	}
 
@@ -62,7 +66,7 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 				Object targetObject = ((IStructuredSelection) selection).getFirstElement();
 				unfilter(filter, treeViewer, targetObject);
 			}
-		} else if (event.keyCode != SWT.ARROW_DOWN && event.keyCode != SWT.ARROW_DOWN) {
+		} else if (event.keyCode != SWT.ARROW_DOWN && event.keyCode != SWT.ARROW_UP) {
 			if (filter.resetTemporarilyUnfiltered()) {
 				viewer.refresh(false);
 			}
@@ -82,9 +86,9 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 				Object targetObject = null;
 				if (getClickedItem(event) != null) {
 					targetObject = ((IStructuredSelection) selection).getFirstElement();
-				} else if (treeViewer.getTree().getTopItem() != null) {
-					targetObject = treeViewer.getTree().getTopItem().getData();
-				}
+				} else {// if (treeViewer.getTree().getTopItem() != null) {
+					targetObject = treeViewer.getTree();
+				} 
 				unfilter(filter, treeViewer, targetObject);
 			}
 		} else {

@@ -13,6 +13,8 @@
  */
 package org.eclipse.mylar.provisional.ui;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -24,6 +26,7 @@ import org.eclipse.mylar.internal.ui.MylarUiPrefContstants;
 import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.swt.widgets.Tree;
 
 /**
  * This is a generic interest filter that can be applied to any
@@ -51,6 +54,19 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 				return true;
 			if (temporarilyUnfiltered != null && temporarilyUnfiltered.equals(parent))
 				return true;
+			if (temporarilyUnfiltered instanceof Tree) {
+				// HACK: should also work for trees without project as root
+				if (object instanceof IProjectNature || object instanceof IProject) {
+					return true;
+				}
+//				TreeItem[] items = ((Tree)temporarilyUnfiltered).getItems();
+//				((StructuredViewer)viewer).get
+//				for (int i = 0; i < items.length; i++) {
+//					if (items[i].getData()!= null && items[i].getData().equals(object)) {
+//						return true;
+//					}
+//				}
+			}
 
 			IMylarElement element = null;
 			if (object instanceof IMylarElement) {
