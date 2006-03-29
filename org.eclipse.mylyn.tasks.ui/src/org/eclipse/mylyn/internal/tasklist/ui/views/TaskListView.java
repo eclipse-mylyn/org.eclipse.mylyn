@@ -1409,7 +1409,7 @@ public class TaskListView extends ViewPart {
 						if (element == null) {
 							// getViewer().getControl().setRedraw(false);
 							// getViewer().refresh();
-							filteredTree.textChanged(0);
+							filteredTree.textChanged();
 							// getViewer().getControl().setRedraw(true);
 						} else {
 							// getViewer().getControl().setRedraw(false);

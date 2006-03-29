@@ -11,10 +11,6 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.views;
 
-import java.lang.reflect.Field;
-
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
@@ -35,7 +31,7 @@ public class TaskListFilteredTree extends FilteredTree {
 
 	private static final int LABEL_MAX_SIZE = 30;
 
-	private static final int DELAY_REFRESH = 700;
+//	private static final int DELAY_REFRESH = 700;
 
 	private static final String LABEL_FIND = " Find:";
 
@@ -43,21 +39,21 @@ public class TaskListFilteredTree extends FilteredTree {
 	
 //	private static final String LABEL_NO_ACTIVE = "     <no active task>";
 		
-	private Job refreshJob;
+//	private Job refreshJob;
 	
 	private Hyperlink activeTaskLabel;
 	
 	public TaskListFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
 		super(parent, treeStyle, filter);
-		Field refreshField;
-		try {
-			// HACK: using reflection to gain access
-			refreshField = FilteredTree.class.getDeclaredField("refreshJob");
-			refreshField.setAccessible(true);
-			refreshJob = (Job)refreshField.get(this);
-		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Could not get refresh job", false);
-		}
+//		Field refreshField;
+//		try {
+//			// HACK: using reflection to gain access
+//			refreshField = FilteredTree.class.getDeclaredField("refreshJob");
+//			refreshField.setAccessible(true);
+//			refreshJob = (Job)refreshField.get(this);
+//		} catch (Exception e) {
+//			MylarStatusHandler.fail(e, "Could not get refresh job", false);
+//		}
 	}
 	
 	@Override
@@ -93,7 +89,8 @@ public class TaskListFilteredTree extends FilteredTree {
 				if (TaskListView.getDefault().getDrilledIntoCategory() != null) {
 					TaskListView.getDefault().goUpToRoot();
 				}
-				TaskListFilteredTree.this.textChanged(0);
+//				TaskListFilteredTree.this.textChanged(0);
+				TaskListFilteredTree.this.textChanged();
 				TaskListView.getDefault().selectedAndFocusTask(
 						MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTask()
 				);
@@ -108,15 +105,16 @@ public class TaskListFilteredTree extends FilteredTree {
 	}
 
     protected void textChanged() {
-    	textChanged(DELAY_REFRESH);
+    	super.textChanged();
+//    	textChanged(DELAY_RE	`FRESH);
     	//refreshJob.schedule(200);
     }
     
-    public void textChanged(int delay) {
-    	if (refreshJob != null) {
-    		refreshJob.schedule(delay);
-    	} 
-    }
+//    public void textChanged(int delay) {
+//    	if (refreshJob != null) {
+//    		refreshJob.schedule(delay);
+//    	} 
+//    }
 
     public void indicateActiveTask(ITask task) {
     	String text = task.getDescription();
