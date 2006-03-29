@@ -101,9 +101,7 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 
 	private static String[] columnNames = new String[] { LABEL_COLUMN, COLOR_COLUMN, TYPE_COLUMN, };
 
-	static final String[] TYPE_ARRAY = { "Gradient", "Solid" }; // ,
-																// "Intersection"
-																// };
+	static final String[] TYPE_ARRAY = { "Gradient", "Solid" }; 
 
 	/**
 	 * Constructor - set preference store to MylarUiPlugin store since the
