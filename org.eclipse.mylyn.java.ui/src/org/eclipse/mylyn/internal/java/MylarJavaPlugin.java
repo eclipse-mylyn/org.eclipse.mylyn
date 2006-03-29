@@ -114,7 +114,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 					if (!getPreferenceStore().contains(MylarPreferenceWizard.MYLAR_FIRST_RUN)) {
 						JavaUiUtil.installContentAssist(JavaPlugin.getDefault().getPreferenceStore(), true);
 					}
-					
+
 					if (!MylarPlugin.getDefault().suppressWizardsOnStartup()
 							&& !getPreferenceStore().contains(MylarPreferenceWizard.MYLAR_FIRST_RUN)) {
 						MylarPreferenceWizard wizard = new MylarPreferenceWizard(FIRST_USE);
@@ -158,8 +158,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 				getPreferenceStore().removePropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
 			}
 
-			if (PlatformUI.getWorkbench() != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
-					&& !PlatformUI.getWorkbench().isClosing()) {
+			if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()
+					&& PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
 				ISelectionService service = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
 				service.removePostSelectionListener(packageExplorerExpansionManager);
 			}
@@ -167,22 +167,22 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 			// CVSUIPlugin.getPlugin().getChangeSetManager().remove(changeSetManager);
 			// TODO: uninstall editor tracker
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Mylar Java stop failed", false);
+			MylarStatusHandler.fail(e, "Mylar Java stop terminated abnormally", false);
 		}
 	}
 
 	private void installEditorTracker(IWorkbench workbench) {
 		editorTracker = new ActiveFoldingEditorTracker();
 		editorTracker.install(workbench);
-//		workbench.addWindowListener(editorTracker);
-//		IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
-//		for (int i = 0; i < windows.length; i++) {
-//			windows[i].addPageListener(editorTracker);
-//			IWorkbenchPage[] pages = windows[i].getPages();
-//			for (int j = 0; j < pages.length; j++) {
-//				pages[j].addPartListener(editorTracker);
-//			}
-//		}
+		// workbench.addWindowListener(editorTracker);
+		// IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
+		// for (int i = 0; i < windows.length; i++) {
+		// windows[i].addPageListener(editorTracker);
+		// IWorkbenchPage[] pages = windows[i].getPages();
+		// for (int j = 0; j < pages.length; j++) {
+		// pages[j].addPartListener(editorTracker);
+		// }
+		// }
 
 		// update editors that are already opened
 		if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
@@ -246,36 +246,42 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 		return AbstractUIPlugin.imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
 
-//	public static boolean isMylarEditorDefault() {
-//		IEditorRegistry editorRegistry = WorkbenchPlugin.getDefault().getEditorRegistry();
-//		IEditorDescriptor desc = editorRegistry.getDefaultEditor("*.java");
-//
-//		return MylarJavaPrefConstants.MYLAR_JAVA_EDITOR_ID.equals(desc.getLabel());
-//	}
+	// public static boolean isMylarEditorDefault() {
+	// IEditorRegistry editorRegistry =
+	// WorkbenchPlugin.getDefault().getEditorRegistry();
+	// IEditorDescriptor desc = editorRegistry.getDefaultEditor("*.java");
+	//
+	// return
+	// MylarJavaPrefConstants.MYLAR_JAVA_EDITOR_ID.equals(desc.getLabel());
+	// }
 
-//	public static void setDefaultEditorForJavaFiles(boolean mylar) {
-//
-//		EditorRegistry editorRegistry = (EditorRegistry) WorkbenchPlugin.getDefault().getEditorRegistry();
-//		// HACK: cast to allow save to be called
-//		IFileEditorMapping[] array = WorkbenchPlugin.getDefault().getEditorRegistry().getFileEditorMappings();
-//
-//		// HACK: cast to allow set to be called
-//		editorRegistry.setFileEditorMappings((FileEditorMapping[]) array);
-//		String defaultEditor = editorRegistry.getDefaultEditor("*.java").getId();
-//
-//		if (mylar) {
-//
-//			if (!(defaultEditor.equals(MylarJavaPrefConstants.MYLAR_JAVA_EDITOR_ID))) {
-//				editorRegistry.setDefaultEditor("*.java", MylarJavaPrefConstants.MYLAR_JAVA_EDITOR_ID);
-//				editorRegistry.saveAssociations();
-//			}
-//		} else {
-//			if (!(defaultEditor.equals(JavaUI.ID_CU_EDITOR))) {
-//				editorRegistry.setDefaultEditor("*.java", JavaUI.ID_CU_EDITOR);
-//				editorRegistry.saveAssociations();
-//			}
-//		}
-//	}
+	// public static void setDefaultEditorForJavaFiles(boolean mylar) {
+	//
+	// EditorRegistry editorRegistry = (EditorRegistry)
+	// WorkbenchPlugin.getDefault().getEditorRegistry();
+	// // HACK: cast to allow save to be called
+	// IFileEditorMapping[] array =
+	// WorkbenchPlugin.getDefault().getEditorRegistry().getFileEditorMappings();
+	//
+	// // HACK: cast to allow set to be called
+	// editorRegistry.setFileEditorMappings((FileEditorMapping[]) array);
+	// String defaultEditor = editorRegistry.getDefaultEditor("*.java").getId();
+	//
+	// if (mylar) {
+	//
+	// if (!(defaultEditor.equals(MylarJavaPrefConstants.MYLAR_JAVA_EDITOR_ID)))
+	// {
+	// editorRegistry.setDefaultEditor("*.java",
+	// MylarJavaPrefConstants.MYLAR_JAVA_EDITOR_ID);
+	// editorRegistry.saveAssociations();
+	// }
+	// } else {
+	// if (!(defaultEditor.equals(JavaUI.ID_CU_EDITOR))) {
+	// editorRegistry.setDefaultEditor("*.java", JavaUI.ID_CU_EDITOR);
+	// editorRegistry.saveAssociations();
+	// }
+	// }
+	// }
 
 	public TypeHistoryManager getTypeHistoryManager() {
 		return typeHistoryManager;
