@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.core.internal.resources.Workspace;
@@ -45,10 +44,10 @@ import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.search.core.text.TextSearchScope;
-import org.eclipse.search.internal.core.text.FileNamePatternSearchScope;
 import org.eclipse.search.internal.ui.text.FileSearchQuery;
 import org.eclipse.search.internal.ui.text.FileSearchResult;
 import org.eclipse.search.ui.ISearchResult;
+import org.eclipse.search.ui.text.FileTextSearchScope;
 import org.eclipse.search.ui.text.Match;
 
 /**
@@ -123,8 +122,7 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
 
 			IResource[] res = new IResource[l.size()];
 			res = l.toArray(res);
-			TextSearchScope doiScope = TextSearchScope.newSearchScope(res, Pattern.compile(Pattern
-					.quote(PdeStructureBridge.CONTENT_TYPE)), false);
+			TextSearchScope doiScope = FileTextSearchScope.newSearchScope(res, new String[] {PdeStructureBridge.CONTENT_TYPE}, false);
 			return l.isEmpty() ? null : doiScope;
 		case 2:
 			// create a search scope for the projects of landmarks
@@ -142,18 +140,15 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
 
 			res = new IProject[proj.size()];
 			res = proj.toArray(res);
-			TextSearchScope projScope = TextSearchScope.newSearchScope(res, Pattern.compile(Pattern
-					.quote(PdeStructureBridge.CONTENT_TYPE)), false);
+			TextSearchScope projScope = FileTextSearchScope.newSearchScope(res, new String[] {PdeStructureBridge.CONTENT_TYPE}, false);
 
 			return proj.isEmpty() ? null : projScope;
 		case 3:
 			// create a search scope for the workspace
-			return TextSearchScope.newSearchScope(new IResource[] { ResourcesPlugin.getWorkspace().getRoot() }, Pattern
-					.compile(Pattern.quote(PdeStructureBridge.CONTENT_TYPE)), false);
+			return FileTextSearchScope.newSearchScope(new IResource[] { ResourcesPlugin.getWorkspace().getRoot() }, new String[] {PdeStructureBridge.CONTENT_TYPE}, false);
 		case 4:
 			// create a search scope for the workspace
-			return TextSearchScope.newSearchScope(new IResource[] { ResourcesPlugin.getWorkspace().getRoot() }, Pattern
-					.compile(Pattern.quote(PdeStructureBridge.CONTENT_TYPE)), false);
+			return FileTextSearchScope.newSearchScope(new IResource[] { ResourcesPlugin.getWorkspace().getRoot() }, new String[] {PdeStructureBridge.CONTENT_TYPE}, false);
 		default:
 			return null;
 		}
@@ -253,7 +248,7 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
 
 		String fullyQualifiedName = getFullyQualifiedName(javaElement);
 
-		return new XMLSearchOperation(scope, "", fullyQualifiedName);
+		return new XMLSearchOperation(scope, fullyQualifiedName);
 	}
 
 	private String getFullyQualifiedName(IJavaElement je) {
@@ -333,8 +328,8 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
 		 * 
 		 * @param data
 		 */
-		public XMLSearchOperation(TextSearchScope scope, String options, String searchString) {
-			super((FileNamePatternSearchScope) scope, options, searchString);
+		public XMLSearchOperation(TextSearchScope scope, String searchString) {
+			super(searchString, false, true, (FileTextSearchScope) scope);
 		}
 
 		/** List of listeners wanting to know about the searches */

@@ -31,8 +31,8 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.mylar.core.tests.MylarCoreTestsPlugin;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.pde.internal.PDE;
-import org.eclipse.pde.internal.PluginProject;
+import org.eclipse.pde.internal.core.natures.PDE;
+import org.eclipse.pde.internal.core.natures.PluginProject;
 
 /**
  * @since 3.0

@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.mylar.internal.core.MylarContextManager;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
@@ -52,23 +53,19 @@ public class MylarChangeSetManager implements IMylarContextListener {
 		}
 
 		public void setAdded(ChangeSet set) {
-			// TODO Auto-generated method stub
-
+			// ignore
 		}
 
 		public void defaultSetChanged(ChangeSet previousDefault, ChangeSet set) {
-			// TODO Auto-generated method stub
-
+			// ignore
 		}
 
 		public void nameChanged(ChangeSet set) {
-			// TODO Auto-generated method stub
-
+			// ignore
 		}
 
-		public void resourcesChanged(ChangeSet set, IResource[] resources) {
-			// TODO Auto-generated method stub
-
+		public void resourcesChanged(ChangeSet set, IPath[] paths) {
+			// ignore
 		}
 	};
 

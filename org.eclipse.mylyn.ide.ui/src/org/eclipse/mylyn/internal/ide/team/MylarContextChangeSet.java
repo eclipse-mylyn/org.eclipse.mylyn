@@ -18,10 +18,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.team.core.TeamException;
-import org.eclipse.team.core.synchronize.SyncInfo;
+import org.eclipse.team.core.diff.IDiff;
+import org.eclipse.team.core.mapping.provider.ResourceDiff;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSet;
 import org.eclipse.team.internal.core.subscribers.SubscriberChangeSetCollector;
 import org.osgi.service.prefs.Preferences;
@@ -102,26 +104,26 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 	}
 
 	@Override
-	public void add(SyncInfo info) {
-		super.add(info);
-		if (!suppressInterestContribution) {
+	public void add(IDiff diff) {
+		super.add(diff);
+		if (!suppressInterestContribution && diff instanceof ResourceDiff) {
 			List<IResource> resources = new ArrayList<IResource>();
-			resources.add(info.getLocal());
+			resources.add(((ResourceDiff)diff).getResource());
 			MylarIdePlugin.getDefault().getInterestUpdater().addResourceToContext(resources);
 		}
 	}
 
 	@Override
-	public void add(SyncInfo[] infos) {
-		super.add(infos);
+	public void add(IDiff[] diffs) {
+		super.add(diffs);
 	}
 
 	@Override
-	public void add(IResource[] newResources) throws TeamException {
+	public void add(IResource[] newResources) throws CoreException {
 		super.add(newResources);
 	}
 
-	public void restoreResources(IResource[] newResources) throws TeamException {
+	public void restoreResources(IResource[] newResources) throws CoreException {
 		suppressInterestContribution = true;
 		try {
 			super.add(newResources);
