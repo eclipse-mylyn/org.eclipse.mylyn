@@ -12,7 +12,6 @@ Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: mylar-core.jar
 Export-Package: org.eclipse.mylar.internal.core,
- org.eclipse.mylar.internal.core.dt,
  org.eclipse.mylar.internal.core.search,
  org.eclipse.mylar.internal.core.util,
  org.eclipse.mylar.provisional.core

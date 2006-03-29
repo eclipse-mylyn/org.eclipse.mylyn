@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.mylar.internal.core.dt.MylarInterest;
 import org.eclipse.mylar.provisional.core.IMylarContext;
 import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.InteractionEvent;
@@ -72,7 +71,6 @@ public class MylarContext implements IMylarContext {
 	/**
 	 * Propagations and predictions are not addes as edges
 	 */
-	@MylarInterest(level = MylarInterest.Level.LANDMARK)
 	private IMylarElement parseInteractionEvent(InteractionEvent event) {
 		if (event.getKind().isUserEvent())
 			numUserEvents++;

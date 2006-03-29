@@ -39,7 +39,6 @@ import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylar.internal.core.dt.MylarWebRef;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.ide.ui.views.ActiveViewDelegatingDragAdapter;
 import org.eclipse.mylar.internal.ide.ui.views.ActiveViewDropAdapter;
@@ -281,7 +280,6 @@ public class ActiveHierarchyView extends ViewPart {
 		}
 	}
 
-	@MylarWebRef(name = "Drag and drop article", url = "http://www.eclipse.org/articles/Article-Workbench-DND/drag_drop.html")
 	private void initDrop() {
 		Transfer[] types = new Transfer[] { LocalSelectionTransfer.getInstance() };
 		viewer.addDropSupport(DND.DROP_MOVE, types, new ActiveViewDropAdapter(viewer));

@@ -29,7 +29,6 @@ import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylar.internal.core.dt.MylarWebRef;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.ide.ui.actions.LinkActiveSearchWithEditorAction;
 import org.eclipse.mylar.internal.ide.ui.actions.ShowQualifiedNamesAction;
@@ -222,7 +221,6 @@ public class ActiveSearchView extends ViewPart {
 		return contains;
 	}
 
-	@MylarWebRef(name = "Drag and drop article", url = "http://www.eclipse.org/articles/Article-Workbench-DND/drag_drop.html")
 	private void initDrop() {
 		Transfer[] types = new Transfer[] { LocalSelectionTransfer.getInstance() };
 		viewer.addDropSupport(DND.DROP_MOVE, types, new ActiveViewDropAdapter(viewer));

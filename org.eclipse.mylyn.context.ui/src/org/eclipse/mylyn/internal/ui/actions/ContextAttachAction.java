@@ -12,25 +12,75 @@
 package org.eclipse.mylar.internal.ui.actions;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.TreeSelection;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.ui.wizards.ContextAttachWizard;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
+ * @author Rob Elves
  */
 public class ContextAttachAction implements IViewActionDelegate {
 
+	ISelection selection = null;
+
+	IViewPart view = null;
+
 	public void init(IViewPart view) {
-		// ignore
+		this.view = view;
 	}
 
 	public void run(IAction action) {
-		// ignore
+		if (selection.isEmpty())
+			return;
+		if (selection instanceof TreeSelection) {
+			TreeSelection treeSelection = (TreeSelection) selection;
+			Object obj = treeSelection.getFirstElement();
+			AbstractRepositoryTask task = null;
+			if (obj instanceof AbstractRepositoryTask) {
+				task = (AbstractRepositoryTask) obj;
+			} else if (obj instanceof AbstractQueryHit) {
+				AbstractQueryHit hit = (AbstractQueryHit) obj;
+				task = hit.getCorrespondingTask();
+			}
+
+			try {
+				if (!MylarPlugin.getContextManager().hasContext(task.getHandleIdentifier())) {
+					MessageDialog.openError(null, "Attach Context", "No context exists for selected task.");
+					return;
+				}
+				
+				ContextAttachWizard wizard = new ContextAttachWizard(task);
+				Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+				if (wizard != null && shell != null && !shell.isDisposed()) {
+					WizardDialog dialog = new WizardDialog(shell, wizard);
+					dialog.create();
+					dialog.setTitle(ContextAttachWizard.WIZARD_TITLE);
+					dialog.setBlockOnOpen(true);
+					if (dialog.open() == Dialog.CANCEL) {
+						dialog.close();
+						return;
+					}
+				}
+			} catch (Exception e) {
+				MylarStatusHandler.fail(e, e.getMessage(), true);
+			}
+		}
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		// ignore
+		this.selection = selection;
 	}
 
 }
