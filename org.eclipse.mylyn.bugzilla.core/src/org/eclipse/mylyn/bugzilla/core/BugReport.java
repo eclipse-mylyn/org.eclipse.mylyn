@@ -88,6 +88,9 @@ public class BugReport implements Serializable, IBugzillaBug {
 	/** Bug attributes (status, resolution, etc.) */
 	protected HashMap<String, Attribute> attributes = new HashMap<String, Attribute>();
 
+//	/** Attachments (Id, Description) **/
+//	protected HashMap<Integer, String> attachements = new HashMap<Integer, String>();
+	
 	/** The keys for the bug attributes */
 	protected ArrayList<String> attributeKeys = new ArrayList<String>();
 
@@ -523,4 +526,13 @@ public class BugReport implements Serializable, IBugzillaBug {
 	public void setCharset(String charset) {
 		this.charset = charset;
 	}
+
+	
+//	public void addAttachment(int id, String description) {
+//		attachements.put(id, description);
+//	}
+//	
+//	public HashMap<Integer, String> getAttachements() {
+//		return attachements;
+//	}
 }

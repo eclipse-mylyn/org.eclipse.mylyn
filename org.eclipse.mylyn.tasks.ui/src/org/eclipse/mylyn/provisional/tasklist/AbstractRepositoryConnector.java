@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.provisional.tasklist;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,6 +49,8 @@ import org.eclipse.ui.progress.IProgressConstants;
  * @author Mik Kersten
  */
 public abstract class AbstractRepositoryConnector {
+	
+	public static final String MYLAR_CONTEXT_DESCRIPTION = "mylar/context/xml";
 
 	private static final int MAX_REFRESH_JOBS = 5;
 
@@ -64,7 +67,13 @@ public abstract class AbstractRepositoryConnector {
 	public abstract boolean canCreateTaskFromId();
 
 	public abstract boolean canCreateNewTask();
-
+	
+	public abstract boolean attachContext(TaskRepository repository, AbstractRepositoryTask task, String longComment) throws IOException;
+	
+	public abstract Set<IRemoteContextDelegate> getAvailableContexts(TaskRepository repository, AbstractRepositoryTask task);
+	
+	public abstract boolean retrieveContext(TaskRepository repository, AbstractRepositoryTask task, IRemoteContextDelegate remoteContextDelegate)  throws IOException;
+	
 	private class SynchronizeTaskJob extends Job {
 
 		private AbstractRepositoryTask repositoryTask;

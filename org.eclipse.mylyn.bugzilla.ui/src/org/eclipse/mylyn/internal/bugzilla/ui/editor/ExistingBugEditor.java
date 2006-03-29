@@ -456,8 +456,13 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		for (Iterator<Comment> it = bug.getComments().iterator(); it.hasNext();) {
 			Comment comment = it.next();
 			String commentHeader = "<b>" + comment.getNumber() + ": " + comment.getAuthorName() + ", "
-					+ df.format(comment.getCreated()) + "</b>";
+					+ df.format(comment.getCreated()) + "</b>";						
 			formText = newLayout(addCommentsComposite, 1, commentHeader, HEADER);
+			if(comment.hasAttachment()) {
+				String attachmentHeader = " Attached: "+comment.getAttachmentDescription()+" <a href='"+repository.getUrl()+"/attachment.cgi?id="+comment.getAttachmentId()+"&amp;action=view'>[view]</a>";
+				formText = newLayout(addCommentsComposite, 1, attachmentHeader, HEADER);//
+				formText.addListener(SWT.FocusIn, new CommentListener(comment));
+			}
 			formText.addListener(SWT.FocusIn, new CommentListener(comment));
 			formText = newLayout(addCommentsComposite, 1, comment.getText(), VALUE);
 			formText.setFont(COMMENT_FONT);

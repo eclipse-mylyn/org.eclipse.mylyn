@@ -48,6 +48,12 @@ public class Comment implements Serializable {
 	/** Following comment */
 	private Comment next;
 
+	private boolean hasAttachment = false;
+
+	private int attachmentId = -1;
+
+	private String attachmentDescription = "";
+
 	/**
 	 * Constructor
 	 * 
@@ -171,4 +177,29 @@ public class Comment implements Serializable {
 	protected void setPrevious(Comment previous) {
 		this.previous = previous;
 	}
+
+	public void setHasAttachment(boolean b) {
+		this.hasAttachment  = b;
+	}
+
+	public boolean hasAttachment() {
+		return hasAttachment;
+	}
+	
+	public void setAttachmentId(int attachmentID) {
+		this.attachmentId  = attachmentID;
+	}
+
+	public int getAttachmentId() {
+		return attachmentId;
+	}
+
+	public void setAttachmentDescription(String attachmentDescription) {
+		this.attachmentDescription  = attachmentDescription;		
+	}
+	
+	public String getAttachmentDescription() {
+		return attachmentDescription;
+	}	
+	
 }

@@ -11,9 +11,13 @@
 package org.eclipse.mylar.internal.bugzilla.core;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -28,6 +32,16 @@ import java.util.List;
 
 import javax.security.auth.login.LoginException;
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.multipart.FilePart;
+import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
+import org.apache.commons.httpclient.methods.multipart.Part;
+import org.apache.commons.httpclient.methods.multipart.PartBase;
+import org.apache.commons.httpclient.methods.multipart.StringPart;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -42,22 +56,55 @@ import org.eclipse.mylar.internal.bugzilla.core.internal.BugParser;
 import org.eclipse.mylar.internal.bugzilla.core.internal.NewBugParser;
 import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile;
 import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaQueryPageParser;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.mylar.provisional.tasklist.TaskRepositoryManager;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
+
 /**
  * @author Mik Kersten (some rewriting)
+ * @author Rob Elves (attachments)
  */
 public class BugzillaRepositoryUtil {
+
+	private static final String VALUE_CONTENTTYPEMETHOD_MANUAL = "manual";
+
+	private static final String VALUE_ISPATCH = "1";
+
+	private static final String VALUE_ACTION_INSERT = "insert";
+
+	private static final String ATTRIBUTE_CONTENTTYPEENTRY = "contenttypeentry";
+
+	private static final String ATTRIBUTE_CONTENTTYPEMETHOD = "contenttypemethod";
+
+	private static final String ATTRIBUTE_ISPATCH = "ispatch";
+
+	private static final String ATTRIBUTE_DATA = "data";
+
+	private static final String ATTRIBUTE_COMMENT = "comment";
+
+	private static final String ATTRIBUTE_DESCRIPTION = "description";
+
+	private static final String ATTRIBUTE_BUGID = "bugid";
+
+	private static final String ATTRIBUTE_BUGZILLA_PASSWORD = "Bugzilla_password";
+
+	private static final String ATTRIBUTE_BUGZILLA_LOGIN = "Bugzilla_login";
+
+	private static final String ATTRIBUTE_ACTION = "action";
 
 	private static final String POST_ARGS_PASSWORD = "&Bugzilla_password=";
 
 	public static final char PREF_DELIM_REPOSITORY = ':';
 
 	public static final String POST_ARGS_SHOW_BUG = "/show_bug.cgi?id=";
+
+	public static final String POST_ARGS_ATTACHMENT_DOWNLOAD = "/attachment.cgi?id=";
+
+	public static final String POST_ARGS_ATTACHMENT_UPLOAD = "/attachment.cgi";// ?action=insert";//&bugid=";
 
 	private static final String POST_ARGS_LOGIN = "GoAheadAndLogIn=1&Bugzilla_login=";
 
@@ -83,7 +130,8 @@ public class BugzillaRepositoryUtil {
 			String url = repositoryUrl + POST_ARGS_SHOW_BUG + id;
 
 			if (repository.hasCredentials()) {
-				url += "&"+ POST_ARGS_LOGIN + URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8)
+				url += "&" + POST_ARGS_LOGIN
+						+ URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8)
 						+ POST_ARGS_PASSWORD
 						+ URLEncoder.encode(repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
 			}
@@ -96,9 +144,9 @@ public class BugzillaRepositoryUtil {
 					in = new BufferedReader(new InputStreamReader(input));
 
 					// get the actual bug fron the server and return it
-					BugReport bug = BugParser.parseBug(in, id, repository.getUrl(), !repository
-							.getVersion().equals(BugzillaServerVersion.SERVER_216.toString()),
-							repository.getUserName(), repository.getPassword(), connection.getContentType());
+					BugReport bug = BugParser.parseBug(in, id, repository.getUrl(), !repository.getVersion().equals(
+							BugzillaServerVersion.SERVER_216.toString()), repository.getUserName(), repository
+							.getPassword(), connection.getContentType());
 					return bug;
 				}
 			}
@@ -159,52 +207,58 @@ public class BugzillaRepositoryUtil {
 	 * Get the list of products
 	 * 
 	 * @return The list of valid products a bug can be logged against
-	 * @throws IOException LoginException Exception
+	 * @throws IOException
+	 *             LoginException Exception
 	 */
 	public static List<String> getProductList(TaskRepository repository) throws IOException, LoginException, Exception {
-//		BufferedReader in = null;
-//		try {
-//			 repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
-//					BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
-//			String urlText = "";
-//			if (repository.hasCredentials()) {
-//				urlText += POST_ARGS_LOGIN_FIRST
-//						+ URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8)
-//						+ POST_ARGS_PASSWORD
-//						+ URLEncoder.encode(repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
-//			}
-//
-//			URL url = new URL(repository.getUrl() + "/enter_bug.cgi" + urlText);
-//
-//			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(url);
-//			if (cntx != null) {
-//				InputStream input = cntx.getInputStream();
-//				if (input != null) {
-//					in = new BufferedReader(new InputStreamReader(input));
-//
-//					
-//					
-//					return new ProductParser(in).getProducts(repository);
-//				}
-//			}
-			
-			BugzillaQueryPageParser parser = new BugzillaQueryPageParser(repository, new NullProgressMonitor());
-			if (!parser.wasSuccessful()) {
-				throw new RuntimeException("Couldn't get products");
-			} else {
-				return Arrays.asList(parser.getProductValues());
-			}
-			
-//			return null;
-//		} finally {
-//			try {
-//				if (in != null)
-//					in.close();
-//			} catch (IOException e) {
-//				BugzillaPlugin.log(new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
-//						"Problem closing the stream", e));
-//			}
-//		}
+		// BufferedReader in = null;
+		// try {
+		// repository =
+		// MylarTaskListPlugin.getRepositoryManager().getRepository(
+		// BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
+		// String urlText = "";
+		// if (repository.hasCredentials()) {
+		// urlText += POST_ARGS_LOGIN_FIRST
+		// + URLEncoder.encode(repository.getUserName(),
+		// BugzillaPlugin.ENCODING_UTF_8)
+		// + POST_ARGS_PASSWORD
+		// + URLEncoder.encode(repository.getPassword(),
+		// BugzillaPlugin.ENCODING_UTF_8);
+		// }
+		//
+		// URL url = new URL(repository.getUrl() + "/enter_bug.cgi" + urlText);
+		//
+		// URLConnection cntx =
+		// BugzillaPlugin.getDefault().getUrlConnection(url);
+		// if (cntx != null) {
+		// InputStream input = cntx.getInputStream();
+		// if (input != null) {
+		// in = new BufferedReader(new InputStreamReader(input));
+		//
+		//					
+		//					
+		// return new ProductParser(in).getProducts(repository);
+		// }
+		// }
+
+		BugzillaQueryPageParser parser = new BugzillaQueryPageParser(repository, new NullProgressMonitor());
+		if (!parser.wasSuccessful()) {
+			throw new RuntimeException("Couldn't get products");
+		} else {
+			return Arrays.asList(parser.getProductValues());
+		}
+
+		// return null;
+		// } finally {
+		// try {
+		// if (in != null)
+		// in.close();
+		// } catch (IOException e) {
+		// BugzillaPlugin.log(new Status(IStatus.ERROR,
+		// IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
+		// "Problem closing the stream", e));
+		// }
+		// }
 	}
 
 	/**
@@ -222,14 +276,15 @@ public class BugzillaRepositoryUtil {
 
 			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
 					BugzillaPlugin.REPOSITORY_KIND, serverUrl);
-			
-			if(repository == null) {
-				throw new LoginException("Repository configuration error.");		
+
+			if (repository == null) {
+				throw new LoginException("Repository configuration error.");
 			}
-			if(repository.getUserName() == null || repository.getUserName().trim().equals("") || repository.getPassword() == null) {
-				throw new LoginException("Login credentials missing.");					
-			}			
-			
+			if (repository.getUserName() == null || repository.getUserName().trim().equals("")
+					|| repository.getPassword() == null) {
+				throw new LoginException("Login credentials missing.");
+			}
+
 			String url = repository.getUrl() + "/enter_bug.cgi";
 
 			// use the proper url if we dont know the product yet
@@ -354,7 +409,8 @@ public class BugzillaRepositoryUtil {
 		String url = repository.getUrl() + POST_ARGS_SHOW_BUG + id;
 		try {
 			if (repository.hasCredentials()) {
-				url += "&"+POST_ARGS_LOGIN + URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8)
+				url += "&" + POST_ARGS_LOGIN
+						+ URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8)
 						+ POST_ARGS_PASSWORD
 						+ URLEncoder.encode(repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
 			}
@@ -416,9 +472,10 @@ public class BugzillaRepositoryUtil {
 	 * 
 	 * @param monitor
 	 *            A reference to a progress monitor
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	public static void updateQueryOptions(TaskRepository repository, IProgressMonitor monitor) throws LoginException, IOException {
+	public static void updateQueryOptions(TaskRepository repository, IProgressMonitor monitor) throws LoginException,
+			IOException {
 
 		String repositoryUrl = repository.getUrl();
 		BugzillaQueryPageParser parser = new BugzillaQueryPageParser(repository, monitor);
@@ -472,6 +529,139 @@ public class BugzillaRepositoryUtil {
 				queryOptionsToString(parser.getTargetValues()));
 		monitor.worked(1);
 	}
+
+	public static boolean downloadAttachment(TaskRepository repository, int id, File destinationFile, boolean overwrite)
+			throws IOException {
+		BufferedReader in = null;
+		try {
+			String url = repository.getUrl() + POST_ARGS_ATTACHMENT_DOWNLOAD + id;
+			if (repository.hasCredentials()) {
+				url += "&" + POST_ARGS_LOGIN
+						+ URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8)
+						+ POST_ARGS_PASSWORD
+						+ URLEncoder.encode(repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
+			}
+			URL downloadUrl = new URL(url);
+			URLConnection connection = BugzillaPlugin.getDefault().getUrlConnection(downloadUrl);
+			if (connection != null) {
+				InputStream input = connection.getInputStream();
+				if (input != null) {
+					in = new BufferedReader(new InputStreamReader(input));
+					if (destinationFile.exists() && !overwrite) {
+						return false;
+					}
+					destinationFile.createNewFile();
+					OutputStreamWriter outputStream = new OutputStreamWriter(new FileOutputStream(destinationFile));
+					BufferedWriter out = new BufferedWriter(outputStream);
+					char[] buf = new char[1024];
+					int len;
+					while ((len = in.read(buf)) > 0) {
+						out.write(buf, 0, len);
+					}
+					in.close();
+					out.close();
+					return true;
+				}
+			}
+		} catch (MalformedURLException e) {
+			throw e;
+		} catch (IOException e) {
+			throw e;
+		} catch (Exception e) {
+			BugzillaPlugin.log(new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
+					"Problem retrieving attachment", e));
+			return false;
+		} finally {
+			try {
+				if (in != null)
+					in.close();
+			} catch (IOException e) {
+				BugzillaPlugin.log(new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
+						"Problem closing the stream", e));
+			}
+		}
+		return false;
+	}
+
+	public static boolean uploadAttachment(TaskRepository repository, int bugReportID, String comment,
+			String description, File sourceFile, String contentType, boolean isPatch) throws IOException {
+
+		// Note: The following debug code requires http commons-logging and
+		// commons-logging-api jars
+		// System.setProperty("org.apache.commons.logging.Log",
+		// "org.apache.commons.logging.impl.SimpleLog");
+		// System.setProperty("org.apache.commons.logging.simplelog.showdatetime",
+		// "true");
+		// System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire",
+		// "debug");
+		// System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient",
+		// "debug");
+
+		boolean uploadResult = true;
+
+		HttpClient client = new HttpClient();
+		PostMethod postMethod = new PostMethod(repository.getUrl() + POST_ARGS_ATTACHMENT_UPLOAD);
+
+		// My understanding is that this option causes the client to first check
+		// with the server to see if it will in fact recieve the post before
+		// actually sending the contents.
+		postMethod.getParams().setBooleanParameter(HttpMethodParams.USE_EXPECT_CONTINUE, true);
+
+		try {
+
+			List<PartBase> parts = new ArrayList<PartBase>();
+
+			parts.add(new StringPart(ATTRIBUTE_ACTION, VALUE_ACTION_INSERT));
+
+			parts.add(new StringPart(ATTRIBUTE_BUGZILLA_LOGIN, repository.getUserName()));
+
+			parts.add(new StringPart(ATTRIBUTE_BUGZILLA_PASSWORD, repository.getPassword()));
+
+			parts.add(new StringPart(ATTRIBUTE_BUGID, String.valueOf(bugReportID)));
+
+			parts.add(new StringPart(ATTRIBUTE_DESCRIPTION, description));
+
+			parts.add(new StringPart(ATTRIBUTE_COMMENT, comment));
+
+			parts.add(new FilePart(ATTRIBUTE_DATA, sourceFile));
+
+			if (isPatch) {
+				parts.add(new StringPart(ATTRIBUTE_ISPATCH, VALUE_ISPATCH));
+			} else {
+				parts.add(new StringPart(ATTRIBUTE_CONTENTTYPEMETHOD, VALUE_CONTENTTYPEMETHOD_MANUAL));
+				parts.add(new StringPart(ATTRIBUTE_CONTENTTYPEENTRY, contentType));
+			}
+
+			postMethod.setRequestEntity(new MultipartRequestEntity(parts.toArray(new Part[1]), postMethod.getParams()));
+ 
+			client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+			int status = client.executeMethod(postMethod);
+			if (status == HttpStatus.SC_OK) {
+				InputStreamReader reader = new InputStreamReader(postMethod.getResponseBodyAsStream(), postMethod
+						.getResponseCharSet());
+				BufferedReader bufferedReader = new BufferedReader(reader);
+				String newLine;
+				while ((newLine = bufferedReader.readLine()) != null) {
+					if (newLine.indexOf("Invalid Username Or Password") >= 0) {
+						throw new IOException(
+								"Invalid Username Or Password - Check credentials in Task Repositories view.");
+					}
+					// TODO: test for no comment and no description etc.
+				}
+			} else {
+				MylarStatusHandler.log(HttpStatus.getStatusText(status), BugzillaRepositoryUtil.class);
+				uploadResult = false;
+			}
+		} catch (HttpException e) {
+			MylarStatusHandler.log("Attachment upload failed\n" + e.getMessage(), BugzillaRepositoryUtil.class);
+			uploadResult = false;
+		} finally {
+			postMethod.releaseConnection();
+		}
+
+		return uploadResult;
+	}
+
 }
 
 /**

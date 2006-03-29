@@ -3,6 +3,25 @@
 <?eclipse version="3.0"?>
 <plugin>
    
+   <!-- TODO: remove? -->
+   <extension
+         id="searchHit"
+         name="Bugzilla Search Match"
+         point="org.eclipse.core.resources.markers">
+      <super type="org.eclipse.search.searchmarker"/>
+      <attribute name="id"/>
+      <attribute name="href"/>
+      <attribute name="description"/>
+      <attribute name="label"/>
+      <attribute name="severity"/>
+      <attribute name="priority"/>
+      <attribute name="platform"/>
+      <attribute name="status"/>
+      <attribute name="result"/>
+      <attribute name="owner"/>
+      <attribute name="query"/>
+   </extension> 
+   
    <extension
          id="org.eclipse.mylar.bugzilla.repository" 
          name="Bugzilla Repository"
@@ -24,7 +43,6 @@
          point="org.eclipse.mylar.tasklist.editors">
       <editorFactory class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaReportEditorFactory"/>
    </extension>
-  
    
    <extension 
    		point="org.eclipse.ui.perspectiveExtensions">
@@ -48,28 +66,6 @@
       </decorator>
    </extension>
 
-<!--      
-<extension
-      id="org.eclipse.mylar.bugzilla.wizards"
-      name="Bug Wizard"
-      point="org.eclipse.ui.newWizards">
-   <category
-         name="Bugzilla Client"
-         id="org.eclipse.mylar.bugzilla.wizard.category">
-   </category>
-   <wizard
-         category="org.eclipse.mylar.bugzilla.wizard.category"
-         class="org.eclipse.mylar.bugzilla.ui.wizard.NewBugzillaReportWizard"
-         icon="icons/elcl16/bug-new.gif"
-         id="org.eclipse.mylar.bugzilla.bugWizard"
-         name="New Bug Report">
-      <description>
-      	 Create a new bug report
-      </description>
-   </wizard>
-</extension>
--->
-   
    <extension
          id="org.eclipse.mylar.bugzilla.help.browser"
          name="Bugzilla Help"
@@ -79,28 +75,7 @@
             primary="false">
       </toc>
    </extension>
-   <!--
-   <extension
-   			id="org.eclipse.mylar.bugzilla.ui"
-   			name="Bugzilla Client Views"
-   			point="org.eclipse.ui.views">
-   		 <category
-   				name="Bugzilla"
-            	id="org.eclipse.mylar.bugzilla.category"/>
-   		 <view
-   		 		name="Bugzilla Offline Reports"
-   				icon="icons/elcl16/bug-dirty.gif"
-   				category="org.eclipse.mylar.bugzilla.category"
-   				class="org.eclipse.mylar.bugzilla.ui.OfflineView"
-   				id="org.eclipse.mylar.bugzilla.ui.offlineReportsView"/>
-   		 <view
-   		 		name="Bugzilla Favorites"
-   				icon="icons/elcl16/bug-favorite.gif"
-   				category="org.eclipse.mylar.bugzilla.category"
-   				class="org.eclipse.mylar.bugzilla.ui.FavoritesView"
-   				id="org.eclipse.mylar.bugzilla.ui.favoritesView"/>
-   </extension>   
-   -->
+
    <extension
          point="org.eclipse.ui.editors">
       <editor
@@ -151,6 +126,59 @@
    </extension>
 </plugin>
 
+<!--      
+<extension
+      id="org.eclipse.mylar.bugzilla.wizards"
+      name="Bug Wizard"
+      point="org.eclipse.ui.newWizards">
+   <category
+         name="Bugzilla Client"
+         id="org.eclipse.mylar.bugzilla.wizard.category">
+   </category>
+   <wizard
+         category="org.eclipse.mylar.bugzilla.wizard.category"
+         class="org.eclipse.mylar.bugzilla.ui.wizard.NewBugzillaReportWizard"
+         icon="icons/elcl16/bug-new.gif"
+         id="org.eclipse.mylar.bugzilla.bugWizard"
+         name="New Bug Report">
+      <description>
+      	 Create a new bug report
+      </description>
+   </wizard>
+</extension>
+-->
+
+   <!--
+   <extension
+   			id="org.eclipse.mylar.bugzilla.ui"
+   			name="Bugzilla Client Views"
+   			point="org.eclipse.ui.views">
+   		 <category
+   				name="Bugzilla"
+            	id="org.eclipse.mylar.bugzilla.category"/>
+   		 <view
+   		 		name="Bugzilla Offline Reports"
+   				icon="icons/elcl16/bug-dirty.gif"
+   				category="org.eclipse.mylar.bugzilla.category"
+   				class="org.eclipse.mylar.bugzilla.ui.OfflineView"
+   				id="org.eclipse.mylar.bugzilla.ui.offlineReportsView"/>
+   		 <view
+   		 		name="Bugzilla Favorites"
+   				icon="icons/elcl16/bug-favorite.gif"
+   				category="org.eclipse.mylar.bugzilla.category"
+   				class="org.eclipse.mylar.bugzilla.ui.FavoritesView"
+   				id="org.eclipse.mylar.bugzilla.ui.favoritesView"/>
+   </extension>   
+   -->
+
+<!--   <extension point="org.eclipse.ui.preferencePages">
+   	  <page
+   	  		name="Bugzilla Client"
+   	  		class="org.eclipse.mylar.internal.bugzilla.core.BugzillaPreferencePage"
+   	  		id="org.eclipse.mylar.bugzilla.bugzillaPreferences"
+   	  		category="org.eclipse.mylar.ui.preferences"/>
+   </extension>
+   -->
 
          <!--
          <action

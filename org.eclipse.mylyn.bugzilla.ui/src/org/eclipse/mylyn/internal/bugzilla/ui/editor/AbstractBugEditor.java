@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -44,6 +42,7 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaReportSelection;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
@@ -67,11 +66,8 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.RetargetAction;
-import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -378,7 +374,6 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		// foreground = JFaceColors.getBannerForeground(display);
 
 		// createInfoArea(editorComposite);
-
 		createContextMenu();
 		createAttributeLayout();
 		createDescriptionLayout(toolkit, form);
@@ -1048,17 +1043,20 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 			formText.addHyperlinkListener(new HyperlinkAdapter() {
 				public void linkActivated(HyperlinkEvent event) {
-					try {
-						// Perhaps should use TaskListUiUtil.openUrl instead?
-						URL url = new URL((String) event.getHref());
-						IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
-
-						support.getExternalBrowser().openURL(url);
-					} catch (PartInitException e1) {
-						MessageDialog.openError(null, "Link error", "Could not open browser");
-					} catch (MalformedURLException e) {
-						MessageDialog.openError(null, "Link error", "Hyperlink address is malformed");
-					}
+					String address = (String) event.getHref();
+					// TODO: how to get proper page title and 
+					TaskListUiUtil.openUrl(address, address, address);
+//					try {
+//						// Perhaps should use TaskListUiUtil.openUrl instead?
+//						URL url = new URL((String) event.getHref());
+//						IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
+//
+//						support.getExternalBrowser().openURL(url);
+//					} catch (PartInitException e1) {
+//						MessageDialog.openError(null, "Link error", "Could not open browser");
+//					} catch (MalformedURLException e) {
+//						MessageDialog.openError(null, "Link error", "Hyperlink address is malformed");
+//					}
 				}
 			});
 
@@ -1102,6 +1100,34 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			formText.setFont("code", JFaceResources.getTextFont());
 			formText.setText(buf.toString(), true, false);
 
+			formText.addHyperlinkListener(new HyperlinkAdapter() {
+				public void linkActivated(HyperlinkEvent event) {
+//					try {
+						// Perhaps should use TaskListUiUtil.openUrl instead?
+//						URL url = new URL((String) event.getHref());
+						TaskListUiUtil.openUrl("Attachment", "", (String) event.getHref());
+//						IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
+//
+//						support.getExternalBrowser().openURL(url);
+//					} catch (PartInitException e1) {
+//						MessageDialog.openError(null, "Link error", "Could not open browser");
+//					} catch (MalformedURLException e) {
+//						MessageDialog.openError(null, "Link error", "Hyperlink address is malformed");
+//					}
+				}
+			});
+			
+			formText.addSelectionListener(new SelectionAdapter() {
+
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					FormText c = (FormText) e.widget;
+					if (c != null && c.canCopy()) {
+						currentSelectedText = c;
+					}
+
+				}
+			});
 			resultText = formText;
 
 		}

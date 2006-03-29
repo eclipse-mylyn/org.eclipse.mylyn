@@ -11,8 +11,10 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -30,6 +32,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.bugzilla.core.BugReport;
+import org.eclipse.mylar.bugzilla.core.BugzillaRemoteContextDelegate;
+import org.eclipse.mylar.bugzilla.core.Comment;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
@@ -51,11 +55,13 @@ import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractAddExistingTaskWizard;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.ExistingTaskWizardPage;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.DateRangeContainer;
+import org.eclipse.mylar.provisional.tasklist.IRemoteContextDelegate;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -70,6 +76,8 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
  * @author Rob Elves
  */
 public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
+
+	private static final String CONTENTTYPE_APPLICATION_XML = "application/xml";
 
 	private static final String LABEL_JOB_SUBMIT = "Submitting to Bugzilla repository";
 
@@ -526,6 +534,68 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				saveOffline(downloadedReport, forceSync);
 			}
 		}
+	}
+
+	@Override
+	public boolean attachContext(TaskRepository repository, AbstractRepositoryTask task, String longComment)
+			throws IOException {
+		boolean result = false;
+		MylarPlugin.getContextManager().saveContext(task.getHandleIdentifier());
+		File sourceContextFile = MylarPlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+		if (sourceContextFile != null && sourceContextFile.exists()) {
+			result = BugzillaRepositoryUtil.uploadAttachment(repository, BugzillaTask.getTaskIdAsInt(task
+					.getHandleIdentifier()), longComment, MYLAR_CONTEXT_DESCRIPTION, sourceContextFile,
+					CONTENTTYPE_APPLICATION_XML, false);
+			if (result) {
+				synchronize(task, false, null);
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public Set<IRemoteContextDelegate> getAvailableContexts(TaskRepository repository, AbstractRepositoryTask task) {
+		Set<IRemoteContextDelegate> contextDelegates = new HashSet<IRemoteContextDelegate>();
+		if(task instanceof BugzillaTask) {
+			BugzillaTask bugzillaTask = (BugzillaTask)task;
+			for (Comment comment : bugzillaTask.getBugReport().getComments()) {
+				if(comment.hasAttachment() && comment.getAttachmentDescription().equals(MYLAR_CONTEXT_DESCRIPTION)) {
+					contextDelegates.add(new BugzillaRemoteContextDelegate(comment));
+				}
+			}
+		}
+		return contextDelegates;
+	}
+
+	@Override
+	public boolean retrieveContext(TaskRepository repository, AbstractRepositoryTask task,
+			IRemoteContextDelegate remoteContextDelegate) throws IOException {
+		boolean result = false;
+		boolean wasActive = false;
+		if (remoteContextDelegate instanceof BugzillaRemoteContextDelegate) {
+			BugzillaRemoteContextDelegate contextDelegate = (BugzillaRemoteContextDelegate) remoteContextDelegate;
+
+			if (task.isActive()) {
+				wasActive = true;
+				MylarTaskListPlugin.getTaskListManager().deactivateTask(task);
+			}
+
+			File destinationContextFile = MylarPlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+			// if(destinationContextFile.exists()) {
+			// destinationContextFile.delete();
+			// }
+
+			result = BugzillaRepositoryUtil.downloadAttachment(repository, contextDelegate.getId(),
+					destinationContextFile, true);
+
+			if (result) {
+				MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
+				if (wasActive) {
+					MylarTaskListPlugin.getTaskListManager().activateTask(task);
+				}
+			}
+		}
+		return result;
 	}
 
 }

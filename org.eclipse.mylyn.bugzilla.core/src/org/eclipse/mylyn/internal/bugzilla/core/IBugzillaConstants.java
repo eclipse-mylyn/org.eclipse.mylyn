@@ -29,6 +29,9 @@ public interface IBugzillaConstants {
 
 	static final String EDITOR_PAGE_CONTEXT = PLUGIN_ID + ".bugzillaEditorContext";
 
+	/**
+	 * XXX: remove?
+	 */
 	static final String HIT_MARKER_ID = PLUGIN_ID + ".searchHit";
 
 	// The is's for hit markers used in the label provider and sorters
@@ -176,6 +179,6 @@ public interface IBugzillaConstants {
 
 	public static final String MESSAGE_LOGIN_FAILURE = "Bugzilla login information or repository version incorrect";
 
-	public static final String INVALID_2201_ATTRIBUTE_IGNORED = "EclipsebugsBugzilla2.20.1 ";
+	public static final String INVALID_2201_ATTRIBUTE_IGNORED = "EclipsebugsBugzilla2.20.1";
 
 }
