@@ -91,7 +91,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @author Mik Kersten (some hardening of prototype)
  * @author Rob Elves (Conversion to Eclipse Forms)
  */
-public abstract class AbstractBugEditor extends EditorPart implements Listener {
+public abstract class AbstractBugEditor extends EditorPart { //implements Listener 
 
 	private static final String LABEL_BUTTON_SUBMIT = "Submit";
 
@@ -203,7 +203,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 	protected RetargetAction cutAction;
 
-	protected BugzillaEditorCopyAction copyAction;
+	protected BugzillaEditorCopyAction copyAction; //BugzillaEditorCopyAction
 
 	protected RetargetAction pasteAction;
 
@@ -279,6 +279,36 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		}
 	};
 
+	private class ComboSelectionListener extends SelectionAdapter {
+
+		private CCombo combo;
+
+		public ComboSelectionListener(CCombo combo) {
+			this.combo = combo;
+		}
+
+		public void widgetDefaultSelected(SelectionEvent event) {
+			// ignore
+		}
+
+		public void widgetSelected(SelectionEvent event) {
+			if (comboListenerMap.containsKey(combo)) {
+				if (combo.getSelectionIndex() > -1) {
+					String sel = combo.getItem(combo.getSelectionIndex());
+					Attribute attribute = getBug().getAttribute(comboListenerMap.get(combo));
+					if (sel != null && !(sel.equals(attribute.getNewValue()))) {
+						attribute.setNewValue(sel);
+						for (IBugzillaAttributeListener client : attributesListeners) {
+							client.attributeChanged(attribute.getName(), sel);
+						}
+						changeDirtyStatus(true);
+					}
+				}
+			}
+		}
+	}
+	
+	
 	/**
 	 * Creates a new <code>AbstractBugEditor</code>. Sets up the default
 	 * fonts and cut/copy/paste actions.
@@ -311,7 +341,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 				.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE_DISABLED));
 		pasteAction.setAccelerator(SWT.CTRL | 'v');
 		pasteAction.setActionDefinitionId(pasteActionDefId);
-
+		
 		copyAction = new BugzillaEditorCopyAction(this);
 		copyAction.setText(WorkbenchMessages.Workbench_copy);// WorkbenchMessages.getString("Workbench.copy"));
 		copyAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
@@ -396,65 +426,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		getSite().setSelectionProvider(selectionProvider);
 	}
 
-	// /**
-	// * Creates the part of the editor that contains the information about the
-	// * the bug.
-	// *
-	// * @param parent
-	// * The composite to put the info area into.
-	// * @return The info area composite.
-	// */
-	// protected Composite createInfoArea(Composite parent) {
-	//
-	// createContextMenu();
-	//
-	// // scrolledComposite = new ScrolledComposite(parent, SWT.V_SCROLL |
-	// // SWT.H_SCROLL);
-	// // scrolledComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-	//
-	// // if (getBug() == null) {
-	// // // close();
-	// // MessageDialog.openError(Display.getDefault().getActiveShell(),
-	// // "Bugzilla Client Errror",
-	// // "Could not resolve the requested bug, check Bugzilla server and
-	// // version.");
-	// //
-	// // Composite composite = new Composite(parent, SWT.NULL);
-	// // Label noBugLabel = new Label(composite, SWT.NULL);
-	// // noBugLabel.setText("Could not resolve bug");
-	// // return composite;
-	// // }
-	//
-	// createLayouts();
-	//
-	// // this.scrolledComposite.setContent(editorComposite);
-	// // Point p = editorComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT,
-	// // true);
-	// // this.scrolledComposite.setMinHeight(p.y);
-	// // this.scrolledComposite.setMinWidth(p.x);
-	// // this.scrolledComposite.setExpandHorizontal(true);
-	// // this.scrolledComposite.setExpandVertical(true);
-	// //
-	// // // make the editor scroll properly with a scroll editor
-	// // scrolledComposite.addControlListener(new ControlListener() {
-	// // public void controlMoved(ControlEvent e) {
-	// // // don't care when the control moved
-	// // }
-	// //
-	// // public void controlResized(ControlEvent e) {
-	// // scrolledComposite.getVerticalBar().setIncrement(scrollIncrement);
-	// // scrolledComposite.getHorizontalBar().setIncrement(scrollIncrement);
-	// // scrollVertPageIncrement = scrolledComposite.getClientArea().height;
-	// // scrollHorzPageIncrement = scrolledComposite.getClientArea().width;
-	// //
-	// scrolledComposite.getVerticalBar().setPageIncrement(scrollVertPageIncrement);
-	// //
-	// scrolledComposite.getHorizontalBar().setPageIncrement(scrollHorzPageIncrement);
-	// // }
-	// // });
-	//
-	// return editorComposite;
-	// }
+	
 
 	/**
 	 * Create a context menu for this editor.
@@ -480,15 +452,6 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		getSite().registerContextMenu("#BugEditor", contextMenuManager, getSite().getSelectionProvider());
 	}
 
-	// /**
-	// * Creates all of the layouts that display the information on the bug.
-	// */
-	// protected void createLayouts() {
-	// createAttributeLayout();
-	// createDescriptionLayout(toolkit, form);
-	// createCommentLayout(toolkit, form);
-	// createButtonLayouts(toolkit, form.getBody());
-	// }
 
 	/**
 	 * Creates the attribute layout, which contains most of the basic attributes
@@ -608,7 +571,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 				} else {
 					oSCombo.select(oSCombo.indexOf("All"));
 				}
-				oSCombo.addListener(SWT.Modify, this);
+//				oSCombo.addListener(SWT.Modify, this);
+				oSCombo.addSelectionListener(new ComboSelectionListener(oSCombo));	
 				comboListenerMap.put(oSCombo, name);
 				oSCombo.addListener(SWT.FocusIn, new GenericListener());
 				currentCol += 2;
@@ -628,7 +592,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 					versionCombo.add(a[i]);
 				}
 				versionCombo.select(versionCombo.indexOf(value));
-				versionCombo.addListener(SWT.Modify, this);
+//				versionCombo.addListener(SWT.Modify, this);
+				versionCombo.addSelectionListener(new ComboSelectionListener(versionCombo));	
 				versionCombo.addListener(SWT.FocusIn, new GenericListener());
 				comboListenerMap.put(versionCombo, name);
 				currentCol += 2;
@@ -647,7 +612,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 					priorityCombo.add(a[i]);
 				}
 				priorityCombo.select(priorityCombo.indexOf(value));
-				priorityCombo.addListener(SWT.Modify, this);
+//				priorityCombo.addListener(SWT.Modify, this);
+				priorityCombo.addSelectionListener(new ComboSelectionListener(priorityCombo));
 				priorityCombo.addListener(SWT.FocusIn, new GenericListener());
 				comboListenerMap.put(priorityCombo, name);
 				currentCol += 2;
@@ -666,7 +632,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 					severityCombo.add(a[i]);
 				}
 				severityCombo.select(severityCombo.indexOf(value));
-				severityCombo.addListener(SWT.Modify, this);
+				severityCombo.addSelectionListener(new ComboSelectionListener(severityCombo));
+//				severityCombo.addListener(SWT.Modify, this);
 				severityCombo.addListener(SWT.FocusIn, new GenericListener());
 				comboListenerMap.put(severityCombo, name);
 				currentCol += 2;
@@ -686,7 +653,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 					milestoneCombo.add(a[i]);
 				}
 				milestoneCombo.select(milestoneCombo.indexOf(value));
-				milestoneCombo.addListener(SWT.Modify, this);
+//				milestoneCombo.addListener(SWT.Modify, this);
+				milestoneCombo.addSelectionListener(new ComboSelectionListener(milestoneCombo));
 				milestoneCombo.addListener(SWT.FocusIn, new GenericListener());
 				comboListenerMap.put(milestoneCombo, name);
 				currentCol += 2;
@@ -706,7 +674,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 					platformCombo.add(a[i]);
 				}
 				platformCombo.select(platformCombo.indexOf(value));
-				platformCombo.addListener(SWT.Modify, this);
+//				platformCombo.addListener(SWT.Modify, this);
+				platformCombo.addSelectionListener(new ComboSelectionListener(platformCombo));
 				platformCombo.addListener(SWT.FocusIn, new GenericListener());
 				comboListenerMap.put(platformCombo, name);
 				currentCol += 2;
@@ -762,7 +731,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 					componentCombo.add(a[i]);
 				}
 				componentCombo.select(componentCombo.indexOf(value));
-				componentCombo.addListener(SWT.Modify, this);
+//				componentCombo.addListener(SWT.Modify, this);
+				componentCombo.addSelectionListener(new ComboSelectionListener(componentCombo));
 				componentCombo.addListener(SWT.FocusIn, new GenericListener());
 				comboListenerMap.put(componentCombo, name);
 				currentCol += 2;
@@ -1011,6 +981,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		FormText resultText;
 		if (style.equalsIgnoreCase(VALUE)) {
 			FormText formText = toolkit.createFormText(composite, true);// new
+			formText.setMenu(contextMenuManager.createContextMenu(formText));
 			// StyledText(composite,
 			// SWT.MULTI
 			// |
@@ -1471,24 +1442,24 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		getSite().getPage().removeSelectionListener(selectionListener);
 	}
 
-	public void handleEvent(Event event) {
-		if (event.widget instanceof CCombo) {
-			CCombo combo = (CCombo) event.widget;
-			if (comboListenerMap.containsKey(combo)) {
-				if (combo.getSelectionIndex() > -1) {
-					String sel = combo.getItem(combo.getSelectionIndex());
-					Attribute attribute = getBug().getAttribute(comboListenerMap.get(combo));
-					if (sel != null && !(sel.equals(attribute.getNewValue()))) {
-						attribute.setNewValue(sel);
-						for (IBugzillaAttributeListener client : attributesListeners) {
-							client.attributeChanged(attribute.getName(), sel);
-						}
-						changeDirtyStatus(true);
-					}
-				}
-			}
-		}
-	}
+//	public void handleEvent(Event event) {
+//		if (event.widget instanceof CCombo) {
+//			CCombo combo = (CCombo) event.widget;
+//			if (comboListenerMap.containsKey(combo)) {
+//				if (combo.getSelectionIndex() > -1) {
+//					String sel = combo.getItem(combo.getSelectionIndex());
+//					Attribute attribute = getBug().getAttribute(comboListenerMap.get(combo));
+//					if (sel != null && !(sel.equals(attribute.getNewValue()))) {
+//						attribute.setNewValue(sel);
+//						for (IBugzillaAttributeListener client : attributesListeners) {
+//							client.attributeChanged(attribute.getName(), sel);
+//						}
+//						changeDirtyStatus(true);
+//					}
+//				}
+//			}
+//		}
+//	}
 
 	/**
 	 * Fires a <code>SelectionChangedEvent</code> to all listeners registered
