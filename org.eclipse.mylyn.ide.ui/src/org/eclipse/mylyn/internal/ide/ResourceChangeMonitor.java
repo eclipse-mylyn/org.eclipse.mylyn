@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.provisional.core.InteractionEvent;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 
 /**
@@ -37,22 +38,39 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 		if (event.getType() != IResourceChangeEvent.POST_CHANGE) {
 			return;
 		}
-		final List<IResource> resources = new ArrayList<IResource>();
+		final List<IResource> addedResources = new ArrayList<IResource>();
+		final List<IResource> changedResources = new ArrayList<IResource>();
 		IResourceDelta rootDelta = event.getDelta();
 		IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
 			public boolean visit(IResourceDelta delta) {
-				// processMarkerDelata(delta.getMarkerDeltas());
 				IResourceDelta[] added = delta.getAffectedChildren(IResourceDelta.ADDED);
 				for (int i = 0; i < added.length; i++) {
 					IResource resource = added[i].getResource();
-					resources.add(resource);
+					addedResources.add(resource);
 				}
+				IResourceDelta[] changed = delta.getAffectedChildren(IResourceDelta.CHANGED);
+				for (int i = 0; i < changed.length; i++) {
+					IResource resource = changed[i].getResource();
+					changedResources.add(resource);
+				}
+				IResourceDelta[] removed = delta.getAffectedChildren(IResourceDelta.REMOVED);
+				for (int i = 0; i < removed.length; i++) {
+					IResource resource = removed[i].getResource();
+					System.err.println(">> " + resource);
+					changedResources.add(resource);
+				}
+//				IResourceDelta[] moved = delta.getAffectedChildren(IResourceDelta.MOVED_TO);
+//				for (int i = 0; i < moved.length; i++) {
+//					IResource resource = moved[i].getResource();
+//					changedResources.add(resource);
+//				}
 				return true;
 			}
 		};
 		try {
 			rootDelta.accept(visitor);
-			MylarIdePlugin.getDefault().getInterestUpdater().addResourceToContext(resources);
+			MylarIdePlugin.getDefault().getInterestUpdater().addResourceToContext(addedResources, InteractionEvent.Kind.SELECTION);
+			MylarIdePlugin.getDefault().getInterestUpdater().addResourceToContext(changedResources, InteractionEvent.Kind.PREDICTION);
 		} catch (CoreException e) {
 			MylarStatusHandler.log(e, "could not accept marker visitor");
 		}
