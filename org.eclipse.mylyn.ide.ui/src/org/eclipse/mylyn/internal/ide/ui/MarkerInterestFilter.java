@@ -24,7 +24,7 @@ import org.eclipse.ui.views.markers.internal.ProblemMarker;
 /**
  * @author Mik Kersten
  */
-public class ProblemsListInterestFilter extends InterestFilter {
+public class MarkerInterestFilter extends InterestFilter {
 
 	@Override
 	public boolean select(Viewer viewer, Object parent, Object element) {
@@ -40,28 +40,33 @@ public class ProblemsListInterestFilter extends InterestFilter {
 						return true;
 					}
 				}
-			}
+			} 
 		} else {
-			ConcreteMarker marker = (ConcreteMarker) element;
-			if ((marker instanceof ProblemMarker) && ((ProblemMarker) marker).getSeverity() == IMarker.SEVERITY_ERROR) {
-				return true;
-			} else {
-				if (!MylarPlugin.getContextManager().isContextActive()) {
-					return false;
-				}
-				return isInteresting(marker, viewer, parent);
-			}
+//			ConcreteMarker marker = (ConcreteMarker) element;
+			return isInteresting((ConcreteMarker)element, viewer, parent);
 		}
 		return false;
 	}
 
+	private boolean isImplicitlyInteresting(ConcreteMarker marker) {
+		return (marker instanceof ProblemMarker) && ((ProblemMarker) marker).getSeverity() == IMarker.SEVERITY_ERROR;
+	}
+
 	private boolean isInteresting(ConcreteMarker marker, Viewer viewer, Object parent) {
-		String handle = MylarPlugin.getDefault().getStructureBridge(marker.getResource().getFileExtension())
-				.getHandleForOffsetInObject(marker, 0);
-		if (handle == null) {
-			return false;
+		if (isImplicitlyInteresting(marker)) {
+			return true;
 		} else {
-			return super.select(viewer, parent, MylarPlugin.getContextManager().getElement(handle));
+			if (!MylarPlugin.getContextManager().isContextActive()) {
+				return false;
+			}
+			String handle = MylarPlugin.getDefault().getStructureBridge(marker.getResource().getFileExtension())
+					.getHandleForOffsetInObject(marker, 0);
+			if (handle == null) {
+				return false;
+			} else {
+				return super.select(viewer, parent, MylarPlugin.getContextManager().getElement(handle));
+			}
 		}
+
 	}
 }

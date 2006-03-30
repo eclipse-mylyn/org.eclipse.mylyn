@@ -30,6 +30,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IActionDelegate2;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Extending this class makes it possible to apply Mylar management to a
@@ -206,5 +208,13 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 	 */
 	public InterestFilter getInterestFilter() {
 		return interestFilter;
+	}
+
+	protected IViewPart getView(String id) {
+		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		if (activePage == null)
+			return null;
+		IViewPart view = activePage.findView(id);
+		return view;
 	}
 }

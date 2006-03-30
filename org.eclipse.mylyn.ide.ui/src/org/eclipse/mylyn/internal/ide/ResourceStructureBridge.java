@@ -30,7 +30,7 @@ import org.eclipse.mylar.provisional.core.AbstractRelationProvider;
 import org.eclipse.mylar.provisional.core.IDegreeOfSeparation;
 import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
-import org.eclipse.ui.views.markers.internal.ProblemMarker;
+import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 
 /**
  * @author Mik Kersten
@@ -148,9 +148,9 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
 	}
 
 	public String getHandleForOffsetInObject(Object resource, int offset) {
-		if (resource == null || !(resource instanceof ProblemMarker))
+		if (resource == null || !(resource instanceof ConcreteMarker))
 			return null;
-		ProblemMarker marker = (ProblemMarker) resource;
+		ConcreteMarker marker = (ConcreteMarker) resource;
 		// we can only get a handle for a marker with the resource plugin.xml
 		try {
 			IResource res = marker.getResource();

@@ -17,32 +17,32 @@ import org.eclipse.mylar.internal.ui.UiUtil;
 import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.swt.graphics.*;
-import org.eclipse.ui.views.markers.internal.ProblemMarker;
+import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 import org.eclipse.ui.views.markers.internal.TableViewLabelProvider;
 
 /**
  * @author Mik Kersten
  */
-public class ProblemsListLabelProvider implements ITableLabelProvider, IColorProvider, IFontProvider {
+public class MarkerViewLabelProvider implements ITableLabelProvider, IColorProvider, IFontProvider {
 
 	private TableViewLabelProvider provider;
 
-	public ProblemsListLabelProvider(TableViewLabelProvider provider) {
+	public MarkerViewLabelProvider(TableViewLabelProvider provider) {
 		this.provider = provider;
 	}
 
 	public Font getFont(Object element) {
-		if (element instanceof ProblemMarker) {
+		if (element instanceof ConcreteMarker) {
 			String handle = MylarPlugin.getDefault().getStructureBridge(
-					((ProblemMarker) element).getResource().getFileExtension()).getHandleForOffsetInObject(
-					((ProblemMarker) element), 0);
+					((ConcreteMarker) element).getResource().getFileExtension()).getHandleForOffsetInObject(
+					((ConcreteMarker) element), 0);
 			IMylarElement node = MylarPlugin.getContextManager().getElement(handle);
 			if (node != null) {
 				if (node.getInterest().isLandmark() && !node.getInterest().isPropagated()) {
 					return MylarUiPrefContstants.BOLD;
 				}
 			}
-		}
+		} 
 		return null;
 	}
 
@@ -55,10 +55,10 @@ public class ProblemsListLabelProvider implements ITableLabelProvider, IColorPro
 	}
 
 	public Color getForeground(Object element) {
-		if (element instanceof ProblemMarker) {
+		if (element instanceof ConcreteMarker) {
 			String handle = MylarPlugin.getDefault().getStructureBridge(
-					((ProblemMarker) element).getResource().getFileExtension()).getHandleForOffsetInObject(
-					((ProblemMarker) element), 0);
+					((ConcreteMarker) element).getResource().getFileExtension()).getHandleForOffsetInObject(
+					((ConcreteMarker) element), 0);
 			return UiUtil.getForegroundForElement(MylarPlugin.getContextManager().getElement(handle));
 		} else {
 			return null;
@@ -66,10 +66,10 @@ public class ProblemsListLabelProvider implements ITableLabelProvider, IColorPro
 	}
 
 	public Color getBackground(Object element) {
-		if (element instanceof ProblemMarker) {
+		if (element instanceof ConcreteMarker) {
 			String handle = MylarPlugin.getDefault().getStructureBridge(
-					((ProblemMarker) element).getResource().getFileExtension()).getHandleForOffsetInObject(
-					((ProblemMarker) element), 0);
+					((ConcreteMarker) element).getResource().getFileExtension()).getHandleForOffsetInObject(
+					((ConcreteMarker) element), 0);
 			return UiUtil.getBackgroundForElement(MylarPlugin.getContextManager().getElement(handle));
 		} else {
 			return null;

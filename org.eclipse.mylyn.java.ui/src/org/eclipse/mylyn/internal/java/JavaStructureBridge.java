@@ -52,7 +52,7 @@ import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.ui.internal.WorkingSet;
-import org.eclipse.ui.views.markers.internal.ProblemMarker;
+import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 
 /**
  * @author Mik Kersten
@@ -227,17 +227,15 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 	}
 
 	public String getHandleForOffsetInObject(Object resource, int offset) {
-		if (resource == null || !(resource instanceof ProblemMarker))
+		if (resource == null || !(resource instanceof ConcreteMarker))
 			return null;
-		ProblemMarker marker = (ProblemMarker) resource;
+		ConcreteMarker marker = (ConcreteMarker) resource;
 		try {
 			IResource res = marker.getResource();
 			ICompilationUnit compilationUnit = null;
 			if (res instanceof IFile) {
 				IFile file = (IFile) res;
-				if (file.getFileExtension().equals("java")) { // TODO:
-																// instanceof
-																// instead?
+				if (file.getFileExtension().equals("java")) { 
 					compilationUnit = JavaCore.createCompilationUnitFrom(file);
 				} else {
 					return null;

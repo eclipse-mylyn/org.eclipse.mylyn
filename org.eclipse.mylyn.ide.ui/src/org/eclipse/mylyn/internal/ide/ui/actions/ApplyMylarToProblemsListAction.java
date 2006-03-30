@@ -21,13 +21,11 @@ import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.ide.ui.MarkerViewLabelProvider;
 import org.eclipse.mylar.internal.ide.ui.ProblemsListDoiSorter;
-import org.eclipse.mylar.internal.ide.ui.ProblemsListInterestFilter;
-import org.eclipse.mylar.internal.ide.ui.ProblemsListLabelProvider;
+import org.eclipse.mylar.internal.ide.ui.MarkerInterestFilter;
 import org.eclipse.mylar.internal.ui.actions.AbstractApplyMylarAction;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.markers.internal.MarkerFilter;
 import org.eclipse.ui.views.markers.internal.ProblemView;
 import org.eclipse.ui.views.markers.internal.TableView;
@@ -40,6 +38,8 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 
 	private static ApplyMylarToProblemsListAction INSTANCE;
 
+	private static final String TARGET_ID = "org.eclipse.ui.views.ProblemView";
+	
 	private StructuredViewer cachedProblemsTableViewer = null;
 
 	private MarkerFilter defaultFilter = null;
@@ -47,7 +47,7 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 	private ProblemsListDoiSorter interestSorter = new ProblemsListDoiSorter();
 
 	public ApplyMylarToProblemsListAction() {
-		super(new ProblemsListInterestFilter());
+		super(new MarkerInterestFilter());
 		INSTANCE = this;
 
 		// IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -78,13 +78,13 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
 		if (cachedProblemsTableViewer == null) {
 			try {
-				ProblemView view = getProblemView();
-				if (view != null) {
+				IViewPart viewPart = getView(TARGET_ID);
+				if (viewPart != null) {
 					Class infoClass = TableView.class;// problemView.getClass();
 					Method method = infoClass.getDeclaredMethod("getViewer", new Class[] {});
 					method.setAccessible(true);
-					cachedProblemsTableViewer = (StructuredViewer) method.invoke(view, new Object[] {});
-					updateLabelProvider(cachedProblemsTableViewer);
+					cachedProblemsTableViewer = (StructuredViewer) method.invoke(viewPart, new Object[] {});
+					updateMarkerViewLabelProvider(cachedProblemsTableViewer);
 				}
 			} catch (Exception e) {
 				MylarStatusHandler.log(e, "couldn't get problmes viewer");
@@ -95,16 +95,16 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 		return viewers;
 	}
 
-	protected ProblemView getProblemView() {
-		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		if (activePage == null)
-			return null;
-		IViewPart view = activePage.findView("org.eclipse.ui.views.ProblemView");
-		if (view instanceof ProblemView) {
-			return (ProblemView) view;
-		}
-		return null;
-	}
+//	protected ProblemView getProblemView() {
+//		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+//		if (activePage == null)
+//			return null;
+//		IViewPart view = activePage.findView();
+//		if (view instanceof ProblemView) {
+//			return (ProblemView) view;
+//		}
+//		return null;
+//	}
 
 	// @Override
 	// public void refreshViewer() {
@@ -117,12 +117,12 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 	// }
 	// }
 
-	private void updateLabelProvider(StructuredViewer viewer) {
-		IBaseLabelProvider currentProvider = viewer.getLabelProvider();
-		if (!(currentProvider instanceof ProblemsListLabelProvider)) {
-			viewer.setLabelProvider(new ProblemsListLabelProvider((TableViewLabelProvider) currentProvider));
-		}
-	}
+//	private void updateLabelProvider(StructuredViewer viewer) {
+//		IBaseLabelProvider currentProvider = viewer.getLabelProvider();
+//		if (!(currentProvider instanceof MarkerViewLabelProvider)) {
+//			viewer.setLabelProvider(new MarkerViewLabelProvider((TableViewLabelProvider) currentProvider));
+//		}
+//	}
 
 	public static ApplyMylarToProblemsListAction getDefault() {
 		return INSTANCE;
@@ -135,8 +135,8 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 		for (StructuredViewer viewer : getViewers()) {
 			if (viewer instanceof TableViewer) {
 				TableViewer tableViewer = (TableViewer) viewer;
-				if (tableViewer != null && !(tableViewer.getLabelProvider() instanceof ProblemsListLabelProvider)) {
-					tableViewer.setLabelProvider(new ProblemsListLabelProvider((TableViewLabelProvider) tableViewer
+				if (tableViewer != null && !(tableViewer.getLabelProvider() instanceof MarkerViewLabelProvider)) {
+					tableViewer.setLabelProvider(new MarkerViewLabelProvider((TableViewLabelProvider) tableViewer
 							.getLabelProvider()));
 				}
 			}
@@ -180,8 +180,9 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 	 */
 	protected void toggleMarkerFilter(boolean enabled) {
 		try {
-			ProblemView view = getProblemView();
-			if (view != null) {
+			IViewPart view = getView(TARGET_ID);
+//				getProblemView();
+			if (view instanceof ProblemView) {
 				Class viewClass = view.getClass();
 
 				try {
@@ -209,6 +210,13 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 	protected void verifySorterInstalled(StructuredViewer viewer) {
 		if (viewer != null && viewer.getSorter() != interestSorter) {
 			viewer.setSorter(interestSorter);
+		}
+	}
+	
+	protected void updateMarkerViewLabelProvider(StructuredViewer viewer) {
+		IBaseLabelProvider currentProvider = viewer.getLabelProvider();
+		if (!(currentProvider instanceof MarkerViewLabelProvider)) {
+			viewer.setLabelProvider(new MarkerViewLabelProvider((TableViewLabelProvider) currentProvider));
 		}
 	}
 }
