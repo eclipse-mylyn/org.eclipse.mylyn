@@ -18,11 +18,14 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
+import org.eclipse.mylar.provisional.core.InteractionEvent;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.team.core.TeamException;
 import org.eclipse.team.core.diff.IDiff;
+import org.eclipse.team.core.diff.provider.ThreeWayDiff;
 import org.eclipse.team.core.mapping.provider.ResourceDiff;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSet;
 import org.eclipse.team.internal.core.subscribers.SubscriberChangeSetCollector;
@@ -106,12 +109,24 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 	@Override
 	public void add(IDiff diff) {
 		super.add(diff);
-		if (!suppressInterestContribution && diff instanceof ResourceDiff) {
+		IResource resource = getResourceFromDiff(diff);
+		if (!suppressInterestContribution && resource != null) {
 			List<IResource> resources = new ArrayList<IResource>();
-			resources.add(((ResourceDiff)diff).getResource());
-			MylarIdePlugin.getDefault().getInterestUpdater().addResourceToContext(resources);
+			resources.add(resource);
+			MylarIdePlugin.getDefault().getInterestUpdater().addResourceToContext(resources, InteractionEvent.Kind.SELECTION);
 		}
 	}
+
+	private IResource getResourceFromDiff(IDiff diff) {
+		if (diff instanceof ResourceDiff) {
+			return ((ResourceDiff)diff).getResource();
+		} else if (diff instanceof ThreeWayDiff) {
+			ThreeWayDiff threeWayDiff = (ThreeWayDiff)diff;
+			return ResourcesPlugin.getWorkspace().getRoot().findMember(threeWayDiff.getPath());
+		} else {
+			return null;
+		}
+	} 
 
 	@Override
 	public void add(IDiff[] diffs) {

@@ -95,7 +95,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		assertEquals(0, collector.getSets().length); // deleted because no
 		// active resources
 		MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
-
+		
 		// TODO: test with resource
 	}
 
@@ -115,23 +115,14 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		assertEquals(1, changeSets.size());
 		MylarContextChangeSet set = changeSets.get(0);
 		IResource[] resources = set.getResources();
-		assertTrue("length: " + resources.length, resources.length <= 2); // can
-		// have
-		// .project
-		// file
-		// in
-		// there
+		// can have .project file in there
+		assertTrue("length: " + resources.length, resources.length <= 2); 
 
 		for (int i = 0; i < 1 / (scaling.getDecay().getValue()) * 3; i++) {
 			MylarPlugin.getContextManager().handleInteractionEvent(mockSelection());
 		}
 		assertTrue("" + fileElement.getInterest().getValue(), fileElement.getInterest().getValue() < 0);
-		assertTrue("length: " + resources.length, resources.length <= 2); // can
-		// have
-		// .project
-		// file
-		// in
-		// there
+		assertTrue("length: " + resources.length, resources.length <= 2); 
 
 		MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
 	}

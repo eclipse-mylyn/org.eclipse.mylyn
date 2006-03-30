@@ -32,17 +32,17 @@ public class ResourceInterestUpdater {
 
 	private boolean syncExec = false;
 
-	public void addResourceToContext(final List<IResource> resources) {
+	public void addResourceToContext(final List<IResource> resources, final InteractionEvent.Kind interactionKind) {
 		try {
 			if (!resources.isEmpty()) {
 				if (syncExec) {
-					internalAddResourceToContext(resources);
+					internalAddResourceToContext(resources, interactionKind);
 				} else {
 					final IWorkbench workbench = PlatformUI.getWorkbench();
 					if (!workbench.isClosing() && !workbench.getDisplay().isDisposed()) {
 						workbench.getDisplay().asyncExec(new Runnable() {
 							public void run() {
-								internalAddResourceToContext(resources);
+								internalAddResourceToContext(resources, interactionKind);
 							}
 						});
 					}
@@ -53,7 +53,7 @@ public class ResourceInterestUpdater {
 		}
 	}
 
-	private void internalAddResourceToContext(List<IResource> resources) {
+	private void internalAddResourceToContext(List<IResource> resources, InteractionEvent.Kind interactionKind) {
 		List<IResource> toAdd = new ArrayList<IResource>();
 		for (IResource resource : resources) {
 			if (acceptResource(resource)) {
@@ -68,7 +68,7 @@ public class ResourceInterestUpdater {
 			if (handle != null) {
 				IMylarElement element = MylarPlugin.getContextManager().getElement(handle);
 				if (element != null && !element.getInterest().isInteresting()) {
-					InteractionEvent interactionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, bridge
+					InteractionEvent interactionEvent = new InteractionEvent(interactionKind, bridge
 							.getContentType(), handle, SOURCE_ID);
 					interactionEvents.add(interactionEvent);
 				}

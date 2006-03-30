@@ -138,22 +138,8 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 						.getStructureBridge(interesting.getContentType());
 				if (includeNodeInScope(interesting, bridge)) {
 					Object object = bridge.getObjectForHandle(interesting.getHandleIdentifier());
-					IProject project = bridge.getProjectForObject(object);// TODO
-																			// what
-																			// to
-																			// do
-																			// when
-																			// the
-																			// element
-																			// is
-																			// not
-																			// a
-																			// java
-																			// element,
-																			// how
-																			// determine
-																			// if a
-																			// javaProject?
+					// TODO what to do when the element is not a java element, how determine if a javaProject?
+					IProject project = bridge.getProjectForObject(object);
 
 					if (project != null && JavaProject.hasJavaNature(project) && project.exists()) {
 						IJavaProject javaProject = JavaCore.create(project);// ((IJavaElement)o).getJavaProject();
@@ -163,6 +149,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 				}
 			}
 			if (degreeOfSeparation == 4) {
+				
 				includeMask = IJavaSearchScope.SOURCES | IJavaSearchScope.APPLICATION_LIBRARIES
 						| IJavaSearchScope.SYSTEM_LIBRARIES;
 			}
