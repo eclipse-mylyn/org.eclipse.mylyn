@@ -929,16 +929,16 @@ public class TaskListView extends ViewPart {
 	}
 
 	private void hookContextMenu() {
-		MenuManager menuMgr = new MenuManager("#PopupMenu");
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
+		MenuManager menuManager = new MenuManager("#PopupMenu");
+		menuManager.setRemoveAllWhenShown(true);
+		menuManager.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
 				TaskListView.this.fillContextMenu(manager);
 			}
 		});
-		Menu menu = menuMgr.createContextMenu(getViewer().getControl());
+		Menu menu = menuManager.createContextMenu(getViewer().getControl());
 		getViewer().getControl().setMenu(menu);
-		getSite().registerContextMenu(menuMgr, getViewer());
+		getSite().registerContextMenu(menuManager, getViewer());
 	}
 
 	private void contributeToActionBars() {

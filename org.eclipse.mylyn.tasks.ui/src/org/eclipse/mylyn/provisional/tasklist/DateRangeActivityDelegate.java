@@ -16,40 +16,39 @@ import java.util.Date;
 import java.util.Set;
 
 /**
- * @author 	Rob Elves
- * @author 	Mik Kersten
+ * @author Rob Elves
+ * @author Mik Kersten
  */
 public class DateRangeActivityDelegate implements ITask {
-	
-	private ITask task = null;
 
-//	private Calendar start = null;
-//
-//	private Calendar end = null;
+	private ITask task = null;
 
 	private DateRangeContainer parent;
 
 	private long startMili = 0;
+
 	private long endMili = 0;
+
 	private long inactivity = 0;
-	
+
 	public DateRangeActivityDelegate(DateRangeContainer parent, ITask task, Calendar start, Calendar end) {
 		this(parent, task, start, end, 0);
 	}
-	
-	public DateRangeActivityDelegate(DateRangeContainer parent, ITask task, Calendar start, Calendar end, long inactivity) {
+
+	public DateRangeActivityDelegate(DateRangeContainer parent, ITask task, Calendar start, Calendar end,
+			long inactivity) {
 		if (task == null) {
 			throw new RuntimeException("attempted to instantiated with null task: " + parent);
 		}
 		this.task = task;
-		if(start != null) {
+		if (start != null) {
 			this.startMili = start.getTimeInMillis();
 		}
-		if(end != null) {
+		if (end != null) {
 			this.endMili = end.getTimeInMillis();
 		}
-//		this.start = start;
-//		this.end = end;
+		// this.start = start;
+		// this.end = end;
 		this.parent = parent;
 		this.inactivity = inactivity;
 	}
@@ -65,11 +64,11 @@ public class DateRangeActivityDelegate implements ITask {
 	public long getInactivity() {
 		return inactivity;
 	}
-	
+
 	public long getActivity() {
 		return (endMili - startMili) - inactivity;
 	}
-	
+
 	public ITask getCorrespondingTask() {
 		return task;
 	}
@@ -213,9 +212,9 @@ public class DateRangeActivityDelegate implements ITask {
 		task.setCreationDate(date);
 	}
 
-//	public void setDescription(String description) {
-//		task.setDescription(description);
-//	}
+	// public void setDescription(String description) {
+	// task.setDescription(description);
+	// }
 
 	public void setElapsedTime(long elapsed) {
 		task.setElapsedTime(elapsed);
