@@ -7,7 +7,7 @@
       plugin="org.eclipse.mylar">
 
    <description url="http://eclipse.org/mylar">
-      Mylar Focused UI for reducing information overload when working with tasks.  Filters and decorates views and editors to focus on the task context.
+      Mylar Focused UI for reducing information overload when working with tasks. Filters and decorates views and editors to focus on the task context.
    </description>
 
    <copyright>
