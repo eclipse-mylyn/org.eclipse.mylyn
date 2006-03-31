@@ -46,11 +46,14 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.compare.BugzillaCompareInput;
 import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -59,6 +62,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
@@ -68,10 +72,10 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -408,7 +412,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		// HEADER);
 
 		// t.addListener(SWT.FocusIn, new DescriptionListener());
-		FormText t = newLayout(descriptionComposite, 4, bug.getDescription(), VALUE);
+		StyledText t = newLayout(descriptionComposite, 4, bug.getDescription(), VALUE);
 		t.setFont(COMMENT_FONT);
 		t.addListener(SWT.FocusIn, new DescriptionListener());
 
@@ -420,7 +424,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 	@Override
 	protected void createCommentLayout(FormToolkit toolkit, final ScrolledForm form) {
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		SimpleDateFormat df = new SimpleDateFormat("E MMM dd, yyyy hh:mm aa");//"yyyy-MM-dd HH:mm"
 
 		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText(LABEL_SECTION_COMMENTS);
@@ -452,31 +456,69 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		addCommentsComposite.setLayoutData(addCommentsData);
 		// End Additional (read-only) Comments Area
 
-		FormText formText = null;
+		StyledText styledText = null;
 		for (Iterator<Comment> it = bug.getComments().iterator(); it.hasNext();) {
-			Comment comment = it.next();
-			String commentHeader = "<b>" + comment.getNumber() + ": " + comment.getAuthorName() + ", "
-					+ df.format(comment.getCreated()) + "</b>";						
-			formText = newLayout(addCommentsComposite, 1, commentHeader, HEADER);
-			if(comment.hasAttachment()) {
-				String attachmentHeader = " Attached: "+comment.getAttachmentDescription()+" <a href='"+repository.getUrl()+"/attachment.cgi?id="+comment.getAttachmentId()+"&amp;action=view'>[view]</a>";
-				formText = newLayout(addCommentsComposite, 1, attachmentHeader, HEADER);//
-				formText.addListener(SWT.FocusIn, new CommentListener(comment));
+			final Comment comment = it.next();
+			
+			
+			ExpandableComposite ec = toolkit.createExpandableComposite(addCommentsComposite, 
+					ExpandableComposite.TREE_NODE);
+			
+			if(!it.hasNext()) {
+				ec.setExpanded(true);
 			}
-			formText.addListener(SWT.FocusIn, new CommentListener(comment));
-			formText = newLayout(addCommentsComposite, 1, comment.getText(), VALUE);
-			formText.setFont(COMMENT_FONT);
-			formText.addListener(SWT.FocusIn, new CommentListener(comment));
+			
+			//comment.getNumber() + ": " + 
+			ec.setText(comment.getAuthorName() + ", "
+					+ df.format(comment.getCreated()));
 
-//			Label spacer = toolkit.createLabel(addCommentsComposite, "");
-//
-//			GridData spacerGridData = new GridData();
-//			spacerGridData.horizontalSpan = 4;
-//			spacerGridData.heightHint = 18;
-//			spacer.setLayoutData(spacerGridData);
+			ec.addExpansionListener(new ExpansionAdapter() {
+				public void expansionStateChanged(ExpansionEvent e) {
+					form.reflow(true);
+				}
+			});
+			
+			ec.setLayout(new GridLayout());
+			
+			Composite ecComposite = toolkit.createComposite(ec);
+			ecComposite.setLayout(new GridLayout());
+			ec.setClient(ecComposite);
+			toolkit.paintBordersFor(ec);
+			
+
+			
+			if(comment.hasAttachment()) {
+				
+				Link attachmentLink = new Link(ecComposite, SWT.NONE);
+				
+				String attachmentHeader = " Attached: "+comment.getAttachmentDescription()+" [<a>view</a>]";
+//			    String result = MessageFormat.format(attachmentHeader, new String[] { node
+//			                    .getLabelText() });
+
+				attachmentLink.addSelectionListener(new SelectionAdapter() {
+			                /*
+			                 * (non-Javadoc)
+			                 * 
+			                 * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+			                 */
+			                public void widgetSelected(SelectionEvent e) {			                	
+			                	String address = repository.getUrl()+"/attachment.cgi?id="+comment.getAttachmentId()+"&amp;action=view";
+			                	TaskListUiUtil.openUrl(address, address, address);
+			                	
+			                }
+			            });
+			        
+				attachmentLink.setText(attachmentHeader);
+				
+			}
+
+			styledText = newLayout(ecComposite, 1, comment.getText(), VALUE);
+			styledText.addListener(SWT.FocusIn, new CommentListener(comment));
+			styledText.setFont(COMMENT_FONT);		
+
 			// code for outline
-			texts.add(textsindex, formText);
-			textHash.put(comment, formText);
+			texts.add(textsindex, styledText);
+			textHash.put(comment, styledText);
 			textsindex++;
 		}
 

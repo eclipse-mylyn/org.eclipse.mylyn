@@ -19,7 +19,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.debug.ui.IDebugModelPresentation;
+import org.eclipse.jdt.internal.debug.ui.JDIDebugUIPlugin;
+import org.eclipse.jdt.internal.debug.ui.actions.OpenTypeAction;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -27,6 +31,9 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -43,16 +50,22 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaReportSelection;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.custom.PaintObjectEvent;
+import org.eclipse.swt.custom.PaintObjectListener;
+import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.GlyphMetrics;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -63,6 +76,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -71,17 +86,20 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.RetargetAction;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.internal.help.WorkbenchHelpSystem;
+import org.eclipse.ui.internal.ide.StringMatcher;
+import org.eclipse.ui.internal.ide.StringMatcher.Position;
 import org.eclipse.ui.part.EditorPart;
+import org.eclipse.ui.texteditor.IDocumentProvider;
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
@@ -91,7 +109,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @author Mik Kersten (some hardening of prototype)
  * @author Rob Elves (Conversion to Eclipse Forms)
  */
-public abstract class AbstractBugEditor extends EditorPart { //implements Listener 
+public abstract class AbstractBugEditor extends EditorPart {
 
 	private static final String LABEL_BUTTON_SUBMIT = "Submit";
 
@@ -136,6 +154,10 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 	private MylarTaskEditor parentEditor = null;
 
 	protected BugzillaOutlineNode bugzillaOutlineModel = null;
+
+	private Map<StyledText, Map<Integer, Control>> controls = new HashMap<StyledText, Map<Integer, Control>>();
+
+	private static int MARGIN = 0;// 5
 
 	/**
 	 * Style option for function <code>newLayout</code>. This will create a
@@ -193,7 +215,7 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 	/** Manager controlling the context menu */
 	protected MenuManager contextMenuManager;
 
-	protected FormText currentSelectedText;
+	protected StyledText currentSelectedText;
 
 	protected static final String cutActionDefId = "org.eclipse.ui.edit.cut"; //$NON-NLS-1$
 
@@ -203,7 +225,7 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 
 	protected RetargetAction cutAction;
 
-	protected BugzillaEditorCopyAction copyAction; //BugzillaEditorCopyAction
+	protected BugzillaEditorCopyAction copyAction; // BugzillaEditorCopyAction
 
 	protected RetargetAction pasteAction;
 
@@ -256,7 +278,7 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 
 					if (n != null && lastSelected != null
 							&& BugzillaTools.getHandle(n).equals(BugzillaTools.getHandle(lastSelected))) {
-						// we don't need to set the selection if it is alredy
+						// we don't need to set the selection if it is already
 						// set
 						return;
 					}
@@ -307,8 +329,7 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * Creates a new <code>AbstractBugEditor</code>. Sets up the default
 	 * fonts and cut/copy/paste actions.
@@ -341,7 +362,7 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 				.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE_DISABLED));
 		pasteAction.setAccelerator(SWT.CTRL | 'v');
 		pasteAction.setActionDefinitionId(pasteActionDefId);
-		
+
 		copyAction = new BugzillaEditorCopyAction(this);
 		copyAction.setText(WorkbenchMessages.Workbench_copy);// WorkbenchMessages.getString("Workbench.copy"));
 		copyAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
@@ -360,7 +381,7 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 	/**
 	 * @return Any currently selected text.
 	 */
-	protected FormText getCurrentText() {
+	protected StyledText getCurrentText() {
 		return currentSelectedText;
 	}
 
@@ -401,11 +422,11 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		String openedDateString = "";
-		if(getBug().getCreated() != null) {
+		if (getBug().getCreated() != null) {
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			openedDateString = simpleDateFormat.format(getBug().getCreated());
 		}
-		Text openedText = toolkit.createText(editorComposite, "Opened: "+openedDateString);
+		Text openedText = toolkit.createText(editorComposite, "Opened: " + openedDateString);
 		openedText.setFont(TITLE_FONT);
 		// display = parent.getDisplay();
 		// background = JFaceColors.getBannerBackground(display);
@@ -425,8 +446,6 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 		getSite().getPage().addSelectionListener(selectionListener);
 		getSite().setSelectionProvider(selectionProvider);
 	}
-
-	
 
 	/**
 	 * Create a context menu for this editor.
@@ -451,7 +470,6 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 		});
 		getSite().registerContextMenu("#BugEditor", contextMenuManager, getSite().getSelectionProvider());
 	}
-
 
 	/**
 	 * Creates the attribute layout, which contains most of the basic attributes
@@ -571,8 +589,8 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 				} else {
 					oSCombo.select(oSCombo.indexOf("All"));
 				}
-//				oSCombo.addListener(SWT.Modify, this);
-				oSCombo.addSelectionListener(new ComboSelectionListener(oSCombo));	
+				// oSCombo.addListener(SWT.Modify, this);
+				oSCombo.addSelectionListener(new ComboSelectionListener(oSCombo));
 				comboListenerMap.put(oSCombo, name);
 				oSCombo.addListener(SWT.FocusIn, new GenericListener());
 				currentCol += 2;
@@ -592,8 +610,8 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 					versionCombo.add(a[i]);
 				}
 				versionCombo.select(versionCombo.indexOf(value));
-//				versionCombo.addListener(SWT.Modify, this);
-				versionCombo.addSelectionListener(new ComboSelectionListener(versionCombo));	
+				// versionCombo.addListener(SWT.Modify, this);
+				versionCombo.addSelectionListener(new ComboSelectionListener(versionCombo));
 				versionCombo.addListener(SWT.FocusIn, new GenericListener());
 				comboListenerMap.put(versionCombo, name);
 				currentCol += 2;
@@ -612,7 +630,7 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 					priorityCombo.add(a[i]);
 				}
 				priorityCombo.select(priorityCombo.indexOf(value));
-//				priorityCombo.addListener(SWT.Modify, this);
+				// priorityCombo.addListener(SWT.Modify, this);
 				priorityCombo.addSelectionListener(new ComboSelectionListener(priorityCombo));
 				priorityCombo.addListener(SWT.FocusIn, new GenericListener());
 				comboListenerMap.put(priorityCombo, name);
@@ -633,7 +651,7 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 				}
 				severityCombo.select(severityCombo.indexOf(value));
 				severityCombo.addSelectionListener(new ComboSelectionListener(severityCombo));
-//				severityCombo.addListener(SWT.Modify, this);
+				// severityCombo.addListener(SWT.Modify, this);
 				severityCombo.addListener(SWT.FocusIn, new GenericListener());
 				comboListenerMap.put(severityCombo, name);
 				currentCol += 2;
@@ -653,7 +671,7 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 					milestoneCombo.add(a[i]);
 				}
 				milestoneCombo.select(milestoneCombo.indexOf(value));
-//				milestoneCombo.addListener(SWT.Modify, this);
+				// milestoneCombo.addListener(SWT.Modify, this);
 				milestoneCombo.addSelectionListener(new ComboSelectionListener(milestoneCombo));
 				milestoneCombo.addListener(SWT.FocusIn, new GenericListener());
 				comboListenerMap.put(milestoneCombo, name);
@@ -674,7 +692,7 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 					platformCombo.add(a[i]);
 				}
 				platformCombo.select(platformCombo.indexOf(value));
-//				platformCombo.addListener(SWT.Modify, this);
+				// platformCombo.addListener(SWT.Modify, this);
 				platformCombo.addSelectionListener(new ComboSelectionListener(platformCombo));
 				platformCombo.addListener(SWT.FocusIn, new GenericListener());
 				comboListenerMap.put(platformCombo, name);
@@ -688,7 +706,7 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 				textLayout.marginWidth = 1;
 				uneditableComp.setLayout(textLayout);
 				toolkit.createText(uneditableComp, value, SWT.READ_ONLY);// Label(attributesComposite,
-																			// value);
+				// value);
 				// newLayout(attributesComposite, 1, value,
 				// VALUE).addListener(SWT.FocusIn, new GenericListener());
 				currentCol += 2;
@@ -731,7 +749,7 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 					componentCombo.add(a[i]);
 				}
 				componentCombo.select(componentCombo.indexOf(value));
-//				componentCombo.addListener(SWT.Modify, this);
+				// componentCombo.addListener(SWT.Modify, this);
 				componentCombo.addSelectionListener(new ComboSelectionListener(componentCombo));
 				componentCombo.addListener(SWT.FocusIn, new GenericListener());
 				comboListenerMap.put(componentCombo, name);
@@ -747,7 +765,7 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 				textLayout.marginWidth = 1;
 				uneditableComp.setLayout(textLayout);
 				toolkit.createText(uneditableComp, value, SWT.READ_ONLY);// Label(attributesComposite,
-																			// value);
+				// value);
 				// newLayout(attributesComposite, 1, value,
 				// VALUE).addListener(SWT.FocusIn, new GenericListener());
 				currentCol += 2;
@@ -958,217 +976,68 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 
 	/**
 	 * Creates an uneditable text field for displaying data.
-	 * 
-	 * @param composite
-	 *            The composite to put this text field into. Its layout style
-	 *            should be a grid with columns.
-	 * @param colSpan
-	 *            The number of columns that this text field should span.
-	 * @param text
-	 *            The text that for this text field.
-	 * @param style
-	 *            The style for this text field. See below for valid values
-	 *            (default is HEADER).
-	 * @return The new styled text.
-	 * @see VALUE
-	 * @see PROPERTY
-	 * @see HEADER
 	 */
-	protected FormText newLayout(Composite composite, int colSpan, String text, String style) {
-//		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-//		data.horizontalSpan = colSpan;
+	protected StyledText newLayout(Composite composite, int colSpan, String text, String style) {
+		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		data.horizontalSpan = colSpan;
 
-		FormText resultText;
+		StyledText resultText;
 		if (style.equalsIgnoreCase(VALUE)) {
-			FormText formText = toolkit.createFormText(composite, true);// new
-			formText.setMenu(contextMenuManager.createContextMenu(formText));
-			// StyledText(composite,
-			// SWT.MULTI
-			// |
-			// SWT.READ_ONLY);
-			formText.setFont(TEXT_FONT);
-			formText.setWhitespaceNormalized(false);
-			// The extra newline at beginning of text is a hack.
-			// FormText is not displaying short strings unless it
-			// is there.
-			String result = checkText(text);
-			result = "\n"+result+"\n";
-			formText.setText(result, false, true);
-
-			// Trying to fingure out how to reduce the space between lines
-			// see FormText class.
-			// GC gc = new GC(formText);
-			// FontMetrics fm = gc.setgetFontMetrics();
-			// int lineHeight = fm.getHeight();
-
-			// formText.setBackground(background);
-//			data.horizontalIndent = HORZ_INDENT;
-			// data.widthHint = DESCRIPTION_WIDTH;
-//			formText.setLayoutData(data);
-			// formText.setEditable(false);
-			// formText.getCaret().setVisible(false);
-
-			formText.addSelectionListener(new SelectionAdapter() {
-
+			resultText = new StyledText(composite, SWT.READ_ONLY);
+			resultText.setText(checkText(text));
+			addHyperlinks(resultText, composite);
+			resultText.setLayoutData(data);
+			resultText.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					FormText c = (FormText) e.widget;
-					if (c != null && c.canCopy()) {
+					StyledText c = (StyledText) e.widget;
+					if (c != null && !c.getSelectionText().equals("")) {
+						if (currentSelectedText != null && !currentSelectedText.equals(c)) {
+							currentSelectedText.setSelectionRange(0, 0);
+						}
 						currentSelectedText = c;
 					}
 
 				}
 			});
-
-			formText.addHyperlinkListener(new HyperlinkAdapter() {
-				public void linkActivated(HyperlinkEvent event) {
-					String address = (String) event.getHref();
-					// TODO: how to get proper page title and 
-					TaskListUiUtil.openUrl(address, address, address);
-//					try {
-//						// Perhaps should use TaskListUiUtil.openUrl instead?
-//						URL url = new URL((String) event.getHref());
-//						IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
-//
-//						support.getExternalBrowser().openURL(url);
-//					} catch (PartInitException e1) {
-//						MessageDialog.openError(null, "Link error", "Could not open browser");
-//					} catch (MalformedURLException e) {
-//						MessageDialog.openError(null, "Link error", "Hyperlink address is malformed");
-//					}
-				}
-			});
-
-			formText.setMenu(contextMenuManager.createContextMenu(formText));
-			resultText = formText;
+			resultText.setMenu(contextMenuManager.createContextMenu(resultText));
 		} else if (style.equalsIgnoreCase(PROPERTY)) {
-			FormText formText = toolkit.createFormText(composite, true);// new
-			// StyledText(composite,
-			// SWT.MULTI
-			// |
-			// SWT.READ_ONLY);
-			// formText.setFont(TEXT_FONT);
-			formText.setText(checkText(text), false, false);
-			// formText.setBackground(background);
-			
-			// formText.setLayoutData(data);
-			// StyleRange sr = new StyleRange(0, text.length(), foreground,
-			// background,
-			// SWT.BOLD);
-			// formText.setStyleRange(sr);
-			// formText.getCaret().setVisible(false);
-			// formText.setEnabled(enabled)Enabled(false);
-
-			formText.setMenu(contextMenuManager.createContextMenu(formText));
-			resultText = formText;
-		} else {
-			// For a description of how tags work see:
-			// http://www.eclipse.org/articles/Article-Forms/article.html
-			StringBuffer buf = new StringBuffer();
-			buf.append("<form>");
-			buf.append("<p>");
-			// buf.append("<span color=\"header\" font=\"header\">");
-			buf.append(text);
-			// buf.append("</span>");
-			buf.append("</p>");
-			buf.append("</form>");
-			FormText formText = toolkit.createFormText(composite, true);
-			formText.setWhitespaceNormalized(true);
-
-			formText.setFont("header", JFaceResources.getDialogFont());
-			formText.setFont("code", JFaceResources.getTextFont());
-			formText.setText(buf.toString(), true, false);
-
-			formText.addHyperlinkListener(new HyperlinkAdapter() {
-				public void linkActivated(HyperlinkEvent event) {
-//					try {
-						// Perhaps should use TaskListUiUtil.openUrl instead?
-//						URL url = new URL((String) event.getHref());
-						TaskListUiUtil.openUrl("Attachment", "", (String) event.getHref());
-//						IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
-//
-//						support.getExternalBrowser().openURL(url);
-//					} catch (PartInitException e1) {
-//						MessageDialog.openError(null, "Link error", "Could not open browser");
-//					} catch (MalformedURLException e) {
-//						MessageDialog.openError(null, "Link error", "Hyperlink address is malformed");
-//					}
-				}
-			});
-			
-			formText.addSelectionListener(new SelectionAdapter() {
-
+			resultText = new StyledText(composite, SWT.READ_ONLY);
+			resultText.setText(checkText(text));
+			resultText.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					FormText c = (FormText) e.widget;
-					if (c != null && c.canCopy()) {
+					StyledText c = (StyledText) e.widget;
+					if (c != null && !c.getSelectionText().equals("")) {
+						if (currentSelectedText != null && !currentSelectedText.equals(c)) {
+							currentSelectedText.setSelectionRange(0, 0);
+						}
 						currentSelectedText = c;
 					}
 
 				}
 			});
-			resultText = formText;
+			resultText.setLayoutData(data);
+		} else {
+			resultText = new StyledText(composite, SWT.READ_ONLY);
+			resultText.setText(checkText(text));
+			resultText.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					StyledText c = (StyledText) e.widget;
+					if (c != null && !c.getSelectionText().equals("")) {
+						if (currentSelectedText != null && !currentSelectedText.equals(c)) {
+							currentSelectedText.setSelectionRange(0, 0);
+						}
+						currentSelectedText = c;
+					}
 
+				}
+			});
+			resultText.setLayoutData(data);
 		}
-		// } else {
-		// Composite generalTitleGroup = toolkit.createComposite(composite);
-		// generalTitleGroup.setLayoutData(new
-		// GridData(GridData.FILL_HORIZONTAL));
-		// generalTitleGroup.setLayoutData(data);
-		// GridLayout generalTitleLayout = new GridLayout();
-		// generalTitleLayout.numColumns = 2;
-		// generalTitleLayout.marginWidth = 0;
-		// generalTitleLayout.marginHeight = 9;
-		// generalTitleGroup.setLayout(generalTitleLayout);
-		// // generalTitleGroup.setBackground(background);
-		//
-		// Label image = toolkit.createLabel(generalTitleGroup, "");
-		// // image.setBackground(background);
-		// image.setImage(WorkbenchImages.getImage(IDEInternalWorkbenchImages.IMG_OBJS_WELCOME_ITEM));
-		//
-		// GridData gd = new GridData(GridData.FILL_BOTH);
-		// gd.verticalAlignment = GridData.VERTICAL_ALIGN_BEGINNING;
-		// image.setLayoutData(gd);
-		// // StyledText titleText = new StyledText(generalTitleGroup, SWT.MULTI
-		// | SWT.READ_ONLY);
-		// FormText titleText = toolkit.createFormText(generalTitleGroup,
-		// true);//new StyledText(composite, SWT.MULTI | SWT.READ_ONLY);
-		// // titleText.setText(checkText(text), false, true);
-		// titleText.setText("<form>hello</form>", true, false);
-		// titleText.setFont(HEADER_FONT);
-		// titleText.setLayout(new TableWrapLayout());
-		// // titleText.setBackground(background);
-		// // StyleRange sr = new StyleRange(titleText.getOffsetAtLine(0),
-		// text.length(), foreground, background,
-		// // SWT.BOLD);
-		// // titleText.setStyleRange(sr);
-		// // titleText.getCaret().setVisible(false);
-		// // titleText.setEditable(false);
-		// titleText.addSelectionListener(new SelectionAdapter() {
-		//
-		// @Override
-		// public void widgetSelected(SelectionEvent e) {
-		// FormText c = (FormText) e.widget;
-		// // if (c != null && c.getSelectionCount() > 0) {
-		// if (c != null && c.canCopy()) {
-		// // if (currentSelectedText != null) {
-		// if (!c.equals(currentSelectedText)) {
-		// currentSelectedText = c;
-		// // currentSelectedText.setSelectionRange(0, 0);
-		// }
-		// // }
-		// }
-		// // currentSelectedText = c;
-		// }
-		// });
-		// // create context menu
-		// generalTitleGroup.setMenu(contextMenuManager.createContextMenu(generalTitleGroup));
-		// titleText.setMenu(contextMenuManager.createContextMenu(titleText));
-		// image.setMenu(contextMenuManager.createContextMenu(image));
-		// // addHyperlinks(titleText);
-		// resultText = titleText;
-		// }
-		composite.setMenu(contextMenuManager.createContextMenu(composite));
+
+		// composite.setMenu(contextMenuManager.createContextMenu(composite));
 		return resultText;
 	}
 
@@ -1265,23 +1134,14 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 			updateBug();
 			IBugzillaBug bug = getBug();
 
-			// if (bug.hasChanges()) {
-			// BugzillaPlugin.getDefault().fireOfflineStatusChanged(bug,
-			// BugzillaOfflineStaus.SAVED_WITH_OUTGOING_CHANGES);
-			// } else {
-			// BugzillaPlugin.getDefault().fireOfflineStatusChanged(bug,
-			// BugzillaOfflineStaus.SAVED);
-			// }
 			final BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) MylarTaskListPlugin
 					.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
 			changeDirtyStatus(false);
-			bugzillaRepositoryClient.saveBugReport(bug);// OfflineView.saveOffline(getBug(),
-			// true);
+			bugzillaRepositoryClient.saveBugReport(bug);
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "bug save offline failed", true);
 		}
-		// OfflineView.checkWindow();
-		// OfflineView.refreshView();
+
 	}
 
 	/**
@@ -1307,71 +1167,6 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 		// titleLabel.setText(title);
 		setGeneralTitleText();
 	}
-
-	// /**
-	// * Break text up into lines of about 80 characters so that it is displayed
-	// * properly in bugzilla
-	// *
-	// * @param origText
-	// * The string to be formatted
-	// * @return The formatted text
-	// */
-	// public static String formatText(String origText) {
-	// if (BugzillaPlugin.getDefault().isServerCompatability220()) {
-	// return origText;
-	// }
-	//
-	// String[] textArray = new String[(origText.length() / WRAP_LENGTH + 1) *
-	// 2];
-	// for (int i = 0; i < textArray.length; i++)
-	// textArray[i] = null;
-	// int j = 0;
-	// while (true) {
-	// int spaceIndex = origText.indexOf(" ", WRAP_LENGTH - 5);
-	// if (spaceIndex == origText.length() || spaceIndex == -1) {
-	// textArray[j] = origText;
-	// break;
-	// }
-	// textArray[j] = origText.substring(0, spaceIndex);
-	// origText = origText.substring(spaceIndex + 1, origText.length());
-	// j++;
-	// }
-	//
-	// String newText = "";
-	//
-	// for (int i = 0; i < textArray.length; i++) {
-	// if (textArray[i] == null)
-	// break;
-	// newText += textArray[i] + "\n";
-	// }
-	// return newText;
-	// }
-
-	// /**
-	// * function to set the url to post the bug to
-	// *
-	// * @param form
-	// * A reference to a BugzillaReportSubmitForm that the bug is going to
-	// * be posted to
-	// * @param formName
-	// * The form that we wish to use to submit the bug
-	// */
-	// public static void setURL(BugzillaReportSubmitForm form, TaskRepository
-	// repository, String formName) {
-	// // String baseURL = BugzillaPlugin.getDefault().getServerName();
-	// String baseURL = repository.getUrl().toExternalForm();
-	// if (!baseURL.endsWith("/"))
-	// baseURL += "/";
-	// try {
-	// form.setURL(baseURL + formName);
-	// } catch (MalformedURLException e) {
-	// // we should be ok here
-	// }
-	//
-	// // add the login information to the bug post
-	// form.add("Bugzilla_login", repository.getUserName());
-	// form.add("Bugzilla_password", repository.getPassword());
-	// }
 
 	@Override
 	public void setFocus() {
@@ -1442,24 +1237,24 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 		getSite().getPage().removeSelectionListener(selectionListener);
 	}
 
-//	public void handleEvent(Event event) {
-//		if (event.widget instanceof CCombo) {
-//			CCombo combo = (CCombo) event.widget;
-//			if (comboListenerMap.containsKey(combo)) {
-//				if (combo.getSelectionIndex() > -1) {
-//					String sel = combo.getItem(combo.getSelectionIndex());
-//					Attribute attribute = getBug().getAttribute(comboListenerMap.get(combo));
-//					if (sel != null && !(sel.equals(attribute.getNewValue()))) {
-//						attribute.setNewValue(sel);
-//						for (IBugzillaAttributeListener client : attributesListeners) {
-//							client.attributeChanged(attribute.getName(), sel);
-//						}
-//						changeDirtyStatus(true);
-//					}
-//				}
-//			}
-//		}
-//	}
+	// public void handleEvent(Event event) {
+	// if (event.widget instanceof CCombo) {
+	// CCombo combo = (CCombo) event.widget;
+	// if (comboListenerMap.containsKey(combo)) {
+	// if (combo.getSelectionIndex() > -1) {
+	// String sel = combo.getItem(combo.getSelectionIndex());
+	// Attribute attribute = getBug().getAttribute(comboListenerMap.get(combo));
+	// if (sel != null && !(sel.equals(attribute.getNewValue()))) {
+	// attribute.setNewValue(sel);
+	// for (IBugzillaAttributeListener client : attributesListeners) {
+	// client.attributeChanged(attribute.getName(), sel);
+	// }
+	// changeDirtyStatus(true);
+	// }
+	// }
+	// }
+	// }
+	// }
 
 	/**
 	 * Fires a <code>SelectionChangedEvent</code> to all listeners registered
@@ -1512,9 +1307,9 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 	 *----------------------------------------------------------*/
 
 	/** List of the StyledText's so that we can get the previous and the next */
-	protected ArrayList<FormText> texts = new ArrayList<FormText>();
+	protected ArrayList<StyledText> texts = new ArrayList<StyledText>();
 
-	protected HashMap<Object, FormText> textHash = new HashMap<Object, FormText>();
+	protected HashMap<Object, StyledText> textHash = new HashMap<Object, StyledText>();
 
 	/** Index into the styled texts */
 	protected int textsindex = 0;
@@ -1554,8 +1349,16 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 	 */
 	public void select(Object o, boolean highlight) {
 		if (textHash.containsKey(o)) {
-			FormText t = textHash.get(o);
+			StyledText t = textHash.get(o);
 			if (t != null) {
+				Composite comp = t.getParent();
+				while (comp != null) {
+					if (comp instanceof ExpandableComposite) {
+						ExpandableComposite ex = (ExpandableComposite) comp;
+						ex.setExpanded(true);
+					}
+					comp = comp.getParent();
+				}
 				focusOn(t, highlight);
 			}
 		} else if (o instanceof IBugzillaBug) {
@@ -1684,15 +1487,187 @@ public abstract class AbstractBugEditor extends EditorPart { //implements Listen
 		this.bugzillaOutlineModel = bugzillaOutlineModel;
 	}
 
-	// private StyledText addHyperlinks(StyledText text) {
-	// StackTrace[] stackTrace = StackTrace.getStackTrace(text.getText(),
-	// text.getText());
-	// if (stackTrace != null) {
-	// for (StackTrace trace : stackTrace) {
-	// //replace hyperlinked portions...
-	// }
-	// }
-	//	
-	// return text;
-	// }
+	private void addHyperlinks(final StyledText styledText, Composite composite) {
+
+		StringMatcher javaElementMatcher = new StringMatcher("*(*.java:*)", true, false);
+		String[] lines = styledText.getText().split("\r\n|\n");
+
+		int totalLength = 0;
+		for (int x = 0; x < lines.length; x++) {
+
+			String line = lines[x];
+			Position position = javaElementMatcher.find(line, 0, line.length());
+
+			if (position != null) {
+				if (controls.get(styledText) == null) {
+					controls.put(styledText, new HashMap<Integer, Control>());
+				}
+
+				String linkText = line.substring(position.getStart() + 1, position.getEnd() - 1);
+				// Link hyperlink = new Link(styledText, SWT.NONE);
+				Hyperlink hyperlink = toolkit.createHyperlink(styledText, linkText, SWT.NONE);
+				hyperlink.setText(linkText);
+				hyperlink.setFont(COMMENT_FONT);
+				hyperlink.setHref(line);
+				hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+					public void linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent e) {
+						String typeName;
+						int lineNumber;
+						try {
+							String linkText = (String) e.getHref();
+							typeName = getTypeName(linkText);
+							lineNumber = getLineNumber(linkText);				
+
+							// documents start at 0
+							if (lineNumber > 0) {
+								lineNumber--;
+							}
+							Object sourceElement = getSourceElement(typeName);
+							if (sourceElement != null) {
+								IDebugModelPresentation presentation = JDIDebugUIPlugin.getDefault()
+										.getModelPresentation();
+								IEditorInput editorInput = presentation.getEditorInput(sourceElement);
+								if (editorInput != null) {
+									String editorId = presentation.getEditorId(editorInput, sourceElement);
+									if (editorId != null) {
+										IEditorPart editorPart = JDIDebugUIPlugin.getActivePage().openEditor(
+												editorInput, editorId);
+										if (editorPart instanceof ITextEditor && lineNumber >= 0) {
+											ITextEditor textEditor = (ITextEditor) editorPart;
+											IDocumentProvider provider = textEditor.getDocumentProvider();
+											provider.connect(editorInput);
+											IDocument document = provider.getDocument(editorInput);
+											try {
+												IRegion line = document.getLineInformation(lineNumber);
+												textEditor.selectAndReveal(line.getOffset(), line.getLength());
+											} catch (BadLocationException e1) {
+												MessageDialog.openInformation(AbstractBugEditor.this.getSite()
+														.getShell(), "Open Type", "Failed to open type.");
+											}
+											provider.disconnect(editorInput);
+										}
+										return;
+									}
+								}
+							}
+							// did not find source
+							MessageDialog.openInformation(AbstractBugEditor.this.getSite().getShell(), "Open Type",
+									"Type could not be located.");
+						} catch (CoreException e1) {
+							MessageDialog.openInformation(AbstractBugEditor.this.getSite().getShell(), "Open Type",
+									"Failed to open type.");
+							return;
+						}
+
+					};
+
+				});
+
+				Map<Integer, Control> controlMap = controls.get(styledText);
+				controlMap.put(styledText.getText().indexOf(line) + position.getStart(), hyperlink); // changed
+				// here
+				// too
+
+				StyleRange style = new StyleRange();
+				style.start = styledText.getText().indexOf(line) + position.getStart();// totalLength
+				// +
+				// position.getStart();
+				style.length = position.getEnd() - position.getStart(); // was 1
+				hyperlink.pack();
+				Rectangle rect = hyperlink.getBounds();
+				int ascent = 2 * rect.height / 3;
+				int descent = rect.height - ascent;
+				style.metrics = new GlyphMetrics(ascent + MARGIN, descent + MARGIN, rect.width + 2 * MARGIN);
+				styledText.setStyleRange(style);
+			}
+			totalLength = totalLength + line.length();
+
+		} // bottom of for loop
+
+		// reposition widgets on paint event
+		styledText.addPaintObjectListener(new PaintObjectListener() {
+			public void paintObject(PaintObjectEvent event) {
+				StyleRange style = event.style;
+				int start = style.start;
+				Map<Integer, Control> controlMap = controls.get(styledText);
+				Control control = controlMap.get(start);
+				if (control != null) {
+					Point pt = control.getSize();
+					int x = event.x + MARGIN;
+					int y = event.y + event.ascent - 2 * pt.y / 3;
+					control.setLocation(x, y);
+				}
+			}
+		});
+	}
+
+	// adapted from JavaStackTraceHyperlink
+	private Object getSourceElement(String typeName) throws CoreException {
+		// ILaunch launch = getLaunch();
+		Object result = null;
+		// if (launch != null) {
+		// result = JavaDebugUtils.resolveSourceElement(typeName, getLaunch());
+		// }
+		// if (result == null) {
+		// search for the type in the workspace
+		result = OpenTypeAction.findTypeInWorkspace(typeName);
+		// }
+		return result;
+	}
+
+	// adapted from JavaStackTraceHyperlink
+	private String getTypeName(String linkText) {
+		int start = linkText.indexOf('(');
+		int end = linkText.indexOf(':');
+		if (start >= 0 && end > start) {
+
+			// get File name (w/o .java)
+			String typeName = linkText.substring(start + 1, end);
+			typeName.indexOf(".");
+			typeName = typeName.substring(0, typeName.indexOf("."));
+
+			String qualifier = linkText.substring(0, start);
+			// remove the method name
+			start = qualifier.lastIndexOf('.');
+
+			if (start >= 0) {
+				// remove the class name
+				start = new String((String) qualifier.subSequence(0, start)).lastIndexOf('.');
+				if (start == -1) {
+					start = 0; // default package
+				}
+			}
+
+			if (start >= 0) {
+				qualifier = qualifier.substring(0, start);
+			}
+
+			if (qualifier.length() > 0) {
+				typeName = qualifier + "." + typeName; //$NON-NLS-1$
+			}
+			return typeName;
+		}
+
+		return "error"; // TODO: Complain
+	}
+
+	// adapted from JavaStackTraceHyperlink
+	protected int getLineNumber(String linkText) throws CoreException {
+		int index = linkText.lastIndexOf(':');
+		if (index >= 0) {
+			String numText = linkText.substring(index + 1);
+			index = numText.indexOf(')');
+			if (index >= 0) {
+				numText = numText.substring(0, index);
+			}
+			try {
+				return Integer.parseInt(numText);
+			} catch (NumberFormatException e) {
+				throw new CoreException(null);
+			}
+		}
+
+		throw new CoreException(null);
+	}
+
 }

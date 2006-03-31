@@ -42,7 +42,7 @@ import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
  */
 public class TaskDataExportJob implements IRunnableWithProgress {
 
-	private static final String JOB_LABEL = "Exporting Data";
+	private static final String JOB_LABEL = "Exporting Mylar Task Data";
 
 	private boolean zip;
 

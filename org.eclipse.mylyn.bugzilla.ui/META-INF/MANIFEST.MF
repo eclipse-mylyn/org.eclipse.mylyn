@@ -19,7 +19,13 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jface.text,
  org.eclipse.mylar.tasklist,
  org.eclipse.team.ui,
- org.eclipse.team.cvs.ui
+ org.eclipse.team.cvs.ui,
+ org.eclipse.jdt.debug,
+ org.eclipse.jdt.debug.ui,
+ org.eclipse.jdt.core,
+ org.eclipse.debug.ui,
+ org.eclipse.ui.editors,
+ org.eclipse.ui.workbench.texteditor
 Eclipse-AutoStart: true
 Export-Package: org.eclipse.mylar.internal.bugzilla.ui,
  org.eclipse.mylar.internal.bugzilla.ui.actions,
