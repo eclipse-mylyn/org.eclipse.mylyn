@@ -1388,7 +1388,8 @@ public class TaskListView extends ViewPart {
 
 	protected void refreshTask(ITask task) {
 		refresh(task);
-		if (task.getContainer() == null || task.getContainer() instanceof TaskArchive) {
+		AbstractTaskContainer rootCategory = MylarTaskListPlugin.getTaskListManager().getTaskList().getRootCategory();
+		if (task.getContainer() == null || task.getContainer() instanceof TaskArchive || task.getContainer().equals(rootCategory)) {
 			refresh(null);
 		} else {
 			refresh(task.getContainer());
@@ -1398,8 +1399,7 @@ public class TaskListView extends ViewPart {
 				task.getHandleIdentifier());
 		for (AbstractQueryHit hit : hits) {
 			refresh(hit);
-		}
-
+		} 
 	}
 
 	private void refresh(final ITaskListElement element) {
