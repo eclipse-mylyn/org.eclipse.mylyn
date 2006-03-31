@@ -34,7 +34,7 @@ public class TaskCompletionFilter extends AbstractTaskListFilter {
 					return !hit.getCorrespondingTask().isCompleted();
 				}
 			} else {
-				return !hit.isCompleted();
+				return !hit.isCompleted(); 
 			}
 		}
 		return true;
