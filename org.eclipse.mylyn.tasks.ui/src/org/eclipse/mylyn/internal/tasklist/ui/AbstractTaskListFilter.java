@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasklist.ui;
 
+import org.eclipse.mylar.internal.tasklist.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 
 /**
@@ -23,6 +24,7 @@ public abstract class AbstractTaskListFilter {
 	public abstract boolean select(Object element);
 
 	protected boolean shouldAlwaysShow(ITask task) {
-		return task.isActive() || (task.isPastReminder() && !task.isCompleted());
+		return task.isActive() || (task.isPastReminder() && !task.isCompleted())
+			|| NewLocalTaskAction.NEW_TASK_DESCRIPTION.equals(task.getDescription());
 	}
 }

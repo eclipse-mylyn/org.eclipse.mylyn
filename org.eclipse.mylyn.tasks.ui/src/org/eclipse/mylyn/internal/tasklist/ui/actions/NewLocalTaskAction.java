@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Display;
  */
 public class NewLocalTaskAction extends Action {
 
-	private static final String NEW_TASK_DESCRIPTION = "New task";
+	public static final String NEW_TASK_DESCRIPTION = "new task";
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.create.task";
 
