@@ -734,6 +734,7 @@ public class BugParser {
 
 						// add the attribute to the bug report
 						bug.addAttribute(t);
+						bug.setLastModified(df.parse(date));
 						state = ParserState.ATT_NAME;
 						continue;
 					}
@@ -804,6 +805,7 @@ public class BugParser {
 						t.setValue(date);
 
 						// add the attribute to the bug report
+						bug.setLastModified(df.parse(date));
 						bug.addAttribute(t);
 					}
 					continue;

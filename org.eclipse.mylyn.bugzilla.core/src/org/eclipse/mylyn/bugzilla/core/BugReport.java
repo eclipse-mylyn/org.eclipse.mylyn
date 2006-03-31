@@ -33,6 +33,12 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
  */
 public class BugReport implements Serializable, IBugzillaBug {
 
+	private static final String ATTR_REPORTER = "Reporter";
+
+	private static final String ATTR_RESOLUTION = "Resolution";
+
+	private static final String ATTR_ASSIGNED_TO = "Assigned To";
+
 	public static final String ATTR_SUMMARY = "Summary";
 
 	public static final String ATTR_STATUS = "Status";
@@ -79,6 +85,9 @@ public class BugReport implements Serializable, IBugzillaBug {
 	/** Creation timestamp */
 	protected Date created;
 
+	/** Modification timestamp */
+	protected Date lastModified = null;
+	
 	/** The bugs valid keywords */
 	protected List<String> validKeywords;
 
@@ -308,7 +317,7 @@ public class BugReport implements Serializable, IBugzillaBug {
 	 * @return The person who reported the bug
 	 */
 	public String getReporter() {
-		return getAttribute("Reporter").getValue();
+		return getAttribute(ATTR_REPORTER).getValue();
 	}
 
 	/**
@@ -317,7 +326,7 @@ public class BugReport implements Serializable, IBugzillaBug {
 	 * @return The person who is assigned to this bug
 	 */
 	public String getAssignedTo() {
-		return getAttribute("Assigned To").getValue();
+		return getAttribute(ATTR_ASSIGNED_TO).getValue();
 	}
 
 	/**
@@ -326,7 +335,7 @@ public class BugReport implements Serializable, IBugzillaBug {
 	 * @return The resolution of the bug
 	 */
 	public String getResolution() {
-		return getAttribute("Resolution").getValue();
+		return getAttribute(ATTR_RESOLUTION).getValue();
 	}
 
 	/**
@@ -525,6 +534,14 @@ public class BugReport implements Serializable, IBugzillaBug {
 
 	public void setCharset(String charset) {
 		this.charset = charset;
+	}
+
+	public Date getLastModified() {
+		return lastModified;
+	}
+
+	public void setLastModified(Date date) {
+		this.lastModified = date;		
 	}
 
 	

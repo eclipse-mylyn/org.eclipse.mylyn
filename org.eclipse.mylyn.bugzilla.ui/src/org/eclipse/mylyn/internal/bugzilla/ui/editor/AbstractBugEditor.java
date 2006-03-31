@@ -159,6 +159,9 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 	private static int MARGIN = 0;// 5
 
+	protected SimpleDateFormat simpleDateFormat = new SimpleDateFormat("E MMM dd, yyyy hh:mm aa");// "yyyy-MM-dd
+																									// HH:mm"
+
 	/**
 	 * Style option for function <code>newLayout</code>. This will create a
 	 * plain-styled, selectable text label.
@@ -225,7 +228,9 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 	protected RetargetAction cutAction;
 
-	protected BugzillaEditorCopyAction copyAction; // BugzillaEditorCopyAction
+	protected BugzillaEditorCopyAction copyAction;
+
+	// private Action revealAllAction;
 
 	protected RetargetAction pasteAction;
 
@@ -371,6 +376,18 @@ public abstract class AbstractBugEditor extends EditorPart {
 		copyAction.setAccelerator(SWT.CTRL | 'c');
 
 		copyAction.setEnabled(false);
+
+		//		
+		// revealAllAction = new ExpandCommentsAction(this);
+		// revealAllAction.setText("Reveal Comments");//
+		// WorkbenchMessages.getString("Workbench.copy"));
+		// revealAllAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
+		// revealAllAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
+		// revealAllAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY_DISABLED));
+		// revealAllAction.setAccelerator(SWT.CTRL | 'r');
+		//
+		// revealAllAction.setEnabled(true);
+
 	}
 
 	/**
@@ -421,13 +438,27 @@ public abstract class AbstractBugEditor extends EditorPart {
 		editorComposite.setLayout(new GridLayout());
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
+		// Header information
+		Composite headerInfoComposite = toolkit.createComposite(editorComposite);
+		headerInfoComposite.setLayout(new GridLayout(6, false));
+		toolkit.createLabel(headerInfoComposite, "Bug# ").setFont(TITLE_FONT);
+		toolkit.createText(headerInfoComposite, "" + getBug().getId());
+
+		toolkit.createLabel(headerInfoComposite, " Opened: ").setFont(TITLE_FONT);
 		String openedDateString = "";
 		if (getBug().getCreated() != null) {
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			openedDateString = simpleDateFormat.format(getBug().getCreated());
 		}
-		Text openedText = toolkit.createText(editorComposite, "Opened: " + openedDateString);
-		openedText.setFont(TITLE_FONT);
+		toolkit.createText(headerInfoComposite, openedDateString);
+
+		toolkit.createLabel(headerInfoComposite, " Modified: ").setFont(TITLE_FONT);
+		String lastModifiedDateString = "";
+		if (getBug().getLastModified() != null) {
+			lastModifiedDateString = simpleDateFormat.format(getBug().getLastModified());
+		}
+		toolkit.createText(headerInfoComposite, lastModifiedDateString);
+
+		// openedText.setFont(TITLE_FONT);
 		// display = parent.getDisplay();
 		// background = JFaceColors.getBannerBackground(display);
 		// foreground = JFaceColors.getBannerForeground(display);
@@ -458,6 +489,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 				manager.add(cutAction);
 				manager.add(copyAction);
 				manager.add(pasteAction);
+				// manager.add(revealAllAction);
 				manager.add(new Separator());
 				manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 				if (currentSelectedText == null || currentSelectedText.getSelectionText().length() == 0) {
@@ -756,6 +788,12 @@ public abstract class AbstractBugEditor extends EditorPart {
 				currentCol += 2;
 			} else if (name.equals("Summary")) {
 				// Don't show the summary here.
+				continue;
+			} else if (name.equals("Last Modified")) {
+				// Don't show last modified here.
+				continue;
+			} else if (name.equals("Bug#")) {
+				// Don't show bug number here
 				continue;
 			} else if (values.isEmpty()) {
 				// newLayout(attributesComposite, 1, name, PROPERTY);
@@ -1339,6 +1377,19 @@ public abstract class AbstractBugEditor extends EditorPart {
 		}
 	}
 
+	public void revealAllComments() {
+		for (StyledText text : textHash.values()) {
+			Composite comp = text.getParent();
+			while (comp != null) {
+				if (comp instanceof ExpandableComposite) {
+					ExpandableComposite ex = (ExpandableComposite) comp;
+					ex.setExpanded(true);
+				}
+				comp = comp.getParent();
+			}
+		}
+	}
+
 	/**
 	 * Selects the given object in the editor.
 	 * 
@@ -1516,7 +1567,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 						try {
 							String linkText = (String) e.getHref();
 							typeName = getTypeName(linkText);
-							lineNumber = getLineNumber(linkText);				
+							lineNumber = getLineNumber(linkText);
 
 							// documents start at 0
 							if (lineNumber > 0) {

@@ -216,4 +216,8 @@ public class NewBugModel implements Serializable, IBugzillaBug {
 		return null;
 	}
 
+	public Date getLastModified() {
+		return null;
+	}
+
 }

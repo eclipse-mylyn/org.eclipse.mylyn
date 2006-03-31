@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -88,6 +87,8 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author Rob Elves (adaption to Eclipse Forms)
  */
 public class ExistingBugEditor extends AbstractBugEditor {
+
+	private static final String ATTR_SUMMARY = "Summary";
 
 	protected Set<String> removeCC = new HashSet<String>();
 
@@ -320,7 +321,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 	@Override
 	protected String getTitleString() {
-		Attribute summary = bug.getAttribute("Summary");
+		Attribute summary = bug.getAttribute(ATTR_SUMMARY);
 		String summaryVal = ((null != summary) ? summary.getNewValue() : null);
 		return bug.getLabel() + ": " + checkText(summaryVal);
 	}
@@ -424,8 +425,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 	@Override
 	protected void createCommentLayout(FormToolkit toolkit, final ScrolledForm form) {
-		SimpleDateFormat df = new SimpleDateFormat("E MMM dd, yyyy hh:mm aa");//"yyyy-MM-dd HH:mm"
-
+		
 		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText(LABEL_SECTION_COMMENTS);
 		section.setExpanded(true);
@@ -456,6 +456,19 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		addCommentsComposite.setLayoutData(addCommentsData);
 		// End Additional (read-only) Comments Area
 
+		Button expandAll = toolkit.createButton(addCommentsComposite, "Expand All", SWT.NONE);
+		expandAll.addSelectionListener(new SelectionListener() {
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// ignore
+				
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				revealAllComments();
+				
+			}});
+		
 		StyledText styledText = null;
 		for (Iterator<Comment> it = bug.getComments().iterator(); it.hasNext();) {
 			final Comment comment = it.next();
@@ -470,7 +483,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 			
 			//comment.getNumber() + ": " + 
 			ec.setText(comment.getAuthorName() + ", "
-					+ df.format(comment.getCreated()));
+					+ simpleDateFormat.format(comment.getCreated()));
 
 			ec.addExpansionListener(new ExpansionAdapter() {
 				public void expansionStateChanged(ExpansionEvent e) {
@@ -521,7 +534,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 			textHash.put(comment, styledText);
 			textsindex++;
 		}
-
+		
 		Section sectionAdditionalComments = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR
 				| Section.TWISTIE);
 		sectionAdditionalComments.setText(LABEL_SECTION_NEW_COMMENT);
@@ -572,7 +585,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 		addCommentsTextBox = addCommentsText;
 
-		this.createSeparatorSpace(addCommentsComposite);
+//		this.createSeparatorSpace(addCommentsComposite);
 		sectionAdditionalComments.setClient(newCommentsComposite);
 	}
 
@@ -968,37 +981,12 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	@Override
 	public void handleSummaryEvent() {
 		String sel = summaryText.getText();
-		Attribute a = getBug().getAttribute("Summary");
+		Attribute a = getBug().getAttribute(ATTR_SUMMARY);
 		if (!(a.getNewValue().equals(sel))) {
 			a.setNewValue(sel);
 			changeDirtyStatus(true);
 		}
 	}
-
-	// /**
-	// * Sets the cc field to the user's address if a cc has not been specified
-	// to
-	// * ensure that commenters are on the cc list.
-	// *
-	// * @author Wesley Coelho
-	// */
-	// private void setDefaultCCValue() {
-	// Attribute newCCattr = bug.getAttributeForKnobName("newcc");
-	// Attribute owner = bug.getAttribute("Assigned To");
-	//
-	// // Don't add the cc if the user is the bug owner
-	// if (owner != null && owner.getValue().indexOf(repository.getUserName()) >
-	// -1) {
-	// return;
-	// }
-	//
-	// // Add the user to the cc list
-	// if (newCCattr != null) {
-	// if (newCCattr.getNewValue().equals("")) {
-	// newCCattr.setNewValue(repository.getUserName());
-	// }
-	// }
-	// }
 
 	// TODO used for spell checking. Add back when we want to support this
 	// protected Button checkSpellingButton;

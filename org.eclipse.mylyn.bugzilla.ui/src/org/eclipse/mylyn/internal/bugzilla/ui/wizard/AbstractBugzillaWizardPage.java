@@ -593,7 +593,8 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 		summaryTextData.horizontalSpan = 1;
 		summaryTextData.widthHint = 200;
 		assignedToText.setLayoutData(summaryTextData);
-		assignedToText.setText("");
+		assignedToText.setText(wizard.getRepository().getUserName());
+		
 
 		// add the summary text field
 		newLayout(textComposite, 1, "Summary", PROPERTY);

@@ -98,4 +98,11 @@ public interface IBugzillaBug extends Serializable {
 	 * @return The bugs creation date
 	 */
 	public Date getCreated();
+
+	/**
+	 * Get the date that the bug was last modified
+	 * 
+	 * @return The bugs last modification date
+	 */
+	public Date getLastModified();
 }
