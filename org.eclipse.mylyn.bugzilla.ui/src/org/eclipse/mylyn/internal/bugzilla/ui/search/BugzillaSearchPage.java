@@ -285,13 +285,14 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 1;
 		group.setLayout(layout);
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.horizontalSpan = 5;
 		group.setLayoutData(gd);
 
 		createProductAttributes(group);
 		createLists(group);
 		createUpdate(group);
+		
 		return group;
 	}
 
@@ -308,7 +309,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		layout = new GridLayout();
 		layout.numColumns = 4;
 		group.setLayout(layout);
-		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.horizontalSpan = 5;
 		group.setLayoutData(gd);
 
@@ -327,22 +328,22 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 
 		// Lists
 		product = new List(group, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
-		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.heightHint = HEIGHT_ATTRIBUTE_COMBO;
 		product.setLayoutData(gd);
 
 		component = new List(group, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
-		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.heightHint = HEIGHT_ATTRIBUTE_COMBO;
 		component.setLayoutData(gd);
 
 		version = new List(group, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
-		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.heightHint = HEIGHT_ATTRIBUTE_COMBO;
 		version.setLayoutData(gd);
 
 		target = new List(group, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
-		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.heightHint = HEIGHT_ATTRIBUTE_COMBO;
 		target.setLayoutData(gd);
 
@@ -361,7 +362,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		layout = new GridLayout();
 		layout.numColumns = 6;
 		group.setLayout(layout);
-		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.horizontalSpan = 5;
 		group.setLayoutData(gd);
 
@@ -386,32 +387,32 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 
 		// Lists
 		status = new List(group, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
-		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.heightHint = 40;
 		status.setLayoutData(gd);
 
 		resolution = new List(group, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
-		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.heightHint = 40;
 		resolution.setLayoutData(gd);
 
 		severity = new List(group, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
-		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.heightHint = 40;
 		severity.setLayoutData(gd);
 
 		priority = new List(group, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
-		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.heightHint = 40;
 		priority.setLayoutData(gd);
 
 		hardware = new List(group, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
-		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.heightHint = 40;
 		hardware.setLayoutData(gd);
 
 		os = new List(group, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
-		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.heightHint = 40;
 		os.setLayoutData(gd);
 
@@ -717,7 +718,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		// gd = new GridData(GridData.BEGINNING);
 		// label.setLayoutData(gd);
 
-		updateButton = new Button(group, SWT.LEFT | SWT.PUSH);
+		updateButton = new Button(group, SWT.PUSH);
 		updateButton.setText("Update Attributes from Repository");
 
 		updateButton.setLayoutData(new GridData());
