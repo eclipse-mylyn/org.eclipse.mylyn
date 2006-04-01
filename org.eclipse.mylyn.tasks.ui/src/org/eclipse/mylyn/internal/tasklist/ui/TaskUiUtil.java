@@ -83,6 +83,9 @@ public class TaskUiUtil {
 		}
 	}
 
+	/**
+	 * Either pass in a repository and id, or fullUrl, or all of them
+	 */
 	public static boolean openRepositoryTask(String repositoryUrl, String taskId, String fullUrl) {
 		boolean opened = false;
 		String handle = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
