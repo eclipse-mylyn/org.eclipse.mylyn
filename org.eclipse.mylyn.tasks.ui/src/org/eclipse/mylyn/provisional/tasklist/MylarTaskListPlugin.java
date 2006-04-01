@@ -49,6 +49,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -57,8 +58,8 @@ import org.osgi.framework.BundleContext;
  * 
  * TODO: this class is in serious need of refactoring
  */
-public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
+public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	private static final int NOTIFICATION_DELAY = 5000;
 
 	public static final String PLUGIN_ID = "org.eclipse.mylar.tasklist";
@@ -81,6 +82,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	
 	private List<ITaskEditorFactory> taskEditors = new ArrayList<ITaskEditorFactory>();
 
+	private Map<String, IHyperlinkListener> taskHyperlinkListeners = new HashMap<String, IHyperlinkListener>();
+	
 	private TaskListWriter taskListWriter;
 
 	public static final String FILE_EXTENSION = ".xml";
@@ -566,9 +569,18 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		return taskEditors;
 	}
 
+	public Map<String, IHyperlinkListener> getTaskHyperlinkListeners() {
+		return taskHyperlinkListeners;
+	}
+
 	public void addContextEditor(ITaskEditorFactory contextEditor) {
 		if (contextEditor != null)
 			this.taskEditors.add(contextEditor);
+	}
+	
+	public void addTaskHyperlinkListener(String type, IHyperlinkListener listener) {
+		if (listener != null)
+			this.taskHyperlinkListeners.put(type, listener);
 	}
 
 	public TaskListSaveManager getTaskListSaveManager() {

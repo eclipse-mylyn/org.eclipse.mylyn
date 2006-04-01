@@ -55,4 +55,11 @@
 	  		</action> 
 	    </objectContribution>
 	</extension>
+    <extension
+          point="org.eclipse.mylar.tasklist.editors">
+       <hyperlinkListener
+             class="org.eclipse.mylar.internal.bugs.java.JavaStackTraceHyperlinkAdapter"
+             id="org.eclipse.mylar.bugs.hyperlinkLister.java"
+             type="java"/>
+    </extension>
 </plugin>

@@ -27,6 +27,7 @@ import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.ITaskListExternalizer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
@@ -67,9 +68,9 @@ public class TaskListExtensionReader {
 
 	public static final String EXTENSION_EDITORS = "org.eclipse.mylar.tasklist.editors";
 
-	public static final String EDITOR_FACTORY = "editorFactory";
+	public static final String ELMNT_EDITOR_FACTORY = "editorFactory";
 
-	public static final String EDITOR_FACTORY_CLASS = "class";
+	public static final String ELMNT_HYPERLINK_LISTENER = "hyperlinkListener";
 
 	private static boolean extensionsRead = false;
 
@@ -123,8 +124,10 @@ public class TaskListExtensionReader {
 			for (int i = 0; i < editors.length; i++) {
 				IConfigurationElement[] elements = editors[i].getConfigurationElements();
 				for (int j = 0; j < elements.length; j++) {
-					if (elements[j].getName().equals(EDITOR_FACTORY)) {
+					if (elements[j].getName().equals(ELMNT_EDITOR_FACTORY)) {
 						readEditorFactory(elements[j]);
+					} else if (elements[j].getName().equals(ELMNT_HYPERLINK_LISTENER)) {
+						readHyperlinkListener(elements[j]);
 					}
 				}
 			}
@@ -133,9 +136,23 @@ public class TaskListExtensionReader {
 		}
 	}
 
+	private static void readHyperlinkListener(IConfigurationElement element) {
+		try {
+			Object type = element.getAttribute(ELMNT_TYPE);
+			Object hyperlinkListener = element.createExecutableExtension(ATTR_CLASS);
+			if (hyperlinkListener instanceof IHyperlinkListener && type instanceof String) {
+				MylarTaskListPlugin.getDefault().addTaskHyperlinkListener((String)type, (IHyperlinkListener) hyperlinkListener);
+			} else {
+				MylarStatusHandler.log("Could not load listener: " + hyperlinkListener.getClass().getCanonicalName(), null);
+			}
+		} catch (CoreException e) {
+			MylarStatusHandler.log(e, "Could not load tasklist listener extension");
+		}
+	}
+	
 	private static void readEditorFactory(IConfigurationElement element) {
 		try {
-			Object editor = element.createExecutableExtension(EDITOR_FACTORY_CLASS);
+			Object editor = element.createExecutableExtension(ATTR_CLASS);
 			if (editor instanceof ITaskEditorFactory) {
 				MylarTaskListPlugin.getDefault().addContextEditor((ITaskEditorFactory) editor);
 			} else {

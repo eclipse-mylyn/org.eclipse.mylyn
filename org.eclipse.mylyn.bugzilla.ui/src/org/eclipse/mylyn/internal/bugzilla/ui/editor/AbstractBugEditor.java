@@ -19,11 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.debug.ui.IDebugModelPresentation;
-import org.eclipse.jdt.internal.debug.ui.JDIDebugUIPlugin;
-import org.eclipse.jdt.internal.debug.ui.actions.OpenTypeAction;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -31,9 +27,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -76,8 +69,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -85,8 +76,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.RetargetAction;
 import org.eclipse.ui.forms.events.ExpansionEvent;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.IExpansionListener;
+import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
@@ -98,8 +89,6 @@ import org.eclipse.ui.internal.help.WorkbenchHelpSystem;
 import org.eclipse.ui.internal.ide.StringMatcher;
 import org.eclipse.ui.internal.ide.StringMatcher.Position;
 import org.eclipse.ui.part.EditorPart;
-import org.eclipse.ui.texteditor.IDocumentProvider;
-import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
@@ -110,6 +99,8 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @author Rob Elves (Conversion to Eclipse Forms)
  */
 public abstract class AbstractBugEditor extends EditorPart {
+
+	public static final String HYPERLINK_TYPE_JAVA = "java";
 
 	private static final String LABEL_BUTTON_SUBMIT = "Submit";
 
@@ -1560,60 +1551,10 @@ public abstract class AbstractBugEditor extends EditorPart {
 				hyperlink.setText(linkText);
 				hyperlink.setFont(COMMENT_FONT);
 				hyperlink.setHref(line);
-				hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
-					public void linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent e) {
-						String typeName;
-						int lineNumber;
-						try {
-							String linkText = (String) e.getHref();
-							typeName = getTypeName(linkText);
-							lineNumber = getLineNumber(linkText);
-
-							// documents start at 0
-							if (lineNumber > 0) {
-								lineNumber--;
-							}
-							Object sourceElement = getSourceElement(typeName);
-							if (sourceElement != null) {
-								IDebugModelPresentation presentation = JDIDebugUIPlugin.getDefault()
-										.getModelPresentation();
-								IEditorInput editorInput = presentation.getEditorInput(sourceElement);
-								if (editorInput != null) {
-									String editorId = presentation.getEditorId(editorInput, sourceElement);
-									if (editorId != null) {
-										IEditorPart editorPart = JDIDebugUIPlugin.getActivePage().openEditor(
-												editorInput, editorId);
-										if (editorPart instanceof ITextEditor && lineNumber >= 0) {
-											ITextEditor textEditor = (ITextEditor) editorPart;
-											IDocumentProvider provider = textEditor.getDocumentProvider();
-											provider.connect(editorInput);
-											IDocument document = provider.getDocument(editorInput);
-											try {
-												IRegion line = document.getLineInformation(lineNumber);
-												textEditor.selectAndReveal(line.getOffset(), line.getLength());
-											} catch (BadLocationException e1) {
-												MessageDialog.openInformation(AbstractBugEditor.this.getSite()
-														.getShell(), "Open Type", "Failed to open type.");
-											}
-											provider.disconnect(editorInput);
-										}
-										return;
-									}
-								}
-							}
-							// did not find source
-							MessageDialog.openInformation(AbstractBugEditor.this.getSite().getShell(), "Open Type",
-									"Type could not be located.");
-						} catch (CoreException e1) {
-							MessageDialog.openInformation(AbstractBugEditor.this.getSite().getShell(), "Open Type",
-									"Failed to open type.");
-							return;
-						}
-
-					};
-
-				});
-
+				IHyperlinkListener javaHyperlinkListener = MylarTaskListPlugin.getDefault().getTaskHyperlinkListeners().get(HYPERLINK_TYPE_JAVA);
+				if (javaHyperlinkListener != null) {
+					hyperlink.addHyperlinkListener(javaHyperlinkListener);
+				}
 				Map<Integer, Control> controlMap = controls.get(styledText);
 				controlMap.put(styledText.getText().indexOf(line) + position.getStart(), hyperlink); // changed
 				// here
@@ -1651,74 +1592,4 @@ public abstract class AbstractBugEditor extends EditorPart {
 			}
 		});
 	}
-
-	// adapted from JavaStackTraceHyperlink
-	private Object getSourceElement(String typeName) throws CoreException {
-		// ILaunch launch = getLaunch();
-		Object result = null;
-		// if (launch != null) {
-		// result = JavaDebugUtils.resolveSourceElement(typeName, getLaunch());
-		// }
-		// if (result == null) {
-		// search for the type in the workspace
-		result = OpenTypeAction.findTypeInWorkspace(typeName);
-		// }
-		return result;
-	}
-
-	// adapted from JavaStackTraceHyperlink
-	private String getTypeName(String linkText) {
-		int start = linkText.indexOf('(');
-		int end = linkText.indexOf(':');
-		if (start >= 0 && end > start) {
-
-			// get File name (w/o .java)
-			String typeName = linkText.substring(start + 1, end);
-			typeName.indexOf(".");
-			typeName = typeName.substring(0, typeName.indexOf("."));
-
-			String qualifier = linkText.substring(0, start);
-			// remove the method name
-			start = qualifier.lastIndexOf('.');
-
-			if (start >= 0) {
-				// remove the class name
-				start = new String((String) qualifier.subSequence(0, start)).lastIndexOf('.');
-				if (start == -1) {
-					start = 0; // default package
-				}
-			}
-
-			if (start >= 0) {
-				qualifier = qualifier.substring(0, start);
-			}
-
-			if (qualifier.length() > 0) {
-				typeName = qualifier + "." + typeName; //$NON-NLS-1$
-			}
-			return typeName;
-		}
-
-		return "error"; // TODO: Complain
-	}
-
-	// adapted from JavaStackTraceHyperlink
-	protected int getLineNumber(String linkText) throws CoreException {
-		int index = linkText.lastIndexOf(':');
-		if (index >= 0) {
-			String numText = linkText.substring(index + 1);
-			index = numText.indexOf(')');
-			if (index >= 0) {
-				numText = numText.substring(0, index);
-			}
-			try {
-				return Integer.parseInt(numText);
-			} catch (NumberFormatException e) {
-				throw new CoreException(null);
-			}
-		}
-
-		throw new CoreException(null);
-	}
-
 }

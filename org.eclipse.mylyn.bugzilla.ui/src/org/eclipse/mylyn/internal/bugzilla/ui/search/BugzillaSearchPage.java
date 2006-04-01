@@ -205,7 +205,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 
 		// Info text
 		label = new Label(group, SWT.LEFT);
-		label.setText("Summary contains: ");
+		label.setText("Summary/id contains: ");
 		gd = new GridData(GridData.BEGINNING);
 		gd.horizontalSpan = 1;
 		label.setLayoutData(gd);

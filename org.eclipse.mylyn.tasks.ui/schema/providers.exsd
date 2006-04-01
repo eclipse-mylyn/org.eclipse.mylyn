@@ -6,7 +6,7 @@
          <meta.schema plugin="org.eclipse.mylar.tasklist" id="providers" name="Task List Providers"/>
       </appInfo>
       <documentation>
-         Currently only a work-around for creating a dynamic popupo menu. 
+         Currently only a work-around for creating a dynamic popupo menu.
       </documentation>
    </annotation>
 
