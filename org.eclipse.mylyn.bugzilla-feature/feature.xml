@@ -2,14 +2,14 @@
 <feature
       id="org.eclipse.mylar.bugzilla_feature"
       label="Mylar Connector: Bugzilla"
-      version="0.4.10.v20060329-2010"
+      version="0.4.10.v20060331-1900"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylar">
 
    <description>
       Bugzilla client integrated with Eclipse and Mylar, can be used standalone.
    </description>
-   
+
    <copyright>
       Copyright (c) 2004 - 2006 Mylar project committers and others.
    </copyright>
@@ -247,21 +247,21 @@ litigation.
          id="org.eclipse.mylar.bugzilla.core"
          download-size="0"
          install-size="0"
-         version="0.4.10.v20060329-2010"
+         version="0.4.10.v20060331-1900"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.bugzilla.ui"
          download-size="0"
          install-size="0"
-         version="0.4.10.v20060329-2010"
+         version="0.4.10.v20060331-1900"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.bugs"
          download-size="0"
          install-size="0"
-         version="0.4.10.v20060329-2010"
+         version="0.4.10.v20060331-1900"
          unpack="false"/>
 
 </feature>
