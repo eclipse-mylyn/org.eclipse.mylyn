@@ -16,7 +16,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.ide.team.MylarContextChangeSet;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
+import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.widgets.Display;
@@ -58,9 +58,9 @@ public class OpenCorrespondingTaskAction implements IViewActionDelegate {
 					if (connector != null) {
 						String repositoryUrl = connector.getRepositoryUrlFromTaskUrl(fullUrl);
 						String id = MylarContextChangeSet.getTaskIdFromComment(comment);					
-						resolved = TaskListUiUtil.openRepositoryTask(repositoryUrl, id, fullUrl);
+						resolved = TaskUiUtil.openRepositoryTask(repositoryUrl, id, fullUrl);
 					} else {
-						TaskListUiUtil.openUrl("Browser", "Browser", fullUrl);
+						TaskUiUtil.openUrl("Browser", "Browser", fullUrl);
 						resolved = true;
 					} 
 				}
