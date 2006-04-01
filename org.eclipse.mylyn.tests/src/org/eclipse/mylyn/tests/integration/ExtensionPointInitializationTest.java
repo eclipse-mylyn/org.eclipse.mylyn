@@ -11,24 +11,21 @@
 
 package org.eclipse.mylar.tests.integration;
 
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import junit.framework.TestCase;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.eclipse.mylar.internal.bugs.java.JavaStackTraceHyperlinkAdapter;
+import org.eclipse.mylar.internal.bugzilla.ui.editor.AbstractBugEditor;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.ui.forms.events.IHyperlinkListener;
 
 /**
  * @author Mik Kersten
  */
-public class AllIntegrationTests {
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tests.integration");
+public class ExtensionPointInitializationTest extends TestCase {
 
-		MylarStatusHandler.setDumpErrors(true);
-
-		// $JUnit-BEGIN$
-		suite.addTestSuite(ExtensionPointInitializationTest.class);
-		suite.addTestSuite(ChangeDataDirTest.class);
-		// $JUnit-END$
-		return suite;
+	public void testBugzillaHyperlinkDetector() {
+		IHyperlinkListener listener = MylarTaskListPlugin.getDefault().getTaskHyperlinkListeners().get(AbstractBugEditor.HYPERLINK_TYPE_JAVA);
+		assertTrue(listener instanceof JavaStackTraceHyperlinkAdapter);
 	}
+	
 }
