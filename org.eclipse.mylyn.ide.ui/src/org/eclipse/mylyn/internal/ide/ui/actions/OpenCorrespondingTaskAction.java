@@ -69,7 +69,7 @@ public class OpenCorrespondingTaskAction implements IViewActionDelegate {
 							repositoryUrl = MylarTaskListPlugin.getRepositoryManager().getAllRepositories().get(0).getUrl();
 						}
 					}
-					String id = MylarContextChangeSet.getTaskIdFromComment(comment);					
+					String id = MylarContextChangeSet.getTaskIdFromCommentOrLabel(comment);	
 					resolved = TaskUiUtil.openRepositoryTask(repositoryUrl, id, fullUrl);
 					
 					if (!resolved) {

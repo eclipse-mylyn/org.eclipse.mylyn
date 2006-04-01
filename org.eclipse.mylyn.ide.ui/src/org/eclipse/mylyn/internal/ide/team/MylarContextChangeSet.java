@@ -197,7 +197,7 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 		return prefix;
 	}
 
-	public static String getTaskIdFromComment(String comment) {
+	public static String getTaskIdFromCommentOrLabel(String comment) {
 		int firstDelimIndex = comment.indexOf(PREFIX_DELIM);
 		if (firstDelimIndex != -1) {
 			int idStart = firstDelimIndex + PREFIX_DELIM.length();
@@ -206,6 +206,9 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 				String id = comment.substring(idStart, idEnd);
 				if (id != null)
 					return id.trim();
+			} else {
+				// change set label
+				return comment.substring(0, firstDelimIndex);
 			}
 		}
 		return null;

@@ -32,7 +32,7 @@ public class CommitMessageTest extends TestCase {
 		};
 		String comment = MylarContextChangeSet.generateComment(task, MylarIdePlugin.DEFAULT_PREFIX_COMPLETED,
 				MylarIdePlugin.DEFAULT_PREFIX_PROGRESS);
-		String bugId = MylarContextChangeSet.getTaskIdFromComment(comment);
+		String bugId = MylarContextChangeSet.getTaskIdFromCommentOrLabel(comment);
 		assertEquals("111", bugId);
 	}
 
@@ -42,8 +42,8 @@ public class CommitMessageTest extends TestCase {
 		task.setUrl("http://eclipse.org/mylar");
 		String comment = MylarContextChangeSet.generateComment(task, MylarIdePlugin.DEFAULT_PREFIX_COMPLETED,
 				MylarIdePlugin.DEFAULT_PREFIX_PROGRESS);
-		String bugId = MylarContextChangeSet.getTaskIdFromComment(comment);
-		assertEquals(null, bugId);
+//		String bugId = MylarContextChangeSet.getTaskIdFromCommentOrLabel(comment);
+//		assertEquals(null, bugId);
 		String url = MylarContextChangeSet.getUrlFromComment(comment);
 		assertEquals("http://eclipse.org/mylar", url);
 
@@ -52,6 +52,12 @@ public class CommitMessageTest extends TestCase {
 				MylarIdePlugin.DEFAULT_PREFIX_PROGRESS);
 		String url2 = MylarContextChangeSet.getUrlFromComment(comment2);
 		assertEquals("http://eclipse.org/mylar", url2);
+	}
+	
+	public void testChangeSetLabelParsing() {
+		String label = "1: foo";
+		String id = MylarContextChangeSet.getTaskIdFromCommentOrLabel(label);
+		assertEquals("1", id);
 	}
 
 }
