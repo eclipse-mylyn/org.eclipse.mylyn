@@ -86,8 +86,19 @@ public class TaskUiUtil {
 	public static boolean openRepositoryTask(String repositoryUrl, String taskId, String fullUrl) {
 		boolean opened = false;
 		String handle = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
-		System.err.println(">>> " + handle)
-		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
+		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle); 
+		if (task == null) { 
+			// search for it
+			for (ITask currTask : MylarTaskListPlugin.getTaskListManager().getTaskList().getAllTasks()) {
+				if (currTask instanceof AbstractRepositoryTask) {
+					String currUrl = ((AbstractRepositoryTask)currTask).getUrl();
+					if (currUrl != null && currUrl.equals(fullUrl)) {
+						task = currTask;
+						break; 
+					}
+				}
+			}
+		}
 		if (task != null) {
 			TaskUiUtil.refreshAndOpenTaskListElement(task);
 			opened = true;
