@@ -18,6 +18,8 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.ide.team.MylarContextChangeSet;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
+import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.team.core.history.IFileRevision;
@@ -37,7 +39,6 @@ public class OpenCorrespondingTaskAction implements IViewActionDelegate {
 	}
 
 	public void run(IAction action) {
-
 		if (action instanceof ObjectPluginAction) {
 			ObjectPluginAction objectAction = (ObjectPluginAction) action;
 			if (objectAction.getSelection() instanceof StructuredSelection) {
@@ -54,17 +55,28 @@ public class OpenCorrespondingTaskAction implements IViewActionDelegate {
 				}
 				if (comment != null) {
 					String fullUrl = MylarContextChangeSet.getUrlFromComment(comment);
-					AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryForTaskUrl(fullUrl);
-					if (connector != null) {
-						String repositoryUrl = connector.getRepositoryUrlFromTaskUrl(fullUrl);
-						String id = MylarContextChangeSet.getTaskIdFromComment(comment);					
-						resolved = TaskUiUtil.openRepositoryTask(repositoryUrl, id, fullUrl);
+					String repositoryUrl = null;	
+					if (fullUrl != null) {
+						AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryForTaskUrl(fullUrl);
+						if (connector != null) {
+							repositoryUrl = connector.getRepositoryUrlFromTaskUrl(fullUrl);
+						}
 					} else {
+						ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTask();
+						if (task instanceof AbstractRepositoryTask) {
+							repositoryUrl = ((AbstractRepositoryTask)task).getRepositoryUrl();
+						} else if (MylarTaskListPlugin.getRepositoryManager().getAllRepositories().size() == 1) {
+							repositoryUrl = MylarTaskListPlugin.getRepositoryManager().getAllRepositories().get(0).getUrl();
+						}
+					}
+					String id = MylarContextChangeSet.getTaskIdFromComment(comment);					
+					resolved = TaskUiUtil.openRepositoryTask(repositoryUrl, id, fullUrl);
+					
+					if (!resolved) {
 						TaskUiUtil.openUrl("Browser", "Browser", fullUrl);
 						resolved = true;
-					} 
+					}
 				}
-
 				if (!resolved) {
 					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Mylar Information",
 							"Could not resolve report corresponding to change set comment.");
