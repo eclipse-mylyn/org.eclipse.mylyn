@@ -17,7 +17,7 @@ import org.eclipse.jface.action.IAction;
  * @author Mik Kersten
  */
 public interface IActionExecutionListener {
-
+ 
 	public void actionObserved(IAction action);
 
 }
