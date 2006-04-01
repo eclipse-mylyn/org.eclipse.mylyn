@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
+import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskInputDialog;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
@@ -123,7 +123,7 @@ public class NewLocalTaskAction extends Action {
 			MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask,
 					MylarTaskListPlugin.getTaskListManager().getTaskList().getRootCategory());
 		}
-		TaskListUiUtil.openEditor(newTask);
+		TaskUiUtil.openEditor(newTask);
 		// newTask.openTaskInEditor(false);
 		view.getViewer().refresh();
 		view.getViewer().setSelection(new StructuredSelection(newTask));

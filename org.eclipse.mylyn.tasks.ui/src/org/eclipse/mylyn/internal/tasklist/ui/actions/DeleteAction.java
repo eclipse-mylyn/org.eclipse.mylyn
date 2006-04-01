@@ -15,7 +15,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
+import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
@@ -60,7 +60,7 @@ public class DeleteAction extends Action {
 				if (task.isActive()) {
 					MylarTaskListPlugin.getTaskListManager().deactivateTask(task);
 					TaskListView.getDefault().refreshAndFocus();
-					TaskListUiUtil.closeEditorInActivePage(task);					
+					TaskUiUtil.closeEditorInActivePage(task);					
 				}
 
 				String message = genDeleteConfirmationMessage(task);
@@ -73,7 +73,7 @@ public class DeleteAction extends Action {
 				MylarTaskListPlugin.getTaskListManager().deactivateTask(task);
 				MylarTaskListPlugin.getTaskListManager().getTaskList().deleteTask(task);
 				MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier());
-				TaskListUiUtil.closeEditorInActivePage(task);
+				TaskUiUtil.closeEditorInActivePage(task);
 			} else if (selectedObject instanceof AbstractRepositoryQuery) {
 				boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 						.getShell(), "Confirm delete", "Delete the selected query? Task data will not be deleted.");
@@ -89,7 +89,7 @@ public class DeleteAction extends Action {
 				TaskCategory cat = (TaskCategory) selectedObject;
 				for (ITask task : cat.getChildren()) {
 					MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier());
-					TaskListUiUtil.closeEditorInActivePage(task);
+					TaskUiUtil.closeEditorInActivePage(task);
 				}
 				MylarTaskListPlugin.getTaskListManager().getTaskList().deleteCategory(cat);
 			} else {

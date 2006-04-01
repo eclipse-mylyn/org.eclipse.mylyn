@@ -15,7 +15,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
+import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 
 /**
@@ -39,7 +39,7 @@ public class OpenTaskListElementAction extends Action {
 		ISelection selection = viewer.getSelection();
 		Object element = ((IStructuredSelection) selection).getFirstElement();
 		if (element instanceof ITaskListElement) {
-			TaskListUiUtil.refreshAndOpenTaskListElement((ITaskListElement)element);	
+			TaskUiUtil.refreshAndOpenTaskListElement((ITaskListElement)element);	
 		}
 	}
 }

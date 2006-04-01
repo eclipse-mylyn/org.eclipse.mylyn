@@ -14,7 +14,7 @@ package org.eclipse.mylar.internal.tasklist.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
+import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.ITask;
@@ -40,7 +40,7 @@ public class TaskDeactivateAction extends Action {
 			if (task != null) {
 				MylarTaskListPlugin.getTaskListManager().deactivateTask(task);
 				TaskListView.getDefault().refreshAndFocus();
-				TaskListUiUtil.closeEditorInActivePage(task);
+				TaskUiUtil.closeEditorInActivePage(task);
 //				TaskListView.getDefault().closeTaskEditors(task, page);
 			}
 		} catch (Exception e) {

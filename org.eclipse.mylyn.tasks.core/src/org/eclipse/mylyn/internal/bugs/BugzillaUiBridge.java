@@ -24,7 +24,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.ViewBugzillaAction;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.BugzillaOutlinePage;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskEditor;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
+import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -65,7 +65,7 @@ public class BugzillaUiBridge implements IMylarUiBridge {
 		// MylarTaskListPlugin.getTaskListManager().getTaskForHandle(BugTaskUtil.getHandle(bugId),
 		// true);
 		if (task != null) {
-			TaskListUiUtil.openEditor(task);
+			TaskUiUtil.openEditor(task);
 //			BugzillaTask bugzillaTask = (BugzillaTask) task;
 //			bugzillaTask.openTask(commentNumer, true);
 		} else {

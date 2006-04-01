@@ -21,7 +21,7 @@ import org.eclipse.jface.viewers.ITableFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
+import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
@@ -98,7 +98,7 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 		} else if (columnIndex == 2) {
 			if (element instanceof ITaskListElement && !(element instanceof AbstractTaskContainer)) {
 				ITaskListElement taskElement = (ITaskListElement) element;
-				return TaskListUiUtil.getImageForPriority(PriorityLevel.fromString(taskElement.getPriority()));
+				return TaskUiUtil.getImageForPriority(PriorityLevel.fromString(taskElement.getPriority()));
 			}
 		} else if (columnIndex == 3) {
 			AbstractRepositoryTask repositoryTask = null;

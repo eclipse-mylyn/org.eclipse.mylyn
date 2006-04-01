@@ -16,7 +16,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
+import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.TaskPriorityFilter;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.tasklist.ITask;
@@ -199,11 +199,11 @@ public class TaskListUiTest extends TestCase {
 
 		// open a task in editor
 //		cat1task1.setForceSyncOpen(true);
-		TaskListUiUtil.openEditor(cat1task1, false);
+		TaskUiUtil.openEditor(cat1task1, false);
 //		cat1task1.openTaskInEditor(false);
 //		cat1task2.setForceSyncOpen(true);
 //		cat1task2.openTaskInEditor(false);
-		TaskListUiUtil.openEditor(cat1task2, false);
+		TaskUiUtil.openEditor(cat1task2, false);
 
 		listeners = manager.getTaskList().getChangeListeners();
 		numListenersDuring = listeners.size();

@@ -21,7 +21,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
+import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.ITask;
@@ -149,7 +149,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 		newTask.setPriority(Task.PriorityLevel.P3.toString());
 		newTask.setUrl(url);
-		TaskListUiUtil.openEditor(newTask);
+		TaskUiUtil.openEditor(newTask);
 //		newTask.openTaskInEditor(true);
 
 		return true;

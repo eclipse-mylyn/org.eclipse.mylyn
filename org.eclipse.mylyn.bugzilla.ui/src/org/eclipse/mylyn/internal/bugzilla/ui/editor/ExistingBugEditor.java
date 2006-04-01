@@ -45,7 +45,7 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.compare.BugzillaCompareInput;
 import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
+import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -516,7 +516,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 			                 */
 			                public void widgetSelected(SelectionEvent e) {			                	
 			                	String address = repository.getUrl()+"/attachment.cgi?id="+comment.getAttachmentId()+"&amp;action=view";
-			                	TaskListUiUtil.openUrl(address, address, address);
+			                	TaskUiUtil.openUrl(address, address, address);
 			                	
 			                }
 			            });
