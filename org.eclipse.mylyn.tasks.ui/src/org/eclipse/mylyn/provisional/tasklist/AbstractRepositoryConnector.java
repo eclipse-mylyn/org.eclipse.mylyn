@@ -74,7 +74,9 @@ public abstract class AbstractRepositoryConnector {
 	
 	public abstract boolean retrieveContext(TaskRepository repository, AbstractRepositoryTask task, IRemoteContextDelegate remoteContextDelegate)  throws IOException;
 	
-	private class SynchronizeTaskJob extends Job {
+	public abstract String getRepositoryUrlFromTaskUrl(String url);
+ 	
+ 	private class SynchronizeTaskJob extends Job {
 
 		private AbstractRepositoryTask repositoryTask;
 
@@ -203,8 +205,8 @@ public abstract class AbstractRepositoryConnector {
 	 *            identifier, e.g. "123" bug Bugzilla bug 123
 	 * @return null if task could not be created
 	 */
-	public abstract ITask createTaskFromExistingId(TaskRepository repository, String id);
 
+	public abstract ITask createTaskFromExistingId(TaskRepository repository, String id);
 	public abstract AbstractRepositorySettingsPage getSettingsPage();
 
 	public abstract IWizard getQueryWizard(TaskRepository repository);
@@ -468,5 +470,11 @@ public abstract class AbstractRepositoryConnector {
 	 */
 	public void setForceSyncExec(boolean forceSyncExec) {
 		this.forceSyncExecForTesting = forceSyncExec;
+	}
+
+	public void openRemoteTask(String repositoryUrl, String idString) {
+		MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), MylarTaskListPlugin.TITLE_DIALOG, 
+				"Opening JIRA issues not added to task list is not implemented."
+		);
 	}
 }

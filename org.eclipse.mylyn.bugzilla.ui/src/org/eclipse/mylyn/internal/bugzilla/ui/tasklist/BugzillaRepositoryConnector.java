@@ -70,6 +70,7 @@ import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryT
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Mik Kersten
@@ -598,4 +599,34 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return result;
 	}
 
+	public String getRepositoryUrlFromTaskUrl(String url) {
+		if (url == null) {
+			return null;
+		} else {
+			int index = url.indexOf(BugzillaRepositoryUtil.POST_ARGS_SHOW_BUG);
+			if (index != -1) {
+				return url.substring(0, index);
+			} else {
+				return null;
+			}
+		}
+	}
+	
+	public void openRemoteTask(String repositoryUrl, String idString) {
+		int id = -1;
+		try {
+			id = Integer.parseInt(idString);
+		} catch (NumberFormatException e) {
+			// ignore
+		}
+		if (id != -1) {
+			OpenBugzillaReportJob job = new OpenBugzillaReportJob(repositoryUrl, id);
+			IProgressService service = PlatformUI.getWorkbench().getProgressService();
+			try {
+				service.run(true, false, job);
+			} catch (Exception e) {
+				MylarStatusHandler.fail(e, "Could not open report", true);
+			}
+		}
+	}
 }

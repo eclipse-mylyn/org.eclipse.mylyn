@@ -109,7 +109,19 @@ public class TaskRepositoryManager {
 		}
 		return null;
 	}
-
+	
+	/**
+	 * @return	the first connector to accept the URL
+	 */
+	public AbstractRepositoryConnector getRepositoryForTaskUrl(String url) {
+		for (AbstractRepositoryConnector connector : getRepositoryConnectors()) {
+			if (connector.getRepositoryUrlFromTaskUrl(url) != null) {
+				return connector;
+			}
+		}
+		return null;
+	}
+	
 	public Set<TaskRepository> getRepositories(String kind) {
 		if (repositoryMap.containsKey(kind)) {
 			return repositoryMap.get(kind);
