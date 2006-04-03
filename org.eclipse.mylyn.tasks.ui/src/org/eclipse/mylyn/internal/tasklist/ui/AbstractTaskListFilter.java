@@ -25,6 +25,6 @@ public abstract class AbstractTaskListFilter {
 
 	protected boolean shouldAlwaysShow(ITask task) {
 		return task.isActive() || (task.isPastReminder() && !task.isCompleted())
-			|| NewLocalTaskAction.NEW_TASK_DESCRIPTION.equals(task.getDescription());
+			|| NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(task.getDescription());
 	}
 }

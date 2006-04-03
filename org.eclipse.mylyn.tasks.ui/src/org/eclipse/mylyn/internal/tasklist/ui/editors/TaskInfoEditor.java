@@ -20,6 +20,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
+import org.eclipse.mylar.internal.tasklist.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.TaskEditorCopyAction;
 import org.eclipse.mylar.internal.tasklist.ui.views.DatePicker;
 import org.eclipse.mylar.internal.tasklist.ui.views.RetrieveTitleFromUrlJob;
@@ -324,7 +325,11 @@ public class TaskInfoEditor extends EditorPart {
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		// Put the info onto the editor
 		createContent(editorComposite, toolkit);
-		form.setFocus();
+//		form.setFocus();
+		if (NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(description.getText())) {
+			description.setSelection(0);
+			description.setFocus();
+		}
 	}
 
 	@Override
