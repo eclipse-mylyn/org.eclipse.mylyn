@@ -26,16 +26,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
@@ -355,7 +352,7 @@ public abstract class AbstractRepositoryConnector {
 			}
 		}
 		
-		synchronize(MylarTaskListPlugin.getTaskListManager().getTaskList().getQueries(), null);
+		synchronize(MylarTaskListPlugin.getTaskListManager().getTaskList().getQueries(), null, Job.DECORATE);
 		
 //		for (AbstractRepositoryQuery query : MylarTaskListPlugin.getTaskListManager().getTaskList().getQueries()) {
 //			if (!(query instanceof AbstractRepositoryQuery)) {
@@ -386,7 +383,7 @@ public abstract class AbstractRepositoryConnector {
 		}
 	}
 	
-	public Job synchronize(Set<AbstractRepositoryQuery>repositoryQueries, IJobChangeListener listener) {
+	public Job synchronize(Set<AbstractRepositoryQuery>repositoryQueries, IJobChangeListener listener, int priority) {
 		
 		SynchronizeQueryJob job = new SynchronizeQueryJob(repositoryQueries);
 
@@ -394,62 +391,11 @@ public abstract class AbstractRepositoryConnector {
 			job.addJobChangeListener(listener);
 		}
 
-		job.addJobChangeListener(new JobChangeAdapter() {
-
-			public void done(IJobChangeEvent event) {
-
-				if (event.getResult().getException() == null) {
-//
-//					for (AbstractQueryHit hit : repositoryQuery.getHits()) {
-//						if (hit.getCorrespondingTask() != null && hit instanceof AbstractQueryHit) {
-//							requestRefresh(hit.getCorrespondingTask());
-//						}
-//					}
-					// TODO: refactor?
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							if (TaskListView.getDefault() != null) {
-								TaskListView.getDefault().getViewer().refresh();
-							}
-						}
-					});
-				}
-			}
-		});
-		job.setPriority(Job.BUILD);
-		job.schedule();
-		return job;
-	}
-	
-	/**
-	 * For synchronizing a single query. Use synchronize(Set, IJobChangeListener) if synchronizing
-	 * multiple queries at a time.
-	 */
-	public Job synchronize(final AbstractRepositoryQuery repositoryQuery, IJobChangeListener listener) {
-		HashSet<AbstractRepositoryQuery> items = new HashSet<AbstractRepositoryQuery>();
-		items.add(repositoryQuery);
-		return synchronize(items, listener);
-	}
-
-//	public Job synchronize(final AbstractRepositoryQuery repositoryQuery, IJobChangeListener listener) {
-//
-//		SynchronizeQueryJob job = new SynchronizeQueryJob(repositoryQuery);
-//
-//		if (listener != null) {
-//			job.addJobChangeListener(listener);
-//		}
-//
 //		job.addJobChangeListener(new JobChangeAdapter() {
 //
 //			public void done(IJobChangeEvent event) {
 //
 //				if (event.getResult().getException() == null) {
-//
-//					for (AbstractQueryHit hit : repositoryQuery.getHits()) {
-//						if (hit.getCorrespondingTask() != null && hit instanceof AbstractQueryHit) {
-//							requestRefresh(hit.getCorrespondingTask());
-//						}
-//					}
 //					// TODO: refactor?
 //					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 //						public void run() {
@@ -461,9 +407,20 @@ public abstract class AbstractRepositoryConnector {
 //				}
 //			}
 //		});
-//		job.schedule();
-//		return job;
-//	}
+		job.setPriority(Job.DECORATE);
+		job.schedule();
+		return job;
+	}
+	
+	/**
+	 * For synchronizing a single query. Use synchronize(Set, IJobChangeListener) if synchronizing
+	 * multiple queries at a time.
+	 */
+	public Job synchronize(final AbstractRepositoryQuery repositoryQuery, IJobChangeListener listener) {
+		HashSet<AbstractRepositoryQuery> items = new HashSet<AbstractRepositoryQuery>();
+		items.add(repositoryQuery);
+		return synchronize(items, listener, Job.BUILD);
+	}
 
 	/**
 	 * For testing

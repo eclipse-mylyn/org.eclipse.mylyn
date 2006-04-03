@@ -326,7 +326,7 @@ public class TaskInfoEditor extends EditorPart {
 		// Put the info onto the editor
 		createContent(editorComposite, toolkit);
 //		form.setFocus();
-		if (NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(description.getText())) {
+		if (description != null && NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(description.getText())) {
 			description.setSelection(0);
 			description.setFocus();
 		}

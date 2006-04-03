@@ -63,7 +63,7 @@ public class ScheduledTaskListRefreshJob extends Job {
 					if(queries.size() > 0) {
 						AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
 						if(connector != null) {
-							connector.synchronize(queries, null);							
+							connector.synchronize(queries, null, Job.DECORATE);							
 						}
 					}
 				}
