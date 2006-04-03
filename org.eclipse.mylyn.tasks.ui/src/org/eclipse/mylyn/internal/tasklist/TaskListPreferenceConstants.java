@@ -69,5 +69,7 @@ public class TaskListPreferenceConstants {
 	public static final String ARCHIVE_FOLDER = "org.eclipse.mylar.tasklist.archive.folder";
 
 	public static final String ARCHIVE_LAST = "org.eclipse.mylar.tasklist.archive.lastarchived";
+
+	public static final String ARCHIVE_MAXFILES = "org.eclipse.mylar.tasklist.archive.maxfiles";
 	
 }

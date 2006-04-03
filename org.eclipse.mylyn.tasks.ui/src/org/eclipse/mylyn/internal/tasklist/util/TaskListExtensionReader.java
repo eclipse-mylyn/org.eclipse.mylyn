@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskEditorFactory;
@@ -27,7 +28,6 @@ import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.ITaskListExternalizer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
@@ -71,6 +71,8 @@ public class TaskListExtensionReader {
 	public static final String ELMNT_EDITOR_FACTORY = "editorFactory";
 
 	public static final String ELMNT_HYPERLINK_LISTENER = "hyperlinkListener";
+	
+	public static final String ELMNT_HYPERLINK_DETECTOR = "hyperlinkDetector";
 
 	private static boolean extensionsRead = false;
 
@@ -126,29 +128,49 @@ public class TaskListExtensionReader {
 				for (int j = 0; j < elements.length; j++) {
 					if (elements[j].getName().equals(ELMNT_EDITOR_FACTORY)) {
 						readEditorFactory(elements[j]);
-					} else if (elements[j].getName().equals(ELMNT_HYPERLINK_LISTENER)) {
-						readHyperlinkListener(elements[j]);
+					//} else if (elements[j].getName().equals(ELMNT_HYPERLINK_LISTENER)) {
+					//	readHyperlinkListener(elements[j]);
+					} else if (elements[j].getName().equals(ELMNT_HYPERLINK_DETECTOR)) {
+						readHyperlinkDetector(elements[j]);
 					}
 				}
-			}
+			}			
 			writer.setDelegateExternalizers(externalizers);
 			extensionsRead = true;
 		}
 	}
 
-	private static void readHyperlinkListener(IConfigurationElement element) {
+	private static void readHyperlinkDetector(IConfigurationElement element) {
 		try {
-			Object type = element.getAttribute(ELMNT_TYPE);
-			Object hyperlinkListener = element.createExecutableExtension(ATTR_CLASS);
-			if (hyperlinkListener instanceof IHyperlinkListener && type instanceof String) {
-				MylarTaskListPlugin.getDefault().addTaskHyperlinkListener((String)type, (IHyperlinkListener) hyperlinkListener);
+			Object hyperlinkDetector = element.createExecutableExtension(ATTR_CLASS);
+			if (hyperlinkDetector instanceof IHyperlinkDetector) {
+				MylarTaskListPlugin.getDefault().addTaskHyperlinkDetector((IHyperlinkDetector) hyperlinkDetector);
 			} else {
-				MylarStatusHandler.log("Could not load listener: " + hyperlinkListener.getClass().getCanonicalName(), null);
+				MylarStatusHandler.log("Could not load detector: " + hyperlinkDetector.getClass().getCanonicalName(), null);
 			}
 		} catch (CoreException e) {
-			MylarStatusHandler.log(e, "Could not load tasklist listener extension");
+			MylarStatusHandler.log(e, "Could not load tasklist hyperlink detector extension");
 		}
 	}
+	
+
+	// private static void readHyperlinkListener(IConfigurationElement element)
+	// {
+	// try {
+	// Object type = element.getAttribute(ELMNT_TYPE);
+	// Object hyperlinkListener = element.createExecutableExtension(ATTR_CLASS);
+	// if (hyperlinkListener instanceof IHyperlinkListener && type instanceof
+	// String) {
+	// MylarTaskListPlugin.getDefault().addTaskHyperlinkListener((String)type,
+	// (IHyperlinkListener) hyperlinkListener);
+	// } else {
+	// MylarStatusHandler.log("Could not load listener: " +
+	// hyperlinkListener.getClass().getCanonicalName(), null);
+	// }
+	// } catch (CoreException e) {
+	// MylarStatusHandler.log(e, "Could not load tasklist listener extension");
+	//		}
+	//	}
 	
 	private static void readEditorFactory(IConfigurationElement element) {
 		try {

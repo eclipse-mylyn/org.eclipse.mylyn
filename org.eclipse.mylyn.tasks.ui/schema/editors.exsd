@@ -14,7 +14,7 @@
       <complexType>
          <sequence>
             <element ref="editorFactory" minOccurs="1" maxOccurs="unbounded"/>
-            <element ref="hyperlinkListener" minOccurs="1" maxOccurs="unbounded"/>
+            <element ref="hyperlinkDetector"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -65,7 +65,7 @@
       </complexType>
    </element>
 
-   <element name="hyperlinkListener">
+   <element name="hyperlinkDetector">
       <complexType>
          <attribute name="id" type="string">
             <annotation>
@@ -80,15 +80,8 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.ui.forms.events.IHyperlinkListener"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.jface.text.hyperlink.IHyperlinkDetector"/>
                </appInfo>
-            </annotation>
-         </attribute>
-         <attribute name="type" type="string" use="required">
-            <annotation>
-               <documentation>
-                  &quot;java&quot;, &quot;task&quot;, &quot;url&quot;
-               </documentation>
             </annotation>
          </attribute>
       </complexType>

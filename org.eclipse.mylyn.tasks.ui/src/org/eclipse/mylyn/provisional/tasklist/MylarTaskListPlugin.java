@@ -25,6 +25,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.mylar.internal.core.MylarPreferenceContstants;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskListAutoArchiveManager;
@@ -49,7 +50,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -81,7 +81,9 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	
 	private List<ITaskEditorFactory> taskEditors = new ArrayList<ITaskEditorFactory>();
 
-	private Map<String, IHyperlinkListener> taskHyperlinkListeners = new HashMap<String, IHyperlinkListener>();
+	//private Map<String, IHyperlinkListener> taskHyperlinkListeners = new HashMap<String, IHyperlinkListener>();
+	
+	private ArrayList<IHyperlinkDetector> hyperlinkDetectors = new ArrayList<IHyperlinkDetector>();
 	
 	private TaskListWriter taskListWriter;
 
@@ -414,8 +416,10 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, ""+(30 * 60 * 1000));
 		
-		store.setDefault(TaskListPreferenceConstants.ARCHIVE_AUTOMATICALLY, false);
+		store.setDefault(TaskListPreferenceConstants.ARCHIVE_AUTOMATICALLY, true);
+		store.setDefault(TaskListPreferenceConstants.ARCHIVE_FOLDER, MylarPlugin.getDefault().getDataDirectory());
 		store.setDefault(TaskListPreferenceConstants.ARCHIVE_SCHEDULE, 5);
+		store.setDefault(TaskListPreferenceConstants.ARCHIVE_MAXFILES, 10);
 		store.setDefault(TaskListPreferenceConstants.ARCHIVE_LAST, 0);
 		
 		store.setDefault(TaskListPreferenceConstants.FILTER_ARCHIVE_MODE, true);
@@ -564,24 +568,25 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		this.highlighter = highlighter;
 	}
 
-	public List<ITaskEditorFactory> getTaskEditors() {
+	public List<ITaskEditorFactory> getTaskEditorFactories() {
 		return taskEditors;
 	}
 
-	public Map<String, IHyperlinkListener> getTaskHyperlinkListeners() {
-		return taskHyperlinkListeners;
-	}
+	// public Map<String, IHyperlinkListener> getTaskHyperlinkListeners() {
+	// return taskHyperlinkListeners;
+	// }
 
+	// public void addTaskHyperlinkListener(String type, IHyperlinkListener
+	// listener) {
+	// if (listener != null)
+	// this.taskHyperlinkListeners.put(type, listener);
+	//}
+	
 	public void addContextEditor(ITaskEditorFactory contextEditor) {
 		if (contextEditor != null)
 			this.taskEditors.add(contextEditor);
 	}
 	
-	public void addTaskHyperlinkListener(String type, IHyperlinkListener listener) {
-		if (listener != null)
-			this.taskHyperlinkListeners.put(type, listener);
-	}
-
 	public TaskListSaveManager getTaskListSaveManager() {
 		return taskListSaveManager;
 	}
@@ -601,6 +606,16 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	public boolean isInitialized() {
 		return initialized;
 	}
+
+	public IHyperlinkDetector[] getTaskHyperlinkDetectors() {
+		return hyperlinkDetectors.toArray(new IHyperlinkDetector[1]);
+	}
+	
+	public void addTaskHyperlinkDetector(IHyperlinkDetector listener) {
+		if (listener != null)
+			this.hyperlinkDetectors.add(listener);
+	}
+	
 } 
 
 // /**

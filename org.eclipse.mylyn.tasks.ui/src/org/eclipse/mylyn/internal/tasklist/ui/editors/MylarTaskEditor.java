@@ -112,7 +112,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 			int index = 0;
 			index = createTaskSummaryPage();
 			int selectedIndex = index;
-			for (ITaskEditorFactory factory : MylarTaskListPlugin.getDefault().getTaskEditors()) {
+			for (ITaskEditorFactory factory : MylarTaskListPlugin.getDefault().getTaskEditorFactories()) {
 				if (factory.canCreateEditorFor(task)) {
 					try {
 						IEditorPart editor = factory.createEditor(this);
@@ -340,7 +340,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	@Override
 	protected void pageChange(int newPageIndex) {
 		// super.pageChange(newPageIndex);
-		for (ITaskEditorFactory factory : MylarTaskListPlugin.getDefault().getTaskEditors()) {
+		for (ITaskEditorFactory factory : MylarTaskListPlugin.getDefault().getTaskEditorFactories()) {
 			for (IEditorPart editor : editors) {
 				factory.notifyEditorActivationChange(editor);
 			}
