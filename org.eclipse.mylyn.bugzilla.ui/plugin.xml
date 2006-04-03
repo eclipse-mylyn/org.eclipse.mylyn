@@ -42,6 +42,9 @@
    <extension
          point="org.eclipse.mylar.tasklist.editors">
       <editorFactory class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaReportEditorFactory"/>
+      <hyperlinkDetector
+            class="org.eclipse.mylar.internal.bugzilla.ui.BugzillaTaskHyperlinkDetector"
+            id="org.eclipse.mylar.tasklist.hyperlinkdetector.bugzillatask"/>
    </extension>
    
    <extension 
@@ -124,6 +127,12 @@
             searchResultClass="org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchResult"
             id="org.eclipse.mylar.bugzilla.BugzillaSearchResultPage"/>
    </extension>
+<!--   <extension
+         point="org.eclipse.mylar.tasklist.editors">
+      <hyperlinkListener
+            class="org.eclipse.mylar.internal.bugzilla.ui.BugzillaTaskHyperlinkDetector"
+            type="org.eclipse.mylar.bugzilla.ui.hyperlinkListener1"/>
+   </extension>-->
 </plugin>
 
 <!--      

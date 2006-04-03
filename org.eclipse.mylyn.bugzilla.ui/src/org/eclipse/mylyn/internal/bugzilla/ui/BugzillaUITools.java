@@ -11,6 +11,8 @@
 package org.eclipse.mylar.internal.bugzilla.ui;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.security.auth.login.LoginException;
 
@@ -19,6 +21,9 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
@@ -218,6 +223,64 @@ public class BugzillaUITools {
 				}
 			}
 		}
+	}
+	
+	public static IHyperlink[] findBugHyperlinks(String repositoryUrl, int startOffset, int endOffset, String comment, int commentStart) {
+
+		Pattern p = Pattern.compile("^.*bug\\s+\\d+.*");
+		Matcher m = p.matcher(comment.toLowerCase().trim());
+		boolean b = m.matches();
+
+		p = Pattern.compile("^.*bug#\\s+\\d+.*");
+		m = p.matcher(comment.toLowerCase().trim());
+		boolean b2 = m.matches();
+
+		p = Pattern.compile("^.*bug\\s#\\d+.*");
+		m = p.matcher(comment.toLowerCase().trim());
+		boolean b3 = m.matches();
+
+		p = Pattern.compile("^.*bug#\\d+.*");
+		m = p.matcher(comment.toLowerCase().trim());
+		boolean b4 = m.matches();
+
+		// XXX walk forward from where we are
+		if (b || b2 || b3 || b4) {
+
+			int start = comment.toLowerCase().indexOf("bug");
+			int ahead = 4;
+			if (b2 || b3 || b4) {
+				int pound = comment.toLowerCase().indexOf("#", start);
+				ahead = pound - start + 1;
+			}
+			String endComment = comment.substring(start + ahead, comment.length());
+			endComment = endComment.trim();
+			int endCommentStart = comment.indexOf(endComment);
+
+			int end = comment.indexOf(" ", endCommentStart);
+			int end2 = comment.indexOf(":", endCommentStart);
+
+			if ((end2 < end && end2 != -1) || (end == -1 && end2 != -1)) {
+				end = end2;
+			}
+
+			if (end == -1)
+				end = comment.length();
+
+			try {
+				//int bugId = Integer.parseInt(comment.substring(endCommentStart, end).trim());
+				String bugId = comment.substring(endCommentStart, end).trim();
+				start += commentStart;
+				end += commentStart;
+
+				if (startOffset >= start && endOffset <= end) {
+					IRegion sregion = new Region(start, end - start);
+					return new IHyperlink[] { new BugzillaHyperLink(sregion, bugId, repositoryUrl) };
+				}
+			} catch (NumberFormatException e) {
+				return null;
+			}
+		}
+		return null;
 	}
 
 }

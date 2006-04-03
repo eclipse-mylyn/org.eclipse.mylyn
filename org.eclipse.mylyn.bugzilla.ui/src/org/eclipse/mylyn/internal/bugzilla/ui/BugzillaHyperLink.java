@@ -8,32 +8,32 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.bugs.java;
+package org.eclipse.mylar.internal.bugzilla.ui;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.OpenBugzillaReportJob;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskRepository;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IProgressService;
+import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 
 /**
  * @author Mik Kersten
  */
 public class BugzillaHyperLink implements IHyperlink {
 
+	private static final String SHOW_BUG_CGI = "/show_bug.cgi?id=";
+
 	private IRegion region;
 
-	private int id;
+	private String id;
 
-	public BugzillaHyperLink(IRegion nlsKeyRegion, int id) {
+	private String repositoryUrl;
+
+	public BugzillaHyperLink(IRegion nlsKeyRegion, String id, String repositoryUrl) {
 		this.region = nlsKeyRegion;
 		this.id = id;
+		this.repositoryUrl = repositoryUrl;
 	}
 
 	public IRegion getHyperlinkRegion() {
@@ -45,25 +45,31 @@ public class BugzillaHyperLink implements IHyperlink {
 	}
 
 	public String getHyperlinkText() {
-		return null;
+		return SHOW_BUG_CGI + id;
 	}
 
 	public void open() {
 		// TaskRepository repository =
 		// MylarTaskListPlugin.getRepositoryManager().getRepositoryForActiveTask(BugzillaPlugin.REPOSITORY_KIND);
-		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
-				BugzillaPlugin.REPOSITORY_KIND);
-		if (repository != null) {
-			OpenBugzillaReportJob job = new OpenBugzillaReportJob(repository.getUrl(), id);
-			IProgressService service = PlatformUI.getWorkbench().getProgressService();
-			try {
-				service.run(true, false, job);
-			} catch (Exception e) {
-				MylarStatusHandler.fail(e, "Could not open report", true);
-			}
+		// TaskRepository repository =
+		// MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
+		// BugzillaPlugin.REPOSITORY_KIND);
+		if (repositoryUrl != null) {
+			TaskUiUtil.openRepositoryTask(repositoryUrl, id, repositoryUrl + BugzillaRepositoryUtil.POST_ARGS_SHOW_BUG
+					+ id);
+			// OpenBugzillaReportJob job = new
+			// OpenBugzillaReportJob(repository.getUrl(), id);
+			// IProgressService service =
+			// PlatformUI.getWorkbench().getProgressService();
+			// try {
+			// service.run(true, false, job);
+			// } catch (Exception e) {
+			// MylarStatusHandler.fail(e, "Could not open report", true);
+			// }
 		} else {
 			MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 					"Could not determine repository for report");
 		}
 	}
+
 }

@@ -31,6 +31,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.bugzilla.core.Attribute;
@@ -398,12 +399,12 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		// Description Area
 		Composite descriptionComposite = toolkit.createComposite(section);
 		GridLayout descriptionLayout = new GridLayout();
-		descriptionLayout.numColumns = 4;
+		descriptionLayout.numColumns = 1;
 		descriptionComposite.setLayout(descriptionLayout);
 		// descriptionComposite.setBackground(background);
-		GridData descriptionData = new GridData(GridData.FILL_HORIZONTAL);
-		descriptionData.horizontalSpan = 1;
-		descriptionData.grabExcessVerticalSpace = false;
+		//GridData descriptionData = new GridData(GridData.FILL_HORIZONTAL);
+		//descriptionData.horizontalSpan = 1;
+		//descriptionData.grabExcessVerticalSpace = false;
 		// descriptionComposite.setLayoutData(descriptionData);
 		// End Description Area
 
@@ -413,19 +414,25 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		// HEADER);
 
 		// t.addListener(SWT.FocusIn, new DescriptionListener());
-		StyledText t = newLayout(descriptionComposite, 4, bug.getDescription(), VALUE);
-		t.setFont(COMMENT_FONT);
-		t.addListener(SWT.FocusIn, new DescriptionListener());
+		//StyledText t = newLayout(descriptionComposite, 4, bug.getDescription(), VALUE);
+		// t.setFont(COMMENT_FONT);
+		
+		TextViewer viewer = addRepositoryText(repository, descriptionComposite, bug.getDescription());
+		StyledText styledText = viewer.getTextWidget();
+		styledText.addListener(SWT.FocusIn, new DescriptionListener());
 
-		texts.add(textsindex, t);
-		textHash.put(bug.getDescription(), t);
+		texts.add(textsindex, styledText);
+		textHash.put(bug.getDescription(), styledText);
 		textsindex++;
 
 	}
 
+	/**
+	 * http://www.eclipse.org and http://www.eclipse.org/mylar and a
+	 */
 	@Override
 	protected void createCommentLayout(FormToolkit toolkit, final ScrolledForm form) {
-		
+
 		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText(LABEL_SECTION_COMMENTS);
 		section.setExpanded(true);
@@ -461,80 +468,83 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// ignore
-				
+
 			}
 
 			public void widgetSelected(SelectionEvent e) {
 				revealAllComments();
-				
-			}});
-		
+
+			}
+		});
+
 		StyledText styledText = null;
 		for (Iterator<Comment> it = bug.getComments().iterator(); it.hasNext();) {
 			final Comment comment = it.next();
-			
-			
-			ExpandableComposite ec = toolkit.createExpandableComposite(addCommentsComposite, 
+
+			ExpandableComposite ec = toolkit.createExpandableComposite(addCommentsComposite,
 					ExpandableComposite.TREE_NODE);
-			
-			if(!it.hasNext()) {
+
+			if (!it.hasNext()) {
 				ec.setExpanded(true);
 			}
-			
-			//comment.getNumber() + ": " + 
-			ec.setText(comment.getAuthorName() + ", "
-					+ simpleDateFormat.format(comment.getCreated()));
+
+			// comment.getNumber() + ": " +
+			ec.setText(comment.getAuthorName() + ", " + simpleDateFormat.format(comment.getCreated()));
 
 			ec.addExpansionListener(new ExpansionAdapter() {
 				public void expansionStateChanged(ExpansionEvent e) {
 					form.reflow(true);
 				}
 			});
-			
+
 			ec.setLayout(new GridLayout());
-			
+
 			Composite ecComposite = toolkit.createComposite(ec);
 			ecComposite.setLayout(new GridLayout());
 			ec.setClient(ecComposite);
 			toolkit.paintBordersFor(ec);
-			
 
-			
-			if(comment.hasAttachment()) {
-				
+			if (comment.hasAttachment()) {
+
 				Link attachmentLink = new Link(ecComposite, SWT.NONE);
-				
-				String attachmentHeader = " Attached: "+comment.getAttachmentDescription()+" [<a>view</a>]";
-//			    String result = MessageFormat.format(attachmentHeader, new String[] { node
-//			                    .getLabelText() });
+
+				String attachmentHeader = " Attached: " + comment.getAttachmentDescription() + " [<a>view</a>]";
+				// String result = MessageFormat.format(attachmentHeader, new
+				// String[] { node
+				// .getLabelText() });
 
 				attachmentLink.addSelectionListener(new SelectionAdapter() {
-			                /*
-			                 * (non-Javadoc)
-			                 * 
-			                 * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-			                 */
-			                public void widgetSelected(SelectionEvent e) {			                	
-			                	String address = repository.getUrl()+"/attachment.cgi?id="+comment.getAttachmentId()+"&amp;action=view";
-			                	TaskUiUtil.openUrl(address, address, address);
-			                	
-			                }
-			            });
-			        
+					/*
+					 * (non-Javadoc)
+					 * 
+					 * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+					 */
+					public void widgetSelected(SelectionEvent e) {
+						String address = repository.getUrl() + "/attachment.cgi?id=" + comment.getAttachmentId()
+								+ "&amp;action=view";
+						TaskUiUtil.openUrl(address, address, address);
+
+					}
+				});
+
 				attachmentLink.setText(attachmentHeader);
-				
+
 			}
 
-			styledText = newLayout(ecComposite, 1, comment.getText(), VALUE);
-			styledText.addListener(SWT.FocusIn, new CommentListener(comment));
-			styledText.setFont(COMMENT_FONT);		
+			// styledText = newLayout(ecComposite, 1, comment.getText(), VALUE);
+			// styledText.addListener(SWT.FocusIn, new
+			// CommentListener(comment));
+			// styledText.setFont(COMMENT_FONT);
+
+			TextViewer viewer = addRepositoryText(repository, ecComposite, comment.getText());
+			styledText = viewer.getTextWidget();
 
 			// code for outline
 			texts.add(textsindex, styledText);
 			textHash.put(comment, styledText);
 			textsindex++;
 		}
-		
+
 		Section sectionAdditionalComments = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR
 				| Section.TWISTIE);
 		sectionAdditionalComments.setText(LABEL_SECTION_NEW_COMMENT);
@@ -563,7 +573,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		toolkit.paintBordersFor(newCommentsComposite);
 		GridData addCommentsTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		// addCommentsTextData.horizontalSpan = 4;
-		//addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
+		// addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
 		addCommentsTextData.heightHint = DESCRIPTION_HEIGHT;
 		addCommentsTextData.grabExcessHorizontalSpace = true;
 
@@ -585,7 +595,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 		addCommentsTextBox = addCommentsText;
 
-//		this.createSeparatorSpace(addCommentsComposite);
+		// this.createSeparatorSpace(addCommentsComposite);
 		sectionAdditionalComments.setClient(newCommentsComposite);
 	}
 
