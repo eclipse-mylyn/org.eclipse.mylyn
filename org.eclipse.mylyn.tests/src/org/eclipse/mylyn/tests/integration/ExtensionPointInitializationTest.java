@@ -13,19 +13,25 @@ package org.eclipse.mylar.tests.integration;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.bugs.java.JavaStackTraceHyperlinkAdapter;
-import org.eclipse.mylar.internal.bugzilla.ui.editor.AbstractBugEditor;
+import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.ui.forms.events.IHyperlinkListener;
 
 /**
  * @author Mik Kersten
  */
 public class ExtensionPointInitializationTest extends TestCase {
 
+//	public void testBugzillaHyperlinkListener() {
+//		IHyperlinkListener listener = MylarTaskListPlugin.getDefault().getTaskHyperlinkListeners().get(AbstractBugEditor.HYPERLINK_TYPE_JAVA);
+//		assertTrue(listener instanceof JavaStackTraceHyperlinkAdapter);
+//		listener = MylarTaskListPlugin.getDefault().getTaskHyperlinkListeners().get(AbstractBugEditor.HYPERLINK_TYPE_TASK);
+//		assertTrue(listener instanceof TaskHyperlinkAdapter);
+//	}
+	
 	public void testBugzillaHyperlinkDetector() {
-		IHyperlinkListener listener = MylarTaskListPlugin.getDefault().getTaskHyperlinkListeners().get(AbstractBugEditor.HYPERLINK_TYPE_JAVA);
-		assertTrue(listener instanceof JavaStackTraceHyperlinkAdapter);
+		IHyperlinkDetector[] detectors = MylarTaskListPlugin.getDefault().getTaskHyperlinkDetectors();		
+		assertNotNull(detectors);
+		assertTrue(detectors.length > 0);
 	}
 	
 }
