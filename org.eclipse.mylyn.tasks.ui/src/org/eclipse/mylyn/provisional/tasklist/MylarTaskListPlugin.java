@@ -58,7 +58,6 @@ import org.osgi.framework.BundleContext;
  * 
  * TODO: this class is in serious need of refactoring
  */
-
 public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	private static final int NOTIFICATION_DELAY = 5000;
 
