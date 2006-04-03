@@ -14,7 +14,11 @@
 		<li><a href="#install-failure">Why does Mylar fail to install or update?</a></li>
 		<li><a href="#tasklist-blank">Why did my tasks disappear?</a></li>
 	</ul>
-	<p><b>Tasks and Repository Connectors</b></p>
+	<p><b>Working with Context</b></p>
+<ul>
+	<li><a href="#context-ui-config">Which Focused UI features can I turn off?</a></li>
+</ul>
+<p><b>Tasks and Repository Connectors</b></p>
 	<ul>
 		<li><a href="#repositories-unsupported">What if Mylar doesn't 
 		support my task/bug/issue tracker?</a></li>
@@ -230,6 +234,61 @@ it will get overwritten on any modification.</p>
 	an previous tasklist.xml file you should first close Eclipse.</p>
 	<p>
 	<img border="0" src="images/faq/tasklist-backup.gif" width="525" height="310"></p>
+
+	<hr>
+
+
+<h3>&nbsp;</h3>
+<h3><a name="context-ui-config">Which Focused UI features can I turn off?</a></h3>
+	<p>
+	All of them.&nbsp; When no task is active neither are any of Mylar's 
+	features.&nbsp; When working with task contexts Mylar's Focused UI features 
+	are all optional and in general configurable.&nbsp; The following table 
+	summarizes how the key features can be toggled.&nbsp; Additional 
+	configuration options are under the Mylar and General -&gt; Appearance 
+	preference pages.</p>
+	<table border="0" cellpadding="2" style="border-collapse: collapse" width="100%" id="table1" cellspacing="2">
+		<tr>
+			<td align="center"><b>UI Mechanism</b></td>
+			<td align="center"><b>Example/description</b></td>
+			<td align="center"><b>Toggle using</b></td>
+		</tr>
+		<tr>
+			<td align="left" valign="top">Interest filtering</td>
+			<td align="left" valign="top">Package Explorer</td>
+			<td align="left" valign="top">Apply Mylar button on view toolbar</td>
+		</tr>
+		<tr>
+			<td align="left" valign="top">Interest decoration</td>
+			<td align="left" valign="top">Bolding of landmark elements</td>
+			<td align="left" valign="top">Preferences -&gt; General -&gt; Appearance 
+			-&gt; Label Decoration</td>
+		</tr>
+		<tr>
+			<td align="left" valign="top">Content assist</td>
+			<td align="left" valign="top">Ranking of interesting elements</td>
+			<td align="left" valign="top">Eclipse 3.2: Java -&gt; Editor -&gt; Content 
+			Assist -&gt; Work in Progress -&gt; turn off Mylar, turn on Java<br>
+			Eclipse 3.1: set the Java editor to be default for .java, not the 
+			Mylar Java editor</td>
+		</tr>
+		<tr>
+			<td align="left" valign="top">Active change sets</td>
+			<td align="left" valign="top">Grouping of changes by tasks</td>
+			<td align="left" valign="top">Preferences -&gt; Mylar -&gt; Team</td>
+		</tr>
+		<tr>
+			<td align="left" valign="top">Editor management</td>
+			<td align="left" valign="top">Auto opening/closing of editors</td>
+			<td align="left" valign="top">Preferences -&gt; Mylar -&gt; Editor 
+			Management</td>
+		</tr>
+		<tr>
+			<td align="left" valign="top">Active views</td>
+			<td align="left" valign="top">Active Search and Hierarchy</td>
+			<td align="left" valign="top">Only on if view is active</td>
+		</tr>
+	</table>
 
 	<hr>
 
