@@ -292,12 +292,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					initialized = true;
 					migrateHandlesToRepositorySupport();
 
-					if (getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP)) {
-						for (AbstractRepositoryConnector repositoryClient : taskRepositoryManager.getRepositoryConnectors()) {
-							repositoryClient.synchronize();
-						}
-					}
-
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(SHELL_LISTENER);
 					
 					taskListNotificationManager = new TaskListNotificationManager();
@@ -318,6 +312,12 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					getMylarCorePrefs().addPropertyChangeListener(taskListRefreshManager);
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addDisposeListener(
 							taskListSaveManager);
+					
+					if (getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP)) {
+						for (AbstractRepositoryConnector repositoryClient : taskRepositoryManager.getRepositoryConnectors()) {
+							repositoryClient.synchronize();
+						}
+					}
 				} catch (Exception e) {
 					MylarStatusHandler.fail(e, "Task List initialization failed", true);
 				}
