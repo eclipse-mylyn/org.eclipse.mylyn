@@ -302,7 +302,7 @@ public class BugzillaSearchEngine {
 		// if we haven't collected any serach results and we suspect a bad
 		// login, we assume it was a bad login
 		if (numCollected == 0 && possibleBadLogin) {
-			throw new LoginException(IBugzillaConstants.MESSAGE_LOGIN_FAILURE + " for repository " + repository.getUrl());
+			throw new LoginException(IBugzillaConstants.MESSAGE_LOGIN_FAILURE + " for url " + urlString);
 		}
 
 		if (status == null)
