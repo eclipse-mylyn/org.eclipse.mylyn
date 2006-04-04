@@ -11,26 +11,17 @@
 
 package org.eclipse.mylar.tests.integration;
 
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.monitor.MylarMonitorPlugin;
+import org.eclipse.mylar.internal.monitor.MylarMonitorPreferenceConstants;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import junit.framework.TestCase;
 
 /**
  * @author Mik Kersten
  */
-public class AllIntegrationTests {
-	
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tests.integration");
+public class DefaultPreferenceConfigTest extends TestCase {
 
-		MylarStatusHandler.setDumpErrors(true);
-
-		// $JUnit-BEGIN$
-		suite.addTestSuite(DefaultPreferenceConfigTest.class);
-		suite.addTestSuite(ExtensionPointInitializationTest.class);
-		suite.addTestSuite(ChangeDataDirTest.class);
-		// $JUnit-END$
-		return suite;
+	public void testMonitorPreferences() {
+		assertTrue(MylarMonitorPlugin.getPrefs().getBoolean(MylarMonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE));
 	}
 }
