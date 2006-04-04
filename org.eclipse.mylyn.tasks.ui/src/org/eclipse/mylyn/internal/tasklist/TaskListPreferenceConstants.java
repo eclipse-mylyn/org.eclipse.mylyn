@@ -62,14 +62,14 @@ public class TaskListPreferenceConstants {
 
 	public static final String NOTIFICATIONS_ENABLED = "org.eclipse.mylar.tasklist.notifications.enabled";
 
-	public static final String ARCHIVE_AUTOMATICALLY = "org.eclipse.mylar.tasklist.archive.enabled";
+	public static final String BACKUP_AUTOMATICALLY = "org.eclipse.mylar.tasklist.backup.enabled";
 
-	public static final String ARCHIVE_SCHEDULE = "org.eclipse.mylar.tasklist.archive.schedule";
+	public static final String BACKUP_SCHEDULE = "org.eclipse.mylar.tasklist.backup.schedule";
 
-	public static final String ARCHIVE_FOLDER = "org.eclipse.mylar.tasklist.archive.folder";
+	public static final String BACKUP_FOLDER = "org.eclipse.mylar.tasklist.backup.folder";
 
-	public static final String ARCHIVE_LAST = "org.eclipse.mylar.tasklist.archive.lastarchived";
+	public static final String BACKUP_LAST = "org.eclipse.mylar.tasklist.backup.lastarchived";
 
-	public static final String ARCHIVE_MAXFILES = "org.eclipse.mylar.tasklist.archive.maxfiles";
+	public static final String BACKUP_MAXFILES = "org.eclipse.mylar.tasklist.backup.maxfiles";
 	
 }

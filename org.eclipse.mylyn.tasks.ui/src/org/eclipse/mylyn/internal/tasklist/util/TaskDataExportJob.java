@@ -103,14 +103,14 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 			File sourceTaskListFile = new File(sourceTaskListPath);
 			if (sourceTaskListFile.exists()) {
 				destTaskListFile = new File(destinationDirectory + File.separator
-						+ MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE);
-				if (destTaskListFile.exists()) {
-					destTaskListFile.delete();
-				}
+						+ MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE);				
 
 				if (zip) {
 					filesToZip.add(sourceTaskListFile);
-				} else {
+				} else if(!destTaskListFile.equals(sourceTaskListFile)) {
+					if (destTaskListFile.exists()) {
+						destTaskListFile.delete();
+					}
 					if (!copy(sourceTaskListFile, destTaskListFile)) {
 						MylarStatusHandler.fail(new Exception("Export Exception"), "Could not export task list file.",
 								false);
@@ -134,13 +134,14 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 					destActivationHistoryFile = new File(destinationDirectory + File.separator
 							+ MylarContextManager.CONTEXT_HISTORY_FILE_NAME
 							+ MylarContextManager.CONTEXT_FILE_EXTENSION);
-					if (destActivationHistoryFile.exists()) {
-						destActivationHistoryFile.delete();
-					}
+					
 
 					if (zip) {
 						filesToZip.add(sourceActivationHistoryFile);
-					} else {
+					} else if(!destActivationHistoryFile.equals(sourceActivationHistoryFile)){
+						if (destActivationHistoryFile.exists()) {
+							destActivationHistoryFile.delete();
+						}
 						copy(sourceActivationHistoryFile, destActivationHistoryFile);
 						monitor.worked(1);
 					}
@@ -163,17 +164,18 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 				File sourceTaskFile = MylarPlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
 
 				File destTaskFile = new File(destinationDirectory + File.separator + sourceTaskFile.getName());
-				if (destTaskFile.exists()) {
-					destTaskFile.delete();
-				}
+				
 
 				if (zip) {
 					if (!filesToZipMap.containsKey(task.getHandleIdentifier())) {
 						filesToZip.add(sourceTaskFile);
 						filesToZipMap.put(task.getHandleIdentifier(), null);
 					}
-				} else {
-					if (!copy(sourceTaskFile, destTaskFile) && !errorDisplayed) {
+				} else if(!sourceTaskFile.equals(destTaskFile)) {
+					if (destTaskFile.exists()) {
+						destTaskFile.delete();
+					}
+					if (!copy(sourceTaskFile, destTaskFile) && !errorDisplayed) {						
 						MylarStatusHandler.fail(new Exception("Export Exception: " + sourceTaskFile.getPath() + " -> "
 								+ destTaskFile.getPath()), "Could not export one or more task context files.", true);
 						errorDisplayed = true;

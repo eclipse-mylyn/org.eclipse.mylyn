@@ -36,6 +36,12 @@ import org.eclipse.swt.widgets.Text;
  */
 public class TaskDataExportWizardPage extends WizardPage {
 
+	private static final String LABEL_TASK_LIST = "Task List";
+
+	private static final String LABEL_TASK_CONTEXTS = "Task Contexts";
+
+	private static final String LABEL_ACTIVITY_HISTORY = "Task Activity History";
+
 	protected final static String PAGE_TITLE = "Export Mylar Task Data";
 
 	public final static String PAGE_NAME = PAGE_TITLE;
@@ -115,9 +121,9 @@ public class TaskDataExportWizardPage extends WizardPage {
 		group.setLayoutData(gridData);
 		group.setText("Select data to export:");
 
-		taskListCheckBox = createCheckBox(group, "Task List");
-		taskActivationHistoryCheckBox = createCheckBox(group, "Task Activation History");
-		taskContextsCheckBox = createCheckBox(group, "Task Contexts");
+		taskListCheckBox = createCheckBox(group, LABEL_TASK_LIST);
+		taskActivationHistoryCheckBox = createCheckBox(group, LABEL_ACTIVITY_HISTORY);
+		taskContextsCheckBox = createCheckBox(group, LABEL_TASK_CONTEXTS);
 	}
 
 	/**

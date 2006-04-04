@@ -46,7 +46,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 	 */
 	private final static String SETTINGS_SECTION = "org.eclipse.mylar.tasklist.ui.exportWizard";
 
-	private final static String ZIP_FILE_PREFIX = "mylardata";
+	public final static String ZIP_FILE_PREFIX = "mylardata";
 
 	private final static String ZIP_FILE_EXTENSION = ".zip";
 

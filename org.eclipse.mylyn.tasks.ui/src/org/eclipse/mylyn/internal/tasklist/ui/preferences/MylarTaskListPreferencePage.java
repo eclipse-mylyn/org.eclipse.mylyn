@@ -10,12 +10,13 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasklist.ui.preferences;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.mylar.internal.tasklist.TaskListAutoArchiveManager;
+import org.eclipse.mylar.internal.tasklist.TaskListBackupManager;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -33,6 +34,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -46,9 +48,25 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  */
 public class MylarTaskListPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
+	private static final String FOLDER_SELECTION_MESSAGE = "Specify the folder for tasks";
+
+	private static final String TITLE_FOLDER_SELECTION = "Folder Selection";
+
+	private static final String FORWARDSLASH = "/";
+
+	private static final String BACKSLASH_MULTI = "\\\\";
+
+	private static final int SPINNER_MAX_BACKUPS = 100;
+
+	private static final int SPINNER_MIN_BACKUPS = 1;
+
+	private static final String LABEL_BACKUP_ERROR = "Backup Error";
+
+	private static final String GROUP_LABEL_BACKUP = "Backup";
+
 	private static final String LABEL_LAST_ARCHIVED_NEVER = "never";
 
-	private static final String LAST_ARCHIVED_ON_LABEL = "Last archived on: ";
+	private static final String LAST_ARCHIVED_ON_LABEL = "   Last archived: ";
 
 	private Text taskDirectoryText = null;
 
@@ -56,17 +74,19 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 
 	private Button browse = null;
 
-	private Button archiveNow = null;
+	private Button backupNow = null;
 
 	private Button notificationEnabledButton = null;
 
-	private Button archiveAutomaticallyButton;
+	private Button backupAutomaticallyButton;
 
-	private Text archiveScheduleTimeText;
+	private Text backkupScheduleTimeText;
 
-	private Text archiveFolderText;
+	private Text backupFolderText;
 
 	private Label lastUpdate;
+
+	private Spinner maxFilesSpinner;
 
 	public MylarTaskListPreferencePage() {
 		super();
@@ -86,7 +106,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		createCreationGroup(container);
 //		createTaskActivityGroup(container);
 		createNotificationsGroup(container);
-		createTaskArchiveScheduleGroup(container);
+		createTaskBackupScheduleGroup(container);
 		createTaskDirectoryControl(container);
 		updateRefreshGroupEnablements();
 		return container;
@@ -99,7 +119,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 	@Override
 	public boolean performOk() {
 		String taskDirectory = taskDirectoryText.getText();
-		taskDirectory = taskDirectory.replaceAll("\\\\", "/");
+		taskDirectory = taskDirectory.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
 		if (!taskDirectory.equals(MylarPlugin.getDefault().getDataDirectory())) {
 			// Order matters:
 			MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskListAndContexts();
@@ -114,11 +134,11 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		getPreferenceStore().setValue(TaskListPreferenceConstants.NOTIFICATIONS_ENABLED,
 				notificationEnabledButton.getSelection());
 
-		getPreferenceStore().setValue(TaskListPreferenceConstants.ARCHIVE_AUTOMATICALLY,
-				archiveAutomaticallyButton.getSelection());
-		getPreferenceStore().setValue(TaskListPreferenceConstants.ARCHIVE_SCHEDULE, archiveScheduleTimeText.getText());
-		getPreferenceStore().setValue(TaskListPreferenceConstants.ARCHIVE_FOLDER, archiveFolderText.getText());
-
+		getPreferenceStore().setValue(TaskListPreferenceConstants.BACKUP_AUTOMATICALLY,
+				backupAutomaticallyButton.getSelection());
+		getPreferenceStore().setValue(TaskListPreferenceConstants.BACKUP_SCHEDULE, backkupScheduleTimeText.getText());
+		getPreferenceStore().setValue(TaskListPreferenceConstants.BACKUP_FOLDER, backupFolderText.getText());
+		getPreferenceStore().setValue(TaskListPreferenceConstants.BACKUP_MAXFILES, maxFilesSpinner.getSelection());
 		return true;
 	}
 
@@ -132,11 +152,11 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		notificationEnabledButton.setSelection(getPreferenceStore().getBoolean(
 				TaskListPreferenceConstants.NOTIFICATIONS_ENABLED));
 
-		archiveAutomaticallyButton.setSelection(getPreferenceStore().getBoolean(
-				TaskListPreferenceConstants.ARCHIVE_AUTOMATICALLY));
-		archiveScheduleTimeText.setText(getPreferenceStore().getString(TaskListPreferenceConstants.ARCHIVE_SCHEDULE));
-		archiveFolderText.setText(getPreferenceStore().getString(TaskListPreferenceConstants.ARCHIVE_FOLDER));
-
+		backupAutomaticallyButton.setSelection(getPreferenceStore().getBoolean(
+				TaskListPreferenceConstants.BACKUP_AUTOMATICALLY));
+		backkupScheduleTimeText.setText(getPreferenceStore().getString(TaskListPreferenceConstants.BACKUP_SCHEDULE));
+		backupFolderText.setText(getPreferenceStore().getString(TaskListPreferenceConstants.BACKUP_FOLDER));
+		maxFilesSpinner.setSelection(getPreferenceStore().getInt(TaskListPreferenceConstants.BACKUP_MAXFILES));
 		return true;
 	}
 
@@ -151,31 +171,32 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		notificationEnabledButton.setSelection(getPreferenceStore().getDefaultBoolean(
 				TaskListPreferenceConstants.NOTIFICATIONS_ENABLED));
 
-		archiveAutomaticallyButton.setSelection(getPreferenceStore().getDefaultBoolean(
-				TaskListPreferenceConstants.ARCHIVE_AUTOMATICALLY));
-		archiveScheduleTimeText.setText(getPreferenceStore().getDefaultString(
-				TaskListPreferenceConstants.ARCHIVE_SCHEDULE));
-		archiveFolderText.setText(getPreferenceStore().getDefaultString(TaskListPreferenceConstants.ARCHIVE_FOLDER));
+		backupAutomaticallyButton.setSelection(getPreferenceStore().getDefaultBoolean(
+				TaskListPreferenceConstants.BACKUP_AUTOMATICALLY));
+		backkupScheduleTimeText.setText(getPreferenceStore().getDefaultString(
+				TaskListPreferenceConstants.BACKUP_SCHEDULE));
+		backupFolderText.setText(getPreferenceStore().getDefaultString(TaskListPreferenceConstants.BACKUP_FOLDER));
+		maxFilesSpinner.setSelection(getPreferenceStore().getDefaultInt(TaskListPreferenceConstants.BACKUP_MAXFILES));
 		updateRefreshGroupEnablements();
 	}
 
-	private void createTaskArchiveScheduleGroup(Composite container) {
+	private void createTaskBackupScheduleGroup(Composite container) {
 		Group group = new Group(container, SWT.SHADOW_ETCHED_IN);
-		group.setText("Auto Archive");
+		group.setText(GROUP_LABEL_BACKUP);
 		group.setLayout(new GridLayout(3, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		Composite archiveTop = new Composite(group, SWT.NONE);
-		archiveTop.setLayout(new GridLayout(3, false));
+		Composite backupTop = new Composite(group, SWT.NONE);
+		backupTop.setLayout(new GridLayout(3, false));
 		GridData archiveData = new GridData();
 		archiveData.horizontalSpan = 3;
-		archiveTop.setLayoutData(archiveData);
+		backupTop.setLayoutData(archiveData);
 
-		archiveAutomaticallyButton = new Button(archiveTop, SWT.CHECK);
-		archiveAutomaticallyButton.setText("Automatically archive tasks every");
-		archiveAutomaticallyButton.setSelection(getPreferenceStore().getBoolean(
-				TaskListPreferenceConstants.ARCHIVE_AUTOMATICALLY));
-		archiveAutomaticallyButton.addSelectionListener(new SelectionListener() {
+		backupAutomaticallyButton = new Button(backupTop, SWT.CHECK);
+		backupAutomaticallyButton.setText("Automatically backup tasks every");
+		backupAutomaticallyButton.setSelection(getPreferenceStore().getBoolean(
+				TaskListPreferenceConstants.BACKUP_AUTOMATICALLY));
+		backupAutomaticallyButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				updateRefreshGroupEnablements();
 			}
@@ -185,14 +206,14 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		});
 
 		{
-			archiveScheduleTimeText = new Text(archiveTop, SWT.BORDER | SWT.RIGHT);
+			backkupScheduleTimeText = new Text(backupTop, SWT.BORDER | SWT.RIGHT);
 			final GridData gridData_1 = new GridData();
 			gridData_1.widthHint = 15;
-			archiveScheduleTimeText.setLayoutData(gridData_1);
+			backkupScheduleTimeText.setLayoutData(gridData_1);
 
-			archiveScheduleTimeText.setText(""
-					+ getPreferenceStore().getInt(TaskListPreferenceConstants.ARCHIVE_SCHEDULE));
-			archiveScheduleTimeText.addModifyListener(new ModifyListener() {
+			backkupScheduleTimeText.setText(""
+					+ getPreferenceStore().getInt(TaskListPreferenceConstants.BACKUP_SCHEDULE));
+			backkupScheduleTimeText.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
 					updateRefreshGroupEnablements();
 				}
@@ -200,19 +221,19 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 
 		}
 
-		Label label = new Label(archiveTop, SWT.NONE);
+		Label label = new Label(backupTop, SWT.NONE);
 		label.setText("days");
 
 		label = new Label(group, SWT.LEFT);
 		label.setText("to");
 
-		String archiveDirectory = getPreferenceStore().getString(TaskListPreferenceConstants.ARCHIVE_FOLDER);
-		archiveDirectory = archiveDirectory.replaceAll("\\\\", "/");
-		archiveFolderText = new Text(group, SWT.BORDER);
+		String backupDirectory = getPreferenceStore().getString(TaskListPreferenceConstants.BACKUP_FOLDER);
+		backupDirectory = backupDirectory.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
+		backupFolderText = new Text(group, SWT.BORDER);
 
-		archiveFolderText.setText(archiveDirectory);
-		archiveFolderText.setEditable(false);
-		archiveFolderText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		backupFolderText.setText(backupDirectory);
+		backupFolderText.setEditable(false);
+		backupFolderText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		browse = new Button(group, SWT.TRAIL);
 		browse.setText("Browse...");
@@ -221,51 +242,65 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				DirectoryDialog dialog = new DirectoryDialog(getShell());
-				dialog.setText("Folder Selection");
-				dialog.setMessage("Specify the archive output folder");
-				String dir = archiveFolderText.getText();
-				dir = dir.replaceAll("\\\\", "/");
+				dialog.setText(TITLE_FOLDER_SELECTION);
+				dialog.setMessage("Specify the backup output folder");
+				String dir = backupFolderText.getText();
+				dir = dir.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
 				dialog.setFilterPath(dir);
 				dir = dialog.open();
 				if (dir == null || dir.equals(""))
 					return;
-				archiveFolderText.setText(dir);
+				backupFolderText.setText(dir);
 				updateRefreshGroupEnablements();
 			}
 		});
 
-		final Label spacer = new Label(group, SWT.NONE);
-		GridData spacerData = new GridData();
-		spacerData.horizontalSpan = 1;
-		spacer.setLayoutData(spacerData);
+		
+		Composite extrasComp = new Composite(group, SWT.NONE);
+		extrasComp.setLayout(new GridLayout(4, false));
+		GridData extrasGD = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		extrasGD.horizontalSpan = 3;
+		extrasComp.setLayoutData(extrasGD);
+		
+		final Label maxFiles = new Label(extrasComp, SWT.NONE);
+		maxFiles.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
+		maxFiles.setText("Max Backups");		
 
-		lastUpdate = new Label(group, SWT.NONE);
+		maxFilesSpinner = new Spinner(extrasComp, SWT.NONE);		
+		maxFilesSpinner.setValues(getPreferenceStore().getInt(TaskListPreferenceConstants.BACKUP_MAXFILES), SPINNER_MIN_BACKUPS, SPINNER_MAX_BACKUPS, 0, 1, 1);
+		
+		
+		lastUpdate = new Label(extrasComp, SWT.NONE);
 		lastUpdate.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		setLastArchived();
+		setLastBackup();
 
-		archiveNow = new Button(group, SWT.NONE);
-		archiveNow.setText("Archive Now");
-		archiveNow.addSelectionListener(new SelectionAdapter() {
+		backupNow = new Button(extrasComp, SWT.NONE);
+		backupNow.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+		backupNow.setText("Backup Now");
+		backupNow.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					getPreferenceStore().setValue(TaskListPreferenceConstants.ARCHIVE_FOLDER,
-							archiveFolderText.getText());
-					TaskListAutoArchiveManager.archiveNow();
-					setLastArchived();
+					getPreferenceStore().setValue(TaskListPreferenceConstants.BACKUP_FOLDER,
+							backupFolderText.getText());
+					TaskListBackupManager.backupNow();
+					setLastBackup();
 				} catch (InvocationTargetException ex) {
-					MessageDialog.openError(getShell(), "Archive Error",
-							TaskListAutoArchiveManager.ARCHIVE_FAILURE_MESSAGE + ex.getCause().getMessage());
+					MessageDialog.openError(getShell(), LABEL_BACKUP_ERROR,
+							TaskListBackupManager.BACKUP_FAILURE_MESSAGE + ex.getCause().getMessage());
+				} catch (IOException ex) {
+					MessageDialog.openError(getShell(), LABEL_BACKUP_ERROR,
+							TaskListBackupManager.BACKUP_FAILURE_MESSAGE + ex.getCause().getMessage());
 				}
 			}
 		});
 
 	}
 
-	private void setLastArchived() {
-		long lastExported = getPreferenceStore().getLong(TaskListPreferenceConstants.ARCHIVE_LAST);
+	private void setLastBackup() {
+		long lastExported = getPreferenceStore().getLong(TaskListPreferenceConstants.BACKUP_LAST);
 		String dateText = "";
 		if (lastExported > 0) {
 			dateText = DateFormat.getDateInstance(DateFormat.MEDIUM).format(lastExported);
@@ -284,7 +319,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		String taskDirectory = MylarPlugin.getDefault().getDataDirectory();
 		// String taskDirectory =
 		// getPreferenceStore().getString(MylarPlugin.PREF_DATA_DIR);
-		taskDirectory = taskDirectory.replaceAll("\\\\", "/");
+		taskDirectory = taskDirectory.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
 		taskDirectoryText = new Text(taskDirComposite, SWT.BORDER);
 		taskDirectoryText.setText(taskDirectory);
 		taskDirectoryText.setEditable(false);
@@ -297,10 +332,10 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				DirectoryDialog dialog = new DirectoryDialog(getShell());
-				dialog.setText("Folder Selection");
-				dialog.setMessage("Specify the folder for tasks");
+				dialog.setText(TITLE_FOLDER_SELECTION);
+				dialog.setMessage(FOLDER_SELECTION_MESSAGE);
 				String dir = taskDirectoryText.getText();
-				dir = dir.replaceAll("\\\\", "/");
+				dir = dir.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
 				dialog.setFilterPath(dir);
 
 				dir = dialog.open();
@@ -405,13 +440,13 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 	}
 
 	public void updateRefreshGroupEnablements() {
-		if (archiveAutomaticallyButton.getSelection()) {
+		if (backupAutomaticallyButton.getSelection()) {
 			try {
-				long number = Integer.parseInt(archiveScheduleTimeText.getText());
+				long number = Integer.parseInt(backkupScheduleTimeText.getText());
 				if (number <= 0) {
 					this.setErrorMessage("Archive schedule time must be > 0");
 					this.setValid(false);
-				} else if (archiveFolderText.getText() == "") {
+				} else if (backupFolderText.getText() == "") {
 					this.setErrorMessage("Archive destination folder must be specified");
 					this.setValid(false);
 				} else {
@@ -426,8 +461,8 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 			this.setValid(true);
 			this.setErrorMessage(null);
 		}
-		archiveScheduleTimeText.setEnabled(archiveAutomaticallyButton.getSelection());
-		archiveNow.setEnabled(archiveFolderText.getText() != "");
+		backkupScheduleTimeText.setEnabled(backupAutomaticallyButton.getSelection());
+		backupNow.setEnabled(backupFolderText.getText() != "");
 	}
 
 }
