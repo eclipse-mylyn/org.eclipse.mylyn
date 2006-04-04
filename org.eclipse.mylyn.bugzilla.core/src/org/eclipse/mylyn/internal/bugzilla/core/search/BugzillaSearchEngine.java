@@ -301,8 +301,9 @@ public class BugzillaSearchEngine {
 
 		// if we haven't collected any serach results and we suspect a bad
 		// login, we assume it was a bad login
-		if (numCollected == 0 && possibleBadLogin)
-			throw new LoginException(IBugzillaConstants.MESSAGE_LOGIN_FAILURE);
+		if (numCollected == 0 && possibleBadLogin) {
+			throw new LoginException(IBugzillaConstants.MESSAGE_LOGIN_FAILURE + " for repository " + repository.getUrl());
+		}
 
 		if (status == null)
 			return new Status(IStatus.OK, NewSearchUI.PLUGIN_ID, IStatus.OK, "", null);
