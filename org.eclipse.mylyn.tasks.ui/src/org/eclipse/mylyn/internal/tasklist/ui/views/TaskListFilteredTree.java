@@ -11,6 +11,10 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.views;
 
+import java.lang.reflect.Field;
+
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
@@ -41,20 +45,23 @@ public class TaskListFilteredTree extends FilteredTree {
 	
 //	private static final String LABEL_NO_ACTIVE = "     <no active task>";
 		
-//	private Job refreshJob;
+	private Job refreshJob;
 	
 	private Hyperlink activeTaskLabel;
 	
+	/**
+	 * HACK: using reflectoin to gain access
+	 */
 	public TaskListFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
 		super(parent, treeStyle, filter);
-//		Field refreshField;
-//		try {
-//			refreshField = FilteredTree.class.getDeclaredField("refreshJob");
-//			refreshField.setAccessible(true);
-//			refreshJob = (Job)refreshField.get(this);
-//		} catch (Exception e) {
-//			MylarStatusHandler.fail(e, "Could not get refresh job", false);
-//		}
+		Field refreshField;
+		try {
+			refreshField = FilteredTree.class.getDeclaredField("refreshJob");
+			refreshField.setAccessible(true);
+			refreshJob = (Job)refreshField.get(this);
+		} catch (Exception e) {
+			MylarStatusHandler.fail(e, "Could not get refresh job", false);
+		}
 	}
 	
 	@Override
@@ -118,17 +125,21 @@ public class TaskListFilteredTree extends FilteredTree {
 		return container;
 	}
 
-    protected void textChanged() {
-    	super.textChanged();
-//    	textChanged(DELAY_RE	`FRESH);
-    	//refreshJob.schedule(200);
-    }
-    
-//    public void textChanged(int delay) {
-//    	if (refreshJob != null) {
-//    		refreshJob.schedule(delay);
-//    	} 
+//    protected void textChanged() {
+//    	super.textChanged();
 //    }
+    
+    protected void textChanged() {
+    	if (refreshJob == null) return;
+    	refreshJob.cancel();
+    	int MAX_REFRESH_DELAY = 800;
+    	int refreshDelay = 0;
+    	int textLength = filterText.getText().length();
+        if (textLength > 0) {
+                refreshDelay = MAX_REFRESH_DELAY / textLength;
+        } 
+        refreshJob.schedule(refreshDelay); 
+    }
 
     public void indicateActiveTask(ITask task) {
     	String text = task.getDescription();
