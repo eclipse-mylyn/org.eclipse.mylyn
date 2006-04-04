@@ -28,7 +28,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.mylar.internal.core.MylarPreferenceContstants;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.TaskListAutoArchiveManager;
+import org.eclipse.mylar.internal.tasklist.TaskListBackupManager;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.TaskListRefreshManager;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
@@ -59,7 +59,20 @@ import org.osgi.framework.BundleContext;
  * TODO: this class is in serious need of refactoring
  */
 public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
+	
+	// TODO: move constants
+	
+	private static final String DEFAULT_BACKUP_FOLDER_NAME = "backup";
+
+	private static final char DEFAULT_PATH_SEPARATOR = '/';
+	
 	private static final int NOTIFICATION_DELAY = 5000;
+	
+	public static final String FILE_EXTENSION = ".xml";
+
+	public static final String DEFAULT_TASK_LIST_FILE = "tasklist" + FILE_EXTENSION;
+
+	public static final String TITLE_DIALOG = "Mylar Information";
 
 	public static final String PLUGIN_ID = "org.eclipse.mylar.tasklist";
 
@@ -77,21 +90,13 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	
 	private TaskListNotificationManager taskListNotificationManager;
 	
-	private TaskListAutoArchiveManager taskListArchiveManager;
+	private TaskListBackupManager taskListArchiveManager;
 	
 	private List<ITaskEditorFactory> taskEditors = new ArrayList<ITaskEditorFactory>();
-
-	//private Map<String, IHyperlinkListener> taskHyperlinkListeners = new HashMap<String, IHyperlinkListener>();
 	
 	private ArrayList<IHyperlinkDetector> hyperlinkDetectors = new ArrayList<IHyperlinkDetector>();
 	
 	private TaskListWriter taskListWriter;
-
-	public static final String FILE_EXTENSION = ".xml";
-
-	public static final String DEFAULT_TASK_LIST_FILE = "tasklist" + FILE_EXTENSION;
-
-	public static final String TITLE_DIALOG = "Mylar Information";
 
 	private ResourceBundle resourceBundle;
 
@@ -300,7 +305,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					taskListNotificationManager.startNotification(NOTIFICATION_DELAY);	
 					getMylarCorePrefs().addPropertyChangeListener(taskListNotificationManager);
 					
-					taskListArchiveManager = new TaskListAutoArchiveManager();
+					taskListArchiveManager = new TaskListBackupManager();
 					getMylarCorePrefs().addPropertyChangeListener(taskListArchiveManager);	
 					
 					taskListRefreshManager = new TaskListRefreshManager();
@@ -416,11 +421,12 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, ""+(30 * 60 * 1000));
 		
-		store.setDefault(TaskListPreferenceConstants.ARCHIVE_AUTOMATICALLY, true);
-		store.setDefault(TaskListPreferenceConstants.ARCHIVE_FOLDER, MylarPlugin.getDefault().getDataDirectory());
-		store.setDefault(TaskListPreferenceConstants.ARCHIVE_SCHEDULE, 5);
-		store.setDefault(TaskListPreferenceConstants.ARCHIVE_MAXFILES, 10);
-		store.setDefault(TaskListPreferenceConstants.ARCHIVE_LAST, 0);
+		store.setDefault(TaskListPreferenceConstants.BACKUP_AUTOMATICALLY, true);
+		
+		store.setDefault(TaskListPreferenceConstants.BACKUP_FOLDER, MylarPlugin.getDefault().getDataDirectory()+DEFAULT_PATH_SEPARATOR+DEFAULT_BACKUP_FOLDER_NAME);
+		store.setDefault(TaskListPreferenceConstants.BACKUP_SCHEDULE, 5);
+		store.setDefault(TaskListPreferenceConstants.BACKUP_MAXFILES, 10);
+		store.setDefault(TaskListPreferenceConstants.BACKUP_LAST, 0);
 		
 		store.setDefault(TaskListPreferenceConstants.FILTER_ARCHIVE_MODE, true);
 		store.setDefault(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS, false);
