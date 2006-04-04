@@ -71,7 +71,7 @@ import org.osgi.framework.BundleContext;
  */
 public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 
-	public static String VERSION = "0.4";
+	public static String VERSION = "0.5";
 
 	public static String UPLOAD_FILE_LABEL = "USAGE";
 
@@ -108,14 +108,6 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 	public static final String MONITOR_LOG_NAME = "monitor-history";
 
 	public static final String MONITOR_LOG_NAME_OLD = "workspace";
-
-	// public static final String PREF_LOG_FILE =
-	// "org.eclipse.mylar.internal.monitor.log.file";
-	public static final String PREF_MONITORING_ENABLED = "org.eclipse.mylar.monitor.enabled";
-
-	public static final String PREF_NUM_USER_EVENTS = "org.eclipse.mylar.monitor.events.observed";
-
-	public static final String PREF_PREVIOUS_TRANSMIT_DATE = "org.eclipse.mylar.monitor.upload.previousTransmit";
 
 	public static final String PLUGIN_ID = "org.eclipse.mylar.monitor";
 
@@ -210,6 +202,10 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		plugin = this;
 	}
 
+	private void initDefaultPrefs() {
+		getPreferenceStore().setDefault(MylarMonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE, true);
+	}
+
 	/**
 	 * Used to start plugin on startup -> entry in plugin.xml to invoke this
 	 */
@@ -217,12 +213,8 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
+				initDefaultPrefs();
 				new MonitorExtensionPointReader().initExtensions();
-				// getPreferenceStore().setDefault(PREF_LOG_FILE,
-				// MylarPlugin.getDefault().getMylarDataDirectory()
-				// + File.separator
-				// + MONITOR_LOG_NAME
-				// + MylarContextManager.CONTEXT_FILE_EXTENSION);
 
 				interactionLogger = new InteractionEventLogger(getMonitorLogFile());
 				preferenceMonitor = new PreferenceChangeMonitor();
@@ -235,25 +227,25 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 				browserMonitor = new BrowserMonitor();
 				setAcceptedUrlMatchList(studyParameters.getAcceptedUrlList());
 
-				if (getPreferenceStore().getBoolean(PREF_MONITORING_ENABLED)) {
-					getPreferenceStore().setValue(PREF_MONITORING_ENABLED, false); // will
+				if (getPreferenceStore().getBoolean(MylarMonitorPreferenceConstants.PREF_MONITORING_ENABLED)) {
+					getPreferenceStore().setValue(MylarMonitorPreferenceConstants.PREF_MONITORING_ENABLED, false); // will
 					// be
 					// reset
 					startMonitoring();
 				}
 
-				if (plugin.getPreferenceStore().contains(PREF_PREVIOUS_TRANSMIT_DATE)) {
-					lastTransmit = new Date(plugin.getPreferenceStore().getLong(PREF_PREVIOUS_TRANSMIT_DATE));
+				if (plugin.getPreferenceStore().contains(MylarMonitorPreferenceConstants.PREF_PREVIOUS_TRANSMIT_DATE)) {
+					lastTransmit = new Date(plugin.getPreferenceStore().getLong(MylarMonitorPreferenceConstants.PREF_PREVIOUS_TRANSMIT_DATE));
 				} else {
 					lastTransmit = new Date();
-					plugin.getPreferenceStore().setValue(PREF_PREVIOUS_TRANSMIT_DATE, lastTransmit.getTime());
+					plugin.getPreferenceStore().setValue(MylarMonitorPreferenceConstants.PREF_PREVIOUS_TRANSMIT_DATE, lastTransmit.getTime());
 				}
 			}
 		});
 	}
 
 	public void stopMonitoring() {
-		if (!getPreferenceStore().getBoolean(PREF_MONITORING_ENABLED))
+		if (!getPreferenceStore().getBoolean(MylarMonitorPreferenceConstants.PREF_MONITORING_ENABLED))
 			return;
 		interactionLogger.stopObserving();
 		for (IInteractionEventListener listener : MylarPlugin.getDefault().getInteractionListeners())
@@ -281,11 +273,11 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		workbench.removeWindowListener(windowMonitor);
 
 		uninstallBrowserMonitor(workbench);
-		getPreferenceStore().setValue(PREF_MONITORING_ENABLED, false);
+		getPreferenceStore().setValue(MylarMonitorPreferenceConstants.PREF_MONITORING_ENABLED, false);
 	}
 
 	public void startMonitoring() {
-		if (getPreferenceStore().getBoolean(PREF_MONITORING_ENABLED))
+		if (getPreferenceStore().getBoolean(MylarMonitorPreferenceConstants.PREF_MONITORING_ENABLED))
 			return;
 		interactionLogger.startObserving();
 		for (IInteractionEventListener listener : MylarPlugin.getDefault().getInteractionListeners())
@@ -316,7 +308,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		if (!MylarPlugin.getDefault().suppressWizardsOnStartup()) {
 			checkForFirstMonitorUse();
 		}
-		getPreferenceStore().setValue(PREF_MONITORING_ENABLED, true);
+		getPreferenceStore().setValue(MylarMonitorPreferenceConstants.PREF_MONITORING_ENABLED, true);
 	}
 
 	@Override
@@ -391,11 +383,11 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		if (wait3Hours) {
 			lastTransmit.setTime(currentTime.getTime() + DELAY_ON_USER_REQUEST
 					- studyParameters.getTransmitPromptPeriod());
-			plugin.getPreferenceStore().setValue(PREF_PREVIOUS_TRANSMIT_DATE, lastTransmit.getTime());
+			plugin.getPreferenceStore().setValue(MylarMonitorPreferenceConstants.PREF_PREVIOUS_TRANSMIT_DATE, lastTransmit.getTime());
 		} else {
 			long day = HOUR * 24;
 			lastTransmit.setTime(currentTime.getTime() + day - studyParameters.getTransmitPromptPeriod());
-			plugin.getPreferenceStore().setValue(PREF_PREVIOUS_TRANSMIT_DATE, lastTransmit.getTime());
+			plugin.getPreferenceStore().setValue(MylarMonitorPreferenceConstants.PREF_PREVIOUS_TRANSMIT_DATE, lastTransmit.getTime());
 		}
 	}
 
@@ -451,11 +443,11 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 			return;
 		if (plugin == null || plugin.getPreferenceStore() == null)
 			return;
-		if (plugin.getPreferenceStore().contains(PREF_PREVIOUS_TRANSMIT_DATE)) {
-			lastTransmit = new Date(plugin.getPreferenceStore().getLong(PREF_PREVIOUS_TRANSMIT_DATE));
+		if (plugin.getPreferenceStore().contains(MylarMonitorPreferenceConstants.PREF_PREVIOUS_TRANSMIT_DATE)) {
+			lastTransmit = new Date(plugin.getPreferenceStore().getLong(MylarMonitorPreferenceConstants.PREF_PREVIOUS_TRANSMIT_DATE));
 		} else {
 			lastTransmit = new Date();
-			plugin.getPreferenceStore().setValue(PREF_PREVIOUS_TRANSMIT_DATE, lastTransmit.getTime());
+			plugin.getPreferenceStore().setValue(MylarMonitorPreferenceConstants.PREF_PREVIOUS_TRANSMIT_DATE, lastTransmit.getTime());
 		}
 		Date currentTime = new Date();
 		if (currentTime.getTime() > lastTransmit.getTime() + studyParameters.getTransmitPromptPeriod()) {
@@ -469,7 +461,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 				// time must be stored right away into preferences, to prevent
 				// other threads
 				lastTransmit.setTime(new Date().getTime());
-				plugin.getPreferenceStore().setValue(PREF_PREVIOUS_TRANSMIT_DATE, currentTime.getTime());
+				plugin.getPreferenceStore().setValue(MylarMonitorPreferenceConstants.PREF_PREVIOUS_TRANSMIT_DATE, currentTime.getTime());
 
 				UsageSubmissionWizard wizard = new UsageSubmissionWizard();
 				wizard.init(PlatformUI.getWorkbench(), null);
@@ -481,7 +473,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 				if (wizard.failed()) {
 					lastTransmit.setTime(currentTime.getTime() + DELAY_ON_FAILURE
 							- studyParameters.getTransmitPromptPeriod());
-					plugin.getPreferenceStore().setValue(PREF_PREVIOUS_TRANSMIT_DATE, currentTime.getTime());
+					plugin.getPreferenceStore().setValue(MylarMonitorPreferenceConstants.PREF_PREVIOUS_TRANSMIT_DATE, currentTime.getTime());
 				}
 			} else {
 				if (result == 1) {
@@ -495,9 +487,9 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	public void incrementObservedEvents(int increment) {
-		int numEvents = getPreferenceStore().getInt(PREF_NUM_USER_EVENTS);
+		int numEvents = getPreferenceStore().getInt(MylarMonitorPreferenceConstants.PREF_NUM_USER_EVENTS);
 		numEvents += increment;
-		getPreferenceStore().setValue(PREF_NUM_USER_EVENTS, numEvents);
+		getPreferenceStore().setValue(MylarMonitorPreferenceConstants.PREF_NUM_USER_EVENTS, numEvents);
 	}
 
 	public void configureProxy(HttpClient httpClient) {
@@ -603,7 +595,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 								}
 							}
 							customizingPlugin = extensions[i].getNamespace();
-							getPreferenceStore().setValue(PREF_MONITORING_ENABLED, true);
+							getPreferenceStore().setValue(MylarMonitorPreferenceConstants.PREF_MONITORING_ENABLED, true);
 						}
 						extensionsRead = true;
 					}
@@ -676,7 +668,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	public boolean isMonitoringEnabled() {
-		return getPreferenceStore().getBoolean(PREF_MONITORING_ENABLED);
+		return getPreferenceStore().getBoolean(MylarMonitorPreferenceConstants.PREF_MONITORING_ENABLED);
 	}
 
 	public String getCustomizedByMessage() {

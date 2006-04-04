@@ -30,6 +30,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.core.MylarContextManager;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.monitor.MylarMonitorPlugin;
+import org.eclipse.mylar.internal.monitor.MylarMonitorPreferenceConstants;
 import org.eclipse.mylar.provisional.core.AbstractUserInteractionMonitor;
 import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.InteractionEvent;
@@ -45,6 +47,8 @@ import org.eclipse.ui.part.EditorPart;
  * @author Mik Kersten
  */
 public class SelectionMonitor extends AbstractUserInteractionMonitor {
+
+	public static final String ENCRYPTION_ALGORITHM = "SHA";
 
 	private static final String ID_JAVA_UNKNOWN = "(non-source element)";
 
@@ -161,9 +165,10 @@ public class SelectionMonitor extends AbstractUserInteractionMonitor {
 	 * Encrypts the string using SHA, then makes it reasonable to print.
 	 */
 	private String obfuscateString(String string) {
+		if(!isObfuscationEnabled()) { return string; }
 		String obfuscatedString = null;
 		try {
-			MessageDigest md = MessageDigest.getInstance("SHA");
+			MessageDigest md = MessageDigest.getInstance(ENCRYPTION_ALGORITHM);
 			md.update(string.getBytes());
 			byte[] digest = md.digest();
 			obfuscatedString = new String(Base64.encode(digest)).replace('/', '=');
@@ -173,6 +178,11 @@ public class SelectionMonitor extends AbstractUserInteractionMonitor {
 			obfuscatedString = LABEL_FAILED_TO_OBFUSCATE;
 		}
 		return obfuscatedString;
+	}
+
+	private boolean isObfuscationEnabled() {
+		return MylarMonitorPlugin.getPrefs()
+			.getBoolean(MylarMonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE);
 	}
 
 	private String obfuscateJavaElementHandle(IJavaElement javaElement) {
@@ -186,6 +196,8 @@ public class SelectionMonitor extends AbstractUserInteractionMonitor {
 				obfuscatedPath.append(':');
 				obfuscatedPath.append(obfuscateString(javaElement.getElementName()));
 				return obfuscatedPath.toString();
+			} else {
+				return obfuscateString(javaElement.getHandleIdentifier());
 			}
 		} catch (JavaModelException e) {
 			// ignore non-existing element

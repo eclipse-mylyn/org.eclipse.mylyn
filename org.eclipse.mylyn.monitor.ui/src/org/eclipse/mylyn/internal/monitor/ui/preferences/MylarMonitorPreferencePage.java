@@ -17,6 +17,8 @@ import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.mylar.internal.core.MylarPreferenceContstants;
 import org.eclipse.mylar.internal.monitor.MylarMonitorPlugin;
+import org.eclipse.mylar.internal.monitor.MylarMonitorPreferenceConstants;
+import org.eclipse.mylar.internal.monitor.monitors.SelectionMonitor;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -46,6 +48,7 @@ public class MylarMonitorPreferencePage extends PreferencePage implements IWorkb
 	private IntegerFieldEditor userStudyId;
 
 	private Button enableMonitoring;
+	private Button enableObfuscation;
 
 	private Text logFileText;
 
@@ -95,7 +98,7 @@ public class MylarMonitorPreferencePage extends PreferencePage implements IWorkb
 
 		enableMonitoring = new Button(group, SWT.CHECK);
 		enableMonitoring.setText("Enable logging to: ");
-		enableMonitoring.setSelection(getPreferenceStore().getBoolean(MylarMonitorPlugin.PREF_MONITORING_ENABLED));
+		enableMonitoring.setSelection(getPreferenceStore().getBoolean(MylarMonitorPreferenceConstants.PREF_MONITORING_ENABLED));
 		enableMonitoring.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent e) {
@@ -134,6 +137,12 @@ public class MylarMonitorPreferencePage extends PreferencePage implements IWorkb
 		// logFileText.setText(dir);
 		// }
 		// });
+
+		enableObfuscation = new Button(group, SWT.CHECK);
+		enableObfuscation.setText("Obfuscate elements using: ");
+		enableObfuscation.setSelection(getPreferenceStore().getBoolean(MylarMonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE));
+		Label obfuscationLablel = new Label(group, SWT.NULL);
+		obfuscationLablel.setText(SelectionMonitor.ENCRYPTION_ALGORITHM + " message digest one-way hash");
 	}
 
 	private void createUsageSection(Composite parent) {
@@ -160,7 +169,7 @@ public class MylarMonitorPreferencePage extends PreferencePage implements IWorkb
 		Label events = new Label(group, SWT.NULL);
 		events.setText(" Events since upload:");
 		Label logged = new Label(group, SWT.NULL);
-		logged.setText("" + getPreferenceStore().getInt(MylarMonitorPlugin.PREF_NUM_USER_EVENTS));
+		logged.setText("" + getPreferenceStore().getInt(MylarMonitorPreferenceConstants.PREF_NUM_USER_EVENTS));
 
 		if (uidNum <= 0) {
 			userStudyId.setEnabled(false, group);
@@ -179,6 +188,8 @@ public class MylarMonitorPreferencePage extends PreferencePage implements IWorkb
 
 	@Override
 	public boolean performOk() {
+		MylarMonitorPlugin.getPrefs()
+			.setValue(MylarMonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE, enableObfuscation.getSelection());
 		if (enableMonitoring.getSelection()) {
 			MylarMonitorPlugin.getDefault().startMonitoring();
 		} else {
@@ -220,7 +231,8 @@ public class MylarMonitorPreferencePage extends PreferencePage implements IWorkb
 
 	@Override
 	public boolean performCancel() {
-		enableMonitoring.setSelection(getPreferenceStore().getBoolean(MylarMonitorPlugin.PREF_MONITORING_ENABLED));
+		enableMonitoring.setSelection(getPreferenceStore().getBoolean(MylarMonitorPreferenceConstants.PREF_MONITORING_ENABLED));
+		enableObfuscation.setSelection(getPreferenceStore().getBoolean(MylarMonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE));
 		userStudyId.setStringValue(MylarPlugin.getDefault().getPreferenceStore().getInt(MylarPreferenceContstants.USER_ID)
 				+ "");
 		return true;
