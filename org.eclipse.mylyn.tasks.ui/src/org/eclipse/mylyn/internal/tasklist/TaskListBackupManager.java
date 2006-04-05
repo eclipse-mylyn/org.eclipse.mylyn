@@ -52,13 +52,13 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 				TaskListPreferenceConstants.BACKUP_AUTOMATICALLY);
 
 		if (enabled) {
-			start();
+			start(MINUTE);
 		}
 	}
 
-	public void start() {
+	public void start(long delay) {
 		timer = new Timer();
-		timer.schedule(new CheckBackupRequired(), MINUTE, HOUR);
+		timer.schedule(new CheckBackupRequired(), delay, HOUR);
 	}
 
 	public void stop() {
@@ -68,7 +68,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 	public void propertyChange(PropertyChangeEvent event) {
 		if (event.getProperty().equals(TaskListPreferenceConstants.BACKUP_AUTOMATICALLY)) {
 			if ((Boolean) event.getNewValue() == true) {
-				start();
+				start(MINUTE);
 			} else {
 				stop();
 			}
@@ -79,7 +79,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 	 * @throws InvocationTargetException
 	 * @throws IOException 
 	 */
-	static public void backupNow() throws InvocationTargetException, IOException {
+	public void backupNow() throws InvocationTargetException, IOException {
 		String destination = MylarTaskListPlugin.getMylarCorePrefs().getString(
 				TaskListPreferenceConstants.BACKUP_FOLDER);
 		
@@ -90,11 +90,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 		
 		removeOldBackups(backupFolder);
 
-//		String formatString = "yyyy-MM-dd";
-//		SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
-//		String date = format.format(new Date());
 		String fileName = TaskDataExportWizard.getZipFileName();
-//			FILENAME_PREFIX + "-" + date + ZIP_FILE_EXTENSION;
 
 		final TaskDataExportJob backupJob = new TaskDataExportJob(destination, true, fileName);
 
@@ -109,7 +105,8 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 				.setValue(TaskListPreferenceConstants.BACKUP_LAST, new Date().getTime());
 	}
 
-	static private void removeOldBackups(File folder) {
+	/** public for testing purposes */
+	public void removeOldBackups(File folder) {
 
 		int maxBackups = MylarTaskListPlugin.getMylarCorePrefs().getInt(TaskListPreferenceConstants.BACKUP_MAXFILES);
 		

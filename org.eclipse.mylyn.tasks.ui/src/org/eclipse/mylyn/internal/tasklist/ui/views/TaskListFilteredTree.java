@@ -35,15 +35,11 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
  */
 public class TaskListFilteredTree extends FilteredTree {
 
-	private static final int LABEL_MAX_SIZE = 30;
-
-//	private static final int DELAY_REFRESH = 700;
+	private static final int DELAY_REFRESH = 700;
 
 	private static final String LABEL_FIND = " Find:";
 
-	private static final String LABEL_NO_ACTIVE = "          <no active task>";
-	
-//	private static final String LABEL_NO_ACTIVE = "     <no active task>";
+	private static final String LABEL_NO_ACTIVE = "<no active task>";
 		
 	private Job refreshJob;
 	
@@ -78,7 +74,8 @@ public class TaskListFilteredTree extends FilteredTree {
 		label.setText(LABEL_FIND);
 				
 		super.createFilterControls(container);
-//		patternFilter.setSize(100, patternFilter.getSize().y);
+		
+		filterText.setLayoutData(new GridData(SWT.NONE, SWT.BEGINNING, false, false));
 		
 		filterText.addKeyListener(new KeyListener() {
 
@@ -93,12 +90,13 @@ public class TaskListFilteredTree extends FilteredTree {
 			}
 		});
 
-		activeTaskLabel = new Hyperlink(container, SWT.RIGHT);
+		activeTaskLabel = new Hyperlink(container, SWT.LEFT);
 		activeTaskLabel.setText(LABEL_NO_ACTIVE);
 		ITask activeTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTask();
 		if (activeTask != null) {
 			indicateActiveTask(activeTask);
 		}
+		activeTaskLabel.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
 		activeTaskLabel.addMouseListener(new MouseListener() {
 
 			public void mouseDoubleClick(MouseEvent e) {
@@ -132,27 +130,28 @@ public class TaskListFilteredTree extends FilteredTree {
     protected void textChanged() {
     	if (refreshJob == null) return;
     	refreshJob.cancel();
-    	int MAX_REFRESH_DELAY = 800;
     	int refreshDelay = 0;
     	int textLength = filterText.getText().length();
         if (textLength > 0) {
-                refreshDelay = MAX_REFRESH_DELAY / textLength;
+                refreshDelay = DELAY_REFRESH / textLength;
         } 
         refreshJob.schedule(refreshDelay); 
     }
 
     public void indicateActiveTask(ITask task) {
     	String text = task.getDescription();
-    	if (text.length() > LABEL_MAX_SIZE) {
-    		text = text.substring(0, LABEL_MAX_SIZE);
-    	}
+//    	if (text.length() > LABEL_MAX_SIZE) {
+//    		text = text.substring(0, LABEL_MAX_SIZE);
+//    	}
     	activeTaskLabel.setText(text);
 		activeTaskLabel.setUnderlined(true);
+		activeTaskLabel.setToolTipText(task.getDescription());
     }
     
     public void indicateNoActiveTask() {
     	activeTaskLabel.setText(LABEL_NO_ACTIVE);
 		activeTaskLabel.setUnderlined(false);
+		activeTaskLabel.setToolTipText("");
     }
     
 	public void setFilterText(String string) {

@@ -35,7 +35,7 @@ import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 
 /**
  * Job that performs exporting (copying or zipping) of Mylar Task List data
- * 
+ * Assumes that check with user for overwrite already done. Overwrites destination if exists!
  * @author Wesley Coelho
  * @author Mik Kersten
  * @author Rob Elves

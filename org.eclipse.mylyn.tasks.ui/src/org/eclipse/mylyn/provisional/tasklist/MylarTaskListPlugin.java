@@ -90,7 +90,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	
 	private TaskListNotificationManager taskListNotificationManager;
 	
-	private TaskListBackupManager taskListArchiveManager;
+	private TaskListBackupManager taskListBackupManager;
 	
 	private List<ITaskEditorFactory> taskEditors = new ArrayList<ITaskEditorFactory>();
 	
@@ -305,8 +305,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					taskListNotificationManager.startNotification(NOTIFICATION_DELAY);	
 					getMylarCorePrefs().addPropertyChangeListener(taskListNotificationManager);
 					
-					taskListArchiveManager = new TaskListBackupManager();
-					getMylarCorePrefs().addPropertyChangeListener(taskListArchiveManager);	
+					taskListBackupManager = new TaskListBackupManager();
+					getMylarCorePrefs().addPropertyChangeListener(taskListBackupManager);	
 					
 					taskListRefreshManager = new TaskListRefreshManager();
 					taskListRefreshManager.startRefreshJob();	
@@ -343,7 +343,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		resourceBundle = null;
 		try {
 			getMylarCorePrefs().removePropertyChangeListener(taskListNotificationManager);
-			getMylarCorePrefs().removePropertyChangeListener(taskListArchiveManager);
+			getMylarCorePrefs().removePropertyChangeListener(taskListBackupManager);
 			taskListManager.getTaskList().removeChangeListener(taskListSaveManager);
 			taskListManager.dispose();
 			TaskListColorsAndFonts.dispose();
@@ -426,7 +426,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		store.setDefault(TaskListPreferenceConstants.BACKUP_FOLDER, MylarPlugin.getDefault().getDataDirectory()+DEFAULT_PATH_SEPARATOR+DEFAULT_BACKUP_FOLDER_NAME);
 		store.setDefault(TaskListPreferenceConstants.BACKUP_SCHEDULE, 5);
 		store.setDefault(TaskListPreferenceConstants.BACKUP_MAXFILES, 10);
-		store.setDefault(TaskListPreferenceConstants.BACKUP_LAST, 0);
+		store.setDefault(TaskListPreferenceConstants.BACKUP_LAST, 0f);
 		
 		store.setDefault(TaskListPreferenceConstants.FILTER_ARCHIVE_MODE, true);
 		store.setDefault(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS, false);
@@ -620,6 +620,10 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	public void addTaskHyperlinkDetector(IHyperlinkDetector listener) {
 		if (listener != null)
 			this.hyperlinkDetectors.add(listener);
+	}
+	
+	public TaskListBackupManager getBackupManager() {
+		return taskListBackupManager;
 	}
 	
 } 

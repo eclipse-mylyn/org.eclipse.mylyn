@@ -66,7 +66,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 
 	private static final String LABEL_LAST_ARCHIVED_NEVER = "never";
 
-	private static final String LAST_ARCHIVED_ON_LABEL = "   Last archived: ";
+	private static final String LAST_BACKUP_ON_LABEL = "   Last backup: ";
 
 	private Text taskDirectoryText = null;
 
@@ -285,7 +285,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 				try {
 					getPreferenceStore().setValue(TaskListPreferenceConstants.BACKUP_FOLDER,
 							backupFolderText.getText());
-					TaskListBackupManager.backupNow();
+					MylarTaskListPlugin.getDefault().getBackupManager().backupNow();
 					setLastBackup();
 				} catch (InvocationTargetException ex) {
 					MessageDialog.openError(getShell(), LABEL_BACKUP_ERROR,
@@ -307,7 +307,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		} else {
 			dateText = LABEL_LAST_ARCHIVED_NEVER;
 		}
-		lastUpdate.setText(LAST_ARCHIVED_ON_LABEL + dateText);// LAST_ARCHIVED_ON_LABEL+
+		lastUpdate.setText(LAST_BACKUP_ON_LABEL + dateText);
 	}
 
 	private void createTaskDirectoryControl(Composite parent) {
