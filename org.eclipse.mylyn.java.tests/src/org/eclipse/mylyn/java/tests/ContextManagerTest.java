@@ -321,6 +321,56 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 		} while (parent != null);
 	}
 
+	public void testIncremenOfParentDoiAfterForcedDecay() throws JavaModelException, Exception {
+		IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
+		IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
+		IMethod m2 = type1.createMethod("void m2() { }", null, true, null);
+		IMylarElement node = MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier());
+		assertFalse(node.getInterest().isInteresting());
+
+		monitor.selectionChanged(part, new StructuredSelection(m1));
+		node = MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier());
+		assertTrue(node.getInterest().isInteresting());
+
+		// make all the parents interest propated to have negative interest
+		IJavaElement parent = m1.getParent();
+		int level = 1;
+		do {
+			level++;
+			IMylarElement parentNode = MylarPlugin.getContextManager().getElement(parent.getHandleIdentifier());
+			if (!(parent instanceof JavaModel)) {
+				assertTrue(parentNode.getInterest().isInteresting());
+				MylarPlugin.getContextManager().handleInteractionEvent(mockInterestContribution(parentNode.getHandleIdentifier(), 
+						-2*parentNode.getInterest().getValue()));
+				IMylarElement updatedParent = MylarPlugin.getContextManager().getElement(parent.getHandleIdentifier());
+				assertFalse(updatedParent.getInterest().isInteresting());
+			}
+			parent = parent.getParent();
+		} while (parent != null);
+		
+//		assertFalse(node.getInterest().isInteresting());
+		
+		// select the element, should propagate up
+		monitor.selectionChanged(part, new StructuredSelection(m2));
+		monitor.selectionChanged(part, new StructuredSelection(m1));
+		node = MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier());
+		assertTrue(node.getInterest().isInteresting());
+		
+		project.build();
+		parent = m1.getParent();
+		level = 1;
+		do {
+			level++;
+			IMylarElement parentNode = MylarPlugin.getContextManager().getElement(parent.getHandleIdentifier());
+			if (!(parent instanceof JavaModel)) {
+				assertTrue(parentNode.getInterest().isInteresting());
+//				assertEquals("failed on: " + parent.getClass(), node.getInterest().getValue(), parentNode.getInterest()
+//						.getValue());
+			}
+			parent = parent.getParent();
+		} while (parent != null);
+	}
+	
 	public void testLandmarks() throws CoreException, IOException {
 		LandmarksModelListener listener = new LandmarksModelListener();
 		manager.addListener(listener);
