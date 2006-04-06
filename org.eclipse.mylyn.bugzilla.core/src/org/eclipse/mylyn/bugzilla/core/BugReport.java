@@ -144,7 +144,7 @@ public class BugReport implements Serializable, IBugzillaBug {
 	}
 
 	public String getLabel() {
-		return id + ": " + getDescription();
+		return id + ": " + getSummary(); 
 	}
 
 	/**

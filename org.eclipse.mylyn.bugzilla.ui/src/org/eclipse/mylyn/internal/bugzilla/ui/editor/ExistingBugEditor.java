@@ -340,9 +340,9 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 	@Override
 	protected String getTitleString() {
-		Attribute summary = bug.getAttribute(ATTR_SUMMARY);
-		String summaryVal = ((null != summary) ? summary.getNewValue() : null);
-		return bug.getLabel() + ": " + checkText(summaryVal);
+//		Attribute summary = bug.getAttribute(ATTR_SUMMARY);
+//		String summaryVal = ((null != summary) ? summary.getNewValue() : null);
+		return bug.getLabel();// + ": " + checkText(summaryVal);
 	}
 
 	@Override
