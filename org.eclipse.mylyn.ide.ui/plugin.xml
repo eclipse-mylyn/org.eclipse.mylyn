@@ -36,6 +36,22 @@
 
     <extension point="org.eclipse.ui.viewActions"> 
 	  <viewContribution 
+		id="org.eclipse.mylar.ui.projectexplorer.filter" 
+   		targetID="org.eclipse.ui.navigator.ProjectExplorer">
+    	<action
+           class="org.eclipse.mylar.internal.ide.ui.actions.ApplyMylarToProjectExplorerAction"
+           enablesFor="*"
+           icon="icons/elcl16/interest-filtering.gif"
+           id="org.eclipse.mylar.ui.actions.FilterResourceNavigatorAction"
+           label="Apply Mylar"
+           menubarPath="mylar"
+           style="toggle"
+           toolbarPath="mylar"
+           tooltip="Apply Mylar"> 
+  		</action> 
+      </viewContribution> 
+      
+	  <viewContribution 
 		id="org.eclipse.mylar.ui.resource.navigator.filter" 
    		targetID="org.eclipse.ui.views.ResourceNavigator">
     	<action
