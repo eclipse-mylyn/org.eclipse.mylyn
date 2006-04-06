@@ -77,54 +77,54 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
-
-	// private void processMarkerDelata(IMarkerDelta[] markers) {
-	// for(IMarkerDelta markerDelta: markers){
-	// try{
-	// final IMarker marker = markerDelta.getMarker();
-	// if(marker == null || !marker.exists()){
-	// final IMylarStructureBridge bridge =
-	// MylarPlugin.getDefault().getStructureBridge(marker.getResource());
-	// if(bridge != null){
-	// if(!PlatformUI.getWorkbench().getDisplay().isDisposed()) {
-	// PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-	// public void run() {
-	// MylarPlugin.getContextManager().removeErrorPredictedInterest(bridge.getHandleIdentifier(marker.getResource()),
-	// bridge.getContentType(), true);
-	// }});
-	// }
-	// }
-	// }
-	//					
-	// if(markerDelta.getMarker().isSubtypeOf(IMarker.PROBLEM)){
-	// final IMylarStructureBridge bridge =
-	// MylarPlugin.getDefault().getStructureBridge(marker.getResource());
-	// if(bridge != null){
-	// if(!PlatformUI.getWorkbench().getDisplay().isDisposed()) {
-	// PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-	// public void run() {
-	// MylarPlugin.getContextManager().addErrorPredictedInterest(bridge.getHandleIdentifier(marker.getResource()),
-	// bridge.getContentType(), true);
-	// }});
-	// }
-	// }
-	// } else
-	// {//if(!markerDelta.getMarker().getType().equals("org.eclipse.jdt.core.problem")){
-	// final IMylarStructureBridge bridge =
-	// MylarPlugin.getDefault().getStructureBridge(marker.getResource());
-	// if(bridge != null){
-	// if(!PlatformUI.getWorkbench().getDisplay().isDisposed()) {
-	// PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-	// public void run() {
-	// MylarPlugin.getContextManager().removeErrorPredictedInterest(bridge.getHandleIdentifier(marker.getResource()),
-	// bridge.getContentType(), true);
-	// }});
-	// }
-	// }
-	// }
-	// }catch (Exception e){
-	// MylarPlugin.log(e, " could not update marker");
-	// }
-	// }
-	// }
 }
+
+// private void processMarkerDelata(IMarkerDelta[] markers) {
+// for(IMarkerDelta markerDelta: markers){
+// try{
+// final IMarker marker = markerDelta.getMarker();
+// if(marker == null || !marker.exists()){
+// final IMylarStructureBridge bridge =
+// MylarPlugin.getDefault().getStructureBridge(marker.getResource());
+// if(bridge != null){
+// if(!PlatformUI.getWorkbench().getDisplay().isDisposed()) {
+// PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+// public void run() {
+// MylarPlugin.getContextManager().removeErrorPredictedInterest(bridge.getHandleIdentifier(marker.getResource()),
+// bridge.getContentType(), true);
+// }});
+// }
+// }
+// }
+//					
+// if(markerDelta.getMarker().isSubtypeOf(IMarker.PROBLEM)){
+// final IMylarStructureBridge bridge =
+// MylarPlugin.getDefault().getStructureBridge(marker.getResource());
+// if(bridge != null){
+// if(!PlatformUI.getWorkbench().getDisplay().isDisposed()) {
+// PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+// public void run() {
+// MylarPlugin.getContextManager().addErrorPredictedInterest(bridge.getHandleIdentifier(marker.getResource()),
+// bridge.getContentType(), true);
+// }});
+// }
+// }
+// } else
+// {//if(!markerDelta.getMarker().getType().equals("org.eclipse.jdt.core.problem")){
+// final IMylarStructureBridge bridge =
+// MylarPlugin.getDefault().getStructureBridge(marker.getResource());
+// if(bridge != null){
+// if(!PlatformUI.getWorkbench().getDisplay().isDisposed()) {
+// PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+// public void run() {
+// MylarPlugin.getContextManager().removeErrorPredictedInterest(bridge.getHandleIdentifier(marker.getResource()),
+// bridge.getContentType(), true);
+// }});
+// }
+// }
+// }
+// }catch (Exception e){
+// MylarPlugin.log(e, " could not update marker");
+// }
+// }
+// }
