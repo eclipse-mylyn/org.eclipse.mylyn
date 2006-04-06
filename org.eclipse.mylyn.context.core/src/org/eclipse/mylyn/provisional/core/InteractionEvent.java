@@ -129,9 +129,11 @@ public class InteractionEvent implements Serializable {
 	 * Factory method.
 	 */
 	public static InteractionEvent makeCopy(InteractionEvent originalEvent, float newInterestContribution) {
-		return new InteractionEvent(originalEvent.getKind(), originalEvent.getStructureKind(), originalEvent.getStructureHandle(), originalEvent.getOriginId(), originalEvent.getNavigation(), newInterestContribution); // default
+		return new InteractionEvent(originalEvent.getKind(), originalEvent.getStructureKind(), originalEvent
+				.getStructureHandle(), originalEvent.getOriginId(), originalEvent.getNavigation(), originalEvent.getDelta(),
+				newInterestContribution, originalEvent.getDate(), originalEvent.getEndDate());
 	}
-		
+
 	/**
 	 * Factory method.
 	 */
@@ -208,7 +210,7 @@ public class InteractionEvent implements Serializable {
 		if (delta != null)
 			hashCode += delta.hashCode();
 		// TODO: could this lose precision?
-		hashCode += new Float(interestContribution).hashCode(); 
+		hashCode += new Float(interestContribution).hashCode();
 		return hashCode;
 	}
 
@@ -221,7 +223,7 @@ public class InteractionEvent implements Serializable {
 	public boolean isValidStructureHandle() {
 		return structureHandle != null && !structureHandle.equals("null") && !structureHandle.trim().equals(ID_UNKNOWN);
 	}
-	
+
 	public String getStructureHandle() {
 		return structureHandle;
 	}

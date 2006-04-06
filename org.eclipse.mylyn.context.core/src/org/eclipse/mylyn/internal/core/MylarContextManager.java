@@ -348,11 +348,7 @@ public class MylarContextManager {
 			previouslyPropagated = previous.getInterest().isPropagated();
 		}
 		if (event.getKind().isUserEvent()) {
-			if (previousInterest < 0) { // reset interest if not interesting
-				decayOffset = (-1) * (previous.getInterest().getValue());
-				currentContext.addEvent(new InteractionEvent(InteractionEvent.Kind.MANIPULATION,
-						event.getContentType(), event.getStructureHandle(), SOURCE_ID_DECAY_CORRECTION, decayOffset));
-			}
+			decayOffset = ensureIsInteresting(event.getContentType(), event.getStructureHandle(), previous, previousInterest);
 		}
 		IMylarElement element = currentContext.addEvent(event);
 		List<IMylarElement> interestDelta = new ArrayList<IMylarElement>();
@@ -368,6 +364,16 @@ public class MylarContextManager {
 
 		checkForLandmarkDeltaAndNotify(previousInterest, element);
 		return interestDelta;
+	}
+
+	private float ensureIsInteresting(String contentType, String handle, IMylarElement previous, float previousInterest) {
+		float decayOffset = 0;
+		if (previousInterest < 0) { // reset interest if not interesting
+			decayOffset = (-1) * (previous.getInterest().getValue());
+			currentContext.addEvent(new InteractionEvent(InteractionEvent.Kind.MANIPULATION,
+					contentType, handle, SOURCE_ID_DECAY_CORRECTION, decayOffset));
+		}
+		return decayOffset;
 	}
 	
 	private void notifyInterestDelta(List<IMylarElement> interestDelta) {
@@ -432,6 +438,10 @@ public class MylarContextManager {
 				previousInterest = previous.getInterest().getValue();
 			}
 			CompositeContextElement parentNode = (CompositeContextElement) currentContext.addEvent(propagationEvent);
+			if (!parentNode.getInterest().isInteresting()) {
+				ensureIsInteresting(parentNode.getContentType(), parentNode.getHandleIdentifier(), parentNode, parentNode.getInterest().getValue());
+				parentNode = (CompositeContextElement) currentContext.addEvent(propagationEvent);
+			}
 			if (isInterestDelta(previousInterest, previous.getInterest().isPredicted(), previous.getInterest()
 					.isPropagated(), parentNode)) {
 				interestDelta.add(0, parentNode);

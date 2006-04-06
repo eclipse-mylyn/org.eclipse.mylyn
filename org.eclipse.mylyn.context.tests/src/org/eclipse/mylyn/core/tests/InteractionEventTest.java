@@ -13,12 +13,15 @@ package org.eclipse.mylar.core.tests;
 
 import org.eclipse.mylar.provisional.core.InteractionEvent;
 
+/**
+ * @author Mik Kersten
+ */
 public class InteractionEventTest extends AbstractContextTest {
 
-	public void testCopy() {
+	public void testCopy() throws InterruptedException {
 		InteractionEvent original = mockSelection();
+		Thread.sleep(1000);
 		InteractionEvent copy = InteractionEvent.makeCopy(original, original.getInterestContribution());
 		assertEquals(original, copy);
-	}
-	
+	} 
 }
