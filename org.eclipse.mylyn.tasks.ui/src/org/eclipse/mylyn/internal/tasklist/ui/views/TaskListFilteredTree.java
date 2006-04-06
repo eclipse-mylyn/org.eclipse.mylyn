@@ -74,9 +74,10 @@ public class TaskListFilteredTree extends FilteredTree {
 		label.setText(LABEL_FIND);
 				
 		super.createFilterControls(container);
-		
-		filterText.setLayoutData(new GridData(SWT.NONE, SWT.BEGINNING, false, false));
-		
+
+		filterText.setLayoutData(new GridData(70, label.getSize().y));
+//		GridData filterGridData = new GridData(SWT.NONE, SWT.BEGINNING, false, false);
+
 		filterText.addKeyListener(new KeyListener() {
 
 			public void keyPressed(KeyEvent e) {
@@ -122,10 +123,6 @@ public class TaskListFilteredTree extends FilteredTree {
 		
 		return container;
 	}
-
-//    protected void textChanged() {
-//    	super.textChanged();
-//    }
     
     protected void textChanged() {
     	if (refreshJob == null) return;
