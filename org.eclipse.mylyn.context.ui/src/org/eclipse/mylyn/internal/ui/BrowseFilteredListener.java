@@ -42,7 +42,7 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 			filter.setTemporarilyUnfiltered(targetObject);
 			if (targetObject instanceof Tree) {
 				treeViewer.refresh();
-			} else {
+			} else { 
 				treeViewer.refresh(targetObject, true);
 				treeViewer.expandToLevel(targetObject, 1);
 			}

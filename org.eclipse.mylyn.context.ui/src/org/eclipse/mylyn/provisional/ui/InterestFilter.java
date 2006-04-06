@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.internal.core.MylarContextManager;
@@ -48,13 +49,13 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 	@Override
 	public boolean select(Viewer viewer, Object parent, Object object) {
 		try {
-			if (!(viewer instanceof StructuredViewer))
+			if (!(viewer instanceof StructuredViewer) || 
+				!containsMylarInterestFilter((StructuredViewer) viewer)) {
 				return true;
-			if (!containsMylarInterestFilter((StructuredViewer) viewer))
+			}
+			if (isTemporarilyUnfiltered(parent)) {
 				return true;
-			if (temporarilyUnfiltered != null && temporarilyUnfiltered.equals(parent))
-				return true;
-			if (temporarilyUnfiltered instanceof Tree) {
+			} else if (temporarilyUnfiltered instanceof Tree) {
 				// HACK: should also work for trees without project as root
 				if (object instanceof IProjectNature || object instanceof IProject) {
 					return true;
@@ -100,39 +101,12 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 		return false;
 	}
 
-	boolean testselect(Viewer viewer, Object parent, Object element) {
-		try {
-			if (!(viewer instanceof StructuredViewer))
-				return true;
-			if (!containsMylarInterestFilter((StructuredViewer) viewer))
-				return true;
-			if (temporarilyUnfiltered != null && temporarilyUnfiltered.equals(parent))
-				return true;
-
-			IMylarElement node = null;
-			if (element instanceof IMylarElement) {
-				node = (IMylarElement) element;
-			} else {
-				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element);
-				if (!bridge.canFilter(element))
-					return true;
-				if (isImplicitlyInteresting(element, bridge))
-					return true;
-
-				String handle = bridge.getHandleIdentifier(element);
-				node = MylarPlugin.getContextManager().getElement(handle);
-			}
-			if (node != null) {
-				if (node.getInterest().isPredicted()) {
-					return false;
-				} else {
-					return node.getInterest().getValue() > MylarContextManager.getScalingFactors().getInteresting();
-				}
-			}
-		} catch (Throwable t) {
-			MylarStatusHandler.log(t, "interest filter failed on viewer: " + viewer.getClass());
+	private boolean isTemporarilyUnfiltered(Object parent) {
+		if (parent instanceof TreePath) {
+			TreePath treePath = (TreePath)parent;
+			parent = treePath.getLastSegment();
 		}
-		return false;
+		return temporarilyUnfiltered != null && temporarilyUnfiltered.equals(parent);
 	}
 
 	protected boolean isImplicitlyInteresting(Object element, IMylarStructureBridge bridge) {
@@ -193,3 +167,39 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 		}
 	}
 }
+
+
+//boolean testselect(Viewer viewer, Object parent, Object element) {
+//	try {
+//		if (!(viewer instanceof StructuredViewer))
+//			return true;
+//		if (!containsMylarInterestFilter((StructuredViewer) viewer))
+//			return true;
+//		if (isTemporarilyUnfiltered(parent))
+//			return true;
+//
+//		IMylarElement node = null;
+//		if (element instanceof IMylarElement) {
+//			node = (IMylarElement) element;
+//		} else {
+//			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element);
+//			if (!bridge.canFilter(element))
+//				return true;
+//			if (isImplicitlyInteresting(element, bridge))
+//				return true;
+//
+//			String handle = bridge.getHandleIdentifier(element);
+//			node = MylarPlugin.getContextManager().getElement(handle);
+//		}
+//		if (node != null) {
+//			if (node.getInterest().isPredicted()) {
+//				return false;
+//			} else {
+//				return node.getInterest().getValue() > MylarContextManager.getScalingFactors().getInteresting();
+//			}
+//		}
+//	} catch (Throwable t) {
+//		MylarStatusHandler.log(t, "interest filter failed on viewer: " + viewer.getClass());
+//	}
+//	return false;
+//}
