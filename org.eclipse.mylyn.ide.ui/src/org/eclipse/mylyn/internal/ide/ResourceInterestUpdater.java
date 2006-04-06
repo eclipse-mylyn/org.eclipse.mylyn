@@ -72,7 +72,8 @@ public class ResourceInterestUpdater {
 							.getContentType(), handle, SOURCE_ID);
 					interactionEvents.add(interactionEvent);
 				}
-			}
+				MylarStatusHandler.log("added : " + element, null);
+			} 
 		} 
 		MylarPlugin.getContextManager().handleInteractionEvents(interactionEvents, true);
 	}

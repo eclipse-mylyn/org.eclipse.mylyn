@@ -48,16 +48,16 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 					IResource resource = added[i].getResource();
 					addedResources.add(resource);
 				}
-//				IResourceDelta[] changed = delta.getAffectedChildren(IResourceDelta.CHANGED);
-//				for (int i = 0; i < changed.length; i++) {
-//					IResource resource = changed[i].getResource();
-//					changedResources.add(resource);
-//				}
-//				IResourceDelta[] removed = delta.getAffectedChildren(IResourceDelta.REMOVED);
-//				for (int i = 0; i < removed.length; i++) {
-//					IResource resource = removed[i].getResource();
-//					changedResources.add(resource);
-//				}
+				IResourceDelta[] changed = delta.getAffectedChildren(IResourceDelta.CHANGED);
+				for (int i = 0; i < changed.length; i++) {
+					IResource resource = changed[i].getResource();
+					changedResources.add(resource);
+				}
+				IResourceDelta[] removed = delta.getAffectedChildren(IResourceDelta.REMOVED);
+				for (int i = 0; i < removed.length; i++) {
+					IResource resource = removed[i].getResource();
+					changedResources.add(resource);
+				} 
 				return true;
 			}
 		};
