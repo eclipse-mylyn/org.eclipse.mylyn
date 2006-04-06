@@ -76,7 +76,7 @@ public class TaskListFilteredTree extends FilteredTree {
 		super.createFilterControls(container);
 
 		filterText.setLayoutData(new GridData(70, label.getSize().y));
-//		GridData filterGridData = new GridData(SWT.NONE, SWT.BEGINNING, false, false);
+//		filterText.setLayoutData(new GridData(SWT.NONE, SWT.BEGINNING, false, false));
 
 		filterText.addKeyListener(new KeyListener() {
 
@@ -97,7 +97,7 @@ public class TaskListFilteredTree extends FilteredTree {
 		if (activeTask != null) {
 			indicateActiveTask(activeTask);
 		}
-		activeTaskLabel.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
+		activeTaskLabel.setLayoutData(new GridData(SWT.FILL, GridData.VERTICAL_ALIGN_CENTER, true, true));
 		activeTaskLabel.addMouseListener(new MouseListener() {
 
 			public void mouseDoubleClick(MouseEvent e) {
@@ -109,7 +109,6 @@ public class TaskListFilteredTree extends FilteredTree {
 				if (TaskListView.getDefault().getDrilledIntoCategory() != null) {
 					TaskListView.getDefault().goUpToRoot();
 				}
-//				TaskListFilteredTree.this.textChanged(0);
 				TaskListFilteredTree.this.textChanged();
 				TaskListView.getDefault().selectedAndFocusTask(
 						MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTask()

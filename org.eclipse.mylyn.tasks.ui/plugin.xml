@@ -351,7 +351,7 @@
    </extension>
    <extension
          point="org.eclipse.mylar.tasklist.editors">
-      <hyperlinkDetector class="org.eclipse.jface.text.hyperlink.URLHyperlinkDetector"/>
+      <hyperlinkDetector class="org.eclipse.ui.internal.editors.text.URLHyperlinkDetector"/>
    </extension>
    
     <!--<extension
