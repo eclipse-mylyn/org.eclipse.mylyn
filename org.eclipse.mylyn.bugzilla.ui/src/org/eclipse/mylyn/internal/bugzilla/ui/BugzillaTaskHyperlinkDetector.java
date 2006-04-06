@@ -17,7 +17,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-import org.eclipse.mylar.internal.bugzilla.ui.editor.RepositoryCommentViewer;
+import org.eclipse.mylar.internal.bugzilla.ui.editor.RepositoryTextViewer;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
 /**
@@ -25,16 +25,16 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
  */
 public class BugzillaTaskHyperlinkDetector implements IHyperlinkDetector {
 
-	TaskRepository repository;
+	private TaskRepository repository;
 
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 		if (region == null || textViewer == null)
 			return null;
 
-		if (!(textViewer instanceof RepositoryCommentViewer))
+		if (!(textViewer instanceof RepositoryTextViewer))
 			return null;
 
-		RepositoryCommentViewer viewer = (RepositoryCommentViewer) textViewer;
+		RepositoryTextViewer viewer = (RepositoryTextViewer) textViewer;
 
 		repository = viewer.getRepository();
 
@@ -60,7 +60,7 @@ public class BugzillaTaskHyperlinkDetector implements IHyperlinkDetector {
 		int offsetInLine = offset - lineInfo.getOffset();
 
 		IHyperlink[] links = BugzillaUITools.findBugHyperlinks(repository.getUrl(), offsetInLine, lineInfo.getLength(),
-				line, lineInfo.getOffset());// lineInfo.getLength()
+				line, lineInfo.getOffset());
 
 		return links;
 

@@ -29,10 +29,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextViewer;
-import org.eclipse.jface.text.hyperlink.DefaultHyperlinkPresenter;
-import org.eclipse.jface.text.hyperlink.HyperlinkManager;
-import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -59,7 +55,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -86,6 +81,7 @@ import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.internal.help.WorkbenchHelpSystem;
 import org.eclipse.ui.part.EditorPart;
+import org.eclipse.ui.themes.IThemeManager;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
@@ -96,6 +92,8 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @author Rob Elves (Conversion to Eclipse Forms)
  */
 public abstract class AbstractBugEditor extends EditorPart {
+
+	public static final String REPOSITORY_TEXT_ID = "org.eclipse.mylar.tasklist.ui.fonts.task.editor.comment";
 
 	public static final String HYPERLINK_TYPE_TASK = "task";
 
@@ -145,7 +143,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 	protected BugzillaOutlineNode bugzillaOutlineModel = null;
 
-	//private static int MARGIN = 0;// 5
+	// private static int MARGIN = 0;// 5
 
 	protected SimpleDateFormat simpleDateFormat = new SimpleDateFormat("E MMM dd, yyyy hh:mm aa");// "yyyy-MM-dd
 
@@ -950,8 +948,8 @@ public abstract class AbstractBugEditor extends EditorPart {
 		submitButton = toolkit.createButton(buttonComposite, LABEL_BUTTON_SUBMIT, SWT.NONE);
 		// submitButton.setFont(TEXT_FONT);
 		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		submitButtonData.widthHint = AbstractBugEditor.WRAP_LENGTH;
-		submitButtonData.heightHint = 20;
+		// submitButtonData.widthHint = AbstractBugEditor.WRAP_LENGTH;
+		// submitButtonData.heightHint = 20;
 
 		submitButton.setLayoutData(submitButtonData);
 		submitButton.addListener(SWT.Selection, new Listener() {
@@ -1025,7 +1023,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 				}
 			});
-			resultText.setLayoutData(data);			
+			resultText.setLayoutData(data);
 		} else if (style.equalsIgnoreCase(PROPERTY)) {
 			resultText = new StyledText(composite, SWT.READ_ONLY);
 			resultText.setText(checkText(text));
@@ -1065,20 +1063,16 @@ public abstract class AbstractBugEditor extends EditorPart {
 		// composite.setMenu(contextMenuManager.createContextMenu(composite));
 		return resultText;
 	}
-	
-	protected TextViewer addRepositoryText(TaskRepository repository, Composite composite, String text) {
-		RepositoryCommentViewer commentViewer = new RepositoryCommentViewer(composite, SWT.NONE);	
-		commentViewer.setRepository(repository);
-		PresentationReconciler reconciler = new PresentationReconciler();
-		reconciler.install(commentViewer);
 
-		IHyperlinkDetector[] detectors = MylarTaskListPlugin.getDefault().getTaskHyperlinkDetectors();
-				
-		HyperlinkManager hyperlinkManager= new HyperlinkManager(HyperlinkManager.FIRST);
-		// TODO: base colour on preferences
-		hyperlinkManager.install(commentViewer, new DefaultHyperlinkPresenter(new RGB(0, 0, 200)), detectors, SWT.NONE);		
+	protected TextViewer addRepositoryText(TaskRepository repository, Composite composite, String text) {
+		RepositoryTextViewer commentViewer = new RepositoryTextViewer(repository, composite, SWT.NONE);
+
+		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+
+		commentViewer.getTextWidget().setFont(themeManager.getCurrentTheme().getFontRegistry().get(REPOSITORY_TEXT_ID));
+
 		commentViewer.setEditable(false);
-		
+
 		commentViewer.getTextWidget().addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -1092,12 +1086,12 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 			}
 		});
-		
+
 		commentViewer.getTextWidget().setMenu(contextMenuManager.createContextMenu(commentViewer.getTextWidget()));
-		
+
 		// textViewer.getControl().setFont(COMMENT_FONT);
 		commentViewer.setDocument(new Document(text));
-		commentViewer.activatePlugins();
+		// commentViewer.activatePlugins();
 		// textViewer.refresh();
 		return commentViewer;
 	}
@@ -1561,85 +1555,95 @@ public abstract class AbstractBugEditor extends EditorPart {
 		this.bugzillaOutlineModel = bugzillaOutlineModel;
 	}
 
-//	private void addHyperlinks(final StyledText styledText, Composite composite) {
-//
-//		StringMatcher javaElementMatcher = new StringMatcher("*(*.java:*)", true, false);
-//		String[] lines = styledText.getText().split("\r\n|\n");
-//
-//		int totalLength = 0;
-//		for (int x = 0; x < lines.length; x++) {
-//
-//			String line = lines[x];
-//			Position position = javaElementMatcher.find(line, 0, line.length());
-//			if (position != null) {
-//				String linkText = line.substring(position.getStart() + 1, position.getEnd() - 1);
-//				// Link hyperlink = new Link(styledText, SWT.NONE);
-//				IRegion region = new Region(styledText.getText().indexOf(line) + position.getStart(), position.getEnd()
-//						- position.getStart());
-//				addControl(styledText, region, linkText, line, HYPERLINK_TYPE_JAVA);
-//			}
-//
-//			IHyperlink[] bugHyperlinks = BugzillaUITools.findBugHyperlinks(0, line.length(), line, 0);
-//			if (bugHyperlinks != null) {
-//				for (IHyperlink hyperlink : bugHyperlinks) {
-//					String linkText = hyperlink.getHyperlinkText();
-//					int index = linkText.lastIndexOf('=');
-//					if (index >= 0) {
-//						String taskId = linkText.substring(index + 1);
-//						String href = repository.getUrl() + hyperlink.getHyperlinkText();						
-//						addControl(styledText, hyperlink.getHyperlinkRegion(), "bug# " + taskId, href,
-//								HYPERLINK_TYPE_TASK);
-//					}
-//
-//				}
-//			}
-//
-//			totalLength = totalLength + line.length();
-//
-//		} // bottom of for loop
-//
-//		// reposition widgets on paint event
-//		styledText.addPaintObjectListener(new PaintObjectListener() {
-//			public void paintObject(PaintObjectEvent event) {
-//				StyleRange style = event.style;
-//				int start = style.start;
-//				Map<Integer, Control> controlMap = controls.get(styledText);
-//				Control control = controlMap.get(start);
-//				if (control != null) {
-//					Point pt = control.getSize();
-//					int x = event.x + MARGIN;
-//					int y = event.y + event.ascent - 2 * pt.y / 3;
-//					control.setLocation(x, y);
-//				}
-//			}
-//		});
-//	}
+	// private void addHyperlinks(final StyledText styledText, Composite
+	// composite) {
+	//
+	// StringMatcher javaElementMatcher = new StringMatcher("*(*.java:*)", true,
+	// false);
+	// String[] lines = styledText.getText().split("\r\n|\n");
+	//
+	// int totalLength = 0;
+	// for (int x = 0; x < lines.length; x++) {
+	//
+	// String line = lines[x];
+	// Position position = javaElementMatcher.find(line, 0, line.length());
+	// if (position != null) {
+	// String linkText = line.substring(position.getStart() + 1,
+	// position.getEnd() - 1);
+	// // Link hyperlink = new Link(styledText, SWT.NONE);
+	// IRegion region = new Region(styledText.getText().indexOf(line) +
+	// position.getStart(), position.getEnd()
+	// - position.getStart());
+	// addControl(styledText, region, linkText, line, HYPERLINK_TYPE_JAVA);
+	// }
+	//
+	// IHyperlink[] bugHyperlinks = BugzillaUITools.findBugHyperlinks(0,
+	// line.length(), line, 0);
+	// if (bugHyperlinks != null) {
+	// for (IHyperlink hyperlink : bugHyperlinks) {
+	// String linkText = hyperlink.getHyperlinkText();
+	// int index = linkText.lastIndexOf('=');
+	// if (index >= 0) {
+	// String taskId = linkText.substring(index + 1);
+	// String href = repository.getUrl() + hyperlink.getHyperlinkText();
+	// addControl(styledText, hyperlink.getHyperlinkRegion(), "bug# " + taskId,
+	// href,
+	// HYPERLINK_TYPE_TASK);
+	// }
+	//
+	// }
+	// }
+	//
+	// totalLength = totalLength + line.length();
+	//
+	// } // bottom of for loop
+	//
+	// // reposition widgets on paint event
+	// styledText.addPaintObjectListener(new PaintObjectListener() {
+	// public void paintObject(PaintObjectEvent event) {
+	// StyleRange style = event.style;
+	// int start = style.start;
+	// Map<Integer, Control> controlMap = controls.get(styledText);
+	// Control control = controlMap.get(start);
+	// if (control != null) {
+	// Point pt = control.getSize();
+	// int x = event.x + MARGIN;
+	// int y = event.y + event.ascent - 2 * pt.y / 3;
+	// control.setLocation(x, y);
+	// }
+	// }
+	// });
+	// }
 
-//	private void addControl(final StyledText styledText, IRegion region, String linkText, String href,
-//			final String listenerType) {
-//		Hyperlink hyperlink = toolkit.createHyperlink(styledText, linkText, SWT.NONE);
-//		hyperlink.setText(linkText);
-//		hyperlink.setFont(COMMENT_FONT);
-//		hyperlink.setHref(href);
-//		IHyperlinkListener hyperlinkListener = MylarTaskListPlugin.getDefault().getTaskHyperlinkListeners().get(
-//				listenerType);
-//		if (hyperlinkListener != null) {
-//			hyperlink.addHyperlinkListener(hyperlinkListener);
-//		}
-//		Map<Integer, Control> controlMap = controls.get(styledText);
-//		if (controlMap == null) {
-//			controlMap = new HashMap<Integer, Control>();
-//			controls.put(styledText, controlMap);
-//		}
-//		controlMap.put(new Integer(region.getOffset()), hyperlink);
-//		StyleRange style = new StyleRange();
-//		style.start = region.getOffset();
-//		style.length = region.getLength();
-//		hyperlink.pack();
-//		Rectangle rect = hyperlink.getBounds();
-//		int ascent = 2 * rect.height / 3;
-//		int descent = rect.height - ascent;
-//		style.metrics = new GlyphMetrics(ascent + MARGIN, descent + MARGIN, rect.width + 2 * MARGIN);
-//		styledText.setStyleRange(style);
-//	}
+	// private void addControl(final StyledText styledText, IRegion region,
+	// String linkText, String href,
+	// final String listenerType) {
+	// Hyperlink hyperlink = toolkit.createHyperlink(styledText, linkText,
+	// SWT.NONE);
+	// hyperlink.setText(linkText);
+	// hyperlink.setFont(COMMENT_FONT);
+	// hyperlink.setHref(href);
+	// IHyperlinkListener hyperlinkListener =
+	// MylarTaskListPlugin.getDefault().getTaskHyperlinkListeners().get(
+	// listenerType);
+	// if (hyperlinkListener != null) {
+	// hyperlink.addHyperlinkListener(hyperlinkListener);
+	// }
+	// Map<Integer, Control> controlMap = controls.get(styledText);
+	// if (controlMap == null) {
+	// controlMap = new HashMap<Integer, Control>();
+	// controls.put(styledText, controlMap);
+	// }
+	// controlMap.put(new Integer(region.getOffset()), hyperlink);
+	// StyleRange style = new StyleRange();
+	// style.start = region.getOffset();
+	// style.length = region.getLength();
+	// hyperlink.pack();
+	// Rectangle rect = hyperlink.getBounds();
+	// int ascent = 2 * rect.height / 3;
+	// int descent = rect.height - ascent;
+	// style.metrics = new GlyphMetrics(ascent + MARGIN, descent + MARGIN,
+	// rect.width + 2 * MARGIN);
+	// styledText.setStyleRange(style);
+	// }
 }

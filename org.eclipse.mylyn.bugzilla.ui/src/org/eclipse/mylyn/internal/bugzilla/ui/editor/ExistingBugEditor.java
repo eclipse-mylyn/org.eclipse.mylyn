@@ -240,6 +240,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 				radioData.horizontalSpan = 1;
 				radioData.widthHint = 120;
+				
+				// TODO: add condition for if opName = reassign to...				
 				radioOptions[i] = toolkit.createText(buttonComposite, "");// ,
 				// SWT.SINGLE);
 				radioOptions[i].setFont(TEXT_FONT);
@@ -277,11 +279,11 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		super.addActionButtons(buttonComposite);
 
 		compareButton = toolkit.createButton(buttonComposite, "Compare", SWT.NONE);
-		compareButton.setFont(TEXT_FONT);
+//		compareButton.setFont(TEXT_FONT);
 		GridData compareButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		compareButtonData.widthHint = 100;
-		compareButtonData.heightHint = 20;
-		// compareButton.setText("Compare");
+//		compareButtonData.widthHint = 100;
+//		compareButtonData.heightHint = 20;
+//		// compareButton.setText("Compare");
 		compareButton.setLayoutData(compareButtonData);
 		compareButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
@@ -291,6 +293,22 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		});
 		compareButton.addListener(SWT.FocusIn, new GenericListener());
 
+		Button expandAll = toolkit.createButton(buttonComposite, "Reveal comments", SWT.NONE);
+		expandAll.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
+		expandAll.addSelectionListener(new SelectionListener() {
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// ignore
+
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				revealAllComments();
+
+			}
+		});
+		
+		
 		// TODO used for spell checking. Add back when we want to support this
 		// checkSpellingButton = new Button(buttonComposite, SWT.NONE);
 		// checkSpellingButton.setFont(TEXT_FONT);
@@ -461,21 +479,9 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		addCommentsData.heightHint = DESCRIPTION_HEIGHT;
 		addCommentsData.grabExcessVerticalSpace = false;
 		addCommentsComposite.setLayoutData(addCommentsData);
-		// End Additional (read-only) Comments Area
+	 // End Additional (read-only) Comments Area
 
-		Button expandAll = toolkit.createButton(addCommentsComposite, "Expand All", SWT.NONE);
-		expandAll.addSelectionListener(new SelectionListener() {
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// ignore
-
-			}
-
-			public void widgetSelected(SelectionEvent e) {
-				revealAllComments();
-
-			}
-		});
+		
 
 		StyledText styledText = null;
 		for (Iterator<Comment> it = bug.getComments().iterator(); it.hasNext();) {
@@ -487,9 +493,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 			if (!it.hasNext()) {
 				ec.setExpanded(true);
 			}
-
-			// comment.getNumber() + ": " +
-			ec.setText(comment.getAuthorName() + ", " + simpleDateFormat.format(comment.getCreated()));
+			
+			ec.setText(comment.getNumber() + ": " +comment.getAuthorName() + ", " + simpleDateFormat.format(comment.getCreated()));
 
 			ec.addExpansionListener(new ExpansionAdapter() {
 				public void expansionStateChanged(ExpansionEvent e) {
@@ -508,7 +513,13 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 				Link attachmentLink = new Link(ecComposite, SWT.NONE);
 
-				String attachmentHeader = " Attached: " + comment.getAttachmentDescription() + " [<a>view</a>]";
+				String attachmentHeader;
+				
+				if(!comment.isObsolete()) {
+					attachmentHeader = " Attached: " + comment.getAttachmentDescription() + " [<a>view</a>]";
+				} else {
+					attachmentHeader = " Deprecated: " + comment.getAttachmentDescription(); 
+				}
 				// String result = MessageFormat.format(attachmentHeader, new
 				// String[] { node
 				// .getLabelText() });

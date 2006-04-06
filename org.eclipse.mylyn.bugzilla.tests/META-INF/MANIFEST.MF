@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylar.bugzilla.core,
  org.eclipse.mylar.bugzilla.ui,
  org.eclipse.mylar.tasklist,
- org.eclipse.mylar.core.tests
+ org.eclipse.mylar.core.tests,
+ org.eclipse.jface.text
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: bugzilla-test.jar

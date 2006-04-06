@@ -306,10 +306,10 @@
    <extension
          point="org.eclipse.ui.themes">
       <themeElementCategory
-           id="org.eclipse.mylar.tasklist.ui.presentation"
-           label="Mylar"/>
+           id="org.eclipse.mylar.tasklist.ui.presentation.colors"
+           label="Mylar Colors"/>
      <colorDefinition
-           categoryId="org.eclipse.mylar.tasklist.ui.presentation"
+           categoryId="org.eclipse.mylar.tasklist.ui.presentation.colors"
            id="org.eclipse.mylar.tasklist.ui.colors.background.category"
            isEditable="true"
            label="Task List Category Background"
@@ -318,7 +318,24 @@
             Background color of Task List categories and queries.
          </description>
      </colorDefinition>
+
+      <themeElementCategory
+           id="org.eclipse.mylar.tasklist.ui.presentation.fonts"
+           label="Mylar Fonts"/>     
+		<fontDefinition
+        categoryId="org.eclipse.mylar.tasklist.ui.presentation.fonts"
+        defaultsTo="org.eclipse.jface.textfont"
+        id="org.eclipse.mylar.tasklist.ui.fonts.task.editor.comment"
+        isEditable="true"
+        label="Task Editor Comment">
+         <description>
+            Text font used for rendering comments.
+         </description>
+      </fontDefinition>
    </extension>
+   
+    
+
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective

@@ -54,6 +54,8 @@ public class Comment implements Serializable {
 
 	private String attachmentDescription = "";
 
+	private boolean obsolete = false;
+
 	/**
 	 * Constructor
 	 * 
@@ -200,6 +202,14 @@ public class Comment implements Serializable {
 	
 	public String getAttachmentDescription() {
 		return attachmentDescription;
-	}	
+	}
+
+	public void setObsolete(boolean obsolete) {
+		this.obsolete  = obsolete;		
+	}
+	
+	public boolean isObsolete() {
+		return obsolete;
+	}
 	
 }
