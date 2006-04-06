@@ -89,6 +89,12 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class ExistingBugEditor extends AbstractBugEditor {
 
+	private static final String REASSIGN_BUG_TO = "Reassign  bug to";
+
+	private static final String LABEL_EXPAND_ALL_BUTTON = "Expand All";
+
+	private static final String LABEL_COMPARE_BUTTON = "Compare";
+
 	private static final String ATTR_SUMMARY = "Summary";
 
 	protected Set<String> removeCC = new HashSet<String>();
@@ -241,8 +247,12 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				radioData.horizontalSpan = 1;
 				radioData.widthHint = 120;
 				
-				// TODO: add condition for if opName = reassign to...				
-				radioOptions[i] = toolkit.createText(buttonComposite, "");// ,
+				// TODO: add condition for if opName = reassign to...
+				String assignmentValue = "";
+				if(opName.equals(REASSIGN_BUG_TO)) {
+					assignmentValue = repository.getUserName();
+				}
+				radioOptions[i] = toolkit.createText(buttonComposite, assignmentValue);// ,
 				// SWT.SINGLE);
 				radioOptions[i].setFont(TEXT_FONT);
 				radioOptions[i].setLayoutData(radioData);
@@ -278,7 +288,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
 		super.addActionButtons(buttonComposite);
 
-		compareButton = toolkit.createButton(buttonComposite, "Compare", SWT.NONE);
+		compareButton = toolkit.createButton(buttonComposite, LABEL_COMPARE_BUTTON, SWT.NONE);
 //		compareButton.setFont(TEXT_FONT);
 		GridData compareButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 //		compareButtonData.widthHint = 100;
@@ -293,7 +303,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		});
 		compareButton.addListener(SWT.FocusIn, new GenericListener());
 
-		Button expandAll = toolkit.createButton(buttonComposite, "Reveal comments", SWT.NONE);
+		Button expandAll = toolkit.createButton(buttonComposite, LABEL_EXPAND_ALL_BUTTON, SWT.NONE);
 		expandAll.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
 		expandAll.addSelectionListener(new SelectionListener() {
 
@@ -582,9 +592,9 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				| SWT.WRAP);
 		addCommentsText.setFont(COMMENT_FONT);
 		toolkit.paintBordersFor(newCommentsComposite);
-		GridData addCommentsTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		// addCommentsTextData.horizontalSpan = 4;
-		// addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
+		GridData addCommentsTextData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		//addCommentsTextData.horizontalSpan = 4;
+		addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
 		addCommentsTextData.heightHint = DESCRIPTION_HEIGHT;
 		addCommentsTextData.grabExcessHorizontalSpace = true;
 

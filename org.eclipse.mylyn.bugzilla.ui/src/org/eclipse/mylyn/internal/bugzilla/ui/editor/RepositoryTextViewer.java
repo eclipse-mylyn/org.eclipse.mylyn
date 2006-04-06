@@ -21,6 +21,7 @@ import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
+import org.eclipse.jface.text.rules.MultiLineRule;
 import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
@@ -58,7 +59,7 @@ public class RepositoryTextViewer extends SourceViewer {
 
 	class RepositoryViewerConfig extends TextSourceViewerConfiguration {
 
-		RepositoryTextScanner scanner = null;
+		private RepositoryTextScanner scanner = null;
 
 		public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
 			PresentationReconciler reconciler = new PresentationReconciler();
@@ -96,16 +97,16 @@ public class RepositoryTextViewer extends SourceViewer {
 
 		public RepositoryTextScanner() {
 			IToken bugToken = new Token(new TextAttribute(URL_COLOR));
-			IRule[] rules = new IRule[9];
+			IRule[] rules = new IRule[8];
 			rules[0] = (new SingleLineRule("http://", " ", bugToken));
 			rules[1] = (new SingleLineRule("https://", " ", bugToken));
-			rules[2] = (new SingleLineRule("bug#",  " ", bugToken));
-			rules[3] = (new SingleLineRule("bug #",  " ", bugToken));
-			rules[4] = (new SingleLineRule(" bug ",  " ", bugToken));
-			rules[5] = (new SingleLineRule(" at ",  ")", bugToken));
-			rules[6] = (new SingleLineRule("bug #",  "\n", bugToken));
-			rules[7] = (new SingleLineRule("http://", "\n", bugToken));
-			rules[8] = (new SingleLineRule("https://", "\n", bugToken));
+			rules[2] = (new MultiLineRule("bug#",  " ", bugToken));
+			rules[3] = (new MultiLineRule("bug #",  " ", bugToken));
+			rules[4] = (new MultiLineRule(" bug ",  " ", bugToken));
+			rules[5] = (new SingleLineRule("bug #",  "\n", bugToken));
+			rules[6] = (new SingleLineRule("http://", "\n", bugToken));
+			rules[7] = (new SingleLineRule("https://", "\n", bugToken));
+//			rules[5] = (new SingleLineRule(" at ",  ")", bugToken));
 			setRules(rules);
 		}
 

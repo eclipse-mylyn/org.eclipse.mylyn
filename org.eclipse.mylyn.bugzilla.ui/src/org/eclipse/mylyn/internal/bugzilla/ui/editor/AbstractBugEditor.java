@@ -99,7 +99,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 	public static final String HYPERLINK_TYPE_JAVA = "java";
 
-	private static final String LABEL_BUTTON_SUBMIT = "Submit";
+	private static final String LABEL_BUTTON_SUBMIT = "Submit to Repository";
 
 	private static final String LABEL_SECTION_ACTIONS = "Actions";
 
