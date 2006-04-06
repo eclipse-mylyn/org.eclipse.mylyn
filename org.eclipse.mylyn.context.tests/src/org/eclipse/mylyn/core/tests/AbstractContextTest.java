@@ -76,7 +76,7 @@ public abstract class AbstractContextTest extends TestCase {
 	protected InteractionEvent mockInterestContribution(String handle, float value) {
 		return mockInterestContribution(handle, MOCK_KIND, value);
 	}
-
+	
 	protected InteractionEvent mockPreferenceChange(String handle) {
 		return new InteractionEvent(InteractionEvent.Kind.PREFERENCE, MOCK_KIND, handle, MOCK_ORIGIN);
 	}
