@@ -45,6 +45,10 @@ import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer.Tok
  */
 public class BugParser {
 
+	private static final String VALUE_ATTACHMENT_OBSOLETE = "bz_obsolete";
+
+	private static final String ATTRIBUTE_CLASS = "class";
+
 	private static final String TAG_SPAN = "span";
 
 	private static final String ATTRIBUTE_ID_TITLE = "title";
@@ -535,8 +539,13 @@ public class BugParser {
 			if (token.getType() == Token.TAG) {
 				HtmlTag tag = (HtmlTag) token.getValue();
 				if (tag.getTagName().equals(TAG_SPAN)) {
-					parseAttachment(commentStringBuffer, comment, tokenizer);
-					continue;
+					if(tag.hasAttribute(ATTRIBUTE_CLASS) && tag.getAttribute(ATTRIBUTE_CLASS).equals("")) {
+						parseAttachment(commentStringBuffer, comment, tokenizer, false);
+						continue;
+					} else if(tag.hasAttribute(ATTRIBUTE_CLASS) && tag.getAttribute(ATTRIBUTE_CLASS).equals(VALUE_ATTACHMENT_OBSOLETE)) {
+						parseAttachment(commentStringBuffer, comment, tokenizer, true);
+						continue;
+					}
 				}
 				// added to ensure whitespace is not
 				// lost if adding a tag within a tag
@@ -562,7 +571,7 @@ public class BugParser {
 		bug.addComment(comment);
 	}
 
-	private static void parseAttachment(StringBuffer stringBuffer, Comment comment, HtmlStreamTokenizer tokenizer)
+	private static void parseAttachment(StringBuffer stringBuffer, Comment comment, HtmlStreamTokenizer tokenizer, boolean obsolete)
 			throws IOException, ParseException {
 
 		int attachmentID = -1;
@@ -592,6 +601,7 @@ public class BugParser {
 							comment.setHasAttachment(true);
 							comment.setAttachmentId(attachmentID);
 							comment.setAttachmentDescription(attachmentDescription);
+							comment.setObsolete(obsolete);
 						}
 
 					}
