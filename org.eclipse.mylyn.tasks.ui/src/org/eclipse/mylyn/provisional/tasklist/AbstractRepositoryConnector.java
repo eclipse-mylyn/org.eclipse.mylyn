@@ -171,6 +171,7 @@ public abstract class AbstractRepositoryConnector {
 				}
 				
 				repositoryQuery.setCurrentlySynchronizing(false);
+				MylarTaskListPlugin.getTaskListManager().getTaskList().notifyQueryUpdated(repositoryQuery);
 				monitor.worked(1);
 			}
 			return Status.OK_STATUS;

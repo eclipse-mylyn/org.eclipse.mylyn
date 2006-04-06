@@ -25,6 +25,7 @@ import org.eclipse.mylar.internal.tasklist.ui.actions.DeleteTaskRepositoryAction
 import org.eclipse.mylar.internal.tasklist.ui.actions.EditRepositoryPropertiesAction;
 import org.eclipse.mylar.provisional.tasklist.ITaskRepositoryListener;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
@@ -54,8 +55,16 @@ public class TaskRepositoriesView extends ViewPart {
 
 	private final ITaskRepositoryListener REPOSITORY_LISTENER = new ITaskRepositoryListener() {
 
-		public void repositorySetUpdated() {
+		public void repositoriesRead() {
 			refresh();
+		}
+
+		public void repositoryAdded(TaskRepository repository) {
+			refresh();	
+		}
+
+		public void repositoryRemoved(TaskRepository repository) {
+			refresh();			
 		} 
 	};
 

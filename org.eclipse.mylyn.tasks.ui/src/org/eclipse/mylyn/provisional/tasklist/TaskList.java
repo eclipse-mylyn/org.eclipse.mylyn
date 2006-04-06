@@ -477,5 +477,15 @@ public class TaskList {
 			}
 		}
 	}
+
+	public void notifyQueryUpdated(AbstractRepositoryQuery query) {
+		for (ITaskListChangeListener listener : new ArrayList<ITaskListChangeListener>(changeListeners)) {
+			try {
+				listener.containerInfoChanged(query);
+			} catch (Throwable t) {
+				MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
+			}
+		}	
+	}
 }
 

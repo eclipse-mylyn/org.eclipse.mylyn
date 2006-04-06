@@ -80,6 +80,9 @@ public class TaskRepositoryManager {
 		}
 		repositories.add(repository);
 		saveRepositories();
+		for (ITaskRepositoryListener listener : listeners) {
+			listener.repositoryAdded(repository);
+		}
 	}
 
 	public void removeRepository(TaskRepository repository) {
@@ -89,6 +92,9 @@ public class TaskRepositoryManager {
 			repositories.remove(repository);
 		}
 		saveRepositories();
+		for (ITaskRepositoryListener listener : listeners) {
+			listener.repositoryRemoved(repository);
+		}
 	}
 
 	public void addListener(ITaskRepositoryListener listener) {
@@ -192,7 +198,7 @@ public class TaskRepositoryManager {
 			}
 		}
 		for (ITaskRepositoryListener listener : listeners) {
-			listener.repositorySetUpdated();
+			listener.repositoriesRead();
 		}
 		return repositoryMap;
 	}
@@ -215,10 +221,6 @@ public class TaskRepositoryManager {
 				String prefId = PREF_REPOSITORIES + repositoryConnector.getRepositoryType();
 				MylarTaskListPlugin.getMylarCorePrefs().setValue(prefId, repositoriesToStore);
 			} 
-		}
-
-		for (ITaskRepositoryListener listener : listeners) {
-			listener.repositorySetUpdated();
 		}
 	}
 	

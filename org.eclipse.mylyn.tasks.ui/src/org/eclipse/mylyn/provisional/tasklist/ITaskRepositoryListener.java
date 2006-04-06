@@ -16,6 +16,12 @@ package org.eclipse.mylar.provisional.tasklist;
  */
 public interface ITaskRepositoryListener {
 
-	public abstract void repositorySetUpdated();
-
+	public abstract void repositoriesRead();
+	
+	public abstract void repositoryAdded(TaskRepository repository);
+	
+	public abstract void repositoryRemoved(TaskRepository repository);
+	
+//	public abstract void repositorySetUpdated();
+	
 }
