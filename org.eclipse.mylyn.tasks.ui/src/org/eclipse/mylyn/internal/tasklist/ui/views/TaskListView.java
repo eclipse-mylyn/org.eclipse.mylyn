@@ -965,6 +965,7 @@ public class TaskListView extends ViewPart {
 //		manager.add(new Separator());
 		manager.add(filterOnPriority);
 		manager.add(new Separator("navigation"));
+//		manager.add(new Separator(SEPARATOR_CONTEXT));
 		manager.add(previousTaskAction);
 		manager.add(nextTaskAction);
 		manager.add(new Separator(SEPARATOR_CONTEXT));
