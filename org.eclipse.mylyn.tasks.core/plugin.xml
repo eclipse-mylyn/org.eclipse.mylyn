@@ -27,20 +27,11 @@
    </extension>   
    -->
 
-<!--    <extension
-          point="org.eclipse.mylar.tasklist.editors">
-       <hyperlinkListener
-             class="org.eclipse.mylar.internal.bugs.java.JavaStackTraceHyperlinkAdapter"
-             id="org.eclipse.mylar.bugs.hyperlinkLister.java"
-             type="java"/>
-    </extension> -->
+
         <extension
           point="org.eclipse.mylar.tasklist.editors">
        <hyperlinkDetector
              class="org.eclipse.mylar.internal.bugs.java.JavaStackTraceHyperlinkDetector"
              id="org.eclipse.mylar.tasks.hyperlink.detector.java.stack"/>
-       <hyperlinkDetector
-             class="org.eclipse.jdt.internal.ui.javaeditor.JavaElementHyperlinkDetector"
-             id="org.eclipse.mylar.tasks.hyperlink.detector.java.element"/>             
     </extension>
 </plugin>
