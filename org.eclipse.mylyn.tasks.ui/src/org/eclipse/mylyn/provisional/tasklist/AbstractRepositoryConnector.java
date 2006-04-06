@@ -13,7 +13,6 @@ package org.eclipse.mylar.provisional.tasklist;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -22,23 +21,15 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IProgressConstants;
 
 /**
  * Encapsulates synchronization policy.
@@ -50,10 +41,6 @@ public abstract class AbstractRepositoryConnector {
 	public static final String MYLAR_CONTEXT_DESCRIPTION = "mylar/context/xml";
 
 	private static final int MAX_REFRESH_JOBS = 5;
-
-	private static final String LABEL_SYNCHRONIZE_QUERY = "Synchronizing query";
-
-	private static final String LABEL_SYNCHRONIZE_TASK = "Synchronizing task";
 
 	private List<AbstractRepositoryTask> toBeRefreshed = new LinkedList<AbstractRepositoryTask>();
 
@@ -73,112 +60,8 @@ public abstract class AbstractRepositoryConnector {
 	
 	public abstract String getRepositoryUrlFromTaskUrl(String url);
  	
- 	private class SynchronizeTaskJob extends Job {
-
-		private AbstractRepositoryTask repositoryTask;
-
-		boolean forceSync = false;
-
-		public SynchronizeTaskJob(AbstractRepositoryTask repositoryTask) {
-			super(LABEL_SYNCHRONIZE_TASK + ": " + repositoryTask.getDescription());
-			this.repositoryTask = repositoryTask;
-		}
-
-		public void setForceSynch(boolean forceUpdate) {
-			this.forceSync = forceUpdate;
-		}
-
-		@Override
-		public IStatus run(IProgressMonitor monitor) {
-			try {
-				setProperty(IProgressConstants.ICON_PROPERTY, TaskListImages.REPOSITORY_SYNCHRONIZE);
-				repositoryTask.setCurrentlyDownloading(true);
-				repositoryTask.setLastRefresh(new Date());
-				MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
-
-				updateOfflineState(repositoryTask, forceSync);
-
-				repositoryTask.setCurrentlyDownloading(false);
-
-				if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
-					repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
-				} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
-					repositoryTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
-				}
-
-				MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
-			} catch (Exception e) {
-				MylarStatusHandler.fail(e, "Could not download report", false);
-			}
-			removeRefreshingTask(repositoryTask);
-			return new Status(IStatus.OK, MylarPlugin.PLUGIN_ID, IStatus.OK, "", null);
-		}
-	}
-
-	protected class SynchronizeQueryJob extends Job {
-
-		private static final String JOB_LABEL = "Query Synchronization";
-		
-		private Set<AbstractRepositoryQuery> queries;
-		
-		private List<AbstractQueryHit> hits = new ArrayList<AbstractQueryHit>();
-
-		public SynchronizeQueryJob(Set<AbstractRepositoryQuery> queries) {
-			super(JOB_LABEL);
-			this.queries = queries;			
-		}
-
-		@Override
-		protected IStatus run(IProgressMonitor monitor) {
-			monitor.beginTask(JOB_LABEL, queries.size());
-			for (AbstractRepositoryQuery repositoryQuery : queries) {
-				monitor.setTaskName("Synchronizing: "+repositoryQuery.getDescription());
-				setProperty(IProgressConstants.ICON_PROPERTY, TaskListImages.REPOSITORY_SYNCHRONIZE);
-				repositoryQuery.setCurrentlySynchronizing(true);
-				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
-						repositoryQuery.getRepositoryKind(), repositoryQuery.getRepositoryUrl());
-				if (repository == null) {
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							MessageDialog
-									.openInformation(Display.getDefault().getActiveShell(),
-											MylarTaskListPlugin.TITLE_DIALOG,
-											"No task repository associated with this query. Open the query to associate it with a repository.");
-						}
-					});
-				}
-
-				MultiStatus queryStatus = new MultiStatus(MylarTaskListPlugin.PLUGIN_ID, IStatus.OK, "Query result",
-						null);
-
-				hits = performQuery(repositoryQuery, monitor, queryStatus);
-				repositoryQuery.setLastRefresh(new Date());
-
-				if (queryStatus.getChildren() != null && queryStatus.getChildren().length > 0) {
-					if (queryStatus.getChildren()[0].getException() == null) {
-						repositoryQuery.clearHits();
-						for (AbstractQueryHit newHit : hits) {
-							repositoryQuery.addHit(newHit);
-							// added refresh here..
-							if (newHit.getCorrespondingTask() != null && newHit instanceof AbstractQueryHit && newHit.getCorrespondingTask().getSyncState() == RepositoryTaskSyncState.SYNCHRONIZED) {
-								requestRefresh(newHit.getCorrespondingTask());
-							}
-						}
-					} else {
-						repositoryQuery.setCurrentlySynchronizing(false);
-						return queryStatus.getChildren()[0];
-					}
-				}
-				
-				repositoryQuery.setCurrentlySynchronizing(false);
-				MylarTaskListPlugin.getTaskListManager().getTaskList().notifyQueryUpdated(repositoryQuery);
-				monitor.worked(1);
-			}
-			return Status.OK_STATUS;
-		}
-	}
-
-	/**
+ 	/**
+	 * Implementors must execute query synchronously.
 	 * 
 	 * @param query
 	 * @param monitor
@@ -217,44 +100,28 @@ public abstract class AbstractRepositoryConnector {
 
 	public abstract List<String> getSupportedVersions();
 
-	/**
-	 * Synchronize state with the repository (e.g. queries, task contents)
-	 */
-	public void synchronize() {
-		boolean offline = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
-		if (offline) {
-			MessageDialog.openInformation(null, MylarTaskListPlugin.TITLE_DIALOG,
-					"Unable to refresh the query since you are currently offline");
-			return;
-		}
-//		for (ITask task : MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTasks()) {
-//			if (task instanceof AbstractRepositoryTask) {
-//				ITask found = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(task.getHandleIdentifier(),
-//						false);
-//				if (found == null) {
-//					MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(task);
-//					MessageDialog
-//							.openInformation(
-//									Display.getCurrent().getActiveShell(),
-//									MylarTaskListPlugin.TITLE_DIALOG,
-//									"Repository Task "
-//											+ AbstractRepositoryTask.getTaskIdAsInt(task.getHandleIdentifier())
-//											+ " has been moved to the root since it is activated and has disappeared from a query.");
-//				}
-//			}
+//	/**
+//	 * Synchronize state with the repository (e.g. queries, task contents)
+//	 */
+//	public void synchronize(long delay) {
+//		boolean offline = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
+//		if (offline) {
+//			MessageDialog.openInformation(null, MylarTaskListPlugin.TITLE_DIALOG,
+//					"Unable to refresh the query since you are currently offline");
+//			return;
 //		}
-		clearAllRefreshes();
-		Job synchronizeJob = new Job(LABEL_SYNCHRONIZE_QUERY) {
-
-			@Override
-			protected IStatus run(IProgressMonitor monitor) {
-				refreshTasksAndQueries();
-				return Status.OK_STATUS;
-			}
-
-		};
-		synchronizeJob.schedule();
-	}
+//		clearAllRefreshes();
+//		Job synchronizeJob = new Job(LABEL_SYNCHRONIZE_QUERY) {
+//
+//			@Override
+//			protected IStatus run(IProgressMonitor monitor) {
+//				refreshTasksAndQueries();
+//				return Status.OK_STATUS;
+//			}
+//
+//		};
+//		synchronizeJob.schedule();
+//	}
 
 	/**
 	 * @param listener
@@ -263,12 +130,11 @@ public abstract class AbstractRepositoryConnector {
 	public Job synchronize(AbstractRepositoryTask repositoryTask, boolean forceSynch, IJobChangeListener listener) {
 		// TODO: refactor these conditions
 		boolean canNotSynch = repositoryTask.isDirty() || repositoryTask.isSynchronizing();
-		// || bugzillaTask.getBugzillaTaskState() != BugzillaTaskState.FREE;
 		boolean hasLocalChanges = repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING
 				|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT;
 		if (forceSynch || (!canNotSynch && !hasLocalChanges) || !repositoryTask.isDownloaded()) {
 
-			final SynchronizeTaskJob synchronizeJob = new SynchronizeTaskJob(repositoryTask);
+			final SynchronizeTaskJob synchronizeJob = new SynchronizeTaskJob(this, repositoryTask);
 
 			synchronizeJob.setForceSynch(forceSynch);
 			if (listener != null) {
@@ -324,37 +190,37 @@ public abstract class AbstractRepositoryConnector {
 		currentlyRefreshing.clear();
 	}
 
-	private void refreshTasksAndQueries() {
-		Set<ITask> tasks = MylarTaskListPlugin.getTaskListManager().getTaskList().getRootTasks();
-
-		for (ITask task : tasks) {
-			if (task instanceof AbstractRepositoryTask && !task.isCompleted()) {
-				requestRefresh((AbstractRepositoryTask) task);
-			}
-		}
-		for (AbstractTaskContainer cat : MylarTaskListPlugin.getTaskListManager().getTaskList().getCategories()) {
-
-			if (cat instanceof TaskCategory) {
-				for (ITask task : ((TaskCategory) cat).getChildren()) {
-					if (task instanceof AbstractRepositoryTask && !task.isCompleted()) {
-						if (AbstractRepositoryTask.getLastRefreshTimeInMinutes(((AbstractRepositoryTask) task)
-								.getLastRefresh()) > 2) {
-							requestRefresh((AbstractRepositoryTask) task);
-						}
-					}
-				}
-				if (((TaskCategory) cat).getChildren() != null) {
-					for (ITask child : ((TaskCategory) cat).getChildren()) {
-						if (child instanceof AbstractRepositoryTask && !child.isCompleted()) {
-							requestRefresh((AbstractRepositoryTask) child);
-						}
-					}
-				}
-			}
-		}
-		
-		synchronize(MylarTaskListPlugin.getTaskListManager().getTaskList().getQueries(), null, Job.DECORATE);
-		
+//	private void refreshTasksAndQueries() {
+//		Set<ITask> tasks = MylarTaskListPlugin.getTaskListManager().getTaskList().getRootTasks();
+//
+//		for (ITask task : tasks) {
+//			if (task instanceof AbstractRepositoryTask && !task.isCompleted()) {
+//				requestRefresh((AbstractRepositoryTask) task);
+//			}
+//		}
+//		for (AbstractTaskContainer cat : MylarTaskListPlugin.getTaskListManager().getTaskList().getCategories()) {
+//
+//			if (cat instanceof TaskCategory) {
+//				for (ITask task : ((TaskCategory) cat).getChildren()) {
+//					if (task instanceof AbstractRepositoryTask && !task.isCompleted()) {
+//						if (AbstractRepositoryTask.getLastRefreshTimeInMinutes(((AbstractRepositoryTask) task)
+//								.getLastRefresh()) > 2) {
+//							requestRefresh((AbstractRepositoryTask) task);
+//						}
+//					}
+//				}
+//				if (((TaskCategory) cat).getChildren() != null) {
+//					for (ITask child : ((TaskCategory) cat).getChildren()) {
+//						if (child instanceof AbstractRepositoryTask && !child.isCompleted()) {
+//							requestRefresh((AbstractRepositoryTask) child);
+//						}
+//					}
+//				}
+//			}
+//		}
+//		
+//		synchronize(MylarTaskListPlugin.getTaskListManager().getTaskList().getQueries(), null, Job.DECORATE, 0);
+//		
 //		for (AbstractRepositoryQuery query : MylarTaskListPlugin.getTaskListManager().getTaskList().getQueries()) {
 //			if (!(query instanceof AbstractRepositoryQuery)) {
 //				continue;
@@ -372,7 +238,7 @@ public abstract class AbstractRepositoryConnector {
 //				}
 //			}
 //		}
-	}
+//	}
 
 	private void updateRefreshState() {
 		if (currentlyRefreshing.size() < MAX_REFRESH_JOBS && toBeRefreshed.size() > 0) {
@@ -384,9 +250,9 @@ public abstract class AbstractRepositoryConnector {
 		}
 	}
 	
-	public Job synchronize(Set<AbstractRepositoryQuery>repositoryQueries, IJobChangeListener listener, int priority) {
+	public Job synchronize(final Set<AbstractRepositoryQuery>repositoryQueries, IJobChangeListener listener, int priority, long delay) {
 		
-		SynchronizeQueryJob job = new SynchronizeQueryJob(repositoryQueries);
+		SynchronizeQueryJob job = new SynchronizeQueryJob(this, repositoryQueries);
 
 		if (listener != null) {
 			job.addJobChangeListener(listener);
@@ -395,21 +261,15 @@ public abstract class AbstractRepositoryConnector {
 //		job.addJobChangeListener(new JobChangeAdapter() {
 //
 //			public void done(IJobChangeEvent event) {
-//
 //				if (event.getResult().getException() == null) {
-//					// TODO: refactor?
-//					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//						public void run() {
-//							if (TaskListView.getDefault() != null) {
-//								TaskListView.getDefault().getViewer().refresh();
-//							}
-//						}
-//					});
+//					for (AbstractRepositoryQuery query : repositoryQueries) {
+//						MylarTaskListPlugin.getTaskListManager().getTaskList().notifyQueryUpdated(query);
+//					}
 //				}
 //			}
 //		});
 		job.setPriority(Job.DECORATE);
-		job.schedule();
+		job.schedule(delay);
 		return job;
 	}
 	
@@ -420,7 +280,7 @@ public abstract class AbstractRepositoryConnector {
 	public Job synchronize(final AbstractRepositoryQuery repositoryQuery, IJobChangeListener listener) {
 		HashSet<AbstractRepositoryQuery> items = new HashSet<AbstractRepositoryQuery>();
 		items.add(repositoryQuery);
-		return synchronize(items, listener, Job.BUILD);
+		return synchronize(items, listener, Job.BUILD, 0);
 	}
 
 	/**

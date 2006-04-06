@@ -17,12 +17,13 @@ import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 
 /**
  * @author Rob Elves
+ * @author Mik Kersten
  */
-public class TaskListRefreshManager implements IPropertyChangeListener {
+public class TaskListSynchronizationManager implements IPropertyChangeListener {
 
-	private ScheduledTaskListRefreshJob refreshJob;
+	private ScheduledTaskListSynchJob refreshJob;
 
-	public void startRefreshJob() {
+	public void startSynchJob() {
 		if (refreshJob != null) {
 			refreshJob.cancel();
 		}
@@ -34,16 +35,29 @@ public class TaskListRefreshManager implements IPropertyChangeListener {
 			long miliseconds = MylarTaskListPlugin.getMylarCorePrefs().getLong(
 					TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
 
-			refreshJob = new ScheduledTaskListRefreshJob(miliseconds, MylarTaskListPlugin.getTaskListManager());
+			refreshJob = new ScheduledTaskListSynchJob(miliseconds, MylarTaskListPlugin.getTaskListManager());
 			refreshJob.schedule(miliseconds);
 		}
+	}
+	
+	public void synchNow(long delay) {
+		if (refreshJob != null) {
+			refreshJob.cancel();
+		}
+		
+		refreshJob = new ScheduledTaskListSynchJob(MylarTaskListPlugin.getTaskListManager());
+		refreshJob.schedule(delay);
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {
 		if (event.getProperty().equals(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED)				
 				|| event.getProperty().equals(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS)) {
-			startRefreshJob();
+			startSynchJob();
 		}
+	}
+
+	public ScheduledTaskListSynchJob getRefreshJob() {
+		return refreshJob;
 	}
 
 }

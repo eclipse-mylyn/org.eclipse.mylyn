@@ -30,7 +30,7 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 /**
  * @author Rob Elves
  */
-public class ScheduledTaskListRefreshJob extends Job {
+public class ScheduledTaskListSynchJob extends Job {
 
 	private static final String JOB_NAME = "Scheduled Tasklist Refresh Job";
 
@@ -40,22 +40,27 @@ public class ScheduledTaskListRefreshJob extends Job {
 
 	private long count = 0;
 
-	private TaskListManager taskManager;
-
-	public ScheduledTaskListRefreshJob(long schedule, TaskListManager manager) {
+	private TaskListManager taskListManager;
+	
+	public ScheduledTaskListSynchJob(long schedule, TaskListManager taskListManager) {
 		super(JOB_NAME);
 		this.scheduleDelay = schedule;
-		this.taskManager = manager;
+		this.taskListManager = taskListManager;
 		this.setSystem(true);
 		this.setPriority(Job.BUILD);
+	}
 
+	public ScheduledTaskListSynchJob(TaskListManager taskListManager) {
+		super(JOB_NAME);
+		this.taskListManager = taskListManager;
+		this.setPriority(Job.BUILD);
+		this.scheduleDelay = -1;
 	}
 
 	public IStatus run(IProgressMonitor monitor) {
 		if (TaskListView.getDefault() != null) {
 			try {
-
-				taskList = taskManager.getTaskList();
+				taskList = taskListManager.getTaskList();
 				List<TaskRepository>repositories  = MylarTaskListPlugin.getRepositoryManager().getAllRepositories();
 				
 				for (TaskRepository repository : repositories) {
@@ -63,16 +68,17 @@ public class ScheduledTaskListRefreshJob extends Job {
 					if(queries.size() > 0) {
 						AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
 						if(connector != null) {
-							connector.synchronize(queries, null, Job.DECORATE);							
+							connector.synchronize(queries, null, Job.DECORATE, 0);							
 						}
 					}
-				}
-				
+				} 
 			} finally {
 				count++;
 				if (count == Long.MAX_VALUE)
 					count = 0;
-				schedule(scheduleDelay);
+				if (scheduleDelay != -1) {
+					schedule(scheduleDelay);
+				}
 			}
 		}
 		return Status.OK_STATUS;

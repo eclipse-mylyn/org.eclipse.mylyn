@@ -30,7 +30,7 @@ import org.eclipse.mylar.internal.core.MylarPreferenceContstants;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskListBackupManager;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasklist.TaskListRefreshManager;
+import org.eclipse.mylar.internal.tasklist.TaskListSynchronizationManager;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskEditorFactory;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskHighlighter;
@@ -62,6 +62,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	
 	// TODO: move constants
 	
+	private static final int DELAY_QUERY_REFRESH_ON_STARTUP = 3000;
+
 	private static final String DEFAULT_BACKUP_FOLDER_NAME = "backup";
 
 	private static final char DEFAULT_PATH_SEPARATOR = '/';
@@ -86,7 +88,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	private TaskListSaveManager taskListSaveManager;
 	
-	private TaskListRefreshManager taskListRefreshManager;
+	private TaskListSynchronizationManager taskListSynchronizationManager;
 	
 	private TaskListNotificationManager taskListNotificationManager;
 	
@@ -304,25 +306,26 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					taskListNotificationManager.addNotificationProvider(NOTIFICATION_PROVIDER);
 					taskListNotificationManager.startNotification(NOTIFICATION_DELAY);	
 					getMylarCorePrefs().addPropertyChangeListener(taskListNotificationManager);
-					
+					  
 					taskListBackupManager = new TaskListBackupManager();
 					getMylarCorePrefs().addPropertyChangeListener(taskListBackupManager);	
 					
-					taskListRefreshManager = new TaskListRefreshManager();
-					taskListRefreshManager.startRefreshJob();	
+					taskListSynchronizationManager = new TaskListSynchronizationManager();
+					taskListSynchronizationManager.startSynchJob();	
 					
 					taskListSaveManager = new TaskListSaveManager();
 					taskListManager.getTaskList().addChangeListener(taskListSaveManager); 
 					
 					MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);					
-					getMylarCorePrefs().addPropertyChangeListener(taskListRefreshManager);
+					getMylarCorePrefs().addPropertyChangeListener(taskListSynchronizationManager);
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addDisposeListener(
 							taskListSaveManager);
 					
 					if (getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP)) {
-						for (AbstractRepositoryConnector repositoryClient : taskRepositoryManager.getRepositoryConnectors()) {
-							repositoryClient.synchronize();
-						}
+						taskListSynchronizationManager.synchNow(DELAY_QUERY_REFRESH_ON_STARTUP);
+//						taskListRefreshManager.getRefreshJob().schedule(DELAY_QUERY_REFRESH_ON_STARTUP);
+//						ScheduledTaskListRefreshJob refreshJob = new ScheduledTaskListRefreshJob(0, getTaskListManager());
+//						refreshJob.schedule(DELAY_QUERY_REFRESH_ON_STARTUP);
 					}
 				} catch (Exception e) {
 					MylarStatusHandler.fail(e, "Task List initialization failed", true);
@@ -359,7 +362,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			MylarStatusHandler.log(e, "Mylar Task List stop terminated abnormally");
 		}
 	}
-
+	
 	private void migrateHandlesToRepositorySupport() {
 		boolean migrated = false; 
 		getMylarCorePrefs().setDefault(TaskListPreferenceConstants.CONTEXTS_MIGRATED, false);

@@ -41,11 +41,11 @@ public class MylarRepositoriesPreferencePage extends PreferencePage implements I
 
 	private Button reportInternal;
 
-	private Text refreshScheduleTime = null;
+	private Text synchScheduleTime = null;
 
-	private Button enableBackgroundRefresh;
+	private Button enableBackgroundSynch;
 
-	private Button refreshQueries = null;
+	private Button synchQueries = null;
 
 	private Button userRefreshOnly;
 
@@ -95,10 +95,10 @@ public class MylarRepositoriesPreferencePage extends PreferencePage implements I
 		getPreferenceStore().setValue(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL, reportInternal.getSelection());
 
 		getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP,
-				refreshQueries.getSelection());
+				synchQueries.getSelection());
 		getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
-				enableBackgroundRefresh.getSelection());
-		long miliseconds = 60000 * Long.parseLong(refreshScheduleTime.getText());
+				enableBackgroundSynch.getSelection());
+		long miliseconds = 60000 * Long.parseLong(synchScheduleTime.getText());
 		getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS,
 				"" + miliseconds);
 		return super.performOk();
@@ -108,11 +108,11 @@ public class MylarRepositoriesPreferencePage extends PreferencePage implements I
 	public boolean performCancel() {
 		reportEditor.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPORT_OPEN_EDITOR));
 		reportInternal.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL));
-		refreshQueries.setSelection(getPreferenceStore().getBoolean(
+		synchQueries.setSelection(getPreferenceStore().getBoolean(
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
-		enableBackgroundRefresh.setSelection(getPreferenceStore().getBoolean(
+		enableBackgroundSynch.setSelection(getPreferenceStore().getBoolean(
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
-		refreshScheduleTime.setText(getMinutesString());
+		synchScheduleTime.setText(getMinutesString());
 		return super.performCancel();
 	}
 
@@ -123,15 +123,15 @@ public class MylarRepositoriesPreferencePage extends PreferencePage implements I
 		reportInternal.setSelection(getPreferenceStore().getDefaultBoolean(
 				TaskListPreferenceConstants.REPORT_OPEN_INTERNAL));
 
-		refreshQueries.setSelection(getPreferenceStore().getDefaultBoolean(
+		synchQueries.setSelection(getPreferenceStore().getDefaultBoolean(
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
-		enableBackgroundRefresh.setSelection(getPreferenceStore().getDefaultBoolean(
+		enableBackgroundSynch.setSelection(getPreferenceStore().getDefaultBoolean(
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
-		userRefreshOnly.setSelection(!enableBackgroundRefresh.getSelection());
+		userRefreshOnly.setSelection(!enableBackgroundSynch.getSelection());
 		long miliseconds = getPreferenceStore().getDefaultLong(
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
 		long minutes = miliseconds / 60000;
-		refreshScheduleTime.setText("" + minutes);
+		synchScheduleTime.setText("" + minutes);
 		super.performDefaults();
 	}
 
@@ -139,7 +139,7 @@ public class MylarRepositoriesPreferencePage extends PreferencePage implements I
 	// org.eclipse.team.internal.ui.synchronize.ConfigureSynchronizeScheduleComposite
 	private void createTaskRefreshScheduleGroup(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		group.setText("Repository Refresh");
+		group.setText("Repository Synchronization");
 		group.setLayout(new GridLayout(1, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -148,7 +148,7 @@ public class MylarRepositoriesPreferencePage extends PreferencePage implements I
 			final GridData gridData = new GridData();
 			gridData.horizontalSpan = 2;
 			userRefreshOnly.setLayoutData(gridData);
-			userRefreshOnly.setText("Do not schedule background synchronization");
+			userRefreshOnly.setText("No background synchronization");
 			userRefreshOnly.setSelection(!getPreferenceStore().getBoolean(
 					TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
 			userRefreshOnly.addSelectionListener(new SelectionListener() {
@@ -162,14 +162,14 @@ public class MylarRepositoriesPreferencePage extends PreferencePage implements I
 
 		}
 		{
-			enableBackgroundRefresh = new Button(group, SWT.RADIO);
+			enableBackgroundSynch = new Button(group, SWT.RADIO);
 			final GridData gridData = new GridData();
 			gridData.horizontalSpan = 2;
-			enableBackgroundRefresh.setLayoutData(gridData);
-			enableBackgroundRefresh.setText("Use the following schedule (Experimental)");
-			enableBackgroundRefresh.setSelection(getPreferenceStore().getBoolean(
+			enableBackgroundSynch.setLayoutData(gridData);
+			enableBackgroundSynch.setText("Use the following synchronization schedule (Experimental)");
+			enableBackgroundSynch.setSelection(getPreferenceStore().getBoolean(
 					TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
-			enableBackgroundRefresh.addSelectionListener(new SelectionListener() {
+			enableBackgroundSynch.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent e) {
 					updateRefreshGroupEnablements();
 				}
@@ -192,13 +192,13 @@ public class MylarRepositoriesPreferencePage extends PreferencePage implements I
 			label.setText("Every: ");
 		}
 		{
-			refreshScheduleTime = new Text(composite, SWT.BORDER | SWT.RIGHT);
+			synchScheduleTime = new Text(composite, SWT.BORDER | SWT.RIGHT);
 			final GridData gridData_1 = new GridData();
 			gridData_1.widthHint = 35;
-			refreshScheduleTime.setLayoutData(gridData_1);
+			synchScheduleTime.setLayoutData(gridData_1);
 
-			refreshScheduleTime.setText(getMinutesString());
-			refreshScheduleTime.addModifyListener(new ModifyListener() {
+			synchScheduleTime.setText(getMinutesString());
+			synchScheduleTime.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
 					updateRefreshGroupEnablements();
 				}
@@ -210,17 +210,17 @@ public class MylarRepositoriesPreferencePage extends PreferencePage implements I
 			label.setText("minutes");
 		}
 
-		refreshQueries = new Button(group, SWT.CHECK);
-		refreshQueries.setText("Automatically perform a repository refresh on startup");
-		refreshQueries.setSelection(getPreferenceStore().getBoolean(
+		synchQueries = new Button(group, SWT.CHECK);
+		synchQueries.setText("Automatically perform a synchronization on startup");
+		synchQueries.setSelection(getPreferenceStore().getBoolean(
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
 
 	}
 
 	public void updateRefreshGroupEnablements() {
-		if (enableBackgroundRefresh.getSelection()) {
+		if (enableBackgroundSynch.getSelection()) {
 			try {
-				long number = Long.parseLong(refreshScheduleTime.getText());
+				long number = Long.parseLong(synchScheduleTime.getText());
 				if (number <= 0) {
 					this.setErrorMessage("Refresh schedule time must be > 0");
 					this.setValid(false);
@@ -236,7 +236,7 @@ public class MylarRepositoriesPreferencePage extends PreferencePage implements I
 			this.setValid(true);
 			this.setErrorMessage(null);
 		}
-		refreshScheduleTime.setEnabled(enableBackgroundRefresh.getSelection());
+		synchScheduleTime.setEnabled(enableBackgroundSynch.getSelection());
 	}
 
 	private String getMinutesString() {

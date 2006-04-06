@@ -28,7 +28,7 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.internal.tasklist.ScheduledTaskListRefreshJob;
+import org.eclipse.mylar.internal.tasklist.ScheduledTaskListSynchJob;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
@@ -417,7 +417,7 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testScheduledRefreshJob() throws InterruptedException {
 		int counter = 3;
-		ScheduledTaskListRefreshJob job = new ScheduledTaskListRefreshJob(500, manager);
+		ScheduledTaskListSynchJob job = new ScheduledTaskListSynchJob(500, manager);
 		job.run(new NullProgressMonitor());
 		Thread.sleep(1500);
 		assertTrue(job.getCount() >= counter);
