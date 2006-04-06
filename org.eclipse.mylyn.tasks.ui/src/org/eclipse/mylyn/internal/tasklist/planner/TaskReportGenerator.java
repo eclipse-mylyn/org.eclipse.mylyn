@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.planner.ui.TaskPlannerWizardPage;
+import org.eclipse.mylar.internal.tasklist.planner.ui.TaskActicityWizardPage;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.ITask;
@@ -36,6 +36,8 @@ import org.eclipse.mylar.provisional.tasklist.TaskList;
  * @author Rob Elves (scope report to specific categories and queries)
  */
 public class TaskReportGenerator implements IRunnableWithProgress {
+
+	private static final String LABEL_JOB = "Mylar Task Activity Report";
 
 	private boolean finished;
 
@@ -75,17 +77,17 @@ public class TaskReportGenerator implements IRunnableWithProgress {
 		Set<ITaskListElement> rootElements;
 		if (filterCategories.size() == 0) {
 			rootElements = tasklist.getRootElements();
-		} else if(filterCategories.contains(TaskPlannerWizardPage.ROOT_CATEGORY_HACK)) {
+		} else if(filterCategories.contains(TaskActicityWizardPage.ROOT_CATEGORY_HACK)) {
 			// TODO: Remove when root category issues fixed
 			rootElements = new HashSet<ITaskListElement>(tasklist.getRootTasks());
-			filterCategories.remove(TaskPlannerWizardPage.ROOT_CATEGORY_HACK);
+			filterCategories.remove(TaskActicityWizardPage.ROOT_CATEGORY_HACK);
 			rootElements.addAll(filterCategories);
 		} else {
 			rootElements = filterCategories;
 		}
 
 		int estimatedItemsToProcess = rootElements.size();
-		monitor.beginTask("Mylar Task Planner", estimatedItemsToProcess);
+		monitor.beginTask(LABEL_JOB, estimatedItemsToProcess);
 
 		for (Object element : rootElements) {
 			monitor.worked(1);

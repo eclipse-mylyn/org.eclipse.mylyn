@@ -34,7 +34,9 @@ import org.eclipse.ui.progress.IProgressService;
  * @author Ken Sueda
  * @author Mik Kersten
  */
-public class TaskPlannerEditorInput implements IEditorInput {
+public class TaskActivityEditorInput implements IEditorInput {
+
+	private static final String TASK_ACTIVITY_REPORT = "Task Activity Report";
 
 	private Set<ITask> completedTasks = new HashSet<ITask>();
 
@@ -48,7 +50,7 @@ public class TaskPlannerEditorInput implements IEditorInput {
 
 	private Date reportStartDate = null;
 
-	public TaskPlannerEditorInput(Date reportStartDate, Set<ITaskListElement> chosenCategories, TaskList tlist) {
+	public TaskActivityEditorInput(Date reportStartDate, Set<ITaskListElement> chosenCategories, TaskList tlist) {
 		this.reportStartDate = reportStartDate;
 		taskReportGenerator = new TaskReportGenerator(tlist, chosenCategories);
 
@@ -83,7 +85,7 @@ public class TaskPlannerEditorInput implements IEditorInput {
 	}
 
 	public String getName() {
-		return "Mylar Task Planner";
+		return TASK_ACTIVITY_REPORT;
 	}
 
 	public IPersistableElement getPersistable() {

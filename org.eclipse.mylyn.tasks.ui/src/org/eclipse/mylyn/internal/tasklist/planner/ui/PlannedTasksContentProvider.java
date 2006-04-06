@@ -21,9 +21,9 @@ import org.eclipse.mylar.provisional.tasklist.ITask;
  */
 public class PlannedTasksContentProvider implements IStructuredContentProvider, ITaskPlannerContentProvider {
 
-	TaskPlannerEditorInput editorInput;
+	TaskActivityEditorInput editorInput;
 
-	public PlannedTasksContentProvider(TaskPlannerEditorInput editorInput) {
+	public PlannedTasksContentProvider(TaskActivityEditorInput editorInput) {
 		this.editorInput = editorInput;
 	}
 

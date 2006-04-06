@@ -28,6 +28,8 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
  * @author Mik Kersten
  */
 public class NewBugzillaReportWizard extends AbstractBugWizard {
+ 	
+	private static final String TITLE = "New Bugzilla Task";
 
 	/**
 	 * The wizard page where the attributes are selected and the bug is
@@ -39,6 +41,7 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 
 	public NewBugzillaReportWizard(TaskRepository repository) {
 		this(false, repository);
+		super.setWindowTitle(TITLE);
 	}
 
 	public NewBugzillaReportWizard(boolean fromDialog, TaskRepository repository) {

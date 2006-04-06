@@ -232,7 +232,6 @@ public class BugzillaSearchEngine {
 						
 						BugzillaServerVersion bugzillaServerVersion = IBugzillaConstants.BugzillaServerVersion.fromString(repository.getVersion());
 						if (bugzillaServerVersion != null && bugzillaServerVersion.compareTo(BugzillaServerVersion.SERVER_220) >= 0) {
-//						if (repository.getVersion().equals(BugzillaServerVersion.SERVER_220.toString())) {
 							regularExpression = reValueBugzilla220;
 						} else {
 							regularExpression = reValue;
@@ -302,7 +301,7 @@ public class BugzillaSearchEngine {
 		// if we haven't collected any serach results and we suspect a bad
 		// login, we assume it was a bad login
 		if (numCollected == 0 && possibleBadLogin) {
-			throw new LoginException(IBugzillaConstants.MESSAGE_LOGIN_FAILURE + " for url " + urlString);
+			throw new LoginException(IBugzillaConstants.MESSAGE_LOGIN_FAILURE + " for query " + BugzillaPlugin.getMostRecentQuery());
 		}
 
 		if (status == null)

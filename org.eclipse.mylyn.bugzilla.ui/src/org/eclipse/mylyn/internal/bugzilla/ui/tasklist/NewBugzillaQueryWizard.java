@@ -28,6 +28,8 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
  */
 public class NewBugzillaQueryWizard extends Wizard {
 
+	private static final String TITLE = "New Bugzilla Query";
+	
 	private final TaskRepository repository;
 
 	private BugzillaQueryWizardPage queryPage;
@@ -35,6 +37,7 @@ public class NewBugzillaQueryWizard extends Wizard {
 	public NewBugzillaQueryWizard(TaskRepository repository) {
 		this.repository = repository;
 		setNeedsProgressMonitor(true);
+		setWindowTitle(TITLE); 
 	}
 
 	@Override

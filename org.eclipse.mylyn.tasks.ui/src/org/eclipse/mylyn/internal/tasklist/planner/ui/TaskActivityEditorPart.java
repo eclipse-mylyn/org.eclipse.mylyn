@@ -24,14 +24,12 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -45,15 +43,11 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.ui.ComboSelectionDialog;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
-import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskCategory;
 import org.eclipse.mylar.provisional.tasklist.TaskListManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -67,7 +61,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
@@ -99,7 +92,7 @@ import org.eclipse.ui.part.EditorPart;
  *         similar code)
  * @author Mik Kersten (rewrite)
  */
-public class TaskPlannerEditorPart extends EditorPart {
+public class TaskActivityEditorPart extends EditorPart {
 
 	private static final String LABEL_PLANNED_ACTIVITY = "Planned Activity";
 
@@ -107,7 +100,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 
 	private static final String LABEL_PAST_ACTIVITY = "Past Activity";
 
-	private TaskPlannerEditorInput editorInput = null;
+	private TaskActivityEditorInput editorInput = null;
 
 	private String[] activityColumnNames = new String[] { " ", " !", "Description", "Created", "Completed", "Elapsed",
 			"Estimated" };
@@ -125,9 +118,6 @@ public class TaskPlannerEditorPart extends EditorPart {
 
 	private int[] planColumnWidths = new int[] { 20, 30, 340, 90, 90, 100 };
 
-//	private static final String[] ESTIMATE_TIMES = new String[] { "0 Hours", "1 Hours", "2 Hours", "3 Hours",
-//			"4 Hours", "5 Hours", "6 Hours", "7 Hours", "8 Hours", "9 Hours", "10 Hours" };
-
 	private static final String LABEL_ESTIMATED = "Total estimated: ";
 
 	private static final String NO_TIME_ELAPSED = "&nbsp;";
@@ -135,8 +125,6 @@ public class TaskPlannerEditorPart extends EditorPart {
 	private static final String BLANK_CELL = "&nbsp;";
 
 	private Label totalEstimatedHoursLabel;
-	
-	// Summary Fields
 	
 	private Label numberCompleted;
 	
@@ -150,7 +138,6 @@ public class TaskPlannerEditorPart extends EditorPart {
 
 	private Label totalTime;
 
-	
 	private TaskActivityContentProvider activityContentProvider;
 
 	private PlannedTasksContentProvider planContentProvider;
@@ -168,7 +155,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		setSite(site);
 		setInput(input);
-		editorInput = (TaskPlannerEditorInput) input;
+		editorInput = (TaskActivityEditorInput) input;
 		setPartName(editorInput.getName());
 		setTitleToolTip(editorInput.getToolTipText());
 	}
@@ -227,7 +214,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 		activityContextMenuMgr.setRemoveAllWhenShown(true);
 		activityContextMenuMgr.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
-				TaskPlannerEditorPart.this.fillContextMenu(activityViewer, manager);
+				TaskActivityEditorPart.this.fillContextMenu(activityViewer, manager);
 
 			}
 		});
@@ -257,7 +244,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 		planContextMenuMgr.setRemoveAllWhenShown(true);
 		planContextMenuMgr.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
-				TaskPlannerEditorPart.this.fillContextMenu(planViewer, manager);
+				TaskActivityEditorPart.this.fillContextMenu(planViewer, manager);
 			}
 		});
 		Menu planMenu = planContextMenuMgr.createContextMenu(planViewer.getControl());
@@ -486,9 +473,6 @@ public class TaskPlannerEditorPart extends EditorPart {
 		});
 	}
 
-	/**
-	 * TODO: refactor into seperate actions?
-	 */
 	private void createButtons(Composite parent, FormToolkit toolkit, final TableViewer viewer,
 			final PlannedTasksContentProvider contentProvider) {
 		Composite container = new Composite(parent, SWT.NULL);
@@ -497,26 +481,26 @@ public class TaskPlannerEditorPart extends EditorPart {
 		container.setLayout(layout);
 		layout.numColumns = 3;
 
-		Button addIncomplete = toolkit.createButton(container, "Add Incomplete", SWT.PUSH | SWT.CENTER);
-		addIncomplete.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				Set<ITask> incompleteTasks = editorInput.getInProgressTasks();
-				for (ITask task : incompleteTasks) {
-					contentProvider.addTask(task);
-					viewer.refresh();
-					updateLabels();
-				}
-			}
-		});
-
-		Button addToCategory = toolkit.createButton(container, "Add Planned to Category...", SWT.PUSH | SWT.CENTER);
-		addToCategory.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				addPlannedTasksToCategory(contentProvider);
-			}
-		});
+//		Button addIncomplete = toolkit.createButton(container, "Add Incomplete", SWT.PUSH | SWT.CENTER);
+//		addIncomplete.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				Set<ITask> incompleteTasks = editorInput.getInProgressTasks();
+//				for (ITask task : incompleteTasks) {
+//					contentProvider.addTask(task);
+//					viewer.refresh();
+//					updateLabels();
+//				}
+//			}
+//		});
+//
+//		Button addToCategory = toolkit.createButton(container, "Add Planned to Category...", SWT.PUSH | SWT.CENTER);
+//		addToCategory.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				addPlannedTasksToCategory(contentProvider);
+//			}
+//		});
 
 		Button exportToHTML = toolkit.createButton(container, "Export to HTML...", SWT.PUSH | SWT.CENTER);
 		exportToHTML.addSelectionListener(new SelectionAdapter() {
@@ -633,46 +617,46 @@ public class TaskPlannerEditorPart extends EditorPart {
 		}
 	}
 
-	private void addPlannedTasksToCategory(PlannedTasksContentProvider contentProvider) {
-		List<AbstractTaskContainer> categories = MylarTaskListPlugin.getTaskListManager().getTaskList().getUserCategories();
-		String[] categoryNames = new String[categories.size()];
-		int i = 0;
-		for (AbstractTaskContainer category : categories) {
-			categoryNames[i++] = category.getDescription();
-		}
-		if (categories.size() > 0) {
-			ComboSelectionDialog dialog = new ComboSelectionDialog(Display.getCurrent().getActiveShell(), LABEL_DIALOG,
-					"Select destination category: ", categoryNames, 0);
-			int confirm = dialog.open();
-			if (confirm == ComboSelectionDialog.OK) {
-				String selected = dialog.getSelectedString();
-				AbstractTaskContainer destinationCategory = null;
-				for (AbstractTaskContainer category : categories) {
-					if (category.getDescription().equals(selected)) {
-						destinationCategory = category;
-						break; // will go to the first one
-					}
-				}
-				if (destinationCategory != null && destinationCategory instanceof TaskCategory) {
-					TaskCategory taskCategory = (TaskCategory) destinationCategory;
-					for (ITask task : editorInput.getPlannedTasks()) {
-						if (!taskCategory.getChildren().contains(task)) {
-							MylarTaskListPlugin.getTaskListManager().getTaskList().moveToContainer(taskCategory, task);
-						}
-					}
-					if (TaskListView.getDefault() != null) {
-						TaskListView.getDefault().refreshAndFocus();
-					}
-				} else {
-					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), LABEL_DIALOG,
-							"Can not add plan tasks into a query category.");
-				}
-			}
-		} else {
-			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), LABEL_DIALOG,
-					"No categories in task list.");
-		}
-	}
+//	private void addPlannedTasksToCategory(PlannedTasksContentProvider contentProvider) {
+//		List<AbstractTaskContainer> categories = MylarTaskListPlugin.getTaskListManager().getTaskList().getUserCategories();
+//		String[] categoryNames = new String[categories.size()];
+//		int i = 0;
+//		for (AbstractTaskContainer category : categories) {
+//			categoryNames[i++] = category.getDescription();
+//		}
+//		if (categories.size() > 0) {
+//			ComboSelectionDialog dialog = new ComboSelectionDialog(Display.getCurrent().getActiveShell(), LABEL_DIALOG,
+//					"Select destination category: ", categoryNames, 0);
+//			int confirm = dialog.open();
+//			if (confirm == ComboSelectionDialog.OK) {
+//				String selected = dialog.getSelectedString();
+//				AbstractTaskContainer destinationCategory = null;
+//				for (AbstractTaskContainer category : categories) {
+//					if (category.getDescription().equals(selected)) {
+//						destinationCategory = category;
+//						break; // will go to the first one
+//					}
+//				}
+//				if (destinationCategory != null && destinationCategory instanceof TaskCategory) {
+//					TaskCategory taskCategory = (TaskCategory) destinationCategory;
+//					for (ITask task : editorInput.getPlannedTasks()) {
+//						if (!taskCategory.getChildren().contains(task)) {
+//							MylarTaskListPlugin.getTaskListManager().getTaskList().moveToContainer(taskCategory, task);
+//						}
+//					}
+//					if (TaskListView.getDefault() != null) {
+//						TaskListView.getDefault().refreshAndFocus();
+//					}
+//				} else {
+//					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), LABEL_DIALOG,
+//							"Can not add plan tasks into a query category.");
+//				}
+//			}
+//		} else {
+//			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), LABEL_DIALOG,
+//					"No categories in task list.");
+//		}
+//	}
 
 	private void updateLabels() {
 		totalEstimatedHoursLabel.setText(LABEL_ESTIMATED + editorInput.getPlannedEstimate() + " hours");
@@ -816,11 +800,9 @@ public class TaskPlannerEditorPart extends EditorPart {
 				writer.write("<td>" + completionDateString + "</td><td>" + elapsedTimeString + "</td><td>"
 						+ estimatedTimeString + "</td>");
 				writer.write("</tr>");
-
 			}
 		}
 		writer.write("</table>");
-
 	}
 
 	private void exportSummarySection(BufferedWriter writer) throws IOException {
@@ -858,7 +840,5 @@ public class TaskPlannerEditorPart extends EditorPart {
 		writer.write("</tr>");
 
 		writer.write("</table>");
-
 	}
-
 }

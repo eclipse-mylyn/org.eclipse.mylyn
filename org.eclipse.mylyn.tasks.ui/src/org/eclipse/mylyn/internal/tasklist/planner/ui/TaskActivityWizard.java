@@ -26,13 +26,16 @@ import org.eclipse.ui.PartInitException;
  * @author Ken Sueda
  * @author Mik Kersten
  */
-public class TaskPlannerWizard extends Wizard implements INewWizard {
+public class TaskActivityWizard extends Wizard implements INewWizard {
 
-	private TaskPlannerWizardPage planningGamePage;
+	private static final String TITLE = "New Task Activity Report";
+	
+	private TaskActicityWizardPage planningGamePage;
 
-	public TaskPlannerWizard() {
+	public TaskActivityWizard() {
 		super();
 		init();
+		setWindowTitle(TITLE);
 	}
 
 	@Override
@@ -42,7 +45,7 @@ public class TaskPlannerWizard extends Wizard implements INewWizard {
 					.getActivePage();
 			if (page == null)
 				return false;
-			IEditorInput input = new TaskPlannerEditorInput(planningGamePage.getReportStartDate(), planningGamePage
+			IEditorInput input = new TaskActivityEditorInput(planningGamePage.getReportStartDate(), planningGamePage
 					.getSelectedFilters(), MylarTaskListPlugin.getTaskListManager().getTaskList());
 			page.openEditor(input, TaskListPreferenceConstants.PLANNER_EDITOR_ID);
 		} catch (PartInitException ex) {
@@ -55,7 +58,7 @@ public class TaskPlannerWizard extends Wizard implements INewWizard {
 	}
 
 	private void init() {
-		planningGamePage = new TaskPlannerWizardPage();
+		planningGamePage = new TaskActicityWizardPage();
 		super.setForcePreviousAndNextButtons(true);
 	}
 

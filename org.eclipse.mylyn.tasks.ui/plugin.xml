@@ -23,7 +23,7 @@
     <extension point="org.eclipse.ui.newWizards">
       <wizard
             category="org.eclipse.mylar.wizards"
-            class="org.eclipse.mylar.internal.tasklist.planner.ui.TaskPlannerWizard"
+            class="org.eclipse.mylar.internal.tasklist.planner.ui.TaskActivityWizard"
             icon="icons/eview16/task-list.gif"
             id="org.eclipse.mylar.tasklist.report.ui.planningGameWizard"
             name="Task Activity Report (Experimental)">
@@ -132,7 +132,7 @@
            id="org.eclipse.mylar.tasklist.ui.catEditor"/>
     <editor
            icon="icons/eview16/task-list.gif"
-           class="org.eclipse.mylar.internal.tasklist.planner.ui.TaskPlannerEditorPart"
+           class="org.eclipse.mylar.internal.tasklist.planner.ui.TaskActivityEditorPart"
            name="Mylar Task Planner"
            id="org.eclipse.mylar.tasklist.ui.planner.editor"/>                      
   </extension>
