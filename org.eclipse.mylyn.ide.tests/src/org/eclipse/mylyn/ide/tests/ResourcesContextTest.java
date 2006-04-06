@@ -59,13 +59,13 @@ public class ResourcesContextTest extends AbstractResourceContextTest {
 		assertTrue(element.getInterest().isInteresting());
 	}
 
-	public void testFolderAdded() throws CoreException {
+	public void testFolderNotAdded() throws CoreException {
 		IFolder folder = project.getProject().getFolder("folder");
 		folder.create(true, true, null);
 		assertTrue(folder.exists());
 
 		IMylarElement element = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(folder));
-		assertTrue(element.getInterest().isInteresting());
+		assertFalse(element.getInterest().isInteresting());
 	}
 
 	public void testDecrementOfFile() throws CoreException, InvocationTargetException, InterruptedException {
