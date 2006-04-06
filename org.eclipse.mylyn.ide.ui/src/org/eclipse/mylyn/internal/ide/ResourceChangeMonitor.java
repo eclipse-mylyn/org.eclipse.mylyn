@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.ide;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -46,17 +47,23 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 				IResourceDelta[] added = delta.getAffectedChildren(IResourceDelta.ADDED);
 				for (int i = 0; i < added.length; i++) {
 					IResource resource = added[i].getResource();
-					addedResources.add(resource);
+					if (resource instanceof IFile) {
+						addedResources.add(resource);
+					}
 				}
 				IResourceDelta[] changed = delta.getAffectedChildren(IResourceDelta.CHANGED);
 				for (int i = 0; i < changed.length; i++) {
 					IResource resource = changed[i].getResource();
-					changedResources.add(resource);
+					if (resource instanceof IFile) {
+						changedResources.add(resource);
+					} 
 				}
 				IResourceDelta[] removed = delta.getAffectedChildren(IResourceDelta.REMOVED);
 				for (int i = 0; i < removed.length; i++) {
 					IResource resource = removed[i].getResource();
-					changedResources.add(resource);
+					if (resource instanceof IFile) {
+						changedResources.add(resource);
+					}
 				} 
 				return true;
 			}
