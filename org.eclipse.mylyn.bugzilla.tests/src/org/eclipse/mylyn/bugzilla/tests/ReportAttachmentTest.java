@@ -14,9 +14,9 @@ package org.eclipse.mylar.bugzilla.tests;
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
-import java.net.URL;
 
-import org.eclipse.core.runtime.FileLocator;
+import junit.framework.TestCase;
+
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.core.tests.support.FileTool;
@@ -25,8 +25,6 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.internal.BugParser;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
-
-import junit.framework.TestCase;
 
 /**
  * @author Rob Elves
@@ -54,12 +52,12 @@ public class ReportAttachmentTest extends TestCase {
 	}
 	
 	public void testAttachementDownload() throws Exception {
-		URL localURL = null;
-
-		URL installURL = BugzillaTestPlugin.getDefault().getBundle().getEntry("testdata/contexts/");
-		localURL = FileLocator.toFileURL(installURL);
+//		URL localURL = null;
+//		URL installURL = BugzillaTestPlugin.getDefault().getBundle().getEntry("testdata/contexts/");
+		File destinationFile = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("testdata/contexts/"));
+//		localURL = FileLocator.toFileURL(installURL); 
 		
-		File destinationFile = new File(localURL.getPath()+"downloadedContext.xml");
+//		File destinationFile = new File(localURL.getPath()+"downloadedContext.xml");
 		
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		boolean result = BugzillaRepositoryUtil.downloadAttachment(repository, 2, destinationFile, true);
