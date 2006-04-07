@@ -59,7 +59,7 @@ public class ResourceInterestUpdater {
 			if (acceptResource(resource)) {
 				toAdd.add(resource);
 			}
-		}
+		} 
 
 		List<InteractionEvent> interactionEvents = new ArrayList<InteractionEvent>();
 		for (IResource resource : toAdd) {
