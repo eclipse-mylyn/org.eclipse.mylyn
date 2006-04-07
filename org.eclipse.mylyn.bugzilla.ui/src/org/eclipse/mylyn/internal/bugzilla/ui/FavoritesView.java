@@ -24,7 +24,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ColumnLayoutData;
 import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -554,8 +553,6 @@ public class FavoritesView extends ViewPart {
 		/**
 		 * Notifies this content provider that a given viewer's input has been
 		 * changed.
-		 * 
-		 * @see IContentProvider#inputChanged
 		 */
 		public void inputChanged(Viewer viewerChanged, Object oldInput, Object newInput) {
 			this.results = (List) newInput;
