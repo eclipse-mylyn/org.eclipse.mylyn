@@ -245,8 +245,8 @@ public class TaskListManager {
 
 	/** public for testing * */
 	public void parseInteractionEvent(InteractionEvent event) {
-		if (event.getDelta().equals(MylarContextManager.ACTIVITY_ACTIVATED)) {
-			if (!event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE)) {
+		if (event.getDelta().equals(MylarContextManager.ACTIVITY_DELTA_ACTIVATED)) {
+			if (!event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION)) {
 				if (isInactive) {
 					isInactive = false;
 					totalInactive = 0;
@@ -261,12 +261,12 @@ public class TaskListManager {
 					currentTaskStart = calendar;
 					currentHandle = event.getStructureHandle();
 				}
-			} else if (event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE) && isInactive) {
+			} else if (event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION) && isInactive) {
 				isInactive = false;
 				totalInactive = event.getDate().getTime() - startInactive;
 			}
-		} else if (event.getDelta().equals(MylarContextManager.ACTIVITY_DEACTIVATED)) {
-			if (!event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE)
+		} else if (event.getDelta().equals(MylarContextManager.ACTIVITY_DELTA_DEACTIVATED)) {
+			if (!event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION)
 					&& currentHandle.equals(event.getStructureHandle())) {
 				GregorianCalendar calendarEnd = new GregorianCalendar();
 				calendarEnd.setFirstDayOfWeek(START_DAY);
@@ -294,7 +294,7 @@ public class TaskListManager {
 				currentHandle = "";
 				totalInactive = 0;
 				startInactive = 0;
-			} else if (event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE) && !isInactive) {
+			} else if (event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION) && !isInactive) {
 				isInactive = true;
 				startInactive = event.getDate().getTime();
 			}

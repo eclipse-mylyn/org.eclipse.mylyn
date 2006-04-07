@@ -111,10 +111,10 @@ public class TaskActivityViewTest extends TestCase {
 		assertTrue(thisWeekActivity.includes(thisWeekCalendarStart));
 
 		InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task1
-				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_ACTIVATED, 2f,
+				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_ACTIVATED, 2f,
 				thisWeekCalendarStart.getTime(), thisWeekCalendarStart.getTime());
 		InteractionEvent event2 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task1
-				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DEACTIVATED, 2f,
+				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f,
 				thisWeekCalendarStop.getTime(), thisWeekCalendarStop.getTime());
 
 		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event1);
@@ -133,10 +133,10 @@ public class TaskActivityViewTest extends TestCase {
 
 		// multiple tasks in category
 		event1 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task2.getHandleIdentifier(),
-				"originId", "navigatedRelation", MylarContextManager.ACTIVITY_ACTIVATED, 2f, thisWeekCalendarStart
+				"originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_ACTIVATED, 2f, thisWeekCalendarStart
 						.getTime(), thisWeekCalendarStart.getTime());
 		event2 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task2.getHandleIdentifier(),
-				"originId", "navigatedRelation", MylarContextManager.ACTIVITY_DEACTIVATED, 2f, thisWeekCalendarStop
+				"originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f, thisWeekCalendarStop
 						.getTime(), thisWeekCalendarStop.getTime());
 		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event1);
 		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event2);
@@ -148,10 +148,10 @@ public class TaskActivityViewTest extends TestCase {
 		assertEquals(0, pastActivity.getChildren().size());
 
 		InteractionEvent event3 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task2
-				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_ACTIVATED, 2f,
+				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_ACTIVATED, 2f,
 				pastActivity.getStart().getTime(), pastActivity.getStart().getTime());
 		InteractionEvent event4 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task2
-				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DEACTIVATED, 2f,
+				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f,
 				pastActivity.getEnd().getTime(), pastActivity.getEnd().getTime());
 
 		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event3);
@@ -164,10 +164,10 @@ public class TaskActivityViewTest extends TestCase {
 		assertEquals(0, futureActivity.getChildren().size());
 
 		InteractionEvent event5 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task2
-				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_ACTIVATED, 2f,
+				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_ACTIVATED, 2f,
 				futureActivity.getStart().getTime(), futureActivity.getStart().getTime());
 		InteractionEvent event6 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task2
-				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DEACTIVATED, 2f,
+				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f,
 				futureActivity.getEnd().getTime(), futureActivity.getEnd().getTime());
 
 		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event5);
@@ -180,10 +180,10 @@ public class TaskActivityViewTest extends TestCase {
 		assertEquals(0, activityNextWeek.getChildren().size());
 
 		InteractionEvent event7 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task2
-				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_ACTIVATED, 2f,
+				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_ACTIVATED, 2f,
 				activityNextWeek.getStart().getTime(), activityNextWeek.getStart().getTime());
 		InteractionEvent event8 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task2
-				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DEACTIVATED, 2f,
+				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f,
 				activityNextWeek.getEnd().getTime(), activityNextWeek.getEnd().getTime());
 
 		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event7);
@@ -196,10 +196,10 @@ public class TaskActivityViewTest extends TestCase {
 		assertEquals(0, activityPreviousWeek.getChildren().size());
 
 		InteractionEvent event9 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task2
-				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_ACTIVATED, 2f,
+				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_ACTIVATED, 2f,
 				activityPreviousWeek.getStart().getTime(), activityPreviousWeek.getStart().getTime());
 		InteractionEvent event10 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task2
-				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DEACTIVATED, 2f,
+				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f,
 				activityPreviousWeek.getEnd().getTime(), activityPreviousWeek.getEnd().getTime());
 
 		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event9);
@@ -217,10 +217,10 @@ public class TaskActivityViewTest extends TestCase {
 		assertEquals(0, activityThisWeek.getChildren().size());
 
 		InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task1
-				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_ACTIVATED, 2f,
+				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_ACTIVATED, 2f,
 				activityThisWeek.getStart().getTime(), activityThisWeek.getStart().getTime());
 		InteractionEvent event2 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task1
-				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DEACTIVATED, 2f,
+				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f,
 				activityThisWeek.getEnd().getTime(), activityThisWeek.getEnd().getTime());
 
 		Calendar inactivityStart = GregorianCalendar.getInstance();
@@ -228,11 +228,11 @@ public class TaskActivityViewTest extends TestCase {
 		inactivityEnd.add(Calendar.HOUR_OF_DAY, 1);
 
 		InteractionEvent inactivityEvent1 = new InteractionEvent(InteractionEvent.Kind.COMMAND, "structureKind",
-				MylarContextManager.ACTIVITY_HANDLE, "originId", "navigatedRelation",
-				MylarContextManager.ACTIVITY_DEACTIVATED, 2f, inactivityStart.getTime(), inactivityStart.getTime());
+				MylarContextManager.ACTIVITY_HANDLE_ATTENTION, "originId", "navigatedRelation",
+				MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f, inactivityStart.getTime(), inactivityStart.getTime());
 		InteractionEvent inactivityEvent2 = new InteractionEvent(InteractionEvent.Kind.COMMAND, "structureKind",
-				MylarContextManager.ACTIVITY_HANDLE, "originId", "navigatedRelation",
-				MylarContextManager.ACTIVITY_ACTIVATED, 2f, inactivityEnd.getTime(), inactivityEnd.getTime());
+				MylarContextManager.ACTIVITY_HANDLE_ATTENTION, "originId", "navigatedRelation",
+				MylarContextManager.ACTIVITY_DELTA_ACTIVATED, 2f, inactivityEnd.getTime(), inactivityEnd.getTime());
 
 		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event1);
 		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(inactivityEvent1);
@@ -271,18 +271,18 @@ public class TaskActivityViewTest extends TestCase {
 		inactivityStop.add(Calendar.MILLISECOND, 18);
 
 		InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task1
-				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_ACTIVATED, 2f,
+				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_ACTIVATED, 2f,
 				taskActivationStart.getTime(), taskActivationStart.getTime());
 		InteractionEvent event2 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task1
-				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DEACTIVATED, 2f,
+				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f,
 				taskActivationStop.getTime(), taskActivationStop.getTime());
 
 		InteractionEvent inactivityEvent1 = new InteractionEvent(InteractionEvent.Kind.COMMAND, "structureKind",
-				MylarContextManager.ACTIVITY_HANDLE, "originId", "navigatedRelation",
-				MylarContextManager.ACTIVITY_DEACTIVATED, 2f, inactivityStart.getTime(), inactivityStart.getTime());
+				MylarContextManager.ACTIVITY_HANDLE_ATTENTION, "originId", "navigatedRelation",
+				MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f, inactivityStart.getTime(), inactivityStart.getTime());
 		InteractionEvent inactivityEvent2 = new InteractionEvent(InteractionEvent.Kind.COMMAND, "structureKind",
-				MylarContextManager.ACTIVITY_HANDLE, "originId", "navigatedRelation",
-				MylarContextManager.ACTIVITY_ACTIVATED, 2f, inactivityStop.getTime(), inactivityStop.getTime());
+				MylarContextManager.ACTIVITY_HANDLE_ATTENTION, "originId", "navigatedRelation",
+				MylarContextManager.ACTIVITY_DELTA_ACTIVATED, 2f, inactivityStop.getTime(), inactivityStop.getTime());
 
 		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(inactivityEvent1);
 		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event1);
@@ -318,18 +318,18 @@ public class TaskActivityViewTest extends TestCase {
 		inactivityStop.add(Calendar.MILLISECOND, 25);
 
 		InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task1
-				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_ACTIVATED, 2f,
+				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_ACTIVATED, 2f,
 				taskActivationStart.getTime(), taskActivationStart.getTime());
 		InteractionEvent event2 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task1
-				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DEACTIVATED, 2f,
+				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f,
 				taskActivationStop.getTime(), taskActivationStop.getTime());
 
 		InteractionEvent inactivityEvent1 = new InteractionEvent(InteractionEvent.Kind.COMMAND, "structureKind",
-				MylarContextManager.ACTIVITY_HANDLE, "originId", "navigatedRelation",
-				MylarContextManager.ACTIVITY_DEACTIVATED, 2f, inactivityStart.getTime(), inactivityStart.getTime());
+				MylarContextManager.ACTIVITY_HANDLE_ATTENTION, "originId", "navigatedRelation",
+				MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f, inactivityStart.getTime(), inactivityStart.getTime());
 		InteractionEvent inactivityEvent2 = new InteractionEvent(InteractionEvent.Kind.COMMAND, "structureKind",
-				MylarContextManager.ACTIVITY_HANDLE, "originId", "navigatedRelation",
-				MylarContextManager.ACTIVITY_ACTIVATED, 2f, inactivityStop.getTime(), inactivityStop.getTime());
+				MylarContextManager.ACTIVITY_HANDLE_ATTENTION, "originId", "navigatedRelation",
+				MylarContextManager.ACTIVITY_DELTA_ACTIVATED, 2f, inactivityStop.getTime(), inactivityStop.getTime());
 
 		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event1);
 		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(inactivityEvent1);
