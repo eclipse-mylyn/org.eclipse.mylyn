@@ -513,7 +513,7 @@ public class MylarContextManager {
 	/**
 	 * Public for testing, activiate via handle
 	 */
-	public void contextActivated(MylarContext context) {
+	public void activateContext(MylarContext context) {
 		currentContext.getContextMap().put(context.getHandleIdentifier(), context);
 		if (!activationHistorySuppressed) {
 			handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND, ACTIVITY_STRUCTURE_KIND, context
@@ -525,14 +525,14 @@ public class MylarContextManager {
 		return new ArrayList<MylarContext>(currentContext.getContextMap().values());
 	}
 
-	public void contextActivated(String handleIdentifier) {
+	public void activateContext(String handleIdentifier) {
 		try {
 			suppressListenerNotification = true;
 			MylarContext context = currentContext.getContextMap().get(handleIdentifier);
 			if (context == null)
 				context = loadContext(handleIdentifier);
 			if (context != null) {
-				contextActivated(context);
+				activateContext(context);
 				for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
 					try {
 						listener.contextActivated(context);
@@ -562,11 +562,11 @@ public class MylarContextManager {
 
 	void deactivateAllContexts() {
 		for (String handleIdentifier : currentContext.getContextMap().keySet()) {
-			contextDeactivated(handleIdentifier);
+			deactivateContext(handleIdentifier);
 		}
 	}
 	
-	public void contextDeactivated(String handleIdentifier) {
+	public void deactivateContext(String handleIdentifier) {
 		try {
 			IMylarContext context = currentContext.getContextMap().get(handleIdentifier);
 			if (context != null) {			
@@ -593,7 +593,7 @@ public class MylarContextManager {
 		}
 	}
 
-	public void contextDeleted(String handleIdentifier) {
+	public void deleteContext(String handleIdentifier) {
 		IMylarContext context = currentContext.getContextMap().get(handleIdentifier);
 		eraseContext(handleIdentifier, false);
 		if (context != null) {

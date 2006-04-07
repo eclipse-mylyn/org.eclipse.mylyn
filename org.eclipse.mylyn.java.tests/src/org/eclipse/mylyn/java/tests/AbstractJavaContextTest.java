@@ -71,7 +71,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 		context.reset();
 		// assertTrue(manager.getActiveContext().getInteresting().toString(),
 		// manager.getActiveContext().getInteresting().isEmpty());
-		manager.contextActivated(context);
+		manager.activateContext(context);
 		assertNotNull(MylarJavaPlugin.getDefault());
 		assertTrue(MylarPlugin.getDefault().getStructureBridges().toString().indexOf(
 				JavaStructureBridge.class.getCanonicalName()) != -1);
@@ -84,14 +84,14 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 	protected void tearDown() throws Exception {
 		context.reset();
 		assertTrue(context.getInteresting().isEmpty());
-		manager.contextDeactivated(contextId);
-		manager.contextDeleted(contextId);
+		manager.deactivateContext(contextId);
+		manager.deleteContext(contextId);
 		manager.getFileForContext(contextId).delete();
 
 		ResourceTestUtil.deleteProject(project.getProject());
 
 		for (MylarContext context : manager.getActiveContexts()) {
-			manager.contextDeactivated(context.getHandleIdentifier());
+			manager.deactivateContext(context.getHandleIdentifier());
 		}
 		if (manager.isContextActive())
 			System.err.println("> still active: " + manager.getActiveContext().getInteresting());

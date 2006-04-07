@@ -70,7 +70,7 @@ public class ActiveSearchNotifier extends AbstractContextTest {
 		WorkspaceSetupHelper.clearDoiModel();
 		try {
 			MylarContext workspaceContext = WorkspaceSetupHelper.getContext();
-			MylarPlugin.getContextManager().contextActivated(workspaceContext.getHandleIdentifier());
+			MylarPlugin.getContextManager().activateContext(workspaceContext.getHandleIdentifier());
 			context = (CompositeContext) MylarPlugin.getContextManager().getActiveContext();
 		} catch (Exception e) {
 			fail();

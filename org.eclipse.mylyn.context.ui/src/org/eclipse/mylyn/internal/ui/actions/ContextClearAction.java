@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
@@ -39,9 +40,16 @@ public class ContextClearAction implements IViewActionDelegate {
 					.getShell(), "Confirm clear context", "Clear context for the selected task?");
 			if (!deleteConfirmed)
 				return;
-
-			MylarPlugin.getContextManager().contextDeleted((task).getHandleIdentifier());																					// ((Task)selectedObject).getContextPath());
-			MylarPlugin.getContextManager().contextActivated((task).getHandleIdentifier());
+			
+			if (task.isActive()) {
+				MylarTaskListPlugin.getTaskListManager().deactivateTask(task);
+				MylarPlugin.getContextManager().deleteContext((task).getHandleIdentifier());
+				MylarTaskListPlugin.getTaskListManager().activateTask(task);
+			} else {
+				MylarPlugin.getContextManager().deleteContext((task).getHandleIdentifier());
+			}
+//			MylarPlugin.getContextManager().contextDeleted((task).getHandleIdentifier());																					// ((Task)selectedObject).getContextPath());
+//			MylarPlugin.getContextManager().contextActivated((task).getHandleIdentifier());
 																												// ((Task)selectedObject).getContextPath());
 			TaskListView.getDefault().getViewer().refresh();
 		}

@@ -65,14 +65,14 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 		plugin1 = WorkspaceSetupHelper.getFile(jp1, "plugin.xml");
 
 		MylarContext context = WorkspaceSetupHelper.getContext();
-		MylarPlugin.getContextManager().contextActivated(context.getHandleIdentifier());
+		MylarPlugin.getContextManager().activateContext(context.getHandleIdentifier());
 		helper = new SearchPluginTestHelper(this);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		WorkspaceSetupHelper.clearDoiModel();
-		MylarPlugin.getContextManager().contextDeactivated(WorkspaceSetupHelper.getContext().getHandleIdentifier());
+		MylarPlugin.getContextManager().deactivateContext(WorkspaceSetupHelper.getContext().getHandleIdentifier());
 		assertFalse(MylarPlugin.getContextManager().isContextActive());
 	}
 

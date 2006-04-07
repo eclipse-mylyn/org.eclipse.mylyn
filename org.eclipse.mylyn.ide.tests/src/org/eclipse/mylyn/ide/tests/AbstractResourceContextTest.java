@@ -51,7 +51,7 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 		project = new TestProject(this.getClass().getName());
 		context = new MylarContext(taskId, scaling);
 		context.reset();
-		manager.contextActivated(context);
+		manager.activateContext(context);
 		MylarUiPlugin.getDefault().getViewerManager().setSyncRefreshMode(true);
 		navigator = (ResourceNavigator) openView(NavigatorRefreshListener.ID_NAVIGATOR);
 		assertNotNull(navigator);
@@ -61,8 +61,8 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 	protected void tearDown() throws Exception {
 		context.reset();
 		assertTrue(context.getInteresting().isEmpty());
-		manager.contextDeactivated(taskId);
-		manager.contextDeleted(taskId);
+		manager.deactivateContext(taskId);
+		manager.deleteContext(taskId);
 		manager.getFileForContext(taskId).delete();
 		ResourceTestUtil.deleteProject(project.getProject());
 		super.tearDown();

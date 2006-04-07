@@ -79,14 +79,14 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest {
 		plugin2 = WorkspaceSetupHelper.getFile(jp2, "plugin.xml");
 
 		MylarContext t = WorkspaceSetupHelper.getContext();
-		MylarPlugin.getContextManager().contextActivated(t.getHandleIdentifier());
+		MylarPlugin.getContextManager().activateContext(t.getHandleIdentifier());
 		helper = new SearchPluginTestHelper(this);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		WorkspaceSetupHelper.clearDoiModel();
-		MylarPlugin.getContextManager().contextDeactivated(WorkspaceSetupHelper.getContext().getHandleIdentifier());
+		MylarPlugin.getContextManager().deactivateContext(WorkspaceSetupHelper.getContext().getHandleIdentifier());
 		assertFalse(MylarPlugin.getContextManager().isContextActive());
 	}
 

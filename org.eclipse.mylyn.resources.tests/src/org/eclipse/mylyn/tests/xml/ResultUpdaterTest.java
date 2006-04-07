@@ -55,7 +55,7 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest {
 		plugin1 = WorkspaceSetupHelper.getFile(jp1, "plugin.xml");
 
 		MylarContext t = WorkspaceSetupHelper.getContext();
-		MylarPlugin.getContextManager().contextActivated(t.getHandleIdentifier());// ,
+		MylarPlugin.getContextManager().activateContext(t.getHandleIdentifier());// ,
 																					// t.getId());
 		helper = new SearchPluginTestHelper(this);
 	}

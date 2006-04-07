@@ -79,7 +79,7 @@ public class WorkspaceSetupHelper {
 	}
 
 	public static void clearDoiModel() throws CoreException {
-		MylarPlugin.getContextManager().contextDeleted(HELPER_CONTEXT_ID);
+		MylarPlugin.getContextManager().deleteContext(HELPER_CONTEXT_ID);
 		taskscape = new MylarContext(HELPER_CONTEXT_ID, new ScalingFactors());
 	}
 
