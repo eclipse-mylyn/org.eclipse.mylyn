@@ -266,7 +266,22 @@
    </extension>
 
  <extension point="org.eclipse.ui.viewActions"> 
-   <!--
+ 	<!--
+ 	  	<viewContribution 
+		id="org.eclipse.mylar.ui.tasklist.apply" 
+   		targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
+    	<action
+           class="org.eclipse.mylar.internal.ui.actions.ApplyMylarToTaskListAction"
+           enablesFor="*"
+           icon="icons/eview16/mylar-apply-activity.gif"
+           id="org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction"
+           label="Apply Mylar"
+           style="toggle"
+           toolbarPath="context"
+           tooltip="Apply Mylar (Experimental)"> 
+  		</action> 
+  	</viewContribution>
+  	-->
 	  <viewContribution 
 		id="org.eclipse.mylar.outline.contribution.filter" 
    		targetID="org.eclipse.ui.views.ContentOutline">
@@ -282,7 +297,6 @@
            tooltip="Apply Mylar"> 
   		</action> 
   	</viewContribution>
-  	-->
     <viewContribution
          id="org.eclipse.mylar.tasklist.contribution.context"
          targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
