@@ -133,6 +133,12 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 		assertTrue(resumed.getInterest().isInteresting());
 	}
 
+	public void testShellLifecycleActivityStart() {
+		List<InteractionEvent> events = manager.getActivityHistoryMetaContext().getInteractionHistory();
+		assertEquals(MylarContextManager.ACTIVITY_DELTA_STARTED, events.get(0).getDelta());
+		assertEquals(MylarContextManager.ACTIVITY_DELTA_ACTIVATED, events.get(1).getDelta());
+	}
+	
 	public void testActivityHistory() {
 		manager.resetActivityHistory();
 		MylarContext history = manager.getActivityHistoryMetaContext();
