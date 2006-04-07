@@ -303,10 +303,10 @@
    <extension
          point="org.eclipse.ui.themes">
       <themeElementCategory
-           id="org.eclipse.mylar.tasklist.ui.presentation.colors"
-           label="Mylar Colors"/>
+           id="org.eclipse.mylar.tasklist.ui.presentation"
+           label="Mylar"/>
      <colorDefinition
-           categoryId="org.eclipse.mylar.tasklist.ui.presentation.colors"
+           categoryId="org.eclipse.mylar.tasklist.ui.presentation"
            id="org.eclipse.mylar.tasklist.ui.colors.background.category"
            isEditable="true"
            label="Task List Category Background"
@@ -315,12 +315,9 @@
             Background color of Task List categories and queries.
          </description>
      </colorDefinition>
-
-      <themeElementCategory
-           id="org.eclipse.mylar.tasklist.ui.presentation.fonts"
-           label="Mylar Fonts"/>     
-		<fontDefinition
-        categoryId="org.eclipse.mylar.tasklist.ui.presentation.fonts"
+         
+	<fontDefinition
+        categoryId="org.eclipse.mylar.tasklist.ui.presentation"
         defaultsTo="org.eclipse.jface.textfont"
         id="org.eclipse.mylar.tasklist.ui.fonts.task.editor.comment"
         isEditable="true"
