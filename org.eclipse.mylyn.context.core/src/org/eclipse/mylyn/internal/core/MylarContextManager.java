@@ -450,18 +450,17 @@ public class MylarContextManager {
 			}
 			CompositeContextElement parentNode = (CompositeContextElement) currentContext.addEvent(propagationEvent);
 			if (kind.isUserEvent() && parentNode.getInterest().getEncodedValue() < scalingFactors.getInteresting()) {
-				ensureIsInteresting(parentNode.getContentType(), parentNode.getHandleIdentifier(), parentNode, parentNode.getInterest().getValue());
-				parentNode = (CompositeContextElement) currentContext.addEvent(propagationEvent);
+				float parentOffset = ((-1) * parentNode.getInterest().getEncodedValue()) + 1;
+				currentContext.addEvent(new InteractionEvent(InteractionEvent.Kind.MANIPULATION,
+						parentNode.getContentType(), parentNode.getHandleIdentifier(), SOURCE_ID_DECAY_CORRECTION, parentOffset));
+//				ensureIsInteresting(parentNode.getContentType(), parentNode.getHandleIdentifier(), parentNode, parentNode.getInterest().getEncodedValue());
+//				parentNode = (CompositeContextElement) currentContext.addEvent(propagationEvent);
 			}
 			if (isInterestDelta(previousInterest, previous.getInterest().isPredicted(), previous.getInterest()
 					.isPropagated(), parentNode)) {
 				interestDelta.add(0, parentNode);
 			}
 			propegateDoiToParents(kind, parentNode, previousInterest, decayOffset, level, interestDelta);// adapter.getResourceExtension(),
-			// adapter.getParentHandle(parentHandle),
-			// level,
-			// doi,
-			// parentChain);
 		}
 	}
 
