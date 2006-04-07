@@ -11,6 +11,10 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.hyperlink.DefaultHyperlinkPresenter;
@@ -35,6 +39,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
+import org.eclipse.ui.internal.editors.text.URLHyperlinkDetector;
 
 /**
  * @author Rob Elves
@@ -80,8 +85,13 @@ public class RepositoryTextViewer extends SourceViewer {
 		}
 		
 		public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
-			 return MylarTaskListPlugin.getDefault().getTaskHyperlinkDetectors();
-		}
+			URLHyperlinkDetector hyperlinkDetector = new URLHyperlinkDetector(sourceViewer);
+			List<IHyperlinkDetector> detectors = new ArrayList<IHyperlinkDetector>();
+			detectors.add(hyperlinkDetector);
+			detectors.addAll(Arrays.asList(MylarTaskListPlugin.getDefault().getTaskHyperlinkDetectors()));
+			return detectors.toArray(new IHyperlinkDetector[detectors.size()]);
+//			 return MylarTaskListPlugin.getDefault().getTaskHyperlinkDetectors();
+		} 
 		
 		public IHyperlinkPresenter getHyperlinkPresenter(ISourceViewer sourceViewer) {
 			return new DefaultHyperlinkPresenter(new RGB(0, 0, 200));
