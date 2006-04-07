@@ -71,11 +71,13 @@ public class ResourceInterestUpdater {
 					InteractionEvent interactionEvent = new InteractionEvent(interactionKind, bridge
 							.getContentType(), handle, SOURCE_ID);
 					interactionEvents.add(interactionEvent);
-//					MylarStatusHandler.log("added : " + element.getHandleIdentifier(), null);
+					MylarStatusHandler.log("added : " + element.getHandleIdentifier(), null);
 				}
 			} 
-		} 
-		MylarPlugin.getContextManager().handleInteractionEvents(interactionEvents, true);
+		}  
+		if (InteractionEvent.Kind.SELECTION.equals(interactionKind)) {
+			MylarPlugin.getContextManager().handleInteractionEvents(interactionEvents, true);
+		}
 	}
 
 	private boolean acceptResource(IResource resource) {
