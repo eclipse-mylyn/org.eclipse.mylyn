@@ -364,7 +364,7 @@ public class MylarContextManager {
 		IMylarElement element = currentContext.addEvent(event);
 		List<IMylarElement> interestDelta = new ArrayList<IMylarElement>();
 		if (propagateToParents && !event.getKind().equals(InteractionEvent.Kind.MANIPULATION)) {
-			propegateDoiToParents(element, previousInterest, decayOffset, 1, interestDelta);
+			propegateDoiToParents(event.getKind(), element, previousInterest, decayOffset, 1, interestDelta);
 		}
 		if (event.getKind().isUserEvent())
 			currentContext.setActiveElement(element);
@@ -425,7 +425,7 @@ public class MylarContextManager {
 		}
 	}
 
-	private void propegateDoiToParents(IMylarElement node, float previousInterest, float decayOffset, int level,
+	private void propegateDoiToParents(InteractionEvent.Kind kind, IMylarElement node, float previousInterest, float decayOffset, int level,
 			List<IMylarElement> interestDelta) {
 		if (level > MAX_PROPAGATION || node == null || node.getInterest().getValue() <= 0)
 			return;// || "/".equals(node.getElementHandle())) return;
@@ -449,7 +449,7 @@ public class MylarContextManager {
 				previousInterest = previous.getInterest().getValue();
 			}
 			CompositeContextElement parentNode = (CompositeContextElement) currentContext.addEvent(propagationEvent);
-			if (!parentNode.getInterest().isInteresting()) {
+			if (kind.isUserEvent() && parentNode.getInterest().getEncodedValue() < scalingFactors.getInteresting()) {
 				ensureIsInteresting(parentNode.getContentType(), parentNode.getHandleIdentifier(), parentNode, parentNode.getInterest().getValue());
 				parentNode = (CompositeContextElement) currentContext.addEvent(propagationEvent);
 			}
@@ -457,7 +457,7 @@ public class MylarContextManager {
 					.isPropagated(), parentNode)) {
 				interestDelta.add(0, parentNode);
 			}
-			propegateDoiToParents(parentNode, previousInterest, decayOffset, level, interestDelta);// adapter.getResourceExtension(),
+			propegateDoiToParents(kind, parentNode, previousInterest, decayOffset, level, interestDelta);// adapter.getResourceExtension(),
 			// adapter.getParentHandle(parentHandle),
 			// level,
 			// doi,
