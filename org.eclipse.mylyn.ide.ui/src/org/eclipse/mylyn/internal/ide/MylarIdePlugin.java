@@ -164,7 +164,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 				}
 			}
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Mylar IDE stop failed", false);
+			MylarStatusHandler.fail(e, "Mylar IDE stop failed, Mylar may not have started properly (ensure correct Eclipse version)", false);
 		}
 	}
 
