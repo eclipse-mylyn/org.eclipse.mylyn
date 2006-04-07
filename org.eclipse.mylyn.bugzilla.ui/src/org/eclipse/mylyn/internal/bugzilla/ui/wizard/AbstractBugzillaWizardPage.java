@@ -49,7 +49,7 @@ import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
  * @author Mik Kersten (hardening of initial prototype)
  */
 public abstract class AbstractBugzillaWizardPage extends WizardPage implements Listener {
-
+ 
 	/** The instance of the workbench */
 	protected IWorkbench workbench;
 
@@ -253,7 +253,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 	 *            The event which occurred
 	 */
 	public void handleEvent(Event e) {
-		boolean pageComplete = isPageComplete();
+		boolean pageComplete = isPageComplete(); 
 
 		// Initialize a variable with the no error status
 		Status status = new Status(IStatus.OK, "not_used", 0, "", null);
@@ -292,7 +292,8 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 			wizard.attributeCompleted = false;
 			return false;
 		}
-		saveDataToModel();
+		//saveDataToModel();
+		wizard.attributeCompleted = true;
 		return true;
 	}
 
@@ -317,8 +318,8 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 			try {
 				if (values == null)
 					values = new HashMap<String, String>();
-				if (key.equals(BugReport.ATTRIBUTE_OS)) {
-					String os = oSCombo.getItem(oSCombo.getSelectionIndex());
+				if (key.equals(BugReport.ATTRIBUTE_OS)) {					
+					String os = oSCombo.getItem(oSCombo.getSelectionIndex());					
 					attribute.setValue(os);
 				} else if (key.equals(BugReport.ATTRIBUTE_VERSION)) {
 					String version = versionCombo.getItem(versionCombo.getSelectionIndex());
@@ -353,7 +354,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 				MylarStatusHandler.fail(e, "could not set attribute: " + attribute, false);
 			}
 		}
-		wizard.attributeCompleted = true;
+		//wizard.attributeCompleted = true;
 	}
 
 	@Override
