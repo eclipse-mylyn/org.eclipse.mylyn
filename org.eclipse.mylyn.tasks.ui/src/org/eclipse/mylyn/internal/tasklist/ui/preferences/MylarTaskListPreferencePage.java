@@ -10,13 +10,9 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasklist.ui.preferences;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.mylar.internal.tasklist.TaskListBackupManager;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -60,7 +56,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 
 	private static final int SPINNER_MIN_BACKUPS = 1;
 
-	private static final String LABEL_BACKUP_ERROR = "Backup Error";
+	// private static final String LABEL_BACKUP_ERROR = "Backup Error";
 
 	private static final String GROUP_LABEL_BACKUP = "Backup";
 
@@ -104,7 +100,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 				(IWorkbenchPreferenceContainer) getContainer(), null);
 
 		createCreationGroup(container);
-//		createTaskActivityGroup(container);
+		// createTaskActivityGroup(container);
 		createNotificationsGroup(container);
 		createTaskBackupScheduleGroup(container);
 		createTaskDirectoryControl(container);
@@ -255,21 +251,20 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 			}
 		});
 
-		
 		Composite extrasComp = new Composite(group, SWT.NONE);
 		extrasComp.setLayout(new GridLayout(4, false));
 		GridData extrasGD = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		extrasGD.horizontalSpan = 3;
 		extrasComp.setLayoutData(extrasGD);
-		
+
 		final Label maxFiles = new Label(extrasComp, SWT.NONE);
 		maxFiles.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
-		maxFiles.setText("Max Backups");		
+		maxFiles.setText("Max Backups");
 
-		maxFilesSpinner = new Spinner(extrasComp, SWT.NONE);		
-		maxFilesSpinner.setValues(getPreferenceStore().getInt(TaskListPreferenceConstants.BACKUP_MAXFILES), SPINNER_MIN_BACKUPS, SPINNER_MAX_BACKUPS, 0, 1, 1);
-		
-		
+		maxFilesSpinner = new Spinner(extrasComp, SWT.NONE);
+		maxFilesSpinner.setValues(getPreferenceStore().getInt(TaskListPreferenceConstants.BACKUP_MAXFILES),
+				SPINNER_MIN_BACKUPS, SPINNER_MAX_BACKUPS, 0, 1, 1);
+
 		lastUpdate = new Label(extrasComp, SWT.NONE);
 		lastUpdate.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -282,18 +277,19 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {
-					getPreferenceStore().setValue(TaskListPreferenceConstants.BACKUP_FOLDER,
-							backupFolderText.getText());
-					MylarTaskListPlugin.getDefault().getBackupManager().backupNow();
-					setLastBackup();
-				} catch (InvocationTargetException ex) {
-					MessageDialog.openError(getShell(), LABEL_BACKUP_ERROR,
-							TaskListBackupManager.BACKUP_FAILURE_MESSAGE + ex.getCause().getMessage());
-				} catch (IOException ex) {
-					MessageDialog.openError(getShell(), LABEL_BACKUP_ERROR,
-							TaskListBackupManager.BACKUP_FAILURE_MESSAGE + ex.getCause().getMessage());
-				}
+				// try {
+				getPreferenceStore().setValue(TaskListPreferenceConstants.BACKUP_FOLDER, backupFolderText.getText());
+				MylarTaskListPlugin.getDefault().getBackupManager().backupNow(true);
+				setLastBackup();
+				// } catch (InvocationTargetException ex) {
+				// MessageDialog.openError(getShell(), LABEL_BACKUP_ERROR,
+				// TaskListBackupManager.BACKUP_FAILURE_MESSAGE +
+				// ex.getCause().getMessage());
+				// } catch (IOException ex) {
+				// MessageDialog.openError(getShell(), LABEL_BACKUP_ERROR,
+				// TaskListBackupManager.BACKUP_FAILURE_MESSAGE +
+				// ex.getCause().getMessage());
+				// }
 			}
 		});
 
@@ -353,39 +349,39 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 
 	}
 
-//	private void createTaskActivityGroup(Composite parent) {
-//		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
-//		group.setText("Work Schedule");
-//		group.setLayout(new GridLayout(2, false));
-//		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-//
-//		Label workLabel = new Label(group, SWT.NONE);
-//		workLabel.setText("Your week starts on");
-//		Combo workWeekBegin = new Combo(group, SWT.READ_ONLY);
-//		workWeekBegin.add("MONDAY");//, Calendar.MONDAY
-//		workWeekBegin.add("TUESDAY");//, Calendar.TUESDAY
-//		workWeekBegin.add("WEDNESDAY");//, Calendar.WEDNESDAY
-//		workWeekBegin.add("THURSDAY");//, Calendar.MONDAY
-//		workWeekBegin.add("FRIDAY");//, Calendar.TUESDAY
-//		workWeekBegin.add("SATURDAY");//, Calendar.WEDNESDAY
-//		workWeekBegin.add("SUNDAY");//, Calendar.WEDNESDAY
-//		
-//		Label startHourLabel = new Label(group, SWT.NONE);
-//		startHourLabel.setText("Your day begins at (24hr)");
-//		
-//		Spinner startHour = new Spinner(group, SWT.NULL | SWT.BORDER);
-//		startHour.setSelection(1);
-//		startHour.setDigits(0);
-//		startHour.setMaximum(24);
-//		startHour.setMinimum(0);
-//		startHour.setIncrement(1);
-////		startHour.addModifyListener(new ModifyListener() {
-////			public void modifyText(ModifyEvent e) {
-////				// do something
-////			}
-////		});
-//	}
-	
+	// private void createTaskActivityGroup(Composite parent) {
+	// Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
+	// group.setText("Work Schedule");
+	// group.setLayout(new GridLayout(2, false));
+	// group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	//
+	// Label workLabel = new Label(group, SWT.NONE);
+	// workLabel.setText("Your week starts on");
+	// Combo workWeekBegin = new Combo(group, SWT.READ_ONLY);
+	// workWeekBegin.add("MONDAY");//, Calendar.MONDAY
+	// workWeekBegin.add("TUESDAY");//, Calendar.TUESDAY
+	// workWeekBegin.add("WEDNESDAY");//, Calendar.WEDNESDAY
+	// workWeekBegin.add("THURSDAY");//, Calendar.MONDAY
+	// workWeekBegin.add("FRIDAY");//, Calendar.TUESDAY
+	// workWeekBegin.add("SATURDAY");//, Calendar.WEDNESDAY
+	// workWeekBegin.add("SUNDAY");//, Calendar.WEDNESDAY
+	//		
+	// Label startHourLabel = new Label(group, SWT.NONE);
+	// startHourLabel.setText("Your day begins at (24hr)");
+	//		
+	// Spinner startHour = new Spinner(group, SWT.NULL | SWT.BORDER);
+	// startHour.setSelection(1);
+	// startHour.setDigits(0);
+	// startHour.setMaximum(24);
+	// startHour.setMinimum(0);
+	// startHour.setIncrement(1);
+	// // startHour.addModifyListener(new ModifyListener() {
+	// // public void modifyText(ModifyEvent e) {
+	// // // do something
+	// // }
+	// // });
+	// }
+
 	private void createCreationGroup(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
 		group.setText("Task Creation");
@@ -417,7 +413,6 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		notificationEnabledButton.setSelection(getPreferenceStore().getBoolean(
 				TaskListPreferenceConstants.NOTIFICATIONS_ENABLED));
 
-		
 		// final Label morningNotificationLabel = new Label(parent, SWT.NONE);
 		// morningNotificationLabel.setText("Start hour of Day (0-24):");
 		//

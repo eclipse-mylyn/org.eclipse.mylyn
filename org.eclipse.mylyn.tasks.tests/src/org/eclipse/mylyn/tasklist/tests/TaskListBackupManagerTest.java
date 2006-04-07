@@ -64,7 +64,7 @@ public class TaskListBackupManagerTest extends TestCase {
 		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.BACKUP_SCHEDULE, 1);
 		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.BACKUP_LAST, 0f);
 		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.BACKUP_AUTOMATICALLY, true);
-		backupManager.backupNow();
+		backupManager.backupNow(true);
 		assertFalse(MylarTaskListPlugin.getMylarCorePrefs().getLong(TaskListPreferenceConstants.BACKUP_LAST) == 0);
 		assertTrue(backupFileFolder.exists());
 		assertTrue(backupFileFolder.isDirectory());
