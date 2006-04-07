@@ -42,6 +42,8 @@ import org.eclipse.search.ui.ISearchPage;
 import org.eclipse.search.ui.ISearchPageContainer;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
@@ -67,6 +69,8 @@ import org.eclipse.ui.internal.help.WorkbenchHelpSystem;
  * @author Mik Kersten (hardening of prototype)
  */
 public class BugzillaSearchPage extends DialogPage implements ISearchPage {
+
+	private static final String MAX_HITS = "100";
 
 	private static final int HEIGHT_ATTRIBUTE_COMBO = 60;
 
@@ -292,7 +296,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		createProductAttributes(group);
 		createLists(group);
 		createUpdate(group);
-		
+
 		return group;
 	}
 
@@ -442,26 +446,48 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		GridData daysLayoutData = new GridData();
 		daysLayoutData.widthHint = 30;
 		daysText.setLayoutData(daysLayoutData);
-		daysText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
+
+		daysText.addFocusListener(new FocusListener() {
+
+			public void focusGained(FocusEvent e) {
+				// ignore
+
+			}
+
+			public void focusLost(FocusEvent e) {
 				String days = daysText.getText();
 				if (days.length() == 0)
 					return;
-				for (int i = days.length() - 1; i >= 0; i--) {
-					try {
-						if (days.equals("") || Integer.parseInt(days) > -1) {
-							if (i == days.length() - 1)
-								return;
-							else
-								break;
-						}
-					} catch (NumberFormatException ex) {
-						days = days.substring(0, i);
+				try {
+					if (Integer.parseInt(days) < 0) {
+						daysText.setText("");
 					}
+				} catch (NumberFormatException ex) {
+					daysText.setText("");
 				}
-				daysText.setText(days);
 			}
 		});
+
+		// daysText.addModifyListener(new ModifyListener() {
+		// public void modifyText(ModifyEvent e) {
+		// String days = daysText.getText();
+		// if (days.length() == 0)
+		// return;
+		// for (int i = days.length() - 1; i >= 0; i--) {
+		// try {
+		// if (days.equals("") || Integer.parseInt(days) > -1) {
+		// if (i == days.length() - 1)
+		// return;
+		// else
+		// break;
+		// }
+		// } catch (NumberFormatException ex) {
+		// days = days.substring(0, i);
+		// }
+		// }
+		// daysText.setText(days);
+		// }
+		// });
 		label = new Label(group, SWT.LEFT);
 		label.setText(" days.");
 
@@ -471,36 +497,60 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		// operation combo
 		maxHitsText = new Text(group, SWT.BORDER);
 		maxHitsText.setTextLimit(6);
-		maxHitsText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
+
+		maxHitsText.addFocusListener(new FocusListener() {
+
+			public void focusGained(FocusEvent e) {
+				// ignore
+
+			}
+
+			public void focusLost(FocusEvent e) {
 				String maxHitss = maxHitsText.getText();
 				if (maxHitss.length() == 0)
 					return;
-				for (int i = maxHitss.length() - 1; i >= 0; i--) {
-					try {
-						if (maxHitss.equals("") || Integer.parseInt(maxHitss) > -1) {
-							if (i == maxHitss.length() - 1) {
-								maxHits = maxHitss;
-								return;
-							} else {
-								break;
-							}
-						}
-					} catch (NumberFormatException ex) {
-						maxHitss = maxHitss.substring(0, i);
-					}
-				}
 
-				BugzillaSearchPage.this.maxHits = maxHitss;
+				try {
+					if (Integer.parseInt(maxHitss) < 0) {
+						maxHitsText.setText(MAX_HITS);
+
+					}
+				} catch (NumberFormatException ex) {
+					maxHitsText.setText(MAX_HITS);
+				}
 			}
 		});
+
+		// maxHitsText.addModifyListener(new ModifyListener() {
+		// public void modifyText(ModifyEvent e) {
+		// String maxHitss = maxHitsText.getText();
+		// if (maxHitss.length() == 0)
+		// return;
+		// for (int i = maxHitss.length() - 1; i >= 0; i--) {
+		// try {
+		// if (maxHitss.equals("") || Integer.parseInt(maxHitss) > -1) {
+		// if (i == maxHitss.length() - 1) {
+		// maxHits = maxHitss;
+		// return;
+		// } else {
+		// break;
+		// }
+		// }
+		// } catch (NumberFormatException ex) {
+		// maxHitss = maxHitss.substring(0, i);
+		// }
+		// }
+		//
+		// BugzillaSearchPage.this.maxHits = maxHitss;
+		// }
+		// });
 		gd = new GridData();
 		gd.widthHint = 30;
 		maxHitsText.setLayoutData(gd);
 		label = new Label(group, SWT.LEFT);
 		label.setText(" hits.");
 
-		maxHits = "100";
+		maxHits = MAX_HITS;
 		maxHitsText.setText(maxHits);
 
 		return group;
@@ -1200,13 +1250,10 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 							null,
 							"Login Error",
 							"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
-			//BugzillaPlugin.log(exception);
+			// BugzillaPlugin.log(exception);
 		} catch (IOException e) {
-			MessageDialog
-			.openError(
-					null,
-					"Connection Error",
-					e.getMessage()+"\nPlease check your settings in the bugzilla preferences. ");
+			MessageDialog.openError(null, "Connection Error", e.getMessage()
+					+ "\nPlease check your settings in the bugzilla preferences. ");
 		} finally {
 			monitor.done();
 			monitorDialog.close();
