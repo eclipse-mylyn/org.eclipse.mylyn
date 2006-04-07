@@ -164,7 +164,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	private static ITaskActivityListener CONTEXT_TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
 
 		public void taskActivated(ITask task) {
-			MylarPlugin.getContextManager().contextActivated(task.getHandleIdentifier());
+			MylarPlugin.getContextManager().activateContext(task.getHandleIdentifier());
 		}
 
 		public void tasksActivated(List<ITask> tasks) {
@@ -174,7 +174,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		}
 
 		public void taskDeactivated(ITask task) {
-			MylarPlugin.getContextManager().contextDeactivated(task.getHandleIdentifier());
+			MylarPlugin.getContextManager().deactivateContext(task.getHandleIdentifier());
 		}
 
 		public void activityChanged(DateRangeContainer week) {

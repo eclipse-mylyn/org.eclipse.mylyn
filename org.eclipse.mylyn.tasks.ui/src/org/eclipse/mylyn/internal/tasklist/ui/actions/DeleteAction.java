@@ -72,7 +72,7 @@ public class DeleteAction extends Action {
 
 				MylarTaskListPlugin.getTaskListManager().deactivateTask(task);
 				MylarTaskListPlugin.getTaskListManager().getTaskList().deleteTask(task);
-				MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier());
+				MylarPlugin.getContextManager().deleteContext(task.getHandleIdentifier());
 				TaskUiUtil.closeEditorInActivePage(task);
 			} else if (selectedObject instanceof AbstractRepositoryQuery) {
 				boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
@@ -88,7 +88,7 @@ public class DeleteAction extends Action {
 
 				TaskCategory cat = (TaskCategory) selectedObject;
 				for (ITask task : cat.getChildren()) {
-					MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier());
+					MylarPlugin.getContextManager().deleteContext(task.getHandleIdentifier());
 					TaskUiUtil.closeEditorInActivePage(task);
 				}
 				MylarTaskListPlugin.getTaskListManager().getTaskList().deleteCategory(cat);

@@ -66,7 +66,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 		mockContext = MylarPlugin.getContextManager().loadContext(task1.getHandleIdentifier());
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.EDIT, "structureKind", "handle", "originId");
 		mockContext.parseEvent(event);
-		MylarPlugin.getContextManager().contextActivated(mockContext);
+		MylarPlugin.getContextManager().activateContext(mockContext);
 
 		// Save the context file and check that it exists
 		MylarPlugin.getContextManager().saveContext(mockContext.getHandleIdentifier());
@@ -83,7 +83,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 
 		destinationDir.delete();
 		assertFalse(destinationDir.exists());
-		MylarPlugin.getContextManager().contextDeactivated(mockContext.getHandleIdentifier());
+		MylarPlugin.getContextManager().deactivateContext(mockContext.getHandleIdentifier());
 		super.tearDown();
 	}
 
