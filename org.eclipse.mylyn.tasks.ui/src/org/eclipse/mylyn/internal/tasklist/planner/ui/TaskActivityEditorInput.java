@@ -24,6 +24,7 @@ import org.eclipse.mylar.internal.tasklist.planner.InProgressTaskCollector;
 import org.eclipse.mylar.internal.tasklist.planner.TaskReportGenerator;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskList;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
@@ -73,7 +74,12 @@ public class TaskActivityEditorInput implements IEditorInput {
 
 		completedTasks = completedTaskCollector.getTasks();
 		inProgressTasks = inProgressTaskCollector.getTasks();
-		plannedTasks = new HashSet<ITask>();
+		
+		plannedTasks.addAll(MylarTaskListPlugin.getTaskListManager().getActivityNextWeek().getChildren());
+		
+		plannedTasks.addAll(MylarTaskListPlugin.getTaskListManager().getActivityFuture().getChildren());
+				
+		//plannedTasks = new HashSet<ITask>();
 	}
 
 	public boolean exists() {
@@ -161,11 +167,10 @@ public class TaskActivityEditorInput implements IEditorInput {
 		inProgressTasks.remove(task);
 	}
 	
-	public void addPlannedTask(ITask task) {
-		if(!plannedTasks.contains(task)) {
-			plannedTasks.add(task);
-		}
+	public void addPlannedTask(ITask task) {		
+		plannedTasks.add(task);		
 	}
+	
 	public void removePlannedTask(ITask task) {
 		plannedTasks.remove(task);
 	}

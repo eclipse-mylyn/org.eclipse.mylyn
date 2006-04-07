@@ -16,12 +16,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -30,31 +27,16 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.ICellEditorListener;
-import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
-import org.eclipse.mylar.provisional.tasklist.TaskListManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -125,15 +107,15 @@ public class TaskActivityEditorPart extends EditorPart {
 	private static final String BLANK_CELL = "&nbsp;";
 
 	private Label totalEstimatedHoursLabel;
-	
+
 	private Label numberCompleted;
-	
+
 	private Label totalTimeOnCompleted;
 
 	private Label numberInProgress;
-	
+
 	private Label totalTimeOnIncomplete;
-	
+
 	private Label totalEstimatedTime;
 
 	private Label totalTime;
@@ -196,7 +178,7 @@ public class TaskActivityEditorPart extends EditorPart {
 		sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		activityContentProvider = new TaskActivityContentProvider(editorInput);
-		
+
 		final TableViewer activityViewer = createTableSection(sashForm, toolkit, label, activityColumnNames,
 				activityColumnWidths, activitySortConstants);
 		activityViewer.setContentProvider(activityContentProvider);
@@ -206,10 +188,10 @@ public class TaskActivityEditorPart extends EditorPart {
 
 		activityViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
-				updateLabels();				
+				updateLabels();
 			}
 		});
-		
+
 		MenuManager activityContextMenuMgr = new MenuManager("#ActivityPlannerPopupMenu");
 		activityContextMenuMgr.setRemoveAllWhenShown(true);
 		activityContextMenuMgr.addMenuListener(new IMenuListener() {
@@ -222,44 +204,48 @@ public class TaskActivityEditorPart extends EditorPart {
 		activityViewer.getControl().setMenu(menu);
 		getSite().registerContextMenu(activityContextMenuMgr, activityViewer);
 
-
 		planContentProvider = new PlannedTasksContentProvider(editorInput);
-		final TableViewer planViewer = createTableSection(sashForm, toolkit, LABEL_PLANNED_ACTIVITY,
-				planColumnNames, planColumnWidths, planSortConstants);
+		final TableViewer planViewer = createTableSection(sashForm, toolkit, LABEL_PLANNED_ACTIVITY, planColumnNames,
+				planColumnWidths, planSortConstants);
 		planViewer.setContentProvider(planContentProvider);
 		planViewer.setLabelProvider(new TaskPlanLabelProvider());
-		createPlanCellEditorListener(planViewer.getTable(), planViewer);
-		planViewer.setCellModifier(new PlannedTasksCellModifier(planViewer));
-		initDrop(planViewer, planContentProvider);
+		// createPlanCellEditorListener(planViewer.getTable(), planViewer);
+		// planViewer.setCellModifier(new PlannedTasksCellModifier(planViewer));
+		// initDrop(planViewer, planContentProvider);
 		setSorters(planColumnNames, planSortConstants, planViewer.getTable(), planViewer, true);
 		planViewer.setInput(editorInput);
 
-		planViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				updateLabels();				
-			}
-		});
+		// planViewer.addSelectionChangedListener(new
+		// ISelectionChangedListener() {
+		// public void selectionChanged(SelectionChangedEvent event) {
+		// updateLabels();
+		// }
+		// });
 
-		MenuManager planContextMenuMgr = new MenuManager("#PlanPlannerPopupMenu");
-		planContextMenuMgr.setRemoveAllWhenShown(true);
-		planContextMenuMgr.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				TaskActivityEditorPart.this.fillContextMenu(planViewer, manager);
-			}
-		});
-		Menu planMenu = planContextMenuMgr.createContextMenu(planViewer.getControl());
-		planViewer.getControl().setMenu(planMenu);
-		getSite().registerContextMenu(planContextMenuMgr, planViewer);
+		// MenuManager planContextMenuMgr = new
+		// MenuManager("#PlanPlannerPopupMenu");
+		// planContextMenuMgr.setRemoveAllWhenShown(true);
+		// planContextMenuMgr.addMenuListener(new IMenuListener() {
+		// public void menuAboutToShow(IMenuManager manager) {
+		// TaskActivityEditorPart.this.fillContextMenu(planViewer, manager);
+		// }
+		// });
+		// Menu planMenu =
+		// planContextMenuMgr.createContextMenu(planViewer.getControl());
+		// planViewer.getControl().setMenu(planMenu);
+		// getSite().registerContextMenu(planContextMenuMgr, planViewer);
 
 		totalEstimatedHoursLabel = toolkit.createLabel(editorComposite, LABEL_ESTIMATED + "0 hours  ", SWT.NULL);
 		createButtons(editorComposite, toolkit, planViewer, planContentProvider);
-				
+		updateLabels();
 	}
 
 	private void fillContextMenu(TableViewer viewer, IMenuManager manager) {
 		if (!viewer.getSelection().isEmpty()) {
 			manager.add(new OpenTaskEditorAction(viewer));
 			manager.add(new RemoveTaskAction(viewer));
+			manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+		} else {
 			manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		}
 	}
@@ -293,7 +279,7 @@ public class TaskActivityEditorPart extends EditorPart {
 		String numComplete = "Number completed: " + editorInput.getCompletedTasks().size();
 		numberCompleted = toolkit.createLabel(summaryContainer, numComplete, SWT.NULL);
 		numberCompleted.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		
+
 		String totalCompletedTaskTime = "Total time on completed: "
 				+ DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnCompletedTasks(), false);
 		totalTimeOnCompleted = toolkit.createLabel(summaryContainer, totalCompletedTaskTime, SWT.NULL);
@@ -307,7 +293,7 @@ public class TaskActivityEditorPart extends EditorPart {
 				+ DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnInProgressTasks(), false);
 		totalTimeOnIncomplete = toolkit.createLabel(summaryContainer, totalInProgressTaskTime, SWT.NULL);
 		totalTimeOnIncomplete.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		
+
 		String spacer = "        ";
 		String totalEstimated = "Total estimated time: " + editorInput.getTotalTimeEstimated() + " hours" + spacer;
 		totalEstimatedTime = toolkit.createLabel(summaryContainer, totalEstimated, SWT.NULL);
@@ -318,11 +304,11 @@ public class TaskActivityEditorPart extends EditorPart {
 		totalTime.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 	}
-	
+
 	private void updateSummarySection() {
-		String numComplete = "Number completed: " + editorInput.getCompletedTasks().size();		
+		String numComplete = "Number completed: " + editorInput.getCompletedTasks().size();
 		numberCompleted.setText(numComplete);
-		
+
 		String totalCompletedTaskTime = "Total time on completed: "
 				+ DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnCompletedTasks(), false);
 		totalTimeOnCompleted.setText(totalCompletedTaskTime);
@@ -333,66 +319,74 @@ public class TaskActivityEditorPart extends EditorPart {
 		String totalInProgressTaskTime = "Total time on incomplete: "
 				+ DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnInProgressTasks(), false);
 		totalTimeOnIncomplete.setText(totalInProgressTaskTime);
-		
+
 		String spacer = "        ";
 		String totalEstimated = "Total estimated time: " + editorInput.getTotalTimeEstimated() + " hours" + spacer;
 		totalEstimatedTime.setText(totalEstimated);
 
 		String grandTotalTime = "Total time: " + getTotalTime();
 		totalTime.setText(grandTotalTime);
-		
+
 	}
 
-	private void createPlanCellEditorListener(final Table planTable, final TableViewer planTableViewer) {
-		CellEditor[] editors = new CellEditor[planColumnNames.length + 1];
-		final ComboBoxCellEditor estimateEditor = new ComboBoxCellEditor(planTable, TaskListManager.ESTIMATE_TIMES, SWT.READ_ONLY);
-		final ReminderCellEditor reminderEditor = new ReminderCellEditor(planTable);
-		editors[0] = null; // not used
-		editors[1] = null;// not used
-		editors[2] = null;// not used
-		editors[3] = null;// not used
-		editors[4] = estimateEditor;
-		editors[5] = reminderEditor;
-		reminderEditor.addListener(new ICellEditorListener() {
-			public void applyEditorValue() {
-				Object selection = ((IStructuredSelection) planTableViewer.getSelection()).getFirstElement();
-				if (selection instanceof ITask) {
-					((ITask) selection).setReminderDate(reminderEditor.getReminderDate());
-					planTableViewer.refresh();
-				}
-			}
-
-			public void cancelEditor() {
-			}
-
-			public void editorValueChanged(boolean oldValidState, boolean newValidState) {
-			}
-
-		});
-		estimateEditor.addListener(new ICellEditorListener() {
-			public void applyEditorValue() {
-				Object selection = ((IStructuredSelection) planTableViewer.getSelection()).getFirstElement();
-				if (selection instanceof ITask) {
-					ITask task = (ITask) selection;
-					int estimate = (Integer) estimateEditor.getValue();
-					if (estimate == -1) {
-						estimate = 0;
-					}
-					task.setEstimatedTimeHours(estimate);
-					updateLabels();
-					planTableViewer.refresh();
-				}
-			}
-
-			public void cancelEditor() {
-			}
-
-			public void editorValueChanged(boolean oldValidState, boolean newValidState) {
-			}
-
-		});
-		planTableViewer.setCellEditors(editors);
-	}
+	// private void createPlanCellEditorListener(final Table planTable, final
+	// TableViewer planTableViewer) {
+	// CellEditor[] editors = new CellEditor[planColumnNames.length + 1];
+	// final ComboBoxCellEditor estimateEditor = new
+	// ComboBoxCellEditor(planTable, TaskListManager.ESTIMATE_TIMES,
+	// SWT.READ_ONLY);
+	// final ReminderCellEditor reminderEditor = new
+	// ReminderCellEditor(planTable);
+	// editors[0] = null; // not used
+	// editors[1] = null;// not used
+	// editors[2] = null;// not used
+	// editors[3] = null;// not used
+	// editors[4] = estimateEditor;
+	// editors[5] = reminderEditor;
+	// reminderEditor.addListener(new ICellEditorListener() {
+	// public void applyEditorValue() {
+	// Object selection = ((IStructuredSelection)
+	// planTableViewer.getSelection()).getFirstElement();
+	// if (selection instanceof ITask) {
+	// ((ITask) selection).setReminderDate(reminderEditor.getReminderDate());
+	// planTableViewer.refresh();
+	// }
+	// }
+	//
+	// public void cancelEditor() {
+	// }
+	//
+	// public void editorValueChanged(boolean oldValidState, boolean
+	// newValidState) {
+	// }
+	//
+	// });
+	// estimateEditor.addListener(new ICellEditorListener() {
+	// public void applyEditorValue() {
+	// Object selection = ((IStructuredSelection)
+	// planTableViewer.getSelection()).getFirstElement();
+	// if (selection instanceof ITask) {
+	// ITask task = (ITask) selection;
+	// int estimate = (Integer) estimateEditor.getValue();
+	// if (estimate == -1) {
+	// estimate = 0;
+	// }
+	// task.setEstimatedTimeHours(estimate);
+	// updateLabels();
+	// planTableViewer.refresh();
+	// }
+	// }
+	//
+	// public void cancelEditor() {
+	// }
+	//
+	// public void editorValueChanged(boolean oldValidState, boolean
+	// newValidState) {
+	// }
+	//
+	// });
+	// planTableViewer.setCellEditors(editors);
+	// }
 
 	private String getTotalTime() {
 		return DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnCompletedTasks()
@@ -401,12 +395,13 @@ public class TaskActivityEditorPart extends EditorPart {
 
 	private TableViewer createTableSection(Composite parent, FormToolkit toolkit, String title, String[] columnNames,
 			int[] columnWidths, int[] sortConstants) {
-		Section tableSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR); // | ExpandableComposite.TWISTIE
-		tableSection.setText(title);		
-//	    tableSection.setExpanded(true);
+		Section tableSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR); // |
+																								// ExpandableComposite.TWISTIE
+		tableSection.setText(title);
+		// tableSection.setExpanded(true);
 		tableSection.marginHeight = 8;
 		tableSection.setLayout(new GridLayout());
-		tableSection.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));	
+		tableSection.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		Composite detailContainer = toolkit.createComposite(tableSection);
 		tableSection.setClient(detailContainer);
@@ -425,7 +420,7 @@ public class TaskActivityEditorPart extends EditorPart {
 		GridData tableGridData = new GridData(GridData.FILL_BOTH);
 		tableGridData.heightHint = 100;
 		table.setLayoutData(tableGridData);
-		
+
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 		table.setEnabled(true);
@@ -481,26 +476,28 @@ public class TaskActivityEditorPart extends EditorPart {
 		container.setLayout(layout);
 		layout.numColumns = 3;
 
-//		Button addIncomplete = toolkit.createButton(container, "Add Incomplete", SWT.PUSH | SWT.CENTER);
-//		addIncomplete.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				Set<ITask> incompleteTasks = editorInput.getInProgressTasks();
-//				for (ITask task : incompleteTasks) {
-//					contentProvider.addTask(task);
-//					viewer.refresh();
-//					updateLabels();
-//				}
-//			}
-//		});
-//
-//		Button addToCategory = toolkit.createButton(container, "Add Planned to Category...", SWT.PUSH | SWT.CENTER);
-//		addToCategory.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				addPlannedTasksToCategory(contentProvider);
-//			}
-//		});
+		// Button addIncomplete = toolkit.createButton(container, "Add
+		// Incomplete", SWT.PUSH | SWT.CENTER);
+		// addIncomplete.addSelectionListener(new SelectionAdapter() {
+		// @Override
+		// public void widgetSelected(SelectionEvent e) {
+		// Set<ITask> incompleteTasks = editorInput.getInProgressTasks();
+		// for (ITask task : incompleteTasks) {
+		// contentProvider.addTask(task);
+		// viewer.refresh();
+		// updateLabels();
+		// }
+		// }
+		// });
+		//
+		// Button addToCategory = toolkit.createButton(container, "Add Planned
+		// to Category...", SWT.PUSH | SWT.CENTER);
+		// addToCategory.addSelectionListener(new SelectionAdapter() {
+		// @Override
+		// public void widgetSelected(SelectionEvent e) {
+		// addPlannedTasksToCategory(contentProvider);
+		// }
+		// });
 
 		Button exportToHTML = toolkit.createButton(container, "Export to HTML...", SWT.PUSH | SWT.CENTER);
 		exportToHTML.addSelectionListener(new SelectionAdapter() {
@@ -511,170 +508,184 @@ public class TaskActivityEditorPart extends EditorPart {
 		});
 	}
 
-	private void initDrop(final TableViewer tableViewer, final PlannedTasksContentProvider contentProvider) {
-		Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
+	// private void initDrop(final TableViewer tableViewer, final
+	// PlannedTasksContentProvider contentProvider) {
+	// Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
+	//
+	// tableViewer.addDropSupport(DND.DROP_MOVE, types, new
+	// ViewerDropAdapter(tableViewer) {
+	// {
+	// setFeedbackEnabled(false);
+	// }
+	//
+	// @Override
+	// public boolean performDrop(Object data) {
+	//
+	// IStructuredSelection selection = ((IStructuredSelection)
+	// TaskListView.getDefault().getViewer()
+	// .getSelection());
+	//
+	// for (Iterator iter = selection.iterator(); iter.hasNext();) {
+	// Object selectedObject = iter.next();
+	// if (selectedObject instanceof ITask) {
+	// contentProvider.addTask((ITask) selectedObject);
+	// updateLabels();
+	// continue;
+	// } else if (selectedObject instanceof ITaskListElement) {
+	// // if
+	// (MylarTaskListPlugin.getDefault().getHandlerForElement((ITaskListElement)
+	// selectedObject) != null) {
+	// ITask task = null;
+	// if (selectedObject instanceof ITask) {
+	// task = (ITask) selectedObject;
+	// } else if (selectedObject instanceof AbstractQueryHit) {
+	// task = ((AbstractQueryHit)
+	// selectedObject).getOrCreateCorrespondingTask();
+	// }
+	// if (task != null) {
+	// contentProvider.addTask(task);
+	// updateLabels();
+	// continue;
+	// }
+	// // }
+	// } else {
+	// return false;
+	// }
+	// }
+	// tableViewer.refresh();
+	// return true;
+	// }
+	//
+	// @Override
+	// public boolean validateDrop(Object targetObject, int operation,
+	// TransferData transferType) {
+	// Object selectedObject = ((IStructuredSelection)
+	// TaskListView.getDefault().getViewer().getSelection())
+	// .getFirstElement();
+	// if (!(selectedObject instanceof AbstractRepositoryQuery)) {
+	// // && ((ITaskListElement) selectedObject).isDragAndDropEnabled()) {
+	// return true;
+	// }
+	// return false;
+	// }
+	// });
+	// }
 
-		tableViewer.addDropSupport(DND.DROP_MOVE, types, new ViewerDropAdapter(tableViewer) {
-			{
-				setFeedbackEnabled(false);
-			}
+	// private class PlannedTasksCellModifier implements ICellModifier {
+	//
+	// private TableViewer tableViewer;
+	//
+	// public PlannedTasksCellModifier(TableViewer tableViewer) {
+	// this.tableViewer = tableViewer;
+	// }
+	//
+	// public boolean canModify(Object element, String property) {
+	// int columnIndex = Arrays.asList(planColumnNames).indexOf(property);
+	// if (columnIndex == 5 || columnIndex == 4) {
+	// return true;
+	// }
+	// return false;
+	// }
+	//
+	// public Object getValue(Object element, String property) {
+	// if (element instanceof ITask) {
+	// int columnIndex = Arrays.asList(planColumnNames).indexOf(property);
+	// if (element instanceof ITask) {
+	// if (columnIndex == 5) {
+	// if (((ITask) element).getReminderDate() != null) {
+	// return DateFormat.getDateInstance(DateFormat.MEDIUM).format(
+	// ((ITask) element).getReminderDate());
+	// } else {
+	// return null;
+	// }
+	// } else if (columnIndex == 4) {
+	// return new Integer(Arrays.asList(TaskListManager.ESTIMATE_TIMES).indexOf(
+	// ((ITask) element).getEstimateTimeHours()));
+	// }
+	//
+	// }
+	// }
+	// return null;
+	// }
+	//
+	// public void modify(Object element, String property, Object value) {
+	// int columnIndex = Arrays.asList(planColumnNames).indexOf(property);
+	// if (element instanceof ITask) {
+	// ITask task = (ITask) element;
+	// if (columnIndex == 4) {
+	// if (value instanceof Integer) {
+	// task.setEstimatedTimeHours(((Integer) value).intValue() * 10);
+	// tableViewer.refresh();
+	// }
+	// }
+	// }
+	// }
+	// }
 
-			@Override
-			public boolean performDrop(Object data) {
-
-				IStructuredSelection selection = ((IStructuredSelection) TaskListView.getDefault().getViewer()
-						.getSelection());
-
-				for (Iterator iter = selection.iterator(); iter.hasNext();) {
-					Object selectedObject = iter.next();
-					if (selectedObject instanceof ITask) {
-						contentProvider.addTask((ITask) selectedObject);
-						updateLabels();
-						continue;
-					} else if (selectedObject instanceof ITaskListElement) {
-//						if (MylarTaskListPlugin.getDefault().getHandlerForElement((ITaskListElement) selectedObject) != null) {
-							ITask task = null;
-							if (selectedObject instanceof ITask) {
-								task = (ITask) selectedObject;
-							} else if (selectedObject instanceof AbstractQueryHit) {
-								task = ((AbstractQueryHit) selectedObject).getOrCreateCorrespondingTask();
-							}
-							if (task != null) {
-								contentProvider.addTask(task);
-								updateLabels();
-								continue;
-							}
-//						}
-					} else {
-						return false;
-					}
-				}
-				tableViewer.refresh();
-				return true;
-			}
-
-			@Override
-			public boolean validateDrop(Object targetObject, int operation, TransferData transferType) {
-				Object selectedObject = ((IStructuredSelection) TaskListView.getDefault().getViewer().getSelection())
-						.getFirstElement();
-				if (!(selectedObject instanceof AbstractRepositoryQuery)) {
-// 						&& ((ITaskListElement) selectedObject).isDragAndDropEnabled()) {
-					return true;
-				}
-				return false;
-			}
-		});
-	}
-
-	private class PlannedTasksCellModifier implements ICellModifier {
-
-		private TableViewer tableViewer;
-
-		public PlannedTasksCellModifier(TableViewer tableViewer) {
-			this.tableViewer = tableViewer;
-		}
-
-		public boolean canModify(Object element, String property) {
-			int columnIndex = Arrays.asList(planColumnNames).indexOf(property);
-			if (columnIndex == 5 || columnIndex == 4) {
-				return true;
-			}
-			return false;
-		}
-
-		public Object getValue(Object element, String property) {
-			if (element instanceof ITask) {
-				int columnIndex = Arrays.asList(planColumnNames).indexOf(property);
-				if (element instanceof ITask) {
-					if (columnIndex == 5) {
-						if (((ITask) element).getReminderDate() != null) {
-							return DateFormat.getDateInstance(DateFormat.MEDIUM).format(
-									((ITask) element).getReminderDate());
-						} else {
-							return null;
-						}
-					} else if (columnIndex == 4) {
-						return new Integer(Arrays.asList(TaskListManager.ESTIMATE_TIMES).indexOf(
-								((ITask) element).getEstimateTimeHours()));
-					}
-
-				}
-			}
-			return null;
-		}
-
-		public void modify(Object element, String property, Object value) {
-			int columnIndex = Arrays.asList(planColumnNames).indexOf(property);
-			if (element instanceof ITask) {
-				ITask task = (ITask) element;
-				if (columnIndex == 4) {
-					if (value instanceof Integer) {
-						task.setEstimatedTimeHours(((Integer) value).intValue() * 10);
-						tableViewer.refresh();
-					}
-				}
-			}
-		}
-	}
-
-//	private void addPlannedTasksToCategory(PlannedTasksContentProvider contentProvider) {
-//		List<AbstractTaskContainer> categories = MylarTaskListPlugin.getTaskListManager().getTaskList().getUserCategories();
-//		String[] categoryNames = new String[categories.size()];
-//		int i = 0;
-//		for (AbstractTaskContainer category : categories) {
-//			categoryNames[i++] = category.getDescription();
-//		}
-//		if (categories.size() > 0) {
-//			ComboSelectionDialog dialog = new ComboSelectionDialog(Display.getCurrent().getActiveShell(), LABEL_DIALOG,
-//					"Select destination category: ", categoryNames, 0);
-//			int confirm = dialog.open();
-//			if (confirm == ComboSelectionDialog.OK) {
-//				String selected = dialog.getSelectedString();
-//				AbstractTaskContainer destinationCategory = null;
-//				for (AbstractTaskContainer category : categories) {
-//					if (category.getDescription().equals(selected)) {
-//						destinationCategory = category;
-//						break; // will go to the first one
-//					}
-//				}
-//				if (destinationCategory != null && destinationCategory instanceof TaskCategory) {
-//					TaskCategory taskCategory = (TaskCategory) destinationCategory;
-//					for (ITask task : editorInput.getPlannedTasks()) {
-//						if (!taskCategory.getChildren().contains(task)) {
-//							MylarTaskListPlugin.getTaskListManager().getTaskList().moveToContainer(taskCategory, task);
-//						}
-//					}
-//					if (TaskListView.getDefault() != null) {
-//						TaskListView.getDefault().refreshAndFocus();
-//					}
-//				} else {
-//					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), LABEL_DIALOG,
-//							"Can not add plan tasks into a query category.");
-//				}
-//			}
-//		} else {
-//			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), LABEL_DIALOG,
-//					"No categories in task list.");
-//		}
-//	}
+	// private void addPlannedTasksToCategory(PlannedTasksContentProvider
+	// contentProvider) {
+	// List<AbstractTaskContainer> categories =
+	// MylarTaskListPlugin.getTaskListManager().getTaskList().getUserCategories();
+	// String[] categoryNames = new String[categories.size()];
+	// int i = 0;
+	// for (AbstractTaskContainer category : categories) {
+	// categoryNames[i++] = category.getDescription();
+	// }
+	// if (categories.size() > 0) {
+	// ComboSelectionDialog dialog = new
+	// ComboSelectionDialog(Display.getCurrent().getActiveShell(), LABEL_DIALOG,
+	// "Select destination category: ", categoryNames, 0);
+	// int confirm = dialog.open();
+	// if (confirm == ComboSelectionDialog.OK) {
+	// String selected = dialog.getSelectedString();
+	// AbstractTaskContainer destinationCategory = null;
+	// for (AbstractTaskContainer category : categories) {
+	// if (category.getDescription().equals(selected)) {
+	// destinationCategory = category;
+	// break; // will go to the first one
+	// }
+	// }
+	// if (destinationCategory != null && destinationCategory instanceof
+	// TaskCategory) {
+	// TaskCategory taskCategory = (TaskCategory) destinationCategory;
+	// for (ITask task : editorInput.getPlannedTasks()) {
+	// if (!taskCategory.getChildren().contains(task)) {
+	// MylarTaskListPlugin.getTaskListManager().getTaskList().moveToContainer(taskCategory,
+	// task);
+	// }
+	// }
+	// if (TaskListView.getDefault() != null) {
+	// TaskListView.getDefault().refreshAndFocus();
+	// }
+	// } else {
+	// MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+	// LABEL_DIALOG,
+	// "Can not add plan tasks into a query category.");
+	// }
+	// }
+	// } else {
+	// MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+	// LABEL_DIALOG,
+	// "No categories in task list.");
+	// }
+	// }
 
 	private void updateLabels() {
 		totalEstimatedHoursLabel.setText(LABEL_ESTIMATED + editorInput.getPlannedEstimate() + " hours");
 		updateSummarySection();
 	}
 
-	
 	private void exportToHtml() {
 		File outputFile;
 		try {
 			FileDialog dialog = new FileDialog(Workbench.getInstance().getActiveWorkbenchWindow().getShell());
 			dialog.setText("Specify a file name");
 			dialog.setFilterExtensions(new String[] { "*.html", "*.*" });
-
 			String filename = dialog.open();
-			
-			if(filename == null || filename.equals("")) return;
-			
+
+			if (filename == null || filename.equals(""))
+				return;
+
 			if (!filename.endsWith(".html"))
 				filename += ".html";
 			outputFile = new File(filename);
@@ -789,14 +800,14 @@ public class TaskActivityEditorPart extends EditorPart {
 				writer.write("<tr>");
 				writer.write("<td width=\"59\">ICON</td><td width=\"55\">" + currentTask.getPriority()
 						+ "</td><td width=\"495\">");
-				
+
 				if (currentTask.hasValidUrl()) {
 					writer.write("<a href='" + currentTask.getUrl() + "'>" + currentTask.getDescription() + "</a>");
 				} else {
 					writer.write(currentTask.getDescription());
 				}
-				
-				writer.write("</td><td>" + creationDateString+ "</td>");
+
+				writer.write("</td><td>" + creationDateString + "</td>");
 				writer.write("<td>" + completionDateString + "</td><td>" + elapsedTimeString + "</td><td>"
 						+ estimatedTimeString + "</td>");
 				writer.write("</tr>");
