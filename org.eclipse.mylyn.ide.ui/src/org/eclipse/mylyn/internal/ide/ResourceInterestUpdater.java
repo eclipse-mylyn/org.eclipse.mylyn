@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.ide;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
@@ -32,7 +33,7 @@ public class ResourceInterestUpdater {
 
 	private boolean syncExec = false;
 
-	public void addResourceToContext(final List<IResource> resources, final InteractionEvent.Kind interactionKind) {
+	public void addResourceToContext(final Set<IResource> resources, final InteractionEvent.Kind interactionKind) {
 		try {
 			if (!resources.isEmpty()) {
 				if (syncExec) {
@@ -53,7 +54,7 @@ public class ResourceInterestUpdater {
 		}
 	}
 
-	private void internalAddResourceToContext(List<IResource> resources, InteractionEvent.Kind interactionKind) {
+	private void internalAddResourceToContext(Set<IResource> resources, InteractionEvent.Kind interactionKind) {
 		List<IResource> toAdd = new ArrayList<IResource>();
 		for (IResource resource : resources) {
 			if (acceptResource(resource)) {
@@ -77,6 +78,8 @@ public class ResourceInterestUpdater {
 		}  
 		if (InteractionEvent.Kind.SELECTION.equals(interactionKind)) {
 			MylarPlugin.getContextManager().handleInteractionEvents(interactionEvents, true);
+		} else {
+			MylarPlugin.getContextManager().handleInteractionEvents(interactionEvents, false);
 		}
 	}
 

@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.ide;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -31,7 +31,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 
 	private boolean enabled = true;
 
-	public void resourceChanged(IResourceChangeEvent event) {
+	public void resourceChanged(IResourceChangeEvent event) { 
 		if (!enabled || !MylarPlugin.getContextManager().isContextActive()
 				|| MylarPlugin.getContextManager().isContextCapturePaused()) {
 			return;
@@ -39,8 +39,8 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 		if (event.getType() != IResourceChangeEvent.POST_CHANGE) {
 			return;
 		}
-		final List<IResource> addedResources = new ArrayList<IResource>();
-		final List<IResource> changedResources = new ArrayList<IResource>();
+		final Set<IResource> addedResources = new HashSet<IResource>();
+		final Set<IResource> changedResources = new HashSet<IResource>();
 		IResourceDelta rootDelta = event.getDelta();
 		IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
 			public boolean visit(IResourceDelta delta) {
@@ -51,20 +51,13 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 						addedResources.add(resource);
 					}
 				}
-				IResourceDelta[] changed = delta.getAffectedChildren(IResourceDelta.CHANGED);
+				IResourceDelta[] changed = delta.getAffectedChildren(IResourceDelta.CONTENT | IResourceDelta.REMOVED | IResourceDelta.MOVED_TO | IResourceDelta.MOVED_FROM);
 				for (int i = 0; i < changed.length; i++) {
 					IResource resource = changed[i].getResource();
 					if (resource instanceof IFile) {
 						changedResources.add(resource);
 					} 
 				}
-				IResourceDelta[] removed = delta.getAffectedChildren(IResourceDelta.REMOVED);
-				for (int i = 0; i < removed.length; i++) {
-					IResource resource = removed[i].getResource();
-					if (resource instanceof IFile) {
-						changedResources.add(resource);
-					}
-				} 
 				return true;
 			}
 		};
@@ -84,6 +77,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
+
 }
 
 // private void processMarkerDelata(IMarkerDelta[] markers) {

@@ -111,8 +111,8 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 		super.add(diff);
 		IResource resource = getResourceFromDiff(diff);
 		if (!suppressInterestContribution && resource != null) {
-			List<IResource> resources = new ArrayList<IResource>();
-			resources.add(resource);
+			Set<IResource> resources = new HashSet<IResource>();
+			resources.add(resource); 
 			MylarIdePlugin.getDefault().getInterestUpdater().addResourceToContext(resources, InteractionEvent.Kind.SELECTION);
 		}
 	}
