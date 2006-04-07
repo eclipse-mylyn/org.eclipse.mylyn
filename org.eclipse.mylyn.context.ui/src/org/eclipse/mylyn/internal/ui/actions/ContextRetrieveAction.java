@@ -14,12 +14,12 @@ package org.eclipse.mylar.internal.ui.actions;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.ContextRetrieveWizard;
-import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
+import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -38,21 +38,10 @@ public class ContextRetrieveAction implements IViewActionDelegate {
 	}
 
 	public void run(IAction action) {
-		if (selection.isEmpty())
-			return;
-		if (selection instanceof TreeSelection) {
-			TreeSelection treeSelection = (TreeSelection) selection;
-			Object obj = treeSelection.getFirstElement();
-			AbstractRepositoryTask task = null;
-			if (obj instanceof AbstractRepositoryTask) {
-				task = (AbstractRepositoryTask) obj;
-			} else if (obj instanceof AbstractQueryHit) {
-				AbstractQueryHit hit = (AbstractQueryHit) obj;
-				task = hit.getCorrespondingTask();
-			}
-
+		ITask task = TaskListView.getDefault().getSelectedTask();
+		if (task instanceof AbstractRepositoryTask) {
 			try {
-				ContextRetrieveWizard wizard = new ContextRetrieveWizard(task);
+				ContextRetrieveWizard wizard = new ContextRetrieveWizard((AbstractRepositoryTask)task);
 				Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 				if (wizard != null && shell != null && !shell.isDisposed()) {
 					WizardDialog dialog = new WizardDialog(shell, wizard);
