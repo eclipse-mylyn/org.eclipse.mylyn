@@ -51,7 +51,8 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 						addedResources.add(resource);
 					}
 				}
-				IResourceDelta[] changed = delta.getAffectedChildren(IResourceDelta.CONTENT | IResourceDelta.REMOVED | IResourceDelta.MOVED_TO | IResourceDelta.MOVED_FROM);
+//				int changeMask = IResourceDelta.CONTENT | IResourceDelta.REMOVED | IResourceDelta.MOVED_TO | IResourceDelta.MOVED_FROM;
+				IResourceDelta[] changed = delta.getAffectedChildren(IResourceDelta.CHANGED);
 				for (int i = 0; i < changed.length; i++) {
 					IResource resource = changed[i].getResource();
 					if (resource instanceof IFile) {
@@ -60,7 +61,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 				}
 				return true;
 			}
-		};
+		}; 
 		try {
 			rootDelta.accept(visitor);
 			MylarIdePlugin.getDefault().getInterestUpdater().addResourceToContext(addedResources, InteractionEvent.Kind.SELECTION);
