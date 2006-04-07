@@ -262,8 +262,14 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		maxFiles.setText("Max Backups");
 
 		maxFilesSpinner = new Spinner(extrasComp, SWT.NONE);
-		maxFilesSpinner.setValues(getPreferenceStore().getInt(TaskListPreferenceConstants.BACKUP_MAXFILES),
-				SPINNER_MIN_BACKUPS, SPINNER_MAX_BACKUPS, 0, 1, 1);
+		maxFilesSpinner.setIncrement(1);
+		maxFilesSpinner.setMinimum(SPINNER_MIN_BACKUPS);
+		maxFilesSpinner.setMaximum(SPINNER_MAX_BACKUPS);
+		maxFilesSpinner.setPageIncrement(1);
+		maxFilesSpinner.setSelection(getPreferenceStore().getInt(TaskListPreferenceConstants.BACKUP_MAXFILES));
+		// 3.2 only: 
+		//		maxFilesSpinner.setValues(getPreferenceStore().getInt(TaskListPreferenceConstants.BACKUP_MAXFILES),
+		//				SPINNER_MIN_BACKUPS, SPINNER_MAX_BACKUPS, 0, 1, 1);
 
 		lastUpdate = new Label(extrasComp, SWT.NONE);
 		lastUpdate.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

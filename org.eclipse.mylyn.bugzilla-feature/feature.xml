@@ -247,21 +247,21 @@ litigation.
          id="org.eclipse.mylar.bugzilla.core"
          download-size="0"
          install-size="0"
-         version="0.4.10.v20060406-1900"
+         version="0.4.10.v20060407-1530"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.bugzilla.ui"
          download-size="0"
          install-size="0"
-         version="0.4.10.v20060406-1900"
+         version="0.4.10.v20060407-1530"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.bugs"
          download-size="0"
          install-size="0"
-         version="0.4.10.v20060406-1900"
+         version="0.4.10.v20060407-1530"
          unpack="false"/>
 
 </feature>
