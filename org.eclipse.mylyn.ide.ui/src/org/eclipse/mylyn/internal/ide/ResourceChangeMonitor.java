@@ -51,7 +51,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 						addedResources.add(resource);
 					}
 				}
-				IResourceDelta[] changed = delta.getAffectedChildren(IResourceDelta.CONTENT);
+				IResourceDelta[] changed = delta.getAffectedChildren(IResourceDelta.CHANGED);
 				for (int i = 0; i < changed.length; i++) {
 					IResource resource = changed[i].getResource();
 					if (resource instanceof IFile) {

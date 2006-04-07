@@ -71,7 +71,7 @@ public class ResourceInterestUpdater {
 					InteractionEvent interactionEvent = new InteractionEvent(interactionKind, bridge
 							.getContentType(), handle, SOURCE_ID);
 					interactionEvents.add(interactionEvent);
-					MylarStatusHandler.log("added : " + element.getHandleIdentifier(), null);
+//					MylarStatusHandler.log("added : " + element.getHandleIdentifier(), null);
 				}
 			} 
 		} 
