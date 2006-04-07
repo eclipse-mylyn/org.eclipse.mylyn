@@ -294,7 +294,7 @@
            label="Apply Mylar"
            style="toggle"
            toolbarPath="context"
-           tooltip="Apply Mylar"> 
+           tooltip="Apply Mylar (Experimental)"> 
   		</action> 
   	</viewContribution>
     <viewContribution

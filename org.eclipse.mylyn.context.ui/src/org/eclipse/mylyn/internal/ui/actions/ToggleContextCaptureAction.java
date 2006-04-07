@@ -26,7 +26,7 @@ import org.eclipse.ui.IViewPart;
  * @author Mik Kersten
  */
 public class ToggleContextCaptureAction extends Action implements IViewActionDelegate {
-
+	
 	public void init(IViewPart view) {
 		// ignore
 	}
@@ -52,8 +52,6 @@ public class ToggleContextCaptureAction extends Action implements IViewActionDel
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		// TODO Auto-generated method stub
-
+		// ignore
 	}
-
 }
