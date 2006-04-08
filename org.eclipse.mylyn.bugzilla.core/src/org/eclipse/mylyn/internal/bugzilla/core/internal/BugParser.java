@@ -385,6 +385,9 @@ public class BugParser {
 		for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 			if (token.getType() == Token.TAG) {
 				HtmlTag tag = (HtmlTag) token.getValue();
+				if (sb.length() > 0) {
+					sb.append(token.getWhitespace());
+				}
 				if (tag.getTagType() == HtmlTag.Type.PRE && tag.isEndTag())
 					break;
 			} else if (token.getType() == Token.TEXT) {
