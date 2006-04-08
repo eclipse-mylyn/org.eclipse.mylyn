@@ -368,7 +368,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		getMylarCorePrefs().setDefault(TaskListPreferenceConstants.CONTEXTS_MIGRATED, false);
 		// NOTE: gets/checks preference in both stores to accidental migration
 		if (!(getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.CONTEXTS_MIGRATED)
-				|| getPreferenceStore().getBoolean(TaskListPreferenceConstants.CONTEXTS_MIGRATED))) {   
+				|| getPreferenceStore().getBoolean(TaskListPreferenceConstants.CONTEXTS_MIGRATED))) {
+			try {
 			File dataDir = new File(MylarPlugin.getDefault().getDataDirectory());
 			TaskRepository defaultRepository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
 					TaskRepositoryManager.PREFIX_REPOSITORY_OLD.toLowerCase());
@@ -377,12 +378,15 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 				migrated = true;
 				if (dataDir.exists() && dataDir.isDirectory()) {
 					for (File file : dataDir.listFiles()) {
-						String oldHandle = file.getName().substring(0, file.getName().lastIndexOf('.'));
-						if (oldHandle.startsWith(TaskRepositoryManager.PREFIX_REPOSITORY_OLD)) {
-							String id = AbstractRepositoryTask.getTaskId(oldHandle);
-							String newHandle = AbstractRepositoryTask.getHandle(repositoryUrl, id);
-							File newFile = MylarPlugin.getContextManager().getFileForContext(newHandle);
-							file.renameTo(newFile);
+						int dotIndex = file.getName().lastIndexOf('.');
+						if (dotIndex != -1) {
+							String oldHandle = file.getName().substring(0, dotIndex);
+							if (oldHandle.startsWith(TaskRepositoryManager.PREFIX_REPOSITORY_OLD)) {
+								String id = AbstractRepositoryTask.getTaskId(oldHandle);
+								String newHandle = AbstractRepositoryTask.getHandle(repositoryUrl, id);
+								File newFile = MylarPlugin.getContextManager().getFileForContext(newHandle);
+								file.renameTo(newFile);
+							}
 						}
 					}
 				}
@@ -402,6 +406,9 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 				}
 				taskListManager.saveTaskList();
 				taskListManager.readExistingOrCreateNewList();
+			}
+			} catch (Throwable t) {
+				MylarStatusHandler.fail(t, "task list migration failed", true);
 			}
 		}
 		if (migrated) {

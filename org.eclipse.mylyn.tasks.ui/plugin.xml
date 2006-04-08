@@ -343,10 +343,13 @@
    <extension point="org.eclipse.mylar.tasklist.providers">    
       <dynamicPopupMenu class="org.eclipse.mylar.internal.tasklist.ui.TaskReminderMenuContributor"/>
    </extension>
+   
+   <!--
    <extension
          point="org.eclipse.mylar.tasklist.editors">
       <hyperlinkDetector class="org.eclipse.ui.internal.editors.text.URLHyperlinkDetector"/>
    </extension>
+   -->
    
     <!--<extension
           point="org.eclipse.mylar.tasklist.editors">
