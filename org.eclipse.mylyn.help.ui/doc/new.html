@@ -170,7 +170,7 @@
 </table>
 <p>Also see the <b><a href="new-0.3.html">New &amp; Noteworthy for the Mylar 0.4.0</a>
 </b>preview release. <span style="background-color: #E0D0E6">&nbsp;Changes since 
-0.4.10 are highlighted. </span> </p><hr>
+0.4.10 are highlighted. </span> </p>
 <p><b>Install/update: </b>to avoid potentially confusing the update manager use &quot;Search for new 
 features..&quot; when installing.</p>
 <p><b>Bugzilla Connector users</b>: after updating, if you get a &quot;Could not log in&quot; error when 
@@ -185,6 +185,7 @@ longer supported). The custom Mylar editor is gone (see below), so before restar
 	Mylar -&gt; Preference Configuration wizard (it should pop up automatically).&nbsp; If auto folding doesn't work reset the folding provider (see
 <a href="#active-folding">Active Folding</a>).</p>
 
+<hr>
 <h3>Task Context</h3>
 
 <table cellpadding="10" cellspacing="0" width="600" id="table177">
@@ -244,17 +245,23 @@ longer supported). The custom Mylar editor is gone (see below), so before restar
 		</tr>
 </table>
 
-<table cellpadding="10" cellspacing="0" width="600" id="table176">
+<table cellpadding="10" cellspacing="0" width="600" id="table192">
 		<tr>
-			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Active Change Set Improvements </b></p>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Editor Management</b></p>
 			</td>
 			<td valign="top" width="70%">
-			Mylar's Active Change sets for the active task now include resources 
-			that are edited indirectly, e.g. resources modified as a result of 
-			refactorings and applying patches.<p>Note that if on Eclipse 3.2M6 
-			your Synchronize view gets stuck now showing Show Change Sets button 
-			select Remove Current Synchronization from the view menu.</td>
+			If the Manage Editors with Context option is selected open editors 
+			will correspond to the active task context:<br>
+			- On task activation the editors of the most interesting elements 
+			will be automatically opened, and populate the Ctrl+E list.&nbsp; 
+			Set the number of editors to open on the Mylar preference page.<br>
+			- Closing an editor will mark the corresponding file and all 
+			children uninteresting (Note that &quot;Mark Less Interesting&quot; now 
+			recurses to children).&nbsp; So if you navigate to something 
+			uninteresting simply hit Ctrl+F4.<p>
+			<img border="0" src="images/0.4.3/editors-auto-manage.gif" width="318" height="150"><p>
+			<img border="0" src="images/0.4.3/editors-auto-manage-pref.gif" width="400" height="43"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -263,7 +270,7 @@ longer supported). The custom Mylar editor is gone (see below), so before restar
 		</tr>
 </table>
 
-<table cellpadding="10" cellspacing="0" width="601" id="table149">
+<table cellpadding="10" cellspacing="0" width="601" id="table187">
 		<tr>
 			<td align="left" valign="top" width="30%">
 			<p align="right"><b>No more custom Java Editor (Eclipse 3.2 only)</b></p>
@@ -280,7 +287,7 @@ longer supported). The custom Mylar editor is gone (see below), so before restar
 		</tr>
 </table>
 
-<table cellpadding="10" cellspacing="0" width="600" id="table127">
+<table cellpadding="10" cellspacing="0" width="600" id="table188">
 		<tr>
 			<td align="left" valign="top" width="30%">
 			<p align="right"><b><a name="active-folding">Active Folding Improvements (Eclipse 3.2 only)</a></b></p>
@@ -300,13 +307,96 @@ longer supported). The custom Mylar editor is gone (see below), so before restar
 		</tr>
 </table>
 
-<table cellpadding="10" cellspacing="0" width="600" id="table110">
+<table cellpadding="10" cellspacing="0" width="600" id="table194">
 		<tr>
 			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Persistent Context Change Sets</b></p>
+			<p align="right"><b>Support for Hierarchical Problems Layout<br>
+			(Eclipse 3.2 only) </b></p>
 			</td>
 			<td valign="top" width="70%">
-			The automatic task context change sets now persist, so that if there 
+			The Mylar interest filter can now be applied to the Eclipse 3.2 
+			Hierarchical Layout of the Problems view.&nbsp; The Flat Layout is 
+			recommended when Mylar is applied, since it helps focus on the 
+			markers of interest.
+			<p>
+			<img border="0" src="images/0.4.2/problems-hierarchical.gif" width="451" height="189"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table191">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Context Capture Pause Indication</b></p>
+			</td>
+			<td valign="top" width="70%">
+			Pausing context capture is now indicated on the status bar.&nbsp; 
+			Note that other notifications can occlude this one, so if you notice 
+			newly selected elements not populating the context check the state 
+			of the toggle button on the Task List.<p>
+			<img border="0" src="images/0.4.3/context-capture-pause-indicator.gif" width="305" height="126"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table193">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Task context indication</b></p>
+			</td>
+			<td valign="top" width="70%">
+			If a task is inactive, but has a context associated with it, the 
+			Activate widget appears lightly filled (i.e. as bug 111722 below).&nbsp; <p>
+			<img border="0" src="images/0.4.1/tasklist-context.gif" width="297" height="191"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<h3>&nbsp;</h3>
+<h3>Team Integration</h3>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table183">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Task Context Change Sets</b></p>
+			</td>
+			<td valign="top" width="70%">
+			The active task now corresponds to a Change Set that's managed by 
+			Mylar.&nbsp; All resources in the task's context automatically get 
+			included in this change set, making it possible to synchronize and 
+			commit only those resources.&nbsp; Resources modified that are not 
+			part of the Task Context will appear outside of the Change Set in 
+			the Synchronize view.&nbsp; Note that as with other Change Sets you 
+			need to set the Synchronize view into either Incoming or Outgoing 
+			mode and toggle the &quot;Show Change Sets&quot; button.<p>
+			<img border="0" src="images/0.4.2/context-change-set.gif" width="498" height="192"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table184">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Context Change Set Persistence and Manipulation</b></p>
+			</td>
+			<td valign="top" width="70%">
+			The active task context change sets now persist, so that if there 
 			are any uncommitted resources in the change set it will not 
 			disappear when the task is deactivated, and multiple change sets can 
 			be present.&nbsp; While the context change sets are affected by 
@@ -326,14 +416,17 @@ longer supported). The custom Mylar editor is gone (see below), so before restar
 		</tr>
 </table>
 
-<table cellpadding="10" cellspacing="0" width="600" id="table108">
+<table cellpadding="10" cellspacing="0" width="600" id="table185">
 		<tr>
-			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Resource Creation</b></p>
+			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
+			<p align="right"><b>Active Change Set Improvements </b></p>
 			</td>
 			<td valign="top" width="70%">
-			Newly created resources (e.g. packages, classes, files) now get 
-			added automatically to the active task context.</td>
+			Mylar's Active Change sets now capture now include resources 
+			that are edited indirectly, e.g. resources modified as a result of 
+			refactorings and applying patches.<p>Note that if on Eclipse 3.2M6 
+			your Synchronize view gets stuck now showing Show Change Sets button 
+			select Remove Current Synchronization from the view menu.</td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -342,35 +435,7 @@ longer supported). The custom Mylar editor is gone (see below), so before restar
 		</tr>
 </table>
 
-<table cellpadding="10" cellspacing="0" width="600" id="table105">
-		<tr>
-			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Editor Management</b></p>
-			</td>
-			<td valign="top" width="70%">
-			If the Manage Editors with Context option is selected open editors 
-			will correspond to the active task context:<br>
-			- On task activation the editors of the most interesting elements 
-			will be automatically opened, and populate the Ctrl+E list.&nbsp; 
-			Set the number of editors to open on the Mylar preference page.<br>
-			- Closing an editor will mark the corresponding file and all 
-			children uninteresting (Note that &quot;Mark Less Interesting&quot; now 
-			recurses to children).&nbsp; So if you navigate to something 
-			uninteresting simply hit Ctrl+F4.<br>
-			- Note that this option will turn off the Eclipse &quot;Close editors 
-			automatically&quot; option, but will set it back to it's original state 
-			if toggled off.<p>
-			<img border="0" src="images/0.4.3/editors-auto-manage.gif" width="318" height="150"><p>
-			<img border="0" src="images/0.4.3/editors-auto-manage-pref.gif" width="400" height="43"></td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table103">
+<table cellpadding="10" cellspacing="0" width="600" id="table180">
 		<tr>
 			<td align="left" valign="top" width="30%">
 			<p align="right"><b>Mapping of Incoming Changes to Reports</b></p>
@@ -395,40 +460,15 @@ longer supported). The custom Mylar editor is gone (see below), so before restar
 		</tr>
 </table>
 
-<table cellpadding="10" cellspacing="0" width="600" id="table107">
+<table cellpadding="10" cellspacing="0" width="600" id="table186">
 		<tr>
-			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Context Capture Pause Indication</b></p>
+			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
+			<p align="right"><b>Open Task from History View<br>
+			(Eclipse 3.2 only)</b></p>
 			</td>
 			<td valign="top" width="70%">
-			Pausing context capture is now indicated on the status bar.&nbsp; 
-			Note that other notifications can occlude this one, so if you notice 
-			newly selected elements not populating the context check the state 
-			of the toggle button on the Task List.<p>
-			<img border="0" src="images/0.4.3/context-capture-pause-indicator.gif" width="305" height="126"></td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table101">
-		<tr>
-			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Change Set Integration</b></p>
-			</td>
-			<td valign="top" width="70%">
-			The active task now corresponds to a Change Set that's managed by 
-			Mylar.&nbsp; All resources in the task's context automatically get 
-			included in this change set, making it possible to synchronize and 
-			commit only those resources.&nbsp; Resources modified that are not 
-			part of the Task Context will appear outside of the Change Set in 
-			the Synchronize view.&nbsp; Note that as with other Change Sets you 
-			need to set the Synchronize view into either Incoming or Outgoing 
-			mode and toggle the &quot;Show Change Sets&quot; button.<p>
-			<img border="0" src="images/0.4.2/context-change-set.gif" width="498" height="192"></td>
+			Change set support<p>
+			<img border="0" src="images/0.5.0/open-task-from-history.gif"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -448,7 +488,7 @@ longer supported). The custom Mylar editor is gone (see below), so before restar
 			action, or by right-clicking the Change Set in the Synchronize view.&nbsp; 
 			In both cases the commit message will be populated by the 
 			description and URL of the task (if available).&nbsp; The comment 
-			prefix can be changed in the Task List preferences page.<p>
+			prefix can be changed in the Task List preferences page.&nbsp; <p>
 			<img border="0" src="images/0.4.2/context-commit.gif" width="231" height="79"><p>
 			<img border="0" src="images/0.4.2/context-commit-wizard.gif" width="525" height="369"><p>
 			<img border="0" src="images/0.4.2/context-commit-prefix.gif" width="432" height="84"></td>
@@ -460,84 +500,8 @@ longer supported). The custom Mylar editor is gone (see below), so before restar
 		</tr>
 </table>
 
-<table cellpadding="10" cellspacing="0" width="600" id="table99">
-		<tr>
-			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Support for Hierarchical Problems Layout </b></p>
-			</td>
-			<td valign="top" width="70%">
-			The Mylar interest filter can now be applied to the Eclipse 3.2 
-			Hierarchical Layout of the Problems view.&nbsp; The Flat Layout is 
-			recommended when Mylar is applied, since it helps focus on the 
-			markers of interest.
-			<p>
-			<img border="0" src="images/0.4.2/problems-hierarchical.gif" width="451" height="189"></td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table94">
-		<tr>
-			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Task context indication</b></p>
-			</td>
-			<td valign="top" width="70%">
-			If a task is inactive, but has a context associated with it, the 
-			Activate widget appears lightly filled (i.e. as bug 111722 below).&nbsp; <p>
-			<img border="0" src="images/0.4.1/tasklist-context.gif" width="297" height="191"></td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table95">
-		<tr>
-			<td width="30%" valign="top" align="left">
-			<p align="right"><b>Pause and resume context capture</b></p>
-			</td>
-			<td width="70%" valign="top">
-			Pause and resume task context capture using the drop-down menu on 
-			the Task List.&nbsp; This can be useful for quick diversions that 
-			don't warrant a new task.&nbsp; As a reminder of context capture 
-			being paused, the Title of the Mylar Tasks view will change.<p>
-			<img border="0" src="images/0.4.1/context-pause.gif" width="250" height="236"></td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table96">
-		<tr>
-			<td>
-			<hr>
-			</td>
-		</tr>
-</table>
-
 <h3>&nbsp;</h3>
 <h3>Task List</h3>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table166">
-		<tr>
-			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Open Task from History View<br>
-			(Eclipse 3.2 only)</b></p>
-			</td>
-			<td valign="top" width="70%">
-			Change set support<p>
-			<img border="0" src="images/0.5.0/open-task-from-history.gif"></td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
 
 <table cellpadding="10" cellspacing="0" width="600" id="table168">
 		<tr>
@@ -585,6 +549,23 @@ longer supported). The custom Mylar editor is gone (see below), so before restar
 			Task list and task editor colors and fonts can be configured via the 
 			global preference settings.<p>
 			<img border="0" src="images/0.5.0/colors-and-fonts.gif"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table195">
+		<tr>
+			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
+			<p align="right"><b>Archive category</b></p>
+			</td>
+			<td valign="top" width="70%">
+			The Archive category includes all tasks that have been worked on.&nbsp; 
+			It is filtered by default, but shows up when the &quot;Find:&quot; view filter 
+			is used.&nbsp; Filtering can be toggled using the view menu.</td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -968,8 +949,13 @@ longer supported). The custom Mylar editor is gone (see below), so before restar
 			</td>
 			<td valign="top" width="70%">
 			Bugzilla versions are now associated with each repository, and can 
-			be set from the Task Repositories view.&nbsp; Bugzilla 2.22rc1 is 
-			also supported.<p>
+			be set from the Task Repositories view.&nbsp; Uncustomized versions 
+			2.16-2.22 are supported.<p>If you are switching from Bugzilla 2.18 
+			to 2.20 you will need to update the existing Bugzilla Queries in 
+			your task list.&nbsp; Double click each query category to edit it, 
+			press &quot;Update Options&quot;, and then simply click OK to save the query.&nbsp; 
+			Please note that the default Bugzilla configuration is now 2.20.</p>
+			<p>
 			<img border="0" src="http://eclipse.org/mylar/doc/images/0.4.10/bugzilla-versions.gif"></td>
 		</tr>
 		<tr>
@@ -1017,32 +1003,11 @@ longer supported). The custom Mylar editor is gone (see below), so before restar
 <table cellpadding="10" cellspacing="0" width="600" id="table100">
 		<tr>
 			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Proxy settings</b></p>
+			<p align="right"><b>Proxy Settings</b></p>
 			</td>
 			<td valign="top" width="70%">
 			To enable use with firewalls and proxy servers the Bugzilla Client 
 			follows proxy settings set in the Install/Update preference page.</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table78">
-		<tr>
-			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Bugzilla 2.20 support</b></p>
-			</td>
-			<td valign="top" width="70%">
-			Bugzilla support has been updated for version 2.20.&nbsp; If you are 
-			switching from Bugzilla 2.18 to 2.20 you will need to update the 
-			existing Bugzilla Queries in your task list.&nbsp; Double click each 
-			query category to edit it, press &quot;Update Options&quot;, and then simply 
-			click OK to save the query.&nbsp; Please note that the default 
-			Bugzilla configuration is now 2.20.<p>
-			<img border="0" src="images/0.4.1/bugzilla-prefs-220.gif" width="412" height="226"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
