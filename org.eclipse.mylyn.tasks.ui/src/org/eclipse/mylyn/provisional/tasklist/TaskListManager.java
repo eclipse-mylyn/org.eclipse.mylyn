@@ -524,6 +524,9 @@ public class TaskListManager {
 	}
 
 	public void deactivateTask(ITask task) {
+		if (task == null) {
+			return;
+		}
 		TaskActivityTimer taskTimer = timerMap.remove(task);
 		if (taskTimer != null) {
 			taskTimer.stopTimer();
