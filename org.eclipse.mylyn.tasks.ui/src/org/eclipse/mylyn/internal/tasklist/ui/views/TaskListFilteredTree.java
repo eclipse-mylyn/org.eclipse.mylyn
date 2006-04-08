@@ -97,7 +97,9 @@ public class TaskListFilteredTree extends FilteredTree {
 		if (activeTask != null) {
 			indicateActiveTask(activeTask);
 		}
-		activeTaskLabel.setLayoutData(new GridData(SWT.FILL, GridData.VERTICAL_ALIGN_CENTER, true, true));
+		GridData labelData = new GridData(SWT.FILL, SWT.END, true, true);
+		activeTaskLabel.setLayoutData(labelData);
+		activeTaskLabel.setLayoutData(labelData);
 		activeTaskLabel.addMouseListener(new MouseListener() {
 
 			public void mouseDoubleClick(MouseEvent e) {
