@@ -14,9 +14,11 @@ package org.eclipse.mylar.bugzilla.tests;
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
+import java.net.URL;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.core.tests.support.FileTool;
@@ -52,12 +54,11 @@ public class ReportAttachmentTest extends TestCase {
 	}
 	
 	public void testAttachementDownload() throws Exception {
-//		URL localURL = null;
-//		URL installURL = BugzillaTestPlugin.getDefault().getBundle().getEntry("testdata/contexts/");
-		File destinationFile = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("testdata/contexts/"));
-//		localURL = FileLocator.toFileURL(installURL); 
-		
-//		File destinationFile = new File(localURL.getPath()+"downloadedContext.xml");
+		URL localURL = null;
+		URL installURL = BugzillaTestPlugin.getDefault().getBundle().getEntry("testdata/contexts/");
+//		File destinationFile = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("testdata/contexts/"));
+		localURL = FileLocator.toFileURL(installURL); 
+		File destinationFile = new File(localURL.getPath()+"downloadedContext.xml");
 		
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		boolean result = BugzillaRepositoryUtil.downloadAttachment(repository, 2, destinationFile, true);
