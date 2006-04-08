@@ -97,7 +97,9 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 	 * dialog.
 	 */
 	public boolean performFinish() {
-
+		
+		MylarTaskListPlugin.getTaskListManager().deactivateTask(MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTask());
+		
 		File sourceDirFile = null;
 		File sourceZipFile = null;
 		File sourceTaskListFile = null;
@@ -304,10 +306,8 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 							"Problem occured extracting from zip file.", true);
 					return;
 				}
+				readTaskList();
 				monitor.done();
-
-				MylarTaskListPlugin.getTaskListManager().readExistingOrCreateNewList();
-
 				return;
 			}
 
@@ -367,8 +367,8 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 					monitor.worked(1);
 				}
 			}
+			readTaskList();
 			monitor.done();
-			MylarTaskListPlugin.getTaskListManager().readExistingOrCreateNewList();
 		}
 	}
 
@@ -415,6 +415,14 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 		} catch (IOException ioe) {
 			return false;
 		}
+	}
+
+	private void readTaskList() {
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				MylarTaskListPlugin.getTaskListManager().readExistingOrCreateNewList();
+			}
+		});
 	}
 
 }
