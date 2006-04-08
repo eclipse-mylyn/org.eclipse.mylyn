@@ -3,7 +3,8 @@
 
 <toc link_to="../org.eclipse.mylar.doc/doc/toc.xml#concepts" label="Concepts">
 	<topic label="Concepts" href="doc/concepts.html">
-		<topic label="Degree of Interest" href="doc/interest.html"/>
+	   
+		<!--<topic label="Degree of Interest" href="doc/interest.html"/>-->
 		<!--<topic label="Navigation" href="doc/navigation.html"/>-->
 	</topic>
 </toc>
