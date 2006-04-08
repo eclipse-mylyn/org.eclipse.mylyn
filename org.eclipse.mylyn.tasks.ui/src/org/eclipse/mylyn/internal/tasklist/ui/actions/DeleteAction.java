@@ -28,7 +28,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchImages;
 
 /**
- * @author Mik Kersten and Ken Sueda
+ * @author Mik Kersten
  */
 public class DeleteAction extends Action {
 

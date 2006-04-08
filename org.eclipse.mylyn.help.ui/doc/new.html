@@ -22,18 +22,13 @@
 		<td bgcolor="#FAF7FB"><font size="1">0.5.0<br>
 		<i>April 07, 2006</i></font></td>
 		<td bgcolor="#FAF7FB" align="center">
-		<font size="1">
 		<a href="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&product=Mylar&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&bug_status=RESOLVED&bug_status=VERIFIED&bug_status=CLOSED&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=2006-03-18&chfieldto=2006-04-08&chfield=resolution&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=">
-		80
+		<font size="1">62</font></a><font size="1"><a href="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&product=Mylar&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&bug_status=RESOLVED&bug_status=VERIFIED&bug_status=CLOSED&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=2006-03-18&chfieldto=2006-04-08&chfield=resolution&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=">
 																																		<br>
 		reports</a></font></td>
-		<td bgcolor="#FAF7FB"><font size="1">Robert Elves contributed the Task 
-		Activity view, ported the Bugzilla editor to Forms, and resolved 
-		numerous bugs. Ian Whalley provided patches for Bugzilla and IBM JDK 
-		compliance. Eugene Kuleshov provided patches for improved task 
-		comparison and repository protocols. Wang Bin provided additional source 
-		code scrutiny and optimizations. Peik Aschan provided a useful assertion 
-		test case. </font></td>
+		<td bgcolor="#FAF7FB"><font size="1">See
+		<a href="http://www.eclipse.org/mylar/doc/new.php">
+		http://www.eclipse.org/mylar/doc/new.php</a> </font></td>
 	</tr>
 	<tr>
 		<td bgcolor="#FAF7FB"><font size="1">0.4.10<br>
@@ -173,38 +168,32 @@
 		improvements to the Task List. </font></td>
 	</tr>
 </table>
-<p>Also see the <b><a href="new-0.3.html">New &amp; Noteworthy for the Mylar 0.3.x</a>
-</b>preview release.&nbsp; </p><hr>
-<p><b>To avoid confusing the poor update manager use &quot;new features&quot;...</b></p>
+<p>Also see the <b><a href="new-0.3.html">New &amp; Noteworthy for the Mylar 0.4.0</a>
+</b>preview release. <span style="background-color: #E0D0E6">&nbsp;Changes since 
+0.4.10 are highlighted. </span> </p><hr>
+<p><b>To avoid potentially confusing the update manager use &quot;Search for new 
+features..&quot; when installing.</b></p>
 <p><b>Bugzilla Connector users</b>: after updating, if you get a &quot;Could not log in&quot; error when 
 synchronizing a query and your credentials are correct open it, verify that it is associated to the correct 
 repository, and click OK (some older task lists did not properly associate 
 queries with repositories). </p>
-<p><b>JIRA Connector users</b>: JIRA Core Services 0.8.0 (from Tigris.org) will get 
-installed with this release.</p>
+<p><b>JIRA Connector users</b>: JIRA Core Services 0.8.0 (from Tigris.org) will 
+get installed with this release if it was not downloaded with a previous one.</p>
 <p><b>Eclipse 3.2 users</b>: this release supports Eclipse 3.2M6 (M5 is no 
 longer supported). The custom Mylar editor is gone (see below), so before restarting 
 	deactivate the current task or close all active editors, and run the New -&gt; 
 	Mylar -&gt; Preference Configuration wizard (it should pop up automatically).&nbsp; If auto folding doesn't work reset the folding provider (see
 <a href="#active-folding">Active Folding</a>).</p>
 
-<table cellpadding="10" cellspacing="0" width="600" id="table157">
+<table cellpadding="10" cellspacing="0" width="600" id="table160">
 		<tr>
 			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Misc</b></p>
+			<p align="right"><b>Open Task from History View<br>
+			(Eclipse 3.2 only)</b></p>
 			</td>
 			<td valign="top" width="70%">
-			Context change sets contain indirect interactions (e.g. changes made 
-			via refactoring). 
-			<p>Bug editor links (java, other reports).&nbsp; </p>
-			<p>Open corresponding report from generic history view<p>Apply Mylar 
-			to Task List (still experimental).&nbsp; Currently shows you the 
-			context of your current week.&nbsp; So instead of &quot;Mark Less 
-			Interesting&quot; use Reminder -&gt; Next Week<p>Themes: task list colors 
-			and bug editor fonts<p>Auto refresh of queries<p>Expand All button 
-			currently at bottom of editor.<p>Auto backup/export<p>If synch view 
-			gets stuck now showing current synchronization select Remove Current 
-			Synchronization from the view menu.</td>
+			Change set support<p>
+			<img border="0" src="images/0.5.0/open-task-from-history.gif"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -213,14 +202,35 @@ longer supported). The custom Mylar editor is gone (see below), so before restar
 		</tr>
 </table>
 
-<table cellpadding="10" cellspacing="0" width="600" id="table158">
+<table cellpadding="10" cellspacing="0" width="600" id="table161">
 		<tr>
 			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Apply Mylar to Tasks Marker View</b></p>
+			<p align="right"><b>Color and Font settings</b></p>
 			</td>
 			<td valign="top" width="70%">
-			Keep Apply Mylar pressed to see only the TODO and other markers in 
-			the view.&nbsp; Use case is to apply before committing.</td>
+			<p>
+			Task list and task editor colors and fonts can be configured via the 
+			global preference settings.<p>
+			<img border="0" src="images/0.5.0/colors-and-fonts.gif"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table162">
+		<tr>
+			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
+			<p align="right"><b>Active Change Set Improvements and History View</b></p>
+			</td>
+			<td valign="top" width="70%">
+			Mylar's Active Change sets for the active task now include resources 
+			that are edited indirectly, e.g. resources modified as a result of 
+			refactorings and applying patches.<p>Note that if on Eclipse 3.2M6 
+			your Synchronize view gets stuck now showing Show Change Sets button 
+			select Remove Current Synchronization from the view menu.</td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -232,11 +242,34 @@ longer supported). The custom Mylar editor is gone (see below), so before restar
 <table cellpadding="10" cellspacing="0" width="600" id="table155">
 		<tr>
 			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Alt+click improvements</b></p>
+			<p align="right"><b>Alt+click Navigation Improvements</b></p>
 			</td>
 			<td valign="top" width="70%">
-			Can click on whitespace to unfilter on all projects, Alt+click is 
-			now 'springy'...</td>
+			When a view is in filtered mode, Alt+Click a tree node to unfilter 
+			all of its children.&nbsp; This can be repeated until the desired 
+			element is found.&nbsp; You can also Alt+Click the white space in 
+			Package Explorer to unfilter all of the projects.&nbsp; If Alt is 
+			let go, the view will spring back to showing only the task context.&nbsp; 
+			Note that on some Linux configurations Alt must be pressed along 
+			with another modifier key.<p>
+			<img border="0" src="images/0.5.0/navigate-alt-click.gif"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table164">
+		<tr>
+			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
+			<p align="right"><b>Apply Mylar to Project Explorer<br>
+			(Eclipse 3.2 only)</b></p>
+			</td>
+			<td valign="top" width="70%">
+			Mylar can be applied to the Eclipse 3.2 Project Explorer view.<p>
+			<img border="0" src="images/0.5.0/apply-project-explorer.gif"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -248,10 +281,32 @@ longer supported). The custom Mylar editor is gone (see below), so before restar
 <table cellpadding="10" cellspacing="0" width="600" id="table154">
 		<tr>
 			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Auto archive</b></p>
+			<p align="right"><b>Automatic task list backup</b></p>
 			</td>
 			<td valign="top" width="70%">
-			Task List can be auto archived...</td>
+			Using <i>Preferences -&gt; Mylar -&gt; Task List</i> the task list and contexts are now automatically backed up to 
+			the specified location. 
+			Backup has the same effect as the Task Data export, and will create 
+			a zip file at the desired location.&nbsp; The zip files can later be 
+			imported used using File -&gt; Import -&gt; Mylar Task Data.<p>
+			<img border="0" src="images/0.5.0/tasklist-backup.gif"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table163">
+		<tr>
+			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
+			<p align="right"><b>Background query synchronization</b></p>
+			</td>
+			<td valign="top" width="70%">
+			Using <i>Preferences -&gt; Mylar -&gt; Task Repositories </i>queries and 
+			repository tasks can be synchronized given the specified schedule.<p>
+			<img border="0" src="images/0.5.0/query-synchronization.gif"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -262,7 +317,7 @@ longer supported). The custom Mylar editor is gone (see below), so before restar
 
 <table cellpadding="10" cellspacing="0" width="600" id="table159">
 		<tr>
-			<td align="left" valign="top" width="30%">
+			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
 			<p align="right"><b>Form-based Bugzilla Editor with Hyperlink 
 			support</b></p>
 			</td>
@@ -276,12 +331,13 @@ longer supported). The custom Mylar editor is gone (see below), so before restar
 				<li>Attachments</li>
 			</ul>
 			<p>
+			On Eclipse 3.1, click the comment for the links to become active.<p>
 			To apply a patch click the &quot;view&quot; link, hit Ctrl+A and Ctrl+C on the 
 			text to get it into the clipboard, then Apply Patch).&nbsp; To 
 			expand all comments click the &quot;Expand All&quot; button at the bottom of 
 			the editor.&nbsp; 
 			<p>
-			<img border="0" src="http://eclipse.org/mylar/doc/images/0.4.10/bugzilla-editor.gif"></td>
+			<img border="0" src="images/0.5.0/task-editor-hyperlinks.gif"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -289,8 +345,6 @@ longer supported). The custom Mylar editor is gone (see below), so before restar
 			</td>
 		</tr>
 </table>
-
-<p>&nbsp;</p>
 
 <table cellpadding="10" cellspacing="0" width="600" id="table145">
 		<tr>
@@ -369,7 +423,7 @@ longer supported). The custom Mylar editor is gone (see below), so before restar
 <table cellpadding="10" cellspacing="0" width="601" id="table149">
 		<tr>
 			<td align="left" valign="top" width="30%">
-			<p align="right"><b>No more custom Java Editor (3.2 only)</b></p>
+			<p align="right"><b>No more custom Java Editor (Eclipse 3.2 only)</b></p>
 			</td>
 			<td valign="top" width="70%">
 			The custom Mylar Java editor is gone, and the automatic folding and 
