@@ -152,13 +152,17 @@ public class SelectionMonitor extends AbstractUserInteractionMonitor {
 	}
 
 	private String obfuscateResourcePath(IPath path) {
-		StringBuffer obfuscatedPath = new StringBuffer();
-		for (int i = 0; i < path.segmentCount(); i++) {
-			obfuscatedPath.append(obfuscateString(path.segments()[i]));
-			if (i < path.segmentCount() - 1)
-				obfuscatedPath.append('/');
+		if (path == null) {
+			return "";
+		} else {
+			StringBuffer obfuscatedPath = new StringBuffer();
+			for (int i = 0; i < path.segmentCount(); i++) {
+				obfuscatedPath.append(obfuscateString(path.segments()[i]));
+				if (i < path.segmentCount() - 1)
+					obfuscatedPath.append('/');
+			}
+			return obfuscatedPath.toString();
 		}
-		return obfuscatedPath.toString();
 	}
 
 	/**
