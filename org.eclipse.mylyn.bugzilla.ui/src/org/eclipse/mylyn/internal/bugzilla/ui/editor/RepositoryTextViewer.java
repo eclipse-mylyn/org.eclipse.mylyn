@@ -85,7 +85,7 @@ public class RepositoryTextViewer extends SourceViewer {
 		}
 		
 		public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
-			URLHyperlinkDetector hyperlinkDetector = new URLHyperlinkDetector();
+			URLHyperlinkDetector hyperlinkDetector = new URLHyperlinkDetector(sourceViewer);
 			List<IHyperlinkDetector> detectors = new ArrayList<IHyperlinkDetector>();
 			detectors.add(hyperlinkDetector);
 			detectors.addAll(Arrays.asList(MylarTaskListPlugin.getDefault().getTaskHyperlinkDetectors()));
