@@ -10,10 +10,19 @@
 	<ul>
 		<li><a href="#configuration-eclipse">What is the recommended Eclipse configuration 
 	for running Mylar?</a></li>
-		<li><a href="#performance-summary">What are the effects of Mylar on Eclipse performance?</a></li>
+		<li></li>
 		<li><a href="#install">Why does Mylar fail to install or update?</a></li>
+		<li><a href="#uninstall">Are there additional steps for uninstalling 
+		Mylar?</a></li>
 		<li><a href="#tasklist-blank">Why did my tasks disappear?</a></li>
 	</ul>
+	<p><b>Integration</b></p>
+<ul>
+	<li><a href="#performance-summary">What are the effects of Mylar on Eclipse performance?</a></li>
+	<li><a href="#subversion-clients">Does Mylar have any limitations when working with Subversion clients?</a></li>
+<li><a href="#setup-linux-browser">Configuring Eclipse's Internal Browser on Linux</a>&nbsp; 
+		</li>
+</ul>
 	<p><b>Working with Context</b></p>
 <ul>
 	<li><a href="#context-ui-config">Which Focused UI features can I turn off?</a></li>
@@ -30,12 +39,6 @@
 		needed to make Mylar work with my JIRA repository?</a></li>
 		<li><a href="#eclipse-views-tasks">How does the Mylar Task List relate to the Eclipse Tasks view?</a></li>
 	</ul>
-	<p><b>Integration</b></p>
-<ul>
-	<li><a href="#subversion-clients">Does Mylar have any limitations when working with Subversion clients?</a></li>
-<li><a href="#setup-linux-browser">Configuring Eclipse's Internal Browser on Linux</a>&nbsp; 
-		</li>
-</ul>
 <p><b>Java Development</b></p>
 	<ul>
 		<li><a href="#content-assist-duplication">Why do elements appear twice in the 
@@ -142,7 +145,8 @@ of your Eclipse.&nbsp; In this case you may see update errors like the
 following.&nbsp; In this case the first thing to do is to try updating again to 
 see if the feature is accessible.&nbsp; If you are trying to update the JIRA 
 connector you can also try de-selecting that feature in case the Tigris.org 
-update site is not accessible.</p>
+update site is not accessible.&nbsp; Using use &quot;Search new features..&quot; when 
+installing can help avoid this problem.</p>
 <tt>&nbsp;&nbsp;&nbsp; org.eclipse.update.internal.core.SiteFilePackedPluginContentConsumer</tt>
 <p><b>Incompatible VM (e.g. JDK 1.4)</b>: in this case you'll errors like the following in your log file.&nbsp; To 
 check JDK version that Eclipse was launched with to to Help -&gt; About Eclipse SDK 
@@ -187,6 +191,17 @@ and after that automatically or manually updating will install the correct
 version.</p>
 <p>
 <img border="0" src="images/faq/eclipse-manage-configuration.gif" width="679" height="335"></p>
+	<hr>
+	<h3>&nbsp;</h3>
+	<h3><a name="uninstall">Are there additional steps for uninstalling Mylar?</a></h3>
+	<p>
+On Eclipse 3.1, you may need to reset the Java editor to be default for &quot;.java&quot; 
+again via: Preferences -&gt; General -&gt; Editors -&gt; File Associations </p>
+	<p>
+On Eclipse 3.2, you may need to ensure that the &quot;Java Completions&quot; and &quot;Java 
+Types&quot; proposal categories are included in the default proposals via: 
+Preferences -&gt; Java -&gt; Editor -&gt; Content Assist -&gt; Work in Progress (<a href="#content-assist-duplication">see 
+screenshot</a>).</p>
 	<hr>
 	<p>
 &nbsp;</p>
