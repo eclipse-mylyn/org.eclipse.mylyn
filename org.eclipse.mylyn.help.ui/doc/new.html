@@ -190,7 +190,7 @@ longer supported). The custom Mylar editor is gone (see below), so before restar
 <hr>
 <p><br>
 &nbsp; </p>
-<h3>Task Context</h3>
+<h2>Task Context</h2>
 
 <table cellpadding="10" cellspacing="0" width="600" id="table177">
 		<tr>
@@ -373,143 +373,7 @@ longer supported). The custom Mylar editor is gone (see below), so before restar
 		</tr>
 </table>
 
-<h3>&nbsp;</h3>
-<h3>Team Integration</h3>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table183">
-		<tr>
-			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Task Context Change Sets</b></p>
-			</td>
-			<td valign="top" width="70%">
-			The active task now corresponds to a Change Set that's managed by 
-			Mylar.&nbsp; All resources in the task's context automatically get 
-			included in this change set, making it possible to synchronize and 
-			commit only those resources.&nbsp; Resources modified that are not 
-			part of the Task Context will appear outside of the Change Set in 
-			the Synchronize view.&nbsp; Note that as with other Change Sets you 
-			need to set the Synchronize view into either Incoming or Outgoing 
-			mode and toggle the &quot;Show Change Sets&quot; button.<p>
-			<img border="0" src="images/0.4.2/context-change-set.gif" width="498" height="192"></td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table184">
-		<tr>
-			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Context Change Set Persistence and Manipulation</b></p>
-			</td>
-			<td valign="top" width="70%">
-			The active task context change sets now persist, so that if there 
-			are any uncommitted resources in the change set it will not 
-			disappear when the task is deactivated, and multiple change sets can 
-			be present.&nbsp; While the context change sets are affected by 
-			interest manipulations (i.e. marking a file uninteresting will 
-			remove it from the change set), they do not 'see' the interest decay 
-			in order to indefinitely retain any resources modified as part of 
-			that task.&nbsp; If resources are changed outside of the context 
-			(e.g. by applying a patch) they can be added to the task via the Add 
-			To menu (visible below).&nbsp; If the task context they are added to 
-			is active those resources will be also come interesting.<p>
-			<img border="0" src="images/0.4.4/changeset-addto.gif" width="592" height="271"></td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table185">
-		<tr>
-			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Active Change Set Improvements </b></p>
-			</td>
-			<td valign="top" width="70%">
-			Mylar's Active Change sets now capture now include resources 
-			that are edited indirectly, e.g. resources modified as a result of 
-			refactorings and applying patches.<p>Note that if on Eclipse 3.2M6 
-			your Synchronize view gets stuck now showing Show Change Sets button 
-			select Remove Current Synchronization from the view menu.</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table180">
-		<tr>
-			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Mapping of Incoming Changes to Reports</b></p>
-			</td>
-			<td valign="top" width="70%">
-			When the Synchronize view is in Incoming and Change Sets mode 
-			(visible below), and Mylar Change Set support was used to commit, 
-			incoming changes will be grouped by task description.&nbsp; Right 
-			clicking a Change Set will bring up an &quot;Open Corresponding Report&quot; 
-			action to navigate to the corresponding issue (either Bugzilla 
-			report or Web Link).&nbsp; The same action is available for 
-			navigating from commit messages to reports in the CVS Resource 
-			History view. <p>
-			<img border="0" src="images/0.4.3/synchronize-change-sets.gif" width="593" height="206"></p>
-			<p>
-			<img border="0" src="images/0.4.3/cvs-resource-history-open.gif" width="476" height="163"></td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table186">
-		<tr>
-			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Open Task from History View<br>
-			(Eclipse 3.2 only)</b></p>
-			</td>
-			<td valign="top" width="70%">
-			Change set support<p>
-			<img border="0" src="images/0.5.0/open-task-from-history.gif"></td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table102">
-		<tr>
-			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Commit Task Context</b></p>
-			</td>
-			<td valign="top" width="70%">
-			Resources in the Task Context can be committed either by 
-			right-clicking the active task and selecting the Commit Task Context 
-			action, or by right-clicking the Change Set in the Synchronize view.&nbsp; 
-			In both cases the commit message will be populated by the 
-			description and URL of the task (if available).&nbsp; The comment 
-			prefix can be changed in the Task List preferences page.&nbsp; <p>
-			<img border="0" src="images/0.4.2/context-commit.gif" width="231" height="79"><p>
-			<img border="0" src="images/0.4.2/context-commit-wizard.gif" width="525" height="369"><p>
-			<img border="0" src="images/0.4.2/context-commit-prefix.gif" width="432" height="84"></td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<h3>&nbsp;</h3>
+<h3>&nbsp;&nbsp;&nbsp; </h3>
 <h3>Task List</h3>
 
 <table cellpadding="10" cellspacing="0" width="600" id="table168">
@@ -918,8 +782,144 @@ longer supported). The custom Mylar editor is gone (see below), so before restar
 		</tr>
 </table>
 
-<h3>&nbsp;</h3>
-<h3>Bugzilla Client</h3>
+<h3>&nbsp; </h3>
+<h3>Team Integration</h3>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table196">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Task Context Change Sets</b></p>
+			</td>
+			<td valign="top" width="70%">
+			The active task now corresponds to a Change Set that's managed by 
+			Mylar.&nbsp; All resources in the task's context automatically get 
+			included in this change set, making it possible to synchronize and 
+			commit only those resources.&nbsp; Resources modified that are not 
+			part of the Task Context will appear outside of the Change Set in 
+			the Synchronize view.&nbsp; Note that as with other Change Sets you 
+			need to set the Synchronize view into either Incoming or Outgoing 
+			mode and toggle the &quot;Show Change Sets&quot; button.<p>
+			<img border="0" src="images/0.4.2/context-change-set.gif" width="498" height="192"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table197">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Context Change Set Persistence and Manipulation</b></p>
+			</td>
+			<td valign="top" width="70%">
+			The active task context change sets now persist, so that if there 
+			are any uncommitted resources in the change set it will not 
+			disappear when the task is deactivated, and multiple change sets can 
+			be present.&nbsp; While the context change sets are affected by 
+			interest manipulations (i.e. marking a file uninteresting will 
+			remove it from the change set), they do not 'see' the interest decay 
+			in order to indefinitely retain any resources modified as part of 
+			that task.&nbsp; If resources are changed outside of the context 
+			(e.g. by applying a patch) they can be added to the task via the Add 
+			To menu (visible below).&nbsp; If the task context they are added to 
+			is active those resources will be also come interesting.<p>
+			<img border="0" src="images/0.4.4/changeset-addto.gif" width="592" height="271"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table198">
+		<tr>
+			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
+			<p align="right"><b>Active Change Set Improvements </b></p>
+			</td>
+			<td valign="top" width="70%">
+			Mylar's Active Change sets now capture now include resources 
+			that are edited indirectly, e.g. resources modified as a result of 
+			refactorings and applying patches.<p>Note that if on Eclipse 3.2M6 
+			your Synchronize view gets stuck now showing Show Change Sets button 
+			select Remove Current Synchronization from the view menu.</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table199">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Mapping of Incoming Changes to Reports</b></p>
+			</td>
+			<td valign="top" width="70%">
+			When the Synchronize view is in Incoming and Change Sets mode 
+			(visible below), and Mylar Change Set support was used to commit, 
+			incoming changes will be grouped by task description.&nbsp; Right 
+			clicking a Change Set will bring up an &quot;Open Corresponding Report&quot; 
+			action to navigate to the corresponding issue (either Bugzilla 
+			report or Web Link).&nbsp; The same action is available for 
+			navigating from commit messages to reports in the CVS Resource 
+			History view. <p>
+			<img border="0" src="images/0.4.3/synchronize-change-sets.gif" width="593" height="206"></p>
+			<p>
+			<img border="0" src="images/0.4.3/cvs-resource-history-open.gif" width="476" height="163"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table200">
+		<tr>
+			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
+			<p align="right"><b>Open Task from History View<br>
+			(Eclipse 3.2 only)</b></p>
+			</td>
+			<td valign="top" width="70%">
+			Change set support<p>
+			<img border="0" src="images/0.5.0/open-task-from-history.gif"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table201">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Commit Task Context</b></p>
+			</td>
+			<td valign="top" width="70%">
+			Resources in the Task Context can be committed either by 
+			right-clicking the active task and selecting the Commit Task Context 
+			action, or by right-clicking the Change Set in the Synchronize view.&nbsp; 
+			In both cases the commit message will be populated by the 
+			description and URL of the task (if available).&nbsp; The comment 
+			prefix can be changed in the Task List preferences page.&nbsp; <p>
+			<img border="0" src="images/0.4.2/context-commit.gif" width="231" height="79"><p>
+			<img border="0" src="images/0.4.2/context-commit-wizard.gif" width="525" height="369"><p>
+			<img border="0" src="images/0.4.2/context-commit-prefix.gif" width="432" height="84"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<h3>&nbsp; </h3>
+<h3>Bugzilla Connector</h3>
 
 <table cellpadding="10" cellspacing="0" width="600" id="table173">
 		<tr>
