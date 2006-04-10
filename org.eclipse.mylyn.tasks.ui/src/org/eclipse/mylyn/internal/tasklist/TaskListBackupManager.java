@@ -40,6 +40,8 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 
 	private static final String TITLE_TASKLIST_BACKUP = "Tasklist Backup";
 
+	private static final String BACKUP_JOB_NAME = "Scheduled task data backup";
+	
 	public static final String BACKUP_FAILURE_MESSAGE = "Could not backup task data. Check backup preferences.\n";
 
 	private static final long SECOND = 1000;
@@ -178,8 +180,6 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 	}
 
 	class ExportJob extends Job {
-
-		private static final String BACKUP_JOB_NAME = "Scheduled Tasklist Backup";
 
 		final TaskDataExportJob backupJob;
 
