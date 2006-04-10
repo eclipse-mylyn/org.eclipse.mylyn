@@ -11,7 +11,7 @@
 		<li><a href="#configuration-eclipse">What is the recommended Eclipse configuration 
 	for running Mylar?</a></li>
 		<li><a href="#performance-summary">What are the effects of Mylar on Eclipse performance?</a></li>
-		<li><a href="#install-failure">Why does Mylar fail to install or update?</a></li>
+		<li><a href="#install">Why does Mylar fail to install or update?</a></li>
 		<li><a href="#tasklist-blank">Why did my tasks disappear?</a></li>
 	</ul>
 	<p><b>Working with Context</b></p>
@@ -79,7 +79,7 @@ configuration for running Mylar?</a></h3>
 		<li>Editors<ul>
 		<li>Turn comment folding on to reduce clutter when using auto folding 
 		(Preferences -&gt; Java -&gt; Editor -&gt; Folding).&nbsp; </li>
-		<li>Turn off Increase the number of editors to leave open (Preferences -&gt; General 
+		<li>Turn off or increase the number of editors to leave open (Preferences -&gt; General 
 		-&gt; Editors -&gt; Number of opened editors before closing).&nbsp; Since 
 		Mylar will manage the open editors with task activation, this number can 
 		be set higher or automatic closing disabled entirely.</li>
@@ -102,7 +102,7 @@ configuration for running Mylar?</a></h3>
 	</ul>
 		</li>
 		<li>Mylar<ul>
-		<li></li>
+		<li>...</li>
 	</ul>
 		</li>
 	</ul>
@@ -136,41 +136,46 @@ a bug</a>.&nbsp; The current performance profile is:</p>
 </ol>
 	<hr>
 	<h3>&nbsp;</h3>
-	<h3><a name="install-failure">Why does Mylar fail to install or update?</a></h3>
+	<h3><a name="install">Why does Mylar fail to install or update?</a></h3>
 	<p>For supported platforms and known limitations please see
-	<a href="http://eclipse.org/mylar/dl.php">http://eclipse.org/mylar/dl.php</a> 
-	</p>
-<p>The most likely reason is that you are using an <b>incompatible VM </b>(e.g. JDK 
-1.4), in which case you'll errors like the following in your log file.&nbsp; To 
+	<a href="http://eclipse.org/mylar/dl.php">http://eclipse.org/mylar/dl.php</a>&nbsp; 
+	Install/update failures can include:</p>
+<p><b>Update manager failure</b>: the update manager failed because it could not 
+access the update site, or because it got confused about the configuration state 
+of your Eclipse.&nbsp; In this case you may see update errors like the 
+following.&nbsp; In this case the first thing to do is to try updating again to 
+see if the feature is accessible.&nbsp; If you are trying to update the JIRA 
+connector you can also try de-selecting that feature in case the Tigris.org 
+update site is not accessible.</p>
+<tt>&nbsp;&nbsp;&nbsp; org.eclipse.update.internal.core.SiteFilePackedPluginContentConsumer</tt>
+<p><b>Incompatible VM (e.g. JDK 1.4)</b>: in this case you'll errors like the following in your log file.&nbsp; To 
 check JDK version that Eclipse was launched with to to Help -&gt; About Eclipse SDK 
 -&gt; Configuration Details and verify that the java.vm.version is 1.5.&nbsp; Mac 
 users should refer to the last
 <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=116347#c4">bug 1163477</a> 
 for instructions on how to change the 1.4 default.</p>
 <p>
-<tt>   Root exception:
-   java.lang.UnsupportedClassVersionError: org/eclipse/mylar/tasklist/MylarTasklistPlugin 
+<tt>&nbsp;&nbsp;&nbsp;   Root exception:
+   java.lang.UnsupportedClassVersionError: <br>
+&nbsp;&nbsp;&nbsp; org/eclipse/mylar/tasklist/MylarTasklistPlugin 
    (Unsupported major.minor version 49.0)
 </tt>
 </p>
 <p>
-This can also be the result of using an <b>incompatible version of Eclipse</b>.&nbsp; 
-Separate versions and update sites exist
+<b>Incompatible version of Eclipse</b>: separate versions and update sites exist
 <a href="http://eclipse.org/mylar/dl.php">for Eclipse 3.1 and for the latest 3.2 
 milestone</a>), in which case you may see errors like the following in your 
 &lt;workspace&gt;/.metadata/.log file or in a Mylar view:</p>
 <p>
-<tt>java.lang.NoSuchMethodError:
-   org.eclipse.ui.internal.dialogs.FilteredTree.getFilterControl()Lorg/eclipse/swt/widgets/Text;
-
-   org.osgi.framework.BundleException: The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.mylar.java is invalid
+<tt>&nbsp;&nbsp;&nbsp; java.lang.NoSuchMethodError:
+   org.eclipse.ui.internal.dialogs.FilteredTree.getFilterControl()<br>
+&nbsp;&nbsp;&nbsp; The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.mylar.java is invalid
 </tt>
 </p>
-<p>If you have verified that you are using the right version of Eclipse but are 
-still seeing install problems it could also be that there is a <b>Mylar feature 
-configuration problem</b>.&nbsp; In either case case the easiest thing to do is 
-uninstall any old versions and update to the latest Mylar.&nbsp; <b>Your tasks won't be 
-lost</b>, by default they are stored in the &lt;workspace&gt;/.mylar/tasklist.xml file 
+<p><b>Mylar feature configuration problem</b>: if the above do not address the 
+issue, the easiest thing to do is 
+uninstall any old versions and update to the latest Mylar.&nbsp; Your tasks won't be 
+lost, by default they are stored in the &lt;workspace&gt;/.mylar/tasklist.xml file 
 which will be read next time Mylar starts correctly.&nbsp;First, uninstall the old version of Mylar using Help -&gt; 
 Software Updates -&gt; Manage Configuration.&nbsp; You need to first Disable on all 
 Mylar features by right-clicking them, allow Eclipse to restart after the last 
