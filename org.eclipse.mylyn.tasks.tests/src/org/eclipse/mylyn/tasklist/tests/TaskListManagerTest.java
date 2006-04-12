@@ -149,6 +149,28 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(0, manager.getTaskList().getQueries().size());
 	}
 	
+	public void testDeleteQueryAfterRename() {
+		AbstractRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1", manager.getTaskList());
+		manager.getTaskList().addQuery(query);
+
+		AbstractRepositoryQuery readQuery = manager.getTaskList().getQueries().iterator().next();
+		assertEquals(query, readQuery);
+		manager.getTaskList().renameContainer(query, "newName");
+		manager.getTaskList().deleteQuery(query);
+		assertEquals(0, manager.getTaskList().getQueries().size());
+	}
+	
+	public void testCreateQueryWithSameName() {
+		AbstractRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1", manager.getTaskList());
+		manager.getTaskList().addQuery(query);
+		assertEquals(1, manager.getTaskList().getQueries().size());
+		AbstractRepositoryQuery readQuery = manager.getTaskList().getQueries().iterator().next();
+		assertEquals(query, readQuery);
+		
+		manager.getTaskList().addQuery(new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1", manager.getTaskList()));
+		assertEquals(1, manager.getTaskList().getQueries().size());
+	}
+	
 	public void testMoveCategories() {
 		assertEquals(0, manager.getTaskList().getRootTasks().size());
 		Task task1 = new Task("t1", "t1", true);
@@ -229,6 +251,58 @@ public class TaskListManagerTest extends TestCase {
 		manager.readExistingOrCreateNewList(); 
 		assertEquals(""+manager.getTaskList().getCategories(), 2, manager.getTaskList().getCategories().size());
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
+	}
+	
+	public void testDeleteCategory() {
+
+		assertNotNull(manager.getTaskList());
+		assertEquals(1, manager.getTaskList().getCategories().size());
+		TaskCategory category = new TaskCategory("cat", manager.getTaskList());
+		manager.getTaskList().addCategory(category);
+		assertEquals(2, manager.getTaskList().getCategories().size());
+		manager.getTaskList().deleteCategory(category);		
+		assertEquals(1, manager.getTaskList().getCategories().size());
+	}
+	
+	public void testRenameCategory() {
+
+		assertNotNull(manager.getTaskList());
+		
+		TaskCategory category = new TaskCategory("cat", manager.getTaskList());
+		manager.getTaskList().addCategory(category);
+		assertEquals(2, manager.getTaskList().getCategories().size());
+		String newDesc = "newDescription";
+		manager.getTaskList().renameContainer(category, newDesc);
+		AbstractTaskContainer container = manager.getTaskList().getContainerForHandle(newDesc);
+		assertNotNull(container);
+		assertEquals(newDesc, container.getDescription());
+		manager.getTaskList().deleteCategory(container);
+		assertEquals(1, manager.getTaskList().getCategories().size());
+	}
+	
+	public void testDeleteCategoryAfterRename() {
+		String newDesc = "newDescription";
+		assertNotNull(manager.getTaskList());
+		assertEquals(1, manager.getTaskList().getCategories().size());
+		TaskCategory category = new TaskCategory("cat", manager.getTaskList());
+		manager.getTaskList().addCategory(category);
+		assertEquals(2, manager.getTaskList().getCategories().size());
+		manager.getTaskList().renameContainer(category, newDesc);
+		manager.getTaskList().deleteCategory(category);		
+		assertEquals(1, manager.getTaskList().getCategories().size());
+	}
+	
+	public void testCreateSameCategoryName() {
+		assertNotNull(manager.getTaskList());
+		assertEquals(1, manager.getTaskList().getCategories().size());
+		TaskCategory category = new TaskCategory("cat", manager.getTaskList());
+		manager.getTaskList().addCategory(category);
+		assertEquals(2, manager.getTaskList().getCategories().size());
+		TaskCategory category2 = new TaskCategory("cat", manager.getTaskList());
+		manager.getTaskList().addCategory(category2);
+		assertEquals(2, manager.getTaskList().getCategories().size());
+		AbstractTaskContainer container = manager.getTaskList().getContainerForHandle("cat");
+		assertEquals(container, category);
 	}
 
 	public void testDelete() {

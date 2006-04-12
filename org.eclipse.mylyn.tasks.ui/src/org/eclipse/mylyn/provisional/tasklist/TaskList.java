@@ -128,7 +128,13 @@ public class TaskList {
 	
 	public void renameContainer(AbstractTaskContainer container, String newDescription) {
 		if (!(container instanceof TaskArchive)) {
-			container.setDescription(newDescription);
+			if(queries.remove(container)) {
+				container.setDescription(newDescription);
+				this.addQuery((AbstractRepositoryQuery)container);
+			} else if(categories.remove(container)) {
+				container.setDescription(newDescription);
+				this.addCategory(container);
+			}			
 		}
 		for (ITaskListChangeListener listener : changeListeners) {
 			listener.containerInfoChanged(container);
