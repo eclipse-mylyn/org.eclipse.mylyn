@@ -36,6 +36,7 @@ public class WebBrowserDialog extends MessageDialog {
 		super(parentShell, dialogTitle, dialogTitleImage, dialogMessage, dialogImageType, dialogButtonLabels,
 				defaultIndex);
 		this.data = data;
+		this.setShellStyle(SWT.SHELL_TRIM | SWT.RESIZE);
 	}
 
 	public static int openAcceptAgreement(Shell parent, String title, String message, String data) {
