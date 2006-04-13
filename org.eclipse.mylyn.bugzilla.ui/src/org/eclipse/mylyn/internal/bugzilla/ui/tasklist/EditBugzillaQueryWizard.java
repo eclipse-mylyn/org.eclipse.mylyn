@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
@@ -23,45 +24,45 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 /**
- * @author Mik Kersten
- * @author Brock Janiczak
+ * @author Rob Elves
  */
-public class NewBugzillaQueryWizard extends Wizard {
+public class EditBugzillaQueryWizard extends Wizard {
 
-	private static final String TITLE = "New Bugzilla Query";
+	private static final String TITLE = "Edit Bugzilla Query";
 
 	private final TaskRepository repository;
 
-	BugzillaQueryTypeWizardPage page1;
+	private AbstractBugzillaQueryPage page;
 
-	public NewBugzillaQueryWizard(TaskRepository repository) {
+	private BugzillaRepositoryQuery query;
+
+	public EditBugzillaQueryWizard(TaskRepository repository, BugzillaRepositoryQuery query) {
 		this.repository = repository;
+		this.query = query;
 		setNeedsProgressMonitor(true);
 		setWindowTitle(TITLE);
 	}
 
 	@Override
 	public void addPages() {
-		page1 = new BugzillaQueryTypeWizardPage(repository);
-		page1.setWizard(this);
-		addPage(page1);
+		if (query.isCustomQuery()) {
+			page = new BugzillaCustomQueryWizardPage(repository, query);
+		} else {
+			page = new BugzillaSearchPage(repository, query);
+		}
+		addPage(page);
 
 	}
 
 	@Override
 	public boolean performFinish() {
 
-		AbstractBugzillaQueryPage page;
+		query = page.getQuery();
 
-		if (page1.getNextPage() != null && page1.getNextPage() instanceof AbstractBugzillaQueryPage) {
-			page = (AbstractBugzillaQueryPage) page1.getNextPage();
-		} else {
-			return false;
-		}
+		final String queryTitle = page.getQueryTitle().trim();
 
-		final BugzillaRepositoryQuery queryCategory = page.getQuery();
+		MylarTaskListPlugin.getTaskListManager().getTaskList().renameContainer(query, queryTitle);
 
-		MylarTaskListPlugin.getTaskListManager().getTaskList().addQuery(queryCategory);
 		boolean offline = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
 		if (!offline) {
 			WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
@@ -70,7 +71,8 @@ public class NewBugzillaQueryWizard extends Wizard {
 					try {
 						AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager()
 								.getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
-						client.synchronize(queryCategory, null);
+
+						client.synchronize(query, null);
 					} finally {
 						monitor.done();
 					}
@@ -89,10 +91,10 @@ public class NewBugzillaQueryWizard extends Wizard {
 
 	@Override
 	public boolean canFinish() {
-		if (page1.getNextPage() != null && page1.getNextPage().isPageComplete()) {
+		if (page != null && page.isPageComplete()) {
 			return true;
 		}
+
 		return false;
 	}
-
 }

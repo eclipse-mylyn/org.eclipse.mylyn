@@ -90,7 +90,7 @@ public abstract class AbstractRepositoryConnector {
 	public abstract ITask createTaskFromExistingId(TaskRepository repository, String id);
 	public abstract AbstractRepositorySettingsPage getSettingsPage();
 
-	public abstract IWizard getQueryWizard(TaskRepository repository);
+	public abstract IWizard getNewQueryWizard(TaskRepository repository);
 
 	public abstract void openEditQueryDialog(AbstractRepositoryQuery query);
 
@@ -268,7 +268,7 @@ public abstract class AbstractRepositoryConnector {
 //				}
 //			}
 //		});
-		job.setPriority(Job.DECORATE);
+		job.setPriority(priority);
 		job.schedule(delay);
 		return job;
 	}

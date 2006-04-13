@@ -30,7 +30,7 @@ public class NewQueryWizard extends MultiRepositoryAwareWizard {
 			protected IWizard createWizard(TaskRepository taskRepository) {
 				AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
 						taskRepository.getKind());
-				return connector.getQueryWizard(taskRepository);
+				return connector.getNewQueryWizard(taskRepository);
 			}
 		}, TITLE);
 	}

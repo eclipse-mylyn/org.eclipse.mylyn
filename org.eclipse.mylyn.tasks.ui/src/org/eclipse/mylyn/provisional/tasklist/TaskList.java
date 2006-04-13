@@ -130,7 +130,9 @@ public class TaskList {
 		if (!(container instanceof TaskArchive)) {
 			if(queries.remove(container)) {
 				container.setDescription(newDescription);
-				this.addQuery((AbstractRepositoryQuery)container);
+				if(container instanceof AbstractRepositoryQuery) {
+					this.addQuery((AbstractRepositoryQuery)container);
+				}
 			} else if(categories.remove(container)) {
 				container.setDescription(newDescription);
 				this.addCategory(container);

@@ -12,15 +12,16 @@ package org.eclipse.mylar.internal.bugzilla.ui.search;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 
 import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -34,6 +35,8 @@ import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchResultColle
 import org.eclipse.mylar.internal.bugzilla.core.search.IBugzillaSearchOperation;
 import org.eclipse.mylar.internal.bugzilla.core.search.IBugzillaSearchResultCollector;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUITools;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.AbstractBugzillaQueryPage;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
@@ -42,8 +45,6 @@ import org.eclipse.search.ui.ISearchPage;
 import org.eclipse.search.ui.ISearchPageContainer;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
@@ -57,9 +58,11 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.internal.help.WorkbenchHelpSystem;
 
@@ -68,7 +71,17 @@ import org.eclipse.ui.internal.help.WorkbenchHelpSystem;
  * 
  * @author Mik Kersten (hardening of prototype)
  */
-public class BugzillaSearchPage extends DialogPage implements ISearchPage {
+public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISearchPage, Listener {
+
+	private static final String MAX_HITS_GREATER = "Max hits shown must be greater than 0 or enter -1 for all results found.";
+
+	private static final String NUM_DAYS_POSITIVE = "Number of days must be a positive integer. ";
+
+	private static final String TITLE = "New Bugzilla Query";
+
+	private static final String DESCRIPTION = "Enter query parameters. If attributes are blank or stale press the Update button.";
+
+	private static final String TITLE_BUGZILLA_QUERY = "Bugzilla Query";
 
 	private static final String MAX_HITS = "100";
 
@@ -107,6 +120,10 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 
 	protected IPreferenceStore prefs = BugzillaPlugin.getDefault().getPreferenceStore();
 
+	protected String maxHits;
+
+	private BugzillaRepositoryQuery originalQuery = null;
+
 	// private TaskRepository selectedRepository = null;
 
 	private static class BugzillaSearchData {
@@ -123,12 +140,27 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 	}
 
 	public BugzillaSearchPage() {
-		super();
+		super(TITLE_BUGZILLA_QUERY);
+		setTitle(TITLE);
+		setDescription(DESCRIPTION);
+		setPageComplete(false);
 	}
 
 	public BugzillaSearchPage(TaskRepository repository) {
-		super();
+		super(TITLE_BUGZILLA_QUERY);
+		setTitle(TITLE);
+		setDescription(DESCRIPTION);
 		this.repository = repository;
+		setPageComplete(false);
+	}
+
+	public BugzillaSearchPage(TaskRepository repository, BugzillaRepositoryQuery origQuery) {
+		super(TITLE_BUGZILLA_QUERY, origQuery.getDescription());
+		originalQuery = origQuery;
+		this.repository = repository;
+		setTitle(TITLE);
+		setDescription(DESCRIPTION);
+		setPageComplete(false);
 	}
 
 	public void createControl(Composite parent) {
@@ -142,24 +174,38 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		control.setLayoutData(gd);
 
-		createRepositoryGroup(control);
+		if (scontainer == null) {
+			// Not presenting in search pane so add parent's content
+			super.createControl(control);
+		} else {
+			// if (repository == null) {
+			// search pane so add repository selection
+			createRepositoryGroup(control);
+		}
 		createSearchGroup(control);
 		createOptionsGroup(control);
 
 		createEmail(control);
 		createLastDays(control);
+
 		// createSaveQuery(control);
 		// createMaxHits(control);
 		input = new SavedQueryFile(BugzillaPlugin.getDefault().getStateLocation().toString(), "/queries");
 		// createUpdate(control);
-
+//		if (originalQuery != null) {
+//			try {
+//				updateDefaults(originalQuery.getQueryUrl(), String.valueOf(originalQuery.getMaxHits()));
+//			} catch (UnsupportedEncodingException e) {
+//				// ignore
+//			}
+//		}
 		setControl(control);
 		WorkbenchHelpSystem.getInstance().setHelp(control, IBugzillaConstants.SEARCH_PAGE_CONTEXT);
 	}
 
 	private void createRepositoryGroup(Composite control) {
 		Group group = new Group(control, SWT.NONE);
-		group.setText("Select Repository");
+		group.setText("Repository");
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 1;
 		group.setLayout(layout);
@@ -218,7 +264,9 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		summaryPattern = new Combo(group, SWT.SINGLE | SWT.BORDER);
 		summaryPattern.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				scontainer.setPerformActionEnabled(canQuery());
+				if (scontainer != null) {
+					scontainer.setPerformActionEnabled(canQuery());
+				}
 			}
 		});
 		summaryPattern.addSelectionListener(new SelectionAdapter() {
@@ -262,7 +310,9 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		commentPattern = new Combo(group, SWT.SINGLE | SWT.BORDER);
 		commentPattern.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				scontainer.setPerformActionEnabled(canQuery());
+				if (scontainer != null) {
+					scontainer.setPerformActionEnabled(canQuery());
+				}
 			}
 		});
 		commentPattern.addSelectionListener(new SelectionAdapter() {
@@ -446,27 +496,27 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		GridData daysLayoutData = new GridData();
 		daysLayoutData.widthHint = 30;
 		daysText.setLayoutData(daysLayoutData);
-
-		daysText.addFocusListener(new FocusListener() {
-
-			public void focusGained(FocusEvent e) {
-				// ignore
-
-			}
-
-			public void focusLost(FocusEvent e) {
-				String days = daysText.getText();
-				if (days.length() == 0)
-					return;
-				try {
-					if (Integer.parseInt(days) < 0) {
-						daysText.setText("");
-					}
-				} catch (NumberFormatException ex) {
-					daysText.setText("");
-				}
-			}
-		});
+		daysText.addListener(SWT.Modify, this);
+		// daysText.addFocusListener(new FocusListener() {
+		//
+		// public void focusGained(FocusEvent e) {
+		// // ignore
+		//
+		// }
+		//
+		// public void focusLost(FocusEvent e) {
+		// String days = daysText.getText();
+		// if (days.length() == 0)
+		// return;
+		// try {
+		// if (Integer.parseInt(days) < 0) {
+		// daysText.setText("");
+		// }
+		// } catch (NumberFormatException ex) {
+		// daysText.setText("");
+		// }
+		// }
+		// });
 
 		// daysText.addModifyListener(new ModifyListener() {
 		// public void modifyText(ModifyEvent e) {
@@ -497,29 +547,30 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		// operation combo
 		maxHitsText = new Text(group, SWT.BORDER);
 		maxHitsText.setTextLimit(6);
+		maxHitsText.addListener(SWT.Modify, this);
 
-		maxHitsText.addFocusListener(new FocusListener() {
-
-			public void focusGained(FocusEvent e) {
-				// ignore
-
-			}
-
-			public void focusLost(FocusEvent e) {
-				String maxHitss = maxHitsText.getText();
-				if (maxHitss.length() == 0)
-					return;
-
-				try {
-					if (Integer.parseInt(maxHitss) < 0) {
-						maxHitsText.setText(MAX_HITS);
-
-					}
-				} catch (NumberFormatException ex) {
-					maxHitsText.setText(MAX_HITS);
-				}
-			}
-		});
+		// maxHitsText.addFocusListener(new FocusListener() {
+		//
+		// public void focusGained(FocusEvent e) {
+		// // ignore
+		//
+		// }
+		//
+		// public void focusLost(FocusEvent e) {
+		// String maxHitss = maxHitsText.getText();
+		// if (maxHitss.length() == 0)
+		// return;
+		//
+		// try {
+		// if (Integer.parseInt(maxHitss) < 0) {
+		// maxHitsText.setText(MAX_HITS);
+		//
+		// }
+		// } catch (NumberFormatException ex) {
+		// maxHitsText.setText(MAX_HITS);
+		// }
+		// }
+		// });
 
 		// maxHitsText.addModifyListener(new ModifyListener() {
 		// public void modifyText(ModifyEvent e) {
@@ -610,10 +661,8 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 	// return group;
 	// }
 
-	protected String maxHits;
-
 	public String getMaxHits() {
-		return maxHits;
+		return maxHitsText.getText();
 	}
 
 	private static final String[] emailText = { "bug owner", "reporter", "CC list", "commenter" };
@@ -637,7 +686,9 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		emailPattern = new Combo(group, SWT.SINGLE | SWT.BORDER);
 		emailPattern.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				scontainer.setPerformActionEnabled(canQuery());
+				if (scontainer != null) {
+					scontainer.setPerformActionEnabled(canQuery());
+				}
 			}
 		});
 		emailPattern.addSelectionListener(new SelectionAdapter() {
@@ -870,9 +921,20 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 			if (firstTime) {
 				firstTime = false;
 				// Set item and text here to prevent page from resizing
-				summaryPattern.setItems(getPreviousPatterns(previousSummaryPatterns));
-				commentPattern.setItems(getPreviousPatterns(previousCommentPatterns));
-				emailPattern.setItems(getPreviousPatterns(previousEmailPatterns));
+				for (String searchPattern : getPreviousPatterns(previousSummaryPatterns)) {
+					summaryPattern.add(searchPattern);
+				}
+				// summaryPattern.setItems(getPreviousPatterns(previousSummaryPatterns));
+				for (String comment : getPreviousPatterns(previousCommentPatterns)) {
+					commentPattern.add(comment);
+				}
+				// commentPattern.setItems(getPreviousPatterns(previousCommentPatterns));
+				for (String email : getPreviousPatterns(previousEmailPatterns)) {
+					emailPattern.add(email);
+				}
+				// emailPattern.setItems(getPreviousPatterns(previousEmailPatterns));
+
+				// TODO: update status, resolution, severity etc if possible...
 
 				if (repository == null) {
 					repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
@@ -895,6 +957,10 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 					repositoryUrls[i] = currRepsitory.getUrl();
 					i++;
 				}
+
+				if (repository != null) {
+					updateAttributesFromRepository(repository.getUrl(), false);
+				}
 				if (repositoryCombo != null) {
 					repositoryCombo.setItems(repositoryUrls);
 					if (repositoryUrls.length == 0) {
@@ -905,9 +971,19 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 						updateAttributesFromRepository(repositoryCombo.getItem(indexToSelect), false);
 					}
 				}
+				if (originalQuery != null) {
+					try {
+						updateDefaults(originalQuery.getQueryUrl(), String.valueOf(originalQuery.getMaxHits()));
+					} catch (UnsupportedEncodingException e) {
+						// ignore
+					}
+				}
+			}
+			if (scontainer != null) {
+				scontainer.setPerformActionEnabled(canQuery());
 			}
 			summaryPattern.setFocus();
-			scontainer.setPerformActionEnabled(canQuery());
+			
 		}
 		super.setVisible(visible);
 	}
@@ -964,6 +1040,19 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		for (int i = 0; i < size; i++)
 			patterns[i] = (patternHistory.get(size - 1 - i)).pattern;
 		return patterns;
+	}
+
+	public String getSearchURL(TaskRepository repository) {
+		try {
+			if (rememberedQuery) {
+				return getQueryURL(repository, new StringBuffer(input.getQueryParameters(selIndex)));
+			} else {
+				return getQueryURL(repository, getQueryParameters());
+			}
+		} catch (UnsupportedEncodingException e) {
+			// ignore
+		}
+		return "";
 	}
 
 	protected String getQueryURL(TaskRepository repository, StringBuffer params) {
@@ -1171,12 +1260,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 	protected ProgressMonitorDialog monitorDialog = new ProgressMonitorDialog(BugzillaPlugin.getDefault()
 			.getWorkbench().getActiveWorkbenchWindow().getShell());
 
-	/**
-	 * Returns the page settings for this Java search page.
-	 * 
-	 * @return the page settings to be used
-	 */
-	private IDialogSettings getDialogSettings() {
+	public IDialogSettings getDialogSettings() {
 		IDialogSettings settings = BugzillaPlugin.getDefault().getDialogSettings();
 		fDialogSettings = settings.getSection(PAGE_NAME);
 		if (fDialogSettings == null)
@@ -1220,8 +1304,8 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 			status.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_STATUS, repositoryUrl));
 			monitor.worked(1);
 
-			status.setSelection(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUSE_STATUS_PRESELECTED,
-					repositoryUrl));
+//			status.setSelection(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUSE_STATUS_PRESELECTED,
+//					repositoryUrl));
 			monitor.worked(1);
 
 			resolution.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_RESOLUTION,
@@ -1267,4 +1351,252 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 	public void setRepository(TaskRepository repository) {
 		this.repository = repository;
 	}
+
+	public boolean canFlipToNextPage() {
+		// if (getErrorMessage() != null)
+		// return false;
+		//
+		// return true;
+		return false;
+	}
+
+	public void handleEvent(Event event) {
+		String message = null;
+		if (event.widget == daysText) {
+			String days = daysText.getText();
+			if (days.length() > 0) {
+				try {
+					if (Integer.parseInt(days) < 0) {
+						message = NUM_DAYS_POSITIVE + days + " is invalid.";
+					}
+				} catch (NumberFormatException ex) {
+					message = NUM_DAYS_POSITIVE + days + " is invalid.";
+				}
+			}
+		} else if (event.widget == maxHitsText) {
+			String maxHitss = maxHitsText.getText();
+			if (maxHitss.length() == 0) {
+				message = MAX_HITS_GREATER;
+			} else {
+				try {
+					if (Integer.parseInt(maxHitss) < -1 || Integer.parseInt(maxHitss) == 0) {
+						message = MAX_HITS_GREATER;
+					}
+				} catch (NumberFormatException ex) {
+					message = MAX_HITS_GREATER;
+				}
+			}
+		}
+
+		setPageComplete(message == null);
+		setErrorMessage(message);
+		if(getWizard() != null) {
+			getWizard().getContainer().updateButtons();
+		}
+	}
+
+	/**
+	 * TODO: get rid of this?
+	 */
+	public void updateDefaults(String startingUrl, String maxHits) throws UnsupportedEncodingException {
+		// String serverName = startingUrl.substring(0,
+		// startingUrl.indexOf("?"));
+		
+		startingUrl = startingUrl.substring(startingUrl.indexOf("?") + 1);
+		String[] options = startingUrl.split("&");
+		for (String option : options) {
+			String key = option.substring(0, option.indexOf("="));
+			String value = URLDecoder.decode(option.substring(option.indexOf("=") + 1), "UTF-8");
+			if (key == null)
+				continue;
+
+			if (key.equals("short_desc")) {
+				summaryPattern.setText(value);
+			} else if (key.equals("short_desc_type")) {
+				if (value.equals("allwordssubstr"))
+					value = "all words";
+				else if (value.equals("anywordssubstr"))
+					value = "any word";
+				int index = 0;
+				for (String item : summaryOperation.getItems()) {
+					if (item.compareTo(value) == 0)
+						break;
+					index++;
+				}
+				if (index < summaryOperation.getItemCount()) {
+					summaryOperation.select(index);
+				}
+			} else if (key.equals("product")) {
+				String[] sel = product.getSelection();
+				java.util.List<String> selList = Arrays.asList(sel);
+				selList = new ArrayList<String>(selList);
+				selList.add(value);
+				sel = new String[selList.size()];
+				product.setSelection(selList.toArray(sel));
+			} else if (key.equals("component")) {
+				String[] sel = component.getSelection();
+				java.util.List<String> selList = Arrays.asList(sel);
+				selList = new ArrayList<String>(selList);
+				selList.add(value);
+				sel = new String[selList.size()];
+				component.setSelection(selList.toArray(sel));
+			} else if (key.equals("version")) {
+				String[] sel = version.getSelection();
+				java.util.List<String> selList = Arrays.asList(sel);
+				selList = new ArrayList<String>(selList);
+				selList.add(value);
+				sel = new String[selList.size()];
+				version.setSelection(selList.toArray(sel));
+			} else if (key.equals("target_milestone")) { // XXX
+				String[] sel = target.getSelection();
+				java.util.List<String> selList = Arrays.asList(sel);
+				selList = new ArrayList<String>(selList);
+				selList.add(value);
+				sel = new String[selList.size()];
+				target.setSelection(selList.toArray(sel));
+			} else if (key.equals("version")) {
+				String[] sel = version.getSelection();
+				java.util.List<String> selList = Arrays.asList(sel);
+				selList = new ArrayList<String>(selList);
+				selList.add(value);
+				sel = new String[selList.size()];
+				version.setSelection(selList.toArray(sel));
+			} else if (key.equals("long_desc_type")) {
+				if (value.equals("allwordssubstr"))
+					value = "all words";
+				else if (value.equals("anywordssubstr"))
+					value = "any word";
+				int index = 0;
+				for (String item : commentOperation.getItems()) {
+					if (item.compareTo(value) == 0)
+						break;
+					index++;
+				}
+				if (index < commentOperation.getItemCount()) {
+					commentOperation.select(index);
+				}
+			} else if (key.equals("long_desc")) {
+				commentPattern.setText(value);
+			} else if (key.equals("bug_status")) {
+				String[] sel = status.getSelection();
+				java.util.List<String> selList = Arrays.asList(sel);
+				selList = new ArrayList<String>(selList);
+				selList.add(value);
+				sel = new String[selList.size()];
+				status.setSelection(selList.toArray(sel));
+			} else if (key.equals("resolution")) {
+				String[] sel = resolution.getSelection();
+				java.util.List<String> selList = Arrays.asList(sel);
+				selList = new ArrayList<String>(selList);
+				selList.add(value);
+				sel = new String[selList.size()];
+				resolution.setSelection(selList.toArray(sel));
+			} else if (key.equals("bug_severity")) {
+				String[] sel = severity.getSelection();
+				java.util.List<String> selList = Arrays.asList(sel);
+				selList = new ArrayList<String>(selList);
+				selList.add(value);
+				sel = new String[selList.size()];
+				severity.setSelection(selList.toArray(sel));
+			} else if (key.equals("priority")) {
+				String[] sel = priority.getSelection();
+				java.util.List<String> selList = Arrays.asList(sel);
+				selList = new ArrayList<String>(selList);
+				selList.add(value);
+				sel = new String[selList.size()];
+				priority.setSelection(selList.toArray(sel));
+			} else if (key.equals("ref_platform")) {
+				String[] sel = hardware.getSelection();
+				java.util.List<String> selList = Arrays.asList(sel);
+				selList = new ArrayList<String>(selList);
+				selList.add(value);
+				sel = new String[selList.size()];
+				hardware.setSelection(selList.toArray(sel));
+			} else if (key.equals("op_sys")) {
+				String[] sel = os.getSelection();
+				java.util.List<String> selList = Arrays.asList(sel);
+				selList = new ArrayList<String>(selList);
+				selList.add(value);
+				sel = new String[selList.size()];
+				os.setSelection(selList.toArray(sel));
+			} else if (key.equals("emailassigned_to1")) { // HACK: email
+				// buttons
+				// assumed to be
+				// in same
+				// position
+				if (value.equals("1"))
+					emailButton[0].setSelection(true);
+				else
+					emailButton[0].setSelection(false);
+			} else if (key.equals("emailreporter1")) { // HACK: email
+				// buttons assumed
+				// to be in same
+				// position
+				if (value.equals("1"))
+					emailButton[1].setSelection(true);
+				else
+					emailButton[1].setSelection(false);
+			} else if (key.equals("emailcc1")) { // HACK: email buttons
+				// assumed to be in same
+				// position
+				if (value.equals("1"))
+					emailButton[2].setSelection(true);
+				else
+					emailButton[2].setSelection(false);
+			} else if (key.equals("emaillongdesc1")) { // HACK: email
+				// buttons assumed
+				// to be in same
+				// position
+				if (value.equals("1"))
+					emailButton[3].setSelection(true);
+				else
+					emailButton[3].setSelection(false);
+			} else if (key.equals("emailtype1")) {
+				int index = 0;
+				for (String item : emailOperation.getItems()) {
+					if (item.compareTo(value) == 0)
+						break;
+					index++;
+				}
+				if (index < emailOperation.getItemCount()) {
+					emailOperation.select(index);
+				}
+			} else if (key.equals("email1")) {
+				emailPattern.setText(value);
+			} else if (key.equals("changedin")) {
+				daysText.setText(value);
+			}
+		}
+		this.maxHits = maxHits;
+		maxHitsText.setText(maxHits);
+	}
+
+	@Override
+	public BugzillaRepositoryQuery getQuery() {
+		if (originalQuery == null) {
+			try {
+				originalQuery = new BugzillaRepositoryQuery(repository.getUrl(), getQueryURL(repository,
+						getQueryParameters()), getQueryTitle(), getMaxHits(), MylarTaskListPlugin.getTaskListManager()
+						.getTaskList());
+			} catch (UnsupportedEncodingException e) {
+				return null;
+			}
+
+		} else {
+			try {
+				originalQuery.setQueryUrl(getQueryURL(repository, getQueryParameters()));
+				originalQuery.setMaxHits(Integer.parseInt(getMaxHits()));
+
+			} catch (UnsupportedEncodingException e) {
+				return null;
+			}
+		}
+		return originalQuery;
+	}
+
+//	@Override
+//	public boolean isPageComplete() {
+//		return super.canFlipToNextPage();
+//	}
+
 }

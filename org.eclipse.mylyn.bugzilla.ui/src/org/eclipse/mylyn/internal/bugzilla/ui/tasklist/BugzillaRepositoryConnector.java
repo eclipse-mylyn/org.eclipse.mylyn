@@ -31,6 +31,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaRemoteContextDelegate;
 import org.eclipse.mylar.bugzilla.core.Comment;
@@ -50,7 +51,6 @@ import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaCategorySearchOperation.ICategorySearchListener;
 import org.eclipse.mylar.internal.bugzilla.ui.wizard.NewBugzillaReportWizard;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.ui.SynchronizeReportsAction;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractAddExistingTaskWizard;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
@@ -68,6 +68,7 @@ import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
@@ -211,8 +212,15 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return task;
 	}
 
-	public IWizard getQueryWizard(TaskRepository repository) {
+	public IWizard getNewQueryWizard(TaskRepository repository) {
 		return new NewBugzillaQueryWizard(repository);
+	}
+	
+	public IWizard getEditQueryWizard(TaskRepository repository, AbstractRepositoryQuery query) {
+		if (!(query instanceof BugzillaRepositoryQuery)) {
+			return null;
+		}
+		return new EditBugzillaQueryWizard(repository, (BugzillaRepositoryQuery)query);
 	}
 
 	public IWizard getAddExistingTaskWizard(TaskRepository repository) {
@@ -238,46 +246,76 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		if (!(query instanceof BugzillaRepositoryQuery)) {
 			return;
 		}
-		BugzillaRepositoryQuery queryCategory = (BugzillaRepositoryQuery) query;
+		// BugzillaRepositoryQuery queryCategory = (BugzillaRepositoryQuery)
+		// query;
+		//
+		// if (queryCategory.isCustomQuery()) {
+		// // BugzillaCustomRepositoryQuery queryCategory =
+		// // (BugzillaCustomRepositoryQuery) query;
+		// BugzillaCustomQueryDialog sqd = new
+		// BugzillaCustomQueryDialog(Display.getCurrent().getActiveShell(),
+		// queryCategory.getQueryUrl(), queryCategory.getDescription(),
+		// queryCategory.getMaxHits() + "");
+		// if (sqd.open() == Dialog.OK) {
+		// MylarTaskListPlugin.getTaskListManager().getTaskList().renameContainer(queryCategory,
+		// sqd.getName());
+		// // queryCategory.setDescription(sqd.getName());
+		// queryCategory.setQueryUrl(sqd.getUrl());
+		// int maxHits = -1;
+		// try {
+		// maxHits = Integer.parseInt(sqd.getMaxHits());
+		// } catch (Exception e) {
+		// }
+		// queryCategory.setMaxHits(maxHits);
+		//
+		// synchronize(queryCategory, null);
+		// }
+		// } else {
+		// // BugzillaRepositoryQuery queryCategory = (BugzillaRepositoryQuery)
+		// // query;
+		// BugzillaQueryDialog queryDialog = new
+		// BugzillaQueryDialog(Display.getCurrent().getActiveShell(),
+		// queryCategory.getRepositoryUrl(), queryCategory.getQueryUrl(),
+		// queryCategory.getDescription(),
+		// queryCategory.getMaxHits() + "");
+		// if (queryDialog.open() == Dialog.OK) {
+		// MylarTaskListPlugin.getTaskListManager().getTaskList().renameContainer(queryCategory,
+		// queryDialog.getName());
+		// // queryCategory.setDescription(queryDialog.getName());
+		// queryCategory.setQueryUrl(queryDialog.getUrl());
+		// queryCategory.setRepositoryUrl(queryDialog.getRepository().getUrl());
+		// int maxHits = -1;
+		// try {
+		// maxHits = Integer.parseInt(queryDialog.getMaxHits());
+		// } catch (Exception e) {
+		// }
+		// queryCategory.setMaxHits(maxHits);
+		//
+		// new SynchronizeReportsAction(queryCategory).run();
+		// }
+		// }
 
-		if (queryCategory.isCustomQuery()) {
-			// BugzillaCustomRepositoryQuery queryCategory =
-			// (BugzillaCustomRepositoryQuery) query;
-			BugzillaCustomQueryDialog sqd = new BugzillaCustomQueryDialog(Display.getCurrent().getActiveShell(),
-					queryCategory.getQueryUrl(), queryCategory.getDescription(), queryCategory.getMaxHits() + "");
-			if (sqd.open() == Dialog.OK) {
-				MylarTaskListPlugin.getTaskListManager().getTaskList().renameContainer(queryCategory, sqd.getName());
-//				queryCategory.setDescription(sqd.getName());
-				queryCategory.setQueryUrl(sqd.getUrl());
-				int maxHits = -1;
-				try {
-					maxHits = Integer.parseInt(sqd.getMaxHits());
-				} catch (Exception e) {
+		try {
+			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+					query.getRepositoryKind(), query.getRepositoryUrl());
+			if (repository == null)
+				return;
+
+			IWizard wizard = this.getEditQueryWizard(repository, query);
+
+			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+			if (wizard != null && shell != null && !shell.isDisposed()) {
+				WizardDialog dialog = new WizardDialog(shell, wizard);
+				dialog.create();
+				dialog.setTitle("Edit Bugzilla Query");
+				dialog.setBlockOnOpen(true);
+				if (dialog.open() == Dialog.CANCEL) {
+					dialog.close();
+					return;
 				}
-				queryCategory.setMaxHits(maxHits);
-
-				synchronize(queryCategory, null);
 			}
-		} else {
-			// BugzillaRepositoryQuery queryCategory = (BugzillaRepositoryQuery)
-			// query;
-			BugzillaQueryDialog queryDialog = new BugzillaQueryDialog(Display.getCurrent().getActiveShell(),
-					queryCategory.getRepositoryUrl(), queryCategory.getQueryUrl(), queryCategory.getDescription(),
-					queryCategory.getMaxHits() + "");
-			if (queryDialog.open() == Dialog.OK) {
-				MylarTaskListPlugin.getTaskListManager().getTaskList().renameContainer(queryCategory, queryDialog.getName());
-//				queryCategory.setDescription(queryDialog.getName());
-				queryCategory.setQueryUrl(queryDialog.getUrl());
-				queryCategory.setRepositoryUrl(queryDialog.getRepository().getUrl());
-				int maxHits = -1;
-				try {
-					maxHits = Integer.parseInt(queryDialog.getMaxHits());
-				} catch (Exception e) {
-				}
-				queryCategory.setMaxHits(maxHits);
-
-				new SynchronizeReportsAction(queryCategory).run();
-			}
+		} catch (Exception e) {
+			MylarStatusHandler.fail(e, e.getMessage(), true);
 		}
 	}
 
