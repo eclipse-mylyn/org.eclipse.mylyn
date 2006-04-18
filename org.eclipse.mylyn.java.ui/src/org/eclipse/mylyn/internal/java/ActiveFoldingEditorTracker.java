@@ -48,7 +48,9 @@ public class ActiveFoldingEditorTracker extends AbstractEditorTracker {
 
 	public void unregisterEditor(JavaEditor editor) {
 		ActiveFoldingListener listener = editorListenerMap.get(editor);
-		listener.dispose();
+		if (listener != null) {
+			listener.dispose();
+		} 
 		editorListenerMap.remove(editor);
 	}
 
