@@ -214,12 +214,14 @@
             id="org.eclipse.mylar.ui.interest.decrement"
             categoryId="org.eclipse.mylar.ui">
       </command>
+      <!--
       <command
             name="Show Filtered Children"
             description="Show Filtered Children"
             id="org.eclipse.mylar.ui.show.filtered"
             categoryId="org.eclipse.mylar.ui">
       </command>
+      -->
    </extension>
      
    <extension point="org.eclipse.ui.bindings">     
@@ -236,17 +238,19 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
       <key
-            sequence="M1+M2+M3+ARROW_RIGHT"
-            contextId="org.eclipse.ui.globalScope"
-            commandId="org.eclipse.mylar.ui.show.filtered"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
-      </key> 
-      <key
             sequence="M1+M2+M3+ARROW_LEFT"
             contextId="org.eclipse.ui.globalScope"
             commandId="org.eclipse.mylar.ui.related.show"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key> 
+	  <!--
+      <key
+            sequence="M1+M2+M3+ARROW_RIGHT"
+            contextId="org.eclipse.ui.globalScope"
+            commandId="org.eclipse.mylar.ui.show.filtered"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key> 
+      -->
    </extension>     
 
    <extension point="org.eclipse.ui.decorators">
@@ -266,7 +270,8 @@
    </extension>
 
  <extension point="org.eclipse.ui.viewActions"> 
- 	  	<viewContribution 
+ 	<!--
+ 	<viewContribution 
 		id="org.eclipse.mylar.ui.tasklist.apply" 
    		targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
     	<action
@@ -280,7 +285,8 @@
            tooltip="Apply Mylar (Experimental)"> 
   		</action> 
   	</viewContribution>
-	  <viewContribution 
+  	-->
+	<viewContribution 
 		id="org.eclipse.mylar.outline.contribution.filter" 
    		targetID="org.eclipse.ui.views.ContentOutline">
     	<action
