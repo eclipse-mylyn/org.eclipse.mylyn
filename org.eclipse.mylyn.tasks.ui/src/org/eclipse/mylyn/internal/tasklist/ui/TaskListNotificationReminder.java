@@ -48,7 +48,7 @@ public class TaskListNotificationReminder implements ITaskListNotification {
 		
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 			public void run() {
-				TaskUiUtil.openEditor(task);
+				TaskUiUtil.openEditor(task, false);
 			}
 		});
 

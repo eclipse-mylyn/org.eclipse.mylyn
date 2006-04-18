@@ -149,8 +149,10 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 		newTask.setPriority(Task.PriorityLevel.P3.toString());
 		newTask.setUrl(url);
-		TaskUiUtil.openEditor(newTask);
-//		newTask.openTaskInEditor(true);
+		
+		// NOTE: setting boolean param as false so that we go directly to the browser tab
+		// as with a previously-created task
+		TaskUiUtil.openEditor(newTask, false);
 
 		return true;
 

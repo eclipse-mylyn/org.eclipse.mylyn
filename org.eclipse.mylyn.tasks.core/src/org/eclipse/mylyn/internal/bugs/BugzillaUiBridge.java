@@ -65,7 +65,7 @@ public class BugzillaUiBridge implements IMylarUiBridge {
 		// MylarTaskListPlugin.getTaskListManager().getTaskForHandle(BugTaskUtil.getHandle(bugId),
 		// true);
 		if (task != null) {
-			TaskUiUtil.openEditor(task);
+			TaskUiUtil.openEditor(task, false);
 //			BugzillaTask bugzillaTask = (BugzillaTask) task;
 //			bugzillaTask.openTask(commentNumer, true);
 		} else {

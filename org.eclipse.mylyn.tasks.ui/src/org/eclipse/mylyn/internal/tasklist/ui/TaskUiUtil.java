@@ -76,7 +76,7 @@ public class TaskUiUtil {
 		if (page == null) {
 			return;
 		}
-		IEditorInput input = new TaskEditorInput(task);
+		IEditorInput input = new TaskEditorInput(task, false);
 		IEditorPart editor = page.findEditor(input);
 		if (editor != null) {
 			page.closeEditor(editor, false);
@@ -140,7 +140,7 @@ public class TaskUiUtil {
 							new IJobChangeListener() {
 
 								public void done(IJobChangeEvent event) {
-									TaskUiUtil.openEditor(task);
+									TaskUiUtil.openEditor(task, false);
 								}
 
 								public void aboutToRun(IJobChangeEvent event) {
@@ -164,11 +164,11 @@ public class TaskUiUtil {
 								}
 							});
 					if (refreshJob == null) {
-						TaskUiUtil.openEditor(task);
+						TaskUiUtil.openEditor(task, false);
 					}
 				}
 			} else {
-				TaskUiUtil.openEditor(task);
+				TaskUiUtil.openEditor(task, false);
 			}
 		} else if (element instanceof TaskCategory) {
 			TaskUiUtil.openEditor((AbstractTaskContainer) element);
@@ -180,16 +180,16 @@ public class TaskUiUtil {
 		}
 	}
 	
-	public static void openEditor(final ITask task) {
-		openEditor(task, true);
+	public static void openEditor(final ITask task, boolean newTask) {
+		openEditor(task, true, newTask);
 	}
 
 	/**
 	 * Set asyncExec false for testing purposes.
 	 */
-	public static void openEditor(final ITask task, boolean asyncExec) {
+	public static void openEditor(final ITask task, boolean asyncExec, boolean newTask) {
 
-		final IEditorInput editorInput = new TaskEditorInput(task);
+		final IEditorInput editorInput = new TaskEditorInput(task, newTask);
 
 		if (asyncExec) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

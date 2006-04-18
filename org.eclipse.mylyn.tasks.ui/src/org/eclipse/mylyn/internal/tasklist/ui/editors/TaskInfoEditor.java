@@ -147,7 +147,6 @@ public class TaskInfoEditor extends EditorPart {
 								return;
 							if (!description.isDisposed()) {
 								description.setText(updateTask.getDescription());
-								// TaskInfoEditor.this.setPartName(updateTask.getDescription(true));
 								parentEditor.changeTitle();
 							}
 							if (!priorityCombo.isDisposed()) {
@@ -156,9 +155,6 @@ public class TaskInfoEditor extends EditorPart {
 									int prioritySelectionIndex = priorityCombo.indexOf(level.getDescription());
 									priorityCombo.select(prioritySelectionIndex);
 								}
-								// int selectionIndex =
-								// priorityCombo.indexOf(updateTask.getPriority());
-								// priorityCombo.select(selectionIndex);
 							}
 							if (!statusCombo.isDisposed()) {
 								if (task.isCompleted()) {
@@ -166,8 +162,6 @@ public class TaskInfoEditor extends EditorPart {
 								} else {
 									statusCombo.select(1);
 								}
-								// statusCombo.indexOf(updateTask.getStatus().toString());
-								// statusCombo.select(selectionIndex);
 							}
 							if (!(updateTask instanceof AbstractRepositoryTask) && !endDate.isDisposed()) {
 								endDate.setText(getTaskDateString(updateTask));

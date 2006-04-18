@@ -117,7 +117,7 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 		
 		AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
 //		client.addTaskToArchive(newTask);
-		TaskUiUtil.openEditor(newTask);
+		TaskUiUtil.openEditor(newTask, true);
 		
 		if (!newTask.isDownloaded()) {
 			client.synchronize(newTask, true, null);

@@ -136,7 +136,7 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 	public void init(IEditorSite site, IEditorInput editorInput) throws PartInitException {
 		if (!(editorInput instanceof BugzillaTaskEditorInput))
 			throw new PartInitException("Invalid Input: Must be BugzillaTaskEditorInput");
-		super.init(site, (IEditorInput) new TaskEditorInput(((BugzillaTaskEditorInput) editorInput).getBugTask()));
+		super.init(site, (IEditorInput) new TaskEditorInput(((BugzillaTaskEditorInput) editorInput).getBugTask(), false));
 		bugzillaEditorInput = (BugzillaTaskEditorInput) editorInput;
 		bugTask = bugzillaEditorInput.getBugTask();
 		bugzillaEditor.setBugzillaOutlineModel(BugzillaOutlineNode.parseBugReport(bugzillaEditorInput.getBug()));

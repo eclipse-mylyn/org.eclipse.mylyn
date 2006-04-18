@@ -111,7 +111,7 @@ public class NewLocalTaskAction extends Action {
 			MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask,
 					MylarTaskListPlugin.getTaskListManager().getTaskList().getRootCategory());
 		}
-		TaskUiUtil.openEditor(newTask);
+		TaskUiUtil.openEditor(newTask, true);
 		// newTask.openTaskInEditor(false);
 		view.getViewer().refresh();
 

@@ -31,8 +31,11 @@ public class TaskEditorInput implements IEditorInput {
 
 	private String label;
 
-	public TaskEditorInput(ITask task) {
+	private boolean newTask = false;
+	
+	public TaskEditorInput(ITask task, boolean newTask) {
 		this.task = task;
+		this.newTask = newTask;
 		id = task.getHandleIdentifier();
 		label = truncateDescription(task.getDescription());
 	}
@@ -127,5 +130,9 @@ public class TaskEditorInput implements IEditorInput {
 			return getId() != null && getId().equals(input.getId());
 		}
 		return false;
+	}
+
+	public boolean isNewTask() {
+		return newTask;
 	}
 }
