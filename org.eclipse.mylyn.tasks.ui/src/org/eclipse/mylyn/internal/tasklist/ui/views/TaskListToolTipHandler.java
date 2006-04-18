@@ -72,8 +72,8 @@ public class TaskListToolTipHandler {
 	}
 
 	private Shell createTipShell(Shell parent) {
-		Shell tipShell = new Shell(parent.getDisplay(), SWT.NO_FOCUS | SWT.ON_TOP | SWT.MODELESS);
-		GridLayout gridLayout = new GridLayout();
+		Shell tipShell = new Shell(parent.getDisplay(), SWT.TOOL | SWT.NO_FOCUS | SWT.ON_TOP | SWT.MODELESS);
+		GridLayout gridLayout = new GridLayout(); 
 		gridLayout.numColumns = 2;
 		gridLayout.marginWidth = 2;
 		gridLayout.marginHeight = 2;
