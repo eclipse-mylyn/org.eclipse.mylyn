@@ -28,7 +28,7 @@ import org.eclipse.team.core.diff.IDiff;
 import org.eclipse.team.core.diff.provider.ThreeWayDiff;
 import org.eclipse.team.core.mapping.provider.ResourceDiff;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSet;
-import org.eclipse.team.internal.core.subscribers.SubscriberChangeSetCollector;
+import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 import org.osgi.service.prefs.Preferences;
 
 /**
@@ -51,7 +51,7 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 
 	private ITask task;
 
-	public MylarContextChangeSet(ITask task, SubscriberChangeSetCollector collector) {
+	public MylarContextChangeSet(ITask task, ActiveChangeSetManager collector) {
 		super(collector, task.getDescription());
 		this.task = task;
 		initTitle();

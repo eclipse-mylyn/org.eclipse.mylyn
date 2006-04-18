@@ -26,16 +26,16 @@ import org.eclipse.mylar.provisional.core.IMylarContextListener;
 import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.DateRangeContainer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.provisional.tasklist.ITaskListChangeListener;
-import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.team.internal.ccvs.ui.CVSUIPlugin;
+import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
 import org.eclipse.team.internal.core.subscribers.IChangeSetChangeListener;
-import org.eclipse.team.internal.core.subscribers.SubscriberChangeSetCollector;
 
 /**
  * @author Mik Kersten
@@ -69,7 +69,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 		}
 	};
 
-	private SubscriberChangeSetCollector collector;
+	private ActiveChangeSetManager collector;
 
 	private Map<String, MylarContextChangeSet> activeChangeSets = new HashMap<String, MylarContextChangeSet>();
 

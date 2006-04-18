@@ -19,9 +19,8 @@ import org.eclipse.mylar.provisional.core.InterestComparator;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.ui.views.markers.internal.FieldFolder;
 import org.eclipse.ui.views.markers.internal.FieldLineNumber;
-import org.eclipse.ui.views.markers.internal.FieldMessage;
 import org.eclipse.ui.views.markers.internal.FieldResource;
-import org.eclipse.ui.views.markers.internal.FieldSeverity;
+import org.eclipse.ui.views.markers.internal.FieldSeverityAndMessage;
 import org.eclipse.ui.views.markers.internal.IField;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
 import org.eclipse.ui.views.markers.internal.TableSorter;
@@ -51,8 +50,8 @@ public class ProblemsListDoiSorter extends TableSorter {
 			ASCENDING, // resource
 			ASCENDING }; // location
 
-	private final static IField[] VISIBLE_FIELDS = { new FieldSeverity(), new FieldMessage(), new FieldResource(),
-			new FieldFolder(), new FieldLineNumber() };
+	private final static IField[] VISIBLE_FIELDS = { new FieldSeverityAndMessage(), new FieldFolder(), new FieldResource(),
+			new FieldLineNumber() };
 
 	// END COPY
 

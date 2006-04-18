@@ -26,8 +26,8 @@ import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.Task;
 import org.eclipse.team.internal.ccvs.ui.CVSUIPlugin;
+import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
-import org.eclipse.team.internal.core.subscribers.SubscriberChangeSetCollector;
 
 /**
  * @author Mik Kersten
@@ -36,7 +36,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 
 	private MylarChangeSetManager changeSetManager;
 
-	private SubscriberChangeSetCollector collector;
+	private ActiveChangeSetManager collector;
 
 	@Override
 	protected void setUp() throws Exception {
