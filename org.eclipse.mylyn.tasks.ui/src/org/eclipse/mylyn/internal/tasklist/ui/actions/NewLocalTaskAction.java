@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.tasklist.ui.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
@@ -104,10 +105,14 @@ public class NewLocalTaskAction extends Action {
 						MylarTaskListPlugin.getTaskListManager().getTaskList().getRootCategory());
 				// MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(newTask);
 			}
-		} else if (view.getDrilledIntoCategory() != null) {
+		} else if (view.getDrilledIntoCategory() instanceof TaskCategory) {
 			MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask,
 					(TaskCategory) view.getDrilledIntoCategory());
 		} else {
+			if (view.getDrilledIntoCategory() != null) {
+				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), MylarTaskListPlugin.TITLE_DIALOG, 
+						"The new task has been added to the root of the list, since tasks can not be added to a query.");
+			}
 			MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask,
 					MylarTaskListPlugin.getTaskListManager().getTaskList().getRootCategory());
 		}
