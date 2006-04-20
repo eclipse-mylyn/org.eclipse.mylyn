@@ -17,11 +17,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
-import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
-import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -44,16 +42,16 @@ import org.eclipse.ui.part.EditorPart;
  * 
  * @author Mik Kersten
  */
-public class PackageExplorerExpansionManager implements IMylarContextListener, ISelectionListener {
+public class PackageExplorerManager implements IMylarContextListener, ISelectionListener {
 
 	public void selectionChanged(IWorkbenchPart part, ISelection changedSelection) {
-		if (MylarPlugin.getContextManager().isContextCapturePaused())
+		if (MylarPlugin.getContextManager().isContextCapturePaused()
+			|| !MylarPlugin.getContextManager().isContextActive()
+			|| (ApplyMylarToPackageExplorerAction.getDefault() != null 
+				&& !ApplyMylarToPackageExplorerAction.getDefault().isChecked())) {
 			return;
+		}
 		try {
-			if (!(MylarPlugin.getContextManager().isContextActive()
-					&& ApplyMylarToPackageExplorerAction.getDefault() != null && ApplyMylarToPackageExplorerAction
-					.getDefault().isChecked()))
-				return;
 			Object elementToSelect = null;
 			if (changedSelection instanceof TextSelection && part instanceof JavaEditor) {
 				TextSelection textSelection = (TextSelection) changedSelection;
@@ -72,20 +70,13 @@ public class PackageExplorerExpansionManager implements IMylarContextListener, I
 				PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
 				if (packageExplorer != null) {
 					TreeViewer viewer = packageExplorer.getTreeViewer();
-					ISelection currentSelection = viewer.getSelection();
-					boolean suppressSelection = false;
-					boolean membersFilteredMode = false;
-					if (currentSelection instanceof StructuredSelection) {
-						if (((StructuredSelection) currentSelection).size() > 1)
-							suppressSelection = true;
-					}
-					if (!isInLinkToEditorMode(packageExplorer))
-						suppressSelection = true;
-					for (ViewerFilter filter : Arrays.asList(viewer.getFilters())) {
-						if (filter instanceof MembersFilter)
-							membersFilteredMode = true;
-					}
-					if (!suppressSelection) {
+					StructuredSelection currentSelection = (StructuredSelection)viewer.getSelection();
+					if (currentSelection.size() <= 1) {
+						boolean membersFilteredMode = false;
+						for (ViewerFilter filter : Arrays.asList(viewer.getFilters())) {
+							if (filter instanceof MembersFilter)
+								membersFilteredMode = true;
+						}
 						if (membersFilteredMode) {
 							if (elementToSelect instanceof IMember) {
 								ICompilationUnit toSelect = ((IMember) elementToSelect).getCompilationUnit();
@@ -94,15 +85,16 @@ public class PackageExplorerExpansionManager implements IMylarContextListener, I
 								}
 							}
 						} else if (elementToSelect != null) {
-							viewer.setSelection(new StructuredSelection(elementToSelect), true);
-						}
-
-						if (elementToSelect != null
-								&& MylarJavaPlugin.getDefault().getPluginPreferences().getBoolean(
-										MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_EXPAND)) {
-							viewer.expandAll();
+							if (!elementToSelect.equals(currentSelection.getFirstElement())) {
+								viewer.setSelection(new StructuredSelection(elementToSelect), true);
+							}
 						}
 					}
+//						if (elementToSelect != null
+//								&& MylarJavaPlugin.getDefault().getPluginPreferences().getBoolean(
+//										MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_EXPAND)) {
+//							viewer.expandAll();
+//						}
 				}
 			}
 		} catch (Throwable t) {
@@ -111,19 +103,20 @@ public class PackageExplorerExpansionManager implements IMylarContextListener, I
 	}
 
 	public void contextActivated(IMylarContext taskscape) {
-		try {
-			if (MylarPlugin.getContextManager().isContextActive()
-					&& ApplyMylarToPackageExplorerAction.getDefault() != null
-					&& ApplyMylarToPackageExplorerAction.getDefault().isChecked()) {
-
-				PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
-				if (packageExplorer != null) {
-					packageExplorer.getTreeViewer().expandAll();
-				}
-			}
-		} catch (Throwable t) {
-			MylarStatusHandler.log(t, "Could not update package explorer");
-		}
+//		try {
+//			if (MylarPlugin.getContextManager().isContextActive()
+//					&& ApplyMylarToPackageExplorerAction.getDefault() != null
+//					&& ApplyMylarToPackageExplorerAction.getDefault().isChecked()) {
+//
+//				PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
+//				if (packageExplorer != null) { 
+//					packageExplorer.setLinkingEnabled(false);
+//					packageExplorer.getTreeViewer().expandAll();
+//				}
+//			}
+//		} catch (Throwable t) {
+//			MylarStatusHandler.log(t, "Could not update package explorer");
+//		}
 	}
 
 	public void contextDeactivated(IMylarContext taskscape) {
@@ -133,16 +126,16 @@ public class PackageExplorerExpansionManager implements IMylarContextListener, I
 		}
 	}
 
+//	private boolean isInLinkToEditorMode(PackageExplorerPart packageExplorer) {
+//		return JavaPlugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_PACKAGES_TO_EDITOR);
+//	}
+	
 	public void interestChanged(List<IMylarElement> nodes) {
 		// ignore
 	}
 
 	public void interestChanged(IMylarElement node) {
 		// ignore
-	}
-
-	private boolean isInLinkToEditorMode(PackageExplorerPart packageExplorer) {
-		return JavaPlugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_PACKAGES_TO_EDITOR);
 	}
 
 	public void revealInteresting() {

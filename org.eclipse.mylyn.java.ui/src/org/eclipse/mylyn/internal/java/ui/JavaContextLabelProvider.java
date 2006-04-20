@@ -24,7 +24,7 @@ import org.eclipse.jdt.ui.JavaElementLabels;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.core.MylarContextManager;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
-import org.eclipse.mylar.internal.java.MylarJavaPrefConstants;
+import org.eclipse.mylar.internal.java.MylarJavaPlugin;
 import org.eclipse.mylar.internal.java.search.AbstractJavaRelationProvider;
 import org.eclipse.mylar.internal.java.search.JUnitReferencesProvider;
 import org.eclipse.mylar.internal.java.search.JavaImplementorsProvider;
@@ -42,6 +42,8 @@ import org.eclipse.swt.graphics.Image;
  */
 public class JavaContextLabelProvider extends AppearanceAwareLabelProvider {
 
+	private static final ImageDescriptor EDGE_REF_JUNIT = MylarJavaPlugin.getImageDescriptor("icons/elcl16/edge-ref-junit.gif");
+	
 	public JavaContextLabelProvider() {
 		// super(createJavaUiLabelProvider());
 		super(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | JavaElementLabels.P_COMPRESSED,
@@ -110,7 +112,7 @@ public class JavaContextLabelProvider extends AppearanceAwareLabelProvider {
 		} else if (relationshipHandle.equals(JavaImplementorsProvider.ID)) {
 			return MylarImages.EDGE_INHERITANCE;
 		} else if (relationshipHandle.equals(JUnitReferencesProvider.ID)) {
-			return MylarJavaPrefConstants.EDGE_REF_JUNIT;
+			return EDGE_REF_JUNIT;
 		} else if (relationshipHandle.equals(JavaWriteAccessProvider.ID)) {
 			return MylarImages.EDGE_ACCESS_WRITE;
 		} else if (relationshipHandle.equals(JavaReadAccessProvider.ID)) {

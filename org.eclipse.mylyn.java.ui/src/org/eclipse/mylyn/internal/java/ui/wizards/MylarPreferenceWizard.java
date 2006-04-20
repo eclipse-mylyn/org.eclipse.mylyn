@@ -76,11 +76,11 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 		JavaUiUtil.installContentAssist(javaPrefs, mylarContentAssist);
 
 		if (preferencePage.isAutoFolding()) {
-			MylarPlugin.getDefault().getPreferenceStore().setValue(MylarJavaPrefConstants.AUTO_FOLDING_ENABLED, true);
+			MylarPlugin.getDefault().getPreferenceStore().setValue(MylarJavaPrefConstants.ACTIVE_FOLDING_ENABLED, true);
 			javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, true);  
 			javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_PROVIDER, DEFAULT_FOLDING_PROVIDER); 
 		} else {
-			MylarPlugin.getDefault().getPreferenceStore().setValue(MylarJavaPrefConstants.AUTO_FOLDING_ENABLED, false);
+			MylarPlugin.getDefault().getPreferenceStore().setValue(MylarJavaPrefConstants.ACTIVE_FOLDING_ENABLED, false);
 		}
 
 		if (preferencePage.closeEditors()) {

@@ -20,6 +20,7 @@ import java.util.Map;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.ui.actions.AbstractApplyMylarAction;
 import org.eclipse.mylar.provisional.core.IMylarContext;
@@ -33,6 +34,9 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
 /**
+ * Encapsualted the element refresh and expansion state policy for all viewers
+ * showing Mylar context.
+ * 
  * @author Mik Kersten
  */
 public class MylarViewerManager implements IMylarContextListener, IPropertyChangeListener {
@@ -187,7 +191,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 
 	private void internalRefresh(final List<IMylarElement> nodesToRefresh, final boolean updateLabels) {
 		try {
-			for (StructuredViewer viewer : managedViewers) {
+			for (StructuredViewer viewer : new ArrayList<StructuredViewer>(managedViewers)) {
 				refreshViewer(nodesToRefresh, updateLabels, viewer);
 			}
 		} catch (Throwable t) {
@@ -196,19 +200,26 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 	}
 
 	private void refreshViewer(final List<IMylarElement> nodesToRefresh, final boolean minor, StructuredViewer viewer) {
-		if (viewer != null && !viewer.getControl().isDisposed() && viewer.getControl().isVisible()) {
+		if (viewer == null) {
+			return;
+		} else if (viewer.getControl().isDisposed()) {
+			managedViewers.remove(viewer);
+		} else if (viewer.getControl().isVisible()) {
 			if (nodesToRefresh == null || nodesToRefresh.isEmpty()) {
 				if (!minor) {
 					viewer.refresh(false);
+					updateExpansionState(viewer, null);
 				} else {
 					viewer.getControl().setRedraw(false);
 					viewer.refresh(true);
+					updateExpansionState(viewer, null);
 					viewer.getControl().setRedraw(true);
 				}
 			} else {
 				if (filteredViewers.contains(viewer)) {
 					viewer.getControl().setRedraw(false);
 					viewer.refresh(minor);
+					updateExpansionState(viewer, null);
 					viewer.getControl().setRedraw(true);
 				} else { // don't need to worry about content changes 
 					viewer.getControl().setRedraw(false);
@@ -218,10 +229,22 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 						Object objectToRefresh = structureBridge.getObjectForHandle(node.getHandleIdentifier());
 						if (objectToRefresh != null) {
 							viewer.update(objectToRefresh, null);
+							updateExpansionState(viewer, objectToRefresh);
 						}
 					}
 					viewer.getControl().setRedraw(true);
 				}
+			}
+		}
+	}
+
+	private void updateExpansionState(StructuredViewer viewer, Object objectToRefresh) {
+		if (viewer instanceof TreeViewer && filteredViewers.contains(viewer)) {
+			TreeViewer treeViewer = (TreeViewer)viewer;
+			if (objectToRefresh == null) {
+				treeViewer.expandAll();
+			} else {
+				treeViewer.expandToLevel(objectToRefresh, TreeViewer.ALL_LEVELS);
 			}
 		}
 	}

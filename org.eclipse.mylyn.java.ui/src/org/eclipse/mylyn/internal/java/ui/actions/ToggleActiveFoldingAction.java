@@ -61,7 +61,7 @@ public class ToggleActiveFoldingAction extends Action implements IWorkbenchWindo
 				JavaPlugin.getDefault().getPreferenceStore().setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, true);
 			}
 			action.setChecked(on);
-			MylarPlugin.getDefault().getPreferenceStore().setValue(MylarJavaPrefConstants.AUTO_FOLDING_ENABLED, on);
+			MylarPlugin.getDefault().getPreferenceStore().setValue(MylarJavaPrefConstants.ACTIVE_FOLDING_ENABLED, on);
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "Could not enable editor management", true);
 		}
@@ -78,7 +78,7 @@ public class ToggleActiveFoldingAction extends Action implements IWorkbenchWindo
 	public void init(IAction action) {
 		this.parentAction = action;
 		valueChanged(action, MylarPlugin.getDefault().getPreferenceStore().getBoolean(
-				MylarJavaPrefConstants.AUTO_FOLDING_ENABLED));
+				MylarJavaPrefConstants.ACTIVE_FOLDING_ENABLED));
 	}
 
 	public void dispose() {

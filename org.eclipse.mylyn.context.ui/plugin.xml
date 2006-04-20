@@ -270,7 +270,6 @@
    </extension>
 
  <extension point="org.eclipse.ui.viewActions"> 
- 	<!--
  	<viewContribution 
 		id="org.eclipse.mylar.ui.tasklist.apply" 
    		targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
@@ -285,7 +284,6 @@
            tooltip="Apply Mylar (Experimental)"> 
   		</action> 
   	</viewContribution>
-  	-->
 	<viewContribution 
 		id="org.eclipse.mylar.outline.contribution.filter" 
    		targetID="org.eclipse.ui.views.ContentOutline">
