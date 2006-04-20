@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar TaskList Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.tasklist; singleton:=true
-Bundle-Version: 0.5.0.1
+Bundle-Version: 0.5.0.v20060419-2230
 Bundle-Activator: org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
