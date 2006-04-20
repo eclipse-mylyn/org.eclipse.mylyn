@@ -11,10 +11,16 @@
 
 package org.eclipse.mylar.java.tests;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.ui.filters.ImportDeclarationFilter;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.internal.java.ui.actions.ApplyMylarToPackageExplorerAction;
 import org.eclipse.mylar.provisional.ui.InterestFilter;
 
@@ -27,6 +33,40 @@ public class InterestFilterTest extends AbstractJavaContextTest {
 
 	private PackageExplorerPart explorer;
 
+	public void testPreservedFilterRemovalExclusion() throws JavaModelException {
+		explorer = PackageExplorerPart.openInActivePerspective();
+		assertNotNull(explorer);
+
+		List<Class> filterClasses = new ArrayList<Class>();
+		for (ViewerFilter filter : Arrays.asList(explorer.getTreeViewer().getFilters())) {
+			filterClasses.add(filter.getClass());
+		}
+		assertTrue(filterClasses.contains(ImportDeclarationFilter.class));
+		
+		ApplyMylarToPackageExplorerAction.getDefault().update(true);
+		filterClasses = new ArrayList<Class>();
+		for (ViewerFilter filter : Arrays.asList(explorer.getTreeViewer().getFilters())) {
+			filterClasses.add(filter.getClass());
+		} 
+		assertTrue(filterClasses.contains(ImportDeclarationFilter.class));
+	}
+	
+	public void testFilterRemovalAndRestore() throws JavaModelException {
+		explorer = PackageExplorerPart.openInActivePerspective();
+		assertNotNull(explorer);
+
+		ViewerFilter[] previousFilters = explorer.getTreeViewer().getFilters();
+		assertTrue(previousFilters.length > 1);
+		ApplyMylarToPackageExplorerAction.getDefault().update(true);
+		ViewerFilter[] afterInstall = explorer.getTreeViewer().getFilters();
+		// more than 1 since we preserve some filters
+		assertEquals(3, afterInstall.length);
+		
+		ApplyMylarToPackageExplorerAction.getDefault().update(false);
+		ViewerFilter[] restoredFilters = explorer.getTreeViewer().getFilters();
+		assertEquals(previousFilters.length, restoredFilters.length);
+	}
+	
 	public void testInterestFilter() throws JavaModelException {
 		explorer = PackageExplorerPart.openInActivePerspective();
 		assertNotNull(explorer);
@@ -50,4 +90,5 @@ public class InterestFilterTest extends AbstractJavaContextTest {
 		assertTrue(filter.select(explorer.getTreeViewer(), null, m1));
 	}
 
+	
 }

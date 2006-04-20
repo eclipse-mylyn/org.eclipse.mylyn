@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.java.ui.actions;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
@@ -159,4 +160,8 @@ public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAct
 
 	}
 
+	@Override
+	public List<Class> getPreservedFilters() {
+		return Collections.emptyList();
+	}
 }

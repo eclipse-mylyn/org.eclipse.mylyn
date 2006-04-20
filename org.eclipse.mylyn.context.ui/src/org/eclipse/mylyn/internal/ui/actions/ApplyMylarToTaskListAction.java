@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.ui.actions;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
@@ -65,5 +66,10 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction {
 
 	public static ApplyMylarToTaskListAction getDefault() {
 		return INSTANCE;
+	}
+	
+	@Override
+	public List<Class> getPreservedFilters() {
+		return Collections.emptyList();
 	}
 }

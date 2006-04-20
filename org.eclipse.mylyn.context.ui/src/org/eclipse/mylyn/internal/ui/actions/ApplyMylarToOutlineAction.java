@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.ui.actions;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
@@ -79,5 +80,10 @@ public class ApplyMylarToOutlineAction extends AbstractApplyMylarAction {
 
 	public void propertyChange(PropertyChangeEvent event) {
 		// ignore
+	}
+	
+	@Override
+	public List<Class> getPreservedFilters() {
+		return Collections.emptyList();
 	}
 }

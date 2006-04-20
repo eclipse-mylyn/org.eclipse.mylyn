@@ -16,7 +16,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.mylar.internal.java.ui.MembersFilter;
+import org.eclipse.mylar.internal.java.ui.JavaDeclarationsFilter;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -52,13 +52,13 @@ public class FilterMembersAction extends Action implements IViewActionDelegate {
 		ViewerFilter existingFilter = null;
 		for (int i = 0; i < packageExplorer.getTreeViewer().getFilters().length; i++) {
 			ViewerFilter filter = packageExplorer.getTreeViewer().getFilters()[i];
-			if (filter instanceof MembersFilter)
+			if (filter instanceof JavaDeclarationsFilter)
 				existingFilter = filter;
 		}
 		if (existingFilter != null) {
 			packageExplorer.getTreeViewer().removeFilter(existingFilter);
 		} else {
-			packageExplorer.getTreeViewer().addFilter(new MembersFilter());
+			packageExplorer.getTreeViewer().addFilter(new JavaDeclarationsFilter());
 		}
 	}
 

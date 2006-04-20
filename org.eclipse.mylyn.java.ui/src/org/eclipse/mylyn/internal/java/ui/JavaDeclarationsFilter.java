@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 /**
  * @author Mik Kersten
  */
-public class MembersFilter extends ViewerFilter {
+public class JavaDeclarationsFilter extends ViewerFilter {
 
 	@Override
 	public boolean select(Viewer viewer, Object parent, Object element) {

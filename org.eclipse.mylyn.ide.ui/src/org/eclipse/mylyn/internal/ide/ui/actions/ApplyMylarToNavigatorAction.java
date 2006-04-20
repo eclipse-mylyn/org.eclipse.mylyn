@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.ide.ui.actions;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
@@ -47,7 +48,11 @@ public class ApplyMylarToNavigatorAction extends AbstractApplyMylarAction {
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {
-		// TODO Auto-generated method stub
-
+		// ignore
+	}
+	
+	@Override
+	public List<Class> getPreservedFilters() {
+		return Collections.emptyList();
 	}
 }

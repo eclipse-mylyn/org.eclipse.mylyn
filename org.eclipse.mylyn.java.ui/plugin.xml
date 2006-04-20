@@ -315,10 +315,10 @@
    <extension point="org.eclipse.jdt.ui.javaElementFilters">
         <filter
             targetId="org.eclipse.jdt.ui.PackageExplorer"
-            name="Mylar Java Declarations Filter"
+            name="Java Declarations Filter"
             enabled="false"
-            description="Mylar Java Declarations Filter"
-            class="org.eclipse.mylar.internal.java.ui.MembersFilter"
+            description="Java Declarations Filter"
+            class="org.eclipse.mylar.internal.java.ui.JavaDeclarationsFilter"
             id="org.eclipse.mylar.java.ui.MembersFilter">
    		</filter>
   </extension>

@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.ui.actions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
@@ -50,10 +51,12 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 
 	protected IAction initAction = null;
 
-	protected InterestFilter interestFilter;
+	protected final InterestFilter interestFilter;
 	
 	protected IViewPart viewPart;
 
+	protected List<ViewerFilter> previousFilters = new ArrayList<ViewerFilter>();
+	
 	public AbstractApplyMylarAction(InterestFilter interestFilter) {
 		super();
 		this.interestFilter = interestFilter;
@@ -123,11 +126,11 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 				installed = installInterestFilter(viewer);
 				MylarUiPlugin.getDefault().getViewerManager().addFilteredViewer(viewer);
 			} else {
-				uninstallInterestFilter(viewer);
 				MylarUiPlugin.getDefault().getViewerManager().removeFilteredViewer(viewer);
+				uninstallInterestFilter(viewer);
 			}
 			if (installed && on && viewer instanceof TreeViewer) {
-				((TreeViewer) viewer).expandAll();
+				((TreeViewer)viewer).expandAll();
 			}
 		}
 	}
@@ -137,21 +140,26 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 	 */
 	public abstract List<StructuredViewer> getViewers();
 
+	/**
+	 * @return	filters that should not be removed when the interest filter is installed
+	 */
+	public abstract List<Class> getPreservedFilters();
+	
 	protected boolean installInterestFilter(StructuredViewer viewer) {
 		if (viewer == null) {
 			MylarStatusHandler.log("The viewer to install InterestFilter is null", this);
 			return false;
 		}
 		
-		for (ViewerFilter viewerFilter : viewer.getFilters()) {
-			if (viewerFilter != null && viewerFilter.equals(interestFilter)) {
-				// already have this filter installed
-				return false;
-			}
-		}
-		
 		try {
 			viewer.getControl().setRedraw(false);
+			previousFilters.addAll(Arrays.asList(viewer.getFilters()));
+			List<Class> excludedFilters = getPreservedFilters();
+			for (ViewerFilter filter : previousFilters) {
+				if (!excludedFilters.contains(filter.getClass())) {
+					viewer.removeFilter(filter);
+				}
+			}
 			viewer.addFilter(interestFilter);
 			viewer.getControl().setRedraw(true);
 			return true;
@@ -167,22 +175,16 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
             return;
         }
 
-        List<ViewerFilter> filtersToRemove = new ArrayList<ViewerFilter>();
-        for (ViewerFilter filter : viewer.getFilters()) {
-            if (filter instanceof InterestFilter) {
-                filtersToRemove.add(filter);
-            }
-        }
-
-        if (filtersToRemove.isEmpty()) {
-            return;
-        }
-
         viewer.getControl().setRedraw(false);
-        for (ViewerFilter filter : filtersToRemove) {
-            viewer.removeFilter(filter);
+        List<Class> excludedFilters = getPreservedFilters();
+        for (ViewerFilter filter : previousFilters) {
+        	if (!excludedFilters.contains(filter.getClass())) {
+        		viewer.addFilter(filter);
+        	}
         }
-        viewer.getControl().setRedraw(true);
+		previousFilters.clear();
+        viewer.removeFilter(interestFilter);
+		viewer.getControl().setRedraw(true);
     }
 
 	public void selectionChanged(IAction action, ISelection selection) {

@@ -14,6 +14,7 @@ package org.eclipse.mylar.internal.ide.ui.actions;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
@@ -218,5 +219,10 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 		if (!(currentProvider instanceof MarkerViewLabelProvider)) {
 			viewer.setLabelProvider(new MarkerViewLabelProvider((TableViewLabelProvider) currentProvider));
 		}
+	}
+	
+	@Override
+	public List<Class> getPreservedFilters() {
+		return Collections.emptyList();
 	}
 }

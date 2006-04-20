@@ -14,6 +14,8 @@ package org.eclipse.mylar.internal.java.ui.actions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jdt.internal.ui.filters.ImportDeclarationFilter;
+import org.eclipse.jdt.internal.ui.filters.PackageDeclarationFilter;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -21,6 +23,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
 import org.eclipse.mylar.internal.java.MylarJavaPrefConstants;
+import org.eclipse.mylar.internal.java.ui.JavaDeclarationsFilter;
 import org.eclipse.mylar.internal.ui.actions.AbstractApplyMylarAction;
 import org.eclipse.mylar.provisional.ui.InterestFilter;
 import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
@@ -49,6 +52,11 @@ public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction 
 		configureAction();
 	}
 
+	@Override
+	protected void valueChanged(IAction action, boolean on, boolean store) {
+		super.valueChanged(action, on, store);
+	}
+	
 	@Override
 	public List<StructuredViewer> getViewers() {
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
@@ -79,5 +87,14 @@ public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction 
 
 	public void propertyChange(org.eclipse.core.runtime.Preferences.PropertyChangeEvent event) {
 		// ignore
+	}
+	
+	@Override
+	public List<Class> getPreservedFilters() {
+		List<Class> preserved = new ArrayList<Class>();
+		preserved.add(ImportDeclarationFilter.class);
+		preserved.add(PackageDeclarationFilter.class);
+		preserved.add(JavaDeclarationsFilter.class);
+		return preserved;
 	}
 }
