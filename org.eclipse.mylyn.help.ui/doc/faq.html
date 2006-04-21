@@ -8,18 +8,16 @@
     <div align=center><h1>Mylar Frequently Asked Questions</h1></div>
 	<p><b>Setup</b></p>
 	<ul>
-		<li><a href="#configuration-eclipse">What is the recommended Eclipse configuration 
-	for running Mylar?</a></li>
-		<li><a href="#install">Why does Mylar fail to install or update?</a></li>
-		<li><a href="#uninstall">Are there additional steps for uninstalling 
-		Mylar?</a></li>
-		<li><a href="#tasklist-blank">Why did my tasks disappear?</a></li>
+		<li><a href="#configuration-eclipse">Recommended configuration</a></li>
+		<li><a href="#install">Install troubleshooting</a></li>
+		<li><a href="#uninstall">Uninstall troubleshooting</a></li>
+		<li><a href="#tasklist-backup">Task backup and restore</a></li>
 	</ul>
 	<p><b>Integration</b></p>
 <ul>
-	<li><a href="#performance-summary">What are the effects of Mylar on Eclipse performance?</a></li>
-	<li><a href="#subversion-clients">Does Mylar have any limitations when working with Subversion clients?</a></li>
-<li><a href="#setup-linux-browser">Configuring Eclipse's Internal Browser on Linux</a>&nbsp; 
+	<li><a href="#performance-summary">Performance profile</a></li>
+	<li><a href="#subversion-clients">Subversion limitations</a></li>
+<li><a href="#setup-linux-browser">Configuring Internal Browser on Linux</a>&nbsp; 
 		</li>
 </ul>
 	<p><b>Working with Context</b></p>
@@ -60,8 +58,7 @@
 
 
 	<hr>
-<h3><a name="configuration-eclipse">What is the recommended Eclipse 
-configuration for running Mylar?</a></h3>
+<h3><a name="configuration-eclipse">Recommended configuration</a></h3>
 	<p>Recommendations for Mylar 0.5.0:</p>
 	<ul>
 		<li>Package Explorer<ul>
@@ -106,8 +103,7 @@ configuration for running Mylar?</a></h3>
 	</ul>
 	<hr>
 <h3>&nbsp;</h3>
-	<h3><a name="performance-summary">What are the effects of Mylar on Eclipse 
-performance?</a></h3>
+	<h3><a name="performance-summary">Performance profile</a></h3>
 <p>The goal is for Mylar to have no noticeable effect on Eclipse's speed or 
 memory usage, you do not need to increase the amount of memory Eclipse runs with 
 to use Mylar, and any performance issue should be
@@ -134,7 +130,7 @@ a bug</a>.&nbsp; The current performance profile is:</p>
 </ol>
 	<hr>
 	<h3>&nbsp;</h3>
-	<h3><a name="install">Why does Mylar fail to install or update?</a></h3>
+	<h3><a name="install">Install Troubleshooting</a></h3>
 	<p>For supported platforms and known limitations please see
 	<a href="http://eclipse.org/mylar/dl.php">http://eclipse.org/mylar/dl.php</a>&nbsp; 
 	Install/update failures can include:</p>
@@ -192,21 +188,22 @@ version.</p>
 <img border="0" src="images/faq/eclipse-manage-configuration.gif" width="679" height="335"></p>
 	<hr>
 	<h3>&nbsp;</h3>
-	<h3><a name="uninstall">Are there additional steps for uninstalling Mylar?</a></h3>
+	<h3><a name="uninstall">Uninstall Troubleshooting</a></h3>
 	<p>
 On Eclipse 3.1, you may need to reset the Java editor to be default for &quot;.java&quot; 
-again via: Preferences -&gt; General -&gt; Editors -&gt; File Associations </p>
+again via: <i>Preferences -&gt; General -&gt; Editors -&gt; File Associations
+</i> </p>
 	<p>
 On Eclipse 3.2, you may need to ensure that the &quot;Java Completions&quot; and &quot;Java 
 Types&quot; proposal categories are included in the default proposals via: 
-Preferences -&gt; Java -&gt; Editor -&gt; Content Assist -&gt; Work in Progress (<a href="#content-assist-duplication">see 
-screenshot</a>).</p>
+<i>Preferences -&gt; Java -&gt; Editor -&gt; Content Assist -&gt; Work in Progress</i> (<a href="#content-assist-duplication">see 
+screenshot</a>) <i>-&gt; Restore Defaults</i></p>
 	<hr>
 	<p>
 &nbsp;</p>
 
 
-<h3><a name="setup-linux-browser">Configuring Eclipse's Internal Browser on Linux</a></h3>
+<h3><a name="setup-linux-browser">Configuring Internal Browser on Linux</a></h3>
 	<p>Mylar Task Management features make user of the Internal Browser.&nbsp; 
 	These instructions have been tested on Fedora Core 4</p>
 	<ol>
@@ -238,25 +235,21 @@ screenshot</a>).</p>
 &nbsp;</p>
 
 
-<h3><a name="tasklist-blank">Why did my tasks disappear?</a>&nbsp;&nbsp;&nbsp; </h3>
-<p>Either because Mylar failed to <a href="#install-failure">install or update</a>, 
-or because there was a problem reading the task list.&nbsp; By default Mylar 
-keeps your task list in &lt;workspace&gt;/.mylar/tasklist.xml.&nbsp; If you move 
-workspaces, and have not changed the Mylar data directory via the Task List 
-preference page, the new location will be used when Eclipse restarts (hit 
-Restore Defaults on that page to copy tasks back to the default location).&nbsp; 
-If your tasks ever disappear please
-<a href="https://bugs.eclipse.org/bugs/enter_bug.cgi?product=Mylar">report this 
-as a critical bug</a>, and check the .mylar folder for a tasklist-backup.xml 
-file, which will contain the previous state task list.&nbsp; Make sure to copy 
-it somewhere it before adding any tasks or queries or restarting Eclipse because 
-it will get overwritten on any modification.</p>
-	<p>Your task list is <b>backed up by default</b> in the 
+<h3><a name="tasklist-backup">Task backup and restore</a>&nbsp;&nbsp;&nbsp; </h3>
+<p>The task list is <b>backed up by default</b> in the 
 	&lt;workspace&gt;/.mylar/backup directory, with rolling backups set according to 
 	the schedule in <i>Preferences -&gt; Mylar -&gt; Task List -&gt; Backup</i>.&nbsp; 
 	Use <i>File -&gt; Import -&gt; Mylar Task Data</i> to restore from one of the 
 	archive zips.</p>
-	<p>You can also back up your task list and context data manually or periodically use 
+<p>If the Task List is blank Mylar failed to <a href="#install-failure">install or update</a>, 
+or there was a problem reading the task list.&nbsp; By default Mylar 
+keeps your task list in <i>&lt;workspace&gt;/.mylar/tasklist.xml</i>.&nbsp; If 
+you move workspaces, and have not changed the Mylar data directory via the Task 
+List preference page, the new location will be used when Eclipse restarts (hit 
+Restore Defaults on that page to copy tasks back to the default location).&nbsp; 
+If your tasks disappear due to to a bug you can check the .mylar folder for a <i>tasklist-backup.xml</i> 
+file, which will contain the previously-saved list.&nbsp;</p>
+<p>You can also back up your task list and context data manually or periodically use 
 	<i>File -&gt; 
 	Import/Export -&gt; &nbsp;Mylar Task Data</i>.&nbsp; Note that when restoring 
 	an previous tasklist.xml file you should first close Eclipse.</p>
@@ -392,7 +385,7 @@ Mylar work with my JIRA repository?</a></h3>
 	Mylar filter is available for both the Problems and the Tasks views.&nbsp; </p>
 	<hr>
 <h3>&nbsp; </h3>
-	<h3><a name="subversion-clients">Does Mylar have any limitations with Subversion clients?</a></h3>
+	<h3><a name="subversion-clients">Subversion Limitations</a></h3>
 	<p>Mylar's Active Change Set integration, which allows you to work with 
 	changes per-task, support's the Eclipse SDK's CVS integration, and should 
 	work with any source repository client that extends Eclipse's Change Set 

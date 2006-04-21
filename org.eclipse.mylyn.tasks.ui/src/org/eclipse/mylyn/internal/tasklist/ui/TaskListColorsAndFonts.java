@@ -11,6 +11,8 @@
 
 package org.eclipse.mylar.internal.tasklist.ui;
 
+import java.lang.reflect.Field;
+
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -51,9 +53,19 @@ public class TaskListColorsAndFonts {
 		FontData[] defaultData = defaultFont.getFontData();
 		if (defaultData != null && defaultData.length == 1) {
 			FontData data = new FontData(defaultData[0].getName(), defaultData[0].getHeight(), defaultData[0].getStyle());
-			// Windowx XP only
-			data.data.lfStrikeOut = 1;
-			STRIKETHROUGH = new Font(Display.getCurrent(), data);
+			
+			// NOTE: Windowx XP only, for: data.data.lfStrikeOut = 1;
+			try {
+				Field dataField = data.getClass().getDeclaredField("data");
+				Object dataObject = dataField.get(data);
+				Class clazz = dataObject.getClass().getSuperclass();
+				Field strikeOutFiled = clazz.getDeclaredField("lfStrikeOut");
+				strikeOutFiled.set(dataObject, (byte)1);
+				STRIKETHROUGH = new Font(Display.getCurrent(), data);
+			} catch (Exception e) {
+				e.printStackTrace();
+				STRIKETHROUGH = defaultFont;
+			}
 		} else {
 			STRIKETHROUGH = defaultFont;
 		}
