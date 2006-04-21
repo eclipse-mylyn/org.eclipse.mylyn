@@ -164,7 +164,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 			viewer.getControl().setRedraw(true);
 			return true;
 		} catch (Throwable t) {
-			MylarStatusHandler.fail(t, "Could not install viewer fitler on: " + prefId, false);
+			MylarStatusHandler.fail(t, "Could not install viewer filter on: " + prefId, false);
 		}
 		return false;
 	}
