@@ -27,7 +27,7 @@ import junit.framework.TestCase;
  */
 public class TaskListBackupManagerTest extends TestCase {
 
-	Task task1;
+	private Task task1;
 
 	protected void setUp() throws Exception {
 		super.setUp();

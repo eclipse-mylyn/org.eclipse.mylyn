@@ -171,11 +171,10 @@ public class TaskListToolTipHandler {
 		return null;
 	}
 
-	private String formatLastRefreshTime(Date lastRefresh) {
+	private String formatLastRefreshTime(Date lastRefresh) {		
 		String toolTip = "Last synchronized: ";
+		if (lastRefresh == null) return toolTip += "unknown";		
 		Date timeNow = new Date();
-		if (lastRefresh == null)
-			lastRefresh = new Date();
 		long timeDifference = (timeNow.getTime() - lastRefresh.getTime()) / 60000;
 		long minutes = timeDifference % 60;
 		timeDifference /= 60;

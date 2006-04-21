@@ -16,6 +16,7 @@ package org.eclipse.mylar.tasklist.tests;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -331,8 +332,12 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testQueryExternalization() {
 		AbstractRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1", manager.getTaskList());
+		long time = 1234;
+		Date oldDate = new Date(time);	
+		query.setLastRefresh(oldDate);
 		assertEquals("repositoryUrl", query.getRepositoryUrl());
 		assertEquals("queryUrl", query.getQueryUrl());
+		assertEquals(time, query.getLastRefresh().getTime());
 		manager.getTaskList().addQuery(query);
 		manager.saveTaskList();
 		assertNotNull(manager.getTaskList());
@@ -344,6 +349,7 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(query.getQueryUrl(), readQuery.getQueryUrl());
 		assertEquals(query.getRepositoryUrl(), readQuery.getRepositoryUrl());
 		assertEquals("repositoryUrl", readQuery.getRepositoryUrl());
+		assertEquals(time, readQuery.getLastRefresh().getTime());
 	}
 
 	public void testArchiveRepositoryTaskExternalization() {
