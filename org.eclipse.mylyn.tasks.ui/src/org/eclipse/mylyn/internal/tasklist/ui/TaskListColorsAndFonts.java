@@ -14,6 +14,7 @@ package org.eclipse.mylar.internal.tasklist.ui;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -37,21 +38,38 @@ public class TaskListColorsAndFonts {
 
 	public static final Font ITALIC = JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT);
 
+	public static Font STRIKETHROUGH;
+	
 	public static final String THEME_COLOR_ID_TASKLIST_CATEGORY = "org.eclipse.mylar.tasklist.ui.colors.background.category";
 
 	public static final String THEME_COLOR_ID_TASK_OVERDUE = "org.eclipse.mylar.tasklist.ui.colors.foreground.overdue"; 
 
 	public static final String THEME_COLOR_ID_TASK_TODAY = "org.eclipse.mylar.tasklist.ui.colors.foreground.today"; 
 	
+	static {
+		Font defaultFont = JFaceResources.getFontRegistry().get(JFaceResources.DEFAULT_FONT);
+		FontData[] defaultData = defaultFont.getFontData();
+		if (defaultData != null && defaultData.length == 1) {
+			FontData data = new FontData(defaultData[0].getName(), defaultData[0].getHeight(), defaultData[0].getStyle());
+			// Windowx XP only
+			data.data.lfStrikeOut = 1;
+			STRIKETHROUGH = new Font(Display.getCurrent(), data);
+		} else {
+			STRIKETHROUGH = defaultFont;
+		}
+	} 
+    
 	/**
 	 * NOTE: disposal of JFaceResources fonts handled by registry.
 	 */
 	public static void dispose() {
+		if (STRIKETHROUGH != null && !STRIKETHROUGH.isDisposed()) {
+			STRIKETHROUGH.dispose();
+		}	
 		BACKGROUND_ARCHIVE.dispose();
 		COLOR_GRAY_LIGHT.dispose();
 		COLOR_TASK_COMPLETED.dispose();
 		COLOR_TASK_ACTIVE.dispose();
-//		COLOR_TASK_OVERDUE.dispose();
 		COLOR_HYPERLINK.dispose();
 	}
 
