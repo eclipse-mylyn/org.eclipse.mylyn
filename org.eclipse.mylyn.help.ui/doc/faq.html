@@ -251,9 +251,14 @@ as a critical bug</a>, and check the .mylar folder for a tasklist-backup.xml
 file, which will contain the previous state task list.&nbsp; Make sure to copy 
 it somewhere it before adding any tasks or queries or restarting Eclipse because 
 it will get overwritten on any modification.</p>
-	<p>If your workspace folder is not backed up it is a good idea to either 
-	backup the tasklist.xml file manually or periodically use File -&gt; 
-	Import/Export -&gt; &nbsp;Other -&gt; Mylar Task Data.&nbsp; Note that when restoring 
+	<p>Your task list is <b>backed up by default</b> in the 
+	&lt;workspace&gt;/.mylar/backup directory, with rolling backups set according to 
+	the schedule in <i>Preferences -&gt; Mylar -&gt; Task List -&gt; Backup</i>.&nbsp; 
+	Use <i>File -&gt; Import -&gt; Mylar Task Data</i> to restore from one of the 
+	archive zips.</p>
+	<p>You can also back up your task list and context data manually or periodically use 
+	<i>File -&gt; 
+	Import/Export -&gt; &nbsp;Mylar Task Data</i>.&nbsp; Note that when restoring 
 	an previous tasklist.xml file you should first close Eclipse.</p>
 	<p>
 	<img border="0" src="images/faq/tasklist-backup.gif" width="525" height="310"></p>

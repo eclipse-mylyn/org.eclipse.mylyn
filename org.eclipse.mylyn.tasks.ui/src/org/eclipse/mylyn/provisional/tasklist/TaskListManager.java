@@ -47,7 +47,7 @@ public class TaskListManager {
 	// TODO: get these two fields from preferences
 	private static final int START_DAY = Calendar.MONDAY;
 
-	private static final int START_HOUR = 9;
+	private static final int START_HOUR = 8;
 
 	private static final int NUM_WEEKS_PREVIOUS = -1;
 
@@ -582,6 +582,18 @@ public class TaskListManager {
 		return false;
 	}
 
+	public boolean isActiveToday(ITask task) {
+		Date reminder = task.getReminderDate();
+		if (reminder != null) {
+			Date now = new Date();
+			Calendar tomorrow = GregorianCalendar.getInstance();
+			MylarTaskListPlugin.getTaskListManager().setTomorrow(tomorrow);
+			return (reminder.compareTo(now) == 1 && reminder.compareTo(tomorrow.getTime()) == -1);
+		} else {
+			return false;
+		}
+	}
+	
 	/**
 	 * TODO: Need to migrate to use of this method for setting of reminders
 	 */

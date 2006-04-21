@@ -307,6 +307,26 @@
            label="Mylar"/>
      <colorDefinition
            categoryId="org.eclipse.mylar.tasklist.ui.presentation"
+           id="org.eclipse.mylar.tasklist.ui.colors.foreground.overdue"
+           isEditable="true"
+           label="Tasks Overdue"
+           value="200,10,30"> 
+         <description>
+            Text color for overdue tasks.
+         </description>
+     </colorDefinition>
+     <colorDefinition
+           categoryId="org.eclipse.mylar.tasklist.ui.presentation"
+           id="org.eclipse.mylar.tasklist.ui.colors.foreground.today"
+           isEditable="true"
+           label="Tasks Due Today"
+           value="225,90,0"> 
+         <description>
+            Text color for tasks due today.
+         </description>
+     </colorDefinition>
+     <colorDefinition
+           categoryId="org.eclipse.mylar.tasklist.ui.presentation"
            id="org.eclipse.mylar.tasklist.ui.colors.background.category"
            isEditable="true"
            label="Task List Category Background"

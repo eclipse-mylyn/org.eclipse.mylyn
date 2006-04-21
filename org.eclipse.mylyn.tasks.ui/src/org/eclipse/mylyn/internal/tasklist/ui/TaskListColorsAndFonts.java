@@ -29,7 +29,7 @@ public class TaskListColorsAndFonts {
 
 	public static final Color COLOR_TASK_ACTIVE = new Color(Display.getDefault(), 36, 22, 50);
 
-	public static final Color COLOR_TASK_OVERDUE = new Color(Display.getDefault(), 200, 10, 30);
+//	public static final Color COLOR_TASK_OVERDUE = new Color(Display.getDefault(), 200, 10, 30);
 
 	public static final Color COLOR_HYPERLINK = new Color(Display.getDefault(), 0, 0, 255);
 
@@ -37,6 +37,12 @@ public class TaskListColorsAndFonts {
 
 	public static final Font ITALIC = JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT);
 
+	public static final String THEME_COLOR_ID_TASKLIST_CATEGORY = "org.eclipse.mylar.tasklist.ui.colors.background.category";
+
+	public static final String THEME_COLOR_ID_TASK_OVERDUE = "org.eclipse.mylar.tasklist.ui.colors.foreground.overdue"; 
+
+	public static final String THEME_COLOR_ID_TASK_TODAY = "org.eclipse.mylar.tasklist.ui.colors.foreground.today"; 
+	
 	/**
 	 * NOTE: disposal of JFaceResources fonts handled by registry.
 	 */
@@ -45,10 +51,8 @@ public class TaskListColorsAndFonts {
 		COLOR_GRAY_LIGHT.dispose();
 		COLOR_TASK_COMPLETED.dispose();
 		COLOR_TASK_ACTIVE.dispose();
-		COLOR_TASK_OVERDUE.dispose();
+//		COLOR_TASK_OVERDUE.dispose();
 		COLOR_HYPERLINK.dispose();
 	}
-
-	public static final String THEME_COLOR_ID_TASKLIST_CATEGORY = "org.eclipse.mylar.tasklist.ui.colors.background.category"; 
 
 }

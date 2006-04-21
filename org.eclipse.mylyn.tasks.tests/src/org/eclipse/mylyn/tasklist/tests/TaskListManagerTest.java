@@ -15,6 +15,7 @@ package org.eclipse.mylar.tasklist.tests;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -69,6 +70,28 @@ public class TaskListManagerTest extends TestCase {
 		manager.resetTaskList();
 		MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskListAndContexts();
 		MylarTaskListPlugin.getRepositoryManager().removeRepository(repository);
+	}
+	
+	public void testIsActiveToday() {
+		ITask task = new Task("1", "task-1", true);
+		assertFalse(manager.isActiveToday(task));
+		
+		task.setReminderDate(new Date());
+		assertFalse(manager.isActiveToday(task));
+		
+		task.setReminded(true);
+		assertFalse(manager.isActiveToday(task));
+		task.setReminded(true);
+		
+		Calendar inAnHour = Calendar.getInstance();
+		inAnHour.set(Calendar.HOUR_OF_DAY, inAnHour.get(Calendar.HOUR_OF_DAY)+1);
+		inAnHour.getTime();
+		task.setReminderDate(inAnHour.getTime());
+		Calendar tomorrow = Calendar.getInstance();
+		manager.setTomorrow(tomorrow);
+		assertEquals(-1, inAnHour.compareTo(tomorrow));
+		
+		assertTrue(manager.isActiveToday(task)); 
 	}
 	
 	public void testLegacyTaskListReading() throws IOException {
