@@ -101,7 +101,7 @@ public class JavaUiBridge implements IMylarUiBridge {
 	public void restoreEditor(IMylarElement document) {
 		IResource resource = MylarIdePlugin.getDefault().getResourceForElement(document);
 		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		if (resource instanceof IFile) {
+		if (resource instanceof IFile && resource.exists()) {
 			try {
 				IDE.openEditor(activePage, (IFile) resource, false);
 			} catch (PartInitException e) {
