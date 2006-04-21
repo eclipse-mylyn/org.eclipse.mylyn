@@ -63,7 +63,7 @@ public class TaskListColorsAndFonts {
 				strikeOutFiled.set(dataObject, (byte)1);
 				STRIKETHROUGH = new Font(Display.getCurrent(), data);
 			} catch (Exception e) {
-				e.printStackTrace();
+				// Linux or other platform
 				STRIKETHROUGH = defaultFont;
 			}
 		} else {
