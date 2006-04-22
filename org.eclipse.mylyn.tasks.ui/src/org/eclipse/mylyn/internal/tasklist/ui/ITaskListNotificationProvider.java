@@ -13,9 +13,11 @@ package org.eclipse.mylar.internal.tasklist.ui;
 
 import java.util.Set;
 
-
+/**
+ * @author Rob Elves
+ */
 public interface ITaskListNotificationProvider {
 
-	Set<ITaskListNotification> getNotifications();
+	public Set<ITaskListNotification> getNotifications();
 	
 }
