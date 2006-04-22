@@ -44,7 +44,7 @@ public class InterestManipulatingEditorTracker extends AbstractEditorTracker {
 				String handle = MylarPlugin.getDefault().getStructureBridge(adapter).getHandleIdentifier(adapter);
 				element = MylarPlugin.getContextManager().getElement(handle);
 			}
-			if (element != null && !element.getInterest().isInteresting() && !part.equals(editors[i])) {
+			if (element != null && !element.getInterest().isInteresting() && !part.equals(editors[i]) && editors[i].getEditorInput().equals(part.getEditorInput())) {
 				page.closeEditor(editors[i], true);
 			}
 		}
@@ -71,7 +71,7 @@ public class InterestManipulatingEditorTracker extends AbstractEditorTracker {
 				}
 			}
 			if (element != null) {
-				MylarPlugin.getContextManager().manipulateInterestForNode(element, false, false, SOURCE_ID);
+				MylarPlugin.getContextManager().manipulateInterestForElement(element, false, false, SOURCE_ID);
 			}
 		}
 	}

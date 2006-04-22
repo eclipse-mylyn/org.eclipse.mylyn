@@ -850,7 +850,7 @@ public class MylarContextManager {
 	/**
 	 * @return	true if interest was manipulated successfully
 	 */
-	public boolean manipulateInterestForNode(IMylarElement element, boolean increment, boolean forceLandmark,
+	public boolean manipulateInterestForElement(IMylarElement element, boolean increment, boolean forceLandmark,
 			String sourceId) {
 		if (element == null) {
 			return false;
@@ -871,7 +871,7 @@ public class MylarContextManager {
 				for (String childHandle : bridge.getChildHandles(element.getHandleIdentifier())) {
 					IMylarElement childElement = getElement(childHandle);
 					if (childElement.getInterest().isInteresting() && !childElement.equals(element)) {
-						manipulateInterestForNode(childElement, increment, forceLandmark, sourceId);
+						manipulateInterestForElement(childElement, increment, forceLandmark, sourceId);
 					}
 				}
 			}

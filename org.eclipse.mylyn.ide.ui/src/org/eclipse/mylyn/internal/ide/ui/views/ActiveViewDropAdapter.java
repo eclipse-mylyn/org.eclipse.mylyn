@@ -40,7 +40,7 @@ public class ActiveViewDropAdapter extends ViewerDropAdapter {
 			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(firstElement);
 			String handle = bridge.getHandleIdentifier(firstElement);
 			IMylarElement node = MylarPlugin.getContextManager().getElement(handle);
-			boolean manipulated = MylarPlugin.getContextManager().manipulateInterestForNode(node, true, true,
+			boolean manipulated = MylarPlugin.getContextManager().manipulateInterestForElement(node, true, true,
 					ID_MANIPULATION);
 			if (!manipulated) {
 				UiUtil.displayInterestManipulationFailure();

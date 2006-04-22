@@ -75,7 +75,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 					node = MylarPlugin.getContextManager().getElement(handle);
 				}
 				if (node != null) {
-					boolean manipulated = MylarPlugin.getContextManager().manipulateInterestForNode(node, increment, false, SOURCE_ID);
+					boolean manipulated = MylarPlugin.getContextManager().manipulateInterestForElement(node, increment, false, SOURCE_ID);
 					if (!manipulated) {
 						UiUtil.displayInterestManipulationFailure();
 					}
@@ -87,7 +87,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 		} else {
 			IMylarElement node = MylarPlugin.getContextManager().getActiveElement();
 			if (node != null) {
-				boolean manipulated = MylarPlugin.getContextManager().manipulateInterestForNode(node, increment, false, SOURCE_ID);
+				boolean manipulated = MylarPlugin.getContextManager().manipulateInterestForElement(node, increment, false, SOURCE_ID);
 				if (!manipulated) {
 					UiUtil.displayInterestManipulationFailure();
 				}
