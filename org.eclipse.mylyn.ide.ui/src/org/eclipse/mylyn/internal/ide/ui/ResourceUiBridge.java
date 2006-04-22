@@ -25,6 +25,7 @@ import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.ui.IMylarUiBridge;
 import org.eclipse.ui.IEditorDescriptor;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
@@ -103,12 +104,18 @@ public class ResourceUiBridge implements IMylarUiBridge {
 		return Collections.emptyList();
 	}
 
-	public void refreshOutline(Object element, boolean updateLabels, boolean setSelection) {
-		// no outline to refresh
-
-	}
-
 	public Object getObjectForTextSelection(TextSelection selection, IEditorPart editor) {
 		return null;
+	}
+	
+	public IMylarElement getElement(IEditorInput input) {
+		Object adapter = input.getAdapter(IResource.class);
+		if (adapter instanceof IFile) {
+			IFile javaElement = (IFile)adapter;
+			String handle = MylarPlugin.getDefault().getStructureBridge(javaElement).getHandleIdentifier(javaElement);
+			return MylarPlugin.getContextManager().getElement(handle);
+		} else {
+			return null;
+		}
 	}
 }

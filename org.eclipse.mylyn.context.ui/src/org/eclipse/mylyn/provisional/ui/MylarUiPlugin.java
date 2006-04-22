@@ -46,6 +46,7 @@ import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -152,8 +153,11 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 		}
 
 		public void setContextCapturePaused(boolean paused) {
-			// TODO Auto-generated method stub
-
+			// ignore
+		}
+		
+		public IMylarElement getElement(IEditorInput input) {
+			return null;
 		}
 	};
 

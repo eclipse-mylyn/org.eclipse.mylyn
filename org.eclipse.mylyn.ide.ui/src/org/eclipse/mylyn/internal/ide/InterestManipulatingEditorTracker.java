@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.internal.ide;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.mylar.internal.ui.MylarUiPrefContstants;
 import org.eclipse.mylar.provisional.core.IMylarElement;
@@ -19,6 +20,10 @@ import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.ui.IMylarUiBridge;
 import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.IPreferenceConstants;
+import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Mik Kersten
@@ -27,14 +32,28 @@ public class InterestManipulatingEditorTracker extends AbstractEditorTracker {
 
 	public static final String SOURCE_ID = "org.eclipse.mylar.ide.editor.tracker.interest";
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void editorOpened(IEditorPart part) {
-
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		IEditorPart[] editors = page.getEditors();
+		for (int i = 0; i < editors.length; i++) {
+			IMylarElement element = null;
+			Object adapter = editors[i].getEditorInput().getAdapter(IResource.class);
+			if (adapter instanceof IFile) {
+				String handle = MylarPlugin.getDefault().getStructureBridge(adapter).getHandleIdentifier(adapter);
+				element = MylarPlugin.getContextManager().getElement(handle);
+			}
+			if (element != null && !element.getInterest().isInteresting() && !part.equals(editors[i])) {
+				page.closeEditor(editors[i], true);
+			}
+		}
 	}
 
 	@Override
 	public void editorClosed(IEditorPart editorPart) {
-		if (MylarUiPlugin.getPrefs().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)) {
+		if (MylarUiPlugin.getPrefs().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)
+			&& !Workbench.getInstance().getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN)) {
 			IMylarElement element = null;
 			IMylarUiBridge uiBridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
 			Object object = uiBridge.getObjectForTextSelection(null, editorPart);
@@ -51,7 +70,9 @@ public class InterestManipulatingEditorTracker extends AbstractEditorTracker {
 					element = MylarPlugin.getContextManager().getElement(resourceBridge.getHandleIdentifier(resource));
 				}
 			}
-			MylarPlugin.getContextManager().manipulateInterestForNode(element, false, false, SOURCE_ID);
+			if (element != null) {
+				MylarPlugin.getContextManager().manipulateInterestForNode(element, false, false, SOURCE_ID);
+			}
 		}
 	}
 

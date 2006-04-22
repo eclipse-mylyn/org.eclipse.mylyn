@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.ui.IMylarUiBridge;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 
 /**
@@ -54,4 +55,7 @@ public class TaskUiBridge implements IMylarUiBridge {
 		return null;
 	}
 
+	public IMylarElement getElement(IEditorInput input) {
+		return null;
+	}
 }

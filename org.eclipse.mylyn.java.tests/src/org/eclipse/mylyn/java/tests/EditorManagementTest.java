@@ -108,6 +108,35 @@ public class EditorManagementTest extends AbstractJavaContextTest {
 	}
 
 	@SuppressWarnings("deprecation")
+	public void testAutoCloseWithDecay() throws JavaModelException, InvocationTargetException, InterruptedException {
+		MylarIdePlugin.getDefault().getEditorManager().closeAllEditors();
+		assertEquals(0, page.getEditors().length);
+		IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridge(JavaStructureBridge.CONTENT_TYPE);
+		IMethod m1 = type1.createMethod("void m111() { }", null, true, null);
+		monitor.selectionChanged(view, new StructuredSelection(m1));
+		IMylarElement element = MylarPlugin.getContextManager().getElement(type1.getHandleIdentifier());
+		bridge.open(element);
+
+		IType typeA = project.createType(p1, "TypeA.java", "public class TypeA{ }");
+		monitor.selectionChanged(view, new StructuredSelection(typeA));
+		IMylarElement elementA = MylarPlugin.getContextManager().getElement(typeA.getHandleIdentifier());
+		bridge.open(elementA);
+		
+		assertEquals(2, page.getEditors().length);
+		for (int i = 0; i < 1 / (scaling.getDecay().getValue()) * 3; i++) {
+			MylarPlugin.getContextManager().handleInteractionEvent(mockSelection());
+		}
+		assertFalse(element.getInterest().isInteresting());
+		assertFalse(elementA.getInterest().isInteresting());
+		IType typeB = project.createType(p1, "TypeB.java", "public class TypeB{ }");
+		monitor.selectionChanged(view, new StructuredSelection(typeB));
+		IMylarElement elementB = MylarPlugin.getContextManager().getElement(typeB.getHandleIdentifier());
+		bridge.open(elementB);
+		monitor.selectionChanged(view, new StructuredSelection(typeB));
+		assertEquals(1, page.getEditors().length);
+	}
+	
+	@SuppressWarnings("deprecation")
 	public void testAutoClose() throws JavaModelException, InvocationTargetException, InterruptedException {
 		MylarIdePlugin.getDefault().getEditorManager().closeAllEditors();
 		assertEquals(0, page.getEditors().length);

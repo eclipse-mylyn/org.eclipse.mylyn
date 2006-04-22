@@ -34,7 +34,9 @@ import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.internal.ui.actions.ApplyMylarToOutlineAction;
 import org.eclipse.mylar.provisional.core.IMylarElement;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.ui.IMylarUiBridge;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
@@ -136,6 +138,17 @@ public class JavaUiBridge implements IMylarUiBridge {
 		return editorPart instanceof JavaEditor;
 	}
 
+	public IMylarElement getElement(IEditorInput input) {
+		Object adapter = input.getAdapter(IJavaElement.class);
+		if (adapter instanceof IJavaElement) {
+			IJavaElement javaElement = (IJavaElement)adapter;
+			String handle = MylarPlugin.getDefault().getStructureBridge(javaElement).getHandleIdentifier(javaElement);
+			return MylarPlugin.getContextManager().getElement(handle);
+		} else {
+			return null;
+		}
+	}
+	
 	public List<TreeViewer> getContentOutlineViewers(IEditorPart editorPart) {
 		if (editorPart == null || javaOutlineField == null)
 			return null;

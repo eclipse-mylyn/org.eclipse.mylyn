@@ -42,6 +42,7 @@ import org.eclipse.pde.internal.ui.editor.PDESourcePage;
 import org.eclipse.pde.internal.ui.editor.SourceOutlinePage;
 import org.eclipse.pde.internal.ui.editor.plugin.ManifestEditor;
 import org.eclipse.pde.internal.ui.editor.plugin.PluginInputContext;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
@@ -312,5 +313,9 @@ public class PdeUiBridge implements IMylarUiBridge {
 	public void setContextCapturePaused(boolean paused) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	public IMylarElement getElement(IEditorInput input) {
+		return null;
 	}
 }

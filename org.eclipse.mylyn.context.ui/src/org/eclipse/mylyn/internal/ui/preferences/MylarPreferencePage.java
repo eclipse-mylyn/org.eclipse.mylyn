@@ -59,6 +59,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.dialogs.PreferenceLinkArea;
+import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 /**
@@ -722,7 +723,7 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 		group.setText("Editor Management");
 		
 		manageEditorsButton = new Button(group, SWT.CHECK);
-		manageEditorsButton.setText("Enable auto editor opening/closing with context activation. ");
+		manageEditorsButton.setText("Enable automatic editor opening/closing with context. ");
 		manageEditorsButton.setSelection(getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS));
 
 		Composite numComposite = new Composite(group, SWT.NULL);
@@ -734,8 +735,9 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 			autoOpenEditorsNum.setEmptyStringAllowed(false);
 		}
 		
+		String prefName = WorkbenchMessages.WorkbenchPreference_reuseEditors;
 		if (getContainer() instanceof IWorkbenchPreferenceContainer) {
-			String message = "See <a>''{0}''</a> for the workbench max open editors setting.";
+			String message = "\"" + prefName + "\" should be off, see <a>''{0}''</a>";
 			new PreferenceLinkArea(group, SWT.NONE,
 					"org.eclipse.ui.preferencePages.Editors", message,
 					(IWorkbenchPreferenceContainer) getContainer(), null);
