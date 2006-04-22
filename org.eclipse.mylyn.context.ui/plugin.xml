@@ -60,7 +60,7 @@
               enablesFor="1"
               icon="icons/etool16/context-attach.gif"
               id="org.eclipse.mylar.ui.context.repository.attach"
-              label="Attach Context"
+              label="Attach Context (Experimental)"
               menubarPath="context">
            <enablement>
               <or>
@@ -74,7 +74,7 @@
               enablesFor="1"
               icon="icons/etool16/context-retrieve.gif"
               id="org.eclipse.mylar.ui.context.repository.retrieve"
-              label="Retrieve Context"
+              label="Retrieve Context (Experimental)"
               menubarPath="context">
            <enablement>
               <or>
@@ -276,7 +276,7 @@
            enablesFor="*"
            icon="icons/eview16/mylar-apply-activity.gif"
            id="org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction"
-           label="Apply Mylar"
+           label="Apply Mylar (Experimental)"
            style="toggle"
            toolbarPath="context"
            tooltip="Apply Mylar (Experimental)"> 
