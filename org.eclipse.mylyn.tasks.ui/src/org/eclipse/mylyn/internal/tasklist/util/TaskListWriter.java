@@ -16,8 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -117,11 +116,10 @@ public class TaskListWriter {
 				MylarStatusHandler.log("Did not externalize: " + query, this);
 			}
 		}
-		Collection<ITask> allTasks = Collections.synchronizedCollection(taskList.getAllTasks());
-		synchronized (allTasks) {
-			for (ITask task : allTasks) {
-				createTaskElement(doc, root, task);
-			}
+//		Collection<ITask> allTasks = Collections.synchronizedCollection(taskList.getAllTasks());
+//		synchronized (allTasks) {
+		for (ITask task : new ArrayList<ITask>(taskList.getAllTasks())) {
+			createTaskElement(doc, root, task);
 		}
 
 		doc.appendChild(root);

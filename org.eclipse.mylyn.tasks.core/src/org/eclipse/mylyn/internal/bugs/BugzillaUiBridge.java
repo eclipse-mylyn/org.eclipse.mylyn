@@ -29,6 +29,7 @@ import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.ui.IMylarUiBridge;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
@@ -124,24 +125,14 @@ public class BugzillaUiBridge implements IMylarUiBridge {
 	}
 
 	public void restoreEditor(IMylarElement document) {
-		// TODO Auto-generated method stub
-
+		// ignore
 	}
 
 	public void setContextCapturePaused(boolean paused) {
-		// TODO Auto-generated method stub
-
+		// ignore
 	}
 
-	// public void refreshOutline(Object element, boolean updateLabels, boolean
-	// setSelection) {
-	// IEditorPart editorPart =
-	// PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-	// TreeViewer treeViewer = getOutlineTreeViewer(editorPart);
-	// if (treeViewer != null) {
-	// treeViewer.refresh(true);
-	//
-	// treeViewer.expandAll();
-	// }
-	// }
+	public IMylarElement getElement(IEditorInput input) {
+		return null;
+	}
 }
