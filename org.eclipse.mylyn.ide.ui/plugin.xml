@@ -192,7 +192,7 @@
 	  		</action> 
 	    </objectContribution>
 	</extension>
-   <!--
+	<!--
    <extension
          point="org.eclipse.ui.decorators">
       <decorator
