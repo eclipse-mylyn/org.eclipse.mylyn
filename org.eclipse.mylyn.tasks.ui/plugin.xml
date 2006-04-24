@@ -320,7 +320,7 @@
            id="org.eclipse.mylar.tasklist.ui.colors.foreground.today"
            isEditable="true"
            label="Tasks Due Today"
-           value="225,90,0"> 
+           value="0,0,255">  
          <description>
             Text color for tasks due today.
          </description>
