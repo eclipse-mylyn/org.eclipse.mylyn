@@ -153,14 +153,18 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 		
 		try {
 			viewer.getControl().setRedraw(false);
+			viewer.addFilter(interestFilter);
 			previousFilters.addAll(Arrays.asList(viewer.getFilters()));
 			List<Class> excludedFilters = getPreservedFilters();
 			for (ViewerFilter filter : previousFilters) {
 				if (!excludedFilters.contains(filter.getClass())) {
-					viewer.removeFilter(filter);
+					try {
+						viewer.removeFilter(filter);
+					} catch (Throwable t) {
+						MylarStatusHandler.fail(t, "Failed to remove filter: " + filter, false);
+					}
 				}
 			}
-			viewer.addFilter(interestFilter);
 			viewer.getControl().setRedraw(true);
 			return true;
 		} catch (Throwable t) {
@@ -179,7 +183,11 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
         List<Class> excludedFilters = getPreservedFilters();
         for (ViewerFilter filter : previousFilters) {
         	if (!excludedFilters.contains(filter.getClass())) {
-        		viewer.addFilter(filter);
+        		try {
+        			viewer.addFilter(filter);
+				} catch (Throwable t) {
+					MylarStatusHandler.fail(t, "Failed to remove filter: " + filter, false);
+				}
         	}
         }
 		previousFilters.clear();
