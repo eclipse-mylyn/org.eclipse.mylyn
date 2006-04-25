@@ -351,7 +351,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 
 	@Override
 	public void endDocument() throws SAXException {
-
+  
 		for (String product : components.keySet()) {
 			List<String> componentURIs = components.get(product);
 			for (String uri : componentURIs) {
@@ -359,9 +359,8 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 				if (realName != null) {
 					configuration.addComponent(product, realName);
 				}
-			}
-
-		}
+			} 
+		} 
 
 		for (String product : versions.keySet()) {
 			List<String> versionURIs = versions.get(product);

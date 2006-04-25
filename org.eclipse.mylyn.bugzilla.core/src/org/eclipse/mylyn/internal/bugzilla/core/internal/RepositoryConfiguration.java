@@ -88,7 +88,7 @@ public class RepositoryConfiguration {
 	 */
 	public List<String> getProducts() {
 		ArrayList<String> productList = new ArrayList<String>(products.keySet());
-		Collections.sort(productList);
+		Collections.sort(productList); 
 		return productList;
 	}
 
