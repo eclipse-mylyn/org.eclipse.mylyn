@@ -480,7 +480,7 @@ public class BugzillaRepositoryUtil {
 		monitor.worked(1);
 
 		
-		prefs.setValue(IBugzillaConstants.VALUES_COMPONENT + PREF_DELIM_REPOSITORY + repositoryUrl+PREF_DELIM_REPOSITORY,
+		prefs.setValue(IBugzillaConstants.VALUES_COMPONENT + PREF_DELIM_REPOSITORY + repositoryUrl,
 				queryOptionsToString(config.getComponents()));
 		monitor.worked(1);
 
@@ -497,11 +497,11 @@ public class BugzillaRepositoryUtil {
 					queryOptionsToString(config.getComponents(product)));
 			monitor.worked(1);
 
-			prefs.setValue(IBugzillaConstants.VALUES_VERSION + PREF_DELIM_REPOSITORY + repositoryUrl,
+			prefs.setValue(IBugzillaConstants.VALUES_VERSION + PREF_DELIM_REPOSITORY + repositoryUrl+PREF_DELIM_REPOSITORY+product,
 					queryOptionsToString(config.getVersions(product)));
 			monitor.worked(1);
 			
-			prefs.setValue(IBugzillaConstants.VALUES_TARGET + PREF_DELIM_REPOSITORY + repositoryUrl,
+			prefs.setValue(IBugzillaConstants.VALUES_TARGET + PREF_DELIM_REPOSITORY + repositoryUrl+PREF_DELIM_REPOSITORY+product,
 					queryOptionsToString(config.getTargetMilestones(product)));
 			monitor.worked(1);
 		}
