@@ -19,6 +19,7 @@
 	<p><b>Extending Mylar</b></p>
 	<ul>
 		<li><a href="#extending-overview">Extensibility Overview</a></li>
+		<li><a href="#repository-requirements">Task repository requirements</a></li>
 	</ul>
 <br>&nbsp;<hr>
 	<h3><a name="contributing-intro">Introduction</a></h3>
@@ -193,7 +194,6 @@ and leave the password blank.</li>
 	<p>&nbsp;</p>
 	<hr>
 <h3>&nbsp;</h3>
-	<p>&nbsp;</p>
 <h3><a name="extending-overview">Extensibility Overview</a></h3>
 <p>Following the Eclipse conventions, Mylar will not make any API guarantees 
 until the 1.0 release.&nbsp; However, a driving goal of the Mylar project is to 
@@ -203,5 +203,40 @@ loosely coupled by preliminary extension points and APIs, and these will be
 stabilizing between the 0.5 and 1.0 releases.&nbsp; We strongly recommend that 
 anyone interest in extending Mylar email <a href="mailto:mylar-dev@eclipse.org">
 mylar-dev@eclipse.org</a> regarding the status of Mylar extensibility.</p>
+	<p>&nbsp;</p>
+<h3><a name="repository-requirements">Task Repository Requirements</a></h3>
+<p>Mylar can be extended to any task/bug/issue/story repository or tracker by 
+creating a Repository Connector that links Mylar's task management facilities 
+with the repository.&nbsp; Connection to the task repository is handled by the 
+connector (e.g. via HTTP for the Bugzilla Connector, via SOAP for the JIRA 
+Connector).&nbsp; The following are required to support task list integration:</p>
+	<ul>
+		<li>Tasks must be uniquely identifiable by a per-repository integer or 
+		string handle (e.g.&nbsp; repository:
+		<a href="https://bugs.eclipse.org/bugs,%20id%20138144">
+		https://bugs.eclipse.org/bugs, id 138144</a>)</li>
+		<li>Mechanism for executing a string-based query and returning task IDs 
+		(e.g. submit query via SOAP, retrieve matching task IDs)</li>
+		<li>Mechanism for accessing all of the task attributes (e.g. 
+		description, priority, comment thread)</li>
+	</ul>
+	<p>The following are optional</p>
+	<ul>
+		<li>Notification of changes (e.g. RSS-based notification of an update 
+		made via that web UI)</li>
+		<li>Retrieving a user's saved queries (e.g. searches or filters saved 
+		via the web UI)</li>
+	</ul>
+	<p>The following additional mechanisms enable task authoring:</p>
+	<ul>
+		<li>Retrieving all of the operations possible on a task given login 
+		credentials (e.g. ability to reassign, change priority)</li>
+		<li>Accessing all of the repository attributes (e.g. lists of products, 
+		components, versions)</li>
+		<li>Setting any of the task's attributes (e.g. changing components, 
+		reassigning)</li>
+		<li>Adding and retrieving attachments (e.g. adding screenshots)</li>
+	</ul>
+<p>&nbsp;</p>
 <p>&nbsp;</p>
 </body></html>
