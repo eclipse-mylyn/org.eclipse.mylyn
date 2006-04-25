@@ -35,6 +35,9 @@ public class HtmlTag {
 
 	/** tag's base url */
 	private URL baseUrl;
+	
+	/** tag is self terminated */
+	private boolean selfTerminating;
 
 	/**
 	 * Basic constructor. The tag is uninitialized.
@@ -244,6 +247,9 @@ public class HtmlTag {
 				sb.append('"');
 			}
 		}
+		if(selfTerminating) {
+			sb.append('/');
+		}
 		sb.append('>');
 
 		return sb.toString();
@@ -343,5 +349,14 @@ public class HtmlTag {
 		tags.put(new String("U"), Tag.U);
 		tags.put(new String("UL"), Tag.UL);
 		tags.put(new String("VAR"), Tag.VAR);
+	}
+	
+	public void setSelfTerminating(boolean terminating) {
+		this.selfTerminating = terminating;
+		
+	}
+	
+	public boolean isSelfTerminating() {
+		return selfTerminating;
 	}
 }

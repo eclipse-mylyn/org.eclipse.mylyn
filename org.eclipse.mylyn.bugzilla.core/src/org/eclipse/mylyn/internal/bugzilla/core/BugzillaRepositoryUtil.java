@@ -26,7 +26,6 @@ import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -44,7 +43,6 @@ import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -55,7 +53,8 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServe
 import org.eclipse.mylar.internal.bugzilla.core.internal.BugParser;
 import org.eclipse.mylar.internal.bugzilla.core.internal.NewBugParser;
 import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile;
-import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaQueryPageParser;
+import org.eclipse.mylar.internal.bugzilla.core.internal.RepositoryConfiguration;
+import org.eclipse.mylar.internal.bugzilla.core.internal.ServerConfigurationFactory;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
@@ -211,54 +210,16 @@ public class BugzillaRepositoryUtil {
 	 *             LoginException Exception
 	 */
 	public static List<String> getProductList(TaskRepository repository) throws IOException, LoginException, Exception {
-		// BufferedReader in = null;
-		// try {
-		// repository =
-		// MylarTaskListPlugin.getRepositoryManager().getRepository(
-		// BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
-		// String urlText = "";
-		// if (repository.hasCredentials()) {
-		// urlText += POST_ARGS_LOGIN_FIRST
-		// + URLEncoder.encode(repository.getUserName(),
-		// BugzillaPlugin.ENCODING_UTF_8)
-		// + POST_ARGS_PASSWORD
-		// + URLEncoder.encode(repository.getPassword(),
-		// BugzillaPlugin.ENCODING_UTF_8);
-		// }
-		//
-		// URL url = new URL(repository.getUrl() + "/enter_bug.cgi" + urlText);
-		//
-		// URLConnection cntx =
-		// BugzillaPlugin.getDefault().getUrlConnection(url);
-		// if (cntx != null) {
-		// InputStream input = cntx.getInputStream();
-		// if (input != null) {
-		// in = new BufferedReader(new InputStreamReader(input));
-		//
-		//					
-		//					
-		// return new ProductParser(in).getProducts(repository);
-		// }
-		// }
 
-		BugzillaQueryPageParser parser = new BugzillaQueryPageParser(repository, new NullProgressMonitor());
-		if (!parser.wasSuccessful()) {
-			throw new RuntimeException("Couldn't get products");
-		} else {
-			return Arrays.asList(parser.getProductValues());
-		}
+		return BugzillaPlugin.getDefault().getProductConfiguration(repository.getUrl()).getProducts();
 
-		// return null;
-		// } finally {
-		// try {
-		// if (in != null)
-		// in.close();
-		// } catch (IOException e) {
-		// BugzillaPlugin.log(new Status(IStatus.ERROR,
-		// IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
-		// "Problem closing the stream", e));
-		// }
-		// }
+//		BugzillaQueryPageParser parser = new BugzillaQueryPageParser(repository, new NullProgressMonitor());
+//		if (!parser.wasSuccessful()) {
+//			throw new RuntimeException("Couldn't get products");
+//		} else {
+//			return Arrays.asList(parser.getProductValues());
+//		}
+
 	}
 
 	/**
@@ -346,10 +307,10 @@ public class BugzillaRepositoryUtil {
 		Attribute a = new Attribute("Severity");
 		a.setParameterName("bug_severity");
 		// get optionValues from ProductConfiguration
-		String[] optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getSeverities();
+		List<String> optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getSeverities();
 		// add option values from ProductConfiguration to Attribute optionValues
-		for (int i = 0; i < optionValues.length; i++) {
-			a.addOptionValue(optionValues[i], optionValues[i]);
+		for (String option: optionValues) {
+			a.addOptionValue(option, option);
 		}
 		// add Attribute to model
 		attributes.put("severites", a);
@@ -358,8 +319,8 @@ public class BugzillaRepositoryUtil {
 		a = new Attribute("OS");
 		a.setParameterName("op_sys");
 		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getOSs();
-		for (int i = 0; i < optionValues.length; i++) {
-			a.addOptionValue(optionValues[i], optionValues[i]);
+		for (String option: optionValues) {
+			a.addOptionValue(option, option);
 		}
 		attributes.put("OSs", a);
 
@@ -367,8 +328,8 @@ public class BugzillaRepositoryUtil {
 		a = new Attribute("Platform");
 		a.setParameterName("rep_platform");
 		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getPlatforms();
-		for (int i = 0; i < optionValues.length; i++) {
-			a.addOptionValue(optionValues[i], optionValues[i]);
+		for (String option: optionValues) {
+			a.addOptionValue(option, option);
 		}
 		attributes.put("platforms", a);
 
@@ -376,8 +337,8 @@ public class BugzillaRepositoryUtil {
 		a = new Attribute("Version");
 		a.setParameterName("version");
 		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getVersions(model.getProduct());
-		for (int i = 0; i < optionValues.length; i++) {
-			a.addOptionValue(optionValues[i], optionValues[i]);
+		for (String option: optionValues) {
+			a.addOptionValue(option, option);
 		}
 		attributes.put("versions", a);
 
@@ -385,8 +346,8 @@ public class BugzillaRepositoryUtil {
 		a = new Attribute("Component");
 		a.setParameterName("component");
 		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getComponents(model.getProduct());
-		for (int i = 0; i < optionValues.length; i++) {
-			a.addOptionValue(optionValues[i], optionValues[i]);
+		for (String option: optionValues) {
+			a.addOptionValue(option, option);
 		}
 		attributes.put("components", a);
 
@@ -394,8 +355,8 @@ public class BugzillaRepositoryUtil {
 		a = new Attribute("Priority");
 		a.setParameterName("bug_severity");
 		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getPriorities();
-		for (int i = 0; i < optionValues.length; i++) {
-			a.addOptionValue(optionValues[i], optionValues[i]);
+		for (String option: optionValues) {
+			a.addOptionValue(option, option);
 		}
 
 		// set NBM Attributes (after all Attributes have been created, and added
@@ -425,16 +386,14 @@ public class BugzillaRepositoryUtil {
 		return url;
 	}
 
-	static String queryOptionsToString(String[] array) {
-		// make a new string buffer and go through each element in the array
+	static String queryOptionsToString(List<String> array) {
+		
 		StringBuffer buffer = new StringBuffer();
-		for (int i = 0; i < array.length; i++) {
-			// append the new value to the end and add a '!' as a delimiter
-			buffer.append(array[i]);
+		for (String string : array) {
+			buffer.append(string);
 			buffer.append("!");
 		}
-
-		// return the buffer converted to a string
+		
 		return buffer.toString();
 	}
 
@@ -478,56 +437,77 @@ public class BugzillaRepositoryUtil {
 			IOException {
 
 		String repositoryUrl = repository.getUrl();
-		BugzillaQueryPageParser parser = new BugzillaQueryPageParser(repository, monitor);
-		if (!parser.wasSuccessful())
-			return;
+//		BugzillaQueryPageParser parser = new BugzillaQueryPageParser(repository, monitor);
+//		if (!parser.wasSuccessful())
+//			return;
+		
+		RepositoryConfiguration config = ServerConfigurationFactory.getInstance().getConfiguration(
+				repositoryUrl);
 
 		// get the preferences store so that we can change the data in it
 		IPreferenceStore prefs = BugzillaPlugin.getDefault().getPreferenceStore();
 
 		prefs.setValue(IBugzillaConstants.VALUES_STATUS + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(parser.getStatusValues()));
+				queryOptionsToString(config.getStatusValues()));
 		monitor.worked(1);
 
 		prefs.setValue(IBugzillaConstants.VALUSE_STATUS_PRESELECTED + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(parser.getPreselectedStatusValues()));
+				queryOptionsToString(config.getOpenStatusValues()));
 		monitor.worked(1);
 
 		prefs.setValue(IBugzillaConstants.VALUES_RESOLUTION + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(parser.getResolutionValues()));
+				queryOptionsToString(config.getResolutions()));
 		monitor.worked(1);
 
 		prefs.setValue(IBugzillaConstants.VALUES_SEVERITY + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(parser.getSeverityValues()));
+				queryOptionsToString(config.getSeverities()));
 		monitor.worked(1);
 
 		prefs.setValue(IBugzillaConstants.VALUES_PRIORITY + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(parser.getPriorityValues()));
+				queryOptionsToString(config.getPriorities()));
 		monitor.worked(1);
 
 		prefs.setValue(IBugzillaConstants.VALUES_HARDWARE + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(parser.getHardwareValues()));
+				queryOptionsToString(config.getPlatforms()));
 		monitor.worked(1);
 
 		prefs.setValue(IBugzillaConstants.VALUES_OS + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(parser.getOSValues()));
+				queryOptionsToString(config.getOSs()));
 		monitor.worked(1);
 
 		prefs.setValue(IBugzillaConstants.VALUES_PRODUCT + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(parser.getProductValues()));
+				queryOptionsToString(config.getProducts()));
 		monitor.worked(1);
 
-		prefs.setValue(IBugzillaConstants.VALUES_COMPONENT + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(parser.getComponentValues()));
+		
+		prefs.setValue(IBugzillaConstants.VALUES_COMPONENT + PREF_DELIM_REPOSITORY + repositoryUrl+PREF_DELIM_REPOSITORY,
+				queryOptionsToString(config.getComponents()));
 		monitor.worked(1);
 
 		prefs.setValue(IBugzillaConstants.VALUES_VERSION + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(parser.getVersionValues()));
+				queryOptionsToString(config.getVersions()));
 		monitor.worked(1);
-
+		
 		prefs.setValue(IBugzillaConstants.VALUES_TARGET + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(parser.getTargetValues()));
+				queryOptionsToString(config.getTargetMilestones()));
 		monitor.worked(1);
+		
+		for (String product: config.getProducts()) {
+			prefs.setValue(IBugzillaConstants.VALUES_COMPONENT + PREF_DELIM_REPOSITORY + repositoryUrl+PREF_DELIM_REPOSITORY+product,
+					queryOptionsToString(config.getComponents(product)));
+			monitor.worked(1);
+
+			prefs.setValue(IBugzillaConstants.VALUES_VERSION + PREF_DELIM_REPOSITORY + repositoryUrl,
+					queryOptionsToString(config.getVersions(product)));
+			monitor.worked(1);
+			
+			prefs.setValue(IBugzillaConstants.VALUES_TARGET + PREF_DELIM_REPOSITORY + repositoryUrl,
+					queryOptionsToString(config.getTargetMilestones(product)));
+			monitor.worked(1);
+		}
+		
+
+		
 	}
 
 	public static boolean downloadAttachment(TaskRepository repository, int id, File destinationFile, boolean overwrite)

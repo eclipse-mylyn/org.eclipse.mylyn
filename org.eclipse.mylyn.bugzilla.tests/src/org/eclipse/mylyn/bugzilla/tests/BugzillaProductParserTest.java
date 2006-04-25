@@ -78,9 +78,9 @@ public class BugzillaProductParserTest extends TestCase {
 				IBugzillaConstants.BugzillaServerVersion.SERVER_220.toString());
 
 		List<String> productList = BugzillaRepositoryUtil.getProductList(repository);
-		Iterator<String> itr = productList.iterator();
-		assertTrue(itr.hasNext());
-		assertEquals("TestProduct", "TestProduct", itr.next());
+		assertEquals(2, productList.size());
+		assertTrue(productList.contains("TestProduct"));
+		assertTrue(productList.contains("Widget"));	
 
 	}
 
@@ -90,20 +90,21 @@ public class BugzillaProductParserTest extends TestCase {
 				IBugzillaConstants.BugzillaServerVersion.SERVER_218.toString());
 
 		List<String> productList = BugzillaRepositoryUtil.getProductList(repository);
-		Iterator<String> itr = productList.iterator();
-		assertTrue(itr.hasNext());
-		assertEquals("TestProduct", "TestProduct", itr.next());
+		assertEquals(1, productList.size());
+		assertTrue(productList.contains("TestProduct"));
+
 	}
-
-	public void test216Products() throws Exception {
-
-		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_216_URL,
-				IBugzillaConstants.BugzillaServerVersion.SERVER_216.toString());
-
-		List<String> productList = BugzillaRepositoryUtil.getProductList(repository);
-		Iterator<String> itr = productList.iterator();
-		assertTrue(itr.hasNext());
-		assertEquals("TestProduct", "TestProduct", itr.next());
-	}
+	
+//  No longer supporting 216
+//	public void test216Products() throws Exception {
+//
+//		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_216_URL,
+//				IBugzillaConstants.BugzillaServerVersion.SERVER_216.toString());
+//
+//		List<String> productList = BugzillaRepositoryUtil.getProductList(repository);
+//		Iterator<String> itr = productList.iterator();
+//		assertTrue(itr.hasNext());
+//		assertEquals("TestProduct", "TestProduct", itr.next());
+//	}
 
 }

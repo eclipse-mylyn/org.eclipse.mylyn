@@ -223,12 +223,17 @@ public class HtmlStreamTokenizer {
 			}
 			String attributeName = s.substring(start, i).toLowerCase();
 
+			if(attributeName.equals("/")) {
+				tag.setSelfTerminating(true);
+				continue;
+			}
+			
 			for (; i < s.length() && Character.isWhitespace(s.charAt(i)); i++) {
 				// just move forward
 			}
 			if (i == s.length() || s.charAt(i) != '=') {
-				// no attribute value
-				tag.setAttribute(attributeName, "");
+				// no attribute value				
+				tag.setAttribute(attributeName, "");				
 				continue;
 			}
 
@@ -450,16 +455,24 @@ public class HtmlStreamTokenizer {
 			}
 			if (value != null) {
 				if (type == TAG) {
-					sb.append('<');
+					// sb.append('<');
 				} else if (type == COMMENT) {
-					sb.append("<!");
+					sb.append("<!--");
 				}
 				sb.append(value);
 				if (type == TAG) {
-					sb.append('>');
+					// if(value instanceof HtmlTag) {
+					// HtmlTag htmlTag = (HtmlTag)value;
+					// if(htmlTag.getTagName().startsWith("?xml")) {
+					// sb.append("?>");
+					// }
+					// } else {
+					// sb.append('>');
+
 				} else if (type == COMMENT) {
 					sb.append("-->");
 				}
+
 			}
 			return sb.toString();
 		}
@@ -501,7 +514,7 @@ public class HtmlStreamTokenizer {
 	/*
 	 * Based on ISO 8879.
 	 * 
-	 * Portions © International Organization for Standardization 1986 Permission
+	 * Portions (c) International Organization for Standardization 1986 Permission
 	 * to copy in any form is granted for use with conforming SGML systems and
 	 * applications as defined in ISO 8879, provided this notice is included in
 	 * all copies.

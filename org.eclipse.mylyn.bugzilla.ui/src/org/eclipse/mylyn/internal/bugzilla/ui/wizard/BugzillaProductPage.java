@@ -225,11 +225,12 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 		try {
 			if (!model.hasParsedAttributes() || !prevProduct.equals(model.getProduct())) {
 				String serverUrl = repository.getUrl();
-				if (model.isConnected()) {
-					BugzillaRepositoryUtil.setupNewBugAttributes(serverUrl, model, false);
-				} else {
+//				if (model.isConnected()) {
+//					BugzillaRepositoryUtil.setupNewBugAttributes(serverUrl, model, false);
+//				} else {
+				
 					BugzillaRepositoryUtil.setupProdConfigAttributes(serverUrl, model);
-				}
+//				}
 				model.setParsedAttributesStatus(true);
 				if (prevProduct == null) {
 					bugWizard.setAttributePage(new WizardAttributesPage(workbench));
