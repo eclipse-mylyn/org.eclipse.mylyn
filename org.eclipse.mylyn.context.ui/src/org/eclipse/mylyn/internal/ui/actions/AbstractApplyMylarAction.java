@@ -153,7 +153,6 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 		
 		try {
 			viewer.getControl().setRedraw(false);
-			viewer.addFilter(interestFilter);
 			previousFilters.addAll(Arrays.asList(viewer.getFilters()));
 			List<Class> excludedFilters = getPreservedFilters();
 			for (ViewerFilter filter : previousFilters) {
@@ -165,6 +164,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 					}
 				}
 			}
+			viewer.addFilter(interestFilter);
 			viewer.getControl().setRedraw(true);
 			return true;
 		} catch (Throwable t) {
