@@ -44,7 +44,8 @@ public class InterestManipulatingEditorTracker extends AbstractEditorTracker {
 				String handle = MylarPlugin.getDefault().getStructureBridge(adapter).getHandleIdentifier(adapter);
 				element = MylarPlugin.getContextManager().getElement(handle);
 			}
-			if (element != null && !element.getInterest().isInteresting() && !part.equals(editors[i]) && editors[i].getEditorInput().equals(part.getEditorInput())) {
+			if (element != null && !element.getInterest().isInteresting() 
+					&& !part.equals(editors[i]) && !editors[i].getEditorInput().equals(part.getEditorInput())) {
 				page.closeEditor(editors[i], true);
 			}
 		}

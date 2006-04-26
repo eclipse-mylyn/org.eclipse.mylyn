@@ -25,6 +25,7 @@ public class ScalingFactors implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private ScalingFactor defaultDecay = new ScalingFactor("decay", .017f);
+//	private ScalingFactor defaultDecay = new ScalingFactor("decay", .6f);
 	
 	private ScalingFactor defaultEdit = new ScalingFactor("edit", .7f);
 

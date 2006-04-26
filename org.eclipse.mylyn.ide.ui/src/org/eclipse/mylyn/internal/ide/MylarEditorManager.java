@@ -11,19 +11,26 @@
 
 package org.eclipse.mylar.internal.ide;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.ui.editors.TaskEditorInput;
 import org.eclipse.mylar.internal.ui.MylarUiPrefContstants;
 import org.eclipse.mylar.provisional.core.IMylarContext;
 import org.eclipse.mylar.provisional.core.IMylarContextListener;
 import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.ui.IMylarUiBridge;
 import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 
@@ -76,11 +83,36 @@ public class MylarEditorManager implements IMylarContextListener {
 	public void closeAllEditors() {
 		try {
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			if (page != null)
-				page.closeAllEditors(true);
+			if (page != null) {
+				IEditorReference[] references = page.getEditorReferences();
+				List<IEditorReference> toClose = new ArrayList<IEditorReference>();
+				for (int i = 0; i < references.length; i++) {
+					if (!isActiveTaskEditor(references[i])) {
+						toClose.add(references[i]);
+					}
+				}
+				page.closeEditors(toClose.toArray(new IEditorReference[toClose.size()]), true);
+			}
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "Could not auto close editor.", false);
 		}
+	}
+
+	private boolean isActiveTaskEditor(IEditorReference editorReference) {
+		ITask activeTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTask();
+		try {
+			IEditorInput input = editorReference.getEditorInput();
+			if (input instanceof TaskEditorInput) {
+				TaskEditorInput taskEditorInput = (TaskEditorInput)input;
+				if (activeTask != null && taskEditorInput.getTask() != null
+					&& taskEditorInput.getTask().getHandleIdentifier().equals(activeTask.getHandleIdentifier())) {
+					return true;
+				}
+			}
+		} catch (PartInitException e) {
+			// ignore
+		}
+		return false;
 	}
 
 	public void presentationSettingsChanging(UpdateKind kind) {
