@@ -35,7 +35,7 @@ public class AllJavaTests {
 		suite.addTestSuite(CommitMessageTest.class);
 		suite.addTestSuite(InterestManipulationTest.class);
 		suite.addTestSuite(ChangeSetManagerTest.class);
-		suite.addTestSuite(EditorManagementTest.class);
+		suite.addTestSuite(EditorManagerTest.class);
 		suite.addTestSuite(RefactoringTest.class);
 		suite.addTestSuite(ContentOutlineRefreshTest.class);
 		suite.addTestSuite(TypeHistoryManagerTest.class);
