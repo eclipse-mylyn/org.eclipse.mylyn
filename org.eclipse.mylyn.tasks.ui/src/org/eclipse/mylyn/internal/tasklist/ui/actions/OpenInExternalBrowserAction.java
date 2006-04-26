@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
@@ -27,11 +28,11 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  * @author Mik Kersten
  * @author Rob Elves
  */
-public class OpenTaskInExternalBrowserAction extends Action {
+public class OpenInExternalBrowserAction extends Action {
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.open.external";
 
-	public OpenTaskInExternalBrowserAction() {
+	public OpenInExternalBrowserAction() {
 		setText("Open in External Browser");
 		setToolTipText("Open in External Browser");
 		setId(ID);
@@ -48,17 +49,21 @@ public class OpenTaskInExternalBrowserAction extends Action {
 				AbstractQueryHit hit = (AbstractQueryHit) selectedObject;
 				task = hit.getOrCreateCorrespondingTask();
 			}
-			if (task != null) {
-				String urlString = task.getUrl();
-				if (task.hasValidUrl()) {
-					URL url;
-					try {
-						url = new URL(urlString);
-						IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
-						support.getExternalBrowser().openURL(url);
-					} catch (Exception e) {
-						MylarStatusHandler.fail(e, "could not open task url", true);
-					}
+			String urlString = null;
+			if (task != null && task.hasValidUrl()) {
+				urlString = task.getUrl();
+			} else if (selectedObject instanceof AbstractRepositoryQuery) {
+				AbstractRepositoryQuery query = (AbstractRepositoryQuery)selectedObject;
+				urlString = query.getQueryUrl();
+			}
+			if (urlString != null) {
+				URL url;
+				try {
+					url = new URL(urlString);
+					IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
+					support.getExternalBrowser().openURL(url);
+				} catch (Exception e) {
+					MylarStatusHandler.fail(e, "could not open task url", true);
 				}
 			}
 		}

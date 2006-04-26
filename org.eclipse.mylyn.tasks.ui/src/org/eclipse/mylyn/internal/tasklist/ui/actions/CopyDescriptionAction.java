@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.swt.SWT;
@@ -26,14 +27,16 @@ import org.eclipse.swt.custom.StyledText;
  */
 public class CopyDescriptionAction extends Action {
 
+	private static final String LABEL = "Copy Details";
+
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.copy";
 
 	private TaskListView view;
 
 	public CopyDescriptionAction(TaskListView view) {
 		this.view = view;
-		setText("Copy Description");
-		setToolTipText("Copy Description");
+		setText(LABEL);
+		setToolTipText(LABEL);
 		setId(ID);
 		setImageDescriptor(TaskListImages.COPY);
 		setAccelerator(SWT.MOD1 + 'c');
@@ -59,6 +62,10 @@ public class CopyDescriptionAction extends Action {
 			} else {
 				text += ((AbstractQueryHit)object).getDescription();
 			}
+		} else if (object instanceof AbstractRepositoryQuery) {
+			AbstractRepositoryQuery query = (AbstractRepositoryQuery)object;
+			text += query.getDescription();
+			text += "\n" + query.getQueryUrl();
 		} else if (object instanceof ITaskListElement) {
 			ITaskListElement element = (ITaskListElement) object;
 			text = element.getDescription();

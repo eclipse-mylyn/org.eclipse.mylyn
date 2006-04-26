@@ -66,7 +66,7 @@ import org.eclipse.mylar.internal.tasklist.ui.actions.MarkTaskIncompleteAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.NewCategoryAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.NextTaskDropDownAction;
-import org.eclipse.mylar.internal.tasklist.ui.actions.OpenTaskInExternalBrowserAction;
+import org.eclipse.mylar.internal.tasklist.ui.actions.OpenInExternalBrowserAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.PreviousTaskDropDownAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.RemoveFromCategoryAction;
@@ -173,7 +173,7 @@ public class TaskListView extends ViewPart {
 
 	private OpenTaskListElementAction openTaskEditor;
 
-	private OpenTaskInExternalBrowserAction openUrlInExternal;
+	private OpenInExternalBrowserAction openUrlInExternal;
 
 	private NewLocalTaskAction newLocalTaskAction;
 
@@ -1019,6 +1019,8 @@ public class TaskListView extends ViewPart {
 				manager.add(activateAction);
 			}
 		} else if (element instanceof AbstractTaskContainer || element instanceof AbstractRepositoryQuery) {
+			addAction(openUrlInExternal, manager, element);
+			addAction(copyDescriptionAction, manager, element);
 			addAction(deleteAction, manager, element);
 		}
 
@@ -1073,7 +1075,7 @@ public class TaskListView extends ViewPart {
 	 */
 	private void updateActionEnablement(Action action, ITaskListElement element) {
 		if (element instanceof ITask) {
-			if (action instanceof OpenTaskInExternalBrowserAction) {
+			if (action instanceof OpenInExternalBrowserAction) {
 				if (((ITask) element).hasValidUrl()) {
 					action.setEnabled(true);
 				} else {
@@ -1150,7 +1152,7 @@ public class TaskListView extends ViewPart {
 		markIncompleteAction = new MarkTaskCompleteAction(this);
 		markCompleteAction = new MarkTaskIncompleteAction(this);
 		openTaskEditor = new OpenTaskListElementAction(this.getViewer());
-		openUrlInExternal = new OpenTaskInExternalBrowserAction();
+		openUrlInExternal = new OpenInExternalBrowserAction();
 		filterCompleteTask = new FilterCompletedTasksAction(this);
 		filterArchiveCategory = new FilterArchiveContainerAction(this);
 		filterOnPriority = new PriorityDropDownAction();
