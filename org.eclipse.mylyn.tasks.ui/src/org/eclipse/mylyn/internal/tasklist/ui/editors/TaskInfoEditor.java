@@ -139,7 +139,7 @@ public class TaskInfoEditor extends EditorPart {
 	private ITaskListChangeListener TASK_LIST_LISTENER = new ITaskListChangeListener() {
 
 		public void localInfoChanged(final ITask updateTask) {
-			if (updateTask != null && updateTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
+			if (updateTask != null && task != null && updateTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
 				if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
