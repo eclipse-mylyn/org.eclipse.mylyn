@@ -223,7 +223,7 @@ litigation.
       <import plugin="org.eclipse.core.resources" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.browser"/>
       <import plugin="org.eclipse.ui.forms" version="0.0.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.platform" version="3.2.0.v20060324" match="greaterOrEqual"/>
+      <import feature="org.eclipse.platform" version="3.2.0.N20060324" match="greaterOrEqual"/>
    </requires>
 
    <plugin
