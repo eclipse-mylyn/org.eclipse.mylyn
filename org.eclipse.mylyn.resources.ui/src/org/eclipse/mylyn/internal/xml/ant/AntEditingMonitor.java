@@ -13,8 +13,8 @@
  */
 package org.eclipse.mylar.internal.xml.ant;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+//import java.lang.reflect.InvocationTargetException;
+//import java.lang.reflect.Method;
 
 import org.eclipse.ant.internal.ui.editor.AntEditor;
 import org.eclipse.ant.internal.ui.model.AntElementNode;
@@ -66,13 +66,13 @@ public class AntEditingMonitor extends AbstractUserInteractionMonitor {
 					}
 
 					FileEditorInput fei = (FileEditorInput) in;
-
-					Method method = AntElementNode.class.getDeclaredMethod("getElementPath", new Class[] {});
-					method.setAccessible(true);
-
-					String path = (String) method.invoke(node, new Object[] {});
-					if (path == null)
+//					Method method = AntElementNode.class.getDeclaredMethod("getElementPath", new Class[] {});
+//					method.setAccessible(true);
+//					String path = (String) method.invoke(node, new Object[] {});
+					String path = node.getElementPath();
+					if (path == null) {
 						return;
+					}
 					XmlNodeHelper xnode = new XmlNodeHelper(fei.getFile().getFullPath().toString(), path);
 					super.handleElementSelection(part, xnode);
 				} catch (Exception e) {
@@ -98,14 +98,14 @@ public class AntEditingMonitor extends AbstractUserInteractionMonitor {
 	 * HACK: using reflection to gain accessibility
 	 */
 	private static AntElementNode getNode(AntElementNode topNode, String elementPath) throws NoSuchMethodException,
-			IllegalAccessException, InvocationTargetException {
+			IllegalAccessException {
 		if (topNode == null)
 			return null;
 
-		Method method = AntElementNode.class.getDeclaredMethod("getElementPath", new Class[] {});
-		method.setAccessible(true);
-
-		String path = (String) method.invoke(topNode, new Object[] {});
+//		Method method = AntElementNode.class.getDeclaredMethod("getElementPath", new Class[] {});
+//		method.setAccessible(true);
+//		String path = (String) method.invoke(topNode, new Object[] {});
+		String path = topNode.getElementPath();
 		if (path.compareTo(elementPath) == 0) {
 			return topNode;
 		}
@@ -116,7 +116,8 @@ public class AntEditingMonitor extends AbstractUserInteractionMonitor {
 		for (Object obj : topNode.getChildNodes()) {
 			if (obj instanceof AntElementNode) {
 				AntElementNode node = (AntElementNode) obj;
-				path = (String) method.invoke(node, new Object[] {});
+//				path = (String) method.invoke(node, new Object[] {});
+				path = node.getElementPath();
 				if (path.compareTo(elementPath) == 0) {
 					return node;
 				} else {

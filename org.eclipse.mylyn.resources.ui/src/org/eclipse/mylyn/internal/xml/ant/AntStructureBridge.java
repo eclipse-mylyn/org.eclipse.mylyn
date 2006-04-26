@@ -13,7 +13,7 @@
  */
 package org.eclipse.mylar.internal.xml.ant;
 
-import java.lang.reflect.Method;
+//import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 
@@ -176,21 +176,14 @@ public class AntStructureBridge implements IMylarStructureBridge {
 			return ((XmlNodeHelper) object).getHandle();
 		} else if (object instanceof AntElementNode) {
 			AntElementNode node = (AntElementNode) object;
-			try {
-				// get the handle for the AntElementNode from the helper
-				Method method = AntElementNode.class.getDeclaredMethod("getElementPath", new Class[] {});
-				method.setAccessible(true);
-				String path = (String) method.invoke(node, new Object[] {});
+				String path = node.getElementPath();
 				if (path == null || node == null || node.getIFile() == null) {
 					return null;
 				}
 				XmlNodeHelper helper = new XmlNodeHelper(node.getIFile().getFullPath().toString(), path);
-				if (helper != null)
+				if (helper != null) {
 					return helper.getHandle();
-			} catch (Throwable t) {
-				// fail silently, since node.getIFile() can throw NPE
-				// MylarPlugin.fail(t, "couldn't get xml node handle", false);
-			}
+				}
 		} else if (object instanceof File) {
 			File file = (File) object;
 			// get the handle for the build.xml file
@@ -301,11 +294,13 @@ public class AntStructureBridge implements IMylarStructureBridge {
 					am.reconcile();
 
 					AntElementNode node = am.getNode(offset, false);
-					Method method = AntElementNode.class.getDeclaredMethod("getElementPath", new Class[] {});
-					method.setAccessible(true);
-					String path = (String) method.invoke(node, new Object[] {});
-					if (path == null)
+//					Method method = AntElementNode.class.getDeclaredMethod("getElementPath", new Class[] {});
+//					method.setAccessible(true);
+//					String path = (String) method.invoke(node, new Object[] {});
+					String path = node.getElementPath();
+					if (path == null) {
 						return null;
+					}
 					String handle = new XmlNodeHelper(file.getFullPath().toString(), path).getHandle();
 					return handle;
 				}
