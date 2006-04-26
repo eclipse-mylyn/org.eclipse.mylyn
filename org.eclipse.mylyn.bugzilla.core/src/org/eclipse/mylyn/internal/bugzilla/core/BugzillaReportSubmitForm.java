@@ -52,6 +52,10 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
  */
 public class BugzillaReportSubmitForm {
 
+	private static final String KEY_BUG_FILE_LOC = "bug_file_loc";
+
+	private static final String KEY_PRODUCT = "product";
+
 	private static final String VAL_TRUE = "true";
 
 	private static final String KEY_REMOVECC = "removecc";
@@ -250,12 +254,20 @@ public class BugzillaReportSubmitForm {
 			}
 		}
 
+		form.add(KEY_BUG_FILE_LOC, "");
+		
+		// specify the product
+		form.add(KEY_PRODUCT, model.getProduct());
+
 		// add the summary to the bug post
 		form.add("short_desc", model.getSummary());
-		
-		BugzillaServerVersion bugzillaServerVersion = IBugzillaConstants.BugzillaServerVersion.fromString(repository.getVersion());
+
+		BugzillaServerVersion bugzillaServerVersion = IBugzillaConstants.BugzillaServerVersion.fromString(repository
+				.getVersion());
 		if (bugzillaServerVersion != null && bugzillaServerVersion.compareTo(BugzillaServerVersion.SERVER_220) >= 0) {
-//		if (repository.getVersion().equals(BugzillaServerVersion.SERVER_220.toString())) {
+			// if
+			// (repository.getVersion().equals(BugzillaServerVersion.SERVER_220.toString()))
+			// {
 			form.add("bug_status", "NEW");
 		}
 
@@ -273,9 +285,11 @@ public class BugzillaReportSubmitForm {
 
 	/**
 	 * TODO: refactor common stuff with new bug post
-	 * @param removeCC 
+	 * 
+	 * @param removeCC
 	 */
-	public static BugzillaReportSubmitForm makeExistingBugPost(BugReport bug, TaskRepository repository, Set<String> removeCC) {
+	public static BugzillaReportSubmitForm makeExistingBugPost(BugReport bug, TaskRepository repository,
+			Set<String> removeCC) {
 
 		BugzillaReportSubmitForm bugReportPostHandler = new BugzillaReportSubmitForm();
 
@@ -319,12 +333,12 @@ public class BugzillaReportSubmitForm {
 		if (bug.getAttribute(BugReport.ATTR_SUMMARY) != null) {
 			bugReportPostHandler.add(KEY_SHORT_DESC, bug.getAttribute(BugReport.ATTR_SUMMARY).getNewValue());
 		}
-		
+
 		// add the new comment to the bug post if there is some text in it
 		if (bug.getNewNewComment().length() != 0) {
 			bugReportPostHandler.add(KEY_COMMENT, bug.getNewNewComment());
 		}
-		
+
 		if (removeCC != null && removeCC.size() > 0) {
 			String[] s = new String[removeCC.size()];
 			bugReportPostHandler.add(KEY_CC, toCommaSeparatedList(removeCC.toArray(s)));
@@ -344,7 +358,7 @@ public class BugzillaReportSubmitForm {
 		}
 		return buffer.toString();
 	}
-	
+
 	/**
 	 * Add a value to be posted to the bug
 	 * 
@@ -425,19 +439,23 @@ public class BugzillaReportSubmitForm {
 
 			String aString = in.readLine();
 
+			// while(aString != null) {
+			// System.err.println(aString);
+			// aString = in.readLine();
+			//			 }
+
 			boolean possibleFailure = true;
 			error = "";
 
 			while (aString != null) {
 				error += aString == null ? "" : aString + "\n";
 
-				// // check if we have run into an error
-				
-				
+				// check if we have run into an error
+
 				if (result == null
 						&& (aString.toLowerCase().indexOf("check e-mail") != -1 || aString.toLowerCase().indexOf(
-								"error") != -1)) {					
-					 throw new LoginException("Bugzilla login problem.");
+								"error") != -1)) {
+					throw new LoginException("Bugzilla login problem.");
 				} else if (aString.indexOf("Invalid Username Or Password") != -1) {
 					throw new LoginException("Invalid Username or Password.");
 				} else if (aString.toLowerCase().matches(".*bug\\s+processed.*") // TODO:
@@ -475,7 +493,8 @@ public class BugzillaReportSubmitForm {
 					&& (prefix != null && prefix2 == null && postfix != null && postfix2 != null)) {
 				throw new PossibleBugzillaFailureException("Could not find bug number for new bug.");
 			} else if (possibleFailure) {
-				throw new PossibleBugzillaFailureException("Could not find indication that bug was processed successfully.  Message from Bugzilla was: ");
+				throw new PossibleBugzillaFailureException(
+						"Could not find indication that bug was processed successfully.  Message from Bugzilla was: ");
 			}
 
 			// set the error to null if we dont think that there was one
@@ -624,9 +643,12 @@ public class BugzillaReportSubmitForm {
 	 * properly in bugzilla
 	 */
 	private static String formatTextToLineWrap(String origText, TaskRepository repository) {
-		BugzillaServerVersion bugzillaServerVersion = IBugzillaConstants.BugzillaServerVersion.fromString(repository.getVersion());
+		BugzillaServerVersion bugzillaServerVersion = IBugzillaConstants.BugzillaServerVersion.fromString(repository
+				.getVersion());
 		if (bugzillaServerVersion != null && bugzillaServerVersion.compareTo(BugzillaServerVersion.SERVER_220) >= 0) {
-//		if (repository.getVersion().equals(BugzillaServerVersion.SERVER_220.toString())) {
+			// if
+			// (repository.getVersion().equals(BugzillaServerVersion.SERVER_220.toString()))
+			// {
 			return origText;
 		}
 

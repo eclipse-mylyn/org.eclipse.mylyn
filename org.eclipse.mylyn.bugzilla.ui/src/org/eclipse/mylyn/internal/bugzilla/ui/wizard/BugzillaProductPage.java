@@ -148,31 +148,16 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 		if (!bugWizard.model.hasParsedProducts()) {
 			String repositoryUrl = repository.getUrl();
 			try {
-				// ProductConfiguration productConfiguration =
-				// BugzillaPlugin.getDefault().getProductConfiguration(repositoryUrl);
 				String[] storedProducts = BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT,
 						repositoryUrl);
 				if (storedProducts.length > 0) {
-					// String[] storedProducts =
-					// BugzillaPlugin.getDefault().getProductConfiguration(repositoryUrl).getProducts();
 					products = Arrays.asList(storedProducts);
 				} else {
 					products = BugzillaRepositoryUtil.getProductList(repository);
 				}
-				// bugWizard.model.setConnected(true);
+				bugWizard.model.setConnected(true);
 				bugWizard.model.setParsedProductsStatus(true);
-				// } catch (IOException e) {
-				// bugWizard.model.setConnected(false);
-				//
-				// if (e instanceof IOException) {
-				// MessageDialog.openError(null, "Bugzilla Connect Error",
-				// "Unable to connect to Bugzilla server.\n"
-				// + "Product configuration will be read from the workspace.");
-				//
-				// products =
-				// Arrays.asList(BugzillaPlugin.getDefault().getProductConfiguration(repositoryUrl).getProducts());
-				// bugWizard.model.setParsedProductsStatus(true);
-				// }
+
 			} catch (Exception e) {
 				bugWizard.model.setConnected(false);						
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -223,7 +208,8 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 
 		// try to get the attributes from the bugzilla server
 		try {
-			if (!model.hasParsedAttributes() || !prevProduct.equals(model.getProduct())) {
+			//if (prevProduct != null && !prevProduct.equals(model.getProduct())) {
+				//!model.hasParsedAttributes() || 
 				String serverUrl = repository.getUrl();
 //				if (model.isConnected()) {
 //					BugzillaRepositoryUtil.setupNewBugAttributes(serverUrl, model, false);
@@ -240,8 +226,9 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 					// will createControl again with new attributes in model
 					bugWizard.getAttributePage().setControl(null);
 				}
-			}
+			//}
 		} catch (final Exception e) {
+			e.printStackTrace();
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					MessageDialog.openError(Display.getDefault().getActiveShell(), NEW_BUGZILLA_TASK_ERROR_TITLE, e

@@ -62,7 +62,6 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepositoryManager;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
-
 /**
  * @author Mik Kersten (some rewriting)
  * @author Rob Elves (attachments)
@@ -99,7 +98,7 @@ public class BugzillaRepositoryUtil {
 
 	public static final char PREF_DELIM_REPOSITORY = ':';
 
-	public static final String POST_ARGS_SHOW_BUG = "/show_bug.cgi?id=";
+	public static final String POST_ARGS_SHOW_BUG = "/show_bug.cgi?id=";//ctype=xml&
 
 	public static final String POST_ARGS_ATTACHMENT_DOWNLOAD = "/attachment.cgi?id=";
 
@@ -142,11 +141,15 @@ public class BugzillaRepositoryUtil {
 				if (input != null) {
 					in = new BufferedReader(new InputStreamReader(input));
 
-					// get the actual bug fron the server and return it
-					BugReport bug = BugParser.parseBug(in, id, repository.getUrl(), !repository.getVersion().equals(
-							BugzillaServerVersion.SERVER_216.toString()), repository.getUserName(), repository
+					// BugReportFactory reportFactory =
+					// BugReportFactory.getInstance();
+					// BugReport bugReport = reportFactory.readReport(in, id,
+					// repository, connection.getContentType());
+					// get the actual bug from the server and return it
+					BugReport bugReport = BugParser.parseBug(in, id, repository.getUrl(), !repository.getVersion()
+							.equals(BugzillaServerVersion.SERVER_216.toString()), repository.getUserName(), repository
 							.getPassword(), connection.getContentType());
-					return bug;
+					return bugReport;
 				}
 			}
 			// TODO handle the error
@@ -213,12 +216,13 @@ public class BugzillaRepositoryUtil {
 
 		return BugzillaPlugin.getDefault().getProductConfiguration(repository.getUrl()).getProducts();
 
-//		BugzillaQueryPageParser parser = new BugzillaQueryPageParser(repository, new NullProgressMonitor());
-//		if (!parser.wasSuccessful()) {
-//			throw new RuntimeException("Couldn't get products");
-//		} else {
-//			return Arrays.asList(parser.getProductValues());
-//		}
+		// BugzillaQueryPageParser parser = new
+		// BugzillaQueryPageParser(repository, new NullProgressMonitor());
+		// if (!parser.wasSuccessful()) {
+		// throw new RuntimeException("Couldn't get products");
+		// } else {
+		// return Arrays.asList(parser.getProductValues());
+		// }
 
 	}
 
@@ -303,61 +307,64 @@ public class BugzillaRepositoryUtil {
 
 		HashMap<String, Attribute> attributes = new HashMap<String, Attribute>();
 
-		// ATTRIBUTE: Severity
 		Attribute a = new Attribute("Severity");
 		a.setParameterName("bug_severity");
-		// get optionValues from ProductConfiguration
 		List<String> optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getSeverities();
-		// add option values from ProductConfiguration to Attribute optionValues
-		for (String option: optionValues) {
+		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
-		// add Attribute to model
 		attributes.put("severites", a);
 
-		// ATTRIBUTE: OS
 		a = new Attribute("OS");
 		a.setParameterName("op_sys");
 		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getOSs();
-		for (String option: optionValues) {
+		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
 		attributes.put("OSs", a);
 
-		// ATTRIBUTE: Platform
 		a = new Attribute("Platform");
 		a.setParameterName("rep_platform");
 		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getPlatforms();
-		for (String option: optionValues) {
+		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
 		attributes.put("platforms", a);
 
-		// ATTRIBUTE: Version
 		a = new Attribute("Version");
 		a.setParameterName("version");
 		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getVersions(model.getProduct());
-		for (String option: optionValues) {
+		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
 		attributes.put("versions", a);
 
-		// ATTRIBUTE: Component
+
 		a = new Attribute("Component");
 		a.setParameterName("component");
 		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getComponents(model.getProduct());
-		for (String option: optionValues) {
+		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
 		attributes.put("components", a);
 
-		// ATTRIBUTE: Priority
+	
 		a = new Attribute("Priority");
-		a.setParameterName("bug_severity");
+		a.setParameterName("priority");
 		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getPriorities();
-		for (String option: optionValues) {
+		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
+		attributes.put("priorities", a);
+		
+
+		a = new Attribute("Product");
+		a.setParameterName("product");
+		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getProducts();
+		for (String option : optionValues) {
+			a.addOptionValue(option, option);
+		}
+		attributes.put("products", a);
 
 		// set NBM Attributes (after all Attributes have been created, and added
 		// to attributes map)
@@ -387,13 +394,13 @@ public class BugzillaRepositoryUtil {
 	}
 
 	static String queryOptionsToString(List<String> array) {
-		
+
 		StringBuffer buffer = new StringBuffer();
 		for (String string : array) {
 			buffer.append(string);
 			buffer.append("!");
 		}
-		
+
 		return buffer.toString();
 	}
 
@@ -437,12 +444,12 @@ public class BugzillaRepositoryUtil {
 			IOException {
 
 		String repositoryUrl = repository.getUrl();
-//		BugzillaQueryPageParser parser = new BugzillaQueryPageParser(repository, monitor);
-//		if (!parser.wasSuccessful())
-//			return;
-		
-		RepositoryConfiguration config = ServerConfigurationFactory.getInstance().getConfiguration(
-				repositoryUrl);
+		// BugzillaQueryPageParser parser = new
+		// BugzillaQueryPageParser(repository, monitor);
+		// if (!parser.wasSuccessful())
+		// return;
+
+		RepositoryConfiguration config = ServerConfigurationFactory.getInstance().getConfiguration(repositoryUrl);
 
 		// get the preferences store so that we can change the data in it
 		IPreferenceStore prefs = BugzillaPlugin.getDefault().getPreferenceStore();
@@ -479,7 +486,6 @@ public class BugzillaRepositoryUtil {
 				queryOptionsToString(config.getProducts()));
 		monitor.worked(1);
 
-		
 		prefs.setValue(IBugzillaConstants.VALUES_COMPONENT + PREF_DELIM_REPOSITORY + repositoryUrl,
 				queryOptionsToString(config.getComponents()));
 		monitor.worked(1);
@@ -487,27 +493,25 @@ public class BugzillaRepositoryUtil {
 		prefs.setValue(IBugzillaConstants.VALUES_VERSION + PREF_DELIM_REPOSITORY + repositoryUrl,
 				queryOptionsToString(config.getVersions()));
 		monitor.worked(1);
-		
+
 		prefs.setValue(IBugzillaConstants.VALUES_TARGET + PREF_DELIM_REPOSITORY + repositoryUrl,
 				queryOptionsToString(config.getTargetMilestones()));
 		monitor.worked(1);
-		
-		for (String product: config.getProducts()) {
-			prefs.setValue(IBugzillaConstants.VALUES_COMPONENT + PREF_DELIM_REPOSITORY + repositoryUrl+PREF_DELIM_REPOSITORY+product,
-					queryOptionsToString(config.getComponents(product)));
+
+		for (String product : config.getProducts()) {
+			prefs.setValue(IBugzillaConstants.VALUES_COMPONENT + PREF_DELIM_REPOSITORY + repositoryUrl
+					+ PREF_DELIM_REPOSITORY + product, queryOptionsToString(config.getComponents(product)));
 			monitor.worked(1);
 
-			prefs.setValue(IBugzillaConstants.VALUES_VERSION + PREF_DELIM_REPOSITORY + repositoryUrl+PREF_DELIM_REPOSITORY+product,
-					queryOptionsToString(config.getVersions(product)));
+			prefs.setValue(IBugzillaConstants.VALUES_VERSION + PREF_DELIM_REPOSITORY + repositoryUrl
+					+ PREF_DELIM_REPOSITORY + product, queryOptionsToString(config.getVersions(product)));
 			monitor.worked(1);
-			
-			prefs.setValue(IBugzillaConstants.VALUES_TARGET + PREF_DELIM_REPOSITORY + repositoryUrl+PREF_DELIM_REPOSITORY+product,
-					queryOptionsToString(config.getTargetMilestones(product)));
+
+			prefs.setValue(IBugzillaConstants.VALUES_TARGET + PREF_DELIM_REPOSITORY + repositoryUrl
+					+ PREF_DELIM_REPOSITORY + product, queryOptionsToString(config.getTargetMilestones(product)));
 			monitor.worked(1);
 		}
-		
 
-		
 	}
 
 	public static boolean downloadAttachment(TaskRepository repository, int id, File destinationFile, boolean overwrite)
@@ -613,7 +617,7 @@ public class BugzillaRepositoryUtil {
 			}
 
 			postMethod.setRequestEntity(new MultipartRequestEntity(parts.toArray(new Part[1]), postMethod.getParams()));
- 
+
 			client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
 			int status = client.executeMethod(postMethod);
 			if (status == HttpStatus.SC_OK) {

@@ -725,7 +725,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 
 			if (java2buzillaOSMap != null && java2buzillaOSMap.containsKey(OS) && opSysAttribute != null && opSysAttribute.getOptionValues() != null) {
 				bugzillaOS = java2buzillaOSMap.get(OS);
-				if (!opSysAttribute.getOptionValues().values().contains(bugzillaOS)) {
+				if (opSysAttribute != null && !opSysAttribute.getOptionValues().values().contains(bugzillaOS)) {
 					// If the OS we found is not in the list of available
 					// options, set bugzillaOS
 					// to null, and just use "other"
@@ -739,7 +739,8 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 
 			if (platform != null && java2buzillaPlatformMap.containsKey(platform)) {
 				bugzillaPlatform = java2buzillaPlatformMap.get(platform);
-				if (!platformAttribute.getOptionValues().values().contains(bugzillaPlatform)) {
+				
+				if (platformAttribute != null && !platformAttribute.getOptionValues().values().contains(bugzillaPlatform)) {
 					// If the platform we found is not int the list of available
 					// optinos, set the
 					// Bugzilla Platform to null, and juse use "other"
@@ -752,9 +753,9 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 			}
 
 			// Set the OS and the Platform in the model
-			if (bugzillaOS != null)
+			if (bugzillaOS != null && opSysAttribute != null)
 				opSysAttribute.setValue(bugzillaOS);
-			if (bugzillaPlatform != null)
+			if (bugzillaPlatform != null && platformAttribute != null)
 				platformAttribute.setValue(bugzillaPlatform);
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "could not set platform options", false); 
