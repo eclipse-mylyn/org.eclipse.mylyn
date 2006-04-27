@@ -19,9 +19,7 @@ import org.eclipse.swt.events.ShellListener;
  * @author Mik Kersten
  */
 class ShellLifecycleListener implements ShellListener {
-	/**
-	 * 
-	 */
+
 	private final MylarContextManager manager;
 
 	public ShellLifecycleListener(MylarContextManager manager) {
@@ -30,7 +28,7 @@ class ShellLifecycleListener implements ShellListener {
 				MylarContextManager.ACTIVITY_HANDLE_LIFECYCLE, MylarContextManager.ACTIVITY_ORIGIN_ID, null, MylarContextManager.ACTIVITY_DELTA_STARTED, 1f));
 	}
 
-	public void shellClosed(ShellEvent arg0) {		
+	public void shellClosed(ShellEvent shellEvent) {
 		manager.handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND, MylarContextManager.ACTIVITY_STRUCTURE_KIND,
 				MylarContextManager.ACTIVITY_HANDLE_ATTENTION, MylarContextManager.ACTIVITY_ORIGIN_ID, null, MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 1f));
 

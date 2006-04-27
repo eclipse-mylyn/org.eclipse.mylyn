@@ -32,6 +32,7 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.Workbench;
 
 /**
@@ -39,8 +40,13 @@ import org.eclipse.ui.internal.Workbench;
  */
 public class MylarEditorManager implements IMylarContextListener {
 
+	private boolean previousCloseEditorsSetting = Workbench.getInstance().getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
+	
 	public void contextActivated(IMylarContext context) {
 		if (MylarUiPlugin.getPrefs().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)) {
+			previousCloseEditorsSetting = Workbench.getInstance().getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
+			Workbench.getInstance().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN, false);
+			
 			Workbench workbench = (Workbench) PlatformUI.getWorkbench();
 			try {
 				MylarPlugin.getContextManager().setContextCapturePaused(true);
@@ -76,12 +82,16 @@ public class MylarEditorManager implements IMylarContextListener {
 
 	public void contextDeactivated(IMylarContext context) {
 		if (MylarUiPlugin.getPrefs().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)) {
+			Workbench.getInstance().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN, previousCloseEditorsSetting);
 			closeAllEditors();
 		}
 	}
 
 	public void closeAllEditors() {
-		try {
+		try {     
+			if (PlatformUI.getWorkbench().isClosing()) {
+				return;  
+			}
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			if (page != null) {
 				IEditorReference[] references = page.getEditorReferences();

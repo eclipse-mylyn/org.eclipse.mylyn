@@ -158,14 +158,17 @@ public class MylarPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		getPreferenceStore().setDefault(MylarPreferenceContstants.PREF_DATA_DIR, getDefaultDataDirectory());
-		if (contextManager == null)
+		if (contextManager == null) {
 			contextManager = new MylarContextManager();
+		}
 	}
 
+	
 	public String getDefaultDataDirectory() {
 		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/' + NAME_DATA_DIR;
 	}
 
+	
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		try {

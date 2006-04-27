@@ -718,15 +718,17 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 	private void createEditorsSection(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
 
-		group.setLayout(new GridLayout(2, false));
+		group.setLayout(new GridLayout(1, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		group.setText("Editor Management");
 		
-		manageEditorsButton = new Button(group, SWT.CHECK);
+		Composite composite = new Composite(group, SWT.NULL);
+		composite.setLayout(new GridLayout(2, false));
+		manageEditorsButton = new Button(composite, SWT.CHECK);
 		manageEditorsButton.setText("Enable automatic editor opening/closing with context. ");
 		manageEditorsButton.setSelection(getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS));
 
-		Composite numComposite = new Composite(group, SWT.NULL);
+		Composite numComposite = new Composite(composite, SWT.NULL);
 		autoOpenEditorsNum = new IntegerFieldEditor("", "Max to open: ", numComposite, 4);
 		autoOpenEditorsNum.setErrorMessage("Must be an integer");
 		int num = getPreferenceStore().getInt(MylarUiPrefContstants.AUTO_MANAGE_EDITORS_OPEN_NUM);
@@ -737,11 +739,10 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 		
 		String prefName = WorkbenchMessages.WorkbenchPreference_reuseEditors;
 		if (getContainer() instanceof IWorkbenchPreferenceContainer) {
-			String message = "\"" + prefName + "\" should be off, see <a>''{0}''</a>";
+			String message =  "     \"" + prefName + "\" from <a>''{0}''</a> will be toggled with activation";
 			new PreferenceLinkArea(group, SWT.NONE,
 					"org.eclipse.ui.preferencePages.Editors", message,
 					(IWorkbenchPreferenceContainer) getContainer(), null);
-			new Label(group, SWT.NULL);
 		}
 		return;
 	}
