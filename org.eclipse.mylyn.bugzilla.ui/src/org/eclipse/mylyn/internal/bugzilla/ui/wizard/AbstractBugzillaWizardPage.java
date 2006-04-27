@@ -23,6 +23,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.bugzilla.core.Attribute;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugModel;
+import org.eclipse.mylar.internal.bugzilla.core.internal.BugReportElement;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.swt.SWT;
@@ -49,7 +50,9 @@ import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
  * @author Mik Kersten (hardening of initial prototype)
  */
 public abstract class AbstractBugzillaWizardPage extends WizardPage implements Listener {
- 
+
+	private static final String KEY_OP_SYS = "op_sys";
+
 	/** The instance of the workbench */
 	protected IWorkbench workbench;
 
@@ -253,7 +256,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 	 *            The event which occurred
 	 */
 	public void handleEvent(Event e) {
-		boolean pageComplete = isPageComplete(); 
+		boolean pageComplete = isPageComplete();
 
 		// Initialize a variable with the no error status
 		Status status = new Status(IStatus.OK, "not_used", 0, "", null);
@@ -292,7 +295,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 			wizard.attributeCompleted = false;
 			return false;
 		}
-		//saveDataToModel();
+		// saveDataToModel();
 		wizard.attributeCompleted = true;
 		return true;
 	}
@@ -307,7 +310,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 
 		nbm.setDescription(descriptionText.getText());
 		nbm.setSummary(summaryText.getText());
-		
+
 		// go through each of the attributes and sync their values with the
 		// combo boxes
 		for (Iterator<Attribute> it = nbm.getAttributes().iterator(); it.hasNext();) {
@@ -318,8 +321,8 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 			try {
 				if (values == null)
 					values = new HashMap<String, String>();
-				if (key.equals(BugReport.ATTRIBUTE_OS)) {					
-					String os = oSCombo.getItem(oSCombo.getSelectionIndex());					
+				if (key.equals(BugReport.ATTRIBUTE_OS)) {
+					String os = oSCombo.getItem(oSCombo.getSelectionIndex());
 					attribute.setValue(os);
 				} else if (key.equals(BugReport.ATTRIBUTE_VERSION)) {
 					String version = versionCombo.getItem(versionCombo.getSelectionIndex());
@@ -354,7 +357,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 				MylarStatusHandler.fail(e, "could not set attribute: " + attribute, false);
 			}
 		}
-		//wizard.attributeCompleted = true;
+		// wizard.attributeCompleted = true;
 	}
 
 	@Override
@@ -371,7 +374,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 		// whether the priority exists or not
 		boolean priExist = false;
 		boolean mileExist = false;
-		
+
 		String url = null;
 
 		// get the model for the new bug
@@ -409,7 +412,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 		// Add the product to the composite
 		newLayout(attributesComposite, 1, "Product", PROPERTY);
 		newLayout(attributesComposite, 1, nbm.getProduct(), VALUE);
-		
+
 		// Populate Attributes
 		for (Iterator<Attribute> it = nbm.getAttributes().iterator(); it.hasNext();) {
 			Attribute attribute = it.next();
@@ -433,7 +436,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 			data.horizontalIndent = HORZ_INDENT;
 			data.widthHint = 150;
 			// create and populate the combo fields for the attributes
-			if (key.equals("op_sys")) {
+			if (key.equals(KEY_OP_SYS)) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
 				oSCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);
 
@@ -498,7 +501,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 					index = 0;
 				platformCombo.select(index);
 				platformCombo.addListener(SWT.Modify, this);
-			} else if (key.equals(BugReport.KEY_MILESTONE)) {				
+			} else if (key.equals(BugReport.KEY_MILESTONE)) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
 				milestoneCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
 						| SWT.READ_ONLY);
@@ -559,23 +562,23 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 			newLayout(attributesComposite, 1, "", PROPERTY);
 		}
 
-		Composite textComposite = new Composite(attributesComposite, SWT.NONE);		
+		Composite textComposite = new Composite(attributesComposite, SWT.NONE);
 		textComposite.setLayout(new GridLayout(3, false));
 		GridData textCompositeGD = new GridData();
 		textCompositeGD.horizontalSpan = 4;
 		textCompositeGD.grabExcessHorizontalSpace = true;
 		textComposite.setLayoutData(textCompositeGD);
-		
+
 		GridData summaryTextData;
-		
+
 		if (url != null) {
-			// add the assigned to text field			
+			// add the assigned to text field
 			newLayout(textComposite, 1, BugReport.ATTRIBUTE_URL, PROPERTY);
 			urlText = new Text(textComposite, SWT.BORDER | SWT.SINGLE | SWT.WRAP);
 			summaryTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 
 			summaryTextData.horizontalSpan = 2;
-//			summaryTextData.widthHint = 200;
+			// summaryTextData.widthHint = 200;
 			urlText.setLayoutData(summaryTextData);
 			urlText.setText(url);
 			urlText.addListener(SWT.FocusOut, this);
@@ -583,7 +586,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 
 		newLayout(textComposite, 1, "Assigned To", PROPERTY);
 		Label l = new Label(textComposite, SWT.NONE);
-//		l.setText("                             ");
+		// l.setText(" ");
 		l.setText("(if email is incorrect submit will not proceed)");
 		summaryTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		summaryTextData.horizontalSpan = 1;
@@ -595,7 +598,6 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 		summaryTextData.widthHint = 200;
 		assignedToText.setLayoutData(summaryTextData);
 		assignedToText.setText("");
-		
 
 		// add the summary text field
 		newLayout(textComposite, 1, "Summary", PROPERTY);
@@ -667,7 +669,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 	// */
 	// public boolean offlineSelected() {
 	// return (offlineButton == null) ? false : offlineButton.getSelection();
-	//	}
+	// }
 
 	/*
 	 * The following are Bugzilla's: OS's All AIX Windows 95 Windows 98 Windows
@@ -714,8 +716,8 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 
 			// Get OS Lookup Map
 			// Check that the result is in Values, if it is not, set it to other
-			Attribute opSysAttribute = newBugModel.getAttribute(BugReport.ATTRIBUTE_OS);
-			Attribute platformAttribute = newBugModel.getAttribute(BugReport.ATTRIBUTE_PLATFORM);
+			Attribute opSysAttribute = newBugModel.getAttribute(BugReportElement.OP_SYS.toString());
+			Attribute platformAttribute = newBugModel.getAttribute(BugReportElement.REP_PLATFORM.toString());
 
 			String OS = Platform.getOS();
 			String platform = Platform.getOSArch();
@@ -723,7 +725,8 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 			String bugzillaOS = null; // Bugzilla String for OS
 			String bugzillaPlatform = null; // Bugzilla String for Platform
 
-			if (java2buzillaOSMap != null && java2buzillaOSMap.containsKey(OS) && opSysAttribute != null && opSysAttribute.getOptionValues() != null) {
+			if (java2buzillaOSMap != null && java2buzillaOSMap.containsKey(OS) && opSysAttribute != null
+					&& opSysAttribute.getOptionValues() != null) {
 				bugzillaOS = java2buzillaOSMap.get(OS);
 				if (opSysAttribute != null && !opSysAttribute.getOptionValues().values().contains(bugzillaOS)) {
 					// If the OS we found is not in the list of available
@@ -739,8 +742,9 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 
 			if (platform != null && java2buzillaPlatformMap.containsKey(platform)) {
 				bugzillaPlatform = java2buzillaPlatformMap.get(platform);
-				
-				if (platformAttribute != null && !platformAttribute.getOptionValues().values().contains(bugzillaPlatform)) {
+
+				if (platformAttribute != null
+						&& !platformAttribute.getOptionValues().values().contains(bugzillaPlatform)) {
 					// If the platform we found is not int the list of available
 					// optinos, set the
 					// Bugzilla Platform to null, and juse use "other"
@@ -757,8 +761,9 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 				opSysAttribute.setValue(bugzillaOS);
 			if (bugzillaPlatform != null && platformAttribute != null)
 				platformAttribute.setValue(bugzillaPlatform);
+
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "could not set platform options", false); 
+			MylarStatusHandler.fail(e, "could not set platform options", false);
 		}
 	}
 

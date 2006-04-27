@@ -51,6 +51,7 @@ import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
 import org.eclipse.mylar.internal.bugzilla.core.internal.BugParser;
+import org.eclipse.mylar.internal.bugzilla.core.internal.BugReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.internal.NewBugParser;
 import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile;
 import org.eclipse.mylar.internal.bugzilla.core.internal.RepositoryConfiguration;
@@ -67,7 +68,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Rob Elves (attachments)
  */
 public class BugzillaRepositoryUtil {
-
+	
 	private static final String VALUE_CONTENTTYPEMETHOD_MANUAL = "manual";
 
 	private static final String VALUE_ISPATCH = "1";
@@ -280,7 +281,7 @@ public class BugzillaRepositoryUtil {
 						"Unable to connect to Bugzilla server.\n"
 								+ "Bug report will be created offline and saved for submission later.")) {
 					nbm.setConnected(false);
-					setupProdConfigAttributes(serverUrl, nbm);
+					setupBugAttributes(serverUrl, nbm);
 				} else
 					throw new Exception("Bug report will not be created.");
 			} else
@@ -297,77 +298,82 @@ public class BugzillaRepositoryUtil {
 	}
 
 	/**
-	 * Method to get attributes from ProductConfiguration if unable to connect
-	 * to Bugzilla server
-	 * 
-	 * @param model -
-	 *            the NewBugModel to store the attributes
+	 * Adds bug attributes to new bug model and sets defaults
 	 */
-	public static void setupProdConfigAttributes(String serverUrl, NewBugModel model) {
+	public static void setupBugAttributes(String serverUrl, NewBugModel model) {
 
 		HashMap<String, Attribute> attributes = new HashMap<String, Attribute>();
 
-		Attribute a = new Attribute("Severity");
-		a.setParameterName("bug_severity");
+		Attribute a = new Attribute(BugReportElement.BUG_SEVERITY.toString());
+		a.setParameterName(BugReportElement.BUG_SEVERITY.getKeyString());
 		List<String> optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getSeverities();
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
-		attributes.put("severites", a);
+		a.setValue(optionValues.get((optionValues.size() / 2)));
+		attributes.put(a.getName(), a);
 
-		a = new Attribute("OS");
-		a.setParameterName("op_sys");
+		a = new Attribute(BugReportElement.OP_SYS.toString());
+		a.setParameterName(BugReportElement.OP_SYS.getKeyString());
 		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getOSs();
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
-		attributes.put("OSs", a);
+		attributes.put(a.getName(), a);
 
-		a = new Attribute("Platform");
-		a.setParameterName("rep_platform");
+		a = new Attribute(BugReportElement.REP_PLATFORM.toString());
+		a.setParameterName(BugReportElement.REP_PLATFORM.getKeyString());
 		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getPlatforms();
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
-		attributes.put("platforms", a);
+		attributes.put(a.getName(), a);
 
-		a = new Attribute("Version");
-		a.setParameterName("version");
+		a = new Attribute(BugReportElement.VERSION.toString());
+		a.setParameterName(BugReportElement.VERSION.getKeyString());
 		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getVersions(model.getProduct());
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
-		attributes.put("versions", a);
+		a.setValue(optionValues.get(optionValues.size() - 1));
+		attributes.put(a.getName(), a);
 
 
-		a = new Attribute("Component");
-		a.setParameterName("component");
+		a = new Attribute(BugReportElement.COMPONENT.toString());
+		a.setParameterName(BugReportElement.COMPONENT.getKeyString());
 		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getComponents(model.getProduct());
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
-		attributes.put("components", a);
+		attributes.put(a.getName(), a);
 
 	
-		a = new Attribute("Priority");
-		a.setParameterName("priority");
+		a = new Attribute(BugReportElement.PRIORITY.toString());
+		a.setParameterName(BugReportElement.PRIORITY.getKeyString());
 		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getPriorities();
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
-		attributes.put("priorities", a);
+		a.setValue(optionValues.get((optionValues.size() / 2)));
+		attributes.put(a.getName(), a);
 		
 
-		a = new Attribute("Product");
-		a.setParameterName("product");
+		a = new Attribute(BugReportElement.PRODUCT.toString());
+		a.setParameterName(BugReportElement.PRODUCT.getKeyString());
 		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getProducts();
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
-		attributes.put("products", a);
+		attributes.put(a.getName(), a);
+		
+		a = new Attribute(BugReportElement.BUG_STATUS.toString());
+		a.setParameterName(BugReportElement.BUG_STATUS.getKeyString());
+		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getStatusValues();
+		for (String option : optionValues) {
+			a.addOptionValue(option, option);
+		}
+		attributes.put(a.getName(), a);
 
-		// set NBM Attributes (after all Attributes have been created, and added
-		// to attributes map)
 		model.attributes = attributes;
 	}
 

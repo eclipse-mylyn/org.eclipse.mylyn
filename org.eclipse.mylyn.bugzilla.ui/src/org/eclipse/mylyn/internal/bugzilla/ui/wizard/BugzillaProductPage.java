@@ -215,7 +215,7 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 //					BugzillaRepositoryUtil.setupNewBugAttributes(serverUrl, model, false);
 //				} else {
 				
-					BugzillaRepositoryUtil.setupProdConfigAttributes(serverUrl, model);
+					BugzillaRepositoryUtil.setupBugAttributes(serverUrl, model);
 //				}
 				model.setParsedAttributesStatus(true);
 				if (prevProduct == null) {
