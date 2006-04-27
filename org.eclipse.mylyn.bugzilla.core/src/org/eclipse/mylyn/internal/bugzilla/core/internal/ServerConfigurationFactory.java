@@ -18,8 +18,11 @@ import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
 
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
@@ -28,7 +31,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * 
  * @author Rob Elves
  */
-public class ServerConfigurationFactory  {
+public class ServerConfigurationFactory {
 
 	private static final String CONFIG_RDF_URL = "/config.cgi?ctype=rdf";
 
@@ -45,31 +48,6 @@ public class ServerConfigurationFactory  {
 		return instance;
 	}
 
-	// public ProductConfiguration getConfiguration(String server) throws
-	// IOException {
-	// URL serverURL = new URL(server + "/config.cgi?ctype=rdf");
-	// URLConnection c = serverURL.openConnection();
-	// BufferedReader in = new BufferedReader(new
-	// InputStreamReader(c.getInputStream()));
-	// Document document;
-	// DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-	// factory.setValidating(false);
-	// factory.setNamespaceAware(false);
-	// try {
-	// DocumentBuilder builder = factory.newDocumentBuilder();
-	// document = builder.parse( new InputSource(in) );
-	//
-	// } catch (SAXParseException spe) {
-	// System.err.println("Sax parse exception!");
-	// } catch (ParserConfigurationException e) {
-	// e.printStackTrace();
-	// } catch (SAXException e) {
-	// e.printStackTrace();
-	// }
-	// return null;
-	//
-	// }
-
 	public RepositoryConfiguration getConfiguration(String server) throws IOException {
 		URL serverURL = new URL(server + CONFIG_RDF_URL);
 		URLConnection c = serverURL.openConnection();
@@ -81,7 +59,7 @@ public class ServerConfigurationFactory  {
 			StringBuffer result = XmlCleaner.clean(in);
 			StringReader strReader = new StringReader(result.toString());
 			XMLReader reader = XMLReaderFactory.createXMLReader();
-			// reader.setErrorHandler(new SaxErrorHandler())
+			reader.setErrorHandler(new SaxErrorHandler());
 			reader.setContentHandler(contentHandler);
 			reader.parse(new InputSource(strReader));
 		} catch (SAXException e) {
@@ -91,26 +69,21 @@ public class ServerConfigurationFactory  {
 
 	}
 
-	// class SaxErrorHandler implements ErrorHandler {
-	//
-	// public void error(SAXParseException exception) throws SAXException {
-	// System.err.println("Error:
-	// "+exception.getLineNumber()+"\n"+exception.getLocalizedMessage());
-	//			
-	// }
-	//
-	// public void fatalError(SAXParseException exception) throws SAXException {
-	// System.err.println("Fatal Error:
-	// "+exception.getLineNumber()+"\n"+exception.getLocalizedMessage());
-	//			
-	// }
-	//
-	// public void warning(SAXParseException exception) throws SAXException {
-	// System.err.println("Warning:
-	// "+exception.getLineNumber()+"\n"+exception.getLocalizedMessage());
-	//			
-	// }
-	//		
-	// }
+	class SaxErrorHandler implements ErrorHandler {
+
+		public void error(SAXParseException exception) throws SAXException {
+			MylarStatusHandler.fail(exception, "ServerConfigurationFactory: " + exception.getLocalizedMessage(), false);
+		}
+
+		public void fatalError(SAXParseException exception) throws SAXException {
+			MylarStatusHandler.fail(exception, "ServerConfigurationFactory: " + exception.getLocalizedMessage(), false);
+
+		}
+
+		public void warning(SAXParseException exception) throws SAXException {
+			// ignore
+		}
+
+	}
 
 }
