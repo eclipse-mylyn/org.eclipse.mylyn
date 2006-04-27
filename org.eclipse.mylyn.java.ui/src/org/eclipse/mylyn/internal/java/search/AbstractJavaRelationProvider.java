@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IImportDeclaration;
+import org.eclipse.jdt.core.IInitializer;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMember;
@@ -82,7 +83,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		if (!node.getContentType().equals(JavaStructureBridge.CONTENT_TYPE))
 			return;
 		IJavaElement javaElement = JavaCore.create(node.getHandleIdentifier());
-		if (!acceptElement(javaElement) || !javaElement.exists()) {
+		if (!acceptElement(javaElement) || !javaElement.exists() || javaElement instanceof IInitializer) {
 			return;
 		}
 
