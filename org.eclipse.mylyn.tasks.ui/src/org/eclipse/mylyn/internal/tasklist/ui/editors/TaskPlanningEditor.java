@@ -78,7 +78,7 @@ import org.eclipse.ui.part.EditorPart;
  * @author Ken Sueda (initial prototype)
  * @author Rob Elves (added additional fields)
  */
-public class TaskInfoEditor extends EditorPart {
+public class TaskPlanningEditor extends EditorPart {
 
 	private static final String LABEL_INCOMPLETE = "Incomplete";
 
@@ -202,7 +202,7 @@ public class TaskInfoEditor extends EditorPart {
 
 	};
 
-	public TaskInfoEditor() {
+	public TaskPlanningEditor() {
 		super();
 		cutAction = new RetargetAction(ActionFactory.CUT.getId(), WorkbenchMessages.Workbench_cut);
 		cutAction.setToolTipText(WorkbenchMessages.Workbench_cutToolTip);
@@ -355,7 +355,7 @@ public class TaskInfoEditor extends EditorPart {
 				createSummarySection(parent, toolkit);
 			}
 			createPlanningSection(parent, toolkit);
-			createDocumentationSection(parent, toolkit);
+			createNotesSection(parent, toolkit);
 			// // createRelatedLinksSection(parent, toolkit);
 			createResourcesSection(parent, toolkit);
 		} catch (SWTException e) {
@@ -491,7 +491,7 @@ public class TaskInfoEditor extends EditorPart {
 			priorityCombo.addSelectionListener(new SelectionListener() {
 
 				public void widgetSelected(SelectionEvent e) {
-					TaskInfoEditor.this.markDirty(true);
+					TaskPlanningEditor.this.markDirty(true);
 
 				}
 
@@ -522,7 +522,7 @@ public class TaskInfoEditor extends EditorPart {
 					} else {
 						task.setCompleted(false);
 					}
-					TaskInfoEditor.this.markDirty(true);
+					TaskPlanningEditor.this.markDirty(true);
 				}
 
 				public void widgetDefaultSelected(SelectionEvent e) {
@@ -546,7 +546,7 @@ public class TaskInfoEditor extends EditorPart {
 				@Override
 				protected void setTitle(final String pageTitle) {
 					description.setText(pageTitle);
-					TaskInfoEditor.this.markDirty(true);
+					TaskPlanningEditor.this.markDirty(true);
 				}
 
 			};
@@ -577,7 +577,7 @@ public class TaskInfoEditor extends EditorPart {
 		}
 	}
 
-	private void createDocumentationSection(Composite parent, FormToolkit toolkit) {
+	private void createNotesSection(Composite parent, FormToolkit toolkit) {
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
 		section.setText(LABEL_NOTES);
 		section.setExpanded(true);
@@ -652,7 +652,7 @@ public class TaskInfoEditor extends EditorPart {
 		datePicker.addPickerSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent arg0) {
 				task.setReminded(false);
-				TaskInfoEditor.this.markDirty(true);
+				TaskPlanningEditor.this.markDirty(true);
 			}
 
 			public void widgetDefaultSelected(SelectionEvent arg0) {
@@ -667,7 +667,7 @@ public class TaskInfoEditor extends EditorPart {
 			public void widgetSelected(SelectionEvent e) {
 				datePicker.setDate(null);
 				task.setReminded(false);
-				TaskInfoEditor.this.markDirty(true);
+				TaskPlanningEditor.this.markDirty(true);
 			}
 		});
 
@@ -709,7 +709,7 @@ public class TaskInfoEditor extends EditorPart {
 		estimated.setIncrement(1);
 		estimated.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				TaskInfoEditor.this.markDirty(true);
+				TaskPlanningEditor.this.markDirty(true);
 			}
 		});
 
