@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.tasklist.ui.wizards;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
 
@@ -103,6 +104,8 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 	public boolean performFinish() {
 		boolean overwrite = exportPage.overwrite();
 		boolean zip = exportPage.zip();
+		
+		Collection<ITask> taskContextsToExport = MylarTaskListPlugin.getTaskListManager().getTaskList().getAllTasks();
 
 		// Get file paths to check for existence
 		String destDir = exportPage.getDestinationDirectory();
@@ -147,7 +150,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 				}
 
 				if (exportPage.exportTaskContexts()) {
-					for (ITask task : MylarTaskListPlugin.getTaskListManager().getTaskList().getAllTasks()) {
+					for (ITask task : taskContextsToExport) {
 						File contextFile = MylarPlugin.getContextManager()
 								.getFileForContext(task.getHandleIdentifier());
 						File destTaskFile = new File(destDir + File.separator + contextFile.getName());
@@ -168,7 +171,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 		// FileCopyJob job = new FileCopyJob(destZipFile, destTaskListFile,
 		// destActivationHistoryFile);
 		TaskDataExportJob job = new TaskDataExportJob(exportPage.getDestinationDirectory(), exportPage.exportTaskList(), exportPage
-				.exportActivationHistory(), exportPage.exportTaskContexts(), exportPage.zip(), destZipFile.getName());
+				.exportActivationHistory(), exportPage.exportTaskContexts(), exportPage.zip(), destZipFile.getName(), taskContextsToExport);
 		IProgressService service = PlatformUI.getWorkbench().getProgressService();
 
 		try {

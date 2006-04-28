@@ -61,25 +61,28 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 	private File destTaskListFile = null;
 
 	private File destActivationHistoryFile = null;
+	
+	private Collection<ITask> tasks;
 
 	/** export all data */
 	public TaskDataExportJob(String destinationDirectory, boolean zipIt, String zipFileName) {
-		this(destinationDirectory, true, true, true, zipIt, zipFileName);
+		this(destinationDirectory, true, true, true, zipIt, zipFileName, MylarTaskListPlugin.getTaskListManager().getTaskList().getAllTasks());
 	}
 
 	/** export specified data */
 	public TaskDataExportJob(String destinationDirectory, boolean exportTaskList, boolean exportActivationHistory,
-			boolean exportTaskContexts, boolean zipIt, String zipFileName) {
+			boolean exportTaskContexts, boolean zipIt, String zipFileName, Collection<ITask> taskContextsToExport) {
 		this.zipFileName = zipFileName;
 		this.zip = zipIt;
 		this.exportTaskList = exportTaskList;
 		this.exportActivationHistory = exportActivationHistory;
 		this.exportTaskContexts = exportTaskContexts;
 		this.destinationDirectory = destinationDirectory;
+		this.tasks = taskContextsToExport;
 	}
 
 	public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		Collection<ITask> tasks = MylarTaskListPlugin.getTaskListManager().getTaskList().getAllTasks();
+		//Collection<ITask> tasks = MylarTaskListPlugin.getTaskListManager().getTaskList().getAllTasks();
 		int jobSize = 0;
 		if (exportTaskList)
 			jobSize++;
