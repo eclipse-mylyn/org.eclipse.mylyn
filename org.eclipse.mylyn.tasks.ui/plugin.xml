@@ -314,8 +314,8 @@
            categoryId="org.eclipse.mylar.tasklist.ui.presentation"
            id="org.eclipse.mylar.tasklist.ui.colors.foreground.overdue"
            isEditable="true"
-           label="Tasks Overdue"
-           value="200,10,30"> 
+           label="Tasks - Past Reminder"
+           value="167,10,26"> 
          <description>
             Text color for overdue tasks.
          </description>
@@ -324,8 +324,8 @@
            categoryId="org.eclipse.mylar.tasklist.ui.presentation"
            id="org.eclipse.mylar.tasklist.ui.colors.foreground.today"
            isEditable="true"
-           label="Tasks Due Today"
-           value="0,0,255">  
+           label="Tasks - Today"
+           value="30,14,231">  
          <description>
             Text color for tasks due today.
          </description>
@@ -334,7 +334,7 @@
            categoryId="org.eclipse.mylar.tasklist.ui.presentation"
            id="org.eclipse.mylar.tasklist.ui.colors.background.category"
            isEditable="true"
-           label="Task List Category Background"
+           label="Categories - Background"
            value="234,233,237"> 
          <description>
             Background color of Task List categories and queries.
@@ -346,7 +346,7 @@
         defaultsTo="org.eclipse.jface.textfont"
         id="org.eclipse.mylar.tasklist.ui.fonts.task.editor.comment"
         isEditable="true"
-        label="Task Editor Comment">
+        label="Task Editor - Comments">
          <description>
             Text font used for rendering comments.
          </description>

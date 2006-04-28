@@ -74,13 +74,13 @@ public class TaskListManagerTest extends TestCase {
 	
 	public void testIsActiveToday() {
 		ITask task = new Task("1", "task-1", true);
-		assertFalse(manager.isActiveToday(task));
+		assertFalse(manager.isReminderToday(task));
 		
 		task.setReminderDate(new Date());
-		assertFalse(manager.isActiveToday(task));
+		assertFalse(manager.isReminderToday(task));
 		
 		task.setReminded(true);
-		assertFalse(manager.isActiveToday(task));
+		assertFalse(manager.isReminderToday(task));
 		task.setReminded(true);
 		
 		Calendar inAnHour = Calendar.getInstance();
@@ -91,7 +91,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.setTomorrow(tomorrow);
 		assertEquals(-1, inAnHour.compareTo(tomorrow));
 		
-		assertTrue(manager.isActiveToday(task)); 
+		assertTrue(manager.isReminderToday(task)); 
 	}
 	
 	public void testLegacyTaskListReading() throws IOException {

@@ -123,7 +123,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				} else if (task.isPastReminder()) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(TaskListColorsAndFonts.THEME_COLOR_ID_TASK_OVERDUE);
 //					return TaskListColorsAndFonts.COLOR_TASK_OVERDUE;
-				} else if (MylarTaskListPlugin.getTaskListManager().isActiveToday(task)) {
+				} else if (MylarTaskListPlugin.getTaskListManager().isReminderToday(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(TaskListColorsAndFonts.THEME_COLOR_ID_TASK_TODAY);
 				}
 			}
