@@ -85,7 +85,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	// TODO: make meta-context more explicit
 	protected boolean isInteresting(ITask task) {
 		return shouldAlwaysShow(task) 
-			|| MylarTaskListPlugin.getTaskListManager().isReminderToday(task)
+//			|| MylarTaskListPlugin.getTaskListManager().isReminderToday(task)
 			|| MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task);
 	}
 }
