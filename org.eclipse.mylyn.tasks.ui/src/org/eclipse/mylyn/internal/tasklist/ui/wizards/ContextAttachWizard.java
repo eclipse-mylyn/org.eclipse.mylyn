@@ -15,6 +15,7 @@ import java.io.IOException;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -25,16 +26,20 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
  */
 public class ContextAttachWizard extends Wizard {
 
-	public static final String WIZARD_TITLE = "Attach Context";	
+	public static final String WIZARD_TITLE = "Attach context";
+
 	private final TaskRepository repository;
+
 	private final AbstractRepositoryTask task;
+
 	private ContextAttachWizardPage wizardPage;
 
 	public ContextAttachWizard(AbstractRepositoryTask task) {
-		repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
-				task.getRepositoryKind(), task.getRepositoryUrl());		
+		repository = MylarTaskListPlugin.getRepositoryManager().getRepository(task.getRepositoryKind(),
+				task.getRepositoryUrl());
 		this.task = task;
-//		init();
+		setWindowTitle(ContextRetrieveWizard.TITLE);
+		setDefaultPageImageDescriptor(TaskListImages.BANNER_REPOSITORY_CONTEXT);
 	}
 
 	@Override
@@ -46,30 +51,25 @@ public class ContextAttachWizard extends Wizard {
 
 	@Override
 	public final boolean performFinish() {
-		
+
 		AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
 				this.repository.getKind());
-		
-		try {			
+
+		try {
 			if (connector.attachContext(repository, task, wizardPage.getComment())) {
-				
+
 				MessageDialog.openInformation(null, "Context Attachment",
 						"Attachment of task context was successful.\n Attached to: " + task.getDescription());
 			} else {
-				MessageDialog.openError(null, "Context Attachment", "Attachment of task context FAILED. See error log for details.");
+				MessageDialog.openError(null, "Context Attachment",
+						"Attachment of task context FAILED. See error log for details.");
 			}
 		} catch (IOException e) {
-			MessageDialog.openError(null, "Context Attachment", "Attachment of task context FAILED.\n"+e.getMessage());
+			MessageDialog
+					.openError(null, "Context Attachment", "Attachment of task context FAILED.\n" + e.getMessage());
 		}
 
 		return true;
 	}
-
-//	public void init(IWorkbench workbench, IStructuredSelection selection) {
-//	}
-
-//	private void init() {
-////		super.setForcePreviousAndNextButtons(true);
-//	}
 
 }

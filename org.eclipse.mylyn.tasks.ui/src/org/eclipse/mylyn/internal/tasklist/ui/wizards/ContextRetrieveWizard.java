@@ -15,6 +15,7 @@ import java.io.IOException;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.IRemoteContextDelegate;
@@ -23,11 +24,14 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
 /**
  * @author Rob Elves
+ * @author Mik Kersten
  */
 public class ContextRetrieveWizard extends Wizard {
 
-	public static final String WIZARD_TITLE = "Retrieve Context";
-
+	public static final String TITLE = "Task Repository";
+	 
+	public static final String WIZARD_TITLE = "Retrieve context";
+	
 	private final TaskRepository repository;
 
 	private final AbstractRepositoryTask task;
@@ -38,6 +42,8 @@ public class ContextRetrieveWizard extends Wizard {
 		repository = MylarTaskListPlugin.getRepositoryManager().getRepository(task.getRepositoryKind(),
 				task.getRepositoryUrl());
 		this.task = task;
+		setWindowTitle(TITLE);
+		setDefaultPageImageDescriptor(TaskListImages.BANNER_REPOSITORY_CONTEXT);
 	}
 
 	@Override
