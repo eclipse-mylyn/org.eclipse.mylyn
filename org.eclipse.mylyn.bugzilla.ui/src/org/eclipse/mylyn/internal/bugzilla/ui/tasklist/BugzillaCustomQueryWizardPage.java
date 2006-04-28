@@ -29,9 +29,9 @@ public class BugzillaCustomQueryWizardPage extends AbstractBugzillaQueryPage {
 
 	private static final String LABEL_CUSTOM_QUERY = "Custom Query";
 
-	private static final String TITLE = "Bugzilla Custom Query";
+	private static final String TITLE = "Create query from URL";
 
-	private static final String DESCRIPTION = "Enter title and custom query url.";
+	private static final String DESCRIPTION = "Enter the name and URL for the query";
 
 	private Text queryText;
 

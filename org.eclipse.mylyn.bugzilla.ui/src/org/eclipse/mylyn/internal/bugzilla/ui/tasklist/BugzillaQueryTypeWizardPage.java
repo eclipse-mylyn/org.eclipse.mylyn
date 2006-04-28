@@ -26,9 +26,9 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class BugzillaQueryTypeWizardPage extends WizardPage {
 
-	private static final String BUTTON_LABEL_QUERY = "Create custom query";
+	private static final String BUTTON_LABEL_QUERY = "Create query from URL";
 
-	private static final String BUTTON_LABEL_FORM = "Create query using bug details form";
+	private static final String BUTTON_LABEL_FORM = "Create query using form";
 
 	private static final String TITLE = "Choose Bugzilla query type";
 
