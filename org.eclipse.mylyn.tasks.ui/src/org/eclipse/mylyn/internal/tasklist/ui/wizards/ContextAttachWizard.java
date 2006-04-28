@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.tasklist.ui.wizards;
 
 import java.io.IOException;
 
+import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
@@ -20,6 +21,9 @@ import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
+import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchSite;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Rob Elves
@@ -57,12 +61,15 @@ public class ContextAttachWizard extends Wizard {
 
 		try {
 			if (connector.attachContext(repository, task, wizardPage.getComment())) {
-
-				MessageDialog.openInformation(null, "Context Attachment",
-						"Attachment of task context was successful.\n Attached to: " + task.getDescription());
+				IWorkbenchSite site = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart().getSite();
+				if (site instanceof IViewSite) {
+					IStatusLineManager statusLineManager = ((IViewSite)site).getActionBars().getStatusLineManager();
+					statusLineManager.setMessage(TaskListImages.getImage(TaskListImages.TASKLIST),
+							"Context attached to task: " + task.getDescription());					
+				}
 			} else {
 				MessageDialog.openError(null, "Context Attachment",
-						"Attachment of task context FAILED. See error log for details.");
+						"Attachment of task context failed.");
 			}
 		} catch (IOException e) {
 			MessageDialog

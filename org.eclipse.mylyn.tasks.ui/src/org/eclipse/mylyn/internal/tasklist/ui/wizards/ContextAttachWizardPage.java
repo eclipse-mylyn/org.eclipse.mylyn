@@ -29,52 +29,59 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public class ContextAttachWizardPage extends WizardPage {
 
+	private static final String DESCRIPTION = "Attaches local context to repository task";
+		
 	private TaskRepository repository;
-	private AbstractRepositoryTask task;	
+
+	private AbstractRepositoryTask task;
+
 	private Text commentText;
+
 	private Form form;
-	
+
 	protected ContextAttachWizardPage(TaskRepository repository, AbstractRepositoryTask task) {
 		super(ContextAttachWizard.WIZARD_TITLE);
 		this.repository = repository;
-		this.task = task;
-	} 
-	
+		this.task = task; 
+		setDescription(DESCRIPTION);
+	}
+
 	public void createControl(Composite parent) {
 		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
 		form = toolkit.createForm(parent);
 		form.getBody().setLayout(new GridLayout(1, false));
-		toolkit.createLabel(form.getBody(), "Task: "+task.getDescription());
-		toolkit.createLabel(form.getBody(), "Repository: "+repository.getUrl());
-		toolkit.createLabel(form.getBody(), "Enter comment below:");
-
-		commentText = toolkit.createText(form.getBody(),"", SWT.MULTI | SWT.V_SCROLL
-				| SWT.WRAP);
-		
-		commentText.addKeyListener(new KeyListener(){
+		form.setBackground(parent.getBackground());
+		toolkit.setBackground(parent.getBackground());
+		toolkit.createLabel(form.getBody(), "Task: " + task.getDescription());
+		toolkit.createLabel(form.getBody(), "Repository: " + repository.getUrl());
+		toolkit.createLabel(form.getBody(), "Comment: ");
+		commentText = toolkit.createText(form.getBody(), "", SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
+	
+		commentText.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
 				getWizard().getContainer().updateButtons();
 			}
 
 			public void keyReleased(KeyEvent e) {
-				getWizard().getContainer().updateButtons();				
+				getWizard().getContainer().updateButtons();
 			}
 		});
-		
+
 		commentText.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		toolkit.paintBordersFor(form.getBody());
-		
+
 		setControl(form.getBody());
 	}
-	
+
 	public String getComment() {
 		return commentText.getText();
 	}
 
 	@Override
 	public boolean isPageComplete() {
-		if(commentText.getText().equals("")) return false;
+//		if (commentText.getText().equals(""))
+//			return false;
 		return super.isPageComplete();
 	}
 

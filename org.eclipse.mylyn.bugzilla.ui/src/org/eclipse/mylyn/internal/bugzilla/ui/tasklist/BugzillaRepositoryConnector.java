@@ -123,7 +123,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				}
 
 				public void activityChanged(DateRangeContainer week) {
-					// ignore	
+					// ignore
 				}
 			});
 		}
@@ -199,15 +199,15 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 		String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), bugId);
 		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
-		 
+
 		if (task == null) {
 			task = new BugzillaTask(handle, DESCRIPTION_DEFAULT, true);
-			MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task);			
-		} 	
+			MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task);
+		}
 
-//		MylarTaskListPlugin.BgetTaskListManager().getTaskList().addTaskToArchive(newTask);
+		// MylarTaskListPlugin.BgetTaskListManager().getTaskList().addTaskToArchive(newTask);
 		if (task instanceof AbstractRepositoryTask) {
-			synchronize((AbstractRepositoryTask)task, true, null);
+			synchronize((AbstractRepositoryTask) task, true, null);
 		}
 		return task;
 	}
@@ -215,12 +215,12 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	public IWizard getNewQueryWizard(TaskRepository repository) {
 		return new NewBugzillaQueryWizard(repository);
 	}
-	
+
 	public IWizard getEditQueryWizard(TaskRepository repository, AbstractRepositoryQuery query) {
 		if (!(query instanceof BugzillaRepositoryQuery)) {
 			return null;
 		}
-		return new EditBugzillaQueryWizard(repository, (BugzillaRepositoryQuery)query);
+		return new EditBugzillaQueryWizard(repository, (BugzillaRepositoryQuery) query);
 	}
 
 	public IWizard getAddExistingTaskWizard(TaskRepository repository) {
@@ -391,7 +391,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 									MylarStatusHandler.fail(throwable, "could not post bug", false);
 									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 											"Could not post bug.  Check repository credentials and connectivity.\n\n"
-											+ throwable); 
+													+ throwable);
 								}
 							}
 						});
@@ -417,11 +417,11 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			Set<AbstractRepositoryQuery> queriesWithHandle = MylarTaskListPlugin.getTaskListManager().getTaskList()
 					.getQueriesForHandle(task.getHandleIdentifier());
 			synchronize(queriesWithHandle, null, Job.INTERACTIVE, 0);
-//			for (AbstractRepositoryQuery query : queriesWithHandle) {
-//				synchronize(query, null);
-//			}
+			// for (AbstractRepositoryQuery query : queriesWithHandle) {
+			// synchronize(query, null);
+			// }
 			if (task instanceof AbstractRepositoryTask) {
-				synchronize((AbstractRepositoryTask)task, true, null);
+				synchronize((AbstractRepositoryTask) task, true, null);
 			}
 
 		} catch (Exception e) {
@@ -523,12 +523,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return supportedVersions;
 	}
 
-	/** public for testing purposes **/
+	/** public for testing purposes * */
 	@Override
-	public List<AbstractQueryHit> performQuery(final AbstractRepositoryQuery repositoryQuery, IProgressMonitor monitor, MultiStatus status) {
+	public List<AbstractQueryHit> performQuery(final AbstractRepositoryQuery repositoryQuery, IProgressMonitor monitor,
+			MultiStatus status) {
 		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
 				repositoryQuery.getRepositoryKind(), repositoryQuery.getRepositoryUrl());
-		
+
 		final BugzillaCategorySearchOperation categorySearch = new BugzillaCategorySearchOperation(repository,
 				repositoryQuery.getQueryUrl(), repositoryQuery.getMaxHits());
 
@@ -539,19 +540,19 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					String description = hit.getId() + ": " + hit.getDescription();
 
 					// TODO: Associate new hit with task (if already exists)
-					newHits.add(new BugzillaQueryHit(description, hit.getPriority(), repositoryQuery
-							.getRepositoryUrl(), hit.getId(), null, hit.getState()));
+					newHits.add(new BugzillaQueryHit(description, hit.getPriority(),
+							repositoryQuery.getRepositoryUrl(), hit.getId(), null, hit.getState()));
 				}
 			}
 		});
-		
+
 		categorySearch.execute(monitor);
 		try {
 			IStatus queryStatus = categorySearch.getStatus();
 			if (!queryStatus.isOK()) {
-				 status.add(new Status(IStatus.OK, MylarTaskListPlugin.PLUGIN_ID, IStatus.OK, queryStatus.getMessage(), queryStatus
-					.getException()));
-			} else {				
+				status.add(new Status(IStatus.OK, MylarTaskListPlugin.PLUGIN_ID, IStatus.OK, queryStatus.getMessage(),
+						queryStatus.getException()));
+			} else {
 				status.add(queryStatus);
 			}
 		} catch (LoginException e) {
@@ -559,14 +560,14 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			MylarStatusHandler.fail(e, "login failure for repository url: " + repository, false);
 			status.add(new Status(IStatus.OK, MylarTaskListPlugin.PLUGIN_ID, IStatus.OK, "Could not log in", e));
 		}
-		
+
 		return newHits;
 	}
 
 	@Override
 	protected void updateOfflineState(AbstractRepositoryTask repositoryTask, boolean forceSync) {
 		if (repositoryTask instanceof BugzillaTask) {
-			BugzillaTask bugzillaTask = (BugzillaTask)repositoryTask;
+			BugzillaTask bugzillaTask = (BugzillaTask) repositoryTask;
 			BugReport downloadedReport = downloadReport(bugzillaTask);
 			if (downloadedReport != null) {
 				bugzillaTask.setBugReport(downloadedReport);
@@ -578,27 +579,33 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public boolean attachContext(TaskRepository repository, AbstractRepositoryTask task, String longComment)
 			throws IOException {
-		boolean result = false;
-		MylarPlugin.getContextManager().saveContext(task.getHandleIdentifier());
-		File sourceContextFile = MylarPlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
-		if (sourceContextFile != null && sourceContextFile.exists()) {
-			result = BugzillaRepositoryUtil.uploadAttachment(repository, BugzillaTask.getTaskIdAsInt(task
-					.getHandleIdentifier()), longComment, MYLAR_CONTEXT_DESCRIPTION, sourceContextFile,
-					CONTENTTYPE_APPLICATION_XML, false);
-			if (result) {
-				synchronize(task, false, null);
+		if (!repository.hasCredentials()) {
+			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					MylarTaskListPlugin.TITLE_DIALOG, "Repository credentials missing or invalid.");
+			return false;
+		} else {
+			boolean result = false;
+			MylarPlugin.getContextManager().saveContext(task.getHandleIdentifier());
+			File sourceContextFile = MylarPlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+			if (sourceContextFile != null && sourceContextFile.exists()) {
+				result = BugzillaRepositoryUtil.uploadAttachment(repository, BugzillaTask.getTaskIdAsInt(task
+						.getHandleIdentifier()), longComment, MYLAR_CONTEXT_DESCRIPTION, sourceContextFile,
+						CONTENTTYPE_APPLICATION_XML, false);
+				if (result) {
+					synchronize(task, false, null);
+				}
 			}
+			return result;
 		}
-		return result;
 	}
 
 	@Override
 	public Set<IRemoteContextDelegate> getAvailableContexts(TaskRepository repository, AbstractRepositoryTask task) {
 		Set<IRemoteContextDelegate> contextDelegates = new HashSet<IRemoteContextDelegate>();
-		if(task instanceof BugzillaTask) {
-			BugzillaTask bugzillaTask = (BugzillaTask)task;
+		if (task instanceof BugzillaTask) {
+			BugzillaTask bugzillaTask = (BugzillaTask) task;
 			for (Comment comment : bugzillaTask.getBugReport().getComments()) {
-				if(comment.hasAttachment() && comment.getAttachmentDescription().equals(MYLAR_CONTEXT_DESCRIPTION)) {
+				if (comment.hasAttachment() && comment.getAttachmentDescription().equals(MYLAR_CONTEXT_DESCRIPTION)) {
 					contextDelegates.add(new BugzillaRemoteContextDelegate(comment));
 				}
 			}
@@ -649,7 +656,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			}
 		}
 	}
-	
+
 	public void openRemoteTask(String repositoryUrl, String idString) {
 		int id = -1;
 		try {

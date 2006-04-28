@@ -68,7 +68,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Rob Elves (attachments)
  */
 public class BugzillaRepositoryUtil {
-	
+
 	private static final String VALUE_CONTENTTYPEMETHOD_MANUAL = "manual";
 
 	private static final String VALUE_ISPATCH = "1";
@@ -99,7 +99,7 @@ public class BugzillaRepositoryUtil {
 
 	public static final char PREF_DELIM_REPOSITORY = ':';
 
-	public static final String POST_ARGS_SHOW_BUG = "/show_bug.cgi?id=";//ctype=xml&
+	public static final String POST_ARGS_SHOW_BUG = "/show_bug.cgi?id=";// ctype=xml&
 
 	public static final String POST_ARGS_ATTACHMENT_DOWNLOAD = "/attachment.cgi?id=";
 
@@ -338,7 +338,6 @@ public class BugzillaRepositoryUtil {
 		a.setValue(optionValues.get(optionValues.size() - 1));
 		attributes.put(a.getName(), a);
 
-
 		a = new Attribute(BugReportElement.COMPONENT.toString());
 		a.setParameterName(BugReportElement.COMPONENT.getKeyString());
 		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getComponents(model.getProduct());
@@ -347,7 +346,6 @@ public class BugzillaRepositoryUtil {
 		}
 		attributes.put(a.getName(), a);
 
-	
 		a = new Attribute(BugReportElement.PRIORITY.toString());
 		a.setParameterName(BugReportElement.PRIORITY.getKeyString());
 		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getPriorities();
@@ -356,7 +354,6 @@ public class BugzillaRepositoryUtil {
 		}
 		a.setValue(optionValues.get((optionValues.size() / 2)));
 		attributes.put(a.getName(), a);
-		
 
 		a = new Attribute(BugReportElement.PRODUCT.toString());
 		a.setParameterName(BugReportElement.PRODUCT.getKeyString());
@@ -365,7 +362,7 @@ public class BugzillaRepositoryUtil {
 			a.addOptionValue(option, option);
 		}
 		attributes.put(a.getName(), a);
-		
+
 		a = new Attribute(BugReportElement.BUG_STATUS.toString());
 		a.setParameterName(BugReportElement.BUG_STATUS.getKeyString());
 		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getStatusValues();
@@ -598,21 +595,13 @@ public class BugzillaRepositoryUtil {
 		postMethod.getParams().setBooleanParameter(HttpMethodParams.USE_EXPECT_CONTINUE, true);
 
 		try {
-
 			List<PartBase> parts = new ArrayList<PartBase>();
-
 			parts.add(new StringPart(ATTRIBUTE_ACTION, VALUE_ACTION_INSERT));
-
 			parts.add(new StringPart(ATTRIBUTE_BUGZILLA_LOGIN, repository.getUserName()));
-
 			parts.add(new StringPart(ATTRIBUTE_BUGZILLA_PASSWORD, repository.getPassword()));
-
 			parts.add(new StringPart(ATTRIBUTE_BUGID, String.valueOf(bugReportID)));
-
 			parts.add(new StringPart(ATTRIBUTE_DESCRIPTION, description));
-
 			parts.add(new StringPart(ATTRIBUTE_COMMENT, comment));
-
 			parts.add(new FilePart(ATTRIBUTE_DATA, sourceFile));
 
 			if (isPatch) {
