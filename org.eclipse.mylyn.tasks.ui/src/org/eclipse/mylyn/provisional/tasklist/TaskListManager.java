@@ -422,6 +422,10 @@ public class TaskListManager {
 		reminderCalendar.set(Calendar.SECOND, 0);
 		reminderCalendar.set(Calendar.MILLISECOND, 0);
 	}
+	
+	public void setInHour(Calendar reminderCalendar) {
+		reminderCalendar.add(Calendar.HOUR_OF_DAY, 1);
+	}
 
 	public Object[] getDateRanges() {
 		// parseFutureReminders();

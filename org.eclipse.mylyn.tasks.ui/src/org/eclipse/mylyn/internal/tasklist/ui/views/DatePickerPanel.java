@@ -104,12 +104,18 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 				"6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM",
 				"2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM", "10:00 PM",
 				"11:00 PM" });
-		timeCombo.select(Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
+		if(date == null) {
+			timeCombo.select(Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
+		} else {
+			timeCombo.select(date.get(Calendar.HOUR_OF_DAY));
+		}
 		timeCombo.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent arg0) {
 				date.set(Calendar.HOUR_OF_DAY, timeCombo.getSelectionIndex());
 				date.set(Calendar.MINUTE, 0);
-				updateCalendar();
+				setSelection(new DateSelection(date));
+				notifyListeners(new SelectionChangedEvent(DatePickerPanel.this, getSelection()));
+				//updateCalendar();
 			}
 		});
 		timeCombo.addKeyListener(this);
@@ -129,6 +135,8 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 
 			public void modifyText(ModifyEvent arg0) {
 				date.set(Calendar.MONTH, monthCombo.getSelectionIndex());
+				setSelection(new DateSelection(date));
+				notifyListeners(new SelectionChangedEvent(DatePickerPanel.this, getSelection()));
 				updateCalendar();
 			}
 
@@ -154,6 +162,8 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 
 			public void modifyText(ModifyEvent arg0) {
 				date.set(Calendar.YEAR, yearSpinner.getSelection());
+				setSelection(new DateSelection(date));
+				notifyListeners(new SelectionChangedEvent(DatePickerPanel.this, getSelection()));
 				updateCalendar();
 			}
 

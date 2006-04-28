@@ -11,6 +11,9 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.actions;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -87,6 +90,10 @@ public class NewLocalTaskAction extends Action {
 	public void run() {
 		Task newTask = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), DESCRIPTION_DEFAULT, true);
 		newTask.setUrl(getDefaultIssueURL());
+		
+		Calendar reminderCalendar = GregorianCalendar.getInstance();
+		MylarTaskListPlugin.getTaskListManager().setInHour(reminderCalendar);
+		MylarTaskListPlugin.getTaskListManager().setReminder(newTask, reminderCalendar.getTime());
 
 		Object selectedObject = ((IStructuredSelection) view.getViewer().getSelection()).getFirstElement();
 
