@@ -10,14 +10,13 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.core;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -57,6 +56,7 @@ import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile;
 import org.eclipse.mylar.internal.bugzilla.core.internal.RepositoryConfiguration;
 import org.eclipse.mylar.internal.bugzilla.core.internal.ServerConfigurationFactory;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.core.util.ZipFileUtil;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.mylar.provisional.tasklist.TaskRepositoryManager;
@@ -69,6 +69,8 @@ import org.eclipse.ui.PlatformUI;
  */
 public class BugzillaRepositoryUtil {
 
+	private static final String ATTACHMENT_DOWNLOAD_FAILED = "Attachment download FAILED.";
+	
 	private static final String VALUE_CONTENTTYPEMETHOD_MANUAL = "manual";
 
 	private static final String VALUE_ISPATCH = "1";
@@ -519,7 +521,8 @@ public class BugzillaRepositoryUtil {
 
 	public static boolean downloadAttachment(TaskRepository repository, int id, File destinationFile, boolean overwrite)
 			throws IOException {
-		BufferedReader in = null;
+		BufferedInputStream in = null;
+		FileOutputStream outStream = null;
 		try {
 			String url = repository.getUrl() + POST_ARGS_ATTACHMENT_DOWNLOAD + id;
 			if (repository.hasCredentials()) {
@@ -532,36 +535,27 @@ public class BugzillaRepositoryUtil {
 			URLConnection connection = BugzillaPlugin.getDefault().getUrlConnection(downloadUrl);
 			if (connection != null) {
 				InputStream input = connection.getInputStream();
-				if (input != null) {
-					in = new BufferedReader(new InputStreamReader(input));
-					if (destinationFile.exists() && !overwrite) {
-						return false;
-					}
-					destinationFile.createNewFile();
-					OutputStreamWriter outputStream = new OutputStreamWriter(new FileOutputStream(destinationFile));
-					BufferedWriter out = new BufferedWriter(outputStream);
-					char[] buf = new char[1024];
-					int len;
-					while ((len = in.read(buf)) > 0) {
-						out.write(buf, 0, len);
-					}
-					in.close();
-					out.close();
-					return true;
-				}
+				outStream = new FileOutputStream(destinationFile);
+				ZipFileUtil.copyByteStream(input, outStream);
+
+				return true;
+
 			}
 		} catch (MalformedURLException e) {
-			throw e;
+			MylarStatusHandler.fail(e, ATTACHMENT_DOWNLOAD_FAILED, false);
+			return false;
 		} catch (IOException e) {
-			throw e;
+			MylarStatusHandler.fail(e, ATTACHMENT_DOWNLOAD_FAILED, false);
+			return false;
 		} catch (Exception e) {
-			BugzillaPlugin.log(new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
-					"Problem retrieving attachment", e));
+			MylarStatusHandler.fail(e, ATTACHMENT_DOWNLOAD_FAILED, false);
 			return false;
 		} finally {
 			try {
 				if (in != null)
 					in.close();
+				if (outStream != null)
+					outStream.close();
 			} catch (IOException e) {
 				BugzillaPlugin.log(new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
 						"Problem closing the stream", e));
@@ -569,6 +563,66 @@ public class BugzillaRepositoryUtil {
 		}
 		return false;
 	}
+
+	// public static boolean downloadAttachment(TaskRepository repository, int
+	// id, File destinationFile, boolean overwrite)
+	// throws IOException {
+	// BufferedReader in = null;
+	// try {
+	// String url = repository.getUrl() + POST_ARGS_ATTACHMENT_DOWNLOAD + id;
+	// if (repository.hasCredentials()) {
+	// url += "&" + POST_ARGS_LOGIN
+	// + URLEncoder.encode(repository.getUserName(),
+	// BugzillaPlugin.ENCODING_UTF_8)
+	// + POST_ARGS_PASSWORD
+	// + URLEncoder.encode(repository.getPassword(),
+	// BugzillaPlugin.ENCODING_UTF_8);
+	// }
+	// URL downloadUrl = new URL(url);
+	// URLConnection connection =
+	// BugzillaPlugin.getDefault().getUrlConnection(downloadUrl);
+	// if (connection != null) {
+	// InputStream input = connection.getInputStream();
+	// if (input != null) {
+	// in = new BufferedReader(new InputStreamReader(input));
+	// if (destinationFile.exists() && !overwrite) {
+	// return false;
+	// }
+	// destinationFile.createNewFile();
+	// OutputStreamWriter outputStream = new OutputStreamWriter(new
+	// FileOutputStream(destinationFile));
+	// BufferedWriter out = new BufferedWriter(outputStream);
+	// char[] buf = new char[1024];
+	// int len;
+	// while ((len = in.read(buf)) > 0) {
+	// out.write(buf, 0, len);
+	// }
+	// in.close();
+	// out.close();
+	// return true;
+	// }
+	// }
+	// } catch (MalformedURLException e) {
+	// throw e;
+	// } catch (IOException e) {
+	// throw e;
+	// } catch (Exception e) {
+	// BugzillaPlugin.log(new Status(IStatus.ERROR,
+	// IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
+	// "Problem retrieving attachment", e));
+	// return false;
+	// } finally {
+	// try {
+	// if (in != null)
+	// in.close();
+	// } catch (IOException e) {
+	// BugzillaPlugin.log(new Status(IStatus.ERROR,
+	// IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
+	// "Problem closing the stream", e));
+	// }
+	// }
+	// return false;
+	// }
 
 	public static boolean uploadAttachment(TaskRepository repository, int bugReportID, String comment,
 			String description, File sourceFile, String contentType, boolean isPatch) throws IOException {

@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +25,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
@@ -51,10 +53,12 @@ import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaCategorySearchOperation.ICategorySearchListener;
 import org.eclipse.mylar.internal.bugzilla.ui.wizard.NewBugzillaReportWizard;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.core.util.ZipFileUtil;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractAddExistingTaskWizard;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.ExistingTaskWizardPage;
+import org.eclipse.mylar.internal.tasklist.util.TaskDataExportJob;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
@@ -79,7 +83,9 @@ import org.eclipse.ui.progress.IProgressService;
  */
 public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
-	private static final String CONTENTTYPE_APPLICATION_XML = "application/xml";
+	private static final String ZIPFILE_EXTENSION = ".zip";
+
+	private static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
 
 	private static final String LABEL_JOB_SUBMIT = "Submitting to Bugzilla repository";
 
@@ -587,14 +593,52 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			boolean result = false;
 			MylarPlugin.getContextManager().saveContext(task.getHandleIdentifier());
 			File sourceContextFile = MylarPlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+
 			if (sourceContextFile != null && sourceContextFile.exists()) {
-				result = BugzillaRepositoryUtil.uploadAttachment(repository, BugzillaTask.getTaskIdAsInt(task
-						.getHandleIdentifier()), longComment, MYLAR_CONTEXT_DESCRIPTION, sourceContextFile,
-						CONTENTTYPE_APPLICATION_XML, false);
-				if (result) {
-					synchronize(task, false, null);
+				File folder = sourceContextFile.getParentFile();
+				if (folder != null && folder.exists() && folder.isDirectory()) {
+					List<ITask> tasksToExport = new ArrayList<ITask>();
+					tasksToExport.add(task);
+					TaskDataExportJob job = new TaskDataExportJob(MylarPlugin.getDefault().getDataDirectory(), false,
+							false, true, true, sourceContextFile.getName() + ZIPFILE_EXTENSION, tasksToExport);
+
+					// IProgressService service =
+					// PlatformUI.getWorkbench().getProgressService();
+
+					try {
+						// service.run(true, false, job);
+						job.run(new NullProgressMonitor());
+
+						File zippedContextFile = new File(MylarPlugin.getDefault().getDataDirectory() + File.separator
+								+ sourceContextFile.getName() + ZIPFILE_EXTENSION);
+						if (zippedContextFile != null && zippedContextFile.exists()) {
+							result = BugzillaRepositoryUtil.uploadAttachment(repository, BugzillaTask
+									.getTaskIdAsInt(task.getHandleIdentifier()), longComment,
+									MYLAR_CONTEXT_DESCRIPTION, zippedContextFile, APPLICATION_OCTET_STREAM, false);
+							if (result) {
+								synchronize(task, false, null);
+							}
+						}
+
+					} catch (InvocationTargetException e) {
+						MylarStatusHandler.fail(e, "Could not export task context as zip file", true);
+					} catch (InterruptedException e) {
+						MylarStatusHandler.fail(e, "Could not export task context as zip file", true);
+					}
+
 				}
 			}
+
+			// if (sourceContextFile != null && sourceContextFile.exists()) {
+			// result = BugzillaRepositoryUtil.uploadAttachment(repository,
+			// BugzillaTask.getTaskIdAsInt(task
+			// .getHandleIdentifier()), longComment, MYLAR_CONTEXT_DESCRIPTION,
+			// sourceContextFile,
+			// CONTENTTYPE_APPLICATION_XML, false);
+			// if (result) {
+			// synchronize(task, false, null);
+			// }
+			// }
 			return result;
 		}
 	}
@@ -627,17 +671,26 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			}
 
 			File destinationContextFile = MylarPlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+
+			File destinationZipFile = new File(destinationContextFile.getPath() + ZIPFILE_EXTENSION);
+
 			// if(destinationContextFile.exists()) {
 			// destinationContextFile.delete();
 			// }
 
-			result = BugzillaRepositoryUtil.downloadAttachment(repository, contextDelegate.getId(),
-					destinationContextFile, true);
+			result = BugzillaRepositoryUtil.downloadAttachment(repository, contextDelegate.getId(), destinationZipFile,
+					true);
 
 			if (result) {
-				MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
-				if (wasActive) {
-					MylarTaskListPlugin.getTaskListManager().activateTask(task);
+
+				ZipFileUtil.unzipFiles(destinationZipFile, MylarPlugin.getDefault().getDataDirectory());
+
+				if (destinationContextFile.exists()) {
+
+					MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
+					if (wasActive) {
+						MylarTaskListPlugin.getTaskListManager().activateTask(task);
+					}
 				}
 			}
 		}
