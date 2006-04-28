@@ -422,7 +422,7 @@ public class TaskListManager {
 		reminderCalendar.set(Calendar.SECOND, 0);
 		reminderCalendar.set(Calendar.MILLISECOND, 0);
 	}
-	
+
 	public Object[] getDateRanges() {
 		// parseFutureReminders();
 		return dateRangeContainers.toArray();
@@ -582,37 +582,38 @@ public class TaskListManager {
 		return false;
 	}
 
-	public boolean isReminderThisWeek(ITask task) {
-		if (task.isCompleted()) {
-			return false;
+	public boolean isReminderAfterThisWeek(ITask task) {
+		Date reminder = task.getReminderDate();
+		if (reminder != null) {
+			return reminder.compareTo(activityNextWeek.getStart().getTime()) > -1;
 		} else {
-			Date reminder = task.getReminderDate();
-			if (reminder != null) {
-				Date now = new Date();
-				Calendar tomorrow = GregorianCalendar.getInstance();
-				MylarTaskListPlugin.getTaskListManager().setTomorrow(tomorrow);
-				return (reminder.compareTo(now) == 1 && reminder.compareTo(tomorrow.getTime()) == -1);
-			} else {
-				return false;
-			}
+			return false;
 		}
 	}
 	
+//	public boolean isReminderThisWeek(ITask task) {
+//		Date reminder = task.getReminderDate();
+//		if (reminder != null) {
+//			Date now = new Date();
+//			Calendar nextWeekStart = activityNextWeek.getStart();
+//			return (reminder.compareTo(now) == 1 && reminder.compareTo(nextWeekStart.getTime()) == -1);
+//		} else {
+//			return false;
+//		}
+//	}
+
 	public boolean isReminderToday(ITask task) {
-		if (task.isCompleted()) {
-			return false;
+		Date reminder = task.getReminderDate();
+		if (reminder != null) {
+			Date now = new Date();
+			Calendar tomorrow = GregorianCalendar.getInstance();
+			MylarTaskListPlugin.getTaskListManager().setTomorrow(tomorrow);
+			return (reminder.compareTo(now) == 1 && reminder.compareTo(tomorrow.getTime()) == -1);
 		} else {
-			Date reminder = task.getReminderDate();
-			if (reminder != null) {
-				Date now = new Date();
-				Calendar nextWeekStart = activityNextWeek.getStart();
-				return (reminder.compareTo(now) == 1 && reminder.compareTo(nextWeekStart.getTime()) == -1);
-			} else {
-				return false;
-			}
+			return false;
 		}
 	}
-	
+
 	/**
 	 * TODO: Need to migrate to use of this method for setting of reminders
 	 */
