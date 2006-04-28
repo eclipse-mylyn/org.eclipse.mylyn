@@ -46,7 +46,7 @@ public class ContextAttachAction implements IViewActionDelegate {
 		if (task instanceof AbstractRepositoryTask) {
 			try {
 				if (!MylarPlugin.getContextManager().hasContext(task.getHandleIdentifier())) {
-					MessageDialog.openError(null, "Attach Context", "No context exists for selected task.");
+					MessageDialog.openInformation(null, "Attach Context", "No context exists for selected task.");
 					return;
 				}
 				

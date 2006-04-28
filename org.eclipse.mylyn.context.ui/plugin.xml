@@ -54,20 +54,6 @@
                  <objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractQueryHit"/>
               </or>
            </enablement>
-        </action> 
-        <action
-              class="org.eclipse.mylar.internal.ui.actions.ContextAttachAction"
-              enablesFor="1"
-              icon="icons/etool16/context-attach.gif"
-              id="org.eclipse.mylar.ui.context.repository.attach"
-              label="Attach Context (Experimental)"
-              menubarPath="context">
-           <enablement>
-              <or>
-                 <objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask"/>
-                 <objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractQueryHit"/>
-              </or>
-           </enablement>
         </action>
         <action
               class="org.eclipse.mylar.internal.ui.actions.ContextRetrieveAction"
@@ -80,6 +66,20 @@
               <or>
                  <objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractQueryHit"/>
                  <objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask"/>
+              </or>
+           </enablement>
+        </action> 
+        <action
+              class="org.eclipse.mylar.internal.ui.actions.ContextAttachAction"
+              enablesFor="1"
+              icon="icons/etool16/context-attach.gif"
+              id="org.eclipse.mylar.ui.context.repository.attach"
+              label="Attach Context (Experimental)"
+              menubarPath="context">
+           <enablement>
+              <or>
+                 <objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask"/>
+                 <objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractQueryHit"/>
               </or>
            </enablement>
         </action>
