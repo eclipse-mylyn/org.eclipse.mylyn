@@ -38,7 +38,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public abstract class AbstractRepositoryConnector {
 	
-	public static final String MYLAR_CONTEXT_DESCRIPTION = "Mylar Task Context";
+	public static final String MYLAR_CONTEXT_DESCRIPTION = "mylar/context/zip";
 
 	private static final int MAX_REFRESH_JOBS = 5;
 
