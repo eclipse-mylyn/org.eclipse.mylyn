@@ -48,7 +48,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 					task = ((AbstractQueryHit) object).getCorrespondingTask();
 				}
 				if (task != null) {
-					if (isImplicitlyInteresting(task)) {
+					if (isInteresting(task)) {
 						return true;
 					}
 //					IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(task);
@@ -72,15 +72,14 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		return false;
 	}
 
-	// protected boolean isImplicitlyUninteresting(ITask task) {
-	// if (task.isCompleted()) {
-	// return true;
-	// }
-	// return false;
-	// }
-
-	protected boolean isImplicitlyInteresting(ITask task) {
-		return task.isActive() || task.isPastReminder()
-				|| MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task);
+	// TODO: restore meta-context
+	protected boolean isInteresting(ITask task) {
+		if (task.isCompleted()) {
+			return false;
+		} else {
+			return shouldAlwaysShow(task)
+				|| MylarTaskListPlugin.getTaskListManager().isReminderToday(task)
+				|| MylarTaskListPlugin.getTaskListManager().isReminderThisWeek(task);
+		}
 	}
 }
