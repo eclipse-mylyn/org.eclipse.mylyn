@@ -99,6 +99,8 @@ public class TaskListImages {
 
 	public static final ImageDescriptor OVERLAY_REPOSITORY = create(T_EVIEW, "overlay-repository.gif");
 	
+	public static final ImageDescriptor OVERLAY_REPOSITORY_CONTEXT = create(T_EVIEW, "overlay-repository-context.gif");
+		
 	public static final ImageDescriptor STATUS_NORMAL = create(T_EVIEW, "status-normal.gif");
 	
 	public static final ImageDescriptor STATUS_CONTEXT = create(T_EVIEW, "status-server-context.gif");
