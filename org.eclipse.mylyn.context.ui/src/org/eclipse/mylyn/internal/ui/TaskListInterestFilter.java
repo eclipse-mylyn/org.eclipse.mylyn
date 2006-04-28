@@ -79,7 +79,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	}
 
 	protected boolean isUninteresting(ITask task) {
-		return task.isCompleted() || MylarTaskListPlugin.getTaskListManager().isReminderAfterThisWeek(task);
+		return !task.isActive() && (task.isCompleted() || MylarTaskListPlugin.getTaskListManager().isReminderAfterThisWeek(task));
 	}
 
 	// TODO: make meta-context more explicit
