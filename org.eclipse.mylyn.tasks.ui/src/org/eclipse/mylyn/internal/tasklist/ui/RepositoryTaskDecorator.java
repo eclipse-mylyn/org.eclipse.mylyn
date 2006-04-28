@@ -18,9 +18,12 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
 /**
  * @author Mik Kersten
@@ -44,7 +47,9 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 			}
 		} else if (element instanceof AbstractRepositoryTask) { 
 			AbstractRepositoryTask task = (AbstractRepositoryTask)element;
-			if (task.hasServerContext()) { 
+			AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(task.getRepositoryKind());
+			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(task.getRepositoryKind(), task.getRepositoryUrl());
+			if (connector != null && connector.hasRepositoryContext(repository, task)) { 
 				decoration.addOverlay(TaskListImages.OVERLAY_REPOSITORY_CONTEXT, IDecoration.BOTTOM_LEFT);
 			} else {
 				decoration.addOverlay(TaskListImages.OVERLAY_REPOSITORY, IDecoration.BOTTOM_LEFT);
@@ -53,11 +58,8 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 				decoration.addOverlay(TaskListImages.OVERLAY_SYNCHRONIZING, IDecoration.TOP_LEFT);
 			}
 		} else if (element instanceof AbstractQueryHit) {
-			decoration.addOverlay(TaskListImages.OVERLAY_REPOSITORY, IDecoration.BOTTOM_LEFT);
 			ITask correspondingTask = ((AbstractQueryHit)element).getCorrespondingTask();
-			if (correspondingTask instanceof AbstractRepositoryTask && ((AbstractRepositoryTask)correspondingTask).isSynchronizing()) {
-				decoration.addOverlay(TaskListImages.OVERLAY_SYNCHRONIZING, IDecoration.TOP_LEFT);
-			}
+			decorate(correspondingTask, decoration);
 		} else if (element instanceof ITask) {
 			String url = ((ITask)element).getUrl();
 			if (url != null && !url.trim().equals("") && !url.equals("http://")) {
