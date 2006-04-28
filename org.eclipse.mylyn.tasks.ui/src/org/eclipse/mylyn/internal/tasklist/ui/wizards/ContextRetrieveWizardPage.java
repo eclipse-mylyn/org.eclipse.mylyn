@@ -23,6 +23,7 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -65,10 +66,15 @@ public class ContextRetrieveWizardPage extends WizardPage {
 		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
 		form = toolkit.createForm(parent);
 		form.getBody().setLayout(new GridLayout(1, false));
+		
+		Color formBackground = form.getBackground();
+		form.setBackground(parent.getBackground());
+		toolkit.setBackground(parent.getBackground());
 		toolkit.createLabel(form.getBody(), "Task: " + task.getDescription());
 		toolkit.createLabel(form.getBody(), "Repository: " + repository.getUrl());
 		toolkit.createLabel(form.getBody(), "Select context below:");
 		final Table contextTable = toolkit.createTable(form.getBody(), SWT.FULL_SELECTION | SWT.SINGLE | SWT.V_SCROLL);
+		contextTable.setBackground(formBackground);
 		contextTable.setHeaderVisible(true);
 		contextTable.setLinesVisible(true);
 		contextTable.addSelectionListener(new SelectionAdapter() {
