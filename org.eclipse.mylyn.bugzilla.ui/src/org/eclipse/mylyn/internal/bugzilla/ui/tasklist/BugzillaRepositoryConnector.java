@@ -648,9 +648,11 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		Set<IRemoteContextDelegate> contextDelegates = new HashSet<IRemoteContextDelegate>();
 		if (task instanceof BugzillaTask) {
 			BugzillaTask bugzillaTask = (BugzillaTask) task;
-			for (Comment comment : bugzillaTask.getBugReport().getComments()) {
-				if (comment.hasAttachment() && comment.getAttachmentDescription().equals(MYLAR_CONTEXT_DESCRIPTION)) {
-					contextDelegates.add(new BugzillaRemoteContextDelegate(comment));
+			if (bugzillaTask.getBugReport() != null) {
+				for (Comment comment : bugzillaTask.getBugReport().getComments()) {
+					if (comment.hasAttachment() && comment.getAttachmentDescription().equals(MYLAR_CONTEXT_DESCRIPTION)) {
+						contextDelegates.add(new BugzillaRemoteContextDelegate(comment));
+					}
 				}
 			}
 		}
