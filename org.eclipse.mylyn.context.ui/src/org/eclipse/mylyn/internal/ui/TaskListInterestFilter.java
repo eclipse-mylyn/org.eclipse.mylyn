@@ -38,8 +38,8 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 			// return true;
 			// }
 			// }
-			
-//			IMylarElement element = null;
+
+			// IMylarElement element = null;
 			if (object instanceof ITask || object instanceof AbstractQueryHit) {
 				ITask task = null;
 				if (object instanceof ITask) {
@@ -48,38 +48,44 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 					task = ((AbstractQueryHit) object).getCorrespondingTask();
 				}
 				if (task != null) {
-					if (isInteresting(task)) {
+					if (isUninteresting(task)) {
+						return false;
+					} else if (isInteresting(task)) {
 						return true;
 					}
-//					IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(task);
-//					if (!bridge.canFilter(task)) {
-//						return true;
-//					}
-//					String handle = bridge.getHandleIdentifier(task.getHandleIdentifier());
-//					element = MylarPlugin.getContextManager().getActivityHistoryMetaContext().get(handle);
+					// IMylarStructureBridge bridge =
+					// MylarPlugin.getDefault().getStructureBridge(task);
+					// if (!bridge.canFilter(task)) {
+					// return true;
+					// }
+					// String handle =
+					// bridge.getHandleIdentifier(task.getHandleIdentifier());
+					// element =
+					// MylarPlugin.getContextManager().getActivityHistoryMetaContext().get(handle);
 				}
 			}
-//			if (element != null) {
-//				if (element.getInterest().isPredicted()) {
-//					return false;
-//				} else {
-//					return element.getInterest().getValue() > MylarContextManager.getScalingFactors().getInteresting();
-//				}
-//			}
+			// if (element != null) {
+			// if (element.getInterest().isPredicted()) {
+			// return false;
+			// } else {
+			// return element.getInterest().getValue() >
+			// MylarContextManager.getScalingFactors().getInteresting();
+			// }
+			// }
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "interest filter failed", false);
 		}
 		return false;
 	}
 
-	// TODO: restore meta-context
+	protected boolean isUninteresting(ITask task) {
+		return task.isCompleted() || MylarTaskListPlugin.getTaskListManager().isReminderAfterThisWeek(task);
+	}
+
+	// TODO: make meta-context more explicit
 	protected boolean isInteresting(ITask task) {
-		if (task.isCompleted()) {
-			return false;
-		} else {
-			return shouldAlwaysShow(task)
-				|| MylarTaskListPlugin.getTaskListManager().isReminderToday(task)
-				|| MylarTaskListPlugin.getTaskListManager().isReminderThisWeek(task);
-		}
+		return shouldAlwaysShow(task) 
+			|| MylarTaskListPlugin.getTaskListManager().isReminderToday(task)
+			|| MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task);
 	}
 }
