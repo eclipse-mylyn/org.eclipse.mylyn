@@ -10,13 +10,19 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.core.util;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -28,6 +34,57 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * @author Shawn Minto (Wrote methods that were moved here)
  */
 public class ZipFileUtil {
+
+	/**
+	 * Only unzips files in zip file not directories
+	 * 
+	 * @param zipped
+	 *            file
+	 * @param destPath Destination path
+	 */
+	public static void unzipFiles(File zippedfile, String destPath) throws FileNotFoundException, IOException {
+
+			ZipFile zipFile = new ZipFile(zippedfile);
+
+			Enumeration entries = zipFile.entries();
+
+			while (entries.hasMoreElements()) {
+				ZipEntry entry = (ZipEntry) entries.nextElement();
+				if (entry.isDirectory())
+					continue;
+
+				InputStream inputStream = zipFile.getInputStream(entry);
+				FileOutputStream outStream = new FileOutputStream(destPath + File.separator + entry.getName());
+				copyByteStream(inputStream, outStream);
+			}			
+	}
+
+	public static void copyByteStream(InputStream in, OutputStream out) throws IOException {
+		
+		if (in != null && out != null) {
+			BufferedInputStream inBuffered = new BufferedInputStream(in);
+			
+			int bufferSize = 1000;
+			byte[] buffer = new byte[bufferSize];
+
+			int readCount;
+			
+			BufferedOutputStream fout = new BufferedOutputStream(out);
+			
+			while ((readCount = inBuffered.read(buffer)) != -1) {
+				if (readCount < bufferSize) {
+					fout.write(buffer, 0, readCount);
+				} else {
+					fout.write(buffer);
+				}
+
+			}
+
+			fout.flush();
+			fout.close();			
+			in.close();
+		}
+	}
 
 	/**
 	 * @param zipFile
