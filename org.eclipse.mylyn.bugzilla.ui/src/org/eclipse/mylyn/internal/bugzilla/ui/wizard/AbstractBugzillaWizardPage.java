@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.bugzilla.core.Attribute;
-import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugModel;
 import org.eclipse.mylar.internal.bugzilla.core.internal.BugReportElement;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.AbstractBugEditor;
@@ -50,8 +49,6 @@ import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
  * @author Mik Kersten (hardening of initial prototype)
  */
 public abstract class AbstractBugzillaWizardPage extends WizardPage implements Listener {
-
-	private static final String KEY_OP_SYS = "op_sys";
 
 	/** The instance of the workbench */
 	protected IWorkbench workbench;
@@ -321,33 +318,36 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 			try {
 				if (values == null)
 					values = new HashMap<String, String>();
-				if (key.equals(BugReport.ATTRIBUTE_OS)) {
+				if (key.equals(BugReportElement.OP_SYS.toString())) {
 					String os = oSCombo.getItem(oSCombo.getSelectionIndex());
 					attribute.setValue(os);
-				} else if (key.equals(BugReport.ATTRIBUTE_VERSION)) {
+				} else if (key.equals(BugReportElement.VERSION.toString())) {
 					String version = versionCombo.getItem(versionCombo.getSelectionIndex());
 					attribute.setValue(version);
-				} else if (key.equals(BugReport.ATTRIBUTE_SEVERITY)) {
+				} else if (key.equals(BugReportElement.BUG_SEVERITY.toString())) {
 					String severity = severityCombo.getItem(severityCombo.getSelectionIndex());
 					attribute.setValue(severity);
-				} else if (key.equals(BugReport.ATTRIBUTE_PLATFORM)) {
+				} else if (key.equals(BugReportElement.REP_PLATFORM.toString())) {
 					String platform = platformCombo.getItem(platformCombo.getSelectionIndex());
 					attribute.setValue(platform);
-				} else if (key.equals(BugReport.ATTRIBUTE_MILESTONE)) {
-					String milestone = milestoneCombo.getItem(milestoneCombo.getSelectionIndex());
-					attribute.setValue(milestone);
-				} else if (key.equals(BugReport.ATTRIBUTE_COMPONENT)) {
+				} else if (key.equals(BugReportElement.TARGET_MILESTONE.toString())) {
+					int index = milestoneCombo.getSelectionIndex();
+					if(index >= 0) {
+						String milestone = milestoneCombo.getItem(milestoneCombo.getSelectionIndex());
+						attribute.setValue(milestone);
+					}
+				} else if (key.equals(BugReportElement.COMPONENT.toString())) {
 					String component = componentCombo.getItem(componentCombo.getSelectionIndex());
 					attribute.setValue(component);
-				} else if (key.equals(BugReport.ATTRIBUTE_PRIORITY)) {
+				} else if (key.equals(BugReportElement.PRIORITY.toString())) {
 					String priority = priorityCombo.getItem(priorityCombo.getSelectionIndex());
 					attribute.setValue(priority);
-				} else if (key.equals(BugReport.ATTRIBUTE_URL)) {
+				} else if (key.equals(BugReportElement.BUG_FILE_LOC.toString())) {
 					String url = urlText.getText();
 					if (url.equalsIgnoreCase("http://"))
 						url = "";
 					attribute.setValue(url);
-				} else if (key.equals("Assign To")) {
+				} else if (key.equals(BugReportElement.ASSIGNED_TO.toString())) {
 					String assignTo = assignedToText.getText();
 					attribute.setValue(assignTo);
 				} else {
@@ -436,7 +436,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 			data.horizontalIndent = HORZ_INDENT;
 			data.widthHint = 150;
 			// create and populate the combo fields for the attributes
-			if (key.equals(KEY_OP_SYS)) {
+			if (key.equals(BugReportElement.OP_SYS.getKeyString())) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
 				oSCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);
 
@@ -451,7 +451,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 					index = 0;
 				oSCombo.select(index);
 				oSCombo.addListener(SWT.Modify, this);
-			} else if (key.equals("version")) {
+			} else if (key.equals(BugReportElement.VERSION.getKeyString())) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
 
 				versionCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
@@ -468,7 +468,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 					index = 0;
 				versionCombo.select(index);
 				versionCombo.addListener(SWT.Modify, this);
-			} else if (key.equals("bug_severity")) {
+			} else if (key.equals(BugReportElement.BUG_SEVERITY.getKeyString())) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
 				severityCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
 						| SWT.READ_ONLY);
@@ -485,7 +485,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 				severityCombo.select(index);
 				severityCombo.addListener(SWT.Modify, this);
 
-			} else if (key.equals("rep_platform")) {
+			} else if (key.equals(BugReportElement.REP_PLATFORM.getKeyString())) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
 				platformCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
 						| SWT.READ_ONLY);
@@ -501,7 +501,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 					index = 0;
 				platformCombo.select(index);
 				platformCombo.addListener(SWT.Modify, this);
-			} else if (key.equals(BugReport.KEY_MILESTONE)) {
+			} else if (key.equals(BugReportElement.TARGET_MILESTONE.getKeyString())) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
 				milestoneCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
 						| SWT.READ_ONLY);
@@ -516,8 +516,9 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 					index = 0;
 				milestoneCombo.select(index);
 				milestoneCombo.addListener(SWT.Modify, this);
+				//if(s.isEmpty()) milestoneCombo.setEnabled(false);
 				mileExist = true;
-			} else if (key.equals("component")) {
+			} else if (key.equals(BugReportElement.COMPONENT.getKeyString())) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
 				componentCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
 						| SWT.READ_ONLY);
@@ -533,7 +534,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 					index = 0;
 				componentCombo.select(index);
 				componentCombo.addListener(SWT.Modify, this);
-			} else if (key.equals("priority")) {
+			} else if (key.equals(BugReportElement.PRIORITY.getKeyString())) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
 				priorityCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
 						| SWT.READ_ONLY);
@@ -550,7 +551,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 				priorityCombo.select(index);
 				priorityCombo.addListener(SWT.Modify, this);
 				priExist = true;
-			} else if (key.equals("bug_file_loc")) {
+			} else if (key.equals(BugReportElement.BUG_FILE_LOC.getKeyString())) {
 				url = value;
 			} else {
 				// do nothing if it isn't a standard value to change
@@ -569,24 +570,23 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 		textCompositeGD.grabExcessHorizontalSpace = true;
 		textComposite.setLayoutData(textCompositeGD);
 
-		GridData summaryTextData;
-
-		if (url != null) {
-			// add the assigned to text field
-			newLayout(textComposite, 1, BugReport.ATTRIBUTE_URL, PROPERTY);
+	
+		GridData urlTextData;
+		if (url != null) {			
+			newLayout(textComposite, 1, BugReportElement.BUG_FILE_LOC.toString(), PROPERTY);
 			urlText = new Text(textComposite, SWT.BORDER | SWT.SINGLE | SWT.WRAP);
-			summaryTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+			urlTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 
-			summaryTextData.horizontalSpan = 2;
+			urlTextData.horizontalSpan = 2;
 			// summaryTextData.widthHint = 200;
-			urlText.setLayoutData(summaryTextData);
+			urlText.setLayoutData(urlTextData);
 			urlText.setText(url);
 			urlText.addListener(SWT.FocusOut, this);
 		}
 
-		newLayout(textComposite, 1, "Assigned To", PROPERTY);
+		GridData summaryTextData;
+		newLayout(textComposite, 1, BugReportElement.ASSIGNED_TO.toString(), PROPERTY);
 		Label l = new Label(textComposite, SWT.NONE);
-		// l.setText(" ");
 		l.setText("(if email is incorrect submit will not proceed)");
 		summaryTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		summaryTextData.horizontalSpan = 1;
@@ -600,7 +600,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 		assignedToText.setText("");
 
 		// add the summary text field
-		newLayout(textComposite, 1, "Summary", PROPERTY);
+		newLayout(textComposite, 1, BugReportElement.SHORT_DESC.toString(), PROPERTY);
 		summaryText = new Text(textComposite, SWT.BORDER | SWT.SINGLE | SWT.WRAP);
 		summaryTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 

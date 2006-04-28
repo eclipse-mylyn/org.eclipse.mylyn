@@ -13,9 +13,10 @@ package org.eclipse.mylar.internal.bugzilla.core;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.mylar.bugzilla.core.Attribute;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
@@ -44,7 +45,7 @@ public class NewBugModel implements Serializable, IBugzillaBug {
 	protected String product;
 
 	/** A list of the attributes that can be changed for the new bug */
-	public HashMap<String, Attribute> attributes = new HashMap<String, Attribute>();
+	public Map<String, Attribute> attributes = new LinkedHashMap<String, Attribute>();
 
 	/** The summary for the bug */
 	protected String summary = "";

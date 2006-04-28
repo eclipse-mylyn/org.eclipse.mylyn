@@ -20,7 +20,7 @@ public class AllBugzillaTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.bugzilla.tests");
-		// $JUnit-BEGIN$ 
+		// $JUnit-BEGIN$
 		suite.addTestSuite(BugzillaConfigurationTest.class);
 		suite.addTestSuite(BugzillaTaskHyperlinkDetectorTest.class);
 		suite.addTestSuite(ReportAttachmentTest.class);
@@ -30,11 +30,11 @@ public class AllBugzillaTests {
 		suite.addTestSuite(EncodingTest.class);
 		suite.addTestSuite(NewBugWizardTest.class);
 		suite.addTestSuite(RegularExpressionMatchTest.class);
-		suite.addTestSuite(BugzillaNewBugParserTestCDT.class);
-		suite.addTestSuite(BugzillaNewBugParserTestEquinox.class);
-		suite.addTestSuite(BugzillaNewBugParserTestGMT.class);
-		suite.addTestSuite(BugzillaNewBugParserTestPlatform.class);
-		suite.addTestSuite(BugzillaNewBugParserTestVE.class);
+		// suite.addTestSuite(BugzillaNewBugParserTestCDT.class);
+		// suite.addTestSuite(BugzillaNewBugParserTestEquinox.class);
+		// suite.addTestSuite(BugzillaNewBugParserTestGMT.class);
+		// suite.addTestSuite(BugzillaNewBugParserTestPlatform.class);
+		// suite.addTestSuite(BugzillaNewBugParserTestVE.class);
 		suite.addTestSuite(BugzillaParserTestNoBug.class);
 		suite.addTestSuite(BugzillaProductParserTest.class);
 		// TODO: enable

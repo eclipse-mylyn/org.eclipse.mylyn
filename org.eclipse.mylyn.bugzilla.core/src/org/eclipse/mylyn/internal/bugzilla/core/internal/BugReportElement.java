@@ -55,6 +55,7 @@ public enum BugReportElement {
 	FILENAME ("filename", "filename"), 
 	TYPE ("type", "type"), 
 	DATA ("data", "data"),
+	BUG_FILE_LOC ("URL", "bug_file_loc"),
 	UNKNOWN ("UNKNOWN", "UNKNOWN");
 	
 	private final String prettyName;

@@ -126,7 +126,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 			protected void execute(final IProgressMonitor monitor) throws CoreException {
 				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 					public void run() {
-						BugzillaReportSubmitForm form = BugzillaReportSubmitForm.makeNewBugPost2(repository, model);
+						BugzillaReportSubmitForm form = BugzillaReportSubmitForm.makeNewBugPost(repository, model);
 						try {
 							id = form.submitReportToRepository();
 

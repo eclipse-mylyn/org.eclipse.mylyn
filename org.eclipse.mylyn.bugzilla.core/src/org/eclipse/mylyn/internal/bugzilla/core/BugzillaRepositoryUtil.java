@@ -22,10 +22,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.security.auth.login.LoginException;
@@ -51,7 +50,6 @@ import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
 import org.eclipse.mylar.internal.bugzilla.core.internal.BugParser;
 import org.eclipse.mylar.internal.bugzilla.core.internal.BugReportElement;
-import org.eclipse.mylar.internal.bugzilla.core.internal.NewBugParser;
 import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile;
 import org.eclipse.mylar.internal.bugzilla.core.internal.RepositoryConfiguration;
 import org.eclipse.mylar.internal.bugzilla.core.internal.ServerConfigurationFactory;
@@ -68,6 +66,8 @@ import org.eclipse.ui.PlatformUI;
  * @author Rob Elves (attachments)
  */
 public class BugzillaRepositoryUtil {
+
+	private static final String BUG_STATUS_NEW = "NEW";
 
 	private static final String ATTACHMENT_DOWNLOAD_FAILED = "Attachment download FAILED.";
 	
@@ -229,108 +229,132 @@ public class BugzillaRepositoryUtil {
 
 	}
 
-	/**
-	 * Get the attribute values for a new bug
-	 * 
-	 * @param nbm
-	 *            A reference to a NewBugModel to store all of the data
-	 * @throws Exception
-	 */
-	public static void setupNewBugAttributes(String serverUrl, NewBugModel nbm, boolean getProd) throws Exception {
-		BufferedReader in = null;
-		try {
-			// create a new input stream for getting the bug
-			String prodname = URLEncoder.encode(nbm.getProduct(), BugzillaPlugin.ENCODING_UTF_8);
-
-			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
-					BugzillaPlugin.REPOSITORY_KIND, serverUrl);
-
-			if (repository == null) {
-				throw new LoginException("Repository configuration error.");
-			}
-			if (repository.getUserName() == null || repository.getUserName().trim().equals("")
-					|| repository.getPassword() == null) {
-				throw new LoginException("Login credentials missing.");
-			}
-
-			String url = repository.getUrl() + "/enter_bug.cgi";
-
-			// use the proper url if we dont know the product yet
-			if (!getProd)
-				url += "?product=" + prodname + "&";
-			else
-				url += "?";
-
-			url += POST_ARGS_LOGIN + URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8)
-					+ POST_ARGS_PASSWORD + URLEncoder.encode(repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
-
-			URL bugUrl = new URL(url);
-			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(bugUrl);
-			if (cntx != null) {
-				InputStream input = cntx.getInputStream();
-				if (input != null) {
-					in = new BufferedReader(new InputStreamReader(input));
-
-					new NewBugParser(in).parseBugAttributes(nbm, getProd);
-				}
-			}
-
-		} catch (Exception e) {
-
-			if (e instanceof KeyManagementException || e instanceof NoSuchAlgorithmException
-					|| e instanceof IOException) {
-				if (MessageDialog.openQuestion(null, "Bugzilla Connect Error",
-						"Unable to connect to Bugzilla server.\n"
-								+ "Bug report will be created offline and saved for submission later.")) {
-					nbm.setConnected(false);
-					setupBugAttributes(serverUrl, nbm);
-				} else
-					throw new Exception("Bug report will not be created.");
-			} else
-				throw e;
-		} finally {
-			try {
-				if (in != null)
-					in.close();
-			} catch (IOException e) {
-				BugzillaPlugin.log(new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
-						"Problem closing the stream", e));
-			}
-		}
-	}
+	// /**
+	// * Get the attribute values for a new bug
+	// *
+	// * @param nbm
+	// * A reference to a NewBugModel to store all of the data
+	// * @throws Exception
+	// */
+	// public static void setupNewBugAttributes(String serverUrl, NewBugModel
+	// nbm, boolean getProd) throws Exception {
+	// BufferedReader in = null;
+	// try {
+	// // create a new input stream for getting the bug
+	// String prodname = URLEncoder.encode(nbm.getProduct(),
+	// BugzillaPlugin.ENCODING_UTF_8);
+	//
+	// TaskRepository repository =
+	// MylarTaskListPlugin.getRepositoryManager().getRepository(
+	// BugzillaPlugin.REPOSITORY_KIND, serverUrl);
+	//
+	// if (repository == null) {
+	// throw new LoginException("Repository configuration error.");
+	// }
+	// if (repository.getUserName() == null ||
+	// repository.getUserName().trim().equals("")
+	// || repository.getPassword() == null) {
+	// throw new LoginException("Login credentials missing.");
+	// }
+	//
+	// String url = repository.getUrl() + "/enter_bug.cgi";
+	//
+	// // use the proper url if we dont know the product yet
+	// if (!getProd)
+	// url += "?product=" + prodname + "&";
+	// else
+	// url += "?";
+	//
+	// url += POST_ARGS_LOGIN + URLEncoder.encode(repository.getUserName(),
+	// BugzillaPlugin.ENCODING_UTF_8)
+	// + POST_ARGS_PASSWORD + URLEncoder.encode(repository.getPassword(),
+	// BugzillaPlugin.ENCODING_UTF_8);
+	//
+	// URL bugUrl = new URL(url);
+	// URLConnection cntx =
+	// BugzillaPlugin.getDefault().getUrlConnection(bugUrl);
+	// if (cntx != null) {
+	// InputStream input = cntx.getInputStream();
+	// if (input != null) {
+	// in = new BufferedReader(new InputStreamReader(input));
+	//
+	// new NewBugParser(in).parseBugAttributes(nbm, getProd);
+	// }
+	// }
+	//
+	// } catch (Exception e) {
+	//
+	// if (e instanceof KeyManagementException || e instanceof
+	// NoSuchAlgorithmException
+	// || e instanceof IOException) {
+	// if (MessageDialog.openQuestion(null, "Bugzilla Connect Error",
+	// "Unable to connect to Bugzilla server.\n"
+	// + "Bug report will be created offline and saved for submission later."))
+	// {
+	// nbm.setConnected(false);
+	// setupBugAttributes(serverUrl, nbm);
+	// } else
+	// throw new Exception("Bug report will not be created.");
+	// } else
+	// throw e;
+	// } finally {
+	// try {
+	// if (in != null)
+	// in.close();
+	// } catch (IOException e) {
+	// BugzillaPlugin.log(new Status(IStatus.ERROR,
+	// IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
+	//						"Problem closing the stream", e));
+	//			}
+	//		}
+	//	}
 
 	/**
 	 * Adds bug attributes to new bug model and sets defaults
 	 */
 	public static void setupBugAttributes(String serverUrl, NewBugModel model) {
 
-		HashMap<String, Attribute> attributes = new HashMap<String, Attribute>();
+//		// order is important
+//		BugReportElement[] newBugElements = { BugReportElement.PRODUCT,
+//				BugReportElement.BUG_STATUS,
+//				BugReportElement.VERSION,				
+//				BugReportElement.COMPONENT,
+//				BugReportElement.TARGET_MILESTONE,
+//				BugReportElement.REP_PLATFORM,				
+//				BugReportElement.OP_SYS,
+//				BugReportElement.PRIORITY,
+//				BugReportElement.BUG_SEVERITY,
+//				BugReportElement.ASSIGNED_TO,
+//// NOT USED	BugReportElement.CC,
+//				BugReportElement.BUG_FILE_LOC,
+// //NOT USED		BugReportElement.SHORT_DESC,
+// //NOT USED		BugReportElement.LONG_DESC
+//		};
 
-		Attribute a = new Attribute(BugReportElement.BUG_SEVERITY.toString());
-		a.setParameterName(BugReportElement.BUG_SEVERITY.getKeyString());
-		List<String> optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getSeverities();
+				
+		
+		
+		HashMap<String, Attribute> attributes = new LinkedHashMap<String, Attribute>();
+
+		Attribute a = new Attribute(BugReportElement.PRODUCT.toString());
+		a.setParameterName(BugReportElement.PRODUCT.getKeyString());
+		List<String> optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getProducts();
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
-		a.setValue(optionValues.get((optionValues.size() / 2)));
+		a.setValue(model.getProduct());
 		attributes.put(a.getName(), a);
-
-		a = new Attribute(BugReportElement.OP_SYS.toString());
-		a.setParameterName(BugReportElement.OP_SYS.getKeyString());
-		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getOSs();
+		
+		
+		a = new Attribute(BugReportElement.BUG_STATUS.toString());
+		a.setParameterName(BugReportElement.BUG_STATUS.getKeyString());
+		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getStatusValues();
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
+		a.setValue(BUG_STATUS_NEW);
 		attributes.put(a.getName(), a);
-
-		a = new Attribute(BugReportElement.REP_PLATFORM.toString());
-		a.setParameterName(BugReportElement.REP_PLATFORM.getKeyString());
-		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getPlatforms();
-		for (String option : optionValues) {
-			a.addOptionValue(option, option);
-		}
-		attributes.put(a.getName(), a);
-
+		
 		a = new Attribute(BugReportElement.VERSION.toString());
 		a.setParameterName(BugReportElement.VERSION.getKeyString());
 		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getVersions(model.getProduct());
@@ -339,10 +363,26 @@ public class BugzillaRepositoryUtil {
 		}
 		a.setValue(optionValues.get(optionValues.size() - 1));
 		attributes.put(a.getName(), a);
-
+		
 		a = new Attribute(BugReportElement.COMPONENT.toString());
 		a.setParameterName(BugReportElement.COMPONENT.getKeyString());
 		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getComponents(model.getProduct());
+		for (String option : optionValues) {
+			a.addOptionValue(option, option);
+		}
+		attributes.put(a.getName(), a);
+		
+		a = new Attribute(BugReportElement.REP_PLATFORM.toString());
+		a.setParameterName(BugReportElement.REP_PLATFORM.getKeyString());
+		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getPlatforms();
+		for (String option : optionValues) {
+			a.addOptionValue(option, option);
+		}
+		attributes.put(a.getName(), a);
+
+		a = new Attribute(BugReportElement.OP_SYS.toString());
+		a.setParameterName(BugReportElement.OP_SYS.getKeyString());
+		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getOSs();
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
@@ -357,22 +397,33 @@ public class BugzillaRepositoryUtil {
 		a.setValue(optionValues.get((optionValues.size() / 2)));
 		attributes.put(a.getName(), a);
 
-		a = new Attribute(BugReportElement.PRODUCT.toString());
-		a.setParameterName(BugReportElement.PRODUCT.getKeyString());
-		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getProducts();
+		a = new Attribute(BugReportElement.BUG_SEVERITY.toString());
+		a.setParameterName(BugReportElement.BUG_SEVERITY.getKeyString());
+		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getSeverities();
+		for (String option : optionValues) {
+			a.addOptionValue(option, option);
+		}
+		a.setValue(optionValues.get((optionValues.size() / 2)));
+		attributes.put(a.getName(), a);
+		
+		a = new Attribute(BugReportElement.TARGET_MILESTONE.toString());
+		a.setParameterName(BugReportElement.TARGET_MILESTONE.getKeyString());
+		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getTargetMilestones(model.getProduct());
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
 		attributes.put(a.getName(), a);
 
-		a = new Attribute(BugReportElement.BUG_STATUS.toString());
-		a.setParameterName(BugReportElement.BUG_STATUS.getKeyString());
-		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getStatusValues();
-		for (String option : optionValues) {
-			a.addOptionValue(option, option);
-		}
+		a = new Attribute(BugReportElement.ASSIGNED_TO.toString());
+		a.setParameterName(BugReportElement.ASSIGNED_TO.getKeyString());
+		a.setValue("");
 		attributes.put(a.getName(), a);
-
+		
+		a = new Attribute(BugReportElement.BUG_FILE_LOC.toString());
+		a.setParameterName(BugReportElement.BUG_FILE_LOC.getKeyString());
+		a.setValue("http://");
+		attributes.put(a.getName(), a);
+		
 		model.attributes = attributes;
 	}
 

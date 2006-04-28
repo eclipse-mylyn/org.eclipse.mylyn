@@ -34,9 +34,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.bugzilla.core.Attribute;
 import org.eclipse.mylar.bugzilla.core.BugReport;
-import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.bugzilla.core.Operation;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
+import org.eclipse.mylar.internal.bugzilla.core.internal.BugReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlTag;
 import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer.Token;
@@ -47,14 +47,15 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
  * 
  * @author Shawn Minto
  * @author Mik Kersten (hardening of prototype)
+ * @author Rob Elves
  * 
  * Class to handle the positing of a bug
  */
 public class BugzillaReportSubmitForm {
 
-	private static final String KEY_BUG_FILE_LOC = "bug_file_loc";
+	// private static final String KEY_BUG_FILE_LOC = "bug_file_loc";
 
-	private static final String KEY_PRODUCT = "product";
+	// private static final String KEY_PRODUCT = "product";
 
 	private static final String VAL_TRUE = "true";
 
@@ -96,21 +97,21 @@ public class BugzillaReportSubmitForm {
 
 	private static final String KEY_ASSIGNED_TO = "Assigned To";
 
-	private static final String KEY_ASSIGN_TO = "Assign To";
-
-	private static final String KEY_URL = "URL";
-
-	private static final String KEY_PRIORITY = "Priority";
-
-	private static final String KEY_COMPONENT = "Component";
-
-	private static final String KEY_PLATFORM = "Platform";
-
-	private static final String KEY_SEVERITY = "Severity";
-
-	private static final String KEY_VERSION = "Version";
-
-	private static final String KEY_OS = "OS";
+	// private static final String KEY_ASSIGN_TO = "Assign To";
+	//
+	// private static final String KEY_URL = "URL";
+	//
+	// private static final String KEY_PRIORITY = "Priority";
+	//
+	// private static final String KEY_COMPONENT = "Component";
+	//
+	// private static final String KEY_PLATFORM = "Platform";
+	//
+	// private static final String KEY_SEVERITY = "Severity";
+	//
+	// private static final String KEY_VERSION = "Version";
+	//
+	// private static final String KEY_OS = "OS";
 
 	public static final String FORM_POSTFIX_218 = " Submitted";
 
@@ -140,69 +141,75 @@ public class BugzillaReportSubmitForm {
 
 	private String error = null;
 
-	/**
-	 * TODO: get rid of this?
-	 */
-	public static BugzillaReportSubmitForm makeNewBugPost(TaskRepository repository, IBugzillaBug bug) {
-		BugzillaReportSubmitForm bugzillaReportSubmitForm = new BugzillaReportSubmitForm();
-		bugzillaReportSubmitForm.setPrefix(BugzillaReportSubmitForm.FORM_PREFIX_BUG_218);
-		bugzillaReportSubmitForm.setPrefix2(BugzillaReportSubmitForm.FORM_PREFIX_BUG_220);
+	// /**
+	// * TODO: get rid of this?
+	// */
+	// public static BugzillaReportSubmitForm makeNewBugPost(TaskRepository
+	// repository, IBugzillaBug bug) {
+	// BugzillaReportSubmitForm bugzillaReportSubmitForm = new
+	// BugzillaReportSubmitForm();
+	// bugzillaReportSubmitForm.setPrefix(BugzillaReportSubmitForm.FORM_PREFIX_BUG_218);
+	// bugzillaReportSubmitForm.setPrefix2(BugzillaReportSubmitForm.FORM_PREFIX_BUG_220);
+	//
+	// bugzillaReportSubmitForm.setPostfix(BugzillaReportSubmitForm.FORM_POSTFIX_216);
+	// bugzillaReportSubmitForm.setPostfix2(BugzillaReportSubmitForm.FORM_POSTFIX_218);
+	//
+	// // go through all of the attributes and add them to the bug post
+	// Iterator<Attribute> itr = bug.getAttributes().iterator();
+	// while (itr.hasNext()) {
+	// Attribute a = itr.next();
+	// if (a != null && a.getParameterName() != null &&
+	// a.getParameterName().compareTo("") != 0 && !a.isHidden()) {
+	// String key = a.getName();
+	// String value = null;
+	//
+	// // get the values from the attribute
+	// if (key.equalsIgnoreCase(KEY_OS)) {
+	// value = a.getValue();
+	// } else if (key.equalsIgnoreCase(KEY_VERSION)) {
+	// value = a.getValue();
+	// } else if (key.equalsIgnoreCase(KEY_SEVERITY)) {
+	// value = a.getValue();
+	// } else if (key.equalsIgnoreCase(KEY_PLATFORM)) {
+	// value = a.getValue();
+	// } else if (key.equalsIgnoreCase(KEY_COMPONENT)) {
+	// value = a.getValue();
+	// } else if (key.equalsIgnoreCase(KEY_PRIORITY)) {
+	// value = a.getValue();
+	// } else if (key.equalsIgnoreCase(KEY_URL)) {
+	// value = a.getValue();
+	// } else if (key.equalsIgnoreCase(KEY_ASSIGN_TO) ||
+	// key.equalsIgnoreCase(KEY_ASSIGNED_TO)) {
+	// value = a.getValue();
+	// }
+	//
+	// // add the attribute to the bug post
+	// if (value == null)
+	// value = "";
+	//
+	// bugzillaReportSubmitForm.add(a.getParameterName(), value);
+	// } else if (a != null && a.getParameterName() != null &&
+	// a.getParameterName().compareTo("") != 0
+	// && a.isHidden()) {
+	// // we have a hidden attribute, add it to the posting
+	// bugzillaReportSubmitForm.add(a.getParameterName(), a.getValue());
+	//
+	// }
+	// }
+	//
+	// setURL(bugzillaReportSubmitForm, repository, POST_BUG_CGI);
+	//
+	// // add the summary to the bug post
+	// bugzillaReportSubmitForm.add(KEY_SHORT_DESC, bug.getSummary());
+	// bug.setDescription(formatTextToLineWrap(bug.getDescription(),
+	// repository));
+	// if (bug.getDescription().length() != 0) {
+	// bugzillaReportSubmitForm.add(KEY_COMMENT, bug.getDescription());
+	// }
+	// return bugzillaReportSubmitForm;
+	// }
 
-		bugzillaReportSubmitForm.setPostfix(BugzillaReportSubmitForm.FORM_POSTFIX_216);
-		bugzillaReportSubmitForm.setPostfix2(BugzillaReportSubmitForm.FORM_POSTFIX_218);
-
-		// go through all of the attributes and add them to the bug post
-		Iterator<Attribute> itr = bug.getAttributes().iterator();
-		while (itr.hasNext()) {
-			Attribute a = itr.next();
-			if (a != null && a.getParameterName() != null && a.getParameterName().compareTo("") != 0 && !a.isHidden()) {
-				String key = a.getName();
-				String value = null;
-
-				// get the values from the attribute
-				if (key.equalsIgnoreCase(KEY_OS)) {
-					value = a.getValue();
-				} else if (key.equalsIgnoreCase(KEY_VERSION)) {
-					value = a.getValue();
-				} else if (key.equalsIgnoreCase(KEY_SEVERITY)) {
-					value = a.getValue();
-				} else if (key.equalsIgnoreCase(KEY_PLATFORM)) {
-					value = a.getValue();
-				} else if (key.equalsIgnoreCase(KEY_COMPONENT)) {
-					value = a.getValue();
-				} else if (key.equalsIgnoreCase(KEY_PRIORITY)) {
-					value = a.getValue();
-				} else if (key.equalsIgnoreCase(KEY_URL)) {
-					value = a.getValue();
-				} else if (key.equalsIgnoreCase(KEY_ASSIGN_TO) || key.equalsIgnoreCase(KEY_ASSIGNED_TO)) {
-					value = a.getValue();
-				}
-
-				// add the attribute to the bug post
-				if (value == null)
-					value = "";
-
-				bugzillaReportSubmitForm.add(a.getParameterName(), value);
-			} else if (a != null && a.getParameterName() != null && a.getParameterName().compareTo("") != 0
-					&& a.isHidden()) {
-				// we have a hidden attribute, add it to the posting
-				bugzillaReportSubmitForm.add(a.getParameterName(), a.getValue());
-
-			}
-		}
-
-		setURL(bugzillaReportSubmitForm, repository, POST_BUG_CGI);
-
-		// add the summary to the bug post
-		bugzillaReportSubmitForm.add(KEY_SHORT_DESC, bug.getSummary());
-		bug.setDescription(formatTextToLineWrap(bug.getDescription(), repository));
-		if (bug.getDescription().length() != 0) {
-			bugzillaReportSubmitForm.add(KEY_COMMENT, bug.getDescription());
-		}
-		return bugzillaReportSubmitForm;
-	}
-
-	public static BugzillaReportSubmitForm makeNewBugPost2(TaskRepository repository, NewBugModel model) {
+	public static BugzillaReportSubmitForm makeNewBugPost(TaskRepository repository, NewBugModel model) {
 		BugzillaReportSubmitForm form = new BugzillaReportSubmitForm();
 		form.setPrefix(BugzillaReportSubmitForm.FORM_PREFIX_BUG_218);
 		form.setPrefix2(BugzillaReportSubmitForm.FORM_PREFIX_BUG_220);
@@ -217,59 +224,68 @@ public class BugzillaReportSubmitForm {
 		while (itr.hasNext()) {
 			Attribute a = itr.next();
 			if (a != null && a.getParameterName() != null && a.getParameterName().compareTo("") != 0 && !a.isHidden()) {
-				String key = a.getName();
+				// String key = a.getName();
 				String value = null;
 
-				// get the values from the attribute
-				if (key.equalsIgnoreCase("OS")) {
-					value = a.getValue();
-				} else if (key.equalsIgnoreCase("Version")) {
-					value = a.getValue();
-				} else if (key.equalsIgnoreCase("Severity")) {
-					value = a.getValue();
-				} else if (key.equalsIgnoreCase("Platform")) {
-					value = a.getValue();
-				} else if (key.equalsIgnoreCase("Component")) {
-					value = a.getValue();
-				} else if (key.equalsIgnoreCase("Priority")) {
-					value = a.getValue();
-				} else if (key.equalsIgnoreCase("Target Milestone")) {
-					value = a.getValue();
-				} else if (key.equalsIgnoreCase("URL")) {
-					value = a.getValue();
-				} else if (key.equalsIgnoreCase("Assign To") || key.equalsIgnoreCase("Assigned To")) {
-					value = a.getValue();
-				}
-
-				// add the attribute to the bug post
+				// // get the values from the attribute
+				// if (key.equalsIgnoreCase("OS")) {
+				// value = a.getValue();
+				// } else if (key.equalsIgnoreCase("Version")) {
+				// value = a.getValue();
+				// } else if (key.equalsIgnoreCase("Severity")) {
+				// value = a.getValue();
+				// } else if (key.equalsIgnoreCase("Platform")) {
+				// value = a.getValue();
+				// } else if (key.equalsIgnoreCase("Component")) {
+				// value = a.getValue();
+				// } else if (key.equalsIgnoreCase("Priority")) {
+				// value = a.getValue();
+				// } else if (key.equalsIgnoreCase("Target Milestone")) {
+				// value = a.getValue();
+				// } else if (key.equalsIgnoreCase("URL")) {
+				// value = a.getValue();
+				// } else if (key.equalsIgnoreCase("Assign To") ||
+				// key.equalsIgnoreCase("Assigned To")) {
+				// value = a.getValue();
+				// }
+				//
+				// // add the attribute to the bug post
+				// if (value == null)
+				// value = "";
+				//
+				// form.add(a.getParameterName(), value);
+				// } else if (a != null && a.getParameterName() != null &&
+				// a.getParameterName().compareTo("") != 0
+				// && a.isHidden()) {
+				// // we have a hidden attribute, add it to the
+				// // posting
+				value = a.getValue();				
 				if (value == null)
-					value = "";
-
+					continue;
 				form.add(a.getParameterName(), value);
-			} else if (a != null && a.getParameterName() != null && a.getParameterName().compareTo("") != 0
-					&& a.isHidden()) {
-				// we have a hidden attribute, add it to the
-				// posting
-				form.add(a.getParameterName(), a.getValue());
 			}
 		}
 
-		form.add(KEY_BUG_FILE_LOC, "");
-		
+		// form.add(KEY_BUG_FILE_LOC, "");
+
 		// specify the product
-		form.add(KEY_PRODUCT, model.getProduct());
+		form.add(BugReportElement.PRODUCT.getKeyString(), model.getProduct());
 
 		// add the summary to the bug post
-		form.add("short_desc", model.getSummary());
+		form.add(BugReportElement.SHORT_DESC.getKeyString(), model.getSummary());
 
-		BugzillaServerVersion bugzillaServerVersion = IBugzillaConstants.BugzillaServerVersion.fromString(repository
-				.getVersion());
-		if (bugzillaServerVersion != null && bugzillaServerVersion.compareTo(BugzillaServerVersion.SERVER_220) >= 0) {
-			// if
-			// (repository.getVersion().equals(BugzillaServerVersion.SERVER_220.toString()))
-			// {
-			form.add("bug_status", "NEW");
-		}
+		// BugzillaServerVersion bugzillaServerVersion =
+		// IBugzillaConstants.BugzillaServerVersion.fromString(repository
+		// .getVersion());
+		// if (bugzillaServerVersion != null &&
+		// bugzillaServerVersion.compareTo(BugzillaServerVersion.SERVER_220) >=
+		// 0) {
+		// // if
+		// //
+		// (repository.getVersion().equals(BugzillaServerVersion.SERVER_220.toString()))
+		// // {
+		// form.add("bug_status", "NEW");
+		// }
 
 		String formattedDescription = formatTextToLineWrap(model.getDescription(), repository);
 		model.setDescription(formattedDescription);
@@ -278,7 +294,7 @@ public class BugzillaReportSubmitForm {
 			// add the new comment to the bug post if there
 			// is some text in
 			// it
-			form.add("comment", model.getDescription());
+			form.add(KEY_COMMENT, model.getDescription());
 		}
 		return form;
 	}
@@ -442,7 +458,7 @@ public class BugzillaReportSubmitForm {
 			// while(aString != null) {
 			// System.err.println(aString);
 			// aString = in.readLine();
-			//			 }
+			// }
 
 			boolean possibleFailure = true;
 			error = "";
