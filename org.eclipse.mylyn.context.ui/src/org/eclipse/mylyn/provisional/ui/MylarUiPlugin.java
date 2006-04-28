@@ -213,7 +213,9 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		try {
 			super.stop(context);
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(MylarPlugin.getContextManager().getShellLifecycleListener());
+			if (!PlatformUI.getWorkbench().isClosing()) {
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(MylarPlugin.getContextManager().getShellLifecycleListener());
+			}
 			MylarPlugin.getContextManager().removeListener(viewerManager);
 			viewerManager.dispose();
 			colorMap.dispose(); 
