@@ -13,19 +13,14 @@ package org.eclipse.mylar.internal.tasklist.ui.wizards;
 
 import java.io.IOException;
 
-import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.IRemoteContextDelegate;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
-import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbenchSite;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Rob Elves
@@ -66,15 +61,14 @@ public class ContextRetrieveWizard extends Wizard {
 				this.repository.getKind());
 		try {
 			if (connector.retrieveContext(repository, task, delegate)) {
-				
-				IWorkbenchSite site = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart().getSite();
-				if (site instanceof IViewSite) {
-					IStatusLineManager statusLineManager = ((IViewSite)site).getActionBars().getStatusLineManager();
-					statusLineManager.setMessage(TaskListImages.getImage(TaskListImages.TASKLIST),
-							"Context retrieved for: " + task.getDescription());					
-				} else {
-					MylarStatusHandler.log("could not get part", this);
-				}
+//				IWorkbenchSite site = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart().getSite();
+//				if (site instanceof IViewSite) {
+//					IStatusLineManager statusLineManager = ((IViewSite)site).getActionBars().getStatusLineManager();
+//					statusLineManager.setMessage(TaskListImages.getImage(TaskListImages.TASKLIST),
+//							"Context retrieved for: " + task.getDescription());					
+//				} else {
+//					MylarStatusHandler.log("could not get part", this);
+//				}
 			} else {
 				MessageDialog.openError(null, "Context Retrieval",
 						"Retrieval of task context FAILED. See error log for details.");
