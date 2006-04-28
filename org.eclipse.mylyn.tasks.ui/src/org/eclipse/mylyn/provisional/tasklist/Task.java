@@ -358,7 +358,7 @@ public class Task implements ITask {
 		return REPOSITORY_KIND_LOCAL;
 	}
 
-	public String getKind() {
+	public String getTaskType() {
 		return kind;
 	}
 

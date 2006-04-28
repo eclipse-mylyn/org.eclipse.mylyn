@@ -170,7 +170,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 //		} 
 
 		node.setAttribute(KEY_PRIORITY, task.getPriority());
-		node.setAttribute(KEY_KIND, task.getKind());
+		node.setAttribute(KEY_KIND, task.getTaskType());
 
 		if (task.isCompleted()) {
 			node.setAttribute(KEY_COMPLETE, VAL_TRUE);

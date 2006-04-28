@@ -54,7 +54,22 @@ public abstract class AbstractRepositoryConnector {
 	
 	public abstract boolean attachContext(TaskRepository repository, AbstractRepositoryTask task, String longComment) throws IOException;
 	
+	/**
+	 * Implementors of this operations must perform it locally without going to the server
+	 * since it is used for frequent operations such as decoration.
+	 * 
+	 * @return	an emtpy set if no contexts
+	 */
 	public abstract Set<IRemoteContextDelegate> getAvailableContexts(TaskRepository repository, AbstractRepositoryTask task);
+	
+	public boolean hasRepositoryContext(TaskRepository repository, AbstractRepositoryTask task) {
+		if (repository == null || task == null) {
+			return false;
+		} else {
+			Set<IRemoteContextDelegate> remoteContexts = getAvailableContexts(repository, task);		
+			return (remoteContexts != null && remoteContexts.size() > 0);
+		}
+	}
 	
 	public abstract boolean retrieveContext(TaskRepository repository, AbstractRepositoryTask task, IRemoteContextDelegate remoteContextDelegate)  throws IOException;
 	

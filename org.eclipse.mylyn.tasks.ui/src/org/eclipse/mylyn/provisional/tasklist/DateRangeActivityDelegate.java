@@ -144,8 +144,8 @@ public class DateRangeActivityDelegate implements ITask {
 		return task.getHandleIdentifier();
 	}
 
-	public String getKind() {
-		return task.getKind();
+	public String getTaskType() {
+		return task.getTaskType();
 	}
 
 	public String getNotes() {

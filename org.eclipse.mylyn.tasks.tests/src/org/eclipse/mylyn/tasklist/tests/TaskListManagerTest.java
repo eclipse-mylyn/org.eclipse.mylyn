@@ -406,7 +406,7 @@ public class TaskListManagerTest extends TestCase {
 
 		assertEquals(repositoryTask.getHandleIdentifier(), readTask.getHandleIdentifier());
 		assertEquals(repositoryTask.getDescription(), readTask.getDescription());
-		assertEquals(repositoryTask.getKind(), readTask.getKind());
+		assertEquals(repositoryTask.getTaskType(), readTask.getTaskType());
 	}
 
 	public void testRepositoryTasksAndCategoriesMultiRead() {

@@ -33,7 +33,7 @@ public interface ITask extends ITaskListElement {
 
 //	abstract void setDescription(String description);
 	  
-	public String getKind();
+	public String getTaskType();
 
 	public void setKind(String kind);
 	

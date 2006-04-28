@@ -108,22 +108,12 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 				repositoryTask = (AbstractRepositoryTask)element;
 			}
 			if (repositoryTask != null) {
-				if (!repositoryTask.hasServerContext()) {
-					if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
-						return TaskListImages.getImage(TaskListImages.STATUS_NORMAL_OUTGOING);
-					} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
-						return TaskListImages.getImage(TaskListImages.STATUS_NORMAL_INCOMING);
-					} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
-						return TaskListImages.getImage(TaskListImages.STATUS_NORMAL_CONFLICT);
-					}
-				} else {
-					if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
-						return TaskListImages.getImage(TaskListImages.STATUS_CONTEXT_OUTGOING);
-					} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
-						return TaskListImages.getImage(TaskListImages.STATUS_CONTEXT_INCOMING);
-					} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
-						return TaskListImages.getImage(TaskListImages.STATUS_CONTEXT_CONFLICT);
-					}
+				if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
+					return TaskListImages.getImage(TaskListImages.STATUS_NORMAL_OUTGOING);
+				} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
+					return TaskListImages.getImage(TaskListImages.STATUS_NORMAL_INCOMING);
+				} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
+					return TaskListImages.getImage(TaskListImages.STATUS_NORMAL_CONFLICT);
 				}
 			} else if (element instanceof AbstractQueryHit){
 				return TaskListImages.getImage(TaskListImages.STATUS_NORMAL_INCOMING);

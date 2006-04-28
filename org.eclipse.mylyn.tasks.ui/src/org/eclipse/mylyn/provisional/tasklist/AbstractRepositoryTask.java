@@ -160,8 +160,4 @@ public abstract class AbstractRepositoryTask extends Task {
 	public void setDirty(boolean isDirty) {
 		this.isDirty = isDirty;
 	}
-
-	public boolean hasServerContext() {
-		return false;
-	}
 }

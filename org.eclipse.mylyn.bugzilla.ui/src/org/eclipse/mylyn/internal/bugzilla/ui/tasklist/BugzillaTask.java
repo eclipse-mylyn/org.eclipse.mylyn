@@ -94,7 +94,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		return bugReport;
 	}
 	
-	public String getKind() {
+	public String getTaskType() {
 		if (bugReport != null && bugReport.getAttribute(BugReport.ATTRIBUTE_SEVERITY) != null) {
 			return bugReport.getAttribute(BugReport.ATTRIBUTE_SEVERITY).getValue();
 		} else {
