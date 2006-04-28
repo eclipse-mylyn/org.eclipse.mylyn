@@ -47,7 +47,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.bugzilla.core.Attribute;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
 import org.eclipse.mylar.internal.bugzilla.core.internal.BugParser;
 import org.eclipse.mylar.internal.bugzilla.core.internal.BugReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile;
@@ -149,8 +148,7 @@ public class BugzillaRepositoryUtil {
 					// BugReport bugReport = reportFactory.readReport(in, id,
 					// repository, connection.getContentType());
 					// get the actual bug from the server and return it
-					BugReport bugReport = BugParser.parseBug(in, id, repository.getUrl(), !repository.getVersion()
-							.equals(BugzillaServerVersion.SERVER_216.toString()), repository.getUserName(), repository
+					BugReport bugReport = BugParser.parseBug(in, id, repository.getUrl(), true, repository.getUserName(), repository
 							.getPassword(), connection.getContentType());
 					return bugReport;
 				}

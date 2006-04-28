@@ -97,7 +97,7 @@ public class BugzillaQueryPageParser {
 
 		// if we are dealing with 2.18 or higher we need to use the folowing in the
 		// query string to get the right search page
-		// UPDATE: There doesn't appear to be any harm in appending this to 2.16, 2.18, 2.20, 2.20.1 and without it we
+		// UPDATE: There doesn't appear to be any harm in appending this to 2.18, 2.20, 2.20.1 and without it we
 		// don't get the advanced view so 2.20 and 2.20.1 break
 		//if (repository.getVersion().equals(BugzillaServerVersion.SERVER_218.toString())) {
 			urlString += "?format=advanced";

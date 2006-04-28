@@ -78,8 +78,7 @@ public class BugzillaPreferencePage extends FieldEditorPreferencePage implements
 		// bugzillaVersionEditor.setPreferenceStore(BugzillaPlugin.getDefault().getPreferenceStore());
 		bugzillaVersionEditor = new RadioGroupFieldEditor(IBugzillaConstants.SERVER_VERSION, "Bugzilla Version", 3,
 				new String[][] { { IBugzillaConstants.SERVER_220, IBugzillaConstants.SERVER_VERSION },
-						{ IBugzillaConstants.SERVER_218, IBugzillaConstants.SERVER_VERSION },
-						{ IBugzillaConstants.SERVER_216, IBugzillaConstants.SERVER_VERSION } }, getFieldEditorParent());
+						{ IBugzillaConstants.SERVER_218, IBugzillaConstants.SERVER_VERSION } }, getFieldEditorParent());
 //		refreshQueries = new BooleanFieldEditor(IBugzillaConstants.REFRESH_QUERY,
 //				"Automatically refresh Bugzilla reports and queries on startup", BooleanFieldEditor.DEFAULT,
 //				getFieldEditorParent());

@@ -72,12 +72,10 @@ public interface IBugzillaConstants {
 	static final String SERVER_220 = "2.20";
 
 	static final String SERVER_218 = "2.18";
-
-	static final String SERVER_216 = "2.16";
 	
 	/** Supported bugzilla repository versions */
 	static public enum BugzillaServerVersion {
-		SERVER_216, SERVER_218, SERVER_220, SERVER_222;
+		SERVER_218, SERVER_220, SERVER_222;
 
 		@Override
 		public String toString() {
@@ -88,8 +86,6 @@ public interface IBugzillaConstants {
 				return "2.20";
 			case SERVER_218:
 				return "2.18";
-			case SERVER_216:
-				return "2.16";
 			default:
 				return "null";
 			}
@@ -100,7 +96,6 @@ public interface IBugzillaConstants {
 			if(version.equals(SERVER_222.toString())) return SERVER_222;
 			if(version.equals(SERVER_220.toString())) return SERVER_220;
 			if(version.equals(SERVER_218.toString())) return SERVER_218;
-			if(version.equals(SERVER_216.toString())) return SERVER_216;
 			return null;
 		}
 	}

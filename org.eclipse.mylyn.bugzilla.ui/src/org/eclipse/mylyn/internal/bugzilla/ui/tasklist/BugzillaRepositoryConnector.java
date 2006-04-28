@@ -91,7 +91,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private static final String DESCRIPTION_DEFAULT = "<needs synchronize>";
 
-	private static final String CLIENT_LABEL = "Bugzilla (supports uncustomized 2.16-2.20)";
+	private static final String CLIENT_LABEL = "Bugzilla (supports uncustomized 2.18-2.22)";
 
 	private List<String> supportedVersions;
 

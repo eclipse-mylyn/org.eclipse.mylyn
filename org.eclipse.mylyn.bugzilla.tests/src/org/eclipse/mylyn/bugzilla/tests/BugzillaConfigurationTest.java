@@ -119,6 +119,4 @@ public class BugzillaConfigurationTest extends TestCase {
 		//assertEquals(10, config.getComponents("Hyades").size());
 		//assertEquals(1, config.getTargetMilestones("TestProduct").size());
 	}
-	
-	// NOTE: Bugzilla 2.16 doesn't have config.cgi interface
 }
