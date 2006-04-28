@@ -21,7 +21,6 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.WorkbenchPlugin;
 
 /**
  * @author Mik Kersten
@@ -49,11 +48,10 @@ public class MylarStatusHandler {
 		buffer.append(", ");
 		buffer.append(DateUtil.getFormattedTime());
 		buffer.append("] ");
-
-		if (WorkbenchPlugin.getDefault() != null) {
-			buffer.append("version: " + WorkbenchPlugin.getDefault().getBundle().getLocation() + ", ");
-		}
-
+		
+//		if (PlatformUI.getDefault() != null) {
+//			buffer.append("version: " + WorkbenchPlugin.getDefault().getBundle().getLocation() + ", ");
+//		}
 		buffer.append(status.toString() + ", ");
 
 		if (status.getException() != null) {
