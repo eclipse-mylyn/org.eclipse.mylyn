@@ -36,7 +36,6 @@ import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
 import org.eclipse.mylar.provisional.core.InteractionEvent;
 import org.eclipse.mylar.provisional.core.InterestComparator;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * This is the core class resposible for context management.
@@ -240,16 +239,10 @@ public class MylarContextManager {
 			listener.contextActivated(activityMetaContext);
 		}
 
-		shellLifecycleListener = new ShellLifecycleListener(this);
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(shellLifecycleListener);
-		
+		shellLifecycleListener = new ShellLifecycleListener(this);		
 		activityListener = new ActivityListener(TIMEOUT_INACTIVITY_MILLIS);// INACTIVITY_TIMEOUT_MILLIS);
 		this.addListener(activityListener);
 		activityListener.startObserving();
-	}
-
-	public void dispose() {
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(shellLifecycleListener);
 	}
 	
 	public void handleActivityMetaContextEvent(InteractionEvent event) {
@@ -972,5 +965,9 @@ public class MylarContextManager {
 	 */
 	public List<IMylarContextListener> getListeners() {
 		return Collections.unmodifiableList(listeners);
+	}
+
+	public ShellLifecycleListener getShellLifecycleListener() {
+		return shellLifecycleListener;
 	}
 }

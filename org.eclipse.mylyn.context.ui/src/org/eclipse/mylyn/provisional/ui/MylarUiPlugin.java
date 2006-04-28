@@ -186,6 +186,8 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
+					// TODO: move to MylarPlugin?
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(MylarPlugin.getContextManager().getShellLifecycleListener());
 					MylarPlugin.getContextManager().addListener(viewerManager);
 
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().addPartListener(
@@ -211,6 +213,7 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		try {
 			super.stop(context);
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(MylarPlugin.getContextManager().getShellLifecycleListener());
 			MylarPlugin.getContextManager().removeListener(viewerManager);
 			viewerManager.dispose();
 			colorMap.dispose(); 
