@@ -213,13 +213,13 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		try {
 			super.stop(context);
-			if (!PlatformUI.getWorkbench().isClosing()) {
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(MylarPlugin.getContextManager().getShellLifecycleListener());
-			}
 			MylarPlugin.getContextManager().removeListener(viewerManager);
 			viewerManager.dispose();
 			colorMap.dispose(); 
 			highlighters.dispose();
+			if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(MylarPlugin.getContextManager().getShellLifecycleListener());
+			}
 		} catch (Exception e) { 
 			MylarStatusHandler.fail(e, "Mylar UI stop failed", false);
 		}
