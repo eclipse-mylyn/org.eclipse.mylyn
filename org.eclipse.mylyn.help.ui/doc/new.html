@@ -7,10 +7,7 @@
 	<link rel="stylesheet" type="text/css" href="http://eclipse.org/eclipse.org-common/themes/Phoenix/css/visual.css" media="screen" />
 </head>
 <body>
-<div align=center><h1>New &amp; Noteworthy for Mylar 0.5.0</h1></div>
-<p>&nbsp; See <a href="http://www.eclipse.org/mylar/doc/new.php">
-http://www.eclipse.org/mylar/doc/new.php</a> for the most recent version of this 
-document</p>
+<div align=center><h1>New &amp; Noteworthy for Mylar 0.5.1</h1></div>
 
 <table border="1" style="border-collapse: collapse" width="100%" id="table128" cellpadding="4" bordercolor="#FFFFFF">
 	<tr>
@@ -24,69 +21,64 @@ document</p>
 	</tr>
 	<tr>
 		<td bgcolor="#FAF7FB"><font size="1">0.5.1<br>
-		<i>April 29</i></font></td>
+		<i>April 28</i></font></td>
 		<td bgcolor="#FAF7FB" align="center">
 		<a href="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&product=Mylar&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&bug_status=RESOLVED&bug_status=VERIFIED&bug_status=CLOSED&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=2006-04-08&chfieldto=2006-04-29&chfield=resolution&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=">
-		<font size="1">x</font><font size="1"><br>
+		<font size="1">35</font><font size="1"><br>
 		reports</a></font></td>
-		<td bgcolor="#FAF7FB">&nbsp;</td>
+		<td bgcolor="#FAF7FB"><font size="1">Robert Elves Brock Janiczak and 
+		Eugene Kuleshov made a very substantial contribution of custom JIRA 
+		query support.&nbsp; Gunnar Wagenknecht contributed a patch for RC1 
+		compatibility.</font></td>
 	</tr>
 	</table>
 
 <hr>
-<p><span style="background-color: #E0D0E6">&nbsp;Changes since 0.4.10 are 
-highlighted. </span>&nbsp; Also see the <b><a href="new-0.4.0.html">New &amp; 
-Noteworthy for Mylar 0.4.0</a></b>. </p>
-<p>&nbsp;</p>
-
-<h2>Task Context</h2>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table207">
-		<tr>
-			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Filter Auto Removal</b></p>
-			</td>
-			<td valign="top" width="70%">
-			Editors auto close on decay, auto toggling of editors to close 
-			option [update faq]</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table206">
-		<tr>
-			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Editor Auto Close</b></p>
-			</td>
-			<td valign="top" width="70%">
-			Editors auto close on decay, auto toggling of editors to close 
-			option [update faq]<p>
-			&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<p>&nbsp;</p>
-
+<p>Also see:<br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp; - </b><b>
+<a href="new-0.4.html">New &amp; Noteworthy for Mylar 0.4</a></b><br>
+<b><a href="new-0.3.html">&nbsp;&nbsp;&nbsp;&nbsp; - New &amp; Noteworthy for 
+Mylar 0.3</a></b></p>
 <h2>Task List</h2>
 
 <table cellpadding="10" cellspacing="0" width="600" id="table208">
 		<tr>
 			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Apply Mylar</b></p>
+			<p align="right"><b>Apply Mylar to Task Activity</b></p>
 			</td>
 			<td valign="top" width="70%">
-			More configurable colors and fonts, today's tasks colored.&nbsp; By 
-			default new tasks are marked for today<p>
-			Copy details and open in external browser actions for queries</td>
+			Similar to how Mylar only shows the resources interesting to a task 
+			when applied to a resource view, the Mylar filter will show only the 
+			tasks relevant to the current work week when applied to the Task 
+			List view.&nbsp; This helps reduce information overload for those 
+			that make heavy use of the Task List by focusing on the tasks 
+			scheduled for this week, incomplete tasks that have become 
+			interesting by being worked on recently, and those that are past 
+			their reminders.&nbsp; To mark a task uninteresting set its reminder 
+			for next week or later.&nbsp; Also note that tasks scheduled for 
+			today are highlighted in blue by default (see <i>Preferences -&gt; 
+			General -&gt; Fonts and Colors</i> to change).<p>
+			<img src="images/0.5.1/apply-tasklist.gif"></td>
+		</tr>
+		</table>
+
+<p>&nbsp;</p>
+
+<h2>Task Context</h2>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table211">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Editor Auto Close</b></p>
+			</td>
+			<td valign="top" width="70%">
+			Editors now close automatically when the corresponding files become 
+			uninteresting.&nbsp; This ensures that the number of open editors 
+			does not bloat, and that the editors match the context visible in 
+			vies like the Package Explorer.&nbsp; Note that when a context is 
+			activated the Eclipse preference for closing editors will be 
+			disabled, and re-enabled on deactivation if previously set.<p>
+			<img src="images/0.5.1/editors-close.gif"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -95,21 +87,43 @@ Noteworthy for Mylar 0.4.0</a></b>. </p>
 		</tr>
 </table>
 
-<p>&nbsp;</p>
+<table cellpadding="10" cellspacing="0" width="600" id="table210">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Filter Auto Removal</b></p>
+			</td>
+			<td valign="top" width="70%">
+			When Mylar is applied to a view, the existing filters will be 
+			removed from the view.&nbsp; This enables Alt+click browsing of all 
+			elements (e.g. .settings folder), and ensures that filters such as 
+			Referenced Libraries and Working Sets do not hide elements 
+			interesting to a context.&nbsp; The filters are restored when the 
+			Apply Mylar button is toggled off.</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
 
+<h2>&nbsp;</h2>
 <h2>Bugzilla Connector</h2>
 
 <table cellpadding="10" cellspacing="0" width="600" id="table209">
 		<tr>
 			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Context Attachments</b></p>
+			<p align="right"><b>Task Context Attachments</b></p>
 			</td>
 			<td valign="top" width="70%">
-			Previous viewer filters are now removed when Mylar is applied (won't 
-			get stuck in working sets, etc), restored when task deactivated or 
-			Mylar unapplied.&nbsp; Enables browsing to .settings, etc.&nbsp; 
-			[update FAQ for recommended prefs]<p>Note: not (yet) supported on 
-			2.18.</td>
+			Task contexts can now be attached to Bugzilla tasks, and retrieved 
+			into the workspace.&nbsp; This can be useful for pair programming, 
+			delegating tasks, and collaborating.&nbsp; When a task has a 
+			repository context the lower-left repository icon turns purple and 
+			gets taller.<p>Note: not (yet) supported on 
+			Bugzilla 2.18.<p>
+			<img src="images/0.5.1/context-attach-popup.gif"><p>
+			<img src="images/0.5.1/context-retrieve.gif"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -121,12 +135,12 @@ Noteworthy for Mylar 0.4.0</a></b>. </p>
 <table cellpadding="10" cellspacing="0" width="600" id="table205">
 		<tr>
 			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Custom Queries</b></p>
+			<p align="right"><b>End of Support for 2.16</b></p>
 			</td>
 			<td valign="top" width="70%">
-			End of support for Bugzilla 2.16 from both eclipse.org/mylar and 
-			bugzilla.org<p>
-			&nbsp;</td>
+			This release marks the end of both bugzilla.org and Mylar support 
+			for Bugzilla 2.16, so those using the old installation will need to
+			<a href="http://www.bugzilla.org/news/">upgrade</a>.</td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -145,8 +159,9 @@ Noteworthy for Mylar 0.4.0</a></b>. </p>
 			<p align="right"><b>Custom Queries</b></p>
 			</td>
 			<td valign="top" width="70%">
-			&nbsp;<p>
-			&nbsp;</td>
+			In addition to using filters stored on the server, custom JIRA 
+			queries can now be added via <i>New Repository Query</i> wizard. <p>
+			<img src="images/0.5.1/jira-query-custom.gif"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
