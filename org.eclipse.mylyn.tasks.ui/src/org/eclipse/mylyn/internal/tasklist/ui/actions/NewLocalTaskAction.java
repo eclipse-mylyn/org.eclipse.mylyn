@@ -17,12 +17,10 @@ import java.util.GregorianCalendar;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskInputDialog;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.Task;
@@ -60,15 +58,14 @@ public class NewLocalTaskAction extends Action {
 		String clipboardText = getClipboardText();
 		if ((clipboardText.startsWith("http://") || clipboardText.startsWith("https://") && clipboardText.length() > 10)) {
 			return clipboardText;
+		} else {
+			return "";
 		}
-
-		String defaultPrefix = MylarPlugin.getDefault().getPreferenceStore().getString(
-				TaskListPreferenceConstants.DEFAULT_URL_PREFIX);
-		if (!defaultPrefix.equals("")) {
-			return defaultPrefix;
-		}
-
-		return "";
+//		String defaultPrefix = MylarPlugin.getDefault().getPreferenceStore().getString(
+//				TaskListPreferenceConstants.DEFAULT_URL_PREFIX);
+//		if (!defaultPrefix.equals("")) {
+//			return defaultPrefix;
+//		}
 	}	
 	
 	/**

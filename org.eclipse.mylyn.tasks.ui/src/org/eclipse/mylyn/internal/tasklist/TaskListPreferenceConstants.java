@@ -15,7 +15,7 @@ package org.eclipse.mylar.internal.tasklist;
  * @author Mik Kersten
  */
 public class TaskListPreferenceConstants {
-
+	
 	public static final String PLANNER_WIZARD_ID = "org.eclipse.mylar.tasklist.ui.planner.wizard";
 
 	public static final String PLANNER_EDITOR_ID = "org.eclipse.mylar.tasklist.ui.planner.editor";
@@ -48,7 +48,7 @@ public class TaskListPreferenceConstants {
 
 	public static final String PREVIOUS_SAVE_DATE = "org.eclipse.mylar.tasklist.save.last";
 
-	public static final String DEFAULT_URL_PREFIX = "org.eclipse.mylar.tasklist.defaultUrlPrefix";
+//	public static final String DEFAULT_URL_PREFIX = "org.eclipse.mylar.tasklist.defaultUrlPrefix";
 
 	public static final String WORK_OFFLINE = "org.eclipse.mylar.tasklist.work.offline";
 

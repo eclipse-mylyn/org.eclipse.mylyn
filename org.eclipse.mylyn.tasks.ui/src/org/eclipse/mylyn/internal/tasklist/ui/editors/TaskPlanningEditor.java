@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.TaskEditorCopyAction;
 import org.eclipse.mylar.internal.tasklist.ui.views.DatePicker;
@@ -565,13 +564,13 @@ public class TaskPlanningEditor extends EditorPart {
 		String url = issueReportURL.getText();
 
 		if (url.length() > 10 && (url.startsWith("http://") || url.startsWith("https://"))) {
-			String defaultPrefix = MylarPlugin.getDefault().getPreferenceStore().getString(
-					TaskListPreferenceConstants.DEFAULT_URL_PREFIX);
-			if (url.equals(defaultPrefix)) {
-				getDescButton.setEnabled(false);
-			} else {
+//			String defaultPrefix = MylarPlugin.getDefault().getPreferenceStore().getString(
+//					TaskListPreferenceConstants.DEFAULT_URL_PREFIX);
+//			if (url.equals(defaultPrefix)) {
+//				getDescButton.setEnabled(false);
+//			} else {
 				getDescButton.setEnabled(true);
-			}
+//			}
 		} else {
 			getDescButton.setEnabled(false);
 		}

@@ -16,8 +16,6 @@ import java.util.Date;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -151,7 +149,7 @@ public class TaskInputDialog extends Dialog {
 		urlLabel.setFont(parent.getFont());
 
 		issueURLTextWidget = new Text(composite, SWT.SINGLE | SWT.BORDER);
-		issueURLTextWidget.setText(getDefaultIssueURL());
+		issueURLTextWidget.setText(getDefaultIssueUrl());
 		GridData urlData = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL);
 		urlData.horizontalSpan = 3;
 		urlData.grabExcessHorizontalSpace = true;
@@ -192,13 +190,13 @@ public class TaskInputDialog extends Dialog {
 		String url = issueURLTextWidget.getText();
 
 		if (url.length() > 10 && (url.startsWith("http://") || url.startsWith("https://"))) {
-			String defaultPrefix = MylarPlugin.getDefault().getPreferenceStore().getString(
-					TaskListPreferenceConstants.DEFAULT_URL_PREFIX);
-			if (url.equals(defaultPrefix)) {
-				getDescButton.setEnabled(false);
-			} else {
+//			String defaultPrefix = MylarPlugin.getDefault().getPreferenceStore().getString(
+//					TaskListPreferenceConstants.DEFAULT_URL_PREFIX);
+//			if (url.equals(defaultPrefix)) {
+//				getDescButton.setEnabled(false);
+//			} else {
 				getDescButton.setEnabled(true);
-			}
+//			}
 		} else {
 			getDescButton.setEnabled(false);
 		}
@@ -209,20 +207,19 @@ public class TaskInputDialog extends Dialog {
 	 * of the clipboard and then using the default prefix preference if that
 	 * fails
 	 */
-	protected String getDefaultIssueURL() {
+	protected String getDefaultIssueUrl() {
 
 		String clipboardText = getClipboardText();
 		if ((clipboardText.startsWith("http://") || clipboardText.startsWith("https://") && clipboardText.length() > 10)) {
 			return clipboardText;
+		} else {
+			return taskURL;
 		}
-
-		String defaultPrefix = MylarPlugin.getDefault().getPreferenceStore().getString(
-				TaskListPreferenceConstants.DEFAULT_URL_PREFIX);
-		if (!defaultPrefix.equals("")) {
-			return defaultPrefix;
-		}
-
-		return taskURL;
+//		String defaultPrefix = MylarPlugin.getDefault().getPreferenceStore().getString(
+//				TaskListPreferenceConstants.DEFAULT_URL_PREFIX);
+//		if (!defaultPrefix.equals("")) {
+//			return defaultPrefix;
+//		}
 	}
 
 	/**
