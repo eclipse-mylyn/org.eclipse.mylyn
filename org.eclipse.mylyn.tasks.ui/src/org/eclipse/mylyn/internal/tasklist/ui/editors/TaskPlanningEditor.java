@@ -139,7 +139,7 @@ public class TaskPlanningEditor extends EditorPart {
 
 		public void localInfoChanged(final ITask updateTask) {
 			if (updateTask != null && task != null && updateTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
-				if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
+				if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
 							if (description == null)
