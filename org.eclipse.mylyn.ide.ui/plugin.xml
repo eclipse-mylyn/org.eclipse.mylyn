@@ -192,7 +192,7 @@
 	  		</action> 
 	    </objectContribution>
 	</extension>
-	<!--
+   <!--
    <extension
          point="org.eclipse.ui.decorators">
       <decorator
@@ -201,10 +201,8 @@
             id="org.eclipse.mylar.ide.decorator"
             label="Mylar Change Set Decorator"
             lightweight="true"
+            objectClass="org.eclipse.team.internal.ui.synchronize.ChangeSetDiffNode"
             state="true">
-         <enablement>
-            <objectClass name="org.eclipse.team.internal.ui.synchronize.ChangeSetDiffNode"/>
-         </enablement>
       </decorator>
    </extension>
    -->

@@ -44,8 +44,8 @@ public class MylarChangeSetManager implements IMylarContextListener {
 
 	private final IChangeSetChangeListener CHANGE_SET_LISTENER = new IChangeSetChangeListener() {
 		public void setRemoved(ChangeSet set) {
-			if (set instanceof MylarContextChangeSet) {
-				MylarContextChangeSet contextChangeSet = (MylarContextChangeSet) set;
+			if (set instanceof MylarActiveChangeSet) {
+				MylarActiveChangeSet contextChangeSet = (MylarActiveChangeSet) set;
 				if (contextChangeSet.getTask().isActive()) {
 					collector.add(contextChangeSet); // put it back
 				}
@@ -71,7 +71,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 
 	private ActiveChangeSetManager collector;
 
-	private Map<String, MylarContextChangeSet> activeChangeSets = new HashMap<String, MylarContextChangeSet>();
+	private Map<String, MylarActiveChangeSet> activeChangeSets = new HashMap<String, MylarActiveChangeSet>();
 
 	private ITaskActivityListener TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
 		
@@ -102,8 +102,8 @@ public class MylarChangeSetManager implements IMylarContextListener {
 			ChangeSet[] sets = collector.getSets();
 			for (int i = 0; i < sets.length; i++) {
 				ChangeSet set = sets[i];
-				if (set instanceof MylarContextChangeSet) {
-					MylarContextChangeSet contextChangeSet = (MylarContextChangeSet) set;
+				if (set instanceof MylarActiveChangeSet) {
+					MylarActiveChangeSet contextChangeSet = (MylarActiveChangeSet) set;
 					if (contextChangeSet.getTask().equals(task)) {
 						contextChangeSet.initTitle();
 					}
@@ -171,13 +171,13 @@ public class MylarChangeSetManager implements IMylarContextListener {
 		ChangeSet[] sets = collector.getSets();
 		for (int i = 0; i < sets.length; i++) {
 			ChangeSet restoredSet = sets[i];
-			if (!(restoredSet instanceof MylarContextChangeSet)) {
+			if (!(restoredSet instanceof MylarActiveChangeSet)) {
 				String encodedTitle = restoredSet.getName();
-				String taskHandle = MylarContextChangeSet.getHandleFromPersistedTitle(encodedTitle);
+				String taskHandle = MylarActiveChangeSet.getHandleFromPersistedTitle(encodedTitle);
 				ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(taskHandle);
 				if (task != null) {
 					try {
-						MylarContextChangeSet contextChangeSet = new MylarContextChangeSet(task, collector);
+						MylarActiveChangeSet contextChangeSet = new MylarActiveChangeSet(task, collector);
 						contextChangeSet.restoreResources(restoredSet.getResources());
 						collector.remove(restoredSet);
 						collector.add(contextChangeSet);
@@ -200,8 +200,8 @@ public class MylarChangeSetManager implements IMylarContextListener {
 		ChangeSet[] sets = collector.getSets();
 		for (int i = 0; i < sets.length; i++) {
 			ChangeSet set = sets[i];
-			if (set instanceof MylarContextChangeSet) {
-				MylarContextChangeSet contextChangeSet = (MylarContextChangeSet) set;
+			if (set instanceof MylarActiveChangeSet) {
+				MylarActiveChangeSet contextChangeSet = (MylarActiveChangeSet) set;
 				if (contextChangeSet.getTask().equals(task)) {
 					return contextChangeSet.getResources();
 				}
@@ -218,7 +218,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 				// MylarStatusHandler.log("could not resolve task for context",
 				// this);
 			} else if (!activeChangeSets.containsKey(task.getHandleIdentifier())) {
-				MylarContextChangeSet contextChangeSet = new MylarContextChangeSet(task, collector);
+				MylarActiveChangeSet contextChangeSet = new MylarActiveChangeSet(task, collector);
 				List<IResource> interestingResources = MylarIdePlugin.getDefault().getInterestingResources();
 				contextChangeSet.add(interestingResources.toArray(new IResource[interestingResources.size()]));
 
@@ -235,7 +235,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 		ChangeSet[] sets = collector.getSets();
 		for (int i = 0; i < sets.length; i++) {
 			ChangeSet set = sets[i];
-			if (set instanceof MylarContextChangeSet) {
+			if (set instanceof MylarActiveChangeSet) {
 				IResource[] resources = set.getResources();
 				if (resources == null || resources.length == 0) {
 					collector.remove(set);
@@ -245,8 +245,8 @@ public class MylarChangeSetManager implements IMylarContextListener {
 		activeChangeSets.clear();
 	}
 
-	public List<MylarContextChangeSet> getActiveChangeSets() {
-		return new ArrayList<MylarContextChangeSet>(activeChangeSets.values());
+	public List<MylarActiveChangeSet> getActiveChangeSets() {
+		return new ArrayList<MylarActiveChangeSet>(activeChangeSets.values());
 	}
 
 	private ITask getTask(IMylarContext context) {
@@ -266,7 +266,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 			if (bridge.isDocument(element.getHandleIdentifier())) {
 				IResource resource = MylarIdePlugin.getDefault().getResourceForElement(element);
 				if (resource != null && resource.exists()) {
-					for (MylarContextChangeSet activeContextChangeSet : getActiveChangeSets()) {
+					for (MylarActiveChangeSet activeContextChangeSet : getActiveChangeSets()) {
 						if (!activeContextChangeSet.contains(resource)) {
 							if (element.getInterest().isInteresting()) {
 								activeContextChangeSet.add(new IResource[] { resource });
@@ -276,7 +276,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 					if (shouldRemove(element)) {
 						ChangeSet[] sets = collector.getSets();
 						for (int i = 0; i < sets.length; i++) {
-							if (sets[i] instanceof MylarContextChangeSet) {
+							if (sets[i] instanceof MylarActiveChangeSet) {
 								sets[i].remove(resource);
 							}
 						}

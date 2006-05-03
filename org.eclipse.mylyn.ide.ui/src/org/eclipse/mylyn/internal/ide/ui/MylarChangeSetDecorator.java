@@ -16,11 +16,15 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.mylar.internal.ui.MylarImages;
 
+/**
+ * @author Mik Kersten
+ */
 public class MylarChangeSetDecorator implements ILightweightLabelDecorator {
 
 	public void decorate(Object element, IDecoration decoration) {
 		// ignore
 		decoration.addOverlay(MylarImages.OVERLAY_MYLAR, IDecoration.BOTTOM_RIGHT);
+		System.err.println("!!!!!!");
 	}
 
 	public void addListener(ILabelProviderListener listener) {

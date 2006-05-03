@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.internal.ide.team.MylarChangeSetManager;
-import org.eclipse.mylar.internal.ide.team.MylarContextChangeSet;
+import org.eclipse.mylar.internal.ide.team.MylarActiveChangeSet;
 import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -111,9 +111,9 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 				structureBridge.getHandleIdentifier(file));
 		assertTrue(fileElement.getInterest().isInteresting());
 
-		List<MylarContextChangeSet> changeSets = changeSetManager.getActiveChangeSets();
+		List<MylarActiveChangeSet> changeSets = changeSetManager.getActiveChangeSets();
 		assertEquals(1, changeSets.size());
-		MylarContextChangeSet set = changeSets.get(0);
+		MylarActiveChangeSet set = changeSets.get(0);
 		IResource[] resources = set.getResources();
 		// can have .project file in there
 		assertTrue("length: " + resources.length, resources.length <= 2); 

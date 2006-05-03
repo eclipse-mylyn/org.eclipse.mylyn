@@ -34,7 +34,7 @@ import org.osgi.service.prefs.Preferences;
 /**
  * @author Mik Kersten
  */
-public class MylarContextChangeSet extends ActiveChangeSet {
+public class MylarActiveChangeSet extends ActiveChangeSet {
 
 	private static final String PREFIX_HTTP = "http://";
 
@@ -51,7 +51,7 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 
 	private ITask task;
 
-	public MylarContextChangeSet(ITask task, ActiveChangeSetManager collector) {
+	public MylarActiveChangeSet(ITask task, ActiveChangeSetManager collector) {
 		super(collector, task.getDescription());
 		this.task = task;
 		initTitle();
@@ -236,8 +236,8 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 
 	@Override
 	public boolean equals(Object object) {
-		if (object instanceof MylarContextChangeSet && task != null) {
-			MylarContextChangeSet changeSet = (MylarContextChangeSet) object;
+		if (object instanceof MylarActiveChangeSet && task != null) {
+			MylarActiveChangeSet changeSet = (MylarActiveChangeSet) object;
 			return task.equals(changeSet.getTask());
 		} else {
 			return super.equals(object);

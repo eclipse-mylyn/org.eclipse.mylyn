@@ -15,7 +15,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.internal.ide.team.MylarContextChangeSet;
+import org.eclipse.mylar.internal.ide.team.MylarActiveChangeSet;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
@@ -54,7 +54,7 @@ public class OpenCorrespondingTaskAction implements IViewActionDelegate {
 					comment = ((IFileRevision)firstElement).getComment();
 				}
 				if (comment != null) {
-					String fullUrl = MylarContextChangeSet.getUrlFromComment(comment);
+					String fullUrl = MylarActiveChangeSet.getUrlFromComment(comment);
 					String repositoryUrl = null;	
 					if (fullUrl != null) {
 						AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryForTaskUrl(fullUrl);
@@ -69,7 +69,7 @@ public class OpenCorrespondingTaskAction implements IViewActionDelegate {
 							repositoryUrl = MylarTaskListPlugin.getRepositoryManager().getAllRepositories().get(0).getUrl();
 						}
 					}
-					String id = MylarContextChangeSet.getTaskIdFromCommentOrLabel(comment);	
+					String id = MylarActiveChangeSet.getTaskIdFromCommentOrLabel(comment);	
 					resolved = TaskUiUtil.openRepositoryTask(repositoryUrl, id, fullUrl);
 					
 					if (!resolved) {
