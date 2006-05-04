@@ -623,10 +623,15 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 			studyParameters.setUseContactField(element.getAttribute(ELEMENT_UI_CONTACT_CONSENT_FIELD));
 
 			try {
-				Object questionnaireObject = element.createExecutableExtension(ELEMENT_UI_QUESTIONNAIRE_PAGE);
-				if (questionnaireObject instanceof IQuestionnairePage) {
-					IQuestionnairePage page = (IQuestionnairePage) questionnaireObject;
-					studyParameters.setQuestionnairePage(page);
+				if(element.getAttribute(ELEMENT_UI_QUESTIONNAIRE_PAGE) != null) {
+					Object questionnaireObject = element.createExecutableExtension(ELEMENT_UI_QUESTIONNAIRE_PAGE);
+					if (questionnaireObject instanceof IQuestionnairePage) {
+						IQuestionnairePage page = (IQuestionnairePage) questionnaireObject;
+						studyParameters.setQuestionnairePage(page);
+					}
+				}
+				else {
+					MylarMonitorPlugin.getDefault().setQuestionnaireEnabled(false);
 				}
 			} catch (CoreException throwable) {
 				MylarStatusHandler.fail(throwable, "could not load questionnaire", false);
@@ -634,11 +639,16 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 			}
 
 			try {
-				Object backgroundObject = element.createExecutableExtension(ELEMENT_UI_BACKGROUND_PAGE);
-				if (backgroundObject instanceof IBackgroundPage) {
-					IBackgroundPage page = (IBackgroundPage) backgroundObject;
-					studyParameters.setBackgroundPage(page);
-					MylarMonitorPlugin.getDefault().setBackgroundEnabled(true);
+				if(element.getAttribute(ELEMENT_UI_BACKGROUND_PAGE) != null) {
+					Object backgroundObject = element.createExecutableExtension(ELEMENT_UI_BACKGROUND_PAGE);
+					if (backgroundObject instanceof IBackgroundPage) {
+						IBackgroundPage page = (IBackgroundPage) backgroundObject;
+						studyParameters.setBackgroundPage(page);
+						MylarMonitorPlugin.getDefault().setBackgroundEnabled(true);
+					}
+				}
+				else {
+					MylarMonitorPlugin.getDefault().setBackgroundEnabled(false);
 				}
 			} catch (CoreException throwable) {
 				MylarStatusHandler.fail(throwable, "could not load background page", false);
