@@ -29,16 +29,16 @@
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="javaNoTypeProposalCategory"
-		name="Java Completions (Mylar)">
+		name="Other Java Proposals (Mylar)">
 		<proposalCategory
-			icon="icons/eview16/mylar.gif"/>
+			icon="icons/elcl16/proposals-other.gif"/>
 	</extension>
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="javaTypeProposalCategory"
-		name="Java Types (Mylar)">
+		name="Type Proposals (Mylar)">
 		<proposalCategory
-			icon="icons/eview16/mylar.gif"/>
+			icon="icons/elcl16/proposals-type.gif"/>
 	</extension>
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
