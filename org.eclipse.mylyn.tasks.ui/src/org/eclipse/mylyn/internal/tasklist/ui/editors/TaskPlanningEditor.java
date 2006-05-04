@@ -79,6 +79,8 @@ import org.eclipse.ui.part.EditorPart;
  */
 public class TaskPlanningEditor extends EditorPart {
 
+	private static final String DESCRIPTION_ESTIMATED = "Time that the task has been actively worked on.\n Inactivity timeout is " + MylarPlugin.getContextManager().getInactivityTimeout() + " seconds.";
+
 	private static final String LABEL_INCOMPLETE = "Incomplete";
 
 	private static final String LABEL_COMPLETE = "Complete";
@@ -748,6 +750,7 @@ public class TaskPlanningEditor extends EditorPart {
 
 		label = toolkit.createLabel(sectionClient, "Elapsed time:");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		label.setToolTipText(DESCRIPTION_ESTIMATED);
 
 		Composite elapsedComposite = toolkit.createComposite(sectionClient);
 		GridLayout elapsedLayout = new GridLayout();
