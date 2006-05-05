@@ -48,6 +48,8 @@ public class MylarJavaProposalProcessor {
 
 	private List<IJavaCompletionProposalComputer> alreadyContainSeparator = new ArrayList<IJavaCompletionProposalComputer>();
 
+	private List<IJavaCompletionProposalComputer> containsSingleInterestingProposal = new ArrayList<IJavaCompletionProposalComputer>();
+	
 	private static MylarJavaProposalProcessor INSTANCE = new MylarJavaProposalProcessor();
 
 	private MylarJavaProposalProcessor() {
@@ -76,17 +78,28 @@ public class MylarJavaProposalProcessor {
 				}
 			}
 			
-			// TODO: this annoying state needs to be maintainted to ensure the
-			// separator is added only once
-			if (hasInterestingProposals && alreadyContainSeparator.isEmpty()) {
+			// NOTE: this annoying state needs to be maintainted to ensure the
+			// separator is added only once, and not added for single proposals
+			if (containsSingleInterestingProposal.size() > 0 && proposals.size() > 0) {
 				proposals.add(MylarJavaProposalProcessor.PROPOSAL_SEPARATOR);
-				alreadyContainSeparator.add(proposalComputer);
+			} else if (hasInterestingProposals && alreadyContainSeparator.isEmpty()) {
+				if (proposals.size() == 1) {
+					containsSingleInterestingProposal.add(proposalComputer);
+				} else {
+					proposals.add(MylarJavaProposalProcessor.PROPOSAL_SEPARATOR);
+					alreadyContainSeparator.add(proposalComputer);
+				}
 			}
+			
+
+//			System.err.println(">>> " + proposals.contains(MylarJavaProposalProcessor.PROPOSAL_SEPARATOR));
+			
 			 
 			alreadyComputedProposals.add(proposalComputer);
 			if (alreadyComputedProposals.size() == monitoredProposalComputers.size()) {
 				alreadyComputedProposals.clear();
 				alreadyContainSeparator.clear();
+				containsSingleInterestingProposal.clear();
 			}
  			
 			return proposals;
