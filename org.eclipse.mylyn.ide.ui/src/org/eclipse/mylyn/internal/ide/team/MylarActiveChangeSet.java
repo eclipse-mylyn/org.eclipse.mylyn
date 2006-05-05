@@ -113,7 +113,9 @@ public class MylarActiveChangeSet extends ActiveChangeSet {
 		if (!suppressInterestContribution && resource != null) {
 			Set<IResource> resources = new HashSet<IResource>();
 			resources.add(resource); 
-			MylarIdePlugin.getDefault().getInterestUpdater().addResourceToContext(resources, InteractionEvent.Kind.SELECTION);
+			if (MylarIdePlugin.getDefault() != null) {
+				MylarIdePlugin.getDefault().getInterestUpdater().addResourceToContext(resources, InteractionEvent.Kind.SELECTION);
+			}
 		}
 	}
 
