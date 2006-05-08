@@ -26,7 +26,7 @@ public class AllMiscTests {
 		// suite.addTestSuite(BugzillaSearchPluginTest.class);
 		suite.addTestSuite(AssertionsEnabledTest.class);
 		suite.addTestSuite(HypertextStructureBridgeTest.class);
-		suite.addTestSuite(BugzillaStackTraceTest.class);
+		//suite.addTestSuite(BugzillaStackTraceTest.class);
 		// $JUnit-END$
 		return suite;
 	}
