@@ -25,11 +25,11 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.mylar.bugzilla.core.BugReport;
+import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.core.NewBugModel;
+import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditor;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditorInput;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.NewBugEditorInput;
@@ -227,14 +227,14 @@ public class BugzillaUITools {
 	}
 
 	public static void closeEditor(IWorkbenchPage page, IBugzillaBug bug) {
-		if (bug instanceof NewBugModel) {
-			IEditorInput input = new NewBugEditorInput((NewBugModel) bug);
+		if (bug instanceof NewBugzillaReport) {
+			IEditorInput input = new NewBugEditorInput((NewBugzillaReport) bug);
 			IEditorPart bugEditor = page.findEditor(input);
 			if (bugEditor != null) {
 				page.closeEditor(bugEditor, false);
 			}
-		} else if (bug instanceof BugReport) {
-			IEditorInput input = new ExistingBugEditorInput((BugReport) bug);
+		} else if (bug instanceof BugzillaReport) {
+			IEditorInput input = new ExistingBugEditorInput((BugzillaReport) bug);
 			IEditorPart bugEditor = page.findEditor(input);
 			if (bugEditor != null) {
 				page.closeEditor(bugEditor, false);

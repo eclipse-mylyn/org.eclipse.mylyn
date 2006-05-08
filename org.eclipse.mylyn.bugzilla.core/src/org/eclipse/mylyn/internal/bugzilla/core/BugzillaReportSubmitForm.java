@@ -32,15 +32,15 @@ import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylar.bugzilla.core.Attribute;
-import org.eclipse.mylar.bugzilla.core.BugReport;
+import org.eclipse.mylar.bugzilla.core.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.bugzilla.core.BugzillaReportAttribute;
 import org.eclipse.mylar.bugzilla.core.Operation;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
-import org.eclipse.mylar.internal.bugzilla.core.internal.BugReportElement;
+import org.eclipse.mylar.internal.bugzilla.core.internal.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlTag;
 import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer.Token;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
 /**
@@ -57,6 +57,8 @@ public class BugzillaReportSubmitForm {
 
 	// private static final String KEY_PRODUCT = "product";
 
+	private static final String KEY_ID = "id";
+
 	private static final String VAL_TRUE = "true";
 
 	private static final String KEY_REMOVECC = "removecc";
@@ -70,8 +72,6 @@ public class BugzillaReportSubmitForm {
 	private static final String REQUEST_PROPERTY_CONTENT_LENGTH = "Content-Length";
 
 	private static final String METHOD_POST = "POST";
-
-	private static final String KEY_NEWCC = "newcc";
 
 	private static final String KEY_BUGZILLA_PASSWORD = "Bugzilla_password";
 
@@ -94,8 +94,6 @@ public class BugzillaReportSubmitForm {
 	private static final String KEY_COMMENT = "comment";
 
 	private static final String KEY_SHORT_DESC = "short_desc";
-
-	private static final String KEY_ASSIGNED_TO = "Assigned To";
 
 	// private static final String KEY_ASSIGN_TO = "Assign To";
 	//
@@ -209,7 +207,7 @@ public class BugzillaReportSubmitForm {
 	// return bugzillaReportSubmitForm;
 	// }
 
-	public static BugzillaReportSubmitForm makeNewBugPost(TaskRepository repository, NewBugModel model) {
+	public static BugzillaReportSubmitForm makeNewBugPost(TaskRepository repository, NewBugzillaReport model) {
 		BugzillaReportSubmitForm form = new BugzillaReportSubmitForm();
 		form.setPrefix(BugzillaReportSubmitForm.FORM_PREFIX_BUG_218);
 		form.setPrefix2(BugzillaReportSubmitForm.FORM_PREFIX_BUG_220);
@@ -220,10 +218,11 @@ public class BugzillaReportSubmitForm {
 		setURL(form, repository, POST_BUG_CGI);
 		// go through all of the attributes and add them to
 		// the bug post
-		Iterator<Attribute> itr = model.getAttributes().iterator();
+		Iterator<AbstractRepositoryReportAttribute> itr = model.getAttributes().iterator();
 		while (itr.hasNext()) {
-			Attribute a = itr.next();
-			if (a != null && a.getParameterName() != null && a.getParameterName().compareTo("") != 0 && !a.isHidden()) {
+			AbstractRepositoryReportAttribute a = itr.next();
+			if (a != null && a.getID() != null && a.getID().compareTo("") != 0) { // &&
+																					// !a.isHidden()
 				// String key = a.getName();
 				String value = null;
 
@@ -259,20 +258,20 @@ public class BugzillaReportSubmitForm {
 				// && a.isHidden()) {
 				// // we have a hidden attribute, add it to the
 				// // posting
-				value = a.getValue();				
+				value = a.getValue();
 				if (value == null)
 					continue;
-				form.add(a.getParameterName(), value);
+				form.add(a.getID(), value);
 			}
 		}
 
 		// form.add(KEY_BUG_FILE_LOC, "");
 
 		// specify the product
-		form.add(BugReportElement.PRODUCT.getKeyString(), model.getProduct());
+		form.add(BugzillaReportElement.PRODUCT.getKeyString(), model.getProduct());
 
 		// add the summary to the bug post
-		form.add(BugReportElement.SHORT_DESC.getKeyString(), model.getSummary());
+		form.add(BugzillaReportElement.SHORT_DESC.getKeyString(), model.getSummary());
 
 		// BugzillaServerVersion bugzillaServerVersion =
 		// IBugzillaConstants.BugzillaServerVersion.fromString(repository
@@ -304,7 +303,7 @@ public class BugzillaReportSubmitForm {
 	 * 
 	 * @param removeCC
 	 */
-	public static BugzillaReportSubmitForm makeExistingBugPost(BugReport bug, TaskRepository repository,
+	public static BugzillaReportSubmitForm makeExistingBugPost(BugzillaReport bug, TaskRepository repository,
 			Set<String> removeCC) {
 
 		BugzillaReportSubmitForm bugReportPostHandler = new BugzillaReportSubmitForm();
@@ -317,18 +316,21 @@ public class BugzillaReportSubmitForm {
 		}
 
 		// go through all of the attributes and add them to the bug post
-		for (Iterator<Attribute> it = bug.getAttributes().iterator(); it.hasNext();) {
-			Attribute a = it.next();
-			if (a != null && a.getParameterName() != null && a.getParameterName().compareTo("") != 0 && !a.isHidden()) {
-				String value = a.getNewValue();
+		for (Iterator<AbstractRepositoryReportAttribute> it = bug.getAttributes().iterator(); it.hasNext();) {
+			AbstractRepositoryReportAttribute a = it.next();
+
+			if (a != null && a.getID() != null && a.getID().compareTo("") != 0 && !a.isHidden()) {
+				String value = a.getValue();
 				// add the attribute to the bug post
-				bugReportPostHandler.add(a.getParameterName(), value != null ? value : "");
-			} else if (a != null && a.getParameterName() != null && a.getParameterName().compareTo("") != 0
-					&& a.isHidden()) {
+				bugReportPostHandler.add(a.getID(), value != null ? value : "");
+			} else if (a != null && a.getID() != null && a.getID().compareTo("") != 0 && a.isHidden()) {
 				// we have a hidden attribute and we should send it back.
-				bugReportPostHandler.add(a.getParameterName(), a.getValue());
+				bugReportPostHandler.add(a.getID(), a.getValue());
 			}
 		}
+
+		// when posting the bug id is encoded in a hidden field named 'id'
+		bugReportPostHandler.add(KEY_ID, bug.getAttributeValue(BugzillaReportElement.BUG_ID));
 
 		// add the operation to the bug post
 		Operation o = bug.getSelectedOperation();
@@ -345,14 +347,15 @@ public class BugzillaReportSubmitForm {
 			}
 		}
 		bugReportPostHandler.add(KEY_FORM_NAME, VAL_PROCESS_BUG);
-		bug.setNewNewComment(formatTextToLineWrap(bug.getNewNewComment(), repository));
-		if (bug.getAttribute(BugReport.ATTR_SUMMARY) != null) {
-			bugReportPostHandler.add(KEY_SHORT_DESC, bug.getAttribute(BugReport.ATTR_SUMMARY).getNewValue());
+		// bug.setNewNewComment(formatTextToLineWrap(bug.getNewComment(),
+		// repository));
+		if (bug.getAttribute(BugzillaReportElement.SHORT_DESC) != null) {
+			bugReportPostHandler.add(KEY_SHORT_DESC, bug.getAttribute(BugzillaReportElement.SHORT_DESC).getValue());
 		}
 
 		// add the new comment to the bug post if there is some text in it
-		if (bug.getNewNewComment().length() != 0) {
-			bugReportPostHandler.add(KEY_COMMENT, bug.getNewNewComment());
+		if (bug.getNewComment().length() != 0) {
+			bugReportPostHandler.add(KEY_COMMENT, bug.getNewComment());
 		}
 
 		if (removeCC != null && removeCC.size() > 0) {
@@ -431,6 +434,10 @@ public class BugzillaReportSubmitForm {
 			}
 			postConnection.setRequestProperty(REQUEST_PROPERTY_CONTENT_TYPE, contentTypeString);
 			// get the url for the update with all of the changed values
+
+			// Used to debug posted report
+			// System.err.println(getPostBody());
+
 			byte[] body = getPostBody().getBytes();
 			postConnection.setRequestProperty(REQUEST_PROPERTY_CONTENT_LENGTH, String.valueOf(body.length));
 
@@ -455,7 +462,8 @@ public class BugzillaReportSubmitForm {
 
 			String aString = in.readLine();
 
-			// while(aString != null) {
+			// Used to debug reponse from bugzilla server
+			// while (aString != null) {
 			// System.err.println(aString);
 			// aString = in.readLine();
 			// }
@@ -631,27 +639,31 @@ public class BugzillaReportSubmitForm {
 
 	/**
 	 * Sets the cc field to the user's address if a cc has not been specified to
-	 * ensure that commenters are on the cc list.
+	 * ensure that commenters are on the cc list. TODO: Review this mechanism
 	 * 
 	 * @author Wesley Coelho
 	 */
-	private static void setDefaultCCValue(BugReport bug, TaskRepository repository) {
-		Attribute newCCattr = bug.getAttributeForKnobName(KEY_NEWCC);
-		Attribute owner = bug.getAttribute(KEY_ASSIGNED_TO);
+	private static void setDefaultCCValue(BugzillaReport bug, TaskRepository repository) {
+		// AbstractRepositoryReportAttribute newCCattr =
+		// bug.getAttributeForKnobName(KEY_NEWCC);
+		AbstractRepositoryReportAttribute owner = bug.getAttribute(BugzillaReportElement.ASSIGNED_TO);
 
 		// Don't add the cc if the user is the bug owner
 		if (repository.getUserName() == null
 				|| (owner != null && owner.getValue().indexOf(repository.getUserName()) != -1)) {
-			MylarStatusHandler.log("Could not determine CC value for repository: " + repository, null);
+			// MylarStatusHandler.log("Could not determine CC value for
+			// repository: " + repository, null);
 			return;
 		}
-
-		// Add the user to the cc list
-		if (newCCattr != null) {
-			if (newCCattr.getNewValue().equals("")) {
-				newCCattr.setNewValue(repository.getUserName());
-			}
+		// Don't add cc if already there
+		AbstractRepositoryReportAttribute ccAttribute = bug.getAttribute(BugzillaReportElement.CC);
+		if (ccAttribute != null && ccAttribute.getValues().contains(repository.getUserName())) {
+			return;
 		}
+		BugzillaReportAttribute newCCattr = new BugzillaReportAttribute(BugzillaReportElement.NEWCC);
+		// Add the user to the cc list
+		newCCattr.setValue(repository.getUserName());
+		bug.addAttribute(BugzillaReportElement.NEWCC, newCCattr);
 	}
 
 	/**

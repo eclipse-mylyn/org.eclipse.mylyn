@@ -10,18 +10,15 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
-import java.util.Iterator;
-
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.bugzilla.core.Attribute;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.internal.bugzilla.core.NewBugModel;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
+import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
@@ -48,7 +45,7 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class NewBugEditor extends AbstractBugEditor {
 
-	protected NewBugModel bug;
+	protected NewBugzillaReport bug;
 
 	protected Text descriptionText;
 
@@ -270,10 +267,10 @@ public class NewBugEditor extends AbstractBugEditor {
 	protected void updateBug() {
 		// go through all of the attributes and update the main values to the
 		// new ones
-		for (Iterator<Attribute> it = bug.getAttributes().iterator(); it.hasNext();) {
-			Attribute a = it.next();
-			a.setValue(a.getNewValue());
-		}
+//		for (Iterator<AbstractRepositoryReportAttribute> it = bug.getAttributes().iterator(); it.hasNext();) {
+//			AbstractRepositoryReportAttribute a = it.next();
+//			a.setValue(a.getNewValue());
+//		}
 
 		// Update some other fields as well.
 		bug.setSummary(newSummary);
@@ -284,10 +281,10 @@ public class NewBugEditor extends AbstractBugEditor {
 	protected void restoreBug() {
 		// go through all of the attributes and restore the new values to the
 		// main ones
-		for (Iterator<Attribute> it = bug.getAttributes().iterator(); it.hasNext();) {
-			Attribute a = it.next();
-			a.setNewValue(a.getValue());
-		}
+//		for (Iterator<AbstractRepositoryReportAttribute> it = bug.getAttributes().iterator(); it.hasNext();) {
+//			AbstractRepositoryReportAttribute a = it.next();
+//			a.setNewValue(a.getValue());
+//		}
 	}
 
 	@SuppressWarnings("deprecation")

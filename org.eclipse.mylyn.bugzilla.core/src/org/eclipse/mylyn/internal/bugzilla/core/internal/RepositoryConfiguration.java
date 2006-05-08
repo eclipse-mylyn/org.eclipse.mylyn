@@ -43,6 +43,8 @@ public class RepositoryConfiguration {
 
 	private List<String> resolutionValues = new ArrayList<String>();
 
+	private List<String> keywords = new ArrayList<String>();
+
 	// master lists
 
 	private List<String> versions = new ArrayList<String>();
@@ -88,7 +90,7 @@ public class RepositoryConfiguration {
 	 */
 	public List<String> getProducts() {
 		ArrayList<String> productList = new ArrayList<String>(products.keySet());
-		Collections.sort(productList); 
+		Collections.sort(productList);
 		return productList;
 	}
 
@@ -214,13 +216,20 @@ public class RepositoryConfiguration {
 	// }
 	// }
 
+	public void addKeyword(String keyword) {
+		keywords.add(keyword);
+	}
+
+	public List<String> getKeywords() {
+		return keywords;
+	}
+
 	public void addPlatform(String platform) {
 		platforms.add(platform);
 	}
 
 	public void addPriority(String priority) {
 		priorities.add(priority);
-
 	}
 
 	public void addSeverity(String severity) {
@@ -321,6 +330,42 @@ public class RepositoryConfiguration {
 
 	public List<String> getVersions() {
 		return versions;
+	}
+
+	/*
+	 * Intermediate step until configuration is made generic.
+	 */
+
+	public List<String> getOptionValues(BugzillaReportElement element, String product) {
+		switch (element) {
+		case PRODUCT:
+			return getProducts();
+		case TARGET_MILESTONE:
+			// return getTargetMilestones();
+			return getTargetMilestones(product);
+		case BUG_STATUS:
+			return getStatusValues();
+		case VERSION:
+			// return getVersions();
+			return getVersions(product);
+		case COMPONENT:
+			// return getComponents();
+			return getComponents(product);
+		case REP_PLATFORM:
+			return getPlatforms();
+		case OP_SYS:
+			return getOSs();
+		case PRIORITY:
+			return getPriorities();
+		case BUG_SEVERITY:
+			return getSeverities();
+		case KEYWORDS:
+			return getKeywords();
+		case RESOLUTION:
+			return getResolutions();
+		default:
+			return new ArrayList<String>();
+		}
 	}
 
 }

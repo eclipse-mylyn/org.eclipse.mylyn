@@ -14,7 +14,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
-import org.eclipse.mylar.bugzilla.core.BugReport;
+import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchResultCollector;
 
 /**
@@ -48,7 +48,7 @@ public class Favorite implements Serializable {
 	 * @param bug
 	 *            The bug this favorite represents.
 	 */
-	public Favorite(BugReport bug) {
+	public Favorite(BugzillaReport bug) {
 		this(bug.getRepositoryUrl(), bug.getId(), bug.getSummary(), "", BugzillaSearchResultCollector.getAttributeMap(bug));
 	}
 

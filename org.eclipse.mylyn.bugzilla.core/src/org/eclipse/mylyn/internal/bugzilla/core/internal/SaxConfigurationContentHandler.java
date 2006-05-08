@@ -62,6 +62,8 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 	private static final String ELEMENT_SEVERITY = "severity";
 
 	private static final String ELEMENT_PRIORITY = "priority";
+	
+	private static final String ELEMENT_KEYWORD = "keyword";
 
 	private static final String ELEMENT_OP_SYS = "op_sys";
 
@@ -108,6 +110,8 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 	private static final int IN_STATUS_OPEN = 1 << 17;
 	
 	private static final int IN_RESOLUTION = 1 << 18;
+	
+	private static final int IN_KEYWORD = 1 << 19;
 
 	private int state = EXPECTING_ROOT;
 
@@ -183,6 +187,9 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 		case IN_RESOLUTION | IN_LI:
 			configuration.addResolution(String.copyValueOf(ch, start, length));
 			break;
+		case IN_KEYWORD | IN_LI:
+			configuration.addKeyword(String.copyValueOf(ch, start, length));
+			break;
 		case IN_STATUS_OPEN | IN_LI:
 			configuration.addOpenStatusValue(String.copyValueOf(ch, start, length));
 			break;
@@ -234,6 +241,8 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			state = state | IN_STATUS_OPEN;
 		} else if (localName.equals(ELEMENT_RESOLUTION)) {
 			state = state | IN_RESOLUTION;
+		} else if (localName.equals(ELEMENT_KEYWORD)) {
+			state = state | IN_KEYWORD;
 		}
 
 	}
@@ -345,6 +354,8 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			state = state & ~IN_STATUS_OPEN;
 		} else if (localName.equals(ELEMENT_RESOLUTION)) {
 			state = state & ~IN_RESOLUTION;
+		} else if (localName.equals(ELEMENT_KEYWORD)) {
+			state = state & ~IN_KEYWORD;
 		}
 
 	}

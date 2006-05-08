@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.core;
 
-import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
+import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 
 /**
  * Miscellaneous constants and functions for this plugin.
@@ -53,7 +53,7 @@ public class BugzillaTools {
 		return name;
 	}
 
-	public static String getHandle(IBugzillaBug bug) {
+	public static String getHandle(BugzillaReport bug) {
 		return getHandle(bug.getRepositoryUrl(), bug.getId());
 	}
 
@@ -61,7 +61,7 @@ public class BugzillaTools {
 		return server + ";" + id;
 	}
 
-	public static String getName(IBugzillaBug bug) {
+	public static String getName(BugzillaReport bug) {
 		return bug.getRepositoryUrl() + ": Bug#: " + bug.getId() + ": " + bug.getSummary();
 	}
 

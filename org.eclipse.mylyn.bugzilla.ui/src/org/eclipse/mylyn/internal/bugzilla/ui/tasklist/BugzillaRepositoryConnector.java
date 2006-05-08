@@ -34,10 +34,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.bugzilla.core.BugReport;
+import org.eclipse.mylar.bugzilla.core.AbstractRepositoryReport;
+import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaRemoteContextDelegate;
-import org.eclipse.mylar.bugzilla.core.Comment;
-import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
+import org.eclipse.mylar.bugzilla.core.ReportAttachment;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
@@ -147,12 +147,12 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return BugzillaPlugin.REPOSITORY_KIND;
 	}
 
-	public void saveBugReport(IBugzillaBug bugzillaBug) {
+	public void saveBugReport(BugzillaReport bugzillaBug) {
 		String handle = AbstractRepositoryTask.getHandle(bugzillaBug.getRepositoryUrl(), bugzillaBug.getId());
 		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
 		if (task instanceof BugzillaTask) {
 			BugzillaTask bugzillaTask = (BugzillaTask) task;
-			bugzillaTask.setBugReport((BugReport) bugzillaBug);
+			bugzillaTask.setBugReport((BugzillaReport) bugzillaBug);
 
 			if (bugzillaBug.hasChanges()) {
 				bugzillaTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
@@ -164,7 +164,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	}
 
-	private BugReport downloadReport(final BugzillaTask bugzillaTask) {
+	private BugzillaReport downloadReport(final BugzillaTask bugzillaTask) {
 		try {
 			return BugzillaRepositoryUtil.getBug(bugzillaTask.getRepositoryUrl(), AbstractRepositoryTask
 					.getTaskIdAsInt(bugzillaTask.getHandleIdentifier()));
@@ -325,7 +325,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
-	private static void offlineStatusChange(IBugzillaBug bug, BugzillaOfflineStatus status, boolean forceSynch) {
+	private static void offlineStatusChange(AbstractRepositoryReport report, BugzillaOfflineStatus status,
+			boolean forceSynch) {
 
 		RepositoryTaskSyncState state = null;
 		if (status == BugzillaOfflineStatus.SAVED_WITH_OUTGOING_CHANGES) {
@@ -350,7 +351,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			return;
 		}
 
-		String handle = AbstractRepositoryTask.getHandle(bug.getRepositoryUrl(), bug.getId());
+		String handle = AbstractRepositoryTask.getHandle(report.getRepositoryUrl(), report.getId());
 		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
 		if (task != null && task instanceof BugzillaTask) {
 			BugzillaTask bugTask = (BugzillaTask) task;
@@ -359,7 +360,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
-	public void submitBugReport(final IBugzillaBug bugReport, final BugzillaReportSubmitForm form,
+	public void submitBugReport(final BugzillaReport bugReport, final BugzillaReportSubmitForm form,
 			IJobChangeListener listener) {
 
 		if (forceSyncExecForTesting) {
@@ -412,7 +413,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
-	private void internalSubmitBugReport(IBugzillaBug bugReport, BugzillaReportSubmitForm form) {
+	private void internalSubmitBugReport(BugzillaReport bugReport, BugzillaReportSubmitForm form) {
 		try {
 			form.submitReportToRepository();
 			removeReport(bugReport);
@@ -420,9 +421,12 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			// TODO: avoid getting archive tasks?
 			ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
 
-			Set<AbstractRepositoryQuery> queriesWithHandle = MylarTaskListPlugin.getTaskListManager().getTaskList()
-					.getQueriesForHandle(task.getHandleIdentifier());
-			synchronize(queriesWithHandle, null, Job.INTERACTIVE, 0);
+			// TODO: re-enable synchronization of queries with task. Redundant?
+			// Set<AbstractRepositoryQuery> queriesWithHandle =
+			// MylarTaskListPlugin.getTaskListManager().getTaskList()
+			// .getQueriesForHandle(task.getHandleIdentifier());
+			// synchronize(queriesWithHandle, null, Job.INTERACTIVE, 0);
+
 			// for (AbstractRepositoryQuery query : queriesWithHandle) {
 			// synchronize(query, null);
 			// }
@@ -444,7 +448,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	 * @param saveChosen
 	 *            This is used to determine a refresh from a user save
 	 */
-	public BugzillaOfflineStatus saveOffline(final IBugzillaBug bug, final boolean forceSynch) {
+	public BugzillaOfflineStatus saveOffline(final BugzillaReport bug, final boolean forceSynch) {
 
 		BugzillaOfflineStatus status = BugzillaOfflineStatus.ERROR;
 
@@ -460,9 +464,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return status;
 	}
 
-	private void internalSaveOffline(final IBugzillaBug bug, final boolean forceSynch) {
+	// TODO: pull up
+	private void internalSaveOffline(final BugzillaReport report, final boolean forceSynch) {
 		// If there is already an offline report for this bug, update the file.
-		if (bug.isSavedOffline()) {
+		if (((AbstractRepositoryReport) report).isSavedOffline()) {
 			offlineReportsFile.update();
 		} else {
 			try {
@@ -479,10 +484,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				// // identical id.");
 				// // return;
 				// }
-				BugzillaOfflineStatus offlineStatus = offlineReportsFile.add(bug, false);
-				bug.setOfflineState(true);
+				BugzillaOfflineStatus offlineStatus = offlineReportsFile.add(report, false);
+				((AbstractRepositoryReport) report).setOfflineState(true);
 				// saveForced forced to false (hack)
-				offlineStatusChange(bug, offlineStatus, forceSynch);
+				offlineStatusChange(report, offlineStatus, forceSynch);
 
 			} catch (CoreException e) {
 				MylarStatusHandler.fail(e, e.getMessage(), false);
@@ -491,15 +496,15 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
-	public static List<IBugzillaBug> getOfflineBugs() {
+	public static List<BugzillaReport> getOfflineBugs() {
 		OfflineReportsFile file = BugzillaPlugin.getDefault().getOfflineReports();
 		return file.elements();
 	}
 
-	public static void removeReport(IBugzillaBug bug) {
+	public static void removeReport(BugzillaReport bug) {
 		bug.setOfflineState(false);
 		offlineStatusChange(bug, BugzillaOfflineStatus.DELETED, false);
-		ArrayList<IBugzillaBug> bugList = new ArrayList<IBugzillaBug>();
+		ArrayList<BugzillaReport> bugList = new ArrayList<BugzillaReport>();
 		bugList.add(bug);
 		BugzillaPlugin.getDefault().getOfflineReports().remove(bugList);
 	}
@@ -574,7 +579,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	protected void updateOfflineState(AbstractRepositoryTask repositoryTask, boolean forceSync) {
 		if (repositoryTask instanceof BugzillaTask) {
 			BugzillaTask bugzillaTask = (BugzillaTask) repositoryTask;
-			BugReport downloadedReport = downloadReport(bugzillaTask);
+			BugzillaReport downloadedReport = downloadReport(bugzillaTask);
 			if (downloadedReport != null) {
 				bugzillaTask.setBugReport(downloadedReport);
 				saveOffline(downloadedReport, forceSync);
@@ -649,11 +654,20 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		if (task instanceof BugzillaTask) {
 			BugzillaTask bugzillaTask = (BugzillaTask) task;
 			if (bugzillaTask.getBugReport() != null) {
-				for (Comment comment : bugzillaTask.getBugReport().getComments()) {
-					if (comment.hasAttachment() && comment.getAttachmentDescription().equals(MYLAR_CONTEXT_DESCRIPTION)) {
-						contextDelegates.add(new BugzillaRemoteContextDelegate(comment));
+				for (ReportAttachment attachment : bugzillaTask.getBugReport().getAttachments()) {
+					if (attachment.getDescription().equals(MYLAR_CONTEXT_DESCRIPTION)) {
+						contextDelegates.add(new BugzillaRemoteContextDelegate(attachment));
 					}
 				}
+				// for (Comment comment :
+				// bugzillaTask.getBugReport().getComments()) {
+				// if (comment.hasAttachment() &&
+				// comment.getAttachmentDescription().equals(MYLAR_CONTEXT_DESCRIPTION))
+				// {
+				// contextDelegates.add(new
+				// BugzillaRemoteContextDelegate(comment));
+				// }
+				// }
 			}
 		}
 		return contextDelegates;

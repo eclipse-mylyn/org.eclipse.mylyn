@@ -11,23 +11,18 @@
 package org.eclipse.mylar.internal.bugzilla.core;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
-import org.eclipse.mylar.bugzilla.core.Attribute;
-import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
+import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 
 /**
  * This class is used to store data about the new bug that is being created
  * while the wizard is being used
  * 
  * @author Eric Booth
+ * @author Rob Elves
  */
-public class NewBugModel implements Serializable, IBugzillaBug {
+public class NewBugzillaReport extends BugzillaReport implements Serializable { 
 
 	/** Automatically generated serialVersionUID */
 	private static final long serialVersionUID = 3977859587934335283L;
@@ -37,22 +32,23 @@ public class NewBugModel implements Serializable, IBugzillaBug {
 
 	/** Whether the products have been parsed yet or not */
 	protected boolean hasParsedProducts = false;
-
-	/** The bug's id */
-	protected final int id;
-
+//
+//	// /** The bug's id */
+//	// protected final int id;
+//
 	/** The product that the bug is for */
 	protected String product;
-
-	/** A list of the attributes that can be changed for the new bug */
-	public Map<String, Attribute> attributes = new LinkedHashMap<String, Attribute>();
-
+//
+//	// /** A list of the attributes that can be changed for the new bug */
+//	// public Map<String, AbstractRepositoryReportAttribute> attributes = new
+//	// LinkedHashMap<String, AbstractRepositoryReportAttribute>();
+//
 	/** The summary for the bug */
 	protected String summary = "";
 
 	/** The description for the bug */
 	protected String description = "";
-	
+
 	/**
 	 * Flag to indicate status of connection to Bugzilla server to identify
 	 * whether ProductConfiguration should be used instead
@@ -66,48 +62,51 @@ public class NewBugModel implements Serializable, IBugzillaBug {
 	 * Creates a new <code>NewBugModel</code>. The id chosen for this bug is
 	 * based on the id of the last <code>NewBugModel</code> that was created.
 	 */
-	public NewBugModel() {
-		super();
-		id = BugzillaPlugin.getDefault().getOfflineReports().getNextOfflineBugId();
+	public NewBugzillaReport(String repositoryURL) {
+		super(BugzillaPlugin.getDefault().getOfflineReports().getNextOfflineBugId(), repositoryURL);
+		// id =
+		// BugzillaPlugin.getDefault().getOfflineReports().getNextOfflineBugId();
 	}
 
-	public Attribute getAttribute(String key) {
-		return attributes.get(key);
-	}
+	// public AbstractRepositoryReportAttribute getAttribute(String key) {
+	// return attributes.get(key);
+	// }
 
-	/**
-	 * Get the list of attributes for this model
-	 * 
-	 * @return An <code>ArrayList</code> of the models attributes
-	 */
-	public List<Attribute> getAttributes() {
-		// create an array list to store the attributes in
-		ArrayList<Attribute> attributeEntries = new ArrayList<Attribute>(attributes.keySet().size());
+	// /**
+	// * Get the list of attributes for this model
+	// *
+	// * @return An <code>ArrayList</code> of the models attributes
+	// */
+	// public List<AbstractRepositoryReportAttribute> getAttributes() {
+	// // create an array list to store the attributes in
+	// ArrayList<AbstractRepositoryReportAttribute> attributeEntries = new
+	// ArrayList<AbstractRepositoryReportAttribute>(attributes.keySet().size());
+	//
+	// // go through each of the attribute keys
+	// for (Iterator<String> it = attributes.keySet().iterator(); it.hasNext();)
+	// {
+	// // get the key for the attribute
+	// String key = it.next();
+	//
+	// // get the attribute and add it to the list
+	// AbstractRepositoryReportAttribute attribute = attributes.get(key);
+	// attributeEntries.add(attribute);
+	// }
+	//
+	// // return the list of attributes for the bug
+	// return attributeEntries;
+	// }
 
-		// go through each of the attribute keys
-		for (Iterator<String> it = attributes.keySet().iterator(); it.hasNext();) {
-			// get the key for the attribute
-			String key = it.next();
-
-			// get the attribute and add it to the list
-			Attribute attribute = attributes.get(key);
-			attributeEntries.add(attribute);
-		}
-
-		// return the list of attributes for the bug
-		return attributeEntries;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public String getRepositoryUrl() {
-		return BugzillaTools.OFFLINE_SERVER_DEFAULT;
-	}
+	// public int getId() {
+	// return id;
+	// }
+	//
+	// public String getRepositoryUrl() {
+	// return BugzillaTools.OFFLINE_SERVER_DEFAULT;
+	// }
 
 	public String getLabel() {
-		return "New Bug #" + id;
+		return "New Bug #" + getId();
 	}
 
 	public String getDescription() {
@@ -213,7 +212,7 @@ public class NewBugModel implements Serializable, IBugzillaBug {
 	}
 
 	/** returns null */
-	public Date getCreated() {		
+	public Date getCreated() {
 		return null;
 	}
 

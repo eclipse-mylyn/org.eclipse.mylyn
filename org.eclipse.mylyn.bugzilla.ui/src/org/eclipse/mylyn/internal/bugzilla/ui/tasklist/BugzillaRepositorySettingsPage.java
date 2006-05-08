@@ -24,6 +24,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -40,10 +41,10 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	private static final String TITLE = "Bugzilla Repository Settings";
 
 	private static final String DESCRIPTION = "Example: https://bugs.eclipse.org/bugs (do not include index.cgi)";
-	private BugzillaRepositoryConnector connector;
+	private AbstractRepositoryConnector connector;
 	protected Combo repositoryVersionCombo;
 	
-	public BugzillaRepositorySettingsPage(BugzillaRepositoryConnector connector) {
+	public BugzillaRepositorySettingsPage(AbstractRepositoryConnector connector) {
 		super(TITLE, DESCRIPTION);
 		this.connector = connector;
 	}

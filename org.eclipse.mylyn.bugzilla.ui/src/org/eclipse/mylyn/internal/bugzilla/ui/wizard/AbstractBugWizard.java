@@ -23,7 +23,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.core.NewBugModel;
+import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
@@ -54,7 +54,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 	protected boolean fromDialog = false;
 
 	/** The model used to store all of the data for the wizard */
-	protected NewBugModel model;
+	protected NewBugzillaReport model;
 
 	/**
 	 * Flag to indicate if the wizard can be completed based on the attributes
@@ -70,7 +70,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 	public AbstractBugWizard(TaskRepository repository) {
 		super();
 		this.repository = repository;
-		model = new NewBugModel();
+		model = new NewBugzillaReport(repository.getUrl());
 		id = null; // Since there is no bug posted yet.
 		super.setDefaultPageImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin(
 				"org.eclipse.mylar.internal.bugzilla.ui", "icons/wizban/bug-wizard.gif"));

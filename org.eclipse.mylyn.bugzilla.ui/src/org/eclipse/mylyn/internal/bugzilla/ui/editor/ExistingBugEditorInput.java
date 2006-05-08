@@ -14,7 +14,7 @@ import java.io.IOException;
 
 import javax.security.auth.login.LoginException;
 
-import org.eclipse.mylar.bugzilla.core.BugReport;
+import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -32,7 +32,7 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 
 	protected int bugId;
 
-	protected BugReport bug;
+	protected BugzillaReport bug;
 
 	/**
 	 * Creates a new <code>ExistingBugEditorInput</code>.
@@ -40,7 +40,7 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 	 * @param bug
 	 *            The bug for this editor input.
 	 */
-	public ExistingBugEditorInput(BugReport bug) {
+	public ExistingBugEditorInput(BugzillaReport bug) {
 		this.bug = bug;
 		this.bugId = bug.getId();
 		repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND,
@@ -101,7 +101,7 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 	}
 
 	@Override
-	public BugReport getBug() {
+	public BugzillaReport getBug() {
 		return bug;
 	}
 

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
+import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 
 /**
@@ -35,7 +35,7 @@ public class BugzillaCacheFile {
 
 	private File file;
 
-	private ArrayList<IBugzillaBug> list = new ArrayList<IBugzillaBug>();
+	private ArrayList<BugzillaReport> list = new ArrayList<BugzillaReport>();
 
 	protected int latestNewBugId = 0;
 
@@ -46,7 +46,7 @@ public class BugzillaCacheFile {
 		}
 	}
 
-	public void add(IBugzillaBug entry) {
+	public void add(BugzillaReport entry) {
 		// add the entry to the list and write the file to disk
 		list.add(entry);
 		writeFile();
@@ -63,14 +63,14 @@ public class BugzillaCacheFile {
 
 	public int find(int id) {
 		for (int i = 0; i < list.size(); i++) {
-			IBugzillaBug currBug = list.get(i);
+			BugzillaReport currBug = list.get(i);
 			if (currBug != null && (currBug.getId() == id) && !currBug.isLocallyCreated())
 				return i;
 		}
 		return -1;
 	}
 
-	public ArrayList<IBugzillaBug> elements() {
+	public ArrayList<BugzillaReport> elements() {
 		return list;
 	}
 
@@ -108,14 +108,14 @@ public class BugzillaCacheFile {
 
 		// read in each of the offline reports in the file
 		for (int nX = 0; nX < size; nX++) {
-			IBugzillaBug item = (IBugzillaBug) in.readObject();
+			BugzillaReport item = (BugzillaReport) in.readObject();
 			// add the offline report to the offlineReports list
 			list.add(item);
 		}
 		in.close();
 	}
 
-	public void remove(List<IBugzillaBug> sel) {
+	public void remove(List<BugzillaReport> sel) {
 		list.removeAll(sel);
 
 		// rewrite the file so that the data is persistant

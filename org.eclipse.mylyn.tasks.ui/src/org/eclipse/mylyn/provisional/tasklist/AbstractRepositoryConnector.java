@@ -84,7 +84,7 @@ public abstract class AbstractRepositoryConnector {
 	 *            set an exception on queryStatus.getChildren[0] to indicate
 	 *            failure
 	 */
-	protected abstract List<AbstractQueryHit> performQuery(AbstractRepositoryQuery query, IProgressMonitor monitor,
+	public abstract List<AbstractQueryHit> performQuery(AbstractRepositoryQuery query, IProgressMonitor monitor,
 			MultiStatus queryStatus);
 
 	protected abstract void updateOfflineState(AbstractRepositoryTask repositoryTask, boolean forceSync);
@@ -310,4 +310,6 @@ public abstract class AbstractRepositoryConnector {
 				"Opening JIRA issues not added to task list is not implemented."
 		);
 	}
+
+	
 }

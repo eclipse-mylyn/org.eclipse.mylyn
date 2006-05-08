@@ -58,9 +58,13 @@ public interface IBugzillaConstants {
 	static final String HIT_MARKER_ATTR_OWNER = "owner";
 
 	static final String HIT_MARKER_ATTR_QUERY = "query";
+	
 
-	// Error code
-	static final int ERROR_CODE = 1;
+	
+	// Error response from bugzilla server upon bug request
+	static final String ERROR_INVALID_BUG_ID = "InvalidBugId";
+	static final String ERROR_INVALID_USERNAME_OR_PASSWORD = "Invalid Username Or Password";	
+//	static final int ERROR_CODE = 1;
 
 	// Bugzilla Preferences keys
 	// static final String BUGZILLA_SERVER = "BUGZILLA_SERVER";
@@ -146,8 +150,9 @@ public interface IBugzillaConstants {
 
 	static final String[] DEFAULT_PRESELECTED_STATUS_VALUES = { "New", "Assigned", "Reopened" };
 
-	static final String[] DEFAULT_RESOLUTION_VALUES = { "Fixed", "Invalid", "Wontfix", "Later", "Remind", "Duplicate",
-			"Worksforme", "Moved" };
+	// static final String[] DEFAULT_RESOLUTION_VALUES = { "Fixed", "Invalid",
+	// "Wontfix", "Later", "Remind", "Duplicate",
+	// "Worksforme", "Moved" };
 
 	static final String[] DEFAULT_SEVERITY_VALUES = { "blocker", "critical", "major", "normal", "minor", "trivial",
 			"enhancement" };
@@ -176,4 +181,21 @@ public interface IBugzillaConstants {
 
 	public static final String INVALID_2201_ATTRIBUTE_IGNORED = "EclipsebugsBugzilla2.20.1";
 
+	public static final String VALUE_STATUS_RESOLVED = "RESOLVED";
+	public static final String VALUE_STATUS_NEW = "NEW";
+	public static final String VALUE_STATUS_CLOSED = "CLOSED";
+	public static final String VALUE_STATUS_ASSIGNED = "ASSIGNED";
+	public static final String VALUE_RESOLUTION_LATER = "LATER";
+
+	public static enum BUGZILLA_OPERATION {
+		none, accept, resolve, duplicate, reassign, reassignbycomponent, reopen, verify, close;
+	}
+	
+	public static enum BUGZILLA_REPORT_STATUS {
+		UNCONFIRMED, NEW, ASSIGNED, REOPENED, RESOLVED, VERIFIED, CLOSED;
+	}
+	
+	public static enum BUGZILLA_RESOLUTION {
+		FIXED, INVALID, WONTFIX, LATER, REMIND, WORKSFORME;		
+	}
 }

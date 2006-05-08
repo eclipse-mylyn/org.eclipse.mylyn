@@ -16,7 +16,7 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylar.bugzilla.core.BugReport;
+import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaAttributeListener;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.BugzillaOutlineNode;
@@ -42,7 +42,7 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 	protected BugzillaTask bugTask;
 
 	/** This bug report can be modified by the user and saved offline. */
-	protected BugReport offlineBug;
+	protected BugzillaReport offlineBug;
 
 	private ExistingBugEditor bugzillaEditor;
 
@@ -189,7 +189,7 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 	/**
 	 * @return Returns the offlineBug.
 	 */
-	public BugReport getOfflineBug() {
+	public BugzillaReport getOfflineBug() {
 		return offlineBug;
 	}
 
@@ -270,7 +270,7 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 	// }
 	// }
 
-	public void makeNewPage(BugReport serverBug, String newCommentText) {
+	public void makeNewPage(BugzillaReport serverBug, String newCommentText) {
 		if (serverBug == null) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 					"Could not open bug.", "Bug #" + offlineBug.getId()

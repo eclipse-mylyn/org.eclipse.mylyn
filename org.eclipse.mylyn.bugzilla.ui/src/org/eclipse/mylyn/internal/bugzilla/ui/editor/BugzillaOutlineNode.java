@@ -13,11 +13,11 @@ package org.eclipse.mylar.internal.bugzilla.ui.editor;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.eclipse.mylar.bugzilla.core.BugReport;
+import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.bugzilla.core.Comment;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaReportSelection;
-import org.eclipse.mylar.internal.bugzilla.core.NewBugModel;
+import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaImages;
 import org.eclipse.swt.graphics.Image;
 
@@ -196,10 +196,10 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	public static BugzillaOutlineNode parseBugReport(IBugzillaBug bug) {
 		// Choose the appropriate parsing function based on
 		// the type of IBugzillaBug.
-		if (bug instanceof NewBugModel) {
-			return parseBugReport((NewBugModel) bug);
-		} else if (bug instanceof BugReport) {
-			return parseBugReport((BugReport) bug);
+		if (bug instanceof NewBugzillaReport) {
+			return parseBugReport((NewBugzillaReport) bug);
+		} else if (bug instanceof BugzillaReport) {
+			return parseBugReport((BugzillaReport) bug);
 		} else {
 			return null;
 		}
@@ -214,7 +214,7 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	 *            The <code>NewBugModel</code> that needs parsing.
 	 * @return The tree of <code>BugzillaOutlineNode</code>'s.
 	 */
-	protected static BugzillaOutlineNode parseBugReport(NewBugModel bug) {
+	protected static BugzillaOutlineNode parseBugReport(NewBugzillaReport bug) {
 		int bugId = bug.getId();
 		String bugServer = bug.getRepositoryUrl();
 		Image bugImage = BugzillaImages.getImage(BugzillaImages.BUG);
@@ -241,7 +241,7 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	 *            The <code>BugReport</code> that needs parsing.
 	 * @return The tree of <code>BugzillaOutlineNode</code>'s.
 	 */
-	protected static BugzillaOutlineNode parseBugReport(BugReport bug) {
+	protected static BugzillaOutlineNode parseBugReport(BugzillaReport bug) {
 
 		int bugId = bug.getId();
 		String bugServer = bug.getRepositoryUrl();
@@ -259,7 +259,8 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 		BugzillaOutlineNode comments = null;
 		for (Iterator<Comment> iter = bug.getComments().iterator(); iter.hasNext();) {
 			Comment comment = iter.next();
-
+			// first comment is the bug description
+			if(comment.getNumber() == 0) continue;
 			if (comments == null) {
 				comments = new BugzillaOutlineNode(bugId, bugServer, "Comments", defaultImage, comment, bug
 						.getSummary());

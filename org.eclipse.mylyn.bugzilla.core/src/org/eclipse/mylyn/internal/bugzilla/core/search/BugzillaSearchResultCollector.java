@@ -19,8 +19,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylar.bugzilla.core.BugReport;
+import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.bugzilla.core.internal.BugzillaReportElement;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.search.ui.text.Match;
 
@@ -120,15 +121,15 @@ public class BugzillaSearchResultCollector implements IBugzillaSearchResultColle
 	 * Returns a map where BugReport's attributes are entered into a Map using
 	 * the same key/value pairs as those created on a search hit marker.
 	 */
-	public static Map<String, Object> getAttributeMap(BugReport bug) {
+	public static Map<String, Object> getAttributeMap(BugzillaReport bug) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put(IBugzillaConstants.HIT_MARKER_ATTR_ID, new Integer(bug.getId()));
 		map.put(IBugzillaConstants.HIT_MARKER_ATTR_REPOSITORY, bug.getRepositoryUrl());
 		map.put(IBugzillaConstants.HIT_MARKER_ATTR_DESC, bug.getDescription());
 		map.put(IBugzillaConstants.HIT_MARKER_ATTR_SEVERITY,
-				mapValue(bug.getAttribute("Severity").getValue(), severity));
+				mapValue(bug.getAttribute(BugzillaReportElement.BUG_SEVERITY).getValue(), severity));
 		map.put(IBugzillaConstants.HIT_MARKER_ATTR_PRIORITY,
-				mapValue(bug.getAttribute("Priority").getValue(), priority));
+				mapValue(bug.getAttribute(BugzillaReportElement.PRIORITY).getValue(), priority));
 		map.put(IBugzillaConstants.HIT_MARKER_ATTR_PLATFORM, bug.getAttribute("Hardware").getValue());
 		map.put(IBugzillaConstants.HIT_MARKER_ATTR_STATE, mapValue(bug.getStatus(), state));
 		map.put(IBugzillaConstants.HIT_MARKER_ATTR_RESULT, mapValue(bug.getResolution(), result));

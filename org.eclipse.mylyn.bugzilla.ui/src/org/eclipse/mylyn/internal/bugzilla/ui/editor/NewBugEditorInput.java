@@ -11,14 +11,14 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
-import org.eclipse.mylar.internal.bugzilla.core.NewBugModel;
+import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 
 /**
  * The <code>IEditorInput</code> implementation for <code>NewBugEditor</code>.
  */
 public class NewBugEditorInput extends AbstractBugEditorInput {
 
-	protected NewBugModel bug;
+	protected NewBugzillaReport bug;
 
 	/**
 	 * Creates a new <code>NewBugEditorInput</code>.
@@ -26,7 +26,7 @@ public class NewBugEditorInput extends AbstractBugEditorInput {
 	 * @param bug
 	 *            The bug for this editor input.
 	 */
-	public NewBugEditorInput(NewBugModel bug) {
+	public NewBugEditorInput(NewBugzillaReport bug) {
 		this.bug = bug;
 	}
 
@@ -35,7 +35,7 @@ public class NewBugEditorInput extends AbstractBugEditorInput {
 	}
 
 	@Override
-	public NewBugModel getBug() {
+	public NewBugzillaReport getBug() {
 		return bug;
 	}
 

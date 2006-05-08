@@ -11,35 +11,16 @@
 
 package org.eclipse.mylar.bugzilla.core;
 
-import java.util.Date;
-
-import org.eclipse.mylar.provisional.tasklist.IRemoteContextDelegate;
+import org.eclipse.mylar.internal.bugzilla.core.internal.BugzillaReportElement;
 
 /**
  * @author Rob Elves
- * TODO: Use of this delegate probably isn't necessary anymore
  */
-public class BugzillaRemoteContextDelegate implements IRemoteContextDelegate {
+public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 
-	private ReportAttachment attachment;
-	
-	public BugzillaRemoteContextDelegate(ReportAttachment attachment) {
-		this.attachment = attachment;
-	}
-	public Date getDate() {
-		return attachment.getDateCreated();
+	@Override
+	public AbstractRepositoryReportAttribute createAttribute(Object key) {
+		return new BugzillaReportAttribute((BugzillaReportElement) key);
 	}
 
-	public String getAuthor() {
-		return attachment.getAuthor();
-	}
-
-	public String getComment() {
-		return attachment.getDescription();
-	}
-
-	public int getId() {
-		return attachment.getId();
-	}
-		
 }

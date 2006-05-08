@@ -22,8 +22,8 @@ import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.IStructureComparator;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylar.bugzilla.core.Attribute;
-import org.eclipse.mylar.bugzilla.core.BugReport;
+import org.eclipse.mylar.bugzilla.core.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.bugzilla.core.Comment;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
@@ -190,7 +190,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	 *            The <code>BugReport</code> that needs parsing.
 	 * @return The tree of <code>BugzillaCompareNode</code>'s.
 	 */
-	public static BugzillaCompareNode parseBugReport(BugReport bug) {
+	public static BugzillaCompareNode parseBugReport(BugzillaReport bug) {
 		Image defaultImage = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_DEF_VIEW);
 		BugzillaCompareNode topNode = new BugzillaCompareNode("Bug #" + bug.getId(), null, defaultImage);
 		Date creationDate = bug.getCreated();
@@ -211,8 +211,8 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 
 		Image attributeImage = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
 		BugzillaCompareNode attributes = new BugzillaCompareNode("Attributes", null, attributeImage);
-		for (Iterator<Attribute> iter = bug.getAttributes().iterator(); iter.hasNext();) {
-			Attribute attribute = iter.next();
+		for (Iterator<AbstractRepositoryReportAttribute> iter = bug.getAttributes().iterator(); iter.hasNext();) {
+			AbstractRepositoryReportAttribute attribute = iter.next();
 			if (attribute.getName().compareTo("delta_ts") == 0 || attribute.getName().compareTo("Last Modified") == 0
 					|| attribute.getName().compareTo("longdesclength") == 0)
 				continue;
@@ -220,7 +220,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 			// attribute's new
 			// value, which is what is in the submit viewer.
 			
-			attributes.addChild(new BugzillaCompareNode(attribute.getName(), attribute.getNewValue(), attributeImage));
+			attributes.addChild(new BugzillaCompareNode(attribute.getName(), attribute.getValue(), attributeImage));
 		}
 		topNode.addChild(attributes);
 
@@ -229,12 +229,12 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 		BugzillaCompareNode comments = new BugzillaCompareNode("Comments", null, defaultImage);
 		for (Iterator<Comment> iter = bug.getComments().iterator(); iter.hasNext();) {
 			Comment comment = iter.next();
-			String bodyString = "Comment from " + comment.getAuthorName() + ":\n\n" + comment.getText();
+			String bodyString = "Comment from " + comment.getAuthorName() + ":\n\n" + comment.getText();			
 			comments.addChild(new BugzillaCompareNode(comment.getCreated().toString(), bodyString, defaultImage));
 		}
 		topNode.addChild(comments);
 
-		topNode.addChild(new BugzillaCompareNode("New Comment", bug.getNewNewComment(), defaultImage));
+		topNode.addChild(new BugzillaCompareNode("New Comment", bug.getNewComment(), defaultImage));
 
 		BugzillaCompareNode ccList = new BugzillaCompareNode("CC List", null, defaultImage);
 		for (Iterator<String> iter = bug.getCC().iterator(); iter.hasNext();) {

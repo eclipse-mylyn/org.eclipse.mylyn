@@ -20,9 +20,9 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylar.bugzilla.core.Attribute;
-import org.eclipse.mylar.internal.bugzilla.core.NewBugModel;
-import org.eclipse.mylar.internal.bugzilla.core.internal.BugReportElement;
+import org.eclipse.mylar.bugzilla.core.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
+import org.eclipse.mylar.internal.bugzilla.core.internal.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.swt.SWT;
@@ -303,51 +303,53 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 	public void saveDataToModel() {
 		// get the model that we are using
 		AbstractBugWizard wizard = (AbstractBugWizard) getWizard();
-		NewBugModel nbm = wizard.model;
+		NewBugzillaReport nbm = wizard.model;
 
 		nbm.setDescription(descriptionText.getText());
 		nbm.setSummary(summaryText.getText());
 
 		// go through each of the attributes and sync their values with the
 		// combo boxes
-		for (Iterator<Attribute> it = nbm.getAttributes().iterator(); it.hasNext();) {
-			Attribute attribute = it.next();
+		for (Iterator<AbstractRepositoryReportAttribute> it = nbm.getAttributes().iterator(); it.hasNext();) {
+			AbstractRepositoryReportAttribute attribute = it.next();
 			String key = attribute.getName();
 			Map<String, String> values = attribute.getOptionValues();
 
 			try {
 				if (values == null)
 					values = new HashMap<String, String>();
-				if (key.equals(BugReportElement.OP_SYS.toString())) {
+				if (key.equals(BugzillaReportElement.OP_SYS.toString())) {
 					String os = oSCombo.getItem(oSCombo.getSelectionIndex());
 					attribute.setValue(os);
-				} else if (key.equals(BugReportElement.VERSION.toString())) {
+				} else if (key.equals(BugzillaReportElement.VERSION.toString())) {
 					String version = versionCombo.getItem(versionCombo.getSelectionIndex());
 					attribute.setValue(version);
-				} else if (key.equals(BugReportElement.BUG_SEVERITY.toString())) {
+				} else if (key.equals(BugzillaReportElement.BUG_SEVERITY.toString())) {
 					String severity = severityCombo.getItem(severityCombo.getSelectionIndex());
 					attribute.setValue(severity);
-				} else if (key.equals(BugReportElement.REP_PLATFORM.toString())) {
+				} else if (key.equals(BugzillaReportElement.REP_PLATFORM.toString())) {
 					String platform = platformCombo.getItem(platformCombo.getSelectionIndex());
 					attribute.setValue(platform);
-				} else if (key.equals(BugReportElement.TARGET_MILESTONE.toString())) {
+				} else if (key.equals(BugzillaReportElement.TARGET_MILESTONE.toString())) {
 					int index = milestoneCombo.getSelectionIndex();
 					if(index >= 0) {
 						String milestone = milestoneCombo.getItem(milestoneCombo.getSelectionIndex());
 						attribute.setValue(milestone);
 					}
-				} else if (key.equals(BugReportElement.COMPONENT.toString())) {
+				} else if (key.equals(BugzillaReportElement.COMPONENT.toString())) {
 					String component = componentCombo.getItem(componentCombo.getSelectionIndex());
 					attribute.setValue(component);
-				} else if (key.equals(BugReportElement.PRIORITY.toString())) {
+				} else if (key.equals(BugzillaReportElement.PRIORITY.toString())) {
 					String priority = priorityCombo.getItem(priorityCombo.getSelectionIndex());
 					attribute.setValue(priority);
-				} else if (key.equals(BugReportElement.BUG_FILE_LOC.toString())) {
-					String url = urlText.getText();
-					if (url.equalsIgnoreCase("http://"))
-						url = "";
-					attribute.setValue(url);
-				} else if (key.equals(BugReportElement.ASSIGNED_TO.toString())) {
+				} else if (key.equals(BugzillaReportElement.BUG_FILE_LOC.toString())) {
+					if (urlText != null) {
+						String url = urlText.getText();
+						if (url.equalsIgnoreCase("http://"))
+							url = "";
+						attribute.setValue(url);
+					}					
+				} else if (key.equals(BugzillaReportElement.ASSIGNED_TO.toString())) {
 					String assignTo = assignedToText.getText();
 					attribute.setValue(assignTo);
 				} else {
@@ -379,7 +381,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 
 		// get the model for the new bug
 		AbstractBugWizard wizard = (AbstractBugWizard) getWizard();
-		NewBugModel nbm = wizard.model;
+		NewBugzillaReport nbm = wizard.model;
 
 		// Set the current platform and OS on the model
 		setPlatformOptions(nbm);
@@ -414,9 +416,9 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 		newLayout(attributesComposite, 1, nbm.getProduct(), VALUE);
 
 		// Populate Attributes
-		for (Iterator<Attribute> it = nbm.getAttributes().iterator(); it.hasNext();) {
-			Attribute attribute = it.next();
-			String key = attribute.getParameterName();
+		for (Iterator<AbstractRepositoryReportAttribute> it = nbm.getAttributes().iterator(); it.hasNext();) {
+			AbstractRepositoryReportAttribute attribute = it.next();
+			String key = attribute.getID();
 			String name = attribute.getName();
 			String value = checkText(attribute.getValue());
 			Map<String, String> values = attribute.getOptionValues();
@@ -436,7 +438,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 			data.horizontalIndent = HORZ_INDENT;
 			data.widthHint = 150;
 			// create and populate the combo fields for the attributes
-			if (key.equals(BugReportElement.OP_SYS.getKeyString())) {
+			if (key.equals(BugzillaReportElement.OP_SYS.getKeyString())) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
 				oSCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);
 
@@ -451,7 +453,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 					index = 0;
 				oSCombo.select(index);
 				oSCombo.addListener(SWT.Modify, this);
-			} else if (key.equals(BugReportElement.VERSION.getKeyString())) {
+			} else if (key.equals(BugzillaReportElement.VERSION.getKeyString())) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
 
 				versionCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
@@ -468,7 +470,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 					index = 0;
 				versionCombo.select(index);
 				versionCombo.addListener(SWT.Modify, this);
-			} else if (key.equals(BugReportElement.BUG_SEVERITY.getKeyString())) {
+			} else if (key.equals(BugzillaReportElement.BUG_SEVERITY.getKeyString())) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
 				severityCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
 						| SWT.READ_ONLY);
@@ -485,7 +487,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 				severityCombo.select(index);
 				severityCombo.addListener(SWT.Modify, this);
 
-			} else if (key.equals(BugReportElement.REP_PLATFORM.getKeyString())) {
+			} else if (key.equals(BugzillaReportElement.REP_PLATFORM.getKeyString())) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
 				platformCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
 						| SWT.READ_ONLY);
@@ -501,7 +503,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 					index = 0;
 				platformCombo.select(index);
 				platformCombo.addListener(SWT.Modify, this);
-			} else if (key.equals(BugReportElement.TARGET_MILESTONE.getKeyString())) {
+			} else if (key.equals(BugzillaReportElement.TARGET_MILESTONE.getKeyString())) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
 				milestoneCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
 						| SWT.READ_ONLY);
@@ -518,7 +520,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 				milestoneCombo.addListener(SWT.Modify, this);
 				//if(s.isEmpty()) milestoneCombo.setEnabled(false);
 				mileExist = true;
-			} else if (key.equals(BugReportElement.COMPONENT.getKeyString())) {
+			} else if (key.equals(BugzillaReportElement.COMPONENT.getKeyString())) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
 				componentCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
 						| SWT.READ_ONLY);
@@ -534,7 +536,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 					index = 0;
 				componentCombo.select(index);
 				componentCombo.addListener(SWT.Modify, this);
-			} else if (key.equals(BugReportElement.PRIORITY.getKeyString())) {
+			} else if (key.equals(BugzillaReportElement.PRIORITY.getKeyString())) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
 				priorityCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
 						| SWT.READ_ONLY);
@@ -551,7 +553,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 				priorityCombo.select(index);
 				priorityCombo.addListener(SWT.Modify, this);
 				priExist = true;
-			} else if (key.equals(BugReportElement.BUG_FILE_LOC.getKeyString())) {
+			} else if (key.equals(BugzillaReportElement.BUG_FILE_LOC.getKeyString())) {
 				url = value;
 			} else {
 				// do nothing if it isn't a standard value to change
@@ -573,7 +575,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 	
 		GridData urlTextData;
 		if (url != null) {			
-			newLayout(textComposite, 1, BugReportElement.BUG_FILE_LOC.toString(), PROPERTY);
+			newLayout(textComposite, 1, BugzillaReportElement.BUG_FILE_LOC.toString(), PROPERTY);
 			urlText = new Text(textComposite, SWT.BORDER | SWT.SINGLE | SWT.WRAP);
 			urlTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 
@@ -585,7 +587,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 		}
 
 		GridData summaryTextData;
-		newLayout(textComposite, 1, BugReportElement.ASSIGNED_TO.toString(), PROPERTY);
+		newLayout(textComposite, 1, BugzillaReportElement.ASSIGNED_TO.toString(), PROPERTY);
 		Label l = new Label(textComposite, SWT.NONE);
 		l.setText("(if email is incorrect submit will not proceed)");
 		summaryTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
@@ -600,7 +602,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 		assignedToText.setText("");
 
 		// add the summary text field
-		newLayout(textComposite, 1, BugReportElement.SHORT_DESC.toString(), PROPERTY);
+		newLayout(textComposite, 1, BugzillaReportElement.SHORT_DESC.toString(), PROPERTY);
 		summaryText = new Text(textComposite, SWT.BORDER | SWT.SINGLE | SWT.WRAP);
 		summaryTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 
@@ -693,7 +695,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 	 * @param newBugModel
 	 *            The bug to set the options for
 	 */
-	public void setPlatformOptions(NewBugModel newBugModel) {
+	public void setPlatformOptions(NewBugzillaReport newBugModel) {
 		try {
 			// A Map from Java's OS and Platform to Buzilla's
 			Map<String, String> java2buzillaOSMap = new HashMap<String, String>();
@@ -712,12 +714,12 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 			java2buzillaOSMap.put("macosx", "MacOS X");
 			java2buzillaOSMap.put("qnx", "QNX-Photon");
 			java2buzillaOSMap.put("solaris", "Solaris");
-			java2buzillaOSMap.put("win32", "Windows All");
+			java2buzillaOSMap.put("win32", "Windows");
 
 			// Get OS Lookup Map
 			// Check that the result is in Values, if it is not, set it to other
-			Attribute opSysAttribute = newBugModel.getAttribute(BugReportElement.OP_SYS.toString());
-			Attribute platformAttribute = newBugModel.getAttribute(BugReportElement.REP_PLATFORM.toString());
+			AbstractRepositoryReportAttribute opSysAttribute = newBugModel.getAttribute(BugzillaReportElement.OP_SYS);
+			AbstractRepositoryReportAttribute platformAttribute = newBugModel.getAttribute(BugzillaReportElement.REP_PLATFORM);
 
 			String OS = Platform.getOS();
 			String platform = Platform.getOSArch();

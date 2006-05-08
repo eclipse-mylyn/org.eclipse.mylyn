@@ -14,7 +14,7 @@ package org.eclipse.mylar.internal.bugzilla.core.compare;
 import org.eclipse.compare.structuremergeviewer.IStructureComparator;
 import org.eclipse.compare.structuremergeviewer.IStructureCreator;
 import org.eclipse.jface.util.Assert;
-import org.eclipse.mylar.bugzilla.core.BugReport;
+import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 
 /**
  * This implementation of the <code>IStructureCreator</code> interface makes
@@ -38,8 +38,8 @@ public class BugzillaStructureCreator implements IStructureCreator {
 	}
 
 	public IStructureComparator getStructure(Object input) {
-		if (input instanceof BugReport) {
-			BugReport bugReport = (BugReport) input;
+		if (input instanceof BugzillaReport) {
+			BugzillaReport bugReport = (BugzillaReport) input;
 			return BugzillaCompareNode.parseBugReport(bugReport);
 		} else {
 			return null;

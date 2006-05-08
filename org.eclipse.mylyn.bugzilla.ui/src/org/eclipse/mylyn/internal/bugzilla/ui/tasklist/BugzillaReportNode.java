@@ -18,7 +18,7 @@ import java.util.List;
 
 import javax.security.auth.login.LoginException;
 
-import org.eclipse.mylar.bugzilla.core.BugReport;
+import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchHit;
 
@@ -43,7 +43,7 @@ public class BugzillaReportNode {
 	private List<StackTrace> stackTraces;
 
 	/** The bug report associated with this DoiInfo */
-	private BugReport bug;
+	private BugzillaReport bug;
 
 	/**
 	 * Constructor
@@ -107,7 +107,7 @@ public class BugzillaReportNode {
 	 * @throws LoginException
 	 * @throws MalformedURLException
 	 */
-	public BugReport getBug() throws MalformedURLException, LoginException, IOException {
+	public BugzillaReport getBug() throws MalformedURLException, LoginException, IOException {
 		if (bug == null) {
 			// get the bug report
 			bug = BugzillaRepositoryUtil.getBug(hit.getRepository(), hit.getId());
@@ -121,7 +121,7 @@ public class BugzillaReportNode {
 	 * @param bug -
 	 *            BugReport that this is associated with
 	 */
-	public void setBug(BugReport bug) {
+	public void setBug(BugzillaReport bug) {
 		this.bug = bug;
 	}
 
