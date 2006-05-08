@@ -11,14 +11,17 @@
 
 package org.eclipse.mylar.tasklist.tests;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.bugzilla.core.Attribute;
-import org.eclipse.mylar.bugzilla.core.BugReport;
+import org.eclipse.mylar.bugzilla.core.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.bugzilla.core.BugzillaReportAttribute;
 import org.eclipse.mylar.bugzilla.core.Comment;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.bugzilla.core.internal.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 
 /**
@@ -40,18 +43,27 @@ public class BugzillaTaskTest extends TestCase {
 
 	public void testCompletionDate() {
 		BugzillaTask task = new BugzillaTask("handle", "description", true);
-		BugReport report = new BugReport(1, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
+		BugzillaReport report = new BugzillaReport(1, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
 		task.setBugReport(report);
 		assertNull(task.getCompletionDate());
 
-		Date now = new Date();
-		report.addComment(new Comment(report, 1, now, "author", "author-name"));
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.getTimeInMillis();
+		Date now = new Date(calendar.getTimeInMillis());
+		
+		Comment comment = new Comment(report, 1);
+		AbstractRepositoryReportAttribute attribute = new BugzillaReportAttribute(BugzillaReportElement.CREATION_TS);
+		attribute.setValue(Comment.creation_ts_date_format.format(now));	
+		comment.addAttribute(BugzillaReportElement.CREATION_TS, attribute);
+		report.addComment(comment);
 		assertNull(task.getCompletionDate());
 
-		Attribute resolvedAttribute = new Attribute(BugReport.ATTR_STATUS);
-		resolvedAttribute.setValue(BugReport.VAL_STATUS_RESOLVED);
-		report.addAttribute(resolvedAttribute);
-		assertEquals(now, task.getCompletionDate());
+		AbstractRepositoryReportAttribute resolvedAttribute = new BugzillaReportAttribute(BugzillaReportElement.BUG_STATUS);
+		resolvedAttribute.setValue(BugzillaReport.VAL_STATUS_RESOLVED);
+		report.addAttribute(BugzillaReportElement.BUG_STATUS, resolvedAttribute);
+		assertNotNull(task.getCompletionDate());
+		assertEquals(Comment.creation_ts_date_format.format(now), Comment.creation_ts_date_format.format(task.getCompletionDate()));
 
 	}
 

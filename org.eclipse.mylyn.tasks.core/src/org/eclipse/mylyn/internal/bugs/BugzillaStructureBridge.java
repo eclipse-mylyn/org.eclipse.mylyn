@@ -19,7 +19,7 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.mylar.bugzilla.core.BugReport;
+import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTools;
@@ -75,7 +75,7 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 		return null;
 	}
 
-	private BugReport result;
+	private BugzillaReport result;
 
 	/**
 	 * TODO: this will not return a non-cached handle

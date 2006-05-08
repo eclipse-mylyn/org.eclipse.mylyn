@@ -28,7 +28,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.bugzilla.core.BugReport;
+import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.bugzilla.core.Comment;
 import org.eclipse.mylar.internal.bugs.MylarBugsPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
@@ -220,7 +220,7 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation imple
 
 				// we have a bugzilla task, so get the bug report
 				BugzillaTask bugTask = (BugzillaTask) task;
-				BugReport bug = bugTask.getBugReport();
+				BugzillaReport bug = bugTask.getBugReport();
 
 				// parse the bug report for the element that we are searching
 				// for
@@ -252,7 +252,7 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation imple
 	 * @param bug
 	 *            The bug to search in
 	 */
-	private boolean search(String elementName, BugReport bug) {
+	private boolean search(String elementName, BugzillaReport bug) {
 
 		if (bug == null)
 			return false; // MIK: added null check here
@@ -373,7 +373,7 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation imple
 
 			// get the bug report so that we have all of the data
 			// - descriptions, comments, etc
-			BugReport b = null;
+			BugzillaReport b = null;
 			try {
 				b = info.getBug();
 			} catch (Exception e) {

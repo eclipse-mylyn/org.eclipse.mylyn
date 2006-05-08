@@ -22,9 +22,9 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
@@ -99,7 +99,7 @@ public class BugzillaSearchEngineTest extends TestCase {
 				QUERY_NAME, 
 				MAX_HITS, MylarTaskListPlugin.getTaskListManager().getTaskList());
 		
-		BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
+		AbstractRepositoryConnector connector = (AbstractRepositoryConnector) MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
 		results.addAll(connector.performQuery(repositoryQuery, new NullProgressMonitor(), new MultiStatus(MylarTaskListPlugin.PLUGIN_ID, IStatus.OK, "Query result", null)));
 		return results;	
 	}

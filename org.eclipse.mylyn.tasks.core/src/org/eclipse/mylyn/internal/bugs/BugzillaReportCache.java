@@ -18,8 +18,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylar.bugzilla.core.BugReport;
-import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
+import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTools;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaCacheFile;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
@@ -29,9 +28,9 @@ import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
  */
 public class BugzillaReportCache {
 
-	private Map<String, BugReport> cache = new HashMap<String, BugReport>();
+	private Map<String, BugzillaReport> cache = new HashMap<String, BugzillaReport>();
 
-	public void cache(String handle, BugReport report) {
+	public void cache(String handle, BugzillaReport report) {
 		cache.put(handle, report);
 		cacheFile.add(report);
 	}
@@ -41,7 +40,7 @@ public class BugzillaReportCache {
 		cacheFile.removeAll();
 	}
 
-	public BugReport getFromCache(String bugHandle) {
+	public BugzillaReport getFromCache(String bugHandle) {
 		return cache.get(bugHandle);
 	}
 
@@ -62,17 +61,17 @@ public class BugzillaReportCache {
 
 		try {
 			cacheFile = new BugzillaCacheFile(cachPath.toFile());
-			ArrayList<IBugzillaBug> cached = cacheFile.elements();
-			for (IBugzillaBug bug : cached) {
-				if (bug instanceof BugReport)
-					cache.put(BugzillaTools.getHandle(bug), (BugReport) bug);
+			ArrayList<BugzillaReport> cached = cacheFile.elements();
+			for (BugzillaReport bug : cached) {
+				if (bug instanceof BugzillaReport)
+					cache.put(BugzillaTools.getHandle(bug), (BugzillaReport) bug);
 			}
 		} catch (Exception e) {
 			MylarStatusHandler.log(e, "occurred while restoring saved offline Bugzilla reports.");
 		}
 	}
 
-	public BugReport getCached(String handle) {
+	public BugzillaReport getCached(String handle) {
 		return cache.get(handle);
 	}
 }

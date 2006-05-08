@@ -21,10 +21,12 @@ import java.net.URL;
 import java.util.Date;
 
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.mylar.bugzilla.core.Attribute;
-import org.eclipse.mylar.bugzilla.core.BugReport;
+import org.eclipse.mylar.bugzilla.core.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.bugzilla.core.BugzillaReportAttribute;
 import org.eclipse.mylar.bugzilla.core.Comment;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.bugzilla.core.internal.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 
 /**
@@ -41,35 +43,41 @@ public class TaskTestUtil {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Adaptred from Java Developers' almanac
 	 */
-    public static void copy(File source, File dest) throws IOException {
-        InputStream in = new FileInputStream(source);
-        OutputStream out = new FileOutputStream(dest);
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = in.read(buf)) > 0) {
-            out.write(buf, 0, len);
-        }
-        in.close();
-        out.close();
-    }
-	
-	public static void setBugTaskCompleted(BugzillaTask bugzillaTask, boolean completed) {
-		BugReport report = new BugReport(1, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
-		bugzillaTask.setBugReport(report);
-		Attribute resolvedAttribute = new Attribute(BugReport.ATTR_STATUS);
-		if (completed) {
-			resolvedAttribute.setValue(BugReport.VAL_STATUS_RESOLVED);
-		} else {
-			resolvedAttribute.setValue(BugReport.VAL_STATUS_NEW);
+	public static void copy(File source, File dest) throws IOException {
+		InputStream in = new FileInputStream(source);
+		OutputStream out = new FileOutputStream(dest);
+		byte[] buf = new byte[1024];
+		int len;
+		while ((len = in.read(buf)) > 0) {
+			out.write(buf, 0, len);
 		}
-		
-		report.addAttribute(resolvedAttribute);
-		
-		Date now = new Date();
-		report.addComment(new Comment(report, 1, now, "author", "author-name"));
+		in.close();
+		out.close();
+	}
+
+	public static void setBugTaskCompleted(BugzillaTask bugzillaTask, boolean completed) {
+		BugzillaReport report = new BugzillaReport(1, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
+		bugzillaTask.setBugReport(report);
+		AbstractRepositoryReportAttribute resolvedAttribute = new BugzillaReportAttribute(
+				BugzillaReportElement.BUG_STATUS);
+		if (completed) {			
+			resolvedAttribute.setValue(BugzillaReport.VAL_STATUS_RESOLVED);
+			Comment comment = new Comment(report, 1);
+			AbstractRepositoryReportAttribute attribute = new BugzillaReportAttribute(BugzillaReportElement.CREATION_TS);
+			attribute.setValue(Comment.creation_ts_date_format.format(new Date()));	
+			comment.addAttribute(BugzillaReportElement.CREATION_TS, attribute);
+			report.addComment(comment);
+		} else {
+			resolvedAttribute.setValue(BugzillaReport.VAL_STATUS_NEW);
+		}
+
+		report.addAttribute(BugzillaReportElement.BUG_STATUS, resolvedAttribute);
+		report.addComment(new Comment(report, 1));
+		// report.addComment(new Comment(report, 1, now, "author",
+		// "author-name"));
 	}
 }
