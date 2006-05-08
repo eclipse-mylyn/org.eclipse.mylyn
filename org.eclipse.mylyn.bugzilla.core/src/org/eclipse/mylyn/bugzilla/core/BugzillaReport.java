@@ -22,7 +22,7 @@ import org.eclipse.mylar.internal.bugzilla.core.internal.BugzillaReportElement;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 
 /**
- * A bug report entered in Bugzilla.
+ * A report entered in Bugzilla.
  * 
  * @author Mik Kersten
  * @author Rob Elves
