@@ -50,6 +50,8 @@ import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -405,49 +407,53 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	@Override
 	protected void createDescriptionLayout(FormToolkit toolkit, final ScrolledForm form) {
 
-		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+		final Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText(LABEL_SECTION_DESCRIPTION);
 		section.setExpanded(true);
 		section.setLayout(new GridLayout());
-		GridData sectionData = new GridData(GridData.FILL_BOTH);
-		sectionData.grabExcessVerticalSpace = true;
-		section.setLayoutData(sectionData);//FILL_HORIZONTAL
-
-		section.addExpansionListener(new IExpansionListener() {
-			public void expansionStateChanging(ExpansionEvent e) {
-				form.reflow(true);
-			}
-
-			public void expansionStateChanged(ExpansionEvent e) {
-				form.reflow(true);
-			}
-		});
+		GridData sectionData = new GridData(GridData.FILL_HORIZONTAL);
+		// sectionData.grabExcessVerticalSpace = true;
+		section.setLayoutData(sectionData);
 
 		// Description Area
-		Composite descriptionComposite = toolkit.createComposite(section);
+		final Composite descriptionComposite = toolkit.createComposite(section);
+		//descriptionComposite.setBackground(new Color(descriptionComposite.getDisplay(), 123, 123, 123));
 		GridLayout descriptionLayout = new GridLayout();
 		descriptionLayout.numColumns = 1;
 		descriptionComposite.setLayout(descriptionLayout);
+
 		// descriptionComposite.setBackground(background);
-		 GridData descriptionData = new GridData(GridData.FILL_BOTH);
-		 descriptionData.widthHint = DESCRIPTION_WIDTH;
-		 descriptionData.grabExcessVerticalSpace = true;
-		 descriptionComposite.setLayoutData(descriptionData);
-	
+		// GridData descriptionData = new GridData(GridData.FILL_BOTH);
+		// descriptionData.widthHint = DESCRIPTION_WIDTH;
+		// descriptionData.widthHint = DESCRIPTION_HEIGHT;
+		// descriptionData.grabExcessVerticalSpace = true;
+		// descriptionComposite.setLayoutData(descriptionData);
+
 		section.setClient(descriptionComposite);
 
-
-
 		TextViewer viewer = addRepositoryText(repository, descriptionComposite, bug.getDescription());
-		StyledText styledText = viewer.getTextWidget();
+		final StyledText styledText = viewer.getTextWidget();
 		styledText.addListener(SWT.FocusIn, new DescriptionListener());
 		styledText.setLayout(new GridLayout());
-		 GridData styledTextData = new GridData(GridData.FILL_BOTH);
-		 styledTextData.widthHint = DESCRIPTION_WIDTH;
-		 styledTextData.grabExcessVerticalSpace = true; 
-		 styledText.setLayoutData(styledTextData);
-		 
-		 
+		GridData styledTextData = new GridData(GridData.FILL_BOTH);
+		styledTextData.widthHint = DESCRIPTION_WIDTH;
+		// styledTextData.heightHint = DESCRIPTION_HEIGHT;
+		styledTextData.grabExcessVerticalSpace = false;
+		styledText.setLayoutData(styledTextData);
+
+		descriptionComposite.addControlListener(new ControlListener() {
+
+			public void controlMoved(ControlEvent e) {
+				// ignore
+
+			}
+
+			public void controlResized(ControlEvent e) {
+
+				descriptionComposite.setSize(descriptionComposite.getSize().x, styledText.getSize().y + 10);
+			}
+		});
+
 		texts.add(textsindex, styledText);
 		textHash.put(bug.getDescription(), styledText);
 		textsindex++;
@@ -493,10 +499,11 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		StyledText styledText = null;
 		for (Iterator<Comment> it = bug.getComments().iterator(); it.hasNext();) {
 			final Comment comment = it.next();
-			
+
 			// skip comment 0 as it is the description
-			if(comment.getNumber() == 0) continue;
-			
+			if (comment.getNumber() == 0)
+				continue;
+
 			ExpandableComposite ec = toolkit.createExpandableComposite(addCommentsComposite,
 					ExpandableComposite.TREE_NODE);
 
@@ -520,56 +527,58 @@ public class ExistingBugEditor extends AbstractBugEditor {
 			ec.setClient(ecComposite);
 			toolkit.paintBordersFor(ec);
 
-			
 			// TODO: Attachments are no longer 'attached' to Comments
-			
-//			if (comment.hasAttachment()) {
-//
-//				Link attachmentLink = new Link(ecComposite, SWT.NONE);
-//
-//				String attachmentHeader;
-//
-//				if (!comment.isObsolete()) {
-//					attachmentHeader = " Attached: " + comment.getAttachmentDescription() + " [<a>view</a>]";
-//				} else {
-//					attachmentHeader = " Deprecated: " + comment.getAttachmentDescription();
-//				}
-//				// String result = MessageFormat.format(attachmentHeader, new
-//				// String[] { node
-//				// .getLabelText() });
-//
-//				attachmentLink.addSelectionListener(new SelectionAdapter() {
-//					/*
-//					 * (non-Javadoc)
-//					 * 
-//					 * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-//					 */
-//					public void widgetSelected(SelectionEvent e) {
-//						String address = repository.getUrl() + "/attachment.cgi?id=" + comment.getAttachmentId()
-//								+ "&amp;action=view";
-//						TaskUiUtil.openUrl(address, address, address);
-//
-//					}
-//				});
-//
-//				attachmentLink.setText(attachmentHeader);
-//
-//			}
+
+			// if (comment.hasAttachment()) {
+			//
+			// Link attachmentLink = new Link(ecComposite, SWT.NONE);
+			//
+			// String attachmentHeader;
+			//
+			// if (!comment.isObsolete()) {
+			// attachmentHeader = " Attached: " +
+			// comment.getAttachmentDescription() + " [<a>view</a>]";
+			// } else {
+			// attachmentHeader = " Deprecated: " +
+			// comment.getAttachmentDescription();
+			// }
+			// // String result = MessageFormat.format(attachmentHeader, new
+			// // String[] { node
+			// // .getLabelText() });
+			//
+			// attachmentLink.addSelectionListener(new SelectionAdapter() {
+			// /*
+			// * (non-Javadoc)
+			// *
+			// * @see
+			// org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+			// */
+			// public void widgetSelected(SelectionEvent e) {
+			// String address = repository.getUrl() + "/attachment.cgi?id=" +
+			// comment.getAttachmentId()
+			// + "&amp;action=view";
+			// TaskUiUtil.openUrl(address, address, address);
+			//
+			// }
+			// });
+			//
+			// attachmentLink.setText(attachmentHeader);
+			//
+			// }
 
 			// styledText = newLayout(ecComposite, 1, comment.getText(), VALUE);
 			// styledText.addListener(SWT.FocusIn, new
 			// CommentListener(comment));
 			// styledText.setFont(COMMENT_FONT);
-			//System.err.println(comment.getNumber()+"   "+comment.getText());
+			// System.err.println(comment.getNumber()+" "+comment.getText());
 			TextViewer viewer = addRepositoryText(repository, ecComposite, comment.getText());
 			styledText = viewer.getTextWidget();
-			
+
 			// line wrapping
 			GridData styledTextData = new GridData(GridData.FILL_BOTH);
-			 styledTextData.widthHint = DESCRIPTION_WIDTH;
-			 styledTextData.grabExcessVerticalSpace = true;
-			 styledText.setLayoutData(styledTextData);
-			
+			styledTextData.widthHint = DESCRIPTION_WIDTH;
+			styledTextData.grabExcessVerticalSpace = true;
+			styledText.setLayoutData(styledTextData);
 
 			// code for outline
 			texts.add(textsindex, styledText);
@@ -605,7 +614,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		toolkit.paintBordersFor(newCommentsComposite);
 		GridData addCommentsTextData = new GridData(GridData.FILL_HORIZONTAL);
 		// addCommentsTextData.horizontalSpan = 4;
-		//addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
+		// addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
 		addCommentsTextData.heightHint = DESCRIPTION_HEIGHT;
 		addCommentsTextData.grabExcessHorizontalSpace = true;
 
@@ -616,7 +625,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 			public void handleEvent(Event event) {
 				String sel = addCommentsText.getText();
 				if (!(bug.getNewComment().equals(sel))) {
-					bug.setNewComment(sel);					
+					bug.setNewComment(sel);
 					changeDirtyStatus(true);
 				}
 				validateInput();
@@ -656,11 +665,10 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		keyWordsList.setLayoutData(keyWordsTextData);
 
 		// initialize the keywords list with valid values
-		
-		
-		
-		java.util.List<String> validKeywords = BugzillaPlugin.getDefault().getProductConfiguration(repository).getKeywords();
-		
+
+		java.util.List<String> validKeywords = BugzillaPlugin.getDefault().getProductConfiguration(repository)
+				.getKeywords();
+
 		if (validKeywords != null) {
 			for (Iterator<String> it = validKeywords.iterator(); it.hasNext();) {
 				String keyword = it.next();
@@ -689,7 +697,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		keyWordsList.addSelectionListener(new KeywordListener());
 		keyWordsList.addListener(SWT.FocusIn, new GenericListener());
 	}
-	
+
 	@Override
 	protected void addCCList(FormToolkit toolkit, String ccValue, Composite attributesComposite) {
 		newLayout(attributesComposite, 1, "Add CC:", PROPERTY);
@@ -732,7 +740,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		if (ccs != null) {
 			for (Iterator<String> it = ccs.iterator(); it.hasNext();) {
 				String cc = it.next();
-				ccList.add(cc);//HtmlStreamTokenizer.unescape(cc));
+				ccList.add(cc);// HtmlStreamTokenizer.unescape(cc));
 			}
 		}
 
@@ -775,7 +783,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		// if (bug.getNewComment().compareTo(bug.getNewNewComment()) != 0) {
 		// // TODO: Ask offline reports if this is true?
 		// bug.setHasChanged(true);
-		//		}
+		// }
 
 		// Update some other fields as well.
 		// bug.setNewComment(bug.getNewNewComment());
@@ -873,7 +881,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 					keywords.append(",");
 				}
 			}
-			
+
 			bug.setAttributeValue(BugzillaReportElement.KEYWORDS, keywords.toString());
 
 			// update the keywords text field
@@ -1022,7 +1030,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		Operation o = bug.getSelectedOperation();
 		if (o != null && o.getKnobName().compareTo("resolve") == 0
 				&& (addCommentsText.getText() == null || addCommentsText.getText().equals(""))) {
-			// TODO: Highlight (change to light red?) New Comment area to indicate need for message
+			// TODO: Highlight (change to light red?) New Comment area to
+			// indicate need for message
 			submitButton.setEnabled(false);
 		} else {
 			submitButton.setEnabled(true);
