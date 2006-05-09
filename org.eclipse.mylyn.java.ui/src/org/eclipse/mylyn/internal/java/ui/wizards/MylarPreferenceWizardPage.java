@@ -11,9 +11,11 @@
 
 package org.eclipse.mylar.internal.java.ui.wizards;
 
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
+import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -21,6 +23,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.events.IHyperlinkListener;
+import org.eclipse.ui.forms.widgets.Hyperlink;
 
 /**
  * @author Shawn Minto
@@ -34,8 +39,10 @@ public class MylarPreferenceWizardPage extends WizardPage {
 
 	private static final String WORKING_SET = "Add the \"active task context\" working set";
 
-	private static final String DEFAULT_EDITOR = "Enable task-context ranked content assist (requires Eclipse restart).";
+	private static final String CONTENT_ASSIST = "Enable task-context ranked content assist (requires Eclipse restart).";
 
+	private static final String CONTENT_ASSIST_WARNING = "Toggle via Preferences->Java->Editor->Content Assist->Advanced ";
+	
 	private static final String OPEN_TASK_LIST = "Open the Mylar Tasks view";
 
 	private Button contentAssistButton;
@@ -56,11 +63,8 @@ public class MylarPreferenceWizardPage extends WizardPage {
 
 	private boolean openTaskList = true;
 
-	private String htmlDocs;
-
-	protected MylarPreferenceWizardPage(String pageName, String htmlDocs) {
+	protected MylarPreferenceWizardPage(String pageName) {
 		super(pageName);
-		this.htmlDocs = htmlDocs;
 		setTitle(pageName);
 		setDescription("Configures Mylar preferences to the recommended defaults. To alter these \n"
 				+ "go to the Mylar preference page or re-invoke this wizard via the \"New\" menu.");
@@ -93,7 +97,17 @@ public class MylarPreferenceWizardPage extends WizardPage {
 //		});
 
 		Label label = new Label(buttonComposite, SWT.NONE);
-		label.setText(DEFAULT_EDITOR);
+		label.setText(CONTENT_ASSIST);
+		label = new Label(buttonComposite, SWT.NONE);
+		label = new Label(buttonComposite, SWT.NONE);
+		label.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
+		label.setText(CONTENT_ASSIST_WARNING);
+		
+		label = new Label(buttonComposite, SWT.NONE);
+		label = new Label(buttonComposite, SWT.NONE);
+		label.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
+		label.setText("NOTE: if Mylar is uninstalled you must Restore Defaults on above page ");
+				
 		gd = new GridData();
 		label.setLayoutData(gd);
 
@@ -116,7 +130,12 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		label.setText(AUTO_FOLDING);
 		gd = new GridData();
 		label.setLayoutData(gd);
-
+		label = new Label(buttonComposite, SWT.NONE);
+		label = new Label(buttonComposite, SWT.NONE);
+		label.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
+		label.setText("Toggle via toolbar button ");
+		
+		
 		closeEditorsOnDeactivationButton = new Button(buttonComposite, SWT.CHECK);
 		gd = new GridData();
 		closeEditorsOnDeactivationButton.setLayoutData(gd);
@@ -131,12 +150,17 @@ public class MylarPreferenceWizardPage extends WizardPage {
 				// don't care about this event
 			}
 		});
-
+		
 		label = new Label(buttonComposite, SWT.NONE);
 		label.setText(AUTO_CLOSE);
 		gd = new GridData();
 		label.setLayoutData(gd);
 
+		label = new Label(buttonComposite, SWT.NONE);
+		label = new Label(buttonComposite, SWT.NONE);
+		label.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
+		label.setText("Toggle via Mylar preferences page ");
+		
 		addMylarActiveWorkingSetButton = new Button(buttonComposite, SWT.CHECK);
 		gd = new GridData();
 		addMylarActiveWorkingSetButton.setSelection(true);
@@ -157,6 +181,11 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		label.setLayoutData(gd);
 		setControl(buttonComposite);
 
+		label = new Label(buttonComposite, SWT.NONE);
+		label = new Label(buttonComposite, SWT.NONE);
+		label.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
+		label.setText("Remove via Window->Working Sets ");
+		
 		openTaskListButton = new Button(buttonComposite, SWT.CHECK);
 		gd = new GridData();
 		openTaskListButton.setLayoutData(gd);
@@ -182,18 +211,37 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		spacer = new Label(buttonComposite, SWT.NONE);
 		spacer.setText(" ");
 
-		Composite browserComposite = new Composite(containerComposite, SWT.NULL);
-		browserComposite.setLayout(new GridLayout());
-		try {
-			Browser browser = new Browser(browserComposite, SWT.NONE);
-			browser.setText(htmlDocs);
-			GridData browserLayout = new GridData(GridData.FILL_HORIZONTAL);
-			browserLayout.heightHint = 100;
-			browserLayout.widthHint = 600;
-			browser.setLayoutData(browserLayout);
-		} catch (Throwable t) {
-			// fail silently if there is no browser
-		}
+		Hyperlink hyperlink = new Hyperlink(containerComposite, SWT.NULL);
+		hyperlink.setUnderlined(true);
+		hyperlink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK);
+		hyperlink.setText("If this is your first time using Mylar watch the getting started video");
+		hyperlink.addHyperlinkListener(new IHyperlinkListener() {
+
+			public void linkActivated(HyperlinkEvent e) {
+				TaskUiUtil.openUrl("Mylar Documentation", "", "http://eclipse.org/mylar/start.php");
+			}
+
+			public void linkEntered(HyperlinkEvent e) {
+				// ignore
+			}
+
+			public void linkExited(HyperlinkEvent e) {
+				// ignore
+			}
+		});
+		
+//		Composite browserComposite = new Composite(containerComposite, SWT.NULL);
+//		browserComposite.setLayout(new GridLayout());
+//		try {
+//			Browser browser = new Browser(browserComposite, SWT.NONE);
+//			browser.setText(htmlDocs);
+//			GridData browserLayout = new GridData(GridData.FILL_HORIZONTAL);
+//			browserLayout.heightHint = 100;
+//			browserLayout.widthHint = 600;
+//			browser.setLayoutData(browserLayout);
+//		} catch (Throwable t) {
+//			// fail silently if there is no browser
+//		}
 
 		setControl(containerComposite);
 	}

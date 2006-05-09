@@ -44,22 +44,22 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
     
 	private IPreferenceStore javaPrefs = JavaPlugin.getDefault().getPreferenceStore();
 
-	public void init(String htmlDocs) {
+	public void init() {
 		setDefaultPageImageDescriptor(MylarImages.MYLAR);
-		setWindowTitle("Mylar Preferences Wizard");
+		setWindowTitle("Mylar Recommended Preferences");
 		super.setDefaultPageImageDescriptor(MylarJavaPlugin.imageDescriptorFromPlugin(MylarJavaPlugin.PLUGIN_ID,
 				"icons/wizban/banner-prefs.gif"));
-		preferencePage = new MylarPreferenceWizardPage("Mylar Configuration", htmlDocs);
+		preferencePage = new MylarPreferenceWizardPage("Automatic preference settings");
 	}
 
 	public MylarPreferenceWizard() {
 		super();
-		init(MylarJavaPlugin.FIRST_USE);
+		init();
 	}
 
 	public MylarPreferenceWizard(String htmlDocs) {
 		super();
-		init(htmlDocs);
+		init();
 	}
 
 	@Override
@@ -84,9 +84,9 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 		}
 
 		if (preferencePage.closeEditors()) {
-			MylarUiPlugin.getPrefs().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, true); //$NON-NLS-1$
+			MylarUiPlugin.getPrefs().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, true);
 		} else {
-			MylarUiPlugin.getPrefs().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, false); //$NON-NLS-1$
+			MylarUiPlugin.getPrefs().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, false);
 		}
 
 		if (preferencePage.isWorkingSet()) {

@@ -61,13 +61,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 	private InterestUpdateDeltaListener javaElementChangeListener = new InterestUpdateDeltaListener();
 
-	public static final String FIRST_USE = "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"http://eclipse.org/mylar/doc/style.css\"/></head>"
-			+ "<body bgcolor=\"#ffffff\">"
-			+ "<p>If this is your first time using Mylar make sure to watch the \n"
-			+ "<a target=\"_blank\" href=\"http://eclipse.org/mylar/doc/demo/mylar-demo-04.html\">\n"
-			+ "<b>3 minute online flash demo</b></a>.</p><p>Mylar documentation is under \n"
-			+ "Help-&gt;Help Contents.</p>" + "</body></html>";
-
 	public MylarJavaPlugin() {
 		super();
 		plugin = this;
@@ -117,7 +110,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 					if (!MylarPlugin.getDefault().suppressWizardsOnStartup()
 							&& !getPreferenceStore().contains(MylarPreferenceWizard.MYLAR_FIRST_RUN)) {
-						MylarPreferenceWizard wizard = new MylarPreferenceWizard(FIRST_USE);
+						MylarPreferenceWizard wizard = new MylarPreferenceWizard();
 						Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 						if (wizard != null && shell != null && !shell.isDisposed()) {
 							WizardDialog dialog = new WizardDialog(shell, wizard);
