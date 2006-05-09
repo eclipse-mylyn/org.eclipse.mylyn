@@ -98,7 +98,19 @@ public class TaskRepositoriesView extends ViewPart {
 		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new TaskRepositoryLabelProvider());
-		viewer.setSorter(new ViewerSorter());
+		viewer.setSorter(new ViewerSorter() {
+
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				if (e1 instanceof TaskRepository && e2 instanceof TaskRepository) {
+					TaskRepository t1 = (TaskRepository)e1;
+					TaskRepository t2 = (TaskRepository)e2;
+					return (t1.getKind() + t1.getUrl()).compareTo(t2.getKind() + t2.getUrl());
+				} else {
+ 					return super.compare(viewer, e1, e2);
+				}
+			}
+		});
 		viewer.setInput(getViewSite());
 
 		hookContextMenu();

@@ -41,41 +41,43 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	private static final String TITLE = "Bugzilla Repository Settings";
 
 	private static final String DESCRIPTION = "Example: https://bugs.eclipse.org/bugs (do not include index.cgi)";
+
 	private AbstractRepositoryConnector connector;
+
 	protected Combo repositoryVersionCombo;
-	
+
 	public BugzillaRepositorySettingsPage(AbstractRepositoryConnector connector) {
 		super(TITLE, DESCRIPTION);
 		this.connector = connector;
 	}
-	
+
 	protected void createAdditionalControls(Composite parent) {
 		Label repositoryVersionLabel = new Label(parent, SWT.NONE);
 		repositoryVersionLabel.setText("Repository Version: ");
-		repositoryVersionCombo = new Combo (parent, SWT.READ_ONLY);
-		 
+		repositoryVersionCombo = new Combo(parent, SWT.READ_ONLY);
+
 		for (String version : connector.getSupportedVersions()) {
-			repositoryVersionCombo.add(version);			
-		}	
-		if(repository != null && repositoryVersionCombo.indexOf(repository.getVersion()) >= 0) {
+			repositoryVersionCombo.add(version);
+		}
+		if (repository != null && repositoryVersionCombo.indexOf(repository.getVersion()) >= 0) {
 			repositoryVersionCombo.select(repositoryVersionCombo.indexOf(repository.getVersion()));
 		} else {
-			int defaultIndex = connector.getSupportedVersions().size()-1;
+			int defaultIndex = connector.getSupportedVersions().size() - 1;
 			repositoryVersionCombo.select(defaultIndex);
 			setVersion(repositoryVersionCombo.getItem(defaultIndex));
-		} 
-		
+		}
+
 		repositoryVersionCombo.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent e) {
-				if(repositoryVersionCombo.getSelectionIndex() >= 0) {
+				if (repositoryVersionCombo.getSelectionIndex() >= 0) {
 					setVersion(repositoryVersionCombo.getItem(repositoryVersionCombo.getSelectionIndex()));
 				}
 			}
 
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// ignore
-			} 
+			}
 		});
 	}
 
@@ -97,6 +99,13 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	protected void validateSettings() {
 		try {
+			String previousUserName = null;
+			String previousPassword = null;
+			TaskRepository previousRepository = super.getRepository();
+			if (super.getRepository() != null) {
+				previousUserName = previousRepository.getUserName();
+				previousPassword = previousRepository.getPassword();
+			}
 			URL serverURL = new URL(super.serverUrlEditor.getStringValue());
 			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(serverURL);
 			if (cntx == null || !(cntx instanceof HttpURLConnection)) {
@@ -108,6 +117,9 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			TaskRepository tempRepository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, getServerUrl());
 			tempRepository.setAuthenticationCredentials(getUserName(), getPassword());
 			BugzillaRepositoryUtil.getProductList(tempRepository);
+			if (previousUserName != null) {
+				previousRepository.setAuthenticationCredentials(previousUserName, previousPassword);
+			}
 		} catch (MalformedURLException e) {
 			MessageDialog.openWarning(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, "Server URL is invalid.");
 			return;
