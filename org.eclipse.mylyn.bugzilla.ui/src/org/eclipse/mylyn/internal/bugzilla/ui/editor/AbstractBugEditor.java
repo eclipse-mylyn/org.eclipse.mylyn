@@ -131,7 +131,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 	public static final Font HEADER_FONT = JFaceResources.getDefaultFont();
 
-	public static final int DESCRIPTION_WIDTH = 79 * 7;
+	public static final int DESCRIPTION_WIDTH = 500;//79 * 7;
 
 	public static final int DESCRIPTION_HEIGHT = 10 * 14;
 
@@ -1259,14 +1259,13 @@ public abstract class AbstractBugEditor extends EditorPart {
 	}
 
 	protected TextViewer addRepositoryText(TaskRepository repository, Composite composite, String text) {
-		RepositoryTextViewer commentViewer = new RepositoryTextViewer(repository, composite, SWT.NONE);
-
+		RepositoryTextViewer commentViewer = new RepositoryTextViewer(repository, composite, SWT.WRAP);
+		
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 
 		commentViewer.getTextWidget().setFont(themeManager.getCurrentTheme().getFontRegistry().get(REPOSITORY_TEXT_ID));
 
 		commentViewer.setEditable(false);
-
 		commentViewer.getTextWidget().addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

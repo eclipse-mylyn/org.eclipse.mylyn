@@ -418,18 +418,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			form.submitReportToRepository();
 			removeReport(bugReport);
 			String handle = AbstractRepositoryTask.getHandle(bugReport.getRepositoryUrl(), bugReport.getId());
-			// TODO: avoid getting archive tasks?
+
 			ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
 
-			// TODO: re-enable synchronization of queries with task. Redundant?
-			// Set<AbstractRepositoryQuery> queriesWithHandle =
-			// MylarTaskListPlugin.getTaskListManager().getTaskList()
-			// .getQueriesForHandle(task.getHandleIdentifier());
-			// synchronize(queriesWithHandle, null, Job.INTERACTIVE, 0);
+			Set<AbstractRepositoryQuery> queriesWithHandle = MylarTaskListPlugin.getTaskListManager().getTaskList()
+					.getQueriesForHandle(task.getHandleIdentifier());
+			synchronize(queriesWithHandle, null, Job.INTERACTIVE, 0);
 
-			// for (AbstractRepositoryQuery query : queriesWithHandle) {
-			// synchronize(query, null);
-			// }
 			if (task instanceof AbstractRepositoryTask) {
 				synchronize((AbstractRepositoryTask) task, true, null);
 			}

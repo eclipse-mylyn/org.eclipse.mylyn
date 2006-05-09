@@ -409,7 +409,9 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		section.setText(LABEL_SECTION_DESCRIPTION);
 		section.setExpanded(true);
 		section.setLayout(new GridLayout());
-		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		GridData sectionData = new GridData(GridData.FILL_BOTH);
+		sectionData.grabExcessVerticalSpace = true;
+		section.setLayoutData(sectionData);//FILL_HORIZONTAL
 
 		section.addExpansionListener(new IExpansionListener() {
 			public void expansionStateChanging(ExpansionEvent e) {
@@ -427,26 +429,25 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		descriptionLayout.numColumns = 1;
 		descriptionComposite.setLayout(descriptionLayout);
 		// descriptionComposite.setBackground(background);
-		// GridData descriptionData = new GridData(GridData.FILL_HORIZONTAL);
-		// descriptionData.horizontalSpan = 1;
-		// descriptionData.grabExcessVerticalSpace = false;
-		// descriptionComposite.setLayoutData(descriptionData);
-		// End Description Area
-
+		 GridData descriptionData = new GridData(GridData.FILL_BOTH);
+		 descriptionData.widthHint = DESCRIPTION_WIDTH;
+		 descriptionData.grabExcessVerticalSpace = true;
+		 descriptionComposite.setLayoutData(descriptionData);
+	
 		section.setClient(descriptionComposite);
 
-		// FormText t = newLayout(descriptionComposite, 4, "Description:",
-		// HEADER);
 
-		// t.addListener(SWT.FocusIn, new DescriptionListener());
-		// StyledText t = newLayout(descriptionComposite, 4,
-		// bug.getDescription(), VALUE);
-		// t.setFont(COMMENT_FONT);
 
 		TextViewer viewer = addRepositoryText(repository, descriptionComposite, bug.getDescription());
 		StyledText styledText = viewer.getTextWidget();
 		styledText.addListener(SWT.FocusIn, new DescriptionListener());
-
+		styledText.setLayout(new GridLayout());
+		 GridData styledTextData = new GridData(GridData.FILL_BOTH);
+		 styledTextData.widthHint = DESCRIPTION_WIDTH;
+		 styledTextData.grabExcessVerticalSpace = true; 
+		 styledText.setLayoutData(styledTextData);
+		 
+		 
 		texts.add(textsindex, styledText);
 		textHash.put(bug.getDescription(), styledText);
 		textsindex++;
@@ -485,7 +486,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		addCommentsData.horizontalSpan = 1;
 		addCommentsData.widthHint = DESCRIPTION_WIDTH;
 		addCommentsData.heightHint = DESCRIPTION_HEIGHT;
-		addCommentsData.grabExcessVerticalSpace = false;
+		addCommentsData.grabExcessVerticalSpace = true;
 		addCommentsComposite.setLayoutData(addCommentsData);
 		// End Additional (read-only) Comments Area
 
@@ -562,6 +563,13 @@ public class ExistingBugEditor extends AbstractBugEditor {
 			//System.err.println(comment.getNumber()+"   "+comment.getText());
 			TextViewer viewer = addRepositoryText(repository, ecComposite, comment.getText());
 			styledText = viewer.getTextWidget();
+			
+			// line wrapping
+			GridData styledTextData = new GridData(GridData.FILL_BOTH);
+			 styledTextData.widthHint = DESCRIPTION_WIDTH;
+			 styledTextData.grabExcessVerticalSpace = true;
+			 styledText.setLayoutData(styledTextData);
+			
 
 			// code for outline
 			texts.add(textsindex, styledText);
@@ -595,9 +603,9 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				| SWT.WRAP);
 		addCommentsText.setFont(COMMENT_FONT);
 		toolkit.paintBordersFor(newCommentsComposite);
-		GridData addCommentsTextData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		GridData addCommentsTextData = new GridData(GridData.FILL_HORIZONTAL);
 		// addCommentsTextData.horizontalSpan = 4;
-		addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
+		//addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
 		addCommentsTextData.heightHint = DESCRIPTION_HEIGHT;
 		addCommentsTextData.grabExcessHorizontalSpace = true;
 
