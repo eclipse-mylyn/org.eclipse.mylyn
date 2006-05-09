@@ -279,7 +279,7 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 		try {
 			offlineReportsFile = new OfflineReportsFile(offlineReportsPath.toFile());
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "could not restore offline Bugzilla reports file, creating new one", false);
+			MylarStatusHandler.log(e, "Could not restore offline Bugzilla reports file, creating new one (possible version incompatibility)");
 			// logAndShowExceptionDetailsDialog(e, "occurred while restoring
 			// saved offline Bugzilla reports.",
 			// "Bugzilla Offline Reports Error");

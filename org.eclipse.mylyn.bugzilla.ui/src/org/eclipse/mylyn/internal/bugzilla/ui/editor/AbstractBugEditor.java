@@ -421,12 +421,12 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 		toolkit = new FormToolkit(parent.getDisplay());
 		form = toolkit.createScrolledForm(parent);
-		String truncatedSummary = getBug().getSummary();
-		int maxLength = 50;
-		if (truncatedSummary.length() > maxLength) {
-			truncatedSummary = truncatedSummary.substring(0, maxLength) + "...";
-		}
-		form.setText("Bugzilla Bug: " + truncatedSummary);
+//		String truncatedSummary = getBug().getSummary();
+//		int maxLength = 50;
+//		if (truncatedSummary.length() > maxLength) {
+//			truncatedSummary = truncatedSummary.substring(0, maxLength) + "...";
+//		}
+		form.setText("Bugzilla Bug: " + getBug().getSummary());
 
 		editorComposite = form.getBody();
 		editorComposite.setLayout(new GridLayout());
