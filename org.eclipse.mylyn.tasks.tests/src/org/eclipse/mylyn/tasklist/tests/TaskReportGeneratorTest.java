@@ -19,9 +19,9 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
+import org.eclipse.mylar.bugzilla.core.BugzillaTask;
+import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.tasklist.planner.CompletedTaskCollector;
 import org.eclipse.mylar.internal.tasklist.planner.TaskReportGenerator;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;

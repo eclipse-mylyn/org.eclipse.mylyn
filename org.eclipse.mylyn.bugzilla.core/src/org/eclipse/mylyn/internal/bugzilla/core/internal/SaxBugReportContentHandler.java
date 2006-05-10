@@ -69,10 +69,11 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase());
 		} catch (RuntimeException e) {
 			if (e instanceof IllegalArgumentException) {
-				MylarStatusHandler.fail(new Exception(e), "Mylar: Bugzilla report element not known: "
+				MylarStatusHandler.fail(e, "Mylar: Bugzilla report element not known: "
 						+ e.getMessage().trim(), false);
 				errorMessage = "Mylar: Bugzilla report element not known: " + e.getMessage().trim();
 			}
+			return;
 		}
 		switch (tag) {
 		case BUGZILLA:
@@ -99,8 +100,17 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
-		BugzillaReportElement tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase());
-
+		BugzillaReportElement tag = BugzillaReportElement.UNKNOWN;
+		try {
+			tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase());
+		} catch (RuntimeException e) {
+			if (e instanceof IllegalArgumentException) {
+				MylarStatusHandler.fail(e, "Mylar: Bugzilla report element not known: "
+						+ e.getMessage().trim(), false);
+				errorMessage = "Mylar: Bugzilla report element not known: " + e.getMessage().trim();
+			}
+			return;
+		}
 		switch (tag) {
 		case BUG_ID: {
 			try {

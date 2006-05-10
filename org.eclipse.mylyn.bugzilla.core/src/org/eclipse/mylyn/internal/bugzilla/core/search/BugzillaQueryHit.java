@@ -9,8 +9,9 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
+package org.eclipse.mylar.internal.bugzilla.core.search;
 
+import org.eclipse.mylar.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
@@ -66,10 +67,6 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 		return BugzillaRepositoryUtil.getBugUrlWithoutLogin(repositoryUrl, idInt);
 	}
 
-	public boolean isLocal() {
-		return false;
-	}
-
 	public AbstractRepositoryTask getOrCreateCorrespondingTask() { 
 		
 		ITask existingTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(
@@ -84,10 +81,6 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 		return task;
 	}
 
-	public boolean isDragAndDropEnabled() {
-		return true;
-	}
-
 	public boolean isCompleted() {
 		if (status != null
 				&& (status.startsWith("RESO") || status.startsWith("CLO") || status.startsWith("VERI") || status
@@ -95,14 +88,6 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 			return true;
 		} 
 		return false;
-	}
-
-	public void setDescription(String description) {
-		// can't set the description to anything
-	}
-
-	public String getStringForSortingDescription() {
-		return getId() + "";
 	}
 
 	public void setHandleIdentifier(String id) {

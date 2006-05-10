@@ -15,7 +15,7 @@ package org.eclipse.mylar.internal.bugzilla.core.search;
  */
 public class BugzillaSearchHit {
 	/** The server that the result was from */
-	private String server;
+	private String repositoryUrl;
 
 	/** The bug id */
 	private int id;
@@ -36,7 +36,7 @@ public class BugzillaSearchHit {
 	private String state;
 
 	/** The resolution of the bug */
-	private String result;
+	private String resolution;
 
 	/** The owner of the bug */
 	private String owner;
@@ -44,6 +44,9 @@ public class BugzillaSearchHit {
 	/** The query that the bug was a result of */
 	private String query;
 
+	public BugzillaSearchHit() {		
+	}
+	
 	/**
 	 * Constructor
 	 * 
@@ -68,14 +71,14 @@ public class BugzillaSearchHit {
 	 */
 	public BugzillaSearchHit(String server, int id, String description, String severity, String priority,
 			String platform, String state, String result, String owner, String query) {
-		this.server = server;
+		this.repositoryUrl = server;
 		this.id = id;
 		this.description = description;
 		this.severity = severity;
 		this.priority = priority;
 		this.platform = platform;
 		this.state = state;
-		this.result = result;
+		this.resolution = result;
 		this.owner = owner;
 		this.query = query;
 	}
@@ -86,7 +89,11 @@ public class BugzillaSearchHit {
 	 * @return The server the bug resides on
 	 */
 	public String getRepository() {
-		return server;
+		return repositoryUrl;
+	}
+	
+	public void setRepository(String url) {
+		repositoryUrl = url;
 	}
 
 	/**
@@ -148,8 +155,8 @@ public class BugzillaSearchHit {
 	 * 
 	 * @return The resolution of the bug
 	 */
-	public String getResult() {
-		return result;
+	public String getResolution() {
+		return resolution;
 	}
 
 	/**
@@ -173,5 +180,41 @@ public class BugzillaSearchHit {
 	@Override
 	public String toString() {
 		return id + " " + description + "\n";
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+	public void setPlatform(String platform) {
+		this.platform = platform;
+	}
+
+	public void setPriority(String priority) {
+		this.priority = priority;
+	}
+
+	public void setQuery(String query) {
+		this.query = query;
+	}
+
+	public void setResolution(String resolution) {
+		this.resolution = resolution;
+	}
+
+	public void setSeverity(String severity) {
+		this.severity = severity;
+	}
+
+	public void setState(String state) {
+		this.state = state;
 	}
 }

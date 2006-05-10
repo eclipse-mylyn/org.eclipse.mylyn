@@ -19,10 +19,10 @@ import junit.framework.TestCase;
 import org.eclipse.mylar.bugzilla.core.AbstractRepositoryReportAttribute;
 import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaReportAttribute;
+import org.eclipse.mylar.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.bugzilla.core.Comment;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.internal.BugzillaReportElement;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 
 /**
  * @author Mik Kersten

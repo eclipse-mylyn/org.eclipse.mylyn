@@ -19,14 +19,14 @@ import javax.security.auth.login.LoginException;
 import junit.framework.TestCase;
 
 import org.eclipse.mylar.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
+import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;

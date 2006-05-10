@@ -25,11 +25,11 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylar.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
+import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.tasklist.ScheduledTaskListSynchJob;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;

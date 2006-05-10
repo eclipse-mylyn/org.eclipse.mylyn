@@ -25,7 +25,6 @@ public class BugzillaRepositoryQuery extends AbstractRepositoryQuery {
 
 	public BugzillaRepositoryQuery(String repositoryUrl, String queryUrl, String description, String maxHits, TaskList taskList) {
 		super(description, taskList);
-//		this.description = label;
 		this.queryUrl = queryUrl;
 		this.repositoryUrl = repositoryUrl;
 		try {
@@ -38,23 +37,6 @@ public class BugzillaRepositoryQuery extends AbstractRepositoryQuery {
 	public String getRepositoryKind() {
 		return BugzillaPlugin.REPOSITORY_KIND;
 	}
-
-//	public boolean isDragAndDropEnabled() {
-//		return false;
-//	}
-//
-//	public Font getFont() {
-//		for (ITaskListElement child : getHits()) {
-//			if (child instanceof BugzillaQueryHit) {
-//				BugzillaQueryHit hit = (BugzillaQueryHit) child;
-//				BugzillaTask task = hit.getCorrespondingTask();
-//				if (task != null && task.isActive()) {
-//					return TaskListColorsAndFonts.BOLD;
-//				}
-//			}
-//		}
-//		return null;
-//	}
 
 	public boolean isCustomQuery() {
 		return customQuery;

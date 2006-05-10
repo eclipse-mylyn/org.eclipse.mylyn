@@ -11,19 +11,17 @@
 /*
  * Created on 14-Jan-2005
  */
-package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
+package org.eclipse.mylar.bugzilla.core;
 
 import java.util.Date;
 import java.util.List;
 
-import org.eclipse.mylar.bugzilla.core.BugzillaReport;
-import org.eclipse.mylar.bugzilla.core.Comment;
-import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.internal.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile;
+import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 
 /**

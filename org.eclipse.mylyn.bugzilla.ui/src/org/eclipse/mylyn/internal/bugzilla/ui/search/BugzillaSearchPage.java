@@ -1060,8 +1060,9 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 		url.append(params);
 
 		// HACK make sure that the searches come back sorted by priority. This
-		// should be a search opetion though
+		// should be a search option though
 		url.append("&order=Importance");
+		//url.append(BugzillaRepositoryUtil.contentTypeRDF);
 		return url.toString();
 	}
 

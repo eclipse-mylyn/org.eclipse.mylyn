@@ -12,17 +12,13 @@ package org.eclipse.mylar.internal.bugzilla.ui.actions;
 
 import java.util.Iterator;
 
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUITools;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
+import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchResultView;
-import org.eclipse.search.internal.ui.SearchMessages;
-import org.eclipse.search.internal.ui.util.ExceptionHandler;
+import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 
 /**
  * This class is used to open a bug report in an editor.
@@ -59,19 +55,28 @@ public class OpenBugsAction extends Action {
 			IStructuredSelection selection = (IStructuredSelection) s;
 
 			// go through each of the selected items and show it in an editor
-			for (Iterator<IMarker> it = selection.iterator(); it.hasNext();) {
-				IMarker marker = it.next();
-				try {
+			for (Iterator<BugzillaQueryHit> it = selection.iterator(); it.hasNext();) {
+				BugzillaQueryHit repositoryHit = it.next();
+				// try {
+				// BugzillaQueryHit repositoryHit = (BugzillaQueryHit)
+				// match.getElement();
+				String bugUrl = BugzillaRepositoryUtil.getBugUrlWithoutLogin(repositoryHit.getRepositoryUrl(),
+						repositoryHit.getId());
+				TaskUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), "" + repositoryHit.getId(), bugUrl);
 
-					String repositoryUrl = (String) marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_REPOSITORY);
-					Integer id = (Integer) marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_ID);
-					BugzillaUITools.show(repositoryUrl, id.intValue());
-				} catch (CoreException e) {
-					// if an error occurs, handle and log it
-					ExceptionHandler.handle(e, SearchMessages.Search_Error_search_title,
-							SearchMessages.Search_Error_search_message); //$NON-NLS-2$ //$NON-NLS-1$
-					BugzillaPlugin.log(e.getStatus());
-				}
+				// String repositoryUrl = (String)
+				// marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_REPOSITORY);
+				// Integer id = (Integer)
+				// marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_ID);
+				// BugzillaUITools.show(repositoryUrl, id.intValue());
+				// } catch (CoreException e) {
+				// // if an error occurs, handle and log it
+				// ExceptionHandler.handle(e,
+				// SearchMessages.Search_Error_search_title,
+				// SearchMessages.Search_Error_search_message); //$NON-NLS-2$
+				// //$NON-NLS-1$
+				// BugzillaPlugin.log(e.getStatus());
+				// }
 			}
 
 		}

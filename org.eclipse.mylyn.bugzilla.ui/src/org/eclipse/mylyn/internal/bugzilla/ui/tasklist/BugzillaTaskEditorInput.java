@@ -19,6 +19,7 @@ import javax.security.auth.login.LoginException;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditorInput;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;

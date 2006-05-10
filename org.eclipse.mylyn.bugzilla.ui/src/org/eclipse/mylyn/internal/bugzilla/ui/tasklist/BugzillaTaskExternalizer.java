@@ -13,6 +13,8 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import java.util.Date;
 
+import org.eclipse.mylar.bugzilla.core.BugzillaTask;
+import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaQueryHit;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskExternalizationException;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;

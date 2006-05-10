@@ -14,14 +14,14 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.internal.BugzillaReportElement;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
+import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.search.ui.text.Match;
 
@@ -54,8 +54,9 @@ public class BugzillaSearchResultCollector implements IBugzillaSearchResultColle
 	/** The string to display to the user when the query is done */
 	private static final String DONE = "done";
 
-	/** Resource used to create markers */
-	private static final IResource resource = ResourcesPlugin.getWorkspace().getRoot();
+	// /** Resource used to create markers */
+	// private static final IResource resource =
+	// ResourcesPlugin.getWorkspace().getRoot();
 
 	// TODO Find a better way to get the states and severity
 
@@ -88,23 +89,52 @@ public class BugzillaSearchResultCollector implements IBugzillaSearchResultColle
 	 */
 	public void accept(BugzillaSearchHit hit) throws CoreException {
 		// set the markers to have the bugs attributes
-		IMarker marker = resource.createMarker(IBugzillaConstants.HIT_MARKER_ID);
+		// IMarker marker =
+		// resource.createMarker(IBugzillaConstants.HIT_MARKER_ID);
+		//
+		// marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_REPOSITORY,
+		// hit.getRepository());
+		// marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_ID, new
+		// Integer(hit.getId()));
+		// marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_DESC,
+		// hit.getDescription());
+		// marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_SEVERITY, new
+		// Integer(IBugzillaConstants.BUGZILLA_REPORT_STATUS.valueOf(hit.getSeverity().trim().toUpperCase()).ordinal()));
+		// marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_PRIORITY, new
+		// Integer(BugzillaReportElement.valueOf(hit.getPriority().trim().toUpperCase()).ordinal()));
+		// marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_PLATFORM, new
+		// Integer(BugzillaReportElement.valueOf(hit.getPlatform().trim().toUpperCase()).ordinal()));
+		// marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_STATE, new
+		// Integer(BugzillaReportElement.valueOf(hit.getState().trim().toUpperCase()).ordinal()));
+		// marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_RESULT, new
+		// Integer(BugzillaReportElement.valueOf(hit.getResolution().trim().toUpperCase()).ordinal()));
+		// // marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_SEVERITY,
+		// mapValue(hit.getSeverity(), severity));
+		// // marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_PRIORITY,
+		// mapValue(hit.getPriority(), priority));
+		// // marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_PLATFORM,
+		// hit.getPlatform());
+		// // marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_STATE,
+		// mapValue(hit.getState(), state));
+		// // marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_RESULT,
+		// mapValue(hit.getResolution(), result));
+		// marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_OWNER,
+		// hit.getOwner());
+		// marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_QUERY,
+		// hit.getQuery());
 
-		marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_REPOSITORY, hit.getRepository());
-		marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_ID, new Integer(hit.getId()));
-		marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_DESC, hit.getDescription());
-		marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_SEVERITY, mapValue(hit.getSeverity(), severity));
-		marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_PRIORITY, mapValue(hit.getPriority(), priority));
-		marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_PLATFORM, hit.getPlatform());
-		marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_STATE, mapValue(hit.getState(), state));
-		marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_RESULT, mapValue(hit.getResult(), result));
-		marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_OWNER, hit.getOwner());
-		marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_QUERY, hit.getQuery());
+		String description = hit.getId() + ": " + hit.getDescription();
 
-		// Add the match to the search results view.
-		// The offset and length of the match are both 0, since the match is the
-		// bug report itself, not a subset of it.
-		searchResult.addMatch(new Match(marker, 0, 0));
+		BugzillaQueryHit queryHit = new BugzillaQueryHit(description, hit.getPriority(), hit.getRepository(), hit
+				.getId(), null, hit.getState());
+
+		ITask correspondingTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(
+				queryHit.getHandleIdentifier());
+		if (correspondingTask instanceof AbstractRepositoryTask) {
+			queryHit.setCorrespondingTask((AbstractRepositoryTask) correspondingTask);
+		}
+
+		searchResult.addMatch(new Match(queryHit, 0, 0));
 
 		// increment the match count
 		matchCount++;
@@ -126,10 +156,10 @@ public class BugzillaSearchResultCollector implements IBugzillaSearchResultColle
 		map.put(IBugzillaConstants.HIT_MARKER_ATTR_ID, new Integer(bug.getId()));
 		map.put(IBugzillaConstants.HIT_MARKER_ATTR_REPOSITORY, bug.getRepositoryUrl());
 		map.put(IBugzillaConstants.HIT_MARKER_ATTR_DESC, bug.getDescription());
-		map.put(IBugzillaConstants.HIT_MARKER_ATTR_SEVERITY,
-				mapValue(bug.getAttribute(BugzillaReportElement.BUG_SEVERITY).getValue(), severity));
-		map.put(IBugzillaConstants.HIT_MARKER_ATTR_PRIORITY,
-				mapValue(bug.getAttribute(BugzillaReportElement.PRIORITY).getValue(), priority));
+		map.put(IBugzillaConstants.HIT_MARKER_ATTR_SEVERITY, mapValue(bug.getAttribute(
+				BugzillaReportElement.BUG_SEVERITY).getValue(), severity));
+		map.put(IBugzillaConstants.HIT_MARKER_ATTR_PRIORITY, mapValue(bug.getAttribute(BugzillaReportElement.PRIORITY)
+				.getValue(), priority));
 		map.put(IBugzillaConstants.HIT_MARKER_ATTR_PLATFORM, bug.getAttribute("Hardware").getValue());
 		map.put(IBugzillaConstants.HIT_MARKER_ATTR_STATE, mapValue(bug.getStatus(), state));
 		map.put(IBugzillaConstants.HIT_MARKER_ATTR_RESULT, mapValue(bug.getResolution(), result));

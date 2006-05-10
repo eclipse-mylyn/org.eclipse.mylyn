@@ -46,7 +46,7 @@ public enum BugzillaReportElement {
 	EVERCONFIRMED ("everconfirmed", "everconfirmed", true),
 	FILENAME ("filename", "filename"),
 	IS_OBSOLETE ("Obsolete", "isobsolete", true), 
-	KEYWORDS ("Keywords:", "keywords", true), 
+	KEYWORDS ("Keywords:", "keywords", true),
 	LONG_DESC ("Description:", "long_desc"), 
 	LONGDESCLENGTH ("Number of comments", "longdesclength", true), 
 	NEWCC ("Add CC:", "newcc", true), 
@@ -64,9 +64,16 @@ public enum BugzillaReportElement {
 	UNKNOWN ("UNKNOWN", "UNKNOWN"),
 	VERSION ("Version:", "version", false),
 	VOTES ("Votes:", "votes", false, true),
-	WHO ("who", "who");
-	
-
+	WHO ("who", "who"),
+	// Used by search engine
+	LI ("used by search engine", "li", true),
+	ID ("used by search engine", "id", true),
+	SHORT_SHORT_DESC ("used by search engine", "short_short_desc", false),
+	SEQ ("used by search engine", "seq", false),	
+	RESULT ("used by search engine", "result", false),
+	RDF ("used by search engine", "rdf", false),
+	INSTALLATION ("used by search engine", "installation", false),
+	BUGS ("used by search engine", "bugs", false);
 	
 	private final boolean isHidden;
 	private final boolean isReadOnly;

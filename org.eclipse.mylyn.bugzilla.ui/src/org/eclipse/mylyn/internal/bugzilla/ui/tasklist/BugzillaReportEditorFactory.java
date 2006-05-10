@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
+import org.eclipse.mylar.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditor;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskEditorFactory;

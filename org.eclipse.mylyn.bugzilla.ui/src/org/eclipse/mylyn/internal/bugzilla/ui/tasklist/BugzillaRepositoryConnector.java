@@ -37,6 +37,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.bugzilla.core.AbstractRepositoryReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaRemoteContextDelegate;
+import org.eclipse.mylar.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.bugzilla.core.ReportAttachment;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
@@ -47,6 +48,7 @@ import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
 import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile;
 import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile.BugzillaOfflineStatus;
+import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchHit;
 import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
@@ -544,8 +546,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			public void searchCompleted(BugzillaResultCollector collector) {
 				for (BugzillaSearchHit hit : collector.getResults()) {
 					String description = hit.getId() + ": " + hit.getDescription();
-
-					// TODO: Associate new hit with task (if already exists)
 					newHits.add(new BugzillaQueryHit(description, hit.getPriority(),
 							repositoryQuery.getRepositoryUrl(), hit.getId(), null, hit.getState()));
 				}

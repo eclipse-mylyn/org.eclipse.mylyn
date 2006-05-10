@@ -16,13 +16,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.charset.Charset;
 
 import javax.security.auth.login.LoginException;
 
 import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
@@ -41,8 +41,6 @@ public class RepositoryReportFactory {
 	private static RepositoryReportFactory instance;
 
 	private static final String SHOW_BUG_CGI_XML = "/show_bug.cgi?ctype=xml&id=";
-
-	private static final String ATTR_CHARSET = "charset";
 
 	private RepositoryReportFactory() {
 		// no initial setup needed
@@ -112,7 +110,7 @@ public class RepositoryReportFactory {
 		URLConnection connection = serverURL.openConnection();
 		String contentType = connection.getContentType();
 		if (contentType != null) {
-			String charsetFromContentType = getCharsetFromString(contentType);
+			String charsetFromContentType = BugzillaRepositoryUtil.getCharsetFromString(contentType);
 			if (charsetFromContentType != null) {
 				bugReport.setCharset(charsetFromContentType);
 			}
@@ -135,30 +133,12 @@ public class RepositoryReportFactory {
 		}
 	}
 
-	// TODO: pull up
-	public static String getCharsetFromString(String string) {
-		int charsetStartIndex = string.indexOf(ATTR_CHARSET);
-		if (charsetStartIndex != -1) {
-			int charsetEndIndex = string.indexOf("\"", charsetStartIndex); // TODO:
-			// could
-			// be
-			// space
-			// after?
-			if (charsetEndIndex == -1) {
-				charsetEndIndex = string.length();
-			}
-			String charsetString = string.substring(charsetStartIndex + 8, charsetEndIndex);
-			if (Charset.availableCharsets().containsKey(charsetString)) {
-				return charsetString;
-			}
-		}
-		return null;
-	}
-
 	class SaxErrorHandler implements ErrorHandler {
 
 		public void error(SAXParseException exception) throws SAXException {
-			System.err.println("Error: " + exception.getLineNumber() + "\n" + exception.getLocalizedMessage());
+			MylarStatusHandler.fail(exception, "Mylar: RepositoryReportFactory Sax parser error", false);
+			// System.err.println("Error: " + exception.getLineNumber() + "\n" +
+			// exception.getLocalizedMessage());
 
 		}
 
@@ -170,8 +150,8 @@ public class RepositoryReportFactory {
 		}
 
 		public void warning(SAXParseException exception) throws SAXException {
-			System.err.println("Warning: " + exception.getLineNumber() + "\n" + exception.getLocalizedMessage());
-
+			// System.err.println("Warning: " + exception.getLineNumber() + "\n"
+			// + exception.getLocalizedMessage());
 		}
 
 	}

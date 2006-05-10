@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaAttributeListener;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.BugzillaOutlineNode;
