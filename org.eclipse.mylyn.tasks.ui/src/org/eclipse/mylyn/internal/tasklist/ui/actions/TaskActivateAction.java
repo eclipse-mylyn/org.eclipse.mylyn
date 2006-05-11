@@ -16,7 +16,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.ui.IViewActionDelegate;
@@ -43,7 +42,7 @@ public class TaskActivateAction extends Action implements IViewActionDelegate {
 	}
 
 	public void run() {
-		MylarPlugin.getContextManager().actionObserved(this, Boolean.TRUE.toString());
+//		MylarPlugin.getContextManager().actionObserved(this, Boolean.TRUE.toString());
 		run(TaskListView.getDefault().getSelectedTask());
 	}
 

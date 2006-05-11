@@ -5,10 +5,18 @@
     <extension-point id="repositories" name="Task Repositories" schema="schema/repositories.exsd"/>
     <extension-point id="editors" name="Task Editors" schema="schema/editors.exsd"/>
 
-   <extension
+	<extension point="org.eclipse.ui.views">
+     	<category name="Mylar" id="org.eclipse.mylar"/>
+    </extension>
+     	
+    <extension point="org.eclipse.ui.newWizards">
+        <category name="Mylar" id="org.eclipse.mylar.wizards"/>
+    </extension>
+
+    <extension
          name="Mylar Task List Startup (required)"
          point="org.eclipse.ui.startup">
-   </extension>
+    </extension>
 
 	<extension
          id="org.eclipse.mylar.helpDocs"
@@ -18,7 +26,7 @@
             file="doc/toc.xml"
             primary="false">
       </toc>
-   </extension>
+    </extension>
 
     <extension point="org.eclipse.ui.newWizards">
       <wizard

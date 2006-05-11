@@ -16,7 +16,6 @@ import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 
@@ -34,7 +33,7 @@ public class TaskDeactivateAction extends Action {
 	}
 
 	public void run(ITask task) {
-		MylarPlugin.getContextManager().actionObserved(this, Boolean.FALSE.toString());
+//		MylarPlugin.getContextManager().actionObserved(this, Boolean.FALSE.toString());
 
 		try {
 			if (task != null) {
