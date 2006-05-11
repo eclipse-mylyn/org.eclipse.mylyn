@@ -13,7 +13,9 @@ package org.eclipse.mylar.internal.monitor;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -29,6 +31,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -46,6 +49,7 @@ import org.eclipse.mylar.internal.monitor.monitors.PreferenceChangeMonitor;
 import org.eclipse.mylar.internal.monitor.monitors.SelectionMonitor;
 import org.eclipse.mylar.internal.monitor.monitors.WindowChangeMonitor;
 import org.eclipse.mylar.internal.monitor.ui.wizards.UsageSubmissionWizard;
+import org.eclipse.mylar.provisional.core.AbstractCommandMonitor;
 import org.eclipse.mylar.provisional.core.IInteractionEventListener;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.pde.internal.ui.PDEPlugin;
@@ -135,6 +139,10 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 
 	private static MylarMonitorPlugin plugin;
 
+	private List<IActionExecutionListener> actionExecutionListeners = new ArrayList<IActionExecutionListener>();
+	
+	private List<AbstractCommandMonitor> commandMonitors = new ArrayList<AbstractCommandMonitor>();
+	
 	private ResourceBundle resourceBundle;
 
 	private static Date lastTransmit = null;
@@ -254,9 +262,9 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		MylarPlugin.getDefault().removeInteractionListener(interactionLogger);
 
-		MylarPlugin.getDefault().getCommandMonitors().remove(keybindingCommandMonitor);
+		getCommandMonitors().remove(keybindingCommandMonitor);
 		MylarPlugin.getDefault().getSelectionMonitors().remove(selectionMonitor);
-		MylarPlugin.getContextManager().getActionExecutionListeners().remove(new ActionExecutionMonitor());
+		getActionExecutionListeners().remove(new ActionExecutionMonitor());
 
 		workbench.getActiveWorkbenchWindow().getShell().removeShellListener(SHELL_LISTENER);
 		MylarPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
@@ -285,10 +293,10 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		MylarPlugin.getDefault().addInteractionListener(interactionLogger);
-		MylarPlugin.getDefault().getCommandMonitors().add(keybindingCommandMonitor);
+		getCommandMonitors().add(keybindingCommandMonitor);
 		MylarPlugin.getDefault().getSelectionMonitors().add(selectionMonitor);
 
-		MylarPlugin.getContextManager().getActionExecutionListeners().add(new ActionExecutionMonitor());
+		getActionExecutionListeners().add(new ActionExecutionMonitor());
 		workbench.getActiveWorkbenchWindow().getShell().addShellListener(SHELL_LISTENER);
 		MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 
@@ -324,6 +332,20 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		MylarPlugin.getDefault().getSelectionMonitors().remove(selectionMonitor);
 	}
 
+	public void actionObserved(IAction action, String info) {
+		for (IActionExecutionListener listener : actionExecutionListeners) {
+			listener.actionObserved(action);
+		}
+	}
+
+	public List<IActionExecutionListener> getActionExecutionListeners() {
+		return actionExecutionListeners;
+	}
+
+	public List<AbstractCommandMonitor> getCommandMonitors() {
+		return commandMonitors;
+	}
+	
 	private void installBrowserMonitor(IWorkbench workbench) {
 		workbench.addWindowListener(browserMonitor);
 		IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
