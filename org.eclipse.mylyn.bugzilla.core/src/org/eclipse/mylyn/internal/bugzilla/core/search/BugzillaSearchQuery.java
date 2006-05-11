@@ -11,6 +11,8 @@
 
 package org.eclipse.mylar.internal.bugzilla.core.search;
 
+import java.lang.reflect.InvocationTargetException;
+
 import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -32,6 +34,8 @@ import org.eclipse.ui.PlatformUI;
  * @see org.eclipse.search.ui.ISearchQuery
  */
 public class BugzillaSearchQuery implements ISearchQuery {
+
+	private static final String MESSAGE_LOGIN_FAILURE = "Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ";
 
 	/** The collection of all the bugzilla matches. */
 	private BugzillaSearchResult bugResult;
@@ -59,10 +63,12 @@ public class BugzillaSearchQuery implements ISearchQuery {
 		final IStatus[] status = new IStatus[1];
 		final AbstractTextSearchResult textResult = (AbstractTextSearchResult) getSearchResult();
 		textResult.removeAll(); // Remove any existing search results from the
-								// view.
+		// view.
 
+		// try {
 		try {
-			operation.execute(monitor);
+			operation.run(monitor);
+
 			status[0] = operation.getStatus();
 
 			if (status[0].getCode() == IStatus.CANCEL) {
@@ -75,17 +81,28 @@ public class BugzillaSearchQuery implements ISearchQuery {
 				});
 				status[0] = Status.OK_STATUS;
 			}
-		} catch (LoginException e) {
-			// we had a problem while searching that seems like a login info
-			// problem
-			// thrown in BugzillaSearchOperation
+		} catch (InvocationTargetException e) {
 			MessageDialog
-					.openError(
+					.openInformation(
 							null,
-							"Login Error",
-							"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
+							"Bugzilla Login Error",
+							MESSAGE_LOGIN_FAILURE);
+			BugzillaPlugin.log(new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.OK, "", e));
+		} catch (InterruptedException e) {
+			// ignore
+		} catch (LoginException e) {
+			MessageDialog
+					.openInformation(
+							null,
+							"Bugzilla Login Error",
+							MESSAGE_LOGIN_FAILURE);
 			BugzillaPlugin.log(new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.OK, "", e));
 		}
+		// } catch (LoginException e) {
+		// // we had a problem while searching that seems like a login info
+		// // problem thrown in BugzillaSearchOperation
+		//			
+		// }
 		return status[0];
 	}
 

@@ -13,7 +13,6 @@ package org.eclipse.mylar.internal.bugzilla.core.search;
 
 import javax.security.auth.login.LoginException;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -24,12 +23,12 @@ import org.eclipse.jface.resource.ImageDescriptor;
  * @author Shawn Minto
  */
 public interface IBugzillaSearchOperation extends IRunnableWithProgress {
-	/**
-	 * Execute the search
-	 * 
-	 * @see org.eclipse.ui.actions.WorkspaceModifyOperation#execute(IProgressMonitor)
-	 */
-	public void execute(IProgressMonitor monitor);
+//	/**
+//	 * Execute the search
+//	 * 
+//	 * @see org.eclipse.ui.actions.WorkspaceModifyOperation#execute(IProgressMonitor)
+//	 */
+//	public void run(IProgressMonitor monitor);
 
 	/**
 	 * Get the status of the search operation

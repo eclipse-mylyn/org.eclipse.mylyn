@@ -16,14 +16,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 /**
  * An operation to perform Bugzilla search query.
  * 
  * @author Mik Kersten (hardening of prototype
  */
-public class BugzillaSearchOperation extends WorkspaceModifyOperation implements IBugzillaSearchOperation {
+public class BugzillaSearchOperation implements IBugzillaSearchOperation {
 	private String queryUrl;
 
 	/** The bugzilla collector for the search */
@@ -54,9 +53,8 @@ public class BugzillaSearchOperation extends WorkspaceModifyOperation implements
 			this.maxHits = -1;
 		}
 	}
-
-	@Override
-	public void execute(IProgressMonitor monitor) {
+	
+	public void run(IProgressMonitor monitor) {
 		// set the progress monitor for the search collector and start the
 		// search
 		collector.setProgressMonitor(monitor);
@@ -104,5 +102,4 @@ public class BugzillaSearchOperation extends WorkspaceModifyOperation implements
 	public String getName() {
 		return null;
 	}
-
 }
