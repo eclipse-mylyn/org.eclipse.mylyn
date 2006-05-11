@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylar.bugzilla.core.BugzillaReport;
@@ -225,11 +224,6 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 	}
 
 	public String getHandleForMarker(ProblemMarker marker) {
-		return null;
-	}
-
-	public IProject getProjectForObject(Object object) {
-		// bugzilla objects do not yet sit in a project
 		return null;
 	}
 

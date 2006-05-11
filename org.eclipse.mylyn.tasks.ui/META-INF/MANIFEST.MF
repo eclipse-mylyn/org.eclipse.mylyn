@@ -7,11 +7,8 @@ Bundle-Activator: org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.core.resources,
- org.eclipse.ui.browser,
  org.eclipse.ui.forms,
  org.eclipse.jface.text,
- org.eclipse.ui.editors,
  org.eclipse.mylar.core
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org

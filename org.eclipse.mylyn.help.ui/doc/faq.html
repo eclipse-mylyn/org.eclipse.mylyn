@@ -135,20 +135,18 @@ a bug</a>.&nbsp; The current performance profile is:</p>
 	Install/update failures can include:</p>
 <p><b>Update manager failure</b>: the update manager failed because it could not 
 access the update site, or because it got confused about the configuration state 
-of your Eclipse.&nbsp; In this case you may see update errors like the 
-following.&nbsp; In this case the first thing to do is to try updating again to 
+of your Eclipse.&nbsp; In this case you may see update errors like: <tt>org.eclipse.update.internal.core.SiteFilePackedPluginContentConsumer</tt>.&nbsp; 
+First try updating again to 
 see if the feature is accessible.&nbsp; If you are trying to update the JIRA 
 connector you can also try de-selecting that feature in case the Tigris.org 
 update site is not accessible.&nbsp; Using use &quot;Search new features..&quot; when 
-installing can help avoid this problem.</p>
-<tt>&nbsp;&nbsp;&nbsp; org.eclipse.update.internal.core.SiteFilePackedPluginContentConsumer</tt>
-<p><b>Incompatible VM (e.g. JDK 1.4)</b>: in this case you'll errors like the following in your log file.&nbsp; To 
+installing can help avoid this problem.&nbsp; If that does not work see the 
+feature configuration troubleshooting below.</p><b>Incompatible VM (e.g. JDK 1.4)</b>: in this case you'll errors like the following in your log file.&nbsp; To 
 check JDK version that Eclipse was launched with to to Help -&gt; About Eclipse SDK 
 -&gt; Configuration Details and verify that the java.vm.version is 1.5.&nbsp; Mac 
 users should refer to the last
 <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=116347#c4">bug 1163477</a> 
-for instructions on how to change the 1.4 default.</p>
-<p>
+for instructions on how to change the 1.4 default.<p>
 <tt>&nbsp;&nbsp;&nbsp;   Root exception:
    java.lang.UnsupportedClassVersionError: <br>
 &nbsp;&nbsp;&nbsp; org/eclipse/mylar/tasklist/MylarTasklistPlugin 
@@ -156,9 +154,14 @@ for instructions on how to change the 1.4 default.</p>
 </tt>
 </p>
 <p>
+If you are using JDK 1.6 on Eclipse 3.1 (<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=140955">not 
+recommended</a>) you must add the following line to your config.ini file: <tt>
+<br>
+&nbsp;&nbsp;&nbsp; org.osgi.framework.executionenvironment=OSGi/Minimum-1.0,OSGi/Minimum-1.1,JRE-1.1,J2SE-1.2,<br>
+&nbsp;&nbsp;&nbsp; J2SE-1.3,J2SE-1.4,J2SE-1.5,JavaSE-1.6</p><p>
+</tt>
 <b>Incompatible version of Eclipse</b>: separate versions and update sites exist
-<a href="http://eclipse.org/mylar/dl.php">for Eclipse 3.1 and for the latest 3.2 
-milestone</a>), in which case you may see errors like the following in your 
+<a href="http://eclipse.org/mylar/dl.php">for Eclipse 3.1 and for the latest 3.2</a>), in which case you may see errors like the following in your 
 &lt;workspace&gt;/.metadata/.log file or in a Mylar view:</p>
 <p>
 <tt>&nbsp;&nbsp;&nbsp; java.lang.NoSuchMethodError:
