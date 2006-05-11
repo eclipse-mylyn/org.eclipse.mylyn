@@ -21,7 +21,6 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -116,10 +115,10 @@ public class MylarPlugin extends AbstractUIPlugin {
 			throw new RuntimeException("null adapter for handle: " + handle);
 		}
 
-		public IProject getProjectForObject(Object object) {
-			// return null;
-			throw new RuntimeException("null brige for object: " + object);
-		}
+//		public IProject getProjectForObject(Object object) {
+//			// return null;
+//			throw new RuntimeException("null brige for object: " + object);
+//		}
 
 		public String getContentType(String elementHandle) {
 			return getContentType();
@@ -165,9 +164,13 @@ public class MylarPlugin extends AbstractUIPlugin {
 
 	
 	public String getDefaultDataDirectory() {
-		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/' + NAME_DATA_DIR;
+//		try {
+			return ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/' + NAME_DATA_DIR;
+//		} catch (Throwable t) {
+//			// NOTE: might not have runtime plug-in when running in RCP mode
+//			return getDefault().getStateLocation().toString() + '/' + NAME_DATA_DIR;
+//		}
 	}
-
 	
 	@Override
 	public void stop(BundleContext context) throws Exception {

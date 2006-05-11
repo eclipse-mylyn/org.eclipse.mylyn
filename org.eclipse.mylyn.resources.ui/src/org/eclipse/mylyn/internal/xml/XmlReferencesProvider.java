@@ -16,8 +16,10 @@ package org.eclipse.mylar.internal.xml;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.core.internal.resources.Workspace;
@@ -38,6 +40,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.mylar.internal.core.search.IActiveSearchListener;
 import org.eclipse.mylar.internal.core.search.IMylarSearchOperation;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.internal.xml.pde.PdeStructureBridge;
 import org.eclipse.mylar.provisional.core.AbstractRelationProvider;
 import org.eclipse.mylar.provisional.core.IMylarElement;
@@ -97,7 +100,7 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
 		switch (degreeOfSeparation) {
 		case 1:
 			// create a search scope for the projects of landmarks
-			List<IResource> l = new ArrayList<IResource>();
+			Set<IResource> l = new HashSet<IResource>();
 			for (IMylarElement landmark : landmarks) {
 				if (landmark.getContentType().equals(PdeStructureBridge.CONTENT_TYPE)) {
 					// ||
@@ -126,23 +129,31 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
 			return l.isEmpty() ? null : doiScope;
 		case 2:
 			// create a search scope for the projects of landmarks
-			List<IProject> proj = new ArrayList<IProject>();
+			Set<IProject> projectsToSearch = new HashSet<IProject>();
 			for (IMylarElement landmark : landmarks) {
-				IMylarStructureBridge sbridge = MylarPlugin.getDefault().getStructureBridge(landmark.getContentType());
-				if (sbridge != null) {
-					Object object = sbridge.getObjectForHandle(landmark.getHandleIdentifier());
-					IProject project = sbridge.getProjectForObject(object);
-					if (project != null) {
-						proj.add(project);
+				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(landmark.getContentType());
+				IResource resource = MylarIdePlugin.getDefault().getResourceForElement(landmark, true);
+				System.err.println(landmark);
+				System.err.println("> " + resource);
+				IProject project = null;
+				if (resource != null) {
+					project = resource.getProject();
+				} else { 
+					Object object = bridge.getObjectForHandle(landmark.getHandleIdentifier());
+					if (object instanceof IJavaElement) {
+						project = ((IJavaElement)object).getJavaProject().getProject();
 					}
+				}
+				if (project != null) {
+					projectsToSearch.add(project);
 				}
 			}
 
-			res = new IProject[proj.size()];
-			res = proj.toArray(res);
+			res = new IProject[projectsToSearch.size()];
+			res = projectsToSearch.toArray(res);
 			TextSearchScope projScope = FileTextSearchScope.newSearchScope(res, new String[] {PdeStructureBridge.CONTENT_TYPE}, false);
 
-			return proj.isEmpty() ? null : projScope;
+			return projectsToSearch.isEmpty() ? null : projScope;
 		case 3:
 			// create a search scope for the workspace
 			return FileTextSearchScope.newSearchScope(new IResource[] { ResourcesPlugin.getWorkspace().getRoot() }, new String[] {PdeStructureBridge.CONTENT_TYPE}, false);

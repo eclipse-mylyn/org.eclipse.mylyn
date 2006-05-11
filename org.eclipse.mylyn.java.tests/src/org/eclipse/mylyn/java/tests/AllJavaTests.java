@@ -32,6 +32,7 @@ public class AllJavaTests {
 		TestSuite suite = new TestSuite("Tests for org.eclipse.mylar.java.tests");
 
 		// $JUnit-BEGIN$
+		suite.addTestSuite(ResourceStructureMappingTest.class);
 		suite.addTestSuite(CommitMessageTest.class);
 		suite.addTestSuite(InterestManipulationTest.class);
 		suite.addTestSuite(ChangeSetManagerTest.class);

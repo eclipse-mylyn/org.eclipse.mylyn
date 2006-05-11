@@ -14,7 +14,6 @@ package org.eclipse.mylar.internal.ui;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.mylar.provisional.core.AbstractRelationProvider;
 import org.eclipse.mylar.provisional.core.IDegreeOfSeparation;
 import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
@@ -95,10 +94,6 @@ public class TaskStructureBridge implements IMylarStructureBridge {
 	}
 
 	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
-		return null;
-	}
-
-	public IProject getProjectForObject(Object object) {
 		return null;
 	}
 

@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -43,6 +44,7 @@ import org.eclipse.jdt.ui.search.QuerySpecification;
 import org.eclipse.mylar.internal.core.search.IActiveSearchListener;
 import org.eclipse.mylar.internal.core.search.IMylarSearchOperation;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
 import org.eclipse.mylar.provisional.core.AbstractRelationProvider;
 import org.eclipse.mylar.provisional.core.IMylarElement;
@@ -138,19 +140,21 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 				IMylarStructureBridge bridge = MylarPlugin.getDefault()
 						.getStructureBridge(interesting.getContentType());
 				if (includeNodeInScope(interesting, bridge)) {
-					Object object = bridge.getObjectForHandle(interesting.getHandleIdentifier());
-					// TODO what to do when the element is not a java element, how determine if a javaProject?
-					IProject project = bridge.getProjectForObject(object);
-
-					if (project != null && JavaProject.hasJavaNature(project) && project.exists()) {
-						IJavaProject javaProject = JavaCore.create(project);// ((IJavaElement)o).getJavaProject();
-						if (javaProject != null && javaProject.exists())
-							searchElements.add(javaProject);
+					// TODO what to do when the element is not a java element,
+					// how determine if a javaProject?
+					IResource resource = MylarIdePlugin.getDefault().getResourceForElement(interesting, true);
+					if (resource != null) {
+						IProject project = resource.getProject();
+						if (project != null && JavaProject.hasJavaNature(project) && project.exists()) {
+							IJavaProject javaProject = JavaCore.create(project);// ((IJavaElement)o).getJavaProject();
+							if (javaProject != null && javaProject.exists())
+								searchElements.add(javaProject);
+						}
 					}
 				}
 			}
 			if (degreeOfSeparation == 4) {
-				
+
 				includeMask = IJavaSearchScope.SOURCES | IJavaSearchScope.APPLICATION_LIBRARIES
 						| IJavaSearchScope.SYSTEM_LIBRARIES;
 			}

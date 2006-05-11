@@ -55,7 +55,7 @@ public class ResourceUiBridge implements IMylarUiBridge {
 	}
 
 	public void restoreEditor(IMylarElement document) {
-		IResource resource = MylarIdePlugin.getDefault().getResourceForElement(document);
+		IResource resource = MylarIdePlugin.getDefault().getResourceForElement(document, false);
 		if (resource instanceof IFile && resource.exists()) {
 			internalOpenEditor((IFile) resource, false);
 		}

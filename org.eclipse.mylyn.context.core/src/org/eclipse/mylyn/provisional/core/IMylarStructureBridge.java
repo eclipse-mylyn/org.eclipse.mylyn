@@ -13,8 +13,6 @@ package org.eclipse.mylar.provisional.core;
 
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
-
 /**
  * @author Mik Kersten
  */
@@ -78,13 +76,13 @@ public interface IMylarStructureBridge {
 	 */
 	public abstract String getHandleForOffsetInObject(Object resource, int offset);
 
-	/**
-	 * TODO remove coupling to projects
-	 * 
-	 * @return The IProject that contains the object, or null if there is no
-	 *         project
-	 */
-	public abstract IProject getProjectForObject(Object object);
+//	/**
+//	 * TODO remove coupling to projects
+//	 * 
+//	 * @return The IProject that contains the object, or null if there is no
+//	 *         project
+//	 */
+//	public abstract IProject getProjectForObject(Object object);
 
 	/**
 	 * Used for switching kinds based on parent handles

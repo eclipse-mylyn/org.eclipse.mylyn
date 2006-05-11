@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -264,16 +263,16 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 		}
 	}
 
-	public IProject getProjectForObject(Object object) {
-		if (object instanceof IJavaElement) {
-			if (((IJavaElement) object).getJavaProject() == null)
-				return null;
-			return ((IJavaElement) object).getJavaProject().getProject();
-		} else if (object instanceof IResource) {
-			return ((IResource) object).getProject();
-		}
-		return null;
-	}
+//	public IProject getProjectForObject(Object object) {
+//		if (object instanceof IJavaElement) {
+//			if (((IJavaElement) object).getJavaProject() == null)
+//				return null;
+//			return ((IJavaElement) object).getJavaProject().getProject();
+//		} else if (object instanceof IResource) {
+//			return ((IResource) object).getProject();
+//		}
+//		return null;
+//	}
 
 	public String getContentType(String elementHandle) {
 		return getContentType();

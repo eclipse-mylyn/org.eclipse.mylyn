@@ -166,13 +166,6 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
 		}
 	}
 
-	public IProject getProjectForObject(Object object) {
-		if (object instanceof IResource) {
-			return ((IResource) object).getProject();
-		}
-		return null;
-	}
-
 	public String getContentType(String elementHandle) {
 		return getContentType();
 	}

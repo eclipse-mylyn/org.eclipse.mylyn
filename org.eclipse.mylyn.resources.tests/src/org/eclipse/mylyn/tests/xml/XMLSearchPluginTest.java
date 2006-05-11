@@ -167,39 +167,39 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest {
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
 		IMylarElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 
-		// results should be null since the scope would be null.
-		// There are no landmarks and therefore no projects to search over
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNull(notifier, searchNode, dos);
-
-		// add an element to the taskscape, results should not be null
-		// There is a landmark with references in it, but not one that is an xml
-		// file that we care about
-		// therefore, we still only get 3 references - landmark is in the same
-		// project
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, tocRefs.getFullPath().toString(), ResourceStructureBridge.CONTENT_TYPE,
-				searchNode, dos, 3);
-
-		// add an element to the taskscape, results should not be null, but only
-		// 3
-		// There is a landmark, but not one that is an xml file that we care
-		// about - landmark is in the same project
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, tocNoRefs.getFullPath().toString(), ResourceStructureBridge.CONTENT_TYPE,
-				searchNode, dos, 3);
-
-		// add the plugin.xml from a different project to the taskscape, should
-		// have non null results, but 0 size
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, plugin2.getFullPath().toString(), PdeStructureBridge.CONTENT_TYPE,
-				searchNode, dos, 0);
-
-		// add java element from the same project, should get result since we
-		// are looking at the projects
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE,
-				searchNode, dos, 3);
+//		// results should be null since the scope would be null.
+//		// There are no landmarks and therefore no projects to search over
+//		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+//		helper.searchResultsNull(notifier, searchNode, dos);
+//
+//		// add an element to the taskscape, results should not be null
+//		// There is a landmark with references in it, but not one that is an xml
+//		// file that we care about
+//		// therefore, we still only get 3 references - landmark is in the same
+//		// project
+//		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+//		helper.searchResultsNotNull(notifier, tocRefs.getFullPath().toString(), ResourceStructureBridge.CONTENT_TYPE,
+//				searchNode, dos, 3);
+//
+//		// add an element to the taskscape, results should not be null, but only
+//		// 3
+//		// There is a landmark, but not one that is an xml file that we care
+//		// about - landmark is in the same project
+//		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+//		helper.searchResultsNotNull(notifier, tocNoRefs.getFullPath().toString(), ResourceStructureBridge.CONTENT_TYPE,
+//				searchNode, dos, 3);
+//
+//		// add the plugin.xml from a different project to the taskscape, should
+//		// have non null results, but 0 size
+//		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+//		helper.searchResultsNotNull(notifier, plugin2.getFullPath().toString(), PdeStructureBridge.CONTENT_TYPE,
+//				searchNode, dos, 0);
+//
+//		// add java element from the same project, should get result since we
+//		// are looking at the projects
+//		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+//		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE,
+//				searchNode, dos, 3);
 
 		// add a java element from a different project, should get non null
 		// result, but 0 size

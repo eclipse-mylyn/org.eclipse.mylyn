@@ -18,7 +18,6 @@ import java.util.List;
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
@@ -299,18 +298,18 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 		return null;
 	}
 
-	public IProject getProjectForObject(Object object) {
-		while (!(object instanceof IFile)) {
-			String handle = getParentHandle(getHandleIdentifier(object));
-			if (handle == null)
-				break;
-			object = getObjectForHandle(handle);
-		}
-		if (object instanceof IFile && acceptsObject(object)) {
-			return ((IFile) object).getProject();
-		}
-		return null;
-	}
+//	public IProject getProjectForObject(Object object) {
+//		while (!(object instanceof IFile)) {
+//			String handle = getParentHandle(getHandleIdentifier(object));
+//			if (handle == null)
+//				break;
+//			object = getObjectForHandle(handle);
+//		}
+//		if (object instanceof IFile && acceptsObject(object)) {
+//			return ((IFile) object).getProject();
+//		}
+//		return null;
+//	}
 
 	/**
 	 * HACK: This is weird that the relationship provider is only here. There
