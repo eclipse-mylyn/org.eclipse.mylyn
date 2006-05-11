@@ -28,7 +28,6 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
-import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -50,39 +49,39 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	private AbstractRepositoryConnector connector;
 
 	protected Combo repositoryVersionCombo;
-	
+
 	public BugzillaRepositorySettingsPage(AbstractRepositoryConnector connector) {
 		super(TITLE, DESCRIPTION);
 		this.connector = connector;
 	}
-	
+
 	protected void createAdditionalControls(Composite parent) {
 		Label repositoryVersionLabel = new Label(parent, SWT.NONE);
 		repositoryVersionLabel.setText("Repository Version: ");
-		repositoryVersionCombo = new Combo (parent, SWT.READ_ONLY);
-		 
+		repositoryVersionCombo = new Combo(parent, SWT.READ_ONLY);
+
 		for (String version : connector.getSupportedVersions()) {
-			repositoryVersionCombo.add(version);			
-		}	
-		if(repository != null && repositoryVersionCombo.indexOf(repository.getVersion()) >= 0) {
+			repositoryVersionCombo.add(version);
+		}
+		if (repository != null && repositoryVersionCombo.indexOf(repository.getVersion()) >= 0) {
 			repositoryVersionCombo.select(repositoryVersionCombo.indexOf(repository.getVersion()));
 		} else {
-			int defaultIndex = connector.getSupportedVersions().size()-1;
+			int defaultIndex = connector.getSupportedVersions().size() - 1;
 			repositoryVersionCombo.select(defaultIndex);
 			setVersion(repositoryVersionCombo.getItem(defaultIndex));
-		} 
-		
+		}
+
 		repositoryVersionCombo.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent e) {
-				if(repositoryVersionCombo.getSelectionIndex() >= 0) {
+				if (repositoryVersionCombo.getSelectionIndex() >= 0) {
 					setVersion(repositoryVersionCombo.getItem(repositoryVersionCombo.getSelectionIndex()));
 				}
 			}
 
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// ignore
-			} 
+			}
 		});
 	}
 
@@ -103,12 +102,12 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	}
 
 	protected void validateSettings() {
-		
+
 		try {
-			final TaskRepository previousRepository = super.getRepository();
-			final String previousUserName = previousRepository != null ?  previousRepository.getUserName() : null;
-			final String previousPassword = previousRepository != null ?  previousRepository.getPassword() : null;
-			final URL serverURL = new URL(super.serverUrlEditor.getStringValue());
+			final URL serverURL = new URL(super.getServerUrl());
+			final String serverUrl = getServerUrl();
+			final String newUserId = getUserName();
+			final String newPassword = getPassword();
 			getWizard().getContainer().run(true, false, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					monitor.beginTask("Validating server settings", IProgressMonitor.UNKNOWN);
@@ -120,12 +119,9 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 						HttpURLConnection serverConnection = (HttpURLConnection) cntx;
 						serverConnection.connect();
-						TaskRepository tempRepository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, serverURL.toString());
-						tempRepository.setAuthenticationCredentials(previousUserName, previousPassword);
-						BugzillaRepositoryUtil.getProductList(tempRepository);
-						if (previousRepository != null && previousUserName != null) {
-							previousRepository.setAuthenticationCredentials(previousUserName, previousPassword);
-						}
+
+						BugzillaRepositoryUtil.validateCredentials(serverUrl, newUserId, newPassword);
+
 					} catch (Exception e) {
 						throw new InvocationTargetException(e);
 					} finally {
@@ -133,9 +129,9 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 					}
 				}
 			});
-			
+
 			MessageDialog.openInformation(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-				"Authentication credentials are valid.");
+					"Authentication credentials are valid.");
 		} catch (InvocationTargetException e) {
 			if (e.getCause() instanceof MalformedURLException) {
 				MessageDialog.openWarning(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, "Server URL is invalid.");
@@ -143,7 +139,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				MessageDialog.openWarning(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 						"Unable to authenticate with server. Login credentials invalid.");
 			} else if (e.getCause() instanceof IOException) {
-				MessageDialog.openWarning(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, "No Bugzilla server found at url");
+				MessageDialog.openWarning(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
+						"No Bugzilla server found at url");
 			} else {
 				MessageDialog.openWarning(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, MESSAGE_FAILURE_UNKNOWN);
 			}

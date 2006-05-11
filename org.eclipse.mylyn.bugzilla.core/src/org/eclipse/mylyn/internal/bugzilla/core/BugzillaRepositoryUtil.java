@@ -23,6 +23,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,10 +53,13 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPER
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESOLUTION;
 import org.eclipse.mylar.internal.bugzilla.core.internal.BugzillaReportElement;
+import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer;
+import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlTag;
 import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile;
 import org.eclipse.mylar.internal.bugzilla.core.internal.RepositoryConfiguration;
 import org.eclipse.mylar.internal.bugzilla.core.internal.RepositoryConfigurationFactory;
 import org.eclipse.mylar.internal.bugzilla.core.internal.RepositoryReportFactory;
+import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer.Token;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.ZipFileUtil;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -71,7 +75,7 @@ import org.eclipse.ui.PlatformUI;
 public class BugzillaRepositoryUtil {
 
 	private static final String ATTR_CHARSET = "charset";
-	
+
 	private static final String OPERATION_INPUT_ASSIGNED_TO = "assigned_to";
 
 	private static final String OPERATION_INPUT_DUP_ID = "dup_id";
@@ -222,8 +226,8 @@ public class BugzillaRepositoryUtil {
 	 * @throws IOException,
 	 *             MalformedURLException, LoginException
 	 */
-	public static BugzillaReport getCurrentBug(String repositoryUrl, int id) throws MalformedURLException, LoginException,
-			IOException {
+	public static BugzillaReport getCurrentBug(String repositoryUrl, int id) throws MalformedURLException,
+			LoginException, IOException {
 		// Look among the offline reports for a bug with the given id.
 		OfflineReportsFile reportsFile = BugzillaPlugin.getDefault().getOfflineReports();
 		int offlineId = reportsFile.find(repositoryUrl, id);
@@ -262,9 +266,57 @@ public class BugzillaRepositoryUtil {
 
 	}
 
-//	public static List<String> getValidKeywords(String repositoryURL) {
-//		return BugzillaPlugin.getDefault().getProductConfiguration(repositoryURL).getKeywords();
-//	}
+	public static void validateCredentials(String repositoryUrl, String userid, String password) throws IOException, LoginException {
+
+		String url = repositoryUrl+"/index.cgi?" + POST_ARGS_LOGIN + URLEncoder.encode(userid, BugzillaPlugin.ENCODING_UTF_8)
+		+ POST_ARGS_PASSWORD + URLEncoder.encode(password, BugzillaPlugin.ENCODING_UTF_8);
+		
+		//BugzillaRepositoryUtil.addCredentials(repository, repository.getUrl() + "/index.cgi?noop=noop")
+		URL serverURL = new URL(url);
+		URLConnection connection = serverURL.openConnection();
+		BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
+
+		boolean isTitle = false;
+		String title = "";
+
+		try {
+
+			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+
+				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == HtmlTag.Type.TITLE
+						&& !((HtmlTag) (token.getValue())).isEndTag()) {
+					isTitle = true;
+					continue;
+				}
+
+				if (isTitle) {
+					// get all of the data in the title tag
+					if (token.getType() != Token.TAG) {
+						title += ((StringBuffer) token.getValue()).toString().toLowerCase() + " ";
+						continue;
+					} else if (token.getType() == Token.TAG
+							&& ((HtmlTag) token.getValue()).getTagType() == HtmlTag.Type.TITLE
+							&& ((HtmlTag) token.getValue()).isEndTag()) {
+
+						if (title.indexOf("login") != -1
+								|| (title.indexOf("invalid") != -1 && title.indexOf("password") != -1)
+								|| title.indexOf("check e-mail") != -1) {
+							throw new LoginException(title);
+						}
+						return;
+					}
+				}
+			}
+		} catch (ParseException e) {
+			throw new IOException("Unable to parse result from repository:\n" + e.getMessage());
+		}
+	}
+
+	// public static List<String> getValidKeywords(String repositoryURL) {
+	// return
+	// BugzillaPlugin.getDefault().getProductConfiguration(repositoryURL).getKeywords();
+	// }
 
 	// /**
 	// * Get the attribute values for a new bug
@@ -648,8 +700,9 @@ public class BugzillaRepositoryUtil {
 				BugzillaReportElement.BUG_ID, BugzillaReportElement.REP_PLATFORM, BugzillaReportElement.PRODUCT,
 				BugzillaReportElement.OP_SYS, BugzillaReportElement.COMPONENT, BugzillaReportElement.VERSION,
 				BugzillaReportElement.PRIORITY, BugzillaReportElement.BUG_SEVERITY, BugzillaReportElement.ASSIGNED_TO,
-				BugzillaReportElement.TARGET_MILESTONE, BugzillaReportElement.REPORTER, BugzillaReportElement.DEPENDSON, BugzillaReportElement.BLOCKED,
-				BugzillaReportElement.BUG_FILE_LOC, BugzillaReportElement.NEWCC, BugzillaReportElement.KEYWORDS};
+				BugzillaReportElement.TARGET_MILESTONE, BugzillaReportElement.REPORTER,
+				BugzillaReportElement.DEPENDSON, BugzillaReportElement.BLOCKED, BugzillaReportElement.BUG_FILE_LOC,
+				BugzillaReportElement.NEWCC, BugzillaReportElement.KEYWORDS };
 
 		for (BugzillaReportElement element : reportElements) {
 			AbstractRepositoryReportAttribute reportAttribute = new BugzillaReportAttribute(element);
@@ -659,11 +712,11 @@ public class BugzillaRepositoryUtil {
 
 	private static void updateBugAttributeOptions(TaskRepository repository, BugzillaReport existingReport) {
 		String product = existingReport.getAttributeValue(BugzillaReportElement.PRODUCT);
-		for (AbstractRepositoryReportAttribute attribute : existingReport.getAttributes()) {			
-			BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getID().trim().toUpperCase());			
+		for (AbstractRepositoryReportAttribute attribute : existingReport.getAttributes()) {
+			BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getID().trim().toUpperCase());
 			attribute.clearOptions();
-			List<String> optionValues = BugzillaPlugin.getDefault().getProductConfiguration(repository).getOptionValues(
-					element, product);
+			List<String> optionValues = BugzillaPlugin.getDefault().getProductConfiguration(repository)
+					.getOptionValues(element, product);
 			if (element == BugzillaReportElement.TARGET_MILESTONE && optionValues.isEmpty()) {
 				existingReport.removeAttribute(BugzillaReportElement.TARGET_MILESTONE);
 				continue;
@@ -726,9 +779,9 @@ public class BugzillaRepositoryUtil {
 		case resolve:
 			newOperation = new Operation(opcode.toString(), OPERATION_LABEL_RESOLVE);
 			newOperation.setUpOptions(OPERATION_OPTION_RESOLUTION);
-			for (BUGZILLA_RESOLUTION resolution: BUGZILLA_RESOLUTION.values()) {
+			for (BUGZILLA_RESOLUTION resolution : BUGZILLA_RESOLUTION.values()) {
 				newOperation.addOption(resolution.toString(), resolution.toString());
-			}			
+			}
 			break;
 		case duplicate:
 			newOperation = new Operation(opcode.toString(), OPERATION_LABEL_DUPLICATE);
@@ -1072,7 +1125,6 @@ public class BugzillaRepositoryUtil {
 		return uploadResult;
 	}
 
-	
 	public static String getCharsetFromString(String string) {
 		int charsetStartIndex = string.indexOf(ATTR_CHARSET);
 		if (charsetStartIndex != -1) {
@@ -1091,7 +1143,7 @@ public class BugzillaRepositoryUtil {
 		}
 		return null;
 	}
-	
+
 }
 
 /**
