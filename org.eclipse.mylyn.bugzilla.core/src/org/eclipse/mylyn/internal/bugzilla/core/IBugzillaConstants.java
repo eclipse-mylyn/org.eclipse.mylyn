@@ -76,6 +76,11 @@ public interface IBugzillaConstants {
 	static final String SERVER_220 = "2.20";
 
 	static final String SERVER_218 = "2.18";
+
+	/** Used by search engine */
+	public static final int RETURN_ALL_HITS = -1;
+
+	public static final String CONTENT_TYPE_RDF = "&ctype=rdf";
 	
 	/** Supported bugzilla repository versions */
 	static public enum BugzillaServerVersion {
@@ -194,7 +199,9 @@ public interface IBugzillaConstants {
 	public static enum BUGZILLA_REPORT_STATUS {
 		UNCONFIRMED, NEW, ASSIGNED, REOPENED, RESOLVED, VERIFIED, CLOSED;
 	}
-	
+	public static enum BUGZILLA_REPORT_SEVERITY {
+		UNCONFIRMED, NEW, ASSIGNED, REOPENED, RESOLVED, VERIFIED, CLOSED;
+	}
 	public static enum BUGZILLA_RESOLUTION {
 		FIXED, INVALID, WONTFIX, LATER, REMIND, WORKSFORME;		
 	}
