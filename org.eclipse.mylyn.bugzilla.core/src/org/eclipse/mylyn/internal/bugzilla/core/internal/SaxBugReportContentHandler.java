@@ -16,7 +16,6 @@ import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaReportAttribute;
 import org.eclipse.mylar.bugzilla.core.Comment;
 import org.eclipse.mylar.bugzilla.core.ReportAttachment;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -69,11 +68,10 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase());
 		} catch (RuntimeException e) {
 			if (e instanceof IllegalArgumentException) {
-				MylarStatusHandler.fail(e, "Mylar: Bugzilla report element not known: "
-						+ e.getMessage().trim(), false);
-				errorMessage = "Mylar: Bugzilla report element not known: " + e.getMessage().trim();
+				// ignore unrecognized tags
+				return;
 			}
-			return;
+			throw e;
 		}
 		switch (tag) {
 		case BUGZILLA:
@@ -105,11 +103,10 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase());
 		} catch (RuntimeException e) {
 			if (e instanceof IllegalArgumentException) {
-				MylarStatusHandler.fail(e, "Mylar: Bugzilla report element not known: "
-						+ e.getMessage().trim(), false);
-				errorMessage = "Mylar: Bugzilla report element not known: " + e.getMessage().trim();
+				// ignore unrecognized tags
+				return;
 			}
-			return;
+			throw e;
 		}
 		switch (tag) {
 		case BUG_ID: {

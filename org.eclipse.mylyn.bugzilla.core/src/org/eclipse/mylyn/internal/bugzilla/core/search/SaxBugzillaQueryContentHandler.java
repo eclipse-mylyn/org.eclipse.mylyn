@@ -21,7 +21,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * Parser for rdf bugzilla query results.
+ * Parser for RDF bugzilla query results.
  * 
  * @author Rob Elves
  */
@@ -30,7 +30,7 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 	private StringBuffer characters;
 
 	private IBugzillaSearchResultCollector collector;
-	
+
 	private TaskRepository repository;
 
 	private BugzillaSearchHit hit;
@@ -39,20 +39,10 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 
 	private int numCollected = 0;
 
-	private String errorMessage = null;
-
 	public SaxBugzillaQueryContentHandler(TaskRepository rep, IBugzillaSearchResultCollector col, int maxHits) {
 		repository = rep;
 		collector = col;
 		this.maxHits = maxHits;
-	}
-
-	public boolean errorOccurred() {
-		return errorMessage != null;
-	}
-
-	public String getErrorMessage() {
-		return errorMessage;
 	}
 
 	@Override
@@ -66,20 +56,18 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 		BugzillaReportElement tag = BugzillaReportElement.UNKNOWN;
 		try {
 			tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase());
+			switch (tag) {
+			case LI:
+				hit = new BugzillaSearchHit();
+				hit.setRepository(repository.getUrl());
+				break;
+			}
 		} catch (RuntimeException e) {
 			if (e instanceof IllegalArgumentException) {
-				MylarStatusHandler.fail(e, "Mylar: Bugzilla xml query element not known: "
-						+ e.getMessage().trim(), false);
-				errorMessage = "Mylar: Bugzilla xml query element not known: " + e.getMessage().trim();
+				// ignore unrecognized tags
+				return;
 			}
-			return;
-		}
-		switch (tag) {
-
-		case LI:
-			hit = new BugzillaSearchHit();
-			hit.setRepository(repository.getUrl());			
-			break;
+			throw e;
 		}
 
 	}
@@ -89,59 +77,48 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 		BugzillaReportElement tag = BugzillaReportElement.UNKNOWN;
 		try {
 			tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase());
+			switch (tag) {
+			case ID:
+				hit.setId(Integer.parseInt(characters.toString()));
+				break;
+			case BUG_SEVERITY:
+				hit.setSeverity(characters.toString());
+				break;
+			case PRIORITY:
+				hit.setPriority(characters.toString());
+				break;
+			case REP_PLATFORM:
+				hit.setPlatform(characters.toString());
+				break;
+			case ASSIGNED_TO:
+				hit.setOwner(characters.toString());
+				break;
+			case BUG_STATUS:
+				hit.setState(characters.toString());
+				break;
+			case RESOLUTION:
+				hit.setResolution(characters.toString());
+				break;
+			case SHORT_SHORT_DESC:
+				hit.setDescription(characters.toString());
+				break;
+			case LI:
+				try {
+					if (numCollected < maxHits || maxHits == IBugzillaConstants.RETURN_ALL_HITS) {
+						collector.accept(hit);
+						numCollected++;
+					}
+				} catch (CoreException e) {
+					MylarStatusHandler.fail(e, "Problem recording Bugzilla search hit information", false);
+				}
+			}
 		} catch (RuntimeException e) {
 			if (e instanceof IllegalArgumentException) {
-				MylarStatusHandler.fail(e, "Mylar: Bugzilla xml query element not known: "
-						+ e.getMessage().trim(), false);
-				errorMessage = "Mylar: Bugzilla xml query element not known: " + e.getMessage().trim();
+				// ignore unrecognized tags
+				return;
 			}
-			return;
-		}
-		switch (tag) {
-		case ID:
-			hit.setId(Integer.parseInt(characters.toString()));
-			break;
-		case BUG_SEVERITY:
-			hit.setSeverity(characters.toString());
-			break;
-		case PRIORITY:
-			hit.setPriority(characters.toString());
-			break;
-		case REP_PLATFORM:
-			hit.setPlatform(characters.toString());
-			break;
-		case ASSIGNED_TO:
-			hit.setOwner(characters.toString());
-			break;
-		case BUG_STATUS:
-			hit.setState(characters.toString());
-			break;
-		case RESOLUTION:
-			hit.setResolution(characters.toString());
-			break;
-		case SHORT_SHORT_DESC:
-			hit.setDescription(characters.toString());
-			break;
-		case LI:
-			try {
-				if (numCollected < maxHits || maxHits == IBugzillaConstants.RETURN_ALL_HITS) {
-					try {
-						collector.accept(hit);
-					} catch (RuntimeException e) {
-						if (e instanceof IllegalArgumentException) {
-							MylarStatusHandler.fail(e, "Mylar: Bugzilla xml query element not known: "
-									+ e.getMessage().trim(), false);
-							errorMessage = "Mylar: Bugzilla xml query element not known: " + e.getMessage().trim();
-						}
-						return;
-					}
-					numCollected++;
-				}
-			} catch (CoreException e) {
-				MylarStatusHandler.fail(e, "Problem recording Bugzilla search hit information", false);
-			}
+			throw e;
 		}
 
 	}
-
 }

@@ -196,9 +196,9 @@ public class BugzillaSearchEngine {
 				});
 				reader.parse(new InputSource(in));
 
-				if (contentHandler.errorOccurred()) {
-					throw new IOException(contentHandler.getErrorMessage());
-				}
+				// if (contentHandler.errorOccurred()) {
+				// throw new IOException(contentHandler.getErrorMessage());
+				//				}
 
 			} catch (SAXException e) {
 				throw new IOException(e.getMessage());
