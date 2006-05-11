@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.tasklist.ui.wizards;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
@@ -24,6 +25,8 @@ import org.eclipse.ui.IWorkbench;
  */
 public class EditRepositoryWizard extends Wizard implements INewWizard {
 
+	private static final String TITLE = "Task Repository Settings";
+
 	private AbstractRepositorySettingsPage abstractRepositorySettingsPage;// =
 
 	private TaskRepository oldRepository;
@@ -31,13 +34,15 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 	public EditRepositoryWizard(TaskRepository repository) {
 		super();
 		oldRepository = repository;
-		// super.setForcePreviousAndNextButtons(true);
 		AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
 				repository.getKind());
 		abstractRepositorySettingsPage = connector.getSettingsPage();
 		abstractRepositorySettingsPage.setRepository(repository);
 		abstractRepositorySettingsPage.setVersion(repository.getVersion());
 		abstractRepositorySettingsPage.setWizard(this);
+		setNeedsProgressMonitor(true);
+		setDefaultPageImageDescriptor(TaskListImages.BANNER_REPOSITORY);
+		setWindowTitle(TITLE);
 	}
 
 	@Override

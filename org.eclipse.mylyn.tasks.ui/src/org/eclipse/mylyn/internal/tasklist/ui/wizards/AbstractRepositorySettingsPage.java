@@ -101,9 +101,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			public void widgetSelected(SelectionEvent e) {
 				validateSettings();
 			}
-		
 		});
-		
 		
 		setControl(container);
 	}
