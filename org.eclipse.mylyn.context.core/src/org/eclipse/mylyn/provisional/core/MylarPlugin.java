@@ -57,8 +57,6 @@ public class MylarPlugin extends AbstractUIPlugin {
 
 	private List<AbstractUserInteractionMonitor> selectionMonitors = new ArrayList<AbstractUserInteractionMonitor>();
 
-	private List<AbstractCommandMonitor> commandMonitors = new ArrayList<AbstractCommandMonitor>();
-
 	private List<MylarWorkingSetUpdater> workingSetUpdaters = null;
 
 	/**
@@ -287,10 +285,6 @@ public class MylarPlugin extends AbstractUIPlugin {
 		} else {
 			bridges.put(bridge.getContentType(), bridge);
 		}
-	}
-
-	public List<AbstractCommandMonitor> getCommandMonitors() {
-		return commandMonitors;
 	}
 
 	/**

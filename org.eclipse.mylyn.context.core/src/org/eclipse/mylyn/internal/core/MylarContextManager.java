@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import org.eclipse.jface.action.IAction;
 import org.eclipse.mylar.internal.core.util.ITimerThreadListener;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.TimerThread;
@@ -101,9 +100,6 @@ public class MylarContextManager {
 	private List<IMylarContextListener> listeners = new ArrayList<IMylarContextListener>();
 	
 	private List<IMylarContextListener> waitingListeners = new ArrayList<IMylarContextListener>();
-
-	// TODO: move
-	private List<IActionExecutionListener> actionExecutionListeners = new ArrayList<IActionExecutionListener>();
 
 	private boolean suppressListenerNotification = false;
 
@@ -817,16 +813,6 @@ public class MylarContextManager {
 	 */
 	public List<IMylarElement> getInterestingDocuments() {
 		return getInterestingDocuments(currentContext);
-	}
-
-	public void actionObserved(IAction action, String info) {
-		for (IActionExecutionListener listener : actionExecutionListeners) {
-			listener.actionObserved(action);
-		}
-	}
-
-	public List<IActionExecutionListener> getActionExecutionListeners() {
-		return actionExecutionListeners;
 	}
 
 	public MylarContext getActivityHistoryMetaContext() {

@@ -2,13 +2,4 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension-point id="context" name="context" schema="schema/context.exsd"/>
-	
-	<!-- these should be in UI but the monitor depends on them -->
-     <extension point="org.eclipse.ui.views">
-     	<category name="Mylar" id="org.eclipse.mylar"/>
-     </extension>
-     	
-     <extension point="org.eclipse.ui.newWizards">
-        <category name="Mylar" id="org.eclipse.mylar.wizards"/>
-     </extension>
 </plugin>
