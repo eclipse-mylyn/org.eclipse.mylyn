@@ -208,10 +208,8 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 				return (IResource) adapted;
 			}
 		}
-		if (findContainingResource) { // recurse
-			System.err.println(">> " + element.getHandleIdentifier());
+		if (findContainingResource) { // recurse if not found
 			String parentHandle = bridge.getParentHandle(element.getHandleIdentifier());
-			System.err.println(">>>> " + parentHandle);
 			return getResourceForElement(MylarPlugin.getContextManager().getElement(parentHandle), true);
 		} else {
 			return null;

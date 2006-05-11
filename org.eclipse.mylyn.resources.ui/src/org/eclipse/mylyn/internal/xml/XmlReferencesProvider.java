@@ -133,8 +133,6 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
 			for (IMylarElement landmark : landmarks) {
 				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(landmark.getContentType());
 				IResource resource = MylarIdePlugin.getDefault().getResourceForElement(landmark, true);
-				System.err.println(landmark);
-				System.err.println("> " + resource);
 				IProject project = null;
 				if (resource != null) {
 					project = resource.getProject();
