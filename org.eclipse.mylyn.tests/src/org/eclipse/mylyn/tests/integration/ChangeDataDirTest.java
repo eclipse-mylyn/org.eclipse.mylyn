@@ -88,10 +88,10 @@ public class ChangeDataDirTest extends TestCase {
 	public void testDefaultDataDirectoryMove() {
 		String workspaceRelativeDir = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/'
 				+ ".mylar";
-		assertTrue(defaultDir.equals(workspaceRelativeDir));
+		assertEquals(defaultDir, workspaceRelativeDir);
 
 		MylarPlugin.getDefault().setDataDirectory(newDataDir);
-		assertTrue(MylarPlugin.getDefault().getDataDirectory().equals(newDataDir));
+		assertEquals(MylarPlugin.getDefault().getDataDirectory(), newDataDir);
 	}
 
 	public void testTaskMove() {
