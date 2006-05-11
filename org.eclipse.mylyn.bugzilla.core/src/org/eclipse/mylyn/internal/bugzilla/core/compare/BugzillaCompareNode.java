@@ -14,8 +14,6 @@ package org.eclipse.mylar.internal.bugzilla.core.compare;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 
 import org.eclipse.compare.IStreamContentAccessor;
@@ -25,6 +23,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.bugzilla.core.AbstractRepositoryReportAttribute;
 import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.bugzilla.core.Comment;
+import org.eclipse.mylar.internal.bugzilla.core.internal.BugzillaReportElement;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
@@ -193,44 +192,19 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	public static BugzillaCompareNode parseBugReport(BugzillaReport bug) {
 		Image defaultImage = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_DEF_VIEW);
 		BugzillaCompareNode topNode = new BugzillaCompareNode("Bug #" + bug.getId(), null, defaultImage);
-		Date creationDate = bug.getCreated();
-		if (creationDate == null) {
-			// XXX: this could be backwards
-			creationDate = Calendar.getInstance().getTime(); 
-		}
-		BugzillaCompareNode child = new BugzillaCompareNode("Creation Date", creationDate.toString(), defaultImage);
-		topNode.addChild(child);
-
-		String keywords = "";
-		if (bug.getKeywords() != null) {
-			for (Iterator<String> iter = bug.getKeywords().iterator(); iter.hasNext();) {
-				keywords += iter.next() + " ";
-			}
-		}
-		topNode.addChild(new BugzillaCompareNode("Keywords", keywords, defaultImage));
 
 		Image attributeImage = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
 		BugzillaCompareNode attributes = new BugzillaCompareNode("Attributes", null, attributeImage);
-		for (Iterator<AbstractRepositoryReportAttribute> iter = bug.getAttributes().iterator(); iter.hasNext();) {
-			AbstractRepositoryReportAttribute attribute = iter.next();
-			if (attribute.getName().compareTo("delta_ts") == 0 || attribute.getName().compareTo("Last Modified") == 0
-					|| attribute.getName().compareTo("longdesclength") == 0)
-				continue;
-			// Since the bug report may not be saved offline, get the
-			// attribute's new
-			// value, which is what is in the submit viewer.
-			
-			attributes.addChild(new BugzillaCompareNode(attribute.getName(), attribute.getValue(), attributeImage));
+		for (AbstractRepositoryReportAttribute attribute : bug.getAttributes()) {
+			BugzillaCompareNode child = new BugzillaCompareNode(attribute.toString(), attribute.getValue(), defaultImage);
+			attributes.addChild(child);	
 		}
-		topNode.addChild(attributes);
-
-		topNode.addChild(new BugzillaCompareNode("Description", bug.getDescription(), defaultImage));
-
+	
 		BugzillaCompareNode comments = new BugzillaCompareNode("Comments", null, defaultImage);
-		for (Iterator<Comment> iter = bug.getComments().iterator(); iter.hasNext();) {
+		for (Iterator<Comment> iter = bug.getComments().iterator(); iter.hasNext();) {			
 			Comment comment = iter.next();
 			String bodyString = "Comment from " + comment.getAuthorName() + ":\n\n" + comment.getText();			
-			comments.addChild(new BugzillaCompareNode(comment.getCreated().toString(), bodyString, defaultImage));
+			comments.addChild(new BugzillaCompareNode(comment.getAttributeValue(BugzillaReportElement.BUG_WHEN), bodyString, defaultImage));
 		}
 		topNode.addChild(comments);
 
@@ -248,5 +222,64 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 
 		return titleNode;
 	}
+	
+//	public static BugzillaCompareNode parseBugReport(BugzillaReport bug) {
+//		Image defaultImage = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_DEF_VIEW);
+//		BugzillaCompareNode topNode = new BugzillaCompareNode("Bug #" + bug.getId(), null, defaultImage);
+//		Date creationDate = bug.getCreated();
+//		if (creationDate == null) {
+//			// XXX: this could be backwards
+//			creationDate = Calendar.getInstance().getTime(); 
+//		}
+//		BugzillaCompareNode child = new BugzillaCompareNode("Creation Date", creationDate.toString(), defaultImage);
+//		topNode.addChild(child);
+//
+//		String keywords = "";
+//		if (bug.getKeywords() != null) {
+//			for (Iterator<String> iter = bug.getKeywords().iterator(); iter.hasNext();) {
+//				keywords += iter.next() + " ";
+//			}
+//		}
+//		topNode.addChild(new BugzillaCompareNode("Keywords", keywords, defaultImage));
+//
+//		Image attributeImage = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
+//		BugzillaCompareNode attributes = new BugzillaCompareNode("Attributes", null, attributeImage);
+//		for (Iterator<AbstractRepositoryReportAttribute> iter = bug.getAttributes().iterator(); iter.hasNext();) {
+//			AbstractRepositoryReportAttribute attribute = iter.next();
+//			if (attribute.getName().compareTo("delta_ts") == 0 || attribute.getName().compareTo("Last Modified") == 0
+//					|| attribute.getName().compareTo("longdesclength") == 0)
+//				continue;
+//			// Since the bug report may not be saved offline, get the
+//			// attribute's new
+//			// value, which is what is in the submit viewer.
+//			
+//			attributes.addChild(new BugzillaCompareNode(attribute.getName(), attribute.getValue(), attributeImage));
+//		}
+//		topNode.addChild(attributes);
+//
+//		topNode.addChild(new BugzillaCompareNode("Description", bug.getDescription(), defaultImage));
+//
+//		BugzillaCompareNode comments = new BugzillaCompareNode("Comments", null, defaultImage);
+//		for (Iterator<Comment> iter = bug.getComments().iterator(); iter.hasNext();) {			
+//			Comment comment = iter.next();
+//			String bodyString = "Comment from " + comment.getAuthorName() + ":\n\n" + comment.getText();			
+//			comments.addChild(new BugzillaCompareNode(comment.getAttributeValue(BugzillaReportElement.CREATION_TS), bodyString, defaultImage));
+//		}
+//		topNode.addChild(comments);
+//
+//		topNode.addChild(new BugzillaCompareNode("New Comment", bug.getNewComment(), defaultImage));
+//
+//		BugzillaCompareNode ccList = new BugzillaCompareNode("CC List", null, defaultImage);
+//		for (Iterator<String> iter = bug.getCC().iterator(); iter.hasNext();) {
+//			String cc = iter.next();
+//			ccList.addChild(new BugzillaCompareNode("CC", cc, defaultImage));
+//		}
+//		topNode.addChild(ccList);
+//
+//		BugzillaCompareNode titleNode = new BugzillaCompareNode("BugReport Object", null, defaultImage);
+//		titleNode.addChild(topNode);
+//
+//		return titleNode;
+//	}
 
 }

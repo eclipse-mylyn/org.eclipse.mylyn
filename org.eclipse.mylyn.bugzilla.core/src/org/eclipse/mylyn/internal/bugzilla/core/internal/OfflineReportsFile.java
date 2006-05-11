@@ -108,6 +108,7 @@ public class OfflineReportsFile {
 					config.setRightImage(PlatformUI.getWorkbench().getSharedImages().getImage(
 							ISharedImages.IMG_OBJ_ELEMENT));
 					final BugzillaCompareInput in = new BugzillaCompareInput(config);
+					oldBug.setOfflineState(true);
 					in.setLeft((BugzillaReport) oldBug);
 					in.setRight((BugzillaReport) entry);
 					in.setTitle("Bug #" + oldBug.getId());
@@ -151,6 +152,7 @@ public class OfflineReportsFile {
 						if (children.length != 0) {
 							for (IDiffElement element : children) {
 								if (((DiffNode) element).getKind() == Differencer.CHANGE) {
+
 									status = BugzillaOfflineStatus.SAVED_WITH_INCOMMING_CHANGES;
 									break;
 								}

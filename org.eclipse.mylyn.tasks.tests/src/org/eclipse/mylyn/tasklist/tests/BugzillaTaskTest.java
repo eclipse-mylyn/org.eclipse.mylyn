@@ -48,22 +48,22 @@ public class BugzillaTaskTest extends TestCase {
 		assertNull(task.getCompletionDate());
 
 		Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.MILLISECOND, 0);
-		calendar.getTimeInMillis();
 		Date now = new Date(calendar.getTimeInMillis());
-		
+
 		Comment comment = new Comment(report, 1);
-		AbstractRepositoryReportAttribute attribute = new BugzillaReportAttribute(BugzillaReportElement.CREATION_TS);
-		attribute.setValue(Comment.creation_ts_date_format.format(now));	
-		comment.addAttribute(BugzillaReportElement.CREATION_TS, attribute);
+		AbstractRepositoryReportAttribute attribute = new BugzillaReportAttribute(BugzillaReportElement.BUG_WHEN);
+		attribute.setValue(Comment.creation_ts_date_format.format(now));
+		comment.addAttribute(BugzillaReportElement.BUG_WHEN, attribute);
 		report.addComment(comment);
 		assertNull(task.getCompletionDate());
 
-		AbstractRepositoryReportAttribute resolvedAttribute = new BugzillaReportAttribute(BugzillaReportElement.BUG_STATUS);
+		AbstractRepositoryReportAttribute resolvedAttribute = new BugzillaReportAttribute(
+				BugzillaReportElement.BUG_STATUS);
 		resolvedAttribute.setValue(BugzillaReport.VAL_STATUS_RESOLVED);
 		report.addAttribute(BugzillaReportElement.BUG_STATUS, resolvedAttribute);
 		assertNotNull(task.getCompletionDate());
-		assertEquals(Comment.creation_ts_date_format.format(now), Comment.creation_ts_date_format.format(task.getCompletionDate()));
+		assertEquals(Comment.creation_ts_date_format.format(now), Comment.creation_ts_date_format.format(task
+				.getCompletionDate()));
 
 	}
 
