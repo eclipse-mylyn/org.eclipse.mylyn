@@ -35,7 +35,7 @@ public class ReminderCellEditor extends DialogCellEditor {
 
 	private String formatString = "dd-MMM-yyyy";
 	
-	public final static String REMINDER_DIALOG_TITLE = "Reminder Date"; 
+	public final static String REMINDER_DIALOG_TITLE = "Date Chooser"; 
 
 	private SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
 

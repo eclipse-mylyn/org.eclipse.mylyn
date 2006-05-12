@@ -31,20 +31,20 @@ import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
  */
 public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 
+	private static final String LABEL_REMINDER = "Schedule for";
+	
+	private static final String LABEL_TODAY = "Today";
+
+	private static final String LABEL_TOMORROW = "Tomorrow";
+
+	private static final String LABEL_NEXT_WEEK = "Next Week";
+
+	private static final String LABEL_FUTURE = "Later";
+	
 	private static final String LABEL_CALENDAR = "Choose Date...";
 
 	private static final String LABEL_CLEAR = "Clear";
 	
-	private static final String LABEL_TODAY = "Today";
-	
-	private static final String LABEL_FUTURE = "Future";
-
-	private static final String LABEL_NEXT_WEEK = "Next week";
-
-	private static final String LABEL_TOMORROW = "Tomorrow";
-
-	private static final String LABEL_REMINDER = "Schedule for";
-
 	private ITask task = null;
 
 	public MenuManager getSubMenuManager(TaskListView view, ITaskListElement selection) {

@@ -112,9 +112,8 @@ public class TaskInputDialog extends Dialog {
 //		reminderCompGD.horizontalSpan = 1;		
 //		reminderCompGD.horizontalAlignment = SWT.RIGHT;
 //		reminderComp.setLayoutData(reminderCompGD);
-//		Label reminderLabel = new Label(reminderComp, SWT.NONE);	
-//		reminderLabel.setText("Reminder Date:");		
-		final DatePicker datePicker = new DatePicker(composite, SWT.BORDER, "<reminder>");
+//		Label reminderLabel = new Label(reminderComp, SWT.NONE);
+		final DatePicker datePicker = new DatePicker(composite, SWT.BORDER, DatePicker.LABEL_CHOOSE);
 		datePicker.addPickerSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent arg0) {
 				if (datePicker.getDate() != null) {

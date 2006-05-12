@@ -49,6 +49,8 @@ import org.eclipse.ui.PlatformUI;
  */
 public class DatePicker extends Composite {
 
+	public static final String LABEL_CHOOSE = "<choose date>";
+
 	private Text dateText = null;
 
 	private Button pickButton = null;

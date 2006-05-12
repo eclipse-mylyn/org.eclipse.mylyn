@@ -79,6 +79,8 @@ import org.eclipse.ui.part.EditorPart;
  */
 public class TaskPlanningEditor extends EditorPart {
 
+	private static final String LABEL_SCHEDULE = "Scheduled for:";
+
 	private static final String DESCRIPTION_ESTIMATED = "Time that the task has been actively worked on.\n Inactivity timeout is " + MylarPlugin.getContextManager().getInactivityTimeout() + " seconds.";
 
 	private static final String LABEL_INCOMPLETE = "Incomplete";
@@ -639,10 +641,10 @@ public class TaskPlanningEditor extends EditorPart {
 		sectionClient.setLayoutData(clientDataLayout);
 
 		// Reminder
-		Label label = toolkit.createLabel(sectionClient, "Reminder:");
+		Label label = toolkit.createLabel(sectionClient, LABEL_SCHEDULE);
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
-		datePicker = new DatePicker(sectionClient, SWT.NONE, "<reminder>");
+		datePicker = new DatePicker(sectionClient, SWT.NONE, DatePicker.LABEL_CHOOSE);
 
 		Calendar calendar = Calendar.getInstance();
 		if (task.getReminderDate() != null) {
