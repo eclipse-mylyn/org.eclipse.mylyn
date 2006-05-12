@@ -35,7 +35,7 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 
 	private static final String LABEL_CLEAR = "Clear";
 	
-	private static final String LABEL_IN_HOUR = "In an hour";
+	private static final String LABEL_TODAY = "Today";
 	
 	private static final String LABEL_FUTURE = "Future";
 
@@ -43,7 +43,7 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 
 	private static final String LABEL_TOMORROW = "Tomorrow";
 
-	private static final String LABEL_REMINDER = "Reminder";
+	private static final String LABEL_REMINDER = "Schedule for";
 
 	private ITask task = null;
 
@@ -65,11 +65,11 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 			@Override
 			public void run() {
 				Calendar reminderCalendar = GregorianCalendar.getInstance();
-				MylarTaskListPlugin.getTaskListManager().setInHour(reminderCalendar);
+				MylarTaskListPlugin.getTaskListManager().setToday(reminderCalendar);
 				MylarTaskListPlugin.getTaskListManager().setReminder(task, reminderCalendar.getTime());
 			}
 		};
-		action.setText(LABEL_IN_HOUR);
+		action.setText(LABEL_TODAY);
 		action.setEnabled(task != null);
 		subMenuManager.add(action);
 		

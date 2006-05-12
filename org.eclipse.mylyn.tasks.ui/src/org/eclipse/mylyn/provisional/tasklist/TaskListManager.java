@@ -47,7 +47,10 @@ public class TaskListManager {
 	// TODO: get these two fields from preferences
 	private static final int START_DAY = Calendar.MONDAY;
 
-	private static final int START_HOUR = 8;
+	// TODO: refactor into configurable intervals
+	private static final int HOUR_DAY_START = 8;
+	
+	private static final int HOUR_DAY_END = 18;
 
 	private static final int NUM_WEEKS_PREVIOUS = -1;
 
@@ -417,14 +420,17 @@ public class TaskListManager {
 
 	public void setTomorrow(Calendar reminderCalendar) {
 		reminderCalendar.add(Calendar.DAY_OF_MONTH, 1);
-		reminderCalendar.set(Calendar.HOUR_OF_DAY, START_HOUR);
+		reminderCalendar.set(Calendar.HOUR_OF_DAY, HOUR_DAY_START);
 		reminderCalendar.set(Calendar.MINUTE, 0);
 		reminderCalendar.set(Calendar.SECOND, 0);
 		reminderCalendar.set(Calendar.MILLISECOND, 0);
 	}
 	
-	public void setInHour(Calendar reminderCalendar) {
-		reminderCalendar.add(Calendar.HOUR_OF_DAY, 1);
+	public void setToday(Calendar reminderCalendar) {
+		reminderCalendar.set(Calendar.HOUR_OF_DAY, HOUR_DAY_END);
+		reminderCalendar.set(Calendar.MINUTE, 0);
+		reminderCalendar.set(Calendar.SECOND, 0);
+		reminderCalendar.set(Calendar.MILLISECOND, 0);
 	}
 
 	public Object[] getDateRanges() {
