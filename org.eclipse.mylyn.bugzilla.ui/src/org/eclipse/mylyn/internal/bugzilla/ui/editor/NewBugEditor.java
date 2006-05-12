@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
+import java.net.Proxy;
+
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
@@ -161,11 +163,9 @@ public class NewBugEditor extends AbstractBugEditor {
 
 	@Override
 	protected void submitBug() {
-
 		updateBug();
-
-		final BugzillaReportSubmitForm bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeNewBugPost(repository, bug);
-	
+		Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
+		final BugzillaReportSubmitForm bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeNewBugPost(repository, proxySettings, bug);
 		final BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) MylarTaskListPlugin
 				.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
 

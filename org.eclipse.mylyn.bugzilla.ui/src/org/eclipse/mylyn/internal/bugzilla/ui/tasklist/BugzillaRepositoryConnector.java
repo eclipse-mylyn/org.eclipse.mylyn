@@ -14,6 +14,7 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.Proxy;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -167,8 +168,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	private BugzillaReport downloadReport(final BugzillaTask bugzillaTask) {
+		Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
 		try {
-			return BugzillaRepositoryUtil.getBug(bugzillaTask.getRepositoryUrl(), AbstractRepositoryTask
+			return BugzillaRepositoryUtil.getBug(bugzillaTask.getRepositoryUrl(), proxySettings, AbstractRepositoryTask
 					.getTaskIdAsInt(bugzillaTask.getHandleIdentifier()));
 		} catch (final LoginException e) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -689,8 +691,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			// destinationContextFile.delete();
 			// }
 
-			result = BugzillaRepositoryUtil.downloadAttachment(repository, contextDelegate.getId(), destinationZipFile,
-					true);
+			Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
+			result = BugzillaRepositoryUtil.downloadAttachment(repository, proxySettings, contextDelegate.getId(),
+					destinationZipFile, true);
 
 			if (result) {
 

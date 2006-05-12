@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -140,7 +141,7 @@ public class BugzillaRepositoryUtil {
 
 	private static final String POST_ARGS_LOGIN = "GoAheadAndLogIn=1&Bugzilla_login=";
 
-	public static BugzillaReport getBug(String repositoryUrl, int id) throws IOException, MalformedURLException,
+	public static BugzillaReport getBug(String repositoryUrl, Proxy proxySettings, int id) throws IOException, MalformedURLException,
 			LoginException {
 
 		BufferedReader in = null;
@@ -164,7 +165,7 @@ public class BugzillaRepositoryUtil {
 			url = addCredentials(repository, url);
 
 			URL bugUrl = new URL(url);
-			URLConnection connection = BugzillaPlugin.getDefault().getUrlConnection(bugUrl);
+			URLConnection connection = BugzillaPlugin.getDefault().getUrlConnection(bugUrl, proxySettings);
 			if (connection != null) {
 				InputStream input = connection.getInputStream();
 				if (input != null) {
@@ -226,7 +227,7 @@ public class BugzillaRepositoryUtil {
 	 * @throws IOException,
 	 *             MalformedURLException, LoginException
 	 */
-	public static BugzillaReport getCurrentBug(String repositoryUrl, int id) throws MalformedURLException,
+	public static BugzillaReport getCurrentBug(String repositoryUrl, Proxy proxySettings, int id) throws MalformedURLException,
 			LoginException, IOException {
 		// Look among the offline reports for a bug with the given id.
 		OfflineReportsFile reportsFile = BugzillaPlugin.getDefault().getOfflineReports();
@@ -242,7 +243,7 @@ public class BugzillaRepositoryUtil {
 
 		// If a suitable offline report was not found, try to get one from the
 		// server.
-		return getBug(repositoryUrl, id);
+		return getBug(repositoryUrl, proxySettings, id);
 	}
 
 	/**
@@ -954,7 +955,7 @@ public class BugzillaRepositoryUtil {
 
 	}
 
-	public static boolean downloadAttachment(TaskRepository repository, int id, File destinationFile, boolean overwrite)
+	public static boolean downloadAttachment(TaskRepository repository, Proxy proxySettings, int id, File destinationFile, boolean overwrite)
 			throws IOException {
 		BufferedInputStream in = null;
 		FileOutputStream outStream = null;
@@ -962,7 +963,7 @@ public class BugzillaRepositoryUtil {
 			String url = repository.getUrl() + POST_ARGS_ATTACHMENT_DOWNLOAD + id;
 			url = addCredentials(repository, url);
 			URL downloadUrl = new URL(url);
-			URLConnection connection = BugzillaPlugin.getDefault().getUrlConnection(downloadUrl);
+			URLConnection connection = BugzillaPlugin.getDefault().getUrlConnection(downloadUrl, proxySettings);
 			if (connection != null) {
 				InputStream input = connection.getInputStream();
 				outStream = new FileOutputStream(destinationFile);

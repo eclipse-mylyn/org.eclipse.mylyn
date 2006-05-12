@@ -9,7 +9,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.forms,
  org.eclipse.jface.text,
- org.eclipse.mylar.core
+ org.eclipse.mylar.core,
+ org.eclipse.update.core
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: mylar-tasklist.jar

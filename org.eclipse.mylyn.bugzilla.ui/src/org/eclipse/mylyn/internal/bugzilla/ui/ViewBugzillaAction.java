@@ -32,6 +32,7 @@ import org.eclipse.ui.progress.UIJob;
  * Action performed when the bugs are supposed to be displayed in the editor
  * window from the favorites list
  */
+@Deprecated
 public class ViewBugzillaAction extends UIJob {
 
 	/** List of bugs to be displayed */

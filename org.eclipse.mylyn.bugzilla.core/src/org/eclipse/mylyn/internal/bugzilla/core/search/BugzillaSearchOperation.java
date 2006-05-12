@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.core.search;
 
+import java.net.Proxy;
+
 import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -41,11 +43,14 @@ public class BugzillaSearchOperation implements IBugzillaSearchOperation {
 
 	private TaskRepository repository;
 
-	public BugzillaSearchOperation(TaskRepository repository, String queryUrl,
+	private Proxy proxySettings;
+	
+	public BugzillaSearchOperation(TaskRepository repository, String queryUrl, Proxy proxySettings,
 			IBugzillaSearchResultCollector collector, String maxHits) {
 		this.repository = repository;
 		this.queryUrl = queryUrl;
 		this.collector = collector;
+		this.proxySettings = proxySettings;
 		collector.setOperation(this);
 		try {
 			this.maxHits = Integer.parseInt(maxHits);
@@ -58,7 +63,7 @@ public class BugzillaSearchOperation implements IBugzillaSearchOperation {
 		// set the progress monitor for the search collector and start the
 		// search
 		collector.setProgressMonitor(monitor);
-		BugzillaSearchEngine engine = new BugzillaSearchEngine(repository, queryUrl);
+		BugzillaSearchEngine engine = new BugzillaSearchEngine(repository, queryUrl, proxySettings);
 		try {
 			status = engine.search(collector, 0, maxHits);
 		} catch (LoginException e) {

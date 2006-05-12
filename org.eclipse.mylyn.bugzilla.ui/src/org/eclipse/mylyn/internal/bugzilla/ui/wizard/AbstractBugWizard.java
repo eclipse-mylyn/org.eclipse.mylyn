@@ -11,6 +11,7 @@
 package org.eclipse.mylar.internal.bugzilla.ui.wizard;
 
 import java.io.IOException;
+import java.net.Proxy;
 
 import javax.security.auth.login.LoginException;
 
@@ -19,9 +20,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
@@ -29,6 +30,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditorInput;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.search.internal.ui.SearchMessages;
 import org.eclipse.search.internal.ui.util.ExceptionHandler;
@@ -126,7 +128,8 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 			protected void execute(final IProgressMonitor monitor) throws CoreException {
 				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 					public void run() {
-						BugzillaReportSubmitForm form = BugzillaReportSubmitForm.makeNewBugPost(repository, model);
+						Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
+						BugzillaReportSubmitForm form = BugzillaReportSubmitForm.makeNewBugPost(repository, proxySettings, model);
 						try {
 							id = form.submitReportToRepository();
 

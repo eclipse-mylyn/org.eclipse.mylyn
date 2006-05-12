@@ -13,6 +13,7 @@
  */
 package org.eclipse.mylar.internal.bugs.search;
 
+import java.net.Proxy;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -31,6 +32,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.bugzilla.core.Comment;
+import org.eclipse.mylar.internal.bugs.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugs.MylarBugsPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchEngine;
@@ -38,7 +40,6 @@ import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchHit;
 import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchQuery;
 import org.eclipse.mylar.internal.bugzilla.core.search.IBugzillaSearchOperation;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaReportNode;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.StackTrace;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
@@ -121,14 +122,14 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation imple
 		}
 
 		if (searchCollector == null) {
-			search.notifySearchCompleted(new ArrayList<BugzillaReportNode>());
+			search.notifySearchCompleted(new ArrayList<BugzillaReportElement>());
 			return;
 		}
 
 		List<BugzillaSearchHit> l = searchCollector.getResults();
 
 		// get the list of doi elements
-		List<BugzillaReportNode> doiList = getDoiList(l);
+		List<BugzillaReportElement> doiList = getDoiList(l);
 
 		// we completed the search, so notify all of the listeners
 		// that the search has been completed
@@ -296,7 +297,8 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation imple
 		int matches = 0;
 		// setup the progress monitor and start the search
 		searchCollector.setProgressMonitor(monitor);
-		BugzillaSearchEngine engine = new BugzillaSearchEngine(repository, url);
+		Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
+		BugzillaSearchEngine engine = new BugzillaSearchEngine(repository, url, proxySettings);
 		try {
 			// perform the search
 			status = engine.search(searchCollector, matches);
@@ -366,10 +368,10 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation imple
 	 * @param doiList -
 	 *            the list of BugzillaSearchHitDOI elements to parse
 	 */
-	public static void secondPassBugzillaParser(List<BugzillaReportNode> doiList) {
+	public static void secondPassBugzillaParser(List<BugzillaReportElement> doiList) {
 
 		// go through each of the items in the doiList
-		for (BugzillaReportNode info : doiList) {
+		for (BugzillaReportElement info : doiList) {
 
 			// get the bug report so that we have all of the data
 			// - descriptions, comments, etc
@@ -419,19 +421,19 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation imple
 	 * @param isExact
 	 *            whether the search was exact or not
 	 */
-	private List<BugzillaReportNode> getDoiList(List<BugzillaSearchHit> results) {
-		List<BugzillaReportNode> doiList = new ArrayList<BugzillaReportNode>();
+	private List<BugzillaReportElement> getDoiList(List<BugzillaSearchHit> results) {
+		List<BugzillaReportElement> doiList = new ArrayList<BugzillaReportElement>();
 
 		boolean isExact = (scope == BugzillaMylarSearch.FULLY_QUAL || scope == BugzillaMylarSearch.LOCAL_QUAL) ? true
 				: false;
 
-		BugzillaReportNode info = null;
+		BugzillaReportElement info = null;
 		// go through all of the results and create a DoiInfo list
 		for (BugzillaSearchHit hit : results) {
 
 			try {
 				float value = 0;
-				info = new BugzillaReportNode(value, hit, isExact);
+				info = new BugzillaReportElement(value, hit, isExact);
 
 				// only download the bug for the exact matches
 				// downloading bugs kills the time - can we do this elsewhere? -

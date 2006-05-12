@@ -25,11 +25,11 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.mylar.internal.bugs.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugs.BugzillaSearchManager;
 import org.eclipse.mylar.internal.bugs.BugzillaStructureBridge;
 import org.eclipse.mylar.internal.bugs.MylarBugsPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaReportNode;
 import org.eclipse.mylar.internal.core.search.IActiveSearchListener;
 import org.eclipse.mylar.internal.core.search.IMylarSearchOperation;
 import org.eclipse.mylar.provisional.core.AbstractRelationProvider;
@@ -96,8 +96,8 @@ public class BugzillaReferencesProvider extends AbstractRelationProvider {
 
 				while (itr.hasNext()) {
 					Object o = itr.next();
-					if (o instanceof BugzillaReportNode) {
-						BugzillaReportNode bugzillaNode = (BugzillaReportNode) o;
+					if (o instanceof BugzillaReportElement) {
+						BugzillaReportElement bugzillaNode = (BugzillaReportElement) o;
 						final String handle = bugzillaNode.getElementHandle();
 						if (MylarBugsPlugin.getDefault().getCache().getCached(handle) == null)
 							cache(handle, bugzillaNode);
@@ -145,13 +145,13 @@ public class BugzillaReferencesProvider extends AbstractRelationProvider {
 	 * that on restart, we dont have to get all of the bugs
 	 * 
 	 */
-	private static final Map<String, BugzillaReportNode> reports = new HashMap<String, BugzillaReportNode>();
+	private static final Map<String, BugzillaReportElement> reports = new HashMap<String, BugzillaReportElement>();
 
-	public BugzillaReportNode getCached(String handle) {
+	public BugzillaReportElement getCached(String handle) {
 		return reports.get(handle);
 	}
 
-	protected void cache(String handle, BugzillaReportNode bugzillaNode) {
+	protected void cache(String handle, BugzillaReportElement bugzillaNode) {
 		reports.put(handle, bugzillaNode);
 	}
 

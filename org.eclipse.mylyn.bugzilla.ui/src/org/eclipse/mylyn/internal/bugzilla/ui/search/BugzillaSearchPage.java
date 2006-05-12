@@ -12,6 +12,7 @@ package org.eclipse.mylar.internal.bugzilla.ui.search;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.Proxy;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -34,7 +35,6 @@ import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchQuery;
 import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchResultCollector;
 import org.eclipse.mylar.internal.bugzilla.core.search.IBugzillaSearchOperation;
 import org.eclipse.mylar.internal.bugzilla.core.search.IBugzillaSearchResultCollector;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUITools;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.AbstractBugzillaQueryPage;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
@@ -883,13 +883,13 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 			}
 		}
 
-		try {
-			// if the summary contains a single bug id, open the bug directly
-			int id = Integer.parseInt(summaryText);
-			return BugzillaUITools.show(repository.getUrl(), id);
-		} catch (NumberFormatException ignored) {
-			// ignore this since this means that the text is not a bug id
-		}
+//		try {
+//			// if the summary contains a single bug id, open the bug directly
+//			int id = Integer.parseInt(summaryText);			
+//			return BugzillaUITools.show(repository.getUrl(), id);
+//		} catch (NumberFormatException ignored) {
+//			// ignore this since this means that the text is not a bug id
+//		}
 
 		// Don't activate the search result view until it is known that the
 		// user is not opening a bug directly -- there is no need to open
@@ -900,7 +900,8 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 
 		IBugzillaSearchResultCollector collector = new BugzillaSearchResultCollector();
 
-		IBugzillaSearchOperation op = new BugzillaSearchOperation(repository, queryUrl, collector, maxHits);
+		Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
+		IBugzillaSearchOperation op = new BugzillaSearchOperation(repository, queryUrl, proxySettings, collector, maxHits);
 
 		BugzillaSearchQuery searchQuery = new BugzillaSearchQuery(op);
 		NewSearchUI.runQueryInBackground(searchQuery);

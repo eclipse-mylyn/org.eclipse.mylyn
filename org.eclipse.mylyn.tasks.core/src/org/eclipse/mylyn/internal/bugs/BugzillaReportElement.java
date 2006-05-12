@@ -9,10 +9,11 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
+package org.eclipse.mylar.internal.bugs;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,13 +22,17 @@ import javax.security.auth.login.LoginException;
 import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchHit;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.StackTrace;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 
 /**
  * Class to store the DoiInfo of a BugzillaSearchHit
  * 
+ * TODO: refactor
+ * 
  * @author Shawn Minto
  */
-public class BugzillaReportNode {
+public class BugzillaReportElement {
 
 	private static final int MAX_LABEL_LENGTH = 150;
 
@@ -55,7 +60,7 @@ public class BugzillaReportNode {
 	 * @param isExact
 	 *            Whether the search was exact or not
 	 */
-	public BugzillaReportNode(float initialValue, BugzillaSearchHit hit, boolean isExact) {
+	public BugzillaReportElement(float initialValue, BugzillaSearchHit hit, boolean isExact) {
 		this.hit = hit;
 		this.isExact = isExact;
 		bug = null;
@@ -110,7 +115,8 @@ public class BugzillaReportNode {
 	public BugzillaReport getBug() throws MalformedURLException, LoginException, IOException {
 		if (bug == null) {
 			// get the bug report
-			bug = BugzillaRepositoryUtil.getBug(hit.getRepository(), hit.getId());
+			Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
+			bug = BugzillaRepositoryUtil.getBug(hit.getRepository(), proxySettings, hit.getId());
 		}
 		return bug;
 	}

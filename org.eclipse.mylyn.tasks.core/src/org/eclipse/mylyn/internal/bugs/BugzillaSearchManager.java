@@ -20,7 +20,6 @@ import java.util.Map;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaReportNode;
 
 /**
  * Class to handle the bridge between mylar and bugzilla
@@ -30,7 +29,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaReportNode;
 public class BugzillaSearchManager {
 
 	/** The hash of all of the landmarks and their related search hits */
-	private Map<String, Map<Integer, List<BugzillaReportNode>>> landmarksHash;
+	private Map<String, Map<Integer, List<BugzillaReportElement>>> landmarksHash;
 
 	/**
 	 * The currently running search jobs so that we can cancel it if necessary
@@ -43,7 +42,7 @@ public class BugzillaSearchManager {
 	 * Constructor
 	 */
 	public BugzillaSearchManager() {
-		landmarksHash = Collections.synchronizedMap(new HashMap<String, Map<Integer, List<BugzillaReportNode>>>());
+		landmarksHash = Collections.synchronizedMap(new HashMap<String, Map<Integer, List<BugzillaReportElement>>>());
 	}
 
 	/**
@@ -77,11 +76,11 @@ public class BugzillaSearchManager {
 	 * @param m
 	 *            The member that this list is for
 	 */
-	public void addToLandmarksHash(List<BugzillaReportNode> doiList, IMember m, int scope) {
-		Map<Integer, List<BugzillaReportNode>> searches = landmarksHash.get(m.getHandleIdentifier());
+	public void addToLandmarksHash(List<BugzillaReportElement> doiList, IMember m, int scope) {
+		Map<Integer, List<BugzillaReportElement>> searches = landmarksHash.get(m.getHandleIdentifier());
 
 		if (searches == null) {
-			searches = new HashMap<Integer, List<BugzillaReportNode>>();
+			searches = new HashMap<Integer, List<BugzillaReportElement>>();
 		}
 		searches.put(scope, doiList);
 		landmarksHash.put(m.getHandleIdentifier(), searches);
@@ -94,8 +93,8 @@ public class BugzillaSearchManager {
 	 *            The member to get the doiList for
 	 * @return The doiList or null if it doesn't exist
 	 */
-	public List<BugzillaReportNode> getFromLandmarksHash(IMember m, int scope) {
-		Map<Integer, List<BugzillaReportNode>> scopes = landmarksHash.get(m.getHandleIdentifier());
+	public List<BugzillaReportElement> getFromLandmarksHash(IMember m, int scope) {
+		Map<Integer, List<BugzillaReportElement>> scopes = landmarksHash.get(m.getHandleIdentifier());
 		if (scopes == null)
 			return null;
 		else

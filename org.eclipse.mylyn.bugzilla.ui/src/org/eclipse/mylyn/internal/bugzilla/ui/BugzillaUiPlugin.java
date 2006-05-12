@@ -10,9 +10,19 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui;
 
+import java.net.Authenticator;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaPreferencePage;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.update.internal.ui.UpdateUI;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -25,6 +35,8 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	public static final String PLUGIN_ID = "org.eclipse.mylar.bugzilla.ui";
 	
 	private static BugzillaUiPlugin plugin;
+	
+	private Authenticator authenticator = null;
 
 	public BugzillaUiPlugin() {
 		plugin = this;
@@ -33,6 +45,15 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		BugzillaPlugin.setResultEditorMatchAdapter(new BugzillaResultMatchAdapter());
+		
+		// TODO: consider removing
+		authenticator = UpdateUI.getDefault().getAuthenticator();
+		if (authenticator == null) {
+			authenticator = new BugzillaAuthenticator();
+		}
+		Authenticator.setDefault(authenticator);
+		
+		migrateOldAuthenticationData();
 	}
 
 	/**
@@ -43,6 +64,46 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		plugin = null;
 	}
 
+	@SuppressWarnings("unchecked")
+	private void migrateOldAuthenticationData() {
+		String OLD_PREF_SERVER = "BUGZILLA_SERVER";
+		String serverUrl = BugzillaPlugin.getDefault().getPreferenceStore().getString(OLD_PREF_SERVER);
+		if (serverUrl != null && serverUrl.trim() != "") {
+			String user = "";
+			String password = "";
+			Map<String, String> map = Platform.getAuthorizationInfo(BugzillaPreferencePage.FAKE_URL, "Bugzilla",
+					BugzillaPreferencePage.AUTH_SCHEME);
+
+			// get the information from the map and save it
+			if (map != null && !map.isEmpty()) {
+				String username = map.get(BugzillaPreferencePage.INFO_USERNAME);
+				if (username != null)
+					user = username;
+
+				String pwd = map.get(BugzillaPreferencePage.INFO_PASSWORD);
+				if (pwd != null)
+					password = pwd;
+			}
+			TaskRepository repository;
+			// try {
+			repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, serverUrl);
+			repository.setAuthenticationCredentials(user, password);
+			MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
+			BugzillaPlugin.getDefault().getPreferenceStore().setValue(OLD_PREF_SERVER, "");
+			// } catch (MalformedURLException e) {
+			// MylarStatusHandler.fail(e, "could not create default repository",
+			// true);
+			// }
+			try {
+				// reset the authorization
+				Platform.addAuthorizationInfo(BugzillaPreferencePage.FAKE_URL, "Bugzilla",
+						BugzillaPreferencePage.AUTH_SCHEME, new HashMap<String, String>());
+			} catch (CoreException e) {
+				// ignore
+			}
+		}
+	}
+	
 	/**
 	 * Returns the shared instance.
 	 */

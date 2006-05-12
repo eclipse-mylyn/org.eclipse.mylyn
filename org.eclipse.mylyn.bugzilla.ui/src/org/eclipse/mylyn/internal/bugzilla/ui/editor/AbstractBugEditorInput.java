@@ -11,8 +11,11 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
+import java.net.Proxy;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
@@ -24,6 +27,12 @@ public abstract class AbstractBugEditorInput implements IEditorInput {
 
 	protected String toolTipText = "";
 
+	protected Proxy proxySettings;
+	
+	protected AbstractBugEditorInput() {
+		this.proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
+	}
+	
 	/**
 	 * Sets the tool tip text for this editor input.
 	 * 
@@ -67,4 +76,7 @@ public abstract class AbstractBugEditorInput implements IEditorInput {
 	@Override
 	public abstract boolean equals(Object o);
 
+	public Proxy getProxySettings() {
+		return proxySettings;
+	}
 }

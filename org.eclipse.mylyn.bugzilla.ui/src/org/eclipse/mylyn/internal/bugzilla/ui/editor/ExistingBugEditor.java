@@ -117,7 +117,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	protected Text addCommentsText;
 
 	protected BugzillaReport bug;
-
+	
 	public String getNewCommentText() {
 		return addCommentsTextBox.getText();
 	}
@@ -359,9 +359,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 		submitButton.setEnabled(false);
 		ExistingBugEditor.this.showBusy(true);
-
 		final BugzillaReportSubmitForm bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeExistingBugPost(bug,
-				repository, removeCC);
+				repository, bugzillaInput.getProxySettings(), removeCC);
 
 		final BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) MylarTaskListPlugin
 				.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
@@ -822,7 +821,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		protected IStatus run(IProgressMonitor monitor) {
 			final BugzillaReport serverBug;
 			try {
-				serverBug = BugzillaRepositoryUtil.getBug(bug.getRepositoryUrl(), bug.getId());
+				serverBug = BugzillaRepositoryUtil.getBug(bug.getRepositoryUrl(), bugzillaInput.getProxySettings(), bug.getId());
 				// If no bug was found on the server, throw an exception so that
 				// the
 				// user gets the same message that appears when there is a

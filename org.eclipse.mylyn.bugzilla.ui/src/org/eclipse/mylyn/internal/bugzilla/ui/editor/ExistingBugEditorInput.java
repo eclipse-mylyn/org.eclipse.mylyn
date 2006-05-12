@@ -33,13 +33,7 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 	protected int bugId;
 
 	protected BugzillaReport bug;
-
-	/**
-	 * Creates a new <code>ExistingBugEditorInput</code>.
-	 * 
-	 * @param bug
-	 *            The bug for this editor input.
-	 */
+	
 	public ExistingBugEditorInput(BugzillaReport bug) {
 		this.bug = bug;
 		this.bugId = bug.getId();
@@ -59,7 +53,7 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 	public ExistingBugEditorInput(String repositoryUrl, int bugId) throws LoginException, IOException {
 		this.bugId = bugId;
 		// get the bug from the server if it exists
-		bug = BugzillaRepositoryUtil.getBug(repositoryUrl, bugId);
+		bug = BugzillaRepositoryUtil.getBug(repositoryUrl, proxySettings, bugId);
 		repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND,
 				repositoryUrl);
 	}
@@ -70,9 +64,9 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 				repositoryUrl);
 		if (!offline) {
 			try {
-				bug = BugzillaRepositoryUtil.getBug(repositoryUrl, bugId);
+				bug = BugzillaRepositoryUtil.getBug(repositoryUrl, proxySettings, bugId);
 			} catch (IOException e) {
-				bug = BugzillaRepositoryUtil.getCurrentBug(repositoryUrl, bugId);
+				bug = BugzillaRepositoryUtil.getCurrentBug(repositoryUrl, proxySettings, bugId);
 				// IWorkbench workbench = PlatformUI.getWorkbench();
 				// workbench.getDisplay().asyncExec(new Runnable() {
 				// public void run() {
@@ -85,7 +79,7 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 				// });
 			}
 		} else {
-			bug = BugzillaRepositoryUtil.getCurrentBug(repositoryUrl, bugId);
+			bug = BugzillaRepositoryUtil.getCurrentBug(repositoryUrl, proxySettings, bugId);
 		}
 	}
 
@@ -121,4 +115,5 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 	public TaskRepository getRepository() {
 		return repository;
 	}
+
 }

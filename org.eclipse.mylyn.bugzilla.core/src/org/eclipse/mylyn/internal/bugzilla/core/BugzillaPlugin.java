@@ -11,12 +11,9 @@
 package org.eclipse.mylar.internal.bugzilla.core;
 
 import java.io.IOException;
-import java.net.Authenticator;
-import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.Proxy.Type;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -26,7 +23,6 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -36,17 +32,13 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.bugzilla.core.BugzillaReport;
-import org.eclipse.mylar.internal.bugzilla.core.internal.FavoritesFile;
 import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile;
 import org.eclipse.mylar.internal.bugzilla.core.internal.RepositoryConfiguration;
 import org.eclipse.mylar.internal.bugzilla.core.internal.RepositoryConfigurationFactory;
 import org.eclipse.mylar.internal.bugzilla.core.search.IBugzillaResultEditorMatchAdapter;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.update.internal.core.UpdateCore;
-import org.eclipse.update.internal.ui.UpdateUI;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -63,16 +55,14 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 	/** Singleton instance of the plug-in */
 	private static BugzillaPlugin plugin;
 
-	/** The file that contains all of the bugzilla favorites */
-	private FavoritesFile favoritesFile;
+//	/** The file that contains all of the bugzilla favorites */
+//	private FavoritesFile favoritesFile;
 
 	/** The file that contains all of the offline bug reports */
 	private OfflineReportsFile offlineReportsFile;
 
 	/** Product configuration for the current server */
 	private Map<String, RepositoryConfiguration> repositoryConfigurations = new HashMap<String, RepositoryConfiguration>();
-
-	private Authenticator authenticator = null;
 
 	/**
 	 * Constructor
@@ -98,66 +88,8 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 
-		authenticator = UpdateUI.getDefault().getAuthenticator();
-		if (authenticator == null) {
-			authenticator = new BugzillaAuthenticator();
-		}
-		Authenticator.setDefault(authenticator);
-
-		// Removed since not repository specific
-		// setDefaultQueryOptions();
-
-		readFavoritesFile();
+//		readFavoritesFile();
 		readOfflineReportsFile();
-
-		// final Set<TaskRepository> repositories =
-		// MylarTaskListPlugin.getRepositoryManager().getRepositories(
-		// REPOSITORY_KIND);
-		// for (TaskRepository repository : repositories) {
-		// readCachedProductConfiguration(repository.getUrl());
-		// }
-
-		migrateOldAuthenticationData();
-	}
-
-	@SuppressWarnings("unchecked")
-	private void migrateOldAuthenticationData() {
-		String OLD_PREF_SERVER = "BUGZILLA_SERVER";
-		String serverUrl = BugzillaPlugin.getDefault().getPreferenceStore().getString(OLD_PREF_SERVER);
-		if (serverUrl != null && serverUrl.trim() != "") {
-			String user = "";
-			String password = "";
-			Map<String, String> map = Platform.getAuthorizationInfo(BugzillaPreferencePage.FAKE_URL, "Bugzilla",
-					BugzillaPreferencePage.AUTH_SCHEME);
-
-			// get the information from the map and save it
-			if (map != null && !map.isEmpty()) {
-				String username = map.get(BugzillaPreferencePage.INFO_USERNAME);
-				if (username != null)
-					user = username;
-
-				String pwd = map.get(BugzillaPreferencePage.INFO_PASSWORD);
-				if (pwd != null)
-					password = pwd;
-			}
-			TaskRepository repository;
-			// try {
-			repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, serverUrl);
-			repository.setAuthenticationCredentials(user, password);
-			MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
-			BugzillaPlugin.getDefault().getPreferenceStore().setValue(OLD_PREF_SERVER, "");
-			// } catch (MalformedURLException e) {
-			// MylarStatusHandler.fail(e, "could not create default repository",
-			// true);
-			// }
-			try {
-				// reset the authorization
-				Platform.addAuthorizationInfo(BugzillaPreferencePage.FAKE_URL, "Bugzilla",
-						BugzillaPreferencePage.AUTH_SCHEME, new HashMap<String, String>());
-			} catch (CoreException e) {
-				// ignore
-			}
-		}
 	}
 
 	@Override
@@ -166,14 +98,14 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 		super.stop(context);
 	}
 
-	/**
-	 * Get the favorites file contatining the favorites
-	 * 
-	 * @return The FavoritesFile
-	 */
-	public FavoritesFile getFavorites() {
-		return favoritesFile;
-	}
+//	/**
+//	 * Get the favorites file contatining the favorites
+//	 * 
+//	 * @return The FavoritesFile
+//	 */
+//	public FavoritesFile getFavorites() {
+//		return favoritesFile;
+//	}
 
 	/**
 	 * Get the OfflineReports file contatining the offline bug reports
@@ -254,20 +186,17 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 		// this.productConfiguration = productConfiguration;
 	}
 
-	/**
-	 * Reads cached product configuration and stores it in the
-	 * <code>productConfiguration</code> field.
-	 */
-	private void readFavoritesFile() {
-		IPath favoritesPath = getFavoritesFile();
 
-		try {
-			favoritesFile = new FavoritesFile(favoritesPath.toFile());
-		} catch (Exception e) {
-			logAndShowExceptionDetailsDialog(e, "occurred while restoring saved Bugzilla favorites.",
-					"Bugzilla Favorites Error");
-		}
-	}
+//	private void readFavoritesFile() {
+//		IPath favoritesPath = getFavoritesFile();
+//
+//		try {
+//			favoritesFile = new FavoritesFile(favoritesPath.toFile());
+//		} catch (Exception e) {
+//			logAndShowExceptionDetailsDialog(e, "occurred while restoring saved Bugzilla favorites.",
+//					"Bugzilla Favorites Error");
+//		}
+//	}
 
 	/**
 	 * Reads cached product configuration and stores it in the
@@ -295,14 +224,14 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	/**
-	 * Returns the path to the file cacheing the query favorites.
-	 */
-	private IPath getFavoritesFile() {
-		IPath stateLocation = Platform.getStateLocation(BugzillaPlugin.getDefault().getBundle());
-		IPath configFile = stateLocation.append("favorites");
-		return configFile;
-	}
+//	/**
+//	 * Returns the path to the file cacheing the query favorites.
+//	 */
+//	private IPath getFavoritesFile() {
+//		IPath stateLocation = Platform.getStateLocation(BugzillaPlugin.getDefault().getBundle());
+//		IPath configFile = stateLocation.append("favorites");
+//		return configFile;
+//	}
 
 	/**
 	 * Returns the path to the file cacheing the offline bug reports.
@@ -420,20 +349,19 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 		return offlineReportsFile.elements();
 	}
 
-	public URLConnection getUrlConnection(URL url) throws IOException, NoSuchAlgorithmException, KeyManagementException {
+	/**
+	 * @param url
+	 * @param proxy		can be null
+	 */
+	public URLConnection getUrlConnection(URL url, Proxy proxy) throws IOException, NoSuchAlgorithmException, KeyManagementException {
 		SSLContext ctx = SSLContext.getInstance("TLS");
 
 		javax.net.ssl.TrustManager[] tm = new javax.net.ssl.TrustManager[] { new TrustAll() };
 		ctx.init(null, tm, null);
 		HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());
 
-		Proxy proxy = Proxy.NO_PROXY;
-		if (UpdateCore.getPlugin().getPluginPreferences().getBoolean(UpdateCore.HTTP_PROXY_ENABLE)) {
-			String proxyHost = UpdateCore.getPlugin().getPluginPreferences().getString(UpdateCore.HTTP_PROXY_HOST);
-			int proxyPort = UpdateCore.getPlugin().getPluginPreferences().getInt(UpdateCore.HTTP_PROXY_PORT);
-
-			InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
-			proxy = new Proxy(Type.HTTP, sockAddr);
+		if (proxy == null) {
+			proxy = Proxy.NO_PROXY;
 		}
 		URLConnection connection = url.openConnection(proxy);
 		return connection;

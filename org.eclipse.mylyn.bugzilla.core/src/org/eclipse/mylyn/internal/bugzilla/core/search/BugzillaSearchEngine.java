@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.regex.Matcher;
@@ -50,11 +51,6 @@ public class BugzillaSearchEngine {
 
 	protected static final String QUERYING_SERVER = "Querying Bugzilla Server...";
 
-	// /** regular expression matching Bugzilla query results format used in
-	// Eclipse.org Bugzilla */
-	// protected static final Pattern re = Pattern.compile("<a
-	// href=\"show_bug.cgi\\?id=(\\d+)\">", Pattern.CASE_INSENSITIVE);
-	//
 	/**
 	 * regular expression matching values of query matches' attributes in
 	 * Eclipse.org Bugzilla
@@ -63,28 +59,19 @@ public class BugzillaSearchEngine {
 
 	public static final Pattern reValueBugzilla220 = Pattern.compile("<td style=\"white-space: nowrap\">([^<]*)");
 
-	//	
-	// /** regular expression matching Bugzilla query results format used in
-	// v2.12 */
-	// protected static final Pattern reOld = Pattern.compile("<a
-	// href=\"show_bug.cgi\\?id=(\\d+)\">\\d+</a>\\s*<td
-	// class=severity><nobr>([^>]+)</nobr><td
-	// class=priority><nobr>([^>]+)</nobr><td
-	// class=platform><nobr>([^>]*)</nobr><td
-	// class=owner><nobr>([^>]*)</nobr><td class=status><nobr>([^>]*)</nobr><td
-	// class=resolution><nobr>([^>]*)</nobr><td class=summary>(.*)$",
-	// Pattern.CASE_INSENSITIVE);
+	private Proxy proxySettings;
 
 	private String urlString;
 
 	private TaskRepository repository;
 
 	private boolean maxReached = false;
-
-	public BugzillaSearchEngine(TaskRepository repository, String queryUrl) {
+	
+	public BugzillaSearchEngine(TaskRepository repository, String queryUrl, Proxy proxySettings) {
 		urlString = queryUrl;
 		urlString = urlString.concat(IBugzillaConstants.CONTENT_TYPE_RDF);
 		this.repository = repository;
+		this.proxySettings = proxySettings;
 //		if (repository.hasCredentials()) {
 //			try {
 //				urlString = BugzillaRepositoryUtil.addCredentials(repository, urlString);
@@ -144,7 +131,7 @@ public class BugzillaSearchEngine {
 			monitor.beginTask(QUERYING_SERVER, maxMatches);// IProgressMonitor.UNKNOWN
 			collector.aboutToStart(startMatches);
 			
-			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(new URL(urlString));
+			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(new URL(urlString), proxySettings);
 			if (cntx == null || !(cntx instanceof HttpURLConnection)) {
 				return null;
 			}
@@ -253,254 +240,6 @@ public class BugzillaSearchEngine {
 			return status;
 	}
 
-	// /**
-	// * Executes the query, parses the response, and adds hits to the search
-	// result collector.
-	// *
-	// * <p>
-	// * The output for a single match looks like this:
-	// * <pre>
-	// * <tr class="bz_enhancement bz_P5 ">
-	// *
-	// * <td>
-	// * <a href="show_bug.cgi?id=6747">6747</a>
-	// * </td>
-	// *
-	// * <td><nobr>enh</nobr>
-	// * </td>
-	// * <td><nobr>P5</nobr>
-	// * </td>
-	// * <td><nobr>All</nobr>
-	// * </td>
-	// * <td><nobr>Olivier_Thomann@oti.com</nobr>
-	// * </td>
-	// * <td><nobr>ASSI</nobr>
-	// * </td>
-	// * <td><nobr></nobr>
-	// * </td>
-	// * <td>Code Formatter exchange several blank lines w/ one
-	// * </td>
-	// *
-	// * </tr>
-	// * <pre>
-	// *
-	// * <p>Or in the older format:
-	// * <pre>
-	// * <A HREF="show_bug.cgi?id=8">8</A> <td
-	// class=severity><nobr>blo</nobr><td class=priority><nobr>P1</nobr><td
-	// class=platform><nobr>PC</nobr><td
-	// class=owner><nobr>cubranic@cs.ubc.ca</nobr><td
-	// class=status><nobr>CLOS</nobr><td class=resolution><nobr>DUPL</nobr><td
-	// class=summary>"Document root" missing when querying on files and
-	// revisions
-	// * </pre>
-	// * @param collector - The collector for the search results
-	// * @param startMatches - The number of matches to start with for the
-	// progress monitor
-	// * @param maxMatches - the maximum number of matches to return or -1 for
-	// unlimited
-	// */
-	// public IStatus search(IBugzillaSearchResultCollector collector, int
-	// startMatches, int maxMatches)
-	// throws LoginException {
-	// IProgressMonitor monitor = collector.getProgressMonitor();
-	// IStatus status = null;
-	// boolean possibleBadLogin = false;
-	// int numCollected = 0;
-	// BufferedReader in = null;
-	//
-	// try {
-	// monitor.beginTask(QUERYING_SERVER, IProgressMonitor.UNKNOWN);
-	// collector.aboutToStart(startMatches);
-	//
-	// URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(new
-	// URL(urlString));
-	// if (cntx == null || !(cntx instanceof HttpURLConnection)) {
-	// return null;
-	// }
-	//
-	// HttpURLConnection connect = (HttpURLConnection) cntx;
-	// connect.connect();
-	// int responseCode = connect.getResponseCode();
-	// if (responseCode != HttpURLConnection.HTTP_OK) {
-	// String msg;
-	// if (responseCode == -1 || responseCode ==
-	// HttpURLConnection.HTTP_FORBIDDEN)
-	// msg = repository.getUrl()
-	// + " does not seem to be a valid Bugzilla server. Check Bugzilla
-	// preferences.";
-	// else
-	// msg = "HTTP Error " + responseCode + " (" + connect.getResponseMessage()
-	// + ") while querying Bugzilla Server. Check Bugzilla preferences.";
-	//
-	// throw new BugzillaException(msg);
-	// }
-	//
-	// if (monitor.isCanceled()) {
-	// throw new OperationCanceledException("Search cancelled");
-	// }
-	//
-	// in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
-	// if (monitor.isCanceled()) {
-	// throw new OperationCanceledException("Search cancelled");
-	// }
-	//
-	// String line;
-	// while ((line = in.readLine()) != null) {
-	// if (maxMatches != -1 && numCollected >= maxMatches) {
-	// maxReached = true;
-	// break;
-	// }
-	//
-	// if (monitor.isCanceled()) {
-	// throw new OperationCanceledException("Search cancelled");
-	// }
-	//
-	// // create regular expressions that can be mathced to check if we
-	// // have
-	// // bad login information
-	// Pattern loginRe = Pattern.compile("<title>.*login.*</title>.*");
-	// Pattern invalidRe =
-	// Pattern.compile(".*<title>.*invalid.*password.*</title>.*");
-	// Pattern passwordRe =
-	// Pattern.compile(".*<title>.*password.*invalid.*</title>.*");
-	// Pattern emailRe = Pattern.compile(".*<title>.*check e-mail.*</title>.*");
-	// Pattern errorRe = Pattern.compile(".*<title>.*error.*</title>.*");
-	//
-	// String lowerLine = line.toLowerCase();
-	//
-	// // check if we have anything that suggests bad login info
-	// if (loginRe.matcher(lowerLine).find() ||
-	// invalidRe.matcher(lowerLine).find() ||
-	// passwordRe.matcher(lowerLine).find()
-	// || emailRe.matcher(lowerLine).find() ||
-	// errorRe.matcher(lowerLine).find())
-	// possibleBadLogin = true;
-	//
-	// Matcher matcher = reOld.matcher(line);
-	// if (matcher.find()) {
-	// int id = Integer.parseInt(matcher.group(1));
-	// String severity = matcher.group(2);
-	// String priority = matcher.group(3);
-	// String platform = matcher.group(4);
-	// String owner = matcher.group(5);
-	// String state = matcher.group(6);
-	// String result = matcher.group(7);
-	// String description = matcher.group(8);
-	// String query = BugzillaPlugin.getMostRecentQuery();
-	// if (query == null)
-	// query = "";
-	//
-	// String server = repository.getUrl();
-	//
-	// BugzillaSearchHit hit = new BugzillaSearchHit(server, id, description,
-	// severity, priority,
-	// platform, state, result, owner, query);
-	// collector.accept(hit);
-	// numCollected++;
-	//
-	// } else {
-	// matcher = re.matcher(line);
-	// if (matcher.find()) {
-	// Pattern regularExpression;
-	//						
-	// BugzillaServerVersion bugzillaServerVersion =
-	// IBugzillaConstants.BugzillaServerVersion.fromString(repository.getVersion());
-	// if (bugzillaServerVersion != null &&
-	// bugzillaServerVersion.compareTo(BugzillaServerVersion.SERVER_220) >= 0) {
-	// regularExpression = reValueBugzilla220;
-	// } else {
-	// regularExpression = reValue;
-	// }
-	//	
-	// int id = Integer.parseInt(matcher.group(1));
-	// BugzillaSearchHit hit = createHit(regularExpression, monitor, in,
-	// repository.getUrl(), id);
-	// collector.accept(hit);
-	// numCollected++;
-	// }
-	// }
-	//				
-	// // } else if (re.matches(line, match)) {
-	// // RegularExpression regularExpression;
-	// // if
-	// (repository.getVersion().equals(BugzillaServerVersion.SERVER_220.toString()))
-	// {
-	// // regularExpression = reValueBugzilla220;
-	// // } else {
-	// // regularExpression = reValue;
-	// // }
-	// //
-	// // int id = Integer.parseInt(match.getCapturedText(1));
-	// // BugzillaSearchHit hit = createHit(regularExpression, monitor, in,
-	// match, repository.getUrl()
-	// // .toExternalForm(), id);
-	// // collector.accept(hit);
-	// // numCollected++;
-	// // }
-	// if (monitor.isCanceled()) {
-	// throw new OperationCanceledException("Search cancelled");
-	// }
-	// }
-	// } catch (CoreException e) {
-	// status = new MultiStatus(IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
-	// "Core Exception occurred while querying Bugzilla Server " +
-	// repository.getUrl()
-	// + ".\n" + "\nClick Details for more information.", e);
-	// ((MultiStatus) status).add(e.getStatus());
-	//
-	// // write error to log
-	// BugzillaPlugin.log(status);
-	// } catch (OperationCanceledException e) {
-	// status = new Status(IStatus.CANCEL, IBugzillaConstants.PLUGIN_ID,
-	// IStatus.CANCEL, "", null);
-	// } catch (Exception e) {
-	// status = new MultiStatus(IBugzillaConstants.PLUGIN_ID, IStatus.ERROR, "An
-	// error occurred while querying Bugzilla Server " + repository.getUrl() +
-	// ".\n"
-	// + "\nCheck network connection repository configuration in Task
-	// Repositories view.", e);
-	//
-	// IStatus s = new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID,
-	// IStatus.ERROR, e.getClass().toString()
-	// + ": ", e);
-	// ((MultiStatus) status).add(s);
-	// s = new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.OK,
-	// "search failed", e);
-	// ((MultiStatus) status).add(s);
-	//
-	// // write error to log
-	// //BugzillaPlugin.log(status);
-	//			
-	// 
-	// } finally {
-	// monitor.done();
-	// collector.done();
-	// try {
-	// if (in != null)
-	// in.close();
-	// } catch (IOException e) {
-	// BugzillaPlugin.log(new Status(IStatus.ERROR,
-	// IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
-	// "Problem closing the stream", e));
-	// }
-	// }
-	//
-	// // if we haven't collected any serach results and we suspect a bad
-	// // login, we assume it was a bad login
-	// if (numCollected == 0 && possibleBadLogin) {
-	// throw new LoginException(IBugzillaConstants.MESSAGE_LOGIN_FAILURE + " for
-	// repository: " + repository.getUrl() + " username: " +
-	// repository.getUserName());
-	// }
-	//
-	// if (status == null)
-	// return new Status(IStatus.OK, NewSearchUI.PLUGIN_ID, IStatus.OK, "",
-	// null);
-	// else
-	// return status;
-	// }
-
 	/** Old code used by a unit test. */
 	public static BugzillaSearchHit createHit(Pattern regularExpression, IProgressMonitor monitor, BufferedReader in,
 			String serverUrl, int id) throws IOException {
@@ -578,3 +317,268 @@ public class BugzillaSearchEngine {
 		return maxReached;
 	}
 }
+
+// /** regular expression matching Bugzilla query results format used in
+// Eclipse.org Bugzilla */
+// protected static final Pattern re = Pattern.compile("<a
+// href=\"show_bug.cgi\\?id=(\\d+)\">", Pattern.CASE_INSENSITIVE);
+//
+//	
+// /** regular expression matching Bugzilla query results format used in
+// v2.12 */
+// protected static final Pattern reOld = Pattern.compile("<a
+// href=\"show_bug.cgi\\?id=(\\d+)\">\\d+</a>\\s*<td
+// class=severity><nobr>([^>]+)</nobr><td
+// class=priority><nobr>([^>]+)</nobr><td
+// class=platform><nobr>([^>]*)</nobr><td
+// class=owner><nobr>([^>]*)</nobr><td class=status><nobr>([^>]*)</nobr><td
+// class=resolution><nobr>([^>]*)</nobr><td class=summary>(.*)$",
+// Pattern.CASE_INSENSITIVE);
+
+// /**
+// * Executes the query, parses the response, and adds hits to the search
+// result collector.
+// *
+// * <p>
+// * The output for a single match looks like this:
+// * <pre>
+// * <tr class="bz_enhancement bz_P5 ">
+// *
+// * <td>
+// * <a href="show_bug.cgi?id=6747">6747</a>
+// * </td>
+// *
+// * <td><nobr>enh</nobr>
+// * </td>
+// * <td><nobr>P5</nobr>
+// * </td>
+// * <td><nobr>All</nobr>
+// * </td>
+// * <td><nobr>Olivier_Thomann@oti.com</nobr>
+// * </td>
+// * <td><nobr>ASSI</nobr>
+// * </td>
+// * <td><nobr></nobr>
+// * </td>
+// * <td>Code Formatter exchange several blank lines w/ one
+// * </td>
+// *
+// * </tr>
+// * <pre>
+// *
+// * <p>Or in the older format:
+// * <pre>
+// * <A HREF="show_bug.cgi?id=8">8</A> <td
+// class=severity><nobr>blo</nobr><td class=priority><nobr>P1</nobr><td
+// class=platform><nobr>PC</nobr><td
+// class=owner><nobr>cubranic@cs.ubc.ca</nobr><td
+// class=status><nobr>CLOS</nobr><td class=resolution><nobr>DUPL</nobr><td
+// class=summary>"Document root" missing when querying on files and
+// revisions
+// * </pre>
+// * @param collector - The collector for the search results
+// * @param startMatches - The number of matches to start with for the
+// progress monitor
+// * @param maxMatches - the maximum number of matches to return or -1 for
+// unlimited
+// */
+// public IStatus search(IBugzillaSearchResultCollector collector, int
+// startMatches, int maxMatches)
+// throws LoginException {
+// IProgressMonitor monitor = collector.getProgressMonitor();
+// IStatus status = null;
+// boolean possibleBadLogin = false;
+// int numCollected = 0;
+// BufferedReader in = null;
+//
+// try {
+// monitor.beginTask(QUERYING_SERVER, IProgressMonitor.UNKNOWN);
+// collector.aboutToStart(startMatches);
+//
+// URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(new
+// URL(urlString));
+// if (cntx == null || !(cntx instanceof HttpURLConnection)) {
+// return null;
+// }
+//
+// HttpURLConnection connect = (HttpURLConnection) cntx;
+// connect.connect();
+// int responseCode = connect.getResponseCode();
+// if (responseCode != HttpURLConnection.HTTP_OK) {
+// String msg;
+// if (responseCode == -1 || responseCode ==
+// HttpURLConnection.HTTP_FORBIDDEN)
+// msg = repository.getUrl()
+// + " does not seem to be a valid Bugzilla server. Check Bugzilla
+// preferences.";
+// else
+// msg = "HTTP Error " + responseCode + " (" + connect.getResponseMessage()
+// + ") while querying Bugzilla Server. Check Bugzilla preferences.";
+//
+// throw new BugzillaException(msg);
+// }
+//
+// if (monitor.isCanceled()) {
+// throw new OperationCanceledException("Search cancelled");
+// }
+//
+// in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
+// if (monitor.isCanceled()) {
+// throw new OperationCanceledException("Search cancelled");
+// }
+//
+// String line;
+// while ((line = in.readLine()) != null) {
+// if (maxMatches != -1 && numCollected >= maxMatches) {
+// maxReached = true;
+// break;
+// }
+//
+// if (monitor.isCanceled()) {
+// throw new OperationCanceledException("Search cancelled");
+// }
+//
+// // create regular expressions that can be mathced to check if we
+// // have
+// // bad login information
+// Pattern loginRe = Pattern.compile("<title>.*login.*</title>.*");
+// Pattern invalidRe =
+// Pattern.compile(".*<title>.*invalid.*password.*</title>.*");
+// Pattern passwordRe =
+// Pattern.compile(".*<title>.*password.*invalid.*</title>.*");
+// Pattern emailRe = Pattern.compile(".*<title>.*check e-mail.*</title>.*");
+// Pattern errorRe = Pattern.compile(".*<title>.*error.*</title>.*");
+//
+// String lowerLine = line.toLowerCase();
+//
+// // check if we have anything that suggests bad login info
+// if (loginRe.matcher(lowerLine).find() ||
+// invalidRe.matcher(lowerLine).find() ||
+// passwordRe.matcher(lowerLine).find()
+// || emailRe.matcher(lowerLine).find() ||
+// errorRe.matcher(lowerLine).find())
+// possibleBadLogin = true;
+//
+// Matcher matcher = reOld.matcher(line);
+// if (matcher.find()) {
+// int id = Integer.parseInt(matcher.group(1));
+// String severity = matcher.group(2);
+// String priority = matcher.group(3);
+// String platform = matcher.group(4);
+// String owner = matcher.group(5);
+// String state = matcher.group(6);
+// String result = matcher.group(7);
+// String description = matcher.group(8);
+// String query = BugzillaPlugin.getMostRecentQuery();
+// if (query == null)
+// query = "";
+//
+// String server = repository.getUrl();
+//
+// BugzillaSearchHit hit = new BugzillaSearchHit(server, id, description,
+// severity, priority,
+// platform, state, result, owner, query);
+// collector.accept(hit);
+// numCollected++;
+//
+// } else {
+// matcher = re.matcher(line);
+// if (matcher.find()) {
+// Pattern regularExpression;
+//						
+// BugzillaServerVersion bugzillaServerVersion =
+// IBugzillaConstants.BugzillaServerVersion.fromString(repository.getVersion());
+// if (bugzillaServerVersion != null &&
+// bugzillaServerVersion.compareTo(BugzillaServerVersion.SERVER_220) >= 0) {
+// regularExpression = reValueBugzilla220;
+// } else {
+// regularExpression = reValue;
+// }
+//	
+// int id = Integer.parseInt(matcher.group(1));
+// BugzillaSearchHit hit = createHit(regularExpression, monitor, in,
+// repository.getUrl(), id);
+// collector.accept(hit);
+// numCollected++;
+// }
+// }
+//				
+// // } else if (re.matches(line, match)) {
+// // RegularExpression regularExpression;
+// // if
+// (repository.getVersion().equals(BugzillaServerVersion.SERVER_220.toString()))
+// {
+// // regularExpression = reValueBugzilla220;
+// // } else {
+// // regularExpression = reValue;
+// // }
+// //
+// // int id = Integer.parseInt(match.getCapturedText(1));
+// // BugzillaSearchHit hit = createHit(regularExpression, monitor, in,
+// match, repository.getUrl()
+// // .toExternalForm(), id);
+// // collector.accept(hit);
+// // numCollected++;
+// // }
+// if (monitor.isCanceled()) {
+// throw new OperationCanceledException("Search cancelled");
+// }
+// }
+// } catch (CoreException e) {
+// status = new MultiStatus(IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
+// "Core Exception occurred while querying Bugzilla Server " +
+// repository.getUrl()
+// + ".\n" + "\nClick Details for more information.", e);
+// ((MultiStatus) status).add(e.getStatus());
+//
+// // write error to log
+// BugzillaPlugin.log(status);
+// } catch (OperationCanceledException e) {
+// status = new Status(IStatus.CANCEL, IBugzillaConstants.PLUGIN_ID,
+// IStatus.CANCEL, "", null);
+// } catch (Exception e) {
+// status = new MultiStatus(IBugzillaConstants.PLUGIN_ID, IStatus.ERROR, "An
+// error occurred while querying Bugzilla Server " + repository.getUrl() +
+// ".\n"
+// + "\nCheck network connection repository configuration in Task
+// Repositories view.", e);
+//
+// IStatus s = new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID,
+// IStatus.ERROR, e.getClass().toString()
+// + ": ", e);
+// ((MultiStatus) status).add(s);
+// s = new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.OK,
+// "search failed", e);
+// ((MultiStatus) status).add(s);
+//
+// // write error to log
+// //BugzillaPlugin.log(status);
+//			
+// 
+// } finally {
+// monitor.done();
+// collector.done();
+// try {
+// if (in != null)
+// in.close();
+// } catch (IOException e) {
+// BugzillaPlugin.log(new Status(IStatus.ERROR,
+// IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
+// "Problem closing the stream", e));
+// }
+// }
+//
+// // if we haven't collected any serach results and we suspect a bad
+// // login, we assume it was a bad login
+// if (numCollected == 0 && possibleBadLogin) {
+// throw new LoginException(IBugzillaConstants.MESSAGE_LOGIN_FAILURE + " for
+// repository: " + repository.getUrl() + " username: " +
+// repository.getUserName());
+// }
+//
+// if (status == null)
+// return new Status(IStatus.OK, NewSearchUI.PLUGIN_ID, IStatus.OK, "",
+// null);
+// else
+// return status;
+// }

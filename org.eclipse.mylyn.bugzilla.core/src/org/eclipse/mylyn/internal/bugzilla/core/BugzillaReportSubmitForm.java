@@ -18,6 +18,7 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -123,6 +124,8 @@ public class BugzillaReportSubmitForm {
 	private Map<String, String> fields = new HashMap<String, String>();
 
 	private URL postUrl;
+	
+	private Proxy proxySettings = Proxy.NO_PROXY;
 
 	private String charset;
 
@@ -139,75 +142,8 @@ public class BugzillaReportSubmitForm {
 
 	private String error = null;
 
-	// /**
-	// * TODO: get rid of this?
-	// */
-	// public static BugzillaReportSubmitForm makeNewBugPost(TaskRepository
-	// repository, IBugzillaBug bug) {
-	// BugzillaReportSubmitForm bugzillaReportSubmitForm = new
-	// BugzillaReportSubmitForm();
-	// bugzillaReportSubmitForm.setPrefix(BugzillaReportSubmitForm.FORM_PREFIX_BUG_218);
-	// bugzillaReportSubmitForm.setPrefix2(BugzillaReportSubmitForm.FORM_PREFIX_BUG_220);
-	//
-	// bugzillaReportSubmitForm.setPostfix(BugzillaReportSubmitForm.FORM_POSTFIX_216);
-	// bugzillaReportSubmitForm.setPostfix2(BugzillaReportSubmitForm.FORM_POSTFIX_218);
-	//
-	// // go through all of the attributes and add them to the bug post
-	// Iterator<Attribute> itr = bug.getAttributes().iterator();
-	// while (itr.hasNext()) {
-	// Attribute a = itr.next();
-	// if (a != null && a.getParameterName() != null &&
-	// a.getParameterName().compareTo("") != 0 && !a.isHidden()) {
-	// String key = a.getName();
-	// String value = null;
-	//
-	// // get the values from the attribute
-	// if (key.equalsIgnoreCase(KEY_OS)) {
-	// value = a.getValue();
-	// } else if (key.equalsIgnoreCase(KEY_VERSION)) {
-	// value = a.getValue();
-	// } else if (key.equalsIgnoreCase(KEY_SEVERITY)) {
-	// value = a.getValue();
-	// } else if (key.equalsIgnoreCase(KEY_PLATFORM)) {
-	// value = a.getValue();
-	// } else if (key.equalsIgnoreCase(KEY_COMPONENT)) {
-	// value = a.getValue();
-	// } else if (key.equalsIgnoreCase(KEY_PRIORITY)) {
-	// value = a.getValue();
-	// } else if (key.equalsIgnoreCase(KEY_URL)) {
-	// value = a.getValue();
-	// } else if (key.equalsIgnoreCase(KEY_ASSIGN_TO) ||
-	// key.equalsIgnoreCase(KEY_ASSIGNED_TO)) {
-	// value = a.getValue();
-	// }
-	//
-	// // add the attribute to the bug post
-	// if (value == null)
-	// value = "";
-	//
-	// bugzillaReportSubmitForm.add(a.getParameterName(), value);
-	// } else if (a != null && a.getParameterName() != null &&
-	// a.getParameterName().compareTo("") != 0
-	// && a.isHidden()) {
-	// // we have a hidden attribute, add it to the posting
-	// bugzillaReportSubmitForm.add(a.getParameterName(), a.getValue());
-	//
-	// }
-	// }
-	//
-	// setURL(bugzillaReportSubmitForm, repository, POST_BUG_CGI);
-	//
-	// // add the summary to the bug post
-	// bugzillaReportSubmitForm.add(KEY_SHORT_DESC, bug.getSummary());
-	// bug.setDescription(formatTextToLineWrap(bug.getDescription(),
-	// repository));
-	// if (bug.getDescription().length() != 0) {
-	// bugzillaReportSubmitForm.add(KEY_COMMENT, bug.getDescription());
-	// }
-	// return bugzillaReportSubmitForm;
-	// }
-
-	public static BugzillaReportSubmitForm makeNewBugPost(TaskRepository repository, NewBugzillaReport model) {
+	public static BugzillaReportSubmitForm makeNewBugPost(TaskRepository repository, Proxy proxySettings, NewBugzillaReport model) {
+		
 		BugzillaReportSubmitForm form = new BugzillaReportSubmitForm();
 		form.setPrefix(BugzillaReportSubmitForm.FORM_PREFIX_BUG_218);
 		form.setPrefix2(BugzillaReportSubmitForm.FORM_PREFIX_BUG_220);
@@ -215,7 +151,7 @@ public class BugzillaReportSubmitForm {
 		form.setPostfix(BugzillaReportSubmitForm.FORM_POSTFIX_216);
 		form.setPostfix2(BugzillaReportSubmitForm.FORM_POSTFIX_218);
 
-		setURL(form, repository, POST_BUG_CGI);
+		setConnectionsSettings(form, repository, proxySettings, POST_BUG_CGI);
 		// go through all of the attributes and add them to
 		// the bug post
 		Iterator<AbstractRepositoryReportAttribute> itr = model.getAttributes().iterator();
@@ -225,39 +161,6 @@ public class BugzillaReportSubmitForm {
 																					// !a.isHidden()
 				// String key = a.getName();
 				String value = null;
-
-				// // get the values from the attribute
-				// if (key.equalsIgnoreCase("OS")) {
-				// value = a.getValue();
-				// } else if (key.equalsIgnoreCase("Version")) {
-				// value = a.getValue();
-				// } else if (key.equalsIgnoreCase("Severity")) {
-				// value = a.getValue();
-				// } else if (key.equalsIgnoreCase("Platform")) {
-				// value = a.getValue();
-				// } else if (key.equalsIgnoreCase("Component")) {
-				// value = a.getValue();
-				// } else if (key.equalsIgnoreCase("Priority")) {
-				// value = a.getValue();
-				// } else if (key.equalsIgnoreCase("Target Milestone")) {
-				// value = a.getValue();
-				// } else if (key.equalsIgnoreCase("URL")) {
-				// value = a.getValue();
-				// } else if (key.equalsIgnoreCase("Assign To") ||
-				// key.equalsIgnoreCase("Assigned To")) {
-				// value = a.getValue();
-				// }
-				//
-				// // add the attribute to the bug post
-				// if (value == null)
-				// value = "";
-				//
-				// form.add(a.getParameterName(), value);
-				// } else if (a != null && a.getParameterName() != null &&
-				// a.getParameterName().compareTo("") != 0
-				// && a.isHidden()) {
-				// // we have a hidden attribute, add it to the
-				// // posting
 				value = a.getValue();
 				if (value == null)
 					continue;
@@ -272,19 +175,6 @@ public class BugzillaReportSubmitForm {
 
 		// add the summary to the bug post
 		form.add(BugzillaReportElement.SHORT_DESC.getKeyString(), model.getSummary());
-
-		// BugzillaServerVersion bugzillaServerVersion =
-		// IBugzillaConstants.BugzillaServerVersion.fromString(repository
-		// .getVersion());
-		// if (bugzillaServerVersion != null &&
-		// bugzillaServerVersion.compareTo(BugzillaServerVersion.SERVER_220) >=
-		// 0) {
-		// // if
-		// //
-		// (repository.getVersion().equals(BugzillaServerVersion.SERVER_220.toString()))
-		// // {
-		// form.add("bug_status", "NEW");
-		// }
 
 		String formattedDescription = formatTextToLineWrap(model.getDescription(), repository);
 		model.setDescription(formattedDescription);
@@ -304,12 +194,12 @@ public class BugzillaReportSubmitForm {
 	 * @param removeCC
 	 */
 	public static BugzillaReportSubmitForm makeExistingBugPost(BugzillaReport bug, TaskRepository repository,
-			Set<String> removeCC) {
+			Proxy proxySettings, Set<String> removeCC) {
 
 		BugzillaReportSubmitForm bugReportPostHandler = new BugzillaReportSubmitForm();
 
 		setDefaultCCValue(bug, repository);
-		setURL(bugReportPostHandler, repository, PROCESS_BUG_CGI);
+		setConnectionsSettings(bugReportPostHandler, repository, proxySettings, PROCESS_BUG_CGI);
 
 		if (bug.getCharset() != null) {
 			bugReportPostHandler.setCharset(bug.getCharset());
@@ -398,16 +288,6 @@ public class BugzillaReportSubmitForm {
 	}
 
 	/**
-	 * Set the url that the bug is supposed to be posted to
-	 * 
-	 * @param urlString
-	 *            The url to post the bug to
-	 */
-	private void setURL(String urlString) throws MalformedURLException {
-		postUrl = new URL(urlString);
-	}
-
-	/**
 	 * Post the bug to the bugzilla server
 	 * 
 	 * @return The result of the responses
@@ -420,7 +300,7 @@ public class BugzillaReportSubmitForm {
 
 		try {
 			// connect to the bugzilla server
-			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(postUrl);
+			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(postUrl, proxySettings);
 			if (cntx == null || !(cntx instanceof HttpURLConnection))
 				return null;
 
@@ -622,12 +502,15 @@ public class BugzillaReportSubmitForm {
 		this.charset = charset;
 	}
 
-	private static void setURL(BugzillaReportSubmitForm form, TaskRepository repository, String formName) {
+	private static void setConnectionsSettings(BugzillaReportSubmitForm form, TaskRepository repository, Proxy proxySettings, String formName) {
 		String baseURL = repository.getUrl();
 		if (!baseURL.endsWith("/"))
 			baseURL += "/";
 		try {
-			form.setURL(baseURL + formName);
+			form.postUrl = new URL(baseURL + formName);
+			if (proxySettings != null) {
+				form.proxySettings = proxySettings;
+			}
 		} catch (MalformedURLException e) {
 			// we should be ok here
 		}
@@ -636,7 +519,7 @@ public class BugzillaReportSubmitForm {
 		form.add(KEY_BUGZILLA_LOGIN, repository.getUserName());
 		form.add(KEY_BUGZILLA_PASSWORD, repository.getPassword());
 	}
-
+	
 	/**
 	 * Sets the cc field to the user's address if a cc has not been specified to
 	 * ensure that commenters are on the cc list. TODO: Review this mechanism

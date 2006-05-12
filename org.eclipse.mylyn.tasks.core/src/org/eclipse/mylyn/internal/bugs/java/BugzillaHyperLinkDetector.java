@@ -27,7 +27,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUITools;
+import org.eclipse.mylar.internal.bugzilla.ui.BugzillaHyperlinkUtil;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.ui.IEditorSite;
@@ -103,7 +103,7 @@ public class BugzillaHyperLinkDetector extends AbstractHyperlinkDetector {
 		int startOffset = region.getOffset();
 		int endOffset = startOffset + region.getLength();
 		
-		return BugzillaUITools.findBugHyperlinks(repository.getUrl(), startOffset, endOffset, comment, commentStart);
+		return BugzillaHyperlinkUtil.findBugHyperlinks(repository.getUrl(), startOffset, endOffset, comment, commentStart);
 	}
 
 //	private IHyperlink[] findBugHyperlinks(int startOffset, int endOffset, String comment, int commentStart) {

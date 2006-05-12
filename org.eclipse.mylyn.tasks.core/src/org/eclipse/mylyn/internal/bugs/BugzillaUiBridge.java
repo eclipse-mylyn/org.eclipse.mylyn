@@ -19,8 +19,7 @@ import java.util.List;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaOpenStructure;
-import org.eclipse.mylar.internal.bugzilla.ui.ViewBugzillaAction;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.BugzillaOutlinePage;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskEditor;
@@ -52,28 +51,28 @@ public class BugzillaUiBridge implements IMylarUiBridge {
 		int next = handle.indexOf(";");
 
 		int bugId;
-		int commentNumer = -1;
+//		int commentNumer = -1;
 		if (next == -1) {
 			bugId = Integer.parseInt(handle);
 		} else {
 			bugId = Integer.parseInt(handle.substring(0, handle.indexOf(";")));
-			commentNumer = Integer.parseInt(handle.substring(handle.indexOf(";") + 1));
+//			commentNumer = Integer.parseInt(handle.substring(handle.indexOf(";") + 1));
 			bugHandle = bugHandle.substring(0, next);
 		}
 
 		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
-		// ITask task =
-		// MylarTaskListPlugin.getTaskListManager().getTaskForHandle(BugTaskUtil.getHandle(bugId),
-		// true);
 		if (task != null) {
 			TaskUiUtil.openEditor(task, false);
 //			BugzillaTask bugzillaTask = (BugzillaTask) task;
 //			bugzillaTask.openTask(commentNumer, true);
 		} else {
-			List<BugzillaOpenStructure> openList = new ArrayList<BugzillaOpenStructure>(1);
-			openList.add(new BugzillaOpenStructure(server, bugId, commentNumer));
-			ViewBugzillaAction viewBugs = new ViewBugzillaAction("Display bugs in editor", openList);
-			viewBugs.schedule();
+			String bugUrl = BugzillaRepositoryUtil.getBugUrlWithoutLogin(server, bugId);
+			TaskUiUtil.openRepositoryTask(server, "" + bugId, bugUrl);
+
+//			List<BugzillaOpenStructure> openList = new ArrayList<BugzillaOpenStructure>(1);
+//			openList.add(new BugzillaOpenStructure(server, bugId, commentNumer));
+//			ViewBugzillaAction viewBugs = new ViewBugzillaAction("Display bugs in editor", openList);
+//			viewBugs.schedule();
 		}
 	}
 

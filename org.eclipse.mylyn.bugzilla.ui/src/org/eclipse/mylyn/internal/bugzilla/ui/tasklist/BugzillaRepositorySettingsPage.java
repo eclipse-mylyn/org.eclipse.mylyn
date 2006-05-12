@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -28,6 +29,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -112,7 +114,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					monitor.beginTask("Validating server settings", IProgressMonitor.UNKNOWN);
 					try {
-						URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(serverURL);
+						Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
+						URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(serverURL, proxySettings);
 						if (cntx == null || !(cntx instanceof HttpURLConnection)) {
 							throw new MalformedURLException();
 						}
