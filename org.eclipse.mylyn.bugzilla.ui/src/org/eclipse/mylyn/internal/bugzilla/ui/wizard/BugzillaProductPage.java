@@ -47,7 +47,7 @@ import org.eclipse.ui.PlatformUI;
  * The first page of the new bug wizard where the user chooses the bug's product
  */
 public class BugzillaProductPage extends AbstractWizardListPage {
-
+  
 	private static final String NEW_BUGZILLA_TASK_ERROR_TITLE = "New Bugzilla Task Error";
 
 	private static final String DESCRIPTION = "Pick a product on which to enter a bug.\n"
@@ -206,7 +206,7 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 
 		// try to get the attributes from the bugzilla server
 		try {
-			if (!model.hasParsedAttributes()) {
+			if (!model.hasParsedAttributes() || !model.getProduct().equals(prevProduct)) {
 				BugzillaRepositoryUtil.setupNewBugAttributes(repository, model);
 				model.setParsedAttributesStatus(true);
 			}

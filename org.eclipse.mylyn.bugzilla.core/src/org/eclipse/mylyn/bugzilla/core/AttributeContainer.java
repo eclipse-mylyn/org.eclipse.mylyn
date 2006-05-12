@@ -50,11 +50,6 @@ public class AttributeContainer implements Serializable {
 		return attributes.get(key);
 	}
 
-	public void removeAttribute(Object key) {
-		attributeKeys.remove(key);
-		attributes.remove(key);
-	}
-	
 	public List<AbstractRepositoryReportAttribute> getAttributes() {
 		ArrayList<AbstractRepositoryReportAttribute> attributeEntries = new ArrayList<AbstractRepositoryReportAttribute>(
 				attributeKeys.size());
@@ -73,4 +68,14 @@ public class AttributeContainer implements Serializable {
 		}
 		return "";
 	}
+
+	public void removeAttribute(Object key) {
+		attributeKeys.remove(key);
+		attributes.remove(key);
+	}
+	
+	public void clearAttributes() {
+		attributeKeys.clear();
+	}
+	
 }

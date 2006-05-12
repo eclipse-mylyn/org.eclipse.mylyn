@@ -141,8 +141,8 @@ public class BugzillaRepositoryUtil {
 
 	private static final String POST_ARGS_LOGIN = "GoAheadAndLogIn=1&Bugzilla_login=";
 
-	public static BugzillaReport getBug(String repositoryUrl, Proxy proxySettings, int id) throws IOException, MalformedURLException,
-			LoginException {
+	public static BugzillaReport getBug(String repositoryUrl, Proxy proxySettings, int id) throws IOException,
+			MalformedURLException, LoginException {
 
 		BufferedReader in = null;
 		try {
@@ -227,8 +227,8 @@ public class BugzillaRepositoryUtil {
 	 * @throws IOException,
 	 *             MalformedURLException, LoginException
 	 */
-	public static BugzillaReport getCurrentBug(String repositoryUrl, Proxy proxySettings, int id) throws MalformedURLException,
-			LoginException, IOException {
+	public static BugzillaReport getCurrentBug(String repositoryUrl, Proxy proxySettings, int id)
+			throws MalformedURLException, LoginException, IOException {
 		// Look among the offline reports for a bug with the given id.
 		OfflineReportsFile reportsFile = BugzillaPlugin.getDefault().getOfflineReports();
 		int offlineId = reportsFile.find(repositoryUrl, id);
@@ -316,115 +316,12 @@ public class BugzillaRepositoryUtil {
 		}
 	}
 
-	// public static List<String> getValidKeywords(String repositoryURL) {
-	// return
-	// BugzillaPlugin.getDefault().getProductConfiguration(repositoryURL).getKeywords();
-	// }
-
-	// /**
-	// * Get the attribute values for a new bug
-	// *
-	// * @param nbm
-	// * A reference to a NewBugModel to store all of the data
-	// * @throws Exception
-	// */
-	// public static void setupNewBugAttributes(String serverUrl, NewBugModel
-	// nbm, boolean getProd) throws Exception {
-	// BufferedReader in = null;
-	// try {
-	// // create a new input stream for getting the bug
-	// String prodname = URLEncoder.encode(nbm.getProduct(),
-	// BugzillaPlugin.ENCODING_UTF_8);
-	//
-	// TaskRepository repository =
-	// MylarTaskListPlugin.getRepositoryManager().getRepository(
-	// BugzillaPlugin.REPOSITORY_KIND, serverUrl);
-	//
-	// if (repository == null) {
-	// throw new LoginException("Repository configuration error.");
-	// }
-	// if (repository.getUserName() == null ||
-	// repository.getUserName().trim().equals("")
-	// || repository.getPassword() == null) {
-	// throw new LoginException("Login credentials missing.");
-	// }
-	//
-	// String url = repository.getUrl() + "/enter_bug.cgi";
-	//
-	// // use the proper url if we dont know the product yet
-	// if (!getProd)
-	// url += "?product=" + prodname + "&";
-	// else
-	// url += "?";
-	//
-	// url += POST_ARGS_LOGIN + URLEncoder.encode(repository.getUserName(),
-	// BugzillaPlugin.ENCODING_UTF_8)
-	// + POST_ARGS_PASSWORD + URLEncoder.encode(repository.getPassword(),
-	// BugzillaPlugin.ENCODING_UTF_8);
-	//
-	// URL bugUrl = new URL(url);
-	// URLConnection cntx =
-	// BugzillaPlugin.getDefault().getUrlConnection(bugUrl);
-	// if (cntx != null) {
-	// InputStream input = cntx.getInputStream();
-	// if (input != null) {
-	// in = new BufferedReader(new InputStreamReader(input));
-	//
-	// new NewBugParser(in).parseBugAttributes(nbm, getProd);
-	// }
-	// }
-	//
-	// } catch (Exception e) {
-	//
-	// if (e instanceof KeyManagementException || e instanceof
-	// NoSuchAlgorithmException
-	// || e instanceof IOException) {
-	// if (MessageDialog.openQuestion(null, "Bugzilla Connect Error",
-	// "Unable to connect to Bugzilla server.\n"
-	// + "Bug report will be created offline and saved for submission later."))
-	// {
-	// nbm.setConnected(false);
-	// setupBugAttributes(serverUrl, nbm);
-	// } else
-	// throw new Exception("Bug report will not be created.");
-	// } else
-	// throw e;
-	// } finally {
-	// try {
-	// if (in != null)
-	// in.close();
-	// } catch (IOException e) {
-	// BugzillaPlugin.log(new Status(IStatus.ERROR,
-	// IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
-	// "Problem closing the stream", e));
-	// }
-	// }
-	// }
-
 	/**
 	 * Adds bug attributes to new bug model and sets defaults
 	 */
 	public static void setupNewBugAttributes(TaskRepository repository, NewBugzillaReport newReport) {
 
-		// // order is important
-		// BugReportElement[] newBugElements = { BugReportElement.PRODUCT,
-		// BugReportElement.BUG_STATUS,
-		// BugReportElement.VERSION,
-		// BugReportElement.COMPONENT,
-		// BugReportElement.TARGET_MILESTONE,
-		// BugReportElement.REP_PLATFORM,
-		// BugReportElement.OP_SYS,
-		// BugReportElement.PRIORITY,
-		// BugReportElement.BUG_SEVERITY,
-		// BugReportElement.ASSIGNED_TO,
-		// // NOT USED BugReportElement.CC,
-		// BugReportElement.BUG_FILE_LOC,
-		// //NOT USED BugReportElement.SHORT_DESC,
-		// //NOT USED BugReportElement.LONG_DESC
-		// };
-
-		// HashMap<String, AbstractRepositoryReportAttribute> attributes = new
-		// LinkedHashMap<String, AbstractRepositoryReportAttribute>();
+		newReport.clearAttributes();
 
 		AbstractRepositoryReportAttribute a = new BugzillaReportAttribute(BugzillaReportElement.PRODUCT);
 		List<String> optionValues = BugzillaPlugin.getDefault().getProductConfiguration(repository).getProducts();
@@ -957,8 +854,8 @@ public class BugzillaRepositoryUtil {
 
 	}
 
-	public static boolean downloadAttachment(TaskRepository repository, Proxy proxySettings, int id, File destinationFile, boolean overwrite)
-			throws IOException {
+	public static boolean downloadAttachment(TaskRepository repository, Proxy proxySettings, int id,
+			File destinationFile, boolean overwrite) throws IOException {
 		BufferedInputStream in = null;
 		FileOutputStream outStream = null;
 		try {
@@ -1197,3 +1094,84 @@ public class BugzillaRepositoryUtil {
 // private static String bugzillaUrl;
 // private static BugzillaRepositoryUtil INSTANCE = new
 // BugzillaRepositoryUtil();
+// -------------
+
+// /**
+// * Get the attribute values for a new bug
+// *
+// * @param nbm
+// * A reference to a NewBugModel to store all of the data
+// * @throws Exception
+// */
+// public static void setupNewBugAttributes(String serverUrl, NewBugModel
+// nbm, boolean getProd) throws Exception {
+// BufferedReader in = null;
+// try {
+// // create a new input stream for getting the bug
+// String prodname = URLEncoder.encode(nbm.getProduct(),
+// BugzillaPlugin.ENCODING_UTF_8);
+//
+// TaskRepository repository =
+// MylarTaskListPlugin.getRepositoryManager().getRepository(
+// BugzillaPlugin.REPOSITORY_KIND, serverUrl);
+//
+// if (repository == null) {
+// throw new LoginException("Repository configuration error.");
+// }
+// if (repository.getUserName() == null ||
+// repository.getUserName().trim().equals("")
+// || repository.getPassword() == null) {
+// throw new LoginException("Login credentials missing.");
+// }
+//
+// String url = repository.getUrl() + "/enter_bug.cgi";
+//
+// // use the proper url if we dont know the product yet
+// if (!getProd)
+// url += "?product=" + prodname + "&";
+// else
+// url += "?";
+//
+// url += POST_ARGS_LOGIN + URLEncoder.encode(repository.getUserName(),
+// BugzillaPlugin.ENCODING_UTF_8)
+// + POST_ARGS_PASSWORD + URLEncoder.encode(repository.getPassword(),
+// BugzillaPlugin.ENCODING_UTF_8);
+//
+// URL bugUrl = new URL(url);
+// URLConnection cntx =
+// BugzillaPlugin.getDefault().getUrlConnection(bugUrl);
+// if (cntx != null) {
+// InputStream input = cntx.getInputStream();
+// if (input != null) {
+// in = new BufferedReader(new InputStreamReader(input));
+//
+// new NewBugParser(in).parseBugAttributes(nbm, getProd);
+// }
+// }
+//
+// } catch (Exception e) {
+//
+// if (e instanceof KeyManagementException || e instanceof
+// NoSuchAlgorithmException
+// || e instanceof IOException) {
+// if (MessageDialog.openQuestion(null, "Bugzilla Connect Error",
+// "Unable to connect to Bugzilla server.\n"
+// + "Bug report will be created offline and saved for submission later."))
+// {
+// nbm.setConnected(false);
+// setupBugAttributes(serverUrl, nbm);
+// } else
+// throw new Exception("Bug report will not be created.");
+// } else
+// throw e;
+// } finally {
+// try {
+// if (in != null)
+// in.close();
+// } catch (IOException e) {
+// BugzillaPlugin.log(new Status(IStatus.ERROR,
+// IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
+// "Problem closing the stream", e));
+// }
+// }
+// }
