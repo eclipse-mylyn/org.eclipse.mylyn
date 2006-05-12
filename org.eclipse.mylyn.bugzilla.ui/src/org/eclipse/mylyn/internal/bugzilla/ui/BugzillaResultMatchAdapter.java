@@ -11,16 +11,19 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui;
 
-import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchResult;
-import org.eclipse.mylar.internal.bugzilla.core.search.IBugzillaResultEditorMatchAdapter;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditorInput;
+import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchResult;
+import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaResultEditorMatchAdapter;
 import org.eclipse.search.ui.text.AbstractTextSearchResult;
 import org.eclipse.search.ui.text.Match;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 
+/**
+ * @author Mik Kersten (clean-up)
+ */
 public class BugzillaResultMatchAdapter implements IBugzillaResultEditorMatchAdapter {
-
+ 
 	/** An empty array of matches */
 	private final Match[] EMPTY_ARR = new Match[0];
 

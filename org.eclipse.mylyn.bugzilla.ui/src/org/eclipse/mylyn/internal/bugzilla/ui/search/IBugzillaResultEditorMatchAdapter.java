@@ -16,6 +16,9 @@ import org.eclipse.search.ui.text.IEditorMatchAdapter;
 import org.eclipse.search.ui.text.Match;
 import org.eclipse.ui.IEditorPart;
 
+/**
+ * @author Mik Kersten (clean-up)
+ */
 public interface IBugzillaResultEditorMatchAdapter extends IEditorMatchAdapter {
 
 	public boolean isShownInEditor(Match match, IEditorPart editor);
