@@ -21,11 +21,11 @@ import junit.framework.TestCase;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.mylar.bugzilla.core.BugzillaTask;
+import org.eclipse.mylar.internal.bugs.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugs.MylarBugsPlugin;
 import org.eclipse.mylar.internal.bugs.search.BugzillaMylarSearch;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaReportNode;
 import org.eclipse.mylar.internal.core.search.IActiveSearchListener;
 import org.eclipse.mylar.java.tests.search.SearchPluginTestHelper;
 import org.eclipse.mylar.java.tests.search.WorkspaceSetupHelper;
@@ -207,7 +207,7 @@ public class BugzillaSearchPluginTest extends TestCase {
 																// size
 
 		// check that the search has been saved
-		List<BugzillaReportNode> saved = MylarBugsPlugin.getBridge().getFromLandmarksHash(astNodeType,
+		List<BugzillaReportElement> saved = MylarBugsPlugin.getBridge().getFromLandmarksHash(astNodeType,
 				BugzillaMylarSearch.UNQUAL);
 		assertTrue("Results not cached", saved != null);
 		assertTrue("Results not the right size", saved.size() > 0); // TODO
