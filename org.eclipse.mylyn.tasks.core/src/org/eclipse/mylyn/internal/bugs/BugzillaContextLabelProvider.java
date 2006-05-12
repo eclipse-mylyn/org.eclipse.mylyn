@@ -11,11 +11,11 @@
 
 package org.eclipse.mylar.internal.bugs;
 
-import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.internal.bugs.search.BugzillaReferencesProvider;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.ui.AbstractContextLabelProvider;
 import org.eclipse.mylar.internal.ui.MylarImages;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.IMylarRelation;
 import org.eclipse.mylar.provisional.core.IMylarStructureBridge;

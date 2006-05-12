@@ -19,8 +19,8 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchEngine;
-import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchHit;
+import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchEngine;
+import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchHit;
 
 public class RegularExpressionMatchTest extends TestCase {
 

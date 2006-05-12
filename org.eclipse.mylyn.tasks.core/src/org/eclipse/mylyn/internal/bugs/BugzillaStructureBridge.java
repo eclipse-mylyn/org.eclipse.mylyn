@@ -19,15 +19,15 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaTools;
-import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchHit;
+import org.eclipse.mylar.internal.bugzilla.ui.BugzillaTools;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.BugzillaOutlineNode;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.BugzillaReportSelection;
+import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchHit;
 import org.eclipse.mylar.internal.core.DegreeOfSeparation;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.provisional.core.AbstractRelationProvider;
 import org.eclipse.mylar.provisional.core.IDegreeOfSeparation;
 import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
@@ -124,7 +124,8 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 						monitor.beginTask("Downloading Bug# " + id, IProgressMonitor.UNKNOWN);
 						try {
 							Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
-							result = BugzillaRepositoryUtil.getCurrentBug(repository.getUrl(), proxySettings, id);
+							// XXX: move this
+							result = BugzillaRepositoryUtil.getBug(repository, proxySettings, id);
 							if (result != null) {
 								MylarBugsPlugin.getDefault().getCache().cache(bugHandle, result);
 							}
@@ -144,9 +145,6 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 				}
 				return null;
 			}
-			// BugzillaOutlineNode node =
-			// BugzillaOutlineNode.parseBugReport(result);
-			// return findNode(node, commentNumber);
 		}
 		return null;
 	}
@@ -203,7 +201,7 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 			return BugzillaTools.getName(b);
 		} else if (object instanceof BugzillaReportElement) {
 			BugzillaSearchHit hit = ((BugzillaReportElement) object).getHit();
-			return hit.getRepository() + ": Bug#: " + hit.getId() + ": " + hit.getDescription();
+			return hit.getRepositoryUrl() + ": Bug#: " + hit.getId() + ": " + hit.getDescription();
 		}
 		return "";
 	}

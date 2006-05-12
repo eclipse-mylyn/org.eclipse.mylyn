@@ -17,8 +17,8 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.core.internal.RepositoryConfiguration;
-import org.eclipse.mylar.internal.bugzilla.core.internal.RepositoryConfigurationFactory;
+import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfiguration;
+import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfigurationFactory;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
 public class BugzillaConfigurationTest extends TestCase {

@@ -16,6 +16,8 @@ import java.util.Date;
 import org.eclipse.mylar.internal.core.MylarContextManager;
 
 /**
+ * Virtual proxy for a repository task.
+ * 
  * @author Mik Kersten
  * @author Rob Elves
  */

@@ -20,8 +20,8 @@ import java.nio.charset.Charset;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
@@ -113,10 +113,10 @@ public class Util {
 
 		StringBuffer sb = new StringBuffer();
 
-		String[] resolutionValues = BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_RESOLUTION,
+		String[] resolutionValues = BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_RESOLUTION,
 				repositoryUrl);
 
-		String[] statusValues = BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_STATUS, repositoryUrl);
+		String[] statusValues = BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_STATUS, repositoryUrl);
 
 		// add the status and resolutions that we care about
 		sb.append("&bug_status=" + statusValues[0]); // UNCONFIRMED

@@ -17,13 +17,13 @@ import javax.security.auth.login.LoginException;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.bugzilla.core.AbstractRepositoryReportAttribute;
-import org.eclipse.mylar.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.core.internal.BugzillaReportElement;
-import org.eclipse.mylar.internal.bugzilla.core.internal.RepositoryReportFactory;
+import org.eclipse.mylar.internal.bugzilla.core.RepositoryReportFactory;
+import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
 public class RepositoryReportFactoryTest extends TestCase {

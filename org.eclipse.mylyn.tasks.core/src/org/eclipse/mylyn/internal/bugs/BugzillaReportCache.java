@@ -18,10 +18,10 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylar.bugzilla.core.BugzillaReport;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaTools;
+import org.eclipse.mylar.internal.bugzilla.ui.BugzillaTools;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaCacheFile;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
 
 /**
  * @author Shawn Minto

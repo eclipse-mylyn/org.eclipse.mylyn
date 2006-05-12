@@ -21,13 +21,13 @@ import java.net.URL;
 import java.util.Date;
 
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.mylar.bugzilla.core.AbstractRepositoryReportAttribute;
-import org.eclipse.mylar.bugzilla.core.BugzillaReport;
-import org.eclipse.mylar.bugzilla.core.BugzillaReportAttribute;
-import org.eclipse.mylar.bugzilla.core.BugzillaTask;
-import org.eclipse.mylar.bugzilla.core.Comment;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.core.internal.BugzillaReportElement;
+import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReportAttribute;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaTask;
+import org.eclipse.mylar.provisional.bugzilla.core.Comment;
 
 /**
  * @author Mik Kersten
