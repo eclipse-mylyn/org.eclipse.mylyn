@@ -267,12 +267,14 @@ public class BugzillaRepositoryUtil {
 
 	}
 
-	public static void validateCredentials(String repositoryUrl, String userid, String password) throws IOException, LoginException {
+	// TODO: move to repository connector / AbstractRepositoryConnector
+	public static void validateCredentials(String repositoryUrl, String userid, String password) throws IOException,
+			LoginException {
 
-		String url = repositoryUrl+"/index.cgi?" + POST_ARGS_LOGIN + URLEncoder.encode(userid, BugzillaPlugin.ENCODING_UTF_8)
-		+ POST_ARGS_PASSWORD + URLEncoder.encode(password, BugzillaPlugin.ENCODING_UTF_8);
-		
-		//BugzillaRepositoryUtil.addCredentials(repository, repository.getUrl() + "/index.cgi?noop=noop")
+		String url = repositoryUrl + "/index.cgi?" + POST_ARGS_LOGIN
+				+ URLEncoder.encode(userid, BugzillaPlugin.ENCODING_UTF_8) + POST_ARGS_PASSWORD
+				+ URLEncoder.encode(password, BugzillaPlugin.ENCODING_UTF_8);
+
 		URL serverURL = new URL(url);
 		URLConnection connection = serverURL.openConnection();
 		BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
