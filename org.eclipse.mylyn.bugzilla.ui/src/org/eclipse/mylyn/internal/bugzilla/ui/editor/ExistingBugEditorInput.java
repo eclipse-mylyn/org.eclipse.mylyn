@@ -11,13 +11,16 @@
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.Proxy;
 
 import javax.security.auth.login.LoginException;
 
-import org.eclipse.mylar.bugzilla.core.BugzillaReport;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
+import org.eclipse.mylar.internal.bugzilla.ui.OfflineReportsFile;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.provisional.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
 /**
@@ -33,12 +36,11 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 	protected int bugId;
 
 	protected BugzillaReport bug;
-	
-	public ExistingBugEditorInput(BugzillaReport bug) {
+
+	public ExistingBugEditorInput(TaskRepository repository, BugzillaReport bug) {
 		this.bug = bug;
 		this.bugId = bug.getId();
-		repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND,
-				bug.getRepositoryUrl());
+		this.repository = repository;
 	}
 
 	/**
@@ -50,23 +52,23 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 	 * @throws LoginException
 	 * @throws IOException
 	 */
-	public ExistingBugEditorInput(String repositoryUrl, int bugId) throws LoginException, IOException {
+	public ExistingBugEditorInput(TaskRepository repository, int bugId) throws LoginException, IOException {
 		this.bugId = bugId;
+		this.repository = repository;
 		// get the bug from the server if it exists
-		bug = BugzillaRepositoryUtil.getBug(repositoryUrl, proxySettings, bugId);
-		repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND,
-				repositoryUrl);
+		bug = BugzillaRepositoryUtil.getBug(repository, proxySettings, bugId);
+//		repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND,
+//				repositoryUrl);
 	}
 
-	public ExistingBugEditorInput(String repositoryUrl, int bugId, boolean offline) throws LoginException, IOException {
+	public ExistingBugEditorInput(TaskRepository repository, int bugId, boolean offline) throws LoginException, IOException {
 		this.bugId = bugId;
-		repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND,
-				repositoryUrl);
+		this.repository = repository;
 		if (!offline) {
 			try {
-				bug = BugzillaRepositoryUtil.getBug(repositoryUrl, proxySettings, bugId);
+				bug = BugzillaRepositoryUtil.getBug(repository, proxySettings, bugId);
 			} catch (IOException e) {
-				bug = BugzillaRepositoryUtil.getCurrentBug(repositoryUrl, proxySettings, bugId);
+				bug = getCurrentBug(repository, proxySettings, bugId);
 				// IWorkbench workbench = PlatformUI.getWorkbench();
 				// workbench.getDisplay().asyncExec(new Runnable() {
 				// public void run() {
@@ -79,8 +81,28 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 				// });
 			}
 		} else {
-			bug = BugzillaRepositoryUtil.getCurrentBug(repositoryUrl, proxySettings, bugId);
+			bug = getCurrentBug(repository, proxySettings, bugId);
 		}
+	}
+
+	// TODO: move
+	private BugzillaReport getCurrentBug(TaskRepository repository, Proxy proxySettings, int id)
+			throws MalformedURLException, LoginException, IOException {
+		// Look among the offline reports for a bug with the given id.
+		OfflineReportsFile reportsFile = BugzillaUiPlugin.getDefault().getOfflineReports();
+		int offlineId = reportsFile.find(repository.getUrl(), id);
+
+		// If an offline bug was found, return it if possible.
+		if (offlineId != -1) {
+			IBugzillaBug bug = reportsFile.elements().get(offlineId);
+			if (bug instanceof BugzillaReport) {
+				return (BugzillaReport) bug;
+			}
+		}
+
+		// If a suitable offline report was not found, try to get one from the
+		// server.
+		return BugzillaRepositoryUtil.getBug(repository, proxySettings, id);
 	}
 
 	public String getName() {

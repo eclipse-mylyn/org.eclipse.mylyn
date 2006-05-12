@@ -90,10 +90,9 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 				"icons/wizban/bug-wizard.gif"));
 	}
 
-	protected ProgressMonitorDialog monitorDialog = new ProgressMonitorDialog(BugzillaPlugin.getDefault()
-			.getWorkbench().getActiveWorkbenchWindow().getShell());
+	protected ProgressMonitorDialog monitorDialog = new ProgressMonitorDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 
-	protected IPreferenceStore prefs = BugzillaPlugin.getDefault().getPreferenceStore();
+	protected IPreferenceStore prefs = BugzillaUiPlugin.getDefault().getPreferenceStore();
 
 	@Override
 	public void createAdditionalControls(Composite parent) {
@@ -112,10 +111,10 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 				monitor.beginTask("Updating search options...", 55);
 
 				try {
-					BugzillaRepositoryUtil.updateQueryOptions(repository, monitor);
+					BugzillaUiPlugin.updateQueryOptions(repository, monitor);
 
 					products = new ArrayList<String>();
-					for (String product : BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT,
+					for (String product : BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT,
 							repository.getUrl())) {
 						products.add(product);
 					}
@@ -146,7 +145,7 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 		if (!bugWizard.model.hasParsedProducts()) {
 			String repositoryUrl = repository.getUrl();
 			try {
-				String[] storedProducts = BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT,
+				String[] storedProducts = BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT,
 						repositoryUrl);
 				if (storedProducts.length > 0) {
 					products = Arrays.asList(storedProducts);

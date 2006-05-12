@@ -23,7 +23,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
@@ -72,7 +71,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 	public AbstractBugWizard(TaskRepository repository) {
 		super();
 		this.repository = repository;
-		model = new NewBugzillaReport(repository.getUrl());
+		model = new NewBugzillaReport(repository.getUrl(), BugzillaUiPlugin.getDefault().getOfflineReports().getNextOfflineBugId());
 		id = null; // Since there is no bug posted yet.
 		super.setDefaultPageImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin(
 				"org.eclipse.mylar.internal.bugzilla.ui", "icons/wizban/bug-wizard.gif"));
@@ -171,9 +170,9 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 
 		IEditorInput input = null;
 		try {
-			input = new ExistingBugEditorInput(repository.getUrl(), Integer.parseInt(id));
-			BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(input,
-					IBugzillaConstants.EXISTING_BUG_EDITOR_ID, false);
+			input = new ExistingBugEditorInput(repository, Integer.parseInt(id));
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(input,
+					BugzillaUiPlugin.EXISTING_BUG_EDITOR_ID, false);
 		} catch (LoginException e) {
 			// if we had an error with logging in, display an error
 			MessageDialog.openError(null, "Posting Error",
@@ -186,8 +185,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 					SearchMessages.Search_Error_search_message);
 			BugzillaPlugin.log(e.getStatus());
 		} catch (IOException e) {
-			BugzillaPlugin.getDefault().logAndShowExceptionDetailsDialog(e, "occurred while opening the bug report.",
-					"Bugzilla Error");
+			MylarStatusHandler.fail(e, "Could not open bug report", false);
 		}
 	}
 

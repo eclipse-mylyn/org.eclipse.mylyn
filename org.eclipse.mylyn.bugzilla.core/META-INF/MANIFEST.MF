@@ -5,22 +5,15 @@ Bundle-SymbolicName: org.eclipse.mylar.bugzilla.core; singleton:=true
 Bundle-Version: 0.5.1.v2006505-1600
 Bundle-Activator: org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- org.eclipse.core.resources,
- org.eclipse.compare,
- org.eclipse.search,
- org.eclipse.mylar.core,
- org.eclipse.mylar.tasklist
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.mylar.tasklist,
+ org.eclipse.mylar.core
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: bugzilla-core.jar,
  lib/commons-logging.jar,
  lib/commons-codec-1.3.jar,
  lib/commons-httpclient-3.0.jar
-Export-Package: org.eclipse.mylar.bugzilla.core,
- org.eclipse.mylar.internal.bugzilla.core,
- org.eclipse.mylar.internal.bugzilla.core.compare,
- org.eclipse.mylar.internal.bugzilla.core.internal,
- org.eclipse.mylar.internal.bugzilla.core.search
+Export-Package: org.eclipse.mylar.internal.bugzilla.core,
+ org.eclipse.mylar.provisional.bugzilla.core
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

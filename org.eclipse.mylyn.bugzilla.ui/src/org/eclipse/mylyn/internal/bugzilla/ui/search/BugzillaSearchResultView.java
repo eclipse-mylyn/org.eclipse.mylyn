@@ -21,20 +21,14 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaContentProvider;
-import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaIdSearchSorter;
-import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaPrioritySearchSorter;
-import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaQueryHit;
-import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSeveritySearchSorter;
-import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaStateSearchSorter;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaTableContentProvider;
+import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.actions.BugzillaSortAction;
 import org.eclipse.mylar.internal.bugzilla.ui.actions.OpenBugsAction;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListTableLabelProvider;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaQueryHit;
 import org.eclipse.search.internal.ui.SearchMessages;
 import org.eclipse.search.internal.ui.SearchPlugin;
 import org.eclipse.search.internal.ui.SearchPreferencePage;
@@ -68,7 +62,7 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 
 	public static final int ORDER_DEFAULT = ORDER_ID;
 
-	private static final String KEY_SORTING = IBugzillaConstants.PLUGIN_ID + ".search.resultpage.sorting"; //$NON-NLS-1$
+	private static final String KEY_SORTING = BugzillaUiPlugin.PLUGIN_ID + ".search.resultpage.sorting"; //$NON-NLS-1$
 
 	private BugzillaContentProvider bugContentProvider;
 

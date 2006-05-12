@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,20 +35,21 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.bugzilla.core.AbstractRepositoryReport;
-import org.eclipse.mylar.bugzilla.core.AbstractRepositoryReportAttribute;
-import org.eclipse.mylar.bugzilla.core.BugzillaReport;
-import org.eclipse.mylar.bugzilla.core.Comment;
-import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaTools;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaAttributeListener;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaReportSelection;
-import org.eclipse.mylar.internal.bugzilla.core.internal.BugzillaReportElement;
+import org.eclipse.mylar.internal.bugzilla.ui.BugzillaTools;
+import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
+import org.eclipse.mylar.internal.bugzilla.ui.IBugzillaReportSelection;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor;
+import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReport;
+import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.provisional.bugzilla.core.Comment;
+import org.eclipse.mylar.provisional.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
@@ -131,7 +133,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 	public static final Font HEADER_FONT = JFaceResources.getDefaultFont();
 
-	public static final int DESCRIPTION_WIDTH = 500;//79 * 7;
+	public static final int DESCRIPTION_WIDTH = 500;// 79 * 7;
 
 	public static final int DESCRIPTION_HEIGHT = 10 * 14;
 
@@ -421,11 +423,11 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 		toolkit = new FormToolkit(parent.getDisplay());
 		form = toolkit.createScrolledForm(parent);
-//		String truncatedSummary = getBug().getSummary();
-//		int maxLength = 50;
-//		if (truncatedSummary.length() > maxLength) {
-//			truncatedSummary = truncatedSummary.substring(0, maxLength) + "...";
-//		}
+		// String truncatedSummary = getBug().getSummary();
+		// int maxLength = 50;
+		// if (truncatedSummary.length() > maxLength) {
+		// truncatedSummary = truncatedSummary.substring(0, maxLength) + "...";
+		// }
 		form.setText("Bugzilla Bug: " + getBug().getSummary());
 
 		editorComposite = form.getBody();
@@ -464,7 +466,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 		createCommentLayout(toolkit, form);
 		createButtonLayouts(toolkit, form.getBody());
 
-		WorkbenchHelpSystem.getInstance().setHelp(parent, IBugzillaConstants.EDITOR_PAGE_CONTEXT);
+		WorkbenchHelpSystem.getInstance().setHelp(parent, BugzillaUiPlugin.EDITOR_PAGE_CONTEXT);
 
 		editorComposite.setMenu(contextMenuManager.createContextMenu(editorComposite));
 		form.reflow(true);
@@ -1009,7 +1011,12 @@ public abstract class AbstractBugEditor extends EditorPart {
 		addUrlText(getReport().getAttributeValue(BugzillaReportElement.BUG_FILE_LOC), attributesComposite);
 
 		// keywords text field (not editable)
-		addKeywordsList(toolkit, getReport().getAttributeValue(BugzillaReportElement.KEYWORDS), attributesComposite);
+		try {
+			addKeywordsList(toolkit, getReport().getAttributeValue(BugzillaReportElement.KEYWORDS), attributesComposite);
+		} catch (IOException e) {
+			MessageDialog.openInformation(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
+					"Could not retrieve keyword list: " + e.getMessage());
+		}
 
 		addSummaryText(attributesComposite);
 		// End URL, Keywords, Summary Text Fields
@@ -1047,7 +1054,8 @@ public abstract class AbstractBugEditor extends EditorPart {
 		urlText.addListener(SWT.FocusIn, new GenericListener());
 	}
 
-	protected abstract void addKeywordsList(FormToolkit toolkit, String keywords, Composite attributesComposite);
+	protected abstract void addKeywordsList(FormToolkit toolkit, String keywords, Composite attributesComposite)
+			throws IOException;
 
 	protected abstract void addCCList(FormToolkit toolkit, String value, Composite attributesComposite);
 
@@ -1260,7 +1268,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 	protected TextViewer addRepositoryText(TaskRepository repository, Composite composite, String text) {
 		RepositoryTextViewer commentViewer = new RepositoryTextViewer(repository, composite, SWT.WRAP);
-		
+
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 
 		commentViewer.getTextWidget().setFont(themeManager.getCurrentTheme().getFontRegistry().get(REPOSITORY_TEXT_ID));

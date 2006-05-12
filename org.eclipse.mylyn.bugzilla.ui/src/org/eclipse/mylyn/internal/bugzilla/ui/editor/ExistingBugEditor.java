@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -34,22 +35,25 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.bugzilla.core.AbstractRepositoryReportAttribute;
-import org.eclipse.mylar.bugzilla.core.BugzillaReport;
-import org.eclipse.mylar.bugzilla.core.Comment;
-import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
-import org.eclipse.mylar.bugzilla.core.Operation;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.core.compare.BugzillaCompareInput;
-import org.eclipse.mylar.internal.bugzilla.core.internal.BugzillaReportElement;
+import org.eclipse.mylar.internal.bugzilla.ui.BugzillaCompareInput;
+import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
+import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.provisional.bugzilla.core.Comment;
+import org.eclipse.mylar.provisional.bugzilla.core.IBugzillaBug;
+import org.eclipse.mylar.provisional.bugzilla.core.Operation;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -115,7 +119,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	protected Text addCommentsText;
 
 	protected BugzillaReport bug;
-
+	
 	public String getNewCommentText() {
 		return addCommentsTextBox.getText();
 	}
@@ -404,21 +408,52 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	@Override
 	protected void createDescriptionLayout(FormToolkit toolkit, final ScrolledForm form) {
 
-		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR);
+		final Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText(LABEL_SECTION_DESCRIPTION);
+		section.setExpanded(true);
 		section.setLayout(new GridLayout());
 		GridData sectionData = new GridData(GridData.FILL_HORIZONTAL);
+		// sectionData.grabExcessVerticalSpace = true;
 		section.setLayoutData(sectionData);
 
-		TextViewer viewer = addRepositoryText(repository, form.getBody(), bug.getDescription());// form.getBody()
+		// Description Area
+		final Composite descriptionComposite = toolkit.createComposite(section);
+		//descriptionComposite.setBackground(new Color(descriptionComposite.getDisplay(), 123, 123, 123));
+		GridLayout descriptionLayout = new GridLayout();
+		descriptionLayout.numColumns = 1;
+		descriptionComposite.setLayout(descriptionLayout);
+
+		// descriptionComposite.setBackground(background);
+		// GridData descriptionData = new GridData(GridData.FILL_BOTH);
+		// descriptionData.widthHint = DESCRIPTION_WIDTH;
+		// descriptionData.widthHint = DESCRIPTION_HEIGHT;
+		// descriptionData.grabExcessVerticalSpace = true;
+		// descriptionComposite.setLayoutData(descriptionData);
+
+		section.setClient(descriptionComposite);
+
+		TextViewer viewer = addRepositoryText(repository, descriptionComposite, bug.getDescription());
 		final StyledText styledText = viewer.getTextWidget();
 		styledText.addListener(SWT.FocusIn, new DescriptionListener());
 		styledText.setLayout(new GridLayout());
-		GridData styledTextData = new GridData(GridData.FILL_HORIZONTAL);
+		GridData styledTextData = new GridData(GridData.FILL_BOTH);
 		styledTextData.widthHint = DESCRIPTION_WIDTH;
-		styledTextData.grabExcessHorizontalSpace = true;
-
+		// styledTextData.heightHint = DESCRIPTION_HEIGHT;
+		styledTextData.grabExcessVerticalSpace = false;
 		styledText.setLayoutData(styledTextData);
+
+		descriptionComposite.addControlListener(new ControlListener() {
+
+			public void controlMoved(ControlEvent e) {
+				// ignore
+
+			}
+
+			public void controlResized(ControlEvent e) {
+
+				descriptionComposite.setSize(descriptionComposite.getSize().x, styledText.getSize().y + 10);
+			}
+		});
 
 		texts.add(textsindex, styledText);
 		textHash.put(bug.getDescription(), styledText);
@@ -607,7 +642,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	}
 
 	@Override
-	protected void addKeywordsList(FormToolkit toolkit, String keywords, Composite attributesComposite) {
+	protected void addKeywordsList(FormToolkit toolkit, String keywords, Composite attributesComposite) throws IOException {
 		// newLayout(attributesComposite, 1, "Keywords:", PROPERTY);
 		toolkit.createLabel(attributesComposite, "Keywords:");
 		keywordsText = toolkit.createText(attributesComposite, keywords);
@@ -788,8 +823,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		protected IStatus run(IProgressMonitor monitor) {
 			final BugzillaReport serverBug;
 			try {
-				serverBug = BugzillaRepositoryUtil.getBug(bug.getRepositoryUrl(), bugzillaInput.getProxySettings(), bug
-						.getId());
+				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, bug.getRepositoryUrl());
+				serverBug = BugzillaRepositoryUtil.getBug(repository, bugzillaInput.getProxySettings(), bug.getId());
 				// If no bug was found on the server, throw an exception so that
 				// the
 				// user gets the same message that appears when there is a
@@ -803,7 +838,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 								"Could not open bug.", "Bug #" + bug.getId() + " could not be read from the server.");
 					}
 				});
-				return new Status(IStatus.OK, IBugzillaConstants.PLUGIN_ID, IStatus.OK,
+				return new Status(IStatus.OK, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK,
 						"Could not get the bug report from the server.", null);
 			}
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -814,7 +849,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 					CompareUI.openCompareEditor(compareInput);
 				}
 			});
-			return new Status(IStatus.OK, IBugzillaConstants.PLUGIN_ID, IStatus.OK, "", null);
+			return new Status(IStatus.OK, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK, "", null);
 		}
 
 	}

@@ -13,10 +13,13 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import java.util.Date;
 
-import org.eclipse.mylar.bugzilla.core.BugzillaTask;
-import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaQueryHit;
+import org.eclipse.mylar.internal.bugzilla.ui.OfflineReportsFile;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskExternalizationException;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaQueryHit;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaTask;
+import org.eclipse.mylar.provisional.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
@@ -187,7 +190,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 			task.setDirty(false);
 		}
 		try {
-			if (task.readBugReport() == false) {
+			if (readBugReport(task) == false) {
 				MylarStatusHandler.log("Failed to read bug report", null);
 			}
 		} catch (Exception e) {
@@ -210,6 +213,22 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		// TODO: put back, checking for null category?
 //		taskList.internalAddTask(task, category);
 		return task;
+	}
+
+	/**
+	 * TODO: move?
+	 */
+	public boolean readBugReport(BugzillaTask bugzillaTask) {		
+		IBugzillaBug tempBug = OfflineReportsFile.findBug(bugzillaTask.getRepositoryUrl(), AbstractRepositoryTask.getTaskIdAsInt(bugzillaTask.getHandleIdentifier()));
+		if (tempBug == null) {
+			bugzillaTask.setBugReport(null);
+			return true;
+		}
+		bugzillaTask.setBugReport((BugzillaReport)tempBug);
+
+		if (bugzillaTask.getBugReport().hasChanges())
+			bugzillaTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
+		return true;
 	}
 
 	public boolean canReadQueryHit(Node node) {

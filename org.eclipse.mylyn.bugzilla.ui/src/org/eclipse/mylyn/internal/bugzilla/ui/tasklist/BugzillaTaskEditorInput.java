@@ -18,10 +18,11 @@ import java.io.IOException;
 import javax.security.auth.login.LoginException;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.bugzilla.core.BugzillaReport;
-import org.eclipse.mylar.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditorInput;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
+import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.ui.IPersistableElement;
 
@@ -39,8 +40,8 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 
 	private boolean offline;
 
-	public BugzillaTaskEditorInput(BugzillaTask bugTask, boolean offline) throws LoginException, IOException {
-		super(bugTask.getRepositoryUrl(), AbstractRepositoryTask.getTaskIdAsInt(bugTask.getHandleIdentifier()), offline);
+	public BugzillaTaskEditorInput(TaskRepository repository, BugzillaTask bugTask, boolean offline) throws LoginException, IOException {
+		super(repository, AbstractRepositoryTask.getTaskIdAsInt(bugTask.getHandleIdentifier()), offline);
 		this.bugTask = bugTask;
 		offlineBug = bugTask.getBugReport();
 		bugId = AbstractRepositoryTask.getTaskIdAsInt(bugTask.getHandleIdentifier());

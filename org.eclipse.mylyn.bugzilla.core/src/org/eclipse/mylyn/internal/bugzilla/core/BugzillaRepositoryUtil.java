@@ -40,34 +40,20 @@ import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.PartBase;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.params.HttpMethodParams;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.mylar.bugzilla.core.AbstractRepositoryReportAttribute;
-import org.eclipse.mylar.bugzilla.core.BugzillaReport;
-import org.eclipse.mylar.bugzilla.core.BugzillaReportAttribute;
-import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
-import org.eclipse.mylar.bugzilla.core.Operation;
+import org.eclipse.mylar.internal.bugzilla.core.HtmlStreamTokenizer.Token;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESOLUTION;
-import org.eclipse.mylar.internal.bugzilla.core.internal.BugzillaReportElement;
-import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer;
-import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlTag;
-import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile;
-import org.eclipse.mylar.internal.bugzilla.core.internal.RepositoryConfiguration;
-import org.eclipse.mylar.internal.bugzilla.core.internal.RepositoryConfigurationFactory;
-import org.eclipse.mylar.internal.bugzilla.core.internal.RepositoryReportFactory;
-import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer.Token;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.ZipFileUtil;
+import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReportAttribute;
+import org.eclipse.mylar.provisional.bugzilla.core.Operation;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
-import org.eclipse.mylar.provisional.tasklist.TaskRepositoryManager;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten (some rewriting)
@@ -131,8 +117,6 @@ public class BugzillaRepositoryUtil {
 
 	private static final String POST_ARGS_PASSWORD = "&Bugzilla_password=";
 
-	public static final char PREF_DELIM_REPOSITORY = ':';
-
 	public static final String POST_ARGS_SHOW_BUG = "/show_bug.cgi?id=";// ctype=xml&
 
 	public static final String POST_ARGS_ATTACHMENT_DOWNLOAD = "/attachment.cgi?id=";
@@ -141,27 +125,12 @@ public class BugzillaRepositoryUtil {
 
 	private static final String POST_ARGS_LOGIN = "GoAheadAndLogIn=1&Bugzilla_login=";
 
-	public static BugzillaReport getBug(String repositoryUrl, Proxy proxySettings, int id) throws IOException,
-			MalformedURLException, LoginException {
+	public static BugzillaReport getBug(TaskRepository repository, Proxy proxySettings, int id) throws IOException, MalformedURLException,
+			LoginException {
 
 		BufferedReader in = null;
 		try {
-
-			// create a new input stream for getting the bug
-			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
-					BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
-			if (repository == null) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						MessageDialog.openInformation(Display.getDefault().getActiveShell(),
-								IBugzillaConstants.TITLE_MESSAGE_DIALOG, TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
-					}
-				});
-				return null;
-			}
-
-			String url = repositoryUrl + POST_ARGS_SHOW_BUG + id;
-
+			String url = repository.getUrl() + POST_ARGS_SHOW_BUG + id;
 			url = addCredentials(repository, url);
 
 			URL bugUrl = new URL(url);
@@ -202,7 +171,7 @@ public class BugzillaRepositoryUtil {
 				if (in != null)
 					in.close();
 			} catch (IOException e) {
-				BugzillaPlugin.log(new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
+				BugzillaPlugin.log(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, IStatus.ERROR,
 						"Problem closing the stream", e));
 			}
 		}
@@ -214,36 +183,6 @@ public class BugzillaRepositoryUtil {
 					+ POST_ARGS_PASSWORD + URLEncoder.encode(repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
 		}
 		return url;
-	}
-
-	/**
-	 * Get a bug from the server. If a bug with the given id is saved offline,
-	 * the offline version is returned instead.
-	 * 
-	 * @param id -
-	 *            the id of the bug to get
-	 * @return - a <code>BugReport</code> for the selected bug or null if it
-	 *         doesn't exist
-	 * @throws IOException,
-	 *             MalformedURLException, LoginException
-	 */
-	public static BugzillaReport getCurrentBug(String repositoryUrl, Proxy proxySettings, int id)
-			throws MalformedURLException, LoginException, IOException {
-		// Look among the offline reports for a bug with the given id.
-		OfflineReportsFile reportsFile = BugzillaPlugin.getDefault().getOfflineReports();
-		int offlineId = reportsFile.find(repositoryUrl, id);
-
-		// If an offline bug was found, return it if possible.
-		if (offlineId != -1) {
-			IBugzillaBug bug = reportsFile.elements().get(offlineId);
-			if (bug instanceof BugzillaReport) {
-				return (BugzillaReport) bug;
-			}
-		}
-
-		// If a suitable offline report was not found, try to get one from the
-		// server.
-		return getBug(repositoryUrl, proxySettings, id);
 	}
 
 	/**
@@ -267,14 +206,12 @@ public class BugzillaRepositoryUtil {
 
 	}
 
-	// TODO: move to repository connector / AbstractRepositoryConnector
-	public static void validateCredentials(String repositoryUrl, String userid, String password) throws IOException,
-			LoginException {
+	public static void validateCredentials(String repositoryUrl, String userid, String password) throws IOException, LoginException {
 
-		String url = repositoryUrl + "/index.cgi?" + POST_ARGS_LOGIN
-				+ URLEncoder.encode(userid, BugzillaPlugin.ENCODING_UTF_8) + POST_ARGS_PASSWORD
-				+ URLEncoder.encode(password, BugzillaPlugin.ENCODING_UTF_8);
-
+		String url = repositoryUrl+"/index.cgi?" + POST_ARGS_LOGIN + URLEncoder.encode(userid, BugzillaPlugin.ENCODING_UTF_8)
+		+ POST_ARGS_PASSWORD + URLEncoder.encode(password, BugzillaPlugin.ENCODING_UTF_8);
+		
+		//BugzillaRepositoryUtil.addCredentials(repository, repository.getUrl() + "/index.cgi?noop=noop")
 		URL serverURL = new URL(url);
 		URLConnection connection = serverURL.openConnection();
 		BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -316,12 +253,116 @@ public class BugzillaRepositoryUtil {
 		}
 	}
 
+	// public static List<String> getValidKeywords(String repositoryURL) {
+	// return
+	// BugzillaPlugin.getDefault().getProductConfiguration(repositoryURL).getKeywords();
+	// }
+
+	// /**
+	// * Get the attribute values for a new bug
+	// *
+	// * @param nbm
+	// * A reference to a NewBugModel to store all of the data
+	// * @throws Exception
+	// */
+	// public static void setupNewBugAttributes(String serverUrl, NewBugModel
+	// nbm, boolean getProd) throws Exception {
+	// BufferedReader in = null;
+	// try {
+	// // create a new input stream for getting the bug
+	// String prodname = URLEncoder.encode(nbm.getProduct(),
+	// BugzillaPlugin.ENCODING_UTF_8);
+	//
+	// TaskRepository repository =
+	// MylarTaskListPlugin.getRepositoryManager().getRepository(
+	// BugzillaPlugin.REPOSITORY_KIND, serverUrl);
+	//
+	// if (repository == null) {
+	// throw new LoginException("Repository configuration error.");
+	// }
+	// if (repository.getUserName() == null ||
+	// repository.getUserName().trim().equals("")
+	// || repository.getPassword() == null) {
+	// throw new LoginException("Login credentials missing.");
+	// }
+	//
+	// String url = repository.getUrl() + "/enter_bug.cgi";
+	//
+	// // use the proper url if we dont know the product yet
+	// if (!getProd)
+	// url += "?product=" + prodname + "&";
+	// else
+	// url += "?";
+	//
+	// url += POST_ARGS_LOGIN + URLEncoder.encode(repository.getUserName(),
+	// BugzillaPlugin.ENCODING_UTF_8)
+	// + POST_ARGS_PASSWORD + URLEncoder.encode(repository.getPassword(),
+	// BugzillaPlugin.ENCODING_UTF_8);
+	//
+	// URL bugUrl = new URL(url);
+	// URLConnection cntx =
+	// BugzillaPlugin.getDefault().getUrlConnection(bugUrl);
+	// if (cntx != null) {
+	// InputStream input = cntx.getInputStream();
+	// if (input != null) {
+	// in = new BufferedReader(new InputStreamReader(input));
+	//
+	// new NewBugParser(in).parseBugAttributes(nbm, getProd);
+	// }
+	// }
+	//
+	// } catch (Exception e) {
+	//
+	// if (e instanceof KeyManagementException || e instanceof
+	// NoSuchAlgorithmException
+	// || e instanceof IOException) {
+	// if (MessageDialog.openQuestion(null, "Bugzilla Connect Error",
+	// "Unable to connect to Bugzilla server.\n"
+	// + "Bug report will be created offline and saved for submission later."))
+	// {
+	// nbm.setConnected(false);
+	// setupBugAttributes(serverUrl, nbm);
+	// } else
+	// throw new Exception("Bug report will not be created.");
+	// } else
+	// throw e;
+	// } finally {
+	// try {
+	// if (in != null)
+	// in.close();
+	// } catch (IOException e) {
+	// BugzillaPlugin.log(new Status(IStatus.ERROR,
+	// IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
+	// "Problem closing the stream", e));
+	// }
+	// }
+	// }
+
 	/**
 	 * Adds bug attributes to new bug model and sets defaults
+	 * @throws IOException 
 	 */
-	public static void setupNewBugAttributes(TaskRepository repository, NewBugzillaReport newReport) {
+	public static void setupNewBugAttributes(TaskRepository repository, NewBugzillaReport newReport) throws IOException {
 
-		newReport.clearAttributes();
+		// // order is important
+		// BugReportElement[] newBugElements = { BugReportElement.PRODUCT,
+		// BugReportElement.BUG_STATUS,
+		// BugReportElement.VERSION,
+		// BugReportElement.COMPONENT,
+		// BugReportElement.TARGET_MILESTONE,
+		// BugReportElement.REP_PLATFORM,
+		// BugReportElement.OP_SYS,
+		// BugReportElement.PRIORITY,
+		// BugReportElement.BUG_SEVERITY,
+		// BugReportElement.ASSIGNED_TO,
+		// // NOT USED BugReportElement.CC,
+		// BugReportElement.BUG_FILE_LOC,
+		// //NOT USED BugReportElement.SHORT_DESC,
+		// //NOT USED BugReportElement.LONG_DESC
+		// };
+
+		// HashMap<String, AbstractRepositoryReportAttribute> attributes = new
+		// LinkedHashMap<String, AbstractRepositoryReportAttribute>();
 
 		AbstractRepositoryReportAttribute a = new BugzillaReportAttribute(BugzillaReportElement.PRODUCT);
 		List<String> optionValues = BugzillaPlugin.getDefault().getProductConfiguration(repository).getProducts();
@@ -610,7 +651,7 @@ public class BugzillaRepositoryUtil {
 		}
 	}
 
-	private static void updateBugAttributeOptions(TaskRepository repository, BugzillaReport existingReport) {
+	private static void updateBugAttributeOptions(TaskRepository repository, BugzillaReport existingReport) throws IOException {
 		String product = existingReport.getAttributeValue(BugzillaReportElement.PRODUCT);
 		for (AbstractRepositoryReportAttribute attribute : existingReport.getAttributes()) {
 			BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getID().trim().toUpperCase());
@@ -733,129 +774,8 @@ public class BugzillaRepositoryUtil {
 		return url;
 	}
 
-	static String queryOptionsToString(List<String> array) {
-
-		StringBuffer buffer = new StringBuffer();
-		for (String string : array) {
-			buffer.append(string);
-			buffer.append("!");
-		}
-
-		return buffer.toString();
-	}
-
-	public static String[] getQueryOptions(String prefId, String repositoryUrl) {
-		IPreferenceStore prefs = BugzillaPlugin.getDefault().getPreferenceStore();
-		return convertQueryOptionsToArray(prefs.getString(prefId + PREF_DELIM_REPOSITORY + repositoryUrl));
-	}
-
-	private static String[] convertQueryOptionsToArray(String values) {
-		// create a new string buffer and array list
-		StringBuffer buffer = new StringBuffer();
-		List<String> options = new ArrayList<String>();
-
-		char[] chars = values.toCharArray();
-		for (int i = 0; i < chars.length; i++) {
-			if (chars[i] == '!') {
-				options.add(buffer.toString());
-				buffer = new StringBuffer();
-			} else {
-				buffer.append(chars[i]);
-			}
-		}
-
-		// create a new string array with the same size as the array list
-		String[] array = new String[options.size()];
-
-		// put each element from the list into the array
-		for (int j = 0; j < options.size(); j++)
-			array[j] = options.get(j);
-		return array;
-	}
-
-	/**
-	 * Update all of the query options for the bugzilla search page
-	 * 
-	 * @param monitor
-	 *            A reference to a progress monitor
-	 * @throws IOException
-	 */
-	public static void updateQueryOptions(TaskRepository repository, IProgressMonitor monitor) throws LoginException,
-			IOException {
-
-		String repositoryUrl = repository.getUrl();
-		// BugzillaQueryPageParser parser = new
-		// BugzillaQueryPageParser(repository, monitor);
-		// if (!parser.wasSuccessful())
-		// return;
-
-		RepositoryConfiguration config = RepositoryConfigurationFactory.getInstance().getConfiguration(repository);
-
-		// get the preferences store so that we can change the data in it
-		IPreferenceStore prefs = BugzillaPlugin.getDefault().getPreferenceStore();
-
-		prefs.setValue(IBugzillaConstants.VALUES_STATUS + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(config.getStatusValues()));
-		monitor.worked(1);
-
-		prefs.setValue(IBugzillaConstants.VALUSE_STATUS_PRESELECTED + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(config.getOpenStatusValues()));
-		monitor.worked(1);
-
-		prefs.setValue(IBugzillaConstants.VALUES_RESOLUTION + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(config.getResolutions()));
-		monitor.worked(1);
-
-		prefs.setValue(IBugzillaConstants.VALUES_SEVERITY + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(config.getSeverities()));
-		monitor.worked(1);
-
-		prefs.setValue(IBugzillaConstants.VALUES_PRIORITY + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(config.getPriorities()));
-		monitor.worked(1);
-
-		prefs.setValue(IBugzillaConstants.VALUES_HARDWARE + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(config.getPlatforms()));
-		monitor.worked(1);
-
-		prefs.setValue(IBugzillaConstants.VALUES_OS + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(config.getOSs()));
-		monitor.worked(1);
-
-		prefs.setValue(IBugzillaConstants.VALUES_PRODUCT + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(config.getProducts()));
-		monitor.worked(1);
-
-		prefs.setValue(IBugzillaConstants.VALUES_COMPONENT + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(config.getComponents()));
-		monitor.worked(1);
-
-		prefs.setValue(IBugzillaConstants.VALUES_VERSION + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(config.getVersions()));
-		monitor.worked(1);
-
-		prefs.setValue(IBugzillaConstants.VALUES_TARGET + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(config.getTargetMilestones()));
-		monitor.worked(1);
-
-		for (String product : config.getProducts()) {
-			prefs.setValue(IBugzillaConstants.VALUES_COMPONENT + PREF_DELIM_REPOSITORY + repositoryUrl
-					+ PREF_DELIM_REPOSITORY + product, queryOptionsToString(config.getComponents(product)));
-			monitor.worked(1);
-
-			prefs.setValue(IBugzillaConstants.VALUES_VERSION + PREF_DELIM_REPOSITORY + repositoryUrl
-					+ PREF_DELIM_REPOSITORY + product, queryOptionsToString(config.getVersions(product)));
-			monitor.worked(1);
-
-			prefs.setValue(IBugzillaConstants.VALUES_TARGET + PREF_DELIM_REPOSITORY + repositoryUrl
-					+ PREF_DELIM_REPOSITORY + product, queryOptionsToString(config.getTargetMilestones(product)));
-			monitor.worked(1);
-		}
-
-	}
-
-	public static boolean downloadAttachment(TaskRepository repository, Proxy proxySettings, int id,
-			File destinationFile, boolean overwrite) throws IOException {
+	public static boolean downloadAttachment(TaskRepository repository, Proxy proxySettings, int id, File destinationFile, boolean overwrite)
+			throws IOException {
 		BufferedInputStream in = null;
 		FileOutputStream outStream = null;
 		try {
@@ -887,7 +807,7 @@ public class BugzillaRepositoryUtil {
 				if (outStream != null)
 					outStream.close();
 			} catch (IOException e) {
-				BugzillaPlugin.log(new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
+				BugzillaPlugin.log(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, IStatus.ERROR,
 						"Problem closing the stream", e));
 			}
 		}
@@ -1094,84 +1014,3 @@ public class BugzillaRepositoryUtil {
 // private static String bugzillaUrl;
 // private static BugzillaRepositoryUtil INSTANCE = new
 // BugzillaRepositoryUtil();
-// -------------
-
-// /**
-// * Get the attribute values for a new bug
-// *
-// * @param nbm
-// * A reference to a NewBugModel to store all of the data
-// * @throws Exception
-// */
-// public static void setupNewBugAttributes(String serverUrl, NewBugModel
-// nbm, boolean getProd) throws Exception {
-// BufferedReader in = null;
-// try {
-// // create a new input stream for getting the bug
-// String prodname = URLEncoder.encode(nbm.getProduct(),
-// BugzillaPlugin.ENCODING_UTF_8);
-//
-// TaskRepository repository =
-// MylarTaskListPlugin.getRepositoryManager().getRepository(
-// BugzillaPlugin.REPOSITORY_KIND, serverUrl);
-//
-// if (repository == null) {
-// throw new LoginException("Repository configuration error.");
-// }
-// if (repository.getUserName() == null ||
-// repository.getUserName().trim().equals("")
-// || repository.getPassword() == null) {
-// throw new LoginException("Login credentials missing.");
-// }
-//
-// String url = repository.getUrl() + "/enter_bug.cgi";
-//
-// // use the proper url if we dont know the product yet
-// if (!getProd)
-// url += "?product=" + prodname + "&";
-// else
-// url += "?";
-//
-// url += POST_ARGS_LOGIN + URLEncoder.encode(repository.getUserName(),
-// BugzillaPlugin.ENCODING_UTF_8)
-// + POST_ARGS_PASSWORD + URLEncoder.encode(repository.getPassword(),
-// BugzillaPlugin.ENCODING_UTF_8);
-//
-// URL bugUrl = new URL(url);
-// URLConnection cntx =
-// BugzillaPlugin.getDefault().getUrlConnection(bugUrl);
-// if (cntx != null) {
-// InputStream input = cntx.getInputStream();
-// if (input != null) {
-// in = new BufferedReader(new InputStreamReader(input));
-//
-// new NewBugParser(in).parseBugAttributes(nbm, getProd);
-// }
-// }
-//
-// } catch (Exception e) {
-//
-// if (e instanceof KeyManagementException || e instanceof
-// NoSuchAlgorithmException
-// || e instanceof IOException) {
-// if (MessageDialog.openQuestion(null, "Bugzilla Connect Error",
-// "Unable to connect to Bugzilla server.\n"
-// + "Bug report will be created offline and saved for submission later."))
-// {
-// nbm.setConnected(false);
-// setupBugAttributes(serverUrl, nbm);
-// } else
-// throw new Exception("Bug report will not be created.");
-// } else
-// throw e;
-// } finally {
-// try {
-// if (in != null)
-// in.close();
-// } catch (IOException e) {
-// BugzillaPlugin.log(new Status(IStatus.ERROR,
-// IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
-// "Problem closing the stream", e));
-// }
-// }
-// }

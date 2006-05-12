@@ -124,7 +124,7 @@
          point="org.eclipse.search.searchResultViewPages">
       <viewPage
             class="org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchResultView"
-            searchResultClass="org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchResult"
+            searchResultClass="org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchResult"
             id="org.eclipse.mylar.bugzilla.BugzillaSearchResultPage"/>
    </extension>
 <!--   <extension

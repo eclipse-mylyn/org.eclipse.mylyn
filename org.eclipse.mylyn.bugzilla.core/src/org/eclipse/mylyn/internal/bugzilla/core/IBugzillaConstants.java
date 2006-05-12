@@ -15,60 +15,11 @@ package org.eclipse.mylar.internal.bugzilla.core;
  */
 public interface IBugzillaConstants {
 
-	// The bugzilla plugin id
-	static final String PLUGIN_ID = "org.eclipse.mylar.bugzilla";
-
-	// The id's of other bugzilla packages
-	static final String EXISTING_BUG_EDITOR_ID = PLUGIN_ID + ".ui.existingBugEditor";
-
-	static final String NEW_BUG_EDITOR_ID = PLUGIN_ID + ".ui.newBugEditor";
-
-	static final String SEARCH_PAGE_ID = PLUGIN_ID + ".search.bugzillaSearchPage";
-
-	static final String SEARCH_PAGE_CONTEXT = PLUGIN_ID + ".bugzillaSearchContext";
-
-	static final String EDITOR_PAGE_CONTEXT = PLUGIN_ID + ".bugzillaEditorContext";
-
-	/**
-	 * XXX: remove?
-	 */
-	static final String HIT_MARKER_ID = PLUGIN_ID + ".searchHit";
-
-	// The is's for hit markers used in the label provider and sorters
-	static final String HIT_MARKER_ATTR_ID = "id";
-
-	static final String HIT_MARKER_ATTR_REPOSITORY = "repository";
-
-	static final String HIT_MARKER_ATTR_HREF = "href";
-
-	static final String HIT_MARKER_ATTR_DESC = "description";
-
-	static final String HIT_MARKER_ATTR_LABEL = "label";
-
-	static final String HIT_MARKER_ATTR_SEVERITY = "severity";
-
-	static final String HIT_MARKER_ATTR_PRIORITY = "priority";
-
-	static final String HIT_MARKER_ATTR_PLATFORM = "platform";
-
-	static final String HIT_MARKER_ATTR_STATE = "state";
-
-	static final String HIT_MARKER_ATTR_RESULT = "result";
-
-	static final String HIT_MARKER_ATTR_OWNER = "owner";
-
-	static final String HIT_MARKER_ATTR_QUERY = "query";
-	
-
-	
 	// Error response from bugzilla server upon bug request
 	static final String ERROR_INVALID_BUG_ID = "InvalidBugId";
-	static final String ERROR_INVALID_USERNAME_OR_PASSWORD = "Invalid Username Or Password";	
-//	static final int ERROR_CODE = 1;
 
-	// Bugzilla Preferences keys
-	// static final String BUGZILLA_SERVER = "BUGZILLA_SERVER";
-	// static final String BUGZILLA_SERVER = "BUGZILLA_SERVER";
+	static final String ERROR_INVALID_USERNAME_OR_PASSWORD = "Invalid Username Or Password";
+
 	static final String MOST_RECENT_QUERY = "org.eclipse.mylar.bugzilla.query.last";
 
 	static final String SERVER_VERSION = "org.eclipse.mylar.bugzilla.server.version";
@@ -81,7 +32,7 @@ public interface IBugzillaConstants {
 	public static final int RETURN_ALL_HITS = -1;
 
 	public static final String CONTENT_TYPE_RDF = "&ctype=rdf";
-	
+
 	/** Supported bugzilla repository versions */
 	static public enum BugzillaServerVersion {
 		SERVER_218, SERVER_220, SERVER_222;
@@ -99,16 +50,18 @@ public interface IBugzillaConstants {
 				return "null";
 			}
 		}
-		
-		/** returns null if version string unknown**/
+
+		/** returns null if version string unknown* */
 		static public BugzillaServerVersion fromString(String version) {
-			if(version.equals(SERVER_222.toString())) return SERVER_222;
-			if(version.equals(SERVER_220.toString())) return SERVER_220;
-			if(version.equals(SERVER_218.toString())) return SERVER_218;
+			if (version.equals(SERVER_222.toString()))
+				return SERVER_222;
+			if (version.equals(SERVER_220.toString()))
+				return SERVER_220;
+			if (version.equals(SERVER_218.toString()))
+				return SERVER_218;
 			return null;
 		}
 	}
-	
 
 	// static final String IS_216 = "BUGZILLA_IS_216";
 	// static final String IS_218 = "BUGZILLA_IS_218";
@@ -141,13 +94,18 @@ public interface IBugzillaConstants {
 
 	static final String VALUES_TARGET = "org.eclipse.mylar.bugzilla.values.target";
 
-
 	static final String ECLIPSE_BUGZILLA_URL = "https://bugs.eclipse.org/bugs";
+
 	static final String TEST_BUGZILLA_216_URL = "http://mylar.eclipse.org/bugs216";
+
 	static final String TEST_BUGZILLA_218_URL = "http://mylar.eclipse.org/bugs218";
+
 	static final String TEST_BUGZILLA_220_URL = "http://mylar.eclipse.org/bugs220";
+
 	static final String TEST_BUGZILLA_2201_URL = "http://mylar.eclipse.org/bugs2201";
+
 	static final String TEST_BUGZILLA_222_URL = "http://mylar.eclipse.org/bugs222";
+
 	// Default values for keys
 
 	static final String[] DEFAULT_STATUS_VALUES = { "Unconfirmed", "New", "Assigned", "Reopened", "Resolved",
@@ -179,7 +137,7 @@ public interface IBugzillaConstants {
 	static final String[] DEFAULT_TARGET_VALUES = {};
 
 	public static final String TITLE_MESSAGE_DIALOG = "Mylar Bugzilla Client";
-	
+
 	public static final String TITLE_NEW_BUG = "New Bugzilla Bug";
 
 	public static final String MESSAGE_LOGIN_FAILURE = "Bugzilla login information or repository version incorrect";
@@ -187,22 +145,28 @@ public interface IBugzillaConstants {
 	public static final String INVALID_2201_ATTRIBUTE_IGNORED = "EclipsebugsBugzilla2.20.1";
 
 	public static final String VALUE_STATUS_RESOLVED = "RESOLVED";
+
 	public static final String VALUE_STATUS_NEW = "NEW";
+
 	public static final String VALUE_STATUS_CLOSED = "CLOSED";
+
 	public static final String VALUE_STATUS_ASSIGNED = "ASSIGNED";
+
 	public static final String VALUE_RESOLUTION_LATER = "LATER";
 
 	public static enum BUGZILLA_OPERATION {
 		none, accept, resolve, duplicate, reassign, reassignbycomponent, reopen, verify, close;
 	}
-	
+
 	public static enum BUGZILLA_REPORT_STATUS {
 		UNCONFIRMED, NEW, ASSIGNED, REOPENED, RESOLVED, VERIFIED, CLOSED;
 	}
+
 	public static enum BUGZILLA_REPORT_SEVERITY {
 		UNCONFIRMED, NEW, ASSIGNED, REOPENED, RESOLVED, VERIFIED, CLOSED;
 	}
+
 	public static enum BUGZILLA_RESOLUTION {
-		FIXED, INVALID, WONTFIX, LATER, REMIND, WORKSFORME;		
+		FIXED, INVALID, WONTFIX, LATER, REMIND, WORKSFORME;
 	}
 }

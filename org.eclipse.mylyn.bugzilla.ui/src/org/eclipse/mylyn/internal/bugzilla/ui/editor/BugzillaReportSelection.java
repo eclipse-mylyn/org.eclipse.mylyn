@@ -11,8 +11,8 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
-import org.eclipse.mylar.bugzilla.core.Comment;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaReportSelection;
+import org.eclipse.mylar.internal.bugzilla.ui.IBugzillaReportSelection;
+import org.eclipse.mylar.provisional.bugzilla.core.Comment;
 
 /**
  * A selection of a Bugzilla element in a view.

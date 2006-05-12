@@ -13,12 +13,12 @@ package org.eclipse.mylar.internal.bugzilla.ui.editor;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.eclipse.mylar.bugzilla.core.BugzillaReport;
-import org.eclipse.mylar.bugzilla.core.Comment;
-import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaReportSelection;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaImages;
+import org.eclipse.mylar.internal.bugzilla.ui.IBugzillaReportSelection;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.provisional.bugzilla.core.Comment;
+import org.eclipse.mylar.provisional.bugzilla.core.IBugzillaBug;
 import org.eclipse.swt.graphics.Image;
 
 /**

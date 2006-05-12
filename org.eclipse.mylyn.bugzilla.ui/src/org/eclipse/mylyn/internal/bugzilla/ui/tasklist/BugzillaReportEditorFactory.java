@@ -11,12 +11,15 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
-import org.eclipse.mylar.bugzilla.core.BugzillaTask;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditor;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskEditorFactory;
 import org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.EditorPart;
@@ -41,21 +44,11 @@ public class BugzillaReportEditorFactory implements ITaskEditorFactory {
 	public IEditorInput createEditorInput(ITask task) {
 		if (task instanceof BugzillaTask) {
 			BugzillaTask bugzillaTask = (BugzillaTask) task;
-
-//			boolean offline = bugzillaTask.getSyncState() == RepositoryTaskSyncState.OUTGOING
-//					|| bugzillaTask.getSyncState() == RepositoryTaskSyncState.CONFLICT;
-
 			try {
-				BugzillaTaskEditorInput input = new BugzillaTaskEditorInput(bugzillaTask, true);
+				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, bugzillaTask.getRepositoryUrl());
+				BugzillaTaskEditorInput input = new BugzillaTaskEditorInput(repository, bugzillaTask, true);
 				input.setOfflineBug(bugzillaTask.getBugReport()); 
-				return input;
-//				GetBugzillaReportJob getBugzillaReportJob = new GetBugzillaReportJob(bugzillaTask);
-//				getBugzillaReportJob.schedule();
-//				return getBugzillaReportJob.getEditorInput();
-				// BugzillaTaskEditorInput input = new
-				// BugzillaTaskEditorInput(bugTask, offline);
-				// try {
-				//				
+				return input;	
 			} catch (Exception e) {
 				MylarStatusHandler.fail(e, "Could not create Bugzilla editor input", true);
 			}

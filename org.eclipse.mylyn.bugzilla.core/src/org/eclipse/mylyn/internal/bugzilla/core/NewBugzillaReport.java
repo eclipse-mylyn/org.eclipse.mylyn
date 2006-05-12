@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.bugzilla.core;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.eclipse.mylar.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
 
 /**
  * This class is used to store data about the new bug that is being created
@@ -32,17 +32,10 @@ public class NewBugzillaReport extends BugzillaReport implements Serializable {
 
 	/** Whether the products have been parsed yet or not */
 	protected boolean hasParsedProducts = false;
-//
-//	// /** The bug's id */
-//	// protected final int id;
-//
+
 	/** The product that the bug is for */
 	protected String product;
-//
-//	// /** A list of the attributes that can be changed for the new bug */
-//	// public Map<String, AbstractRepositoryReportAttribute> attributes = new
-//	// LinkedHashMap<String, AbstractRepositoryReportAttribute>();
-//
+
 	/** The summary for the bug */
 	protected String summary = "";
 
@@ -62,12 +55,11 @@ public class NewBugzillaReport extends BugzillaReport implements Serializable {
 	 * Creates a new <code>NewBugModel</code>. The id chosen for this bug is
 	 * based on the id of the last <code>NewBugModel</code> that was created.
 	 */
-	public NewBugzillaReport(String repositoryURL) {
-		super(BugzillaPlugin.getDefault().getOfflineReports().getNextOfflineBugId(), repositoryURL);
-		// id =
-		// BugzillaPlugin.getDefault().getOfflineReports().getNextOfflineBugId();
+	public NewBugzillaReport(String repositoryURL, int offlineId) {
+		super(offlineId, repositoryURL);
+//		BugzillaPlugin.getDefault().getOfflineReports().getNextOfflineBugId();
 	}
-
+ 
 	// public AbstractRepositoryReportAttribute getAttribute(String key) {
 	// return attributes.get(key);
 	// }

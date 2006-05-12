@@ -33,15 +33,12 @@ import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylar.bugzilla.core.AbstractRepositoryReportAttribute;
-import org.eclipse.mylar.bugzilla.core.BugzillaReport;
-import org.eclipse.mylar.bugzilla.core.BugzillaReportAttribute;
-import org.eclipse.mylar.bugzilla.core.Operation;
+import org.eclipse.mylar.internal.bugzilla.core.HtmlStreamTokenizer.Token;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
-import org.eclipse.mylar.internal.bugzilla.core.internal.BugzillaReportElement;
-import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer;
-import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlTag;
-import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer.Token;
+import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReportAttribute;
+import org.eclipse.mylar.provisional.bugzilla.core.Operation;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
 /**
@@ -420,7 +417,7 @@ public class BugzillaReportSubmitForm {
 					out.close();
 
 			} catch (IOException e) {
-				BugzillaPlugin.log(new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
+				BugzillaPlugin.log(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, IStatus.ERROR,
 						"Problem posting the bug", e));
 			}
 		}

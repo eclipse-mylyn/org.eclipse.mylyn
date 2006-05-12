@@ -22,10 +22,10 @@ import javax.security.auth.login.LoginException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchEngine;
-import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchQuery;
-import org.eclipse.mylar.internal.bugzilla.core.search.IBugzillaSearchOperation;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
+import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchEngine;
+import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchQuery;
+import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaSearchOperation;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -125,7 +125,7 @@ public class BugzillaCategorySearchOperation extends WorkspaceModifyOperation im
 	}
 
 	/**
-	 * @see org.eclipse.mylar.internal.bugzilla.core.search.IBugzillaSearchOperation#getStatus()
+	 * @see org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaSearchOperation#getStatus()
 	 */
 	public IStatus getStatus() throws LoginException {
 		// if a LoginException was thrown while trying to search, throw this

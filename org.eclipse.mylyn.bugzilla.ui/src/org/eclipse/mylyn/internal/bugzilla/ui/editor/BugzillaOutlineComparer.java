@@ -12,8 +12,8 @@
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
 import org.eclipse.jface.viewers.IElementComparer;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaTools;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaReportSelection;
+import org.eclipse.mylar.internal.bugzilla.ui.BugzillaTools;
+import org.eclipse.mylar.internal.bugzilla.ui.IBugzillaReportSelection;
 
 /**
  * This class is used to compare two <code>IBugzillaReportSelection</code>

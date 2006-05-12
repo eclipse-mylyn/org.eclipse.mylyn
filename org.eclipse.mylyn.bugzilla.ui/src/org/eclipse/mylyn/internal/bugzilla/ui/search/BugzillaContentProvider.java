@@ -1,0 +1,66 @@
+/*******************************************************************************
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     University Of British Columbia - initial API and implementation
+ *******************************************************************************/
+
+package org.eclipse.mylar.internal.bugzilla.ui.search;
+
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.search.ui.text.AbstractTextSearchResult;
+
+/**
+ * An abstract implementation of a content provider for a Bugzilla search.
+ * 
+ * @see org.eclipse.jface.viewers.IContentProvider
+ */
+public abstract class BugzillaContentProvider implements IStructuredContentProvider {
+
+	/** An empty array of objects */
+	protected final Object[] EMPTY_ARR = new Object[0];
+
+	/** The Bugzilla search result for this content provider */
+	protected AbstractTextSearchResult bugResult;
+
+	public void dispose() {
+		// nothing to do
+	}
+
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		if (newInput instanceof BugzillaSearchResult) {
+			initialize((BugzillaSearchResult) newInput);
+		}
+	}
+
+	/**
+	 * Initializes the content provider with the given search result.
+	 * 
+	 * @param result
+	 *            The search result to use with this content provider
+	 */
+	protected void initialize(AbstractTextSearchResult result) {
+		bugResult = result;
+	}
+
+	/**
+	 * This method is called whenever the set of matches for the given elements
+	 * changes.
+	 * 
+	 * @param updatedElements
+	 *            The array of objects that has to be refreshed
+	 * @see
+	 * @see org.eclipse.search.ui.text.AbstractTextSearchViewPage#elementsChanged(java.lang.Object[])
+	 */
+	public abstract void elementsChanged(Object[] updatedElements);
+
+	/**
+	 * Clears the viewer.
+	 */
+	public abstract void clear();
+}
