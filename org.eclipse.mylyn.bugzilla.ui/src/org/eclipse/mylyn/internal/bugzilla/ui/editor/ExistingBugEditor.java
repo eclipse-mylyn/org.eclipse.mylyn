@@ -50,8 +50,6 @@ import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -117,7 +115,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	protected Text addCommentsText;
 
 	protected BugzillaReport bug;
-	
+
 	public String getNewCommentText() {
 		return addCommentsTextBox.getText();
 	}
@@ -406,52 +404,21 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	@Override
 	protected void createDescriptionLayout(FormToolkit toolkit, final ScrolledForm form) {
 
-		final Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR);
 		section.setText(LABEL_SECTION_DESCRIPTION);
-		section.setExpanded(true);
 		section.setLayout(new GridLayout());
 		GridData sectionData = new GridData(GridData.FILL_HORIZONTAL);
-		// sectionData.grabExcessVerticalSpace = true;
 		section.setLayoutData(sectionData);
 
-		// Description Area
-		final Composite descriptionComposite = toolkit.createComposite(section);
-		//descriptionComposite.setBackground(new Color(descriptionComposite.getDisplay(), 123, 123, 123));
-		GridLayout descriptionLayout = new GridLayout();
-		descriptionLayout.numColumns = 1;
-		descriptionComposite.setLayout(descriptionLayout);
-
-		// descriptionComposite.setBackground(background);
-		// GridData descriptionData = new GridData(GridData.FILL_BOTH);
-		// descriptionData.widthHint = DESCRIPTION_WIDTH;
-		// descriptionData.widthHint = DESCRIPTION_HEIGHT;
-		// descriptionData.grabExcessVerticalSpace = true;
-		// descriptionComposite.setLayoutData(descriptionData);
-
-		section.setClient(descriptionComposite);
-
-		TextViewer viewer = addRepositoryText(repository, descriptionComposite, bug.getDescription());
+		TextViewer viewer = addRepositoryText(repository, form.getBody(), bug.getDescription());// form.getBody()
 		final StyledText styledText = viewer.getTextWidget();
 		styledText.addListener(SWT.FocusIn, new DescriptionListener());
 		styledText.setLayout(new GridLayout());
-		GridData styledTextData = new GridData(GridData.FILL_BOTH);
+		GridData styledTextData = new GridData(GridData.FILL_HORIZONTAL);
 		styledTextData.widthHint = DESCRIPTION_WIDTH;
-		// styledTextData.heightHint = DESCRIPTION_HEIGHT;
-		styledTextData.grabExcessVerticalSpace = false;
+		styledTextData.grabExcessHorizontalSpace = true;
+
 		styledText.setLayoutData(styledTextData);
-
-		descriptionComposite.addControlListener(new ControlListener() {
-
-			public void controlMoved(ControlEvent e) {
-				// ignore
-
-			}
-
-			public void controlResized(ControlEvent e) {
-
-				descriptionComposite.setSize(descriptionComposite.getSize().x, styledText.getSize().y + 10);
-			}
-		});
 
 		texts.add(textsindex, styledText);
 		textHash.put(bug.getDescription(), styledText);
@@ -821,7 +788,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		protected IStatus run(IProgressMonitor monitor) {
 			final BugzillaReport serverBug;
 			try {
-				serverBug = BugzillaRepositoryUtil.getBug(bug.getRepositoryUrl(), bugzillaInput.getProxySettings(), bug.getId());
+				serverBug = BugzillaRepositoryUtil.getBug(bug.getRepositoryUrl(), bugzillaInput.getProxySettings(), bug
+						.getId());
 				// If no bug was found on the server, throw an exception so that
 				// the
 				// user gets the same message that appears when there is a
