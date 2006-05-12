@@ -51,10 +51,10 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 					task = ((AbstractQueryHit) object).getCorrespondingTask();
 				}
 				if (task != null) {
-					if (isInteresting(task)) {
-						return true;
-					} else if (isUninteresting(task)) {
+					if (isUninteresting(task)) {
 						return false;
+					} else if (isInteresting(task)) {
+						return true;
 					}
 					// IMylarStructureBridge bridge =
 					// MylarPlugin.getDefault().getStructureBridge(task);
@@ -83,7 +83,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	protected boolean isUninteresting(ITask task) {
 		return !task.isActive()
-				&& (task.isCompleted() || MylarTaskListPlugin.getTaskListManager().isReminderAfterThisWeek(task));
+				&& ((task.isCompleted() && !isCompletedToday(task)) || MylarTaskListPlugin.getTaskListManager().isReminderAfterThisWeek(task));
 	}
 
 	// TODO: make meta-context more explicit
