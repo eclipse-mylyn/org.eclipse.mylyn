@@ -24,6 +24,8 @@ public class TaskListPreferenceConstants {
 
 	public static final String REPORT_OPEN_INTERNAL = "org.eclipse.mylar.tasklist.report.open.internal";
 
+	public static final String REPORT_DISABLE_INTERNAL = "org.eclipse.mylar.tasklist.report.disable.internal";
+
 	public static final String REPORT_OPEN_EXTERNAL = "org.eclipse.mylar.tasklist.report.open.external";
 
 	public static final String MULTIPLE_ACTIVE_TASKS = "org.eclipse.mylar.tasklist.active.multipe";

@@ -24,8 +24,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -39,6 +41,8 @@ public class MylarRepositoriesPreferencePage extends PreferencePage implements I
 
 	private Button reportEditor;
 
+	private Button disableInternal;
+	
 	private Button reportInternal;
 
 	private Text synchScheduleTime = null;
@@ -76,13 +80,32 @@ public class MylarRepositoriesPreferencePage extends PreferencePage implements I
 		container.setLayout(new GridLayout(2, false));
 		container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		container.setText("Open Repository Tasks With");
+		container.setText("Open Repository Tasks with");
 		reportEditor = new Button(container, SWT.RADIO);
 		reportEditor.setText("Editor if available (Recommended)");
 		reportEditor.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPORT_OPEN_EDITOR));
 		reportInternal = new Button(container, SWT.RADIO);
 		reportInternal.setText("Internal browser");
 		reportInternal.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL));
+		disableInternal = new Button(container, SWT.CHECK);
+		disableInternal.setText("Disable internal browser");
+		disableInternal.setEnabled(!reportInternal.getSelection());
+		disableInternal.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL));
+		reportInternal.addListener(SWT.Selection, new Listener() {
+		
+			public void handleEvent(Event event) {
+				if(reportInternal.getSelection())
+				{
+					disableInternal.setSelection(false);
+					disableInternal.setEnabled(false);
+				}
+				else
+				{
+					disableInternal.setEnabled(true);
+				}
+			}
+		
+		});
 		// reportExternal = new Button(container, SWT.RADIO);
 		// reportExternal.setText("External browser");
 		// reportExternal.setSelection(getPreferenceStore().getBoolean(MylarTaskListPlugin.REPORT_OPEN_EXTERNAL));
@@ -93,6 +116,7 @@ public class MylarRepositoriesPreferencePage extends PreferencePage implements I
 	public boolean performOk() {
 		getPreferenceStore().setValue(TaskListPreferenceConstants.REPORT_OPEN_EDITOR, reportEditor.getSelection());
 		getPreferenceStore().setValue(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL, reportInternal.getSelection());
+		getPreferenceStore().setValue(TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL, disableInternal.getSelection());
 
 		getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP,
 				synchQueries.getSelection());
@@ -108,6 +132,7 @@ public class MylarRepositoriesPreferencePage extends PreferencePage implements I
 	public boolean performCancel() {
 		reportEditor.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPORT_OPEN_EDITOR));
 		reportInternal.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL));
+		disableInternal.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL));
 		synchQueries.setSelection(getPreferenceStore().getBoolean(
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
 		enableBackgroundSynch.setSelection(getPreferenceStore().getBoolean(
@@ -122,6 +147,8 @@ public class MylarRepositoriesPreferencePage extends PreferencePage implements I
 				.getDefaultBoolean(TaskListPreferenceConstants.REPORT_OPEN_EDITOR));
 		reportInternal.setSelection(getPreferenceStore().getDefaultBoolean(
 				TaskListPreferenceConstants.REPORT_OPEN_INTERNAL));
+		reportInternal.setSelection(getPreferenceStore().getDefaultBoolean(
+				TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL));
 
 		synchQueries.setSelection(getPreferenceStore().getDefaultBoolean(
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));

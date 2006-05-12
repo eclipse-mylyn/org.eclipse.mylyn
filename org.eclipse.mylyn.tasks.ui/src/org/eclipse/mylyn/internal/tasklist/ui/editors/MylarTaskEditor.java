@@ -64,7 +64,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	private List<IEditorPart> editors = new ArrayList<IEditorPart>();
 
 	private IEditorPart contentOutlineProvider = null;
-			
+
 	private static class TaskEditorSelectionProvider extends MultiPageSelectionProvider {
 		private ISelection globalSelection;
 
@@ -133,17 +133,17 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 				}
 			}
 			if (hasValidUrl()) {
-				int browserIndex = createBrowserPage(); 
+				int browserIndex = createBrowserPage();
 				if (selectedIndex == 0 && !taskEditorInput.isNewTask()) {
 					selectedIndex = browserIndex;
 				}
 			}
 			setActivePage(selectedIndex);
-			
+
 			if (task instanceof AbstractRepositoryTask) {
-				 setTitleImage(TaskListImages.getImage(TaskListImages.TASK_REPOSITORY));
-			} else if (hasValidUrl()){
-				 setTitleImage(TaskListImages.getImage(TaskListImages.TASK_WEB));
+				setTitleImage(TaskListImages.getImage(TaskListImages.TASK_REPOSITORY));
+			} else if (hasValidUrl()) {
+				setTitleImage(TaskListImages.getImage(TaskListImages.TASK_WEB));
 			}
 		} catch (PartInitException e) {
 			MylarStatusHandler.fail(e, "failed to create task editor pages", false);
@@ -152,14 +152,14 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 
 	@Override
 	public Object getAdapter(Class adapter) {
-		// TODO: consider adding: IContentOutlinePage.class.equals(adapter) && 
+		// TODO: consider adding: IContentOutlinePage.class.equals(adapter) &&
 		if (contentOutlineProvider != null) {
 			return contentOutlineProvider.getAdapter(adapter);
 		} else {
 			return super.getAdapter(adapter);
 		}
 	}
-	
+
 	public IEditorPart getActiveEditor() {
 		return super.getActiveEditor();
 	}
@@ -180,23 +180,26 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	}
 
 	private int createBrowserPage() {
-		try {
-			webBrowser = new Browser(getContainer(), SWT.NONE);
-			int index = addPage(webBrowser);
-			setPageText(index, ISSUE_WEB_PAGE_LABEL);
-			webBrowser.setUrl(task.getUrl());
+		if (!MylarTaskListPlugin.getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL)) {
+			try {
+				webBrowser = new Browser(getContainer(), SWT.NONE);
+				int index = addPage(webBrowser);
+				setPageText(index, ISSUE_WEB_PAGE_LABEL);
+				webBrowser.setUrl(task.getUrl());
 
-			boolean openWithBrowser = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(
-					TaskListPreferenceConstants.REPORT_OPEN_INTERNAL);
-//			if (!(task instanceof AbstractRepositoryTask) || openWithBrowser) {
-			if (openWithBrowser) {
-				setActivePage(index);
+				boolean openWithBrowser = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(
+						TaskListPreferenceConstants.REPORT_OPEN_INTERNAL);
+				// if (!(task instanceof AbstractRepositoryTask) ||
+				// openWithBrowser) {
+				if (openWithBrowser) {
+					setActivePage(index);
+				}
+				return index;
+			} catch (SWTError e) {
+				MylarStatusHandler.fail(e, "Could not create Browser page: " + e.getMessage(), true);
+			} catch (RuntimeException e) {
+				MylarStatusHandler.fail(e, "could not create issue report page", false);
 			}
-			return index;
-		} catch (SWTError e) {
-			MylarStatusHandler.fail(e, "Could not create Browser page: " + e.getMessage(), true);
-		} catch (RuntimeException e) {
-			MylarStatusHandler.fail(e, "could not create issue report page", false);
 		}
 		return 0;
 	}
@@ -205,7 +208,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	public void doSave(IProgressMonitor monitor) {
 		for (IEditorPart editor : editors) {
 			editor.doSave(monitor);
-		}		
+		}
 
 		if (webBrowser != null) {
 			webBrowser.setUrl(task.getUrl());
@@ -220,7 +223,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	private boolean hasValidUrl() {
 		return task.getUrl().length() > 9;
 	}
-	
+
 	/**
 	 * Saves the multi-page editor's document as another file. Also updates the
 	 * text for page 0's tab, and updates this multi-page editor's input to
@@ -230,7 +233,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	 */
 	@SuppressWarnings("deprecation")
 	@Override
-	public void doSaveAs() {	
+	public void doSaveAs() {
 		IEditorPart editor = getEditor(0);
 		editor.doSaveAs();
 		setPageText(0, editor.getTitle());
@@ -251,7 +254,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		 * only one instance of the task data is stored for each editor opened.
 		 */
 		task = taskEditorInput.getTask();
-		
+
 		try {
 			taskPlanningEditor.init(this.getEditorSite(), this.getEditorInput());
 			taskPlanningEditor.setTask(task);
@@ -285,7 +288,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 				ITask task = taskEditorInput.getTask();
 				if (TaskListView.getDefault() != null) {
 					TaskListView.getDefault().selectedAndFocusTask(task);
-				}  
+				}
 			}
 		}
 
