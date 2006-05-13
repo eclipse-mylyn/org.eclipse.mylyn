@@ -193,7 +193,7 @@ public class BugzillaReportSubmitForm {
 
 		BugzillaReportSubmitForm bugReportPostHandler = new BugzillaReportSubmitForm();
 
-		setDefaultCCValue(bug, repositoryUrl);
+		setDefaultCCValue(bug, userName);
 		setConnectionsSettings(bugReportPostHandler, repositoryUrl, userName, password, proxySettings, PROCESS_BUG_CGI);
 
 		if (bug.getCharset() != null) {
