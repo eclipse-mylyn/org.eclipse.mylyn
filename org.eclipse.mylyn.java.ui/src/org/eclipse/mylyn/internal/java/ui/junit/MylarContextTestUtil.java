@@ -15,11 +15,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.junit.launcher.ITestKind;
+import org.eclipse.jdt.internal.junit.launcher.TestKindRegistry;
+import org.eclipse.jdt.internal.junit.launcher.TestSearchResult;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
 import org.eclipse.mylar.internal.java.search.JUnitReferencesProvider;
@@ -33,6 +39,16 @@ import org.eclipse.mylar.provisional.core.MylarPlugin;
  */
 public class MylarContextTestUtil {
 
+	public static TestSearchResult findTestTypes(ILaunchConfiguration configuration, IProgressMonitor pm) throws CoreException {
+		Set<IType> contextTestCases = MylarContextTestUtil.getTestCasesInContext();
+		ITestKind testKind = TestKindRegistry.getDefault().getKind(configuration);
+		// HACK: only checks first type
+		if (contextTestCases.size() > 0) {
+			testKind = TestKindRegistry.getDefault().getKind(contextTestCases.iterator().next());
+		}
+		return new TestSearchResult(contextTestCases.toArray(new IType[contextTestCases.size()]), testKind);
+	}
+	
 	public static Set<IType> getTestCasesInContext() {
 		Set<IType> testTypes = new HashSet<IType>();
 		List<IMylarElement> interesting = MylarPlugin.getContextManager().getActiveContext().getInteresting();

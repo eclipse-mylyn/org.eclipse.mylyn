@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.internal.junit.launcher.TestSearchResult;
 import org.eclipse.jdt.internal.junit.ui.JUnitMessages;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.pde.core.plugin.IFragmentModel;
@@ -34,13 +35,13 @@ import org.eclipse.pde.internal.ui.launcher.JUnitLaunchConfiguration;
  */
 public class MylarPdeJUnitLaunchConfiguration extends JUnitLaunchConfiguration {
 
-	protected IType[] getTestTypes(ILaunchConfiguration configuration, IProgressMonitor pm) throws CoreException {
-		Set<IType> contextTestCases = MylarContextTestUtil.getTestCasesInContext();
-		if (contextTestCases.isEmpty()) {
+	protected TestSearchResult findTestTypes(ILaunchConfiguration configuration, IProgressMonitor pm) throws CoreException {
+		TestSearchResult testSearchResult = MylarContextTestUtil.findTestTypes(configuration, pm);
+		if (testSearchResult.getTypes().length == 0) {
 			abort(JUnitMessages.JUnitBaseLaunchConfiguration_error_notests, null,
 					IJavaLaunchConfigurationConstants.ERR_UNSPECIFIED_MAIN_TYPE);
 		}
-		return contextTestCases.toArray(new IType[contextTestCases.size()]);
+		return testSearchResult;
 	}
 
 	protected String getTestPluginId(ILaunchConfiguration configuration) throws CoreException {

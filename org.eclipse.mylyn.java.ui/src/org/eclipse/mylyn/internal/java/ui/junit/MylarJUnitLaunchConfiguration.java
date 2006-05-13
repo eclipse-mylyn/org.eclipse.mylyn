@@ -11,13 +11,11 @@
 
 package org.eclipse.mylar.internal.java.ui.junit;
 
-import java.util.Set;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.junit.launcher.JUnitLaunchConfiguration;
+import org.eclipse.jdt.internal.junit.launcher.TestSearchResult;
 import org.eclipse.jdt.internal.junit.ui.JUnitMessages;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 
@@ -26,12 +24,12 @@ import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
  */
 public class MylarJUnitLaunchConfiguration extends JUnitLaunchConfiguration {
 
-	protected IType[] getTestTypes(ILaunchConfiguration config, IProgressMonitor pm) throws CoreException {
-		Set<IType> contextTestCases = MylarContextTestUtil.getTestCasesInContext();
-		if (contextTestCases.isEmpty()) {
+	protected TestSearchResult findTestTypes(ILaunchConfiguration configuration, IProgressMonitor pm) throws CoreException {
+		TestSearchResult testSearchResult = MylarContextTestUtil.findTestTypes(configuration, pm);
+		if (testSearchResult.getTypes().length == 0) {
 			abort(JUnitMessages.JUnitBaseLaunchConfiguration_error_notests, null,
 					IJavaLaunchConfigurationConstants.ERR_UNSPECIFIED_MAIN_TYPE);
 		}
-		return contextTestCases.toArray(new IType[contextTestCases.size()]);
+		return testSearchResult;
 	}
 }
