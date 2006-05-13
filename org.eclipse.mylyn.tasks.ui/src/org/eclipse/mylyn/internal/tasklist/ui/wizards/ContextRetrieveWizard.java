@@ -11,8 +11,6 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.wizards;
 
-import java.io.IOException;
-
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
@@ -73,8 +71,8 @@ public class ContextRetrieveWizard extends Wizard {
 				MessageDialog.openError(null, "Context Retrieval",
 						"Retrieval of task context FAILED. See error log for details.");
 			}
-		} catch (IOException e) {
-			MessageDialog.openError(null, "Context Retrieval", "Retrieval of task context FAILED.\n" + e.getMessage());
+		} catch (Exception e) {
+			MessageDialog.openError(null, MylarTaskListPlugin.TITLE_DIALOG, "Retrieval of task context FAILED.\n" + e.getMessage());
 		}
 		return true;
 	}

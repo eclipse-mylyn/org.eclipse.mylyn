@@ -34,12 +34,10 @@ import javax.security.auth.login.LoginException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.internal.bugzilla.core.HtmlStreamTokenizer.Token;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
 import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReportAttribute;
 import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReportAttribute;
 import org.eclipse.mylar.provisional.bugzilla.core.Operation;
-import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
 /**
  * 
@@ -139,7 +137,7 @@ public class BugzillaReportSubmitForm {
 
 	private String error = null;
 
-	public static BugzillaReportSubmitForm makeNewBugPost(TaskRepository repository, Proxy proxySettings, NewBugzillaReport model) {
+	public static BugzillaReportSubmitForm makeNewBugPost(String repositoryUrl, String userName, String password, Proxy proxySettings, NewBugzillaReport model, boolean wrapDescription) {
 		
 		BugzillaReportSubmitForm form = new BugzillaReportSubmitForm();
 		form.setPrefix(BugzillaReportSubmitForm.FORM_PREFIX_BUG_218);
@@ -148,7 +146,7 @@ public class BugzillaReportSubmitForm {
 		form.setPostfix(BugzillaReportSubmitForm.FORM_POSTFIX_216);
 		form.setPostfix2(BugzillaReportSubmitForm.FORM_POSTFIX_218);
 
-		setConnectionsSettings(form, repository, proxySettings, POST_BUG_CGI);
+		setConnectionsSettings(form, repositoryUrl, userName, password, proxySettings, POST_BUG_CGI);
 		// go through all of the attributes and add them to
 		// the bug post
 		Iterator<AbstractRepositoryReportAttribute> itr = model.getAttributes().iterator();
@@ -173,7 +171,7 @@ public class BugzillaReportSubmitForm {
 		// add the summary to the bug post
 		form.add(BugzillaReportElement.SHORT_DESC.getKeyString(), model.getSummary());
 
-		String formattedDescription = formatTextToLineWrap(model.getDescription(), repository);
+		String formattedDescription = formatTextToLineWrap(model.getDescription(), wrapDescription);
 		model.setDescription(formattedDescription);
 
 		if (model.getDescription().length() != 0) {
@@ -190,13 +188,13 @@ public class BugzillaReportSubmitForm {
 	 * 
 	 * @param removeCC
 	 */
-	public static BugzillaReportSubmitForm makeExistingBugPost(BugzillaReport bug, TaskRepository repository,
+	public static BugzillaReportSubmitForm makeExistingBugPost(BugzillaReport bug, String repositoryUrl, String userName, String password,
 			Proxy proxySettings, Set<String> removeCC) {
 
 		BugzillaReportSubmitForm bugReportPostHandler = new BugzillaReportSubmitForm();
 
-		setDefaultCCValue(bug, repository);
-		setConnectionsSettings(bugReportPostHandler, repository, proxySettings, PROCESS_BUG_CGI);
+		setDefaultCCValue(bug, repositoryUrl);
+		setConnectionsSettings(bugReportPostHandler, repositoryUrl, userName, password, proxySettings, PROCESS_BUG_CGI);
 
 		if (bug.getCharset() != null) {
 			bugReportPostHandler.setCharset(bug.getCharset());
@@ -499,8 +497,8 @@ public class BugzillaReportSubmitForm {
 		this.charset = charset;
 	}
 
-	private static void setConnectionsSettings(BugzillaReportSubmitForm form, TaskRepository repository, Proxy proxySettings, String formName) {
-		String baseURL = repository.getUrl();
+	private static void setConnectionsSettings(BugzillaReportSubmitForm form, String repositoryUrl, String userName, String password, Proxy proxySettings, String formName) {
+		String baseURL = repositoryUrl;
 		if (!baseURL.endsWith("/"))
 			baseURL += "/";
 		try {
@@ -513,8 +511,8 @@ public class BugzillaReportSubmitForm {
 		}
 
 		// add the login information to the bug post
-		form.add(KEY_BUGZILLA_LOGIN, repository.getUserName());
-		form.add(KEY_BUGZILLA_PASSWORD, repository.getPassword());
+		form.add(KEY_BUGZILLA_LOGIN, userName);
+		form.add(KEY_BUGZILLA_PASSWORD, password);
 	}
 	
 	/**
@@ -523,26 +521,26 @@ public class BugzillaReportSubmitForm {
 	 * 
 	 * @author Wesley Coelho
 	 */
-	private static void setDefaultCCValue(BugzillaReport bug, TaskRepository repository) {
+	private static void setDefaultCCValue(BugzillaReport bug, String userName) {
 		// AbstractRepositoryReportAttribute newCCattr =
 		// bug.getAttributeForKnobName(KEY_NEWCC);
 		AbstractRepositoryReportAttribute owner = bug.getAttribute(BugzillaReportElement.ASSIGNED_TO);
 
 		// Don't add the cc if the user is the bug owner
-		if (repository.getUserName() == null
-				|| (owner != null && owner.getValue().indexOf(repository.getUserName()) != -1)) {
+		if (userName == null
+				|| (owner != null && owner.getValue().indexOf(userName) != -1)) {
 			// MylarStatusHandler.log("Could not determine CC value for
 			// repository: " + repository, null);
 			return;
 		}
 		// Don't add cc if already there
 		AbstractRepositoryReportAttribute ccAttribute = bug.getAttribute(BugzillaReportElement.CC);
-		if (ccAttribute != null && ccAttribute.getValues().contains(repository.getUserName())) {
+		if (ccAttribute != null && ccAttribute.getValues().contains(userName)) {
 			return;
 		}
 		BugzillaReportAttribute newCCattr = new BugzillaReportAttribute(BugzillaReportElement.NEWCC);
 		// Add the user to the cc list
-		newCCattr.setValue(repository.getUserName());
+		newCCattr.setValue(userName);
 		bug.addAttribute(BugzillaReportElement.NEWCC, newCCattr);
 	}
 
@@ -550,38 +548,37 @@ public class BugzillaReportSubmitForm {
 	 * Break text up into lines of about 80 characters so that it is displayed
 	 * properly in bugzilla
 	 */
-	private static String formatTextToLineWrap(String origText, TaskRepository repository) {
-		BugzillaServerVersion bugzillaServerVersion = IBugzillaConstants.BugzillaServerVersion.fromString(repository
-				.getVersion());
-		if (bugzillaServerVersion != null && bugzillaServerVersion.compareTo(BugzillaServerVersion.SERVER_220) >= 0) {
-			// if
-			// (repository.getVersion().equals(BugzillaServerVersion.SERVER_220.toString()))
-			// {
+	private static String formatTextToLineWrap(String origText, boolean hardWrap) {
+//		BugzillaServerVersion bugzillaServerVersion = IBugzillaConstants.BugzillaServerVersion.fromString(repository
+//				.getVersion());
+//		if (bugzillaServerVersion != null && bugzillaServerVersion.compareTo(BugzillaServerVersion.SERVER_220) >= 0) {
+//			return origText;
+		if (!hardWrap) {
 			return origText;
-		}
-
-		String[] textArray = new String[(origText.length() / WRAP_LENGTH + 1) * 2];
-		for (int i = 0; i < textArray.length; i++)
-			textArray[i] = null;
-		int j = 0;
-		while (true) {
-			int spaceIndex = origText.indexOf(" ", WRAP_LENGTH - 5);
-			if (spaceIndex == origText.length() || spaceIndex == -1) {
-				textArray[j] = origText;
-				break;
+		} else {
+			String[] textArray = new String[(origText.length() / WRAP_LENGTH + 1) * 2];
+			for (int i = 0; i < textArray.length; i++)
+				textArray[i] = null;
+			int j = 0;
+			while (true) {
+				int spaceIndex = origText.indexOf(" ", WRAP_LENGTH - 5);
+				if (spaceIndex == origText.length() || spaceIndex == -1) {
+					textArray[j] = origText;
+					break;
+				}
+				textArray[j] = origText.substring(0, spaceIndex);
+				origText = origText.substring(spaceIndex + 1, origText.length());
+				j++;
 			}
-			textArray[j] = origText.substring(0, spaceIndex);
-			origText = origText.substring(spaceIndex + 1, origText.length());
-			j++;
+		
+			String newText = "";
+		
+			for (int i = 0; i < textArray.length; i++) {
+				if (textArray[i] == null)
+					break;
+				newText += textArray[i] + "\n";
+			}
+			return newText;
 		}
-
-		String newText = "";
-
-		for (int i = 0; i < textArray.length; i++) {
-			if (textArray[i] == null)
-				break;
-			newText += textArray[i] + "\n";
-		}
-		return newText;
 	}
 }

@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Proxy;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -58,10 +59,7 @@ import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettings
 import org.eclipse.mylar.internal.tasklist.ui.wizards.ExistingTaskWizardPage;
 import org.eclipse.mylar.internal.tasklist.util.TaskDataExportJob;
 import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReport;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaQueryHit;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaRemoteContextDelegate;
 import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.provisional.bugzilla.core.ReportAttachment;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
@@ -136,7 +134,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, bugzillaTask.getRepositoryUrl());
 		Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
 		try {
-			return BugzillaRepositoryUtil.getBug(repository, proxySettings, AbstractRepositoryTask
+			return BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, AbstractRepositoryTask
 					.getTaskIdAsInt(bugzillaTask.getHandleIdentifier()));
 		} catch (final LoginException e) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -145,12 +143,12 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 							"Ensure proper repository configuration in " + TaskRepositoriesView.NAME + ".");
 				}
 			});
-		} catch (IOException e) {
+		} catch (final Exception e) {
 			if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						((ApplicationWindow) PlatformUI.getWorkbench().getActiveWorkbenchWindow())
-								.setStatus("Download of bug: " + bugzillaTask + " failed due to I/O exception");
+								.setStatus("Download of bug: " + bugzillaTask + " failed due to exception: " + e);
 					}
 				});
 			}
@@ -580,7 +578,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 						File zippedContextFile = new File(MylarPlugin.getDefault().getDataDirectory() + File.separator
 								+ sourceContextFile.getName() + ZIPFILE_EXTENSION);
 						if (zippedContextFile != null && zippedContextFile.exists()) {
-							result = BugzillaRepositoryUtil.uploadAttachment(repository, BugzillaTask
+							result = BugzillaRepositoryUtil.uploadAttachment(repository.getUrl(), repository.getUserName(), repository.getPassword(), BugzillaTask
 									.getTaskIdAsInt(task.getHandleIdentifier()), longComment,
 									MYLAR_CONTEXT_DESCRIPTION, zippedContextFile, APPLICATION_OCTET_STREAM, false);
 							if (result) {
@@ -638,7 +636,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public boolean retrieveContext(TaskRepository repository, AbstractRepositoryTask task,
-			IRemoteContextDelegate remoteContextDelegate) throws IOException {
+			IRemoteContextDelegate remoteContextDelegate) throws IOException, GeneralSecurityException {
 		boolean result = false;
 		boolean wasActive = false;
 		if (remoteContextDelegate instanceof BugzillaRemoteContextDelegate) {
@@ -658,7 +656,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			// }
 
 			Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
-			result = BugzillaRepositoryUtil.downloadAttachment(repository, proxySettings, contextDelegate.getId(),
+			result = BugzillaRepositoryUtil.downloadAttachment(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, contextDelegate.getId(),
 					destinationZipFile, true);
 
 			if (result) {

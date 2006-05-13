@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui.wizard;
 
-import java.io.IOException;
 import java.net.Proxy;
 
 import javax.security.auth.login.LoginException;
@@ -23,6 +22,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
+import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
@@ -128,7 +128,8 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 					public void run() {
 						Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
-						BugzillaReportSubmitForm form = BugzillaReportSubmitForm.makeNewBugPost(repository, proxySettings, model);
+						boolean wrap = IBugzillaConstants.BugzillaServerVersion.SERVER_218.equals(repository.getVersion());
+						BugzillaReportSubmitForm form = BugzillaReportSubmitForm.makeNewBugPost(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, model, wrap);
 						try {
 							id = form.submitReportToRepository();
 
@@ -184,9 +185,9 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 			ExceptionHandler.handle(e, SearchMessages.Search_Error_search_title,
 					SearchMessages.Search_Error_search_message);
 			BugzillaPlugin.log(e.getStatus());
-		} catch (IOException e) {
-			MylarStatusHandler.fail(e, "Could not open bug report", false);
-		}
+		} catch (Exception e) {
+			MylarStatusHandler.fail(e, "Failed to open Bugzilla report", false);
+		} 
 	}
 
 	/**

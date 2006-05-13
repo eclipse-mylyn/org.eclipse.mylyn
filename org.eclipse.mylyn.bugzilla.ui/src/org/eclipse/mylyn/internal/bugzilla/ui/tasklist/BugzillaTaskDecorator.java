@@ -15,8 +15,6 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaImages;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaQueryHit;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaTask;
 
 /**
  * @author Mik Kersten

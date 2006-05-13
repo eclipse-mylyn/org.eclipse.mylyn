@@ -12,6 +12,7 @@
 package org.eclipse.mylar.provisional.tasklist;
 
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -71,7 +72,7 @@ public abstract class AbstractRepositoryConnector {
 		}
 	}
 	
-	public abstract boolean retrieveContext(TaskRepository repository, AbstractRepositoryTask task, IRemoteContextDelegate remoteContextDelegate)  throws IOException;
+	public abstract boolean retrieveContext(TaskRepository repository, AbstractRepositoryTask task, IRemoteContextDelegate remoteContextDelegate) throws IOException, GeneralSecurityException;
 	
 	public abstract String getRepositoryUrlFromTaskUrl(String url);
  	

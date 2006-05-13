@@ -362,7 +362,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		submitButton.setEnabled(false);
 		ExistingBugEditor.this.showBusy(true);
 		final BugzillaReportSubmitForm bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeExistingBugPost(bug,
-				repository, bugzillaInput.getProxySettings(), removeCC);
+				repository.getUrl(), repository.getUserName(), repository.getPassword(), bugzillaInput.getProxySettings(), removeCC);
 
 		final BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) MylarTaskListPlugin
 				.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
@@ -667,7 +667,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 		// initialize the keywords list with valid values
 
-		java.util.List<String> validKeywords = BugzillaPlugin.getDefault().getProductConfiguration(repository)
+		java.util.List<String> validKeywords = BugzillaPlugin.getDefault().getProductConfiguration(repository.getUrl(), repository.getUserName(), repository.getPassword())
 				.getKeywords();
 
 		if (validKeywords != null) {
@@ -824,7 +824,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 			final BugzillaReport serverBug;
 			try {
 				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, bug.getRepositoryUrl());
-				serverBug = BugzillaRepositoryUtil.getBug(repository, bugzillaInput.getProxySettings(), bug.getId());
+				serverBug = BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), bugzillaInput.getProxySettings(), bug.getId());
 				// If no bug was found on the server, throw an exception so that
 				// the
 				// user gets the same message that appears when there is a

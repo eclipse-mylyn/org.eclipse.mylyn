@@ -14,10 +14,9 @@ package org.eclipse.mylar.internal.bugs;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.Proxy;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.security.auth.login.LoginException;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
@@ -111,15 +110,15 @@ public class BugzillaReportElement {
 	 * @return Returns the BugReport
 	 * 
 	 * @throws IOException
-	 * @throws LoginException
 	 * @throws MalformedURLException
+	 * @throws GeneralSecurityException 
 	 */
-	public BugzillaReport getBug() throws MalformedURLException, LoginException, IOException {
+	public BugzillaReport getBug() throws IOException, GeneralSecurityException {
 		if (bug == null) {
 			// get the bug report
 			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, hit.getRepositoryUrl());
 			Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
-			bug = BugzillaRepositoryUtil.getBug(repository, proxySettings, hit.getId());
+			bug = BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, hit.getId());
 		}
 		return bug;
 	}

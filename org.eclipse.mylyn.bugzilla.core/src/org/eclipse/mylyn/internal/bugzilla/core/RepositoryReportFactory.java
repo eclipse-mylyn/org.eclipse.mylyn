@@ -19,9 +19,7 @@ import java.net.URLConnection;
 
 import javax.security.auth.login.LoginException;
 
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
-import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -98,13 +96,13 @@ public class RepositoryReportFactory {
 	 * Bugzilla specific, to be generalized TODO: Based on repository kind use
 	 * appropriate loader
 	 */
-	public void populateReport(BugzillaReport bugReport, TaskRepository repository) throws IOException, LoginException {
+	public void populateReport(BugzillaReport bugReport, String repositoryUrl, String userName, String password) throws IOException, LoginException {
 
 		SaxBugReportContentHandler contentHandler = new SaxBugReportContentHandler(bugReport);
 
-		String xmlBugReportUrl = repository.getUrl() + SHOW_BUG_CGI_XML + bugReport.getId();
+		String xmlBugReportUrl = repositoryUrl + SHOW_BUG_CGI_XML + bugReport.getId();
 
-		URL serverURL = new URL(BugzillaRepositoryUtil.addCredentials(repository, xmlBugReportUrl));
+		URL serverURL = new URL(BugzillaRepositoryUtil.addCredentials(xmlBugReportUrl, userName, password));
 		URLConnection connection = serverURL.openConnection();
 		String contentType = connection.getContentType();
 		if (contentType != null) {
@@ -134,7 +132,8 @@ public class RepositoryReportFactory {
 	class SaxErrorHandler implements ErrorHandler {
 
 		public void error(SAXParseException exception) throws SAXException {
-			MylarStatusHandler.fail(exception, "Mylar: RepositoryReportFactory Sax parser error", false);
+			throw exception;
+//			MylarStatusHandler.fail(exception, "Mylar: RepositoryReportFactory Sax parser error", false);
 			// System.err.println("Error: " + exception.getLineNumber() + "\n" +
 			// exception.getLocalizedMessage());
 

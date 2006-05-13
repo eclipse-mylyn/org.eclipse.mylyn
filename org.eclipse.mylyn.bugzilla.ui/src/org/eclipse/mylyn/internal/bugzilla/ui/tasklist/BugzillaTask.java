@@ -11,7 +11,7 @@
 /*
  * Created on 14-Jan-2005
  */
-package org.eclipse.mylar.provisional.bugzilla.core;
+package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import java.util.Date;
 import java.util.List;
@@ -20,6 +20,8 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.HtmlStreamTokenizer;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.provisional.bugzilla.core.Comment;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 
 /**

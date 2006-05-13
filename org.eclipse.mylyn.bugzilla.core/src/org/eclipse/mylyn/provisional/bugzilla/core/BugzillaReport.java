@@ -11,6 +11,7 @@
 package org.eclipse.mylar.provisional.bugzilla.core;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,7 +20,6 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 
 /**
  * A report entered in Bugzilla.
@@ -176,8 +176,8 @@ public class BugzillaReport extends AbstractRepositoryReport implements IBugzill
 			String dateString = getAttributeValue(BugzillaReportElement.CREATION_TS);
 			try {
 				created = df.parse(dateString);
-			} catch (Exception e) {
-				MylarStatusHandler.fail(e, "Mylar: Unable to parse report #" + getId() + "'s creation date.", false);
+			} catch (ParseException e) {
+				// ignore
 			}
 		}
 		return created;
@@ -323,9 +323,8 @@ public class BugzillaReport extends AbstractRepositoryReport implements IBugzill
 			String dateString = getAttributeValue(BugzillaReportElement.DELTA_TS);
 			try {
 				lastModified = df.parse(dateString);
-			} catch (Exception e) {
-				MylarStatusHandler
-						.fail(e, "Mylar: Unable to parse report #" + getId() + "'s modification date.", false);
+			} catch (ParseException e) {
+				// ignore
 			}
 		}
 		return lastModified;
@@ -509,9 +508,9 @@ public class BugzillaReport extends AbstractRepositoryReport implements IBugzill
 		return attributeFactory;
 	}
 
-	public AbstractRepositoryReportAttribute getAttribute(String test) {
-
-		MylarStatusHandler.fail(new Exception(), "BugReport: getAttribute called with string", false);
-		return new BugzillaReportAttribute(BugzillaReportElement.UNKNOWN);
-	}
+//	public AbstractRepositoryReportAttribute getAttribute(String test) {
+//
+//		MylarStatusHandler.fail(new Exception(), "BugReport: getAttribute called with string", false);
+//		return new BugzillaReportAttribute(BugzillaReportElement.UNKNOWN);
+//	}
 }

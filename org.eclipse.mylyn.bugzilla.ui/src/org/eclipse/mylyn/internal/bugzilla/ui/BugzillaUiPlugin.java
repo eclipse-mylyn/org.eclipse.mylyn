@@ -255,7 +255,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		// if (!parser.wasSuccessful())
 		// return;
 
-		RepositoryConfiguration config = RepositoryConfigurationFactory.getInstance().getConfiguration(repository);
+		RepositoryConfiguration config = RepositoryConfigurationFactory.getInstance().getConfiguration(repository.getUrl(), repository.getUserName(), repository.getPassword());
 
 		// get the preferences store so that we can change the data in it
 		IPreferenceStore prefs = BugzillaUiPlugin.getDefault().getPreferenceStore();

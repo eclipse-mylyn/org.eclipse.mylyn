@@ -18,8 +18,6 @@ import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -49,9 +47,9 @@ public class RepositoryConfigurationFactory {
 		return instance;
 	}
 
-	public RepositoryConfiguration getConfiguration(TaskRepository repository) throws IOException {
-		String configUrlStr = repository.getUrl() + CONFIG_RDF_URL;
-		configUrlStr = BugzillaRepositoryUtil.addCredentials(repository, configUrlStr);
+	public RepositoryConfiguration getConfiguration(String repositoryUrl, String userName, String password) throws IOException {
+		String configUrlStr = repositoryUrl + CONFIG_RDF_URL;
+		configUrlStr = BugzillaRepositoryUtil.addCredentials(configUrlStr, userName, password);
 		URLConnection c = new URL(configUrlStr).openConnection();
 		BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
 
@@ -99,12 +97,13 @@ public class RepositoryConfigurationFactory {
 	class SaxErrorHandler implements ErrorHandler {
 
 		public void error(SAXParseException exception) throws SAXException {
-			MylarStatusHandler.fail(exception, "ServerConfigurationFactory: " + exception.getLocalizedMessage(), false);
+			throw exception;
+//			MylarStatusHandler.fail(exception, "ServerConfigurationFactory: " + exception.getLocalizedMessage(), false);
 		}
 
 		public void fatalError(SAXParseException exception) throws SAXException {
-			MylarStatusHandler.fail(exception, "ServerConfigurationFactory: " + exception.getLocalizedMessage(), false);
-
+			throw exception;
+//			MylarStatusHandler.fail(exception, "ServerConfigurationFactory: " + exception.getLocalizedMessage(), false);
 		}
 
 		public void warning(SAXParseException exception) throws SAXException {

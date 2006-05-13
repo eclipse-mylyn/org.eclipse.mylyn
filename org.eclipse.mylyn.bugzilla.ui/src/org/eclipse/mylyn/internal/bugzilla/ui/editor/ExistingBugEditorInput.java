@@ -11,10 +11,8 @@
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.Proxy;
-
-import javax.security.auth.login.LoginException;
+import java.security.GeneralSecurityException;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
@@ -49,24 +47,24 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 	 * 
 	 * @param bugId
 	 *            The id of the bug for this editor input.
-	 * @throws LoginException
 	 * @throws IOException
+	 * @throws GeneralSecurityException 
 	 */
-	public ExistingBugEditorInput(TaskRepository repository, int bugId) throws LoginException, IOException {
+	public ExistingBugEditorInput(TaskRepository repository, int bugId) throws IOException, GeneralSecurityException {
 		this.bugId = bugId;
 		this.repository = repository;
 		// get the bug from the server if it exists
-		bug = BugzillaRepositoryUtil.getBug(repository, proxySettings, bugId);
+		bug = BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, bugId);
 //		repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND,
 //				repositoryUrl);
 	}
 
-	public ExistingBugEditorInput(TaskRepository repository, int bugId, boolean offline) throws LoginException, IOException {
+	public ExistingBugEditorInput(TaskRepository repository, int bugId, boolean offline) throws IOException, GeneralSecurityException {
 		this.bugId = bugId;
 		this.repository = repository;
 		if (!offline) {
 			try {
-				bug = BugzillaRepositoryUtil.getBug(repository, proxySettings, bugId);
+				bug = BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, bugId);
 			} catch (IOException e) {
 				bug = getCurrentBug(repository, proxySettings, bugId);
 				// IWorkbench workbench = PlatformUI.getWorkbench();
@@ -87,7 +85,7 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 
 	// TODO: move
 	private BugzillaReport getCurrentBug(TaskRepository repository, Proxy proxySettings, int id)
-			throws MalformedURLException, LoginException, IOException {
+			throws IOException, GeneralSecurityException {
 		// Look among the offline reports for a bug with the given id.
 		OfflineReportsFile reportsFile = BugzillaUiPlugin.getDefault().getOfflineReports();
 		int offlineId = reportsFile.find(repository.getUrl(), id);
@@ -102,7 +100,7 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 
 		// If a suitable offline report was not found, try to get one from the
 		// server.
-		return BugzillaRepositoryUtil.getBug(repository, proxySettings, id);
+		return BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, id);
 	}
 
 	public String getName() {

@@ -24,9 +24,8 @@ public interface IBugzillaConstants {
 
 	static final String SERVER_VERSION = "org.eclipse.mylar.bugzilla.server.version";
 
-	static final String SERVER_220 = "2.20";
-
-	static final String SERVER_218 = "2.18";
+//	static final String SERVER_220 = "2.20";
+//	static final String SERVER_218 = "2.18";
 
 	/** Used by search engine */
 	public static final int RETURN_ALL_HITS = -1;

@@ -5,9 +5,7 @@ Bundle-SymbolicName: org.eclipse.mylar.bugzilla.core; singleton:=true
 Bundle-Version: 0.5.1.v2006505-1600
 Bundle-Activator: org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.mylar.tasklist,
- org.eclipse.mylar.core
+Require-Bundle: org.eclipse.core.runtime
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: bugzilla-core.jar,

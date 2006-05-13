@@ -27,7 +27,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -110,12 +109,12 @@ public class BugzillaPlugin extends Plugin {
 	// IBugzillaConstants.SERVER_220.equals(getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION));
 	// }
 
-	public RepositoryConfiguration getProductConfiguration(TaskRepository repository) throws IOException {
-		if (!repositoryConfigurations.containsKey(repository.getUrl())) {
-			repositoryConfigurations.put(repository.getUrl(), RepositoryConfigurationFactory.getInstance()
-					.getConfiguration(repository));
+	public RepositoryConfiguration getProductConfiguration(String repositoryUrl, String userName, String password) throws IOException {
+		if (!repositoryConfigurations.containsKey(repositoryUrl)) {
+			repositoryConfigurations.put(repositoryUrl, RepositoryConfigurationFactory.getInstance()
+					.getConfiguration(repositoryUrl, userName, password));
 		}
-		return repositoryConfigurations.get(repository.getUrl());
+		return repositoryConfigurations.get(repositoryUrl);
 	}
 
 	// public RepositoryConfiguration getProductConfiguration(String serverUrl)

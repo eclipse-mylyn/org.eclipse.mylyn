@@ -150,7 +150,7 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 				if (storedProducts.length > 0) {
 					products = Arrays.asList(storedProducts);
 				} else {
-					products = BugzillaRepositoryUtil.getProductList(repository);
+					products = BugzillaRepositoryUtil.getProductList(repository.getUrl(), repository.getUserName(), repository.getPassword());
 				}
 				bugWizard.model.setConnected(true);
 				bugWizard.model.setParsedProductsStatus(true);
@@ -206,7 +206,7 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 		// try to get the attributes from the bugzilla server
 		try {
 			if (!model.hasParsedAttributes() || !model.getProduct().equals(prevProduct)) {
-				BugzillaRepositoryUtil.setupNewBugAttributes(repository, model);
+				BugzillaRepositoryUtil.setupNewBugAttributes(repository.getUrl(), repository.getUserName(), repository.getPassword(), model);
 				model.setParsedAttributesStatus(true);
 			}
 
