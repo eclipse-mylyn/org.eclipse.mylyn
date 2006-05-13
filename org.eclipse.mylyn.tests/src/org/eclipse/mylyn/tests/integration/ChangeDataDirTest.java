@@ -18,9 +18,9 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.core.MylarContextManager;
 import org.eclipse.mylar.internal.monitor.MylarMonitorPlugin;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.provisional.core.InteractionEvent;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
