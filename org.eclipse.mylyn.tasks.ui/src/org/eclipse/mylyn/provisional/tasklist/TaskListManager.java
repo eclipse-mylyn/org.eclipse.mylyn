@@ -50,7 +50,7 @@ public class TaskListManager {
 	// TODO: refactor into configurable intervals
 	private static final int HOUR_DAY_START = 8;
 	
-	private static final int HOUR_DAY_END = 18;
+	private static final int HOUR_DAY_END = 23;
 
 	private static final int NUM_WEEKS_PREVIOUS = -1;
 
