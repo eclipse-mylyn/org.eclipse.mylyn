@@ -174,10 +174,11 @@ public class BugzillaRepositoryUtil {
 	}
 
 	public static String addCredentials(String url, String userName, String password) throws UnsupportedEncodingException {
-//		if (repository.hasCredentials()) {
+		if (userName != null && password != null) {
+		//		if (repository.hasCredentials()) {
 			url += "&" + POST_ARGS_LOGIN + URLEncoder.encode(userName, BugzillaPlugin.ENCODING_UTF_8)
 					+ POST_ARGS_PASSWORD + URLEncoder.encode(password, BugzillaPlugin.ENCODING_UTF_8);
-//		}
+		}
 		return url;
 	}
 
