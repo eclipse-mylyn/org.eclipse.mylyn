@@ -811,7 +811,7 @@ public class BugzillaRepositoryUtil {
 			}
 //		} catch (HttpException e) {
 //			MylarStatusHandler.log("Attachment upload failed\n" + e.getMessage(), BugzillaRepositoryUtil.class);
-			uploadResult = false;
+//			uploadResult = false;
 		} finally {
 			postMethod.releaseConnection();
 		}
