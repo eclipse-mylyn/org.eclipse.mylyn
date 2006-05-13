@@ -114,9 +114,9 @@ public class Util {
 		StringBuffer sb = new StringBuffer();
 
 		String[] resolutionValues = BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_RESOLUTION,
-				repositoryUrl);
+				null, repositoryUrl);
 
-		String[] statusValues = BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_STATUS, repositoryUrl);
+		String[] statusValues = BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_STATUS, null, repositoryUrl);
 
 		// add the status and resolutions that we care about
 		sb.append("&bug_status=" + statusValues[0]); // UNCONFIRMED

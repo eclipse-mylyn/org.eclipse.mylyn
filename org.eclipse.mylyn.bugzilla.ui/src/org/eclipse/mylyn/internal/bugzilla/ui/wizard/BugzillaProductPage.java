@@ -115,7 +115,7 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 
 					products = new ArrayList<String>();
 					for (String product : BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT,
-							repository.getUrl())) {
+							null, repository.getUrl())) {
 						products.add(product);
 					}
 					monitor.worked(1);
@@ -146,7 +146,7 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 			String repositoryUrl = repository.getUrl();
 			try {
 				String[] storedProducts = BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT,
-						repositoryUrl);
+						null, repositoryUrl);
 				if (storedProducts.length > 0) {
 					products = Arrays.asList(storedProducts);
 				} else {

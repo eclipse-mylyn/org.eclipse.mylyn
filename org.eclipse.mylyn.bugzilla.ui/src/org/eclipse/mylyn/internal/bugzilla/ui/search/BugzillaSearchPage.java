@@ -219,7 +219,7 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 				String repositoryUrl = repositoryCombo.getItem(repositoryCombo.getSelectionIndex());
 				repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND,
 						repositoryUrl);
-				updateAttributesFromRepository(repositoryUrl, false);
+				updateAttributesFromRepository(repositoryUrl, null, false);
 			}
 		});
 		gd = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
@@ -384,6 +384,17 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.heightHint = HEIGHT_ATTRIBUTE_COMBO;
 		product.setLayoutData(gd);
+		product.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (product.getSelectionIndex() != -1) {
+					String[] selectedProducts = product.getSelection();
+					updateAttributesFromRepository(repository.getUrl(), selectedProducts, false);
+				} else {
+					updateAttributesFromRepository(repository.getUrl(), null, false);
+				}
+			}
+		});
 
 		component = new List(group, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -827,8 +838,8 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 
 			@Override
 			public void mouseUp(MouseEvent e) {
-				if (repository != null) {
-					updateAttributesFromRepository(repository.getUrl(), true);
+				if (repository != null) {					
+					updateAttributesFromRepository(repository.getUrl(), null, true);
 				} else {
 					MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
 							IBugzillaConstants.TITLE_MESSAGE_DIALOG, TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
@@ -961,7 +972,10 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 				}
 
 				if (repository != null) {
-					updateAttributesFromRepository(repository.getUrl(), false);
+					updateAttributesFromRepository(repository.getUrl(), null, false);
+					if (product.getItemCount() == 0) {
+						updateAttributesFromRepository(repository.getUrl(), null, true);
+					}
 				}
 				if (repositoryCombo != null) {
 					repositoryCombo.setItems(repositoryUrls);
@@ -970,7 +984,7 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 								IBugzillaConstants.TITLE_MESSAGE_DIALOG, TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
 					} else {
 						repositoryCombo.select(indexToSelect);
-						updateAttributesFromRepository(repositoryCombo.getItem(indexToSelect), false);
+						updateAttributesFromRepository(repositoryCombo.getItem(indexToSelect), null, false);
 					}
 				}
 				if (originalQuery != null) {
@@ -1279,7 +1293,7 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 		getDialogSettings();
 	}
 
-	private void updateAttributesFromRepository(String repositoryUrl, boolean connect) {
+	private void updateAttributesFromRepository(String repositoryUrl, String[] selectedProducts, boolean connect) {
 		monitorDialog.open();
 		IProgressMonitor monitor = monitorDialog.getProgressMonitor();
 		monitor.beginTask("Updating search options...", 55);
@@ -1292,38 +1306,56 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 			if (connect) {
 				BugzillaUiPlugin.updateQueryOptions(repository, monitor);
 			}
-			product.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT, repositoryUrl));
+
+			if (selectedProducts == null) {
+				String[] productsList = BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT, null,
+						repositoryUrl);
+				Arrays.sort(productsList, String.CASE_INSENSITIVE_ORDER);
+				product.setItems(productsList);
+				monitor.worked(1);
+			}
+
+			String[] componentsList = BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_COMPONENT,
+					selectedProducts, repositoryUrl);
+			Arrays.sort(componentsList, String.CASE_INSENSITIVE_ORDER);
+			component.setItems(componentsList);
 			monitor.worked(1);
 
-			component.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_COMPONENT, repositoryUrl));
+			version.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_VERSION, selectedProducts,
+					repositoryUrl));
 			monitor.worked(1);
 
-			version.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_VERSION, repositoryUrl));
+			target.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_TARGET, selectedProducts,
+					repositoryUrl));
 			monitor.worked(1);
 
-			target.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_TARGET, repositoryUrl));
-			monitor.worked(1);
-
-			status.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_STATUS, repositoryUrl));
+			status.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_STATUS, selectedProducts,
+					repositoryUrl));
 			monitor.worked(1);
 
 			// status.setSelection(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUSE_STATUS_PRESELECTED,
 			// repositoryUrl));
 			monitor.worked(1);
 
-			resolution.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_RESOLUTION, repositoryUrl));
+			resolution.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_RESOLUTION,
+					selectedProducts, repositoryUrl));
 			monitor.worked(1);
 
-			severity.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_SEVERITY, repositoryUrl));
+			severity.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_SEVERITY, selectedProducts,
+					repositoryUrl));
 			monitor.worked(1);
 
-			priority.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRIORITY, repositoryUrl));
+			priority.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRIORITY, selectedProducts,
+					repositoryUrl));
 			monitor.worked(1);
 
-			hardware.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_HARDWARE, repositoryUrl));
+			hardware.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_HARDWARE, selectedProducts,
+					repositoryUrl));
 			monitor.worked(1);
 
-			os.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_OS, repositoryUrl));
+			os
+					.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_OS, selectedProducts,
+							repositoryUrl));
 			monitor.worked(1);
 		} catch (LoginException exception) {
 			// we had a problem that seems to have been caused from bad

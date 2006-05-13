@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.bugzilla.ui;
 import java.io.IOException;
 import java.net.Authenticator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.security.auth.login.LoginException;
@@ -42,7 +43,7 @@ import org.osgi.framework.BundleContext;
 public class BugzillaUiPlugin extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylar.bugzilla.ui";
-	
+
 	// The id's of other bugzilla packages
 	public static final String EXISTING_BUG_EDITOR_ID = BugzillaUiPlugin.PLUGIN_ID + ".existingBugEditor";
 
@@ -78,22 +79,22 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	public static final String HIT_MARKER_ATTR_OWNER = "owner";
 
 	public static final String HIT_MARKER_ATTR_QUERY = "query";
-	
+
 	/**
 	 * XXX: remove?
 	 */
 	public static final String HIT_MARKER_ID = BugzillaUiPlugin.PLUGIN_ID + ".searchHit";
-	
+
 	private static BugzillaUiPlugin plugin;
-	
+
 	private Authenticator authenticator = null;
 
 	private static IBugzillaResultEditorMatchAdapter resultEditorMatchAdapter = null;
-		
+
 	private OfflineReportsFile offlineReportsFile;
-	
+
 	public static final char PREF_DELIM_REPOSITORY = ':';
-	
+
 	public BugzillaUiPlugin() {
 		plugin = this;
 	}
@@ -101,25 +102,25 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		getPreferenceStore().setDefault(IBugzillaConstants.MAX_RESULTS, 100);
-		
+
 		readOfflineReportsFile();
-		
+
 		BugzillaUiPlugin.setResultEditorMatchAdapter(new BugzillaResultMatchAdapter());
-		
+
 		// TODO: consider removing
 		authenticator = UpdateUI.getDefault().getAuthenticator();
 		if (authenticator == null) {
 			authenticator = new BugzillaAuthenticator();
 		}
 		Authenticator.setDefault(authenticator);
-		
-//		migrateOldAuthenticationData();
+
+		// migrateOldAuthenticationData();
 	}
 
 	public int getMaxResults() {
 		return getPreferenceStore().getInt(IBugzillaConstants.MAX_RESULTS);
 	}
-	
+
 	/**
 	 * This method is called when the plug-in is stopped
 	 */
@@ -127,7 +128,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		super.stop(context);
 		plugin = null;
 	}
-	
+
 	public static IBugzillaResultEditorMatchAdapter getResultEditorMatchAdapter() {
 		return resultEditorMatchAdapter;
 	}
@@ -135,7 +136,6 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	public static void setResultEditorMatchAdapter(IBugzillaResultEditorMatchAdapter resultEditorMatchAdapter) {
 		BugzillaUiPlugin.resultEditorMatchAdapter = resultEditorMatchAdapter;
 	}
-	
 
 	private void readOfflineReportsFile() {
 		IPath offlineReportsPath = getOfflineReportsFile();
@@ -143,7 +143,9 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		try {
 			offlineReportsFile = new OfflineReportsFile(offlineReportsPath.toFile());
 		} catch (Exception e) {
-			MylarStatusHandler.log(e, "Could not restore offline Bugzilla reports file, creating new one (possible version incompatibility)");
+			MylarStatusHandler
+					.log(e,
+							"Could not restore offline Bugzilla reports file, creating new one (possible version incompatibility)");
 			// logAndShowExceptionDetailsDialog(e, "occurred while restoring
 			// saved offline Bugzilla reports.",
 			// "Bugzilla Offline Reports Error");
@@ -158,7 +160,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns the path to the file cacheing the offline bug reports.
 	 */
@@ -167,15 +169,15 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		IPath configFile = stateLocation.append("offlineReports");
 		return configFile;
 	}
-	
+
 	public OfflineReportsFile getOfflineReports() {
 		return offlineReportsFile;
 	}
-	
+
 	public List<BugzillaReport> getSavedBugReports() {
 		return offlineReportsFile.elements();
 	}
-	
+
 	/**
 	 * Returns the shared instance.
 	 */
@@ -195,9 +197,20 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		return AbstractUIPlugin.imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
 
-	public static String[] getQueryOptions(String prefId, String repositoryUrl) {
+	public static String[] getQueryOptions(String prefId, String[] selectedProducts, String repositoryUrl) {
 		IPreferenceStore prefs = BugzillaUiPlugin.getDefault().getPreferenceStore();
-		return convertQueryOptionsToArray(prefs.getString(prefId + PREF_DELIM_REPOSITORY + repositoryUrl));
+		if ((prefId.equals(IBugzillaConstants.VALUES_COMPONENT) || prefId.equals(IBugzillaConstants.VALUES_VERSION) || prefId
+				.equals(IBugzillaConstants.VALUES_TARGET))
+				&& selectedProducts != null) {
+			List<String> options = new ArrayList<String>();
+			for (String product : selectedProducts) {
+				options.addAll(Arrays.asList(convertQueryOptionsToArray(prefs.getString(prefId + PREF_DELIM_REPOSITORY
+						+ repositoryUrl + PREF_DELIM_REPOSITORY + product))));
+			}
+			return options.toArray(new String[options.size()]);
+		} else {
+			return convertQueryOptionsToArray(prefs.getString(prefId + PREF_DELIM_REPOSITORY + repositoryUrl));
+		}
 	}
 
 	private static String queryOptionsToString(List<String> array) {
@@ -210,7 +223,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 
 		return buffer.toString();
 	}
-	
+
 	private static String[] convertQueryOptionsToArray(String values) {
 		// create a new string buffer and array list
 		StringBuffer buffer = new StringBuffer();
@@ -238,7 +251,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	public static String getMostRecentQuery() {
 		return plugin.getPreferenceStore().getString(IBugzillaConstants.MOST_RECENT_QUERY);
 	}
-	
+
 	/**
 	 * Update all of the query options for the bugzilla search page
 	 * 
@@ -321,50 +334,54 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	}
 }
 
-//@SuppressWarnings("unchecked")
-//private void migrateOldAuthenticationData() {
-//	String OLD_PREF_SERVER = "BUGZILLA_SERVER";
-//	String serverUrl = BugzillaPlugin.getDefault().getPreferenceStore().getString(OLD_PREF_SERVER);
-//	if (serverUrl != null && serverUrl.trim() != "") {
-//		URL oldFakeUrl = null;
-//		try {
-//			oldFakeUrl = new URL("http://org.eclipse.mylar.bugzilla");
-//		} catch (MalformedURLException e) {
-//			BugzillaPlugin.log(new Status(IStatus.WARNING, BugzillaPlugin.PLUGIN_ID, IStatus.OK,
-//					"Bad temp server url: BugzillaPreferencePage", e));
-//		}
+// @SuppressWarnings("unchecked")
+// private void migrateOldAuthenticationData() {
+// String OLD_PREF_SERVER = "BUGZILLA_SERVER";
+// String serverUrl =
+// BugzillaPlugin.getDefault().getPreferenceStore().getString(OLD_PREF_SERVER);
+// if (serverUrl != null && serverUrl.trim() != "") {
+// URL oldFakeUrl = null;
+// try {
+// oldFakeUrl = new URL("http://org.eclipse.mylar.bugzilla");
+// } catch (MalformedURLException e) {
+// BugzillaPlugin.log(new Status(IStatus.WARNING, BugzillaPlugin.PLUGIN_ID,
+// IStatus.OK,
+// "Bad temp server url: BugzillaPreferencePage", e));
+// }
 //		
-//		String user = "";
-//		String password = "";
-//		Map<String, String> map = Platform.getAuthorizationInfo(oldFakeUrl, "Bugzilla",
-//				BugzillaPreferencePage.AUTH_SCHEME);
+// String user = "";
+// String password = "";
+// Map<String, String> map = Platform.getAuthorizationInfo(oldFakeUrl,
+// "Bugzilla",
+// BugzillaPreferencePage.AUTH_SCHEME);
 //
-//		// get the information from the map and save it
-//		if (map != null && !map.isEmpty()) {
-//			String username = map.get(BugzillaPreferencePage.INFO_USERNAME);
-//			if (username != null)
-//				user = username;
+// // get the information from the map and save it
+// if (map != null && !map.isEmpty()) {
+// String username = map.get(BugzillaPreferencePage.INFO_USERNAME);
+// if (username != null)
+// user = username;
 //
-//			String pwd = map.get(BugzillaPreferencePage.INFO_PASSWORD);
-//			if (pwd != null)
-//				password = pwd;
-//		}
-//		TaskRepository repository;
-//		// try {
-//		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, serverUrl);
-//		repository.setAuthenticationCredentials(user, password);
-//		MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
-//		BugzillaPlugin.getDefault().getPreferenceStore().setValue(OLD_PREF_SERVER, "");
-//		// } catch (MalformedURLException e) {
-//		// MylarStatusHandler.fail(e, "could not create default repository",
-//		// true);
-//		// }
-//		try {
-//			// reset the authorization
-//			Platform.addAuthorizationInfo(oldFakeUrl, "Bugzilla",
-//					BugzillaPreferencePage.AUTH_SCHEME, new HashMap<String, String>());
-//		} catch (CoreException e) {
-//			// ignore
-//		}
-//	}
-//}
+// String pwd = map.get(BugzillaPreferencePage.INFO_PASSWORD);
+// if (pwd != null)
+// password = pwd;
+// }
+// TaskRepository repository;
+// // try {
+// repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, serverUrl);
+// repository.setAuthenticationCredentials(user, password);
+// MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
+// BugzillaPlugin.getDefault().getPreferenceStore().setValue(OLD_PREF_SERVER,
+// "");
+// // } catch (MalformedURLException e) {
+// // MylarStatusHandler.fail(e, "could not create default repository",
+// // true);
+// // }
+// try {
+// // reset the authorization
+// Platform.addAuthorizationInfo(oldFakeUrl, "Bugzilla",
+// BugzillaPreferencePage.AUTH_SCHEME, new HashMap<String, String>());
+// } catch (CoreException e) {
+// // ignore
+// }
+// }
+// }
