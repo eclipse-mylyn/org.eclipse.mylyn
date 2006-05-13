@@ -60,7 +60,6 @@ public class ZipFileUtil {
 	}
 
 	public static void copyByteStream(InputStream in, OutputStream out) throws IOException {
-		
 		if (in != null && out != null) {
 			BufferedInputStream inBuffered = new BufferedInputStream(in);
 			
@@ -77,9 +76,7 @@ public class ZipFileUtil {
 				} else {
 					fout.write(buffer);
 				}
-
 			}
-
 			fout.flush();
 			fout.close();			
 			in.close();
