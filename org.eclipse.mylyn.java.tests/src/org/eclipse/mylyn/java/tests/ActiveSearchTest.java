@@ -92,15 +92,12 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
 		for (AbstractRelationProvider provider : MylarPlugin.getContextManager().getActiveRelationProviders()) {
 			assertTrue(provider.getCurrentDegreeOfSeparation() > 0);
 		}
-		JavaPlugin.getActivePage().showView("org.eclipse.ui.views.ProblemView"); // make
-																					// another
-																					// view
-																					// active
+		JavaPlugin.getActivePage().showView("org.eclipse.ui.views.ProblemView"); 
 
 		Perspective perspective = ((WorkbenchPage) JavaPlugin.getActivePage()).getActivePerspective();
 		IViewReference reference = JavaPlugin.getActivePage().findViewReference(ActiveSearchView.ID);
 		assertNotNull(reference);
-		assertTrue(perspective.canCloseView(view));
+//		assertTrue(perspective.canCloseView(view));
 		assertTrue(perspective.hideView(reference));
 
 		for (AbstractRelationProvider provider : MylarPlugin.getContextManager().getActiveRelationProviders()) {
