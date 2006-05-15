@@ -52,6 +52,8 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -73,9 +75,12 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -90,7 +95,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 	private static final String REASSIGN_BUG_TO = "Reassign  bug to";
 
-	private static final String LABEL_EXPAND_ALL_BUTTON = "Expand All";
+	private static final String LABEL_EXPAND_ALL = "Expand All";
 
 	private static final String LABEL_COMPARE_BUTTON = "Compare";
 
@@ -302,20 +307,20 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		});
 		compareButton.addListener(SWT.FocusIn, new GenericListener());
 
-		Button expandAll = toolkit.createButton(buttonComposite, LABEL_EXPAND_ALL_BUTTON, SWT.NONE);
-		expandAll.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
-		expandAll.addSelectionListener(new SelectionListener() {
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// ignore
-
-			}
-
-			public void widgetSelected(SelectionEvent e) {
-				revealAllComments();
-
-			}
-		});
+//		Button expandAll = toolkit.createButton(buttonComposite, LABEL_EXPAND_ALL_BUTTON, SWT.NONE);
+//		expandAll.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
+//		expandAll.addSelectionListener(new SelectionListener() {
+//
+//			public void widgetDefaultSelected(SelectionEvent e) {
+//				// ignore
+//
+//			}
+//
+//			public void widgetSelected(SelectionEvent e) {
+//				revealAllComments();
+//
+//			}
+//		});
 
 		// TODO used for spell checking. Add back when we want to support this
 		// checkSpellingButton = new Button(buttonComposite, SWT.NONE);
@@ -422,24 +427,35 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				form.reflow(true);
 			}
 		});
-
+		
 		Composite sectionComposite = toolkit.createComposite(form.getBody());
-		// section.setClient(sectionComposite);
+		//section.setClient(sectionComposite);
 		GridLayout addCommentsLayout = new GridLayout();
 		addCommentsLayout.numColumns = 1;
 		sectionComposite.setLayout(addCommentsLayout);
 		GridData sectionCompositeData = new GridData(GridData.FILL_HORIZONTAL);
 		sectionComposite.setLayoutData(sectionCompositeData);
 
-		TextViewer viewer = addRepositoryText(repository, sectionComposite, bug.getDescription());// form.getBody()
+		TextViewer viewer = addRepositoryText(repository, sectionComposite, bug.getDescription());		
 		final StyledText styledText = viewer.getTextWidget();
 		styledText.addListener(SWT.FocusIn, new DescriptionListener());
 		styledText.setLayout(new GridLayout());
 		GridData styledTextData = new GridData(GridData.FILL_HORIZONTAL);
-		styledTextData.widthHint = DESCRIPTION_WIDTH;
-		// styledTextData.grabExcessHorizontalSpace = true;
-
+		styledTextData.widthHint = DESCRIPTION_WIDTH;		
 		styledText.setLayoutData(styledTextData);
+		styledText.addControlListener(new ControlListener() {
+
+			public void controlMoved(ControlEvent e) {
+				// ignore
+				
+			}
+
+			public void controlResized(ControlEvent e) {
+				form.reflow(true);
+				
+			}
+			
+		});
 
 		texts.add(textsindex, styledText);
 		textHash.put(bug.getDescription(), styledText);
@@ -468,6 +484,16 @@ public class ExistingBugEditor extends AbstractBugEditor {
 			}
 		});
 
+		
+		Hyperlink hyperlink = toolkit.createHyperlink(section, LABEL_EXPAND_ALL, SWT.NONE);		
+		hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+			public void linkActivated(HyperlinkEvent e) {
+				revealAllComments();
+			}			
+		});
+		
+		section.setTextClient(hyperlink);
+		
 		// Additional (read-only) Comments Area
 		Composite addCommentsComposite = toolkit.createComposite(section);
 		section.setClient(addCommentsComposite);
