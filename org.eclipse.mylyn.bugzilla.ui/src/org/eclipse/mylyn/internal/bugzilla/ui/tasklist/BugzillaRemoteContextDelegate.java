@@ -32,7 +32,7 @@ public class BugzillaRemoteContextDelegate implements IRemoteContextDelegate {
 	}
 
 	public String getAuthor() {
-		return attachment.getAuthor();
+		return attachment.getCreator();
 	}
 
 	public String getComment() {

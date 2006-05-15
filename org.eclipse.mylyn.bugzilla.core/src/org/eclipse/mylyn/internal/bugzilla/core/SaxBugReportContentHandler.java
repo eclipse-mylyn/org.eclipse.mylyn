@@ -11,6 +11,9 @@
 
 package org.eclipse.mylar.internal.bugzilla.core;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReportAttribute;
 import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReportAttribute;
@@ -27,10 +30,14 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class SaxBugReportContentHandler extends DefaultHandler {
 
+	private static final String COMMENT_ATTACHMENT_STRING = "Created an attachment (id=";
+
 	private StringBuffer characters;
 
 	private Comment comment;
 
+	private final Map<Integer, Comment> attachIdToComment = new HashMap<Integer, Comment>();
+	
 	private int commentNum = 0;
 
 	private ReportAttachment attachment;
@@ -130,6 +137,14 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			// Comment attributes
 		case WHO:
 		case BUG_WHEN:
+			if (comment != null) {
+				BugzillaReportAttribute attr = new BugzillaReportAttribute(tag);
+				attr.setValue(characters.toString());
+				// System.err.println(">>> "+comment.getNumber()+"
+				// "+characters.toString());
+				comment.addAttribute(tag, attr);
+			}
+			break;
 		case THETEXT:
 			if (comment != null) {
 				BugzillaReportAttribute attr = new BugzillaReportAttribute(tag);
@@ -137,6 +152,9 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 				// System.err.println(">>> "+comment.getNumber()+"
 				// "+characters.toString());
 				comment.addAttribute(tag, attr);
+
+				// Check for attachment
+				parseAttachment(comment, characters.toString());
 			}
 			break;
 		case LONG_DESC:
@@ -189,6 +207,14 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			} else {
 				numCommentsAttribute.setValue("" + report.getComments().size());
 			}
+			
+			// Set the creator name on all attachments
+			for (ReportAttachment attachment: report.getAttachments()) {
+				Comment comment = (Comment)attachIdToComment.get(attachment.getId());
+				if(comment != null) {
+					attachment.setCreator(comment.getAuthor());
+				}
+			}
 			break;
 
 		// All others added as report attribute
@@ -208,6 +234,27 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			break;
 		}
 
+	}
+
+	/** determines attachment id from comment */
+	private void parseAttachment(Comment comment, String commentText) {
+
+		int attachmentID = -1;
+
+		if (commentText.startsWith(COMMENT_ATTACHMENT_STRING)) {
+			try {
+				int endIndex = commentText.indexOf(")");
+				if (endIndex > 0 && endIndex < commentText.length()) {
+					attachmentID = Integer
+							.parseInt(commentText.substring(COMMENT_ATTACHMENT_STRING.length(), endIndex));					
+					comment.setHasAttachment(true);
+					comment.setAttachmentId(attachmentID);
+					attachIdToComment.put(attachmentID, comment);
+				}
+			} catch (NumberFormatException e) {
+				return;
+			}
+		}
 	}
 
 }

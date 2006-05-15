@@ -54,6 +54,10 @@ public class Comment extends AttributeContainer implements Serializable {
 	/** Following comment */
 	private Comment next;
 
+	private boolean hasAttachment;
+
+	private int attachmentId;
+
 	// private boolean hasAttachment = false;
 	//
 	// private int attachmentId = -1;
@@ -206,21 +210,23 @@ public class Comment extends AttributeContainer implements Serializable {
 		this.previous = previous;
 	}
 
-	// public void setHasAttachment(boolean b) {
-	// this.hasAttachment = b;
-	// }
-	//
-	// public boolean hasAttachment() {
-	// return hasAttachment;
-	// }
-	//	
-	// public void setAttachmentId(int attachmentID) {
-	// this.attachmentId = attachmentID;
-	// }
-	//
-	// public int getAttachmentId() {
-	// return attachmentId;
-	// }
+	
+	 public void setHasAttachment(boolean b) {
+		this.hasAttachment = b;
+	}
+
+	public boolean hasAttachment() {
+		return hasAttachment;
+	}
+
+	public void setAttachmentId(int attachmentID) {
+		this.attachmentId = attachmentID;
+	}
+
+	public int getAttachmentId() {
+		return attachmentId;
+	}
+	
 	//
 	// public void setAttachmentDescription(String attachmentDescription) {
 	// this.attachmentDescription = attachmentDescription;

@@ -30,11 +30,19 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.util.SafeRunnable;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaAttributeListener;
@@ -44,12 +52,14 @@ import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.IBugzillaReportSelection;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReport;
 import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReportAttribute;
 import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.provisional.bugzilla.core.Comment;
 import org.eclipse.mylar.provisional.bugzilla.core.IBugzillaBug;
+import org.eclipse.mylar.provisional.bugzilla.core.ReportAttachment;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
@@ -59,6 +69,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -68,6 +79,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISharedImages;
@@ -108,6 +121,8 @@ public abstract class AbstractBugEditor extends EditorPart {
 	private static final String LABEL_SECTION_ACTIONS = "Actions";
 
 	private static final String LABEL_SECTION_ATTRIBUTES = "Attributes";
+
+	private static final String LABEL_SECTION_ATTACHMENTS = "Attachments";
 
 	protected static final String LABEL_SECTION_DESCRIPTION = "Description";
 
@@ -196,7 +211,13 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 	protected Button submitButton;
 
-	// protected Button saveButton;
+	protected Table attachmentsTable;
+
+	protected TableViewer attachmentTableViewer;
+
+	protected String[] attachmentsColumns = { "Description", "Type", "Creator", "Created" };
+
+	protected int[] attachmentsColumnWidths = { 200, 100, 100, 200 };
 
 	protected int scrollIncrement;
 
@@ -462,6 +483,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 		// createInfoArea(editorComposite);
 		createContextMenu();
 		createAttributeLayout();
+		createAttachmentLayout();
 		createDescriptionLayout(toolkit, form);
 		createCommentLayout(toolkit, form);
 		createButtonLayouts(toolkit, form.getBody());
@@ -1081,6 +1103,127 @@ public abstract class AbstractBugEditor extends EditorPart {
 		// summaryText.setText(getBug().getSummary());
 		summaryText.addListener(SWT.KeyUp, new SummaryListener());
 		summaryText.addListener(SWT.FocusIn, new GenericListener());
+	}
+
+	protected void createAttachmentLayout() {
+		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+		section.setText(LABEL_SECTION_ATTACHMENTS);
+		section.setExpanded(true);
+		section.setLayout(new GridLayout());
+		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+		Composite attachmentsComposite = toolkit.createComposite(section);
+		attachmentsComposite.setLayout(new GridLayout());
+		attachmentsComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+		section.setClient(attachmentsComposite);
+
+		if (getReport().getAttachments().size() > 0) {
+
+			attachmentsTable = toolkit.createTable(attachmentsComposite, SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION);
+			attachmentsTable.setLinesVisible(true);
+			attachmentsTable.setHeaderVisible(true);
+			attachmentsTable.setLayout(new GridLayout());
+			GridData tableGridData = new GridData(GridData.FILL_BOTH);
+			// tableGridData.heightHint = 100;
+			tableGridData.widthHint = DESCRIPTION_WIDTH;
+			attachmentsTable.setLayoutData(tableGridData);
+
+			for (int i = 0; i < attachmentsColumns.length; i++) {
+				TableColumn column = new TableColumn(attachmentsTable, SWT.LEFT, i);
+				column.setText(attachmentsColumns[i]);
+				column.setWidth(attachmentsColumnWidths[i]);
+			}
+
+			TableViewer attachmentsTableViewer = new TableViewer(attachmentsTable);
+			attachmentsTableViewer.setUseHashlookup(true);
+			attachmentsTableViewer.setColumnProperties(attachmentsColumns);
+
+			attachmentsTableViewer.setSorter(new ViewerSorter() {
+				public int compare(Viewer viewer, Object e1, Object e2) {
+					ReportAttachment attachment1 = (ReportAttachment) e1;
+					ReportAttachment attachment2 = (ReportAttachment) e2;
+					return attachment1.getDateCreated().compareTo(attachment2.getDateCreated());
+				}
+			});
+
+			attachmentsTableViewer.setContentProvider(new IStructuredContentProvider() {
+				public Object[] getElements(Object inputElement) {
+					return getReport().getAttachments().toArray();
+				}
+
+				public void dispose() {
+					// ignore
+
+				}
+
+				public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+					// ignore
+
+				}
+			});
+
+			attachmentsTableViewer.setLabelProvider(new ITableLabelProvider() {
+
+				public Image getColumnImage(Object element, int columnIndex) {
+					// ReportAttachment attachment = (ReportAttachment) element;
+					return null;
+				}
+
+				public String getColumnText(Object element, int columnIndex) {
+					ReportAttachment attachment = (ReportAttachment) element;
+					switch (columnIndex) {
+					case 0:
+						return attachment.getDescription();
+					case 1:
+						return attachment.getContentType();
+					case 2:
+						return attachment.getCreator();
+					case 3:
+						return attachment.getDateCreated().toString();
+					}
+					return "unrecognized column";
+				}
+
+				public void addListener(ILabelProviderListener listener) {
+					// ignore
+
+				}
+
+				public void dispose() {
+					// ignore
+
+				}
+
+				public boolean isLabelProperty(Object element, String property) {
+					// ignore
+					return false;
+				}
+
+				public void removeListener(ILabelProviderListener listener) {
+					// ignore
+
+				}
+
+			});
+
+			attachmentsTableViewer.addDoubleClickListener(new IDoubleClickListener() {
+				public void doubleClick(DoubleClickEvent event) {
+					String address = repository.getUrl() + "/attachment.cgi?id=";
+					if (!event.getSelection().isEmpty()) {
+						StructuredSelection selection = (StructuredSelection) event.getSelection();
+						ReportAttachment attachment = (ReportAttachment) selection.getFirstElement();
+						address += attachment.getId() + "&amp;action=view";
+						;
+						TaskUiUtil.openUrl(address, address, address);
+					}
+				}
+			});
+
+			attachmentsTableViewer.setInput(getReport());
+
+		} else {
+			toolkit.createLabel(attachmentsComposite, "No attachments");
+		}
 	}
 
 	/**

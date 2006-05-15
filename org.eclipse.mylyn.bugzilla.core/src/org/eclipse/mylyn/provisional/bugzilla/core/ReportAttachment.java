@@ -19,7 +19,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 
 /**
  * TODO: Make generic. This currently represents Bugzilla attachments only
- * @author relves
+ * @author Rob Elves
  */
 public class ReportAttachment extends AttributeContainer implements Serializable {
 
@@ -31,6 +31,8 @@ public class ReportAttachment extends AttributeContainer implements Serializable
 	private boolean isObsolete = false;
 
 	private Date created;
+	
+	private String creator = "";
 	
 	public boolean isObsolete() {
 		return isObsolete;
@@ -55,16 +57,13 @@ public class ReportAttachment extends AttributeContainer implements Serializable
 		return created;
 	}
 
-	/**
-	 * Currently returns empty string. XML from bugzilla
-	 * doesn't include who attached directly in attachment data
-	 * TODO: Retrieve from associated comment
-	 * @return
-	 */
-	public String getAuthor() {
-		return "";
+	public String getCreator() {
+		return creator;
 	}
 
+	public void setCreator(String creator) {
+		this.creator = creator;		
+	}
 	public String getDescription() {
 		//System.err.println(getAttributeValue(BugzillaReportElement.DESC));
 		return getAttributeValue(BugzillaReportElement.DESC);
@@ -78,8 +77,13 @@ public class ReportAttachment extends AttributeContainer implements Serializable
 		}
 	}
 
-	public Object getContentType() {
-		return getAttributeValue(BugzillaReportElement.CTYPE);
+	public String getContentType() {
+		// Eclipse.org uses "ctype", others use "type"
+		if(getAttribute(BugzillaReportElement.TYPE) != null) {
+			return getAttributeValue(BugzillaReportElement.TYPE);
+		} else {
+			return getAttributeValue(BugzillaReportElement.CTYPE);
+		}
 	}
 	
 }
