@@ -417,10 +417,6 @@ public class TaskListManager {
 		cal.set(Calendar.MILLISECOND, cal.getMaximum(Calendar.MILLISECOND));
 		cal.getTime();
 	}
-
-	public void setTomorrow(Calendar reminderCalendar) {
-
-	}
 	
 	public void setDueIn(Calendar reminderCalendar, int days) {
 		reminderCalendar.add(Calendar.DAY_OF_MONTH, days);
@@ -621,7 +617,7 @@ public class TaskListManager {
 		if (reminder != null) {
 			Date now = new Date();
 			Calendar tomorrow = GregorianCalendar.getInstance();
-			MylarTaskListPlugin.getTaskListManager().setTomorrow(tomorrow);
+			MylarTaskListPlugin.getTaskListManager().setDueIn(tomorrow, 1);
 			return (reminder.compareTo(now) == 1 && reminder.compareTo(tomorrow.getTime()) == -1);
 		} else {
 			return false;

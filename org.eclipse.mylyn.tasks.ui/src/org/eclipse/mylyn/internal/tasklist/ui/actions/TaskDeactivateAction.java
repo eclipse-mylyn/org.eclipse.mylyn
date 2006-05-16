@@ -33,14 +33,11 @@ public class TaskDeactivateAction extends Action {
 	}
 
 	public void run(ITask task) {
-//		MylarPlugin.getContextManager().actionObserved(this, Boolean.FALSE.toString());
-
 		try {
 			if (task != null) {
 				MylarTaskListPlugin.getTaskListManager().deactivateTask(task);
 				TaskListView.getDefault().refreshAndFocus();
 				TaskUiUtil.closeEditorInActivePage(task);
-//				TaskListView.getDefault().closeTaskEditors(task, page);
 			}
 		} catch (Exception e) {
 			MylarStatusHandler.log(e, " Closing task editor on task deactivation failed");

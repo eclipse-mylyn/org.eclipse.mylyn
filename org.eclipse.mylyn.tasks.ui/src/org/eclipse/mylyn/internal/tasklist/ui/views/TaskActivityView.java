@@ -320,7 +320,7 @@ public class TaskActivityView extends ViewPart {
 					container = (DateRangeContainer) target;
 					if (container.isPresent()) {
 						reminderCalendar = GregorianCalendar.getInstance();
-						MylarTaskListPlugin.getTaskListManager().setTomorrow(reminderCalendar);
+						MylarTaskListPlugin.getTaskListManager().setDueIn(reminderCalendar, 1);
 					} else {
 						reminderCalendar = container.getStart();
 					}
@@ -328,7 +328,7 @@ public class TaskActivityView extends ViewPart {
 					DateRangeActivityDelegate dateRangeActivityDelegate = (DateRangeActivityDelegate) target;
 					if (dateRangeActivityDelegate.getDateRangeContainer().isPresent()) {
 						reminderCalendar = GregorianCalendar.getInstance();
-						MylarTaskListPlugin.getTaskListManager().setTomorrow(reminderCalendar);
+						MylarTaskListPlugin.getTaskListManager().setDueIn(reminderCalendar, 1);
 					} else {
 						reminderCalendar = dateRangeActivityDelegate.getDateRangeContainer().getStart();
 					}
