@@ -39,7 +39,7 @@ public class MylarPreferenceWizardPage extends WizardPage {
 
 	private static final String WORKING_SET = "Add the \"active task context\" working set";
 
-	private static final String CONTENT_ASSIST = "Enable task-context ranked content assist (requires Eclipse restart).";
+	private static final String CONTENT_ASSIST = "Enable task-context ranked content assist, requires Eclipse restart.";
 
 	private static final String CONTENT_ASSIST_WARNING = "Toggle via Preferences->Java->Editor->Content Assist->Advanced ";
 	
@@ -66,8 +66,8 @@ public class MylarPreferenceWizardPage extends WizardPage {
 	protected MylarPreferenceWizardPage(String pageName) {
 		super(pageName);
 		setTitle(pageName);
-		setDescription("Configures Mylar preferences to the recommended defaults. To alter these \n"
-				+ "go to the Mylar preference page or re-invoke this wizard via the \"New\" menu.");
+		setDescription("Configures Mylar preferences to the recommended defaults. To alter these go"
+				+ "to re-invoke this wizard via the \"New\" menu.");
 	}
 
 	public void createControl(Composite parent) {
@@ -105,9 +105,10 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		
 		label = new Label(buttonComposite, SWT.NONE);
 		label = new Label(buttonComposite, SWT.NONE);
-		label.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
+//		label.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
 		label.setText("NOTE: if Mylar is uninstalled you must Restore Defaults on above page ");
-				
+		label.setForeground(TaskListColorsAndFonts.COLOR_LABEL_CAUTION);
+		
 		gd = new GridData();
 		label.setLayoutData(gd);
 
@@ -214,7 +215,7 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		Hyperlink hyperlink = new Hyperlink(containerComposite, SWT.NULL);
 		hyperlink.setUnderlined(true);
 		hyperlink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK);
-		hyperlink.setText("If this is your first time using Mylar watch the getting started video");
+		hyperlink.setText("If this is your first time using Mylar please watch the short getting started video");
 		hyperlink.addHyperlinkListener(new IHyperlinkListener() {
 
 			public void linkActivated(HyperlinkEvent e) {
