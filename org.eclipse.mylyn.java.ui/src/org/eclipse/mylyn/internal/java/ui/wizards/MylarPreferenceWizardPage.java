@@ -33,6 +33,10 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
  */
 public class MylarPreferenceWizardPage extends WizardPage {
 
+	private static final String DESCRIPTION = 
+		"Configures Mylar preferences to the recommended defaults. To alter these\n"
+      + "re-invoke this wizard via the File -> New menu.";
+
 	private static final String AUTO_FOLDING = "Turn interest-based automatic Java editor folding on";
 
 	private static final String AUTO_CLOSE = "Automatically manage open editors to match task context";
@@ -66,8 +70,7 @@ public class MylarPreferenceWizardPage extends WizardPage {
 	protected MylarPreferenceWizardPage(String pageName) {
 		super(pageName);
 		setTitle(pageName);
-		setDescription("Configures Mylar preferences to the recommended defaults. To alter these go"
-				+ "to re-invoke this wizard via the \"New\" menu.");
+		setDescription(DESCRIPTION);
 	}
 
 	public void createControl(Composite parent) {
