@@ -391,7 +391,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 			Set<AbstractRepositoryQuery> queriesWithHandle = MylarTaskListPlugin.getTaskListManager().getTaskList()
 					.getQueriesForHandle(task.getHandleIdentifier());
-			synchronize(queriesWithHandle, null, Job.INTERACTIVE, 0);
+			synchronize(queriesWithHandle, null, Job.SHORT, 0);
 
 			if (task instanceof AbstractRepositoryTask) {
 				synchronize((AbstractRepositoryTask) task, true, null);
