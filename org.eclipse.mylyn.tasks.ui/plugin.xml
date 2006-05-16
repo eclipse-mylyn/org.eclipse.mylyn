@@ -322,7 +322,7 @@
            categoryId="org.eclipse.mylar.tasklist.ui.presentation"
            id="org.eclipse.mylar.tasklist.ui.colors.foreground.overdue"
            isEditable="true"
-           label="Tasks - Past Reminder"
+           label="Tasks - Overdue"
            value="167,10,26"> 
          <description>
             Text color for overdue tasks.
@@ -343,7 +343,7 @@
            id="org.eclipse.mylar.tasklist.ui.colors.foreground.today.completed"
            isEditable="true"
            label="Tasks - Completed Today"
-           value="46,175,68">  
+           value="107,169,128">  
          <description>
             Text color for tasks completed.
          </description>
