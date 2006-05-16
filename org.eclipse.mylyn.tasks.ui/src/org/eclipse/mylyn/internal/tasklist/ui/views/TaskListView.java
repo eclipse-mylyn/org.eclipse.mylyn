@@ -331,10 +331,11 @@ public class TaskListView extends ViewPart {
 	private final IPropertyChangeListener THEME_CHANGE_LISTENER = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
 			if (event.getProperty().equals(IThemeManager.CHANGE_CURRENT_THEME)
-					|| event.getProperty().equals(TaskListColorsAndFonts.THEME_COLOR_ID_TASKLIST_CATEGORY)
-					|| event.getProperty().equals(TaskListColorsAndFonts.THEME_COLOR_ID_TASK_OVERDUE)
-					|| event.getProperty().equals(TaskListColorsAndFonts.THEME_COLOR_ID_TASK_TODAY)) {
-				taskListTableLabelProvider.setCategoryBackgroundColor(themeManager.getCurrentTheme().getColorRegistry().get(TaskListColorsAndFonts.THEME_COLOR_ID_TASKLIST_CATEGORY));
+					|| event.getProperty().equals(TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY)
+					|| event.getProperty().equals(TaskListColorsAndFonts.THEME_COLOR_TASK_OVERDUE)
+					|| event.getProperty().equals(TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_COMPLETED)
+				    || event.getProperty().equals(TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_SCHEDULED)) {
+				taskListTableLabelProvider.setCategoryBackgroundColor(themeManager.getCurrentTheme().getColorRegistry().get(TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY));
 				getViewer().refresh();
 			} 
 		}
@@ -840,7 +841,7 @@ public class TaskListView extends ViewPart {
 
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
-				TaskListColorsAndFonts.THEME_COLOR_ID_TASKLIST_CATEGORY);
+				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
 
 		taskListTableLabelProvider = new TaskListTableLabelProvider(new TaskElementLabelProvider(), PlatformUI
 				.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground);
@@ -1257,6 +1258,10 @@ public class TaskListView extends ViewPart {
 		if (!filters.contains(filter)) {
 			filters.add(filter);
 		}
+	}
+	
+	public void clearFilters() {
+		filters.clear();
 	}
 
 	public void removeFilter(AbstractTaskListFilter filter) {

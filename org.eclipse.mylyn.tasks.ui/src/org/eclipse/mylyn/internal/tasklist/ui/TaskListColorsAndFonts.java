@@ -42,11 +42,13 @@ public class TaskListColorsAndFonts {
 
 	public static Font STRIKETHROUGH;
 	
-	public static final String THEME_COLOR_ID_TASKLIST_CATEGORY = "org.eclipse.mylar.tasklist.ui.colors.background.category";
+	public static final String THEME_COLOR_TASKLIST_CATEGORY = "org.eclipse.mylar.tasklist.ui.colors.background.category";
 
-	public static final String THEME_COLOR_ID_TASK_OVERDUE = "org.eclipse.mylar.tasklist.ui.colors.foreground.overdue"; 
+	public static final String THEME_COLOR_TASK_OVERDUE = "org.eclipse.mylar.tasklist.ui.colors.foreground.overdue"; 
 
-	public static final String THEME_COLOR_ID_TASK_TODAY = "org.eclipse.mylar.tasklist.ui.colors.foreground.today"; 
+	public static final String THEME_COLOR_TASK_TODAY_SCHEDULED = "org.eclipse.mylar.tasklist.ui.colors.foreground.today.scheduled"; 
+	
+	public static final String THEME_COLOR_TASK_TODAY_COMPLETED = "org.eclipse.mylar.tasklist.ui.colors.foreground.today.completed"; 
 	
 	static {
 		Font defaultFont = JFaceResources.getFontRegistry().get(JFaceResources.DEFAULT_FONT);

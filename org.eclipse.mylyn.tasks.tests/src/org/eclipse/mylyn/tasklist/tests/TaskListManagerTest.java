@@ -88,7 +88,7 @@ public class TaskListManagerTest extends TestCase {
 		inAnHour.getTime();
 		task.setReminderDate(inAnHour.getTime());
 		Calendar tomorrow = Calendar.getInstance();
-		manager.setDueIn(tomorrow, 1);
+		manager.setSecheduledIn(tomorrow, 1);
 		assertEquals(-1, inAnHour.compareTo(tomorrow));
 		
 		assertTrue(manager.isReminderToday(task)); 

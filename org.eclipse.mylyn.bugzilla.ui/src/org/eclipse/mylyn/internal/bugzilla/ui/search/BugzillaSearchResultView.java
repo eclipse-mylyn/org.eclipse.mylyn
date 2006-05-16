@@ -165,7 +165,7 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 		// TaskElementLabelProvider BugzillaLabelProvider
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
-				TaskListColorsAndFonts.THEME_COLOR_ID_TASKLIST_CATEGORY);
+				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
 
 		SearchViewTableLabelProvider taskListTableLabelProvider = new SearchViewTableLabelProvider(
 				new TaskElementLabelProvider(), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(),

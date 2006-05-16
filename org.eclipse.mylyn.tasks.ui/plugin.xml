@@ -330,12 +330,22 @@
      </colorDefinition>
      <colorDefinition
            categoryId="org.eclipse.mylar.tasklist.ui.presentation"
-           id="org.eclipse.mylar.tasklist.ui.colors.foreground.today"
+           id="org.eclipse.mylar.tasklist.ui.colors.foreground.today.scheduled"
            isEditable="true"
-           label="Tasks - Today"
+           label="Tasks - Scheduled for Today"
            value="30,14,231">  
          <description>
-            Text color for tasks due today.
+            Text color for tasks scheduled for today.
+         </description>
+     </colorDefinition>
+     <colorDefinition
+           categoryId="org.eclipse.mylar.tasklist.ui.presentation"
+           id="org.eclipse.mylar.tasklist.ui.colors.foreground.today.completed"
+           isEditable="true"
+           label="Tasks - Completed Today"
+           value="46,175,68">  
+         <description>
+            Text color for tasks completed.
          </description>
      </colorDefinition>
      <colorDefinition

@@ -200,10 +200,12 @@ public class Task implements ITask {
 	}
 
 	public void setCompleted(boolean completed) {
+		this.completed = completed;
 		if (completed) {
 			completionDate = new Date();
+		} else {
+			completionDate = null;
 		}
-		this.completed = completed;
 	}
 
 	public boolean isCategory() {

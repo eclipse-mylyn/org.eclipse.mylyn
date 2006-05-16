@@ -109,9 +109,9 @@ public class TaskActivityView extends ViewPart {
 	private final IPropertyChangeListener THEME_CHANGE_LISTENER = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
 			if (event.getProperty().equals(IThemeManager.CHANGE_CURRENT_THEME)
-					|| event.getProperty().equals(TaskListColorsAndFonts.THEME_COLOR_ID_TASKLIST_CATEGORY)) {
+					|| event.getProperty().equals(TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY)) {
 				taskHistoryTreeLabelProvider.setCategoryBackgroundColor(themeManager.getCurrentTheme()
-						.getColorRegistry().get(TaskListColorsAndFonts.THEME_COLOR_ID_TASKLIST_CATEGORY));
+						.getColorRegistry().get(TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY));
 				refresh();
 			}
 		}
@@ -261,7 +261,7 @@ public class TaskActivityView extends ViewPart {
 
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
-				TaskListColorsAndFonts.THEME_COLOR_ID_TASKLIST_CATEGORY);
+				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
 
 		taskHistoryTreeLabelProvider = new TaskActivityLabelProvider(new TaskElementLabelProvider(), PlatformUI
 				.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground);
@@ -320,7 +320,7 @@ public class TaskActivityView extends ViewPart {
 					container = (DateRangeContainer) target;
 					if (container.isPresent()) {
 						reminderCalendar = GregorianCalendar.getInstance();
-						MylarTaskListPlugin.getTaskListManager().setDueIn(reminderCalendar, 1);
+						MylarTaskListPlugin.getTaskListManager().setSecheduledIn(reminderCalendar, 1);
 					} else {
 						reminderCalendar = container.getStart();
 					}
@@ -328,7 +328,7 @@ public class TaskActivityView extends ViewPart {
 					DateRangeActivityDelegate dateRangeActivityDelegate = (DateRangeActivityDelegate) target;
 					if (dateRangeActivityDelegate.getDateRangeContainer().isPresent()) {
 						reminderCalendar = GregorianCalendar.getInstance();
-						MylarTaskListPlugin.getTaskListManager().setDueIn(reminderCalendar, 1);
+						MylarTaskListPlugin.getTaskListManager().setSecheduledIn(reminderCalendar, 1);
 					} else {
 						reminderCalendar = dateRangeActivityDelegate.getDateRangeContainer().getStart();
 					}

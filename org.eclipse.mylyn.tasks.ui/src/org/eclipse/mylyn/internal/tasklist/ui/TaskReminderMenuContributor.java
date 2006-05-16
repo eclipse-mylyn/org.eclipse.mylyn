@@ -62,7 +62,7 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 			@Override
 			public void run() {
 				Calendar reminderCalendar = GregorianCalendar.getInstance();
-				MylarTaskListPlugin.getTaskListManager().setToday(reminderCalendar);
+				MylarTaskListPlugin.getTaskListManager().setScheduledToday(reminderCalendar);
 				MylarTaskListPlugin.getTaskListManager().setReminder(task, reminderCalendar.getTime());
 			}
 		};
@@ -79,7 +79,7 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 				public void run() {
 					Calendar reminderCalendar = GregorianCalendar.getInstance();
 					int dueIn = day-today;
-					MylarTaskListPlugin.getTaskListManager().setDueIn(reminderCalendar, dueIn);
+					MylarTaskListPlugin.getTaskListManager().setSecheduledIn(reminderCalendar, dueIn);
 					MylarTaskListPlugin.getTaskListManager().setReminder(task, reminderCalendar.getTime());
 				}
 			};

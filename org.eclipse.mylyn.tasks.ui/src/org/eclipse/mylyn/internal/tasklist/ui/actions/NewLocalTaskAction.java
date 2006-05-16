@@ -89,7 +89,7 @@ public class NewLocalTaskAction extends Action {
 		newTask.setUrl(getDefaultIssueURL());
 		
 		Calendar reminderCalendar = GregorianCalendar.getInstance();
-		MylarTaskListPlugin.getTaskListManager().setToday(reminderCalendar);
+		MylarTaskListPlugin.getTaskListManager().setScheduledToday(reminderCalendar);
 		MylarTaskListPlugin.getTaskListManager().setReminder(newTask, reminderCalendar.getTime());
 
 		Object selectedObject = ((IStructuredSelection) view.getViewer().getSelection()).getFirstElement();

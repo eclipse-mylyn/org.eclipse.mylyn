@@ -95,7 +95,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				if (child.isActive()) {
 					return TaskListColorsAndFonts.COLOR_TASK_ACTIVE;
 				} else if (child.isPastReminder() && !child.isCompleted()) {
-					return themeManager.getCurrentTheme().getColorRegistry().get(TaskListColorsAndFonts.THEME_COLOR_ID_TASK_OVERDUE);
+					return themeManager.getCurrentTheme().getColorRegistry().get(TaskListColorsAndFonts.THEME_COLOR_TASK_OVERDUE);
 				}
 			}
 		} else if (object instanceof AbstractRepositoryQuery) {
@@ -116,16 +116,17 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		} else if (object instanceof ITaskListElement) {
 			ITask task = getCorrespondingTask((ITaskListElement) object);
 			if (task != null) {
-				if (task.isCompleted()) {
+				if (MylarTaskListPlugin.getTaskListManager().isCompletedToday(task)) {
+					return themeManager.getCurrentTheme().getColorRegistry().get(TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_COMPLETED);
+				} else if (task.isCompleted()) {
 					return TaskListColorsAndFonts.COLOR_TASK_COMPLETED;
 				} else if (task.isActive()) {
 					return TaskListColorsAndFonts.COLOR_TASK_ACTIVE;
 				} else if (task.isPastReminder()) {
-					return themeManager.getCurrentTheme().getColorRegistry().get(TaskListColorsAndFonts.THEME_COLOR_ID_TASK_OVERDUE);
-//					return TaskListColorsAndFonts.COLOR_TASK_OVERDUE;
+					return themeManager.getCurrentTheme().getColorRegistry().get(TaskListColorsAndFonts.THEME_COLOR_TASK_OVERDUE);
 				} else if (MylarTaskListPlugin.getTaskListManager().isReminderToday(task)) {
-					return themeManager.getCurrentTheme().getColorRegistry().get(TaskListColorsAndFonts.THEME_COLOR_ID_TASK_TODAY);
-				}
+					return themeManager.getCurrentTheme().getColorRegistry().get(TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_SCHEDULED);
+				} 
 			}
 		}
 		return null;
