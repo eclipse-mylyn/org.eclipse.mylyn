@@ -419,11 +419,15 @@ public class TaskListManager {
 	}
 
 	public void setTomorrow(Calendar reminderCalendar) {
-		reminderCalendar.add(Calendar.DAY_OF_MONTH, 1);
+
+	}
+	
+	public void setDueIn(Calendar reminderCalendar, int days) {
+		reminderCalendar.add(Calendar.DAY_OF_MONTH, days);
 		reminderCalendar.set(Calendar.HOUR_OF_DAY, HOUR_DAY_START);
 		reminderCalendar.set(Calendar.MINUTE, 0);
 		reminderCalendar.set(Calendar.SECOND, 0);
-		reminderCalendar.set(Calendar.MILLISECOND, 0);
+		reminderCalendar.set(Calendar.MILLISECOND, 0);	
 	}
 	
 	public void setToday(Calendar reminderCalendar) {

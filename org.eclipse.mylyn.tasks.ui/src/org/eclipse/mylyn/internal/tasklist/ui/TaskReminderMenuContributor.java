@@ -62,7 +62,7 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 			@Override
 			public void run() {
 				Calendar reminderCalendar = GregorianCalendar.getInstance();
-				MylarTaskListPlugin.getTaskListManager().setTomorrow(reminderCalendar);
+				MylarTaskListPlugin.getTaskListManager().setToday(reminderCalendar);
 				MylarTaskListPlugin.getTaskListManager().setReminder(task, reminderCalendar.getTime());
 			}
 		};
