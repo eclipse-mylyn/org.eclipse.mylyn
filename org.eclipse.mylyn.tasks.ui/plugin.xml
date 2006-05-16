@@ -223,6 +223,24 @@
       <viewerContribution
             id="org.eclipse.mylar.tasklist.ui.viewerContribution"
             targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
+
+         <action
+               class="org.eclipse.mylar.internal.tasklist.ui.SynchronizeReportsAction"
+               enablesFor="*"
+               icon="icons/etool16/repository-synchronize.gif"
+               id="org.eclipse.mylar.bugzilla.ui.popup.refresh"
+               label="Synchronize with Repository"
+               menubarPath="reports"
+               tooltip="Synchronize with Repository">
+            <enablement>
+               <or>
+                    <objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractQueryHit"/>
+					<objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery"/>
+               		<objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask"/>
+                 <objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer"/>
+               </or>
+            </enablement>
+         </action>
          
 		<action
               class="org.eclipse.mylar.internal.tasklist.ui.actions.AddRepositoryTaskAction"
@@ -255,24 +273,6 @@
               style="push"
               tooltip="New Repository Query"> 
   		</action>
-
-         <action
-               class="org.eclipse.mylar.internal.tasklist.ui.SynchronizeReportsAction"
-               enablesFor="*"
-               icon="icons/etool16/repository-synchronize.gif"
-               id="org.eclipse.mylar.bugzilla.ui.popup.refresh"
-               label="Synchronize with Repository"
-               menubarPath="reports"
-               tooltip="Synchronize with Repository">
-            <enablement>
-               <or>
-                    <objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractQueryHit"/>
-					<objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery"/>
-               		<objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask"/>
-                 <objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer"/>
-               </or>
-            </enablement>
-         </action>
       </viewerContribution>
    </extension>
 

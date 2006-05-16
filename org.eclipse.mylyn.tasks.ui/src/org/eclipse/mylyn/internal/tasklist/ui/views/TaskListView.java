@@ -191,7 +191,7 @@ public class TaskListView extends ViewPart {
 
 	private TaskActivateAction activateAction = new TaskActivateAction();
 
-	private TaskDeactivateAction deactivateAction = new TaskDeactivateAction();
+//	private TaskDeactivateAction deactivateAction = new TaskDeactivateAction();
 
 	private MarkTaskCompleteAction markIncompleteAction;
 
@@ -992,10 +992,14 @@ public class TaskListView extends ViewPart {
 			} else {
 				task = (ITask) element;
 			}
-
+			
 			addAction(openUrlInExternal, manager, element);
+			if (!(element instanceof AbstractRepositoryTask)
+					|| element instanceof AbstractTaskContainer || element instanceof AbstractRepositoryQuery) {
+				addAction(renameAction, manager, element);
+			}
 			addAction(copyDescriptionAction, manager, element);
-
+			
 			if (task != null) {
 				if (!(task instanceof AbstractRepositoryTask)) {
 					if (task.isCompleted()) {
@@ -1005,15 +1009,12 @@ public class TaskListView extends ViewPart {
 					}
 				}
 
-				if (task.isActive()) {
-					manager.add(deactivateAction);
-				} else {
-					manager.add(activateAction);
-				}
-
-				// if (!task.isLocal()) {
+//				if (task.isActive()) {
+//					manager.add(deactivateAction);
+//				} else {
+//					manager.add(activateAction);
+//				}
 				addAction(removeFromCategoryAction, manager, element);
-				// }
 				addAction(deleteAction, manager, element);
 			} else {
 				manager.add(activateAction);
@@ -1024,27 +1025,23 @@ public class TaskListView extends ViewPart {
 			addAction(deleteAction, manager, element);
 		}
 
-		if ((element instanceof ITask && !(element instanceof AbstractRepositoryTask))
-				|| element instanceof AbstractTaskContainer || element instanceof AbstractRepositoryQuery) {
-			addAction(renameAction, manager, element);
-		}
 		if (element instanceof AbstractTaskContainer) {
 			manager.add(goIntoAction);
 		}
 		if (drilledIntoCategory != null) {
 			manager.add(goUpAction);
 		}
-
-		manager.add(new Separator(SEPARATOR_LOCAL));
-		manager.add(newCategoryAction);
-		manager.add(newLocalTaskAction);
-		manager.add(new Separator(SEPARATOR_REPORTS));
-
+		
 		for (IDynamicSubMenuContributor contributor : MylarTaskListPlugin.getDefault().getDynamicMenuContributers()) {
 			MenuManager subMenuManager = contributor.getSubMenuManager(this, (ITaskListElement) selectedObject);
 			if (subMenuManager != null)
 				addMenuManager(subMenuManager, manager, element);
 		}
+
+		manager.add(new Separator(SEPARATOR_LOCAL));
+		manager.add(newCategoryAction);
+		manager.add(newLocalTaskAction);
+		manager.add(new Separator(SEPARATOR_REPORTS));
 		
 		manager.add(new Separator(SEPARATOR_CONTEXT));
 

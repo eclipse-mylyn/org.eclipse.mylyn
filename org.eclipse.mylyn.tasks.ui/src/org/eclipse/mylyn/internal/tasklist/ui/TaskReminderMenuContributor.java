@@ -71,14 +71,14 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 		subMenuManager.add(action);
 		subMenuManager.add(new Separator());
 		
-		int today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+		final int today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 		for (int i = today+1; i <= 7; i++) {
 			final int day = i;
 			action = new Action() {
 				@Override
 				public void run() {
 					Calendar reminderCalendar = GregorianCalendar.getInstance();
-					int dueIn = Calendar.getInstance().get(Calendar.MONTH) + day;
+					int dueIn = day-today;
 					MylarTaskListPlugin.getTaskListManager().setDueIn(reminderCalendar, dueIn);
 					MylarTaskListPlugin.getTaskListManager().setReminder(task, reminderCalendar.getTime());
 				}
