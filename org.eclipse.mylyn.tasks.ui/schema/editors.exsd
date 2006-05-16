@@ -58,7 +58,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.internal.tasklist.ui.ITaskEditorFactory"/>
                </appInfo>
             </annotation>
          </attribute>
