@@ -99,7 +99,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 			return false;
 		} else {
 			Calendar tomorrow = Calendar.getInstance();
-			MylarTaskListPlugin.getTaskListManager().setTomorrow(tomorrow);
+			MylarTaskListPlugin.getTaskListManager().setDueIn(tomorrow, 1);
 
 			Calendar yesterday = Calendar.getInstance();
 			yesterday.set(Calendar.HOUR_OF_DAY, 0);
