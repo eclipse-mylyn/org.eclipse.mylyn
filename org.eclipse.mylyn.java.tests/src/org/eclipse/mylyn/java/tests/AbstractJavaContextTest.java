@@ -11,10 +11,6 @@
 
 package org.eclipse.mylar.java.tests;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -33,8 +29,6 @@ import org.eclipse.mylar.internal.java.JavaStructureBridge;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
 
 /**
  * @author Mik Kersten
@@ -112,21 +106,6 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 				wasInterrupted = true;
 			}
 		} while (wasInterrupted);
-	}
-
-	protected int countItemsInTree(Tree tree) {
-		List<TreeItem> collectedItems = new ArrayList<TreeItem>();
-		collectTreeItemsInView(tree.getItems(), collectedItems);
-		return collectedItems.size();
-	}
-
-	protected void collectTreeItemsInView(TreeItem[] items, List<TreeItem> collectedItems) {
-		if (items.length > 0) {
-			for (TreeItem childItem : Arrays.asList(items)) {
-				collectedItems.add(childItem);
-				collectTreeItemsInView(childItem.getItems(), collectedItems);
-			}
-		}
 	}
 
 	class TestProgressMonitor implements IProgressMonitor {

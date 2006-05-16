@@ -20,6 +20,7 @@ import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylar.core.tests.UiTestUtil;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
 import org.eclipse.mylar.internal.ui.actions.ApplyMylarToOutlineAction;
 import org.eclipse.mylar.provisional.ui.IMylarUiBridge;
@@ -74,14 +75,14 @@ public class ContentOutlineRefreshTest extends AbstractJavaContextTest {
 		}
 		assertEquals(1, viewers.size());
 		TreeViewer viewer = (TreeViewer) viewers.get(0);
-		assertEquals(3, super.countItemsInTree(viewer.getTree()));
+		assertEquals(3, UiTestUtil.countItemsInTree(viewer.getTree()));
 
 		action.installInterestFilter(true, viewer);
-		assertEquals(0, super.countItemsInTree(viewer.getTree()));
+		assertEquals(0, UiTestUtil.countItemsInTree(viewer.getTree()));
 
 		StructuredSelection sm1 = new StructuredSelection(m1);
 		monitor.selectionChanged(view, sm1);
 		viewer.refresh();
-		assertEquals(2, super.countItemsInTree(viewer.getTree()));
+		assertEquals(2, UiTestUtil.countItemsInTree(viewer.getTree()));
 	}
 }

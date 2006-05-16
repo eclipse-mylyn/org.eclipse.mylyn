@@ -21,6 +21,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylar.core.tests.UiTestUtil;
 import org.eclipse.mylar.core.tests.support.search.TestActiveSearchListener;
 import org.eclipse.mylar.internal.core.search.IMylarSearchOperation;
 import org.eclipse.mylar.internal.ide.ui.views.ActiveSearchView;
@@ -79,7 +80,7 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
 		assertEquals(1, search(2, node).size());
 
 		List<TreeItem> collectedItems = new ArrayList<TreeItem>();
-		collectTreeItemsInView(view.getViewer().getTree().getItems(), collectedItems);
+		UiTestUtil.collectTreeItemsInView(view.getViewer().getTree().getItems(), collectedItems);
 
 		// just make sure that the view didn't blow up.
 		assertEquals(1, collectedItems.size());

@@ -11,9 +11,6 @@
 
 package org.eclipse.mylar.internal.ui;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.AbstractTaskListFilter;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
@@ -83,32 +80,14 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	protected boolean isUninteresting(ITask task) {
 		return !task.isActive()
-				&& ((task.isCompleted() && !isCompletedToday(task)) || MylarTaskListPlugin.getTaskListManager().isReminderAfterThisWeek(task));
+				&& ((task.isCompleted() && !MylarTaskListPlugin.getTaskListManager().isCompletedToday(task)) || MylarTaskListPlugin
+						.getTaskListManager().isReminderAfterThisWeek(task));
 	}
 
 	// TODO: make meta-context more explicit
 	protected boolean isInteresting(ITask task) {
-		return shouldAlwaysShow(task)
-			|| isCompletedToday(task) 
-			|| MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task);
+		return shouldAlwaysShow(task) || MylarTaskListPlugin.getTaskListManager().isCompletedToday(task)
+				|| MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task);
 	}
 
-	private boolean isCompletedToday(ITask task) {
-		Date completionDate = task.getCompletionDate();
-		if (completionDate == null) {
-			return false;
-		} else {
-			Calendar tomorrow = Calendar.getInstance();
-			MylarTaskListPlugin.getTaskListManager().setDueIn(tomorrow, 1);
-
-			Calendar yesterday = Calendar.getInstance();
-			yesterday.set(Calendar.HOUR_OF_DAY, 0);
-			yesterday.set(Calendar.MINUTE, 0);
-			yesterday.set(Calendar.SECOND, 0);
-			yesterday.set(Calendar.MILLISECOND, 0);
-
-			return completionDate.compareTo(yesterday.getTime()) == 1
-					&& completionDate.compareTo(tomorrow.getTime()) == -1;
-		}
-	}
 }

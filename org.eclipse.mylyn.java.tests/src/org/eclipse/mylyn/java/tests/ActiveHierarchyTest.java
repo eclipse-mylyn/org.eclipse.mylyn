@@ -19,6 +19,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylar.core.tests.UiTestUtil;
 import org.eclipse.mylar.internal.java.ui.views.ActiveHierarchyView;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.swt.widgets.Tree;
@@ -49,25 +50,25 @@ public class ActiveHierarchyTest extends AbstractJavaContextTest {
 		IType superType = project.createType(p1, "Super.java", "public class Super { }");
 		makeLandmark(superType);
 		List<TreeItem> collectedItems = new ArrayList<TreeItem>();
-		collectTreeItemsInView(tree.getItems(), collectedItems);
+		UiTestUtil.collectTreeItemsInView(tree.getItems(), collectedItems);
 		assertEquals(2, collectedItems.size());
 
 		IType sub1 = project.createType(p1, "Sub1.java", "public class Sub1 extends Super { }");
 		makeLandmark(sub1);
 		collectedItems = new ArrayList<TreeItem>();
-		collectTreeItemsInView(tree.getItems(), collectedItems);
+		UiTestUtil.collectTreeItemsInView(tree.getItems(), collectedItems);
 		assertEquals(3, collectedItems.size());
 
 		IType sub2 = project.createType(p1, "Sub2.java", "public class Sub2 extends Super { }");
 		makeLandmark(sub2);
 		collectedItems = new ArrayList<TreeItem>();
-		collectTreeItemsInView(tree.getItems(), collectedItems);
+		UiTestUtil.collectTreeItemsInView(tree.getItems(), collectedItems);
 		assertEquals(4, collectedItems.size());
 
 		IType subsub = project.createType(p1, "SubSub.java", "public class SubSub extends Sub1 { }");
 		makeLandmark(subsub);
 		collectedItems = new ArrayList<TreeItem>();
-		collectTreeItemsInView(tree.getItems(), collectedItems);
+		UiTestUtil.collectTreeItemsInView(tree.getItems(), collectedItems);
 		assertEquals(5, collectedItems.size());
 	}
 
