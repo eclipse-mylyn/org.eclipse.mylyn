@@ -27,6 +27,7 @@ public abstract class AbstractTaskListFilter {
 	protected boolean shouldAlwaysShow(ITask task) {
 		return task.isActive() 
 			|| (MylarTaskListPlugin.getTaskListManager().isReminderToday(task) && !task.isCompleted())
+			|| (MylarTaskListPlugin.getTaskListManager().isCompletedToday(task))
 			|| (task.isPastReminder() && !task.isCompleted())
 			|| NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(task.getDescription());
 	}
