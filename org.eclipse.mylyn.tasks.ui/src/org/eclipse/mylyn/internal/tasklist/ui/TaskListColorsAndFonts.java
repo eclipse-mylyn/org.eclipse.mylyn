@@ -32,7 +32,7 @@ public class TaskListColorsAndFonts {
 
 	public static final Color COLOR_TASK_ACTIVE = new Color(Display.getDefault(), 36, 22, 50);
 
-//	public static final Color COLOR_TASK_OVERDUE = new Color(Display.getDefault(), 200, 10, 30);
+	public static final Color COLOR_LABEL_CAUTION = new Color(Display.getDefault(), 200, 10, 30);
 
 	public static final Color COLOR_HYPERLINK = new Color(Display.getDefault(), 0, 0, 255);
 
@@ -79,6 +79,7 @@ public class TaskListColorsAndFonts {
 			STRIKETHROUGH.dispose();
 		}	
 		BACKGROUND_ARCHIVE.dispose();
+		COLOR_LABEL_CAUTION.dispose();
 		COLOR_GRAY_LIGHT.dispose();
 		COLOR_TASK_COMPLETED.dispose();
 		COLOR_TASK_ACTIVE.dispose();
