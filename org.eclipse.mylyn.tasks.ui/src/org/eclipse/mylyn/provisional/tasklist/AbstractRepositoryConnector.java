@@ -129,6 +129,7 @@ public abstract class AbstractRepositoryConnector {
 			final SynchronizeTaskJob synchronizeJob = new SynchronizeTaskJob(this, repositoryTask);
 
 			synchronizeJob.setForceSynch(forceSynch);
+			synchronizeJob.setPriority(Job.LONG);
 			if (listener != null) {
 				synchronizeJob.addJobChangeListener(listener);
 			}
@@ -159,7 +160,6 @@ public abstract class AbstractRepositoryConnector {
 	}
 	
 	public Job synchronize(final Set<AbstractRepositoryQuery>repositoryQueries, IJobChangeListener listener, int priority, long delay) {
-		
 		SynchronizeQueryJob job = new SynchronizeQueryJob(this, repositoryQueries);
 
 		if (listener != null) {
