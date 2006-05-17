@@ -10,13 +10,14 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui.wizard;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.Proxy;
 
 import javax.security.auth.login.LoginException;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
@@ -38,7 +39,6 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
 
 /**
@@ -54,6 +54,8 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 
 	protected boolean fromDialog = false;
 
+	private BugzillaReportSubmitForm form;
+
 	/** The model used to store all of the data for the wizard */
 	protected NewBugzillaReport model;
 
@@ -67,11 +69,15 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 	protected IWorkbench workbenchInstance;
 
 	private final TaskRepository repository;
+	
+	// Flag to indicate if the bug was successfully sent
+	private boolean sentSuccessfully = false;
 
 	public AbstractBugWizard(TaskRepository repository) {
 		super();
 		this.repository = repository;
-		model = new NewBugzillaReport(repository.getUrl(), BugzillaUiPlugin.getDefault().getOfflineReports().getNextOfflineBugId());
+		model = new NewBugzillaReport(repository.getUrl(), BugzillaUiPlugin.getDefault().getOfflineReports()
+				.getNextOfflineBugId());
 		id = null; // Since there is no bug posted yet.
 		super.setDefaultPageImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin(
 				"org.eclipse.mylar.internal.bugzilla.ui", "icons/wizban/bug-wizard.gif"));
@@ -89,19 +95,18 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 
 	@Override
 	public boolean performFinish() {
-		// if (getWizardDataPage().serverSelected()) {
 		getWizardDataPage().saveDataToModel();
-		// If the bug report is sent successfully,
-		// then close the wizard and open the bug in an editor
-		if (postBug()) {
-			// if (!fromDialog)
-			// openBugEditor();
-			return true;
-		}
-		// If the report was not sent, keep the wizard open
-		else {
-			return false;
-		}
+		return postBug();
+		
+		// if (postBug()) {
+		// // if (!fromDialog)
+		// // openBugEditor();
+		// return true;
+		// }
+		// // If the report was not sent, keep the wizard open
+		// else {
+		// return false;
+		// }
 		// }
 
 		// if (getWizardDataPage().offlineSelected()) {
@@ -113,9 +118,6 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 		// return false;
 	}
 
-	// Flag to indicate if the bug was successfully sent
-	private boolean sentSuccessfully = false;
-
 	/**
 	 * Attempts to post the bug on the Bugzilla server. If it fails, an error
 	 * message pops up.
@@ -123,45 +125,87 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 	 * @return true if the bug is posted successfully, and false otherwise
 	 */
 	protected boolean postBug() {
-		final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-			protected void execute(final IProgressMonitor monitor) throws CoreException {
-				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-					public void run() {
-						Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
-						boolean wrap = IBugzillaConstants.BugzillaServerVersion.SERVER_218.equals(repository.getVersion());
-						BugzillaReportSubmitForm form = BugzillaReportSubmitForm.makeNewBugPost(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, model, wrap);
-						try {
-							id = form.submitReportToRepository();
-
-							if (id != null) {
-								sentSuccessfully = true;
-							}
-						} catch (BugzillaException e) {
-							MessageDialog.openError(null, "I/O Error", "Bugzilla could not post your bug.");
-							BugzillaPlugin.log(e);
-						} catch (PossibleBugzillaFailureException e) {
-							WebBrowserDialog.openAcceptAgreement(null, "Possible Bugzilla Client Failure",
-									"Bugzilla may not have posted your bug.\n" + e.getMessage(), form.getError());
-							BugzillaPlugin.log(e);
-						} catch (LoginException e) {
-							MessageDialog.openError(null, "Posting Error",
-									"Bugzilla could not post your bug since your login name or password is incorrect."
-											+ "\nPlease check your settings in the bugzilla preferences. ");
-							sentSuccessfully = false;
-						}
+		
+		final IRunnableWithProgress op = new IRunnableWithProgress() {
+			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+				Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
+				boolean wrap = IBugzillaConstants.BugzillaServerVersion.SERVER_218.equals(repository.getVersion());
+				form = BugzillaReportSubmitForm.makeNewBugPost(repository.getUrl(), repository.getUserName(),
+						repository.getPassword(), proxySettings, model, wrap);
+				try {
+					id = form.submitReportToRepository();
+					if (id != null) {
+						sentSuccessfully = true;
 					}
-
-				});
+				} catch (Exception e) {
+					throw new InvocationTargetException(e);
+				}
 			}
 		};
 
 		IProgressService service = PlatformUI.getWorkbench().getProgressService();
 		try {
-			service.run(false, false, op);
-		} catch (Exception e) {
-			MylarStatusHandler.log(e, "Unable to submit bug");
+			service.run(true, false, op);
+		} catch (InvocationTargetException e) {
+			if (e.getCause() instanceof BugzillaException) {
+				MessageDialog.openError(getWizardDataPage().getShell(), "I/O Error",
+						"Bugzilla could not post your bug.");
+			} else if (e.getCause() instanceof PossibleBugzillaFailureException) {
+				WebBrowserDialog.openAcceptAgreement(getWizardDataPage().getShell(),
+						"Possible Bugzilla Client Failure",
+						"Bugzilla may not have posted your bug.\n" + e.getCause().getMessage(), form.getError());
+			} else if (e.getCause() instanceof LoginException) {
+				MessageDialog.openError(getWizardDataPage().getShell(), "Posting Error",
+						"Bugzilla could not post your bug since your login name or password is incorrect."
+								+ "\nPlease check your settings in the bugzilla preferences. ");
+			}
+		} catch (InterruptedException e) {
+			// ignore
 		}
 		return sentSuccessfully;
+		
+		// final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+		// protected void execute(final IProgressMonitor monitor) throws
+		// CoreException {
+		// PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+		// public void run() {
+		// Proxy proxySettings =
+		// MylarTaskListPlugin.getDefault().getProxySettings();
+		// boolean wrap =
+		// IBugzillaConstants.BugzillaServerVersion.SERVER_218.equals(repository.getVersion());
+		// BugzillaReportSubmitForm form =
+		// BugzillaReportSubmitForm.makeNewBugPost(repository.getUrl(),
+		// repository.getUserName(), repository.getPassword(), proxySettings,
+		// model, wrap);
+		// try {
+		// id = form.submitReportToRepository();
+		//
+		// if (id != null) {
+		// sentSuccessfully = true;
+		// }
+		// } catch (BugzillaException e) {
+		// MessageDialog.openError(null, "I/O Error", "Bugzilla could not post
+		// your bug.");
+		// BugzillaPlugin.log(e);
+		// } catch (PossibleBugzillaFailureException e) {
+		// WebBrowserDialog.openAcceptAgreement(null, "Possible Bugzilla Client
+		// Failure",
+		// "Bugzilla may not have posted your bug.\n" + e.getMessage(),
+		// form.getError());
+		// BugzillaPlugin.log(e);
+		// } catch (LoginException e) {
+		// MessageDialog.openError(null, "Posting Error",
+		// "Bugzilla could not post your bug since your login name or password
+		// is incorrect."
+		// + "\nPlease check your settings in the bugzilla preferences. ");
+		// sentSuccessfully = false;
+		// }
+		// }
+		//
+		// });
+		// }
+		// };
+
 	}
 
 	/**
@@ -187,7 +231,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 			BugzillaPlugin.log(e.getStatus());
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Failed to open Bugzilla report", false);
-		} 
+		}
 	}
 
 	/**

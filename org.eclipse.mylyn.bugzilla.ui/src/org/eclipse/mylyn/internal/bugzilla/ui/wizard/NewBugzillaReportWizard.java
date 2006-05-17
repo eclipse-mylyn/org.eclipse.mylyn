@@ -82,47 +82,55 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 
 	@Override
 	public boolean performFinish() {
-		super.performFinish();
-		String bugIdString = this.getId();
-		int bugId = -1;
-		boolean validId = false;
-		try {
-			if (bugIdString != null) {
-				bugId = Integer.parseInt(bugIdString);
-				validId = true;
-			} 
-		} catch (NumberFormatException nfe) {
-			// ignore
+		if (super.performFinish()) {
+			String bugIdString = this.getId();
+			int bugId = -1;
+			// boolean validId = false;
+			try {
+				if (bugIdString != null) {
+					bugId = Integer.parseInt(bugIdString);
+					// validId = true;
+				}
+			} catch (NumberFormatException nfe) {
+				MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
+						"Could not create bug id, no valid id");
+				return false;
+			}
+			// if (!validId) {
+			// MessageDialog.openError(null,
+			// IBugzillaConstants.TITLE_MESSAGE_DIALOG,
+			// "Could not create bug id, no valid id");
+			// return false;
+			// }
+
+			BugzillaTask newTask = new BugzillaTask(AbstractRepositoryTask.getHandle(repository.getUrl(), bugId),
+					"<bugzilla info>", true);
+			Object selectedObject = null;
+			if (TaskListView.getDefault() != null)
+				selectedObject = ((IStructuredSelection) TaskListView.getDefault().getViewer().getSelection())
+						.getFirstElement();
+
+			// MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask);
+
+			if (selectedObject instanceof TaskCategory) {
+				MylarTaskListPlugin.getTaskListManager().getTaskList()
+						.addTask(newTask, ((TaskCategory) selectedObject));
+			} else {
+				MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask,
+						MylarTaskListPlugin.getTaskListManager().getTaskList().getRootCategory());
+			}
+
+			AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
+					BugzillaPlugin.REPOSITORY_KIND);
+			// client.addTaskToArchive(newTask);
+			TaskUiUtil.openEditor(newTask, true);
+
+			if (!newTask.isDownloaded()) {
+				client.synchronize(newTask, true, null);
+			}
+
+			return true;
 		}
-		if (!validId) {
-			MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, 
-					"Could not create bug id, no valid id");
-			return false;
-		} 
-
-		BugzillaTask newTask = new BugzillaTask(AbstractRepositoryTask.getHandle(repository.getUrl(),
-				bugId), "<bugzilla info>", true);
-		Object selectedObject = null;
-		if (TaskListView.getDefault() != null)
-			selectedObject = ((IStructuredSelection) TaskListView.getDefault().getViewer().getSelection())
-					.getFirstElement();
-
-//		MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask);
-
-		if (selectedObject instanceof TaskCategory) {
-			MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask, ((TaskCategory) selectedObject));
-		} else {
-			MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask, MylarTaskListPlugin.getTaskListManager().getTaskList().getRootCategory());
-		}
-		
-		AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
-//		client.addTaskToArchive(newTask);
-		TaskUiUtil.openEditor(newTask, true);
-		
-		if (!newTask.isDownloaded()) {
-			client.synchronize(newTask, true, null);
-		}
-
-		return true;
+		return false;
 	}
 }
