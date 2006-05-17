@@ -96,16 +96,20 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	public boolean shouldAlwaysShow(ITask task) {
 		return super.shouldAlwaysShow(task) 
 			|| hasChanges(task) 
-			|| MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task)
-			|| (MylarTaskListPlugin.getTaskListManager().isReminderToday(task) && !task.isCompleted())
 			|| (MylarTaskListPlugin.getTaskListManager().isCompletedToday(task))
-			|| (task.isPastReminder() && !task.isCompleted())
+			|| (isInterestingForThisWeek(task) && !task.isCompleted())
 			|| NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(task.getDescription());
+	}
+
+	private boolean isInterestingForThisWeek(ITask task) {
+		return MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task)
+			|| MylarTaskListPlugin.getTaskListManager().isReminderToday(task) 
+			|| task.isPastReminder();
 	}
 
 	private boolean hasChanges(ITask task) {
 		if (task instanceof AbstractRepositoryTask) {
-			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)task;
+			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
 			if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
 				return true;
 			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
