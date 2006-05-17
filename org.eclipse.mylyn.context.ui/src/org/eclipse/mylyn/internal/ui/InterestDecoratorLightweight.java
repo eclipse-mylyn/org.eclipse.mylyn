@@ -26,7 +26,7 @@ import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
  */
 public class InterestDecoratorLightweight implements ILightweightLabelDecorator {
 
-	private boolean doiTextDecorationEnabled = true;
+	private boolean doiTextDecorationEnabled = false;
 	
 	public InterestDecoratorLightweight() {
 		super();
