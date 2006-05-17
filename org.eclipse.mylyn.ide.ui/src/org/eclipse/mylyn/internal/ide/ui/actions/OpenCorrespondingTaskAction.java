@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.team.core.history.IFileRevision;
 import org.eclipse.team.internal.ccvs.core.client.listeners.LogEntry;
 import org.eclipse.team.internal.ui.synchronize.ChangeSetDiffNode;
+import org.eclipse.team.ui.synchronize.ISynchronizeModelElement;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.internal.ObjectPluginAction;
@@ -46,8 +47,19 @@ public class OpenCorrespondingTaskAction implements IViewActionDelegate {
 				Object firstElement = selection.getFirstElement();
 				String comment = null;
 				boolean resolved = false;
+				if (firstElement instanceof ISynchronizeModelElement) {
+					// find change set if available
+					firstElement = findParent((ISynchronizeModelElement)firstElement);	
+				} 
 				if (firstElement instanceof ChangeSetDiffNode) {
-					comment = ((ChangeSetDiffNode) firstElement).getName();
+					ChangeSetDiffNode diffNode = (ChangeSetDiffNode)firstElement;
+					if (diffNode.getSet() instanceof MylarActiveChangeSet) {
+						ITask task = ((MylarActiveChangeSet)diffNode.getSet()).getTask();
+						TaskUiUtil.openEditor(task, false);
+						return;
+					} else {
+						comment = ((ChangeSetDiffNode) firstElement).getName();
+					}
 				} else if (firstElement instanceof LogEntry) {
 					comment = ((LogEntry) firstElement).getComment();
 				} else if (firstElement instanceof IFileRevision) {
@@ -83,6 +95,15 @@ public class OpenCorrespondingTaskAction implements IViewActionDelegate {
 				}
 			}
 		}
+	}
+
+	private Object findParent(ISynchronizeModelElement element) {
+		if (element instanceof ChangeSetDiffNode) {
+			return element;
+		} else if (element.getParent() instanceof ISynchronizeModelElement) {
+			return findParent((ISynchronizeModelElement)element.getParent());
+		}
+		return null;
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {

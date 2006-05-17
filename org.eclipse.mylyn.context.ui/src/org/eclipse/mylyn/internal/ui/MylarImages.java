@@ -90,7 +90,7 @@ public class MylarImages {
 
 	public static final ImageDescriptor LINK_WITH_EDITOR = create(T_ELCL, "link-with-editor.gif");
 
-	public static final ImageDescriptor OVERLAY_MYLAR = create(T_VIEW, "overlay-mylar.gif");
+//	public static final ImageDescriptor OVERLAY_MYLAR = create(T_VIEW, "overlay-mylar.gif");
 	
 	public static final ImageDescriptor BLANK = create(T_ELCL, "blank.gif");
 

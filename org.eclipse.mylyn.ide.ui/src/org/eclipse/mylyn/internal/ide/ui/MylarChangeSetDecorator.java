@@ -22,9 +22,7 @@ import org.eclipse.mylar.internal.ui.MylarImages;
 public class MylarChangeSetDecorator implements ILightweightLabelDecorator {
 
 	public void decorate(Object element, IDecoration decoration) {
-		// ignore
-		decoration.addOverlay(MylarImages.OVERLAY_MYLAR, IDecoration.BOTTOM_RIGHT);
-		System.err.println("!!!!!!");
+		decoration.addOverlay(MylarImages.MYLAR_OVERLAY, IDecoration.BOTTOM_RIGHT);
 	}
 
 	public void addListener(ILabelProviderListener listener) {

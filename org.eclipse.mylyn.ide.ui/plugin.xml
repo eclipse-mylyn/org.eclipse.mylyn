@@ -150,8 +150,33 @@
 	 </objectContribution>
    </extension>
    
-   
-      	<extension point="org.eclipse.ui.popupMenus"> 
+   <extension point="org.eclipse.ui.popupMenus"> 
+		<objectContribution
+            objectClass="org.eclipse.team.ui.synchronize.ISynchronizeModelElement"
+            id="org.eclipse.mylar.ui.team.synchronize.open.report">
+         <action
+	           class="org.eclipse.mylar.internal.ide.ui.actions.OpenCorrespondingTaskAction"
+	           enablesFor="1" 
+	           icon="icons/elcl16/task-repository.gif"
+	           id="org.eclipse.mylar.ui.team.synchronize.contribution.open.report"
+	           label="Open Corresponding Task"
+	           menubarPath="mylar"
+	           tooltip="Open Corresponding Task"> 
+	  		</action> 
+	    </objectContribution>
+	   	<objectContribution
+            objectClass="org.eclipse.team.internal.ccvs.core.client.listeners.LogEntry"
+            id="org.eclipse.mylar.ui.team.history.open.report">
+         <action
+	           class="org.eclipse.mylar.internal.ide.ui.actions.OpenCorrespondingTaskAction"
+	           enablesFor="1" 
+	           icon="icons/elcl16/task-repository.gif"
+	           id="org.eclipse.mylar.ui.team.synchronize.contribution.open.report"
+	           label="Open Corresponding Task"
+	           menubarPath="mylar"
+	           tooltip="Open Corresponding Task"> 
+	  		</action> 
+	    </objectContribution>
 		<objectContribution
             objectClass="org.eclipse.team.core.history.IFileRevision"
             id="org.eclipse.mylar.ui.team.synchronize.open.report">
@@ -159,12 +184,13 @@
 	           class="org.eclipse.mylar.internal.ide.ui.actions.OpenCorrespondingTaskAction"
 	           enablesFor="1" 
 	           icon="icons/elcl16/task-repository.gif"
-	           id="org.eclipse.mylar.bugzilla.ui.team.synchronize.contribution.open.report"
+	           id="org.eclipse.mylar.ui.team.synchronize.contribution.open.report"
 	           label="Open Corresponding Task"
 	           menubarPath="mylar"
 	           tooltip="Open Corresponding Task"> 
 	  		</action> 
 	    </objectContribution>
+	    <!--
 		<objectContribution
             objectClass="org.eclipse.team.internal.ui.synchronize.ChangeSetDiffNode"
             id="org.eclipse.mylar.ui.team.synchronize.open.report">
@@ -172,33 +198,20 @@
 	           class="org.eclipse.mylar.internal.ide.ui.actions.OpenCorrespondingTaskAction"
 	           enablesFor="1" 
 	           icon="icons/elcl16/task-repository.gif"
-	           id="org.eclipse.mylar.bugzilla.ui.team.synchronize.contribution.open.report"
+	           id="org.eclipse.mylar.ui.team.synchronize.contribution.open.report"
 	           label="Open Corresponding Task"
 	           menubarPath="mylar"
 	           tooltip="Open Corresponding Task"> 
 	  		</action> 
 	    </objectContribution>
-		<objectContribution
-            objectClass="org.eclipse.team.internal.ccvs.core.client.listeners.LogEntry"
-            id="org.eclipse.mylar.ui.team.history.open.report">
-         <action
-	           class="org.eclipse.mylar.internal.ide.ui.actions.OpenCorrespondingTaskAction"
-	           enablesFor="1" 
-	           icon="icons/elcl16/task-repository.gif"
-	           id="org.eclipse.mylar.bugzilla.ui.team.history.contribution.open.report"
-	           label="Open Corresponding Task"
-	           menubarPath="mylar"
-	           tooltip="Open Corresponding Task"> 
-	  		</action> 
-	    </objectContribution>
+	    -->
 	</extension>
-   <!--
+	<!--
    <extension
          point="org.eclipse.ui.decorators">
       <decorator
-            adaptable="true"
             class="org.eclipse.mylar.internal.ide.ui.MylarChangeSetDecorator"
-            id="org.eclipse.mylar.ide.decorator"
+            id="org.eclipse.mylar.team.changeset.decorator"
             label="Mylar Change Set Decorator"
             lightweight="true"
             objectClass="org.eclipse.team.internal.ui.synchronize.ChangeSetDiffNode"
