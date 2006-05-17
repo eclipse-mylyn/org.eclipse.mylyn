@@ -16,8 +16,8 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.TaskPriorityFilter;
+import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskListChangeListener;
@@ -233,6 +233,7 @@ public class TaskListUiTest extends TestCase {
 	}
 
 	public boolean checkCompleteIncompleteFilter(TreeItem[] items, boolean checkComplete) {
+//		System.err.println(">>> " + UiTestUtil.);
 		assertEquals(2, items.length);
 		int count = 0;
 		for (int i = 0; i < items.length; i++) {
