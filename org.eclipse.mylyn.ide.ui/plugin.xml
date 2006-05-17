@@ -206,17 +206,16 @@
 	    </objectContribution>
 	    -->
 	</extension>
-	<!--
-   <extension
+    <extension
          point="org.eclipse.ui.decorators">
       <decorator
             class="org.eclipse.mylar.internal.ide.ui.MylarChangeSetDecorator"
             id="org.eclipse.mylar.team.changeset.decorator"
             label="Mylar Change Set Decorator"
             lightweight="true"
-            objectClass="org.eclipse.team.internal.ui.synchronize.ChangeSetDiffNode"
+            objectClass="org.eclipse.mylar.internal.ide.team.MylarActiveChangeSet"
             state="true">
       </decorator>
-   </extension>
+    </extension>
    -->
 </plugin>
