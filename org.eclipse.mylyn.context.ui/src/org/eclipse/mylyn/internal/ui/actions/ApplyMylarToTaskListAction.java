@@ -13,10 +13,13 @@ package org.eclipse.mylar.internal.ui.actions;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.mylar.internal.tasklist.ui.AbstractTaskListFilter;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.internal.ui.TaskListInterestFilter;
 import org.eclipse.mylar.provisional.ui.InterestFilter;
@@ -31,6 +34,8 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction {
 	private static ApplyMylarToTaskListAction INSTANCE;
 	
 	private TaskListInterestFilter taskListInterestFilter = new TaskListInterestFilter();
+	
+	protected Set<AbstractTaskListFilter> previousFilters = new HashSet<AbstractTaskListFilter>();
 	
 	public ApplyMylarToTaskListAction() {
 		super(new InterestFilter());
@@ -48,6 +53,8 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction {
 
 	@Override
 	protected boolean installInterestFilter(StructuredViewer viewer) {
+		previousFilters = TaskListView.getDefault().getFilters();
+		TaskListView.getDefault().clearFilters(true);
 		TaskListView.getDefault().addFilter(taskListInterestFilter);
 		TaskListView.getDefault().refreshAndFocus();
 		return true;
@@ -56,6 +63,9 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction {
 	@Override
 	protected void uninstallInterestFilter(StructuredViewer viewer) {
 		TaskListView.getDefault().removeFilter(taskListInterestFilter);
+		for (AbstractTaskListFilter filter : previousFilters) {
+			TaskListView.getDefault().addFilter(filter);
+		}
 		TaskListView.getDefault().getViewer().collapseAll();
 		TaskListView.getDefault().refreshAndFocus();
 	}

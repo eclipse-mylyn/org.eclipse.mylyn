@@ -13,9 +13,12 @@ package org.eclipse.mylar.internal.ui;
 
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.AbstractTaskListFilter;
+import org.eclipse.mylar.internal.tasklist.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 
 /**
  * Goal is to have this reuse as much of the super as possible.
@@ -86,8 +89,31 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	// TODO: make meta-context more explicit
 	protected boolean isInteresting(ITask task) {
-		return shouldAlwaysShow(task) 
-			|| MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task);
+		return shouldAlwaysShow(task);
 	}
 
+	@Override
+	public boolean shouldAlwaysShow(ITask task) {
+		return super.shouldAlwaysShow(task) 
+			|| hasChanges(task) 
+			|| MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task)
+			|| (MylarTaskListPlugin.getTaskListManager().isReminderToday(task) && !task.isCompleted())
+			|| (MylarTaskListPlugin.getTaskListManager().isCompletedToday(task))
+			|| (task.isPastReminder() && !task.isCompleted())
+			|| NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(task.getDescription());
+	}
+
+	private boolean hasChanges(ITask task) {
+		if (task instanceof AbstractRepositoryTask) {
+			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)task;
+			if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
+				return true;
+			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
+				return true;
+			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
