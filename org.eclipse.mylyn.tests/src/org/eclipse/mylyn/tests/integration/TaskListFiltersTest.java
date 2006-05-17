@@ -11,9 +11,9 @@
 
 package org.eclipse.mylar.tests.integration;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -35,7 +35,7 @@ public class TaskListFiltersTest extends TestCase {
 	
 	private TaskListManager manager = MylarTaskListPlugin.getTaskListManager();
 	
-	private List<AbstractTaskListFilter> previousFilters = new ArrayList<AbstractTaskListFilter>();
+	private Set<AbstractTaskListFilter> previousFilters;
 	
 	private ITask taskCompleted;
 	
@@ -52,7 +52,7 @@ public class TaskListFiltersTest extends TestCase {
 		super.setUp();
 		assertNotNull(view);
 		previousFilters = view.getFilters();
-		view.clearFilters();
+		view.clearFilters(false);
 		
 		manager.getTaskList().reset();
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
@@ -82,7 +82,7 @@ public class TaskListFiltersTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		view.clearFilters();
+		view.clearFilters(false);
 		for (AbstractTaskListFilter filter : previousFilters) {
 			view.addFilter(filter);
 		}
