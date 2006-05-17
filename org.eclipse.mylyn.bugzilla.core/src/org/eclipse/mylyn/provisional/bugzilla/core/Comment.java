@@ -157,7 +157,7 @@ public class Comment extends AttributeContainer implements Serializable {
 	 * @return The comments text
 	 */
 	public String getText() {
-		return getAttributeValue(BugzillaReportElement.THETEXT);
+		return bug.decodeStringFromCharset(getAttributeValue(BugzillaReportElement.THETEXT));
 	}
 
 	// /**
