@@ -177,15 +177,6 @@ public abstract class AbstractRepositoryConnector {
 		updateRefreshState();
 	}
 
-	public void removeTaskToBeRefreshed(AbstractRepositoryTask task) {
-		toBeRefreshed.remove(task);
-		if (currentlyRefreshing.get(task) != null) {
-			currentlyRefreshing.get(task).cancel();
-			currentlyRefreshing.remove(task);
-		}
-		updateRefreshState();
-	}
-
 	public void removeRefreshingTask(AbstractRepositoryTask task) {
 		if (currentlyRefreshing.containsKey(task)) {
 			currentlyRefreshing.remove(task);
@@ -208,6 +199,7 @@ public abstract class AbstractRepositoryConnector {
 		if (currentlyRefreshing.size() < MAX_REFRESH_JOBS && toBeRefreshed.size() > 0) {
 			AbstractRepositoryTask repositoryTask = toBeRefreshed.remove(0);
 			Job refreshJob = synchronize(repositoryTask, true, null);
+			refreshJob.setPriority(Job.BUILD);
 			if (refreshJob != null) {
 				currentlyRefreshing.put(repositoryTask, refreshJob);
 			}
@@ -227,6 +219,16 @@ public abstract class AbstractRepositoryConnector {
 		);
 	}	
 }
+
+
+//public void removeTaskToBeRefreshed(AbstractRepositoryTask task) {
+//toBeRefreshed.remove(task);
+//if (currentlyRefreshing.get(task) != null) {
+//	currentlyRefreshing.get(task).cancel();
+//	currentlyRefreshing.remove(task);
+//}
+//updateRefreshState();
+//}
 
 
 //private void refreshTasksAndQueries() {
