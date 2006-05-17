@@ -41,7 +41,7 @@ public abstract class AbstractRepositoryConnector {
 	
 	public static final String MYLAR_CONTEXT_DESCRIPTION = "mylar/context/zip";
 
-	private static final int MAX_REFRESH_JOBS = 5;
+	private static final int MAX_REFRESH_JOBS = 1;
 
 	private List<AbstractRepositoryTask> toBeRefreshed = new LinkedList<AbstractRepositoryTask>();
 
