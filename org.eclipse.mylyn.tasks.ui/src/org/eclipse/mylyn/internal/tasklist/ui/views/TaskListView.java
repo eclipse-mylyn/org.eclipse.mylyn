@@ -11,8 +11,8 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.views;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -51,8 +51,8 @@ import org.eclipse.mylar.internal.tasklist.ui.TaskCompletionFilter;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListPatternFilter;
-import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.TaskPriorityFilter;
+import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.actions.CollapseAllAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.CopyDescriptionAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.DeleteAction;
@@ -213,7 +213,7 @@ public class TaskListView extends ViewPart {
 
 	private static TaskArchiveFilter FILTER_ARCHIVE = new TaskArchiveFilter();
 	
-	private List<AbstractTaskListFilter> filters = new ArrayList<AbstractTaskListFilter>();
+	private Set<AbstractTaskListFilter> filters = new HashSet<AbstractTaskListFilter>();
 
 	static final String FILTER_LABEL = "<filter>";
 
@@ -1260,8 +1260,11 @@ public class TaskListView extends ViewPart {
 		}
 	}
 	
-	public void clearFilters() {
+	public void clearFilters(boolean preserveArchiveFilter) {
 		filters.clear();
+		if (preserveArchiveFilter) {
+			filters.add(FILTER_ARCHIVE);
+		}
 	}
 
 	public void removeFilter(AbstractTaskListFilter filter) {
@@ -1438,7 +1441,7 @@ public class TaskListView extends ViewPart {
 		return images;
 	}
 
-	public List<AbstractTaskListFilter> getFilters() {
+	public Set<AbstractTaskListFilter> getFilters() {
 		return filters;
 	}
 	

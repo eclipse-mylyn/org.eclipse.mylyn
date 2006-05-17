@@ -38,19 +38,19 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 
 	private final TaskListView view;
 
-	private static class ContentTaskFilter extends AbstractTaskListFilter {
-		@Override
-		public boolean select(Object element) {
-			return true;
-		}
+//	private static class ContentTaskFilter extends AbstractTaskListFilter {
+//		@Override
+//		public boolean select(Object element) {
+//			return true;
+//		}
+//
+//		@Override
+//		public boolean shouldAlwaysShow(ITask task) {
+//			return super.shouldAlwaysShow(task);
+//		}
+//	};
 
-		@Override
-		public boolean shouldAlwaysShow(ITask task) {
-			return super.shouldAlwaysShow(task);
-		}
-	};
-
-	private ContentTaskFilter contentTaskFilter = new ContentTaskFilter();
+//	private ContentTaskFilter contentTaskFilter = new ContentTaskFilter();
 
 	public TaskListContentProvider(TaskListView view) {
 		this.view = view;
@@ -149,18 +149,6 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 		if (filter(container) && !shouldAlwaysShow(container)) {
 			return false;
 		}
-//		if (container instanceof TaskArchive) {
-//			for (ITask task : container.getChildren()) {
-//				if (contentTaskFilter.shouldAlwaysShow(task)) {
-//					// TODO: archive logic?
-//					ITask t = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(task.getHandleIdentifier());
-//					if (t == null) {
-//						return true;
-//					}
-//				}
-//			}
-//			return false;
-//		}
 		
 		Set<ITask> children = container.getChildren();
 		if (children.size() == 0) {
@@ -176,7 +164,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 
 	private boolean shouldAlwaysShow(AbstractTaskContainer container) {
 		for (ITask task : container.getChildren()) {
-			if (contentTaskFilter.shouldAlwaysShow(task)) {
+			if (shouldAlwaysShow(task)) {
 				if (container instanceof TaskArchive) {
 					Set<AbstractQueryHit> existingHits = MylarTaskListPlugin.getTaskListManager().getTaskList().getQueryHitsForHandle(task.getHandleIdentifier());
 					if (existingHits.isEmpty()) {
@@ -190,6 +178,15 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 		return false;
 	}
 
+	private boolean shouldAlwaysShow(ITask task) {
+		for (AbstractTaskListFilter filter : this.view.getFilters()) {
+			if (filter.shouldAlwaysShow(task)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private List<Object> getFilteredChildrenFor(Object parent) {
 		if (containsNoFilterText(((Text) this.view.getFilteredTree().getFilterControl()).getText())
 				|| ((Text) this.view.getFilteredTree().getFilterControl()).getText().startsWith(TaskListView.FILTER_LABEL)) {
@@ -198,16 +195,12 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 				if (filter(parent)) {
 					if (((AbstractTaskContainer)parent) instanceof TaskArchive) {
 						for (ITask task : ((AbstractTaskContainer) parent).getChildren()) { 
-							if (contentTaskFilter.shouldAlwaysShow(task)) {
+							if (shouldAlwaysShow(task)) {
 								// TODO: archive logic?
 								Set<AbstractQueryHit> existingHits = MylarTaskListPlugin.getTaskListManager().getTaskList().getQueryHitsForHandle(task.getHandleIdentifier());
 								if (existingHits.isEmpty()) {
 									children.add(task);								
 								} 
-	//							ITask t = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(
-	//									task.getHandleIdentifier());
-	//							if (t == null)
-	//								children.add(task);
 							}
 						} 
 						return children;
