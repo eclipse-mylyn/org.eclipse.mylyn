@@ -18,9 +18,9 @@ package org.eclipse.mylar.internal.bugzilla.core;
  * @author Rob Elves
  */
 public enum BugzillaReportElement {
-	// Format: ENUM ( "pretty name", "xml key", <hidden: true/false>, <multivalued: true/false>)
+	// Format: ENUM ( "pretty name", "xml key", <hidden: true/false>, <readonly: true/false>)
 	// Hidden elements are not automatically displayed in ui	
-	ASSIGNED_TO ("Assigned to:", "assigned_to"),
+	ASSIGNED_TO ("Assigned to:", "assigned_to", false, true),
 	ATTACHID ("attachid", "attachid"),
 	ATTACHMENT ("attachment", "attachment"),
 	BLOCKED ("Bug blocks:", "blocked"),

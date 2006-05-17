@@ -29,6 +29,7 @@ import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.security.auth.login.LoginException;
@@ -256,28 +257,11 @@ public class BugzillaRepositoryUtil {
 	 */
 	public static void setupNewBugAttributes(String repositoryUrl, String userName, String password, NewBugzillaReport newReport) throws IOException {
 
-		// // order is important
-		// BugReportElement[] newBugElements = { BugReportElement.PRODUCT,
-		// BugReportElement.BUG_STATUS,
-		// BugReportElement.VERSION,
-		// BugReportElement.COMPONENT,
-		// BugReportElement.TARGET_MILESTONE,
-		// BugReportElement.REP_PLATFORM,
-		// BugReportElement.OP_SYS,
-		// BugReportElement.PRIORITY,
-		// BugReportElement.BUG_SEVERITY,
-		// BugReportElement.ASSIGNED_TO,
-		// // NOT USED BugReportElement.CC,
-		// BugReportElement.BUG_FILE_LOC,
-		// //NOT USED BugReportElement.SHORT_DESC,
-		// //NOT USED BugReportElement.LONG_DESC
-		// };
-
-		// HashMap<String, AbstractRepositoryReportAttribute> attributes = new
-		// LinkedHashMap<String, AbstractRepositoryReportAttribute>();
-
+		newReport.removeAllAttributes();
+		
 		AbstractRepositoryReportAttribute a = new BugzillaReportAttribute(BugzillaReportElement.PRODUCT);
 		List<String> optionValues = BugzillaPlugin.getDefault().getProductConfiguration(repositoryUrl, userName, password).getProducts();
+		Collections.sort(optionValues);
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
@@ -297,6 +281,7 @@ public class BugzillaRepositoryUtil {
 		a = new BugzillaReportAttribute(BugzillaReportElement.VERSION);
 		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(repositoryUrl, userName, password).getVersions(
 				newReport.getProduct());
+		Collections.sort(optionValues);
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
@@ -309,6 +294,7 @@ public class BugzillaRepositoryUtil {
 		a = new BugzillaReportAttribute(BugzillaReportElement.COMPONENT);
 		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(repositoryUrl, userName, password).getComponents(
 				newReport.getProduct());
+		Collections.sort(optionValues);
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
@@ -316,6 +302,7 @@ public class BugzillaRepositoryUtil {
 
 		a = new BugzillaReportAttribute(BugzillaReportElement.REP_PLATFORM);
 		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(repositoryUrl, userName, password).getPlatforms();
+		Collections.sort(optionValues);
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
@@ -324,6 +311,7 @@ public class BugzillaRepositoryUtil {
 
 		a = new BugzillaReportAttribute(BugzillaReportElement.OP_SYS);
 		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(repositoryUrl, userName, password).getOSs();
+		Collections.sort(optionValues);
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
@@ -570,6 +558,9 @@ public class BugzillaRepositoryUtil {
 			attribute.clearOptions();
 			List<String> optionValues = BugzillaPlugin.getDefault().getProductConfiguration(repositoryUrl, userName, password)
 					.getOptionValues(element, product);
+			if(element != BugzillaReportElement.BUG_SEVERITY && element != BugzillaReportElement.PRIORITY || element != BugzillaReportElement.BUG_STATUS) {
+				Collections.sort(optionValues);
+			}
 			if (element == BugzillaReportElement.TARGET_MILESTONE && optionValues.isEmpty()) {
 				existingReport.removeAttribute(BugzillaReportElement.TARGET_MILESTONE);
 				continue;
@@ -838,6 +829,13 @@ public class BugzillaRepositoryUtil {
 		return null;
 	}
 
+	public static String decodeStringFromCharset(String string, String charset) throws UnsupportedEncodingException {
+			String decoded = string;
+			if (charset != null && string != null && Charset.availableCharsets().containsKey(charset)) {
+				decoded = new String(string.getBytes(), charset);	
+			} 
+			return decoded;
+		}
 }
 
 /**

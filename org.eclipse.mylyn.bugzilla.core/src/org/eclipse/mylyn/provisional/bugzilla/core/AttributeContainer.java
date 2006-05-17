@@ -73,4 +73,9 @@ public class AttributeContainer implements Serializable {
 		}
 		return "";
 	}
+
+	public void removeAllAttributes() {
+		attributeKeys.clear();
+		attributes.clear();
+	}
 }

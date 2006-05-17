@@ -13,7 +13,6 @@ package org.eclipse.mylar.internal.bugzilla.ui;
 import java.io.IOException;
 import java.net.Authenticator;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.security.auth.login.LoginException;
@@ -204,8 +203,10 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 				&& selectedProducts != null) {
 			List<String> options = new ArrayList<String>();
 			for (String product : selectedProducts) {
-				options.addAll(Arrays.asList(convertQueryOptionsToArray(prefs.getString(prefId + PREF_DELIM_REPOSITORY
-						+ repositoryUrl + PREF_DELIM_REPOSITORY + product))));
+				for (String option : convertQueryOptionsToArray(prefs.getString(prefId + PREF_DELIM_REPOSITORY
+						+ repositoryUrl + PREF_DELIM_REPOSITORY + product))) {
+					if(!options.contains(option)) options.add(option);
+				}
 			}
 			return options.toArray(new String[options.size()]);
 		} else {

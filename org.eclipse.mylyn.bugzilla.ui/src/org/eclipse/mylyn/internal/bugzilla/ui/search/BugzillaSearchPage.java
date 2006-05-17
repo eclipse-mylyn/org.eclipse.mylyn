@@ -198,7 +198,7 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 		// // ignore
 		// }
 		// }
-		setControl(control);
+		setControl(control);		
 		WorkbenchHelpSystem.getInstance().setHelp(control, BugzillaUiPlugin.SEARCH_PAGE_CONTEXT);
 	}
 
@@ -1329,34 +1329,35 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 					repositoryUrl));
 			monitor.worked(1);
 
-			status.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_STATUS, selectedProducts,
-					repositoryUrl));
-			monitor.worked(1);
+			if (selectedProducts == null) {
+				status.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_STATUS, selectedProducts,
+						repositoryUrl));
+				monitor.worked(1);
 
-			// status.setSelection(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUSE_STATUS_PRESELECTED,
-			// repositoryUrl));
-			monitor.worked(1);
+				// status.setSelection(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUSE_STATUS_PRESELECTED,
+				// repositoryUrl));
+				monitor.worked(1);
 
-			resolution.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_RESOLUTION,
-					selectedProducts, repositoryUrl));
-			monitor.worked(1);
+				resolution.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_RESOLUTION,
+						selectedProducts, repositoryUrl));
+				monitor.worked(1);
 
-			severity.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_SEVERITY, selectedProducts,
-					repositoryUrl));
-			monitor.worked(1);
+				severity.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_SEVERITY,
+						selectedProducts, repositoryUrl));
+				monitor.worked(1);
 
-			priority.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRIORITY, selectedProducts,
-					repositoryUrl));
-			monitor.worked(1);
+				priority.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRIORITY,
+						selectedProducts, repositoryUrl));
+				monitor.worked(1);
 
-			hardware.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_HARDWARE, selectedProducts,
-					repositoryUrl));
-			monitor.worked(1);
+				hardware.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_HARDWARE,
+						selectedProducts, repositoryUrl));
+				monitor.worked(1);
 
-			os
-					.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_OS, selectedProducts,
-							repositoryUrl));
-			monitor.worked(1);
+				os.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_OS, selectedProducts,
+						repositoryUrl));
+				monitor.worked(1);
+			}
 		} catch (LoginException exception) {
 			// we had a problem that seems to have been caused from bad
 			// login info
@@ -1463,7 +1464,8 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 				selList = new ArrayList<String>(selList);
 				selList.add(value);
 				sel = new String[selList.size()];
-				product.setSelection(selList.toArray(sel));
+				product.setSelection(selList.toArray(sel));				
+				updateAttributesFromRepository(repository.getUrl(), selList.toArray(sel), false);
 			} else if (key.equals("component")) {
 				String[] sel = component.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);
