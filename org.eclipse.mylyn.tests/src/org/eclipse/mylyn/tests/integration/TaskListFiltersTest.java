@@ -52,28 +52,28 @@ public class TaskListFiltersTest extends TestCase {
 		super.setUp();
 		assertNotNull(view);
 		previousFilters = view.getFilters();
-		view.clearFilters(false);
+		view.clearFilters(true);
 		
 		manager.getTaskList().reset();
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
 		
-		taskCompleted = new Task("t-completed", "t-completed", true);
+		taskCompleted = new Task("completed-1", "completed", true);
 		taskCompleted.setCompleted(true);
 		taskCompleted.setCompletionDate(manager.setSecheduledIn(Calendar.getInstance(), -1).getTime());
 		manager.getTaskList().addTask(taskCompleted, manager.getTaskList().getRootCategory());
 		
-		taskIncomplete = new Task("t-incomplete", "t-incomplete", true);
+		taskIncomplete = new Task("incomplete-2", "t-incomplete", true);
 		manager.getTaskList().addTask(taskIncomplete, manager.getTaskList().getRootCategory());
 		
-		taskOverdue = new Task("t-overdue", "t-overdue", true);
+		taskOverdue = new Task("overdue-3", "t-overdue", true);
 		taskOverdue.setReminderDate(manager.setSecheduledIn(Calendar.getInstance(), -1).getTime());
 		manager.getTaskList().addTask(taskOverdue, manager.getTaskList().getRootCategory());
 		
-		taskDueToday = new Task("t-today", "t-today", true);
+		taskDueToday = new Task("today-4", "t-today", true);
 		taskDueToday.setReminderDate(manager.setScheduledToday(Calendar.getInstance()).getTime());
 		manager.getTaskList().addTask(taskDueToday, manager.getTaskList().getRootCategory());
 		
-		taskCompletedToday = new Task("t-donetoday", "t-donetoday", true);
+		taskCompletedToday = new Task("donetoday-5", "t-donetoday", true);
 		taskCompletedToday.setReminderDate(manager.setScheduledToday(Calendar.getInstance()).getTime());
 		taskCompletedToday.setCompleted(true);
 		manager.getTaskList().addTask(taskCompletedToday, manager.getTaskList().getRootCategory());
@@ -82,14 +82,15 @@ public class TaskListFiltersTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		view.clearFilters(false);
+		view.clearFilters(true);
 		for (AbstractTaskListFilter filter : previousFilters) {
 			view.addFilter(filter);
 		}
 	}
 
 	public void testInterestFilter() {
-		view.addFilter(new TaskListInterestFilter());
+		TaskListInterestFilter interestFilter = new TaskListInterestFilter();
+		view.addFilter(interestFilter);
 		view.getViewer().refresh();
 		List<Object> items = UiTestUtil.getAllData(view.getViewer().getTree());
 		assertFalse(items.contains(taskCompleted));
@@ -97,12 +98,12 @@ public class TaskListFiltersTest extends TestCase {
 		assertTrue(items.contains(taskOverdue));
 		assertTrue(items.contains(taskDueToday));
 		assertTrue(items.contains(taskCompletedToday));
-		
+		view.removeFilter(interestFilter);
 	}
 	
 	public void testNoFilters() {
-		assertEquals(0, view.getFilters().size());
+		assertEquals("has archive filter", 1, view.getFilters().size());
 		view.getViewer().refresh();
-		assertEquals(6, view.getViewer().getTree().getItemCount());
+		assertEquals(5, view.getViewer().getTree().getItemCount());
 	}
 }
