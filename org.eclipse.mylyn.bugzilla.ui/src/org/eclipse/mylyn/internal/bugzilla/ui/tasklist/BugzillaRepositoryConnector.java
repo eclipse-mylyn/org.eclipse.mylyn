@@ -355,7 +355,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 											"Bugzilla could not post your bug.");
 								} else if (throwable.getCause() instanceof PossibleBugzillaFailureException) {
 									WebBrowserDialog.openAcceptAgreement(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-											"Possible problem posting Bugzilla report.\n\n"
+											"Possible problem posting Bugzilla report.\n"
 													+ throwable.getCause().getMessage(), form.getError());
 								} else if (throwable.getCause() instanceof LoginException) {
 									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,

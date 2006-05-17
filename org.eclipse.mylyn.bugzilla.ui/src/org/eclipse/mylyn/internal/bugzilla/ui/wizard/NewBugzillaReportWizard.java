@@ -27,7 +27,7 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 /**
  * @author Mik Kersten
  */
-public class NewBugzillaReportWizard extends AbstractBugWizard {
+public class NewBugzillaReportWizard extends AbstractBugzillaReportWizard {
  	
 	private static final String TITLE = "New Bugzilla Task";
 

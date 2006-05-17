@@ -47,7 +47,7 @@ import org.eclipse.ui.progress.IProgressService;
  * @author Eric Booth
  * @author Mik Kersten (some hardening of prototype)
  */
-public abstract class AbstractBugWizard extends Wizard implements INewWizard {
+public abstract class AbstractBugzillaReportWizard extends Wizard implements INewWizard {
 
 	/** The ID of the posted bug report. */
 	private String id;
@@ -73,7 +73,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 	// Flag to indicate if the bug was successfully sent
 	private boolean sentSuccessfully = false;
 
-	public AbstractBugWizard(TaskRepository repository) {
+	public AbstractBugzillaReportWizard(TaskRepository repository) {
 		super();
 		this.repository = repository;
 		model = new NewBugzillaReport(repository.getUrl(), BugzillaUiPlugin.getDefault().getOfflineReports()
@@ -152,7 +152,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 						"Bugzilla could not post your bug.");
 			} else if (e.getCause() instanceof PossibleBugzillaFailureException) {
 				WebBrowserDialog.openAcceptAgreement(getWizardDataPage().getShell(),
-						"Possible Bugzilla Client Failure",
+						"Bugzilla Submission Message",
 						"Bugzilla may not have posted your bug.\n" + e.getCause().getMessage(), form.getError());
 			} else if (e.getCause() instanceof LoginException) {
 				MessageDialog.openError(getWizardDataPage().getShell(), "Posting Error",

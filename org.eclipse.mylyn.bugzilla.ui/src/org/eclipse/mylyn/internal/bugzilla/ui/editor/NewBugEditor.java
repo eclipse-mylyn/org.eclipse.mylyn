@@ -203,66 +203,6 @@ public class NewBugEditor extends AbstractBugEditor {
 			}
 		};
 		bugzillaRepositoryClient.submitBugReport(bug, bugzillaReportSubmitForm, closeEditorListener);
-		
-//		final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-//			protected void execute(final IProgressMonitor monitor) throws CoreException {
-//				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-//					public void run() {
-//						// update the bug on the server
-//						try {
-//
-//							bugzillaRepositoryClient.submitBugReport(bug, bugReportPostHandler);
-//
-//							// If the bug was successfully sent...
-//							if (NewBugEditor.this != null && !NewBugEditor.this.isDisposed()) {
-//								changeDirtyStatus(false);
-//								close();
-//								// BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage()
-//								// .closeEditor(NewBugEditor.this, false);
-//							}
-//						} catch (BugzillaException e) {
-//							MessageDialog.openError(null, "I/O Error", "Bugzilla could not post your bug.");
-//							BugzillaPlugin.log(e);
-//						} catch (PossibleBugzillaFailureException e) {
-//							WebBrowserDialog.openAcceptAgreement(null, "Possible Bugzilla Client Failure",
-//									"Bugzilla may not have posted your bug.\n" + e.getMessage(), bugReportPostHandler
-//											.getError());
-//							BugzillaPlugin.log(e);
-//						} catch (LoginException e) {
-//							e.printStackTrace();
-//							// if we had an error with logging in, display an
-//							// error
-//							MessageDialog.openError(null, "Posting Error",
-//									"Bugzilla could not post your bug since your login name or password is incorrect."
-//											+ "\nPlease check your settings in the bugzilla preferences. ");
-//						}
-//					}
-//				});
-//			}
-//		};
-//		Job job = new Job("Submitting New Bug") {
-//
-//			@Override
-//			protected IStatus run(IProgressMonitor monitor) {
-//				try {
-//					op.run(monitor);
-//				} catch (Exception e) {
-//					MylarStatusHandler.log(e, "Failed to submit bug");
-//					return new Status(Status.ERROR, "org.eclipse.mylar.internal.bugzilla.ui", Status.ERROR,
-//							"Failed to submit bug", e);
-//				}
-//
-//				BugzillaRepositoryClient client = (BugzillaRepositoryClient) MylarTaskListPlugin.getRepositoryManager()
-//						.getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
-//				if (client != null) {
-//					client.synchronize();
-//				}
-//				return Status.OK_STATUS;
-//			}
-//
-//		};
-//		job.schedule();
-
 	}
 
 	@Override
@@ -331,5 +271,63 @@ public class NewBugEditor extends AbstractBugEditor {
 	protected void addCCList(FormToolkit toolkit, String value, Composite attributesComposite) {
 		// do nothing here right now
 	}
-
 }
+
+//final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+//protected void execute(final IProgressMonitor monitor) throws CoreException {
+//	PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+//		public void run() {
+//			// update the bug on the server
+//			try {
+//
+//				bugzillaRepositoryClient.submitBugReport(bug, bugReportPostHandler);
+//
+//				// If the bug was successfully sent...
+//				if (NewBugEditor.this != null && !NewBugEditor.this.isDisposed()) {
+//					changeDirtyStatus(false);
+//					close();
+//					// BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage()
+//					// .closeEditor(NewBugEditor.this, false);
+//				}
+//			} catch (BugzillaException e) {
+//				MessageDialog.openError(null, "I/O Error", "Bugzilla could not post your bug.");
+//				BugzillaPlugin.log(e);
+//			} catch (PossibleBugzillaFailureException e) {
+//				WebBrowserDialog.openAcceptAgreement(null, "Possible Bugzilla Client Failure",
+//						"Bugzilla may not have posted your bug.\n" + e.getMessage(), bugReportPostHandler
+//								.getError());
+//				BugzillaPlugin.log(e);
+//			} catch (LoginException e) {
+//				e.printStackTrace();
+//				// if we had an error with logging in, display an
+//				// error
+//				MessageDialog.openError(null, "Posting Error",
+//						"Bugzilla could not post your bug since your login name or password is incorrect."
+//								+ "\nPlease check your settings in the bugzilla preferences. ");
+//			}
+//		}
+//	});
+//}
+//};
+//Job job = new Job("Submitting New Bug") {
+//
+//@Override
+//protected IStatus run(IProgressMonitor monitor) {
+//	try {
+//		op.run(monitor);
+//	} catch (Exception e) {
+//		MylarStatusHandler.log(e, "Failed to submit bug");
+//		return new Status(Status.ERROR, "org.eclipse.mylar.internal.bugzilla.ui", Status.ERROR,
+//				"Failed to submit bug", e);
+//	}
+//
+//	BugzillaRepositoryClient client = (BugzillaRepositoryClient) MylarTaskListPlugin.getRepositoryManager()
+//			.getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+//	if (client != null) {
+//		client.synchronize();
+//	}
+//	return Status.OK_STATUS;
+//}
+//
+//};
+//job.schedule();

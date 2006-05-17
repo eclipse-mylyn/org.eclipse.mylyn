@@ -135,7 +135,7 @@ public interface IBugzillaConstants {
 
 	static final String[] DEFAULT_TARGET_VALUES = {};
 
-	public static final String TITLE_MESSAGE_DIALOG = "Mylar Bugzilla Client";
+	public static final String TITLE_MESSAGE_DIALOG = "Mylar Bugzilla Connector";
 
 	public static final String TITLE_NEW_BUG = "New Bugzilla Bug";
 

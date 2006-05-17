@@ -286,7 +286,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 	 */
 	@Override
 	public boolean isPageComplete() {
-		AbstractBugWizard wizard = (AbstractBugWizard) getWizard();
+		AbstractBugzillaReportWizard wizard = (AbstractBugzillaReportWizard) getWizard();
 		if (summaryText.getText() == null || summaryText.getText().equals("") || descriptionText.getText() == null
 				|| descriptionText.getText().equals("")) {
 			wizard.attributeCompleted = false;
@@ -302,7 +302,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 	 */
 	public void saveDataToModel() {
 		// get the model that we are using
-		AbstractBugWizard wizard = (AbstractBugWizard) getWizard();
+		AbstractBugzillaReportWizard wizard = (AbstractBugzillaReportWizard) getWizard();
 		NewBugzillaReport nbm = wizard.model;
 
 		nbm.setDescription(descriptionText.getText());
@@ -380,7 +380,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 		String url = null;
 
 		// get the model for the new bug
-		AbstractBugWizard wizard = (AbstractBugWizard) getWizard();
+		AbstractBugzillaReportWizard wizard = (AbstractBugzillaReportWizard) getWizard();
 		NewBugzillaReport nbm = wizard.model;
 
 		// Set the current platform and OS on the model
