@@ -393,7 +393,7 @@ public class BugzillaReportSubmitForm {
 				throw new PossibleBugzillaFailureException("Could not find bug number for new bug.");
 			} else if (possibleFailure) {
 				throw new PossibleBugzillaFailureException(
-						"Could not find indication that bug was processed successfully.  Message from Bugzilla was: ");
+						"Bug report may not have been submitted.  Bugzilla message was: ");
 			}
 
 			// set the error to null if we dont think that there was one

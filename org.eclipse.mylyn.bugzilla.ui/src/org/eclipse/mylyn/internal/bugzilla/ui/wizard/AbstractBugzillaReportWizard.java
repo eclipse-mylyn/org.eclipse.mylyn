@@ -152,8 +152,8 @@ public abstract class AbstractBugzillaReportWizard extends Wizard implements INe
 						"Bugzilla could not post your bug.");
 			} else if (e.getCause() instanceof PossibleBugzillaFailureException) {
 				WebBrowserDialog.openAcceptAgreement(getWizardDataPage().getShell(),
-						"Bugzilla Submission Message",
-						"Bugzilla may not have posted your bug.\n" + e.getCause().getMessage(), form.getError());
+						"Bugzilla Submission Error Message",
+						e.getCause().getMessage(), form.getError());
 			} else if (e.getCause() instanceof LoginException) {
 				MessageDialog.openError(getWizardDataPage().getShell(), "Posting Error",
 						"Bugzilla could not post your bug since your login name or password is incorrect."

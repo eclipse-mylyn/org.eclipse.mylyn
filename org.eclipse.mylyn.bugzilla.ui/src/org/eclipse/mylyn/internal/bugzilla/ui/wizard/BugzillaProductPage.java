@@ -247,9 +247,4 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 		prevProduct = model.getProduct();
 		model.setProduct((listBox.getSelection())[0]);
 	}
-
-	@Override
-	public String getTableName() {
-		return "Product:";
-	}
 }
