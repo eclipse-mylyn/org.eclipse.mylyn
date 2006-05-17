@@ -203,7 +203,9 @@ public class BugzillaReportSubmitForm {
 		// go through all of the attributes and add them to the bug post
 		for (Iterator<AbstractRepositoryReportAttribute> it = bug.getAttributes().iterator(); it.hasNext();) {
 			AbstractRepositoryReportAttribute a = it.next();
-
+			if(a.getID().equals(BugzillaReportElement.DELTA_TS.getKeyString()) || a.getID().equals(BugzillaReportElement.CREATION_TS.getKeyString())) {
+				continue;
+			}
 			if (a != null && a.getID() != null && a.getID().compareTo("") != 0 && !a.isHidden()) {
 				String value = a.getValue();
 				// add the attribute to the bug post
@@ -232,17 +234,15 @@ public class BugzillaReportSubmitForm {
 			}
 		}
 		bugReportPostHandler.add(KEY_FORM_NAME, VAL_PROCESS_BUG);
-		// bug.setNewNewComment(formatTextToLineWrap(bug.getNewComment(),
-		// repository));
+
 		if (bug.getAttribute(BugzillaReportElement.SHORT_DESC) != null) {
-			bugReportPostHandler.add(KEY_SHORT_DESC, bug.getAttribute(BugzillaReportElement.SHORT_DESC).getValue());
+				bugReportPostHandler.add(KEY_SHORT_DESC, bug.getAttribute(BugzillaReportElement.SHORT_DESC).getValue());
 		}
 
-		// add the new comment to the bug post if there is some text in it
 		if (bug.getNewComment().length() != 0) {
-			bugReportPostHandler.add(KEY_COMMENT, bug.getNewComment());
+				bugReportPostHandler.add(KEY_COMMENT, bug.getNewComment());				
 		}
-
+		
 		if (removeCC != null && removeCC.size() > 0) {
 			String[] s = new String[removeCC.size()];
 			bugReportPostHandler.add(KEY_CC, toCommaSeparatedList(removeCC.toArray(s)));
@@ -311,7 +311,7 @@ public class BugzillaReportSubmitForm {
 			// get the url for the update with all of the changed values
 
 			// Used to debug posted report
-			// System.err.println(getPostBody());
+			//System.err.println(">>> "+getPostBody());
 
 			byte[] body = getPostBody().getBytes();
 			postConnection.setRequestProperty(REQUEST_PROPERTY_CONTENT_LENGTH, String.valueOf(body.length));
@@ -341,7 +341,7 @@ public class BugzillaReportSubmitForm {
 			// while (aString != null) {
 			// System.err.println(aString);
 			// aString = in.readLine();
-			// }
+			//			 }
 
 			boolean possibleFailure = true;
 			error = "";

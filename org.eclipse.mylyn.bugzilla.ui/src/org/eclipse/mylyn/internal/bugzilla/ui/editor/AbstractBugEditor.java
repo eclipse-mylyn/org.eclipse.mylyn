@@ -11,6 +11,7 @@
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +27,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextViewer;
@@ -45,6 +47,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaAttributeListener;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaTools;
@@ -54,6 +57,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnect
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor;
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReport;
 import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReportAttribute;
 import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
@@ -148,7 +152,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 	public static final Font HEADER_FONT = JFaceResources.getDefaultFont();
 
-	public static final int DESCRIPTION_WIDTH = 500;// 79 * 7;
+	public static final int DESCRIPTION_WIDTH = 79 * 7; //500;
 
 	public static final int DESCRIPTION_HEIGHT = 10 * 14;
 
@@ -164,9 +168,8 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 	// private static int MARGIN = 0;// 5
 
-	protected SimpleDateFormat simpleDateFormat = new SimpleDateFormat("E MMM dd, yyyy hh:mm aa");// "yyyy-MM-dd
-
-	// HH:mm"
+	protected SimpleDateFormat simpleDateFormat = new SimpleDateFormat("E MMM dd, yyyy hh:mm aa");
+	// "yyyy-MM-dd HH:mm"
 
 	/**
 	 * Style option for function <code>newLayout</code>. This will create a
@@ -449,38 +452,47 @@ public abstract class AbstractBugEditor extends EditorPart {
 		// if (truncatedSummary.length() > maxLength) {
 		// truncatedSummary = truncatedSummary.substring(0, maxLength) + "...";
 		// }
-		form.setText("Bugzilla Bug: " + getBug().getSummary());
-
+		// form.setFont(COMMENT_FONT);
+		// form.setText("Bugzilla Bug: " + getBug().getSummary());
+		
+		
 		editorComposite = form.getBody();
 		editorComposite.setLayout(new GridLayout());
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		// Header information
+		
+		
+		Composite summaryComposite = toolkit.createComposite(editorComposite);
+		summaryComposite.setLayout(new GridLayout(2, false));
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryComposite);
+		addSummaryText(summaryComposite);
+		toolkit.paintBordersFor(summaryComposite);
 		Composite headerInfoComposite = toolkit.createComposite(editorComposite);
-		headerInfoComposite.setLayout(new GridLayout(6, false));
+		headerInfoComposite.setLayout(new GridLayout(6, false));		
 		toolkit.createLabel(headerInfoComposite, "Bug# ").setFont(TITLE_FONT);
-		toolkit.createText(headerInfoComposite, "" + getReport().getId());
+		toolkit.createText(headerInfoComposite, "" + getReport().getId(), SWT.FLAT | SWT.READ_ONLY);
 
 		toolkit.createLabel(headerInfoComposite, " Opened: ").setFont(TITLE_FONT);
 		String openedDateString = "";
 		if (getBug().getCreated() != null) {
 			openedDateString = simpleDateFormat.format(getBug().getCreated());
 		}
-		toolkit.createText(headerInfoComposite, openedDateString);
+		toolkit.createText(headerInfoComposite, openedDateString, SWT.FLAT | SWT.READ_ONLY);
 
 		toolkit.createLabel(headerInfoComposite, " Modified: ").setFont(TITLE_FONT);
 		String lastModifiedDateString = "";
 		if (getBug().getLastModified() != null) {
 			lastModifiedDateString = simpleDateFormat.format(getBug().getLastModified());
 		}
-		toolkit.createText(headerInfoComposite, lastModifiedDateString);
+		toolkit.createText(headerInfoComposite, lastModifiedDateString, SWT.FLAT | SWT.READ_ONLY);
 
 		// openedText.setFont(TITLE_FONT);
 		// display = parent.getDisplay();
 		// background = JFaceColors.getBannerBackground(display);
 		// foreground = JFaceColors.getBannerForeground(display);
 
-		// createInfoArea(editorComposite);
+		//createInfoArea(editorComposite);
 		createContextMenu();
 		createAttributeLayout();
 		createAttachmentLayout();
@@ -945,7 +957,12 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 			// String key = attribute.getID();
 			String name = attribute.getName();
-			String value = checkText(attribute.getValue());
+			String value = "";
+			try {
+				value = checkText(BugzillaRepositoryUtil.decodeStringFromCharset(attribute.getValue(), getReport().getCharset()));
+			} catch (UnsupportedEncodingException e1) {
+				// ignore
+			}
 			// System.err.println(">>> AbstractBugEditor>> name: "+name+"
 			// key:"+key+" value:"+value+" is hidden"+attribute.isHidden());
 			if (attribute.isHidden())
@@ -988,10 +1005,11 @@ public abstract class AbstractBugEditor extends EditorPart {
 				textData.widthHint = 135;
 
 				if (attribute.isReadOnly()) {
-					final Text text = toolkit.createText(textFieldComposite, value, SWT.FLAT | SWT.READ_ONLY);
+					final Text text = toolkit.createText(textFieldComposite, value, SWT.FLAT | SWT.READ_ONLY);					
 					text.setLayoutData(textData);
 				} else {
 					final Text text = toolkit.createText(textFieldComposite, value, SWT.FLAT);
+					//text.setFont(COMMENT_FONT);						
 					text.setLayoutData(textData);
 					toolkit.paintBordersFor(textFieldComposite);
 					text.setData(attribute);
@@ -1037,10 +1055,10 @@ public abstract class AbstractBugEditor extends EditorPart {
 			addKeywordsList(toolkit, getReport().getAttributeValue(BugzillaReportElement.KEYWORDS), attributesComposite);
 		} catch (IOException e) {
 			MessageDialog.openInformation(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-					"Could not retrieve keyword list: " + e.getMessage());
+					"Could not retrieve keyword list, ensure proper configuration in "+TaskRepositoriesView.NAME+"\n\nError reported: " + e.getMessage());
 		}
 
-		addSummaryText(attributesComposite);
+		//addSummaryText(attributesComposite);
 		// End URL, Keywords, Summary Text Fields
 		toolkit.paintBordersFor(attributesComposite);
 	}
@@ -1089,18 +1107,14 @@ public abstract class AbstractBugEditor extends EditorPart {
 	 */
 	protected void addSummaryText(Composite attributesComposite) {
 		// newLayout(attributesComposite, 1, "Summary:", PROPERTY);
-		toolkit.createLabel(attributesComposite, "Summary:");
-		summaryText = toolkit.createText(attributesComposite, getBug().getSummary());// SWT.BORDER
-		// |
-		// SWT.SINGLE
-		// |
-		// SWT.WRAP
-		summaryText.setFont(TEXT_FONT);
-		GridData summaryTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		summaryTextData.horizontalSpan = 3;
-		summaryTextData.widthHint = 200;
+		toolkit.createLabel(attributesComposite, "Summary:").setFont(TITLE_FONT);
+		summaryText = toolkit.createText(attributesComposite, getBug().getSummary(), SWT.FLAT);
+		summaryText.setFont(COMMENT_FONT);
+		GridData summaryTextData = new GridData(GridData.FILL_HORIZONTAL);//HORIZONTAL_ALIGN_FILL
+		summaryTextData.horizontalSpan = 1;
+		//summaryTextData.widthHint = 200;
+		
 		summaryText.setLayoutData(summaryTextData);
-		// summaryText.setText(getBug().getSummary());
 		summaryText.addListener(SWT.KeyUp, new SummaryListener());
 		summaryText.addListener(SWT.FocusIn, new GenericListener());
 	}
@@ -1410,7 +1424,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 	}
 
 	protected TextViewer addRepositoryText(TaskRepository repository, Composite composite, String text) {
-		RepositoryTextViewer commentViewer = new RepositoryTextViewer(repository, composite, SWT.WRAP);
+		RepositoryTextViewer commentViewer = new RepositoryTextViewer(repository, composite, SWT.MULTI | SWT.WRAP);
 
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 
@@ -1710,6 +1724,8 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 	protected HashMap<Object, StyledText> textHash = new HashMap<Object, StyledText>();
 
+	protected List<StyledText> commentStyleText = new ArrayList<StyledText>();
+	
 	/** Index into the styled texts */
 	protected int textsindex = 0;
 
@@ -1739,7 +1755,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 	}
 
 	public void revealAllComments() {
-		for (StyledText text : textHash.values()) {
+		for (StyledText text : commentStyleText) {
 			Composite comp = text.getParent();
 			while (comp != null) {
 				if (comp instanceof ExpandableComposite) {

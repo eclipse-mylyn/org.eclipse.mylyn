@@ -32,6 +32,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -42,6 +43,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaCompareInput;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReportAttribute;
 import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.provisional.bugzilla.core.Comment;
@@ -52,8 +54,6 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -80,7 +80,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.Hyperlink;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -95,11 +95,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 	private static final String REASSIGN_BUG_TO = "Reassign  bug to";
 
-	private static final String LABEL_EXPAND_ALL = "Expand All";
-
 	private static final String LABEL_COMPARE_BUTTON = "Compare";
-
-	// private static final String ATTR_SUMMARY = "Summary";
 
 	protected Set<String> removeCC = new HashSet<String>();
 
@@ -412,8 +408,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	@Override
 	protected void createDescriptionLayout(FormToolkit toolkit, final ScrolledForm form) {
 
-		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR); // |
-																								// Section.TWISTIE
+		final Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText(LABEL_SECTION_DESCRIPTION);
 		section.setExpanded(true);
 		section.setLayout(new GridLayout());
@@ -428,8 +423,9 @@ public class ExistingBugEditor extends AbstractBugEditor {
 			}
 		});
 		
-		Composite sectionComposite = toolkit.createComposite(form.getBody());
-		//section.setClient(sectionComposite);
+				
+		final Composite sectionComposite = toolkit.createComposite(section);
+		section.setClient(sectionComposite);
 		GridLayout addCommentsLayout = new GridLayout();
 		addCommentsLayout.numColumns = 1;
 		sectionComposite.setLayout(addCommentsLayout);
@@ -440,23 +436,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		final StyledText styledText = viewer.getTextWidget();
 		styledText.addListener(SWT.FocusIn, new DescriptionListener());
 		styledText.setLayout(new GridLayout());
-		GridData styledTextData = new GridData(GridData.FILL_HORIZONTAL);
-		styledTextData.widthHint = DESCRIPTION_WIDTH;		
-		styledText.setLayoutData(styledTextData);
-		styledText.addControlListener(new ControlListener() {
-
-			public void controlMoved(ControlEvent e) {
-				// ignore
-				
-			}
-
-			public void controlResized(ControlEvent e) {
-				form.reflow(true);
-				
-			}
-			
-		});
-
+		GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(styledText);//sectionComposite.getSize().x
+		
 		texts.add(textsindex, styledText);
 		textHash.put(bug.getDescription(), styledText);
 		textsindex++;
@@ -485,7 +466,10 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		});
 
 		
-		Hyperlink hyperlink = toolkit.createHyperlink(section, LABEL_EXPAND_ALL, SWT.NONE);		
+		ImageHyperlink hyperlink = toolkit.createImageHyperlink(section, SWT.NONE);
+		hyperlink.setBackgroundMode(SWT.INHERIT_NONE);		
+		hyperlink.setBackground(section.getTitleBarBackground());
+		hyperlink.setImage(TaskListImages.getImage(TaskListImages.EXPAND_ALL));
 		hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 			public void linkActivated(HyperlinkEvent e) {
 				revealAllComments();
@@ -501,12 +485,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		addCommentsLayout.numColumns = 1;
 		addCommentsComposite.setLayout(addCommentsLayout);
 		// addCommentsComposite.setBackground(background);
-		GridData addCommentsData = new GridData(GridData.FILL_HORIZONTAL);
-		// addCommentsData.horizontalSpan = 1;
-		// addCommentsData.widthHint = DESCRIPTION_WIDTH;
-		// addCommentsData.heightHint = DESCRIPTION_HEIGHT;
-		// addCommentsData.grabExcessVerticalSpace = false;
-		addCommentsComposite.setLayoutData(addCommentsData);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(addCommentsComposite);
 		// End Additional (read-only) Comments Area
 
 		StyledText styledText = null;
@@ -605,6 +584,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 			// styledTextData.grabExcessHorizontalSpace = true;
 
 			// code for outline
+			commentStyleText.add(styledText);
 			texts.add(textsindex, styledText);
 			textHash.put(comment, styledText);
 			textsindex++;

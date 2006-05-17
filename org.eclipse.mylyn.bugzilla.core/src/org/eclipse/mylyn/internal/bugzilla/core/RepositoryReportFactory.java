@@ -97,19 +97,21 @@ public class RepositoryReportFactory {
 	 * appropriate loader
 	 */
 	public void populateReport(BugzillaReport bugReport, String repositoryUrl, String userName, String password) throws IOException, LoginException {
-
 		SaxBugReportContentHandler contentHandler = new SaxBugReportContentHandler(bugReport);
 
 		String xmlBugReportUrl = repositoryUrl + SHOW_BUG_CGI_XML + bugReport.getId();
 
 		URL serverURL = new URL(BugzillaRepositoryUtil.addCredentials(xmlBugReportUrl, userName, password));
 		URLConnection connection = serverURL.openConnection();
-		String contentType = connection.getContentType();
-		if (contentType != null) {
-			String charsetFromContentType = BugzillaRepositoryUtil.getCharsetFromString(contentType);
+		String contentEncoding = connection.getContentEncoding();
+		if (contentEncoding != null) {
+			String charsetFromContentType = BugzillaRepositoryUtil.getCharsetFromString(contentEncoding);
 			if (charsetFromContentType != null) {
 				bugReport.setCharset(charsetFromContentType);
 			}
+		} else {
+			// TODO: get from repository preferences
+			bugReport.setCharset(BugzillaPlugin.ENCODING_UTF_8);
 		}
 
 		BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -125,7 +127,11 @@ public class RepositoryReportFactory {
 			}
 
 		} catch (SAXException e) {
-			throw new IOException(e.getMessage());
+			if(e.getMessage().equals(IBugzillaConstants.ERROR_INVALID_USERNAME_OR_PASSWORD)) {
+				throw new LoginException(e.getMessage());
+			} else {
+				throw new IOException(e.getMessage());
+			}
 		}
 	}
 
@@ -133,7 +139,8 @@ public class RepositoryReportFactory {
 
 		public void error(SAXParseException exception) throws SAXException {
 			throw exception;
-//			MylarStatusHandler.fail(exception, "Mylar: RepositoryReportFactory Sax parser error", false);
+			// MylarStatusHandler.fail(exception, "Mylar:
+			// RepositoryReportFactory Sax parser error", false);
 			// System.err.println("Error: " + exception.getLineNumber() + "\n" +
 			// exception.getLocalizedMessage());
 
