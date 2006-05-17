@@ -21,15 +21,13 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.core.util.SaxContextReader;
+import org.eclipse.mylar.internal.core.util.SaxContextWriter;
 
 /**
  * @author Mik Kersten
  */
 public class MylarContextExternalizer {
-
-	// private ContextReader reader = new ContextReader();
-	//
-	// private ContextWriter writer = new ContextWriter();
 
 	private IContextReader reader = new SaxContextReader();
 

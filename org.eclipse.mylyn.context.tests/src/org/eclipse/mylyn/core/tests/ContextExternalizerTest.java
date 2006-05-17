@@ -19,8 +19,8 @@ import org.eclipse.mylar.core.tests.support.DomContextWriter;
 import org.eclipse.mylar.core.tests.support.FileTool;
 import org.eclipse.mylar.internal.core.MylarContext;
 import org.eclipse.mylar.internal.core.MylarContextExternalizer;
-import org.eclipse.mylar.internal.core.SaxContextReader;
 import org.eclipse.mylar.internal.core.ScalingFactors;
+import org.eclipse.mylar.internal.core.util.SaxContextReader;
 import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.IMylarRelation;
 

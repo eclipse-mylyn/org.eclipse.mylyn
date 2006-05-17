@@ -6,8 +6,8 @@ Bundle-Version: 0.5.1.v20060512-1800
 Bundle-Activator: org.eclipse.mylar.provisional.core.MylarPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.core.resources,
- org.eclipse.ui
+ org.eclipse.ui,
+ org.eclipse.core.resources
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: mylar-core.jar

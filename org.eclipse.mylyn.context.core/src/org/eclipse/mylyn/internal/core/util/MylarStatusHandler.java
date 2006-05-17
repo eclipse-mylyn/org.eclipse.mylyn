@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.internal.core.util;
 
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -32,8 +31,6 @@ public class MylarStatusHandler {
 	private static final String ERROR_MESSAGE = "Please report the following error by following the bugs link at:\n"
 			+ "http://eclipse.org/mylar\n\n"
 			+ "For details on this error please open the PDE Runtime -> Error Log view";
-
-	public static PrintStream logStream = null;
 
 	/**
 	 * Logs the specified status with this plug-in's log.
@@ -61,19 +58,9 @@ public class MylarStatusHandler {
 
 		if (MylarPlugin.getDefault() != null) {
 			MylarPlugin.getDefault().getLog().log(status);
-			if (logStream != null)
-				logStream.println(buffer.toString());
 		}
 		if (dumpErrors)
 			System.err.println(buffer.toString());
-	}
-
-	public void setLogStream(PrintStream logStream) {
-		MylarStatusHandler.logStream = logStream;
-	}
-
-	public PrintStream getLogStream() {
-		return logStream;
 	}
 
 	private static String printStrackTrace(Throwable t) {

@@ -163,7 +163,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 	
 	public String getDefaultDataDirectory() {
 //		try {
-			return ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/' + NAME_DATA_DIR;
+		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/' + NAME_DATA_DIR;
 //		} catch (Throwable t) {
 //			// NOTE: might not have runtime plug-in when running in RCP mode
 //			return getDefault().getStateLocation().toString() + '/' + NAME_DATA_DIR;

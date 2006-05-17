@@ -8,11 +8,13 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.core;
+package org.eclipse.mylar.internal.core.util;
 
 import java.util.Date;
 
-import org.eclipse.mylar.internal.core.util.XmlStringConverter;
+import org.eclipse.mylar.internal.core.MylarContext;
+import org.eclipse.mylar.internal.core.MylarContextExternalizer;
+import org.eclipse.mylar.internal.core.MylarContextManager;
 import org.eclipse.mylar.provisional.core.InteractionEvent;
 import org.eclipse.mylar.provisional.core.InteractionEvent.Kind;
 import org.xml.sax.Attributes;

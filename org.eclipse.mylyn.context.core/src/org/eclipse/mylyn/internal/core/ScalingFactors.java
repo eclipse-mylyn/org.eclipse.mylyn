@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.internal.core;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,9 +19,7 @@ import org.eclipse.mylar.provisional.core.InteractionEvent;
 /**
  * @author Mik Kersten
  */
-public class ScalingFactors implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class ScalingFactors {
 
 	private ScalingFactor defaultDecay = new ScalingFactor("decay", .017f);
 	

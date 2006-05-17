@@ -11,12 +11,10 @@
 
 package org.eclipse.mylar.internal.core;
 
-import java.io.Serializable;
-
 /**
  * @author Mik Kersten
  */
-public class ScalingFactor implements Serializable {
+public class ScalingFactor {
 
 	private static final long serialVersionUID = 1L;
 

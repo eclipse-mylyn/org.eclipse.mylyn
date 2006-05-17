@@ -11,8 +11,8 @@
 
 package org.eclipse.mylar.provisional.core;
 
-import java.io.Serializable;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Immutable
@@ -21,9 +21,7 @@ import java.util.*;
  * 
  * @author Mik Kersten
  */
-public class InteractionEvent implements Serializable {
-
-	private static final long serialVersionUID = 3L;
+public class InteractionEvent {
 
 	public enum Kind {
 		SELECTION, EDIT, COMMAND, PREFERENCE, PREDICTION, PROPAGATION, MANIPULATION;
