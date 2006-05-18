@@ -48,15 +48,6 @@ public class OfflineReportsFile {
 	/** A list of offline reports */
 	private ArrayList<BugzillaReport> list = new ArrayList<BugzillaReport>();
 
-	/** Sort by bug ID */
-	public static final int ID_SORT = 0;
-
-	/** Sort by bug type (locally created or not) */
-	public static final int TYPE_SORT = 4;
-
-	/** Default sort by bug TYPE */
-	public static int lastSel = TYPE_SORT;
-
 	/** The bug id of the most recently created offline report. */
 	protected int latestNewBugId = 0;
 
@@ -72,9 +63,9 @@ public class OfflineReportsFile {
 	 * @throws ClassNotFoundException
 	 *             Error deserializing objects from the offline reports file
 	 */
-	public OfflineReportsFile(File file) throws IOException, ClassNotFoundException {
+	public OfflineReportsFile(File file, boolean read) throws IOException, ClassNotFoundException {
 		this.file = file;
-		if (file.exists()) {
+		if (read && file.exists()) {
 			readFile();
 		}
 	}

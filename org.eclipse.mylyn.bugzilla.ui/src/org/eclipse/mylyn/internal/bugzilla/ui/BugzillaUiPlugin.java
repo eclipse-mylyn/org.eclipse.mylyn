@@ -139,14 +139,14 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		IPath offlineReportsPath = getOfflineReportsFilePath();
 
 		try {
-			offlineReportsFile = new OfflineReportsFile(offlineReportsPath.toFile());
+			offlineReportsFile = new OfflineReportsFile(offlineReportsPath.toFile(), true);
 		} catch (Exception e) {
 			MylarStatusHandler.log(e,
 							"Could not restore offline Bugzilla reports file, creating new one (possible version incompatibility)");
 			offlineReportsPath.toFile().delete();
 //			if (offlineReportsPath.toFile().delete()) {
 			try {
-				offlineReportsFile = new OfflineReportsFile(offlineReportsPath.toFile());
+				offlineReportsFile = new OfflineReportsFile(offlineReportsPath.toFile(), false);
 			} catch (Exception e1) {
 				MylarStatusHandler.fail(e, "could not reset offline Bugzilla reports file", true);
 			}
