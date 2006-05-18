@@ -219,8 +219,10 @@ public class MylarChangeSetManager implements IMylarContextListener {
 				contextChangeSet.add(interestingResources.toArray(new IResource[interestingResources.size()]));
 
 				activeChangeSets.put(task.getHandleIdentifier(), contextChangeSet);
-				if (!collector.contains(contextChangeSet))
+				if (!collector.contains(contextChangeSet)) {
 					collector.add(contextChangeSet);
+				}
+				
 			}
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "could not update change set", false);

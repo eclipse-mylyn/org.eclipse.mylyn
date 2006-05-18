@@ -51,14 +51,20 @@ public class MylarActiveChangeSet extends ActiveChangeSet {
 
 	private ITask task;
 
-	public MylarActiveChangeSet(ITask task, ActiveChangeSetManager collector) {
-		super(collector, task.getDescription());
+	public MylarActiveChangeSet(ITask task, ActiveChangeSetManager manager) {
+		super(manager, task.getDescription());
 		this.task = task;
 		initTitle();
 	}
 
+	@Override
+	public boolean isUserCreated() {
+		return true;
+	}
+	
 	public void initTitle() {
-		super.setTitle(this.task.getDescription());
+		super.setName(task.getDescription());
+		super.setTitle(task.getDescription());
 	}
 
 	/**
