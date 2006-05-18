@@ -19,7 +19,9 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.provisional.core.InteractionEvent;
 import org.eclipse.mylar.provisional.tasklist.ITask;
@@ -27,6 +29,7 @@ import org.eclipse.team.core.TeamException;
 import org.eclipse.team.core.diff.IDiff;
 import org.eclipse.team.core.diff.provider.ThreeWayDiff;
 import org.eclipse.team.core.mapping.provider.ResourceDiff;
+import org.eclipse.team.internal.ccvs.core.mapping.ChangeSetResourceMapping;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSet;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 import org.osgi.service.prefs.Preferences;
@@ -34,7 +37,7 @@ import org.osgi.service.prefs.Preferences;
 /**
  * @author Mik Kersten
  */
-public class MylarActiveChangeSet extends ActiveChangeSet {
+public class MylarActiveChangeSet extends ActiveChangeSet implements IAdaptable {
 
 	private static final String PREFIX_HTTP = "http://";
 
@@ -263,5 +266,13 @@ public class MylarActiveChangeSet extends ActiveChangeSet {
 
 	public ITask getTask() {
 		return task;
+	}
+
+	public Object getAdapter(Class adapter) {
+		if (adapter == ResourceMapping.class) {
+			return new ChangeSetResourceMapping(this);
+		} else {
+			return null;
+		}
 	}
 }
