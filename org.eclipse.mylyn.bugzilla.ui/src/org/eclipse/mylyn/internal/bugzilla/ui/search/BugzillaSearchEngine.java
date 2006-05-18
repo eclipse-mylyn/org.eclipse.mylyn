@@ -67,11 +67,14 @@ public class BugzillaSearchEngine {
 
 	private boolean maxReached = false;
 	
+	private String characterEncoding;
+	
 	public BugzillaSearchEngine(TaskRepository repository, String queryUrl, Proxy proxySettings) {
 		urlString = queryUrl;
 		urlString = urlString.concat(IBugzillaConstants.CONTENT_TYPE_RDF);
 		this.repository = repository;
 		this.proxySettings = proxySettings;
+		this.characterEncoding = repository.getCharacterEncoding();
 //		if (repository.hasCredentials()) {
 //			try {
 //				urlString = BugzillaRepositoryUtil.addCredentials(repository, urlString);
@@ -154,8 +157,14 @@ public class BugzillaSearchEngine {
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException("Search cancelled");
 			}
-
-			in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			
+			
+			if (characterEncoding != null) {
+				in = new BufferedReader(new InputStreamReader(connection.getInputStream(), characterEncoding));
+			} else {
+				in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			}
+			
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException("Search cancelled");
 			}

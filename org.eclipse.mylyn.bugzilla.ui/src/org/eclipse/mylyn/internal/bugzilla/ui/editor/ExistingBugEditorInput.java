@@ -54,7 +54,7 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 		this.bugId = bugId;
 		this.repository = repository;
 		// get the bug from the server if it exists
-		bug = BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, bugId);
+		bug = BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, repository.getCharacterEncoding(), bugId);
 //		repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND,
 //				repositoryUrl);
 	}
@@ -64,7 +64,7 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 		this.repository = repository;
 		if (!offline) {
 			try {
-				bug = BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, bugId);
+				bug = BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, repository.getCharacterEncoding(), bugId);
 			} catch (IOException e) {
 				bug = getCurrentBug(repository, proxySettings, bugId);
 				// IWorkbench workbench = PlatformUI.getWorkbench();
@@ -100,7 +100,7 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 			}
 		} 
 		// If a suitable offline report was not found, get it from the server
-		return BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, id);
+		return BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, repository.getCharacterEncoding(), id);
 	}
 
 	public String getName() {

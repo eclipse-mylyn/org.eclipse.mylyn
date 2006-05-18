@@ -11,6 +11,7 @@
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -44,6 +45,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.BugzillaCompareInput;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReportAttribute;
 import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.provisional.bugzilla.core.Comment;
@@ -360,9 +362,16 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 		submitButton.setEnabled(false);
 		ExistingBugEditor.this.showBusy(true);
-		final BugzillaReportSubmitForm bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeExistingBugPost(bug,
-				repository.getUrl(), repository.getUserName(), repository.getPassword(), bugzillaInput
-						.getProxySettings(), removeCC);
+		BugzillaReportSubmitForm bugzillaReportSubmitForm;
+		try {
+			bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeExistingBugPost(bug,
+					repository.getUrl(), repository.getUserName(), repository.getPassword(), bugzillaInput
+							.getProxySettings(), removeCC, repository.getCharacterEncoding());
+		} catch (UnsupportedEncodingException e) {
+			// should never get here but just in case...
+			MessageDialog.openError(null, "Posting Error", "Ensure proper encoding selected in "+TaskRepositoriesView.NAME+".");
+			return;
+		}
 
 		final BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) MylarTaskListPlugin
 				.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
@@ -663,8 +672,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 		// initialize the keywords list with valid values
 
-		java.util.List<String> validKeywords = BugzillaPlugin.getDefault().getProductConfiguration(repository.getUrl(),
-				repository.getUserName(), repository.getPassword()).getKeywords();
+		java.util.List<String> validKeywords = BugzillaPlugin.getDefault().getRepositoryConfiguration(repository.getUrl(),
+				repository.getUserName(), repository.getPassword(), repository.getCharacterEncoding()).getKeywords();
 
 		if (validKeywords != null) {
 			for (Iterator<String> it = validKeywords.iterator(); it.hasNext();) {
@@ -822,7 +831,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
 						BugzillaPlugin.REPOSITORY_KIND, bug.getRepositoryUrl());
 				serverBug = BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository
-						.getPassword(), bugzillaInput.getProxySettings(), bug.getId());
+						.getPassword(), bugzillaInput.getProxySettings(), repository.getCharacterEncoding(), bug.getId());
 				// If no bug was found on the server, throw an exception so that
 				// the
 				// user gets the same message that appears when there is a

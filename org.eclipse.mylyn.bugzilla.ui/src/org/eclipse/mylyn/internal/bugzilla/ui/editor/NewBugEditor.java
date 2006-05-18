@@ -10,11 +10,13 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
+import java.io.UnsupportedEncodingException;
 import java.net.Proxy;
 
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
@@ -22,6 +24,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.provisional.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
@@ -167,7 +170,14 @@ public class NewBugEditor extends AbstractBugEditor {
 		updateBug();
 		Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
 		boolean wrap = IBugzillaConstants.BugzillaServerVersion.SERVER_218.equals(repository.getVersion());
-		final BugzillaReportSubmitForm bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeNewBugPost(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, bug, wrap);
+		BugzillaReportSubmitForm bugzillaReportSubmitForm;
+		try {
+			bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeNewBugPost(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, repository.getCharacterEncoding(), bug, wrap);
+		} catch (UnsupportedEncodingException e) {
+			// should never get here but just in case...
+			MessageDialog.openError(null, "Posting Error", "Ensure proper encoding selected in "+TaskRepositoriesView.NAME+".");
+			return;
+		}
 		final BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) MylarTaskListPlugin
 				.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
 

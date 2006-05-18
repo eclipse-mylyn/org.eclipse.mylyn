@@ -122,7 +122,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		assertEquals(RepositoryTaskSyncState.OUTGOING, task.getSyncState());
 
 		// Submit changes
-		MockBugzillaReportSubmitForm form = new MockBugzillaReportSubmitForm();
+		MockBugzillaReportSubmitForm form = new MockBugzillaReportSubmitForm(BugzillaPlugin.ENCODING_UTF_8);
 		client.submitBugReport(task.getBugReport(), form, null);
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
 
@@ -177,6 +177,10 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 	}
 
 	class MockBugzillaReportSubmitForm extends BugzillaReportSubmitForm {
+
+		public MockBugzillaReportSubmitForm(String encoding_utf_8) {
+			super(encoding_utf_8);			
+		}
 
 		@Override
 		public String submitReportToRepository() throws BugzillaException, LoginException,

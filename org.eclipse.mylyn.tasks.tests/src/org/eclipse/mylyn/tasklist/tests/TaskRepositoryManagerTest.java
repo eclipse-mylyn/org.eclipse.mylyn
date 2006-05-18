@@ -125,6 +125,26 @@ public class TaskRepositoryManagerTest extends TestCase {
 
 	}
 
+	public void testRepositoryEncodingPersistance() throws MalformedURLException {
+		assertEquals("", MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
+
+		String encoding = "UTF-8";
+
+		TaskRepository repository1 = new TaskRepository("bugzilla", "http://bugzilla");
+		MylarTaskListPlugin.getRepositoryManager().setEncoding(repository1, encoding);
+		manager.addRepository(repository1);
+
+		String prefIdEncoding = repository1.getUrl() + TaskRepositoryManager.PROPERTY_DELIM
+				+ TaskRepositoryManager.PROPERTY_ENCODING;
+
+		assertEquals(encoding, MylarTaskListPlugin.getMylarCorePrefs().getString(prefIdEncoding));
+
+		manager.readRepositories();
+		TaskRepository temp = manager.getRepository(repository1.getKind(), repository1.getUrl());
+		assertNotNull(temp);
+		assertEquals(temp.getCharacterEncoding(), encoding);
+	}
+	
 	public void testRepositoryPersistanceAfterDelete() throws MalformedURLException {
 		manager.clearRepositories();
 

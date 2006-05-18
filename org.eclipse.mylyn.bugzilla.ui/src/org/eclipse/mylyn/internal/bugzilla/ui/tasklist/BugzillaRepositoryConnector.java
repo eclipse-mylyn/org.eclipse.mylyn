@@ -134,8 +134,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, bugzillaTask.getRepositoryUrl());
 		Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
 		try {
-			return BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, AbstractRepositoryTask
-					.getTaskIdAsInt(bugzillaTask.getHandleIdentifier()));
+			return BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, repository.getCharacterEncoding(), AbstractRepositoryTask
+							.getTaskIdAsInt(bugzillaTask.getHandleIdentifier()));
 		} catch (final LoginException e) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {

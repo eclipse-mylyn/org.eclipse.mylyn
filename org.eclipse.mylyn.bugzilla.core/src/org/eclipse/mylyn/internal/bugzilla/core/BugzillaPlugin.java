@@ -109,10 +109,10 @@ public class BugzillaPlugin extends Plugin {
 	// IBugzillaConstants.SERVER_220.equals(getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION));
 	// }
 
-	public RepositoryConfiguration getProductConfiguration(String repositoryUrl, String userName, String password) throws IOException {
+	public RepositoryConfiguration getRepositoryConfiguration(String repositoryUrl, String userName, String password, String encoding) throws IOException {
 		if (!repositoryConfigurations.containsKey(repositoryUrl)) {
 			repositoryConfigurations.put(repositoryUrl, RepositoryConfigurationFactory.getInstance()
-					.getConfiguration(repositoryUrl, userName, password));
+					.getConfiguration(repositoryUrl, userName, password, encoding));
 		}
 		return repositoryConfigurations.get(repositoryUrl);
 	}

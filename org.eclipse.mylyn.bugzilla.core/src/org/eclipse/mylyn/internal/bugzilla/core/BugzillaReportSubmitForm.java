@@ -137,24 +137,36 @@ public class BugzillaReportSubmitForm {
 
 	private String error = null;
 
-	public static BugzillaReportSubmitForm makeNewBugPost(String repositoryUrl, String userName, String password, Proxy proxySettings, NewBugzillaReport model, boolean wrapDescription) {
+	public BugzillaReportSubmitForm(String charEncoding) {
+		charset = charEncoding;
+	}
+
+	public static BugzillaReportSubmitForm makeNewBugPost(String repositoryUrl, String userName, String password, Proxy proxySettings, String characterEncoding, NewBugzillaReport model, boolean wrapDescription) throws UnsupportedEncodingException {
 		
-		BugzillaReportSubmitForm form = new BugzillaReportSubmitForm();
+		BugzillaReportSubmitForm form;
+		
+		if (characterEncoding != null) {
+			form = new BugzillaReportSubmitForm(characterEncoding);
+		} else {
+			form = new BugzillaReportSubmitForm(BugzillaPlugin.ENCODING_UTF_8);
+		}
+		
 		form.setPrefix(BugzillaReportSubmitForm.FORM_PREFIX_BUG_218);
 		form.setPrefix2(BugzillaReportSubmitForm.FORM_PREFIX_BUG_220);
 
 		form.setPostfix(BugzillaReportSubmitForm.FORM_POSTFIX_216);
 		form.setPostfix2(BugzillaReportSubmitForm.FORM_POSTFIX_218);
 
-		setConnectionsSettings(form, repositoryUrl, userName, password, proxySettings, POST_BUG_CGI);
+		setConnectionsSettings(form, repositoryUrl, userName, password, proxySettings, POST_BUG_CGI);		
+				
 		// go through all of the attributes and add them to
 		// the bug post
 		Iterator<AbstractRepositoryReportAttribute> itr = model.getAttributes().iterator();
 		while (itr.hasNext()) {
 			AbstractRepositoryReportAttribute a = itr.next();
-			if (a != null && a.getID() != null && a.getID().compareTo("") != 0) { // &&
-																					// !a.isHidden()
-				// String key = a.getName();
+			if (a != null && a.getID() != null && a.getID().compareTo("") != 0) { 
+				//String key = a.getName();
+				//System.err.println(">>> "+key);
 				String value = null;
 				value = a.getValue();
 				if (value == null)
@@ -185,20 +197,24 @@ public class BugzillaReportSubmitForm {
 
 	/**
 	 * TODO: refactor common stuff with new bug post
-	 * 
 	 * @param removeCC
+	 * @param characterEncoding TODO
+	 * 
+	 * @throws UnsupportedEncodingException 
 	 */
 	public static BugzillaReportSubmitForm makeExistingBugPost(BugzillaReport bug, String repositoryUrl, String userName, String password,
-			Proxy proxySettings, Set<String> removeCC) {
+			Proxy proxySettings, Set<String> removeCC, String characterEncoding) throws UnsupportedEncodingException {
 
-		BugzillaReportSubmitForm bugReportPostHandler = new BugzillaReportSubmitForm();
-
+		BugzillaReportSubmitForm bugReportPostHandler;
+		
+		if (characterEncoding != null) {
+			bugReportPostHandler = new BugzillaReportSubmitForm(characterEncoding);
+		} else {
+			bugReportPostHandler = new BugzillaReportSubmitForm(BugzillaPlugin.ENCODING_UTF_8);
+		}
+		
 		setDefaultCCValue(bug, userName);
 		setConnectionsSettings(bugReportPostHandler, repositoryUrl, userName, password, proxySettings, PROCESS_BUG_CGI);
-
-		if (bug.getCharset() != null) {
-			bugReportPostHandler.setCharset(bug.getCharset());
-		}
 
 		// go through all of the attributes and add them to the bug post
 		for (Iterator<AbstractRepositoryReportAttribute> it = bug.getAttributes().iterator(); it.hasNext();) {
@@ -270,16 +286,15 @@ public class BugzillaReportSubmitForm {
 	 *            The key for the value to be added
 	 * @param value
 	 *            The value to be added
+	 * @throws UnsupportedEncodingException 
 	 */
-	private void add(String key, String value) {
-		try {
-			fields.put(key, URLEncoder.encode(value == null ? "" : value, BugzillaPlugin.ENCODING_UTF_8));
-		} catch (UnsupportedEncodingException e) {
-			/*
-			 * Do nothing. Every implementation of the Java platform is required
-			 * to support the standard charset "UTF-8"
-			 */
-		}
+	private void add(String key, String value) throws UnsupportedEncodingException {
+//		try {
+			fields.put(key, URLEncoder.encode(value == null ? "" : value, charset));
+			//BugzillaPlugin.ENCODING_UTF_8
+//		} catch (UnsupportedEncodingException e) {
+//			// ignore
+//		}
 	}
 
 	/**
@@ -493,11 +508,11 @@ public class BugzillaReportSubmitForm {
 		this.prefix2 = prefix2;
 	}
 
-	private void setCharset(String charset) {
-		this.charset = charset;
-	}
+	// private void setCharset(String charset) {
+	// this.charset = charset;
+	// }
 
-	private static void setConnectionsSettings(BugzillaReportSubmitForm form, String repositoryUrl, String userName, String password, Proxy proxySettings, String formName) {
+	private static void setConnectionsSettings(BugzillaReportSubmitForm form, String repositoryUrl, String userName, String password, Proxy proxySettings, String formName) throws UnsupportedEncodingException {
 		String baseURL = repositoryUrl;
 		if (!baseURL.endsWith("/"))
 			baseURL += "/";

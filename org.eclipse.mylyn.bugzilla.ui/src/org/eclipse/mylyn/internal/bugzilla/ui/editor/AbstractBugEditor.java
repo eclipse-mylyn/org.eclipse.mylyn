@@ -11,7 +11,6 @@
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +45,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaAttributeListener;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaTools;
@@ -957,11 +955,12 @@ public abstract class AbstractBugEditor extends EditorPart {
 			// String key = attribute.getID();
 			String name = attribute.getName();
 			String value = "";
-			try {
-				value = checkText(BugzillaRepositoryUtil.decodeStringFromCharset(attribute.getValue(), getReport().getCharset()));
-			} catch (UnsupportedEncodingException e1) {
-				// ignore
-			}
+			//try {
+				value = checkText(attribute.getValue());
+				//value = checkText(BugzillaRepositoryUtil.decodeStringFromCharset(attribute.getValue(), getReport().getCharset()));
+//			} catch (UnsupportedEncodingException e1) {
+//				// ignore
+//			}
 			// System.err.println(">>> AbstractBugEditor>> name: "+name+"
 			// key:"+key+" value:"+value+" is hidden"+attribute.isHidden());
 			if (attribute.isHidden())

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui.wizard;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Proxy;
 
@@ -30,6 +31,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditorInput;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.search.internal.ui.SearchMessages;
@@ -69,7 +71,7 @@ public abstract class AbstractBugzillaReportWizard extends Wizard implements INe
 	protected IWorkbench workbenchInstance;
 
 	private final TaskRepository repository;
-	
+
 	// Flag to indicate if the bug was successfully sent
 	private boolean sentSuccessfully = false;
 
@@ -77,7 +79,7 @@ public abstract class AbstractBugzillaReportWizard extends Wizard implements INe
 		super();
 		this.repository = repository;
 		model = new NewBugzillaReport(repository.getUrl(), BugzillaUiPlugin.getDefault().getOfflineReportsFile()
-				.getNextOfflineBugId());
+				.getNextOfflineBugId());		
 		id = null; // Since there is no bug posted yet.
 		super.setDefaultPageImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin(
 				"org.eclipse.mylar.internal.bugzilla.ui", "icons/wizban/bug-wizard.gif"));
@@ -97,7 +99,7 @@ public abstract class AbstractBugzillaReportWizard extends Wizard implements INe
 	public boolean performFinish() {
 		getWizardDataPage().saveDataToModel();
 		return postBug();
-		
+
 		// if (postBug()) {
 		// // if (!fromDialog)
 		// // openBugEditor();
@@ -125,14 +127,14 @@ public abstract class AbstractBugzillaReportWizard extends Wizard implements INe
 	 * @return true if the bug is posted successfully, and false otherwise
 	 */
 	protected boolean postBug() {
-		
+
 		final IRunnableWithProgress op = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 				Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
 				boolean wrap = IBugzillaConstants.BugzillaServerVersion.SERVER_218.equals(repository.getVersion());
-				form = BugzillaReportSubmitForm.makeNewBugPost(repository.getUrl(), repository.getUserName(),
-						repository.getPassword(), proxySettings, model, wrap);
 				try {
+					form = BugzillaReportSubmitForm.makeNewBugPost(repository.getUrl(), repository.getUserName(),
+							repository.getPassword(), proxySettings, repository.getCharacterEncoding(), model, wrap);				
 					id = form.submitReportToRepository();
 					if (id != null) {
 						sentSuccessfully = true;
@@ -152,18 +154,21 @@ public abstract class AbstractBugzillaReportWizard extends Wizard implements INe
 						"Bugzilla could not post your bug.");
 			} else if (e.getCause() instanceof PossibleBugzillaFailureException) {
 				WebBrowserDialog.openAcceptAgreement(getWizardDataPage().getShell(),
-						"Bugzilla Submission Error Message",
-						e.getCause().getMessage(), form.getError());
+						"Bugzilla Submission Error Message", e.getCause().getMessage(), form.getError());
 			} else if (e.getCause() instanceof LoginException) {
 				MessageDialog.openError(getWizardDataPage().getShell(), "Posting Error",
 						"Bugzilla could not post your bug since your login name or password is incorrect."
 								+ "\nPlease check your settings in the bugzilla preferences. ");
+			} else if (e.getCause() instanceof UnsupportedEncodingException) {			
+				// should never get here but just in case...
+				MessageDialog.openError(getWizardDataPage().getShell(), "Posting Error", "Ensure proper encoding selected in "
+						+ TaskRepositoriesView.NAME + ".");			
 			}
 		} catch (InterruptedException e) {
 			// ignore
 		}
 		return sentSuccessfully;
-		
+
 		// final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
 		// protected void execute(final IProgressMonitor monitor) throws
 		// CoreException {
