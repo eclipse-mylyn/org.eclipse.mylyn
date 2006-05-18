@@ -310,8 +310,7 @@ public class BugzillaRepositoryUtil {
 		// attributes.put(a.getName(), a);
 
 		a = new BugzillaReportAttribute(BugzillaReportElement.OP_SYS);
-		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(repositoryUrl, userName, password).getOSs();
-		Collections.sort(optionValues);
+		optionValues = BugzillaPlugin.getDefault().getProductConfiguration(repositoryUrl, userName, password).getOSs();		
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
@@ -558,7 +557,7 @@ public class BugzillaRepositoryUtil {
 			attribute.clearOptions();
 			List<String> optionValues = BugzillaPlugin.getDefault().getProductConfiguration(repositoryUrl, userName, password)
 					.getOptionValues(element, product);
-			if(element != BugzillaReportElement.BUG_SEVERITY && element != BugzillaReportElement.PRIORITY || element != BugzillaReportElement.BUG_STATUS) {
+			if(element != BugzillaReportElement.OP_SYS && element != BugzillaReportElement.BUG_SEVERITY && element != BugzillaReportElement.PRIORITY && element != BugzillaReportElement.BUG_STATUS) {
 				Collections.sort(optionValues);
 			}
 			if (element == BugzillaReportElement.TARGET_MILESTONE && optionValues.isEmpty()) {

@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -982,8 +981,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 				attributeCombo.setFont(TEXT_FONT);
 				attributeCombo.setLayoutData(data);
 				Set<String> s = values.keySet();
-				String[] a = s.toArray(new String[s.size()]);
-				Arrays.sort(a);
+				String[] a = s.toArray(new String[s.size()]);				
 				for (int i = 0; i < a.length; i++) {
 					attributeCombo.add(a[i]);
 				}
