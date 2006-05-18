@@ -331,10 +331,7 @@ public class TaskListView extends ViewPart {
 	private final IPropertyChangeListener THEME_CHANGE_LISTENER = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
 			if (event.getProperty().equals(IThemeManager.CHANGE_CURRENT_THEME)
-					|| event.getProperty().equals(TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY)
-					|| event.getProperty().equals(TaskListColorsAndFonts.THEME_COLOR_TASK_OVERDUE)
-					|| event.getProperty().equals(TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_COMPLETED)
-				    || event.getProperty().equals(TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_SCHEDULED)) {
+					|| TaskListColorsAndFonts.isTaskListTheme(event.getProperty())) {
 				taskListTableLabelProvider.setCategoryBackgroundColor(themeManager.getCurrentTheme().getColorRegistry().get(TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY));
 				getViewer().refresh();
 			} 
