@@ -28,6 +28,8 @@ import org.eclipse.mylar.internal.core.MylarContextManager;
  */
 public class TaskRepositoryManager {
 
+	public static final String PROPERTY_ENCODING = "encoding";
+	
 	public static final String PROPERTY_VERSION = "version";
 
 	public static final String PROPERTY_DELIM = ":";
@@ -192,8 +194,14 @@ public class TaskRepositoryManager {
 
 					repositoryMap.put(repositoryConnector.getRepositoryType(), repositories);						
 					String prefIdVersion = urlString + PROPERTY_DELIM + PROPERTY_VERSION;
-					String version = MylarTaskListPlugin.getMylarCorePrefs().getString(prefIdVersion);
-					repositories.add(new TaskRepository(repositoryConnector.getRepositoryType(), urlString, version));
+					String version = MylarTaskListPlugin.getMylarCorePrefs().getString(prefIdVersion);					
+					
+					String prefIdEncoding = urlString + PROPERTY_DELIM + PROPERTY_ENCODING;
+					String encoding = MylarTaskListPlugin.getMylarCorePrefs().getString(prefIdEncoding);
+					if(encoding.equals("")) {
+						encoding = TaskRepository.DEFAULT_CHARACTER_ENCODING;
+					}
+					repositories.add(new TaskRepository(repositoryConnector.getRepositoryType(), urlString, version, encoding));
 				}
 			}
 		}
@@ -208,6 +216,11 @@ public class TaskRepositoryManager {
 		saveRepositories();
 	}
 	
+	public void setEncoding(TaskRepository repository, String encoding) {
+		repository.setCharacterEncoding(encoding);
+		saveRepositories();
+	}
+	
 	private void saveRepositories() {
 		for (AbstractRepositoryConnector repositoryConnector : repositoryConnectors.values()) {
 			if (repositoryMap.containsKey(repositoryConnector.getRepositoryType())) {
@@ -215,8 +228,11 @@ public class TaskRepositoryManager {
 				for (TaskRepository repository : repositoryMap.get(repositoryConnector.getRepositoryType())) {
 					repositoriesToStore += repository.getUrl() + PREF_STORE_DELIM;
 
-					String prefIdVersion = repository.getUrl() + PROPERTY_DELIM + PROPERTY_VERSION;
+					String prefIdVersion = repository.getUrl() + PROPERTY_DELIM + PROPERTY_VERSION;					
 					MylarTaskListPlugin.getMylarCorePrefs().setValue(prefIdVersion, repository.getVersion());
+					
+					String prefIdEncoding = repository.getUrl() + PROPERTY_DELIM + PROPERTY_ENCODING;
+					MylarTaskListPlugin.getMylarCorePrefs().setValue(prefIdEncoding, repository.getCharacterEncoding());
 				}
 				String prefId = PREF_REPOSITORIES + repositoryConnector.getRepositoryType();
 				MylarTaskListPlugin.getMylarCorePrefs().setValue(prefId, repositoriesToStore);

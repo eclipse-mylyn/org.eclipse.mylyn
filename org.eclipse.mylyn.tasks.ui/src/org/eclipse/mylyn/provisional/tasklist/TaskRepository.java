@@ -24,6 +24,8 @@ import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
  */
 public class TaskRepository {
 
+	public static final String DEFAULT_CHARACTER_ENCODING = "UTF-8";
+	
 	public static final String AUTH_PASSWORD = "org.eclipse.mylar.tasklist.repositories.password"; //$NON-NLS-1$ 
 
 	public static final String AUTH_USERNAME = "org.eclipse.mylar.tasklist.repositories.username"; //$NON-NLS-1$ 
@@ -51,14 +53,21 @@ public class TaskRepository {
 	
 	private String version = NO_VERSION_SPECIFIED;
 
+	private String characterEncoding = DEFAULT_CHARACTER_ENCODING;
+	
 	public TaskRepository(String kind, String serverUrl) {
 		this.serverUrl = serverUrl;
 		this.kind = kind;
 	}
-
+	/** sets character encoding to DEFAULT_CHARACTER_ENCODING */
 	public TaskRepository(String kind, String serverUrl, String version) {
+		this(kind, serverUrl, version, DEFAULT_CHARACTER_ENCODING);		
+	}
+	
+	public TaskRepository(String kind, String serverUrl, String version, String encoding) {
 		this(kind, serverUrl);
 		this.version = version;
+		this.characterEncoding = encoding;
 	}
 	
 	public String getUrl() {
@@ -175,6 +184,16 @@ public class TaskRepository {
 		} else {
 			version = ver;
 		}
+	}
+
+	
+	public String getCharacterEncoding() {
+		return characterEncoding;
+	}
+	
+
+	void setCharacterEncoding(String characterEncoding) {
+		this.characterEncoding = characterEncoding;
 	}
 
 }

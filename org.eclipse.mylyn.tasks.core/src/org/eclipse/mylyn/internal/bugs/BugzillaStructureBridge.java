@@ -125,7 +125,7 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 						try {
 							Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
 							// XXX: move this
-							result = BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, id);
+							result = BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, repository.getCharacterEncoding(), id);
 							if (result != null) {
 								MylarBugsPlugin.getDefault().getCache().cache(bugHandle, result);
 							}

@@ -315,7 +315,7 @@ public class BugzillaReport extends AbstractRepositoryReport implements IBugzill
 	}
 
 	public String getLabel() {
-		return getId() + ": " + decodeStringFromCharset(getAttributeValue(BugzillaReportElement.SHORT_DESC));
+		return getId() + ": " + getAttributeValue(BugzillaReportElement.SHORT_DESC);
 	}
 
 	public Date getLastModified() {
@@ -408,8 +408,7 @@ public class BugzillaReport extends AbstractRepositoryReport implements IBugzill
 	 * @return The bugs summary
 	 */
 	public String getSummary() {
-		//return getAttributeValue(BugzillaReportElement.SHORT_DESC);
-		return decodeStringFromCharset(getAttributeValue(BugzillaReportElement.SHORT_DESC));
+		return getAttributeValue(BugzillaReportElement.SHORT_DESC);
 	}
 
 	public void setSummary(String summary) {

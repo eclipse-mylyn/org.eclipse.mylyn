@@ -12,8 +12,6 @@
 package org.eclipse.mylar.provisional.bugzilla.core;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +21,7 @@ import java.util.List;
  */
 public abstract class AbstractRepositoryReport extends AttributeContainer implements Serializable {
 
-	private String charset = null;
+//	private String charset = null;
 
 	private int reportID;
 
@@ -80,13 +78,13 @@ public abstract class AbstractRepositoryReport extends AttributeContainer implem
 		return repositoryURL;
 	}
 
-	public String getCharset() {
-		return charset;
-	}
-
-	public void setCharset(String charset) {
-		this.charset = charset;
-	}
+//	public String getCharset() {
+//		return charset;
+//	}
+//
+//	public void setCharset(String charset) {
+//		this.charset = charset;
+//	}
 
 	public boolean hasChanges() {
 		return hasChanges ;
@@ -163,17 +161,4 @@ public abstract class AbstractRepositoryReport extends AttributeContainer implem
 	}
 
 	public abstract AbstractAttributeFactory getAttributeFactory();
-	
-	protected String decodeStringFromCharset(String string) {
-		String decoded = string;
-		if (charset != null && string != null && Charset.availableCharsets().containsKey(charset)) {
-			try {
-				decoded = new String(string.getBytes(), charset);
-			} catch (UnsupportedEncodingException e) {
-				// ignore
-			}
-		}
-		return decoded;
-	}
-
 }

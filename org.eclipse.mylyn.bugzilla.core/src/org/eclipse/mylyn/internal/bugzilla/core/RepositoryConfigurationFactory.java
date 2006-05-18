@@ -47,11 +47,17 @@ public class RepositoryConfigurationFactory {
 		return instance;
 	}
 
-	public RepositoryConfiguration getConfiguration(String repositoryUrl, String userName, String password) throws IOException {
+	public RepositoryConfiguration getConfiguration(String repositoryUrl, String userName, String password, String encoding) throws IOException {
 		String configUrlStr = repositoryUrl + CONFIG_RDF_URL;
 		configUrlStr = BugzillaRepositoryUtil.addCredentials(configUrlStr, userName, password);
-		URLConnection c = new URL(configUrlStr).openConnection();
-		BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
+		URLConnection connection = new URL(configUrlStr).openConnection();
+		
+		BufferedReader in;
+		if (encoding != null) {
+			in = new BufferedReader(new InputStreamReader(connection.getInputStream(), encoding));
+		} else {
+			in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		}		
 
 		SaxConfigurationContentHandler contentHandler = new SaxConfigurationContentHandler();
 

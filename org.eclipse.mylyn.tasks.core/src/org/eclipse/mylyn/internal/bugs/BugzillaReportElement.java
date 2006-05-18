@@ -118,7 +118,7 @@ public class BugzillaReportElement {
 			// get the bug report
 			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, hit.getRepositoryUrl());
 			Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
-			bug = BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, hit.getId());
+			bug = BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, repository.getCharacterEncoding(), hit.getId());
 		}
 		return bug;
 	}

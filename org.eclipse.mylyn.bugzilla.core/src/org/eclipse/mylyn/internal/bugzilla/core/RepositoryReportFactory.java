@@ -95,26 +95,33 @@ public class RepositoryReportFactory {
 	/**
 	 * Bugzilla specific, to be generalized TODO: Based on repository kind use
 	 * appropriate loader
+	 * @param characterEncoding TODO
 	 */
-	public void populateReport(BugzillaReport bugReport, String repositoryUrl, String userName, String password) throws IOException, LoginException {
+	public void populateReport(BugzillaReport bugReport, String repositoryUrl, String userName, String password, String characterEncoding)
+			throws IOException, LoginException {
 		SaxBugReportContentHandler contentHandler = new SaxBugReportContentHandler(bugReport);
 
 		String xmlBugReportUrl = repositoryUrl + SHOW_BUG_CGI_XML + bugReport.getId();
 
 		URL serverURL = new URL(BugzillaRepositoryUtil.addCredentials(xmlBugReportUrl, userName, password));
 		URLConnection connection = serverURL.openConnection();
-		String contentEncoding = connection.getContentEncoding();
-		if (contentEncoding != null) {
-			String charsetFromContentType = BugzillaRepositoryUtil.getCharsetFromString(contentEncoding);
-			if (charsetFromContentType != null) {
-				bugReport.setCharset(charsetFromContentType);
-			}
-		} else {
-			// TODO: get from repository preferences
-			bugReport.setCharset(BugzillaPlugin.ENCODING_UTF_8);
-		}
+		// String contentEncoding = connection.getContentEncoding();
+		// if (contentEncoding != null) {
+		// String charsetFromContentType =
+		// BugzillaRepositoryUtil.getCharsetFromString(contentEncoding);
+		// if (charsetFromContentType != null) {
+		// bugReport.setCharset(charsetFromContentType);
+		// }
+		// } else {
+		// bugReport.setCharset(BugzillaPlugin.ENCODING_UTF_8);
+		// }
 
-		BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		BufferedReader in;
+		if (characterEncoding != null) {
+			in = new BufferedReader(new InputStreamReader(connection.getInputStream(), characterEncoding));
+		} else {
+			in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		}
 
 		try {
 			XMLReader reader = XMLReaderFactory.createXMLReader();
@@ -127,7 +134,7 @@ public class RepositoryReportFactory {
 			}
 
 		} catch (SAXException e) {
-			if(e.getMessage().equals(IBugzillaConstants.ERROR_INVALID_USERNAME_OR_PASSWORD)) {
+			if (e.getMessage().equals(IBugzillaConstants.ERROR_INVALID_USERNAME_OR_PASSWORD)) {
 				throw new LoginException(e.getMessage());
 			} else {
 				throw new IOException(e.getMessage());

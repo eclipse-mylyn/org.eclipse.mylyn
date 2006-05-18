@@ -829,13 +829,15 @@ public class BugzillaRepositoryUtil {
 		return null;
 	}
 
-	public static String decodeStringFromCharset(String string, String charset) throws UnsupportedEncodingException {
-			String decoded = string;
-			if (charset != null && string != null && Charset.availableCharsets().containsKey(charset)) {
-				decoded = new String(string.getBytes(), charset);	
-			} 
-			return decoded;
-		}
+	// public static String decodeStringFromCharset(String string, String
+	// charset) throws UnsupportedEncodingException {
+	// String decoded = string;
+	// if (charset != null && string != null &&
+	// Charset.availableCharsets().containsKey(charset)) {
+	// decoded = new String(string.getBytes(), charset);
+	// }
+	// return decoded;
+	//		}
 }
 
 /**
