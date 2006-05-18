@@ -340,6 +340,16 @@
      </colorDefinition>
      <colorDefinition
            categoryId="org.eclipse.mylar.tasklist.ui.presentation"
+           id="org.eclipse.mylar.tasklist.ui.colors.foreground.thisweek.scheduled"
+           isEditable="true"
+           label="Tasks - Scheduled for This Week"
+           value="0,0,128">  
+         <description>
+            Text color for tasks scheduled for this week
+         </description>
+     </colorDefinition>
+     <colorDefinition
+           categoryId="org.eclipse.mylar.tasklist.ui.presentation"
            id="org.eclipse.mylar.tasklist.ui.colors.foreground.today.completed"
            isEditable="true"
            label="Tasks - Completed Today"

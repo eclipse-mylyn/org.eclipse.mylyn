@@ -46,6 +46,8 @@ public class TaskListColorsAndFonts {
 
 	public static final String THEME_COLOR_TASK_OVERDUE = "org.eclipse.mylar.tasklist.ui.colors.foreground.overdue"; 
 
+	public static final String THEME_COLOR_TASK_THISWEEK_SCHEDULED = "org.eclipse.mylar.tasklist.ui.colors.foreground.thisweek.scheduled"; 
+		
 	public static final String THEME_COLOR_TASK_TODAY_SCHEDULED = "org.eclipse.mylar.tasklist.ui.colors.foreground.today.scheduled"; 
 	
 	public static final String THEME_COLOR_TASK_TODAY_COMPLETED = "org.eclipse.mylar.tasklist.ui.colors.foreground.today.completed"; 
