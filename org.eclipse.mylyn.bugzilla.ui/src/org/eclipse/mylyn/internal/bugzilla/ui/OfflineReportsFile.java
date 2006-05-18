@@ -224,9 +224,9 @@ public class OfflineReportsFile {
 	}
 
 	public static BugzillaReport findBug(String repositoryUrl, int bugId) {
-		int location = BugzillaUiPlugin.getDefault().getOfflineReports().find(repositoryUrl, bugId);
+		int location = BugzillaUiPlugin.getDefault().getOfflineReportsFile().find(repositoryUrl, bugId);
 		if (location != -1) {
-			return BugzillaUiPlugin.getDefault().getOfflineReports().elements().get(location);
+			return BugzillaUiPlugin.getDefault().getOfflineReportsFile().elements().get(location);
 		}
 		return null;
 	}

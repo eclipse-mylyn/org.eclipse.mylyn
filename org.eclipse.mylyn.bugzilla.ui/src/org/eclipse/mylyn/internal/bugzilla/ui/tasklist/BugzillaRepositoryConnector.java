@@ -94,11 +94,11 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private List<String> supportedVersions;
 
-	private OfflineReportsFile offlineReportsFile;
+//	private OfflineReportsFile offlineReportsFile;
 
 	public BugzillaRepositoryConnector() {
 		super();
-		offlineReportsFile = BugzillaUiPlugin.getDefault().getOfflineReports();
+//		offlineReportsFile = BugzillaUiPlugin.getDefault().getOfflineReportsFile();
 	}
 
 	public String getLabel() {
@@ -431,7 +431,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	private void internalSaveOffline(final BugzillaReport report, final boolean forceSynch) {
 		// If there is already an offline report for this bug, update the file.
 		if (((AbstractRepositoryReport) report).isSavedOffline()) {
-			offlineReportsFile.update();
+			BugzillaUiPlugin.getDefault().getOfflineReportsFile().update();
 		} else {
 			try {
 				// int index = -1;
@@ -447,7 +447,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				// // identical id.");
 				// // return;
 				// }
-				BugzillaOfflineStatus offlineStatus = offlineReportsFile.add(report, false);
+				BugzillaOfflineStatus offlineStatus = BugzillaUiPlugin.getDefault().getOfflineReportsFile().add(report, false);
 				((AbstractRepositoryReport) report).setOfflineState(true);
 				// saveForced forced to false (hack)
 				offlineStatusChange(report, offlineStatus, forceSynch);
@@ -460,7 +460,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	public static List<BugzillaReport> getOfflineBugs() {
-		OfflineReportsFile file = BugzillaUiPlugin.getDefault().getOfflineReports();
+		OfflineReportsFile file = BugzillaUiPlugin.getDefault().getOfflineReportsFile();
 		return file.elements();
 	}
 
@@ -469,7 +469,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		offlineStatusChange(bug, BugzillaOfflineStatus.DELETED, false);
 		ArrayList<BugzillaReport> bugList = new ArrayList<BugzillaReport>();
 		bugList.add(bug);
-		BugzillaUiPlugin.getDefault().getOfflineReports().remove(bugList);
+		BugzillaUiPlugin.getDefault().getOfflineReportsFile().remove(bugList);
 	}
 
 	@Override

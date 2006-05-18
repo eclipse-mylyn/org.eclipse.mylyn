@@ -28,7 +28,6 @@ import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfigurationFactory;
 import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaResultEditorMatchAdapter;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.update.internal.ui.UpdateUI;
@@ -137,45 +136,45 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	}
 
 	private void readOfflineReportsFile() {
-		IPath offlineReportsPath = getOfflineReportsFile();
+		IPath offlineReportsPath = getOfflineReportsFilePath();
 
 		try {
 			offlineReportsFile = new OfflineReportsFile(offlineReportsPath.toFile());
 		} catch (Exception e) {
-			MylarStatusHandler
-					.log(e,
+			MylarStatusHandler.log(e,
 							"Could not restore offline Bugzilla reports file, creating new one (possible version incompatibility)");
-			// logAndShowExceptionDetailsDialog(e, "occurred while restoring
-			// saved offline Bugzilla reports.",
-			// "Bugzilla Offline Reports Error");
-			if (offlineReportsPath.toFile().delete()) {
-				try {
-					offlineReportsFile = new OfflineReportsFile(offlineReportsPath.toFile());
-				} catch (Exception e1) {
-					MylarStatusHandler.fail(e, "could not reset offline Bugzilla reports file", true);
-				}
-			} else {
-				MylarStatusHandler.fail(null, "reset of Bugzilla offline reports file failed", true);
+			offlineReportsPath.toFile().delete();
+//			if (offlineReportsPath.toFile().delete()) {
+			try {
+				offlineReportsFile = new OfflineReportsFile(offlineReportsPath.toFile());
+			} catch (Exception e1) {
+				MylarStatusHandler.fail(e, "could not reset offline Bugzilla reports file", true);
 			}
+//			} else {
+//				MylarStatusHandler.fail(null, "reset of Bugzilla offline reports file failed", true);
+//			}
 		}
 	}
 
 	/**
 	 * Returns the path to the file cacheing the offline bug reports.
 	 */
-	private IPath getOfflineReportsFile() {
+	private IPath getOfflineReportsFilePath() {
 		IPath stateLocation = Platform.getStateLocation(BugzillaPlugin.getDefault().getBundle());
 		IPath configFile = stateLocation.append("offlineReports");
 		return configFile;
 	}
 
-	public OfflineReportsFile getOfflineReports() {
+	public OfflineReportsFile getOfflineReportsFile() {
+		if (offlineReportsFile == null) {
+			MylarStatusHandler.fail(null, "Offline reports file not created, try restarting.", true);
+		} 
 		return offlineReportsFile;
 	}
 
-	public List<BugzillaReport> getSavedBugReports() {
-		return offlineReportsFile.elements();
-	}
+//	public List<BugzillaReport> getSavedBugReports() {
+//		return offlineReportsFile.elements();
+//	}
 
 	/**
 	 * Returns the shared instance.

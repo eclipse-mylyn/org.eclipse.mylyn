@@ -87,19 +87,19 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 	private BugzillaReport getCurrentBug(TaskRepository repository, Proxy proxySettings, int id)
 			throws IOException, GeneralSecurityException {
 		// Look among the offline reports for a bug with the given id.
-		OfflineReportsFile reportsFile = BugzillaUiPlugin.getDefault().getOfflineReports();
-		int offlineId = reportsFile.find(repository.getUrl(), id);
-
-		// If an offline bug was found, return it if possible.
-		if (offlineId != -1) {
-			IBugzillaBug bug = reportsFile.elements().get(offlineId);
-			if (bug instanceof BugzillaReport) {
-				return (BugzillaReport) bug;
+		OfflineReportsFile reportsFile = BugzillaUiPlugin.getDefault().getOfflineReportsFile();
+		if (reportsFile != null) {
+			int offlineId = reportsFile.find(repository.getUrl(), id);
+	
+			// If an offline bug was found, return it if possible.
+			if (offlineId != -1) {
+				IBugzillaBug bug = reportsFile.elements().get(offlineId);
+				if (bug instanceof BugzillaReport) {
+					return (BugzillaReport) bug;
+				}
 			}
-		}
-
-		// If a suitable offline report was not found, try to get one from the
-		// server.
+		} 
+		// If a suitable offline report was not found, get it from the server
 		return BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, id);
 	}
 
