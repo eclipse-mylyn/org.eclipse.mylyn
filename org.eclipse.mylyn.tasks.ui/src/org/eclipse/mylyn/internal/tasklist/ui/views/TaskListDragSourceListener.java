@@ -20,6 +20,8 @@ import org.eclipse.swt.dnd.DragSourceListener;
  */
 class TaskListDragSourceListener implements DragSourceListener {
 
+	static final String ID_DATA_TASK_DRAG = "task-drag";
+
 	static final String DELIM = ", ";
 
 	private final TaskListView view;
@@ -38,7 +40,7 @@ class TaskListDragSourceListener implements DragSourceListener {
 	}
 
 	public void dragSetData(DragSourceEvent event) {
-		event.data = "task-drag";
+		event.data = ID_DATA_TASK_DRAG;
 		// StructuredSelection selection = (StructuredSelection)
 		// this.view.getViewer().getSelection();
 		// String data = "task-drag";

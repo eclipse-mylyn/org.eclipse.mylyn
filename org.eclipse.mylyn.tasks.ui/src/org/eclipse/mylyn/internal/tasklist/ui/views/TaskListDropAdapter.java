@@ -47,13 +47,12 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 	@Override
 	public boolean performDrop(Object data) {
-
 		Object currentTarget = getCurrentTarget();
 		List<ITask> tasksToMove = new ArrayList<ITask>();
-
+		
 		if (isUrl(data) && createTaskFromUrl(data)) {
 			tasksToMove.add(newTask);
-		} else {
+		} else if (TaskListDragSourceListener.ID_DATA_TASK_DRAG.equals(data)){
 			ISelection selection = ((TreeViewer) getViewer()).getSelection();
 			for (Object selectedObject : ((IStructuredSelection) selection).toList()) {
 				ITask toMove = null;
@@ -66,7 +65,9 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					tasksToMove.add(toMove);
 				}
 			}
-		}
+		} else if (data instanceof String && createTaskFromString((String)data)) {
+			tasksToMove.add(newTask);
+		} 
 
 		for (ITask task : tasksToMove) {
 			if (currentTarget instanceof TaskCategory) {
@@ -115,7 +116,6 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 	 * @return true if task succesfully created, false otherwise
 	 */
 	public boolean createTaskFromUrl(Object data) {
-
 		if (!(data instanceof String))
 			return false;
 
@@ -153,9 +153,19 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 		// NOTE: setting boolean param as false so that we go directly to the browser tab
 		// as with a previously-created task
 		TaskUiUtil.openEditor(newTask, false);
-
 		return true;
+	}
+	
+	public boolean createTaskFromString(String title) {
+		newTask = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), title, true);
 
+		if (newTask == null) {
+			return false;
+		} else {
+			newTask.setPriority(Task.PriorityLevel.P3.toString());
+			TaskUiUtil.openEditor(newTask, false);
+			return true;
+		}
 	}
 
 	@Override
