@@ -22,6 +22,7 @@ import java.util.TimerTask;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -41,7 +42,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 	private static final String TITLE_TASKLIST_BACKUP = "Tasklist Backup";
 
 	private static final String BACKUP_JOB_NAME = "Scheduled task data backup";
-	
+
 	public static final String BACKUP_FAILURE_MESSAGE = "Could not backup task data. Check backup preferences.\n";
 
 	private static final long SECOND = 1000;
@@ -152,29 +153,24 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 
 		@Override
 		public void run() {
-			long lastBackup = MylarTaskListPlugin.getMylarCorePrefs().getLong(TaskListPreferenceConstants.BACKUP_LAST);
-			int days = MylarTaskListPlugin.getMylarCorePrefs().getInt(TaskListPreferenceConstants.BACKUP_SCHEDULE);
-			long waitPeriod = days * DAY;
-			final long now = new Date().getTime();
+			if (!Platform.isRunning()) {
+				return;
+			} else {
+				long lastBackup = MylarTaskListPlugin.getMylarCorePrefs().getLong(
+						TaskListPreferenceConstants.BACKUP_LAST);
+				int days = MylarTaskListPlugin.getMylarCorePrefs().getInt(TaskListPreferenceConstants.BACKUP_SCHEDULE);
+				long waitPeriod = days * DAY;
+				final long now = new Date().getTime();
 
-			if ((now - lastBackup) > waitPeriod) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						// try {
-						// MessageDialog.openQuestion(shell, title,
-						// message);
-						backupNow(false);
-						// } catch (InvocationTargetException e) {
-						// MylarStatusHandler.fail(e, BACKUP_FAILURE_MESSAGE +
-						// e.getCause().getMessage(), true);
-						// return;
-						// } catch (IOException e) {
-						// MylarStatusHandler.fail(e, BACKUP_FAILURE_MESSAGE +
-						// e.getCause().getMessage(), true);
-						// return;
-						// }
-					}
-				});
+				if ((now - lastBackup) > waitPeriod) {
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							backupNow(false);
+							;
+							// }
+						}
+					});
+				}
 			}
 		}
 	}
