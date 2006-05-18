@@ -32,8 +32,8 @@ import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.provisional.tasklist.ITaskListChangeListener;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.team.internal.ccvs.core.mapping.CVSActiveChangeSetCollector;
 import org.eclipse.team.internal.ccvs.ui.CVSUIPlugin;
-import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
 import org.eclipse.team.internal.core.subscribers.IChangeSetChangeListener;
 
@@ -69,7 +69,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 		}
 	};
 
-	private ActiveChangeSetManager collector;
+	private CVSActiveChangeSetCollector collector;
 
 	private Map<String, MylarActiveChangeSet> activeChangeSets = new HashMap<String, MylarActiveChangeSet>();
 
@@ -143,7 +143,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 	private boolean isEnabled = false;
 
 	public MylarChangeSetManager() {
-		collector = CVSUIPlugin.getPlugin().getChangeSetManager();
+		collector = (CVSActiveChangeSetCollector)CVSUIPlugin.getPlugin().getChangeSetManager();
 	}
 
 	public void enable() {
@@ -222,7 +222,10 @@ public class MylarChangeSetManager implements IMylarContextListener {
 				if (!collector.contains(contextChangeSet)) {
 					collector.add(contextChangeSet);
 				}
-				
+//				collector.makeDefault(contextChangeSet);
+//				IdeUiUtil.forceSynchronizeViewUpdate();
+//				DiffChangeEvent event = new DiffChangeEvent(contextChangeSet.getDiffTree());
+//				collector.diffsChanged(event, new NullProgressMonitor());
 			}
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "could not update change set", false);

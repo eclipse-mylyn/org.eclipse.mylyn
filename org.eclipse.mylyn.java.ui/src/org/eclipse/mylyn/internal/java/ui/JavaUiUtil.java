@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Apr 6, 2005
- */
+
 package org.eclipse.mylar.internal.java.ui;
 
 import java.util.HashSet;
@@ -33,10 +31,6 @@ import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.ui.MylarUiPrefContstants;
-import org.eclipse.mylar.provisional.core.IMylarElement;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -46,25 +40,10 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 
+/**
+ * @author Mik Kersten
+ */
 public class JavaUiUtil {
-
-	public static Font getFontForElement(IJavaElement element) {
-		// if (MylarPlugin.getTaskscapeManager().getActiveNode() == null) return
-		// null;
-		// IJavaElement activeElement =
-		// JavaCore.create(MylarPlugin.getTaskscapeManager().getActiveNode().getElementHandle());
-		// if (activeElement == null) return null;
-		//    
-		if (element == null)
-			return null;
-		IMylarElement info = MylarPlugin.getContextManager().getElement(element.getHandleIdentifier());
-		if (info.getInterest().isLandmark() && !info.getInterest().isPropagated()) {
-			return MylarUiPrefContstants.BOLD;
-		}
-		// if (info.getDegreeOfInterest().getDegreeOfInterest().isPredicted())
-		// return UiUtil.ITALIC;
-		return null;
-	}
 
 	private static final Point SMALL_SIZE = new Point(16, 16);
 
@@ -158,23 +137,6 @@ public class JavaUiUtil {
 			return m.getDeclaringType().getFullyQualifiedName() + "." + m.getElementName();
 	}
 
-	// public static void openFile(IPath path) {
-	// // PathfinderView.userActionListener.incrementNumPathfinderselection();
-	// final IFile ir = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-	// if (ir != null && ir.exists()) {
-	// try {
-	// IEditorPart editorPart= IDE.openEditor(
-	// PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(),
-	// ir, true);
-	// editorPart.
-	// } catch (CoreException ce) {
-	// ce.printStackTrace();
-	// }
-	// } else {
-	// MylarPlugin.fail(null, "Couldn't open pathfile: " + path.toString(),
-	// true);
-	// }
-	// }
 	public static void closeActiveEditors(boolean javaOnly) {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (page != null) {

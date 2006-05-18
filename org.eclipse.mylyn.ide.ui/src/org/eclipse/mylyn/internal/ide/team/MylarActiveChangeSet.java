@@ -29,15 +29,15 @@ import org.eclipse.team.core.TeamException;
 import org.eclipse.team.core.diff.IDiff;
 import org.eclipse.team.core.diff.provider.ThreeWayDiff;
 import org.eclipse.team.core.mapping.provider.ResourceDiff;
+import org.eclipse.team.internal.ccvs.core.mapping.CVSActiveChangeSet;
 import org.eclipse.team.internal.ccvs.core.mapping.ChangeSetResourceMapping;
-import org.eclipse.team.internal.core.subscribers.ActiveChangeSet;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 import org.osgi.service.prefs.Preferences;
 
 /**
  * @author Mik Kersten
  */
-public class MylarActiveChangeSet extends ActiveChangeSet implements IAdaptable {
+public class MylarActiveChangeSet extends CVSActiveChangeSet implements IAdaptable {
 
 	private static final String PREFIX_HTTP = "http://";
 
