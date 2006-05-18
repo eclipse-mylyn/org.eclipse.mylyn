@@ -323,7 +323,7 @@
            id="org.eclipse.mylar.tasklist.ui.colors.foreground.overdue"
            isEditable="true"
            label="Tasks - Overdue"
-           value="167,10,26"> 
+           value="198,4,38"> 
          <description>
             Text color for overdue tasks.
          </description>
@@ -333,7 +333,7 @@
            id="org.eclipse.mylar.tasklist.ui.colors.foreground.today.scheduled"
            isEditable="true"
            label="Tasks - Scheduled for Today"
-           value="30,14,231">  
+           value="32,21,223">  
          <description>
             Text color for tasks scheduled for today.
          </description>
@@ -343,7 +343,7 @@
            id="org.eclipse.mylar.tasklist.ui.colors.foreground.thisweek.scheduled"
            isEditable="true"
            label="Tasks - Scheduled for This Week"
-           value="0,0,128">  
+           value="0,0,0">  
          <description>
             Text color for tasks scheduled for this week
          </description>
