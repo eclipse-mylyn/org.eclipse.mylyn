@@ -25,7 +25,7 @@ import org.eclipse.mylar.provisional.core.InteractionEvent;
  * TODO: make package-visible
  */
 public class DegreeOfInterest implements IDegreeOfInterest {
-
+ 
 	private List<InteractionEvent> events = new ArrayList<InteractionEvent>();
 
 	private Map<InteractionEvent.Kind, InteractionEvent> collapsedEvents = new HashMap<InteractionEvent.Kind, InteractionEvent>();
