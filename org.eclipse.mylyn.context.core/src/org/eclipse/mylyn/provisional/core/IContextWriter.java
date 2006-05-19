@@ -9,10 +9,12 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.core;
+package org.eclipse.mylar.provisional.core;
 
 import java.io.IOException;
 import java.io.OutputStream;
+
+import org.eclipse.mylar.internal.core.MylarContext;
 
 /**
  * @author Mik Kersten

@@ -23,6 +23,8 @@ import java.util.Locale;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.SaxContextReader;
 import org.eclipse.mylar.internal.core.util.SaxContextWriter;
+import org.eclipse.mylar.provisional.core.IContextReader;
+import org.eclipse.mylar.provisional.core.IContextWriter;
 
 /**
  * @author Mik Kersten

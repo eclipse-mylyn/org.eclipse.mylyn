@@ -28,10 +28,10 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.eclipse.mylar.internal.core.IContextWriter;
 import org.eclipse.mylar.internal.core.MylarContext;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.XmlStringConverter;
+import org.eclipse.mylar.provisional.core.IContextWriter;
 import org.eclipse.mylar.provisional.core.InteractionEvent;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

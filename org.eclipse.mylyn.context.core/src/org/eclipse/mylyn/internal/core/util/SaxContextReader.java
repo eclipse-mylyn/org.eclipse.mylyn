@@ -14,8 +14,8 @@ package org.eclipse.mylar.internal.core.util;
 import java.io.File;
 import java.io.FileInputStream;
 
-import org.eclipse.mylar.internal.core.IContextReader;
 import org.eclipse.mylar.internal.core.MylarContext;
+import org.eclipse.mylar.provisional.core.IContextReader;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;

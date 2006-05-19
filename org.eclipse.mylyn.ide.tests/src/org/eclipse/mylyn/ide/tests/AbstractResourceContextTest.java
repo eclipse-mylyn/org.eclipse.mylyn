@@ -16,7 +16,7 @@ import org.eclipse.mylar.internal.core.MylarContext;
 import org.eclipse.mylar.internal.core.MylarContextManager;
 import org.eclipse.mylar.internal.core.ScalingFactors;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
-import org.eclipse.mylar.internal.ide.ResourceSelectionMonitor;
+import org.eclipse.mylar.internal.ide.ResourceInteractionMonitor;
 import org.eclipse.mylar.internal.ide.ResourceStructureBridge;
 import org.eclipse.mylar.internal.ide.ui.NavigatorRefreshListener;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
@@ -30,7 +30,7 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 
 	protected MylarContextManager manager = MylarPlugin.getContextManager();
 
-	protected ResourceSelectionMonitor monitor = new ResourceSelectionMonitor();
+	protected ResourceInteractionMonitor monitor = new ResourceInteractionMonitor();
 
 	protected ResourceStructureBridge structureBridge = new ResourceStructureBridge();
 

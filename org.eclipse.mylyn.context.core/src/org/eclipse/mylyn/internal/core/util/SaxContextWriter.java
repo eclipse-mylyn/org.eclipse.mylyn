@@ -21,9 +21,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.eclipse.mylar.internal.core.IContextWriter;
 import org.eclipse.mylar.internal.core.MylarContext;
 import org.eclipse.mylar.internal.core.MylarContextExternalizer;
+import org.eclipse.mylar.provisional.core.IContextWriter;
 import org.eclipse.mylar.provisional.core.InteractionEvent;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DTDHandler;

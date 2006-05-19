@@ -26,7 +26,7 @@ import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
  */
 public class InterestDecoratorLightweight implements ILightweightLabelDecorator {
 
-	private boolean doiTextDecorationEnabled = false;
+	private boolean doiTextDecorationEnabled = true;
 	
 	public InterestDecoratorLightweight() {
 		super();
@@ -61,7 +61,7 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
 					decoration.setFont(MylarUiPrefContstants.BOLD);
 				}
 				if (doiTextDecorationEnabled) {
-					decoration.addSuffix(" {doi:" + node.getInterest().getValue() + "}");
+					decoration.addSuffix(" {" + node.getInterest().getValue() + "}");
 				}
 			}
 		} catch (Exception e) {

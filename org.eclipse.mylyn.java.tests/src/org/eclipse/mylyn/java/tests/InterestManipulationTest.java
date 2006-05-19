@@ -21,7 +21,7 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.internal.ide.ResourceSelectionMonitor;
+import org.eclipse.mylar.internal.ide.ResourceInteractionMonitor;
 import org.eclipse.mylar.internal.ide.ResourceStructureBridge;
 import org.eclipse.mylar.internal.ui.actions.AbstractInterestManipulationAction;
 import org.eclipse.mylar.provisional.core.IMylarElement;
@@ -73,7 +73,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		file.create(null, true, null);
 		// IFile file = (IFile)javaCu.getAdapter(IResource.class);
 		ResourceStructureBridge bridge = new ResourceStructureBridge();
-		new ResourceSelectionMonitor().selectionChanged(part, new StructuredSelection(file));
+		new ResourceInteractionMonitor().selectionChanged(part, new StructuredSelection(file));
 
 		IMylarElement fileElement = MylarPlugin.getContextManager().getElement(bridge.getHandleIdentifier(file));
 		IMylarElement projectElement = MylarPlugin.getContextManager().getElement(

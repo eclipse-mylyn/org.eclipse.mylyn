@@ -28,7 +28,7 @@ import org.eclipse.ui.part.EditorPart;
 /**
  * @author Mik Kersten
  */
-public class ResourceSelectionMonitor extends AbstractUserInteractionMonitor {
+public class ResourceInteractionMonitor extends AbstractUserInteractionMonitor {
 
 	@Override
 	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection) {

@@ -43,7 +43,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 
 	private MylarEditorManager editorManager = new MylarEditorManager();
 
-	private ResourceSelectionMonitor resourceSelectionMonitor;
+	private ResourceInteractionMonitor resourceInteractionMonitor;
 
 	private static MylarIdePlugin plugin;
 
@@ -85,8 +85,10 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 					}
 					MylarPlugin.getContextManager().addListener(navigatorRefreshListener);
 
-					resourceSelectionMonitor = new ResourceSelectionMonitor();
-					MylarPlugin.getDefault().getSelectionMonitors().add(resourceSelectionMonitor);
+					resourceInteractionMonitor = new ResourceInteractionMonitor();
+//					Display.getDefault().addFilter(SWT.Selection, resourceInteractionMonitor);
+					
+					MylarPlugin.getDefault().getSelectionMonitors().add(resourceInteractionMonitor);
 					MylarPlugin.getContextManager().addListener(editorManager);
 
 					ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeMonitor,
@@ -146,7 +148,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 			super.stop(context);
 			plugin = null;
 			MylarPlugin.getContextManager().removeListener(editorManager);
-			MylarPlugin.getDefault().getSelectionMonitors().remove(resourceSelectionMonitor);
+			MylarPlugin.getDefault().getSelectionMonitors().remove(resourceInteractionMonitor);
 			MylarPlugin.getContextManager().removeListener(navigatorRefreshListener);
 			changeSetManager.disable();
 
