@@ -1454,4 +1454,9 @@ public class TaskListView extends ViewPart {
 	public TaskArchiveFilter getArchiveFilter() {
 		return FILTER_ARCHIVE;
 	}
+
+	
+	public void setPriorityButtonEnabled(boolean enabled) {
+		filterOnPriority.setEnabled(enabled);
+	}
 }
