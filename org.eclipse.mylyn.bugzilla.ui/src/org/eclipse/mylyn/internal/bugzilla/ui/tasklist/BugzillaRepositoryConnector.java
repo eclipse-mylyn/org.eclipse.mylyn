@@ -401,17 +401,18 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			String handle = AbstractRepositoryTask.getHandle(bugReport.getRepositoryUrl(), bugReport.getId());
 
 			ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
+			if (task != null) {
+				Set<AbstractRepositoryQuery> queriesWithHandle = MylarTaskListPlugin.getTaskListManager().getTaskList()
+						.getQueriesForHandle(task.getHandleIdentifier());
+				synchronize(queriesWithHandle, null, Job.SHORT, 0);
 
-			Set<AbstractRepositoryQuery> queriesWithHandle = MylarTaskListPlugin.getTaskListManager().getTaskList()
-					.getQueriesForHandle(task.getHandleIdentifier());
-			synchronize(queriesWithHandle, null, Job.SHORT, 0);
-
-			if (task instanceof AbstractRepositoryTask) {
-				synchronize((AbstractRepositoryTask) task, true, null);
+				if (task instanceof AbstractRepositoryTask) {
+					synchronize((AbstractRepositoryTask) task, true, null);
+				}
 			}
 
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+ 			throw new RuntimeException(e);
 		}
 	}
 
