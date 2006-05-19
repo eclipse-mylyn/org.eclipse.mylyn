@@ -19,9 +19,11 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.internal.tasklist.ui.AbstractTaskListFilter;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.internal.ui.TaskListInterestFilter;
+import org.eclipse.mylar.internal.ui.TaskListInterestSorter;
 import org.eclipse.mylar.provisional.ui.InterestFilter;
 
 /**
@@ -35,7 +37,11 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction {
 	
 	private TaskListInterestFilter taskListInterestFilter = new TaskListInterestFilter();
 	
-	protected Set<AbstractTaskListFilter> previousFilters = new HashSet<AbstractTaskListFilter>();
+	private TaskListInterestSorter taskListInterestSorter = new TaskListInterestSorter();
+	
+	private Set<AbstractTaskListFilter> previousFilters = new HashSet<AbstractTaskListFilter>();
+	
+	private ViewerSorter previousSorter;
 	
 	public ApplyMylarToTaskListAction() {
 		super(new InterestFilter());
@@ -53,7 +59,9 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction {
 
 	@Override
 	protected boolean installInterestFilter(StructuredViewer viewer) {
-		previousFilters = TaskListView.getDefault().getFilters();
+		previousSorter = TaskListView.getDefault().getViewer().getSorter();
+		TaskListView.getDefault().getViewer().setSorter(taskListInterestSorter);
+		previousFilters = new HashSet<AbstractTaskListFilter>(TaskListView.getDefault().getFilters());
 		TaskListView.getDefault().clearFilters(true);
 		TaskListView.getDefault().addFilter(taskListInterestFilter);
 		TaskListView.getDefault().refreshAndFocus();
@@ -62,6 +70,7 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction {
 
 	@Override
 	protected void uninstallInterestFilter(StructuredViewer viewer) {
+		TaskListView.getDefault().getViewer().setSorter(previousSorter);
 		TaskListView.getDefault().removeFilter(taskListInterestFilter);
 		for (AbstractTaskListFilter filter : previousFilters) {
 			TaskListView.getDefault().addFilter(filter);
