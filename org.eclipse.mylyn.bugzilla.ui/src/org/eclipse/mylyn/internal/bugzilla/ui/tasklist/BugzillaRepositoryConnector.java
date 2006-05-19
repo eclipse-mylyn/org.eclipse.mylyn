@@ -800,8 +800,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					}
 				}
 			}
-		}
-		System.err.println("num changed:"+changedTasks.size());
+		}		
 		return changedTasks;
 	}
 
