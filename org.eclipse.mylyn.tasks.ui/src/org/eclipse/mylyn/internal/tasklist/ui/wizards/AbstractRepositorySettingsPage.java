@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.tasklist.ui.wizards;
 
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.TimeZone;
 
 import org.eclipse.jface.layout.GridDataFactory;
@@ -65,7 +66,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	private Button defaultEncoding;
 
-	private Combo timeZones;
+	private Combo timeZonesCombo;
 
 	public AbstractRepositorySettingsPage(String title, String description) {
 		super(title);
@@ -109,13 +110,15 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 		Label encodingLabel = new Label(container, SWT.NONE);
 		encodingLabel.setText("Repository time zone: ");
-		timeZones = new Combo(container, SWT.READ_ONLY);
-		for (String zone : TimeZone.getAvailableIDs()) {
-			timeZones.add(zone);
+		timeZonesCombo = new Combo(container, SWT.READ_ONLY);
+		String[] timeZoneIds = TimeZone.getAvailableIDs();
+		Arrays.sort(timeZoneIds);
+		for (String zone : timeZoneIds) {
+			timeZonesCombo.add(zone);
 		}
 		if (repository != null) {
-			if (timeZones.indexOf(repository.getTimeZoneId()) > -1) {
-				timeZones.select(timeZones.indexOf(repository.getTimeZoneId()));
+			if (timeZonesCombo.indexOf(repository.getTimeZoneId()) > -1) {
+				timeZonesCombo.select(timeZonesCombo.indexOf(repository.getTimeZoneId()));
 			}
 		}
 
@@ -277,7 +280,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	}
 
 	public String getTimeZoneId() {
-		return timeZones.getItem(timeZones.getSelectionIndex());
+		return timeZonesCombo.getItem(timeZonesCombo.getSelectionIndex());
 	}
 
 }
