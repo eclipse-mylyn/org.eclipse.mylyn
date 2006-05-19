@@ -360,7 +360,7 @@ public class TaskListManagerTest extends TestCase {
 		query.setLastRefresh(oldDate);
 		assertEquals("repositoryUrl", query.getRepositoryUrl());
 		assertEquals("queryUrl", query.getQueryUrl());
-		assertEquals(time, query.getLastRefresh().getTime());
+		assertEquals(time, query.getLastSynchronized().getTime());
 		manager.getTaskList().addQuery(query);
 		manager.saveTaskList();
 		assertNotNull(manager.getTaskList());
@@ -372,7 +372,7 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(query.getQueryUrl(), readQuery.getQueryUrl());
 		assertEquals(query.getRepositoryUrl(), readQuery.getRepositoryUrl());
 		assertEquals("repositoryUrl", readQuery.getRepositoryUrl());
-		assertEquals(time, readQuery.getLastRefresh().getTime());
+		assertEquals(time, readQuery.getLastSynchronized().getTime());
 	}
 
 	public void testArchiveRepositoryTaskExternalization() {

@@ -14,11 +14,17 @@ package org.eclipse.mylar.internal.bugzilla.core;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 
 import javax.security.auth.login.LoginException;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
@@ -95,16 +101,31 @@ public class RepositoryReportFactory {
 	/**
 	 * Bugzilla specific, to be generalized TODO: Based on repository kind use
 	 * appropriate loader
-	 * @param characterEncoding TODO
+	 * 
+	 * @param proxyConfig
+	 *            TODO
+	 * @param characterEncoding
+	 *            TODO
+	 * @throws IOException
+	 * @throws NoSuchAlgorithmException
+	 * @throws KeyManagementException
+	 * @throws NoSuchAlgorithmException
+	 * @throws KeyManagementException
 	 */
-	public void populateReport(BugzillaReport bugReport, String repositoryUrl, String userName, String password, String characterEncoding)
-			throws IOException, LoginException {
+	public void populateReport(BugzillaReport bugReport, String repositoryUrl, Proxy proxySettings, String userName,
+			String password, String characterEncoding) throws LoginException, KeyManagementException,
+			NoSuchAlgorithmException, IOException {
+
+		BufferedReader in = null;
 		SaxBugReportContentHandler contentHandler = new SaxBugReportContentHandler(bugReport);
 
 		String xmlBugReportUrl = repositoryUrl + SHOW_BUG_CGI_XML + bugReport.getId();
-
 		URL serverURL = new URL(BugzillaRepositoryUtil.addCredentials(xmlBugReportUrl, userName, password));
-		URLConnection connection = serverURL.openConnection();
+		URLConnection connection = BugzillaPlugin.getDefault().getUrlConnection(serverURL, proxySettings);
+		if (connection == null || !(connection instanceof HttpURLConnection)) {
+			return;
+		}
+
 		// String contentEncoding = connection.getContentEncoding();
 		// if (contentEncoding != null) {
 		// String charsetFromContentType =
@@ -116,14 +137,14 @@ public class RepositoryReportFactory {
 		// bugReport.setCharset(BugzillaPlugin.ENCODING_UTF_8);
 		// }
 
-		BufferedReader in;
-		if (characterEncoding != null) {
-			in = new BufferedReader(new InputStreamReader(connection.getInputStream(), characterEncoding));
-		} else {
-			in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-		}
-
 		try {
+
+			if (characterEncoding != null) {
+				in = new BufferedReader(new InputStreamReader(connection.getInputStream(), characterEncoding));
+			} else {
+				in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			}
+
 			XMLReader reader = XMLReaderFactory.createXMLReader();
 			reader.setContentHandler(contentHandler);
 			reader.setErrorHandler(new SaxErrorHandler());
@@ -139,7 +160,16 @@ public class RepositoryReportFactory {
 			} else {
 				throw new IOException(e.getMessage());
 			}
+		} finally {
+			try {
+				if (in != null)
+					in.close();
+			} catch (IOException e) {
+				BugzillaPlugin.log(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, IStatus.ERROR,
+						"Problem closing the stream", e));
+			}
 		}
+
 	}
 
 	class SaxErrorHandler implements ErrorHandler {

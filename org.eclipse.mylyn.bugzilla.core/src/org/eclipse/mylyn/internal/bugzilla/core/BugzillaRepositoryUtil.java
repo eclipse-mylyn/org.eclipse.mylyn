@@ -122,60 +122,55 @@ public class BugzillaRepositoryUtil {
 
 	private static final String POST_ARGS_LOGIN = "GoAheadAndLogIn=1&Bugzilla_login=";
 
-	public static BugzillaReport getBug(String repositoryUrl, String userName, String password, Proxy proxySettings, String characterEncoding, int id) throws IOException, MalformedURLException,
-			LoginException, GeneralSecurityException {
+	public static BugzillaReport getBug(String repositoryUrl, String userName, String password, Proxy proxySettings,
+			String characterEncoding, int id) throws IOException, MalformedURLException, LoginException,
+			GeneralSecurityException {
 
-		BufferedReader in = null;
+		// BufferedReader in = null;
 		try {
-			String url = repositoryUrl + POST_ARGS_SHOW_BUG + id;
-			url = addCredentials(url, userName, password);
+			// String url = repositoryUrl + POST_ARGS_SHOW_BUG + id;
+			// url = addCredentials(url, userName, password);
+			//
+			// URL bugUrl = new URL(url);
+			// URLConnection connection =
+			// BugzillaPlugin.getDefault().getUrlConnection(bugUrl,
+			// proxySettings);
+			// if (connection != null) {
+			// InputStream input = connection.getInputStream();
+			// if (input != null) {
+			// in = new BufferedReader(new InputStreamReader(input));
+			BugzillaReport bugReport = new BugzillaReport(id, repositoryUrl);
+			setupExistingBugAttributes(repositoryUrl, bugReport);
 
-			URL bugUrl = new URL(url);
-			URLConnection connection = BugzillaPlugin.getDefault().getUrlConnection(bugUrl, proxySettings);
-			if (connection != null) {
-				InputStream input = connection.getInputStream();
-				if (input != null) {
-					in = new BufferedReader(new InputStreamReader(input));
-					BugzillaReport bugReport = new BugzillaReport(id, repositoryUrl);
-					setupExistingBugAttributes(repositoryUrl, bugReport);
+			RepositoryReportFactory reportFactory = RepositoryReportFactory.getInstance();
+			reportFactory.populateReport(bugReport, repositoryUrl, null, userName, password, characterEncoding);
+			updateBugAttributeOptions(repositoryUrl, userName, password, bugReport, characterEncoding);
+			addValidOperations(bugReport, userName);
 
-					RepositoryReportFactory reportFactory = RepositoryReportFactory.getInstance();
-					reportFactory.populateReport(bugReport, repositoryUrl, userName, password, characterEncoding);
-					updateBugAttributeOptions(repositoryUrl, userName, password, bugReport, characterEncoding);
-					addValidOperations(bugReport, userName);
+			return bugReport;
 
-					return bugReport;
-
-				}
-			}
-			// TODO handle the error
-			return null;
+			// }
+			// }
 		} catch (MalformedURLException e) {
 			throw e;
 		} catch (IOException e) {
 			throw e;
 		} catch (LoginException e) {
 			throw e;
-//		} catch (Exception e) {
-//			// BugzillaPlugin.log(new Status(IStatus.ERROR,
-//			// IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
-//			// "Problem getting report:\n"+e.getMessage(), e));
-//			MylarStatusHandler.fail(e, "Problem getting report:\n" + e.getMessage(), false);
-//			return null;
-		} finally {
-			try {
-				if (in != null)
-					in.close();
-			} catch (IOException e) {
-				BugzillaPlugin.log(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, IStatus.ERROR,
-						"Problem closing the stream", e));
-			}
+			// } catch (Exception e) {
+			// // BugzillaPlugin.log(new Status(IStatus.ERROR,
+			// // IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
+			// // "Problem getting report:\n"+e.getMessage(), e));
+			// MylarStatusHandler.fail(e, "Problem getting report:\n" +
+			// e.getMessage(), false);
+			// return null;
 		}
 	}
 
-	public static String addCredentials(String url, String userName, String password) throws UnsupportedEncodingException {
+	public static String addCredentials(String url, String userName, String password)
+			throws UnsupportedEncodingException {
 		if (userName != null && password != null) {
-		//		if (repository.hasCredentials()) {
+			// if (repository.hasCredentials()) {
 			url += "&" + POST_ARGS_LOGIN + URLEncoder.encode(userName, BugzillaPlugin.ENCODING_UTF_8)
 					+ POST_ARGS_PASSWORD + URLEncoder.encode(password, BugzillaPlugin.ENCODING_UTF_8);
 		}
@@ -184,15 +179,19 @@ public class BugzillaRepositoryUtil {
 
 	/**
 	 * Get the list of products
-	 * @param encoding TODO
+	 * 
+	 * @param encoding
+	 *            TODO
 	 * 
 	 * @return The list of valid products a bug can be logged against
 	 * @throws IOException
 	 *             LoginException Exception
 	 */
-	public static List<String> getProductList(String repositoryUrl, String userName, String password, String encoding) throws IOException, LoginException, Exception {
+	public static List<String> getProductList(String repositoryUrl, String userName, String password, String encoding)
+			throws IOException, LoginException, Exception {
 
-		return BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, userName, password, encoding).getProducts();
+		return BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, userName, password, encoding)
+				.getProducts();
 
 		// BugzillaQueryPageParser parser = new
 		// BugzillaQueryPageParser(repository, new NullProgressMonitor());
@@ -204,12 +203,15 @@ public class BugzillaRepositoryUtil {
 
 	}
 
-	public static void validateCredentials(String repositoryUrl, String userid, String password) throws IOException, LoginException {
+	public static void validateCredentials(String repositoryUrl, String userid, String password) throws IOException,
+			LoginException {
 
-		String url = repositoryUrl+"/index.cgi?" + POST_ARGS_LOGIN + URLEncoder.encode(userid, BugzillaPlugin.ENCODING_UTF_8)
-		+ POST_ARGS_PASSWORD + URLEncoder.encode(password, BugzillaPlugin.ENCODING_UTF_8);
-		
-		//BugzillaRepositoryUtil.addCredentials(repository, repository.getUrl() + "/index.cgi?noop=noop")
+		String url = repositoryUrl + "/index.cgi?" + POST_ARGS_LOGIN
+				+ URLEncoder.encode(userid, BugzillaPlugin.ENCODING_UTF_8) + POST_ARGS_PASSWORD
+				+ URLEncoder.encode(password, BugzillaPlugin.ENCODING_UTF_8);
+
+		// BugzillaRepositoryUtil.addCredentials(repository, repository.getUrl()
+		// + "/index.cgi?noop=noop")
 		URL serverURL = new URL(url);
 		URLConnection connection = serverURL.openConnection();
 		BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -253,15 +255,19 @@ public class BugzillaRepositoryUtil {
 
 	/**
 	 * Adds bug attributes to new bug model and sets defaults
-	 * @param characterEncoding TODO
-	 * @throws IOException 
+	 * 
+	 * @param characterEncoding
+	 *            TODO
+	 * @throws IOException
 	 */
-	public static void setupNewBugAttributes(String repositoryUrl, String userName, String password, NewBugzillaReport newReport, String characterEncoding) throws IOException {
+	public static void setupNewBugAttributes(String repositoryUrl, String userName, String password,
+			NewBugzillaReport newReport, String characterEncoding) throws IOException {
 
 		newReport.removeAllAttributes();
-		
+
 		AbstractRepositoryReportAttribute a = new BugzillaReportAttribute(BugzillaReportElement.PRODUCT);
-		List<String> optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, userName, password, characterEncoding).getProducts();
+		List<String> optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, userName,
+				password, characterEncoding).getProducts();
 		Collections.sort(optionValues);
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
@@ -271,7 +277,8 @@ public class BugzillaRepositoryUtil {
 		// attributes.put(a.getName(), a);
 
 		a = new BugzillaReportAttribute(BugzillaReportElement.BUG_STATUS);
-		optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, userName, password, characterEncoding).getStatusValues();
+		optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, userName, password,
+				characterEncoding).getStatusValues();
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
@@ -280,8 +287,8 @@ public class BugzillaRepositoryUtil {
 		// attributes.put(a.getName(), a);
 
 		a = new BugzillaReportAttribute(BugzillaReportElement.VERSION);
-		optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, userName, password, characterEncoding).getVersions(
-				newReport.getProduct());
+		optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, userName, password,
+				characterEncoding).getVersions(newReport.getProduct());
 		Collections.sort(optionValues);
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
@@ -293,8 +300,8 @@ public class BugzillaRepositoryUtil {
 		// attributes.put(a.getName(), a);
 
 		a = new BugzillaReportAttribute(BugzillaReportElement.COMPONENT);
-		optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, userName, password, characterEncoding).getComponents(
-				newReport.getProduct());
+		optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, userName, password,
+				characterEncoding).getComponents(newReport.getProduct());
 		Collections.sort(optionValues);
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
@@ -302,7 +309,8 @@ public class BugzillaRepositoryUtil {
 		newReport.addAttribute(BugzillaReportElement.COMPONENT, a);
 
 		a = new BugzillaReportAttribute(BugzillaReportElement.REP_PLATFORM);
-		optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, userName, password, characterEncoding).getPlatforms();
+		optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, userName, password,
+				characterEncoding).getPlatforms();
 		Collections.sort(optionValues);
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
@@ -311,7 +319,8 @@ public class BugzillaRepositoryUtil {
 		// attributes.put(a.getName(), a);
 
 		a = new BugzillaReportAttribute(BugzillaReportElement.OP_SYS);
-		optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, userName, password, characterEncoding).getOSs();		
+		optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, userName, password,
+				characterEncoding).getOSs();
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
@@ -319,7 +328,8 @@ public class BugzillaRepositoryUtil {
 		// attributes.put(a.getName(), a);
 
 		a = new BugzillaReportAttribute(BugzillaReportElement.PRIORITY);
-		optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, userName, password, characterEncoding).getPriorities();
+		optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, userName, password,
+				characterEncoding).getPriorities();
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
@@ -328,7 +338,8 @@ public class BugzillaRepositoryUtil {
 		// attributes.put(a.getName(), a);
 
 		a = new BugzillaReportAttribute(BugzillaReportElement.BUG_SEVERITY);
-		optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, userName, password, characterEncoding).getSeverities();
+		optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, userName, password,
+				characterEncoding).getSeverities();
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
@@ -551,14 +562,16 @@ public class BugzillaRepositoryUtil {
 		}
 	}
 
-	private static void updateBugAttributeOptions(String repositoryUrl, String userName, String password, BugzillaReport existingReport, String characterEncoding) throws IOException {
+	private static void updateBugAttributeOptions(String repositoryUrl, String userName, String password,
+			BugzillaReport existingReport, String characterEncoding) throws IOException {
 		String product = existingReport.getAttributeValue(BugzillaReportElement.PRODUCT);
 		for (AbstractRepositoryReportAttribute attribute : existingReport.getAttributes()) {
 			BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getID().trim().toUpperCase());
 			attribute.clearOptions();
-			List<String> optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, userName, password, characterEncoding)
-					.getOptionValues(element, product);
-			if(element != BugzillaReportElement.OP_SYS && element != BugzillaReportElement.BUG_SEVERITY && element != BugzillaReportElement.PRIORITY && element != BugzillaReportElement.BUG_STATUS) {
+			List<String> optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, userName,
+					password, characterEncoding).getOptionValues(element, product);
+			if (element != BugzillaReportElement.OP_SYS && element != BugzillaReportElement.BUG_SEVERITY
+					&& element != BugzillaReportElement.PRIORITY && element != BugzillaReportElement.BUG_STATUS) {
 				Collections.sort(optionValues);
 			}
 			if (element == BugzillaReportElement.TARGET_MILESTONE && optionValues.isEmpty()) {
@@ -652,7 +665,8 @@ public class BugzillaRepositoryUtil {
 			break;
 		default:
 			break;
-//			MylarStatusHandler.log("Unknown bugzilla operation code recieved", BugzillaRepositoryUtil.class);
+		// MylarStatusHandler.log("Unknown bugzilla operation code recieved",
+		// BugzillaRepositoryUtil.class);
 		}
 		if (newOperation != null) {
 			bugReport.addOperation(newOperation);
@@ -675,8 +689,9 @@ public class BugzillaRepositoryUtil {
 		return url;
 	}
 
-	public static boolean downloadAttachment(String repositoryUrl, String userName, String password, Proxy proxySettings, int id, File destinationFile, boolean overwrite)
-			throws IOException, GeneralSecurityException {
+	public static boolean downloadAttachment(String repositoryUrl, String userName, String password,
+			Proxy proxySettings, int id, File destinationFile, boolean overwrite) throws IOException,
+			GeneralSecurityException {
 		BufferedInputStream in = null;
 		FileOutputStream outStream = null;
 		try {
@@ -692,15 +707,15 @@ public class BugzillaRepositoryUtil {
 				return true;
 
 			}
-//		} catch (MalformedURLException e) {
-//			MylarStatusHandler.fail(e, ATTACHMENT_DOWNLOAD_FAILED, false);
-//			return false;
-//		} catch (IOException e) {
-//			MylarStatusHandler.fail(e, ATTACHMENT_DOWNLOAD_FAILED, false);
-//			return false;
-//		} catch (Exception e) {
-//			MylarStatusHandler.fail(e, ATTACHMENT_DOWNLOAD_FAILED, false);
-//			return false;
+			// } catch (MalformedURLException e) {
+			// MylarStatusHandler.fail(e, ATTACHMENT_DOWNLOAD_FAILED, false);
+			// return false;
+			// } catch (IOException e) {
+			// MylarStatusHandler.fail(e, ATTACHMENT_DOWNLOAD_FAILED, false);
+			// return false;
+			// } catch (Exception e) {
+			// MylarStatusHandler.fail(e, ATTACHMENT_DOWNLOAD_FAILED, false);
+			// return false;
 		} finally {
 			try {
 				if (in != null)
@@ -718,14 +733,14 @@ public class BugzillaRepositoryUtil {
 	private static void copyByteStream(InputStream in, OutputStream out) throws IOException {
 		if (in != null && out != null) {
 			BufferedInputStream inBuffered = new BufferedInputStream(in);
-			
+
 			int bufferSize = 1000;
 			byte[] buffer = new byte[bufferSize];
 
 			int readCount;
-			
+
 			BufferedOutputStream fout = new BufferedOutputStream(out);
-			
+
 			while ((readCount = inBuffered.read(buffer)) != -1) {
 				if (readCount < bufferSize) {
 					fout.write(buffer, 0, readCount);
@@ -734,13 +749,14 @@ public class BugzillaRepositoryUtil {
 				}
 			}
 			fout.flush();
-			fout.close();			
+			fout.close();
 			in.close();
 		}
 	}
-	
-	public static boolean uploadAttachment(String repositoryUrl, String userName, String password, int bugReportID, String comment,
-			String description, File sourceFile, String contentType, boolean isPatch) throws IOException {
+
+	public static boolean uploadAttachment(String repositoryUrl, String userName, String password, int bugReportID,
+			String comment, String description, File sourceFile, String contentType, boolean isPatch)
+			throws IOException {
 
 		// Note: The following debug code requires http commons-logging and
 		// commons-logging-api jars
@@ -797,12 +813,14 @@ public class BugzillaRepositoryUtil {
 					// TODO: test for no comment and no description etc.
 				}
 			} else {
-//				MylarStatusHandler.log(HttpStatus.getStatusText(status), BugzillaRepositoryUtil.class);
+				// MylarStatusHandler.log(HttpStatus.getStatusText(status),
+				// BugzillaRepositoryUtil.class);
 				uploadResult = false;
 			}
-//		} catch (HttpException e) {
-//			MylarStatusHandler.log("Attachment upload failed\n" + e.getMessage(), BugzillaRepositoryUtil.class);
-//			uploadResult = false;
+			// } catch (HttpException e) {
+			// MylarStatusHandler.log("Attachment upload failed\n" +
+			// e.getMessage(), BugzillaRepositoryUtil.class);
+			// uploadResult = false;
 		} finally {
 			postMethod.releaseConnection();
 		}
@@ -837,7 +855,7 @@ public class BugzillaRepositoryUtil {
 	// decoded = new String(string.getBytes(), charset);
 	// }
 	// return decoded;
-	//		}
+	// }
 }
 
 /**
@@ -889,12 +907,10 @@ public class BugzillaRepositoryUtil {
 // private static BugzillaRepositoryUtil INSTANCE = new
 // BugzillaRepositoryUtil();
 
-
 // public static List<String> getValidKeywords(String repositoryURL) {
 // return
 // BugzillaPlugin.getDefault().getProductConfiguration(repositoryURL).getKeywords();
 // }
-
 // /**
 // * Get the attribute values for a new bug
 // *
@@ -974,7 +990,6 @@ public class BugzillaRepositoryUtil {
 // }
 // }
 // }
-
 // public static boolean downloadAttachment(TaskRepository repository, int
 // id, File destinationFile, boolean overwrite)
 // throws IOException {
