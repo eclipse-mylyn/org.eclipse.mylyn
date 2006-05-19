@@ -21,6 +21,7 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
@@ -87,6 +88,8 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
  * @author Rob Elves
  */
 public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
+
+	private static final int MAX_URL_LENGTH = 2000;
 
 	private static final String CHANGED_BUGS_START_DATE_SHORT = "yyyy-MM-dd";
 
@@ -727,10 +730,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public List<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository, Set<ITask> tasks,
 			Date lastSync) {
-		
+
 		List<AbstractRepositoryTask> changedTasks = new ArrayList<AbstractRepositoryTask>();
-		
-		if(lastSync == null) {
+
+		if (lastSync == null) {
 			for (ITask task : tasks) {
 				if (task instanceof AbstractRepositoryTask) {
 					changedTasks.add((AbstractRepositoryTask) task);
@@ -738,54 +741,85 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			}
 			return changedTasks;
 		}
-		
+
 		TimeZone timeZone = TimeZone.getTimeZone(repository.getTimeZoneId());
-		
-		if(!timeZone.getID().equals(repository.getTimeZoneId())) {
-			MylarStatusHandler.log("Mylar: Specified time zone not available, using GMT. Check repository settings in "+TaskRepositoriesView.NAME+".", BugzillaRepositoryConnector.class);
+
+		if (!timeZone.getID().equals(repository.getTimeZoneId())) {
+			MylarStatusHandler.log("Mylar: Specified time zone not available, using GMT. Check repository settings in "
+					+ TaskRepositoriesView.NAME + ".", BugzillaRepositoryConnector.class);
 		}
-		
+
 		String dateString = DateUtil.getZoneFormattedDate(timeZone, lastSync, CHANGED_BUGS_START_DATE_LONG);
+
+		String urlQueryBase;
 		String urlQueryString;
+
 		try {
-			urlQueryString = repository.getUrl()+CHANGED_BUGS_CGI_QUERY + URLEncoder.encode(dateString, repository.getCharacterEncoding())+ CHANGED_BUGS_CGI_ENDDATE;
+			urlQueryBase = repository.getUrl() + CHANGED_BUGS_CGI_QUERY
+					+ URLEncoder.encode(dateString, repository.getCharacterEncoding()) + CHANGED_BUGS_CGI_ENDDATE;
 		} catch (UnsupportedEncodingException e1) {
-			MylarStatusHandler.log(e1, "Mylar: Check encoding settings in "+TaskRepositoriesView.NAME+".");
-			urlQueryString = repository.getUrl()+CHANGED_BUGS_CGI_QUERY + DateUtil.getZoneFormattedDate(timeZone, lastSync, CHANGED_BUGS_START_DATE_SHORT) + CHANGED_BUGS_CGI_ENDDATE;
+			MylarStatusHandler.log(e1, "Mylar: Check encoding settings in " + TaskRepositoriesView.NAME + ".");
+			urlQueryBase = repository.getUrl() + CHANGED_BUGS_CGI_QUERY
+					+ DateUtil.getZoneFormattedDate(timeZone, lastSync, CHANGED_BUGS_START_DATE_SHORT)
+					+ CHANGED_BUGS_CGI_ENDDATE;
 		}
 
-		int queryCounter = -1;
-		for (ITask task : tasks) {
+		urlQueryString = new String(urlQueryBase);
+
+		int queryCounter = -1;		
+		Iterator itr = tasks.iterator();
+		while (itr.hasNext()) {
 			queryCounter++;
-			urlQueryString += "&field0-0-"+queryCounter+"=bug_id&type0-0-"+queryCounter+"=equals&value0-0-"+queryCounter+"="
-					+ AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
-		}
-		urlQueryString += IBugzillaConstants.CONTENT_TYPE_RDF;
-		
-		
-		BugzillaResultCollector collector = new BugzillaResultCollector();
-		RepositoryQueryFactory queryFactory = RepositoryQueryFactory.getInstance();
-		try {
-			queryFactory.performQuery(repository.getUrl(), collector, urlQueryString, MylarTaskListPlugin.getDefault()
-					.getProxySettings(), RepositoryQueryFactory.RETURN_ALL_HITS, repository.getCharacterEncoding());
+			ITask task = (ITask) itr.next();
 
-			for (BugzillaSearchHit hit : collector.getResults()) {				
-				String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), hit.getId());								
-				ITask correspondingTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
-				if (correspondingTask != null && correspondingTask instanceof AbstractRepositoryTask
-						&& tasks.contains(correspondingTask)) {
-					changedTasks.add((AbstractRepositoryTask) correspondingTask);
+			String newurlQueryString = "&field0-0-" + queryCounter + "=bug_id&type0-0-" + queryCounter
+					+ "=equals&value0-0-" + queryCounter + "="
+					+ AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
+			try {
+				if ((urlQueryString.length() + newurlQueryString.length() + IBugzillaConstants.CONTENT_TYPE_RDF
+						.length()) > MAX_URL_LENGTH) {
+					urlQueryString += IBugzillaConstants.CONTENT_TYPE_RDF;
+					queryForChanged(repository, changedTasks, urlQueryString);
+					queryCounter = 0;
+					urlQueryString = new String(urlQueryBase);
+					urlQueryString = "&field0-0-" + queryCounter + "=bug_id&type0-0-" + queryCounter
+							+ "=equals&value0-0-" + queryCounter + "="
+							+ AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
+				} else if (!itr.hasNext()) {
+					urlQueryString += newurlQueryString;
+					urlQueryString += IBugzillaConstants.CONTENT_TYPE_RDF;
+					queryForChanged(repository, changedTasks, urlQueryString);
+				} else {
+					urlQueryString += newurlQueryString;
 				}
-			}
-		} catch (Exception e) {
-			MylarStatusHandler.log(e, "Mylar: Error retrieving changed bug reports, will synchronize all reports.");
-			for (ITask task : tasks) {
-				if (task instanceof AbstractRepositoryTask) {
-					changedTasks.add((AbstractRepositoryTask) task);
+			} catch (Exception e) {
+				MylarStatusHandler.log(e, "Mylar: Error retrieving changed bug reports, will synchronize all reports.");
+				for (ITask eachTask : tasks) {
+					if (eachTask instanceof AbstractRepositoryTask) {
+						changedTasks.add((AbstractRepositoryTask) eachTask);
+					}
 				}
 			}
 		}
+		System.err.println("num changed:"+changedTasks.size());
 		return changedTasks;
+	}
+
+	private void queryForChanged(TaskRepository repository, List<AbstractRepositoryTask> changedTasks,
+			String urlQueryString) throws Exception {
+		RepositoryQueryFactory queryFactory = RepositoryQueryFactory.getInstance();
+		BugzillaResultCollector collector = new BugzillaResultCollector();
+
+		queryFactory.performQuery(repository.getUrl(), collector, urlQueryString, MylarTaskListPlugin.getDefault()
+				.getProxySettings(), RepositoryQueryFactory.RETURN_ALL_HITS, repository.getCharacterEncoding());
+
+		for (BugzillaSearchHit hit : collector.getResults()) {
+			String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), hit.getId());
+			ITask correspondingTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
+			if (correspondingTask != null && correspondingTask instanceof AbstractRepositoryTask) {				
+				changedTasks.add((AbstractRepositoryTask) correspondingTask);
+			}
+		}
 	}
 }
 
