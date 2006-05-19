@@ -83,8 +83,8 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	protected boolean isUninteresting(ITask task) {
 		return !task.isActive()
-				&& ((task.isCompleted() && !MylarTaskListPlugin.getTaskListManager().isCompletedToday(task)) || MylarTaskListPlugin
-						.getTaskListManager().isReminderAfterThisWeek(task));
+				&& ((task.isCompleted() && !MylarTaskListPlugin.getTaskListManager().isCompletedToday(task)) 
+					|| (MylarTaskListPlugin.getTaskListManager().isReminderAfterThisWeek(task)) && !hasChanges(task));
 	}
 
 	// TODO: make meta-context more explicit
