@@ -14,6 +14,7 @@ package org.eclipse.mylar.provisional.tasklist;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
@@ -37,6 +38,7 @@ public class TaskRepository {
 	private static final String AUTH_REALM = "";
 
     private static final URL DEFAULT_URL;
+    
     static {
       URL u = null;
       try {
@@ -55,19 +57,30 @@ public class TaskRepository {
 
 	private String characterEncoding = DEFAULT_CHARACTER_ENCODING;
 	
+	private String timeZoneId = "";
+	
+	/**
+	 * for testing purposes
+	 */
 	public TaskRepository(String kind, String serverUrl) {
-		this.serverUrl = serverUrl;
-		this.kind = kind;
+		this(kind, serverUrl, NO_VERSION_SPECIFIED);
 	}
-	/** sets character encoding to DEFAULT_CHARACTER_ENCODING */
+	 
+	/**
+	 * for testing purposes
+	 * sets repository time zone to local default time zone
+	 * sets character encoding to DEFAULT_CHARACTER_ENCODING
+	 */ 
 	public TaskRepository(String kind, String serverUrl, String version) {
-		this(kind, serverUrl, version, DEFAULT_CHARACTER_ENCODING);		
+		this(kind, serverUrl, version, DEFAULT_CHARACTER_ENCODING, TimeZone.getDefault().getID());		
 	}
 	
-	public TaskRepository(String kind, String serverUrl, String version, String encoding) {
-		this(kind, serverUrl);
+	public TaskRepository(String kind, String serverUrl, String version, String encoding, String timeZoneId) {
+		this.serverUrl = serverUrl;
+		this.kind = kind;
 		this.version = version;
 		this.characterEncoding = encoding;
+		this.timeZoneId = timeZoneId;
 	}
 	
 	public String getUrl() {
@@ -178,6 +191,9 @@ public class TaskRepository {
 		return version;
 	}
 	
+	/**
+	 * for testing purposes
+	 */
 	void setVersion(String ver) {
 		if(ver == null) {
 			version = NO_VERSION_SPECIFIED;
@@ -191,9 +207,22 @@ public class TaskRepository {
 		return characterEncoding;
 	}
 	
-
+	/**
+	 * for testing purposes
+	 */
 	void setCharacterEncoding(String characterEncoding) {
 		this.characterEncoding = characterEncoding;
+	}
+	
+	public String getTimeZoneId() {
+		return timeZoneId;
+	}
+	
+	/**
+	 * for testing purposes
+	 */
+	public void setTimeZoneId(String timeZoneId) {
+		this.timeZoneId = timeZoneId;
 	}
 
 }

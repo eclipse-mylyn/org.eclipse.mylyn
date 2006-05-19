@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.tasklist.ui.wizards;
 
 import java.nio.charset.Charset;
+import java.util.TimeZone;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -27,6 +28,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 
@@ -62,6 +64,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	private Combo otherEncodingCombo;
 
 	private Button defaultEncoding;
+
+	private Combo timeZones;
 
 	public AbstractRepositorySettingsPage(String title, String description) {
 		super(title);
@@ -102,6 +106,18 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		}
 		// bug 131656: must set echo char after setting value on Mac
 		passwordEditor.getTextControl().setEchoChar('*');
+
+		Label encodingLabel = new Label(container, SWT.NONE);
+		encodingLabel.setText("Repository time zone: ");
+		timeZones = new Combo(container, SWT.READ_ONLY);
+		for (String zone : TimeZone.getAvailableIDs()) {
+			timeZones.add(zone);
+		}
+		if (repository != null) {
+			if (timeZones.indexOf(repository.getTimeZoneId()) > -1) {
+				timeZones.select(timeZones.indexOf(repository.getTimeZoneId()));
+			}
+		}
 
 		createAdditionalControls(container);
 
@@ -144,11 +160,11 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		if (repository != null) {
 			try {
 				String repositoryEncoding = repository.getCharacterEncoding();
-				if (repositoryEncoding != null && !repositoryEncoding.equals(defaultEncoding)) {					
+				if (repositoryEncoding != null && !repositoryEncoding.equals(defaultEncoding)) {
 					if (otherEncodingCombo.getItemCount() > 0 && otherEncodingCombo.indexOf(repositoryEncoding) > -1) {
 						otherEncodingCombo.setEnabled(true);
 						otherEncoding.setSelection(true);
-						defaultEncoding.setSelection(false);						
+						defaultEncoding.setSelection(false);
 						otherEncodingCombo.select(otherEncodingCombo.indexOf(repositoryEncoding));
 					} else {
 						setDefaultEncoding();
@@ -253,10 +269,15 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	}
 
 	public String getCharacterEncoding() {
-		if(defaultEncoding.getSelection()) {
+		if (defaultEncoding.getSelection()) {
 			return TaskRepository.DEFAULT_CHARACTER_ENCODING;
 		} else {
 			return otherEncodingCombo.getItem(otherEncodingCombo.getSelectionIndex());
 		}
 	}
+
+	public String getTimeZoneId() {
+		return timeZones.getItem(timeZones.getSelectionIndex());
+	}
+
 }

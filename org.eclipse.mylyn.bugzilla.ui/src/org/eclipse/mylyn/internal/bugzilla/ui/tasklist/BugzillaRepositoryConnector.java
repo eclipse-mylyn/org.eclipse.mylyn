@@ -13,13 +13,17 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Proxy;
+import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 
 import javax.security.auth.login.LoginException;
 
@@ -49,8 +53,10 @@ import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.internal.bugzilla.ui.OfflineReportsFile.BugzillaOfflineStatus;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchHit;
+import org.eclipse.mylar.internal.bugzilla.ui.search.RepositoryQueryFactory;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaCategorySearchOperation.ICategorySearchListener;
 import org.eclipse.mylar.internal.bugzilla.ui.wizard.NewBugzillaReportWizard;
+import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.ZipFileUtil;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
@@ -81,6 +87,14 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
  * @author Rob Elves
  */
 public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
+
+	private static final String CHANGED_BUGS_START_DATE_SHORT = "yyyy-MM-dd";
+
+	private static final String CHANGED_BUGS_START_DATE_LONG = "yyyy-MM-dd HH:mm";
+
+	private static final String CHANGED_BUGS_CGI_ENDDATE = "&chfieldto=Now";
+
+	private static final String CHANGED_BUGS_CGI_QUERY = "/buglist.cgi?query_format=advanced&chfieldfrom=";
 
 	private static final String ZIPFILE_EXTENSION = ".zip";
 
@@ -128,11 +142,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	private BugzillaReport downloadReport(final BugzillaTask bugzillaTask) {
-		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, bugzillaTask.getRepositoryUrl());
+		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+				BugzillaPlugin.REPOSITORY_KIND, bugzillaTask.getRepositoryUrl());
 		Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
 		try {
-			return BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, repository.getCharacterEncoding(), AbstractRepositoryTask
-							.getTaskIdAsInt(bugzillaTask.getHandleIdentifier()));
+			return BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository
+					.getPassword(), proxySettings, repository.getCharacterEncoding(), AbstractRepositoryTask
+					.getTaskIdAsInt(bugzillaTask.getHandleIdentifier()));
 		} catch (final LoginException e) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
@@ -444,7 +460,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				// // identical id.");
 				// // return;
 				// }
-				BugzillaOfflineStatus offlineStatus = BugzillaUiPlugin.getDefault().getOfflineReportsFile().add(report, false);
+				BugzillaOfflineStatus offlineStatus = BugzillaUiPlugin.getDefault().getOfflineReportsFile().add(report,
+						false);
 				((AbstractRepositoryReport) report).setOfflineState(true);
 				// saveForced forced to false (hack)
 				offlineStatusChange(report, offlineStatus, forceSynch);
@@ -575,9 +592,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 						File zippedContextFile = new File(MylarPlugin.getDefault().getDataDirectory() + File.separator
 								+ sourceContextFile.getName() + ZIPFILE_EXTENSION);
 						if (zippedContextFile != null && zippedContextFile.exists()) {
-							result = BugzillaRepositoryUtil.uploadAttachment(repository.getUrl(), repository.getUserName(), repository.getPassword(), BugzillaTask
-									.getTaskIdAsInt(task.getHandleIdentifier()), longComment,
-									MYLAR_CONTEXT_DESCRIPTION, zippedContextFile, APPLICATION_OCTET_STREAM, false);
+							result = BugzillaRepositoryUtil.uploadAttachment(repository.getUrl(), repository
+									.getUserName(), repository.getPassword(), BugzillaTask.getTaskIdAsInt(task
+									.getHandleIdentifier()), longComment, MYLAR_CONTEXT_DESCRIPTION, zippedContextFile,
+									APPLICATION_OCTET_STREAM, false);
 							if (result) {
 								synchronize(task, false, null);
 							}
@@ -653,8 +671,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			// }
 
 			Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
-			result = BugzillaRepositoryUtil.downloadAttachment(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, contextDelegate.getId(),
-					destinationZipFile, true);
+			result = BugzillaRepositoryUtil.downloadAttachment(repository.getUrl(), repository.getUserName(),
+					repository.getPassword(), proxySettings, contextDelegate.getId(), destinationZipFile, true);
 
 			if (result) {
 
@@ -695,46 +713,118 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		if (id != -1) {
 			OpenBugzillaReportJob job = new OpenBugzillaReportJob(repositoryUrl, id);
 			job.runInUIThread(new NullProgressMonitor());
-//			IProgressService service = PlatformUI.getWorkbench().getProgressService();
-//			try {
-//				service.run(true, false, job);
-//			} catch (Exception e) {
-//				MylarStatusHandler.fail(e, "Could not open report", true);
-//			}
+			// IProgressService service =
+			// PlatformUI.getWorkbench().getProgressService();
+			// try {
+			// service.run(true, false, job);
+			// } catch (Exception e) {
+			// MylarStatusHandler.fail(e, "Could not open report", true);
+			// }
 		}
+	}
+
+	@Override
+	public List<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository, Set<ITask> tasks,
+			Date lastSync) {
+		
+		List<AbstractRepositoryTask> changedTasks = new ArrayList<AbstractRepositoryTask>();
+		
+		if(lastSync == null) {
+			for (ITask task : tasks) {
+				if (task instanceof AbstractRepositoryTask) {
+					changedTasks.add((AbstractRepositoryTask) task);
+				}
+			}
+			return changedTasks;
+		}
+		
+		TimeZone timeZone = TimeZone.getTimeZone(repository.getTimeZoneId());
+		
+		if(!timeZone.getID().equals(repository.getTimeZoneId())) {
+			MylarStatusHandler.log("Mylar: Specified time zone not available, using GMT. Check repository settings in "+TaskRepositoriesView.NAME+".", BugzillaRepositoryConnector.class);
+		}
+		
+		String dateString = DateUtil.getZoneFormattedDate(timeZone, lastSync, CHANGED_BUGS_START_DATE_LONG);
+		String urlQueryString;
+		try {
+			urlQueryString = repository.getUrl()+CHANGED_BUGS_CGI_QUERY + URLEncoder.encode(dateString, repository.getCharacterEncoding())+ CHANGED_BUGS_CGI_ENDDATE;
+		} catch (UnsupportedEncodingException e1) {
+			MylarStatusHandler.log(e1, "Mylar: Check encoding settings in "+TaskRepositoriesView.NAME+".");
+			urlQueryString = repository.getUrl()+CHANGED_BUGS_CGI_QUERY + DateUtil.getZoneFormattedDate(timeZone, lastSync, CHANGED_BUGS_START_DATE_SHORT) + CHANGED_BUGS_CGI_ENDDATE;
+		}
+
+		int queryCounter = -1;
+		for (ITask task : tasks) {
+			queryCounter++;
+			urlQueryString += "&field0-0-"+queryCounter+"=bug_id&type0-0-"+queryCounter+"=equals&value0-0-"+queryCounter+"="
+					+ AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
+		}
+		urlQueryString += IBugzillaConstants.CONTENT_TYPE_RDF;
+		
+		
+		BugzillaResultCollector collector = new BugzillaResultCollector();
+		RepositoryQueryFactory queryFactory = RepositoryQueryFactory.getInstance();
+		try {
+			queryFactory.performQuery(repository.getUrl(), collector, urlQueryString, MylarTaskListPlugin.getDefault()
+					.getProxySettings(), RepositoryQueryFactory.RETURN_ALL_HITS, repository.getCharacterEncoding());
+
+			for (BugzillaSearchHit hit : collector.getResults()) {				
+				String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), hit.getId());								
+				ITask correspondingTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
+				if (correspondingTask != null && correspondingTask instanceof AbstractRepositoryTask
+						&& tasks.contains(correspondingTask)) {
+					changedTasks.add((AbstractRepositoryTask) correspondingTask);
+				}
+			}
+		} catch (Exception e) {
+			MylarStatusHandler.log(e, "Mylar: Error retrieving changed bug reports, will synchronize all reports.");
+			for (ITask task : tasks) {
+				if (task instanceof AbstractRepositoryTask) {
+					changedTasks.add((AbstractRepositoryTask) task);
+				}
+			}
+		}
+		return changedTasks;
 	}
 }
 
-//if (!BugzillaUiPlugin.getDefault().getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION).equals("")) {
-//	MylarTaskListPlugin.getTaskListManager().addActivityListener(new ITaskActivityListener() {
+// if
+// (!BugzillaUiPlugin.getDefault().getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION).equals(""))
+// {
+// MylarTaskListPlugin.getTaskListManager().addActivityListener(new
+// ITaskActivityListener() {
 //
-//		public void tasklistRead() {
-//			String oldVersionSetting = BugzillaPlugin.getDefault().getPreferenceStore().getString(
-//					IBugzillaConstants.SERVER_VERSION);
+// public void tasklistRead() {
+// String oldVersionSetting =
+// BugzillaPlugin.getDefault().getPreferenceStore().getString(
+// IBugzillaConstants.SERVER_VERSION);
 //
-//			Set<TaskRepository> existingBugzillaRepositories = MylarTaskListPlugin.getRepositoryManager()
-//					.getRepositories(BugzillaPlugin.REPOSITORY_KIND);
-//			for (TaskRepository repository : existingBugzillaRepositories) {
-//				MylarTaskListPlugin.getRepositoryManager().setVersion(repository, oldVersionSetting);
-//			}
-//			BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.SERVER_VERSION, "");
-//			MylarTaskListPlugin.getTaskListManager().removeActivityListener(this);
-//		}
+// Set<TaskRepository> existingBugzillaRepositories =
+// MylarTaskListPlugin.getRepositoryManager()
+// .getRepositories(BugzillaPlugin.REPOSITORY_KIND);
+// for (TaskRepository repository : existingBugzillaRepositories) {
+// MylarTaskListPlugin.getRepositoryManager().setVersion(repository,
+// oldVersionSetting);
+// }
+// BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.SERVER_VERSION,
+// "");
+// MylarTaskListPlugin.getTaskListManager().removeActivityListener(this);
+// }
 //
-//		public void taskActivated(ITask task) {
-//			// ignore
-//		}
+// public void taskActivated(ITask task) {
+// // ignore
+// }
 //
-//		public void tasksActivated(List<ITask> tasks) {
-//			// ignore
-//		}
+// public void tasksActivated(List<ITask> tasks) {
+// // ignore
+// }
 //
-//		public void taskDeactivated(ITask task) {
-//			// ignore
-//		}
+// public void taskDeactivated(ITask task) {
+// // ignore
+// }
 //
-//		public void activityChanged(DateRangeContainer week) {
-//			// ignore
-//		}
-//	});
-//}
+// public void activityChanged(DateRangeContainer week) {
+// // ignore
+// }
+// });
+// }

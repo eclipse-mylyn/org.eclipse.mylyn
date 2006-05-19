@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.TimeZone;
 
 import org.eclipse.mylar.internal.core.MylarContextManager;
 
@@ -28,6 +29,8 @@ import org.eclipse.mylar.internal.core.MylarContextManager;
  */
 public class TaskRepositoryManager {
 
+	public static final String PROPERTY_TIMEZONE = "timezone";
+	
 	public static final String PROPERTY_ENCODING = "encoding";
 	
 	public static final String PROPERTY_VERSION = "version";
@@ -201,7 +204,14 @@ public class TaskRepositoryManager {
 					if(encoding.equals("")) {
 						encoding = TaskRepository.DEFAULT_CHARACTER_ENCODING;
 					}
-					repositories.add(new TaskRepository(repositoryConnector.getRepositoryType(), urlString, version, encoding));
+					
+					String prefIdTimeZoneId = urlString + PROPERTY_DELIM + PROPERTY_TIMEZONE;
+					String timeZoneId = MylarTaskListPlugin.getMylarCorePrefs().getString(prefIdTimeZoneId);
+					if(timeZoneId.equals("")) {
+						timeZoneId = TimeZone.getDefault().getID();
+					}
+					
+					repositories.add(new TaskRepository(repositoryConnector.getRepositoryType(), urlString, version, encoding, timeZoneId));
 				}
 			}
 		}
@@ -211,13 +221,27 @@ public class TaskRepositoryManager {
 		return repositoryMap;
 	}
 
+	/**
+	 * for testing purposes
+	 */
 	public void setVersion(TaskRepository repository, String version) {
 		repository.setVersion(version);
 		saveRepositories();
 	}
 	
+	/**
+	 * for testing purposes
+	 */
 	public void setEncoding(TaskRepository repository, String encoding) {
 		repository.setCharacterEncoding(encoding);
+		saveRepositories();
+	}
+	
+	/**
+	 * for testing purposes
+	 */
+	public void setTimeZoneId(TaskRepository repository, String timeZoneId) {
+		repository.setTimeZoneId(timeZoneId);
 		saveRepositories();
 	}
 	
@@ -233,6 +257,9 @@ public class TaskRepositoryManager {
 					
 					String prefIdEncoding = repository.getUrl() + PROPERTY_DELIM + PROPERTY_ENCODING;
 					MylarTaskListPlugin.getMylarCorePrefs().setValue(prefIdEncoding, repository.getCharacterEncoding());
+					
+					String prefIdTimeZoneId = repository.getUrl() + PROPERTY_DELIM + PROPERTY_TIMEZONE;
+					MylarTaskListPlugin.getMylarCorePrefs().setValue(prefIdTimeZoneId, repository.getTimeZoneId());
 				}
 				String prefId = PREF_REPOSITORIES + repositoryConnector.getRepositoryType();
 				MylarTaskListPlugin.getMylarCorePrefs().setValue(prefId, repositoriesToStore);

@@ -1117,7 +1117,7 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 	 * Goes through the query form and builds up the query parameters.
 	 * 
 	 * Example: short_desc_type=substring&amp;short_desc=bla&amp; ...
-	 * 
+	 * TODO: The encoding here should match TaskRepository.getCharacterEncoding()
 	 * @throws UnsupportedEncodingException
 	 */
 	protected StringBuffer getQueryParameters() throws UnsupportedEncodingException {

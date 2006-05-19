@@ -123,7 +123,7 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		this.repositoryUrl = repositoryUrl;
 	}
 
-	public Date getLastRefresh() {
+	public Date getLastSynchronized() {
 		return lastRefresh;
 	}
 

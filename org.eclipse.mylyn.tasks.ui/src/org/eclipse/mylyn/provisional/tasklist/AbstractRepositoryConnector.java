@@ -14,6 +14,7 @@ package org.eclipse.mylar.provisional.tasklist;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -117,6 +118,11 @@ public abstract class AbstractRepositoryConnector {
 	public abstract List<String> getSupportedVersions();
 
 	/**
+	 * returns all tasks if date is null or an error occurs
+	 */
+	public abstract List<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository, Set<ITask> tasks, Date lastSync) throws GeneralSecurityException, IOException;
+	
+	/**
 	 * @param listener can be null
 	 */
 	public Job synchronize(AbstractRepositoryTask repositoryTask, boolean forceSynch, IJobChangeListener listener) {
@@ -170,6 +176,7 @@ public abstract class AbstractRepositoryConnector {
 		return job;
 	}
 	
+	// TODO: refactor
 	public void requestRefresh(AbstractRepositoryTask task) {
 		if (!currentlyRefreshing.containsKey(task) && !toBeRefreshed.contains(task)) {
 			toBeRefreshed.add(task);
@@ -217,7 +224,7 @@ public abstract class AbstractRepositoryConnector {
 		MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), MylarTaskListPlugin.TITLE_DIALOG, 
 				"Opening JIRA issues not added to task list is not implemented."
 		);
-	}	
+	}
 }
 
 

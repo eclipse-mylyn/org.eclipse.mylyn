@@ -14,9 +14,7 @@ package org.eclipse.mylar.internal.bugzilla.ui.search;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaSearchResultCollector;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -32,7 +30,7 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 
 	private IBugzillaSearchResultCollector collector;
 
-	private TaskRepository repository;
+	private String repositoryUrl;
 
 	private BugzillaSearchHit hit;
 
@@ -40,8 +38,8 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 
 	private int numCollected = 0;
 
-	public SaxBugzillaQueryContentHandler(TaskRepository rep, IBugzillaSearchResultCollector col, int maxHits) {
-		repository = rep;
+	public SaxBugzillaQueryContentHandler(String repositoryUrl, IBugzillaSearchResultCollector col, int maxHits) {
+		this.repositoryUrl = repositoryUrl;
 		collector = col;
 		this.maxHits = maxHits;
 	}
@@ -60,7 +58,7 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 			switch (tag) {
 			case LI:
 				hit = new BugzillaSearchHit();
-				hit.setRepository(repository.getUrl());
+				hit.setRepository(repositoryUrl);
 				break;
 			}
 		} catch (RuntimeException e) {

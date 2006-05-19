@@ -123,7 +123,7 @@ public class TaskListToolTipHandler {
 			} catch (Exception e) {
 				// ignore
 			}
-			tooltip += formatLastRefreshTime(query.getLastRefresh()) + "\n";
+			tooltip += formatLastRefreshTime(query.getLastSynchronized()) + "\n";
 			if (query.getHits().size() == 1) {
 				tooltip += "1 hit";
 			} else {

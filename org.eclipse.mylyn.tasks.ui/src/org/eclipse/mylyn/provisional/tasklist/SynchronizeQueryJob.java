@@ -11,6 +11,8 @@
 
 package org.eclipse.mylar.provisional.tasklist;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +25,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
@@ -36,15 +39,15 @@ class SynchronizeQueryJob extends Job {
 	private final AbstractRepositoryConnector connector;
 
 	private static final String JOB_LABEL = "Synchronizing queries";
-	
+
 	private Set<AbstractRepositoryQuery> queries;
-	
+
 	private List<AbstractQueryHit> hits = new ArrayList<AbstractQueryHit>();
 
 	public SynchronizeQueryJob(AbstractRepositoryConnector connector, Set<AbstractRepositoryQuery> queries) {
 		super(JOB_LABEL + ": " + connector.getRepositoryType());
 		this.connector = connector;
-		this.queries = queries;			
+		this.queries = queries;
 	}
 
 	@Override
@@ -67,8 +70,7 @@ class SynchronizeQueryJob extends Job {
 				});
 			}
 
-			MultiStatus queryStatus = new MultiStatus(MylarTaskListPlugin.PLUGIN_ID, IStatus.OK, "Query result",
-					null);
+			MultiStatus queryStatus = new MultiStatus(MylarTaskListPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
 
 			hits = this.connector.performQuery(repositoryQuery, monitor, queryStatus);
 			if (queryStatus.getChildren() != null && queryStatus.getChildren().length > 0) {
@@ -76,16 +78,46 @@ class SynchronizeQueryJob extends Job {
 					repositoryQuery.clearHits();
 					for (AbstractQueryHit newHit : hits) {
 						repositoryQuery.addHit(newHit);
-						if (newHit.getCorrespondingTask() != null && newHit instanceof AbstractQueryHit && newHit.getCorrespondingTask().getSyncState() == RepositoryTaskSyncState.SYNCHRONIZED) {
-							this.connector.requestRefresh(newHit.getCorrespondingTask());
-						}
 					}
+
+					try {
+						for (AbstractRepositoryTask taskToSync : connector.getChangedSinceLastSync(repository,
+								repositoryQuery.getChildren(), repositoryQuery.getLastSynchronized())) {
+							// if (hitToSynch.getCorrespondingTask() != null &&
+							// hitToSynch instanceof AbstractQueryHit &&
+							// hitToSynch.getCorrespondingTask().getSyncState()
+							// == RepositoryTaskSyncState.SYNCHRONIZED) {
+							// if (taskToSync.getSyncState() !=
+							// RepositoryTaskSyncState.OUTGOING) {
+							if (taskToSync.getSyncState() == RepositoryTaskSyncState.SYNCHRONIZED) {
+								this.connector.requestRefresh(taskToSync);
+							}
+						}
+					} catch (GeneralSecurityException e) {
+						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+							public void run() {
+								MessageDialog.openError(Display.getDefault().getActiveShell(),
+										MylarTaskListPlugin.TITLE_DIALOG, "Authentication error. Check setting in "
+												+ TaskRepositoriesView.NAME + ".");
+							}
+						});
+					} catch (final IOException e) {
+						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+							public void run() {
+								MessageDialog.openError(Display.getDefault().getActiveShell(),
+										MylarTaskListPlugin.TITLE_DIALOG,
+										"Communication error during query synchronization. Error reported:\n\n"
+												+ e.getMessage());
+							}
+						});
+					}
+
 				} else {
 					repositoryQuery.setCurrentlySynchronizing(false);
 					return queryStatus.getChildren()[0];
 				}
 			}
-			
+
 			repositoryQuery.setCurrentlySynchronizing(false);
 			repositoryQuery.setLastRefresh(new Date());
 			MylarTaskListPlugin.getTaskListManager().getTaskList().notifyQueryUpdated(repositoryQuery);
