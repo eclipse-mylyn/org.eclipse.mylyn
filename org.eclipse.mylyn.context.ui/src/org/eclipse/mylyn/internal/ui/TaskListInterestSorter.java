@@ -19,6 +19,7 @@ import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskArchive;
 
 /**
@@ -81,6 +82,12 @@ public class TaskListInterestSorter extends ViewerSorter {
 					return -1;
 				}
 				if (task2.isPastReminder()) {
+					return 1;
+				}
+				if (MylarTaskListPlugin.getTaskListManager().isReminderToday(task1)) {
+					return -1;
+				}
+				if (MylarTaskListPlugin.getTaskListManager().isReminderToday(task2)) {
 					return 1;
 				}
 				
