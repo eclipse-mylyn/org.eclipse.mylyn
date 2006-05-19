@@ -22,6 +22,7 @@ import org.eclipse.mylar.provisional.core.InteractionEvent;
 public class ScalingFactors {
 
 	private ScalingFactor defaultDecay = new ScalingFactor("decay", .017f);
+//	private ScalingFactor defaultDecay = new ScalingFactor("decay", .5f);
 	
 	private ScalingFactor defaultEdit = new ScalingFactor("edit", .7f);
 
