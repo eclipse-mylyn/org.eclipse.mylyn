@@ -64,6 +64,7 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction {
 		previousFilters = new HashSet<AbstractTaskListFilter>(TaskListView.getDefault().getFilters());
 		TaskListView.getDefault().clearFilters(true);
 		TaskListView.getDefault().addFilter(taskListInterestFilter);
+		TaskListView.getDefault().setPriorityButtonEnabled(false);
 		TaskListView.getDefault().refreshAndFocus();
 		return true;
 	}
@@ -72,6 +73,7 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction {
 	protected void uninstallInterestFilter(StructuredViewer viewer) {
 		TaskListView.getDefault().getViewer().setSorter(previousSorter);
 		TaskListView.getDefault().removeFilter(taskListInterestFilter);
+		TaskListView.getDefault().setPriorityButtonEnabled(true);
 		for (AbstractTaskListFilter filter : previousFilters) {
 			TaskListView.getDefault().addFilter(filter);
 		}
