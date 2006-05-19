@@ -782,7 +782,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					queryForChanged(repository, changedTasks, urlQueryString);
 					queryCounter = 0;
 					urlQueryString = new String(urlQueryBase);
-					urlQueryString = "&field0-0-" + queryCounter + "=bug_id&type0-0-" + queryCounter
+					urlQueryString += "&field0-0-" + queryCounter + "=bug_id&type0-0-" + queryCounter
 							+ "=equals&value0-0-" + queryCounter + "="
 							+ AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
 				} else if (!itr.hasNext()) {
