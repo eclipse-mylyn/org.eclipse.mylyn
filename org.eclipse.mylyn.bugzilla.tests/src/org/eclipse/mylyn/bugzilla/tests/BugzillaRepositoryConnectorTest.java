@@ -84,10 +84,10 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 	}
 
 	public void testCreateTaskFromExistingId() throws MalformedURLException, InterruptedException {
-		BugzillaTask badId = (BugzillaTask) client.createTaskFromExistingId(repository, "bad-id");
+		BugzillaTask badId = (BugzillaTask) client.createTaskFromExistingKey(repository, "bad-id");
 		assertNull(badId);
 
-		BugzillaTask task = (BugzillaTask) client.createTaskFromExistingId(repository, "1");
+		BugzillaTask task = (BugzillaTask) client.createTaskFromExistingKey(repository, "1");
 		assertNotNull(task);
 		assertEquals(task.getSyncState(), RepositoryTaskSyncState.SYNCHRONIZED);
 
@@ -103,7 +103,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 			PossibleBugzillaFailureException {
 
 		// Get the task
-		BugzillaTask task = (BugzillaTask) client.createTaskFromExistingId(repository, "1");
+		BugzillaTask task = (BugzillaTask) client.createTaskFromExistingKey(repository, "1");
 		MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(task);
 		assertTrue(task.isDownloaded());
 		// (The initial local copy from server)

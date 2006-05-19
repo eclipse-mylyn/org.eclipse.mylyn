@@ -38,7 +38,7 @@ public abstract class AbstractAddExistingTaskWizard extends Wizard {
 	public final boolean performFinish() {
 		AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
 				this.repository.getKind());
-		ITask newTask = connector.createTaskFromExistingId(repository, getTaskId());
+		ITask newTask = connector.createTaskFromExistingKey(repository, getTaskId());
 
 		if (newTask != null && TaskListView.getDefault() != null) {
 			Object selectedObject = ((IStructuredSelection) TaskListView.getDefault().getViewer().getSelection())

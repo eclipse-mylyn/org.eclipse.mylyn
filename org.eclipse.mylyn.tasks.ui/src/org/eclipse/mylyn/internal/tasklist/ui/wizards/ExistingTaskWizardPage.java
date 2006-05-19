@@ -48,7 +48,7 @@ public class ExistingTaskWizardPage extends WizardPage {
 		gd.widthHint = 200;
 
 		Label label = new Label(container, SWT.NULL);
-		label.setText("Enter ID: ");
+		label.setText("Enter Key/ID: ");
 		taskIdText = new Text(container, SWT.BORDER);
 		taskIdText.setLayoutData(gd);
 		taskIdText.setFocus();

@@ -49,7 +49,7 @@ public abstract class AbstractRepositoryConnector {
 
 	protected boolean forceSyncExecForTesting = false;
 
-	public abstract boolean canCreateTaskFromId();
+	public abstract boolean canCreateTaskFromKey();
 
 	public abstract boolean canCreateNewTask();
 	
@@ -103,7 +103,7 @@ public abstract class AbstractRepositoryConnector {
 	 * @return null if task could not be created
 	 */
 
-	public abstract ITask createTaskFromExistingId(TaskRepository repository, String id);
+	public abstract ITask createTaskFromExistingKey(TaskRepository repository, String id);
 	public abstract AbstractRepositorySettingsPage getSettingsPage();
 
 	public abstract IWizard getNewQueryWizard(TaskRepository repository);

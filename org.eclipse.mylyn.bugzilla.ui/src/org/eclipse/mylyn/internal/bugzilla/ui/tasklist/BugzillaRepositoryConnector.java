@@ -94,11 +94,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private List<String> supportedVersions;
 
-//	private OfflineReportsFile offlineReportsFile;
-
 	public BugzillaRepositoryConnector() {
 		super();
-//		offlineReportsFile = BugzillaUiPlugin.getDefault().getOfflineReportsFile();
 	}
 
 	public String getLabel() {
@@ -156,7 +153,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return null;
 	}
 
-	public ITask createTaskFromExistingId(TaskRepository repository, String id) {
+	public ITask createTaskFromExistingKey(TaskRepository repository, String id) {
 		int bugId = -1;
 		try {
 			if (id != null) {
@@ -473,7 +470,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public boolean canCreateTaskFromId() {
+	public boolean canCreateTaskFromKey() {
 		return true;
 	}
 

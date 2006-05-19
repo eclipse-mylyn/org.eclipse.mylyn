@@ -31,7 +31,7 @@ public class NewRepositoryTaskWizard extends MultiRepositoryAwareWizard {
 	private static List<String> getConnectorKinds() {
 		List<String> connectorKinds = new ArrayList<String>();
 		for (AbstractRepositoryConnector client: MylarTaskListPlugin.getRepositoryManager().getRepositoryConnectors()) {
-			if (client.canCreateTaskFromId()) {
+			if (client.canCreateNewTask()) {
 				connectorKinds.add(client.getRepositoryType());
 			} 
 		} 
