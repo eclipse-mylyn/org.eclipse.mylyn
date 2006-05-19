@@ -11,13 +11,18 @@
 
 package org.eclipse.mylar.internal.core.util;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * @author Mik Kersten
  */
 public class DateUtil {
 
+	private static final SimpleDateFormat formatter = new SimpleDateFormat();
+	
 	public static String getFormattedDate() {
 		return getFormattedDate(Calendar.getInstance());
 	}
@@ -137,5 +142,11 @@ public class DateUtil {
 				formatted += sec;
 		}
 		return formatted;
+	}
+	
+	public static String getZoneFormattedDate(TimeZone zone, Date date, String dateFormat) {
+		formatter.setTimeZone(zone);
+		formatter.applyPattern(dateFormat);		
+		return formatter.format(date);
 	}
 }
