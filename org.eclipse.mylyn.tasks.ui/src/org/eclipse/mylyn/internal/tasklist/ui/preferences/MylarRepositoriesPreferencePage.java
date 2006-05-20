@@ -193,7 +193,7 @@ public class MylarRepositoriesPreferencePage extends PreferencePage implements I
 			final GridData gridData = new GridData();
 			gridData.horizontalSpan = 2;
 			enableBackgroundSynch.setLayoutData(gridData);
-			enableBackgroundSynch.setText("Use the following synchronization schedule (Experimental)");
+			enableBackgroundSynch.setText("Use the following synchronization schedule");
 			enableBackgroundSynch.setSelection(getPreferenceStore().getBoolean(
 					TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
 			enableBackgroundSynch.addSelectionListener(new SelectionListener() {

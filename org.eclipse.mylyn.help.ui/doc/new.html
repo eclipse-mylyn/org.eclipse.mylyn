@@ -61,34 +61,103 @@ Mylar 0.3</a></b></p>
 
 <hr>
 
-<table cellpadding="10" cellspacing="0" width="600" id="table212">
+<table cellpadding="10" cellspacing="0" width="600" id="table215">
 		<tr>
 			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Misc for 0.5.2</b></p>
+			<p align="right"><b>Apply Mylar to Task List</b></p>
 			</td>
 			<td valign="top" width="70%">
-			Bugzilla editor: depends/blocks, votes show up, keywords can be set.<p>
-			Bugzilla encodings.</p>
-			<p>Bugzilla search: 
-			integrated, improved query page, synchronizations improvements<p>
-			Bugzilla: no more HTML parsing, work for RedHat &amp; other 
-			customizations<p>Task List: reminder improvements, today's progress 
+						Task List: reminder improvements, today's progress 
 			visible (tasks completed today always appear), incoming status 
 			improved, tasks with incoming state always show (will need to go 
 			through these to synch them up, may be a long list, step towards 
 			turning off Bugzilla email notifications, opening or clicking &quot;synch 
 			with rep&quot; will get rid of incoming, e.g. if you have a bunch of 
 			repository tasks).&nbsp; Without Apply Mylar standard filters behave 
-			normally now (e.g. overdue tasks won't stick).<p>Synchronization: 
-			check your time zones, use PDT for eclipse.org<p>Interest based 
-			sorting<p>Form based JIRA editor (disable???), must synch queries to 
-			use.&nbsp; Make experimental.<p>Add individual JIRA tasks<p>Change 
-			set support changes, model based, have decorator (not yet supported, 
-			don't use model synch), work-around is to re-toggle, if change sets 
-			don't appear toggle task.&nbsp; Press &quot;Synchronize&quot; not &quot;populate&quot; 
-			on startup.</td>
+			normally now (e.g. overdue tasks won't stick).<p>Interest based 
+			sorting</td>
 		</tr>
-		</table>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table217">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>JIRA Editor<br>
+			(Experimental)</b></p>
+			</td>
+			<td valign="top" width="70%">
+						The Eclipse Forms-based JIRA editor provides integrated 
+						editing for JIRA repository tasks.&nbsp; Offline editing 
+						is not yet supported, and saving a comment will result 
+						in it being posted.&nbsp; Note that you must synchronize 
+						your queries before using this editor.<p>
+			<img src="images/0.5.2/jira-editor.gif"></td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table219">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Individual Tasks</b></p>
+			</td>
+			<td valign="top" width="70%">
+			sAdd individual JIRA tasks</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table218">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Search Integration</b></p>
+			</td>
+			<td valign="top" width="70%">
+			The Bugzilla search page now only shows attributes relevant to the 
+			selected product.&nbsp; The search results indicate which hits are 
+			in the Task List (via task icon).&nbsp; 
+			<p>Bugzilla search: 
+			integrated, improved query page, synchronizations improvements</p>
+			<p>
+			Search and query pages will only show relevant attributes.</p>
+			<p>
+			<img src="images/0.5.2/bugzilla-search.gif"></td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table220">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Bugzilla Connector Uses XML/RDF</b></p>
+			</td>
+			<td valign="top" width="70%">
+			The Bugzilla connector now exclusively uses XML and RDF to run 
+			queries and retrieve bug reports (previously relied on HTML 
+			parsing).&nbsp; This means that it can now be used with many 
+			customized repositories (e.g. RedHat), and that all bug attributes 
+			should be visible and editable (e.g. keywords). 
+			<p>Synchronization and notification of offline changes has been 
+			improved (for settings see below).</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table214">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Character Encodings and Time Zones</b></p>
+			</td>
+			<td valign="top" width="70%">
+			The Bugzilla Connector now has full support for encodings (note 
+			UTF-8 support was improved in Bugzilla 2.22).&nbsp; 
+			For most installations 
+			the default UTF-8 settings should work, but you can also force the 
+			encoding used in the repository settings page.<p>
+			<img src="images/0.5.2/bugzilla-encodings-editor.gif"><p>
+			The time zone setting <b>must be set correctly</b> for synchronization to 
+			only synchronize changed tasks correctly.&nbsp; If you do not set this 
+			value your local time zone will be used.&nbsp; Note that the 
+			eclipse.org repository is on Canada/Eastern time.<p>
+			<img src="images/0.5.2/bugzilla-encodings-settings.gif"></td>
+		</tr>
+</table>
 
 <table cellpadding="10" cellspacing="0" width="600" id="table213">
 		<tr>
@@ -96,10 +165,10 @@ Mylar 0.3</a></b></p>
 			<p align="right"><b>Support for CVS Change Sets with Models</b></p>
 			</td>
 			<td valign="top" width="70%">
-			If you are using the model-based change sets...<p>Get decoration, 
-			can be in incoming and outgoing mode.</p>
-			<p>On startup press <i>Synchronize</i> and not <i>Populate</i>.&nbsp; 
-			If a change set you expect is missing or if you get a <i>There are no more Incoming/Outgoing changes</i> message 
+			If you are using the model-based change sets...<p>Get 
+			decoration, can be in incoming and outgoing mode.</p>
+			<p>On startup press <i>Synchronize</i> and not <i>Populate</i>.&nbsp; If a change 
+			set you expect is missing or if you get a <i>There are no more Incoming/Outgoing changes</i> message 
 			in the view on startup toggle the third toolbar button between <i>
 			All Models</i> and <i>Change Sets</i> (see Platform/Team
 			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=142395">bug 
