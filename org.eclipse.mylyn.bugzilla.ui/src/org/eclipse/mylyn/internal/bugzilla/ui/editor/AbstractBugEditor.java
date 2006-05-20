@@ -145,7 +145,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 	public static final Font TEXT_FONT = JFaceResources.getDefaultFont();
 
-	public static final Font COMMENT_FONT = JFaceResources.getFontRegistry().get(JFaceResources.TEXT_FONT);
+	//public static final Font COMMENT_FONT = JFaceResources.getFontRegistry().get(JFaceResources.TEXT_FONT);
 
 	public static final Font HEADER_FONT = JFaceResources.getDefaultFont();
 
@@ -202,6 +202,8 @@ public abstract class AbstractBugEditor extends EditorPart {
 	protected CCombo milestoneCombo;
 
 	protected CCombo componentCombo;
+	
+	protected Button addSelfToCCCheck;
 
 	protected Text urlText;
 
@@ -1055,6 +1057,19 @@ public abstract class AbstractBugEditor extends EditorPart {
 					"Could not retrieve keyword list, ensure proper configuration in "+TaskRepositoriesView.NAME+"\n\nError reported: " + e.getMessage());
 		}
 
+//		addSelfToCCCheck = toolkit.createButton(attributesComposite, "Add "+repository.getUserName()+" to CC", SWT.FLAT | SWT.CHECK);
+//		addSelfToCCCheck.setSelection(true);
+//		addSelfToCCCheck.addSelectionListener(new SelectionAdapter() {
+//
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				if(addSelfToCCCheck.getSelection()) {
+//					getReport().setAttributeValue(BugzillaReportElement.ADDSELFCC, "1");
+//				} else {
+//					getReport().setAttributeValue(BugzillaReportElement.ADDSELFCC, "0");
+//				}
+//			}});
+//		
 		//addSummaryText(attributesComposite);
 		// End URL, Keywords, Summary Text Fields
 		toolkit.paintBordersFor(attributesComposite);
@@ -1106,7 +1121,9 @@ public abstract class AbstractBugEditor extends EditorPart {
 		// newLayout(attributesComposite, 1, "Summary:", PROPERTY);
 		toolkit.createLabel(attributesComposite, "Summary:").setFont(TITLE_FONT);
 		summaryText = toolkit.createText(attributesComposite, getBug().getSummary(), SWT.FLAT);
-		summaryText.setFont(COMMENT_FONT);
+		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+		Font summaryFont = themeManager.getCurrentTheme().getFontRegistry().get(REPOSITORY_TEXT_ID);		
+		summaryText.setFont(summaryFont);
 		GridData summaryTextData = new GridData(GridData.FILL_HORIZONTAL);//HORIZONTAL_ALIGN_FILL
 		summaryTextData.horizontalSpan = 1;
 		//summaryTextData.widthHint = 200;

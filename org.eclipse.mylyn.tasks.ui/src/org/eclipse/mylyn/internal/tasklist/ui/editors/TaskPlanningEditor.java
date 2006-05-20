@@ -75,7 +75,7 @@ import org.eclipse.ui.part.EditorPart;
  * 
  * @author Mik Kersten
  * @author Ken Sueda (initial prototype)
- * @author Rob Elves (added additional fields)
+ * @author Rob Elves
  */
 public class TaskPlanningEditor extends EditorPart {
 
@@ -148,6 +148,13 @@ public class TaskPlanningEditor extends EditorPart {
 				if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
+							
+							if( datePicker != null && updateTask.getReminderDate() != null) {
+								Calendar cal = Calendar.getInstance();
+								cal.setTime(updateTask.getReminderDate());
+								datePicker.setDate(cal);
+							}
+							
 							if (description == null)
 								return;
 							if (!description.isDisposed()) {
@@ -167,7 +174,7 @@ public class TaskPlanningEditor extends EditorPart {
 								} else {
 									statusCombo.select(1);
 								}
-							}
+							}							
 							if (!(updateTask instanceof AbstractRepositoryTask) && !endDate.isDisposed()) {
 								endDate.setText(getTaskDateString(updateTask));
 							}

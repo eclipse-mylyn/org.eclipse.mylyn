@@ -60,6 +60,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -85,6 +86,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * An editor used to view a bug report that exists on a server. It uses a
@@ -445,7 +447,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		final StyledText styledText = viewer.getTextWidget();
 		styledText.addListener(SWT.FocusIn, new DescriptionListener());
 		styledText.setLayout(new GridLayout());
-		GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(styledText);//sectionComposite.getSize().x
+		GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(styledText);
 		
 		texts.add(textsindex, styledText);
 		textHash.put(bug.getDescription(), styledText);
@@ -577,11 +579,12 @@ public class ExistingBugEditor extends AbstractBugEditor {
 			TextViewer viewer = addRepositoryText(repository, ecComposite, comment.getText());
 			styledText = viewer.getTextWidget();
 
+			GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(styledText);
 			// line wrapping
-			GridData styledTextData = new GridData(GridData.FILL_HORIZONTAL);
-			styledTextData.widthHint = DESCRIPTION_WIDTH;
-			styledTextData.grabExcessHorizontalSpace = true;
-			styledText.setLayoutData(styledTextData);
+			// GridData styledTextData = new GridData(GridData.FILL_HORIZONTAL);
+			// styledTextData.widthHint = DESCRIPTION_WIDTH;
+			// styledTextData.grabExcessHorizontalSpace = true;
+			// styledText.setLayoutData(styledTextData);
 
 			// TextViewer viewer = addRepositoryText(repository, form.getBody(),
 			// bug.getDescription());// form.getBody()
@@ -620,7 +623,10 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		newCommentsComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		addCommentsText = toolkit.createText(newCommentsComposite, bug.getNewComment(), SWT.MULTI | SWT.V_SCROLL
 				| SWT.WRAP);
-		addCommentsText.setFont(COMMENT_FONT);
+		
+		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+		Font newCommnetFont = themeManager.getCurrentTheme().getFontRegistry().get(REPOSITORY_TEXT_ID);		
+		addCommentsText.setFont(newCommnetFont);
 		toolkit.paintBordersFor(newCommentsComposite);
 		GridData addCommentsTextData = new GridData(GridData.FILL_HORIZONTAL);
 		addCommentsTextData.widthHint = DESCRIPTION_WIDTH;

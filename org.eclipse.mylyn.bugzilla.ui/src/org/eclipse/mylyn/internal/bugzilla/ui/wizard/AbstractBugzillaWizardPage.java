@@ -38,8 +38,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
+import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * Class that contains shared functions for the last page of the wizards that
@@ -626,7 +628,10 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 		// add the description text field
 		descriptionText = new Text(attributesComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
 
-		descriptionText.setFont(AbstractBugEditor.COMMENT_FONT);
+		//descriptionText.setFont(AbstractBugEditor.COMMENT_FONT);
+		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
+		Font descriptionFont = themeManager.getCurrentTheme().getFontRegistry().get(AbstractBugEditor.REPOSITORY_TEXT_ID);
+		descriptionText.setFont(descriptionFont);
 		GridData descriptionTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		descriptionTextData.horizontalSpan = 4;
 		descriptionTextData.widthHint = AbstractBugEditor.DESCRIPTION_WIDTH;

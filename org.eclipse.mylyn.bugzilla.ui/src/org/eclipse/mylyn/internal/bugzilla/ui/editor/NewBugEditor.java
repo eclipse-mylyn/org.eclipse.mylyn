@@ -29,6 +29,7 @@ import org.eclipse.mylar.provisional.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -38,12 +39,14 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * An editor used to view a locally created bug that does not yet exist on a
@@ -125,7 +128,10 @@ public class NewBugEditor extends AbstractBugEditor {
 				new DescriptionListener());
 
 		descriptionText = new Text(descriptionComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
-		descriptionText.setFont(COMMENT_FONT);
+		//descriptionText.setFont(COMMENT_FONT);
+		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
+		Font descriptionFont = themeManager.getCurrentTheme().getFontRegistry().get(AbstractBugEditor.REPOSITORY_TEXT_ID);
+		descriptionText.setFont(descriptionFont);
 		GridData descriptionTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		descriptionTextData.horizontalSpan = 4;
 		descriptionTextData.widthHint = DESCRIPTION_WIDTH;
