@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar XML Plugin
 Bundle-SymbolicName: org.eclipse.mylar.xml; singleton:=true
-Bundle-Version: 0.5.1.v20060519-1700
+Bundle-Version: 0.5.2
 Bundle-Activator: org.eclipse.mylar.internal.xml.MylarXmlPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
