@@ -603,9 +603,14 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 		assignedToText.setLayoutData(summaryTextData);
 		assignedToText.setText("");
 
+		
+		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
+		Font repositoryFont = themeManager.getCurrentTheme().getFontRegistry().get(AbstractBugEditor.REPOSITORY_TEXT_ID);
+		
 		// add the summary text field
 		newLayout(textComposite, 1, BugzillaReportElement.SHORT_DESC.toString(), PROPERTY);
 		summaryText = new Text(textComposite, SWT.BORDER | SWT.SINGLE | SWT.WRAP);
+		summaryText.setFont(repositoryFont);
 		summaryTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 
 		summaryTextData.horizontalSpan = 2;
@@ -629,9 +634,7 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 		descriptionText = new Text(attributesComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
 
 		//descriptionText.setFont(AbstractBugEditor.COMMENT_FONT);
-		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
-		Font descriptionFont = themeManager.getCurrentTheme().getFontRegistry().get(AbstractBugEditor.REPOSITORY_TEXT_ID);
-		descriptionText.setFont(descriptionFont);
+		descriptionText.setFont(repositoryFont);
 		GridData descriptionTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		descriptionTextData.horizontalSpan = 4;
 		descriptionTextData.widthHint = AbstractBugEditor.DESCRIPTION_WIDTH;
