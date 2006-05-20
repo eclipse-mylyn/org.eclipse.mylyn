@@ -27,10 +27,8 @@
 		<a href="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&product=Mylar&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&bug_status=RESOLVED&bug_status=VERIFIED&bug_status=CLOSED&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=2006-04-29&chfieldto=2006-05-20&chfield=resolution&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=">
 		x<br>
 		reports</a></font></td>
-		<td bgcolor="#FAF7FB"><font size="1">Brock Janiczak and 
-		Eugene Kuleshov made a very substantial contribution of custom JIRA 
-		query support.&nbsp; Gunnar Wagenknecht contributed a patch for RC1 
-		compatibility.</font></td>
+		<td bgcolor="#FAF7FB"><font size="1">See
+		<a href="http://eclipse.org/mylar">http://eclipse.org/mylar</a></font></td>
 	</tr>
 	<tr>
 		<td bgcolor="#FAF7FB"><font size="1">0.5.1<br>
@@ -52,6 +50,7 @@
 <b>&nbsp;&nbsp;&nbsp;&nbsp; - <a href="new-0.3.html">New &amp; Noteworthy for 
 Mylar 0.3</a></b></p>
 
+<p>Changes <span style="background-color: #E0D0E6">since</span>...</p>
 <p>Instructions</p>
 <ul>
 	<li>Please use &quot;search for new&quot; to install</li>
@@ -61,129 +60,57 @@ Mylar 0.3</a></b></p>
 
 <hr>
 
-<table cellpadding="10" cellspacing="0" width="600" id="table215">
-		<tr>
-			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Apply Mylar to Task List</b></p>
-			</td>
-			<td valign="top" width="70%">
-						Task List: reminder improvements, today's progress 
-			visible (tasks completed today always appear), incoming status 
-			improved, tasks with incoming state always show (will need to go 
-			through these to synch them up, may be a long list, step towards 
-			turning off Bugzilla email notifications, opening or clicking &quot;synch 
-			with rep&quot; will get rid of incoming, e.g. if you have a bunch of 
-			repository tasks).&nbsp; Without Apply Mylar standard filters behave 
-			normally now (e.g. overdue tasks won't stick).<p>Interest based 
-			sorting<p>
-			<img src="images/0.5.2/tasklist-apply-mylar.gif"></td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table217">
-		<tr>
-			<td align="left" valign="top" width="30%">
-			<p align="right"><b>JIRA Editor<br>
-			(Experimental)</b></p>
-			</td>
-			<td valign="top" width="70%">
-						The Eclipse Forms-based JIRA editor provides integrated 
-						editing for JIRA repository tasks.&nbsp; Offline editing 
-						is not yet supported, and saving a comment will result 
-						in it being posted.&nbsp; Note that you must synchronize 
-						your queries before using this editor.<p>
-			<img src="images/0.5.2/jira-editor.gif"></td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table219">
-		<tr>
-			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Individual Tasks</b></p>
-			</td>
-			<td valign="top" width="70%">
-			Individual JIRA tasks can now be added by key via the Task List </td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table218">
-		<tr>
-			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Search Integration</b></p>
-			</td>
-			<td valign="top" width="70%">
-			The Bugzilla search page now only shows attributes relevant to the 
-			selected product.&nbsp; The search results indicate which hits are 
-			in the Task List (via task icon).&nbsp; 
-			<p>Bugzilla search: 
-			integrated, improved query page, synchronizations improvements</p>
-			<p>
-			Search and query pages will only show relevant attributes.</p>
-			<p>
-			<img src="images/0.5.2/bugzilla-search.gif"></td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table220">
-		<tr>
-			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Bugzilla Connector Uses XML/RDF</b></p>
-			</td>
-			<td valign="top" width="70%">
-			The Bugzilla connector now exclusively uses XML and RDF to run 
-			queries and retrieve bug reports (previously relied on HTML 
-			parsing).&nbsp; This means that it can now be used with many 
-			customized repositories (e.g. RedHat), and that all bug attributes 
-			should be visible and editable (e.g. keywords).
-			<span style="background-color: #FFFF00">Attachments show up as a 
-			table.</span><p>Synchronization and incoming change notification has been 
-			streamlined and only downloads changed reports (refer to Time Zone 
-			settings below).</p>
-			<p>
-			<img src="images/0.5.2/task-repository-sync.gif"></td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table214">
-		<tr>
-			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Character Encodings and Time Zones</b></p>
-			</td>
-			<td valign="top" width="70%">
-			The Bugzilla Connector now has full support for encodings (note 
-			UTF-8 support was improved in Bugzilla 2.22).&nbsp; 
-			For most installations 
-			the default UTF-8 settings should work, but you can also force the 
-			encoding used in the repository settings page.<p>
-			<img src="images/0.5.2/bugzilla-encodings-editor.gif"><p>
-			The time zone setting <b>must be set correctly</b> for synchronization to 
-			only synchronize changed tasks correctly.&nbsp; If you do not set this 
-			value your local time zone will be used.&nbsp; Note that the 
-			eclipse.org repository is on Canada/Eastern time.<p>
-			<img src="images/0.5.2/bugzilla-encodings-settings.gif"></td>
-		</tr>
-</table>
-
 <table cellpadding="10" cellspacing="0" width="600" id="table213">
 		<tr>
-			<td align="left" valign="top" width="30%">
+			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
 			<p align="right"><b>Support for CVS Change Sets with Models</b></p>
 			</td>
 			<td valign="top" width="70%">
-			If you are using the model-based change sets...<p>Get 
-			decoration, can be in incoming and outgoing mode.</p>
-			<p>On startup press <i>Synchronize</i> and not <i>Populate</i>.&nbsp; If a change 
+			If you are using the model-based change sets, you will notice that 
+			the Mylar Active Change sets work show up with a decoration in the 
+			lower-right corner, and that you can view both incoming and outgoing 
+			change sets at the same time.&nbsp; However, note that there is a 
+			refresh problem on startup, so if a change 
 			set you expect is missing or if you get a <i>There are no more Incoming/Outgoing changes</i> message 
 			in the view on startup toggle the third toolbar button between <i>
 			All Models</i> and <i>Change Sets</i> (see Platform/Team
 			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=142395">bug 
-			142395</a>).</p>
-			<p>
+			142395</a>).<p>
 			<img src="images/0.5.2/changesets-model-based.gif"></td>
 		</tr>
 </table>
 
 <h2>Task List</h2>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table221">
+		<tr>
+			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
+			<p align="right"><b>Daily Progress </b></p>
+			</td>
+			<td valign="top" width="70%">
+						Apply Mylar now helps focus tasks relevant to the work 
+						day by highlighting those scheduled for today (default 
+						is blue) and always showing tasks completed today 
+						(default is green).&nbsp; Repository tasks with incoming 
+						comments are always considered to be interesting.&nbsp; 
+						Note that if you see too many tasks with incoming 
+						notifications you can select them all and click <i>
+						Synchronize with Repository</i> on the context menu to 
+						catch up.&nbsp; With Apply Mylar enabled sorting is also 
+						based on interest (e.g. bringing overdue tasks to the 
+						top and completed ones to the bottom, then sorting by 
+						priority and description).<p>
+			<img src="images/0.5.2/tasklist-apply-mylar.gif"></td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table222">
+		<tr>
+			<td>
+			<hr>
+			</td>
+		</tr>
+</table>
 
 <table cellpadding="10" cellspacing="0" width="600" id="table208">
 		<tr>
@@ -244,7 +171,113 @@ Mylar 0.3</a></b></p>
 		</tr>
 		</table>
 
+<p>&nbsp;</p>
+<h2>Team</h2>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table233">
+		<tr>
+			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
+			<p align="right"><b>Support for CVS Change Sets with Models</b></p>
+			</td>
+			<td valign="top" width="70%">
+			If you are using the model-based change sets, you will notice that 
+			the Mylar Active Change sets work show up with a decoration in the 
+			lower-right corner, and that you can view both incoming and outgoing 
+			change sets at the same time.&nbsp; However, note that there is a 
+			refresh problem on startup, so if a change 
+			set you expect is missing or if you get a <i>There are no more Incoming/Outgoing changes</i> message 
+			in the view on startup toggle the third toolbar button between <i>
+			All Models</i> and <i>Change Sets</i> (see Platform/Team
+			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=142395">bug 
+			142395</a>).<p>
+			<img src="images/0.5.2/changesets-model-based.gif"></td>
+		</tr>
+</table>
+
+<p>&nbsp;</p>
+
 <h2>Bugzilla Connector</h2>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table227">
+		<tr>
+			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
+			<p align="right"><b>Search Integration</b></p>
+			</td>
+			<td valign="top" width="70%">
+			The Bugzilla search page now only shows attributes relevant to the 
+			selected product.&nbsp; The search results indicate which hits are 
+			in the Task List (via task icon).&nbsp; 
+			<p>Bugzilla search: 
+			integrated, improved query page, synchronizations improvements</p>
+			<p>
+			Search and query pages will only show relevant attributes.</p>
+			<p>
+			<img src="images/0.5.2/bugzilla-search.gif"></td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table231">
+		<tr>
+			<td>
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table228">
+		<tr>
+			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
+			<p align="right"><b>Bugzilla Connector Uses XML/RDF</b></p>
+			</td>
+			<td valign="top" width="70%">
+			The Bugzilla connector now exclusively uses XML and RDF to run 
+			queries and retrieve bug reports (previously relied on HTML 
+			parsing).&nbsp; This means that it can now be used with many 
+			customized repositories (e.g. RedHat), and that all bug attributes 
+			should be visible and editable (e.g. keywords).&nbsp; Attachments 
+			show up in a table.<p>Synchronization and incoming change notification has been 
+			streamlined and only downloads changed reports (refer to Time Zone 
+			settings below).</p>
+			<p>
+			<img src="images/0.5.2/task-repository-sync.gif"></td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table232">
+		<tr>
+			<td>
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table229">
+		<tr>
+			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
+			<p align="right"><b>Character Encodings and Time Zones</b></p>
+			</td>
+			<td valign="top" width="70%">
+			The Bugzilla Connector now has full support for encodings (note 
+			UTF-8 support was improved in Bugzilla 2.22).&nbsp; 
+			For most installations 
+			the default UTF-8 settings should work, but you can also force the 
+			encoding used in the repository settings page.<p>
+			<img src="images/0.5.2/bugzilla-encodings-editor.gif"><p>
+			The time zone setting <b>must be set correctly</b> for synchronization to 
+			only synchronize changed tasks correctly.&nbsp; If you do not set this 
+			value your local time zone will be used.&nbsp; Note that the 
+			eclipse.org repository is on Canada/Eastern time.<p>
+			<img src="images/0.5.2/bugzilla-encodings-settings.gif"></td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table230">
+		<tr>
+			<td>
+			<hr>
+			</td>
+		</tr>
+</table>
 
 <table cellpadding="10" cellspacing="0" width="600" id="table209">
 		<tr>
@@ -280,6 +313,48 @@ Mylar 0.3</a></b></p>
 		</table>
 
 <h2>JIRA Connector</h2>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table223">
+		<tr>
+			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
+			<p align="right"><b>JIRA Editor<br>
+			(Experimental)</b></p>
+			</td>
+			<td valign="top" width="70%">
+						The Eclipse Forms-based JIRA editor provides integrated 
+						editing for JIRA repository tasks.&nbsp; Offline editing 
+						is not yet supported, and saving a comment will result 
+						in it being posted.&nbsp; Note that you must synchronize 
+						your queries before using this editor.<p>
+			<img src="images/0.5.2/jira-editor.gif"></td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table225">
+		<tr>
+			<td>
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table224">
+		<tr>
+			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
+			<p align="right"><b>Individual Tasks</b></p>
+			</td>
+			<td valign="top" width="70%">
+			Individual JIRA tasks can now be added by key via the Task List.</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table226">
+		<tr>
+			<td>
+			<hr>
+			</td>
+		</tr>
+</table>
 
 <table cellpadding="10" cellspacing="0" width="600" id="table204">
 		<tr>
