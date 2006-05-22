@@ -21,14 +21,29 @@
 	</tr>
 	<tr>
 		<td bgcolor="#FAF7FB"><font size="1">0.5.2<br>
-		<i>May 19</i></font></td>
+		<i>May 22</i></font></td>
 		<td bgcolor="#FAF7FB" align="center">
 		<font size="1">
 		<a href="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&product=Mylar&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&bug_status=RESOLVED&bug_status=VERIFIED&bug_status=CLOSED&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=2006-04-29&chfieldto=2006-05-20&chfield=resolution&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=">
-		x<br>
+		64<br>
 		reports</a></font></td>
-		<td bgcolor="#FAF7FB"><font size="1">See
-		<a href="http://eclipse.org/mylar">http://eclipse.org/mylar</a></font></td>
+		<td bgcolor="#FAF7FB"><font size="1">Brock Janiczak made another big 
+		contribution with the
+		<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=133764">
+		form-based JIRA editor</a>, updates for
+		<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=139320">new JIRA 
+		APIs</a>, and
+		<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=141251">wizard 
+		progress</a>.&nbsp; David Barri's patch and help were instrumental in 
+		supporting
+		<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=117035">alternate 
+		encodings</a>.&nbsp; Sefan Langer made use of the internal browser for 
+		tasks <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=132656">
+		optional</a>.&nbsp; Minor fixes were also contributed by
+		<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=142362">Brian de 
+		Alwis</a> and
+		<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=139293">Leah 
+		Findlater</a>.</font></td>
 	</tr>
 	<tr>
 		<td bgcolor="#FAF7FB"><font size="1">0.5.1<br>
@@ -50,36 +65,15 @@
 <b>&nbsp;&nbsp;&nbsp;&nbsp; - <a href="new-0.3.html">New &amp; Noteworthy for 
 Mylar 0.3</a></b></p>
 
-<p>Changes <span style="background-color: #E0D0E6">since 0.5.1 are highlighted
-</span></p>
-<p>Instructions</p>
+<p>Changes <span style="background-color: #E0D0E6">since 0.5.1 are highlighted.
+</span>&nbsp; Update instructions</p>
 <ul>
-	<li>Please use &quot;search for new&quot; to install</li>
+	<li>Please use &quot;Search for new features...&quot; to install</li>
 	<li>Bugzilla users: offline reports will be deleted, so submit outgoing 
 	changes before update</li>
 </ul>
 
 <hr>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table213">
-		<tr>
-			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Support for CVS Change Sets with Models</b></p>
-			</td>
-			<td valign="top" width="70%">
-			If you are using the model-based change sets, you will notice that 
-			the Mylar Active Change sets work show up with a decoration in the 
-			lower-right corner, and that you can view both incoming and outgoing 
-			change sets at the same time.&nbsp; However, note that there is a 
-			refresh problem on startup, so if a change 
-			set you expect is missing or if you get a <i>There are no more Incoming/Outgoing changes</i> message 
-			in the view on startup toggle the third toolbar button between <i>
-			All Models</i> and <i>Change Sets</i> (see Platform/Team
-			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=142395">bug 
-			142395</a>).<p>
-			<img src="images/0.5.2/changesets-model-based.gif"></td>
-		</tr>
-</table>
 
 <h2>Task List</h2>
 
@@ -89,18 +83,22 @@ Mylar 0.3</a></b></p>
 			<p align="right"><b>Daily Progress </b></p>
 			</td>
 			<td valign="top" width="70%">
-						Apply Mylar now helps focus tasks relevant to the work 
-						day by highlighting those scheduled for today (default 
+						Using
+						Apply Mylar in the Task List now helps track daily task 
+						progress by highlighting tasks scheduled for today (default 
 						is blue) and always showing tasks completed today 
-						(default is green).&nbsp; Repository tasks with incoming 
-						comments are always considered to be interesting.&nbsp; 
+						(default is green).&nbsp; With Apply Mylar enabled the 
+						previous sort order is removed and interest based 
+						sorting is added (e.g. brings overdue tasks to the top 
+						and completed ones to the bottom, then sorts by priority 
+						and description).<p>Repository tasks with incoming 
+						comments are now always considered to be interesting 
+						(e.g. 133196 below).&nbsp; 
 						Note that if you see too many tasks with incoming 
 						notifications you can select them all and click <i>
 						Synchronize with Repository</i> on the context menu to 
-						catch up.&nbsp; With Apply Mylar enabled sorting is also 
-						based on interest (e.g. bringing overdue tasks to the 
-						top and completed ones to the bottom, then sorting by 
-						priority and description).<p>
+						catch up.&nbsp; </p>
+						<p>
 			<img src="images/0.5.2/tasklist-apply-mylar.gif"></td>
 		</tr>
 </table>
@@ -207,13 +205,9 @@ Mylar 0.3</a></b></p>
 			</td>
 			<td valign="top" width="70%">
 			The Bugzilla search page now only shows attributes relevant to the 
-			selected product.&nbsp; The search results indicate which hits are 
-			in the Task List (via task icon).&nbsp; 
-			<p>Bugzilla search: 
-			integrated, improved query page, synchronizations improvements</p>
-			<p>
-			Search and query pages will only show relevant attributes.</p>
-			<p>
+			selected product.&nbsp; The results shown in the Search view are now 
+			opened and displayed consistently with the Task List (e.g. 
+			indicating which hits are in the Task list via the icon).<p>
 			<img src="images/0.5.2/bugzilla-search.gif"></td>
 		</tr>
 </table>
@@ -237,7 +231,7 @@ Mylar 0.3</a></b></p>
 			parsing).&nbsp; This means that it can now be used with many 
 			customized repositories (e.g. RedHat), and that all bug attributes 
 			should be visible and editable (e.g. keywords).&nbsp; Attachments 
-			show up in a table.<p>Synchronization and incoming change notification has been 
+			now show up in a new section on the report.<p>Synchronization and incoming change notification has been 
 			streamlined and only downloads changed reports (refer to Time Zone 
 			settings below).</p>
 			<p>
@@ -324,8 +318,10 @@ Mylar 0.3</a></b></p>
 			</td>
 			<td valign="top" width="70%">
 						The Eclipse Forms-based JIRA editor provides integrated 
-						editing for JIRA repository tasks.&nbsp; Offline editing 
-						is not yet supported, and saving a comment will result 
+						editing for JIRA repository tasks.&nbsp; At this time 
+						only new comment posting is supported, and attributes 
+						can not be edited.&nbsp; Since offline editing for JIRA 
+						tasks is not yet supported saving a comment will result 
 						in it being posted.&nbsp; Note that you must synchronize 
 						your queries before using this editor.<p>
 			<img src="images/0.5.2/jira-editor.gif"></td>
@@ -346,7 +342,8 @@ Mylar 0.3</a></b></p>
 			<p align="right"><b>Individual Tasks</b></p>
 			</td>
 			<td valign="top" width="70%">
-			Individual JIRA tasks can now be added by key via the Task List.</td>
+			Individual JIRA tasks can now be added by issue key via the Task 
+			List (via context menu -&gt; <i>Add Existing Repository Task</i>)</td>
 		</tr>
 </table>
 
