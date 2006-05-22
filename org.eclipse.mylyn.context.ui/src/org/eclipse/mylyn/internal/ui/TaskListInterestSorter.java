@@ -79,6 +79,14 @@ public class TaskListInterestSorter extends ViewerSorter {
 				} else if (task1.isCompleted() && task2.isCompleted()){
 					return comparePrioritiesAndKeys(task1, task2);
 				}
+
+				if (MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task1) && !MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task2)) {
+					return 1;
+				} else if (!MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task1) && MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task2)) {
+					return -1;
+				} else if (MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task1) && MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task2)) {
+					return comparePrioritiesAndKeys(task1, task2);
+				}
 				
 				if (MylarTaskListPlugin.getTaskListManager().isReminderToday(task1) && !MylarTaskListPlugin.getTaskListManager().isReminderToday(task2)) {
 					return 1;
