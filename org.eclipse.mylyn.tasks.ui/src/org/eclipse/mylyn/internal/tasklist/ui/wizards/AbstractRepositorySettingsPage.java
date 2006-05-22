@@ -116,12 +116,17 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		for (String zone : timeZoneIds) {
 			timeZonesCombo.add(zone);
 		}
+		boolean setZone = false;
 		if (repository != null) {
 			if (timeZonesCombo.indexOf(repository.getTimeZoneId()) > -1) {
 				timeZonesCombo.select(timeZonesCombo.indexOf(repository.getTimeZoneId()));
+				setZone = true;
 			}
 		}
-
+		if (!setZone) {
+			timeZonesCombo.select(timeZonesCombo.indexOf(TimeZone.getDefault().getID()));
+		}
+		
 		createAdditionalControls(container);
 
 		Composite encodingContainer = new Composite(container, SWT.NONE);
