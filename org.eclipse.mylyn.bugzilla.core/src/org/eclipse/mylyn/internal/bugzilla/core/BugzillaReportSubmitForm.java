@@ -119,7 +119,7 @@ public class BugzillaReportSubmitForm {
 	private Map<String, String> fields = new HashMap<String, String>();
 
 	private URL postUrl;
-	
+
 	private Proxy proxySettings = Proxy.NO_PROXY;
 
 	private String charset;
@@ -141,32 +141,34 @@ public class BugzillaReportSubmitForm {
 		charset = charEncoding;
 	}
 
-	public static BugzillaReportSubmitForm makeNewBugPost(String repositoryUrl, String userName, String password, Proxy proxySettings, String characterEncoding, NewBugzillaReport model, boolean wrapDescription) throws UnsupportedEncodingException {
-		
+	public static BugzillaReportSubmitForm makeNewBugPost(String repositoryUrl, String userName, String password,
+			Proxy proxySettings, String characterEncoding, NewBugzillaReport model, boolean wrapDescription)
+			throws UnsupportedEncodingException {
+
 		BugzillaReportSubmitForm form;
-		
+
 		if (characterEncoding != null) {
 			form = new BugzillaReportSubmitForm(characterEncoding);
 		} else {
 			form = new BugzillaReportSubmitForm(BugzillaPlugin.ENCODING_UTF_8);
 		}
-		
+
 		form.setPrefix(BugzillaReportSubmitForm.FORM_PREFIX_BUG_218);
 		form.setPrefix2(BugzillaReportSubmitForm.FORM_PREFIX_BUG_220);
 
 		form.setPostfix(BugzillaReportSubmitForm.FORM_POSTFIX_216);
 		form.setPostfix2(BugzillaReportSubmitForm.FORM_POSTFIX_218);
 
-		setConnectionsSettings(form, repositoryUrl, userName, password, proxySettings, POST_BUG_CGI);		
-				
+		setConnectionsSettings(form, repositoryUrl, userName, password, proxySettings, POST_BUG_CGI);
+
 		// go through all of the attributes and add them to
 		// the bug post
 		Iterator<AbstractRepositoryReportAttribute> itr = model.getAttributes().iterator();
 		while (itr.hasNext()) {
 			AbstractRepositoryReportAttribute a = itr.next();
-			if (a != null && a.getID() != null && a.getID().compareTo("") != 0) { 
-				//String key = a.getName();
-				//System.err.println(">>> "+key);
+			if (a != null && a.getID() != null && a.getID().compareTo("") != 0) {
+				// String key = a.getName();
+				// System.err.println(">>> "+key);
 				String value = null;
 				value = a.getValue();
 				if (value == null)
@@ -197,37 +199,46 @@ public class BugzillaReportSubmitForm {
 
 	/**
 	 * TODO: refactor common stuff with new bug post
-	 * @param removeCC
-	 * @param characterEncoding TODO
 	 * 
-	 * @throws UnsupportedEncodingException 
+	 * @param removeCC
+	 * @param characterEncoding
+	 *            TODO
+	 * 
+	 * @throws UnsupportedEncodingException
 	 */
-	public static BugzillaReportSubmitForm makeExistingBugPost(BugzillaReport bug, String repositoryUrl, String userName, String password,
-			Proxy proxySettings, Set<String> removeCC, String characterEncoding) throws UnsupportedEncodingException {
+	public static BugzillaReportSubmitForm makeExistingBugPost(BugzillaReport bug, String repositoryUrl,
+			String userName, String password, Proxy proxySettings, Set<String> removeCC, String characterEncoding)
+			throws UnsupportedEncodingException {
 
 		BugzillaReportSubmitForm bugReportPostHandler;
-		
+
 		if (characterEncoding != null) {
 			bugReportPostHandler = new BugzillaReportSubmitForm(characterEncoding);
 		} else {
 			bugReportPostHandler = new BugzillaReportSubmitForm(BugzillaPlugin.ENCODING_UTF_8);
 		}
-		
+
 		setDefaultCCValue(bug, userName);
 		setConnectionsSettings(bugReportPostHandler, repositoryUrl, userName, password, proxySettings, PROCESS_BUG_CGI);
 
 		// go through all of the attributes and add them to the bug post
 		for (Iterator<AbstractRepositoryReportAttribute> it = bug.getAttributes().iterator(); it.hasNext();) {
 			AbstractRepositoryReportAttribute a = it.next();
-			if(a.getID().equals(BugzillaReportElement.DELTA_TS.getKeyString()) || a.getID().equals(BugzillaReportElement.CREATION_TS.getKeyString())) {
+			if (a.getID().equals(BugzillaReportElement.CC.getKeyString())
+					|| a.getID().equals(BugzillaReportElement.REPORTER.getKeyString())
+					|| a.getID().equals(BugzillaReportElement.ASSIGNED_TO.getKeyString())
+					|| a.getID().equals(BugzillaReportElement.DELTA_TS.getKeyString())
+					|| a.getID().equals(BugzillaReportElement.CREATION_TS.getKeyString())) {
 				continue;
 			}
 			if (a != null && a.getID() != null && a.getID().compareTo("") != 0 && !a.isHidden()) {
 				String value = a.getValue();
+				// System.err.println(a.getID()+" "+a.getValue());
 				// add the attribute to the bug post
 				bugReportPostHandler.add(a.getID(), value != null ? value : "");
 			} else if (a != null && a.getID() != null && a.getID().compareTo("") != 0 && a.isHidden()) {
 				// we have a hidden attribute and we should send it back.
+				// System.err.println(a.getID()+" "+a.getValue());
 				bugReportPostHandler.add(a.getID(), a.getValue());
 			}
 		}
@@ -252,13 +263,13 @@ public class BugzillaReportSubmitForm {
 		bugReportPostHandler.add(KEY_FORM_NAME, VAL_PROCESS_BUG);
 
 		if (bug.getAttribute(BugzillaReportElement.SHORT_DESC) != null) {
-				bugReportPostHandler.add(KEY_SHORT_DESC, bug.getAttribute(BugzillaReportElement.SHORT_DESC).getValue());
+			bugReportPostHandler.add(KEY_SHORT_DESC, bug.getAttribute(BugzillaReportElement.SHORT_DESC).getValue());
 		}
 
 		if (bug.getNewComment().length() != 0) {
-				bugReportPostHandler.add(KEY_COMMENT, bug.getNewComment());				
+			bugReportPostHandler.add(KEY_COMMENT, bug.getNewComment());
 		}
-		
+
 		if (removeCC != null && removeCC.size() > 0) {
 			String[] s = new String[removeCC.size()];
 			bugReportPostHandler.add(KEY_CC, toCommaSeparatedList(removeCC.toArray(s)));
@@ -286,15 +297,15 @@ public class BugzillaReportSubmitForm {
 	 *            The key for the value to be added
 	 * @param value
 	 *            The value to be added
-	 * @throws UnsupportedEncodingException 
+	 * @throws UnsupportedEncodingException
 	 */
 	private void add(String key, String value) throws UnsupportedEncodingException {
-//		try {
-			fields.put(key, URLEncoder.encode(value == null ? "" : value, charset));
-			//BugzillaPlugin.ENCODING_UTF_8
-//		} catch (UnsupportedEncodingException e) {
-//			// ignore
-//		}
+		// try {
+		fields.put(key, URLEncoder.encode(value == null ? "" : value, charset));
+		// BugzillaPlugin.ENCODING_UTF_8
+		// } catch (UnsupportedEncodingException e) {
+		// // ignore
+		// }
 	}
 
 	/**
@@ -326,7 +337,7 @@ public class BugzillaReportSubmitForm {
 			// get the url for the update with all of the changed values
 
 			// Used to debug posted report
-			//System.err.println(">>> "+getPostBody());
+			// System.err.println(">>> "+getPostBody());
 
 			byte[] body = getPostBody().getBytes();
 			postConnection.setRequestProperty(REQUEST_PROPERTY_CONTENT_LENGTH, String.valueOf(body.length));
@@ -356,7 +367,7 @@ public class BugzillaReportSubmitForm {
 			// while (aString != null) {
 			// System.err.println(aString);
 			// aString = in.readLine();
-			//			 }
+			// }
 
 			boolean possibleFailure = true;
 			error = "";
@@ -512,7 +523,8 @@ public class BugzillaReportSubmitForm {
 	// this.charset = charset;
 	// }
 
-	private static void setConnectionsSettings(BugzillaReportSubmitForm form, String repositoryUrl, String userName, String password, Proxy proxySettings, String formName) throws UnsupportedEncodingException {
+	private static void setConnectionsSettings(BugzillaReportSubmitForm form, String repositoryUrl, String userName,
+			String password, Proxy proxySettings, String formName) throws UnsupportedEncodingException {
 		String baseURL = repositoryUrl;
 		if (!baseURL.endsWith("/"))
 			baseURL += "/";
@@ -529,7 +541,7 @@ public class BugzillaReportSubmitForm {
 		form.add(KEY_BUGZILLA_LOGIN, userName);
 		form.add(KEY_BUGZILLA_PASSWORD, password);
 	}
-	
+
 	/**
 	 * Sets the cc field to the user's address if a cc has not been specified to
 	 * ensure that commenters are on the cc list. TODO: Review this mechanism
@@ -542,8 +554,7 @@ public class BugzillaReportSubmitForm {
 		AbstractRepositoryReportAttribute owner = bug.getAttribute(BugzillaReportElement.ASSIGNED_TO);
 
 		// Don't add the cc if the user is the bug owner
-		if (userName == null
-				|| (owner != null && owner.getValue().indexOf(userName) != -1)) {
+		if (userName == null || (owner != null && owner.getValue().indexOf(userName) != -1)) {
 			// MylarStatusHandler.log("Could not determine CC value for
 			// repository: " + repository, null);
 			return;
@@ -553,10 +564,13 @@ public class BugzillaReportSubmitForm {
 		if (ccAttribute != null && ccAttribute.getValues().contains(userName)) {
 			return;
 		}
-		BugzillaReportAttribute newCCattr = new BugzillaReportAttribute(BugzillaReportElement.NEWCC);
+		AbstractRepositoryReportAttribute newCCattr = bug.getAttribute(BugzillaReportElement.NEWCC);
+		if (newCCattr == null) {
+			newCCattr = new BugzillaReportAttribute(BugzillaReportElement.NEWCC);
+			bug.addAttribute(BugzillaReportElement.NEWCC, newCCattr);
+		}
 		// Add the user to the cc list
 		newCCattr.setValue(userName);
-		bug.addAttribute(BugzillaReportElement.NEWCC, newCCattr);
 	}
 
 	/**
@@ -564,10 +578,13 @@ public class BugzillaReportSubmitForm {
 	 * properly in bugzilla
 	 */
 	private static String formatTextToLineWrap(String origText, boolean hardWrap) {
-//		BugzillaServerVersion bugzillaServerVersion = IBugzillaConstants.BugzillaServerVersion.fromString(repository
-//				.getVersion());
-//		if (bugzillaServerVersion != null && bugzillaServerVersion.compareTo(BugzillaServerVersion.SERVER_220) >= 0) {
-//			return origText;
+		// BugzillaServerVersion bugzillaServerVersion =
+		// IBugzillaConstants.BugzillaServerVersion.fromString(repository
+		// .getVersion());
+		// if (bugzillaServerVersion != null &&
+		// bugzillaServerVersion.compareTo(BugzillaServerVersion.SERVER_220) >=
+		// 0) {
+		// return origText;
 		if (!hardWrap) {
 			return origText;
 		} else {
@@ -585,9 +602,9 @@ public class BugzillaReportSubmitForm {
 				origText = origText.substring(spaceIndex + 1, origText.length());
 				j++;
 			}
-		
+
 			String newText = "";
-		
+
 			for (int i = 0; i < textArray.length; i++) {
 				if (textArray[i] == null)
 					break;

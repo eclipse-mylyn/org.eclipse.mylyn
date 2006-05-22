@@ -65,6 +65,8 @@ public enum BugzillaReportElement {
 	VERSION ("Version:", "version", false),
 	VOTES ("Votes:", "votes", false, true),
 	WHO ("who", "who"),
+	QA_CONTACT("QA Contact", "qa_contact", false, true),
+	//ADDSELFCC ("Add self to CC", "addselfcc", true, false),
 	// Used by search engine
 	LI ("used by search engine", "li", true),
 	ID ("used by search engine", "id", true),
