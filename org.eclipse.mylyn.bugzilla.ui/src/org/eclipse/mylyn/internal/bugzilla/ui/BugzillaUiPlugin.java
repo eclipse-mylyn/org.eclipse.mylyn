@@ -19,6 +19,7 @@ import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -261,15 +262,18 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	 */
 	public static void updateQueryOptions(TaskRepository repository, IProgressMonitor monitor) throws LoginException,
 			IOException {
-
+		
 		String repositoryUrl = repository.getUrl();
-		// BugzillaQueryPageParser parser = new
-		// BugzillaQueryPageParser(repository, monitor);
-		// if (!parser.wasSuccessful())
-		// return;
 
+		if(monitor.isCanceled())
+			throw new OperationCanceledException();
+		
+		// TODO: pass monitor along since it is this call that does the work and can hang due to network IO
 		RepositoryConfiguration config = RepositoryConfigurationFactory.getInstance().getConfiguration(repository.getUrl(), repository.getUserName(), repository.getPassword(), repository.getCharacterEncoding());
 
+		if(monitor.isCanceled())
+			throw new OperationCanceledException();
+		
 		// get the preferences store so that we can change the data in it
 		IPreferenceStore prefs = BugzillaUiPlugin.getDefault().getPreferenceStore();
 
