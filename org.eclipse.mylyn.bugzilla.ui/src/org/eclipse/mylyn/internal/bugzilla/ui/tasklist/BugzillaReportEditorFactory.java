@@ -13,7 +13,6 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import javax.security.auth.login.LoginException;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditor;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
@@ -23,7 +22,6 @@ import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
@@ -50,15 +48,17 @@ public class BugzillaReportEditorFactory implements ITaskEditorFactory {
 		if (task instanceof BugzillaTask) {
 			BugzillaTask bugzillaTask = (BugzillaTask) task;
 			try {
-				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, bugzillaTask.getRepositoryUrl());
+				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+						BugzillaPlugin.REPOSITORY_KIND, bugzillaTask.getRepositoryUrl());
 				BugzillaTaskEditorInput input = new BugzillaTaskEditorInput(repository, bugzillaTask, true);
-				input.setOfflineBug(bugzillaTask.getBugReport()); 
-				return input;	
+				input.setOfflineBug(bugzillaTask.getBugReport());
+				return input;
 			} catch (final LoginException e) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						MessageDialog.openError(Display.getDefault().getActiveShell(), "Report Download Failed",
-								"Ensure proper repository configuration in " + TaskRepositoriesView.NAME + ".");
+						MylarStatusHandler.fail(e,
+								"Report Download Failed.  Ensure proper repository configuration in "
+										+ TaskRepositoriesView.NAME + ".", true);
 					}
 				});
 			} catch (Exception e) {
