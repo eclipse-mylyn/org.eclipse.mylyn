@@ -67,6 +67,7 @@ import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettings
 import org.eclipse.mylar.internal.tasklist.ui.wizards.ExistingTaskWizardPage;
 import org.eclipse.mylar.internal.tasklist.util.TaskDataExportJob;
 import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReport;
+import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReportAttribute;
 import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.provisional.bugzilla.core.ReportAttachment;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
@@ -379,6 +380,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 											"Bugzilla could not post your bug.");
 								} else if (throwable.getCause() instanceof PossibleBugzillaFailureException) {
+									String attributes = "";
+									if (bugReport != null) {
+										for (AbstractRepositoryReportAttribute attribute : bugReport.getAttributes()) {
+											attributes += attribute.getID() + "=" + attribute.getValue() + " | ";
+										}
+										MylarStatusHandler.log(attributes, BugzillaRepositoryConnector.class);
+									}
 									WebBrowserDialog.openAcceptAgreement(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 											"Possible problem posting Bugzilla report.\n"
 													+ throwable.getCause().getMessage(), form.getError());

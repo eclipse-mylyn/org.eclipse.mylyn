@@ -203,6 +203,7 @@ public class BugzillaRepositoryUtil {
 
 	}
 
+	// TODO: move to repository connector?
 	public static void validateCredentials(String repositoryUrl, String userid, String password) throws IOException,
 			LoginException {
 
