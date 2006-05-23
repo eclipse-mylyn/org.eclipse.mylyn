@@ -65,7 +65,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 	}
 
 	public void testReadingReport() throws Exception {
-		int bugid = 4;
+		int bugid = 2;
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 
@@ -74,28 +74,28 @@ public class RepositoryReportFactoryTest extends TestCase {
 		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
 
 		assertNotNull(report);
-		assertEquals("Another Test", report.getAttribute(BugzillaReportElement.SHORT_DESC).getValue());
+		assertEquals("search-match-test 1", report.getAttribute(BugzillaReportElement.SHORT_DESC).getValue());
 		assertEquals("TestProduct", report.getAttribute(BugzillaReportElement.PRODUCT).getValue());
 		assertEquals("PC", report.getAttribute(BugzillaReportElement.REP_PLATFORM).getValue());
-		assertEquals("Other", report.getAttribute(BugzillaReportElement.OP_SYS).getValue());
+		assertEquals("Windows", report.getAttribute(BugzillaReportElement.OP_SYS).getValue());
 		// first comment (#0) is the description so this value is always 1 greater
 		// than what is shown on the report ui
-		assertEquals(38, report.getComments().size());
-		assertEquals("Testing new 2.22 version capability", report.getComments().get(0).getAttribute(
+		assertEquals(1, report.getComments().size());
+		assertEquals("search-match-test 1", report.getComments().get(0).getAttribute(
 				BugzillaReportElement.THETEXT).getValue());
-		assertEquals(15, report.getAttachments().size());
-		assertEquals("1", report.getAttachments().get(0).getAttribute(BugzillaReportElement.ATTACHID).getValue());
-		assertEquals("2006-03-10 14:11", report.getAttachments().get(0).getAttribute(BugzillaReportElement.DATE)
-				.getValue());
-		assertEquals("Testing upload", report.getAttachments().get(0).getAttribute(BugzillaReportElement.DESC)
-				.getValue());
-		assertEquals("patch130217.txt", report.getAttachments().get(0).getAttribute(BugzillaReportElement.FILENAME)
-				.getValue());
-		assertEquals("text/plain", report.getAttachments().get(0).getAttribute(BugzillaReportElement.TYPE).getValue());
+//		assertEquals(15, report.getAttachments().size());
+//		assertEquals("1", report.getAttachments().get(0).getAttribute(BugzillaReportElement.ATTACHID).getValue());
+//		assertEquals("2006-03-10 14:11", report.getAttachments().get(0).getAttribute(BugzillaReportElement.DATE)
+//				.getValue());
+//		assertEquals("Testing upload", report.getAttachments().get(0).getAttribute(BugzillaReportElement.DESC)
+//				.getValue());
+//		assertEquals("patch130217.txt", report.getAttachments().get(0).getAttribute(BugzillaReportElement.FILENAME)
+//				.getValue());
+//		assertEquals("text/plain", report.getAttachments().get(0).getAttribute(BugzillaReportElement.TYPE).getValue());
 	}
 
 	public void testReadingReport222() throws Exception {
-		int bugid = 1;
+		int bugid = 2;
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 
@@ -111,17 +111,17 @@ public class RepositoryReportFactoryTest extends TestCase {
 		assertEquals("Windows", report.getAttribute(BugzillaReportElement.OP_SYS).getValue());
 		assertEquals("other", report.getAttribute(BugzillaReportElement.VERSION).getValue());
 		assertEquals("P1", report.getAttribute(BugzillaReportElement.PRIORITY).getValue());
-		assertEquals("blocker", report.getAttribute(BugzillaReportElement.BUG_SEVERITY).getValue());
-		assertEquals("1", report.getAttribute(BugzillaReportElement.BUG_ID).getValue());
+		assertEquals("normal", report.getAttribute(BugzillaReportElement.BUG_SEVERITY).getValue());
+		assertEquals(""+bugid, report.getAttribute(BugzillaReportElement.BUG_ID).getValue());
 		assertEquals("NEW", report.getAttribute(BugzillaReportElement.BUG_STATUS).getValue());
-		assertEquals("2006-03-08 19:59", report.getAttribute(BugzillaReportElement.CREATION_TS).getValue());
-		assertEquals("2006-03-08 19:59:15", report.getAttribute(BugzillaReportElement.DELTA_TS).getValue());
+		assertEquals("2006-05-23 17:46", report.getAttribute(BugzillaReportElement.CREATION_TS).getValue());
+		assertEquals("2006-05-23 17:46:24", report.getAttribute(BugzillaReportElement.DELTA_TS).getValue());
 		assertEquals("---", report.getAttribute(BugzillaReportElement.TARGET_MILESTONE).getValue());
 		assertEquals("relves@cs.ubc.ca", report.getAttribute(BugzillaReportElement.REPORTER).getValue());
-		assertEquals("relves@cs.ubc.ca", report.getAttribute(BugzillaReportElement.ASSIGNED_TO).getValue());
+		assertEquals("nhapke@cs.ubc.ca", report.getAttribute(BugzillaReportElement.ASSIGNED_TO).getValue());
 		assertEquals(1, report.getComments().size());
 		assertEquals("relves@cs.ubc.ca", report.getComments().get(0).getAttribute(BugzillaReportElement.WHO).getValue());
-		assertEquals("2006-03-08 19:59:15", report.getComments().get(0).getAttribute(BugzillaReportElement.BUG_WHEN)
+		assertEquals("2006-05-23 17:46:24", report.getComments().get(0).getAttribute(BugzillaReportElement.BUG_WHEN)
 				.getValue());
 		assertEquals("search-match-test 1", report.getComments().get(0).getAttribute(BugzillaReportElement.THETEXT)
 				.getValue());
@@ -285,7 +285,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 	}
 
 	public void testBugReportAPI() throws Exception {
-		int bugid = 4;
+		int bugid = 3;
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 
@@ -296,10 +296,10 @@ public class RepositoryReportFactoryTest extends TestCase {
 		assertNotNull(report);
 		assertTrue(report instanceof BugzillaReport);
 		BugzillaReport bugReport = (BugzillaReport) report;
-		assertEquals("Another Test", bugReport.getSummary());
-		assertEquals("Testing new 2.22 version capability", bugReport.getDescription());
+		assertEquals("search-match-test 2", bugReport.getSummary());
+		assertEquals("search-match-test 2", bugReport.getDescription());
 		assertEquals("TestProduct", bugReport.getProduct());
-		assertEquals("relves@cs.ubc.ca", bugReport.getAssignedTo());
+		assertEquals("nhapke@cs.ubc.ca", bugReport.getAssignedTo());
 		// assertEquals("Other",
 		// report.getAttribute(BugzillaReportElement.OP_SYS).getValue());
 		// assertEquals(37, report.getComments().size());

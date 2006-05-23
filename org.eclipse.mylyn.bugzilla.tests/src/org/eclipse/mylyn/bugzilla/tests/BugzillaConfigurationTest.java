@@ -48,7 +48,7 @@ public class BugzillaConfigurationTest extends TestCase {
 		assertEquals(4, config.getOpenStatusValues().size());
 		assertEquals(1, config.getComponents("TestProduct").size());
 		assertEquals(1, config.getVersions("TestProduct").size());
-		assertEquals(1, config.getTargetMilestones("TestProduct").size());
+		assertEquals(0, config.getTargetMilestones("TestProduct").size());
 	}
 		
 	public void test2201RDFProductConfig() throws IOException {
