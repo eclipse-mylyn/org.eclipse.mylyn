@@ -36,6 +36,10 @@ public class ApplyMylarToProjectExplorerAction extends AbstractApplyMylarAction 
 		INSTANCE = this;
 	}
 
+	protected ApplyMylarToProjectExplorerAction(InterestFilter filter) {
+		super(filter);
+	}
+
 	@Override
 	public List<StructuredViewer> getViewers() {
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
