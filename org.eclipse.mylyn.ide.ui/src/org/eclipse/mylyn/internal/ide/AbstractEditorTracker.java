@@ -32,21 +32,25 @@ public abstract class AbstractEditorTracker extends AbstractPartTracker {
 		}
 	}
 
-	public abstract void editorOpened(IEditorPart part);
+	@Override
+	public void partBroughtToTop(IWorkbenchPart part) {
+		if (part instanceof IEditorPart) {
+			editorBroughtToTop((IEditorPart) part);
+		}
+	}
 
-	public abstract void editorClosed(IEditorPart part);
+	protected abstract void editorOpened(IEditorPart part);
 
+	protected abstract void editorClosed(IEditorPart part);
+
+	protected abstract void editorBroughtToTop(IEditorPart part);
+	
 	@Override
 	public void partActivated(IWorkbenchPart part) {
 		// ignore
 	}
 
 	public void partDeactivated(IWorkbenchPart part) {
-	}
-	
-	@Override
-	public void partBroughtToTop(IWorkbenchPart part) {
-		// ignore
 	}
 
 }

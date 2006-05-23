@@ -61,4 +61,9 @@ public class ActiveFoldingEditorTracker extends AbstractEditorTracker {
 		return editorListenerMap;
 	}
 
+	@Override
+	protected void editorBroughtToTop(IEditorPart part) {
+		// ignore
+	}
+
 }

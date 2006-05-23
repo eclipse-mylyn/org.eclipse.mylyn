@@ -34,6 +34,11 @@ public class InterestManipulatingEditorTracker extends AbstractEditorTracker {
 	public static final String SOURCE_ID = "org.eclipse.mylar.ide.editor.tracker.interest";
 
 	@Override
+	protected void editorBroughtToTop(IEditorPart part) {
+//		System.err.println(">> brought to top: " + part.getTitle());
+	}
+	
+	@Override
 	public void editorOpened(IEditorPart editorPartOpened) {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		IEditorReference[] editorReferences = page.getEditorReferences();
