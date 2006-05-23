@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
@@ -164,6 +165,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
+						
+						if(e instanceof FileNotFoundException) {
+							MessageDialog.openError(Display.getDefault().getActiveShell(), "Report Download Failed",
+									"Resource not found: " + e.getMessage());
+							return;
+						}
+						
 						((ApplicationWindow) PlatformUI.getWorkbench().getActiveWorkbenchWindow())
 								.setStatus("Download of bug: " + bugzillaTask + " failed due to exception: " + e);
 					}
