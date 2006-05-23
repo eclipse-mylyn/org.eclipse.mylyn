@@ -1298,7 +1298,8 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 	private void updateAttributesFromRepository(String repositoryUrl, String[] selectedProducts, boolean connect) {
 
 		if (connect) {
-			monitorDialog.setCancelable(true);
+			// TODO: make cancelable (bug 143011)
+			monitorDialog.setCancelable(false);
 			monitorDialog.open();			
 			IProgressMonitor monitor = monitorDialog.getProgressMonitor();
 			try {
