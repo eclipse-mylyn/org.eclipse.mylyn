@@ -800,7 +800,6 @@ public class TaskListView extends ViewPart {
 		
 		filteredTree = new TaskListFilteredTree(parent, SWT.MULTI | SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL
 				| SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new TaskListPatternFilter());
-		filteredTree.setInitialText("");
 
 		getViewer().getTree().setHeaderVisible(true);
 		getViewer().getTree().setLinesVisible(true);
