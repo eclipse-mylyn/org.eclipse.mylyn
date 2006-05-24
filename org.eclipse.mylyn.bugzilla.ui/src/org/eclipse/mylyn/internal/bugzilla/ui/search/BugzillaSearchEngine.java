@@ -12,6 +12,7 @@ package org.eclipse.mylar.internal.bugzilla.ui.search;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.Proxy;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,10 +26,14 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.bugzilla.core.AbstractReportFactory.UnrecognizedBugzillaError;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
+import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Queries the Bugzilla server for the list of bugs matching search criteria.
@@ -60,17 +65,16 @@ public class BugzillaSearchEngine {
 		urlString = urlString.concat(IBugzillaConstants.CONTENT_TYPE_RDF);
 		this.repository = repository;
 		this.proxySettings = proxySettings;
-		// if (repository.hasCredentials()) {
-		// try {
-		// urlString = BugzillaRepositoryUtil.addCredentials(repository,
-		// urlString);
-		// } catch (UnsupportedEncodingException e) {
-		// /*
-		// * Do nothing. Every implementation of the Java platform is
-		// * required to support the standard charset "UTF-8"
-		// */
-		// }
-		// }
+		 if (repository.hasCredentials()) {
+			try {
+				urlString = BugzillaRepositoryUtil.addCredentials(urlString, repository.getUserName(), repository.getPassword());
+			} catch (UnsupportedEncodingException e) {
+				/*
+				 * Do nothing. Every implementation of the Java platform is
+				 * required to support the standard charset "UTF-8"
+				 */
+			}
+		}
 
 	}
 
@@ -123,7 +127,7 @@ public class BugzillaSearchEngine {
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException("Search cancelled");
 			}
-			RepositoryQueryFactory queryFactory = RepositoryQueryFactory.getInstance();
+			RepositoryQueryResultsFactory queryFactory = RepositoryQueryResultsFactory.getInstance();
 			queryFactory.performQuery(repository.getUrl(), collector, urlString, proxySettings, maxHits, repository
 					.getCharacterEncoding());
 
@@ -218,6 +222,33 @@ public class BugzillaSearchEngine {
 			BugzillaPlugin.log(status);
 		} catch (OperationCanceledException e) {
 			status = new Status(IStatus.CANCEL, BugzillaUiPlugin.PLUGIN_ID, IStatus.CANCEL, "", null);
+		} catch (LoginException e) {
+			status = new MultiStatus(BugzillaUiPlugin.PLUGIN_ID, IStatus.ERROR,
+					"Login error occurred while querying Bugzilla Server " + repository.getUrl() + ".\n"
+							+ "\nEnsure proper configuration in "+TaskRepositoriesView.NAME+".", e);
+
+			IStatus s = new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, IStatus.ERROR, e.getClass().toString()
+					+ ":  ", e);
+			((MultiStatus) status).add(s);
+			s = new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK, "search failed", e);
+			((MultiStatus) status).add(s);
+		} catch (final UnrecognizedBugzillaError e) {
+			
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					WebBrowserDialog.openAcceptAgreement(null, "Report Download Failed",
+							"Unrecognized response from server", e.getMessage());
+				}
+			});				
+			status = new MultiStatus(BugzillaUiPlugin.PLUGIN_ID, IStatus.ERROR,
+					"Unrecognized response from Bugzilla server " + repository.getUrl(), e);
+
+			IStatus s = new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, IStatus.ERROR, e.getClass().toString()
+					+ ":  ", e);
+			((MultiStatus) status).add(s);
+			s = new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK, "search failed", e);
+			((MultiStatus) status).add(s);
+
 		} catch (Exception e) {
 			status = new MultiStatus(BugzillaUiPlugin.PLUGIN_ID, IStatus.ERROR,
 					"An error occurred while querying Bugzilla Server " + repository.getUrl() + ".\n"
@@ -229,10 +260,6 @@ public class BugzillaSearchEngine {
 			((MultiStatus) status).add(s);
 			s = new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK, "search failed", e);
 			((MultiStatus) status).add(s);
-
-			// write error to log
-			// BugzillaPlugin.log(status);
-
 		} finally {
 			monitor.done();
 			collector.done();

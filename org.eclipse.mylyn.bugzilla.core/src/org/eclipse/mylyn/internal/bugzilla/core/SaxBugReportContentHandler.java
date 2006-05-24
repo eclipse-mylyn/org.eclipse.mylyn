@@ -65,6 +65,9 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {
 		characters.append(ch, start, length);
+//		 if (monitor.isCanceled()) {
+//		 throw new OperationCanceledException("Search cancelled");
+//		 }
 	}
 
 	@Override
