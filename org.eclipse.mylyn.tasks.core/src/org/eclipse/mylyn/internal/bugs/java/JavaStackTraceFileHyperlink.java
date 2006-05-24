@@ -141,7 +141,7 @@ public class JavaStackTraceFileHyperlink implements IHyperlink {
 			if (qualifier.length() > 0) {
 				typeName = qualifier + "." + typeName; //$NON-NLS-1$
 			}
-			return typeName;
+			return typeName.trim();
 		}
 
 		return "error"; // TODO: Complain
