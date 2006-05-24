@@ -13,14 +13,14 @@ package org.eclipse.mylar.tests.misc;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.hypertext.HypertextStructureBridge;
+import org.eclipse.mylar.internal.hypertext.WebStructureBridge;
 
 /**
  * @author Mik Kersten
  */
 public class HypertextStructureBridgeTest extends TestCase {
 
-	private HypertextStructureBridge bridge = new HypertextStructureBridge();
+	private WebStructureBridge bridge = new WebStructureBridge();
 
 	public void testParentHandle() {
 		String site = "http://www.foo.bar";
