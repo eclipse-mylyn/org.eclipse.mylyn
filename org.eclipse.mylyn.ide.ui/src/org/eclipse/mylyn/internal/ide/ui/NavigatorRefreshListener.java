@@ -13,6 +13,7 @@
  */
 package org.eclipse.mylar.internal.ide.ui;
 
+
 import java.util.List;
 
 import org.eclipse.jface.viewers.TreeViewer;

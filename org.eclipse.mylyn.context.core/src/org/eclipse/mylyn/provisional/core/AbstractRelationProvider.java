@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.provisional.core;
 
+
 import java.util.List;
 
 import org.eclipse.mylar.internal.core.CompositeContextElement;
