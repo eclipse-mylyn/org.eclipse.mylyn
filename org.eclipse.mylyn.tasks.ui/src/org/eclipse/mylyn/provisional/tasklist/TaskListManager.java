@@ -132,15 +132,7 @@ public class TaskListManager {
 		}
 
 		public void contextDeactivated(IMylarContext context) {
-
-		}
-
-		public void interestChanged(IMylarElement element) {
-			// String taskHandle = element.getHandleIdentifier();
-			List<InteractionEvent> events = MylarPlugin.getContextManager().getActivityHistoryMetaContext()
-					.getInteractionHistory();
-			InteractionEvent event = events.get(events.size() - 1);
-			parseInteractionEvent(event);
+			// ignore
 		}
 
 		public void presentationSettingsChanging(UpdateKind kind) {
@@ -152,7 +144,10 @@ public class TaskListManager {
 		}
 
 		public void interestChanged(List<IMylarElement> elements) {
-			// ignore
+			List<InteractionEvent> events = MylarPlugin.getContextManager().getActivityHistoryMetaContext()
+					.getInteractionHistory();
+			InteractionEvent event = events.get(events.size() - 1);
+			parseInteractionEvent(event);
 		}
 
 		public void nodeDeleted(IMylarElement element) {
