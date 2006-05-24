@@ -16,6 +16,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.mylar.internal.ui.MylarUiPrefContstants;
 import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
+import org.eclipse.mylar.provisional.core.InteractionEvent;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.ui.IMylarUiBridge;
 import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
@@ -32,10 +33,17 @@ import org.eclipse.ui.internal.Workbench;
 public class InterestManipulatingEditorTracker extends AbstractEditorTracker {
 
 	public static final String SOURCE_ID = "org.eclipse.mylar.ide.editor.tracker.interest";
-
+	
 	@Override
 	protected void editorBroughtToTop(IEditorPart part) {
-//		System.err.println(">> brought to top: " + part.getTitle());
+		Object object = part.getEditorInput().getAdapter(IResource.class);
+		if (object instanceof IResource) {
+			IResource resource = (IResource)object;
+			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(resource);
+			InteractionEvent selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION,
+					bridge.getContentType(), bridge.getHandleIdentifier(resource), part.getSite().getId());
+			MylarPlugin.getContextManager().handleInteractionEvent(selectionEvent);
+		}
 	}
 	
 	@Override

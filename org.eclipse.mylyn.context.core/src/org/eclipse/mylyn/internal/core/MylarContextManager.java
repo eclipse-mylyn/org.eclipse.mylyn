@@ -332,10 +332,11 @@ public class MylarContextManager {
 	}
 	
 	private List<IMylarElement> internalHandleInteractionEvent(InteractionEvent event, boolean propagateToParents) {
-		if (contextCapturePaused || event.getKind() == InteractionEvent.Kind.COMMAND || !isContextActive()
-				|| suppressListenerNotification)
+		if (contextCapturePaused || InteractionEvent.Kind.COMMAND.equals(event.getKind()) || !isContextActive()
+				|| suppressListenerNotification) {
 			return Collections.emptyList();
-  
+		}
+	
 		IMylarElement previous = currentContext.get(event.getStructureHandle());
 		float previousInterest = 0;
 		boolean previouslyPredicted = false;

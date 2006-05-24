@@ -25,7 +25,7 @@ import org.eclipse.mylar.provisional.core.MylarPlugin;
 /**
  * @author Mik Kersten
  */
-public class ResourcesContextTest extends AbstractResourceContextTest {
+public class ResourceContextTest extends AbstractResourceContextTest {
 
 	@Override
 	protected void setUp() throws Exception {
@@ -41,12 +41,17 @@ public class ResourcesContextTest extends AbstractResourceContextTest {
 	}
 
 	public void testResourceSelect() throws CoreException {
+		MylarPlugin.getContextManager().setContextCapturePaused(true);
 		IFile file = project.getProject().getFile("file");
 		file.create(null, true, null);
 		assertTrue(file.exists());
 
-		monitor.selectionChanged(navigator, new StructuredSelection(file));
 		IMylarElement element = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
+		assertFalse(element.getInterest().isInteresting());
+		MylarPlugin.getContextManager().setContextCapturePaused(false);
+
+		monitor.selectionChanged(navigator, new StructuredSelection(file));
+		element = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
 		assertTrue(element.getInterest().isInteresting());
 	}
 
