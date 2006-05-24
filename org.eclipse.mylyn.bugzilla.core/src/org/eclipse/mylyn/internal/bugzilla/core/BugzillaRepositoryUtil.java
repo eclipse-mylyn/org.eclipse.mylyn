@@ -127,44 +127,44 @@ public class BugzillaRepositoryUtil {
 			GeneralSecurityException {
 
 		// BufferedReader in = null;
-		try {
-			// String url = repositoryUrl + POST_ARGS_SHOW_BUG + id;
-			// url = addCredentials(url, userName, password);
-			//
-			// URL bugUrl = new URL(url);
-			// URLConnection connection =
-			// BugzillaPlugin.getDefault().getUrlConnection(bugUrl,
-			// proxySettings);
-			// if (connection != null) {
-			// InputStream input = connection.getInputStream();
-			// if (input != null) {
-			// in = new BufferedReader(new InputStreamReader(input));
-			BugzillaReport bugReport = new BugzillaReport(id, repositoryUrl);
-			setupExistingBugAttributes(repositoryUrl, bugReport);
+		// try {
+		// String url = repositoryUrl + POST_ARGS_SHOW_BUG + id;
+		// url = addCredentials(url, userName, password);
+		//
+		// URL bugUrl = new URL(url);
+		// URLConnection connection =
+		// BugzillaPlugin.getDefault().getUrlConnection(bugUrl,
+		// proxySettings);
+		// if (connection != null) {
+		// InputStream input = connection.getInputStream();
+		// if (input != null) {
+		// in = new BufferedReader(new InputStreamReader(input));
+		BugzillaReport bugReport = new BugzillaReport(id, repositoryUrl);
+		setupExistingBugAttributes(repositoryUrl, bugReport);
 
-			RepositoryReportFactory reportFactory = RepositoryReportFactory.getInstance();
-			reportFactory.populateReport(bugReport, repositoryUrl, null, userName, password, characterEncoding);
-			updateBugAttributeOptions(repositoryUrl, userName, password, bugReport, characterEncoding);
-			addValidOperations(bugReport, userName);
+		RepositoryReportFactory reportFactory = RepositoryReportFactory.getInstance();
+		reportFactory.populateReport(bugReport, repositoryUrl, null, userName, password, characterEncoding);
+		updateBugAttributeOptions(repositoryUrl, userName, password, bugReport, characterEncoding);
+		addValidOperations(bugReport, userName);
 
-			return bugReport;
+		return bugReport;
 
-			// }
-			// }
-		} catch (MalformedURLException e) {
-			throw e;
-		} catch (IOException e) {
-			throw e;
-		} catch (LoginException e) {
-			throw e;
-			// } catch (Exception e) {
-			// // BugzillaPlugin.log(new Status(IStatus.ERROR,
-			// // IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
-			// // "Problem getting report:\n"+e.getMessage(), e));
-			// MylarStatusHandler.fail(e, "Problem getting report:\n" +
-			// e.getMessage(), false);
-			// return null;
-		}
+		// }
+		// }
+		// } catch (MalformedURLException e) {
+		// throw e;
+		// } catch (IOException e) {
+		// throw e;
+		// } catch (LoginException e) {
+		// throw e;
+		// // } catch (Exception e) {
+		// // // BugzillaPlugin.log(new Status(IStatus.ERROR,
+		// // // IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
+		// // // "Problem getting report:\n"+e.getMessage(), e));
+		// // MylarStatusHandler.fail(e, "Problem getting report:\n" +
+		// // e.getMessage(), false);
+		// // return null;
+		// }
 	}
 
 	public static String addCredentials(String url, String userName, String password)
@@ -211,11 +211,17 @@ public class BugzillaRepositoryUtil {
 				+ URLEncoder.encode(userid, BugzillaPlugin.ENCODING_UTF_8) + POST_ARGS_PASSWORD
 				+ URLEncoder.encode(password, BugzillaPlugin.ENCODING_UTF_8);
 
-		// BugzillaRepositoryUtil.addCredentials(repository, repository.getUrl()
-		// + "/index.cgi?noop=noop")
 		URL serverURL = new URL(url);
 		URLConnection connection = serverURL.openConnection();
 		BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		parseHtmlError(in);
+	}
+
+	/**
+	 * Utility method for determining what potential error has occurred from a
+	 * bugzilla html reponse page
+	 */
+	public static void parseHtmlError(BufferedReader in) throws IOException, LoginException {
 		HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
 
 		boolean isTitle = false;
@@ -243,7 +249,7 @@ public class BugzillaRepositoryUtil {
 						if (title.indexOf("login") != -1
 								|| (title.indexOf("invalid") != -1 && title.indexOf("password") != -1)
 								|| title.indexOf("check e-mail") != -1) {
-							throw new LoginException(title);
+							throw new LoginException(IBugzillaConstants.ERROR_INVALID_USERNAME_OR_PASSWORD);
 						}
 						return;
 					}
@@ -907,7 +913,6 @@ public class BugzillaRepositoryUtil {
 // private static String bugzillaUrl;
 // private static BugzillaRepositoryUtil INSTANCE = new
 // BugzillaRepositoryUtil();
-
 // public static List<String> getValidKeywords(String repositoryURL) {
 // return
 // BugzillaPlugin.getDefault().getProductConfiguration(repositoryURL).getKeywords();

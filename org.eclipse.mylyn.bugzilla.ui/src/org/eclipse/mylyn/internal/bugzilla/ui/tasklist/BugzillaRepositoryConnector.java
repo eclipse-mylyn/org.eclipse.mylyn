@@ -42,12 +42,14 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.mylar.internal.bugzilla.core.AbstractReportFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
+import org.eclipse.mylar.internal.bugzilla.core.AbstractReportFactory.UnrecognizedBugzillaError;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.OfflineReportsFile;
@@ -55,7 +57,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.internal.bugzilla.ui.OfflineReportsFile.BugzillaOfflineStatus;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchHit;
-import org.eclipse.mylar.internal.bugzilla.ui.search.RepositoryQueryFactory;
+import org.eclipse.mylar.internal.bugzilla.ui.search.RepositoryQueryResultsFactory;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaCategorySearchOperation.ICategorySearchListener;
 import org.eclipse.mylar.internal.bugzilla.ui.wizard.NewBugzillaReportWizard;
 import org.eclipse.mylar.internal.core.util.DateUtil;
@@ -162,6 +164,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 							"Ensure proper repository configuration in " + TaskRepositoriesView.NAME + ".");
 				}
 			});
+		} catch (final UnrecognizedBugzillaError e) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					WebBrowserDialog.openAcceptAgreement(null, "Report Download Failed",
+							"Unrecognized response from server", e.getMessage());
+				}
+			});			
 		} catch (final Exception e) {
 			if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -817,11 +826,11 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private void queryForChanged(TaskRepository repository, List<AbstractRepositoryTask> changedTasks,
 			String urlQueryString) throws Exception {
-		RepositoryQueryFactory queryFactory = RepositoryQueryFactory.getInstance();
+		RepositoryQueryResultsFactory queryFactory = RepositoryQueryResultsFactory.getInstance();
 		BugzillaResultCollector collector = new BugzillaResultCollector();
 
 		queryFactory.performQuery(repository.getUrl(), collector, urlQueryString, MylarTaskListPlugin.getDefault()
-				.getProxySettings(), RepositoryQueryFactory.RETURN_ALL_HITS, repository.getCharacterEncoding());
+				.getProxySettings(), AbstractReportFactory.RETURN_ALL_HITS, repository.getCharacterEncoding());
 
 		for (BugzillaSearchHit hit : collector.getResults()) {
 			String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), hit.getId());

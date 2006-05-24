@@ -33,7 +33,6 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.AbstractBugzillaQueryPage;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.mylar.provisional.tasklist.TaskRepositoryManager;
@@ -1099,17 +1098,20 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 		}
 		sb.append("buglist.cgi?");
 
-		// use the username and password if we have it
-		if (repository.hasCredentials()) {
-			try {
-				sb.append("GoAheadAndLogIn=1&Bugzilla_login="
-						+ URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8)
-						+ "&Bugzilla_password="
-						+ URLEncoder.encode(repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8) + "&");
-			} catch (UnsupportedEncodingException e) {
-				MylarStatusHandler.fail(e, "unsupported encoding", false);
-			}
-		}
+		// NOTE: authentication now added in BugzillaSsearchEngine constructor
+		// // use the username and password if we have it
+		// if (repository.hasCredentials()) {
+		// try {
+		// sb.append("GoAheadAndLogIn=1&Bugzilla_login="
+		// + URLEncoder.encode(repository.getUserName(),
+		// BugzillaPlugin.ENCODING_UTF_8)
+		// + "&Bugzilla_password="
+		// + URLEncoder.encode(repository.getPassword(),
+		// BugzillaPlugin.ENCODING_UTF_8) + "&");
+		// } catch (UnsupportedEncodingException e) {
+		// MylarStatusHandler.fail(e, "unsupported encoding", false);
+		//			}
+		//		}
 
 		return sb;
 	}
