@@ -89,9 +89,6 @@ public class ActiveHierarchyView extends ViewPart {
 			refreshHierarchy();
 		}
 
-		public void interestChanged(IMylarElement info) {
-		}
-
 		public void interestChanged(List<IMylarElement> nodes) {
 		}
 
@@ -114,7 +111,9 @@ public class ActiveHierarchyView extends ViewPart {
 		}
 
 		public void nodeDeleted(IMylarElement node) {
+			// ignore
 		}
+
 	};
 
 	class ViewContentProvider implements IStructuredContentProvider, ITreeContentProvider {

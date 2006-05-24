@@ -146,10 +146,6 @@ public abstract class AbstractRelationProvider implements IMylarContextListener 
 		// we don't care about this event
 	}
 
-	public void interestChanged(IMylarElement info) {
-		// we don't care about this event
-	}
-
 	public void interestChanged(List<IMylarElement> nodes) {
 		// we don't care about this event
 	}

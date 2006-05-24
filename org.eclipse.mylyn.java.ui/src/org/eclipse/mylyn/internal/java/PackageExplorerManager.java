@@ -134,10 +134,6 @@ public class PackageExplorerManager implements IMylarContextListener, ISelection
 		// ignore
 	}
 
-	public void interestChanged(IMylarElement node) {
-		// ignore
-	}
-
 	public void revealInteresting() {
 		// ignore
 	}
@@ -165,5 +161,4 @@ public class PackageExplorerManager implements IMylarContextListener, ISelection
 	public void edgesChanged(IMylarElement node) {
 		// ignore
 	}
-
 }

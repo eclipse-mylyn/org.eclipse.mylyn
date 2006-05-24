@@ -261,34 +261,6 @@ public class MylarChangeSetManager implements IMylarContextListener {
 		}
 	}
 
-	public void interestChanged(IMylarElement element) {
-		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
-		try {
-			if (bridge.isDocument(element.getHandleIdentifier())) {
-				IResource resource = MylarIdePlugin.getDefault().getResourceForElement(element, false);
-				if (resource != null && resource.exists()) {
-					for (MylarActiveChangeSet activeContextChangeSet : getActiveChangeSets()) {
-						if (!activeContextChangeSet.contains(resource)) {
-							if (element.getInterest().isInteresting()) {
-								activeContextChangeSet.add(new IResource[] { resource });
-							}
-						}
-					}
-					if (shouldRemove(element)) {
-						ChangeSet[] sets = collector.getSets();
-						for (int i = 0; i < sets.length; i++) {
-							if (sets[i] instanceof MylarActiveChangeSet) {
-								sets[i].remove(resource);
-							}
-						}
-					}
-				}
-			}
-		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "could not manipulate change set resources", false);
-		}
-	}
-
 	/**
 	 * Ignores decay.
 	 */
@@ -300,7 +272,31 @@ public class MylarChangeSetManager implements IMylarContextListener {
 
 	public void interestChanged(List<IMylarElement> elements) {
 		for (IMylarElement element : elements) {
-			interestChanged(element);
+			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
+			try {
+				if (bridge.isDocument(element.getHandleIdentifier())) {
+					IResource resource = MylarIdePlugin.getDefault().getResourceForElement(element, false);
+					if (resource != null && resource.exists()) {
+						for (MylarActiveChangeSet activeContextChangeSet : getActiveChangeSets()) {
+							if (!activeContextChangeSet.contains(resource)) {
+								if (element.getInterest().isInteresting()) {
+									activeContextChangeSet.add(new IResource[] { resource });
+								}
+							}
+						}
+						if (shouldRemove(element)) {
+							ChangeSet[] sets = collector.getSets();
+							for (int i = 0; i < sets.length; i++) {
+								if (sets[i] instanceof MylarActiveChangeSet) {
+									sets[i].remove(resource);
+								}
+							}
+						}
+					}
+				}
+			} catch (Exception e) {
+				MylarStatusHandler.fail(e, "could not manipulate change set resources", false);
+			}
 		}
 	}
 
@@ -327,7 +323,6 @@ public class MylarChangeSetManager implements IMylarContextListener {
 	public void presentationSettingsChanged(UpdateKind kind) {
 		// ignore
 	}
-
 }
 
 // private void touch(final IResource resource) throws CoreException {

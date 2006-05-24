@@ -71,11 +71,6 @@ public class MylarWorkingSetUpdater implements IWorkingSetUpdater, IMylarContext
 
 	}
 
-	public void interestChanged(IMylarElement node) {
-		updateWorkingSet();
-
-	}
-
 	public void interestChanged(List<IMylarElement> nodes) {
 		updateWorkingSet();
 
@@ -136,5 +131,4 @@ public class MylarWorkingSetUpdater implements IWorkingSetUpdater, IMylarContext
 	public IWorkingSet getWorkingSet() {
 		return workingSets.get(0);
 	}
-
 }

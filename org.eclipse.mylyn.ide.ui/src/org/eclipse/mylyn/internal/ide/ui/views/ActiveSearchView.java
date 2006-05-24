@@ -81,9 +81,6 @@ public class ActiveSearchView extends ViewPart {
 	private boolean syncExecForTesting = true;
 
 	private final IMylarContextListener REFRESH_UPDATE_LISTENER = new IMylarContextListener() {
-		public void interestChanged(IMylarElement node) {
-			refresh(node, false);
-		}
 
 		public void interestChanged(List<IMylarElement> nodes) {
 			refresh(nodes.get(nodes.size() - 1), false);

@@ -100,13 +100,10 @@ public class TypeHistoryManager implements IMylarContextListener {
 		} 
 	}
 
-	public void interestChanged(IMylarElement node) {
-		updateTypeHistory(node, true);
-	}
-
 	public void interestChanged(List<IMylarElement> nodes) {
-		for (IMylarElement node : nodes)
-			interestChanged(node);
+		for (IMylarElement node : nodes) {
+			updateTypeHistory(node, true);
+		}
 	}
 
 	public void nodeDeleted(IMylarElement node) {

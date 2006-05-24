@@ -50,12 +50,6 @@ public interface IMylarContextListener {
 	public void presentationSettingsChanged(UpdateKind kind);
 
 	/**
-	 * Called when the interest level for a single element changes, e.g. when it
-	 * is selected by the user.
-	 */
-	public void interestChanged(IMylarElement element);
-
-	/**
 	 * Called when the interest level for multiple elements changes, sorted
 	 * according to the containment hierarchy. The last element is the element
 	 * invoking the change.

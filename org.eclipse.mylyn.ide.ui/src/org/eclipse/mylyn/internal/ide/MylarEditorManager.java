@@ -133,20 +133,16 @@ public class MylarEditorManager implements IMylarContextListener {
 		// ignore
 	}
 
-	public void interestChanged(IMylarElement element) {
-		if (MylarUiPlugin.getPrefs().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)) {
-			if (!element.getInterest().isInteresting()) {
-				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
-				if (bridge.isDocument(element.getHandleIdentifier())) {
-					MylarUiPlugin.getDefault().getUiBridge(element.getContentType()).close(element);
-				}
-			}
-		}
-	}
-
 	public void interestChanged(List<IMylarElement> elements) {
 		for (IMylarElement element : elements) {
-			interestChanged(element);
+			if (MylarUiPlugin.getPrefs().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)) {
+				if (!element.getInterest().isInteresting()) {
+					IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
+					if (bridge.isDocument(element.getHandleIdentifier())) {
+						MylarUiPlugin.getDefault().getUiBridge(element.getContentType()).close(element);
+					}
+				}
+			}
 		}
 	}
 
@@ -165,5 +161,4 @@ public class MylarEditorManager implements IMylarContextListener {
 	public void edgesChanged(IMylarElement node) {
 		// ignore
 	}
-
 }

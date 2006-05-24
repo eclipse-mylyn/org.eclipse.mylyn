@@ -139,42 +139,38 @@ public class ActiveFoldingListener implements IMylarContextListener {
 		return allChildren;
 	}
 
-	public void interestChanged(IMylarElement element) {
-		if (updater == null || !enabled) {
-			return;
-		} else {
-			Object object = bridge.getObjectForHandle(element.getHandleIdentifier());
-			if (object instanceof IMember) {
-				IMember member = (IMember) object;
-				if (element.getInterest().isInteresting()) {
-					updater.expandElements(new IJavaElement[] { member });
-					// expand the next 2 children down (e.g. anonymous types)
-					try {
-						if (member instanceof IParent) {
-							IJavaElement[] children = ((IParent)member).getChildren();
-							if (children.length == 1) {
-								updater.expandElements(new IJavaElement[] { children[0] });
-								if (children[0] instanceof IParent) {
-									IJavaElement[] childsChildren = ((IParent)children[0]).getChildren();
-									if (childsChildren.length == 1) {
-										updater.expandElements(new IJavaElement[] { childsChildren[0] });
+	public void interestChanged(List<IMylarElement> elements) {
+		for (IMylarElement element : elements) {
+			if (updater == null || !enabled) {
+				return;
+			} else {
+				Object object = bridge.getObjectForHandle(element.getHandleIdentifier());
+				if (object instanceof IMember) {
+					IMember member = (IMember) object;
+					if (element.getInterest().isInteresting()) {
+						updater.expandElements(new IJavaElement[] { member });
+						// expand the next 2 children down (e.g. anonymous types)
+						try {
+							if (member instanceof IParent) {
+								IJavaElement[] children = ((IParent)member).getChildren();
+								if (children.length == 1) {
+									updater.expandElements(new IJavaElement[] { children[0] });
+									if (children[0] instanceof IParent) {
+										IJavaElement[] childsChildren = ((IParent)children[0]).getChildren();
+										if (childsChildren.length == 1) {
+											updater.expandElements(new IJavaElement[] { childsChildren[0] });
+										}
 									}
 								}
 							}
+						} catch (JavaModelException e) {
+							// ignore
 						}
-					} catch (JavaModelException e) {
-						// ignore
+					} else {
+						updater.collapseElements(new IJavaElement[] { member });
 					}
-				} else {
-					updater.collapseElements(new IJavaElement[] { member });
 				}
 			}
-		}
-	}
-
-	public void interestChanged(List<IMylarElement> elements) {
-		for (IMylarElement element : elements) {
-			interestChanged(element);
 		}
 	}
 
@@ -214,96 +210,3 @@ public class ActiveFoldingListener implements IMylarContextListener {
 		// ignore
 	}
 }
-
-// class ActiveFoldingController implements IPartListener2 {
-//
-// public ActiveFoldingController(JavaEditor editor) {
-// IWorkbenchPartSite site = editor.getSite();
-// if (site != null) {
-// IWorkbenchPage page = site.getPage();
-// if (!page.isPartVisible(editor))
-// page.addPartListener(this);
-// }
-// }
-//
-// public void updateFolding(final boolean expand, boolean async) {
-// if (async) {
-// PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-// public void run() {
-// internalUpdateFolding(expand);
-// }
-// });
-// } else {
-// internalUpdateFolding(expand);
-// }
-// }
-//
-// private void internalUpdateFolding(final boolean expand) {
-// if (!editor.getSite().getPage().isPartVisible(editor))
-// return;
-// ISourceViewer sourceViewer = editor.getViewer();
-// if (sourceViewer instanceof ProjectionViewer) {
-// ProjectionViewer pv = (ProjectionViewer) sourceViewer;
-// if (isAutoFoldingEnabled()) {
-// if (expand) {
-// if (pv.canDoOperation(ProjectionViewer.EXPAND))
-// pv.doOperation(ProjectionViewer.EXPAND);
-// } else {
-// if (pv.canDoOperation(ProjectionViewer.COLLAPSE))
-// pv.doOperation(ProjectionViewer.COLLAPSE);
-// }
-// }
-// }
-// }
-//
-// public void resetFolding() {
-// PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-// public void run() {
-// ActiveFoldingListener.resetProjection(editor);
-// }
-// });
-// }
-//
-// private boolean isAutoFoldingEnabled() {
-// return
-// AutoFoldingStructureProvider.ID.equals(JavaPlugin.getDefault().getPreferenceStore().getString(
-// PreferenceConstants.EDITOR_FOLDING_PROVIDER));
-// }
-//
-// public void partVisible(IWorkbenchPartReference partRef) {
-// // don't care when a part becomes visible
-// }
-//
-// public void partActivated(IWorkbenchPartReference partRef) {
-// if (editor.equals(partRef.getPart(false))) {
-// updateFolding(true, true);
-// }
-// }
-//
-// public void partClosed(IWorkbenchPartReference partRef) {
-// // monitor.unregisterEditor(editor);
-// }
-//
-// public void partBroughtToTop(IWorkbenchPartReference partRef) {
-// if (editor.equals(partRef.getPart(false))) {
-// // cancel();
-// updateFolding(true, true);
-// }
-// }
-//
-// public void partDeactivated(IWorkbenchPartReference partRef) {
-// // don't care when a part is deactivated
-// }
-//
-// public void partOpened(IWorkbenchPartReference partRef) {
-// // don't care when a part is opened
-// }
-//
-// public void partHidden(IWorkbenchPartReference partRef) {
-// // don't care when a part is hidden
-// }
-//
-// public void partInputChanged(IWorkbenchPartReference partRef) {
-// // don't care when an input changes
-// }
-// }

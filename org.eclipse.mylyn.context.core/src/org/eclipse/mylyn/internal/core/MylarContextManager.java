@@ -183,42 +183,30 @@ public class MylarContextManager {
 
 		public void presentationSettingsChanging(UpdateKind kind) {
 			// ignore
-			
 		}
 
 		public void presentationSettingsChanged(UpdateKind kind) {
 			// ignore
-			
-		}
-
-		public void interestChanged(IMylarElement element) {
-			// ignore
-			
 		}
 
 		public void interestChanged(List<IMylarElement> elements) {
 			// ignore
-			
 		}
 
 		public void nodeDeleted(IMylarElement element) {
 			// ignore
-			
 		}
 
 		public void landmarkAdded(IMylarElement element) {
 			// ignore
-			
 		}
 
 		public void landmarkRemoved(IMylarElement element) {
 			// ignore
-			
 		}
 
 		public void edgesChanged(IMylarElement element) {
-			// ignore
-			
+			// ignore	
 		}
 	}
 
@@ -245,7 +233,9 @@ public class MylarContextManager {
 		IMylarElement element = activityMetaContext.parseEvent(event);
 		for (IMylarContextListener listener : activityMetaContextListeners) {
 			try {
-				listener.interestChanged(element);
+				List<IMylarElement> changed = new ArrayList<IMylarElement>();
+				changed.add(element);
+				listener.interestChanged(changed);
 			} catch (Throwable t) {
 				MylarStatusHandler.fail(t, "context listener failed", false);
 			}
@@ -291,8 +281,8 @@ public class MylarContextManager {
 			return;
 		if (handle == null)
 			return;
-		IMylarElement node = currentContext.get(handle);
-		if (node != null && node.getInterest().isInteresting() && errorElementHandles.contains(handle)) {
+		IMylarElement element = currentContext.get(handle);
+		if (element != null && element.getInterest().isInteresting() && errorElementHandles.contains(handle)) {
 			InteractionEvent errorEvent = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, kind, handle,
 					SOURCE_ID_MODEL_ERROR, -scalingFactors.getErrorInterest());
 			handleInteractionEvent(errorEvent, true);
@@ -300,8 +290,11 @@ public class MylarContextManager {
 			errorElementHandles.remove(handle);
 			// TODO: this results in double-notification
 			if (notify)
-				for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners))
-					listener.interestChanged(node);
+				for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
+					List<IMylarElement> changed = new ArrayList<IMylarElement>();
+					changed.add(element);
+					listener.interestChanged(changed);
+				}
 		}
 	}
 
@@ -920,7 +913,9 @@ public class MylarContextManager {
 			return;
 		getActiveContext().updateElementHandle(element, newHandle);
 		for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
-			listener.interestChanged(element);
+			List<IMylarElement> changed = new ArrayList<IMylarElement>();
+			changed.add(element);
+			listener.interestChanged(changed);
 		}
 		if (element.getInterest().isLandmark()) {
 			for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {

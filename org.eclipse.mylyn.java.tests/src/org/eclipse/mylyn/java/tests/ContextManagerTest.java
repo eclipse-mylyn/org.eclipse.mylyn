@@ -100,16 +100,17 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 			// don't care about this event
 		}
 
-		public void interestChanged(List<IMylarElement> nodes) {
-			// don't care about this event
-		}
-
 		public void contextActivated(IMylarContext taskscapeActivated) {
 			// don't care about this event
 		}
 
 		public void contextDeactivated(IMylarContext taskscapeDeactivated) {
 			// don't care about this event
+		}
+
+		public void interestChanged(List<IMylarElement> elements) {
+			// ignore
+			
 		}
 	}
 

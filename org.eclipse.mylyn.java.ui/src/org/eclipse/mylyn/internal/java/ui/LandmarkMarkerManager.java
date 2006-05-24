@@ -69,10 +69,6 @@ public class LandmarkMarkerManager implements IMylarContextListener {
 		}
 	}
 
-	public void interestChanged(IMylarElement element) {
-		// don't care when the interest changes
-	}
-
 	public void interestChanged(List<IMylarElement> nodes) {
 		// don't care when the interest changes
 	}
@@ -168,5 +164,4 @@ public class LandmarkMarkerManager implements IMylarContextListener {
 	public void nodeDeleted(IMylarElement node) {
 		// don't care when a node is deleted
 	}
-
 }

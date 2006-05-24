@@ -173,9 +173,9 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 		refreshViewers(nodes, false);
 	}
 
-	public void interestChanged(IMylarElement node) {
-		refreshViewers(node, false);
-	}
+//	public void interestChanged(IMylarElement node) {
+//		refreshViewers(node, false);
+//	}
 
 	protected void refreshViewers(final List<IMylarElement> nodesToRefresh, final boolean updateLabels) {
 		if (syncRefreshMode) {

@@ -94,13 +94,9 @@ public class NavigatorRefreshListener implements IMylarContextListener {
 //		refresh(null);
 	}
 
-	public void interestChanged(IMylarElement node) {
-//		refresh(node);
-	}
-
 	public void interestChanged(List<IMylarElement> nodes) {
-		IMylarElement node = nodes.get(nodes.size() - 1);
-		interestChanged(node);
+//		IMylarElement node = nodes.get(nodes.size() - 1);
+//		interestChanged(node);
 	}
 
 	public void nodeDeleted(IMylarElement node) {
