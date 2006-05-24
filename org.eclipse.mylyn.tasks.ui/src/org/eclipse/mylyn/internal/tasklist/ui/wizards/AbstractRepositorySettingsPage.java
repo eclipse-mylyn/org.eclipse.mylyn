@@ -280,7 +280,11 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		if (defaultEncoding.getSelection()) {
 			return TaskRepository.DEFAULT_CHARACTER_ENCODING;
 		} else {
-			return otherEncodingCombo.getItem(otherEncodingCombo.getSelectionIndex());
+			if(otherEncodingCombo.getSelectionIndex() > -1) {
+				return otherEncodingCombo.getItem(otherEncodingCombo.getSelectionIndex());
+			} else {
+				return TaskRepository.DEFAULT_CHARACTER_ENCODING;
+			}			
 		}
 	}
 
