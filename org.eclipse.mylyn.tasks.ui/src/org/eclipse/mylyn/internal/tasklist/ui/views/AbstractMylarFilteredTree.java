@@ -95,9 +95,9 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
     	int refreshDelay = 0;
     	int textLength = filterText.getText().length();
         if (textLength > 0) {
-                refreshDelay = DELAY_REFRESH / textLength;
-        } 
+        	refreshDelay = DELAY_REFRESH / textLength;
+        }
+        
         refreshJob.schedule(refreshDelay); 
     }
-
 }
