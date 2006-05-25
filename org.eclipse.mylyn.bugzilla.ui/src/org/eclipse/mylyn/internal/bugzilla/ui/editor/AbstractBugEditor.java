@@ -1242,7 +1242,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 						ReportAttachment attachment = (ReportAttachment) selection.getFirstElement();
 						address += attachment.getId() + "&amp;action=view";
 						;
-						TaskUiUtil.openUrl(address, address, address);
+						TaskUiUtil.openUrl(address);
 					}
 				}
 			});

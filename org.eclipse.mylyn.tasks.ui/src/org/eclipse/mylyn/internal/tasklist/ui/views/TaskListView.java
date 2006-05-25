@@ -66,7 +66,7 @@ import org.eclipse.mylar.internal.tasklist.ui.actions.MarkTaskIncompleteAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.NewCategoryAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.NextTaskDropDownAction;
-import org.eclipse.mylar.internal.tasklist.ui.actions.OpenInExternalBrowserAction;
+import org.eclipse.mylar.internal.tasklist.ui.actions.OpenWithBrowserAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.PreviousTaskDropDownAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.RemoveFromCategoryAction;
@@ -174,7 +174,7 @@ public class TaskListView extends ViewPart {
 
 	private OpenTaskListElementAction openTaskEditor;
 
-	private OpenInExternalBrowserAction openUrlInExternal;
+	private OpenWithBrowserAction openUrlInExternal;
 
 	private NewLocalTaskAction newLocalTaskAction;
 
@@ -1070,7 +1070,7 @@ public class TaskListView extends ViewPart {
 	 */
 	private void updateActionEnablement(Action action, ITaskListElement element) {
 		if (element instanceof ITask) {
-			if (action instanceof OpenInExternalBrowserAction) {
+			if (action instanceof OpenWithBrowserAction) {
 				if (((ITask) element).hasValidUrl()) {
 					action.setEnabled(true);
 				} else {
@@ -1147,7 +1147,7 @@ public class TaskListView extends ViewPart {
 		markIncompleteAction = new MarkTaskCompleteAction(this);
 		markCompleteAction = new MarkTaskIncompleteAction(this);
 		openTaskEditor = new OpenTaskListElementAction(this.getViewer());
-		openUrlInExternal = new OpenInExternalBrowserAction();
+		openUrlInExternal = new OpenWithBrowserAction();
 		filterCompleteTask = new FilterCompletedTasksAction(this);
 		filterArchiveCategory = new FilterArchiveContainerAction(this);
 		filterOnPriority = new PriorityDropDownAction();

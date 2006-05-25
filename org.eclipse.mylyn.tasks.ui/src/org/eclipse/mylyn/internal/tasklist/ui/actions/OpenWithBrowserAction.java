@@ -11,28 +11,24 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.actions;
 
-import java.net.URL;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
 /**
  * @author Mik Kersten
  * @author Rob Elves
  */
-public class OpenInExternalBrowserAction extends Action {
+public class OpenWithBrowserAction extends Action {
 
-	public static final String ID = "org.eclipse.mylar.tasklist.actions.open.external";
+	public static final String ID = "org.eclipse.mylar.tasklist.actions.open.browser";
 
-	public OpenInExternalBrowserAction() {
+	public OpenWithBrowserAction() {
 		setText("Open in External Browser");
 		setToolTipText("Open in External Browser");
 		setId(ID);
@@ -57,14 +53,7 @@ public class OpenInExternalBrowserAction extends Action {
 				urlString = query.getQueryUrl();
 			}
 			if (urlString != null) {
-				URL url;
-				try {
-					url = new URL(urlString);
-					IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
-					support.getExternalBrowser().openURL(url);
-				} catch (Exception e) {
-					MylarStatusHandler.fail(e, "could not open task url", true);
-				}
+				TaskUiUtil.openUrl(urlString);
 			}
 		}
 	}

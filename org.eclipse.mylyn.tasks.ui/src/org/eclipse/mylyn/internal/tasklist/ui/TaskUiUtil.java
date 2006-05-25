@@ -26,9 +26,9 @@ import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
+import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.DateRangeActivityDelegate;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.Task;
@@ -36,11 +36,13 @@ import org.eclipse.mylar.provisional.tasklist.TaskCategory;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart; 
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
+import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
+import org.eclipse.ui.internal.browser.WebBrowserPreference;
 import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
 
 /**
@@ -113,7 +115,7 @@ public class TaskUiUtil {
 			}
 		} 
 		if (!opened) { 
-			TaskUiUtil.openUrl("Web Browser", "Web Browser", fullUrl);
+			TaskUiUtil.openUrl(fullUrl);
 			opened = true;
 		}
 		return opened;
@@ -223,21 +225,32 @@ public class TaskUiUtil {
 		});
 	}
 
-	public static void openUrl(String title, String tooltip, String url) {
+	public static void openUrl(String url) {
 		try {
-			IWebBrowser browser = null;
-			int flags = 0;
-			if (WorkbenchBrowserSupport.getInstance().isInternalWebBrowserAvailable()) {
-				flags = WorkbenchBrowserSupport.AS_EDITOR | WorkbenchBrowserSupport.LOCATION_BAR
-						| WorkbenchBrowserSupport.NAVIGATION_BAR;
-
+			if (WebBrowserPreference.getBrowserChoice() == WebBrowserPreference.EXTERNAL) {
+				try {
+					IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
+					support.getExternalBrowser().openURL(new URL(url));
+				} catch (Exception e) {
+					MylarStatusHandler.fail(e, "could not open task url", true);
+				}
 			} else {
-				flags = WorkbenchBrowserSupport.AS_EXTERNAL | WorkbenchBrowserSupport.LOCATION_BAR
-						| WorkbenchBrowserSupport.NAVIGATION_BAR;
+				IWebBrowser browser = null;
+				int flags = 0;
+				if (WorkbenchBrowserSupport.getInstance().isInternalWebBrowserAvailable()) {
+					flags = WorkbenchBrowserSupport.AS_EDITOR | WorkbenchBrowserSupport.LOCATION_BAR
+							| WorkbenchBrowserSupport.NAVIGATION_BAR;
+		
+				} else {
+					flags = WorkbenchBrowserSupport.AS_EXTERNAL | WorkbenchBrowserSupport.LOCATION_BAR
+							| WorkbenchBrowserSupport.NAVIGATION_BAR;
+				}
+				String title = "Browser";
+				String tooltip = url;
+				browser = WorkbenchBrowserSupport.getInstance().createBrowser(flags, MylarTaskListPlugin.PLUGIN_ID + title,
+						title, tooltip);
+				browser.openURL(new URL(url));
 			}
-			browser = WorkbenchBrowserSupport.getInstance().createBrowser(flags, MylarTaskListPlugin.PLUGIN_ID + title,
-					title, tooltip);
-			browser.openURL(new URL(url));
 		} catch (PartInitException e) {
 			MessageDialog.openError(Display.getDefault().getActiveShell(), "Browser init error",
 					"Browser could not be initiated");
