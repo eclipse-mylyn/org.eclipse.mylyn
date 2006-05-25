@@ -222,7 +222,7 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		hyperlink.addHyperlinkListener(new IHyperlinkListener() {
 
 			public void linkActivated(HyperlinkEvent e) {
-				TaskUiUtil.openUrl("Mylar Documentation", "", "http://eclipse.org/mylar/start.php");
+				TaskUiUtil.openUrl("http://eclipse.org/mylar/start.php");
 			}
 
 			public void linkEntered(HyperlinkEvent e) {
