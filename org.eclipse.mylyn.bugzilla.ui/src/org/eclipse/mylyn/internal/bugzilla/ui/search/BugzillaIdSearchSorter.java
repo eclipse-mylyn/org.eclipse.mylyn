@@ -11,10 +11,9 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.search;
 
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 
 /**
  * Sorts results of Bugzilla search by bug id.
@@ -34,12 +33,12 @@ public class BugzillaIdSearchSorter extends ViewerSorter {
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		try {
 			// cast the object and get its bug id
-			IMarker entry1 = (IMarker) e1;
-			Integer id1 = (Integer) entry1.getAttribute(BugzillaUiPlugin.HIT_MARKER_ATTR_ID);
+			BugzillaQueryHit entry1 = (BugzillaQueryHit) e1;
+			Integer id1 = entry1.getId();
 
 			// cast the other object and get its bug id
-			IMarker entry2 = (IMarker) e2;
-			Integer id2 = (Integer) entry2.getAttribute(BugzillaUiPlugin.HIT_MARKER_ATTR_ID);
+			BugzillaQueryHit entry2 = (BugzillaQueryHit) e2;
+			Integer id2 = entry2.getId();
 
 			// if neither is null, compare the bug id's
 			if (id1 != null && id2 != null) {
@@ -65,16 +64,12 @@ public class BugzillaIdSearchSorter extends ViewerSorter {
 	@Override
 	public int category(Object element) {
 		try {
-			IMarker marker = (IMarker) element;
-
-			// return the bugs id
-			if (marker.getType().equals(BugzillaUiPlugin.HIT_MARKER_ID)) {
-				return ((Integer) marker.getAttribute(BugzillaUiPlugin.HIT_MARKER_ATTR_ID)).intValue();
-			}
+			BugzillaQueryHit hit = (BugzillaQueryHit) element;
+			return hit.getId();
+			
 		} catch (Exception ignored) {
 			// ignore if there is a problem
 		}
-
 		// if that didn't work, use the default category method
 		return super.category(element);
 	}

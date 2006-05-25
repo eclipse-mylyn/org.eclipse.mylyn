@@ -11,10 +11,14 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.search;
 
-import org.eclipse.core.resources.IMarker;
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 
 /**
  * Sorts results of Bugzilla search by bug priority.
@@ -33,17 +37,19 @@ public class BugzillaPrioritySearchSorter extends ViewerSorter {
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		try {
-			// cast the object and get the bugs priority
-			IMarker entry1 = (IMarker) e1;
-			Integer pr1 = (Integer) entry1.getAttribute(BugzillaUiPlugin.HIT_MARKER_ATTR_PRIORITY);
 
-			// cast the other object and get the bugs priority
-			IMarker entry2 = (IMarker) e2;
-			Integer pr2 = (Integer) entry2.getAttribute(BugzillaUiPlugin.HIT_MARKER_ATTR_PRIORITY);
+			BugzillaQueryHit entry1 = (BugzillaQueryHit) e1;
+			String[] priorityLevels = BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRIORITY, null, entry1
+					.getRepositoryUrl());
+			if (priorityLevels != null && priorityLevels.length > 0) {
+				List<String> levels = Arrays.asList(priorityLevels);
+				Integer pr1 = new Integer(levels.indexOf(entry1.getPriority()));
 
-			// if neither is null, compare the bug priority
-			if (pr1 != null && pr2 != null) {
-				return pr1.compareTo(pr2);
+				BugzillaQueryHit entry2 = (BugzillaQueryHit) e2;
+				Integer pr2 = new Integer(levels.indexOf(entry2.getPriority()));
+				if (pr1 != null && pr2 != null) {
+					return pr1.compareTo(pr2);
+				}
 			}
 		} catch (Exception ignored) {
 			// do nothing
@@ -65,16 +71,12 @@ public class BugzillaPrioritySearchSorter extends ViewerSorter {
 	@Override
 	public int category(Object element) {
 		try {
-			IMarker marker = (IMarker) element;
+			BugzillaQueryHit hit = (BugzillaQueryHit) element;
+			return hit.getId();
 
-			// return the bugs id
-			if (marker.getType().equals(BugzillaUiPlugin.HIT_MARKER_ID)) {
-				return ((Integer) marker.getAttribute(BugzillaUiPlugin.HIT_MARKER_ATTR_ID)).intValue();
-			}
 		} catch (Exception ignored) {
 			// ignore if there is a problem
 		}
-
 		// if that didn't work, use the default category method
 		return super.category(element);
 	}
