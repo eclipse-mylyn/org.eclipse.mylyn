@@ -48,6 +48,7 @@ import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReportAttribute;
 import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReportAttribute;
 import org.eclipse.mylar.provisional.bugzilla.core.Comment;
 import org.eclipse.mylar.provisional.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.provisional.bugzilla.core.Operation;
@@ -58,6 +59,7 @@ import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
@@ -648,7 +650,46 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		});
 		addCommentsText.addListener(SWT.FocusIn, new NewCommentListener());
 		addCommentsTextBox = addCommentsText;
+		
 		sectionAdditionalComments.setClient(newCommentsComposite);
+		
+		
+		
+		// if they aren't already on the cc list create an add self check box
+		
+		
+		AbstractRepositoryReportAttribute owner = bug.getAttribute(BugzillaReportElement.ASSIGNED_TO);
+
+		// Don't add addselfcc check box if the user is the bug owner
+		if (owner != null && owner.getValue().indexOf(repository.getUserName()) != -1) {			
+			return;
+		}
+		// Don't add addselfcc if already there
+		AbstractRepositoryReportAttribute ccAttribute = bug.getAttribute(BugzillaReportElement.CC);
+		if (ccAttribute != null && ccAttribute.getValues().contains(repository.getUserName())) {
+			return;
+		}
+		AbstractRepositoryReportAttribute addselfcc = bug.getAttribute(BugzillaReportElement.ADDSELFCC);
+		if (addselfcc == null) {
+			addselfcc = new BugzillaReportAttribute(BugzillaReportElement.ADDSELFCC);			
+			bug.addAttribute(BugzillaReportElement.ADDSELFCC, addselfcc);
+		} 
+		
+		addselfcc.setValue("0");
+		
+		
+		final Button addSelfButton = toolkit.createButton(newCommentsComposite, "Add "+repository.getUserName()+" to CC list", SWT.CHECK);
+		
+		addSelfButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(addSelfButton.getSelection()) {
+					bug.setAttributeValue(BugzillaReportElement.ADDSELFCC, "1");					
+				} else {
+					bug.setAttributeValue(BugzillaReportElement.ADDSELFCC, "0");
+				}
+			}});		
 	}
 
 	@Override

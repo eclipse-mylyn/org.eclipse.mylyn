@@ -36,7 +36,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.internal.bugzilla.core.HtmlStreamTokenizer.Token;
 import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReportAttribute;
 import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReportAttribute;
 import org.eclipse.mylar.provisional.bugzilla.core.Operation;
 
 /**
@@ -218,7 +217,7 @@ public class BugzillaReportSubmitForm {
 			bugReportPostHandler = new BugzillaReportSubmitForm(BugzillaPlugin.ENCODING_UTF_8);
 		}
 
-		setDefaultCCValue(bug, userName);
+		//setDefaultCCValue(bug, userName);
 		setConnectionsSettings(bugReportPostHandler, repositoryUrl, userName, password, proxySettings, PROCESS_BUG_CGI);
 
 		// go through all of the attributes and add them to the bug post
@@ -337,7 +336,7 @@ public class BugzillaReportSubmitForm {
 			// get the url for the update with all of the changed values
 
 			// Used to debug posted report
-			// System.err.println(">>> "+getPostBody());
+			//System.err.println(">>> "+getPostBody());
 
 			byte[] body = getPostBody().getBytes();
 			postConnection.setRequestProperty(REQUEST_PROPERTY_CONTENT_LENGTH, String.valueOf(body.length));
@@ -542,36 +541,36 @@ public class BugzillaReportSubmitForm {
 		form.add(KEY_BUGZILLA_PASSWORD, password);
 	}
 
-	/**
-	 * Sets the cc field to the user's address if a cc has not been specified to
-	 * ensure that commenters are on the cc list. TODO: Review this mechanism
-	 * 
-	 * @author Wesley Coelho
-	 */
-	private static void setDefaultCCValue(BugzillaReport bug, String userName) {
-		// AbstractRepositoryReportAttribute newCCattr =
-		// bug.getAttributeForKnobName(KEY_NEWCC);
-		AbstractRepositoryReportAttribute owner = bug.getAttribute(BugzillaReportElement.ASSIGNED_TO);
-
-		// Don't add the cc if the user is the bug owner
-		if (userName == null || (owner != null && owner.getValue().indexOf(userName) != -1)) {
-			// MylarStatusHandler.log("Could not determine CC value for
-			// repository: " + repository, null);
-			return;
-		}
-		// Don't add cc if already there
-		AbstractRepositoryReportAttribute ccAttribute = bug.getAttribute(BugzillaReportElement.CC);
-		if (ccAttribute != null && ccAttribute.getValues().contains(userName)) {
-			return;
-		}
-		AbstractRepositoryReportAttribute newCCattr = bug.getAttribute(BugzillaReportElement.NEWCC);
-		if (newCCattr == null) {
-			newCCattr = new BugzillaReportAttribute(BugzillaReportElement.NEWCC);
-			bug.addAttribute(BugzillaReportElement.NEWCC, newCCattr);
-		}
-		// Add the user to the cc list
-		newCCattr.setValue(userName);
-	}
+//	/**
+//	 * Sets the cc field to the user's address if a cc has not been specified to
+//	 * ensure that commenters are on the cc list. TODO: Review this mechanism
+//	 * 
+//	 * @author Wesley Coelho
+//	 */
+//	private static void setDefaultCCValue(BugzillaReport bug, String userName) {
+//		// AbstractRepositoryReportAttribute newCCattr =
+//		// bug.getAttributeForKnobName(KEY_NEWCC);
+//		AbstractRepositoryReportAttribute owner = bug.getAttribute(BugzillaReportElement.ASSIGNED_TO);
+//
+//		// Don't add the cc if the user is the bug owner
+//		if (userName == null || (owner != null && owner.getValue().indexOf(userName) != -1)) {
+//			// MylarStatusHandler.log("Could not determine CC value for
+//			// repository: " + repository, null);
+//			return;
+//		}
+//		// Don't add cc if already there
+//		AbstractRepositoryReportAttribute ccAttribute = bug.getAttribute(BugzillaReportElement.CC);
+//		if (ccAttribute != null && ccAttribute.getValues().contains(userName)) {
+//			return;
+//		}
+//		AbstractRepositoryReportAttribute newCCattr = bug.getAttribute(BugzillaReportElement.NEWCC);
+//		if (newCCattr == null) {
+//			newCCattr = new BugzillaReportAttribute(BugzillaReportElement.NEWCC);
+//			bug.addAttribute(BugzillaReportElement.NEWCC, newCCattr);
+//		}
+//		// Add the user to the cc list
+//		newCCattr.setValue(userName);
+//	}
 
 	/**
 	 * Break text up into lines of about 80 characters so that it is displayed
