@@ -29,8 +29,8 @@ public class OpenWithBrowserAction extends Action {
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.open.browser";
 
 	public OpenWithBrowserAction() {
-		setText("Open in External Browser");
-		setToolTipText("Open in External Browser");
+		setText("Open with Browser");
+		setToolTipText("Open with Browser");
 		setId(ID);
 	}
 
