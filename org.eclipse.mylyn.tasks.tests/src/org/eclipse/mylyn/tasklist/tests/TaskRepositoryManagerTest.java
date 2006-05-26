@@ -13,6 +13,7 @@ package org.eclipse.mylar.tasklist.tests;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -161,6 +162,37 @@ public class TaskRepositoryManagerTest extends TestCase {
 		TaskRepository temp = manager.getRepository(repository1.getKind(), repository1.getUrl());
 		assertNotNull(temp);
 		assertEquals(temp.getTimeZoneId(), fakeTimeZone);
+	}
+	
+	
+	public void testRepositorySyncTimePersistance1() throws MalformedURLException {
+		assertEquals("", MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
+		TaskRepository repository1 = new TaskRepository("bugzilla", "http://bugzilla");		
+		manager.addRepository(repository1);
+		manager.readRepositories();
+		TaskRepository temp = manager.getRepository(repository1.getKind(), repository1.getUrl());
+		assertNotNull(temp);
+		assertNotNull(temp.getSyncTime());
+		assertEquals(new Date(0), temp.getSyncTime());		
+	}
+		
+	public void testRepositorySyncTimePersistance2() throws MalformedURLException {
+		assertEquals("", MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
+		TaskRepository repository1 = new TaskRepository("bugzilla", "http://bugzilla");
+		
+		Date now = new Date();
+		MylarTaskListPlugin.getRepositoryManager().setSyncTime(repository1, now);
+		manager.addRepository(repository1);
+
+		String prefIdSyncTime= repository1.getUrl() + TaskRepositoryManager.PROPERTY_DELIM
+				+ TaskRepositoryManager.PROPERTY_SYNCTIME;
+
+		assertEquals(now.getTime(), MylarTaskListPlugin.getMylarCorePrefs().getLong(prefIdSyncTime));
+
+		manager.readRepositories();
+		TaskRepository temp = manager.getRepository(repository1.getKind(), repository1.getUrl());
+		assertNotNull(temp);
+		assertEquals(temp.getSyncTime(), now);
 	}
 	
 	public void testRepositoryPersistanceAfterDelete() throws MalformedURLException {

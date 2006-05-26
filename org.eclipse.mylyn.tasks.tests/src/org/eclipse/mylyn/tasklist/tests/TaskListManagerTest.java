@@ -571,5 +571,26 @@ public class TaskListManagerTest extends TestCase {
 		assertTrue(hitsReturned.contains(hit2twin));
 
 	}
+		
+	public void testgetRepositoryTasks() {
 
+		String repositoryUrl = "https://bugs.eclipse.org/bugs";
+		
+		String bugNumber = "106939";
+		
+		BugzillaTask task1 = new BugzillaTask(repositoryUrl+"-"+bugNumber, "label", false);		
+		manager.getTaskList().addTask(task1);
+		
+		BugzillaTask task2 = new BugzillaTask("https://unresolved-"+bugNumber, "label", false);		
+		manager.getTaskList().addTask(task2);
+		
+		TaskList taskList = manager.getTaskList();
+		assertEquals(2, taskList.getAllTasks().size());
+		Set<AbstractRepositoryTask> tasksReturned = taskList.getRepositoryTasks(repositoryUrl);
+		assertNotNull(tasksReturned);
+		assertEquals(1, tasksReturned.size()); 
+		assertTrue(tasksReturned.contains(task1));
+	}
+	
+	
 }

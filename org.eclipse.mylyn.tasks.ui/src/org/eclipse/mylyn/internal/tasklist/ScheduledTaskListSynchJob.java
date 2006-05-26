@@ -18,6 +18,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
@@ -60,17 +61,31 @@ public class ScheduledTaskListSynchJob extends Job {
 	public IStatus run(IProgressMonitor monitor) {
 		if (TaskListView.getDefault() != null) {
 			try {
+				//MylarStatusHandler.log("ScheduledTaskListSyncJob Time: "+(new Date()).toString(), this);
 				taskList = taskListManager.getTaskList();
 				List<TaskRepository>repositories  = MylarTaskListPlugin.getRepositoryManager().getAllRepositories();
-				
+				if(monitor != null) {
+					monitor.beginTask("Repository Synchronization", repositories.size());
+				}
 				for (TaskRepository repository : repositories) {
+					
+					AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
+					if(connector == null) {
+						if(monitor != null) {
+							monitor.worked(1);
+						}
+						continue;
+					}
+					
 					Set<AbstractRepositoryQuery> queries = Collections.unmodifiableSet(taskList.getRepositoryQueries(repository.getUrl()));
 					if(queries.size() > 0) {
-						AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
 						if(connector != null) {
-							connector.synchronize(queries, null, Job.DECORATE, 0);							
+							connector.synchronize(queries, null, Job.DECORATE, 0, false);							
 						}
 					}
+					
+					//Set<AbstractRepositoryTask> tasks = Collections.unmodifiableSet(taskList.getRepositoryTasks(repository.getUrl()));					
+					connector.synchronizeChanged(repository, new SubProgressMonitor(monitor, 1));					
 				} 
 			} finally {
 				count++;
@@ -78,6 +93,9 @@ public class ScheduledTaskListSynchJob extends Job {
 					count = 0;
 				if (scheduleDelay != -1) {
 					schedule(scheduleDelay);
+				}
+				if(monitor != null) {
+					monitor.done();
 				}
 			}
 		}

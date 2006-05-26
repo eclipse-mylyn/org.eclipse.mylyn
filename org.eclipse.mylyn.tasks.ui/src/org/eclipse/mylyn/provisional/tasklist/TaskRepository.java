@@ -13,6 +13,7 @@ package org.eclipse.mylar.provisional.tasklist;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -58,6 +59,8 @@ public class TaskRepository {
 	private String characterEncoding = DEFAULT_CHARACTER_ENCODING;
 	
 	private String timeZoneId = "";
+	
+	private Date syncTime = new Date(0); 
 	
 	/**
 	 * for testing purposes
@@ -224,5 +227,19 @@ public class TaskRepository {
 	public void setTimeZoneId(String timeZoneId) {
 		this.timeZoneId = timeZoneId;
 	}
+
+	public Date getSyncTime() {
+		return syncTime;
+	}
+
+	/**
+	 * ONLY for use by TaskRepositoryManager.
+	 * To set the sync time call TaskRepositoryManager.setSyncTime(repository, date);
+	 */
+	protected void setSyncTime(Date syncTime) {
+		this.syncTime = syncTime;
+	}
+
+
 
 }

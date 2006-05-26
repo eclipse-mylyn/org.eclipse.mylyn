@@ -14,6 +14,7 @@ package org.eclipse.mylar.provisional.tasklist;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,8 +30,10 @@ import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -120,7 +123,7 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * returns all tasks if date is null or an error occurs
 	 */
-	public abstract List<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository, Set<ITask> tasks, Date lastSync) throws GeneralSecurityException, IOException;
+	public abstract Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository, Set<AbstractRepositoryTask> tasks) throws GeneralSecurityException, IOException;
 	
 	/**
 	 * @param listener can be null
@@ -162,18 +165,60 @@ public abstract class AbstractRepositoryConnector {
 	public Job synchronize(final AbstractRepositoryQuery repositoryQuery, IJobChangeListener listener) {
 		HashSet<AbstractRepositoryQuery> items = new HashSet<AbstractRepositoryQuery>();
 		items.add(repositoryQuery);
-		return synchronize(items, listener, Job.LONG, 0);
+		return synchronize(items, listener, Job.LONG, 0, true);
 	}
 	
-	public Job synchronize(final Set<AbstractRepositoryQuery>repositoryQueries, IJobChangeListener listener, int priority, long delay) {
+	public Job synchronize(final Set<AbstractRepositoryQuery>repositoryQueries, IJobChangeListener listener, int priority, long delay, boolean syncTasks) {
 		SynchronizeQueryJob job = new SynchronizeQueryJob(this, repositoryQueries);
-
+		job.setSynchTasks(syncTasks);		
 		if (listener != null) {
 			job.addJobChangeListener(listener);
 		}
 		job.setPriority(priority);
 		job.schedule(delay);
 		return job;
+	}
+	
+	/**
+	 * Synchronizes only those tasks that have changed since the last time the given repository
+	 * was synchronized. Calls to this method set TaskRepository.syncTime to now. 
+	 */
+	public void synchronizeChanged(TaskRepository repository, IProgressMonitor monitor) {		
+		TaskList taskList = MylarTaskListPlugin.getTaskListManager().getTaskList();
+		Set<AbstractRepositoryTask> repositoryTasks = Collections.unmodifiableSet(taskList.getRepositoryTasks(repository.getUrl()));
+		
+		try {
+			Set<AbstractRepositoryTask> changedTasks = getChangedSinceLastSync(repository, repositoryTasks);
+			if(monitor != null) monitor.beginTask("Synchronizing modified reports", changedTasks.size());
+			for (AbstractRepositoryTask taskToSync : changedTasks) {
+				if (taskToSync.getSyncState() == RepositoryTaskSyncState.SYNCHRONIZED) {
+					requestRefresh(taskToSync);					
+				}
+				if(monitor != null) monitor.worked(1);
+			}
+			MylarTaskListPlugin.getRepositoryManager().setSyncTime(repository, new Date());
+		} catch (GeneralSecurityException e) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					MessageDialog.openError(Display.getDefault().getActiveShell(),
+							MylarTaskListPlugin.TITLE_DIALOG, "Authentication error. Check setting in "
+									+ TaskRepositoriesView.NAME + ".");
+				}
+			});
+		} catch (final IOException e) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					MessageDialog.openError(Display.getDefault().getActiveShell(),
+							MylarTaskListPlugin.TITLE_DIALOG,
+							"Communication error during query synchronization. Error reported:\n\n"
+									+ e.getMessage());
+				}
+			});
+		} finally {
+			if(monitor != null) {
+				monitor.done();				
+			}
+		}
 	}
 	
 	// TODO: refactor
@@ -202,10 +247,11 @@ public abstract class AbstractRepositoryConnector {
 		currentlyRefreshing.clear();
 	}
 
-	private void updateRefreshState() {
+	private void updateRefreshState() {		
 		if (currentlyRefreshing.size() < MAX_REFRESH_JOBS && toBeRefreshed.size() > 0) {
 			AbstractRepositoryTask repositoryTask = toBeRefreshed.remove(0);
-			Job refreshJob = synchronize(repositoryTask, true, null);
+				
+			Job refreshJob = synchronize(repositoryTask, true, null);			
 			refreshJob.setPriority(Job.BUILD);
 			if (refreshJob != null) {
 				currentlyRefreshing.put(repositoryTask, refreshJob);

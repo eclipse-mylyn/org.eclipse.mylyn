@@ -17,10 +17,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Proxy;
+import java.net.SocketTimeoutException;
 import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -161,29 +161,31 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					MessageDialog.openError(Display.getDefault().getActiveShell(), "Report Download Failed",
-							"Ensure proper repository configuration in " + TaskRepositoriesView.NAME + ".");
+							"Ensure proper repository configuration of " + bugzillaTask.getRepositoryUrl() + " in "
+									+ TaskRepositoriesView.NAME + ".");
 				}
 			});
 		} catch (final UnrecognizedBugzillaError e) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					WebBrowserDialog.openAcceptAgreement(null, "Report Download Failed",
-							"Unrecognized response from server", e.getMessage());
+					WebBrowserDialog.openAcceptAgreement(null, "Report Download Failed", "Unrecognized response from "
+							+ bugzillaTask.getRepositoryUrl(), e.getMessage());
 				}
-			});			
+			});
 		} catch (final Exception e) {
 			if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						
-						if(e instanceof FileNotFoundException) {
+
+						if (e instanceof FileNotFoundException) {
 							MessageDialog.openError(Display.getDefault().getActiveShell(), "Report Download Failed",
 									"Resource not found: " + e.getMessage());
 							return;
 						}
-						
+
 						((ApplicationWindow) PlatformUI.getWorkbench().getActiveWorkbenchWindow())
-								.setStatus("Download of bug: " + bugzillaTask + " failed due to exception: " + e);
+								.setStatus("Download of bug: " + bugzillaTask + " from "
+										+ bugzillaTask.getRepositoryUrl() + " failed due to exception: " + e);
 					}
 				});
 			}
@@ -433,7 +435,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			if (task != null) {
 				Set<AbstractRepositoryQuery> queriesWithHandle = MylarTaskListPlugin.getTaskListManager().getTaskList()
 						.getQueriesForHandle(task.getHandleIdentifier());
-				synchronize(queriesWithHandle, null, Job.SHORT, 0);
+				synchronize(queriesWithHandle, null, Job.SHORT, 0, true);
 
 				if (task instanceof AbstractRepositoryTask) {
 					synchronize((AbstractRepositoryTask) task, true, null);
@@ -441,7 +443,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			}
 
 		} catch (Exception e) {
- 			throw new RuntimeException(e);
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -748,18 +750,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public List<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository, Set<ITask> tasks,
-			Date lastSync) {
+	public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
+			Set<AbstractRepositoryTask> tasks) {
 
-		List<AbstractRepositoryTask> changedTasks = new ArrayList<AbstractRepositoryTask>();
+		Set<AbstractRepositoryTask> changedTasks = new HashSet<AbstractRepositoryTask>();
 
-		if (lastSync == null) {
-			for (ITask task : tasks) {
-				if (task instanceof AbstractRepositoryTask) {
-					changedTasks.add((AbstractRepositoryTask) task);
-				}
-			}
-			return changedTasks;
+		if (repository.getSyncTime() == null) {
+			return tasks;
 		}
 
 		TimeZone timeZone = TimeZone.getTimeZone(repository.getTimeZoneId());
@@ -769,8 +766,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					+ TaskRepositoriesView.NAME + ".", BugzillaRepositoryConnector.class);
 		}
 
-		String dateString = DateUtil.getZoneFormattedDate(timeZone, lastSync, CHANGED_BUGS_START_DATE_LONG);
-
+		String dateString = DateUtil.getZoneFormattedDate(timeZone, repository.getSyncTime(),
+				CHANGED_BUGS_START_DATE_LONG);
 		String urlQueryBase;
 		String urlQueryString;
 
@@ -780,13 +777,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		} catch (UnsupportedEncodingException e1) {
 			MylarStatusHandler.log(e1, "Mylar: Check encoding settings in " + TaskRepositoriesView.NAME + ".");
 			urlQueryBase = repository.getUrl() + CHANGED_BUGS_CGI_QUERY
-					+ DateUtil.getZoneFormattedDate(timeZone, lastSync, CHANGED_BUGS_START_DATE_SHORT)
+					+ DateUtil.getZoneFormattedDate(timeZone, repository.getSyncTime(), CHANGED_BUGS_START_DATE_SHORT)
 					+ CHANGED_BUGS_CGI_ENDDATE;
 		}
 
 		urlQueryString = new String(urlQueryBase);
 
-		int queryCounter = -1;		
+		int queryCounter = -1;
 		Iterator itr = tasks.iterator();
 		while (itr.hasNext()) {
 			queryCounter++;
@@ -812,19 +809,19 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				} else {
 					urlQueryString += newurlQueryString;
 				}
+			} catch (SocketTimeoutException e) {
+				MylarStatusHandler.log("Mylar: Timeout occurred while retrieving reports from " + repository.getUrl()
+						+ ", will synchronize all reports.", this);
 			} catch (Exception e) {
-				MylarStatusHandler.log(e, "Mylar: Error retrieving changed bug reports, will synchronize all reports.");
-				for (ITask eachTask : tasks) {
-					if (eachTask instanceof AbstractRepositoryTask) {
-						changedTasks.add((AbstractRepositoryTask) eachTask);
-					}
-				}
+				MylarStatusHandler.log(e, "Mylar: Error retrieving reports from " + repository.getUrl()
+						+ ", will synchronize all reports.");
+				return tasks;
 			}
-		}		
+		}
 		return changedTasks;
 	}
 
-	private void queryForChanged(TaskRepository repository, List<AbstractRepositoryTask> changedTasks,
+	private void queryForChanged(TaskRepository repository, Set<AbstractRepositoryTask> changedTasks,
 			String urlQueryString) throws Exception {
 		RepositoryQueryResultsFactory queryFactory = RepositoryQueryResultsFactory.getInstance();
 		BugzillaResultCollector collector = new BugzillaResultCollector();
@@ -835,7 +832,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		for (BugzillaSearchHit hit : collector.getResults()) {
 			String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), hit.getId());
 			ITask correspondingTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
-			if (correspondingTask != null && correspondingTask instanceof AbstractRepositoryTask) {				
+			if (correspondingTask != null && correspondingTask instanceof AbstractRepositoryTask) {
 				changedTasks.add((AbstractRepositoryTask) correspondingTask);
 			}
 		}

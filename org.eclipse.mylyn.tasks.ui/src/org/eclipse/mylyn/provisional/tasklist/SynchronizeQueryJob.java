@@ -11,8 +11,6 @@
 
 package org.eclipse.mylar.provisional.tasklist;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,12 +19,11 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressConstants;
@@ -44,6 +41,8 @@ class SynchronizeQueryJob extends Job {
 
 	private List<AbstractQueryHit> hits = new ArrayList<AbstractQueryHit>();
 
+	private boolean synchTasks;
+
 	public SynchronizeQueryJob(AbstractRepositoryConnector connector, Set<AbstractRepositoryQuery> queries) {
 		super(JOB_LABEL + ": " + connector.getRepositoryType());
 		this.connector = connector;
@@ -54,6 +53,7 @@ class SynchronizeQueryJob extends Job {
 	protected IStatus run(IProgressMonitor monitor) {
 		monitor.beginTask(JOB_LABEL, queries.size());
 		for (AbstractRepositoryQuery repositoryQuery : queries) {
+			if(repositoryQuery.isSynchronizing()) continue;
 			monitor.setTaskName("Synchronizing: " + repositoryQuery.getDescription());
 			setProperty(IProgressConstants.ICON_PROPERTY, TaskListImages.REPOSITORY_SYNCHRONIZE);
 			repositoryQuery.setCurrentlySynchronizing(true);
@@ -72,44 +72,28 @@ class SynchronizeQueryJob extends Job {
 
 			MultiStatus queryStatus = new MultiStatus(MylarTaskListPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
 
-			hits = this.connector.performQuery(repositoryQuery, monitor, queryStatus);
+			// TODO: what good is a progress monitor here?
+			hits = this.connector.performQuery(repositoryQuery, new NullProgressMonitor(), queryStatus);
 			if (queryStatus.getChildren() != null && queryStatus.getChildren().length > 0) {
 				if (queryStatus.getChildren()[0].getException() == null) {
 					repositoryQuery.clearHits();
 					for (AbstractQueryHit newHit : hits) {
 						repositoryQuery.addHit(newHit);
 					}
+					
+					if (synchTasks) {
 
-					try {
-						for (AbstractRepositoryTask taskToSync : connector.getChangedSinceLastSync(repository,
-								repositoryQuery.getChildren(), repositoryQuery.getLastSynchronized())) {
-							// if (hitToSynch.getCorrespondingTask() != null &&
-							// hitToSynch instanceof AbstractQueryHit &&
-							// hitToSynch.getCorrespondingTask().getSyncState()
-							// == RepositoryTaskSyncState.SYNCHRONIZED) {
-							// if (taskToSync.getSyncState() !=
-							// RepositoryTaskSyncState.OUTGOING) {
-							if (taskToSync.getSyncState() == RepositoryTaskSyncState.SYNCHRONIZED) {
-								this.connector.requestRefresh(taskToSync);
-							}
-						}
-					} catch (GeneralSecurityException e) {
-						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-							public void run() {
-								MessageDialog.openError(Display.getDefault().getActiveShell(),
-										MylarTaskListPlugin.TITLE_DIALOG, "Authentication error. Check setting in "
-												+ TaskRepositoriesView.NAME + ".");
-							}
-						});
-					} catch (final IOException e) {
-						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-							public void run() {
-								MessageDialog.openError(Display.getDefault().getActiveShell(),
-										MylarTaskListPlugin.TITLE_DIALOG,
-										"Communication error during query synchronization. Error reported:\n\n"
-												+ e.getMessage());
-							}
-						});
+						// Set<ITask> tasks = repositoryQuery.getChildren();
+						// Set<AbstractRepositoryTask> repositoryTasks = new
+						// HashSet<AbstractRepositoryTask>();
+						// for (ITask task : tasks) {
+						// if (task instanceof AbstractRepositoryTask) {
+						// repositoryTasks.add((AbstractRepositoryTask) task);
+						//							}
+						//						}
+
+						connector.synchronizeChanged(repository, monitor);
+						
 					}
 
 				} else {
@@ -124,5 +108,10 @@ class SynchronizeQueryJob extends Job {
 			monitor.worked(1);
 		}
 		return Status.OK_STATUS;
+	}
+
+	public void setSynchTasks(boolean syncTasks) {
+		this.synchTasks = syncTasks;
+		
 	}
 }

@@ -438,6 +438,24 @@ public class TaskList {
 		}
 		return repositoryQueries;
 	}
+	
+	/**
+	 *  return all tasks for the given repository url
+	 */
+	public Set<AbstractRepositoryTask> getRepositoryTasks(String repositoryUrl) {
+		Set<AbstractRepositoryTask> repositoryTasks = new HashSet<AbstractRepositoryTask>();
+		if (repositoryUrl != null) {
+			for (ITask task : tasks.values()) {
+				if (task instanceof AbstractRepositoryTask) {
+					AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)task;
+					if(repositoryTask.getRepositoryUrl().equals(repositoryUrl)) {
+						repositoryTasks.add(repositoryTask);
+					}
+				}
+			}
+		}
+		return repositoryTasks;
+	}
 
 	/** if handle == null or no query hits found an empty set is returned **/
 	public Set<AbstractQueryHit> getQueryHitsForHandle(String handle) {

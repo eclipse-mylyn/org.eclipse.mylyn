@@ -14,6 +14,7 @@ package org.eclipse.mylar.provisional.tasklist;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -28,7 +29,9 @@ import org.eclipse.mylar.internal.core.MylarContextManager;
  * @author Mik Kersten
  */
 public class TaskRepositoryManager {
-
+	
+	public static final String PROPERTY_SYNCTIME = "synctime";
+	
 	public static final String PROPERTY_TIMEZONE = "timezone";
 	
 	public static final String PROPERTY_ENCODING = "encoding";
@@ -211,7 +214,14 @@ public class TaskRepositoryManager {
 						timeZoneId = TimeZone.getDefault().getID();
 					}
 					
-					repositories.add(new TaskRepository(repositoryConnector.getRepositoryType(), urlString, version, encoding, timeZoneId));
+					String prefIdSyncTime = urlString + PROPERTY_DELIM + PROPERTY_SYNCTIME;
+					long time = MylarTaskListPlugin.getMylarCorePrefs().getLong(prefIdSyncTime);
+					Date syncDate = new Date(time);										
+					
+					TaskRepository repository = new TaskRepository(repositoryConnector.getRepositoryType(), urlString, version, encoding, timeZoneId);
+					repository.setSyncTime(syncDate);
+					
+					repositories.add(repository);
 				}
 			}
 		}
@@ -245,6 +255,16 @@ public class TaskRepositoryManager {
 		saveRepositories();
 	}
 	
+	public void setSyncTime(TaskRepository repository, Date syncTime) {
+		repository.setSyncTime(syncTime);
+		String prefIdSyncTime = repository.getUrl() + PROPERTY_DELIM + PROPERTY_SYNCTIME;
+		if(repository.getSyncTime() != null) {
+			MylarTaskListPlugin.getMylarCorePrefs().setValue(prefIdSyncTime, repository.getSyncTime().getTime());
+		} else {
+			MylarTaskListPlugin.getMylarCorePrefs().setValue(prefIdSyncTime, 0L);
+		}
+	}
+	
 	private void saveRepositories() {
 		for (AbstractRepositoryConnector repositoryConnector : repositoryConnectors.values()) {
 			if (repositoryMap.containsKey(repositoryConnector.getRepositoryType())) {
@@ -260,6 +280,13 @@ public class TaskRepositoryManager {
 					
 					String prefIdTimeZoneId = repository.getUrl() + PROPERTY_DELIM + PROPERTY_TIMEZONE;
 					MylarTaskListPlugin.getMylarCorePrefs().setValue(prefIdTimeZoneId, repository.getTimeZoneId());
+					
+					String prefIdSyncTime = repository.getUrl() + PROPERTY_DELIM + PROPERTY_SYNCTIME;
+					if(repository.getSyncTime() != null) {
+						MylarTaskListPlugin.getMylarCorePrefs().setValue(prefIdSyncTime, repository.getSyncTime().getTime());
+					} else {
+						MylarTaskListPlugin.getMylarCorePrefs().setValue(prefIdSyncTime, 0L);
+					}
 				}
 				String prefId = PREF_REPOSITORIES + repositoryConnector.getRepositoryType();
 				MylarTaskListPlugin.getMylarCorePrefs().setValue(prefId, repositoriesToStore);
