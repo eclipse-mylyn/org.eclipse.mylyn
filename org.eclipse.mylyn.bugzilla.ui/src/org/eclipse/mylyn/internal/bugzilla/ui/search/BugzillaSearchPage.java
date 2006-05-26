@@ -609,7 +609,7 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 		gd.widthHint = 30;
 		maxHitsText.setLayoutData(gd);
 		label = new Label(group, SWT.LEFT);
-		label.setText(" hits.");
+		label.setText(" hits. (-1 returns all)");
 
 		maxHits = MAX_HITS;
 		maxHitsText.setText(maxHits);
@@ -913,7 +913,7 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 
 		Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
 		IBugzillaSearchOperation op = new BugzillaSearchOperation(repository, queryUrl, proxySettings, collector,
-				maxHits);
+				getMaxHits());
 
 		BugzillaSearchQuery searchQuery = new BugzillaSearchQuery(op);
 		NewSearchUI.runQueryInBackground(searchQuery);
