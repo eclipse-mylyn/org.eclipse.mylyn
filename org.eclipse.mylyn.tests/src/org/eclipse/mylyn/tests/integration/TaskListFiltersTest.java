@@ -31,7 +31,7 @@ import org.eclipse.mylar.provisional.tasklist.TaskListManager;
  */
 public class TaskListFiltersTest extends TestCase {
 
-	private TaskListView view = TaskListView.getDefault();
+	private TaskListView view = TaskListView.getFromActivePerspective();
 	
 	private TaskListManager manager = MylarTaskListPlugin.getTaskListManager();
 	
