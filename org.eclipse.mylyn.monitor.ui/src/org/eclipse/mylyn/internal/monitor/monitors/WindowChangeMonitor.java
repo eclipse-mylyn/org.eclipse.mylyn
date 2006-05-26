@@ -15,7 +15,6 @@ import org.eclipse.mylar.provisional.core.InteractionEvent;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * Logs all bug root window selections (i.e. the window that the workbench is
@@ -29,37 +28,41 @@ public class WindowChangeMonitor implements IWindowListener {
 
 	public static final String WINDOW_OPENED = "opened";
 
-	public static final String ROOT_WINDOW_OPENED = "root";
+	public static final String WINDOW_ACTIVATED = "activated";
 
-	private IWorkbenchWindow rootWindow;
+	public static final String WINDOW_DEACTIVATED = "deactivated";
 
 	public WindowChangeMonitor() {
-		rootWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		super();
 	}
 
 	// TODO: Should we add the default set of monitors to the new window as
 	// well?
 	public void windowOpened(IWorkbenchWindow window) {
-		if (!window.equals(rootWindow)) {
-			InteractionEvent interactionEvent = InteractionEvent.makeCommand(window.getClass().getCanonicalName(),
+			InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window),
 					WINDOW_OPENED);
 			MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent);
-		}
 	}
 
 	public void windowClosed(IWorkbenchWindow window) {
-		if (!window.equals(rootWindow)) {
-			InteractionEvent interactionEvent = InteractionEvent.makeCommand(window.getClass().getCanonicalName(),
+			InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window),
 					WINDOW_CLOSED);
 			MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent);
-		}
 	}
 
 	public void windowDeactivated(IWorkbenchWindow window) {
-		// Do nothing
+		InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window),
+				WINDOW_DEACTIVATED);
+		MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 	public void windowActivated(IWorkbenchWindow window) {
-		// Do nothing
+		InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window),
+				WINDOW_ACTIVATED);
+		MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+	}
+
+	protected String getWindowOrigin(IWorkbenchWindow window) {
+		return window.getClass().getCanonicalName() + "@" + window.hashCode();
 	}
 }

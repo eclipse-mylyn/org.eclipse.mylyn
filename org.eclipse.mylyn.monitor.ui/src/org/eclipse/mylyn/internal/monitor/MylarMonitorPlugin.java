@@ -58,6 +58,7 @@ import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
+import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -159,6 +160,22 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 
 	private StudyParameters studyParameters = new StudyParameters();
 
+	private IWindowListener WINDOW_LISTENER = new IWindowListener() {
+		public void windowActivated(IWorkbenchWindow window) {}
+		public void windowDeactivated(IWorkbenchWindow window) {}
+
+		public void windowClosed(IWorkbenchWindow window) {
+			if(window.getShell() != null) {
+				window.getShell().removeShellListener(SHELL_LISTENER);
+			}
+		}
+
+		public void windowOpened(IWorkbenchWindow window) {
+			if(window.getShell() != null && !PlatformUI.getWorkbench().isClosing()) {
+				window.getShell().addShellListener(SHELL_LISTENER);
+			}
+		}};
+	
 	private ShellListener SHELL_LISTENER = new ShellListener() {
 
 		public void shellDeactivated(ShellEvent arg0) {
@@ -266,7 +283,10 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		MylarPlugin.getDefault().getSelectionMonitors().remove(selectionMonitor);
 		getActionExecutionListeners().remove(new ActionExecutionMonitor());
 
-		workbench.getActiveWorkbenchWindow().getShell().removeShellListener(SHELL_LISTENER);
+		workbench.removeWindowListener(WINDOW_LISTENER);
+		for(IWorkbenchWindow w : workbench.getWorkbenchWindows()) {
+			if(w.getShell() != null) { w.getShell().removeShellListener(SHELL_LISTENER); }
+		}
 		MylarPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
 
 		MylarPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(preferenceMonitor);
@@ -275,7 +295,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		EditorsPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(preferenceMonitor);
 		PDEPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(preferenceMonitor);
 
-		workbench.getActiveWorkbenchWindow().removePerspectiveListener(perspectiveMonitor);
+		MylarPlugin.getDefault().removeWindowPerspectiveListener(perspectiveMonitor);
 		workbench.getActivitySupport().getActivityManager().removeActivityManagerListener(activityMonitor);
 		workbench.getDisplay().removeFilter(SWT.Selection, menuMonitor);
 		workbench.removeWindowListener(windowMonitor);
@@ -297,7 +317,10 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		MylarPlugin.getDefault().getSelectionMonitors().add(selectionMonitor);
 
 		getActionExecutionListeners().add(new ActionExecutionMonitor());
-		workbench.getActiveWorkbenchWindow().getShell().addShellListener(SHELL_LISTENER);
+		workbench.addWindowListener(WINDOW_LISTENER);
+		for(IWorkbenchWindow w : workbench.getWorkbenchWindows()) {
+			if(w.getShell() != null) { w.getShell().addShellListener(SHELL_LISTENER); }
+		}
 		MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 
 		MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(preferenceMonitor);
@@ -306,7 +329,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		EditorsPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(preferenceMonitor);
 		PDEPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(preferenceMonitor);
 
-		workbench.getActiveWorkbenchWindow().addPerspectiveListener(perspectiveMonitor);
+		MylarPlugin.getDefault().addWindowPerspectiveListener(perspectiveMonitor);
 		workbench.getActivitySupport().getActivityManager().addActivityManagerListener(activityMonitor);
 		workbench.getDisplay().addFilter(SWT.Selection, menuMonitor);
 		workbench.addWindowListener(windowMonitor);

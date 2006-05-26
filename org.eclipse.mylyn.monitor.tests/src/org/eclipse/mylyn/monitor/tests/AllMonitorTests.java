@@ -34,6 +34,7 @@ public class AllMonitorTests {
 		suite.addTestSuite(MonitorTest.class);
 		suite.addTestSuite(InteractionEventExternalizationTest.class);
 		suite.addTestSuite(MonitorPackagingTest.class);
+		suite.addTestSuite(MultiWindowMonitorTest.class);
 		// $JUnit-END$
 
 		return suite;

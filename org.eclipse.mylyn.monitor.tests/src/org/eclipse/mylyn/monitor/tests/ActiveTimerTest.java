@@ -64,8 +64,8 @@ public class ActiveTimerTest extends TestCase {
 			} catch (InterruptedException e) {
 			}
 		}
-		assertFalse("Too long of a wait", i > 8);
-		assertFalse("Too short of a wait", i < 6);
+		assertFalse("Too long of a wait (" + i + ")", i > 8);
+		assertFalse("Too short of a wait (" + i + ")", i < 6);
 
 		thread = new TimerThread(1000, 100);
 		thread.addListener(listener2);
@@ -87,7 +87,7 @@ public class ActiveTimerTest extends TestCase {
 			}
 		}
 		thread.kill();
-		assertFalse("Too long of a wait", i > 12);
-		assertFalse("Too short of a wait", i < 10);
+		assertFalse("Too long of a wait (" + i + ")", i > 12);
+		assertFalse("Too short of a wait (" + i + ")", i < 10);
 	}
 }
