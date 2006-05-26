@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -60,7 +59,7 @@ public class ScheduledTaskListSynchJob extends Job {
 	}
 
 	public IStatus run(IProgressMonitor monitor) {
-		if (TaskListView.getFromActivePerspective() != null) {
+		///if (TaskListView.getFromActivePerspective() != null) {
 			try {
 				if(monitor == null) {
 					monitor = new NullProgressMonitor();
@@ -103,7 +102,7 @@ public class ScheduledTaskListSynchJob extends Job {
 					monitor.done();
 				}
 			}
-		}
+		//}
 		return Status.OK_STATUS;
 	}
 
