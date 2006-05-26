@@ -202,7 +202,8 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		for (IEditorPart editor : editors) {
-			editor.doSave(monitor);
+			if(editor.isDirty())
+				editor.doSave(monitor);
 		}
 
 		if (webBrowser != null) {
@@ -263,6 +264,10 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		}
 	}
 
+	public void notifyTaskChanged() {
+		MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
+	}
+	
 	@Override
 	public boolean isSaveAsAllowed() {
 		return false;

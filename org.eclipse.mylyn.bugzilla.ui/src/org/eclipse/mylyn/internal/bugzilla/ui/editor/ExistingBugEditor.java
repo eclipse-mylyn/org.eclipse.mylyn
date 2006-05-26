@@ -768,11 +768,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		ccText.addModifyListener(new ModifyListener() {
 
 			public void modifyText(ModifyEvent e) {
-				changeDirtyStatus(true);
-				AbstractRepositoryReportAttribute a = bug.getAttribute(BugzillaReportElement.NEWCC);
-				if (a != null) {
-					a.setValue(ccText.getText());
-				}
+				changeDirtyStatus(true);				
+				bug.setAttributeValue(BugzillaReportElement.NEWCC, ccText.getText());				
 			}
 
 		});

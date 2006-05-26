@@ -1562,9 +1562,12 @@ public abstract class AbstractBugEditor extends EditorPart {
 			// IBugzillaBug bug = getBug();
 
 			final BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) MylarTaskListPlugin
-					.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
-			changeDirtyStatus(false);
+					.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);			
 			bugzillaRepositoryClient.saveBugReport((BugzillaReport) getReport());
+			changeDirtyStatus(false);
+			if(parentEditor != null) {
+				parentEditor.notifyTaskChanged();
+			}
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "bug save offline failed", true);
 		}
@@ -1640,9 +1643,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		saveBug();
-		updateEditor();
-
-		// XXX notify that saved ofline?
+		updateEditor();		
 	}
 
 	@Override

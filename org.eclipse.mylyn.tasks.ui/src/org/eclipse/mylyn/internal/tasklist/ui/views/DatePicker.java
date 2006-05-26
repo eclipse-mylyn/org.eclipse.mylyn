@@ -248,7 +248,7 @@ public class DatePicker extends Composite {
 			dateText.setText(initialText);
 			dateText.setEnabled(true);
 		}
-		notifyPickerListeners();
+		//notifyPickerListeners();
 	}
 
 	public void setEnabled(boolean enabled) {

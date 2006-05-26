@@ -275,7 +275,11 @@ public class TaskPlanningEditor extends EditorPart {
 			// task.setReminderDate(null);
 			MylarTaskListPlugin.getTaskListManager().setReminder(task, null);
 		}
-		MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
+		
+		//MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
+		if(parentEditor != null) {
+			parentEditor.notifyTaskChanged();
+		}
 
 		// Method not implemented yet
 		// task.setStatus(statusCombo.getItem(statusCombo.getSelectionIndex()));
