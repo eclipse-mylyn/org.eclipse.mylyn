@@ -37,7 +37,7 @@ public class TaskListDnDTest extends TestCase {
 		manager = MylarTaskListPlugin.getTaskListManager();
 		manager.resetTaskList();
 
-		TreeViewer viewer = TaskListView.getDefault().getViewer();
+		TreeViewer viewer = TaskListView.getFromActivePerspective().getViewer();
 		assertNotNull(viewer);
 		dropAdapter = new TaskListDropAdapter(viewer);
 	}

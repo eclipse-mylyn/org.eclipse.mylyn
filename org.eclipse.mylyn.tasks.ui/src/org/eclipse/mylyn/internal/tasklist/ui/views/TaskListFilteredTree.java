@@ -62,11 +62,11 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 
 			public void mouseDown(MouseEvent e) {
 				TaskListFilteredTree.super.filterText.setText("");
-				if (TaskListView.getDefault().getDrilledIntoCategory() != null) {
-					TaskListView.getDefault().goUpToRoot();
+				if (TaskListView.getFromActivePerspective().getDrilledIntoCategory() != null) {
+					TaskListView.getFromActivePerspective().goUpToRoot();
 				}
 				TaskListFilteredTree.this.textChanged();
-				TaskListView.getDefault().selectedAndFocusTask(
+				TaskListView.getFromActivePerspective().selectedAndFocusTask(
 						MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTask()
 				);
 			}

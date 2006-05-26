@@ -43,14 +43,14 @@ public class TaskActivateAction extends Action implements IViewActionDelegate {
 
 	public void run() {
 //		MylarPlugin.getContextManager().actionObserved(this, Boolean.TRUE.toString());
-		run(TaskListView.getDefault().getSelectedTask());
+		run(TaskListView.getFromActivePerspective().getSelectedTask());
 	}
 
 	public void run(ITask task) {
 		if (task != null) {
 			MylarTaskListPlugin.getTaskListManager().activateTask(task);
-			if (TaskListView.getDefault() != null) {
-				TaskListView.getDefault().refreshAndFocus();
+			if (TaskListView.getFromActivePerspective() != null) {
+				TaskListView.getFromActivePerspective().refreshAndFocus();
 			}
 		}
 	}

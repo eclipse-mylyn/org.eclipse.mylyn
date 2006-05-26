@@ -76,8 +76,8 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 					}
 				});
 
-		} else if (TaskListView.getDefault() != null) {
-			ISelection selection = TaskListView.getDefault().getViewer().getSelection();
+		} else if (TaskListView.getFromActivePerspective() != null) {
+			ISelection selection = TaskListView.getFromActivePerspective().getViewer().getSelection();
 			for (Object obj : ((IStructuredSelection) selection).toList()) {
 				if (obj instanceof AbstractRepositoryQuery) {
 					final AbstractRepositoryQuery repositoryQuery = (AbstractRepositoryQuery) obj;
@@ -118,8 +118,8 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 		}
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				if (TaskListView.getDefault() != null)
-					TaskListView.getDefault().getViewer().refresh();
+				if (TaskListView.getFromActivePerspective() != null)
+					TaskListView.getFromActivePerspective().getViewer().refresh();
 			}
 		});
 	}

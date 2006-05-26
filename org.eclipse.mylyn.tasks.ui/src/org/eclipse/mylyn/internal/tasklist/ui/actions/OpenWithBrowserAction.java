@@ -36,7 +36,7 @@ public class OpenWithBrowserAction extends Action {
 
 	@Override
 	public void run() {
-		ISelection selection = TaskListView.getDefault().getViewer().getSelection();
+		ISelection selection = TaskListView.getFromActivePerspective().getViewer().getSelection();
 		for (Object selectedObject : ((IStructuredSelection) selection).toList()) {
 			ITask task = null;
 			if (selectedObject instanceof ITask) {

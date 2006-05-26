@@ -520,10 +520,11 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testScheduledRefreshJob() throws InterruptedException {
 		int counter = 3;
-		ScheduledTaskListSynchJob job = new ScheduledTaskListSynchJob(500, manager);
+		ScheduledTaskListSynchJob job = new ScheduledTaskListSynchJob(10, manager);
 		job.run(new NullProgressMonitor());
-		Thread.sleep(1500);
-		assertTrue(job.getCount() >= counter);
+//		job.schedule();
+		Thread.sleep(2000);
+		assertTrue(job.getCount() + " smaller than " + counter, job.getCount() >= counter);
 		job.cancel();
 	}
 

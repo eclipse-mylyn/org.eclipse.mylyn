@@ -58,7 +58,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
-import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.part.EditorPart;
 
 /**
@@ -678,7 +677,7 @@ public class TaskActivityEditorPart extends EditorPart {
 	private void exportToHtml() {
 		File outputFile;
 		try {
-			FileDialog dialog = new FileDialog(Workbench.getInstance().getActiveWorkbenchWindow().getShell());
+			FileDialog dialog = new FileDialog(getSite().getWorkbenchWindow().getShell());
 			dialog.setText("Specify a file name");
 			dialog.setFilterExtensions(new String[] { "*.html", "*.*" });
 			String filename = dialog.open();

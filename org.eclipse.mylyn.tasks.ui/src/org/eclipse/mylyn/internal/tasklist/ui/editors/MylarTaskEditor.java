@@ -97,11 +97,6 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 
 	public MylarTaskEditor() {
 		super();
-		IWorkbench workbench = MylarTaskListPlugin.getDefault().getWorkbench();
-		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-		IWorkbenchPage activePage = window.getActivePage();
-		partListener = new TaskEditorListener();
-		activePage.addPartListener(partListener);
 		taskPlanningEditor = new TaskPlanningEditor();
 		taskPlanningEditor.setParentEditor(this);
 	}
@@ -243,6 +238,9 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		taskEditorInput = (TaskEditorInput) input;
+		partListener = new TaskEditorListener();
+		site.getPage().addPartListener(partListener);
+
 		super.init(site, input);
 
 		setSite(site);
@@ -286,8 +284,8 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		public void partActivated(IWorkbenchPart part) {
 			if (part.equals(MylarTaskEditor.this)) {
 				ITask task = taskEditorInput.getTask();
-				if (TaskListView.getDefault() != null) {
-					TaskListView.getDefault().selectedAndFocusTask(task);
+				if (TaskListView.getFromActivePerspective() != null) {
+					TaskListView.getFromActivePerspective().selectedAndFocusTask(task);
 				}
 			}
 		}
@@ -362,16 +360,13 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 			webBrowser.dispose();
 
 		IWorkbench workbench = MylarTaskListPlugin.getDefault().getWorkbench();
-		IWorkbenchWindow window = null;
-		IWorkbenchPage activePage = null;
 		if (workbench != null) {
-			window = workbench.getActiveWorkbenchWindow();
-		}
-		if (window != null) {
-			activePage = window.getActivePage();
-		}
-		if (activePage != null) {
-			activePage.removePartListener(partListener);
+			for(IWorkbenchWindow window : workbench.getWorkbenchWindows()) {
+			IWorkbenchPage activePage = window.getActivePage();
+				if (activePage != null) {
+					activePage.removePartListener(partListener);
+				}
+			}
 		}
 	}
 }

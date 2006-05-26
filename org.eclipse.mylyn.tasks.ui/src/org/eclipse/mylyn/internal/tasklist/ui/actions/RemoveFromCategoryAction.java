@@ -42,7 +42,7 @@ public class RemoveFromCategoryAction extends Action {
 	@Override
 	public void run() {
 		try {
-			ISelection selection = TaskListView.getDefault().getViewer().getSelection();
+			ISelection selection = TaskListView.getFromActivePerspective().getViewer().getSelection();
 			for (Object selectedObject : ((IStructuredSelection) selection).toList()) {
 				if (selectedObject instanceof ITask) { // && !((ITask) selectedObject).isLocal()) {
 					ITask task = (ITask) selectedObject;

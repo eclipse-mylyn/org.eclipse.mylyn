@@ -23,18 +23,16 @@ import java.util.List;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskListChangeListener;
-import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
  */
-public class TaskListSaveManager implements ITaskListChangeListener, DisposeListener, IBackgroundSaveListener {
+public class TaskListSaveManager implements ITaskListChangeListener, IBackgroundSaveListener {
 
 	private final static int DEFAULT_SAVE_INTERVAL = 5 * 60 * 1000;
 
@@ -174,10 +172,6 @@ public class TaskListSaveManager implements ITaskListChangeListener, DisposeList
 
 	public void tasklistRead() {
 		// ignore
-	}
-
-	public void widgetDisposed(DisposeEvent e) {
-		saveTaskListAndContexts();
 	}
 
 	/**

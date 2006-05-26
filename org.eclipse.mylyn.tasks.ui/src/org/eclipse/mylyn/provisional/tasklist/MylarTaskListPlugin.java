@@ -47,11 +47,11 @@ import org.eclipse.mylar.internal.tasklist.util.TaskListExtensionReader;
 import org.eclipse.mylar.internal.tasklist.util.TaskListSaveManager;
 import org.eclipse.mylar.internal.tasklist.util.TaskListWriter;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
-import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IStartup;
+import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.update.internal.core.UpdateCore;
@@ -193,30 +193,25 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	/**
 	 * TODO: move into reminder mechanims
 	 */
-	private static ShellListener SHELL_LISTENER = new ShellListener() {
-
-		public void shellClosed(ShellEvent arg0) {
-			// ignore
-		}
-
+	private IWindowListener WINDOW_LISTENER = new IWindowListener() {
 		/**
 		 * bug 1002249: too slow to save state here
 		 */
-		public void shellDeactivated(ShellEvent arg0) {
+		public void windowDeactivated(IWorkbenchWindow window) {
 			shellActive = false;
 		}
 
-		public void shellActivated(ShellEvent arg0) {
+		public void windowActivated(IWorkbenchWindow window) {
 			getDefault().checkTaskListBackup();
 			shellActive = true;
 		}
 
-		public void shellDeiconified(ShellEvent arg0) {
-			// ingore
+		public void windowOpened(IWorkbenchWindow window) {
+			// ignore	
 		}
 
-		public void shellIconified(ShellEvent arg0) {
-			// ignore
+		public void windowClosed(IWorkbenchWindow window) {
+			taskListSaveManager.saveTaskListAndContexts();
 		}
 	};
 
@@ -240,11 +235,11 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 		public void propertyChange(PropertyChangeEvent event) {
 			if (event.getProperty().equals(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS)) {
-				TaskListView.getDefault().togglePreviousAction(
+				TaskListView.getFromActivePerspective().togglePreviousAction(
 						!getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS));
-				TaskListView.getDefault().toggleNextAction(
+				TaskListView.getFromActivePerspective().toggleNextAction(
 						!getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS));
-				TaskListView.getDefault().clearTaskHistory();
+				TaskListView.getFromActivePerspective().clearTaskHistory();
 			}
 			if (event.getProperty().equals(MylarPreferenceContstants.PREF_DATA_DIR)) {
 				if (event.getOldValue() instanceof String) {
@@ -256,8 +251,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					getTaskListManager().setTaskListFile(new File(taskListFilePath));
 					getTaskListManager().readExistingOrCreateNewList();
 
-					if (TaskListView.getDefault() != null) {
-						TaskListView.getDefault().clearTaskHistory();
+					if (TaskListView.getFromActivePerspective() != null) {
+						TaskListView.getFromActivePerspective().clearTaskHistory();
 					}
 				}
 			}
@@ -306,7 +301,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					initialized = true;
 					migrateHandlesToRepositorySupport();
 
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(SHELL_LISTENER);
+					PlatformUI.getWorkbench().addWindowListener(WINDOW_LISTENER);
 
 					taskListNotificationManager = new TaskListNotificationManager();
 					taskListNotificationManager.addNotificationProvider(NOTIFICATION_PROVIDER);
@@ -324,8 +319,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 					MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 					getMylarCorePrefs().addPropertyChangeListener(taskListSynchronizationManager);
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addDisposeListener(
-							taskListSaveManager);
 
 					if (getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP)) {
 						taskListSynchronizationManager.synchNow(DELAY_QUERY_REFRESH_ON_STARTUP);
@@ -360,11 +353,9 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			if (MylarPlugin.getDefault() != null) {
 				MylarPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
 			}
-			if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()
-					&& PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(SHELL_LISTENER);
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().removeDisposeListener(
-						taskListSaveManager);
+			if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
+				// FIXME: uncertain why isClosing() is necessary
+				PlatformUI.getWorkbench().removeWindowListener(WINDOW_LISTENER);
 			}
 		} catch (Exception e) {
 			MylarStatusHandler.log(e, "Mylar Task List stop terminated abnormally");

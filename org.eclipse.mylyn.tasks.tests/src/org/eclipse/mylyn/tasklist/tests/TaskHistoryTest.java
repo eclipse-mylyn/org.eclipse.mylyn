@@ -60,8 +60,8 @@ public class TaskHistoryTest extends TestCase {
 			fail("View not initialized");
 		}
 
-		assertNotNull(TaskListView.getDefault());
-		taskView = TaskListView.getDefault();
+		assertNotNull(TaskListView.getFromActivePerspective());
+		taskView = TaskListView.getFromActivePerspective();
 
 		resetHistory();
 

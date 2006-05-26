@@ -28,8 +28,8 @@ public class GoUpAction extends Action {
 
 	@Override
 	public void run() {
-		if (TaskListView.getDefault() != null) {
-			TaskListView.getDefault().goUpToRoot();
+		if (TaskListView.getFromActivePerspective() != null) {
+			TaskListView.getFromActivePerspective().goUpToRoot();
 		}
 	}
 }

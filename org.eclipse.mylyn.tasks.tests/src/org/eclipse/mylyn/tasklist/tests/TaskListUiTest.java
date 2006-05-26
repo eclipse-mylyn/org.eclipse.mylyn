@@ -161,18 +161,18 @@ public class TaskListUiTest extends TestCase {
 
 	public void testUiFilter() {
 		try {
-			assertNotNull(TaskListView.getDefault());
-			TreeViewer viewer = TaskListView.getDefault().getViewer();
-			TaskListView.getDefault().addFilter(TaskListView.getDefault().getCompleteFilter());
+			assertNotNull(TaskListView.getFromActivePerspective());
+			TreeViewer viewer = TaskListView.getFromActivePerspective().getViewer();
+			TaskListView.getFromActivePerspective().addFilter(TaskListView.getFromActivePerspective().getCompleteFilter());
 			viewer.refresh();
 			viewer.expandAll();
 			TreeItem[] items = viewer.getTree().getItems();
 			assertTrue(checkFilter(CHECK_COMPLETE_FILTER, items));
-			TaskListView.getDefault().removeFilter(TaskListView.getDefault().getCompleteFilter());
+			TaskListView.getFromActivePerspective().removeFilter(TaskListView.getFromActivePerspective().getCompleteFilter());
 
-			TaskPriorityFilter filter = (TaskPriorityFilter) TaskListView.getDefault().getPriorityFilter();
+			TaskPriorityFilter filter = (TaskPriorityFilter) TaskListView.getFromActivePerspective().getPriorityFilter();
 			filter.displayPrioritiesAbove("P2");
-			TaskListView.getDefault().addFilter(filter);
+			TaskListView.getFromActivePerspective().addFilter(filter);
 			viewer.refresh();
 			viewer.expandAll();
 			items = viewer.getTree().getItems();

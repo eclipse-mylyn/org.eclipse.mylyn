@@ -66,8 +66,8 @@ import org.eclipse.mylar.internal.tasklist.ui.actions.MarkTaskIncompleteAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.NewCategoryAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.NextTaskDropDownAction;
-import org.eclipse.mylar.internal.tasklist.ui.actions.OpenWithBrowserAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.OpenTaskListElementAction;
+import org.eclipse.mylar.internal.tasklist.ui.actions.OpenWithBrowserAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.PreviousTaskDropDownAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.RemoveFromCategoryAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.RenameAction;
@@ -107,10 +107,12 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IMemento;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.DrillDownAdapter;
@@ -156,7 +158,7 @@ public class TaskListView extends ViewPart {
 
 	private static final String PART_NAME = "Mylar Tasks";
 
-	private static TaskListView INSTANCE;
+//	private static TaskListView INSTANCE;
 
 	private IThemeManager themeManager;
 	
@@ -482,6 +484,17 @@ public class TaskListView extends ViewPart {
 		}
 	}
 
+	public static TaskListView getFromActivePerspective() {
+		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		if (activePage != null) {
+			IViewPart view= activePage.findView(ID);
+			if (view instanceof TaskListView) {
+				return (TaskListView)view;
+			}
+		}
+		return null;	
+	}
+	
 	public static TaskListView openInActivePerspective() {
 		try {
 			return (TaskListView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ID);
@@ -491,7 +504,7 @@ public class TaskListView extends ViewPart {
 	}
 
 	public TaskListView() {
-		INSTANCE = this;
+//		INSTANCE = this;
 		MylarTaskListPlugin.getTaskListManager().getTaskList().addChangeListener(TASK_REFERESH_LISTENER);
 		MylarTaskListPlugin.getTaskListManager().addActivityListener(TASK_ACTIVITY_LISTENER);
 	}
@@ -1220,7 +1233,7 @@ public class TaskListView extends ViewPart {
 	}
 
 	public String getBugIdFromUser() {
-		InputDialog dialog = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+		InputDialog dialog = new InputDialog(getSite().getWorkbenchWindow().getShell(),
 				"Enter Bugzilla ID", "Enter the Bugzilla ID: ", "", null);
 		int dialogResult = dialog.open();
 		if (dialogResult == Window.OK) {
@@ -1228,10 +1241,6 @@ public class TaskListView extends ViewPart {
 		} else {
 			return null;
 		}
-	}
-
-	public static TaskListView getDefault() {
-		return INSTANCE;
 	}
 
 	public void refreshAndFocus() {

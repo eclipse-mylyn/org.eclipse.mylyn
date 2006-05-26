@@ -310,7 +310,7 @@ public class TaskActivityView extends ViewPart {
 			@Override
 			public boolean performDrop(Object data) {
 
-				IStructuredSelection selection = ((IStructuredSelection) TaskListView.getDefault().getViewer()
+				IStructuredSelection selection = ((IStructuredSelection) TaskListView.getFromActivePerspective().getViewer()
 						.getSelection());
 
 				Object target = getCurrentTarget();
@@ -353,7 +353,7 @@ public class TaskActivityView extends ViewPart {
 
 			@Override
 			public boolean validateDrop(Object targetObject, int operation, TransferData transferType) {
-				Object selectedObject = ((IStructuredSelection) TaskListView.getDefault().getViewer().getSelection())
+				Object selectedObject = ((IStructuredSelection) TaskListView.getFromActivePerspective().getViewer().getSelection())
 						.getFirstElement();
 
 				if (selectedObject instanceof AbstractTaskContainer) {

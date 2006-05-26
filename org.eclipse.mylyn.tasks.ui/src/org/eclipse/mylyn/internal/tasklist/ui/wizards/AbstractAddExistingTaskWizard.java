@@ -40,8 +40,8 @@ public abstract class AbstractAddExistingTaskWizard extends Wizard {
 				this.repository.getKind());
 		ITask newTask = connector.createTaskFromExistingKey(repository, getTaskId());
 
-		if (newTask != null && TaskListView.getDefault() != null) {
-			Object selectedObject = ((IStructuredSelection) TaskListView.getDefault().getViewer().getSelection())
+		if (newTask != null && TaskListView.getFromActivePerspective() != null) {
+			Object selectedObject = ((IStructuredSelection) TaskListView.getFromActivePerspective().getViewer().getSelection())
 					.getFirstElement();
 
 			if (selectedObject instanceof TaskCategory) {
@@ -49,8 +49,8 @@ public abstract class AbstractAddExistingTaskWizard extends Wizard {
 			} else {
 				MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(newTask);
 			}
-			if (TaskListView.getDefault() != null) {
-				TaskListView.getDefault().getViewer().setSelection(new StructuredSelection(newTask));
+			if (TaskListView.getFromActivePerspective() != null) {
+				TaskListView.getFromActivePerspective().getViewer().setSelection(new StructuredSelection(newTask));
 			}
 		}
 

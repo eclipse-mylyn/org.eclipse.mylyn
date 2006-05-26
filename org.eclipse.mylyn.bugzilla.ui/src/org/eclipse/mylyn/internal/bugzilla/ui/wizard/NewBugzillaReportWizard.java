@@ -106,8 +106,8 @@ public class NewBugzillaReportWizard extends AbstractBugzillaReportWizard {
 			BugzillaTask newTask = new BugzillaTask(AbstractRepositoryTask.getHandle(repository.getUrl(), bugId),
 					"<bugzilla info>", true);
 			Object selectedObject = null;
-			if (TaskListView.getDefault() != null)
-				selectedObject = ((IStructuredSelection) TaskListView.getDefault().getViewer().getSelection())
+			if (TaskListView.getFromActivePerspective() != null)
+				selectedObject = ((IStructuredSelection) TaskListView.getFromActivePerspective().getViewer().getSelection())
 						.getFirstElement();
 
 			// MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask);

@@ -33,7 +33,7 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
  */
 public class ScheduledTaskListSynchJob extends Job {
 
-	private static final String JOB_NAME = "Scheduled Tasklist Refresh Job";
+	private static final String JOB_NAME = "Scheduled Tasklist Refresh";
 
 	private long scheduleDelay = 1000 * 60 * 20;// 20 minutes default
 
@@ -59,7 +59,7 @@ public class ScheduledTaskListSynchJob extends Job {
 	}
 
 	public IStatus run(IProgressMonitor monitor) {
-		if (TaskListView.getDefault() != null) {
+		if (TaskListView.getFromActivePerspective() != null) {
 			try {
 				//MylarStatusHandler.log("ScheduledTaskListSyncJob Time: "+(new Date()).toString(), this);
 				taskList = taskListManager.getTaskList();

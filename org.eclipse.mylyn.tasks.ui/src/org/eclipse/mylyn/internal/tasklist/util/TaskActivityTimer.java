@@ -19,14 +19,14 @@ import org.eclipse.mylar.provisional.core.IInteractionEventListener;
 import org.eclipse.mylar.provisional.core.InteractionEvent;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.events.ShellListener;
+import org.eclipse.ui.IWindowListener;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
  */
-public class TaskActivityTimer implements ITimerThreadListener, IInteractionEventListener, ShellListener {
+public class TaskActivityTimer implements ITimerThreadListener, IInteractionEventListener, IWindowListener {
 
 	private TimerThread timer;
 
@@ -39,7 +39,7 @@ public class TaskActivityTimer implements ITimerThreadListener, IInteractionEven
 	public TaskActivityTimer(ITask task, int timeout, int sleepInterval) {
 		this.task = task;
 		timer = new TimerThread(timeout, sleepInterval);
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(this);
+		PlatformUI.getWorkbench().addWindowListener(this);
 		MylarPlugin.getDefault().addInteractionListener(this);
 		timer.addListener(this);
 	}
@@ -57,7 +57,7 @@ public class TaskActivityTimer implements ITimerThreadListener, IInteractionEven
 		timer.kill();
 		timer.removeListener(this);
 		MylarPlugin.getDefault().removeInteractionListener(this);
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(this);
+		PlatformUI.getWorkbench().removeWindowListener(this);
 		started = false;
 	}
 
@@ -65,18 +65,9 @@ public class TaskActivityTimer implements ITimerThreadListener, IInteractionEven
 		suspendTiming();
 	}
 
-	public void shellDeactivated(ShellEvent e) {
-		suspendTiming();
-	}
-
 	public void interactionObserved(InteractionEvent event) {
 		// lastActivity = Calendar.getInstance().getTimeInMillis();
 		timer.resetTimer();
-	}
-
-	public void shellActivated(ShellEvent e) {
-		timer.resetTimer();
-		lastActivity = Calendar.getInstance().getTimeInMillis();
 	}
 
 	private void suspendTiming() {
@@ -88,18 +79,6 @@ public class TaskActivityTimer implements ITimerThreadListener, IInteractionEven
 		long elapsed = Calendar.getInstance().getTimeInMillis() - lastActivity;
 		task.setElapsedTime(task.getElapsedTime() + elapsed);
 		lastActivity = Calendar.getInstance().getTimeInMillis();
-	}
-
-	public void shellClosed(ShellEvent e) {
-		timer.kill();
-	}
-
-	public void shellDeiconified(ShellEvent e) {
-		// ignore
-	}
-
-	public void shellIconified(ShellEvent e) {
-		// ignore
 	}
 
 	public void startObserving() {
@@ -127,5 +106,24 @@ public class TaskActivityTimer implements ITimerThreadListener, IInteractionEven
 
 	public void intervalElapsed() {
 		addElapsedToActivityTime();
+	}
+
+	public void windowActivated(IWorkbenchWindow window) {
+		timer.resetTimer();
+		lastActivity = Calendar.getInstance().getTimeInMillis();
+	}
+
+	public void windowDeactivated(IWorkbenchWindow window) {
+		suspendTiming();
+	}
+
+	public void windowClosed(IWorkbenchWindow window) {
+		if (PlatformUI.getWorkbench().getWorkbenchWindowCount() == 0) {
+			timer.kill();
+		}
+	}
+
+	public void windowOpened(IWorkbenchWindow window) {
+		// ignore
 	}
 }
