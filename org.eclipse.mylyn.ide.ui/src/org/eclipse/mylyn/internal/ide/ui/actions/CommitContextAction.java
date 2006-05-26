@@ -11,7 +11,11 @@
 
 package org.eclipse.mylar.internal.ide.ui.actions;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -51,7 +55,7 @@ public class CommitContextAction implements IViewActionDelegate {
 			MylarCommitWizard wizard = new MylarCommitWizard(resources, task);
 
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-			if (wizard != null && shell != null && !shell.isDisposed()) {
+			if (shell != null && !shell.isDisposed() && wizard.hasOutgoingChanges()) {
 				wizard.loadSize();
 				WizardDialog dialog = new WizardDialog(shell, wizard);
 				dialog.setMinimumPageSize(wizard.loadSize());
@@ -60,7 +64,25 @@ public class CommitContextAction implements IViewActionDelegate {
 				dialog.setBlockOnOpen(true);
 				if (dialog.open() == Dialog.CANCEL) {
 					dialog.close();
-					return;
+				}
+			}
+			
+			if (Platform.getBundle("org.tigris.subversion.subclipse.core") != null) {
+				try {
+					Class commitActionClass = Class.forName("org.tigris.subversion.subclipse.ui.actions.CommitAction");
+					Constructor commitActionConstructor = commitActionClass.getConstructor(new Class[] {String.class});
+					Object commitAction = commitActionConstructor.newInstance(new Object[] {""});
+					Method setSelectedResourcesMethod = commitActionClass.getMethod("setSelectedResources", new Class[] {IResource[].class});
+					setSelectedResourcesMethod.invoke(commitAction, new Object[] {resources});
+					
+					Method hasOutgoingChangesMethod = commitActionClass.getMethod("hasOutgoingChanges", new Class[0]);
+					Boolean hasOutgoingChanges = (Boolean) hasOutgoingChangesMethod.invoke(commitAction, new Object[0]);
+					if (hasOutgoingChanges.booleanValue()) {
+						Method executeMethod = commitActionClass.getMethod("execute", new Class[] {IAction.class});
+						executeMethod.invoke(commitAction, new Object[] {null});
+					}
+				}catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		} catch (Exception e) {
