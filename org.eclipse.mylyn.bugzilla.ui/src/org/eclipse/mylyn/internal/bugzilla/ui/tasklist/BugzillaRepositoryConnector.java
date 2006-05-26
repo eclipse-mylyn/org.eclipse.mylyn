@@ -810,7 +810,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					urlQueryString += newurlQueryString;
 				}
 			} catch (SocketTimeoutException e) {
-				MylarStatusHandler.log("Mylar: Timeout occurred while retrieving reports from " + repository.getUrl()
+				MylarStatusHandler.log("Timeout occurred while retrieving reports from " + repository.getUrl()
 						+ ", will synchronize all reports.", this);
 			} catch (Exception e) {
 				MylarStatusHandler.log(e, "Mylar: Error retrieving reports from " + repository.getUrl()
