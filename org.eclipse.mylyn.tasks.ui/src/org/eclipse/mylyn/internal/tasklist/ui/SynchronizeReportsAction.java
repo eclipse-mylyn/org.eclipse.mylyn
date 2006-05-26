@@ -96,7 +96,7 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 							AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager()
 									.getRepositoryConnector(((AbstractRepositoryTask)task).getRepositoryKind());
 							if (client != null)
-								client.requestRefresh((AbstractRepositoryTask) task);
+								client.forceRefresh((AbstractRepositoryTask) task);
 						}
 					}
 				} else if (obj instanceof AbstractRepositoryTask) {
@@ -104,14 +104,14 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 					AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager()
 							.getRepositoryConnector(bugTask.getRepositoryKind());
 					if (client != null)
-						client.requestRefresh(bugTask);
+						client.forceRefresh(bugTask);
 				} else if (obj instanceof AbstractQueryHit) {
 					AbstractQueryHit hit = (AbstractQueryHit) obj;
 					if (hit.getCorrespondingTask() != null) {
 						AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager()
 								.getRepositoryConnector(hit.getCorrespondingTask().getRepositoryKind());
 						if (client != null)
-							client.requestRefresh(hit.getCorrespondingTask());
+							client.forceRefresh(hit.getCorrespondingTask());
 					}
 				}
 			}

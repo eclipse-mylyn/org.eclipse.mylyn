@@ -225,8 +225,7 @@ public class BugzillaReportSubmitForm {
 			AbstractRepositoryReportAttribute a = it.next();
 			if (a.getID().equals(BugzillaReportElement.CC.getKeyString())
 					|| a.getID().equals(BugzillaReportElement.REPORTER.getKeyString())
-					|| a.getID().equals(BugzillaReportElement.ASSIGNED_TO.getKeyString())
-					|| a.getID().equals(BugzillaReportElement.DELTA_TS.getKeyString())
+					|| a.getID().equals(BugzillaReportElement.ASSIGNED_TO.getKeyString())					
 					|| a.getID().equals(BugzillaReportElement.CREATION_TS.getKeyString())) {
 				continue;
 			}

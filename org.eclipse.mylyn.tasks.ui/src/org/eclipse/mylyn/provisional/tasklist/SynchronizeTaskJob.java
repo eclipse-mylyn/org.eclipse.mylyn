@@ -58,6 +58,8 @@ class SynchronizeTaskJob extends Job {
 			for (AbstractRepositoryTask repositoryTask : repositoryTasks) {
 				if (monitor.isCanceled())
 					throw new OperationCanceledException();
+				
+				// TODO: refactor conditions
 				boolean canNotSynch = repositoryTask.isDirty() || repositoryTask.isSynchronizing();
 				boolean hasLocalChanges = repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING
 						|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT;

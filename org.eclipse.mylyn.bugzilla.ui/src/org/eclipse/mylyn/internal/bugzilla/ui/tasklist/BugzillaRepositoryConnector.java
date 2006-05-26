@@ -339,13 +339,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		} else if (status == BugzillaOfflineStatus.SAVED) {
 			state = RepositoryTaskSyncState.SYNCHRONIZED;
 		} else if (status == BugzillaOfflineStatus.SAVED_WITH_INCOMMING_CHANGES) {
-			if (forceSynch) {
+			//if (forceSynch) {
 				state = RepositoryTaskSyncState.INCOMING;
-			} else {
+			//} else {
 				// User opened (forceSynch = false) so no need to denote
 				// incomming
-				state = RepositoryTaskSyncState.SYNCHRONIZED;
-			}
+			//	state = RepositoryTaskSyncState.SYNCHRONIZED;
+			//}
 		} else if (status == BugzillaOfflineStatus.CONFLICT) {
 			state = RepositoryTaskSyncState.CONFLICT;
 		} else if (status == BugzillaOfflineStatus.DELETED) {
@@ -401,6 +401,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 									WebBrowserDialog.openAcceptAgreement(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 											"Possible problem posting Bugzilla report.\n"
 													+ throwable.getCause().getMessage(), form.getError());
+									
 								} else if (throwable.getCause() instanceof LoginException) {
 									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 											"Bugzilla could not post your bug since your login name or password is incorrect."

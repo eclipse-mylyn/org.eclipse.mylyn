@@ -28,6 +28,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
@@ -200,7 +201,13 @@ public abstract class AbstractRepositoryConnector {
 
 		try {
 			Set<AbstractRepositoryTask> changedTasks = getChangedSinceLastSync(repository, repositoryTasks);
-			requestRefresh(changedTasks);
+			Set<AbstractRepositoryTask> tasksToSync = new HashSet<AbstractRepositoryTask>();
+			for (AbstractRepositoryTask task : changedTasks) {
+				if(task.getSyncState() == RepositoryTaskSyncState.SYNCHRONIZED) {
+					tasksToSync.add(task);
+				}				
+			}
+			refreshTasks(tasksToSync, false);
 			MylarTaskListPlugin.getRepositoryManager().setSyncTime(repository, new Date());
 		} catch (GeneralSecurityException e) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -219,21 +226,22 @@ public abstract class AbstractRepositoryConnector {
 		}
 	}
 
-	// TODO: refactor
-	public void requestRefresh(Set<AbstractRepositoryTask> tasks) {
-		synchronize(tasks, true, null);
+	/**
+	 * refresh the given tasks with latest content from repository
+	 * @param tasks - to synchronize
+	 * @param force - if true will overwrite local changes and incoming status
+	 */
+	public void refreshTasks(Set<AbstractRepositoryTask> tasks, boolean force) {
+		synchronize(tasks, force, null);
 	}
 
-	// TODO: refactor
-	public void requestRefresh(AbstractRepositoryTask task) {
+	/**
+	 * Force the given task to be refreshed from the repository
+	 */
+	public void forceRefresh(AbstractRepositoryTask task) {
 		Set<AbstractRepositoryTask> toRefresh = new HashSet<AbstractRepositoryTask>();
 		toRefresh.add(task);
-		requestRefresh(toRefresh);
-		// if (!currentlyRefreshing.containsKey(task) &&
-		// !toBeRefreshed.contains(task)) {
-		// toBeRefreshed.add(task);
-		// }
-		// updateRefreshState();
+		refreshTasks(toRefresh, true);
 	}
 
 	/**

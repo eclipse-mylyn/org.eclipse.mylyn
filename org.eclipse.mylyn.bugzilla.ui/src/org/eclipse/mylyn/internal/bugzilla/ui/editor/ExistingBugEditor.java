@@ -363,7 +363,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 	@Override
 	public void submitBug() {
-
+		updateBug();
 		submitButton.setEnabled(false);
 		ExistingBugEditor.this.showBusy(true);
 		BugzillaReportSubmitForm bugzillaReportSubmitForm;
