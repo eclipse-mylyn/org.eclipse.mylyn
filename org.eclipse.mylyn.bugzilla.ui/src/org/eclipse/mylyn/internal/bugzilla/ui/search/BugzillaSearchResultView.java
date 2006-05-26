@@ -56,12 +56,14 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 	// The categories to sort bug results by
 
 	public static final int ORDER_PRIORITY = 1;
-	
-	public static final int ORDER_ID = 2;
+
+	public static final int ORDER_DESCRIPTION = 2;
 
 	public static final int ORDER_SEVERITY = 3;
 
 	public static final int ORDER_STATUS = 4;
+
+	public static final int ORDER_ID = 5;
 
 	public static final int ORDER_DEFAULT = ORDER_PRIORITY;
 
@@ -71,13 +73,15 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 
 	private int bugCurrentSortOrder;
 
-	private BugzillaSortAction bugSortByIDAction;
+	// private BugzillaSortAction bugSortByIDAction;
 
-//	private BugzillaSortAction bugSortBySeverityAction;
+	// private BugzillaSortAction bugSortBySeverityAction;
 
 	private BugzillaSortAction bugSortByPriorityAction;
 
-//	private BugzillaSortAction bugSortByStatusAction;
+	private BugzillaSortAction bugSortByDescriptionAction;
+
+	// private BugzillaSortAction bugSortByStatusAction;
 
 	// private AddFavoriteAction addToFavoritesAction;
 
@@ -99,12 +103,14 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 	public BugzillaSearchResultView() {
 		// Only use the table layout.
 		super(FLAG_LAYOUT_FLAT);
-		
-		
+
 		bugSortByPriorityAction = new BugzillaSortAction("Bug priority", this, ORDER_PRIORITY);
-		bugSortByIDAction = new BugzillaSortAction("Bug ID", this, ORDER_ID);
-//		bugSortBySeverityAction = new BugzillaSortAction("Bug severity", this, ORDER_SEVERITY);
-//		bugSortByStatusAction = new BugzillaSortAction("Bug status", this, ORDER_STATUS);
+		bugSortByDescriptionAction = new BugzillaSortAction("Bug Description", this, ORDER_DESCRIPTION);
+		// bugSortByIDAction = new BugzillaSortAction("Bug ID", this, ORDER_ID);
+		// bugSortBySeverityAction = new BugzillaSortAction("Bug severity",
+		// this, ORDER_SEVERITY);
+		// bugSortByStatusAction = new BugzillaSortAction("Bug status", this,
+		// ORDER_STATUS);
 		bugCurrentSortOrder = ORDER_DEFAULT;
 
 		// addToFavoritesAction = new AddFavoriteAction("Mark Result as
@@ -158,7 +164,7 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 		TableColumn[] columns = new TableColumn[columnNames.length];
 		int[] columnWidths = new int[] { 20, 20, 500 };
 		viewer.setColumnProperties(columnNames);
-		
+
 		viewer.getTable().setHeaderVisible(true);
 		for (int i = 0; i < columnNames.length; i++) {
 			columns[i] = new TableColumn(viewer.getTable(), 0, i); // SWT.LEFT
@@ -169,10 +175,11 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					TableColumn col = (TableColumn)e.getSource();
-					Integer integer = (Integer)col.getData();
+					TableColumn col = (TableColumn) e.getSource();
+					Integer integer = (Integer) col.getData();
 					setSortOrder(integer.intValue());
-				}});
+				}
+			});
 		}
 
 		// TaskElementLabelProvider BugzillaLabelProvider
@@ -200,12 +207,15 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 	 * @param sortOrder
 	 *            The new category to sort bug reports by
 	 */
-	public void setSortOrder(int sortOrder) {		
+	public void setSortOrder(int sortOrder) {
 		StructuredViewer viewer = getViewer();
 
 		switch (sortOrder) {
 		case ORDER_ID:
 			viewer.setSorter(new BugzillaIdSearchSorter());
+			break;
+		case ORDER_DESCRIPTION:
+			viewer.setSorter(new BugzillaDescriptionSearchSorter());
 			break;
 		case ORDER_PRIORITY:
 			viewer.setSorter(new BugzillaPrioritySearchSorter());
@@ -272,16 +282,21 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 		// Create the submenu for sorting
 		MenuManager sortMenu = new MenuManager(SearchMessages.SortDropDownAction_label); //$NON-NLS-1$
 		sortMenu.add(bugSortByPriorityAction);
-		sortMenu.add(bugSortByIDAction);
-//		sortMenu.add(bugSortBySeverityAction);
-//		sortMenu.add(bugSortByStatusAction);
+		sortMenu.add(bugSortByDescriptionAction);
+		// sortMenu.add(bugSortByIDAction);
+		// sortMenu.add(bugSortBySeverityAction);
+		// sortMenu.add(bugSortByStatusAction);
 
 		// Check the right sort option
-	
+
 		bugSortByPriorityAction.setChecked(bugCurrentSortOrder == bugSortByPriorityAction.getSortOrder());
-		bugSortByIDAction.setChecked(bugCurrentSortOrder == bugSortByIDAction.getSortOrder());
-//		bugSortBySeverityAction.setChecked(bugCurrentSortOrder == bugSortBySeverityAction.getSortOrder());
-//		bugSortByStatusAction.setChecked(bugCurrentSortOrder == bugSortByStatusAction.getSortOrder());
+		bugSortByDescriptionAction.setChecked(bugCurrentSortOrder == bugSortByDescriptionAction.getSortOrder());
+		// bugSortByIDAction.setChecked(bugCurrentSortOrder ==
+		// bugSortByIDAction.getSortOrder());
+		// bugSortBySeverityAction.setChecked(bugCurrentSortOrder ==
+		// bugSortBySeverityAction.getSortOrder());
+		// bugSortByStatusAction.setChecked(bugCurrentSortOrder ==
+		// bugSortByStatusAction.getSortOrder());
 
 		// Add the new context menu items
 		mgr.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, sortMenu);
