@@ -92,7 +92,7 @@ class SynchronizeQueryJob extends Job {
 						//							}
 						//						}
 
-						connector.synchronizeChanged(repository, monitor);
+						connector.synchronizeChanged(repository);
 						
 					}
 

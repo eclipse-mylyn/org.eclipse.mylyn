@@ -77,7 +77,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 //		taskList.clearArchive();
-		client.clearAllRefreshes();
+//		client.clearAllRefreshes();
 		MylarTaskListPlugin.getTaskListManager().resetTaskList();
 		manager.clearRepositories();
 

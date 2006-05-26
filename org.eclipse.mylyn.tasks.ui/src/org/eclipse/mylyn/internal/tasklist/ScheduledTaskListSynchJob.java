@@ -17,8 +17,9 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
@@ -61,19 +62,21 @@ public class ScheduledTaskListSynchJob extends Job {
 	public IStatus run(IProgressMonitor monitor) {
 		if (TaskListView.getFromActivePerspective() != null) {
 			try {
-				//MylarStatusHandler.log("ScheduledTaskListSyncJob Time: "+(new Date()).toString(), this);
+				if(monitor == null) {
+					monitor = new NullProgressMonitor();
+				}
+				
 				taskList = taskListManager.getTaskList();
 				List<TaskRepository>repositories  = MylarTaskListPlugin.getRepositoryManager().getAllRepositories();
-				if(monitor != null) {
-					monitor.beginTask("Repository Synchronization", repositories.size());
-				}
+				
+				monitor.beginTask("Repository Synchronization", repositories.size());
+				
 				for (TaskRepository repository : repositories) {
-					
+					if(monitor.isCanceled())
+						throw new OperationCanceledException();
 					AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
-					if(connector == null) {
-						if(monitor != null) {
-							monitor.worked(1);
-						}
+					if(connector == null) {						
+							monitor.worked(1);					
 						continue;
 					}
 					
@@ -83,9 +86,11 @@ public class ScheduledTaskListSynchJob extends Job {
 							connector.synchronize(queries, null, Job.DECORATE, 0, false);							
 						}
 					}
+										
+					connector.synchronizeChanged(repository);
 					
-					//Set<AbstractRepositoryTask> tasks = Collections.unmodifiableSet(taskList.getRepositoryTasks(repository.getUrl()));					
-					connector.synchronizeChanged(repository, new SubProgressMonitor(monitor, 1));					
+					monitor.worked(1);
+					
 				} 
 			} finally {
 				count++;

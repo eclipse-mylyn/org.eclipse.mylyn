@@ -12,9 +12,11 @@
 package org.eclipse.mylar.provisional.tasklist;
 
 import java.util.Date;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
@@ -27,19 +29,21 @@ import org.eclipse.ui.progress.IProgressConstants;
  * @author Mik Kersten
  */
 class SynchronizeTaskJob extends Job {
-	
+
+	private static final String LABEL_SYNCHRONIZING = "Synchronizing ";
+
+	private static final String LABEL_SYNCHRONIZE_TASK = "Task Synchronization";
+
 	private final AbstractRepositoryConnector connector;
-
-	private static final String LABEL_SYNCHRONIZE_TASK = "Synchronizing task";
-
-	private AbstractRepositoryTask repositoryTask;
+	
+	private Set<AbstractRepositoryTask> repositoryTasks;
 
 	boolean forceSync = false;
 
-	public SynchronizeTaskJob(AbstractRepositoryConnector connector, AbstractRepositoryTask repositoryTask) {
-		super(LABEL_SYNCHRONIZE_TASK + ": " + repositoryTask.getDescription());
+	public SynchronizeTaskJob(AbstractRepositoryConnector connector, Set<AbstractRepositoryTask> repositoryTasks) {
+		super(LABEL_SYNCHRONIZE_TASK);
 		this.connector = connector;
-		this.repositoryTask = repositoryTask;
+		this.repositoryTasks = repositoryTasks;
 	}
 
 	public void setForceSynch(boolean forceUpdate) {
@@ -49,26 +53,41 @@ class SynchronizeTaskJob extends Job {
 	@Override
 	public IStatus run(IProgressMonitor monitor) {
 		try {
+			monitor.beginTask(LABEL_SYNCHRONIZE_TASK, repositoryTasks.size());
 			setProperty(IProgressConstants.ICON_PROPERTY, TaskListImages.REPOSITORY_SYNCHRONIZE);
-			repositoryTask.setCurrentlyDownloading(true);
-			repositoryTask.setLastRefresh(new Date());
-			MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
+			for (AbstractRepositoryTask repositoryTask : repositoryTasks) {
+				if (monitor.isCanceled())
+					throw new OperationCanceledException();
+				boolean canNotSynch = repositoryTask.isDirty() || repositoryTask.isSynchronizing();
+				boolean hasLocalChanges = repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING
+						|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT;
+				if (forceSync || (!canNotSynch && !hasLocalChanges) || !repositoryTask.isDownloaded()) {
+					monitor.setTaskName(LABEL_SYNCHRONIZING+repositoryTask.getDescription());					
+					repositoryTask.setCurrentlyDownloading(true);
+					repositoryTask.setLastRefresh(new Date());
+					MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 
-			this.connector.updateOfflineState(repositoryTask, forceSync);
+					this.connector.updateOfflineState(repositoryTask, forceSync);
 
-			repositoryTask.setCurrentlyDownloading(false);
+					repositoryTask.setCurrentlyDownloading(false);
 
-			if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
-				repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
-			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
-				repositoryTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
+					if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
+						repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
+					} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
+						repositoryTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
+					}
+
+					MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);					
+				}
+				monitor.worked(1);
 			}
 
-			MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Could not download report", false);
+		} finally {
+			monitor.done();
 		}
-		this.connector.removeRefreshingTask(repositoryTask);
+		// this.connector.removeRefreshingTask(repositoryTask);
 		return new Status(IStatus.OK, MylarPlugin.PLUGIN_ID, IStatus.OK, "", null);
 	}
 }

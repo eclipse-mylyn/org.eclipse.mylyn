@@ -115,6 +115,9 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 					}
 				}
 			}
+			
+			
+			
 		}
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
