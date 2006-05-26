@@ -19,6 +19,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.IPage;
+import org.eclipse.ui.views.navigator.ResourceNavigator;
 
 /**
  * @author Mik Kersten
@@ -26,6 +27,8 @@ import org.eclipse.ui.part.IPage;
 public class IdeUiUtil {
 
 	public static final String ID_VIEW_SYNCHRONIZE = "org.eclipse.team.sync.views.SynchronizeView";
+	
+	public static final String ID_NAVIGATOR = "org.eclipse.ui.views.ResourceNavigator";
 	
 	public static IViewPart getView(String id) {
 		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -53,5 +56,17 @@ public class IdeUiUtil {
 				
 			}
 		}
+	}
+	
+	public static ResourceNavigator getNavigatorFromActivePage() {
+		if (PlatformUI.getWorkbench() == null || PlatformUI.getWorkbench().getActiveWorkbenchWindow() == null)
+			return null;
+		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		if (activePage == null)
+			return null;
+		IViewPart view = activePage.findView(ID_NAVIGATOR);
+		if (view instanceof ResourceNavigator)
+			return (ResourceNavigator) view;
+		return null;
 	}
 }

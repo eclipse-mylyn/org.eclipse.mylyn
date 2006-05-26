@@ -34,7 +34,7 @@ public class ContextClearAction implements IViewActionDelegate {
 	}
 
 	public void run(IAction action) {
-		ITask task = TaskListView.getDefault().getSelectedTask();
+		ITask task = TaskListView.getFromActivePerspective().getSelectedTask();
 		if (task instanceof ITask) {
 			boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 					.getShell(), "Confirm clear context", "Clear context for the selected task?");
@@ -51,7 +51,7 @@ public class ContextClearAction implements IViewActionDelegate {
 //			MylarPlugin.getContextManager().contextDeleted((task).getHandleIdentifier());																					// ((Task)selectedObject).getContextPath());
 //			MylarPlugin.getContextManager().contextActivated((task).getHandleIdentifier());
 																												// ((Task)selectedObject).getContextPath());
-			TaskListView.getDefault().getViewer().refresh();
+			TaskListView.getFromActivePerspective().getViewer().refresh();
 		}
 	}
 

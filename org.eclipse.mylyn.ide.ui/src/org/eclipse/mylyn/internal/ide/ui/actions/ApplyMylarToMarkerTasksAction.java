@@ -35,9 +35,9 @@ import org.eclipse.ui.views.markers.internal.TaskView;
  */
 public class ApplyMylarToMarkerTasksAction extends AbstractApplyMylarAction {
 
-	private static ApplyMylarToMarkerTasksAction INSTANCE;
+//	private static ApplyMylarToMarkerTasksAction INSTANCE;
 	
-	private static final String TARGET_ID = "org.eclipse.ui.views.TaskList";
+//	private static final String TARGET_ID = "org.eclipse.ui.views.TaskList";
 
 	private StructuredViewer cachedTasksViewer = null;
 
@@ -45,7 +45,7 @@ public class ApplyMylarToMarkerTasksAction extends AbstractApplyMylarAction {
 
 	public ApplyMylarToMarkerTasksAction() {
 		super(new MarkerInterestFilter());
-		INSTANCE = this;
+//		INSTANCE = this;
 	}
 
 	/**
@@ -56,7 +56,8 @@ public class ApplyMylarToMarkerTasksAction extends AbstractApplyMylarAction {
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
 		if (cachedTasksViewer == null) {
 			try {
-				IViewPart viewPart = getView(TARGET_ID);
+				IViewPart viewPart = super.getPartForAction();
+//				IViewPart viewPart = getView(TARGET_ID);
 				if (viewPart instanceof TaskView) {
 					Class infoClass = TableView.class;
 					Method method = infoClass.getDeclaredMethod("getViewer", new Class[] {});
@@ -80,9 +81,9 @@ public class ApplyMylarToMarkerTasksAction extends AbstractApplyMylarAction {
 		}
 	}
 
-	public static ApplyMylarToMarkerTasksAction getDefault() {
-		return INSTANCE;
-	}
+//	public static ApplyMylarToMarkerTasksAction getDefault() {
+//		return INSTANCE;
+//	}
 
 	@Override
 	public void update() {

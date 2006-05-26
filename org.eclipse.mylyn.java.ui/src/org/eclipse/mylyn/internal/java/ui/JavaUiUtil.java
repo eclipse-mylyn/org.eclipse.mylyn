@@ -36,6 +36,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.eclipse.ui.views.markers.internal.ConcreteMarker;
@@ -81,7 +82,7 @@ public class JavaUiUtil {
 		}
 		javaPrefs.setValue(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES, newValue);
 	}
-	
+
 	public static ImageDescriptor decorate(ImageDescriptor base, int decorations) {
 		ImageDescriptor imageDescriptor = new JavaElementImageDescriptor(base, decorations, SMALL_SIZE);
 		return imageDescriptor;
@@ -96,8 +97,8 @@ public class JavaUiUtil {
 			if (res instanceof IFile) {
 				IFile file = (IFile) res;
 				if (file.getFileExtension().equals("java")) { // TODO:
-																// instanceof
-																// instead?
+					// instanceof
+					// instead?
 					cu = JavaCore.createCompilationUnitFrom(file);
 				} else {
 					return null;
@@ -138,21 +139,22 @@ public class JavaUiUtil {
 	}
 
 	public static void closeActiveEditors(boolean javaOnly) {
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		if (page != null) {
-			IEditorReference[] references = page.getEditorReferences();
-			for (int i = 0; i < references.length; i++) {
-				IEditorPart part = references[i].getEditor(false);
-				if (part != null) {
-					if (javaOnly && part.getEditorInput() instanceof IFileEditorInput && part instanceof JavaEditor) {
-						JavaEditor editor = (JavaEditor) part;
-						editor.close(true);
-					} else if (part instanceof JavaEditor) {
-						((AbstractTextEditor) part).close(true);
+		for (IWorkbenchWindow workbenchWindow : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+			IWorkbenchPage page = workbenchWindow.getActivePage();
+			if (page != null) {
+				IEditorReference[] references = page.getEditorReferences();
+				for (int i = 0; i < references.length; i++) {
+					IEditorPart part = references[i].getEditor(false);
+					if (part != null) {
+						if (javaOnly && part.getEditorInput() instanceof IFileEditorInput && part instanceof JavaEditor) {
+							JavaEditor editor = (JavaEditor) part;
+							editor.close(true);
+						} else if (part instanceof JavaEditor) {
+							((AbstractTextEditor) part).close(true);
+						}
 					}
 				}
 			}
 		}
 	}
-
 }

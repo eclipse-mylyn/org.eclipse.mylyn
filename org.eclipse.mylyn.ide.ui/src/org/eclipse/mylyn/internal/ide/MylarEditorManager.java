@@ -30,6 +30,7 @@ import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.IPreferenceConstants;
@@ -92,16 +93,18 @@ public class MylarEditorManager implements IMylarContextListener {
 			if (PlatformUI.getWorkbench().isClosing()) {
 				return;  
 			}
-			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			if (page != null) {
-				IEditorReference[] references = page.getEditorReferences();
-				List<IEditorReference> toClose = new ArrayList<IEditorReference>();
-				for (int i = 0; i < references.length; i++) {
-					if (!isActiveTaskEditor(references[i])) {
-						toClose.add(references[i]);
+			for(IWorkbenchWindow w : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+				IWorkbenchPage page = w.getActivePage();
+				if (page != null) {
+					IEditorReference[] references = page.getEditorReferences();
+					List<IEditorReference> toClose = new ArrayList<IEditorReference>();
+					for (int i = 0; i < references.length; i++) {
+						if (!isActiveTaskEditor(references[i])) {
+							toClose.add(references[i]);
+						}
 					}
+					page.closeEditors(toClose.toArray(new IEditorReference[toClose.size()]), true);
 				}
-				page.closeEditors(toClose.toArray(new IEditorReference[toClose.size()]), true);
 			}
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "Could not auto close editor.", false);

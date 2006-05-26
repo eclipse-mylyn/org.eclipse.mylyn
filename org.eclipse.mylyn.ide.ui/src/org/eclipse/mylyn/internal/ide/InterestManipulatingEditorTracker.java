@@ -23,7 +23,6 @@ import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.Workbench;
 
@@ -48,7 +47,8 @@ public class InterestManipulatingEditorTracker extends AbstractEditorTracker {
 	
 	@Override
 	public void editorOpened(IEditorPart editorPartOpened) {
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		IWorkbenchPage page = editorPartOpened.getSite().getPage();
+//		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		IEditorReference[] editorReferences = page.getEditorReferences();
 		for (int i = 0; i < editorReferences.length; i++) {
 			IMylarElement element = null;

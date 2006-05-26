@@ -17,7 +17,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.mylar.internal.ide.ui.NavigatorRefreshListener;
+import org.eclipse.mylar.internal.ide.ui.IdeUiUtil;
 import org.eclipse.mylar.internal.ui.actions.AbstractApplyMylarAction;
 import org.eclipse.mylar.provisional.ui.InterestFilter;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
@@ -27,25 +27,25 @@ import org.eclipse.ui.views.navigator.ResourceNavigator;
  */
 public class ApplyMylarToNavigatorAction extends AbstractApplyMylarAction {
 
-	private static ApplyMylarToNavigatorAction INSTANCE;
+//	private static ApplyMylarToNavigatorAction INSTANCE;
 
 	public ApplyMylarToNavigatorAction() {
 		super(new InterestFilter());
-		INSTANCE = this;
+//		INSTANCE = this;
 	}
 
 	@Override
 	public List<StructuredViewer> getViewers() {
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
-		ResourceNavigator navigator = NavigatorRefreshListener.getResourceNavigator();
+		ResourceNavigator navigator = IdeUiUtil.getNavigatorFromActivePage();
 		if (navigator != null)
 			viewers.add(navigator.getTreeViewer());
 		return viewers;
 	}
 
-	public static ApplyMylarToNavigatorAction getDefault() {
-		return INSTANCE;
-	}
+//	public static ApplyMylarToNavigatorAction getDefault() {
+//		return INSTANCE;
+//	}
 
 	public void propertyChange(PropertyChangeEvent event) {
 		// ignore

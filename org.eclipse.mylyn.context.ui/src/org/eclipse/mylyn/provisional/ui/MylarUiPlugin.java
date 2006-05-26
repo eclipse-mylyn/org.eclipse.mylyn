@@ -38,7 +38,6 @@ import org.eclipse.mylar.internal.ui.Highlighter;
 import org.eclipse.mylar.internal.ui.HighlighterList;
 import org.eclipse.mylar.internal.ui.MylarUiPrefContstants;
 import org.eclipse.mylar.internal.ui.MylarViewerManager;
-import org.eclipse.mylar.internal.ui.actions.ApplyMylarToOutlineAction;
 import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.IMylarRelation;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
@@ -49,7 +48,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -155,7 +153,7 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 		public void setContextCapturePaused(boolean paused) {
 			// ignore
 		}
-		
+
 		public IMylarElement getElement(IEditorInput input) {
 			return null;
 		}
@@ -187,17 +185,15 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 			public void run() {
 				try {
 					// TODO: move to MylarPlugin?
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(MylarPlugin.getContextManager().getShellLifecycleListener());
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(
+							MylarPlugin.getContextManager().getShellLifecycleListener());
 					MylarPlugin.getContextManager().addListener(viewerManager);
 
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().addPartListener(
-							contentOutlineManager);
-					IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
-					for (int i = 0; i < windows.length; i++) {
-						windows[i].addPageListener(contentOutlineManager);
-					}
-					if (ApplyMylarToOutlineAction.getDefault() != null)
-						ApplyMylarToOutlineAction.getDefault().update();
+					MylarPlugin.getDefault().addWindowPartListener(contentOutlineManager);
+					MylarPlugin.getDefault().addWindowPageListener(contentOutlineManager);
+
+//					if (ApplyMylarToOutlineAction.getDefault() != null)
+//						ApplyMylarToOutlineAction.getDefault().update();
 					MylarTaskListPlugin.getDefault().setHighlighter(DEFAULT_HIGHLIGHTER);
 				} catch (Exception e) {
 					MylarStatusHandler.fail(e, "Mylar UI initialization failed", true);
@@ -214,13 +210,16 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 		try {
 			super.stop(context);
 			MylarPlugin.getContextManager().removeListener(viewerManager);
+			MylarPlugin.getDefault().removeWindowPartListener(contentOutlineManager);
+			MylarPlugin.getDefault().removeWindowPageListener(contentOutlineManager);
 			viewerManager.dispose();
-			colorMap.dispose(); 
+			colorMap.dispose();
 			highlighters.dispose();
 			if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(MylarPlugin.getContextManager().getShellLifecycleListener());
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(
+						MylarPlugin.getContextManager().getShellLifecycleListener());
 			}
-		} catch (Exception e) { 
+		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Mylar UI stop failed", false);
 		}
 	}

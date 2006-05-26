@@ -32,7 +32,6 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
-import org.eclipse.mylar.internal.ui.actions.ApplyMylarToOutlineAction;
 import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.ui.IMylarUiBridge;
@@ -94,9 +93,9 @@ public class JavaUiBridge implements IMylarUiBridge {
 			if (explorer != null) {
 				explorer.setLinkingEnabled(explorerLinked);
 			}
-			if (ApplyMylarToOutlineAction.getDefault() != null) {
-				ApplyMylarToOutlineAction.getDefault().update();
-			}
+//			if (ApplyMylarToOutlineAction.getDefault() != null) {
+//				ApplyMylarToOutlineAction.getDefault().update();
+//			}
 		}
 	}
 

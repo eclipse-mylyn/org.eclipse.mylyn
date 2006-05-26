@@ -21,8 +21,6 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.java.ui.JavaUiUtil;
 import org.eclipse.mylar.internal.java.ui.LandmarkMarkerManager;
-import org.eclipse.mylar.internal.java.ui.actions.ApplyMylarToBrowsingPerspectiveAction;
-import org.eclipse.mylar.internal.java.ui.actions.ApplyMylarToPackageExplorerAction;
 import org.eclipse.mylar.internal.java.ui.editor.ActiveFoldingListener;
 import org.eclipse.mylar.internal.java.ui.wizards.MylarPreferenceWizard;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
@@ -32,6 +30,7 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -88,21 +87,19 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 					}
 					getPreferenceStore().addPropertyChangeListener(problemListener);
 
-					ISelectionService service = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-							.getSelectionService();
-					service.addPostSelectionListener(packageExplorerManager);
+					MylarPlugin.getDefault().addWindowPostSelectionListener(packageExplorerManager);
 
 					javaEditingMonitor = new JavaEditingMonitor();
 					MylarPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
 					installEditorTracker(workbench);
 
 					// TODO: race conditions prevents this from running?
-					if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
-						ApplyMylarToPackageExplorerAction.getDefault().update();
-					}
-					if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
-						ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
-					}
+//					if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
+//						ApplyMylarToPackageExplorerAction.getDefault().update();
+//					}
+//					if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
+//						ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
+//					}
 
 					if (!getPreferenceStore().contains(MylarPreferenceWizard.MYLAR_FIRST_RUN)) {
 						JavaUiUtil.installContentAssist(JavaPlugin.getDefault().getPreferenceStore(), true);
@@ -147,15 +144,16 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 			MylarPlugin.getDefault().getSelectionMonitors().remove(javaEditingMonitor);
 
-			if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
-				getPreferenceStore().removePropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
-			}
+//			if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
+//				getPreferenceStore().removePropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
+//			}
 
-			if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()
-					&& PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
-				ISelectionService service = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
-				service.removePostSelectionListener(packageExplorerManager);
-			}
+			if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
+				for(IWorkbenchWindow w : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+					ISelectionService service = w.getSelectionService();
+					service.removePostSelectionListener(packageExplorerManager);
+				}
+  		}
 			JavaCore.removeElementChangedListener(javaElementChangeListener);
 			// CVSUIPlugin.getPlugin().getChangeSetManager().remove(changeSetManager);
 			// TODO: uninstall editor tracker
@@ -178,8 +176,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 		// }
 
 		// update editors that are already opened
-		if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
-			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		for(IWorkbenchWindow w : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+			IWorkbenchPage page = w.getActivePage();
 			if (page != null) {
 				IEditorReference[] references = page.getEditorReferences();
 				for (int i = 0; i < references.length; i++) {

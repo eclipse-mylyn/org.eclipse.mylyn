@@ -27,17 +27,18 @@ import org.eclipse.mylar.internal.java.ui.JavaDeclarationsFilter;
 import org.eclipse.mylar.internal.ui.actions.AbstractApplyMylarAction;
 import org.eclipse.mylar.provisional.ui.InterestFilter;
 import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
+import org.eclipse.ui.IViewPart;
 
 /**
  * @author Mik Kersten
  */
 public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction implements IPropertyChangeListener {
 
-	public static ApplyMylarToPackageExplorerAction INSTANCE;
+//	public static ApplyMylarToPackageExplorerAction INSTANCE;
 
 	public ApplyMylarToPackageExplorerAction() {
 		super(new InterestFilter());
-		INSTANCE = this;
+//		INSTANCE = this;
 		configureAction();
 		MylarJavaPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
 	} 
@@ -60,15 +61,18 @@ public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction 
 	@Override
 	public List<StructuredViewer> getViewers() {
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
-		PackageExplorerPart part = PackageExplorerPart.getFromActivePerspective();
-		if (part != null)
-			viewers.add(part.getTreeViewer());
+		// TODO: get from super
+		IViewPart part = super.getPartForAction();
+//		PackageExplorerPart part = PackageExplorerPart.getFromActivePerspective();
+		if (part instanceof PackageExplorerPart) {
+			viewers.add(((PackageExplorerPart)part).getTreeViewer());
+		}
 		return viewers;
 	}
 
-	public static ApplyMylarToPackageExplorerAction getDefault() {
-		return INSTANCE;
-	}
+//	public static ApplyMylarToPackageExplorerAction getDefault() {
+//		return INSTANCE;
+//	}
 
 	public void propertyChange(PropertyChangeEvent event) {
 		if (MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE.equals(event.getProperty())) {

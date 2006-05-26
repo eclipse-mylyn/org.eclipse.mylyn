@@ -40,7 +40,7 @@ public class ContextAttachAction implements IViewActionDelegate {
 	}
 
 	public void run(IAction action) {
-		ITask task = TaskListView.getDefault().getSelectedTask();
+		ITask task = TaskListView.getFromActivePerspective().getSelectedTask();
 		if (task instanceof AbstractRepositoryTask) {
 			try {	
 				ContextAttachWizard wizard = new ContextAttachWizard((AbstractRepositoryTask)task);

@@ -25,7 +25,6 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * This class is a bit weird since it doesn't obey the same contract as the
@@ -36,7 +35,7 @@ import org.eclipse.ui.PlatformUI;
 public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAction implements
 		IWorkbenchWindowActionDelegate {
 
-	public static ApplyMylarToBrowsingPerspectiveAction INSTANCE;
+//	public static ApplyMylarToBrowsingPerspectiveAction INSTANCE;
 
 	private String packageViewerWrapperClassName = "org.eclipse.jdt.internal.ui.browsing.PackageViewerWrapper";
 
@@ -46,38 +45,13 @@ public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAct
 	private String[] classNames = { "org.eclipse.jdt.internal.ui.browsing.MembersView",
 			"org.eclipse.jdt.internal.ui.browsing.PackagesView", "org.eclipse.jdt.internal.ui.browsing.TypesView" };
 
+	private IWorkbenchWindow initWindow;
+	
 	public ApplyMylarToBrowsingPerspectiveAction() {
 		super(new InterestFilter());
-		INSTANCE = this;
-		prefId = PREF_ID_PREFIX + "javaBrowsing";
+//		INSTANCE = this;
+		globalPrefId = PREF_ID_PREFIX + "javaBrowsing";
 	}
-
-	// /**
-	// * TODO: refactor duplicate behavior into super class
-	// */
-	// @Override
-	// protected void valueChanged(IAction action, final boolean on, boolean
-	// store) {
-	// action.setChecked(on);
-	//        
-	// if (store && MylarPlugin.getDefault() != null)
-	// MylarPlugin.getDefault().getPreferenceStore().setValue(prefId, on);
-	//
-	// for(int i = 0; i < viewNames.length; i++){
-	// StructuredViewer viewer =
-	// getBrowsingViewerFromActivePerspective(viewNames[i], classNames[i]);
-	// if(viewer == null) continue;
-	// if (on) {
-	// installInterestFilter(viewer);
-	// MylarUiPlugin.getDefault().getViewerManager().addManagedViewer(viewer);
-	// } else {
-	// uninstallInterestFilter(viewer);
-	// MylarUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer);
-	// }
-	//
-	// }
-	// refreshViewer();
-	// }
 
 	@Override
 	public List<StructuredViewer> getViewers() {
@@ -90,23 +64,9 @@ public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAct
 		return viewers;
 	}
 
-	// @Override
-	// public void refreshViewer() {
-	// for(int i = 0; i < viewNames.length; i++){
-	// StructuredViewer viewer =
-	// getBrowsingViewerFromActivePerspective(viewNames[i], classNames[i]);
-	// if(viewer != null){
-	// viewer.refresh();
-	// }
-	// }
-	// }
-
-	public static ApplyMylarToBrowsingPerspectiveAction getDefault() {
-		return INSTANCE;
-	}
-
 	private StructuredViewer getBrowsingViewerFromActivePerspective(String id, String className) {
-		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		IWorkbenchPage activePage = initWindow.getActivePage();
+//		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (activePage == null)
 			return null;
 		try {
@@ -153,11 +113,11 @@ public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAct
 	}
 
 	public void init(IWorkbenchWindow window) {
+		initWindow = window;
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override

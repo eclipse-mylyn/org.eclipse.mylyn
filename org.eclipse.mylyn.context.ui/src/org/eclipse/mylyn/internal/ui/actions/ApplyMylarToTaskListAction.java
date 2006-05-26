@@ -33,7 +33,7 @@ import org.eclipse.mylar.provisional.ui.InterestFilter;
  */
 public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction {
 
-	private static ApplyMylarToTaskListAction INSTANCE;
+//	private static ApplyMylarToTaskListAction INSTANCE;
 	
 	private TaskListInterestFilter taskListInterestFilter = new TaskListInterestFilter();
 	
@@ -45,49 +45,49 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction {
 	
 	public ApplyMylarToTaskListAction() {
 		super(new InterestFilter());
-		INSTANCE = this;
+//		INSTANCE = this;
 	}
 	
 	@Override
 	public List<StructuredViewer> getViewers() {
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
-		if (TaskListView.getDefault() != null) {
-			viewers.add(TaskListView.getDefault().getViewer());
+		if (TaskListView.getFromActivePerspective() != null) {
+			viewers.add(TaskListView.getFromActivePerspective().getViewer());
 		}
 		return viewers;
 	}
 
 	@Override
 	protected boolean installInterestFilter(StructuredViewer viewer) {
-		previousSorter = TaskListView.getDefault().getViewer().getSorter();
-		TaskListView.getDefault().getViewer().setSorter(taskListInterestSorter);
-		previousFilters = new HashSet<AbstractTaskListFilter>(TaskListView.getDefault().getFilters());
-		TaskListView.getDefault().clearFilters(true);
-		TaskListView.getDefault().addFilter(taskListInterestFilter);
-		TaskListView.getDefault().setPriorityButtonEnabled(false);
-		TaskListView.getDefault().refreshAndFocus();
+		previousSorter = TaskListView.getFromActivePerspective().getViewer().getSorter();
+		TaskListView.getFromActivePerspective().getViewer().setSorter(taskListInterestSorter);
+		previousFilters = new HashSet<AbstractTaskListFilter>(TaskListView.getFromActivePerspective().getFilters());
+		TaskListView.getFromActivePerspective().clearFilters(true);
+		TaskListView.getFromActivePerspective().addFilter(taskListInterestFilter);
+		TaskListView.getFromActivePerspective().setPriorityButtonEnabled(false);
+		TaskListView.getFromActivePerspective().refreshAndFocus();
 		return true;
 	}
 
 	@Override
 	protected void uninstallInterestFilter(StructuredViewer viewer) {
-		TaskListView.getDefault().getViewer().setSorter(previousSorter);
-		TaskListView.getDefault().removeFilter(taskListInterestFilter);
-		TaskListView.getDefault().setPriorityButtonEnabled(true);
+		TaskListView.getFromActivePerspective().getViewer().setSorter(previousSorter);
+		TaskListView.getFromActivePerspective().removeFilter(taskListInterestFilter);
+		TaskListView.getFromActivePerspective().setPriorityButtonEnabled(true);
 		for (AbstractTaskListFilter filter : previousFilters) {
-			TaskListView.getDefault().addFilter(filter);
+			TaskListView.getFromActivePerspective().addFilter(filter);
 		}
-		TaskListView.getDefault().getViewer().collapseAll();
-		TaskListView.getDefault().refreshAndFocus();
+		TaskListView.getFromActivePerspective().getViewer().collapseAll();
+		TaskListView.getFromActivePerspective().refreshAndFocus();
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {
 		// ignore
 	}
 
-	public static ApplyMylarToTaskListAction getDefault() {
-		return INSTANCE;
-	}
+//	public static ApplyMylarToTaskListAction getDefault() {
+//		return INSTANCE;
+//	}
 	
 	@Override
 	public List<Class> getPreservedFilters() {

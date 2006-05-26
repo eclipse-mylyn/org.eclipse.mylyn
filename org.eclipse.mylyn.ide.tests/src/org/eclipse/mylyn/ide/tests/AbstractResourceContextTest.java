@@ -18,7 +18,7 @@ import org.eclipse.mylar.internal.core.ScalingFactors;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.internal.ide.ResourceInteractionMonitor;
 import org.eclipse.mylar.internal.ide.ResourceStructureBridge;
-import org.eclipse.mylar.internal.ide.ui.NavigatorRefreshListener;
+import org.eclipse.mylar.internal.ide.ui.IdeUiUtil;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
@@ -53,7 +53,7 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 		context.reset();
 		manager.activateContext(context);
 		MylarUiPlugin.getDefault().getViewerManager().setSyncRefreshMode(true);
-		navigator = (ResourceNavigator) openView(NavigatorRefreshListener.ID_NAVIGATOR);
+		navigator = (ResourceNavigator) openView(IdeUiUtil.ID_NAVIGATOR);
 		assertNotNull(navigator);
 	}
 

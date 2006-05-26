@@ -11,71 +11,70 @@
 
 package org.eclipse.mylar.internal.ui;
 
-import org.eclipse.ui.IPageListener;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
 
 /**
  * @author Mik Kersten
  */
-public abstract class AbstractPartTracker implements IWindowListener, IPageListener, IPartListener {
+public abstract class AbstractPartTracker implements IPartListener {
 
 	public void install(IWorkbench workbench) {
-		if (workbench != null) {
-			workbench.addWindowListener(this);
-			IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
-			for (int i = 0; i < windows.length; i++) {
-				windows[i].addPageListener(this);
-				IWorkbenchPage[] pages = windows[i].getPages();
-				for (int j = 0; j < pages.length; j++) {
-					pages[j].addPartListener(this);
-				}
-			}
-		}
+		MylarPlugin.getDefault().addWindowPartListener(this);
+//		if (workbench != null) {
+//			workbench.addWindowListener(this);
+//			IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
+//			for (int i = 0; i < windows.length; i++) {
+//				windows[i].addPageListener(this);
+//				IWorkbenchPage[] pages = windows[i].getPages();
+//				for (int j = 0; j < pages.length; j++) {
+//					pages[j].addPartListener(this);
+//				}
+//			}
+//		}
 	}
 
 	public void dispose(IWorkbench workbench) {
-		if (workbench != null) {
-			workbench.removeWindowListener(this);
-			IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
-			for (int i = 0; i < windows.length; i++) {
-				windows[i].removePageListener(this);
-				IWorkbenchPage[] pages = windows[i].getPages();
-				for (int j = 0; j < pages.length; j++) {
-					pages[j].removePartListener(this);
-				}
-			}
-		}
+		MylarPlugin.getDefault().removeWindowPartListener(this);
+//		if (workbench != null) {
+//			workbench.removeWindowListener(this);
+//			IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
+//			for (int i = 0; i < windows.length; i++) {
+//				windows[i].removePageListener(this);
+//				IWorkbenchPage[] pages = windows[i].getPages();
+//				for (int j = 0; j < pages.length; j++) {
+//					pages[j].removePartListener(this);
+//				}
+//			}
+//		}
 	}
 
-	public void windowActivated(IWorkbenchWindow window) {
-	}
+//	public void windowActivated(IWorkbenchWindow window) {
+//	}
+//
+//	public void windowDeactivated(IWorkbenchWindow window) {
+//	}
 
-	public void windowDeactivated(IWorkbenchWindow window) {
-	}
+//	public void windowClosed(IWorkbenchWindow window) {
+//		window.removePageListener(this);
+//	}
+//
+//	public void windowOpened(IWorkbenchWindow window) {
+//		window.addPageListener(this);
+//	}
 
-	public void windowClosed(IWorkbenchWindow window) {
-		window.removePageListener(this);
-	}
-
-	public void windowOpened(IWorkbenchWindow window) {
-		window.addPageListener(this);
-	}
-
-	public void pageActivated(IWorkbenchPage page) {
-	}
-
-	public void pageClosed(IWorkbenchPage page) {
-		page.removePartListener(this);
-	}
-
-	public void pageOpened(IWorkbenchPage page) {
-		page.addPartListener(this);
-	}
+//	public void pageActivated(IWorkbenchPage page) {
+//	}
+//
+//	public void pageClosed(IWorkbenchPage page) {
+//		page.removePartListener(this);
+//	}
+//
+//	public void pageOpened(IWorkbenchPage page) {
+//		page.addPartListener(this);
+//	}
 
 	public abstract void partActivated(IWorkbenchPart part);
 

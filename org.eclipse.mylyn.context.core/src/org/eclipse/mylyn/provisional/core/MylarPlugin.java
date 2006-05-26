@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
@@ -33,6 +34,13 @@ import org.eclipse.mylar.internal.core.MylarContextManager;
 import org.eclipse.mylar.internal.core.MylarPreferenceContstants;
 import org.eclipse.mylar.internal.core.search.MylarWorkingSetUpdater;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.ui.IPageListener;
+import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IPerspectiveListener;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.ISelectionService;
+import org.eclipse.ui.IWindowListener;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -113,10 +121,10 @@ public class MylarPlugin extends AbstractUIPlugin {
 			throw new RuntimeException("null adapter for handle: " + handle);
 		}
 
-//		public IProject getProjectForObject(Object object) {
-//			// return null;
-//			throw new RuntimeException("null brige for object: " + object);
-//		}
+		// public IProject getProjectForObject(Object object) {
+		// // return null;
+		// throw new RuntimeException("null brige for object: " + object);
+		// }
 
 		public String getContentType(String elementHandle) {
 			return getContentType();
@@ -158,22 +166,30 @@ public class MylarPlugin extends AbstractUIPlugin {
 		if (contextManager == null) {
 			contextManager = new MylarContextManager();
 		}
+		getWorkbench().addWindowListener(WINDOW_LISTENER);
 	}
 
-	
 	public String getDefaultDataDirectory() {
-//		try {
+		// try {
 		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/' + NAME_DATA_DIR;
-//		} catch (Throwable t) {
-//			// NOTE: might not have runtime plug-in when running in RCP mode
-//			return getDefault().getStateLocation().toString() + '/' + NAME_DATA_DIR;
-//		}
+		// } catch (Throwable t) {
+		// // NOTE: might not have runtime plug-in when running in RCP mode
+		// return getDefault().getStateLocation().toString() + '/' +
+		// NAME_DATA_DIR;
+		// }
 	}
-	
+
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		try {
 			super.stop(context);
+
+			// Unregister all listeners
+			getWorkbench().removeWindowListener(WINDOW_LISTENER);
+//			for (IWorkbenchWindow w : getWorkbench().getWorkbenchWindows()) {
+//				WINDOW_LISTENER.windowClosed(w); // hack, but ok
+//			}
+
 			INSTANCE = null;
 			resourceBundle = null;
 
@@ -441,4 +457,115 @@ public class MylarPlugin extends AbstractUIPlugin {
 
 		public static final String ELEMENT_STRUCTURE_BRIDGE_SEARCH_LABEL = "activeSearchLabel";
 	}
+
+	protected Set<IPartListener> partListeners = new HashSet<IPartListener>();
+
+	protected Set<IPageListener> pageListeners = new HashSet<IPageListener>();
+
+	protected Set<IPerspectiveListener> perspectiveListeners = new HashSet<IPerspectiveListener>();
+
+	protected Set<ISelectionListener> postSelectionListeners = new HashSet<ISelectionListener>();
+
+	protected IWindowListener WINDOW_LISTENER = new IWindowListener() {
+		public void windowActivated(IWorkbenchWindow window) {
+			// ignore
+		}
+
+		public void windowDeactivated(IWorkbenchWindow window) {
+			// ignore
+		}
+
+		public void windowOpened(IWorkbenchWindow window) {
+			if (getWorkbench().isClosing()) {
+				return;
+			}
+			for (IPageListener listener : pageListeners) {
+				window.addPageListener(listener);
+			}
+			for (IPartListener listener : partListeners) {
+				window.getPartService().addPartListener(listener);
+			}
+			for (IPerspectiveListener listener : perspectiveListeners) {
+				window.addPerspectiveListener(listener);
+			}
+			for (ISelectionListener listener : postSelectionListeners) {
+				window.getSelectionService().addPostSelectionListener(listener);
+			}
+
+		}
+
+		public void windowClosed(IWorkbenchWindow window) {
+			for (IPageListener listener : pageListeners) {
+				window.removePageListener(listener);
+			}
+			for (IPartListener listener : partListeners) {
+				window.getPartService().removePartListener(listener);
+			}
+			for (IPerspectiveListener listener : perspectiveListeners) {
+				window.removePerspectiveListener(listener);
+			}
+			for (ISelectionListener listener : postSelectionListeners) {
+				window.getSelectionService().removePostSelectionListener(listener);
+			}
+		}
+	};
+
+	public void addWindowPartListener(IPartListener listener) {
+		partListeners.add(listener);
+		for (IWorkbenchWindow window : getWorkbench().getWorkbenchWindows()) {
+			window.getPartService().addPartListener(listener);
+		}
+	}
+
+	public void removeWindowPartListener(IPartListener listener) {
+		partListeners.remove(listener);
+		for (IWorkbenchWindow window : getWorkbench().getWorkbenchWindows()) {
+			window.getPartService().removePartListener(listener);
+		}
+	}
+
+	public void addWindowPageListener(IPageListener listener) {
+		pageListeners.add(listener);
+		for (IWorkbenchWindow window : getWorkbench().getWorkbenchWindows()) {
+			window.addPageListener(listener);
+		}
+	}
+
+	public void removeWindowPageListener(IPageListener listener) {
+		pageListeners.remove(listener);
+		for (IWorkbenchWindow window : getWorkbench().getWorkbenchWindows()) {
+			window.removePageListener(listener);
+		}
+	}
+
+	public void addWindowPerspectiveListener(IPerspectiveListener listener) {
+		perspectiveListeners.add(listener);
+		for (IWorkbenchWindow window : getWorkbench().getWorkbenchWindows()) {
+			window.addPerspectiveListener(listener);
+		}
+	}
+
+	public void removeWindowPerspectiveListener(IPerspectiveListener listener) {
+		perspectiveListeners.remove(listener);
+		for (IWorkbenchWindow window : getWorkbench().getWorkbenchWindows()) {
+			window.removePerspectiveListener(listener);
+		}
+	}
+
+	public void addWindowPostSelectionListener(ISelectionListener listener) {
+		postSelectionListeners.add(listener);
+		for (IWorkbenchWindow window : getWorkbench().getWorkbenchWindows()) {
+			ISelectionService service = window.getSelectionService();
+			service.addPostSelectionListener(listener);
+		}
+	}
+
+	public void removeWindowPostSelectionListener(ISelectionListener listener) {
+		getDefault().postSelectionListeners.remove(listener);
+		for (IWorkbenchWindow window : getDefault().getWorkbench().getWorkbenchWindows()) {
+			ISelectionService service = window.getSelectionService();
+			service.removePostSelectionListener(listener);
+		}
+	}
+
 }

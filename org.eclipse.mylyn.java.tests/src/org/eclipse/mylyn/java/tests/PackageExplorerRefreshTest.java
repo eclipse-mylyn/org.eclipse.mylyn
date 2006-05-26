@@ -35,7 +35,7 @@ public class PackageExplorerRefreshTest extends AbstractJavaContextTest {
 		view = PackageExplorerPart.openInActivePerspective();
 		viewer = view.getTreeViewer();
 		MylarUiPlugin.getDefault().getViewerManager().setSyncRefreshMode(true);
-		ApplyMylarToPackageExplorerAction.getDefault().update(true);
+		ApplyMylarToPackageExplorerAction.getActionForPart(view).update(true);
 	}
 
 	@Override
@@ -54,9 +54,9 @@ public class PackageExplorerRefreshTest extends AbstractJavaContextTest {
 		assertNotNull(viewer.testFindItem(m1.getParent()));
 
 		manager.deactivateContext(contextId);
-		ApplyMylarToPackageExplorerAction.getDefault().update(true);
+		ApplyMylarToPackageExplorerAction.getActionForPart(view).update(true);
 		assertTrue("num items: " + UiTestUtil.countItemsInTree(viewer.getTree()), UiTestUtil.countItemsInTree(viewer.getTree()) == 0);
-		ApplyMylarToPackageExplorerAction.getDefault().update();
+		ApplyMylarToPackageExplorerAction.getActionForPart(view).update();
 	}
 
 	public void testPropagation() throws JavaModelException {

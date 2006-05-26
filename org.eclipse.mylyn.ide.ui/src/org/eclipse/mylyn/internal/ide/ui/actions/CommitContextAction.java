@@ -39,7 +39,7 @@ public class CommitContextAction implements IViewActionDelegate {
 	}
 
 	public void run(IAction action) {
-		ITask task = TaskListView.getDefault().getSelectedTask();
+		ITask task = TaskListView.getFromActivePerspective().getSelectedTask();
 		IResource[] resources = MylarIdePlugin.getDefault().getChangeSetManager().getResources(task);
 		if (resources == null || resources.length == 0) {
 			MessageDialog.openInformation(null, "Mylar Information",

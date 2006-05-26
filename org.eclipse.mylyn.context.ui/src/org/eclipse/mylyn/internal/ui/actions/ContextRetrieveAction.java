@@ -38,7 +38,7 @@ public class ContextRetrieveAction implements IViewActionDelegate {
 	}
 
 	public void run(IAction action) {
-		ITask task = TaskListView.getDefault().getSelectedTask();
+		ITask task = TaskListView.getFromActivePerspective().getSelectedTask();
 		if (task instanceof AbstractRepositoryTask) {
 			try {
 				ContextRetrieveWizard wizard = new ContextRetrieveWizard((AbstractRepositoryTask)task);

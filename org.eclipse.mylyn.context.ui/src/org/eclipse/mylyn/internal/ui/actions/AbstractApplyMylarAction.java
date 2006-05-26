@@ -14,8 +14,9 @@ package org.eclipse.mylar.internal.ui.actions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
-import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -31,8 +32,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IActionDelegate2;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 /**
  * Extending this class makes it possible to apply Mylar management to a
@@ -40,14 +40,13 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Mik Kersten
  */
-public abstract class AbstractApplyMylarAction extends Action implements IViewActionDelegate, IActionDelegate2,
-		IPropertyChangeListener {
+public abstract class AbstractApplyMylarAction extends Action implements IViewActionDelegate, IActionDelegate2 {
 
 	private static final String ACTION_LABEL = "Apply Mylar";
 
 	public static final String PREF_ID_PREFIX = "org.eclipse.mylar.ui.interest.filter.";
 
-	protected String prefId;
+	protected String globalPrefId;
 
 	protected IAction initAction = null;
 
@@ -56,6 +55,25 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 	protected IViewPart viewPart;
 
 	protected List<ViewerFilter> previousFilters = new ArrayList<ViewerFilter>();
+	
+	private static Map<IViewPart, AbstractApplyMylarAction> partMap = new WeakHashMap<IViewPart, AbstractApplyMylarAction>();
+	
+	public static AbstractApplyMylarAction getActionForPart(IViewPart part) {
+		return partMap.get(part);
+	}
+	
+	public IViewPart getPartForAction() {
+		if (this instanceof IWorkbenchWindowActionDelegate) {
+			throw new RuntimeException("not supported on IWorkbenchWindowActionDelegate");
+		}
+		for (IViewPart part : partMap.keySet()) {
+			AbstractApplyMylarAction action = partMap.get(part);
+			if (this == action) {
+				return part;
+			}
+		}
+		return null;
+	}
 	
 	public AbstractApplyMylarAction(InterestFilter interestFilter) {
 		super();
@@ -72,8 +90,9 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 
 	public void init(IViewPart view) {
 		String id = view.getSite().getId();
-		prefId = PREF_ID_PREFIX + id;
+		globalPrefId = PREF_ID_PREFIX + id;
 		viewPart = view;
+		partMap.put(view, this);
 	}
 
 	public void run(IAction action) {
@@ -85,8 +104,8 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 	 * Don't update if the preference has not been initialized.
 	 */
 	public void update() {
-		if (prefId != null) {
-			update(MylarPlugin.getDefault().getPreferenceStore().getBoolean(prefId));
+		if (globalPrefId != null) {
+			update(MylarPlugin.getDefault().getPreferenceStore().getBoolean(globalPrefId));
 		}
 	}
 
@@ -102,15 +121,16 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 			MylarPlugin.getContextManager().setContextCapturePaused(true);
 			setChecked(on);
 			action.setChecked(on);
-			if (store && MylarPlugin.getDefault() != null)
-				MylarPlugin.getDefault().getPreferenceStore().setValue(prefId, on);
-
+			if (store && MylarPlugin.getDefault() != null) {
+				MylarPlugin.getDefault().getPreferenceStore().setValue(globalPrefId, on);
+			}
+				
 			for (StructuredViewer viewer : getViewers()) {
 				MylarUiPlugin.getDefault().getViewerManager().addManagedViewer(viewer, viewPart);
 				installInterestFilter(on, viewer);
 			}
 		} catch (Throwable t) {
-			MylarStatusHandler.fail(t, "Could not install viewer manager on: " + prefId, false);
+			MylarStatusHandler.fail(t, "Could not install viewer manager on: " + globalPrefId, false);
 		} finally {
 			MylarPlugin.getContextManager().setContextCapturePaused(false);
 		}
@@ -168,7 +188,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 			viewer.getControl().setRedraw(true);
 			return true;
 		} catch (Throwable t) {
-			MylarStatusHandler.fail(t, "Could not install viewer filter on: " + prefId, false);
+			MylarStatusHandler.fail(t, "Could not install viewer filter on: " + globalPrefId, false);
 		}
 		return false;
 	}
@@ -200,17 +220,18 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 	}
 
 	public void dispose() {
+		partMap.remove(getPartForAction());
 		for (StructuredViewer viewer : getViewers()) {
 			MylarUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer, viewPart);
 		}
-	}
+	} 
 
 	public void runWithEvent(IAction action, Event event) {
 		run(action);
 	}
 
-	public String getPrefId() {
-		return prefId;
+	public String getGlobalPrefId() {
+		return globalPrefId;
 	}
 
 	/**
@@ -220,11 +241,12 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 		return interestFilter;
 	}
 
-	protected IViewPart getView(String id) {
-		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		if (activePage == null)
-			return null;
-		IViewPart view = activePage.findView(id);
-		return view;
-	}
+//	protected IViewPart getView(String id) {
+//		getV
+//		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+//		if (activePage == null)
+//			return null;
+//		IViewPart view = activePage.findView(id);
+//		return view;
+//	}
 }

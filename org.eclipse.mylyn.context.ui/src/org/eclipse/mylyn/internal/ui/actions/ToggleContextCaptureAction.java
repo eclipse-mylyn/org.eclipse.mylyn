@@ -43,12 +43,12 @@ public class ToggleContextCaptureAction extends Action implements IViewActionDel
 
 	public void pause() {
 		MylarPlugin.getContextManager().setContextCapturePaused(true);
-		TaskListView.getDefault().indicatePaused(true);
+		TaskListView.getFromActivePerspective().indicatePaused(true);
 	}
 
 	public void resume() {
 		MylarPlugin.getContextManager().setContextCapturePaused(false);
-		TaskListView.getDefault().indicatePaused(false);
+		TaskListView.getFromActivePerspective().indicatePaused(false);
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {

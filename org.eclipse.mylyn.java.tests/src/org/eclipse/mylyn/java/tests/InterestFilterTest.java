@@ -22,6 +22,7 @@ import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.internal.java.ui.actions.ApplyMylarToPackageExplorerAction;
+import org.eclipse.mylar.internal.ui.actions.AbstractApplyMylarAction;
 import org.eclipse.mylar.provisional.ui.InterestFilter;
 
 /**
@@ -33,17 +34,30 @@ public class InterestFilterTest extends AbstractJavaContextTest {
 
 	private PackageExplorerPart explorer;
 
-	public void testPreservedFilterRemovalExclusion() throws JavaModelException {
+	private AbstractApplyMylarAction applyAction;
+	
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
 		explorer = PackageExplorerPart.openInActivePerspective();
 		assertNotNull(explorer);
+		applyAction = AbstractApplyMylarAction.getActionForPart(explorer);		
+		assertTrue(applyAction instanceof ApplyMylarToPackageExplorerAction);
+	}
 
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+	}
+
+	public void testPreservedFilterRemovalExclusion() throws JavaModelException {
 		List<Class> filterClasses = new ArrayList<Class>();
 		for (ViewerFilter filter : Arrays.asList(explorer.getTreeViewer().getFilters())) {
 			filterClasses.add(filter.getClass());
 		}
 		assertTrue(filterClasses.contains(ImportDeclarationFilter.class));
-		
-		ApplyMylarToPackageExplorerAction.getDefault().update(true);
+
+		applyAction.update(true);
 		filterClasses = new ArrayList<Class>();
 		for (ViewerFilter filter : Arrays.asList(explorer.getTreeViewer().getFilters())) {
 			filterClasses.add(filter.getClass());
@@ -52,27 +66,23 @@ public class InterestFilterTest extends AbstractJavaContextTest {
 	}
 	
 	public void testFilterRemovalAndRestore() throws JavaModelException {
-		explorer = PackageExplorerPart.openInActivePerspective();
-		assertNotNull(explorer);
 
 		ViewerFilter[] previousFilters = explorer.getTreeViewer().getFilters();
 		assertTrue(previousFilters.length > 1);
-		ApplyMylarToPackageExplorerAction.getDefault().update(true);
+		applyAction.update(true);
 		ViewerFilter[] afterInstall = explorer.getTreeViewer().getFilters();
 		// more than 1 since we preserve some filters
 		assertEquals(3, afterInstall.length);
 		
-		ApplyMylarToPackageExplorerAction.getDefault().update(false);
+		applyAction.update(false);
 		ViewerFilter[] restoredFilters = explorer.getTreeViewer().getFilters();
 		assertEquals(previousFilters.length, restoredFilters.length);
 	}
 	
 	public void testInterestFilter() throws JavaModelException {
-		explorer = PackageExplorerPart.openInActivePerspective();
-		assertNotNull(explorer);
 
-		ApplyMylarToPackageExplorerAction.getDefault().update(true);
-		filter = ApplyMylarToPackageExplorerAction.getDefault().getInterestFilter();
+		applyAction.update(true);
+		filter = applyAction.getInterestFilter();
 		assertNotNull(filter);
 
 		IMethod m1 = type1.createMethod("public void m10() { }", null, true, null);

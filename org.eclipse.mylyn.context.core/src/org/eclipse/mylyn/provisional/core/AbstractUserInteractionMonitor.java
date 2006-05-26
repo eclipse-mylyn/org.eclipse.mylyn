@@ -15,9 +15,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.core.InteractionEvent.Kind;
 import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * Self-registering on construction. Encapsulates users' interaction with the
@@ -34,8 +32,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 	 */
 	public AbstractUserInteractionMonitor() {
 		try {
-			ISelectionService service = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
-			service.addPostSelectionListener(this);
+			MylarPlugin.getDefault().addWindowPostSelectionListener(this);
 		} catch (NullPointerException npe) {
 			MylarStatusHandler.log("Monitors can not be instantiated until the workbench is active", this);
 		}
@@ -43,8 +40,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 
 	public void dispose() {
 		try {
-			ISelectionService service = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
-			service.removePostSelectionListener(this);
+			MylarPlugin.getDefault().removeWindowPostSelectionListener(this);
 		} catch (NullPointerException npe) {
 			MylarStatusHandler.log(npe, "Could not dispose monitor.");
 		}

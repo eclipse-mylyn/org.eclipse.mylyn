@@ -20,9 +20,6 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.ide.team.MylarChangeSetManager;
-import org.eclipse.mylar.internal.ide.ui.NavigatorRefreshListener;
-import org.eclipse.mylar.internal.ide.ui.actions.ApplyMylarToNavigatorAction;
-import org.eclipse.mylar.internal.ide.ui.actions.ApplyMylarToProblemsListAction;
 import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
@@ -39,7 +36,7 @@ import org.osgi.framework.BundleContext;
  */
 public class MylarIdePlugin extends AbstractUIPlugin {
 
-	private NavigatorRefreshListener navigatorRefreshListener = new NavigatorRefreshListener();
+//	private NavigatorRefreshListener navigatorRefreshListener = new NavigatorRefreshListener();
 
 	private MylarEditorManager editorManager = new MylarEditorManager();
 
@@ -83,7 +80,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 					if (getPreferenceStore().getBoolean(CHANGE_SET_MANAGE)) {
 						changeSetManager.enable();
 					}
-					MylarPlugin.getContextManager().addListener(navigatorRefreshListener);
+//					MylarPlugin.getContextManager().addListener(navigatorRefreshListener);
 
 					resourceInteractionMonitor = new ResourceInteractionMonitor();
 //					Display.getDefault().addFilter(SWT.Selection, resourceInteractionMonitor);
@@ -94,10 +91,10 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 					ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeMonitor,
 							IResourceChangeEvent.POST_CHANGE);
 
-					if (ApplyMylarToNavigatorAction.getDefault() != null)
-						ApplyMylarToNavigatorAction.getDefault().update();
-					if (ApplyMylarToProblemsListAction.getDefault() != null)
-						ApplyMylarToProblemsListAction.getDefault().update();
+//					if (ApplyMylarToNavigatorAction.getDefault() != null)
+//						ApplyMylarToNavigatorAction.getDefault().update();
+//					if (ApplyMylarToProblemsListAction.getDefault() != null)
+//						ApplyMylarToProblemsListAction.getDefault().update();
 
 					workbench.addWindowListener(activeSearchViewTracker);
 					IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
@@ -149,7 +146,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 			plugin = null;
 			MylarPlugin.getContextManager().removeListener(editorManager);
 			MylarPlugin.getDefault().getSelectionMonitors().remove(resourceInteractionMonitor);
-			MylarPlugin.getContextManager().removeListener(navigatorRefreshListener);
+//			MylarPlugin.getContextManager().removeListener(navigatorRefreshListener);
 			changeSetManager.disable();
 
 			ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeMonitor);

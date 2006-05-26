@@ -31,8 +31,7 @@ public abstract class AbstractCommandMonitor implements IExecutionListener {
 	 */
 	public AbstractCommandMonitor() {
 		try {
-			ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getWorkbench().getAdapter(ICommandService.class);
+			ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getAdapter(ICommandService.class);
 			commandService.addExecutionListener(this);
 		} catch (NullPointerException npe) {
 			MylarStatusHandler.log("Monitors can not be instantiated until the workbench is active: ", this);
@@ -41,8 +40,7 @@ public abstract class AbstractCommandMonitor implements IExecutionListener {
 
 	public void dispose() {
 		try {
-			ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getWorkbench().getAdapter(ICommandService.class);
+			ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getAdapter(ICommandService.class);
 			commandService.removeExecutionListener(this);
 		} catch (NullPointerException npe) {
 			MylarStatusHandler.log(npe, "Could not dispose monitor.");
