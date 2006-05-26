@@ -23,6 +23,7 @@ import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.Workbench;
 
@@ -77,7 +78,9 @@ public class InterestManipulatingEditorTracker extends AbstractEditorTracker {
 
 	@Override
 	public void editorClosed(IEditorPart editorPart) {
-		if (MylarUiPlugin.getPrefs().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)
+		if (PlatformUI.getWorkbench().isClosing()) {
+			return;
+		} else if (MylarUiPlugin.getPrefs().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)
 			&& !Workbench.getInstance().getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN)) {
 			IMylarElement element = null;
 			IMylarUiBridge uiBridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
