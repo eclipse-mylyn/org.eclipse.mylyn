@@ -36,7 +36,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
@@ -72,8 +71,9 @@ public class TaskListToolTipHandler {
 	}
 
 	private Shell createTipShell(Shell parent) {
-		Shell tipShell = new Shell(parent.getDisplay(), SWT.TOOL | SWT.NO_FOCUS | SWT.ON_TOP | SWT.MODELESS);
-		GridLayout gridLayout = new GridLayout(); 
+		Shell tipShell = new Shell(parent.getDisplay(), SWT.TOOL | SWT.NO_FOCUS | SWT.MODELESS);
+		// | SWT.ON_TOP
+		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
 		gridLayout.marginWidth = 2;
 		gridLayout.marginHeight = 2;
@@ -171,9 +171,10 @@ public class TaskListToolTipHandler {
 		return null;
 	}
 
-	private String formatLastRefreshTime(Date lastRefresh) {		
+	private String formatLastRefreshTime(Date lastRefresh) {
 		String toolTip = "Last synchronized: ";
-		if (lastRefresh == null) return toolTip += "unknown";		
+		if (lastRefresh == null)
+			return toolTip += "unknown";
 		Date timeNow = new Date();
 		long timeDifference = (timeNow.getTime() - lastRefresh.getTime()) / 60000;
 		long minutes = timeDifference % 60;
@@ -313,12 +314,21 @@ public class TaskListToolTipHandler {
 					return;
 				}
 
-				if (!tipShell.isDisposed() && tipShell.getShell() != null && tipShell.getShell().getParent() != null
-						&& Display.getCurrent().getActiveShell() != null
-						&& tipShell.getShell().getParent() != Display.getCurrent().getActiveShell()) {
+				if (!tipShell.isDisposed() && tipShell.getShell() != null
+						&& PlatformUI.getWorkbench().getDisplay().getActiveShell() != null) {
 					tipShell.close();
-					tipShell = createTipShell(Display.getCurrent().getActiveShell());
+					tipShell = createTipShell(PlatformUI.getWorkbench().getDisplay().getActiveShell());
 				}
+
+				// if (!tipShell.isDisposed() && tipShell.getShell() != null &&
+				// tipShell.getShell().getParent() != null
+				// && Display.getCurrent().getActiveShell() != null
+				// && tipShell.getShell().getParent() !=
+				// Display.getCurrent().getActiveShell()) {
+				// tipShell.close();
+				// tipShell =
+				// createTipShell(Display.getCurrent().getActiveShell());
+				// }
 
 				tipLabelText.setText(text);
 				tipLabelImage.setImage(image); // accepts null
