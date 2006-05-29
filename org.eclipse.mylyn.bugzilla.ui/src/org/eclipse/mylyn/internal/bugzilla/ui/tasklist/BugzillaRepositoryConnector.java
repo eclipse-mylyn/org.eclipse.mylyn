@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Proxy;
-import java.net.SocketTimeoutException;
 import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
@@ -339,13 +338,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		} else if (status == BugzillaOfflineStatus.SAVED) {
 			state = RepositoryTaskSyncState.SYNCHRONIZED;
 		} else if (status == BugzillaOfflineStatus.SAVED_WITH_INCOMMING_CHANGES) {
-			//if (forceSynch) {
-				state = RepositoryTaskSyncState.INCOMING;
-			//} else {
-				// User opened (forceSynch = false) so no need to denote
-				// incomming
-			//	state = RepositoryTaskSyncState.SYNCHRONIZED;
-			//}
+			// if (forceSynch) {
+			state = RepositoryTaskSyncState.INCOMING;
+			// } else {
+			// User opened (forceSynch = false) so no need to denote
+			// incomming
+			// state = RepositoryTaskSyncState.SYNCHRONIZED;
+			// }
 		} else if (status == BugzillaOfflineStatus.CONFLICT) {
 			state = RepositoryTaskSyncState.CONFLICT;
 		} else if (status == BugzillaOfflineStatus.DELETED) {
@@ -401,7 +400,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 									WebBrowserDialog.openAcceptAgreement(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 											"Possible problem posting Bugzilla report.\n"
 													+ throwable.getCause().getMessage(), form.getError());
-									
+
 								} else if (throwable.getCause() instanceof LoginException) {
 									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 											"Bugzilla could not post your bug since your login name or password is incorrect."
@@ -752,7 +751,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
-			Set<AbstractRepositoryTask> tasks) {
+			Set<AbstractRepositoryTask> tasks) throws Exception {
 
 		Set<AbstractRepositoryTask> changedTasks = new HashSet<AbstractRepositoryTask>();
 
@@ -793,31 +792,31 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			String newurlQueryString = "&field0-0-" + queryCounter + "=bug_id&type0-0-" + queryCounter
 					+ "=equals&value0-0-" + queryCounter + "="
 					+ AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
-			try {
-				if ((urlQueryString.length() + newurlQueryString.length() + IBugzillaConstants.CONTENT_TYPE_RDF
-						.length()) > MAX_URL_LENGTH) {
-					urlQueryString += IBugzillaConstants.CONTENT_TYPE_RDF;
-					queryForChanged(repository, changedTasks, urlQueryString);
-					queryCounter = 0;
-					urlQueryString = new String(urlQueryBase);
-					urlQueryString += "&field0-0-" + queryCounter + "=bug_id&type0-0-" + queryCounter
-							+ "=equals&value0-0-" + queryCounter + "="
-							+ AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
-				} else if (!itr.hasNext()) {
-					urlQueryString += newurlQueryString;
-					urlQueryString += IBugzillaConstants.CONTENT_TYPE_RDF;
-					queryForChanged(repository, changedTasks, urlQueryString);
-				} else {
-					urlQueryString += newurlQueryString;
-				}
-			} catch (SocketTimeoutException e) {
-				MylarStatusHandler.log("Timeout occurred while retrieving reports from " + repository.getUrl()
-						+ ", will synchronize all reports.", this);
-			} catch (Exception e) {
-				MylarStatusHandler.log(e, "Mylar: Error retrieving reports from " + repository.getUrl()
-						+ ", will synchronize all reports.");
-				return tasks;
+			// try {
+			if ((urlQueryString.length() + newurlQueryString.length() + IBugzillaConstants.CONTENT_TYPE_RDF.length()) > MAX_URL_LENGTH) {
+				urlQueryString += IBugzillaConstants.CONTENT_TYPE_RDF;
+				queryForChanged(repository, changedTasks, urlQueryString);
+				queryCounter = 0;
+				urlQueryString = new String(urlQueryBase);
+				urlQueryString += "&field0-0-" + queryCounter + "=bug_id&type0-0-" + queryCounter + "=equals&value0-0-"
+						+ queryCounter + "=" + AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
+			} else if (!itr.hasNext()) {
+				urlQueryString += newurlQueryString;
+				urlQueryString += IBugzillaConstants.CONTENT_TYPE_RDF;
+				queryForChanged(repository, changedTasks, urlQueryString);
+			} else {
+				urlQueryString += newurlQueryString;
 			}
+			// } catch (SocketTimeoutException e) {
+			// MylarStatusHandler.log("Timeout occurred while retrieving reports
+			// from " + repository.getUrl()
+			// + ", will synchronize all reports.", this);
+			// } catch (Exception e) {
+			// MylarStatusHandler.log(e, "Mylar: Error retrieving reports from "
+			// + repository.getUrl()
+			// + ", will synchronize all reports.");
+			// return tasks;
+			// }
 		}
 		return changedTasks;
 	}

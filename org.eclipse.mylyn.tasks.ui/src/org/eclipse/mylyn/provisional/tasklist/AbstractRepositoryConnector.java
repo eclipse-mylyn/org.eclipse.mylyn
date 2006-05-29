@@ -26,10 +26,9 @@ import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -38,6 +37,10 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  */
 public abstract class AbstractRepositoryConnector {
+
+	private static final int RETRY_DELAY = 3000;
+
+	private static final int MAX_QUERY_ATTEMPTS = 3;
 
 	public static final String MYLAR_CONTEXT_DESCRIPTION = "mylar/context/zip";
 
@@ -50,6 +53,8 @@ public abstract class AbstractRepositoryConnector {
 	// HashMap<AbstractRepositoryTask, Job>();
 
 	protected boolean forceSyncExecForTesting = false;
+
+	boolean syncAll = false;
 
 	public abstract boolean canCreateTaskFromKey();
 
@@ -126,12 +131,13 @@ public abstract class AbstractRepositoryConnector {
 	 * returns all tasks if date is null or an error occurs
 	 */
 	public abstract Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
-			Set<AbstractRepositoryTask> tasks) throws GeneralSecurityException, IOException;
+			Set<AbstractRepositoryTask> tasks) throws Exception;
 
 	/**
-	 * Sychronize a single task. Note that if you have a collection of tasks
-	 * to synchronize with this connector then you should call 
-	 * synchronize(Set<Set<AbstractRepositoryTask> repositoryTasks, ...)
+	 * Sychronize a single task. Note that if you have a collection of tasks to
+	 * synchronize with this connector then you should call synchronize(Set<Set<AbstractRepositoryTask>
+	 * repositoryTasks, ...)
+	 * 
 	 * @param listener
 	 *            can be null
 	 */
@@ -149,7 +155,7 @@ public abstract class AbstractRepositoryConnector {
 
 		final SynchronizeTaskJob synchronizeJob = new SynchronizeTaskJob(this, repositoryTasks);
 		synchronizeJob.setForceSynch(forceSynch);
-		synchronizeJob.setPriority(Job.LONG);
+		synchronizeJob.setPriority(Job.DECORATE);
 		if (listener != null) {
 			synchronizeJob.addJobChangeListener(listener);
 		}
@@ -194,42 +200,69 @@ public abstract class AbstractRepositoryConnector {
 	 * given repository was synchronized. Calls to this method set
 	 * TaskRepository.syncTime to now.
 	 */
-	public void synchronizeChanged(TaskRepository repository) {
+	public void synchronizeChanged(final TaskRepository repository) {
 		TaskList taskList = MylarTaskListPlugin.getTaskListManager().getTaskList();
 		Set<AbstractRepositoryTask> repositoryTasks = Collections.unmodifiableSet(taskList
 				.getRepositoryTasks(repository.getUrl()));
 
-		try {
-			Set<AbstractRepositoryTask> changedTasks = getChangedSinceLastSync(repository, repositoryTasks);
-			Set<AbstractRepositoryTask> tasksToSync = new HashSet<AbstractRepositoryTask>();
-			for (AbstractRepositoryTask task : changedTasks) {
-				if(task.getSyncState() == RepositoryTaskSyncState.SYNCHRONIZED) {
-					tasksToSync.add(task);
-				}				
+		// try {
+		Set<AbstractRepositoryTask> tasksToSync = new HashSet<AbstractRepositoryTask>();
+		Set<AbstractRepositoryTask> changedTasks = null;
+		int attempts = 0;
+
+		while (attempts < MAX_QUERY_ATTEMPTS && changedTasks == null) {
+			attempts++;
+			try {
+				changedTasks = getChangedSinceLastSync(repository, repositoryTasks);
+			} catch (Exception e) {
+				if (attempts == MAX_QUERY_ATTEMPTS) {
+					MylarStatusHandler.log(e, "Error determining modified reports on " + repository.getUrl() + ".");
+					return;
+				}
+				try {
+					Thread.sleep(RETRY_DELAY);
+				} catch (InterruptedException e1) {					
+					return;
+				}
 			}
-			refreshTasks(tasksToSync, false);
-			MylarTaskListPlugin.getRepositoryManager().setSyncTime(repository, new Date());
-		} catch (GeneralSecurityException e) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					MessageDialog.openError(Display.getDefault().getActiveShell(), MylarTaskListPlugin.TITLE_DIALOG,
-							"Authentication error. Check setting in " + TaskRepositoriesView.NAME + ".");
-				}
-			});
-		} catch (final IOException e) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					MessageDialog.openError(Display.getDefault().getActiveShell(), MylarTaskListPlugin.TITLE_DIALOG,
-							"Communication error during query synchronization. Error reported:\n\n" + e.getMessage());
-				}
-			});
 		}
+
+		for (AbstractRepositoryTask task : changedTasks) {
+			if (task.getSyncState() == RepositoryTaskSyncState.SYNCHRONIZED) {
+				tasksToSync.add(task);
+			}
+		}
+
+		refreshTasks(tasksToSync, false);
+		MylarTaskListPlugin.getRepositoryManager().setSyncTime(repository, new Date());
+		// } catch (GeneralSecurityException e) {
+		// PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+		// public void run() {
+		// MessageDialog.openError(Display.getDefault().getActiveShell(),
+		// MylarTaskListPlugin.TITLE_DIALOG,
+		// "Authentication error. Check setting in " + TaskRepositoriesView.NAME
+		// + ".");
+		// }
+		// });
+		// } catch (final IOException e) {
+		// PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+		// public void run() {
+		// MessageDialog.openError(Display.getDefault().getActiveShell(),
+		// MylarTaskListPlugin.TITLE_DIALOG,
+		// "Communication error during query synchronization. Error
+		// reported:\n\n" + e.getMessage());
+		// }
+		// });
+		// }
 	}
 
 	/**
 	 * refresh the given tasks with latest content from repository
-	 * @param tasks - to synchronize
-	 * @param force - if true will overwrite local changes and incoming status
+	 * 
+	 * @param tasks -
+	 *            to synchronize
+	 * @param force -
+	 *            if true will overwrite local changes and incoming status
 	 */
 	public void refreshTasks(Set<AbstractRepositoryTask> tasks, boolean force) {
 		synchronize(tasks, force, null);
