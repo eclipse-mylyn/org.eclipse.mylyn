@@ -274,6 +274,7 @@ public class ActiveHierarchyView extends ViewPart {
 
 			initDrop();
 			initDrag();
+			getSite().setSelectionProvider(getViewer());
 		} catch (Throwable t) {
 			MylarStatusHandler.log(t, "create failed");
 		}

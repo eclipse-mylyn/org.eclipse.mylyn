@@ -249,7 +249,8 @@ public class ActiveSearchView extends ViewPart {
 		hookContextMenu();
 		initDrop();
 		initDrag();
-
+		getSite().setSelectionProvider(getViewer());
+		
 		viewer.addOpenListener(new ContextNodeOpenListener(viewer));
 
 		contributeToActionBars();
