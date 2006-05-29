@@ -74,7 +74,7 @@ public class CompositeContextElement implements IMylarElement {
 	}
 
 	/**
-	 * @return null if all kinds aren't equal
+	 * @return empty string if all kinds aren't equal
 	 */
 	public String getContentType() {
 		Set<String> kinds = new HashSet<String>();

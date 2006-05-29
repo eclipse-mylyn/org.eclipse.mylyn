@@ -182,8 +182,14 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		if (interesting == null || bridge == null) {
 			return false;
 		} else {
-			return interesting.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)
-					|| bridge.isDocument(interesting.getHandleIdentifier());
+			if (interesting.getContentType() == null) {
+				// TODO: remove
+				MylarStatusHandler.log("null content type for: " + interesting.getHandleIdentifier(), this);
+				return false;
+			} else {
+				return interesting.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)
+						|| bridge.isDocument(interesting.getHandleIdentifier());
+			}
 		}
 	}
 
