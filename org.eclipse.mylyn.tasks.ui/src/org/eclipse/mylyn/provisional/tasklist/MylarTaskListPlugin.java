@@ -21,8 +21,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
@@ -104,7 +102,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	private TaskListWriter taskListWriter;
 
-	private ResourceBundle resourceBundle;
+//	private ResourceBundle resourceBundle;
 
 	private long AUTOMATIC_BACKUP_SAVE_INTERVAL = 1 * 3600 * 1000; // every
 
@@ -322,10 +320,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 					if (getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP)) {
 						taskListSynchronizationManager.synchNow(DELAY_QUERY_REFRESH_ON_STARTUP);
-						// taskListRefreshManager.getRefreshJob().schedule(DELAY_QUERY_REFRESH_ON_STARTUP);
-						// ScheduledTaskListRefreshJob refreshJob = new
-						// ScheduledTaskListRefreshJob(0, getTaskListManager());
-						// refreshJob.schedule(DELAY_QUERY_REFRESH_ON_STARTUP);
 					}
 				} catch (Exception e) {
 					MylarStatusHandler.fail(e, "Task List initialization failed", true);
@@ -343,7 +337,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		INSTANCE = null;
-		resourceBundle = null;
+//		resourceBundle = null;S
 		try {
 			getMylarCorePrefs().removePropertyChangeListener(taskListNotificationManager);
 			getMylarCorePrefs().removePropertyChangeListener(taskListBackupManager);
@@ -419,8 +413,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
-		// store.setDefault(TaskListPreferenceConstants.AUTO_MANAGE_EDITORS,
-		// true);
 		store.setDefault(TaskListPreferenceConstants.NOTIFICATIONS_ENABLED, true);
 		store.setDefault(TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P5.toString());
 		store.setDefault(TaskListPreferenceConstants.REPORT_OPEN_EDITOR, true);
@@ -470,32 +462,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		return INSTANCE;
 	}
 
-	/**
-	 * Returns the string from the INSTANCE's resource bundle, or 'key' if not
-	 * found.
-	 */
-	public static String getResourceString(String key) {
-		ResourceBundle bundle = MylarTaskListPlugin.getDefault().getResourceBundle();
-		try {
-			return (bundle != null) ? bundle.getString(key) : key;
-		} catch (MissingResourceException e) {
-			return key;
-		}
-	}
-
-	/**
-	 * Returns the INSTANCE's resource bundle,
-	 */
-	public ResourceBundle getResourceBundle() {
-		try {
-			if (resourceBundle == null)
-				resourceBundle = ResourceBundle.getBundle("taskListPlugin.TaskListPluginPluginResources");
-		} catch (MissingResourceException x) {
-			resourceBundle = null;
-		}
-		return resourceBundle;
-	}
-
 	public static IPreferenceStore getMylarCorePrefs() {
 		// TODO: should be using the task list's prefernece store, but can't
 		// change without migrating because this will cause people to lose
@@ -504,79 +470,13 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	private void checkTaskListBackup() {
-		// if (getPrefs().contains(PREVIOUS_SAVE_DATE)) {
-		// lastSave = new Date(getPrefs().getLong(PREVIOUS_SAVE_DATE));
-		// } else {
-		// lastSave = new Date();
-		// getPrefs().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
-		// }
 		Date currentTime = new Date();
 		if (currentTime.getTime() > lastBackup.getTime() + AUTOMATIC_BACKUP_SAVE_INTERVAL) {// TaskListSaveMode.fromStringToLong(getPrefs().getString(SAVE_TASKLIST_MODE)))
 			// {
 			MylarTaskListPlugin.getDefault().getTaskListSaveManager().createTaskListBackupFile();
 			lastBackup = new Date();
-			// INSTANCE.getPreferenceStore().setValue(PREVIOUS_SAVE_DATE,
-			// lastSave.getTime());
 		}
 	}
-
-	// public static void setCurrentPriorityLevel(Task.PriorityLevel pl) {
-	// getPrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY,
-	// pl.toString());
-	// }
-
-	// public void setFilterCompleteMode(boolean isFilterOn) {
-	// getPrefs().setValue(TaskListPreferenceConstants.FILTER_COMPLETE_MODE,
-	// isFilterOn);
-	// }
-
-	// public boolean isFilterCompleteMode() {
-	// if
-	// (getPrefs().contains(TaskListPreferenceConstants.FILTER_COMPLETE_MODE)) {
-	// return
-	// getPrefs().getBoolean(TaskListPreferenceConstants.FILTER_COMPLETE_MODE);
-	// } else {
-	// return false;
-	// }
-	// }
-
-	// public void setFilterInCompleteMode(boolean isFilterOn) {
-	// getPrefs().setValue(TaskListPreferenceConstants.FILTER_INCOMPLETE_MODE,
-	// isFilterOn);
-	// }
-
-	// public boolean isFilterInCompleteMode() {
-	// if
-	// (getPrefs().contains(TaskListPreferenceConstants.FILTER_INCOMPLETE_MODE))
-	// {
-	// return
-	// getPrefs().getBoolean(TaskListPreferenceConstants.FILTER_INCOMPLETE_MODE);
-	// } else {
-	// return false;
-	// }
-	// }
-
-	// public List<ITaskHandler> getTaskHandlers() {
-	// return taskHandlers;
-	// }
-
-	// public ITaskHandler getHandlerForElement(ITaskListElement element) {
-	// for (ITaskHandler taskHandler : taskHandlers) {
-	// if (taskHandler.acceptsItem(element))
-	// return taskHandler;
-	// }
-	// return null;
-	// }
-
-	// public void addTaskHandler(ITaskHandler taskHandler) {
-	// taskHandlers.add(taskHandler);
-	// }
-
-	// private void restoreTaskHandlerState() {
-	// for (ITaskHandler handler : taskHandlers) {
-	// handler.restoreState(TaskListView.getDefault());
-	// }
-	// }
 
 	private List<IDynamicSubMenuContributor> menuContributors = new ArrayList<IDynamicSubMenuContributor>();
 
@@ -609,17 +509,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	public List<ITaskEditorFactory> getTaskEditorFactories() {
 		return taskEditors;
 	}
-
-	// public Map<String, IHyperlinkListener> getTaskHyperlinkListeners() {
-	// return taskHyperlinkListeners;
-	// }
-
-	// public void addTaskHyperlinkListener(String type, IHyperlinkListener
-	// listener) {
-	// if (listener != null)
-	// this.taskHyperlinkListeners.put(type, listener);
-	// }
-
+	
 	public void addContextEditor(ITaskEditorFactory contextEditor) {
 		if (contextEditor != null)
 			this.taskEditors.add(contextEditor);
@@ -659,6 +549,102 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 }
+
+
+// public Map<String, IHyperlinkListener> getTaskHyperlinkListeners() {
+// return taskHyperlinkListeners;
+// }
+
+// public void addTaskHyperlinkListener(String type, IHyperlinkListener
+// listener) {
+// if (listener != null)
+// this.taskHyperlinkListeners.put(type, listener);
+// }
+
+
+///**
+//* Returns the string from the INSTANCE's resource bundle, or 'key' if not
+//* found.
+//*/
+//public static String getResourceString(String key) {
+//	ResourceBundle bundle = MylarTaskListPlugin.getDefault().getResourceBundle();
+//	try {
+//		return (bundle != null) ? bundle.getString(key) : key;
+//	} catch (MissingResourceException e) {
+//		return key;
+//	}
+//}
+//
+///**
+//* Returns the INSTANCE's resource bundle,
+//*/
+//public ResourceBundle getResourceBundle() {
+//	try {
+//		if (resourceBundle == null)
+//			resourceBundle = ResourceBundle.getBundle("taskListPlugin.TaskListPluginPluginResources");
+//	} catch (MissingResourceException x) {
+//		resourceBundle = null;
+//	}
+//	return resourceBundle;
+//}
+
+// public static void setCurrentPriorityLevel(Task.PriorityLevel pl) {
+// getPrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY,
+// pl.toString());
+// }
+
+// public void setFilterCompleteMode(boolean isFilterOn) {
+// getPrefs().setValue(TaskListPreferenceConstants.FILTER_COMPLETE_MODE,
+// isFilterOn);
+// }
+
+// public boolean isFilterCompleteMode() {
+// if
+// (getPrefs().contains(TaskListPreferenceConstants.FILTER_COMPLETE_MODE)) {
+// return
+// getPrefs().getBoolean(TaskListPreferenceConstants.FILTER_COMPLETE_MODE);
+// } else {
+// return false;
+// }
+// }
+
+// public void setFilterInCompleteMode(boolean isFilterOn) {
+// getPrefs().setValue(TaskListPreferenceConstants.FILTER_INCOMPLETE_MODE,
+// isFilterOn);
+// }
+
+// public boolean isFilterInCompleteMode() {
+// if
+// (getPrefs().contains(TaskListPreferenceConstants.FILTER_INCOMPLETE_MODE))
+// {
+// return
+// getPrefs().getBoolean(TaskListPreferenceConstants.FILTER_INCOMPLETE_MODE);
+// } else {
+// return false;
+// }
+// }
+
+// public List<ITaskHandler> getTaskHandlers() {
+// return taskHandlers;
+// }
+
+// public ITaskHandler getHandlerForElement(ITaskListElement element) {
+// for (ITaskHandler taskHandler : taskHandlers) {
+// if (taskHandler.acceptsItem(element))
+// return taskHandler;
+// }
+// return null;
+// }
+
+// public void addTaskHandler(ITaskHandler taskHandler) {
+// taskHandlers.add(taskHandler);
+// }
+
+// private void restoreTaskHandlerState() {
+// for (ITaskHandler handler : taskHandlers) {
+// handler.restoreState(TaskListView.getDefault());
+// }
+// }
 
 // /**
 // * Sets the directory containing the task list file to use.

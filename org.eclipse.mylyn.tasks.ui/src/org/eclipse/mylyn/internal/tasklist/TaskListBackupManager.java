@@ -30,6 +30,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.TaskDataExportWizard;
 import org.eclipse.mylar.internal.tasklist.util.TaskDataExportJob;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
@@ -153,7 +154,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 
 		@Override
 		public void run() {
-			if (!Platform.isRunning()) {
+			if (!Platform.isRunning() || MylarPlugin.getDefault() == null) {
 				return;
 			} else {
 				long lastBackup = MylarTaskListPlugin.getMylarCorePrefs().getLong(
