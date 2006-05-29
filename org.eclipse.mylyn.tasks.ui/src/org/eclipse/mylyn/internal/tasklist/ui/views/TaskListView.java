@@ -920,6 +920,7 @@ public class TaskListView extends ViewPart {
 		if (activeTasks.size() > 0) {
 			updateDescription(activeTasks.get(0));
 		}
+		getSite().setSelectionProvider(getViewer());
 	}
 
 	private void initDragAndDrop(Composite parent) {

@@ -240,7 +240,6 @@ public class TaskActivityView extends ViewPart {
 					// if(taskActivityMemento != null) {
 					// sorter.saveState(taskActivityMemento);
 					// }
-
 				}
 			});
 
@@ -280,6 +279,7 @@ public class TaskActivityView extends ViewPart {
 		hookOpenAction();
 		hookContextMenu();
 		contributeToActionBars();
+		getSite().setSelectionProvider(getViewer());
 	}
 
 	

@@ -115,6 +115,7 @@ public class TaskRepositoriesView extends ViewPart {
 
 		hookContextMenu();
 		contributeToActionBars();
+		getSite().setSelectionProvider(getViewer());
 	}
 
 	private void hookContextMenu() {
