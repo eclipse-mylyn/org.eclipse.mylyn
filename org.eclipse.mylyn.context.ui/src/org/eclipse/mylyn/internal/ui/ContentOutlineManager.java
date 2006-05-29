@@ -35,16 +35,16 @@ import org.eclipse.ui.PlatformUI;
 public class ContentOutlineManager implements IPartListener, IPageListener {
 
 	public void partBroughtToTop(IWorkbenchPart part) {
-		if (!MylarPlugin.getContextManager().isContextActive()
-				|| MylarPlugin.getContextManager().isContextCapturePaused())
+		if (!MylarPlugin.getContextManager().isContextActive()) {
 			return;
-
-		if (part instanceof IEditorPart) {
-			IEditorPart editorPart = (IEditorPart) part;			
-			ApplyMylarToOutlineAction applyAction = ApplyMylarToOutlineAction.getOutlineActionForEditor(editorPart);
-			if (applyAction != null) {
-				applyAction.update(editorPart);
-				configureDecorator(editorPart);
+		} else {
+			if (part instanceof IEditorPart) {
+				IEditorPart editorPart = (IEditorPart) part;
+				ApplyMylarToOutlineAction applyAction = ApplyMylarToOutlineAction.getOutlineActionForEditor(editorPart);
+				if (applyAction != null) {
+					applyAction.update(editorPart);
+					configureDecorator(editorPart);
+				}
 			}
 		}
 	}
@@ -61,8 +61,8 @@ public class ContentOutlineManager implements IPartListener, IPageListener {
 	 * TODO: refactor, this will get called too often
 	 */
 	private void configureDecorator(IEditorPart editorPart) {
-//		if (ApplyMylarToOutlineAction.getDefault() == null)
-//			return;
+		// if (ApplyMylarToOutlineAction.getDefault() == null)
+		// return;
 		IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
 		List<TreeViewer> viewers = bridge.getContentOutlineViewers(editorPart);
 		if (viewers == null) {

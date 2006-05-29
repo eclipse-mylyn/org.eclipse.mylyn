@@ -32,8 +32,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 	private boolean enabled = true;
 
 	public void resourceChanged(IResourceChangeEvent event) { 
-		if (!enabled || !MylarPlugin.getContextManager().isContextActive()
-				|| MylarPlugin.getContextManager().isContextCapturePaused()) {
+		if (!enabled || !MylarPlugin.getContextManager().isContextActive()) {
 			return;
 		}
 		if (event.getType() != IResourceChangeEvent.POST_CHANGE) {

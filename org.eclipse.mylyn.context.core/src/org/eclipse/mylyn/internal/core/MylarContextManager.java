@@ -748,26 +748,8 @@ public class MylarContextManager {
 		return MylarContextManager.scalingFactors;
 	}
 
-	// Copying of mylar dir contents disabled for now (WC)
-	// public void updateMylarDirContents(String prevDir) {
-	// File prev = new File(prevDir);
-	// if (!prev.isDirectory()) {
-	// return;
-	// }
-	// File[] contents = prev.listFiles();
-	// File curr = new File(MylarPlugin.getDefault().getMylarDataDirectory());
-	// for (File f : contents) {
-	// // XXX: remove hack below
-	// if ( (f.getName().endsWith(".xml") && f.getName().startsWith("task")) ||
-	// f.getName().startsWith("mylar")) {
-	// String name = curr.getAbsolutePath() + "/" + f.getName();
-	// f.renameTo(new File(name));
-	// }
-	// }
-	// }
-
 	public boolean isContextActive() {
-		return currentContext.getContextMap().values().size() > 0;
+		return !contextCapturePaused && currentContext.getContextMap().values().size() > 0;
 	}
 
 	public List<IMylarElement> getActiveLandmarks() {
@@ -932,10 +914,6 @@ public class MylarContextManager {
 		for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
 			listener.nodeDeleted(element);
 		}
-	}
-
-	public boolean isContextCapturePaused() {
-		return contextCapturePaused;
 	}
 
 	public void setContextCapturePaused(boolean paused) {

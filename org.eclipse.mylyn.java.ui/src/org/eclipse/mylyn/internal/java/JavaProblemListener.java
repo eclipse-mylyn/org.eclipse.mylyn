@@ -32,22 +32,23 @@ public class JavaProblemListener implements IProblemChangedListener, IPropertyCh
 
 	public void problemsChanged(IResource[] changedResources, boolean isMarkerChange) {
 		try {
-			if (!MylarPlugin.getContextManager().isContextActive()
-					|| MylarPlugin.getContextManager().isContextCapturePaused())
+			if (!MylarPlugin.getContextManager().isContextActive()) {
 				return;
-			for (int i = 0; i < changedResources.length; i++) {
-				IResource resource = changedResources[i];
-				if (resource instanceof IFile) {
-					IJavaElement javaElement = (IJavaElement) resource.getAdapter(IJavaElement.class);
-					if (javaElement != null) {
-						IMylarElement element = MylarPlugin.getContextManager().getElement(
-								javaElement.getHandleIdentifier());
-						if (!javaStructureBridge.containsProblem(element)) {
-							MylarPlugin.getContextManager().removeErrorPredictedInterest(element.getHandleIdentifier(),
-									JavaStructureBridge.CONTENT_TYPE, true);
-						} else {
-							MylarPlugin.getContextManager().addErrorPredictedInterest(element.getHandleIdentifier(),
-									JavaStructureBridge.CONTENT_TYPE, true);
+			} else {
+				for (int i = 0; i < changedResources.length; i++) {
+					IResource resource = changedResources[i];
+					if (resource instanceof IFile) {
+						IJavaElement javaElement = (IJavaElement) resource.getAdapter(IJavaElement.class);
+						if (javaElement != null) {
+							IMylarElement element = MylarPlugin.getContextManager().getElement(
+									javaElement.getHandleIdentifier());
+							if (!javaStructureBridge.containsProblem(element)) {
+								MylarPlugin.getContextManager().removeErrorPredictedInterest(
+										element.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, true);
+							} else {
+								MylarPlugin.getContextManager().addErrorPredictedInterest(
+										element.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, true);
+							}
 						}
 					}
 				}

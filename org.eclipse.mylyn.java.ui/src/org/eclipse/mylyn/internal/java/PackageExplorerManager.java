@@ -49,11 +49,8 @@ public class PackageExplorerManager implements IMylarContextListener, ISelection
 			return;
 		}		
 		AbstractApplyMylarAction applyAction = AbstractApplyMylarAction.getActionForPart((PackageExplorerPart)part);		
-		if (MylarPlugin.getContextManager().isContextCapturePaused()
-			|| !MylarPlugin.getContextManager().isContextActive()
+		if (!MylarPlugin.getContextManager().isContextActive()
 			|| (applyAction != null && !applyAction.isChecked())) {
-//			|| (ApplyMylarToPackageExplorerAction.getDefault() != null 
-//				&& !ApplyMylarToPackageExplorerAction.getDefault().isChecked())) {
 			return;
 		}
 		try {
