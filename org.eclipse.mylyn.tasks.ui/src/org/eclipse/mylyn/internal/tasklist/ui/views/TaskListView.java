@@ -267,9 +267,10 @@ public class TaskListView extends ViewPart {
 			}
 		}
 
-		public void taskDeactivated(ITask task) {
+		public void taskDeactivated(final ITask task) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
+					refreshTask(task);
 					updateDescription(null);
 					filteredTree.indicateNoActiveTask();
 				}
