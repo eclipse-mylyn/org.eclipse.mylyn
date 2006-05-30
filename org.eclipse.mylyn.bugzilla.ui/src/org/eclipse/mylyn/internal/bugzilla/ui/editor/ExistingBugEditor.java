@@ -718,9 +718,14 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		keyWordsList.setLayoutData(keyWordsTextData);
 
 		// initialize the keywords list with valid values
-
-		java.util.List<String> validKeywords = BugzillaPlugin.getDefault().getRepositoryConfiguration(repository.getUrl(),
-				repository.getUserName(), repository.getPassword(), repository.getCharacterEncoding()).getKeywords();
+		
+		java.util.List<String> validKeywords = new ArrayList<String>();
+		try {
+			validKeywords = BugzillaPlugin.getDefault().getRepositoryConfiguration(repository.getUrl(),
+					MylarTaskListPlugin.getDefault().getProxySettings(), repository.getUserName(), repository.getPassword(), repository.getCharacterEncoding()).getKeywords();
+		} catch (Exception e) {
+			// ignore
+		}
 
 		if (validKeywords != null) {
 			for (Iterator<String> it = validKeywords.iterator(); it.hasNext();) {

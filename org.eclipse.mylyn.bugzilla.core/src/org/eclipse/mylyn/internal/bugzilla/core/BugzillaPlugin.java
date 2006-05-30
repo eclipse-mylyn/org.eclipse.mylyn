@@ -21,6 +21,7 @@ import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
+import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -109,10 +110,10 @@ public class BugzillaPlugin extends Plugin {
 	// IBugzillaConstants.SERVER_220.equals(getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION));
 	// }
 
-	public RepositoryConfiguration getRepositoryConfiguration(String repositoryUrl, String userName, String password, String encoding) throws IOException {
+	public RepositoryConfiguration getRepositoryConfiguration(String repositoryUrl, Proxy proxySettings, String userName, String password, String encoding) throws IOException, KeyManagementException, LoginException, NoSuchAlgorithmException {
 		if (!repositoryConfigurations.containsKey(repositoryUrl)) {
 			repositoryConfigurations.put(repositoryUrl, RepositoryConfigurationFactory.getInstance()
-					.getConfiguration(repositoryUrl, userName, password, encoding));
+					.getConfiguration(repositoryUrl, proxySettings, userName, password, encoding));
 		}
 		return repositoryConfigurations.get(repositoryUrl);
 	}

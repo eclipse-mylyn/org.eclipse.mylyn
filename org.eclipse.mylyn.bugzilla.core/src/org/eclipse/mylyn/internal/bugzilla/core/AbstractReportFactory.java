@@ -14,6 +14,7 @@ package org.eclipse.mylar.internal.bugzilla.core;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
@@ -50,6 +51,8 @@ public class AbstractReportFactory {
 
 	private BufferedReader in = null;
 
+	private boolean clean = false;
+	
 	protected void collectResults(URL url, Proxy proxySettings, String characterEncoding, DefaultHandler contentHandler)
 			throws IOException, LoginException, KeyManagementException, NoSuchAlgorithmException {
 		URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(url, proxySettings);
@@ -79,6 +82,14 @@ public class AbstractReportFactory {
 			in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 		}
 
+		
+		
+		if(clean) {
+			 StringBuffer result = XmlCleaner.clean(in);
+			 StringReader strReader = new StringReader(result.toString());
+			 in = new BufferedReader(strReader);
+		}
+		
 		if (connection.getContentType().contains(CONTENT_TYPE_APP_RDF_XML)
 				|| connection.getContentType().contains(CONTENT_TYPE_APP_XML)
 				|| connection.getContentType().contains(CONTENT_TYPE_TEXT_XML)) {
@@ -131,6 +142,10 @@ public class AbstractReportFactory {
 		public UnrecognizedBugzillaError(String message) {
 			super(message);
 		}
+	}
+
+	protected void setClean(boolean clean) {
+		this.clean = clean;
 	}
 
 }

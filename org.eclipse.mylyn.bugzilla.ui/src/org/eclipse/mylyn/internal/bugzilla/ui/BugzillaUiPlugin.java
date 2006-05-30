@@ -12,6 +12,8 @@ package org.eclipse.mylar.internal.bugzilla.ui;
 
 import java.io.IOException;
 import java.net.Authenticator;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +31,7 @@ import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfigurationFactory;
 import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaResultEditorMatchAdapter;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.update.internal.ui.UpdateUI;
@@ -259,9 +262,11 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	 * @param monitor
 	 *            A reference to a progress monitor
 	 * @throws IOException
+	 * @throws NoSuchAlgorithmException 
+	 * @throws KeyManagementException 
 	 */
 	public static void updateQueryOptions(TaskRepository repository, IProgressMonitor monitor) throws LoginException,
-			IOException {
+			IOException, KeyManagementException, NoSuchAlgorithmException {
 		
 		String repositoryUrl = repository.getUrl();
 
@@ -269,7 +274,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 			throw new OperationCanceledException();
 		
 		// TODO: pass monitor along since it is this call that does the work and can hang due to network IO
-		RepositoryConfiguration config = RepositoryConfigurationFactory.getInstance().getConfiguration(repository.getUrl(), repository.getUserName(), repository.getPassword(), repository.getCharacterEncoding());
+		RepositoryConfiguration config = RepositoryConfigurationFactory.getInstance().getConfiguration(repository.getUrl(), MylarTaskListPlugin.getDefault().getProxySettings(), repository.getUserName(), repository.getPassword(), repository.getCharacterEncoding());
 
 		if(monitor.isCanceled())
 			throw new OperationCanceledException();

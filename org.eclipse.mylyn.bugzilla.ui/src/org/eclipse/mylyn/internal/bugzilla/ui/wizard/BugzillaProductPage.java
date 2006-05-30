@@ -29,6 +29,7 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
@@ -47,7 +48,7 @@ import org.eclipse.ui.PlatformUI;
  * The first page of the new bug wizard where the user chooses the bug's product
  */
 public class BugzillaProductPage extends AbstractWizardListPage {
-  
+
 	private static final String NEW_BUGZILLA_TASK_ERROR_TITLE = "New Bugzilla Task Error";
 
 	private static final String DESCRIPTION = "Pick a product on which to enter a bug.\n"
@@ -90,7 +91,8 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 				"icons/wizban/bug-wizard.gif"));
 	}
 
-	protected ProgressMonitorDialog monitorDialog = new ProgressMonitorDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+	protected ProgressMonitorDialog monitorDialog = new ProgressMonitorDialog(PlatformUI.getWorkbench()
+			.getActiveWorkbenchWindow().getShell());
 
 	protected IPreferenceStore prefs = BugzillaUiPlugin.getDefault().getPreferenceStore();
 
@@ -114,8 +116,8 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 					BugzillaUiPlugin.updateQueryOptions(repository, monitor);
 
 					products = new ArrayList<String>();
-					for (String product : BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT,
-							null, repository.getUrl())) {
+					for (String product : BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT, null,
+							repository.getUrl())) {
 						products.add(product);
 					}
 					monitor.worked(1);
@@ -132,6 +134,9 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 				} catch (IOException exception) {
 					MessageDialog.openError(null, "Connection Error",
 							"\nPlease check your settings in the bugzilla preferences. ");
+				} catch (Exception exception) {
+					MessageDialog.openError(null, "Error updating product list", "Error reported:\n"
+							+ exception.getMessage());
 				} finally {
 					monitor.done();
 					monitorDialog.close();
@@ -145,12 +150,14 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 		if (!bugWizard.model.hasParsedProducts()) {
 			String repositoryUrl = repository.getUrl();
 			try {
-				String[] storedProducts = BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT,
-						null, repositoryUrl);
+				String[] storedProducts = BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT, null,
+						repositoryUrl);
 				if (storedProducts.length > 0) {
 					products = Arrays.asList(storedProducts);
 				} else {
-					products = BugzillaRepositoryUtil.getProductList(repository.getUrl(), repository.getUserName(), repository.getPassword(), repository.getCharacterEncoding());
+					products = BugzillaRepositoryUtil.getProductList(repository.getUrl(), MylarTaskListPlugin
+							.getDefault().getProxySettings(), repository.getUserName(), repository.getPassword(),
+							repository.getCharacterEncoding());
 				}
 				bugWizard.model.setConnected(true);
 				bugWizard.model.setParsedProductsStatus(true);
@@ -206,7 +213,9 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 		// try to get the attributes from the bugzilla server
 		try {
 			if (!model.hasParsedAttributes() || !model.getProduct().equals(prevProduct)) {
-				BugzillaRepositoryUtil.setupNewBugAttributes(repository.getUrl(), repository.getUserName(), repository.getPassword(), model, null);
+				BugzillaRepositoryUtil.setupNewBugAttributes(repository.getUrl(), MylarTaskListPlugin.getDefault()
+						.getProxySettings(), repository.getUserName(), repository.getPassword(), model, repository
+						.getCharacterEncoding());
 				model.setParsedAttributesStatus(true);
 			}
 

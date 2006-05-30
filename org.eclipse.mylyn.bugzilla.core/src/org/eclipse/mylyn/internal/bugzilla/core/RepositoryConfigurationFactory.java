@@ -11,26 +11,24 @@
 
 package org.eclipse.mylar.internal.bugzilla.core;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringReader;
+import java.net.Proxy;
 import java.net.URL;
-import java.net.URLConnection;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+
+import javax.security.auth.login.LoginException;
 
 import org.xml.sax.ErrorHandler;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * Reads bugzilla product configuration from config.cgi on server in RDF format.
  * 
  * @author Rob Elves
  */
-public class RepositoryConfigurationFactory {
+public class RepositoryConfigurationFactory extends AbstractReportFactory {
 
 	private static final String CONFIG_RDF_URL = "/config.cgi?ctype=rdf";
 
@@ -44,33 +42,18 @@ public class RepositoryConfigurationFactory {
 		if (instance == null) {
 			instance = new RepositoryConfigurationFactory();
 		}
+		instance.setClean(true);
 		return instance;
 	}
 
-	public RepositoryConfiguration getConfiguration(String repositoryUrl, String userName, String password, String encoding) throws IOException {
+	public RepositoryConfiguration getConfiguration(String repositoryUrl, Proxy proxySettings, String userName,
+			String password, String encoding) throws IOException, KeyManagementException, LoginException,
+			NoSuchAlgorithmException {
 		String configUrlStr = repositoryUrl + CONFIG_RDF_URL;
 		configUrlStr = BugzillaRepositoryUtil.addCredentials(configUrlStr, userName, password);
-		URLConnection connection = new URL(configUrlStr).openConnection();
-		
-		BufferedReader in;
-		if (encoding != null) {
-			in = new BufferedReader(new InputStreamReader(connection.getInputStream(), encoding));
-		} else {
-			in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-		}		
-
+		URL url = new URL(configUrlStr);
 		SaxConfigurationContentHandler contentHandler = new SaxConfigurationContentHandler();
-
-		try {
-			StringBuffer result = XmlCleaner.clean(in);
-			StringReader strReader = new StringReader(result.toString());
-			XMLReader reader = XMLReaderFactory.createXMLReader();
-			reader.setErrorHandler(new SaxErrorHandler());
-			reader.setContentHandler(contentHandler);
-			reader.parse(new InputSource(strReader));
-		} catch (SAXException e) {
-			throw new IOException("Unable to read server configuration.");
-		}
+		collectResults(url, proxySettings, encoding, contentHandler);
 		return contentHandler.getConfiguration();
 
 	}
@@ -104,12 +87,14 @@ public class RepositoryConfigurationFactory {
 
 		public void error(SAXParseException exception) throws SAXException {
 			throw exception;
-//			MylarStatusHandler.fail(exception, "ServerConfigurationFactory: " + exception.getLocalizedMessage(), false);
+			// MylarStatusHandler.fail(exception, "ServerConfigurationFactory: "
+			// + exception.getLocalizedMessage(), false);
 		}
 
 		public void fatalError(SAXParseException exception) throws SAXException {
 			throw exception;
-//			MylarStatusHandler.fail(exception, "ServerConfigurationFactory: " + exception.getLocalizedMessage(), false);
+			// MylarStatusHandler.fail(exception, "ServerConfigurationFactory: "
+			// + exception.getLocalizedMessage(), false);
 		}
 
 		public void warning(SAXParseException exception) throws SAXException {

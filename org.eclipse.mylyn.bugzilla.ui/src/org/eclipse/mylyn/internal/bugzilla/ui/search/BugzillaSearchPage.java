@@ -1320,8 +1320,11 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 				MessageDialog.openError(null, "Connection Error", e.getMessage()
 						+ "\nPlease check your settings in the bugzilla preferences. ");
 				return;
-			} catch (OperationCanceledException exception) {
-				System.err.println("Cancelled");
+			} catch (OperationCanceledException exception) {				
+				return;
+			} catch (Exception e) {
+				MessageDialog.openError(null, "Error updating search options", "Error was : "+e.getMessage());				
+				return;
 			} finally {
 			
 				monitor.done();

@@ -11,8 +11,6 @@
 
 package org.eclipse.mylar.bugzilla.tests;
 
-import java.io.IOException;
-
 import junit.framework.TestCase;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
@@ -32,10 +30,10 @@ public class BugzillaConfigurationTest extends TestCase {
 	}
 
 	
-	public void test222RDFProductConfig() throws IOException {
+	public void test222RDFProductConfig() throws Exception {
 		RepositoryConfigurationFactory factory = RepositoryConfigurationFactory.getInstance();
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
-		RepositoryConfiguration config = factory.getConfiguration(repository.getUrl(), repository.getUserName(), repository.getPassword(), null);
+		RepositoryConfiguration config = factory.getConfiguration(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
 		assertNotNull(config);
 		assertEquals("2.22", config.getInstallVersion());
 		assertEquals(7, config.getStatusValues().size());
@@ -51,10 +49,10 @@ public class BugzillaConfigurationTest extends TestCase {
 		assertEquals(0, config.getTargetMilestones("TestProduct").size());
 	}
 		
-	public void test2201RDFProductConfig() throws IOException {
+	public void test2201RDFProductConfig() throws Exception {
 		RepositoryConfigurationFactory factory = RepositoryConfigurationFactory.getInstance();
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_2201_URL);
-		RepositoryConfiguration config = factory.getConfiguration(repository.getUrl(), repository.getUserName(), repository.getPassword(), null);
+		RepositoryConfiguration config = factory.getConfiguration(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
 		assertNotNull(config);
 		assertEquals("2.20.1", config.getInstallVersion());
 		assertEquals(7, config.getStatusValues().size());
@@ -70,10 +68,10 @@ public class BugzillaConfigurationTest extends TestCase {
 		// assertEquals(1, config.getTargetMilestones("TestProduct").size());
 	}
 	
-	public void test220RDFProductConfig() throws IOException {
+	public void test220RDFProductConfig() throws Exception {
 		RepositoryConfigurationFactory factory = RepositoryConfigurationFactory.getInstance();
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_220_URL);
-		RepositoryConfiguration config = factory.getConfiguration(repository.getUrl(), repository.getUserName(), repository.getPassword(), null);
+		RepositoryConfiguration config = factory.getConfiguration(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
 		assertNotNull(config);
 		assertEquals("2.20", config.getInstallVersion());
 		assertEquals(7, config.getStatusValues().size());
@@ -89,10 +87,10 @@ public class BugzillaConfigurationTest extends TestCase {
 		// assertEquals(1, config.getTargetMilestones("TestProduct").size());
 	}
 	
-	public void test218RDFProductConfig() throws IOException {
+	public void test218RDFProductConfig() throws Exception {
 		RepositoryConfigurationFactory factory = RepositoryConfigurationFactory.getInstance();
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_218_URL);
-		RepositoryConfiguration config = factory.getConfiguration(repository.getUrl(), repository.getUserName(), repository.getPassword(), null);
+		RepositoryConfiguration config = factory.getConfiguration(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
 		assertNotNull(config);
 		assertEquals("2.18.5", config.getInstallVersion());
 		assertEquals(7, config.getStatusValues().size());
@@ -108,10 +106,10 @@ public class BugzillaConfigurationTest extends TestCase {
 		// assertEquals(1, config.getTargetMilestones("TestProduct").size());
 	}
 	
-	public void testEclipseRDFProductConfig() throws IOException {
+	public void testEclipseRDFProductConfig() throws Exception {
 		RepositoryConfigurationFactory factory = RepositoryConfigurationFactory.getInstance();
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
-		RepositoryConfiguration config = factory.getConfiguration(repository.getUrl(), repository.getUserName(), repository.getPassword(), null);
+		RepositoryConfiguration config = factory.getConfiguration(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
 		assertNotNull(config);
 		assertEquals("2.20.1", config.getInstallVersion());
 		assertEquals(7, config.getStatusValues().size());
