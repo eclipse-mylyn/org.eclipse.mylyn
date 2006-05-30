@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.mylar.internal.bugzilla.core.HtmlStreamTokenizer;
+
 /**
  * @author Rob Elves
  */
@@ -39,10 +41,6 @@ public class AttributeContainer implements Serializable {
 		if (!attributes.containsKey(attribute.getName())) {
 			attributeKeys.add(key);
 		}
-
-		// TODO: deal with character sets
-		//attribute.setValue(decodeStringFromCharset(attribute.getValue()));
-
 		attributes.put(key, attribute);
 	}
 	
@@ -69,7 +67,7 @@ public class AttributeContainer implements Serializable {
 	public String getAttributeValue(Object key) {
 		AbstractRepositoryReportAttribute attribute = getAttribute(key);
 		if(attribute != null) {
-			return attribute.getValue();
+			return HtmlStreamTokenizer.unescape(attribute.getValue());
 		}
 		return "";
 	}
