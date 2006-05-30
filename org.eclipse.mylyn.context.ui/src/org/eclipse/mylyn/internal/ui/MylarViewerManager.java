@@ -201,7 +201,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 			return;
 		} else if (viewer.getControl().isDisposed()) {
 			managedViewers.remove(viewer);
-		} else if (viewer.getControl().isVisible()) {
+		} else { //if (viewer.getControl().isVisible()) {
 			if (nodesToRefresh == null || nodesToRefresh.isEmpty()) {
 				if (!minor) {
 					viewer.refresh(false);

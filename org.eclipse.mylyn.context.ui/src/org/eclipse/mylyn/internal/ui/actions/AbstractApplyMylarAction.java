@@ -33,6 +33,7 @@ import org.eclipse.ui.IActionDelegate2;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Extending this class makes it possible to apply Mylar management to a
@@ -115,6 +116,9 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 	}
 
 	protected void valueChanged(IAction action, final boolean on, boolean store) {
+		if (PlatformUI.getWorkbench().isClosing()) {
+			return;
+		}
 		try {
 			MylarPlugin.getContextManager().setContextCapturePaused(true);
 			setChecked(on);
