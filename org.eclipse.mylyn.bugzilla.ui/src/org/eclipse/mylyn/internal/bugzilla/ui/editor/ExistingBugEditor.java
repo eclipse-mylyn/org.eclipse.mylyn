@@ -529,7 +529,11 @@ public class ExistingBugEditor extends AbstractBugEditor {
 			expandableComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 			Composite ecComposite = toolkit.createComposite(expandableComposite);
-			ecComposite.setLayout(new GridLayout());
+			GridLayout ecLayout = new GridLayout();
+			ecLayout.marginHeight = 0;
+			ecLayout.marginBottom = 10;
+			ecLayout.marginLeft = 10;
+			ecComposite.setLayout(ecLayout);
 			ecComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			expandableComposite.setClient(ecComposite);
 			// toolkit.paintBordersFor(expandableComposite);
@@ -579,9 +583,10 @@ public class ExistingBugEditor extends AbstractBugEditor {
 			// styledText.setFont(COMMENT_FONT);
 			// System.err.println(comment.getNumber()+" "+comment.getText());
 			TextViewer viewer = addRepositoryText(repository, ecComposite, comment.getText());
-			styledText = viewer.getTextWidget();
-
+			styledText = viewer.getTextWidget();			
 			GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(styledText);
+			
+			
 			// line wrapping
 			// GridData styledTextData = new GridData(GridData.FILL_HORIZONTAL);
 			// styledTextData.widthHint = DESCRIPTION_WIDTH;
