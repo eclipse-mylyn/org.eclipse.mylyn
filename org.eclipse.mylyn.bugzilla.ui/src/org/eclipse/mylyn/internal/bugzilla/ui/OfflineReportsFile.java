@@ -153,8 +153,11 @@ public class OfflineReportsFile {
 						if (children.length != 0) {
 							for (IDiffElement element : children) {
 								if (((DiffNode) element).getKind() == Differencer.CHANGE) {
-
-									status = BugzillaOfflineStatus.SAVED_WITH_INCOMMING_CHANGES;
+									if(reopenEditors(oldBug)) {
+										status = BugzillaOfflineStatus.SAVED;
+									} else {
+										status = BugzillaOfflineStatus.SAVED_WITH_INCOMMING_CHANGES;
+									}
 									break;
 								}
 							}
@@ -202,6 +205,21 @@ public class OfflineReportsFile {
 			}						
 		}
 		return dirtyTask;
+	}
+	
+	private boolean reopenEditors(BugzillaReport oldBug) {
+		// TODO: Move out of offline reports
+		List<MylarTaskEditor> editors = TaskUiUtil.getActiveRepositoryTaskEditors();
+		for (final MylarTaskEditor editor : editors) {						
+			TaskEditorInput input = (TaskEditorInput) editor.getEditorInput();							
+			String handle = AbstractRepositoryTask.getHandle(oldBug.getRepositoryUrl(), oldBug.getId());
+			if(input.getTask().getHandleIdentifier().equals(handle)) {							
+				TaskUiUtil.closeEditorInActivePage(input.getTask());
+				TaskUiUtil.openEditor(input.getTask(), false);
+				return true;
+			}						
+		}
+		return false;
 	}
 
 	/**
