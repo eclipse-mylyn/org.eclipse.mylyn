@@ -13,6 +13,8 @@ package org.eclipse.mylar.internal.tasklist.ui;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
@@ -21,6 +23,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.ui.editors.CategoryEditorInput;
+import org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasklist.ui.editors.TaskEditorInput;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
@@ -39,6 +42,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
@@ -272,5 +276,23 @@ public class TaskUiUtil {
 		} catch (MalformedURLException e) {
 			MessageDialog.openError(Display.getDefault().getActiveShell(), "URL not found", "URL Could not be opened");
 		}
+	}
+
+	public static List<MylarTaskEditor> getActiveRepositoryTaskEditors() {
+		List<MylarTaskEditor> repositoryTaskEditors = new ArrayList<MylarTaskEditor>();
+		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+		for (IWorkbenchWindow window : windows) {
+			IEditorReference[] editorReferences = window.getActivePage().getEditorReferences();
+			for (int i = 0; i < editorReferences.length; i++) {
+				IEditorPart editor = editorReferences[i].getEditor(false);
+				if (editor instanceof MylarTaskEditor) {
+					TaskEditorInput input = (TaskEditorInput) ((MylarTaskEditor)editor).getEditorInput();
+					if (input.getTask() instanceof AbstractRepositoryTask) {
+						repositoryTaskEditors.add((MylarTaskEditor) editor);
+					}
+				}
+			}
+		}
+		return repositoryTaskEditors;
 	}
 }

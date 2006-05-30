@@ -29,7 +29,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor;
+import org.eclipse.mylar.internal.tasklist.ui.editors.TaskEditorInput;
 import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
+import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
@@ -118,22 +123,29 @@ public class OfflineReportsFile {
 						return BugzillaOfflineStatus.ERROR;
 					}
 
+					ITask dirtyTask = getDirtyTask(oldBug);
+					
+					
 					if (in.getCompareResult() == null) {
 						status = BugzillaOfflineStatus.SAVED;
-					} else if (oldBug.hasChanges()) {
+					} else if (oldBug.hasChanges() || dirtyTask != null) {
 						if (!MessageDialog
 								.openQuestion(
 										null,
 										"Update Local Copy",
-										"Local copy of Bug# "
-												+ entry.getId()
-												+ " Has Changes.\nWould you like to override local changes? Note: if you select No, your added comment will be saved with the updated bug, but all other changes will be lost.")) {
+										"Local copy of Report "
+												+ entry.getId() + " on "+entry.getRepositoryUrl()
+												+ " has changes.\nWould you like to override local changes? \n\nNote: if you select No, only the new comment will be saved with the updated bug, all other changes will be lost.")) {
 							((BugzillaReport) entry).setNewComment(((BugzillaReport) oldBug).getNewComment());
 							((BugzillaReport) entry).setHasChanged(true);
-							status = BugzillaOfflineStatus.CONFLICT;
+							status = BugzillaOfflineStatus.CONFLICT;							
 						} else {
 							((BugzillaReport) entry).setHasChanged(false);
-							status = BugzillaOfflineStatus.SAVED;
+							status = BugzillaOfflineStatus.SAVED;							
+						}	
+						if(dirtyTask != null) {								
+							TaskUiUtil.closeEditorInActivePage(dirtyTask);
+							TaskUiUtil.openEditor(dirtyTask, false);
 						}
 					} else {
 						DiffNode node = (DiffNode) in.getCompareResult();
@@ -175,6 +187,21 @@ public class OfflineReportsFile {
 			throw new CoreException(runtimestatus);
 		}
 		return status;
+	}
+
+	private ITask getDirtyTask(BugzillaReport oldBug) {
+		// TODO: Move out of offline reports
+		ITask dirtyTask = null;
+		List<MylarTaskEditor> editors = TaskUiUtil.getActiveRepositoryTaskEditors();
+		for (final MylarTaskEditor editor : editors) {						
+			TaskEditorInput input = (TaskEditorInput) editor.getEditorInput();							
+			String handle = AbstractRepositoryTask.getHandle(oldBug.getRepositoryUrl(), oldBug.getId());
+			if(input.getTask().getHandleIdentifier().equals(handle) && editor.isDirty()) {							
+				dirtyTask = input.getTask();
+				break;
+			}						
+		}
+		return dirtyTask;
 	}
 
 	/**
