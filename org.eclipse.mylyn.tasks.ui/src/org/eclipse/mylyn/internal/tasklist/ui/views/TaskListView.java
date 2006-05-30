@@ -692,11 +692,11 @@ public class TaskListView extends ViewPart {
 						}
 						if (task != null) {
 							if (task.isActive()) {
-								new TaskDeactivateAction().run();
+								new TaskDeactivateAction().run(task);
 								nextTaskAction.setEnabled(taskHistory.hasNext());
 								previousTaskAction.setEnabled(taskHistory.hasPrevious());
 							} else {
-								new TaskActivateAction().run();
+								new TaskActivateAction().run(task);
 								addTaskToHistory(task);
 							}
 						}
