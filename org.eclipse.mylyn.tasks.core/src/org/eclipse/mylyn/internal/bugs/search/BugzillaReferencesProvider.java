@@ -99,8 +99,8 @@ public class BugzillaReferencesProvider extends AbstractRelationProvider {
 					if (o instanceof BugzillaReportElement) {
 						BugzillaReportElement bugzillaNode = (BugzillaReportElement) o;
 						final String handle = bugzillaNode.getElementHandle();
-						if (MylarBugsPlugin.getDefault().getCache().getCached(handle) == null)
-							cache(handle, bugzillaNode);
+//						if (MylarBugsPlugin.getDefault().getCache().getCached(handle) == null)
+//							cache(handle, bugzillaNode);
 
 						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 							public void run() {

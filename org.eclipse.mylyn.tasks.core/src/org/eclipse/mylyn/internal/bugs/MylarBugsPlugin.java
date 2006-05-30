@@ -36,7 +36,7 @@ public class MylarBugsPlugin extends AbstractUIPlugin {
 
 	private static MylarBugsPlugin plugin;
 
-	private BugzillaReportCache cache;
+//	private BugzillaReportCache cache;
 
 	public MylarBugsPlugin() {
 		plugin = this;
@@ -47,8 +47,8 @@ public class MylarBugsPlugin extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		cache = new BugzillaReportCache();
-		cache.readCacheFile();
+//		cache = new BugzillaReportCache();
+//		cache.readCacheFile();
 
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window != null) {
@@ -105,7 +105,7 @@ public class MylarBugsPlugin extends AbstractUIPlugin {
 
 	}
 
-	public BugzillaReportCache getCache() {
-		return cache;
-	}
+//	public BugzillaReportCache getCache() {
+//		return cache;
+//	}
 }
