@@ -60,13 +60,6 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 				if (object instanceof IProjectNature || object instanceof IProject) {
 					return true;
 				}
-//				TreeItem[] items = ((Tree)temporarilyUnfiltered).getItems();
-//				((StructuredViewer)viewer).get
-//				for (int i = 0; i < items.length; i++) {
-//					if (items[i].getData()!= null && items[i].getData().equals(object)) {
-//						return true;
-//					}
-//				}
 			}
 
 			IMylarElement element = null;
@@ -80,8 +73,8 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 				if (isImplicitlyInteresting(object, bridge)) {
 					return true;
 				}
-				 
-				if (!object.getClass().getName().equals("java.lang.Object")) {
+				
+				if (!object.getClass().getName().equals(Object.class.getCanonicalName())) {
 					String handle = bridge.getHandleIdentifier(object);
 					element = MylarPlugin.getContextManager().getElement(handle);
 				} else {

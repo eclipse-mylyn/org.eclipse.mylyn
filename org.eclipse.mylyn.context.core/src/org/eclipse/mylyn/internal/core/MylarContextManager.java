@@ -825,8 +825,9 @@ public class MylarContextManager {
 				changeValue = (-1 * originalValue) + 1;
 			} else {
 				// make uninteresting
-				if (originalValue >= 0)
+				if (originalValue >= 0) {
 					changeValue = (-1 * originalValue) - 1;
+				}
 
 				// reduce interest of children
 				for (String childHandle : bridge.getChildHandles(element.getHandleIdentifier())) {
@@ -839,9 +840,9 @@ public class MylarContextManager {
 		} else {
 			if (!forceLandmark && (originalValue > MylarContextManager.getScalingFactors().getLandmark())) {
 				changeValue = 0;
-			} else { // make it a landmark by setting interest to 2 x landmark interest
+			} else { 
+				// make it a landmark by setting interest to 2 x landmark interest
 				if (element != null && bridge.canBeLandmark(element.getHandleIdentifier())) {
-//						&& !bridge.getContentType(element.getHandleIdentifier()).equals(MylarPlugin.CONTENT_TYPE_ANY)) {
 					changeValue = (2*MylarContextManager.getScalingFactors().getLandmark()) - originalValue + 1;
 				} else { 
 					return false;
