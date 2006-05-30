@@ -16,6 +16,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
@@ -155,8 +157,33 @@ public class TaskUiUtil {
 							"Repository does not have credentials set, verify via " + TaskRepositoriesView.NAME + " view");
 				}
 				if (connector != null) {
-					TaskUiUtil.openEditor(task, false);
-					Job refreshJob = connector.synchronize((AbstractRepositoryTask) task, forceUpdate, null);
+					Job refreshJob = connector.synchronize((AbstractRepositoryTask) task, forceUpdate,
+							new IJobChangeListener() {
+
+								public void done(IJobChangeEvent event) {
+									TaskUiUtil.openEditor(task, false);
+								}
+
+								public void aboutToRun(IJobChangeEvent event) {
+									// ignore
+								}
+
+								public void awake(IJobChangeEvent event) {
+									// ignore
+								}
+
+								public void running(IJobChangeEvent event) {
+									// ignore
+								}
+
+								public void scheduled(IJobChangeEvent event) {
+									// ignore
+								}
+
+								public void sleeping(IJobChangeEvent event) {
+									// ignore
+								}
+							});
 					if (refreshJob == null) {
 						TaskUiUtil.openEditor(task, false);
 					}
