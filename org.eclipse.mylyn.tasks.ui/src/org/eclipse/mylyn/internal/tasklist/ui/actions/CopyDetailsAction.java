@@ -25,7 +25,7 @@ import org.eclipse.swt.custom.StyledText;
 /**
  * @author Mik Kersten
  */
-public class CopyDescriptionAction extends Action {
+public class CopyDetailsAction extends Action {
 
 	private static final String LABEL = "Copy Details";
 
@@ -33,7 +33,7 @@ public class CopyDescriptionAction extends Action {
 
 	private TaskListView view;
 
-	public CopyDescriptionAction(TaskListView view) {
+	public CopyDetailsAction(TaskListView view) {
 		this.view = view;
 		setText(LABEL);
 		setToolTipText(LABEL);

@@ -210,12 +210,13 @@
                menubarPath="additions"
                tooltip="Synchronize with Repository">
          </action>
-    <action
-          class="org.eclipse.mylar.internal.tasklist.ui.actions.CopyDescriptionAction"
+         <!--
+    	<action
+          class="org.eclipse.mylar.internal.tasklist.ui.actions.CopyDetailsAction"
           id="org.eclipse.mylar.tasklist.copy.details"
           label="Copy Details"
           style="push"/>
-  			
+  		-->
 	    </viewContribution> 
 	</extension>
 

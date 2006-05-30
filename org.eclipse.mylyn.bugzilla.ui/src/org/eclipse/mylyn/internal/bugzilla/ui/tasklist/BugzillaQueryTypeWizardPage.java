@@ -14,6 +14,7 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchPage;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -26,13 +27,13 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class BugzillaQueryTypeWizardPage extends WizardPage {
 
-	private static final String BUTTON_LABEL_QUERY = "Create query from URL";
+	private static final String BUTTON_LABEL_QUERY = "Create query from existing URL";
 
 	private static final String BUTTON_LABEL_FORM = "Create query using form";
 
-	private static final String TITLE = "Choose Bugzilla query type";
+	private static final String TITLE = "Choose query type";
 
-	private static final String DESCRIPTION = "Select query type below.";
+	private static final String DESCRIPTION = "Select from the available query types.";
 
 	private Button buttonCustom;
 
@@ -48,10 +49,9 @@ public class BugzillaQueryTypeWizardPage extends WizardPage {
 		super(TITLE);
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);
+		setImageDescriptor(TaskListImages.BANNER_REPOSITORY);
 		customPage = new BugzillaCustomQueryWizardPage(repository);		
 		searchPage = new BugzillaSearchPage(repository);
-		
-		
 	}
 
 	public void createControl(Composite parent) {

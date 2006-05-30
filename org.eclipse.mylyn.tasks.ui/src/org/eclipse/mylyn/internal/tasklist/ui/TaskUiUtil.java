@@ -22,6 +22,7 @@ import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.ui.editors.CategoryEditorInput;
 import org.eclipse.mylar.internal.tasklist.ui.editors.TaskEditorInput;
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
@@ -33,6 +34,7 @@ import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.Task;
 import org.eclipse.mylar.provisional.tasklist.TaskCategory;
+import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
@@ -140,8 +142,16 @@ public class TaskUiUtil {
 
 			boolean forceUpdate = false;
 			if (task instanceof AbstractRepositoryTask) {
+				String repositoryKind = ((AbstractRepositoryTask) task).getRepositoryKind();
 				final AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager()
-						.getRepositoryConnector(((AbstractRepositoryTask) task).getRepositoryKind());
+						.getRepositoryConnector(repositoryKind);
+				
+				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(repositoryKind, ((AbstractRepositoryTask) task).getRepositoryUrl());
+				if (!repository.hasCredentials()) {
+					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+							MylarTaskListPlugin.TITLE_DIALOG, 
+							"Repository does not have credentials set, verify via " + TaskRepositoriesView.NAME + " view");
+				}
 				if (connector != null) {
 					Job refreshJob = connector.synchronize((AbstractRepositoryTask) task, forceUpdate,
 							new IJobChangeListener() {

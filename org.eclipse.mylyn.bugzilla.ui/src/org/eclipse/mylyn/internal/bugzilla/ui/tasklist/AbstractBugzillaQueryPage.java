@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -28,12 +29,20 @@ public abstract class AbstractBugzillaQueryPage extends WizardPage {
 
 	private static final String TITLE_QUERY_TITLE = "Query Title";
 
+	private static final String TITLE = "Enter query parameters";
+
+	private static final String DESCRIPTION = "If attributes are blank or stale press the Update button.";
+	
 	private Text title;
 
 	private String titleString = "";
 
 	public AbstractBugzillaQueryPage(String wizardTitle) {
 		this(wizardTitle, "");
+		setTitle(TITLE);
+		setDescription(DESCRIPTION);
+		setImageDescriptor(TaskListImages.BANNER_REPOSITORY);
+		setPageComplete(false);
 	}
 
 	public AbstractBugzillaQueryPage(String wizardTitle, String queryTitle) {
@@ -42,9 +51,8 @@ public abstract class AbstractBugzillaQueryPage extends WizardPage {
 	}
 
 	public void createControl(Composite parent) {
-
 		createTitleGroup(parent);
-
+		title.setFocus();
 	}
 
 	private void createTitleGroup(Composite composite) {
@@ -66,12 +74,10 @@ public abstract class AbstractBugzillaQueryPage extends WizardPage {
 
 			public void keyPressed(KeyEvent e) {
 				// ignore
-
 			}
 
 			public void keyReleased(KeyEvent e) {
 				setPageComplete(canFlipToNextPage());
-
 			}
 		});
 	}

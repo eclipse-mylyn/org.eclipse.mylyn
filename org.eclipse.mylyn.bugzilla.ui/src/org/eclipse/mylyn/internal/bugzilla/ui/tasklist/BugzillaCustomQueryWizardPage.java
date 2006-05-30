@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
+import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
@@ -24,14 +25,15 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Rob Elves
+ * @author Mik Kersten
  */
 public class BugzillaCustomQueryWizardPage extends AbstractBugzillaQueryPage {
 
-	private static final String LABEL_CUSTOM_QUERY = "Custom Query";
+	private static final String LABEL_CUSTOM_QUERY = "Enter query URL";
 
 	private static final String TITLE = "Create query from URL";
 
-	private static final String DESCRIPTION = "Enter the name and URL for the query";
+//	private static final String DESCRIPTION = "Enter the name and URL for the query";
 
 	private Text queryText;
 
@@ -46,14 +48,16 @@ public class BugzillaCustomQueryWizardPage extends AbstractBugzillaQueryPage {
 		this.query = query;
 		this.repository = repository;
 		setTitle(LABEL_CUSTOM_QUERY);
-		setDescription(DESCRIPTION);
+//		setDescription(DESCRIPTION);
+		setImageDescriptor(TaskListImages.BANNER_REPOSITORY);
 	}
 
 	public BugzillaCustomQueryWizardPage(TaskRepository repository) {
 		super(TITLE);
 		this.repository = repository;
 		setTitle(LABEL_CUSTOM_QUERY);
-		setDescription(DESCRIPTION);
+//		setDescription(DESCRIPTION);
+		setImageDescriptor(TaskListImages.BANNER_REPOSITORY);
 	}
 
 	public void createControl(Composite parent) {

@@ -73,10 +73,6 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 
 	private static final String NUM_DAYS_POSITIVE = "Number of days must be a positive integer. ";
 
-	private static final String TITLE = "New Bugzilla Query";
-
-	private static final String DESCRIPTION = "Enter query parameters. If attributes are blank or stale press the Update button.";
-
 	private static final String TITLE_BUGZILLA_QUERY = "Bugzilla Query";
 
 	private static final String MAX_HITS = "100";
@@ -137,26 +133,27 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 
 	public BugzillaSearchPage() {
 		super(TITLE_BUGZILLA_QUERY);
-		setTitle(TITLE);
-		setDescription(DESCRIPTION);
-		setPageComplete(false);
+//		setTitle(TITLE);
+//		setDescription(DESCRIPTION);
+//		setPageComplete(false);
 	}
 
 	public BugzillaSearchPage(TaskRepository repository) {
 		super(TITLE_BUGZILLA_QUERY);
-		setTitle(TITLE);
-		setDescription(DESCRIPTION);
 		this.repository = repository;
-		setPageComplete(false);
+//		setTitle(TITLE);
+//		setDescription(DESCRIPTION);
+//		setImageDescriptor(TaskListImages.BANNER_REPOSITORY);
+//		setPageComplete(false);
 	}
 
 	public BugzillaSearchPage(TaskRepository repository, BugzillaRepositoryQuery origQuery) {
 		super(TITLE_BUGZILLA_QUERY, origQuery.getDescription());
 		originalQuery = origQuery;
 		this.repository = repository;
-		setTitle(TITLE);
-		setDescription(DESCRIPTION);
-		setPageComplete(false);
+//		setTitle(TITLE);
+//		setDescription(DESCRIPTION);
+//		setPageComplete(false);
 	}
 
 	public void createControl(Composite parent) {
@@ -998,8 +995,10 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 			if (scontainer != null) {
 				scontainer.setPerformActionEnabled(canQuery());
 			}
-			summaryPattern.setFocus();
-
+			if (getWizard() == null) {
+				 // TODO: wierd check
+				summaryPattern.setFocus();
+			}
 		}
 		super.setVisible(visible);
 	}
