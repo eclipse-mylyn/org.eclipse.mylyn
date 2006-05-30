@@ -49,7 +49,6 @@ public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAct
 	
 	public ApplyMylarToBrowsingPerspectiveAction() {
 		super(new InterestFilter());
-//		INSTANCE = this;
 		globalPrefId = PREF_ID_PREFIX + "javaBrowsing";
 	}
 
@@ -66,7 +65,6 @@ public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAct
 
 	private StructuredViewer getBrowsingViewerFromActivePerspective(String id, String className) {
 		IWorkbenchPage activePage = initWindow.getActivePage();
-//		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (activePage == null)
 			return null;
 		try {

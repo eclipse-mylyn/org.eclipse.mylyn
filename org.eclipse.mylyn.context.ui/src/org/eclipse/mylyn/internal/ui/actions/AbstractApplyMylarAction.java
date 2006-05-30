@@ -63,16 +63,14 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 	}
 	
 	public IViewPart getPartForAction() {
-		if (this instanceof IWorkbenchWindowActionDelegate) {
-			throw new RuntimeException("not supported on IWorkbenchWindowActionDelegate");
-		}
-		for (IViewPart part : partMap.keySet()) {
-			AbstractApplyMylarAction action = partMap.get(part);
-			if (this == action) {
-				return part;
+		if (viewPart == null) {
+			if(this instanceof IWorkbenchWindowActionDelegate) {
+				throw new RuntimeException("not supported on IWorkbenchWindowActionDelegate");
+			} else {
+				throw new RuntimeException("error: viewPart is null");
 			}
 		}
-		return null;
+		return viewPart;
 	}
 	
 	public AbstractApplyMylarAction(InterestFilter interestFilter) {
@@ -126,7 +124,9 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 			}
 				
 			for (StructuredViewer viewer : getViewers()) {
-				MylarUiPlugin.getDefault().getViewerManager().addManagedViewer(viewer, viewPart);
+				if(viewPart != null) {
+					MylarUiPlugin.getDefault().getViewerManager().addManagedViewer(viewer, viewPart);
+				}
 				installInterestFilter(on, viewer);
 			}
 		} catch (Throwable t) {
@@ -221,8 +221,10 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 
 	public void dispose() {
 		partMap.remove(getPartForAction());
-		for (StructuredViewer viewer : getViewers()) {
-			MylarUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer, viewPart);
+		if(viewPart != null) {
+			for (StructuredViewer viewer : getViewers()) {
+				MylarUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer, viewPart);
+			}
 		}
 	} 
 
