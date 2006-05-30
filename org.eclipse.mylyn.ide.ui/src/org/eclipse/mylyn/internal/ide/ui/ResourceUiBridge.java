@@ -39,13 +39,15 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
  */
 public class ResourceUiBridge implements IMylarUiBridge {
 
-	public void open(IMylarElement node) {
-		IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
-		if (adapter == null)
+	public void open(IMylarElement element) {
+		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
+		if (bridge == null) {
 			return;
-		IResource resource = (IResource) adapter.getObjectForHandle(node.getHandleIdentifier());
-		if (resource instanceof IFile && resource.exists()) {
-			internalOpenEditor((IFile) resource, true);
+		} else {
+			IResource resource = (IResource) bridge.getObjectForHandle(element.getHandleIdentifier());
+			if (resource instanceof IFile && resource.exists()) {
+				internalOpenEditor((IFile) resource, true);
+			}
 		}
 	}
 
@@ -84,12 +86,12 @@ public class ResourceUiBridge implements IMylarUiBridge {
 					IEditorPart part = references[i].getEditor(false);
 					if (part != null) {
 						if (part instanceof AbstractTextEditor) {
-							AbstractTextEditor editor = (AbstractTextEditor)part;
+							AbstractTextEditor editor = (AbstractTextEditor) part;
 							Object adapter = editor.getEditorInput().getAdapter(IResource.class);
-							if (adapter instanceof IFile && ((IFile)adapter).equals(object)) {
+							if (adapter instanceof IFile && ((IFile) adapter).equals(object)) {
 								editor.close(true);
 							}
-						} 
+						}
 					}
 				}
 			}
@@ -107,11 +109,11 @@ public class ResourceUiBridge implements IMylarUiBridge {
 	public Object getObjectForTextSelection(TextSelection selection, IEditorPart editor) {
 		return null;
 	}
-	
+
 	public IMylarElement getElement(IEditorInput input) {
 		Object adapter = input.getAdapter(IResource.class);
 		if (adapter instanceof IFile) {
-			IFile javaElement = (IFile)adapter;
+			IFile javaElement = (IFile) adapter;
 			String handle = MylarPlugin.getDefault().getStructureBridge(javaElement).getHandleIdentifier(javaElement);
 			return MylarPlugin.getContextManager().getElement(handle);
 		} else {
