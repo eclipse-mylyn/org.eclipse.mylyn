@@ -148,18 +148,20 @@ public class TaskPlanningEditor extends EditorPart {
 				if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
-							
-							if( datePicker != null && !datePicker.isDisposed() && updateTask.getReminderDate() != null) {
+
+							if (datePicker != null && !datePicker.isDisposed() && updateTask.getReminderDate() != null) {
 								Calendar cal = Calendar.getInstance();
 								cal.setTime(updateTask.getReminderDate());
 								datePicker.setDate(cal);
 							}
-							
+
 							if (description == null)
 								return;
 							if (!description.isDisposed()) {
-								description.setText(updateTask.getDescription());
-								parentEditor.changeTitle();
+								if (!description.getText().equals(updateTask.getDescription())) {
+									description.setText(updateTask.getDescription());
+									parentEditor.changeTitle();
+								}
 							}
 							if (!priorityCombo.isDisposed()) {
 								PriorityLevel level = PriorityLevel.fromString(updateTask.getPriority());
@@ -174,7 +176,7 @@ public class TaskPlanningEditor extends EditorPart {
 								} else {
 									statusCombo.select(1);
 								}
-							}							
+							}
 							if (!(updateTask instanceof AbstractRepositoryTask) && !endDate.isDisposed()) {
 								endDate.setText(getTaskDateString(updateTask));
 							}
@@ -268,16 +270,16 @@ public class TaskPlanningEditor extends EditorPart {
 		String note = notes.getText();
 		task.setNotes(note);
 		task.setEstimatedTimeHours(estimated.getSelection());
-		if (datePicker != null && datePicker.getDate() != null) {
+		 if (datePicker != null && datePicker.getDate() != null) {
 			MylarTaskListPlugin.getTaskListManager().setReminder(task, datePicker.getDate().getTime());
 			// task.setReminderDate(datePicker.getDate().getTime());
 		} else {
 			// task.setReminderDate(null);
 			MylarTaskListPlugin.getTaskListManager().setReminder(task, null);
 		}
-		
-		//MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
-		if(parentEditor != null) {
+
+		// MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
+		if (parentEditor != null) {
 			parentEditor.notifyTaskChanged();
 		}
 
