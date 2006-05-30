@@ -34,11 +34,8 @@ import org.eclipse.ui.IViewPart;
  */
 public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction implements IPropertyChangeListener {
 
-//	public static ApplyMylarToPackageExplorerAction INSTANCE;
-
 	public ApplyMylarToPackageExplorerAction() {
 		super(new InterestFilter());
-//		INSTANCE = this;
 		configureAction();
 		MylarJavaPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
 	} 
@@ -63,16 +60,11 @@ public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction 
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
 		// TODO: get from super
 		IViewPart part = super.getPartForAction();
-//		PackageExplorerPart part = PackageExplorerPart.getFromActivePerspective();
 		if (part instanceof PackageExplorerPart) {
 			viewers.add(((PackageExplorerPart)part).getTreeViewer());
 		}
 		return viewers;
 	}
-
-//	public static ApplyMylarToPackageExplorerAction getDefault() {
-//		return INSTANCE;
-//	}
 
 	public void propertyChange(PropertyChangeEvent event) {
 		if (MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE.equals(event.getProperty())) {

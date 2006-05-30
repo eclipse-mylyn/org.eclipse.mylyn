@@ -35,17 +35,12 @@ import org.eclipse.ui.views.markers.internal.TaskView;
  */
 public class ApplyMylarToMarkerTasksAction extends AbstractApplyMylarAction {
 
-//	private static ApplyMylarToMarkerTasksAction INSTANCE;
-	
-//	private static final String TARGET_ID = "org.eclipse.ui.views.TaskList";
-
 	private StructuredViewer cachedTasksViewer = null;
 
 	private ProblemsListDoiSorter interestSorter = new ProblemsListDoiSorter();
 
 	public ApplyMylarToMarkerTasksAction() {
 		super(new MarkerInterestFilter());
-//		INSTANCE = this;
 	}
 
 	/**
@@ -57,7 +52,6 @@ public class ApplyMylarToMarkerTasksAction extends AbstractApplyMylarAction {
 		if (cachedTasksViewer == null) {
 			try {
 				IViewPart viewPart = super.getPartForAction();
-//				IViewPart viewPart = getView(TARGET_ID);
 				if (viewPart instanceof TaskView) {
 					Class infoClass = TableView.class;
 					Method method = infoClass.getDeclaredMethod("getViewer", new Class[] {});
@@ -80,10 +74,6 @@ public class ApplyMylarToMarkerTasksAction extends AbstractApplyMylarAction {
 			viewer.setLabelProvider(new MarkerViewLabelProvider((TableViewLabelProvider) currentProvider));
 		}
 	}
-
-//	public static ApplyMylarToMarkerTasksAction getDefault() {
-//		return INSTANCE;
-//	}
 
 	@Override
 	public void update() {

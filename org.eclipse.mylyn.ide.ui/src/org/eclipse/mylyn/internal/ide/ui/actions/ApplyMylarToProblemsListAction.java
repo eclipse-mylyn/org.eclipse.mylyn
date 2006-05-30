@@ -37,10 +37,6 @@ import org.eclipse.ui.views.markers.internal.TableViewLabelProvider;
  */
 public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 
-//	private static ApplyMylarToProblemsListAction INSTANCE;
-
-//	private static final String TARGET_ID = "org.eclipse.ui.views.ProblemView";
-	
 	private StructuredViewer cachedProblemsTableViewer = null;
 
 	private MarkerFilter defaultFilter = null;
@@ -49,26 +45,6 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 
 	public ApplyMylarToProblemsListAction() {
 		super(new MarkerInterestFilter());
-//		INSTANCE = this;
-
-		// IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		// workspace.addResourceChangeListener(new IResourceChangeListener() {
-		// public void resourceChanged(IResourceChangeEvent event) {
-		// if (event.getType() == IResourceChangeEvent.POST_CHANGE) {
-		// IWorkbench workbench = PlatformUI.getWorkbench();
-		// workbench.getDisplay().asyncExec(new Runnable() {
-		// public void run() {
-		// StructuredViewer viewer = getViewer();
-		// verifySorterInstalled(viewer);
-		// if (viewer != null && viewer.getSorter() != null) {
-		// getViewer().getSorter().sort(getViewer(),
-		// ((TableViewer)getViewer()).getTable().getItems());
-		// }
-		// }
-		// });
-		// };
-		// }
-		// });
 	}
 
 	/**
@@ -80,7 +56,6 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 		if (cachedProblemsTableViewer == null) {
 			try {
 				IViewPart viewPart = super.getPartForAction();
-//				IViewPart viewPart = getView(TARGET_ID);
 				if (viewPart != null) {
 					Class infoClass = TableView.class;// problemView.getClass();
 					Method method = infoClass.getDeclaredMethod("getViewer", new Class[] {});
@@ -96,10 +71,6 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 			viewers.add(cachedProblemsTableViewer);
 		return viewers;
 	}
-
-//	public static ApplyMylarToProblemsListAction getDefault() {
-//		return INSTANCE;
-//	}
 
 	@Override
 	public void update() {
@@ -139,7 +110,6 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 	protected void toggleMarkerFilter(boolean enabled) {
 		try {
 			IViewPart view = super.getPartForAction();
-//			IViewPart view = getView(TARGET_ID);
 //				getProblemView();
 			if (view instanceof ProblemView) {
 				Class viewClass = view.getClass();

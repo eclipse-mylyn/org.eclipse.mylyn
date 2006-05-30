@@ -27,13 +27,8 @@ import org.eclipse.ui.navigator.CommonNavigator;
  */
 public class ApplyMylarToProjectExplorerAction extends AbstractApplyMylarAction {
 
-//	private static ApplyMylarToProjectExplorerAction INSTANCE;
-
-//	private static final String TARGET_ID = "org.eclipse.ui.navigator.ProjectExplorer";
-	
 	public ApplyMylarToProjectExplorerAction() {
 		super(new InterestFilter());
-//		INSTANCE = this;
 	}
 
 	protected ApplyMylarToProjectExplorerAction(InterestFilter filter) {
@@ -51,10 +46,6 @@ public class ApplyMylarToProjectExplorerAction extends AbstractApplyMylarAction 
 		}
 		return viewers;
 	}
-
-//	public static ApplyMylarToProjectExplorerAction getDefault() {
-//		return INSTANCE;
-//	}
 
 	public void propertyChange(PropertyChangeEvent event) {
 		// TODO Auto-generated method stub

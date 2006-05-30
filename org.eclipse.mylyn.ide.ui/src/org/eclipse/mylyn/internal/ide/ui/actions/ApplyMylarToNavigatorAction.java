@@ -27,11 +27,8 @@ import org.eclipse.ui.views.navigator.ResourceNavigator;
  */
 public class ApplyMylarToNavigatorAction extends AbstractApplyMylarAction {
 
-//	private static ApplyMylarToNavigatorAction INSTANCE;
-
 	public ApplyMylarToNavigatorAction() {
 		super(new InterestFilter());
-//		INSTANCE = this;
 	}
 
 	@Override
@@ -42,10 +39,6 @@ public class ApplyMylarToNavigatorAction extends AbstractApplyMylarAction {
 			viewers.add(navigator.getTreeViewer());
 		return viewers;
 	}
-
-//	public static ApplyMylarToNavigatorAction getDefault() {
-//		return INSTANCE;
-//	}
 
 	public void propertyChange(PropertyChangeEvent event) {
 		// ignore

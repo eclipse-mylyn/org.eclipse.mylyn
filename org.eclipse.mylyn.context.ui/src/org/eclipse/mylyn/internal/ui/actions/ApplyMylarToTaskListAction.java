@@ -32,8 +32,6 @@ import org.eclipse.mylar.provisional.ui.InterestFilter;
  * @author Mik Kersten
  */
 public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction {
-
-//	private static ApplyMylarToTaskListAction INSTANCE;
 	
 	private TaskListInterestFilter taskListInterestFilter = new TaskListInterestFilter();
 	
@@ -45,7 +43,6 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction {
 	
 	public ApplyMylarToTaskListAction() {
 		super(new InterestFilter());
-//		INSTANCE = this;
 	}
 	
 	@Override
@@ -85,9 +82,6 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction {
 		// ignore
 	}
 
-//	public static ApplyMylarToTaskListAction getDefault() {
-//		return INSTANCE;
-//	}
 	
 	@Override
 	public List<Class> getPreservedFilters() {
