@@ -10,6 +10,8 @@
 	<ul>
 		<li><a href="#configuration-eclipse">Recommended configuration</a></li>
 		<li><a href="#install">Install troubleshooting</a></li>
+		<li><a href="#install-linux">Installing on Linux</a>&nbsp; 
+		</li>
 		<li><a href="#uninstall">Uninstall troubleshooting</a></li>
 		<li><a href="#tasklist-backup">Task backup and restore</a></li>
 	</ul>
@@ -17,8 +19,6 @@
 <ul>
 	<li><a href="#performance-summary">Performance profile</a></li>
 	<li><a href="#subversion-clients">Subversion limitations</a></li>
-<li><a href="#setup-linux-browser">Configuring Internal Browser on Linux</a>&nbsp; 
-		</li>
 </ul>
 	<p><b>Working with Context</b></p>
 <ul>
@@ -147,7 +147,7 @@ installing can help avoid this problem.&nbsp; If that does not work see the
 feature configuration troubleshooting below.</p><b>Incompatible VM (e.g. JDK 1.4)</b>: in this case you'll errors like the following in your log file.&nbsp; To 
 check JDK version that Eclipse was launched with to to Help -&gt; About Eclipse SDK 
 -&gt; Configuration Details and verify that the java.vm.version is 1.5.&nbsp; Mac 
-users should refer to the last
+users should refer to the last comment on
 <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=116347#c4">bug 1163477</a> 
 for instructions on how to change the 1.4 default.<p>
 <tt>&nbsp;&nbsp;&nbsp;   Root exception:
@@ -192,25 +192,14 @@ version.</p>
 <p>
 <img border="0" src="images/faq/eclipse-manage-configuration.gif" width="679" height="335"></p>
 	<hr>
-	<h3>&nbsp;</h3>
-	<h3><a name="uninstall">Uninstall Troubleshooting</a></h3>
-	<p>
-On Eclipse 3.1, you may need to reset the Java editor to be default for &quot;.java&quot; 
-again via: <i>Preferences -&gt; General -&gt; Editors -&gt; File Associations
-</i> </p>
-	<p>
-On Eclipse 3.2, you may need to ensure that the &quot;Java Completions&quot; and &quot;Java 
-Types&quot; proposal categories are included in the default proposals via: 
-<i>Preferences -&gt; Java -&gt; Editor -&gt; Content Assist -&gt; Advanced</i> (<a href="#content-assist-duplication">see 
-screenshot</a>) <i>-&gt; Restore Defaults</i></p>
-	<hr>
 	<p>
 &nbsp;</p>
 
 
-<h3><a name="setup-linux-browser">Configuring Internal Browser on Linux</a></h3>
-	<p>Mylar Task Management features make user of the Internal Browser.&nbsp; 
-	These instructions have been tested on Fedora Core 4</p>
+<h3><a name="install-linux">Installing on Linux</a></h3>
+	<p>Mylar Task Management features make user of Eclipse's Internal Browser 
+	which may require additional install steps.&nbsp; The following have been 
+	verified on Fedora Core.</p>
 	<ol>
 		<li>Run Mozilla (not firefox) to confirm that it works.</li>
 		<li>Confirm the location of your Mozilla install ( /usr/lib/mozilla-1.7.12 
@@ -233,8 +222,36 @@ screenshot</a>) <i>-&gt; Restore Defaults</i></p>
 	using their search facility.&nbsp; References:
 	<a title="http://www.eclipse.org/swt/faq.php" href="http://www.eclipse.org/swt/faq.php">
 	SWT FAQ</a></p>
+	<hr>
+
+
+<h3>&nbsp;</h3>
+	<h3><a name="install-macos">Installing on MacOS</a></h3>
+	<p>If you see errors like the following it may be due to Xerces missing from 
+	the Mac JDK so you may need to add it to your default classpath.&nbsp; 
+	Please refer to and comment on
+	<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=144287">bug 144287</a> 
+	if you see this problem.</p>
+<blockquote>
+	<p>Could not create Bugzilla editor input<br>
+	java.io.IOException: SAX2 driver class org.apache.xerces.parsers.SAXParser 
+	not found</p>
+</blockquote>
+	<p>To ensure that you are using the 1.5 VM refer to the last comment on
+<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=116347#c4">bug 1163477</a> 
+for instructions on how to change the 1.4 default.</p>
+	<hr>
+	<p>&nbsp;</p>
+	<h3><a name="uninstall">Uninstall Troubleshooting</a></h3>
 	<p>
-&nbsp;</p>
+On Eclipse 3.1, you may need to reset the Java editor to be default for &quot;.java&quot; 
+again via: <i>Preferences -&gt; General -&gt; Editors -&gt; File Associations
+</i> </p>
+	<p>
+On Eclipse 3.2, you may need to ensure that the &quot;Java Completions&quot; and &quot;Java 
+Types&quot; proposal categories are included in the default proposals via: 
+<i>Preferences -&gt; Java -&gt; Editor -&gt; Content Assist -&gt; Advanced</i> (<a href="#content-assist-duplication">see 
+screenshot</a>) <i>-&gt; Restore Defaults</i></p>
 	<hr>
 	<p>
 &nbsp;</p>
@@ -430,14 +447,13 @@ manually in the preference page.&nbsp; Proposals will disappear if&nbsp; a
 workspace into which Mylar was installed is run without Mylar installed (e.g. as 
 a result of uninstalling or multiple Eclipses using same workspace, see Platform
 <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=140416">bug 140416</a>).</p>
-	<p>If after invoking content assist you see an error message dialog that 
-	states &quot;The extension tool too long to return from the 'computeCompletionProposals()' 
-	operation&quot;, this is most likely due to something interrupting the proposal 
-	operation (e.g. garbage collection).&nbsp; Ignore it if it does not recur, 
-	increase Eclipse's memory if it does (e.g via -Xmx384M command line 
-	argument), or see
-	<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=141457">bug 141457</a> 
-	for more details.</p>
+<p>If after invoking content assist you see an error message dialog that states 
+&quot;The extension tool too long to return from the 'computeCompletionProposals()' 
+operation&quot;, this is most likely due to something interrupting the proposal 
+operation (e.g. garbage collection).&nbsp; Ignore it if it does not recur, 
+increase Eclipse's memory if it does (e.g via -Xmx384M command line argument), 
+or see <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=141457">bug 141457</a> 
+for more details.</p>
 <p>
 			<img border="0" src="images/faq/content-assist.gif"></p>
 	<hr>
