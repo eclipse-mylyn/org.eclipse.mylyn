@@ -80,7 +80,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 		assertEquals("Windows", report.getAttribute(BugzillaReportElement.OP_SYS).getValue());
 		// first comment (#0) is the description so this value is always 1 greater
 		// than what is shown on the report ui
-		assertEquals(1, report.getComments().size());
+		assertEquals(2, report.getComments().size());
 		assertEquals("search-match-test 1", report.getComments().get(0).getAttribute(
 				BugzillaReportElement.THETEXT).getValue());
 //		assertEquals(15, report.getAttachments().size());
@@ -115,11 +115,11 @@ public class RepositoryReportFactoryTest extends TestCase {
 		assertEquals(""+bugid, report.getAttribute(BugzillaReportElement.BUG_ID).getValue());
 		assertEquals("NEW", report.getAttribute(BugzillaReportElement.BUG_STATUS).getValue());
 		assertEquals("2006-05-23 17:46", report.getAttribute(BugzillaReportElement.CREATION_TS).getValue());
-		assertEquals("2006-05-23 17:46:24", report.getAttribute(BugzillaReportElement.DELTA_TS).getValue());
+		assertEquals("2006-05-30 18:56:24", report.getAttribute(BugzillaReportElement.DELTA_TS).getValue());
 		assertEquals("---", report.getAttribute(BugzillaReportElement.TARGET_MILESTONE).getValue());
 		assertEquals("relves@cs.ubc.ca", report.getAttribute(BugzillaReportElement.REPORTER).getValue());
 		assertEquals("nhapke@cs.ubc.ca", report.getAttribute(BugzillaReportElement.ASSIGNED_TO).getValue());
-		assertEquals(1, report.getComments().size());
+		assertEquals(2, report.getComments().size());
 		assertEquals("relves@cs.ubc.ca", report.getComments().get(0).getAttribute(BugzillaReportElement.WHO).getValue());
 		assertEquals("2006-05-23 17:46:24", report.getComments().get(0).getAttribute(BugzillaReportElement.BUG_WHEN)
 				.getValue());

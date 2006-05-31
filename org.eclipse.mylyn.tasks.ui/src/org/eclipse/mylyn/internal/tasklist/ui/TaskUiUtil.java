@@ -14,6 +14,7 @@ package org.eclipse.mylar.internal.tasklist.ui;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
@@ -209,7 +210,9 @@ public class TaskUiUtil {
 	 * Set asyncExec false for testing purposes.
 	 */
 	public static void openEditor(final ITask task, boolean asyncExec, boolean newTask) {
-
+		if(task instanceof AbstractRepositoryTask) {
+			((AbstractRepositoryTask)task).setLastOpened(new Date());
+		}
 		final IEditorInput editorInput = new TaskEditorInput(task, newTask);
 
 		if (asyncExec) {

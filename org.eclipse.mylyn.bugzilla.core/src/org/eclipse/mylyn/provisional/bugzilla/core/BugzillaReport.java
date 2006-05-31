@@ -40,7 +40,9 @@ public class BugzillaReport extends AbstractRepositoryReport implements IBugzill
 	public static final String VAL_STATUS_NEW = "NEW";
 
 	/** Parser for dates in the report */
-	private static SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	private static SimpleDateFormat delta_ts_format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
+	private static SimpleDateFormat creation_ts_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	/** Description of the bug */
 	protected String description;
@@ -175,7 +177,7 @@ public class BugzillaReport extends AbstractRepositoryReport implements IBugzill
 		if (created == null) {
 			String dateString = getAttributeValue(BugzillaReportElement.CREATION_TS);
 			try {
-				created = df.parse(dateString);
+				created = creation_ts_format.parse(dateString);
 			} catch (ParseException e) {
 				// ignore
 			}
@@ -322,7 +324,7 @@ public class BugzillaReport extends AbstractRepositoryReport implements IBugzill
 		if (lastModified == null) {
 			String dateString = getAttributeValue(BugzillaReportElement.DELTA_TS);
 			try {
-				lastModified = df.parse(dateString);
+				lastModified = delta_ts_format.parse(dateString);
 			} catch (ParseException e) {
 				// ignore
 			}

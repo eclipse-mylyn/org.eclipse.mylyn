@@ -97,7 +97,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private static final String CHANGED_BUGS_START_DATE_SHORT = "yyyy-MM-dd";
 
-	private static final String CHANGED_BUGS_START_DATE_LONG = "yyyy-MM-dd HH:mm";
+	private static final String CHANGED_BUGS_START_DATE_LONG = "yyyy-MM-dd HH:mm:ss";
 
 	private static final String CHANGED_BUGS_CGI_ENDDATE = "&chfieldto=Now";
 

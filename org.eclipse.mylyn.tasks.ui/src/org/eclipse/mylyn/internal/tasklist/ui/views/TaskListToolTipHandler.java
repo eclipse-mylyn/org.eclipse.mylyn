@@ -22,10 +22,8 @@ import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
-import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.Task;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -134,17 +132,17 @@ public class TaskListToolTipHandler {
 			}
 			return tooltip;
 		}
-		if (element instanceof ITask || element instanceof AbstractQueryHit) {
-			ITask task = null;
-			if (element instanceof ITask) {
-				task = (ITask) element;
-			} else {
-				task = ((AbstractQueryHit) element).getCorrespondingTask();
-			}
-			if (task != null) {
-				priority += "\nPriority: " + Task.PriorityLevel.fromString(task.getPriority()).getDescription();
-			}
-		}
+//		if (element instanceof ITask || element instanceof AbstractQueryHit) {
+//			ITask task = null;
+//			if (element instanceof ITask) {
+//				task = (ITask) element;
+//			} else {
+//				task = ((AbstractQueryHit) element).getCorrespondingTask();
+//			}
+//			if (task != null) {
+//				priority += "\nPriority: " + Task.PriorityLevel.fromString(task.getPriority()).getDescription();
+//			}
+//		}
 
 		if (element instanceof AbstractRepositoryTask || element instanceof AbstractQueryHit) {
 			AbstractRepositoryTask repositoryTask;
@@ -154,13 +152,16 @@ public class TaskListToolTipHandler {
 				repositoryTask = (AbstractRepositoryTask) element;
 			}
 			tooltip += ((ITaskListElement) element).getDescription();
-			tooltip += priority;
-			if (repositoryTask != null) {
-				Date lastRefresh = repositoryTask.getLastRefresh();
-				if (lastRefresh != null) {
-					tooltip += "\n" + formatLastRefreshTime(repositoryTask.getLastRefresh());
-				}
+			if(repositoryTask != null) {
+				tooltip += "\n" + repositoryTask.getRepositoryUrl();
 			}
+//			tooltip += priority;
+//			if (repositoryTask != null) {
+//				Date lastRefresh = repositoryTask.getLastOpened();
+//				if (lastRefresh != null) {
+//					tooltip += "\n" + formatLastRefreshTime(repositoryTask.getLastOpened());
+//				}
+//			}
 			return tooltip;
 		} else if (element != null) {
 			tooltip += ((ITaskListElement) element).getDescription();

@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.provisional.tasklist;
 
-import java.util.Date;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -66,7 +65,6 @@ class SynchronizeTaskJob extends Job {
 				if (forceSync || (!canNotSynch && !hasLocalChanges) || !repositoryTask.isDownloaded()) {
 					monitor.setTaskName(LABEL_SYNCHRONIZING+repositoryTask.getDescription());					
 					repositoryTask.setCurrentlyDownloading(true);
-					repositoryTask.setLastRefresh(new Date());
 					MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 
 					this.connector.updateOfflineState(repositoryTask, forceSync);
