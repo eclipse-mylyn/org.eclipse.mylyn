@@ -225,7 +225,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 
 	public void dispose() {
 		partMap.remove(getPartForAction());
-		if(viewPart != null) {
+		if(viewPart != null && !PlatformUI.getWorkbench().isClosing()) {
 			for (StructuredViewer viewer : getViewers()) {
 				MylarUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer, viewPart);
 			}
