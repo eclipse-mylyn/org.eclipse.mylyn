@@ -14,13 +14,13 @@ reports marked help wanted</a>.&nbsp;</p>
 		<li><a href="#contributing-intro">Introduction</a></li>
 		<li><a href="#contributing-setup">Workspace setup</a></li>
 		<li><a href="#bootstrap">Working bootstrapped</a></li>
-		<li><a href="#bootstrap">JIRA Connector</a></li>
 		<li><a href="#contributing-patches">Contributing patches</li>
 <!--	<li>Building</li>-->
 		</a></li>
+		<li><a href="#bootstrap">Building the JIRA Connector</a></li>
 		<li><a href="#building-dist">Building a distribution</a></li>
 	</ul><hr width="50%">
-	<h4><a name="contributing-setup">Workspace setup</a></h4>
+	<h3><a name="contributing-setup">Workspace setup</a></h3>
 	<ul>
 		<li>Building Mylar feature from HEAD requires
 		the latest Eclipse milestone release and
@@ -43,7 +43,8 @@ and leave the password blank.</li>
 	</ul>
 		</li>
 	</ul>
-	<h4><a name="connector-jira">JIRA Connector</a></h4>
+	<hr>
+	<h3><a name="connector-jira">JIRA Connector</a></h3>
 	<ul>
 		<li>Get the latest <a href="http://subclipse.tigris.org/download.html">
 		Subclipse</a> plug-in, e.g. from the following update site: 
@@ -54,9 +55,9 @@ and leave the password blank.</li>
 		Dahsboard doc</a> for troubleshooting):<ul>
 			<li>username: <code>guest</code> </li>
 			<li>password: &lt;blank&gt;</li>
-			<li>repository: <code>
+			<li>repository:
 			<a href="http://jira-dashboard.tigris.org/svn/jira-dashboard/trunk">
-			http://jira-dashboard.tigris.org/svn/jira-dashboard/trunk</a></code></li>
+			http://jira-dashboard.tigris.org/svn/jira-dashboard/trunk</a></li>
 		</ul>
 		</li>
 		<li>Check out the JIRA Dashboard Core featureres:<ul>
@@ -67,9 +68,11 @@ and leave the password blank.</li>
 		</li>
 		<li>Create a working set that excludes <i>org.tigris.jira</i> plug-ins 
 		so that you have no warnings in the Problems list</li>
+		<li>Note that the JIRA connector has it's own test suite: <i>
+		org.eclipse.mylar.jira.tests.AllJiraTests</i></li>
 	</ul>
 	<hr>
-<h4><a name="bootstrap">Working bootsrapped</a> </h4>
+<h3><a name="bootstrap">Working bootsrapped</a> </h3>
 <p>To make eating your own dog food easier and avoid having to update to dev 
 builds Mylar committers work bootstrapped:</p>
 	<ul>
@@ -84,7 +87,7 @@ builds Mylar committers work bootstrapped:</p>
 		workspace and restart.&nbsp; You could conceivably </li>
 	</ul>
 	<hr>
-<h4><a name="contributing-patches">Contributing patches</a> </h4>
+<h3><a name="contributing-patches">Contributing patches</a> </h3>
 	<p>All contributions to Mylar including patches should be made by using 
 	Mylar in order to ensure that we
 	<a href="http://en.wikipedia.org/wiki/Eat_one's_own_dog_food">eat our our 
@@ -128,7 +131,7 @@ builds Mylar committers work bootstrapped:</p>
 		<li>Attach the task context to the bug report.</li>
 	</ul>
 	<hr>
-<h4><a name=building-dist>Building a distribution</a></h4>
+<h3><a name=building-dist>Building a distribution</a></h3>
 <ul>
 	<li>Using PDE Build support to create a Mylar distribution from HEAD, using 
 	a plain Eclipse 3.2<ul>
@@ -156,7 +159,8 @@ builds Mylar committers work bootstrapped:</p>
 	<p>Merging and building the 3.1 branch:</p>
 	<ul>
 		<li>Right-click the org.eclipse.mylar.java, mylar.ide, and mylar.xml 
-		project, Team -&gt; Switch to Another Branch..., then Refresh the Branches 
+		project, <i>Team</i> -&gt; <i>Switch to Another Branch...</i>, then <i>Refresh</i> the 
+		<i>Branches</i> 
 		and select <b>e_3_1 </b></li>
 		<li>The list of files that should not be overwritten is in: 
 		org.eclipse.mylar-site/merge.text</li>
@@ -165,4 +169,5 @@ builds Mylar committers work bootstrapped:</p>
 	<ul>
 		<li>Instructions are in org.eclipse.mylar-site/release.txt</li>
 	</ul>
+	<p>&nbsp; </p>
 </body></html>
