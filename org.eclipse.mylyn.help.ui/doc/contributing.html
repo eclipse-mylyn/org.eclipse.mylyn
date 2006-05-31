@@ -13,18 +13,20 @@ reports marked help wanted</a>.&nbsp;</p>
 	<ul>
 		<li><a href="#contributing-intro">Introduction</a></li>
 		<li><a href="#contributing-setup">Workspace setup</a></li>
+		<li><a href="#bootstrap">Working bootstrapped</a></li>
 		<li><a href="#contributing-patches">Contributing patches</li>
 <!--	<li>Building</li>-->
 		</a></li>
 		<li><a href="#building-dist">Building a distribution</a></li>
-	</ul><hr>
-	<h3><a name="contributing-intro">Introduction</a></h3>
+	</ul>
+	<h3>&nbsp;</h3>
+	<h4><a name="contributing-intro">Introduction</a></h4>
 <p>Those interested in contributing should start out by emailing
 <a href="mailto:mylar-dev@eclipse.org">mylar-dev@eclipse.org</a> in order to get 
 an idea of the current priorities.&nbsp; Also refer to the list of <a href="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&product=Mylar&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&keywords_type=allwords&keywords=helpwanted&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=">
 reports marked help wanted</a>.&nbsp; </p>
-<h3>&nbsp;</h3>
-	<h3><a name="contributing-setup">Workspace setup</a></h3>
+	<hr>
+	<h4><a name="contributing-setup">Workspace setup</a></h4>
 	<ul>
 		<li>Building Mylar feature from HEAD requires
 		the latest Eclipse milestone release and
@@ -73,20 +75,22 @@ and leave the password blank.</li>
 		so that you have no warnings in the Problems list</li>
 	</ul>
 	<hr>
-<h3><a name="bootstrap">Working Bootsrapped</a> </h3>
+<h4><a name="bootstrap">Working bootsrapped</a> </h4>
+	<p>To make eating your own dog food easier and avoid having to update to dev 
+	builds Mylar committers work bootstrapped:</p>
 	<ul>
-		<li>To work from the latest copy of Mylar in HEAD as some committers do, 
-		set up a fresh workspace launched from an Eclipse that does not have 
-		Mylar installed (recommended, not required), and check out Mylar into 
+		<li>Set up a fresh workspace launched from an Eclipse that does not have 
+		Mylar installed, and check out Mylar into 
 		it.</li>
-		<li>Then create a new Launch Configuration, point it at your workspace, 
+		<li>Create a new Launch Configuration, point it at your workspace, 
 		and work in that.&nbsp; The launching workspace will typically use very 
 		little memory, but if you have a memory constrained machine you can kill 
 		its java process.</li>
+		<li>Whenever your changes make it into HEAD synch up your launching 
+		workspace and restart.&nbsp; You could conceivably </li>
 	</ul>
 	<hr>
-	<p>&nbsp;</p>
-<h3><a name="contributing-patches">Contributing patches</a> </h3>
+<h4><a name="contributing-patches">Contributing patches</a> </h4>
 	<p>All contributions to Mylar including patches should be made by using 
 	Mylar in order to ensure that we
 	<a href="http://en.wikipedia.org/wiki/Eat_one's_own_dog_food">eat our our 
@@ -116,7 +120,7 @@ and leave the password blank.</li>
 		<li>Ensure that there is no console output.&nbsp; For logging errors use 
 		<tt>MylarStatusHandler</tt>.</li>
 	</ul>
-	<p><b>To submit:</b></p>
+	<p>To submit:</p>
 	<ul>
 		<li>Ensure there are no build errors, warnings, and that <tt>org.eclipse.mylar.tests.AllTests</tt> passes.</li>
 		<li>Synchronize using Incoming mode and ensure that there are no 
@@ -130,8 +134,7 @@ and leave the password blank.</li>
 		<li>Attach the task context to the bug report.</li>
 	</ul>
 	<hr>
-	<h3>&nbsp;</h3>
-<h3><a name=building-dist>Building a distribution</a></h3>
+<h4><a name=building-dist>Building a distribution</a></h4>
 <ul>
 	<li>Using PDE Build support to create a Mylar distribution from HEAD, using 
 	a plain Eclipse 3.2<ul>
@@ -156,7 +159,7 @@ and leave the password blank.</li>
 	out the following projects mylar.bugzilla.core, mylar.bugzilla.ui, 
 	mylar.tasklist, mylar.core </li>
 </ul>
-	<p><b>Merging and building the 3.1 branch</b></p>
+	<p>Merging and building the 3.1 branch:</p>
 	<ul>
 		<li>Right-click the org.eclipse.mylar.java, mylar.ide, and mylar.xml 
 		project, Team -&gt; Switch to Another Branch..., then Refresh the Branches 
@@ -164,8 +167,8 @@ and leave the password blank.</li>
 		<li>The list of files that should not be overwritten is in: 
 		org.eclipse.mylar-site/merge.text</li>
 	</ul>
-	<p><b>Deploying</b></p>
+	<p>Deploying:</p>
 	<ul>
-		<li>Instructions are in org.eclipse.mylar-site/deploy.txt</li>
+		<li>Instructions are in org.eclipse.mylar-site/release.txt</li>
 	</ul>
 </body></html>
