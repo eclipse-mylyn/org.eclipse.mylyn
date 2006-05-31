@@ -430,6 +430,14 @@ manually in the preference page.&nbsp; Proposals will disappear if&nbsp; a
 workspace into which Mylar was installed is run without Mylar installed (e.g. as 
 a result of uninstalling or multiple Eclipses using same workspace, see Platform
 <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=140416">bug 140416</a>).</p>
+	<p>If after invoking content assist you see an error message dialog that 
+	states &quot;The extension tool too long to return from the 'computeCompletionProposals()' 
+	operation&quot;, this is most likely due to something interrupting the proposal 
+	operation (e.g. garbage collection).&nbsp; Ignore it if it does not recur, 
+	increase Eclipse's memory if it does (e.g via -Xmx384M command line 
+	argument), or see
+	<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=141457">bug 141457</a> 
+	for more details.</p>
 <p>
 			<img border="0" src="images/faq/content-assist.gif"></p>
 	<hr>
