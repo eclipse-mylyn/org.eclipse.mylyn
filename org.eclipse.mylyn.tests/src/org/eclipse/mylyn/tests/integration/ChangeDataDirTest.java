@@ -108,16 +108,17 @@ public class ChangeDataDirTest extends TestCase {
 		assertEquals(readTaskBeforeMove.getCreationDate(), readTaskAfterMove.getCreationDate());
 	}
 
+	// TODO: delete?  using lastOpened date wrong
 	public void testBugzillaTaskMove() {
 		String handle = AbstractRepositoryTask.getHandle("server", 1);
 		BugzillaTask bugzillaTask = new BugzillaTask(handle, "bug1", true);
 		addBugzillaTask(bugzillaTask);
 		Date refreshDate = new Date();
-		bugzillaTask.setLastRefresh(refreshDate);
+		bugzillaTask.setLastOpened(refreshDate);
 
 		BugzillaTask readTaskBeforeMove = (BugzillaTask) manager.getTaskList().getTask(handle);
 		assertNotNull(readTaskBeforeMove);
-		assertEquals(refreshDate, readTaskBeforeMove.getLastRefresh());
+		assertEquals(refreshDate, readTaskBeforeMove.getLastOpened());
 
 		MylarTaskListPlugin.getDefault().getTaskListSaveManager().copyDataDirContentsTo(newDataDir);
 		MylarPlugin.getDefault().setDataDirectory(newDataDir);
@@ -125,7 +126,7 @@ public class ChangeDataDirTest extends TestCase {
 		BugzillaTask readTaskAfterMove = (BugzillaTask) manager.getTaskList().getTask(handle);
 		assertNotNull(readTaskAfterMove);
 		// HACK: shoudl be checking date equality, but millis seem to differ?
-		assertEquals(refreshDate.toString(), readTaskAfterMove.getLastRefresh().toString());
+		assertEquals(refreshDate.toString(), readTaskAfterMove.getLastOpened().toString());
 	}
 
 	private void addBugzillaTask(BugzillaTask newTask) {
