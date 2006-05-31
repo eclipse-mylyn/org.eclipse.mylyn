@@ -105,29 +105,6 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		}
 	}
 
-//	public void readRegistry(Node node, TaskList taskList) throws TaskExternalizationException {
-//		boolean hasCaughtException = false;
-//		NodeList list = node.getChildNodes();
-//		for (int i = 0; i < list.getLength(); i++) {
-//			try {
-//				Node child = list.item(i);
-//				ITask task = readTask(child, taskList, null, null);
-//				if (task instanceof AbstractRepositoryTask) {
-//					taskList.addTaskToArchive((AbstractRepositoryTask)task);
-//				}
-//			} catch (TaskExternalizationException e) {
-//				hasCaughtException = true;
-//			}
-//		}
-//
-//		if (hasCaughtException)
-//			throw new TaskExternalizationException("Failed to restore all tasks");
-//	}
-
-//	public boolean canCreateElementFor(ITaskContainer cat) {
-//		return false;
-//	}
-
 	public boolean canCreateElementFor(AbstractRepositoryQuery category) {
 		return category instanceof BugzillaRepositoryQuery;
 	}
@@ -207,9 +184,6 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 				task.setSyncState(RepositoryTaskSyncState.CONFLICT);
 			}
 		}
-
-		// TODO: put back, checking for null category?
-//		taskList.internalAddTask(task, category);
 		return task;
 	}
 

@@ -82,7 +82,6 @@ class SynchronizeQueryJob extends Job {
 					}
 					
 					if (synchTasks) {
-
 						// Set<ITask> tasks = repositoryQuery.getChildren();
 						// Set<AbstractRepositoryTask> repositoryTasks = new
 						// HashSet<AbstractRepositoryTask>();
@@ -93,7 +92,6 @@ class SynchronizeQueryJob extends Job {
 						//						}
 
 						connector.synchronizeChanged(repository);
-						
 					}
 
 				} else {
