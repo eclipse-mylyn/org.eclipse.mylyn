@@ -590,62 +590,67 @@ public class TaskListManager {
 	}
 
 	public boolean isCompletedToday(ITask task) {
-		Date completionDate = task.getCompletionDate();
-		if (completionDate == null) {
-			return false;
-		} else {
-			Calendar tomorrow = Calendar.getInstance();
-			MylarTaskListPlugin.getTaskListManager().setSecheduledIn(tomorrow, 1);
+		if (task != null) {
+			Date completionDate = task.getCompletionDate();
+			if (completionDate != null) {
+				Calendar tomorrow = Calendar.getInstance();
+				MylarTaskListPlugin.getTaskListManager().setSecheduledIn(tomorrow, 1);
 
-			Calendar yesterday = Calendar.getInstance();
-			yesterday.set(Calendar.HOUR_OF_DAY, 0);
-			yesterday.set(Calendar.MINUTE, 0);
-			yesterday.set(Calendar.SECOND, 0);
-			yesterday.set(Calendar.MILLISECOND, 0);
+				Calendar yesterday = Calendar.getInstance();
+				yesterday.set(Calendar.HOUR_OF_DAY, 0);
+				yesterday.set(Calendar.MINUTE, 0);
+				yesterday.set(Calendar.SECOND, 0);
+				yesterday.set(Calendar.MILLISECOND, 0);
 
-			return completionDate.compareTo(yesterday.getTime()) == 1
-					&& completionDate.compareTo(tomorrow.getTime()) == -1;
+				return completionDate.compareTo(yesterday.getTime()) == 1
+						&& completionDate.compareTo(tomorrow.getTime()) == -1;
+			}
 		}
+		return false;
 	}
 
 	public boolean isReminderAfterThisWeek(ITask task) {
-		Date reminder = task.getReminderDate();
-		if (reminder != null) {
-			return reminder.compareTo(activityNextWeek.getStart().getTime()) > -1;
-		} else {
-			return false;
+		if (task != null) {
+			Date reminder = task.getReminderDate();
+			if (reminder != null) {
+				return reminder.compareTo(activityNextWeek.getStart().getTime()) > -1;
+			}
 		}
+		return false;
 	}
 
 	public boolean isReminderLater(ITask task) {
-		Date reminder = task.getReminderDate();
-		if (reminder != null) {
-			return reminder.compareTo(activityFuture.getStart().getTime()) > -1;
-		} else {
-			return false;
+		if (task != null) {
+			Date reminder = task.getReminderDate();
+			if (reminder != null) {
+				return reminder.compareTo(activityFuture.getStart().getTime()) > -1;
+			}
 		}
-	} 
-	
+		return false;
+	}
+
 	public boolean isReminderThisWeek(ITask task) {
-		Date reminder = task.getReminderDate();
-		if (reminder != null) {
-			Date now = new Date();
-			return (reminder.compareTo(now) == 1 && reminder.compareTo(activityThisWeek.getEnd().getTime()) == -1);
-		} else {
-			return false;
+		if (task != null) {
+			Date reminder = task.getReminderDate();
+			if (reminder != null) {
+				Date now = new Date();
+				return (reminder.compareTo(now) == 1 && reminder.compareTo(activityThisWeek.getEnd().getTime()) == -1);
+			}
 		}
+		return false;
 	}
 
 	public boolean isReminderToday(ITask task) {
-		Date reminder = task.getReminderDate();
-		if (reminder != null) {
-			Date now = new Date();
-			Calendar tomorrow = GregorianCalendar.getInstance();
-			MylarTaskListPlugin.getTaskListManager().setSecheduledIn(tomorrow, 1);
-			return (reminder.compareTo(now) == 1 && reminder.compareTo(tomorrow.getTime()) == -1);
-		} else {
-			return false;
+		if (task != null) {
+			Date reminder = task.getReminderDate();
+			if (reminder != null) {
+				Date now = new Date();
+				Calendar tomorrow = GregorianCalendar.getInstance();
+				MylarTaskListPlugin.getTaskListManager().setSecheduledIn(tomorrow, 1);
+				return (reminder.compareTo(now) == 1 && reminder.compareTo(tomorrow.getTime()) == -1);
+			}
 		}
+		return false;
 	}
 
 	/**

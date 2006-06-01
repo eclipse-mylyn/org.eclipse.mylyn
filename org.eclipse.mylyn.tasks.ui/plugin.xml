@@ -206,7 +206,7 @@
                enablesFor="*"
                icon="icons/etool16/repository-synchronize.gif"
                id="org.eclipse.mylar.bugzilla.ui.popup.refresh"
-               label="Synchronize Queries"
+               label="Synchronize All"
                menubarPath="additions"
                tooltip="Synchronize with Repository">
          </action>
