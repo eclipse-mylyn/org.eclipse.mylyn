@@ -31,6 +31,7 @@ import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -72,15 +73,17 @@ public class OfflineReportsFile {
 		}
 	}
 
+	
+	
 	/**
 	 * Add an offline report to the offline reports list
 	 * 
 	 * @param entry
 	 *            The bug to add
 	 */
-	public BugzillaOfflineStatus add(final BugzillaReport entry, boolean forceSync) throws CoreException {
+	public RepositoryTaskSyncState add(final BugzillaReport entry, boolean forceSync) throws CoreException {
 
-		BugzillaOfflineStatus status = BugzillaOfflineStatus.SAVED;
+		RepositoryTaskSyncState status = RepositoryTaskSyncState.SYNCHRONIZED;
 
 		try {
 
@@ -124,21 +127,21 @@ public class OfflineReportsFile {
 							if (!updateLocalCopy) {
 								((BugzillaReport) entry).setNewComment(((BugzillaReport) oldBug).getNewComment());
 								((BugzillaReport) entry).setHasChanged(true);
-								status = BugzillaOfflineStatus.CONFLICT;
+								status = RepositoryTaskSyncState.CONFLICT;
 							} else {
 								((BugzillaReport) entry).setHasChanged(false);
-								status = BugzillaOfflineStatus.SAVED;
+								status = RepositoryTaskSyncState.SYNCHRONIZED;
 							}
 						} else {
 							if (forceSync) {
-								status = BugzillaOfflineStatus.SAVED;
+								status = RepositoryTaskSyncState.SYNCHRONIZED;
 							} else {
-								status = BugzillaOfflineStatus.SAVED_WITH_INCOMMING_CHANGES;
+								status = RepositoryTaskSyncState.INCOMING;
 							}
 						}
 						list.remove(index);
-						if (entry.hasChanges() && status != BugzillaOfflineStatus.CONFLICT) {
-							status = BugzillaOfflineStatus.SAVED_WITH_OUTGOING_CHANGES;
+						if (entry.hasChanges() && status != RepositoryTaskSyncState.CONFLICT) {
+							status = RepositoryTaskSyncState.OUTGOING;
 						}
 						list.add(entry);
 						writeFile();
@@ -158,6 +161,7 @@ public class OfflineReportsFile {
 		}
 		return status;
 	}
+	
 
 	// DO NOT REMOVE
 	// /**

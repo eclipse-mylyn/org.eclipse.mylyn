@@ -53,7 +53,6 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServe
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.OfflineReportsFile;
 import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
-import org.eclipse.mylar.internal.bugzilla.ui.OfflineReportsFile.BugzillaOfflineStatus;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchHit;
 import org.eclipse.mylar.internal.bugzilla.ui.search.RepositoryQueryResultsFactory;
@@ -329,29 +328,27 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
-	private static void offlineStatusChange(AbstractRepositoryReport report, BugzillaOfflineStatus status,
-			boolean forceSynch) {
+	private static void offlineStatusChange(AbstractRepositoryReport report, RepositoryTaskSyncState state) {
 
-		RepositoryTaskSyncState state = null;
-		if (status == BugzillaOfflineStatus.SAVED_WITH_OUTGOING_CHANGES) {
-			state = RepositoryTaskSyncState.OUTGOING;
-		} else if (status == BugzillaOfflineStatus.SAVED) {
-			state = RepositoryTaskSyncState.SYNCHRONIZED;
-		} else if (status == BugzillaOfflineStatus.SAVED_WITH_INCOMMING_CHANGES) {
-			// if (forceSynch) {
-			state = RepositoryTaskSyncState.INCOMING;
-			// } else {
-			// User opened (forceSynch = false) so no need to denote
-			// incomming
-			// state = RepositoryTaskSyncState.SYNCHRONIZED;
-			// }
-		} else if (status == BugzillaOfflineStatus.CONFLICT) {
-			state = RepositoryTaskSyncState.CONFLICT;
-		} else if (status == BugzillaOfflineStatus.DELETED) {
-			state = RepositoryTaskSyncState.SYNCHRONIZED;
-		}
-		if (state == null) {
-			// this means that we got a status that we didn't understand
+//		RepositoryTaskSyncState state = null;
+//		if (status == BugzillaOfflineStatus.SAVED_WITH_OUTGOING_CHANGES) {
+//			state = RepositoryTaskSyncState.OUTGOING;
+//		} else if (status == BugzillaOfflineStatus.SAVED) {
+//			state = RepositoryTaskSyncState.SYNCHRONIZED;
+//		} else if (status == BugzillaOfflineStatus.SAVED_WITH_INCOMMING_CHANGES) {
+//			// if (forceSynch) {
+//			state = RepositoryTaskSyncState.INCOMING;
+//			// } else {
+//			// User opened (forceSynch = false) so no need to denote
+//			// incomming
+//			// state = RepositoryTaskSyncState.SYNCHRONIZED;
+//			// }
+//		} else if (status == BugzillaOfflineStatus.CONFLICT) {
+//			state = RepositoryTaskSyncState.CONFLICT;
+//		} else if (status == BugzillaOfflineStatus.DELETED) {
+//			state = RepositoryTaskSyncState.SYNCHRONIZED;
+//		}
+		if (report == null || state == null) {			
 			return;
 		}
 
@@ -503,10 +500,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				// // identical id.");
 				// // return;
 				// }
-				BugzillaOfflineStatus offlineStatus = BugzillaUiPlugin.getDefault().getOfflineReportsFile().add(report,
+				RepositoryTaskSyncState offlineStatus = BugzillaUiPlugin.getDefault().getOfflineReportsFile().add(report,
 						forceSynch);
 				((AbstractRepositoryReport) report).setOfflineState(true);
-				offlineStatusChange(report, offlineStatus, forceSynch);
+				offlineStatusChange(report, offlineStatus);
 
 			} catch (CoreException e) {
 				MylarStatusHandler.fail(e, e.getMessage(), false);
@@ -522,7 +519,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	public static void removeReport(BugzillaReport bug) {
 		bug.setOfflineState(false);
-		offlineStatusChange(bug, BugzillaOfflineStatus.DELETED, false);
+//		offlineStatusChange(bug, BugzillaOfflineStatus.DELETED, false);
+		offlineStatusChange(bug, RepositoryTaskSyncState.SYNCHRONIZED);		
 		ArrayList<BugzillaReport> bugList = new ArrayList<BugzillaReport>();
 		bugList.add(bug);
 		BugzillaUiPlugin.getDefault().getOfflineReportsFile().remove(bugList);
