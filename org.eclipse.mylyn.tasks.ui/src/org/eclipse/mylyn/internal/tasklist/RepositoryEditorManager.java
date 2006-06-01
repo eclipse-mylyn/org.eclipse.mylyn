@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.tasklist;
 
 import java.util.List;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasklist.ui.editors.TaskEditorInput;
@@ -25,6 +26,8 @@ import org.eclipse.ui.PlatformUI;
 
 public class RepositoryEditorManager implements ITaskListChangeListener {
 
+	boolean dialogOpen = false;
+	
 	public void containerAdded(AbstractTaskContainer container) {
 		// ignore
 	}
@@ -45,20 +48,22 @@ public class RepositoryEditorManager implements ITaskListChangeListener {
 
 		if (task instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
-			if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
+			if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING && !dialogOpen) {
 
 				List<MylarTaskEditor> editors = TaskUiUtil.getActiveRepositoryTaskEditors();
 				for (final MylarTaskEditor editor : editors) {
 					final TaskEditorInput input = (TaskEditorInput) editor.getEditorInput();
 					if (input.getTask().getHandleIdentifier().equals(repositoryTask.getHandleIdentifier())) {
-
+						dialogOpen = true;
 						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 							public void run() {
-//								TaskUiUtil.closeEditorInActivePage(input.getTask());
-//								TaskUiUtil.refreshAndOpenTaskListElement(input.getTask());
-								// If the following is used, incoming status will remain
-								// TaskUiUtil.openEditor(input.getTask(),
-								// false);
+								
+								if(MessageDialog.openConfirm(null, "Stale Editor", "Remote copy of report has changes. Refresh and open report?")) {
+									TaskUiUtil.closeEditorInActivePage(input.getTask());
+									TaskUiUtil.refreshAndOpenTaskListElement(input.getTask());								
+									//TaskUiUtil.openEditor(input.getTask(), false);
+								}
+								dialogOpen = false;
 							}
 						});
 

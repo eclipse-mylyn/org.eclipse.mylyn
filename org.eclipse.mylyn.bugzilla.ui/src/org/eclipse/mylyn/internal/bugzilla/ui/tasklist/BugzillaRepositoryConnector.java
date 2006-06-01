@@ -359,12 +359,15 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
 		if (task != null && task instanceof BugzillaTask) {
 			final BugzillaTask bugTask = (BugzillaTask) task;
-			bugTask.setSyncState(state);			
-//			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//				public void run() {
-					MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(bugTask);
-//				}
-//			});			
+			if (bugTask.getSyncState() != state) {
+				bugTask.setSyncState(state);
+				// PlatformUI.getWorkbench().getDisplay().asyncExec(new
+				// Runnable() {
+				// public void run() {
+				MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(bugTask);
+				// }
+				// });
+			}
 		}
 	}
 
@@ -403,7 +406,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 									// }
 									// MylarStatusHandler.log(attributes,
 									// BugzillaRepositoryConnector.class);
-									//									}
+									// }
 									WebBrowserDialog.openAcceptAgreement(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 											"Possible problem posting Bugzilla report.\n"
 													+ throwable.getCause().getMessage(), form.getError());
@@ -453,35 +456,36 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
-//	/**
-//	 * Saves the given report to the offlineReportsFile, or, if it already
-//	 * exists in the file, updates it.
-//	 * 
-//	 * @param bug
-//	 *            The bug to add/update.
-//	 * @param saveChosen
-//	 *            This is used to determine a refresh from a user save
-//	 */
-//	public BugzillaOfflineStatus saveOffline(final BugzillaReport bug, final boolean forceSynch) {
-//
-//		BugzillaOfflineStatus status = BugzillaOfflineStatus.ERROR;
-//
-////		if (!forceSyncExecForTesting) {
-////			Display.getDefault().asyncExec(new Runnable() {
-////				public void run() {
-////					internalSaveOffline(bug, forceSynch);
-////				}
-////			});
-////		} else {
-//			internalSaveOffline(bug, forceSynch);
-////		}
-//		return status;
-//	}
+	// /**
+	// * Saves the given report to the offlineReportsFile, or, if it already
+	// * exists in the file, updates it.
+	// *
+	// * @param bug
+	// * The bug to add/update.
+	// * @param saveChosen
+	// * This is used to determine a refresh from a user save
+	// */
+	// public BugzillaOfflineStatus saveOffline(final BugzillaReport bug, final
+	// boolean forceSynch) {
+	//
+	// BugzillaOfflineStatus status = BugzillaOfflineStatus.ERROR;
+	//
+	// // if (!forceSyncExecForTesting) {
+	// // Display.getDefault().asyncExec(new Runnable() {
+	// // public void run() {
+	// // internalSaveOffline(bug, forceSynch);
+	// // }
+	// // });
+	// // } else {
+	// internalSaveOffline(bug, forceSynch);
+	// // }
+	// return status;
+	// }
 
 	// TODO: pull up
 	public void saveOffline(final BugzillaReport report, final boolean forceSynch) {
 		// If there is already an offline report for this bug, update the file.
-		
+
 		if (((AbstractRepositoryReport) report).isSavedOffline()) {
 			BugzillaUiPlugin.getDefault().getOfflineReportsFile().update();
 		} else {
@@ -501,7 +505,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				// }
 				BugzillaOfflineStatus offlineStatus = BugzillaUiPlugin.getDefault().getOfflineReportsFile().add(report,
 						forceSynch);
-				((AbstractRepositoryReport) report).setOfflineState(true);				
+				((AbstractRepositoryReport) report).setOfflineState(true);
 				offlineStatusChange(report, offlineStatus, forceSynch);
 
 			} catch (CoreException e) {

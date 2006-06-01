@@ -63,7 +63,7 @@ class SynchronizeTaskJob extends Job {
 					throw new OperationCanceledException();
 				
 				if(isDirty(repositoryTask)) {
-					MylarStatusHandler.log(repositoryTask.getDescription()+" editor dirty. Skipping synchronization.", this);
+					MylarStatusHandler.log("Dirty editor, not synchronizing: "+repositoryTask.getDescription(), this);
 					continue;
 				}
 				
@@ -79,11 +79,13 @@ class SynchronizeTaskJob extends Job {
 					this.connector.updateOfflineState(repositoryTask, forceSync);
 					repositoryTask.setCurrentlyDownloading(false);
 
-//					if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
-//						repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
-//					} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
-//						repositoryTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
-//					}
+					// if (repositoryTask.getSyncState() ==
+					// RepositoryTaskSyncState.INCOMING) {
+					// repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
+					// } else if (repositoryTask.getSyncState() ==
+					// RepositoryTaskSyncState.CONFLICT) {
+					// repositoryTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
+					//					}
 
 					MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);					
 				}
