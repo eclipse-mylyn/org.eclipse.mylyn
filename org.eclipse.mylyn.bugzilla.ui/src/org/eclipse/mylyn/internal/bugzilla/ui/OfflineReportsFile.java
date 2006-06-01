@@ -18,16 +18,19 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -83,14 +86,24 @@ public class OfflineReportsFile {
 
 			String handle = AbstractRepositoryTask.getHandle(entry.getRepositoryUrl(), entry.getId());
 			ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
+			
 			if (task != null && task instanceof AbstractRepositoryTask) {
 				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+				
+				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
+				
+				if(repository == null) {
+					throw new Exception("No repository associated with task. Unable to retrieve timezone information.");
+				}
+				
+				TimeZone repositoryTimeZone = DateUtil.getTimeZone(repository.getTimeZoneId());				
+				
 				int index = -1;
 				if ((index = find(entry.getRepositoryUrl(), entry.getId())) >= 0) {
 					BugzillaReport oldBug = list.get(index);
 
-					if (repositoryTask.getLastOpened() == null
-							|| entry.getLastModified().compareTo(repositoryTask.getLastOpened()) > 0 || forceSync) {
+					if (repositoryTask.getLastSynchronized() == null
+							|| entry.getLastModified(repositoryTimeZone).compareTo(repositoryTask.getLastSynchronized()) > 0 || forceSync) {
 
 						if (oldBug.hasChanges()) {
 
@@ -135,6 +148,7 @@ public class OfflineReportsFile {
 					list.add(entry);
 					writeFile();
 				}
+				repositoryTask.setLastSynchronized(entry.getLastModified(repositoryTimeZone));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

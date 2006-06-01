@@ -20,7 +20,6 @@ import java.net.Proxy;
 import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -597,7 +596,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			if (downloadedReport != null) {
 				bugzillaTask.setBugReport(downloadedReport);
 				saveOffline(downloadedReport, forceSync);
-				repositoryTask.setLastOpened(new Date());
 			}
 		}
 	}

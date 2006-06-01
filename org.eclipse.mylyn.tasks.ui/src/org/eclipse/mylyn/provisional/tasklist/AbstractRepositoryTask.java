@@ -24,7 +24,7 @@ import org.eclipse.mylar.internal.core.MylarContextManager;
 public abstract class AbstractRepositoryTask extends Task {
 
 	/** The last time this task's bug report was downloaded from the server. */
-	protected Date lastOpened;
+	protected Date lastSynchronized;
 	
 	protected boolean currentlySynchronizing;
 	
@@ -55,12 +55,12 @@ public abstract class AbstractRepositoryTask extends Task {
 	
 	public abstract boolean isDownloaded();
 	
-	public Date getLastOpened() {
-		return lastOpened;
+	public Date getLastSynchronized() {
+		return lastSynchronized;
 	}
 
-	public void setLastOpened(Date lastOpened) {
-		this.lastOpened = lastOpened;
+	public void setLastSynchronized(Date lastOpened) {
+		this.lastSynchronized = lastOpened;
 	}
 
 	public void setSyncState(RepositoryTaskSyncState syncState) {
@@ -77,7 +77,7 @@ public abstract class AbstractRepositoryTask extends Task {
 	 */
 	public long getTimeSinceLastRefresh() {
 		Date timeNow = new Date();
-		return (timeNow.getTime() - lastOpened.getTime()) / 1000;
+		return (timeNow.getTime() - lastSynchronized.getTime()) / 1000;
 	}
 
 	public String getRepositoryUrl() {

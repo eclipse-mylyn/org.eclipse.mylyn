@@ -481,8 +481,8 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 		toolkit.createLabel(headerInfoComposite, " Modified: ").setFont(TITLE_FONT);
 		String lastModifiedDateString = "";
-		if (getBug().getLastModified() != null) {
-			lastModifiedDateString = simpleDateFormat.format(getBug().getLastModified());
+		if (getBug().getLastModified(null) != null) {
+			lastModifiedDateString = simpleDateFormat.format(getBug().getLastModified(null));
 		}
 		toolkit.createText(headerInfoComposite, lastModifiedDateString, SWT.FLAT | SWT.READ_ONLY);
 

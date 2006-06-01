@@ -116,8 +116,8 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	public Element createTaskElement(ITask task, Document doc, Element parent) {
 		Element node = super.createTaskElement(task, doc, parent);
 		BugzillaTask bugzillaTask = (BugzillaTask) task;
-		if (bugzillaTask.getLastOpened() != null) {
-			node.setAttribute(LAST_DATE, new Long(bugzillaTask.getLastOpened().getTime()).toString());
+		if (bugzillaTask.getLastSynchronized() != null) {
+			node.setAttribute(LAST_DATE, new Long(bugzillaTask.getLastSynchronized().getTime()).toString());
 		} else {
 			node.setAttribute(LAST_DATE, new Long(new Date().getTime()).toString());
 		}
@@ -157,7 +157,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		readTaskInfo(task, taskList, element, parent, category);
 
 		task.setCurrentlyDownloading(false);
-		task.setLastOpened(new Date(new Long(element.getAttribute("LastDate")).longValue()));
+		task.setLastSynchronized(new Date(new Long(element.getAttribute("LastDate")).longValue()));
 
 		if (element.getAttribute("Dirty").compareTo("true") == 0) {
 			task.setDirty(true);

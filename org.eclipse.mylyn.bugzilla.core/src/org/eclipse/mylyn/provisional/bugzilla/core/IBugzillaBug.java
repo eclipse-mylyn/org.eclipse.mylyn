@@ -12,6 +12,7 @@ package org.eclipse.mylar.provisional.bugzilla.core;
 
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Interface representing a Bugzilla bug report.
@@ -140,9 +141,9 @@ public interface IBugzillaBug { // extends Serializable
 	public Date getCreated();
 
 	/**
-	 * Get the date that the bug was last modified
-	 * 
-	 * @return The bugs last modification date
+	 * Returns a Date based on the given time zone
+	 * null is allowed and will return date interpreted
+	 * as local default time zone.
 	 */
-	public Date getLastModified();
+	public Date getLastModified(TimeZone timeZone);
 }

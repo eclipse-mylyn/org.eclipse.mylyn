@@ -18,6 +18,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.TimeZone;
+
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 
@@ -320,10 +322,15 @@ public class BugzillaReport extends AbstractRepositoryReport implements IBugzill
 		return getId() + ": " + getAttributeValue(BugzillaReportElement.SHORT_DESC);
 	}
 
-	public Date getLastModified() {
-		if (lastModified == null) {
+	public Date getLastModified(TimeZone timeZone) {
+		if (lastModified == null) {			
 			String dateString = getAttributeValue(BugzillaReportElement.DELTA_TS);
 			try {
+				if(timeZone != null) {
+					delta_ts_format.setTimeZone(timeZone);
+				} else {
+					delta_ts_format.setTimeZone(TimeZone.getDefault());
+				}
 				lastModified = delta_ts_format.parse(dateString);
 			} catch (ParseException e) {
 				// ignore
