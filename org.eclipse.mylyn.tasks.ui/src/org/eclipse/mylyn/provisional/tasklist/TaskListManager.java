@@ -49,7 +49,7 @@ public class TaskListManager {
 
 	// TODO: refactor into configurable intervals
 	private static final int HOUR_DAY_START = 8;
-	
+
 	private static final int HOUR_DAY_END = 23;
 
 	private static final int NUM_WEEKS_PREVIOUS = -1;
@@ -412,16 +412,16 @@ public class TaskListManager {
 		cal.set(Calendar.MILLISECOND, cal.getMaximum(Calendar.MILLISECOND));
 		cal.getTime();
 	}
-	
+
 	public Calendar setSecheduledIn(Calendar calendar, int days) {
 		calendar.add(Calendar.DAY_OF_MONTH, days);
 		calendar.set(Calendar.HOUR_OF_DAY, HOUR_DAY_START);
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.SECOND, 0);
-		calendar.set(Calendar.MILLISECOND, 0);	
+		calendar.set(Calendar.MILLISECOND, 0);
 		return calendar;
 	}
-	
+
 	public Calendar setScheduledToday(Calendar calendar) {
 		calendar.set(Calendar.HOUR_OF_DAY, HOUR_DAY_END);
 		calendar.set(Calendar.MINUTE, 0);
@@ -588,7 +588,7 @@ public class TaskListManager {
 		}
 		return false;
 	}
-	
+
 	public boolean isCompletedToday(ITask task) {
 		Date completionDate = task.getCompletionDate();
 		if (completionDate == null) {
@@ -616,17 +616,16 @@ public class TaskListManager {
 			return false;
 		}
 	}
-	
-//	public boolean isReminderThisWeek(ITask task) {
-//		Date reminder = task.getReminderDate();
-//		if (reminder != null) {
-//			Date now = new Date();
-//			Calendar nextWeekStart = activityNextWeek.getStart();
-//			return (reminder.compareTo(now) == 1 && reminder.compareTo(nextWeekStart.getTime()) == -1);
-//		} else {
-//			return false;
-//		}
-//	}
+
+	public boolean isReminderThisWeek(ITask task) {
+		Date reminder = task.getReminderDate();
+		if (reminder != null) {
+			Date now = new Date();
+			return (reminder.compareTo(now) == 1 && reminder.compareTo(activityThisWeek.getEnd().getTime()) == -1);
+		} else {
+			return false;
+		}
+	}
 
 	public boolean isReminderToday(ITask task) {
 		Date reminder = task.getReminderDate();

@@ -347,6 +347,8 @@ public class TaskListView extends ViewPart {
 
 	private TaskListTableLabelProvider taskListTableLabelProvider;
 
+	private TaskListTableSorter tableSorter;
+
 	private final class PriorityDropDownAction extends Action implements IMenuCreator {
 		private Menu dropDownMenu = null;
 
@@ -800,7 +802,9 @@ public class TaskListView extends ViewPart {
 				sortIndex = 2; // default priority
 				sortDirection = DEFAULT_SORT_DIRECTION;
 			}
-			getViewer().setSorter(new TaskListTableSorter(this, columnNames[sortIndex]));
+			tableSorter.setColumn(columnNames[sortIndex]);
+			getViewer().refresh(false);  
+//			getViewer().setSorter(new TaskListTableSorter(this, columnNames[sortIndex]));
 		}
 		addFilter(FILTER_PRIORITY);
 		// if (MylarTaskListPlugin.getDefault().isFilterInCompleteMode())
@@ -844,7 +848,9 @@ public class TaskListView extends ViewPart {
 				public void widgetSelected(SelectionEvent e) {
 					sortIndex = index;
 					sortDirection *= DEFAULT_SORT_DIRECTION;
-					getViewer().setSorter(new TaskListTableSorter(TaskListView.this, columnNames[sortIndex]));
+					tableSorter.setColumn(columnNames[sortIndex]);
+					getViewer().refresh(false);  
+//					getViewer().setSorter(new TaskListTableSorter(TaskListView.this, columnNames[sortIndex]));
 				}
 			});
 			columns[i].addControlListener(new ControlListener() {
@@ -879,7 +885,8 @@ public class TaskListView extends ViewPart {
 		editors[4] = textEditor;
 		getViewer().setCellEditors(editors);
 		getViewer().setCellModifier(new TaskListCellModifier());
-		getViewer().setSorter(new TaskListTableSorter(this, columnNames[sortIndex]));
+		tableSorter = new TaskListTableSorter(this, columnNames[sortIndex]);
+		getViewer().setSorter(tableSorter);
 
 		drillDownAdapter = new DrillDownAdapter(getViewer());
 		getViewer().setContentProvider(new TaskListContentProvider(this));

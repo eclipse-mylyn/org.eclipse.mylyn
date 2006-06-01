@@ -36,6 +36,10 @@ public class TaskListTableSorter extends ViewerSorter {
 		this.view = view;
 		this.column = column;
 	}
+	
+	public void setColumn(String column) {
+		this.column = column;
+	}
 
 	/**
 	 * compare - invoked when column is selected calls the actual comparison
