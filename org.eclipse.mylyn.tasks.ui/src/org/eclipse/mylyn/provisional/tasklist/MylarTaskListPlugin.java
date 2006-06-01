@@ -29,6 +29,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.mylar.internal.core.MylarPreferenceContstants;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.RepositoryEditorManager;
 import org.eclipse.mylar.internal.tasklist.TaskListBackupManager;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.TaskListSynchronizationManager;
@@ -89,6 +90,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	private static TaskRepositoryManager taskRepositoryManager;
 
 	private TaskListSaveManager taskListSaveManager;
+	
+	private RepositoryEditorManager repositoryEditorManager;
 
 	private TaskListSynchronizationManager taskListSynchronizationManager;
 
@@ -312,6 +315,9 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					taskListSynchronizationManager = new TaskListSynchronizationManager();
 					taskListSynchronizationManager.startSynchJob();
 
+					repositoryEditorManager = new RepositoryEditorManager();
+					taskListManager.getTaskList().addChangeListener(repositoryEditorManager);
+					
 					taskListSaveManager = new TaskListSaveManager();
 					taskListManager.getTaskList().addChangeListener(taskListSaveManager);
 
@@ -341,6 +347,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		try {
 			getMylarCorePrefs().removePropertyChangeListener(taskListNotificationManager);
 			getMylarCorePrefs().removePropertyChangeListener(taskListBackupManager);
+			taskListManager.getTaskList().removeChangeListener(repositoryEditorManager);
 			taskListManager.getTaskList().removeChangeListener(taskListSaveManager);
 			taskListManager.dispose();
 			TaskListColorsAndFonts.dispose();

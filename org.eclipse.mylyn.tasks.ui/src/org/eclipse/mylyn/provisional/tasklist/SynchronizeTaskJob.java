@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.provisional.tasklist;
 
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -20,6 +21,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor;
+import org.eclipse.mylar.internal.tasklist.ui.editors.TaskEditorInput;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.ui.progress.IProgressConstants;
@@ -58,6 +62,11 @@ class SynchronizeTaskJob extends Job {
 				if (monitor.isCanceled())
 					throw new OperationCanceledException();
 				
+				if(isDirty(repositoryTask)) {
+					MylarStatusHandler.log(repositoryTask.getDescription()+" editor dirty. Skipping synchronization.", this);
+					continue;
+				}
+				
 				// TODO: refactor conditions
 				boolean canNotSynch = repositoryTask.isDirty() || repositoryTask.isSynchronizing();
 				boolean hasLocalChanges = repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING
@@ -66,19 +75,19 @@ class SynchronizeTaskJob extends Job {
 					monitor.setTaskName(LABEL_SYNCHRONIZING+repositoryTask.getDescription());					
 					repositoryTask.setCurrentlyDownloading(true);
 					MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
-
+					
 					this.connector.updateOfflineState(repositoryTask, forceSync);
-
 					repositoryTask.setCurrentlyDownloading(false);
 
-					if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
-						repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
-					} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
-						repositoryTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
-					}
+//					if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
+//						repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
+//					} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
+//						repositoryTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
+//					}
 
 					MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);					
 				}
+				
 				monitor.worked(1);
 			}
 
@@ -90,4 +99,21 @@ class SynchronizeTaskJob extends Job {
 		// this.connector.removeRefreshingTask(repositoryTask);
 		return new Status(IStatus.OK, MylarPlugin.PLUGIN_ID, IStatus.OK, "", null);
 	}
+	
+	
+	private boolean isDirty(AbstractRepositoryTask task) {
+		// TODO: Move out of offline reports
+		List<MylarTaskEditor> editors = TaskUiUtil.getActiveRepositoryTaskEditors();
+		for (final MylarTaskEditor editor : editors) {
+			TaskEditorInput input = (TaskEditorInput) editor.getEditorInput();
+			// String handle =
+			// AbstractRepositoryTask.getHandle(oldBug.getRepositoryUrl(),
+			// oldBug.getId());
+			if (input.getTask().equals(task) && editor.isDirty()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }

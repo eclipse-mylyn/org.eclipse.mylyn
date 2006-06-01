@@ -24,13 +24,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
-import org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor;
-import org.eclipse.mylar.internal.tasklist.ui.editors.TaskEditorInput;
 import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Class to persist the data for the offline reports list
@@ -50,6 +48,8 @@ public class OfflineReportsFile {
 	/** The bug id of the most recently created offline report. */
 	protected int latestNewBugId = 0;
 
+	private boolean updateLocalCopy = false;
+
 	/**
 	 * Constructor that reads the offline reports data persisted in the plugin's
 	 * state directory, if it exists.
@@ -68,44 +68,47 @@ public class OfflineReportsFile {
 			readFile();
 		}
 	}
-	
+
 	/**
 	 * Add an offline report to the offline reports list
 	 * 
 	 * @param entry
 	 *            The bug to add
 	 */
-	public BugzillaOfflineStatus add(BugzillaReport entry, boolean saveChosen) throws CoreException {
+	public BugzillaOfflineStatus add(final BugzillaReport entry, boolean forceSync) throws CoreException {
 
 		BugzillaOfflineStatus status = BugzillaOfflineStatus.SAVED;
 
 		try {
 
-			int index = -1;
-			if ((index = find(entry.getRepositoryUrl(), entry.getId())) >= 0) {
-				BugzillaReport oldBug = list.get(index);
-
-				String handle = AbstractRepositoryTask.getHandle(entry.getRepositoryUrl(), entry.getId());
-				ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
-				
-				if (task != null && task instanceof AbstractRepositoryTask) {
-					AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+			String handle = AbstractRepositoryTask.getHandle(entry.getRepositoryUrl(), entry.getId());
+			ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
+			if (task != null && task instanceof AbstractRepositoryTask) {
+				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+				int index = -1;
+				if ((index = find(entry.getRepositoryUrl(), entry.getId())) >= 0) {
+					BugzillaReport oldBug = list.get(index);
 
 					if (repositoryTask.getLastOpened() == null
-							|| entry.getLastModified().compareTo(repositoryTask.getLastOpened()) > 0) {
+							|| entry.getLastModified().compareTo(repositoryTask.getLastOpened()) > 0 || forceSync) {
 
-						ITask dirtyTask = getDirtyTask(entry);
+						if (oldBug.hasChanges()) {
 
-						if (oldBug.hasChanges() || dirtyTask != null) {
-							if (!MessageDialog
-									.openQuestion(
-											null,
-											"Update Local Copy",
-											"Local copy of Report "
-													+ entry.getId()
-													+ " on "
-													+ entry.getRepositoryUrl()
-													+ " has changes.\nWould you like to override local changes? \n\nNote: if you select No, only the new comment will be saved with the updated bug, all other changes will be lost.")) {
+							PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+								public void run() {
+									updateLocalCopy = MessageDialog
+											.openQuestion(
+													null,
+													"Update Local Copy",
+													"Local copy of Report "
+															+ entry.getId()
+															+ " on "
+															+ entry.getRepositoryUrl()
+															+ " has changes.\nWould you like to override local changes? \n\nNote: if you select No, only the new comment will be saved with the updated bug, all other changes will be lost.");
+								}
+							});
+
+							if (!updateLocalCopy) {
 								((BugzillaReport) entry).setNewComment(((BugzillaReport) oldBug).getNewComment());
 								((BugzillaReport) entry).setHasChanged(true);
 								status = BugzillaOfflineStatus.CONFLICT;
@@ -113,26 +116,26 @@ public class OfflineReportsFile {
 								((BugzillaReport) entry).setHasChanged(false);
 								status = BugzillaOfflineStatus.SAVED;
 							}
-							if (dirtyTask != null) {
-								TaskUiUtil.closeEditorInActivePage(dirtyTask);
-								TaskUiUtil.openEditor(dirtyTask, false);
-							}
 						} else {
-							if (reopenEditors(oldBug)) {
+							if (forceSync) {
 								status = BugzillaOfflineStatus.SAVED;
 							} else {
 								status = BugzillaOfflineStatus.SAVED_WITH_INCOMMING_CHANGES;
 							}
 						}
+						list.remove(index);
+						if (entry.hasChanges() && status != BugzillaOfflineStatus.CONFLICT) {
+							status = BugzillaOfflineStatus.SAVED_WITH_OUTGOING_CHANGES;
+						}
+						list.add(entry);
+						writeFile();
 					}
+				} else {
+					// report doesn't exist in offline reports
+					list.add(entry);
+					writeFile();
 				}
-				list.remove(index);
 			}
-			if (entry.hasChanges() && status != BugzillaOfflineStatus.CONFLICT) {
-				status = BugzillaOfflineStatus.SAVED_WITH_OUTGOING_CHANGES;
-			}			
-			list.add(entry);
-			writeFile();
 		} catch (Exception e) {
 			e.printStackTrace();
 			IStatus runtimestatus = new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK,
@@ -266,36 +269,6 @@ public class OfflineReportsFile {
 	// }
 	// return status;
 	// }
-
-	private ITask getDirtyTask(BugzillaReport oldBug) {
-		// TODO: Move out of offline reports
-		ITask dirtyTask = null;
-		List<MylarTaskEditor> editors = TaskUiUtil.getActiveRepositoryTaskEditors();
-		for (final MylarTaskEditor editor : editors) {
-			TaskEditorInput input = (TaskEditorInput) editor.getEditorInput();
-			String handle = AbstractRepositoryTask.getHandle(oldBug.getRepositoryUrl(), oldBug.getId());
-			if (input.getTask().getHandleIdentifier().equals(handle) && editor.isDirty()) {
-				dirtyTask = input.getTask();
-				break;
-			}
-		}
-		return dirtyTask;
-	}
-
-	private boolean reopenEditors(BugzillaReport oldBug) {
-		// TODO: Move out of offline reports
-		List<MylarTaskEditor> editors = TaskUiUtil.getActiveRepositoryTaskEditors();
-		for (final MylarTaskEditor editor : editors) {
-			TaskEditorInput input = (TaskEditorInput) editor.getEditorInput();
-			String handle = AbstractRepositoryTask.getHandle(oldBug.getRepositoryUrl(), oldBug.getId());
-			if (input.getTask().getHandleIdentifier().equals(handle)) {
-				TaskUiUtil.closeEditorInActivePage(input.getTask());
-				TaskUiUtil.openEditor(input.getTask(), false);
-				return true;
-			}
-		}
-		return false;
-	}
 
 	/**
 	 * Updates the offline reports list. Used when existing offline reports are

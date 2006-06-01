@@ -14,12 +14,8 @@ package org.eclipse.mylar.internal.tasklist.ui;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.IJobChangeListener;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
@@ -145,7 +141,6 @@ public class TaskUiUtil {
 				task = (ITask) element;
 			}
 
-			boolean forceUpdate = false;
 			if (task instanceof AbstractRepositoryTask) {
 				String repositoryKind = ((AbstractRepositoryTask) task).getRepositoryKind();
 				final AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager()
@@ -158,36 +153,40 @@ public class TaskUiUtil {
 							"Repository does not have credentials set, verify via " + TaskRepositoriesView.NAME + " view");
 				}
 				if (connector != null) {
-					Job refreshJob = connector.synchronize((AbstractRepositoryTask) task, forceUpdate,
-							new IJobChangeListener() {
-
-								public void done(IJobChangeEvent event) {
-									TaskUiUtil.openEditor(task, false);
-								}
-
-								public void aboutToRun(IJobChangeEvent event) {
-									// ignore
-								}
-
-								public void awake(IJobChangeEvent event) {
-									// ignore
-								}
-
-								public void running(IJobChangeEvent event) {
-									// ignore
-								}
-
-								public void scheduled(IJobChangeEvent event) {
-									// ignore
-								}
-
-								public void sleeping(IJobChangeEvent event) {
-									// ignore
-								}
-							});
-					if (refreshJob == null) {
-						TaskUiUtil.openEditor(task, false);
-					}
+					TaskUiUtil.openEditor(task, false);
+					connector.synchronize((AbstractRepositoryTask) task, false, null);
+					
+					
+//					Job refreshJob = connector.synchronize((AbstractRepositoryTask) task, forceUpdate,
+//							new IJobChangeListener() {
+//
+//								public void done(IJobChangeEvent event) {
+//									TaskUiUtil.openEditor(task, false);
+//								}
+//
+//								public void aboutToRun(IJobChangeEvent event) {
+//									// ignore
+//								}
+//
+//								public void awake(IJobChangeEvent event) {
+//									// ignore
+//								}
+//
+//								public void running(IJobChangeEvent event) {
+//									// ignore
+//								}
+//
+//								public void scheduled(IJobChangeEvent event) {
+//									// ignore
+//								}
+//
+//								public void sleeping(IJobChangeEvent event) {
+//									// ignore
+//								}
+//							});
+//					if (refreshJob == null) {
+//						TaskUiUtil.openEditor(task, false);
+//					}
 				}
 			} else {
 				TaskUiUtil.openEditor(task, false);
@@ -210,9 +209,7 @@ public class TaskUiUtil {
 	 * Set asyncExec false for testing purposes.
 	 */
 	public static void openEditor(final ITask task, boolean asyncExec, boolean newTask) {
-		if(task instanceof AbstractRepositoryTask) {
-			((AbstractRepositoryTask)task).setLastOpened(new Date());
-		}
+
 		final IEditorInput editorInput = new TaskEditorInput(task, newTask);
 
 		if (asyncExec) {

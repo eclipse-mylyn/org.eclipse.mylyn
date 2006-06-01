@@ -20,6 +20,7 @@ import java.net.Proxy;
 import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -68,7 +69,6 @@ import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettings
 import org.eclipse.mylar.internal.tasklist.ui.wizards.ExistingTaskWizardPage;
 import org.eclipse.mylar.internal.tasklist.util.TaskDataExportJob;
 import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReport;
-import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReportAttribute;
 import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.provisional.bugzilla.core.ReportAttachment;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
@@ -144,6 +144,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				bugzillaTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
 			}
 		}
+
 		saveOffline(bugzillaBug, true);
 
 	}
@@ -358,9 +359,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		String handle = AbstractRepositoryTask.getHandle(report.getRepositoryUrl(), report.getId());
 		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
 		if (task != null && task instanceof BugzillaTask) {
-			BugzillaTask bugTask = (BugzillaTask) task;
-			bugTask.setSyncState(state);
-			MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(bugTask);
+			final BugzillaTask bugTask = (BugzillaTask) task;
+			bugTask.setSyncState(state);			
+//			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//				public void run() {
+					MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(bugTask);
+//				}
+//			});			
 		}
 	}
 
@@ -390,17 +395,19 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 											"Bugzilla could not post your bug.");
 								} else if (throwable.getCause() instanceof PossibleBugzillaFailureException) {
-									String attributes = "";
-									if (bugReport != null) {
-										for (AbstractRepositoryReportAttribute attribute : bugReport.getAttributes()) {
-											attributes += attribute.getID() + "=" + attribute.getValue() + " | ";
-										}
-										MylarStatusHandler.log(attributes, BugzillaRepositoryConnector.class);
-									}
+									// String attributes = "";
+									// if (bugReport != null) {
+									// for (AbstractRepositoryReportAttribute
+									// attribute : bugReport.getAttributes()) {
+									// attributes += attribute.getID() + "=" +
+									// attribute.getValue() + " | ";
+									// }
+									// MylarStatusHandler.log(attributes,
+									// BugzillaRepositoryConnector.class);
+									//									}
 									WebBrowserDialog.openAcceptAgreement(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 											"Possible problem posting Bugzilla report.\n"
 													+ throwable.getCause().getMessage(), form.getError());
-
 								} else if (throwable.getCause() instanceof LoginException) {
 									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 											"Bugzilla could not post your bug since your login name or password is incorrect."
@@ -447,34 +454,35 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
-	/**
-	 * Saves the given report to the offlineReportsFile, or, if it already
-	 * exists in the file, updates it.
-	 * 
-	 * @param bug
-	 *            The bug to add/update.
-	 * @param saveChosen
-	 *            This is used to determine a refresh from a user save
-	 */
-	public BugzillaOfflineStatus saveOffline(final BugzillaReport bug, final boolean forceSynch) {
-
-		BugzillaOfflineStatus status = BugzillaOfflineStatus.ERROR;
-
-		if (!forceSyncExecForTesting) {
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					internalSaveOffline(bug, forceSynch);
-				}
-			});
-		} else {
-			internalSaveOffline(bug, forceSynch);
-		}
-		return status;
-	}
+//	/**
+//	 * Saves the given report to the offlineReportsFile, or, if it already
+//	 * exists in the file, updates it.
+//	 * 
+//	 * @param bug
+//	 *            The bug to add/update.
+//	 * @param saveChosen
+//	 *            This is used to determine a refresh from a user save
+//	 */
+//	public BugzillaOfflineStatus saveOffline(final BugzillaReport bug, final boolean forceSynch) {
+//
+//		BugzillaOfflineStatus status = BugzillaOfflineStatus.ERROR;
+//
+////		if (!forceSyncExecForTesting) {
+////			Display.getDefault().asyncExec(new Runnable() {
+////				public void run() {
+////					internalSaveOffline(bug, forceSynch);
+////				}
+////			});
+////		} else {
+//			internalSaveOffline(bug, forceSynch);
+////		}
+//		return status;
+//	}
 
 	// TODO: pull up
-	private void internalSaveOffline(final BugzillaReport report, final boolean forceSynch) {
+	public void saveOffline(final BugzillaReport report, final boolean forceSynch) {
 		// If there is already an offline report for this bug, update the file.
+		
 		if (((AbstractRepositoryReport) report).isSavedOffline()) {
 			BugzillaUiPlugin.getDefault().getOfflineReportsFile().update();
 		} else {
@@ -493,9 +501,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				// // return;
 				// }
 				BugzillaOfflineStatus offlineStatus = BugzillaUiPlugin.getDefault().getOfflineReportsFile().add(report,
-						false);
-				((AbstractRepositoryReport) report).setOfflineState(true);
-				// saveForced forced to false (hack)
+						forceSynch);
+				((AbstractRepositoryReport) report).setOfflineState(true);				
 				offlineStatusChange(report, offlineStatus, forceSynch);
 
 			} catch (CoreException e) {
@@ -590,6 +597,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			if (downloadedReport != null) {
 				bugzillaTask.setBugReport(downloadedReport);
 				saveOffline(downloadedReport, forceSync);
+				repositoryTask.setLastOpened(new Date());
 			}
 		}
 	}
