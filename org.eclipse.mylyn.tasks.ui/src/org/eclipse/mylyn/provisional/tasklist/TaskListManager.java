@@ -617,6 +617,15 @@ public class TaskListManager {
 		}
 	}
 
+	public boolean isReminderLater(ITask task) {
+		Date reminder = task.getReminderDate();
+		if (reminder != null) {
+			return reminder.compareTo(activityFuture.getStart().getTime()) > -1;
+		} else {
+			return false;
+		}
+	} 
+	
 	public boolean isReminderThisWeek(ITask task) {
 		Date reminder = task.getReminderDate();
 		if (reminder != null) {

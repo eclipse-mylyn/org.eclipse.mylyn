@@ -45,6 +45,7 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 	
 	private ITask task = null;
 
+	@SuppressWarnings("deprecation")
 	public MenuManager getSubMenuManager(TaskListView view, ITaskListElement selection) {
 		final ITaskListElement selectedElement = selection;
 		final TaskListView taskListView = view;
@@ -69,10 +70,14 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 		action.setText(LABEL_TODAY);
 		action.setEnabled(canSchedule());
 		subMenuManager.add(action);
+		if (MylarTaskListPlugin.getTaskListManager().isReminderToday(task)) {
+			action.setChecked(true);
+		}
 		subMenuManager.add(new Separator());
 		
 		final int today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-		for (int i = today+1; i <= 7; i++) {
+		boolean reachedEndOfWeek = false;
+		for (int i = today+1; i <= 8 && !reachedEndOfWeek; i++) {
 			final int day = i;
 			action = new Action() {
 				@Override
@@ -84,7 +89,14 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 				}
 			};
 			getDayLabel(i, action);
-			
+			int tasksCheduledOn = task.getReminderDate().getDay();
+			if (MylarTaskListPlugin.getTaskListManager().isReminderThisWeek(task)) { 
+				if (tasksCheduledOn+1 == day) {
+					action.setChecked(true);
+				} else if (tasksCheduledOn ==0 && day == 8) {
+					action.setChecked(true);
+				}
+			}
 			action.setEnabled(canSchedule());
 			subMenuManager.add(action);	
 		}
@@ -100,6 +112,10 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 		};
 		action.setText(LABEL_NEXT_WEEK);
 		action.setEnabled(canSchedule());
+		if (MylarTaskListPlugin.getTaskListManager().isReminderAfterThisWeek(task) &&
+			!MylarTaskListPlugin.getTaskListManager().isReminderLater(task)) {
+			action.setChecked(true);
+		}
 		subMenuManager.add(action);
 
 		action = new Action() {
@@ -111,6 +127,9 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 		};
 		action.setText(LABEL_FUTURE);
 		action.setEnabled(canSchedule());
+		if (MylarTaskListPlugin.getTaskListManager().isReminderLater(task)) {
+			action.setChecked(true);
+		}
 		subMenuManager.add(action);
 
 		subMenuManager.add(new Separator());
@@ -165,7 +184,7 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 			case Calendar.SATURDAY:
 				action.setText("Saturday");
 				break;
-			case Calendar.SUNDAY:
+			case 8:
 				action.setText("Sunday");
 				break;
 		default:
