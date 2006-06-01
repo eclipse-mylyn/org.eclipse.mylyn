@@ -75,13 +75,13 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 			|| NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(task.getDescription());
 	}
 
-	private boolean isInterestingForThisWeek(ITask task) {
-		return MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task)
+	public static boolean isInterestingForThisWeek(ITask task) {
+		return MylarTaskListPlugin.getTaskListManager().isReminderThisWeek(task)
 			|| MylarTaskListPlugin.getTaskListManager().isReminderToday(task) 
 			|| task.isPastReminder();
 	}
 
-	private boolean hasChanges(ITask task) {
+	public static boolean hasChanges(ITask task) {
 		if (task instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
 			if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {

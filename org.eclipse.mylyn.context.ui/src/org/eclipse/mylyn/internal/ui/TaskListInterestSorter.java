@@ -62,7 +62,7 @@ public class TaskListInterestSorter extends ViewerSorter {
 					}
 				} else if (element1 instanceof ITask) {
 					task1 = (ITask)element1;
-				}
+				}				
 				if (element2 instanceof AbstractQueryHit) {
 					task2 = ((AbstractQueryHit)element2).getCorrespondingTask();
 					if (task2 == null) {
@@ -70,50 +70,102 @@ public class TaskListInterestSorter extends ViewerSorter {
 					}
 				} else if (element2 instanceof ITask) {
 					task2 = (ITask)element2;
+				}
+				
+				int complete = compareCompleted(task1, task2);
+				if (complete != 0) {
+					return complete;
+				} else {
+					int thisWeek = compareThisWeek(task1, task2);
+					if (thisWeek != 0) {
+						return thisWeek;
+					} else {
+						int today = compareToday(task1, task2);
+						if (today != 0) {
+							return today;
+						} else {
+							int overdue = compareOverdue(task1, task2);
+							if (overdue != 0) {
+								return overdue;
+							} else {
+								int hasChanges = compareChanges(task1, task2);
+								if (hasChanges != 0) {
+									return hasChanges;
+								}
+							}
+						}
+					}
 				} 
-				
-				if (task1.isCompleted() && !task2.isCompleted()) {
-					return 1;
-				} else if (!task1.isCompleted() && task2.isCompleted()) {
-					return -1;
-				} else if (task1.isCompleted() && task2.isCompleted()){
-					return comparePrioritiesAndKeys(task1, task2);
-				}
-
-				if (MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task1) && !MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task2)) {
-					return 1;
-				} else if (!MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task1) && MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task2)) {
-					return -1;
-				} else if (MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task1) && MylarTaskListPlugin.getTaskListManager().isActiveThisWeek(task2)) {
-					return comparePrioritiesAndKeys(task1, task2);
-				}
-				
-				if (MylarTaskListPlugin.getTaskListManager().isReminderToday(task1) && !MylarTaskListPlugin.getTaskListManager().isReminderToday(task2)) {
-					return 1;
-				} else if (!MylarTaskListPlugin.getTaskListManager().isReminderToday(task1) && MylarTaskListPlugin.getTaskListManager().isReminderToday(task2)) {
-					return -1;
-				} else if (MylarTaskListPlugin.getTaskListManager().isReminderToday(task1) && MylarTaskListPlugin.getTaskListManager().isReminderToday(task2)) {
-					return comparePrioritiesAndKeys(task1, task2);
-				}
-				
-				if (task1.isPastReminder() && !task2.isPastReminder()) {
-					return 1;
-				} else if (!task1.isPastReminder() && task2.isPastReminder()) {
-					return -1;
-				} else if (task1.isPastReminder() && task2.isPastReminder()){
-					return comparePrioritiesAndKeys(task1, task2);
-				}
-				
-//				if (task1.isPastReminder() && MylarTaskListPlugin.getTaskListManager().isReminderToday(task2)) {
-//					return 1;
-//				} else if (MylarTaskListPlugin.getTaskListManager().isReminderToday(task1) && task2.isPastReminder()) {
-//					return -1;
-//				}
-				
 				return comparePrioritiesAndKeys(element1, element2);
 			}
 		} 
 		return 0;
+	}
+
+	private int compareOverdue(ITask task1, ITask task2) {
+		if (task1.isPastReminder() && !task2.isPastReminder()) {
+			return 1;
+		} else if (!task1.isPastReminder() && task2.isPastReminder()) {
+			return -1;
+		} else if (task1.isPastReminder() && task2.isPastReminder()){
+			return comparePrioritiesAndKeys(task1, task2);
+		} else {
+			return 0;
+		}
+	}
+
+	private int compareToday(ITask task1, ITask task2) {
+		if (MylarTaskListPlugin.getTaskListManager().isReminderToday(task1) && !MylarTaskListPlugin.getTaskListManager().isReminderToday(task2)) {
+			return 1;
+		} else if (!MylarTaskListPlugin.getTaskListManager().isReminderToday(task1) && MylarTaskListPlugin.getTaskListManager().isReminderToday(task2)) {
+			return -1;
+		} else if (MylarTaskListPlugin.getTaskListManager().isReminderToday(task1) && MylarTaskListPlugin.getTaskListManager().isReminderToday(task2)) {
+			return comparePrioritiesAndKeys(task1, task2);
+		} else {
+			return 0;
+		}
+	}
+
+	private int compareChanges(ITask task1, ITask task2) {
+		if (TaskListInterestFilter.hasChanges(task1)
+				&& !TaskListInterestFilter.hasChanges(task2)) {
+			return 1;
+		} else if (!TaskListInterestFilter.hasChanges(task1)
+				&& TaskListInterestFilter.hasChanges(task2)) {
+			return -1;
+		} else if (TaskListInterestFilter.hasChanges(task1)
+				&& TaskListInterestFilter.hasChanges(task2)) {
+			return comparePrioritiesAndKeys(task1, task2);
+		} else {
+			return 0;
+		}
+	}
+	
+	private int compareThisWeek(ITask task1, ITask task2) {
+		if (MylarTaskListPlugin.getTaskListManager().isReminderThisWeek(task1)
+				&& !MylarTaskListPlugin.getTaskListManager().isReminderThisWeek(task2)) {
+			return 1;
+		} else if (!MylarTaskListPlugin.getTaskListManager().isReminderThisWeek(task1)
+				&& MylarTaskListPlugin.getTaskListManager().isReminderThisWeek(task2)) {
+			return -1;
+		} else if (MylarTaskListPlugin.getTaskListManager().isReminderThisWeek(task1)
+				&& MylarTaskListPlugin.getTaskListManager().isReminderThisWeek(task2)) {
+			return comparePrioritiesAndKeys(task1, task2);
+		} else {
+			return 0;
+		}
+	}
+
+	private int compareCompleted(ITask task1, ITask task2) {
+		if (task1.isCompleted() && !task2.isCompleted()) {
+			return 1;
+		} else if (!task1.isCompleted() && task2.isCompleted()) {
+			return -1;
+		} else if (task1.isCompleted() && task2.isCompleted()){
+			return comparePrioritiesAndKeys(task1, task2);
+		} else {
+			return 0;
+		}
 	}
 
 	private int comparePrioritiesAndKeys(ITaskListElement element1, ITaskListElement element2) {
