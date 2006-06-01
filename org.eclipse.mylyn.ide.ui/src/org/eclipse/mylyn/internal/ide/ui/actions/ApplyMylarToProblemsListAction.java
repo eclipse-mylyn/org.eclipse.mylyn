@@ -61,7 +61,9 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 					Method method = infoClass.getDeclaredMethod("getViewer", new Class[] {});
 					method.setAccessible(true);
 					cachedProblemsTableViewer = (StructuredViewer) method.invoke(viewPart, new Object[] {});
-					updateMarkerViewLabelProvider(cachedProblemsTableViewer);
+					if (!cachedProblemsTableViewer.getControl().isDisposed()) {
+						updateMarkerViewLabelProvider(cachedProblemsTableViewer);
+					}
 				}
 			} catch (Exception e) {
 				MylarStatusHandler.log(e, "couldn't get problmes viewer");
