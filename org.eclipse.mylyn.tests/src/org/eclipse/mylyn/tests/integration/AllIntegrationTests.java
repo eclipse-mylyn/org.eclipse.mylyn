@@ -27,7 +27,7 @@ public class AllIntegrationTests {
 		MylarStatusHandler.setDumpErrors(true);
 
 		// $JUnit-BEGIN$
-		suite.addTestSuite(TaskListFiltersTest.class);
+		suite.addTestSuite(TaskListFilterTest.class);
 		suite.addTestSuite(DefaultPreferenceConfigTest.class);
 		suite.addTestSuite(ExtensionPointInitializationTest.class);
 		suite.addTestSuite(ChangeDataDirTest.class);

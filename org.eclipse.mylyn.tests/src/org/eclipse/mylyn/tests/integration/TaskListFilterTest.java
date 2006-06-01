@@ -29,7 +29,7 @@ import org.eclipse.mylar.provisional.tasklist.TaskListManager;
 /**
  * @author Mik Kersten
  */
-public class TaskListFiltersTest extends TestCase {
+public class TaskListFilterTest extends TestCase {
 
 	private TaskListView view = TaskListView.getFromActivePerspective();
 	
