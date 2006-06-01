@@ -114,19 +114,19 @@ public class ChangeDataDirTest extends TestCase {
 		BugzillaTask bugzillaTask = new BugzillaTask(handle, "bug1", true);
 		addBugzillaTask(bugzillaTask);
 		Date refreshDate = new Date();
-		bugzillaTask.setLastOpened(refreshDate);
+		bugzillaTask.setLastSynchronized(refreshDate);
 
 		BugzillaTask readTaskBeforeMove = (BugzillaTask) manager.getTaskList().getTask(handle);
 		assertNotNull(readTaskBeforeMove);
-		assertEquals(refreshDate, readTaskBeforeMove.getLastOpened());
+		assertEquals(refreshDate, readTaskBeforeMove.getLastSynchronized());
 
 		MylarTaskListPlugin.getDefault().getTaskListSaveManager().copyDataDirContentsTo(newDataDir);
 		MylarPlugin.getDefault().setDataDirectory(newDataDir);
   
 		BugzillaTask readTaskAfterMove = (BugzillaTask) manager.getTaskList().getTask(handle);
 		assertNotNull(readTaskAfterMove);
-		// HACK: shoudl be checking date equality, but millis seem to differ?
-		assertEquals(refreshDate.toString(), readTaskAfterMove.getLastOpened().toString());
+		// HACK: should be checking date equality, but millis seem to differ?
+		assertEquals(refreshDate.toString(), readTaskAfterMove.getLastSynchronized().toString());
 	}
 
 	private void addBugzillaTask(BugzillaTask newTask) {
