@@ -89,7 +89,7 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 				}
 			};
 			getDayLabel(i, action);
-			if (task != null) {
+			if (task != null && task.getReminderDate() != null) {
 				int tasksCheduledOn = task.getReminderDate().getDay();
 				if (MylarTaskListPlugin.getTaskListManager().isReminderThisWeek(task)) { 
 					if (tasksCheduledOn+1 == day) {
