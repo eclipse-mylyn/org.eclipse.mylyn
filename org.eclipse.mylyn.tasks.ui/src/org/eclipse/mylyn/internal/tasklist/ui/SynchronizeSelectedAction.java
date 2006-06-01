@@ -34,38 +34,22 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Ken Sueda and Mik Kersten
  */
-public class SynchronizeReportsAction extends Action implements IViewActionDelegate {
-
-	private static final String LABEL = "Synchronize Repsitory Tasks";
-
-	public static final String ID = "org.eclipse.mylar.tasklist.actions.synchronize";
+public class SynchronizeSelectedAction extends Action implements IViewActionDelegate {
 
 	private AbstractRepositoryQuery query = null;
-
-	public SynchronizeReportsAction() {
-		setText(LABEL);
-		setToolTipText(LABEL);
-		setId(ID);
-		setImageDescriptor(TaskListImages.REPOSITORY_SYNCHRONIZE);
-	}
-
-	public SynchronizeReportsAction(AbstractRepositoryQuery query) {
-		this();
-		this.query = query;
-	}
 
 	private void checkSyncResult(final IJobChangeEvent event, final AbstractRepositoryQuery problemQuery) {
 		if (event.getResult().getException() != null) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					MessageDialog.openError(Display.getDefault().getActiveShell(), "Synchronize Reports Error", event.getResult().getMessage());
+					MessageDialog.openError(Display.getDefault().getActiveShell(), "Synchronize Reports Error", event
+							.getResult().getMessage());
 				}
 			});
 		}
 	}
 
-	@Override
-	public void run() {
+	public void run(IAction action) {
 		if (query != null) {
 			AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
 					query.getRepositoryKind());
@@ -94,7 +78,7 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 					for (ITask task : cat.getChildren()) {
 						if (task instanceof AbstractRepositoryTask) {
 							AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager()
-									.getRepositoryConnector(((AbstractRepositoryTask)task).getRepositoryKind());
+									.getRepositoryConnector(((AbstractRepositoryTask) task).getRepositoryKind());
 							if (client != null)
 								client.forceRefresh((AbstractRepositoryTask) task);
 						}
@@ -115,27 +99,17 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 					}
 				}
 			}
-			
-			
-			
 		}
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				if (TaskListView.getFromActivePerspective() != null)
-					TaskListView.getFromActivePerspective().getViewer().refresh();
-			}
-		});
+		if (TaskListView.getFromActivePerspective() != null) {
+			TaskListView.getFromActivePerspective().getViewer().refresh();
+		}
 	}
 
 	public void init(IViewPart view) {
-
+		// ignore
 	}
-
-	public void run(IAction action) {
-		run();
-	}
-
+	
 	public void selectionChanged(IAction action, ISelection selection) {
-
+		// ignore
 	}
 }

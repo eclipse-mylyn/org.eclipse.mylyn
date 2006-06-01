@@ -300,7 +300,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		// }
 		// queryCategory.setMaxHits(maxHits);
 		//
-		// new SynchronizeReportsAction(queryCategory).run();
+		// new SynchronizeSelectedAction(queryCategory).run();
 		// }
 		// }
 

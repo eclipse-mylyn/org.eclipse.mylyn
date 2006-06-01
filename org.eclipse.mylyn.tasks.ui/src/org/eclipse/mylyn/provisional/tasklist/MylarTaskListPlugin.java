@@ -89,11 +89,11 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	private static TaskRepositoryManager taskRepositoryManager;
 
+	private static TaskListSynchronizationManager synchronizationManager;
+	
 	private TaskListSaveManager taskListSaveManager;
 	
 	private RepositoryEditorManager repositoryEditorManager;
-
-	private TaskListSynchronizationManager taskListSynchronizationManager;
 
 	private TaskListNotificationManager taskListNotificationManager;
 
@@ -312,8 +312,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					taskListBackupManager = new TaskListBackupManager();
 					getMylarCorePrefs().addPropertyChangeListener(taskListBackupManager);
 
-					taskListSynchronizationManager = new TaskListSynchronizationManager();
-					taskListSynchronizationManager.startSynchJob();
+					synchronizationManager = new TaskListSynchronizationManager();
+					synchronizationManager.startSynchJob();
 
 					repositoryEditorManager = new RepositoryEditorManager();
 					taskListManager.getTaskList().addChangeListener(repositoryEditorManager);
@@ -322,10 +322,10 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					taskListManager.getTaskList().addChangeListener(taskListSaveManager);
 
 					MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
-					getMylarCorePrefs().addPropertyChangeListener(taskListSynchronizationManager);
+					getMylarCorePrefs().addPropertyChangeListener(synchronizationManager);
 
 					if (getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP)) {
-						taskListSynchronizationManager.synchNow(DELAY_QUERY_REFRESH_ON_STARTUP);
+						synchronizationManager.synchNow(DELAY_QUERY_REFRESH_ON_STARTUP);
 					}
 				} catch (Exception e) {
 					MylarStatusHandler.fail(e, "Task List initialization failed", true);
@@ -553,6 +553,10 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	public TaskListBackupManager getBackupManager() {
 		return taskListBackupManager;
+	}
+
+	public static TaskListSynchronizationManager getSynchronizationManager() {
+		return synchronizationManager;
 	}
 
 }

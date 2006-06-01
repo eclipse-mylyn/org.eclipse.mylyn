@@ -202,13 +202,13 @@
   		</action>
   		
   		<action
-               class="org.eclipse.mylar.internal.tasklist.ui.SynchronizeReportsAction"
+               class="org.eclipse.mylar.internal.tasklist.ui.SynchronizeAllAction"
                enablesFor="*"
                icon="icons/etool16/repository-synchronize.gif"
                id="org.eclipse.mylar.bugzilla.ui.popup.refresh"
                label="Synchronize All"
                menubarPath="additions"
-               tooltip="Synchronize with Repository">
+               tooltip="Synchronize All Tasks and Queries">
          </action>
          <!--
     	<action
@@ -226,7 +226,7 @@
             targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
 
          <action
-               class="org.eclipse.mylar.internal.tasklist.ui.SynchronizeReportsAction"
+               class="org.eclipse.mylar.internal.tasklist.ui.SynchronizeSelectedAction"
                enablesFor="*"
                icon="icons/etool16/repository-synchronize.gif"
                id="org.eclipse.mylar.bugzilla.ui.popup.refresh"
