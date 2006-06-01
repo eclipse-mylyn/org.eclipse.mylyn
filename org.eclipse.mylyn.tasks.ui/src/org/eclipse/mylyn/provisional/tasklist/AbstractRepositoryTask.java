@@ -59,8 +59,8 @@ public abstract class AbstractRepositoryTask extends Task {
 		return lastOpened;
 	}
 
-	public void setLastOpened(Date lastRefresh) {
-		this.lastOpened = lastRefresh;
+	public void setLastOpened(Date lastOpened) {
+		this.lastOpened = lastOpened;
 	}
 
 	public void setSyncState(RepositoryTaskSyncState syncState) {

@@ -54,8 +54,8 @@ public class RepositoryEditorManager implements ITaskListChangeListener {
 
 						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 							public void run() {
-								TaskUiUtil.closeEditorInActivePage(input.getTask());
-								TaskUiUtil.refreshAndOpenTaskListElement(input.getTask());
+//								TaskUiUtil.closeEditorInActivePage(input.getTask());
+//								TaskUiUtil.refreshAndOpenTaskListElement(input.getTask());
 								// If the following is used, incoming status will remain
 								// TaskUiUtil.openEditor(input.getTask(),
 								// false);

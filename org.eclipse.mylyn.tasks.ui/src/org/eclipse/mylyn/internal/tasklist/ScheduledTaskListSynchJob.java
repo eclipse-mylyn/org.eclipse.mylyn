@@ -33,7 +33,7 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
  */
 public class ScheduledTaskListSynchJob extends Job {
 
-	private static final String JOB_NAME = "Scheduled Tasklist Refresh";
+	private static final String JOB_NAME = "Synchronizing repository tasks";
 
 	private long scheduleDelay = 1000 * 60 * 20;// 20 minutes default
 
