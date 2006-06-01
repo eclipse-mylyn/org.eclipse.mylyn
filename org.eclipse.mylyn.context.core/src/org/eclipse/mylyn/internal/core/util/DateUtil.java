@@ -22,7 +22,7 @@ import java.util.TimeZone;
 public class DateUtil {
 
 	private static final SimpleDateFormat formatter = new SimpleDateFormat();
-	
+
 	public static String getFormattedDate() {
 		return getFormattedDate(Calendar.getInstance());
 	}
@@ -143,10 +143,29 @@ public class DateUtil {
 		}
 		return formatted;
 	}
-	
+
 	public static String getZoneFormattedDate(TimeZone zone, Date date, String dateFormat) {
 		formatter.setTimeZone(zone);
-		formatter.applyPattern(dateFormat);		
+		formatter.applyPattern(dateFormat);
 		return formatter.format(date);
 	}
+	
+	
+	public static TimeZone getTimeZone(String zoneId) {
+		TimeZone timeZone = TimeZone.getTimeZone(zoneId);
+		if (!timeZone.getID().equals(zoneId)) {
+			MylarStatusHandler.log("Mylar: Specified time zone not available, using "+timeZone.getDisplayName()+". Check repository settings.",
+					DateUtil.class);
+		}
+		return timeZone;
+	}
+	
+//	public static Date parseDate(String dateString, String dateFormat, TimeZone timeZone) throws ParseException {
+//		Date result = null;
+//		formatter.setTimeZone(timeZone);
+//		formatter.applyPattern(dateFormat);
+//		result = formatter.parse(dateString);
+//		return result;
+//
+//	}
 }
