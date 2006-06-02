@@ -34,7 +34,7 @@ import javax.security.auth.login.LoginException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.internal.bugzilla.core.HtmlStreamTokenizer.Token;
-import org.eclipse.mylar.internal.tasklist.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.RepositoryReport;
 import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
 import org.eclipse.mylar.internal.tasklist.Operation;
@@ -163,9 +163,9 @@ public class BugzillaReportSubmitForm {
 
 		// go through all of the attributes and add them to
 		// the bug post
-		Iterator<AbstractRepositoryReportAttribute> itr = model.getAttributes().iterator();
+		Iterator<AbstractRepositoryTaskAttribute> itr = model.getAttributes().iterator();
 		while (itr.hasNext()) {
-			AbstractRepositoryReportAttribute a = itr.next();
+			AbstractRepositoryTaskAttribute a = itr.next();
 			if (a != null && a.getID() != null && a.getID().compareTo("") != 0) {
 				// String key = a.getName();
 				// System.err.println(">>> "+key);
@@ -222,8 +222,8 @@ public class BugzillaReportSubmitForm {
 		setConnectionsSettings(bugReportPostHandler, repositoryUrl, userName, password, proxySettings, PROCESS_BUG_CGI);
 
 		// go through all of the attributes and add them to the bug post
-		for (Iterator<AbstractRepositoryReportAttribute> it = bug.getAttributes().iterator(); it.hasNext();) {
-			AbstractRepositoryReportAttribute a = it.next();
+		for (Iterator<AbstractRepositoryTaskAttribute> it = bug.getAttributes().iterator(); it.hasNext();) {
+			AbstractRepositoryTaskAttribute a = it.next();
 			if (a.getID().equals(BugzillaReportElement.CC.getKeyString())
 					|| a.getID().equals(BugzillaReportElement.REPORTER.getKeyString())
 					|| a.getID().equals(BugzillaReportElement.ASSIGNED_TO.getKeyString())					
@@ -548,9 +548,9 @@ public class BugzillaReportSubmitForm {
 //	 * @author Wesley Coelho
 //	 */
 //	private static void setDefaultCCValue(BugzillaReport bug, String userName) {
-//		// AbstractRepositoryReportAttribute newCCattr =
+//		// AbstractRepositoryTaskAttribute newCCattr =
 //		// bug.getAttributeForKnobName(KEY_NEWCC);
-//		AbstractRepositoryReportAttribute owner = bug.getAttribute(BugzillaReportElement.ASSIGNED_TO);
+//		AbstractRepositoryTaskAttribute owner = bug.getAttribute(BugzillaReportElement.ASSIGNED_TO);
 //
 //		// Don't add the cc if the user is the bug owner
 //		if (userName == null || (owner != null && owner.getValue().indexOf(userName) != -1)) {
@@ -559,13 +559,13 @@ public class BugzillaReportSubmitForm {
 //			return;
 //		}
 //		// Don't add cc if already there
-//		AbstractRepositoryReportAttribute ccAttribute = bug.getAttribute(BugzillaReportElement.CC);
+//		AbstractRepositoryTaskAttribute ccAttribute = bug.getAttribute(BugzillaReportElement.CC);
 //		if (ccAttribute != null && ccAttribute.getValues().contains(userName)) {
 //			return;
 //		}
-//		AbstractRepositoryReportAttribute newCCattr = bug.getAttribute(BugzillaReportElement.NEWCC);
+//		AbstractRepositoryTaskAttribute newCCattr = bug.getAttribute(BugzillaReportElement.NEWCC);
 //		if (newCCattr == null) {
-//			newCCattr = new BugzillaReportAttribute(BugzillaReportElement.NEWCC);
+//			newCCattr = new RepositoryTaskAttribute(BugzillaReportElement.NEWCC);
 //			bug.addAttribute(BugzillaReportElement.NEWCC, newCCattr);
 //		}
 //		// Add the user to the cc list

@@ -14,9 +14,9 @@ package org.eclipse.mylar.internal.bugzilla.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.mylar.internal.tasklist.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.RepositoryReport;
-import org.eclipse.mylar.internal.tasklist.BugzillaReportAttribute;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
 import org.eclipse.mylar.internal.tasklist.Comment;
 import org.eclipse.mylar.internal.tasklist.ReportAttachment;
@@ -99,7 +99,7 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 		case ATTACHMENT:
 			attachment = new ReportAttachment();
 			if (attributes != null && (attributes.getValue(BugzillaReportElement.IS_OBSOLETE.getKeyString()) != null)) {
-				attachment.addAttribute(BugzillaReportElement.IS_OBSOLETE, new BugzillaReportAttribute(
+				attachment.addAttribute(BugzillaReportElement.IS_OBSOLETE, new RepositoryTaskAttribute(
 						BugzillaReportElement.IS_OBSOLETE));
 			}
 			break;
@@ -129,9 +129,9 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 				errorMessage = "Bug id from server did not match requested id.";
 			}
 
-			AbstractRepositoryReportAttribute attr = report.getAttribute(tag);
+			AbstractRepositoryTaskAttribute attr = report.getAttribute(tag);
 			if (attr == null) {
-				attr = new BugzillaReportAttribute(tag);
+				attr = new RepositoryTaskAttribute(tag);
 				report.addAttribute(tag, attr);
 			}
 			attr.setValue(characters.toString());
@@ -142,7 +142,7 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 		case WHO:
 		case BUG_WHEN:
 			if (comment != null) {
-				BugzillaReportAttribute attr = new BugzillaReportAttribute(tag);
+				RepositoryTaskAttribute attr = new RepositoryTaskAttribute(tag);
 				attr.setValue(characters.toString());
 				// System.err.println(">>> "+comment.getNumber()+"
 				// "+characters.toString());
@@ -151,7 +151,7 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			break;
 		case THETEXT:
 			if (comment != null) {
-				BugzillaReportAttribute attr = new BugzillaReportAttribute(tag);
+				RepositoryTaskAttribute attr = new RepositoryTaskAttribute(tag);
 				attr.setValue(characters.toString());
 				// System.err.println(">>> "+comment.getNumber()+"
 				// "+characters.toString());
@@ -175,7 +175,7 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 		case CTYPE:
 		case TYPE:
 			if (attachment != null) {
-				BugzillaReportAttribute attr = new BugzillaReportAttribute(tag);
+				RepositoryTaskAttribute attr = new RepositoryTaskAttribute(tag);
 				attr.setValue(characters.toString());
 				attachment.addAttribute(tag, attr);
 			}
@@ -202,10 +202,10 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 		case BUG:
 			// Reached end of bug. Need to set LONGDESCLENGTH to number of
 			// comments
-			AbstractRepositoryReportAttribute numCommentsAttribute = report
+			AbstractRepositoryTaskAttribute numCommentsAttribute = report
 					.getAttribute(BugzillaReportElement.LONGDESCLENGTH);
 			if (numCommentsAttribute == null) {
-				numCommentsAttribute = new BugzillaReportAttribute(BugzillaReportElement.LONGDESCLENGTH);
+				numCommentsAttribute = new RepositoryTaskAttribute(BugzillaReportElement.LONGDESCLENGTH);
 				numCommentsAttribute.setValue("" + report.getComments().size());
 				report.addAttribute(BugzillaReportElement.LONGDESCLENGTH, numCommentsAttribute);
 			} else {
@@ -223,11 +223,11 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 
 		// All others added as report attribute
 		default:
-			AbstractRepositoryReportAttribute attribute = report.getAttribute(tag);
+			AbstractRepositoryTaskAttribute attribute = report.getAttribute(tag);
 			if (attribute == null) {
 				// System.err.println(">>> Undeclared attribute added: " +
 				// tag.toString()+" value: "+characters.toString());
-				attribute = new BugzillaReportAttribute(tag);
+				attribute = new RepositoryTaskAttribute(tag);
 				attribute.setValue(characters.toString());
 				report.addAttribute(tag, attribute);
 			} else {

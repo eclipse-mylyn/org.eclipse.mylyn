@@ -24,7 +24,7 @@ import java.util.TimeZone;
  * @author Mik Kersten
  * @author Rob Elves
  */
-public class RepositoryReport extends AbstractRepositoryReport implements IBugzillaBug, Serializable {
+public class RepositoryReport extends AbstractRepositoryReport implements Serializable {
 
 	private static final long serialVersionUID = 310066248657960823L;
 
@@ -56,7 +56,7 @@ public class RepositoryReport extends AbstractRepositoryReport implements IBugzi
 	/** The operations that can be done on the report */
 	protected List<Operation> operations = new ArrayList<Operation>();
 
-	private static final AbstractAttributeFactory attributeFactory = new BugzillaAttributeFactory();
+	private static final AbstractTaskAttributeFactory attributeFactory = new BugzillaAttributeFactory();
 
 	/** The value for the new comment to add (text that is saved) */
 	protected String newComment = "";
@@ -124,24 +124,6 @@ public class RepositoryReport extends AbstractRepositoryReport implements IBugzi
 		return getAttributeValue(BugzillaReportElement.ASSIGNED_TO);
 	}
 
-	// public AbstractRepositoryReportAttribute
-	// getAttributeForKnobName(BugzillaReportElement element) {
-	// return super.getAttribute(element.getKeyString());
-	// }
-
-	// private String decodeStringFromCharset(String string) {
-	// String decoded = string;
-	// if (charset != null && string != null &&
-	// Charset.availableCharsets().containsKey(charset)) {
-	// try {
-	// decoded = new String(string.getBytes(), charset);
-	// } catch (UnsupportedEncodingException e) {
-	// // ignore
-	// }
-	// }
-	// return decoded;
-	// }
-
 	/**
 	 * Get the set of addresses in the CC list
 	 * 
@@ -183,96 +165,6 @@ public class RepositoryReport extends AbstractRepositoryReport implements IBugzi
 
 	}
 
-	// public AbstractRepositoryReportAttribute getAttribute(String key) {
-	// return attributes.get(key);
-	// }
-	//
-	// /**
-	// * Get the list of attributes for this bug
-	// *
-	// * @return An <code>ArrayList</code> of the bugs attributes
-	// */
-	// public List<AbstractRepositoryReportAttribute> getAttributes() {
-	// // create an array list to store the attributes in
-	// ArrayList<AbstractRepositoryReportAttribute> attributeEntries = new
-	// ArrayList<AbstractRepositoryReportAttribute>(attributeKeys.size());
-	//
-	// // go through each of the attribute keys
-	// for (Iterator<String> it = attributeKeys.iterator(); it.hasNext();) {
-	// // get the key for the attribute
-	// String key = it.next();
-	//
-	// // get the attribute and add it to the list
-	// AbstractRepositoryReportAttribute attribute = attributes.get(key);
-	// attributeEntries.add(attribute);
-	// }
-	//
-	// // return the list of attributes for the bug
-	// return attributeEntries;
-	// }
-
-	// public AbstractRepositoryReportAttribute getAttributeForKnobName(String
-	// knobName) {
-	// for (Iterator<String> it = attributeKeys.iterator(); it.hasNext();) {
-	// String key = it.next();
-	//
-	// AbstractRepositoryReportAttribute attribute = attributes.get(key);
-	// if (attribute != null && attribute.getID() != null
-	// && attribute.getID().compareTo(knobName) == 0) {
-	// return attribute;
-	// }
-	// }
-	//
-	// return null;
-	// }
-
-	// /**
-	// * @param attribute
-	// * The attribute to add to the bug
-	// */
-	// public void addAttribute(AbstractRepositoryReportAttribute attribute) {
-	// if (!attributes.containsKey(attribute.getName())) {
-	// attributeKeys.add(attribute.getName());
-	// }
-	//
-	// attribute.setValue(decodeStringFromCharset(attribute.getValue()));
-	//
-	// // put the value of the attribute into the map, using its name as the
-	// // key
-	// attributes.put(attribute.getName(), attribute);
-	// }
-
-	// /**
-	// * Get the comments posted on the bug
-	// *
-	// * @return A list of comments for the bug
-	// */
-	// public ArrayList<Comment> getComments() {
-	// return comments;
-	// }
-
-	// /**
-	// * Add a comment to the bug
-	// *
-	// * @param comment
-	// * The comment to add to the bug
-	// */
-	// public void addComment(Comment comment) {
-	// Comment preceding = null;
-	// if (comments.size() > 0) {
-	// // if there are some comments, get the last comment and set the next
-	// // value to be the new comment
-	// preceding = comments.get(comments.size() - 1);
-	// preceding.setNext(comment);
-	// }
-	// // set the comments previous value to the preceeding one
-	// comment.setPrevious(preceding);
-	//
-	// comment.setText(decodeStringFromCharset(comment.getText()));
-	// // add the comment to the comment list
-	// comments.add(comment);
-	// }
-
 	/**
 	 * Get the keywords for the bug
 	 * 
@@ -289,14 +181,6 @@ public class RepositoryReport extends AbstractRepositoryReport implements IBugzi
 		}
 
 		return keywords;
-		//		
-		// String[] keywords =
-		// getAttributeValue(BugzillaReportElement.KEYWORDS).split(",");
-		// return getAttributeValue(BugzillaReportElement.KEYWORDS)
-		// BugzillaPlugin.getDefault().getProductConfiguration(repository).getProducts()
-		//		
-		// return
-		// BugzillaRepositoryUtil.getValidKeywords(this.getRepositoryUrl());
 	}
 
 	public String getLabel() {
@@ -328,13 +212,6 @@ public class RepositoryReport extends AbstractRepositoryReport implements IBugzi
 	public String getNewComment() {
 		return newComment;
 	}
-
-	// /**
-	// * @return the new value of the new NewComment.
-	// */
-	// public String getNewNewComment() {
-	// return newNewComment;
-	// }
 
 	/**
 	 * Get an operation from the bug based on its display name
@@ -409,16 +286,12 @@ public class RepositoryReport extends AbstractRepositoryReport implements IBugzi
 		return getAttributeValue(BugzillaReportElement.PRODUCT);
 	}
 
-	// public void setSummary(String newSummary) {
-	// setAttributeValue(BugzillaReportElement.SHORT_DESC, newSummary);
-	// }
-
 	public boolean isLocallyCreated() {
 		return false;
 	}
 
 	public boolean isResolved() {
-		AbstractRepositoryReportAttribute status = getAttribute(BugzillaReportElement.BUG_STATUS);
+		AbstractRepositoryTaskAttribute status = getAttribute(BugzillaReportElement.BUG_STATUS);
 		return status != null && isResolvedStatus(status.getValue());
 	}
 
@@ -436,17 +309,7 @@ public class RepositoryReport extends AbstractRepositoryReport implements IBugzi
 	public void removeCC(String email) {
 		removeAttributeValue(BugzillaReportElement.CC, email);
 	}
-
-	// /**
-	// * Set the bugs creation date
-	// *
-	// * @param created
-	// * The date the the bug was created
-	// */
-	// public void setCreated(Date created) {
-	// this.created = created;
-	// }
-
+	
 	public void setDescription(String description) {
 		// ignore, used by NewBugReport
 		// this.description = decodeStringFromCharset(description);
@@ -493,13 +356,13 @@ public class RepositoryReport extends AbstractRepositoryReport implements IBugzi
 	}
 
 	@Override
-	public AbstractAttributeFactory getAttributeFactory() {
+	public AbstractTaskAttributeFactory getAttributeFactory() {
 		return attributeFactory;
 	}
 
-//	public AbstractRepositoryReportAttribute getAttribute(String test) {
+//	public AbstractRepositoryTaskAttribute getAttribute(String test) {
 //
 //		MylarStatusHandler.fail(new Exception(), "BugReport: getAttribute called with string", false);
-//		return new BugzillaReportAttribute(BugzillaReportElement.UNKNOWN);
+//		return new RepositoryTaskAttribute(BugzillaReportElement.UNKNOWN);
 //	}
 }

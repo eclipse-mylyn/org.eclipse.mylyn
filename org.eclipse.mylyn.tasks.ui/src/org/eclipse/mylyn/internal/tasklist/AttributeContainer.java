@@ -28,21 +28,21 @@ public class AttributeContainer implements Serializable {
 	private ArrayList<Object> attributeKeys;
 
 	/** report attributes (status, resolution, etc.) */
-	private HashMap<Object, AbstractRepositoryReportAttribute> attributes;
+	private HashMap<Object, AbstractRepositoryTaskAttribute> attributes;
 	
 	public AttributeContainer() {
 		attributeKeys = new ArrayList<Object>();
-		attributes = new HashMap<Object, AbstractRepositoryReportAttribute>();
+		attributes = new HashMap<Object, AbstractRepositoryTaskAttribute>();
 	}
 	
-	public void addAttribute(Object key, AbstractRepositoryReportAttribute attribute) {
+	public void addAttribute(Object key, AbstractRepositoryTaskAttribute attribute) {
 		if (!attributes.containsKey(attribute.getName())) {
 			attributeKeys.add(key);
 		}
 		attributes.put(key, attribute);
 	}
 	
-	public AbstractRepositoryReportAttribute getAttribute(Object key) {
+	public AbstractRepositoryTaskAttribute getAttribute(Object key) {
 		return attributes.get(key);
 	}
 
@@ -51,19 +51,19 @@ public class AttributeContainer implements Serializable {
 		attributes.remove(key);
 	}
 	
-	public List<AbstractRepositoryReportAttribute> getAttributes() {
-		ArrayList<AbstractRepositoryReportAttribute> attributeEntries = new ArrayList<AbstractRepositoryReportAttribute>(
+	public List<AbstractRepositoryTaskAttribute> getAttributes() {
+		ArrayList<AbstractRepositoryTaskAttribute> attributeEntries = new ArrayList<AbstractRepositoryTaskAttribute>(
 				attributeKeys.size());
 		for (Iterator<Object> it = attributeKeys.iterator(); it.hasNext();) {
 			Object key = it.next();
-			AbstractRepositoryReportAttribute attribute = attributes.get(key);
+			AbstractRepositoryTaskAttribute attribute = attributes.get(key);
 			attributeEntries.add(attribute);
 		}
 		return attributeEntries;
 	}
 
 	public String getAttributeValue(Object key) {
-		AbstractRepositoryReportAttribute attribute = getAttribute(key);
+		AbstractRepositoryTaskAttribute attribute = getAttribute(key);
 		if(attribute != null) {
 			// TODO: unescape should happen on connector side not here
 			//return HtmlStreamTokenizer.unescape(attribute.getValue());

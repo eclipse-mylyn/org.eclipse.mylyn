@@ -352,7 +352,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 // IPath offlineReportsPath = getOfflineReportsFilePath();
 //
 // try {
-// offlineReportsFile = new OfflineReportsFile(offlineReportsPath.toFile(),
+// offlineReportsFile = new OfflineTaskManager(offlineReportsPath.toFile(),
 // true);
 // } catch (Exception e) {
 // MylarStatusHandler.log(e,
@@ -361,7 +361,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 // offlineReportsPath.toFile().delete();
 // // if (offlineReportsPath.toFile().delete()) {
 // try {
-// offlineReportsFile = new OfflineReportsFile(offlineReportsPath.toFile(),
+// offlineReportsFile = new OfflineTaskManager(offlineReportsPath.toFile(),
 // false);
 // } catch (Exception e1) {
 // MylarStatusHandler.fail(e, "could not reset offline Bugzilla reports
@@ -384,7 +384,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 // return configFile;
 // }
 //
-// public OfflineReportsFile getOfflineReportsFile() {
+// public OfflineTaskManager getOfflineReportsFile() {
 // if (offlineReportsFile == null) {
 // MylarStatusHandler.fail(null, "Offline reports file not created, try
 // restarting.", true);

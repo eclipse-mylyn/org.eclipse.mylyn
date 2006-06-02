@@ -22,7 +22,7 @@ import java.util.Map;
  * 
  * @author Rob Elves
  */
-public abstract class AbstractRepositoryReportAttribute implements Serializable {
+public abstract class AbstractRepositoryTaskAttribute implements Serializable {
 
 	private boolean hidden = false;
 	private boolean isReadOnly = false;;
@@ -41,7 +41,7 @@ public abstract class AbstractRepositoryReportAttribute implements Serializable 
 	 */
 	private List<String> values = new ArrayList<String>();
 
-	public AbstractRepositoryReportAttribute(String name, boolean hidden) {
+	public AbstractRepositoryTaskAttribute(String name, boolean hidden) {
 		// initialize the name and its legal values
 		this.name = name;
 		this.hidden = hidden;

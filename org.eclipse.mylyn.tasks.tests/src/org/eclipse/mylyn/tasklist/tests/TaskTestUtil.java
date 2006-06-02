@@ -23,9 +23,9 @@ import java.util.Date;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.internal.tasklist.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.RepositoryReport;
-import org.eclipse.mylar.internal.tasklist.BugzillaReportAttribute;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
 import org.eclipse.mylar.internal.tasklist.Comment;
 
@@ -62,12 +62,12 @@ public class TaskTestUtil {
 	public static void setBugTaskCompleted(BugzillaTask bugzillaTask, boolean completed) {
 		RepositoryReport report = new RepositoryReport(1, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
 		bugzillaTask.setBugReport(report);
-		AbstractRepositoryReportAttribute resolvedAttribute = new BugzillaReportAttribute(
+		AbstractRepositoryTaskAttribute resolvedAttribute = new RepositoryTaskAttribute(
 				BugzillaReportElement.BUG_STATUS);
 		if (completed) {			
 			resolvedAttribute.setValue(RepositoryReport.VAL_STATUS_RESOLVED);
 			Comment comment = new Comment(report, 1);
-			AbstractRepositoryReportAttribute attribute = new BugzillaReportAttribute(BugzillaReportElement.CREATION_TS);
+			AbstractRepositoryTaskAttribute attribute = new RepositoryTaskAttribute(BugzillaReportElement.CREATION_TS);
 			attribute.setValue(Comment.creation_ts_date_format.format(new Date()));	
 			comment.addAttribute(BugzillaReportElement.CREATION_TS, attribute);
 			report.addComment(comment);

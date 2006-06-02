@@ -23,7 +23,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
@@ -312,8 +312,8 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 
 		// go through each of the attributes and sync their values with the
 		// combo boxes
-		for (Iterator<AbstractRepositoryReportAttribute> it = nbm.getAttributes().iterator(); it.hasNext();) {
-			AbstractRepositoryReportAttribute attribute = it.next();
+		for (Iterator<AbstractRepositoryTaskAttribute> it = nbm.getAttributes().iterator(); it.hasNext();) {
+			AbstractRepositoryTaskAttribute attribute = it.next();
 			String key = attribute.getName();
 			Map<String, String> values = attribute.getOptionValues();
 
@@ -418,8 +418,8 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 		newLayout(attributesComposite, 1, nbm.getProduct(), VALUE);
 
 		// Populate Attributes
-		for (Iterator<AbstractRepositoryReportAttribute> it = nbm.getAttributes().iterator(); it.hasNext();) {
-			AbstractRepositoryReportAttribute attribute = it.next();
+		for (Iterator<AbstractRepositoryTaskAttribute> it = nbm.getAttributes().iterator(); it.hasNext();) {
+			AbstractRepositoryTaskAttribute attribute = it.next();
 			String key = attribute.getID();
 			String name = attribute.getName();
 			String value = checkText(attribute.getValue());
@@ -726,8 +726,8 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 
 			// Get OS Lookup Map
 			// Check that the result is in Values, if it is not, set it to other
-			AbstractRepositoryReportAttribute opSysAttribute = newBugModel.getAttribute(BugzillaReportElement.OP_SYS);
-			AbstractRepositoryReportAttribute platformAttribute = newBugModel.getAttribute(BugzillaReportElement.REP_PLATFORM);
+			AbstractRepositoryTaskAttribute opSysAttribute = newBugModel.getAttribute(BugzillaReportElement.OP_SYS);
+			AbstractRepositoryTaskAttribute platformAttribute = newBugModel.getAttribute(BugzillaReportElement.REP_PLATFORM);
 
 			String OS = Platform.getOS();
 			String platform = Platform.getOSArch();

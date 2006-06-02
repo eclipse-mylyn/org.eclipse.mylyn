@@ -20,7 +20,7 @@ import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.IStructureComparator;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylar.internal.tasklist.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.RepositoryReport;
 import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
 import org.eclipse.mylar.internal.tasklist.Comment;
@@ -195,7 +195,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 
 		Image attributeImage = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
 		BugzillaCompareNode attributes = new BugzillaCompareNode("Attributes", null, attributeImage);
-		for (AbstractRepositoryReportAttribute attribute : bug.getAttributes()) {
+		for (AbstractRepositoryTaskAttribute attribute : bug.getAttributes()) {
 			BugzillaCompareNode child = new BugzillaCompareNode(attribute.toString(), attribute.getValue(), defaultImage);
 			attributes.addChild(child);	
 		}
@@ -244,8 +244,8 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 //
 //		Image attributeImage = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
 //		BugzillaCompareNode attributes = new BugzillaCompareNode("Attributes", null, attributeImage);
-//		for (Iterator<AbstractRepositoryReportAttribute> iter = bug.getAttributes().iterator(); iter.hasNext();) {
-//			AbstractRepositoryReportAttribute attribute = iter.next();
+//		for (Iterator<AbstractRepositoryTaskAttribute> iter = bug.getAttributes().iterator(); iter.hasNext();) {
+//			AbstractRepositoryTaskAttribute attribute = iter.next();
 //			if (attribute.getName().compareTo("delta_ts") == 0 || attribute.getName().compareTo("Last Modified") == 0
 //					|| attribute.getName().compareTo("longdesclength") == 0)
 //				continue;

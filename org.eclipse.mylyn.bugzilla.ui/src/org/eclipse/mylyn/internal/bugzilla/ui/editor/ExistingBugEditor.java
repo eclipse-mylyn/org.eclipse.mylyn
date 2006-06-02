@@ -43,8 +43,8 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaCompareInput;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
-import org.eclipse.mylar.internal.tasklist.AbstractRepositoryReportAttribute;
-import org.eclipse.mylar.internal.tasklist.BugzillaReportAttribute;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTaskAttribute;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
 import org.eclipse.mylar.internal.tasklist.Comment;
 import org.eclipse.mylar.internal.tasklist.Operation;
@@ -662,20 +662,20 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		// if they aren't already on the cc list create an add self check box
 		
 		
-		AbstractRepositoryReportAttribute owner = bug.getAttribute(BugzillaReportElement.ASSIGNED_TO);
+		AbstractRepositoryTaskAttribute owner = bug.getAttribute(BugzillaReportElement.ASSIGNED_TO);
 
 		// Don't add addselfcc check box if the user is the bug owner
 		if (owner != null && owner.getValue().indexOf(repository.getUserName()) != -1) {			
 			return;
 		}
 		// Don't add addselfcc if already there
-		AbstractRepositoryReportAttribute ccAttribute = bug.getAttribute(BugzillaReportElement.CC);
+		AbstractRepositoryTaskAttribute ccAttribute = bug.getAttribute(BugzillaReportElement.CC);
 		if (ccAttribute != null && ccAttribute.getValues().contains(repository.getUserName())) {
 			return;
 		}
-		AbstractRepositoryReportAttribute addselfcc = bug.getAttribute(BugzillaReportElement.ADDSELFCC);
+		AbstractRepositoryTaskAttribute addselfcc = bug.getAttribute(BugzillaReportElement.ADDSELFCC);
 		if (addselfcc == null) {
-			addselfcc = new BugzillaReportAttribute(BugzillaReportElement.ADDSELFCC);			
+			addselfcc = new RepositoryTaskAttribute(BugzillaReportElement.ADDSELFCC);			
 			bug.addAttribute(BugzillaReportElement.ADDSELFCC, addselfcc);
 		} 
 		
@@ -829,9 +829,9 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		bug.setHasChanged(true);
 		// go through all of the attributes and update the main values to the
 		// new ones
-		// for (Iterator<AbstractRepositoryReportAttribute> it =
+		// for (Iterator<AbstractRepositoryTaskAttribute> it =
 		// bug.getAttributes().iterator(); it.hasNext();) {
-		// AbstractRepositoryReportAttribute a = it.next();
+		// AbstractRepositoryTaskAttribute a = it.next();
 		// if (a.getNewValue() != null &&
 		// a.getNewValue().compareTo(a.getValue()) != 0) {
 		// bug.setHasChanged(true);
@@ -857,9 +857,9 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 		// go through all of the attributes and restore the new values to the
 		// main ones
-		// for (Iterator<AbstractRepositoryReportAttribute> it =
+		// for (Iterator<AbstractRepositoryTaskAttribute> it =
 		// bug.getAttributes().iterator(); it.hasNext();) {
-		// AbstractRepositoryReportAttribute a = it.next();
+		// AbstractRepositoryTaskAttribute a = it.next();
 		// a.setNewValue(a.getValue());
 		// }
 
@@ -1103,7 +1103,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	@Override
 	public void handleSummaryEvent() {
 		String sel = summaryText.getText();
-		AbstractRepositoryReportAttribute a = getReport().getAttribute(BugzillaReportElement.SHORT_DESC);
+		AbstractRepositoryTaskAttribute a = getReport().getAttribute(BugzillaReportElement.SHORT_DESC);
 		if (!(a.getValue().equals(sel))) {
 			a.setValue(sel);
 			changeDirtyStatus(true);

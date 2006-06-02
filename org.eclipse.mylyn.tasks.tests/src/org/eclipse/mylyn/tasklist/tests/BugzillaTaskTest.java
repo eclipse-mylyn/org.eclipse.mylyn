@@ -18,9 +18,9 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.internal.tasklist.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.RepositoryReport;
-import org.eclipse.mylar.internal.tasklist.BugzillaReportAttribute;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
 import org.eclipse.mylar.internal.tasklist.Comment;
 
@@ -51,13 +51,13 @@ public class BugzillaTaskTest extends TestCase {
 		Date now = new Date(calendar.getTimeInMillis());
 
 		Comment comment = new Comment(report, 1);
-		AbstractRepositoryReportAttribute attribute = new BugzillaReportAttribute(BugzillaReportElement.BUG_WHEN);
+		AbstractRepositoryTaskAttribute attribute = new RepositoryTaskAttribute(BugzillaReportElement.BUG_WHEN);
 		attribute.setValue(Comment.creation_ts_date_format.format(now));
 		comment.addAttribute(BugzillaReportElement.BUG_WHEN, attribute);
 		report.addComment(comment);
 		assertNull(task.getCompletionDate());
 
-		AbstractRepositoryReportAttribute resolvedAttribute = new BugzillaReportAttribute(
+		AbstractRepositoryTaskAttribute resolvedAttribute = new RepositoryTaskAttribute(
 				BugzillaReportElement.BUG_STATUS);
 		resolvedAttribute.setValue(RepositoryReport.VAL_STATUS_RESOLVED);
 		report.addAttribute(BugzillaReportElement.BUG_STATUS, resolvedAttribute);

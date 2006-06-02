@@ -52,7 +52,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.IBugzillaReportSelection;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryReport;
-import org.eclipse.mylar.internal.tasklist.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
 import org.eclipse.mylar.internal.tasklist.Comment;
 import org.eclipse.mylar.internal.tasklist.ReportAttachment;
@@ -283,7 +283,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 	protected List<ISelectionChangedListener> selectionChangedListeners = new ArrayList<ISelectionChangedListener>();
 
-	protected HashMap<CCombo, AbstractRepositoryReportAttribute> comboListenerMap = new HashMap<CCombo, AbstractRepositoryReportAttribute>();
+	protected HashMap<CCombo, AbstractRepositoryTaskAttribute> comboListenerMap = new HashMap<CCombo, AbstractRepositoryTaskAttribute>();
 
 	private IBugzillaReportSelection lastSelected = null;
 
@@ -335,7 +335,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 			if (comboListenerMap.containsKey(combo)) {
 				if (combo.getSelectionIndex() > -1) {
 					String sel = combo.getItem(combo.getSelectionIndex());
-					AbstractRepositoryReportAttribute attribute = comboListenerMap.get(combo);
+					AbstractRepositoryTaskAttribute attribute = comboListenerMap.get(combo);
 					if (sel != null && !(sel.equals(attribute.getValue()))) {
 						attribute.setValue(sel);
 						for (IBugzillaAttributeListener client : attributesListeners) {
@@ -599,9 +599,9 @@ public abstract class AbstractBugEditor extends EditorPart {
 	// // String ccValue = null;
 	//
 	// // Populate Attributes
-	// for (Iterator<AbstractRepositoryReportAttribute> it =
+	// for (Iterator<AbstractRepositoryTaskAttribute> it =
 	// getReport().getAttributes().iterator(); it.hasNext();) {
-	// AbstractRepositoryReportAttribute attribute = it.next();
+	// AbstractRepositoryTaskAttribute attribute = it.next();
 	// String key = attribute.getID();
 	// String name = attribute.getName();
 	// String value = checkText(attribute.getValue());
@@ -815,7 +815,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 	// assignedTo.addListener(SWT.KeyUp, new Listener() {
 	// public void handleEvent(Event event) {
 	// String sel = assignedTo.getText();
-	// AbstractRepositoryReportAttribute a = getReport().getAttribute(
+	// AbstractRepositoryTaskAttribute a = getReport().getAttribute(
 	// BugzillaReportElement.ASSIGNED_TO);
 	// if (!(a.getValue().equals(sel))) {
 	// a.setValue(sel);
@@ -951,7 +951,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 		int currentCol = 1;
 
-		for (AbstractRepositoryReportAttribute attribute : getReport().getAttributes()) {
+		for (AbstractRepositoryTaskAttribute attribute : getReport().getAttributes()) {
 
 			// String key = attribute.getID();
 			String name = attribute.getName();
@@ -1014,7 +1014,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 					text.addListener(SWT.KeyUp, new Listener() {
 						public void handleEvent(Event event) {
 							String sel = text.getText();
-							AbstractRepositoryReportAttribute a = (AbstractRepositoryReportAttribute) text.getData();
+							AbstractRepositoryTaskAttribute a = (AbstractRepositoryTaskAttribute) text.getData();
 							if (!(a.getValue().equals(sel))) {
 								a.setValue(sel);
 								changeDirtyStatus(true);
@@ -1095,7 +1095,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 		urlText.addListener(SWT.KeyUp, new Listener() {
 			public void handleEvent(Event event) {
 				String sel = urlText.getText();
-				AbstractRepositoryReportAttribute a = getReport().getAttribute(BugzillaReportElement.BUG_FILE_LOC);
+				AbstractRepositoryTaskAttribute a = getReport().getAttribute(BugzillaReportElement.BUG_FILE_LOC);
 				if (!(a.getValue().equals(sel))) {
 					a.setValue(sel);
 					changeDirtyStatus(true);

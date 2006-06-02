@@ -194,8 +194,8 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 
 		// go through all of the attributes and update the main values to the
 		// new ones
-//		for (Iterator<AbstractRepositoryReportAttribute> it = bug.getAttributes().iterator(); it.hasNext();) {
-//			AbstractRepositoryReportAttribute attribute = it.next();
+//		for (Iterator<AbstractRepositoryTaskAttribute> it = bug.getAttributes().iterator(); it.hasNext();) {
+//			AbstractRepositoryTaskAttribute attribute = it.next();
 //			if (attribute.getValue() != null && attribute.getValue().compareTo(attribute.getValue()) != 0) {
 //				bug.setHasChanged(true);
 //			}

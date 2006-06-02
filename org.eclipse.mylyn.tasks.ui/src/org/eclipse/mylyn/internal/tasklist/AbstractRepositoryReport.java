@@ -105,7 +105,7 @@ public abstract class AbstractRepositoryReport extends AttributeContainer implem
 	public abstract void setOfflineState(boolean newOfflineState);
 
 //	public String getAttributeValue(Object key) {
-//		AbstractRepositoryReportAttribute attribute = getAttribute(key);
+//		AbstractRepositoryTaskAttribute attribute = getAttribute(key);
 //		if(attribute != null) {
 //			return attribute.getValue();
 //		}
@@ -113,7 +113,7 @@ public abstract class AbstractRepositoryReport extends AttributeContainer implem
 //	}
 	
 	public List<String> getAttributeValues(Object key) {
-		AbstractRepositoryReportAttribute attribute = getAttribute(key);
+		AbstractRepositoryTaskAttribute attribute = getAttribute(key);
 		if(attribute != null) {
 			return attribute.getValues();
 		}
@@ -125,7 +125,7 @@ public abstract class AbstractRepositoryReport extends AttributeContainer implem
 	 * appropriate attribute is created
 	 */
 	public void setAttributeValue(Object key, String value) {
-		AbstractRepositoryReportAttribute attrib = getAttribute(key);
+		AbstractRepositoryTaskAttribute attrib = getAttribute(key);
 		if(attrib == null) {
 			attrib = getAttributeFactory().createAttribute(key);
 			this.addAttribute(key, attrib);
@@ -134,7 +134,7 @@ public abstract class AbstractRepositoryReport extends AttributeContainer implem
 	}
 	
 	public void addAttributeValue(Object key, String value) {
-		AbstractRepositoryReportAttribute attrib = getAttribute(key);
+		AbstractRepositoryTaskAttribute attrib = getAttribute(key);
 		if (attrib != null) {
 			attrib.addValue(value);
 		} else {
@@ -145,11 +145,11 @@ public abstract class AbstractRepositoryReport extends AttributeContainer implem
 	}
 	
 	public void removeAttributeValue(Object key, String value) {
-		AbstractRepositoryReportAttribute attrib = getAttribute(key);
+		AbstractRepositoryTaskAttribute attrib = getAttribute(key);
 		if (attrib != null) {
 			attrib.removeValue(value);
 		} 
 	}
 
-	public abstract AbstractAttributeFactory getAttributeFactory();
+	public abstract AbstractTaskAttributeFactory getAttributeFactory();
 }

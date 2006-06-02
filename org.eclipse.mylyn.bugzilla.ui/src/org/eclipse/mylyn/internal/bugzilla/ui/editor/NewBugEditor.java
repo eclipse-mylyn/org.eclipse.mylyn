@@ -225,8 +225,8 @@ public class NewBugEditor extends AbstractBugEditor {
 	protected void updateBug() {
 		// go through all of the attributes and update the main values to the
 		// new ones
-//		for (Iterator<AbstractRepositoryReportAttribute> it = bug.getAttributes().iterator(); it.hasNext();) {
-//			AbstractRepositoryReportAttribute a = it.next();
+//		for (Iterator<AbstractRepositoryTaskAttribute> it = bug.getAttributes().iterator(); it.hasNext();) {
+//			AbstractRepositoryTaskAttribute a = it.next();
 //			a.setValue(a.getNewValue());
 //		}
 
@@ -239,8 +239,8 @@ public class NewBugEditor extends AbstractBugEditor {
 	protected void restoreBug() {
 		// go through all of the attributes and restore the new values to the
 		// main ones
-//		for (Iterator<AbstractRepositoryReportAttribute> it = bug.getAttributes().iterator(); it.hasNext();) {
-//			AbstractRepositoryReportAttribute a = it.next();
+//		for (Iterator<AbstractRepositoryTaskAttribute> it = bug.getAttributes().iterator(); it.hasNext();) {
+//			AbstractRepositoryTaskAttribute a = it.next();
 //			a.setNewValue(a.getValue());
 //		}
 	}

@@ -15,7 +15,7 @@ import java.net.Proxy;
 import java.security.GeneralSecurityException;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
-import org.eclipse.mylar.internal.tasklist.OfflineReportsFile;
+import org.eclipse.mylar.internal.tasklist.OfflineTaskManager;
 import org.eclipse.mylar.internal.tasklist.RepositoryReport;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
@@ -86,7 +86,7 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 	private RepositoryReport getCurrentBug(TaskRepository repository, Proxy proxySettings, int id)
 			throws IOException, GeneralSecurityException {
 		// Look among the offline reports for a bug with the given id.
-		OfflineReportsFile reportsFile = MylarTaskListPlugin.getDefault().getOfflineReportsFile();
+		OfflineTaskManager reportsFile = MylarTaskListPlugin.getDefault().getOfflineReportsFile();
 		if (reportsFile != null) {
 			int offlineId = reportsFile.find(repository.getUrl(), id);
 	

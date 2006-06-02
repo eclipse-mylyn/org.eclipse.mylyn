@@ -394,7 +394,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 								} else if (throwable.getCause() instanceof PossibleBugzillaFailureException) {
 									// String attributes = "";
 									// if (bugReport != null) {
-									// for (AbstractRepositoryReportAttribute
+									// for (AbstractRepositoryTaskAttribute
 									// attribute : bugReport.getAttributes()) {
 									// attributes += attribute.getID() + "=" +
 									// attribute.getValue() + " | ";
@@ -506,7 +506,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			} catch (CoreException e) {
 				MylarStatusHandler.fail(e, e.getMessage(), false);
 			}
-			// file.sort(OfflineReportsFile.lastSel);
+			// file.sort(OfflineTaskManager.lastSel);
 		}
 	}
 

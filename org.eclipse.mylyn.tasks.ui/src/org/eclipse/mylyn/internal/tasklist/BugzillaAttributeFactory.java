@@ -11,15 +11,14 @@
 
 package org.eclipse.mylar.internal.tasklist;
 
-
 /**
  * @author Rob Elves
  */
-public class BugzillaAttributeFactory extends AbstractAttributeFactory {
+public class BugzillaAttributeFactory extends AbstractTaskAttributeFactory {
 
 	@Override
-	public AbstractRepositoryReportAttribute createAttribute(Object key) {
-		return new BugzillaReportAttribute((BugzillaReportElement) key);
+	public AbstractRepositoryTaskAttribute createAttribute(Object key) {
+		return new RepositoryTaskAttribute((BugzillaReportElement) key);
 	}
 
 }

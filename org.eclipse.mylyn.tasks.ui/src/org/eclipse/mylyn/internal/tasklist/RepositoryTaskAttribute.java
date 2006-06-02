@@ -14,8 +14,14 @@ package org.eclipse.mylar.internal.tasklist;
 /**
  * @author Rob Elves
  */
-public abstract class AbstractAttributeFactory {
+public class RepositoryTaskAttribute extends AbstractRepositoryTaskAttribute {
 
-	public abstract AbstractRepositoryReportAttribute createAttribute(Object key);
+	private static final long serialVersionUID = 6959987055086133307L;
+
+	public RepositoryTaskAttribute(BugzillaReportElement element) {
+		super(element.toString(), element.isHidden());
+		super.setID(element.getKeyString());
+		super.setReadOnly(element.isReadOnly());
+	}
 	
 }

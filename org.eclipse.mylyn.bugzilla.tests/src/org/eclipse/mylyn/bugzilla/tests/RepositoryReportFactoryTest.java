@@ -21,7 +21,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryReportFactory;
-import org.eclipse.mylar.internal.tasklist.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.RepositoryReport;
 import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
@@ -151,7 +151,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 		assertEquals("2006-03-02 18:13", report.getAttribute(BugzillaReportElement.CREATION_TS).getValue());
 		assertEquals("2006-05-03 13:06:11", report.getAttribute(BugzillaReportElement.DELTA_TS).getValue());
 		assertEquals("---", report.getAttribute(BugzillaReportElement.TARGET_MILESTONE).getValue());
-		AbstractRepositoryReportAttribute attribute = report.getAttribute(BugzillaReportElement.BLOCKED);
+		AbstractRepositoryTaskAttribute attribute = report.getAttribute(BugzillaReportElement.BLOCKED);
 		assertEquals(2, attribute.getValues().size());
 		assertEquals("2", attribute.getValues().get(0));
 		assertEquals("9", attribute.getValues().get(1));
@@ -194,7 +194,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 		assertEquals("2002-10-07 09:32", report.getAttribute(BugzillaReportElement.CREATION_TS).getValue());
 		assertEquals("2006-02-03 12:03:57", report.getAttribute(BugzillaReportElement.DELTA_TS).getValue());
 		assertEquals("core, performance, ui", report.getAttribute(BugzillaReportElement.KEYWORDS).getValue());
-		// AbstractRepositoryReportAttribute attribute =
+		// AbstractRepositoryTaskAttribute attribute =
 		// report.getAttribute(BugzillaReportElement.CC);
 		// assertEquals(30, attribute.getValues().size());
 		// assertEquals("relves@cs.ubc.ca", attribute.getValues().get(0));

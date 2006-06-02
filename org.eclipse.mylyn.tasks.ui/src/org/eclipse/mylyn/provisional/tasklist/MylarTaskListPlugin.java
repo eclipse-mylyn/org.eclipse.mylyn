@@ -31,7 +31,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.mylar.internal.core.MylarPreferenceContstants;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.OfflineReportsFile;
+import org.eclipse.mylar.internal.tasklist.OfflineTaskManager;
 import org.eclipse.mylar.internal.tasklist.RepositoryEditorManager;
 import org.eclipse.mylar.internal.tasklist.TaskListBackupManager;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
@@ -102,7 +102,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	private TaskListBackupManager taskListBackupManager;
 	
-	private OfflineReportsFile offlineReportsFile;
+	private OfflineTaskManager offlineTaskManager;
 
 	private List<ITaskEditorFactory> taskEditors = new ArrayList<ITaskEditorFactory>();
 
@@ -568,14 +568,14 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		IPath offlineReportsPath = getOfflineReportsFilePath();
 
 		try {
-			offlineReportsFile = new OfflineReportsFile(offlineReportsPath.toFile(), true);
+			offlineTaskManager = new OfflineTaskManager(offlineReportsPath.toFile(), true);
 		} catch (Exception e) {
 			MylarStatusHandler.log(e,
 							"Could not restore offline Bugzilla reports file, creating new one (possible version incompatibility)");
 			offlineReportsPath.toFile().delete();
 //			if (offlineReportsPath.toFile().delete()) {
 			try {
-				offlineReportsFile = new OfflineReportsFile(offlineReportsPath.toFile(), false);
+				offlineTaskManager = new OfflineTaskManager(offlineReportsPath.toFile(), false);
 			} catch (Exception e1) {
 				MylarStatusHandler.fail(e, "could not reset offline Bugzilla reports file", true);
 			}
@@ -594,11 +594,11 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		return configFile;
 	}
 
-	public OfflineReportsFile getOfflineReportsFile() {
-		if (offlineReportsFile == null) {
+	public OfflineTaskManager getOfflineReportsFile() {
+		if (offlineTaskManager == null) {
 			MylarStatusHandler.fail(null, "Offline reports file not created, try restarting.", true);
 		} 
-		return offlineReportsFile;
+		return offlineTaskManager;
 	}
 
 	public static TaskListSynchronizationManager getSynchronizationManager() {
