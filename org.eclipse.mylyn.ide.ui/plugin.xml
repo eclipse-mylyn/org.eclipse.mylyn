@@ -115,7 +115,7 @@
         <action
               class="org.eclipse.mylar.internal.ide.ui.actions.CommitContextAction"
               enablesFor="*"
-              icon="icons/elcl16/cvs_persp.gif"
+              icon="icons/elcl16/context-commit.gif"
               id="org.eclipse.mylar.ide.ui.team.context.commit"
               label="Commit Context..."
               menubarPath="context"

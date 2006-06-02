@@ -60,7 +60,7 @@
               enablesFor="1"
               icon="icons/etool16/context-retrieve.gif"
               id="org.eclipse.mylar.ui.context.repository.retrieve"
-              label="Retrieve Context (Experimental)"
+              label="Retrieve Context"
               menubarPath="context">
            <enablement>
               <or>
@@ -74,7 +74,7 @@
               enablesFor="1"
               icon="icons/etool16/context-attach.gif"
               id="org.eclipse.mylar.ui.context.repository.attach"
-              label="Attach Context (Experimental)"
+              label="Attach Context..."
               menubarPath="context">
            <enablement>
               <or>
