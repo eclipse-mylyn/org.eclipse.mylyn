@@ -145,16 +145,13 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 	 */
 	public void installInterestFilter(final boolean on, StructuredViewer viewer) {
 		if (viewer != null) {
-			boolean installed = false;
+//			boolean installed = false;
 			if (on) {
-				installed = installInterestFilter(viewer);
+				installInterestFilter(viewer);
 				MylarUiPlugin.getDefault().getViewerManager().addFilteredViewer(viewer);
 			} else {
 				MylarUiPlugin.getDefault().getViewerManager().removeFilteredViewer(viewer);
 				uninstallInterestFilter(viewer);
-			}
-			if (installed && on && viewer instanceof TreeViewer) {
-				((TreeViewer)viewer).expandAll();
 			}
 		}
 	}
@@ -193,6 +190,9 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 				}
 			}
 			viewer.addFilter(interestFilter);
+			if (viewer instanceof TreeViewer) {
+				((TreeViewer)viewer).expandAll();
+			}
 			viewer.getControl().setRedraw(true);
 			return true;
 		} catch (Throwable t) {
@@ -255,12 +255,4 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 		return interestFilter;
 	}
 
-//	protected IViewPart getView(String id) {
-//		getV
-//		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-//		if (activePage == null)
-//			return null;
-//		IViewPart view = activePage.findView(id);
-//		return view;
-//	}
 }
