@@ -38,19 +38,19 @@ import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaCompareInput;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.internal.tasklist.BugzillaReportAttribute;
+import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
+import org.eclipse.mylar.internal.tasklist.Comment;
+import org.eclipse.mylar.internal.tasklist.Operation;
+import org.eclipse.mylar.internal.tasklist.RepositoryReport;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
-import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReportAttribute;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReportAttribute;
-import org.eclipse.mylar.provisional.bugzilla.core.Comment;
-import org.eclipse.mylar.provisional.bugzilla.core.Operation;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
@@ -122,7 +122,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 	protected Text addCommentsText;
 
-	protected BugzillaReport bug;
+	protected RepositoryReport bug;
 
 	public String getNewCommentText() {
 		return addCommentsTextBox.getText();
@@ -348,7 +348,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	}
 
 	@Override
-	public BugzillaReport getBug() {
+	public RepositoryReport getBug() {
 		return bug;
 	}
 
@@ -879,7 +879,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
-			final BugzillaReport serverBug;
+			final RepositoryReport serverBug;
 			try {
 				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
 						BugzillaPlugin.REPOSITORY_KIND, bug.getRepositoryUrl());

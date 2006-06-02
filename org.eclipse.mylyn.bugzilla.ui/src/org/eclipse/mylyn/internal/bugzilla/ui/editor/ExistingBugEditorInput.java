@@ -15,9 +15,9 @@ import java.net.Proxy;
 import java.security.GeneralSecurityException;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylar.internal.bugzilla.ui.OfflineReportManager;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.internal.tasklist.OfflineReportsFile;
+import org.eclipse.mylar.internal.tasklist.RepositoryReport;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
 /**
@@ -32,9 +32,9 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 
 	protected int bugId;
 
-	protected BugzillaReport bug;
+	protected RepositoryReport bug;
 
-	public ExistingBugEditorInput(TaskRepository repository, BugzillaReport bug) {
+	public ExistingBugEditorInput(TaskRepository repository, RepositoryReport bug) {
 		this.bug = bug;
 		this.bugId = bug.getId();
 		this.repository = repository;
@@ -83,18 +83,18 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 	}
 
 	// TODO: move
-	private BugzillaReport getCurrentBug(TaskRepository repository, Proxy proxySettings, int id)
+	private RepositoryReport getCurrentBug(TaskRepository repository, Proxy proxySettings, int id)
 			throws IOException, GeneralSecurityException {
 		// Look among the offline reports for a bug with the given id.
-		OfflineReportManager reportsFile = BugzillaUiPlugin.getDefault().getOfflineReportsFile();
+		OfflineReportsFile reportsFile = MylarTaskListPlugin.getDefault().getOfflineReportsFile();
 		if (reportsFile != null) {
 			int offlineId = reportsFile.find(repository.getUrl(), id);
 	
 			// If an offline bug was found, return it if possible.
 			if (offlineId != -1) {
-				BugzillaReport bug = reportsFile.elements().get(offlineId);
-				if (bug instanceof BugzillaReport) {
-					return (BugzillaReport) bug;
+				RepositoryReport bug = reportsFile.elements().get(offlineId);
+				if (bug instanceof RepositoryReport) {
+					return (RepositoryReport) bug;
 				}
 			}
 		} 
@@ -114,7 +114,7 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 	}
 
 	@Override
-	public BugzillaReport getBug() {
+	public RepositoryReport getBug() {
 		return bug;
 	}
 

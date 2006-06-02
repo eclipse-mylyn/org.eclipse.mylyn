@@ -50,7 +50,6 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.internal.bugzilla.core.AbstractReportFactory.UnrecognizedBugzillaError;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchHit;
@@ -60,14 +59,14 @@ import org.eclipse.mylar.internal.bugzilla.ui.wizard.NewBugzillaReportWizard;
 import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.ZipFileUtil;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryReport;
+import org.eclipse.mylar.internal.tasklist.ReportAttachment;
+import org.eclipse.mylar.internal.tasklist.RepositoryReport;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractAddExistingTaskWizard;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.ExistingTaskWizardPage;
 import org.eclipse.mylar.internal.tasklist.util.TaskDataExportJob;
-import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReport;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
-import org.eclipse.mylar.provisional.bugzilla.core.ReportAttachment;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
@@ -128,12 +127,12 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return BugzillaPlugin.REPOSITORY_KIND;
 	}
 
-	public void saveBugReport(BugzillaReport bugzillaBug) {
+	public void saveBugReport(RepositoryReport bugzillaBug) {
 		String handle = AbstractRepositoryTask.getHandle(bugzillaBug.getRepositoryUrl(), bugzillaBug.getId());
 		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
 		if (task instanceof BugzillaTask) {
 			BugzillaTask bugzillaTask = (BugzillaTask) task;
-			bugzillaTask.setBugReport((BugzillaReport) bugzillaBug);
+			bugzillaTask.setBugReport((RepositoryReport) bugzillaBug);
 
 			if (bugzillaBug.hasChanges()) {
 				bugzillaTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
@@ -146,7 +145,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	}
 
-	private BugzillaReport downloadReport(final BugzillaTask bugzillaTask) {
+	private RepositoryReport downloadReport(final BugzillaTask bugzillaTask) {
 		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
 				BugzillaPlugin.REPOSITORY_KIND, bugzillaTask.getRepositoryUrl());
 		Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
@@ -299,7 +298,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		// }
 		// queryCategory.setMaxHits(maxHits);
 		//
-		// new SynchronizeSelectedAction(queryCategory).run();
+		// new SynchronizeReportsAction(queryCategory).run();
 		// }
 		// }
 
@@ -367,7 +366,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
-	public void submitBugReport(final BugzillaReport bugReport, final BugzillaReportSubmitForm form,
+	public void submitBugReport(final RepositoryReport bugReport, final BugzillaReportSubmitForm form,
 			IJobChangeListener listener) {
 
 		if (forceSyncExecForTesting) {
@@ -430,7 +429,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
-	private void internalSubmitBugReport(BugzillaReport bugReport, BugzillaReportSubmitForm form) {
+	private void internalSubmitBugReport(RepositoryReport bugReport, BugzillaReportSubmitForm form) {
 		try {
 			form.submitReportToRepository();
 			removeReport(bugReport);
@@ -479,11 +478,11 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	// }
 
 	// TODO: pull up
-	public void saveOffline(final BugzillaReport report, final boolean forceSynch) {
+	public void saveOffline(final RepositoryReport report, final boolean forceSynch) {
 		// If there is already an offline report for this bug, update the file.
 
 		if (((AbstractRepositoryReport) report).isSavedOffline()) {
-			BugzillaUiPlugin.getDefault().getOfflineReportsFile().update();
+			MylarTaskListPlugin.getDefault().getOfflineReportsFile().update();
 		} else {
 			try {
 				// int index = -1;
@@ -499,7 +498,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				// // identical id.");
 				// // return;
 				// }
-				RepositoryTaskSyncState offlineStatus = BugzillaUiPlugin.getDefault().getOfflineReportsFile().add(
+				RepositoryTaskSyncState offlineStatus = MylarTaskListPlugin.getDefault().getOfflineReportsFile().add(
 						report, forceSynch);
 				((AbstractRepositoryReport) report).setOfflineState(true);
 				offlineStatusChange(report, offlineStatus);
@@ -507,7 +506,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			} catch (CoreException e) {
 				MylarStatusHandler.fail(e, e.getMessage(), false);
 			}
-			// file.sort(OfflineReportManager.lastSel);
+			// file.sort(OfflineReportsFile.lastSel);
 		}
 	}
 
@@ -516,13 +515,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 //		return file.elements();
 //	}
 
-	public static void removeReport(BugzillaReport bug) {
+	public static void removeReport(RepositoryReport bug) {
 		bug.setOfflineState(false);
 		// offlineStatusChange(bug, BugzillaOfflineStatus.DELETED, false);
 		offlineStatusChange(bug, RepositoryTaskSyncState.SYNCHRONIZED);
-		ArrayList<BugzillaReport> bugList = new ArrayList<BugzillaReport>();
+		ArrayList<RepositoryReport> bugList = new ArrayList<RepositoryReport>();
 		bugList.add(bug);
-		BugzillaUiPlugin.getDefault().getOfflineReportsFile().remove(bugList);
+		MylarTaskListPlugin.getDefault().getOfflineReportsFile().remove(bugList);
 	}
 
 	@Override
@@ -593,7 +592,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	protected void updateOfflineState(AbstractRepositoryTask repositoryTask, boolean forceSync) {
 		if (repositoryTask instanceof BugzillaTask) {
 			BugzillaTask bugzillaTask = (BugzillaTask) repositoryTask;
-			BugzillaReport downloadedReport = downloadReport(bugzillaTask);
+			RepositoryReport downloadedReport = downloadReport(bugzillaTask);
 			if (downloadedReport != null) {
 				bugzillaTask.setBugReport(downloadedReport);
 				saveOffline(downloadedReport, forceSync);
