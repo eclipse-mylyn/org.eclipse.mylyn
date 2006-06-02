@@ -50,8 +50,6 @@ public class BugzillaTask extends AbstractRepositoryTask {
 	private void initFromHandle() {
 		int id = AbstractRepositoryTask.getTaskIdAsInt(getHandleIdentifier());
 		String repositoryUrl = getRepositoryUrl();
-		// repositoryUrl =
-		// TaskRepositoryManager.getRepositoryUrl(getHandleIdentifier());
 		if (repositoryUrl != null) {
 			String url = BugzillaRepositoryUtil.getBugUrlWithoutLogin(repositoryUrl, id);
 			if (url != null) {
@@ -132,11 +130,12 @@ public class BugzillaTask extends AbstractRepositoryTask {
 			if (bugReport.isResolved()) {
 				List<Comment> comments = bugReport.getComments();
 				if (comments != null && !comments.isEmpty()) {
+					// TODO: fix not to be based on comment
 					return comments.get(comments.size() - 1).getCreated();
 				}
 			}
 		}
-		return null;
+		return super.getCompletionDate();
 	}
 
 	public String getRepositoryKind() {
