@@ -93,7 +93,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 
 	private static IBugzillaResultEditorMatchAdapter resultEditorMatchAdapter = null;
 
-	private OfflineReportsFile offlineReportsFile;
+	private OfflineReportManager offlineReportManager;
 
 	public static final char PREF_DELIM_REPOSITORY = ':';
 
@@ -143,14 +143,14 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		IPath offlineReportsPath = getOfflineReportsFilePath();
 
 		try {
-			offlineReportsFile = new OfflineReportsFile(offlineReportsPath.toFile(), true);
+			offlineReportManager = new OfflineReportManager(offlineReportsPath.toFile(), true);
 		} catch (Exception e) {
 			MylarStatusHandler.log(e,
 							"Could not restore offline Bugzilla reports file, creating new one (possible version incompatibility)");
 			offlineReportsPath.toFile().delete();
 //			if (offlineReportsPath.toFile().delete()) {
 			try {
-				offlineReportsFile = new OfflineReportsFile(offlineReportsPath.toFile(), false);
+				offlineReportManager = new OfflineReportManager(offlineReportsPath.toFile(), false);
 			} catch (Exception e1) {
 				MylarStatusHandler.fail(e, "could not reset offline Bugzilla reports file", true);
 			}
@@ -169,16 +169,12 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		return configFile;
 	}
 
-	public OfflineReportsFile getOfflineReportsFile() {
-		if (offlineReportsFile == null) {
+	public OfflineReportManager getOfflineReportsFile() {
+		if (offlineReportManager == null) {
 			MylarStatusHandler.fail(null, "Offline reports file not created, try restarting.", true);
 		} 
-		return offlineReportsFile;
+		return offlineReportManager;
 	}
-
-//	public List<BugzillaReport> getSavedBugReports() {
-//		return offlineReportsFile.elements();
-//	}
 
 	/**
 	 * Returns the shared instance.

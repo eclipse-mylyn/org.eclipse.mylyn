@@ -21,8 +21,6 @@ import java.util.List;
  */
 public abstract class AbstractRepositoryReport extends AttributeContainer implements Serializable {
 
-//	private String charset = null;
-
 	private int reportID;
 
 	private String repositoryURL;
@@ -49,9 +47,6 @@ public abstract class AbstractRepositoryReport extends AttributeContainer implem
 		}
 		// set the comments previous value to the preceeding one
 		comment.setPrevious(preceding);
-
-		// comment.setText(decodeStringFromCharset(comment.getText()));
-		// add the comment to the comment list
 		comments.add(comment);
 	}
 
@@ -78,16 +73,8 @@ public abstract class AbstractRepositoryReport extends AttributeContainer implem
 		return repositoryURL;
 	}
 
-//	public String getCharset() {
-//		return charset;
-//	}
-//
-//	public void setCharset(String charset) {
-//		this.charset = charset;
-//	}
-
 	public boolean hasChanges() {
-		return hasChanges ;
+		return hasChanges;
 	}
 
 	public void setHasChanged(boolean b) {
@@ -113,13 +100,6 @@ public abstract class AbstractRepositoryReport extends AttributeContainer implem
 	 */
 	public abstract void setOfflineState(boolean newOfflineState);
 
-//	public String getAttributeValue(Object key) {
-//		AbstractRepositoryReportAttribute attribute = getAttribute(key);
-//		if(attribute != null) {
-//			return attribute.getValue();
-//		}
-//		return "";
-//	}
 	
 	public List<String> getAttributeValues(Object key) {
 		AbstractRepositoryReportAttribute attribute = getAttribute(key);

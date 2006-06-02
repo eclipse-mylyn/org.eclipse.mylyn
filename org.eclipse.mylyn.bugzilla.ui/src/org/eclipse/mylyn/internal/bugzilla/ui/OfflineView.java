@@ -208,11 +208,11 @@
 //		toolbar.add(selectAll);
 //
 //		// create actions to handle the sorting of the OfflineReports
-//		// sortByIDAction = new SortByAction(OfflineReportsFile.ID_SORT);
+//		// sortByIDAction = new SortByAction(OfflineReportManager.ID_SORT);
 //		// sortByIDAction.setText("by &Bug ID");
 //		// sortByIDAction.setToolTipText("Sorts by Bug number");
 //		//		
-//		// sortByTypeAction = new SortByAction(OfflineReportsFile.TYPE_SORT);
+//		// sortByTypeAction = new SortByAction(OfflineReportManager.TYPE_SORT);
 //		// sortByTypeAction.setText("by &Bug Type");
 //		// sortByTypeAction.setToolTipText("Sorts by locally created/from server
 //		// status");
@@ -233,11 +233,11 @@
 //	// * Function to make sure that the appropriate sort is checked
 //	// */
 //	// void updateSortingState() {
-//	// int curCriterion = OfflineReportsFile.lastSel;
+//	// int curCriterion = OfflineReportManager.lastSel;
 //	//		
-//	// sortByIDAction.setChecked(curCriterion == OfflineReportsFile.ID_SORT);
+//	// sortByIDAction.setChecked(curCriterion == OfflineReportManager.ID_SORT);
 //	// sortByTypeAction.setChecked(curCriterion ==
-//	// OfflineReportsFile.TYPE_SORT);
+//	// OfflineReportManager.TYPE_SORT);
 //	// viewer.setInput(viewer.getInput());
 //	// }
 //	//	
@@ -444,7 +444,7 @@
 //	}
 //
 //	/**
-//	 * Calls remove function in OfflineReportsFile
+//	 * Calls remove function in OfflineReportManager
 //	 */
 //	@SuppressWarnings("unchecked")
 //	public void deleteSelectedOfflineReports() {
@@ -457,11 +457,11 @@
 //	}
 //
 //	/**
-//	 * Removes all of the offline reports in the OfflineReportsFile.
+//	 * Removes all of the offline reports in the OfflineReportManager.
 //	 */
 //	public void deleteAllOfflineReports() {
 //		closeOfflineReports(BugzillaPlugin.getDefault().getOfflineReports().elements());
-//		List<IBugzillaBug> reports = new ArrayList<IBugzillaBug>(OfflineReportsFile.getOfflineBugs());
+//		List<IBugzillaBug> reports = new ArrayList<IBugzillaBug>(OfflineReportManager.getOfflineBugs());
 //		for (IBugzillaBug bug : reports) {
 //			removeReport(bug);
 //		}
@@ -481,7 +481,7 @@
 //		Display.getDefault().asyncExec(new Runnable() {
 //			public void run() {
 //
-//				OfflineReportsFile file = BugzillaPlugin.getDefault().getOfflineReports();
+//				OfflineReportManager file = BugzillaPlugin.getDefault().getOfflineReports();
 //				// If there is already an offline report for this bug, update
 //				// the file.
 //				if (bug.isSavedOffline()) {
@@ -506,7 +506,7 @@
 //					} catch (CoreException e) {
 //						MylarStatusHandler.fail(e, e.getMessage(), false);
 //					}
-//					// file.sort(OfflineReportsFile.lastSel);
+//					// file.sort(OfflineReportManager.lastSel);
 //				}
 //				// OfflineView.checkWindow();
 //				OfflineView.refreshView();
@@ -515,7 +515,7 @@
 //	}
 //
 //	public static List<IBugzillaBug> getOfflineBugs() {
-//		OfflineReportsFile file = BugzillaPlugin.getDefault().getOfflineReports();
+//		OfflineReportManager file = BugzillaPlugin.getDefault().getOfflineReports();
 //		return file.elements();
 //	}
 //

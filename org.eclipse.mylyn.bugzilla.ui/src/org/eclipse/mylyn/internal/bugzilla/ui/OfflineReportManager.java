@@ -37,7 +37,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * Class to persist the data for the offline reports list
  */
-public class OfflineReportsFile {
+public class OfflineReportManager {
 
 	public enum BugzillaOfflineStatus {
 		SAVED, SAVED_WITH_OUTGOING_CHANGES, DELETED, SAVED_WITH_INCOMMING_CHANGES, CONFLICT, ERROR
@@ -66,15 +66,13 @@ public class OfflineReportsFile {
 	 * @throws ClassNotFoundException
 	 *             Error deserializing objects from the offline reports file
 	 */
-	public OfflineReportsFile(File file, boolean read) throws IOException, ClassNotFoundException {
+	public OfflineReportManager(File file, boolean read) throws IOException, ClassNotFoundException {
 		this.file = file;
 		if (read && file.exists()) {
 			readFile();
 		}
 	}
 
-	
-	
 	/**
 	 * Add an offline report to the offline reports list
 	 * 
@@ -89,24 +87,26 @@ public class OfflineReportsFile {
 
 			String handle = AbstractRepositoryTask.getHandle(entry.getRepositoryUrl(), entry.getId());
 			ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
-			
+
 			if (task != null && task instanceof AbstractRepositoryTask) {
 				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
-				
-				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
-				
-				if(repository == null) {
+
+				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+						repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
+
+				if (repository == null) {
 					throw new Exception("No repository associated with task. Unable to retrieve timezone information.");
 				}
-				
-				TimeZone repositoryTimeZone = DateUtil.getTimeZone(repository.getTimeZoneId());				
-				
+
+				TimeZone repositoryTimeZone = DateUtil.getTimeZone(repository.getTimeZoneId());
+
 				int index = -1;
 				if ((index = find(entry.getRepositoryUrl(), entry.getId())) >= 0) {
 					BugzillaReport oldBug = list.get(index);
 
 					if (repositoryTask.getLastSynchronized() == null
-							|| entry.getLastModified(repositoryTimeZone).compareTo(repositoryTask.getLastSynchronized()) > 0 || forceSync) {
+							|| entry.getLastModified(repositoryTimeZone)
+									.compareTo(repositoryTask.getLastSynchronized()) > 0 || forceSync) {
 
 						if (oldBug.hasChanges()) {
 
@@ -161,7 +161,6 @@ public class OfflineReportsFile {
 		}
 		return status;
 	}
-	
 
 	// DO NOT REMOVE
 	// /**
@@ -528,7 +527,7 @@ public class OfflineReportsFile {
 // */
 // public static void saveOffline(IBugzillaBug bug, boolean saveChosen) throws
 // CoreException {
-// OfflineReportsFile file = BugzillaPlugin.getDefault().getOfflineReports();
+// OfflineReportManager file = BugzillaPlugin.getDefault().getOfflineReports();
 // // If there is already an offline report for this bug, update the file.
 // if (bug.isSavedOffline()) {
 // file.update();
@@ -547,12 +546,12 @@ public class OfflineReportsFile {
 // }
 // file.add(bug, saveChosen);
 // bug.setOfflineState(true);
-// // file.sort(OfflineReportsFile.lastSel);
+// // file.sort(OfflineReportManager.lastSel);
 // }
 // }
 
 // public static List<IBugzillaBug> getOfflineBugs() {
-// OfflineReportsFile file = BugzillaPlugin.getDefault().getOfflineReports();
+// OfflineReportManager file = BugzillaPlugin.getDefault().getOfflineReports();
 // return file.elements();
 // }
 //

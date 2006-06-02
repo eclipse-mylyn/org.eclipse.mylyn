@@ -18,7 +18,6 @@ import org.eclipse.mylar.internal.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.internal.bugzilla.ui.IBugzillaReportSelection;
 import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.provisional.bugzilla.core.Comment;
-import org.eclipse.mylar.provisional.bugzilla.core.IBugzillaBug;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -193,13 +192,13 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	 *            The bug that needs parsing.
 	 * @return The tree of <code>BugzillaOutlineNode</code>'s.
 	 */
-	public static BugzillaOutlineNode parseBugReport(IBugzillaBug bug) {
+	public static BugzillaOutlineNode parseBugReport(BugzillaReport bug) {
 		// Choose the appropriate parsing function based on
 		// the type of IBugzillaBug.
 		if (bug instanceof NewBugzillaReport) {
-			return parseBugReport((NewBugzillaReport) bug);
+			return parseNewBugReport((NewBugzillaReport) bug);
 		} else if (bug instanceof BugzillaReport) {
-			return parseBugReport((BugzillaReport) bug);
+			return parseExistingBugReport((BugzillaReport) bug);
 		} else {
 			return null;
 		}
@@ -214,7 +213,7 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	 *            The <code>NewBugModel</code> that needs parsing.
 	 * @return The tree of <code>BugzillaOutlineNode</code>'s.
 	 */
-	protected static BugzillaOutlineNode parseBugReport(NewBugzillaReport bug) {
+	protected static BugzillaOutlineNode parseNewBugReport(NewBugzillaReport bug) {
 		int bugId = bug.getId();
 		String bugServer = bug.getRepositoryUrl();
 		Image bugImage = BugzillaImages.getImage(BugzillaImages.BUG);
@@ -241,7 +240,7 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	 *            The <code>BugReport</code> that needs parsing.
 	 * @return The tree of <code>BugzillaOutlineNode</code>'s.
 	 */
-	protected static BugzillaOutlineNode parseBugReport(BugzillaReport bug) {
+	protected static BugzillaOutlineNode parseExistingBugReport(BugzillaReport bug) {
 
 		int bugId = bug.getId();
 		String bugServer = bug.getRepositoryUrl();

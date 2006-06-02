@@ -25,7 +25,7 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
-import org.eclipse.mylar.provisional.bugzilla.core.IBugzillaBug;
+import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
@@ -70,7 +70,7 @@ public class NewBugEditor extends AbstractBugEditor {
 	}
 
 	@Override
-	public IBugzillaBug getBug() {
+	public BugzillaReport getBug() {
 		return bug;
 	}
 

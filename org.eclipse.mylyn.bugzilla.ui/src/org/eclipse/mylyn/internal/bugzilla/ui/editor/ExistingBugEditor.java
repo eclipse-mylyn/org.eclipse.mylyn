@@ -50,7 +50,6 @@ import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReportAttri
 import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
 import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReportAttribute;
 import org.eclipse.mylar.provisional.bugzilla.core.Comment;
-import org.eclipse.mylar.provisional.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.provisional.bugzilla.core.Operation;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
@@ -349,7 +348,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	}
 
 	@Override
-	public IBugzillaBug getBug() {
+	public BugzillaReport getBug() {
 		return bug;
 	}
 

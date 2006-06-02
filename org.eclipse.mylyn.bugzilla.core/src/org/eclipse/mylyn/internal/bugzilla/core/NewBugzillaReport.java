@@ -57,45 +57,7 @@ public class NewBugzillaReport extends BugzillaReport implements Serializable {
 	 */
 	public NewBugzillaReport(String repositoryURL, int offlineId) {
 		super(offlineId, repositoryURL);
-//		BugzillaPlugin.getDefault().getOfflineReports().getNextOfflineBugId();
 	}
- 
-	// public AbstractRepositoryReportAttribute getAttribute(String key) {
-	// return attributes.get(key);
-	// }
-
-	// /**
-	// * Get the list of attributes for this model
-	// *
-	// * @return An <code>ArrayList</code> of the models attributes
-	// */
-	// public List<AbstractRepositoryReportAttribute> getAttributes() {
-	// // create an array list to store the attributes in
-	// ArrayList<AbstractRepositoryReportAttribute> attributeEntries = new
-	// ArrayList<AbstractRepositoryReportAttribute>(attributes.keySet().size());
-	//
-	// // go through each of the attribute keys
-	// for (Iterator<String> it = attributes.keySet().iterator(); it.hasNext();)
-	// {
-	// // get the key for the attribute
-	// String key = it.next();
-	//
-	// // get the attribute and add it to the list
-	// AbstractRepositoryReportAttribute attribute = attributes.get(key);
-	// attributeEntries.add(attribute);
-	// }
-	//
-	// // return the list of attributes for the bug
-	// return attributeEntries;
-	// }
-
-	// public int getId() {
-	// return id;
-	// }
-	//
-	// public String getRepositoryUrl() {
-	// return BugzillaTools.OFFLINE_SERVER_DEFAULT;
-	// }
 
 	public String getLabel() {
 		return "New Bug #" + getId();
@@ -195,9 +157,9 @@ public class NewBugzillaReport extends BugzillaReport implements Serializable {
 		return true;
 	}
 
-	public void setOfflineState(boolean newOfflineState) {
-		savedOffline = newOfflineState;
-	}
+//	public void setOfflineState(boolean newOfflineState) {
+//		savedOffline = newOfflineState;
+//	}
 
 	public boolean hasChanges() {
 		return true;
@@ -211,5 +173,4 @@ public class NewBugzillaReport extends BugzillaReport implements Serializable {
 	public Date getLastModified() {
 		return null;
 	}
-
 }

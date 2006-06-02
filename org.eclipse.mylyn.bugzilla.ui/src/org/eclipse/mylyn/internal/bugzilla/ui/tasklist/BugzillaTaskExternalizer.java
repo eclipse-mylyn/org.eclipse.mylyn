@@ -13,11 +13,10 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import java.util.Date;
 
-import org.eclipse.mylar.internal.bugzilla.ui.OfflineReportsFile;
+import org.eclipse.mylar.internal.bugzilla.ui.OfflineReportManager;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskExternalizationException;
 import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
-import org.eclipse.mylar.provisional.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
@@ -191,7 +190,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	 * TODO: move?
 	 */
 	public boolean readBugReport(BugzillaTask bugzillaTask) {		
-		IBugzillaBug tempBug = OfflineReportsFile.findBug(bugzillaTask.getRepositoryUrl(), AbstractRepositoryTask.getTaskIdAsInt(bugzillaTask.getHandleIdentifier()));
+		BugzillaReport tempBug = OfflineReportManager.findBug(bugzillaTask.getRepositoryUrl(), AbstractRepositoryTask.getTaskIdAsInt(bugzillaTask.getHandleIdentifier()));
 		if (tempBug == null) {
 			bugzillaTask.setBugReport(null);
 			return true;

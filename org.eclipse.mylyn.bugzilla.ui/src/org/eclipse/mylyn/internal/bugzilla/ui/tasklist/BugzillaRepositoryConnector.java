@@ -51,7 +51,6 @@ import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException
 import org.eclipse.mylar.internal.bugzilla.core.AbstractReportFactory.UnrecognizedBugzillaError;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylar.internal.bugzilla.ui.OfflineReportsFile;
 import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchHit;
@@ -508,14 +507,14 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			} catch (CoreException e) {
 				MylarStatusHandler.fail(e, e.getMessage(), false);
 			}
-			// file.sort(OfflineReportsFile.lastSel);
+			// file.sort(OfflineReportManager.lastSel);
 		}
 	}
 
-	public static List<BugzillaReport> getOfflineBugs() {
-		OfflineReportsFile file = BugzillaUiPlugin.getDefault().getOfflineReportsFile();
-		return file.elements();
-	}
+//	public static List<BugzillaReport> getOfflineBugs() {
+//		OfflineReportManager file = BugzillaUiPlugin.getDefault().getOfflineReportsFile();
+//		return file.elements();
+//	}
 
 	public static void removeReport(BugzillaReport bug) {
 		bug.setOfflineState(false);
