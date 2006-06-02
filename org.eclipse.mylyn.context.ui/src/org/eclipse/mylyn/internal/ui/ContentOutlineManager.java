@@ -10,74 +10,36 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.ui;
 
-import java.util.List;
-
-import org.eclipse.jface.viewers.DecoratingLabelProvider;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.ui.actions.ApplyMylarToOutlineAction;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
-import org.eclipse.mylar.provisional.ui.IMylarUiBridge;
-import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
 
 /**
- * Manages the installation of the outline filter and sorter.
- * 
  * @author Mik Kersten
  */
-public class ContentOutlineManager implements IPartListener, IPageListener {
+public class ContentOutlineManager implements IPartListener {
 
 	public void partBroughtToTop(IWorkbenchPart part) {
-		if (!MylarPlugin.getContextManager().isContextActive()) {
-			return;
-		} else {
-			if (part instanceof IEditorPart) {
-				IEditorPart editorPart = (IEditorPart) part;
-				ApplyMylarToOutlineAction applyAction = ApplyMylarToOutlineAction.getOutlineActionForEditor(editorPart);
-				if (applyAction != null) {
-					applyAction.update(editorPart);
-					configureDecorator(editorPart);
-				}
+//		if (!MylarPlugin.getContextManager().isContextActive()) {
+//			return;
+//		} else {
+		if (part instanceof IEditorPart) {
+			IEditorPart editorPart = (IEditorPart) part;
+			ApplyMylarToOutlineAction applyAction = ApplyMylarToOutlineAction.getOutlineActionForEditor(editorPart);
+			if (applyAction != null) {
+				applyAction.update(editorPart);
 			}
 		}
+//		}
 	}
-
+	
 	public void partActivated(IWorkbenchPart part) {
-
+		// ignore
 	}
 
 	public void partOpened(IWorkbenchPart part) {
-
-	}
-
-	/**
-	 * TODO: refactor, this will get called too often
-	 */
-	private void configureDecorator(IEditorPart editorPart) {
-		// if (ApplyMylarToOutlineAction.getDefault() == null)
-		// return;
-		IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
-		List<TreeViewer> viewers = bridge.getContentOutlineViewers(editorPart);
-		if (viewers == null) {
-			MylarStatusHandler.log("null viewer list from bridge: " + bridge + " for editor: " + editorPart, this);
-			return;
-		} else {
-			for (TreeViewer viewer : viewers) {
-				if (viewer != null) {
-					if (!(viewer.getLabelProvider() instanceof DecoratingLabelProvider)) {
-						viewer.setLabelProvider(new DecoratingLabelProvider((ILabelProvider) viewer.getLabelProvider(),
-								PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
-					}
-				}
-			}
-		}
+		// ignore
 	}
 
 	public void partClosed(IWorkbenchPart partRef) {
@@ -87,18 +49,4 @@ public class ContentOutlineManager implements IPartListener, IPageListener {
 	public void partDeactivated(IWorkbenchPart partRef) {
 		// ignore
 	}
-
-	public void pageActivated(IWorkbenchPage page) {
-		// ignore
-	}
-
-	public void pageClosed(IWorkbenchPage page) {
-		// ignore
-	}
-
-	public void pageOpened(IWorkbenchPage page) {
-		// ignore
-
-	}
-
 }

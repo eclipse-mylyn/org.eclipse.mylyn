@@ -190,7 +190,7 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 					MylarPlugin.getContextManager().addListener(viewerManager);
 
 					MylarPlugin.getDefault().addWindowPartListener(contentOutlineManager);
-					MylarPlugin.getDefault().addWindowPageListener(contentOutlineManager);
+//					MylarPlugin.getDefault().addWindowPageListener(contentOutlineManager);
 
 //					if (ApplyMylarToOutlineAction.getDefault() != null)
 //						ApplyMylarToOutlineAction.getDefault().update();
@@ -211,7 +211,7 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 			super.stop(context);
 			MylarPlugin.getContextManager().removeListener(viewerManager);
 			MylarPlugin.getDefault().removeWindowPartListener(contentOutlineManager);
-			MylarPlugin.getDefault().removeWindowPageListener(contentOutlineManager);
+//			MylarPlugin.getDefault().removeWindowPageListener(contentOutlineManager);
 			viewerManager.dispose();
 			colorMap.dispose();
 			highlighters.dispose();

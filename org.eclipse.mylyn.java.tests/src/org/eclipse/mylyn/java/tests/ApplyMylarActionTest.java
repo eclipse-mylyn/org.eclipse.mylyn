@@ -33,7 +33,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Mik Kersten
  */
-public class ContentOutlineRefreshTest extends AbstractJavaContextTest {
+public class ApplyMylarActionTest extends AbstractJavaContextTest {
 
 	private IViewPart view;
 
@@ -60,7 +60,7 @@ public class ContentOutlineRefreshTest extends AbstractJavaContextTest {
 		openView("org.eclipse.ui.views.ContentOutline");
 		JavaUI.openInEditor(m1);
 
-		// ApplyMylarToOutlineAction.getDefault().update(true);
+//		ApplyMylarToOutlineAction.getDefault().update(true);
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
 		IEditorPart[] parts = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditors();
 		for (int i = 0; i < parts.length; i++) {
