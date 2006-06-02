@@ -16,8 +16,8 @@ import java.util.Iterator;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.internal.bugzilla.ui.IBugzillaReportSelection;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
-import org.eclipse.mylar.provisional.bugzilla.core.Comment;
+import org.eclipse.mylar.internal.tasklist.Comment;
+import org.eclipse.mylar.internal.tasklist.RepositoryReport;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -192,13 +192,13 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	 *            The bug that needs parsing.
 	 * @return The tree of <code>BugzillaOutlineNode</code>'s.
 	 */
-	public static BugzillaOutlineNode parseBugReport(BugzillaReport bug) {
+	public static BugzillaOutlineNode parseBugReport(RepositoryReport bug) {
 		// Choose the appropriate parsing function based on
 		// the type of IBugzillaBug.
 		if (bug instanceof NewBugzillaReport) {
 			return parseNewBugReport((NewBugzillaReport) bug);
-		} else if (bug instanceof BugzillaReport) {
-			return parseExistingBugReport((BugzillaReport) bug);
+		} else if (bug instanceof RepositoryReport) {
+			return parseExistingBugReport((RepositoryReport) bug);
 		} else {
 			return null;
 		}
@@ -240,7 +240,7 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	 *            The <code>BugReport</code> that needs parsing.
 	 * @return The tree of <code>BugzillaOutlineNode</code>'s.
 	 */
-	protected static BugzillaOutlineNode parseExistingBugReport(BugzillaReport bug) {
+	protected static BugzillaOutlineNode parseExistingBugReport(RepositoryReport bug) {
 
 		int bugId = bug.getId();
 		String bugServer = bug.getRepositoryUrl();
