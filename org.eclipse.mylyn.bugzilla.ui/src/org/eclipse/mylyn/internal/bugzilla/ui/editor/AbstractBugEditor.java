@@ -44,7 +44,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaAttributeListener;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaTools;
@@ -52,14 +51,16 @@ import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.IBugzillaReportSelection;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryReport;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.internal.tasklist.RepositoryReport;
+import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
+import org.eclipse.mylar.internal.tasklist.Comment;
+import org.eclipse.mylar.internal.tasklist.IBugzillaBug;
+import org.eclipse.mylar.internal.tasklist.ReportAttachment;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
-import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReport;
-import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReportAttribute;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
-import org.eclipse.mylar.provisional.bugzilla.core.Comment;
-import org.eclipse.mylar.provisional.bugzilla.core.ReportAttachment;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
@@ -1562,7 +1563,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 			final BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) MylarTaskListPlugin
 					.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);			
-			bugzillaRepositoryClient.saveBugReport((BugzillaReport) getReport());
+			bugzillaRepositoryClient.saveBugReport((RepositoryReport) getReport());
 			changeDirtyStatus(false);
 			if(parentEditor != null) {
 				parentEditor.notifyTaskChanged();
@@ -1708,7 +1709,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 	 */
 	protected class GenericListener implements Listener {
 		public void handleEvent(Event event) {
-			BugzillaReport bug = (BugzillaReport) getReport();
+			RepositoryReport bug = (RepositoryReport) getReport();
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
 					new BugzillaReportSelection(bug.getId(), bug.getRepositoryUrl(), bug.getLabel(), false, bug
 							.getSummary()))));
