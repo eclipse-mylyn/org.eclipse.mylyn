@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import java.util.Date;
 
-import org.eclipse.mylar.provisional.bugzilla.core.ReportAttachment;
+import org.eclipse.mylar.internal.tasklist.ReportAttachment;
 import org.eclipse.mylar.provisional.tasklist.IRemoteContextDelegate;
 
 /**

@@ -78,7 +78,7 @@ class SynchronizeTaskJob extends Job {
 					
 					this.connector.updateOfflineState(repositoryTask, forceSync);
 					repositoryTask.setCurrentlyDownloading(false);
-
+					
 					// if (repositoryTask.getSyncState() ==
 					// RepositoryTaskSyncState.INCOMING) {
 					// repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);

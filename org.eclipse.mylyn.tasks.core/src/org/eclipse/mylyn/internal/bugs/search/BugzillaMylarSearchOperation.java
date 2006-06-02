@@ -40,8 +40,8 @@ import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaSearchOperation;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.StackTrace;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
-import org.eclipse.mylar.provisional.bugzilla.core.Comment;
+import org.eclipse.mylar.internal.tasklist.RepositoryReport;
+import org.eclipse.mylar.internal.tasklist.Comment;
 import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -221,7 +221,7 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation imple
 
 				// we have a bugzilla task, so get the bug report
 				BugzillaTask bugTask = (BugzillaTask) task;
-				BugzillaReport bug = bugTask.getBugReport();
+				RepositoryReport bug = bugTask.getBugReport();
 
 				// parse the bug report for the element that we are searching
 				// for
@@ -253,7 +253,7 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation imple
 	 * @param bug
 	 *            The bug to search in
 	 */
-	private boolean search(String elementName, BugzillaReport bug) {
+	private boolean search(String elementName, RepositoryReport bug) {
 
 		if (bug == null)
 			return false; // MIK: added null check here
@@ -375,7 +375,7 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation imple
 
 			// get the bug report so that we have all of the data
 			// - descriptions, comments, etc
-			BugzillaReport b = null;
+			RepositoryReport b = null;
 			try {
 				b = info.getBug();
 			} catch (Exception e) {

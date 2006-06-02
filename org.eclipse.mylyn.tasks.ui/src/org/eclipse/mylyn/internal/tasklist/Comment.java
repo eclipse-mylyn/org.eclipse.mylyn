@@ -9,14 +9,12 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.provisional.bugzilla.core;
+package org.eclipse.mylar.internal.tasklist;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 
 /**
  * A comment posted on a bug.

@@ -23,12 +23,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.mylar.internal.core.MylarPreferenceContstants;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.OfflineReportsFile;
 import org.eclipse.mylar.internal.tasklist.RepositoryEditorManager;
 import org.eclipse.mylar.internal.tasklist.TaskListBackupManager;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
@@ -98,6 +101,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	private TaskListNotificationManager taskListNotificationManager;
 
 	private TaskListBackupManager taskListBackupManager;
+	
+	private OfflineReportsFile offlineReportsFile;
 
 	private List<ITaskEditorFactory> taskEditors = new ArrayList<ITaskEditorFactory>();
 
@@ -294,6 +299,10 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
+					
+					// XXX: move?
+					readOfflineReportsFile();
+					
 					TaskListExtensionReader.initExtensions(taskListWriter);
 					taskRepositoryManager.readRepositories();
 
@@ -320,7 +329,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					
 					taskListSaveManager = new TaskListSaveManager();
 					taskListManager.getTaskList().addChangeListener(taskListSaveManager);
-
+					
 					MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 					getMylarCorePrefs().addPropertyChangeListener(synchronizationManager);
 
@@ -553,6 +562,43 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	public TaskListBackupManager getBackupManager() {
 		return taskListBackupManager;
+	}
+	
+	private void readOfflineReportsFile() {
+		IPath offlineReportsPath = getOfflineReportsFilePath();
+
+		try {
+			offlineReportsFile = new OfflineReportsFile(offlineReportsPath.toFile(), true);
+		} catch (Exception e) {
+			MylarStatusHandler.log(e,
+							"Could not restore offline Bugzilla reports file, creating new one (possible version incompatibility)");
+			offlineReportsPath.toFile().delete();
+//			if (offlineReportsPath.toFile().delete()) {
+			try {
+				offlineReportsFile = new OfflineReportsFile(offlineReportsPath.toFile(), false);
+			} catch (Exception e1) {
+				MylarStatusHandler.fail(e, "could not reset offline Bugzilla reports file", true);
+			}
+//			} else {
+//				MylarStatusHandler.fail(null, "reset of Bugzilla offline reports file failed", true);
+//			}
+		}
+	}
+
+	/**
+	 * Returns the path to the file cacheing the offline bug reports.
+	 */
+	private IPath getOfflineReportsFilePath() {
+		IPath stateLocation = Platform.getStateLocation(MylarTaskListPlugin.getDefault().getBundle());
+		IPath configFile = stateLocation.append("offlineReports");
+		return configFile;
+	}
+
+	public OfflineReportsFile getOfflineReportsFile() {
+		if (offlineReportsFile == null) {
+			MylarStatusHandler.fail(null, "Offline reports file not created, try restarting.", true);
+		} 
+		return offlineReportsFile;
 	}
 
 	public static TaskListSynchronizationManager getSynchronizationManager() {

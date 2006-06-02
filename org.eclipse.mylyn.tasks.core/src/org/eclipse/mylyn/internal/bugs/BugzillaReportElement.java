@@ -22,7 +22,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchHit;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.StackTrace;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.internal.tasklist.RepositoryReport;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
@@ -49,7 +49,7 @@ public class BugzillaReportElement {
 	private List<StackTrace> stackTraces;
 
 	/** The bug report associated with this DoiInfo */
-	private BugzillaReport bug;
+	private RepositoryReport bug;
 
 	/**
 	 * Constructor
@@ -113,7 +113,7 @@ public class BugzillaReportElement {
 	 * @throws MalformedURLException
 	 * @throws GeneralSecurityException 
 	 */
-	public BugzillaReport getBug() throws IOException, GeneralSecurityException {
+	public RepositoryReport getBug() throws IOException, GeneralSecurityException {
 		if (bug == null) {
 			// get the bug report
 			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, hit.getRepositoryUrl());
@@ -129,7 +129,7 @@ public class BugzillaReportElement {
 	 * @param bug -
 	 *            BugReport that this is associated with
 	 */
-	public void setBug(BugzillaReport bug) {
+	public void setBug(RepositoryReport bug) {
 		this.bug = bug;
 	}
 

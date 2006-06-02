@@ -14,11 +14,12 @@ package org.eclipse.mylar.internal.bugzilla.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReportAttribute;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReportAttribute;
-import org.eclipse.mylar.provisional.bugzilla.core.Comment;
-import org.eclipse.mylar.provisional.bugzilla.core.ReportAttachment;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.internal.tasklist.RepositoryReport;
+import org.eclipse.mylar.internal.tasklist.BugzillaReportAttribute;
+import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
+import org.eclipse.mylar.internal.tasklist.Comment;
+import org.eclipse.mylar.internal.tasklist.ReportAttachment;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -42,11 +43,11 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 
 	private ReportAttachment attachment;
 
-	private BugzillaReport report;
+	private RepositoryReport report;
 
 	private String errorMessage = null;
 
-	public SaxBugReportContentHandler(BugzillaReport rpt) {
+	public SaxBugReportContentHandler(RepositoryReport rpt) {
 		this.report = rpt;
 	}
 
@@ -58,7 +59,7 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 		return errorMessage;
 	}
 
-	public BugzillaReport getReport() {
+	public RepositoryReport getReport() {
 		return report;
 	}
 

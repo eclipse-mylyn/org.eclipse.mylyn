@@ -53,11 +53,10 @@ import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnect
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryReport;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryReportAttribute;
-import org.eclipse.mylar.internal.tasklist.RepositoryReport;
 import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
 import org.eclipse.mylar.internal.tasklist.Comment;
-import org.eclipse.mylar.internal.tasklist.IBugzillaBug;
 import org.eclipse.mylar.internal.tasklist.ReportAttachment;
+import org.eclipse.mylar.internal.tasklist.RepositoryReport;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
@@ -407,7 +406,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 	/**
 	 * @return The bug this editor is displaying.
 	 */
-	public abstract BugzillaReport getBug();
+	public abstract RepositoryReport getBug();
 
 	// TODO: temporary as part of conversion to xml
 	public AbstractRepositoryReport getReport() {
@@ -1804,7 +1803,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 				}
 				focusOn(t, highlight);
 			}
-		} else if (o instanceof BugzillaReport) {
+		} else if (o instanceof RepositoryReport) {
 			focusOn(null, highlight);
 		}
 	}

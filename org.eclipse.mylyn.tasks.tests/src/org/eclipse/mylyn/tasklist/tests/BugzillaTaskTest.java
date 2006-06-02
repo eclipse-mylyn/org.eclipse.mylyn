@@ -16,13 +16,13 @@ import java.util.Date;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReportAttribute;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReportAttribute;
-import org.eclipse.mylar.provisional.bugzilla.core.Comment;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.internal.tasklist.RepositoryReport;
+import org.eclipse.mylar.internal.tasklist.BugzillaReportAttribute;
+import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
+import org.eclipse.mylar.internal.tasklist.Comment;
 
 /**
  * @author Mik Kersten
@@ -43,7 +43,7 @@ public class BugzillaTaskTest extends TestCase {
 
 	public void testCompletionDate() {
 		BugzillaTask task = new BugzillaTask("handle", "description", true);
-		BugzillaReport report = new BugzillaReport(1, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
+		RepositoryReport report = new RepositoryReport(1, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
 		task.setBugReport(report);
 		assertNull(task.getCompletionDate());
 
@@ -59,7 +59,7 @@ public class BugzillaTaskTest extends TestCase {
 
 		AbstractRepositoryReportAttribute resolvedAttribute = new BugzillaReportAttribute(
 				BugzillaReportElement.BUG_STATUS);
-		resolvedAttribute.setValue(BugzillaReport.VAL_STATUS_RESOLVED);
+		resolvedAttribute.setValue(RepositoryReport.VAL_STATUS_RESOLVED);
 		report.addAttribute(BugzillaReportElement.BUG_STATUS, resolvedAttribute);
 		assertNotNull(task.getCompletionDate());
 		assertEquals(Comment.creation_ts_date_format.format(now), Comment.creation_ts_date_format.format(task

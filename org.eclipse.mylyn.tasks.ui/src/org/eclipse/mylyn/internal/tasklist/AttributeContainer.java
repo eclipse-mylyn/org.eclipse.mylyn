@@ -9,15 +9,13 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.provisional.bugzilla.core;
+package org.eclipse.mylar.internal.tasklist;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
-import org.eclipse.mylar.internal.bugzilla.core.HtmlStreamTokenizer;
 
 /**
  * @author Rob Elves
@@ -67,7 +65,9 @@ public class AttributeContainer implements Serializable {
 	public String getAttributeValue(Object key) {
 		AbstractRepositoryReportAttribute attribute = getAttribute(key);
 		if(attribute != null) {
-			return HtmlStreamTokenizer.unescape(attribute.getValue());
+			// TODO: unescape should happen on connector side not here
+			//return HtmlStreamTokenizer.unescape(attribute.getValue());
+			return attribute.getValue();
 		}
 		return "";
 	}

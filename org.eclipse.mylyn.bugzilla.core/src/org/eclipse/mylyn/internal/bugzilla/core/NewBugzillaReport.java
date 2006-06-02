@@ -13,7 +13,8 @@ package org.eclipse.mylar.internal.bugzilla.core;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.internal.tasklist.RepositoryReport;
+
 
 /**
  * This class is used to store data about the new bug that is being created
@@ -22,7 +23,7 @@ import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
  * @author Eric Booth
  * @author Rob Elves
  */
-public class NewBugzillaReport extends BugzillaReport implements Serializable { 
+public class NewBugzillaReport extends RepositoryReport implements Serializable { 
 
 	/** Automatically generated serialVersionUID */
 	private static final long serialVersionUID = 3977859587934335283L;

@@ -15,11 +15,11 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.ui.wizard.AbstractBugzillaWizardPage;
+import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.ui.PlatformUI;
 

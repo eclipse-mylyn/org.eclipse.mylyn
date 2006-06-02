@@ -9,13 +9,24 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.provisional.bugzilla.core;
+package org.eclipse.mylar.bugzilla.tests;
 
-/**
- * @author Rob Elves
- */
-public abstract class AbstractAttributeFactory {
+import junit.framework.TestCase;
 
-	public abstract AbstractRepositoryReportAttribute createAttribute(Object key);
+public class BugzillaAuthenticationTest extends TestCase {
+
+	protected void setUp() throws Exception {
+		super.setUp();
+	}
+
+	protected void tearDown() throws Exception {
+		super.tearDown();
+	}
+
 	
+	public void testBugzillaValidation() throws Exception {
+		//BugzillaRepositoryUtil.validateCredentials(repositoryUrl, userid, password);
+		assertTrue(false);
+	}
+		
 }

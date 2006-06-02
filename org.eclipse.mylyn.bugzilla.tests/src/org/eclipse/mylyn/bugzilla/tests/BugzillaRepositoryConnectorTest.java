@@ -26,7 +26,7 @@ import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.internal.tasklist.RepositoryReport;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -155,7 +155,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		// because task doesn't have bug report (new query hit)
 		// Result: retrieved with no incoming status
 		task.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
-		BugzillaReport bugReport = task.getBugReport();
+		RepositoryReport bugReport = task.getBugReport();
 		task.setBugReport(null);
 		client.synchronize(task, false, null);
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
@@ -190,7 +190,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 
 	}
 
-	protected void updateBug(BugzillaReport bug) {
+	protected void updateBug(RepositoryReport bug) {
 
 		// go through all of the attributes and update the main values to the
 		// new ones

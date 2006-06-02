@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.provisional.bugzilla.core;
+package org.eclipse.mylar.internal.tasklist;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -20,18 +20,13 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 
-
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
-
 /**
- * A report entered in Bugzilla.
- * 
  * @author Mik Kersten
  * @author Rob Elves
  */
-public class BugzillaReport extends AbstractRepositoryReport implements Serializable {
+public class RepositoryReport extends AbstractRepositoryReport implements IBugzillaBug, Serializable {
 
-	private static final long serialVersionUID = -382103999768379139L;
+	private static final long serialVersionUID = 310066248657960823L;
 
 	public static final String VAL_STATUS_VERIFIED = "VERIFIED";
 
@@ -76,8 +71,34 @@ public class BugzillaReport extends AbstractRepositoryReport implements Serializ
 
 	protected String charset = null;
 
-	public BugzillaReport(int id, String repositoryURL) {
+	// /**
+	// * Get the bugs id
+	// *
+	// * @return The bugs id
+	// */
+	// public int getId() {
+	// return id;
+	// }
+	//
+	// public String getRepositoryUrl() {
+	// return repositoryUrl;
+	// }
+
+	public RepositoryReport(int id, String repositoryURL) {
 		super(id, repositoryURL);
+
+	}
+
+	/**
+	 * TODO: move?
+	 */
+	public static boolean isResolvedStatus(String status) {
+		if (status != null) {
+			return status.equals(VAL_STATUS_RESOLVED) || status.equals(VAL_STATUS_CLOSED)
+					|| status.equals(VAL_STATUS_VERIFIED);
+		} else {
+			return false;
+		}
 	}
 
 	public void addCC(String email) {
@@ -102,6 +123,24 @@ public class BugzillaReport extends AbstractRepositoryReport implements Serializ
 	public String getAssignedTo() {
 		return getAttributeValue(BugzillaReportElement.ASSIGNED_TO);
 	}
+
+	// public AbstractRepositoryReportAttribute
+	// getAttributeForKnobName(BugzillaReportElement element) {
+	// return super.getAttribute(element.getKeyString());
+	// }
+
+	// private String decodeStringFromCharset(String string) {
+	// String decoded = string;
+	// if (charset != null && string != null &&
+	// Charset.availableCharsets().containsKey(charset)) {
+	// try {
+	// decoded = new String(string.getBytes(), charset);
+	// } catch (UnsupportedEncodingException e) {
+	// // ignore
+	// }
+	// }
+	// return decoded;
+	// }
 
 	/**
 	 * Get the set of addresses in the CC list
@@ -143,7 +182,97 @@ public class BugzillaReport extends AbstractRepositoryReport implements Serializ
 		}
 
 	}
-	
+
+	// public AbstractRepositoryReportAttribute getAttribute(String key) {
+	// return attributes.get(key);
+	// }
+	//
+	// /**
+	// * Get the list of attributes for this bug
+	// *
+	// * @return An <code>ArrayList</code> of the bugs attributes
+	// */
+	// public List<AbstractRepositoryReportAttribute> getAttributes() {
+	// // create an array list to store the attributes in
+	// ArrayList<AbstractRepositoryReportAttribute> attributeEntries = new
+	// ArrayList<AbstractRepositoryReportAttribute>(attributeKeys.size());
+	//
+	// // go through each of the attribute keys
+	// for (Iterator<String> it = attributeKeys.iterator(); it.hasNext();) {
+	// // get the key for the attribute
+	// String key = it.next();
+	//
+	// // get the attribute and add it to the list
+	// AbstractRepositoryReportAttribute attribute = attributes.get(key);
+	// attributeEntries.add(attribute);
+	// }
+	//
+	// // return the list of attributes for the bug
+	// return attributeEntries;
+	// }
+
+	// public AbstractRepositoryReportAttribute getAttributeForKnobName(String
+	// knobName) {
+	// for (Iterator<String> it = attributeKeys.iterator(); it.hasNext();) {
+	// String key = it.next();
+	//
+	// AbstractRepositoryReportAttribute attribute = attributes.get(key);
+	// if (attribute != null && attribute.getID() != null
+	// && attribute.getID().compareTo(knobName) == 0) {
+	// return attribute;
+	// }
+	// }
+	//
+	// return null;
+	// }
+
+	// /**
+	// * @param attribute
+	// * The attribute to add to the bug
+	// */
+	// public void addAttribute(AbstractRepositoryReportAttribute attribute) {
+	// if (!attributes.containsKey(attribute.getName())) {
+	// attributeKeys.add(attribute.getName());
+	// }
+	//
+	// attribute.setValue(decodeStringFromCharset(attribute.getValue()));
+	//
+	// // put the value of the attribute into the map, using its name as the
+	// // key
+	// attributes.put(attribute.getName(), attribute);
+	// }
+
+	// /**
+	// * Get the comments posted on the bug
+	// *
+	// * @return A list of comments for the bug
+	// */
+	// public ArrayList<Comment> getComments() {
+	// return comments;
+	// }
+
+	// /**
+	// * Add a comment to the bug
+	// *
+	// * @param comment
+	// * The comment to add to the bug
+	// */
+	// public void addComment(Comment comment) {
+	// Comment preceding = null;
+	// if (comments.size() > 0) {
+	// // if there are some comments, get the last comment and set the next
+	// // value to be the new comment
+	// preceding = comments.get(comments.size() - 1);
+	// preceding.setNext(comment);
+	// }
+	// // set the comments previous value to the preceeding one
+	// comment.setPrevious(preceding);
+	//
+	// comment.setText(decodeStringFromCharset(comment.getText()));
+	// // add the comment to the comment list
+	// comments.add(comment);
+	// }
+
 	/**
 	 * Get the keywords for the bug
 	 * 
@@ -160,6 +289,14 @@ public class BugzillaReport extends AbstractRepositoryReport implements Serializ
 		}
 
 		return keywords;
+		//		
+		// String[] keywords =
+		// getAttributeValue(BugzillaReportElement.KEYWORDS).split(",");
+		// return getAttributeValue(BugzillaReportElement.KEYWORDS)
+		// BugzillaPlugin.getDefault().getProductConfiguration(repository).getProducts()
+		//		
+		// return
+		// BugzillaRepositoryUtil.getValidKeywords(this.getRepositoryUrl());
 	}
 
 	public String getLabel() {
@@ -191,6 +328,13 @@ public class BugzillaReport extends AbstractRepositoryReport implements Serializ
 	public String getNewComment() {
 		return newComment;
 	}
+
+	// /**
+	// * @return the new value of the new NewComment.
+	// */
+	// public String getNewNewComment() {
+	// return newNewComment;
+	// }
 
 	/**
 	 * Get an operation from the bug based on its display name
@@ -264,7 +408,11 @@ public class BugzillaReport extends AbstractRepositoryReport implements Serializ
 	public String getProduct() {
 		return getAttributeValue(BugzillaReportElement.PRODUCT);
 	}
-	
+
+	// public void setSummary(String newSummary) {
+	// setAttributeValue(BugzillaReportElement.SHORT_DESC, newSummary);
+	// }
+
 	public boolean isLocallyCreated() {
 		return false;
 	}
@@ -272,16 +420,6 @@ public class BugzillaReport extends AbstractRepositoryReport implements Serializ
 	public boolean isResolved() {
 		AbstractRepositoryReportAttribute status = getAttribute(BugzillaReportElement.BUG_STATUS);
 		return status != null && isResolvedStatus(status.getValue());
-	}
-
-	// TODO: move
-	private boolean isResolvedStatus(String status) {
-		if (status != null) {
-			return status.equals(VAL_STATUS_RESOLVED) || status.equals(VAL_STATUS_CLOSED)
-					|| status.equals(VAL_STATUS_VERIFIED);
-		} else {
-			return false;
-		}
 	}
 
 	public boolean isSavedOffline() {
@@ -299,6 +437,16 @@ public class BugzillaReport extends AbstractRepositoryReport implements Serializ
 		removeAttributeValue(BugzillaReportElement.CC, email);
 	}
 
+	// /**
+	// * Set the bugs creation date
+	// *
+	// * @param created
+	// * The date the the bug was created
+	// */
+	// public void setCreated(Date created) {
+	// this.created = created;
+	// }
+
 	public void setDescription(String description) {
 		// ignore, used by NewBugReport
 		// this.description = decodeStringFromCharset(description);
@@ -307,6 +455,10 @@ public class BugzillaReport extends AbstractRepositoryReport implements Serializ
 	public void setKeywords(List<String> keywords) {
 		this.validKeywords = keywords;
 	}
+
+	// public void setLastModified(Date date) {
+	// this.lastModified = date;
+	// }
 
 	/**
 	 * Set the new comment that will be added to the bug
@@ -317,6 +469,16 @@ public class BugzillaReport extends AbstractRepositoryReport implements Serializ
 	public void setNewComment(String newComment) {
 		this.newComment = newComment;
 	}
+
+	// /**
+	// * Set the new value of the new NewComment
+	// *
+	// * @param newNewComment
+	// * The new value of the new NewComment.
+	// */
+	// public void setNewNewComment(String newNewComment) {
+	// this.newNewComment = newNewComment;
+	// }
 
 	public void setOfflineState(boolean newOfflineState) {
 		savedOffline = newOfflineState;
@@ -334,4 +496,10 @@ public class BugzillaReport extends AbstractRepositoryReport implements Serializ
 	public AbstractAttributeFactory getAttributeFactory() {
 		return attributeFactory;
 	}
+
+//	public AbstractRepositoryReportAttribute getAttribute(String test) {
+//
+//		MylarStatusHandler.fail(new Exception(), "BugReport: getAttribute called with string", false);
+//		return new BugzillaReportAttribute(BugzillaReportElement.UNKNOWN);
+//	}
 }

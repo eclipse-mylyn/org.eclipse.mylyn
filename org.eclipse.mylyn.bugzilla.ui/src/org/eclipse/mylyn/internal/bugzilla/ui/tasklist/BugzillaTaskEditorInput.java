@@ -18,7 +18,7 @@ import java.security.GeneralSecurityException;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditorInput;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.internal.tasklist.RepositoryReport;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
@@ -32,7 +32,7 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 
 	private String bugTitle;
 
-	private BugzillaReport offlineBug;
+	private RepositoryReport offlineBug;
 
 	private BugzillaTask bugTask;
 
@@ -99,7 +99,7 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 	/**
 	 * Returns the offline bug for this input's Bugzilla task
 	 */
-	public BugzillaReport getOfflineBug() {
+	public RepositoryReport getOfflineBug() {
 		if (offline || bugTask.getSyncState() == RepositoryTaskSyncState.OUTGOING
 				|| bugTask.getSyncState() == RepositoryTaskSyncState.CONFLICT)
 			return offlineBug;
@@ -107,7 +107,7 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 			return super.getBug();
 	}
 
-	public void setOfflineBug(BugzillaReport offlineBug) {
+	public void setOfflineBug(RepositoryReport offlineBug) {
 		this.offlineBug = offlineBug;
 	}
 

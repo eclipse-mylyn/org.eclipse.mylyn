@@ -19,7 +19,7 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.security.auth.login.LoginException;
 
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.internal.tasklist.RepositoryReport;
 
 /**
  * Reads bug reports from repository.
@@ -43,7 +43,7 @@ public class RepositoryReportFactory extends AbstractReportFactory {
 		return instance;
 	}
 
-	public void populateReport(BugzillaReport bugReport, String repositoryUrl, Proxy proxySettings, String userName,
+	public void populateReport(RepositoryReport bugReport, String repositoryUrl, Proxy proxySettings, String userName,
 			String password, String characterEncoding) throws LoginException, KeyManagementException,
 			NoSuchAlgorithmException, IOException {
 

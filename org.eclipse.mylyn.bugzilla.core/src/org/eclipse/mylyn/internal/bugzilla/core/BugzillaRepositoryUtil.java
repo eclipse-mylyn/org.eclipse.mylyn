@@ -51,10 +51,11 @@ import org.eclipse.mylar.internal.bugzilla.core.HtmlStreamTokenizer.Token;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESOLUTION;
-import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReportAttribute;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReportAttribute;
-import org.eclipse.mylar.provisional.bugzilla.core.Operation;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.internal.tasklist.RepositoryReport;
+import org.eclipse.mylar.internal.tasklist.BugzillaReportAttribute;
+import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
+import org.eclipse.mylar.internal.tasklist.Operation;
 
 /**
  * @author Mik Kersten (some rewriting)
@@ -124,12 +125,12 @@ public class BugzillaRepositoryUtil {
 
 	private static final String POST_ARGS_LOGIN = "GoAheadAndLogIn=1&Bugzilla_login=";
 
-	public static BugzillaReport getBug(String repositoryUrl, String userName, String password, Proxy proxySettings,
+	public static RepositoryReport getBug(String repositoryUrl, String userName, String password, Proxy proxySettings,
 			String characterEncoding, int id) throws IOException, MalformedURLException, LoginException,
 			GeneralSecurityException {
 
 
-		BugzillaReport bugReport = new BugzillaReport(id, repositoryUrl);
+		RepositoryReport bugReport = new RepositoryReport(id, repositoryUrl);
 		setupExistingBugAttributes(repositoryUrl, bugReport);
 
 		RepositoryReportFactory reportFactory = RepositoryReportFactory.getInstance();
@@ -529,7 +530,7 @@ public class BugzillaRepositoryUtil {
 	//
 	// }
 
-	public static void setupExistingBugAttributes(String serverUrl, BugzillaReport existingReport) {
+	public static void setupExistingBugAttributes(String serverUrl, RepositoryReport existingReport) {
 		// ordered list of elements as they appear in UI
 		// and additional elements that may not appear in the incoming xml
 		// stream but need to be present for bug submission
@@ -548,7 +549,7 @@ public class BugzillaRepositoryUtil {
 	}
 
 	private static void updateBugAttributeOptions(String repositoryUrl, Proxy proxySettings, String userName,
-			String password, BugzillaReport existingReport, String characterEncoding) throws IOException, KeyManagementException, LoginException, NoSuchAlgorithmException {
+			String password, RepositoryReport existingReport, String characterEncoding) throws IOException, KeyManagementException, LoginException, NoSuchAlgorithmException {
 		String product = existingReport.getAttributeValue(BugzillaReportElement.PRODUCT);
 		for (AbstractRepositoryReportAttribute attribute : existingReport.getAttributes()) {
 			BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getID().trim().toUpperCase());
@@ -570,7 +571,7 @@ public class BugzillaRepositoryUtil {
 
 	}
 
-	public static void addValidOperations(BugzillaReport bugReport, String userName) {
+	public static void addValidOperations(RepositoryReport bugReport, String userName) {
 		BUGZILLA_REPORT_STATUS status = BUGZILLA_REPORT_STATUS.valueOf(bugReport.getStatus());
 		switch (status) {
 		case UNCONFIRMED:
@@ -607,7 +608,7 @@ public class BugzillaRepositoryUtil {
 		}
 	}
 
-	public static void addOperation(BugzillaReport bugReport, BUGZILLA_OPERATION opcode, String userName) {
+	public static void addOperation(RepositoryReport bugReport, BUGZILLA_OPERATION opcode, String userName) {
 		Operation newOperation = null;
 		switch (opcode) {
 		case none:

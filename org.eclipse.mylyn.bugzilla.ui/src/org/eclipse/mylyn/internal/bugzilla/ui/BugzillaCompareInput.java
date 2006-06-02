@@ -16,7 +16,7 @@ import org.eclipse.compare.CompareEditorInput;
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.compare.structuremergeviewer.IStructureComparator;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.internal.tasklist.RepositoryReport;
 
 /**
  * A two-way or three-way compare for <code>BugReport</code> objects.
@@ -72,7 +72,7 @@ public class BugzillaCompareInput extends CompareEditorInput {
 	 * @param newAncestor
 	 *            The new original object.
 	 */
-	public void setAncestor(BugzillaReport newAncestor) {
+	public void setAncestor(RepositoryReport newAncestor) {
 		threeWay = (newAncestor != null);
 		BugzillaCompareStructureCreator structureCreator = new BugzillaCompareStructureCreator();
 		ancestor = structureCreator.getStructure(newAncestor);
@@ -93,7 +93,7 @@ public class BugzillaCompareInput extends CompareEditorInput {
 	 * @param newLeft
 	 *            The new local object.
 	 */
-	public void setLeft(BugzillaReport newLeft) {
+	public void setLeft(RepositoryReport newLeft) {
 		BugzillaCompareStructureCreator structureCreator = new BugzillaCompareStructureCreator();
 		left = structureCreator.getStructure(newLeft);
 	}
@@ -113,7 +113,7 @@ public class BugzillaCompareInput extends CompareEditorInput {
 	 * @param newRight
 	 *            The new online object.
 	 */
-	public void setRight(BugzillaReport newRight) {
+	public void setRight(RepositoryReport newRight) {
 		BugzillaCompareStructureCreator structureCreator = new BugzillaCompareStructureCreator();
 		right = structureCreator.getStructure(newRight);
 	}

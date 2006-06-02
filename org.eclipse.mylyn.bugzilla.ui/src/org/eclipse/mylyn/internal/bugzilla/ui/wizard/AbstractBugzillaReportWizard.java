@@ -78,7 +78,7 @@ public abstract class AbstractBugzillaReportWizard extends Wizard implements INe
 	public AbstractBugzillaReportWizard(TaskRepository repository) {
 		super();
 		this.repository = repository;
-		model = new NewBugzillaReport(repository.getUrl(), BugzillaUiPlugin.getDefault().getOfflineReportsFile()
+		model = new NewBugzillaReport(repository.getUrl(), MylarTaskListPlugin.getDefault().getOfflineReportsFile()
 				.getNextOfflineBugId());		
 		id = null; // Since there is no bug posted yet.
 		super.setDefaultPageImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin(

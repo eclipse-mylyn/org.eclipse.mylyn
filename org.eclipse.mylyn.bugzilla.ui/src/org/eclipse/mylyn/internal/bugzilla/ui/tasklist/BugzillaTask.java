@@ -17,11 +17,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.HtmlStreamTokenizer;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
-import org.eclipse.mylar.provisional.bugzilla.core.Comment;
+import org.eclipse.mylar.internal.tasklist.RepositoryReport;
+import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
+import org.eclipse.mylar.internal.tasklist.Comment;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 
 /**
@@ -33,7 +33,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 	 * The bug report for this BugzillaTask. This is <code>null</code> if the
 	 * bug report with the specified ID was unable to download.
 	 */
-	protected transient BugzillaReport bugReport = null;
+	protected transient RepositoryReport bugReport = null;
 
 	public BugzillaTask(String handle, String label, boolean newTask) {
 		super(handle, label, newTask);
@@ -71,7 +71,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		}
 	}
 
-	public BugzillaReport getBugReport() {
+	public RepositoryReport getBugReport() {
 		return bugReport;
 	}
 	
@@ -87,7 +87,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 	 * @param bugReport
 	 *            The bugReport to set.
 	 */
-	public void setBugReport(BugzillaReport bugReport) {
+	public void setBugReport(RepositoryReport bugReport) {
 		this.bugReport = bugReport;
 		
 		// TODO: remove?

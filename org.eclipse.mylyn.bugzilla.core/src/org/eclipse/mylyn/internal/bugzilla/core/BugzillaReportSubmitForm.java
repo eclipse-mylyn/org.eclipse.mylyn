@@ -34,9 +34,10 @@ import javax.security.auth.login.LoginException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.internal.bugzilla.core.HtmlStreamTokenizer.Token;
-import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReportAttribute;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
-import org.eclipse.mylar.provisional.bugzilla.core.Operation;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.internal.tasklist.RepositoryReport;
+import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
+import org.eclipse.mylar.internal.tasklist.Operation;
 
 /**
  * 
@@ -205,7 +206,7 @@ public class BugzillaReportSubmitForm {
 	 * 
 	 * @throws UnsupportedEncodingException
 	 */
-	public static BugzillaReportSubmitForm makeExistingBugPost(BugzillaReport bug, String repositoryUrl,
+	public static BugzillaReportSubmitForm makeExistingBugPost(RepositoryReport bug, String repositoryUrl,
 			String userName, String password, Proxy proxySettings, Set<String> removeCC, String characterEncoding)
 			throws UnsupportedEncodingException {
 

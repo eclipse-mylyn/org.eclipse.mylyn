@@ -9,18 +9,17 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.provisional.bugzilla.core;
+package org.eclipse.mylar.internal.tasklist;
 
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 
-/**
- * @author Rob Elves
- */
-public class BugzillaAttributeFactory extends AbstractAttributeFactory {
+public class BugzillaReportAttribute extends AbstractRepositoryReportAttribute {
 
-	@Override
-	public AbstractRepositoryReportAttribute createAttribute(Object key) {
-		return new BugzillaReportAttribute((BugzillaReportElement) key);
+	private static final long serialVersionUID = 6959987055086133307L;
+
+	public BugzillaReportAttribute(BugzillaReportElement element) {
+		super(element.toString(), element.isHidden());
+		super.setID(element.getKeyString());
+		super.setReadOnly(element.isReadOnly());
 	}
-
+	
 }

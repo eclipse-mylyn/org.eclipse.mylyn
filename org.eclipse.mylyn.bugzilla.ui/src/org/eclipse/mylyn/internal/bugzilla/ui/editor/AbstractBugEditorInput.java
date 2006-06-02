@@ -14,7 +14,7 @@ package org.eclipse.mylar.internal.bugzilla.ui.editor;
 import java.net.Proxy;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.internal.tasklist.RepositoryReport;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
@@ -51,7 +51,7 @@ public abstract class AbstractBugEditorInput implements IEditorInput {
 	/**
 	 * @return The <code>IBugzillaBug</code> object for this editor input.
 	 */
-	public abstract BugzillaReport getBug();
+	public abstract RepositoryReport getBug();
 
 	public ImageDescriptor getImageDescriptor() {
 		return null;

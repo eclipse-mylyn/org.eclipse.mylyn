@@ -18,12 +18,12 @@ import javax.security.auth.login.LoginException;
 import junit.framework.TestCase;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryReportFactory;
-import org.eclipse.mylar.provisional.bugzilla.core.AbstractRepositoryReportAttribute;
-import org.eclipse.mylar.provisional.bugzilla.core.BugzillaReport;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryReportAttribute;
+import org.eclipse.mylar.internal.tasklist.RepositoryReport;
+import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
 public class RepositoryReportFactoryTest extends TestCase {
@@ -36,7 +36,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		try {
-			BugzillaReport report = new BugzillaReport(bugid, repository.getUrl());
+			RepositoryReport report = new RepositoryReport(bugid, repository.getUrl());
 			factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
 		} catch (LoginException e) {
 			//
@@ -53,7 +53,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		repository.setAuthenticationCredentials("invalid", "invalid");
 		try {
-			BugzillaReport report = new BugzillaReport(bugid, repository.getUrl());
+			RepositoryReport report = new RepositoryReport(bugid, repository.getUrl());
 			factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
 		} catch (LoginException e) {
 			errorMessage = e.getMessage();
@@ -69,7 +69,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 
-		BugzillaReport report = new BugzillaReport(bugid, repository.getUrl());
+		RepositoryReport report = new RepositoryReport(bugid, repository.getUrl());
 		BugzillaRepositoryUtil.setupExistingBugAttributes(repository.getUrl(), report);
 		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
 
@@ -99,7 +99,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 
-		BugzillaReport report = new BugzillaReport(bugid, repository.getUrl());
+		RepositoryReport report = new RepositoryReport(bugid, repository.getUrl());
 		BugzillaRepositoryUtil.setupExistingBugAttributes(repository.getUrl(), report);
 		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
 
@@ -133,7 +133,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_2201_URL);
 
-		BugzillaReport report = new BugzillaReport(bugid, repository.getUrl());
+		RepositoryReport report = new RepositoryReport(bugid, repository.getUrl());
 		BugzillaRepositoryUtil.setupExistingBugAttributes(repository.getUrl(), report);
 		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
 
@@ -175,7 +175,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
 
-		BugzillaReport report = new BugzillaReport(bugid, repository.getUrl());
+		RepositoryReport report = new RepositoryReport(bugid, repository.getUrl());
 		BugzillaRepositoryUtil.setupExistingBugAttributes(repository.getUrl(), report);
 		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
 
@@ -220,7 +220,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_220_URL);
 
-		BugzillaReport report = new BugzillaReport(bugid, repository.getUrl());
+		RepositoryReport report = new RepositoryReport(bugid, repository.getUrl());
 		BugzillaRepositoryUtil.setupExistingBugAttributes(repository.getUrl(), report);
 		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
 
@@ -255,7 +255,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_218_URL);
 
-		BugzillaReport report = new BugzillaReport(bugid, repository.getUrl());
+		RepositoryReport report = new RepositoryReport(bugid, repository.getUrl());
 		BugzillaRepositoryUtil.setupExistingBugAttributes(repository.getUrl(), report);
 		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
 
@@ -289,13 +289,13 @@ public class RepositoryReportFactoryTest extends TestCase {
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 
-		BugzillaReport report = new BugzillaReport(bugid, repository.getUrl());
+		RepositoryReport report = new RepositoryReport(bugid, repository.getUrl());
 		BugzillaRepositoryUtil.setupExistingBugAttributes(repository.getUrl(), report);
 		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
 
 		assertNotNull(report);
-		assertTrue(report instanceof BugzillaReport);
-		BugzillaReport bugReport = (BugzillaReport) report;
+		assertTrue(report instanceof RepositoryReport);
+		RepositoryReport bugReport = (RepositoryReport) report;
 		assertEquals("search-match-test 2", bugReport.getSummary());
 		assertEquals("search-match-test 2", bugReport.getDescription());
 		assertEquals("TestProduct", bugReport.getProduct());

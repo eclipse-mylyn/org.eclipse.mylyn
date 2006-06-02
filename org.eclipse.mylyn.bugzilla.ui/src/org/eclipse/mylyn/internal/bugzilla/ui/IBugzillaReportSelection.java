@@ -12,7 +12,7 @@
 package org.eclipse.mylar.internal.bugzilla.ui;
 
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.provisional.bugzilla.core.Comment;
+import org.eclipse.mylar.internal.tasklist.Comment;
 
 /**
  * Interface for a selection of a Bugzilla element in a view.
