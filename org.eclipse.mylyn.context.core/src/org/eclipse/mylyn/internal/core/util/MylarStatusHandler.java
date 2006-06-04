@@ -78,9 +78,13 @@ public class MylarStatusHandler {
 	}
 
 	public static void log(Throwable throwable, String message) {
-		fail(throwable, message, false);
+		fail(throwable, message, false, Status.INFO);
 	}
 
+	public static void fail(Throwable throwable, String message, boolean informUser) {
+		fail(throwable, message, informUser, Status.ERROR);
+	}
+	
 	/**
 	 * @param throwable
 	 *            can be null
@@ -89,12 +93,12 @@ public class MylarStatusHandler {
 	 * @param informUser
 	 *            if true dialog box will be popped up
 	 */
-	public static void fail(Throwable throwable, String message, boolean informUser) {
+	public static void fail(Throwable throwable, String message, boolean informUser, int severity) {
 		if (message == null)
 			message = "no message";
 		message += "\n";
 
-		final Status status = new Status(Status.ERROR, MylarPlugin.PLUGIN_ID, IStatus.OK, message, throwable);
+		final Status status = new Status(severity, MylarPlugin.PLUGIN_ID, IStatus.OK, message, throwable);
 		log(status);
 
 		if (informUser && PlatformUI.getWorkbench() != null) {
