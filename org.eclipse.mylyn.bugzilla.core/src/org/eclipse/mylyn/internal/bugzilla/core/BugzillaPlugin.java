@@ -50,7 +50,7 @@ public class BugzillaPlugin extends Plugin {
 	// private FavoritesFile favoritesFile;
 
 	/** Product configuration for the current server */
-	private Map<String, RepositoryConfiguration> repositoryConfigurations = new HashMap<String, RepositoryConfiguration>();
+	private static Map<String, RepositoryConfiguration> repositoryConfigurations = new HashMap<String, RepositoryConfiguration>();
 
 	public BugzillaPlugin() {
 		super();
@@ -110,7 +110,7 @@ public class BugzillaPlugin extends Plugin {
 	// IBugzillaConstants.SERVER_220.equals(getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION));
 	// }
 
-	public RepositoryConfiguration getRepositoryConfiguration(String repositoryUrl, Proxy proxySettings, String userName, String password, String encoding) throws IOException, KeyManagementException, LoginException, NoSuchAlgorithmException {
+	public static RepositoryConfiguration getRepositoryConfiguration(String repositoryUrl, Proxy proxySettings, String userName, String password, String encoding) throws IOException, KeyManagementException, LoginException, NoSuchAlgorithmException {
 		if (!repositoryConfigurations.containsKey(repositoryUrl)) {
 			repositoryConfigurations.put(repositoryUrl, RepositoryConfigurationFactory.getInstance()
 					.getConfiguration(repositoryUrl, proxySettings, userName, password, encoding));
@@ -135,10 +135,11 @@ public class BugzillaPlugin extends Plugin {
 	// return repositoryConfigurations.get(serverUrl);
 	// }
 
-	protected void setProductConfiguration(String serverUrl, RepositoryConfiguration repositoryConfiguration) {
-		repositoryConfigurations.put(serverUrl, repositoryConfiguration);
-		// this.productConfiguration = productConfiguration;
-	}
+	// protected void setProductConfiguration(String serverUrl,
+	// RepositoryConfiguration repositoryConfiguration) {
+	// repositoryConfigurations.put(serverUrl, repositoryConfiguration);
+	// // this.productConfiguration = productConfiguration;
+	//	}
 
 	// private void readFavoritesFile() {
 	// IPath favoritesPath = getFavoritesFile();

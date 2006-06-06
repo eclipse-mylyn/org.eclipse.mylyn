@@ -166,7 +166,7 @@ public class BugzillaRepositoryUtil {
 	public static List<String> getProductList(String repositoryUrl, Proxy proxySettings, String userName, String password, String encoding)
 			throws IOException, LoginException, Exception {
 
-		return BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, proxySettings, userName, password, encoding)
+		return BugzillaPlugin.getRepositoryConfiguration(repositoryUrl, proxySettings, userName, password, encoding)
 				.getProducts();
 
 		// BugzillaQueryPageParser parser = new
@@ -253,7 +253,7 @@ public class BugzillaRepositoryUtil {
 		newReport.removeAllAttributes();
 
 		RepositoryTaskAttribute a = BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.PRODUCT);
-		List<String> optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, proxySettings,
+		List<String> optionValues = BugzillaPlugin.getRepositoryConfiguration(repositoryUrl, proxySettings,
 				userName, password, characterEncoding).getProducts();
 		Collections.sort(optionValues);
 		for (String option : optionValues) {
@@ -264,7 +264,7 @@ public class BugzillaRepositoryUtil {
 		// attributes.put(a.getName(), a);
 
 		a = BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.BUG_STATUS);
-		optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, proxySettings, userName,
+		optionValues = BugzillaPlugin.getRepositoryConfiguration(repositoryUrl, proxySettings, userName,
 				password, characterEncoding).getStatusValues();
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
@@ -274,7 +274,7 @@ public class BugzillaRepositoryUtil {
 		// attributes.put(a.getName(), a);
 
 		a = BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.VERSION);
-		optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, proxySettings, userName,
+		optionValues = BugzillaPlugin.getRepositoryConfiguration(repositoryUrl, proxySettings, userName,
 				password, characterEncoding).getVersions(newReport.getProduct());
 		Collections.sort(optionValues);
 		for (String option : optionValues) {
@@ -287,7 +287,7 @@ public class BugzillaRepositoryUtil {
 		// attributes.put(a.getName(), a);
 
 		a = BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.COMPONENT);
-		optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, proxySettings, userName,
+		optionValues = BugzillaPlugin.getRepositoryConfiguration(repositoryUrl, proxySettings, userName,
 				password, characterEncoding).getComponents(newReport.getProduct());
 		Collections.sort(optionValues);
 		for (String option : optionValues) {
@@ -296,7 +296,7 @@ public class BugzillaRepositoryUtil {
 		newReport.addAttribute(BugzillaReportElement.COMPONENT.getKeyString(), a);
 
 		a = BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.REP_PLATFORM);
-		optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, proxySettings, userName,
+		optionValues = BugzillaPlugin.getRepositoryConfiguration(repositoryUrl, proxySettings, userName,
 				password, characterEncoding).getPlatforms();
 		Collections.sort(optionValues);
 		for (String option : optionValues) {
@@ -306,7 +306,7 @@ public class BugzillaRepositoryUtil {
 		// attributes.put(a.getName(), a);
 
 		a = BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.OP_SYS);
-		optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, proxySettings, userName,
+		optionValues = BugzillaPlugin.getRepositoryConfiguration(repositoryUrl, proxySettings, userName,
 				password, characterEncoding).getOSs();
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
@@ -315,7 +315,7 @@ public class BugzillaRepositoryUtil {
 		// attributes.put(a.getName(), a);
 
 		a = BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.PRIORITY);
-		optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, proxySettings, userName,
+		optionValues = BugzillaPlugin.getRepositoryConfiguration(repositoryUrl, proxySettings, userName,
 				password, characterEncoding).getPriorities();
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
@@ -325,7 +325,7 @@ public class BugzillaRepositoryUtil {
 		// attributes.put(a.getName(), a);
 
 		a = BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.BUG_SEVERITY);
-		optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, proxySettings, userName,
+		optionValues = BugzillaPlugin.getRepositoryConfiguration(repositoryUrl, proxySettings, userName,
 				password, characterEncoding).getSeverities();
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
@@ -555,7 +555,7 @@ public class BugzillaRepositoryUtil {
 		for (RepositoryTaskAttribute attribute : existingReport.getAttributes()) {
 			BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getID().trim().toUpperCase());
 			attribute.clearOptions();
-			List<String> optionValues = BugzillaPlugin.getDefault().getRepositoryConfiguration(repositoryUrl, proxySettings,
+			List<String> optionValues = BugzillaPlugin.getRepositoryConfiguration(repositoryUrl, proxySettings,
 					userName, password, characterEncoding).getOptionValues(element, product);
 			if (element != BugzillaReportElement.OP_SYS && element != BugzillaReportElement.BUG_SEVERITY
 					&& element != BugzillaReportElement.PRIORITY && element != BugzillaReportElement.BUG_STATUS) {

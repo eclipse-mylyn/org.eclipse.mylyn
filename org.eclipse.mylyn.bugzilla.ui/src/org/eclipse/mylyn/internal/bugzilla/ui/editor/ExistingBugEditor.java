@@ -733,7 +733,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 		java.util.List<String> validKeywords = new ArrayList<String>();
 		try {
-			validKeywords = BugzillaPlugin.getDefault().getRepositoryConfiguration(repository.getUrl(),
+			validKeywords = BugzillaPlugin.getRepositoryConfiguration(repository.getUrl(),
 					MylarTaskListPlugin.getDefault().getProxySettings(), repository.getUserName(),
 					repository.getPassword(), repository.getCharacterEncoding()).getKeywords();
 		} catch (Exception e) {
