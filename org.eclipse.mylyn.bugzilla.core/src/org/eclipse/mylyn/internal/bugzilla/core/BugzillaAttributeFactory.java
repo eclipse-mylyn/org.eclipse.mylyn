@@ -67,7 +67,7 @@ public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 	@Override
 	public boolean getIsHidden(String key) {
 		try {
-			return BugzillaReportElement.valueOf(key).isHidden();
+			return BugzillaReportElement.valueOf(key.trim().toUpperCase()).isHidden();
 		} catch (IllegalArgumentException e) {
 			return false;
 		}
@@ -76,7 +76,7 @@ public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 	@Override
 	public String getName(String key) {
 		try {
-			return BugzillaReportElement.valueOf(key).toString();
+			return BugzillaReportElement.valueOf(key.trim().toUpperCase()).toString();
 		} catch (IllegalArgumentException e) {
 			return "<unknown>";
 		}
@@ -85,7 +85,7 @@ public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 	@Override
 	public boolean isReadOnly(String key) {
 		try {
-			return BugzillaReportElement.valueOf(key).isReadOnly();
+			return BugzillaReportElement.valueOf(key.trim().toUpperCase()).isReadOnly();
 		} catch (IllegalArgumentException e) {
 			return true;
 		}

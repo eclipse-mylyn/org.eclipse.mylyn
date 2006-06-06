@@ -22,7 +22,7 @@ public abstract class AbstractAttributeFactory implements Serializable {
 		String mapped = mapCommonAttributeKey(key);
 		RepositoryTaskAttribute attribute = new RepositoryTaskAttribute(mapped, getName(mapped), getIsHidden(mapped));
 		attribute.setReadOnly(isReadOnly(mapped));
-		return new RepositoryTaskAttribute(mapped, getName(mapped), getIsHidden(mapped));
+		return attribute;
 	}
 	
 	public abstract String mapCommonAttributeKey(String key);

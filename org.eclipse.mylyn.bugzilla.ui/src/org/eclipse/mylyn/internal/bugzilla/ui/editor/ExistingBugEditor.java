@@ -23,6 +23,7 @@ import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareUI;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
@@ -367,6 +368,9 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 	@Override
 	public void submitBug() {
+		if(isDirty()) {
+			this.doSave(new NullProgressMonitor());
+		}
 		updateBug();
 		submitButton.setEnabled(false);
 		ExistingBugEditor.this.showBusy(true);
@@ -675,11 +679,12 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		}
 		RepositoryTaskAttribute addselfcc = taskData.getAttribute(BugzillaReportElement.ADDSELFCC.getKeyString());
 		if (addselfcc == null) {
-			addselfcc = BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.ADDSELFCC);
-			taskData.addAttribute(BugzillaReportElement.ADDSELFCC.getKeyString(), addselfcc);
+			// addselfcc =
+			// BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.ADDSELFCC);
+			taskData.setAttributeValue(BugzillaReportElement.ADDSELFCC.getKeyString(), "0");
+		} else {
+			addselfcc.setValue("0");
 		}
-
-		addselfcc.setValue("0");
 
 		final Button addSelfButton = toolkit.createButton(newCommentsComposite, "Add " + repository.getUserName()
 				+ " to CC list", SWT.CHECK);

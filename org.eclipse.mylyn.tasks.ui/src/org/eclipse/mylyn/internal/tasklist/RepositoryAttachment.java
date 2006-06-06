@@ -17,7 +17,6 @@ import java.util.Date;
 
 
 /**
- * TODO: Make generic. This currently represents Bugzilla attachments only
  * @author Rob Elves
  */
 public class RepositoryAttachment extends AttributeContainer implements Serializable {
@@ -29,6 +28,7 @@ public class RepositoryAttachment extends AttributeContainer implements Serializ
 	private static final long serialVersionUID = -9123545810321250785L;
 	
 	/** Parser for dates in the report */
+	//TODO: this is repository specific so need to pull out
 	private static SimpleDateFormat creation_ts_date_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	private boolean isObsolete = false;
@@ -81,7 +81,7 @@ public class RepositoryAttachment extends AttributeContainer implements Serializ
 	}
 
 	public String getContentType() {
-		// Eclipse.org uses "ctype", others use "type"
+		// I've seen both "ctype" and "type" occur for this, investigate
 		if(getAttribute(RepositoryTaskAttribute.ATTACHMENT_TYPE) != null) {
 			return getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_TYPE);
 		} else {

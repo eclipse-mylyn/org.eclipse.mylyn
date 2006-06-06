@@ -60,7 +60,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.wizard.NewBugzillaReportWizard;
 import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.ZipFileUtil;
-import org.eclipse.mylar.internal.tasklist.RemoteContextDelegate;
+import org.eclipse.mylar.internal.tasklist.RepositoryAttachment;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractAddExistingTaskWizard;
@@ -72,7 +72,6 @@ import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
-import org.eclipse.mylar.provisional.tasklist.IRemoteContextDelegate;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
@@ -112,7 +111,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	public BugzillaRepositoryConnector() {
 		super(new BugzillaAttributeFactory());
 	}
-	
+
 	public String getLabel() {
 		return CLIENT_LABEL;
 	}
@@ -416,18 +415,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return newHits;
 	}
 
-//	@Override
-//	protected void updateOfflineState(AbstractRepositoryTask repositoryTask, boolean forceSync) {
-//		if (repositoryTask instanceof BugzillaTask) {
-//			BugzillaTask bugzillaTask = (BugzillaTask) repositoryTask;
-//			RepositoryTaskData downloadedReport = downloadReport(bugzillaTask);
-//			if (downloadedReport != null) {
-//				bugzillaTask.setBugReport(downloadedReport);
-//				saveOffline(downloadedReport, forceSync);
-//			}
-//		}
-//	}
-
 	@Override
 	public boolean attachContext(TaskRepository repository, AbstractRepositoryTask task, String longComment)
 			throws IOException {
@@ -476,60 +463,38 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
-//	@Override
-//	public Set<IRemoteContextDelegate> getAvailableContexts(TaskRepository repository, AbstractRepositoryTask task) {
-//		Set<IRemoteContextDelegate> contextDelegates = new HashSet<IRemoteContextDelegate>();
-//		if (task instanceof BugzillaTask) {
-//			BugzillaTask bugzillaTask = (BugzillaTask) task;
-//			if (bugzillaTask.getTaskData() != null) {
-//				for (RepositoryAttachment attachment : bugzillaTask.getTaskData().getAttachments()) {
-//					if (attachment.getDescription().equals(MYLAR_CONTEXT_DESCRIPTION)) {
-//						contextDelegates.add(new BugzillaRemoteContextDelegate(attachment));
-//					}
-//				}
-//			}
-//		}
-//		return contextDelegates;
-//	}
-
 	@Override
 	public boolean retrieveContext(TaskRepository repository, AbstractRepositoryTask task,
-			IRemoteContextDelegate remoteContextDelegate) throws IOException, GeneralSecurityException {
+			RepositoryAttachment attachment) throws IOException, GeneralSecurityException {
 		boolean result = false;
 		boolean wasActive = false;
-		if (remoteContextDelegate instanceof RemoteContextDelegate) {
-			RemoteContextDelegate contextDelegate = (RemoteContextDelegate) remoteContextDelegate;
 
-			if (task.isActive()) {
-				wasActive = true;
-				MylarTaskListPlugin.getTaskListManager().deactivateTask(task);
-			}
+		if (task.isActive()) {
+			wasActive = true;
+			MylarTaskListPlugin.getTaskListManager().deactivateTask(task);
+		}
 
-			File destinationContextFile = MylarPlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+		File destinationContextFile = MylarPlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
 
-			File destinationZipFile = new File(destinationContextFile.getPath() + ZIPFILE_EXTENSION);
+		File destinationZipFile = new File(destinationContextFile.getPath() + ZIPFILE_EXTENSION);
 
-			// if(destinationContextFile.exists()) {
-			// destinationContextFile.delete();
-			// }
+		Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
+		result = BugzillaRepositoryUtil.downloadAttachment(repository.getUrl(), repository.getUserName(), repository
+				.getPassword(), proxySettings, attachment.getId(), destinationZipFile, true);
 
-			Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
-			result = BugzillaRepositoryUtil.downloadAttachment(repository.getUrl(), repository.getUserName(),
-					repository.getPassword(), proxySettings, contextDelegate.getId(), destinationZipFile, true);
+		if (result) {
 
-			if (result) {
+			ZipFileUtil.unzipFiles(destinationZipFile, MylarPlugin.getDefault().getDataDirectory());
 
-				ZipFileUtil.unzipFiles(destinationZipFile, MylarPlugin.getDefault().getDataDirectory());
+			if (destinationContextFile.exists()) {
 
-				if (destinationContextFile.exists()) {
-
-					MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
-					if (wasActive) {
-						MylarTaskListPlugin.getTaskListManager().activateTask(task);
-					}
+				MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
+				if (wasActive) {
+					MylarTaskListPlugin.getTaskListManager().activateTask(task);
 				}
 			}
 		}
+
 		return result;
 	}
 
@@ -650,92 +615,35 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 }
 
-// BugzillaRepositoryQuery queryCategory = (BugzillaRepositoryQuery)
-// query;
-//
-// if (queryCategory.isCustomQuery()) {
-// // BugzillaCustomRepositoryQuery queryCategory =
-// // (BugzillaCustomRepositoryQuery) query;
-// BugzillaCustomQueryDialog sqd = new
-// BugzillaCustomQueryDialog(Display.getCurrent().getActiveShell(),
-// queryCategory.getQueryUrl(), queryCategory.getDescription(),
-// queryCategory.getMaxHits() + "");
-// if (sqd.open() == Dialog.OK) {
-// MylarTaskListPlugin.getTaskListManager().getTaskList().renameContainer(queryCategory,
-// sqd.getName());
-// // queryCategory.setDescription(sqd.getName());
-// queryCategory.setQueryUrl(sqd.getUrl());
-// int maxHits = -1;
-// try {
-// maxHits = Integer.parseInt(sqd.getMaxHits());
-// } catch (Exception e) {
+// @Override
+// protected void updateOfflineState(AbstractRepositoryTask repositoryTask,
+// boolean forceSync) {
+// if (repositoryTask instanceof BugzillaTask) {
+// BugzillaTask bugzillaTask = (BugzillaTask) repositoryTask;
+// RepositoryTaskData downloadedReport = downloadReport(bugzillaTask);
+// if (downloadedReport != null) {
+// bugzillaTask.setBugReport(downloadedReport);
+// saveOffline(downloadedReport, forceSync);
 // }
-// queryCategory.setMaxHits(maxHits);
-//
-// synchronize(queryCategory, null);
-// }
-// } else {
-// // BugzillaRepositoryQuery queryCategory = (BugzillaRepositoryQuery)
-// // query;
-// BugzillaQueryDialog queryDialog = new
-// BugzillaQueryDialog(Display.getCurrent().getActiveShell(),
-// queryCategory.getRepositoryUrl(), queryCategory.getQueryUrl(),
-// queryCategory.getDescription(),
-// queryCategory.getMaxHits() + "");
-// if (queryDialog.open() == Dialog.OK) {
-// MylarTaskListPlugin.getTaskListManager().getTaskList().renameContainer(queryCategory,
-// queryDialog.getName());
-// // queryCategory.setDescription(queryDialog.getName());
-// queryCategory.setQueryUrl(queryDialog.getUrl());
-// queryCategory.setRepositoryUrl(queryDialog.getRepository().getUrl());
-// int maxHits = -1;
-// try {
-// maxHits = Integer.parseInt(queryDialog.getMaxHits());
-// } catch (Exception e) {
-// }
-// queryCategory.setMaxHits(maxHits);
-//
-// new SynchronizeReportsAction(queryCategory).run();
 // }
 // }
 
-// if
-// (!BugzillaUiPlugin.getDefault().getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION).equals(""))
-// {
-// MylarTaskListPlugin.getTaskListManager().addActivityListener(new
-// ITaskActivityListener() {
-//
-// public void tasklistRead() {
-// String oldVersionSetting =
-// BugzillaPlugin.getDefault().getPreferenceStore().getString(
-// IBugzillaConstants.SERVER_VERSION);
-//
-// Set<TaskRepository> existingBugzillaRepositories =
-// MylarTaskListPlugin.getRepositoryManager()
-// .getRepositories(BugzillaPlugin.REPOSITORY_KIND);
-// for (TaskRepository repository : existingBugzillaRepositories) {
-// MylarTaskListPlugin.getRepositoryManager().setVersion(repository,
-// oldVersionSetting);
+// @Override
+// public Set<IRemoteContextDelegate> getAvailableContexts(TaskRepository
+// repository, AbstractRepositoryTask task) {
+// Set<IRemoteContextDelegate> contextDelegates = new
+// HashSet<IRemoteContextDelegate>();
+// if (task instanceof BugzillaTask) {
+// BugzillaTask bugzillaTask = (BugzillaTask) task;
+// if (bugzillaTask.getTaskData() != null) {
+// for (RepositoryAttachment attachment :
+// bugzillaTask.getTaskData().getAttachments()) {
+// if (attachment.getDescription().equals(MYLAR_CONTEXT_DESCRIPTION)) {
+// contextDelegates.add(new BugzillaRemoteContextDelegate(attachment));
 // }
-// BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.SERVER_VERSION,
-// "");
-// MylarTaskListPlugin.getTaskListManager().removeActivityListener(this);
 // }
-//
-// public void taskActivated(ITask task) {
-// // ignore
 // }
-//
-// public void tasksActivated(List<ITask> tasks) {
-// // ignore
 // }
-//
-// public void taskDeactivated(ITask task) {
-// // ignore
+// return contextDelegates;
 // }
-//
-// public void activityChanged(DateRangeContainer week) {
-// // ignore
-// }
-// });
-// }
+

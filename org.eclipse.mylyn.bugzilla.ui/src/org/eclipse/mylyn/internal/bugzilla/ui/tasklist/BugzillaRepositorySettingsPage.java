@@ -115,7 +115,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 					monitor.beginTask("Validating server settings", IProgressMonitor.UNKNOWN);
 					try {
 						Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
-						URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(serverURL, proxySettings);
+						URLConnection cntx = BugzillaPlugin.getUrlConnection(serverURL, proxySettings);
 						if (cntx == null || !(cntx instanceof HttpURLConnection)) {
 							throw new MalformedURLException();
 						}

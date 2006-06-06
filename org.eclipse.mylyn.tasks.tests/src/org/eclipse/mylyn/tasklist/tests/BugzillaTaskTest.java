@@ -19,18 +19,19 @@ import junit.framework.TestCase;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.Comment;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 
 /**
  * @author Mik Kersten
  */
 public class BugzillaTaskTest extends TestCase {
 
+	private BugzillaAttributeFactory attributeFactory = new BugzillaAttributeFactory();
+	
 	@Override
 	protected void setUp() throws Exception {
 		// ignore
@@ -53,14 +54,13 @@ public class BugzillaTaskTest extends TestCase {
 		Date now = new Date(calendar.getTimeInMillis());
 
 		Comment comment = new Comment(new BugzillaAttributeFactory(), report, 1);
-		RepositoryTaskAttribute attribute = BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.BUG_WHEN);
+		RepositoryTaskAttribute attribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_WHEN.getKeyString());
 		attribute.setValue(Comment.creation_ts_date_format.format(now));
 		comment.addAttribute(BugzillaReportElement.BUG_WHEN.getKeyString(), attribute);
 		report.addComment(comment);
 		assertNull(task.getCompletionDate());
 
-		RepositoryTaskAttribute resolvedAttribute = BugzillaRepositoryUtil.makeNewAttribute(
-				BugzillaReportElement.BUG_STATUS);
+		RepositoryTaskAttribute resolvedAttribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_STATUS.getKeyString());
 		resolvedAttribute.setValue(RepositoryTaskData.VAL_STATUS_RESOLVED);
 		report.addAttribute(BugzillaReportElement.BUG_STATUS.getKeyString(), resolvedAttribute);
 		assertNotNull(task.getCompletionDate());

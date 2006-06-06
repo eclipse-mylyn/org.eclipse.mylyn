@@ -32,7 +32,6 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.AbstractAttributeFactory;
-import org.eclipse.mylar.internal.tasklist.RemoteContextDelegate;
 import org.eclipse.mylar.internal.tasklist.OfflineTaskManager;
 import org.eclipse.mylar.internal.tasklist.RepositoryAttachment;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
@@ -44,6 +43,7 @@ import org.eclipse.ui.PlatformUI;
  * Encapsulates synchronization policy.
  * 
  * @author Mik Kersten
+ * @author Rob Elves
  */
 public abstract class AbstractRepositoryConnector {
 
@@ -58,8 +58,6 @@ public abstract class AbstractRepositoryConnector {
 	protected AbstractAttributeFactory attributeFactory;
 
 	protected boolean forceSyncExecForTesting = false;
-
-	// private boolean syncAll = false;
 
 	private boolean updateLocalCopy = false;
 
@@ -81,35 +79,29 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @return an emtpy set if no contexts
 	 */
-	// public abstract Set<IRemoteContextDelegate>
-	// getAvailableContexts(TaskRepository repository,
-	// AbstractRepositoryTask task);
-	public Set<IRemoteContextDelegate> getAvailableContexts(TaskRepository repository, AbstractRepositoryTask task) {
-		Set<IRemoteContextDelegate> contextDelegates = new HashSet<IRemoteContextDelegate>();
-		// if (task instanceof BugzillaTask) {
-		// BugzillaTask bugzillaTask = (BugzillaTask) task;
+	public Set<RepositoryAttachment> getContextAttachments(TaskRepository repository, AbstractRepositoryTask task) {
+		Set<RepositoryAttachment> contextAttachments = new HashSet<RepositoryAttachment>();
 		if (task.getTaskData() != null) {
 			for (RepositoryAttachment attachment : task.getTaskData().getAttachments()) {
 				if (attachment.getDescription().equals(MYLAR_CONTEXT_DESCRIPTION)) {
-					contextDelegates.add(new RemoteContextDelegate(attachment));
+					contextAttachments.add(attachment);
 				}
 			}
 		}
-		// }
-		return contextDelegates;
+		return contextAttachments;
 	}
 
 	public boolean hasRepositoryContext(TaskRepository repository, AbstractRepositoryTask task) {
 		if (repository == null || task == null) {
 			return false;
 		} else {
-			Set<IRemoteContextDelegate> remoteContexts = getAvailableContexts(repository, task);
-			return (remoteContexts != null && remoteContexts.size() > 0);
+			Set<RepositoryAttachment> remoteContextAttachments = getContextAttachments(repository, task);
+			return (remoteContextAttachments != null && remoteContextAttachments.size() > 0);
 		}
 	}
 
 	public abstract boolean retrieveContext(TaskRepository repository, AbstractRepositoryTask task,
-			IRemoteContextDelegate remoteContextDelegate) throws IOException, GeneralSecurityException;
+			RepositoryAttachment attachment) throws IOException, GeneralSecurityException;
 
 	public abstract String getRepositoryUrlFromTaskUrl(String url);
 
@@ -125,6 +117,7 @@ public abstract class AbstractRepositoryConnector {
 	public abstract List<AbstractQueryHit> performQuery(AbstractRepositoryQuery query, IProgressMonitor monitor,
 			MultiStatus queryStatus);
 
+	// Precondition of note: offline file is removed upon submit to repository resulting in a synchronized state.
 	protected void updateOfflineState(AbstractRepositoryTask repositoryTask, boolean forceSync) {
 		RepositoryTaskSyncState status = repositoryTask.getSyncState();
 
@@ -195,7 +188,7 @@ public abstract class AbstractRepositoryConnector {
 		repositoryTask.setLastSynchronized(downloadedTaskData.getLastModified(repositoryTimeZone));
 		repositoryTask.setTaskData(downloadedTaskData);
 		repositoryTask.setSyncState(status);
-		saveOffline(downloadedTaskData, forceSync);		
+		saveOffline(downloadedTaskData, forceSync);
 	}
 
 	protected abstract RepositoryTaskData downloadTaskData(AbstractRepositoryTask bugzillaTask);
@@ -424,7 +417,7 @@ public abstract class AbstractRepositoryConnector {
 	protected void removeOfflineTaskData(RepositoryTaskData bug) {
 		if (bug == null)
 			return;
-		//bug.setOfflineState(false);
+		// bug.setOfflineState(false);
 		// offlineStatusChange(bug, RepositoryTaskSyncState.SYNCHRONIZED);
 		ArrayList<RepositoryTaskData> bugList = new ArrayList<RepositoryTaskData>();
 		bugList.add(bug);

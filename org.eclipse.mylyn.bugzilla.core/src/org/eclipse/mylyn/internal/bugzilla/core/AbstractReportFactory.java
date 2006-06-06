@@ -55,7 +55,7 @@ public class AbstractReportFactory {
 	
 	protected void collectResults(URL url, Proxy proxySettings, String characterEncoding, DefaultHandler contentHandler)
 			throws IOException, LoginException, KeyManagementException, NoSuchAlgorithmException {
-		URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(url, proxySettings);
+		URLConnection cntx = BugzillaPlugin.getUrlConnection(url, proxySettings);
 		if (cntx == null || !(cntx instanceof HttpURLConnection)) {
 			throw new IOException("Could not form URLConnection.");
 		}

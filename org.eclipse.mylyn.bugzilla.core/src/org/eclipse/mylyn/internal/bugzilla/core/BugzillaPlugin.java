@@ -242,7 +242,7 @@ public class BugzillaPlugin extends Plugin {
 	 * @param proxy
 	 *            can be null
 	 */
-	public URLConnection getUrlConnection(URL url, Proxy proxy) throws IOException, NoSuchAlgorithmException,
+	public static URLConnection getUrlConnection(URL url, Proxy proxy) throws IOException, NoSuchAlgorithmException,
 			KeyManagementException {
 		SSLContext ctx = SSLContext.getInstance("TLS");
 

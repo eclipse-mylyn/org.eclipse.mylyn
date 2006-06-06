@@ -321,7 +321,7 @@ public class BugzillaReportSubmitForm {
 
 		try {
 			// connect to the bugzilla server
-			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(postUrl, proxySettings);
+			URLConnection cntx = BugzillaPlugin.getUrlConnection(postUrl, proxySettings);
 			if (cntx == null || !(cntx instanceof HttpURLConnection))
 				return null;
 

@@ -124,6 +124,8 @@ public class BugzillaRepositoryUtil {
 	public static final String POST_ARGS_ATTACHMENT_UPLOAD = "/attachment.cgi";// ?action=insert";//&bugid=";
 
 	private static final String POST_ARGS_LOGIN = "GoAheadAndLogIn=1&Bugzilla_login=";
+	
+ 	private static final BugzillaAttributeFactory attributeFactory = new BugzillaAttributeFactory();
 
 	public static RepositoryTaskData getBug(String repositoryUrl, String userName, String password, Proxy proxySettings,
 			String characterEncoding, int id) throws IOException, MalformedURLException, LoginException,
@@ -683,7 +685,7 @@ public class BugzillaRepositoryUtil {
 			String url = repositoryUrl + POST_ARGS_ATTACHMENT_DOWNLOAD + id;
 			url = addCredentials(url, userName, password);
 			URL downloadUrl = new URL(url);
-			URLConnection connection = BugzillaPlugin.getDefault().getUrlConnection(downloadUrl, proxySettings);
+			URLConnection connection = BugzillaPlugin.getUrlConnection(downloadUrl, proxySettings);
 			if (connection != null) {
 				InputStream input = connection.getInputStream();
 				outStream = new FileOutputStream(destinationFile);
@@ -832,8 +834,8 @@ public class BugzillaRepositoryUtil {
 		return null;
 	}
 
-	public static RepositoryTaskAttribute makeNewAttribute(org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement tag) {
-		return new RepositoryTaskAttribute(tag.getKeyString(), tag.toString(), tag.isHidden());
+	protected static RepositoryTaskAttribute makeNewAttribute(org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement tag) {
+		return attributeFactory.createAttribute(tag.getKeyString());
 	}
 
 

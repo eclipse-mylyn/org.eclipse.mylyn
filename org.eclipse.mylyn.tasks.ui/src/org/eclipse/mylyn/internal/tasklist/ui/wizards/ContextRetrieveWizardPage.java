@@ -15,9 +15,9 @@ import java.text.DateFormat;
 import java.util.Set;
 
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylar.internal.tasklist.RepositoryAttachment;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
-import org.eclipse.mylar.provisional.tasklist.IRemoteContextDelegate;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
@@ -53,7 +53,7 @@ public class ContextRetrieveWizardPage extends WizardPage {
 
 	private Form form;
 
-	private IRemoteContextDelegate selectedContext = null;
+	private RepositoryAttachment selectedContextAttachment = null;
 
 	protected ContextRetrieveWizardPage(TaskRepository repository, AbstractRepositoryTask task) {
 		super(ContextAttachWizard.WIZARD_TITLE);
@@ -80,7 +80,7 @@ public class ContextRetrieveWizardPage extends WizardPage {
 		contextTable.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				if (contextTable.getSelectionIndex() > -1) {
-					selectedContext = (IRemoteContextDelegate) contextTable.getItem(contextTable.getSelectionIndex())
+					selectedContextAttachment = (RepositoryAttachment) contextTable.getItem(contextTable.getSelectionIndex())
 							.getData();
 					getWizard().getContainer().updateButtons();
 				}
@@ -90,7 +90,7 @@ public class ContextRetrieveWizardPage extends WizardPage {
 		AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
 				repository.getKind());
 
-		Set<IRemoteContextDelegate> contextDelegates = connector.getAvailableContexts(repository, task);
+		Set<RepositoryAttachment> contextAttachments = connector.getContextAttachments(repository, task);
 		TableColumn[] columns = new TableColumn[3];
 
 		columns[0] = new TableColumn(contextTable, SWT.LEFT);
@@ -102,12 +102,12 @@ public class ContextRetrieveWizardPage extends WizardPage {
 		columns[2] = new TableColumn(contextTable, SWT.CENTER);
 		columns[2].setText(COLUMN_COMMENT);
 
-		for (IRemoteContextDelegate delegate : contextDelegates) {
+		for (RepositoryAttachment attachment : contextAttachments) {
 			TableItem item = new TableItem(contextTable, SWT.NONE);
-			item.setText(0, DateFormat.getDateInstance(DateFormat.MEDIUM).format(delegate.getDate()));
-			item.setText(1, delegate.getAuthor());
-			item.setText(2, delegate.getComment());
-			item.setData(delegate);
+			item.setText(0, DateFormat.getDateInstance(DateFormat.MEDIUM).format(attachment.getDateCreated()));
+			item.setText(1, attachment.getCreator());
+			item.setText(2, attachment.getDescription());
+			item.setData(attachment);
 		}
 
 	    for (int i = 0, n = columns.length; i < n; i++) {
@@ -120,13 +120,13 @@ public class ContextRetrieveWizardPage extends WizardPage {
 		setControl(form.getBody());
 	}
 
-	public IRemoteContextDelegate getSelectedContext() {
-		return selectedContext;
+	public RepositoryAttachment getSelectedContext() {
+		return selectedContextAttachment;
 	}
 
 	@Override
 	public boolean isPageComplete() {
-		if(selectedContext == null) return false;
+		if(selectedContextAttachment == null) return false;
 		return super.isPageComplete();
 	}
 

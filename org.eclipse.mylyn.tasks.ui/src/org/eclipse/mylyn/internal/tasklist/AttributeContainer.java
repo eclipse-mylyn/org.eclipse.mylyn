@@ -41,20 +41,30 @@ public class AttributeContainer implements Serializable {
 		attributeKeys = new ArrayList<String>();
 		attributes = new HashMap<String, RepositoryTaskAttribute>();
 	}
-	
+
 	public void setAttributeFactory(AbstractAttributeFactory factory) {
 		this.attributeFactory = factory;
 	}
 
 	public void addAttribute(String key, RepositoryTaskAttribute attribute) {
-		if (!attributes.containsKey(attribute.getName())) {
-			attributeKeys.add(key);
+		if (attributeFactory == null) {
+			MylarStatusHandler.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
+			return;
 		}
-		attributes.put(key, attribute);
+		String mapped = attributeFactory.mapCommonAttributeKey(key);
+		if (!attributes.containsKey(mapped)) {
+			attributeKeys.add(mapped);
+		}
+		attributes.put(mapped, attribute);
 	}
 
 	public RepositoryTaskAttribute getAttribute(String key) {
-		return attributes.get(key);
+		if (attributeFactory == null) {
+			MylarStatusHandler.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
+			return null;
+		}
+		String mapped = attributeFactory.mapCommonAttributeKey(key);
+		return attributes.get(mapped);
 	}
 
 	public void removeAttribute(Object key) {
@@ -78,22 +88,18 @@ public class AttributeContainer implements Serializable {
 		attributes.clear();
 	}
 
-	// TODO: Re-enable this functionality when persisting in xml form
-	//       and remove from AbstractAttributeFactory in order to make
-	//       api cleaner?
 	public void addAttributeValue(String key, String value) {
-		if(attributeFactory == null) {
+		if (attributeFactory == null) {
 			MylarStatusHandler.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
 			return;
 		}
-		String mapped = attributeFactory.mapCommonAttributeKey(key);
-		RepositoryTaskAttribute attrib = getAttribute(mapped);
+		RepositoryTaskAttribute attrib = getAttribute(key);
 		if (attrib != null) {
 			attrib.addValue(value);
 		} else {
-			attrib = attributeFactory.createAttribute(mapped);
+			attrib = attributeFactory.createAttribute(key);
 			attrib.addValue(value);
-			addAttribute(mapped, attrib);
+			addAttribute(key, attrib);
 		}
 	}
 
@@ -102,42 +108,38 @@ public class AttributeContainer implements Serializable {
 	 * attribute is created
 	 */
 	public void setAttributeValue(String key, String value) {
-		if(attributeFactory == null) {
+		if (attributeFactory == null) {
 			MylarStatusHandler.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
 			return;
 		}
-		String mapped = attributeFactory.mapCommonAttributeKey(key);
-		RepositoryTaskAttribute attrib = getAttribute(mapped);
+		RepositoryTaskAttribute attrib = getAttribute(key);
 		if (attrib == null) {
-			attrib = attributeFactory.createAttribute(mapped);
-			addAttribute(mapped, attrib);
+			attrib = attributeFactory.createAttribute(key);
+			addAttribute(key, attrib);
 		}
 		attrib.setValue(value);
 	}
 
 	public String getAttributeValue(String key) {
-		if(attributeFactory == null) {
+		if (attributeFactory == null) {
 			MylarStatusHandler.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
 			return "";
 		}
 		String returnValue = "";
-		String mapped = attributeFactory.mapCommonAttributeKey(key);
-		RepositoryTaskAttribute attrib = getAttribute(mapped);
+		RepositoryTaskAttribute attrib = getAttribute(key);
 		if (attrib != null) {
 			returnValue = attrib.getValue();
-			// returnValue = HtmlStreamTokenizer.unescape(attrib.getValue());
 		}
 		return returnValue;
 	}
 
 	public List<String> getAttributeValues(String key) {
 		List<String> returnValue = new ArrayList<String>();
-		if(attributeFactory == null) {
+		if (attributeFactory == null) {
 			MylarStatusHandler.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
 			return returnValue;
 		}
-		String mapped = attributeFactory.mapCommonAttributeKey(key);
-		RepositoryTaskAttribute attrib = getAttribute(mapped);
+		RepositoryTaskAttribute attrib = getAttribute(key);
 		if (attrib != null) {
 			returnValue = attrib.getValues();
 		}
