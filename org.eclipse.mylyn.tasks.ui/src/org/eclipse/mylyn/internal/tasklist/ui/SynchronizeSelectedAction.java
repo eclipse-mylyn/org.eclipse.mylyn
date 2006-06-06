@@ -42,7 +42,7 @@ public class SynchronizeSelectedAction extends Action implements IViewActionDele
 		if (event.getResult().getException() != null) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					MessageDialog.openError(Display.getDefault().getActiveShell(), "Synchronize Reports Error", event
+					MessageDialog.openError(Display.getDefault().getActiveShell(), MylarTaskListPlugin.TITLE_DIALOG, event
 							.getResult().getMessage());
 				}
 			});

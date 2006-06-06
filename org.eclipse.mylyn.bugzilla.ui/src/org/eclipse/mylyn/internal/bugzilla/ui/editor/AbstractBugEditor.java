@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.bugzilla.ui.editor;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaAttributeListener;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaTools;
@@ -51,12 +53,10 @@ import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.IBugzillaReportSelection;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.AbstractRepositoryReport;
-import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTaskAttribute;
-import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.Comment;
-import org.eclipse.mylar.internal.tasklist.ReportAttachment;
-import org.eclipse.mylar.internal.tasklist.RepositoryReport;
+import org.eclipse.mylar.internal.tasklist.RepositoryAttachment;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
@@ -283,7 +283,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 	protected List<ISelectionChangedListener> selectionChangedListeners = new ArrayList<ISelectionChangedListener>();
 
-	protected HashMap<CCombo, AbstractRepositoryTaskAttribute> comboListenerMap = new HashMap<CCombo, AbstractRepositoryTaskAttribute>();
+	protected HashMap<CCombo, RepositoryTaskAttribute> comboListenerMap = new HashMap<CCombo, RepositoryTaskAttribute>();
 
 	private IBugzillaReportSelection lastSelected = null;
 
@@ -335,7 +335,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 			if (comboListenerMap.containsKey(combo)) {
 				if (combo.getSelectionIndex() > -1) {
 					String sel = combo.getItem(combo.getSelectionIndex());
-					AbstractRepositoryTaskAttribute attribute = comboListenerMap.get(combo);
+					RepositoryTaskAttribute attribute = comboListenerMap.get(combo);
 					if (sel != null && !(sel.equals(attribute.getValue()))) {
 						attribute.setValue(sel);
 						for (IBugzillaAttributeListener client : attributesListeners) {
@@ -406,11 +406,11 @@ public abstract class AbstractBugEditor extends EditorPart {
 	/**
 	 * @return The bug this editor is displaying.
 	 */
-	public abstract RepositoryReport getBug();
+	public abstract RepositoryTaskData getBug();
 
 	// TODO: temporary as part of conversion to xml
-	public AbstractRepositoryReport getReport() {
-		return (AbstractRepositoryReport) getBug();
+	public RepositoryTaskData getReport() {
+		return (RepositoryTaskData) getBug();
 	}
 
 	/**
@@ -599,9 +599,9 @@ public abstract class AbstractBugEditor extends EditorPart {
 	// // String ccValue = null;
 	//
 	// // Populate Attributes
-	// for (Iterator<AbstractRepositoryTaskAttribute> it =
+	// for (Iterator<RepositoryTaskAttribute> it =
 	// getReport().getAttributes().iterator(); it.hasNext();) {
-	// AbstractRepositoryTaskAttribute attribute = it.next();
+	// RepositoryTaskAttribute attribute = it.next();
 	// String key = attribute.getID();
 	// String name = attribute.getName();
 	// String value = checkText(attribute.getValue());
@@ -815,7 +815,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 	// assignedTo.addListener(SWT.KeyUp, new Listener() {
 	// public void handleEvent(Event event) {
 	// String sel = assignedTo.getText();
-	// AbstractRepositoryTaskAttribute a = getReport().getAttribute(
+	// RepositoryTaskAttribute a = getReport().getAttribute(
 	// BugzillaReportElement.ASSIGNED_TO);
 	// if (!(a.getValue().equals(sel))) {
 	// a.setValue(sel);
@@ -951,7 +951,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 		int currentCol = 1;
 
-		for (AbstractRepositoryTaskAttribute attribute : getReport().getAttributes()) {
+		for (RepositoryTaskAttribute attribute : getReport().getAttributes()) {
 
 			// String key = attribute.getID();
 			String name = attribute.getName();
@@ -1014,7 +1014,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 					text.addListener(SWT.KeyUp, new Listener() {
 						public void handleEvent(Event event) {
 							String sel = text.getText();
-							AbstractRepositoryTaskAttribute a = (AbstractRepositoryTaskAttribute) text.getData();
+							RepositoryTaskAttribute a = (RepositoryTaskAttribute) text.getData();
 							if (!(a.getValue().equals(sel))) {
 								a.setValue(sel);
 								changeDirtyStatus(true);
@@ -1046,11 +1046,11 @@ public abstract class AbstractBugEditor extends EditorPart {
 		addCCList(toolkit, "", attributesComposite);
 
 		// URL field
-		addUrlText(getReport().getAttributeValue(BugzillaReportElement.BUG_FILE_LOC), attributesComposite);
+		addUrlText(getReport().getAttributeValue(BugzillaReportElement.BUG_FILE_LOC.getKeyString()), attributesComposite);
 
 		// keywords text field (not editable)
 		try {
-			addKeywordsList(toolkit, getReport().getAttributeValue(BugzillaReportElement.KEYWORDS), attributesComposite);
+			addKeywordsList(toolkit, getReport().getAttributeValue(BugzillaReportElement.KEYWORDS.getKeyString()), attributesComposite);
 		} catch (IOException e) {
 			MessageDialog.openInformation(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 					"Could not retrieve keyword list, ensure proper configuration in "+TaskRepositoriesView.NAME+"\n\nError reported: " + e.getMessage());
@@ -1095,7 +1095,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 		urlText.addListener(SWT.KeyUp, new Listener() {
 			public void handleEvent(Event event) {
 				String sel = urlText.getText();
-				AbstractRepositoryTaskAttribute a = getReport().getAttribute(BugzillaReportElement.BUG_FILE_LOC);
+				RepositoryTaskAttribute a = getReport().getAttribute(BugzillaReportElement.BUG_FILE_LOC.getKeyString());
 				if (!(a.getValue().equals(sel))) {
 					a.setValue(sel);
 					changeDirtyStatus(true);
@@ -1167,9 +1167,15 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 			attachmentsTableViewer.setSorter(new ViewerSorter() {
 				public int compare(Viewer viewer, Object e1, Object e2) {
-					ReportAttachment attachment1 = (ReportAttachment) e1;
-					ReportAttachment attachment2 = (ReportAttachment) e2;
-					return attachment1.getDateCreated().compareTo(attachment2.getDateCreated());
+					RepositoryAttachment attachment1 = (RepositoryAttachment) e1;
+					RepositoryAttachment attachment2 = (RepositoryAttachment) e2;
+					Date created1 = attachment1.getDateCreated();
+					Date created2 = attachment2.getDateCreated();
+					if(created1 != null && created2 != null) {
+						return attachment1.getDateCreated().compareTo(attachment2.getDateCreated());
+					} else {
+						return 0;
+					}
 				}
 			});
 
@@ -1192,12 +1198,12 @@ public abstract class AbstractBugEditor extends EditorPart {
 			attachmentsTableViewer.setLabelProvider(new ITableLabelProvider() {
 
 				public Image getColumnImage(Object element, int columnIndex) {
-					// ReportAttachment attachment = (ReportAttachment) element;
+					// RepositoryAttachment attachment = (RepositoryAttachment) element;
 					return null;
 				}
 
 				public String getColumnText(Object element, int columnIndex) {
-					ReportAttachment attachment = (ReportAttachment) element;
+					RepositoryAttachment attachment = (RepositoryAttachment) element;
 					switch (columnIndex) {
 					case 0:
 						return attachment.getDescription();
@@ -1238,7 +1244,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 					String address = repository.getUrl() + "/attachment.cgi?id=";
 					if (!event.getSelection().isEmpty()) {
 						StructuredSelection selection = (StructuredSelection) event.getSelection();
-						ReportAttachment attachment = (ReportAttachment) selection.getFirstElement();
+						RepositoryAttachment attachment = (RepositoryAttachment) selection.getFirstElement();
 						address += attachment.getId() + "&amp;action=view";
 						;
 						TaskUiUtil.openUrl(address);
@@ -1562,7 +1568,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 			final BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) MylarTaskListPlugin
 					.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);			
-			bugzillaRepositoryClient.saveBugReport((RepositoryReport) getReport());
+			bugzillaRepositoryClient.saveBugReport((RepositoryTaskData) getReport());
 			changeDirtyStatus(false);
 			if(parentEditor != null) {
 				parentEditor.notifyTaskChanged();
@@ -1708,7 +1714,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 	 */
 	protected class GenericListener implements Listener {
 		public void handleEvent(Event event) {
-			RepositoryReport bug = (RepositoryReport) getReport();
+			RepositoryTaskData bug = (RepositoryTaskData) getReport();
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
 					new BugzillaReportSelection(bug.getId(), bug.getRepositoryUrl(), bug.getLabel(), false, bug
 							.getSummary()))));
@@ -1803,7 +1809,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 				}
 				focusOn(t, highlight);
 			}
-		} else if (o instanceof RepositoryReport) {
+		} else if (o instanceof RepositoryTaskData) {
 			focusOn(null, highlight);
 		}
 	}

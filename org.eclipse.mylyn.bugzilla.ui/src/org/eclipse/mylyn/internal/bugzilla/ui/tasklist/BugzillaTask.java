@@ -17,10 +17,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
-import org.eclipse.mylar.internal.bugzilla.core.HtmlStreamTokenizer;
-import org.eclipse.mylar.internal.tasklist.RepositoryReport;
-import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
 import org.eclipse.mylar.internal.tasklist.Comment;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 
@@ -33,7 +31,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 	 * The bug report for this BugzillaTask. This is <code>null</code> if the
 	 * bug report with the specified ID was unable to download.
 	 */
-	protected transient RepositoryReport bugReport = null;
+	//protected transient RepositoryTaskData bugReport = null;
 
 	public BugzillaTask(String handle, String label, boolean newTask) {
 		super(handle, label, newTask);
@@ -71,35 +69,35 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		}
 	}
 
-	public RepositoryReport getBugReport() {
-		return bugReport;
-	}
+//	public RepositoryTaskData getBugReport() {
+//		return bugReport;
+//	}
 	
 	public String getTaskType() {
-		if (bugReport != null && bugReport.getAttribute(BugzillaReportElement.BUG_SEVERITY) != null) {
-			return bugReport.getAttribute(BugzillaReportElement.BUG_SEVERITY).getValue();
+		if (taskData != null && taskData.getAttribute(BugzillaReportElement.BUG_SEVERITY.getKeyString()) != null) {
+			return taskData.getAttribute(BugzillaReportElement.BUG_SEVERITY.getKeyString()).getValue();
 		} else {
 			return null;
 		}
 	}
 
-	/**
-	 * @param bugReport
-	 *            The bugReport to set.
-	 */
-	public void setBugReport(RepositoryReport bugReport) {
-		this.bugReport = bugReport;
-		
-		// TODO: remove?
-		if (bugReport != null) {
-			setDescription(HtmlStreamTokenizer.unescape(AbstractRepositoryTask
-					.getTaskIdAsInt(getHandleIdentifier())
-					+ ": " + bugReport.getSummary()));
-		}
-	}
+//	/**
+//	 * @param taskData
+//	 *            The taskData to set.
+//	 */
+//	public void setBugReport(RepositoryTaskData bugReport) {
+//		this.bugReport = bugReport;
+//		
+//		// TODO: remove?
+//		if (bugReport != null) {
+//			setDescription(HtmlStreamTokenizer.unescape(AbstractRepositoryTask
+//					.getTaskIdAsInt(getHandleIdentifier())
+//					+ ": " + bugReport.getSummary()));
+//		}
+//	}
 
 	public boolean isDownloaded() {
-		return bugReport != null;
+		return taskData != null;
 	}
 
 	@Override
@@ -109,8 +107,8 @@ public class BugzillaTask extends AbstractRepositoryTask {
 
 	@Override
 	public boolean isCompleted() {
-		if (bugReport != null) {
-			return bugReport.isResolved();
+		if (taskData != null) {
+			return taskData.isResolved();
 		} else {
 			return super.isCompleted();
 		}
@@ -126,9 +124,9 @@ public class BugzillaTask extends AbstractRepositoryTask {
 
 	@Override
 	public Date getCompletionDate() {
-		if (bugReport != null) {
-			if (bugReport.isResolved()) {
-				List<Comment> comments = bugReport.getComments();
+		if (taskData != null) {
+			if (taskData.isResolved()) {
+				List<Comment> comments = taskData.getComments();
 				if (comments != null && !comments.isEmpty()) {
 					// TODO: fix not to be based on comment
 					return comments.get(comments.size() - 1).getCreated();
@@ -144,8 +142,8 @@ public class BugzillaTask extends AbstractRepositoryTask {
 
 	@Override
 	public String getPriority() {
-		if (bugReport != null && bugReport.getAttribute(BugzillaReportElement.PRIORITY) != null) {
-			return bugReport.getAttribute(BugzillaReportElement.PRIORITY).getValue();
+		if (taskData != null && taskData.getAttribute(BugzillaReportElement.PRIORITY.getKeyString()) != null) {
+			return taskData.getAttribute(BugzillaReportElement.PRIORITY.getKeyString()).getValue();
 		} else {
 			return super.getPriority();
 		}

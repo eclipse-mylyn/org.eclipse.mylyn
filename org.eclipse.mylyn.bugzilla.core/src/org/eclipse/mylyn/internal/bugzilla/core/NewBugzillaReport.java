@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.bugzilla.core;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.eclipse.mylar.internal.tasklist.RepositoryReport;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 
 
 /**
@@ -23,7 +23,7 @@ import org.eclipse.mylar.internal.tasklist.RepositoryReport;
  * @author Eric Booth
  * @author Rob Elves
  */
-public class NewBugzillaReport extends RepositoryReport implements Serializable { 
+public class NewBugzillaReport extends RepositoryTaskData implements Serializable { 
 
 	/** Automatically generated serialVersionUID */
 	private static final long serialVersionUID = 3977859587934335283L;
@@ -57,7 +57,7 @@ public class NewBugzillaReport extends RepositoryReport implements Serializable 
 	 * based on the id of the last <code>NewBugModel</code> that was created.
 	 */
 	public NewBugzillaReport(String repositoryURL, int offlineId) {
-		super(offlineId, repositoryURL);
+		super(new BugzillaAttributeFactory(), BugzillaPlugin.REPOSITORY_KIND, repositoryURL, offlineId);
 	}
 
 	public String getLabel() {

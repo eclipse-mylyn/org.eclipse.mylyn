@@ -2,18 +2,11 @@
 <?eclipse version="3.0"?>
 <?eclipse version="3.0"?>
 <plugin>
-	<extension
-          point="org.eclipse.mylar.tasklist.editors">
-       <hyperlinkDetector
-             class="org.eclipse.mylar.internal.bugs.java.JavaStackTraceHyperlinkDetector"
-             id="org.eclipse.mylar.tasks.hyperlink.detector.java.stack"/>
-    </extension>
-
    <!--
    <extension 
          point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
       <hyperlinkDetector class="org.eclipse.mylar.internal.bugs.java.BugzillaHyperLinkDetector"/>
-   </extension>   
+   </extension>    
    -->
 
 <!--

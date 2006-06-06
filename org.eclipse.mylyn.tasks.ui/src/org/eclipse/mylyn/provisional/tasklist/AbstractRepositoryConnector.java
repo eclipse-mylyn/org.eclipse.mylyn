@@ -13,12 +13,15 @@ package org.eclipse.mylar.provisional.tasklist;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -26,7 +29,13 @@ import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.AbstractAttributeFactory;
+import org.eclipse.mylar.internal.tasklist.RemoteContextDelegate;
+import org.eclipse.mylar.internal.tasklist.OfflineTaskManager;
+import org.eclipse.mylar.internal.tasklist.RepositoryAttachment;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.ui.PlatformUI;
@@ -44,17 +53,15 @@ public abstract class AbstractRepositoryConnector {
 
 	public static final String MYLAR_CONTEXT_DESCRIPTION = "mylar/context/zip";
 
-	// private static final int MAX_REFRESH_JOBS = 1;
-	//
-	// private List<AbstractRepositoryTask> toBeRefreshed = new
-	// LinkedList<AbstractRepositoryTask>();
-	//
-	// private Map<AbstractRepositoryTask, Job> currentlyRefreshing = new
-	// HashMap<AbstractRepositoryTask, Job>();
+	protected List<String> supportedVersions;
+
+	protected AbstractAttributeFactory attributeFactory;
 
 	protected boolean forceSyncExecForTesting = false;
 
-	boolean syncAll = false;
+	// private boolean syncAll = false;
+
+	private boolean updateLocalCopy = false;
 
 	public abstract boolean canCreateTaskFromKey();
 
@@ -63,14 +70,34 @@ public abstract class AbstractRepositoryConnector {
 	public abstract boolean attachContext(TaskRepository repository, AbstractRepositoryTask task, String longComment)
 			throws IOException;
 
+	protected AbstractRepositoryConnector(AbstractAttributeFactory attributeFactory) {
+		this.attributeFactory = attributeFactory;
+	}
+
 	/**
-	 * Implementors of this operations must perform it locally without going to
-	 * the server since it is used for frequent operations such as decoration.
+	 * Implementors of this repositoryOperations must perform it locally without
+	 * going to the server since it is used for frequent repositoryOperations
+	 * such as decoration.
 	 * 
 	 * @return an emtpy set if no contexts
 	 */
-	public abstract Set<IRemoteContextDelegate> getAvailableContexts(TaskRepository repository,
-			AbstractRepositoryTask task);
+	// public abstract Set<IRemoteContextDelegate>
+	// getAvailableContexts(TaskRepository repository,
+	// AbstractRepositoryTask task);
+	public Set<IRemoteContextDelegate> getAvailableContexts(TaskRepository repository, AbstractRepositoryTask task) {
+		Set<IRemoteContextDelegate> contextDelegates = new HashSet<IRemoteContextDelegate>();
+		// if (task instanceof BugzillaTask) {
+		// BugzillaTask bugzillaTask = (BugzillaTask) task;
+		if (task.getTaskData() != null) {
+			for (RepositoryAttachment attachment : task.getTaskData().getAttachments()) {
+				if (attachment.getDescription().equals(MYLAR_CONTEXT_DESCRIPTION)) {
+					contextDelegates.add(new RemoteContextDelegate(attachment));
+				}
+			}
+		}
+		// }
+		return contextDelegates;
+	}
 
 	public boolean hasRepositoryContext(TaskRepository repository, AbstractRepositoryTask task) {
 		if (repository == null || task == null) {
@@ -98,7 +125,80 @@ public abstract class AbstractRepositoryConnector {
 	public abstract List<AbstractQueryHit> performQuery(AbstractRepositoryQuery query, IProgressMonitor monitor,
 			MultiStatus queryStatus);
 
-	protected abstract void updateOfflineState(AbstractRepositoryTask repositoryTask, boolean forceSync);
+	protected void updateOfflineState(AbstractRepositoryTask repositoryTask, boolean forceSync) {
+		RepositoryTaskSyncState status = repositoryTask.getSyncState();
+
+		final RepositoryTaskData downloadedTaskData = downloadTaskData(repositoryTask);
+
+		if (downloadedTaskData == null) {
+			MylarStatusHandler.log("Download of " + repositoryTask.getDescription() + " from "
+					+ repositoryTask.getRepositoryUrl() + " failed.", this);
+			return;
+		}
+
+		RepositoryTaskData offlineTaskData = OfflineTaskManager.findBug(downloadedTaskData.getRepositoryUrl(),
+				downloadedTaskData.getId());
+
+		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+				repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
+
+		if (repository == null) {
+			MylarStatusHandler
+					.log("No repository associated with task. Unable to retrieve timezone information.", this);
+			return;
+		}
+
+		TimeZone repositoryTimeZone = DateUtil.getTimeZone(repository.getTimeZoneId());
+		if (offlineTaskData != null) {
+			switch (status) {
+			case OUTGOING:
+				// Should not occur if forceSync = false
+			case CONFLICT:
+				// Should not occur if forceSync = false
+				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+					public void run() {
+						updateLocalCopy = MessageDialog
+								.openQuestion(
+										null,
+										"Update Local Copy",
+										"Local copy of Report "
+												+ downloadedTaskData.getId()
+												+ " on "
+												+ downloadedTaskData.getRepositoryUrl()
+												+ " has changes.\nWould you like to override local changes? \n\nNote: if you select No, only the new comment will be saved with the updated bug, all other changes will be lost.");
+					}
+				});
+				if (!updateLocalCopy) {
+					downloadedTaskData.setNewComment(offlineTaskData.getNewComment());
+					downloadedTaskData.setHasChanged(true);
+					status = RepositoryTaskSyncState.CONFLICT;
+				} else {
+					downloadedTaskData.setHasChanged(false);
+					status = RepositoryTaskSyncState.SYNCHRONIZED;
+				}
+				break;
+			case INCOMING:
+				status = RepositoryTaskSyncState.SYNCHRONIZED;
+				break;
+			case SYNCHRONIZED:
+				if (repositoryTask.getLastSynchronized() == null
+						|| downloadedTaskData.getLastModified(repositoryTimeZone).compareTo(
+								repositoryTask.getLastSynchronized()) > 0) {
+					status = RepositoryTaskSyncState.INCOMING;
+				}
+				break;
+			}
+			removeOfflineTaskData(offlineTaskData);
+		} else {
+			status = RepositoryTaskSyncState.SYNCHRONIZED;
+		}
+		repositoryTask.setLastSynchronized(downloadedTaskData.getLastModified(repositoryTimeZone));
+		repositoryTask.setTaskData(downloadedTaskData);
+		repositoryTask.setSyncState(status);
+		saveOffline(downloadedTaskData, forceSync);		
+	}
+
+	protected abstract RepositoryTaskData downloadTaskData(AbstractRepositoryTask bugzillaTask);
 
 	public abstract String getLabel();
 
@@ -217,12 +317,13 @@ public abstract class AbstractRepositoryConnector {
 			} catch (Exception e) {
 				if (attempts == MAX_QUERY_ATTEMPTS) {
 					Date now = new Date();
-					MylarStatusHandler.log(e, "Error determining modified reports on " + repository.getUrl() + ". ["+now.toString()+"]");
+					MylarStatusHandler.log(e, "Could not determine modified tasks for " + repository.getUrl() + ". ["
+							+ now.toString() + "]");
 					return;
 				}
 				try {
 					Thread.sleep(RETRY_DELAY);
-				} catch (InterruptedException e1) {					
+				} catch (InterruptedException e1) {
 					return;
 				}
 			}
@@ -289,6 +390,47 @@ public abstract class AbstractRepositoryConnector {
 		MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 				MylarTaskListPlugin.TITLE_DIALOG, "Opening JIRA issues not added to task list is not implemented.");
 	}
+
+	public AbstractAttributeFactory getAttributeFactory() {
+		return attributeFactory;
+	}
+
+	public void saveOffline(final RepositoryTaskData report, final boolean forceSync) {
+		try {
+			MylarTaskListPlugin.getDefault().getOfflineReportsFile().add(report, forceSync);
+			// report.setOfflineState(true);
+		} catch (CoreException e) {
+			MylarStatusHandler.fail(e, e.getMessage(), false);
+		}
+
+		// if (report.isSavedOffline()) {
+		// // There is already an offline report for this bug, update the file.
+		// MylarTaskListPlugin.getDefault().getOfflineReportsFile().update();
+		// } else {
+		// try {
+		// RepositoryTaskSyncState offlineStatus =
+		// MylarTaskListPlugin.getDefault().getOfflineReportsFile().add(
+		// report, forceSynch);
+		// report.setOfflineState(true);
+		// offlineStatusChange(report, offlineStatus);
+		//			
+		// } catch (CoreException e) {
+		// MylarStatusHandler.fail(e, e.getMessage(), false);
+		// }
+		// }
+
+	}
+
+	protected void removeOfflineTaskData(RepositoryTaskData bug) {
+		if (bug == null)
+			return;
+		//bug.setOfflineState(false);
+		// offlineStatusChange(bug, RepositoryTaskSyncState.SYNCHRONIZED);
+		ArrayList<RepositoryTaskData> bugList = new ArrayList<RepositoryTaskData>();
+		bugList.add(bug);
+		MylarTaskListPlugin.getDefault().getOfflineReportsFile().remove(bugList);
+	}
+
 }
 
 // public void removeTaskToBeRefreshed(AbstractRepositoryTask task) {

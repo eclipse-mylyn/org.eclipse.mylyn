@@ -34,7 +34,7 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 public class Util {
 
 	/**
-	 * List of all of the search operations that can be done <br>
+	 * List of all of the search repositoryOperations that can be done <br>
 	 * all words, any words, regex
 	 */
 	private static final String[] patternOperationValues = { "allwordssubstr", "anywordssubstr", "regexp" };

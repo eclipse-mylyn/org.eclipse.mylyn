@@ -25,7 +25,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.mylar.internal.bugs.BugzillaReportElement;
+import org.eclipse.mylar.internal.bugs.BugzillaReportInfo;
 import org.eclipse.mylar.internal.bugs.BugzillaSearchManager;
 import org.eclipse.mylar.internal.bugs.BugzillaStructureBridge;
 import org.eclipse.mylar.internal.bugs.MylarBugsPlugin;
@@ -96,8 +96,8 @@ public class BugzillaReferencesProvider extends AbstractRelationProvider {
 
 				while (itr.hasNext()) {
 					Object o = itr.next();
-					if (o instanceof BugzillaReportElement) {
-						BugzillaReportElement bugzillaNode = (BugzillaReportElement) o;
+					if (o instanceof BugzillaReportInfo) {
+						BugzillaReportInfo bugzillaNode = (BugzillaReportInfo) o;
 						final String handle = bugzillaNode.getElementHandle();
 //						if (MylarBugsPlugin.getDefault().getCache().getCached(handle) == null)
 //							cache(handle, bugzillaNode);
@@ -145,13 +145,13 @@ public class BugzillaReferencesProvider extends AbstractRelationProvider {
 	 * that on restart, we dont have to get all of the bugs
 	 * 
 	 */
-	private static final Map<String, BugzillaReportElement> reports = new HashMap<String, BugzillaReportElement>();
+	private static final Map<String, BugzillaReportInfo> reports = new HashMap<String, BugzillaReportInfo>();
 
-	public BugzillaReportElement getCached(String handle) {
+	public BugzillaReportInfo getCached(String handle) {
 		return reports.get(handle);
 	}
 
-	protected void cache(String handle, BugzillaReportElement bugzillaNode) {
+	protected void cache(String handle, BugzillaReportInfo bugzillaNode) {
 		reports.put(handle, bugzillaNode);
 	}
 

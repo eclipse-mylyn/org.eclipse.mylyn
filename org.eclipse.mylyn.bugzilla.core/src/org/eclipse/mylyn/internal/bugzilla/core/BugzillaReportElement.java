@@ -78,8 +78,11 @@ public enum BugzillaReportElement {
 	BUGS ("used by search engine", "bugs", false);
 	
 	private final boolean isHidden;
+	
 	private final boolean isReadOnly;
+	
 	private final String keyString;
+	
 	private final String prettyName;
 
 	BugzillaReportElement(String prettyName, String fieldName) {		

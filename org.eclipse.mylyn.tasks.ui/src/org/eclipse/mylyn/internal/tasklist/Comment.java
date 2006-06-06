@@ -29,19 +29,10 @@ public class Comment extends AttributeContainer implements Serializable {
 	public static SimpleDateFormat creation_ts_date_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	/** Comment's bug */
-	private final AbstractRepositoryReport bug;
+	private final RepositoryTaskData bug;
 
 	/** Comment's number */
 	private final int number;
-
-	// /** Comment's text */
-	// private String text;
-	//
-	// /** Comment's author */
-	// private final String author;
-	//
-	// /** Author's realname, if known */
-	// private final String authorName;
 
 	/** Comment's creation timestamp */
 	private Date created;
@@ -56,48 +47,18 @@ public class Comment extends AttributeContainer implements Serializable {
 
 	private int attachmentId;
 
-	// private boolean hasAttachment = false;
-	//
-	// private int attachmentId = -1;
-	//
-	// private String attachmentDescription = "";
-	//
-	// private boolean obsolete = false;
-
-	public Comment(AbstractRepositoryReport report, int num) {
+	public Comment(AbstractAttributeFactory attributeFactory, RepositoryTaskData report, int num) {
+		super(attributeFactory);
 		this.bug = report;
 		this.number = num;
 	}
-
-	// /**
-	// * Constructor
-	// *
-	// * @param bug
-	// * The bug that this comment is associated with
-	// * @param date
-	// * The date taht this comment was entered on
-	// * @param author
-	// * The author of the bug
-	// * @param authorName
-	// * The authors real name
-	// * @depricated This use Comment(AbstractRepositoryReport report, int num)
-	// instead
-	// */
-	// public Comment(AbstractRepositoryReport bug, int number, Date date,
-	// String author, String authorName) {
-	// this.bug = bug;
-	// this.number = number;
-	// // this.created = date;
-	// // this.author = author;
-	// // this.authorName = authorName;
-	// }
 
 	/**
 	 * Get the bug that this comment is associated with
 	 * 
 	 * @return The bug that this comment is associated with
 	 */
-	public AbstractRepositoryReport getBug() {
+	public RepositoryTaskData getBug() {
 		return bug;
 	}
 
@@ -119,7 +80,7 @@ public class Comment extends AttributeContainer implements Serializable {
 		if (created == null) {
 			created = Calendar.getInstance().getTime();
 			try {
-				created = creation_ts_date_format.parse(getAttributeValue(BugzillaReportElement.BUG_WHEN));
+				created = creation_ts_date_format.parse(getAttributeValue(RepositoryTaskAttribute.COMMENT_DATE));
 			} catch (Exception e) {
 				// ignore
 				// MylarStatusHandler.log("Comment creation date parse error,
@@ -135,7 +96,7 @@ public class Comment extends AttributeContainer implements Serializable {
 	 * @return The comments author
 	 */
 	public String getAuthor() {
-		return getAttributeValue(BugzillaReportElement.WHO);
+		return getAttributeValue(RepositoryTaskAttribute.USER_OWNER);
 	}
 
 	/**
@@ -155,18 +116,8 @@ public class Comment extends AttributeContainer implements Serializable {
 	 * @return The comments text
 	 */
 	public String getText() {
-		return getAttributeValue(BugzillaReportElement.THETEXT);
+		return getAttributeValue(RepositoryTaskAttribute.COMMENT_TEXT);
 	}
-
-	// /**
-	// * Set the comments text
-	// *
-	// * @param text
-	// * The text to set the comment to have
-	// */
-	// public void setText(String text) {
-	// this.text = text;
-	// }
 
 	/**
 	 * Get the next comment for the bug
@@ -224,23 +175,4 @@ public class Comment extends AttributeContainer implements Serializable {
 	public int getAttachmentId() {
 		return attachmentId;
 	}
-	
-	//
-	// public void setAttachmentDescription(String attachmentDescription) {
-	// this.attachmentDescription = attachmentDescription;
-	// }
-	//	
-	// public String getAttachmentDescription() {
-	// return attachmentDescription;
-	// }
-	//
-	// public void setObsolete(boolean obsolete) {
-	// this.obsolete = obsolete;
-	// }
-	//	
-	// public boolean isObsolete() {
-	// return obsolete;
-	// }
-	//
-
 }

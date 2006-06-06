@@ -15,8 +15,8 @@ import java.net.Proxy;
 import java.security.GeneralSecurityException;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.OfflineTaskManager;
-import org.eclipse.mylar.internal.tasklist.RepositoryReport;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
@@ -32,9 +32,9 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 
 	protected int bugId;
 
-	protected RepositoryReport bug;
+	protected RepositoryTaskData bug;
 
-	public ExistingBugEditorInput(TaskRepository repository, RepositoryReport bug) {
+	public ExistingBugEditorInput(TaskRepository repository, RepositoryTaskData bug) {
 		this.bug = bug;
 		this.bugId = bug.getId();
 		this.repository = repository;
@@ -77,13 +77,13 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 				// }
 				// });
 			}
-		} else {
+		} else {			
 			bug = getCurrentBug(repository, proxySettings, bugId);
 		}
 	}
 
 	// TODO: move
-	private RepositoryReport getCurrentBug(TaskRepository repository, Proxy proxySettings, int id)
+	private RepositoryTaskData getCurrentBug(TaskRepository repository, Proxy proxySettings, int id)
 			throws IOException, GeneralSecurityException {
 		// Look among the offline reports for a bug with the given id.
 		OfflineTaskManager reportsFile = MylarTaskListPlugin.getDefault().getOfflineReportsFile();
@@ -92,9 +92,9 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 	
 			// If an offline bug was found, return it if possible.
 			if (offlineId != -1) {
-				RepositoryReport bug = reportsFile.elements().get(offlineId);
-				if (bug instanceof RepositoryReport) {
-					return (RepositoryReport) bug;
+				RepositoryTaskData bug = reportsFile.elements().get(offlineId);
+				if (bug instanceof RepositoryTaskData) {
+					return (RepositoryTaskData) bug;
 				}
 			}
 		} 
@@ -114,7 +114,7 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 	}
 
 	@Override
-	public RepositoryReport getBug() {
+	public RepositoryTaskData getBug() {
 		return bug;
 	}
 

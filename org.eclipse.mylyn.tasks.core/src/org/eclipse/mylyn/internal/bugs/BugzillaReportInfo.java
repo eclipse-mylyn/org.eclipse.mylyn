@@ -22,7 +22,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchHit;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.StackTrace;
-import org.eclipse.mylar.internal.tasklist.RepositoryReport;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
@@ -33,7 +33,7 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
  * 
  * @author Shawn Minto
  */
-public class BugzillaReportElement {
+public class BugzillaReportInfo {
 
 	private static final int MAX_LABEL_LENGTH = 150;
 
@@ -49,7 +49,7 @@ public class BugzillaReportElement {
 	private List<StackTrace> stackTraces;
 
 	/** The bug report associated with this DoiInfo */
-	private RepositoryReport bug;
+	private RepositoryTaskData bug;
 
 	/**
 	 * Constructor
@@ -61,7 +61,7 @@ public class BugzillaReportElement {
 	 * @param isExact
 	 *            Whether the search was exact or not
 	 */
-	public BugzillaReportElement(float initialValue, BugzillaSearchHit hit, boolean isExact) {
+	public BugzillaReportInfo(float initialValue, BugzillaSearchHit hit, boolean isExact) {
 		this.hit = hit;
 		this.isExact = isExact;
 		bug = null;
@@ -113,7 +113,7 @@ public class BugzillaReportElement {
 	 * @throws MalformedURLException
 	 * @throws GeneralSecurityException 
 	 */
-	public RepositoryReport getBug() throws IOException, GeneralSecurityException {
+	public RepositoryTaskData getBug() throws IOException, GeneralSecurityException {
 		if (bug == null) {
 			// get the bug report
 			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, hit.getRepositoryUrl());
@@ -129,7 +129,7 @@ public class BugzillaReportElement {
 	 * @param bug -
 	 *            BugReport that this is associated with
 	 */
-	public void setBug(RepositoryReport bug) {
+	public void setBug(RepositoryTaskData bug) {
 		this.bug = bug;
 	}
 

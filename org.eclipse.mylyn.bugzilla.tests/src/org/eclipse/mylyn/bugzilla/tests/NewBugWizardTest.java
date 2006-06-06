@@ -15,11 +15,11 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.ui.wizard.AbstractBugzillaWizardPage;
-import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.ui.PlatformUI;
 
@@ -40,33 +40,33 @@ public class NewBugWizardTest extends TestCase {
 
 		String os = Platform.getOS();
 		if (os.equals("win32"))
-			assertEquals("Windows", newReport.getAttribute(BugzillaReportElement.OP_SYS).getValue());
+			assertEquals("Windows", newReport.getAttribute(BugzillaReportElement.OP_SYS.getKeyString()).getValue());
 		else if (os.equals("solaris"))
-			assertEquals("Solaris", newReport.getAttribute(BugzillaReportElement.OP_SYS).getValue());
+			assertEquals("Solaris", newReport.getAttribute(BugzillaReportElement.OP_SYS.getKeyString()).getValue());
 		else if (os.equals("qnx"))
-			assertEquals("QNX-Photon", newReport.getAttribute(BugzillaReportElement.OP_SYS).getValue());
+			assertEquals("QNX-Photon", newReport.getAttribute(BugzillaReportElement.OP_SYS.getKeyString()).getValue());
 		else if (os.equals("macosx"))
-			assertEquals("Mac OS", newReport.getAttribute(BugzillaReportElement.OP_SYS).getValue());
+			assertEquals("Mac OS", newReport.getAttribute(BugzillaReportElement.OP_SYS.getKeyString()).getValue());
 		else if (os.equals("linux"))
-			assertEquals("Linux", newReport.getAttribute(BugzillaReportElement.OP_SYS).getValue());
+			assertEquals("Linux", newReport.getAttribute(BugzillaReportElement.OP_SYS.getKeyString()).getValue());
 		else if (os.equals("hpux"))
-			assertEquals("HP-UX", newReport.getAttribute(BugzillaReportElement.OP_SYS).getValue());
+			assertEquals("HP-UX", newReport.getAttribute(BugzillaReportElement.OP_SYS.getKeyString()).getValue());
 		else if (os.equals("aix"))
-			assertEquals("AIX", newReport.getAttribute(BugzillaReportElement.OP_SYS).getValue());
+			assertEquals("AIX", newReport.getAttribute(BugzillaReportElement.OP_SYS.getKeyString()).getValue());
 
 		String platform = Platform.getOSArch();
 		if (platform.equals("x86"))
-			assertEquals("PC", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM).getValue());
+			assertEquals("PC", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
 		else if (platform.equals("x86_64"))
-			assertEquals("PC", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM).getValue());
+			assertEquals("PC", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
 		else if (platform.equals("ia64"))
-			assertEquals("PC", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM).getValue());
+			assertEquals("PC", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
 		else if (platform.equals("ia64_32"))
-			assertEquals("PC", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM).getValue());
+			assertEquals("PC", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
 		else if (platform.equals("sparc"))
-			assertEquals("Sun", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM).getValue());
+			assertEquals("Sun", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
 		else if (platform.equals("ppc"))
-			assertEquals("Power", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM).getValue());
+			assertEquals("Power", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
 
 	}
 

@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.core;
+package org.eclipse.mylar.internal.tasklist.util;
 
 import java.net.URL;
 import java.text.ParseException;

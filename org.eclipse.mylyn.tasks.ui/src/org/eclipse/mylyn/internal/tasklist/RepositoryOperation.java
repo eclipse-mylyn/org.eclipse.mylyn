@@ -23,7 +23,7 @@ import java.util.Map;
  * 
  * @author Shawn Minto
  */
-public class Operation implements Serializable {
+public class RepositoryOperation implements Serializable {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
@@ -67,7 +67,7 @@ public class Operation implements Serializable {
 	 * @param operationName
 	 *            The display text for the operation
 	 */
-	public Operation(String knobName, String operationName) {
+	public RepositoryOperation(String knobName, String operationName) {
 		knob_name = knobName;
 		op_name = operationName;
 	}

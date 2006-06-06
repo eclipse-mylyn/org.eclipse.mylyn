@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
-import org.eclipse.mylar.internal.bugs.BugzillaReportElement;
+import org.eclipse.mylar.internal.bugs.BugzillaReportInfo;
 import org.eclipse.mylar.internal.bugs.BugzillaSearchManager;
 import org.eclipse.mylar.internal.core.search.IActiveSearchListener;
 import org.eclipse.mylar.internal.core.search.IMylarSearchOperation;
@@ -151,7 +151,7 @@ public class BugzillaMylarSearch implements IMylarSearchOperation {
 	 * @param member
 	 *            The IMember that the search was performed on
 	 */
-	public void notifySearchCompleted(List<BugzillaReportElement> doiList) {
+	public void notifySearchCompleted(List<BugzillaReportInfo> doiList) {
 		// go through all of the listeners and call searchCompleted(colelctor,
 		// member)
 		BugzillaSearchManager.removeSearchJob(handle);

@@ -9,22 +9,21 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
+package org.eclipse.mylar.internal.tasklist;
 
 import java.util.Date;
 
-import org.eclipse.mylar.internal.tasklist.ReportAttachment;
 import org.eclipse.mylar.provisional.tasklist.IRemoteContextDelegate;
 
 /**
  * @author Rob Elves
  * TODO: Use of this delegate probably isn't necessary anymore
  */
-public class BugzillaRemoteContextDelegate implements IRemoteContextDelegate {
+public class RemoteContextDelegate implements IRemoteContextDelegate {
 
-	private ReportAttachment attachment;
+	private RepositoryAttachment attachment;
 	
-	public BugzillaRemoteContextDelegate(ReportAttachment attachment) {
+	public RemoteContextDelegate(RepositoryAttachment attachment) {
 		this.attachment = attachment;
 	}
 	public Date getDate() {

@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.TitleEvent;
@@ -89,10 +90,8 @@ public abstract class RetrieveTitleFromUrlJob extends Job implements TitleListen
 		} else {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					if (Display.getDefault().getActiveShell().isDisposed()) {
-						MessageDialog.openError(Display.getDefault().getActiveShell(), "Task Description Error",
-								"Could not retrieve a description from the specified web page.");
-					}
+						MessageDialog.openError(null, MylarTaskListPlugin.TITLE_DIALOG,
+							"Could not retrieve a description from the specified web page.");
 				}
 			});
 			return Status.CANCEL_STATUS;

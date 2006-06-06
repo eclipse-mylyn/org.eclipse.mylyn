@@ -122,7 +122,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 				+ MylarContextManager.CONTEXT_HISTORY_FILE_NAME + MylarContextManager.CONTEXT_FILE_EXTENSION);
 		final File destZipFile = new File(destDir + File.separator + getZipFileName());
 
-		// Prompt the user to confirm if ANY of the save operations will cause
+		// Prompt the user to confirm if ANY of the save repositoryOperations will cause
 		// an overwrite
 		if (!overwrite) {
 

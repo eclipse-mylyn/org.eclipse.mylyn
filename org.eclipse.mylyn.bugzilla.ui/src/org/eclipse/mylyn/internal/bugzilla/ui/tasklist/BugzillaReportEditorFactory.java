@@ -53,7 +53,7 @@ public class BugzillaReportEditorFactory implements ITaskEditorFactory {
 					BugzillaPlugin.REPOSITORY_KIND, bugzillaTask.getRepositoryUrl());
 			try {
 				BugzillaTaskEditorInput input = new BugzillaTaskEditorInput(repository, bugzillaTask, true);
-				input.setOfflineBug(bugzillaTask.getBugReport());
+				input.setOfflineBug(bugzillaTask.getTaskData());
 				return input;
 			} catch (final LoginException e) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

@@ -14,6 +14,8 @@ package org.eclipse.mylar.provisional.tasklist;
 import java.util.Date;
 
 import org.eclipse.mylar.internal.core.MylarContextManager;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
+import org.eclipse.mylar.internal.tasklist.util.HtmlStreamTokenizer;
 
 /**
  * Virtual proxy for a repository task.
@@ -25,9 +27,11 @@ public abstract class AbstractRepositoryTask extends Task {
 
 	/** The last time this task's bug report was downloaded from the server. */
 	protected Date lastSynchronized;
-	
+
+	protected transient RepositoryTaskData taskData;
+
 	protected boolean currentlySynchronizing;
-	
+
 	/**
 	 * Value is <code>true</code> if the bug report has saved changes that
 	 * need synchronizing with the repository.
@@ -37,24 +41,25 @@ public abstract class AbstractRepositoryTask extends Task {
 	public enum RepositoryTaskSyncState {
 		OUTGOING, SYNCHRONIZED, INCOMING, CONFLICT
 	}
-	
+
 	protected RepositoryTaskSyncState syncState = RepositoryTaskSyncState.SYNCHRONIZED;
 
 	public static final String HANDLE_DELIM = "-";
-		
+
 	public AbstractRepositoryTask(String handle, String label, boolean newTask) {
 		super(handle, label, newTask);
 	}
 
 	public abstract String getRepositoryKind();
-	
+
 	/**
-	 * @return	true	if the task can be queried and manipulated without connecting to the server
+	 * @return true if the task can be queried and manipulated without
+	 *         connecting to the server
 	 */
 	public abstract boolean isPersistentInWorkspace();
-	
+
 	public abstract boolean isDownloaded();
-	
+
 	public Date getLastSynchronized() {
 		return lastSynchronized;
 	}
@@ -70,7 +75,7 @@ public abstract class AbstractRepositoryTask extends Task {
 	public RepositoryTaskSyncState getSyncState() {
 		return syncState;
 	}
-	
+
 	/**
 	 * @return The number of seconds ago that this task's bug report was
 	 *         downloaded from the server.
@@ -140,7 +145,8 @@ public abstract class AbstractRepositoryTask extends Task {
 	}
 
 	/**
-	 * @param taskId	must be an integer
+	 * @param taskId
+	 *            must be an integer
 	 */
 	public static String getHandle(String repositoryUrl, String taskId) {
 		if (repositoryUrl == null) {
@@ -161,5 +167,18 @@ public abstract class AbstractRepositoryTask extends Task {
 
 	public void setDirty(boolean isDirty) {
 		this.isDirty = isDirty;
+	}
+
+	public RepositoryTaskData getTaskData() {
+		return taskData;
+	}
+
+	public void setTaskData(RepositoryTaskData taskData) {
+		this.taskData = taskData;
+		// TODO: remove?
+		if (taskData != null) {
+			setDescription(HtmlStreamTokenizer.unescape(AbstractRepositoryTask.getTaskIdAsInt(getHandleIdentifier())
+					+ ": " + taskData.getSummary()));
+		}
 	}
 }

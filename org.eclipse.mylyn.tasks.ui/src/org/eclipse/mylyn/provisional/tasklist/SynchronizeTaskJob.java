@@ -75,18 +75,8 @@ class SynchronizeTaskJob extends Job {
 					monitor.setTaskName(LABEL_SYNCHRONIZING+repositoryTask.getDescription());					
 					repositoryTask.setCurrentlyDownloading(true);
 					MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
-					
 					this.connector.updateOfflineState(repositoryTask, forceSync);
 					repositoryTask.setCurrentlyDownloading(false);
-					
-					// if (repositoryTask.getSyncState() ==
-					// RepositoryTaskSyncState.INCOMING) {
-					// repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
-					// } else if (repositoryTask.getSyncState() ==
-					// RepositoryTaskSyncState.CONFLICT) {
-					// repositoryTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
-					//					}
-
 					MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);					
 				}
 				

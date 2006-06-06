@@ -16,10 +16,10 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
-import org.eclipse.mylar.internal.tasklist.RepositoryReport;
-import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -117,14 +117,14 @@ public class BugzillaSearchResultCollector implements IBugzillaSearchResultColle
 	 * Returns a map where BugReport's attributes are entered into a Map using
 	 * the same key/value pairs as those created on a search hit marker.
 	 */
-	public static Map<String, Object> getAttributeMap(RepositoryReport bug) {
+	public static Map<String, Object> getAttributeMap(RepositoryTaskData bug) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put(BugzillaUiPlugin.HIT_MARKER_ATTR_ID, new Integer(bug.getId()));
 		map.put(BugzillaUiPlugin.HIT_MARKER_ATTR_REPOSITORY, bug.getRepositoryUrl());
 		map.put(BugzillaUiPlugin.HIT_MARKER_ATTR_DESC, bug.getDescription());
 		map.put(BugzillaUiPlugin.HIT_MARKER_ATTR_SEVERITY, mapValue(bug.getAttribute(
-				BugzillaReportElement.BUG_SEVERITY).getValue(), severity));
-		map.put(BugzillaUiPlugin.HIT_MARKER_ATTR_PRIORITY, mapValue(bug.getAttribute(BugzillaReportElement.PRIORITY)
+				BugzillaReportElement.BUG_SEVERITY.getKeyString()).getValue(), severity));
+		map.put(BugzillaUiPlugin.HIT_MARKER_ATTR_PRIORITY, mapValue(bug.getAttribute(BugzillaReportElement.PRIORITY.getKeyString())
 				.getValue(), priority));
 		map.put(BugzillaUiPlugin.HIT_MARKER_ATTR_PLATFORM, bug.getAttribute("Hardware").getValue());
 		map.put(BugzillaUiPlugin.HIT_MARKER_ATTR_STATE, mapValue(bug.getStatus(), state));

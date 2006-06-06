@@ -29,7 +29,7 @@ import org.eclipse.jdt.core.IMember;
 public class BugzillaSearchManager {
 
 	/** The hash of all of the landmarks and their related search hits */
-	private Map<String, Map<Integer, List<BugzillaReportElement>>> landmarksHash;
+	private Map<String, Map<Integer, List<BugzillaReportInfo>>> landmarksHash;
 
 	/**
 	 * The currently running search jobs so that we can cancel it if necessary
@@ -42,7 +42,7 @@ public class BugzillaSearchManager {
 	 * Constructor
 	 */
 	public BugzillaSearchManager() {
-		landmarksHash = Collections.synchronizedMap(new HashMap<String, Map<Integer, List<BugzillaReportElement>>>());
+		landmarksHash = Collections.synchronizedMap(new HashMap<String, Map<Integer, List<BugzillaReportInfo>>>());
 	}
 
 	/**
@@ -76,11 +76,11 @@ public class BugzillaSearchManager {
 	 * @param m
 	 *            The member that this list is for
 	 */
-	public void addToLandmarksHash(List<BugzillaReportElement> doiList, IMember m, int scope) {
-		Map<Integer, List<BugzillaReportElement>> searches = landmarksHash.get(m.getHandleIdentifier());
+	public void addToLandmarksHash(List<BugzillaReportInfo> doiList, IMember m, int scope) {
+		Map<Integer, List<BugzillaReportInfo>> searches = landmarksHash.get(m.getHandleIdentifier());
 
 		if (searches == null) {
-			searches = new HashMap<Integer, List<BugzillaReportElement>>();
+			searches = new HashMap<Integer, List<BugzillaReportInfo>>();
 		}
 		searches.put(scope, doiList);
 		landmarksHash.put(m.getHandleIdentifier(), searches);
@@ -93,8 +93,8 @@ public class BugzillaSearchManager {
 	 *            The member to get the doiList for
 	 * @return The doiList or null if it doesn't exist
 	 */
-	public List<BugzillaReportElement> getFromLandmarksHash(IMember m, int scope) {
-		Map<Integer, List<BugzillaReportElement>> scopes = landmarksHash.get(m.getHandleIdentifier());
+	public List<BugzillaReportInfo> getFromLandmarksHash(IMember m, int scope) {
+		Map<Integer, List<BugzillaReportInfo>> scopes = landmarksHash.get(m.getHandleIdentifier());
 		if (scopes == null)
 			return null;
 		else

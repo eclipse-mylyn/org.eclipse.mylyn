@@ -300,12 +300,12 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			public void run() {
 				try {
 					
-					// XXX: move?
-					readOfflineReportsFile();
-					
 					TaskListExtensionReader.initExtensions(taskListWriter);
 					taskRepositoryManager.readRepositories();
 
+					// Must be called after repositories read
+					readOfflineReportsFile();
+					
 					taskListManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
 					taskListManager.readExistingOrCreateNewList();
 					initialized = true;

@@ -20,11 +20,11 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTaskAttribute;
-import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -312,8 +312,8 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 
 		// go through each of the attributes and sync their values with the
 		// combo boxes
-		for (Iterator<AbstractRepositoryTaskAttribute> it = nbm.getAttributes().iterator(); it.hasNext();) {
-			AbstractRepositoryTaskAttribute attribute = it.next();
+		for (Iterator<RepositoryTaskAttribute> it = nbm.getAttributes().iterator(); it.hasNext();) {
+			RepositoryTaskAttribute attribute = it.next();
 			String key = attribute.getName();
 			Map<String, String> values = attribute.getOptionValues();
 
@@ -418,8 +418,8 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 		newLayout(attributesComposite, 1, nbm.getProduct(), VALUE);
 
 		// Populate Attributes
-		for (Iterator<AbstractRepositoryTaskAttribute> it = nbm.getAttributes().iterator(); it.hasNext();) {
-			AbstractRepositoryTaskAttribute attribute = it.next();
+		for (Iterator<RepositoryTaskAttribute> it = nbm.getAttributes().iterator(); it.hasNext();) {
+			RepositoryTaskAttribute attribute = it.next();
 			String key = attribute.getID();
 			String name = attribute.getName();
 			String value = checkText(attribute.getValue());
@@ -726,8 +726,8 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 
 			// Get OS Lookup Map
 			// Check that the result is in Values, if it is not, set it to other
-			AbstractRepositoryTaskAttribute opSysAttribute = newBugModel.getAttribute(BugzillaReportElement.OP_SYS);
-			AbstractRepositoryTaskAttribute platformAttribute = newBugModel.getAttribute(BugzillaReportElement.REP_PLATFORM);
+			RepositoryTaskAttribute opSysAttribute = newBugModel.getAttribute(BugzillaReportElement.OP_SYS.getKeyString());
+			RepositoryTaskAttribute platformAttribute = newBugModel.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString());
 
 			String OS = Platform.getOS();
 			String platform = Platform.getOSArch();

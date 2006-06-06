@@ -29,7 +29,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.internal.bugs.BugzillaReportElement;
+import org.eclipse.mylar.internal.bugs.BugzillaReportInfo;
 import org.eclipse.mylar.internal.bugs.MylarBugsPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
@@ -40,7 +40,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaSearchOperation;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.StackTrace;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.RepositoryReport;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.Comment;
 import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
@@ -122,14 +122,14 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation imple
 		}
 
 		if (searchCollector == null) {
-			search.notifySearchCompleted(new ArrayList<BugzillaReportElement>());
+			search.notifySearchCompleted(new ArrayList<BugzillaReportInfo>());
 			return;
 		}
 
 		List<BugzillaSearchHit> l = searchCollector.getResults();
 
 		// get the list of doi elements
-		List<BugzillaReportElement> doiList = getDoiList(l);
+		List<BugzillaReportInfo> doiList = getDoiList(l);
 
 		// we completed the search, so notify all of the listeners
 		// that the search has been completed
@@ -221,7 +221,7 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation imple
 
 				// we have a bugzilla task, so get the bug report
 				BugzillaTask bugTask = (BugzillaTask) task;
-				RepositoryReport bug = bugTask.getBugReport();
+				RepositoryTaskData bug = bugTask.getTaskData();
 
 				// parse the bug report for the element that we are searching
 				// for
@@ -253,7 +253,7 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation imple
 	 * @param bug
 	 *            The bug to search in
 	 */
-	private boolean search(String elementName, RepositoryReport bug) {
+	private boolean search(String elementName, RepositoryTaskData bug) {
 
 		if (bug == null)
 			return false; // MIK: added null check here
@@ -368,14 +368,14 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation imple
 	 * @param doiList -
 	 *            the list of BugzillaSearchHitDOI elements to parse
 	 */
-	public static void secondPassBugzillaParser(List<BugzillaReportElement> doiList) {
+	public static void secondPassBugzillaParser(List<BugzillaReportInfo> doiList) {
 
 		// go through each of the items in the doiList
-		for (BugzillaReportElement info : doiList) {
+		for (BugzillaReportInfo info : doiList) {
 
 			// get the bug report so that we have all of the data
 			// - descriptions, comments, etc
-			RepositoryReport b = null;
+			RepositoryTaskData b = null;
 			try {
 				b = info.getBug();
 			} catch (Exception e) {
@@ -421,19 +421,19 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation imple
 	 * @param isExact
 	 *            whether the search was exact or not
 	 */
-	private List<BugzillaReportElement> getDoiList(List<BugzillaSearchHit> results) {
-		List<BugzillaReportElement> doiList = new ArrayList<BugzillaReportElement>();
+	private List<BugzillaReportInfo> getDoiList(List<BugzillaSearchHit> results) {
+		List<BugzillaReportInfo> doiList = new ArrayList<BugzillaReportInfo>();
 
 		boolean isExact = (scope == BugzillaMylarSearch.FULLY_QUAL || scope == BugzillaMylarSearch.LOCAL_QUAL) ? true
 				: false;
 
-		BugzillaReportElement info = null;
+		BugzillaReportInfo info = null;
 		// go through all of the results and create a DoiInfo list
 		for (BugzillaSearchHit hit : results) {
 
 			try {
 				float value = 0;
-				info = new BugzillaReportElement(value, hit, isExact);
+				info = new BugzillaReportInfo(value, hit, isExact);
 
 				// only download the bug for the exact matches
 				// downloading bugs kills the time - can we do this elsewhere? -

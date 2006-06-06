@@ -15,7 +15,9 @@ import java.io.IOException;
 import java.io.Reader;
 import java.text.ParseException;
 
-import org.eclipse.mylar.internal.bugzilla.core.HtmlStreamTokenizer.Token;
+import org.eclipse.mylar.internal.tasklist.util.HtmlStreamTokenizer;
+import org.eclipse.mylar.internal.tasklist.util.HtmlTag;
+import org.eclipse.mylar.internal.tasklist.util.HtmlStreamTokenizer.Token;
 
 /**
  * This is in place to escape & characters within the resource and rdf:about

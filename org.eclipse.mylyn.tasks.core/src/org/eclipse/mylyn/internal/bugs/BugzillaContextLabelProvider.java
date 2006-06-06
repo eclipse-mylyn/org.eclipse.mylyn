@@ -53,7 +53,7 @@ public class BugzillaContextLabelProvider extends AbstractContextLabelProvider {
 	protected String getText(IMylarElement node) {
 		// try to get from the cache before downloading
 		Object report;
-		BugzillaReportElement reportNode = MylarBugsPlugin.getReferenceProvider().getCached(node.getHandleIdentifier());
+		BugzillaReportInfo reportNode = MylarBugsPlugin.getReferenceProvider().getCached(node.getHandleIdentifier());
 //		BugzillaReport cachedReport = MylarBugsPlugin.getDefault().getCache().getCached(node.getHandleIdentifier());
 		IMylarStructureBridge bridge = MylarPlugin.getDefault()
 				.getStructureBridge(BugzillaStructureBridge.CONTENT_TYPE);

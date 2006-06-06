@@ -14,12 +14,12 @@ package org.eclipse.mylar.internal.bugzilla.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTaskAttribute;
-import org.eclipse.mylar.internal.tasklist.RepositoryReport;
-import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
-import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
+import org.eclipse.mylar.internal.tasklist.AbstractAttributeFactory;
 import org.eclipse.mylar.internal.tasklist.Comment;
-import org.eclipse.mylar.internal.tasklist.ReportAttachment;
+import org.eclipse.mylar.internal.tasklist.RepositoryAttachment;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
+import org.eclipse.mylar.internal.tasklist.util.HtmlStreamTokenizer;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -41,13 +41,16 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 	
 	private int commentNum = 0;
 
-	private ReportAttachment attachment;
+	private RepositoryAttachment attachment;
 
-	private RepositoryReport report;
+	private RepositoryTaskData report;
 
 	private String errorMessage = null;
 
-	public SaxBugReportContentHandler(RepositoryReport rpt) {
+	private AbstractAttributeFactory attributeFactory;
+
+	public SaxBugReportContentHandler(AbstractAttributeFactory factory, RepositoryTaskData rpt) {
+		this.attributeFactory = factory;
 		this.report = rpt;
 	}
 
@@ -59,7 +62,7 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 		return errorMessage;
 	}
 
-	public RepositoryReport getReport() {
+	public RepositoryTaskData getReport() {
 		return report;
 	}
 
@@ -94,12 +97,12 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			}
 			break;
 		case LONG_DESC:
-			comment = new Comment(report, commentNum++);
+			comment = new Comment(attributeFactory, report, commentNum++);
 			break;
 		case ATTACHMENT:
-			attachment = new ReportAttachment();
+			attachment = new RepositoryAttachment(attributeFactory);
 			if (attributes != null && (attributes.getValue(BugzillaReportElement.IS_OBSOLETE.getKeyString()) != null)) {
-				attachment.addAttribute(BugzillaReportElement.IS_OBSOLETE, new RepositoryTaskAttribute(
+				attachment.addAttribute(BugzillaReportElement.IS_OBSOLETE.getKeyString(), BugzillaRepositoryUtil.makeNewAttribute(
 						BugzillaReportElement.IS_OBSOLETE));
 			}
 			break;
@@ -109,6 +112,9 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
+		
+		String parsedText = HtmlStreamTokenizer.unescape(characters.toString());
+		
 		BugzillaReportElement tag = BugzillaReportElement.UNKNOWN;
 		try {
 			tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase());
@@ -122,19 +128,19 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 		switch (tag) {
 		case BUG_ID: {
 			try {
-				if (report.getId() != Integer.parseInt(characters.toString())) {
+				if (report.getId() != Integer.parseInt(parsedText)) {
 					errorMessage = "Requested report number does not match returned report number.";
 				}
 			} catch (NumberFormatException e) {
 				errorMessage = "Bug id from server did not match requested id.";
 			}
 
-			AbstractRepositoryTaskAttribute attr = report.getAttribute(tag);
+			RepositoryTaskAttribute attr = report.getAttribute(tag.getKeyString());
 			if (attr == null) {
-				attr = new RepositoryTaskAttribute(tag);
-				report.addAttribute(tag, attr);
+				attr = BugzillaRepositoryUtil.makeNewAttribute(tag);
+				report.addAttribute(tag.getKeyString(), attr);
 			}
-			attr.setValue(characters.toString());
+			attr.setValue(parsedText);
 			break;
 		}
 
@@ -142,23 +148,23 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 		case WHO:
 		case BUG_WHEN:
 			if (comment != null) {
-				RepositoryTaskAttribute attr = new RepositoryTaskAttribute(tag);
-				attr.setValue(characters.toString());
+				RepositoryTaskAttribute attr = BugzillaRepositoryUtil.makeNewAttribute(tag);
+				attr.setValue(parsedText);
 				// System.err.println(">>> "+comment.getNumber()+"
-				// "+characters.toString());
-				comment.addAttribute(tag, attr);
+				// "+parsedText);
+				comment.addAttribute(tag.getKeyString(), attr);
 			}
 			break;
 		case THETEXT:
 			if (comment != null) {
-				RepositoryTaskAttribute attr = new RepositoryTaskAttribute(tag);
-				attr.setValue(characters.toString());
+				RepositoryTaskAttribute attr = BugzillaRepositoryUtil.makeNewAttribute(tag);
+				attr.setValue(parsedText);
 				// System.err.println(">>> "+comment.getNumber()+"
-				// "+characters.toString());
-				comment.addAttribute(tag, attr);
+				// "+parsedText);
+				comment.addAttribute(tag.getKeyString(), attr);
 
 				// Check for attachment
-				parseAttachment(comment, characters.toString());
+				parseAttachment(comment, parsedText);
 			}
 			break;
 		case LONG_DESC:
@@ -175,9 +181,9 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 		case CTYPE:
 		case TYPE:
 			if (attachment != null) {
-				RepositoryTaskAttribute attr = new RepositoryTaskAttribute(tag);
-				attr.setValue(characters.toString());
-				attachment.addAttribute(tag, attr);
+				RepositoryTaskAttribute attr = BugzillaRepositoryUtil.makeNewAttribute(tag);
+				attr.setValue(parsedText);
+				attachment.addAttribute(tag.getKeyString(), attr);
 			}
 			break;
 		case DATA:
@@ -202,18 +208,18 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 		case BUG:
 			// Reached end of bug. Need to set LONGDESCLENGTH to number of
 			// comments
-			AbstractRepositoryTaskAttribute numCommentsAttribute = report
-					.getAttribute(BugzillaReportElement.LONGDESCLENGTH);
+			RepositoryTaskAttribute numCommentsAttribute = report
+					.getAttribute(BugzillaReportElement.LONGDESCLENGTH.getKeyString());
 			if (numCommentsAttribute == null) {
-				numCommentsAttribute = new RepositoryTaskAttribute(BugzillaReportElement.LONGDESCLENGTH);
+				numCommentsAttribute = BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.LONGDESCLENGTH);
 				numCommentsAttribute.setValue("" + report.getComments().size());
-				report.addAttribute(BugzillaReportElement.LONGDESCLENGTH, numCommentsAttribute);
+				report.addAttribute(BugzillaReportElement.LONGDESCLENGTH.getKeyString(), numCommentsAttribute);
 			} else {
 				numCommentsAttribute.setValue("" + report.getComments().size());
 			}
 			
 			// Set the creator name on all attachments
-			for (ReportAttachment attachment: report.getAttachments()) {
+			for (RepositoryAttachment attachment: report.getAttachments()) {
 				Comment comment = (Comment)attachIdToComment.get(attachment.getId());
 				if(comment != null) {
 					attachment.setCreator(comment.getAuthor());
@@ -223,17 +229,17 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 
 		// All others added as report attribute
 		default:
-			AbstractRepositoryTaskAttribute attribute = report.getAttribute(tag);
+			RepositoryTaskAttribute attribute = report.getAttribute(tag.getKeyString());
 			if (attribute == null) {
 				// System.err.println(">>> Undeclared attribute added: " +
-				// tag.toString()+" value: "+characters.toString());
-				attribute = new RepositoryTaskAttribute(tag);
-				attribute.setValue(characters.toString());
-				report.addAttribute(tag, attribute);
+				// tag.toString()+" value: "+parsedText);
+				attribute = BugzillaRepositoryUtil.makeNewAttribute(tag);
+				attribute.setValue(parsedText);
+				report.addAttribute(tag.getKeyString(), attribute);
 			} else {
 				// System.err.println("Attr: " + attribute.getName() + " = " +
-				// characters.toString());
-				attribute.addValue(characters.toString());
+				// parsedText);
+				attribute.addValue(parsedText);
 			}
 			break;
 		}

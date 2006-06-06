@@ -20,7 +20,11 @@ import java.util.Date;
  * TODO: Make generic. This currently represents Bugzilla attachments only
  * @author Rob Elves
  */
-public class ReportAttachment extends AttributeContainer implements Serializable {
+public class RepositoryAttachment extends AttributeContainer implements Serializable {
+
+	public RepositoryAttachment(AbstractAttributeFactory attributeFactory) {
+		super(attributeFactory);		
+	}
 
 	private static final long serialVersionUID = -9123545810321250785L;
 	
@@ -49,7 +53,7 @@ public class ReportAttachment extends AttributeContainer implements Serializable
 		if(created == null) {
 			//created = Calendar.getInstance().getTime();
 			try {
-				created = creation_ts_date_format.parse(getAttributeValue(BugzillaReportElement.DATE));
+				created = creation_ts_date_format.parse(getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_DATE));
 			} catch (Exception e) {
 			}			
 		}
@@ -65,12 +69,12 @@ public class ReportAttachment extends AttributeContainer implements Serializable
 	}
 	public String getDescription() {
 		//System.err.println(getAttributeValue(BugzillaReportElement.DESC));
-		return getAttributeValue(BugzillaReportElement.DESC);
+		return getAttributeValue(RepositoryTaskAttribute.DESCRIPTION);
 	}
 
 	public int getId() {
 		try {
-			return Integer.parseInt(getAttributeValue(BugzillaReportElement.ATTACHID));
+			return Integer.parseInt(getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_ID));
 		} catch (NumberFormatException e) {
 			return -1;
 		}
@@ -78,10 +82,10 @@ public class ReportAttachment extends AttributeContainer implements Serializable
 
 	public String getContentType() {
 		// Eclipse.org uses "ctype", others use "type"
-		if(getAttribute(BugzillaReportElement.TYPE) != null) {
-			return getAttributeValue(BugzillaReportElement.TYPE);
+		if(getAttribute(RepositoryTaskAttribute.ATTACHMENT_TYPE) != null) {
+			return getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_TYPE);
 		} else {
-			return getAttributeValue(BugzillaReportElement.CTYPE);
+			return getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_CTYPE);
 		}
 	}
 	

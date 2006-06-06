@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui;
 
-import org.eclipse.mylar.internal.tasklist.RepositoryReport;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 
 /**
  * Miscellaneous constants and functions for this plugin.
@@ -53,7 +53,7 @@ public class BugzillaTools {
 		return name;
 	}
 
-	public static String getHandle(RepositoryReport bug) {
+	public static String getHandle(RepositoryTaskData bug) {
 		return getHandle(bug.getRepositoryUrl(), bug.getId());
 	}
 
@@ -61,7 +61,7 @@ public class BugzillaTools {
 		return server + ";" + id;
 	}
 
-	public static String getName(RepositoryReport bug) {
+	public static String getName(RepositoryTaskData bug) {
 		return bug.getRepositoryUrl() + ": Bug#: " + bug.getId() + ": " + bug.getSummary();
 	}
 

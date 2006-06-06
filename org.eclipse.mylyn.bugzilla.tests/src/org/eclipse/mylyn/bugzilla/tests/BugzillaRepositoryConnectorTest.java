@@ -26,7 +26,7 @@ import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.internal.tasklist.RepositoryReport;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -96,7 +96,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		assertEquals(task.getHandleIdentifier(), retrievedTask.getHandleIdentifier());
 
 		assertTrue(task.isDownloaded());
-		assertEquals(1, task.getBugReport().getId());
+		assertEquals(1, task.getTaskData().getId());
 	}
 
 	public void testSynchronize() throws InterruptedException, PartInitException, LoginException, BugzillaException,
@@ -107,23 +107,23 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(task);
 		assertTrue(task.isDownloaded());
 		// (The initial local copy from server)
-		client.saveBugReport(task.getBugReport());
+		client.saveBugReport(task.getTaskData());
 		assertEquals(task.getSyncState(), RepositoryTaskSyncState.SYNCHRONIZED);
 
 		// Modify it
 		String newCommentText = "BugzillaRepositoryClientTest.testSynchronize(): " + (new Date()).toString();
-		task.getBugReport().setNewComment(newCommentText);
+		task.getTaskData().setNewComment(newCommentText);
 		// overwrites old fields/attributes with new content (ususually done by
 		// BugEditor)
-		task.getBugReport().setHasChanged(true);
+		task.getTaskData().setHasChanged(true);
 //		updateBug(task.getBugReport());
 		assertEquals(task.getSyncState(), RepositoryTaskSyncState.SYNCHRONIZED);
-		client.saveBugReport(task.getBugReport());
+		client.saveBugReport(task.getTaskData());
 		assertEquals(RepositoryTaskSyncState.OUTGOING, task.getSyncState());
 
 		// Submit changes
 		MockBugzillaReportSubmitForm form = new MockBugzillaReportSubmitForm(BugzillaPlugin.ENCODING_UTF_8);
-		client.submitBugReport(task.getBugReport(), form, null);
+		client.submitBugReport(task.getTaskData(), form, null);
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
 
 		// TODO: Test that comment was appended
@@ -155,12 +155,12 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		// because task doesn't have bug report (new query hit)
 		// Result: retrieved with no incoming status
 		task.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
-		RepositoryReport bugReport = task.getBugReport();
-		task.setBugReport(null);
+		RepositoryTaskData bugReport = task.getTaskData();
+		task.setTaskData(null);
 		client.synchronize(task, false, null);
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
-		assertNotNull(task.getBugReport());
-		assertEquals(task.getBugReport().getId(), bugReport.getId());
+		assertNotNull(task.getTaskData());
+		assertEquals(task.getTaskData().getId(), bugReport.getId());
 	}
 
 	public void testUniqueTaskObjects() {
@@ -190,7 +190,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 
 	}
 
-	protected void updateBug(RepositoryReport bug) {
+	protected void updateBug(RepositoryTaskData bug) {
 
 		// go through all of the attributes and update the main values to the
 		// new ones

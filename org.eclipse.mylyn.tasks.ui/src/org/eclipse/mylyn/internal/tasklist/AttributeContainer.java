@@ -17,32 +17,43 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+
 /**
  * @author Rob Elves
  */
 public class AttributeContainer implements Serializable {
-	
-	private static final long serialVersionUID = -3990742719133977940L;
+
+	public static final String ERROR_NO_ATTRIBUTE_FACTORY = "Attribute factory not available.";
+
+	private static final long serialVersionUID = 3533078709450471836L;
 
 	/** The keys for the report attributes */
-	private ArrayList<Object> attributeKeys;
+	private ArrayList<String> attributeKeys;
 
 	/** report attributes (status, resolution, etc.) */
-	private HashMap<Object, AbstractRepositoryTaskAttribute> attributes;
-	
-	public AttributeContainer() {
-		attributeKeys = new ArrayList<Object>();
-		attributes = new HashMap<Object, AbstractRepositoryTaskAttribute>();
+	private HashMap<String, RepositoryTaskAttribute> attributes;
+
+	transient private AbstractAttributeFactory attributeFactory;
+
+	public AttributeContainer(AbstractAttributeFactory attributeFactory) {
+		this.attributeFactory = attributeFactory;
+		attributeKeys = new ArrayList<String>();
+		attributes = new HashMap<String, RepositoryTaskAttribute>();
 	}
 	
-	public void addAttribute(Object key, AbstractRepositoryTaskAttribute attribute) {
+	public void setAttributeFactory(AbstractAttributeFactory factory) {
+		this.attributeFactory = factory;
+	}
+
+	public void addAttribute(String key, RepositoryTaskAttribute attribute) {
 		if (!attributes.containsKey(attribute.getName())) {
 			attributeKeys.add(key);
 		}
 		attributes.put(key, attribute);
 	}
-	
-	public AbstractRepositoryTaskAttribute getAttribute(Object key) {
+
+	public RepositoryTaskAttribute getAttribute(String key) {
 		return attributes.get(key);
 	}
 
@@ -50,30 +61,87 @@ public class AttributeContainer implements Serializable {
 		attributeKeys.remove(key);
 		attributes.remove(key);
 	}
-	
-	public List<AbstractRepositoryTaskAttribute> getAttributes() {
-		ArrayList<AbstractRepositoryTaskAttribute> attributeEntries = new ArrayList<AbstractRepositoryTaskAttribute>(
-				attributeKeys.size());
-		for (Iterator<Object> it = attributeKeys.iterator(); it.hasNext();) {
-			Object key = it.next();
-			AbstractRepositoryTaskAttribute attribute = attributes.get(key);
+
+	public List<RepositoryTaskAttribute> getAttributes() {
+		ArrayList<RepositoryTaskAttribute> attributeEntries = new ArrayList<RepositoryTaskAttribute>(attributeKeys
+				.size());
+		for (Iterator<String> it = attributeKeys.iterator(); it.hasNext();) {
+			String key = it.next();
+			RepositoryTaskAttribute attribute = attributes.get(key);
 			attributeEntries.add(attribute);
 		}
 		return attributeEntries;
-	}
-
-	public String getAttributeValue(Object key) {
-		AbstractRepositoryTaskAttribute attribute = getAttribute(key);
-		if(attribute != null) {
-			// TODO: unescape should happen on connector side not here
-			//return HtmlStreamTokenizer.unescape(attribute.getValue());
-			return attribute.getValue();
-		}
-		return "";
 	}
 
 	public void removeAllAttributes() {
 		attributeKeys.clear();
 		attributes.clear();
 	}
+
+	// TODO: Re-enable this functionality when persisting in xml form
+	//       and remove from AbstractAttributeFactory in order to make
+	//       api cleaner?
+	public void addAttributeValue(String key, String value) {
+		if(attributeFactory == null) {
+			MylarStatusHandler.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
+			return;
+		}
+		String mapped = attributeFactory.mapCommonAttributeKey(key);
+		RepositoryTaskAttribute attrib = getAttribute(mapped);
+		if (attrib != null) {
+			attrib.addValue(value);
+		} else {
+			attrib = attributeFactory.createAttribute(mapped);
+			attrib.addValue(value);
+			addAttribute(mapped, attrib);
+		}
+	}
+
+	/**
+	 * sets a value on an attribute, if attribute doesn't exist, appropriate
+	 * attribute is created
+	 */
+	public void setAttributeValue(String key, String value) {
+		if(attributeFactory == null) {
+			MylarStatusHandler.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
+			return;
+		}
+		String mapped = attributeFactory.mapCommonAttributeKey(key);
+		RepositoryTaskAttribute attrib = getAttribute(mapped);
+		if (attrib == null) {
+			attrib = attributeFactory.createAttribute(mapped);
+			addAttribute(mapped, attrib);
+		}
+		attrib.setValue(value);
+	}
+
+	public String getAttributeValue(String key) {
+		if(attributeFactory == null) {
+			MylarStatusHandler.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
+			return "";
+		}
+		String returnValue = "";
+		String mapped = attributeFactory.mapCommonAttributeKey(key);
+		RepositoryTaskAttribute attrib = getAttribute(mapped);
+		if (attrib != null) {
+			returnValue = attrib.getValue();
+			// returnValue = HtmlStreamTokenizer.unescape(attrib.getValue());
+		}
+		return returnValue;
+	}
+
+	public List<String> getAttributeValues(String key) {
+		List<String> returnValue = new ArrayList<String>();
+		if(attributeFactory == null) {
+			MylarStatusHandler.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
+			return returnValue;
+		}
+		String mapped = attributeFactory.mapCommonAttributeKey(key);
+		RepositoryTaskAttribute attrib = getAttribute(mapped);
+		if (attrib != null) {
+			returnValue = attrib.getValues();
+		}
+		return returnValue;
+	}
+
 }

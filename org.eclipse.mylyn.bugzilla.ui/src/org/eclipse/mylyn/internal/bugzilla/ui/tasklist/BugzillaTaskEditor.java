@@ -20,7 +20,7 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaAttributeListener;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.BugzillaOutlineNode;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditor;
-import org.eclipse.mylar.internal.tasklist.RepositoryReport;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasklist.ui.editors.TaskEditorInput;
@@ -42,7 +42,7 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 	protected BugzillaTask bugTask;
 
 	/** This bug report can be modified by the user and saved offline. */
-	protected RepositoryReport offlineBug;
+	protected RepositoryTaskData offlineBug;
 
 	private ExistingBugEditor bugzillaEditor;
 
@@ -189,7 +189,7 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 	/**
 	 * @return Returns the offlineBug.
 	 */
-	public RepositoryReport getOfflineBug() {
+	public RepositoryTaskData getOfflineBug() {
 		return offlineBug;
 	}
 
@@ -270,7 +270,7 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 	// }
 	// }
 
-	public void makeNewPage(RepositoryReport serverBug, String newCommentText) {
+	public void makeNewPage(RepositoryTaskData serverBug, String newCommentText) {
 		if (serverBug == null) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 					"Could not open bug.", "Bug #" + offlineBug.getId()

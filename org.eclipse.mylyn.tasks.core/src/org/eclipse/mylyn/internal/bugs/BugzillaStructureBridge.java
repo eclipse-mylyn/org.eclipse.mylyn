@@ -126,7 +126,7 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 //				try {
 //					service.run(false, false, op);
 //				} catch (InvocationTargetException e) {
-//					// Operation was canceled
+//					// RepositoryOperation was canceled
 //				} catch (InterruptedException e) {
 //					// Handle the wrapped exception
 //				}
@@ -186,8 +186,8 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 		if (object instanceof BugzillaOutlineNode) {
 			BugzillaOutlineNode b = (BugzillaOutlineNode) object;
 			return BugzillaTools.getName(b);
-		} else if (object instanceof BugzillaReportElement) {
-			BugzillaSearchHit hit = ((BugzillaReportElement) object).getHit();
+		} else if (object instanceof BugzillaReportInfo) {
+			BugzillaSearchHit hit = ((BugzillaReportInfo) object).getHit();
 			return hit.getRepositoryUrl() + ": Bug#: " + hit.getId() + ": " + hit.getDescription();
 		}
 		return "";

@@ -12,9 +12,10 @@
 package org.eclipse.mylar.internal.bugzilla.ui.search;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.BugzillaReportElement;
+import org.eclipse.mylar.internal.tasklist.util.HtmlStreamTokenizer;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -73,33 +74,36 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
+		
+		String parsedText = HtmlStreamTokenizer.unescape(characters.toString());
+		
 		BugzillaReportElement tag = BugzillaReportElement.UNKNOWN;
 		try {
 			tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase());
 			switch (tag) {
 			case ID:
-				hit.setId(Integer.parseInt(characters.toString()));
+				hit.setId(Integer.parseInt(parsedText));
 				break;
 			case BUG_SEVERITY:
-				hit.setSeverity(characters.toString());
+				hit.setSeverity(parsedText);
 				break;
 			case PRIORITY:
-				hit.setPriority(characters.toString());
+				hit.setPriority(parsedText);
 				break;
 			case REP_PLATFORM:
-				hit.setPlatform(characters.toString());
+				hit.setPlatform(parsedText);
 				break;
 			case ASSIGNED_TO:
-				hit.setOwner(characters.toString());
+				hit.setOwner(parsedText);
 				break;
 			case BUG_STATUS:
-				hit.setState(characters.toString());
+				hit.setState(parsedText);
 				break;
 			case RESOLUTION:
-				hit.setResolution(characters.toString());
+				hit.setResolution(parsedText);
 				break;
 			case SHORT_SHORT_DESC:
-				hit.setDescription(characters.toString());
+				hit.setDescription(parsedText);
 				break;
 			case LI:
 				try {

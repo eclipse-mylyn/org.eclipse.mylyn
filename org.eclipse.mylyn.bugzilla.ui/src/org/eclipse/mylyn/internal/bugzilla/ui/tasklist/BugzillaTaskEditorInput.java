@@ -18,7 +18,7 @@ import java.security.GeneralSecurityException;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditorInput;
-import org.eclipse.mylar.internal.tasklist.RepositoryReport;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
@@ -32,7 +32,7 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 
 	private String bugTitle;
 
-	private RepositoryReport offlineBug;
+	private RepositoryTaskData offlineBug;
 
 	private BugzillaTask bugTask;
 
@@ -41,7 +41,7 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 	public BugzillaTaskEditorInput(TaskRepository repository, BugzillaTask bugTask, boolean offline) throws IOException, GeneralSecurityException {
 		super(repository, AbstractRepositoryTask.getTaskIdAsInt(bugTask.getHandleIdentifier()), offline);
 		this.bugTask = bugTask;
-		offlineBug = bugTask.getBugReport();
+		offlineBug = bugTask.getTaskData();
 		bugId = AbstractRepositoryTask.getTaskIdAsInt(bugTask.getHandleIdentifier());
 		bugTitle = "";
 		this.offline = offline;
@@ -99,7 +99,7 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 	/**
 	 * Returns the offline bug for this input's Bugzilla task
 	 */
-	public RepositoryReport getOfflineBug() {
+	public RepositoryTaskData getOfflineBug() {
 		if (offline || bugTask.getSyncState() == RepositoryTaskSyncState.OUTGOING
 				|| bugTask.getSyncState() == RepositoryTaskSyncState.CONFLICT)
 			return offlineBug;
@@ -107,7 +107,7 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 			return super.getBug();
 	}
 
-	public void setOfflineBug(RepositoryReport offlineBug) {
+	public void setOfflineBug(RepositoryTaskData offlineBug) {
 		this.offlineBug = offlineBug;
 	}
 
