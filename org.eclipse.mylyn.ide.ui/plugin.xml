@@ -6,6 +6,7 @@
          point="org.eclipse.mylar.core.context">
       <structureBridge class="org.eclipse.mylar.internal.ide.ResourceStructureBridge"/> 
    </extension>
+   
    <extension
          point="org.eclipse.mylar.ui.context">
       <uiBridge
@@ -15,6 +16,7 @@
             class="org.eclipse.mylar.internal.ide.ui.ResourceContextLabelProvider"
             contentType="*"/>
    </extension>   
+   
    <extension point="org.eclipse.ui.views"> 
    	  <view
           allowMultiple="false"
