@@ -27,6 +27,23 @@ import org.eclipse.ui.navigator.CommonNavigator;
  */
 public class ApplyMylarToProjectExplorerAction extends AbstractApplyMylarAction {
 
+//	private boolean wasLinkingEnabled = false;
+//	
+//	@Override
+//	public void update(boolean on) {
+//		super.update(on);
+//		IViewPart view = super.getPartForAction();
+//		if (view instanceof CommonNavigator) {
+//			CommonNavigator navigator = (CommonNavigator)view;
+//			if (on) {
+//				wasLinkingEnabled = navigator.isLinkingEnabled();
+//				navigator.setLinkingEnabled(true);
+//			} else {
+//				navigator.setLinkingEnabled(wasLinkingEnabled);
+//			}
+//		}
+//	}
+  
 	public ApplyMylarToProjectExplorerAction() {
 		super(new InterestFilter());
 	}
