@@ -31,14 +31,14 @@ import org.eclipse.ui.part.EditorPart;
 public class ResourceInteractionMonitor extends AbstractUserInteractionMonitor {
 
 	@Override
-	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection) {
+	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection, boolean contributeToContext) {
 		if (selection instanceof StructuredSelection) {
 			StructuredSelection structuredSelection = (StructuredSelection) selection;
 
 			Object selectedObject = structuredSelection.getFirstElement();
 			if (selectedObject instanceof File) {
 				File file = (File) selectedObject;
-				super.handleElementSelection(part, file);
+				super.handleElementSelection(part, file, contributeToContext);
 			}
 		} else if (selection instanceof TextSelection) {
 			if (part instanceof EditorPart) {
@@ -47,7 +47,7 @@ public class ResourceInteractionMonitor extends AbstractUserInteractionMonitor {
 					if (object instanceof IFile) {
 						IFile file = (IFile) object;
 						if (!MylarPlugin.getDefault().getKnownContentTypes().contains(file.getFileExtension())) {
-							super.handleElementEdit(part, object);
+							super.handleElementEdit(part, object, contributeToContext);
 						}
 					}
 				} catch (Throwable t) {

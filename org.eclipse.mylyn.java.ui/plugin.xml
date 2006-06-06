@@ -25,6 +25,13 @@
 	          contentType="java"/>
 	</extension>
 	
+	<extension
+          point="org.eclipse.mylar.tasklist.editors">
+       <hyperlinkDetector
+             class="org.eclipse.mylar.internal.java.ui.JavaStackTraceHyperlinkDetector"
+             id="org.eclipse.mylar.java.hyperlink.detector.stack"/>
+    </extension>
+	
 	<!-- Content Assist -->
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"

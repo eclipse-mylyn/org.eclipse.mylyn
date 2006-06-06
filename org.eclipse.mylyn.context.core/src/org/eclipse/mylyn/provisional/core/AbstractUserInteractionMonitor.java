@@ -50,48 +50,63 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 		if (selection == null || selection.isEmpty())
 			return;
 		if (!MylarPlugin.getContextManager().isContextActive()) {
-			return;
+			handleWorkbenchPartSelection(part, selection, false);
 		} else {
-			handleWorkbenchPartSelection(part, selection);
+			handleWorkbenchPartSelection(part, selection, true);
 		}
 	}
 
-	protected abstract void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection);
+	protected abstract void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection, boolean contributeToContext);
 
 	/**
 	 * Intended to be called back by subclasses.
 	 */
-	protected InteractionEvent handleElementSelection(IWorkbenchPart part, Object selectedElement) {
+	protected InteractionEvent handleElementSelection(IWorkbenchPart part, Object selectedElement, boolean contributeToContext) {
 		if (selectedElement == null || selectedElement.equals(lastSelectedElement))
 			return null;
 		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(selectedElement);
-		InteractionEvent selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION,
-				bridge.getContentType(), bridge.getHandleIdentifier(selectedElement), part.getSite().getId());
-		MylarPlugin.getContextManager().handleInteractionEvent(selectionEvent);
+		InteractionEvent selectionEvent;
+		if (bridge.getContentType() != null) {
+			selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION,
+					bridge.getContentType(), bridge.getHandleIdentifier(selectedElement), part.getSite().getId());
+		} else {
+			selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION,
+					null, null, part.getSite().getId());			
+		}
+		if (contributeToContext) {
+			MylarPlugin.getContextManager().handleInteractionEvent(selectionEvent);
+		}
+		MylarPlugin.getDefault().notifyInteractionObserved(selectionEvent);
 		return selectionEvent;
 	}
 
 	/**
 	 * Intended to be called back by subclasses.
 	 */
-	protected void handleElementEdit(IWorkbenchPart part, Object selectedElement) {
+	protected void handleElementEdit(IWorkbenchPart part, Object selectedElement, boolean contributeToContext) {
 		if (selectedElement == null)
 			return;
 		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(selectedElement);
-		InteractionEvent selectionEvent = new InteractionEvent(InteractionEvent.Kind.EDIT, bridge.getContentType(),
+		InteractionEvent editEvent = new InteractionEvent(InteractionEvent.Kind.EDIT, bridge.getContentType(),
 				bridge.getHandleIdentifier(selectedElement), part.getSite().getId());
-		MylarPlugin.getContextManager().handleInteractionEvent(selectionEvent);
+		if (contributeToContext) {
+			MylarPlugin.getContextManager().handleInteractionEvent(editEvent);
+		}
+		MylarPlugin.getDefault().notifyInteractionObserved(editEvent);
 	}
 
 	/**
 	 * Intended to be called back by subclasses.
 	 */
-	protected void handleNavigation(IWorkbenchPart part, Object targetElement, String kind) {
+	protected void handleNavigation(IWorkbenchPart part, Object targetElement, String kind, boolean contributeToContext) {
 		IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(targetElement);
 		if (adapter.getContentType() != null) {
-			InteractionEvent selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, adapter
+			InteractionEvent navigationEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, adapter
 					.getContentType(), adapter.getHandleIdentifier(targetElement), part.getSite().getId(), kind);
-			MylarPlugin.getContextManager().handleInteractionEvent(selectionEvent);
+			if (contributeToContext) {
+				MylarPlugin.getContextManager().handleInteractionEvent(navigationEvent);
+			}
+			MylarPlugin.getDefault().notifyInteractionObserved(navigationEvent);
 		}
 	}
 

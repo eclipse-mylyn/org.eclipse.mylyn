@@ -177,7 +177,7 @@ public class SaxContextWriter implements IContextWriter {
 								.getStructureHandle()));
 				ieAttributes.addAttribute("", MylarContextExternalizer.ATR_STRUCTURE_KIND,
 						MylarContextExternalizer.ATR_STRUCTURE_KIND, "", XmlStringConverter.convertToXmlString(ie
-								.getContentType()));
+								.getStructureKind()));
 
 				handler.startElement("", SaxContextContentHandler.ATTRIBUTE_INTERACTION_EVENT,
 						SaxContextContentHandler.ATTRIBUTE_INTERACTION_EVENT, ieAttributes);

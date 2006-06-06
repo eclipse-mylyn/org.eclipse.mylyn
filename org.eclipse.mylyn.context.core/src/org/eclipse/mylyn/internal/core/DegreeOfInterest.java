@@ -61,7 +61,7 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 		events.add(0, event);
 		InteractionEvent last = collapsedEvents.get(event.getKind());
 		if (last != null) {
-			InteractionEvent aggregateEvent = new InteractionEvent(event.getKind(), event.getContentType(), event
+			InteractionEvent aggregateEvent = new InteractionEvent(event.getKind(), event.getStructureKind(), event
 					.getStructureHandle(), event.getOriginId(), event.getNavigation(), event.getDelta(), last
 					.getInterestContribution()
 					+ event.getInterestContribution(), last.getDate(), event.getEndDate());
@@ -163,7 +163,7 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 		allCollapsed.addAll(collapsedEvents.values());
 		if (!allCollapsed.isEmpty()) {
 			allCollapsed.add(0, new InteractionEvent(InteractionEvent.Kind.MANIPULATION, allCollapsed.get(0)
-					.getContentType(), allCollapsed.get(0).getStructureHandle(), MylarContextManager.SOURCE_ID_DECAY,
+					.getStructureKind(), allCollapsed.get(0).getStructureHandle(), MylarContextManager.SOURCE_ID_DECAY,
 					-getDecayValue()));
 		}
 		return allCollapsed;

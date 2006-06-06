@@ -50,7 +50,7 @@ public class JavaEditingMonitor extends AbstractUserInteractionMonitor {
 	 * Only public for testing
 	 */
 	@Override
-	public void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection) {
+	public void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection, boolean contributeToContext) {
 		try {
 			IJavaElement selectedElement = null;
 			if (selection instanceof StructuredSelection) {
@@ -70,7 +70,7 @@ public class JavaEditingMonitor extends AbstractUserInteractionMonitor {
 					}
 				}
 				if (selectedElement != null)
-					super.handleElementSelection(part, selectedElement);
+					super.handleElementSelection(part, selectedElement, contributeToContext);
 			} else {
 				if (selection instanceof TextSelection && part instanceof JavaEditor) {
 					currentEditor = (JavaEditor) part;
@@ -88,30 +88,30 @@ public class JavaEditingMonitor extends AbstractUserInteractionMonitor {
 						if (lastResolvedElement != null && lastSelectedElement != null
 								&& lastResolvedElement.equals(selectedElement)
 								&& !lastSelectedElement.equals(lastResolvedElement)) {
-							super.handleNavigation(part, selectedElement, JavaReferencesProvider.ID);
+							super.handleNavigation(part, selectedElement, JavaReferencesProvider.ID, contributeToContext);
 							selectionResolved = true;
 						} else if (lastSelectedElement != null && lastSelectedElement.equals(lastResolvedElement)
 								&& !lastSelectedElement.equals(selectedElement)) {
-							super.handleNavigation(part, selectedElement, JavaReferencesProvider.ID);
+							super.handleNavigation(part, selectedElement, JavaReferencesProvider.ID, contributeToContext);
 							selectionResolved = true;
 						}
 					} else if (selectedElement != null && lastSelectedElement != null
 							&& !lastSelectedElement.equals(selectedElement)) {
 						if (lastSelectedElement.getElementName().equals(selectedElement.getElementName())) {
 							if (selectedElement instanceof IMethod && lastSelectedElement instanceof IMethod) {
-								super.handleNavigation(part, selectedElement, JavaImplementorsProvider.ID);
+								super.handleNavigation(part, selectedElement, JavaImplementorsProvider.ID, contributeToContext);
 								selectionResolved = true;
 							} else if (selectedElement instanceof IType && lastSelectedElement instanceof IType) {
-								super.handleNavigation(part, selectedElement, JavaImplementorsProvider.ID);
+								super.handleNavigation(part, selectedElement, JavaImplementorsProvider.ID, contributeToContext);
 								selectionResolved = true;
 							}
 						}
 					}
 					if (selectedElement != null) {
 						if (!selectionResolved && selectedElement.equals(lastSelectedElement)) {
-							super.handleElementEdit(part, selectedElement);
+							super.handleElementEdit(part, selectedElement, contributeToContext);
 						} else if (!selectedElement.equals(lastSelectedElement)) {
-							super.handleElementSelection(part, selectedElement);
+							super.handleElementSelection(part, selectedElement, contributeToContext);
 						}
 					}
 

@@ -119,10 +119,6 @@ public class InteractionEvent {
 		return new InteractionEvent(InteractionEvent.Kind.COMMAND, "null", "null", originId, "null", delta, 1);
 	}
 
-	public String getStructureKind() {
-		return structureKind;
-	}
-
 	/**
 	 * Factory method.
 	 */
@@ -226,7 +222,7 @@ public class InteractionEvent {
 		return structureHandle;
 	}
 
-	public String getContentType() {
+	public String getStructureKind() {
 		return structureKind;
 	}
 

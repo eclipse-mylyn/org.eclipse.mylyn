@@ -42,7 +42,7 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 	}
 
 	@Override
-	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection) {
+	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection, boolean contributeToContext) {
 		if (part instanceof ManifestEditor) {
 			TextSelection textSelection = null;
 			IEditorInput in = null;
@@ -111,7 +111,7 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 						String name = node.getXMLAttributeValue("name");
 						if (name == null)
 							name = node.getXMLTagName();
-						super.handleElementSelection(part, xnode);
+						super.handleElementSelection(part, xnode, contributeToContext);
 					}
 				} catch (Exception e) {
 					MylarStatusHandler.log(e, "couldn't resolve selection");

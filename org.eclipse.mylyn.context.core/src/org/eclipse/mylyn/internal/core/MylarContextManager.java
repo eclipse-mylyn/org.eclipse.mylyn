@@ -348,7 +348,7 @@ public class MylarContextManager {
 			previouslyPropagated = previous.getInterest().isPropagated();
 		}
 		if (event.getKind().isUserEvent()) {
-			decayOffset = ensureIsInteresting(event.getContentType(), event.getStructureHandle(), previous, previousInterest);
+			decayOffset = ensureIsInteresting(event.getStructureKind(), event.getStructureHandle(), previous, previousInterest);
 		}
 		IMylarElement element = currentContext.addEvent(event);
 		List<IMylarElement> interestDelta = new ArrayList<IMylarElement>();

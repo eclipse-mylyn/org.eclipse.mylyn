@@ -58,7 +58,7 @@ public class TestMonitor extends AbstractUserInteractionMonitor {
 	}
 
 	@Override
-	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection) {
+	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection, boolean contributeToContext) {
 		// don't need to do anything here
 
 	}

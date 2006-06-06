@@ -39,7 +39,7 @@ public class AntEditingMonitor extends AbstractUserInteractionMonitor {
 	}
 
 	@Override
-	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection) {
+	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection, boolean contributeToContext) {
 		if (part instanceof AntEditor) {
 
 			TextSelection textSelection = null;
@@ -74,7 +74,7 @@ public class AntEditingMonitor extends AbstractUserInteractionMonitor {
 						return;
 					}
 					XmlNodeHelper xnode = new XmlNodeHelper(fei.getFile().getFullPath().toString(), path);
-					super.handleElementSelection(part, xnode);
+					super.handleElementSelection(part, xnode, contributeToContext);
 				} catch (Exception e) {
 					MylarStatusHandler.log(e, "selection resolve failed");
 				}

@@ -76,7 +76,7 @@ public class MylarContext implements IMylarContext {
 			numUserEvents++;
 		MylarContextElement node = nodes.get(event.getStructureHandle());
 		if (node == null) {
-			node = new MylarContextElement(event.getContentType(), event.getStructureHandle(), this);
+			node = new MylarContextElement(event.getStructureKind(), event.getStructureHandle(), this);
 			nodes.put(event.getStructureHandle(), node);
 		}
 
@@ -87,7 +87,7 @@ public class MylarContext implements IMylarContext {
 			if (navigationSource != null) {
 				MylarContextRelation edge = lastEdgeNode.getRelation(event.getStructureHandle());
 				if (edge == null) {
-					edge = new MylarContextRelation(event.getContentType(), event.getNavigation(), lastEdgeNode, node,
+					edge = new MylarContextRelation(event.getStructureKind(), event.getNavigation(), lastEdgeNode, node,
 							this);
 					lastEdgeNode.addEdge(edge);
 				}
