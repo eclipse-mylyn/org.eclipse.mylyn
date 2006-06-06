@@ -17,6 +17,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -28,24 +29,29 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 
 /**
-* @author Bahadir Yagan
-* @author Mik Kersten
-* @author Rob Elves
-*/
+ * @author Bahadir Yagan
+ * @author Mik Kersten
+ * @author Rob Elves
+ */
 public class DatePickerPanel extends Composite implements KeyListener, ISelectionProvider {
 
-	private Combo timeCombo = null;
+	// private Combo timeCombo = null;
 
-	private Combo monthCombo = null;
+	// private Combo monthCombo = null;
+
+	private org.eclipse.swt.widgets.List timeList = null;
+
+	private org.eclipse.swt.widgets.List monthList = null;
 
 	private Spinner yearSpinner = null;
 
@@ -54,15 +60,15 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 	private Composite calendarComposite = null;
 
 	private Calendar initialDate = null;
-	
+
 	private Calendar date = null;
-	
-	private ISelection selection = null; 
+
+	private ISelection selection = null;
 
 	private DateFormatSymbols dateFormatSymbols = null;
 
 	private Label[] calendarLabels = null;
-	
+
 	private List<ISelectionChangedListener> selectionListeners = new ArrayList<ISelectionChangedListener>();
 
 	public DatePickerPanel(Composite parent, int style, Calendar initialDate) {
@@ -75,83 +81,128 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 	}
 
 	private void initialize() {
-		if(date == null) { 
+		if (date == null) {
 			date = GregorianCalendar.getInstance();
 		}
 		dateFormatSymbols = new DateFormatSymbols();
 		calendarLabels = new Label[42];
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 3;
-		gridLayout.horizontalSpacing = 3;
-		gridLayout.verticalSpacing = 3;
+		// gridLayout.horizontalSpacing = 3;
+		// gridLayout.verticalSpacing = 3;
 		this.setLayout(gridLayout);
-//		pickerPanel.setSize(new org.eclipse.swt.graphics.Point(400, 200));//277, 200
-		createTimeCombo();
-		createMonthCombo();
-		createYearSpinner();
-		createComposite();
-		createComposite1();
+		// pickerPanel.setSize(new org.eclipse.swt.graphics.Point(400, 200));
+		createMonthList(this);
+		Composite middle = new Composite(this, SWT.NONE);
+		GridLayout middleLayout = new GridLayout();
+		middleLayout.verticalSpacing = 0;
+		middle.setLayout(middleLayout);
+		createYearSpinner(middle);
+		createComposite(middle);
+		createComposite1(middle);
 		createCalendarData();
+		createTimeList(this);
+
 	}
 
 	/**
 	 * This method initializes the month combo
 	 * 
 	 */
-	private void createTimeCombo() {
-		timeCombo = new Combo(this, SWT.READ_ONLY);
-		timeCombo.setItems(new String[] { "12:00 AM", "1:00 AM", "2:00 AM", "3:00 AM", "4:00 AM", "5:00 AM",
-				"6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM",
-				"2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM", "10:00 PM",
-				"11:00 PM" });
-		if(date == null) {
-			timeCombo.select(Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
+	private void createTimeList(Composite composite) {
+		timeList = new org.eclipse.swt.widgets.List(composite, SWT.READ_ONLY | SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
+		timeList.setItems(new String[] { "12:00 AM", "1:00 AM", "2:00 AM", "3:00 AM", "4:00 AM", "5:00 AM", "6:00 AM",
+				"7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM",
+				"4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM", "10:00 PM", "11:00 PM" });
+		if (date == null) {
+			timeList.select(Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
 		} else {
-			timeCombo.select(date.get(Calendar.HOUR_OF_DAY));
+			timeList.select(date.get(Calendar.HOUR_OF_DAY));
 		}
-		timeCombo.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent arg0) {
-				date.set(Calendar.HOUR_OF_DAY, timeCombo.getSelectionIndex());
+		timeList.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				date.set(Calendar.HOUR_OF_DAY, timeList.getSelectionIndex());
 				date.set(Calendar.MINUTE, 0);
 				setSelection(new DateSelection(date));
 				notifyListeners(new SelectionChangedEvent(DatePickerPanel.this, getSelection()));
-				//updateCalendar();
+				// updateCalendar();
 			}
 		});
-		timeCombo.addKeyListener(this);
+		GridDataFactory.fillDefaults().hint(SWT.DEFAULT, 150).grab(false, true).applyTo(timeList);
+		timeList.addKeyListener(this);
 	}
+
+	// /**
+	// * This method initializes the month combo
+	// *
+	// */
+	// private void createTimeCombo(Composite composite) {
+	// timeCombo = new Combo(composite, SWT.READ_ONLY);
+	// timeCombo.setItems(new String[] { "12:00 AM", "1:00 AM", "2:00 AM", "3:00
+	// AM", "4:00 AM", "5:00 AM",
+	// "6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM",
+	// "12:00 PM", "1:00 PM",
+	// "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00
+	// PM", "9:00 PM", "10:00 PM",
+	// "11:00 PM" });
+	// if(date == null) {
+	// timeCombo.select(Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
+	// } else {
+	// timeCombo.select(date.get(Calendar.HOUR_OF_DAY));
+	// }
+	// timeCombo.addModifyListener(new ModifyListener() {
+	// public void modifyText(ModifyEvent arg0) {
+	// date.set(Calendar.HOUR_OF_DAY, timeCombo.getSelectionIndex());
+	// date.set(Calendar.MINUTE, 0);
+	// setSelection(new DateSelection(date));
+	// notifyListeners(new SelectionChangedEvent(DatePickerPanel.this,
+	// getSelection()));
+	// //updateCalendar();
+	// }
+	// });
+	// timeCombo.addKeyListener(this);
+	// }
 
 	/**
 	 * This method initializes the month combo
 	 * 
 	 */
-	private void createMonthCombo() {
-		monthCombo = new Combo(this, SWT.READ_ONLY);
-		monthCombo.setItems(dateFormatSymbols.getMonths());
-		monthCombo.remove(12);
-		monthCombo.select(date.get(Calendar.MONTH));
-		monthCombo.setVisibleItemCount(12);
-		monthCombo.addModifyListener(new ModifyListener() {
+	private void createMonthList(Composite composite) {
+		monthList = new org.eclipse.swt.widgets.List(composite, SWT.READ_ONLY | SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
+		for (String month : dateFormatSymbols.getMonths()) {
+			if (month != null && !month.equals("")) {
+				monthList.add(month);
+			}
+		}
+		GridDataFactory.fillDefaults().hint(SWT.DEFAULT, 50).grab(false, false).applyTo(monthList);
+		monthList.select(date.get(Calendar.MONTH));
+		monthList.addSelectionListener(new SelectionAdapter() {
 
-			public void modifyText(ModifyEvent arg0) {
-				date.set(Calendar.MONTH, monthCombo.getSelectionIndex());
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				date.set(Calendar.MONTH, monthList.getSelectionIndex());
 				setSelection(new DateSelection(date));
 				notifyListeners(new SelectionChangedEvent(DatePickerPanel.this, getSelection()));
 				updateCalendar();
 			}
-
 		});
-		monthCombo.addKeyListener(this);
+		monthList.addKeyListener(this);
 	}
 
-	private void createYearSpinner() {
-		GridData gridData1 = new org.eclipse.swt.layout.GridData();
-		gridData1.horizontalAlignment = org.eclipse.swt.layout.GridData.BEGINNING;
+	private void createYearSpinner(Composite composite) {
+		Composite yearComposite = new Composite(composite, SWT.NONE);
+		GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.DEFAULT).applyTo(yearComposite);
+		yearComposite.setLayout(new GridLayout(2, false));
+		org.eclipse.swt.widgets.Label yearLabel = new org.eclipse.swt.widgets.Label(yearComposite, SWT.NONE);
+		yearLabel.setText("Year: ");
+		GridData gridData1 = new GridData();
+		gridData1.horizontalAlignment = GridData.BEGINNING;
 		gridData1.grabExcessVerticalSpace = false;
 		gridData1.grabExcessHorizontalSpace = false;
 		gridData1.heightHint = -1;
-		gridData1.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
-		yearSpinner = new Spinner(this, SWT.BORDER | SWT.READ_ONLY);
+		gridData1.verticalAlignment = org.eclipse.swt.layout.GridData.BEGINNING;
+		yearSpinner = new Spinner(yearComposite, SWT.BORDER | SWT.READ_ONLY);
 		yearSpinner.setMinimum(1900);
 		yearSpinner.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		yearSpinner.setDigits(0);
@@ -171,30 +222,27 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 		yearSpinner.addKeyListener(this);
 	}
 
-	/**
-	 * This method initializes composite
-	 * 
-	 */
-	private void createComposite() {
+	private void createComposite(Composite composite) {
 		String[] weekDays = dateFormatSymbols.getWeekdays();
 		GridLayout gridLayout1 = new GridLayout();
 		gridLayout1.numColumns = 7;
+		gridLayout1.verticalSpacing = 0;
 		gridLayout1.makeColumnsEqualWidth = true;
 		GridData gridData = new org.eclipse.swt.layout.GridData();
 		gridData.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = false;
-		gridData.horizontalSpan = 3;
-		gridData.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
-		headerComposite = new Composite(this, SWT.NONE);
+		// gridData.horizontalSpan = 3;
+		gridData.verticalAlignment = org.eclipse.swt.layout.GridData.BEGINNING;
+		headerComposite = new Composite(composite, SWT.NONE);
 		headerComposite.setLayoutData(gridData);
 		headerComposite.setLayout(gridLayout1);
 		GridData labelGridData = new org.eclipse.swt.layout.GridData();
 		labelGridData.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		labelGridData.grabExcessHorizontalSpace = true;
-		labelGridData.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
+		labelGridData.verticalAlignment = org.eclipse.swt.layout.GridData.BEGINNING;
 		for (int i = 1; i < 8; ++i) {
-			Label headerLabel = new Label(headerComposite, SWT.CENTER);
+			Label headerLabel = new Label(headerComposite, SWT.BEGINNING);
 			headerLabel.setText(weekDays[i].substring(0, 3));
 			headerLabel.setLayoutData(labelGridData);
 		}
@@ -204,17 +252,18 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 	 * This method initializes composite1
 	 * 
 	 */
-	private void createComposite1() {
+	private void createComposite1(Composite composite) {
 		GridLayout gridLayout2 = new GridLayout();
 		gridLayout2.numColumns = 7;
+		gridLayout2.verticalSpacing = 0;
 		gridLayout2.makeColumnsEqualWidth = true;
 		GridData gridData1 = new org.eclipse.swt.layout.GridData();
-		gridData1.horizontalSpan = 3;
+		// gridData1.horizontalSpan = 3;
 		gridData1.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
-		gridData1.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
-		gridData1.grabExcessVerticalSpace = true;
+		gridData1.verticalAlignment = org.eclipse.swt.layout.GridData.BEGINNING;
+		gridData1.grabExcessVerticalSpace = false;
 		gridData1.grabExcessHorizontalSpace = true;
-		calendarComposite = new Composite(this, SWT.BORDER);
+		calendarComposite = new Composite(composite, SWT.BORDER);
 		calendarComposite.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		calendarComposite.setLayout(gridLayout2);
 		calendarComposite.setLayoutData(gridData1);
@@ -250,8 +299,8 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 					Label label = (Label) arg0.getSource();
 					if (!label.getText().equals("")) {
 						date.set(Calendar.YEAR, yearSpinner.getSelection());
-						date.set(Calendar.MONTH, monthCombo.getSelectionIndex());
-						date.set(Calendar.DAY_OF_MONTH, Integer.parseInt(label.getText()));			
+						date.set(Calendar.MONTH, monthList.getSelectionIndex());
+						date.set(Calendar.DAY_OF_MONTH, Integer.parseInt(label.getText()));
 						setSelection(new DateSelection(date));
 						notifyListeners(new SelectionChangedEvent(DatePickerPanel.this, getSelection()));
 					}
@@ -304,53 +353,52 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 			SelectionChangedEvent changeEvent = new SelectionChangedEvent(this, new ISelection() {
 				public boolean isEmpty() {
 					return true;
-				}});
-			notifyListeners(changeEvent);		
+				}
+			});
+			notifyListeners(changeEvent);
 		}
 	}
 
 	public void keyReleased(KeyEvent e) {
 	}
-	
+
 	private void notifyListeners(SelectionChangedEvent event) {
-		for (ISelectionChangedListener listener: selectionListeners) {
+		for (ISelectionChangedListener listener : selectionListeners) {
 			listener.selectionChanged(event);
 		}
 	}
 
 	public void addSelectionChangedListener(ISelectionChangedListener listener) {
-		selectionListeners.add(listener);		
+		selectionListeners.add(listener);
 	}
 
-	public ISelection getSelection() {		
+	public ISelection getSelection() {
 		return selection;
 	}
 
 	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
-		selectionListeners.remove(listener);		
+		selectionListeners.remove(listener);
 	}
 
 	public void setSelection(ISelection selection) {
 		this.selection = selection;
 	}
-	
-	
+
 	public class DateSelection implements ISelection {
 		private Calendar date;
-		
+
 		public DateSelection(Calendar calendar) {
 			date = calendar;
 		}
-		
+
 		public boolean isEmpty() {
 			return date == null;
 		}
-		
+
 		public Calendar getDate() {
 			return date;
 		}
-		
+
 	}
-	
-	
+
 }
