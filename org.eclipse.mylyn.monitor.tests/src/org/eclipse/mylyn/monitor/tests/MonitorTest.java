@@ -25,7 +25,6 @@ import org.eclipse.mylar.internal.monitor.MylarMonitorPlugin;
 import org.eclipse.mylar.internal.monitor.monitors.BrowserMonitor;
 import org.eclipse.mylar.internal.monitor.monitors.KeybindingCommandMonitor;
 import org.eclipse.mylar.internal.monitor.monitors.PerspectiveChangeMonitor;
-import org.eclipse.mylar.internal.monitor.monitors.SelectionMonitor;
 import org.eclipse.mylar.provisional.core.InteractionEvent;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.ui.IPerspectiveDescriptor;
@@ -39,7 +38,7 @@ public class MonitorTest extends TestCase {
 
 	private InteractionEventLogger logger = MylarMonitorPlugin.getDefault().getInteractionLogger();
 
-	private SelectionMonitor selectionMonitor = new SelectionMonitor();
+	private MockSelectionMonitor selectionMonitor = new MockSelectionMonitor();
 
 	private KeybindingCommandMonitor commandMonitor = new KeybindingCommandMonitor();
 

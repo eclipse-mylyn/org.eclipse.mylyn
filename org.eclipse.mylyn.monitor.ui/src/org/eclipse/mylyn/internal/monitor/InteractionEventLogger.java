@@ -52,6 +52,8 @@ public class InteractionEventLogger implements IInteractionEventListener {
 	private int eventAccumulartor = 0;
 
 	private List<InteractionEvent> queue = new ArrayList<InteractionEvent>();
+	
+	private HandleObfuscator handleObfuscator = new HandleObfuscator();
 
 	public InteractionEventLogger(File outputFile) {
 		this.outputFile = outputFile;
@@ -61,7 +63,11 @@ public class InteractionEventLogger implements IInteractionEventListener {
 	 * TODO: should these be queued for better performance?
 	 */
 	public void interactionObserved(InteractionEvent event) {
-//		System.err.println("> " + event); 
+//		System.err.println(">>> " + event);
+		if (handleObfuscator.isObfuscationEnabled()) {
+			String obfuscatedHandle = handleObfuscator.obfuscateHandle(event.getStructureKind(), event.getStructureHandle());
+			event = new InteractionEvent(event.getKind(), event.getStructureKind(), obfuscatedHandle, event.getOriginId(), event.getNavigation(), event.getDelta(), event.getInterestContribution());
+		}
 		try {
 			if (started) {
 				String xml = interactionEventToXml(event);
@@ -224,7 +230,7 @@ public class InteractionEventLogger implements IInteractionEventListener {
 				+ ENDL);
 		res.append(TAB + OPEN + "originId" + CLOSE + XmlStringConverter.convertToXmlString(e.getOriginId()) + OPEN
 				+ SLASH + "originId" + CLOSE + ENDL);
-		res.append(TAB + OPEN + "structureKind" + CLOSE + XmlStringConverter.convertToXmlString(e.getContentType())
+		res.append(TAB + OPEN + "structureKind" + CLOSE + XmlStringConverter.convertToXmlString(e.getStructureKind())
 				+ OPEN + SLASH + "structureKind" + CLOSE + ENDL);
 		res.append(TAB + OPEN + "structureHandle" + CLOSE
 				+ XmlStringConverter.convertToXmlString(e.getStructureHandle()) + OPEN + SLASH + "structureHandle"

@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.monitor.InteractionEventLogger;
 import org.eclipse.mylar.internal.monitor.MylarMonitorPlugin;
-import org.eclipse.mylar.internal.monitor.monitors.SelectionMonitor;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -38,7 +37,7 @@ public class MultiWindowMonitorTest extends TestCase {
 
 	private InteractionEventLogger logger = MylarMonitorPlugin.getDefault().getInteractionLogger();
 
-	private SelectionMonitor selectionMonitor = new SelectionMonitor();
+	private MockSelectionMonitor selectionMonitor = new MockSelectionMonitor();
 
 	private IWorkbenchWindow window1;
 

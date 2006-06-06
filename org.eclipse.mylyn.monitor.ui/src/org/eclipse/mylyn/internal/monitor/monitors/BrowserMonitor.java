@@ -68,7 +68,7 @@ public class BrowserMonitor extends AbstractUserInteractionMonitor implements IP
 	}
 
 	@Override
-	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection) {
+	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection, boolean contributeToContext) {
 		// ignore, this is a special case
 	}
 

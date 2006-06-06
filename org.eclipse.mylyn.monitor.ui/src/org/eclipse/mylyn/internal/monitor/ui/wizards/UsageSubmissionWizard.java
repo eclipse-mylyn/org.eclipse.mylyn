@@ -29,7 +29,6 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -53,7 +52,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 /**
  * A wizard for uploading the Mylar statistics to a website
@@ -160,21 +158,24 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
 				&& backgroundPage != null) {
 			backgroundFile = backgroundPage.createFeedbackFile();
 		}
-
-		final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-			protected void execute(final IProgressMonitor monitor) throws CoreException {
-				monitor.beginTask("Uploading user statistics", 3);
-				performUpload(monitor);
-				monitor.done();
-			}
-		};
+			
+//		final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+//			protected void execute(final IProgressMonitor monitor) throws CoreException {
+//				monitor.beginTask("Uploading user statistics", 3);
+//				performUpload(monitor);
+//				monitor.done();
+//			}
+//		};
 
 		Job j = new Job("Upload User Statistics") {
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					op.run(monitor);
+					monitor.beginTask("Uploading user statistics", 3);
+					performUpload(monitor);
+					monitor.done();
+//					op.run(monitor);
 					return Status.OK_STATUS;
 				} catch (Exception e) {
 					MylarStatusHandler.log(e, "Error uploading statistics");

@@ -21,7 +21,6 @@ import org.eclipse.mylar.internal.core.MylarContext;
 import org.eclipse.mylar.internal.core.ScalingFactor;
 import org.eclipse.mylar.internal.core.ScalingFactors;
 import org.eclipse.mylar.internal.monitor.InteractionEventLogger;
-import org.eclipse.mylar.internal.monitor.monitors.SelectionMonitor;
 import org.eclipse.mylar.monitor.tests.MylarMonitorTestsPlugin;
 import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.InteractionEvent;
@@ -68,17 +67,19 @@ public class ContextParsingTest extends TestCase {
 		MylarContext context = new MylarContext("test", scalingFactors);
 		int numEvents = 0;
 		for (InteractionEvent event : events) {
-			if (SelectionMonitor.isValidStructureHandle(event)) {
+			if (event.isValidStructureHandle()) {
+//			if (SelectionMonitor.isValidStructureHandle(event)) {
 				InteractionEvent newEvent = InteractionEvent.makeCopy(event, 1f);
 				context.parseEvent(newEvent); 
-				if (SelectionMonitor.isValidStructureHandle(event) && event.getKind().equals(InteractionEvent.Kind.SELECTION)) {
+				if (event.isValidStructureHandle() && event.getKind().equals(InteractionEvent.Kind.SELECTION)) {
+//				if (SelectionMonitor.isValidStructureHandle(event) && event.getKind().equals(InteractionEvent.Kind.SELECTION)) {
 					IMylarElement element = context.parseEvent(event);
 					
 					// reset decay if not selected
 					if (element.getInterest().getValue() < 0) { 
 						float decayOffset = (-1) * (element.getInterest().getValue()) + 1;
 						element = context.parseEvent(new InteractionEvent(InteractionEvent.Kind.MANIPULATION,
-								event.getContentType(), event.getStructureHandle(), "test-decay", decayOffset));
+								event.getStructureKind(), event.getStructureHandle(), "test-decay", decayOffset));
 					} 
 					
 					assertTrue("should be positive: " + element.getInterest().getValue(), element.getInterest().getValue() >= 0);

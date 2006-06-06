@@ -18,7 +18,7 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.mylar.internal.core.MylarPreferenceContstants;
 import org.eclipse.mylar.internal.monitor.MylarMonitorPlugin;
 import org.eclipse.mylar.internal.monitor.MylarMonitorPreferenceConstants;
-import org.eclipse.mylar.internal.monitor.monitors.SelectionMonitor;
+import org.eclipse.mylar.internal.monitor.HandleObfuscator;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -142,7 +142,7 @@ public class MylarMonitorPreferencePage extends PreferencePage implements IWorkb
 		enableObfuscation.setText("Obfuscate elements using: ");
 		enableObfuscation.setSelection(getPreferenceStore().getBoolean(MylarMonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE));
 		Label obfuscationLablel = new Label(group, SWT.NULL);
-		obfuscationLablel.setText(SelectionMonitor.ENCRYPTION_ALGORITHM + " message digest one-way hash");
+		obfuscationLablel.setText(HandleObfuscator.ENCRYPTION_ALGORITHM + " message digest one-way hash");
 	}
 
 	private void createUsageSection(Composite parent) {
