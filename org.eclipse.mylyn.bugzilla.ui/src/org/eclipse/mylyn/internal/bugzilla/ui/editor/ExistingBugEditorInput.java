@@ -10,15 +10,24 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.Proxy;
 import java.security.GeneralSecurityException;
 
+import javax.security.auth.login.LoginException;
+
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
-import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
+import org.eclipse.mylar.internal.bugzilla.core.AbstractReportFactory.UnrecognizedBugzillaError;
+import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.internal.tasklist.OfflineTaskManager;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * The <code>IEditorInput</code> implementation for
@@ -82,24 +91,61 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 		}
 	}
 
-	// TODO: move
-	private RepositoryTaskData getCurrentBug(TaskRepository repository, Proxy proxySettings, int id)
+	// TODO: move?
+	private RepositoryTaskData getCurrentBug(final TaskRepository repository, Proxy proxySettings, final int id)
 			throws IOException, GeneralSecurityException {
+		RepositoryTaskData result = null;
 		// Look among the offline reports for a bug with the given id.
 		OfflineTaskManager reportsFile = MylarTaskListPlugin.getDefault().getOfflineReportsFile();
 		if (reportsFile != null) {
 			int offlineId = reportsFile.find(repository.getUrl(), id);
-	
 			// If an offline bug was found, return it if possible.
 			if (offlineId != -1) {
 				RepositoryTaskData bug = reportsFile.elements().get(offlineId);
 				if (bug instanceof RepositoryTaskData) {
-					return (RepositoryTaskData) bug;
+					result = (RepositoryTaskData) bug;
 				}
 			}
 		} 
+		// TODO: Use downloadTaskData on repositoryConnector?
 		// If a suitable offline report was not found, get it from the server
-		return BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, repository.getCharacterEncoding(), id);
+		if(result == null) {
+		try {
+			result = BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, repository.getCharacterEncoding(), id);
+		} catch (final LoginException e) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					MessageDialog.openError(Display.getDefault().getActiveShell(), "Report Download Failed",
+							"Ensure proper repository configuration of " + repository.getUrl() + " in "
+									+ TaskRepositoriesView.NAME + ".");
+				}
+			});
+		} catch (final UnrecognizedBugzillaError e) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					WebBrowserDialog.openAcceptAgreement(null, "Report Download Failed", "Unrecognized response from "
+							+ repository.getUrl(), e.getMessage());
+				}
+			});
+		} catch (final Exception e) {
+			if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						if (e instanceof FileNotFoundException) {
+							MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Report Download Failed",
+									"Resource not found: " + e.getMessage());
+							
+						} else {
+							MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Report Download Failed",
+									"Report "+id+" did not download correctly from " + repository.getUrl());
+							
+						}
+					}
+				});
+			}
+		}
+		} 
+		return result;
 	}
 
 	public String getName() {

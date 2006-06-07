@@ -471,9 +471,11 @@ public abstract class AbstractBugEditor extends EditorPart {
 	public void createPartControl(Composite parent) {
 
 		if (getBug() == null) {
-			// close();
-			MessageDialog.openError(Display.getDefault().getActiveShell(), "Bugzilla Client Errror",
-					"Could not resolve the requested bug, check Bugzilla server and version.");
+			
+
+			// MessageDialog.openError(Display.getDefault().getActiveShell(),
+			// "Bugzilla Client Errror",
+			//					"Could not resolve the requested bug, check Bugzilla server and version.");
 
 			Composite composite = new Composite(parent, SWT.NULL);
 			composite.setLayout(new GridLayout());
