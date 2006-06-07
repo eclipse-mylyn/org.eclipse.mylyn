@@ -1265,9 +1265,14 @@ public class TaskListView extends ViewPart {
 		}
 	}
 
-	public void refreshAndFocus() {
+	public void refreshAndFocus(boolean expand) {
+		getViewer().getControl().setRedraw(false);
 		getViewer().refresh();
+		if (expand) {
+			getViewer().expandAll();
+		}
 		selectedAndFocusTask(MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTask());
+		getViewer().getControl().setRedraw(true);
 	}
 
 	public TreeViewer getViewer() {
@@ -1407,14 +1412,14 @@ public class TaskListView extends ViewPart {
 		if (task == null || getViewer().getControl().isDisposed()) {
 			return;
 		}
-		StructuredSelection currentSelection = (StructuredSelection) getViewer().getSelection();
-		ITask selectedTask = null;
-		if (currentSelection.getFirstElement() instanceof ITask) {
-			selectedTask = (ITask) currentSelection.getFirstElement();
-		} else if (currentSelection.getFirstElement() instanceof AbstractQueryHit) {
-			selectedTask = ((AbstractQueryHit) currentSelection.getFirstElement()).getCorrespondingTask();
-		}
-		if (!task.equals(selectedTask)) {
+//		StructuredSelection currentSelection = (StructuredSelection) getViewer().getSelection();
+//		ITask selectedTask = null;
+//		if (currentSelection.getFirstElement() instanceof ITask) {
+//			selectedTask = (ITask) currentSelection.getFirstElement();
+//		} else if (currentSelection.getFirstElement() instanceof AbstractQueryHit) {
+//			selectedTask = ((AbstractQueryHit) currentSelection.getFirstElement()).getCorrespondingTask();
+//		}
+//		if (!task.equals(selectedTask)) {
 			getViewer().setSelection(new StructuredSelection(task), true);
 			// if no task exists, select the query hit if exists
 			AbstractQueryHit hit = null;
@@ -1426,11 +1431,12 @@ public class TaskListView extends ViewPart {
 				getViewer().expandToLevel(query, 1);
 				getViewer().setSelection(new StructuredSelection(hit), true);
 			} else {
-				if (task.getContainer() != null) {
-					getViewer().expandToLevel(task.getContainer(), 1);
-				}
+//				if (task.getc() != null) {
+//					getViewer().expandToLevel(task.getContainer(), 1);
+//				}
+//				getViewer().setSelection(new StructuredSelection(hit), true);
 			}
-		}
+//		}
 	}
 
 	protected void refreshTask(ITask task) {

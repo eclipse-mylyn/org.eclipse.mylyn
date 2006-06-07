@@ -59,7 +59,7 @@ public class DeleteAction extends Action {
 
 				if (task.isActive()) {
 					MylarTaskListPlugin.getTaskListManager().deactivateTask(task);
-					TaskListView.getFromActivePerspective().refreshAndFocus();
+					TaskListView.getFromActivePerspective().refreshAndFocus(false);
 					TaskUiUtil.closeEditorInActivePage(task);					
 				}
 

@@ -53,7 +53,7 @@ public class PreviousTaskDropDownAction extends TaskNavigateDropDownAction {
 		if (taskHistory.hasPrevious()) {
 			new TaskActivateAction().run(taskHistory.getPreviousTask());
 			setButtonStatus();
-			view.refreshAndFocus();
+			view.refreshAndFocus(false);
 		}
 	}
 
