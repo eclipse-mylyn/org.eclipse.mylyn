@@ -67,7 +67,7 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction {
 			taskListView.clearFilters(true);
 			taskListView.addFilter(taskListInterestFilter);
 			taskListView.setPriorityButtonEnabled(false);
-			taskListView.refreshAndFocus();
+			taskListView.refreshAndFocus(true);
 			return true;
 		} else {
 			return false;
@@ -86,7 +86,7 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction {
 				TaskListView.getFromActivePerspective().addFilter(filter);
 			}
 			taskListView.getViewer().collapseAll();
-			taskListView.refreshAndFocus();
+			taskListView.refreshAndFocus(false);
 		} 
 	}
 
