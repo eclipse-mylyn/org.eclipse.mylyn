@@ -1178,7 +1178,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 	protected void createAttachmentLayout() {
 		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText(LABEL_SECTION_ATTACHMENTS);
-		section.setExpanded(true);
+		section.setExpanded(getReport().getAttachments().size() > 0);
 		section.setLayout(new GridLayout());
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
