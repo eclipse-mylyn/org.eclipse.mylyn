@@ -78,7 +78,7 @@ public class InterestManipulatingEditorTracker extends AbstractEditorTracker {
 
 	@Override
 	public void editorClosed(IEditorPart editorPart) {
-		if (PlatformUI.getWorkbench().isClosing()) {
+		if (PlatformUI.getWorkbench().isClosing() || editorPart instanceof IInterestPreservedOnClose) {
 			return;
 		} else if (MylarUiPlugin.getPrefs().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)
 			&& !Workbench.getInstance().getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN)) {
