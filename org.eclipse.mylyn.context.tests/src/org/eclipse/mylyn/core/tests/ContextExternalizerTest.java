@@ -120,7 +120,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertTrue("interest: " + context.get("3").getInterest().getValue(), context.get("3").getInterest()
 				.isLandmark());
 		float doi = node.getInterest().getValue();
-		assertNotNull(context.getLandmarks());
+		assertNotNull(context.getLandmarkMap());
 
 		// "3" not a user event
 		assertEquals("2", context.getActiveNode().getHandleIdentifier());
@@ -138,7 +138,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertNotNull(loadedNode);
 		assertEquals(doi, loadedNode.getInterest().getValue());
 		assertTrue(landmark.getInterest().isLandmark());
-		assertNotNull(loaded.getLandmarks());
+		assertNotNull(loaded.getLandmarkMap());
 
 		assertEquals("2", loaded.getActiveNode().getHandleIdentifier());
 	}

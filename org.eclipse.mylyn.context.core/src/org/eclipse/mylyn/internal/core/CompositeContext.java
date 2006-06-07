@@ -57,7 +57,7 @@ public class CompositeContext implements IMylarContext {
 	public List<IMylarElement> getLandmarks() {
 		Set<IMylarElement> landmarks = new HashSet<IMylarElement>();
 		for (MylarContext taskscape : contexts.values()) {
-			for (IMylarElement concreteNode : taskscape.getLandmarks()) {
+			for (IMylarElement concreteNode : taskscape.getLandmarkMap()) {
 				if (concreteNode != null)
 					landmarks.add(get(concreteNode.getHandleIdentifier()));
 			}
