@@ -53,10 +53,11 @@ import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.IBugzillaReportSelection;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.Comment;
+import org.eclipse.mylar.internal.tasklist.LocalAttachment;
 import org.eclipse.mylar.internal.tasklist.RepositoryAttachment;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
@@ -65,8 +66,11 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
@@ -77,6 +81,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
@@ -144,11 +149,12 @@ public abstract class AbstractBugEditor extends EditorPart {
 
 	public static final Font TEXT_FONT = JFaceResources.getDefaultFont();
 
-	//public static final Font COMMENT_FONT = JFaceResources.getFontRegistry().get(JFaceResources.TEXT_FONT);
+	// public static final Font COMMENT_FONT =
+	// JFaceResources.getFontRegistry().get(JFaceResources.TEXT_FONT);
 
 	public static final Font HEADER_FONT = JFaceResources.getDefaultFont();
 
-	public static final int DESCRIPTION_WIDTH = 79 * 8; //500;
+	public static final int DESCRIPTION_WIDTH = 79 * 8; // 500;
 
 	public static final int DESCRIPTION_HEIGHT = 10 * 14;
 
@@ -165,6 +171,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 	// private static int MARGIN = 0;// 5
 
 	protected SimpleDateFormat simpleDateFormat = new SimpleDateFormat("E MMM dd, yyyy hh:mm aa");
+
 	// "yyyy-MM-dd HH:mm"
 
 	/**
@@ -201,7 +208,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 	protected CCombo milestoneCombo;
 
 	protected CCombo componentCombo;
-	
+
 	protected Button addSelfToCCCheck;
 
 	protected Text urlText;
@@ -209,6 +216,10 @@ public abstract class AbstractBugEditor extends EditorPart {
 	protected Text summaryText;
 
 	protected Text assignedTo;
+
+	protected Text attachmentDesc;
+
+	protected Text attachmentComment;
 
 	protected Button submitButton;
 
@@ -260,6 +271,34 @@ public abstract class AbstractBugEditor extends EditorPart {
 	// protected Hyperlink linkToBug;
 
 	// protected StyledText generalTitleText;
+
+	// private static List<String> contentTypes;
+
+	private static Map<String, String> extensions2Types;
+
+	static {
+		/* For possible UI */
+		// contentTypes = new LinkedList<String>();
+		// contentTypes.add("text/plain");
+		// contentTypes.add("text/html");
+		// contentTypes.add("application/xml");
+		// contentTypes.add("image/gif");
+		// contentTypes.add("image/jpeg");
+		// contentTypes.add("image/png");
+		// contentTypes.add("application/octet-stream");
+		extensions2Types = new HashMap<String, String>();
+		extensions2Types.put("txt", "text/plain");
+		extensions2Types.put("html", "text/html");
+		extensions2Types.put("htm", "text/html");
+		extensions2Types.put("jpg", "image/jpeg");
+		extensions2Types.put("jpeg", "image/jpeg");
+		extensions2Types.put("gif", "image/gif");
+		extensions2Types.put("png", "image/png");
+		extensions2Types.put("xml", "application/xml");
+		extensions2Types.put("zip", "application/octet-stream");
+		extensions2Types.put("tar", "application/octet-stream");
+		extensions2Types.put("gz", "application/octet-stream");
+	}
 
 	private List<IBugzillaAttributeListener> attributesListeners = new ArrayList<IBugzillaAttributeListener>();
 
@@ -452,22 +491,20 @@ public abstract class AbstractBugEditor extends EditorPart {
 		// }
 		// form.setFont(COMMENT_FONT);
 		// form.setText("Bugzilla Bug: " + getBug().getSummary());
-		
-		
+
 		editorComposite = form.getBody();
 		editorComposite.setLayout(new GridLayout());
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		// Header information
-		
-		
+
 		Composite summaryComposite = toolkit.createComposite(editorComposite);
 		summaryComposite.setLayout(new GridLayout(2, false));
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryComposite);
 		addSummaryText(summaryComposite);
 		toolkit.paintBordersFor(summaryComposite);
 		Composite headerInfoComposite = toolkit.createComposite(editorComposite);
-		headerInfoComposite.setLayout(new GridLayout(6, false));		
+		headerInfoComposite.setLayout(new GridLayout(6, false));
 		toolkit.createLabel(headerInfoComposite, "Bug# ").setFont(TITLE_FONT);
 		toolkit.createText(headerInfoComposite, "" + getReport().getId(), SWT.FLAT | SWT.READ_ONLY);
 
@@ -490,7 +527,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 		// background = JFaceColors.getBannerBackground(display);
 		// foreground = JFaceColors.getBannerForeground(display);
 
-		//createInfoArea(editorComposite);
+		// createInfoArea(editorComposite);
 		createContextMenu();
 		createAttributeLayout();
 		createAttachmentLayout();
@@ -956,12 +993,14 @@ public abstract class AbstractBugEditor extends EditorPart {
 			// String key = attribute.getID();
 			String name = attribute.getName();
 			String value = "";
-			//try {
-				value = checkText(attribute.getValue());
-				//value = checkText(BugzillaRepositoryUtil.decodeStringFromCharset(attribute.getValue(), getReport().getCharset()));
-//			} catch (UnsupportedEncodingException e1) {
-//				// ignore
-//			}
+			// try {
+			value = checkText(attribute.getValue());
+			// value =
+			// checkText(BugzillaRepositoryUtil.decodeStringFromCharset(attribute.getValue(),
+			// getReport().getCharset()));
+			// } catch (UnsupportedEncodingException e1) {
+			// // ignore
+			// }
 			// System.err.println(">>> AbstractBugEditor>> name: "+name+"
 			// key:"+key+" value:"+value+" is hidden"+attribute.isHidden());
 			if (attribute.isHidden())
@@ -981,7 +1020,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 				attributeCombo.setFont(TEXT_FONT);
 				attributeCombo.setLayoutData(data);
 				Set<String> s = values.keySet();
-				String[] a = s.toArray(new String[s.size()]);				
+				String[] a = s.toArray(new String[s.size()]);
 				for (int i = 0; i < a.length; i++) {
 					attributeCombo.add(a[i]);
 				}
@@ -1003,11 +1042,11 @@ public abstract class AbstractBugEditor extends EditorPart {
 				textData.widthHint = 135;
 
 				if (attribute.isReadOnly()) {
-					final Text text = toolkit.createText(textFieldComposite, value, SWT.FLAT | SWT.READ_ONLY);					
+					final Text text = toolkit.createText(textFieldComposite, value, SWT.FLAT | SWT.READ_ONLY);
 					text.setLayoutData(textData);
 				} else {
 					final Text text = toolkit.createText(textFieldComposite, value, SWT.FLAT);
-					//text.setFont(COMMENT_FONT);						
+					// text.setFont(COMMENT_FONT);
 					text.setLayoutData(textData);
 					toolkit.paintBordersFor(textFieldComposite);
 					text.setData(attribute);
@@ -1046,30 +1085,34 @@ public abstract class AbstractBugEditor extends EditorPart {
 		addCCList(toolkit, "", attributesComposite);
 
 		// URL field
-		addUrlText(getReport().getAttributeValue(BugzillaReportElement.BUG_FILE_LOC.getKeyString()), attributesComposite);
+		addUrlText(getReport().getAttributeValue(BugzillaReportElement.BUG_FILE_LOC.getKeyString()),
+				attributesComposite);
 
 		// keywords text field (not editable)
 		try {
-			addKeywordsList(toolkit, getReport().getAttributeValue(BugzillaReportElement.KEYWORDS.getKeyString()), attributesComposite);
+			addKeywordsList(toolkit, getReport().getAttributeValue(BugzillaReportElement.KEYWORDS.getKeyString()),
+					attributesComposite);
 		} catch (IOException e) {
 			MessageDialog.openInformation(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-					"Could not retrieve keyword list, ensure proper configuration in "+TaskRepositoriesView.NAME+"\n\nError reported: " + e.getMessage());
+					"Could not retrieve keyword list, ensure proper configuration in " + TaskRepositoriesView.NAME
+							+ "\n\nError reported: " + e.getMessage());
 		}
 
-//		addSelfToCCCheck = toolkit.createButton(attributesComposite, "Add "+repository.getUserName()+" to CC", SWT.FLAT | SWT.CHECK);
-//		addSelfToCCCheck.setSelection(true);
-//		addSelfToCCCheck.addSelectionListener(new SelectionAdapter() {
-//
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				if(addSelfToCCCheck.getSelection()) {
-//					getReport().setAttributeValue(BugzillaReportElement.ADDSELFCC, "1");
-//				} else {
-//					getReport().setAttributeValue(BugzillaReportElement.ADDSELFCC, "0");
-//				}
-//			}});
-//		
-		//addSummaryText(attributesComposite);
+		// addSelfToCCCheck = toolkit.createButton(attributesComposite, "Add
+		// "+repository.getUserName()+" to CC", SWT.FLAT | SWT.CHECK);
+		// addSelfToCCCheck.setSelection(true);
+		// addSelfToCCCheck.addSelectionListener(new SelectionAdapter() {
+		//
+		// @Override
+		// public void widgetSelected(SelectionEvent e) {
+		// if(addSelfToCCCheck.getSelection()) {
+		// getReport().setAttributeValue(BugzillaReportElement.ADDSELFCC, "1");
+		// } else {
+		// getReport().setAttributeValue(BugzillaReportElement.ADDSELFCC, "0");
+		// }
+		// }});
+		//		
+		// addSummaryText(attributesComposite);
 		// End URL, Keywords, Summary Text Fields
 		toolkit.paintBordersFor(attributesComposite);
 	}
@@ -1121,12 +1164,12 @@ public abstract class AbstractBugEditor extends EditorPart {
 		toolkit.createLabel(attributesComposite, "Summary:").setFont(TITLE_FONT);
 		summaryText = toolkit.createText(attributesComposite, getBug().getSummary(), SWT.FLAT);
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-		Font summaryFont = themeManager.getCurrentTheme().getFontRegistry().get(REPOSITORY_TEXT_ID);		
+		Font summaryFont = themeManager.getCurrentTheme().getFontRegistry().get(REPOSITORY_TEXT_ID);
 		summaryText.setFont(summaryFont);
-		GridData summaryTextData = new GridData(GridData.FILL_HORIZONTAL);//HORIZONTAL_ALIGN_FILL
+		GridData summaryTextData = new GridData(GridData.FILL_HORIZONTAL);// HORIZONTAL_ALIGN_FILL
 		summaryTextData.horizontalSpan = 1;
-		//summaryTextData.widthHint = 200;
-		
+		// summaryTextData.widthHint = 200;
+
 		summaryText.setLayoutData(summaryTextData);
 		summaryText.addListener(SWT.KeyUp, new SummaryListener());
 		summaryText.addListener(SWT.FocusIn, new GenericListener());
@@ -1139,7 +1182,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 		section.setLayout(new GridLayout());
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		Composite attachmentsComposite = toolkit.createComposite(section);
+		final Composite attachmentsComposite = toolkit.createComposite(section);
 		attachmentsComposite.setLayout(new GridLayout());
 		attachmentsComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		section.setClient(attachmentsComposite);
@@ -1171,7 +1214,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 					RepositoryAttachment attachment2 = (RepositoryAttachment) e2;
 					Date created1 = attachment1.getDateCreated();
 					Date created2 = attachment2.getDateCreated();
-					if(created1 != null && created2 != null) {
+					if (created1 != null && created2 != null) {
 						return attachment1.getDateCreated().compareTo(attachment2.getDateCreated());
 					} else {
 						return 0;
@@ -1198,7 +1241,8 @@ public abstract class AbstractBugEditor extends EditorPart {
 			attachmentsTableViewer.setLabelProvider(new ITableLabelProvider() {
 
 				public Image getColumnImage(Object element, int columnIndex) {
-					// RepositoryAttachment attachment = (RepositoryAttachment) element;
+					// RepositoryAttachment attachment = (RepositoryAttachment)
+					// element;
 					return null;
 				}
 
@@ -1257,6 +1301,106 @@ public abstract class AbstractBugEditor extends EditorPart {
 		} else {
 			toolkit.createLabel(attachmentsComposite, "No attachments");
 		}
+
+		/* Add a file chooser to add new attachments */
+		Composite addAttachmentComposite = toolkit.createComposite(attachmentsComposite);
+		addAttachmentComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		addAttachmentComposite.setLayout(new GridLayout(2, false));
+
+		Button addAttachmentButton = toolkit.createButton(addAttachmentComposite, "Add an Attachment...", SWT.PUSH);
+		final Text fname = new Text(addAttachmentComposite, SWT.LEFT);// toolkit.createText(addAttachmentComposite,
+																		// "");
+		fname.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+		final Composite addAttachmentInfo = toolkit.createComposite(addAttachmentComposite);
+		addAttachmentInfo.setSize(2, 1);
+		addAttachmentInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		addAttachmentInfo.setLayout(new GridLayout(3, false));
+
+		toolkit.createLabel(addAttachmentInfo, "Description: ");
+		attachmentDesc = toolkit.createText(addAttachmentInfo, "");
+		attachmentDesc.setEnabled(false);
+		attachmentDesc.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+
+		toolkit.createLabel(addAttachmentInfo, "Comment: ");
+		attachmentComment = toolkit.createText(addAttachmentInfo, "");
+		attachmentComment.setEnabled(false);
+		attachmentComment.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+
+		final Button isPatchButton = toolkit.createButton(addAttachmentInfo, "Patch", SWT.CHECK);
+
+		addAttachmentInfo.setVisible(false);
+
+		/* File Chooser listener */
+		addAttachmentButton.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// ignore
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				FileDialog fileChooser = new FileDialog(attachmentsComposite.getShell(), SWT.OPEN);
+				String file = fileChooser.open();
+
+				// Check if the dialog was canceled or an error occured
+				if (file == null) {
+					return;
+				}
+				// update UI
+				fname.setText(file);
+			}
+		});
+
+		/*
+		 * Attachment file name listener, update the local attachment
+		 * accordingly
+		 */
+		fname.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				LocalAttachment att = getBug().getNewAttachment();
+				if (att == null) {
+					att = new LocalAttachment();
+					att.setReport(getBug());
+				}
+				if ("".equals(fname.getText())) {
+					attachmentDesc.setEnabled(false);
+					attachmentComment.setEnabled(false);
+				} else {
+					addAttachmentInfo.setVisible(true);
+					attachmentDesc.setEnabled(true);
+					attachmentComment.setEnabled(true);
+				}
+				att.setFilePath(fname.getText());
+				getBug().setNewAttachment(att);
+
+				/* TODO jpound - UI for content type */
+				// Determine type by extension
+				int index = fname.getText().lastIndexOf(".");
+				if (index < 0) {
+					att.setContentType("text/plain");
+				} else {
+					String ext = fname.getText().substring(index + 1);
+					String type = extensions2Types.get(ext.toLowerCase());
+					if (type != null) {
+						att.setContentType(type);
+					} else {
+						att.setContentType("text/plain");
+					}
+				}
+			}
+		});
+
+		/* Listener for isPatch */
+		isPatchButton.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// ignore
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				LocalAttachment att = getBug().getNewAttachment();
+				att.setPatch(isPatchButton.getSelection());
+			}
+		});
+
 	}
 
 	/**
@@ -1567,10 +1711,10 @@ public abstract class AbstractBugEditor extends EditorPart {
 			// IBugzillaBug bug = getBug();
 
 			final BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) MylarTaskListPlugin
-					.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);			
+					.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
 			bugzillaRepositoryClient.saveBugReport((RepositoryTaskData) getReport());
 			changeDirtyStatus(false);
-			if(parentEditor != null) {
+			if (parentEditor != null) {
 				parentEditor.notifyTaskChanged();
 			}
 		} catch (Exception e) {
@@ -1648,7 +1792,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		saveBug();
-		updateEditor();		
+		updateEditor();
 	}
 
 	@Override
@@ -1745,7 +1889,7 @@ public abstract class AbstractBugEditor extends EditorPart {
 	protected HashMap<Object, StyledText> textHash = new HashMap<Object, StyledText>();
 
 	protected List<StyledText> commentStyleText = new ArrayList<StyledText>();
-	
+
 	/** Index into the styled texts */
 	protected int textsindex = 0;
 

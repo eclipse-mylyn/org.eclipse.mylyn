@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESOLUTION;
+import org.eclipse.mylar.internal.tasklist.LocalAttachment;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.RepositoryOperation;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
@@ -741,6 +742,19 @@ public class BugzillaRepositoryUtil {
 		}
 	}
 
+	public static boolean uploadAttachment(LocalAttachment attachment, String uname, String password) throws IOException {
+		
+		File file = new File(attachment.getFilePath());
+		if (!file.exists() || file.length() <= 0) {
+			return false;
+		}
+		
+		return uploadAttachment(attachment.getReport().getRepositoryUrl(), uname, password, attachment.getReport().getId(),
+				attachment.getComment(), attachment.getDescription(), file,
+				attachment.getContentType(), attachment.isPatch());
+	}
+
+	
 	public static boolean uploadAttachment(String repositoryUrl, String userName, String password, int bugReportID,
 			String comment, String description, File sourceFile, String contentType, boolean isPatch)
 			throws IOException {

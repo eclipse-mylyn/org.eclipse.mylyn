@@ -32,7 +32,10 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 	private String repositoryURL;
 
 	protected String newComment = "";
-
+		
+	/** The full path to the attachment to submit with this report, empty if none */
+	protected LocalAttachment newAttachment = null;
+	
 	private List<Comment> comments = new ArrayList<Comment>();
 
 	private List<RepositoryAttachment> attachments = new ArrayList<RepositoryAttachment>();
@@ -367,6 +370,14 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 		return attachments;
 	}
 
+	public LocalAttachment getNewAttachment() {
+		return newAttachment;
+	}
+
+	public void setNewAttachment(LocalAttachment newAttachment) {
+		this.newAttachment = newAttachment;
+	}
+	
 	public int getId() {
 		return reportID;
 	}

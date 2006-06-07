@@ -21,6 +21,7 @@ import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -33,6 +34,7 @@ import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylar.internal.tasklist.LocalAttachment;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.RepositoryOperation;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
@@ -137,7 +139,11 @@ public class BugzillaReportSubmitForm {
 	private String postfix2;
 
 	private String error = null;
+	
+	/** The local attachment to attach to this report, null if none */
+	private LocalAttachment attachment = null;
 
+	
 	public BugzillaReportSubmitForm(String charEncoding) {
 		charset = charEncoding;
 	}
@@ -275,7 +281,9 @@ public class BugzillaReportSubmitForm {
 			bugReportPostHandler.add(KEY_CC, toCommaSeparatedList(removeCC.toArray(s)));
 			bugReportPostHandler.add(KEY_REMOVECC, VAL_TRUE);
 		}
-
+		
+		bugReportPostHandler.attachment = bug.getNewAttachment();
+		
 		return bugReportPostHandler;
 	}
 
@@ -318,7 +326,7 @@ public class BugzillaReportSubmitForm {
 	public String submitReportToRepository() throws BugzillaException, LoginException, PossibleBugzillaFailureException {
 		BufferedOutputStream out = null;
 		BufferedReader in = null;
-
+		String result = null;
 		try {
 			// connect to the bugzilla server
 			URLConnection cntx = BugzillaPlugin.getUrlConnection(postUrl, proxySettings);
@@ -359,7 +367,7 @@ public class BugzillaReportSubmitForm {
 
 			// open a stream to receive response from bugzilla
 			in = new BufferedReader(new InputStreamReader(postConnection.getInputStream()));
-			String result = null;
+			
 
 			String aString = in.readLine();
 
@@ -425,8 +433,6 @@ public class BugzillaReportSubmitForm {
 			// set the error to null if we dont think that there was one
 			error = null;
 
-			// return the bug number
-			return result;
 		} catch (IOException e) {
 			throw new BugzillaException("An exception occurred while submitting the bug: " + e.getMessage(), e);
 		} catch (KeyManagementException e) {
@@ -439,12 +445,33 @@ public class BugzillaReportSubmitForm {
 					in.close();
 				if (out != null)
 					out.close();
-
+												
 			} catch (IOException e) {
 				BugzillaPlugin.log(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, IStatus.ERROR,
 						"Problem posting the bug", e));
 			}
+			
+			try {			
+				// upload the attachment if any
+				if (attachment != null) {
+					if (attachment.getDescription() == null || attachment.getDescription().equals("")) {
+						throw new BugzillaException("Attachment must have a description");
+					}
+					
+					String uname = URLDecoder.decode(fields.get(KEY_BUGZILLA_LOGIN), this.charset);
+					String password = URLDecoder.decode(fields.get(KEY_BUGZILLA_PASSWORD), this.charset);
+					if (!BugzillaRepositoryUtil.uploadAttachment(attachment, uname, password)) {
+						throw new BugzillaException("Could not upload attachment.");
+					}
+							
+				}
+			} catch (IOException e) {
+				throw new BugzillaException("Could not upload attachment.  Communications error: " + e.getMessage(), e);
+			}
+
 		}
+		// return the bug number
+		return result;
 	}
 
 	/**
@@ -525,7 +552,9 @@ public class BugzillaReportSubmitForm {
 
 	private static void setConnectionsSettings(BugzillaReportSubmitForm form, String repositoryUrl, String userName,
 			String password, Proxy proxySettings, String formName) throws UnsupportedEncodingException {
+
 		String baseURL = repositoryUrl;
+		
 		if (!baseURL.endsWith("/"))
 			baseURL += "/";
 		try {
