@@ -43,6 +43,7 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		return queryUrl;
 	}
 
+	// TODO: this overriding is a bit weird
 	public Set<ITask> getChildren() {
 		Set<ITask> tasks = new HashSet<ITask>();
 		for (AbstractQueryHit hit : new ArrayList<AbstractQueryHit>(getHits())) {
