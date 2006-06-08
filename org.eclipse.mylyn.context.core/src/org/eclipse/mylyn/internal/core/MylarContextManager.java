@@ -45,7 +45,7 @@ public class MylarContextManager {
 
 	// TODO: move constants
 	
-	private static final String CONTEXT_FILENAME_ENCODING = "UTF-8";
+	public static final String CONTEXT_FILENAME_ENCODING = "UTF-8";
 
 	public static final String ACTIVITY_DELTA_DEACTIVATED = "deactivated";
 
@@ -930,9 +930,5 @@ public class MylarContextManager {
 
 	public ShellLifecycleListener getShellLifecycleListener() {
 		return shellLifecycleListener;
-	}
-
-	public void refactorRepositoryUrl(Object oldUrl, String newUrl) {
-		
 	}
 }

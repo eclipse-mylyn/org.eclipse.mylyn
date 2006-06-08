@@ -81,7 +81,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 
 	private ITaskActivityListener TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
 		
-		public void tasklistRead() {
+		public void taskListRead() {
 			initContextChangeSets();
 		}
 		
