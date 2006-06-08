@@ -101,6 +101,9 @@ public class TaskList {
 				for (AbstractQueryHit hit : query.getHits()) {
 					hit.setRepositoryUrl(newUrl);
 				}
+				for (ITaskListChangeListener listener : changeListeners) {
+					listener.containerInfoChanged(query);
+				}
 			}
 		}
 	}

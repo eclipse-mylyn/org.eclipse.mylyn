@@ -85,7 +85,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 	
 	public void testMigrateQueryHandles() {
-		AbstractRepositoryQuery query = new MockRepositoryQuery("mock-query", manager.getTaskList());
+		AbstractRepositoryQuery query = new MockRepositoryQuery("mquery", manager.getTaskList());
 		query.setRepositoryUrl("http://a");
 		manager.getTaskList().addQuery(query);
 		manager.refactorRepositoryUrl("http://a", "http://b");
