@@ -439,6 +439,11 @@ public class TaskListManager {
 		return TaskRepositoryManager.PREFIX_LOCAL + nextLocalTaskId++;
 	}
 
+	public void refactorRepositoryUrl(Object oldUrl, String newUrl)	{
+		taskList.refactorRepositoryUrl(oldUrl, newUrl);
+		MylarPlugin.getContextManager().refactorRepositoryUrl(oldUrl, newUrl);
+	}
+	
 	public boolean readExistingOrCreateNewList() {
 		try {
 			if (taskListFile.exists()) {

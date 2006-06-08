@@ -81,6 +81,31 @@ public class TaskList {
 		}
 	}
 	
+	void refactorRepositoryUrl(Object oldUrl, String newUrl)	{
+		if (oldUrl == null || newUrl == null) {
+			return;
+		}
+		for (ITask task : getAllTasks()) {
+			if (task instanceof AbstractRepositoryTask) {
+				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)task;
+				if (oldUrl.equals(AbstractRepositoryTask.getRepositoryUrl(repositoryTask.getHandleIdentifier()))) {
+					tasks.remove(repositoryTask.getHandleIdentifier());
+					String id = AbstractRepositoryTask.getTaskId(repositoryTask.getHandleIdentifier());
+					String newHandle = AbstractRepositoryTask.getHandle(newUrl, id);
+					repositoryTask.setHandleIdentifier(newHandle);
+					tasks.put(newHandle, repositoryTask);
+				}
+			}
+		}
+		for (AbstractRepositoryQuery query : queries) {
+			if (query.getRepositoryUrl().equals(oldUrl)) {
+//				queries.remove(query);
+				query.setRepositoryUrl(newUrl);
+//				queries.add(query);
+			}
+		}
+	}
+	
 	public void moveToRoot(ITask task) {
 		moveToContainer(rootCategory, task);
 	}

@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Dec 21, 2004
- */
+
 package org.eclipse.mylar.tasklist.tests;
 
 import java.io.File;
@@ -43,6 +41,8 @@ import org.eclipse.mylar.provisional.tasklist.TaskCategory;
 import org.eclipse.mylar.provisional.tasklist.TaskList;
 import org.eclipse.mylar.provisional.tasklist.TaskListManager;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
+import org.eclipse.mylar.tasklist.tests.mockconnector.MockRepositoryQuery;
+import org.eclipse.mylar.tasklist.tests.mockconnector.MockRepositoryTask;
 
 /**
  * @author Mik Kersten
@@ -70,6 +70,23 @@ public class TaskListManagerTest extends TestCase {
 		manager.resetTaskList();
 		MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskListAndContexts();
 		MylarTaskListPlugin.getRepositoryManager().removeRepository(repository);
+	}
+	
+	public void testMigrateQueryHandles() {
+		AbstractRepositoryQuery query = new MockRepositoryQuery("mock-query", manager.getTaskList());
+		query.setRepositoryUrl("http://a");
+		manager.getTaskList().addQuery(query);
+		manager.refactorRepositoryUrl("http://a", "http://b");
+		assertFalse(manager.getTaskList().getRepositoryQueries("http://b").isEmpty());
+		assertTrue(manager.getTaskList().getRepositoryQueries("http://a").isEmpty());
+	}
+	
+	public void testMigrateTaskHandles() {
+		AbstractRepositoryTask task = new MockRepositoryTask("http://a-123", "123", true);
+		manager.getTaskList().addTask(task);
+		manager.refactorRepositoryUrl("http://a", "http://b");
+		assertNull(manager.getTaskList().getTask("http://a-123"));
+		assertNotNull(manager.getTaskList().getTask("http://b-123"));
 	}
 	
 	public void testIsActiveToday() {

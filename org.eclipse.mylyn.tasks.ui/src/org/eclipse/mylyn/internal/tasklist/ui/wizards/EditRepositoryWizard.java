@@ -48,9 +48,12 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 	@Override
 	public boolean performFinish() {
 		if (canFinish()) {
+			String oldUrl = oldRepository.getUrl();
+			String newUrl = abstractRepositorySettingsPage.getServerUrl();
+			MylarTaskListPlugin.getTaskListManager().refactorRepositoryUrl(oldUrl, newUrl);
 			MylarTaskListPlugin.getRepositoryManager().removeRepository(oldRepository);
 			TaskRepository repository = new TaskRepository(abstractRepositorySettingsPage.getRepository().getKind(),
-					abstractRepositorySettingsPage.getServerUrl(), abstractRepositorySettingsPage.getVersion(),
+					newUrl, abstractRepositorySettingsPage.getVersion(),
 					abstractRepositorySettingsPage.getCharacterEncoding(), abstractRepositorySettingsPage
 							.getTimeZoneId());
 			repository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(),
