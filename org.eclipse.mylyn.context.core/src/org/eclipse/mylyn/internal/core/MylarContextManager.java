@@ -931,4 +931,8 @@ public class MylarContextManager {
 	public ShellLifecycleListener getShellLifecycleListener() {
 		return shellLifecycleListener;
 	}
+
+	public void refactorRepositoryUrl(Object oldUrl, String newUrl) {
+		
+	}
 }
