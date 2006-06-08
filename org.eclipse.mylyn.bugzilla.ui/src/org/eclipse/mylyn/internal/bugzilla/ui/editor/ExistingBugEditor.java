@@ -154,7 +154,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		setSite(site);
 		setInput(input);
 
-		bugzillaOutlineModel = RepositoryTaskOutlineNode.parseBugReport(editorInput.getRepositoryTaskData());
+		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(editorInput.getRepositoryTaskData());
 
 		// restoreBug();
 		isDirty = false;

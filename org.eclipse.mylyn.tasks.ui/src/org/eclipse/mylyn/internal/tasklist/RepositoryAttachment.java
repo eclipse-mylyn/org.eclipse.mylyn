@@ -68,7 +68,6 @@ public class RepositoryAttachment extends AttributeContainer implements Serializ
 		this.creator = creator;		
 	}
 	public String getDescription() {
-		//System.err.println(getAttributeValue(BugzillaReportElement.DESC));
 		return getAttributeValue(RepositoryTaskAttribute.DESCRIPTION);
 	}
 

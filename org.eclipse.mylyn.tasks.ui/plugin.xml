@@ -187,14 +187,14 @@
   
    <extension point="org.eclipse.ui.viewActions"> 
 		<viewContribution 
-			id="org.eclipse.mylar.bugzilla.ui.tasklist.actions" 
+			id="org.eclipse.mylar.tasklist.actions.view" 
 	   		targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
   		
   		<action
                class="org.eclipse.mylar.internal.tasklist.ui.actions.NewRepositoryTaskAction"
                enablesFor="*"
                icon="icons/etool16/task-repository-new.gif"
-               id="org.eclipse.mylar.bugzilla.tasklist.addNew"
+               id="org.eclipse.mylar.tasklist.new.repositorytask"
                label="New Repository Task"
                style="push"
                toolbarPath="reports"
@@ -205,7 +205,7 @@
                class="org.eclipse.mylar.internal.tasklist.ui.SynchronizeAllAction"
                enablesFor="*"
                icon="icons/etool16/repository-synchronize.gif"
-               id="org.eclipse.mylar.bugzilla.ui.popup.refresh"
+               id="org.eclipse.mylar.tasklist.synchronize"
                label="Synchronize All"
                menubarPath="additions"
                tooltip="Synchronize All Tasks and Queries">
@@ -229,7 +229,7 @@
                class="org.eclipse.mylar.internal.tasklist.ui.SynchronizeSelectedAction"
                enablesFor="*"
                icon="icons/etool16/repository-synchronize.gif"
-               id="org.eclipse.mylar.bugzilla.ui.popup.refresh"
+               id="org.eclipse.mylar.tasklist.synchronize.selected"
                label="Synchronize with Repository"
                menubarPath="reports"
                tooltip="Synchronize with Repository">
@@ -254,16 +254,15 @@
               tooltip="Add Repository Task"> 
   		</action>
   		
-  				<action
-        class="org.eclipse.mylar.internal.tasklist.ui.actions.NewRepositoryTaskAction"
-        enablesFor="*"
-        icon="icons/etool16/task-repository-new.gif"
-        id="org.eclipse.mylar.bugzilla.tasklist.popup.addNew"
-        label="New Repository Task"
-        menubarPath="reports"
-        tooltip="New Repository Task"/>
-        
-                  
+  		<action
+	        class="org.eclipse.mylar.internal.tasklist.ui.actions.NewRepositoryTaskAction"
+	        enablesFor="*"
+	        icon="icons/etool16/task-repository-new.gif"
+	        id="org.eclipse.mylar.tasklist.new.repositorytask"
+	        label="New Repository Task"
+	        menubarPath="reports"
+	        tooltip="New Repository Task"/>
+	              
 		<action
               class="org.eclipse.mylar.internal.tasklist.ui.actions.NewQueryAction"
               enablesFor="*"

@@ -139,7 +139,7 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 		super.init(site, (IEditorInput) new TaskEditorInput(((BugzillaTaskEditorInput) editorInput).getBugTask(), false));
 		bugzillaEditorInput = (BugzillaTaskEditorInput) editorInput;
 		bugTask = bugzillaEditorInput.getBugTask();
-		bugzillaEditor.setBugzillaOutlineModel(RepositoryTaskOutlineNode.parseBugReport(bugzillaEditorInput.getRepositoryTaskData()));
+		bugzillaEditor.setTaskOutlineModel(RepositoryTaskOutlineNode.parseBugReport(bugzillaEditorInput.getRepositoryTaskData()));
 		offlineBug = bugzillaEditorInput.getRepositoryTaskData();
 
 		super.setSite(site);

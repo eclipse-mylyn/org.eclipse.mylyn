@@ -256,7 +256,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		setSite(site);
 		setInput(input);
 		editorInput = ei;
-		bugzillaOutlineModel = RepositoryTaskOutlineNode.parseBugReport(editorInput.getRepositoryTaskData());
+		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(editorInput.getRepositoryTaskData());
 		bug = ei.getRepositoryTaskData();
 		newSummary = bug.getSummary();
 		newDescription = bug.getDescription();

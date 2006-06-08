@@ -14,9 +14,6 @@ package org.eclipse.mylar.internal.tasklist.ui.editors;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.internal.tasklist.Comment;
 
-/**
- * Interface for a selection of a Bugzilla element in a view.
- */
 public interface IRepositoryTaskSelection extends ISelection {
 
 	/**

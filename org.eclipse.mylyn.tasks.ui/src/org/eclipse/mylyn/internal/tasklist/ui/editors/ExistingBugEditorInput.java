@@ -44,14 +44,6 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 		this.repository = repository;
 	}
 
-	
-//	public ExistingBugEditorInput(TaskRepository repository, AbstractRepositoryTask task) throws IOException, GeneralSecurityException {
-//		this.repositoryTask = task;
-//		this.repository = repository;
-//		this.repositoryTaskData = task.getTaskData();
-//		//bug = BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, repository.getCharacterEncoding(), bugId);
-//	}
-	
 	public ExistingBugEditorInput(TaskRepository repository, int bugId) throws IOException, GeneralSecurityException {
 		this.bugId = bugId;
 		this.repository = repository;
@@ -65,10 +57,6 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 		} else {
 			MylarStatusHandler.log("Could not locate repository task", this); 
 		}
-		
-		
-		
-		//bug = BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, repository.getCharacterEncoding(), bugId);
 	}
 
 	public AbstractRepositoryTask getRepositoryTask() {
@@ -79,32 +67,6 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 	public RepositoryTaskData getRepositoryTaskData() {
 		return repositoryTaskData;
 	}
-//	public ExistingBugEditorInput(TaskRepository repository, int bugId, boolean offline) throws IOException, GeneralSecurityException {
-//		this.bugId = bugId;
-//		this.repository = repository;
-//		this.repositoryTaskData = getOfflineTaskData(repository, proxySettings, bugId);
-//		// if (!offline) {
-//		// try {
-//		// bug = BugzillaRepositoryUtil.getBug(repository.getUrl(),
-//		// repository.getUserName(), repository.getPassword(), proxySettings,
-//		// repository.getCharacterEncoding(), bugId);
-//		// } catch (IOException e) {
-//		// bug = getCurrentBug(repository, proxySettings, bugId);
-//		// // IWorkbench workbench = PlatformUI.getWorkbench();
-//		// // workbench.getDisplay().asyncExec(new Runnable() {
-//		// // public void run() {
-//		// // MessageDialog.openInformation(
-//		// // Display.getDefault().getActiveShell(),
-//		// // "Mylar Bugzilla Client",
-//		// // "Unable to download bug report, using offline copy.");
-//		// //
-//		// // }
-//		// // });
-//		// }
-//		// } else {
-//		// bug = getCurrentBug(repository, proxySettings, bugId);
-//		//		}
-//	}
 
 	// TODO: move?
 	private RepositoryTaskData getOfflineTaskData(final TaskRepository repository, Proxy proxySettings, final int id)

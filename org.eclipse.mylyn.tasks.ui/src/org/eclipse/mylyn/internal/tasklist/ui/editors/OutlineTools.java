@@ -12,6 +12,10 @@ package org.eclipse.mylar.internal.tasklist.ui.editors;
 
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 
+/**
+ * @author Rob Elves
+ * @author Mik Kersten
+ */
 public class OutlineTools {
 
 	/** The default string used for locally created bugs. */
@@ -21,45 +25,45 @@ public class OutlineTools {
 	 * Returns a unique handle for the bugzilla selection. Contains the bug id,
 	 * the bug server, and (if applicable) the comment number.
 	 * 
-	 * @param bugSel
+	 * @param taskSelection
 	 *            The bugzilla selection.
 	 * @return The handle for the bugzilla selection.
 	 */
-	public static String getHandle(IRepositoryTaskSelection bugSel) {
-		String handle = bugSel.getServer() + ";" + bugSel.getId();
-		if (bugSel.hasComment()) {
-			int number = bugSel.getComment().getNumber() + 1;
+	public static String getHandle(IRepositoryTaskSelection taskSelection) {
+		String handle = taskSelection.getServer() + ";" + taskSelection.getId();
+		if (taskSelection.hasComment()) {
+			int number = taskSelection.getComment().getNumber() + 1;
 			handle += ";" + number;
-		} else if (bugSel.isCommentHeader()) {
+		} else if (taskSelection.isCommentHeader()) {
 			handle += ";1";
-		} else if (bugSel.isDescription()) {
+		} else if (taskSelection.isDescription()) {
 			handle += ";0";
 		}
 		return handle;
 	}
 
-	public static String getName(IRepositoryTaskSelection bugSel) {
-		String name = bugSel.getServer() + ": Bug#: " + bugSel.getId() + ": " + bugSel.getBugSummary();
-		if (bugSel.hasComment()) {
-			name += " : Comment#: " + bugSel.getComment().getNumber();
-		} else if (bugSel.isCommentHeader()) {
+	public static String getName(IRepositoryTaskSelection taskSelection) {
+		String name = taskSelection.getServer() + ": Bug#: " + taskSelection.getId() + ": " + taskSelection.getBugSummary();
+		if (taskSelection.hasComment()) {
+			name += " : Comment#: " + taskSelection.getComment().getNumber();
+		} else if (taskSelection.isCommentHeader()) {
 			name += " : Comment Header";
-		} else if (bugSel.isDescription()) {
+		} else if (taskSelection.isDescription()) {
 			name += ": Description";
 		}
 		return name;
 	}
 
-	public static String getHandle(RepositoryTaskData bug) {
-		return getHandle(bug.getRepositoryUrl(), bug.getId());
+	public static String getHandle(RepositoryTaskData taskData) {
+		return getHandle(taskData.getRepositoryUrl(), taskData.getId());
 	}
 
 	public static String getHandle(String server, int id) {
 		return server + ";" + id;
 	}
 
-	public static String getName(RepositoryTaskData bug) {
-		return bug.getRepositoryUrl() + ": Bug#: " + bug.getId() + ": " + bug.getSummary();
+	public static String getName(RepositoryTaskData taskData) {
+		return taskData.getRepositoryUrl() + ": Bug#: " + taskData.getId() + ": " + taskData.getSummary();
 	}
 
 }

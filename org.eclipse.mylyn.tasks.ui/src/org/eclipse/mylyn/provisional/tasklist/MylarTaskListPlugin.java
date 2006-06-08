@@ -571,13 +571,13 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			offlineTaskManager = new OfflineTaskManager(offlineReportsPath.toFile(), true);
 		} catch (Exception e) {
 			MylarStatusHandler.log(e,
-							"Could not restore offline Bugzilla reports file, creating new one (possible version incompatibility)");
+							"Could not restore offline repository tasks file, creating new one (possible version incompatibility)");
 			offlineReportsPath.toFile().delete();
 //			if (offlineReportsPath.toFile().delete()) {
 			try {
 				offlineTaskManager = new OfflineTaskManager(offlineReportsPath.toFile(), false);
 			} catch (Exception e1) {
-				MylarStatusHandler.fail(e, "could not reset offline Bugzilla reports file", true);
+				MylarStatusHandler.fail(e, "could not reset offline repository tasks file", true);
 			}
 //			} else {
 //				MylarStatusHandler.fail(null, "reset of Bugzilla offline reports file failed", true);

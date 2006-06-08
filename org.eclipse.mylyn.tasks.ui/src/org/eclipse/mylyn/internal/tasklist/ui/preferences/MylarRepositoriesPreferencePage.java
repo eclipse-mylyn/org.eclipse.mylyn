@@ -64,7 +64,7 @@ public class MylarRepositoriesPreferencePage extends PreferencePage implements I
 		GridLayout layout = new GridLayout(1, false);
 		container.setLayout(layout);
 
-		createBugzillaReportOption(container);
+		createOpenWith(container);
 		createTaskRefreshScheduleGroup(container);
 		updateRefreshGroupEnablements();
 		return container;
@@ -75,7 +75,7 @@ public class MylarRepositoriesPreferencePage extends PreferencePage implements I
 
 	}
 
-	private void createBugzillaReportOption(Composite parent) {
+	private void createOpenWith(Composite parent) {
 		Group container = new Group(parent, SWT.SHADOW_ETCHED_IN);
 		container.setLayout(new GridLayout(2, false));
 		container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

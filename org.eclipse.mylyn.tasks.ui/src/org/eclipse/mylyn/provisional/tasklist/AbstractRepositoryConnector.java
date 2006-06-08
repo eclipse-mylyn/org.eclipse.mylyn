@@ -204,7 +204,7 @@ public abstract class AbstractRepositoryConnector {
 		saveOffline(downloadedTaskData);
 	}
 
-	protected abstract RepositoryTaskData downloadTaskData(AbstractRepositoryTask bugzillaTask) throws CoreException;
+	protected abstract RepositoryTaskData downloadTaskData(AbstractRepositoryTask repositoryTask) throws CoreException;
 
 	public abstract String getLabel();
 
