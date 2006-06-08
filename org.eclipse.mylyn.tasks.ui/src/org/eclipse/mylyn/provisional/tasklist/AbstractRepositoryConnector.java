@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.internal.core.util.DateUtil;
@@ -117,11 +118,31 @@ public abstract class AbstractRepositoryConnector {
 	public abstract List<AbstractQueryHit> performQuery(AbstractRepositoryQuery query, IProgressMonitor monitor,
 			MultiStatus queryStatus);
 
+	
 	// Precondition of note: offline file is removed upon submit to repository resulting in a synchronized state.
-	protected void updateOfflineState(AbstractRepositoryTask repositoryTask, boolean forceSync) {
+	protected void updateOfflineState(final AbstractRepositoryTask repositoryTask, boolean forceSync) {
 		RepositoryTaskSyncState status = repositoryTask.getSyncState();
+		RepositoryTaskData downloadedTaskData;
+		
+		final TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+				repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
 
-		final RepositoryTaskData downloadedTaskData = downloadTaskData(repositoryTask);
+		if (repository == null) {
+			MylarStatusHandler
+					.log("No repository associated with task "+repositoryTask.getDescription()+". Unable to retrieve timezone information.", this);
+			return;
+		}
+		
+		try {
+			downloadedTaskData = downloadTaskData(repositoryTask);
+		} catch (final CoreException e) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					ErrorDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Error Downloading Report", "Unable to synchronize "+repositoryTask.getDescription()+" on "+repository.getUrl(), e.getStatus());
+				}
+			});
+			return;
+		}
 
 		if (downloadedTaskData == null) {
 			MylarStatusHandler.log("Download of " + repositoryTask.getDescription() + " from "
@@ -132,14 +153,6 @@ public abstract class AbstractRepositoryConnector {
 		RepositoryTaskData offlineTaskData = OfflineTaskManager.findBug(downloadedTaskData.getRepositoryUrl(),
 				downloadedTaskData.getId());
 
-		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
-				repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
-
-		if (repository == null) {
-			MylarStatusHandler
-					.log("No repository associated with task. Unable to retrieve timezone information.", this);
-			return;
-		}
 
 		TimeZone repositoryTimeZone = DateUtil.getTimeZone(repository.getTimeZoneId());
 		if (offlineTaskData != null) {
@@ -155,9 +168,9 @@ public abstract class AbstractRepositoryConnector {
 										null,
 										"Update Local Copy",
 										"Local copy of Report "
-												+ downloadedTaskData.getId()
+												+ repositoryTask.getDescription()
 												+ " on "
-												+ downloadedTaskData.getRepositoryUrl()
+												+ repositoryTask.getRepositoryUrl()
 												+ " has changes.\nWould you like to override local changes? \n\nNote: if you select No, only the new comment will be saved with the updated bug, all other changes will be lost.");
 					}
 				});
@@ -186,12 +199,12 @@ public abstract class AbstractRepositoryConnector {
 			status = RepositoryTaskSyncState.SYNCHRONIZED;
 		}
 		repositoryTask.setLastSynchronized(downloadedTaskData.getLastModified(repositoryTimeZone));
-		repositoryTask.setTaskData(downloadedTaskData);
+		repositoryTask.setTaskData(downloadedTaskData);	
 		repositoryTask.setSyncState(status);
-		saveOffline(downloadedTaskData, forceSync);
+		saveOffline(downloadedTaskData);
 	}
 
-	protected abstract RepositoryTaskData downloadTaskData(AbstractRepositoryTask bugzillaTask);
+	protected abstract RepositoryTaskData downloadTaskData(AbstractRepositoryTask bugzillaTask) throws CoreException;
 
 	public abstract String getLabel();
 
@@ -387,11 +400,10 @@ public abstract class AbstractRepositoryConnector {
 	public AbstractAttributeFactory getAttributeFactory() {
 		return attributeFactory;
 	}
-
-	public void saveOffline(final RepositoryTaskData report, final boolean forceSync) {
-		try {
-			MylarTaskListPlugin.getDefault().getOfflineReportsFile().add(report, forceSync);
-			// report.setOfflineState(true);
+	
+	public void saveOffline(RepositoryTaskData taskData) {
+		try {			
+			MylarTaskListPlugin.getDefault().getOfflineReportsFile().add(taskData);			
 		} catch (CoreException e) {
 			MylarStatusHandler.fail(e, e.getMessage(), false);
 		}

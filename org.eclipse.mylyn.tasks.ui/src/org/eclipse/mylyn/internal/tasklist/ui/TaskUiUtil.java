@@ -16,6 +16,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
@@ -142,52 +145,37 @@ public class TaskUiUtil {
 			}
 
 			if (task instanceof AbstractRepositoryTask) {
-				String repositoryKind = ((AbstractRepositoryTask) task).getRepositoryKind();
+				final AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+				String repositoryKind = repositoryTask.getRepositoryKind();
 				final AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager()
 						.getRepositoryConnector(repositoryKind);
 				
-				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(repositoryKind, ((AbstractRepositoryTask) task).getRepositoryUrl());
+				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(repositoryKind, repositoryTask.getRepositoryUrl());
 				if (!repository.hasCredentials()) {
 					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
 							MylarTaskListPlugin.TITLE_DIALOG, 
 							"Repository does not have credentials set, verify via " + TaskRepositoriesView.NAME + " view");
 				}
-				if (connector != null) {
-					TaskUiUtil.openEditor(task, false);
-					connector.synchronize((AbstractRepositoryTask) task, false, null);
-					
-					
-//					Job refreshJob = connector.synchronize((AbstractRepositoryTask) task, forceUpdate,
-//							new IJobChangeListener() {
-//
-//								public void done(IJobChangeEvent event) {
-//									TaskUiUtil.openEditor(task, false);
-//								}
-//
-//								public void aboutToRun(IJobChangeEvent event) {
-//									// ignore
-//								}
-//
-//								public void awake(IJobChangeEvent event) {
-//									// ignore
-//								}
-//
-//								public void running(IJobChangeEvent event) {
-//									// ignore
-//								}
-//
-//								public void scheduled(IJobChangeEvent event) {
-//									// ignore
-//								}
-//
-//								public void sleeping(IJobChangeEvent event) {
-//									// ignore
-//								}
-//							});
-//					if (refreshJob == null) {
-//						TaskUiUtil.openEditor(task, false);
-//					}
-				}
+				if (connector != null)
+					if (repositoryTask.getTaskData() != null) {
+						TaskUiUtil.openEditor(task, false);
+						// TODO: Eventually will need to check that this task 
+						//       isn't a new report awaiting submission if so
+						//       don't synchronize
+						connector.synchronize((AbstractRepositoryTask) task, false, null);
+					} else {
+						Job refreshJob = connector.synchronize((AbstractRepositoryTask) task, true,
+								new JobChangeAdapter() {
+									public void done(IJobChangeEvent event) {
+										if (repositoryTask.getTaskData() != null) {
+											TaskUiUtil.openEditor(task, false);
+										}
+									}
+								});
+						if (refreshJob == null) {
+							TaskUiUtil.openEditor(task, false);
+						}
+					}
 			} else {
 				TaskUiUtil.openEditor(task, false);
 			}

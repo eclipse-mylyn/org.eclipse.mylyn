@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.bugzilla.ui.editor;
+package org.eclipse.mylar.internal.tasklist.ui.editors;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -16,10 +16,8 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaImages;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaTools;
-import org.eclipse.mylar.internal.bugzilla.ui.IBugzillaReportSelection;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISelectionListener;
@@ -29,20 +27,20 @@ import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 /**
  * An outline page for a <code>BugEditor</code>.
  */
-public class BugzillaOutlinePage extends ContentOutlinePage {
+public class RepositoryTaskOutlinePage extends ContentOutlinePage {
 
-	private BugzillaOutlineNode topTreeNode;
+	private RepositoryTaskOutlineNode topTreeNode;
 
 	protected final ISelectionListener selectionListener = new ISelectionListener() {
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-			if ((part instanceof AbstractBugEditor) && (selection instanceof IStructuredSelection)) {
-				if (((IStructuredSelection) selection).getFirstElement() instanceof IBugzillaReportSelection) {
-					if (((IStructuredSelection) getSelection()).getFirstElement() instanceof IBugzillaReportSelection) {
-						IBugzillaReportSelection brs1 = (IBugzillaReportSelection) ((IStructuredSelection) getSelection())
+			if ((part instanceof AbstractRepositoryTaskEditor) && (selection instanceof IStructuredSelection)) {
+				if (((IStructuredSelection) selection).getFirstElement() instanceof IRepositoryTaskSelection) {
+					if (((IStructuredSelection) getSelection()).getFirstElement() instanceof IRepositoryTaskSelection) {
+						IRepositoryTaskSelection brs1 = (IRepositoryTaskSelection) ((IStructuredSelection) getSelection())
 								.getFirstElement();
-						IBugzillaReportSelection brs2 = ((IBugzillaReportSelection) ((IStructuredSelection) selection)
+						IRepositoryTaskSelection brs2 = ((IRepositoryTaskSelection) ((IStructuredSelection) selection)
 								.getFirstElement());
-						if (BugzillaTools.getHandle(brs1).compareTo(BugzillaTools.getHandle(brs2)) == 0) {
+						if (OutlineTools.getHandle(brs1).compareTo(OutlineTools.getHandle(brs2)) == 0) {
 							// don't need to make a selection for the same
 							// element
 							return;
@@ -57,14 +55,14 @@ public class BugzillaOutlinePage extends ContentOutlinePage {
 	private TreeViewer viewer;
 
 	/**
-	 * Creates a new <code>BugzillaOutlinePage</code>.
+	 * Creates a new <code>RepositoryTaskOutlinePage</code>.
 	 * 
 	 * @param topTreeNode
 	 *            The top data node of the tree for this view.
 	 * @param editor
 	 *            The editor this outline page is for.
 	 */
-	public BugzillaOutlinePage(BugzillaOutlineNode topTreeNode) {
+	public RepositoryTaskOutlinePage(RepositoryTaskOutlineNode topTreeNode) {
 		super();
 		this.topTreeNode = topTreeNode;
 	}
@@ -77,12 +75,13 @@ public class BugzillaOutlinePage extends ContentOutlinePage {
 		viewer.setLabelProvider(new LabelProvider() {
 			@Override
 			public Image getImage(Object element) {
-				if (element instanceof BugzillaOutlineNode) {
-					BugzillaOutlineNode node = (BugzillaOutlineNode) element;
+				if (element instanceof RepositoryTaskOutlineNode) {
+					RepositoryTaskOutlineNode node = (RepositoryTaskOutlineNode) element;
 					if (node.getComment() != null) {
 						return node.getImage();
 					} else {
-						return BugzillaImages.getImage(BugzillaImages.BUG);
+						return TaskListImages.getImage(TaskListImages.TASK);
+						//BugzillaImages.getImage(BugzillaImages.BUG);
 					}
 				} else {
 					return super.getImage(element);
@@ -91,8 +90,8 @@ public class BugzillaOutlinePage extends ContentOutlinePage {
 
 			@Override
 			public String getText(Object element) {
-				if (element instanceof BugzillaOutlineNode) {
-					BugzillaOutlineNode node = (BugzillaOutlineNode) element;
+				if (element instanceof RepositoryTaskOutlineNode) {
+					RepositoryTaskOutlineNode node = (RepositoryTaskOutlineNode) element;
 					if (node.getComment() != null) {
 						return node.getComment().getAuthorName() + " (" + node.getName() + ")";
 					} else {
@@ -104,7 +103,7 @@ public class BugzillaOutlinePage extends ContentOutlinePage {
 		});
 		try {
 			viewer.setInput(topTreeNode);
-			viewer.setComparer(new BugzillaOutlineComparer());
+			viewer.setComparer(new RepositoryTaskOutlineComparer());
 			viewer.expandAll();
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "could not create bugzilla outline", true);
@@ -130,8 +129,8 @@ public class BugzillaOutlinePage extends ContentOutlinePage {
 	protected class BugTaskOutlineContentProvider implements ITreeContentProvider {
 
 		public Object[] getChildren(Object parentElement) {
-			if (parentElement instanceof BugzillaOutlineNode) {
-				Object[] children = ((BugzillaOutlineNode) parentElement).getChildren();
+			if (parentElement instanceof RepositoryTaskOutlineNode) {
+				Object[] children = ((RepositoryTaskOutlineNode) parentElement).getChildren();
 				if (children.length > 0) {
 					return children;
 				}
@@ -144,15 +143,15 @@ public class BugzillaOutlinePage extends ContentOutlinePage {
 		}
 
 		public boolean hasChildren(Object element) {
-			if (element instanceof BugzillaOutlineNode) {
-				return ((BugzillaOutlineNode) element).getChildren().length > 0;
+			if (element instanceof RepositoryTaskOutlineNode) {
+				return ((RepositoryTaskOutlineNode) element).getChildren().length > 0;
 			}
 			return false;
 		}
 
 		public Object[] getElements(Object inputElement) {
-			if (inputElement instanceof BugzillaOutlineNode) {
-				Object[] children = ((BugzillaOutlineNode) inputElement).getChildren();
+			if (inputElement instanceof RepositoryTaskOutlineNode) {
+				Object[] children = ((RepositoryTaskOutlineNode) inputElement).getChildren();
 				if (children.length > 0) {
 					return children;
 				}

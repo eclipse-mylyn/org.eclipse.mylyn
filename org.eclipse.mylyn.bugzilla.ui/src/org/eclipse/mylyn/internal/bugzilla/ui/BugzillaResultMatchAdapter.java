@@ -11,9 +11,9 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui;
 
-import org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditorInput;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchResult;
 import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaResultEditorMatchAdapter;
+import org.eclipse.mylar.internal.tasklist.ui.editors.ExistingBugEditorInput;
 import org.eclipse.search.ui.text.AbstractTextSearchResult;
 import org.eclipse.search.ui.text.Match;
 import org.eclipse.ui.IEditorInput;
@@ -41,7 +41,7 @@ public class BugzillaResultMatchAdapter implements IBugzillaResultEditorMatchAda
 		IEditorInput ei = editor.getEditorInput();
 		if (ei instanceof ExistingBugEditorInput) {
 			ExistingBugEditorInput bi = (ExistingBugEditorInput) ei;
-			return match.getElement().equals(bi.getBug());
+			return match.getElement().equals(bi.getRepositoryTaskData());
 		}
 		return false;
 	}
@@ -58,7 +58,7 @@ public class BugzillaResultMatchAdapter implements IBugzillaResultEditorMatchAda
 		IEditorInput ei = editor.getEditorInput();
 		if (ei instanceof ExistingBugEditorInput) {
 			ExistingBugEditorInput bi = (ExistingBugEditorInput) ei;
-			return result.getMatches(bi.getBug());
+			return result.getMatches(bi.getRepositoryTaskData());
 		}
 		return EMPTY_ARR;
 	}

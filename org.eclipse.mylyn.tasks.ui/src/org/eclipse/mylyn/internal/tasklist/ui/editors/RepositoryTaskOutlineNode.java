@@ -8,24 +8,22 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.bugzilla.ui.editor;
+package org.eclipse.mylar.internal.tasklist.ui.editors;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaImages;
-import org.eclipse.mylar.internal.bugzilla.ui.IBugzillaReportSelection;
-import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.Comment;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.swt.graphics.Image;
 
 /**
- * A node for the tree in the <code>BugzillaOutlinePage</code>.
+ * A node for the tree in the <code>RepositoryTaskOutlinePage</code>.
  * 
  * @author Mik Kersten (hardening of prototype)
  */
-public class BugzillaOutlineNode implements IBugzillaReportSelection {
+public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 
 	/** The id of the Bugzilla object that the selection was on. */
 	protected int id;
@@ -37,10 +35,10 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	private String key;
 
 	/** The children of this node. */
-	private ArrayList<BugzillaOutlineNode> nodeChildren;
+	private ArrayList<RepositoryTaskOutlineNode> nodeChildren;
 
 	/** The parent of this node or null if it is the bug report */
-	private BugzillaOutlineNode parent;
+	private RepositoryTaskOutlineNode parent;
 
 	/** This node's image. */
 	private Image image;
@@ -56,7 +54,7 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	private boolean isDescription = false;
 
 	/**
-	 * Creates a new <code>BugzillaOutlineNode</code>.
+	 * Creates a new <code>RepositoryTaskOutlineNode</code>.
 	 * 
 	 * @param id
 	 *            The id of the bug this outline is for.
@@ -71,7 +69,7 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	 * @param parent
 	 *            The parent of this node
 	 */
-	public BugzillaOutlineNode(int id, String server, String key, Image image, Object data, String summary) {
+	public RepositoryTaskOutlineNode(int id, String server, String key, Image image, Object data, String summary) {
 		this.id = id;
 		this.server = server;
 		this.key = key;
@@ -90,9 +88,9 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	 * @return The children of this node, represented as an <code>Object</code>
 	 *         array.
 	 */
-	public BugzillaOutlineNode[] getChildren() {
-		return (nodeChildren == null) ? new BugzillaOutlineNode[0] : nodeChildren
-				.toArray(new BugzillaOutlineNode[nodeChildren.size()]);
+	public RepositoryTaskOutlineNode[] getChildren() {
+		return (nodeChildren == null) ? new RepositoryTaskOutlineNode[0] : nodeChildren
+				.toArray(new RepositoryTaskOutlineNode[nodeChildren.size()]);
 	}
 
 	/**
@@ -101,9 +99,9 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	 * @param bugNode
 	 *            The new child.
 	 */
-	public void addChild(BugzillaOutlineNode bugNode) {
+	public void addChild(RepositoryTaskOutlineNode bugNode) {
 		if (nodeChildren == null) {
-			nodeChildren = new ArrayList<BugzillaOutlineNode>();
+			nodeChildren = new ArrayList<RepositoryTaskOutlineNode>();
 		}
 		bugNode.setParent(this);
 		nodeChildren.add(bugNode);
@@ -147,8 +145,8 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	 */
 	@Override
 	public boolean equals(Object arg0) {
-		if (arg0 instanceof BugzillaOutlineNode) {
-			BugzillaOutlineNode bugNode = (BugzillaOutlineNode) arg0;
+		if (arg0 instanceof RepositoryTaskOutlineNode) {
+			RepositoryTaskOutlineNode bugNode = (RepositoryTaskOutlineNode) arg0;
 			return getKey().equals(bugNode.getKey());
 		}
 		return super.equals(arg0);
@@ -185,87 +183,90 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 
 	/**
 	 * Parses the given <code>IBugzillaBug</code> into a tree of
-	 * <code>BugzillaOutlineNode</code>'s suitable for use in the
-	 * <code>BugzillaOutlinePage</code> view.
+	 * <code>RepositoryTaskOutlineNode</code>'s suitable for use in the
+	 * <code>RepositoryTaskOutlinePage</code> view.
 	 * 
 	 * @param bug
 	 *            The bug that needs parsing.
-	 * @return The tree of <code>BugzillaOutlineNode</code>'s.
+	 * @return The tree of <code>RepositoryTaskOutlineNode</code>'s.
 	 */
-	public static BugzillaOutlineNode parseBugReport(RepositoryTaskData bug) {
+	public static RepositoryTaskOutlineNode parseBugReport(RepositoryTaskData bug) {
 		// Choose the appropriate parsing function based on
 		// the type of IBugzillaBug.
-		if (bug instanceof NewBugzillaReport) {
-			return parseNewBugReport((NewBugzillaReport) bug);
-		} else if (bug instanceof RepositoryTaskData) {
+//		if (bug instanceof NewBugzillaReport) {
+//			return parseNewBugReport((NewBugzillaReport) bug);
+//		} else 
+		if (bug instanceof RepositoryTaskData) {
 			return parseExistingBugReport((RepositoryTaskData) bug);
 		} else {
 			return null;
 		}
 	}
 
-	/**
-	 * Parses the given <code>NewBugModel</code> into a tree of
-	 * <code>BugzillaOutlineNode</code>'s suitable for use in the
-	 * <code>BugzillaOutlinePage</code> view.
-	 * 
-	 * @param bug
-	 *            The <code>NewBugModel</code> that needs parsing.
-	 * @return The tree of <code>BugzillaOutlineNode</code>'s.
-	 */
-	protected static BugzillaOutlineNode parseNewBugReport(NewBugzillaReport bug) {
-		int bugId = bug.getId();
-		String bugServer = bug.getRepositoryUrl();
-		Image bugImage = BugzillaImages.getImage(BugzillaImages.BUG);
-		Image defaultImage = BugzillaImages.getImage(BugzillaImages.BUG_COMMENT);
-		BugzillaOutlineNode topNode = new BugzillaOutlineNode(bugId, bugServer, bug.getLabel(), bugImage, bug, bug
-				.getSummary());
-
-		topNode.addChild(new BugzillaOutlineNode(bugId, bugServer, "New Description", defaultImage, null, bug
-				.getSummary()));
-
-		BugzillaOutlineNode titleNode = new BugzillaOutlineNode(bugId, bugServer, "NewBugModel Object", defaultImage,
-				null, bug.getSummary());
-		titleNode.addChild(topNode);
-
-		return titleNode;
-	}
+//	/**
+//	 * Parses the given <code>NewBugModel</code> into a tree of
+//	 * <code>RepositoryTaskOutlineNode</code>'s suitable for use in the
+//	 * <code>RepositoryTaskOutlinePage</code> view.
+//	 * 
+//	 * @param bug
+//	 *            The <code>NewBugModel</code> that needs parsing.
+//	 * @return The tree of <code>RepositoryTaskOutlineNode</code>'s.
+//	 */
+//	protected static RepositoryTaskOutlineNode parseNewBugReport(NewBugzillaReport bug) {
+//		int bugId = bug.getId();
+//		String bugServer = bug.getRepositoryUrl();
+//		Image bugImage = BugzillaImages.getImage(BugzillaImages.BUG);
+//		Image defaultImage = BugzillaImages.getImage(BugzillaImages.BUG_COMMENT);
+//		RepositoryTaskOutlineNode topNode = new RepositoryTaskOutlineNode(bugId, bugServer, bug.getLabel(), bugImage, bug, bug
+//				.getSummary());
+//
+//		topNode.addChild(new RepositoryTaskOutlineNode(bugId, bugServer, "New Description", defaultImage, null, bug
+//				.getSummary()));
+//
+//		RepositoryTaskOutlineNode titleNode = new RepositoryTaskOutlineNode(bugId, bugServer, "NewBugModel Object", defaultImage,
+//				null, bug.getSummary());
+//		titleNode.addChild(topNode);
+//
+//		return titleNode;
+//	}
 
 	/**
 	 * Parses the given <code>BugReport</code> into a tree of
-	 * <code>BugzillaOutlineNode</code>'s suitable for use in the
-	 * <code>BugzillaOutlinePage</code> view.
+	 * <code>RepositoryTaskOutlineNode</code>'s suitable for use in the
+	 * <code>RepositoryTaskOutlinePage</code> view.
 	 * 
 	 * @param bug
 	 *            The <code>BugReport</code> that needs parsing.
-	 * @return The tree of <code>BugzillaOutlineNode</code>'s.
+	 * @return The tree of <code>RepositoryTaskOutlineNode</code>'s.
 	 */
-	protected static BugzillaOutlineNode parseExistingBugReport(RepositoryTaskData bug) {
+	protected static RepositoryTaskOutlineNode parseExistingBugReport(RepositoryTaskData bug) {
 
 		int bugId = bug.getId();
 		String bugServer = bug.getRepositoryUrl();
-		Image bugImage = BugzillaImages.getImage(BugzillaImages.BUG);
-		Image defaultImage = BugzillaImages.getImage(BugzillaImages.BUG_COMMENT);
-		BugzillaOutlineNode topNode = new BugzillaOutlineNode(bugId, bugServer, bug.getLabel(), bugImage, bug, bug
+		Image bugImage = TaskListImages.getImage(TaskListImages.TASK_REMOTE);
+		//MylarTaskListPlugin.getDefault().BugzillaImages.getImage(BugzillaImages.BUG);
+		Image defaultImage = TaskListImages.getImage(TaskListImages.TASK_NOTES);
+		//BugzillaImages.getImage(BugzillaImages.BUG_COMMENT);
+		RepositoryTaskOutlineNode topNode = new RepositoryTaskOutlineNode(bugId, bugServer, bug.getLabel(), bugImage, bug, bug
 				.getSummary());
 
-		BugzillaOutlineNode desc = new BugzillaOutlineNode(bugId, bugServer, "Description", defaultImage, bug
+		RepositoryTaskOutlineNode desc = new RepositoryTaskOutlineNode(bugId, bugServer, "Description", defaultImage, bug
 				.getDescription(), bug.getSummary());
 		desc.setIsDescription(true);
 
 		topNode.addChild(desc);
 
-		BugzillaOutlineNode comments = null;
+		RepositoryTaskOutlineNode comments = null;
 		for (Iterator<Comment> iter = bug.getComments().iterator(); iter.hasNext();) {
 			Comment comment = iter.next();
 			// first comment is the bug description
 			if(comment.getNumber() == 0) continue;
 			if (comments == null) {
-				comments = new BugzillaOutlineNode(bugId, bugServer, "Comments", defaultImage, comment, bug
+				comments = new RepositoryTaskOutlineNode(bugId, bugServer, "Comments", defaultImage, comment, bug
 						.getSummary());
 				comments.setIsCommentHeader(true);
 			}
-			comments.addChild(new BugzillaOutlineNode(bugId, bugServer, comment.getCreated().toString(), defaultImage,
+			comments.addChild(new RepositoryTaskOutlineNode(bugId, bugServer, comment.getCreated().toString(), defaultImage,
 					comment, bug.getSummary()));
 		}
 		if (comments != null) {
@@ -273,9 +274,9 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 		}
 
 		topNode
-				.addChild(new BugzillaOutlineNode(bugId, bugServer, "New Comment", defaultImage, null, bug.getSummary()));
+				.addChild(new RepositoryTaskOutlineNode(bugId, bugServer, "New Comment", defaultImage, null, bug.getSummary()));
 
-		BugzillaOutlineNode titleNode = new BugzillaOutlineNode(bugId, bugServer, "BugReport Object", defaultImage,
+		RepositoryTaskOutlineNode titleNode = new RepositoryTaskOutlineNode(bugId, bugServer, "BugReport Object", defaultImage,
 				null, bug.getSummary());
 		titleNode.addChild(topNode);
 
@@ -325,11 +326,11 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 		return (server == null) || ((getContents() == null) && (getComment() == null));
 	}
 
-	public BugzillaOutlineNode getParent() {
+	public RepositoryTaskOutlineNode getParent() {
 		return parent;
 	}
 
-	public void setParent(BugzillaOutlineNode parent) {
+	public void setParent(RepositoryTaskOutlineNode parent) {
 		this.parent = parent;
 	}
 

@@ -16,12 +16,12 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaAttributeListener;
-import org.eclipse.mylar.internal.bugzilla.ui.editor.AbstractBugEditor;
-import org.eclipse.mylar.internal.bugzilla.ui.editor.BugzillaOutlineNode;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditor;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasklist.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylar.internal.tasklist.ui.editors.RepositoryTaskOutlineNode;
+import org.eclipse.mylar.internal.tasklist.ui.editors.IRepositoryTaskAttributeListener;
 import org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasklist.ui.editors.TaskEditorInput;
 import org.eclipse.swt.widgets.Composite;
@@ -48,11 +48,11 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 
 	private BugzillaTaskEditorInput bugzillaEditorInput;
 
-//	private BugzillaOutlinePage outlinePage = null;
+//	private RepositoryTaskOutlinePage outlinePage = null;
 	
-//	protected BugzillaOutlineNode bugzillaOutlineModel = null;
+//	protected RepositoryTaskOutlineNode bugzillaOutlineModel = null;
 
-	private IBugzillaAttributeListener ATTRIBUTE_LISTENER = new IBugzillaAttributeListener() {
+	private IRepositoryTaskAttributeListener ATTRIBUTE_LISTENER = new IRepositoryTaskAttributeListener() {
 		public void attributeChanged(String attribute, String value) {
 			// TODO: get rid of this?
 			if (attribute.equals("Priority")) {
@@ -82,7 +82,7 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 		// taskSummaryEditor.setParentEditor(this);
 	}
 
-	public AbstractBugEditor getBugzillaEditor() {
+	public AbstractRepositoryTaskEditor getBugzillaEditor() {
 		return bugzillaEditor;
 	}
 
@@ -139,8 +139,8 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 		super.init(site, (IEditorInput) new TaskEditorInput(((BugzillaTaskEditorInput) editorInput).getBugTask(), false));
 		bugzillaEditorInput = (BugzillaTaskEditorInput) editorInput;
 		bugTask = bugzillaEditorInput.getBugTask();
-		bugzillaEditor.setBugzillaOutlineModel(BugzillaOutlineNode.parseBugReport(bugzillaEditorInput.getBug()));
-		offlineBug = bugzillaEditorInput.getOfflineBug();
+		bugzillaEditor.setBugzillaOutlineModel(RepositoryTaskOutlineNode.parseBugReport(bugzillaEditorInput.getRepositoryTaskData()));
+		offlineBug = bugzillaEditorInput.getRepositoryTaskData();
 
 		super.setSite(site);
 		super.setInput(editorInput);
@@ -211,7 +211,7 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 //	public Object getAdapter(Class adapter) {
 //		if (IContentOutlinePage.class.equals(adapter)) {
 //			if (outlinePage == null && bugzillaEditorInput != null) {
-//				outlinePage = new BugzillaOutlinePage(bugzillaOutlineModel);
+//				outlinePage = new RepositoryTaskOutlinePage(bugzillaOutlineModel);
 //			}
 //			return outlinePage;
 //		}

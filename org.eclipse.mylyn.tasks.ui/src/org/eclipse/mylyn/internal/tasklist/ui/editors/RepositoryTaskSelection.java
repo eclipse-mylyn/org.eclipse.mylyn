@@ -9,15 +9,14 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui.editor;
+package org.eclipse.mylar.internal.tasklist.ui.editors;
 
-import org.eclipse.mylar.internal.bugzilla.ui.IBugzillaReportSelection;
 import org.eclipse.mylar.internal.tasklist.Comment;
 
 /**
- * A selection of a Bugzilla element in a view.
+ * A selection of an element in a view.
  */
-public class BugzillaReportSelection implements IBugzillaReportSelection {
+public class RepositoryTaskSelection implements IRepositoryTaskSelection {
 
 	/**
 	 * The id of the Bugzilla object that the selection was on.
@@ -39,7 +38,7 @@ public class BugzillaReportSelection implements IBugzillaReportSelection {
 	protected Comment comment;
 
 	/**
-	 * Creates a new <code>BugzillaReportSelection</code> with no supplied
+	 * Creates a new <code>RepositoryTaskSelection</code> with no supplied
 	 * contents or comment.
 	 * 
 	 * @param id
@@ -47,12 +46,12 @@ public class BugzillaReportSelection implements IBugzillaReportSelection {
 	 * @param server
 	 *            The server of the Bugzilla object that the selection was on.
 	 */
-	public BugzillaReportSelection(int id, String server, String summary) {
+	public RepositoryTaskSelection(int id, String server, String summary) {
 		this(id, server, null, null, summary);
 	}
 
 	/**
-	 * Creates a new <code>BugzillaReportSelection</code> with no supplied
+	 * Creates a new <code>RepositoryTaskSelection</code> with no supplied
 	 * comment.
 	 * 
 	 * @param id
@@ -62,13 +61,13 @@ public class BugzillaReportSelection implements IBugzillaReportSelection {
 	 * @param contents
 	 *            The contents of the selection.
 	 */
-	public BugzillaReportSelection(int id, String server, String contents, boolean isDescription, String summary) {
+	public RepositoryTaskSelection(int id, String server, String contents, boolean isDescription, String summary) {
 		this(id, server, contents, null, summary);
 		this.isDescription = isDescription;
 	}
 
 	/**
-	 * Creates a new <code>BugzillaReportSelection</code> with no supplied
+	 * Creates a new <code>RepositoryTaskSelection</code> with no supplied
 	 * contents.
 	 * 
 	 * @param id
@@ -80,12 +79,12 @@ public class BugzillaReportSelection implements IBugzillaReportSelection {
 	 *            comment was not selected, then this should be
 	 *            <code>null</code>.
 	 */
-	public BugzillaReportSelection(int id, String server, Comment comment, String summary) {
+	public RepositoryTaskSelection(int id, String server, Comment comment, String summary) {
 		this(id, server, null, comment, summary);
 	}
 
 	/**
-	 * Creates a new <code>BugzillaReportSelection</code>.
+	 * Creates a new <code>RepositoryTaskSelection</code>.
 	 * 
 	 * @param id
 	 *            The id of the Bugzilla object that the selection was on.
@@ -98,7 +97,7 @@ public class BugzillaReportSelection implements IBugzillaReportSelection {
 	 *            comment was not selected, then this should be
 	 *            <code>null</code>.
 	 */
-	public BugzillaReportSelection(int id, String server, String contents, Comment comment, String summary) {
+	public RepositoryTaskSelection(int id, String server, String contents, Comment comment, String summary) {
 		this.id = id;
 		this.server = server;
 		this.contents = contents;

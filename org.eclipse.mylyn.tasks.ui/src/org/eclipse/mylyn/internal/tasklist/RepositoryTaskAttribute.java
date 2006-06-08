@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Class representing a report attribute may contain child attributes
+ * Class representing a report attribute 
  * 
  * @author Rob Elves
  */

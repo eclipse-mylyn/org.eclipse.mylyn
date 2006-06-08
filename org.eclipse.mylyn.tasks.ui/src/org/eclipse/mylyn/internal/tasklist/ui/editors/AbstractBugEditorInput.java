@@ -9,19 +9,20 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui.editor;
+package org.eclipse.mylar.internal.tasklist.ui.editors;
 
 import java.net.Proxy;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
 /**
  * Abstract base implementation of an <code>IEditorInput</code> for a subclass
- * of <code>AbstractBugEditor</code>.
+ * of <code>AbstractRepositoryTaskEditor</code>.
  */
 public abstract class AbstractBugEditorInput implements IEditorInput {
 
@@ -48,10 +49,7 @@ public abstract class AbstractBugEditorInput implements IEditorInput {
 		return true;
 	}
 
-	/**
-	 * @return The <code>IBugzillaBug</code> object for this editor input.
-	 */
-	public abstract RepositoryTaskData getBug();
+	public abstract RepositoryTaskData getRepositoryTaskData();
 
 	public ImageDescriptor getImageDescriptor() {
 		return null;
@@ -79,4 +77,7 @@ public abstract class AbstractBugEditorInput implements IEditorInput {
 	public Proxy getProxySettings() {
 		return proxySettings;
 	}
+
+
+	public abstract TaskRepository getRepository();
 }

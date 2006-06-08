@@ -22,9 +22,9 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylar.internal.bugzilla.ui.editor.AbstractBugEditor;
-import org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditorInput;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylar.internal.tasklist.ui.editors.ExistingBugEditorInput;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.ui.IWorkbenchPage;
@@ -66,11 +66,11 @@ public class OpenBugzillaReportJob extends Job {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
 					public void run() {
-						if (editorInput.getBug() == null) {
+						if (editorInput.getRepositoryTaskData() == null) {
 							MessageDialog.openError(null, "Server Setting Error", "Incorrect server set for the bug.");
 						} else {
 							try {
-								AbstractBugEditor abe = (AbstractBugEditor) page.openEditor(editorInput,
+								AbstractRepositoryTaskEditor abe = (AbstractRepositoryTaskEditor) page.openEditor(editorInput,
 										BugzillaUiPlugin.EXISTING_BUG_EDITOR_ID);
 								abe.selectDescription();
 								// if (commentNumber == 0) {

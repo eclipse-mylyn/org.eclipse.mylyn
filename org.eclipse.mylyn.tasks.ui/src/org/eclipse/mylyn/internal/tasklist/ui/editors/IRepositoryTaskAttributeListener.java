@@ -9,11 +9,11 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.core;
+package org.eclipse.mylar.internal.tasklist.ui.editors;
 
 /**
  * @author Ken Sueda
  */
-public interface IBugzillaAttributeListener {
+public interface IRepositoryTaskAttributeListener {
 	public abstract void attributeChanged(String attribute, String value);
 }

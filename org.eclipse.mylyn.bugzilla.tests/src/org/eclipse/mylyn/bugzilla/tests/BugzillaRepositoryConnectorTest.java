@@ -67,7 +67,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		repository = new TaskRepository(DEFAULT_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		// Valid user name and password must be set for tests to pass
 		repository.setAuthenticationCredentials("enter your username here", "enter your password here");
-		
+		repository.setTimeZoneId("Canada/Eastern");
 		manager.addRepository(repository);
 		assertNotNull(manager);
 		taskList = MylarTaskListPlugin.getTaskListManager().getTaskList();
@@ -113,24 +113,23 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		BugzillaTask task = (BugzillaTask) client.createTaskFromExistingKey(repository, "1");
 		MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(task);
 		assertTrue(task.isDownloaded());
-		// (The initial local copy from server)
-		client.saveBugReport(task.getTaskData());
-		assertEquals(task.getSyncState(), RepositoryTaskSyncState.SYNCHRONIZED);
-
+		// (The initial local copy from server)		
+		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
+		client.synchronize(task, true, null);
+		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
 		// Modify it
 		String newCommentText = "BugzillaRepositoryClientTest.testSynchronize(): " + (new Date()).toString();
 		task.getTaskData().setNewComment(newCommentText);
 		// overwrites old fields/attributes with new content (ususually done by
 		// BugEditor)
-		task.getTaskData().setHasChanged(true);
-//		updateBug(task.getTaskData());
-		assertEquals(task.getSyncState(), RepositoryTaskSyncState.SYNCHRONIZED);
-		client.saveBugReport(task.getTaskData());
+		task.getTaskData().setHasChanged(true);	
+		task.setSyncState(RepositoryTaskSyncState.OUTGOING);
+		client.saveOffline(task.getTaskData());
 		assertEquals(RepositoryTaskSyncState.OUTGOING, task.getSyncState());
 
 		// Submit changes
 		MockBugzillaReportSubmitForm form = new MockBugzillaReportSubmitForm(BugzillaPlugin.ENCODING_UTF_8);
-		client.submitBugReport(task.getTaskData(), form, null);
+		client.submitBugReport(task.getTaskData(), form, null);		
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
 
 		// TODO: Test that comment was appended

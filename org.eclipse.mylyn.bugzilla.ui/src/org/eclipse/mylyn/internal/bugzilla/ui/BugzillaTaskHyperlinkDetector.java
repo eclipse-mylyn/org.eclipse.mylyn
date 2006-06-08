@@ -17,7 +17,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-import org.eclipse.mylar.internal.bugzilla.ui.editor.RepositoryTextViewer;
+import org.eclipse.mylar.internal.tasklist.ui.editors.RepositoryTextViewer;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
 /**

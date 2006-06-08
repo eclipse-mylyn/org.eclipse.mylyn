@@ -120,7 +120,7 @@ public class AbstractReportFactory {
 				}
 			}
 		} else if (connection.getContentType().contains(CONTENT_TYPE_TEXT_HTML)) {
-			in.mark(0);
+			in.mark(10);
 			BugzillaRepositoryUtil.parseHtmlError(in);
 			in.reset();
 			String message = "";

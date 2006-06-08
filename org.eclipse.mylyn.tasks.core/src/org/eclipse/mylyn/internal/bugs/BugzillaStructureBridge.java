@@ -15,11 +15,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaTools;
-import org.eclipse.mylar.internal.bugzilla.ui.editor.BugzillaOutlineNode;
-import org.eclipse.mylar.internal.bugzilla.ui.editor.BugzillaReportSelection;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchHit;
 import org.eclipse.mylar.internal.core.DegreeOfSeparation;
+import org.eclipse.mylar.internal.tasklist.ui.editors.RepositoryTaskOutlineNode;
+import org.eclipse.mylar.internal.tasklist.ui.editors.RepositoryTaskSelection;
+import org.eclipse.mylar.internal.tasklist.ui.editors.OutlineTools;
 import org.eclipse.mylar.provisional.core.AbstractRelationProvider;
 import org.eclipse.mylar.provisional.core.IDegreeOfSeparation;
 import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
@@ -48,15 +48,15 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 	/**
 	 * Handle format: <server-name:port>;<bug-id>;<comment#>
 	 * 
-	 * Use: BugzillaTools ???
+	 * Use: OutlineTools ???
 	 */
 	public String getHandleIdentifier(Object object) {
-		if (object instanceof BugzillaOutlineNode) {
-			BugzillaOutlineNode node = (BugzillaOutlineNode) object;
-			return BugzillaTools.getHandle(node);
-		} else if (object instanceof BugzillaReportSelection) {
-			BugzillaReportSelection n = (BugzillaReportSelection) object;
-			return BugzillaTools.getHandle(n);
+		if (object instanceof RepositoryTaskOutlineNode) {
+			RepositoryTaskOutlineNode node = (RepositoryTaskOutlineNode) object;
+			return OutlineTools.getHandle(node);
+		} else if (object instanceof RepositoryTaskSelection) {
+			RepositoryTaskSelection n = (RepositoryTaskSelection) object;
+			return OutlineTools.getHandle(n);
 		}
 		return null;
 	}
@@ -92,9 +92,9 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 //			} catch (NullPointerException e) {
 //				// do nothing, this just means that there is no active page
 //			}
-//			if (editorPart != null && editorPart instanceof AbstractBugEditor) {
-//				AbstractBugEditor abe = ((AbstractBugEditor) editorPart);
-//				BugzillaOutlineNode node = abe.getOutlineModel();
+//			if (editorPart != null && editorPart instanceof AbstractRepositoryTaskEditor) {
+//				AbstractRepositoryTaskEditor abe = ((AbstractRepositoryTaskEditor) editorPart);
+//				RepositoryTaskOutlineNode node = abe.getOutlineModel();
 //				return findNode(node, commentNumber);
 //			}
 //
@@ -136,7 +136,7 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 		return null;
 	}
 
-//	private BugzillaOutlineNode findNode(BugzillaOutlineNode startNode, int commentNumber) {
+//	private RepositoryTaskOutlineNode findNode(RepositoryTaskOutlineNode startNode, int commentNumber) {
 //
 //		if (commentNumber == -1) {
 //			return startNode;
@@ -148,9 +148,9 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 //			return startNode;
 //		}
 //
-//		BugzillaOutlineNode[] children = startNode.getChildren();
+//		RepositoryTaskOutlineNode[] children = startNode.getChildren();
 //		for (int i = 0; i < children.length; i++) {
-//			BugzillaOutlineNode n = findNode(children[i], commentNumber);
+//			RepositoryTaskOutlineNode n = findNode(children[i], commentNumber);
 //			if (n != null)
 //				return n;
 //		}
@@ -164,9 +164,9 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 		if (!handle.matches(".*;.*;.*"))
 			return null;
 
-		BugzillaOutlineNode bon = (BugzillaOutlineNode) getObjectForHandle(handle);
+		RepositoryTaskOutlineNode bon = (RepositoryTaskOutlineNode) getObjectForHandle(handle);
 		if (bon != null && bon.getParent() != null)
-			return BugzillaTools.getHandle(bon.getParent());
+			return OutlineTools.getHandle(bon.getParent());
 		else
 			return null;
 		// String [] parts = handle.split(";");
@@ -183,9 +183,9 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 	}
 
 	public String getName(Object object) {
-		if (object instanceof BugzillaOutlineNode) {
-			BugzillaOutlineNode b = (BugzillaOutlineNode) object;
-			return BugzillaTools.getName(b);
+		if (object instanceof RepositoryTaskOutlineNode) {
+			RepositoryTaskOutlineNode b = (RepositoryTaskOutlineNode) object;
+			return OutlineTools.getName(b);
 		} else if (object instanceof BugzillaReportInfo) {
 			BugzillaSearchHit hit = ((BugzillaReportInfo) object).getHit();
 			return hit.getRepositoryUrl() + ": Bug#: " + hit.getId() + ": " + hit.getDescription();
@@ -198,7 +198,7 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 	}
 
 	public boolean acceptsObject(Object object) {
-		return object instanceof BugzillaOutlineNode || object instanceof BugzillaReportSelection;
+		return object instanceof RepositoryTaskOutlineNode || object instanceof RepositoryTaskSelection;
 	}
 
 	public boolean canFilter(Object element) {

@@ -17,7 +17,7 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaTaskHyperlinkDetector;
-import org.eclipse.mylar.internal.bugzilla.ui.editor.RepositoryTextViewer;
+import org.eclipse.mylar.internal.tasklist.ui.editors.RepositoryTextViewer;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;

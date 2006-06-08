@@ -28,11 +28,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.text.TextViewer;
@@ -50,7 +45,10 @@ import org.eclipse.mylar.internal.tasklist.LocalAttachment;
 import org.eclipse.mylar.internal.tasklist.RepositoryOperation;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasklist.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylar.internal.tasklist.ui.editors.RepositoryTaskOutlineNode;
+import org.eclipse.mylar.internal.tasklist.ui.editors.RepositoryTaskSelection;
+import org.eclipse.mylar.internal.tasklist.ui.editors.ExistingBugEditorInput;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -60,10 +58,8 @@ import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -76,20 +72,14 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * An editor used to view a bug report that exists on a server. It uses a
@@ -98,7 +88,7 @@ import org.eclipse.ui.themes.IThemeManager;
  * @author Mik Kersten (hardening of prototype)
  * @author Rob Elves (adaption to Eclipse Forms)
  */
-public class ExistingBugEditor extends AbstractBugEditor {
+public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 
 	private static final String REASSIGN_BUG_TO = "Reassign  bug to";
 
@@ -122,15 +112,17 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 	protected Text ccText;
 
-	protected Text addCommentsText;
+	protected Text urlText;
+
+	// protected Text addCommentsText;
 
 	protected RepositoryTaskData taskData;
 
 	protected AbstractRepositoryConnector connector;
 
-	public String getNewCommentText() {
-		return addCommentsTextBox.getText();
-	}
+	// public String getNewCommentText() {
+	// return addCommentsTextBox.getText();
+	// }
 
 	/**
 	 * Creates a new <code>ExistingBugEditor</code>.
@@ -149,56 +141,59 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		compareInput = new BugzillaCompareInput(config);
 	}
 
-	@SuppressWarnings("deprecation")
+	// @SuppressWarnings("deprecation")
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		if (!(input instanceof ExistingBugEditorInput))
 			throw new PartInitException("Invalid Input: Must be ExistingBugEditorInput");
-		ExistingBugEditorInput editorInput = (ExistingBugEditorInput) input;
+		editorInput = (ExistingBugEditorInput) input;
+		taskData = editorInput.getRepositoryTaskData();
 		repository = editorInput.getRepository();
 		connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
 
 		setSite(site);
 		setInput(input);
-		bugzillaInput = editorInput;
-		bugzillaOutlineModel = BugzillaOutlineNode.parseBugReport(bugzillaInput.getBug());
 
-		taskData = editorInput.getBug();
-		restoreBug();
+		bugzillaOutlineModel = RepositoryTaskOutlineNode.parseBugReport(editorInput.getRepositoryTaskData());
+
+		// restoreBug();
 		isDirty = false;
 		updateEditorTitle();
 	}
 
-	/**
-	 * This overrides the existing implementation in order to add an "add to
-	 * favorites" option to the context menu.
-	 * 
-	 * @see org.eclipse.mylar.internal.bugzilla.ui.AbstractBugEditor#createContextMenu()
-	 */
-	@Override
-	protected void createContextMenu() {
-		contextMenuManager = new MenuManager("#BugEditor");
-		contextMenuManager.setRemoveAllWhenShown(true);
-		contextMenuManager.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				// manager.add(new
-				// AddToFavoritesAction(ExistingBugEditor.this));
-				// manager.add(new Separator());
-				manager.add(cutAction);
-				manager.add(copyAction);
-				manager.add(pasteAction);
-				manager.add(new Separator());
-				manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-				if (currentSelectedText == null || currentSelectedText.getSelectionText().length() == 0) {
-
-					copyAction.setEnabled(false);
-				} else {
-					copyAction.setEnabled(true);
-				}
-			}
-		});
-		getSite().registerContextMenu("#BugEditor", contextMenuManager, getSite().getSelectionProvider());
-	}
+	// /**
+	// * This overrides the existing implementation in order to add an "add to
+	// * favorites" option to the context menu.
+	// *
+	// * @see
+	// org.eclipse.mylar.internal.bugzilla.ui.AbstractRepositoryTaskEditor#createContextMenu()
+	// */
+	// @Override
+	// protected void createContextMenu() {
+	// contextMenuManager = new MenuManager(CONTEXT_MENU_ID);
+	// contextMenuManager.setRemoveAllWhenShown(true);
+	// contextMenuManager.addMenuListener(new IMenuListener() {
+	// public void menuAboutToShow(IMenuManager manager) {
+	// // manager.add(new
+	// // AddToFavoritesAction(ExistingBugEditor.this));
+	// // manager.add(new Separator());
+	// manager.add(cutAction);
+	// manager.add(copyAction);
+	// manager.add(pasteAction);
+	// manager.add(new Separator());
+	// manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+	// if (currentSelectedText == null ||
+	// currentSelectedText.getSelectionText().length() == 0) {
+	//
+	// copyAction.setEnabled(false);
+	// } else {
+	// copyAction.setEnabled(true);
+	// }
+	// }
+	// });
+	// getSite().registerContextMenu("#BugEditor", contextMenuManager,
+	// getSite().getSelectionProvider());
+	// }
 
 	@Override
 	protected void addRadioButtons(Composite buttonComposite) {
@@ -230,7 +225,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 				radioData.horizontalSpan = 1;
 				radioData.heightHint = 20;
-				radioData.widthHint = AbstractBugEditor.WRAP_LENGTH;
+				radioData.widthHint = AbstractRepositoryTaskEditor.WRAP_LENGTH;
 				// radioOptions[i] = new Combo(buttonComposite, SWT.NULL);
 				radioOptions[i] = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY);
 				toolkit.adapt(radioOptions[i], true, true);
@@ -354,10 +349,10 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		return compareInput;
 	}
 
-	@Override
-	public RepositoryTaskData getBug() {
-		return taskData;
-	}
+	// @Override
+	// public RepositoryTaskData getBug() {
+	// return taskData;
+	// }
 
 	@Override
 	protected String getTitleString() {
@@ -369,7 +364,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 	@Override
 	public void submitBug() {
-		if(isDirty()) {
+		if (isDirty()) {
 			this.doSave(new NullProgressMonitor());
 		}
 		updateBug();
@@ -381,10 +376,10 @@ public class ExistingBugEditor extends AbstractBugEditor {
 			att.setComment(attachmentComment.getText());
 			att.setDescription(attachmentDesc.getText());
 		}
-				
+
 		try {
 			bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeExistingBugPost(taskData, repository.getUrl(),
-					repository.getUserName(), repository.getPassword(), bugzillaInput.getProxySettings(), removeCC,
+					repository.getUserName(), repository.getPassword(), editorInput.getProxySettings(), removeCC,
 					repository.getCharacterEncoding());
 		} catch (UnsupportedEncodingException e) {
 			// should never get here but just in case...
@@ -435,8 +430,37 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	}
 
 	@Override
-	protected void createDescriptionLayout(FormToolkit toolkit, final ScrolledForm form) {
+	protected void createCustomAttributeLayout(FormToolkit toolkit, final ScrolledForm form) {
 
+		
+		Composite customAttributesComposite = toolkit.createComposite(form.getBody());
+		GridLayout attributesLayout = new GridLayout();
+		attributesLayout.numColumns = 4;
+		attributesLayout.horizontalSpacing = 14;
+		attributesLayout.verticalSpacing = 6;
+		customAttributesComposite.setLayout(attributesLayout);
+		GridData attributesData = new GridData(GridData.FILL_BOTH);
+		attributesData.horizontalSpan = 1;
+		attributesData.grabExcessVerticalSpace = false;
+		customAttributesComposite.setLayoutData(attributesData);
+		addCCList(toolkit, "", customAttributesComposite);
+
+		// URL field
+		// addUrlText(getReport().getAttributeValue(BugzillaReportElement.BUG_FILE_LOC.getKeyString()),
+		// customAttributesComposite);
+
+		// keywords text field (not editable)
+		try {
+			addKeywordsList(toolkit, getRepositoryTaskData().getAttributeValue(RepositoryTaskAttribute.KEYWORDS),
+					customAttributesComposite);
+		} catch (IOException e) {
+			MessageDialog.openInformation(null, "Attribute Display Error",
+					"Could not retrieve keyword list, ensure proper configuration in " + TaskRepositoriesView.NAME
+							+ "\n\nError reported: " + e.getMessage());
+		}
+		
+		toolkit.paintBordersFor(customAttributesComposite);
+		
 		final Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText(LABEL_SECTION_DESCRIPTION);
 		section.setExpanded(true);
@@ -460,6 +484,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		GridData sectionCompositeData = new GridData(GridData.FILL_HORIZONTAL);
 		sectionComposite.setLayoutData(sectionCompositeData);
 
+		// Perhaps these should be performed in subclass eventually
+	
 		TextViewer viewer = addRepositoryText(repository, sectionComposite, taskData.getDescription());
 		final StyledText styledText = viewer.getTextWidget();
 		styledText.addListener(SWT.FocusIn, new DescriptionListener());
@@ -472,246 +498,274 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 	}
 
-	/**
-	 * http://www.eclipse.org and http://www.eclipse.org/mylar and a
-	 */
-	@Override
-	protected void createCommentLayout(FormToolkit toolkit, final ScrolledForm form) {
+	// /**
+	// * http://www.eclipse.org and http://www.eclipse.org/mylar and a
+	// */
+	// @Override
+	// protected void createCommentLayout(FormToolkit toolkit, final
+	// ScrolledForm form) {
+	//
+	// Section section = toolkit.createSection(form.getBody(),
+	// ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+	// section.setText(LABEL_SECTION_COMMENTS);
+	// section.setExpanded(true);
+	// section.setLayout(new GridLayout());
+	// section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	// section.addExpansionListener(new IExpansionListener() {
+	// public void expansionStateChanging(ExpansionEvent e) {
+	// form.reflow(true);
+	// }
+	//
+	// public void expansionStateChanged(ExpansionEvent e) {
+	// form.reflow(true);
+	// }
+	// });
+	//
+	// ImageHyperlink hyperlink = toolkit.createImageHyperlink(section,
+	// SWT.NONE);
+	// hyperlink.setBackgroundMode(SWT.INHERIT_NONE);
+	// hyperlink.setBackground(section.getTitleBarBackground());
+	// hyperlink.setImage(TaskListImages.getImage(TaskListImages.EXPAND_ALL));
+	// hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+	// public void linkActivated(HyperlinkEvent e) {
+	// revealAllComments();
+	// }
+	// });
+	//
+	// section.setTextClient(hyperlink);
+	//
+	// // Additional (read-only) Comments Area
+	// Composite addCommentsComposite = toolkit.createComposite(section);
+	// section.setClient(addCommentsComposite);
+	// GridLayout addCommentsLayout = new GridLayout();
+	// addCommentsLayout.numColumns = 1;
+	// addCommentsComposite.setLayout(addCommentsLayout);
+	// // addCommentsComposite.setBackground(background);
+	// GridDataFactory.fillDefaults().grab(true,
+	// false).applyTo(addCommentsComposite);
+	// // End Additional (read-only) Comments Area
+	//
+	// StyledText styledText = null;
+	// for (Iterator<Comment> it = taskData.getComments().iterator();
+	// it.hasNext();) {
+	// final Comment comment = it.next();
+	//
+	// // skip comment 0 as it is the description
+	// if (comment.getNumber() == 0)
+	// continue;
+	//
+	// ExpandableComposite expandableComposite =
+	// toolkit.createExpandableComposite(addCommentsComposite,
+	// ExpandableComposite.TREE_NODE);
+	//
+	// if (!it.hasNext()) {
+	// expandableComposite.setExpanded(true);
+	// }
+	//
+	// expandableComposite.setText(comment.getNumber() + ": " +
+	// comment.getAuthorName() + ", "
+	// + simpleDateFormat.format(comment.getCreated()));
+	//
+	// expandableComposite.addExpansionListener(new ExpansionAdapter() {
+	// public void expansionStateChanged(ExpansionEvent e) {
+	// form.reflow(true);
+	// }
+	// });
+	//
+	// expandableComposite.setLayout(new GridLayout());
+	// expandableComposite.setLayoutData(new
+	// GridData(GridData.FILL_HORIZONTAL));
+	//
+	// Composite ecComposite = toolkit.createComposite(expandableComposite);
+	// GridLayout ecLayout = new GridLayout();
+	// ecLayout.marginHeight = 0;
+	// ecLayout.marginBottom = 10;
+	// ecLayout.marginLeft = 10;
+	// ecComposite.setLayout(ecLayout);
+	// ecComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	// expandableComposite.setClient(ecComposite);
+	// // toolkit.paintBordersFor(expandableComposite);
+	//
+	// // TODO: Attachments are no longer 'attached' to Comments
+	//
+	// // if (comment.hasAttachment()) {
+	// //
+	// // Link attachmentLink = new Link(ecComposite, SWT.NONE);
+	// //
+	// // String attachmentHeader;
+	// //
+	// // if (!comment.isObsolete()) {
+	// // attachmentHeader = " Attached: " +
+	// // comment.getAttachmentDescription() + " [<a>view</a>]";
+	// // } else {
+	// // attachmentHeader = " Deprecated: " +
+	// // comment.getAttachmentDescription();
+	// // }
+	// // // String result = MessageFormat.format(attachmentHeader, new
+	// // // String[] { node
+	// // // .getLabelText() });
+	// //
+	// // attachmentLink.addSelectionListener(new SelectionAdapter() {
+	// // /*
+	// // * (non-Javadoc)
+	// // *
+	// // * @see
+	// //
+	// org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+	// // */
+	// // public void widgetSelected(SelectionEvent e) {
+	// // String address = repository.getUrl() + "/attachment.cgi?id=" +
+	// // comment.getAttachmentId()
+	// // + "&amp;action=view";
+	// // TaskUiUtil.openUrl(address, address, address);
+	// //
+	// // }
+	// // });
+	// //
+	// // attachmentLink.setText(attachmentHeader);
+	// //
+	// // }
+	//
+	// // styledText = newLayout(ecComposite, 1, comment.getText(), VALUE);
+	// // styledText.addListener(SWT.FocusIn, new
+	// // CommentListener(comment));
+	// // styledText.setFont(COMMENT_FONT);
+	// // System.err.println(comment.getNumber()+" "+comment.getText());
+	// TextViewer viewer = addRepositoryText(repository, ecComposite,
+	// comment.getText());
+	// styledText = viewer.getTextWidget();
+	// GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH,
+	// SWT.DEFAULT).applyTo(styledText);
+	//
+	// // line wrapping
+	// // GridData styledTextData = new GridData(GridData.FILL_HORIZONTAL);
+	// // styledTextData.widthHint = DESCRIPTION_WIDTH;
+	// // styledTextData.grabExcessHorizontalSpace = true;
+	// // styledText.setLayoutData(styledTextData);
+	//
+	// // TextViewer viewer = addRepositoryText(repository, form.getBody(),
+	// // bug.getDescription());// form.getBody()
+	// // final StyledText styledText = viewer.getTextWidget();
+	// // styledText.addListener(SWT.FocusIn, new DescriptionListener());
+	// // styledText.setLayout(new GridLayout());
+	// // GridData styledTextData = new GridData(GridData.FILL_HORIZONTAL);
+	// // styledTextData.widthHint = DESCRIPTION_WIDTH;
+	// // styledTextData.grabExcessHorizontalSpace = true;
+	//
+	// // code for outline
+	// commentStyleText.add(styledText);
+	// texts.add(textsindex, styledText);
+	// textHash.put(comment, styledText);
+	// textsindex++;
+	// }
+	//
+	// Section sectionAdditionalComments = toolkit.createSection(form.getBody(),
+	// ExpandableComposite.TITLE_BAR
+	// | Section.TWISTIE);
+	// sectionAdditionalComments.setText(LABEL_SECTION_NEW_COMMENT);
+	// sectionAdditionalComments.setExpanded(true);
+	//
+	// sectionAdditionalComments.setLayoutData(new
+	// GridData(GridData.FILL_HORIZONTAL));
+	// sectionAdditionalComments.addExpansionListener(new IExpansionListener() {
+	// public void expansionStateChanging(ExpansionEvent e) {
+	// form.reflow(true);
+	// }
+	//
+	// public void expansionStateChanged(ExpansionEvent e) {
+	// form.reflow(true);
+	// }
+	// });
+	//
+	// Composite newCommentsComposite =
+	// toolkit.createComposite(sectionAdditionalComments);
+	// newCommentsComposite.setLayout(new GridLayout());
+	// newCommentsComposite.setLayoutData(new
+	// GridData(GridData.FILL_HORIZONTAL));
+	// addCommentsText = toolkit.createText(newCommentsComposite,
+	// taskData.getNewComment(), SWT.MULTI | SWT.V_SCROLL
+	// | SWT.WRAP);
+	//
+	// IThemeManager themeManager =
+	// getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+	// Font newCommnetFont =
+	// themeManager.getCurrentTheme().getFontRegistry().get(REPOSITORY_TEXT_ID);
+	// addCommentsText.setFont(newCommnetFont);
+	// toolkit.paintBordersFor(newCommentsComposite);
+	// GridData addCommentsTextData = new GridData(GridData.FILL_HORIZONTAL);
+	// addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
+	// addCommentsTextData.heightHint = DESCRIPTION_HEIGHT;
+	// addCommentsTextData.grabExcessHorizontalSpace = true;
+	//
+	// addCommentsText.setLayoutData(addCommentsTextData);
+	//
+	// addCommentsText.addListener(SWT.KeyUp, new Listener() {
+	//
+	// public void handleEvent(Event event) {
+	// String sel = addCommentsText.getText();
+	// if (!(taskData.getNewComment().equals(sel))) {
+	// taskData.setNewComment(sel);
+	// changeDirtyStatus(true);
+	// }
+	// validateInput();
+	// }
+	// });
+	// addCommentsText.addListener(SWT.FocusIn, new NewCommentListener());
+	// addCommentsTextBox = addCommentsText;
+	//
+	// sectionAdditionalComments.setClient(newCommentsComposite);
+	//
+	// // if they aren't already on the cc list create an add self check box
+	//
+	// RepositoryTaskAttribute owner =
+	// taskData.getAttribute(BugzillaReportElement.ASSIGNED_TO.getKeyString());
+	//
+	// // Don't add addselfcc check box if the user is the bug owner
+	// if (owner != null && owner.getValue().indexOf(repository.getUserName())
+	// != -1) {
+	// return;
+	// }
+	// // Don't add addselfcc if already there
+	// RepositoryTaskAttribute ccAttribute =
+	// taskData.getAttribute(BugzillaReportElement.CC.getKeyString());
+	// if (ccAttribute != null &&
+	// ccAttribute.getValues().contains(repository.getUserName())) {
+	// return;
+	// }
+	// RepositoryTaskAttribute addselfcc =
+	// taskData.getAttribute(BugzillaReportElement.ADDSELFCC.getKeyString());
+	// if (addselfcc == null) {
+	// // addselfcc =
+	// //
+	// BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.ADDSELFCC);
+	// taskData.setAttributeValue(BugzillaReportElement.ADDSELFCC.getKeyString(),
+	// "0");
+	// } else {
+	// addselfcc.setValue("0");
+	// }
+	//
+	// final Button addSelfButton = toolkit.createButton(newCommentsComposite,
+	// "Add " + repository.getUserName()
+	// + " to CC list", SWT.CHECK);
+	//
+	// addSelfButton.addSelectionListener(new SelectionAdapter() {
+	//
+	// @Override
+	// public void widgetSelected(SelectionEvent e) {
+	// if (addSelfButton.getSelection()) {
+	// taskData.setAttributeValue(BugzillaReportElement.ADDSELFCC.getKeyString(),
+	// "1");
+	// // connector.getAttributeFactory().setAttributeValue(taskData,
+	// // BugzillaReportElement.ADDSELFCC.getKeyString(), "1");
+	// } else {
+	// taskData.setAttributeValue(BugzillaReportElement.ADDSELFCC.getKeyString(),
+	// "0");
+	// }
+	// }
+	// });
+	// }
 
-		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.TWISTIE);
-		section.setText(LABEL_SECTION_COMMENTS);
-		section.setExpanded(true);
-		section.setLayout(new GridLayout());
-		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		section.addExpansionListener(new IExpansionListener() {
-			public void expansionStateChanging(ExpansionEvent e) {
-				form.reflow(true);
-			}
 
-			public void expansionStateChanged(ExpansionEvent e) {
-				form.reflow(true);
-			}
-		});
-
-		ImageHyperlink hyperlink = toolkit.createImageHyperlink(section, SWT.NONE);
-		hyperlink.setBackgroundMode(SWT.INHERIT_NONE);
-		hyperlink.setBackground(section.getTitleBarBackground());
-		hyperlink.setImage(TaskListImages.getImage(TaskListImages.EXPAND_ALL));
-		hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
-			public void linkActivated(HyperlinkEvent e) {
-				revealAllComments();
-			}
-		});
-
-		section.setTextClient(hyperlink);
-
-		// Additional (read-only) Comments Area
-		Composite addCommentsComposite = toolkit.createComposite(section);
-		section.setClient(addCommentsComposite);
-		GridLayout addCommentsLayout = new GridLayout();
-		addCommentsLayout.numColumns = 1;
-		addCommentsComposite.setLayout(addCommentsLayout);
-		// addCommentsComposite.setBackground(background);
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(addCommentsComposite);
-		// End Additional (read-only) Comments Area
-
-		StyledText styledText = null;
-		for (Iterator<Comment> it = taskData.getComments().iterator(); it.hasNext();) {
-			final Comment comment = it.next();
-
-			// skip comment 0 as it is the description
-			if (comment.getNumber() == 0)
-				continue;
-
-			ExpandableComposite expandableComposite = toolkit.createExpandableComposite(addCommentsComposite,
-					ExpandableComposite.TREE_NODE);
-
-			if (!it.hasNext()) {
-				expandableComposite.setExpanded(true);
-			}
-
-			expandableComposite.setText(comment.getNumber() + ": " + comment.getAuthorName() + ", "
-					+ simpleDateFormat.format(comment.getCreated()));
-
-			expandableComposite.addExpansionListener(new ExpansionAdapter() {
-				public void expansionStateChanged(ExpansionEvent e) {
-					form.reflow(true);
-				}
-			});
-
-			expandableComposite.setLayout(new GridLayout());
-			expandableComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-			Composite ecComposite = toolkit.createComposite(expandableComposite);
-			GridLayout ecLayout = new GridLayout();
-			ecLayout.marginHeight = 0;
-			ecLayout.marginBottom = 10;
-			ecLayout.marginLeft = 10;
-			ecComposite.setLayout(ecLayout);
-			ecComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			expandableComposite.setClient(ecComposite);
-			// toolkit.paintBordersFor(expandableComposite);
-
-			// TODO: Attachments are no longer 'attached' to Comments
-
-			// if (comment.hasAttachment()) {
-			//
-			// Link attachmentLink = new Link(ecComposite, SWT.NONE);
-			//
-			// String attachmentHeader;
-			//
-			// if (!comment.isObsolete()) {
-			// attachmentHeader = " Attached: " +
-			// comment.getAttachmentDescription() + " [<a>view</a>]";
-			// } else {
-			// attachmentHeader = " Deprecated: " +
-			// comment.getAttachmentDescription();
-			// }
-			// // String result = MessageFormat.format(attachmentHeader, new
-			// // String[] { node
-			// // .getLabelText() });
-			//
-			// attachmentLink.addSelectionListener(new SelectionAdapter() {
-			// /*
-			// * (non-Javadoc)
-			// *
-			// * @see
-			// org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-			// */
-			// public void widgetSelected(SelectionEvent e) {
-			// String address = repository.getUrl() + "/attachment.cgi?id=" +
-			// comment.getAttachmentId()
-			// + "&amp;action=view";
-			// TaskUiUtil.openUrl(address, address, address);
-			//
-			// }
-			// });
-			//
-			// attachmentLink.setText(attachmentHeader);
-			//
-			// }
-
-			// styledText = newLayout(ecComposite, 1, comment.getText(), VALUE);
-			// styledText.addListener(SWT.FocusIn, new
-			// CommentListener(comment));
-			// styledText.setFont(COMMENT_FONT);
-			// System.err.println(comment.getNumber()+" "+comment.getText());
-			TextViewer viewer = addRepositoryText(repository, ecComposite, comment.getText());
-			styledText = viewer.getTextWidget();
-			GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(styledText);
-
-			// line wrapping
-			// GridData styledTextData = new GridData(GridData.FILL_HORIZONTAL);
-			// styledTextData.widthHint = DESCRIPTION_WIDTH;
-			// styledTextData.grabExcessHorizontalSpace = true;
-			// styledText.setLayoutData(styledTextData);
-
-			// TextViewer viewer = addRepositoryText(repository, form.getBody(),
-			// bug.getDescription());// form.getBody()
-			// final StyledText styledText = viewer.getTextWidget();
-			// styledText.addListener(SWT.FocusIn, new DescriptionListener());
-			// styledText.setLayout(new GridLayout());
-			// GridData styledTextData = new GridData(GridData.FILL_HORIZONTAL);
-			// styledTextData.widthHint = DESCRIPTION_WIDTH;
-			// styledTextData.grabExcessHorizontalSpace = true;
-
-			// code for outline
-			commentStyleText.add(styledText);
-			texts.add(textsindex, styledText);
-			textHash.put(comment, styledText);
-			textsindex++;
-		}
-
-		Section sectionAdditionalComments = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR
-				| Section.TWISTIE);
-		sectionAdditionalComments.setText(LABEL_SECTION_NEW_COMMENT);
-		sectionAdditionalComments.setExpanded(true);
-
-		sectionAdditionalComments.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		sectionAdditionalComments.addExpansionListener(new IExpansionListener() {
-			public void expansionStateChanging(ExpansionEvent e) {
-				form.reflow(true);
-			}
-
-			public void expansionStateChanged(ExpansionEvent e) {
-				form.reflow(true);
-			}
-		});
-
-		Composite newCommentsComposite = toolkit.createComposite(sectionAdditionalComments);
-		newCommentsComposite.setLayout(new GridLayout());
-		newCommentsComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		addCommentsText = toolkit.createText(newCommentsComposite, taskData.getNewComment(), SWT.MULTI | SWT.V_SCROLL
-				| SWT.WRAP);
-
-		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-		Font newCommnetFont = themeManager.getCurrentTheme().getFontRegistry().get(REPOSITORY_TEXT_ID);
-		addCommentsText.setFont(newCommnetFont);
-		toolkit.paintBordersFor(newCommentsComposite);
-		GridData addCommentsTextData = new GridData(GridData.FILL_HORIZONTAL);
-		addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
-		addCommentsTextData.heightHint = DESCRIPTION_HEIGHT;
-		addCommentsTextData.grabExcessHorizontalSpace = true;
-
-		addCommentsText.setLayoutData(addCommentsTextData);
-
-		addCommentsText.addListener(SWT.KeyUp, new Listener() {
-
-			public void handleEvent(Event event) {
-				String sel = addCommentsText.getText();
-				if (!(taskData.getNewComment().equals(sel))) {
-					taskData.setNewComment(sel);
-					changeDirtyStatus(true);
-				}
-				validateInput();
-			}
-		});
-		addCommentsText.addListener(SWT.FocusIn, new NewCommentListener());
-		addCommentsTextBox = addCommentsText;
-
-		sectionAdditionalComments.setClient(newCommentsComposite);
-
-		// if they aren't already on the cc list create an add self check box
-
-		RepositoryTaskAttribute owner = taskData.getAttribute(BugzillaReportElement.ASSIGNED_TO.getKeyString());
-
-		// Don't add addselfcc check box if the user is the bug owner
-		if (owner != null && owner.getValue().indexOf(repository.getUserName()) != -1) {
-			return;
-		}
-		// Don't add addselfcc if already there
-		RepositoryTaskAttribute ccAttribute = taskData.getAttribute(BugzillaReportElement.CC.getKeyString());
-		if (ccAttribute != null && ccAttribute.getValues().contains(repository.getUserName())) {
-			return;
-		}
-		RepositoryTaskAttribute addselfcc = taskData.getAttribute(BugzillaReportElement.ADDSELFCC.getKeyString());
-		if (addselfcc == null) {
-			// addselfcc =
-			// BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.ADDSELFCC);
-			taskData.setAttributeValue(BugzillaReportElement.ADDSELFCC.getKeyString(), "0");
-		} else {
-			addselfcc.setValue("0");
-		}
-
-		final Button addSelfButton = toolkit.createButton(newCommentsComposite, "Add " + repository.getUserName()
-				+ " to CC list", SWT.CHECK);
-
-		addSelfButton.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (addSelfButton.getSelection()) {
-					taskData.setAttributeValue(BugzillaReportElement.ADDSELFCC.getKeyString(), "1");
-					// connector.getAttributeFactory().setAttributeValue(taskData,
-					// BugzillaReportElement.ADDSELFCC.getKeyString(), "1");
-				} else {
-					taskData.setAttributeValue(BugzillaReportElement.ADDSELFCC.getKeyString(), "0");
-				}
-			}
-		});
-	}
-
-	@Override
 	protected void addKeywordsList(FormToolkit toolkit, String keywords, Composite attributesComposite)
 			throws IOException {
 		// newLayout(attributesComposite, 1, "Keywords:", PROPERTY);
@@ -776,7 +830,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		keyWordsList.addListener(SWT.FocusIn, new GenericListener());
 	}
 
-	@Override
+
 	protected void addCCList(FormToolkit toolkit, String ccValue, Composite attributesComposite) {
 		newLayout(attributesComposite, 1, "Add CC:", PROPERTY);
 		ccText = toolkit.createText(attributesComposite, ccValue);
@@ -865,23 +919,23 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 	}
 
-	@Override
-	protected void restoreBug() {
-
-		if (taskData == null)
-			return;
-
-		// go through all of the attributes and restore the new values to the
-		// main ones
-		// for (Iterator<RepositoryTaskAttribute> it =
-		// bug.getAttributes().iterator(); it.hasNext();) {
-		// RepositoryTaskAttribute a = it.next();
-		// a.setNewValue(a.getValue());
-		// }
-
-		// Restore some other fields as well.
-		// bug.setNewNewComment(bug.getNewComment());
-	}
+	// @Override
+	// protected void restoreBug() {
+	//
+	// if (taskData == null)
+	// return;
+	//
+	// // go through all of the attributes and restore the new values to the
+	// // main ones
+	// // for (Iterator<RepositoryTaskAttribute> it =
+	// // bug.getAttributes().iterator(); it.hasNext();) {
+	// // RepositoryTaskAttribute a = it.next();
+	// // a.setNewValue(a.getValue());
+	// // }
+	//
+	// // Restore some other fields as well.
+	// // bug.setNewNewComment(bug.getNewComment());
+	// }
 
 	/**
 	 * This job opens a compare editor to compare the current state of the bug
@@ -900,7 +954,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
 						BugzillaPlugin.REPOSITORY_KIND, taskData.getRepositoryUrl());
 				serverBug = BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository
-						.getPassword(), bugzillaInput.getProxySettings(), repository.getCharacterEncoding(), taskData
+						.getPassword(), editorInput.getProxySettings(), repository.getCharacterEncoding(), taskData
 						.getId());
 				// If no bug was found on the server, throw an exception so that
 				// the
@@ -951,7 +1005,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 			if (keyWordsList.getSelectionCount() == 1) {
 				int index = keyWordsList.getSelectionIndex();
 				String keyword = keyWordsList.getItem(index);
-				if (getReport().getAttributeValue(BugzillaReportElement.KEYWORDS.getKeyString()).equals(keyword))
+				if (getRepositoryTaskData().getAttributeValue(BugzillaReportElement.KEYWORDS.getKeyString()).equals(
+						keyword))
 					keyWordsList.deselectAll();
 			}
 
@@ -983,7 +1038,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	protected class DescriptionListener implements Listener {
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
-					new BugzillaReportSelection(taskData.getId(), taskData.getRepositoryUrl(),
+					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(),
 							LABEL_SECTION_DESCRIPTION, true, taskData.getSummary()))));
 		}
 	}
@@ -1008,20 +1063,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
-					new BugzillaReportSelection(taskData.getId(), taskData.getRepositoryUrl(), comment.getCreated()
+					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(), comment.getCreated()
 							.toString(), comment, taskData.getSummary()))));
-		}
-	}
-
-	/**
-	 * A listener for selection of the textbox where a new comment is entered
-	 * in.
-	 */
-	protected class NewCommentListener implements Listener {
-		public void handleEvent(Event event) {
-			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
-					new BugzillaReportSelection(taskData.getId(), taskData.getRepositoryUrl(), "New Comment", false,
-							taskData.getSummary()))));
 		}
 	}
 
@@ -1106,7 +1149,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		}
 	}
 
-	private void validateInput() {
+	protected void validateInput() {
 		RepositoryOperation o = taskData.getSelectedOperation();
 		if (o != null && o.getKnobName().compareTo("resolve") == 0
 				&& (addCommentsText.getText() == null || addCommentsText.getText().equals(""))) {
@@ -1118,15 +1161,65 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		}
 	}
 
-	@Override
-	public void handleSummaryEvent() {
-		String sel = summaryText.getText();
-		RepositoryTaskAttribute a = getReport().getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString());
-		if (!(a.getValue().equals(sel))) {
-			a.setValue(sel);
-			changeDirtyStatus(true);
-		}
+	/**
+	 * Adds a text field to display and edit the bug's URL attribute.
+	 * 
+	 * @param url
+	 *            The URL attribute of the bug.
+	 * @param attributesComposite
+	 *            The composite to add the text field to.
+	 */
+	protected void addUrlText(String url, Composite attributesComposite) {
+		FormToolkit toolkit = new FormToolkit(attributesComposite.getDisplay());
+		toolkit.createLabel(attributesComposite, "URL:");
+		urlText = toolkit.createText(attributesComposite, url);
+		urlText.setFont(TEXT_FONT);
+		GridData urlTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		urlTextData.horizontalSpan = 3;
+		urlTextData.widthHint = 200;
+		urlText.setLayoutData(urlTextData);
+		// urlText.setText(url);
+		urlText.addListener(SWT.KeyUp, new Listener() {
+			public void handleEvent(Event event) {
+				String sel = urlText.getText();
+				RepositoryTaskAttribute a = getRepositoryTaskData().getAttribute(
+						BugzillaReportElement.BUG_FILE_LOC.getKeyString());
+				if (!(a.getValue().equals(sel))) {
+					a.setValue(sel);
+					changeDirtyStatus(true);
+				}
+			}
+		});
+		urlText.addListener(SWT.FocusIn, new GenericListener());
 	}
+
+	@Override
+	public void createCustomAttributeLayout() {
+		// ignore
+
+	}
+
+	@Override
+	public RepositoryTaskData getRepositoryTaskData() {
+		return editorInput.getRepositoryTaskData();
+	}
+
+	// @Override
+	// public AbstractRepositoryTask getRepositoryTask() {
+	// // ignore
+	// return null;
+	// }
+
+	// @Override
+	// public void handleSummaryEvent() {
+	// String sel = summaryText.getText();
+	// RepositoryTaskAttribute a =
+	// getReport().getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString());
+	// if (!(a.getValue().equals(sel))) {
+	// a.setValue(sel);
+	// changeDirtyStatus(true);
+	// }
+	// }
 
 	// TODO used for spell checking. Add back when we want to support this
 	// protected Button checkSpellingButton;

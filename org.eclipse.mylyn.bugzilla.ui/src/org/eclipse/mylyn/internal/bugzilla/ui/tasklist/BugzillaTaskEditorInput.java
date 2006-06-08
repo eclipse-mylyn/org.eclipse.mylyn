@@ -17,11 +17,9 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditorInput;
-import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
+import org.eclipse.mylar.internal.tasklist.ui.editors.ExistingBugEditorInput;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.ui.IPersistableElement;
 
 /**
@@ -32,19 +30,19 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 
 	private String bugTitle;
 
-	private RepositoryTaskData offlineBug;
+	//private RepositoryTaskData offlineBug;
 
 	private BugzillaTask bugTask;
 
-	private boolean offline;
+	//private boolean offline;
 
 	public BugzillaTaskEditorInput(TaskRepository repository, BugzillaTask bugTask, boolean offline) throws IOException, GeneralSecurityException {
-		super(repository, AbstractRepositoryTask.getTaskIdAsInt(bugTask.getHandleIdentifier()), offline);
+		super(repository, AbstractRepositoryTask.getTaskIdAsInt(bugTask.getHandleIdentifier()));
 		this.bugTask = bugTask;
-		offlineBug = bugTask.getTaskData();
+//		offlineBug = bugTask.getTaskData();
 		bugId = AbstractRepositoryTask.getTaskIdAsInt(bugTask.getHandleIdentifier());
 		bugTitle = "";
-		this.offline = offline;
+//		this.offline = offline;
 	}
 
 	protected void setBugTitle(String str) {
@@ -87,29 +85,29 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 		return bugId;
 	}
 
-	/**
-	 * Returns the online server bug for this input
-	 * 
-	 * @see BugzillaRepositoryUtil
-	 * @see BugReport
-	 */
-	// public BugReport getServerBug() {
-	// return serverBug;
-	// }
-	/**
-	 * Returns the offline bug for this input's Bugzilla task
-	 */
-	public RepositoryTaskData getOfflineBug() {
-		if (offline || bugTask.getSyncState() == RepositoryTaskSyncState.OUTGOING
-				|| bugTask.getSyncState() == RepositoryTaskSyncState.CONFLICT)
-			return offlineBug;
-		else
-			return super.getBug();
-	}
-
-	public void setOfflineBug(RepositoryTaskData offlineBug) {
-		this.offlineBug = offlineBug;
-	}
+//	/**
+//	 * Returns the online server bug for this input
+//	 * 
+//	 * @see BugzillaRepositoryUtil
+//	 * @see BugReport
+//	 */
+//	// public BugReport getServerBug() {
+//	// return serverBug;
+//	// }
+//	/**
+//	 * Returns the offline bug for this input's Bugzilla task
+//	 */
+//	public RepositoryTaskData getOfflineBug() {
+//		if (offline || bugTask.getSyncState() == RepositoryTaskSyncState.OUTGOING
+//				|| bugTask.getSyncState() == RepositoryTaskSyncState.CONFLICT)
+//			return offlineBug;
+//		else
+//			return super.getBug();
+//	}
+//
+//	public void setOfflineBug(RepositoryTaskData offlineBug) {
+//		this.offlineBug = offlineBug;
+//	}
 
 	/**
 	 * Gets the bug page input stream

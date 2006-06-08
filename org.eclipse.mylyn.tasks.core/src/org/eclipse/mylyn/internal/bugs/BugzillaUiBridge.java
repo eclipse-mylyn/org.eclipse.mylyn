@@ -20,10 +20,10 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
-import org.eclipse.mylar.internal.bugzilla.ui.editor.AbstractBugEditor;
-import org.eclipse.mylar.internal.bugzilla.ui.editor.BugzillaOutlinePage;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskEditor;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasklist.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylar.internal.tasklist.ui.editors.RepositoryTaskOutlinePage;
 import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -87,8 +87,8 @@ public class BugzillaUiBridge implements IMylarUiBridge {
 			for (int i = 0; i < references.length; i++) {
 				IEditorPart part = references[i].getEditor(false);
 				if (part != null) {
-					if (part instanceof AbstractBugEditor) {
-						((AbstractBugEditor) part).close();
+					if (part instanceof AbstractRepositoryTaskEditor) {
+						((AbstractRepositoryTaskEditor) part).close();
 					} else if (part instanceof BugzillaTaskEditor) {
 						((BugzillaTaskEditor) part).close();
 					}
@@ -98,7 +98,7 @@ public class BugzillaUiBridge implements IMylarUiBridge {
 	}
 
 	public boolean acceptsEditor(IEditorPart editorPart) {
-		return editorPart instanceof AbstractBugEditor;
+		return editorPart instanceof AbstractRepositoryTaskEditor;
 	}
 
 	public List<TreeViewer> getContentOutlineViewers(IEditorPart editor) {
@@ -110,9 +110,9 @@ public class BugzillaUiBridge implements IMylarUiBridge {
 	}
 
 	protected TreeViewer getOutlineTreeViewer(IEditorPart editor) {
-		if (editor instanceof AbstractBugEditor) {
-			AbstractBugEditor abe = (AbstractBugEditor) editor;
-			BugzillaOutlinePage outline = abe.getOutline();
+		if (editor instanceof AbstractRepositoryTaskEditor) {
+			AbstractRepositoryTaskEditor abe = (AbstractRepositoryTaskEditor) editor;
+			RepositoryTaskOutlinePage outline = abe.getOutline();
 			if (outline != null)
 				return outline.getOutlineTreeViewer();
 		}

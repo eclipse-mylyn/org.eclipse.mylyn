@@ -9,26 +9,26 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui.editor;
+package org.eclipse.mylar.internal.tasklist.ui.editors;
 
 import org.eclipse.jface.action.Action;
 
 /**
  * Action used to copy selected text from a bug editor to the clipboard.
  */
-public class BugzillaEditorCopyAction extends Action {
+public class RepositoryTaskEditorCopyAction extends Action {
 	/** The editor to copy text selections from. */
-	private AbstractBugEditor bugEditor;
+	private AbstractRepositoryTaskEditor bugEditor;
 
 	/**
-	 * Creates a new <code>BugzillaEditorCopyAction</code>.
+	 * Creates a new <code>RepositoryTaskEditorCopyAction</code>.
 	 * 
 	 * @param editor
 	 *            The editor that this action is copying text selections from.
 	 */
-	public BugzillaEditorCopyAction(AbstractBugEditor editor) {
+	public RepositoryTaskEditorCopyAction(AbstractRepositoryTaskEditor editor) {
 		bugEditor = editor;
-		setText("AbstractBugEditor.copy.text");
+		setText("AbstractRepositoryTaskEditor.copy.text");
 	}
 
 	@Override

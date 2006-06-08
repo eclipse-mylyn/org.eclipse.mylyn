@@ -8,14 +8,11 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.bugzilla.ui;
+package org.eclipse.mylar.internal.tasklist.ui.editors;
 
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 
-/**
- * Miscellaneous constants and functions for this plugin.
- */
-public class BugzillaTools {
+public class OutlineTools {
 
 	/** The default string used for locally created bugs. */
 	public static final String OFFLINE_SERVER_DEFAULT = "[local]";
@@ -28,7 +25,7 @@ public class BugzillaTools {
 	 *            The bugzilla selection.
 	 * @return The handle for the bugzilla selection.
 	 */
-	public static String getHandle(IBugzillaReportSelection bugSel) {
+	public static String getHandle(IRepositoryTaskSelection bugSel) {
 		String handle = bugSel.getServer() + ";" + bugSel.getId();
 		if (bugSel.hasComment()) {
 			int number = bugSel.getComment().getNumber() + 1;
@@ -41,7 +38,7 @@ public class BugzillaTools {
 		return handle;
 	}
 
-	public static String getName(IBugzillaReportSelection bugSel) {
+	public static String getName(IRepositoryTaskSelection bugSel) {
 		String name = bugSel.getServer() + ": Bug#: " + bugSel.getId() + ": " + bugSel.getBugSummary();
 		if (bugSel.hasComment()) {
 			name += " : Comment#: " + bugSel.getComment().getNumber();

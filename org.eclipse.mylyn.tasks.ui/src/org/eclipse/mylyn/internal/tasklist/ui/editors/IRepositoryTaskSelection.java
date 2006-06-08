@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui;
+package org.eclipse.mylar.internal.tasklist.ui.editors;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.internal.tasklist.Comment;
@@ -17,7 +17,7 @@ import org.eclipse.mylar.internal.tasklist.Comment;
 /**
  * Interface for a selection of a Bugzilla element in a view.
  */
-public interface IBugzillaReportSelection extends ISelection {
+public interface IRepositoryTaskSelection extends ISelection {
 
 	/**
 	 * @return <code>true</code> if a comment was selected.

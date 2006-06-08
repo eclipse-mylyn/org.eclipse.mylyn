@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui.editor;
+package org.eclipse.mylar.internal.tasklist.ui.editors;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.text.IDocument;
@@ -65,7 +65,7 @@ public class SpellingDialog extends Dialog {
 		suggestions = new List(spellingComposite, SWT.BORDER);
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		gd.widthHint = 150;
-		gd.heightHint = AbstractBugEditor.WRAP_LENGTH;
+		gd.heightHint = AbstractRepositoryTaskEditor.WRAP_LENGTH;
 		suggestions.setLayoutData(gd);
 
 		return c;

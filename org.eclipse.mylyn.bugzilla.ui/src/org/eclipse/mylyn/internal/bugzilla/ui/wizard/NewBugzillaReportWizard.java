@@ -63,7 +63,7 @@ public class NewBugzillaReportWizard extends AbstractBugzillaReportWizard {
 	@Override
 	protected void saveBugOffline() {
 		AbstractRepositoryConnector client = (AbstractRepositoryConnector)MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
-		client.saveOffline(model, true);
+		client.saveOffline(model);
 	}
 
 	@Override
@@ -119,14 +119,15 @@ public class NewBugzillaReportWizard extends AbstractBugzillaReportWizard {
 						MylarTaskListPlugin.getTaskListManager().getTaskList().getRootCategory());
 			}
 
-			AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
-					BugzillaPlugin.REPOSITORY_KIND);
+//			AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
+//					BugzillaPlugin.REPOSITORY_KIND);
 			// client.addTaskToArchive(newTask);
-			TaskUiUtil.openEditor(newTask, true);
+			//TaskUiUtil.openEditor(newTask, true);
+			TaskUiUtil.refreshAndOpenTaskListElement(newTask);
 
-			if (!newTask.isDownloaded()) {
-				client.synchronize(newTask, true, null);
-			}
+//			if (!newTask.isDownloaded()) {
+//				client.synchronize(newTask, true, null);
+//			}
 
 			return true;
 		}
