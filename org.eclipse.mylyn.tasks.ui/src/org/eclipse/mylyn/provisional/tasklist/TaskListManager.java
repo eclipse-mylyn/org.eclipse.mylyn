@@ -14,6 +14,7 @@
 package org.eclipse.mylar.provisional.tasklist;
 
 import java.io.File;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -439,11 +440,44 @@ public class TaskListManager {
 		return TaskRepositoryManager.PREFIX_LOCAL + nextLocalTaskId++;
 	}
 
-	public void refactorRepositoryUrl(Object oldUrl, String newUrl)	{
+	public void refactorRepositoryUrl(Object oldUrl, String newUrl) {
+		if (oldUrl == null || newUrl == null) {
+			return;
+		}
+		List<ITask> activeTasks = taskList.getActiveTasks();
+		for (ITask task : activeTasks) {
+			deactivateTask(task);
+		}
 		taskList.refactorRepositoryUrl(oldUrl, newUrl);
-		MylarPlugin.getContextManager().refactorRepositoryUrl(oldUrl, newUrl);
+
+		File dataDir = new File(MylarPlugin.getDefault().getDataDirectory());
+		if (dataDir.exists() && dataDir.isDirectory()) {
+			for (File file : dataDir.listFiles()) {
+				int dotIndex = file.getName().lastIndexOf('.');
+				if (dotIndex != -1) {
+					String storedHandle;
+					try {
+						storedHandle = URLDecoder.decode(file.getName().substring(0, dotIndex),
+								MylarContextManager.CONTEXT_FILENAME_ENCODING);
+						int delimIndex = storedHandle.lastIndexOf(AbstractRepositoryTask.HANDLE_DELIM);
+						if (delimIndex != -1) {
+							String storedUrl = storedHandle.substring(0, delimIndex);
+							if (oldUrl.equals(storedUrl)) {
+								String id = AbstractRepositoryTask.getTaskId(storedHandle);
+								String newHandle = AbstractRepositoryTask.getHandle(newUrl, id);
+								File newFile = MylarPlugin.getContextManager().getFileForContext(newHandle);
+								file.renameTo(newFile);
+							}
+						}
+					} catch (Exception e) {
+						MylarStatusHandler.fail(e, "Could not move context file: " + file.getName(), false);
+					}
+				}
+			}
+		}
+		saveTaskList();
 	}
-	
+
 	public boolean readExistingOrCreateNewList() {
 		try {
 			if (taskListFile.exists()) {
@@ -466,7 +500,7 @@ public class TaskListManager {
 			parseFutureReminders();
 			taskListInitialized = true;
 			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
-				listener.tasklistRead();
+				listener.taskListRead();
 			}
 
 			// only activate the first task to avoid confusion of mutliple

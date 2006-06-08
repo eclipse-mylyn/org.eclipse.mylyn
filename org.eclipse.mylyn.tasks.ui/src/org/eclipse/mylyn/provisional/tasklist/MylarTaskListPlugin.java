@@ -191,7 +191,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			// ignore
 		}
 
-		public void tasklistRead() {
+		public void taskListRead() {
 			// ignore
 		}
 	};
@@ -372,6 +372,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		}
 	}
 
+	// TODO: delete post 0.6?
 	private void migrateHandlesToRepositorySupport() {
 		boolean migrated = false;
 		getMylarCorePrefs().setDefault(TaskListPreferenceConstants.CONTEXTS_MIGRATED, false);

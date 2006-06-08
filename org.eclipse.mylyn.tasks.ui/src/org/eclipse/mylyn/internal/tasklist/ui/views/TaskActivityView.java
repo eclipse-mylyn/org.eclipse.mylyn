@@ -143,7 +143,7 @@ public class TaskActivityView extends ViewPart {
 			// TaskActivityView.this.treeViewer.refresh(week);
 		}
 
-		public void tasklistRead() {
+		public void taskListRead() {
 			refresh();
 		}
 	};

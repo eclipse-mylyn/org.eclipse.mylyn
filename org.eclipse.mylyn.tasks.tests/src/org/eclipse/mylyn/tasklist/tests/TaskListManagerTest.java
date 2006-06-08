@@ -29,6 +29,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.tasklist.ScheduledTaskListSynchJob;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
@@ -70,6 +71,17 @@ public class TaskListManagerTest extends TestCase {
 		manager.resetTaskList();
 		MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskListAndContexts();
 		MylarTaskListPlugin.getRepositoryManager().removeRepository(repository);
+	}
+	
+	public void testMigrateTaskContextFiles() throws IOException {
+		File fileA = MylarPlugin.getContextManager().getFileForContext("http://a-1");
+		fileA.createNewFile();
+		fileA.deleteOnExit();
+		assertTrue(fileA.exists());
+		manager.refactorRepositoryUrl("http://a", "http://b");
+		File fileB = MylarPlugin.getContextManager().getFileForContext("http://b-1");
+		assertTrue(fileB.exists());
+		assertFalse(fileA.exists());
 	}
 	
 	public void testMigrateQueryHandles() {

@@ -82,10 +82,7 @@ public class TaskList {
 	}
 	
 	void refactorRepositoryUrl(Object oldUrl, String newUrl)	{
-		if (oldUrl == null || newUrl == null) {
-			return;
-		}
-		for (ITask task : getAllTasks()) {
+		for (ITask task : new ArrayList<ITask>(tasks.values())) {
 			if (task instanceof AbstractRepositoryTask) {
 				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)task;
 				if (oldUrl.equals(AbstractRepositoryTask.getRepositoryUrl(repositoryTask.getHandleIdentifier()))) {
@@ -97,11 +94,13 @@ public class TaskList {
 				}
 			}
 		}
+		
 		for (AbstractRepositoryQuery query : queries) {
 			if (query.getRepositoryUrl().equals(oldUrl)) {
-//				queries.remove(query);
 				query.setRepositoryUrl(newUrl);
-//				queries.add(query);
+				for (AbstractQueryHit hit : query.getHits()) {
+					hit.setRepositoryUrl(newUrl);
+				}
 			}
 		}
 	}

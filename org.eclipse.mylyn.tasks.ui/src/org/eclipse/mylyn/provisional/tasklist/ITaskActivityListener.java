@@ -27,6 +27,6 @@ public interface ITaskActivityListener {
 
 	public abstract void activityChanged(DateRangeContainer week);
 	
-	public abstract void tasklistRead();
+	public abstract void taskListRead();
 
 }

@@ -282,7 +282,7 @@ public class TaskListView extends ViewPart {
 			// ignore
 		}
 
-		public void tasklistRead() {
+		public void taskListRead() {
 			refresh(null);
 		}
 	};
