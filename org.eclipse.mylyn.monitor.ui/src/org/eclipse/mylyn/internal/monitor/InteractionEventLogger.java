@@ -59,15 +59,12 @@ public class InteractionEventLogger implements IInteractionEventListener {
 		this.outputFile = outputFile;
 	}
 
-	/**
-	 * TODO: should these be queued for better performance?
-	 */
 	public void interactionObserved(InteractionEvent event) {
-//		System.err.println(">>> " + event);
 		if (handleObfuscator.isObfuscationEnabled()) {
 			String obfuscatedHandle = handleObfuscator.obfuscateHandle(event.getStructureKind(), event.getStructureHandle());
 			event = new InteractionEvent(event.getKind(), event.getStructureKind(), obfuscatedHandle, event.getOriginId(), event.getNavigation(), event.getDelta(), event.getInterestContribution());
 		}
+		System.err.println("> " + event);
 		try {
 			if (started) {
 				String xml = interactionEventToXml(event);
@@ -84,11 +81,17 @@ public class InteractionEventLogger implements IInteractionEventListener {
 	}
 
 	public void startObserving() {
+		synchronized(this) {
+			if (started) {
+				return;
+			} else {
+				started = true;
+			}
+		}
 		try {
 			if (!outputFile.exists())
 				outputFile.createNewFile();
 			outputStream = new FileOutputStream(outputFile, true);
-			started = true;
 
 			for (InteractionEvent queuedEvent : queue)
 				interactionObserved(queuedEvent);
