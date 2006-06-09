@@ -18,6 +18,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import org.eclipse.jface.viewers.DialogCellEditor;
+import org.eclipse.mylar.internal.tasklist.ui.views.DatePicker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -35,8 +36,6 @@ public class ReminderCellEditor extends DialogCellEditor {
 
 	private String formatString = "dd-MMM-yyyy";
 	
-	public final static String REMINDER_DIALOG_TITLE = "Date Chooser"; 
-
 	private SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
 
 	public ReminderCellEditor(Composite parent) {
@@ -64,7 +63,7 @@ public class ReminderCellEditor extends DialogCellEditor {
 			newCalendar.setTime(initialCalendar.getTime());
 		} 
 		
-		dialog = new DateSelectionDialog(cellEditorWindow.getShell(), newCalendar, REMINDER_DIALOG_TITLE);
+		dialog = new DateSelectionDialog(cellEditorWindow.getShell(), newCalendar, DatePicker.TITLE_DIALOG);
 		int dialogResponse = dialog.open();
 		
 		if(dialogResponse == DateSelectionDialog.CANCEL) {

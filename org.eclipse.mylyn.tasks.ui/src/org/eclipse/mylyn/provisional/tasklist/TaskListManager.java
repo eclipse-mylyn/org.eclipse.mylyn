@@ -441,11 +441,11 @@ public class TaskListManager {
 	}
 
 	public void refactorRepositoryUrl(Object oldUrl, String newUrl) {
-		if (oldUrl == null || newUrl == null) {
+		if (oldUrl == null || newUrl == null || oldUrl.equals(newUrl)) {
 			return;
-		}
+		} 
 		List<ITask> activeTasks = taskList.getActiveTasks();
-		for (ITask task : activeTasks) {
+		for (ITask task : new ArrayList<ITask>(activeTasks)) {
 			deactivateTask(task);
 		}
 		taskList.refactorRepositoryUrl(oldUrl, newUrl);
