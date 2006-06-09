@@ -117,7 +117,6 @@ public abstract class AbstractRepositoryConnector {
 	 */
 	public abstract List<AbstractQueryHit> performQuery(AbstractRepositoryQuery query, IProgressMonitor monitor,
 			MultiStatus queryStatus);
-
 	
 	// Precondition of note: offline file is removed upon submit to repository resulting in a synchronized state.
 	protected void updateOfflineState(final AbstractRepositoryTask repositoryTask, boolean forceSync) {
@@ -437,100 +436,3 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 }
-
-// public void removeTaskToBeRefreshed(AbstractRepositoryTask task) {
-// toBeRefreshed.remove(task);
-// if (currentlyRefreshing.get(task) != null) {
-// currentlyRefreshing.get(task).cancel();
-// currentlyRefreshing.remove(task);
-// }
-// updateRefreshState();
-// }
-
-// private void refreshTasksAndQueries() {
-// Set<ITask> tasks =
-// MylarTaskListPlugin.getTaskListManager().getTaskList().getRootTasks();
-//
-// for (ITask task : tasks) {
-// if (task instanceof AbstractRepositoryTask && !task.isCompleted()) {
-// requestRefresh((AbstractRepositoryTask) task);
-// }
-// }
-// for (AbstractTaskContainer cat :
-// MylarTaskListPlugin.getTaskListManager().getTaskList().getCategories()) {
-//
-// if (cat instanceof TaskCategory) {
-// for (ITask task : ((TaskCategory) cat).getChildren()) {
-// if (task instanceof AbstractRepositoryTask && !task.isCompleted()) {
-// if
-// (AbstractRepositoryTask.getLastRefreshTimeInMinutes(((AbstractRepositoryTask)
-// task)
-// .getLastRefresh()) > 2) {
-// requestRefresh((AbstractRepositoryTask) task);
-// }
-// }
-// }
-// if (((TaskCategory) cat).getChildren() != null) {
-// for (ITask child : ((TaskCategory) cat).getChildren()) {
-// if (child instanceof AbstractRepositoryTask && !child.isCompleted()) {
-// requestRefresh((AbstractRepositoryTask) child);
-// }
-// }
-// }
-// }
-// }
-//
-// synchronize(MylarTaskListPlugin.getTaskListManager().getTaskList().getQueries(),
-// null, Job.DECORATE, 0);
-//
-// for (AbstractRepositoryQuery query :
-// MylarTaskListPlugin.getTaskListManager().getTaskList().getQueries()) {
-// if (!(query instanceof AbstractRepositoryQuery)) {
-// continue;
-// }
-
-// AbstractRepositoryQuery repositoryQuery = (AbstractRepositoryQuery) query;
-// synchronize(repositoryQuery, null);
-// // bqc.refreshBugs();
-// for (AbstractQueryHit hit : repositoryQuery.getHits()) {
-// if (hit.getCorrespondingTask() != null) {
-// AbstractRepositoryTask task = ((AbstractRepositoryTask)
-// hit.getCorrespondingTask());
-// if (!task.isCompleted()) {
-// requestRefresh((AbstractRepositoryTask) task);
-// }
-// }
-// }
-// }
-// }
-
-// public void removeRefreshingTask(AbstractRepositoryTask task) {
-// if (currentlyRefreshing.containsKey(task)) {
-// currentlyRefreshing.remove(task);
-// }
-// updateRefreshState();
-// }
-//
-// public void clearAllRefreshes() {
-// toBeRefreshed.clear();
-// List<Job> l = new ArrayList<Job>();
-// l.addAll(currentlyRefreshing.values());
-// for (Job j : l) {
-// if (j != null)
-// j.cancel();
-// }
-// currentlyRefreshing.clear();
-// }
-
-// private void updateRefreshState() {
-// if (currentlyRefreshing.size() < MAX_REFRESH_JOBS && toBeRefreshed.size() >
-// 0) {
-// AbstractRepositoryTask repositoryTask = toBeRefreshed.remove(0);
-//		
-// Job refreshJob = synchronize(repositoryTask, true, null);
-// refreshJob.setPriority(Job.BUILD);
-// if (refreshJob != null) {
-// currentlyRefreshing.put(repositoryTask, refreshJob);
-// }
-// }
-// }

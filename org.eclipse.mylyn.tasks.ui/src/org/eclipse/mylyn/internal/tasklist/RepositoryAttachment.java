@@ -15,28 +15,27 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
 /**
  * @author Rob Elves
  */
 public class RepositoryAttachment extends AttributeContainer implements Serializable {
 
 	public RepositoryAttachment(AbstractAttributeFactory attributeFactory) {
-		super(attributeFactory);		
+		super(attributeFactory);
 	}
 
 	private static final long serialVersionUID = -9123545810321250785L;
-	
+
 	/** Parser for dates in the report */
-	//TODO: this is repository specific so need to pull out
+	// TODO: this is repository specific so need to pull out
 	private static SimpleDateFormat creation_ts_date_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	private boolean isObsolete = false;
 
 	private Date created;
-	
+
 	private String creator = "";
-	
+
 	public boolean isObsolete() {
 		return isObsolete;
 	}
@@ -44,18 +43,17 @@ public class RepositoryAttachment extends AttributeContainer implements Serializ
 	public void setObsolete(boolean isObsolete) {
 		this.isObsolete = isObsolete;
 	}
-	
 
-	/** 
+	/**
 	 * may return null if date is unknown/unparseable
 	 */
 	public Date getDateCreated() {
-		if(created == null) {
-			//created = Calendar.getInstance().getTime();
+		if (created == null) {
+			// created = Calendar.getInstance().getTime();
 			try {
 				created = creation_ts_date_format.parse(getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_DATE));
 			} catch (Exception e) {
-			}			
+			}
 		}
 		return created;
 	}
@@ -65,8 +63,9 @@ public class RepositoryAttachment extends AttributeContainer implements Serializ
 	}
 
 	public void setCreator(String creator) {
-		this.creator = creator;		
+		this.creator = creator;
 	}
+
 	public String getDescription() {
 		return getAttributeValue(RepositoryTaskAttribute.DESCRIPTION);
 	}
@@ -81,11 +80,11 @@ public class RepositoryAttachment extends AttributeContainer implements Serializ
 
 	public String getContentType() {
 		// I've seen both "ctype" and "type" occur for this, investigate
-		if(getAttribute(RepositoryTaskAttribute.ATTACHMENT_TYPE) != null) {
+		if (getAttribute(RepositoryTaskAttribute.ATTACHMENT_TYPE) != null) {
 			return getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_TYPE);
 		} else {
 			return getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_CTYPE);
 		}
 	}
-	
+
 }

@@ -122,25 +122,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return BugzillaPlugin.REPOSITORY_KIND;
 	}
 
-//	// TODO: eliminate this method, should only need call to saveOffline(..)
-//	public void saveBugReport(RepositoryTaskData bugzillaBug) {
-//		String handle = AbstractRepositoryTask.getHandle(bugzillaBug.getRepositoryUrl(), bugzillaBug.getId());
-//		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
-//		if (task instanceof BugzillaTask) {
-//			BugzillaTask bugzillaTask = (BugzillaTask) task;
-//			bugzillaTask.setTaskData(bugzillaBug);
-//
-//			if (bugzillaBug.hasChanges()) {
-//				bugzillaTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
-//			} else {
-//				bugzillaTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
-//			}
-//		}
-//
-//		saveOffline(bugzillaBug, false);
-//
-//	}
-
 	public RepositoryTaskData downloadTaskData(final AbstractRepositoryTask bugzillaTask) throws CoreException {
 		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
 				BugzillaPlugin.REPOSITORY_KIND, bugzillaTask.getRepositoryUrl());
@@ -623,36 +604,4 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 }
-
-// @Override
-// protected void updateOfflineState(AbstractRepositoryTask repositoryTask,
-// boolean forceSync) {
-// if (repositoryTask instanceof BugzillaTask) {
-// BugzillaTask bugzillaTask = (BugzillaTask) repositoryTask;
-// RepositoryTaskData downloadedReport = downloadReport(bugzillaTask);
-// if (downloadedReport != null) {
-// bugzillaTask.setBugReport(downloadedReport);
-// saveOffline(downloadedReport, forceSync);
-// }
-// }
-// }
-
-// @Override
-// public Set<IRemoteContextDelegate> getAvailableContexts(TaskRepository
-// repository, AbstractRepositoryTask task) {
-// Set<IRemoteContextDelegate> contextDelegates = new
-// HashSet<IRemoteContextDelegate>();
-// if (task instanceof BugzillaTask) {
-// BugzillaTask bugzillaTask = (BugzillaTask) task;
-// if (bugzillaTask.getTaskData() != null) {
-// for (RepositoryAttachment attachment :
-// bugzillaTask.getTaskData().getAttachments()) {
-// if (attachment.getDescription().equals(MYLAR_CONTEXT_DESCRIPTION)) {
-// contextDelegates.add(new BugzillaRemoteContextDelegate(attachment));
-// }
-// }
-// }
-// }
-// return contextDelegates;
-// }
 
