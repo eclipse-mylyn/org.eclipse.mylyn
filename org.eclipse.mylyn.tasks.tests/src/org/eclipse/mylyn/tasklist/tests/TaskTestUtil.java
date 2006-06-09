@@ -34,9 +34,9 @@ import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
  * @author Mik Kersten
  */
 public class TaskTestUtil {
-	
+
 	private static BugzillaAttributeFactory attributeFactory = new BugzillaAttributeFactory();
-	
+
 	public static File getLocalFile(String path) {
 		try {
 			URL installURL = MylarTasksTestsPlugin.getDefault().getBundle().getEntry(path);
@@ -63,14 +63,17 @@ public class TaskTestUtil {
 	}
 
 	public static void setBugTaskCompleted(BugzillaTask bugzillaTask, boolean completed) {
-		RepositoryTaskData report = new RepositoryTaskData(new BugzillaAttributeFactory(),  BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.ECLIPSE_BUGZILLA_URL, 1);
+		RepositoryTaskData report = new RepositoryTaskData(new BugzillaAttributeFactory(),
+				BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.ECLIPSE_BUGZILLA_URL, 1);
 		bugzillaTask.setTaskData(report);
-		RepositoryTaskAttribute resolvedAttribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_STATUS.getKeyString());
-		if (completed) {			
+		RepositoryTaskAttribute resolvedAttribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_STATUS
+				.getKeyString());
+		if (completed) {
 			resolvedAttribute.setValue(RepositoryTaskData.VAL_STATUS_RESOLVED);
 			Comment comment = new Comment(new BugzillaAttributeFactory(), report, 1);
-			RepositoryTaskAttribute attribute = attributeFactory.createAttribute(BugzillaReportElement.CREATION_TS.getKeyString());
-			attribute.setValue(Comment.creation_ts_date_format.format(new Date()));	
+			RepositoryTaskAttribute attribute = attributeFactory.createAttribute(BugzillaReportElement.CREATION_TS
+					.getKeyString());
+			attribute.setValue(Comment.creation_ts_date_format.format(new Date()));
 			comment.addAttribute(BugzillaReportElement.CREATION_TS.getKeyString(), attribute);
 			report.addComment(comment);
 		} else {
@@ -82,4 +85,5 @@ public class TaskTestUtil {
 		// report.addComment(new Comment(report, 1, now, "author",
 		// "author-name"));
 	}
+
 }

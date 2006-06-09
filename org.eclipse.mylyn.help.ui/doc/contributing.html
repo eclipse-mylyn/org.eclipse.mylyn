@@ -35,12 +35,14 @@ and leave the password blank.</li>
 		mylar.sandbox, mylar.viz, and mylar.zest.* which have additional 
 		dependencies).&nbsp; There should be no errors or warnings.</li>
 		<li>Run org.eclipse.mylar.tests.AllTests as a JUnit Plug-in Test, with 
-		assertions enabled.&nbsp; All 
-		tests should pass and there should be no console output.&nbsp; The tests 
-		workbench window can be in the foreground or background, but should not 
-		be interacted with during the test execution.<ul>
+		assertions enabled.&nbsp; All tests should pass and there should be no 
+		console output once you have done the following:<ul>
 		<li>Add the following to the test configuration under Arguments -&gt; VM 
 		Arguments: -enableassertions -Xmx384M</li>
+		<li>Add a <b>credentials.properties</b> file to 
+		org.eclipse.mylar.bugzilla.tests, and define &quot;username: xxx&quot; and 
+		&quot;password: yyy&quot; property. Email mylar-dev@ecipse.org for a username and 
+		password</li>
 	</ul>
 		</li>
 	</ul>
