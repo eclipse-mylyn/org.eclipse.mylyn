@@ -56,15 +56,11 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 		super.setUp();
 		assertNotNull(JavaPlugin.getDefault());
 		assertNotNull(MylarJavaPlugin.getDefault());
-		project = new TestJavaProject(this.getClass().getSimpleName());// + "-"
-																		// +
-																		// projectCounter++);
+		project = new TestJavaProject(this.getClass().getSimpleName());
 		p1 = project.createPackage("p1");
 		type1 = project.createType(p1, "Type1.java", "public class Type1 { }");
 		context = new MylarContext(contextId, scaling);
 		context.reset();
-		// assertTrue(manager.getActiveContext().getInteresting().toString(),
-		// manager.getActiveContext().getInteresting().isEmpty());
 		manager.activateContext(context);
 		assertNotNull(MylarJavaPlugin.getDefault());
 		assertTrue(MylarPlugin.getDefault().getStructureBridges().toString().indexOf(

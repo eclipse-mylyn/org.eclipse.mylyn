@@ -30,7 +30,7 @@ import org.eclipse.ui.internal.Workbench;
 /**
  * @author Mik Kersten
  */
-public class InterestManipulatingEditorTracker extends AbstractEditorTracker {
+public class EditorInteractionMonitor extends AbstractEditorTracker {
 
 	public static final String SOURCE_ID = "org.eclipse.mylar.ide.editor.tracker.interest";
 	
@@ -49,7 +49,6 @@ public class InterestManipulatingEditorTracker extends AbstractEditorTracker {
 	@Override
 	public void editorOpened(IEditorPart editorPartOpened) {
 		IWorkbenchPage page = editorPartOpened.getSite().getPage();
-//		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		IEditorReference[] editorReferences = page.getEditorReferences();
 		for (int i = 0; i < editorReferences.length; i++) {
 			IMylarElement element = null;

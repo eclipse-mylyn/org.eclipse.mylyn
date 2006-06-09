@@ -26,7 +26,7 @@ public interface IMylarUiBridge {
 
 	public abstract void open(IMylarElement element);
 
-	public abstract void setContextCapturePaused(boolean paused);
+//	public abstract void setContextCapturePaused(boolean paused);
 
 	public abstract void restoreEditor(IMylarElement document);
 

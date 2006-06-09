@@ -22,7 +22,9 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.tests.UiTestUtil;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
+import org.eclipse.mylar.internal.java.ui.actions.ApplyMylarToPackageExplorerAction;
 import org.eclipse.mylar.internal.ui.actions.ApplyMylarToOutlineAction;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.ui.IMylarUiBridge;
 import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
 import org.eclipse.ui.IEditorPart;
@@ -52,6 +54,19 @@ public class ApplyMylarActionTest extends AbstractJavaContextTest {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
+	}
+	
+	public void testPreservationOfContextPause() {
+		ApplyMylarToPackageExplorerAction action = new ApplyMylarToPackageExplorerAction();
+		MylarPlugin.getContextManager().setContextCapturePaused(true);
+		action.update(true);
+		assertTrue(MylarPlugin.getContextManager().isContextCapturePaused());
+		
+		MylarPlugin.getContextManager().setContextCapturePaused(false);
+		action.update(false);
+		assertFalse(MylarPlugin.getContextManager().isContextCapturePaused());
+		action.update(true);
+		assertFalse(MylarPlugin.getContextManager().isContextCapturePaused());
 	}
 	
 	@SuppressWarnings("deprecation")

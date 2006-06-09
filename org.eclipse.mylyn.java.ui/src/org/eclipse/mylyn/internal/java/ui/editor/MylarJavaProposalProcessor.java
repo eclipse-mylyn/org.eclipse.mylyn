@@ -90,11 +90,7 @@ public class MylarJavaProposalProcessor {
 					alreadyContainSeparator.add(proposalComputer);
 				}
 			}
-			
 
-//			System.err.println(">>> " + proposals.contains(MylarJavaProposalProcessor.PROPOSAL_SEPARATOR));
-			
-			 
 			alreadyComputedProposals.add(proposalComputer);
 			if (alreadyComputedProposals.size() == monitoredProposalComputers.size()) {
 				alreadyComputedProposals.clear();

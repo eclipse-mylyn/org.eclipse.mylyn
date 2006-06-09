@@ -627,8 +627,11 @@ public class MylarContextManager {
 	}
 
 	public void saveContext(String handleIdentifier) {
+		boolean wasPaused = contextCapturePaused;
 		try {
-			setContextCapturePaused(true);
+			if (!wasPaused) {
+				setContextCapturePaused(true);
+			}
 			MylarContext context = currentContext.getContextMap().get(handleIdentifier);
 			if (context == null)
 				return;
@@ -637,18 +640,25 @@ public class MylarContextManager {
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "could not save context", false);
 		} finally {
-			setContextCapturePaused(false);
+			if (!wasPaused) {
+				setContextCapturePaused(false);
+			}
 		}
 	}
 
 	public void saveActivityHistoryContext() {
+		boolean wasPaused = contextCapturePaused;
 		try {
-			setContextCapturePaused(true);
+			if (!wasPaused) {
+				setContextCapturePaused(true);
+			}
 			externalizer.writeContextToXML(activityMetaContext, getFileForContext(CONTEXT_HISTORY_FILE_NAME));
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "could not save activity history", false);
 		} finally {
-			setContextCapturePaused(false);
+			if (!wasPaused) {
+				setContextCapturePaused(false);
+			}
 		}
 	}
 
@@ -917,8 +927,15 @@ public class MylarContextManager {
 		}
 	}
 
+	/**
+	 * NOTE: If pausing ensure to restore to original state.
+	 */
 	public void setContextCapturePaused(boolean paused) {
 		this.contextCapturePaused = paused;
+	}
+	
+	public boolean isContextCapturePaused() {
+		return contextCapturePaused;
 	}
 
 	/**

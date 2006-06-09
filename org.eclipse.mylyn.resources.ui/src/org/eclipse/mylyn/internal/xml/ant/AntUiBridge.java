@@ -180,12 +180,6 @@ public class AntUiBridge implements IMylarUiBridge {
 	public void restoreEditor(IMylarElement document) {
 		open(document);
 	}
-
-	public void setContextCapturePaused(boolean paused) {
-		// TODO Auto-generated method stub
-
-	}
-
 	
 	public IMylarElement getElement(IEditorInput input) {
 		return null;

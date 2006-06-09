@@ -150,10 +150,6 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 			// ignore
 		}
 
-		public void setContextCapturePaused(boolean paused) {
-			// ignore
-		}
-
 		public IMylarElement getElement(IEditorInput input) {
 			return null;
 		}

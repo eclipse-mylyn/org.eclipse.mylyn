@@ -46,7 +46,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 
 	private ActiveSearchViewTracker activeSearchViewTracker = new ActiveSearchViewTracker();
 
-	private InterestManipulatingEditorTracker interestEditorTracker = new InterestManipulatingEditorTracker();
+	private EditorInteractionMonitor interestEditorTracker = new EditorInteractionMonitor();
 
 	private ResourceChangeMonitor resourceChangeMonitor = new ResourceChangeMonitor();
 

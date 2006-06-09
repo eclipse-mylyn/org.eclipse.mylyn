@@ -31,10 +31,6 @@ public class TaskUiBridge implements IMylarUiBridge {
 		// ignore
 	}
 
-	public void setContextCapturePaused(boolean paused) {
-		// ignore
-	}
-
 	public void restoreEditor(IMylarElement document) {
 		// ignore
 	}

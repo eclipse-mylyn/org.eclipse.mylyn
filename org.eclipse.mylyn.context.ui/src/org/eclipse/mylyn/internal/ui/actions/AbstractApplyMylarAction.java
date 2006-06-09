@@ -118,8 +118,11 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 		if (PlatformUI.getWorkbench().isClosing()) {
 			return;
 		}
+		boolean wasPaused = MylarPlugin.getContextManager().isContextCapturePaused();
 		try {
-			MylarPlugin.getContextManager().setContextCapturePaused(true);
+			if (!wasPaused) {
+				MylarPlugin.getContextManager().setContextCapturePaused(true);
+			}
 			setChecked(on);
 			action.setChecked(on);
 			if (store && MylarPlugin.getDefault() != null) {
@@ -135,7 +138,9 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "Could not install viewer manager on: " + globalPrefId, false);
 		} finally {
-			MylarPlugin.getContextManager().setContextCapturePaused(false);
+			if (!wasPaused) {
+				MylarPlugin.getContextManager().setContextCapturePaused(false);
+			}
 		}
 	}
 
