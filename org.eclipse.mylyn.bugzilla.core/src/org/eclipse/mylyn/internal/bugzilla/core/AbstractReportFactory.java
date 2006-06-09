@@ -68,10 +68,10 @@ public class AbstractReportFactory {
 		if (responseCode != HttpURLConnection.HTTP_OK) {
 			String msg;
 			if (responseCode == -1 || responseCode == HttpURLConnection.HTTP_FORBIDDEN)
-				msg = "Repository does not seem to be a valid Bugzilla server.  Check Bugzilla preferences.";
+				msg = "Repository does not seem to be a valid Bugzilla server: " + url.toExternalForm();
 			else
 				msg = "HTTP Error " + responseCode + " (" + connection.getResponseMessage()
-						+ ") while querying Bugzilla Server.  Check Bugzilla preferences.";
+						+ ") while querying Bugzilla server: " + url.toExternalForm();
 
 			throw new IOException(msg);
 		}
