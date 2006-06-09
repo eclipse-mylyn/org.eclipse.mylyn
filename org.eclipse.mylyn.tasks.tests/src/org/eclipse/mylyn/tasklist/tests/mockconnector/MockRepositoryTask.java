@@ -18,8 +18,8 @@ import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
  */
 public class MockRepositoryTask extends AbstractRepositoryTask {
 	
-	public MockRepositoryTask(String handle, String label, boolean newTask) {
-		super(handle, label, newTask);
+	public MockRepositoryTask(String handle) {
+		super(handle, "label for " + handle, true);
 	}
 
 	@Override
