@@ -189,8 +189,9 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 				checkForStatisticsUpload();
 			}
 			if (!isPerformingUpload() && MylarPlugin.getDefault() != null) {
-				for (IInteractionEventListener listener : MylarPlugin.getDefault().getInteractionListeners())
+				for (IInteractionEventListener listener : MylarPlugin.getDefault().getInteractionListeners()) {
 					listener.startObserving();
+				}
 			}
 		}
 

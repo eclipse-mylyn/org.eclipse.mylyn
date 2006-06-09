@@ -60,11 +60,11 @@ public class InteractionEventLogger implements IInteractionEventListener {
 	}
 
 	public void interactionObserved(InteractionEvent event) {
+//		System.err.println("> " + event);
 		if (handleObfuscator.isObfuscationEnabled()) {
 			String obfuscatedHandle = handleObfuscator.obfuscateHandle(event.getStructureKind(), event.getStructureHandle());
 			event = new InteractionEvent(event.getKind(), event.getStructureKind(), obfuscatedHandle, event.getOriginId(), event.getNavigation(), event.getDelta(), event.getInterestContribution());
 		}
-		System.err.println("> " + event);
 		try {
 			if (started) {
 				String xml = interactionEventToXml(event);
