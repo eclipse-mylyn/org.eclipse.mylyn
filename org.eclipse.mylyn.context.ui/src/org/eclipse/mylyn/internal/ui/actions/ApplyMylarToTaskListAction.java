@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.internal.tasklist.ui.AbstractTaskListFilter;
+import org.eclipse.mylar.internal.tasklist.ui.views.IFilteredTreeListener;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.internal.ui.TaskListInterestFilter;
 import org.eclipse.mylar.internal.ui.TaskListInterestSorter;
@@ -32,7 +33,7 @@ import org.eclipse.ui.IViewPart;
  * 
  * @author Mik Kersten
  */
-public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction {
+public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction implements IFilteredTreeListener {
 
 	private TaskListInterestFilter taskListInterestFilter = new TaskListInterestFilter();
 
@@ -46,6 +47,24 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction {
 		super(new InterestFilter());
 	}
 
+	@Override
+	public void init(IViewPart view) {
+		super.init(view);
+		IViewPart part = super.getPartForAction();
+		if (part instanceof TaskListView) {
+			((TaskListView)part).getFilteredTree().addListener(this);
+		}
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		IViewPart part = super.getPartForAction();
+		if (part instanceof TaskListView) {
+			((TaskListView)part).getFilteredTree().removeListener(this);
+		}
+	}
+	
 	@Override
 	public List<StructuredViewer> getViewers() {
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
@@ -97,5 +116,15 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction {
 	@Override
 	public List<Class> getPreservedFilters() {
 		return Collections.emptyList();
+	}
+
+	
+	public void filterTextChanged(String text) {
+		if (isChecked() && (text == null || "".equals(text))) {
+			IViewPart part = super.getPartForAction();
+			if (part instanceof TaskListView) {
+				((TaskListView)part).getViewer().expandAll();
+			}
+		}
 	}
 }
