@@ -13,14 +13,18 @@ package org.eclipse.mylar.bugzilla.tests;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Date;
+import java.util.Properties;
 
 import javax.security.auth.login.LoginException;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
@@ -65,8 +69,17 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		manager = MylarTaskListPlugin.getRepositoryManager();
 		manager.clearRepositories();
 		repository = new TaskRepository(DEFAULT_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
+		
 		// Valid user name and password must be set for tests to pass
-		repository.setAuthenticationCredentials("enter your username here", "enter your password here");
+		try { 
+			Properties properties = new Properties();
+			URL localURL = FileLocator.toFileURL(BugzillaTestPlugin.getDefault().getBundle().getEntry("credentials.properties"));
+			properties.load(new FileInputStream(new File(localURL.getFile())));
+			repository.setAuthenticationCredentials(properties.getProperty("username"), properties.getProperty("password"));
+		} catch (Throwable t) {
+			fail("must define credentials in <plug-in dir>/credentials.properties");
+		}
+		
 		repository.setTimeZoneId("Canada/Eastern");
 		manager.addRepository(repository);
 		assertNotNull(manager);
