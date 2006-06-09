@@ -218,29 +218,23 @@ litigation.
    </url>
 
    <requires>
-      <import plugin="org.eclipse.ui" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.runtime" version="0.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylar.tasklist"/>
+      <import plugin="org.eclipse.ui" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.resources" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.compare" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.search" version="0.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.ide" version="0.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.update.core"/>
-      <import plugin="org.eclipse.update.ui"/>
-      <import plugin="org.eclipse.mylar.core"/>
-      <import plugin="org.eclipse.mylar.tasklist"/>
       <import plugin="org.eclipse.ui.views" version="0.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.ide" version="0.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylar.core"/>
       <import plugin="org.eclipse.ui.forms"/>
       <import plugin="org.eclipse.jface.text" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.team.ui"/>
       <import plugin="org.eclipse.team.cvs.ui"/>
-      <import plugin="org.eclipse.ui.workbench.texteditor" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.editors" version="0.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.team.core"/>
-      <import plugin="org.eclipse.team.cvs.core"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor" version="0.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.update.ui"/>
       <import feature="org.eclipse.mylar_feature" version="0.5.2" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.jdt.core"/>
-      <import plugin="org.eclipse.jdt.ui"/>
-      <import plugin="org.eclipse.mylar.ide"/>
    </requires>
 
    <plugin
