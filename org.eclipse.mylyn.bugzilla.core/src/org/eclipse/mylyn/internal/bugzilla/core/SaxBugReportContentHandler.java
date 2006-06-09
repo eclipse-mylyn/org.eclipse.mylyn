@@ -149,8 +149,6 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			if (comment != null) {
 				RepositoryTaskAttribute attr = attributeFactory.createAttribute(tag.getKeyString());
 				attr.setValue(parsedText);
-				// System.err.println(">>> "+comment.getNumber()+"
-				// "+parsedText);
 				comment.addAttribute(tag.getKeyString(), attr);
 			}
 			break;
@@ -158,8 +156,6 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			if (comment != null) {
 				RepositoryTaskAttribute attr = attributeFactory.createAttribute(tag.getKeyString());
 				attr.setValue(parsedText);
-				// System.err.println(">>> "+comment.getNumber()+"
-				// "+parsedText);
 				comment.addAttribute(tag.getKeyString(), attr);
 
 				// Check for attachment
@@ -230,14 +226,10 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 		default:
 			RepositoryTaskAttribute attribute = report.getAttribute(tag.getKeyString());
 			if (attribute == null) {
-				// System.err.println(">>> Undeclared attribute added: " +
-				// tag.toString()+" value: "+parsedText);
 				attribute = attributeFactory.createAttribute(tag.getKeyString());
 				attribute.setValue(parsedText);
 				report.addAttribute(tag.getKeyString(), attribute);
 			} else {
-				// System.err.println("Attr: " + attribute.getName() + " = " +
-				// parsedText);
 				attribute.addValue(parsedText);
 			}
 			break;

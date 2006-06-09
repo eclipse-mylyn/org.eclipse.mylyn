@@ -174,8 +174,6 @@ public class BugzillaReportSubmitForm {
 		while (itr.hasNext()) {
 			RepositoryTaskAttribute a = itr.next();
 			if (a != null && a.getID() != null && a.getID().compareTo("") != 0) {
-				// String key = a.getName();
-				// System.err.println(">>> "+key);
 				String value = null;
 				value = a.getValue();
 				if (value == null)
@@ -343,9 +341,6 @@ public class BugzillaReportSubmitForm {
 			}
 			postConnection.setRequestProperty(REQUEST_PROPERTY_CONTENT_TYPE, contentTypeString);
 			// get the url for the update with all of the changed values
-
-			// Used to debug posted report
-			//System.err.println(">>> "+getPostBody());
 
 			byte[] body = getPostBody().getBytes();
 			postConnection.setRequestProperty(REQUEST_PROPERTY_CONTENT_LENGTH, String.valueOf(body.length));

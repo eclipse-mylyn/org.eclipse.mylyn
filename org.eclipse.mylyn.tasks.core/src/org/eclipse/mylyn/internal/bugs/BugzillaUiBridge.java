@@ -127,10 +127,6 @@ public class BugzillaUiBridge implements IMylarUiBridge {
 		// ignore
 	}
 
-	public void setContextCapturePaused(boolean paused) {
-		// ignore
-	}
-
 	public IMylarElement getElement(IEditorInput input) {
 		return null;
 	}

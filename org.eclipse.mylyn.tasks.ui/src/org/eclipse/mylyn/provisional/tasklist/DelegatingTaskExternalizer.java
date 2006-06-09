@@ -429,7 +429,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	}
 
 	public String getQueryTagNameForElement(AbstractRepositoryQuery query) {
-		return "";
+		return KEY_QUERY;
 	}
 
 	public String getQueryHitTagName() {

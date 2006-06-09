@@ -615,7 +615,6 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 			// } catch (UnsupportedEncodingException e1) {
 			// // ignore
 			// }
-			// System.err.println(">>> AbstractRepositoryTaskEditor>> name:
 			// "+name+"
 			// key:"+key+" value:"+value+" is hidden"+attribute.isHidden());
 			if (attribute.isHidden())

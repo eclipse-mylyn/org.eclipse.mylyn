@@ -233,7 +233,6 @@ public class TaskListUiTest extends TestCase {
 	}
 
 	public boolean checkCompleteIncompleteFilter(TreeItem[] items, boolean checkComplete) {
-//		System.err.println(">>> " + UiTestUtil.);
 		assertEquals(2, items.length);
 		int count = 0;
 		for (int i = 0; i < items.length; i++) {
