@@ -34,15 +34,6 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 	
 	private Hyperlink activeTaskLabel;
 	
-//	@Override
-//    protected Composite createFilterControls(Composite parent){
-//		Composite container = super.createFilterControls(parent);
-//				
-//		createStatusComposite(container);
-//		
-//		return container;
-//	}
-
 	protected Composite createStatusComposite(Composite container) {
 		activeTaskLabel = new Hyperlink(container, SWT.LEFT);
 		activeTaskLabel.setText(LABEL_NO_ACTIVE);
