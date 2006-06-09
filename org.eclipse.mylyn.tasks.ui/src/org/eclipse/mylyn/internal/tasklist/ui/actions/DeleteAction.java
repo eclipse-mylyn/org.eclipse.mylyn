@@ -82,7 +82,7 @@ public class DeleteAction extends Action {
 				}
 			} else if (selectedObject instanceof TaskCategory) {
 				boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-						.getShell(), "Confirm Delete", "Delete the selected category and all contained tasks?");
+						.getShell(), "Confirm Delete", "Delete the selected category?  Contained tasks will be moved to the root.");
 				if (!deleteConfirmed)
 					return;
 

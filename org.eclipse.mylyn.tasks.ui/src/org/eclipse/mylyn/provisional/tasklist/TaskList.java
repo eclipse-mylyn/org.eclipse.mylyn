@@ -199,6 +199,9 @@ public class TaskList {
 	}
 
 	public void deleteCategory(AbstractTaskContainer category) {
+		for (ITask task : category.getChildren()) {
+			rootCategory.add(task);
+		}
 		categories.remove(category);
 		for (ITaskListChangeListener listener : changeListeners) {
 			listener.containerDeleted(category);

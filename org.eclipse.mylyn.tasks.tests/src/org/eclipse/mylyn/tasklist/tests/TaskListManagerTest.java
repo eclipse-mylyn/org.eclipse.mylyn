@@ -73,6 +73,23 @@ public class TaskListManagerTest extends TestCase {
 		MylarTaskListPlugin.getRepositoryManager().removeRepository(repository);
 	}
 	
+	public void testSingleTaskDeletion() {
+		MockRepositoryTask task = new MockRepositoryTask("mock-1");
+		manager.getTaskList().moveToRoot(task);
+		manager.saveTaskList();
+
+		manager.resetTaskList();
+		manager.readExistingOrCreateNewList(); 
+		assertEquals(1, manager.getTaskList().getAllTasks().size());
+		
+		manager.getTaskList().deleteTask(task);
+		assertEquals(0, manager.getTaskList().getAllTasks().size());
+		
+		manager.resetTaskList();
+		manager.readExistingOrCreateNewList(); 
+		assertEquals(0, manager.getTaskList().getAllTasks().size());	
+	}
+	
 	public void testMigrateTaskContextFiles() throws IOException {
 		File fileA = MylarPlugin.getContextManager().getFileForContext("http://a-1");
 		fileA.createNewFile();
@@ -94,7 +111,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 	
 	public void testMigrateTaskHandles() {
-		AbstractRepositoryTask task = new MockRepositoryTask("http://a-123", "123", true);
+		AbstractRepositoryTask task = new MockRepositoryTask("http://a-123");
 		manager.getTaskList().addTask(task);
 		manager.refactorRepositoryUrl("http://a", "http://b");
 		assertNull(manager.getTaskList().getTask("http://a-123"));
@@ -262,26 +279,7 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(TaskList.LABEL_ROOT, task1.getContainer().getHandleIdentifier());
 	}
 
-//	public void testPlans() {
-//		Task task1 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1", true);
-//		task1.addPlan("default");
-//		manager.moveToRoot(task1);
-//
-//		manager.saveTaskList();
-//		assertNotNull(manager.getTaskList());
-//		TaskList list = new TaskList();
-//		manager.setTaskList(list);
-//		manager.readExistingOrCreateNewList();
-//		assertNotNull(manager.getTaskList());
-//
-//		Set<ITask> readList = manager.getTaskList().getRootTasks();
-//		ITask task = readList.iterator().next();
-//		assertEquals(1, task.getPlans().size());
-//		assertTrue(task.getPlans().get(0).equals("default"));
-//	}
-
 	public void testEmpty() {
-//		TaskList list = new TaskList();
 		manager.resetTaskList();
 		assertTrue(manager.getTaskList().isEmpty());
 		manager.getTaskList().internalAddRootTask(new Task("", "", true));
@@ -298,16 +296,12 @@ public class TaskListManagerTest extends TestCase {
 
 		manager.saveTaskList();
 		manager.resetTaskList();
-//		manager.getTaskList().clear();
-//		TaskList list = new TaskList();
-//		manager.setTaskList(list);
 		manager.readExistingOrCreateNewList(); 
 		assertEquals(""+manager.getTaskList().getCategories(), 2, manager.getTaskList().getCategories().size());
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
 	}
 	
 	public void testDeleteCategory() {
-
 		assertNotNull(manager.getTaskList());
 		assertEquals(1, manager.getTaskList().getCategories().size());
 		TaskCategory category = new TaskCategory("cat", manager.getTaskList());
@@ -315,6 +309,16 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(2, manager.getTaskList().getCategories().size());
 		manager.getTaskList().deleteCategory(category);		
 		assertEquals(1, manager.getTaskList().getCategories().size());
+	}
+	
+	public void testDeleteCategoryMovesTasksToRoot() {
+		ITask task = new MockRepositoryTask("mock-delete");
+		TaskCategory category = new TaskCategory("mock-cat", manager.getTaskList());
+		manager.getTaskList().addTask(task, category);
+		manager.getTaskList().addCategory(category);
+		assertEquals(0, manager.getTaskList().getRootCategory().getChildren().size());
+		manager.getTaskList().deleteCategory(category);
+		assertEquals(1, manager.getTaskList().getRootCategory().getChildren().size());
 	}
 	
 	public void testRenameCategory() {
