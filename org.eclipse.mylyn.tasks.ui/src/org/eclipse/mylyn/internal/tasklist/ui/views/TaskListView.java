@@ -194,8 +194,7 @@ public class TaskListView extends ViewPart {
 
 	private TaskActivateAction activateAction = new TaskActivateAction();
 
-	// private TaskDeactivateAction deactivateAction = new
-	// TaskDeactivateAction();
+	private TaskDeactivateAction deactivateAction = new TaskDeactivateAction();
 
 	private MarkTaskCompleteAction markIncompleteAction;
 
@@ -803,8 +802,9 @@ public class TaskListView extends ViewPart {
 				sortDirection = DEFAULT_SORT_DIRECTION;
 			}
 			tableSorter.setColumn(columnNames[sortIndex]);
-			getViewer().refresh(false);  
-//			getViewer().setSorter(new TaskListTableSorter(this, columnNames[sortIndex]));
+			getViewer().refresh(false);
+			// getViewer().setSorter(new TaskListTableSorter(this,
+			// columnNames[sortIndex]));
 		}
 		addFilter(FILTER_PRIORITY);
 		// if (MylarTaskListPlugin.getDefault().isFilterInCompleteMode())
@@ -849,8 +849,10 @@ public class TaskListView extends ViewPart {
 					sortIndex = index;
 					sortDirection *= DEFAULT_SORT_DIRECTION;
 					tableSorter.setColumn(columnNames[sortIndex]);
-					getViewer().refresh(false);  
-//					getViewer().setSorter(new TaskListTableSorter(TaskListView.this, columnNames[sortIndex]));
+					getViewer().refresh(false);
+					// getViewer().setSorter(new
+					// TaskListTableSorter(TaskListView.this,
+					// columnNames[sortIndex]));
 				}
 			});
 			columns[i].addControlListener(new ControlListener() {
@@ -1018,8 +1020,8 @@ public class TaskListView extends ViewPart {
 		}
 
 		addAction(openTaskEditor, manager, element);
+		ITask task = null;
 		if ((element instanceof ITask) || (element instanceof AbstractQueryHit)) {
-			ITask task = null;
 			if (element instanceof AbstractQueryHit) {
 				task = ((AbstractQueryHit) element).getCorrespondingTask();
 			} else {
@@ -1041,14 +1043,13 @@ public class TaskListView extends ViewPart {
 						addAction(markIncompleteAction, manager, element);
 					}
 				}
-
-				// if (task.isActive()) {
-				// manager.add(deactivateAction);
-				// } else {
-				// manager.add(activateAction);
-				// }
 				addAction(removeFromCategoryAction, manager, element);
 				addAction(deleteAction, manager, element);
+				if (task.isActive()) {
+					manager.add(deactivateAction);
+				} else {
+					manager.add(activateAction);
+				}
 			} else {
 				manager.add(activateAction);
 			}
@@ -1412,31 +1413,34 @@ public class TaskListView extends ViewPart {
 		if (task == null || getViewer().getControl().isDisposed()) {
 			return;
 		}
-//		StructuredSelection currentSelection = (StructuredSelection) getViewer().getSelection();
-//		ITask selectedTask = null;
-//		if (currentSelection.getFirstElement() instanceof ITask) {
-//			selectedTask = (ITask) currentSelection.getFirstElement();
-//		} else if (currentSelection.getFirstElement() instanceof AbstractQueryHit) {
-//			selectedTask = ((AbstractQueryHit) currentSelection.getFirstElement()).getCorrespondingTask();
-//		}
-//		if (!task.equals(selectedTask)) {
-			getViewer().setSelection(new StructuredSelection(task), true);
-			// if no task exists, select the query hit if exists
-			AbstractQueryHit hit = null;
-			if (getViewer().getSelection().isEmpty()
-					&& (hit = MylarTaskListPlugin.getTaskListManager().getTaskList().getQueryHitForHandle(
-							task.getHandleIdentifier())) != null) {
-				AbstractRepositoryQuery query = MylarTaskListPlugin.getTaskListManager().getTaskList()
-						.getQueryForHandle(task.getHandleIdentifier());
-				getViewer().expandToLevel(query, 1);
-				getViewer().setSelection(new StructuredSelection(hit), true);
-			} else {
-//				if (task.getc() != null) {
-//					getViewer().expandToLevel(task.getContainer(), 1);
-//				}
-//				getViewer().setSelection(new StructuredSelection(hit), true);
-			}
-//		}
+		// StructuredSelection currentSelection = (StructuredSelection)
+		// getViewer().getSelection();
+		// ITask selectedTask = null;
+		// if (currentSelection.getFirstElement() instanceof ITask) {
+		// selectedTask = (ITask) currentSelection.getFirstElement();
+		// } else if (currentSelection.getFirstElement() instanceof
+		// AbstractQueryHit) {
+		// selectedTask = ((AbstractQueryHit)
+		// currentSelection.getFirstElement()).getCorrespondingTask();
+		// }
+		// if (!task.equals(selectedTask)) {
+		getViewer().setSelection(new StructuredSelection(task), true);
+		// if no task exists, select the query hit if exists
+		AbstractQueryHit hit = null;
+		if (getViewer().getSelection().isEmpty()
+				&& (hit = MylarTaskListPlugin.getTaskListManager().getTaskList().getQueryHitForHandle(
+						task.getHandleIdentifier())) != null) {
+			AbstractRepositoryQuery query = MylarTaskListPlugin.getTaskListManager().getTaskList().getQueryForHandle(
+					task.getHandleIdentifier());
+			getViewer().expandToLevel(query, 1);
+			getViewer().setSelection(new StructuredSelection(hit), true);
+		} else {
+			// if (task.getc() != null) {
+			// getViewer().expandToLevel(task.getContainer(), 1);
+			// }
+			// getViewer().setSelection(new StructuredSelection(hit), true);
+		}
+		// }
 	}
 
 	protected void refreshTask(ITask task) {
