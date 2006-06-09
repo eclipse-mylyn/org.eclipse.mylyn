@@ -237,34 +237,38 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				initDefaultPrefs();
-				new MonitorExtensionPointReader().initExtensions();
+				try {
+					initDefaultPrefs();
+					new MonitorExtensionPointReader().initExtensions();
 
-				interactionLogger = new InteractionEventLogger(getMonitorLogFile());
-				
-				perspectiveMonitor = new PerspectiveChangeMonitor();
-				activityMonitor = new ActivityChangeMonitor();
-				windowMonitor = new WindowChangeMonitor();
-				menuMonitor = new MenuCommandMonitor();
-				keybindingCommandMonitor = new KeybindingCommandMonitor();
-				browserMonitor = new BrowserMonitor();
-				
-				setAcceptedUrlMatchList(studyParameters.getAcceptedUrlList());
+					interactionLogger = new InteractionEventLogger(getMonitorLogFile());
 
-				if (getPreferenceStore().getBoolean(MylarMonitorPreferenceConstants.PREF_MONITORING_ENABLED)) {
-					getPreferenceStore().setValue(MylarMonitorPreferenceConstants.PREF_MONITORING_ENABLED, false); // will
-					// be
-					// reset
-					startMonitoring();
-				}
+					perspectiveMonitor = new PerspectiveChangeMonitor();
+					activityMonitor = new ActivityChangeMonitor();
+					windowMonitor = new WindowChangeMonitor();
+					menuMonitor = new MenuCommandMonitor();
+					keybindingCommandMonitor = new KeybindingCommandMonitor();
+					browserMonitor = new BrowserMonitor();
 
-				if (plugin.getPreferenceStore().contains(MylarMonitorPreferenceConstants.PREF_PREVIOUS_TRANSMIT_DATE)) {
-					lastTransmit = new Date(plugin.getPreferenceStore().getLong(
-							MylarMonitorPreferenceConstants.PREF_PREVIOUS_TRANSMIT_DATE));
-				} else {
-					lastTransmit = new Date();
-					plugin.getPreferenceStore().setValue(MylarMonitorPreferenceConstants.PREF_PREVIOUS_TRANSMIT_DATE,
-							lastTransmit.getTime());
+					setAcceptedUrlMatchList(studyParameters.getAcceptedUrlList());
+
+					if (getPreferenceStore().getBoolean(MylarMonitorPreferenceConstants.PREF_MONITORING_ENABLED)) {
+						// will be reset
+						getPreferenceStore().setValue(MylarMonitorPreferenceConstants.PREF_MONITORING_ENABLED, false); 
+						startMonitoring();
+					}
+
+					if (plugin.getPreferenceStore().contains(
+							MylarMonitorPreferenceConstants.PREF_PREVIOUS_TRANSMIT_DATE)) {
+						lastTransmit = new Date(plugin.getPreferenceStore().getLong(
+								MylarMonitorPreferenceConstants.PREF_PREVIOUS_TRANSMIT_DATE));
+					} else {
+						lastTransmit = new Date();
+						plugin.getPreferenceStore().setValue(
+								MylarMonitorPreferenceConstants.PREF_PREVIOUS_TRANSMIT_DATE, lastTransmit.getTime());
+					}
+				} catch (Throwable t) {
+					MylarStatusHandler.fail(t, "monitor failed to start", false);
 				}
 			}
 		});
@@ -301,35 +305,14 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		}
 		getPreferenceStore().setValue(MylarMonitorPreferenceConstants.PREF_MONITORING_ENABLED, true);
 	}
-	
-	public void addMonitoredPreferences(Preferences preferences) { 
+
+	public void addMonitoredPreferences(Preferences preferences) {
 		preferences.addPropertyChangeListener(preferenceMonitor);
 	}
-	
+
 	public void removeMonitoredPreferences(Preferences preferences) {
 		preferences.removePropertyChangeListener(preferenceMonitor);
 	}
-
-//	private void installPreferenceMonitoring() {
-//		((IEclipsePreferences) getPreferenceStore().getp())
-//		.addNodeChangeListener(getNodeChangeListener());
-		
-//		Bundle[] bundles = PDERuntimePlugin.getDefault().getBundleContext().getBundles();
-//		for (Bundle bundle : bundles) {
-//			if (bundle.getHeaders().get(Constants.FRAGMENT_HOST) == null) {
-//				if (bundle.getState() == Bundle.ACTIVE) {
-//					System.err.println(">> " + bundle.getClass());
-//				}
-//			}
-//		}
-
-		// for (String namespace :
-		// Platform.getExtensionRegistry().getNamespaces()) {
-		// IExtension extension =
-		// Platform.getExtensionRegistry().getExtension(namespace);
-		// System.err.println(">>> " + extension);
-		// }
-//	}
 
 	public void stopMonitoring() {
 		if (!getPreferenceStore().getBoolean(MylarMonitorPreferenceConstants.PREF_MONITORING_ENABLED))
@@ -410,15 +393,6 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 			}
 		}
 	}
-
-	// /**
-	// * @param newPath the fully filesystem path
-	// */
-	// public File moveMonitorLogFile(String newPath) throws IOException {
-	// getPreferenceStore().setValue(PREF_LOG_FILE, newPath);
-	// File newFile = interactionLogger.moveOutputFile(newPath);
-	// return newFile;
-	// }
 
 	public File getMonitorLogFile() {
 		File file = new File(MylarPlugin.getDefault().getDataDirectory() + File.separator + MONITOR_LOG_NAME
@@ -787,3 +761,24 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 			return false;
 	}
 }
+
+// private void installPreferenceMonitoring() {
+// ((IEclipsePreferences) getPreferenceStore().getp())
+// .addNodeChangeListener(getNodeChangeListener());
+
+// Bundle[] bundles =
+// PDERuntimePlugin.getDefault().getBundleContext().getBundles();
+// for (Bundle bundle : bundles) {
+// if (bundle.getHeaders().get(Constants.FRAGMENT_HOST) == null) {
+// if (bundle.getState() == Bundle.ACTIVE) {
+// System.err.println(">> " + bundle.getClass());
+// }
+// }
+// }
+
+// for (String namespace :
+// Platform.getExtensionRegistry().getNamespaces()) {
+// IExtension extension =
+// Platform.getExtensionRegistry().getExtension(namespace);
+// }
+// }
