@@ -52,10 +52,6 @@ import org.eclipse.mylar.internal.tasklist.util.HtmlStreamTokenizer.Token;
  */
 public class BugzillaReportSubmitForm {
 
-	// private static final String KEY_BUG_FILE_LOC = "bug_file_loc";
-
-	// private static final String KEY_PRODUCT = "product";
-
 	private static final String KEY_ID = "id";
 
 	private static final String VAL_TRUE = "true";
@@ -94,22 +90,6 @@ public class BugzillaReportSubmitForm {
 
 	private static final String KEY_SHORT_DESC = "short_desc";
 
-	// private static final String KEY_ASSIGN_TO = "Assign To";
-	//
-	// private static final String KEY_URL = "URL";
-	//
-	// private static final String KEY_PRIORITY = "Priority";
-	//
-	// private static final String KEY_COMPONENT = "Component";
-	//
-	// private static final String KEY_PLATFORM = "Platform";
-	//
-	// private static final String KEY_SEVERITY = "Severity";
-	//
-	// private static final String KEY_VERSION = "Version";
-	//
-	// private static final String KEY_OS = "OS";
-
 	public static final String FORM_POSTFIX_218 = " Submitted";
 
 	public static final String FORM_POSTFIX_216 = " posted";
@@ -117,6 +97,8 @@ public class BugzillaReportSubmitForm {
 	public static final String FORM_PREFIX_BUG_218 = "Bug ";
 
 	public static final String FORM_PREFIX_BUG_220 = "Issue ";
+	
+	private BugzillaAttachmentHandler attachmentHandler = new BugzillaAttachmentHandler();
 
 	/** The fields that are to be changed/maintained */
 	private Map<String, String> fields = new HashMap<String, String>();
@@ -455,7 +437,7 @@ public class BugzillaReportSubmitForm {
 					
 					String uname = URLDecoder.decode(fields.get(KEY_BUGZILLA_LOGIN), this.charset);
 					String password = URLDecoder.decode(fields.get(KEY_BUGZILLA_PASSWORD), this.charset);
-					if (!BugzillaRepositoryUtil.uploadAttachment(attachment, uname, password)) {
+					if (!attachmentHandler.uploadAttachment(attachment, uname, password)) {
 						throw new BugzillaException("Could not upload attachment.");
 					}
 							

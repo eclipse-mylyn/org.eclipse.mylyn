@@ -25,10 +25,10 @@ import javax.security.auth.login.LoginException;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttachmentHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
@@ -53,8 +53,6 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 
 	private static final String DEFAULT_KIND = BugzillaPlugin.REPOSITORY_KIND;
 
-	//private static final String TEST_REPOSITORY_URL = "https://bugs.eclipse.org/bugs";
-
 	private BugzillaRepositoryConnector client;
 
 	private TaskRepositoryManager manager;
@@ -62,6 +60,8 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 	private TaskRepository repository;
 
 	private TaskList taskList;
+	
+	private BugzillaAttachmentHandler attachmentHandler = new BugzillaAttachmentHandler();
 
 	@Override
 	protected void setUp() throws Exception {
@@ -256,8 +256,8 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		attachment.setComment("Automated JUnit attachment test"); // optional
 		
 		/* Test attempt to upload a non-existent file */
-		attachment.setFilePath("/this/is/not/a/real-file");
-		assertFalse(BugzillaRepositoryUtil.uploadAttachment(attachment, repository.getUserName(), repository.getPassword()));
+		attachment.setFilePath("/this/is/not/a/real-file"); 
+		assertFalse(attachmentHandler.uploadAttachment(attachment, repository.getUserName(), repository.getPassword()));
 		task = (BugzillaTask) client.createTaskFromExistingKey(repository, taskNumber);
 		assertEquals(numAttached, task.getTaskData().getAttachments().size());
 		
@@ -265,7 +265,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		File attachFile = new File(fileName);
 		attachment.setFilePath(attachFile.getAbsolutePath());
 		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));		
-		assertFalse(BugzillaRepositoryUtil.uploadAttachment(attachment, repository.getUserName(), repository.getPassword()));
+		assertFalse(attachmentHandler.uploadAttachment(attachment, repository.getUserName(), repository.getPassword()));
 		task = (BugzillaTask) client.createTaskFromExistingKey(repository, taskNumber);
 		assertEquals(numAttached, task.getTaskData().getAttachments().size());
 		
@@ -274,7 +274,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		write.write("elif txet tset a si sihT");
 		write.close();
 		attachment.setFilePath(attachFile.getAbsolutePath());
-		assertTrue(BugzillaRepositoryUtil.uploadAttachment(attachment, repository.getUserName(), repository.getPassword()));
+		assertTrue(attachmentHandler.uploadAttachment(attachment, repository.getUserName(), repository.getPassword()));
 		task = (BugzillaTask) client.createTaskFromExistingKey(repository, taskNumber);
 		assertEquals(numAttached + 1, task.getTaskData().getAttachments().size());
 		

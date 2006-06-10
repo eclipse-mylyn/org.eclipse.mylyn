@@ -10,15 +10,9 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.core;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.Proxy;
@@ -30,30 +24,17 @@ import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import javax.security.auth.login.LoginException;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.multipart.FilePart;
-import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
-import org.apache.commons.httpclient.methods.multipart.Part;
-import org.apache.commons.httpclient.methods.multipart.PartBase;
-import org.apache.commons.httpclient.methods.multipart.StringPart;
-import org.apache.commons.httpclient.params.HttpMethodParams;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESOLUTION;
-import org.eclipse.mylar.internal.tasklist.LocalAttachment;
-import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.RepositoryOperation;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.util.HtmlStreamTokenizer;
 import org.eclipse.mylar.internal.tasklist.util.HtmlTag;
 import org.eclipse.mylar.internal.tasklist.util.HtmlStreamTokenizer.Token;
@@ -90,39 +71,9 @@ public class BugzillaRepositoryUtil {
 
 	private static final String BUG_STATUS_NEW = "NEW";
 
-	private static final String VALUE_CONTENTTYPEMETHOD_MANUAL = "manual";
-
-	private static final String VALUE_ISPATCH = "1";
-
-	private static final String VALUE_ACTION_INSERT = "insert";
-
-	private static final String ATTRIBUTE_CONTENTTYPEENTRY = "contenttypeentry";
-
-	private static final String ATTRIBUTE_CONTENTTYPEMETHOD = "contenttypemethod";
-
-	private static final String ATTRIBUTE_ISPATCH = "ispatch";
-
-	private static final String ATTRIBUTE_DATA = "data";
-
-	private static final String ATTRIBUTE_COMMENT = "comment";
-
-	private static final String ATTRIBUTE_DESCRIPTION = "description";
-
-	private static final String ATTRIBUTE_BUGID = "bugid";
-
-	private static final String ATTRIBUTE_BUGZILLA_PASSWORD = "Bugzilla_password";
-
-	private static final String ATTRIBUTE_BUGZILLA_LOGIN = "Bugzilla_login";
-
-	private static final String ATTRIBUTE_ACTION = "action";
-
 	private static final String POST_ARGS_PASSWORD = "&Bugzilla_password=";
 
 	public static final String POST_ARGS_SHOW_BUG = "/show_bug.cgi?id=";// ctype=xml&
-
-	public static final String POST_ARGS_ATTACHMENT_DOWNLOAD = "/attachment.cgi?id=";
-
-	public static final String POST_ARGS_ATTACHMENT_UPLOAD = "/attachment.cgi";// ?action=insert";//&bugid=";
 
 	private static final String POST_ARGS_LOGIN = "GoAheadAndLogIn=1&Bugzilla_login=";
 	
@@ -249,7 +200,7 @@ public class BugzillaRepositoryUtil {
 	 * @throws KeyManagementException 
 	 */
 	public static void setupNewBugAttributes(String repositoryUrl, Proxy proxySettings, String userName,
-			String password, NewBugzillaReport newReport, String characterEncoding) throws IOException, KeyManagementException, LoginException, NoSuchAlgorithmException {
+		String password, NewBugzillaReport newReport, String characterEncoding) throws IOException, KeyManagementException, LoginException, NoSuchAlgorithmException {
 
 		newReport.removeAllAttributes();
 
@@ -362,175 +313,6 @@ public class BugzillaRepositoryUtil {
 
 		// newReport.attributes = attributes;
 	}
-
-	// /**
-	// * Adds bug attributes to new bug model and sets defaults
-	// */
-	// public static void setupExistingBugAttributes(String serverUrl, BugReport
-	// existingReport) {
-	//
-	// // // order is important
-	// // BugReportElement[] newBugElements = { BugReportElement.PRODUCT,
-	// // BugReportElement.BUG_STATUS,
-	// // BugReportElement.VERSION,
-	// // BugReportElement.COMPONENT,
-	// // BugReportElement.TARGET_MILESTONE,
-	// // BugReportElement.REP_PLATFORM,
-	// // BugReportElement.OP_SYS,
-	// // BugReportElement.PRIORITY,
-	// // BugReportElement.BUG_SEVERITY,
-	// // BugReportElement.ASSIGNED_TO,
-	// // // NOT USED BugReportElement.CC,
-	// // BugReportElement.BUG_FILE_LOC,
-	// // //NOT USED BugReportElement.SHORT_DESC,
-	// // //NOT USED BugReportElement.LONG_DESC
-	// // };
-	//
-	// // HashMap<String, RepositoryTaskAttribute> attributes = new
-	// // LinkedHashMap<String, RepositoryTaskAttribute>();
-	// List<String> optionValues;
-	// RepositoryTaskAttribute a =
-	// existingReport.getAttribute(BugzillaReportElement.PRODUCT);
-	// if (a != null) {
-	// optionValues =
-	// BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getProducts();
-	// for (String option : optionValues) {
-	// a.addOptionValue(option, option);
-	// }
-	// }
-	// // existingReport.addAttribute(BugzillaReportElement.PRODUCT, a);
-	//
-	// a = existingReport.getAttribute(BugzillaReportElement.BUG_STATUS);
-	// if (a != null) {
-	// optionValues =
-	// BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getStatusValues();
-	// for (String option : optionValues) {
-	// a.addOptionValue(option, option);
-	// }
-	// }
-	// // existingReport.addAttribute(BugzillaReportElement.BUG_STATUS, a);
-	//
-	// a = existingReport.getAttribute(BugzillaReportElement.VERSION);
-	// if (a != null) {
-	// optionValues =
-	// BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getVersions(
-	// existingReport.getProduct());
-	// for (String option : optionValues) {
-	// a.addOptionValue(option, option);
-	// }
-	// }
-	// // existingReport.addAttribute(BugzillaReportElement.VERSION, a);
-	//
-	// a = existingReport.getAttribute(BugzillaReportElement.COMPONENT);
-	// if (a != null) {
-	// optionValues =
-	// BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getComponents(
-	// existingReport.getProduct());
-	// for (String option : optionValues) {
-	// a.addOptionValue(option, option);
-	// }
-	// }
-	// // existingReport.addAttribute(BugzillaReportElement.COMPONENT, a);
-	//
-	// a = existingReport.getAttribute(BugzillaReportElement.REP_PLATFORM);
-	// if (a != null) {
-	// optionValues =
-	// BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getPlatforms();
-	// for (String option : optionValues) {
-	// a.addOptionValue(option, option);
-	// }
-	// }
-	// // existingReport.addAttribute(BugzillaReportElement.REP_PLATFORM, a);
-	//
-	// a = existingReport.getAttribute(BugzillaReportElement.OP_SYS);
-	// if (a != null) {
-	// optionValues =
-	// BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getOSs();
-	// for (String option : optionValues) {
-	// a.addOptionValue(option, option);
-	// }
-	// }
-	// // existingReport.addAttribute(BugzillaReportElement.OP_SYS, a);
-	//
-	// a = existingReport.getAttribute(BugzillaReportElement.PRIORITY);
-	// if (a != null) {
-	// optionValues =
-	// BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getPriorities();
-	// for (String option : optionValues) {
-	// a.addOptionValue(option, option);
-	// }
-	// }
-	// // existingReport.addAttribute(BugzillaReportElement.PRIORITY, a);
-	//
-	// a = existingReport.getAttribute(BugzillaReportElement.BUG_SEVERITY);
-	// if (a != null) {
-	// optionValues =
-	// BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getSeverities();
-	// for (String option : optionValues) {
-	// a.addOptionValue(option, option);
-	// }
-	// }
-	// // existingReport.addAttribute(BugzillaReportElement.BUG_SEVERITY, a);
-	//
-	// a = existingReport.getAttribute(BugzillaReportElement.TARGET_MILESTONE);
-	// if (a != null) {
-	// optionValues =
-	// BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getTargetMilestones(
-	// existingReport.getProduct());
-	// for (String option : optionValues) {
-	// a.addOptionValue(option, option);
-	// }
-	// }
-	// // existingReport.addAttribute(BugzillaReportElement.TARGET_MILESTONE,
-	// // a);
-	//
-	// // a = SaxBugReportContentHandler.makeNewAttribute(BugzillaReportElement.ASSIGNED_TO);
-	// // existingReport.addAttribute(BugzillaReportElement.ASSIGNED_TO, a);
-	// //
-	// // a = SaxBugReportContentHandler.makeNewAttribute(BugzillaReportElement.BUG_FILE_LOC);
-	// // existingReport.addAttribute(BugzillaReportElement.BUG_FILE_LOC, a);
-	//
-	// // Add fields that may not be present in xml but required for ui and
-	// // submission. NOTE: Perhaps the bug reports should be set up with all
-	// // valid attributes
-	// // and then passed to the parser to populate the appropriate fields
-	// // rather than
-	//
-	// a = existingReport.getAttribute(BugzillaReportElement.CC);
-	// if (a == null) {
-	// existingReport
-	// .addAttribute(BugzillaReportElement.CC, new
-	// RepositoryTaskAttribute(BugzillaReportElement.CC));
-	// }
-	// a = existingReport.getAttribute(BugzillaReportElement.RESOLUTION);
-	// if (a == null) {
-	// existingReport.addAttribute(BugzillaReportElement.RESOLUTION, new
-	// RepositoryTaskAttribute(
-	// BugzillaReportElement.RESOLUTION));
-	// }
-	// a = existingReport.getAttribute(BugzillaReportElement.BUG_FILE_LOC);
-	// if (a == null) {
-	// existingReport.addAttribute(BugzillaReportElement.BUG_FILE_LOC, new
-	// RepositoryTaskAttribute(
-	// BugzillaReportElement.BUG_FILE_LOC));
-	// }
-	// a = existingReport.getAttribute(BugzillaReportElement.NEWCC);
-	// if (a == null) {
-	// existingReport.addAttribute(BugzillaReportElement.NEWCC, new
-	// RepositoryTaskAttribute(
-	// BugzillaReportElement.NEWCC));
-	// }
-	//
-	// // Special hidden fields required when existing bug is submitted to
-	// // bugzilla
-	// a = existingReport.getAttribute(BugzillaReportElement.LONGDESCLENGTH);
-	// if (a == null) {
-	// a = SaxBugReportContentHandler.makeNewAttribute(BugzillaReportElement.LONGDESCLENGTH);
-	// a.setValue("" + existingReport.getComments().size());
-	// existingReport.addAttribute(BugzillaReportElement.LONGDESCLENGTH, a);
-	// }
-	//
-	// }
 
 	public static void setupExistingBugAttributes(String serverUrl, RepositoryTaskData existingReport) {
 		// ordered list of elements as they appear in UI
@@ -675,158 +457,6 @@ public class BugzillaRepositoryUtil {
 	public static String getBugUrlWithoutLogin(String repositoryUrl, int id) {
 		String url = repositoryUrl + POST_ARGS_SHOW_BUG + id;
 		return url;
-	}
-
-	public static boolean downloadAttachment(String repositoryUrl, String userName, String password,
-			Proxy proxySettings, int id, File destinationFile, boolean overwrite) throws IOException,
-			GeneralSecurityException {
-		BufferedInputStream in = null;
-		FileOutputStream outStream = null;
-		try {
-			String url = repositoryUrl + POST_ARGS_ATTACHMENT_DOWNLOAD + id;
-			url = addCredentials(url, userName, password);
-			URL downloadUrl = new URL(url);
-			URLConnection connection = BugzillaPlugin.getUrlConnection(downloadUrl, proxySettings);
-			if (connection != null) {
-				InputStream input = connection.getInputStream();
-				outStream = new FileOutputStream(destinationFile);
-				copyByteStream(input, outStream);
-
-				return true;
-
-			}
-			// } catch (MalformedURLException e) {
-			// MylarStatusHandler.fail(e, ATTACHMENT_DOWNLOAD_FAILED, false);
-			// return false;
-			// } catch (IOException e) {
-			// MylarStatusHandler.fail(e, ATTACHMENT_DOWNLOAD_FAILED, false);
-			// return false;
-			// } catch (Exception e) {
-			// MylarStatusHandler.fail(e, ATTACHMENT_DOWNLOAD_FAILED, false);
-			// return false;
-		} finally {
-			try {
-				if (in != null)
-					in.close();
-				if (outStream != null)
-					outStream.close();
-			} catch (IOException e) {
-				BugzillaPlugin.log(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, IStatus.ERROR,
-						"Problem closing the stream", e));
-			}
-		}
-		return false;
-	}
-
-	private static void copyByteStream(InputStream in, OutputStream out) throws IOException {
-		if (in != null && out != null) {
-			BufferedInputStream inBuffered = new BufferedInputStream(in);
-
-			int bufferSize = 1000;
-			byte[] buffer = new byte[bufferSize];
-
-			int readCount;
-
-			BufferedOutputStream fout = new BufferedOutputStream(out);
-
-			while ((readCount = inBuffered.read(buffer)) != -1) {
-				if (readCount < bufferSize) {
-					fout.write(buffer, 0, readCount);
-				} else {
-					fout.write(buffer);
-				}
-			}
-			fout.flush();
-			fout.close();
-			in.close();
-		}
-	}
-
-	public static boolean uploadAttachment(LocalAttachment attachment, String uname, String password) throws IOException {
-		
-		File file = new File(attachment.getFilePath());
-		if (!file.exists() || file.length() <= 0) {
-			return false;
-		}
-		
-		return uploadAttachment(attachment.getReport().getRepositoryUrl(), uname, password, attachment.getReport().getId(),
-				attachment.getComment(), attachment.getDescription(), file,
-				attachment.getContentType(), attachment.isPatch());
-	}
-
-	
-	public static boolean uploadAttachment(String repositoryUrl, String userName, String password, int bugReportID,
-			String comment, String description, File sourceFile, String contentType, boolean isPatch)
-			throws IOException {
-
-		// Note: The following debug code requires http commons-logging and
-		// commons-logging-api jars
-		// System.setProperty("org.apache.commons.logging.Log",
-		// "org.apache.commons.logging.impl.SimpleLog");
-		// System.setProperty("org.apache.commons.logging.simplelog.showdatetime",
-		// "true");
-		// System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire",
-		// "debug");
-		// System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient",
-		// "debug");
-
-		boolean uploadResult = true;
-
-		HttpClient client = new HttpClient();
-		PostMethod postMethod = new PostMethod(repositoryUrl + POST_ARGS_ATTACHMENT_UPLOAD);
-
-		// My understanding is that this option causes the client to first check
-		// with the server to see if it will in fact recieve the post before
-		// actually sending the contents.
-		postMethod.getParams().setBooleanParameter(HttpMethodParams.USE_EXPECT_CONTINUE, true);
-
-		try {
-			List<PartBase> parts = new ArrayList<PartBase>();
-			parts.add(new StringPart(ATTRIBUTE_ACTION, VALUE_ACTION_INSERT));
-			parts.add(new StringPart(ATTRIBUTE_BUGZILLA_LOGIN, userName));
-			parts.add(new StringPart(ATTRIBUTE_BUGZILLA_PASSWORD, password));
-			parts.add(new StringPart(ATTRIBUTE_BUGID, String.valueOf(bugReportID)));
-			parts.add(new StringPart(ATTRIBUTE_DESCRIPTION, description));
-			parts.add(new StringPart(ATTRIBUTE_COMMENT, comment));
-			parts.add(new FilePart(ATTRIBUTE_DATA, sourceFile));
-
-			if (isPatch) {
-				parts.add(new StringPart(ATTRIBUTE_ISPATCH, VALUE_ISPATCH));
-			} else {
-				parts.add(new StringPart(ATTRIBUTE_CONTENTTYPEMETHOD, VALUE_CONTENTTYPEMETHOD_MANUAL));
-				parts.add(new StringPart(ATTRIBUTE_CONTENTTYPEENTRY, contentType));
-			}
-
-			postMethod.setRequestEntity(new MultipartRequestEntity(parts.toArray(new Part[1]), postMethod.getParams()));
-
-			client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
-			int status = client.executeMethod(postMethod);
-			if (status == HttpStatus.SC_OK) {
-				InputStreamReader reader = new InputStreamReader(postMethod.getResponseBodyAsStream(), postMethod
-						.getResponseCharSet());
-				BufferedReader bufferedReader = new BufferedReader(reader);
-				String newLine;
-				while ((newLine = bufferedReader.readLine()) != null) {
-					if (newLine.indexOf("Invalid Username Or Password") >= 0) {
-						throw new IOException(
-								"Invalid Username Or Password - Check credentials in Task Repositories view.");
-					}
-					// TODO: test for no comment and no description etc.
-				}
-			} else {
-				// MylarStatusHandler.log(HttpStatus.getStatusText(status),
-				// BugzillaRepositoryUtil.class);
-				uploadResult = false;
-			}
-			// } catch (HttpException e) {
-			// MylarStatusHandler.log("Attachment upload failed\n" +
-			// e.getMessage(), BugzillaRepositoryUtil.class);
-			// uploadResult = false;
-		} finally {
-			postMethod.releaseConnection();
-		}
-
-		return uploadResult;
 	}
 
 	public static String getCharsetFromString(String string) {

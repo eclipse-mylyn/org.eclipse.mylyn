@@ -58,7 +58,7 @@ public class ContextRetrieveWizard extends Wizard {
 		AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
 				this.repository.getKind());
 		try {
-			if (connector.retrieveContext(repository, task, delegate)) {
+			connector.retrieveContext(repository, task, delegate);
 				// IWorkbenchSite site =
 				// PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart().getSite();
 				// if (site instanceof IViewSite) {
@@ -69,10 +69,6 @@ public class ContextRetrieveWizard extends Wizard {
 				// } else {
 				// MylarStatusHandler.log("could not get part", this);
 				// }
-			} else {
-				MessageDialog.openError(null, "Context Retrieval",
-						"Retrieval of task context FAILED. See error log for details.");
-			}
 		} catch (Exception e) {
 			MessageDialog.openError(null, MylarTaskListPlugin.TITLE_DIALOG, "Retrieval of task context FAILED.\n"
 					+ e.getMessage());

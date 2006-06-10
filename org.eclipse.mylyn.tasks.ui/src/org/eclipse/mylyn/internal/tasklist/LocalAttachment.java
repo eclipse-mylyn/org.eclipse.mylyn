@@ -11,8 +11,6 @@
 
 package org.eclipse.mylar.internal.tasklist;
 
-
-
 /**
  * A class representing a local attachment.
  * 

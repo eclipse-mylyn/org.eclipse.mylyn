@@ -11,8 +11,9 @@
 
 package org.eclipse.mylar.provisional.tasklist;
 
+import java.io.File;
 import java.io.IOException;
-import java.security.GeneralSecurityException;
+import java.net.Proxy;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -32,11 +33,13 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.core.util.ZipFileUtil;
 import org.eclipse.mylar.internal.tasklist.AbstractAttributeFactory;
 import org.eclipse.mylar.internal.tasklist.OfflineTaskManager;
 import org.eclipse.mylar.internal.tasklist.RepositoryAttachment;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.ui.PlatformUI;
 
@@ -48,11 +51,17 @@ import org.eclipse.ui.PlatformUI;
  */
 public abstract class AbstractRepositoryConnector {
 
+	private static final String MESSAGE_ATTACHMENTS_NOT_SUPPORTED = "Attachments not supported by connector: ";
+
 	private static final int RETRY_DELAY = 3000;
 
 	private static final int MAX_QUERY_ATTEMPTS = 3;
 
 	public static final String MYLAR_CONTEXT_DESCRIPTION = "mylar/context/zip";
+
+	private static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
+
+	private static final String ZIPFILE_EXTENSION = ".zip";
 
 	protected List<String> supportedVersions;
 
@@ -65,10 +74,59 @@ public abstract class AbstractRepositoryConnector {
 	public abstract boolean canCreateTaskFromKey();
 
 	public abstract boolean canCreateNewTask();
+	
+	protected abstract IAttachmentHandler getAttachmentHandler();
 
-	public abstract boolean attachContext(TaskRepository repository, AbstractRepositoryTask task, String longComment)
-			throws IOException;
+	public abstract String getRepositoryUrlFromTaskUrl(String url);
 
+	/**
+	 * Implementors must execute query synchronously.
+	 * 
+	 * @param query
+	 * @param monitor
+	 * @param queryStatus
+	 *            set an exception on queryStatus.getChildren[0] to indicate
+	 *            failure
+	 */
+	public abstract List<AbstractQueryHit> performQuery(AbstractRepositoryQuery query, IProgressMonitor monitor,
+			MultiStatus queryStatus);
+	
+	protected abstract RepositoryTaskData downloadTaskData(AbstractRepositoryTask repositoryTask) throws CoreException;
+
+	public abstract String getLabel();
+
+	/**
+	 * @return the unique type of the repository, e.g. "bugzilla"
+	 */
+	public abstract String getRepositoryType();
+
+	/**
+	 * @param id
+	 *            identifier, e.g. "123" bug Bugzilla bug 123
+	 * @return null if task could not be created
+	 */
+
+	public abstract ITask createTaskFromExistingKey(TaskRepository repository, String id);
+
+	public abstract AbstractRepositorySettingsPage getSettingsPage();
+
+	public abstract IWizard getNewQueryWizard(TaskRepository repository);
+
+	public abstract void openEditQueryDialog(AbstractRepositoryQuery query);
+
+	public abstract IWizard getAddExistingTaskWizard(TaskRepository repository);
+
+	public abstract IWizard getNewTaskWizard(TaskRepository taskRepository);
+
+	public abstract List<String> getSupportedVersions();
+
+	/**
+	 * returns all tasks if date is null or an error occurs
+	 */
+	public abstract Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
+			Set<AbstractRepositoryTask> tasks) throws Exception;
+
+	
 	protected AbstractRepositoryConnector(AbstractAttributeFactory attributeFactory) {
 		this.attributeFactory = attributeFactory;
 	}
@@ -101,43 +159,95 @@ public abstract class AbstractRepositoryConnector {
 		}
 	}
 
-	public abstract boolean retrieveContext(TaskRepository repository, AbstractRepositoryTask task,
-			RepositoryAttachment attachment) throws IOException, GeneralSecurityException;
+	public void attachContext(TaskRepository repository, AbstractRepositoryTask task, String longComment)
+			throws CoreException {
+		if (!repository.hasCredentials()) {
+			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					MylarTaskListPlugin.TITLE_DIALOG, "Repository credentials missing or invalid.");
+			return;
+		} else {
+			MylarPlugin.getContextManager().saveContext(task.getHandleIdentifier());
+			File sourceContextFile = MylarPlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
 
-	public abstract String getRepositoryUrlFromTaskUrl(String url);
+			if (sourceContextFile != null && sourceContextFile.exists()) {
+				try {
+					List<File> filesToZip = new ArrayList<File>();
+					filesToZip.add(sourceContextFile);
 
-	/**
-	 * Implementors must execute query synchronously.
-	 * 
-	 * @param query
-	 * @param monitor
-	 * @param queryStatus
-	 *            set an exception on queryStatus.getChildren[0] to indicate
-	 *            failure
-	 */
-	public abstract List<AbstractQueryHit> performQuery(AbstractRepositoryQuery query, IProgressMonitor monitor,
-			MultiStatus queryStatus);
+					File destinationFile = File.createTempFile(sourceContextFile.getName(), ZIPFILE_EXTENSION);
+					destinationFile.deleteOnExit();
+					ZipFileUtil.createZipFile(destinationFile, filesToZip, new NullProgressMonitor());
+					
+					IAttachmentHandler handler = getAttachmentHandler();					
+					if (handler != null) {
+						handler.uploadAttachment(repository, task, longComment, MYLAR_CONTEXT_DESCRIPTION,
+								destinationFile, APPLICATION_OCTET_STREAM, false);
+						synchronize(task, false, null);
+					} else {
+						MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+								MylarTaskListPlugin.TITLE_DIALOG, MESSAGE_ATTACHMENTS_NOT_SUPPORTED
+										+ getLabel());
+					}
+				} catch (Exception e) {
+					MylarStatusHandler.fail(e, "Could not export task context as zip file", true);
+				}
+			}
+		}
+	}
 	
-	// Precondition of note: offline file is removed upon submit to repository resulting in a synchronized state.
+	public void retrieveContext(TaskRepository repository, AbstractRepositoryTask task,
+			RepositoryAttachment attachment) throws CoreException, IOException {
+		boolean wasActive = false;
+		if (task.isActive()) {
+			wasActive = true;
+			MylarTaskListPlugin.getTaskListManager().deactivateTask(task);
+		}
+
+		File destinationContextFile = MylarPlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+
+		File destinationZipFile = new File(destinationContextFile.getPath() + ZIPFILE_EXTENSION);
+
+		Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
+		IAttachmentHandler attachmentHandler = getAttachmentHandler();
+		if (attachmentHandler != null) {
+			attachmentHandler.downloadAttachment(repository, task, attachment.getId(), destinationZipFile, proxySettings);
+			ZipFileUtil.unzipFiles(destinationZipFile, MylarPlugin.getDefault().getDataDirectory());
+			if (destinationContextFile.exists()) {
+				MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
+				if (wasActive) {
+					MylarTaskListPlugin.getTaskListManager().activateTask(task);
+				}
+			}
+		} else {
+			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					MylarTaskListPlugin.TITLE_DIALOG, MESSAGE_ATTACHMENTS_NOT_SUPPORTED
+							+ getLabel());
+		}
+	}
+	
+	// Precondition of note: offline file is removed upon submit to repository
+	// resulting in a synchronized state.
 	protected void updateOfflineState(final AbstractRepositoryTask repositoryTask, boolean forceSync) {
 		RepositoryTaskSyncState status = repositoryTask.getSyncState();
 		RepositoryTaskData downloadedTaskData;
-		
+
 		final TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
 				repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
 
 		if (repository == null) {
-			MylarStatusHandler
-					.log("No repository associated with task "+repositoryTask.getDescription()+". Unable to retrieve timezone information.", this);
+			MylarStatusHandler.log("No repository associated with task " + repositoryTask.getDescription()
+					+ ". Unable to retrieve timezone information.", this);
 			return;
 		}
-		
+
 		try {
 			downloadedTaskData = downloadTaskData(repositoryTask);
 		} catch (final CoreException e) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					ErrorDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Error Downloading Report", "Unable to synchronize "+repositoryTask.getDescription()+" on "+repository.getUrl(), e.getStatus());
+					ErrorDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+							"Error Downloading Report", "Unable to synchronize " + repositoryTask.getDescription()
+									+ " on " + repository.getUrl(), e.getStatus());
 				}
 			});
 			return;
@@ -151,7 +261,6 @@ public abstract class AbstractRepositoryConnector {
 
 		RepositoryTaskData offlineTaskData = OfflineTaskManager.findBug(downloadedTaskData.getRepositoryUrl(),
 				downloadedTaskData.getId());
-
 
 		TimeZone repositoryTimeZone = DateUtil.getTimeZone(repository.getTimeZoneId());
 		if (offlineTaskData != null) {
@@ -198,45 +307,10 @@ public abstract class AbstractRepositoryConnector {
 			status = RepositoryTaskSyncState.SYNCHRONIZED;
 		}
 		repositoryTask.setLastSynchronized(downloadedTaskData.getLastModified(repositoryTimeZone));
-		repositoryTask.setTaskData(downloadedTaskData);	
+		repositoryTask.setTaskData(downloadedTaskData);
 		repositoryTask.setSyncState(status);
 		saveOffline(downloadedTaskData);
 	}
-
-	protected abstract RepositoryTaskData downloadTaskData(AbstractRepositoryTask repositoryTask) throws CoreException;
-
-	public abstract String getLabel();
-
-	/**
-	 * @return the unique type of the repository, e.g. "bugzilla"
-	 */
-	public abstract String getRepositoryType();
-
-	/**
-	 * @param id
-	 *            identifier, e.g. "123" bug Bugzilla bug 123
-	 * @return null if task could not be created
-	 */
-
-	public abstract ITask createTaskFromExistingKey(TaskRepository repository, String id);
-
-	public abstract AbstractRepositorySettingsPage getSettingsPage();
-
-	public abstract IWizard getNewQueryWizard(TaskRepository repository);
-
-	public abstract void openEditQueryDialog(AbstractRepositoryQuery query);
-
-	public abstract IWizard getAddExistingTaskWizard(TaskRepository repository);
-
-	public abstract IWizard getNewTaskWizard(TaskRepository taskRepository);
-
-	public abstract List<String> getSupportedVersions();
-
-	/**
-	 * returns all tasks if date is null or an error occurs
-	 */
-	public abstract Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
-			Set<AbstractRepositoryTask> tasks) throws Exception;
 
 	/**
 	 * Sychronize a single task. Note that if you have a collection of tasks to
@@ -399,10 +473,10 @@ public abstract class AbstractRepositoryConnector {
 	public AbstractAttributeFactory getAttributeFactory() {
 		return attributeFactory;
 	}
-	
+
 	public void saveOffline(RepositoryTaskData taskData) {
-		try {			
-			MylarTaskListPlugin.getDefault().getOfflineReportsFile().add(taskData);			
+		try {
+			MylarTaskListPlugin.getDefault().getOfflineReportsFile().add(taskData);
 		} catch (CoreException e) {
 			MylarStatusHandler.fail(e, e.getMessage(), false);
 		}
