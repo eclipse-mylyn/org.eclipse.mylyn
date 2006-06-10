@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
@@ -88,16 +89,16 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 		}
 	}
 
-	public void uploadAttachment(TaskRepository repository, AbstractRepositoryTask task, String comment, String description, File file, String contentType, boolean isPatch) throws CoreException {
+	public void uploadAttachment(TaskRepository repository, AbstractRepositoryTask task, String comment, String description, File file, String contentType, boolean isPatch, Proxy proxySettings) throws CoreException {
 		try {
-			uploadAttachment(repository.getUrl(), repository.getUserName(), repository.getPassword(), AbstractRepositoryTask.getTaskIdAsInt(task.getHandleIdentifier()), comment, description, file, contentType, isPatch);
+			uploadAttachment(repository.getUrl(), repository.getUserName(), repository.getPassword(), AbstractRepositoryTask.getTaskIdAsInt(task.getHandleIdentifier()), comment, description, file, contentType, isPatch, proxySettings);
 		} catch (Exception e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, 0, "could not download", e));
 		}
 	}
 	
 	private boolean uploadAttachment(String repositoryUrl, String userName, String password, int bugReportID,
-			String comment, String description, File sourceFile, String contentType, boolean isPatch)
+			String comment, String description, File sourceFile, String contentType, boolean isPatch, Proxy proxySettings)
 			throws IOException {
 
 		// Note: The following debug code requires http commons-logging and
@@ -114,8 +115,13 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 		boolean uploadResult = true;
 
 		HttpClient client = new HttpClient();
+		if (proxySettings != null && proxySettings.address() instanceof InetSocketAddress) {
+			InetSocketAddress address = (InetSocketAddress)proxySettings.address();
+			client.getHostConfiguration().setProxy(address.getHostName(), address.getPort());
+		}
+		
 		PostMethod postMethod = new PostMethod(repositoryUrl + POST_ARGS_ATTACHMENT_UPLOAD);
-
+		
 		// My understanding is that this option causes the client to first check
 		// with the server to see if it will in fact recieve the post before
 		// actually sending the contents.
@@ -171,7 +177,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 	}
 	
 
-	public boolean uploadAttachment(LocalAttachment attachment, String uname, String password) throws IOException {
+	public boolean uploadAttachment(LocalAttachment attachment, String uname, String password, Proxy proxySettings) throws IOException {
 		
 		File file = new File(attachment.getFilePath());
 		if (!file.exists() || file.length() <= 0) {
@@ -180,7 +186,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 		
 		return uploadAttachment(attachment.getReport().getRepositoryUrl(), uname, password, attachment.getReport().getId(),
 				attachment.getComment(), attachment.getDescription(), file,
-				attachment.getContentType(), attachment.isPatch());
+				attachment.getContentType(), attachment.isPatch(), proxySettings);
 	}
 	
 	private boolean downloadAttachment(String repositoryUrl, String userName, String password,

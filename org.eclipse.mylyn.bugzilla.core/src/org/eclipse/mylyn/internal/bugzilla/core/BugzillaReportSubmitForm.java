@@ -437,7 +437,7 @@ public class BugzillaReportSubmitForm {
 					
 					String uname = URLDecoder.decode(fields.get(KEY_BUGZILLA_LOGIN), this.charset);
 					String password = URLDecoder.decode(fields.get(KEY_BUGZILLA_PASSWORD), this.charset);
-					if (!attachmentHandler.uploadAttachment(attachment, uname, password)) {
+					if (!attachmentHandler.uploadAttachment(attachment, uname, password, proxySettings)) {
 						throw new BugzillaException("Could not upload attachment.");
 					}
 							

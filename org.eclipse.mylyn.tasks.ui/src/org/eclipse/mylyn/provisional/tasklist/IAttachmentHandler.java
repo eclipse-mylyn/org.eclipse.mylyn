@@ -23,10 +23,9 @@ import org.eclipse.core.runtime.CoreException;
 public interface IAttachmentHandler {
 
 	public void uploadAttachment(TaskRepository repository, AbstractRepositoryTask task, String comment,
-			String description, File file, String contentType, boolean isPatch) throws CoreException;
+			String description, File file, String contentType, boolean isPatch, Proxy proxySettings) throws CoreException;
 
 	public void downloadAttachment(TaskRepository taskRepository, AbstractRepositoryTask task,
 			int attachmentId, File file, Proxy proxySettings) throws CoreException;
 
-	
 }

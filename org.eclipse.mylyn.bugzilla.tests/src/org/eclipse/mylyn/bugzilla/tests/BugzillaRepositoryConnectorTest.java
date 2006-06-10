@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URL;
 import java.util.Date;
 import java.util.Properties;
@@ -257,7 +258,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		
 		/* Test attempt to upload a non-existent file */
 		attachment.setFilePath("/this/is/not/a/real-file"); 
-		assertFalse(attachmentHandler.uploadAttachment(attachment, repository.getUserName(), repository.getPassword()));
+		assertFalse(attachmentHandler.uploadAttachment(attachment, repository.getUserName(), repository.getPassword(), Proxy.NO_PROXY));
 		task = (BugzillaTask) client.createTaskFromExistingKey(repository, taskNumber);
 		assertEquals(numAttached, task.getTaskData().getAttachments().size());
 		
@@ -265,7 +266,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		File attachFile = new File(fileName);
 		attachment.setFilePath(attachFile.getAbsolutePath());
 		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));		
-		assertFalse(attachmentHandler.uploadAttachment(attachment, repository.getUserName(), repository.getPassword()));
+		assertFalse(attachmentHandler.uploadAttachment(attachment, repository.getUserName(), repository.getPassword(), Proxy.NO_PROXY));
 		task = (BugzillaTask) client.createTaskFromExistingKey(repository, taskNumber);
 		assertEquals(numAttached, task.getTaskData().getAttachments().size());
 		
@@ -274,7 +275,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		write.write("elif txet tset a si sihT");
 		write.close();
 		attachment.setFilePath(attachFile.getAbsolutePath());
-		assertTrue(attachmentHandler.uploadAttachment(attachment, repository.getUserName(), repository.getPassword()));
+		assertTrue(attachmentHandler.uploadAttachment(attachment, repository.getUserName(), repository.getPassword(), Proxy.NO_PROXY));
 		task = (BugzillaTask) client.createTaskFromExistingKey(repository, taskNumber);
 		assertEquals(numAttached + 1, task.getTaskData().getAttachments().size());
 		

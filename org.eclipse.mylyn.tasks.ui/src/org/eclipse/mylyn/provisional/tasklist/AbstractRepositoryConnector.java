@@ -181,7 +181,7 @@ public abstract class AbstractRepositoryConnector {
 					IAttachmentHandler handler = getAttachmentHandler();					
 					if (handler != null) {
 						handler.uploadAttachment(repository, task, longComment, MYLAR_CONTEXT_DESCRIPTION,
-								destinationFile, APPLICATION_OCTET_STREAM, false);
+								destinationFile, APPLICATION_OCTET_STREAM, false, null);
 						synchronize(task, false, null);
 					} else {
 						MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
