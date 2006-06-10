@@ -27,12 +27,6 @@ import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
  */
 public class BugzillaTask extends AbstractRepositoryTask {
 
-	/**
-	 * The bug report for this BugzillaTask. This is <code>null</code> if the
-	 * bug report with the specified ID was unable to download.
-	 */
-	//protected transient RepositoryTaskData bugReport = null;
-
 	public BugzillaTask(String handle, String label, boolean newTask) {
 		super(handle, label, newTask);
 		isDirty = false;
@@ -69,10 +63,6 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		}
 	}
 
-//	public RepositoryTaskData getBugReport() {
-//		return bugReport;
-//	}
-	
 	public String getTaskType() {
 		if (taskData != null && taskData.getAttribute(BugzillaReportElement.BUG_SEVERITY.getKeyString()) != null) {
 			return taskData.getAttribute(BugzillaReportElement.BUG_SEVERITY.getKeyString()).getValue();
@@ -80,21 +70,6 @@ public class BugzillaTask extends AbstractRepositoryTask {
 			return null;
 		}
 	}
-
-//	/**
-//	 * @param taskData
-//	 *            The taskData to set.
-//	 */
-//	public void setBugReport(RepositoryTaskData bugReport) {
-//		this.bugReport = bugReport;
-//		
-//		// TODO: remove?
-//		if (bugReport != null) {
-//			setDescription(HtmlStreamTokenizer.unescape(AbstractRepositoryTask
-//					.getTaskIdAsInt(getHandleIdentifier())
-//					+ ": " + bugReport.getSummary()));
-//		}
-//	}
 
 	public boolean isDownloaded() {
 		return taskData != null;

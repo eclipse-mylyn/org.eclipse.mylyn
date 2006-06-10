@@ -65,7 +65,7 @@ public class TaskUiUtil {
 			return null;
 		}
 		switch (priorityLevel) {
-		case P1: 
+		case P1:
 			return TaskListImages.getImage(TaskListImages.PRIORITY_1);
 		case P2:
 			return TaskListImages.getImage(TaskListImages.PRIORITY_2);
@@ -79,7 +79,7 @@ public class TaskUiUtil {
 			return null;
 		}
 	}
-	
+
 	public static void closeEditorInActivePage(ITask task) {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window == null) {
@@ -102,15 +102,15 @@ public class TaskUiUtil {
 	public static boolean openRepositoryTask(String repositoryUrl, String taskId, String fullUrl) {
 		boolean opened = false;
 		String handle = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
-		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle); 
-		if (task == null) { 
+		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
+		if (task == null) {
 			// search for it
 			for (ITask currTask : MylarTaskListPlugin.getTaskListManager().getTaskList().getAllTasks()) {
 				if (currTask instanceof AbstractRepositoryTask) {
-					String currUrl = ((AbstractRepositoryTask)currTask).getUrl();
+					String currUrl = ((AbstractRepositoryTask) currTask).getUrl();
 					if (currUrl != null && currUrl.equals(fullUrl)) {
 						task = currTask;
-						break; 
+						break;
 					}
 				}
 			}
@@ -119,19 +119,20 @@ public class TaskUiUtil {
 			TaskUiUtil.refreshAndOpenTaskListElement(task);
 			opened = true;
 		} else {
-			AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryForTaskUrl(fullUrl);
+			AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryForTaskUrl(
+					fullUrl);
 			if (connector != null) {
 				connector.openRemoteTask(repositoryUrl, taskId);
 				opened = true;
 			}
-		} 
-		if (!opened) { 
+		}
+		if (!opened) {
 			TaskUiUtil.openUrl(fullUrl);
 			opened = true;
 		}
 		return opened;
 	}
-	
+
 	public static void refreshAndOpenTaskListElement(ITaskListElement element) {
 		if (element instanceof ITask || element instanceof AbstractQueryHit
 				|| element instanceof DateRangeActivityDelegate) {
@@ -149,27 +150,28 @@ public class TaskUiUtil {
 				String repositoryKind = repositoryTask.getRepositoryKind();
 				final AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager()
 						.getRepositoryConnector(repositoryKind);
-				
-				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(repositoryKind, repositoryTask.getRepositoryUrl());
+
+				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(repositoryKind,
+						repositoryTask.getRepositoryUrl());
 				if (!repository.hasCredentials()) {
-					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
-							MylarTaskListPlugin.TITLE_DIALOG, 
-							"Repository does not have credentials set, verify via " + TaskRepositoriesView.NAME + " view");
+					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+							MylarTaskListPlugin.TITLE_DIALOG, "Repository does not have credentials set, verify via "
+									+ TaskRepositoriesView.NAME + " view");
 				}
 				if (connector != null)
 					if (repositoryTask.getTaskData() != null) {
 						TaskUiUtil.openEditor(task, false);
-						// TODO: Eventually will need to check that this task 
-						//       isn't a new report awaiting submission if so
-						//       don't synchronize
+						// TODO: Eventually will need to check that this task
+						// isn't a new report awaiting submission if so
+						// don't synchronize
 						connector.synchronize((AbstractRepositoryTask) task, false, null);
 					} else {
 						Job refreshJob = connector.synchronize((AbstractRepositoryTask) task, true,
 								new JobChangeAdapter() {
 									public void done(IJobChangeEvent event) {
-										if (repositoryTask.getTaskData() != null) {
-											TaskUiUtil.openEditor(task, false);
-										}
+//										if (repositoryTask.getTaskData() != null) {
+										TaskUiUtil.openEditor(task, false);
+//										}
 									}
 								});
 						if (refreshJob == null) {
@@ -188,7 +190,7 @@ public class TaskUiUtil {
 			client.openEditQueryDialog(query);
 		}
 	}
-	
+
 	public static void openEditor(final ITask task, boolean newTask) {
 		openEditor(task, true, newTask);
 	}
@@ -247,15 +249,15 @@ public class TaskUiUtil {
 				if (WorkbenchBrowserSupport.getInstance().isInternalWebBrowserAvailable()) {
 					flags = WorkbenchBrowserSupport.AS_EDITOR | WorkbenchBrowserSupport.LOCATION_BAR
 							| WorkbenchBrowserSupport.NAVIGATION_BAR;
-		
+
 				} else {
 					flags = WorkbenchBrowserSupport.AS_EXTERNAL | WorkbenchBrowserSupport.LOCATION_BAR
 							| WorkbenchBrowserSupport.NAVIGATION_BAR;
 				}
 				String title = "Browser";
 				String tooltip = url;
-				browser = WorkbenchBrowserSupport.getInstance().createBrowser(flags, MylarTaskListPlugin.PLUGIN_ID + title,
-						title, tooltip);
+				browser = WorkbenchBrowserSupport.getInstance().createBrowser(flags,
+						MylarTaskListPlugin.PLUGIN_ID + title, title, tooltip);
 				browser.openURL(new URL(url));
 			}
 		} catch (PartInitException e) {
@@ -274,7 +276,7 @@ public class TaskUiUtil {
 			for (int i = 0; i < editorReferences.length; i++) {
 				IEditorPart editor = editorReferences[i].getEditor(false);
 				if (editor instanceof MylarTaskEditor) {
-					TaskEditorInput input = (TaskEditorInput) ((MylarTaskEditor)editor).getEditorInput();
+					TaskEditorInput input = (TaskEditorInput) ((MylarTaskEditor) editor).getEditorInput();
 					if (input.getTask() instanceof AbstractRepositoryTask) {
 						repositoryTaskEditors.add((MylarTaskEditor) editor);
 					}

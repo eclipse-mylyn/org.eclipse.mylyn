@@ -11,10 +11,18 @@
 
 package org.eclipse.mylar.provisional.tasklist;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.mylar.internal.tasklist.AbstractAttributeFactory;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
+
 /**
  * @author Mik Kersten
  * @author Rob Elves
  */
 public interface IOfflineTaskHandler {
-
+	
+	public AbstractAttributeFactory getAttributeFactory();
+	
+	public RepositoryTaskData downloadTaskData(AbstractRepositoryTask repositoryTask) throws CoreException;
+	
 }

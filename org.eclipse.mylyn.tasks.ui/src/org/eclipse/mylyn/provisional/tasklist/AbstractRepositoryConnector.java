@@ -34,7 +34,6 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.ZipFileUtil;
-import org.eclipse.mylar.internal.tasklist.AbstractAttributeFactory;
 import org.eclipse.mylar.internal.tasklist.OfflineTaskManager;
 import org.eclipse.mylar.internal.tasklist.RepositoryAttachment;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
@@ -65,20 +64,26 @@ public abstract class AbstractRepositoryConnector {
 
 	protected List<String> supportedVersions;
 
-	protected AbstractAttributeFactory attributeFactory;
-
 	protected boolean forceSyncExecForTesting = false;
 
 	private boolean updateLocalCopy = false;
+
+	/**
+	 * @return	null if not supported
+	 */
+	public abstract IAttachmentHandler getAttachmentHandler();
+	
+	/**
+	 * @return	null if not supported
+	 */
+	public abstract IOfflineTaskHandler getOfflineTaskHandler();
+
+	public abstract String getRepositoryUrlFromTaskUrl(String url);
 
 	public abstract boolean canCreateTaskFromKey();
 
 	public abstract boolean canCreateNewTask();
 	
-	protected abstract IAttachmentHandler getAttachmentHandler();
-
-	public abstract String getRepositoryUrlFromTaskUrl(String url);
-
 	/**
 	 * Implementors must execute query synchronously.
 	 * 
@@ -90,8 +95,6 @@ public abstract class AbstractRepositoryConnector {
 	 */
 	public abstract List<AbstractQueryHit> performQuery(AbstractRepositoryQuery query, IProgressMonitor monitor,
 			MultiStatus queryStatus);
-	
-	protected abstract RepositoryTaskData downloadTaskData(AbstractRepositoryTask repositoryTask) throws CoreException;
 
 	public abstract String getLabel();
 
@@ -105,7 +108,6 @@ public abstract class AbstractRepositoryConnector {
 	 *            identifier, e.g. "123" bug Bugzilla bug 123
 	 * @return null if task could not be created
 	 */
-
 	public abstract ITask createTaskFromExistingKey(TaskRepository repository, String id);
 
 	public abstract AbstractRepositorySettingsPage getSettingsPage();
@@ -120,16 +122,13 @@ public abstract class AbstractRepositoryConnector {
 
 	public abstract List<String> getSupportedVersions();
 
+	protected abstract void updateTaskState(AbstractRepositoryTask repositoryTask);
+		
 	/**
 	 * returns all tasks if date is null or an error occurs
 	 */
 	public abstract Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
 			Set<AbstractRepositoryTask> tasks) throws Exception;
-
-	
-	protected AbstractRepositoryConnector(AbstractAttributeFactory attributeFactory) {
-		this.attributeFactory = attributeFactory;
-	}
 
 	/**
 	 * Implementors of this repositoryOperations must perform it locally without
@@ -138,7 +137,7 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @return an emtpy set if no contexts
 	 */
-	public Set<RepositoryAttachment> getContextAttachments(TaskRepository repository, AbstractRepositoryTask task) {
+	public final Set<RepositoryAttachment> getContextAttachments(TaskRepository repository, AbstractRepositoryTask task) {
 		Set<RepositoryAttachment> contextAttachments = new HashSet<RepositoryAttachment>();
 		if (task.getTaskData() != null) {
 			for (RepositoryAttachment attachment : task.getTaskData().getAttachments()) {
@@ -150,7 +149,8 @@ public abstract class AbstractRepositoryConnector {
 		return contextAttachments;
 	}
 
-	public boolean hasRepositoryContext(TaskRepository repository, AbstractRepositoryTask task) {
+	// TODO: move
+	public final boolean hasRepositoryContext(TaskRepository repository, AbstractRepositoryTask task) {
 		if (repository == null || task == null) {
 			return false;
 		} else {
@@ -159,7 +159,7 @@ public abstract class AbstractRepositoryConnector {
 		}
 	}
 
-	public void attachContext(TaskRepository repository, AbstractRepositoryTask task, String longComment)
+	public final void attachContext(TaskRepository repository, AbstractRepositoryTask task, String longComment)
 			throws CoreException {
 		if (!repository.hasCredentials()) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
@@ -177,16 +177,15 @@ public abstract class AbstractRepositoryConnector {
 					File destinationFile = File.createTempFile(sourceContextFile.getName(), ZIPFILE_EXTENSION);
 					destinationFile.deleteOnExit();
 					ZipFileUtil.createZipFile(destinationFile, filesToZip, new NullProgressMonitor());
-					
-					IAttachmentHandler handler = getAttachmentHandler();					
+
+					IAttachmentHandler handler = getAttachmentHandler();
 					if (handler != null) {
 						handler.uploadAttachment(repository, task, longComment, MYLAR_CONTEXT_DESCRIPTION,
 								destinationFile, APPLICATION_OCTET_STREAM, false, null);
 						synchronize(task, false, null);
 					} else {
 						MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-								MylarTaskListPlugin.TITLE_DIALOG, MESSAGE_ATTACHMENTS_NOT_SUPPORTED
-										+ getLabel());
+								MylarTaskListPlugin.TITLE_DIALOG, MESSAGE_ATTACHMENTS_NOT_SUPPORTED + getLabel());
 					}
 				} catch (Exception e) {
 					MylarStatusHandler.fail(e, "Could not export task context as zip file", true);
@@ -194,8 +193,8 @@ public abstract class AbstractRepositoryConnector {
 			}
 		}
 	}
-	
-	public void retrieveContext(TaskRepository repository, AbstractRepositoryTask task,
+
+	public final void retrieveContext(TaskRepository repository, AbstractRepositoryTask task,
 			RepositoryAttachment attachment) throws CoreException, IOException {
 		boolean wasActive = false;
 		if (task.isActive()) {
@@ -210,7 +209,8 @@ public abstract class AbstractRepositoryConnector {
 		Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
 		IAttachmentHandler attachmentHandler = getAttachmentHandler();
 		if (attachmentHandler != null) {
-			attachmentHandler.downloadAttachment(repository, task, attachment.getId(), destinationZipFile, proxySettings);
+			attachmentHandler.downloadAttachment(repository, task, attachment.getId(), destinationZipFile,
+					proxySettings);
 			ZipFileUtil.unzipFiles(destinationZipFile, MylarPlugin.getDefault().getDataDirectory());
 			if (destinationContextFile.exists()) {
 				MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
@@ -220,16 +220,19 @@ public abstract class AbstractRepositoryConnector {
 			}
 		} else {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					MylarTaskListPlugin.TITLE_DIALOG, MESSAGE_ATTACHMENTS_NOT_SUPPORTED
-							+ getLabel());
+					MylarTaskListPlugin.TITLE_DIALOG, MESSAGE_ATTACHMENTS_NOT_SUPPORTED + getLabel());
 		}
 	}
-	
+
 	// Precondition of note: offline file is removed upon submit to repository
 	// resulting in a synchronized state.
-	protected void updateOfflineState(final AbstractRepositoryTask repositoryTask, boolean forceSync) {
+	void updateOfflineState(final AbstractRepositoryTask repositoryTask, boolean forceSync) {
+		IOfflineTaskHandler offlineTaskHandler = getOfflineTaskHandler();
+		if (offlineTaskHandler == null) {
+			return;
+		}
 		RepositoryTaskSyncState status = repositoryTask.getSyncState();
-		RepositoryTaskData downloadedTaskData;
+		RepositoryTaskData downloadedTaskData = null;
 
 		final TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
 				repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
@@ -241,7 +244,7 @@ public abstract class AbstractRepositoryConnector {
 		}
 
 		try {
-			downloadedTaskData = downloadTaskData(repositoryTask);
+			downloadedTaskData = offlineTaskHandler.downloadTaskData(repositoryTask);
 		} catch (final CoreException e) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
@@ -320,7 +323,7 @@ public abstract class AbstractRepositoryConnector {
 	 * @param listener
 	 *            can be null
 	 */
-	public Job synchronize(AbstractRepositoryTask repositoryTask, boolean forceSynch, IJobChangeListener listener) {
+	public final Job synchronize(AbstractRepositoryTask repositoryTask, boolean forceSynch, IJobChangeListener listener) {
 		Set<AbstractRepositoryTask> toSync = new HashSet<AbstractRepositoryTask>();
 		toSync.add(repositoryTask);
 		return synchronize(toSync, forceSynch, listener);
@@ -330,7 +333,7 @@ public abstract class AbstractRepositoryConnector {
 	 * @param listener
 	 *            can be null
 	 */
-	public Job synchronize(Set<AbstractRepositoryTask> repositoryTasks, boolean forceSynch, IJobChangeListener listener) {
+	private Job synchronize(Set<AbstractRepositoryTask> repositoryTasks, boolean forceSynch, IJobChangeListener listener) {
 
 		final SynchronizeTaskJob synchronizeJob = new SynchronizeTaskJob(this, repositoryTasks);
 		synchronizeJob.setForceSynch(forceSynch);
@@ -356,13 +359,13 @@ public abstract class AbstractRepositoryConnector {
 	 * For synchronizing a single query. Use synchronize(Set,
 	 * IJobChangeListener) if synchronizing multiple queries at a time.
 	 */
-	public Job synchronize(final AbstractRepositoryQuery repositoryQuery, IJobChangeListener listener) {
+	public final Job synchronize(final AbstractRepositoryQuery repositoryQuery, IJobChangeListener listener) {
 		HashSet<AbstractRepositoryQuery> items = new HashSet<AbstractRepositoryQuery>();
 		items.add(repositoryQuery);
 		return synchronize(items, listener, Job.LONG, 0, true);
 	}
 
-	public Job synchronize(final Set<AbstractRepositoryQuery> repositoryQueries, IJobChangeListener listener,
+	public final Job synchronize(final Set<AbstractRepositoryQuery> repositoryQueries, IJobChangeListener listener,
 			int priority, long delay, boolean syncTasks) {
 		SynchronizeQueryJob job = new SynchronizeQueryJob(this, repositoryQueries);
 		job.setSynchTasks(syncTasks);
@@ -379,7 +382,7 @@ public abstract class AbstractRepositoryConnector {
 	 * given repository was synchronized. Calls to this method set
 	 * TaskRepository.syncTime to now.
 	 */
-	public void synchronizeChanged(final TaskRepository repository) {
+	public final void synchronizeChanged(final TaskRepository repository) {
 		TaskList taskList = MylarTaskListPlugin.getTaskListManager().getTaskList();
 		Set<AbstractRepositoryTask> repositoryTasks = Collections.unmodifiableSet(taskList
 				.getRepositoryTasks(repository.getUrl()));
@@ -414,92 +417,27 @@ public abstract class AbstractRepositoryConnector {
 			}
 		}
 
-		refreshTasks(tasksToSync, false);
+		synchronize(tasksToSync, false, null);
 		MylarTaskListPlugin.getRepositoryManager().setSyncTime(repository, new Date());
-		// } catch (GeneralSecurityException e) {
-		// PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-		// public void run() {
-		// MessageDialog.openError(Display.getDefault().getActiveShell(),
-		// MylarTaskListPlugin.TITLE_DIALOG,
-		// "Authentication error. Check setting in " + TaskRepositoriesView.NAME
-		// + ".");
-		// }
-		// });
-		// } catch (final IOException e) {
-		// PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-		// public void run() {
-		// MessageDialog.openError(Display.getDefault().getActiveShell(),
-		// MylarTaskListPlugin.TITLE_DIALOG,
-		// "Communication error during query synchronization. Error
-		// reported:\n\n" + e.getMessage());
-		// }
-		// });
-		// }
-	}
-
-	/**
-	 * refresh the given tasks with latest content from repository
-	 * 
-	 * @param tasks -
-	 *            to synchronize
-	 * @param force -
-	 *            if true will overwrite local changes and incoming status
-	 */
-	public void refreshTasks(Set<AbstractRepositoryTask> tasks, boolean force) {
-		synchronize(tasks, force, null);
 	}
 
 	/**
 	 * Force the given task to be refreshed from the repository
 	 */
-	public void forceRefresh(AbstractRepositoryTask task) {
+	public final void forceRefresh(AbstractRepositoryTask task) {
 		Set<AbstractRepositoryTask> toRefresh = new HashSet<AbstractRepositoryTask>();
 		toRefresh.add(task);
-		refreshTasks(toRefresh, true);
+		synchronize(toRefresh, true, null);
 	}
 
 	/**
 	 * For testing
 	 */
-	public void setForceSyncExec(boolean forceSyncExec) {
+	public final void setForceSyncExec(boolean forceSyncExec) {
 		this.forceSyncExecForTesting = forceSyncExec;
 	}
 
-	public void openRemoteTask(String repositoryUrl, String idString) {
-		MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-				MylarTaskListPlugin.TITLE_DIALOG, "Opening JIRA issues not added to task list is not implemented.");
-	}
-
-	public AbstractAttributeFactory getAttributeFactory() {
-		return attributeFactory;
-	}
-
-	public void saveOffline(RepositoryTaskData taskData) {
-		try {
-			MylarTaskListPlugin.getDefault().getOfflineReportsFile().add(taskData);
-		} catch (CoreException e) {
-			MylarStatusHandler.fail(e, e.getMessage(), false);
-		}
-
-		// if (report.isSavedOffline()) {
-		// // There is already an offline report for this bug, update the file.
-		// MylarTaskListPlugin.getDefault().getOfflineReportsFile().update();
-		// } else {
-		// try {
-		// RepositoryTaskSyncState offlineStatus =
-		// MylarTaskListPlugin.getDefault().getOfflineReportsFile().add(
-		// report, forceSynch);
-		// report.setOfflineState(true);
-		// offlineStatusChange(report, offlineStatus);
-		//			
-		// } catch (CoreException e) {
-		// MylarStatusHandler.fail(e, e.getMessage(), false);
-		// }
-		// }
-
-	}
-
-	protected void removeOfflineTaskData(RepositoryTaskData bug) {
+	protected final void removeOfflineTaskData(RepositoryTaskData bug) {
 		if (bug == null)
 			return;
 		// bug.setOfflineState(false);
@@ -509,4 +447,16 @@ public abstract class AbstractRepositoryConnector {
 		MylarTaskListPlugin.getDefault().getOfflineReportsFile().remove(bugList);
 	}
 
+	public final void saveOffline(RepositoryTaskData taskData) {
+		try {
+			MylarTaskListPlugin.getDefault().getOfflineReportsFile().add(taskData);
+		} catch (CoreException e) {
+			MylarStatusHandler.fail(e, e.getMessage(), false);
+		}
+	}
+
+	public void openRemoteTask(String repositoryUrl, String idString) {
+		MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+				MylarTaskListPlugin.TITLE_DIALOG, "Not supported by connector: " + getLabel());
+	}
 }

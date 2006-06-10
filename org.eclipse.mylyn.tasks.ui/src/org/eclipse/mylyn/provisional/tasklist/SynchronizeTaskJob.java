@@ -75,7 +75,10 @@ class SynchronizeTaskJob extends Job {
 					monitor.setTaskName(LABEL_SYNCHRONIZING+repositoryTask.getDescription());					
 					repositoryTask.setCurrentlyDownloading(true);
 					MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
+					
 					this.connector.updateOfflineState(repositoryTask, forceSync);
+					this.connector.updateTaskState(repositoryTask);
+					
 					repositoryTask.setCurrentlyDownloading(false);
 					MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);					
 				}

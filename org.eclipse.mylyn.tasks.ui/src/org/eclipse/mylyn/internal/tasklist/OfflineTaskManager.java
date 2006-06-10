@@ -502,8 +502,8 @@ public class OfflineTaskManager {
 				// try {
 				RepositoryTaskData item = (RepositoryTaskData) in.readObject();
 				AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(item.getRepositoryKind());
-				if(connector != null) {
-					AbstractAttributeFactory factory = connector.getAttributeFactory();
+				if(connector != null && connector.getOfflineTaskHandler() != null) {
+					AbstractAttributeFactory factory = connector.getOfflineTaskHandler().getAttributeFactory();
 					if(factory != null) {
 						item.setAttributeFactory(factory);
 					} 

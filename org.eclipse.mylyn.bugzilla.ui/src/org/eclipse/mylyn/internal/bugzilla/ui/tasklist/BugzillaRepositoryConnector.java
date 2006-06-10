@@ -11,9 +11,7 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
-import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
-import java.net.Proxy;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,14 +36,12 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.internal.bugzilla.core.AbstractReportFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttachmentHandler;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
-import org.eclipse.mylar.internal.bugzilla.core.AbstractReportFactory.UnrecognizedBugzillaError;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
 import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
@@ -65,6 +61,7 @@ import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.IAttachmentHandler;
+import org.eclipse.mylar.provisional.tasklist.IOfflineTaskHandler;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
@@ -97,17 +94,20 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private BugzillaAttachmentHandler attachmentHandler = new BugzillaAttachmentHandler();
 	
-	public BugzillaRepositoryConnector() {
-		super(new BugzillaAttributeFactory());
-	}
+	private BugzillaOfflineTaskHandler offlineHandler = new BugzillaOfflineTaskHandler();
 
 	public String getLabel() {
 		return CLIENT_LABEL;
 	}
 
 	@Override
-	protected IAttachmentHandler getAttachmentHandler() {
+	public IAttachmentHandler getAttachmentHandler() {
 		return attachmentHandler;
+	}
+	
+	@Override
+	public IOfflineTaskHandler getOfflineTaskHandler() {
+		return offlineHandler;
 	}
 	
 	public AbstractRepositorySettingsPage getSettingsPage() {
@@ -116,55 +116,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	public String getRepositoryType() {
 		return BugzillaPlugin.REPOSITORY_KIND;
-	}
-
-	public RepositoryTaskData downloadTaskData(final AbstractRepositoryTask bugzillaTask) throws CoreException {
-		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
-				BugzillaPlugin.REPOSITORY_KIND, bugzillaTask.getRepositoryUrl());
-		Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
-		try {
-			return BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository
-					.getPassword(), proxySettings, repository.getCharacterEncoding(), AbstractRepositoryTask
-					.getTaskIdAsInt(bugzillaTask.getHandleIdentifier()));
-		} catch (final LoginException e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, 0, "Report download failed. Ensure proper repository configuration of " + bugzillaTask.getRepositoryUrl() + " in "
-					+ TaskRepositoriesView.NAME + ".", e ));
-//			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//				public void run() {
-//					MessageDialog.openError(Display.getDefault().getActiveShell(), "Report Download Failed",
-//							"Ensure proper repository configuration of " + bugzillaTask.getRepositoryUrl() + " in "
-//									+ TaskRepositoriesView.NAME + ".");
-//				}
-//			});
-		} catch (final UnrecognizedBugzillaError e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, 0, "Report download failed. Unrecognized response from " + bugzillaTask.getRepositoryUrl() + ".", e ));
-//			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//				public void run() {
-//					WebBrowserDialog.openAcceptAgreement(null, "Report Download Failed", "Unrecognized response from "
-//							+ bugzillaTask.getRepositoryUrl(), e.getMessage());
-//				}
-//			});
-		} catch (final FileNotFoundException e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, 0, "Report download from " + bugzillaTask.getRepositoryUrl() + " failed. File not found: "+e.getMessage(), e ));
-		} catch (final Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, 0, "Report download from " + bugzillaTask.getRepositoryUrl() + " failed, please see details.", e ));
-//			if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
-//				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//					public void run() {
-//
-//						if (e instanceof FileNotFoundException) {
-//							MessageDialog.openError(Display.getDefault().getActiveShell(), "Report Download Failed",
-//									"Resource not found: " + e.getMessage());
-//							return;
-//						}
-//
-//						((ApplicationWindow) PlatformUI.getWorkbench().getActiveWorkbenchWindow())
-//								.setStatus("Download of bug: " + bugzillaTask + " from "
-//										+ bugzillaTask.getRepositoryUrl() + " failed due to exception: " + e);
-//					}
-//				});
-//			}
-		}
 	}
 
 	public ITask createTaskFromExistingKey(TaskRepository repository, String id) {
@@ -471,7 +422,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			String newurlQueryString = "&field0-0-" + queryCounter + "=bug_id&type0-0-" + queryCounter
 					+ "=equals&value0-0-" + queryCounter + "="
 					+ AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
-			// try {
 			if ((urlQueryString.length() + newurlQueryString.length() + IBugzillaConstants.CONTENT_TYPE_RDF.length()) > MAX_URL_LENGTH) {
 				urlQueryString += IBugzillaConstants.CONTENT_TYPE_RDF;
 				queryForChanged(repository, changedTasks, urlQueryString);
@@ -486,16 +436,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			} else {
 				urlQueryString += newurlQueryString;
 			}
-			// } catch (SocketTimeoutException e) {
-			// MylarStatusHandler.log("Timeout occurred while retrieving reports
-			// from " + repository.getUrl()
-			// + ", will synchronize all reports.", this);
-			// } catch (Exception e) {
-			// MylarStatusHandler.log(e, "Mylar: Error retrieving reports from "
-			// + repository.getUrl()
-			// + ", will synchronize all reports.");
-			// return tasks;
-			// }
 		}
 		return changedTasks;
 	}
@@ -515,6 +455,11 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				changedTasks.add((AbstractRepositoryTask) correspondingTask);
 			}
 		}
+	}
+
+	@Override
+	protected void updateTaskState(AbstractRepositoryTask repositoryTask) {
+		// TODO: implement once this is consistent with offline task data
 	}
 
 }
