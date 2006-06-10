@@ -119,15 +119,8 @@ public class NewBugzillaReportWizard extends AbstractBugzillaReportWizard {
 						MylarTaskListPlugin.getTaskListManager().getTaskList().getRootCategory());
 			}
 
-//			AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
-//					BugzillaPlugin.REPOSITORY_KIND);
-			// client.addTaskToArchive(newTask);
-			//TaskUiUtil.openEditor(newTask, true);
 			TaskUiUtil.refreshAndOpenTaskListElement(newTask);
-
-//			if (!newTask.isDownloaded()) {
-//				client.synchronize(newTask, true, null);
-//			}
+			MylarTaskListPlugin.getSynchronizationManager().synchNow(0);
 
 			return true;
 		}
