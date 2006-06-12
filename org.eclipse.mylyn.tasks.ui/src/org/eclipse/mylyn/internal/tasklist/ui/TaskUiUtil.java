@@ -255,9 +255,8 @@ public class TaskUiUtil {
 							| WorkbenchBrowserSupport.NAVIGATION_BAR;
 				}
 				String title = "Browser";
-				String tooltip = url;
 				browser = WorkbenchBrowserSupport.getInstance().createBrowser(flags,
-						MylarTaskListPlugin.PLUGIN_ID + title, title, tooltip);
+						MylarTaskListPlugin.PLUGIN_ID + title, null, null);
 				browser.openURL(new URL(url));
 			}
 		} catch (PartInitException e) {
