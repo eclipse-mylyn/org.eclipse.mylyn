@@ -57,10 +57,11 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 	private Timer timer;
 
 	public TaskListBackupManager() {
-		boolean enabled = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(
-				TaskListPreferenceConstants.BACKUP_AUTOMATICALLY);
-
-		if (enabled) {
+//		boolean enabled = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(
+//				TaskListPreferenceConstants.BACKUP_AUTOMATICALLY);
+//		if (enabled) {
+		int days = MylarTaskListPlugin.getMylarCorePrefs().getInt(TaskListPreferenceConstants.BACKUP_SCHEDULE);
+		if (days > 0) {
 			start(MINUTE);
 		}
 	}
@@ -75,19 +76,20 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {
-		if (event.getProperty().equals(TaskListPreferenceConstants.BACKUP_AUTOMATICALLY)) {
-			if ((Boolean) event.getNewValue() == true) {
-				start(MINUTE);
-			} else {
-				stop();
-			}
-		}
+//		if (event.getProperty().equals(TaskListPreferenceConstants.BACKUP_AUTOMATICALLY)) {
+//			if ((Boolean) event.getNewValue() == true) {
+//				start(MINUTE);
+//			} else {
+//				stop();
+//			}
+//		}
 	}
 
 	public void backupNow(boolean synchronous) {
-		String destination = MylarTaskListPlugin.getMylarCorePrefs().getString(
-				TaskListPreferenceConstants.BACKUP_FOLDER);
-
+//		String destination = MylarTaskListPlugin.getMylarCorePrefs().getString(
+//				TaskListPreferenceConstants.BACKUP_FOLDER);
+		String destination = MylarTaskListPlugin.getDefault().getBackupFolderPath();
+		
 		File backupFolder = new File(destination);
 		if (!backupFolder.exists()) {
 			backupFolder.mkdir();

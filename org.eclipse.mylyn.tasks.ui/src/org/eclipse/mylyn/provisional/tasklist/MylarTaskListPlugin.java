@@ -93,15 +93,15 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	private static TaskRepositoryManager taskRepositoryManager;
 
 	private static TaskListSynchronizationManager synchronizationManager;
-	
+
 	private TaskListSaveManager taskListSaveManager;
-	
+
 	private RepositoryEditorManager repositoryEditorManager;
 
 	private TaskListNotificationManager taskListNotificationManager;
 
 	private TaskListBackupManager taskListBackupManager;
-	
+
 	private OfflineTaskManager offlineTaskManager;
 
 	private List<ITaskEditorFactory> taskEditors = new ArrayList<ITaskEditorFactory>();
@@ -110,7 +110,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	private TaskListWriter taskListWriter;
 
-//	private ResourceBundle resourceBundle;
+	// private ResourceBundle resourceBundle;
 
 	private long AUTOMATIC_BACKUP_SAVE_INTERVAL = 1 * 3600 * 1000; // every
 
@@ -213,7 +213,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		}
 
 		public void windowOpened(IWorkbenchWindow window) {
-			// ignore	
+			// ignore
 		}
 
 		public void windowClosed(IWorkbenchWindow window) {
@@ -299,13 +299,13 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
-					
+
 					TaskListExtensionReader.initExtensions(taskListWriter);
 					taskRepositoryManager.readRepositories();
 
 					// Must be called after repositories read
 					readOfflineReportsFile();
-					
+
 					taskListManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
 					taskListManager.readExistingOrCreateNewList();
 					initialized = true;
@@ -326,10 +326,10 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 					repositoryEditorManager = new RepositoryEditorManager();
 					taskListManager.getTaskList().addChangeListener(repositoryEditorManager);
-					
+
 					taskListSaveManager = new TaskListSaveManager();
 					taskListManager.getTaskList().addChangeListener(taskListSaveManager);
-					
+
 					MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 					getMylarCorePrefs().addPropertyChangeListener(synchronizationManager);
 
@@ -352,7 +352,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		INSTANCE = null;
-//		resourceBundle = null;S
+		// resourceBundle = null;S
 		try {
 			getMylarCorePrefs().removePropertyChangeListener(taskListNotificationManager);
 			getMylarCorePrefs().removePropertyChangeListener(taskListBackupManager);
@@ -441,12 +441,12 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, "" + (30 * 60 * 1000));
 
-		store.setDefault(TaskListPreferenceConstants.BACKUP_AUTOMATICALLY, true);
-
-		store.setDefault(TaskListPreferenceConstants.BACKUP_FOLDER, MylarPlugin.getDefault().getDataDirectory()
-				+ DEFAULT_PATH_SEPARATOR + DEFAULT_BACKUP_FOLDER_NAME);
+//		store.setDefault(TaskListPreferenceConstants.BACKUP_AUTOMATICALLY, true);
+		// store.setDefault(TaskListPreferenceConstants.BACKUP_FOLDER,
+		// MylarPlugin.getDefault().getDataDirectory()
+		// + DEFAULT_PATH_SEPARATOR + DEFAULT_BACKUP_FOLDER_NAME);
 		store.setDefault(TaskListPreferenceConstants.BACKUP_SCHEDULE, 5);
-		store.setDefault(TaskListPreferenceConstants.BACKUP_MAXFILES, 10);
+		store.setDefault(TaskListPreferenceConstants.BACKUP_MAXFILES, 20);
 		store.setDefault(TaskListPreferenceConstants.BACKUP_LAST, 0f);
 
 		store.setDefault(TaskListPreferenceConstants.FILTER_ARCHIVE_MODE, true);
@@ -515,6 +515,10 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		return options;
 	}
 
+	public String getBackupFolderPath() {
+		return MylarPlugin.getDefault().getDataDirectory() + DEFAULT_PATH_SEPARATOR + DEFAULT_BACKUP_FOLDER_NAME;
+	}
+
 	public ITaskHighlighter getHighlighter() {
 		return highlighter;
 	}
@@ -526,7 +530,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	public List<ITaskEditorFactory> getTaskEditorFactories() {
 		return taskEditors;
 	}
-	
+
 	public void addContextEditor(ITaskEditorFactory contextEditor) {
 		if (contextEditor != null)
 			this.taskEditors.add(contextEditor);
@@ -564,7 +568,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	public TaskListBackupManager getBackupManager() {
 		return taskListBackupManager;
 	}
-	
+
 	// TODO: clean-up
 	private void readOfflineReportsFile() {
 		IPath offlineReportsPath = getOfflineReportsFilePath();
@@ -572,7 +576,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		try {
 			offlineTaskManager = new OfflineTaskManager(offlineReportsPath.toFile(), true);
 		} catch (Exception e) {
-			MylarStatusHandler.log(e,
+			MylarStatusHandler
+					.log(e,
 							"Could not restore offline repository tasks file, creating new one (possible version incompatibility)");
 			boolean deleted = offlineReportsPath.toFile().delete();
 			if (!deleted) {
@@ -598,7 +603,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	public OfflineTaskManager getOfflineReportsFile() {
 		if (offlineTaskManager == null) {
 			MylarStatusHandler.fail(null, "Offline reports file not created, try restarting.", true);
-		} 
+		}
 		return offlineTaskManager;
 	}
 
@@ -607,7 +612,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 }
-
 
 // public Map<String, IHyperlinkListener> getTaskHyperlinkListeners() {
 // return taskHyperlinkListeners;
@@ -619,32 +623,32 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 // this.taskHyperlinkListeners.put(type, listener);
 // }
 
-
-///**
-//* Returns the string from the INSTANCE's resource bundle, or 'key' if not
-//* found.
-//*/
-//public static String getResourceString(String key) {
-//	ResourceBundle bundle = MylarTaskListPlugin.getDefault().getResourceBundle();
-//	try {
-//		return (bundle != null) ? bundle.getString(key) : key;
-//	} catch (MissingResourceException e) {
-//		return key;
-//	}
-//}
+// /**
+// * Returns the string from the INSTANCE's resource bundle, or 'key' if not
+// * found.
+// */
+// public static String getResourceString(String key) {
+// ResourceBundle bundle = MylarTaskListPlugin.getDefault().getResourceBundle();
+// try {
+// return (bundle != null) ? bundle.getString(key) : key;
+// } catch (MissingResourceException e) {
+// return key;
+// }
+// }
 //
-///**
-//* Returns the INSTANCE's resource bundle,
-//*/
-//public ResourceBundle getResourceBundle() {
-//	try {
-//		if (resourceBundle == null)
-//			resourceBundle = ResourceBundle.getBundle("taskListPlugin.TaskListPluginPluginResources");
-//	} catch (MissingResourceException x) {
-//		resourceBundle = null;
-//	}
-//	return resourceBundle;
-//}
+// /**
+// * Returns the INSTANCE's resource bundle,
+// */
+// public ResourceBundle getResourceBundle() {
+// try {
+// if (resourceBundle == null)
+// resourceBundle =
+// ResourceBundle.getBundle("taskListPlugin.TaskListPluginPluginResources");
+// } catch (MissingResourceException x) {
+// resourceBundle = null;
+// }
+// return resourceBundle;
+// }
 
 // public static void setCurrentPriorityLevel(Task.PriorityLevel pl) {
 // getPrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY,

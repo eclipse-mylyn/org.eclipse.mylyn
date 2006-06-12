@@ -40,12 +40,12 @@ public class TaskListBackupManagerTest extends TestCase {
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.BACKUP_AUTOMATICALLY, false);
+//		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.BACKUP_AUTOMATICALLY, false);
 	}
 
 	public void testAutoBackupDisabled() throws InterruptedException {
 		TaskListBackupManager backupManager = MylarTaskListPlugin.getDefault().getBackupManager();
-		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.BACKUP_AUTOMATICALLY, false);
+//		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.BACKUP_AUTOMATICALLY, false);
 		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.BACKUP_SCHEDULE, 1);
 		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.BACKUP_LAST, 0f);
 		assertEquals(0, MylarTaskListPlugin.getMylarCorePrefs().getLong(TaskListPreferenceConstants.BACKUP_LAST));
@@ -56,14 +56,15 @@ public class TaskListBackupManagerTest extends TestCase {
 
 	public void testAutoBackupEnabled() throws InterruptedException, InvocationTargetException, IOException {
 		TaskListBackupManager backupManager = MylarTaskListPlugin.getDefault().getBackupManager();
-		String backupFolder = MylarTaskListPlugin.getMylarCorePrefs().getDefaultString(
-				TaskListPreferenceConstants.BACKUP_FOLDER);
+		String backupFolder = MylarTaskListPlugin.getDefault().getBackupFolderPath();
+//		String backupFolder = MylarTaskListPlugin.getMylarCorePrefs().getDefaultString(
+//				TaskListPreferenceConstants.BACKUP_FOLDER);
 		File backupFileFolder = new File(backupFolder);
 		deleteBackupFolder(backupFileFolder);
-		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.BACKUP_FOLDER, backupFolder);
+//		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.BACKUP_FOLDER, backupFolder);
 		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.BACKUP_SCHEDULE, 1);
 		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.BACKUP_LAST, 0f);
-		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.BACKUP_AUTOMATICALLY, true);
+//		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.BACKUP_AUTOMATICALLY, true);
 		backupManager.backupNow(true);
 		assertFalse(MylarTaskListPlugin.getMylarCorePrefs().getLong(TaskListPreferenceConstants.BACKUP_LAST) == 0);
 		assertTrue(backupFileFolder.exists());
