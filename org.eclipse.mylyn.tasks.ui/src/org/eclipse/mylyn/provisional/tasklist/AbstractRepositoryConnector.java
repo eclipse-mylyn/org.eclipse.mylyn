@@ -69,12 +69,12 @@ public abstract class AbstractRepositoryConnector {
 	private boolean updateLocalCopy = false;
 
 	/**
-	 * @return	null if not supported
+	 * @return null if not supported
 	 */
 	public abstract IAttachmentHandler getAttachmentHandler();
-	
+
 	/**
-	 * @return	null if not supported
+	 * @return null if not supported
 	 */
 	public abstract IOfflineTaskHandler getOfflineTaskHandler();
 
@@ -83,7 +83,7 @@ public abstract class AbstractRepositoryConnector {
 	public abstract boolean canCreateTaskFromKey();
 
 	public abstract boolean canCreateNewTask();
-	
+
 	/**
 	 * Implementors must execute query synchronously.
 	 * 
@@ -123,7 +123,7 @@ public abstract class AbstractRepositoryConnector {
 	public abstract List<String> getSupportedVersions();
 
 	protected abstract void updateTaskState(AbstractRepositoryTask repositoryTask);
-		
+
 	/**
 	 * returns all tasks if date is null or an error occurs
 	 */
@@ -246,13 +246,15 @@ public abstract class AbstractRepositoryConnector {
 		try {
 			downloadedTaskData = offlineTaskHandler.downloadTaskData(repositoryTask);
 		} catch (final CoreException e) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					ErrorDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-							"Error Downloading Report", "Unable to synchronize " + repositoryTask.getDescription()
-									+ " on " + repository.getUrl(), e.getStatus());
-				}
-			});
+			if (forceSync) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						ErrorDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+								"Error Downloading Report", "Unable to synchronize " + repositoryTask.getDescription()
+										+ " on " + repository.getUrl(), e.getStatus());
+					}
+				});
+			}
 			return;
 		}
 
