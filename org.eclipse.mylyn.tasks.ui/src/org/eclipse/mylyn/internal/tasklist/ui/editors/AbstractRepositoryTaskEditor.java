@@ -510,7 +510,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 		toolkit.createLabel(headerInfoComposite, " Modified: ").setFont(TITLE_FONT);
 		String lastModifiedDateString = "";		
-		if (getRepositoryTaskData().getLastModified(null) != null) {
+		if (getRepositoryTaskData().getLastModified(repository.getTimeZoneId()) != null) {
 			lastModifiedDateString = simpleDateFormat.format(getRepositoryTaskData().getLastModified(repository.getTimeZoneId()));
 		}
 		toolkit.createText(headerInfoComposite, lastModifiedDateString, SWT.FLAT | SWT.READ_ONLY);
