@@ -58,13 +58,9 @@ public class DatePicker extends Composite {
 
 	private Calendar date = null;
 
-//	private Shell pickerShell = null;
-//
-//	private DatePickerPanel datePickerPanel = null;
-
 	private List<SelectionListener> pickerListeners = new LinkedList<SelectionListener>();
 	
-	SimpleDateFormat simpleDateFormat = (SimpleDateFormat) SimpleDateFormat.getDateInstance(SimpleDateFormat.LONG, Locale.ENGLISH);
+	private SimpleDateFormat simpleDateFormat = (SimpleDateFormat) SimpleDateFormat.getDateInstance(SimpleDateFormat.LONG, Locale.ENGLISH);
 	
 	private String initialText = "Select Date";
 	
