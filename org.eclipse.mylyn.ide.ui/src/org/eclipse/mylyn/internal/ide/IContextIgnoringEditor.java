@@ -12,10 +12,8 @@
 package org.eclipse.mylar.internal.ide;
 
 /**
- * Tag interface.
+ * Tag interface for editors that do not get opened or closed with interest.
  * 
  * @author Mik Kersten
  */
-public interface IInterestPreservedOnClose {
-
-}
+public interface IContextIgnoringEditor { }
