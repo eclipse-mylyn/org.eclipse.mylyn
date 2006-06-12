@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TimeZone;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -31,7 +30,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.ZipFileUtil;
 import org.eclipse.mylar.internal.tasklist.OfflineTaskManager;
@@ -266,8 +264,7 @@ public abstract class AbstractRepositoryConnector {
 
 		RepositoryTaskData offlineTaskData = OfflineTaskManager.findBug(downloadedTaskData.getRepositoryUrl(),
 				downloadedTaskData.getId());
-
-		TimeZone repositoryTimeZone = DateUtil.getTimeZone(repository.getTimeZoneId());
+		
 		if (offlineTaskData != null) {
 			switch (status) {
 			case OUTGOING:
@@ -301,7 +298,7 @@ public abstract class AbstractRepositoryConnector {
 				break;
 			case SYNCHRONIZED:
 				if (repositoryTask.getLastSynchronized() == null
-						|| downloadedTaskData.getLastModified(repositoryTimeZone).compareTo(
+						|| downloadedTaskData.getLastModified(repository.getTimeZoneId()).compareTo(
 								repositoryTask.getLastSynchronized()) > 0) {
 					status = RepositoryTaskSyncState.INCOMING;
 				}
@@ -311,7 +308,7 @@ public abstract class AbstractRepositoryConnector {
 		} else {
 			status = RepositoryTaskSyncState.SYNCHRONIZED;
 		}
-		repositoryTask.setLastSynchronized(downloadedTaskData.getLastModified(repositoryTimeZone));
+		repositoryTask.setLastSynchronized(downloadedTaskData.getLastModified(repository.getTimeZoneId()));
 		repositoryTask.setTaskData(downloadedTaskData);
 		repositoryTask.setSyncState(status);
 		saveOffline(downloadedTaskData);

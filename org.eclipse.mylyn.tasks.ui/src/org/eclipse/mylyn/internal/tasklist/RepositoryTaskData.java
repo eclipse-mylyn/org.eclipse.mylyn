@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.provisional.tasklist.TaskRepository;
+
 /**
  * @author Mik Kersten
  * @author Rob Elves
@@ -138,12 +141,13 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 	}
 
 	// XXX: fix to not parse
-	public Date getLastModified(TimeZone timeZone) {
+	public Date getLastModified(String timeZoneID) {		
 		if (lastModified == null) {
 			String dateString = getAttributeValue(RepositoryTaskAttribute.DATE_MODIFIED);
 			// String dateString =
 			// getAttributeValue(BugzillaReportElement.DELTA_TS.getKeyString());
 			try {
+				TimeZone timeZone  = TimeZone.getTimeZone(timeZoneID);
 				if (timeZone != null) {
 					delta_ts_format.setTimeZone(timeZone);
 				} else {
@@ -267,11 +271,19 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 	 * @return The bugs creation date
 	 */
 	public Date getCreated() {
-		if (created == null) {
+		if (created == null) {			
+			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(this.getRepositoryKind(), this.getRepositoryUrl());
+			TimeZone timeZone = null;
+			if(repository != null) {
+				timeZone = TimeZone.getTimeZone(repository.getTimeZoneId());
+			} else {
+				timeZone = TimeZone.getDefault();
+			}
 			String dateString = getAttributeValue(RepositoryTaskAttribute.DATE_CREATION);
 			// String dateString =
 			// getAttributeValue(BugzillaReportElement.CREATION_TS.getKeyString());
 			try {
+				creation_ts_format.setTimeZone(timeZone);
 				created = creation_ts_format.parse(dateString);
 			} catch (ParseException e) {
 				// ignore

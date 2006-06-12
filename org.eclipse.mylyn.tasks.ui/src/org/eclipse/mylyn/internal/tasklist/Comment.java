@@ -15,6 +15,10 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
+
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
 /**
  * A comment posted on a bug.
@@ -77,9 +81,15 @@ public class Comment extends AttributeContainer implements Serializable {
 	 * @return The comments creation timestamp
 	 */
 	public Date getCreated() {
+		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(bug.getRepositoryKind(), bug.getRepositoryUrl());
+		TimeZone timeZone = TimeZone.getDefault();
+		if(repository != null) {
+			timeZone = TimeZone.getTimeZone(repository.getTimeZoneId());
+		}		
 		if (created == null) {
 			created = Calendar.getInstance().getTime();
 			try {
+				creation_ts_date_format.setTimeZone(timeZone);
 				created = creation_ts_date_format.parse(getAttributeValue(RepositoryTaskAttribute.COMMENT_DATE));
 			} catch (Exception e) {
 				// ignore

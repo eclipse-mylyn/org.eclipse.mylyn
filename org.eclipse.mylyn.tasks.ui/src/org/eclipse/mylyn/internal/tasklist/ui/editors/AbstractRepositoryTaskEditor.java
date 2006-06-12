@@ -509,9 +509,9 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		toolkit.createText(headerInfoComposite, openedDateString, SWT.FLAT | SWT.READ_ONLY);
 
 		toolkit.createLabel(headerInfoComposite, " Modified: ").setFont(TITLE_FONT);
-		String lastModifiedDateString = "";
+		String lastModifiedDateString = "";		
 		if (getRepositoryTaskData().getLastModified(null) != null) {
-			lastModifiedDateString = simpleDateFormat.format(getRepositoryTaskData().getLastModified(null));
+			lastModifiedDateString = simpleDateFormat.format(getRepositoryTaskData().getLastModified(repository.getTimeZoneId()));
 		}
 		toolkit.createText(headerInfoComposite, lastModifiedDateString, SWT.FLAT | SWT.READ_ONLY);
 
@@ -1031,7 +1031,14 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		// addCommentsComposite.setBackground(background);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(addCommentsComposite);
 		// End Additional (read-only) Comments Area
-
+		// Date lastSynced = new Date();
+		// if(this.getEditorInput() instanceof ExistingBugEditorInput) {
+		// ExistingBugEditorInput input =
+		// (ExistingBugEditorInput)this.getEditorInput();
+		// lastSynced = input.getRepositoryTask().getLastSynchronized();
+		//		}
+		
+		
 		StyledText styledText = null;
 		for (Iterator<Comment> it = getRepositoryTaskData().getComments().iterator(); it.hasNext();) {
 			final Comment comment = it.next();
@@ -1043,6 +1050,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 			ExpandableComposite expandableComposite = toolkit.createExpandableComposite(addCommentsComposite,
 					ExpandableComposite.TREE_NODE);
 
+			//if (comment.getCreated().after(lastSynced)) {
 			if (!it.hasNext()) {
 				expandableComposite.setExpanded(true);
 			}
