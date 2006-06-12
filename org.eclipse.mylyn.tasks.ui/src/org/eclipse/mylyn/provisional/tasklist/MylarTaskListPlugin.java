@@ -565,6 +565,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		return taskListBackupManager;
 	}
 	
+	// TODO: clean-up
 	private void readOfflineReportsFile() {
 		IPath offlineReportsPath = getOfflineReportsFilePath();
 
@@ -573,16 +574,15 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		} catch (Exception e) {
 			MylarStatusHandler.log(e,
 							"Could not restore offline repository tasks file, creating new one (possible version incompatibility)");
-			offlineReportsPath.toFile().delete();
-//			if (offlineReportsPath.toFile().delete()) {
+			boolean deleted = offlineReportsPath.toFile().delete();
+			if (!deleted) {
+				MylarStatusHandler.log(e, "could not delete offline repository tasks file");
+			}
 			try {
 				offlineTaskManager = new OfflineTaskManager(offlineReportsPath.toFile(), false);
 			} catch (Exception e1) {
-				MylarStatusHandler.fail(e, "could not reset offline repository tasks file", true);
+				MylarStatusHandler.log(e, "could not reset offline repository tasks file");
 			}
-//			} else {
-//				MylarStatusHandler.fail(null, "reset of Bugzilla offline reports file failed", true);
-//			}
 		}
 	}
 

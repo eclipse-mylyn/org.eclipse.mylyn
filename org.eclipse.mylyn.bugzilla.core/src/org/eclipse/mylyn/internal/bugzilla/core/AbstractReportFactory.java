@@ -37,7 +37,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public class AbstractReportFactory {
 
-	private static final int COM_TIME_OUT = 10000;
+	private static final int COM_TIME_OUT = 15000;
 
 	private static final String CONTENT_TYPE_TEXT_HTML = "text/html";
 

@@ -510,7 +510,6 @@ public class OfflineTaskManager {
 				}
 				list.add(item);				
 			}
-
 		} finally {
 			in.close();
 		}
