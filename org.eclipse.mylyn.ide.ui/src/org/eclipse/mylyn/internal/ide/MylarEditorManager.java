@@ -54,9 +54,6 @@ public class MylarEditorManager implements IMylarContextListener {
 				if (!wasPaused) {
 					MylarPlugin.getContextManager().setContextCapturePaused(true);
 				}
-//				for (IMylarUiBridge bridge : MylarUiPlugin.getDefault().getUiBridges()) {
-//					bridge.setContextCapturePaused(true);
-//				}
 				workbench.largeUpdateStart();
 
 				List<IMylarElement> documents = MylarPlugin.getContextManager().getInterestingDocuments();
@@ -76,9 +73,6 @@ public class MylarEditorManager implements IMylarContextListener {
 				MylarStatusHandler.fail(e, "failed to open editors on activation", false);
 			} finally {
 				MylarPlugin.getContextManager().setContextCapturePaused(false);
-//				for (IMylarUiBridge bridge : MylarUiPlugin.getDefault().getUiBridges()) {
-//					bridge.setContextCapturePaused(false);
-//				}
 				workbench.largeUpdateEnd();
 			}
 		}
