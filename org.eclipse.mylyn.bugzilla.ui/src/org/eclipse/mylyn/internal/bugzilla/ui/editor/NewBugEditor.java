@@ -43,8 +43,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.forms.events.ExpansionEvent;
-import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
@@ -84,28 +82,28 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 //	}
 
 	@Override
-	protected void createCustomAttributeLayout(FormToolkit toolkit, final ScrolledForm form) {
-
-		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+	protected void createDescriptionLayout(Composite composite) {
+		FormToolkit toolkit = new FormToolkit(composite.getDisplay());
+		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText(LABEL_SECTION_DESCRIPTION);
 		section.setExpanded(true);
 		section.setLayout(new GridLayout());
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		section.addExpansionListener(new IExpansionListener() {
-			public void expansionStateChanging(ExpansionEvent e) {
-				form.reflow(true);
-			}
-
-			public void expansionStateChanged(ExpansionEvent e) {
-				form.reflow(true);
-			}
-		});
+		// section.addExpansionListener(new IExpansionListener() {
+		// public void expansionStateChanging(ExpansionEvent e) {
+		// form.reflow(true);
+		// }
+		//
+		// public void expansionStateChanged(ExpansionEvent e) {
+		// form.reflow(true);
+		//			}
+		//		});
 		
 		
 		
 		// Description Area
-		Composite descriptionComposite = toolkit.createComposite(form.getBody());
+		Composite descriptionComposite = toolkit.createComposite(composite);
 		GridLayout descriptionLayout = new GridLayout();
 		descriptionLayout.numColumns = 4;
 		descriptionComposite.setLayout(descriptionLayout);
@@ -300,6 +298,11 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 	protected void validateInput() {
 		// ignore
 		
+	}
+
+	@Override
+	protected void createCustomAttributeLayout(Composite composite) {
+		// ignore
 	}
 }
 

@@ -213,7 +213,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	protected Text summaryText;
 
 	protected Text addCommentsText;
-	
+
 	// protected Text assignedTo;
 
 	protected Text attachmentDesc;
@@ -332,7 +332,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 				if (select instanceof RepositoryTaskOutlineNode) {
 					RepositoryTaskOutlineNode n = (RepositoryTaskOutlineNode) select;
 
-					 if (n != null && lastSelected != null
+					if (n != null && lastSelected != null
 							&& OutlineTools.getHandle(n).equals(OutlineTools.getHandle(lastSelected))) {
 						// we don't need to set the selection if it is already
 						// set
@@ -449,7 +449,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	public String getNewCommentText() {
 		return addCommentsTextBox.getText();
 	}
-	
+
 	/**
 	 * @return Any currently selected text.
 	 */
@@ -522,8 +522,9 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 		// createInfoArea(editorComposite);
 		createContextMenu();
-		createAttributeLayout();
-		createCustomAttributeLayout(toolkit, form);
+		Composite attribComp = createAttributeLayout();
+		createCustomAttributeLayout(attribComp);
+		createDescriptionLayout(form.getBody());
 		createAttachmentLayout();
 		createCommentLayout(toolkit, form);
 		createButtonLayouts(toolkit, form.getBody());
@@ -567,7 +568,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	 * Creates the attribute layout, which contains most of the basic attributes
 	 * of the bug (some of which are editable).
 	 */
-	protected void createAttributeLayout() {
+	protected Composite createAttributeLayout() {
 
 		String title = getTitleString();
 		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.TWISTIE);
@@ -684,6 +685,15 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 			}
 		}
 		toolkit.paintBordersFor(attributesComposite);
+		// make sure that we are in the first column
+		if (currentCol > 1) {
+			while (currentCol <= attributesLayout.numColumns) {
+				toolkit.createLabel(attributesComposite, "");
+				// newLayout(attributesComposite, 1, "", PROPERTY);
+				currentCol++;
+			}
+		}
+		return attributesComposite;
 	}
 
 	/**
@@ -934,11 +944,54 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 	}
 
+	protected abstract void createCustomAttributeLayout(Composite composite);
+
+	protected void createDescriptionLayout(Composite composite) {
+		final Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+		section.setText(LABEL_SECTION_DESCRIPTION);
+		section.setExpanded(true);
+		section.setLayout(new GridLayout());
+		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		section.addExpansionListener(new IExpansionListener() {
+			public void expansionStateChanging(ExpansionEvent e) {
+				form.reflow(true);
+			}
+
+			public void expansionStateChanged(ExpansionEvent e) {
+				form.reflow(true);
+			}
+		});
+
+		final Composite sectionComposite = toolkit.createComposite(section);
+		section.setClient(sectionComposite);
+		GridLayout addCommentsLayout = new GridLayout();
+		addCommentsLayout.numColumns = 1;
+		sectionComposite.setLayout(addCommentsLayout);
+		GridData sectionCompositeData = new GridData(GridData.FILL_HORIZONTAL);
+		sectionComposite.setLayoutData(sectionCompositeData);
+
+		TextViewer viewer = addRepositoryText(repository, sectionComposite, getRepositoryTaskData().getDescription());
+		final StyledText styledText = viewer.getTextWidget();
+		styledText.addListener(SWT.FocusIn, new DescriptionListener());
+		styledText.setLayout(new GridLayout());
+		GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(styledText);
+
+		texts.add(textsindex, styledText);
+		textHash.put(getRepositoryTaskData().getDescription(), styledText);
+		textsindex++;
+	}
+
 	/**
-	 * Creates the description layout, which displays and possibly edits the
-	 * bug's description.
+	 * A listener for selection of the description field.
 	 */
-	protected abstract void createCustomAttributeLayout(FormToolkit toolkit, final ScrolledForm form);
+	protected class DescriptionListener implements Listener {
+		public void handleEvent(Event event) {
+			fireSelectionChanged(new SelectionChangedEvent(selectionProvider,
+					new StructuredSelection(new RepositoryTaskSelection(getRepositoryTaskData().getId(),
+							getRepositoryTaskData().getRepositoryUrl(), LABEL_SECTION_DESCRIPTION, true,
+							getRepositoryTaskData().getSummary()))));
+		}
+	}
 
 	protected void createCommentLayout(FormToolkit toolkit, final ScrolledForm form) {
 
@@ -1059,7 +1112,6 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 			styledText = viewer.getTextWidget();
 			GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(styledText);
 
-			
 			// code for outline
 			commentStyleText.add(styledText);
 			texts.add(textsindex, styledText);
@@ -1086,8 +1138,8 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		Composite newCommentsComposite = toolkit.createComposite(sectionAdditionalComments);
 		newCommentsComposite.setLayout(new GridLayout());
 		newCommentsComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		addCommentsText = toolkit.createText(newCommentsComposite, getRepositoryTaskData().getNewComment(), SWT.MULTI | SWT.V_SCROLL
-				| SWT.WRAP);
+		addCommentsText = toolkit.createText(newCommentsComposite, getRepositoryTaskData().getNewComment(), SWT.MULTI
+				| SWT.V_SCROLL | SWT.WRAP);
 
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		Font newCommnetFont = themeManager.getCurrentTheme().getFontRegistry().get(REPOSITORY_TEXT_ID);
@@ -1115,50 +1167,60 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		addCommentsTextBox = addCommentsText;
 
 		sectionAdditionalComments.setClient(newCommentsComposite);
-		
-// TODO: move into ExistingBugEditor commands section
-//		// if they aren't already on the cc list create an add self check box
-//
-//		RepositoryTaskAttribute owner = getReport().getAttribute(RepositoryTaskAttribute.USER_ASSIGNED);
-//
-//		// Don't add addselfcc check box if the user is the bug owner
-//		if (owner != null && owner.getValue().indexOf(repository.getUserName()) != -1) {
-//			return;
-//		}
-//		// Don't add addselfcc if already there
-//		RepositoryTaskAttribute ccAttribute = getReport().getAttribute(RepositoryTaskAttribute.USER_CC);
-//		if (ccAttribute != null && ccAttribute.getValues().contains(repository.getUserName())) {
-//			return;
-//		}
-//		RepositoryTaskAttribute addselfcc = getReport().getAttribute(BugzillaReportElement.ADDSELFCC.getKeyString());
-//		if (addselfcc == null) {
-//			// addselfcc =
-//			// BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.ADDSELFCC);
-//			getReport().setAttributeValue(BugzillaReportElement.ADDSELFCC.getKeyString(), "0");
-//		} else {
-//			addselfcc.setValue("0");
-//		}
-//
-//		final Button addSelfButton = toolkit.createButton(newCommentsComposite, "Add " + repository.getUserName()
-//				+ " to CC list", SWT.CHECK);
-//
-//		addSelfButton.addSelectionListener(new SelectionAdapter() {
-//
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				if (addSelfButton.getSelection()) {
-//					getReport().setAttributeValue(BugzillaReportElement.ADDSELFCC.getKeyString(), "1");
-//					// connector.getAttributeFactory().setAttributeValue(getReport(),
-//					// BugzillaReportElement.ADDSELFCC.getKeyString(), "1");
-//				} else {
-//					getReport().setAttributeValue(BugzillaReportElement.ADDSELFCC.getKeyString(), "0");
-//				}
-//			}
-//		});
-	}
-	
-	protected abstract void validateInput();
 
+		// TODO: move into ExistingBugEditor commands section
+		// // if they aren't already on the cc list create an add self check box
+		//
+		// RepositoryTaskAttribute owner =
+		// getReport().getAttribute(RepositoryTaskAttribute.USER_ASSIGNED);
+		//
+		// // Don't add addselfcc check box if the user is the bug owner
+		// if (owner != null &&
+		// owner.getValue().indexOf(repository.getUserName()) != -1) {
+		// return;
+		// }
+		// // Don't add addselfcc if already there
+		// RepositoryTaskAttribute ccAttribute =
+		// getReport().getAttribute(RepositoryTaskAttribute.USER_CC);
+		// if (ccAttribute != null &&
+		// ccAttribute.getValues().contains(repository.getUserName())) {
+		// return;
+		// }
+		// RepositoryTaskAttribute addselfcc =
+		// getReport().getAttribute(BugzillaReportElement.ADDSELFCC.getKeyString());
+		// if (addselfcc == null) {
+		// // addselfcc =
+		// //
+		// BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.ADDSELFCC);
+		// getReport().setAttributeValue(BugzillaReportElement.ADDSELFCC.getKeyString(),
+		// "0");
+		// } else {
+		// addselfcc.setValue("0");
+		// }
+		//
+		// final Button addSelfButton =
+		// toolkit.createButton(newCommentsComposite, "Add " +
+		// repository.getUserName()
+		// + " to CC list", SWT.CHECK);
+		//
+		// addSelfButton.addSelectionListener(new SelectionAdapter() {
+		//
+		// @Override
+		// public void widgetSelected(SelectionEvent e) {
+		// if (addSelfButton.getSelection()) {
+		// getReport().setAttributeValue(BugzillaReportElement.ADDSELFCC.getKeyString(),
+		// "1");
+		// // connector.getAttributeFactory().setAttributeValue(getReport(),
+		// // BugzillaReportElement.ADDSELFCC.getKeyString(), "1");
+		// } else {
+		// getReport().setAttributeValue(BugzillaReportElement.ADDSELFCC.getKeyString(),
+		// "0");
+		// }
+		// }
+		// });
+	}
+
+	protected abstract void validateInput();
 
 	/**
 	 * Creates the button layout. This displays options and buttons at the
@@ -1828,7 +1890,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	public void setTaskOutlineModel(RepositoryTaskOutlineNode taskOutlineModel) {
 		this.taskOutlineModel = taskOutlineModel;
 	}
-	
+
 	/**
 	 * A listener for selection of the textbox where a new comment is entered
 	 * in.
@@ -1836,8 +1898,8 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	protected class NewCommentListener implements Listener {
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
-					new RepositoryTaskSelection(getRepositoryTaskData().getId(), getRepositoryTaskData().getRepositoryUrl(), "New Comment", false,
-							getRepositoryTaskData().getSummary()))));
+					new RepositoryTaskSelection(getRepositoryTaskData().getId(), getRepositoryTaskData()
+							.getRepositoryUrl(), "New Comment", false, getRepositoryTaskData().getSummary()))));
 		}
 	}
 
