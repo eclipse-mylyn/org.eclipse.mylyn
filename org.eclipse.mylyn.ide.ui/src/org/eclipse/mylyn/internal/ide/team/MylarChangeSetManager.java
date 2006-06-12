@@ -156,7 +156,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 		if (svnBundle != null) {
 			Method getChangeSetManagerMethod;
 			try {
-				Class providerPlugin = Class.forName("org.tigris.subversion.subclipse.core.SVNProviderPlugin");
+				Class providerPlugin = svnBundle.loadClass("org.tigris.subversion.subclipse.core.SVNProviderPlugin"); //Class.forName("org.tigris.subversion.subclipse.core.SVNProviderPlugin");
 				Method getPluginMethod = providerPlugin.getMethod("getPlugin", new Class[0]);
 				Object pluginInstance = getPluginMethod.invoke(null, new Object[0]);
 				getChangeSetManagerMethod = providerPlugin.getDeclaredMethod("getChangeSetManager", new Class[0]);
