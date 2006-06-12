@@ -27,6 +27,7 @@ import org.eclipse.mylar.internal.ui.TaskListInterestFilter;
 import org.eclipse.mylar.internal.ui.TaskListInterestSorter;
 import org.eclipse.mylar.provisional.ui.InterestFilter;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * TODO: abuses contract from super class
@@ -52,7 +53,7 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction impleme
 		super.init(view);
 		IViewPart part = super.getPartForAction();
 		if (part instanceof TaskListView) {
-			((TaskListView)part).getFilteredTree().addListener(this);
+			((TaskListView) part).getFilteredTree().addListener(this);
 		}
 	}
 
@@ -61,10 +62,10 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction impleme
 		super.dispose();
 		IViewPart part = super.getPartForAction();
 		if (part instanceof TaskListView) {
-			((TaskListView)part).getFilteredTree().removeListener(this);
+			((TaskListView) part).getFilteredTree().removeListener(this);
 		}
 	}
-	
+
 	@Override
 	public List<StructuredViewer> getViewers() {
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
@@ -106,7 +107,7 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction impleme
 			}
 			taskListView.getViewer().collapseAll();
 			taskListView.refreshAndFocus(false);
-		} 
+		}
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {
@@ -118,13 +119,16 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction impleme
 		return Collections.emptyList();
 	}
 
-	
-	public void filterTextChanged(String text) {
-		if (isChecked() && (text == null || "".equals(text))) {
-			IViewPart part = super.getPartForAction();
-			if (part instanceof TaskListView) {
-				((TaskListView)part).getViewer().expandAll();
+	public void filterTextChanged(final String text) {
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				if (isChecked() && (text == null || "".equals(text))) {
+					IViewPart part = ApplyMylarToTaskListAction.super.getPartForAction();
+					if (part instanceof TaskListView) {
+						((TaskListView) part).getViewer().expandAll();
+					}
+				}
 			}
-		}
+		});
 	}
 }
