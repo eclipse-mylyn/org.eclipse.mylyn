@@ -14,9 +14,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.TitleEvent;
@@ -38,7 +36,7 @@ public abstract class RetrieveTitleFromUrlJob extends Job implements TitleListen
 
 	private final static long SLEEP_INTERVAL_MILLIS = 500;
 
-	private String taskURL = null;
+	private String url = null;
 
 	private String pageTitle = null;
 
@@ -52,7 +50,7 @@ public abstract class RetrieveTitleFromUrlJob extends Job implements TitleListen
 
 	public RetrieveTitleFromUrlJob(String url) {
 		super(LABEL_TITLE);
-		taskURL = url;
+		this.url = url;
 	}
 
 	protected abstract void setTitle(String pageTitle);
@@ -66,7 +64,7 @@ public abstract class RetrieveTitleFromUrlJob extends Job implements TitleListen
 				shell.setVisible(false);
 				Browser browser = new Browser(shell, SWT.NONE);
 				browser.addTitleListener(RetrieveTitleFromUrlJob.this);
-				browser.setUrl(taskURL);
+				browser.setUrl(url);
 			}
 		});
 
@@ -88,12 +86,7 @@ public abstract class RetrieveTitleFromUrlJob extends Job implements TitleListen
 			});
 			return Status.OK_STATUS;
 		} else {
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-						MessageDialog.openError(null, MylarTaskListPlugin.TITLE_DIALOG,
-							"Could not retrieve a description from the specified web page.");
-				}
-			});
+			MylarStatusHandler.log("Timeout retrieving description for: " + url, this);
 			return Status.CANCEL_STATUS;
 		}
 
@@ -101,11 +94,11 @@ public abstract class RetrieveTitleFromUrlJob extends Job implements TitleListen
 
 	public void changed(TitleEvent event) {
 		if (!ignoreChangeCall) {
-			if (event.title.equals(taskURL)) {
+			if (event.title.equals(url)) {
 				return;
 			} else {
 				ignoreChangeCall = true;
-				if (event.title.equals(taskURL + "/") || event.title.equals("Object not found!")
+				if (event.title.equals(url + "/") || event.title.equals("Object not found!")
 						|| event.title.equals("No page to display") || event.title.equals("Cannot find server")
 						|| event.title.equals("Invalid Bug ID")) {
 					retrievalFailed = true;
