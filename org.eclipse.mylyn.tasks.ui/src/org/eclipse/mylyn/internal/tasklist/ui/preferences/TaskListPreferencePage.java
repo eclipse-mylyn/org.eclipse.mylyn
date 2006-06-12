@@ -40,7 +40,7 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  * @author Mik Kersten
  * @author Rob Elves
  */
-public class MylarTaskListPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+public class TaskListPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	private static final String FOLDER_SELECTION_MESSAGE = "Specify the folder for tasks";
 
@@ -62,7 +62,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 
 	private Button synchQueries = null;
 
-	private Button userRefreshOnly;
+//	private Button userRefreshOnly;
 
 	private Text taskDirectoryText = null;
 
@@ -76,7 +76,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 
 	private Text backupFolderText;
 
-	public MylarTaskListPreferencePage() {
+	public TaskListPreferencePage() {
 		super();
 		setPreferenceStore(MylarTaskListPlugin.getMylarCorePrefs());
 	}
@@ -174,7 +174,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
 		enableBackgroundSynch.setSelection(getPreferenceStore().getDefaultBoolean(
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
-		userRefreshOnly.setSelection(!enableBackgroundSynch.getSelection());
+//		userRefreshOnly.setSelection(!enableBackgroundSynch.getSelection());
 		long miliseconds = getPreferenceStore().getDefaultLong(
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
 		long minutes = miliseconds / 60000;
@@ -190,28 +190,28 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 //		gridLayout.marginLeft = 0;
 		group.setLayout(gridLayout);
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		userRefreshOnly = new Button(group, SWT.RADIO);
-		GridData gridData = new GridData();
+//		userRefreshOnly = new Button(group, SWT.RADIO);
+//		GridData gridData = new GridData();
 //		gridData.horizontalSpan = 2;
-		userRefreshOnly.setLayoutData(gridData);
-		userRefreshOnly.setText("Disabled");
-		userRefreshOnly.setSelection(!getPreferenceStore().getBoolean(
-				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
-		userRefreshOnly.addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent e) {
-				updateRefreshGroupEnablements();
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
+//		userRefreshOnly.setLayoutData(gridData);
+//		userRefreshOnly.setText("Disabled");
+//		userRefreshOnly.setSelection(!getPreferenceStore().getBoolean(
+//				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
+//		userRefreshOnly.addSelectionListener(new SelectionListener() {
+//			public void widgetSelected(SelectionEvent e) {
+//				updateRefreshGroupEnablements();
+//			}
+//
+//			public void widgetDefaultSelected(SelectionEvent e) {
+//			}
+//		});
 		Composite enableSynch = new Composite(group, SWT.NULL);
 		gridLayout = new GridLayout(4, false);
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 0;
 		enableSynch.setLayout(gridLayout);
-		enableBackgroundSynch = new Button(enableSynch, SWT.RADIO);
-		enableBackgroundSynch.setLayoutData(gridData);
+		enableBackgroundSynch = new Button(enableSynch, SWT.CHECK);
+//		enableBackgroundSynch.setLayoutData(gridData);
 		enableBackgroundSynch.setText("Synchronize every");
 		enableBackgroundSynch.setSelection(getPreferenceStore().getBoolean(
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
