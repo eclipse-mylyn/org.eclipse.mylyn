@@ -25,8 +25,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizard;
@@ -264,7 +266,7 @@ public abstract class AbstractRepositoryConnector {
 
 		RepositoryTaskData offlineTaskData = OfflineTaskManager.findBug(downloadedTaskData.getRepositoryUrl(),
 				downloadedTaskData.getId());
-		
+
 		if (offlineTaskData != null) {
 			switch (status) {
 			case OUTGOING:
@@ -386,8 +388,7 @@ public abstract class AbstractRepositoryConnector {
 		Set<AbstractRepositoryTask> repositoryTasks = Collections.unmodifiableSet(taskList
 				.getRepositoryTasks(repository.getUrl()));
 
-		// try {
-		Set<AbstractRepositoryTask> tasksToSync = new HashSet<AbstractRepositoryTask>();
+		final Set<AbstractRepositoryTask> tasksToSync = new HashSet<AbstractRepositoryTask>();
 		Set<AbstractRepositoryTask> changedTasks = null;
 		int attempts = 0;
 
@@ -416,8 +417,19 @@ public abstract class AbstractRepositoryConnector {
 			}
 		}
 
-		synchronize(tasksToSync, false, null);
-		MylarTaskListPlugin.getRepositoryManager().setSyncTime(repository, new Date());
+		synchronize(tasksToSync, false, new JobChangeAdapter() {
+
+			@Override
+			public void done(IJobChangeEvent event) {				
+				for (AbstractRepositoryTask task : Collections.unmodifiableSet(tasksToSync)) {
+					if (repository.getSyncTime().after(task.getLastSynchronized())) {						
+						return;
+					}
+				}
+				MylarTaskListPlugin.getRepositoryManager().setSyncTime(repository, new Date());
+			}});
+
+		
 	}
 
 	/**

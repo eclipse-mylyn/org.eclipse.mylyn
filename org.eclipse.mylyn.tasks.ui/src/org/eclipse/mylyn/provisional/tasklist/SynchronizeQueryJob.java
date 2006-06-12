@@ -53,7 +53,8 @@ class SynchronizeQueryJob extends Job {
 	protected IStatus run(IProgressMonitor monitor) {
 		monitor.beginTask(JOB_LABEL, queries.size());
 		for (AbstractRepositoryQuery repositoryQuery : queries) {
-			if(repositoryQuery.isSynchronizing()) continue;
+			if (repositoryQuery.isSynchronizing())
+				continue;
 			monitor.setTaskName("Synchronizing: " + repositoryQuery.getDescription());
 			setProperty(IProgressConstants.ICON_PROPERTY, TaskListImages.REPOSITORY_SYNCHRONIZE);
 			repositoryQuery.setCurrentlySynchronizing(true);
@@ -72,7 +73,6 @@ class SynchronizeQueryJob extends Job {
 
 			MultiStatus queryStatus = new MultiStatus(MylarTaskListPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
 
-			// TODO: what good is a progress monitor here?
 			hits = this.connector.performQuery(repositoryQuery, new NullProgressMonitor(), queryStatus);
 			if (queryStatus.getChildren() != null && queryStatus.getChildren().length > 0) {
 				if (queryStatus.getChildren()[0].getException() == null) {
@@ -80,17 +80,8 @@ class SynchronizeQueryJob extends Job {
 					for (AbstractQueryHit newHit : hits) {
 						repositoryQuery.addHit(newHit);
 					}
-					
-					if (synchTasks) {
-						// Set<ITask> tasks = repositoryQuery.getChildren();
-						// Set<AbstractRepositoryTask> repositoryTasks = new
-						// HashSet<AbstractRepositoryTask>();
-						// for (ITask task : tasks) {
-						// if (task instanceof AbstractRepositoryTask) {
-						// repositoryTasks.add((AbstractRepositoryTask) task);
-						//							}
-						//						}
 
+					if (synchTasks) {
 						connector.synchronizeChanged(repository);
 					}
 
@@ -110,6 +101,5 @@ class SynchronizeQueryJob extends Job {
 
 	public void setSynchTasks(boolean syncTasks) {
 		this.synchTasks = syncTasks;
-		
 	}
 }
