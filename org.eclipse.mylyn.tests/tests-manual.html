@@ -9,129 +9,125 @@
 	<ul>
 		<li>Test of Search &gt; Search... &gt; Bugzilla Search tab
 		<ul>
-			<li><font color="#FF0000">Requires that a bugzilla repository is 
-			configured in the Mylar Task Repositories view</font></li>
+			<li>Requires that a bugzilla repository is 
+			configured in the Mylar Task Repositories view</li>
+			<li>Test opening non-local report</li>
+			<li>Test opening report with local task</li>
 		</ul>
-	</ul>
-		<ul>
 		<li>Test Bugzilla Query Wizard</li><ul>
-		<li>Create new query</li>
-		<li>Open query to see that parameters are still there</li>
-  	 	<li>Check for error handling (enter invalid number in max returned etc)</li>
-	</ul>
-		</li>
+			<li>Create new query</li>
+			<li>Open query to see that parameters are still there</li>
+			<li>Check for error handling (enter invalid number in max returned etc)</li>
+		</ul></li>
 		<li>New Bug submission (valid credentials)<ul>
-		<li>Test new bug submission for each Bugzilla server version</li>
-	</ul></li>
+			<li>Test new bug submission for each Bugzilla server version</li>
+		</ul></li>
 		<li>New Bug submission (invalid credentials)<ul>
-		<li>Remove username and password from a repository configuration in the 
+			<li>Remove username and password from a repository configuration in the 
 		Task Repositories view</li>
-		<li>Initiate new repository task action</li>
-		<li>Select repository with missing credentials</li>
-		<li>After product selection user is presented with dialog:<ul>
-		<li>Login credentials missing. Ensure proper repository configuration in 
+			<li>Initiate new repository task action</li>
+			<li>Select repository with missing credentials</li>
+			<li>After product selection user is presented with dialog:<ul>
+				<li>Login credentials missing. Ensure proper repository configuration in 
 		Task Repositories view.</li>
-	</ul></li>
-	</ul></li>
+			</ul></li>
+		</ul></li>
 		<li><font color="#FF0000">Bug Compare (ensure priority attribute works)</font></li>
 		<li>New Bug submission (invalid password)<ul>
-		<li>Make repository password invalid in Task Repositories view.</li>
-		<li>Initiate new repository task action.</li>
-		<li>Select repository with invalid password</li>
-		<li>Error Dialog presented on product update or selection of Next: The 
+			<li>Make repository password invalid in Task Repositories view.</li>
+			<li>Initiate new repository task action.</li>
+			<li>Select repository with invalid password</li>
+			<li>Error Dialog presented on product update or selection of Next: The 
 		user name or password you entered is not valid...</li>
-	</ul>	
-	</li>
+		</ul></li>
 		<li>Submission of changes to a Bugzilla report should result in all 
 		parent queries being re-synchronized as well as the task itself being 
 		synchronized</li>
-	<li><font color="#FF0000">Make sure submission of comment doesn't remove dependancies</font></li>
+		<li>Make sure submission of comment doesn't remove 
+	dependencies</li>
 		<li>Submission of changes to existing bug with invalid repository 
 		credentials<ul>
-		<li>Mylar Bugzilla Client Dialog: Bugzilla could not post your bug since your login name or password is incorrect.
+			<li>Mylar Bugzilla Client Dialog: Bugzilla could not post your bug since your login name or password is incorrect.
 		Ensure proper repository configuration in Task Repositories view.</li>
-	</ul>
-		</li>
+		</ul></li>
 		<li>Synchronize Reports (invalid userid and password)<ul>
-		<li>Report Download Failed Dialog: Ensure proper repository 
+			<li>Report Download Failed Dialog: Ensure proper repository 
 		configuration in Task Repositories view.</li>
-	</ul>
-		</li>
-		<li>Product configuration caching<ul>
-		<li>Run new bug wizard</li>
-		<li>Restart, rerun, products should appear immediately</li>
-	</ul>
-		</li>
+		</ul></li>
+		<li><font color="#FF0000">Product configuration caching</font><ul>
+			<li><font color="#FF0000">Run new bug wizard</font></li>
+			<li><font color="#FF0000">Restart, rerun, products should appear immediately</font></li>
+		</ul></li>
 		<li>Reports &gt; Task list notification<ul>
-		<li>Open, modify, save, should have outgoing decorator<ul>
-		<li>Case synchronize: should get option to override local changes<ul>
-		<li>If overriding, overlay and changes go away</li>
-		<li>If no override, get conflict icon to show</li>
-	</ul>
-		</li>
-		<li>Case open: should retain outgoing overlay</li>
-		<li>Case submit: outgoing overlay should disappear (should be no incoming 
-		upon synchronize)<br>
-&nbsp;</li>
-	</ul>
-		</li>
-		<li>Task in CONFLICT state<ul>
-			<li>Case open: remains with conflict decorator</li>
-			<li>Case synchronize: should get option to override local changes<ul>
-				<li>Case overriding: overlay and changes go away</li>
-				<li>Case no override: changes remain, conflict decorator appears<br>
+			<li>Open, modify, save, should have outgoing decorator<ul>
+				<li>Case synchronize: should get option to override local changes<ul>
+					<li>If overriding, overlay and changes go away</li>
+					<li>If no override, get conflict icon to show</li>
+				</ul></li>
+				<li>Case open: should retain outgoing overlay</li>
+				<li>Case submit: outgoing overlay should disappear (should be no incoming 
+		upon synchronize)<br>&nbsp;</li>
+			</ul></li>
+			<li>Task in CONFLICT state<ul>
+				<li>Case open: remains with conflict decorator</li>
+				<li>Case synchronize: should get option to override local changes<ul>
+					<li>Case overriding: overlay and changes go away</li>
+					<li>Case no override: changes remain, conflict decorator appears<br>&nbsp;</li>
+				</ul></li>
+			</ul>
+			<p></li>
+			<li>Query hits not yet downloaded<ul>
+				<li>Case open: report downloaded (task icon appears), no decoration</li>
+				<li>Case synchronize: query hit remains not downloaded, 
+				<font color="#FF0000">no decoration</font><br>&nbsp;</li>
+			</ul></li>
+			<li>Open report&nbsp; in external editor and add a comment.<ul>
+				<li>Case synchronize: incoming decoration should appear on task
+				<font color="#FF0000">[Broken under Linux]</font><ul>
+					<li>Case open: task opens with new content, no decoration</li>
+					<li>Case open (bug editor already open):&nbsp; 
+					User presented with dialog asking if they want to reopen 
+					with latest version</li>
+				</ul></li>
+				<li>Case open: task opens with offline content, user asked if 
+				they want to refresh with incoming content.<br>
 &nbsp;</li>
 			</ul></li>
-		</ul>
-		<p></li>
-		<li>Query hits not yet downloaded<ul>
-		<li>Case open: report downloaded (task icon appears), no decoration</li>
-		<li>Case synchronize: query hit remains not downloaded, no decoration<br>
-&nbsp;</li>
-	</ul></li>
-		<li>Open report&nbsp; in external editor and add a comment.<ul>
-		<li>Case synchronize: incoming decoration should appear on task
-		<font color="#FF0000">[Broken under Linux]</font><ul>
-		<li>Case open: task opens with new content, no decoration</li>
-		<li><font color="#FF9900">Case open (bug editor already open):&nbsp; 
-		Editor should close and reopen with new data.</font></li>
-	</ul></li>
-		<li>Case open: task opens with new content, no decoration<br>
-&nbsp;</li>
-	</ul></li>
-		<li>Open, modify, save, should have outgoing decorator, open report in 
+			<li>Open, modify, save, should have outgoing decorator, open report in 
 		external browser, add comment<ul>
-		<li>Case open: Outgoing decorator remains</li>
-		<li>Case Submit: Dialog:Possible problem posting Bugzilla report... HTML 
-		mid-air collision dialog (outgoing state remains)</li>
-		<li>Case synchronize: should get option to override local changes<ul>
-		<li>If overriding, overlay and changes go away</li>
-		<li>If no override, get conflict icon to show<br>
-&nbsp;</li>
-	</ul></li>
-	</ul></li>
-		<li>Copy report to a local category, repeat above tests ensuring 
+				<li>Case open: Outgoing decorator remains</li>
+				<li>Case Submit: Dialog:Possible problem posting Bugzilla report... HTML 
+		mid-air collision dialog (outgoing state remains)<ul>
+					<li><font color="#FF0000">Editor should be placed in 
+					CONFLICT state upon mid air collision</font></li>
+				</ul></li>
+				<li>Case synchronize: should get option to override local changes<ul>
+					<li>If overriding, overlay and changes go away</li>
+					<li>If no override, get conflict icon to show<br>&nbsp;</li>
+				</ul></li>
+			</ul></li>
+			<li>Copy report to a local category, repeat above tests ensuring 
 		decoration always </li>
-		<li>Copy report to root category, repeat tests ensuring decoration 
+			<li>Copy report to root category, repeat tests ensuring decoration 
 		always matches</li>
-	</ul>
-		</li>
+		</ul></li>
+		<li>Ensure that when offline reports file is deleted, tasks don't 
+		suddenly all have incoming status upon synchronizing</li>
 		<li>Reports &gt; Outline View<ul>
-		<li>Clicking on comments in outline view should cause Bugzilla editor to 
+			<li>Clicking on comments in outline view should cause Bugzilla editor to 
 		scroll to respective bug on page.</li>
-	</ul>
-		</li>
+		</ul></li>
 	</ul>
 	<p><b>Task List</b></p>
 	<ul>
 		<li>File -&gt; Export -&gt; Mylar Task Data: ensure it works</li>
 		<li>File -&gt; Import -&gt; Mylar Task Data:<ul>
-		<li><font color="#FF0000">Test importing with task in active state</font></li>
+		<li>Test importing with task in active state</li>
 	</ul>
 		</li>
-		<li><font color="#FF0000">Make a task, make it active, move it to the 
-		archive - file should remain visible in task list</font></li>
-		<li><font color="#FF0000">Task List Auto-Archive</font></li>
+		<li>Make a task, make it active, move it to the 
+		archive - file should remain visible in task list</li>
+		<li>Task List Auto-Archive</li>
 		<li>Addition and removal of files from change sets</li>
 		<li>Mylar context sensitive JUnit unit tests</li>
 		<li>Ensure internal browser tab can be disabled (via preferences)</li>
