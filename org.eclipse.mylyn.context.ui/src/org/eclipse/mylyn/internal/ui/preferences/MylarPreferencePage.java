@@ -16,7 +16,6 @@ package org.eclipse.mylar.internal.ui.preferences;
 
 import java.util.Arrays;
 
-import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.viewers.CellEditor;
@@ -69,8 +68,6 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 		ICellEditorListener {
 
 	private StringFieldEditor exclusionFieldEditor;
-
-	private IntegerFieldEditor autoOpenEditorsNum;
 
 	private Table table;
 
@@ -126,6 +123,10 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 		return entryTable;
 	}
 
+//	private void createResourceExclusionTable(Composite parent) {
+//		
+//	}
+	
 	public void init(IWorkbench workbench) {
 		// don't have anything to initialize
 	}
@@ -141,13 +142,6 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 		// don't care when the widget is selected
 	}
 
-	/***************************************************************************
-	 * PropertyPage Methods
-	 **************************************************************************/
-
-	/**
-	 * Handle Ok and Apply Store all data in the preference store
-	 */
 	@Override
 	public boolean performOk() {
 		getPreferenceStore().setValue(MylarUiPrefContstants.HIGHLIGHTER_PREFIX,
@@ -155,11 +149,10 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 		getPreferenceStore().setValue(MylarUiPrefContstants.INTEREST_FILTER_EXCLUSION,
 				exclusionFieldEditor.getStringValue());
 		getPreferenceStore().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, manageEditorsButton.getSelection());
-
-		int value = autoOpenEditorsNum.getIntValue();
-		if (value > 0) {
-			getPreferenceStore().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS_OPEN_NUM, value);
-		}
+//		int value = autoOpenEditorsNum.getIntValue();
+//		if (value > 0) {
+//			getPreferenceStore().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS_OPEN_NUM, value);
+//		}
 
 		return true;
 	}
