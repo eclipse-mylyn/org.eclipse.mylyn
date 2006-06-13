@@ -147,7 +147,7 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 	
 	protected void updateMarkerViewLabelProvider(StructuredViewer viewer) {
 		IBaseLabelProvider currentProvider = viewer.getLabelProvider();
-		if (!(currentProvider instanceof MarkerViewLabelProvider)) {
+		if (currentProvider instanceof TableViewLabelProvider && !(currentProvider instanceof MarkerViewLabelProvider)) {
 			viewer.setLabelProvider(new MarkerViewLabelProvider((TableViewLabelProvider) currentProvider));
 		}
 	}
