@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.core.InteractionEvent;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
@@ -47,7 +48,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 				IResourceDelta[] added = delta.getAffectedChildren(IResourceDelta.ADDED);
 				for (int i = 0; i < added.length; i++) {
 					IResource resource = added[i].getResource();
-					if (resource instanceof IFile || resource instanceof IFolder) {
+					if ((resource instanceof IFile || resource instanceof IFolder) && !isExcluded(resource.getProjectRelativePath())) {
 						addedResources.add(resource);
 					}
 				}
@@ -64,11 +65,24 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 		}; 
 		try {
 			rootDelta.accept(visitor);
-			MylarIdePlugin.getDefault().getInterestUpdater().addResourceToContext(addedResources, InteractionEvent.Kind.SELECTION);
 			MylarIdePlugin.getDefault().getInterestUpdater().addResourceToContext(changedResources, InteractionEvent.Kind.PREDICTION);
+			MylarIdePlugin.getDefault().getInterestUpdater().addResourceToContext(addedResources, InteractionEvent.Kind.SELECTION);	
 		} catch (CoreException e) {
 			MylarStatusHandler.log(e, "could not accept marker visitor");
 		}
+	}
+
+	private boolean isExcluded(IPath path) {
+		if (path == null) {
+			return false;
+		}
+		// NOTE: n^2 time complexity, but should not be a bottleneck
+		for (String pattern : MylarIdePlugin.getDefault().getExcludedResourcePatterns()) {
+			for (String segment : path.segments()) {
+				return segment.matches(pattern.replaceAll("\\.", "\\\\.").replaceAll("\\*", ".*"));		
+			}
+		}
+		return false;
 	}
 
 	public boolean isEnabled() {

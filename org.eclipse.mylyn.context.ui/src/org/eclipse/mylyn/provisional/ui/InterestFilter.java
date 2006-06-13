@@ -109,7 +109,7 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 			return false;
 		try {
 			String name = bridge.getName(element);
-			return name.matches(excludedMatches.replaceAll("\\*", ".*").replaceAll("\\.", "\\."));
+			return name.matches(excludedMatches.replaceAll("\\.", "\\\\.").replaceAll("\\*", ".*"));
 		} catch (Throwable t) {
 			return false;
 		}

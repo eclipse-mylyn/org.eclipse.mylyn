@@ -23,6 +23,4 @@ public class MylarJavaPrefConstants {
 
 	public static final String PREDICTED_INTEREST_ERRORS = "org.eclipse.mylar.java.interest.predicted.errors";
 
-	public static final String PACKAGE_EXPLORER_AUTO_EXPAND = "org.eclipse.mylar.java.explorer.auto.exapand";
-
 }

@@ -55,13 +55,6 @@ public class ResourceInterestUpdater {
 	}
 
 	private void internalAddResourceToContext(Set<IResource> resources, InteractionEvent.Kind interactionKind) {
-//		List<IResource> toAdd = new ArrayList<IResource>();
-//		for (IResource resource : resources) {
-//			if (acceptResource(resource)) {
-//				toAdd.add(resource);
-//			}
-//		} 
-
 		List<InteractionEvent> interactionEvents = new ArrayList<InteractionEvent>();
 		for (IResource resource : resources) {
 			if (acceptResource(resource)) {
@@ -85,7 +78,10 @@ public class ResourceInterestUpdater {
 	}
 
 	private boolean acceptResource(IResource resource) {
-		return resource.isAccessible() && !resource.isDerived() && !resource.isPhantom();
+		if (resource.isAccessible() && !resource.isDerived() && !resource.isPhantom()) {
+			return true;
+		}
+		return false;
 	}
 
 	/**

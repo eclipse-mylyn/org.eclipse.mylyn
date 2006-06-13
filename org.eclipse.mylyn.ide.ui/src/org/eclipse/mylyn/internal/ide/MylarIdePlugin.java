@@ -11,7 +11,10 @@
 package org.eclipse.mylar.internal.ide;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -35,8 +38,6 @@ import org.osgi.framework.BundleContext;
  * @author Mik Kersten
  */
 public class MylarIdePlugin extends AbstractUIPlugin {
-
-//	private NavigatorRefreshListener navigatorRefreshListener = new NavigatorRefreshListener();
 
 	private MylarEditorManager editorManager = new MylarEditorManager();
 
@@ -64,6 +65,14 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 
 	public static final String DEFAULT_PREFIX_COMPLETED = "Completed:";
 
+	private static final String PREF_STORE_DELIM = ", ";
+
+//	public static final String PREF_RESOURCE_MONITORING_ENABLED = "org.eclipse.mylar.ide.resources.monitoring.enabled";
+	
+	public static final String PREF_RESOURCES_IGNORED = "org.eclipse.mylar.ide.resources.ignored.pattern";
+
+	public static final String PREF_VAL_DEFAULT_RESOURCES_IGNORED = ".*" + PREF_STORE_DELIM;
+	
 	public MylarIdePlugin() {
 		plugin = this;
 	}
@@ -80,21 +89,22 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 					if (getPreferenceStore().getBoolean(CHANGE_SET_MANAGE)) {
 						changeSetManager.enable();
 					}
-//					MylarPlugin.getContextManager().addListener(navigatorRefreshListener);
+					// MylarPlugin.getContextManager().addListener(navigatorRefreshListener);
 
 					resourceInteractionMonitor = new ResourceInteractionMonitor();
-//					Display.getDefault().addFilter(SWT.Selection, resourceInteractionMonitor);
-					
+					// Display.getDefault().addFilter(SWT.Selection,
+					// resourceInteractionMonitor);
+
 					MylarPlugin.getDefault().getSelectionMonitors().add(resourceInteractionMonitor);
 					MylarPlugin.getContextManager().addListener(editorManager);
 
 					ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeMonitor,
 							IResourceChangeEvent.POST_CHANGE);
 
-//					if (ApplyMylarToNavigatorAction.getDefault() != null)
-//						ApplyMylarToNavigatorAction.getDefault().update();
-//					if (ApplyMylarToProblemsListAction.getDefault() != null)
-//						ApplyMylarToProblemsListAction.getDefault().update();
+					// if (ApplyMylarToNavigatorAction.getDefault() != null)
+					// ApplyMylarToNavigatorAction.getDefault().update();
+					// if (ApplyMylarToProblemsListAction.getDefault() != null)
+					// ApplyMylarToProblemsListAction.getDefault().update();
 
 					workbench.addWindowListener(activeSearchViewTracker);
 					IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
@@ -126,6 +136,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 		getPreferenceStore().setDefault(CHANGE_SET_MANAGE, true);
 		getPreferenceStore().setDefault(COMMIT_PREFIX_COMPLETED, DEFAULT_PREFIX_COMPLETED);
 		getPreferenceStore().setDefault(COMMIT_PREFIX_PROGRESS, DEFAULT_PREFIX_PROGRESS);
+		getPreferenceStore().setDefault(PREF_RESOURCES_IGNORED, PREF_VAL_DEFAULT_RESOURCES_IGNORED);
 
 		// restore old preference values if set
 		if (MylarTaskListPlugin.getDefault() != null) {
@@ -146,7 +157,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 			plugin = null;
 			MylarPlugin.getContextManager().removeListener(editorManager);
 			MylarPlugin.getDefault().getSelectionMonitors().remove(resourceInteractionMonitor);
-//			MylarPlugin.getContextManager().removeListener(navigatorRefreshListener);
+			// MylarPlugin.getContextManager().removeListener(navigatorRefreshListener);
 			changeSetManager.disable();
 
 			ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeMonitor);
@@ -169,9 +180,6 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 		}
 	}
 
-	/**
-	 * For testing.
-	 */
 	public void setResourceMonitoringEnabled(boolean enabled) {
 		resourceChangeMonitor.setEnabled(enabled);
 	}
@@ -195,8 +203,30 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 		return interestingResources;
 	}
 
+	public void setExcludedResourcePatterns(Set<String> patterns) {
+		StringBuilder store = new StringBuilder();
+		for (String string : patterns) {
+			store.append(string);
+			store.append(PREF_STORE_DELIM);
+		}
+		getPreferenceStore().setValue(PREF_RESOURCES_IGNORED, store.toString());
+	}
+
+	public Set<String> getExcludedResourcePatterns() {
+		Set<String> ignored = new HashSet<String>();
+		String read = getPreferenceStore().getString(PREF_RESOURCES_IGNORED);
+		if (read != null) {
+			StringTokenizer st = new StringTokenizer(read, PREF_STORE_DELIM);
+			while (st.hasMoreTokens()) {
+				ignored.add(st.nextToken());
+			}
+		}
+		return ignored;
+	}
+
 	public IResource getResourceForElement(IMylarElement element, boolean findContainingResource) {
-		if (element == null) return null;
+		if (element == null)
+			return null;
 		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
 		Object object = bridge.getObjectForHandle(element.getHandleIdentifier());
 		if (object instanceof IResource) {

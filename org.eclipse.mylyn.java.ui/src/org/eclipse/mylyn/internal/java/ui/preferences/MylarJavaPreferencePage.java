@@ -15,7 +15,6 @@ import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
 import org.eclipse.mylar.internal.java.MylarJavaPrefConstants;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -30,8 +29,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 public class MylarJavaPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	private Button autoEnableExplorerFilter = null;
-
-	private Button autoExpandExplorer = null;
 
 	private Button enableErrorInterest = null;
 
@@ -55,25 +52,15 @@ public class MylarJavaPreferencePage extends PreferencePage implements IWorkbenc
 	}
 
 	private void createUserbooleanControl(Composite parent) {
-		Composite container = new Composite(parent, SWT.NULL);
-		GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		container.setLayoutData(gridData);
-		GridLayout gl = new GridLayout(1, false);
-		container.setLayout(gl);
-
-		Group group = new Group(container, SWT.SHADOW_ETCHED_IN);
-		group.setLayout(gl);// new RowLayout());
+		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
 		group.setText("Package Explorer");
+		GridLayout gl = new GridLayout(1, false);
+		group.setLayout(gl);
 
 		autoEnableExplorerFilter = new Button(group, SWT.CHECK);
 		autoEnableExplorerFilter.setText("Automatically toggle interest filter on task activation/deactivation.");
 		autoEnableExplorerFilter.setSelection(getPreferenceStore().getBoolean(
 				MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE));
-
-		autoExpandExplorer = new Button(group, SWT.CHECK);
-		autoExpandExplorer.setText("Automatically keep the package explorer expanded when filtered.");
-		autoExpandExplorer.setSelection(getPreferenceStore().getBoolean(
-				MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_EXPAND));
 
 		enableErrorInterest = new Button(group, SWT.CHECK);
 		enableErrorInterest.setText("Enable predicted interest of errors (significantly increases view refresh).");
@@ -85,8 +72,6 @@ public class MylarJavaPreferencePage extends PreferencePage implements IWorkbenc
 	public boolean performOk() {
 		getPreferenceStore().setValue(MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE,
 				autoEnableExplorerFilter.getSelection());
-		getPreferenceStore().setValue(MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_EXPAND,
-				autoExpandExplorer.getSelection());
 		getPreferenceStore().setValue(MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS,
 				enableErrorInterest.getSelection());
 		return true;
@@ -96,8 +81,6 @@ public class MylarJavaPreferencePage extends PreferencePage implements IWorkbenc
 	public boolean performCancel() {
 		autoEnableExplorerFilter.setSelection(getPreferenceStore().getBoolean(
 				MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE));
-		autoExpandExplorer.setSelection(getPreferenceStore().getBoolean(
-				MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_EXPAND));
 		enableErrorInterest.setSelection(getPreferenceStore().getBoolean(
 				MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS));
 		return true;
@@ -105,8 +88,6 @@ public class MylarJavaPreferencePage extends PreferencePage implements IWorkbenc
 
 	public void performDefaults() {
 		super.performDefaults();
-		autoExpandExplorer.setSelection(getPreferenceStore().getDefaultBoolean(
-				MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_EXPAND));
 		enableErrorInterest.setSelection(getPreferenceStore().getDefaultBoolean(
 				MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS));
 	}

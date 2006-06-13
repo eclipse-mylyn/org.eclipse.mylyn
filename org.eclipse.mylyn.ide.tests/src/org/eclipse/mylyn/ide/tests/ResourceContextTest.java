@@ -12,6 +12,8 @@
 package org.eclipse.mylar.ide.tests;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -55,6 +57,64 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		assertTrue(element.getInterest().isInteresting());
 	}
 
+	public void testFileNotAddedIfExcluded() throws CoreException {
+		Set<String> previousExcludions = MylarIdePlugin.getDefault().getExcludedResourcePatterns();
+		Set<String> exclude = new HashSet<String>();
+		exclude.add("boring");
+		MylarIdePlugin.getDefault().setExcludedResourcePatterns(exclude);
+		
+		IFile file = project.getProject().getFile("boring");
+		file.create(null, true, null);
+		assertTrue(file.exists());
+
+		IMylarElement element = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
+		assertFalse(element.getInterest().isInteresting());
+		MylarIdePlugin.getDefault().setExcludedResourcePatterns(previousExcludions);
+	}
+	
+	public void testPatternNotAddedIfExcluded() throws CoreException {
+		Set<String> previousExcludions = MylarIdePlugin.getDefault().getExcludedResourcePatterns();
+		Set<String> exclude = new HashSet<String>();
+		exclude.add("b*.txt");
+		MylarIdePlugin.getDefault().setExcludedResourcePatterns(exclude);
+		
+		IFile file = project.getProject().getFile("boring.txt");
+		file.create(null, true, null);
+		assertTrue(file.exists());
+
+		IMylarElement element = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
+		assertFalse(element.getInterest().isInteresting());
+		MylarIdePlugin.getDefault().setExcludedResourcePatterns(previousExcludions);
+	}
+
+	public void testPatternNotAddedMatching() throws CoreException {
+		Set<String> previousExcludions = MylarIdePlugin.getDefault().getExcludedResourcePatterns();
+		Set<String> exclude = new HashSet<String>();
+		exclude.add(".*");
+		MylarIdePlugin.getDefault().setExcludedResourcePatterns(exclude);
+		
+		String pattern = ".*";
+		String segment = "boring";
+		
+		String s = pattern.replaceAll("\\.", "\\\\.").replaceAll("\\*", ".*");
+		assertFalse(segment.matches(s));
+		assertTrue(".boring".matches(s));
+		
+		IFile file = project.getProject().getFile(".boring");
+		file.create(null, true, null);
+		assertTrue(file.exists());
+		IMylarElement element = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
+		assertFalse(element.getInterest().isInteresting());
+		
+		file = project.getProject().getFile("boring");
+		file.create(null, true, null);
+		assertTrue(file.exists());
+		element = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
+		assertTrue(element.getInterest().isInteresting());
+		
+		MylarIdePlugin.getDefault().setExcludedResourcePatterns(previousExcludions);
+	}
+	
 	public void testFileAdded() throws CoreException {
 		IFile file = project.getProject().getFile("new-file.txt");
 		file.create(null, true, null);

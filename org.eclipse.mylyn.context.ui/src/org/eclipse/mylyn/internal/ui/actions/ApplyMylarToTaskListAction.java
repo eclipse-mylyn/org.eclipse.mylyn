@@ -27,7 +27,6 @@ import org.eclipse.mylar.internal.ui.TaskListInterestFilter;
 import org.eclipse.mylar.internal.ui.TaskListInterestSorter;
 import org.eclipse.mylar.provisional.ui.InterestFilter;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * TODO: abuses contract from super class
@@ -120,15 +119,11 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction impleme
 	}
 
 	public void filterTextChanged(final String text) {
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				if (isChecked() && (text == null || "".equals(text))) {
-					IViewPart part = ApplyMylarToTaskListAction.super.getPartForAction();
-					if (part instanceof TaskListView) {
-						((TaskListView) part).getViewer().expandAll();
-					}
-				}
+		if (isChecked() && (text == null || "".equals(text))) {
+			IViewPart part = ApplyMylarToTaskListAction.super.getPartForAction();
+			if (part instanceof TaskListView) {
+				((TaskListView) part).getViewer().expandAll();
 			}
-		});
+		}
 	}
 }
