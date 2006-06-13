@@ -11,12 +11,16 @@
 
 package org.eclipse.mylar.internal.tasklist;
 
+import java.io.Serializable;
+
 /**
  * A class representing a local attachment.
  * 
  * @author Jeff Pound
  */
-public class LocalAttachment {
+public class LocalAttachment implements Serializable {
+
+	private static final long serialVersionUID = -4477699536552617389L;
 
 	/** The report to which this attachment will be attached */
 	private RepositoryTaskData repositoryTaskData;
