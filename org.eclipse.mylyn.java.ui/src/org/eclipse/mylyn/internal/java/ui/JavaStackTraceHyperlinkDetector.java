@@ -27,6 +27,9 @@ import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
  */
 public class JavaStackTraceHyperlinkDetector implements IHyperlinkDetector {
 
+	private static final Pattern stackTracePattern = Pattern.compile("\\S*.{1}java:\\d*\\){1}",
+			Pattern.CASE_INSENSITIVE);
+
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 
 		if (region == null || textViewer == null)
@@ -36,7 +39,6 @@ public class JavaStackTraceHyperlinkDetector implements IHyperlinkDetector {
 
 		int offset = region.getOffset();
 
-		// String urlString= null;
 		if (document == null)
 			return null;
 
@@ -49,29 +51,13 @@ public class JavaStackTraceHyperlinkDetector implements IHyperlinkDetector {
 			return null;
 		}
 
-		// int offsetInLine = offset - lineInfo.getOffset();
-
-		Pattern p = Pattern.compile("[ {1}|\\n].*({1}.*.{1}java:\\d*){1}", Pattern.CASE_INSENSITIVE);
-		Matcher m = p.matcher(line);
+		Matcher m = stackTracePattern.matcher(line);
 
 		if (m.find()) {
-			IRegion urlRegion = new Region(lineInfo.getOffset() + m.start() + 1, m.end() - m.start());
+			IRegion urlRegion = new Region(lineInfo.getOffset() + m.start(), m.end() - m.start());			
 			return new IHyperlink[] { new JavaStackTraceFileHyperlink(urlRegion, m.group()) };
 		}
 
-		// StringMatcher javaElementMatcher = new StringMatcher("*(*.java:*)",
-		// true, false);//[\r|\n|\b|^]
-		//		
-		// Position position = javaElementMatcher.find(line, 0, line.length());
-		// if (position != null) {
-		// //String linkText = line.substring(position.getStart() + 1,
-		// position.getEnd() - 1);
-		// IRegion urlRegion= new Region(lineInfo.getOffset() +
-		// position.getStart() + 1, position.getEnd() - position.getStart() -
-		// 2);
-		// return new IHyperlink[] {new JavaStackTraceFileHyperlink(urlRegion,
-		// line)};
-		// }
 		return null;
 	}
 
