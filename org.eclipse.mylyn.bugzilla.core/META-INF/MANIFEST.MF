@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Bugzilla Client Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.bugzilla.core; singleton:=true
-Bundle-Version: 0.5.2.v20060609-2000
+Bundle-Version: 0.5.3
 Bundle-Activator: org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
