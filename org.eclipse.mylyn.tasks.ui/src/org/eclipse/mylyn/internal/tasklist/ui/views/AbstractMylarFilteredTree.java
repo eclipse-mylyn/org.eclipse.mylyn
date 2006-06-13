@@ -26,6 +26,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 
@@ -35,15 +36,15 @@ import org.eclipse.ui.dialogs.PatternFilter;
 public abstract class AbstractMylarFilteredTree extends FilteredTree {
 
 	private static final int DELAY_REFRESH = 700;
-	
+
 	private static final int filterWidth = 70;
-	
+
 	private static final String LABEL_FIND = " Find:";
 
 	private Set<IFilteredTreeListener> listeners = new HashSet<IFilteredTreeListener>();
-	
+
 	private Job refreshJob;
-	
+
 	private final IJobChangeListener REFRESH_JOB_LISTENER = new IJobChangeListener() {
 
 		public void aboutToRun(IJobChangeEvent event) {
@@ -55,9 +56,13 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 		}
 
 		public void done(IJobChangeEvent event) {
-			for (IFilteredTreeListener listener : listeners) {
-				listener.filterTextChanged(AbstractMylarFilteredTree.this.filterText.getText());
-			}
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					for (IFilteredTreeListener listener : listeners) {
+						listener.filterTextChanged(AbstractMylarFilteredTree.this.filterText.getText());
+					}
+				}
+			});
 		}
 
 		public void running(IJobChangeEvent event) {
@@ -71,7 +76,7 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 		public void sleeping(IJobChangeEvent event) {
 			// ignore
 		}
-    };
+	};
 
 	/**
 	 * HACK: using reflectoin to gain access
@@ -82,15 +87,14 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 		try {
 			refreshField = FilteredTree.class.getDeclaredField("refreshJob");
 			refreshField.setAccessible(true);
-			refreshJob = (Job)refreshField.get(this);
+			refreshJob = (Job) refreshField.get(this);
 			refreshJob.addJobChangeListener(REFRESH_JOB_LISTENER);
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Could not get refresh job", false);
 		}
 		setInitialText("");
 	}
-	
-	
+
 	@Override
 	public void dispose() {
 		super.dispose();
@@ -100,20 +104,20 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 	}
 
 	@Override
-    protected Composite createFilterControls(Composite parent){
+	protected Composite createFilterControls(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		container.setLayoutData(gridData);
 		GridLayout gridLayout = new GridLayout(4, false);
 		gridLayout.marginHeight = 0;
 		gridLayout.marginWidth = 0;
-		container.setLayout(gridLayout); 
-		
+		container.setLayout(gridLayout);
+
 		Label label = new Label(container, SWT.LEFT);
 		label.setText(LABEL_FIND);
-				
+
 		super.createFilterControls(container);
-		
+
 		filterText.addKeyListener(new KeyListener() {
 
 			public void keyPressed(KeyEvent e) {
@@ -126,33 +130,34 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 				// ignore
 			}
 		});
-		
+
 		Composite status = createStatusComposite(container);
 		if (status != null) {
 			filterText.setLayoutData(new GridData(filterWidth, label.getSize().y));
 		}
 		return container;
 	}
-	
-    protected abstract Composite createStatusComposite(Composite container);
+
+	protected abstract Composite createStatusComposite(Composite container);
 
 	protected void textChanged() {
-    	if (refreshJob == null) return;
-    	refreshJob.cancel();
-    	int refreshDelay = 0;
-    	final String text = filterText.getText();
-    	int textLength = text.length();
-        if (textLength > 0) {
-        	refreshDelay = DELAY_REFRESH / textLength;
-        }
-        refreshJob.addJobChangeListener(REFRESH_JOB_LISTENER);
-        refreshJob.schedule(refreshDelay); 
-    }
-	
+		if (refreshJob == null)
+			return;
+		refreshJob.cancel();
+		int refreshDelay = 0;
+		final String text = filterText.getText();
+		int textLength = text.length();
+		if (textLength > 0) {
+			refreshDelay = DELAY_REFRESH / textLength;
+		}
+		refreshJob.addJobChangeListener(REFRESH_JOB_LISTENER);
+		refreshJob.schedule(refreshDelay);
+	}
+
 	public void addListener(IFilteredTreeListener listener) {
 		listeners.add(listener);
 	}
-	
+
 	public void removeListener(IFilteredTreeListener listener) {
 		listeners.remove(listener);
 	}

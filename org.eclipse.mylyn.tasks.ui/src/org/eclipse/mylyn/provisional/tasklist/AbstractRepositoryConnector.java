@@ -420,16 +420,15 @@ public abstract class AbstractRepositoryConnector {
 		synchronize(tasksToSync, false, new JobChangeAdapter() {
 
 			@Override
-			public void done(IJobChangeEvent event) {				
+			public void done(IJobChangeEvent event) {
 				for (AbstractRepositoryTask task : Collections.unmodifiableSet(tasksToSync)) {
-					if (repository.getSyncTime().after(task.getLastSynchronized())) {						
+					if (repository.getSyncTime().after(task.getLastSynchronized())) {
 						return;
 					}
 				}
 				MylarTaskListPlugin.getRepositoryManager().setSyncTime(repository, new Date());
-			}});
-
-		
+			}
+		});
 	}
 
 	/**
