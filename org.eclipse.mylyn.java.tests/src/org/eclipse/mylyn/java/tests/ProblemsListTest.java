@@ -22,7 +22,7 @@ import org.eclipse.jdt.core.IJavaModelMarker;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.mylar.internal.ide.ui.ProblemsListDoiSorter;
+import org.eclipse.mylar.internal.ide.ui.ProblemsListInterestSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IViewPart;
@@ -48,7 +48,7 @@ public class ProblemsListTest extends AbstractJavaContextTest {
 		manager.handleInteractionEvent(mockInterestContribution(m2.getHandleIdentifier(), 2f));
 
 		TableViewer viewer = new TableViewer(new Table(problemsPart.getViewSite().getShell(), SWT.NULL));
-		viewer.setSorter(new ProblemsListDoiSorter());
+		viewer.setSorter(new ProblemsListInterestSorter());
 
 		IMarker[] markers = type1.getResource().findMarkers(IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER, false,
 				IResource.DEPTH_INFINITE);

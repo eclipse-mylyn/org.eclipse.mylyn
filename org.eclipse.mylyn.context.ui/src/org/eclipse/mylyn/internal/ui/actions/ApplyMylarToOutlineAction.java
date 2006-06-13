@@ -47,7 +47,10 @@ public class ApplyMylarToOutlineAction extends AbstractApplyMylarAction {
 	 * TODO: refactor this optimization?
 	 */
 	public void update(IEditorPart editorPart) {
-		boolean on = MylarPlugin.getDefault().getPreferenceStore().getBoolean(getGlobalPrefId());
+		if (!super.isChecked()) {
+			return;
+		}
+		boolean on = MylarPlugin.getDefault().getPreferenceStore().getBoolean(getGlobalPrefId()) ;
 
 		IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
 		List<TreeViewer> outlineViewers = bridge.getContentOutlineViewers(editorPart);

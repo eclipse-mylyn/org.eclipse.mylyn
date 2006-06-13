@@ -28,7 +28,7 @@ import org.eclipse.ui.views.markers.internal.TableSorter;
 /**
  * @author Mik Kersten
  */
-public class ProblemsListDoiSorter extends TableSorter {
+public class ProblemsListInterestSorter extends TableSorter {
 
 	// COPIED: from ProblemView
 	private final static int ASCENDING = TableSorter.ASCENDING;
@@ -55,7 +55,7 @@ public class ProblemsListDoiSorter extends TableSorter {
 
 	// END COPY
 
-	public ProblemsListDoiSorter() {
+	public ProblemsListInterestSorter() {
 		super(VISIBLE_FIELDS, DEFAULT_PRIORITIES, DEFAULT_DIRECTIONS);
 	}
 

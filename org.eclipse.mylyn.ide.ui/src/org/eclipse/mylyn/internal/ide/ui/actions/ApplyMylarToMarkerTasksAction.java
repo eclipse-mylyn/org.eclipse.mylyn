@@ -22,7 +22,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.ide.ui.MarkerViewLabelProvider;
-import org.eclipse.mylar.internal.ide.ui.ProblemsListDoiSorter;
+import org.eclipse.mylar.internal.ide.ui.ProblemsListInterestSorter;
 import org.eclipse.mylar.internal.ide.ui.MarkerInterestFilter;
 import org.eclipse.mylar.internal.ui.actions.AbstractApplyMylarAction;
 import org.eclipse.ui.IViewPart;
@@ -37,7 +37,7 @@ public class ApplyMylarToMarkerTasksAction extends AbstractApplyMylarAction {
 
 	private StructuredViewer cachedTasksViewer = null;
 
-	private ProblemsListDoiSorter interestSorter = new ProblemsListDoiSorter();
+	private ProblemsListInterestSorter interestSorter = new ProblemsListInterestSorter();
 
 	public ApplyMylarToMarkerTasksAction() {
 		super(new MarkerInterestFilter());
