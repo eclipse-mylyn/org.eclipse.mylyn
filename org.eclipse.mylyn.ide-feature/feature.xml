@@ -247,7 +247,7 @@ litigation.
       <import plugin="org.eclipse.team.core"/>
       <import plugin="org.eclipse.ui.forms"/>
       <import plugin="org.eclipse.ant.ui"/>
-      <import feature="org.eclipse.mylar_feature" version="0.5.2" match="greaterOrEqual"/>
+      <import feature="org.eclipse.mylar_feature" version="0.5.3" match="greaterOrEqual"/>
       <import plugin="org.eclipse.compare"/>
       <import plugin="org.eclipse.ui.navigator"/>
       <import plugin="org.eclipse.ui.navigator.resources"/>
