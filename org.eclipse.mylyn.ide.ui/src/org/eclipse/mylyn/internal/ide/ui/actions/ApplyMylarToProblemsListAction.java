@@ -66,11 +66,12 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 					}
 				}
 			} catch (Exception e) {
-				MylarStatusHandler.log(e, "couldn't get problmes viewer");
+				MylarStatusHandler.log(e, "couldn't get problems view viewer");
 			}
 		}
-		if (cachedProblemsTableViewer != null)
+		if (cachedProblemsTableViewer != null) {
 			viewers.add(cachedProblemsTableViewer);
+		}
 		return viewers;
 	}
 

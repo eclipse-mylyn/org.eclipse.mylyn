@@ -60,7 +60,7 @@ public class ApplyMylarToMarkerTasksAction extends AbstractApplyMylarAction {
 					updateMarkerViewLabelProvider(cachedTasksViewer);
 				} 
 			} catch (Exception e) {
-				MylarStatusHandler.log(e, "couldn't get problmes viewer");
+				MylarStatusHandler.log(e, "couldn't get task view list viewer");
 			}
 		}
 		if (cachedTasksViewer != null)

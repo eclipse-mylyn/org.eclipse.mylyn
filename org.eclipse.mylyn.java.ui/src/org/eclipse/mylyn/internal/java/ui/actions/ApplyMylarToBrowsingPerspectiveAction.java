@@ -105,7 +105,7 @@ public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAct
 
 			}
 		} catch (Exception e) {
-			MylarStatusHandler.log(e, "couldn't get problmes viewer");
+			MylarStatusHandler.log(e, "couldn't get " + id + " view tree viewer");
 		}
 		return null;
 	}

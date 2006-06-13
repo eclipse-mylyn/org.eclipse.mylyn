@@ -56,9 +56,6 @@ public class MarkerInterestFilter extends InterestFilter {
 		if (isImplicitlyInteresting(marker)) {
 			return true;
 		} else {
-			if (!MylarPlugin.getContextManager().isContextActive()) {
-				return false;
-			}
 			String handle = MylarPlugin.getDefault().getStructureBridge(marker.getResource().getFileExtension())
 					.getHandleForOffsetInObject(marker, 0);
 			if (handle == null) {
