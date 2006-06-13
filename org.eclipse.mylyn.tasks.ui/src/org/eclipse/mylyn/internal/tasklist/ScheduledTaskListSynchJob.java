@@ -72,6 +72,7 @@ public class ScheduledTaskListSynchJob extends Job {
 
 			for (TaskRepository repository : repositories) {
 				if (monitor.isCanceled()) {
+					scheduleDelay = -1;
 					throw new OperationCanceledException();
 				}
 				AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager()
