@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 
@@ -464,7 +464,7 @@ public class OfflineTaskManager {
 		} catch (IOException e) {
 			// put up a message and log the error if there is a problem writing
 			// to the file
-			MessageDialog.openError(null, "I/O Error", "Could not write to offline reports file.");
+			MylarStatusHandler.fail(e, "Could not write to offline reports file.", false);
 		} finally {
 			if (out != null) {
 				try {
