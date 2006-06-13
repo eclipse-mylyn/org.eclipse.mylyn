@@ -123,10 +123,6 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 		return entryTable;
 	}
 
-//	private void createResourceExclusionTable(Composite parent) {
-//		
-//	}
-	
 	public void init(IWorkbench workbench) {
 		// don't have anything to initialize
 	}
@@ -629,15 +625,18 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 
 	private void createExclusionFilterControl(Composite parent) {
 		Group exclusionControl = new Group(parent, SWT.SHADOW_ETCHED_IN);
-
 		exclusionControl.setLayout(new GridLayout(1, false));
 		exclusionControl.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		Composite composite = new Composite(exclusionControl, SWT.NULL);
+		composite.setLayout(new GridLayout(1, false));
+		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		exclusionControl.setText("Interest Filter");
 
-		Label label = new Label(exclusionControl, SWT.LEFT);
+		Label label = new Label(composite, SWT.LEFT);
 		label.setText("Exclusion pattern, matches will always be shown (e.g. build*.xml):");
 
-		exclusionFieldEditor = new StringFieldEditor("", "", StringFieldEditor.UNLIMITED, exclusionControl);
+		exclusionFieldEditor = new StringFieldEditor("", "", StringFieldEditor.UNLIMITED, composite	);
 
 		String text = getPreferenceStore().getString(MylarUiPrefContstants.INTEREST_FILTER_EXCLUSION);
 		if (text != null)
