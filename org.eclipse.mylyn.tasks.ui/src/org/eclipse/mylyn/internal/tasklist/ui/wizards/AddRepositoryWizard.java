@@ -29,12 +29,7 @@ public class AddRepositoryWizard extends AbstractRepositoryClientWizard {
 	@Override
 	public boolean performFinish() {
 		if (canFinish()) {
-			TaskRepository repository = new TaskRepository(repositoryClient.getRepositoryType(),
-					abstractRepositorySettingsPage.getServerUrl(), abstractRepositorySettingsPage.getVersion(),
-					abstractRepositorySettingsPage.getCharacterEncoding(), abstractRepositorySettingsPage
-							.getTimeZoneId());
-			repository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(),
-					abstractRepositorySettingsPage.getPassword());
+			TaskRepository repository = abstractRepositorySettingsPage.createTaskRepository();
 			MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
 			return true;
 		}

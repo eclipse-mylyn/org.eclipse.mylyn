@@ -19,6 +19,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -48,6 +49,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	protected static final String URL_PREFIX_HTTP = "http://";
 
+	private AbstractRepositoryConnector connector;
+	
 	protected StringFieldEditor serverUrlEditor;
 
 	protected StringFieldEditor userNameEditor;
@@ -68,10 +71,12 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	private Combo timeZonesCombo;
 
-	public AbstractRepositorySettingsPage(String title, String description) {
+	public AbstractRepositorySettingsPage(String title, String description, AbstractRepositoryConnector connector) {
 		super(title);
 		super.setTitle(title);
 		super.setDescription(description);
+		this.connector = connector;
+
 	}
 
 	public void createControl(Composite parent) {
@@ -292,4 +297,15 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		return timeZonesCombo.getItem(timeZonesCombo.getSelectionIndex());
 	}
 
+	public TaskRepository createTaskRepository() {
+		TaskRepository repository = new TaskRepository(connector.getRepositoryType(), 
+				getServerUrl(), getVersion(), getCharacterEncoding(), getTimeZoneId());
+		repository.setAuthenticationCredentials(getUserName(), getPassword());
+		return repository;
+	}
+
+	public AbstractRepositoryConnector getConnector() {
+		return connector;
+	}
+	
 }

@@ -48,13 +48,10 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	private static final String DESCRIPTION = "Example: https://bugs.eclipse.org/bugs (do not include index.cgi)";
 
-	private AbstractRepositoryConnector connector;
-
 	protected Combo repositoryVersionCombo;
 
 	public BugzillaRepositorySettingsPage(AbstractRepositoryConnector connector) {
-		super(TITLE, DESCRIPTION);
-		this.connector = connector;
+		super(TITLE, DESCRIPTION, connector);
 	}
 
 	protected void createAdditionalControls(Composite parent) {
@@ -62,13 +59,13 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		repositoryVersionLabel.setText("Repository Version: ");
 		repositoryVersionCombo = new Combo(parent, SWT.READ_ONLY);
 
-		for (String version : connector.getSupportedVersions()) {
+		for (String version : getConnector().getSupportedVersions()) {
 			repositoryVersionCombo.add(version);
 		}
 		if (repository != null && repositoryVersionCombo.indexOf(repository.getVersion()) >= 0) {
 			repositoryVersionCombo.select(repositoryVersionCombo.indexOf(repository.getVersion()));
 		} else {
-			int defaultIndex = connector.getSupportedVersions().size() - 1;
+			int defaultIndex = getConnector().getSupportedVersions().size() - 1;
 			repositoryVersionCombo.select(defaultIndex);
 			setVersion(repositoryVersionCombo.getItem(defaultIndex));
 		}
