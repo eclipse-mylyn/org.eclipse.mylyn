@@ -76,6 +76,8 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
  */
 public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
+	private static final String BUG_ID = "&bug_id=";
+
 	private static final int MAX_URL_LENGTH = 2000;
 
 	private static final String CHANGED_BUGS_START_DATE_SHORT = "yyyy-MM-dd";
@@ -93,7 +95,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	private static final String CLIENT_LABEL = "Bugzilla (supports uncustomized 2.18-2.22)";
 
 	private BugzillaAttachmentHandler attachmentHandler = new BugzillaAttachmentHandler();
-	
+
 	private BugzillaOfflineTaskHandler offlineHandler = new BugzillaOfflineTaskHandler();
 
 	public String getLabel() {
@@ -104,12 +106,12 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	public IAttachmentHandler getAttachmentHandler() {
 		return attachmentHandler;
 	}
-	
+
 	@Override
 	public IOfflineTaskHandler getOfflineTaskHandler() {
 		return offlineHandler;
 	}
-	
+
 	public AbstractRepositorySettingsPage getSettingsPage() {
 		return new BugzillaRepositorySettingsPage(this);
 	}
@@ -390,13 +392,11 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					+ TaskRepositoriesView.NAME + ".", BugzillaRepositoryConnector.class);
 		}
 
-		
 		// XXX: This is a hack to adjust for slow local clock.
-		//      Backs query start date up by 5 minutes.
+		// Backs query start date up by 5 minutes.
 		Date syncTime = new Date(repository.getSyncTime().getTime() - (60000 * 5));
-		
-		String dateString = DateUtil.getZoneFormattedDate(timeZone, syncTime,
-				CHANGED_BUGS_START_DATE_LONG);
+
+		String dateString = DateUtil.getZoneFormattedDate(timeZone, syncTime, CHANGED_BUGS_START_DATE_LONG);
 
 		String urlQueryBase;
 		String urlQueryString;
@@ -411,24 +411,21 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					+ CHANGED_BUGS_CGI_ENDDATE;
 		}
 
-		urlQueryString = new String(urlQueryBase);
+		urlQueryString = new String(urlQueryBase + BUG_ID);
 
 		int queryCounter = -1;
 		Iterator itr = tasks.iterator();
 		while (itr.hasNext()) {
 			queryCounter++;
 			ITask task = (ITask) itr.next();
-
-			String newurlQueryString = "&field0-0-" + queryCounter + "=bug_id&type0-0-" + queryCounter
-					+ "=equals&value0-0-" + queryCounter + "="
-					+ AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
+			String newurlQueryString = URLEncoder.encode(AbstractRepositoryTask.getTaskId(task.getHandleIdentifier())
+					+ ",", repository.getCharacterEncoding());
 			if ((urlQueryString.length() + newurlQueryString.length() + IBugzillaConstants.CONTENT_TYPE_RDF.length()) > MAX_URL_LENGTH) {
 				urlQueryString += IBugzillaConstants.CONTENT_TYPE_RDF;
 				queryForChanged(repository, changedTasks, urlQueryString);
 				queryCounter = 0;
-				urlQueryString = new String(urlQueryBase);
-				urlQueryString += "&field0-0-" + queryCounter + "=bug_id&type0-0-" + queryCounter + "=equals&value0-0-"
-						+ queryCounter + "=" + AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
+				urlQueryString = new String(urlQueryBase + BUG_ID);
+				urlQueryString += newurlQueryString;
 			} else if (!itr.hasNext()) {
 				urlQueryString += newurlQueryString;
 				urlQueryString += IBugzillaConstants.CONTENT_TYPE_RDF;
@@ -463,4 +460,3 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 }
-

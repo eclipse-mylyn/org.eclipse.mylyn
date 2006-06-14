@@ -115,7 +115,7 @@ public class BugzillaConfigurationTest extends TestCase {
 		assertEquals(7, config.getStatusValues().size());
 		assertEquals(8, config.getResolutions().size());
 		assertEquals(6, config.getPlatforms().size());
-		assertEquals(27, config.getOSs().size());
+		assertEquals(28, config.getOSs().size());
 		assertEquals(5, config.getPriorities().size());
 		assertEquals(7, config.getSeverities().size());
 		assertEquals(52, config.getProducts().size());
