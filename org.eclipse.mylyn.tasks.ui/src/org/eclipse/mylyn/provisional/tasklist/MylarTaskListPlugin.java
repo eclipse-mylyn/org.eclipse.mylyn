@@ -68,7 +68,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	// TODO: move constants
 
-	private static final int DELAY_QUERY_REFRESH_ON_STARTUP = 3000;
+	// private static final int DELAY_QUERY_REFRESH_ON_STARTUP = 3000;
 
 	private static final String DEFAULT_BACKUP_FOLDER_NAME = "backup";
 
@@ -321,7 +321,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					taskListBackupManager = new TaskListBackupManager();
 					getMylarCorePrefs().addPropertyChangeListener(taskListBackupManager);
 
-					synchronizationManager = new TaskListSynchronizationManager();
+					synchronizationManager = new TaskListSynchronizationManager(true);
 					synchronizationManager.startSynchJob();
 
 					repositoryEditorManager = new RepositoryEditorManager();
@@ -333,9 +333,11 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 					getMylarCorePrefs().addPropertyChangeListener(synchronizationManager);
 
-					if (getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP)) {
-						synchronizationManager.synchNow(DELAY_QUERY_REFRESH_ON_STARTUP);
-					}
+					// if
+					// (getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP))
+					// {
+					// synchronizationManager.synchNow(DELAY_QUERY_REFRESH_ON_STARTUP);
+					//					}
 				} catch (Exception e) {
 					MylarStatusHandler.fail(e, "Task List initialization failed", true);
 				}
@@ -436,7 +438,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		store.setDefault(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL, false);
 		store.setDefault(TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL, false);
 		store.setDefault(TaskListPreferenceConstants.REPORT_OPEN_EXTERNAL, false);
-		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP, false);
+		//store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP, false);
 
 		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, "" + (30 * 60 * 1000));

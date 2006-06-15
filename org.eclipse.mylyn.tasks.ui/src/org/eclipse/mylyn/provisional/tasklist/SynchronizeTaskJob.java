@@ -44,7 +44,7 @@ class SynchronizeTaskJob extends Job {
 	boolean forceSync = false;
 
 	public SynchronizeTaskJob(AbstractRepositoryConnector connector, Set<AbstractRepositoryTask> repositoryTasks) {
-		super(LABEL_SYNCHRONIZE_TASK);
+		super(LABEL_SYNCHRONIZE_TASK+" ("+repositoryTasks.size()+" tasks)");
 		this.connector = connector;
 		this.repositoryTasks = repositoryTasks;
 	}

@@ -41,7 +41,7 @@ public class ScheduledTaskListSynchJob extends Job {
 
 	private TaskList taskList = null;
 
-	private long count = 0;
+	private static long count = 0;
 
 	private TaskListManager taskListManager;
 
@@ -61,7 +61,7 @@ public class ScheduledTaskListSynchJob extends Job {
 	}
 
 	public IStatus run(IProgressMonitor monitor) {
-		try {
+		try {			
 			if (monitor == null) {
 				monitor = new NullProgressMonitor();
 			}
@@ -97,9 +97,9 @@ public class ScheduledTaskListSynchJob extends Job {
 			count++;
 			if (count == Long.MAX_VALUE)
 				count = 0;
-			if (scheduleDelay != -1) {
-				schedule(scheduleDelay);
-			}
+			// if (scheduleDelay != -1) {
+			// schedule(scheduleDelay);
+			//			}
 			if (monitor != null) {
 				monitor.done();
 			}
@@ -116,8 +116,12 @@ public class ScheduledTaskListSynchJob extends Job {
 	 * 
 	 * @return
 	 */
-	public long getCount() {
+	public static long getCount() {
 		return count;
+	}
+
+	public long getScheduleDelay() {
+		return scheduleDelay;
 	}
 
 }

@@ -22,13 +22,14 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.tasklist.ScheduledTaskListSynchJob;
+import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
+import org.eclipse.mylar.internal.tasklist.TaskListSynchronizationManager;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
@@ -552,13 +553,16 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testScheduledRefreshJob() throws InterruptedException {
-		int counter = 3;
-		ScheduledTaskListSynchJob job = new ScheduledTaskListSynchJob(10, manager);
-		job.run(new NullProgressMonitor());
-//		job.schedule();
-		Thread.sleep(2000);
-		assertTrue(job.getCount() + " smaller than " + counter, job.getCount() >= counter);
-		job.cancel();
+		int counter = 3;		
+		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, true);
+		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, 1000L);
+		assertEquals(0, ScheduledTaskListSynchJob.getCount());
+		TaskListSynchronizationManager manager = new TaskListSynchronizationManager(false);
+		manager.startSynchJob();
+		Thread.sleep(3000);		
+		assertTrue(ScheduledTaskListSynchJob.getCount()+ " smaller than " + counter, ScheduledTaskListSynchJob.getCount() >= counter);
+		manager.cancelAll();
+		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 	}
 
 	public void testgetQueriesAndHitsForHandle() {

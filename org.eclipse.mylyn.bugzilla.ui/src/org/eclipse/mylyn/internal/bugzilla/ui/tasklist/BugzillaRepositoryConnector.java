@@ -14,7 +14,6 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -392,12 +391,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					+ TaskRepositoriesView.NAME + ".", BugzillaRepositoryConnector.class);
 		}
 
-		// XXX: This is a hack to adjust for slow local clock.
-		// Backs query start date up by 5 minutes.
-		Date syncTime = new Date(repository.getSyncTime().getTime() - (60000 * 5));
-
-		String dateString = DateUtil.getZoneFormattedDate(timeZone, syncTime, CHANGED_BUGS_START_DATE_LONG);
-
+		String dateString = DateUtil.getZoneFormattedDate(timeZone, repository.getSyncTime(),
+				CHANGED_BUGS_START_DATE_LONG);
 		String urlQueryBase;
 		String urlQueryString;
 

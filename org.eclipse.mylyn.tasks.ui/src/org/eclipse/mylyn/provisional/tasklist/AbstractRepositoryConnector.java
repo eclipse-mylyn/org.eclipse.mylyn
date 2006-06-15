@@ -334,7 +334,7 @@ public abstract class AbstractRepositoryConnector {
 	 * @param listener
 	 *            can be null
 	 */
-	private Job synchronize(Set<AbstractRepositoryTask> repositoryTasks, boolean forceSynch, IJobChangeListener listener) {
+	private Job synchronize(Set<AbstractRepositoryTask> repositoryTasks, boolean forceSynch, final IJobChangeListener listener) {
 
 		final SynchronizeTaskJob synchronizeJob = new SynchronizeTaskJob(this, repositoryTasks);
 		synchronizeJob.setForceSynch(forceSynch);
@@ -349,6 +349,9 @@ public abstract class AbstractRepositoryConnector {
 			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 				public void run() {
 					synchronizeJob.run(new NullProgressMonitor());
+					if(listener != null) {
+						listener.done(null);
+					}
 				}
 			});
 		}
@@ -381,7 +384,7 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * Synchronizes only those tasks that have changed since the last time the
 	 * given repository was synchronized. Calls to this method set
-	 * TaskRepository.syncTime to now.
+	 * TaskRepository.syncTime to now if sync was successful for all tasks.
 	 */
 	public final void synchronizeChanged(final TaskRepository repository) {
 		TaskList taskList = MylarTaskListPlugin.getTaskListManager().getTaskList();
@@ -417,16 +420,22 @@ public abstract class AbstractRepositoryConnector {
 			}
 		}
 
+		if (tasksToSync.size() == 0) {
+			return;
+		}
+
 		synchronize(tasksToSync, false, new JobChangeAdapter() {
 
 			@Override
 			public void done(IJobChangeEvent event) {
-				for (AbstractRepositoryTask task : Collections.unmodifiableSet(tasksToSync)) {
-					if (repository.getSyncTime().after(task.getLastSynchronized())) {
-						return;
+				Date mostRecent = new Date(0);
+				for (AbstractRepositoryTask task : tasksToSync) {
+					Date taskModifiedDate = task.getTaskData().getLastModified(repository.getTimeZoneId());
+					if (taskModifiedDate.after(mostRecent)) {
+						mostRecent = taskModifiedDate;
 					}
 				}
-				MylarTaskListPlugin.getRepositoryManager().setSyncTime(repository, new Date());
+				MylarTaskListPlugin.getRepositoryManager().setSyncTime(repository, new Date(mostRecent.getTime() + 1000));
 			}
 		});
 	}

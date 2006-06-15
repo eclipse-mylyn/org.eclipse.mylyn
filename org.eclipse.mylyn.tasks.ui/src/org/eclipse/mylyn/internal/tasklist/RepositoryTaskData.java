@@ -156,6 +156,8 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 				lastModified = delta_ts_format.parse(dateString);
 			} catch (ParseException e) {
 				// ignore
+			} catch (NumberFormatException e) {
+				// ignore
 			}
 		}
 		return lastModified;
