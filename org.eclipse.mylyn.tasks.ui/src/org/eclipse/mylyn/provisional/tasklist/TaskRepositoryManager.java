@@ -74,10 +74,6 @@ public class TaskRepositoryManager {
 		}
 	}
 
-	public void removeRepositoryConnector(AbstractRepositoryConnector repositoryConnector) {
-		repositoryConnectors.remove(repositoryConnector);
-	}
-
 	public void addRepository(TaskRepository repository) {
 		Set<TaskRepository> repositories;
 		if (!repositoryMap.containsKey(repository.getKind())) {
