@@ -82,7 +82,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 		assertEquals("Windows", report.getAttribute(BugzillaReportElement.OP_SYS.getKeyString()).getValue());
 		// first comment (#0) is the description so this value is always 1 greater
 		// than what is shown on the report ui
-		assertEquals(2, report.getComments().size());
+		assertEquals(3, report.getComments().size());
 		assertEquals("search-match-test 1", report.getComments().get(0).getAttribute(
 				BugzillaReportElement.THETEXT.getKeyString()).getValue());
 //		assertEquals(15, report.getAttachments().size());
@@ -121,7 +121,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 		assertEquals("---", report.getAttribute(BugzillaReportElement.TARGET_MILESTONE.getKeyString()).getValue());
 		assertEquals("relves@cs.ubc.ca", report.getAttribute(BugzillaReportElement.REPORTER.getKeyString()).getValue());
 		assertEquals("nhapke@cs.ubc.ca", report.getAttribute(BugzillaReportElement.ASSIGNED_TO.getKeyString()).getValue());
-		assertEquals(2, report.getComments().size());
+		assertEquals(3, report.getComments().size());
 		assertEquals("relves@cs.ubc.ca", report.getComments().get(0).getAttribute(BugzillaReportElement.WHO.getKeyString()).getValue());
 		assertEquals("2006-05-23 17:46:24", report.getComments().get(0).getAttribute(BugzillaReportElement.BUG_WHEN.getKeyString())
 				.getValue());
