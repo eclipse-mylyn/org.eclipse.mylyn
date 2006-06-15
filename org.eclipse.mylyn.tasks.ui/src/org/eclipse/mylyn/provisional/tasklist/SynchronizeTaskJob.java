@@ -94,16 +94,12 @@ class SynchronizeTaskJob extends Job {
 		// this.connector.removeRefreshingTask(repositoryTask);
 		return new Status(IStatus.OK, MylarPlugin.PLUGIN_ID, IStatus.OK, "", null);
 	}
-	
-	
+		
 	private boolean isDirty(AbstractRepositoryTask task) {
 		// TODO: Move out of offline reports
 		List<MylarTaskEditor> editors = TaskUiUtil.getActiveRepositoryTaskEditors();
 		for (final MylarTaskEditor editor : editors) {
 			TaskEditorInput input = (TaskEditorInput) editor.getEditorInput();
-			// String handle =
-			// AbstractRepositoryTask.getHandle(oldBug.getRepositoryUrl(),
-			// oldBug.getId());
 			if (input.getTask().equals(task) && editor.isDirty()) {
 				return true;
 			}

@@ -48,38 +48,20 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 
 	private BugzillaTaskEditorInput bugzillaEditorInput;
 
-//	private RepositoryTaskOutlinePage outlinePage = null;
-	
-//	protected RepositoryTaskOutlineNode bugzillaOutlineModel = null;
-
 	private IRepositoryTaskAttributeListener ATTRIBUTE_LISTENER = new IRepositoryTaskAttributeListener() {
 		public void attributeChanged(String attribute, String value) {
 			// TODO: get rid of this?
 			if (attribute.equals("Priority")) {
 				bugTask.setPriority(value);
-//				if (TaskListView.getDefault() != null)
-//					TaskListView.getDefault().notifyTaskDataChanged(bugTask);
 			}
 		}
 	};
 
 	public BugzillaTaskEditor() {
 		super();
-
-		// get the workbench page and add a listener so we can detect when it
-		// closes
-		// IWorkbench wb = MylarTaskListPlugin.getDefault().getWorkbench();
-		// IWorkbenchWindow aw = wb.getActiveWorkbenchWindow();
-		// IWorkbenchPage ap = aw.getActivePage();
-		// BugzillaTaskEditorListener listener = new
-		// BugzillaTaskEditorListener();
-		// ap.addPartListener(listener);
-
 		bugzillaEditor = new ExistingBugEditor();
 		bugzillaEditor.setParentEditor(this);
 		bugzillaEditor.addAttributeListener(ATTRIBUTE_LISTENER);
-		// taskSummaryEditor = new TaskInfoEditor();
-		// taskSummaryEditor.setParentEditor(this);
 	}
 
 	public AbstractRepositoryTaskEditor getBugzillaEditor() {
