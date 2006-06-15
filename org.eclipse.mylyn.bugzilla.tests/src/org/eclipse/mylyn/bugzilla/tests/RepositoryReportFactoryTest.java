@@ -117,7 +117,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 		assertEquals(""+bugid, report.getAttribute(BugzillaReportElement.BUG_ID.getKeyString()).getValue());
 		assertEquals("NEW", report.getAttribute(BugzillaReportElement.BUG_STATUS.getKeyString()).getValue());
 		assertEquals("2006-05-23 17:46", report.getAttribute(BugzillaReportElement.CREATION_TS.getKeyString()).getValue());
-		assertEquals("2006-05-30 18:56:24", report.getAttribute(BugzillaReportElement.DELTA_TS.getKeyString()).getValue());
+		assertEquals("2006-06-15 12:55:43", report.getAttribute(BugzillaReportElement.DELTA_TS.getKeyString()).getValue());
 		assertEquals("---", report.getAttribute(BugzillaReportElement.TARGET_MILESTONE.getKeyString()).getValue());
 		assertEquals("relves@cs.ubc.ca", report.getAttribute(BugzillaReportElement.REPORTER.getKeyString()).getValue());
 		assertEquals("nhapke@cs.ubc.ca", report.getAttribute(BugzillaReportElement.ASSIGNED_TO.getKeyString()).getValue());
