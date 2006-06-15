@@ -148,9 +148,14 @@
       <extension point="org.eclipse.ui.perspectiveExtensions">
           <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
                <viewShortcut id="org.eclipse.mylar.tasks.ui.views.TaskListView"/>
-               <view id="org.eclipse.mylar.tasks.ui.views.TaskListView"
-                    relative="org.eclipse.ui.views.ContentOutline"
-                    relationship="top"/>
+               <view
+                     closeable="true"
+                     id="org.eclipse.mylar.tasks.ui.views.TaskListView"
+                     moveable="true"
+                     ratio="0.5"
+                     relationship="top"
+                     relative="org.eclipse.ui.views.ContentOutline"
+                     visible="true"/>
           </perspectiveExtension>
 		  <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaBrowsingPerspective">
                <viewShortcut id="org.eclipse.mylar.tasks.ui.views.TaskListView"/>
