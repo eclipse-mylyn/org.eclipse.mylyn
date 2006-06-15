@@ -39,6 +39,7 @@ public class InterestFilterTest extends AbstractJavaContextTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		
 		explorer = PackageExplorerPart.openInActivePerspective();
 		assertNotNull(explorer);
 		applyAction = AbstractApplyMylarAction.getActionForPart(explorer);		
@@ -98,6 +99,9 @@ public class InterestFilterTest extends AbstractJavaContextTest {
 
 		filter.setExcludedMatches("*1*");
 		assertTrue(filter.select(explorer.getTreeViewer(), null, m1));
+		
+		//teardown
+		filter.setExcludedMatches(null);
 	}
 
 	
