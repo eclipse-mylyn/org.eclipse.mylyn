@@ -56,7 +56,7 @@ public class BugzillaProductParserTest extends TestCase {
 		List<String> productList = BugzillaRepositoryUtil.getProductList(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
 		Iterator<String> itr = productList.iterator();
 		assertTrue(itr.hasNext());
-		assertEquals("TestProduct", "TestProduct", itr.next());
+		assertEquals("Mylar Test Cases", "Mylar Test Cases", itr.next());
 
 	}
 
