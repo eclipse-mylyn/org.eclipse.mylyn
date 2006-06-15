@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mylar Track Plug-in
+Bundle-SymbolicName: org.eclipse.mylar.trac; singleton:=true
+Bundle-Version: 0.5.3
+Bundle-Activator: org.eclipse.mylar.internal.track.MylarTracPlugin
+Bundle-Vendor: Eclipse.org
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.ui.forms
+Eclipse-AutoStart: true
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: 
+Bundle-ClassPath: mylar-trac.jar
