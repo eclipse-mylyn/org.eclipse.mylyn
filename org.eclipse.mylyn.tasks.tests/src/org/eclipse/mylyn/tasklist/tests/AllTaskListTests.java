@@ -17,7 +17,7 @@ import junit.framework.TestSuite;
 /**
  * @author Mik Kersten
  */
-public class AllTasklistTests {
+public class AllTaskListTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tasklist.tests");

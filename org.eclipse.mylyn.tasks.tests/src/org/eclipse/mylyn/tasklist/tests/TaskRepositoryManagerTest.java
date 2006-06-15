@@ -95,12 +95,13 @@ public class TaskRepositoryManagerTest extends TestCase {
 		repositoryList.add(repository2);
 		repositoryList.add(repository1);
 		manager.readRepositories();
-		if (manager.getRepositoryConnectors().size() == 2) {
+		// NOTE: we have a mock connector, hence 3
+		if (manager.getRepositoryConnectors().size() == 3) {
 			assertTrue(manager.getAllRepositories().contains(repository1));
 			assertTrue(manager.getAllRepositories().contains(repository2));
 			// assertEquals(repositoryList, manager.getAllRepositories());
 		} else {
-			assertEquals(1, manager.getAllRepositories().size());
+			assertEquals("all: " + manager.getAllRepositories(), 1, manager.getAllRepositories().size());
 		}
 	}
 

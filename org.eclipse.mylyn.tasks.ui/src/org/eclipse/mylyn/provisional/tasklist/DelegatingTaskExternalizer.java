@@ -388,7 +388,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		return KEY_TASK;
 	}
 	
-	public boolean canCreateElementFor(AbstractRepositoryQuery category) {
+	public boolean canCreateElementFor(AbstractRepositoryQuery query) {
 		return true;
 	}
 

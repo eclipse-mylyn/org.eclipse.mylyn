@@ -514,7 +514,6 @@ public class TaskListView extends ViewPart {
 	}
 
 	public TaskListView() {
-		// INSTANCE = this;
 		MylarTaskListPlugin.getTaskListManager().getTaskList().addChangeListener(TASK_REFERESH_LISTENER);
 		MylarTaskListPlugin.getTaskListManager().addActivityListener(TASK_ACTIVITY_LISTENER);
 	}

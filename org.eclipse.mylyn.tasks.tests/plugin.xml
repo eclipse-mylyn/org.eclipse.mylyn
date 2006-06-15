@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+   <extension
+         id="org.eclipse.mylar.jira.repository"
+         name="JIRA Repository"
+         point="org.eclipse.mylar.tasklist.repositories">
+
+      <repositoryType
+            class="org.eclipse.mylar.tasklist.tests.mockconnector.MockRepositoryConnector"
+            id="org.eclipse.mylar.tasklist.tests.repositories"
+            name="Mock Repository Client"
+            type="mock"/>
+           
+      <externalizer 
+            class="org.eclipse.mylar.tasklist.tests.mockconnector.MockRepositoryExternalizer"
+            id="org.eclipse.mylar.tasklist.tests.externalizer"/>
+   </extension>  
+   
+</plugin>
