@@ -64,7 +64,7 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 	}
 
 	public Set<AbstractQueryHit> getHits() {
-		return Collections.unmodifiableSet(hits);
+		return Collections.unmodifiableSet(new HashSet<AbstractQueryHit>(hits));
 	}
 
 	public void clearHits() {
