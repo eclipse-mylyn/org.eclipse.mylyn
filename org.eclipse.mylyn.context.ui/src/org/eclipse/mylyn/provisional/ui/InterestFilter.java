@@ -43,7 +43,7 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 	private String excludedMatches = null;
 
 	public InterestFilter() {
-		MylarUiPlugin.getPrefs().addPropertyChangeListener(this);
+		MylarUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
 	}
 
 	@Override

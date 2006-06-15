@@ -88,7 +88,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 	};
 	
 	public MylarViewerManager() {
-		MylarUiPlugin.getPrefs().addPropertyChangeListener(this);
+		MylarUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
 		VIEWER_PART_TRACKER.install(PlatformUI.getWorkbench());
 	}
 	

@@ -84,9 +84,9 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 		}
 
 		if (preferencePage.closeEditors()) {
-			MylarUiPlugin.getPrefs().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, true);
+			MylarUiPlugin.getDefault().getPreferenceStore().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, true);
 		} else {
-			MylarUiPlugin.getPrefs().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, false);
+			MylarUiPlugin.getDefault().getPreferenceStore().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, false);
 		}
 
 		if (preferencePage.isWorkingSet()) {

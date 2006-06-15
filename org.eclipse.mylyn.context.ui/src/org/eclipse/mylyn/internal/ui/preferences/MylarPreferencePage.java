@@ -99,7 +99,7 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 	 */
 	public MylarPreferencePage() {
 		super();
-		setPreferenceStore(MylarUiPlugin.getPrefs());
+		setPreferenceStore(MylarUiPlugin.getDefault().getPreferenceStore());
 		setTitle("Mylar");
 	}
 

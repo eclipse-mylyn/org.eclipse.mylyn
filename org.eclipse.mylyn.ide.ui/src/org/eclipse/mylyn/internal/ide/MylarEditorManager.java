@@ -44,7 +44,7 @@ public class MylarEditorManager implements IMylarContextListener {
 	private boolean previousCloseEditorsSetting = Workbench.getInstance().getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
 	
 	public void contextActivated(IMylarContext context) {
-		if (MylarUiPlugin.getPrefs().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)) {
+		if (MylarUiPlugin.getDefault().getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)) {
 			previousCloseEditorsSetting = Workbench.getInstance().getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
 			Workbench.getInstance().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN, false);
 			
@@ -58,7 +58,7 @@ public class MylarEditorManager implements IMylarContextListener {
 
 				List<IMylarElement> documents = MylarPlugin.getContextManager().getInterestingDocuments();
 				int opened = 0;
-				int threshold = MylarUiPlugin.getPrefs().getInt(MylarUiPrefContstants.AUTO_MANAGE_EDITORS_OPEN_NUM);
+				int threshold = MylarUiPlugin.getDefault().getPreferenceStore().getInt(MylarUiPrefContstants.AUTO_MANAGE_EDITORS_OPEN_NUM);
 				for (Iterator iter = documents.iterator(); iter.hasNext() && opened < threshold - 1; opened++) {
 					IMylarElement document = (IMylarElement) iter.next();
 					IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridge(document.getContentType());
@@ -79,7 +79,7 @@ public class MylarEditorManager implements IMylarContextListener {
 	}
 
 	public void contextDeactivated(IMylarContext context) {
-		if (MylarUiPlugin.getPrefs().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)) {
+		if (MylarUiPlugin.getDefault().getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)) {
 			Workbench.getInstance().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN, previousCloseEditorsSetting);
 			closeAllEditors();
 		}
@@ -135,7 +135,7 @@ public class MylarEditorManager implements IMylarContextListener {
 
 	public void interestChanged(List<IMylarElement> elements) {
 		for (IMylarElement element : elements) {
-			if (MylarUiPlugin.getPrefs().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)) {
+			if (MylarUiPlugin.getDefault().getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)) {
 				if (!element.getInterest().isInteresting()) {
 					IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
 					if (bridge.isDocument(element.getHandleIdentifier())) {

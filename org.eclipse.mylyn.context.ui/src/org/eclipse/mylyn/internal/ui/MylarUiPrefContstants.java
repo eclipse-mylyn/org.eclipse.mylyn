@@ -19,6 +19,8 @@ import org.eclipse.swt.graphics.Font;
  */
 public class MylarUiPrefContstants {
 
+	public static final String PREFIX_TASK_TO_PERSPECTIVE = "org.eclipse.mylar.ui.perspectives.task.";
+	
 	public static final String MARKER_LANDMARK = "org.eclipse.mylar.ui.interest.landmark";
 
 	public static final String INTEREST_FILTER_EXCLUSION = "org.eclipse.mylar.ui.interest.filter.exclusion";
@@ -35,7 +37,7 @@ public class MylarUiPrefContstants {
 
 	public static final String GAMMA_SETTING_LIGHTENED = "org.eclipse.mylar.ui.gamma.lightened";
 
-	public static final String GLOBAL_FILTERING = "org.eclipse.mylar.ui.interest.filter.global";
+//	public static final String GLOBAL_FILTERING = "org.eclipse.mylar.ui.interest.filter.global";
 
 	public static final String INTERSECTION_MODE = "org.eclipse.mylar.ui.interest.intersection";
 

@@ -79,7 +79,7 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 	public void editorClosed(IEditorPart editorPart) {
 		if (PlatformUI.getWorkbench().isClosing() || editorPart instanceof IContextIgnoringEditor) {
 			return;
-		} else if (MylarUiPlugin.getPrefs().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)
+		} else if (MylarUiPlugin.getDefault().getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)
 			&& !Workbench.getInstance().getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN)) {
 			IMylarElement element = null;
 			IMylarUiBridge uiBridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(editorPart);

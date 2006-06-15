@@ -58,7 +58,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 		assertNotNull(page);
 		view = PackageExplorerPart.openInActivePerspective();
 		assertNotNull(view);
-		assertTrue(MylarUiPlugin.getPrefs().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS));
+		assertTrue(MylarUiPlugin.getDefault().getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS));
 	}
 
 	@Override

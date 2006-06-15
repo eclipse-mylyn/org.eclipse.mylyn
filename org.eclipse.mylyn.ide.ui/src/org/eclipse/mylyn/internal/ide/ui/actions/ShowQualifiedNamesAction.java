@@ -34,17 +34,17 @@ public class ShowQualifiedNamesAction extends Action {
 		setText(LABEL);
 		setToolTipText(LABEL);
 		setImageDescriptor(MylarImages.QUALIFY_NAMES);
-		update(MylarUiPlugin.getPrefs().getBoolean(ID));
+		update(MylarUiPlugin.getDefault().getPreferenceStore().getBoolean(ID));
 	}
 
 	public void update(boolean on) {
 		view.setQualifiedNameMode(on);
 		setChecked(on);
-		MylarUiPlugin.getPrefs().setValue(ID, on);
+		MylarUiPlugin.getDefault().getPreferenceStore().setValue(ID, on);
 	}
 
 	@Override
 	public void run() {
-		update(!MylarUiPlugin.getPrefs().getBoolean(ID));
+		update(!MylarUiPlugin.getDefault().getPreferenceStore().getBoolean(ID));
 	}
 }
