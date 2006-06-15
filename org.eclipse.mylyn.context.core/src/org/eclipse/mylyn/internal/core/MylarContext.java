@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.mylar.provisional.core.IMylarContext;
 import org.eclipse.mylar.provisional.core.IMylarElement;
@@ -125,11 +126,14 @@ public class MylarContext implements IMylarContext {
 
 	public List<IMylarElement> getInteresting() {
 		List<IMylarElement> elements = new ArrayList<IMylarElement>();
-
-		for (String key : new ArrayList<String>(elementMap.keySet())) {
-			MylarContextElement info = elementMap.get(key);
-			if (info.getInterest().isInteresting()) {
-				elements.add(info);
+	
+		Set<String> keys = Collections.synchronizedSet(elementMap.keySet());
+		synchronized (keys) {
+			for (String key : keys) {
+				MylarContextElement info = elementMap.get(key);
+				if (info.getInterest().isInteresting()) {
+					elements.add(info);
+				}
 			}
 		}
 		return elements;

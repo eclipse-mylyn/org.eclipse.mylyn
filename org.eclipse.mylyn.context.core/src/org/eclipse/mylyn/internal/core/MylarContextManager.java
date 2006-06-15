@@ -39,6 +39,8 @@ import org.eclipse.mylar.provisional.core.MylarPlugin;
 /**
  * This is the core class resposible for context management.
  * 
+ * TODO: fix synchronization instead of using ArrayList copies
+ * 
  * @author Mik Kersten
  */
 public class MylarContextManager {
