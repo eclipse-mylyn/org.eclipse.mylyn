@@ -32,7 +32,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
-import org.eclipse.ui.texteditor.AbstractTextEditor;
 
 /**
  * @author Mik Kersten
@@ -78,15 +77,10 @@ public class ResourceUiBridge implements IMylarUiBridge {
 			if (page != null) {
 				IEditorReference[] references = page.getEditorReferences();
 				for (int i = 0; i < references.length; i++) {
-					IEditorPart part = references[i].getEditor(false);
-					if (part != null) {
-						if (part instanceof AbstractTextEditor) {
-							AbstractTextEditor editor = (AbstractTextEditor) part;
-							Object adapter = editor.getEditorInput().getAdapter(IResource.class);
-							if (adapter instanceof IFile && ((IFile) adapter).equals(object)) {
-								editor.close(true);
-							}
-						}
+					IEditorPart editorPart = references[i].getEditor(false);
+					Object adapter = editorPart.getEditorInput().getAdapter(IResource.class);
+					if (adapter instanceof IFile && ((IFile) adapter).equals(object)) {
+						page.closeEditor(references[i].getEditor(false), true);
 					}
 				}
 			}

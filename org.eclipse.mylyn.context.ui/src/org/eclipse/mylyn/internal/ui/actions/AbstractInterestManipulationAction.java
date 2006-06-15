@@ -39,8 +39,10 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 
 	protected IViewPart view;
 
+	protected IWorkbenchWindow window;
+
 	public void init(IWorkbenchWindow window) {
-		// don't have anything to initialize
+		this.window = window;
 	}
 
 	public void init(IViewPart view) {
@@ -75,26 +77,39 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 					node = MylarPlugin.getContextManager().getElement(handle);
 				}
 				if (node != null) {
-					boolean manipulated = MylarPlugin.getContextManager().manipulateInterestForElement(node, increment, false, SOURCE_ID);
+					if (!isIncrement()) {
+						try {
+							// NOTE: need to set the selection null so the
+							// automatic reselection does not induce interest
+							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart()
+									.getSite().getSelectionProvider().setSelection(null);
+						} catch (Exception e) {
+							// ignore
+						}
+					}
+					boolean manipulated = MylarPlugin.getContextManager().manipulateInterestForElement(node, increment,
+							false, SOURCE_ID);
 					if (!manipulated) {
 						UiUtil.displayInterestManipulationFailure();
 					}
 				} else {
-					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), 
+					MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
 							MylarTaskListPlugin.TITLE_DIALOG, MESSAGE_NO_CONTEXT);
 				}
 			}
 		} else {
 			IMylarElement node = MylarPlugin.getContextManager().getActiveElement();
 			if (node != null) {
-				boolean manipulated = MylarPlugin.getContextManager().manipulateInterestForElement(node, increment, false, SOURCE_ID);
+				boolean manipulated = MylarPlugin.getContextManager().manipulateInterestForElement(node, increment,
+						false, SOURCE_ID);
 				if (!manipulated) {
 					UiUtil.displayInterestManipulationFailure();
 				}
 			} else {
-				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), 
-						MylarTaskListPlugin.TITLE_DIALOG, MESSAGE_NO_CONTEXT);
-//				MylarStatusHandler.log("no active element for interest manipulation", this);
+				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), MylarTaskListPlugin.TITLE_DIALOG,
+						MESSAGE_NO_CONTEXT);
+				// MylarStatusHandler.log("no active element for interest
+				// manipulation", this);
 			}
 		}
 	}

@@ -139,7 +139,8 @@ public class MylarEditorManager implements IMylarContextListener {
 				if (!element.getInterest().isInteresting()) {
 					IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
 					if (bridge.isDocument(element.getHandleIdentifier())) {
-						MylarUiPlugin.getDefault().getUiBridge(element.getContentType()).close(element);
+						IMylarUiBridge uiBridge = MylarUiPlugin.getDefault().getUiBridge(element.getContentType());
+						uiBridge.close(element);
 					}
 				}
 			}

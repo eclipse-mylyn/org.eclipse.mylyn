@@ -37,7 +37,7 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		"Configures Mylar preferences to the recommended defaults. To alter these\n"
       + "re-invoke this wizard via the File -> New menu.";
 
-	private static final String AUTO_FOLDING = "Turn interest-based automatic Java editor folding on";
+	private static final String AUTO_FOLDING = "Turn automatic Java editor folding on";
 
 	private static final String AUTO_CLOSE = "Automatically manage open editors to match task context";
 
@@ -218,7 +218,7 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		Hyperlink hyperlink = new Hyperlink(containerComposite, SWT.NULL);
 		hyperlink.setUnderlined(true);
 		hyperlink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK);
-		hyperlink.setText("If this is your first time using Mylar please watch the short getting started video");
+		hyperlink.setText("If this is your first time using Mylar please watch the short Getting Started video");
 		hyperlink.addHyperlinkListener(new IHyperlinkListener() {
 
 			public void linkActivated(HyperlinkEvent e) {

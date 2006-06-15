@@ -211,9 +211,6 @@
    <extension point="org.eclipse.ui.perspectiveExtensions">
           <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
 			<viewShortcut id="org.eclipse.mylar.ui.views.active.hierarchy"/>
-               <view id="org.eclipse.mylar.ui.views.active.hierarchy"
-                    relative="org.eclipse.ui.views.ContentOutline"
-                    relationship="stack"/>
                 <!--
                <viewShortcut id="org.eclipse.mylar.ui.views.active.search"/>
                -->
