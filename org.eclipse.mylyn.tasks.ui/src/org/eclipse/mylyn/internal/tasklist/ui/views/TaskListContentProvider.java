@@ -39,20 +39,6 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 
 	private final TaskListView view;
 
-//	private static class ContentTaskFilter extends AbstractTaskListFilter {
-//		@Override
-//		public boolean select(Object element) {
-//			return true;
-//		}
-//
-//		@Override
-//		public boolean shouldAlwaysShow(ITask task) {
-//			return super.shouldAlwaysShow(task);
-//		}
-//	};
-
-//	private ContentTaskFilter contentTaskFilter = new ContentTaskFilter();
-
 	public TaskListContentProvider(TaskListView view) {
 		this.view = view;
 	}
