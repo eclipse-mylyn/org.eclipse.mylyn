@@ -39,7 +39,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
  */
 public class BugzillaHyperLinkDetector extends AbstractHyperlinkDetector {
 
-	TaskRepository repository;
+	private TaskRepository repository;
 	
 	public BugzillaHyperLinkDetector(TaskRepository repository) {
 		this.repository = repository;
