@@ -13,25 +13,26 @@ package org.eclipse.mylar.internal.bugzilla.ui.editor;
 import java.io.UnsupportedEncodingException;
 import java.net.Proxy;
 
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
+import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasklist.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylar.internal.tasklist.ui.editors.RepositoryTaskSelection;
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskRepository;
+import org.eclipse.mylar.provisional.tasklist.TaskCategory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -51,11 +52,13 @@ import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * An editor used to view a locally created bug that does not yet exist on a
- * server. It uses a <code>NewBugModel</code> object to store the data.
+ * server.
+ * 
+ * @author Rob Elves (modifications)
  */
 public class NewBugEditor extends AbstractRepositoryTaskEditor {
 
-	protected NewBugzillaReport bug;
+	protected RepositoryTaskData taskData;
 
 	protected Text descriptionText;
 
@@ -63,23 +66,29 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 
 	protected String newDescription = "";
 
-	/**
-	 * Creates a new <code>NewBugEditor</code>.
-	 */
-	public NewBugEditor(TaskRepository repository) {
-		super.repository = repository;
+	private String submittedBugId = null;
+
+	@Override
+	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
+		if (!(input instanceof NewBugEditorInput))
+			throw new PartInitException("Invalid Input: Must be NewBugEditorInput");
+		NewBugEditorInput ei = (NewBugEditorInput) input;
+		setSite(site);
+		setInput(input);
+		editorInput = ei;
+		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(editorInput.getRepositoryTaskData());
+		taskData = ei.getRepositoryTaskData();
+		newSummary = taskData.getSummary();
+		newDescription = taskData.getDescription();
+		repository = editorInput.getRepository();
+		isDirty = false;
+		updateEditorTitle();
 	}
 
 	@Override
 	public RepositoryTaskData getRepositoryTaskData() {
-		return bug;
+		return taskData;
 	}
-
-//	@Override
-//	protected void addKeywordsList(FormToolkit toolkit, String keywords, Composite attributesComposite) {
-//		// Since NewBugModels have no keywords, there is no
-//		// GUI for them.
-//	}
 
 	@Override
 	protected void createDescriptionLayout(Composite composite) {
@@ -90,58 +99,33 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		section.setLayout(new GridLayout());
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		// section.addExpansionListener(new IExpansionListener() {
-		// public void expansionStateChanging(ExpansionEvent e) {
-		// form.reflow(true);
-		// }
-		//
-		// public void expansionStateChanged(ExpansionEvent e) {
-		// form.reflow(true);
-		//			}
-		//		});
-		
-		
-		
-		// Description Area
-		Composite descriptionComposite = toolkit.createComposite(composite);
+		Composite descriptionComposite = toolkit.createComposite(section);
 		GridLayout descriptionLayout = new GridLayout();
 		descriptionLayout.numColumns = 4;
 		descriptionComposite.setLayout(descriptionLayout);
-//		descriptionComposite.setBackground(background);
+		// descriptionComposite.setBackground(background);
 		GridData descriptionData = new GridData(GridData.FILL_BOTH);
 		descriptionData.horizontalSpan = 1;
 		descriptionData.grabExcessVerticalSpace = false;
 		descriptionComposite.setLayoutData(descriptionData);
 		// End Description Area
 		section.setClient(descriptionComposite);
-		
-		Composite descriptionTitleComposite = toolkit.createComposite(descriptionComposite, SWT.NONE);
-		GridLayout descriptionTitleLayout = new GridLayout();
-		descriptionTitleLayout.horizontalSpacing = 0;
-		descriptionTitleLayout.marginWidth = 0;
-		descriptionTitleComposite.setLayout(descriptionTitleLayout);
-//		descriptionTitleComposite.setBackground(background);
-		GridData descriptionTitleData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		descriptionTitleData.horizontalSpan = 4;
-		descriptionTitleData.grabExcessVerticalSpace = false;
-		descriptionTitleComposite.setLayoutData(descriptionTitleData);
-		newLayout(descriptionTitleComposite, 4, "Description:", HEADER).addListener(SWT.FocusIn,
-				new DescriptionListener());
 
 		descriptionText = new Text(descriptionComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
-		//descriptionText.setFont(COMMENT_FONT);
+		// descriptionText.setFont(COMMENT_FONT);
 		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
-		Font descriptionFont = themeManager.getCurrentTheme().getFontRegistry().get(AbstractRepositoryTaskEditor.REPOSITORY_TEXT_ID);
+		Font descriptionFont = themeManager.getCurrentTheme().getFontRegistry().get(
+				AbstractRepositoryTaskEditor.REPOSITORY_TEXT_ID);
 		descriptionText.setFont(descriptionFont);
 		GridData descriptionTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		descriptionTextData.horizontalSpan = 4;
 		descriptionTextData.widthHint = DESCRIPTION_WIDTH;
 		descriptionTextData.heightHint = DESCRIPTION_HEIGHT;
 		descriptionText.setLayoutData(descriptionTextData);
-		descriptionText.setText(bug.getDescription());
-		descriptionText.addListener(SWT.KeyUp, new Listener() {
-			public void handleEvent(Event event) {
-				String sel = descriptionText.getText() + event.character;
+		descriptionText.setText(taskData.getDescription());
+		descriptionText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				String sel = descriptionText.getText();
 				if (!(newDescription.equals(sel))) {
 					newDescription = sel;
 					changeDirtyStatus(true);
@@ -156,7 +140,33 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	@Override
-	protected void createCommentLayout(FormToolkit toolkit, final ScrolledForm form) {
+	protected void createReportHeaderLayout(Composite comp) {
+		addSummaryText(comp);
+	}
+
+	// @Override
+	// protected void createReportHeaderLayout(Composite comp) {
+	// FormToolkit toolkit = new FormToolkit(comp.getDisplay());
+	// Composite headerComposite = toolkit.createComposite(editorComposite);
+	// headerComposite.setLayout(new GridLayout(2, false));
+	// GridDataFactory.fillDefaults().grab(true,
+	// false).applyTo(headerComposite);
+	// toolkit.createLabel(headerComposite, "Posting To:").setFont(TITLE_FONT);
+	// Text target = toolkit.createText(headerComposite, repository.getUrl(),
+	// SWT.FLAT);
+	// target.setFont(TITLE_FONT);
+	// target.setEditable(false);
+	// addSummaryText(headerComposite);
+	// toolkit.paintBordersFor(headerComposite);
+	// }
+
+	@Override
+	protected void createAttachmentLayout(Composite comp) {
+		// currently can't attach while creating new bug
+	}
+
+	@Override
+	protected void createCommentLayout(Composite comp, final ScrolledForm form) {
 		// Since NewBugModels have no comments, there is no
 		// GUI for them.
 	}
@@ -168,8 +178,19 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	@Override
+	public void createCustomAttributeLayout() {
+		// ignore
+
+	}
+
+	@Override
+	protected void createCustomAttributeLayout(Composite composite) {
+		// ignore
+	}
+
+	@Override
 	protected String getTitleString() {
-		return bug.getLabel();
+		return taskData.getLabel();
 	}
 
 	@Override
@@ -179,88 +200,72 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		boolean wrap = IBugzillaConstants.BugzillaServerVersion.SERVER_218.equals(repository.getVersion());
 		BugzillaReportSubmitForm bugzillaReportSubmitForm;
 		try {
-			bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeNewBugPost(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, repository.getCharacterEncoding(), bug, wrap);
+			bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeNewBugPost(repository.getUrl(), repository
+					.getUserName(), repository.getPassword(), proxySettings, repository.getCharacterEncoding(),
+					taskData, wrap);
+			submittedBugId = bugzillaReportSubmitForm.submitReportToRepository();
+			if (submittedBugId != null) {
+				close();			
+				int bugId = -1;				
+				bugId = Integer.parseInt(submittedBugId);				
+				BugzillaTask newTask = new BugzillaTask(AbstractRepositoryTask.getHandle(repository.getUrl(), bugId),
+						"<bugzilla info>", true);
+				Object selectedObject = null;
+				if (TaskListView.getFromActivePerspective() != null)
+					selectedObject = ((IStructuredSelection) TaskListView.getFromActivePerspective().getViewer()
+							.getSelection()).getFirstElement();
+
+				if (selectedObject instanceof TaskCategory) {
+					MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask,
+							((TaskCategory) selectedObject));
+				} else {
+					MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask,
+							MylarTaskListPlugin.getTaskListManager().getTaskList().getRootCategory());
+				}
+
+				TaskUiUtil.refreshAndOpenTaskListElement(newTask);
+				MylarTaskListPlugin.getSynchronizationManager().synchNow(0);
+				return;
+			}
+
 		} catch (UnsupportedEncodingException e) {
 			// should never get here but just in case...
-			MessageDialog.openError(null, "Posting Error", "Ensure proper encoding selected in "+TaskRepositoriesView.NAME+".");
-			return;
+			MessageDialog.openError(null, "Posting Error", "Ensure proper encoding selected in "
+					+ TaskRepositoriesView.NAME + ".");
+		} catch (Exception e) {
+			// TODO: Handle errors more appropriately (perhaps CoreException)
+			MessageDialog.openError(null, "Posting Error", "Ensure proper configuration in "
+					+ TaskRepositoriesView.NAME + ".");
 		}
-		final BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) MylarTaskListPlugin
-				.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
-
-		IJobChangeListener closeEditorListener = new IJobChangeListener() {
-
-			public void done(IJobChangeEvent event) {
-				if (event.getJob().getResult().equals(Status.OK_STATUS)) {
-					close();
-				} else {
-					submitButton.setEnabled(true);
-					NewBugEditor.this.showBusy(false);
-				}
-			}
-
-			public void aboutToRun(IJobChangeEvent event) {
-				// ignore
-			}
-
-			public void awake(IJobChangeEvent event) {
-				// ignore
-			}
-
-			public void running(IJobChangeEvent event) {
-				// ignore
-			}
-
-			public void scheduled(IJobChangeEvent event) {
-				// ignore
-			}
-
-			public void sleeping(IJobChangeEvent event) {
-				// ignore
-			}
-		};
-		bugzillaRepositoryClient.submitBugReport(bug, bugzillaReportSubmitForm, closeEditorListener);
+		submitButton.setEnabled(true);
+		NewBugEditor.this.showBusy(false);
+		// final BugzillaRepositoryConnector bugzillaRepositoryClient =
+		// (BugzillaRepositoryConnector) MylarTaskListPlugin
+		// .getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
+		//
+		// IJobChangeListener closeEditorListener = new JobChangeAdapter() {
+		// public void done(IJobChangeEvent event) {
+		// if (event.getJob().getResult().equals(Status.OK_STATUS)) {
+		// close();
+		// if(submittedBugId != null) {
+		// TaskUiUtil.openRepositoryTask(repository.getUrl(), submittedBugId,
+		// AbstractRepositoryTask.getHandle(repository.getUrl(),
+		// submittedBugId));
+		// }
+		// } else {
+		// submitButton.setEnabled(true);
+		// NewBugEditor.this.showBusy(false);
+		// }
+		// }
+		// };
+		// submittedBugId = bugzillaRepositoryClient.submitBugReport(taskData,
+		// bugzillaReportSubmitForm, closeEditorListener);
 	}
 
 	@Override
 	protected void updateBug() {
-		// go through all of the attributes and update the main values to the
-		// new ones
-//		for (Iterator<AbstractRepositoryTaskAttribute> it = bug.getAttributes().iterator(); it.hasNext();) {
-//			AbstractRepositoryTaskAttribute a = it.next();
-//			a.setValue(a.getNewValue());
-//		}
-
-		// Update some other fields as well.
-		bug.setSummary(newSummary);
-		bug.setDescription(newDescription);
-	}
-
-//	@Override
-//	protected void restoreBug() {
-		// go through all of the attributes and restore the new values to the
-		// main ones
-//		for (Iterator<AbstractRepositoryTaskAttribute> it = bug.getAttributes().iterator(); it.hasNext();) {
-//			AbstractRepositoryTaskAttribute a = it.next();
-//			a.setNewValue(a.getValue());
-//		}
-//	}
-
-	@Override
-	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		if (!(input instanceof NewBugEditorInput))
-			throw new PartInitException("Invalid Input: Must be NewBugEditorInput");
-		NewBugEditorInput ei = (NewBugEditorInput) input;
-		setSite(site);
-		setInput(input);
-		editorInput = ei;
-		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(editorInput.getRepositoryTaskData());
-		bug = ei.getRepositoryTaskData();
-		newSummary = bug.getSummary();
-		newDescription = bug.getDescription();
-		//restoreBug();
-		isDirty = false;
-		updateEditorTitle();
+		taskData.setSummary(newSummary);
+		taskData.setDescription(newDescription);
 	}
 
 	/**
@@ -269,8 +274,8 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 	protected class DescriptionListener implements Listener {
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
-					new RepositoryTaskSelection(bug.getId(), bug.getRepositoryUrl(), "New Description", false, bug
-							.getSummary()))));
+					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(), "New Description",
+							false, taskData.getSummary()))));
 		}
 	}
 
@@ -283,84 +288,20 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		}
 	}
 
-//	@Override
-//	protected void addCCList(FormToolkit toolkit, String value, Composite attributesComposite) {
-//		// do nothing here right now
-//	}
-
-	@Override
-	public void createCustomAttributeLayout() {
-		// ignore
-		
-	}
-
 	@Override
 	protected void validateInput() {
 		// ignore
-		
+	}
+
+	
+	
+	@Override
+	public boolean isDirty() {
+		return true;
 	}
 
 	@Override
-	protected void createCustomAttributeLayout(Composite composite) {
-		// ignore
+	public boolean isSaveAsAllowed() {
+		return false;
 	}
 }
-
-//final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-//protected void execute(final IProgressMonitor monitor) throws CoreException {
-//	PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-//		public void run() {
-//			// update the bug on the server
-//			try {
-//
-//				bugzillaRepositoryClient.submitBugReport(bug, bugReportPostHandler);
-//
-//				// If the bug was successfully sent...
-//				if (NewBugEditor.this != null && !NewBugEditor.this.isDisposed()) {
-//					changeDirtyStatus(false);
-//					close();
-//					// BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage()
-//					// .closeEditor(NewBugEditor.this, false);
-//				}
-//			} catch (BugzillaException e) {
-//				MessageDialog.openError(null, "I/O Error", "Bugzilla could not post your bug.");
-//				BugzillaPlugin.log(e);
-//			} catch (PossibleBugzillaFailureException e) {
-//				WebBrowserDialog.openAcceptAgreement(null, "Possible Bugzilla Client Failure",
-//						"Bugzilla may not have posted your bug.\n" + e.getMessage(), bugReportPostHandler
-//								.getError());
-//				BugzillaPlugin.log(e);
-//			} catch (LoginException e) {
-//				e.printStackTrace();
-//				// if we had an error with logging in, display an
-//				// error
-//				MessageDialog.openError(null, "Posting Error",
-//						"Bugzilla could not post your bug since your login name or password is incorrect."
-//								+ "\nPlease check your settings in the bugzilla preferences. ");
-//			}
-//		}
-//	});
-//}
-//};
-//Job job = new Job("Submitting New Bug") {
-//
-//@Override
-//protected IStatus run(IProgressMonitor monitor) {
-//	try {
-//		op.run(monitor);
-//	} catch (Exception e) {
-//		MylarStatusHandler.log(e, "Failed to submit bug");
-//		return new Status(Status.ERROR, "org.eclipse.mylar.internal.bugzilla.ui", Status.ERROR,
-//				"Failed to submit bug", e);
-//	}
-//
-//	BugzillaRepositoryClient client = (BugzillaRepositoryClient) MylarTaskListPlugin.getRepositoryManager()
-//			.getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
-//	if (client != null) {
-//		client.synchronize();
-//	}
-//	return Status.OK_STATUS;
-//}
-//
-//};
-//job.schedule();

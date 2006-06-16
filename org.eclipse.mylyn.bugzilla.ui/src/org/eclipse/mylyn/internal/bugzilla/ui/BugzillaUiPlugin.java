@@ -23,9 +23,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfiguration;
-import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfigurationFactory;
 import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaResultEditorMatchAdapter;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
@@ -227,7 +227,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 			throw new OperationCanceledException();
 		
 		// TODO: pass monitor along since it is this call that does the work and can hang due to network IO
-		RepositoryConfiguration config = RepositoryConfigurationFactory.getInstance().getConfiguration(repository.getUrl(), MylarTaskListPlugin.getDefault().getProxySettings(), repository.getUserName(), repository.getPassword(), repository.getCharacterEncoding());
+		RepositoryConfiguration config = BugzillaPlugin.getRepositoryConfiguration(true, repository.getUrl(), MylarTaskListPlugin.getDefault().getProxySettings(), repository.getUserName(), repository.getPassword(), repository.getCharacterEncoding());
 
 		if(monitor.isCanceled())
 			throw new OperationCanceledException();

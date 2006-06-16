@@ -291,11 +291,11 @@ public abstract class AbstractBugzillaWizardPage extends WizardPage implements L
 		AbstractBugzillaReportWizard wizard = (AbstractBugzillaReportWizard) getWizard();
 		if (summaryText.getText() == null || summaryText.getText().equals("") || descriptionText.getText() == null
 				|| descriptionText.getText().equals("")) {
-			wizard.attributeCompleted = false;
+			wizard.completed = false;
 			return false;
 		}
 		// saveDataToModel();
-		wizard.attributeCompleted = true;
+		wizard.completed = true;
 		return true;
 	}
 

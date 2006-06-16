@@ -23,14 +23,21 @@ import org.eclipse.ui.IPersistableElement;
 /**
  * Abstract base implementation of an <code>IEditorInput</code> for a subclass
  * of <code>AbstractRepositoryTaskEditor</code>.
+ * @author Rob Elves (modifications)
  */
 public abstract class AbstractBugEditorInput implements IEditorInput {
 
 	protected String toolTipText = "";
 
 	protected Proxy proxySettings;
+
+	protected TaskRepository repository;
+
+	protected RepositoryTaskData repositoryTaskData;
 	
-	protected AbstractBugEditorInput() {
+	protected AbstractBugEditorInput(TaskRepository repository, RepositoryTaskData taskData) {
+		this.repositoryTaskData = taskData;		
+		this.repository = repository;
 		this.proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
 	}
 	
@@ -49,7 +56,9 @@ public abstract class AbstractBugEditorInput implements IEditorInput {
 		return true;
 	}
 
-	public abstract RepositoryTaskData getRepositoryTaskData();
+	public RepositoryTaskData getRepositoryTaskData() {
+		return repositoryTaskData;
+	}
 
 	public ImageDescriptor getImageDescriptor() {
 		return null;
@@ -78,6 +87,7 @@ public abstract class AbstractBugEditorInput implements IEditorInput {
 		return proxySettings;
 	}
 
-
-	public abstract TaskRepository getRepository();
+	public TaskRepository getRepository() {
+		return repository;
+	}
 }

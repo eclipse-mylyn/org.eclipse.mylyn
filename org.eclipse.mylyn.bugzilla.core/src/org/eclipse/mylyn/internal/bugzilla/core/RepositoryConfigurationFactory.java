@@ -54,47 +54,22 @@ public class RepositoryConfigurationFactory extends AbstractReportFactory {
 		URL url = new URL(configUrlStr);
 		SaxConfigurationContentHandler contentHandler = new SaxConfigurationContentHandler();
 		collectResults(url, proxySettings, encoding, contentHandler);
-		return contentHandler.getConfiguration();
-
+		RepositoryConfiguration config = contentHandler.getConfiguration();
+		if(config != null) {
+			config.setRepositoryUrl(repositoryUrl);
+		}
+		return config;
 	}
-
-	// public RepositoryConfiguration getConfiguration(String server) throws
-	// IOException {
-	// URL serverURL = new URL(server + CONFIG_RDF_URL);
-	// BugzillaRepositoryUtil.addCredentials(repository, serverURL)
-	// URLConnection c = serverURL.openConnection();
-	// BufferedReader in = new BufferedReader(new
-	// InputStreamReader(c.getInputStream()));
-	//
-	// SaxConfigurationContentHandler contentHandler = new
-	// SaxConfigurationContentHandler();
-	//
-	// try {
-	// StringBuffer result = XmlCleaner.clean(in);
-	// StringReader strReader = new StringReader(result.toString());
-	// XMLReader reader = XMLReaderFactory.createXMLReader();
-	// reader.setErrorHandler(new SaxErrorHandler());
-	// reader.setContentHandler(contentHandler);
-	// reader.parse(new InputSource(strReader));
-	// } catch (SAXException e) {
-	// throw new IOException("Unable to read server configuration.");
-	// }
-	// return contentHandler.getConfiguration();
-	//
-	// }
 
 	class SaxErrorHandler implements ErrorHandler {
 
 		public void error(SAXParseException exception) throws SAXException {
 			throw exception;
-			// MylarStatusHandler.fail(exception, "ServerConfigurationFactory: "
-			// + exception.getLocalizedMessage(), false);
 		}
 
 		public void fatalError(SAXParseException exception) throws SAXException {
 			throw exception;
-			// MylarStatusHandler.fail(exception, "ServerConfigurationFactory: "
-			// + exception.getLocalizedMessage(), false);
+
 		}
 
 		public void warning(SAXParseException exception) throws SAXException {

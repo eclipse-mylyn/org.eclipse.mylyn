@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.core;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
@@ -45,6 +49,8 @@ public class BugzillaPlugin extends Plugin {
 
 	/** Singleton instance of the plug-in */
 	private static BugzillaPlugin plugin;
+	
+	private static boolean cacheFileRead = false;
 
 	// /** The file that contains all of the bugzilla favorites */
 	// private FavoritesFile favoritesFile;
@@ -69,144 +75,113 @@ public class BugzillaPlugin extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-
 		// readFavoritesFile();
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		if (!repositoryConfigurations.isEmpty()) {
+			writeRepositoryConfigFile();
+		}
 		plugin = null;
 		super.stop(context);
 	}
 
-	// /**
-	// * Get the favorites file contatining the favorites
-	// *
-	// * @return The FavoritesFile
-	// */
-	// public FavoritesFile getFavorites() {
-	// return favoritesFile;
-	// }
+	/**
+	 * for testing purposes
+	 */
+	public static RepositoryConfiguration getRepositoryConfiguration(String repositoryUrl) {
+		return repositoryConfigurations.get(repositoryUrl);
+	}
 
-	// /**
-	// * // * Get the name of the bugzilla server // * // *
-	// *
-	// * @return A string containing the prefered name of the bugzilla server //
-	// */
-	// // public String getServerName() {
-	// // return
-	// //
-	// plugin.getPreferenceStore().getString(IBugzillaConstants.BUGZILLA_SERVER);
-	// // }
-	// public boolean isServerCompatability218() {
-	// return
-	// IBugzillaConstants.SERVER_218.equals(getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION))
-	// || IBugzillaConstants.SERVER_220.equals(getPreferenceStore().getString(
-	// IBugzillaConstants.SERVER_VERSION));
-	// }
-	//
-	// public boolean isServerCompatability220() {
-	// return
-	// IBugzillaConstants.SERVER_220.equals(getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION));
-	// }
-
-	public static RepositoryConfiguration getRepositoryConfiguration(String repositoryUrl, Proxy proxySettings, String userName, String password, String encoding) throws IOException, KeyManagementException, LoginException, NoSuchAlgorithmException {
-		if (!repositoryConfigurations.containsKey(repositoryUrl)) {
-			repositoryConfigurations.put(repositoryUrl, RepositoryConfigurationFactory.getInstance()
-					.getConfiguration(repositoryUrl, proxySettings, userName, password, encoding));
+	/**
+	 * Retrieves the latest repository configuration from the server 
+	 */
+	public static RepositoryConfiguration getRepositoryConfiguration(boolean forceRefresh, String repositoryUrl, Proxy proxySettings,
+			String userName, String password, String encoding) throws IOException, KeyManagementException,
+			LoginException, NoSuchAlgorithmException {	
+		if(!cacheFileRead) {
+			readRepositoryConfigurationFile();
+			cacheFileRead = true;
+		}
+		if(repositoryConfigurations.get(repositoryUrl) == null || forceRefresh) {
+			addRepositoryConfiguration(RepositoryConfigurationFactory.getInstance().getConfiguration(repositoryUrl,
+				proxySettings, userName, password, encoding));
 		}
 		return repositoryConfigurations.get(repositoryUrl);
 	}
 
-	// public RepositoryConfiguration getProductConfiguration(String serverUrl)
-	// {
-	// if (!repositoryConfigurations.containsKey(serverUrl)) {
-	// try {
-	// repositoryConfigurations.put(serverUrl,
-	// RepositoryConfigurationFactory.getInstance().getConfiguration(
-	// serverUrl));
-	// } catch (IOException e) {
-	// MessageDialog.openInformation(null, "Retrieval of Bugzilla
-	// Configuration",
-	// "Bugzilla configuration retrieval failed.");
-	// }
-	// }
-	//
-	// return repositoryConfigurations.get(serverUrl);
-	// }
-
-	// protected void setProductConfiguration(String serverUrl,
-	// RepositoryConfiguration repositoryConfiguration) {
-	// repositoryConfigurations.put(serverUrl, repositoryConfiguration);
-	// // this.productConfiguration = productConfiguration;
-	//	}
-
-	// private void readFavoritesFile() {
-	// IPath favoritesPath = getFavoritesFile();
-	//
-	// try {
-	// favoritesFile = new FavoritesFile(favoritesPath.toFile());
-	// } catch (Exception e) {
-	// logAndShowExceptionDetailsDialog(e, "occurred while restoring saved
-	// Bugzilla favorites.",
-	// "Bugzilla Favorites Error");
-	// }
-	// }
-
-	// /**
-	// * Returns the path to the file cacheing the query favorites.
-	// */
-	// private IPath getFavoritesFile() {
-	// IPath stateLocation =
-	// Platform.getStateLocation(BugzillaPlugin.getDefault().getBundle());
-	// IPath configFile = stateLocation.append("favorites");
-	// return configFile;
-	// }
-
-	// /**
-	// * Reads cached product configuration and stores it in the
-	// * <code>productConfiguration</code> field.
-	// *
-	// * TODO remove this?
-	// */
-	// private void readCachedProductConfiguration(String serverUrl) {
-	// IPath configFile = getProductConfigurationCachePath(serverUrl);
-	//
-	// try {
-	// productConfigurations.put(serverUrl,
-	// ServerConfigurationFactory.getInstance().readConfiguration(
-	// configFile.toFile()));
-	// } catch (IOException ex) {
-	// try {
-	// log(ex);
-	// productConfigurations.put(serverUrl,
-	// ServerConfigurationFactory.getInstance().getConfiguration(
-	// serverUrl));
-	// } catch (IOException e) {
-	// log(e);
-	// MessageDialog
-	// .openInformation(
-	// null,
-	// "Bugzilla product attributes check",
-	// "An error occurred while restoring saved Bugzilla product attributes:
-	// \n\n"
-	// + ex.getMessage()
-	// + "\n\nUpdating them from the server also caused an error:\n\n"
-	// + e.getMessage()
-	// + "\n\nCheck the server URL in Bugzila preferences.\n"
-	// + "Offline submission of new bugs will be disabled until valid product
-	// attributes have been loaded.");
-	// }
-	// }
-	// }
+	/** public for testing */
+	public static void addRepositoryConfiguration(RepositoryConfiguration config) {
+		repositoryConfigurations.remove(config.getRepositoryUrl());
+		repositoryConfigurations.put(config.getRepositoryUrl(), config);
+	}
 
 	/**
 	 * Returns the path to the file cacheing the product configuration.
 	 */
-	protected IPath getProductConfigurationCachePath(String serverUrl) {
+	private static IPath getProductConfigurationCachePath() {
 		IPath stateLocation = Platform.getStateLocation(BugzillaPlugin.getDefault().getBundle());
-		IPath configFile = stateLocation.append("productConfig." + serverUrl.replace('/', '-'));
+		IPath configFile = stateLocation.append("repositoryConfigurations");
 		return configFile;
+	}
+
+	/** public for testing */
+	public void removeConfiguration(RepositoryConfiguration config) {
+		repositoryConfigurations.remove(config.getRepositoryUrl());
+	}
+
+	/** public for testing */
+	public static void readRepositoryConfigurationFile() {
+		IPath configFile = getProductConfigurationCachePath();
+		if(!configFile.toFile().exists()) return;
+		ObjectInputStream in = null;
+		try {
+			in = new ObjectInputStream(new FileInputStream(configFile.toFile()));
+			int size = in.readInt();
+			for (int nX = 0; nX < size; nX++) {
+				RepositoryConfiguration item = (RepositoryConfiguration) in.readObject();
+				if (item != null) {
+					repositoryConfigurations.put(item.getRepositoryUrl(), item);
+				}
+			}
+		} catch (Exception e) {
+			log(e);
+		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					// ignore
+				}
+			}
+		}
+	}
+
+	/** public for testing */
+	public static void writeRepositoryConfigFile() {
+		IPath configFile = getProductConfigurationCachePath();
+		ObjectOutputStream out = null;
+		try {
+			out = new ObjectOutputStream(new FileOutputStream(configFile.toFile()));
+			out.writeInt(repositoryConfigurations.size());
+			for (String key : repositoryConfigurations.keySet()) {
+				RepositoryConfiguration item = repositoryConfigurations.get(key);
+				if (item != null) {
+					out.writeObject(item);
+				}
+			}
+		} catch (IOException e) {
+			log(e);			
+		} finally {
+			if (out != null) {
+				try {
+					out.close();
+				} catch (IOException e) {
+					// ignore
+				}
+			}
+		}
 	}
 
 	/**
@@ -257,6 +232,82 @@ public class BugzillaPlugin extends Plugin {
 		URLConnection connection = url.openConnection(proxy);
 		return connection;
 	}
+
+	// /**
+	// * Get the favorites file contatining the favorites
+	// *
+	// * @return The FavoritesFile
+	// */
+	// public FavoritesFile getFavorites() {
+	// return favoritesFile;
+	// }
+
+	// /**
+	// * // * Get the name of the bugzilla server // * // *
+	// *
+	// * @return A string containing the prefered name of the bugzilla server //
+	// */
+	// // public String getServerName() {
+	// // return
+	// //
+	// plugin.getPreferenceStore().getString(IBugzillaConstants.BUGZILLA_SERVER);
+	// // }
+	// public boolean isServerCompatability218() {
+	// return
+	// IBugzillaConstants.SERVER_218.equals(getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION))
+	// || IBugzillaConstants.SERVER_220.equals(getPreferenceStore().getString(
+	// IBugzillaConstants.SERVER_VERSION));
+	// }
+	//
+	// public boolean isServerCompatability220() {
+	// return
+	// IBugzillaConstants.SERVER_220.equals(getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION));
+	// }
+
+	// public RepositoryConfiguration getProductConfiguration(String serverUrl)
+	// {
+	// if (!repositoryConfigurations.containsKey(serverUrl)) {
+	// try {
+	// repositoryConfigurations.put(serverUrl,
+	// RepositoryConfigurationFactory.getInstance().getConfiguration(
+	// serverUrl));
+	// } catch (IOException e) {
+	// MessageDialog.openInformation(null, "Retrieval of Bugzilla
+	// Configuration",
+	// "Bugzilla configuration retrieval failed.");
+	// }
+	// }
+	//
+	// return repositoryConfigurations.get(serverUrl);
+	// }
+
+	// protected void setProductConfiguration(String serverUrl,
+	// RepositoryConfiguration repositoryConfiguration) {
+	// repositoryConfigurations.put(serverUrl, repositoryConfiguration);
+	// // this.productConfiguration = productConfiguration;
+	// }
+
+	// private void readFavoritesFile() {
+	// IPath favoritesPath = getFavoritesFile();
+	//
+	// try {
+	// favoritesFile = new FavoritesFile(favoritesPath.toFile());
+	// } catch (Exception e) {
+	// logAndShowExceptionDetailsDialog(e, "occurred while restoring saved
+	// Bugzilla favorites.",
+	// "Bugzilla Favorites Error");
+	// }
+	// }
+
+	// /**
+	// * Returns the path to the file cacheing the query favorites.
+	// */
+	// private IPath getFavoritesFile() {
+	// IPath stateLocation =
+	// Platform.getStateLocation(BugzillaPlugin.getDefault().getBundle());
+	// IPath configFile = stateLocation.append("favorites");
+	// return configFile;
+	// }
 
 	// public IStatus logAndShowExceptionDetailsDialog(Exception e, String
 	// message, String title) {

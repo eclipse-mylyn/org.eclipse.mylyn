@@ -35,6 +35,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
+import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaCompareInput;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
@@ -42,6 +43,7 @@ import org.eclipse.mylar.internal.tasklist.Comment;
 import org.eclipse.mylar.internal.tasklist.RepositoryOperation;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
+import org.eclipse.mylar.internal.tasklist.ui.editors.AbstractBugEditorInput;
 import org.eclipse.mylar.internal.tasklist.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasklist.ui.editors.ExistingBugEditorInput;
 import org.eclipse.mylar.internal.tasklist.ui.editors.RepositoryTaskOutlineNode;
@@ -136,7 +138,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		if (!(input instanceof ExistingBugEditorInput))
 			throw new PartInitException("Invalid Input: Must be ExistingBugEditorInput");
-		editorInput = (ExistingBugEditorInput) input;
+		editorInput = (AbstractBugEditorInput) input;
 		taskData = editorInput.getRepositoryTaskData();
 		repository = editorInput.getRepository();
 		connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
@@ -362,10 +364,17 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		ExistingBugEditor.this.showBusy(true);
 		BugzillaReportSubmitForm bugzillaReportSubmitForm;
 
-		try {
-			bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeExistingBugPost(taskData, repository.getUrl(),
-					repository.getUserName(), repository.getPassword(), editorInput.getProxySettings(), removeCC,
-					repository.getCharacterEncoding());
+		try {	
+			if (taskData.isLocallyCreated()) {
+				boolean wrap = IBugzillaConstants.BugzillaServerVersion.SERVER_218.equals(repository.getVersion());
+				bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeNewBugPost(repository.getUrl(), repository
+						.getUserName(), repository.getPassword(), editorInput.getProxySettings(), repository
+						.getCharacterEncoding(), taskData, wrap);
+			} else {
+				bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeExistingBugPost(taskData, repository.getUrl(),
+						repository.getUserName(), repository.getPassword(), editorInput.getProxySettings(), removeCC,
+						repository.getCharacterEncoding());
+			}
 		} catch (UnsupportedEncodingException e) {
 			// should never get here but just in case...
 			MessageDialog.openError(null, "Posting Error", "Ensure proper encoding selected in "
@@ -474,7 +483,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 
 		java.util.List<String> validKeywords = new ArrayList<String>();
 		try {
-			validKeywords = BugzillaPlugin.getRepositoryConfiguration(repository.getUrl(),
+			validKeywords = BugzillaPlugin.getRepositoryConfiguration(false, repository.getUrl(),
 					MylarTaskListPlugin.getDefault().getProxySettings(), repository.getUserName(),
 					repository.getPassword(), repository.getCharacterEncoding()).getKeywords();
 		} catch (Exception e) {

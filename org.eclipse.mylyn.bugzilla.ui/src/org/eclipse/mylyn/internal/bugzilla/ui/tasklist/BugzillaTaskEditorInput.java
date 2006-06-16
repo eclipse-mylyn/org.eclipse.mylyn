@@ -37,7 +37,7 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 	//private boolean offline;
 
 	public BugzillaTaskEditorInput(TaskRepository repository, BugzillaTask bugTask, boolean offline) throws IOException, GeneralSecurityException {
-		super(repository, AbstractRepositoryTask.getTaskIdAsInt(bugTask.getHandleIdentifier()));
+		super(repository, bugTask.getTaskData(), AbstractRepositoryTask.getTaskIdAsInt(bugTask.getHandleIdentifier()));
 		this.bugTask = bugTask;
 //		offlineBug = bugTask.getTaskData();
 		bugId = AbstractRepositoryTask.getTaskIdAsInt(bugTask.getHandleIdentifier());

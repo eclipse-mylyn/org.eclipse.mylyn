@@ -125,4 +125,30 @@ public class BugzillaConfigurationTest extends TestCase {
 		// assertEquals(10, config.getComponents("Hyades").size());
 		// assertEquals(1, config.getTargetMilestones("TestProduct").size());
 	}
+	
+	public void testRepositoryConfigurationCachePersistance() throws Exception {
+		RepositoryConfiguration configuration1 = new RepositoryConfiguration();
+		configuration1.setRepositoryUrl("url1");
+		configuration1.addProduct("Test Product 1");
+		assertEquals(1, configuration1.getProducts().size());
+
+		RepositoryConfiguration configuration2 = new RepositoryConfiguration();
+		configuration1.setRepositoryUrl("url2");
+		configuration2.addProduct("Test Product 2");
+		assertEquals(1, configuration2.getProducts().size());
+		
+		BugzillaPlugin.addRepositoryConfiguration(configuration1);
+		BugzillaPlugin.addRepositoryConfiguration(configuration2);
+		BugzillaPlugin.writeRepositoryConfigFile();
+		BugzillaPlugin.getDefault().removeConfiguration(configuration1);
+		BugzillaPlugin.getDefault().removeConfiguration(configuration2);
+		assertNull(BugzillaPlugin.getRepositoryConfiguration(configuration1.getRepositoryUrl()));
+		assertNull(BugzillaPlugin.getRepositoryConfiguration(configuration2.getRepositoryUrl()));
+		BugzillaPlugin.readRepositoryConfigurationFile();
+		assertNotNull(BugzillaPlugin.getRepositoryConfiguration(configuration1.getRepositoryUrl()));
+		assertNotNull(BugzillaPlugin.getRepositoryConfiguration(configuration2.getRepositoryUrl()));
+		RepositoryConfiguration testLoadedConfig = BugzillaPlugin.getRepositoryConfiguration(configuration1.getRepositoryUrl());
+		assertEquals(1, testLoadedConfig.getProducts().size());
+		assertEquals(configuration1.getProducts().get(0), testLoadedConfig.getProducts().get(0));
+	}
 }

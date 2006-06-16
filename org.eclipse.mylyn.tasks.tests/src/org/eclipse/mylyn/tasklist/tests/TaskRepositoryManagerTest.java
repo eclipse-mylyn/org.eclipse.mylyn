@@ -103,8 +103,8 @@ public class TaskRepositoryManagerTest extends TestCase {
 		repositoryList.add(repository2);
 		repositoryList.add(repository1);
 		manager.readRepositories();
-		// NOTE: we have a mock connector, hence 4
-		if (manager.getRepositoryConnectors().size() == 4) {
+		// NOTE: different conditions for running with and without the JIRA Connector
+		if (manager.getRepositoryConnectors().size() > 1) {
 			assertTrue(manager.getAllRepositories().contains(repository1));
 			assertTrue(manager.getAllRepositories().contains(repository2));
 			// assertEquals(repositoryList, manager.getAllRepositories());

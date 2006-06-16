@@ -448,25 +448,41 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 		toolkit = new FormToolkit(parent.getDisplay());
 		form = toolkit.createScrolledForm(parent);
-		// String truncatedSummary = getBug().getSummary();
-		// int maxLength = 50;
-		// if (truncatedSummary.length() > maxLength) {
-		// truncatedSummary = truncatedSummary.substring(0, maxLength) + "...";
-		// }
-		// form.setFont(COMMENT_FONT);
 
 		editorComposite = form.getBody();
 		editorComposite.setLayout(new GridLayout());
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		// Header information
+		createContextMenu();
+		createReportHeaderLayout(editorComposite);
+		Composite attribComp = createAttributeLayout(editorComposite);
+		createCustomAttributeLayout(attribComp);
+		createDescriptionLayout(editorComposite);
+		createAttachmentLayout(editorComposite);
+		createCommentLayout(editorComposite, form);
+		createButtonLayouts(editorComposite);
 
-		Composite summaryComposite = toolkit.createComposite(editorComposite);
-		summaryComposite.setLayout(new GridLayout(2, false));
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryComposite);
-		addSummaryText(summaryComposite);
-		toolkit.paintBordersFor(summaryComposite);
-		Composite headerInfoComposite = toolkit.createComposite(editorComposite);
+		// WorkbenchHelpSystem.getInstance().setHelp(parent,
+
+		editorComposite.setMenu(contextMenuManager.createContextMenu(editorComposite));
+		form.reflow(true);
+		getSite().getPage().addSelectionListener(selectionListener);
+		getSite().setSelectionProvider(selectionProvider);
+	}
+
+	/**
+	 * By default puts task number, date opened and date modified in header
+	 */
+	protected void createReportHeaderLayout(Composite composite) {
+		
+		// Summary Field
+//		Composite summaryComposite = toolkit.createComposite(editorComposite);
+//		summaryComposite.setLayout(new GridLayout(2, false));
+//		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryComposite);
+		addSummaryText(composite);
+		
+		
+		Composite headerInfoComposite = toolkit.createComposite(composite);
 		headerInfoComposite.setLayout(new GridLayout(6, false));
 		toolkit.createLabel(headerInfoComposite, "Task# ").setFont(TITLE_FONT);
 		toolkit.createText(headerInfoComposite, "" + getRepositoryTaskData().getId(), SWT.FLAT | SWT.READ_ONLY);
@@ -479,69 +495,22 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		toolkit.createText(headerInfoComposite, openedDateString, SWT.FLAT | SWT.READ_ONLY);
 
 		toolkit.createLabel(headerInfoComposite, " Modified: ").setFont(TITLE_FONT);
-		String lastModifiedDateString = "";		
+		String lastModifiedDateString = "";
 		if (getRepositoryTaskData().getLastModified(repository.getTimeZoneId()) != null) {
-			lastModifiedDateString = simpleDateFormat.format(getRepositoryTaskData().getLastModified(repository.getTimeZoneId()));
+			lastModifiedDateString = simpleDateFormat.format(getRepositoryTaskData().getLastModified(
+					repository.getTimeZoneId()));
 		}
 		toolkit.createText(headerInfoComposite, lastModifiedDateString, SWT.FLAT | SWT.READ_ONLY);
-
-		// openedText.setFont(TITLE_FONT);
-		// display = parent.getDisplay();
-		// background = JFaceColors.getBannerBackground(display);
-		// foreground = JFaceColors.getBannerForeground(display);
-
-		// createInfoArea(editorComposite);
-		createContextMenu();
-		Composite attribComp = createAttributeLayout();
-		createCustomAttributeLayout(attribComp);
-		createDescriptionLayout(form.getBody());
-		createAttachmentLayout();
-		createCommentLayout(toolkit, form);
-		createButtonLayouts(toolkit, form.getBody());
-
-		// WorkbenchHelpSystem.getInstance().setHelp(parent,
-
-		editorComposite.setMenu(contextMenuManager.createContextMenu(editorComposite));
-		form.reflow(true);
-		getSite().getPage().addSelectionListener(selectionListener);
-		getSite().setSelectionProvider(selectionProvider);
-	}
-
-	public abstract void createCustomAttributeLayout();
-
-	/**
-	 * Create a context menu for this editor.
-	 */
-	protected void createContextMenu() {
-		contextMenuManager = new MenuManager(CONTEXT_MENU_ID);
-		contextMenuManager.setRemoveAllWhenShown(true);
-		contextMenuManager.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				manager.add(cutAction);
-				manager.add(copyAction);
-				manager.add(pasteAction);
-				// manager.add(revealAllAction);
-				manager.add(new Separator());
-				manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-				if (currentSelectedText == null || currentSelectedText.getSelectionText().length() == 0) {
-
-					copyAction.setEnabled(false);
-				} else {
-					copyAction.setEnabled(true);
-				}
-			}
-		});
-		getSite().registerContextMenu(CONTEXT_MENU_ID, contextMenuManager, getSite().getSelectionProvider());
 	}
 
 	/**
 	 * Creates the attribute layout, which contains most of the basic attributes
 	 * of the bug (some of which are editable).
 	 */
-	protected Composite createAttributeLayout() {
+	protected Composite createAttributeLayout(Composite composite) {
 
 		String title = getTitleString();
-		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText(LABEL_SECTION_ATTRIBUTES);
 		section.setExpanded(true);
 		section.setLayout(new GridLayout());
@@ -666,6 +635,33 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		return attributesComposite;
 	}
 
+	public abstract void createCustomAttributeLayout();
+
+	/**
+	 * Create a context menu for this editor.
+	 */
+	protected void createContextMenu() {
+		contextMenuManager = new MenuManager(CONTEXT_MENU_ID);
+		contextMenuManager.setRemoveAllWhenShown(true);
+		contextMenuManager.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager manager) {
+				manager.add(cutAction);
+				manager.add(copyAction);
+				manager.add(pasteAction);
+				// manager.add(revealAllAction);
+				manager.add(new Separator());
+				manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+				if (currentSelectedText == null || currentSelectedText.getSelectionText().length() == 0) {
+
+					copyAction.setEnabled(false);
+				} else {
+					copyAction.setEnabled(true);
+				}
+			}
+		});
+		getSite().registerContextMenu(CONTEXT_MENU_ID, contextMenuManager, getSite().getSelectionProvider());
+	}
+
 	/**
 	 * Adds a text field to display and edit the bug's summary.
 	 * 
@@ -673,9 +669,13 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	 *            The composite to add the text field to.
 	 */
 	protected void addSummaryText(Composite attributesComposite) {
-		// newLayout(attributesComposite, 1, "Summary:", PROPERTY);
-		toolkit.createLabel(attributesComposite, "Summary:").setFont(TITLE_FONT);
-		summaryText = toolkit.createText(attributesComposite, getRepositoryTaskData().getSummary(), SWT.FLAT);
+
+		Composite summaryComposite = toolkit.createComposite(attributesComposite);
+		summaryComposite.setLayout(new GridLayout(2, false));
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryComposite);
+		
+		toolkit.createLabel(summaryComposite, "Summary:").setFont(TITLE_FONT);
+		summaryText = toolkit.createText(summaryComposite, getRepositoryTaskData().getSummary(), SWT.FLAT);
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		Font summaryFont = themeManager.getCurrentTheme().getFontRegistry().get(REPOSITORY_TEXT_ID);
 		summaryText.setFont(summaryFont);
@@ -686,10 +686,11 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		summaryText.setLayoutData(summaryTextData);
 		summaryText.addListener(SWT.KeyUp, new SummaryListener());
 		summaryText.addListener(SWT.FocusIn, new GenericListener());
+		toolkit.paintBordersFor(summaryComposite);
 	}
 
-	protected void createAttachmentLayout() {
-		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+	protected void createAttachmentLayout(Composite composite) {
+		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText(LABEL_SECTION_ATTACHMENTS);
 		section.setExpanded(getRepositoryTaskData().getAttachments().size() > 0);
 		section.setLayout(new GridLayout());
@@ -890,9 +891,8 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		}
 	}
 
-	protected void createCommentLayout(FormToolkit toolkit, final ScrolledForm form) {
-
-		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+	protected void createCommentLayout(Composite composite, final ScrolledForm form) {
+		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText(LABEL_SECTION_COMMENTS);
 		section.setExpanded(true);
 		section.setLayout(new GridLayout());
@@ -933,9 +933,8 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		// ExistingBugEditorInput input =
 		// (ExistingBugEditorInput)this.getEditorInput();
 		// lastSynced = input.getRepositoryTask().getLastSynchronized();
-		//		}
-		
-		
+		// }
+
 		StyledText styledText = null;
 		for (Iterator<Comment> it = getRepositoryTaskData().getComments().iterator(); it.hasNext();) {
 			final Comment comment = it.next();
@@ -947,7 +946,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 			ExpandableComposite expandableComposite = toolkit.createExpandableComposite(addCommentsComposite,
 					ExpandableComposite.TREE_NODE);
 
-			//if (comment.getCreated().after(lastSynced)) {
+			// if (comment.getCreated().after(lastSynced)) {
 			if (!it.hasNext()) {
 				expandableComposite.setExpanded(true);
 			}
@@ -1024,7 +1023,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 			textsindex++;
 		}
 
-		Section sectionAdditionalComments = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR
+		Section sectionAdditionalComments = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR
 				| Section.TWISTIE);
 		sectionAdditionalComments.setText(LABEL_SECTION_NEW_COMMENT);
 		sectionAdditionalComments.setExpanded(true);
@@ -1131,9 +1130,8 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	 * Creates the button layout. This displays options and buttons at the
 	 * bottom of the editor to allow actions to be performed on the bug.
 	 */
-	protected void createButtonLayouts(FormToolkit toolkit, Composite formComposite) {
-
-		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+	protected void createButtonLayouts(Composite formComposite) {
+		Section section = toolkit.createSection(formComposite, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText(LABEL_SECTION_ACTIONS);
 		section.setExpanded(true);
 		section.setLayout(new GridLayout());
@@ -1433,9 +1431,8 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 						repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
 					}
 					MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
-				}
+				}				
 			}
-
 			repositoryClient.saveOffline(getRepositoryTaskData());
 			changeDirtyStatus(false);
 			if (parentEditor != null) {

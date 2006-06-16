@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.internal.bugzilla.core;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,10 +24,14 @@ import java.util.Map;
  * 
  * @author Rob Elves
  */
-public class RepositoryConfiguration {
+public class RepositoryConfiguration implements Serializable {
+
+	private static final long serialVersionUID = -3623617786905114255L;
 
 	private static final String VERSION_UNKNOWN = "unknown";
 
+	private String repositoryUrl = "<unknown>";
+	
 	private Map<String, ProductEntry> products = new HashMap<String, ProductEntry>();
 
 	private List<String> platforms = new ArrayList<String>();
@@ -57,8 +62,9 @@ public class RepositoryConfiguration {
 
 	public RepositoryConfiguration() {
 		super();
+		// ignore
 	}
-
+	
 	public void addStatus(String status) {
 		bugStatus.add(status);
 	}
@@ -269,7 +275,9 @@ public class RepositoryConfiguration {
 	/**
 	 * Container for product information: name, components.
 	 */
-	private static class ProductEntry {
+	private static class ProductEntry implements Serializable {
+
+		private static final long serialVersionUID = 4120139521246741120L;
 
 		String productName;
 
@@ -332,6 +340,14 @@ public class RepositoryConfiguration {
 		return versions;
 	}
 
+	public String getRepositoryUrl() {
+		return repositoryUrl;
+	}
+
+	public void setRepositoryUrl(String repositoryUrl) {
+		this.repositoryUrl = repositoryUrl;
+	}
+	
 	/*
 	 * Intermediate step until configuration is made generic.
 	 */
@@ -366,5 +382,7 @@ public class RepositoryConfiguration {
 			return new ArrayList<String>();
 		}
 	}
+
+	
 
 }

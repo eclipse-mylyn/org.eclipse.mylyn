@@ -131,7 +131,7 @@ public class BugzillaReportSubmitForm {
 	}
 
 	public static BugzillaReportSubmitForm makeNewBugPost(String repositoryUrl, String userName, String password,
-			Proxy proxySettings, String characterEncoding, NewBugzillaReport model, boolean wrapDescription)
+			Proxy proxySettings, String characterEncoding, RepositoryTaskData model, boolean wrapDescription)
 			throws UnsupportedEncodingException {
 
 		BugzillaReportSubmitForm form;
@@ -324,6 +324,7 @@ public class BugzillaReportSubmitForm {
 			postConnection.setRequestProperty(REQUEST_PROPERTY_CONTENT_TYPE, contentTypeString);
 			// get the url for the update with all of the changed values
 
+			//System.err.println(">>> "+getPostBody());
 			byte[] body = getPostBody().getBytes();
 			postConnection.setRequestProperty(REQUEST_PROPERTY_CONTENT_LENGTH, String.valueOf(body.length));
 
@@ -348,11 +349,11 @@ public class BugzillaReportSubmitForm {
 
 			String aString = in.readLine();
 
-			// Used to debug reponse from bugzilla server
+			 //Used to debug reponse from bugzilla server
 			// while (aString != null) {
 			// System.err.println(aString);
 			// aString = in.readLine();
-			// }
+			//			 }
 
 			boolean possibleFailure = true;
 			error = "";

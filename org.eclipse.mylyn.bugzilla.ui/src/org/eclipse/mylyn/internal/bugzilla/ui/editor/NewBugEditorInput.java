@@ -11,49 +11,32 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
-import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.ui.editors.AbstractBugEditorInput;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
 /**
  * The <code>IEditorInput</code> implementation for <code>NewBugEditor</code>.
+ * @author Rob Elves (modifications)
  */
 public class NewBugEditorInput extends AbstractBugEditorInput {
 
-	protected NewBugzillaReport bug;
 
-	/**
-	 * Creates a new <code>NewBugEditorInput</code>.
-	 * 
-	 * @param bug
-	 *            The bug for this editor input.
-	 */
-	public NewBugEditorInput(NewBugzillaReport bug) {
-		this.bug = bug;
+	public NewBugEditorInput(TaskRepository repository, RepositoryTaskData taskData) {
+		super(repository, taskData);		
 	}
 
 	public String getName() {
-		return bug.getLabel();
-	}
-
-	@Override
-	public NewBugzillaReport getRepositoryTaskData() {
-		return bug;
+		return "NEW ["+repository.getUrl()+"]";
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof NewBugEditorInput) {
 			NewBugEditorInput input = (NewBugEditorInput) o;
-			return input.getRepositoryTaskData().equals(bug);
+			return input.getRepositoryTaskData().equals(this.getRepositoryTaskData());
 		}
 		return false;
-	}
-
-	@Override
-	public TaskRepository getRepository() {
-		// ignore
-		return null;
 	}
 
 }

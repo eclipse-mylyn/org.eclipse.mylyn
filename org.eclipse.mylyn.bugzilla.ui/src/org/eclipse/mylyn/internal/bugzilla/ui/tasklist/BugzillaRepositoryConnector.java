@@ -208,11 +208,14 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
-	public void submitBugReport(final RepositoryTaskData bugReport, final BugzillaReportSubmitForm form,
+	/**
+	 * @return bugid if bugReport was a new report created locally null if existing report
+	 */
+	public String submitBugReport(final RepositoryTaskData bugReport, final BugzillaReportSubmitForm form,
 			IJobChangeListener listener) {
 
 		if (forceSyncExecForTesting) {
-			internalSubmitBugReport(bugReport, form);
+			return internalSubmitBugReport(bugReport, form);
 		} else {
 			// TODO: get rid of this idiom?
 			final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
@@ -258,12 +261,14 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			};
 			job.addJobChangeListener(listener);
 			job.schedule();
+			return null;
 		}
 	}
 
-	private void internalSubmitBugReport(RepositoryTaskData bugReport, BugzillaReportSubmitForm form) {
+	private String internalSubmitBugReport(RepositoryTaskData bugReport, BugzillaReportSubmitForm form) {
+		String resultId = null;
 		try {
-			form.submitReportToRepository();
+			resultId = form.submitReportToRepository();
 			removeOfflineTaskData(bugReport);
 			String handle = AbstractRepositoryTask.getHandle(bugReport.getRepositoryUrl(), bugReport.getId());
 
@@ -281,6 +286,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+		return resultId;
 	}
 
 	@Override
