@@ -52,12 +52,16 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 			String newUrl = abstractRepositorySettingsPage.getServerUrl();
 			MylarTaskListPlugin.getTaskListManager().refactorRepositoryUrl(oldUrl, newUrl);
 			MylarTaskListPlugin.getRepositoryManager().removeRepository(oldRepository);
-			TaskRepository repository = new TaskRepository(abstractRepositorySettingsPage.getRepository().getKind(),
-					newUrl, abstractRepositorySettingsPage.getVersion(),
-					abstractRepositorySettingsPage.getCharacterEncoding(), abstractRepositorySettingsPage
-							.getTimeZoneId());
-			repository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(),
-					abstractRepositorySettingsPage.getPassword());
+			
+//			TaskRepository repository = new TaskRepository(abstractRepositorySettingsPage.getRepository().getKind(),
+//					newUrl, abstractRepositorySettingsPage.getVersion(),
+//					abstractRepositorySettingsPage.getCharacterEncoding(), abstractRepositorySettingsPage
+//							.getTimeZoneId());
+//			repository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(),
+//					abstractRepositorySettingsPage.getPassword());
+
+			TaskRepository repository = abstractRepositorySettingsPage.createTaskRepository();
+			
 			MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
 			return true;
 		}
