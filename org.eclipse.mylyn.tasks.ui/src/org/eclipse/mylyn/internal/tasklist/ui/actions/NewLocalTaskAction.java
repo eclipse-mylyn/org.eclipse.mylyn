@@ -25,8 +25,6 @@ import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.Task;
 import org.eclipse.mylar.provisional.tasklist.TaskCategory;
-import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -48,45 +46,10 @@ public class NewLocalTaskAction extends Action {
 		setImageDescriptor(TaskListImages.TASK_NEW);
 	}
 
-	/**
-	 * Returns the default URL text for the task by first checking the contents
-	 * of the clipboard and then using the default prefix preference if that
-	 * fails
-	 */
-	protected String getDefaultIssueURL() {
-
-		String clipboardText = getClipboardText();
-		if ((clipboardText.startsWith("http://") || clipboardText.startsWith("https://") && clipboardText.length() > 10)) {
-			return clipboardText;
-		} else {
-			return "";
-		}
-//		String defaultPrefix = MylarPlugin.getDefault().getPreferenceStore().getString(
-//				TaskListPreferenceConstants.DEFAULT_URL_PREFIX);
-//		if (!defaultPrefix.equals("")) {
-//			return defaultPrefix;
-//		}
-	}	
-	
-	/**
-	 * Returns the contents of the clipboard or "" if no text content was
-	 * available
-	 */
-	protected String getClipboardText() {
-		Clipboard clipboard = new Clipboard(Display.getDefault());
-		TextTransfer transfer = TextTransfer.getInstance();
-		String contents = (String) clipboard.getContents(transfer);
-		if (contents != null) {
-			return contents;
-		} else {
-			return "";
-		}
-	}
-	
 	@Override
 	public void run() {
 		Task newTask = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), DESCRIPTION_DEFAULT, true);
-		newTask.setUrl(getDefaultIssueURL());
+//		newTask.setUrl(getDefaultIssueURL());
 		
 		Calendar reminderCalendar = GregorianCalendar.getInstance();
 		MylarTaskListPlugin.getTaskListManager().setScheduledToday(reminderCalendar);
