@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasklist.ui.editors;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,6 +44,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.Comment;
 import org.eclipse.mylar.internal.tasklist.LocalAttachment;
@@ -51,6 +53,7 @@ import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasklist.ui.wizards.NewAttachmentWizard;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -59,8 +62,6 @@ import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryT
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -74,7 +75,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
@@ -216,10 +216,6 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 	// protected Text assignedTo;
 
-	protected Text attachmentDesc;
-
-	protected Text attachmentComment;
-
 	protected Button submitButton;
 
 	protected Table attachmentsTable;
@@ -270,34 +266,6 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	// protected Hyperlink linkToBug;
 
 	// protected StyledText generalTitleText;
-
-	// private static List<String> contentTypes;
-
-	private static Map<String, String> extensions2Types;
-
-	static {
-		/* For possible UI */
-		// contentTypes = new LinkedList<String>();
-		// contentTypes.add("text/plain");
-		// contentTypes.add("text/html");
-		// contentTypes.add("application/xml");
-		// contentTypes.add("image/gif");
-		// contentTypes.add("image/jpeg");
-		// contentTypes.add("image/png");
-		// contentTypes.add("application/octet-stream");
-		extensions2Types = new HashMap<String, String>();
-		extensions2Types.put("txt", "text/plain");
-		extensions2Types.put("html", "text/html");
-		extensions2Types.put("htm", "text/html");
-		extensions2Types.put("jpg", "image/jpeg");
-		extensions2Types.put("jpeg", "image/jpeg");
-		extensions2Types.put("gif", "image/gif");
-		extensions2Types.put("png", "image/png");
-		extensions2Types.put("xml", "application/xml");
-		extensions2Types.put("zip", "application/octet-stream");
-		extensions2Types.put("tar", "application/octet-stream");
-		extensions2Types.put("gz", "application/octet-stream");
-	}
 
 	private List<IRepositoryTaskAttributeListener> attributesListeners = new ArrayList<IRepositoryTaskAttributeListener>();
 
@@ -356,6 +324,8 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 			}
 		}
 	};
+
+	private TableViewer attachmentsTableViewer;
 
 	private class ComboSelectionListener extends SelectionAdapter {
 
@@ -445,7 +415,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	 * @return The task data this editor is displaying.
 	 */
 	public abstract RepositoryTaskData getRepositoryTaskData();
-
+	
 	public String getNewCommentText() {
 		return addCommentsTextBox.getText();
 	}
@@ -726,17 +696,17 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		final Composite attachmentsComposite = toolkit.createComposite(section);
-		attachmentsComposite.setLayout(new GridLayout());
+		attachmentsComposite.setLayout(new GridLayout(2, false));
 		attachmentsComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		section.setClient(attachmentsComposite);
-
+		
 		if (getRepositoryTaskData().getAttachments().size() > 0) {
 
 			attachmentsTable = toolkit.createTable(attachmentsComposite, SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION);
 			attachmentsTable.setLinesVisible(true);
 			attachmentsTable.setHeaderVisible(true);
 			attachmentsTable.setLayout(new GridLayout());
-			GridData tableGridData = new GridData(GridData.FILL_BOTH);
+			GridData tableGridData = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
 			// tableGridData.heightHint = 100;
 			tableGridData.widthHint = DESCRIPTION_WIDTH;
 			attachmentsTable.setLayoutData(tableGridData);
@@ -747,7 +717,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 				column.setWidth(attachmentsColumnWidths[i]);
 			}
 
-			TableViewer attachmentsTableViewer = new TableViewer(attachmentsTable);
+			attachmentsTableViewer = new TableViewer(attachmentsTable);
 			attachmentsTableViewer.setUseHashlookup(true);
 			attachmentsTableViewer.setColumnProperties(attachmentsColumns);
 
@@ -775,7 +745,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 				}
 
 				public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-					// ignore
+					viewer.refresh();
 				}
 			});
 
@@ -843,105 +813,32 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 			toolkit.createLabel(attachmentsComposite, "No attachments");
 		}
 
-		/* Add a file chooser to add new attachments */
-		Composite addAttachmentComposite = toolkit.createComposite(attachmentsComposite);
-		addAttachmentComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		addAttachmentComposite.setLayout(new GridLayout(2, false));
-
-		Button addAttachmentButton = toolkit.createButton(addAttachmentComposite, "Add an Attachment...", SWT.PUSH);
-		final Text fname = new Text(addAttachmentComposite, SWT.LEFT);// toolkit.createText(addAttachmentComposite,
-		// "");
-		fname.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-		final Composite addAttachmentInfo = toolkit.createComposite(addAttachmentComposite);
-		addAttachmentInfo.setSize(2, 1);
-		addAttachmentInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-		addAttachmentInfo.setLayout(new GridLayout(3, false));
-
-		toolkit.createLabel(addAttachmentInfo, "Description: ");
-		attachmentDesc = toolkit.createText(addAttachmentInfo, "");
-		attachmentDesc.setEnabled(false);
-		attachmentDesc.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-
-		toolkit.createLabel(addAttachmentInfo, "Comment: ");
-		attachmentComment = toolkit.createText(addAttachmentInfo, "");
-		attachmentComment.setEnabled(false);
-		attachmentComment.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-
-		final Button isPatchButton = toolkit.createButton(addAttachmentInfo, "Patch", SWT.CHECK);
-
-		addAttachmentInfo.setVisible(false);
-
-		/* File Chooser listener */
+		/* Launch a NewAttachemntWizard */
+		Button addAttachmentButton = toolkit.createButton(attachmentsComposite, "Add...", SWT.PUSH);
+		final Text newAttachment = new Text(attachmentsComposite, SWT.LEFT);
+		newAttachment.setEditable(false);
+		newAttachment.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
 		addAttachmentButton.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// ignore
 			}
-
 			public void widgetSelected(SelectionEvent e) {
-				FileDialog fileChooser = new FileDialog(attachmentsComposite.getShell(), SWT.OPEN);
-				String file = fileChooser.open();
-
-				// Check if the dialog was canceled or an error occured
-				if (file == null) {
-					return;
-				}
-				// update UI
-				fname.setText(file);
-			}
-		});
-
-		/*
-		 * Attachment file name listener, update the local attachment
-		 * accordingly
-		 */
-		fname.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				LocalAttachment att = getRepositoryTaskData().getNewAttachment();
-				if (att == null) {
-					att = new LocalAttachment();
-					att.setReport(getRepositoryTaskData());
-				}
-				if ("".equals(fname.getText())) {
-					attachmentDesc.setEnabled(false);
-					attachmentComment.setEnabled(false);
-				} else {
-					addAttachmentInfo.setVisible(true);
-					attachmentDesc.setEnabled(true);
-					attachmentComment.setEnabled(true);
-				}
-				att.setFilePath(fname.getText());
+				NewAttachmentWizard naw = new NewAttachmentWizard();				
+				WizardDialog dialog = new WizardDialog(form.getShell(), naw);
+				dialog.create();
+				dialog.open();
+				final LocalAttachment att = naw.getAttachment();
+				att.setReport(getRepositoryTaskData());
 				getRepositoryTaskData().setNewAttachment(att);
-
-				/* TODO jpound - UI for content type */
-				// Determine type by extension
-				int index = fname.getText().lastIndexOf(".");
-				if (index < 0) {
-					att.setContentType("text/plain");
-				} else {
-					String ext = fname.getText().substring(index + 1);
-					String type = extensions2Types.get(ext.toLowerCase());
-					if (type != null) {
-						att.setContentType(type);
-					} else {
-						att.setContentType("text/plain");
-					}
-				}
+				// TODO: Add row to table 
+//				RepositoryTaskData data = getRepositoryTaskData();
+//				data.addAttachment(new DisplayableLocalAttachment(att));
+//				attachmentsTableViewer.setInput(data);
+				newAttachment.setText((new File(att.getFilePath())).getName() + " <not yet submitted>");
+				attachmentsComposite.redraw();
 			}
 		});
-
-		/* Listener for isPatch */
-		isPatchButton.addSelectionListener(new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// ignore
-			}
-
-			public void widgetSelected(SelectionEvent e) {
-				LocalAttachment att = getRepositoryTaskData().getNewAttachment();
-				att.setPatch(isPatchButton.getSelection());
-			}
-		});
-
 	}
 
 	protected abstract void createCustomAttributeLayout(Composite composite);
@@ -2002,4 +1899,44 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	// rect.width + 2 * MARGIN);
 	// styledText.setStyleRange(style);
 	// }
+	
+//	private class DisplayableLocalAttachment extends RepositoryAttachment {
+//		private static final long serialVersionUID = 900218036143022422L;
+//		
+//		private Date date;
+//		private String description;
+//		private String creator;
+//		private String name;
+//		
+//		public String getCreator() {
+//			return creator;
+//		}
+//		public void setCreator(String creator) {
+//			this.creator = creator;
+//		}
+//		public Date getDateCreated() {
+//			return date;
+//		}
+//		public void setDateCreated(Date date) {
+//			this.date = date;
+//		}
+//		public String getDescription() {
+//			return description;
+//		}
+//		public void setDescription(String description) {
+//			this.description = description;
+//		}
+//		public String getName() {
+//			return name;
+//		}
+//		public void setName(String name) {
+//			this.name = name;
+//		}
+//		public DisplayableLocalAttachment(LocalAttachment att) {
+//			super(null);
+//			setName(att.getFilePath());
+//			setDescription(att.getDescription());
+//			setDateCreated(new Date());
+//		}
+//	}
 }

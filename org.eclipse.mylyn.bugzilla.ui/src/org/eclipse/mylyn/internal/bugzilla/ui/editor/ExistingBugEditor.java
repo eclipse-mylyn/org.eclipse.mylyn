@@ -39,7 +39,6 @@ import org.eclipse.mylar.internal.bugzilla.ui.BugzillaCompareInput;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.tasklist.Comment;
-import org.eclipse.mylar.internal.tasklist.LocalAttachment;
 import org.eclipse.mylar.internal.tasklist.RepositoryOperation;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
@@ -362,11 +361,6 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		submitButton.setEnabled(false);
 		ExistingBugEditor.this.showBusy(true);
 		BugzillaReportSubmitForm bugzillaReportSubmitForm;
-		LocalAttachment att = taskData.getNewAttachment();
-		if (att != null && !"".equals(att.getFilePath())) {
-			att.setComment(attachmentComment.getText());
-			att.setDescription(attachmentDesc.getText());
-		}
 
 		try {
 			bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeExistingBugPost(taskData, repository.getUrl(),
