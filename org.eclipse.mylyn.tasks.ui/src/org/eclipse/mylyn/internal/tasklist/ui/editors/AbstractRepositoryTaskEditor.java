@@ -1431,9 +1431,10 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 						repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
 					}
 					MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
-				}				
-			}
-			repositoryClient.saveOffline(getRepositoryTaskData());
+				}
+				// TODO: move out of if when adding support for saving new bug reports offline
+				repositoryClient.saveOffline(getRepositoryTaskData());
+			}			
 			changeDirtyStatus(false);
 			if (parentEditor != null) {
 				parentEditor.notifyTaskChanged();
