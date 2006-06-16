@@ -84,6 +84,11 @@ public abstract class AbstractRepositoryConnector {
 
 	public abstract boolean canCreateNewTask();
 
+	public String[] repositoryPropertyNames() {
+		return new String[] { TaskRepositoryManager.PROPERTY_VERSION, 
+				TaskRepositoryManager.PROPERTY_TIMEZONE, TaskRepositoryManager.PROPERTY_ENCODING };
+	}
+
 	/**
 	 * Implementors must execute query synchronously.
 	 * 

@@ -103,12 +103,13 @@ public class TaskRepositoryManagerTest extends TestCase {
 		repositoryList.add(repository2);
 		repositoryList.add(repository1);
 		manager.readRepositories();
-		// NOTE: we have a mock connector, hence 3
-		if (manager.getRepositoryConnectors().size() == 3) {
+		// NOTE: we have a mock connector, hence 4
+		if (manager.getRepositoryConnectors().size() == 4) {
 			assertTrue(manager.getAllRepositories().contains(repository1));
 			assertTrue(manager.getAllRepositories().contains(repository2));
 			// assertEquals(repositoryList, manager.getAllRepositories());
 		} else {
+			// TODO there is something wrong with this
 			assertEquals("all: " + manager.getAllRepositories(), 1, manager.getAllRepositories().size());
 		}
 	}
@@ -172,6 +173,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		assertNotNull(temp);
 		assertEquals(temp.getTimeZoneId(), fakeTimeZone);
 	}
+	
 	
 	public void testRepositorySyncTimePersistance1() throws MalformedURLException {
 		assertEquals("", MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
@@ -238,5 +240,17 @@ public class TaskRepositoryManagerTest extends TestCase {
 
 		assertEquals("testUser", repository.getUserName());
 		assertEquals("testPassword", repository.getPassword());
+	}
+	
+	public void testRepositoryWithCustomAttributes() throws Exception {
+		TaskRepository repository = new TaskRepository("http://jroller.com/page/eu", "web");
+		repository.setProperty("owner", "euxx");
+		manager.addRepository(repository);
+		
+		manager.readRepositories();
+		
+		TaskRepository temp = manager.getRepository(repository.getKind(), repository.getUrl());
+		assertNotNull(temp);
+		assertEquals("euxx", temp.getProperty("owner"));
 	}
 }

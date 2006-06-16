@@ -14,6 +14,7 @@ package org.eclipse.mylar.provisional.tasklist;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -50,17 +51,13 @@ public class TaskRepository {
       DEFAULT_URL = u; 
     }
 
-	private String serverUrl;
-
 	private String kind;
-	
-	private String version = NO_VERSION_SPECIFIED;
 
-	private String characterEncoding = DEFAULT_CHARACTER_ENCODING;
-	
-	private String timeZoneId = "";
+	private String serverUrl;
 	
 	private Date syncTime = new Date(0); 
+    
+    private Map<String, String> properties = new HashMap<String, String>();
 	
 	/**
 	 * for testing purposes
@@ -79,15 +76,21 @@ public class TaskRepository {
 	}
 	
 	public TaskRepository(String kind, String serverUrl, String version, String encoding, String timeZoneId) {
-		this.serverUrl = serverUrl;
 		this.kind = kind;
-		this.version = version;
-		this.characterEncoding = encoding;
-		this.timeZoneId = timeZoneId;
+		this.serverUrl = serverUrl;
+		this.properties.put(TaskRepositoryManager.PROPERTY_VERSION, version);
+		this.properties.put(TaskRepositoryManager.PROPERTY_ENCODING, encoding);
+		this.properties.put(TaskRepositoryManager.PROPERTY_TIMEZONE, timeZoneId);
 	}
 	
+	public TaskRepository(String kind, String serverUrl, Map<String, String> properties) {
+		this.kind = kind;
+		this.serverUrl = serverUrl;
+		this.properties.putAll(properties);
+	}
+
 	public String getUrl() {
-		return serverUrl;
+		return this.serverUrl;
 	}
 	
 	public boolean hasCredentials() {
@@ -191,41 +194,39 @@ public class TaskRepository {
 
 	
 	public String getVersion() {
-		return version;
+		return properties.get(TaskRepositoryManager.PROPERTY_VERSION);
 	}
 	
 	/**
 	 * for testing purposes
 	 */
 	void setVersion(String ver) {
-		if(ver == null) {
-			version = NO_VERSION_SPECIFIED;
-		} else {
-			version = ver;
-		}
+		properties.put(TaskRepositoryManager.PROPERTY_VERSION, ver == null ? NO_VERSION_SPECIFIED : ver);
 	}
 
 	
 	public String getCharacterEncoding() {
-		return characterEncoding;
+		final String encoding = properties.get(TaskRepositoryManager.PROPERTY_ENCODING);
+		return encoding==null || "".equals(encoding) ? DEFAULT_CHARACTER_ENCODING : encoding;
 	}
 	
 	/**
 	 * for testing purposes
 	 */
 	void setCharacterEncoding(String characterEncoding) {
-		this.characterEncoding = characterEncoding;
+		properties.put(TaskRepositoryManager.PROPERTY_ENCODING, characterEncoding);
 	}
 	
 	public String getTimeZoneId() {
-		return timeZoneId;
+		final String timeZoneId = properties.get(TaskRepositoryManager.PROPERTY_TIMEZONE);
+		return timeZoneId==null || "".equals(timeZoneId) ? TimeZone.getDefault().getID() : timeZoneId;
 	}
 	
 	/**
 	 * for testing purposes
 	 */
 	public void setTimeZoneId(String timeZoneId) {
-		this.timeZoneId = timeZoneId;
+		properties.put(TaskRepositoryManager.PROPERTY_TIMEZONE, timeZoneId);
 	}
 
 	public Date getSyncTime() {
@@ -240,6 +241,16 @@ public class TaskRepository {
 		this.syncTime = syncTime;
 	}
 
+	public Map<String, String> getProperties() {
+		return this.properties;
+	}
 
+	public String getProperty(String name) {
+		return this.properties.get(name);
+	}
+
+	public void setProperty(String name, String value) {
+		this.properties.put(name, value);
+	}
 
 }

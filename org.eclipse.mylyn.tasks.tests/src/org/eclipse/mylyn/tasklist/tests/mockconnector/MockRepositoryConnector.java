@@ -71,8 +71,7 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public String getLabel() {
-		// ignore
-		return null;
+		return "Mock Repository (for unit tests)";
 	}
 
 	@Override
