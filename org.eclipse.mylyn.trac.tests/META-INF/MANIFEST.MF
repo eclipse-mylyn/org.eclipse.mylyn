@@ -4,5 +4,6 @@ Bundle-Name: Mylar Trac Tests Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.trac.tests
 Bundle-Version: 0.0.0
 Bundle-Localization: plugin
-Require-Bundle: org.junit
+Require-Bundle: org.junit,
+ org.apache.xmlrpc
 Export-Package: org.eclipse.mylar.trac.tests
