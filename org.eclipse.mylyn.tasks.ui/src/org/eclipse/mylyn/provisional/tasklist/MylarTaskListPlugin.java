@@ -295,54 +295,57 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	 * Startup order is critical
 	 */
 	public void earlyStartup() {
-		final IWorkbench workbench = PlatformUI.getWorkbench();
-		workbench.getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				try {
+		try {
+			final IWorkbench workbench = PlatformUI.getWorkbench();
+			workbench.getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					try {
+						TaskListExtensionReader.initExtensions(taskListWriter);
+						taskRepositoryManager.readRepositories();
 
-					TaskListExtensionReader.initExtensions(taskListWriter);
-					taskRepositoryManager.readRepositories();
+						// Must be called after repositories read
+						readOfflineReportsFile();
 
-					// Must be called after repositories read
-					readOfflineReportsFile();
+						taskListManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
+						taskListManager.readExistingOrCreateNewList();
+						initialized = true;
+						migrateHandlesToRepositorySupport();
 
-					taskListManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
-					taskListManager.readExistingOrCreateNewList();
-					initialized = true;
-					migrateHandlesToRepositorySupport();
+						PlatformUI.getWorkbench().addWindowListener(WINDOW_LISTENER);
 
-					PlatformUI.getWorkbench().addWindowListener(WINDOW_LISTENER);
+						taskListNotificationManager = new TaskListNotificationManager();
+						taskListNotificationManager.addNotificationProvider(NOTIFICATION_PROVIDER);
+						taskListNotificationManager.startNotification(NOTIFICATION_DELAY);
+						getMylarCorePrefs().addPropertyChangeListener(taskListNotificationManager);
 
-					taskListNotificationManager = new TaskListNotificationManager();
-					taskListNotificationManager.addNotificationProvider(NOTIFICATION_PROVIDER);
-					taskListNotificationManager.startNotification(NOTIFICATION_DELAY);
-					getMylarCorePrefs().addPropertyChangeListener(taskListNotificationManager);
+						taskListBackupManager = new TaskListBackupManager();
+						getMylarCorePrefs().addPropertyChangeListener(taskListBackupManager);
 
-					taskListBackupManager = new TaskListBackupManager();
-					getMylarCorePrefs().addPropertyChangeListener(taskListBackupManager);
+						synchronizationManager = new TaskListSynchronizationManager(true);
+						synchronizationManager.startSynchJob();
 
-					synchronizationManager = new TaskListSynchronizationManager(true);
-					synchronizationManager.startSynchJob();
+						repositoryEditorManager = new RepositoryEditorManager();
+						taskListManager.getTaskList().addChangeListener(repositoryEditorManager);
 
-					repositoryEditorManager = new RepositoryEditorManager();
-					taskListManager.getTaskList().addChangeListener(repositoryEditorManager);
+						taskListSaveManager = new TaskListSaveManager();
+						taskListManager.getTaskList().addChangeListener(taskListSaveManager);
 
-					taskListSaveManager = new TaskListSaveManager();
-					taskListManager.getTaskList().addChangeListener(taskListSaveManager);
+						MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
+						getMylarCorePrefs().addPropertyChangeListener(synchronizationManager);
 
-					MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
-					getMylarCorePrefs().addPropertyChangeListener(synchronizationManager);
-
-					// if
-					// (getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP))
-					// {
-					// synchronizationManager.synchNow(DELAY_QUERY_REFRESH_ON_STARTUP);
-					//					}
-				} catch (Exception e) {
-					MylarStatusHandler.fail(e, "Task List initialization failed", true);
+						// if
+						// (getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP))
+						// {
+						// synchronizationManager.synchNow(DELAY_QUERY_REFRESH_ON_STARTUP);
+						// }
+					} catch (Exception e) {
+						MylarStatusHandler.fail(e, "Task List initialization failed", true);
+					}
 				}
-			}
-		});
+			});
+		} catch (Exception e) {
+			MylarStatusHandler.fail(e, "Task List initialization failed", true);
+		}
 	}
 
 	@Override
@@ -354,19 +357,17 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		INSTANCE = null;
-		// resourceBundle = null;S
 		try {
-			getMylarCorePrefs().removePropertyChangeListener(taskListNotificationManager);
-			getMylarCorePrefs().removePropertyChangeListener(taskListBackupManager);
-			taskListManager.getTaskList().removeChangeListener(repositoryEditorManager);
-			taskListManager.getTaskList().removeChangeListener(taskListSaveManager);
-			taskListManager.dispose();
-			TaskListColorsAndFonts.dispose();
-			if (MylarPlugin.getDefault() != null) {
-				MylarPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
-			}
-			if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
-				// FIXME: uncertain why isClosing() is necessary
+			if (PlatformUI.isWorkbenchRunning()) {
+				getMylarCorePrefs().removePropertyChangeListener(taskListNotificationManager);
+				getMylarCorePrefs().removePropertyChangeListener(taskListBackupManager);
+				taskListManager.getTaskList().removeChangeListener(repositoryEditorManager);
+				taskListManager.getTaskList().removeChangeListener(taskListSaveManager);
+				taskListManager.dispose();
+				TaskListColorsAndFonts.dispose();
+				if (MylarPlugin.getDefault() != null) {
+					MylarPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
+				}
 				PlatformUI.getWorkbench().removeWindowListener(WINDOW_LISTENER);
 			}
 		} catch (Exception e) {
@@ -438,12 +439,14 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		store.setDefault(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL, false);
 		store.setDefault(TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL, false);
 		store.setDefault(TaskListPreferenceConstants.REPORT_OPEN_EXTERNAL, false);
-		//store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP, false);
+		// store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP,
+		// false);
 
 		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, "" + (30 * 60 * 1000));
 
-//		store.setDefault(TaskListPreferenceConstants.BACKUP_AUTOMATICALLY, true);
+		// store.setDefault(TaskListPreferenceConstants.BACKUP_AUTOMATICALLY,
+		// true);
 		// store.setDefault(TaskListPreferenceConstants.BACKUP_FOLDER,
 		// MylarPlugin.getDefault().getDataDirectory()
 		// + DEFAULT_PATH_SEPARATOR + DEFAULT_BACKUP_FOLDER_NAME);
