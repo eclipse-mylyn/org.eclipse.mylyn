@@ -19,11 +19,11 @@
 	<p><b>Integration</b></p>
 <ul>
 	<li><a href="#performance-summary">Performance profile</a></li>
-	<li><a href="#subversion-clients">Subversion limitations</a></li>
 </ul>
 	<p><b>Working with Context</b></p>
 <ul>
 	<li><a href="#context-ui-config">Which Focused UI features can I turn off?</a></li>
+	<li><a href="#change-sets">Change Set troubleshooting</a></li>
 </ul>
 <p><b>Tasks and Repository Connectors</b></p>
 	<ul>
@@ -414,13 +414,32 @@ Mylar work with my JIRA repository?</a></h3>
 	Mylar filter is available for both the Problems and the Tasks views.&nbsp; </p>
 	<hr>
 <h3>&nbsp; </h3>
-	<h3><a name="subversion-clients">Subversion Limitations</a></h3>
-	<p>Mylar's Active Change Set integration, which allows you to work with 
-	changes per-task, support's the Eclipse SDK's CVS integration, and should 
-	work with any source repository client that extends Eclipse's Change Set 
-	support.&nbsp; As of March 2006 no Subversion clients support change sets, 
-	and as such this feature is not available for those clients.&nbsp; </p>
-	<p>&nbsp;</p>
+	<h3><a name="change-sets">Change Set troubleshooting</a></h3>
+	<p>There are two modes for Change Sets: the <i>models</i> mode (Eclipse 3.2 
+	only) and the standard mode.&nbsp; The <i>models</i> mode is toggled via <i>
+	Synchronize View -&gt; Preferences -&gt; CVS -&gt; Allow Models to participate in 
+	synchronizations</i>.&nbsp; </p>
+<p>If you are using the standard mode, Change Sets toolbar button will only 
+appear if the Synchronize view is in <i>Incoming</i> or <i>Outgoing</i> mode, 
+not in the combined <i>Incoming/Outgoing</i> mode.&nbsp; This button must be 
+pressed in order for change sets to appear.&nbsp; For working with CVS two modes 
+are indistinguishable beyond this limitation.&nbsp; Subclipse only supports the 
+standard mode.</p>
+<p>
+			<img border="0" src="images/faq/changeset-subclipse.gif"></p>
+<p>If you are using the <i>models</i> change sets, you will notice that the 
+Mylar Active Change sets work show up with a decoration in the lower-right 
+corner, and that you can view both incoming and outgoing change sets at the same 
+time.&nbsp; However, note that there is a refresh problem with this mode, so 
+until this is resolved we <b>recommend that you use the standard mode for CVS</b>.&nbsp; 
+To work around it, if a a Change 
+Set you expect is missing or if you get a <i>There are no more Incoming/Outgoing 
+changes</i> message in the view on startup toggle the third toolbar button 
+between <i>All Models</i> and <i>Change Sets</i> (see Platform/Team
+<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=142395">bug 142395</a>).&nbsp; 
+If that doesn't resolve it activate and deactivate the current task.</p>
+<p>
+			<img border="0" src="images/faq/changesets-model-based.gif"></p>
 	<hr>
 			<h3>&nbsp;</h3>
 <h3><a name="active-search-empty0">Why does nothing show up in the Active Search or Active Hierarchy?</a></h3>
