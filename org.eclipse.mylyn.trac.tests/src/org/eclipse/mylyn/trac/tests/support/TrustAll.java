@@ -18,6 +18,8 @@ import javax.net.ssl.X509TrustManager;
 
 /**
  * A trust store that accepts all certificates.
+ * 
+ * @author Steffen Pingel
  */
 public class TrustAll implements X509TrustManager {
 

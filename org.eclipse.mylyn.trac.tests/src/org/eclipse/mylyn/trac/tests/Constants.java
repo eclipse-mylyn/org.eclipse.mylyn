@@ -11,6 +11,9 @@
 
 package org.eclipse.mylar.trac.tests;
 
+/**
+ * @author Steffen Pingel
+ */
 public class Constants {
 
 	public static final String TEST_REPOSITORY1_URL = "http://trac.steffenpingel.de/mylar-test";

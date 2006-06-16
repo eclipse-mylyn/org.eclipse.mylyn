@@ -32,6 +32,8 @@ import org.eclipse.mylar.trac.tests.support.TrustAll;
 /**
  * Test cases for Trac XML-RPC Plugin API. This class does not depend on any of
  * the Mylar connector classes.
+ * 
+ * @author Steffen Pingel
  */
 public class TracXmlRpcTest extends TestCase {
 
@@ -41,7 +43,7 @@ public class TracXmlRpcTest extends TestCase {
 
 	private String username;
 
-//	private String password;
+	// private String password;
 
 	private Random random;
 
@@ -79,7 +81,7 @@ public class TracXmlRpcTest extends TestCase {
 		}
 
 		this.username = username;
-//		this.password = password;
+		// this.password = password;
 	}
 
 	protected void tearDown() throws Exception {
