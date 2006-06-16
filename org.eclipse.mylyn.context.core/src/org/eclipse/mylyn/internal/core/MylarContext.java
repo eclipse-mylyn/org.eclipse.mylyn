@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.mylar.provisional.core.IMylarContext;
 import org.eclipse.mylar.provisional.core.IMylarElement;
@@ -33,7 +33,7 @@ public class MylarContext implements IMylarContext {
 
 	private List<InteractionEvent> interactionHistory = new ArrayList<InteractionEvent>();
 
-	protected Map<String, MylarContextElement> elementMap;
+	protected ConcurrentHashMap<String, MylarContextElement> elementMap;
 
 	protected Map<String, IMylarElement> landmarkMap;
 	
@@ -50,7 +50,7 @@ public class MylarContext implements IMylarContext {
 	protected ScalingFactors scalingFactors;
 
 	void parseInteractionHistory() {
-		elementMap = new HashMap<String, MylarContextElement>();
+		elementMap = new ConcurrentHashMap<String, MylarContextElement>();
 		landmarkMap = new HashMap<String, IMylarElement>();
 		for (InteractionEvent event : interactionHistory)
 			parseInteractionEvent(event);
@@ -126,10 +126,9 @@ public class MylarContext implements IMylarContext {
 
 	public List<IMylarElement> getInteresting() {
 		List<IMylarElement> elements = new ArrayList<IMylarElement>();
-	
-		Set<String> keys = Collections.synchronizedSet(elementMap.keySet());
-		synchronized (keys) {
-			for (String key : keys) {
+		synchronized (elementMap) {
+//			Set<String> keys = Collections.synchronizedSet(elementMap.keySet());
+			for (String key : elementMap.keySet()) {
 				MylarContextElement info = elementMap.get(key);
 				if (info.getInterest().isInteresting()) {
 					elements.add(info);
