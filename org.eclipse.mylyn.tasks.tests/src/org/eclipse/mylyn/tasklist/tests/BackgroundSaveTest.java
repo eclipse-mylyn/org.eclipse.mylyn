@@ -11,6 +11,7 @@
 package org.eclipse.mylar.tasklist.tests;
 
 import java.io.File;
+import java.io.IOException;
 
 import junit.framework.TestCase;
 
@@ -47,13 +48,11 @@ public class BackgroundSaveTest extends TestCase {
 		MylarTaskListPlugin.getDefault().getTaskListSaveManager().setForceBackgroundSave(false);
 	}
 
-	public void testBackgroundSave() throws InterruptedException {
+	public void testBackgroundSave() throws InterruptedException, IOException {
 		File file = MylarTaskListPlugin.getTaskListManager().getTaskListFile();
+		long previouslyModified = file.lastModified();
 		policy.saveTaskListAndContexts();
-
-		long fistModified = file.lastModified();
-		Thread.sleep(500);
-
-		assertTrue(file.lastModified() > fistModified);
+		
+		assertTrue(file.lastModified() > previouslyModified);
 	}
 }

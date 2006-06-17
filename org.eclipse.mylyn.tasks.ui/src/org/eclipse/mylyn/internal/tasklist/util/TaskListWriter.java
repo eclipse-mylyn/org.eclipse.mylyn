@@ -153,13 +153,10 @@ public class TaskListWriter {
 	 */
 	private void writeDOMtoFile(Document doc, File file) {
 		try {
-			// A file output stream is an output stream for writing data to a
-			// File
-			//
 			OutputStream outputStream = new FileOutputStream(file);
 			writeDOMtoStream(doc, outputStream);
 			outputStream.flush();
-			outputStream.close();
+			outputStream.close(); 
 		} catch (Exception fnfe) {
 			MylarStatusHandler.log(fnfe, "TaskList could not be found");
 		}
@@ -175,19 +172,16 @@ public class TaskListWriter {
 		// Prepare the DOM document for writing
 		// DOMSource - Acts as a holder for a transformation Source tree in the
 		// form of a Document Object Model (DOM) tree
-		//
 		Source source = new DOMSource(doc);
 
 		// StreamResult - Acts as an holder for a XML transformation result
 		// Prepare the output stream
-		//
 		Result result = new StreamResult(outputStream);
 
 		// An instance of this class can be obtained with the
 		// TransformerFactory.newTransformer method. This instance may
 		// then be used to process XML from a variety of sources and write
 		// the transformation output to a variety of sinks
-		//
 
 		Transformer xformer = null;
 		try {
