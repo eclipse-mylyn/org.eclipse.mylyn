@@ -57,16 +57,17 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Shawn Minto
+ * @author Rob Elves
  * 
- * The first page of the new bug wizard where the user chooses the bug's product
+ * Product selection page of new bug wizard
  */
 public class BugzillaProductPage extends WizardPage implements Listener {
 
-	
-	//		 A Map from Java's OS and Platform to Buzilla's
+	// A Map from Java's OS and Platform to Buzilla's
 	private Map<String, String> java2buzillaOSMap = new HashMap<String, String>();
+
 	private Map<String, String> java2buzillaPlatformMap = new HashMap<String, String>();
-	
+
 	private static final String NEW_BUGZILLA_TASK_ERROR_TITLE = "New Bugzilla Task Error";
 
 	private static final String DESCRIPTION = "Pick a product on which to enter a bug.\n"
@@ -85,13 +86,13 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 
 	/** The instance of the workbench */
 	protected IWorkbench workbench;
-	
+
 	/** The list box for the list of items to choose from */
 	protected org.eclipse.swt.widgets.List listBox;
 
 	/** Status variable for the possible errors on this page */
 	protected IStatus listStatus;
-	
+
 	/**
 	 * String to hold previous product; determines if attribute option values
 	 * need to be updated
@@ -99,13 +100,11 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 	private String prevProduct;
 
 	private final TaskRepository repository;
-	
+
 	protected ProgressMonitorDialog monitorDialog = new ProgressMonitorDialog(PlatformUI.getWorkbench()
 			.getActiveWorkbenchWindow().getShell());
 
 	protected IPreferenceStore prefs = BugzillaUiPlugin.getDefault().getPreferenceStore();
-	
-	
 
 	/**
 	 * Constructor for BugzillaProductPage
@@ -125,7 +124,7 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 
 		// set the status for the page
 		listStatus = new Status(IStatus.OK, "not_used", 0, "", null);
-		
+
 		this.bugWizard = bugWiz;
 		this.repository = repository;
 		setImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.bugzilla.ui",
@@ -175,7 +174,7 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 		setControl(composite);
 		listBox.addListener(SWT.Selection, this);
 	}
-	
+
 	/**
 	 * Create a separator line in the dialog
 	 * 
@@ -190,7 +189,7 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 		gridData.horizontalSpan = ncol;
 		line.setLayoutData(gridData);
 	}
-	
+
 	public void createAdditionalControls(Composite parent) {
 		Button updateButton = new Button(parent, SWT.LEFT | SWT.PUSH);
 		updateButton.setText(LABEL_UPDATE);
@@ -204,7 +203,7 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 
 				monitorDialog.open();
 				IProgressMonitor monitor = monitorDialog.getProgressMonitor();
-				monitor.beginTask("Updating search options...", 55);
+				monitor.beginTask("Updating repository report options...", 55);
 
 				try {
 					BugzillaUiPlugin.updateQueryOptions(repository, monitor);
@@ -294,7 +293,7 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 	public void handleEvent(Event event) {
 		handleEventHelper(event, "You must select a product");
 	}
-	
+
 	/**
 	 * A helper function for "handleEvent"
 	 * 
@@ -350,64 +349,20 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 			break;
 		}
 	}
-	
-
-//	@Override
-//	public IWizardPage getNextPage() {
-//		// save the product information to the model
-//		saveDataToModel();
-//		NewBugzillaReportWizard wizard = (NewBugzillaReportWizard) getWizard();
-//		NewBugzillaReport model = wizard.model;
-//
-//		// try to get the attributes from the bugzilla server
-//		try {
-//			if (!model.hasParsedAttributes() || !model.getProduct().equals(prevProduct)) {
-//				BugzillaRepositoryUtil.setupNewBugAttributes(repository.getUrl(), MylarTaskListPlugin.getDefault()
-//						.getProxySettings(), repository.getUserName(), repository.getPassword(), model, repository
-//						.getCharacterEncoding());
-//				model.setParsedAttributesStatus(true);
-//			}
-//
-////			if (prevProduct == null) {
-////				bugWizard.setAttributePage(new WizardAttributesPage(workbench));
-////				bugWizard.addPage(bugWizard.getAttributePage());
-////			} else {
-////				// selected product has changed
-////				// will createControl again with new attributes in model
-////				bugWizard.getAttributePage().setControl(null);
-////			}
-//			
-//		} catch (final Exception e) {
-//			e.printStackTrace();
-//			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//				public void run() {
-//					MessageDialog.openError(Display.getDefault().getActiveShell(), NEW_BUGZILLA_TASK_ERROR_TITLE, e
-//							.getLocalizedMessage()
-//							+ " Ensure proper repository configuration in " + TaskRepositoriesView.NAME + ".");
-//				}
-//			});
-//			// MylarStatusHandler.fail(e, e.getLocalizedMessage()+" Ensure
-//			// proper repository configuration in
-//			// "+TaskRepositoriesView.NAME+".", true);
-//			// BugzillaPlugin.getDefault().logAndShowExceptionDetailsDialog(e,
-//			// "occurred.", "Bugzilla Error");
-//		}
-//		return super.getNextPage();
-//	}
 
 	/**
 	 * Save the currently selected product to the model when next is clicked
-	 * @throws IOException 
-	 * @throws NoSuchAlgorithmException 
-	 * @throws LoginException 
-	 * @throws KeyManagementException 
+	 * 
+	 * @throws IOException
+	 * @throws NoSuchAlgorithmException
+	 * @throws LoginException
+	 * @throws KeyManagementException
 	 */
 	public void saveDataToModel() throws KeyManagementException, LoginException, NoSuchAlgorithmException, IOException {
 		NewBugzillaReport model = bugWizard.model;
 		prevProduct = model.getProduct();
 		model.setProduct((listBox.getSelection())[0]);
 
-		// try {
 		if (!model.hasParsedAttributes() || !model.getProduct().equals(prevProduct)) {
 			BugzillaRepositoryUtil.setupNewBugAttributes(repository.getUrl(), MylarTaskListPlugin.getDefault()
 					.getProxySettings(), repository.getUserName(), repository.getPassword(), model, repository
@@ -416,45 +371,23 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 		}
 
 		setPlatformOptions(model);
-		// if (prevProduct == null) {
-		// bugWizard.setAttributePage(new WizardAttributesPage(workbench));
-		// bugWizard.addPage(bugWizard.getAttributePage());
-		// } else {
-		// // selected product has changed
-		// // will createControl again with new attributes in model
-		// bugWizard.getAttributePage().setControl(null);
-		// }
-
-		// } catch (final Exception e) {
-		// PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-		// public void run() {
-		// MessageDialog.openError(Display.getDefault().getActiveShell(),
-		// NEW_BUGZILLA_TASK_ERROR_TITLE, e
-		// .getMessage()
-		// + " Ensure proper repository configuration in " +
-		// TaskRepositoriesView.NAME + ".");
-		// }
-		// });
-		// }
-
 	}
-	
+
 	@Override
 	public boolean isPageComplete() {
 		bugWizard.completed = listBox.getSelectionIndex() != -1;
 		return bugWizard.completed;
 	}
-	
-	
-	
-	
+
 	public void setPlatformOptions(NewBugzillaReport newBugModel) {
 		try {
 
 			// Get OS Lookup Map
 			// Check that the result is in Values, if it is not, set it to other
-			RepositoryTaskAttribute opSysAttribute = newBugModel.getAttribute(BugzillaReportElement.OP_SYS.getKeyString());
-			RepositoryTaskAttribute platformAttribute = newBugModel.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString());
+			RepositoryTaskAttribute opSysAttribute = newBugModel.getAttribute(BugzillaReportElement.OP_SYS
+					.getKeyString());
+			RepositoryTaskAttribute platformAttribute = newBugModel.getAttribute(BugzillaReportElement.REP_PLATFORM
+					.getKeyString());
 
 			String OS = Platform.getOS();
 			String platform = Platform.getOSArch();
@@ -464,7 +397,7 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 
 			if (java2buzillaOSMap != null && java2buzillaOSMap.containsKey(OS) && opSysAttribute != null
 					&& opSysAttribute.getOptionValues() != null) {
-						bugzillaOS = java2buzillaOSMap.get(OS);				
+				bugzillaOS = java2buzillaOSMap.get(OS);
 				if (opSysAttribute != null && !opSysAttribute.getOptionValues().values().contains(bugzillaOS)) {
 					// If the OS we found is not in the list of available
 					// options, set bugzillaOS
@@ -478,7 +411,7 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 			}
 
 			if (platform != null && java2buzillaPlatformMap.containsKey(platform)) {
-				bugzillaPlatform = java2buzillaPlatformMap.get(platform);				
+				bugzillaPlatform = java2buzillaPlatformMap.get(platform);
 				if (platformAttribute != null
 						&& !platformAttribute.getOptionValues().values().contains(bugzillaPlatform)) {
 					// If the platform we found is not int the list of available
@@ -502,7 +435,53 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 			MylarStatusHandler.fail(e, "could not set platform options", false);
 		}
 	}
-	
-	
-	
+
+	// @Override
+	// public IWizardPage getNextPage() {
+	// // save the product information to the model
+	// saveDataToModel();
+	// NewBugzillaReportWizard wizard = (NewBugzillaReportWizard) getWizard();
+	// NewBugzillaReport model = wizard.model;
+	//
+	// // try to get the attributes from the bugzilla server
+	// try {
+	// if (!model.hasParsedAttributes() ||
+	// !model.getProduct().equals(prevProduct)) {
+	// BugzillaRepositoryUtil.setupNewBugAttributes(repository.getUrl(),
+	// MylarTaskListPlugin.getDefault()
+	// .getProxySettings(), repository.getUserName(), repository.getPassword(),
+	// model, repository
+	// .getCharacterEncoding());
+	// model.setParsedAttributesStatus(true);
+	// }
+	//
+	// // if (prevProduct == null) {
+	// // bugWizard.setAttributePage(new WizardAttributesPage(workbench));
+	// // bugWizard.addPage(bugWizard.getAttributePage());
+	// // } else {
+	// // // selected product has changed
+	// // // will createControl again with new attributes in model
+	// // bugWizard.getAttributePage().setControl(null);
+	// // }
+	//			
+	// } catch (final Exception e) {
+	// e.printStackTrace();
+	// PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+	// public void run() {
+	// MessageDialog.openError(Display.getDefault().getActiveShell(),
+	// NEW_BUGZILLA_TASK_ERROR_TITLE, e
+	// .getLocalizedMessage()
+	// + " Ensure proper repository configuration in " +
+	// TaskRepositoriesView.NAME + ".");
+	// }
+	// });
+	// // MylarStatusHandler.fail(e, e.getLocalizedMessage()+" Ensure
+	// // proper repository configuration in
+	// // "+TaskRepositoriesView.NAME+".", true);
+	// // BugzillaPlugin.getDefault().logAndShowExceptionDetailsDialog(e,
+	// // "occurred.", "Bugzilla Error");
+	// }
+	// return super.getNextPage();
+	// }
+
 }
