@@ -19,7 +19,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
-import org.eclipse.mylar.internal.bugzilla.ui.wizard.AbstractBugzillaWizardPage;
+import org.eclipse.mylar.internal.bugzilla.ui.wizard.BugzillaProductPage;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.ui.PlatformUI;
 
@@ -31,11 +31,11 @@ public class NewBugWizardTest extends TestCase {
 
 	public void testPlatformOptions() throws Exception {
 
-		NewBugzillaReport newReport = new NewBugzillaReport(IBugzillaConstants.TEST_BUGZILLA_220_URL, 1);
-		AbstractBugzillaWizardPage page = new TestWizardDataPage();
+		NewBugzillaReport newReport = new NewBugzillaReport(IBugzillaConstants.TEST_BUGZILLA_220_URL, 1);	
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_220_URL);
-		BugzillaRepositoryUtil.setupNewBugAttributes(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), newReport, null); 
+		BugzillaRepositoryUtil.setupNewBugAttributes(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), newReport, null);
+		BugzillaProductPage page = new BugzillaProductPage(PlatformUI.getWorkbench(), null, repository);
 		page.setPlatformOptions(newReport);
 
 		String os = Platform.getOS();
@@ -68,13 +68,6 @@ public class NewBugWizardTest extends TestCase {
 		else if (platform.equals("ppc"))
 			assertEquals("Power", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
 
-	}
-
-	static class TestWizardDataPage extends AbstractBugzillaWizardPage {
-
-		public TestWizardDataPage() {
-			super("", "", "", PlatformUI.getWorkbench());
-		}
 	}
 
 }

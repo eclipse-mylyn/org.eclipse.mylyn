@@ -12,10 +12,16 @@ package org.eclipse.mylar.internal.bugzilla.ui.wizard;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.NewBugEditorInput;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
+import org.eclipse.ui.INewWizard;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
@@ -23,24 +29,44 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @author Rob Elves
  */
-public class NewBugzillaReportWizard extends AbstractBugzillaReportWizard {
+public class NewBugzillaReportWizard extends Wizard implements INewWizard {
 
 	private static final String TITLE = "New Bugzilla Task";
+
+	private IWorkbench workbenchInstance;
 
 	private final TaskRepository repository;
 
 	private final BugzillaProductPage productPage;
 
+	/**
+	 * Flag to indicate if the wizard can be completed (finish button enabled)
+	 */
+	protected boolean completed = false;
+
+	/** The model used to store all of the data for the wizard */
+	protected NewBugzillaReport model;
+
+	// TODO: Change model to a RepositoryTaskData
+	// protected RepositoryTaskData model;
+
 	public NewBugzillaReportWizard(TaskRepository repository) {
 		this(false, repository);
+		model = new NewBugzillaReport(repository.getUrl(), MylarTaskListPlugin.getDefault().getOfflineReportsFile()
+				.getNextOfflineBugId());
+		super.setDefaultPageImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin(
+				"org.eclipse.mylar.internal.bugzilla.ui", "icons/wizban/bug-wizard.gif"));
 		super.setWindowTitle(TITLE);
 	}
 
 	public NewBugzillaReportWizard(boolean fromDialog, TaskRepository repository) {
-		super(repository);
+		super();
 		this.repository = repository;
-		this.fromDialog = fromDialog;
 		this.productPage = new BugzillaProductPage(workbenchInstance, this, repository);
+	}
+
+	public void init(IWorkbench workbench, IStructuredSelection selection) {
+		this.workbenchInstance = workbench;
 	}
 
 	@Override
@@ -53,19 +79,6 @@ public class NewBugzillaReportWizard extends AbstractBugzillaReportWizard {
 	@Override
 	public boolean canFinish() {
 		return completed;
-	}
-
-	@Override
-	protected void saveBugOffline() {
-		// AbstractRepositoryConnector client = (AbstractRepositoryConnector)
-		// MylarTaskListPlugin.getRepositoryManager()
-		// .getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
-		// client.saveOffline(model);
-	}
-
-	@Override
-	protected AbstractBugzillaWizardPage getWizardDataPage() {
-		return null;
 	}
 
 	@Override
@@ -83,7 +96,21 @@ public class NewBugzillaReportWizard extends AbstractBugzillaReportWizard {
 		}
 		return false;
 	}
+
 }
+
+// @Override
+// protected void saveBugOffline() {
+// // AbstractRepositoryConnector client = (AbstractRepositoryConnector)
+// // MylarTaskListPlugin.getRepositoryManager()
+// // .getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
+// // client.saveOffline(model);
+// }
+//
+// @Override
+// protected AbstractBugzillaWizardPage getWizardDataPage() {
+// return null;
+// }
 
 // Open new bug editor
 
