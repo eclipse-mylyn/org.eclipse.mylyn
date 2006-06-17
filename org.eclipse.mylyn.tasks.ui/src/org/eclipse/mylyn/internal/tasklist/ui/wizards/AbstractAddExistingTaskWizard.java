@@ -31,6 +31,7 @@ public abstract class AbstractAddExistingTaskWizard extends Wizard {
 
 	public AbstractAddExistingTaskWizard(TaskRepository repository) {
 		this.repository = repository;
+		setNeedsProgressMonitor(true);
 		init();
 	}
 

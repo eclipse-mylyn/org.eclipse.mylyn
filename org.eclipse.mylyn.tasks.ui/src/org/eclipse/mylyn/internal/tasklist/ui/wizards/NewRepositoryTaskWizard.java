@@ -26,6 +26,7 @@ public class NewRepositoryTaskWizard extends MultiRepositoryAwareWizard {
 	
 	public NewRepositoryTaskWizard() {
 		super(new NewRepositoryTaskPage(getConnectorKinds()), TITLE);
+		setNeedsProgressMonitor(true);
 	}
 
 	private static List<String> getConnectorKinds() {

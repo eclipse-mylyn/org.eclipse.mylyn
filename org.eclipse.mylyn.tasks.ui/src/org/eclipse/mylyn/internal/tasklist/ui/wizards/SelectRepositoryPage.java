@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardNode;
 import org.eclipse.jface.wizard.WizardSelectionPage;
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoryLabelProvider;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
@@ -39,7 +40,8 @@ import org.eclipse.swt.widgets.Composite;
  */
 public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
-	private static final String DESCRIPTION = "Select a repository, or add a new one using the Task Repositories view.";
+	private static final String DESCRIPTION = "Add new repositories using the " + TaskRepositoriesView.NAME + " view.\n"
+		+ "If a repsitory is missing it does not support the requested operation.";
 
 	private static final String TITLE = "Select a repository";
 
