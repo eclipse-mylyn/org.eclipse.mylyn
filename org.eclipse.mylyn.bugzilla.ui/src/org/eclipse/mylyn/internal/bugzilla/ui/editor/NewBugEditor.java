@@ -195,6 +195,8 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 
 	@Override
 	protected void submitBug() {
+		submitButton.setEnabled(false);
+		showBusy(true);
 		updateBug();
 		Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
 		boolean wrap = IBugzillaConstants.BugzillaServerVersion.SERVER_218.equals(repository.getVersion());
@@ -238,7 +240,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 					+ TaskRepositoriesView.NAME + ".");
 		}
 		submitButton.setEnabled(true);
-		NewBugEditor.this.showBusy(false);
+		showBusy(false);
 		// final BugzillaRepositoryConnector bugzillaRepositoryClient =
 		// (BugzillaRepositoryConnector) MylarTaskListPlugin
 		// .getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
