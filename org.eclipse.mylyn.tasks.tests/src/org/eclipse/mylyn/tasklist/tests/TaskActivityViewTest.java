@@ -12,6 +12,7 @@
 package org.eclipse.mylar.tasklist.tests;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import junit.framework.TestCase;
@@ -207,6 +208,109 @@ public class TaskActivityViewTest extends TestCase {
 		assertEquals(1, activityPreviousWeek.getChildren().size());
 	}
 
+	/**
+	 * Some 'attention' events when all tasks are inactive
+	 * @author Yuri Baburov (burchik@gmail.com)
+	 */
+	public void testTaskListManagerActivity2(){
+		ITask task1 = new Task("task 1", "Task 1", true);
+		MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task1);
+		DateRangeContainer thisWeekActivity = MylarTaskListPlugin.getTaskListManager().getActivityThisWeek();
+		assertNotNull(thisWeekActivity);
+		assertEquals(0, thisWeekActivity.getChildren().size());
+		assertEquals(0, thisWeekActivity.getTotalElapsed());
+		thisWeekActivity.getStart().setTimeInMillis(1149490800000L); // Start of the week Jun 5 2006 - Jun 11 2006, NOVST 
+		thisWeekActivity.getEnd().setTimeInMillis(1150095600000L); // End of the week 
+		
+		Date time1 = new Date(1149911820812L); // Sat Jun 10 10:57:00 NOVST 2006 - task 1 - activated
+		Date time2 = new Date(1149911820812L); // Sat Jun 10 10:57:00 NOVST 2006 - task 1 - deactivated
+		Date time3 = new Date(1149911840812L); // Sat Jun 10 10:57:20 NOVST 2006 - attention - deactivated
+		Date time4 = new Date(1149911941765L); // Sat Jun 10 10:59:01 NOVST 2006 - attention - activated
+		Date time5 = new Date(1149911948953L); // Sat Jun 10 10:59:08 NOVST 2006 - task 1 - activated
+		Date time6 = new Date(1149911988781L); // Sat Jun 10 10:59:48 NOVST 2006 - task 1 - deactivated
+		
+		String task1handle = task1.getHandleIdentifier();
+		InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task1handle,
+				"originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_ACTIVATED,   2f, time1, time1);
+		InteractionEvent event2 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task1handle,
+				"originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f, time2, time2);
+		InteractionEvent event3 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", "attention",
+				"originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f, time3, time3);
+		InteractionEvent event4 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", "attention",
+				"originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_ACTIVATED,   2f, time4, time4);
+		InteractionEvent event5 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task1handle,
+				"originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_ACTIVATED,   2f, time5, time5);
+		InteractionEvent event6 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task1handle,
+				"originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f, time6, time6);
+
+		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event1);
+		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event2);
+		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event3);
+		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event4);
+		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event5);
+		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event6);
+		assertEquals(1, thisWeekActivity.getChildren().size());
+		long expectedTotalTime = time6.getTime() - time5.getTime() + time2.getTime() - time1.getTime();
+		assertEquals(expectedTotalTime, thisWeekActivity.getTotalElapsed());
+		assertEquals(expectedTotalTime, thisWeekActivity.getElapsed(new DateRangeActivityDelegate(thisWeekActivity,
+				task1, null, null)));
+	}
+	
+	/**
+	 * Task with some inner 'attention' events
+	 * @author Yuri Baburov (burchik@gmail.com)
+	 */
+	public void testTaskListManagerActivity3(){
+		ITask task1 = new Task("task 1", "Task 1", true);
+		MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task1);
+		DateRangeContainer thisWeekActivity = MylarTaskListPlugin.getTaskListManager().getActivityThisWeek();
+		assertNotNull(thisWeekActivity);
+		assertEquals(0, thisWeekActivity.getChildren().size());
+		assertEquals(0, thisWeekActivity.getTotalElapsed());
+		thisWeekActivity.getStart().setTimeInMillis(1149490800000L); // Start of the week Jun 5 2006 - Jun 11 2006, NOVST 
+		thisWeekActivity.getEnd().setTimeInMillis(1150095600000L); // End of the week 
+
+		Date time1 = new Date(1150007053171L); // Sun Jun 11 13:24:13 NOVST 2006 - task 1 - activated
+		Date time2 = new Date(1150007263468L); // Sun Jun 11 13:27:43 NOVST 2006 - attention - deactivated
+		Date time3 = new Date(1150021535953L); // Sun Jun 11 17:25:35 NOVST 2006 - attention - activated
+		Date time4 = new Date(1150021658500L); // Sun Jun 11 17:27:38 NOVST 2006 - attention - deactivated
+		Date time5 = new Date(1150031089250L); // Sun Jun 11 20:04:49 NOVST 2006 - attention - activated
+		Date time6 = new Date(1150031111578L); // Sun Jun 11 20:05:11 NOVST 2006 - attention - deactivated
+		Date time7 = new Date(1150031111578L); // Sun Jun 11 20:05:11 NOVST 2006 - task 1 - deactivated
+		
+		String task1handle = task1.getHandleIdentifier();
+		InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task1handle,
+				"originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_ACTIVATED,   2f, time1, time1);
+		InteractionEvent event2 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", "attention",
+				"originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f, time2, time2);
+		InteractionEvent event3 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", "attention",
+				"originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_ACTIVATED,   2f, time3, time3);
+		InteractionEvent event4 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", "attention",
+				"originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f, time4, time4);
+		InteractionEvent event5 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", "attention",
+				"originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_ACTIVATED,   2f, time5, time5);
+		InteractionEvent event6 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", "attention",
+				"originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f, time6, time6);
+		InteractionEvent event7 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task1handle,
+				"originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f, time7, time7);
+
+		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event1);
+		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event2);
+		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event3);
+		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event4);
+		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event5);
+		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event6);
+		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event7);
+		assertEquals(1, thisWeekActivity.getChildren().size());
+		long expectedTotalTime = 
+			time6.getTime() - time5.getTime() + 
+			time4.getTime() - time3.getTime() + 
+			time2.getTime() - time1.getTime();
+		assertEquals(expectedTotalTime, thisWeekActivity.getTotalElapsed());
+		assertEquals(expectedTotalTime, thisWeekActivity.getElapsed(new DateRangeActivityDelegate(thisWeekActivity,
+				task1, null, null)));
+	}
+	
 	public void testTaskListManagerInactivity() {
 
 		ITask task1 = new Task("task 1", "Task 1", true);

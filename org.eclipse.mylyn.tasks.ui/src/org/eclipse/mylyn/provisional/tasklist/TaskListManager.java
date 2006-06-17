@@ -262,7 +262,7 @@ public class TaskListManager {
 				}
 			} else if (event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION) && isInactive) {
 				isInactive = false;
-				totalInactive = event.getDate().getTime() - startInactive;
+				totalInactive += event.getDate().getTime() - startInactive;
 			}
 		} else if (event.getDelta().equals(MylarContextManager.ACTIVITY_DELTA_DEACTIVATED)) {
 			if (!event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION)
@@ -274,7 +274,7 @@ public class TaskListManager {
 				currentTaskEnd = calendarEnd;
 				if (isInactive) {
 					isInactive = false;
-					totalInactive = event.getDate().getTime() - startInactive;
+					totalInactive += event.getDate().getTime() - startInactive;
 				}
 				for (DateRangeContainer week : dateRangeContainers) {
 					if (week.includes(currentTaskStart)) {
@@ -294,8 +294,10 @@ public class TaskListManager {
 				totalInactive = 0;
 				startInactive = 0;
 			} else if (event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION) && !isInactive) {
-				isInactive = true;
-				startInactive = event.getDate().getTime();
+				if(!currentHandle.equals("")) {
+					isInactive = true;
+					startInactive = event.getDate().getTime();
+				}
 			}
 		}
 	}
