@@ -402,6 +402,7 @@
      
    <extension point="org.eclipse.mylar.tasklist.providers">    
       <dynamicPopupMenu class="org.eclipse.mylar.internal.tasklist.ui.TaskReminderMenuContributor"/>
+      <dynamicPopupMenu class="org.eclipse.mylar.internal.tasklist.ui.MoveToCategoryMenuContributor"/>
    </extension>
    
    <!--

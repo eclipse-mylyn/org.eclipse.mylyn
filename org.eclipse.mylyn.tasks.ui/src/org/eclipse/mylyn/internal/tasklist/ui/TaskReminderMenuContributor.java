@@ -37,7 +37,7 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 	
 	private static final String LABEL_NEXT_WEEK = "Next Week";
 
-	private static final String LABEL_FUTURE = "Later";
+	private static final String LABEL_FUTURE = "Two Weeks";
 	
 	private static final String LABEL_CALENDAR = "Choose Date...";
 
