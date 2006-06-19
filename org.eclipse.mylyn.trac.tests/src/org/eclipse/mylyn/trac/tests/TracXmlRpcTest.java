@@ -206,6 +206,26 @@ public class TracXmlRpcTest extends TestCase {
 		fail("Could not find expected value: " + value);
 	}
 
+	private void assertTicketHasAttributes(Hashtable<String, Object> attributes, int id, Vector ticket) {
+		assertTicketHasAttributes(attributes, id, ticket, true);
+	}
+
+	private void assertTicketHasAttributes(Hashtable<String, Object> attributes, int id, Vector ticket,
+			boolean newTicket) {
+		assertEquals(id, ticket.get(0));
+		assertTrue(ticket.get(1) instanceof Integer); // time created
+		// time changed
+		if (newTicket) {
+			assertEquals(ticket.get(1), ticket.get(2));
+		} else {
+			assertTrue((Integer) ticket.get(2) >= (Integer) ticket.get(1));
+		}
+		Hashtable values = (Hashtable) ticket.get(3);
+		for (String attribute : attributes.keySet()) {
+			assertEquals(attributes.get(attribute), values.get(attribute));
+		}
+	}
+
 	public void testGetTicket() throws XmlRpcException, IOException {
 		Hashtable<String, Object> attributes = new Hashtable<String, Object>();
 		attributes.put("type", "task");
@@ -216,15 +236,24 @@ public class TracXmlRpcTest extends TestCase {
 		attributes.put("description", "description");
 
 		Vector ticket = (Vector) call("ticket.get", id);
-		assertEquals(id, ticket.get(0));
-		assertTrue(ticket.get(1) instanceof Integer); // time created
-		assertEquals(ticket.get(1), ticket.get(2)); // time changed
-		Hashtable values = (Hashtable) ticket.get(3);
-		for (String attribute : attributes.keySet()) {
-			assertEquals(attributes.get(attribute), values.get(attribute));
-		}
+		assertTicketHasAttributes(attributes, id, ticket);
 
 		call("ticket.delete", id);
+	}
+
+	public void testGetTicketNonExistant() throws XmlRpcException, IOException {
+		try {
+			call("ticket.delete", 1);
+		} catch (Exception e) {
+			// ignore
+		}
+
+		try {
+			Vector ticket = (Vector) call("ticket.get", 1);
+			fail("Expected XmlRpcException, got ticket instead: " + ticket);
+		} catch (XmlRpcException e) {
+			// ignore
+		}
 	}
 
 	public void testGetTicketUmlaute() throws XmlRpcException, IOException {
@@ -235,13 +264,7 @@ public class TracXmlRpcTest extends TestCase {
 		attributes.put("description", "ßßß");
 
 		Vector ticket = (Vector) call("ticket.get", id);
-		assertEquals(id, ticket.get(0));
-		assertTrue(ticket.get(1) instanceof Integer); // time created
-		assertEquals(ticket.get(1), ticket.get(2)); // time changed
-		Hashtable values = (Hashtable) ticket.get(3);
-		for (String attribute : attributes.keySet()) {
-			assertEquals(attributes.get(attribute), values.get(attribute));
-		}
+		assertTicketHasAttributes(attributes, id, ticket);
 
 		call("ticket.delete", id);
 	}
@@ -260,6 +283,34 @@ public class TracXmlRpcTest extends TestCase {
 		for (String attribute : attributes.keySet()) {
 			assertEquals(attributes.get(attribute), values.get(attribute));
 		}
+
+		call("ticket.delete", id);
+	}
+
+	public void testTicketCustomFields() throws XmlRpcException, IOException {
+		Hashtable<String, Object> attributes = new Hashtable<String, Object>();
+		attributes.put("custom_text_field", "myvalue");
+		int id = (Integer) call("ticket.create", "summary", "description", attributes);
+
+		// check for default values
+		attributes.put("custom_checkbox_field", "1");
+		attributes.put("custom_select_field", "two");
+		attributes.put("custom_radio_field", "baz");
+		attributes.put("custom_textarea_field", "default text");
+
+		Vector ticket = (Vector) call("ticket.get", id);
+		assertTicketHasAttributes(attributes, id, ticket);
+
+		attributes.put("custom_text_field", "myvalue2");
+		attributes.put("custom_checkbox_field", "0");
+		attributes.put("custom_select_field", "one");
+		attributes.put("custom_radio_field", "foo");
+		attributes.put("custom_textarea_field", "mytext");
+
+		call("ticket.update", id, "my comment", attributes);
+
+		ticket = (Vector) call("ticket.get", id);
+		assertTicketHasAttributes(attributes, id, ticket, false);
 
 		call("ticket.delete", id);
 	}
@@ -283,15 +334,23 @@ public class TracXmlRpcTest extends TestCase {
 	}
 
 	public void testMultiGetTicket() throws XmlRpcException, IOException {
-		Object[] calls = new Object[] { createMultiCall("ticket.get", 1), createMultiCall("ticket.get", 2), };
+		int id1 = (Integer) call("ticket.create", "summary1", "description1", new Hashtable());
+		int id2 = (Integer) call("ticket.create", "summary2", "description2", new Hashtable());
 
+		Object[] calls = new Object[] { createMultiCall("ticket.get", id1), createMultiCall("ticket.get", id2), };
 		Vector ret = (Vector) call("system.multicall", new Object[] { calls });
 
 		Vector ticket = (Vector) ret.get(0);
-		assertEquals(1, ticket.get(0));
+		Hashtable<String, Object> attributes = new Hashtable<String, Object>();
+		attributes.put("summary", "summary1");
+		attributes.put("description", "description1");
+		assertTicketHasAttributes(attributes, id1, ticket);
 
 		ticket = (Vector) ret.get(1);
-		assertEquals(2, ticket.get(0));
+		attributes.clear();
+		attributes.put("summary", "summary2");
+		attributes.put("description", "description2");
+		assertTicketHasAttributes(attributes, id2, ticket);
 	}
 
 	public void testAttachment() throws XmlRpcException, IOException {
