@@ -213,12 +213,13 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 				if (!read && canReadTask(child)) {
 					category.add(readTask(child, taskList, category, null));
 				}
-			} catch (TaskExternalizationException e) {
+			} catch (Throwable t) {
 				hasCaughtException = true;
 			}
 		}
-		if (hasCaughtException)
+		if (hasCaughtException) {
 			throw new TaskExternalizationException("Failed to load all tasks");
+		}
 	}
 
 	public boolean canReadTask(Node node) {

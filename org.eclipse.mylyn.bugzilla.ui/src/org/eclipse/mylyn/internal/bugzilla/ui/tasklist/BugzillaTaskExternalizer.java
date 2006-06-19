@@ -38,9 +38,9 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 
 	private static final String STATUS_NEW = "NEW";
 
-	private static final String LAST_DATE = "LastDate";
+	private static final String KEY_LAST_DATE = "LastDate";
 
-	private static final String DIRTY = "Dirty";
+	private static final String KEY_DIRTY = "Dirty";
 
 	private static final String SYNC_STATE = "offlineSyncState";
 
@@ -116,17 +116,17 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		Element node = super.createTaskElement(task, doc, parent);
 		BugzillaTask bugzillaTask = (BugzillaTask) task;
 		if (bugzillaTask.getLastSynchronized() != null) {
-			node.setAttribute(LAST_DATE, new Long(bugzillaTask.getLastSynchronized().getTime()).toString());
+			node.setAttribute(KEY_LAST_DATE, new Long(bugzillaTask.getLastSynchronized().getTime()).toString());
 		} else {
-			node.setAttribute(LAST_DATE, new Long(new Date().getTime()).toString());
+			node.setAttribute(KEY_LAST_DATE, new Long(new Date().getTime()).toString());
 		}
 
 		node.setAttribute(SYNC_STATE, bugzillaTask.getSyncState().toString());
 
 		if (bugzillaTask.isDirty()) {
-			node.setAttribute(DIRTY, VAL_TRUE);
+			node.setAttribute(KEY_DIRTY, VAL_TRUE);
 		} else {
-			node.setAttribute(DIRTY, VAL_FALSE);
+			node.setAttribute(KEY_DIRTY, VAL_FALSE);
 		}
 		return node;
 	}
@@ -156,9 +156,15 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		readTaskInfo(task, taskList, element, parent, category);
 
 		task.setCurrentlyDownloading(false);
-		task.setLastSynchronized(new Date(new Long(element.getAttribute("LastDate")).longValue()));
+		if (element.hasAttribute(KEY_LAST_DATE)) {
+			try {
+				task.setLastSynchronized(new Date(new Long(element.getAttribute(KEY_LAST_DATE)).longValue()));
+			} catch (Exception e) {
+				// invalid date format
+			}
+		}
 
-		if (element.getAttribute("Dirty").compareTo("true") == 0) {
+		if (element.getAttribute(KEY_DIRTY).compareTo(VAL_TRUE) == 0) {
 			task.setDirty(true);
 		} else {
 			task.setDirty(false);

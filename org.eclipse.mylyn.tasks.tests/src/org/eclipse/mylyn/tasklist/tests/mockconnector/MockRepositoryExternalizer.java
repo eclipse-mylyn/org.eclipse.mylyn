@@ -11,8 +11,11 @@
 
 package org.eclipse.mylar.tasklist.tests.mockconnector;
 
+import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.DelegatingTaskExternalizer;
+import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.w3c.dom.Node;
 
 /**
  * @author Mik Kersten
@@ -22,6 +25,36 @@ public class MockRepositoryExternalizer extends DelegatingTaskExternalizer {
 	@Override
 	public boolean canCreateElementFor(AbstractRepositoryQuery query) {
 		return query instanceof MockRepositoryQuery;
+	}
+
+	@Override
+	public boolean canCreateElementFor(ITask task) {
+		return task instanceof MockRepositoryTask;
+	}
+
+	@Override
+	public boolean canCreateElementFor(AbstractQueryHit queryHit) {
+		return false;
+	}
+	
+	@Override
+	public boolean canReadCategory(Node node) {
+		return false;
+	}
+
+	@Override
+	public boolean canReadQuery(Node node) {
+		return false;
+	}
+
+	@Override
+	public boolean canReadQueryHit(Node node) {
+		return false;
+	}
+
+	@Override
+	public boolean canReadTask(Node node) {
+		return false;
 	}
 
 }
