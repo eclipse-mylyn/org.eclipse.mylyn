@@ -552,6 +552,23 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(cat1Contents, readCat1.getChildren());
 	}
 
+	public void testExternalizationOfHandlesWithDash() {
+		Set<ITask> rootTasks = new HashSet<ITask>();
+		
+		String handle = AbstractRepositoryTask.getHandle("http://url/repo-location", 1);
+		Task task1 = new Task(handle, "task 1", true);
+		manager.getTaskList().moveToRoot(task1);
+		rootTasks.add(task1);
+		
+		manager.saveTaskList();
+		assertNotNull(manager.getTaskList());
+		manager.resetTaskList();
+		assertTrue(manager.readExistingOrCreateNewList());
+
+		assertNotNull(manager.getTaskList());
+		assertEquals(rootTasks, manager.getTaskList().getRootTasks());
+	}
+
 	public void testScheduledRefreshJob() throws InterruptedException {
 		int counter = 3;		
 		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, true);

@@ -345,7 +345,7 @@ public class TaskList {
 		int max = 0;
 		for (ITask task : tasks) {
 			if (!(task instanceof AbstractRepositoryTask)) {
-				String string = task.getHandleIdentifier().substring(task.getHandleIdentifier().indexOf('-') + 1,
+				String string = task.getHandleIdentifier().substring(task.getHandleIdentifier().lastIndexOf('-') + 1,
 						task.getHandleIdentifier().length());
 				if (!"".equals(string)) {
 					ihandle = Integer.parseInt(string);
