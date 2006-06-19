@@ -35,6 +35,8 @@ public class LocalAttachment implements Serializable {
 	
 	private boolean isPatch = false;
 
+	private boolean deleteAfterUpload = false;
+
 	public String getComment() {
 		return comment;
 	}
@@ -81,5 +83,14 @@ public class LocalAttachment implements Serializable {
 
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
+	}
+
+
+	public void setDeleteAfterUpload(boolean d) {
+		deleteAfterUpload = d;
+	}
+
+	public boolean getDeleteAfterUpload() {
+		return deleteAfterUpload;
 	}
 }

@@ -123,6 +123,8 @@ public class NewAttachmentPage extends WizardPage {
 				attachment.setContentType(contentTypeList.getItem(contentTypeList.getSelectionIndex()));
 			}
 		});
+		contentTypeList.select(0);
+		attachment.setContentType(contentTypeList.getItem(0));
 		
 		final NewAttachmentPage thisPage = this;
 		/*
@@ -197,7 +199,6 @@ public class NewAttachmentPage extends WizardPage {
 	
 
 	public void populateAttachment() {	
-		attachment.setFilePath(filePath.getText());
 		attachment.setDescription(attachmentDesc.getText());
 		attachment.setComment(attachmentComment.getText());
 	}

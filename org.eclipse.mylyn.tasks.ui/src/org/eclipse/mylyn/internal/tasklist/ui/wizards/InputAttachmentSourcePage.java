@@ -69,7 +69,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 	// constants
 	protected static final int SIZING_TEXT_FIELD_WIDTH = 250;
 	protected static final int COMBO_HISTORY_LENGTH = 5;
-	
+	public static final String CLIPBOARD_LABEL = "<Clipboard>";
 	
 	// input constants
 	protected final static int CLIPBOARD = 1;
@@ -124,8 +124,12 @@ public class InputAttachmentSourcePage extends WizardPage {
 	}
 
 	public String getAttachmentName() {
-		if (getInputMethod() == CLIPBOARD)
-			return "CLIPBOARD";
+		if (getInputMethod() == CLIPBOARD) {
+			return CLIPBOARD_LABEL;
+		}
+		else if(getInputMethod() == WORKSPACE) {
+			return getResources(treeViewer.getSelection())[0].getFullPath().toOSString();
+		}
 		return getAttachmentFilePath();
 	}
 	
@@ -194,7 +198,6 @@ public class InputAttachmentSourcePage extends WizardPage {
 		// 2nd row
 		useFileButton = new Button(composite, SWT.RADIO);
 		useFileButton.setText("File");
-		useFileButton.setSelection(true);
 
 		fileNameField = new Combo(composite, SWT.BORDER);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -318,6 +321,9 @@ public class InputAttachmentSourcePage extends WizardPage {
 				}
 			}
 		});
+		
+		useFileButton.setSelection(true);
+		setEnableWorkspaceAttachment(false);
 	}
 
 	private void addWorkspaceControls(Composite composite) {
@@ -348,7 +354,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 		
 		String error = null;
 
-		boolean haveAttachment = false;
+		boolean attachmentFound = false;
 		int inputMethod = getInputMethod();
 		if (inputMethod == CLIPBOARD) {
 			Control c= getControl();
@@ -359,7 +365,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 				if (o instanceof String) {
 					String s = ((String) o).trim();
 					if (s.length() > 0)
-						haveAttachment = true;
+						attachmentFound = true;
 					else
 						error = "Clipboard is empty"; 
 				} else
@@ -370,8 +376,8 @@ public class InputAttachmentSourcePage extends WizardPage {
 			String path = fileNameField.getText();
 			if (path != null && path.length() > 0) {
 				File file = new File(path);
-				haveAttachment = file.exists() && file.isFile() && file.length() > 0;
-				if (!haveAttachment)
+				attachmentFound = file.exists() && file.isFile() && file.length() > 0;
+				if (!attachmentFound)
 					error = "Cannot locate attachment file";
 			} else {
 				error = "No file name";
@@ -382,9 +388,19 @@ public class InputAttachmentSourcePage extends WizardPage {
 			if (resources == null || resources.length <= 0) {
 				error = "No file name";
 			}
+			else {
+				IResource attachmentFile = resources[0];
+				if (attachmentFile != null && attachmentFile.getType() == IResource.FILE) {
+					File actualFile = attachmentFile.getRawLocation().toFile();
+					attachmentFound = actualFile.exists() && actualFile.isFile() && actualFile.length() > 0;
+					if (!attachmentFound) {
+						error = "Cannot locate attachment file";
+					}
+				}
+			}
 		}
 
-		setPageComplete(haveAttachment);
+		setPageComplete(attachmentFound);
 
 		if (showError) {
 			setErrorMessage(error);
@@ -444,18 +460,34 @@ public class InputAttachmentSourcePage extends WizardPage {
 	}
 	
 	protected int getInputMethod() {
-		if (useClipboardButton.getSelection())
+		if (useClipboardButton.getSelection()) {
 			return CLIPBOARD;
-		if (useFileButton.getSelection())
+		}
+		if (useFileButton.getSelection()) {
 			return FILE;
+		}
 		return WORKSPACE;
 	}
 
 	private String getAttachmentFilePath() {
-		if (fileNameField != null)
+		if (fileNameField != null) {
 			return fileNameField.getText();
+		}
 		return ""; //$NON-NLS-1$
 	} 
+
+	public String getAbsoluteAttachmentPath() {
+		switch (getInputMethod()) {
+		case CLIPBOARD:
+			return CLIPBOARD_LABEL;
+		case WORKSPACE:
+			return getResources(treeViewer.getSelection())[0].getRawLocation().toOSString();
+		case FILE:
+		default:
+			return getAttachmentFilePath();
+		}
+	}
+
 	
 	/*
 	 * Based on .eclipse.compare.internal.Utilities
@@ -504,5 +536,19 @@ public class InputAttachmentSourcePage extends WizardPage {
 
 		return (IResource[]) tmp.toArray(new IResource[tmp.size()]);
 	}
+
+	public String getClipboardContents() {
+		Control c = getControl();
+		if (c != null) {
+			Clipboard clipboard = new Clipboard(c.getDisplay());
+			Object o = clipboard.getContents(TextTransfer.getInstance());
+			clipboard.dispose();
+			if (o instanceof String) {
+				return ((String) o).trim();
+			}
+		}
+		return null;
+	}
+
 }
 

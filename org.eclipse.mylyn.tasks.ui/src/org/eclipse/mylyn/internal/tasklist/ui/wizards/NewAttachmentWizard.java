@@ -11,9 +11,14 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.wizards;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.tasklist.LocalAttachment;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
 
 public class NewAttachmentWizard extends Wizard {
 
@@ -30,9 +35,29 @@ public class NewAttachmentWizard extends Wizard {
 	
 	@Override
 	public boolean performFinish() {
-		/* TODO jpound - handle clipboard and workspace resources */
+		/* TODO jpound - support non-text in clipboard */
 		attachPage.populateAttachment();
-		//attachment.setFilePath(inputPage.getPatchName());
+		String path = inputPage.getAbsoluteAttachmentPath();
+		if (InputAttachmentSourcePage.CLIPBOARD_LABEL.equals(path)) {
+			// write temporary file
+			String contents = inputPage.getClipboardContents();
+			if (contents == null) {
+				// TODO Handle error
+			}
+			
+			File file = new File(MylarPlugin.getDefault().getDefaultDataDirectory() + System.getProperty("file.separator").charAt(0) + "Clipboard-attachment");
+			try {
+				FileWriter writer = new FileWriter(file);	
+				writer.write(contents);
+				writer.flush();
+				writer.close();
+			} catch (IOException e) {
+				// TODO Handle error
+			}
+			path = file.getAbsolutePath();
+			attachment.setDeleteAfterUpload(true);
+		}
+		attachment.setFilePath(path);
 		return true;
 	}
 	
