@@ -498,17 +498,22 @@ public class OfflineTaskManager {
 			latestNewBugId = in.readInt();
 
 			// read in each of the offline reports in the file
-			for (int nX = 0; nX < size; nX++) {
-				// try {
-				RepositoryTaskData item = (RepositoryTaskData) in.readObject();
-				AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(item.getRepositoryKind());
-				if(connector != null && connector.getOfflineTaskHandler() != null) {
-					AbstractAttributeFactory factory = connector.getOfflineTaskHandler().getAttributeFactory();
-					if(factory != null) {
-						item.setAttributeFactory(factory);
-					} 
+			for (int nX = 0; nX < size; nX++) {				
+				RepositoryTaskData item = null;
+
+				item = (RepositoryTaskData) in.readObject();
+
+				if (item != null) {
+					AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager()
+							.getRepositoryConnector(item.getRepositoryKind());
+					if (connector != null && connector.getOfflineTaskHandler() != null) {
+						AbstractAttributeFactory factory = connector.getOfflineTaskHandler().getAttributeFactory();
+						if (factory != null) {
+							item.setAttributeFactory(factory);
+						}
+					}
+					list.add(item);
 				}
-				list.add(item);				
 			}
 		} finally {
 			in.close();
