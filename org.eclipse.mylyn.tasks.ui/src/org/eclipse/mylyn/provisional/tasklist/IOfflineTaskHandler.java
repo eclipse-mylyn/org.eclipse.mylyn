@@ -11,6 +11,8 @@
 
 package org.eclipse.mylar.provisional.tasklist;
 
+import java.util.Date;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.internal.tasklist.AbstractAttributeFactory;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
@@ -20,6 +22,11 @@ import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
  * @author Rob Elves
  */
 public interface IOfflineTaskHandler {
+	
+	/**
+	 * @return null if date cannot be parsed
+	 */
+	public Date getDateForAttributeType(String attributeKey, String dateString);
 	
 	public AbstractAttributeFactory getAttributeFactory();
 	

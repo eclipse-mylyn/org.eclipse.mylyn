@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.wizards;
 
-import java.text.DateFormat;
 import java.util.Set;
 
 import org.eclipse.jface.wizard.WizardPage;
@@ -104,7 +103,7 @@ public class ContextRetrieveWizardPage extends WizardPage {
 
 		for (RepositoryAttachment attachment : contextAttachments) {
 			TableItem item = new TableItem(contextTable, SWT.NONE);
-			item.setText(0, DateFormat.getDateInstance(DateFormat.MEDIUM).format(attachment.getDateCreated()));
+			item.setText(0, attachment.getDateCreated());
 			item.setText(1, attachment.getCreator());
 			item.setText(2, attachment.getDescription());
 			item.setData(attachment);

@@ -772,7 +772,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 					case 2:
 						return attachment.getCreator();
 					case 3:
-						return attachment.getDateCreated().toString();
+						return attachment.getDateCreated();
 					}
 					return "unrecognized column";
 				}

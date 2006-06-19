@@ -12,13 +12,6 @@
 package org.eclipse.mylar.internal.tasklist;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
-
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
 /**
  * A comment posted on a bug.
@@ -29,8 +22,9 @@ public class Comment extends AttributeContainer implements Serializable {
 
 	private static final long serialVersionUID = -1760372869047050979L;
 
-	/** Parser for dates in the report */
-	public static SimpleDateFormat creation_ts_date_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	// /** Parser for dates in the report */
+	// public static SimpleDateFormat creation_ts_date_format = new
+	// SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	/** Comment's bug */
 	private final RepositoryTaskData bug;
@@ -38,8 +32,8 @@ public class Comment extends AttributeContainer implements Serializable {
 	/** Comment's number */
 	private final int number;
 
-	/** Comment's creation timestamp */
-	private Date created;
+	// /** Comment's creation timestamp */
+	// private Date created;
 
 	/** Preceding comment */
 	private Comment previous;
@@ -80,24 +74,28 @@ public class Comment extends AttributeContainer implements Serializable {
 	 * 
 	 * @return The comments creation timestamp
 	 */
-	public Date getCreated() {
-		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(bug.getRepositoryKind(), bug.getRepositoryUrl());
-		TimeZone timeZone = TimeZone.getDefault();
-		if(repository != null) {
-			timeZone = TimeZone.getTimeZone(repository.getTimeZoneId());
-		}		
-		if (created == null) {
-			created = Calendar.getInstance().getTime();
-			try {
-				creation_ts_date_format.setTimeZone(timeZone);
-				created = creation_ts_date_format.parse(getAttributeValue(RepositoryTaskAttribute.COMMENT_DATE));
-			} catch (Exception e) {
-				// ignore
-				// MylarStatusHandler.log("Comment creation date parse error,
-				// setting to NOW.", Comment.class);
-			}
-		}
-		return created;
+	public String getCreated() {
+		return getAttributeValue(RepositoryTaskAttribute.COMMENT_DATE);
+		// TaskRepository repository =
+		// MylarTaskListPlugin.getRepositoryManager().getRepository(bug.getRepositoryKind(),
+		// bug.getRepositoryUrl());
+		// TimeZone timeZone = TimeZone.getDefault();
+		// if(repository != null) {
+		// timeZone = TimeZone.getTimeZone(repository.getTimeZoneId());
+		// }
+		// if (created == null) {
+		// created = Calendar.getInstance().getTime();
+		// try {
+		// creation_ts_date_format.setTimeZone(timeZone);
+		// created =
+		// creation_ts_date_format.parse(getAttributeValue(RepositoryTaskAttribute.COMMENT_DATE));
+		// } catch (Exception e) {
+		// // ignore
+		// // MylarStatusHandler.log("Comment creation date parse error,
+		// // setting to NOW.", Comment.class);
+		// }
+		// }
+		// return created;
 	}
 
 	/**
@@ -169,8 +167,7 @@ public class Comment extends AttributeContainer implements Serializable {
 		this.previous = previous;
 	}
 
-	
-	 public void setHasAttachment(boolean b) {
+	public void setHasAttachment(boolean b) {
 		this.hasAttachment = b;
 	}
 

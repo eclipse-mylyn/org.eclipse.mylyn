@@ -36,6 +36,7 @@ import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.ZipFileUtil;
 import org.eclipse.mylar.internal.tasklist.OfflineTaskManager;
 import org.eclipse.mylar.internal.tasklist.RepositoryAttachment;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
@@ -85,8 +86,8 @@ public abstract class AbstractRepositoryConnector {
 	public abstract boolean canCreateNewTask();
 
 	public String[] repositoryPropertyNames() {
-		return new String[] { TaskRepositoryManager.PROPERTY_VERSION, 
-				TaskRepositoryManager.PROPERTY_TIMEZONE, TaskRepositoryManager.PROPERTY_ENCODING };
+		return new String[] { TaskRepositoryManager.PROPERTY_VERSION, TaskRepositoryManager.PROPERTY_TIMEZONE,
+				TaskRepositoryManager.PROPERTY_ENCODING };
 	}
 
 	/**
@@ -232,6 +233,7 @@ public abstract class AbstractRepositoryConnector {
 	// Precondition of note: offline file is removed upon submit to repository
 	// resulting in a synchronized state.
 	void updateOfflineState(final AbstractRepositoryTask repositoryTask, boolean forceSync) {
+
 		IOfflineTaskHandler offlineTaskHandler = getOfflineTaskHandler();
 		if (offlineTaskHandler == null) {
 			return;
@@ -249,7 +251,72 @@ public abstract class AbstractRepositoryConnector {
 		}
 
 		try {
+
 			downloadedTaskData = offlineTaskHandler.downloadTaskData(repositoryTask);
+
+			if (downloadedTaskData == null) {
+				MylarStatusHandler.log("Download of " + repositoryTask.getDescription() + " from "
+						+ repositoryTask.getRepositoryUrl() + " failed.", this);
+				return;
+			}
+
+			RepositoryTaskData offlineTaskData = OfflineTaskManager.findBug(downloadedTaskData.getRepositoryUrl(),
+					downloadedTaskData.getId());
+
+			if (offlineTaskData != null) {
+				switch (status) {
+				case OUTGOING:
+					// Should not occur if forceSync = false
+				case CONFLICT:
+					// Should not occur if forceSync = false
+					PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+						public void run() {
+							updateLocalCopy = MessageDialog
+									.openQuestion(
+											null,
+											"Update Local Copy",
+											"Local copy of Report "
+													+ repositoryTask.getDescription()
+													+ " on "
+													+ repositoryTask.getRepositoryUrl()
+													+ " has changes.\nWould you like to override local changes? \n\nNote: if you select No, only the new comment will be saved with the updated bug, all other changes will be lost.");
+						}
+					});
+					if (!updateLocalCopy) {
+						downloadedTaskData.setNewComment(offlineTaskData.getNewComment());
+						downloadedTaskData.setHasChanged(true);
+						status = RepositoryTaskSyncState.CONFLICT;
+					} else {
+						downloadedTaskData.setHasChanged(false);
+						status = RepositoryTaskSyncState.SYNCHRONIZED;
+					}
+					break;
+				case INCOMING:
+					status = RepositoryTaskSyncState.SYNCHRONIZED;
+					break;
+				case SYNCHRONIZED:
+					// XXX: FIX THIS
+					RepositoryTaskAttribute modifiedDateAttributeDownloaded = downloadedTaskData
+							.getAttribute(RepositoryTaskAttribute.DATE_MODIFIED);
+					Date newModifiedDate = getOfflineTaskHandler().getDateForAttributeType(
+							RepositoryTaskAttribute.DATE_MODIFIED, modifiedDateAttributeDownloaded.getValue());
+					if (repositoryTask.getLastModifiedDateStamp() == null
+							|| (newModifiedDate != null && newModifiedDate.compareTo(getOfflineTaskHandler()
+									.getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED,
+											repositoryTask.getLastModifiedDateStamp())) > 0)) {
+						status = RepositoryTaskSyncState.INCOMING;
+					}
+					break;
+				}
+				removeOfflineTaskData(offlineTaskData);
+			} else {
+				status = RepositoryTaskSyncState.SYNCHRONIZED;
+			}
+			repositoryTask.setModifiedDateStamp(downloadedTaskData.getLastModified());
+			repositoryTask.setTaskData(downloadedTaskData);
+			repositoryTask.setSyncState(status);
+			saveOffline(downloadedTaskData);
+
 		} catch (final CoreException e) {
 			if (forceSync) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -262,63 +329,6 @@ public abstract class AbstractRepositoryConnector {
 			}
 			return;
 		}
-
-		if (downloadedTaskData == null) {
-			MylarStatusHandler.log("Download of " + repositoryTask.getDescription() + " from "
-					+ repositoryTask.getRepositoryUrl() + " failed.", this);
-			return;
-		}
-
-		RepositoryTaskData offlineTaskData = OfflineTaskManager.findBug(downloadedTaskData.getRepositoryUrl(),
-				downloadedTaskData.getId());
-
-		if (offlineTaskData != null) {
-			switch (status) {
-			case OUTGOING:
-				// Should not occur if forceSync = false
-			case CONFLICT:
-				// Should not occur if forceSync = false
-				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-					public void run() {
-						updateLocalCopy = MessageDialog
-								.openQuestion(
-										null,
-										"Update Local Copy",
-										"Local copy of Report "
-												+ repositoryTask.getDescription()
-												+ " on "
-												+ repositoryTask.getRepositoryUrl()
-												+ " has changes.\nWould you like to override local changes? \n\nNote: if you select No, only the new comment will be saved with the updated bug, all other changes will be lost.");
-					}
-				});
-				if (!updateLocalCopy) {
-					downloadedTaskData.setNewComment(offlineTaskData.getNewComment());
-					downloadedTaskData.setHasChanged(true);
-					status = RepositoryTaskSyncState.CONFLICT;
-				} else {
-					downloadedTaskData.setHasChanged(false);
-					status = RepositoryTaskSyncState.SYNCHRONIZED;
-				}
-				break;
-			case INCOMING:
-				status = RepositoryTaskSyncState.SYNCHRONIZED;
-				break;
-			case SYNCHRONIZED:
-				if (repositoryTask.getLastSynchronized() == null
-						|| downloadedTaskData.getLastModified(repository.getTimeZoneId()).compareTo(
-								repositoryTask.getLastSynchronized()) > 0) {
-					status = RepositoryTaskSyncState.INCOMING;
-				}
-				break;
-			}
-			removeOfflineTaskData(offlineTaskData);
-		} else {
-			status = RepositoryTaskSyncState.SYNCHRONIZED;
-		}
-		repositoryTask.setLastSynchronized(downloadedTaskData.getLastModified(repository.getTimeZoneId()));
-		repositoryTask.setTaskData(downloadedTaskData);
-		repositoryTask.setSyncState(status);
-		saveOffline(downloadedTaskData);
 	}
 
 	/**
@@ -339,7 +349,8 @@ public abstract class AbstractRepositoryConnector {
 	 * @param listener
 	 *            can be null
 	 */
-	private Job synchronize(Set<AbstractRepositoryTask> repositoryTasks, boolean forceSynch, final IJobChangeListener listener) {
+	private Job synchronize(Set<AbstractRepositoryTask> repositoryTasks, boolean forceSynch,
+			final IJobChangeListener listener) {
 
 		final SynchronizeTaskJob synchronizeJob = new SynchronizeTaskJob(this, repositoryTasks);
 		synchronizeJob.setForceSynch(forceSynch);
@@ -354,7 +365,7 @@ public abstract class AbstractRepositoryConnector {
 			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 				public void run() {
 					synchronizeJob.run(new NullProgressMonitor());
-					if(listener != null) {
+					if (listener != null) {
 						listener.done(null);
 					}
 				}
@@ -434,13 +445,25 @@ public abstract class AbstractRepositoryConnector {
 			@Override
 			public void done(IJobChangeEvent event) {
 				Date mostRecent = new Date(0);
+				String mostRecentTimeStamp = "";
 				for (AbstractRepositoryTask task : tasksToSync) {
-					Date taskModifiedDate = task.getTaskData().getLastModified(repository.getTimeZoneId());
-					if (taskModifiedDate.after(mostRecent)) {
+					Date taskModifiedDate;
+
+					if (getOfflineTaskHandler() != null && task.getTaskData() != null
+							&& task.getTaskData().getLastModified() != null) {
+						taskModifiedDate = getOfflineTaskHandler().getDateForAttributeType(
+								RepositoryTaskAttribute.DATE_MODIFIED, task.getTaskData().getLastModified());
+					} else {
+						continue;
+					}
+
+					if (taskModifiedDate != null && taskModifiedDate.after(mostRecent)) {
 						mostRecent = taskModifiedDate;
+						mostRecentTimeStamp = task.getTaskData().getLastModified();
 					}
 				}
-				MylarTaskListPlugin.getRepositoryManager().setSyncTime(repository, new Date(mostRecent.getTime() + 1000));
+				// TODO: Get actual time stamp of query from repository
+				MylarTaskListPlugin.getRepositoryManager().setSyncTime(repository, mostRecentTimeStamp);
 			}
 		});
 	}

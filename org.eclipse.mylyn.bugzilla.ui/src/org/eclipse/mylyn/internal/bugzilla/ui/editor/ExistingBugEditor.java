@@ -364,7 +364,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		ExistingBugEditor.this.showBusy(true);
 		BugzillaReportSubmitForm bugzillaReportSubmitForm;
 
-		try {	
+		try {
 			if (taskData.isLocallyCreated()) {
 				boolean wrap = IBugzillaConstants.BugzillaServerVersion.SERVER_218.equals(repository.getVersion());
 				bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeNewBugPost(repository.getUrl(), repository
@@ -740,8 +740,8 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
-					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(), comment.getCreated()
-							.toString(), comment, taskData.getSummary()))));
+					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(), comment.getCreated(),
+							comment, taskData.getSummary()))));
 		}
 	}
 

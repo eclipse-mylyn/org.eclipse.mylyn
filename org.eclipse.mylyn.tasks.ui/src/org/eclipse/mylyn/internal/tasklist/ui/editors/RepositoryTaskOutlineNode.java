@@ -266,7 +266,7 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 						.getSummary());
 				comments.setIsCommentHeader(true);
 			}
-			comments.addChild(new RepositoryTaskOutlineNode(bugId, bugServer, comment.getCreated().toString(), defaultImage,
+			comments.addChild(new RepositoryTaskOutlineNode(bugId, bugServer, comment.getCreated(), defaultImage,
 					comment, bug.getSummary()));
 		}
 		if (comments != null) {

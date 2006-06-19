@@ -12,17 +12,11 @@
 package org.eclipse.mylar.internal.tasklist;
 
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.TimeZone;
-
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
 /**
  * @author Mik Kersten
@@ -30,8 +24,20 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
  */
 public class RepositoryTaskData extends AttributeContainer implements Serializable {
 
+	private static final long serialVersionUID = 2746931358107812373L;
+
+	public static final String VAL_STATUS_VERIFIED = "VERIFIED";
+
+	public static final String VAL_STATUS_CLOSED = "CLOSED";
+
+	public static final String VAL_STATUS_RESOLVED = "RESOLVED";
+
+	public static final String VAL_STATUS_NEW = "NEW";
+	
 	private int reportID;
 
+	private boolean hasChanges = false;
+	
 	private String repositoryURL;
 
 	protected String newComment = "";
@@ -43,17 +49,6 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 
 	private List<RepositoryAttachment> attachments = new ArrayList<RepositoryAttachment>();
 
-	private boolean hasChanges = false;
-
-	private static final long serialVersionUID = 310066248657960823L;
-
-	public static final String VAL_STATUS_VERIFIED = "VERIFIED";
-
-	public static final String VAL_STATUS_CLOSED = "CLOSED";
-
-	public static final String VAL_STATUS_RESOLVED = "RESOLVED";
-
-	public static final String VAL_STATUS_NEW = "NEW";
 
 	/** The operation that was selected to do to the bug */
 	protected RepositoryOperation selectedOperation = null;
@@ -69,10 +64,12 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 	// private static final RepositoryTaskAttributeFactory attributeFactory =
 	// new BugzillaAttributeFactory();
 
-	/** Parser for dates in the report */
-	private static SimpleDateFormat delta_ts_format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-	private static SimpleDateFormat creation_ts_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	// /** Parser for dates in the report */
+	// private static SimpleDateFormat delta_ts_format = new
+	// SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	//
+	// private static SimpleDateFormat creation_ts_format = new
+	// SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	/** The bugs valid keywords */
 	protected List<String> validKeywords;
@@ -140,27 +137,8 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 		// getAttributeValue(BugzillaReportElement.BUG_STATUS.getKeyString());
 	}
 
-	// XXX: fix to not parse
-	public Date getLastModified(String timeZoneID) {		
-		if (lastModified == null) {
-			String dateString = getAttributeValue(RepositoryTaskAttribute.DATE_MODIFIED);
-			// String dateString =
-			// getAttributeValue(BugzillaReportElement.DELTA_TS.getKeyString());
-			try {
-				TimeZone timeZone  = TimeZone.getTimeZone(timeZoneID);
-				if (timeZone != null) {
-					delta_ts_format.setTimeZone(timeZone);
-				} else {
-					delta_ts_format.setTimeZone(TimeZone.getDefault());
-				}
-				lastModified = delta_ts_format.parse(dateString);
-			} catch (ParseException e) {
-				// ignore
-			} catch (NumberFormatException e) {
-				// ignore
-			}
-		}
-		return lastModified;
+	public String getLastModified() {
+		return getAttributeValue(RepositoryTaskAttribute.DATE_MODIFIED);
 	}
 
 	public void setDescription(String description) {
@@ -272,26 +250,8 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 	 * 
 	 * @return The bugs creation date
 	 */
-	public Date getCreated() {
-		if (created == null) {			
-			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(this.getRepositoryKind(), this.getRepositoryUrl());
-			TimeZone timeZone = null;
-			if(repository != null) {
-				timeZone = TimeZone.getTimeZone(repository.getTimeZoneId());
-			} else {
-				timeZone = TimeZone.getDefault();
-			}
-			String dateString = getAttributeValue(RepositoryTaskAttribute.DATE_CREATION);
-			// String dateString =
-			// getAttributeValue(BugzillaReportElement.CREATION_TS.getKeyString());
-			try {
-				creation_ts_format.setTimeZone(timeZone);
-				created = creation_ts_format.parse(dateString);
-			} catch (ParseException e) {
-				// ignore
-			}
-		}
-		return created;
+	public String getCreated() {
+		return getAttributeValue(RepositoryTaskAttribute.DATE_CREATION);		
 	}
 
 	/**

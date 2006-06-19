@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.provisional.tasklist;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,13 +29,15 @@ import org.eclipse.mylar.internal.core.MylarContextManager;
  * @author Mik Kersten
  */
 public class TaskRepositoryManager {
-	
+
 	public static final String PROPERTY_SYNCTIME = "synctime";
-	
+
+	public static final String PROPERTY_SYNCTIMESTAMP = "synctimestamp";
+
 	public static final String PROPERTY_TIMEZONE = "timezone";
-	
+
 	public static final String PROPERTY_ENCODING = "encoding";
-	
+
 	public static final String PROPERTY_VERSION = "version";
 
 	public static final String PROPERTY_DELIM = ":";
@@ -118,9 +121,9 @@ public class TaskRepositoryManager {
 		}
 		return null;
 	}
-	
+
 	/**
-	 * @return	the first connector to accept the URL
+	 * @return the first connector to accept the URL
 	 */
 	public AbstractRepositoryConnector getRepositoryForTaskUrl(String url) {
 		for (AbstractRepositoryConnector connector : getRepositoryConnectors()) {
@@ -130,7 +133,7 @@ public class TaskRepositoryManager {
 		}
 		return null;
 	}
-	
+
 	public Set<TaskRepository> getRepositories(String kind) {
 		if (repositoryMap.containsKey(kind)) {
 			return repositoryMap.get(kind);
@@ -186,7 +189,8 @@ public class TaskRepositoryManager {
 
 	public Map<String, Set<TaskRepository>> readRepositories() {
 		for (AbstractRepositoryConnector repositoryConnector : repositoryConnectors.values()) {
-			String read = MylarTaskListPlugin.getMylarCorePrefs().getString(PREF_REPOSITORIES + repositoryConnector.getRepositoryType());
+			String read = MylarTaskListPlugin.getMylarCorePrefs().getString(
+					PREF_REPOSITORIES + repositoryConnector.getRepositoryType());
 			Set<TaskRepository> repositories = new HashSet<TaskRepository>();
 			if (read != null) {
 				StringTokenizer st = new StringTokenizer(read, PREF_STORE_DELIM);
@@ -194,30 +198,55 @@ public class TaskRepositoryManager {
 					String urlString = st.nextToken();
 
 					repositoryMap.put(repositoryConnector.getRepositoryType(), repositories);
-					
+
 					Map<String, String> properties = new HashMap<String, String>();
-					for(String propertyName : repositoryConnector.repositoryPropertyNames()) {
+					for (String propertyName : repositoryConnector.repositoryPropertyNames()) {
 						String key = urlString + PROPERTY_DELIM + propertyName;
 						String value = MylarTaskListPlugin.getMylarCorePrefs().getString(key);
 						properties.put(propertyName, value);
 					}
 
-					String prefIdSyncTime = urlString + PROPERTY_DELIM + PROPERTY_SYNCTIME;
-					long time = MylarTaskListPlugin.getMylarCorePrefs().getLong(prefIdSyncTime);
-					Date syncDate = new Date(time);										
+					String prefIdSyncTime = urlString + PROPERTY_DELIM + PROPERTY_SYNCTIMESTAMP;
+					String time = MylarTaskListPlugin.getMylarCorePrefs().getString(prefIdSyncTime);
 
-					TaskRepository repository = new TaskRepository(repositoryConnector.getRepositoryType(), urlString, properties);
-					repository.setSyncTime(syncDate);
-					
+					TaskRepository repository = new TaskRepository(repositoryConnector.getRepositoryType(), urlString,
+							properties);
+					if (!time.equals("")) {
+						repository.setSyncTimeStamp(time);
+					} else {
+						if (repository.getKind().equals("bugzilla")) {
+							String oldSyncTimeId = urlString + PROPERTY_DELIM + PROPERTY_SYNCTIME;
+							Long oldSyncTime = MylarTaskListPlugin.getMylarCorePrefs().getLong(oldSyncTimeId);
+							if (oldSyncTime != 0L) {
+								time = migrateOldBugzillaSyncDate(oldSyncTime);
+								if (time != null && !time.equals("")) {
+									repository.setSyncTimeStamp(time);
+								}
+							}
+						}
+					}
+
 					repositories.add(repository);
 				}
-					
+
 			}
 		}
 		for (ITaskRepositoryListener listener : listeners) {
 			listener.repositoriesRead();
 		}
 		return repositoryMap;
+	}
+
+	private String migrateOldBugzillaSyncDate(long oldTime) {
+		String newDate = "";
+		String DATE_FORMAT_2 = "yyyy-MM-dd HH:mm:ss";
+		SimpleDateFormat delta_ts_format = new SimpleDateFormat(DATE_FORMAT_2);
+		try {
+			newDate = delta_ts_format.format(new Date(oldTime - (60000 * 1440)));
+		} catch (Exception e) {
+			// ignore
+		}
+		return newDate;
 	}
 
 	/**
@@ -227,7 +256,7 @@ public class TaskRepositoryManager {
 		repository.setVersion(version);
 		saveRepositories();
 	}
-	
+
 	/**
 	 * for testing purposes
 	 */
@@ -235,7 +264,7 @@ public class TaskRepositoryManager {
 		repository.setCharacterEncoding(encoding);
 		saveRepositories();
 	}
-	
+
 	/**
 	 * for testing purposes
 	 */
@@ -243,17 +272,15 @@ public class TaskRepositoryManager {
 		repository.setTimeZoneId(timeZoneId);
 		saveRepositories();
 	}
-	
-	public void setSyncTime(TaskRepository repository, Date syncTime) {
-		repository.setSyncTime(syncTime);
-		String prefIdSyncTime = repository.getUrl() + PROPERTY_DELIM + PROPERTY_SYNCTIME;
-		if(repository.getSyncTime() != null) {
-			MylarTaskListPlugin.getMylarCorePrefs().setValue(prefIdSyncTime, repository.getSyncTime().getTime());
-		} else {
-			MylarTaskListPlugin.getMylarCorePrefs().setValue(prefIdSyncTime, 0L);
+
+	public void setSyncTime(TaskRepository repository, String syncTime) {
+		repository.setSyncTimeStamp(syncTime);
+		String prefIdSyncTime = repository.getUrl() + PROPERTY_DELIM + PROPERTY_SYNCTIMESTAMP;
+		if (repository.getSyncTimeStamp() != null) {
+			MylarTaskListPlugin.getMylarCorePrefs().setValue(prefIdSyncTime, repository.getSyncTimeStamp());
 		}
 	}
-	
+
 	private void saveRepositories() {
 		for (AbstractRepositoryConnector repositoryConnector : repositoryConnectors.values()) {
 			if (repositoryMap.containsKey(repositoryConnector.getRepositoryType())) {
@@ -262,23 +289,21 @@ public class TaskRepositoryManager {
 					repositoriesToStore += repository.getUrl() + PREF_STORE_DELIM;
 
 					for (Map.Entry<String, String> property : repository.getProperties().entrySet()) {
-						String key = repository.getUrl() + PROPERTY_DELIM + property.getKey();					
+						String key = repository.getUrl() + PROPERTY_DELIM + property.getKey();
 						MylarTaskListPlugin.getMylarCorePrefs().setValue(key, property.getValue());
 					}
-					
-					String prefIdSyncTime = repository.getUrl() + PROPERTY_DELIM + PROPERTY_SYNCTIME;
-					if(repository.getSyncTime() != null) {
-						MylarTaskListPlugin.getMylarCorePrefs().setValue(prefIdSyncTime, repository.getSyncTime().getTime());
-					} else {
-						MylarTaskListPlugin.getMylarCorePrefs().setValue(prefIdSyncTime, 0L);
+
+					String prefIdSyncTime = repository.getUrl() + PROPERTY_DELIM + PROPERTY_SYNCTIMESTAMP;
+					if (repository.getSyncTimeStamp() != null) {
+						MylarTaskListPlugin.getMylarCorePrefs().setValue(prefIdSyncTime, repository.getSyncTimeStamp());
 					}
 				}
 				String prefId = PREF_REPOSITORIES + repositoryConnector.getRepositoryType();
 				MylarTaskListPlugin.getMylarCorePrefs().setValue(prefId, repositoriesToStore);
-			} 
+			}
 		}
 	}
-	
+
 	/**
 	 * For testing.
 	 */
