@@ -25,6 +25,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaOfflineTaskHandler;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.tasklist.Comment;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
@@ -71,19 +72,16 @@ public class TaskTestUtil {
 		if (completed) {
 			resolvedAttribute.setValue(RepositoryTaskData.VAL_STATUS_RESOLVED);
 			Comment comment = new Comment(new BugzillaAttributeFactory(), report, 1);
-			RepositoryTaskAttribute attribute = attributeFactory.createAttribute(BugzillaReportElement.CREATION_TS
+			RepositoryTaskAttribute attribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_WHEN
 					.getKeyString());
-			attribute.setValue(Comment.creation_ts_date_format.format(new Date()));
-			comment.addAttribute(BugzillaReportElement.CREATION_TS.getKeyString(), attribute);
+			attribute.setValue(BugzillaOfflineTaskHandler.comment_creation_ts_format.format(new Date()));
+			comment.addAttribute(BugzillaReportElement.BUG_WHEN.getKeyString(), attribute);
 			report.addComment(comment);
 		} else {
 			resolvedAttribute.setValue(RepositoryTaskData.VAL_STATUS_NEW);
 		}
 
 		report.addAttribute(BugzillaReportElement.BUG_STATUS.getKeyString(), resolvedAttribute);
-		report.addComment(new Comment(new BugzillaAttributeFactory(), report, 1));
-		// report.addComment(new Comment(report, 1, now, "author",
-		// "author-name"));
 	}
 
 }

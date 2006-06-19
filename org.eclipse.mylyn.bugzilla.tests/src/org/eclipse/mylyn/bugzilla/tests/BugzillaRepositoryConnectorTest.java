@@ -320,12 +320,10 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 
 		MylarTaskListPlugin.getRepositoryManager().setSyncTime(repository, null);
 		client.synchronizeChanged(repository);
-		// if a task or two has changed the last sync date is updated to 1s
-		// after most recent change
-		// therefore the following call should generally result in 0 changed
-		// tasks returned.
+		// synchronizeChanged uses the date stamp from the most recent task returned so
+		// this should always result in 1 task being returned (the most recently modified task). 
 		Set<AbstractRepositoryTask> changedTasks = client.getChangedSinceLastSync(repository, tasks);
-		assertEquals("No tasks should be changed", 0, changedTasks.size());
+		assertEquals(1, changedTasks.size());
 
 		String priority4 = null;
 		if (task4.getPriority().equals("P1")) {

@@ -38,7 +38,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 
 	private static final String STATUS_NEW = "NEW";
 
-	private static final String KEY_LAST_DATE = "LastDate";
+	private static final String KEY_LAST_MOD_DATE = "LastDate";
 
 	private static final String KEY_DIRTY = "Dirty";
 
@@ -54,7 +54,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 
 	public String getQueryTagNameForElement(AbstractRepositoryQuery query) {
 		if (query instanceof BugzillaRepositoryQuery) {
-			if (((BugzillaRepositoryQuery)query).isCustomQuery()) {
+			if (((BugzillaRepositoryQuery) query).isCustomQuery()) {
 				return TAG_BUGZILLA_CUSTOM_QUERY;
 			} else {
 				return TAG_BUGZILLA_QUERY;
@@ -70,24 +70,22 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	public AbstractRepositoryQuery readQuery(Node node, TaskList taskList) throws TaskExternalizationException {
 		boolean hasCaughtException = false;
 		Element element = (Element) node;
-		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(
-				element.getAttribute(KEY_REPOSITORY_URL), 
-				element.getAttribute(KEY_QUERY_STRING), 
-				element.getAttribute(KEY_NAME),
-				element.getAttribute(KEY_QUERY_MAX_HITS), taskList);
+		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(element.getAttribute(KEY_REPOSITORY_URL), element
+				.getAttribute(KEY_QUERY_STRING), element.getAttribute(KEY_NAME), element
+				.getAttribute(KEY_QUERY_MAX_HITS), taskList);
 		if (node.getNodeName().equals(TAG_BUGZILLA_CUSTOM_QUERY)) {
 			query.setCustomQuery(true);
 		}
-		if(!element.getAttribute(KEY_LAST_REFRESH).equals("")) {
+		if (!element.getAttribute(KEY_LAST_REFRESH).equals("")) {
 			Date refreshDate = new Date();
 			try {
 				refreshDate.setTime(Long.parseLong(element.getAttribute(KEY_LAST_REFRESH)));
 				query.setLastRefresh(refreshDate);
 			} catch (NumberFormatException e) {
 				// ignore
-			}			
+			}
 		}
-		
+
 		NodeList list = node.getChildNodes();
 		for (int i = 0; i < list.getLength(); i++) {
 			Node child = list.item(i);
@@ -115,10 +113,8 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	public Element createTaskElement(ITask task, Document doc, Element parent) {
 		Element node = super.createTaskElement(task, doc, parent);
 		BugzillaTask bugzillaTask = (BugzillaTask) task;
-		if (bugzillaTask.getLastSynchronized() != null) {
-			node.setAttribute(KEY_LAST_DATE, new Long(bugzillaTask.getLastSynchronized().getTime()).toString());
-		} else {
-			node.setAttribute(KEY_LAST_DATE, new Long(new Date().getTime()).toString());
+		if (bugzillaTask.getLastModifiedDateStamp() != null) {
+			node.setAttribute(KEY_LAST_MOD_DATE,bugzillaTask.getLastModifiedDateStamp());
 		}
 
 		node.setAttribute(SYNC_STATE, bugzillaTask.getSyncState().toString());
@@ -156,9 +152,9 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		readTaskInfo(task, taskList, element, parent, category);
 
 		task.setCurrentlyDownloading(false);
-		if (element.hasAttribute(KEY_LAST_DATE)) {
+		if (element.hasAttribute(KEY_LAST_MOD_DATE)) {
 			try {
-				task.setLastSynchronized(new Date(new Long(element.getAttribute(KEY_LAST_DATE)).longValue()));
+				task.setModifiedDateStamp(element.getAttribute(KEY_LAST_MOD_DATE));
 			} catch (Exception e) {
 				// invalid date format
 			}
@@ -195,13 +191,14 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	/**
 	 * TODO: move?
 	 */
-	public boolean readBugReport(BugzillaTask bugzillaTask) {		
-		RepositoryTaskData tempBug = OfflineTaskManager.findBug(bugzillaTask.getRepositoryUrl(), AbstractRepositoryTask.getTaskIdAsInt(bugzillaTask.getHandleIdentifier()));
+	public boolean readBugReport(BugzillaTask bugzillaTask) {
+		RepositoryTaskData tempBug = OfflineTaskManager.findBug(bugzillaTask.getRepositoryUrl(), AbstractRepositoryTask
+				.getTaskIdAsInt(bugzillaTask.getHandleIdentifier()));
 		if (tempBug == null) {
 			bugzillaTask.setTaskData(null);
 			return true;
 		}
-		bugzillaTask.setTaskData((RepositoryTaskData)tempBug);
+		bugzillaTask.setTaskData((RepositoryTaskData) tempBug);
 
 		if (bugzillaTask.getTaskData().hasChanges())
 			bugzillaTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
@@ -212,7 +209,8 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		return node.getNodeName().equals(getQueryHitTagName());
 	}
 
-	public void readQueryHit(Node node, TaskList taskList, AbstractRepositoryQuery query) throws TaskExternalizationException {
+	public void readQueryHit(Node node, TaskList taskList, AbstractRepositoryQuery query)
+			throws TaskExternalizationException {
 		Element element = (Element) node;
 		String handle;
 		String label;
@@ -233,21 +231,21 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		} else {
 			throw new TaskExternalizationException("Description not stored for bug report");
 		}
-		
+
 		status = STATUS_NEW;
 		if (element.hasAttribute(KEY_COMPLETE)) {
 			status = element.getAttribute(KEY_COMPLETE);
 			if (status.equals(VAL_TRUE)) {
-				status = STATUS_RESO; 
-			} 
-		} 
+				status = STATUS_RESO;
+			}
+		}
 		BugzillaQueryHit hit = new BugzillaQueryHit(label, priority, query.getRepositoryUrl(), AbstractRepositoryTask
 				.getTaskIdAsInt(handle), null, status);
 		ITask correspondingTask = taskList.getTask(hit.getHandleIdentifier());
 		if (correspondingTask instanceof BugzillaTask) {
-			hit.setCorrespondingTask((BugzillaTask)correspondingTask);
+			hit.setCorrespondingTask((BugzillaTask) correspondingTask);
 		}
-		
+
 		query.addHit(hit);
 	}
 

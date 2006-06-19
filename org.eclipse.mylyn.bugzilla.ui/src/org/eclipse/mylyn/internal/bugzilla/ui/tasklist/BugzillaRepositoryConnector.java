@@ -18,7 +18,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.TimeZone;
 
 import javax.security.auth.login.LoginException;
 
@@ -48,7 +47,6 @@ import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchHit;
 import org.eclipse.mylar.internal.bugzilla.ui.search.RepositoryQueryResultsFactory;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaCategorySearchOperation.ICategorySearchListener;
 import org.eclipse.mylar.internal.bugzilla.ui.wizard.NewBugzillaReportWizard;
-import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
@@ -79,9 +77,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private static final int MAX_URL_LENGTH = 2000;
 
-	private static final String CHANGED_BUGS_START_DATE_SHORT = "yyyy-MM-dd";
-
-	private static final String CHANGED_BUGS_START_DATE_LONG = "yyyy-MM-dd HH:mm:ss";
+	// private static final String CHANGED_BUGS_START_DATE_SHORT = "yyyy-MM-dd";
+	//
+	// private static final String CHANGED_BUGS_START_DATE_LONG = "yyyy-MM-dd
+	// HH:mm:ss";
 
 	private static final String CHANGED_BUGS_CGI_ENDDATE = "&chfieldto=Now";
 
@@ -209,7 +208,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	/**
-	 * @return bugid if bugReport was a new report created locally null if existing report
+	 * @return bugid if bugReport was a new report created locally null if
+	 *         existing report
 	 */
 	public String submitBugReport(final RepositoryTaskData bugReport, final BugzillaReportSubmitForm form,
 			IJobChangeListener listener) {
@@ -386,19 +386,14 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 		Set<AbstractRepositoryTask> changedTasks = new HashSet<AbstractRepositoryTask>();
 
-		if (repository.getSyncTime() == null) {
+		if (repository.getSyncTimeStamp() == null) {
 			return tasks;
 		}
 
-		TimeZone timeZone = TimeZone.getTimeZone(repository.getTimeZoneId());
-
-		if (!timeZone.getID().equals(repository.getTimeZoneId())) {
-			MylarStatusHandler.log("Mylar: Specified time zone not available, using GMT. Check repository settings in "
-					+ TaskRepositoriesView.NAME + ".", BugzillaRepositoryConnector.class);
+		String dateString = repository.getSyncTimeStamp();
+		if (dateString == null) {
+			dateString = "";
 		}
-
-		String dateString = DateUtil.getZoneFormattedDate(timeZone, repository.getSyncTime(),
-				CHANGED_BUGS_START_DATE_LONG);
 		String urlQueryBase;
 		String urlQueryString;
 
@@ -407,9 +402,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					+ URLEncoder.encode(dateString, repository.getCharacterEncoding()) + CHANGED_BUGS_CGI_ENDDATE;
 		} catch (UnsupportedEncodingException e1) {
 			MylarStatusHandler.log(e1, "Mylar: Check encoding settings in " + TaskRepositoriesView.NAME + ".");
-			urlQueryBase = repository.getUrl() + CHANGED_BUGS_CGI_QUERY
-					+ DateUtil.getZoneFormattedDate(timeZone, repository.getSyncTime(), CHANGED_BUGS_START_DATE_SHORT)
-					+ CHANGED_BUGS_CGI_ENDDATE;
+			urlQueryBase = repository.getUrl() + CHANGED_BUGS_CGI_QUERY + dateString + CHANGED_BUGS_CGI_ENDDATE;
 		}
 
 		urlQueryString = new String(urlQueryBase + BUG_ID);

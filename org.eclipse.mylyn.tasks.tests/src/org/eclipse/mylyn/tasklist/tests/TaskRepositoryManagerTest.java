@@ -182,8 +182,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		manager.readRepositories();
 		TaskRepository temp = manager.getRepository(repository1.getKind(), repository1.getUrl());
 		assertNotNull(temp);
-		assertNotNull(temp.getSyncTime());
-		assertEquals(new Date(0), temp.getSyncTime());		
+		assertNull(temp.getSyncTimeStamp());		
 	}
 		
 	public void testRepositorySyncTimePersistance2() throws MalformedURLException {
@@ -191,18 +190,19 @@ public class TaskRepositoryManagerTest extends TestCase {
 		TaskRepository repository1 = new TaskRepository("bugzilla", "http://bugzilla");
 		
 		Date now = new Date();
-		MylarTaskListPlugin.getRepositoryManager().setSyncTime(repository1, now);
+		String dateString = now.toString();
+		MylarTaskListPlugin.getRepositoryManager().setSyncTime(repository1, dateString);
 		manager.addRepository(repository1);
 
 		String prefIdSyncTime= repository1.getUrl() + TaskRepositoryManager.PROPERTY_DELIM
-				+ TaskRepositoryManager.PROPERTY_SYNCTIME;
+				+ TaskRepositoryManager.PROPERTY_SYNCTIMESTAMP;
 
-		assertEquals(now.getTime(), MylarTaskListPlugin.getMylarCorePrefs().getLong(prefIdSyncTime));
+		assertEquals(dateString, MylarTaskListPlugin.getMylarCorePrefs().getString(prefIdSyncTime));
 
 		manager.readRepositories();
 		TaskRepository temp = manager.getRepository(repository1.getKind(), repository1.getUrl());
 		assertNotNull(temp);
-		assertEquals(temp.getSyncTime(), now);
+		assertEquals(dateString, temp.getSyncTimeStamp());
 	}
 	
 	public void testRepositoryPersistanceAfterDelete() throws MalformedURLException {

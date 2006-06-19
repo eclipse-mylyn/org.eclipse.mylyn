@@ -11,7 +11,6 @@
 package org.eclipse.mylar.internal.tasklist.ui.editors;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -56,6 +55,7 @@ import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.NewAttachmentWizard;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
+import org.eclipse.mylar.provisional.tasklist.IOfflineTaskHandler;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
@@ -167,7 +167,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 	// private static int MARGIN = 0;// 5
 
-	protected SimpleDateFormat simpleDateFormat = new SimpleDateFormat("E MMM dd, yyyy hh:mm aa");
+	//protected SimpleDateFormat simpleDateFormat = new SimpleDateFormat("E MMM dd, yyyy hh:mm aa");
 
 	// "yyyy-MM-dd HH:mm"
 
@@ -490,17 +490,11 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		toolkit.createLabel(headerInfoComposite, " Opened: ").setFont(TITLE_FONT);
 		String openedDateString = "";
 		if (getRepositoryTaskData().getCreated() != null) {
-			openedDateString = simpleDateFormat.format(getRepositoryTaskData().getCreated());
+			openedDateString = getRepositoryTaskData().getCreated();
 		}
 		toolkit.createText(headerInfoComposite, openedDateString, SWT.FLAT | SWT.READ_ONLY);
-
 		toolkit.createLabel(headerInfoComposite, " Modified: ").setFont(TITLE_FONT);
-		String lastModifiedDateString = "";
-		if (getRepositoryTaskData().getLastModified(repository.getTimeZoneId()) != null) {
-			lastModifiedDateString = simpleDateFormat.format(getRepositoryTaskData().getLastModified(
-					repository.getTimeZoneId()));
-		}
-		toolkit.createText(headerInfoComposite, lastModifiedDateString, SWT.FLAT | SWT.READ_ONLY);
+		toolkit.createText(headerInfoComposite, getRepositoryTaskData().getLastModified(), SWT.FLAT | SWT.READ_ONLY);
 	}
 
 	/**
@@ -722,20 +716,30 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 			attachmentsTableViewer.setUseHashlookup(true);
 			attachmentsTableViewer.setColumnProperties(attachmentsColumns);
 
-			attachmentsTableViewer.setSorter(new ViewerSorter() {
-				public int compare(Viewer viewer, Object e1, Object e2) {
-					RepositoryAttachment attachment1 = (RepositoryAttachment) e1;
-					RepositoryAttachment attachment2 = (RepositoryAttachment) e2;
-					Date created1 = attachment1.getDateCreated();
-					Date created2 = attachment2.getDateCreated();
-					if (created1 != null && created2 != null) {
-						return attachment1.getDateCreated().compareTo(attachment2.getDateCreated());
-					} else {
-						return 0;
-					}
-				}
-			});
+			
+			final AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager()
+					.getRepositoryConnector(getRepositoryTaskData().getRepositoryKind());
 
+			if (connector != null) {
+				final IOfflineTaskHandler offlineHandler = connector.getOfflineTaskHandler();
+				if (offlineHandler != null) {
+					attachmentsTableViewer.setSorter(new ViewerSorter() {
+						public int compare(Viewer viewer, Object e1, Object e2) {							
+							RepositoryAttachment attachment1 = (RepositoryAttachment) e1;
+							RepositoryAttachment attachment2 = (RepositoryAttachment) e2;
+							Date created1 = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.ATTACHMENT_DATE, attachment1.getDateCreated());
+							Date created2 = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.ATTACHMENT_DATE, attachment2.getDateCreated());
+							if (created1 != null && created2 != null) {
+								return attachment1.getDateCreated().compareTo(attachment2.getDateCreated());
+							} else {
+								return 0;
+							}
+						}
+					});
+				}
+
+			}
+			
 			attachmentsTableViewer.setContentProvider(new IStructuredContentProvider() {
 				public Object[] getElements(Object inputElement) {
 					return getRepositoryTaskData().getAttachments().toArray();
@@ -952,7 +956,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 			}
 
 			expandableComposite.setText(comment.getNumber() + ": " + comment.getAuthorName() + ", "
-					+ simpleDateFormat.format(comment.getCreated()));
+					+ comment.getCreated());
 
 			expandableComposite.addExpansionListener(new ExpansionAdapter() {
 				public void expansionStateChanged(ExpansionEvent e) {
