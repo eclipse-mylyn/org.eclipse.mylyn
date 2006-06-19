@@ -13,6 +13,7 @@ reports marked help wanted</a>.&nbsp;</p>
 	<ul>
 		<li><a href="#contributing-intro">Introduction</a></li>
 		<li><a href="#contributing-setup">Workspace setup</a></li>
+		<li><a href="#tests">Running tests</a></li>
 		<li><a href="#bootstrap">Working bootstrapped</a></li>
 		<li><a href="#contributing-patches">Contributing patches</li>
 <!--	<li>Building</li>-->
@@ -37,15 +38,19 @@ and leave the password blank.</li>
 		dependencies).&nbsp; There should be no errors or warnings.</li>
 		<li>Run org.eclipse.mylar.tests.AllTests as a JUnit Plug-in Test, with 
 		assertions enabled.&nbsp; All tests should pass and there should be no 
-		console output once you have done the following:<ul>
+		console output.</li>
+	</ul>
+	<hr>
+	<h3><a name="tests">Running tests</a></h3>
+	<p>Each component has it's own All&lt;Component&gt;Tests suite, and all can be run 
+	via org.eclipse.mylar.tests.AllTests.&nbsp; </p>
+	<ul>
 		<li>Add the following to the test configuration under Arguments -&gt; VM 
 		Arguments: -enableassertions -Xmx384M</li>
 		<li>Add a <b>credentials.properties</b> file to 
 		org.eclipse.mylar.bugzilla.tests, and define &quot;username: xxx&quot; and 
 		&quot;password: yyy&quot; in it. Email mylar-dev@ecipse.org for a username and 
 		password.</li>
-	</ul>
-		</li>
 	</ul>
 	<hr>
 	<h3><a name="connector-jira">JIRA Connector</a></h3>
