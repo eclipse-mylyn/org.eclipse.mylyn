@@ -73,6 +73,9 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 		return getFilteredChildrenFor(parent).toArray();
 	}
 
+	/**
+	 * NOTE: If parent is an ITask, this method checks if parent has unfiltered children (see bug 145194).
+	 */
 	public boolean hasChildren(Object parent) {
 		if (parent instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery t = (AbstractRepositoryQuery) parent;
@@ -80,10 +83,21 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 		} else if (parent instanceof AbstractTaskContainer) {
 			AbstractTaskContainer cat = (AbstractTaskContainer) parent;
 			return cat.getChildren() != null && cat.getChildren().size() > 0;
-		} else if (parent instanceof Task) {
-			Task t = (Task) parent;
-			return t.getChildren() != null && t.getChildren().size() > 0;
+		} else if (parent instanceof ITask) {
+			return taskHasUnfilteredChildren((ITask) parent);
 		} 
+		return false;
+	}
+
+	private boolean taskHasUnfilteredChildren(ITask parent) {
+		Set<ITask> children = parent.getChildren();
+		if (children != null) {
+			for (ITask task : children) {
+				if (! filter(task)) {
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 
