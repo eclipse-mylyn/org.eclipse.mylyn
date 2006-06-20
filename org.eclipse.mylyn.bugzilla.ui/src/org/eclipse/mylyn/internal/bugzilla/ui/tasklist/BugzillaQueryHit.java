@@ -16,6 +16,7 @@ import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 
 /**
  * @author Ken Sueda
@@ -75,6 +76,7 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 			this.task = (BugzillaTask)existingTask;
 		} else {
 			task = new BugzillaTask(this, true);
+			task.setSyncState(RepositoryTaskSyncState.INCOMING);
 			MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task);			
 		} 	
 		return task;

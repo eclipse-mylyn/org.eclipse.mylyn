@@ -134,8 +134,10 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 
 		BugzillaTask task = (BugzillaTask) client.createTaskFromExistingKey(repository, "1");
 		assertNotNull(task);
-		assertEquals(task.getSyncState(), RepositoryTaskSyncState.SYNCHRONIZED);
-
+		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
+		client.synchronize(task, true, null);
+		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
+		
 		BugzillaTask retrievedTask = (BugzillaTask) taskList.getTask(task.getHandleIdentifier());
 		assertNotNull(retrievedTask);
 		assertEquals(task.getHandleIdentifier(), retrievedTask.getHandleIdentifier());
@@ -265,8 +267,11 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		String taskNumber = "6";
 		BugzillaTask task = (BugzillaTask) client.createTaskFromExistingKey(repository, taskNumber);
 		assertNotNull(task);
-		assertEquals(task.getSyncState(), RepositoryTaskSyncState.SYNCHRONIZED);
+		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
 		assertTrue(task.isDownloaded());
+		client.synchronize(task, true, null);
+		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
+		
 		assertEquals(6, task.getTaskData().getId());
 		int numAttached = task.getTaskData().getAttachments().size();
 		String fileName = "test-attach-" + System.currentTimeMillis() + ".txt";
@@ -316,30 +321,20 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 	}
 
 	public void testSynchChangedReports() throws Exception {
-		
+
 		init222();
 		BugzillaTask task4 = generateLocalTaskAndDownload("4");
-		assertNotNull(task4);
-		MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(task4);
-		assertTrue(task4.isDownloaded());
 		assertEquals(4, task4.getTaskData().getId());
 
-		String taskNumber5 = "5";
-		BugzillaTask task5 = (BugzillaTask) client.createTaskFromExistingKey(repository, taskNumber5);
-		assertNotNull(task5);
-		MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(task5);
-		assertTrue(task5.isDownloaded());
-		assertEquals(5, task5.getTaskData().getId());
-
+		BugzillaTask task5 = generateLocalTaskAndDownload("5");
+ 		assertEquals(5, task5.getTaskData().getId());
+		
 		Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
 		tasks.add(task4);
 		tasks.add(task5);
 
-		client.synchronize(task4, true, null);
-		client.synchronize(task5, true, null);
-		assertEquals(task4.getSyncState(), RepositoryTaskSyncState.SYNCHRONIZED);
-		assertEquals(task5.getSyncState(), RepositoryTaskSyncState.SYNCHRONIZED);
-
+		synchAndAssertState(tasks, RepositoryTaskSyncState.SYNCHRONIZED);
+		
 		MylarTaskListPlugin.getRepositoryManager().setSyncTime(repository, null);
 		client.synchronizeChanged(repository);
 		// synchronizeChanged uses the date stamp from the most recent task returned so

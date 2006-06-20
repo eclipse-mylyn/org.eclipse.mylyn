@@ -263,12 +263,11 @@ public abstract class AbstractRepositoryConnector {
 			RepositoryTaskData offlineTaskData = OfflineTaskManager.findBug(downloadedTaskData.getRepositoryUrl(),
 					downloadedTaskData.getId());
 
-			if (offlineTaskData != null) {
-				switch (status) {
-				case OUTGOING:
-					// Should not occur if forceSync = false
-				case CONFLICT:
-					// Should not occur if forceSync = false
+			switch (status) {
+			case OUTGOING:
+				// Should not occur if forceSync = false
+			case CONFLICT:
+				if (offlineTaskData != null) {
 					PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 						public void run() {
 							updateLocalCopy = MessageDialog
@@ -290,26 +289,35 @@ public abstract class AbstractRepositoryConnector {
 						downloadedTaskData.setHasChanged(false);
 						status = RepositoryTaskSyncState.SYNCHRONIZED;
 					}
-					break;
-				case INCOMING:
+				} else {
+					downloadedTaskData.setHasChanged(false);
 					status = RepositoryTaskSyncState.SYNCHRONIZED;
-					break;
-				case SYNCHRONIZED:					
-					RepositoryTaskAttribute modifiedDateAttributeDownloaded = downloadedTaskData
-							.getAttribute(RepositoryTaskAttribute.DATE_MODIFIED);
-					Date newModifiedDate = getOfflineTaskHandler().getDateForAttributeType(
-							RepositoryTaskAttribute.DATE_MODIFIED, modifiedDateAttributeDownloaded.getValue());
+				}
+				break;
+			case INCOMING:
+				// Should not occur if forceSync = false
+				status = RepositoryTaskSyncState.SYNCHRONIZED;
+				break;
+			case SYNCHRONIZED:
+				RepositoryTaskAttribute modifiedDateAttribute = downloadedTaskData
+						.getAttribute(RepositoryTaskAttribute.DATE_MODIFIED);
+				if (modifiedDateAttribute != null) {
+					Date newModifiedDate = offlineTaskHandler.getDateForAttributeType(
+							RepositoryTaskAttribute.DATE_MODIFIED, modifiedDateAttribute.getValue());
+
 					if (repositoryTask.getLastModifiedDateStamp() == null
-							|| (newModifiedDate != null && newModifiedDate.compareTo(getOfflineTaskHandler()
-									.getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED,
-											repositoryTask.getLastModifiedDateStamp())) > 0)) {
+							|| newModifiedDate == null
+							|| (newModifiedDate.compareTo(offlineTaskHandler.getDateForAttributeType(
+									RepositoryTaskAttribute.DATE_MODIFIED, repositoryTask.getLastModifiedDateStamp())) > 0)) {
 						status = RepositoryTaskSyncState.INCOMING;
 					}
-					break;
+				} else {
+					status = RepositoryTaskSyncState.INCOMING;
 				}
+				break;
+			}
+			if (offlineTaskData != null) {
 				removeOfflineTaskData(offlineTaskData);
-			} else {
-				status = RepositoryTaskSyncState.SYNCHRONIZED;
 			}
 			repositoryTask.setModifiedDateStamp(downloadedTaskData.getLastModified());
 			repositoryTask.setTaskData(downloadedTaskData);
@@ -443,7 +451,7 @@ public abstract class AbstractRepositoryConnector {
 
 			@Override
 			public void done(IJobChangeEvent event) {
-				Date mostRecent = new Date(0);				
+				Date mostRecent = new Date(0);
 				String mostRecentTimeStamp = repository.getSyncTimeStamp();
 				for (AbstractRepositoryTask task : tasksToSync) {
 					Date taskModifiedDate;
