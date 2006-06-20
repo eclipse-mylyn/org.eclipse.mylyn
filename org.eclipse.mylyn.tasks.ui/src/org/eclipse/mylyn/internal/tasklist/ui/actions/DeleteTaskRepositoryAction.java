@@ -11,6 +11,10 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.actions;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -18,6 +22,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.ui.ISharedImages;
@@ -47,14 +52,41 @@ public class DeleteTaskRepositoryAction extends Action {
 
 	public void run() {
 		try {
+
 			boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 					.getShell(), "Confirm Delete", "Delete the selected task repositories?");
 			if (deleteConfirmed) {
 				IStructuredSelection selection = (IStructuredSelection) repositoriesView.getViewer().getSelection();
+				Set<AbstractRepositoryQuery> queries = MylarTaskListPlugin.getTaskListManager().getTaskList()
+						.getQueries();
+				List<TaskRepository> repositoriesInUse = new ArrayList<TaskRepository>();
+				List<TaskRepository> repositoriesToDelete = new ArrayList<TaskRepository>();
 				for (Object selectedObject : selection.toList()) {
 					if (selectedObject instanceof TaskRepository) {
-						MylarTaskListPlugin.getRepositoryManager().removeRepository((TaskRepository) selectedObject);
+						TaskRepository taskRepository = (TaskRepository) selectedObject;
+						if (queries != null && queries.size() > 0) {
+							for (AbstractRepositoryQuery query : queries) {
+								if (query.getRepositoryUrl().equals(taskRepository.getUrl())) {
+									repositoriesInUse.add(taskRepository);
+									break;
+								}
+							}
+						}
+						if (!repositoriesInUse.contains(taskRepository)) {
+							repositoriesToDelete.add(taskRepository);
+						}
 					}
+				}
+
+				for (TaskRepository taskRepository : repositoriesToDelete) {
+					MylarTaskListPlugin.getRepositoryManager().removeRepository(taskRepository);
+				}
+
+				if (repositoriesInUse.size() > 0) {
+					MessageDialog
+							.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+									"Repository In Use",
+									"One or more of the selected repositories is being used by a query and can not be deleted.");
 				}
 			}
 		} catch (Exception e) {
