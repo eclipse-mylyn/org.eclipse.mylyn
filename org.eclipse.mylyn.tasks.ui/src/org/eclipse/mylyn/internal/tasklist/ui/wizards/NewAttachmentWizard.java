@@ -20,19 +20,26 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.tasklist.LocalAttachment;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 
+/**
+ * A wizard to add a new attachment to a task report.
+ * 
+ * @author Jeff Pound
+ */
 public class NewAttachmentWizard extends Wizard {
 
 	private LocalAttachment attachment;
-	private InputAttachmentSourcePage inputPage; 
+
+	private InputAttachmentSourcePage inputPage;
+
 	private NewAttachmentPage attachPage;
-	
+
 	public NewAttachmentWizard() {
 		super();
 		setNeedsProgressMonitor(true);
 		setWindowTitle("Add a new attachment");
 		attachment = new LocalAttachment();
 	}
-	
+
 	@Override
 	public boolean performFinish() {
 		/* TODO jpound - support non-text in clipboard */
@@ -44,10 +51,11 @@ public class NewAttachmentWizard extends Wizard {
 			if (contents == null) {
 				// TODO Handle error
 			}
-			
-			File file = new File(MylarPlugin.getDefault().getDefaultDataDirectory() + System.getProperty("file.separator").charAt(0) + "Clipboard-attachment");
+
+			File file = new File(MylarPlugin.getDefault().getDefaultDataDirectory()
+					+ System.getProperty("file.separator").charAt(0) + "Clipboard-attachment");
 			try {
-				FileWriter writer = new FileWriter(file);	
+				FileWriter writer = new FileWriter(file);
 				writer.write(contents);
 				writer.flush();
 				writer.close();
@@ -60,12 +68,12 @@ public class NewAttachmentWizard extends Wizard {
 		attachment.setFilePath(path);
 		return true;
 	}
-	
+
 	@Override
 	public boolean canFinish() {
 		return attachPage.isPageComplete();
 	}
-	
+
 	@Override
 	public void addPages() {
 		super.addPages();

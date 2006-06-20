@@ -32,12 +32,19 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
+/**
+ * A wizard page to enter details of a new attachment.
+ * 
+ * @author Jeff Pound
+ */
 public class NewAttachmentPage extends WizardPage {
 
 	private LocalAttachment attachment;
 
 	private Text filePath;
+
 	private Text attachmentDesc;
+
 	private Text attachmentComment;
 
 	private static List<String> contentTypes;
@@ -46,15 +53,15 @@ public class NewAttachmentPage extends WizardPage {
 
 	static {
 		/* For UI */
-		 contentTypes = new LinkedList<String>();
-		 contentTypes.add("text/plain");
-		 contentTypes.add("text/html");
-		 contentTypes.add("application/xml");
-		 contentTypes.add("image/gif");
-		 contentTypes.add("image/jpeg");
-		 contentTypes.add("image/png");
-		 contentTypes.add("application/octet-stream");
-		
+		contentTypes = new LinkedList<String>();
+		contentTypes.add("text/plain");
+		contentTypes.add("text/html");
+		contentTypes.add("application/xml");
+		contentTypes.add("image/gif");
+		contentTypes.add("image/jpeg");
+		contentTypes.add("image/png");
+		contentTypes.add("application/octet-stream");
+
 		/* For auto-detect */
 		extensions2Types = new HashMap<String, String>();
 		extensions2Types.put("txt", "text/plain");
@@ -70,7 +77,6 @@ public class NewAttachmentPage extends WizardPage {
 		extensions2Types.put("gz", "application/octet-stream");
 	}
 
-	
 	protected NewAttachmentPage(LocalAttachment att) {
 		super("AttachmentDetails");
 		setMessage("Attachment Details");
@@ -78,17 +84,18 @@ public class NewAttachmentPage extends WizardPage {
 	}
 
 	public void createControl(Composite parent) {
-		
+
 		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
-		
+
 		Composite composite = toolkit.createComposite(parent);
 		setControl(composite);
-		
+
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		composite.setLayout(new GridLayout(3, false));
 
 		toolkit.createLabel(composite, "File");
-		filePath = new Text(composite, SWT.LEFT); //toolkit.createText(composite, "");
+		filePath = new Text(composite, SWT.LEFT); // toolkit.createText(composite,
+													// "");
 		filePath.setEditable(false);
 		filePath.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 2, 1));
 
@@ -99,11 +106,11 @@ public class NewAttachmentPage extends WizardPage {
 		toolkit.createLabel(composite, "Comment");
 		attachmentComment = toolkit.createText(composite, "");
 		attachmentComment.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-		
+
 		toolkit.createLabel(composite, "Content Type");
 		final Combo contentTypeList = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		final Button isPatchButton = toolkit.createButton(composite, "Patch", SWT.CHECK);
-		
+
 		final HashMap<String, Integer> contentTypeIndices = new HashMap<String, Integer>();
 		Iterator<String> iter = contentTypes.iterator();
 		int i = 0;
@@ -119,13 +126,14 @@ public class NewAttachmentPage extends WizardPage {
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// ignore
 			}
+
 			public void widgetSelected(SelectionEvent e) {
 				attachment.setContentType(contentTypeList.getItem(contentTypeList.getSelectionIndex()));
 			}
 		});
 		contentTypeList.select(0);
 		attachment.setContentType(contentTypeList.getItem(0));
-		
+
 		final NewAttachmentPage thisPage = this;
 		/*
 		 * Attachment file name listener, update the local attachment
@@ -143,12 +151,11 @@ public class NewAttachmentPage extends WizardPage {
 						attachment.setContentType(type);
 					}
 				}
-				
+
 				// check page completenes
 				if ("".equals(attachmentDesc.getText())) {
 					thisPage.setErrorMessage("Description required");
-				}
-				else {
+				} else {
 					if (!"".equals(filePath.getText())) {
 						thisPage.setPageComplete(true);
 						thisPage.setErrorMessage(null);
@@ -160,51 +167,49 @@ public class NewAttachmentPage extends WizardPage {
 		/* Listener for isPatch */
 		isPatchButton.addSelectionListener(new SelectionListener() {
 			private int lastSelected;
+
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// ignore
 			}
+
 			public void widgetSelected(SelectionEvent e) {
 				attachment.setPatch(isPatchButton.getSelection());
 				if (isPatchButton.getSelection()) {
 					lastSelected = contentTypeList.getSelectionIndex();
 					contentTypeList.select(0);
 					contentTypeList.setEnabled(false);
-				}
-				else {
+				} else {
 					contentTypeList.setEnabled(true);
 					contentTypeList.select(lastSelected);
 				}
 			}
 		});
-		
+
 		attachmentDesc.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				if ("".equals(attachmentDesc.getText())) {
 					thisPage.setErrorMessage("Description required");
-				}
-				else {
+				} else {
 					if (!"".equals(filePath.getText())) {
 						thisPage.setPageComplete(true);
 						thisPage.setErrorMessage(null);
 					}
 				}
 			}
-			
+
 		});
 	}
-	
+
 	public boolean isPageComplete() {
 		return !"".equals(filePath.getText()) && !"".equals(attachmentDesc.getText());
 	}
-	
 
-	public void populateAttachment() {	
+	public void populateAttachment() {
 		attachment.setDescription(attachmentDesc.getText());
 		attachment.setComment(attachmentComment.getText());
 	}
-	
-	
-	public LocalAttachment getAttachment() {	
+
+	public LocalAttachment getAttachment() {
 		return attachment;
 	}
 

@@ -167,7 +167,8 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 	// private static int MARGIN = 0;// 5
 
-	//protected SimpleDateFormat simpleDateFormat = new SimpleDateFormat("E MMM dd, yyyy hh:mm aa");
+	// protected SimpleDateFormat simpleDateFormat = new SimpleDateFormat("E MMM
+	// dd, yyyy hh:mm aa");
 
 	// "yyyy-MM-dd HH:mm"
 
@@ -415,7 +416,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	 * @return The task data this editor is displaying.
 	 */
 	public abstract RepositoryTaskData getRepositoryTaskData();
-	
+
 	public String getNewCommentText() {
 		return addCommentsTextBox.getText();
 	}
@@ -474,14 +475,15 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	 * By default puts task number, date opened and date modified in header
 	 */
 	protected void createReportHeaderLayout(Composite composite) {
-		
+
 		// Summary Field
-//		Composite summaryComposite = toolkit.createComposite(editorComposite);
-//		summaryComposite.setLayout(new GridLayout(2, false));
-//		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryComposite);
+		// Composite summaryComposite =
+		// toolkit.createComposite(editorComposite);
+		// summaryComposite.setLayout(new GridLayout(2, false));
+		// GridDataFactory.fillDefaults().grab(true,
+		// false).applyTo(summaryComposite);
 		addSummaryText(composite);
-		
-		
+
 		Composite headerInfoComposite = toolkit.createComposite(composite);
 		headerInfoComposite.setLayout(new GridLayout(6, false));
 		toolkit.createLabel(headerInfoComposite, "ID: ").setFont(TITLE_FONT);
@@ -667,7 +669,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		Composite summaryComposite = toolkit.createComposite(attributesComposite);
 		summaryComposite.setLayout(new GridLayout(2, false));
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryComposite);
-		
+
 		toolkit.createLabel(summaryComposite, "Summary:").setFont(TITLE_FONT);
 		summaryText = toolkit.createText(summaryComposite, getRepositoryTaskData().getSummary(), SWT.FLAT);
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
@@ -691,17 +693,17 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		final Composite attachmentsComposite = toolkit.createComposite(section);
-		attachmentsComposite.setLayout(new GridLayout(2, false));
+		attachmentsComposite.setLayout(new GridLayout(1, false));
 		attachmentsComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		section.setClient(attachmentsComposite);
-		
+
 		if (getRepositoryTaskData().getAttachments().size() > 0) {
 
 			attachmentsTable = toolkit.createTable(attachmentsComposite, SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION);
 			attachmentsTable.setLinesVisible(true);
 			attachmentsTable.setHeaderVisible(true);
 			attachmentsTable.setLayout(new GridLayout());
-			GridData tableGridData = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
+			GridData tableGridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 			// tableGridData.heightHint = 100;
 			tableGridData.widthHint = DESCRIPTION_WIDTH;
 			attachmentsTable.setLayoutData(tableGridData);
@@ -716,7 +718,6 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 			attachmentsTableViewer.setUseHashlookup(true);
 			attachmentsTableViewer.setColumnProperties(attachmentsColumns);
 
-			
 			final AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager()
 					.getRepositoryConnector(getRepositoryTaskData().getRepositoryKind());
 
@@ -724,11 +725,13 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 				final IOfflineTaskHandler offlineHandler = connector.getOfflineTaskHandler();
 				if (offlineHandler != null) {
 					attachmentsTableViewer.setSorter(new ViewerSorter() {
-						public int compare(Viewer viewer, Object e1, Object e2) {							
+						public int compare(Viewer viewer, Object e1, Object e2) {
 							RepositoryAttachment attachment1 = (RepositoryAttachment) e1;
 							RepositoryAttachment attachment2 = (RepositoryAttachment) e2;
-							Date created1 = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.ATTACHMENT_DATE, attachment1.getDateCreated());
-							Date created2 = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.ATTACHMENT_DATE, attachment2.getDateCreated());
+							Date created1 = offlineHandler.getDateForAttributeType(
+									RepositoryTaskAttribute.ATTACHMENT_DATE, attachment1.getDateCreated());
+							Date created2 = offlineHandler.getDateForAttributeType(
+									RepositoryTaskAttribute.ATTACHMENT_DATE, attachment2.getDateCreated());
 							if (created1 != null && created2 != null) {
 								return attachment1.getDateCreated().compareTo(attachment2.getDateCreated());
 							} else {
@@ -739,7 +742,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 				}
 
 			}
-			
+
 			attachmentsTableViewer.setContentProvider(new IStructuredContentProvider() {
 				public Object[] getElements(Object inputElement) {
 					return getRepositoryTaskData().getAttachments().toArray();
@@ -823,25 +826,30 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		final Text newAttachment = new Text(attachmentsComposite, SWT.LEFT);
 		newAttachment.setEditable(false);
 		newAttachment.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
+
 		addAttachmentButton.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// ignore
 			}
+
 			public void widgetSelected(SelectionEvent e) {
-				NewAttachmentWizard naw = new NewAttachmentWizard();				
+				NewAttachmentWizard naw = new NewAttachmentWizard();
 				WizardDialog dialog = new WizardDialog(form.getShell(), naw);
 				dialog.create();
-				dialog.open();
-				final LocalAttachment att = naw.getAttachment();
-				att.setReport(getRepositoryTaskData());
-				getRepositoryTaskData().setNewAttachment(att);
-				// TODO: Add row to table 
-//				RepositoryTaskData data = getRepositoryTaskData();
-//				data.addAttachment(new DisplayableLocalAttachment(att));
-//				attachmentsTableViewer.setInput(data);
-				newAttachment.setText((new File(att.getFilePath())).getName() + " <not yet submitted>");
-				attachmentsComposite.redraw();
+				if (dialog.open() != SWT.OK) {
+					getRepositoryTaskData().setNewAttachment(null);
+				} else {
+					final LocalAttachment att = naw.getAttachment();
+					att.setReport(getRepositoryTaskData());
+					getRepositoryTaskData().setNewAttachment(att);
+
+					// TODO: Add row to table
+					// RepositoryTaskData data = getRepositoryTaskData();
+					// data.addAttachment(new DisplayableLocalAttachment(att));
+					// attachmentsTableViewer.setInput(data);
+					newAttachment.setText((new File(att.getFilePath())).getName() + " <not yet submitted>");
+					attachmentsComposite.redraw();
+				}
 			}
 		});
 	}
@@ -1436,9 +1444,10 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 					}
 					MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 				}
-				// TODO: move out of if when adding support for saving new bug reports offline
+				// TODO: move out of if when adding support for saving new bug
+				// reports offline
 				repositoryClient.saveOffline(getRepositoryTaskData());
-			}			
+			}
 			changeDirtyStatus(false);
 			if (parentEditor != null) {
 				parentEditor.notifyTaskChanged();
@@ -1901,44 +1910,44 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	// rect.width + 2 * MARGIN);
 	// styledText.setStyleRange(style);
 	// }
-	
-//	private class DisplayableLocalAttachment extends RepositoryAttachment {
-//		private static final long serialVersionUID = 900218036143022422L;
-//		
-//		private Date date;
-//		private String description;
-//		private String creator;
-//		private String name;
-//		
-//		public String getCreator() {
-//			return creator;
-//		}
-//		public void setCreator(String creator) {
-//			this.creator = creator;
-//		}
-//		public Date getDateCreated() {
-//			return date;
-//		}
-//		public void setDateCreated(Date date) {
-//			this.date = date;
-//		}
-//		public String getDescription() {
-//			return description;
-//		}
-//		public void setDescription(String description) {
-//			this.description = description;
-//		}
-//		public String getName() {
-//			return name;
-//		}
-//		public void setName(String name) {
-//			this.name = name;
-//		}
-//		public DisplayableLocalAttachment(LocalAttachment att) {
-//			super(null);
-//			setName(att.getFilePath());
-//			setDescription(att.getDescription());
-//			setDateCreated(new Date());
-//		}
-//	}
+
+	// private class DisplayableLocalAttachment extends RepositoryAttachment {
+	// private static final long serialVersionUID = 900218036143022422L;
+	//		
+	// private Date date;
+	// private String description;
+	// private String creator;
+	// private String name;
+	//		
+	// public String getCreator() {
+	// return creator;
+	// }
+	// public void setCreator(String creator) {
+	// this.creator = creator;
+	// }
+	// public Date getDateCreated() {
+	// return date;
+	// }
+	// public void setDateCreated(Date date) {
+	// this.date = date;
+	// }
+	// public String getDescription() {
+	// return description;
+	// }
+	// public void setDescription(String description) {
+	// this.description = description;
+	// }
+	// public String getName() {
+	// return name;
+	// }
+	// public void setName(String name) {
+	// this.name = name;
+	// }
+	// public DisplayableLocalAttachment(LocalAttachment att) {
+	// super(null);
+	// setName(att.getFilePath());
+	// setDescription(att.getDescription());
+	// setDateCreated(new Date());
+	// }
+	// }
 }

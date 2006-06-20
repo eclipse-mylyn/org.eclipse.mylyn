@@ -8,8 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Sebastian Davids <sdavids@gmx.de> - layout tweaks
- *     
- *     Based on org.eclipse.compare's InputPatchPage
+ *     Jeff Pound <jeff.bagu@gmail.com> - modified for attachment input
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasklist.ui.wizards;
 
@@ -64,6 +63,12 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceSorter;
 
+/**
+ * A wizard to input the source of the attachment. This is a modified version of
+ * org.eclipse.compare.internal.InputPatchPage.
+ * 
+ * @author Jeff Pound
+ */
 public class InputAttachmentSourcePage extends WizardPage {
 
 	// constants
@@ -125,7 +130,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 		super("InputAttachmentPage");
 		this.wizard = wizard;
 		setTitle("Select attachment source");
-//		setMessage("Please select the source for the attachment");
+		// setMessage("Please select the source for the attachment");
 	}
 
 	/*
@@ -149,7 +154,9 @@ public class InputAttachmentSourcePage extends WizardPage {
 
 		Composite composite = new Composite(parent, SWT.NULL);
 		composite.setLayout(new GridLayout());
-		composite.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL));
+		GridData gd = new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL);
+		gd.heightHint = 800;
+		composite.setLayoutData(gd);
 		setControl(composite);
 
 		initializeDialogUnits(parent);
