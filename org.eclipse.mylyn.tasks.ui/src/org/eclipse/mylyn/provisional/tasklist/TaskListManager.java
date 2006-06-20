@@ -442,7 +442,7 @@ public class TaskListManager {
 		return TaskRepositoryManager.PREFIX_LOCAL + nextLocalTaskId++;
 	}
 
-	public void refactorRepositoryUrl(Object oldUrl, String newUrl) {
+	public void refactorRepositoryUrl(String oldUrl, String newUrl) {
 		if (oldUrl == null || newUrl == null || oldUrl.equals(newUrl)) {
 			return;
 		} 
