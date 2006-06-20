@@ -141,7 +141,8 @@ public class LandmarkMarkerManager implements IMylarContextListener {
 					};
 					resource.getWorkspace().run(runnable, null);
 				} catch (JavaModelException e) {
-					MylarStatusHandler.fail(e, "couldn't update landmark marker", false);
+					// ignore the Java Model errors
+//					MylarStatusHandler.fail(e, "couldn't update landmark marker", false);
 				} catch (CoreException e) {
 					MylarStatusHandler.fail(e, "couldn't update landmark marker", false);
 				}
