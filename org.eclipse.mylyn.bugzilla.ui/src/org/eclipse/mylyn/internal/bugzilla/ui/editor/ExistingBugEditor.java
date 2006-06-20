@@ -112,6 +112,16 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 
 	protected AbstractRepositoryConnector connector;
 
+	protected Text estimateText;
+
+	protected Text actualText;
+
+	protected Text remainingText;
+
+	protected Text addTimeText;
+
+	protected Text deadlineText;
+
 	// public String getNewCommentText() {
 	// return addCommentsTextBox.getText();
 	// }
@@ -438,7 +448,10 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		// attributesData.grabExcessVerticalSpace = false;
 		// composite.setLayoutData(attributesData);
 		addCCList(toolkit, "", composite);
-
+		
+		if (getRepositoryTaskData().getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()) != null)
+			addBugzillaTimeTracker(toolkit, composite);
+		
 		// URL field
 		// addUrlText(getReport().getAttributeValue(BugzillaReportElement.BUG_FILE_LOC.getKeyString()),
 		// customAttributesComposite);
@@ -453,6 +466,70 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 							+ "\n\nError reported: " + e.getMessage());
 		}
 
+	}
+
+	protected void addBugzillaTimeTracker(FormToolkit toolkit, Composite parent) {
+		RepositoryTaskData data = getRepositoryTaskData(); 
+		
+		toolkit.createLabel(parent, BugzillaReportElement.ESTIMATED_TIME.toString());
+		estimateText = toolkit.createText(parent, data.getAttributeValue(BugzillaReportElement.ESTIMATED_TIME.getKeyString()));
+		estimateText.setFont(TEXT_FONT);
+		estimateText.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+		estimateText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				changeDirtyStatus(true);
+				taskData.setAttributeValue(BugzillaReportElement.ESTIMATED_TIME.getKeyString(), estimateText.getText());
+			}
+		});
+		
+		toolkit.createLabel(parent, "Current Estimate:");
+		Text currentEstimate = toolkit.createText(parent, 
+				"" + (Float.parseFloat(data.getAttributeValue(BugzillaReportElement.ACTUAL_TIME.getKeyString())) +
+				      Float.parseFloat(data.getAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString())))
+		); // TODO Remove border?
+		currentEstimate.setFont(TEXT_FONT);
+		currentEstimate.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+		currentEstimate.setEditable(false);
+		
+		toolkit.createLabel(parent, BugzillaReportElement.ACTUAL_TIME.toString());
+		actualText = toolkit.createText(parent, data.getAttributeValue(BugzillaReportElement.ACTUAL_TIME.getKeyString()));
+		actualText.setFont(TEXT_FONT);
+		actualText.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+		actualText.setEditable(false);
+				
+		data.setAttributeValue(BugzillaReportElement.WORK_TIME.getKeyString(), "0.0");
+		toolkit.createLabel(parent, BugzillaReportElement.WORK_TIME.toString());
+		addTimeText = toolkit.createText(parent, data.getAttributeValue(BugzillaReportElement.WORK_TIME.getKeyString()));
+		addTimeText.setFont(TEXT_FONT);
+		addTimeText.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+		addTimeText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				changeDirtyStatus(true);
+				taskData.setAttributeValue(BugzillaReportElement.WORK_TIME.getKeyString(), addTimeText.getText());
+			}
+		});
+		
+		toolkit.createLabel(parent, BugzillaReportElement.REMAINING_TIME.toString());
+		remainingText = toolkit.createText(parent, data.getAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString())); 
+		remainingText.setFont(TEXT_FONT);
+		remainingText.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+		remainingText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				changeDirtyStatus(true);
+				taskData.setAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString(), remainingText.getText());
+			}
+		});
+		
+		toolkit.createLabel(parent, BugzillaReportElement.DEADLINE.toString());
+		deadlineText = toolkit.createText(parent, data.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString()));
+		deadlineText.setFont(TEXT_FONT);
+		deadlineText.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+		deadlineText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				changeDirtyStatus(true);
+				taskData.setAttributeValue(BugzillaReportElement.DEADLINE.getKeyString(), deadlineText.getText());
+			}
+		});
 	}
 
 	protected void addKeywordsList(FormToolkit toolkit, String keywords, Composite attributesComposite)

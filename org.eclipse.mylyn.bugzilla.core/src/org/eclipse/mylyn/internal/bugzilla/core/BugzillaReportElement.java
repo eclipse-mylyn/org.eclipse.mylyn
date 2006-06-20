@@ -20,6 +20,8 @@ package org.eclipse.mylar.internal.bugzilla.core;
 public enum BugzillaReportElement {
 	// Format: ENUM ( "pretty name", "xml key", <hidden: true/false>, <readonly: true/false>)
 	// Hidden elements are not automatically displayed in ui	
+	ACTUAL_TIME ("Hours Worked:", "actual_time", true),
+	ADD_COMMENT ("Additional Comments:", "comment", true, false),
 	ASSIGNED_TO ("Assigned to:", "assigned_to", false, true),
 	ATTACHID ("attachid", "attachid"),
 	ATTACHMENT ("attachment", "attachment"),
@@ -40,10 +42,12 @@ public enum BugzillaReportElement {
 	CTYPE ("Content Type", "ctype"),
 	DATA ("data", "data"), 
 	DATE ("Date", "date"), 
+	DEADLINE ("Deadline:", "deadline", true, true),
 	DELTA_TS ("Last Modification", "delta_ts", true), 
 	DEPENDSON ("Bug depends on:", "dependson"), 
 	DESC ("desc", "desc"), 
 	EVERCONFIRMED ("everconfirmed", "everconfirmed", true),
+	ESTIMATED_TIME ("Estimated Time:", "estimated_time", true),
 	FILENAME ("filename", "filename"),
 	IS_OBSOLETE ("Obsolete", "isobsolete", true), 
 	KEYWORDS ("Keywords:", "keywords", true),
@@ -57,6 +61,7 @@ public enum BugzillaReportElement {
 	REPORTER ("Reporter:", "reporter", false, true),
 	REPORTER_ACCESSIBLE ("reporter_accessible", "reporter_accessible", true),
 	RESOLUTION ("Resolution:", "resolution", false, true), // Exiting bug field, new cc
+	REMAINING_TIME( "Hours Left:", "remaining_time", true),
 	SHORT_DESC ("Summary:", "short_desc", true),
 	TARGET_MILESTONE ("Target milestone:", "target_milestone", false),
 	THETEXT ("thetext", "thetext"),
@@ -64,6 +69,7 @@ public enum BugzillaReportElement {
 	UNKNOWN ("UNKNOWN", "UNKNOWN"),
 	VERSION ("Version:", "version", false),
 	VOTES ("Votes:", "votes", false, true),
+	WORK_TIME("Add Time:", "work_time", true, false),
 	WHO ("who", "who"),
 	QA_CONTACT("QA Contact", "qa_contact", false, false),
 	ADDSELFCC ("Add self to CC", "addselfcc", true, false),

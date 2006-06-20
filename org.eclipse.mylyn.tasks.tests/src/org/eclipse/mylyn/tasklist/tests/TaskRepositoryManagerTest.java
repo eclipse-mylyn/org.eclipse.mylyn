@@ -174,18 +174,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		assertEquals(temp.getTimeZoneId(), fakeTimeZone);
 	}
 	
-	
-	public void testRepositorySyncTimePersistance1() throws MalformedURLException {
-		assertEquals("", MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
-		TaskRepository repository1 = new TaskRepository("bugzilla", "http://bugzilla");		
-		manager.addRepository(repository1);
-		manager.readRepositories();
-		TaskRepository temp = manager.getRepository(repository1.getKind(), repository1.getUrl());
-		assertNotNull(temp);
-		assertNull(temp.getSyncTimeStamp());		
-	}
-		
-	public void testRepositorySyncTimePersistance2() throws MalformedURLException {
+	public void testRepositorySyncTimePersistance() throws MalformedURLException {
 		assertEquals("", MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
 		TaskRepository repository1 = new TaskRepository("bugzilla", "http://bugzilla");
 		

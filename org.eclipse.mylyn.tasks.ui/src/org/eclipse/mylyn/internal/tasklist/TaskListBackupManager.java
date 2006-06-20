@@ -137,17 +137,21 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 
 		File[] backupFileArray = backupFiles.toArray(new File[1]);
 
-		Arrays.sort(backupFileArray, new Comparator<File>() {
-			public int compare(File file1, File file2) {
-				return new Long((file1).lastModified()).compareTo(new Long((file2).lastModified()));
-			}
+		if (backupFileArray != null && backupFileArray.length > 0) {
+			Arrays.sort(backupFileArray, new Comparator<File>() {
+				public int compare(File file1, File file2) {
+					return new Long((file1).lastModified()).compareTo(new Long((file2).lastModified()));
+				}
 
-		});
+			});
 
-		int toomany = backupFileArray.length - maxBackups;
-		if (toomany > 0) {
-			for (int x = 0; x < toomany; x++) {
-				backupFileArray[x].delete();
+			int toomany = backupFileArray.length - maxBackups;
+			if (toomany > 0) {
+				for (int x = 0; x < toomany; x++) {
+					if(backupFileArray[x] != null) {
+						backupFileArray[x].delete();
+					}
+				}
 			}
 		}
 	}

@@ -294,8 +294,7 @@ public abstract class AbstractRepositoryConnector {
 				case INCOMING:
 					status = RepositoryTaskSyncState.SYNCHRONIZED;
 					break;
-				case SYNCHRONIZED:
-					// XXX: FIX THIS
+				case SYNCHRONIZED:					
 					RepositoryTaskAttribute modifiedDateAttributeDownloaded = downloadedTaskData
 							.getAttribute(RepositoryTaskAttribute.DATE_MODIFIED);
 					Date newModifiedDate = getOfflineTaskHandler().getDateForAttributeType(
@@ -444,8 +443,8 @@ public abstract class AbstractRepositoryConnector {
 
 			@Override
 			public void done(IJobChangeEvent event) {
-				Date mostRecent = new Date(0);
-				String mostRecentTimeStamp = "";
+				Date mostRecent = new Date(0);				
+				String mostRecentTimeStamp = repository.getSyncTimeStamp();
 				for (AbstractRepositoryTask task : tasksToSync) {
 					Date taskModifiedDate;
 

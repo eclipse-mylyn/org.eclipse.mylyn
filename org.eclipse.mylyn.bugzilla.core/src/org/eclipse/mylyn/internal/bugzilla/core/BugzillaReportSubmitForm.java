@@ -86,8 +86,9 @@ public class BugzillaReportSubmitForm {
 	private static final String VAL_NONE = "none";
 
 	private static final String KEY_KNOB = "knob";
-
-	private static final String KEY_COMMENT = "comment";
+	
+//	 TODO change to BugzillaReportElement.ADD_COMMENT
+	private static final String KEY_COMMENT = "comment";  
 
 	private static final String KEY_SHORT_DESC = "short_desc";
 
