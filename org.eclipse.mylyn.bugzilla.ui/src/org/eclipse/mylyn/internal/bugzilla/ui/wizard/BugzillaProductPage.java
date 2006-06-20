@@ -70,8 +70,8 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 
 	private static final String NEW_BUGZILLA_TASK_ERROR_TITLE = "New Bugzilla Task Error";
 
-	private static final String DESCRIPTION = "Pick a product on which to enter a bug.\n"
-			+ "Press the Update button if you do not see the desired product.";
+	private static final String DESCRIPTION = "Pick a product to open the new bug editor.\n"
+			+ "Press the Update button if the product is not in the list.";
 
 	private static final String LABEL_UPDATE = "Update Products from Repository";
 
