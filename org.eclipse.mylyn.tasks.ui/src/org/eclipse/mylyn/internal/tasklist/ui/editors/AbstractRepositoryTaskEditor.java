@@ -693,7 +693,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		final Composite attachmentsComposite = toolkit.createComposite(section);
-		attachmentsComposite.setLayout(new GridLayout(1, false));
+		attachmentsComposite.setLayout(new GridLayout(2, false));
 		attachmentsComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		section.setClient(attachmentsComposite);
 
@@ -703,7 +703,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 			attachmentsTable.setLinesVisible(true);
 			attachmentsTable.setHeaderVisible(true);
 			attachmentsTable.setLayout(new GridLayout());
-			GridData tableGridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+			GridData tableGridData = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
 			// tableGridData.heightHint = 100;
 			tableGridData.widthHint = DESCRIPTION_WIDTH;
 			attachmentsTable.setLayoutData(tableGridData);
@@ -819,6 +819,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 		} else {
 			toolkit.createLabel(attachmentsComposite, "No attachments");
+			toolkit.createLabel(attachmentsComposite, "");
 		}
 
 		/* Launch a NewAttachemntWizard */
@@ -836,7 +837,8 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 				NewAttachmentWizard naw = new NewAttachmentWizard();
 				WizardDialog dialog = new WizardDialog(form.getShell(), naw);
 				dialog.create();
-				if (dialog.open() != SWT.OK) {
+				dialog.open();
+				if (dialog.getReturnCode() == WizardDialog.CANCEL) {
 					getRepositoryTaskData().setNewAttachment(null);
 				} else {
 					final LocalAttachment att = naw.getAttachment();
