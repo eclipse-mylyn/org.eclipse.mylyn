@@ -19,6 +19,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Properties;
@@ -377,6 +378,48 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		
 		assertEquals(priority4, task4.getPriority());
 		assertEquals(priority5, task5.getPriority());
+	}
+	
+	public void testIncomingWhenOfflineDeleted() throws Exception {
+
+		init222();
+		BugzillaTask task7 = generateLocalTaskAndDownload("7");
+		assertEquals(7, task7.getTaskData().getId());
+		
+		Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
+		tasks.add(task7);
+		synchAndAssertState(tasks, RepositoryTaskSyncState.SYNCHRONIZED);
+		
+		RepositoryTaskData recentTaskData = task7.getTaskData();
+		assertNotNull(recentTaskData);
+		
+		assertFalse(MylarTaskListPlugin.getDefault().getOfflineReportsFile().find(IBugzillaConstants.TEST_BUGZILLA_222_URL, 7) == -1);
+		ArrayList<RepositoryTaskData> taskDataList = new ArrayList<RepositoryTaskData>();		
+		taskDataList.add(task7.getTaskData());
+		MylarTaskListPlugin.getDefault().getOfflineReportsFile().remove(taskDataList);
+		assertTrue(MylarTaskListPlugin.getDefault().getOfflineReportsFile().find(IBugzillaConstants.TEST_BUGZILLA_222_URL, 7) == -1);
+		
+		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task7.getSyncState());
+		// Task no longer stored offline		
+		// make an external change		
+		assertNotNull(repository.getUserName());
+		assertNotNull(repository.getPassword());
+
+		String priority = null;
+		if (task7.getPriority().equals("P1")) {
+			priority = "P2";
+			recentTaskData.setAttributeValue(BugzillaReportElement.PRIORITY.getKeyString(), priority);
+		} else {
+			priority = "P1";
+			recentTaskData.setAttributeValue(BugzillaReportElement.PRIORITY.getKeyString(), priority);
+		}
+		
+		BugzillaReportSubmitForm bugzillaReportSubmitForm;
+		bugzillaReportSubmitForm = makeExistingBugPost(recentTaskData);
+		bugzillaReportSubmitForm.submitReportToRepository();		
+		client.synchronizeChanged(repository);
+		
+		assertEquals(RepositoryTaskSyncState.INCOMING, task7.getSyncState());		
 	}
 	
 	private BugzillaTask generateLocalTaskAndDownload(String taskNumber) {
