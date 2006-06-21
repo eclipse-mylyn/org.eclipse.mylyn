@@ -301,19 +301,18 @@ public abstract class AbstractRepositoryConnector {
 			case SYNCHRONIZED:
 				RepositoryTaskAttribute modifiedDateAttribute = downloadedTaskData
 						.getAttribute(RepositoryTaskAttribute.DATE_MODIFIED);
-				if (modifiedDateAttribute != null) {
+				if (repositoryTask.getLastModifiedDateStamp() != null && modifiedDateAttribute != null) {
 					Date newModifiedDate = offlineTaskHandler.getDateForAttributeType(
 							RepositoryTaskAttribute.DATE_MODIFIED, modifiedDateAttribute.getValue());
-
-					if (repositoryTask.getLastModifiedDateStamp() == null
-							|| newModifiedDate == null
-							|| (newModifiedDate.compareTo(offlineTaskHandler.getDateForAttributeType(
-									RepositoryTaskAttribute.DATE_MODIFIED, repositoryTask.getLastModifiedDateStamp())) > 0)) {
+					Date oldModifiedDate = offlineTaskHandler.getDateForAttributeType(
+							RepositoryTaskAttribute.DATE_MODIFIED, repositoryTask.getLastModifiedDateStamp());
+					if (oldModifiedDate != null && newModifiedDate != null
+							&& (newModifiedDate.compareTo(oldModifiedDate) > 0)) {
 						status = RepositoryTaskSyncState.INCOMING;
 					}
-				} else {
-					status = RepositoryTaskSyncState.INCOMING;
+					break;
 				}
+				status = RepositoryTaskSyncState.INCOMING;
 				break;
 			}
 			if (offlineTaskData != null) {
