@@ -9,25 +9,22 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.trac.tests;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+package org.eclipse.mylar.internal.trac.core;
 
 /**
- * @author Mik Kersten
+ * Indicates an authentication error during login.
+ * 
  * @author Steffen Pingel
  */
-public class AllTracTests {
+public class TracLoginException extends TracException {
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.trac.tests");
-		//$JUnit-BEGIN$
-		suite.addTestSuite(TracXmlRpcTest.class);
-		suite.addTestSuite(TracSearchTest.class);
-		suite.addTestSuite(TracTicketTest.class);
-		//$JUnit-END$
-		return suite;
+	private static final long serialVersionUID = -6128773690643367414L;
+
+	public TracLoginException() {
+	}
+
+	public TracLoginException(String message) {
+		super(message);
 	}
 
 }
