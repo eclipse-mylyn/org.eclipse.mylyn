@@ -2,7 +2,7 @@
 <?eclipse version="3.0"?>
 <?eclipse version="3.0"?>
 <plugin>
-   <extension-point id="teamRepositoryProvider" name="Mylar Team Repository Provider" schema="schema/teamRepositoryProvider.exsd"/>
+   <extension-point id="teamProviders" name="Mylar Team Providers" schema="schema/teamProviders.exsd"/>
    <extension
          point="org.eclipse.mylar.core.context">
       <structureBridge class="org.eclipse.mylar.internal.ide.ResourceStructureBridge"/> 
@@ -226,12 +226,14 @@
             state="true">
       </decorator>
     </extension>
+    
    <extension
-         point="org.eclipse.mylar.ide.teamRepositoryProvider">
+         point="org.eclipse.mylar.ide.teamProviders">
       <repositoryProvider class="org.eclipse.mylar.internal.ide.team.ccvs.CVSRepositoryProvider"/>
    </extension>
    <extension
-         point="org.eclipse.mylar.ide.teamRepositoryProvider">
+         point="org.eclipse.mylar.ide.teamProviders">
       <repositoryProvider class="org.eclipse.mylar.internal.ide.team.subclipse.SubclipseTeamRepositoryProvider"/>
    </extension>
+   
 </plugin>

@@ -26,6 +26,8 @@ import org.eclipse.mylar.provisional.ide.team.TeamRepositoryProvider;
 
 /**
  * Manages the registeres repository provides.
+ * 
+ * @author Gunnar Wagenknecht
  */
 public class TeamRespositoriesManager {
 
@@ -33,16 +35,10 @@ public class TeamRespositoriesManager {
 
 	private static final String ELEM_REPOSITORY_PROVIDER = "repositoryProvider";
 
-	private static final String EXT_POINT_TEAM_REPOSITORY_PROVIDER = "teamRepositoryProvider";
+	private static final String EXT_POINT_TEAM_REPOSITORY_PROVIDER = "teamProviders";
 
-	/** the shared instance */
 	private static TeamRespositoriesManager sharedInstance;
 
-	/**
-	 * Returns the shared instance.
-	 * 
-	 * @return the shared instance
-	 */
 	public static TeamRespositoriesManager getInstance() {
 		if (null == sharedInstance)
 			initialize();
@@ -60,22 +56,17 @@ public class TeamRespositoriesManager {
 		sharedInstance = new TeamRespositoriesManager();
 	}
 
-	/** the provider */
 	private List<TeamRepositoryProvider> provider;
 
-	/**
-	 * Hidden constructor.
-	 */
 	private TeamRespositoriesManager() {
-		/* hidden */
 		readExtensions();
 	}
 
 	private void readExtensions() {
 		ArrayList<TeamRepositoryProvider> providerList = new ArrayList<TeamRepositoryProvider>();
-		IExtensionPoint teamRepositoryProvider = Platform.getExtensionRegistry().getExtensionPoint(
+		IExtensionPoint teamProvider = Platform.getExtensionRegistry().getExtensionPoint(
 				MylarIdePlugin.PLUGIN_ID, EXT_POINT_TEAM_REPOSITORY_PROVIDER);
-		IExtension[] extensions = teamRepositoryProvider.getExtensions();
+		IExtension[] extensions = teamProvider.getExtensions();
 		for (int i = 0; i < extensions.length; i++) {
 			IExtension extension = extensions[i];
 			IConfigurationElement[] elements = extension.getConfigurationElements();
@@ -90,6 +81,7 @@ public class TeamRespositoriesManager {
 								.createExecutableExtension(ATTR_CLASS);
 						providerList.add(provider);
 					} catch (CoreException e) {
+						// ignore, we 
 						MylarStatusHandler.log(e, MessageFormat.format(
 								"Error while initializing repository contribution {0} from plugin {1}.", element
 										.getAttribute(ATTR_CLASS), element.getContributor().getName()));
