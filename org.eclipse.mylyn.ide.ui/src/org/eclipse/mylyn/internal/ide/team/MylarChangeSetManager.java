@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.internal.ide.team;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +18,6 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.internal.core.MylarContextManager;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
@@ -28,18 +26,16 @@ import org.eclipse.mylar.provisional.core.IMylarContextListener;
 import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.provisional.ide.team.TeamRepositoryProvider;
 import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.DateRangeContainer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.provisional.tasklist.ITaskListChangeListener;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.team.internal.ccvs.core.mapping.CVSActiveChangeSetCollector;
-import org.eclipse.team.internal.ccvs.ui.CVSUIPlugin;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
 import org.eclipse.team.internal.core.subscribers.IChangeSetChangeListener;
-import org.osgi.framework.Bundle;
 
 /**
  * @author Mik Kersten
@@ -151,19 +147,11 @@ public class MylarChangeSetManager implements IMylarContextListener {
 	private boolean isEnabled = false;
 
 	public MylarChangeSetManager() {
-		collectors.add((CVSActiveChangeSetCollector)CVSUIPlugin.getPlugin().getChangeSetManager());
-		Bundle svnBundle = Platform.getBundle("org.tigris.subversion.subclipse.core");
-		if (svnBundle != null) {
-			Method getChangeSetManagerMethod;
-			try {
-				Class providerPlugin = svnBundle.loadClass("org.tigris.subversion.subclipse.core.SVNProviderPlugin"); //Class.forName("org.tigris.subversion.subclipse.core.SVNProviderPlugin");
-				Method getPluginMethod = providerPlugin.getMethod("getPlugin", new Class[0]);
-				Object pluginInstance = getPluginMethod.invoke(null, new Object[0]);
-				getChangeSetManagerMethod = providerPlugin.getDeclaredMethod("getChangeSetManager", new Class[0]);
-				collectors.add((ActiveChangeSetManager) getChangeSetManagerMethod.invoke(pluginInstance, new Object[0]));
-			} catch (Throwable t) {
-				// intore missing tigris collector
-			}
+		List<TeamRepositoryProvider> providerList = TeamRespositoriesManager.getInstance().getProvider();
+		for (TeamRepositoryProvider provider : providerList) {
+			ActiveChangeSetManager changeSetManager = provider.getActiveChangeSetManager();
+			if(null != changeSetManager)
+				collectors.add(changeSetManager);
 		}
 	}
 

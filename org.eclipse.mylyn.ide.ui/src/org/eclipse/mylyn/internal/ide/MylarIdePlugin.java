@@ -38,6 +38,8 @@ import org.osgi.framework.BundleContext;
  * @author Mik Kersten
  */
 public class MylarIdePlugin extends AbstractUIPlugin {
+	
+	public static final String PLUGIN_ID = "org.eclipse.mylar.ide";
 
 	private MylarEditorManager editorManager = new MylarEditorManager();
 
