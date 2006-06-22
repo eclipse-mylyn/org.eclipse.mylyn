@@ -26,6 +26,10 @@ public class AllTracTests {
 		suite.addTestSuite(TracXmlRpcTest.class);
 		suite.addTestSuite(TracSearchTest.class);
 		suite.addTestSuite(TracTicketTest.class);
+		suite.addTestSuite(TracXmlRpcRepositoryTest.class);
+		suite.addTestSuite(TracXmlRpcRepositorySearchTest.class);
+		suite.addTestSuite(Trac09RepositoryTest.class);
+		suite.addTestSuite(Trac09RepositorySearchTest.class);
 		//$JUnit-END$
 		return suite;
 	}
