@@ -32,7 +32,7 @@ public class TrustAllSslProtocolSocketFactory implements ProtocolSocketFactory {
 
 	private SSLContext sslContext;
 
-	private SSLContext getSSLContext() {
+	private SSLContext getSslContext() {
 		if (sslContext == null) {
 			try {
 				sslContext = SSLContext.getInstance("SSL");
@@ -45,20 +45,20 @@ public class TrustAllSslProtocolSocketFactory implements ProtocolSocketFactory {
 	}
 
 	public Socket createSocket(String remoteHost, int remotePort) throws IOException, UnknownHostException {
-		return getSSLContext().getSocketFactory().createSocket(remoteHost, remotePort);
+		return getSslContext().getSocketFactory().createSocket(remoteHost, remotePort);
 	}
 
 	public Socket createSocket(String remoteHost, int remotePort, InetAddress clientHost, int clientPort)
 			throws IOException, UnknownHostException {
-		return getSSLContext().getSocketFactory().createSocket(remoteHost, remotePort, clientHost, clientPort);
+		return getSslContext().getSocketFactory().createSocket(remoteHost, remotePort, clientHost, clientPort);
 	}
 
 	public Socket createSocket(String remoteHost, int remotePort, InetAddress clientHost, int clientPort,
 			HttpConnectionParams params) throws IOException, UnknownHostException, ConnectTimeoutException {
 		if (params == null || params.getConnectionTimeout() == 0)
-			return getSSLContext().getSocketFactory().createSocket(remoteHost, remotePort, clientHost, clientPort);
+			return getSslContext().getSocketFactory().createSocket(remoteHost, remotePort, clientHost, clientPort);
 
-		Socket socket = getSSLContext().getSocketFactory().createSocket();
+		Socket socket = getSslContext().getSocketFactory().createSocket();
 		socket.bind(new InetSocketAddress(clientHost, clientPort));
 		socket.connect(new InetSocketAddress(remoteHost, remotePort), params.getConnectionTimeout());
 		return socket;
