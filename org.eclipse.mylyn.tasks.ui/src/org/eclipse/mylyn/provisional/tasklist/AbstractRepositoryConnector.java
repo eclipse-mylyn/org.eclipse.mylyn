@@ -294,26 +294,14 @@ public abstract class AbstractRepositoryConnector {
 					status = RepositoryTaskSyncState.SYNCHRONIZED;
 				}
 				break;
-			case INCOMING:
-				// Should not occur if forceSync = false
+			case INCOMING:				
 				status = RepositoryTaskSyncState.SYNCHRONIZED;
 				break;
 			case SYNCHRONIZED:
-				RepositoryTaskAttribute modifiedDateAttribute = downloadedTaskData
-						.getAttribute(RepositoryTaskAttribute.DATE_MODIFIED);
-				if (repositoryTask.getLastModifiedDateStamp() != null && modifiedDateAttribute != null) {
-					Date newModifiedDate = offlineTaskHandler.getDateForAttributeType(
-							RepositoryTaskAttribute.DATE_MODIFIED, modifiedDateAttribute.getValue());
-					Date oldModifiedDate = offlineTaskHandler.getDateForAttributeType(
-							RepositoryTaskAttribute.DATE_MODIFIED, repositoryTask.getLastModifiedDateStamp());
-					if (oldModifiedDate != null && newModifiedDate != null
-							&& (newModifiedDate.compareTo(oldModifiedDate) > 0)) {
-						status = RepositoryTaskSyncState.INCOMING;
-					}
-					break;
+				if(checkHasIncoming(offlineTaskHandler, repositoryTask, downloadedTaskData)) {
+					status = RepositoryTaskSyncState.INCOMING;
 				}
-				status = RepositoryTaskSyncState.INCOMING;
-				break;
+				break;				
 			}
 			if (offlineTaskData != null) {
 				removeOfflineTaskData(offlineTaskData);
@@ -332,11 +320,48 @@ public abstract class AbstractRepositoryConnector {
 										+ " on " + repository.getUrl(), e.getStatus());
 					}
 				});
+			} else {
+				MylarStatusHandler.fail(e, "Unable to synchronize " + repositoryTask.getDescription()
+										+ " on " + repository.getUrl(), false);
 			}
 			return;
 		}
 	}
 
+	/** public for testing purposes */
+	public boolean checkHasIncoming(IOfflineTaskHandler offlineTaskHandler, AbstractRepositoryTask repositoryTask, RepositoryTaskData newData) {
+		
+		 RepositoryTaskAttribute modifiedDateAttribute = newData.getAttribute(RepositoryTaskAttribute.DATE_MODIFIED);
+		if (repositoryTask.getLastModifiedDateStamp() != null && modifiedDateAttribute != null
+				&& modifiedDateAttribute.getValue() != null) {
+			Date newModifiedDate = offlineTaskHandler.getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED,
+					modifiedDateAttribute.getValue());
+			Date oldModifiedDate = offlineTaskHandler.getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED,
+					repositoryTask.getLastModifiedDateStamp());
+			if (oldModifiedDate != null && newModifiedDate != null) {
+				if (newModifiedDate.compareTo(oldModifiedDate) <= 0) {
+					// leave in SYNCHRONIZED state
+					return false;
+				}
+			}
+		}
+		return true;
+		
+		// THE FOLLOWING CODE CAN BE USED AFTER MIGRATION TO 0.6.0 IS COMPLETE
+		// RepositoryTaskAttribute modifiedDateAttribute =
+		// newData.getAttribute(RepositoryTaskAttribute.DATE_MODIFIED);
+		// if (repositoryTask.getLastModifiedDateStamp() != null &&
+		// modifiedDateAttribute != null && modifiedDateAttribute.getValue() !=
+		// null) {
+		// if(repositoryTask.getLastModifiedDateStamp().trim().compareTo(modifiedDateAttribute.getValue().trim())
+		// == 0) {
+		// return false;
+		// }
+		// }
+		//		return true;
+	}					
+
+	
 	/**
 	 * Sychronize a single task. Note that if you have a collection of tasks to
 	 * synchronize with this connector then you should call synchronize(Set<Set<AbstractRepositoryTask>
@@ -439,6 +464,7 @@ public abstract class AbstractRepositoryConnector {
 		for (AbstractRepositoryTask task : changedTasks) {
 			if (task.getSyncState() == RepositoryTaskSyncState.SYNCHRONIZED) {
 				tasksToSync.add(task);
+				MylarStatusHandler.log("Changed: "+repository.getUrl()+" ** "+task.getDescription(), this);
 			}
 		}
 
@@ -468,7 +494,7 @@ public abstract class AbstractRepositoryConnector {
 						mostRecentTimeStamp = task.getTaskData().getLastModified();
 					}
 				}
-				// TODO: Get actual time stamp of query from repository
+				// TODO: Get actual time stamp of query from repository rather than above hack
 				MylarTaskListPlugin.getRepositoryManager().setSyncTime(repository, mostRecentTimeStamp);
 			}
 		});

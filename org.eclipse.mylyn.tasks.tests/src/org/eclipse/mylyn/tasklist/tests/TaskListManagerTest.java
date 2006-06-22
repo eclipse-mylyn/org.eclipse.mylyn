@@ -388,13 +388,14 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testQueryExternalization() {
-		AbstractRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1", manager.getTaskList());
-		long time = 1234;
-		Date oldDate = new Date(time);	
-		query.setLastRefresh(oldDate);
+		AbstractRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1", manager
+				.getTaskList());
+		// long time = 1234;
+		// Date oldDate = new Date(time);
+		// query.setLastRefresh(oldDate);
 		assertEquals("repositoryUrl", query.getRepositoryUrl());
 		assertEquals("queryUrl", query.getQueryUrl());
-		assertEquals(time, query.getLastSynchronized().getTime());
+		// assertEquals(time, query.getLastSynchronized().getTime());
 		manager.getTaskList().addQuery(query);
 		manager.saveTaskList();
 		assertNotNull(manager.getTaskList());
@@ -406,7 +407,7 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(query.getQueryUrl(), readQuery.getQueryUrl());
 		assertEquals(query.getRepositoryUrl(), readQuery.getRepositoryUrl());
 		assertEquals("repositoryUrl", readQuery.getRepositoryUrl());
-		assertEquals(time, readQuery.getLastSynchronized().getTime());
+		// assertEquals(time, readQuery.getLastSynchronized().getTime());
 	}
 
 	public void testArchiveRepositoryTaskExternalization() {

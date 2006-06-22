@@ -12,7 +12,6 @@ package org.eclipse.mylar.provisional.tasklist;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,16 +28,16 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 
 	private Set<AbstractQueryHit> hits = new HashSet<AbstractQueryHit>();
 
-	protected Date lastRefresh;
+	// protected Date lastRefresh;
 
 	private boolean currentlySynchronizing = false;
 
 	public abstract String getRepositoryKind();
-	
+
 	public AbstractRepositoryQuery(String description, TaskList taskList) {
 		super(description, taskList);
 	}
-	
+
 	public String getQueryUrl() {
 		return queryUrl;
 	}
@@ -70,9 +69,10 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 	public void clearHits() {
 		hits.clear();
 	}
-	
+
 	public void addHit(AbstractQueryHit hit) {
-		ITask correspondingTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(hit.getHandleIdentifier());
+		ITask correspondingTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(
+				hit.getHandleIdentifier());
 		if (correspondingTask instanceof AbstractRepositoryTask) {
 			hit.setCorrespondingTask((AbstractRepositoryTask) correspondingTask);
 		}
@@ -124,13 +124,13 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		this.repositoryUrl = repositoryUrl;
 	}
 
-	public Date getLastSynchronized() {
-		return lastRefresh;
-	}
+	// public Date getLastSynchronized() {
+	// return lastRefresh;
+	// }
 
-	public void setLastRefresh(Date lastRefresh) {
-		this.lastRefresh = lastRefresh;
-	}
+	// public void setLastRefresh(Date lastRefresh) {
+	// this.lastRefresh = lastRefresh;
+	// }
 
 	public boolean isSynchronizing() {
 		return currentlySynchronizing;
@@ -139,7 +139,7 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 	public void setCurrentlySynchronizing(boolean currentlySynchronizing) {
 		this.currentlySynchronizing = currentlySynchronizing;
 	}
-	
+
 	@Override
 	final void add(ITask task) {
 		// ignore, can not add tasks to a query

@@ -11,11 +11,12 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.OfflineTaskManager;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.TaskExternalizationException;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
@@ -38,7 +39,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 
 	private static final String STATUS_NEW = "NEW";
 
-	private static final String KEY_LAST_MOD_DATE = "LastDate";
+	private static final String KEY_OLD_LAST_DATE = "LastDate";
 
 	private static final String KEY_DIRTY = "Dirty";
 
@@ -76,15 +77,15 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		if (node.getNodeName().equals(TAG_BUGZILLA_CUSTOM_QUERY)) {
 			query.setCustomQuery(true);
 		}
-		if (!element.getAttribute(KEY_LAST_REFRESH).equals("")) {
-			Date refreshDate = new Date();
-			try {
-				refreshDate.setTime(Long.parseLong(element.getAttribute(KEY_LAST_REFRESH)));
-				query.setLastRefresh(refreshDate);
-			} catch (NumberFormatException e) {
-				// ignore
-			}
-		}
+		// if (!element.getAttribute(KEY_LAST_REFRESH).equals("")) {
+		// Date refreshDate = new Date();
+		// try {
+		// refreshDate.setTime(Long.parseLong(element.getAttribute(KEY_LAST_REFRESH)));
+		// query.setLastRefresh(refreshDate);
+		// } catch (NumberFormatException e) {
+		// // ignore
+		//			}
+		//		}
 
 		NodeList list = node.getChildNodes();
 		for (int i = 0; i < list.getLength(); i++) {
@@ -114,7 +115,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		Element node = super.createTaskElement(task, doc, parent);
 		BugzillaTask bugzillaTask = (BugzillaTask) task;
 		if (bugzillaTask.getLastModifiedDateStamp() != null) {
-			node.setAttribute(KEY_LAST_MOD_DATE,bugzillaTask.getLastModifiedDateStamp());
+			node.setAttribute(KEY_LAST_MOD_DATE, bugzillaTask.getLastModifiedDateStamp());
 		}
 
 		node.setAttribute(SYNC_STATE, bugzillaTask.getSyncState().toString());
@@ -152,9 +153,17 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		readTaskInfo(task, taskList, element, parent, category);
 
 		task.setCurrentlyDownloading(false);
-		if (element.hasAttribute(KEY_LAST_MOD_DATE)) {
+		if (element.hasAttribute(KEY_LAST_MOD_DATE) && !element.getAttribute(KEY_LAST_MOD_DATE).equals("")) {
+			task.setModifiedDateStamp(element.getAttribute(KEY_LAST_MOD_DATE));
+		} else {
 			try {
-				task.setModifiedDateStamp(element.getAttribute(KEY_LAST_MOD_DATE));
+				// migrate to new time stamp 0.5.3 -> 0.6.0
+				if(element.hasAttribute(KEY_OLD_LAST_DATE)) {
+					String DATE_FORMAT_2 = "yyyy-MM-dd HH:mm:ss";
+					SimpleDateFormat delta_ts_format = new SimpleDateFormat(DATE_FORMAT_2);		
+					String oldDateStamp = delta_ts_format.format(new Date(new Long(element.getAttribute(KEY_OLD_LAST_DATE)).longValue()));
+					task.setModifiedDateStamp(oldDateStamp);
+				}
 			} catch (Exception e) {
 				// invalid date format
 			}
@@ -176,7 +185,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		if (element.hasAttribute(SYNC_STATE)) {
 			String syncState = element.getAttribute(SYNC_STATE);
 			if (syncState.compareTo(RepositoryTaskSyncState.SYNCHRONIZED.toString()) == 0) {
-				task.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
+				task.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);				
 			} else if (syncState.compareTo(RepositoryTaskSyncState.INCOMING.toString()) == 0) {
 				task.setSyncState(RepositoryTaskSyncState.INCOMING);
 			} else if (syncState.compareTo(RepositoryTaskSyncState.OUTGOING.toString()) == 0) {
@@ -185,6 +194,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 				task.setSyncState(RepositoryTaskSyncState.CONFLICT);
 			}
 		}
+				
 		return task;
 	}
 

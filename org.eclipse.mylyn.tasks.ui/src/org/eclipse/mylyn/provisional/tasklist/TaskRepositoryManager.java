@@ -30,9 +30,11 @@ import org.eclipse.mylar.internal.core.MylarContextManager;
  */
 public class TaskRepositoryManager {
 
-	public static final String PROPERTY_SYNCTIME = "synctime";
+	public static final String OLD_PROPERTY_SYNCTIME = "synctime";
 
-	public static final String PROPERTY_SYNCTIMESTAMP = "synctimestamp";
+	// public static final String PROPERTY_SYNCTIMESTAMP = "synctimestamp";
+
+	public static final String PROPERTY_SYNCTIMESTAMP = "lastsynctimestamp";
 
 	public static final String PROPERTY_TIMEZONE = "timezone";
 
@@ -214,13 +216,15 @@ public class TaskRepositoryManager {
 					if (!time.equals("")) {
 						repository.setSyncTimeStamp(time);
 					} else {
+						// migrate to new time stamp 0.5.3 -> 0.6.0
 						if (repository.getKind().equals("bugzilla")) {
-							String oldSyncTimeId = urlString + PROPERTY_DELIM + PROPERTY_SYNCTIME;
+							String oldSyncTimeId = urlString + PROPERTY_DELIM + OLD_PROPERTY_SYNCTIME;
 							Long oldSyncTime = MylarTaskListPlugin.getMylarCorePrefs().getLong(oldSyncTimeId);
 							if (oldSyncTime != 0L) {
 								time = migrateOldBugzillaSyncDate(oldSyncTime);
 								if (time != null && !time.equals("")) {
 									repository.setSyncTimeStamp(time);
+									MylarTaskListPlugin.getMylarCorePrefs().setValue(prefIdSyncTime, time);
 								}
 							}
 						}
@@ -237,12 +241,13 @@ public class TaskRepositoryManager {
 		return repositoryMap;
 	}
 
+	// migrate to new time stamp 0.5.3 -> 0.6.0
 	private String migrateOldBugzillaSyncDate(long oldTime) {
 		String newDate = "";
 		String DATE_FORMAT_2 = "yyyy-MM-dd HH:mm:ss";
-		SimpleDateFormat delta_ts_format = new SimpleDateFormat(DATE_FORMAT_2);
 		try {
-			newDate = delta_ts_format.format(new Date(oldTime - (60000 * 1440)));
+			SimpleDateFormat delta_ts_format = new SimpleDateFormat(DATE_FORMAT_2);
+			newDate = delta_ts_format.format(new Date(oldTime));
 		} catch (Exception e) {
 			// ignore
 		}

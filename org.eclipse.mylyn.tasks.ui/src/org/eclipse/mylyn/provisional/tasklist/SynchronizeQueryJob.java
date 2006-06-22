@@ -12,7 +12,6 @@
 package org.eclipse.mylar.provisional.tasklist;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -92,7 +91,7 @@ class SynchronizeQueryJob extends Job {
 			}
 
 			repositoryQuery.setCurrentlySynchronizing(false);
-			repositoryQuery.setLastRefresh(new Date());
+			//repositoryQuery.setLastRefresh(new Date());
 			MylarTaskListPlugin.getTaskListManager().getTaskList().notifyQueryUpdated(repositoryQuery);
 			monitor.worked(1);
 		}
