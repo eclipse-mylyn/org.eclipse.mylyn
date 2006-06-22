@@ -156,16 +156,27 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		if (element.hasAttribute(KEY_LAST_MOD_DATE) && !element.getAttribute(KEY_LAST_MOD_DATE).equals("")) {
 			task.setModifiedDateStamp(element.getAttribute(KEY_LAST_MOD_DATE));
 		} else {
+			// migrate to new time stamp 0.5.3 -> 0.6.0
 			try {
-				// migrate to new time stamp 0.5.3 -> 0.6.0
-				if(element.hasAttribute(KEY_OLD_LAST_DATE)) {
+				if (element.hasAttribute(KEY_OLD_LAST_DATE)) {
 					String DATE_FORMAT_2 = "yyyy-MM-dd HH:mm:ss";
-					SimpleDateFormat delta_ts_format = new SimpleDateFormat(DATE_FORMAT_2);		
-					String oldDateStamp = delta_ts_format.format(new Date(new Long(element.getAttribute(KEY_OLD_LAST_DATE)).longValue()));
-					task.setModifiedDateStamp(oldDateStamp);
+					SimpleDateFormat delta_ts_format = new SimpleDateFormat(DATE_FORMAT_2);
+					String oldDateStamp = "";
+					try {
+						oldDateStamp = delta_ts_format.format(new Date(
+								new Long(element.getAttribute(KEY_OLD_LAST_DATE)).longValue()));
+						task.setModifiedDateStamp(oldDateStamp);
+					} catch (NumberFormatException e) {
+						// For those who may have been working from head...
+						Date parsedDate = delta_ts_format.parse(element.getAttribute(KEY_OLD_LAST_DATE));
+						if (parsedDate != null) {
+							oldDateStamp = element.getAttribute(KEY_OLD_LAST_DATE);
+							task.setModifiedDateStamp(oldDateStamp);
+						}
+					}
 				}
 			} catch (Exception e) {
-				// invalid date format
+				// invalid date format/parse
 			}
 		}
 
