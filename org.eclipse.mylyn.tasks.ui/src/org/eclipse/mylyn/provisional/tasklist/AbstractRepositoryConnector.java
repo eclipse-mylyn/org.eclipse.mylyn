@@ -241,15 +241,6 @@ public abstract class AbstractRepositoryConnector {
 		RepositoryTaskSyncState status = repositoryTask.getSyncState();
 		RepositoryTaskData downloadedTaskData = null;
 
-		final TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
-				repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
-
-		if (repository == null) {
-			MylarStatusHandler.log("No repository associated with task " + repositoryTask.getDescription()
-					+ ". Unable to retrieve timezone information.", this);
-			return;
-		}
-
 		try {
 
 			downloadedTaskData = offlineTaskHandler.downloadTaskData(repositoryTask);
@@ -316,8 +307,7 @@ public abstract class AbstractRepositoryConnector {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						ErrorDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-								"Error Downloading Report", "Unable to synchronize " + repositoryTask.getDescription()
-										+ " on " + repository.getUrl(), e.getStatus());
+								"Error Downloading Report", "Unable to synchronize " + repositoryTask.getDescription(), e.getStatus());
 					}
 				});
 			} 
