@@ -320,10 +320,12 @@ public abstract class AbstractRepositoryConnector {
 										+ " on " + repository.getUrl(), e.getStatus());
 					}
 				});
-			} else {
-				MylarStatusHandler.fail(e, "Unable to synchronize " + repositoryTask.getDescription()
-										+ " on " + repository.getUrl(), false);
-			}
+			} 
+			// else {
+			// MylarStatusHandler.fail(e, "Unable to synchronize " +
+			// repositoryTask.getDescription()
+			// + " on " + repository.getUrl(), false);
+			//			}
 			return;
 		}
 	}
@@ -464,7 +466,7 @@ public abstract class AbstractRepositoryConnector {
 		for (AbstractRepositoryTask task : changedTasks) {
 			if (task.getSyncState() == RepositoryTaskSyncState.SYNCHRONIZED) {
 				tasksToSync.add(task);
-				MylarStatusHandler.log("Changed: "+repository.getUrl()+" ** "+task.getDescription(), this);
+				//MylarStatusHandler.log("Changed: "+repository.getUrl()+" ** "+task.getDescription(), this);
 			}
 		}
 
