@@ -37,6 +37,7 @@ import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.PartBase;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.commons.httpclient.protocol.Protocol;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -113,7 +114,8 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 		// "debug");
 
 		boolean uploadResult = true;
-
+		
+		Protocol.registerProtocol("https", new Protocol("https", new TrustAllSslProtocolSocketFactory(), 443));
 		HttpClient client = new HttpClient();
 		if (proxySettings != null && proxySettings.address() instanceof InetSocketAddress) {
 			InetSocketAddress address = (InetSocketAddress)proxySettings.address();
