@@ -27,7 +27,7 @@ import org.apache.xmlrpc.DefaultXmlRpcTransportFactory;
 import org.apache.xmlrpc.XmlRpc;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
-import org.eclipse.mylar.trac.tests.support.TrustAll;
+import org.eclipse.mylar.internal.trac.TrustAll;
 
 /**
  * Test cases for Trac XML-RPC Plugin API. This class does not depend on any of

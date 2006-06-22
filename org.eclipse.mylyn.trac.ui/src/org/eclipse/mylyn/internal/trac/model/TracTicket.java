@@ -33,9 +33,9 @@ public class TracTicket {
 	 * @author Steffen Pingel
 	 */
 	public enum Key {
-		COMPONENT("component"), DESCRIPTION("description"), ID("id"), KEYWORDS("keywords"), MILESTONE("milestone"), OWNER(
-				"owner"), PRIORITY("priority"), REPORTER("reporter"), RESOLUTION("resolution"), STATUS("status"), SUMMARY(
-				"summary"), TYPE("type"), VERSION("version");
+		CHANGE_TIME("changetime"), COMPONENT("component"), DESCRIPTION("description"), ID("id"), KEYWORDS("keywords"), MILESTONE(
+				"milestone"), OWNER("owner"), PRIORITY("priority"), REPORTER("reporter"), RESOLUTION("resolution"), STATUS(
+				"status"), SUMMARY("summary"), TIME("time"), TYPE("type"), VERSION("version");
 
 		public static Key fromKey(String name) {
 			for (Key key : Key.values()) {
@@ -101,14 +101,25 @@ public class TracTicket {
 	}
 
 	public String getCustomValue(String key) {
-		if (customValueByKey == null){
+		if (customValueByKey == null) {
 			return null;
 		}
 		return customValueByKey.get(key);
 	}
-	
+
 	public String getValue(Key key) {
 		return valueByKey.get(key);
+	}
+
+	public Map<String, String> getValues() {
+		Map<String, String> result = new HashMap<String, String>();
+		for (Key key : valueByKey.keySet()) {
+			result.put(key.toString(), valueByKey.get(key));
+		}
+		if (customValueByKey != null) {
+			result.putAll(customValueByKey);
+		}
+		return result;
 	}
 
 	public boolean isValid() {
@@ -142,8 +153,8 @@ public class TracTicket {
 	public void putTracValue(String keyName, String value) throws InvalidTicketException {
 		Key key = Key.fromKey(keyName);
 		if (key != null) {
-			if (key == Key.ID) {
-				throw new RuntimeException("The ID field must be accessed through setId()");
+			if (key == Key.ID || key == Key.TIME || key == Key.CHANGE_TIME) {
+				throw new RuntimeException("The '" + key + "' field must be accessed through a set() method");
 			}
 			putBuiltinValue(key, value);
 		} else if (value instanceof String) {

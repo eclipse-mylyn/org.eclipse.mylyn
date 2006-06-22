@@ -8,7 +8,9 @@ Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.mylar.core
+ org.eclipse.mylar.core,
+ org.eclipse.mylar.tasklist,
+ org.apache.xmlrpc
 Eclipse-LazyStart: true
 Export-Package: org.eclipse.mylar.internal.trac,
  org.eclipse.mylar.internal.trac.core,

@@ -9,7 +9,7 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.trac.tests.support;
+package org.eclipse.mylar.internal.trac;
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
