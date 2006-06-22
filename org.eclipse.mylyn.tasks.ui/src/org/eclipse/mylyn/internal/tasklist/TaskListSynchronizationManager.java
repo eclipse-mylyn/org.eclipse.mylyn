@@ -15,7 +15,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -35,6 +37,8 @@ public class TaskListSynchronizationManager implements IPropertyChangeListener {
 
 	private List<ScheduledTaskListSynchJob> jobsQueue = Collections.synchronizedList(jobs);
 
+	private final MutexRule rule = new MutexRule();
+	
 	public TaskListSynchronizationManager(boolean refreshOnStartup) {		
 		boolean enabled = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED);
@@ -61,6 +65,7 @@ public class TaskListSynchronizationManager implements IPropertyChangeListener {
 			long miliseconds = MylarTaskListPlugin.getMylarCorePrefs().getLong(
 					TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
 			refreshJob = new ScheduledTaskListSynchJob(miliseconds, MylarTaskListPlugin.getTaskListManager());
+			refreshJob.setRule(rule);
 			addJobToQueue(refreshJob);
 		}
 	}
@@ -71,7 +76,7 @@ public class TaskListSynchronizationManager implements IPropertyChangeListener {
 			@Override
 			public void done(IJobChangeEvent event) {
 				synchronized (refreshJob) {
-					if(refreshJob == jobToAdd) {
+					if(refreshJob == jobToAdd && event.getResult() != Status.CANCEL_STATUS) {
 						startSynchJob();						
 					}	
 				}				
@@ -99,9 +104,24 @@ public class TaskListSynchronizationManager implements IPropertyChangeListener {
 	}
 
 	public void cancelAll() {
-		if (refreshJob != null) {
-			refreshJob.cancel();
-		}
 		jobsQueue.clear();
+		if (refreshJob != null) {
+			if (!refreshJob.cancel()) {
+				try {
+					refreshJob.join();
+				} catch (InterruptedException e) {
+					// ignore
+				}
+			}
+		}
 	}
+	
+	class MutexRule implements ISchedulingRule {
+	      public boolean isConflicting(ISchedulingRule rule) {
+	         return rule == this;
+	      }
+	      public boolean contains(ISchedulingRule rule) {
+	         return rule == this;
+	      }
+	   }
 }
