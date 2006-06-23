@@ -18,7 +18,7 @@ reports marked help wanted</a>.&nbsp;</p>
 		<li><a href="#contributing-patches">Contributing patches</li>
 <!--	<li>Building</li>-->
 		</a></li>
-		<li><a href="#bootstrap">Building the JIRA Connector</a></li>
+		<li><a href="#building-jira">Building the JIRA Connector</a></li>
 		<li><a href="#building-dist">Building a distribution</a></li>
 		<li><a href="#web-site-authoring">Web site authoring</a></li>
 	</ul><hr width="50%">
@@ -53,7 +53,7 @@ and leave the password blank.</li>
 		password.</li>
 	</ul>
 	<hr>
-	<h3><a name="connector-jira">JIRA Connector</a></h3>
+	<h3><a name="building-jira">JIRA Connector</a></h3>
 	<ul>
 		<li>Get the latest <a href="http://subclipse.tigris.org/download.html">
 		Subclipse</a> plug-in, e.g. from the following update site: 
@@ -82,18 +82,19 @@ and leave the password blank.</li>
 	</ul>
 	<hr>
 <h3><a name="bootstrap">Working bootsrapped</a> </h3>
-<p>To make eating your own dog food easier and avoid having to update to dev 
-builds Mylar committers work bootstrapped:</p>
+<p>Working bootstrapped (i.e. self-hosted) makes eating your own dog food easier 
+and avoids having to update to dev builds:</p>
 	<ul>
 		<li>Set up a fresh workspace launched from an Eclipse that does not have 
 		Mylar installed, and check out Mylar into 
 		it.</li>
-		<li>Create a new Launch Configuration, point it at your workspace, 
-		and work in that.&nbsp; The launching workspace will typically use very 
-		little memory, but if you have a memory constrained machine you can kill 
-		its java process.</li>
+		<li>Create a new <i>Launch Configuration</i>, point it at your workspace, 
+		and work in that.&nbsp; Note that the launching workspace will typically 
+		consume very little memory.</li>
 		<li>Whenever your changes make it into HEAD synch up your launching 
-		workspace and restart.&nbsp; You could conceivably </li>
+		workspace and restart.&nbsp; It is possible to run in debug mode so that 
+		the changes apply to the workspace immediately after synch, but we have 
+		not found this worthwhile since restarts are often necessary.</li>
 	</ul>
 	<hr>
 <h3><a name="contributing-patches">Contributing patches</a> </h3>
