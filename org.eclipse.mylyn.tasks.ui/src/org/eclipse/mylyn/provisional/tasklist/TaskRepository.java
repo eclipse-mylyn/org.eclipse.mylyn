@@ -32,7 +32,7 @@ public class TaskRepository {
 
 	public static final String AUTH_USERNAME = "org.eclipse.mylar.tasklist.repositories.username"; //$NON-NLS-1$ 
 
-	public static final String NO_VERSION_SPECIFIED = "";
+	public static final String NO_VERSION_SPECIFIED = "unknown";
 	
 	private static final String AUTH_SCHEME = "Basic";
 
@@ -49,13 +49,7 @@ public class TaskRepository {
       }
       DEFAULT_URL = u; 
     }
-
-	private String kind;
-
-	private String serverUrl;
-	
-	private String lastSynchronizedDateStamp = null; 
-    
+	    
     private Map<String, String> properties = new HashMap<String, String>();
 	
 	/**
@@ -75,27 +69,30 @@ public class TaskRepository {
 	}
 	
 	public TaskRepository(String kind, String serverUrl, String version, String encoding, String timeZoneId) {
-		this.kind = kind;
-		this.serverUrl = serverUrl;
+		this.properties.put(TaskRepositoryManager.PROPERTY_KIND, kind);
+		this.properties.put(TaskRepositoryManager.PROPERTY_URL, serverUrl);
 		this.properties.put(TaskRepositoryManager.PROPERTY_VERSION, version);
 		this.properties.put(TaskRepositoryManager.PROPERTY_ENCODING, encoding);
 		this.properties.put(TaskRepositoryManager.PROPERTY_TIMEZONE, timeZoneId);
 	}
 	
 	public TaskRepository(String kind, String serverUrl, Map<String, String> properties) {
-		this.kind = kind;
-		this.serverUrl = serverUrl;
+		this.properties.put(TaskRepositoryManager.PROPERTY_KIND, kind);
+		this.properties.put(TaskRepositoryManager.PROPERTY_URL, serverUrl);
 		this.properties.putAll(properties);
 	}
 
 	public String getUrl() {
-		return this.serverUrl;
+		return properties.get(TaskRepositoryManager.PROPERTY_URL);		
+	}
+	
+	public void setUrl(String newUrl) {
+		properties.put(TaskRepositoryManager.PROPERTY_URL, newUrl);
 	}
 	
 	public boolean hasCredentials() {
 		String username = getUserName();
-		String password = getPassword();
-		//return username != null && !username.equals("") && password != null && !password.equals("");
+		String password = getPassword();		
 		return username != null && password != null;
 	}
 
@@ -176,30 +173,28 @@ public class TaskRepository {
 
 	@Override
 	public int hashCode() {
-		if (serverUrl != null) {
-			return serverUrl.hashCode();
+		if (getUrl() != null) {
+			return getUrl().hashCode();
 		} else {
 			return super.hashCode();
 		}
 	}
 
 	public String toString() {
-		return serverUrl;
+		return getUrl();
 	}
 
 	public String getKind() {
-		return kind;
+		return properties.get(TaskRepositoryManager.PROPERTY_KIND);
 	}
 
 	
 	public String getVersion() {
-		return properties.get(TaskRepositoryManager.PROPERTY_VERSION);
+		final String version = properties.get(TaskRepositoryManager.PROPERTY_VERSION);
+		return version==null || "".equals(version) ? NO_VERSION_SPECIFIED : version;
 	}
 	
-	/**
-	 * for testing purposes
-	 */
-	void setVersion(String ver) {
+	public void setVersion(String ver) {
 		properties.put(TaskRepositoryManager.PROPERTY_VERSION, ver == null ? NO_VERSION_SPECIFIED : ver);
 	}
 
@@ -212,32 +207,29 @@ public class TaskRepository {
 	/**
 	 * for testing purposes
 	 */
-	void setCharacterEncoding(String characterEncoding) {
-		properties.put(TaskRepositoryManager.PROPERTY_ENCODING, characterEncoding);
+	public void setCharacterEncoding(String characterEncoding) {
+		properties.put(TaskRepositoryManager.PROPERTY_ENCODING, characterEncoding == null ? DEFAULT_CHARACTER_ENCODING : characterEncoding);
 	}
 	
 	public String getTimeZoneId() {
 		final String timeZoneId = properties.get(TaskRepositoryManager.PROPERTY_TIMEZONE);
 		return timeZoneId==null || "".equals(timeZoneId) ? TimeZone.getDefault().getID() : timeZoneId;
 	}
-	
-	/**
-	 * for testing purposes
-	 */
+
 	public void setTimeZoneId(String timeZoneId) {
-		properties.put(TaskRepositoryManager.PROPERTY_TIMEZONE, timeZoneId);
+		this.properties.put(TaskRepositoryManager.PROPERTY_TIMEZONE, timeZoneId == null ? TimeZone.getDefault().getID() : timeZoneId);
 	}
 
 	public String getSyncTimeStamp() {
-		return lastSynchronizedDateStamp;
+		return this.properties.get(TaskRepositoryManager.PROPERTY_SYNCTIMESTAMP);		
 	}
 
 	/**
 	 * ONLY for use by TaskRepositoryManager.
 	 * To set the sync time call TaskRepositoryManager.setSyncTime(repository, date);
 	 */
-	protected void setSyncTimeStamp(String syncTime) {
-		this.lastSynchronizedDateStamp = syncTime;
+	public void setSyncTimeStamp(String syncTime) {
+		this.properties.put(TaskRepositoryManager.PROPERTY_SYNCTIMESTAMP, syncTime);
 	}
 
 	public Map<String, String> getProperties() {

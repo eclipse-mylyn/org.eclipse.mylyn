@@ -39,7 +39,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 		abstractRepositorySettingsPage = connector.getSettingsPage();
 		abstractRepositorySettingsPage.setRepository(repository);
 		abstractRepositorySettingsPage.setVersion(repository.getVersion());
-		abstractRepositorySettingsPage.setWizard(this);
+		abstractRepositorySettingsPage.setWizard(this);		
 		setNeedsProgressMonitor(true);
 		setDefaultPageImageDescriptor(TaskListImages.BANNER_REPOSITORY);
 		setWindowTitle(TITLE);
@@ -51,18 +51,19 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 			String oldUrl = oldRepository.getUrl();
 			String newUrl = abstractRepositorySettingsPage.getServerUrl();
 			MylarTaskListPlugin.getTaskListManager().refactorRepositoryUrl(oldUrl, newUrl);
-			MylarTaskListPlugin.getRepositoryManager().removeRepository(oldRepository);
 			
-//			TaskRepository repository = new TaskRepository(abstractRepositorySettingsPage.getRepository().getKind(),
-//					newUrl, abstractRepositorySettingsPage.getVersion(),
-//					abstractRepositorySettingsPage.getCharacterEncoding(), abstractRepositorySettingsPage
-//							.getTimeZoneId());
-//			repository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(),
-//					abstractRepositorySettingsPage.getPassword());
-
-			TaskRepository repository = abstractRepositorySettingsPage.createTaskRepository();
+			oldRepository.flushAuthenticationCredentials();
+			oldRepository.setUrl(newUrl);
+			oldRepository.setVersion(abstractRepositorySettingsPage.getVersion());
+			oldRepository.setCharacterEncoding(abstractRepositorySettingsPage.getCharacterEncoding());
+			oldRepository.setTimeZoneId(abstractRepositorySettingsPage.getTimeZoneId());			
+			oldRepository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(), abstractRepositorySettingsPage.getPassword());
+			MylarTaskListPlugin.getRepositoryManager().saveRepositories();
 			
-			MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
+			// MylarTaskListPlugin.getRepositoryManager().removeRepository(oldRepository);
+			// TaskRepository repository = abstractRepositorySettingsPage.createTaskRepository();
+			// MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
+			// MylarTaskListPlugin.getRepositoryManager().setSyncTime(repository, oldRepository.getSyncTimeStamp());
 			return true;
 		}
 		return false;

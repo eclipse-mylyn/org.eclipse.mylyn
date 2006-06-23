@@ -29,6 +29,7 @@ import org.eclipse.mylar.tasklist.tests.mockconnector.MockRepositoryConnector;
 
 /**
  * @author Mik Kersten
+ * @author Rob Elves
  */
 public class TaskRepositoryManagerTest extends TestCase {
 
@@ -88,22 +89,24 @@ public class TaskRepositoryManagerTest extends TestCase {
 		manager.addRepositoryConnector(connector);
 		assertNotNull(manager.getRepositoryConnector(connector.getRepositoryType()));
 	}
-	
+
 	public void testRepositoryPersistance() throws MalformedURLException {
-		assertEquals("", MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
+		// assertEquals("",
+		// MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
 
 		TaskRepository repository1 = new TaskRepository("bugzilla", "http://bugzilla");
 		TaskRepository repository2 = new TaskRepository("jira", "http://jira");
 		manager.addRepository(repository1);
 		manager.addRepository(repository2);
 
-		assertNotNull(MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
+		// assertNotNull(MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
 
 		List<TaskRepository> repositoryList = new ArrayList<TaskRepository>();
 		repositoryList.add(repository2);
 		repositoryList.add(repository1);
 		manager.readRepositories();
-		// NOTE: different conditions for running with and without the JIRA Connector
+		// NOTE: different conditions for running with and without the JIRA
+		// Connector
 		if (manager.getRepositoryConnectors().size() > 1) {
 			assertTrue(manager.getAllRepositories().contains(repository1));
 			assertTrue(manager.getAllRepositories().contains(repository2));
@@ -114,111 +117,45 @@ public class TaskRepositoryManagerTest extends TestCase {
 		}
 	}
 
-	public void testRepositoryVersionPersistance() throws MalformedURLException {
+	public void testRepositoryAttributePersistance() throws MalformedURLException {
 		assertEquals("", MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
 
 		String version = "123";
-
-		TaskRepository repository1 = new TaskRepository("bugzilla", "http://bugzilla");
-		// repository1.setVersion(version);
-		MylarTaskListPlugin.getRepositoryManager().setVersion(repository1, version);
-		manager.addRepository(repository1);
-
-		String prefIdVersion = repository1.getUrl() + TaskRepositoryManager.PROPERTY_DELIM
-				+ TaskRepositoryManager.PROPERTY_VERSION;
-
-		assertEquals(version, MylarTaskListPlugin.getMylarCorePrefs().getString(prefIdVersion));
-
-		manager.readRepositories();
-		TaskRepository temp = manager.getRepository(repository1.getKind(), repository1.getUrl());
-		assertNotNull(temp);
-		assertEquals(temp.getVersion(), version);
-
-	}
-
-	public void testRepositoryEncodingPersistance() throws MalformedURLException {
-		assertEquals("", MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
-
-		String encoding = "UTF-8";
-
-		TaskRepository repository1 = new TaskRepository("bugzilla", "http://bugzilla");
-		MylarTaskListPlugin.getRepositoryManager().setEncoding(repository1, encoding);
-		manager.addRepository(repository1);
-
-		String prefIdEncoding = repository1.getUrl() + TaskRepositoryManager.PROPERTY_DELIM
-				+ TaskRepositoryManager.PROPERTY_ENCODING;
-
-		assertEquals(encoding, MylarTaskListPlugin.getMylarCorePrefs().getString(prefIdEncoding));
-
-		manager.readRepositories();
-		TaskRepository temp = manager.getRepository(repository1.getKind(), repository1.getUrl());
-		assertNotNull(temp);
-		assertEquals(temp.getCharacterEncoding(), encoding);
-	}
-	
-	public void testRepositoryTimeZonePersistance() throws MalformedURLException {
-		assertEquals("", MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
-		TaskRepository repository1 = new TaskRepository("bugzilla", "http://bugzilla");
+		String encoding = "UTF-16";
 		String fakeTimeZone = "nowhere";
-		MylarTaskListPlugin.getRepositoryManager().setTimeZoneId(repository1, fakeTimeZone);
-		manager.addRepository(repository1);
-
-		String prefIdTimeZoneId = repository1.getUrl() + TaskRepositoryManager.PROPERTY_DELIM
-				+ TaskRepositoryManager.PROPERTY_TIMEZONE;
-
-		assertEquals(fakeTimeZone, MylarTaskListPlugin.getMylarCorePrefs().getString(prefIdTimeZoneId));
-
-		manager.readRepositories();
-		TaskRepository temp = manager.getRepository(repository1.getKind(), repository1.getUrl());
-		assertNotNull(temp);
-		assertEquals(temp.getTimeZoneId(), fakeTimeZone);
-	}
-	
-	public void testRepositorySyncTimePersistance() throws MalformedURLException {
-		assertEquals("", MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
-		TaskRepository repository1 = new TaskRepository("bugzilla", "http://bugzilla");
-		
 		Date now = new Date();
 		String dateString = now.toString();
-		MylarTaskListPlugin.getRepositoryManager().setSyncTime(repository1, dateString);
+
+		TaskRepository repository1 = new TaskRepository("bugzilla", "http://bugzilla");
+		repository1.setVersion(version);
+		repository1.setCharacterEncoding(encoding);
+		repository1.setTimeZoneId(fakeTimeZone);
+		repository1.setSyncTimeStamp(dateString);
 		manager.addRepository(repository1);
-
-		String prefIdSyncTime= repository1.getUrl() + TaskRepositoryManager.PROPERTY_DELIM
-				+ TaskRepositoryManager.PROPERTY_SYNCTIMESTAMP;
-
-		assertEquals(dateString, MylarTaskListPlugin.getMylarCorePrefs().getString(prefIdSyncTime));
 
 		manager.readRepositories();
 		TaskRepository temp = manager.getRepository(repository1.getKind(), repository1.getUrl());
 		assertNotNull(temp);
+		assertEquals(version, temp.getVersion());
+		assertEquals(encoding, temp.getCharacterEncoding());
+		assertEquals(fakeTimeZone, temp.getTimeZoneId());
 		assertEquals(dateString, temp.getSyncTimeStamp());
-	}
-	
-	public void testRepositoryPersistanceAfterDelete() throws MalformedURLException {
-		manager.clearRepositories();
 
-		assertEquals("", MylarTaskListPlugin.getMylarCorePrefs().getString(
-				TaskRepositoryManager.PREF_REPOSITORIES + DEFAULT_KIND));
+	}
+
+	public void testRepositoryPersistanceAfterDelete() throws MalformedURLException {
 
 		TaskRepository repository = new TaskRepository(DEFAULT_KIND, DEFAULT_URL);
 		manager.addRepository(repository);
-
-		assertFalse(MylarTaskListPlugin.getMylarCorePrefs().getString(
-				TaskRepositoryManager.PREF_REPOSITORIES + DEFAULT_KIND).equals(""));
-
+		assertNotNull(manager.getRepository(repository.getKind(), repository.getUrl()));
+	
 		TaskRepository repository2 = new TaskRepository(DEFAULT_KIND, ANOTHER_URL);
 		manager.addRepository(repository2);
-
-		String saveString = MylarTaskListPlugin.getMylarCorePrefs().getString(
-				TaskRepositoryManager.PREF_REPOSITORIES + DEFAULT_KIND);
-		assertNotNull(saveString);
+		assertNotNull(manager.getRepository(repository2.getKind(), repository2.getUrl()));
 
 		manager.removeRepository(repository2);
 
-		String newSaveString = MylarTaskListPlugin.getMylarCorePrefs().getString(
-				TaskRepositoryManager.PREF_REPOSITORIES + DEFAULT_KIND);
-
-		assertFalse(saveString.equals(newSaveString));
+		assertNull(manager.getRepository(repository2.getKind(), repository2.getUrl()));
 	}
 
 	public void testRepositoryWithUnnownUrlHandler() {
@@ -230,14 +167,14 @@ public class TaskRepositoryManagerTest extends TestCase {
 		assertEquals("testUser", repository.getUserName());
 		assertEquals("testPassword", repository.getPassword());
 	}
-	
+
 	public void testRepositoryWithCustomAttributes() throws Exception {
-		TaskRepository repository = new TaskRepository("http://jroller.com/page/eu", "web");
+		TaskRepository repository = new TaskRepository("web", "http://jroller.com/page/eu");
 		repository.setProperty("owner", "euxx");
 		manager.addRepository(repository);
-		
+
 		manager.readRepositories();
-		
+
 		TaskRepository temp = manager.getRepository(repository.getKind(), repository.getUrl());
 		assertNotNull(temp);
 		assertEquals("euxx", temp.getProperty("owner"));
