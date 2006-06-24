@@ -71,15 +71,20 @@
 					<li>If no override, get conflict icon to show</li>
 				</ul></li>
 				<li>Case open: should retain outgoing overlay</li>
+				<li>Case edit and save again: outgoing overlay remains (should 
+				not receive conflict warning)</li>
 				<li>Case submit: outgoing overlay should disappear (should be no incoming 
-		upon synchronize)<br>&nbsp;</li>
+		upon synchronize)</li>
 			</ul></li>
 			<li>Task in CONFLICT state<ul>
 				<li>Case open: remains with conflict decorator</li>
 				<li>Case synchronize: should get option to override local changes<ul>
 					<li>Case overriding: overlay and changes go away</li>
-					<li>Case no override: changes remain, conflict decorator appears<br>&nbsp;</li>
+					<li>Case no override: changes remain, conflict decorator appears</li>
 				</ul></li>
+				<li>Case edit: Currently state switches to OUTGOING which is 
+				correct for now because we migrate their comment into the new 
+				report<br>&nbsp;</li>
 			</ul>
 			<p></li>
 			<li>Query hits not yet downloaded<ul>
@@ -94,6 +99,7 @@
 					<li>Case open (bug editor already open):&nbsp; 
 					User presented with dialog asking if they want to reopen 
 					with latest version</li>
+					<li>Case Background Synchronization incoming state remains</li>
 				</ul></li>
 				<li>Case open: task opens with offline content, user asked if 
 				they want to refresh with incoming content.<br>&nbsp;</li>
