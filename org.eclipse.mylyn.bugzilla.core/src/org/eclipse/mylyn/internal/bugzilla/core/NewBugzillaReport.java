@@ -161,7 +161,7 @@ public class NewBugzillaReport extends RepositoryTaskData implements Serializabl
 //		savedOffline = newOfflineState;
 //	}
 
-	public boolean hasChanges() {
+	public boolean hasLocalChanges() {
 		return true;
 	}
 

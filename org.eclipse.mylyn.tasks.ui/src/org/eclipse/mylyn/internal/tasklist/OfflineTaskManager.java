@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -32,13 +33,16 @@ public class OfflineTaskManager {
 	/** The file that the offline reports are written to */
 	private File file;
 
+
+	private ArrayList<RepositoryTaskData> backingList = new ArrayList<RepositoryTaskData>();
+	
 	/** A list of offline reports */
-	private ArrayList<RepositoryTaskData> list = new ArrayList<RepositoryTaskData>();
+	private List<RepositoryTaskData> list = Collections.synchronizedList(backingList);
 
 	/** The bug id of the most recently created offline report. */
 	protected int latestNewBugId = 0;
 
-	//private boolean updateLocalCopy = false;
+	// private boolean updateLocalCopy = false;
 
 	/**
 	 * Constructor that reads the offline reports data persisted in the plugin's
@@ -58,8 +62,7 @@ public class OfflineTaskManager {
 			readFile();
 		}
 	}
-	
-	
+
 	/**
 	 * Add a RepositoryTaskData to the offline reports file
 	 * 
@@ -80,187 +83,208 @@ public class OfflineTaskManager {
 			writeFile();
 		}
 	}
-	
-	
-// /**
-// * Add an offline report to the offline reports list
-//	 * 
-//	 * @param entry
-//	 *            The bug to add
-//	 */
-//	public RepositoryTaskSyncState add(final RepositoryTaskData entry, boolean forceSync) throws CoreException {
-//
-//		RepositoryTaskSyncState status = RepositoryTaskSyncState.SYNCHRONIZED;
-////
-////		try {
-////
-////			String handle = AbstractRepositoryTask.getHandle(entry.getRepositoryUrl(), entry.getId());
-////			ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
-////
-////			if (task != null && task instanceof AbstractRepositoryTask) {
-////				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
-////
-////				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
-////						repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
-////
-////				if (repository == null) {
-////					throw new Exception("No repository associated with task. Unable to retrieve timezone information.");
-////				}
-////
-////				TimeZone repositoryTimeZone = DateUtil.getTimeZone(repository.getTimeZoneId());
-//
-//				int index = -1;
-//				if ((index = find(entry.getRepositoryUrl(), entry.getId())) >= 0) {
-//					//RepositoryTaskData oldBug = list.get(index);
-//
-////					if (repositoryTask.getLastSynchronized() == null
-////							|| entry.getLastModified(repositoryTimeZone)
-////									.compareTo(repositoryTask.getLastSynchronized()) > 0 || forceSync) {
-////
-////						if (oldBug.hasChanges()) {
-////
-////							PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-////								public void run() {
-////									updateLocalCopy = MessageDialog
-////											.openQuestion(
-////													null,
-////													"Update Local Copy",
-////													"Local copy of Report "
-////															+ entry.getId()
-////															+ " on "
-////															+ entry.getRepositoryUrl()
-////															+ " has changes.\nWould you like to override local changes? \n\nNote: if you select No, only the new comment will be saved with the updated bug, all other changes will be lost.");
-////								}
-////							});
-////
-////							if (!updateLocalCopy) {
-////								((RepositoryTaskData) entry).setNewComment(((RepositoryTaskData) oldBug).getNewComment());
-////								((RepositoryTaskData) entry).setHasChanged(true);
-////								status = RepositoryTaskSyncState.CONFLICT;
-////							} else {
-////								((RepositoryTaskData) entry).setHasChanged(false);
-////								status = RepositoryTaskSyncState.SYNCHRONIZED;
-////							}
-////						} else {
-////							if (forceSync) {
-////								status = RepositoryTaskSyncState.SYNCHRONIZED;
-////							} else {
-////								status = RepositoryTaskSyncState.INCOMING;
-////							}
-////						}
-//						list.remove(index);
-////						if (entry.hasChanges() && status != RepositoryTaskSyncState.CONFLICT) {
-////							status = RepositoryTaskSyncState.OUTGOING;
-////						}
-//						list.add(entry);
-//						writeFile();
-//					
-//				} else {
-//					// report doesn't exist in offline reports
-//					list.add(entry);
-//					writeFile();
-//				}
-//				//repositoryTask.setLastSynchronized(entry.getLastModified(repositoryTimeZone));
-////	}
-////		} catch (Exception e) {
-////			e.printStackTrace();
-////			IStatus runtimestatus = new Status(IStatus.ERROR, MylarTaskListPlugin.PLUGIN_ID, IStatus.OK,
-////					"failed to add offline report", e);
-////			throw new CoreException(runtimestatus);
-////		}
-//		return status;
-//	}
-	
-	
-	
-//	/**
-//	 * Add an offline report to the offline reports list
-//	 * 
-//	 * @param entry
-//	 *            The bug to add
-//	 */
-//	public RepositoryTaskSyncState add(final RepositoryTaskData entry, boolean forceSync) throws CoreException {
-//
-//		RepositoryTaskSyncState status = RepositoryTaskSyncState.SYNCHRONIZED;
-//
-//		try {
-//
-//			String handle = AbstractRepositoryTask.getHandle(entry.getRepositoryUrl(), entry.getId());
-//			ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
-//
-//			if (task != null && task instanceof AbstractRepositoryTask) {
-//				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
-//
-//				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
-//						repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
-//
-//				if (repository == null) {
-//					throw new Exception("No repository associated with task. Unable to retrieve timezone information.");
-//				}
-//
-//				TimeZone repositoryTimeZone = DateUtil.getTimeZone(repository.getTimeZoneId());
-//
-//				int index = -1;
-//				if ((index = find(entry.getRepositoryUrl(), entry.getId())) >= 0) {
-//					RepositoryTaskData oldBug = list.get(index);
-//
-//					if (repositoryTask.getLastSynchronized() == null
-//							|| entry.getLastModified(repositoryTimeZone)
-//									.compareTo(repositoryTask.getLastSynchronized()) > 0 || forceSync) {
-//
-//						if (oldBug.hasChanges()) {
-//
-//							PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-//								public void run() {
-//									updateLocalCopy = MessageDialog
-//											.openQuestion(
-//													null,
-//													"Update Local Copy",
-//													"Local copy of Report "
-//															+ entry.getId()
-//															+ " on "
-//															+ entry.getRepositoryUrl()
-//															+ " has changes.\nWould you like to override local changes? \n\nNote: if you select No, only the new comment will be saved with the updated bug, all other changes will be lost.");
-//								}
-//							});
-//
-//							if (!updateLocalCopy) {
-//								((RepositoryTaskData) entry).setNewComment(((RepositoryTaskData) oldBug).getNewComment());
-//								((RepositoryTaskData) entry).setHasChanged(true);
-//								status = RepositoryTaskSyncState.CONFLICT;
-//							} else {
-//								((RepositoryTaskData) entry).setHasChanged(false);
-//								status = RepositoryTaskSyncState.SYNCHRONIZED;
-//							}
-//						} else {
-//							if (forceSync) {
-//								status = RepositoryTaskSyncState.SYNCHRONIZED;
-//							} else {
-//								status = RepositoryTaskSyncState.INCOMING;
-//							}
-//						}
-//						list.remove(index);
-//						if (entry.hasChanges() && status != RepositoryTaskSyncState.CONFLICT) {
-//							status = RepositoryTaskSyncState.OUTGOING;
-//						}
-//						list.add(entry);
-//						writeFile();
-//					}
-//				} else {
-//					// report doesn't exist in offline reports
-//					list.add(entry);
-//					writeFile();
-//				}
-//				repositoryTask.setLastSynchronized(entry.getLastModified(repositoryTimeZone));
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			IStatus runtimestatus = new Status(IStatus.ERROR, MylarTaskListPlugin.PLUGIN_ID, IStatus.OK,
-//					"failed to add offline report", e);
-//			throw new CoreException(runtimestatus);
-//		}
-//		return status;
-//	}
+
+	// /**
+	// * Add an offline report to the offline reports list
+	// *
+	// * @param entry
+	// * The bug to add
+	// */
+	// public RepositoryTaskSyncState add(final RepositoryTaskData entry,
+	// boolean forceSync) throws CoreException {
+	//
+	// RepositoryTaskSyncState status = RepositoryTaskSyncState.SYNCHRONIZED;
+	// //
+	// // try {
+	// //
+	// // String handle =
+	// AbstractRepositoryTask.getHandle(entry.getRepositoryUrl(),
+	// entry.getId());
+	// // ITask task =
+	// MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
+	// //
+	// // if (task != null && task instanceof AbstractRepositoryTask) {
+	// // AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+	// //
+	// // TaskRepository repository =
+	// MylarTaskListPlugin.getRepositoryManager().getRepository(
+	// // repositoryTask.getRepositoryKind(),
+	// repositoryTask.getRepositoryUrl());
+	// //
+	// // if (repository == null) {
+	// // throw new Exception("No repository associated with task. Unable to
+	// retrieve timezone information.");
+	// // }
+	// //
+	// // TimeZone repositoryTimeZone =
+	// DateUtil.getTimeZone(repository.getTimeZoneId());
+	//
+	// int index = -1;
+	// if ((index = find(entry.getRepositoryUrl(), entry.getId())) >= 0) {
+	// //RepositoryTaskData oldBug = list.get(index);
+	//
+	// // if (repositoryTask.getLastSynchronized() == null
+	// // || entry.getLastModified(repositoryTimeZone)
+	// // .compareTo(repositoryTask.getLastSynchronized()) > 0 || forceSync) {
+	// //
+	// // if (oldBug.hasChanges()) {
+	// //
+	// // PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+	// // public void run() {
+	// // updateLocalCopy = MessageDialog
+	// // .openQuestion(
+	// // null,
+	// // "Update Local Copy",
+	// // "Local copy of Report "
+	// // + entry.getId()
+	// // + " on "
+	// // + entry.getRepositoryUrl()
+	// // + " has changes.\nWould you like to override local changes? \n\nNote:
+	// if you select No, only the new comment will be saved with the updated
+	// bug, all other changes will be lost.");
+	// // }
+	// // });
+	// //
+	// // if (!updateLocalCopy) {
+	// // ((RepositoryTaskData) entry).setNewComment(((RepositoryTaskData)
+	// oldBug).getNewComment());
+	// // ((RepositoryTaskData) entry).setHasChanged(true);
+	// // status = RepositoryTaskSyncState.CONFLICT;
+	// // } else {
+	// // ((RepositoryTaskData) entry).setHasChanged(false);
+	// // status = RepositoryTaskSyncState.SYNCHRONIZED;
+	// // }
+	// // } else {
+	// // if (forceSync) {
+	// // status = RepositoryTaskSyncState.SYNCHRONIZED;
+	// // } else {
+	// // status = RepositoryTaskSyncState.INCOMING;
+	// // }
+	// // }
+	// list.remove(index);
+	// // if (entry.hasChanges() && status != RepositoryTaskSyncState.CONFLICT)
+	// {
+	// // status = RepositoryTaskSyncState.OUTGOING;
+	// // }
+	// list.add(entry);
+	// writeFile();
+	//					
+	// } else {
+	// // report doesn't exist in offline reports
+	// list.add(entry);
+	// writeFile();
+	// }
+	// //repositoryTask.setLastSynchronized(entry.getLastModified(repositoryTimeZone));
+	// // }
+	// // } catch (Exception e) {
+	// // e.printStackTrace();
+	// // IStatus runtimestatus = new Status(IStatus.ERROR,
+	// MylarTaskListPlugin.PLUGIN_ID, IStatus.OK,
+	// // "failed to add offline report", e);
+	// // throw new CoreException(runtimestatus);
+	// // }
+	// return status;
+	// }
+
+	// /**
+	// * Add an offline report to the offline reports list
+	// *
+	// * @param entry
+	// * The bug to add
+	// */
+	// public RepositoryTaskSyncState add(final RepositoryTaskData entry,
+	// boolean forceSync) throws CoreException {
+	//
+	// RepositoryTaskSyncState status = RepositoryTaskSyncState.SYNCHRONIZED;
+	//
+	// try {
+	//
+	// String handle =
+	// AbstractRepositoryTask.getHandle(entry.getRepositoryUrl(),
+	// entry.getId());
+	// ITask task =
+	// MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
+	//
+	// if (task != null && task instanceof AbstractRepositoryTask) {
+	// AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+	//
+	// TaskRepository repository =
+	// MylarTaskListPlugin.getRepositoryManager().getRepository(
+	// repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
+	//
+	// if (repository == null) {
+	// throw new Exception("No repository associated with task. Unable to
+	// retrieve timezone information.");
+	// }
+	//
+	// TimeZone repositoryTimeZone =
+	// DateUtil.getTimeZone(repository.getTimeZoneId());
+	//
+	// int index = -1;
+	// if ((index = find(entry.getRepositoryUrl(), entry.getId())) >= 0) {
+	// RepositoryTaskData oldBug = list.get(index);
+	//
+	// if (repositoryTask.getLastSynchronized() == null
+	// || entry.getLastModified(repositoryTimeZone)
+	// .compareTo(repositoryTask.getLastSynchronized()) > 0 || forceSync) {
+	//
+	// if (oldBug.hasChanges()) {
+	//
+	// PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+	// public void run() {
+	// updateLocalCopy = MessageDialog
+	// .openQuestion(
+	// null,
+	// "Update Local Copy",
+	// "Local copy of Report "
+	// + entry.getId()
+	// + " on "
+	// + entry.getRepositoryUrl()
+	// + " has changes.\nWould you like to override local changes? \n\nNote: if
+	// you select No, only the new comment will be saved with the updated bug,
+	// all other changes will be lost.");
+	// }
+	// });
+	//
+	// if (!updateLocalCopy) {
+	// ((RepositoryTaskData) entry).setNewComment(((RepositoryTaskData)
+	// oldBug).getNewComment());
+	// ((RepositoryTaskData) entry).setHasChanged(true);
+	// status = RepositoryTaskSyncState.CONFLICT;
+	// } else {
+	// ((RepositoryTaskData) entry).setHasChanged(false);
+	// status = RepositoryTaskSyncState.SYNCHRONIZED;
+	// }
+	// } else {
+	// if (forceSync) {
+	// status = RepositoryTaskSyncState.SYNCHRONIZED;
+	// } else {
+	// status = RepositoryTaskSyncState.INCOMING;
+	// }
+	// }
+	// list.remove(index);
+	// if (entry.hasChanges() && status != RepositoryTaskSyncState.CONFLICT) {
+	// status = RepositoryTaskSyncState.OUTGOING;
+	// }
+	// list.add(entry);
+	// writeFile();
+	// }
+	// } else {
+	// // report doesn't exist in offline reports
+	// list.add(entry);
+	// writeFile();
+	// }
+	// repositoryTask.setLastSynchronized(entry.getLastModified(repositoryTimeZone));
+	// }
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// IStatus runtimestatus = new Status(IStatus.ERROR,
+	// MylarTaskListPlugin.PLUGIN_ID, IStatus.OK,
+	// "failed to add offline report", e);
+	// throw new CoreException(runtimestatus);
+	// }
+	// return status;
+	// }
 
 	// DO NOT REMOVE
 	// /**
@@ -438,39 +462,45 @@ public class OfflineTaskManager {
 	 * 
 	 * @return The list of offline reports
 	 */
-	public ArrayList<RepositoryTaskData> elements() {
-		return list;
+	public List<RepositoryTaskData> elements() {
+		return Collections.unmodifiableList(list);
 	}
 
 	/**
 	 * Write the offline reports to disk
 	 */
-	private void writeFile() {
-		ObjectOutputStream out = null;
-		try {
-			out = new ObjectOutputStream(new FileOutputStream(file));
+	private synchronized void writeFile() {
 
-			// Write the size of the list so that we can read it back in easier
-			out.writeInt(list.size());
+		synchronized (file) {
 
-			out.writeInt(latestNewBugId);
+			ObjectOutputStream out = null;
+			try {
+				out = new ObjectOutputStream(new FileOutputStream(file));
 
-			// write each element in the array list
-			for (int i = 0; i < list.size(); i++) {
-				RepositoryTaskData item = list.get(i);
-				out.writeObject(item);
-			}
-			out.close();
-		} catch (IOException e) {
-			// put up a message and log the error if there is a problem writing
-			// to the file
-			MylarStatusHandler.fail(e, "Could not write to offline reports file.", false);
-		} finally {
-			if (out != null) {
-				try {
-					out.close();
-				} catch (IOException e) {
-					// ignore
+				// Write the size of the list so that we can read it back in
+				// easier
+				out.writeInt(list.size());
+
+				out.writeInt(latestNewBugId);
+
+				// write each element in the array list
+				for (int i = 0; i < list.size(); i++) {
+					RepositoryTaskData item = list.get(i);
+					out.writeObject(item);
+				}
+				out.close();
+			} catch (IOException e) {
+				// put up a message and log the error if there is a problem
+				// writing
+				// to the file
+				MylarStatusHandler.fail(e, "Could not write to offline reports file.", false);
+			} finally {
+				if (out != null) {
+					try {
+						out.close();
+					} catch (IOException e) {
+						// ignore
+					}
 				}
 			}
 		}
@@ -487,36 +517,39 @@ public class OfflineTaskManager {
 	 */
 	private void readFile() throws IOException, ClassNotFoundException {
 
-		ObjectInputStream in = null;
-		try {
-			in = new ObjectInputStream(new FileInputStream(file));
+		synchronized (file) {
 
-			// get the number of offline reports in the file
-			int size = in.readInt();
+			ObjectInputStream in = null;
+			try {
+				in = new ObjectInputStream(new FileInputStream(file));
 
-			// get the bug id of the most recently created offline report
-			latestNewBugId = in.readInt();
+				// get the number of offline reports in the file
+				int size = in.readInt();
 
-			// read in each of the offline reports in the file
-			for (int nX = 0; nX < size; nX++) {				
-				RepositoryTaskData item = null;
+				// get the bug id of the most recently created offline report
+				latestNewBugId = in.readInt();
 
-				item = (RepositoryTaskData) in.readObject();
+				// read in each of the offline reports in the file
+				for (int nX = 0; nX < size; nX++) {
+					RepositoryTaskData item = null;
 
-				if (item != null) {
-					AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager()
-							.getRepositoryConnector(item.getRepositoryKind());
-					if (connector != null && connector.getOfflineTaskHandler() != null) {
-						AbstractAttributeFactory factory = connector.getOfflineTaskHandler().getAttributeFactory();
-						if (factory != null) {
-							item.setAttributeFactory(factory);
+					item = (RepositoryTaskData) in.readObject();
+
+					if (item != null) {
+						AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager()
+								.getRepositoryConnector(item.getRepositoryKind());
+						if (connector != null && connector.getOfflineTaskHandler() != null) {
+							AbstractAttributeFactory factory = connector.getOfflineTaskHandler().getAttributeFactory();
+							if (factory != null) {
+								item.setAttributeFactory(factory);
+							}
 						}
+						list.add(item);
 					}
-					list.add(item);
 				}
+			} finally {
+				in.close();
 			}
-		} finally {
-			in.close();
 		}
 	}
 
@@ -543,7 +576,6 @@ public class OfflineTaskManager {
 		writeFile();
 	}
 
-	
 }
 // /**
 // * Function to sort the offline reports list

@@ -661,7 +661,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 
 	@Override
 	protected void updateBug() {
-		taskData.setHasChanged(true);
+		taskData.setHasLocalChanges(true);
 		// go through all of the attributes and update the main values to the
 		// new ones
 		// for (Iterator<RepositoryTaskAttribute> it =

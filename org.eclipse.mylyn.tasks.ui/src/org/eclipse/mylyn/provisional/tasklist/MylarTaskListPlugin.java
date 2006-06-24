@@ -32,7 +32,6 @@ import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.mylar.internal.core.MylarPreferenceContstants;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.OfflineTaskManager;
-import org.eclipse.mylar.internal.tasklist.RepositoryEditorManager;
 import org.eclipse.mylar.internal.tasklist.TaskListBackupManager;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.TaskListSynchronizationManager;
@@ -95,8 +94,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	private static TaskListSynchronizationManager synchronizationManager;
 
 	private TaskListSaveManager taskListSaveManager;
-
-	private RepositoryEditorManager repositoryEditorManager;
 
 	private TaskListNotificationManager taskListNotificationManager;
 
@@ -324,14 +321,12 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 						synchronizationManager = new TaskListSynchronizationManager(true);
 						synchronizationManager.startSynchJob();
 
-						repositoryEditorManager = new RepositoryEditorManager();
-						taskListManager.getTaskList().addChangeListener(repositoryEditorManager);
-
 						taskListSaveManager = new TaskListSaveManager();
 						taskListManager.getTaskList().addChangeListener(taskListSaveManager);
 
 						MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 						getMylarCorePrefs().addPropertyChangeListener(synchronizationManager);
+//						getMylarCorePrefs().addPropertyChangeListener(taskListManager);
 
 						// if
 						// (getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP))
@@ -361,7 +356,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			if (PlatformUI.isWorkbenchRunning()) {
 				getMylarCorePrefs().removePropertyChangeListener(taskListNotificationManager);
 				getMylarCorePrefs().removePropertyChangeListener(taskListBackupManager);
-				taskListManager.getTaskList().removeChangeListener(repositoryEditorManager);
+//				getMylarCorePrefs().removePropertyChangeListener(taskListManager);
+				getMylarCorePrefs().removePropertyChangeListener(synchronizationManager);
 				taskListManager.getTaskList().removeChangeListener(taskListSaveManager);
 				taskListManager.dispose();
 				TaskListColorsAndFonts.dispose();
@@ -457,7 +453,12 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		store.setDefault(TaskListPreferenceConstants.FILTER_ARCHIVE_MODE, true);
 		store.setDefault(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS, false);
 		store.setValue(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS, false);
-
+		
+		
+//		store.setDefault(TaskListPreferenceConstants.PLANNING_STARTDAY, 2);	
+//		store.setDefault(TaskListPreferenceConstants.PLANNING_STARTHOUR, 8);
+//		store.setDefault(TaskListPreferenceConstants.PLANNING_ENDHOUR, 23);
+		
 		store.setDefault(TaskListPreferenceConstants.SAVE_TASKLIST_MODE, TaskListSaveMode.THREE_HOURS.toString());
 	}
 

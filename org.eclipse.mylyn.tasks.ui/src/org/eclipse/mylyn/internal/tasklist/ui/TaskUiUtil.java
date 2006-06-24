@@ -160,18 +160,13 @@ public class TaskUiUtil {
 				}
 				if (connector != null)
 					if (repositoryTask.getTaskData() != null) {
-						TaskUiUtil.openEditor(task, false);
-						// TODO: Eventually will need to check that this task
-						// isn't a new report awaiting submission if so
-						// don't synchronize
-						connector.synchronize((AbstractRepositoryTask) task, false, null);
+						TaskUiUtil.openEditor(task, false, false);
+						connector.synchronize(repositoryTask, false, null);
 					} else {
-						Job refreshJob = connector.synchronize((AbstractRepositoryTask) task, true,
+						Job refreshJob = connector.synchronize(repositoryTask, true,
 								new JobChangeAdapter() {
 									public void done(IJobChangeEvent event) {
-//										if (repositoryTask.getTaskData() != null) {
 										TaskUiUtil.openEditor(task, false);
-//										}
 									}
 								});
 						if (refreshJob == null) {
@@ -194,6 +189,18 @@ public class TaskUiUtil {
 	public static void openEditor(final ITask task, boolean newTask) {
 		openEditor(task, true, newTask);
 	}
+	
+//	private static void openEditorThenSync(final AbstractRepositoryConnector connector, final ITask task) {
+//		final IEditorInput editorInput = new TaskEditorInput(task, false);
+//		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//			public void run() {
+//				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+//				if(openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page) != null) {
+//					connector.synchronize((AbstractRepositoryTask) task, false, null);
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Set asyncExec false for testing purposes.

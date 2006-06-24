@@ -363,11 +363,11 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 		return repositoryURL;
 	}
 
-	public boolean hasChanges() {
+	public boolean hasLocalChanges() {
 		return hasChanges;
 	}
 
-	public void setHasChanged(boolean b) {
+	public void setHasLocalChanges(boolean b) {
 		hasChanges = b;
 	}
 

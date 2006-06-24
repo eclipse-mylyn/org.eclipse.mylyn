@@ -240,6 +240,11 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 									WebBrowserDialog.openAcceptAgreement(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 											"Possible problem posting Bugzilla report.\n"
 													+ throwable.getCause().getMessage(), form.getError());
+									String handle = AbstractRepositoryTask.getHandle(bugReport.getRepositoryUrl(), bugReport.getId());
+									ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
+									if (task != null && task instanceof AbstractRepositoryTask) {
+										synchronize((AbstractRepositoryTask)task, true, null);
+									}
 								} else if (throwable.getCause() instanceof LoginException) {
 									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 											"Bugzilla could not post your bug since your login name or password is incorrect."
@@ -269,9 +274,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		String resultId = null;
 		try {
 			resultId = form.submitReportToRepository();
-			removeOfflineTaskData(bugReport);
+			//removeOfflineTaskData(bugReport);
 			String handle = AbstractRepositoryTask.getHandle(bugReport.getRepositoryUrl(), bugReport.getId());
-
 			ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
 			if (task != null) {
 				Set<AbstractRepositoryQuery> queriesWithHandle = MylarTaskListPlugin.getTaskListManager().getTaskList()
@@ -279,7 +283,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				synchronize(queriesWithHandle, null, Job.SHORT, 0, true);
 
 				if (task instanceof AbstractRepositoryTask) {
-					synchronize((AbstractRepositoryTask) task, true, null);
+					AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+					// Set to null in order for update to bypass ui override check with user
+					repositoryTask.setTaskData(null);
+					synchronize(repositoryTask, true, null);
 				}
 			}
 

@@ -48,6 +48,9 @@ public abstract class AbstractRepositoryTask extends Task {
 
 	public AbstractRepositoryTask(String handle, String label, boolean newTask) {
 		super(handle, label, newTask);
+		if(newTask) {
+			setSyncState(RepositoryTaskSyncState.INCOMING);
+		}
 	}
 
 	public abstract String getRepositoryKind();

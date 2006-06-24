@@ -58,7 +58,6 @@ import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.IOfflineTaskHandler;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.StyledText;
@@ -1439,16 +1438,19 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 				AbstractRepositoryTask repositoryTask = existingInput.getRepositoryTask();
 				// AbstractRepositoryTask repositoryTask = getRepositoryTask();
 				if (repositoryTask != null) {
-					if (getRepositoryTaskData().hasChanges()) {
-						repositoryTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
-					} else {
-						repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
+					// if (getRepositoryTaskData().hasChanges()) {
+					// repositoryTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
+					// } else {
+					// repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
+					//					}
+					if(getRepositoryTaskData().hasLocalChanges() == true) {
+						repositoryClient.updateOfflineState(repositoryTask, getRepositoryTaskData(), false);
 					}
 					MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 				}
-				// TODO: move out of if when adding support for saving new bug
-				// reports offline
-				repositoryClient.saveOffline(getRepositoryTaskData());
+
+				// For new bug reports something along these lines...
+				//repositoryClient.saveOffline(getRepositoryTaskData());
 			}
 			changeDirtyStatus(false);
 			if (parentEditor != null) {

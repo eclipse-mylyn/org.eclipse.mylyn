@@ -221,7 +221,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		}
 		bugzillaTask.setTaskData((RepositoryTaskData) tempBug);
 
-		if (bugzillaTask.getTaskData().hasChanges())
+		if (bugzillaTask.getTaskData().hasLocalChanges())
 			bugzillaTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
 		return true;
 	}
