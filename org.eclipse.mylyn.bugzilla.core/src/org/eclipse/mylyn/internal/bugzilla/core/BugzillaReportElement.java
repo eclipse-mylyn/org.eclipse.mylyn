@@ -50,6 +50,7 @@ public enum BugzillaReportElement {
 	ESTIMATED_TIME ("Estimated Time:", "estimated_time", true),
 	FILENAME ("filename", "filename"),
 	IS_OBSOLETE ("Obsolete", "isobsolete", true), 
+	IS_PATCH("Patch", "ispatch", true),
 	KEYWORDS ("Keywords:", "keywords", true),
 	LONG_DESC ("Description:", "long_desc"), 
 	LONGDESCLENGTH ("Number of comments", "longdesclength", true), 

@@ -38,7 +38,7 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 	private Comment comment;
 
 	private final Map<Integer, Comment> attachIdToComment = new HashMap<Integer, Comment>();
-	
+
 	private int commentNum = 0;
 
 	private RepositoryAttachment attachment;
@@ -69,9 +69,9 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {
 		characters.append(ch, start, length);
-//		 if (monitor.isCanceled()) {
-//		 throw new OperationCanceledException("Search cancelled");
-//		 }
+		// if (monitor.isCanceled()) {
+		// throw new OperationCanceledException("Search cancelled");
+		// }
 	}
 
 	@Override
@@ -101,8 +101,14 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			break;
 		case ATTACHMENT:
 			attachment = new RepositoryAttachment(attributeFactory);
-			if (attributes != null && (attributes.getValue(BugzillaReportElement.IS_OBSOLETE.getKeyString()) != null)) {
-				attachment.addAttribute(BugzillaReportElement.IS_OBSOLETE.getKeyString(), attributeFactory.createAttribute(BugzillaReportElement.IS_OBSOLETE.getKeyString()));
+			if (attributes != null) {
+				if (attributes.getValue(BugzillaReportElement.IS_OBSOLETE.getKeyString()) != null) {
+					attachment.addAttribute(BugzillaReportElement.IS_OBSOLETE.getKeyString(), attributeFactory
+							.createAttribute(BugzillaReportElement.IS_OBSOLETE.getKeyString()));
+				}
+				if ("1".equals(attributes.getValue(BugzillaReportElement.IS_PATCH.getKeyString()))) {
+					attachment.setPatch(true);
+				}
 			}
 			break;
 		}
@@ -111,9 +117,9 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
-		
+
 		String parsedText = HtmlStreamTokenizer.unescape(characters.toString());
-		
+
 		BugzillaReportElement tag = BugzillaReportElement.UNKNOWN;
 		try {
 			tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase());
@@ -185,6 +191,10 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			// TODO: Need to figure out under what circumstanceswhen attachments
 			// are inline and
 			// what to do with them.
+			// jpound - if data gets stored here, the attachment actions in the
+			// task editor
+			// should be updated to use this data instead of retrieving from
+			// server.
 			break;
 		case ATTACHMENT:
 			if (attachment != null) {
@@ -203,20 +213,21 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 		case BUG:
 			// Reached end of bug. Need to set LONGDESCLENGTH to number of
 			// comments
-			RepositoryTaskAttribute numCommentsAttribute = report
-					.getAttribute(BugzillaReportElement.LONGDESCLENGTH.getKeyString());
+			RepositoryTaskAttribute numCommentsAttribute = report.getAttribute(BugzillaReportElement.LONGDESCLENGTH
+					.getKeyString());
 			if (numCommentsAttribute == null) {
-				numCommentsAttribute = attributeFactory.createAttribute(BugzillaReportElement.LONGDESCLENGTH.getKeyString());
+				numCommentsAttribute = attributeFactory.createAttribute(BugzillaReportElement.LONGDESCLENGTH
+						.getKeyString());
 				numCommentsAttribute.setValue("" + report.getComments().size());
 				report.addAttribute(BugzillaReportElement.LONGDESCLENGTH.getKeyString(), numCommentsAttribute);
 			} else {
 				numCommentsAttribute.setValue("" + report.getComments().size());
 			}
-			
+
 			// Set the creator name on all attachments
-			for (RepositoryAttachment attachment: report.getAttachments()) {
-				Comment comment = (Comment)attachIdToComment.get(attachment.getId());
-				if(comment != null) {
+			for (RepositoryAttachment attachment : report.getAttachments()) {
+				Comment comment = (Comment) attachIdToComment.get(attachment.getId());
+				if (comment != null) {
 					attachment.setCreator(comment.getAuthor());
 				}
 			}
@@ -247,7 +258,7 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 				int endIndex = commentText.indexOf(")");
 				if (endIndex > 0 && endIndex < commentText.length()) {
 					attachmentID = Integer
-							.parseInt(commentText.substring(COMMENT_ATTACHMENT_STRING.length(), endIndex));					
+							.parseInt(commentText.substring(COMMENT_ATTACHMENT_STRING.length(), endIndex));
 					comment.setHasAttachment(true);
 					comment.setAttachmentId(attachmentID);
 					attachIdToComment.put(attachmentID, comment);

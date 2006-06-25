@@ -35,6 +35,8 @@ public class RepositoryAttachment extends AttributeContainer implements Serializ
 
 	private String creator = "";
 
+	private boolean isPatch = false;
+
 	public boolean isObsolete() {
 		return isObsolete;
 	}
@@ -90,4 +92,11 @@ public class RepositoryAttachment extends AttributeContainer implements Serializ
 		}
 	}
 
+	public boolean isPatch() {
+		return isPatch;
+	}
+
+	public void setPatch(boolean b) {
+		isPatch = b;
+	}
 }

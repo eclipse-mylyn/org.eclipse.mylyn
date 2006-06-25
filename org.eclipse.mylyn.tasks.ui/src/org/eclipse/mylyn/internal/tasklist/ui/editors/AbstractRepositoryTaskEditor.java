@@ -10,7 +10,13 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasklist.ui.editors;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -52,6 +59,8 @@ import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasklist.ui.actions.CopyToClipboardAction;
+import org.eclipse.mylar.internal.tasklist.ui.actions.SaveRemoteFileAction;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.NewAttachmentWizard;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
@@ -74,8 +83,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
@@ -108,6 +119,8 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @author Rob Elves
  */
 public abstract class AbstractRepositoryTaskEditor extends EditorPart {
+
+	private static final String ATTACHMENT_URL_SUFFIX = "/attachment.cgi?id=";
 
 	protected static final String CONTEXT_MENU_ID = "#BugEditor";
 
@@ -770,7 +783,11 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 					case 0:
 						return attachment.getDescription();
 					case 1:
-						return attachment.getContentType();
+						if (attachment.isPatch()) {
+							return "patch";
+						} else {
+							return attachment.getContentType();
+						}
 					case 2:
 						return attachment.getCreator();
 					case 3:
@@ -803,7 +820,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 			attachmentsTableViewer.addDoubleClickListener(new IDoubleClickListener() {
 				public void doubleClick(DoubleClickEvent event) {
-					String address = repository.getUrl() + "/attachment.cgi?id=";
+					String address = repository.getUrl() + ATTACHMENT_URL_SUFFIX;
 					if (!event.getSelection().isEmpty()) {
 						StructuredSelection selection = (StructuredSelection) event.getSelection();
 						RepositoryAttachment attachment = (RepositoryAttachment) selection.getFirstElement();
@@ -815,6 +832,82 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 			});
 
 			attachmentsTableViewer.setInput(getRepositoryTaskData());
+
+			final MenuManager popupMenu = new MenuManager();
+			popupMenu.add(new Action("Open in Browser") {
+				public void run() {
+					RepositoryAttachment att = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
+							.getSelection()).getFirstElement());
+					String url = repository.getUrl() + ATTACHMENT_URL_SUFFIX + att.getId();
+					TaskUiUtil.openUrl(url);
+				}
+			});
+
+			popupMenu.add(new Action(SaveRemoteFileAction.TITLE) {
+				public void run() {
+					RepositoryAttachment att = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
+							.getSelection()).getFirstElement());
+					/* Launch Browser */
+					FileDialog fileChooser = new FileDialog(attachmentsTable.getShell(), SWT.SAVE);
+					fileChooser.setFileName(att.getAttributeValue("filename"));
+					String file = fileChooser.open();
+
+					// Check if the dialog was canceled or an error occured
+					if (file == null) {
+						return;
+					}
+					SaveRemoteFileAction save = new SaveRemoteFileAction();
+					save.setDestinationFilePath(file);
+					save.setInputStream(getAttachmentInputStream(repository.getUrl() + ATTACHMENT_URL_SUFFIX
+							+ att.getId()));
+					save.run();
+				}
+			});
+			final Action copyToClip = new Action(CopyToClipboardAction.TITLE) {
+				public void run() {
+					RepositoryAttachment att = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
+							.getSelection()).getFirstElement());
+					CopyToClipboardAction copyToClip = new CopyToClipboardAction();
+					copyToClip.setContents(getAttachmentContents(repository.getUrl() + ATTACHMENT_URL_SUFFIX
+							+ att.getId()));
+					copyToClip.setControl(attachmentsTable.getParent());
+					copyToClip.run();
+				}
+			};
+			copyToClip.setId("ID_COPY_TO_CLIPBOARD");
+
+			final Action applyPatch = new Action("Apply Patch...") {
+				public void run() {
+					// RepositoryAttachment att =
+					// (RepositoryAttachment)(((StructuredSelection)attachmentsTableViewer.getSelection()).getFirstElement());
+					// implementation pending bug 98707
+				}
+			};
+			applyPatch.setId("ID_APPLY_PATCH");
+			applyPatch.setEnabled(false); // pending bug 98707
+
+			popupMenu.add(new Separator());
+			Menu menu = popupMenu.createContextMenu(attachmentsTable);
+			attachmentsTable.setMenu(menu);
+
+			/*
+			 * Add the apply patch option if the attachment is a patch. Add the
+			 * copy to clipboard option if the attachment is text or xml
+			 */
+			attachmentsTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+				public void selectionChanged(SelectionChangedEvent e) {
+					RepositoryAttachment att = (RepositoryAttachment) (((StructuredSelection) e.getSelection())
+							.getFirstElement());
+					popupMenu.remove("ID_APPLY_PATCH");
+					popupMenu.remove("ID_COPY_TO_CLIPBOARD");
+					if (att.getContentType().startsWith("text") || att.getContentType().endsWith("xml")) {
+						popupMenu.add(copyToClip);
+					}
+					if (att.isPatch()) {
+						popupMenu.add(applyPatch);
+					}
+				}
+			});
 
 		} else {
 			toolkit.createLabel(attachmentsComposite, "No attachments");
@@ -849,10 +942,50 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 					// data.addAttachment(new DisplayableLocalAttachment(att));
 					// attachmentsTableViewer.setInput(data);
 					newAttachment.setText((new File(att.getFilePath())).getName() + " <not yet submitted>");
-					attachmentsComposite.redraw();
 				}
 			}
 		});
+	}
+
+	public static InputStream getAttachmentInputStream(String url) {
+		URLConnection urlConnect;
+		InputStream stream = null;
+		try {
+			urlConnect = (new URL(url)).openConnection();
+			urlConnect.connect();
+			stream = urlConnect.getInputStream();
+
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return stream;
+	}
+
+	public static String getAttachmentContents(String url) {
+		URLConnection urlConnect;
+		StringBuffer contents = new StringBuffer();
+		try {
+			urlConnect = (new URL(url)).openConnection();
+			urlConnect.connect();
+			BufferedInputStream stream = new BufferedInputStream(urlConnect.getInputStream());
+			int c;
+			while ((c = stream.read()) != -1) {
+				/* TODO jpound - handle non-text */
+				contents.append((char) c);
+			}
+			stream.close();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return contents.toString();
 	}
 
 	protected abstract void createCustomAttributeLayout(Composite composite);
@@ -1442,15 +1575,15 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 					// repositoryTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
 					// } else {
 					// repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
-					//					}
-					if(getRepositoryTaskData().hasLocalChanges() == true) {
+					// }
+					if (getRepositoryTaskData().hasLocalChanges() == true) {
 						repositoryClient.updateOfflineState(repositoryTask, getRepositoryTaskData(), false);
 					}
 					MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 				}
 
 				// For new bug reports something along these lines...
-				//repositoryClient.saveOffline(getRepositoryTaskData());
+				// repositoryClient.saveOffline(getRepositoryTaskData());
 			}
 			changeDirtyStatus(false);
 			if (parentEditor != null) {
