@@ -8,6 +8,8 @@
 
 package org.eclipse.mylar.internal.tasklist.ui;
 
+import java.util.List;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
@@ -23,7 +25,7 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 
 	private static final String LABEL = "Move to Category";
 
-	public MenuManager getSubMenuManager(TaskListView view, ITaskListElement selectedElement) {
+	public MenuManager getSubMenuManager(TaskListView view, List<ITaskListElement> selectedElement) {
 		ITask task = null;
 		final MenuManager subMenuManager = new MenuManager(LABEL);
 		if (selectedElement instanceof ITask) {

@@ -11,8 +11,10 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.views;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -1013,9 +1015,16 @@ public class TaskListView extends ViewPart {
 
 		ITaskListElement element = null;
 
-		final Object selectedObject = ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
-		if (selectedObject instanceof ITaskListElement) {
-			element = (ITaskListElement) selectedObject;
+		final Object firstSelectedObject = ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
+		if (firstSelectedObject instanceof ITaskListElement) {
+			element = (ITaskListElement) firstSelectedObject;
+		}
+		List<ITaskListElement> selectedElements = new ArrayList<ITaskListElement>();
+		for (Iterator i = ((IStructuredSelection) getViewer().getSelection()).iterator(); i.hasNext();) {
+			Object object = i.next();
+			if (object instanceof ITaskListElement) {
+				selectedElements.add((ITaskListElement)object);
+			}
 		}
 
 		addAction(openTaskEditor, manager, element);
@@ -1066,7 +1075,7 @@ public class TaskListView extends ViewPart {
 		}
 
 		for (IDynamicSubMenuContributor contributor : MylarTaskListPlugin.getDefault().getDynamicMenuContributers()) {
-			MenuManager subMenuManager = contributor.getSubMenuManager(this, (ITaskListElement) selectedObject);
+			MenuManager subMenuManager = contributor.getSubMenuManager(this, selectedElements);
 			if (subMenuManager != null)
 				addMenuManager(subMenuManager, manager, element);
 		}
