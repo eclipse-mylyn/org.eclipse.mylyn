@@ -147,7 +147,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 	private boolean isEnabled = false;
 
 	public MylarChangeSetManager() {
-		List<TeamRepositoryProvider> providerList = TeamRespositoriesManager.getInstance().getProvider();
+		List<TeamRepositoryProvider> providerList = TeamRespositoriesManager.getInstance().getProviders();
 		for (TeamRepositoryProvider provider : providerList) {
 			ActiveChangeSetManager changeSetManager = provider.getActiveChangeSetManager();
 			if(null != changeSetManager)

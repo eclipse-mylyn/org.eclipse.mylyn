@@ -98,7 +98,7 @@ public class TeamRespositoriesManager {
 	 * 
 	 * @return a list of {@link TeamRepositoryProvider}
 	 */
-	public List<TeamRepositoryProvider> getProvider() {
+	public List<TeamRepositoryProvider> getProviders() {
 		return provider;
 	}
 
