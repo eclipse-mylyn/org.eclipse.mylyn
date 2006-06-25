@@ -347,9 +347,10 @@ public class TaskList {
 			if (!(task instanceof AbstractRepositoryTask)) {
 				String string = task.getHandleIdentifier().substring(task.getHandleIdentifier().lastIndexOf('-') + 1,
 						task.getHandleIdentifier().length());
-				if (!"".equals(string)) {
+				try {
 					ihandle = Integer.parseInt(string);
 				}
+				catch (NumberFormatException nfe) { }
 			}
 			max = Math.max(ihandle, max);
 			ihandle = largestTaskHandleHelper(task.getChildren());
@@ -544,4 +545,3 @@ public class TaskList {
 		}	
 	}
 }
-
