@@ -11,6 +11,8 @@
 
 package org.eclipse.mylar.internal.ui;
 
+import java.util.List;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -31,16 +33,15 @@ public class TaskListHighlighterMenuContributor implements IDynamicSubMenuContri
 
 	private static final String CHOOSE_HIGHLIGHTER = "Highlighter";
 
-	public MenuManager getSubMenuManager(TaskListView view, ITaskListElement selection) {
-		final ITaskListElement selectedElement = selection;
+	public MenuManager getSubMenuManager(TaskListView view, final List<ITaskListElement> selectedElements) {
 		final TaskListView taskListView = view;
 		final MenuManager subMenuManager = new MenuManager(CHOOSE_HIGHLIGHTER);
 		for (final Highlighter highlighter : MylarUiPlugin.getDefault().getHighlighters()) {
-			if (selectedElement instanceof ITaskListElement) {
-				Action action = new Action() {
-					@Override
-					public void run() {
-						ITask task = null;
+			Action action = new Action() {
+				@Override
+				public void run() {
+					ITask task = null;
+					for (ITaskListElement selectedElement : selectedElements) {
 						if (selectedElement instanceof ITask) {
 							task = (ITask) selectedElement;
 						} else if (selectedElement instanceof AbstractQueryHit) {
@@ -56,17 +57,17 @@ public class TaskListHighlighterMenuContributor implements IDynamicSubMenuContri
 									IMylarContextListener.UpdateKind.HIGHLIGHTER);
 						}
 					}
-				};
-				if (highlighter.isGradient()) {
-					action.setImageDescriptor(new HighlighterImageDescriptor(highlighter.getBase(), highlighter
-							.getLandmarkColor()));
-				} else {
-					action.setImageDescriptor(new HighlighterImageDescriptor(highlighter.getLandmarkColor(),
-							highlighter.getLandmarkColor()));
 				}
-				action.setText(highlighter.toString());
-				subMenuManager.add(action);
+			};
+			if (highlighter.isGradient()) {
+				action.setImageDescriptor(new HighlighterImageDescriptor(highlighter.getBase(), highlighter
+						.getLandmarkColor()));
+			} else {
+				action.setImageDescriptor(new HighlighterImageDescriptor(highlighter.getLandmarkColor(), highlighter
+						.getLandmarkColor()));
 			}
+			action.setText(highlighter.toString());
+			subMenuManager.add(action);
 		}
 		subMenuManager.add(new Separator());
 		subMenuManager.add(new EditHighlightersAction());
