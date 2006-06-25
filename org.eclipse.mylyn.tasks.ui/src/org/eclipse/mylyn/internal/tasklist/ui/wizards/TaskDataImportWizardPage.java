@@ -40,7 +40,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 
 	private final static String PAGE_TITLE = "Import Mylar Task Data";
 
-	private static final String DESCRIPTION = "WARNING: importing overwrites current task list, use with caution.";
+	private static final String DESCRIPTION = "WARNING: importing overwrites current task list and repositories, use with caution.";
 
 	public final static String PAGE_NAME = PAGE_TITLE;
 
