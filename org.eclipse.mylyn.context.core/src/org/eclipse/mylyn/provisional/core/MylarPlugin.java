@@ -121,11 +121,6 @@ public class MylarPlugin extends AbstractUIPlugin {
 			throw new RuntimeException("null adapter for handle: " + handle);
 		}
 
-		// public IProject getProjectForObject(Object object) {
-		// // return null;
-		// throw new RuntimeException("null brige for object: " + object);
-		// }
-
 		public String getContentType(String elementHandle) {
 			return getContentType();
 		}

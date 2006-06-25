@@ -15,6 +15,8 @@ package org.eclipse.mylar.provisional.ui;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -67,6 +69,18 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 				element = (IMylarElement) object;
 			} else {
 				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(object);
+				if (bridge.getContentType() == null) {
+					// try to resolve the resource
+					if (object instanceof IAdaptable) {
+						Object adapted = ((IAdaptable)object).getAdapter(IResource.class);
+						if (adapted instanceof IResource) {
+							object = adapted;
+						}
+						bridge = MylarPlugin.getDefault().getStructureBridge(object);
+					} else {
+						return false;
+					}
+				}
 				if (!bridge.canFilter(object)) {
 					return true;
 				}
