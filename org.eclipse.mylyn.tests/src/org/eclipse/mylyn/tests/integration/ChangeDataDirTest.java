@@ -53,7 +53,7 @@ public class ChangeDataDirTest extends TestCase {
 		dir.deleteOnExit();
 		manager.resetTaskList();
 		assertTrue(manager.getTaskList().isEmpty());
-		MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskListAndContexts();
+		MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
 	}
 
 	protected void tearDown() throws Exception {
