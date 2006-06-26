@@ -35,10 +35,6 @@ import org.eclipse.mylar.provisional.core.MylarPlugin;
  */
 public class TaskRepositoryManager {
 
-	public static final String REPOSITORIES_EXTENSION = ".xml";
-
-	public static final String REPOSITORIES_FILENAME = "repositories";
-
 	public static final String OLD_PROPERTY_SYNCTIME = "synctime";
 
 	// public static final String PROPERTY_SYNCTIMESTAMP = "synctimestamp";
@@ -274,8 +270,7 @@ public class TaskRepositoryManager {
 	private void loadRepositories() {
 		try {
 			String dataDirectory = MylarPlugin.getDefault().getDataDirectory();
-			File repositoriesFile = new File(dataDirectory + File.separator + REPOSITORIES_FILENAME
-					+ REPOSITORIES_EXTENSION);
+			File repositoriesFile = new File(dataDirectory + File.separator + MylarTaskListPlugin.DEFAULT_REPOSITORIES_FILE);
 			// Will only load repositories for which a connector exists
 			for (AbstractRepositoryConnector repositoryConnector : repositoryConnectors.values()) {
 				repositoryMap.put(repositoryConnector.getRepositoryType(), new HashSet<TaskRepository>());
@@ -360,8 +355,7 @@ public class TaskRepositoryManager {
 
 		try {
 			String dataDirectory = MylarPlugin.getDefault().getDataDirectory();
-			File repositoriesFile = new File(dataDirectory + File.separator + REPOSITORIES_FILENAME
-					+ REPOSITORIES_EXTENSION);
+			File repositoriesFile = new File(dataDirectory + File.separator + MylarTaskListPlugin.DEFAULT_REPOSITORIES_FILE);
 			externalizer.writeRepositoriesToXML(repositoriesToWrite, repositoriesFile);
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "could not save repositories", false);

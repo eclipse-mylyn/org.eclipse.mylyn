@@ -67,7 +67,8 @@ public class TaskDataImportTest extends AbstractContextTest {
 	}
 
 	protected void tearDown() throws Exception {
-
+		MylarTaskListPlugin.getRepositoryManager().clearRepositories();
+		MylarTaskListPlugin.getTaskListManager().resetTaskList();
 		super.tearDown();
 	}
 
@@ -76,6 +77,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 	 * zip file
 	 */
 	public void testImportFromAllFromZip() {
+		assertEquals(0, MylarTaskListPlugin.getRepositoryManager().getAllRepositories().size());
 		wizardPage.setParameters(true, true, true, true, true, "", sourceZipFile.getPath());
 		wizard.performFinish();
 
@@ -86,10 +88,13 @@ public class TaskDataImportTest extends AbstractContextTest {
 		for (ITask task : tasks) {
 			assertTrue(MylarPlugin.getContextManager().hasContext(task.getHandleIdentifier()));
 		}
+		
+		assertEquals(2, MylarTaskListPlugin.getRepositoryManager().getAllRepositories().size());
 	}
 
 	/** Tests the wizard when it has been asked to import task data from folder */
 	public void testImportFromAllFromFolder() {
+		assertEquals(0, MylarTaskListPlugin.getRepositoryManager().getAllRepositories().size());
 		wizardPage.setParameters(true, true, true, true, false, sourceDirFile.getPath(), "");
 		wizard.performFinish();
 
@@ -100,5 +105,6 @@ public class TaskDataImportTest extends AbstractContextTest {
 		for (ITask task : tasks) {
 			assertTrue(MylarPlugin.getContextManager().hasContext(task.getHandleIdentifier()));
 		}
+		assertEquals(2, MylarTaskListPlugin.getRepositoryManager().getAllRepositories().size());
 	}
 }

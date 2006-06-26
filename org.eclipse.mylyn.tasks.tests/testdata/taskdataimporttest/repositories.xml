@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TaskRepositories OutputVersion="1">
+<TaskRepository encoding="UTF-8" kind="bugzilla" timezone="Canada/Pacific" url="https://bugzilla.mozilla.org/" lastsynctimestamp="2006-06-26 01:14:10 PDT" version="2.22"/>
+<TaskRepository encoding="UTF-8" kind="bugzilla" timezone="Canada/Eastern" url="https://bugs.eclipse.org/bugs" lastsynctimestamp="2006-06-26 13:30:14" version="2.20" /></TaskRepositories>

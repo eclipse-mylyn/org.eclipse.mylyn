@@ -103,6 +103,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 		File sourceDirFile = null;
 		File sourceZipFile = null;
 		File sourceTaskListFile = null;
+		File sourceRepositoriesFile = null;
 		File sourceActivationHistoryFile = null;
 		List<File> contextFiles = new ArrayList<File>();
 		List<String> zipFilesToExtract = new ArrayList<String>();
@@ -136,7 +137,8 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 					if (!importPage.importTaskList()
 							&& entry.getName().endsWith(MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE)) {
 						continue;
-					}
+					}										
+					
 					if (!importPage.importActivationHistory()
 							&& entry.getName().endsWith(
 									MylarContextManager.CONTEXT_HISTORY_FILE_NAME
@@ -165,8 +167,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 				}
 
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				MylarStatusHandler.fail(e, "Could not import files", true);
 			}
 
 		} else {
@@ -180,6 +181,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
 			// make sure selected files for import are there
 			sourceTaskListFile = new File(sourceDir + File.separator + MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE);
+			sourceRepositoriesFile = new File(sourceDir + File.separator + MylarTaskListPlugin.DEFAULT_REPOSITORIES_FILE);
 			sourceActivationHistoryFile = new File(sourceDir + File.separator
 					+ MylarContextManager.CONTEXT_HISTORY_FILE_NAME + MylarContextManager.CONTEXT_FILE_EXTENSION);
 
@@ -203,7 +205,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 				}
 
 			}
-
+			
 			if (importPage.importTaskList() && !sourceTaskListFile.exists()) {
 				MessageDialog.openError(getShell(), "File not found", sourceTaskListFile.toString() + " not found.");
 				return false;
@@ -215,7 +217,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
 		}
 
-		FileCopyJob job = new FileCopyJob(sourceDirFile, sourceZipFile, sourceTaskListFile,
+		FileCopyJob job = new FileCopyJob(sourceDirFile, sourceZipFile, sourceTaskListFile, sourceRepositoriesFile,
 				sourceActivationHistoryFile, contextFiles, zipFilesToExtract);
 
 		IProgressService service = PlatformUI.getWorkbench().getProgressService();
@@ -242,6 +244,8 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 		private File sourceTaskListFile = null;
 
 		private File sourceActivationHistoryFile = null;
+		
+		private File sourceRepositoriesFile = null;
 
 		private boolean zip;
 
@@ -255,11 +259,12 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
 		private List<String> zipFilesToExtract;
 
-		public FileCopyJob(File sourceFolder, File sourceZipFile, File sourceTaskListFile,
+		public FileCopyJob(File sourceFolder, File sourceZipFile, File sourceTaskListFile, File sourceRepositoriesFile,
 				File sourceActivationHistoryFile, List<File> contextFiles, List<String> zipFiles) {
 
 			this.sourceZipFile = sourceZipFile;
 			this.sourceTaskListFile = sourceTaskListFile;
+			this.sourceRepositoriesFile = sourceRepositoriesFile;
 			this.sourceActivationHistoryFile = sourceActivationHistoryFile;
 			this.sourceContextFiles = contextFiles;
 			this.zipFilesToExtract = zipFiles;
@@ -306,13 +311,35 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 							"Problem occured extracting from zip file.", true);
 					return;
 				}
-				readTaskList();
+				readTaskListData();
 				monitor.done();
 				return;
 			}
 
-			if (importTaskList) {
-				monitor.beginTask(JOB_LABEL, sourceContextFiles.size() + 2);
+			int jobSize = 1;
+			if(importTaskList) jobSize++;
+			if(importActivationHistory) jobSize++;
+			if(importTaskContexts) jobSize += sourceContextFiles.size();
+			monitor.beginTask(JOB_LABEL, jobSize);
+			
+			if(true) {				
+				String destRepositoriesPath = MylarPlugin.getDefault().getDataDirectory() + File.separator
+						+ MylarTaskListPlugin.DEFAULT_REPOSITORIES_FILE;
+				File destRepositoriesFile = new File(destRepositoriesPath);
+
+				if (destRepositoriesFile.exists()) {
+					destRepositoriesFile.delete();
+				}
+
+				if (!copy(sourceRepositoriesFile, destRepositoriesFile)) {
+					MylarStatusHandler
+							.fail(new Exception("Import Exception"), "Could not import repositories file.", true);
+				}
+				monitor.worked(1);
+			}
+			
+			
+			if (importTaskList) {				
 				String destTaskListPath = MylarPlugin.getDefault().getDataDirectory() + File.separator
 						+ MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE;
 				File destTaskListFile = new File(destTaskListPath);
@@ -367,7 +394,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 					monitor.worked(1);
 				}
 			}
-			readTaskList();
+			readTaskListData();
 			monitor.done();
 		}
 	}
@@ -417,9 +444,10 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 		}
 	}
 
-	private void readTaskList() {
+	private void readTaskListData() {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
+				MylarTaskListPlugin.getRepositoryManager().readRepositories();
 				MylarTaskListPlugin.getTaskListManager().readExistingOrCreateNewList();
 			}
 		});

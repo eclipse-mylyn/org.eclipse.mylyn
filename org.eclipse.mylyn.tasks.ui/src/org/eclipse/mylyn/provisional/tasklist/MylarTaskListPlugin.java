@@ -78,6 +78,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	public static final String FILE_EXTENSION = ".xml";
 
 	public static final String DEFAULT_TASK_LIST_FILE = "tasklist" + FILE_EXTENSION;
+	
+	public static final String DEFAULT_REPOSITORIES_FILE = "repositories" + FILE_EXTENSION;
 
 	public static final String TITLE_DIALOG = "Mylar Information";
 

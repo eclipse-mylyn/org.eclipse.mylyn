@@ -57,10 +57,6 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 	private String zipFileName;
 
 	private File destZipFile = null;
-
-	private File destTaskListFile = null;
-
-	private File destActivationHistoryFile = null;
 	
 	private Collection<ITask> tasks;
 
@@ -83,7 +79,7 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 
 	public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		//Collection<ITask> tasks = MylarTaskListPlugin.getTaskListManager().getTaskList().getAllTasks();
-		int jobSize = 0;
+		int jobSize = 1; // 1 for repositories.xml
 		if (exportTaskList)
 			jobSize++;
 		if (exportActivationHistory)
@@ -98,6 +94,35 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 		// Map of file paths used to avoid duplicates
 		Map<String, String> filesToZipMap = new HashMap<String, String>();
 
+		if (true) {
+			// Repositories always exported
+			MylarTaskListPlugin.getRepositoryManager().saveRepositories();
+
+			String sourceRepositoriesPath = MylarPlugin.getDefault().getDataDirectory() + File.separator
+					+ MylarTaskListPlugin.DEFAULT_REPOSITORIES_FILE;
+			File sourceRepositoriesFile = new File(sourceRepositoriesPath);
+			if (sourceRepositoriesFile.exists()) {
+				File destRepositoriesFile = new File(destinationDirectory + File.separator
+						+ MylarTaskListPlugin.DEFAULT_REPOSITORIES_FILE);				
+
+				if (zip) {
+					filesToZip.add(sourceRepositoriesFile);
+				} else if(!destRepositoriesFile.equals(sourceRepositoriesFile)) {
+					if (destRepositoriesFile.exists()) {
+						destRepositoriesFile.delete();
+					}
+					if (!copy(sourceRepositoriesFile, destRepositoriesFile)) {
+						MylarStatusHandler.fail(new Exception("Export Exception"), "Could not export repositories file.",
+								false);
+					}
+					monitor.worked(1);
+				}
+			}
+
+		}
+		
+		
+		
 		if (exportTaskList) {
 			MylarTaskListPlugin.getTaskListManager().saveTaskList();
 
@@ -105,7 +130,7 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 					+ MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE;
 			File sourceTaskListFile = new File(sourceTaskListPath);
 			if (sourceTaskListFile.exists()) {
-				destTaskListFile = new File(destinationDirectory + File.separator
+				File destTaskListFile = new File(destinationDirectory + File.separator
 						+ MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE);				
 
 				if (zip) {
@@ -134,7 +159,7 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 
 					MylarPlugin.getContextManager().saveActivityHistoryContext();
 
-					destActivationHistoryFile = new File(destinationDirectory + File.separator
+					File destActivationHistoryFile = new File(destinationDirectory + File.separator
 							+ MylarContextManager.CONTEXT_HISTORY_FILE_NAME
 							+ MylarContextManager.CONTEXT_FILE_EXTENSION);
 					
