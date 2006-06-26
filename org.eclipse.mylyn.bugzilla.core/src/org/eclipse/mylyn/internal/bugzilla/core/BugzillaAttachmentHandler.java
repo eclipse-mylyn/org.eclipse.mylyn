@@ -37,6 +37,7 @@ import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.PartBase;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.commons.httpclient.protocol.Protocol;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -121,8 +122,16 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 			client.getHostConfiguration().setProxy(address.getHostName(), address.getPort());
 		}
 		
-		PostMethod postMethod = new PostMethod(repositoryUrl + POST_ARGS_ATTACHMENT_UPLOAD);
-		
+		PostMethod postMethod;
+		if (repositoryUsesHttps(repositoryUrl)) {
+			Protocol acceptAllSsl = new Protocol("https", new TrustAllSslProtocolSocketFactory(), getSslPort(repositoryUrl));
+			client.getHostConfiguration().setHost(getDomain(repositoryUrl), getSslPort(repositoryUrl), acceptAllSsl);
+			
+			postMethod = new PostMethod(getRequestPath(repositoryUrl) + POST_ARGS_ATTACHMENT_UPLOAD);
+		}
+		else {
+			postMethod = new PostMethod(repositoryUrl + POST_ARGS_ATTACHMENT_UPLOAD);
+		}
 		// My understanding is that this option causes the client to first check
 		// with the server to see if it will in fact recieve the post before
 		// actually sending the contents.
@@ -177,6 +186,60 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 		return uploadResult;
 	}
 	
+	/**
+	 * public for testing
+	 */
+	public static boolean repositoryUsesHttps(String repositoryUrl) {
+		return repositoryUrl.matches("https.*");
+	}
+
+	public static int getSslPort(String repositoryUrl) {
+		int colonSlashSlash = repositoryUrl.indexOf("://");
+		int colonPort = repositoryUrl.indexOf(':', colonSlashSlash + 1);
+		if (colonPort < 0)
+			return 443;
+
+		int requestPath = repositoryUrl.indexOf('/', colonPort + 1);
+		
+		int end;
+		if (requestPath < 0)
+			end = repositoryUrl.length();
+		else
+			end = requestPath;
+		
+		return Integer.parseInt(repositoryUrl.substring(colonPort + 1, end));
+	}
+
+	public static String getDomain(String repositoryUrl) {
+		int colonSlashSlash = repositoryUrl.indexOf("://");
+		
+		int colonPort = repositoryUrl.indexOf(':', colonSlashSlash + 1);
+		int requestPath = repositoryUrl.indexOf('/', colonSlashSlash + 3);
+		
+		int substringEnd;
+		
+		// minimum positive, or string length
+		if (colonPort > 0 && requestPath > 0)
+			substringEnd = Math.min(colonPort, requestPath);
+		else if (colonPort > 0)
+			substringEnd = colonPort;
+		else if (requestPath > 0)
+			substringEnd = requestPath;
+		else
+			substringEnd = repositoryUrl.length(); 
+		
+		return repositoryUrl.substring(colonSlashSlash + 3, substringEnd);
+	}
+	
+	public static String getRequestPath(String repositoryUrl) {
+		int colonSlashSlash = repositoryUrl.indexOf("://");
+		int requestPath = repositoryUrl.indexOf('/', colonSlashSlash + 3);
+		
+		if (requestPath < 0)
+			return "";
+		else
+			return repositoryUrl.substring(requestPath);
+	}
 
 	public boolean uploadAttachment(LocalAttachment attachment, String uname, String password, Proxy proxySettings) throws IOException {
 		

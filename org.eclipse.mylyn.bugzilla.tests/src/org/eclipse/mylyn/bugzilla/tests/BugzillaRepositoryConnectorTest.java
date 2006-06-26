@@ -16,8 +16,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.Proxy;
+import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +31,7 @@ import javax.security.auth.login.LoginException;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttachmentHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
@@ -37,6 +40,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
+import org.eclipse.mylar.internal.bugzilla.core.TrustAllSslProtocolSocketFactory;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
@@ -462,11 +466,11 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 	 * @param enableDeadline bugzilla 218 doesn't support deadlines
 	 */
 	protected void timeTracker(int taskid, boolean enableDeadline) throws Exception {
-		BugzillaTask task14 = generateLocalTaskAndDownload("" + taskid);
-		assertEquals(taskid, task14.getTaskData().getId());
+		BugzillaTask bugtask = generateLocalTaskAndDownload("" + taskid);
+		assertEquals(taskid, bugtask.getTaskData().getId());
 
 		Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
-		tasks.add(task14);
+		tasks.add(bugtask);
 		
 		synchAndAssertState(tasks, RepositoryTaskSyncState.SYNCHRONIZED);
 		
@@ -485,12 +489,12 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		float estimatedTime, remainingTime, actualTime, addTime;
 		String deadline = null;
 
-		RepositoryTaskData taskdata14 = task14.getTaskData();
-		estimatedTime = Float.parseFloat(taskdata14.getAttributeValue(BugzillaReportElement.ESTIMATED_TIME.getKeyString()));
-		remainingTime = Float.parseFloat(taskdata14.getAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString()));
-		actualTime 	  =	Float.parseFloat(taskdata14.getAttributeValue(BugzillaReportElement.ACTUAL_TIME.getKeyString()));
+		RepositoryTaskData bugtaskdata = bugtask.getTaskData();
+		estimatedTime = Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.ESTIMATED_TIME.getKeyString()));
+		remainingTime = Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString()));
+		actualTime 	  =	Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.ACTUAL_TIME.getKeyString()));
 		if (enableDeadline) 
-			deadline = taskdata14.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString());
+			deadline = bugtaskdata.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString());
 		
 		estimatedTime += 2;
 		remainingTime += 1.5;
@@ -498,11 +502,11 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		if (enableDeadline) 
 			deadline = generateNewDay();
 				
-		taskdata14.setAttributeValue(BugzillaReportElement.ESTIMATED_TIME.getKeyString(), "" + estimatedTime);
-		taskdata14.setAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString(), "" + remainingTime);
-		taskdata14.setAttributeValue(BugzillaReportElement.WORK_TIME.getKeyString(), 	  "" + addTime);
+		bugtaskdata.setAttributeValue(BugzillaReportElement.ESTIMATED_TIME.getKeyString(), "" + estimatedTime);
+		bugtaskdata.setAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString(), "" + remainingTime);
+		bugtaskdata.setAttributeValue(BugzillaReportElement.WORK_TIME.getKeyString(), 	  "" + addTime);
 		if (enableDeadline)
-			taskdata14.setAttributeValue(BugzillaReportElement.DEADLINE.getKeyString(), deadline);
+			bugtaskdata.setAttributeValue(BugzillaReportElement.DEADLINE.getKeyString(), deadline);
 		
 		BugzillaReportSubmitForm bugzillaReportSubmitForm;
 		
@@ -518,17 +522,64 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		synchAndAssertState(tasks, RepositoryTaskSyncState.INCOMING);
 		synchAndAssertState(tasks, RepositoryTaskSyncState.SYNCHRONIZED);
 		
-		taskdata14 = task14.getTaskData();
+		bugtaskdata = bugtask.getTaskData();
 		
 		
-		assertEquals(estimatedTime, Float.parseFloat(taskdata14.getAttributeValue(BugzillaReportElement.ESTIMATED_TIME.getKeyString())));
-		assertEquals(remainingTime, Float.parseFloat(taskdata14.getAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString())));
-		assertEquals(actualTime + addTime, Float.parseFloat(taskdata14.getAttributeValue(BugzillaReportElement.ACTUAL_TIME.getKeyString())));
+		assertEquals(estimatedTime, Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.ESTIMATED_TIME.getKeyString())));
+		assertEquals(remainingTime, Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString())));
+		assertEquals(actualTime + addTime, Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.ACTUAL_TIME.getKeyString())));
 		if (enableDeadline)
-			assertEquals(deadline, taskdata14.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString()));
+			assertEquals(deadline, bugtaskdata.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString()));
 		
 	}
 
+	public void testUrlParsers() {
+		String url = "https://example.com:444/folder/file.txt";
+		assertEquals(444, BugzillaAttachmentHandler.getSslPort(url));
+		assertEquals("example.com", BugzillaAttachmentHandler.getDomain(url));
+		assertEquals("/folder/file.txt", BugzillaAttachmentHandler.getRequestPath(url));
+
+		url = "http://example.com/";
+		assertEquals(443, BugzillaAttachmentHandler.getSslPort(url));
+		assertEquals("example.com", BugzillaAttachmentHandler.getDomain(url));
+		assertEquals("/", BugzillaAttachmentHandler.getRequestPath(url));
+
+		url = "https://example.com:321";
+		assertEquals(321, BugzillaAttachmentHandler.getSslPort(url));
+		assertEquals("example.com", BugzillaAttachmentHandler.getDomain(url));
+		assertEquals("", BugzillaAttachmentHandler.getRequestPath(url));
+	}
+
+	/**
+	 * Though unlikely, this may fail randomly if it tries to bind to a port that happens to be in use.  
+	 */
+	public void testTrustAllSslProtocolSocketFactory() throws Exception {
+		TrustAllSslProtocolSocketFactory factory = new TrustAllSslProtocolSocketFactory();
+		Socket s;
+		
+		s = factory.createSocket("mylar.eclipse.org", 80);
+		assertNotNull(s);
+		assertTrue(s.isConnected());
+		s.close();
+
+		s = factory.createSocket("mylar.eclipse.org", 80, InetAddress.getLocalHost(), (int)(Math.random() * 1000 + 20000));
+		assertNotNull(s);
+		assertTrue(s.isConnected());
+		s.close();
+
+		HttpConnectionParams params = new HttpConnectionParams();
+		s = factory.createSocket("mylar.eclipse.org", 80, InetAddress.getLocalHost(), (int)(Math.random() * 1000 + 20000), null);
+		assertNotNull(s);
+		assertTrue(s.isConnected());
+		s.close();
+		
+		params.setConnectionTimeout(100);
+		s = factory.createSocket("mylar.eclipse.org", 80, InetAddress.getLocalHost(), (int)(Math.random() * 1000 + 20000), params);
+		assertNotNull(s);
+		assertTrue(s.isConnected());
+		s.close();
+	}
+	
 	private String generateNewDay() {
 		int year = 2006;
 		int month = (int) (Math.random() * 12 + 1);
