@@ -630,6 +630,7 @@ public class MylarContextManager {
 
 	public void saveContext(String handleIdentifier) {
 		boolean wasPaused = contextCapturePaused;
+		System.err.println(">>> saving");
 		try {
 			if (!wasPaused) {
 				setContextCapturePaused(true);
