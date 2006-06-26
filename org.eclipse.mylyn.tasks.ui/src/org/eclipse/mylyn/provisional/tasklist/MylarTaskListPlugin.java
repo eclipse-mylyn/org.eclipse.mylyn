@@ -214,7 +214,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		}
 
 		public void windowClosed(IWorkbenchWindow window) {
-			taskListSaveManager.saveTaskListAndContexts();
+			taskListSaveManager.saveTaskList(true);
 		}
 	};
 
@@ -249,7 +249,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					String newDirPath = MylarPlugin.getDefault().getDataDirectory();
 					String taskListFilePath = newDirPath + File.separator + DEFAULT_TASK_LIST_FILE;
 
-					getTaskListSaveManager().saveTaskListAndContexts();
+					getTaskListSaveManager().saveTaskList(true);
 					getTaskListManager().resetTaskList();
 					getTaskListManager().setTaskListFile(new File(taskListFilePath));
 					getTaskListManager().readExistingOrCreateNewList();

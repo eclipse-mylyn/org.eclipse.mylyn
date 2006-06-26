@@ -108,7 +108,7 @@ public class TaskListPreferencePage extends PreferencePage implements IWorkbench
 		taskDirectory = taskDirectory.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
 		if (!taskDirectory.equals(MylarPlugin.getDefault().getDataDirectory())) {
 			// NOTE: order matters
-			MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskListAndContexts();
+			MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
 			MylarTaskListPlugin.getDefault().getTaskListSaveManager().copyDataDirContentsTo(taskDirectory);
 			MylarPlugin.getDefault().setDataDirectory(taskDirectory);
 		}

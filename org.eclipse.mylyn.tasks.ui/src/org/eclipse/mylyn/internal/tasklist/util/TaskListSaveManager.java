@@ -60,19 +60,21 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 		if (MylarTaskListPlugin.getDefault() != null && MylarTaskListPlugin.getDefault().isShellActive()
 				|| forceBackgroundSave) {
 			try {
-				saveTaskListAndContexts();
+				saveTaskList(true);
 			} catch (Exception e) {
 				MylarStatusHandler.fail(e, "Could not auto save task list", false);
 			}
 		}
 	}
 
-	public void saveTaskListAndContexts() { 
+	public void saveTaskList(boolean saveContext) { 
 		if (MylarTaskListPlugin.getDefault() != null && MylarTaskListPlugin.getDefault().isInitialized()) {
 			MylarTaskListPlugin.getTaskListManager().saveTaskList();
-			for (ITask task : new ArrayList<ITask>(MylarTaskListPlugin.getTaskListManager().getTaskList()
-					.getActiveTasks())) {
-				MylarPlugin.getContextManager().saveContext(task.getHandleIdentifier());
+			if (saveContext) {
+				for (ITask task : new ArrayList<ITask>(MylarTaskListPlugin.getTaskListManager().getTaskList()
+						.getActiveTasks())) {
+					MylarPlugin.getContextManager().saveContext(task.getHandleIdentifier());
+				}
 			}
 		} else {
 			MylarStatusHandler.log("Possible task list initialization failure, not saving list.", this);
@@ -159,11 +161,11 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 	}
 
 	public void taskDeactivated(ITask task) {
-		saveTaskListAndContexts();
+		saveTaskList(true);
 	}
 
 	public void localInfoChanged(ITask task) {
-		saveTaskListAndContexts();
+		saveTaskList(false);
 	}
 
 	public void repositoryInfoChanged(ITask task) {
@@ -183,23 +185,23 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 	}
 
 	public void taskMoved(ITask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
-		saveTaskListAndContexts();
+		saveTaskList(false);
 	}
 
 	public void taskDeleted(ITask task) {
-		saveTaskListAndContexts();
+		saveTaskList(false);
 	}
 
 	public void containerAdded(AbstractTaskContainer container) {
-		saveTaskListAndContexts();
+		saveTaskList(false);
 	}
 
 	public void containerDeleted(AbstractTaskContainer container) {
-		saveTaskListAndContexts();
+		saveTaskList(false);
 	}
 	
 	public void taskAdded(ITask task) {
-		saveTaskListAndContexts();
+		saveTaskList(false);
 	}
 	
 	/** For testing only * */
@@ -208,6 +210,6 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 	}
 
 	public void containerInfoChanged(AbstractTaskContainer container) {
-		saveTaskListAndContexts();
+		saveTaskList(false);
 	}
 }

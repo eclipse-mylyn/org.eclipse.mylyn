@@ -51,7 +51,7 @@ public class BackgroundSaveTest extends TestCase {
 	public void testBackgroundSave() throws InterruptedException, IOException {
 		File file = MylarTaskListPlugin.getTaskListManager().getTaskListFile();
 		long previouslyModified = file.lastModified();
-		policy.saveTaskListAndContexts();
+		policy.saveTaskList(true);
 		
 		assertTrue(file.lastModified() > previouslyModified);
 	}

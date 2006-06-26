@@ -767,7 +767,7 @@ public class TaskListView extends ViewPart {
 		if (MylarTaskListPlugin.getDefault() != null
 				&& MylarTaskListPlugin.getDefault().getTaskListSaveManager() != null) {
 			MylarTaskListPlugin.getDefault().getTaskListSaveManager().createTaskListBackupFile();
-			MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskListAndContexts();
+			MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
 		}
 	}
 

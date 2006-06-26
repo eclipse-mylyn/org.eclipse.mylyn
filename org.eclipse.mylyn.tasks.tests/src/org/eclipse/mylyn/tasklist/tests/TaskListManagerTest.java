@@ -70,7 +70,7 @@ public class TaskListManagerTest extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();		
 		manager.resetTaskList();
-		MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskListAndContexts();
+		MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
 		MylarTaskListPlugin.getRepositoryManager().removeRepository(repository);
 	}
 	

@@ -46,7 +46,7 @@ public class TaskListDnDTest extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		manager.resetTaskList();
-		MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskListAndContexts();
+		MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
 	}
 
 	public void testisUrl() {
