@@ -91,7 +91,7 @@ public class SynchronizeSelectedAction extends Action implements IViewActionDele
 						client.forceRefresh(bugTask);
 				} else if (obj instanceof AbstractQueryHit) {
 					AbstractQueryHit hit = (AbstractQueryHit) obj;
-					if (hit.getCorrespondingTask() != null) {
+					if (hit.getOrCreateCorrespondingTask() != null) {
 						AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager()
 								.getRepositoryConnector(hit.getCorrespondingTask().getRepositoryKind());
 						if (client != null)
