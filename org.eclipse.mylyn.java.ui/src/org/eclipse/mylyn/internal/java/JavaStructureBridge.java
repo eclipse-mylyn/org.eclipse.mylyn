@@ -13,6 +13,7 @@
  */
 package org.eclipse.mylar.internal.java;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,6 +27,7 @@ import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IImportDeclaration;
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IParent;
@@ -133,17 +135,40 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 	 * Uses resource-compatible path for projects
 	 */
 	public String getHandleIdentifier(Object object) {
-		if (object == null || !(object instanceof IJavaElement)) {
+		if (object == null) {
+			return null;
+		} else if (!(object instanceof IJavaElement)) {
 			if (object instanceof IResource) {
 				Object adapter = ((IResource) object).getAdapter(IJavaElement.class);
 				if (adapter instanceof IJavaElement) {
 					return ((IJavaElement) adapter).getHandleIdentifier();
 				}
+			} else if (isWtpClass(object)) {
+				return getWtpElementHandle(object);
 			}
 			return null;
 		} else {
 			return ((IJavaElement) object).getHandleIdentifier();
 		}
+	}
+
+	private String getWtpElementHandle(Object object) {
+		Class browserClass = object.getClass();
+		try {
+			Method getProjectMethod = browserClass.getMethod("getProject", new Class[0]);
+			Object javaProject = getProjectMethod.invoke(object, new Object[0]);
+			if (javaProject instanceof IJavaProject) {
+				return ((IJavaElement) javaProject).getHandleIdentifier();
+			}
+		} catch (Exception e) {
+			// ignore
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private boolean isWtpClass(Object object) {
+		return object.getClass().getSimpleName().equals("CompressedJavaProject");
 	}
 
 	public String getName(Object object) {
@@ -174,10 +199,9 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 
 		boolean accepts = object instanceof IJavaElement || object instanceof ClassPathContainer
 				|| object instanceof ClassPathContainer.RequiredProjectWrapper || object instanceof JarEntryFile
-				|| object instanceof IPackageFragment || object instanceof WorkingSet; // TODO:
-																						// move
-																						// to
-																						// IDE?
+				|| object instanceof IPackageFragment || object instanceof WorkingSet 
+				|| isWtpClass(object);
+		
 		return accepts;
 	}
 
@@ -189,8 +213,8 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 		if (object instanceof ClassPathContainer.RequiredProjectWrapper) {
 			return true;
 		} else if (object instanceof ClassPathContainer) { // HACK: check if it
-															// has anything
-															// interesting
+			// has anything
+			// interesting
 			ClassPathContainer container = (ClassPathContainer) object;
 
 			Object[] children = container.getChildren(container);
@@ -234,7 +258,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 			ICompilationUnit compilationUnit = null;
 			if (res instanceof IFile) {
 				IFile file = (IFile) res;
-				if (file.getFileExtension().equals("java")) { 
+				if (file.getFileExtension().equals("java")) {
 					compilationUnit = JavaCore.createCompilationUnitFrom(file);
 				} else {
 					return null;
@@ -262,17 +286,6 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 			return null;
 		}
 	}
-
-//	public IProject getProjectForObject(Object object) {
-//		if (object instanceof IJavaElement) {
-//			if (((IJavaElement) object).getJavaProject() == null)
-//				return null;
-//			return ((IJavaElement) object).getJavaProject().getProject();
-//		} else if (object instanceof IResource) {
-//			return ((IResource) object).getProject();
-//		}
-//		return null;
-//	}
 
 	public String getContentType(String elementHandle) {
 		return getContentType();
