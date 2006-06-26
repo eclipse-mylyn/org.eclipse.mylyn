@@ -172,6 +172,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 		shell.addShellListener(activationListener);
 
 		Dialog.applyDialogFont(composite);
+
 	}
 
 	public IWizardPage getNextPage() {

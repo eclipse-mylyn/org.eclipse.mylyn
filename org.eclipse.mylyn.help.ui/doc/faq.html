@@ -14,7 +14,7 @@
 		</li>
 		<li><a href="#install-macos">Installing on MacOS</a></li>
 		<li><a href="#uninstall">Uninstall troubleshooting</a></li>
-		<li><a href="#tasklist-backup">Task backup and restore</a></li>
+		<li><a href="#tasklist-backup">Task List backup and restore</a></li>
 	</ul>
 	<p><b>Integration</b></p>
 <ul>
@@ -261,6 +261,10 @@ screenshot</a>) <i>-&gt; Restore Defaults</i></p>
 	the schedule in <i>Preferences -&gt; Mylar -&gt; Task List -&gt; Backup</i>.&nbsp; 
 	Use <i>File -&gt; Import -&gt; Mylar Task Data</i> to restore from one of the 
 	archive zips.</p>
+	<p>Note that uninstalling a connector will cause all of the queries and 
+	tasks of that kind to disappear from the Task List (<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=146344">bug 
+	146344</a>), so you may need to restore from a backup if you did this 
+	accidentally.</p>
 <p>If the Task List is blank Mylar failed to <a href="#install-failure">install or update</a>, 
 or there was a problem reading the task list.&nbsp; By default Mylar 
 keeps your task list in <i>&lt;workspace&gt;/.mylar/tasklist.xml</i>.&nbsp; If 

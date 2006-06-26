@@ -61,6 +61,7 @@ import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.actions.CopyToClipboardAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.SaveRemoteFileAction;
+import org.eclipse.mylar.internal.tasklist.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.NewAttachmentWizard;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
@@ -455,7 +456,8 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 			Composite composite = new Composite(parent, SWT.NULL);
 			composite.setLayout(new GridLayout());
 			Label noBugLabel = new Label(composite, SWT.NULL);
-			noBugLabel.setText("Could not resolve bug");
+			noBugLabel.setText("Could not download task data, possibly due to timeout or connectivity problem.\n"
+					+ " Please try again.");
 			return;
 		}
 
@@ -927,7 +929,8 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 			public void widgetSelected(SelectionEvent e) {
 				NewAttachmentWizard naw = new NewAttachmentWizard();
-				WizardDialog dialog = new WizardDialog(form.getShell(), naw);
+				NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(attachmentsComposite.getShell(), naw);
+				naw.setDialog(dialog);
 				dialog.create();
 				dialog.open();
 				if (dialog.getReturnCode() == WizardDialog.CANCEL) {

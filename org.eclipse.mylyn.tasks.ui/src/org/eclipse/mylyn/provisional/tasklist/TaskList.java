@@ -281,7 +281,7 @@ public class TaskList {
 	private AbstractQueryHit findQueryHitHelper(Set<? extends ITaskListElement> elements, String handle) {
 		if (handle == null)
 			return null;
-		for (ITaskListElement element : new ArrayList<ITaskListElement>(elements)) {
+		for (ITaskListElement element : elements) {
 			if (element instanceof AbstractQueryHit) {
 				AbstractQueryHit hit = (AbstractQueryHit) element;
 				if (hit.getHandleIdentifier().compareTo(handle) == 0) {

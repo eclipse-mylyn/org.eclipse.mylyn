@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.tasklist.LocalAttachment;
@@ -27,17 +28,32 @@ import org.eclipse.mylar.provisional.core.MylarPlugin;
  */
 public class NewAttachmentWizard extends Wizard {
 
+	private static final String DIALOG_SETTINGS_KEY = "AttachmentWizard";
+
 	private LocalAttachment attachment;
 
 	private InputAttachmentSourcePage inputPage;
 
 	private NewAttachmentPage attachPage;
 
+	private NewAttachmentWizardDialog dialog;
+
+	private boolean hasNewDialogSettings;
+
 	public NewAttachmentWizard() {
 		super();
 		setNeedsProgressMonitor(true);
 		setWindowTitle("Add a new attachment");
 		attachment = new LocalAttachment();
+
+		IDialogSettings workbenchSettings = MylarPlugin.getDefault().getDialogSettings();
+		IDialogSettings section = workbenchSettings.getSection(DIALOG_SETTINGS_KEY);
+		if (section == null) {
+			hasNewDialogSettings = true;
+		} else {
+			hasNewDialogSettings = false;
+			setDialogSettings(section);
+		}
 	}
 
 	@Override
@@ -66,6 +82,14 @@ public class NewAttachmentWizard extends Wizard {
 			attachment.setDeleteAfterUpload(true);
 		}
 		attachment.setFilePath(path);
+
+		// Save the dialog settings
+		if (hasNewDialogSettings) {
+			IDialogSettings workbenchSettings = MylarPlugin.getDefault().getDialogSettings();
+			IDialogSettings section = workbenchSettings.getSection(DIALOG_SETTINGS_KEY);
+			section = workbenchSettings.addNewSection(DIALOG_SETTINGS_KEY);
+			setDialogSettings(section);
+		}
 		return true;
 	}
 
@@ -92,5 +116,13 @@ public class NewAttachmentWizard extends Wizard {
 	public IWizardPage getNextPage(IWizardPage page) {
 		attachPage.setFilePath(inputPage.getAttachmentName());
 		return super.getNextPage(page);
+	}
+
+	public void showPage(IWizardPage page) {
+		dialog.showPage(page);
+	}
+
+	public void setDialog(NewAttachmentWizardDialog dialog) {
+		this.dialog = dialog;
 	}
 }
