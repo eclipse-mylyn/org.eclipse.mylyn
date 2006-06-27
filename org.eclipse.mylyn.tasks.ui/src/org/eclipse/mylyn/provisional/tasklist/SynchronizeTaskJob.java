@@ -82,17 +82,6 @@ class SynchronizeTaskJob extends Job {
 							downloadedTaskData = offlineHandler.downloadTaskData(repositoryTask);
 						} catch (final CoreException e) {
 							MylarStatusHandler.log(e.getStatus());
-							// if (forceSync) {
-							// PlatformUI.getWorkbench().getDisplay().asyncExec(new
-							// Runnable() {
-							// public void run() {
-							// ErrorDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-							// "Error Downloading Report", "Unable to
-							// synchronize "
-							// + repositoryTask.getDescription(),
-							// e.getStatus());
-							// }
-							// });
 						}
 
 						if (downloadedTaskData != null) {							

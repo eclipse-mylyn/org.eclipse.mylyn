@@ -160,8 +160,6 @@ public class TaskListView extends ViewPart {
 
 	private static final String PART_NAME = "Mylar Tasks";
 
-	// private static TaskListView INSTANCE;
-
 	private IThemeManager themeManager;
 
 	private TaskListFilteredTree filteredTree;

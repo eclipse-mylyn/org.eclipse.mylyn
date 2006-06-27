@@ -32,22 +32,22 @@ public class TaskList {
 	public static final String LABEL_ROOT = "Root (automatic)";
 
 	private List<ITaskListChangeListener> changeListeners = new ArrayList<ITaskListChangeListener>();
-	
+
 	private Map<String, ITask> tasks;
-	
+
 	private TaskArchive archiveContainer;
 
 	private TaskCategory rootCategory;
-	
+
 	private Set<AbstractTaskContainer> categories;
 
 	private Set<AbstractRepositoryQuery> queries;
 
 	private List<ITask> activeTasks;
-		
+
 	public TaskList() {
 		reset();
-	} 
+	}
 
 	/**
 	 * Public for testing.
@@ -59,20 +59,20 @@ public class TaskList {
 		categories = new HashSet<AbstractTaskContainer>();
 		queries = new HashSet<AbstractRepositoryQuery>();
 		activeTasks = new ArrayList<ITask>();
-		
+
 		categories.add(archiveContainer);
 	}
-	
+
 	public void addTask(ITask task) {
 		addTask(task, archiveContainer);
 	}
-	
+
 	public void addTask(ITask task, AbstractTaskContainer category) {
 		tasks.put(task.getHandleIdentifier(), task);
 		if (category != null) {
 			category.add(task);
 			task.setContainer(category);
-		} else { 
+		} else {
 			rootCategory.add(task);
 			task.setContainer(rootCategory);
 		}
@@ -80,11 +80,11 @@ public class TaskList {
 			listener.taskAdded(task);
 		}
 	}
-	
-	void refactorRepositoryUrl(Object oldUrl, String newUrl)	{
+
+	void refactorRepositoryUrl(Object oldUrl, String newUrl) {
 		for (ITask task : new ArrayList<ITask>(tasks.values())) {
 			if (task instanceof AbstractRepositoryTask) {
-				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)task;
+				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
 				if (oldUrl.equals(AbstractRepositoryTask.getRepositoryUrl(repositoryTask.getHandleIdentifier()))) {
 					tasks.remove(repositoryTask.getHandleIdentifier());
 					String id = AbstractRepositoryTask.getTaskId(repositoryTask.getHandleIdentifier());
@@ -94,7 +94,7 @@ public class TaskList {
 				}
 			}
 		}
-		
+
 		for (AbstractRepositoryQuery query : queries) {
 			if (query.getRepositoryUrl().equals(oldUrl)) {
 				query.setRepositoryUrl(newUrl);
@@ -107,7 +107,7 @@ public class TaskList {
 			}
 		}
 	}
-	
+
 	public void moveToRoot(ITask task) {
 		moveToContainer(rootCategory, task);
 	}
@@ -116,11 +116,11 @@ public class TaskList {
 		if (!tasks.containsKey(task.getHandleIdentifier())) {
 			tasks.put(task.getHandleIdentifier(), task);
 		}
-		
+
 		AbstractTaskContainer fromContainer = task.getContainer();
 		if (fromContainer instanceof AbstractTaskContainer) {
-			((AbstractTaskContainer)fromContainer).remove(task);
-		} 
+			((AbstractTaskContainer) fromContainer).remove(task);
+		}
 		if (toContainer != null) {
 			internalAddTask(task, toContainer);
 		} else {
@@ -135,7 +135,7 @@ public class TaskList {
 		categories.add(category);
 		for (ITaskListChangeListener listener : changeListeners) {
 			listener.containerAdded(category);
-		} 
+		}
 	}
 
 	public void removeFromCategory(TaskCategory category, ITask task) {
@@ -152,31 +152,31 @@ public class TaskList {
 			listener.localInfoChanged(task);
 		}
 	}
-	
+
 	public void renameContainer(AbstractTaskContainer container, String newDescription) {
 		if (!(container instanceof TaskArchive)) {
-			if(queries.remove(container)) {
+			if (queries.remove(container)) {
 				container.setDescription(newDescription);
-				if(container instanceof AbstractRepositoryQuery) {
-					this.addQuery((AbstractRepositoryQuery)container);
+				if (container instanceof AbstractRepositoryQuery) {
+					this.addQuery((AbstractRepositoryQuery) container);
 				}
-			} else if(categories.remove(container)) {
+			} else if (categories.remove(container)) {
 				container.setDescription(newDescription);
 				this.addCategory(container);
-			}			
+			}
 		}
 		for (ITaskListChangeListener listener : changeListeners) {
 			listener.containerInfoChanged(container);
 		}
 	}
-	
+
 	public void addQuery(AbstractRepositoryQuery query) {
 		queries.add(query);
 		for (ITaskListChangeListener listener : changeListeners) {
 			listener.containerAdded(query);
 		}
 	}
-	
+
 	/**
 	 * TODO: refactor around querying containers for their tasks
 	 */
@@ -214,11 +214,11 @@ public class TaskList {
 			listener.containerDeleted(query);
 		}
 	}
-	
+
 	public void markComplete(ITask task, boolean complete) {
 		task.setCompleted(complete);
 		for (ITaskListChangeListener listener : new ArrayList<ITaskListChangeListener>(changeListeners)) {
-			listener.localInfoChanged(task); 
+			listener.localInfoChanged(task);
 		}
 	}
 
@@ -229,14 +229,14 @@ public class TaskList {
 	public void removeChangeListener(ITaskListChangeListener listener) {
 		changeListeners.remove(listener);
 	}
-	
+
 	/**
 	 * NOTE: Only public so that other externalizers can use it
 	 */
 	public void internalAddCategory(AbstractTaskContainer cat) {
 		categories.add(cat);
 	}
-	
+
 	public void internalAddTask(ITask task, AbstractTaskContainer container) {
 		tasks.put(task.getHandleIdentifier(), task);
 		if (container != null) {
@@ -247,10 +247,10 @@ public class TaskList {
 			rootCategory.add(task);
 		}
 	}
-	
+
 	public void internalAddRootTask(ITask task) {
 		internalAddTask(task, rootCategory);
-	} 
+	}
 
 	public void internalAddQuery(AbstractRepositoryQuery query) {
 		queries.add(query);
@@ -264,7 +264,7 @@ public class TaskList {
 			activeTasks.remove(task);
 		}
 	}
-	
+
 	private boolean deleteTaskHelper(Set<ITask> tasks, ITask toDelete) {
 		for (ITask task : tasks) {
 			if (task.getHandleIdentifier().equals(toDelete.getHandleIdentifier())) {
@@ -279,13 +279,16 @@ public class TaskList {
 	}
 
 	private AbstractQueryHit findQueryHitHelper(Set<? extends ITaskListElement> elements, String handle) {
-		if (handle == null)
+		if (handle == null) {
 			return null;
-		for (ITaskListElement element : elements) {
-			if (element instanceof AbstractQueryHit) {
-				AbstractQueryHit hit = (AbstractQueryHit) element;
-				if (hit.getHandleIdentifier().compareTo(handle) == 0) {
-					return hit;
+		}
+		synchronized (elements) {
+			for (ITaskListElement element : elements) {
+				if (element instanceof AbstractQueryHit) {
+					AbstractQueryHit hit = (AbstractQueryHit) element;
+					if (hit.getHandleIdentifier().compareTo(handle) == 0) {
+						return hit;
+					}
 				}
 			}
 		}
@@ -349,8 +352,8 @@ public class TaskList {
 						task.getHandleIdentifier().length());
 				try {
 					ihandle = Integer.parseInt(string);
+				} catch (NumberFormatException nfe) {
 				}
-				catch (NumberFormatException nfe) { }
 			}
 			max = Math.max(ihandle, max);
 			ihandle = largestTaskHandleHelper(task.getChildren());
@@ -380,7 +383,7 @@ public class TaskList {
 			if (container instanceof TaskCategory || container instanceof TaskArchive) {
 				containers.add((AbstractTaskContainer) container);
 			}
-		} 
+		}
 		return containers;
 	}
 
@@ -397,8 +400,8 @@ public class TaskList {
 	}
 
 	/**
-	 * NOTE: will only return first occurrence of the hit in the first
-	 * category it is matched in.
+	 * NOTE: will only return first occurrence of the hit in the first category
+	 * it is matched in.
 	 */
 	public AbstractQueryHit getQueryHitForHandle(String handle) {
 		if (handle == null) {
@@ -415,7 +418,8 @@ public class TaskList {
 
 	public boolean isEmpty() {
 		boolean archiveIsEmpty = getCategories().size() == 1
-				&& getCategories().iterator().next().equals(archiveContainer) && archiveContainer.getChildren().isEmpty();
+				&& getCategories().iterator().next().equals(archiveContainer)
+				&& archiveContainer.getChildren().isEmpty();
 		return getAllTasks().size() == 0 && archiveIsEmpty && getQueries().size() == 0;
 	}
 
@@ -442,7 +446,7 @@ public class TaskList {
 		return archiveContainer;
 	}
 
-	/** if handle == null or no queries found an empty set is returned **/	 
+	/** if handle == null or no queries found an empty set is returned * */
 	public Set<AbstractRepositoryQuery> getQueriesForHandle(String handle) {
 		Set<AbstractRepositoryQuery> queriesForHandle = new HashSet<AbstractRepositoryQuery>();
 		if (handle == null) {
@@ -455,8 +459,9 @@ public class TaskList {
 		}
 		return queriesForHandle;
 	}
+
 	/**
-	 *  return all queries for the given repository url
+	 * return all queries for the given repository url
 	 */
 	public Set<AbstractRepositoryQuery> getRepositoryQueries(String repositoryUrl) {
 		Set<AbstractRepositoryQuery> repositoryQueries = new HashSet<AbstractRepositoryQuery>();
@@ -469,17 +474,17 @@ public class TaskList {
 		}
 		return repositoryQueries;
 	}
-	
+
 	/**
-	 *  return all tasks for the given repository url
+	 * return all tasks for the given repository url
 	 */
 	public Set<AbstractRepositoryTask> getRepositoryTasks(String repositoryUrl) {
 		Set<AbstractRepositoryTask> repositoryTasks = new HashSet<AbstractRepositoryTask>();
 		if (repositoryUrl != null) {
 			for (ITask task : tasks.values()) {
 				if (task instanceof AbstractRepositoryTask) {
-					AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)task;
-					if(repositoryTask.getRepositoryUrl().equals(repositoryUrl)) {
+					AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+					if (repositoryTask.getRepositoryUrl().equals(repositoryUrl)) {
 						repositoryTasks.add(repositoryTask);
 					}
 				}
@@ -488,7 +493,7 @@ public class TaskList {
 		return repositoryTasks;
 	}
 
-	/** if handle == null or no query hits found an empty set is returned **/
+	/** if handle == null or no query hits found an empty set is returned * */
 	public Set<AbstractQueryHit> getQueryHitsForHandle(String handle) {
 		Set<AbstractQueryHit> hitsForHandle = new HashSet<AbstractQueryHit>();
 		if (handle == null) {
@@ -511,7 +516,7 @@ public class TaskList {
 	public List<ITaskListChangeListener> getChangeListeners() {
 		return Collections.unmodifiableList(changeListeners);
 	}
-	
+
 	/**
 	 * TODO: refactor into task deltas?
 	 */
@@ -524,7 +529,7 @@ public class TaskList {
 			}
 		}
 	}
-	
+
 	public void notifyRepositoryInfoChanged(ITask task) {
 		for (ITaskListChangeListener listener : new ArrayList<ITaskListChangeListener>(changeListeners)) {
 			try {
@@ -542,6 +547,6 @@ public class TaskList {
 			} catch (Throwable t) {
 				MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
 			}
-		}	
+		}
 	}
 }
