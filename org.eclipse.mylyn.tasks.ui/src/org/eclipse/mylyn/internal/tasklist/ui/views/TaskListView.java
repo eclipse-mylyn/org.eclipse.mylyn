@@ -297,6 +297,12 @@ public class TaskListView extends ViewPart {
 			if (task.getContainer() != null) {
 				refresh(task.getContainer());
 			}
+			if (task instanceof AbstractRepositoryTask) {
+				Set<AbstractRepositoryQuery> queries = MylarTaskListPlugin.getTaskListManager().getTaskList().getQueriesForHandle(task.getHandleIdentifier());
+				for (AbstractRepositoryQuery query : queries) {
+					refresh(query);
+				}
+			}
 		}
 
 		public void repositoryInfoChanged(ITask task) {
