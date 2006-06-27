@@ -303,6 +303,9 @@ public class TaskListView extends ViewPart {
 					refresh(query);
 				}
 			}
+			if (task.isActive()) {
+				filteredTree.indicateActiveTask(task);
+			}
 		}
 
 		public void repositoryInfoChanged(ITask task) {
