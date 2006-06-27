@@ -93,6 +93,37 @@
               tooltip="Activate Task"/>
         -->
      </viewerContribution>
+     <objectContribution
+           adaptable="false"
+           id="org.eclipse.mylar.ui.tasks.repository.action.contribution"
+           objectClass="org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask">
+		<action
+              class="org.eclipse.mylar.internal.ui.actions.ContextClearAction"
+              enablesFor="1"
+              icon="icons/elcl16/context-clear.gif"
+              id="org.eclipse.mylar.ui.clear.context"
+              label="Clear Context"
+              menubarPath="context"
+              tooltip="Clear Context">
+        </action>
+        <action
+              class="org.eclipse.mylar.internal.ui.actions.ContextRetrieveAction"
+              enablesFor="1"
+              icon="icons/etool16/context-retrieve.gif"
+              id="org.eclipse.mylar.ui.context.repository.retrieve"
+              label="Retrieve Context"
+              menubarPath="context">
+        </action> 
+        <action
+              class="org.eclipse.mylar.internal.ui.actions.ContextAttachAction"
+              enablesFor="1"
+              icon="icons/etool16/context-attach.gif"
+              id="org.eclipse.mylar.ui.context.repository.attach"
+              label="Attach Context..."
+              menubarPath="context">
+        </action>
+           
+	</objectContribution>
   </extension>
     
     

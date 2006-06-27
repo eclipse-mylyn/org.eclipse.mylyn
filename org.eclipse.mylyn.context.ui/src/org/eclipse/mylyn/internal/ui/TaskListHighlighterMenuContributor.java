@@ -17,13 +17,13 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.internal.ui.actions.EditHighlightersAction;
 import org.eclipse.mylar.provisional.core.IMylarContextListener;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
 
 /**
@@ -33,8 +33,7 @@ public class TaskListHighlighterMenuContributor implements IDynamicSubMenuContri
 
 	private static final String CHOOSE_HIGHLIGHTER = "Highlighter";
 
-	public MenuManager getSubMenuManager(TaskListView view, final List<ITaskListElement> selectedElements) {
-		final TaskListView taskListView = view;
+	public MenuManager getSubMenuManager(final List<ITaskListElement> selectedElements) {
 		final MenuManager subMenuManager = new MenuManager(CHOOSE_HIGHLIGHTER);
 		for (final Highlighter highlighter : MylarUiPlugin.getDefault().getHighlighters()) {
 			Action action = new Action() {
@@ -52,7 +51,8 @@ public class TaskListHighlighterMenuContributor implements IDynamicSubMenuContri
 						if (task != null) {
 							MylarUiPlugin.getDefault().setHighlighterMapping(task.getHandleIdentifier(),
 									highlighter.getName());
-							taskListView.getViewer().refresh();
+							MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
+//							taskListView.getViewer().refresh();
 							MylarPlugin.getContextManager().notifyPostPresentationSettingsChange(
 									IMylarContextListener.UpdateKind.HIGHLIGHTER);
 						}
