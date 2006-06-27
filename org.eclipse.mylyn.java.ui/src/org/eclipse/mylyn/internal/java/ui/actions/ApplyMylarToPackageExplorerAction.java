@@ -21,6 +21,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
 import org.eclipse.mylar.internal.java.MylarJavaPrefConstants;
 import org.eclipse.mylar.internal.java.ui.JavaDeclarationsFilter;
@@ -73,11 +74,15 @@ public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction 
 	}
 
 	private void configureAction() {
-		if (MylarJavaPlugin.getDefault().getPreferenceStore().getBoolean(
-				MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE)) {
-			MylarUiPlugin.getDefault().getViewerManager().addManagedAction(this);
-		} else {
-			MylarUiPlugin.getDefault().getViewerManager().removeManagedAction(this);
+		try {
+			if (MylarJavaPlugin.getDefault().getPreferenceStore().getBoolean(
+					MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE)) {
+				MylarUiPlugin.getDefault().getViewerManager().addManagedAction(this);
+			} else if (MylarUiPlugin.getDefault() != null) {
+				MylarUiPlugin.getDefault().getViewerManager().removeManagedAction(this);
+			}
+		} catch (Exception e) {
+			MylarStatusHandler.fail(e, "could not toggle Mylar on view: " + getPartForAction(), true);
 		}
 	}
 
