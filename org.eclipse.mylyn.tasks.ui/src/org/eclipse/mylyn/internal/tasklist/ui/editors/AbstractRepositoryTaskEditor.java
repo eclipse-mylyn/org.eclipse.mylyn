@@ -121,6 +121,20 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  */
 public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
+	private static final String ATTACHMENT_DEFAULT_NAME = "attachment";
+
+	private static final String CTYPE_ZIP = "zip";
+
+	private static final String CTYPE_OCTET_STREAM = "octet-stream";
+
+	private static final String CTYPE_TEXT = "text";
+
+	private static final String ATTR_FILENAME = "filename";
+
+	private static final String CTYPE_HTML = "html";
+
+	private static final String LABEL_OPEN_IN_BROWSER = "Open in Browser";
+
 	private static final String ATTACHMENT_URL_SUFFIX = "/attachment.cgi?id=";
 
 	protected static final String CONTEXT_MENU_ID = "#MylarRepositoryEditor";
@@ -759,7 +773,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 			attachmentsTableViewer.setInput(getRepositoryTaskData());
 
 			final MenuManager popupMenu = new MenuManager();
-			popupMenu.add(new Action("Open in Browser") {
+			popupMenu.add(new Action(LABEL_OPEN_IN_BROWSER) {
 				public void run() {
 					RepositoryAttachment att = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
 							.getSelection()).getFirstElement());
@@ -774,7 +788,23 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 							.getSelection()).getFirstElement());
 					/* Launch Browser */
 					FileDialog fileChooser = new FileDialog(attachmentsTable.getShell(), SWT.SAVE);
-					fileChooser.setFileName(att.getAttributeValue("filename"));
+					String fname = att.getAttributeValue(ATTR_FILENAME);
+					// Default name if none is found
+					if (fname.equals("")) {
+						String ctype = att.getContentType();
+						if (ctype.endsWith(CTYPE_HTML)) {
+							fname = ATTACHMENT_DEFAULT_NAME + ".html";
+						} else if (ctype.startsWith(CTYPE_TEXT)) {
+							fname = ATTACHMENT_DEFAULT_NAME + ".txt";
+						} else if (ctype.endsWith(CTYPE_OCTET_STREAM)) {
+							fname = ATTACHMENT_DEFAULT_NAME;
+						} else if (ctype.endsWith(CTYPE_ZIP)) {
+							fname = ATTACHMENT_DEFAULT_NAME + "." + CTYPE_ZIP;
+						} else {
+							fname = ATTACHMENT_DEFAULT_NAME + "." + ctype.substring(ctype.indexOf("/") + 1);
+						}
+					}
+					fileChooser.setFileName(fname);
 					String file = fileChooser.open();
 
 					// Check if the dialog was canceled or an error occured
@@ -825,7 +855,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 							.getFirstElement());
 					popupMenu.remove("ID_APPLY_PATCH");
 					popupMenu.remove("ID_COPY_TO_CLIPBOARD");
-					if (att.getContentType().startsWith("text") || att.getContentType().endsWith("xml")) {
+					if (att.getContentType().startsWith(CTYPE_TEXT) || att.getContentType().endsWith("xml")) {
 						popupMenu.add(copyToClip);
 					}
 					if (att.isPatch()) {
