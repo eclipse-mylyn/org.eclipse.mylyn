@@ -446,5 +446,89 @@ public class TaskActivityViewTest extends TestCase {
 		assertEquals(expectedTotalTime, activityThisWeek.getElapsed(new DateRangeActivityDelegate(activityThisWeek,
 				task1, null, null)));
 	}
+	
+	public void testResetAndRollOver() {
+		
+		DateRangeContainer pastWeeks = MylarTaskListPlugin.getTaskListManager().getActivityPast();
+		DateRangeContainer previousWeek = MylarTaskListPlugin.getTaskListManager().getActivityPrevious();
+		DateRangeContainer thisWeek = MylarTaskListPlugin.getTaskListManager().getActivityThisWeek();
+		DateRangeContainer nextWeek = MylarTaskListPlugin.getTaskListManager().getActivityNextWeek();
+		DateRangeContainer futureWeeks = MylarTaskListPlugin.getTaskListManager().getActivityFuture();
+		
+		assertTrue(thisWeek.isPresent());
+		assertTrue(nextWeek.isFuture());
+		
+		long pastStartTime = pastWeeks.getEnd().getTimeInMillis();
+		long previousStartTime = previousWeek.getStart().getTimeInMillis();
+		long thisWeekStartTime = thisWeek.getStart().getTimeInMillis();
+		long nextStartTime = nextWeek.getStart().getTimeInMillis();
+		long futureStartTime = futureWeeks.getStart().getTimeInMillis();
+	
+		Calendar pastWeeksTaskStart = Calendar.getInstance();
+		pastWeeksTaskStart.setTimeInMillis(pastStartTime - 10);
+		assertTrue(pastWeeks.includes(pastWeeksTaskStart));
+		
+		Calendar previousWeekTaskStart = Calendar.getInstance();
+		previousWeekTaskStart.setTimeInMillis(previousStartTime + 10);
+		assertTrue(previousWeek.includes(previousWeekTaskStart));
+		
+		Calendar thisWeekTaskStart = Calendar.getInstance();
+		thisWeekTaskStart.setTimeInMillis(thisWeekStartTime + 10);
+		assertTrue(thisWeek.includes(thisWeekTaskStart));
+		
+		Calendar thisWeekTaskStop = Calendar.getInstance();
+		thisWeekTaskStop.setTimeInMillis(thisWeek.getEnd().getTimeInMillis() - 10);
+		assertTrue(thisWeek.includes(thisWeekTaskStop));
+		
+		Calendar nextWeekTaskStart = Calendar.getInstance();
+		nextWeekTaskStart.setTimeInMillis(nextStartTime + 10);
+		assertTrue(nextWeek.includes(nextWeekTaskStart));
+		
+		Calendar futureWeekTaskStart = Calendar.getInstance();
+		futureWeekTaskStart.setTimeInMillis(futureStartTime + 10);
+		assertTrue(futureWeeks.includes(futureWeekTaskStart));
+		
+		ITask task1 = new Task("task 1", "Task 1", true);
+		MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task1);		
+		InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task1
+				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_ACTIVATED, 2f,
+				thisWeekTaskStart.getTime(), thisWeekTaskStart.getTime());
+		InteractionEvent event2 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task1
+				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f,
+				thisWeekTaskStop.getTime(), thisWeekTaskStop.getTime());
 
+		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event1);
+		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event2);
+		assertEquals(1, thisWeek.getChildren().size());
+		assertEquals(thisWeekTaskStop.getTime().getTime() - thisWeekTaskStart.getTime().getTime(),
+				thisWeek.getTotalElapsed());
+				
+		// ROLL OVER		
+		MylarTaskListPlugin.getTaskListManager().startTime = new Date(nextWeek.getStart().getTimeInMillis() + 10);
+		MylarTaskListPlugin.getTaskListManager().resetAndRollOver();
+		
+	
+		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event1);
+		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event2);		
+		
+		
+		DateRangeContainer newPastWeeks = MylarTaskListPlugin.getTaskListManager().getActivityPast();
+		DateRangeContainer newPreviousWeek = MylarTaskListPlugin.getTaskListManager().getActivityPrevious();
+		DateRangeContainer newThisWeek = MylarTaskListPlugin.getTaskListManager().getActivityThisWeek();
+		DateRangeContainer newNextWeek = MylarTaskListPlugin.getTaskListManager().getActivityNextWeek();
+		//DateRangeContainer newFutureWeeks = MylarTaskListPlugin.getTaskListManager().getActivityFuture();
+		
+		assertTrue(newPastWeeks.includes(previousWeekTaskStart));
+		assertTrue(newPreviousWeek.includes(thisWeekTaskStart));
+		assertTrue(newThisWeek.includes(nextWeekTaskStart));
+		assertTrue(newNextWeek.includes(futureWeekTaskStart));
+		
+		assertFalse(newThisWeek.includes(thisWeekTaskStart));
+		assertFalse(newThisWeek.isPresent());
+		assertTrue(newThisWeek.isFuture());
+		
+		assertEquals(1, newPreviousWeek.getChildren().size());
+		assertEquals(thisWeekTaskStop.getTime().getTime() - thisWeekTaskStart.getTime().getTime(),
+				newPreviousWeek.getTotalElapsed());
+	}
 }

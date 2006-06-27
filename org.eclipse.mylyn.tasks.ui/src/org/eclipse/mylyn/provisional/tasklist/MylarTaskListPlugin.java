@@ -193,6 +193,10 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		public void taskListRead() {
 			// ignore
 		}
+
+		public void calendarChanged() {
+			// ignore
+		}
 	};
 
 	/**
@@ -328,7 +332,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 						MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 						getMylarCorePrefs().addPropertyChangeListener(synchronizationManager);
-//						getMylarCorePrefs().addPropertyChangeListener(taskListManager);
+						getMylarCorePrefs().addPropertyChangeListener(taskListManager);
 
 						// if
 						// (getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP))
@@ -358,7 +362,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			if (PlatformUI.isWorkbenchRunning()) {
 				getMylarCorePrefs().removePropertyChangeListener(taskListNotificationManager);
 				getMylarCorePrefs().removePropertyChangeListener(taskListBackupManager);
-//				getMylarCorePrefs().removePropertyChangeListener(taskListManager);
+				getMylarCorePrefs().removePropertyChangeListener(taskListManager);
 				getMylarCorePrefs().removePropertyChangeListener(synchronizationManager);
 				taskListManager.getTaskList().removeChangeListener(taskListSaveManager);
 				taskListManager.dispose();
@@ -457,9 +461,10 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		store.setValue(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS, false);
 		
 		
-//		store.setDefault(TaskListPreferenceConstants.PLANNING_STARTDAY, 2);	
-//		store.setDefault(TaskListPreferenceConstants.PLANNING_STARTHOUR, 8);
-//		store.setDefault(TaskListPreferenceConstants.PLANNING_ENDHOUR, 23);
+		//store.setDefault(TaskListPreferenceConstants.PLANNING_STARTDAY, 2);
+		//store.setDefault(TaskListPreferenceConstants.PLANNING_ENDDAY, 6);	
+		store.setDefault(TaskListPreferenceConstants.PLANNING_STARTHOUR, 8);
+		store.setDefault(TaskListPreferenceConstants.PLANNING_ENDHOUR, 23);
 		
 		store.setDefault(TaskListPreferenceConstants.SAVE_TASKLIST_MODE, TaskListSaveMode.THREE_HOURS.toString());
 	}

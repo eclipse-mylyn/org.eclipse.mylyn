@@ -74,4 +74,12 @@ public class TaskListPreferenceConstants {
 
 	public static final String BACKUP_MAXFILES = "org.eclipse.mylar.tasklist.backup.maxfiles";
 	
+//	public static final String PLANNING_STARTDAY = "org.eclipse.mylar.tasklist.planning.startday";
+	
+//	public static final String PLANNING_ENDDAY = "org.eclipse.mylar.tasklist.planning.endday";
+	
+	public static final String PLANNING_STARTHOUR = "org.eclipse.mylar.tasklist.planning.starthour";
+	
+	public static final String PLANNING_ENDHOUR = "org.eclipse.mylar.tasklist.planning.endhour";
+	
 }

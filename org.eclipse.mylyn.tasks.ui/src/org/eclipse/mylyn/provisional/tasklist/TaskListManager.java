@@ -24,7 +24,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylar.internal.core.MylarContextManager;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.TimerThread;
@@ -43,15 +48,13 @@ import org.eclipse.mylar.provisional.core.MylarPlugin;
  * @author Mik Kersten
  * @author Rob Elves (task activity)
  */
-public class TaskListManager {
+public class TaskListManager implements IPropertyChangeListener {
 
-	// TODO: get these two fields from preferences
-	private static final int START_DAY = Calendar.MONDAY;
+	private static final long SECOND = 1000;
 
-	// TODO: refactor into configurable intervals
-	private static final int HOUR_DAY_START = 8;
+	private static final long MINUTE = 60 * SECOND;
 
-	private static final int HOUR_DAY_END = 23;
+	private static final long ROLLOVER_DELAY = 30 * MINUTE;
 
 	private static final int NUM_WEEKS_PREVIOUS = -1;
 
@@ -126,6 +129,19 @@ public class TaskListManager {
 
 	private int timerSleepInterval = TimerThread.DEFAULT_SLEEP_INTERVAL;
 
+	private int startDay;
+
+	private int endDay;
+
+	private int scheduledStartHour;
+
+	private int scheduledEndHour;
+
+	private Timer timer;
+
+	/** public for testing */
+	public Date startTime = new Date();
+
 	private final IMylarContextListener CONTEXT_LISTENER = new IMylarContextListener() {
 
 		public void contextActivated(IMylarContext context) {
@@ -172,7 +188,8 @@ public class TaskListManager {
 		this.taskListFile = file;
 		this.taskListWriter = taskListWriter;
 		this.nextLocalTaskId = startId;
-		// setupCalendarRanges();
+		timer = new Timer();
+		timer.schedule(new RolloverCheck(), ROLLOVER_DELAY, ROLLOVER_DELAY);
 		MylarPlugin.getContextManager().addActivityMetaContextListener(CONTEXT_LISTENER);
 	}
 
@@ -224,7 +241,7 @@ public class TaskListManager {
 			}
 		}
 		GregorianCalendar tempCalendar = new GregorianCalendar();
-		tempCalendar.setFirstDayOfWeek(START_DAY);
+		tempCalendar.setFirstDayOfWeek(startDay);
 		for (ITask task : tasksWithReminders) {
 			if (task.getReminderDate() != null) {
 				tempCalendar.setTime(task.getReminderDate());
@@ -255,7 +272,7 @@ public class TaskListManager {
 						.getTask(event.getStructureHandle());
 				if (currentTask != null) {
 					GregorianCalendar calendar = new GregorianCalendar();
-					calendar.setFirstDayOfWeek(START_DAY);
+					calendar.setFirstDayOfWeek(startDay);
 					calendar.setTime(event.getDate());
 					currentTaskStart = calendar;
 					currentHandle = event.getStructureHandle();
@@ -268,7 +285,7 @@ public class TaskListManager {
 			if (!event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION)
 					&& currentHandle.equals(event.getStructureHandle())) {
 				GregorianCalendar calendarEnd = new GregorianCalendar();
-				calendarEnd.setFirstDayOfWeek(START_DAY);
+				calendarEnd.setFirstDayOfWeek(startDay);
 				calendarEnd.setTime(event.getDate());
 				calendarEnd.getTime();
 				currentTaskEnd = calendarEnd;
@@ -294,7 +311,7 @@ public class TaskListManager {
 				totalInactive = 0;
 				startInactive = 0;
 			} else if (event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION) && !isInactive) {
-				if(!currentHandle.equals("")) {
+				if (!currentHandle.equals("")) {
 					isInactive = true;
 					startInactive = event.getDate().getTime();
 				}
@@ -328,26 +345,33 @@ public class TaskListManager {
 	}
 
 	private void setupCalendarRanges() {
+		// MylarTaskListPlugin.getMylarCorePrefs().getInt(TaskListPreferenceConstants.PLANNING_STARTDAY);
+		startDay = Calendar.MONDAY;
+		// MylarTaskListPlugin.getMylarCorePrefs().getInt(TaskListPreferenceConstants.PLANNING_ENDDAY);
+		endDay = Calendar.SUNDAY;
+		scheduledStartHour = MylarTaskListPlugin.getMylarCorePrefs().getInt(
+				TaskListPreferenceConstants.PLANNING_STARTHOUR);
+		scheduledEndHour = MylarTaskListPlugin.getMylarCorePrefs().getInt(TaskListPreferenceConstants.PLANNING_ENDHOUR);
 
 		GregorianCalendar currentBegin = new GregorianCalendar();
-		currentBegin.setFirstDayOfWeek(START_DAY);
-		Date startTime = new Date();
+		currentBegin.setFirstDayOfWeek(startDay);
 		currentBegin.setTime(startTime);
 		snapToStartOfWeek(currentBegin);
 		GregorianCalendar currentEnd = new GregorianCalendar();
-		currentEnd.setFirstDayOfWeek(START_DAY);
+		currentEnd.setFirstDayOfWeek(startDay);
+		currentEnd.setTime(startTime);
 		snapToEndOfWeek(currentEnd);
 		activityThisWeek = new DateRangeContainer(currentBegin, currentEnd, DESCRIPTION_THIS_WEEK, taskList);
 		dateRangeContainers.add(activityThisWeek);
 
 		GregorianCalendar previousStart = new GregorianCalendar();
-		previousStart.setFirstDayOfWeek(START_DAY);
-		previousStart.setTime(new Date());
+		previousStart.setFirstDayOfWeek(startDay);
+		previousStart.setTime(startTime);
 		previousStart.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_PREVIOUS);
 		snapToStartOfWeek(previousStart);
 		GregorianCalendar previousEnd = new GregorianCalendar();
-		previousEnd.setFirstDayOfWeek(START_DAY);
-		previousEnd.setTime(new Date());
+		previousEnd.setFirstDayOfWeek(startDay);
+		previousEnd.setTime(startTime);
 		previousEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_PREVIOUS);
 		snapToEndOfWeek(previousEnd);
 		activityPreviousWeek = new DateRangeContainer(previousStart.getTime(), previousEnd.getTime(),
@@ -355,13 +379,13 @@ public class TaskListManager {
 		dateRangeContainers.add(activityPreviousWeek);
 
 		GregorianCalendar nextStart = new GregorianCalendar();
-		nextStart.setFirstDayOfWeek(START_DAY);
-		nextStart.setTime(new Date());
+		nextStart.setFirstDayOfWeek(startDay);
+		nextStart.setTime(startTime);
 		nextStart.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_NEXT);
 		snapToStartOfWeek(nextStart);
 		GregorianCalendar nextEnd = new GregorianCalendar();
-		nextEnd.setFirstDayOfWeek(START_DAY);
-		nextEnd.setTime(new Date());
+		nextEnd.setFirstDayOfWeek(startDay);
+		nextEnd.setTime(startTime);
 		nextEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_NEXT);
 		snapToEndOfWeek(nextEnd);
 		activityNextWeek = new DateRangeContainer(nextStart.getTime(), nextEnd.getTime(), DESCRIPTION_NEXT_WEEK,
@@ -369,13 +393,13 @@ public class TaskListManager {
 		dateRangeContainers.add(activityNextWeek);
 
 		GregorianCalendar futureStart = new GregorianCalendar();
-		futureStart.setFirstDayOfWeek(START_DAY);
-		futureStart.setTime(new Date());
+		futureStart.setFirstDayOfWeek(startDay);
+		futureStart.setTime(startTime);
 		futureStart.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_FUTURE_START);
 		snapToStartOfWeek(futureStart);
 		GregorianCalendar futureEnd = new GregorianCalendar();
-		futureEnd.setFirstDayOfWeek(START_DAY);
-		futureEnd.setTime(new Date());
+		futureEnd.setFirstDayOfWeek(startDay);
+		futureEnd.setTime(startTime);
 		futureEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_FUTURE_END);
 		snapToEndOfWeek(futureEnd);
 		activityFuture = new DateRangeContainer(futureStart.getTime(), futureEnd.getTime(), DESCRIPTION_FUTURE,
@@ -383,13 +407,13 @@ public class TaskListManager {
 		dateRangeContainers.add(activityFuture);
 
 		GregorianCalendar pastStart = new GregorianCalendar();
-		pastStart.setFirstDayOfWeek(START_DAY);
-		pastStart.setTime(new Date());
+		pastStart.setFirstDayOfWeek(startDay);
+		pastStart.setTime(startTime);
 		pastStart.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_PAST_START);
 		snapToStartOfWeek(pastStart);
 		GregorianCalendar pastEnd = new GregorianCalendar();
-		pastEnd.setFirstDayOfWeek(START_DAY);
-		pastEnd.setTime(new Date());
+		pastEnd.setFirstDayOfWeek(startDay);
+		pastEnd.setTime(startTime);
 		pastEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_PAST_END);
 		snapToEndOfWeek(pastEnd);
 		activityPast = new DateRangeContainer(pastStart.getTime(), pastEnd.getTime(), DESCRIPTION_PAST, taskList);
@@ -398,7 +422,7 @@ public class TaskListManager {
 
 	private void snapToStartOfWeek(GregorianCalendar cal) {
 		cal.getTime();
-		cal.set(Calendar.DAY_OF_WEEK, START_DAY);
+		cal.set(Calendar.DAY_OF_WEEK, startDay);
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
@@ -408,7 +432,7 @@ public class TaskListManager {
 
 	private void snapToEndOfWeek(GregorianCalendar cal) {
 		cal.getTime();
-		cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);// FRIDAY
+		cal.set(Calendar.DAY_OF_WEEK, endDay);
 		cal.set(Calendar.HOUR_OF_DAY, cal.getMaximum(Calendar.HOUR_OF_DAY));
 		cal.set(Calendar.MINUTE, cal.getMaximum(Calendar.MINUTE));
 		cal.set(Calendar.SECOND, cal.getMaximum(Calendar.SECOND));
@@ -418,7 +442,7 @@ public class TaskListManager {
 
 	public Calendar setSecheduledIn(Calendar calendar, int days) {
 		calendar.add(Calendar.DAY_OF_MONTH, days);
-		calendar.set(Calendar.HOUR_OF_DAY, HOUR_DAY_START);
+		calendar.set(Calendar.HOUR_OF_DAY, scheduledStartHour);
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
@@ -426,7 +450,7 @@ public class TaskListManager {
 	}
 
 	public Calendar setScheduledToday(Calendar calendar) {
-		calendar.set(Calendar.HOUR_OF_DAY, HOUR_DAY_END);
+		calendar.set(Calendar.HOUR_OF_DAY, scheduledEndHour);
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
@@ -445,7 +469,7 @@ public class TaskListManager {
 	public void refactorRepositoryUrl(String oldUrl, String newUrl) {
 		if (oldUrl == null || newUrl == null || oldUrl.equals(newUrl)) {
 			return;
-		} 
+		}
 		List<ITask> activeTasks = taskList.getActiveTasks();
 		for (ITask task : new ArrayList<ITask>(activeTasks)) {
 			deactivateTask(task);
@@ -706,4 +730,50 @@ public class TaskListManager {
 		parseFutureReminders();
 		taskList.notifyLocalInfoChanged(task);
 	}
+
+	public void propertyChange(PropertyChangeEvent event) {
+		if (event.getProperty().equals(TaskListPreferenceConstants.PLANNING_STARTHOUR)
+				|| event.getProperty().equals(TaskListPreferenceConstants.PLANNING_ENDHOUR)) {
+			// event.getProperty().equals(TaskListPreferenceConstants.PLANNING_STARTDAY)
+			scheduledStartHour = MylarTaskListPlugin.getMylarCorePrefs().getInt(
+					TaskListPreferenceConstants.PLANNING_STARTHOUR);
+			scheduledEndHour = MylarTaskListPlugin.getMylarCorePrefs().getInt(
+					TaskListPreferenceConstants.PLANNING_ENDHOUR);
+		}
+	}
+
+	/** public for testing */
+	public void resetAndRollOver() {
+		taskActivityHistoryInitialized = false;
+		tasksWithReminders.clear();
+		for (ITask task : taskList.getAllTasks()) {
+			if (task.getReminderDate() != null) {
+				tasksWithReminders.add(task);
+			}
+		}
+		resetActivity();
+		parseFutureReminders();
+		parseTaskActivityInteractionHistory();
+		for (ITaskActivityListener listener : activityListeners) {
+			listener.calendarChanged();
+		}
+	}
+
+	private class RolloverCheck extends TimerTask {
+
+		@Override
+		public void run() {
+			if (!Platform.isRunning() || MylarPlugin.getDefault() == null) {
+				return;
+			} else {
+				Calendar now = GregorianCalendar.getInstance();
+				DateRangeContainer thisWeek = getActivityThisWeek();
+				if (!thisWeek.includes(now)) {
+					startTime = new Date();
+					resetAndRollOver();
+				}
+			}
+		}
+	}
+
 }

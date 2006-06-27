@@ -37,7 +37,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public class AbstractReportFactory {
 
-	private static final int COM_TIME_OUT = 15000;
+	private static final int COM_TIME_OUT = 30000;
 
 	private static final String CONTENT_TYPE_TEXT_HTML = "text/html";
 
@@ -62,7 +62,7 @@ public class AbstractReportFactory {
 
 		HttpURLConnection connection = (HttpURLConnection) cntx;
 		connection.setConnectTimeout(COM_TIME_OUT);
-		connection.setReadTimeout(COM_TIME_OUT);
+		connection.setReadTimeout(COM_TIME_OUT);		
 		connection.connect();
 		int responseCode = connection.getResponseCode();
 		if (responseCode != HttpURLConnection.HTTP_OK) {

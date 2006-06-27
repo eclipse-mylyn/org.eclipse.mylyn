@@ -284,6 +284,10 @@ public class TaskListView extends ViewPart {
 		public void taskListRead() {
 			refresh(null);
 		}
+
+		public void calendarChanged() {
+			refresh(null);
+		}
 	};
 
 	private final ITaskListChangeListener TASK_REFERESH_LISTENER = new ITaskListChangeListener() {
