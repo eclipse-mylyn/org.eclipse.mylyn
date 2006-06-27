@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -29,6 +32,7 @@ import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
@@ -62,6 +66,8 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	private TaskEditorListener partListener;
 
 	private List<IEditorPart> editors = new ArrayList<IEditorPart>();
+
+	private Menu contextMenu;
 
 	private IEditorPart contentOutlineProvider = null;
 
@@ -104,6 +110,17 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	@Override
 	protected void createPages() {
 		try {
+			MenuManager manager = new MenuManager();
+			IMenuListener listener = new IMenuListener() {
+				public void menuAboutToShow(IMenuManager manager) {
+					contextMenuAboutToShow(manager);
+				}
+			};
+			manager.setRemoveAllWhenShown(true);
+			manager.addMenuListener(listener);
+			contextMenu = manager.createContextMenu(getContainer());
+			getContainer().setMenu(contextMenu);
+
 			int index = 0;
 			index = createTaskSummaryPage();
 			int selectedIndex = index;
@@ -114,7 +131,15 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 						IEditorInput input = factory.createEditorInput(task);
 						if (editor != null && input != null) {
 							editors.add(editor);
-							index = addPage(editor, input);
+							if (editor instanceof AbstractRepositoryTaskEditor) {
+								AbstractRepositoryTaskEditor repositoryTaskEditor = (AbstractRepositoryTaskEditor)editor;
+								repositoryTaskEditor.setParentEditor(this);
+								editor.init(getEditorSite(), input);
+								repositoryTaskEditor.createPartControl(getContainer());
+								index = addPage(repositoryTaskEditor.getControl());
+							} else {
+								index = addPage(editor, input);
+							}
 							selectedIndex = index;
 							setPageText(index++, factory.getTitle());
 						}
@@ -143,6 +168,19 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		} catch (PartInitException e) {
 			MylarStatusHandler.fail(e, "failed to create task editor pages", false);
 		}
+	}
+
+	protected void contextMenuAboutToShow(IMenuManager manager) {
+		TaskEditorActionContributor contributor = getContributor();
+		// IFormPage page = getActivePageInstance();
+		// if (page instanceof PDEFormPage)
+		// ((PDEFormPage) page).contextMenuAboutToShow(manager);
+		// if (contributor != null)
+		contributor.contextMenuAboutToShow(manager);
+	}
+
+	public TaskEditorActionContributor getContributor() {
+		return (TaskEditorActionContributor) getEditorSite().getActionBarContributor();
 	}
 
 	@Override
@@ -202,7 +240,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		for (IEditorPart editor : editors) {
-			if(editor.isDirty())
+			if (editor.isDirty())
 				editor.doSave(monitor);
 		}
 
@@ -267,7 +305,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	public void notifyTaskChanged() {
 		MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
 	}
-	
+
 	@Override
 	public boolean isSaveAsAllowed() {
 		return false;
@@ -366,12 +404,16 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 
 		IWorkbench workbench = MylarTaskListPlugin.getDefault().getWorkbench();
 		if (workbench != null) {
-			for(IWorkbenchWindow window : workbench.getWorkbenchWindows()) {
-			IWorkbenchPage activePage = window.getActivePage();
+			for (IWorkbenchWindow window : workbench.getWorkbenchWindows()) {
+				IWorkbenchPage activePage = window.getActivePage();
 				if (activePage != null) {
 					activePage.removePartListener(partListener);
 				}
 			}
 		}
+	}
+
+	public TaskEditorInput getTaskEditorInput() {
+		return taskEditorInput;
 	}
 }

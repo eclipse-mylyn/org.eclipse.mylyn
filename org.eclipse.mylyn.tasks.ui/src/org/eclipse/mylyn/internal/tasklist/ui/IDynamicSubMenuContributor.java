@@ -13,7 +13,6 @@ package org.eclipse.mylar.internal.tasklist.ui;
 import java.util.List;
 
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 
 /**
@@ -21,6 +20,6 @@ import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
  */
 public interface IDynamicSubMenuContributor {
 
-	public abstract MenuManager getSubMenuManager(TaskListView view, List<ITaskListElement> selectedElements);
+	public abstract MenuManager getSubMenuManager(List<ITaskListElement> selectedElements);
 
 }

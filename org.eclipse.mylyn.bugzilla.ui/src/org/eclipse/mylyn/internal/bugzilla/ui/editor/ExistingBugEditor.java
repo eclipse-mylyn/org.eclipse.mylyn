@@ -106,8 +106,6 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 
 	protected Text urlText;
 
-	// protected Text addCommentsText;
-
 	protected RepositoryTaskData taskData;
 
 	protected AbstractRepositoryConnector connector;
@@ -121,10 +119,6 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	protected Text addTimeText;
 
 	protected Text deadlineText;
-
-	// public String getNewCommentText() {
-	// return addCommentsTextBox.getText();
-	// }
 
 	/**
 	 * Creates a new <code>ExistingBugEditor</code>.
@@ -162,40 +156,6 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		isDirty = false;
 		updateEditorTitle();
 	}
-
-	// /**
-	// * This overrides the existing implementation in order to add an "add to
-	// * favorites" option to the context menu.
-	// *
-	// * @see
-	// org.eclipse.mylar.internal.bugzilla.ui.AbstractRepositoryTaskEditor#createContextMenu()
-	// */
-	// @Override
-	// protected void createContextMenu() {
-	// contextMenuManager = new MenuManager(CONTEXT_MENU_ID);
-	// contextMenuManager.setRemoveAllWhenShown(true);
-	// contextMenuManager.addMenuListener(new IMenuListener() {
-	// public void menuAboutToShow(IMenuManager manager) {
-	// // manager.add(new
-	// // AddToFavoritesAction(ExistingBugEditor.this));
-	// // manager.add(new Separator());
-	// manager.add(cutAction);
-	// manager.add(copyAction);
-	// manager.add(pasteAction);
-	// manager.add(new Separator());
-	// manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-	// if (currentSelectedText == null ||
-	// currentSelectedText.getSelectionText().length() == 0) {
-	//
-	// copyAction.setEnabled(false);
-	// } else {
-	// copyAction.setEnabled(true);
-	// }
-	// }
-	// });
-	// getSite().registerContextMenu("#BugEditor", contextMenuManager,
-	// getSite().getSelectionProvider());
-	// }
 
 	@Override
 	protected void addRadioButtons(Composite buttonComposite) {
@@ -436,27 +396,10 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	@Override
 	protected void createCustomAttributeLayout(Composite composite) {
 		FormToolkit toolkit = new FormToolkit(composite.getDisplay());
-		// Composite customAttributesComposite =
-		// toolkit.createComposite(form.getBody());
-		// GridLayout attributesLayout = new GridLayout();
-		// attributesLayout.numColumns = 4;
-		// attributesLayout.horizontalSpacing = 14;
-		// attributesLayout.verticalSpacing = 6;
-		// composite.setLayout(attributesLayout);
-		// GridData attributesData = new GridData(GridData.FILL_BOTH);
-		// attributesData.horizontalSpan = 1;
-		// attributesData.grabExcessVerticalSpace = false;
-		// composite.setLayoutData(attributesData);
 		addCCList(toolkit, "", composite);
 		
 		if (getRepositoryTaskData().getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()) != null)
 			addBugzillaTimeTracker(toolkit, composite);
-		
-		// URL field
-		// addUrlText(getReport().getAttributeValue(BugzillaReportElement.BUG_FILE_LOC.getKeyString()),
-		// customAttributesComposite);
-
-		// keywords text field (not editable)
 		try {
 			addKeywordsList(toolkit, getRepositoryTaskData().getAttributeValue(RepositoryTaskAttribute.KEYWORDS),
 					composite);

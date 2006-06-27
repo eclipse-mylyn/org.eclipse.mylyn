@@ -176,7 +176,7 @@ public class TaskListView extends ViewPart {
 
 	private OpenTaskListElementAction openTaskEditor;
 
-	private OpenWithBrowserAction openUrlInExternal;
+	private OpenWithBrowserAction openWithBrowser;
 
 	private NewLocalTaskAction newLocalTaskAction;
 
@@ -1031,7 +1031,8 @@ public class TaskListView extends ViewPart {
 				selectedElements.add((ITaskListElement)object);
 			}
 		}
-
+		openWithBrowser.selectionChanged((StructuredSelection)getViewer().getSelection());
+		
 		addAction(openTaskEditor, manager, element);
 		ITask task = null;
 		if ((element instanceof ITask) || (element instanceof AbstractQueryHit)) {
@@ -1040,8 +1041,7 @@ public class TaskListView extends ViewPart {
 			} else {
 				task = (ITask) element;
 			}
-
-			addAction(openUrlInExternal, manager, element);
+			addAction(openWithBrowser, manager, element);
 			if (!(element instanceof AbstractRepositoryTask) || element instanceof AbstractTaskContainer
 					|| element instanceof AbstractRepositoryQuery) {
 				addAction(renameAction, manager, element);
@@ -1067,7 +1067,7 @@ public class TaskListView extends ViewPart {
 				manager.add(activateAction);
 			}
 		} else if (element instanceof AbstractTaskContainer || element instanceof AbstractRepositoryQuery) {
-			addAction(openUrlInExternal, manager, element);
+			addAction(openWithBrowser, manager, element);
 			addAction(copyDetailsAction, manager, element);
 			addAction(deleteAction, manager, element);
 		}
@@ -1079,8 +1079,9 @@ public class TaskListView extends ViewPart {
 			manager.add(goUpAction);
 		}
 
+		manager.add(new Separator()); 
 		for (IDynamicSubMenuContributor contributor : MylarTaskListPlugin.getDefault().getDynamicMenuContributers()) {
-			MenuManager subMenuManager = contributor.getSubMenuManager(this, selectedElements);
+			MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
 			if (subMenuManager != null)
 				addMenuManager(subMenuManager, manager, element);
 		}
@@ -1196,7 +1197,7 @@ public class TaskListView extends ViewPart {
 		markIncompleteAction = new MarkTaskCompleteAction(this);
 		markCompleteAction = new MarkTaskIncompleteAction(this);
 		openTaskEditor = new OpenTaskListElementAction(this.getViewer());
-		openUrlInExternal = new OpenWithBrowserAction();
+		openWithBrowser = new OpenWithBrowserAction();
 		filterCompleteTask = new FilterCompletedTasksAction(this);
 		filterArchiveCategory = new FilterArchiveContainerAction(this);
 		filterOnPriority = new PriorityDropDownAction();

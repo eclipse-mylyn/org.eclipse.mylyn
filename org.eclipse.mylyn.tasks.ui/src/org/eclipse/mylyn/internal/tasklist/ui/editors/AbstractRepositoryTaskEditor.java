@@ -123,7 +123,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 	private static final String ATTACHMENT_URL_SUFFIX = "/attachment.cgi?id=";
 
-	protected static final String CONTEXT_MENU_ID = "#BugEditor";
+	protected static final String CONTEXT_MENU_ID = "#MylarRepositoryEditor";
 
 	public static final String REPOSITORY_TEXT_ID = "org.eclipse.mylar.tasklist.ui.fonts.task.editor.comment";
 
@@ -159,31 +159,17 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 	public static final Font TEXT_FONT = JFaceResources.getDefaultFont();
 
-	// public static final Font COMMENT_FONT =
-	// JFaceResources.getFontRegistry().get(JFaceResources.TEXT_FONT);
-
 	public static final Font HEADER_FONT = JFaceResources.getDefaultFont();
 
 	public static final int DESCRIPTION_WIDTH = 79 * 8; // 500;
 
 	public static final int DESCRIPTION_HEIGHT = 10 * 14;
 
-	// protected Color background;
-	//
-	// protected Color foreground;
-
 	protected AbstractBugEditorInput editorInput;
 
 	private MylarTaskEditor parentEditor = null;
 
 	protected RepositoryTaskOutlineNode taskOutlineModel = null;
-
-	// private static int MARGIN = 0;// 5
-
-	// protected SimpleDateFormat simpleDateFormat = new SimpleDateFormat("E MMM
-	// dd, yyyy hh:mm aa");
-
-	// "yyyy-MM-dd HH:mm"
 
 	/**
 	 * Style option for function <code>newLayout</code>. This will create a
@@ -208,28 +194,12 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 	protected CCombo attributeCombo;
 
-	// protected CCombo versionCombo;
-	//
-	// protected CCombo platformCombo;
-	//
-	// protected CCombo priorityCombo;
-	//
-	// protected CCombo severityCombo;
-	//
-	// protected CCombo milestoneCombo;
-	//
-	// protected CCombo componentCombo;
-
 	protected Button addSelfToCCCheck;
-
-	// protected Text urlText;
 
 	protected Text summaryText;
 
 	protected Text addCommentsText;
-
-	// protected Text assignedTo;
-
+	
 	protected Button submitButton;
 
 	protected Table attachmentsTable;
@@ -263,23 +233,9 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 	protected RepositoryTaskEditorCopyAction copyAction;
 
-	// private Action revealAllAction;
-
 	protected RetargetAction pasteAction;
 
 	protected Composite editorComposite;
-
-	// protected CLabel titleLabel;
-
-	// protected ScrolledComposite scrolledComposite;
-
-	// protected Composite scrolledComposite;
-
-	// protected Composite infoArea;
-
-	// protected Hyperlink linkToBug;
-
-	// protected StyledText generalTitleText;
 
 	private List<IRepositoryTaskAttributeListener> attributesListeners = new ArrayList<IRepositoryTaskAttributeListener>();
 
@@ -383,6 +339,10 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		scrollVertPageIncrement = 0;
 		scrollHorzPageIncrement = 0;
 
+		makeContextMenuActions();
+	}
+
+	private void makeContextMenuActions() {
 		// set up actions for the context menu
 		cutAction = new RetargetAction(ActionFactory.CUT.getId(), WorkbenchMessages.Workbench_cut);
 		cutAction.setToolTipText(WorkbenchMessages.Workbench_cutToolTip);// WorkbenchMessages.getString("Workbench.cutToolTip"));
@@ -394,8 +354,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		cutAction.setActionDefinitionId(cutActionDefId);
 
 		pasteAction = new RetargetAction(ActionFactory.PASTE.getId(), WorkbenchMessages.Workbench_paste);
-		pasteAction.setToolTipText(WorkbenchMessages.Workbench_pasteToolTip);// WorkbenchMessages.getString("Workbench.pasteToolTip"));
-		// //$NON-NLS-1$
+		pasteAction.setToolTipText(WorkbenchMessages.Workbench_pasteToolTip);
 		pasteAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
 		pasteAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
 		pasteAction.setDisabledImageDescriptor(WorkbenchImages
@@ -411,18 +370,6 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		copyAction.setAccelerator(SWT.CTRL | 'c');
 
 		copyAction.setEnabled(false);
-
-		//		
-		// revealAllAction = new ExpandCommentsAction(this);
-		// revealAllAction.setText("Reveal Comments");//
-		// WorkbenchMessages.getString("Workbench.copy"));
-		// revealAllAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
-		// revealAllAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
-		// revealAllAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY_DISABLED));
-		// revealAllAction.setAccelerator(SWT.CTRL | 'r');
-		//
-		// revealAllAction.setEnabled(true);
-
 	}
 
 	/**
@@ -451,13 +398,12 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-
 		if (getRepositoryTaskData() == null) {
 			Composite composite = new Composite(parent, SWT.NULL);
 			composite.setLayout(new GridLayout());
 			Label noBugLabel = new Label(composite, SWT.NULL);
 			noBugLabel.setText("Could not download task data, possibly due to timeout or connectivity problem.\n"
-					+ " Please try again.");
+					+ "Please check connection and try again.");
 			return;
 		}
 
@@ -467,8 +413,8 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		editorComposite = form.getBody();
 		editorComposite.setLayout(new GridLayout());
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-
 		createContextMenu();
+		
 		createReportHeaderLayout(editorComposite);
 		Composite attribComp = createAttributeLayout(editorComposite);
 		createCustomAttributeLayout(attribComp);
@@ -476,10 +422,9 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		createAttachmentLayout(editorComposite);
 		createCommentLayout(editorComposite, form);
 		createButtonLayouts(editorComposite);
-
-		// WorkbenchHelpSystem.getInstance().setHelp(parent,
-
-		editorComposite.setMenu(contextMenuManager.createContextMenu(editorComposite));
+		
+//		editorComposite.setMenu(contextMenuManager.createContextMenu(editorComposite));
+		
 		form.reflow(true);
 		getSite().getPage().addSelectionListener(selectionListener);
 		getSite().setSelectionProvider(selectionProvider);
@@ -489,13 +434,6 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	 * By default puts task number, date opened and date modified in header
 	 */
 	protected void createReportHeaderLayout(Composite composite) {
-
-		// Summary Field
-		// Composite summaryComposite =
-		// toolkit.createComposite(editorComposite);
-		// summaryComposite.setLayout(new GridLayout(2, false));
-		// GridDataFactory.fillDefaults().grab(true,
-		// false).applyTo(summaryComposite);
 		addSummaryText(composite);
 
 		Composite headerInfoComposite = toolkit.createComposite(composite);
@@ -553,20 +491,9 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		int currentCol = 1;
 
 		for (RepositoryTaskAttribute attribute : getRepositoryTaskData().getAttributes()) {
-
-			// String key = attribute.getID();
 			String name = attribute.getName();
 			String value = "";
-			// try {
 			value = checkText(attribute.getValue());
-			// value =
-			// checkText(BugzillaRepositoryUtil.decodeStringFromCharset(attribute.getValue(),
-			// getReport().getCharset()));
-			// } catch (UnsupportedEncodingException e1) {
-			// // ignore
-			// }
-			// "+name+"
-			// key:"+key+" value:"+value+" is hidden"+attribute.isHidden());
 			if (attribute.isHidden())
 				continue;
 			Map<String, String> values = attribute.getOptionValues();
@@ -647,9 +574,6 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 	public abstract void createCustomAttributeLayout();
 
-	/**
-	 * Create a context menu for this editor.
-	 */
 	protected void createContextMenu() {
 		contextMenuManager = new MenuManager(CONTEXT_MENU_ID);
 		contextMenuManager.setRemoveAllWhenShown(true);
@@ -658,18 +582,17 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 				manager.add(cutAction);
 				manager.add(copyAction);
 				manager.add(pasteAction);
-				// manager.add(revealAllAction);
-				manager.add(new Separator());
-				manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 				if (currentSelectedText == null || currentSelectedText.getSelectionText().length() == 0) {
-
 					copyAction.setEnabled(false);
 				} else {
 					copyAction.setEnabled(true);
 				}
-			}
+				// manager.add(revealAllAction);
+				manager.add(new Separator());
+				manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+			} 
 		});
-		getSite().registerContextMenu(CONTEXT_MENU_ID, contextMenuManager, getSite().getSelectionProvider());
+//		getSite().registerContextMenu(CONTEXT_MENU_ID, contextMenuManager, getSite().getSelectionProvider());
 	}
 
 	/**
@@ -1457,23 +1380,18 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		commentViewer.getTextWidget().addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				StyledText c = (StyledText) e.widget;
-				if (c != null && !c.getSelectionText().equals("")) {
-					if (currentSelectedText != null && !currentSelectedText.equals(c)) {
+				StyledText styledText = (StyledText) e.widget;
+				if (styledText != null && !styledText.getSelectionText().equals("")) {
+					if (currentSelectedText != null && !currentSelectedText.equals(styledText)) {
 						currentSelectedText.setSelectionRange(0, 0);
 					}
-					currentSelectedText = c;
+					currentSelectedText = styledText;
 				}
-
 			}
 		});
 
 		commentViewer.getTextWidget().setMenu(contextMenuManager.createContextMenu(commentViewer.getTextWidget()));
-
-		// textViewer.getControl().setFont(COMMENT_FONT);
 		commentViewer.setDocument(new Document(text));
-		// commentViewer.activatePlugins();
-		// textViewer.refresh();
 		return commentViewer;
 	}
 
@@ -1959,6 +1877,10 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		}
 	}
 
+	public Control getControl() {
+		return form;
+	}
+	
 	// private void addHyperlinks(final StyledText styledText, Composite
 	// composite) {
 	//

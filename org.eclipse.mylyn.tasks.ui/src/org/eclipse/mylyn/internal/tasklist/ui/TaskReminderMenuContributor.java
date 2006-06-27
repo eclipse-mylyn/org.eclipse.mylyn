@@ -22,11 +22,11 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.internal.tasklist.planner.ui.DateSelectionDialog;
 import org.eclipse.mylar.internal.tasklist.ui.views.DatePicker;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * TODO: this has bloated, reafactor
@@ -49,8 +49,8 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 	private static final String LABEL_CLEAR = "Clear";
 
 	@SuppressWarnings("deprecation")
-	public MenuManager getSubMenuManager(TaskListView view, final List<ITaskListElement> selectedElements) {
-		final TaskListView taskListView = view;
+	public MenuManager getSubMenuManager(final List<ITaskListElement> selectedElements) {
+//		final TaskListView taskListView = view;
 		final MenuManager subMenuManager = new MenuManager(LABEL_REMINDER);
 
 		ITask selectedTask = null;
@@ -176,7 +176,7 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 				if (singleTask != null && singleTask.getReminderDate() != null) {
 					theCalendar.setTime(singleTask.getReminderDate());
 				}
-				DateSelectionDialog reminderDialog = new DateSelectionDialog(taskListView.getSite().getShell(),
+				DateSelectionDialog reminderDialog = new DateSelectionDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 						theCalendar, DatePicker.TITLE_DIALOG);
 				int result = reminderDialog.open();
 				if (result == Window.OK) {

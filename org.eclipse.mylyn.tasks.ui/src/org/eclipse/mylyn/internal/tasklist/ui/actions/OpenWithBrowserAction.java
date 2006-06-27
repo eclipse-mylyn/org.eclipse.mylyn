@@ -11,50 +11,56 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.actions;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
+import java.util.Iterator;
+
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
  * @author Mik Kersten
  * @author Rob Elves
  */
-public class OpenWithBrowserAction extends Action {
+public class OpenWithBrowserAction extends BaseSelectionListenerAction {
+
+	private static final String LABEL = "Open with Browser";
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.open.browser";
 
 	public OpenWithBrowserAction() {
-		setText("Open with Browser");
-		setToolTipText("Open with Browser");
+		super(LABEL);
+		setToolTipText(LABEL);
 		setId(ID);
 	}
 
 	@Override
 	public void run() {
-		ISelection selection = TaskListView.getFromActivePerspective().getViewer().getSelection();
-		for (Object selectedObject : ((IStructuredSelection) selection).toList()) {
-			ITask task = null;
-			if (selectedObject instanceof ITask) {
-				task = (ITask) selectedObject;
-			} else if (selectedObject instanceof AbstractQueryHit) {
-				AbstractQueryHit hit = (AbstractQueryHit) selectedObject;
-				task = hit.getOrCreateCorrespondingTask();
+		if (super.getStructuredSelection() != null) {
+			for (Iterator iter = super.getStructuredSelection().iterator(); iter.hasNext();) {
+				runWithSelection(iter.next());
 			}
-			String urlString = null;
-			if (task != null && task.hasValidUrl()) {
-				urlString = task.getUrl();
-			} else if (selectedObject instanceof AbstractRepositoryQuery) {
-				AbstractRepositoryQuery query = (AbstractRepositoryQuery)selectedObject;
-				urlString = query.getQueryUrl();
-			}
-			if (urlString != null) {
-				TaskUiUtil.openUrl(urlString);
-			}
+		}
+	}
+
+	private void runWithSelection(Object selectedObject) {
+		ITask task = null;
+		if (selectedObject instanceof ITask) {
+			task = (ITask) selectedObject;
+		} else if (selectedObject instanceof AbstractQueryHit) {
+			AbstractQueryHit hit = (AbstractQueryHit) selectedObject;
+			task = hit.getOrCreateCorrespondingTask();
+		}
+		String urlString = null;
+		if (task != null && task.hasValidUrl()) {
+			urlString = task.getUrl();
+		} else if (selectedObject instanceof AbstractRepositoryQuery) {
+			AbstractRepositoryQuery query = (AbstractRepositoryQuery) selectedObject;
+			urlString = query.getQueryUrl();
+		}
+		if (urlString != null) {
+			TaskUiUtil.openUrl(urlString);
 		}
 	}
 }

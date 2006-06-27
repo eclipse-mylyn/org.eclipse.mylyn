@@ -12,7 +12,7 @@ import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
+import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
@@ -25,28 +25,38 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 
 	private static final String LABEL = "Move to Category";
 
-	public MenuManager getSubMenuManager(TaskListView view, List<ITaskListElement> selectedElement) {
-		ITask task = null;
+	public MenuManager getSubMenuManager(final List<ITaskListElement> selectedElements) {
 		final MenuManager subMenuManager = new MenuManager(LABEL);
-		if (selectedElement instanceof ITask) {
-			task = (ITask) selectedElement;
-		}
-		final ITask taskToMove = task;
-		if (taskToMove != null) {
-			for (final AbstractTaskContainer category : MylarTaskListPlugin.getTaskListManager().getTaskList()
-					.getCategories()) {
-				if (!category.equals(task.getContainer()) && !category.equals(MylarTaskListPlugin.getTaskListManager().getTaskList().getArchiveContainer())) {
-					Action action = new Action() {
-						@Override
-						public void run() {
-							MylarTaskListPlugin.getTaskListManager().getTaskList()
-									.moveToContainer(category, taskToMove);
+
+		for (final AbstractTaskContainer category : MylarTaskListPlugin.getTaskListManager().getTaskList()
+				.getCategories()) {
+			if (!category.equals(MylarTaskListPlugin.getTaskListManager().getTaskList().getArchiveContainer())) {
+				Action action = new Action() {
+					@Override
+					public void run() {
+						for (ITaskListElement element : selectedElements) {
+							if (element instanceof ITask) {
+								MylarTaskListPlugin.getTaskListManager().getTaskList().moveToContainer(category,
+										(ITask) element);
+							} else if (element instanceof AbstractQueryHit) {
+								ITask task = ((AbstractQueryHit) element).getCorrespondingTask();
+								if (task != null) {
+									MylarTaskListPlugin.getTaskListManager().getTaskList().moveToContainer(category,
+											task);
+								}
+							}
 						}
-					};
-					action.setText(category.getDescription());
-					action.setImageDescriptor(TaskListImages.CATEGORY);
-					subMenuManager.add(action);
+					}
+				};
+				action.setText(category.getDescription());
+				action.setImageDescriptor(TaskListImages.CATEGORY);
+				if (selectedElements.size() == 1 && selectedElements.get(0) instanceof AbstractQueryHit) {
+					AbstractQueryHit hit = (AbstractQueryHit) selectedElements.get(0);
+					if (hit.getCorrespondingTask() == null) {
+						action.setEnabled(false);
+					}
 				}
+				subMenuManager.add(action);
 			}
 		}
 		return subMenuManager;

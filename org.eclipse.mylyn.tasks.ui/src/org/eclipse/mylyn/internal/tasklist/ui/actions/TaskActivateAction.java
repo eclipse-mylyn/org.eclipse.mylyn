@@ -28,8 +28,6 @@ public class TaskActivateAction extends Action implements IViewActionDelegate {
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.context.activate";
 
-	public ITask task = null;
-
 	public TaskActivateAction() {
 		setId(ID);
 		setText("Activate");
@@ -42,7 +40,6 @@ public class TaskActivateAction extends Action implements IViewActionDelegate {
 	}
 
 	public void run() {
-//		MylarPlugin.getContextManager().actionObserved(this, Boolean.TRUE.toString());
 		run(TaskListView.getFromActivePerspective().getSelectedTask());
 	}
 
@@ -61,6 +58,5 @@ public class TaskActivateAction extends Action implements IViewActionDelegate {
 
 	public void selectionChanged(IAction action, ISelection selection) {
 		// TODO Auto-generated method stub
-
 	}
 }

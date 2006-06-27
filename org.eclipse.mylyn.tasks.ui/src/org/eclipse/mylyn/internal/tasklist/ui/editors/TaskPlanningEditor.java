@@ -325,21 +325,12 @@ public class TaskPlanningEditor extends EditorPart {
 	public void createPartControl(Composite parent) {
 		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
 		form = toolkit.createScrolledForm(parent);
-		// String trucatedDescription = task.getDescription();
-		// int maxLength = 50;
-		// if (trucatedDescription.length() > maxLength) {
-		// trucatedDescription = trucatedDescription.substring(0, maxLength) +
-		// "...";
-		// }
-		// form.setText(trucatedDescription);
 		form.setText(task.getDescription());
 
 		editorComposite = form.getBody();
 		editorComposite.setLayout(new GridLayout());
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-		// Put the info onto the editor
 		createContent(editorComposite, toolkit);
-		// form.setFocus();
 		if (description != null && NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(description.getText())) {
 			description.setSelection(0);
 			description.setFocus();
