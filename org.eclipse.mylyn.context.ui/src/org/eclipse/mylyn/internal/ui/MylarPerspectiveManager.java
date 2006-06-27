@@ -55,4 +55,8 @@ public class MylarPerspectiveManager implements ITaskActivityListener {
 	public void tasksActivated(List<ITask> tasks) {
 		// ignore
 	}
+
+	public void calendarChanged() {
+		// ignore
+	}
 }

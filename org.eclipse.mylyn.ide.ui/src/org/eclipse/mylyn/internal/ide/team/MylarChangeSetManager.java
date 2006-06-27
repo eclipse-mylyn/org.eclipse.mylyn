@@ -96,6 +96,10 @@ public class MylarChangeSetManager implements IMylarContextListener {
 		public void activityChanged(DateRangeContainer week) {
 			// ignore	
 		}
+
+		public void calendarChanged() {
+			// ignore
+		}
 	};
 	
 	private ITaskListChangeListener TASK_CHANGE_LISTENER = new ITaskListChangeListener() {
