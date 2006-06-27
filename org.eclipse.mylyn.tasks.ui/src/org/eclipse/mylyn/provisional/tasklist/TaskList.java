@@ -426,7 +426,7 @@ public class TaskList {
 	public ITask getTask(String handleIdentifier) {
 		return tasks.get(handleIdentifier);
 	}
-
+	
 	public AbstractTaskContainer getContainerForHandle(String categoryHandle) {
 		for (AbstractTaskContainer cat : categories) {
 			if (cat instanceof AbstractTaskContainer) {
