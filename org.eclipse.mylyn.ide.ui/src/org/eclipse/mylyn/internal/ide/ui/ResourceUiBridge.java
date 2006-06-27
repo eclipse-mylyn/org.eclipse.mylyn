@@ -78,11 +78,13 @@ public class ResourceUiBridge implements IMylarUiBridge {
 				IEditorReference[] references = page.getEditorReferences();
 				for (int i = 0; i < references.length; i++) {
 					IEditorPart editorPart = references[i].getEditor(false);
-					IEditorInput input = editorPart.getEditorInput();
-					if (input != null) {
-						Object adapter = input.getAdapter(IResource.class);
-						if (adapter instanceof IFile && ((IFile) adapter).equals(object)) {
-							page.closeEditor(references[i].getEditor(false), true);
+						if (editorPart != null) {
+						IEditorInput input = editorPart.getEditorInput();
+						if (input != null) {
+							Object adapter = input.getAdapter(IResource.class);
+							if (adapter instanceof IFile && ((IFile) adapter).equals(object)) {
+								page.closeEditor(references[i].getEditor(false), true);
+							}
 						}
 					}
 				}
