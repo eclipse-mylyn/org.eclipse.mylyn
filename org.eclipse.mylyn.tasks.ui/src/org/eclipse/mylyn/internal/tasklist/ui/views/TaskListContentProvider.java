@@ -12,7 +12,6 @@
 package org.eclipse.mylar.internal.tasklist.ui.views;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -215,10 +214,12 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 				}
 				return children;
 			} else if (parent instanceof AbstractRepositoryQuery) {
-				Set<? extends ITaskListElement> list = ((AbstractRepositoryQuery) parent).getHits();
-				for (ITaskListElement element : new HashSet<ITaskListElement>(list)) {
-					if (!filter(element)) {
-						children.add(element);
+				Set<AbstractQueryHit> list = ((AbstractRepositoryQuery) parent).getHits();
+				synchronized(list) {
+					for (ITaskListElement element : list) {
+						if (!filter(element)) {
+							children.add(element);
+						}
 					}
 				}
 				return children;

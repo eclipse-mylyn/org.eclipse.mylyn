@@ -1452,7 +1452,7 @@ public class TaskListView extends ViewPart {
 	protected void refreshTask(ITask task) {
 		refresh(task);
 		AbstractTaskContainer rootCategory = MylarTaskListPlugin.getTaskListManager().getTaskList().getRootCategory();
-		if (task.getContainer() == null || task.getContainer() instanceof TaskArchive
+		if (task.getContainer() == null //|| task.getContainer() instanceof TaskArchive
 				|| task.getContainer().equals(rootCategory)) {
 			refresh(null);
 		} else {
@@ -1467,19 +1467,22 @@ public class TaskListView extends ViewPart {
 	}
 
 	private void refresh(final ITaskListElement element) {
+//		if (element == null) {
+//		System.err.println(">>> " + element);
+//		}
 		if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					if (getViewer().getControl() != null && !getViewer().getControl().isDisposed()) {
 						if (element == null) {
-							// getViewer().getControl().setRedraw(false);
+//							 getViewer().getControl().setRedraw(false);
 							// getViewer().refresh();
 							filteredTree.textChanged();
-							// getViewer().getControl().setRedraw(true);
+//							 getViewer().getControl().setRedraw(true);
 						} else {
-							// getViewer().getControl().setRedraw(false);
-							getViewer().refresh(element, true);
-							// getViewer().getControl().setRedraw(true);
+//							 getViewer().getControl().setRedraw(false);
+							 getViewer().refresh(element, true);
+//							 getViewer().getControl().setRedraw(true);
 						}
 					}
 				}
