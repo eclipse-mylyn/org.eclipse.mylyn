@@ -294,6 +294,9 @@ public class TaskListView extends ViewPart {
 
 		public void localInfoChanged(ITask task) {
 			refreshTask(task);
+			if (task.getContainer() != null) {
+				refresh(task.getContainer());
+			}
 		}
 
 		public void repositoryInfoChanged(ITask task) {
@@ -1471,9 +1474,6 @@ public class TaskListView extends ViewPart {
 	}
 
 	private void refresh(final ITaskListElement element) {
-//		if (element == null) {
-//		System.err.println(">>> " + element);
-//		}
 		if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
