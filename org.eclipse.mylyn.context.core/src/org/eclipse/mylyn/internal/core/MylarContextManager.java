@@ -216,6 +216,15 @@ public class MylarContextManager {
 		File storeDir = new File(MylarPlugin.getDefault().getDataDirectory());
 		storeDir.mkdirs();
 
+		loadActivityMetaContext();
+
+		shellLifecycleListener = new ShellLifecycleListener(this);		
+		activityListener = new ActivityListener(TIMEOUT_INACTIVITY_MILLIS);// INACTIVITY_TIMEOUT_MILLIS);
+		this.addListener(activityListener);
+		activityListener.startObserving();
+	}
+
+	public void loadActivityMetaContext() {
 		activityMetaContext = externalizer.readContextFromXML(CONTEXT_HISTORY_FILE_NAME,
 				getFileForContext(CONTEXT_HISTORY_FILE_NAME));
 		if (activityMetaContext == null) {
@@ -224,11 +233,6 @@ public class MylarContextManager {
 		for (IMylarContextListener listener : activityMetaContextListeners) {
 			listener.contextActivated(activityMetaContext);
 		}
-
-		shellLifecycleListener = new ShellLifecycleListener(this);		
-		activityListener = new ActivityListener(TIMEOUT_INACTIVITY_MILLIS);// INACTIVITY_TIMEOUT_MILLIS);
-		this.addListener(activityListener);
-		activityListener.startObserving();
 	}
 	
 	public void handleActivityMetaContextEvent(InteractionEvent event) {
