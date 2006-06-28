@@ -76,7 +76,9 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 				newHits.get(newHits.indexOf(oldHit)).setNotified(oldHit.isNotified);
 			}
 		}
-		hits.addAll(newHits);
+		for (AbstractQueryHit hit : newHits) {
+			this.addHit(hit);
+		}
 	}
 	
 	private void clearHits() {
