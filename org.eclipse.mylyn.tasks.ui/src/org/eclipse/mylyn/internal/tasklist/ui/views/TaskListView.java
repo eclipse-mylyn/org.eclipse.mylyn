@@ -945,8 +945,12 @@ public class TaskListView extends ViewPart {
 		hookOpenAction();
 		contributeToActionBars();
 		
-		//TaskListToolTipHandler taskListToolTipHandler = new TaskListToolTipHandler(getViewer().getControl().getShell());
-		//taskListToolTipHandler.activateHoverHelp(getViewer().getControl());
+		
+		
+		TaskListToolTipHandler taskListToolTipHandler = new TaskListToolTipHandler(getViewer().getControl().getShell());
+		taskListToolTipHandler.activateHoverHelp(getViewer().getControl());
+		
+		getViewer().getTree().setToolTipText(null);
 		
 		initDragAndDrop(parent);
 		expandToActiveTasks();
