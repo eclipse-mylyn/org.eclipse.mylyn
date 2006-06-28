@@ -91,10 +91,11 @@ class SynchronizeTaskJob extends Job {
 								refreshEditors(repositoryTask);							
 							}
 						}
-					} else {
-						MylarStatusHandler.log("No offline content handler available for "
-								+ connector.getRepositoryType() + " connector.", this);
-					}					
+					} 
+//					else {
+//						MylarStatusHandler.log("No offline content handler available for "
+//								+ connector.getRepositoryType() + " connector.", this);
+//					}					
 					repositoryTask.setCurrentlyDownloading(false);
 					MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 

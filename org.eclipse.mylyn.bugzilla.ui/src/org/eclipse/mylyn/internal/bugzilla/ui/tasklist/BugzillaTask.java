@@ -32,6 +32,9 @@ public class BugzillaTask extends AbstractRepositoryTask {
 	
 	public BugzillaTask(String handle, String label, boolean newTask) {
 		super(handle, label, newTask);
+		if (newTask) {
+			setSyncState(RepositoryTaskSyncState.INCOMING);
+		}
 		isDirty = false;
 		initFromHandle();
 	}

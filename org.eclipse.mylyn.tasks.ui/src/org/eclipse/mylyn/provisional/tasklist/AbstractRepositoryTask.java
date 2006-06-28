@@ -31,7 +31,7 @@ public abstract class AbstractRepositoryTask extends Task {
 	protected transient RepositoryTaskData taskData;
 
 	protected boolean currentlySynchronizing;
-	
+
 	protected boolean isNotifiedIncoming = true;
 
 	/**
@@ -50,9 +50,6 @@ public abstract class AbstractRepositoryTask extends Task {
 
 	public AbstractRepositoryTask(String handle, String label, boolean newTask) {
 		super(handle, label, newTask);
-		if(newTask) {			
-			setSyncState(RepositoryTaskSyncState.INCOMING);
-		}
 	}
 
 	public abstract String getRepositoryKind();
@@ -80,15 +77,6 @@ public abstract class AbstractRepositoryTask extends Task {
 	public RepositoryTaskSyncState getSyncState() {
 		return syncState;
 	}
-
-	// /**
-	// * @return The number of seconds ago that this task's bug report was
-	// * downloaded from the server.
-	// */
-	// public long getTimeSinceLastRefresh() {
-	// Date timeNow = new Date();
-	// return (timeNow.getTime() - lastSynchronized.getTime()) / 1000;
-	//	}
 
 	public String getRepositoryUrl() {
 		return AbstractRepositoryTask.getRepositoryUrl(getHandleIdentifier());
@@ -190,7 +178,7 @@ public abstract class AbstractRepositoryTask extends Task {
 	public boolean isNotified() {
 		return isNotifiedIncoming;
 	}
-	
+
 	public void setNotified(boolean notified) {
 		isNotifiedIncoming = notified;
 	}
