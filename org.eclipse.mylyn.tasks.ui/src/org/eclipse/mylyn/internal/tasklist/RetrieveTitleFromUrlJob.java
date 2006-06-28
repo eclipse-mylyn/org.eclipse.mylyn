@@ -77,19 +77,18 @@ public abstract class RetrieveTitleFromUrlJob extends Job implements TitleListen
 			timeWaitedMillis += SLEEP_INTERVAL_MILLIS;
 		}
 
-		if (pageTitle != null) {
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					setTitle(pageTitle);
-					titleRetrieved = true;
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				if (pageTitle == null) {
+					pageTitle = url;
+					titleRetrieved = false;
+				} else {
+					titleRetrieved = true;	
 				}
-			});
-			return Status.OK_STATUS;
-		} else {
-			MylarStatusHandler.log("Timeout retrieving description for: " + url, this);
-			return Status.CANCEL_STATUS;
-		}
-
+				setTitle(pageTitle);				
+			}
+		});
+		return Status.OK_STATUS;
 	}
 
 	public void changed(TitleEvent event) {
