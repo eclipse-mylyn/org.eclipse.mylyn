@@ -187,9 +187,12 @@ public abstract class AbstractRepositoryConnector {
 
 					IAttachmentHandler handler = getAttachmentHandler();
 					if (handler != null) {
+						// TODO: 'faking' outgoing state 
+						task.setSyncState(RepositoryTaskSyncState.OUTGOING);
 						handler.uploadAttachment(repository, task, longComment, MYLAR_CONTEXT_DESCRIPTION,
 								destinationFile, APPLICATION_OCTET_STREAM, false, null);
-						synchronize(task, false, null);
+						task.setTaskData(null);
+						synchronize(task, true, null);
 					} else {
 						MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 								MylarTaskListPlugin.TITLE_DIALOG, MESSAGE_ATTACHMENTS_NOT_SUPPORTED + getLabel());

@@ -14,6 +14,7 @@ package org.eclipse.mylar.internal.tasklist.ui.wizards;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -39,6 +40,8 @@ public class ContextAttachWizardPage extends WizardPage {
 
 	private Form form;
 
+	private boolean complete = true;
+	
 	protected ContextAttachWizardPage(TaskRepository repository, AbstractRepositoryTask task) {
 		super(ContextAttachWizard.WIZARD_TITLE);
 		this.repository = repository;
@@ -72,6 +75,12 @@ public class ContextAttachWizardPage extends WizardPage {
 		toolkit.paintBordersFor(form.getBody());
 
 		setControl(form.getBody());
+		
+		if(task.getSyncState() != RepositoryTaskSyncState.SYNCHRONIZED) {
+			setErrorMessage("Task must be synchronized before attaching context");
+			complete = false;
+			getWizard().getContainer().updateButtons();
+		}
 	}
 
 	public String getComment() {
@@ -80,9 +89,10 @@ public class ContextAttachWizardPage extends WizardPage {
 
 	@Override
 	public boolean isPageComplete() {
+		return complete;
 //		if (commentText.getText().equals(""))
 //			return false;
-		return super.isPageComplete();
+//		return super.isPageComplete();
 	}
 
 }
