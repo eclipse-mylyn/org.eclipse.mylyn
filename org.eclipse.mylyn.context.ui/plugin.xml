@@ -37,6 +37,7 @@
 	  		enablesFor="*"/>
 	 </objectContribution> 
 	 
+	 <!--
      <viewerContribution 
            id="org.eclipse.mylar.ui.tasklist.contribution"
            targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
@@ -83,20 +84,13 @@
               </or>
            </enablement>
         </action>
-        
-        <!--
-        <action
-              class="org.eclipse.mylar.tasklist.ui.actions.TaskActivateAction"
-              id="org.eclipse.mylar.tasklist.actions.context.activate"
-              label="Activate Task"
-              menubarPath="task"
-              tooltip="Activate Task"/>
+             </viewerContribution>
         -->
-     </viewerContribution>
-     <objectContribution
+
+	 <objectContribution
            adaptable="false"
-           id="org.eclipse.mylar.ui.tasks.repository.action.contribution"
-           objectClass="org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask">
+           id="org.eclipse.mylar.ui.tasks.action.contribution"
+           objectClass="org.eclipse.mylar.provisional.tasklist.ITask">
 		<action
               class="org.eclipse.mylar.internal.ui.actions.ContextClearAction"
               enablesFor="1"
@@ -106,6 +100,11 @@
               menubarPath="context"
               tooltip="Clear Context">
         </action>
+	 </objectContribution>
+     <objectContribution
+           adaptable="false"
+           id="org.eclipse.mylar.ui.tasks.repository.hits..action.contribution"
+           objectClass="org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask">
         <action
               class="org.eclipse.mylar.internal.ui.actions.ContextRetrieveAction"
               enablesFor="1"
@@ -122,8 +121,38 @@
               label="Attach Context..."
               menubarPath="context">
         </action>
-           
-	</objectContribution>
+	 </objectContribution>
+	 <!-- NOTE: duplicate actions as above -->
+	 <objectContribution
+           adaptable="false"
+           id="org.eclipse.mylar.ui.tasks.repository.action.contribution"
+           objectClass="org.eclipse.mylar.provisional.tasklist.AbstractQueryHit">
+        <action
+              class="org.eclipse.mylar.internal.ui.actions.ContextRetrieveAction"
+              enablesFor="1"
+              icon="icons/etool16/context-retrieve.gif"
+              id="org.eclipse.mylar.ui.context.repository.retrieve"
+              label="Retrieve Context"
+              menubarPath="context">
+        </action> 
+        <action
+              class="org.eclipse.mylar.internal.ui.actions.ContextAttachAction"
+              enablesFor="1"
+              icon="icons/etool16/context-attach.gif"
+              id="org.eclipse.mylar.ui.context.repository.attach"
+              label="Attach Context..."
+              menubarPath="context">
+        </action>
+        <action
+              class="org.eclipse.mylar.internal.ui.actions.ContextClearAction"
+              enablesFor="1"
+              icon="icons/elcl16/context-clear.gif"
+              id="org.eclipse.mylar.ui.clear.context.hit"
+              label="Clear Context"
+              menubarPath="context"
+              tooltip="Clear Context">
+        </action>
+	 </objectContribution>
   </extension>
     
     

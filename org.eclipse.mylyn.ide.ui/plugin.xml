@@ -118,6 +118,7 @@
    </extension>
     
   	<extension point = "org.eclipse.ui.popupMenus">
+  	        <!--
        <viewerContribution
             id="org.eclipse.mylar.ide.team.ui.viewerContribution"
             targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
@@ -137,6 +138,7 @@
            </enablement>
         </action>
      </viewerContribution>
+             -->
      <objectContribution
         id="org.eclipse.mylar.ui.interest"
         objectClass="org.eclipse.core.resources.IResource">
@@ -157,6 +159,20 @@
 	  		icon="icons/elcl16/interest-increase.gif"
 	  		enablesFor="*"/>
 	 </objectContribution>
+    <objectContribution
+           adaptable="false"
+           id="org.eclipse.mylar.ide.team.ui.objectContribution"
+           objectClass="org.eclipse.mylar.provisional.tasklist.AbstractQueryHit">
+		<action
+              class="org.eclipse.mylar.internal.ide.ui.actions.CommitContextAction"
+              enablesFor="*"
+              icon="icons/elcl16/context-commit.gif"
+              id="org.eclipse.mylar.ide.ui.team.context.commit"
+              label="Commit Context..."
+              menubarPath="context"
+              tooltip="Commit Context...">
+        </action>
+	</objectContribution>
      <objectContribution
            adaptable="false"
            id="org.eclipse.mylar.ide.team.ui.objectContribution"
