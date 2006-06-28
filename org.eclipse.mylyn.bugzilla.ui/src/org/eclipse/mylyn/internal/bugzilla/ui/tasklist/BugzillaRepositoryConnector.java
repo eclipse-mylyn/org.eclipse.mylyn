@@ -48,6 +48,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.search.RepositoryQueryResultsFacto
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaCategorySearchOperation.ICategorySearchListener;
 import org.eclipse.mylar.internal.bugzilla.ui.wizard.NewBugzillaReportWizard;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractAddExistingTaskWizard;
@@ -250,6 +251,14 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 											"Bugzilla could not post your bug since your login name or password is incorrect."
 													+ " Ensure proper repository configuration in "
 													+ TaskRepositoriesView.NAME + ".");
+									String attributes = "Attributes: ";
+									if (bugReport != null) {
+										for (RepositoryTaskAttribute attribute : bugReport.getAttributes()) {
+											attributes += attribute.getID() + "=" + attribute.getValue() + " | ";
+										}
+										MylarStatusHandler.log(attributes, BugzillaRepositoryConnector.class);
+									}
+									
 								} else {
 									MylarStatusHandler.fail(throwable, "could not post bug", false);
 									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
