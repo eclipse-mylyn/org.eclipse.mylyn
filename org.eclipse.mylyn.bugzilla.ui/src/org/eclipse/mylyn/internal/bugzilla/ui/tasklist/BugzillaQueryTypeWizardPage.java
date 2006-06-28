@@ -52,6 +52,7 @@ public class BugzillaQueryTypeWizardPage extends WizardPage {
 		setImageDescriptor(TaskListImages.BANNER_REPOSITORY);
 		customPage = new BugzillaCustomQueryWizardPage(repository);		
 		searchPage = new BugzillaSearchPage(repository);
+		searchPage.setRestoreQueryOptions(false);
 	}
 
 	public void createControl(Composite parent) {

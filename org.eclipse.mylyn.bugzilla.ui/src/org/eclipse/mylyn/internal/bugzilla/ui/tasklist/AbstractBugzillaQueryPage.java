@@ -32,7 +32,7 @@ public abstract class AbstractBugzillaQueryPage extends WizardPage {
 	private static final String TITLE = "Enter query parameters";
 
 	private static final String DESCRIPTION = "If attributes are blank or stale press the Update button.";
-	
+
 	private Text title;
 
 	private String titleString = "";
@@ -103,4 +103,7 @@ public abstract class AbstractBugzillaQueryPage extends WizardPage {
 
 	public abstract BugzillaRepositoryQuery getQuery();
 
+	public void saveWidgetValues() {
+		// empty
+	}
 }

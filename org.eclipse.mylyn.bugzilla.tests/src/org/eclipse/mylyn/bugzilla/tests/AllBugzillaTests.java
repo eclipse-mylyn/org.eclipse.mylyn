@@ -39,6 +39,7 @@ public class AllBugzillaTests {
 		suite.addTestSuite(BugzillaProductParserTest.class);
 		// TODO: enable
 		// suite.addTest(new TestSuite(BugzillaParserTest.class));
+		suite.addTestSuite(BugzillaSearchDialogTest.class);
 		// $JUnit-END$
 		return suite;
 	}
