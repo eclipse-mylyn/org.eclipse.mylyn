@@ -34,9 +34,11 @@ public class UiUtil {
 	}
 
 	public static Color getBackgroundForElement(IMylarElement node, boolean resolveContextColor) {
-		if (node == null)
+		if (node == null) {
 			return null;
-		if (!resolveContextColor && (node.getInterest().isPropagated() || node.getInterest().isPredicted())) {
+		} else if (!resolveContextColor && (node.getInterest().isPropagated() || node.getInterest().isPredicted())) {
+			return null;
+		} else if (node.getInterest().getEncodedValue() <= MylarContextManager.getScalingFactors().getInteresting()) {
 			return null;
 		}
 

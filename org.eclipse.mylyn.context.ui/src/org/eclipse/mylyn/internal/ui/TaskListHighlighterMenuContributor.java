@@ -61,10 +61,10 @@ public class TaskListHighlighterMenuContributor implements IDynamicSubMenuContri
 			};
 			if (highlighter.isGradient()) {
 				action.setImageDescriptor(new HighlighterImageDescriptor(highlighter.getBase(), highlighter
-						.getLandmarkColor()));
+						.getHighlightColor()));
 			} else {
-				action.setImageDescriptor(new HighlighterImageDescriptor(highlighter.getLandmarkColor(), highlighter
-						.getLandmarkColor()));
+				action.setImageDescriptor(new HighlighterImageDescriptor(highlighter.getHighlightColor(), highlighter
+						.getHighlightColor()));
 			}
 			action.setText(highlighter.toString());
 			subMenuManager.add(action);

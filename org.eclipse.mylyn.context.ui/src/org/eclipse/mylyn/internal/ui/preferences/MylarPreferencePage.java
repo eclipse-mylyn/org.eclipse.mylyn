@@ -256,9 +256,9 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 				case 1:
 					HighlighterImageDescriptor des;
 					if (h.isGradient()) {
-						des = new HighlighterImageDescriptor(h.getBase(), h.getLandmarkColor());
+						des = new HighlighterImageDescriptor(h.getBase(), h.getHighlightColor());
 					} else {
-						des = new HighlighterImageDescriptor(h.getLandmarkColor(), h.getLandmarkColor());
+						des = new HighlighterImageDescriptor(h.getHighlightColor(), h.getHighlightColor());
 					}
 					return des.getImage();
 				default:

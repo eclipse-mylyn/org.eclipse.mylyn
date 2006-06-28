@@ -35,7 +35,8 @@ public class HighlighterImageDescriptor extends ImageDescriptor {
 			toColor = Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
 		}
 		ImageData band = createGradientBand(50, 20, false, new RGB(fromColor.getRed(), fromColor.getGreen(), fromColor
-				.getBlue()), new RGB(toColor.getRed(), toColor.getGreen(), toColor.getBlue()), 4, 4, 4);
+				.getBlue()), 
+				new RGB(toColor.getRed(), toColor.getGreen(), toColor.getBlue()), 7, 7, 7);
 		image = new Image(Display.getCurrent(), band);
 	}
 

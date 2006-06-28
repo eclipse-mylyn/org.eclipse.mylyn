@@ -31,7 +31,7 @@ public class Highlighter {
 
 	private static final String LABEL_GRADIENT = "Gradient";
 
-	private static final int NUM_LEVELS = 40;
+	private static final int NUM_LEVELS = 17;
 
 	private static final String VAL_DEFAULT = "";
 
@@ -40,8 +40,6 @@ public class Highlighter {
 	private String name;
 
 	private Color core;
-
-	private Color landmarkColor;
 
 	private Color highlightColor;
 
@@ -62,27 +60,17 @@ public class Highlighter {
 		this.core = coreColor;
 		this.isGradient = isGradient;
 		if (coreColor != null) {
-			initializeGradients();
 			initializeHighlight();
-		}
-		if (!isGradient) {
-			this.landmarkColor = coreColor;
-		} else {
-			initializeLandmark();
+			initializeGradients();
 		}
 	}
 
 	public Highlighter(String attributes) {
 		if (initializeFromString(attributes)) {
-			initializeGradients();
 			initializeHighlight();
-			if (!isGradient) {
-				this.landmarkColor = highlightColor;
-			} else {
-				initializeLandmark();
-			}
-		} 
-	} 
+			initializeGradients();
+		}
+	}
 
 	public void dispose() {
 		for (Color color : gradients) {
@@ -94,42 +82,33 @@ public class Highlighter {
 		return highlightColor;
 	}
 
-	public Color getLandmarkColor() {
-		return landmarkColor;
-	}
-
 	public Color getHighlight(IMylarElement info, boolean isLandmark) {
 		if (info.getInterest().getValue() > 0) {
-			if (isLandmark) {
-				return landmarkColor;
+			if (isGradient) {
+				return mapDoiToElevation(info);
 			} else {
-				if (isGradient) {
-					return mapDoiToElevation(info);
-				} else {
-					return highlightColor;
-				}
+				return highlightColor;
 			}
 		} else {
 			return ColorMap.COLOR_WHITE;
 		}
 	}
 
-	public Color mapDoiToElevation(IMylarElement info) {
-		if (info == null)
+	public Color mapDoiToElevation(IMylarElement element) {
+		if (element == null)
 			return ColorMap.COLOR_WHITE;
-		if (info.getInterest().getValue() < 0)
+		if (element.getInterest().getValue() < 0)
 			return highlightColor;
 
 		int step = 2;
 		Color color = ColorMap.COLOR_WHITE;
 		for (Iterator<Color> it = gradients.iterator(); it.hasNext();) {
 			color = it.next();
-			if (info.getInterest().getValue() < step)
+			if (element.getInterest().getValue() < step)
 				return color;
 			step += 2;
 		}
-		return color; // darkest color supported
-		// return landmarkColor;
+		return color;
 	}
 
 	private void initializeHighlight() {
@@ -144,25 +123,13 @@ public class Highlighter {
 		}
 	}
 
-	private void initializeLandmark() {
-		try {
-			int redStep = (int) Math.ceil((2 * core.getRed() + ColorMap.COLOR_BLACK.getRed()) / 3);
-			int greenStep = (int) Math.ceil((2 * core.getGreen() + ColorMap.COLOR_BLACK.getGreen()) / 3);
-			int blueStep = (int) Math.ceil((2 * core.getBlue() + ColorMap.COLOR_BLACK.getBlue()) / 3);
-
-			landmarkColor = new Color(Display.getDefault(), redStep, greenStep, blueStep);
-		} catch (Throwable t) {
-			MylarStatusHandler.log(t, "landmark init failed");
-		}
-	}
-
 	private void initializeGradients() {
 		try {
-			int redStep = (int) Math.ceil((core.getRed() - ColorMap.COLOR_WHITE.getRed()) / NUM_LEVELS);
-			int greenStep = (int) Math.ceil((core.getGreen() - ColorMap.COLOR_WHITE.getGreen()) / NUM_LEVELS);
-			int blueStep = (int) Math.ceil((core.getBlue() - ColorMap.COLOR_WHITE.getBlue()) / NUM_LEVELS);
+			int redStep = (int) Math.ceil((highlightColor.getRed() - ColorMap.COLOR_WHITE.getRed()) / NUM_LEVELS);
+			int greenStep = (int) Math.ceil((highlightColor.getGreen() - ColorMap.COLOR_WHITE.getGreen()) / NUM_LEVELS);
+			int blueStep = (int) Math.ceil((highlightColor.getBlue() - ColorMap.COLOR_WHITE.getBlue()) / NUM_LEVELS);
 
-			int OFFSET = 5;
+			int OFFSET = 1;
 			int red = ColorMap.COLOR_WHITE.getRed() + redStep * OFFSET;
 			int green = ColorMap.COLOR_WHITE.getGreen() + greenStep * OFFSET;
 			int blue = ColorMap.COLOR_WHITE.getBlue() + blueStep * OFFSET;
@@ -241,7 +208,6 @@ public class Highlighter {
 		this.core = core;
 		this.initializeGradients();
 		this.initializeHighlight();
-		this.initializeLandmark();
 	}
 
 	public String getHighlightKind() {
@@ -268,7 +234,7 @@ public class Highlighter {
 		}
 	}
 
-private boolean initializeFromString(String attributes) {
+	private boolean initializeFromString(String attributes) {
 		if (!VAL_DEFAULT.equals(attributes)) {
 			String[] data = attributes.split(";");
 			Integer r = new Integer(data[0]);
@@ -292,4 +258,5 @@ private boolean initializeFromString(String attributes) {
 			this.core = HighlighterList.DEFAULT_HIGHLIGHTER.getCore();
 			return false;
 		}
-	}}
+	}
+}
