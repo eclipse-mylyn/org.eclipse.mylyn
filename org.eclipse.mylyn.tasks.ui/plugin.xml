@@ -236,7 +236,7 @@
                enablesFor="*"
                icon="icons/etool16/repository-synchronize.gif"
                id="org.eclipse.mylar.tasklist.synchronize.selected"
-               label="Synchronize with Repository"
+               label="Synchronize"
                menubarPath="reports"
                tooltip="Synchronize with Repository">
             <enablement>
