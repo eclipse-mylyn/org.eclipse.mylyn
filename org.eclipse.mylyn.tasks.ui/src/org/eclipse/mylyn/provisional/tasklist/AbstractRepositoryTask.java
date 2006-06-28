@@ -31,6 +31,8 @@ public abstract class AbstractRepositoryTask extends Task {
 	protected transient RepositoryTaskData taskData;
 
 	protected boolean currentlySynchronizing;
+	
+	protected boolean isNotifiedIncoming = true;
 
 	/**
 	 * Value is <code>true</code> if the bug report has saved changes that
@@ -48,7 +50,7 @@ public abstract class AbstractRepositoryTask extends Task {
 
 	public AbstractRepositoryTask(String handle, String label, boolean newTask) {
 		super(handle, label, newTask);
-		if(newTask) {
+		if(newTask) {			
 			setSyncState(RepositoryTaskSyncState.INCOMING);
 		}
 	}
@@ -183,5 +185,13 @@ public abstract class AbstractRepositoryTask extends Task {
 			setDescription(HtmlStreamTokenizer.unescape(AbstractRepositoryTask.getTaskIdAsInt(getHandleIdentifier())
 					+ ": " + taskData.getSummary()));
 		}
+	}
+
+	public boolean isNotified() {
+		return isNotifiedIncoming;
+	}
+	
+	public void setNotified(boolean notified) {
+		isNotifiedIncoming = notified;
 	}
 }

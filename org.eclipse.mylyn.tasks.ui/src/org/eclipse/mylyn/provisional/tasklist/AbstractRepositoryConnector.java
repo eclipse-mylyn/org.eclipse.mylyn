@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -66,6 +67,8 @@ public abstract class AbstractRepositoryConnector {
 	protected boolean forceSyncExecForTesting = false;
 
 	private boolean updateLocalCopy = false;
+	
+	private final MutexRule rule = new MutexRule();
 
 	/**
 	 * @return null if not supported
@@ -321,7 +324,9 @@ public abstract class AbstractRepositoryConnector {
 		repositoryTask.setTaskData(newTaskData);
 		repositoryTask.setSyncState(status);
 		saveOffline(newTaskData);
-
+		if(status == RepositoryTaskSyncState.INCOMING) {
+			repositoryTask.setNotified(false);
+		}
 		return startState == repositoryTask.getSyncState();
 		// } catch (final CoreException e) {
 		// if (forceSync) {
@@ -400,6 +405,7 @@ public abstract class AbstractRepositoryConnector {
 		final SynchronizeTaskJob synchronizeJob = new SynchronizeTaskJob(this, repositoryTasks);
 		synchronizeJob.setForceSynch(forceSynch);
 		synchronizeJob.setPriority(Job.DECORATE);
+		synchronizeJob.setRule(rule);
 		if (listener != null) {
 			synchronizeJob.addJobChangeListener(listener);
 		}
@@ -570,5 +576,15 @@ public abstract class AbstractRepositoryConnector {
 	public void openRemoteTask(String repositoryUrl, String idString) {
 		MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 				MylarTaskListPlugin.TITLE_DIALOG, "Not supported by connector: " + getLabel());
+	}
+	
+	private class MutexRule implements ISchedulingRule {
+		public boolean isConflicting(ISchedulingRule rule) {
+			return rule == this;
+		}
+
+		public boolean contains(ISchedulingRule rule) {
+			return rule == this;
+		}
 	}
 }

@@ -31,6 +31,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.mylar.internal.core.MylarPreferenceContstants;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.Comment;
 import org.eclipse.mylar.internal.tasklist.OfflineTaskManager;
 import org.eclipse.mylar.internal.tasklist.TaskListBackupManager;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
@@ -41,13 +42,16 @@ import org.eclipse.mylar.internal.tasklist.ui.ITaskHighlighter;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskListNotification;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskListNotificationProvider;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListNotificationIncoming;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListNotificationManager;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListNotificationQueryIncoming;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListNotificationReminder;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.internal.tasklist.util.TaskListExtensionReader;
 import org.eclipse.mylar.internal.tasklist.util.TaskListSaveManager;
 import org.eclipse.mylar.internal.tasklist.util.TaskListWriter;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWindowListener;
@@ -224,19 +228,56 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		}
 	};
 
-	private static ITaskListNotificationProvider NOTIFICATION_PROVIDER = new ITaskListNotificationProvider() {
+	private static ITaskListNotificationProvider REMINDER_NOTIFICATION_PROVIDER = new ITaskListNotificationProvider() {
 
 		public Set<ITaskListNotification> getNotifications() {
 			Date currentDate = new Date();
 			Collection<ITask> allTasks = MylarTaskListPlugin.getTaskListManager().getTaskList().getAllTasks();
 			Set<ITaskListNotification> reminders = new HashSet<ITaskListNotification>();
 			for (ITask task : allTasks) {
-				if (task.getReminderDate() != null && !task.hasBeenReminded()
+				if (!task.isCompleted() && task.getReminderDate() != null && !task.hasBeenReminded()
 						&& task.getReminderDate().compareTo(currentDate) < 0) {
 					reminders.add(new TaskListNotificationReminder(task));
+					task.setReminded(true);
 				}
 			}
 			return reminders;
+		}
+	};
+	
+	private static ITaskListNotificationProvider INCOMING_NOTIFICATION_PROVIDER = new ITaskListNotificationProvider() {
+		// TODO: use push rather than pull for incoming notification?
+		public Set<ITaskListNotification> getNotifications() {
+			Set<ITaskListNotification> notifications = new HashSet<ITaskListNotification>();	
+			// Incoming Changes
+			for (TaskRepository repository : getRepositoryManager().getAllRepositories()) {
+				for (AbstractRepositoryTask repositoryTask : MylarTaskListPlugin.getTaskListManager().getTaskList().getRepositoryTasks(repository.getUrl())) {
+					if(repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING && repositoryTask.isNotified() == false) {
+						TaskListNotificationIncoming notification = new TaskListNotificationIncoming(repositoryTask);
+						
+						if(repositoryTask.getTaskData() != null && repositoryTask.getTaskData().getComments() != null) {
+							List<Comment> comments = repositoryTask.getTaskData().getComments();
+							Comment lastComment = comments.get(comments.size() - 1);
+							if(lastComment != null) {
+								notification.setDescription(lastComment.getText());
+							}
+						}					
+						
+						notifications.add(notification);
+						repositoryTask.setNotified(true);
+					}
+				}			
+			}
+			// New query hits
+			for (AbstractRepositoryQuery query : MylarTaskListPlugin.getTaskListManager().getTaskList().getQueries()) {
+				for (AbstractQueryHit hit : query.getHits()) {
+					if(hit.getCorrespondingTask() == null && hit.isNotified() == false) {
+						notifications.add(new TaskListNotificationQueryIncoming(hit));
+						hit.setNotified(true);
+					}
+				}
+			}
+			return notifications;
 		}
 	};
 
@@ -288,7 +329,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 			taskListManager = new TaskListManager(taskListWriter, taskListFile, nextTaskId);
 			taskRepositoryManager = new TaskRepositoryManager();
-			// taskActivityManager = new TaskActivityManager();
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Mylar Task List initialization failed", false);
 		}
@@ -317,10 +357,12 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 						PlatformUI.getWorkbench().addWindowListener(WINDOW_LISTENER);
 
 						taskListNotificationManager = new TaskListNotificationManager();
-						taskListNotificationManager.addNotificationProvider(NOTIFICATION_PROVIDER);
+						taskListNotificationManager.addNotificationProvider(REMINDER_NOTIFICATION_PROVIDER);
+						taskListNotificationManager.addNotificationProvider(INCOMING_NOTIFICATION_PROVIDER);
 						taskListNotificationManager.startNotification(NOTIFICATION_DELAY);
 						getMylarCorePrefs().addPropertyChangeListener(taskListNotificationManager);
-
+						
+						
 						taskListBackupManager = new TaskListBackupManager();
 						getMylarCorePrefs().addPropertyChangeListener(taskListBackupManager);
 
@@ -483,6 +525,10 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	public static TaskListManager getTaskListManager() {
 		return taskListManager;
+	}
+	
+	public TaskListNotificationManager getTaskListNotificationManager() {
+		return taskListNotificationManager;
 	}
 
 	/**

@@ -13,6 +13,7 @@ package org.eclipse.mylar.provisional.tasklist;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -67,6 +68,10 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 //		return Collections.unmodifiableSet(new HashSet<AbstractQueryHit>(hits));
 	}
 
+	public void addAll(List<AbstractQueryHit> newHits) {
+		hits.addAll(newHits);
+	}
+	
 	public void clearHits() {
 		hits.clear();
 	}

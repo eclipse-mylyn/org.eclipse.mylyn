@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.tasklist.ui;
 
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskElementLabelProvider;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
@@ -20,27 +21,29 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Rob Elves
  */
-public class TaskListNotificationReminder implements ITaskListNotification {
+public class TaskListNotificationIncoming implements ITaskListNotification {
 
-	private final ITask task;
+	private final AbstractRepositoryTask task;
+	
+	private String description = null;
 
 	private DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new TaskElementLabelProvider(),
 			PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
 
-	public TaskListNotificationReminder(ITask task) {
+	public TaskListNotificationIncoming(AbstractRepositoryTask task) {
 		this.task = task;
 	}
 
 	public String getDescription() {
-		return null;
+		return description;
 	}
 
 	public String getLabel() {
-		if (labelProvider.getText(task).length() > 40) {
-			String truncated = labelProvider.getText(task).substring(0, 35);
-			return truncated + "...";
-		}
 		return labelProvider.getText(task);
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public void openTask() {
@@ -56,16 +59,20 @@ public class TaskListNotificationReminder implements ITaskListNotification {
 	public Image getNotificationIcon() {
 		return labelProvider.getImage(task);
 	}
-
-	public Image getOverlayIcon() {
-		return TaskListImages.getImage(TaskListImages.CALENDAR);
-	}
+//
+//	public synchronized void setNotified(boolean notified) {
+//		task.setNotified(true);
+//	}
+//
+//	public synchronized boolean isNotified() {
+//		return task.isNotified();
+//	}
 
 	public boolean equals(Object o) {
-		if (!(o instanceof TaskListNotificationReminder)) {
+		if (!(o instanceof TaskListNotificationIncoming)) {
 			return false;
 		}
-		TaskListNotificationReminder notification = (TaskListNotificationReminder) o;
+		TaskListNotificationIncoming notification = (TaskListNotificationIncoming) o;
 		return notification.getTask().equals(task);
 	}
 
@@ -75,6 +82,10 @@ public class TaskListNotificationReminder implements ITaskListNotification {
 
 	public int hashCode() {
 		return task.hashCode();
+	}
+
+	public Image getOverlayIcon() {
+		return TaskListImages.getImage(TaskListImages.OVERLAY_INCOMMING);
 	}
 
 }

@@ -64,7 +64,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 							if ((popup != null && popup.close()) || popup == null) {
 								closeJob.cancel();
 								collectNotifications();
-								setNotified();
+								//setNotified();
 								synchronized (TaskListNotificationManager.class) {
 									if (currentlyNotifying.size() > 0) {
 										popup = new TaskListNotificationPopup(new Shell(PlatformUI.getWorkbench()
@@ -144,17 +144,18 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 	};
 
 	
-	private void setNotified() {
-		for (ITaskListNotification notification : currentlyNotifying) {
-			notification.setNotified(true);
-		}
-	}
+//	private void setNotified() {
+//		for (ITaskListNotification notification : currentlyNotifying) {
+//			notification.setNotified(true);
+//		}
+//	}
 	
 	private void cleanNotified() {
 		currentlyNotifying.clear();
 	}
 
-	private void collectNotifications() {
+	/** public for testing */
+	public void collectNotifications() {
 		for (ITaskListNotificationProvider provider : notificationProviders) {
 			currentlyNotifying.addAll(provider.getNotifications());
 		}
@@ -162,8 +163,12 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 
 	public void startNotification(long initialStartupTime) {
 		if (MylarTaskListPlugin.getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.NOTIFICATIONS_ENABLED)) {
-			if (openJob.cancel()) {
-				openJob.setSystem(runSystem);
+			if (!openJob.cancel()) {
+				try {					
+					openJob.join();
+				} catch (InterruptedException e) {
+					// ignore
+				}
 			}
 			openJob.schedule(initialStartupTime);
 		}

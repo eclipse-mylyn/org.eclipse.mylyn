@@ -17,11 +17,14 @@ import org.eclipse.swt.graphics.Image;
  * @author Rob Elves
  */
 public interface ITaskListNotification {
-	
-	public void openResource();
+
+	public void openTask();
+
 	public String getDescription();
-	public String getToolTip();
+
+	public String getLabel();
+
 	public Image getNotificationIcon();
-	public void setNotified(boolean notified);
-	public boolean isNotified();
+
+	public Image getOverlayIcon();
 }

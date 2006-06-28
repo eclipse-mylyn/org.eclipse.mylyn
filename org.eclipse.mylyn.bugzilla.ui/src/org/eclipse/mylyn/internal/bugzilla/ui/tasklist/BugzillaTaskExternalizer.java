@@ -118,6 +118,12 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 			node.setAttribute(KEY_LAST_MOD_DATE, bugzillaTask.getLastModifiedDateStamp());
 		}
 
+		if(bugzillaTask.isNotified()) {
+			node.setAttribute(KEY_NOTIFIED_INCOMING, VAL_TRUE);		
+		} else {
+			node.setAttribute(KEY_NOTIFIED_INCOMING, VAL_FALSE);
+		}
+		
 		node.setAttribute(SYNC_STATE, bugzillaTask.getSyncState().toString());
 
 		if (bugzillaTask.isDirty()) {
@@ -150,7 +156,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 			throw new TaskExternalizationException("Description not stored for bug report");
 		}
 		BugzillaTask task = new BugzillaTask(handle, label, false);
-		readTaskInfo(task, taskList, element, parent, category);
+		super.readTaskInfo(task, taskList, element, parent, category);
 
 		task.setCurrentlyDownloading(false);
 		if (element.hasAttribute(KEY_LAST_MOD_DATE) && !element.getAttribute(KEY_LAST_MOD_DATE).equals("")) {
@@ -185,6 +191,13 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		} else {
 			task.setDirty(false);
 		}
+		
+		if (element.hasAttribute(KEY_NOTIFIED_INCOMING) && element.getAttribute(KEY_NOTIFIED_INCOMING).compareTo(VAL_TRUE) == 0) {
+			task.setNotified(true);
+		} else {
+			task.setNotified(false);
+		}
+		
 		try {
 			if (readBugReport(task) == false) {
 				MylarStatusHandler.log("Failed to read bug report", null);
@@ -251,7 +264,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 			priority = element.getAttribute(KEY_PRIORITY);
 		} else {
 			throw new TaskExternalizationException("Description not stored for bug report");
-		}
+		}		
 
 		status = STATUS_NEW;
 		if (element.hasAttribute(KEY_COMPLETE)) {
@@ -262,6 +275,13 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		}
 		BugzillaQueryHit hit = new BugzillaQueryHit(label, priority, query.getRepositoryUrl(), AbstractRepositoryTask
 				.getTaskIdAsInt(handle), null, status);
+		
+		if (element.hasAttribute(KEY_NOTIFIED_INCOMING) && element.getAttribute(KEY_NOTIFIED_INCOMING).compareTo(VAL_TRUE) == 0) {
+			hit.setNotified(true);
+		} else {
+			hit.setNotified(false);
+		}
+		
 		ITask correspondingTask = taskList.getTask(hit.getHandleIdentifier());
 		if (correspondingTask instanceof BugzillaTask) {
 			hit.setCorrespondingTask((BugzillaTask) correspondingTask);

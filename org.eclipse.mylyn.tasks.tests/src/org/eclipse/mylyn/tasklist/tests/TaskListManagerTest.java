@@ -622,7 +622,7 @@ public class TaskListManagerTest extends TestCase {
 		Set<AbstractQueryHit> hitsReturned = taskList.getQueryHitsForHandle(AbstractRepositoryTask.getHandle(
 				"repositoryURL", 2));
 		assertNotNull(hitsReturned);
-		assertEquals(2, hitsReturned.size());
+		assertEquals(1, hitsReturned.size());
 		assertTrue(hitsReturned.contains(hit2));
 		assertTrue(hitsReturned.contains(hit2twin));
 
@@ -648,5 +648,30 @@ public class TaskListManagerTest extends TestCase {
 		assertTrue(tasksReturned.contains(task1));
 	}
 	
+	
+	public void testRemindedPersistance() {
+
+		String repositoryUrl = "https://bugs.eclipse.org/bugs";
+		
+		String bugNumber = "106939";
+		
+		BugzillaTask task1 = new BugzillaTask(repositoryUrl+"-"+bugNumber, "label", false);		
+		manager.getTaskList().addTask(task1);
+		
+		task1.setReminded(true);
+		
+		MylarTaskListPlugin.getTaskListManager().saveTaskList();
+		MylarTaskListPlugin.getTaskListManager().resetTaskList();
+		MylarTaskListPlugin.getTaskListManager().readExistingOrCreateNewList();	
+		
+		TaskList taskList = manager.getTaskList();
+		assertEquals(1, taskList.getAllTasks().size());
+		Set<AbstractRepositoryTask> tasksReturned = taskList.getRepositoryTasks(repositoryUrl);
+		assertNotNull(tasksReturned);
+		assertEquals(1, tasksReturned.size());
+		for (AbstractRepositoryTask task : tasksReturned) {
+			assertTrue(task.hasBeenReminded());
+		}		
+	}
 	
 }

@@ -22,6 +22,8 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 	protected String priority;
 	
 	protected int id;
+
+	protected boolean isNotified = false;
 	
 	protected AbstractQueryHit(String repositoryUrl, String description, int id) {
 		this.repositoryUrl = repositoryUrl;
@@ -55,4 +57,29 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 	public int getId() {
 		return id;
 	}
+	
+	public boolean isNotified() {
+		return isNotified;
+	}
+	
+	public void setNotified(boolean notified) {
+		isNotified = notified;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof AbstractQueryHit)) {
+			return false;
+		}
+		AbstractQueryHit hit = (AbstractQueryHit)obj;
+		return hit.getHandleIdentifier().equals(this.getHandleIdentifier());		
+	}
+
+	@Override
+	public int hashCode() {
+		return this.getHandleIdentifier().hashCode();
+	}
+	
+	
+	
 }

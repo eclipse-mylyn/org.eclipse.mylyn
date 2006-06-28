@@ -13,68 +13,64 @@ package org.eclipse.mylar.internal.tasklist.ui;
 
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskElementLabelProvider;
-import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Rob Elves
  */
-public class TaskListNotificationReminder implements ITaskListNotification {
+public class TaskListNotificationQueryIncoming implements ITaskListNotification {
 
-	private final ITask task;
+	private final AbstractQueryHit hit;
 
 	private DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new TaskElementLabelProvider(),
 			PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
 
-	public TaskListNotificationReminder(ITask task) {
-		this.task = task;
+	public TaskListNotificationQueryIncoming(AbstractQueryHit hit) {
+		this.hit = hit;
 	}
 
 	public String getDescription() {
-		return null;
+		return hit.getDescription();
 	}
 
 	public String getLabel() {
-		if (labelProvider.getText(task).length() > 40) {
-			String truncated = labelProvider.getText(task).substring(0, 35);
+		if (labelProvider.getText(hit).length() > 40) {
+			String truncated = labelProvider.getText(hit).substring(0, 35);
 			return truncated + "...";
 		}
-		return labelProvider.getText(task);
+		return labelProvider.getText(hit);
 	}
 
 	public void openTask() {
 
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 			public void run() {
-				TaskUiUtil.refreshAndOpenTaskListElement(task);
+				TaskUiUtil.refreshAndOpenTaskListElement(hit);
 			}
 		});
 
 	}
 
 	public Image getNotificationIcon() {
-		return labelProvider.getImage(task);
-	}
-
-	public Image getOverlayIcon() {
-		return TaskListImages.getImage(TaskListImages.CALENDAR);
+		return labelProvider.getImage(hit);
 	}
 
 	public boolean equals(Object o) {
-		if (!(o instanceof TaskListNotificationReminder)) {
+		if (!(o instanceof TaskListNotificationQueryIncoming)) {
 			return false;
 		}
-		TaskListNotificationReminder notification = (TaskListNotificationReminder) o;
-		return notification.getTask().equals(task);
-	}
-
-	private ITask getTask() {
-		return task;
+		TaskListNotificationQueryIncoming notification = (TaskListNotificationQueryIncoming) o;
+		return notification.getDescription().equals(hit.getDescription());
 	}
 
 	public int hashCode() {
-		return task.hashCode();
+		return hit.getDescription().hashCode();
+	}
+
+	public Image getOverlayIcon() {
+		return TaskListImages.getImage(TaskListImages.OVERLAY_INCOMMING);
 	}
 
 }

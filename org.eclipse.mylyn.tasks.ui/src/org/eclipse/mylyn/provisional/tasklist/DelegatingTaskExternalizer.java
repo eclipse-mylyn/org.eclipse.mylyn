@@ -43,6 +43,8 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	public static final String KEY_QUERY_MAX_HITS = "MaxHits";
 
 	public static final String KEY_QUERY_STRING = "QueryString";
+	
+	public static final String KEY_NOTIFIED_INCOMING = "NotifiedIncoming";
 
 	//public static final String KEY_LAST_REFRESH = "LastRefresh";
 
@@ -453,6 +455,11 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			node.setAttribute(KEY_COMPLETE, VAL_TRUE);
 		} else {
 			node.setAttribute(KEY_COMPLETE, VAL_FALSE);
+		}
+		if (queryHit.isNotified()) {
+			node.setAttribute(KEY_NOTIFIED_INCOMING, VAL_TRUE);
+		} else {
+			node.setAttribute(KEY_NOTIFIED_INCOMING, VAL_FALSE);
 		}
 		parent.appendChild(node);
 		return null;

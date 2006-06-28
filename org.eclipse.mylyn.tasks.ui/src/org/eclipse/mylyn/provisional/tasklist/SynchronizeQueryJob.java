@@ -75,11 +75,11 @@ class SynchronizeQueryJob extends Job {
 			hits = this.connector.performQuery(repositoryQuery, new NullProgressMonitor(), queryStatus);
 			if (queryStatus.getChildren() != null && queryStatus.getChildren().length > 0) {
 				if (queryStatus.getChildren()[0].getException() == null) {
-					repositoryQuery.clearHits();
-					for (AbstractQueryHit newHit : hits) {
-						repositoryQuery.addHit(newHit);
-					}
-
+					repositoryQuery.addAll(hits);
+					// repositoryQuery.clearHits();
+					// for (AbstractQueryHit newHit : hits) {
+					// repositoryQuery.addHit(newHit);
+					//					}
 					if (synchTasks) {
 						connector.synchronizeChanged(repository);
 					}
