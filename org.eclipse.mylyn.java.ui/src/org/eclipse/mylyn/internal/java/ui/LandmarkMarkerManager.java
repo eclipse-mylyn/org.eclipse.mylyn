@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRunnable;
@@ -84,22 +85,21 @@ public class LandmarkMarkerManager implements IMylarContextListener {
 				try {
 					final ISourceRange range = ((IMember) element).getNameRange();
 					final IResource resource = element.getUnderlyingResource();
-					if (resource == null)
-						return;
-					IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
-						public void run(IProgressMonitor monitor) throws CoreException {
-							IMarker marker = resource.createMarker(MARKER_ID_LANDMARK);
-							if (marker != null && range != null) {
-								marker.setAttribute(IMarker.CHAR_START, range.getOffset());
-								marker.setAttribute(IMarker.CHAR_END, range.getOffset() + range.getLength());
-								marker.setAttribute(IMarker.MESSAGE, "Mylar Landmark");
-								marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
-								markerMap.put(node, marker.getId());
+					if (resource instanceof IFile) {
+						IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
+							public void run(IProgressMonitor monitor) throws CoreException {
+								IMarker marker = resource.createMarker(MARKER_ID_LANDMARK);
+								if (marker != null && range != null) {
+									marker.setAttribute(IMarker.CHAR_START, range.getOffset());
+									marker.setAttribute(IMarker.CHAR_END, range.getOffset() + range.getLength());
+									marker.setAttribute(IMarker.MESSAGE, "Mylar Landmark");
+									marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
+									markerMap.put(node, marker.getId());
+								}
 							}
-						}
-					};
-					if (resource != null)
+						}; 
 						resource.getWorkspace().run(runnable, null);
+					}
 				} catch (JavaModelException e) {
 					MylarStatusHandler.fail(e, "couldn't update marker", false);
 				} catch (CoreException e) {
