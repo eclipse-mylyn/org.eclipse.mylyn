@@ -1287,6 +1287,12 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 
 	private static final String STORE_EMAILBUTTON_ID = PAGE_NAME + ".EMAILATTR";
 
+	private static final String STORE_SUMMARYTEXT_ID = PAGE_NAME + ".SUMMARYTEXT";
+
+	private static final String STORE_COMMENTTEXT_ID = PAGE_NAME + ".COMMENTTEXT";
+
+	private static final String STORE_EMAILADDRESS_ID = PAGE_NAME + ".EMAILADDRESS";
+
 	protected Combo summaryOperation;
 
 	protected List product;
@@ -1722,6 +1728,9 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 		for (int i = 0; i < emailButton.length; i++) {
 			emailButton[i].setSelection(settings.getBoolean(STORE_EMAILBUTTON_ID + i + repoId));
 		}
+		summaryPattern.setText(settings.get(STORE_SUMMARYTEXT_ID + repoId));
+		commentPattern.setText(settings.get(STORE_COMMENTTEXT_ID + repoId));
+		emailPattern.setText(settings.get(STORE_EMAILADDRESS_ID + repoId));
 	}
 
 	public void saveWidgetValues() {
@@ -1744,6 +1753,9 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 		for (int i = 0; i < emailButton.length; i++) {
 			settings.put(STORE_EMAILBUTTON_ID + i + repoId, emailButton[i].getSelection());
 		}
+		settings.put(STORE_SUMMARYTEXT_ID + repoId, summaryPattern.getText());
+		settings.put(STORE_COMMENTTEXT_ID + repoId, commentPattern.getText());
+		settings.put(STORE_EMAILADDRESS_ID + repoId, emailPattern.getText());
 	}
 
 	/* Testing hook to see if any products are present */
