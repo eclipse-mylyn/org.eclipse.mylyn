@@ -68,11 +68,18 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 //		return Collections.unmodifiableSet(new HashSet<AbstractQueryHit>(hits));
 	}
 
-	public void addAll(List<AbstractQueryHit> newHits) {
+	public void updateHits(List<AbstractQueryHit> newHits) {
+		Set<AbstractQueryHit> oldHits = new HashSet<AbstractQueryHit>(hits);
+		clearHits();		
+		for (AbstractQueryHit oldHit : oldHits) {
+			if(newHits.contains(oldHit)) {
+				newHits.get(newHits.indexOf(oldHit)).setNotified(oldHit.isNotified);
+			}
+		}
 		hits.addAll(newHits);
 	}
 	
-	public void clearHits() {
+	private void clearHits() {
 		hits.clear();
 	}
 

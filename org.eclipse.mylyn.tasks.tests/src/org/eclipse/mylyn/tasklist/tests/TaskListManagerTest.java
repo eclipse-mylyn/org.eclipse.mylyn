@@ -13,11 +13,13 @@ package org.eclipse.mylar.tasklist.tests;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import junit.framework.TestCase;
@@ -626,6 +628,48 @@ public class TaskListManagerTest extends TestCase {
 		assertTrue(hitsReturned.contains(hit2));
 		assertTrue(hitsReturned.contains(hit2twin));
 
+	}
+	
+	public void testUpdateQueryHits() {
+
+		BugzillaQueryHit hit1 = new BugzillaQueryHit("description1", "P1", "repositoryURL", 1, null, "status");
+		BugzillaQueryHit hit2 = new BugzillaQueryHit("description2", "P1", "repositoryURL", 2, null, "status");
+		BugzillaQueryHit hit3 = new BugzillaQueryHit("description3", "P1", "repositoryURL", 3, null, "status");
+
+		BugzillaQueryHit hit1twin = new BugzillaQueryHit("description1", "P1", "repositoryURL", 1, null, "status");
+		BugzillaQueryHit hit2twin = new BugzillaQueryHit("description2", "P1", "repositoryURL", 2, null, "status");
+		BugzillaQueryHit hit3twin = new BugzillaQueryHit("description3", "P1", "repositoryURL", 3, null, "status");
+
+		BugzillaRepositoryQuery query1 = new BugzillaRepositoryQuery("url","url", "queryl", "10", manager.getTaskList());
+
+		query1.addHit(hit1);
+		query1.addHit(hit2);		
+		query1.addHit(hit3);
+		assertEquals(3, query1.getHits().size());
+		List<AbstractQueryHit> newHits = new ArrayList<AbstractQueryHit>();		
+		query1.updateHits(newHits);
+		assertEquals(0, query1.getHits().size());
+		newHits.add(hit1);
+		newHits.add(hit2);
+		query1.updateHits(newHits);
+		assertEquals(2, query1.getHits().size());
+		hit1.setNotified(true);
+		newHits.clear();
+		newHits.add(hit1twin);
+		newHits.add(hit2twin);
+		newHits.add(hit3twin);
+		query1.updateHits(newHits);
+		assertEquals(3, query1.getHits().size());
+		assertTrue(query1.getHits().contains(hit1twin));
+		assertTrue(query1.getHits().contains(hit2twin));
+		assertTrue(query1.getHits().contains(hit3twin));
+		for (AbstractQueryHit hit : query1.getHits()) {
+			if(hit.equals(hit1twin)) {
+				assertTrue(hit.isNotified());
+			} else {
+				assertFalse(hit.isNotified());
+			}
+		}
 	}
 		
 	public void testgetRepositoryTasks() {
