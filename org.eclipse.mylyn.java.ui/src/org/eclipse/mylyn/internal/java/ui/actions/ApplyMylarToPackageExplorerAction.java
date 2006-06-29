@@ -29,6 +29,7 @@ import org.eclipse.mylar.internal.ui.actions.AbstractApplyMylarAction;
 import org.eclipse.mylar.provisional.ui.InterestFilter;
 import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -38,8 +39,8 @@ public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction 
 	public ApplyMylarToPackageExplorerAction() {
 		super(new InterestFilter());
 		MylarJavaPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
-	} 
-	
+	}
+
 	public void init(IAction action) {
 		super.init(action);
 		configureAction();
@@ -55,14 +56,14 @@ public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction 
 	protected void valueChanged(IAction action, boolean on, boolean store) {
 		super.valueChanged(action, on, store);
 	}
-	
+
 	@Override
 	public List<StructuredViewer> getViewers() {
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
 		// TODO: get from super
 		IViewPart part = super.getPartForAction();
 		if (part instanceof PackageExplorerPart) {
-			viewers.add(((PackageExplorerPart)part).getTreeViewer());
+			viewers.add(((PackageExplorerPart) part).getTreeViewer());
 		}
 		return viewers;
 	}
@@ -74,22 +75,28 @@ public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction 
 	}
 
 	private void configureAction() {
-		try {
-			if (MylarJavaPlugin.getDefault().getPreferenceStore().getBoolean(
-					MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE)) {
-				MylarUiPlugin.getDefault().getViewerManager().addManagedAction(this);
-			} else if (MylarUiPlugin.getDefault() != null) {
-				MylarUiPlugin.getDefault().getViewerManager().removeManagedAction(this);
+		// can't do htis until the workbench/view is active
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+
+			public void run() {
+				try {
+					if (MylarJavaPlugin.getDefault().getPreferenceStore().getBoolean(
+							MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE)) {
+						MylarUiPlugin.getDefault().getViewerManager().addManagedAction(ApplyMylarToPackageExplorerAction.this);
+					} else if (MylarUiPlugin.getDefault() != null) {
+						MylarUiPlugin.getDefault().getViewerManager().removeManagedAction(ApplyMylarToPackageExplorerAction.this);
+					}
+				} catch (Exception e) {
+					MylarStatusHandler.fail(e, "could not toggle Mylar on view: " + getPartForAction(), true);
+				}
 			}
-		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "could not toggle Mylar on view: " + getPartForAction(), true);
-		}
+		});
 	}
 
 	public void propertyChange(org.eclipse.core.runtime.Preferences.PropertyChangeEvent event) {
 		// ignore
 	}
-	
+
 	@Override
 	public List<Class> getPreservedFilters() {
 		List<Class> preserved = new ArrayList<Class>();
