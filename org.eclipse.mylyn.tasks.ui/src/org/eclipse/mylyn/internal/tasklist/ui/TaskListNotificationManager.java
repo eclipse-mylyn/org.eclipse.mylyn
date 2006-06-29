@@ -39,7 +39,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 
 	private static final String OPEN_NOTIFICATION_JOB = "Open Notification Job";
 
-	private static final long CLOSE_POPUP_DELAY = 1000 * 10;
+	private static final long CLOSE_POPUP_DELAY = 1000 * 12;
 
 	private static final long OPEN_POPUP_DELAY = 1000 * 60;
 
@@ -127,6 +127,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 			popup.close();
 			// don't want notifications right away
 			openJob.cancel();
+			openJob.setSystem(runSystem);
 			openJob.schedule(OPEN_POPUP_DELAY);
 		}
 
@@ -170,6 +171,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 					// ignore
 				}
 			}
+			openJob.setSystem(runSystem);
 			openJob.schedule(initialStartupTime);
 		}
 	}
