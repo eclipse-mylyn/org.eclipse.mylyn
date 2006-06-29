@@ -170,14 +170,15 @@
           </perspectiveExtension>
       	<perspectiveExtension
             targetID="org.eclipse.ui.resourcePerspective">
-         <view
-               ratio="0.5"
-               relative="org.eclipse.ui.views.TaskList"
-               relationship="right"
-               id="org.eclipse.mylar.tasklist.repositories">
+            <viewShortcut id="org.eclipse.mylar.tasks.ui.views.TaskListView"/>
+	         <view
+                id="org.eclipse.mylar.tasks.ui.views.TaskListView"
+                relationship="left"
+                relative="org.eclipse.ui.views.TaskList"
+                >
          </view>
       </perspectiveExtension>
-      
+       
        <perspectiveExtension targetID="org.eclipse.team.cvs.ui.cvsPerspective">
         <view
               id="org.eclipse.mylar.tasklist.repositories"
@@ -187,10 +188,19 @@
               visible="true"/>
         <viewShortcut id="org.eclipse.mylar.tasklist.repositories"/>
      </perspectiveExtension>
+     <perspectiveExtension targetID="org.tigris.subversion.subclipse.ui.svnPerspective">
+        <view
+              id="org.eclipse.mylar.tasklist.repositories"
+              ratio="0.7"
+              relationship="bottom"
+              relative="org.tigris.subversion.subclipse.ui.repository.RepositoriesView"
+              visible="true"/>
+        <viewShortcut id="org.eclipse.mylar.tasklist.repositories"/>
+     </perspectiveExtension>
      <perspectiveExtension targetID="org.eclipse.team.ui.TeamSynchronizingPerspective">
         <view
               id="org.eclipse.mylar.tasklist.repositories"
-              ratio="0.8"
+              ratio="0.7"
               relationship="bottom"
               relative="org.eclipse.team.sync.views.SynchronizeView"
               visible="true"/>
