@@ -12,8 +12,6 @@
 package org.eclipse.mylar.internal.tasklist.ui.wizards;
 
 import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.TimeZone;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -70,7 +68,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	private Button defaultEncoding;
 
-	private Combo timeZonesCombo;
+//	private Combo timeZonesCombo;
 
 	private Button anonymousButton;
 
@@ -155,26 +153,27 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		// bug 131656: must set echo char after setting value on Mac
 		((RepositoryStringFieldEditor)passwordEditor).getTextControl().setEchoChar('*');
 
-		if (needsTimeZone()) {
-			Label timeZoneLabel = new Label(container, SWT.NONE);
-			timeZoneLabel.setText("Repository time zone: ");
-			timeZonesCombo = new Combo(container, SWT.READ_ONLY);
-			String[] timeZoneIds = TimeZone.getAvailableIDs();
-			Arrays.sort(timeZoneIds);
-			for (String zone : timeZoneIds) {
-				timeZonesCombo.add(zone);
-			}
-			boolean setZone = false;
-			if (repository != null) {
-				if (timeZonesCombo.indexOf(repository.getTimeZoneId()) > -1) {
-					timeZonesCombo.select(timeZonesCombo.indexOf(repository.getTimeZoneId()));
-					setZone = true;
-				}
-			}
-			if (!setZone) {
-				timeZonesCombo.select(timeZonesCombo.indexOf(TimeZone.getDefault().getID()));
-			}
-		}
+		// TODO: put this back if we can't get the info from all connectors
+//		if (needsTimeZone()) {
+//			Label timeZoneLabel = new Label(container, SWT.NONE);
+//			timeZoneLabel.setText("Repository time zone: ");
+//			timeZonesCombo = new Combo(container, SWT.READ_ONLY);
+//			String[] timeZoneIds = TimeZone.getAvailableIDs();
+//			Arrays.sort(timeZoneIds);
+//			for (String zone : timeZoneIds) {
+//				timeZonesCombo.add(zone);
+//			}
+//			boolean setZone = false;
+//			if (repository != null) {
+//				if (timeZonesCombo.indexOf(repository.getTimeZoneId()) > -1) {
+//					timeZonesCombo.select(timeZonesCombo.indexOf(repository.getTimeZoneId()));
+//					setZone = true;
+//				}
+//			}
+//			if (!setZone) {
+//				timeZonesCombo.select(timeZonesCombo.indexOf(TimeZone.getDefault().getID()));
+//			}
+//		}
 
 		createAdditionalControls(container);
 
@@ -363,13 +362,17 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		}
 	}
 
-	public String getTimeZoneId() {
-		return (timeZonesCombo != null) ? timeZonesCombo.getItem(timeZonesCombo.getSelectionIndex()) : null;
-	}
+//	public String getTimeZoneId() {
+//		return (timeZonesCombo != null) ? timeZonesCombo.getItem(timeZonesCombo.getSelectionIndex()) : null;
+//	}
 
 	public TaskRepository createTaskRepository() {
+//		TaskRepository repository = new TaskRepository(connector.getRepositoryType(), getServerUrl(), getVersion(),
+//				getCharacterEncoding(), getTimeZoneId());
+		
 		TaskRepository repository = new TaskRepository(connector.getRepositoryType(), getServerUrl(), getVersion(),
-				getCharacterEncoding(), getTimeZoneId());
+				getCharacterEncoding(), "");
+		
 		repository.setAuthenticationCredentials(getUserName(), getPassword());
 		return repository;
 	}

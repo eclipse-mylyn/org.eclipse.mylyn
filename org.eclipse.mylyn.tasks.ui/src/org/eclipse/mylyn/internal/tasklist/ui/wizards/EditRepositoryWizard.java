@@ -56,7 +56,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 			oldRepository.setUrl(newUrl);
 			oldRepository.setVersion(abstractRepositorySettingsPage.getVersion());
 			oldRepository.setCharacterEncoding(abstractRepositorySettingsPage.getCharacterEncoding());
-			oldRepository.setTimeZoneId(abstractRepositorySettingsPage.getTimeZoneId());			
+//			oldRepository.setTimeZoneId(abstractRepositorySettingsPage.getTimeZoneId());			
 			oldRepository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(), abstractRepositorySettingsPage.getPassword());
 			MylarTaskListPlugin.getRepositoryManager().saveRepositories();
 			
