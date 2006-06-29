@@ -14,6 +14,7 @@ package org.eclipse.mylar.provisional.tasklist;
 import java.io.File;
 import java.io.IOException;
 import java.net.Proxy;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -469,9 +470,12 @@ public abstract class AbstractRepositoryConnector {
 			attempts++;
 			try {
 				changedTasks = getChangedSinceLastSync(repository, repositoryTasks);
+			} catch (UnknownHostException e) { 
+				// ignore, indicates working offline
+				return;
 			} catch (Exception e) {
 				if (attempts == MAX_QUERY_ATTEMPTS) {
-					Date now = new Date();
+					Date now = new Date(); 
 					MylarStatusHandler.log(e, "Could not determine modified tasks for " + repository.getUrl() + ". ["
 							+ now.toString() + "]");
 					return;
