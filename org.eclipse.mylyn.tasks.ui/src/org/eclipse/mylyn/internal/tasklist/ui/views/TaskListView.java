@@ -292,7 +292,7 @@ public class TaskListView extends ViewPart {
 
 	private final ITaskListChangeListener TASK_REFERESH_LISTENER = new ITaskListChangeListener() {
 
-		public void localInfoChanged(ITask task) {
+		public void localInfoChanged(final ITask task) {
 			refreshTask(task);
 			if (task.getContainer() != null) {
 				refresh(task.getContainer());
@@ -304,13 +304,16 @@ public class TaskListView extends ViewPart {
 				}
 			}
 			if (task.isActive()) {
-				filteredTree.indicateActiveTask(task);
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						filteredTree.indicateActiveTask(task);
+					}
+				});
 			}
 		}
 
 		public void repositoryInfoChanged(ITask task) {
 			localInfoChanged(task);
-//			refreshTask(task);
 		}
 
 		public void taskMoved(ITask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
