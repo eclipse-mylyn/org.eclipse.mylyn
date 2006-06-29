@@ -94,18 +94,18 @@ public class MylarTeamPreferencePage extends PreferencePage implements IWorkbenc
 
 	private void createChangeSetGroup(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		group.setText("Active Change Set Management");
+		group.setText("Change Set Management");
 		group.setLayout(new GridLayout(1, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		changeSetsManage = new Button(group, SWT.CHECK);
-		changeSetsManage.setText("Manage change sets with task context");
+		changeSetsManage.setText("Create and manage Change Sets with task context");
 		changeSetsManage.setSelection(getPreferenceStore().getBoolean(MylarIdePlugin.CHANGE_SET_MANAGE));
 	}
 
 	private void createCommitGroup(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		group.setText("Task Context Commit");
+		group.setText("Automatic Commit Messages");
 		group.setLayout(new GridLayout(2, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 

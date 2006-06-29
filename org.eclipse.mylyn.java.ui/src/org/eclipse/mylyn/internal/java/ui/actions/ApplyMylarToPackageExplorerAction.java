@@ -37,12 +37,12 @@ public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction 
 
 	public ApplyMylarToPackageExplorerAction() {
 		super(new InterestFilter());
-		configureAction();
 		MylarJavaPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
 	} 
 	
 	public void init(IAction action) {
 		super.init(action);
+		configureAction();
 	}
 
 	@Override
