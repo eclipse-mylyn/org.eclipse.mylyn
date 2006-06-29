@@ -703,7 +703,9 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 				}
 
 				public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-					viewer.refresh();
+					if (!viewer.getControl().isDisposed()) {
+						viewer.refresh();
+					}
 				}
 			});
 
