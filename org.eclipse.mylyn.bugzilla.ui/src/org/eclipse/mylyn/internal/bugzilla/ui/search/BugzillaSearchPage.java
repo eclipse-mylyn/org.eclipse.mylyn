@@ -943,23 +943,6 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 	public void setVisible(boolean visible) {
 		if (visible && summaryPattern != null) {
 			if (firstTime) {
-				firstTime = false;
-				// Set item and text here to prevent page from resizing
-				for (String searchPattern : getPreviousPatterns(previousSummaryPatterns)) {
-					summaryPattern.add(searchPattern);
-				}
-				// summaryPattern.setItems(getPreviousPatterns(previousSummaryPatterns));
-				for (String comment : getPreviousPatterns(previousCommentPatterns)) {
-					commentPattern.add(comment);
-				}
-				// commentPattern.setItems(getPreviousPatterns(previousCommentPatterns));
-				for (String email : getPreviousPatterns(previousEmailPatterns)) {
-					emailPattern.add(email);
-				}
-				// emailPattern.setItems(getPreviousPatterns(previousEmailPatterns));
-
-				// TODO: update status, resolution, severity etc if possible...
-
 				if (repository == null) {
 					repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
 							BugzillaPlugin.REPOSITORY_KIND);
@@ -982,20 +965,45 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 					i++;
 				}
 
-				if (repository != null) {
-					updateAttributesFromRepository(repository.getUrl(), null, false);
-					if (product.getItemCount() == 0) {
-						updateAttributesFromRepository(repository.getUrl(), null, true);
-					}
-				}
+				IDialogSettings settings = getDialogSettings();
 				if (repositoryCombo != null) {
 					repositoryCombo.setItems(repositoryUrls);
 					if (repositoryUrls.length == 0) {
 						MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
 								IBugzillaConstants.TITLE_MESSAGE_DIALOG, TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
 					} else {
-						repositoryCombo.select(indexToSelect);
-						updateAttributesFromRepository(repositoryCombo.getItem(indexToSelect), null, false);
+						String selectRepo = settings.get(STORE_REPO_ID);
+						if (selectRepo != null) {
+							repositoryCombo.setText(selectRepo);
+							repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+									BugzillaPlugin.REPOSITORY_KIND, repositoryCombo.getText());
+						} else {
+							repositoryCombo.select(indexToSelect);
+						}
+						updateAttributesFromRepository(repositoryCombo.getText(), null, false);
+					}
+				}
+
+				firstTime = false;
+				// Set item and text here to prevent page from resizing
+				for (String searchPattern : getPreviousPatterns(previousSummaryPatterns)) {
+					summaryPattern.add(searchPattern);
+				}
+				// summaryPattern.setItems(getPreviousPatterns(previousSummaryPatterns));
+				for (String comment : getPreviousPatterns(previousCommentPatterns)) {
+					commentPattern.add(comment);
+				}
+				// commentPattern.setItems(getPreviousPatterns(previousCommentPatterns));
+				for (String email : getPreviousPatterns(previousEmailPatterns)) {
+					emailPattern.add(email);
+				}
+				// emailPattern.setItems(getPreviousPatterns(previousEmailPatterns));
+
+				// TODO: update status, resolution, severity etc if possible...
+				if (repository != null) {
+					updateAttributesFromRepository(repository.getUrl(), null, false);
+					if (product.getItemCount() == 0) {
+						updateAttributesFromRepository(repository.getUrl(), null, true);
 					}
 				}
 				if (originalQuery != null) {
@@ -1292,6 +1300,8 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 	private static final String STORE_COMMENTTEXT_ID = PAGE_NAME + ".COMMENTTEXT";
 
 	private static final String STORE_EMAILADDRESS_ID = PAGE_NAME + ".EMAILADDRESS";
+
+	private static final String STORE_REPO_ID = PAGE_NAME + ".REPO";
 
 	protected Combo summaryOperation;
 
@@ -1756,6 +1766,7 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 		settings.put(STORE_SUMMARYTEXT_ID + repoId, summaryPattern.getText());
 		settings.put(STORE_COMMENTTEXT_ID + repoId, commentPattern.getText());
 		settings.put(STORE_EMAILADDRESS_ID + repoId, emailPattern.getText());
+		settings.put(STORE_REPO_ID, repositoryCombo.getText());
 	}
 
 	/* Testing hook to see if any products are present */
