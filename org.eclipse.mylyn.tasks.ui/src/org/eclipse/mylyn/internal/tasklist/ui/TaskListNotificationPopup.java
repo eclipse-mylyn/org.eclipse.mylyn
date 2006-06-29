@@ -16,15 +16,9 @@ import java.util.List;
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -44,13 +38,12 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class TaskListNotificationPopup extends PopupDialog {
 
-	private static final int BUTTON_FONT_SIZE = 7;
 
 	static boolean takeFocusOnOpen = false;
 
 	static boolean persistBounds = false;
 
-	static boolean showDialogMenu = false;
+	static boolean showDialogMenu =false;
 
 	static boolean showPersistAction = false;
 
@@ -100,13 +93,11 @@ public class TaskListNotificationPopup extends PopupDialog {
 		sectionClient = toolkit.createComposite(section);
 		sectionClient.setLayout(new GridLayout(2, false));
 		for (final ITaskListNotification notification : notifications) {
-			
-//			Composite notificationComp = toolkit.createComposite(sectionClient);
-//			notificationComp.setLayout(new RowLayout());
+
 			Label notificationLabelIcon = toolkit.createLabel(sectionClient, "");
-			notificationLabelIcon.setImage(notification.getOverlayIcon());			
-			ImageHyperlink link = toolkit.createImageHyperlink(sectionClient, SWT.WRAP | SWT.TOP);			
-			link.setText(notification.getLabel());			
+			notificationLabelIcon.setImage(notification.getOverlayIcon());
+			ImageHyperlink link = toolkit.createImageHyperlink(sectionClient, SWT.WRAP | SWT.TOP);
+			link.setText(notification.getLabel());
 			link.setImage(notification.getNotificationIcon());
 			link.addHyperlinkListener(new HyperlinkAdapter() {
 				public void linkActivated(HyperlinkEvent e) {
@@ -121,15 +112,15 @@ public class TaskListNotificationPopup extends PopupDialog {
 					}
 				}
 			});
-			
+
 			String descriptionText = null;
 			if (notification.getDescription() != null && notification.getDescription().length() > 40) {
 				String truncated = notification.getDescription().substring(0, 35);
 				descriptionText = truncated + "...";
-			} else if(notification.getDescription() != null) {
+			} else if (notification.getDescription() != null) {
 				descriptionText = notification.getDescription();
 			}
-			if(descriptionText != null) {
+			if (descriptionText != null) {
 				Label descriptionLabel = toolkit.createLabel(sectionClient, descriptionText);
 				GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(descriptionLabel);
 			}
@@ -140,61 +131,17 @@ public class TaskListNotificationPopup extends PopupDialog {
 		Composite buttonsComposite = toolkit.createComposite(section);
 		section.setTextClient(buttonsComposite);
 		buttonsComposite.setLayout(new RowLayout());
-		Button buttonOpenAll = toolkit.createButton(buttonsComposite, "Open All", SWT.NONE);
-
-		{
-			Font initialFont = buttonOpenAll.getFont();
-			FontData[] fontData = initialFont.getFontData();
-			for (int i = 0; i < fontData.length; i++) {
-				fontData[i].setHeight(BUTTON_FONT_SIZE);
-			}
-			Font newFont = new Font(getShell().getDisplay(), fontData);
-			buttonOpenAll.setFont(newFont);
-		}
-		buttonOpenAll.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				for (ITaskListNotification notification : notifications) {
-					//notification.setNotified(true);
-					notification.openTask();
-				}
-				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-				if (window != null) {
-					Shell windowShell = window.getShell();
-					if (windowShell != null) {
-						windowShell.setMaximized(true);
-						windowShell.open();
-					}
-				}
+		buttonsComposite.setBackground(section.getTitleBarBackground());
+		final ImageHyperlink closeHyperlink = toolkit.createImageHyperlink(buttonsComposite, SWT.NONE);
+		// closeHyperlink.setBackgroundMode(SWT.INHERIT_FORCE);
+		closeHyperlink.setBackground(section.getTitleBarBackground());
+		closeHyperlink.setImage(TaskListImages.getImage(TaskListImages.NOTIFICATION_CLOSE));
+		closeHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+			public void linkActivated(HyperlinkEvent e) {
 				close();
 			}
 		});
 
-		RowData buttonOpenAllRowData = new RowData(45, 15);
-		buttonOpenAll.setLayoutData(buttonOpenAllRowData);
-
-		Button buttonDismiss = toolkit.createButton(buttonsComposite, "Close", SWT.NONE);
-
-		{
-			Font initialFont = buttonDismiss.getFont();
-			FontData[] fontData = initialFont.getFontData();
-			for (int i = 0; i < fontData.length; i++) {
-				fontData[i].setHeight(BUTTON_FONT_SIZE);
-			}
-			Font newFont = new Font(getShell().getDisplay(), fontData);
-			buttonDismiss.setFont(newFont);
-		}
-		buttonDismiss.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-//				for (ITaskListNotification notification : notifications) {
-//					notification.setNotified(true);
-//				}
-				close();
-			}
-		});
-
-		RowData buttonDismissRowData = new RowData(30, 15);
-		buttonDismiss.setLayoutData(buttonDismissRowData);
-		// toolkit.paintBordersFor(parent);
 		form.pack();
 		return parent;
 	}

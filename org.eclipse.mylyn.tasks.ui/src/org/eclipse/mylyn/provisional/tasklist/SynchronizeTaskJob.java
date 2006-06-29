@@ -73,7 +73,7 @@ class SynchronizeTaskJob extends Job {
 						|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT;
 				if (forceSync || (!canNotSynch && !hasLocalChanges) || !repositoryTask.isDownloaded()) {
 					monitor.setTaskName(LABEL_SYNCHRONIZING + repositoryTask.getDescription());
-					repositoryTask.setCurrentlyDownloading(true);					
+					repositoryTask.setCurrentlyDownloading(true);
 					MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 					IOfflineTaskHandler offlineHandler = connector.getOfflineTaskHandler();
 					if (offlineHandler != null) {
@@ -84,18 +84,20 @@ class SynchronizeTaskJob extends Job {
 							MylarStatusHandler.log(e.getStatus());
 						}
 
-						if (downloadedTaskData != null) {							
-							boolean changed = connector.updateOfflineState(repositoryTask, downloadedTaskData, forceSync);
+						if (downloadedTaskData != null) {
+							boolean changed = connector.updateOfflineState(repositoryTask, downloadedTaskData,
+									forceSync);
 							connector.updateTaskState(repositoryTask);
-							if(changed) {
-								refreshEditors(repositoryTask);							
+							if (changed) {
+								refreshEditors(repositoryTask);
 							}
 						}
-					} 
-//					else {
-//						MylarStatusHandler.log("No offline content handler available for "
-//								+ connector.getRepositoryType() + " connector.", this);
-//					}					
+					}
+					// else {
+					// MylarStatusHandler.log("No offline content handler
+					// available for "
+					// + connector.getRepositoryType() + " connector.", this);
+					// }
 					repositoryTask.setCurrentlyDownloading(false);
 					MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 
@@ -103,7 +105,9 @@ class SynchronizeTaskJob extends Job {
 
 				monitor.worked(1);
 			}
-			
+
+			MylarTaskListPlugin.getDefault().getTaskListNotificationManager().startNotification(1);
+
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Could not download report", false);
 		} finally {
@@ -113,7 +117,6 @@ class SynchronizeTaskJob extends Job {
 		return new Status(IStatus.OK, MylarPlugin.PLUGIN_ID, IStatus.OK, "", null);
 	}
 
-	
 	private void refreshEditors(final AbstractRepositoryTask repositoryTask) {
 		// TODO: move out of SynchronizeTaskJob (but beware of race conditions)
 		if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING
@@ -138,8 +141,6 @@ class SynchronizeTaskJob extends Job {
 			}
 		}
 	}
-	
-	
 
 	// private boolean isDirty(AbstractRepositoryTask task) {
 	// // TODO: move out of SynchronizeTaskJob
@@ -152,6 +153,6 @@ class SynchronizeTaskJob extends Job {
 	// }
 	// }
 	// return false;
-	//	}
+	// }
 
 }
