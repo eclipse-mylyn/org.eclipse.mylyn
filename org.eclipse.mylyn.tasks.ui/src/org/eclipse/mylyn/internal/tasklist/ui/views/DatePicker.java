@@ -125,7 +125,14 @@ public class DatePicker extends Composite {
 				if(date != null) {
 					newCalendar.setTime(date.getTime());
 				}
-				DateSelectionDialog dialog = new DateSelectionDialog(new Shell(PlatformUI.getWorkbench().getDisplay()), newCalendar, DatePicker.TITLE_DIALOG);
+
+				Shell shell = null;
+				if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
+					shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+				} else {
+					shell = new Shell(PlatformUI.getWorkbench().getDisplay());
+				}
+				DateSelectionDialog dialog = new DateSelectionDialog(shell, newCalendar, DatePicker.TITLE_DIALOG);
 				pickButton.setEnabled(false);
 				dateText.setEnabled(false);
 				
@@ -163,55 +170,6 @@ public class DatePicker extends Composite {
 		this.layout();
 		return new Point(this.getSize().x, this.getSize().y);
 	}
-
-//	private void showDatePicker(int x, int y) {
-//		pickerShell = new Shell(SWT.APPLICATION_MODAL);//| SWT.ON_TOP
-//		pickerShell.setText("Shell");
-//		pickerShell.setLayout(new FillLayout());		
-//		if (date == null) {
-//			date = new GregorianCalendar();
-//		}
-////		datePickerPanel.setDate(date);
-//		datePickerPanel = new DatePickerPanel(pickerShell, SWT.NONE, date);
-//		datePickerPanel.addSelectionChangedListener(new ISelectionChangedListener() {
-//
-//			public void selectionChanged(SelectionChangedEvent event) {
-//				if(!event.getSelection().isEmpty()) {
-//					dateSelected(event.getSelection().isEmpty(), ((DateSelection)event.getSelection()).getDate());
-//				} else {
-//					dateSelected(false, null);
-//				}
-//			}});
-//				
-//		pickerShell.setSize(new Point(240, 180));
-//		pickerShell.setLocation(new Point(x, y));
-//
-//		datePickerPanel.addKeyListener(new KeyListener() {
-//			public void keyPressed(KeyEvent e) {
-//				if (e.keyCode == SWT.ESC) {
-//					dateSelected(true, null);	
-//				}
-//			}
-//
-//			public void keyReleased(KeyEvent e) {
-//			}
-//		});
-//		
-//		pickerShell.addFocusListener(new FocusListener() {
-//
-//			public void focusGained(FocusEvent e) {
-//				System.err.println(" shell - Focus Gained!");
-//				
-//			}
-//
-//			public void focusLost(FocusEvent e) {
-//				System.err.println("shell -  Focus Lost!");
-//				
-//			}});
-//		
-//		pickerShell.pack();
-//		pickerShell.open();		
-//	}
 
 	/** Called when the user has selected a date */
 	protected void dateSelected(boolean canceled, Calendar selectedDate) {
