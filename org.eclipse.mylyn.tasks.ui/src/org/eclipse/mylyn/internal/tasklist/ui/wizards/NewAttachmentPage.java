@@ -20,6 +20,7 @@ import java.util.Map;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.internal.tasklist.LocalAttachment;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -27,7 +28,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -89,29 +89,30 @@ public class NewAttachmentPage extends WizardPage {
 		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
 
 		Composite composite = toolkit.createComposite(parent);
+		composite.setBackground(parent.getBackground());		
 		setControl(composite);
 
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		composite.setLayout(new GridLayout(3, false));
 
-		toolkit.createLabel(composite, "File");
-		filePath = new Text(composite, SWT.LEFT); // toolkit.createText(composite,
-													// "");
+		toolkit.createLabel(composite, "File").setBackground(parent.getBackground());
+		filePath = new Text(composite, SWT.LEFT); 
+		
 		filePath.setEditable(false);
 		filePath.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 2, 1));
 
-		toolkit.createLabel(composite, "Description");
+		toolkit.createLabel(composite, "Description").setBackground(parent.getBackground());
 		attachmentDesc = toolkit.createText(composite, "");
 		attachmentDesc.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 2, 1));
 
-		toolkit.createLabel(composite, "Comment");
-		attachmentComment = toolkit.createText(composite, "");
+		toolkit.createLabel(composite, "Comment").setBackground(parent.getBackground());
+		attachmentComment = toolkit.createText(composite, "", SWT.WRAP);
 		attachmentComment.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
-		toolkit.createLabel(composite, "Content Type");
-		final Combo contentTypeList = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
+		toolkit.createLabel(composite, "Content Type").setBackground(parent.getBackground());
+		final CCombo contentTypeList = new CCombo(composite, SWT.FLAT | SWT.DROP_DOWN | SWT.READ_ONLY);
 		final Button isPatchButton = toolkit.createButton(composite, "Patch", SWT.CHECK);
-
+		isPatchButton.setBackground(parent.getBackground());
 		final HashMap<String, Integer> contentTypeIndices = new HashMap<String, Integer>();
 		Iterator<String> iter = contentTypes.iterator();
 		int i = 0;
@@ -199,6 +200,8 @@ public class NewAttachmentPage extends WizardPage {
 			}
 
 		});
+		
+		toolkit.paintBordersFor(composite);
 	}
 
 	public boolean isPageComplete() {
