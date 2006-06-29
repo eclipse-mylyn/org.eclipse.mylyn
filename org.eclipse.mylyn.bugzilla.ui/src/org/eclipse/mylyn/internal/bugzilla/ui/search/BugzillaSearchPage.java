@@ -1022,7 +1022,7 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 			 */
 			IDialogSettings settings = getDialogSettings();
 			String repoId = "." + repository.getUrl();
-			if (restoreQueryOptions && settings.getArray(STORE_PRODUCT_ID + repoId) != null && product != null) {
+			if (getWizard() == null && restoreQueryOptions && settings.getArray(STORE_PRODUCT_ID + repoId) != null && product != null) {
 				product.setSelection(nonNullArray(settings, STORE_PRODUCT_ID + repoId));
 				updateAttributesFromRepository(repository.getUrl(), product.getSelection(), false);
 				restoreWidgetValues();
