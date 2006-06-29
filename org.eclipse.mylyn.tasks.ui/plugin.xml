@@ -382,9 +382,9 @@
         defaultsTo="org.eclipse.jface.dialogfont"
         id="org.eclipse.mylar.tasklist.ui.fonts.task.editor.comment"
         isEditable="true"
-        label="Task Editor - Comments">
+        label="Task Editor - Notes and Comments">
          <description>
-            Text font used for rendering comments.
+            Text font used for task editor text areas.
          </description>
       </fontDefinition>
    </extension>

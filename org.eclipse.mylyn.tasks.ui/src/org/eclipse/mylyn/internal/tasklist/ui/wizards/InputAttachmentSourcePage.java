@@ -129,7 +129,8 @@ public class InputAttachmentSourcePage extends WizardPage {
 	public InputAttachmentSourcePage(NewAttachmentWizard wizard) {
 		super("InputAttachmentPage");
 		this.wizard = wizard;
-		setTitle("Select attachment source");
+		setTitle("Select source");
+		setDescription("Clipboard contents are for text attachments only.");
 		// setMessage("Please select the source for the attachment");
 	}
 

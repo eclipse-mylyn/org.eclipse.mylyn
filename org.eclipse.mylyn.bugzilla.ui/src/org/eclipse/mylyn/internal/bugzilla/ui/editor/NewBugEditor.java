@@ -21,6 +21,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasklist.ui.editors.RepositoryTaskOutlineNode;
@@ -115,7 +116,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		// descriptionText.setFont(COMMENT_FONT);
 		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 		Font descriptionFont = themeManager.getCurrentTheme().getFontRegistry().get(
-				AbstractRepositoryTaskEditor.REPOSITORY_TEXT_ID);
+				TaskListColorsAndFonts.TASK_EDITOR_FONT);
 		descriptionText.setFont(descriptionFont);
 		GridData descriptionTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		descriptionTextData.horizontalSpan = 4;

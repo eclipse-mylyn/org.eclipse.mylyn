@@ -19,6 +19,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.tasklist.LocalAttachment;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 
 /**
@@ -43,7 +44,8 @@ public class NewAttachmentWizard extends Wizard {
 	public NewAttachmentWizard() {
 		super();
 		setNeedsProgressMonitor(true);
-		setWindowTitle("Add a new attachment");
+		setWindowTitle("Add Attachment");
+		setDefaultPageImageDescriptor(TaskListImages.BANNER_REPOSITORY);
 		attachment = new LocalAttachment();
 
 		IDialogSettings workbenchSettings = MylarPlugin.getDefault().getDialogSettings();

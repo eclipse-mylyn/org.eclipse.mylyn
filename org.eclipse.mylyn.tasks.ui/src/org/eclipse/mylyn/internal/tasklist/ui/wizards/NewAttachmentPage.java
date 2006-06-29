@@ -79,7 +79,8 @@ public class NewAttachmentPage extends WizardPage {
 
 	protected NewAttachmentPage(LocalAttachment att) {
 		super("AttachmentDetails");
-		setMessage("Attachment Details");
+		setTitle("Attachment Details");
+		setMessage("Provide a description and verify the content type of the attachment.");
 		attachment = att;
 	}
 

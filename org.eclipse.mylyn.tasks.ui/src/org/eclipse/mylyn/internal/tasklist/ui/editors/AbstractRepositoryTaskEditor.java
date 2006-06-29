@@ -57,6 +57,7 @@ import org.eclipse.mylar.internal.tasklist.LocalAttachment;
 import org.eclipse.mylar.internal.tasklist.RepositoryAttachment;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.actions.CopyToClipboardAction;
@@ -138,8 +139,6 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	private static final String ATTACHMENT_URL_SUFFIX = "/attachment.cgi?id=";
 
 	protected static final String CONTEXT_MENU_ID = "#MylarRepositoryEditor";
-
-	public static final String REPOSITORY_TEXT_ID = "org.eclipse.mylar.tasklist.ui.fonts.task.editor.comment";
 
 	public static final String HYPERLINK_TYPE_TASK = "task";
 
@@ -624,7 +623,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		toolkit.createLabel(summaryComposite, "Summary:").setFont(TITLE_FONT);
 		summaryText = toolkit.createText(summaryComposite, getRepositoryTaskData().getSummary(), SWT.FLAT);
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-		Font summaryFont = themeManager.getCurrentTheme().getFontRegistry().get(REPOSITORY_TEXT_ID);
+		Font summaryFont = themeManager.getCurrentTheme().getFontRegistry().get(TaskListColorsAndFonts.TASK_EDITOR_FONT);
 		summaryText.setFont(summaryFont);
 		GridData summaryTextData = new GridData(GridData.FILL_HORIZONTAL);// HORIZONTAL_ALIGN_FILL
 		summaryTextData.horizontalSpan = 1;
@@ -874,7 +873,8 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		final Text newAttachment = new Text(attachmentsComposite, SWT.LEFT);
 		newAttachment.setEditable(false);
 		newAttachment.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
+		newAttachment.setBackground(form.getBackground());
+		
 		addAttachmentButton.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// ignore
@@ -1148,7 +1148,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 				| SWT.V_SCROLL | SWT.WRAP);
 
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-		Font newCommnetFont = themeManager.getCurrentTheme().getFontRegistry().get(REPOSITORY_TEXT_ID);
+		Font newCommnetFont = themeManager.getCurrentTheme().getFontRegistry().get(TaskListColorsAndFonts.TASK_EDITOR_FONT);
 		addCommentsText.setFont(newCommnetFont);
 		toolkit.paintBordersFor(newCommentsComposite);
 		GridData addCommentsTextData = new GridData(GridData.FILL_HORIZONTAL);
@@ -1404,7 +1404,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 
-		commentViewer.getTextWidget().setFont(themeManager.getCurrentTheme().getFontRegistry().get(REPOSITORY_TEXT_ID));
+		commentViewer.getTextWidget().setFont(themeManager.getCurrentTheme().getFontRegistry().get(TaskListColorsAndFonts.TASK_EDITOR_FONT));
 
 		commentViewer.setEditable(false);
 		commentViewer.getTextWidget().addSelectionListener(new SelectionAdapter() {
