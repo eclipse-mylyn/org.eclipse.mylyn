@@ -158,6 +158,8 @@ public class TaskListImages {
 
 	public static final ImageDescriptor COLLAPSE_ALL = create(T_ELCL, "collapseall.png");
 
+	public static final ImageDescriptor NOTIFICATION_CLOSE = create(T_EVIEW, "notification-close.jpg");
+	
 	public static final ImageDescriptor EXPAND_ALL = create(T_ELCL, "expandall.gif"); 
 	
 	public static final ImageDescriptor PRIORITY_1 = createSize(create(T_EVIEW, "priority-1.gif"), SIZE);

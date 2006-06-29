@@ -101,11 +101,12 @@ public class TaskListPreferencePage extends PreferencePage implements IWorkbench
 		new PreferenceLinkArea(container, SWT.NONE, "org.eclipse.ui.preferencePages.ColorsAndFonts", message,
 				(IWorkbenchPreferenceContainer) getContainer(), null);
 
-		createOpenWith(container);
 		createTaskRefreshScheduleGroup(container);
-		createTaskDataControl(container);
 		createNotificationsGroup(container);
-		createPlanningGroup(container);
+		createSchedulingGroup(container);
+		createOpenWith(container);
+		createTaskDataControl(container);
+		
 		updateRefreshGroupEnablements();
 		return container;
 	}
@@ -390,12 +391,12 @@ public class TaskListPreferencePage extends PreferencePage implements IWorkbench
 		group.setLayout(new GridLayout(1, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		notificationEnabledButton = new Button(group, SWT.CHECK);
-		notificationEnabledButton.setText("Reminder popups enabled");
+		notificationEnabledButton.setText("Display notifications for overdue tasks and incoming changes");
 		notificationEnabledButton.setSelection(getPreferenceStore().getBoolean(
 				TaskListPreferenceConstants.NOTIFICATIONS_ENABLED));
 	}
 
-	private void createPlanningGroup(Composite container) {
+	private void createSchedulingGroup(Composite container) {
 		Group group = new Group(container, SWT.SHADOW_ETCHED_IN);
 		group.setText(GROUP_WORK_WEEK_LABEL);
 		group.setLayout(new GridLayout(5, false));
