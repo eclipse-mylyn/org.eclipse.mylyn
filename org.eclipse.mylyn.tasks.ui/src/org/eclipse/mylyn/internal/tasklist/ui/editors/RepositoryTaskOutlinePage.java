@@ -77,11 +77,16 @@ public class RepositoryTaskOutlinePage extends ContentOutlinePage {
 			public Image getImage(Object element) {
 				if (element instanceof RepositoryTaskOutlineNode) {
 					RepositoryTaskOutlineNode node = (RepositoryTaskOutlineNode) element;
-					if (node.getComment() != null) {
-						return node.getImage();
+					
+					if (RepositoryTaskOutlineNode.LABEL_COMMENTS.equals(node.getContents())||
+						RepositoryTaskOutlineNode.LABEL_NEW_COMMENT.equals(node.getContents())) {
+						return TaskListImages.getImage(TaskListImages.COMMENT);
+					} if (RepositoryTaskOutlineNode.LABEL_DESCRIPTION.equals(node.getContents())) {
+						return TaskListImages.getImage(TaskListImages.TASK_NOTES);
+					} else if (node.getComment() != null) {
+						return TaskListImages.getImage(TaskListImages.PERSON);
 					} else {
-						return TaskListImages.getImage(TaskListImages.TASK);
-						//BugzillaImages.getImage(BugzillaImages.BUG);
+						return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY);
 					}
 				} else {
 					return super.getImage(element);

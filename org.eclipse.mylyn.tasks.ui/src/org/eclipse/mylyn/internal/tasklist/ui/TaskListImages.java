@@ -93,6 +93,8 @@ public class TaskListImages {
 
 	public static final ImageDescriptor COMMENT = create(T_TOOL, "comment.gif");
 	
+	public static final ImageDescriptor PERSON = create(T_TOOL, "person.gif");
+		
 	public static final ImageDescriptor OVERLAY_INCOMMING = create(T_EVIEW, "overlay-incoming.gif");
 
 	public static final ImageDescriptor OVERLAY_OUTGOING = create(T_EVIEW, "overlay-outgoing.gif");

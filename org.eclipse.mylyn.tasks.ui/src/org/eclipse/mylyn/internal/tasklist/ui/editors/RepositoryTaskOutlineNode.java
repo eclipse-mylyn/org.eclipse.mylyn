@@ -15,8 +15,6 @@ import java.util.Iterator;
 
 import org.eclipse.mylar.internal.tasklist.Comment;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
-import org.eclipse.swt.graphics.Image;
 
 /**
  * A node for the tree in the <code>RepositoryTaskOutlinePage</code>.
@@ -24,6 +22,12 @@ import org.eclipse.swt.graphics.Image;
  * @author Mik Kersten (hardening of prototype)
  */
 public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
+
+	static final String LABEL_DESCRIPTION = "Description";
+
+	static final String LABEL_COMMENTS = "Comments";
+
+	static final String LABEL_NEW_COMMENT = "New Comment";
 
 	/** The id of the Bugzilla object that the selection was on. */
 	protected int id;
@@ -39,9 +43,6 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 
 	/** The parent of this node or null if it is the bug report */
 	private RepositoryTaskOutlineNode parent;
-
-	/** This node's image. */
-	private Image image;
 
 	private Object data = null;
 
@@ -69,12 +70,11 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 	 * @param parent
 	 *            The parent of this node
 	 */
-	public RepositoryTaskOutlineNode(int id, String server, String key, Image image, Object data, String summary) {
+	public RepositoryTaskOutlineNode(int id, String server, String key, Object data, String summary) {
 		this.id = id;
 		this.server = server;
 		this.key = key;
 		this.nodeChildren = null;
-		this.image = image;
 		this.data = data;
 		this.parent = null;
 		this.bugSummary = summary;
@@ -114,31 +114,6 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 		return key;
 	}
 
-	// /**
-	// * Set the label of this node.
-	// * @param key The new label.
-	// */
-	// public void setKey(String key) {
-	// this.key = key;
-	// }
-
-	/**
-	 * TODO: remove, nodes don't need to know about image decorator
-	 */
-	public Image getImage() {
-		return image;
-	}
-
-	/**
-	 * Sets the decorator image for this node.
-	 * 
-	 * @param newImage
-	 *            The new image.
-	 */
-	public void setImage(Image newImage) {
-		this.image = newImage;
-	}
-
 	/**
 	 * @return <code>true</code> if the given object is another node
 	 *         representing the same piece of data in the editor.
@@ -150,7 +125,7 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 			return getKey().equals(bugNode.getKey());
 		}
 		return super.equals(arg0);
-	}
+	}  
 
 	@Override
 	public int hashCode() {
@@ -243,14 +218,10 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 
 		int bugId = bug.getId();
 		String bugServer = bug.getRepositoryUrl();
-		Image bugImage = TaskListImages.getImage(TaskListImages.TASK_REMOTE);
-		//MylarTaskListPlugin.getDefault().BugzillaImages.getImage(BugzillaImages.BUG);
-		Image defaultImage = TaskListImages.getImage(TaskListImages.TASK_NOTES);
-		//BugzillaImages.getImage(BugzillaImages.BUG_COMMENT);
-		RepositoryTaskOutlineNode topNode = new RepositoryTaskOutlineNode(bugId, bugServer, bug.getLabel(), bugImage, bug, bug
+		RepositoryTaskOutlineNode topNode = new RepositoryTaskOutlineNode(bugId, bugServer, bug.getLabel(), bug, bug
 				.getSummary());
 
-		RepositoryTaskOutlineNode desc = new RepositoryTaskOutlineNode(bugId, bugServer, "Description", defaultImage, bug
+		RepositoryTaskOutlineNode desc = new RepositoryTaskOutlineNode(bugId, bugServer, LABEL_DESCRIPTION, bug
 				.getDescription(), bug.getSummary());
 		desc.setIsDescription(true);
 
@@ -262,11 +233,11 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 			// first comment is the bug description
 			if(comment.getNumber() == 0) continue;
 			if (comments == null) {
-				comments = new RepositoryTaskOutlineNode(bugId, bugServer, "Comments", defaultImage, comment, bug
+				comments = new RepositoryTaskOutlineNode(bugId, bugServer, LABEL_COMMENTS, comment, bug
 						.getSummary());
 				comments.setIsCommentHeader(true);
 			}
-			comments.addChild(new RepositoryTaskOutlineNode(bugId, bugServer, comment.getCreated(), defaultImage,
+			comments.addChild(new RepositoryTaskOutlineNode(bugId, bugServer, comment.getCreated(),
 					comment, bug.getSummary()));
 		}
 		if (comments != null) {
@@ -274,9 +245,9 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 		}
 
 		topNode
-				.addChild(new RepositoryTaskOutlineNode(bugId, bugServer, "New Comment", defaultImage, null, bug.getSummary()));
+				.addChild(new RepositoryTaskOutlineNode(bugId, bugServer, LABEL_NEW_COMMENT, null, bug.getSummary()));
 
-		RepositoryTaskOutlineNode titleNode = new RepositoryTaskOutlineNode(bugId, bugServer, "BugReport Object", defaultImage,
+		RepositoryTaskOutlineNode titleNode = new RepositoryTaskOutlineNode(bugId, bugServer, "BugReport Object",
 				null, bug.getSummary());
 		titleNode.addChild(topNode);
 
