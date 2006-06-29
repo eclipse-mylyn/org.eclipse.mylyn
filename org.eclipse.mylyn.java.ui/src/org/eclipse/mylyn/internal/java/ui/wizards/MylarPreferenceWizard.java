@@ -89,7 +89,7 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 			MylarUiPlugin.getDefault().getPreferenceStore().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, false);
 		}
 
-		if (preferencePage.isWorkingSet()) {
+		if (preferencePage.isCreateWorkingSet()) {
 			IWorkingSetManager workingSetManager = MylarUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
 			IWorkingSetNewWizard wizard = workingSetManager
 					.createWorkingSetNewWizard(new String[] { "org.eclipse.mylar.workingSetPage" });

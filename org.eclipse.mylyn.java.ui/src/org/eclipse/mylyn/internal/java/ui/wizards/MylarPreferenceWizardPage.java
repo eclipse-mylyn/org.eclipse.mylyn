@@ -41,7 +41,7 @@ public class MylarPreferenceWizardPage extends WizardPage {
 
 	private static final String AUTO_CLOSE = "Automatically manage open editors to match task context";
 
-	private static final String WORKING_SET = "Add the \"active task context\" working set";
+//	private static final String WORKING_SET = "Add the \"active task context\" working set";
 
 	private static final String CONTENT_ASSIST = "Enable task-context ranked content assist, requires Eclipse restart.";
 
@@ -55,9 +55,10 @@ public class MylarPreferenceWizardPage extends WizardPage {
 
 	private boolean autoFolding = true;
 
-	private Button addMylarActiveWorkingSetButton;
+//	private Button addMylarActiveWorkingSetButton;
 
-	private boolean workingSet = true;
+	// TODO: remove
+	private boolean createWorkingSet = false;
 
 	private Button closeEditorsOnDeactivationButton;
 
@@ -88,16 +89,6 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		GridData gd = new GridData();
 		contentAssistButton.setLayoutData(gd);
 		contentAssistButton.setSelection(true);
-//		contentAssistButton.addSelectionListener(new SelectionListener() {
-//
-//			public void widgetSelected(SelectionEvent e) {
-//				mylarContentAssistDefault = contentAssistButton.getSelection();
-//			}
-//
-//			public void widgetDefaultSelected(SelectionEvent e) {
-//				// don't care about this event
-//			}
-//		});
 
 		Label label = new Label(buttonComposite, SWT.NONE);
 		label.setText(CONTENT_ASSIST);
@@ -108,7 +99,6 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		
 		label = new Label(buttonComposite, SWT.NONE);
 		label = new Label(buttonComposite, SWT.NONE);
-//		label.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
 		label.setText("NOTE: if Mylar is uninstalled you must Restore Defaults on above page ");
 		label.setForeground(TaskListColorsAndFonts.COLOR_LABEL_CAUTION);
 		
@@ -165,30 +155,30 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		label.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
 		label.setText("Toggle via Mylar preferences page ");
 		
-		addMylarActiveWorkingSetButton = new Button(buttonComposite, SWT.CHECK);
-		gd = new GridData();
-		addMylarActiveWorkingSetButton.setSelection(true);
-		addMylarActiveWorkingSetButton.addSelectionListener(new SelectionListener() {
+//		addMylarActiveWorkingSetButton = new Button(buttonComposite, SWT.CHECK);
+//		gd = new GridData();
+//		addMylarActiveWorkingSetButton.setSelection(true);
+//		addMylarActiveWorkingSetButton.addSelectionListener(new SelectionListener() {
+//
+//			public void widgetSelected(SelectionEvent e) {
+//				workingSet = addMylarActiveWorkingSetButton.getSelection();
+//			}
+//
+//			public void widgetDefaultSelected(SelectionEvent e) {
+//				// don't care about this event
+//			}
+//		});
 
-			public void widgetSelected(SelectionEvent e) {
-				workingSet = addMylarActiveWorkingSetButton.getSelection();
-			}
+//		label = new Label(buttonComposite, SWT.NONE);
+//		label.setText(WORKING_SET);
+//		gd = new GridData();
+//		label.setLayoutData(gd);
+//		setControl(buttonComposite);
 
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// don't care about this event
-			}
-		});
-
-		label = new Label(buttonComposite, SWT.NONE);
-		label.setText(WORKING_SET);
-		gd = new GridData();
-		label.setLayoutData(gd);
-		setControl(buttonComposite);
-
-		label = new Label(buttonComposite, SWT.NONE);
-		label = new Label(buttonComposite, SWT.NONE);
-		label.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
-		label.setText("Remove via Window->Working Sets ");
+//		label = new Label(buttonComposite, SWT.NONE);
+//		label = new Label(buttonComposite, SWT.NONE);
+//		label.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
+//		label.setText("Remove via Window->Working Sets ");
 		
 		openTaskListButton = new Button(buttonComposite, SWT.CHECK);
 		gd = new GridData();
@@ -262,8 +252,8 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		return contentAssistButton.getSelection();
 	}
 
-	public boolean isWorkingSet() {
-		return workingSet;
+	public boolean isCreateWorkingSet() {
+		return createWorkingSet;
 	}
 
 	public boolean isOpenTaskList() {
