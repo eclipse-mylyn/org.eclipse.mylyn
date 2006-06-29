@@ -1498,14 +1498,16 @@ public class TaskListView extends ViewPart {
 				public void run() {
 					if (getViewer().getControl() != null && !getViewer().getControl().isDisposed()) {
 						if (element == null) {
-//							 getViewer().getControl().setRedraw(false);
 							// getViewer().refresh();
 							filteredTree.textChanged();
-//							 getViewer().getControl().setRedraw(true);
 						} else {
-//							 getViewer().getControl().setRedraw(false);
-							 getViewer().refresh(element, true);
-//							 getViewer().getControl().setRedraw(true);
+							getViewer().refresh(element, true);
+							if (element instanceof AbstractTaskContainer && !((AbstractTaskContainer)element).equals(MylarTaskListPlugin.getTaskListManager().getTaskList().getArchiveContainer())) {
+								List visibleElements = Arrays.asList(getViewer().getVisibleExpandedElements());
+								if (!visibleElements.contains(element)) {
+									getViewer().refresh();
+								}
+							}
 						}
 					}
 				}
