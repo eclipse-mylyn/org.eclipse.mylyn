@@ -24,6 +24,7 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -50,7 +51,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	protected static final String URL_PREFIX_HTTP = "http://";
 
 	private AbstractRepositoryConnector connector;
-	
+
 	protected StringFieldEditor serverUrlEditor;
 
 	protected StringFieldEditor userNameEditor;
@@ -59,7 +60,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	private String serverVersion = TaskRepository.NO_VERSION_SPECIFIED;
 
-	protected RepositoryStringFieldEditor passwordEditor;
+	protected StringFieldEditor passwordEditor;
 
 	protected TaskRepository repository;
 
@@ -71,15 +72,30 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	private Combo timeZonesCombo;
 
+	private Button anonymousButton;
+
+	private String oldUsername;
+
+	private String oldPassword;
+
+	private boolean needsAnonymousLogin;
+
+	private boolean needsTimeZone;
+
+	private boolean needsEncoding;
+
 	public AbstractRepositorySettingsPage(String title, String description, AbstractRepositoryConnector connector) {
 		super(title);
 		super.setTitle(title);
 		super.setDescription(description);
 		this.connector = connector;
 
+		setNeedsAnonymousLogin(false);
+		setNeedsEncoding(true);
+		setNeedsTimeZone(true);
 	}
 
-	public void createControl(Composite parent) {
+	public void createControl(final Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 		FillLayout layout = new FillLayout();
 		container.setLayout(layout);
@@ -99,9 +115,32 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		};
 		serverUrlEditor.setErrorMessage("Server path must be a valid http(s):// url");
 
+		if (needsAnonymousLogin()) {
+			Label anonymousLabel = new Label(parent, SWT.NONE);
+			anonymousLabel.setText("");
+			anonymousButton = new Button(parent, SWT.CHECK);
+			anonymousButton.setText("Anonymous Access");
+			if (repository != null) {
+				anonymousButton.setSelection(isAnonymousAccess());
+			}
+			anonymousButton.addSelectionListener(new SelectionListener() {
+				public void widgetSelected(SelectionEvent e) {
+					boolean selected = anonymousButton.getSelection();
+					updateAnonymousButton(selected, parent);
+				}
+
+				public void widgetDefaultSelected(SelectionEvent e) {
+					// ignore
+				}
+			});
+			updateAnonymousButton(anonymousButton.getSelection(), parent);
+		}
+
 		userNameEditor = new StringFieldEditor("", LABEL_USER, StringFieldEditor.UNLIMITED, container);
 		passwordEditor = new RepositoryStringFieldEditor("", LABEL_PASSWORD, StringFieldEditor.UNLIMITED, container);
 		if (repository != null) {
+			oldUsername = repository.getUserName();
+			oldPassword = repository.getPassword();
 			try {
 				serverUrlEditor.setStringValue(repository.getUrl());
 				userNameEditor.setStringValue(repository.getUserName());
@@ -109,82 +148,90 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			} catch (Throwable t) {
 				MylarStatusHandler.fail(t, "could not set field value for: " + repository, false);
 			}
+		} else {
+			oldUsername = "";
+			oldPassword = "";
 		}
 		// bug 131656: must set echo char after setting value on Mac
-		passwordEditor.getTextControl().setEchoChar('*');
+		((RepositoryStringFieldEditor)passwordEditor).getTextControl().setEchoChar('*');
 
-		Label encodingLabel = new Label(container, SWT.NONE);
-		encodingLabel.setText("Repository time zone: ");
-		timeZonesCombo = new Combo(container, SWT.READ_ONLY);
-		String[] timeZoneIds = TimeZone.getAvailableIDs();
-		Arrays.sort(timeZoneIds);
-		for (String zone : timeZoneIds) {
-			timeZonesCombo.add(zone);
-		}
-		boolean setZone = false;
-		if (repository != null) {
-			if (timeZonesCombo.indexOf(repository.getTimeZoneId()) > -1) {
-				timeZonesCombo.select(timeZonesCombo.indexOf(repository.getTimeZoneId()));
-				setZone = true;
+		if (needsTimeZone()) {
+			Label timeZoneLabel = new Label(container, SWT.NONE);
+			timeZoneLabel.setText("Repository time zone: ");
+			timeZonesCombo = new Combo(container, SWT.READ_ONLY);
+			String[] timeZoneIds = TimeZone.getAvailableIDs();
+			Arrays.sort(timeZoneIds);
+			for (String zone : timeZoneIds) {
+				timeZonesCombo.add(zone);
+			}
+			boolean setZone = false;
+			if (repository != null) {
+				if (timeZonesCombo.indexOf(repository.getTimeZoneId()) > -1) {
+					timeZonesCombo.select(timeZonesCombo.indexOf(repository.getTimeZoneId()));
+					setZone = true;
+				}
+			}
+			if (!setZone) {
+				timeZonesCombo.select(timeZonesCombo.indexOf(TimeZone.getDefault().getID()));
 			}
 		}
-		if (!setZone) {
-			timeZonesCombo.select(timeZonesCombo.indexOf(TimeZone.getDefault().getID()));
-		}
-		
+
 		createAdditionalControls(container);
 
-		Composite encodingContainer = new Composite(container, SWT.NONE);
-		encodingContainer.setLayout(new GridLayout());
-		GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(encodingContainer);
+		if (needsEncoding()) {
+			Composite encodingContainer = new Composite(container, SWT.NONE);
+			encodingContainer.setLayout(new GridLayout());
+			GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(encodingContainer);
 
-		Group encodingGroup = new Group(encodingContainer, SWT.FLAT);
-		encodingGroup.setText("Character Encoding");
-		encodingGroup.setLayout(new GridLayout(2, false));
-		defaultEncoding = new Button(encodingGroup, SWT.RADIO);
-		defaultEncoding.setText("Default (" + TaskRepository.DEFAULT_CHARACTER_ENCODING + ")");
-		defaultEncoding.setSelection(true);
-		GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(defaultEncoding);
+			Group encodingGroup = new Group(encodingContainer, SWT.FLAT);
+			encodingGroup.setText("Character Encoding");
+			encodingGroup.setLayout(new GridLayout(2, false));
+			defaultEncoding = new Button(encodingGroup, SWT.RADIO);
+			defaultEncoding.setText("Default (" + TaskRepository.DEFAULT_CHARACTER_ENCODING + ")");
+			defaultEncoding.setSelection(true);
+			GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(defaultEncoding);
 
-		final Button otherEncoding = new Button(encodingGroup, SWT.RADIO);
-		otherEncoding.setText("Other:");
-		otherEncodingCombo = new Combo(encodingGroup, SWT.READ_ONLY);
-		for (String encoding : Charset.availableCharsets().keySet()) {
-			if (!encoding.equals(TaskRepository.DEFAULT_CHARACTER_ENCODING)) {
-				otherEncodingCombo.add(encoding);
-			}
-		}
-
-		setDefaultEncoding();
-
-		otherEncoding.addSelectionListener(new SelectionAdapter() {
-
-			public void widgetSelected(SelectionEvent e) {
-				if (otherEncoding.getSelection()) {
-					defaultEncoding.setSelection(false);
-					otherEncodingCombo.setEnabled(true);
-				} else {
-					defaultEncoding.setSelection(true);
-					otherEncodingCombo.setEnabled(false);
+			final Button otherEncoding = new Button(encodingGroup, SWT.RADIO);
+			otherEncoding.setText("Other:");
+			otherEncodingCombo = new Combo(encodingGroup, SWT.READ_ONLY);
+			for (String encoding : Charset.availableCharsets().keySet()) {
+				if (!encoding.equals(TaskRepository.DEFAULT_CHARACTER_ENCODING)) {
+					otherEncodingCombo.add(encoding);
 				}
 			}
-		});
 
-		if (repository != null) {
-			try {
-				String repositoryEncoding = repository.getCharacterEncoding();
-				if (repositoryEncoding != null && !repositoryEncoding.equals(defaultEncoding)) {
-					if (otherEncodingCombo.getItemCount() > 0 && otherEncodingCombo.indexOf(repositoryEncoding) > -1) {
-						otherEncodingCombo.setEnabled(true);
-						otherEncoding.setSelection(true);
+			setDefaultEncoding();
+
+			otherEncoding.addSelectionListener(new SelectionAdapter() {
+
+				public void widgetSelected(SelectionEvent e) {
+					if (otherEncoding.getSelection()) {
 						defaultEncoding.setSelection(false);
-						otherEncodingCombo.select(otherEncodingCombo.indexOf(repositoryEncoding));
+						otherEncodingCombo.setEnabled(true);
 					} else {
-						setDefaultEncoding();
+						defaultEncoding.setSelection(true);
+						otherEncodingCombo.setEnabled(false);
 					}
 				}
-			} catch (Throwable t) {
-				MylarStatusHandler.fail(t, "could not set field value for: " + repository, false);
+			});
+
+			if (repository != null) {
+				try {
+					String repositoryEncoding = repository.getCharacterEncoding();
+					if (repositoryEncoding != null && !repositoryEncoding.equals(defaultEncoding)) {
+						if (otherEncodingCombo.getItemCount() > 0
+								&& otherEncodingCombo.indexOf(repositoryEncoding) > -1) {
+							otherEncodingCombo.setEnabled(true);
+							otherEncoding.setSelection(true);
+							defaultEncoding.setSelection(false);
+							otherEncodingCombo.select(otherEncodingCombo.indexOf(repositoryEncoding));
+						} else {
+							setDefaultEncoding();
+						}
+					}
+				} catch (Throwable t) {
+					MylarStatusHandler.fail(t, "could not set field value for: " + repository, false);
+				}
 			}
 		}
 
@@ -209,6 +256,21 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		}
 	}
 
+	private void updateAnonymousButton(boolean selected, Composite parent) {
+		if (selected) {
+			oldUsername = userNameEditor.getStringValue();
+			oldPassword = ((StringFieldEditor) passwordEditor).getStringValue();
+			userNameEditor.setStringValue(null);
+			((StringFieldEditor) passwordEditor).setStringValue(null);
+		} else {
+			userNameEditor.setStringValue(oldUsername);
+			((StringFieldEditor) passwordEditor).setStringValue(oldPassword);
+		}
+
+		userNameEditor.setEnabled(!selected, parent);
+		((StringFieldEditor) passwordEditor).setEnabled(!selected, parent);
+	}
+
 	protected abstract void createAdditionalControls(Composite parent);
 
 	protected abstract void validateSettings();
@@ -229,6 +291,10 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	public void init(IWorkbench workbench) {
 		// ignore
+	}
+
+	private boolean isAnonymousAccess() {
+		return "".equals(getUserName()) && "".equals(getPassword());
 	}
 
 	/**
@@ -282,24 +348,28 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	}
 
 	public String getCharacterEncoding() {
+		if (defaultEncoding == null) {
+			return null;
+		}
+
 		if (defaultEncoding.getSelection()) {
 			return TaskRepository.DEFAULT_CHARACTER_ENCODING;
 		} else {
-			if(otherEncodingCombo.getSelectionIndex() > -1) {
+			if (otherEncodingCombo.getSelectionIndex() > -1) {
 				return otherEncodingCombo.getItem(otherEncodingCombo.getSelectionIndex());
 			} else {
 				return TaskRepository.DEFAULT_CHARACTER_ENCODING;
-			}			
+			}
 		}
 	}
 
 	public String getTimeZoneId() {
-		return timeZonesCombo.getItem(timeZonesCombo.getSelectionIndex());
+		return (timeZonesCombo != null) ? timeZonesCombo.getItem(timeZonesCombo.getSelectionIndex()) : null;
 	}
 
 	public TaskRepository createTaskRepository() {
-		TaskRepository repository = new TaskRepository(connector.getRepositoryType(), 
-				getServerUrl(), getVersion(), getCharacterEncoding(), getTimeZoneId());
+		TaskRepository repository = new TaskRepository(connector.getRepositoryType(), getServerUrl(), getVersion(),
+				getCharacterEncoding(), getTimeZoneId());
 		repository.setAuthenticationCredentials(getUserName(), getPassword());
 		return repository;
 	}
@@ -307,5 +377,29 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	public AbstractRepositoryConnector getConnector() {
 		return connector;
 	}
-	
+
+	public boolean needsEncoding() {
+		return needsEncoding;
+	}
+
+	public boolean needsTimeZone() {
+		return needsTimeZone;
+	}
+
+	public boolean needsAnonymousLogin() {
+		return needsAnonymousLogin;
+	}
+
+	public void setNeedsEncoding(boolean needsEncoding) {
+		this.needsEncoding = needsEncoding;
+	}
+
+	public void setNeedsTimeZone(boolean needsTimeZone) {
+		this.needsTimeZone = needsTimeZone;
+	}
+
+	public void setNeedsAnonymousLogin(boolean needsAnonymousLogin) {
+		this.needsAnonymousLogin = needsAnonymousLogin;
+	}
+
 }
