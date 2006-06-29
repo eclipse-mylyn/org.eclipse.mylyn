@@ -449,6 +449,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 			public void run() {				
 				MylarTaskListPlugin.getRepositoryManager().readRepositories();
 				MylarPlugin.getContextManager().loadActivityMetaContext();
+				MylarTaskListPlugin.getTaskListManager().resetTaskList();
 				MylarTaskListPlugin.getTaskListManager().readExistingOrCreateNewList();
 			}
 		});

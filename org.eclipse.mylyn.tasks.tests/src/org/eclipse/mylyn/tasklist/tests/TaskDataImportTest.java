@@ -20,6 +20,7 @@ import org.eclipse.mylar.internal.tasklist.ui.wizards.TaskDataImportWizardPage;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.provisional.tasklist.Task;
 import org.eclipse.mylar.provisional.tasklist.TaskList;
 import org.eclipse.mylar.provisional.tasklist.TaskListManager;
 import org.eclipse.swt.widgets.Shell;
@@ -116,7 +117,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 		wizard.performFinish();
 		
 		Collection<ITask> tasks = taskList.getAllTasks();
-		assertTrue(tasks.size() > 0);
+		assertEquals(2, tasks.size());
 		for (ITask task : tasks) {
 			assertTrue(MylarPlugin.getContextManager().hasContext(task.getHandleIdentifier()));
 		}
@@ -125,4 +126,40 @@ public class TaskDataImportTest extends AbstractContextTest {
 		assertTrue(historyContext.getInteractionHistory().size() > 0);
 		assertEquals(2, MylarTaskListPlugin.getRepositoryManager().getAllRepositories().size());
 	}
+	
+	
+	/**
+	 * Tests the wizard when it has been asked to import all task data from a
+	 * zip file
+	 */
+	public void testImportOverwritesAllTasks() {
+		TaskList taskList = MylarTaskListPlugin.getTaskListManager().getTaskList();
+		MylarContext historyContext = MylarPlugin.getContextManager().getActivityHistoryMetaContext();
+		assertNotNull(taskList);
+		assertNotNull(historyContext);
+		assertTrue(taskList.getAllTasks().size() == 0);		
+		assertTrue(historyContext.getInteractionHistory().size() == 0);
+		assertEquals(0, MylarTaskListPlugin.getRepositoryManager().getAllRepositories().size());
+
+		Task task1 = new Task("handle", "label", true);
+		taskList.addTask(task1);
+		Collection<ITask> tasks = taskList.getAllTasks();
+		assertEquals(1, tasks.size());
+		
+		wizardPage.setParameters(true, true, true, true, true, "", sourceZipFile.getPath());
+		wizard.performFinish();
+		
+		tasks = taskList.getAllTasks();
+		assertEquals(2, tasks.size());
+		assertTrue(!taskList.getAllTasks().contains(task1));
+		for (ITask task : tasks) {
+			assertTrue(MylarPlugin.getContextManager().hasContext(task.getHandleIdentifier()));
+		}
+		historyContext = MylarPlugin.getContextManager().getActivityHistoryMetaContext();		
+		assertNotNull(historyContext);
+		assertTrue(historyContext.getInteractionHistory().size() > 0);		
+		assertEquals(2, MylarTaskListPlugin.getRepositoryManager().getAllRepositories().size());
+				
+	}
+	
 }
