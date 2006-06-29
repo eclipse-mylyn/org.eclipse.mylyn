@@ -36,11 +36,18 @@
             id="org.eclipse.mylar.tasklist.report.ui.planningGameWizard"
             name="Task Activity Report (Experimental)">
       </wizard>
+      <wizard
+            canFinishEarly="true"
+            category="org.eclipse.mylar.wizards"
+            class="org.eclipse.mylar.internal.tasklist.ui.wizards.NewLocalTaskWizard"
+            icon="icons/etool16/task-new.gif"
+            id="org.eclipse.mylar.tasklist.wizard.new.task"
+            name="New Local Task"/>
 	  <wizard
             category="org.eclipse.mylar.wizards"
             class="org.eclipse.mylar.internal.tasklist.ui.wizards.NewRepositoryTaskWizard"
             icon="icons/etool16/task-repository-new.gif"
-            id="org.eclipse.mylar.tasklist.wizard.new.query"
+            id="org.eclipse.mylar.tasklist.wizard.new.repository.task"
             name="New Repository Task"/>
       <wizard
             category="org.eclipse.mylar.wizards"
