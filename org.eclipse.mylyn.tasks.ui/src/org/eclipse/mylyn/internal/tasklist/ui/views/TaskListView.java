@@ -304,6 +304,7 @@ public class TaskListView extends ViewPart {
 				}
 			}
 			if (task.isActive()) {
+				// TODO: only do this if description changes
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						filteredTree.indicateActiveTask(task);
