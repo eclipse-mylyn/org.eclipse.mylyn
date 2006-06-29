@@ -309,7 +309,8 @@ public class TaskListView extends ViewPart {
 		}
 
 		public void repositoryInfoChanged(ITask task) {
-			refreshTask(task);
+			localInfoChanged(task);
+//			refreshTask(task);
 		}
 
 		public void taskMoved(ITask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
