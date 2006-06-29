@@ -11,7 +11,6 @@ package org.eclipse.mylar.internal.tasklist.ui.wizards;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.tasklist.ui.actions.NewLocalTaskAction;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
@@ -21,7 +20,7 @@ import org.eclipse.ui.IWorkbench;
 public class NewLocalTaskWizard extends Wizard implements INewWizard {
 
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		// ignore
+		setForcePreviousAndNextButtons(false);
 	}
 	
 	@Override
@@ -31,7 +30,7 @@ public class NewLocalTaskWizard extends Wizard implements INewWizard {
 	
 	@Override
 	public boolean performFinish() {
-		new NewLocalTaskAction(TaskListView.getFromActivePerspective()).run();
+		new NewLocalTaskAction().run();
 		return true;
 	}
 

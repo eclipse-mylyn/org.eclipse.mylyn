@@ -38,6 +38,10 @@ public class NewLocalTaskAction extends Action {
 
 	private final TaskListView view;
 
+	public NewLocalTaskAction() {
+		this(null);
+	}
+	
 	public NewLocalTaskAction(TaskListView view) {
 		this.view = view;
 		setText(TaskInputDialog.LABEL_SHELL);
@@ -49,14 +53,15 @@ public class NewLocalTaskAction extends Action {
 	@Override
 	public void run() {
 		Task newTask = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), DESCRIPTION_DEFAULT, true);
-//		newTask.setUrl(getDefaultIssueURL());
-		
+
 		Calendar reminderCalendar = GregorianCalendar.getInstance();
 		MylarTaskListPlugin.getTaskListManager().setScheduledToday(reminderCalendar);
 		MylarTaskListPlugin.getTaskListManager().setReminder(newTask, reminderCalendar.getTime());
 
-		Object selectedObject = ((IStructuredSelection) view.getViewer().getSelection()).getFirstElement();
-
+		Object selectedObject = null;
+		if (view != null) {
+			((IStructuredSelection) view.getViewer().getSelection()).getFirstElement();
+		}
 		if (selectedObject instanceof TaskCategory) {
 			MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask, (TaskCategory) selectedObject);
 		} else if (selectedObject instanceof ITask) {
@@ -70,13 +75,12 @@ public class NewLocalTaskAction extends Action {
 			} else {
 				MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask,
 						MylarTaskListPlugin.getTaskListManager().getTaskList().getRootCategory());
-				// MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(newTask);
 			}
-		} else if (view.getDrilledIntoCategory() instanceof TaskCategory) {
+		} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
 			MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask,
 					(TaskCategory) view.getDrilledIntoCategory());
 		} else {
-			if (view.getDrilledIntoCategory() != null) {
+			if (view != null && view.getDrilledIntoCategory() != null) {
 				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), MylarTaskListPlugin.TITLE_DIALOG, 
 						"The new task has been added to the root of the list, since tasks can not be added to a query.");
 			}
@@ -84,14 +88,12 @@ public class NewLocalTaskAction extends Action {
 					MylarTaskListPlugin.getTaskListManager().getTaskList().getRootCategory());
 		}
 		TaskUiUtil.openEditor(newTask, true);
-		// newTask.openTaskInEditor(false);
-		view.getViewer().refresh();
-
 		
-		view.setInRenameAction(true);
-		view.getViewer().editElement(newTask, 4);
-		view.setInRenameAction(false);
-//		view.getViewer().setSelection(new StructuredSelection(newTask));
-		// }
+		if (view != null) {
+			view.getViewer().refresh();		
+			view.setInRenameAction(true);
+			view.getViewer().editElement(newTask, 4);
+			view.setInRenameAction(false);
+		}
 	}
 }
