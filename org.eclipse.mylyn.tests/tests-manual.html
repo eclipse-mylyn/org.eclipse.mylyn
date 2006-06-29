@@ -9,8 +9,9 @@
 	<p><b>Bugzilla Client</b></p>
 	
 	<ul>
+		<li>Migration: Ensure that offline reports still open correctly (if not 
+		lost).</li>
 		<li>Bug Editor Hyperlinking - <font color="#FF6600">URL Hyperlinks</font>, Bug hyperlinks (bug# 123, bug 12312,  duplicate bug links), stack trace file links</li>
-		<li>Ensure that when offline reports still open correctly.</li>
 	</ul>
 	<ul>
 		<li>Test of Search &gt; Search... &gt; Bugzilla Search tab
@@ -22,7 +23,27 @@
 		</ul>
 		<li>Test Bugzilla Query Wizard</li><ul>
 			<li>Create new query</li>
-			<li>Open query to see that parameters are still there</li>
+			<li><b><font color="#FF0000" size="4">Open query to see that parameters are still there 
+			(June 29, 2006 [0.6])</font></b></li>
+			<li><font color="#FF0000"><b>java.lang.NullPointerException<br>
+			at 
+			org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchPage.setVisible(BugzillaSearchPage.java:1024)<br>
+			at 
+			org.eclipse.search.internal.ui.SearchDialog.turnToPage(SearchDialog.java:526)<br>
+			at 
+			org.eclipse.search.internal.ui.SearchDialog.access$1(SearchDialog.java:500)<br>
+			at 
+			org.eclipse.search.internal.ui.SearchDialog$7.widgetSelected(SearchDialog.java:408)<br>
+			at 
+			org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:90)<br>
+			at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)<br>
+			at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:928)<br>
+			at 
+			org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:3348)<br>
+			at 
+			org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:2968)<br>
+			at org.eclipse.jface.window.Window.runEventLoop(Window.java:820)<br>
+			at org.eclipse.jface.window.Window.open(Window.java:796)</b></font></li>
 			<li>Check for error handling (enter invalid number in max returned etc)</li>
 		</ul></li>
 		<li>New Bug submission (valid credentials)<ul>
@@ -33,18 +54,19 @@
 		Task Repositories view</li>
 			<li>Initiate new repository task action</li>
 			<li>Select repository with missing credentials</li>
-			<li>After product selection user is presented with dialog:<ul>
-				<li>Login credentials missing. Ensure proper repository configuration in 
-		Task Repositories view.</li>
-			</ul></li>
+			<li><font color="#FF0000">Upon submitting new bug editor user is 
+			presented with credentials error dialog (June 29, 2006 [0.6] Posting 
+			Error - Ensure proper configuration... dialog occurs rather than 
+			correct error message)</font></li>
 		</ul></li>
-		<li><font color="#FF0000">Bug Compare (ensure priority attribute works)</font></li>
 		<li>New Bug submission (invalid password)<ul>
 			<li>Make repository password invalid in Task Repositories view.</li>
 			<li>Initiate new repository task action.</li>
 			<li>Select repository with invalid password</li>
-			<li>Error Dialog presented on product update or selection of Next: The 
-		user name or password you entered is not valid...</li>
+			<li><font color="#FF0000">Error Dialog presented on product update or selection of Next: The 
+		user name or password you entered is not valid...&nbsp; (June 29, 2006 
+			[0.6] Posting Error - Ensure proper configuration... dialog occurs 
+			rather than correct error message)</font></li>
 		</ul></li>
 		<li>Submission of changes to a Bugzilla report should result in all 
 		parent queries being re-synchronized as well as the task itself being 
@@ -56,14 +78,45 @@
 			<li>Mylar Bugzilla Client Dialog: Bugzilla could not post your bug since your login name or password is incorrect.
 		Ensure proper repository configuration in Task Repositories view.</li>
 		</ul></li>
+		<li><font color="#FF0000">Bug Compare (ensure attribute compare works) 
+		(June 29, 2006 [0.6])</font></li>
 		<li>Synchronize Reports (invalid userid and password)<ul>
 			<li>Report Download Failed Dialog: Ensure proper repository 
 		configuration in Task Repositories view.</li>
 		</ul></li>
-		<li><font color="#FF0000">Product configuration caching</font><ul>
-			<li><font color="#FF0000">Run new bug wizard</font></li>
-			<li><font color="#FF0000">Restart, rerun, products should appear immediately</font></li>
+		<li>Product configuration caching<ul>
+			<li>Run new bug wizard</li>
+			<li>Restart, rerun, products should appear immediately</li>
 		</ul></li>
+		<li>Synchronizing while disconnected should not put errors in the 
+		eclipse log<ul>
+		<li><font color="#FF0000">java.net.UnknownHostException: 
+		mylar.eclipse.org<br>
+		at java.net.PlainSocketImpl.connect(Unknown Source)<br>
+		at java.net.Socket.connect(Unknown Source)<br>
+		at sun.net.NetworkClient.doConnect(Unknown Source)<br>
+		at sun.net.www.http.HttpClient.openServer(Unknown Source)<br>
+		at sun.net.www.http.HttpClient.openServer(Unknown Source)<br>
+		at sun.net.www.http.HttpClient.&lt;init&gt;(Unknown Source)<br>
+		at sun.net.www.http.HttpClient.New(Unknown Source)<br>
+		at sun.net.www.http.HttpClient.New(Unknown Source)<br>
+		at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(Unknown 
+		Source)<br>
+		at sun.net.www.protocol.http.HttpURLConnection.plainConnect(Unknown 
+		Source)<br>
+		at sun.net.www.protocol.http.HttpURLConnection.connect(Unknown Source)<br>
+		at 
+		org.eclipse.mylar.internal.bugzilla.core.AbstractReportFactory.collectResults(AbstractReportFactory.java:66)<br>
+		at 
+		org.eclipse.mylar.internal.bugzilla.core.RepositoryReportFactory.populateReport(RepositoryReportFactory.java:58)<br>
+		at 
+		org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil.getBug(BugzillaRepositoryUtil.java:91)<br>
+		at 
+		org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaOfflineTaskHandler.downloadTaskData(BugzillaOfflineTaskHandler.java:66)<br>
+		at 
+		org.eclipse.mylar.provisional.tasklist.SynchronizeTaskJob.run(SynchronizeTaskJob.java:82)</font></li>
+	</ul>
+		</li>
 		<li>Reports &gt; Task list notification<ul>
 			<li>Open, modify, save, should have outgoing decorator<ul>
 				<li>Case synchronize: should get option to override local changes<ul>
@@ -89,12 +142,11 @@
 			<p></li>
 			<li>Query hits not yet downloaded<ul>
 				<li>Case open: report downloaded (task icon appears), no decoration</li>
-				<li>Case synchronize: query hit remains not downloaded, 
-				<font color="#FF0000">no decoration</font><br>&nbsp;</li>
+				<li>Case synchronize: report downloaded (task icon appears), no 
+				decoration<br>&nbsp;</li>
 			</ul></li>
 			<li>Open report&nbsp; in external editor and add a comment.<ul>
-				<li>Case synchronize: incoming decoration should appear on task
-				<font color="#FF0000">[Broken under Linux]</font><ul>
+				<li>Case synchronize: incoming decoration should appear on task<ul>
 					<li>Case open: task opens with new content, no decoration</li>
 					<li>Case open (bug editor already open):&nbsp; 
 					User presented with dialog asking if they want to reopen 
@@ -107,10 +159,10 @@
 			<li>Open, modify, save, should have outgoing decorator, open report in 
 		external browser, add comment<ul>
 				<li>Case open: Outgoing decorator remains</li>
-				<li>Case Submit: Dialog:Possible problem posting Bugzilla report... HTML 
-		mid-air collision dialog (outgoing state remains)<ul>
-					<li><font color="#FF0000">Editor should be placed in 
-					CONFLICT state upon mid air collision</font></li>
+				<li>Case Submit: Dialog:Possible problem posting Bugzilla 
+				report... HTML mid-air collision dialog<ul>
+					<li>Overwrite changes dialog (if yes - SYNCHRONIZED, if no - 
+					CONFLICT)</li>
 				</ul></li>
 				<li>Case synchronize: should get option to override local changes<ul>
 					<li>If overriding, overlay and changes go away</li>
@@ -122,10 +174,14 @@
 			<li>Copy report to root category, repeat tests ensuring decoration 
 		always matches</li>
 		</ul></li>
+		<li>Check that auto background synchronize works</li>
+		<li><font color="#FF0000">If editor open and task gets incoming dialog 
+		presented asking if user wants to refresh and reopen. (June 29, 2006 
+		[0.6])</font></li>
 		<li>Ensure that when offline reports file is deleted, tasks don't 
 		suddenly all have incoming status upon synchronizing</li>
 		<li>Reports &gt; Outline View<ul>
-			<li>Clicking on comments in outline view should cause Bugzilla editor to 
+			<li>Clicking on comments in outline view should cause editor to 
 		scroll to respective bug on page.</li>
 		</ul></li>
 	</ul>
@@ -137,7 +193,7 @@
 	</ul>
 		</li>
 		<li>Make a task, make it active, move it to the 
-		archive - file should remain visible in task list</li>
+		archive (remove from root category) - file should remain visible in task list</li>
 		<li>Task List Auto-Archive</li>
 		<li>Addition and removal of files from change sets</li>
 		<li>Mylar context sensitive JUnit unit tests</li>
