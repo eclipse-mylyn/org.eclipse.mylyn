@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on 31-Jan-2005
- */
+
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import org.eclipse.core.resources.IMarker;

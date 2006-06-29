@@ -519,7 +519,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 			if (attribute.hasOptions() && !attribute.isReadOnly()) {
 				toolkit.createLabel(attributesComposite, name);
-				attributeCombo = new CCombo(attributesComposite, SWT.FLAT | SWT.READ_ONLY);
+				attributeCombo = new CCombo(attributesComposite, SWT.BORDER | SWT.READ_ONLY);
 				toolkit.adapt(attributeCombo, true, true);
 				attributeCombo.setFont(TEXT_FONT);
 				attributeCombo.setLayoutData(data);

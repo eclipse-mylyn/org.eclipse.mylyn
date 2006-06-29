@@ -15,6 +15,9 @@ import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
+/**
+ * @author Jeff Pound
+ */
 public class NewAttachmentWizardDialog extends WizardDialog {
 
 	private static final String ATTACHMENT_WIZARD_SETTINGS_SECTION = "PatchWizard"; //$NON-NLS-1$

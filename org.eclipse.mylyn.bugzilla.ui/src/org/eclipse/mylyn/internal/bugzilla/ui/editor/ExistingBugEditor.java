@@ -189,7 +189,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 				radioData.heightHint = 20;
 				radioData.widthHint = AbstractRepositoryTaskEditor.WRAP_LENGTH;
 				// radioOptions[i] = new Combo(buttonComposite, SWT.NULL);
-				radioOptions[i] = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY);
+				radioOptions[i] = new CCombo(buttonComposite, SWT.BORDER | SWT.READ_ONLY);
 				toolkit.adapt(radioOptions[i], true, true);
 				// radioOptions[i] = new Combo(buttonComposite, SWT.MULTI |
 				// SWT.V_SCROLL | SWT.READ_ONLY);

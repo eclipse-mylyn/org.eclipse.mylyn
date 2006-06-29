@@ -87,32 +87,32 @@ public class NewAttachmentPage extends WizardPage {
 	public void createControl(Composite parent) {
 
 		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
-
+		toolkit.setBackground(parent.getBackground());
 		Composite composite = toolkit.createComposite(parent);
-		composite.setBackground(parent.getBackground());		
+//		composite.setBackground(parent.getBackground());		
 		setControl(composite);
 
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		composite.setLayout(new GridLayout(3, false));
 
-		toolkit.createLabel(composite, "File").setBackground(parent.getBackground());
+		toolkit.createLabel(composite, "File");//.setBackground(parent.getBackground());
 		filePath = new Text(composite, SWT.LEFT); 
 		
 		filePath.setEditable(false);
 		filePath.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 2, 1));
 
-		toolkit.createLabel(composite, "Description").setBackground(parent.getBackground());
+		toolkit.createLabel(composite, "Description");//.setBackground(parent.getBackground());
 		attachmentDesc = toolkit.createText(composite, "");
 		attachmentDesc.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 2, 1));
 
-		toolkit.createLabel(composite, "Comment").setBackground(parent.getBackground());
+		toolkit.createLabel(composite, "Comment");//.setBackground(parent.getBackground());
 		attachmentComment = toolkit.createText(composite, "", SWT.WRAP);
 		attachmentComment.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
-		toolkit.createLabel(composite, "Content Type").setBackground(parent.getBackground());
-		final CCombo contentTypeList = new CCombo(composite, SWT.FLAT | SWT.DROP_DOWN | SWT.READ_ONLY);
+		toolkit.createLabel(composite, "Content Type");//.setBackground(parent.getBackground());
+		final CCombo contentTypeList = new CCombo(composite, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
 		final Button isPatchButton = toolkit.createButton(composite, "Patch", SWT.CHECK);
-		isPatchButton.setBackground(parent.getBackground());
+//		isPatchButton.setBackground(parent.getBackground());
 		final HashMap<String, Integer> contentTypeIndices = new HashMap<String, Integer>();
 		Iterator<String> iter = contentTypes.iterator();
 		int i = 0;

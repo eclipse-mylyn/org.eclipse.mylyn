@@ -60,7 +60,7 @@ public class NewLocalTaskAction extends Action {
 
 		Object selectedObject = null;
 		if (view != null) {
-			((IStructuredSelection) view.getViewer().getSelection()).getFirstElement();
+			selectedObject = ((IStructuredSelection) view.getViewer().getSelection()).getFirstElement();
 		}
 		if (selectedObject instanceof TaskCategory) {
 			MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask, (TaskCategory) selectedObject);
