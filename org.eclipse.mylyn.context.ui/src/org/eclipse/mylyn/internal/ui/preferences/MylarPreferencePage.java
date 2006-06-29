@@ -81,6 +81,8 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 
 	private Button manageEditorsButton = null;
 
+	private Button managePerspectivesButton = null;
+	
 	private static final String LABEL_COLUMN = "Label";
 
 	private static final String COLOR_COLUMN = "Color";
@@ -110,7 +112,7 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 		layout.verticalSpacing = 4;
 		entryTable.setLayout(layout);
 
-		createEditorsSection(entryTable);
+		createUiManagementSection(entryTable);
 		createExclusionFilterControl(entryTable);
 
 		createTable(entryTable);
@@ -145,6 +147,7 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 		getPreferenceStore().setValue(MylarUiPrefContstants.INTEREST_FILTER_EXCLUSION,
 				exclusionFieldEditor.getStringValue());
 		getPreferenceStore().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, manageEditorsButton.getSelection());
+		getPreferenceStore().setValue(MylarUiPrefContstants.AUTO_MANAGE_PERSPECTIVES, managePerspectivesButton.getSelection());
 //		int value = autoOpenEditorsNum.getIntValue();
 //		if (value > 0) {
 //			getPreferenceStore().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS_OPEN_NUM, value);
@@ -644,37 +647,21 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 		return;
 	}
 
-	private void createEditorsSection(Composite parent) {
+	private void createUiManagementSection(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
 
 		group.setLayout(new GridLayout(1, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		group.setText("Editor Management");
+		group.setText("UI Management");
 
-		// Composite composite = new Composite(group, SWT.NULL);
-		// GridLayout gridLayout = new GridLayout(3, false);
-		// gridLayout.marginHeight = 0;
-		// gridLayout.marginWidth = 0;
-		// composite.setLayout(gridLayout);
+		managePerspectivesButton = new Button(group, SWT.CHECK);
+		managePerspectivesButton.setText("Open last used perspective on task activation");
+		managePerspectivesButton.setSelection(getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_PERSPECTIVES));
+		
 		manageEditorsButton = new Button(group, SWT.CHECK);
-		manageEditorsButton.setText("Manage open editors to match task context.");
+		manageEditorsButton.setText("Manage open editors to match task context");
 		manageEditorsButton.setSelection(getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS));
-
-		// Composite numComposite = new Composite(group, SWT.NULL);
-		// gridLayout = new GridLayout(1, false);
-		// gridLayout.marginHeight = 0;
-		// gridLayout.marginWidth = 0;
-		// numComposite.setLayout(gridLayout);
-		// autoOpenEditorsNum = new IntegerFieldEditor("", "Max to open: ",
-		// numComposite, 4);
-		// autoOpenEditorsNum.setErrorMessage("Must be an integer");
-		// int num =
-		// getPreferenceStore().getInt(MylarUiPrefContstants.AUTO_MANAGE_EDITORS_OPEN_NUM);
-		// if (num > 0) {
-		// autoOpenEditorsNum.setStringValue("" + num);
-		// autoOpenEditorsNum.setEmptyStringAllowed(false);
-		// }
-
+		
 		String prefName = WorkbenchMessages.WorkbenchPreference_reuseEditors;
 		if (getContainer() instanceof IWorkbenchPreferenceContainer) {
 			String message = "<a>''{0}''</a> \"" + prefName + "\" setting will toggle with task activation";

@@ -240,14 +240,12 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
 		store.setDefault(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, true);
+		store.setDefault(MylarUiPrefContstants.AUTO_MANAGE_PERSPECTIVES, true);
 		store.setDefault(MylarUiPrefContstants.AUTO_MANAGE_EDITORS_OPEN_NUM, 8);
 
 		store.setDefault(MylarUiPrefContstants.GAMMA_SETTING_LIGHTENED, false);
 		store.setDefault(MylarUiPrefContstants.GAMMA_SETTING_STANDARD, true);
 		store.setDefault(MylarUiPrefContstants.GAMMA_SETTING_DARKENED, false);
-
-//		if (!store.contains(MylarUiPrefContstants.GLOBAL_FILTERING))
-//			store.setDefault(MylarUiPrefContstants.GLOBAL_FILTERING, true);
 	}
 
 	public void setHighlighterMapping(String id, String name) {

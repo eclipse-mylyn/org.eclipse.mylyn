@@ -28,7 +28,9 @@ public class MylarPerspectiveManager implements ITaskActivityListener {
 
 	public void taskActivated(ITask task) {
 		String perspectiveId = MylarUiPlugin.getDefault().getPerspectiveIdFor(task);
-		if (perspectiveId != null && !"".equals(perspectiveId)) {
+		
+		if (perspectiveId != null && !"".equals(perspectiveId) 
+				&& MylarUiPlugin.getDefault().getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_PERSPECTIVES)) {
 			try {
 				PlatformUI.getWorkbench().showPerspective(perspectiveId, PlatformUI.getWorkbench().getActiveWorkbenchWindow());
 			} catch (WorkbenchException e) {
@@ -38,16 +40,18 @@ public class MylarPerspectiveManager implements ITaskActivityListener {
 	}
 
 	public void taskDeactivated(ITask task) {
-		if (PlatformUI.isWorkbenchRunning()) {
-			IPerspectiveDescriptor descriptor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getPerspective();
+		if (PlatformUI.isWorkbenchRunning() 
+				&& MylarUiPlugin.getDefault().getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_PERSPECTIVES)) {
+			IPerspectiveDescriptor descriptor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+					.getPerspective();
 			MylarUiPlugin.getDefault().setPerspectiveIdFor(task, descriptor.getId());
 		}
 	}
-	
+
 	public void activityChanged(DateRangeContainer week) {
 		// ignore
 	}
-	
+
 	public void taskListRead() {
 		// ignore
 	}

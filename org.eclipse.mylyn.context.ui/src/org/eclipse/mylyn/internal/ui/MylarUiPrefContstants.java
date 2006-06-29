@@ -29,6 +29,8 @@ public class MylarUiPrefContstants {
 
 	public static final String AUTO_MANAGE_EDITORS = "org.eclipse.mylar.ide.ui.editors.auto.manage";
 	
+	public static final String AUTO_MANAGE_PERSPECTIVES = "org.eclipse.mylar.ide.ui.perspectives.auto.manage";
+		
 	public static final String HIGHLIGHTER_PREFIX = "org.eclipse.mylar.ui.interest.highlighters";
 
 	public static final String GAMMA_SETTING_DARKENED = "org.eclipse.mylar.ui.gamma.darkened";
