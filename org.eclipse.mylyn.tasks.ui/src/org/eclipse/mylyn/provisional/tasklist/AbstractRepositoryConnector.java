@@ -331,7 +331,7 @@ public abstract class AbstractRepositoryConnector {
 		if(status == RepositoryTaskSyncState.INCOMING) {
 			repositoryTask.setNotified(false);
 		}
-		return startState == repositoryTask.getSyncState();
+		return startState != repositoryTask.getSyncState();
 		// } catch (final CoreException e) {
 		// if (forceSync) {
 		// PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
