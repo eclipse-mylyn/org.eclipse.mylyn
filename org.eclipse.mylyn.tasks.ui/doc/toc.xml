@@ -3,8 +3,10 @@
 
 <toc link_to="../org.eclipse.mylar.doc/doc/toc.xml#tasklist" label="Task List"> 
 	<topic label="Task List" href="doc/tasklist.html">
+		<!--
 		<topic label="Task Planning" href="doc/planning.html"/>
 		<topic label="Bugzilla Integration" href="doc/bugzilla.html"/>
+		-->
 	</topic>
 </toc>
 
