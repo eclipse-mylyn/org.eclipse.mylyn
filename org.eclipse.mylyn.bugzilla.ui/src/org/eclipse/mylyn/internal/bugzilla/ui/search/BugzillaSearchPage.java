@@ -977,6 +977,10 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 							repositoryCombo.setText(selectRepo);
 							repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
 									BugzillaPlugin.REPOSITORY_KIND, repositoryCombo.getText());
+							if (repository == null) {
+								repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
+										BugzillaPlugin.REPOSITORY_KIND);
+							}
 						} else {
 							repositoryCombo.select(indexToSelect);
 						}
@@ -1020,12 +1024,15 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 			 * attributes so the component/version/milestone lists have the
 			 * proper values, then we can restore all the widget selections.
 			 */
-			IDialogSettings settings = getDialogSettings();
-			String repoId = "." + repository.getUrl();
-			if (getWizard() == null && restoreQueryOptions && settings.getArray(STORE_PRODUCT_ID + repoId) != null && product != null) {
-				product.setSelection(nonNullArray(settings, STORE_PRODUCT_ID + repoId));
-				updateAttributesFromRepository(repository.getUrl(), product.getSelection(), false);
-				restoreWidgetValues();
+			if (repository != null) {
+				IDialogSettings settings = getDialogSettings();
+				String repoId = "." + repository.getUrl();
+				if (getWizard() == null && restoreQueryOptions && settings.getArray(STORE_PRODUCT_ID + repoId) != null
+						&& product != null) {
+					product.setSelection(nonNullArray(settings, STORE_PRODUCT_ID + repoId));
+					updateAttributesFromRepository(repository.getUrl(), product.getSelection(), false);
+					restoreWidgetValues();
+				}
 			}
 
 			if (scontainer != null) {
