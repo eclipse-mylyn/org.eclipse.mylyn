@@ -10,7 +10,7 @@
 	
 	<ul>
 		<li>Migration: Ensure that offline reports still open correctly (if not 
-		lost).</li>
+		lost completely).</li>
 		<li>Bug Editor Hyperlinking - <font color="#FF6600">URL Hyperlinks</font>, Bug hyperlinks (bug# 123, bug 12312,  duplicate bug links), stack trace file links</li>
 	</ul>
 	<ul>
@@ -70,7 +70,7 @@
 		</ul></li>
 		<li>Synchronizing while disconnected should not put errors in the 
 		eclipse log<ul>
-		<li><font color="#FF0000">java.net.UnknownHostException: 
+		<li><font color="#FF6600">java.net.UnknownHostException: 
 		mylar.eclipse.org<br>
 		at java.net.PlainSocketImpl.connect(Unknown Source)<br>
 		at java.net.Socket.connect(Unknown Source)<br>
@@ -155,9 +155,8 @@
 		always matches</li>
 		</ul></li>
 		<li>Check that auto background synchronize works</li>
-		<li><font color="#FF0000">If editor open and task gets incoming dialog 
-		presented asking if user wants to refresh and reopen. (June 29, 2006 
-		[0.6])</font></li>
+		<li>If editor open and task gets incoming dialog 
+		presented asking if user wants to refresh and reopen.</li>
 		<li>Ensure that when offline reports file is deleted, tasks don't 
 		suddenly all have incoming status upon synchronizing</li>
 		<li>Reports &gt; Outline View<ul>
@@ -192,6 +191,7 @@
 		<li>Run JUnit context test without interesting tests: should get message</li>
 		<li>Run JUnit contexts test with interesting tests, should run</li>
 		<li>Do above for PDE JUnit tests</li>
+		<li>Ensure code folding works properly</li>
 	</ul>
 	<p>PDE</p>
 	<ul>
