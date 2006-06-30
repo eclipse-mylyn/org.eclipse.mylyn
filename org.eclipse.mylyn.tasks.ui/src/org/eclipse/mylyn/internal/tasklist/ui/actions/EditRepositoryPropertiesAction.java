@@ -61,6 +61,10 @@ public class EditRepositoryPropertiesAction extends Action {
 					}
 				}
 			}
+			// TODO: move
+			if (TaskRepositoriesView.getFromActivePerspective() != null) {
+				TaskRepositoriesView.getFromActivePerspective().getViewer().refresh();
+			}
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, e.getMessage(), true);
 		}
