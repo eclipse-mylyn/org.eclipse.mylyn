@@ -27,7 +27,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 
 	private static final String TITLE = "Task Repository Settings";
 
-	private AbstractRepositorySettingsPage abstractRepositorySettingsPage;// =
+	private AbstractRepositorySettingsPage abstractRepositorySettingsPage;
 
 	private TaskRepository oldRepository;
 
@@ -80,5 +80,10 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 	@Override
 	public boolean canFinish() {
 		return abstractRepositorySettingsPage.isPageComplete();
+	}
+	
+	/** public for testing */
+	public AbstractRepositorySettingsPage getSettingsPage() {
+		return abstractRepositorySettingsPage;
 	}
 }
