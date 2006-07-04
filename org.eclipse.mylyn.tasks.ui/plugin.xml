@@ -422,6 +422,12 @@
       <dynamicPopupMenu class="org.eclipse.mylar.internal.tasklist.ui.TaskReminderMenuContributor"/>
       <dynamicPopupMenu class="org.eclipse.mylar.internal.tasklist.ui.MoveToCategoryMenuContributor"/>
    </extension>
+   <extension
+         point="org.eclipse.mylar.tasklist.editors">
+      <hyperlinkDetector
+            class="org.eclipse.mylar.internal.tasklist.ui.editors.TaskEditorUrlHyperlinkDetector"
+            id="org.eclipse.mylar.tasklist.hyperlinkdetector.url"/>
+   </extension>
    
    <!--
    <extension

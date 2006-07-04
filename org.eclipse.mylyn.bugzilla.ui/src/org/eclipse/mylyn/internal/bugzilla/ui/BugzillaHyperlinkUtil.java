@@ -38,18 +38,26 @@ public class BugzillaHyperlinkUtil {
 
 	private static final String BUG_PATTERN_1 = "bug\\s+\\d+";// "^.*bug\\s+\\d+.*";
 
-	private static final String[] BUG_PATTERNS = { BUG_PATTERN_1, BUG_PATTERN_2, BUG_PATTERN_3, BUG_PATTERN_4,
-			BUG_PATTERN_5, BUG_PATTERN_6 };
+	private static final Pattern PATTERN1 = Pattern.compile(BUG_PATTERN_1, Pattern.CASE_INSENSITIVE);
 
-	// TODO: legacy?: endOffset
+	private static final Pattern PATTERN2 = Pattern.compile(BUG_PATTERN_2, Pattern.CASE_INSENSITIVE);
+
+	private static final Pattern PATTERN3 = Pattern.compile(BUG_PATTERN_3, Pattern.CASE_INSENSITIVE);
+
+	private static final Pattern PATTERN4 = Pattern.compile(BUG_PATTERN_4, Pattern.CASE_INSENSITIVE);
+
+	private static final Pattern PATTERN5 = Pattern.compile(BUG_PATTERN_5, Pattern.CASE_INSENSITIVE);
+
+	private static final Pattern PATTERN6 = Pattern.compile(BUG_PATTERN_6, Pattern.CASE_INSENSITIVE);
+
+	private static final Pattern[] BUG_PATTERNS = { PATTERN1, PATTERN2, PATTERN3, PATTERN4, PATTERN5, PATTERN6 };
+
+	// TODO: legacy parameter?: endOffset
 	public static IHyperlink[] findBugHyperlinks(String repositoryUrl, int offset, int endOffset, String comment,
 			int lineOffset) {
 		ArrayList<IHyperlink> hyperlinksFound = new ArrayList<IHyperlink>();
-		for (String regExp : BUG_PATTERNS) {
-			// TODO: Store these compiled patterns rather than always
-			// re-compiling
-			Pattern p = Pattern.compile(regExp, Pattern.CASE_INSENSITIVE);
-			Matcher m = p.matcher(comment);// comment.toLowerCase().trim()
+		for (Pattern pattern : BUG_PATTERNS) {
+			Matcher m = pattern.matcher(comment);
 			while (m.find()) {
 				if (offset >= m.start() && offset <= m.end()) {
 					IHyperlink link = extractHyperlink(repositoryUrl, lineOffset, m);

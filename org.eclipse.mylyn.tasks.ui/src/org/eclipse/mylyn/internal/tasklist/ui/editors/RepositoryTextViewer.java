@@ -39,7 +39,6 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
-import org.eclipse.ui.internal.editors.text.URLHyperlinkDetector;
 
 /**
  * @author Rob Elves
@@ -54,7 +53,7 @@ public class RepositoryTextViewer extends SourceViewer {
 		this.repository = repository;
 	}
 
-	public TaskRepository getRepository() {		
+	public TaskRepository getRepository() {
 		return repository;
 	}
 
@@ -83,20 +82,17 @@ public class RepositoryTextViewer extends SourceViewer {
 			}
 			return scanner;
 		}
-		
+
 		public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
-			URLHyperlinkDetector hyperlinkDetector = new URLHyperlinkDetector();
 			List<IHyperlinkDetector> detectors = new ArrayList<IHyperlinkDetector>();
-			detectors.add(hyperlinkDetector);
 			detectors.addAll(Arrays.asList(MylarTaskListPlugin.getDefault().getTaskHyperlinkDetectors()));
 			return detectors.toArray(new IHyperlinkDetector[detectors.size()]);
-//			 return MylarTaskListPlugin.getDefault().getTaskHyperlinkDetectors();
-		} 
-		
+		}
+
 		public IHyperlinkPresenter getHyperlinkPresenter(ISourceViewer sourceViewer) {
 			return new DefaultHyperlinkPresenter(new RGB(0, 0, 200));
 		}
-		
+
 		public int getHyperlinkStateMask(ISourceViewer sourceViewer) {
 			return SWT.NONE;
 		}
@@ -110,13 +106,13 @@ public class RepositoryTextViewer extends SourceViewer {
 			IRule[] rules = new IRule[7];
 			rules[0] = (new SingleLineRule("http://", " ", bugToken));
 			rules[1] = (new SingleLineRule("https://", " ", bugToken));
-			rules[2] = (new MultiLineRule("bug#",  " ", bugToken));
-			rules[3] = (new MultiLineRule("bug #",  " ", bugToken));
-			rules[4] = (new SingleLineRule("bug #",  "\n", bugToken));
+			rules[2] = (new MultiLineRule("bug#", " ", bugToken));
+			rules[3] = (new MultiLineRule("bug #", " ", bugToken));
+			rules[4] = (new SingleLineRule("bug #", "\n", bugToken));
 			rules[5] = (new SingleLineRule("http://", "\n", bugToken));
 			rules[6] = (new SingleLineRule("https://", "\n", bugToken));
-//			rules[7] = (new MultiLineRule(" bug ",  " ", bugToken));
-//			rules[8] = (new SingleLineRule(" at ",  ")", bugToken));
+			// rules[7] = (new MultiLineRule(" bug ", " ", bugToken));
+			// rules[8] = (new SingleLineRule(" at ", ")", bugToken));
 			setRules(rules);
 		}
 
