@@ -32,5 +32,4 @@ Export-Package: org.eclipse.mylar.internal.ide,
  org.eclipse.mylar.internal.ide.ui.actions,
  org.eclipse.mylar.internal.ide.ui.views,
  org.eclipse.mylar.provisional.ide.team
-Bundle-ClassPath: mylar-ide.jar
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

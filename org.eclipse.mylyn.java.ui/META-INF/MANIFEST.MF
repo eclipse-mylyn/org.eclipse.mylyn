@@ -46,5 +46,4 @@ Export-Package: org.eclipse.mylar.internal.java,
  org.eclipse.mylar.internal.java.ui.preferences,
  org.eclipse.mylar.internal.java.ui.views,
  org.eclipse.mylar.internal.java.ui.wizards
-Bundle-ClassPath: mylar-java.jar
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

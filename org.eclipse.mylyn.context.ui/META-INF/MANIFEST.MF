@@ -14,7 +14,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.resources
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
-Bundle-ClassPath: mylar-ui.jar
 Export-Package: org.eclipse.mylar.internal.ui,
  org.eclipse.mylar.internal.ui.actions,
  org.eclipse.mylar.internal.ui.preferences,
