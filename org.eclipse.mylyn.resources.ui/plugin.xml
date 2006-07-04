@@ -32,14 +32,5 @@
           contentType="build.xml"/>
  </extension>
  
- 	<extension
-         id="org.eclipse.mylar.helpDocs"
-         name="Mylar Help"
-         point="org.eclipse.help.toc">
-      <toc
-            file="doc/toc.xml"
-            primary="false">
-      </toc>
-   </extension>
   
 </plugin>
