@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.core.util;
 
+import java.text.ParseException;
 import java.util.Date;
 
 import org.eclipse.mylar.internal.core.MylarContext;
@@ -58,33 +59,37 @@ public class SaxContextContentHandler extends DefaultHandler {
 			break;
 		case EXPECTING_EVENT:
 			try {
-				String delta = XmlStringConverter.convertXmlToString(attributes
-						.getValue(MylarContextExternalizer.ATR_DELTA));
-				String endDate = attributes.getValue(MylarContextExternalizer.ATR_END_DATE);
-				String interest = attributes.getValue(MylarContextExternalizer.ATR_INTEREST);
-				String kind = attributes.getValue(MylarContextExternalizer.ATR_KIND);
-				String navigation = XmlStringConverter.convertXmlToString(attributes
-						.getValue(MylarContextExternalizer.ATR_NAVIGATION));
-				String originId = XmlStringConverter.convertXmlToString(attributes
-						.getValue(MylarContextExternalizer.ATR_ORIGIN_ID));
-				String startDate = attributes.getValue(MylarContextExternalizer.ATR_START_DATE);
-				String structureHandle = XmlStringConverter.convertXmlToString(attributes
-						.getValue(MylarContextExternalizer.ATR_STRUCTURE_HANDLE));
-				String structureKind = XmlStringConverter.convertXmlToString(attributes
-						.getValue(MylarContextExternalizer.ATR_STRUCTURE_KIND));
-
-				Date dStartDate = MylarContextExternalizer.DATE_FORMAT.parse(startDate);
-				Date dEndDate = MylarContextExternalizer.DATE_FORMAT.parse(endDate);
-				float iInterest = Float.parseFloat(interest);
-
-				InteractionEvent ie = new InteractionEvent(Kind.fromString(kind), structureKind, structureHandle,
-						originId, navigation, delta, iInterest, dStartDate, dEndDate);
+				InteractionEvent ie = createEventFromAttributes(attributes);
 				context.parseEvent(ie);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			break;
 		}
+	}
 
+	public static InteractionEvent createEventFromAttributes(Attributes attributes) throws ParseException {
+		String delta = XmlStringConverter.convertXmlToString(attributes
+				.getValue(MylarContextExternalizer.ATR_DELTA));
+		String endDate = attributes.getValue(MylarContextExternalizer.ATR_END_DATE);
+		String interest = attributes.getValue(MylarContextExternalizer.ATR_INTEREST);
+		String kind = attributes.getValue(MylarContextExternalizer.ATR_KIND);
+		String navigation = XmlStringConverter.convertXmlToString(attributes
+				.getValue(MylarContextExternalizer.ATR_NAVIGATION));
+		String originId = XmlStringConverter.convertXmlToString(attributes
+				.getValue(MylarContextExternalizer.ATR_ORIGIN_ID));
+		String startDate = attributes.getValue(MylarContextExternalizer.ATR_START_DATE);
+		String structureHandle = XmlStringConverter.convertXmlToString(attributes
+				.getValue(MylarContextExternalizer.ATR_STRUCTURE_HANDLE));
+		String structureKind = XmlStringConverter.convertXmlToString(attributes
+				.getValue(MylarContextExternalizer.ATR_STRUCTURE_KIND));
+
+		Date dStartDate = MylarContextExternalizer.DATE_FORMAT.parse(startDate);
+		Date dEndDate = MylarContextExternalizer.DATE_FORMAT.parse(endDate);
+		float iInterest = Float.parseFloat(interest);
+
+		InteractionEvent ie = new InteractionEvent(Kind.fromString(kind), structureKind, structureHandle,
+				originId, navigation, delta, iInterest, dStartDate, dEndDate);
+		return ie;
 	}
 }

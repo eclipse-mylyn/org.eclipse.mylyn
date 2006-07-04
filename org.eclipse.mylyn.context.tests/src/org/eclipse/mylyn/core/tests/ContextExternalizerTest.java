@@ -63,12 +63,12 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		externalizer.setWriter(new DomContextWriter());
 		File domOut = new File("dom-out.xml");
 		domOut.deleteOnExit();
-		externalizer.writeContextToXML(saxReadContext, domOut);
+		externalizer.writeContextToXml(saxReadContext, domOut);
 
 		externalizer.setWriter(new DomContextWriter());
 		File saxOut = new File("sax-out.xml");
 		saxOut.deleteOnExit();
-		externalizer.writeContextToXML(saxReadContext, saxOut);
+		externalizer.writeContextToXml(saxReadContext, saxOut);
 		assertEquals(domOut.length(), saxOut.length());
 
 		externalizer.setReader(new DomContextReader());
@@ -91,7 +91,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 			context.parseEvent(mockPreferenceChange("2"));
 		}
 		context.collapse();
-		externalizer.writeContextToXML(context, file);
+		externalizer.writeContextToXml(context, file);
 		long size = file.length();
 
 		context.reset();
@@ -100,7 +100,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 			context.parseEvent(mockPreferenceChange("2"));
 		}
 		context.collapse();
-		externalizer.writeContextToXML(context, file);
+		externalizer.writeContextToXml(context, file);
 		long size2 = file.length();
 		assertTrue(size <= size2 * 2);
 	}
@@ -125,7 +125,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		// "3" not a user event
 		assertEquals("2", context.getActiveNode().getHandleIdentifier());
 
-		externalizer.writeContextToXML(context, file);
+		externalizer.writeContextToXml(context, file);
 		MylarContext loaded = externalizer.readContextFromXML("handle", file);
 		assertNotNull(loaded);
 		assertEquals(3, loaded.getInteractionHistory().size());

@@ -25,6 +25,7 @@ import org.eclipse.mylar.internal.core.MylarContext;
 import org.eclipse.mylar.internal.core.MylarContextExternalizer;
 import org.eclipse.mylar.provisional.core.IContextWriter;
 import org.eclipse.mylar.provisional.core.InteractionEvent;
+import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DTDHandler;
 import org.xml.sax.EntityResolver;
@@ -152,33 +153,7 @@ public class SaxContextWriter implements IContextWriter {
 					MylarContextExternalizer.ELMNT_INTERACTION_HISTORY, rootAttributes);
 			// List could get modified as we're writing
 			for (InteractionEvent ie : new ArrayList<InteractionEvent>(context.getInteractionHistory())) {
-				AttributesImpl ieAttributes = new AttributesImpl();
-
-				ieAttributes.addAttribute("", MylarContextExternalizer.ATR_DELTA, MylarContextExternalizer.ATR_DELTA,
-						"", XmlStringConverter.convertToXmlString(ie.getDelta()));
-				ieAttributes.addAttribute("", MylarContextExternalizer.ATR_END_DATE,
-						MylarContextExternalizer.ATR_END_DATE, "", MylarContextExternalizer.DATE_FORMAT.format(ie
-								.getEndDate()));
-				ieAttributes.addAttribute("", MylarContextExternalizer.ATR_INTEREST,
-						MylarContextExternalizer.ATR_INTEREST, "", Float.toString(ie.getInterestContribution()));
-				ieAttributes.addAttribute("", MylarContextExternalizer.ATR_KIND, MylarContextExternalizer.ATR_KIND, "",
-						ie.getKind().toString());
-				ieAttributes.addAttribute("", MylarContextExternalizer.ATR_NAVIGATION,
-						MylarContextExternalizer.ATR_NAVIGATION, "", XmlStringConverter.convertToXmlString(ie
-								.getNavigation()));
-				ieAttributes.addAttribute("", MylarContextExternalizer.ATR_ORIGIN_ID,
-						MylarContextExternalizer.ATR_ORIGIN_ID, "", XmlStringConverter.convertToXmlString(ie
-								.getOriginId()));
-				ieAttributes.addAttribute("", MylarContextExternalizer.ATR_START_DATE,
-						MylarContextExternalizer.ATR_START_DATE, "", MylarContextExternalizer.DATE_FORMAT.format(ie
-								.getDate()));
-				ieAttributes.addAttribute("", MylarContextExternalizer.ATR_STRUCTURE_HANDLE,
-						MylarContextExternalizer.ATR_STRUCTURE_HANDLE, "", XmlStringConverter.convertToXmlString(ie
-								.getStructureHandle()));
-				ieAttributes.addAttribute("", MylarContextExternalizer.ATR_STRUCTURE_KIND,
-						MylarContextExternalizer.ATR_STRUCTURE_KIND, "", XmlStringConverter.convertToXmlString(ie
-								.getStructureKind()));
-
+				Attributes ieAttributes = createEventAttributes(ie);
 				handler.startElement("", SaxContextContentHandler.ATTRIBUTE_INTERACTION_EVENT,
 						SaxContextContentHandler.ATTRIBUTE_INTERACTION_EVENT, ieAttributes);
 				handler.endElement("", SaxContextContentHandler.ATTRIBUTE_INTERACTION_EVENT,
@@ -193,6 +168,35 @@ public class SaxContextWriter implements IContextWriter {
 		public void parse(String systemId) throws IOException, SAXException {
 			throw new SAXException("Can only parse writable input sources");
 		}
+	}
+	
+	public static Attributes createEventAttributes(InteractionEvent ie) {
+		AttributesImpl ieAttributes = new AttributesImpl();
 
+		ieAttributes.addAttribute("", MylarContextExternalizer.ATR_DELTA, MylarContextExternalizer.ATR_DELTA,
+				"", XmlStringConverter.convertToXmlString(ie.getDelta()));
+		ieAttributes.addAttribute("", MylarContextExternalizer.ATR_END_DATE,
+				MylarContextExternalizer.ATR_END_DATE, "", MylarContextExternalizer.DATE_FORMAT.format(ie
+						.getEndDate()));
+		ieAttributes.addAttribute("", MylarContextExternalizer.ATR_INTEREST,
+				MylarContextExternalizer.ATR_INTEREST, "", Float.toString(ie.getInterestContribution()));
+		ieAttributes.addAttribute("", MylarContextExternalizer.ATR_KIND, MylarContextExternalizer.ATR_KIND, "",
+				ie.getKind().toString());
+		ieAttributes.addAttribute("", MylarContextExternalizer.ATR_NAVIGATION,
+				MylarContextExternalizer.ATR_NAVIGATION, "", XmlStringConverter.convertToXmlString(ie
+						.getNavigation()));
+		ieAttributes.addAttribute("", MylarContextExternalizer.ATR_ORIGIN_ID,
+				MylarContextExternalizer.ATR_ORIGIN_ID, "", XmlStringConverter.convertToXmlString(ie
+						.getOriginId()));
+		ieAttributes.addAttribute("", MylarContextExternalizer.ATR_START_DATE,
+				MylarContextExternalizer.ATR_START_DATE, "", MylarContextExternalizer.DATE_FORMAT.format(ie
+						.getDate()));
+		ieAttributes.addAttribute("", MylarContextExternalizer.ATR_STRUCTURE_HANDLE,
+				MylarContextExternalizer.ATR_STRUCTURE_HANDLE, "", XmlStringConverter.convertToXmlString(ie
+						.getStructureHandle()));
+		ieAttributes.addAttribute("", MylarContextExternalizer.ATR_STRUCTURE_KIND,
+				MylarContextExternalizer.ATR_STRUCTURE_KIND, "", XmlStringConverter.convertToXmlString(ie
+						.getStructureKind()));
+		return ieAttributes;
 	}
 }

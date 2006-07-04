@@ -642,7 +642,7 @@ public class MylarContextManager {
 			if (context == null)
 				return;
 			context.collapse();
-			externalizer.writeContextToXML(context, getFileForContext(handleIdentifier));
+			externalizer.writeContextToXml(context, getFileForContext(handleIdentifier));
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "could not save context", false);
 		} finally {
@@ -658,7 +658,7 @@ public class MylarContextManager {
 			if (!wasPaused) {
 				setContextCapturePaused(true);
 			}
-			externalizer.writeContextToXML(activityMetaContext, getFileForContext(CONTEXT_HISTORY_FILE_NAME));
+			externalizer.writeContextToXml(activityMetaContext, getFileForContext(CONTEXT_HISTORY_FILE_NAME));
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "could not save activity history", false);
 		} finally {
