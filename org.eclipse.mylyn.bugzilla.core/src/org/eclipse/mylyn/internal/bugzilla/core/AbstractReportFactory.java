@@ -119,28 +119,14 @@ public class AbstractReportFactory {
 					throw new IOException(e.getMessage());
 				}
 			}
-		} else if (connection.getContentType().contains(CONTENT_TYPE_TEXT_HTML)) {
-			in.mark(10);
-			BugzillaRepositoryUtil.parseHtmlError(in);
-			in.reset();
-			String message = "";
-			String newLine = in.readLine();
-			while (newLine != null) {
-				message += newLine;
-				newLine = in.readLine();
+		} else if (connection.getContentType().contains(CONTENT_TYPE_TEXT_HTML)) {			
+			try {
+				BugzillaRepositoryUtil.parseHtmlError(in);
+			} catch (BugzillaException e) {
+				throw new IOException(e.getMessage());
 			}
-			throw new UnrecognizedBugzillaError(message);
-
 		} else {
 			throw new IOException("Unrecognized content type: " + connection.getContentType());
-		}
-	}
-
-	public class UnrecognizedBugzillaError extends IOException {
-		private static final long serialVersionUID = 8419167415822022988L;
-
-		public UnrecognizedBugzillaError(String message) {
-			super(message);
 		}
 	}
 

@@ -25,7 +25,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
-import org.eclipse.mylar.internal.bugzilla.core.AbstractReportFactory.UnrecognizedBugzillaError;
+import org.eclipse.mylar.internal.bugzilla.core.UnrecognizedReponseException;
 import org.eclipse.mylar.internal.tasklist.AbstractAttributeFactory;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
@@ -69,7 +69,7 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 		} catch (final LoginException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, 0, "Report download failed. Ensure proper repository configuration of " + bugzillaTask.getRepositoryUrl() + " in "
 					+ TaskRepositoriesView.NAME + ".", e ));
-		} catch (final UnrecognizedBugzillaError e) {
+		} catch (final UnrecognizedReponseException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, 0, "Report download failed. Unrecognized response from " + bugzillaTask.getRepositoryUrl() + ".", e ));
 		} catch (final FileNotFoundException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, 0, "Report download from " + bugzillaTask.getRepositoryUrl() + " failed. File not found: "+e.getMessage(), e ));

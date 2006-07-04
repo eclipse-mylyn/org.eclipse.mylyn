@@ -29,9 +29,11 @@ import java.util.List;
 
 import javax.security.auth.login.LoginException;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESOLUTION;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.RepositoryOperation;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
@@ -120,8 +122,8 @@ public class BugzillaRepositoryUtil {
 	public static List<String> getProductList(String repositoryUrl, Proxy proxySettings, String userName,
 			String password, String encoding) throws IOException, LoginException, Exception {
 
-		return BugzillaPlugin.getRepositoryConfiguration(true, repositoryUrl, proxySettings, userName, password, encoding)
-				.getProducts();
+		return BugzillaPlugin.getRepositoryConfiguration(true, repositoryUrl, proxySettings, userName, password,
+				encoding).getProducts();
 
 		// BugzillaQueryPageParser parser = new
 		// BugzillaQueryPageParser(repository, new NullProgressMonitor());
@@ -133,9 +135,9 @@ public class BugzillaRepositoryUtil {
 
 	}
 
-	// TODO: move to repository connector?
+	// TODO: imrpove and move to repository connector?
 	public static void validateCredentials(String repositoryUrl, String userid, String password) throws IOException,
-			LoginException {
+			LoginException, BugzillaException {
 
 		String url = repositoryUrl + "/index.cgi?" + POST_ARGS_LOGIN
 				+ URLEncoder.encode(userid, BugzillaPlugin.ENCODING_UTF_8) + POST_ARGS_PASSWORD
@@ -144,23 +146,30 @@ public class BugzillaRepositoryUtil {
 		URL serverURL = new URL(url);
 		URLConnection connection = serverURL.openConnection();
 		BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-		parseHtmlError(in);
+		try {
+			parseHtmlError(in);
+		} catch (UnrecognizedReponseException e) {
+			return;
+		}
 	}
 
 	/**
 	 * Utility method for determining what potential error has occurred from a
 	 * bugzilla html reponse page
+	 * 
+	 * @throws CoreException
 	 */
-	public static void parseHtmlError(BufferedReader in) throws IOException, LoginException {
+	public static void parseHtmlError(BufferedReader in) throws IOException, LoginException, BugzillaException {
 		HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
 
 		boolean isTitle = false;
 		String title = "";
+		String body = "";
 
 		try {
 
 			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-
+				body += token.toString();
 				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == HtmlTag.Type.TITLE
 						&& !((HtmlTag) (token.getValue())).isEndTag()) {
 					isTitle = true;
@@ -180,11 +189,16 @@ public class BugzillaRepositoryUtil {
 								|| (title.indexOf("invalid") != -1 && title.indexOf("password") != -1)
 								|| title.indexOf("check e-mail") != -1) {
 							throw new LoginException(IBugzillaConstants.ERROR_INVALID_USERNAME_OR_PASSWORD);
+						} else if (title.indexOf("collision") != -1) {
+							throw new BugzillaException(IBugzillaConstants.ERROR_MIDAIR_COLLISION);
 						}
-						return;
 					}
 				}
 			}
+
+			MylarStatusHandler.log("Unrecognized Reponse: " + body, BugzillaRepositoryUtil.class);
+			throw new UnrecognizedReponseException(body);
+
 		} catch (ParseException e) {
 			throw new IOException("Unable to parse result from repository:\n" + e.getMessage());
 		}
@@ -209,9 +223,9 @@ public class BugzillaRepositoryUtil {
 
 		newReport.removeAllAttributes();
 
-		RepositoryConfiguration repositoryConfiguration = BugzillaPlugin.getRepositoryConfiguration(false, repositoryUrl, proxySettings, userName,
-					password, characterEncoding);
-		
+		RepositoryConfiguration repositoryConfiguration = BugzillaPlugin.getRepositoryConfiguration(false,
+				repositoryUrl, proxySettings, userName, password, characterEncoding);
+
 		RepositoryTaskAttribute a = BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.PRODUCT);
 		List<String> optionValues = repositoryConfiguration.getProducts();
 		Collections.sort(optionValues);

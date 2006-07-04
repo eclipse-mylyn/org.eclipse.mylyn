@@ -15,6 +15,8 @@ package org.eclipse.mylar.internal.bugzilla.core;
  */
 public interface IBugzillaConstants {
 
+	static final String ERROR_MIDAIR_COLLISION = "A mid-air collision has occurred, please synchronize.";
+	
 	// Error response from bugzilla server upon bug request
 	static final String ERROR_INVALID_BUG_ID = "InvalidBugId";
 

@@ -26,6 +26,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -86,9 +87,9 @@ public class BugzillaReportSubmitForm {
 	private static final String VAL_NONE = "none";
 
 	private static final String KEY_KNOB = "knob";
-	
-//	 TODO change to BugzillaReportElement.ADD_COMMENT
-	private static final String KEY_COMMENT = "comment";  
+
+	// TODO change to BugzillaReportElement.ADD_COMMENT
+	private static final String KEY_COMMENT = "comment";
 
 	private static final String KEY_SHORT_DESC = "short_desc";
 
@@ -99,7 +100,7 @@ public class BugzillaReportSubmitForm {
 	public static final String FORM_PREFIX_BUG_218 = "Bug ";
 
 	public static final String FORM_PREFIX_BUG_220 = "Issue ";
-	
+
 	private BugzillaAttachmentHandler attachmentHandler = new BugzillaAttachmentHandler();
 
 	/** The fields that are to be changed/maintained */
@@ -123,11 +124,12 @@ public class BugzillaReportSubmitForm {
 	private String postfix2;
 
 	private String error = null;
-	
+
 	/** The local attachment to attach to this report, null if none */
 	private LocalAttachment attachment = null;
 
-	
+	private boolean isNewBugPost = false;
+
 	public BugzillaReportSubmitForm(String charEncoding) {
 		charset = charEncoding;
 	}
@@ -183,6 +185,9 @@ public class BugzillaReportSubmitForm {
 			// it
 			form.add(KEY_COMMENT, model.getDescription());
 		}
+
+		form.setNewBugPost(true);
+
 		return form;
 	}
 
@@ -207,7 +212,7 @@ public class BugzillaReportSubmitForm {
 			bugReportPostHandler = new BugzillaReportSubmitForm(BugzillaPlugin.ENCODING_UTF_8);
 		}
 
-		//setDefaultCCValue(bug, userName);
+		// setDefaultCCValue(bug, userName);
 		setConnectionsSettings(bugReportPostHandler, repositoryUrl, userName, password, proxySettings, PROCESS_BUG_CGI);
 
 		// go through all of the attributes and add them to the bug post
@@ -215,7 +220,7 @@ public class BugzillaReportSubmitForm {
 			RepositoryTaskAttribute a = it.next();
 			if (a.getID().equals(BugzillaReportElement.CC.getKeyString())
 					|| a.getID().equals(BugzillaReportElement.REPORTER.getKeyString())
-					|| a.getID().equals(BugzillaReportElement.ASSIGNED_TO.getKeyString())					
+					|| a.getID().equals(BugzillaReportElement.ASSIGNED_TO.getKeyString())
 					|| a.getID().equals(BugzillaReportElement.CREATION_TS.getKeyString())) {
 				continue;
 			}
@@ -231,6 +236,8 @@ public class BugzillaReportSubmitForm {
 			}
 		}
 
+		bugReportPostHandler.add("cc", "somewhere@nowhere.com");
+		
 		// when posting the bug id is encoded in a hidden field named 'id'
 		bugReportPostHandler.add(KEY_ID, bug.getAttributeValue(BugzillaReportElement.BUG_ID.getKeyString()));
 
@@ -251,7 +258,8 @@ public class BugzillaReportSubmitForm {
 		bugReportPostHandler.add(KEY_FORM_NAME, VAL_PROCESS_BUG);
 
 		if (bug.getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString()) != null) {
-			bugReportPostHandler.add(KEY_SHORT_DESC, bug.getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString()).getValue());
+			bugReportPostHandler.add(KEY_SHORT_DESC, bug.getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString())
+					.getValue());
 		}
 
 		if (bug.getNewComment().length() != 0) {
@@ -263,9 +271,9 @@ public class BugzillaReportSubmitForm {
 			bugReportPostHandler.add(KEY_CC, toCommaSeparatedList(removeCC.toArray(s)));
 			bugReportPostHandler.add(KEY_REMOVECC, VAL_TRUE);
 		}
-		
+
 		bugReportPostHandler.attachment = bug.getNewAttachment();
-		
+
 		return bugReportPostHandler;
 	}
 
@@ -302,10 +310,9 @@ public class BugzillaReportSubmitForm {
 	 * Post the bug to the bugzilla server
 	 * 
 	 * @return The result of the responses
-	 * @throws BugzillaException
-	 * @throws PossibleBugzillaFailureException
 	 */
-	public String submitReportToRepository() throws BugzillaException, LoginException, PossibleBugzillaFailureException {
+	public String submitReportToRepository() throws IOException, BugzillaException, LoginException,
+			PossibleBugzillaFailureException {
 		BufferedOutputStream out = null;
 		BufferedReader in = null;
 		String result = null;
@@ -326,7 +333,7 @@ public class BugzillaReportSubmitForm {
 			postConnection.setRequestProperty(REQUEST_PROPERTY_CONTENT_TYPE, contentTypeString);
 			// get the url for the update with all of the changed values
 
-			//System.err.println(">>> "+getPostBody());
+			// System.err.println(">>> "+getPostBody());
 			byte[] body = getPostBody().getBytes();
 			postConnection.setRequestProperty(REQUEST_PROPERTY_CONTENT_LENGTH, String.valueOf(body.length));
 
@@ -347,97 +354,70 @@ public class BugzillaReportSubmitForm {
 
 			// open a stream to receive response from bugzilla
 			in = new BufferedReader(new InputStreamReader(postConnection.getInputStream()));
-			
+			in.mark(10);
+			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
 
-			String aString = in.readLine();
+			boolean existingBugPosted = false;
+			boolean isTitle = false;
+			String title = "";
+			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 
-			 //Used to debug reponse from bugzilla server
-			// while (aString != null) {
-			// System.err.println(aString);
-			// aString = in.readLine();
-			//			 }
-
-			boolean possibleFailure = true;
-			error = "";
-
-			while (aString != null) {
-				error += aString == null ? "" : aString + "\n";
-
-				// check if we have run into an error
-
-				if (result == null
-						&& (aString.toLowerCase().indexOf("check e-mail") != -1 || aString.toLowerCase().indexOf(
-								"error") != -1)) {
-					throw new LoginException("Bugzilla login problem.");
-				} else if (aString.indexOf("Invalid Username Or Password") != -1) {
-					throw new LoginException("Invalid Username or Password.");
-				} else if (aString.toLowerCase().matches(".*bug\\s+processed.*") // TODO:
-						// make
-						// this
-						// configurable
-						|| aString.toLowerCase().matches(".*defect\\s+processed.*")) {
-					possibleFailure = false;
+				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == HtmlTag.Type.TITLE
+						&& !((HtmlTag) (token.getValue())).isEndTag()) {
+					isTitle = true;
+					continue;
 				}
-				// // get the bug number if it is required
-				if (prefix != null && prefix2 != null && postfix != null && postfix2 != null && result == null) {
-					int startIndex = -1;
-					int startIndexPrefix = aString.toLowerCase().indexOf(prefix.toLowerCase());
-					int startIndexPrefix2 = aString.toLowerCase().indexOf(prefix2.toLowerCase());
 
-					if (startIndexPrefix != -1 || startIndexPrefix2 != -1) {
-						if (startIndexPrefix != -1) {
-							startIndex = startIndexPrefix + prefix.length();
-						} else {
-							startIndex = startIndexPrefix2 + prefix2.length();
+				if (isTitle) {
+					// get all of the data in the title tag
+					if (token.getType() != Token.TAG) {
+						title += ((StringBuffer) token.getValue()).toString().toLowerCase() + " ";
+						continue;
+					} else if (token.getType() == Token.TAG
+							&& ((HtmlTag) token.getValue()).getTagType() == HtmlTag.Type.TITLE
+							&& ((HtmlTag) token.getValue()).isEndTag()) {
+						if (!isNewBugPost
+								&& (title.toLowerCase().matches(".*bug\\s+processed.*") || title.toLowerCase().matches(
+										".*defect\\s+processed.*"))) {
+							existingBugPosted = true;
+						} else if (isNewBugPost && prefix != null && prefix2 != null && postfix != null
+								&& postfix2 != null && result == null) {
+							int startIndex = -1;
+							int startIndexPrefix = title.toLowerCase().indexOf(prefix.toLowerCase());
+							int startIndexPrefix2 = title.toLowerCase().indexOf(prefix2.toLowerCase());
+
+							if (startIndexPrefix != -1 || startIndexPrefix2 != -1) {
+								if (startIndexPrefix != -1) {
+									startIndex = startIndexPrefix + prefix.length();
+								} else {
+									startIndex = startIndexPrefix2 + prefix2.length();
+								}
+								int stopIndex = title.toLowerCase().indexOf(postfix.toLowerCase(), startIndex);
+								if (stopIndex == -1)
+									stopIndex = title.toLowerCase().indexOf(postfix2.toLowerCase(), startIndex);
+								if (stopIndex > -1) {
+									result = (title.substring(startIndex, stopIndex)).trim();
+								}
+							}
 						}
-						int stopIndex = aString.toLowerCase().indexOf(postfix.toLowerCase(), startIndex);
-						if (stopIndex == -1)
-							stopIndex = aString.toLowerCase().indexOf(postfix2.toLowerCase(), startIndex);
-						if (stopIndex > -1) {
-							result = (aString.substring(startIndex, stopIndex)).trim();
-							possibleFailure = false;
-						}
+						break;
 					}
 				}
-				aString = in.readLine();
 			}
 
-			if ((result == null || result.compareTo("") == 0)
-					&& (prefix != null && prefix2 == null && postfix != null && postfix2 != null)) {
-				throw new PossibleBugzillaFailureException("Could not find bug number for new bug.");
-			} else if (possibleFailure) {
-				throw new PossibleBugzillaFailureException(
-						"Bug report may not have been submitted.  Bugzilla message was: ");
-			}
-
-			// set the error to null if we dont think that there was one
-			error = null;
-
-		} catch (IOException e) {
-			throw new BugzillaException("An exception occurred while submitting the bug: " + e.getMessage(), e);
-		} catch (KeyManagementException e) {
-			throw new BugzillaException("Could not POST form.  Communications error: " + e.getMessage(), e);
-		} catch (NoSuchAlgorithmException e) {
-			throw new BugzillaException("Could not POST form.  Communications error: " + e.getMessage(), e);
-		} finally {
-			try {
-				if (in != null)
-					in.close();
-				if (out != null)
-					out.close();
-												
-			} catch (IOException e) {
-				BugzillaPlugin.log(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, IStatus.ERROR,
-						"Problem posting the bug", e));
+			if ((!isNewBugPost && existingBugPosted != true) || (isNewBugPost && result == null)) {
+				in.reset();
+				BugzillaRepositoryUtil.parseHtmlError(in);
 			}
 			
-			try {			
-				// upload the attachment if any
-				if (attachment != null) {
+			if (!isNewBugPost && existingBugPosted == true && attachment != null) {
+				try {
+					// upload the attachment if any
+
 					if (attachment.getDescription() == null || attachment.getDescription().equals("")) {
 						throw new BugzillaException("Attachment must have a description");
 					}
-					
+
 					String uname = URLDecoder.decode(fields.get(KEY_BUGZILLA_LOGIN), this.charset);
 					String password = URLDecoder.decode(fields.get(KEY_BUGZILLA_PASSWORD), this.charset);
 					if (!attachmentHandler.uploadAttachment(attachment, uname, password, proxySettings)) {
@@ -446,15 +426,34 @@ public class BugzillaReportSubmitForm {
 					if (attachment.getDeleteAfterUpload()) {
 						File file = new File(attachment.getFilePath());
 						if (!file.delete()) {
-							// TODO: Hanlde bad clean up
+							// TODO: Handle bad clean up
 						}
 					}
-							
-				}
-			} catch (IOException e) {
-				throw new BugzillaException("Could not upload attachment.  Communications error: " + e.getMessage(), e);
-			}
 
+				} catch (IOException e) {
+					throw new BugzillaException(
+							"Could not upload attachment.  Communications error: " + e.getMessage(), e);
+				}
+			}
+			
+
+		} catch (KeyManagementException e) {
+			throw new BugzillaException("Could not POST form.  Communications error: " + e.getMessage(), e);
+		} catch (NoSuchAlgorithmException e) {
+			throw new BugzillaException("Could not POST form.  Communications error: " + e.getMessage(), e);
+		} catch (ParseException e) {
+			throw new IOException("Could not parse response from server.");
+		} finally {
+			try {
+				if (in != null)
+					in.close();
+				if (out != null)
+					out.close();
+
+			} catch (IOException e) {
+				BugzillaPlugin.log(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, IStatus.ERROR,
+						"Problem posting the bug", e));
+			}
 		}
 		// return the bug number
 		return result;
@@ -540,7 +539,7 @@ public class BugzillaReportSubmitForm {
 			String password, Proxy proxySettings, String formName) throws UnsupportedEncodingException {
 
 		String baseURL = repositoryUrl;
-		
+
 		if (!baseURL.endsWith("/"))
 			baseURL += "/";
 		try {
@@ -557,36 +556,42 @@ public class BugzillaReportSubmitForm {
 		form.add(KEY_BUGZILLA_PASSWORD, password);
 	}
 
-//	/**
-//	 * Sets the cc field to the user's address if a cc has not been specified to
-//	 * ensure that commenters are on the cc list. TODO: Review this mechanism
-//	 * 
-//	 * @author Wesley Coelho
-//	 */
-//	private static void setDefaultCCValue(BugzillaReport bug, String userName) {
-//		// RepositoryTaskAttribute newCCattr =
-//		// bug.getAttributeForKnobName(KEY_NEWCC);
-//		RepositoryTaskAttribute owner = bug.getAttribute(BugzillaReportElement.ASSIGNED_TO);
-//
-//		// Don't add the cc if the user is the bug owner
-//		if (userName == null || (owner != null && owner.getValue().indexOf(userName) != -1)) {
-//			// MylarStatusHandler.log("Could not determine CC value for
-//			// repository: " + repository, null);
-//			return;
-//		}
-//		// Don't add cc if already there
-//		RepositoryTaskAttribute ccAttribute = bug.getAttribute(BugzillaReportElement.CC);
-//		if (ccAttribute != null && ccAttribute.getValues().contains(userName)) {
-//			return;
-//		}
-//		RepositoryTaskAttribute newCCattr = bug.getAttribute(BugzillaReportElement.NEWCC);
-//		if (newCCattr == null) {
-//			newCCattr = new RepositoryTaskAttribute(BugzillaReportElement.NEWCC);
-//			bug.addAttribute(BugzillaReportElement.NEWCC, newCCattr);
-//		}
-//		// Add the user to the cc list
-//		newCCattr.setValue(userName);
-//	}
+	// /**
+	// * Sets the cc field to the user's address if a cc has not been specified
+	// to
+	// * ensure that commenters are on the cc list. TODO: Review this mechanism
+	// *
+	// * @author Wesley Coelho
+	// */
+	// private static void setDefaultCCValue(BugzillaReport bug, String
+	// userName) {
+	// // RepositoryTaskAttribute newCCattr =
+	// // bug.getAttributeForKnobName(KEY_NEWCC);
+	// RepositoryTaskAttribute owner =
+	// bug.getAttribute(BugzillaReportElement.ASSIGNED_TO);
+	//
+	// // Don't add the cc if the user is the bug owner
+	// if (userName == null || (owner != null &&
+	// owner.getValue().indexOf(userName) != -1)) {
+	// // MylarStatusHandler.log("Could not determine CC value for
+	// // repository: " + repository, null);
+	// return;
+	// }
+	// // Don't add cc if already there
+	// RepositoryTaskAttribute ccAttribute =
+	// bug.getAttribute(BugzillaReportElement.CC);
+	// if (ccAttribute != null && ccAttribute.getValues().contains(userName)) {
+	// return;
+	// }
+	// RepositoryTaskAttribute newCCattr =
+	// bug.getAttribute(BugzillaReportElement.NEWCC);
+	// if (newCCattr == null) {
+	// newCCattr = new RepositoryTaskAttribute(BugzillaReportElement.NEWCC);
+	// bug.addAttribute(BugzillaReportElement.NEWCC, newCCattr);
+	// }
+	// // Add the user to the cc list
+	// newCCattr.setValue(userName);
+	// }
 
 	/**
 	 * Break text up into lines of about 80 characters so that it is displayed
@@ -627,5 +632,13 @@ public class BugzillaReportSubmitForm {
 			}
 			return newText;
 		}
+	}
+
+	public boolean isNewBugPost() {
+		return isNewBugPost;
+	}
+
+	public void setNewBugPost(boolean isNewBugPost) {
+		this.isNewBugPost = isNewBugPost;
 	}
 }

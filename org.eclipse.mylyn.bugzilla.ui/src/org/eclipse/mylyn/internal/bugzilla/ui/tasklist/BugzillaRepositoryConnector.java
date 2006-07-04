@@ -40,6 +40,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
+import org.eclipse.mylar.internal.bugzilla.core.UnrecognizedReponseException;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
 import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
@@ -236,7 +237,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 								// TODO: clean up exception handling
 								if (throwable.getCause() instanceof BugzillaException) {
 									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-											"Bugzilla could not post your bug.");
+											"Bugzilla could not post your bug. \n\n"+ throwable.getCause().getMessage());
 								} else if (throwable.getCause() instanceof PossibleBugzillaFailureException) {
 									WebBrowserDialog.openAcceptAgreement(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 											"Possible problem posting Bugzilla report.\n"
@@ -246,19 +247,22 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 									if (task != null && task instanceof AbstractRepositoryTask) {
 										synchronize((AbstractRepositoryTask)task, true, null);
 									}
-								} else if (throwable.getCause() instanceof LoginException) {
-									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-											"Bugzilla could not post your bug since your login name or password is incorrect."
-													+ " Ensure proper repository configuration in "
-													+ TaskRepositoriesView.NAME + ".");
+								} else if (throwable.getCause() instanceof UnrecognizedReponseException) {
+									WebBrowserDialog.openAcceptAgreement(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
+											"Unrecognized response from server:", throwable.getCause().getMessage());									
 									String attributes = "Attributes: ";
 									if (bugReport != null) {
 										for (RepositoryTaskAttribute attribute : bugReport.getAttributes()) {
 											attributes += attribute.getID() + "=" + attribute.getValue() + " | ";
 										}
+										
 										MylarStatusHandler.log(attributes, BugzillaRepositoryConnector.class);
 									}
-									
+								} else if (throwable.getCause() instanceof LoginException) {
+									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
+											"Bugzilla could not post your bug since your login name or password is incorrect."
+													+ " Ensure proper repository configuration in "
+													+ TaskRepositoriesView.NAME + ".");									
 								} else {
 									MylarStatusHandler.fail(throwable, "could not post bug", false);
 									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,

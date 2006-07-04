@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.core.AbstractReportFactory.UnrecognizedBugzillaError;
+import org.eclipse.mylar.internal.bugzilla.core.UnrecognizedReponseException;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
@@ -232,7 +232,7 @@ public class BugzillaSearchEngine {
 			((MultiStatus) status).add(s);
 			s = new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK, "search failed", e);
 			((MultiStatus) status).add(s);
-		} catch (final UnrecognizedBugzillaError e) {
+		} catch (final UnrecognizedReponseException e) {
 			
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
