@@ -33,6 +33,5 @@ Eclipse-AutoStart: true
 Export-Package: org.eclipse.mylar.internal.bugs,
  org.eclipse.mylar.internal.bugs.java,
  org.eclipse.mylar.internal.bugs.search
-Bundle-ClassPath: mylar-bugs.jar
 Bundle-Vendor: Eclipse.org
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
