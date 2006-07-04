@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
@@ -153,6 +154,8 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 	private boolean backgroundEnabled = false;
 
 	private StudyParameters studyParameters = new StudyParameters();
+	
+	private ListenerList lifecycleListeners = new ListenerList();
 
 	private IWindowListener WINDOW_LISTENER = new IWindowListener() {
 		public void windowActivated(IWorkbenchWindow window) {
@@ -189,9 +192,8 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 				checkForStatisticsUpload();
 			}
 			if (!isPerformingUpload() && MylarPlugin.getDefault() != null) {
-				for (IInteractionEventListener listener : MylarPlugin.getDefault().getInteractionListeners()) {
+				for (IInteractionEventListener listener : MylarPlugin.getDefault().getInteractionListeners())
 					listener.startObserving();
-				}
 			}
 		}
 
@@ -300,6 +302,10 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 
 		installBrowserMonitor(workbench);
 
+		for(Object listener : lifecycleListeners.getListeners()) {
+			((IMylarMonitorLifecycleListener)listener).startMonitoring();
+		}
+
 		if (!MylarPlugin.getDefault().suppressWizardsOnStartup()) {
 			checkForFirstMonitorUse();
 		}
@@ -317,7 +323,11 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 	public void stopMonitoring() {
 		if (!getPreferenceStore().getBoolean(MylarMonitorPreferenceConstants.PREF_MONITORING_ENABLED))
 			return;
-		interactionLogger.stopObserving();
+		
+		for(Object listener : lifecycleListeners.getListeners()) {
+			((IMylarMonitorLifecycleListener)listener).stopMonitoring();
+		}
+
 		for (IInteractionEventListener listener : MylarPlugin.getDefault().getInteractionListeners())
 			listener.stopObserving();
 
@@ -341,8 +351,23 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		workbench.removeWindowListener(windowMonitor);
 
 		uninstallBrowserMonitor(workbench);
+
+		interactionLogger.stopObserving();
+
 		getPreferenceStore().setValue(MylarMonitorPreferenceConstants.PREF_MONITORING_ENABLED, false);
 	}
+
+	public void addMonitoringLifecycleListener(IMylarMonitorLifecycleListener listener) {
+		lifecycleListeners.add(listener);
+		if(isMonitoringEnabled()) {
+			listener.startMonitoring();
+		}
+	}
+	
+	public void removeMonitoringLifecycleListener(IMylarMonitorLifecycleListener listener) {
+		lifecycleListeners.remove(listener);
+	}
+	
 
 	@Override
 	public void start(BundleContext context) throws Exception {
