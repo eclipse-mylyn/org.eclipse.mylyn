@@ -20,6 +20,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylar.internal.monitor.IMylarMonitorLifecycleListener;
 import org.eclipse.mylar.internal.monitor.InteractionEventLogger;
 import org.eclipse.mylar.internal.monitor.MylarMonitorPlugin;
 import org.eclipse.mylar.internal.monitor.monitors.BrowserMonitor;
@@ -34,7 +35,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Mik Kersten
  */
-public class MonitorTest extends TestCase {
+public class MonitorTest extends TestCase implements IMylarMonitorLifecycleListener {
 
 	private InteractionEventLogger logger = MylarMonitorPlugin.getDefault().getInteractionLogger();
 
@@ -78,34 +79,6 @@ public class MonitorTest extends TestCase {
 		assertEquals(2, logger.getHistoryFromFile(monitorFile).size());
 		MylarMonitorPlugin.getDefault().stopMonitoring();
 	}
-
-	// public void testLogFileMove() throws IOException {
-	// File defaultFile = MylarMonitorPlugin.getDefault().getMonitorLogFile();
-	// MylarMonitorPlugin.getDefault().stopMonitoring();
-	// assertTrue(logger.clearInteractionHistory());
-	//    	
-	// MylarMonitorPlugin.getDefault().startMonitoring();
-	// generateSelection();
-	// generateSelection();
-	// assertEquals(2, logger.getHistoryFromFile(defaultFile).size());
-	//        
-	// File newFile =
-	// MylarMonitorPlugin.getDefault().moveMonitorLogFile(MylarPlugin.getDefault().getMylarDataDirectory()
-	// + "/monitor-test-new.xml");
-	// assertNotNull(newFile);
-	// File movedFile = MylarMonitorPlugin.getDefault().getMonitorLogFile();
-	// assertTrue(!newFile.equals(defaultFile));
-	// assertEquals(newFile, movedFile);
-	// assertEquals(newFile, logger.getOutputFile());
-	// assertEquals(2, logger.getHistoryFromFile(newFile).size());
-	// assertEquals(0, logger.getHistoryFromFile(defaultFile).size());
-	//    	
-	// generateSelection();
-	// assertEquals(3, logger.getHistoryFromFile(newFile).size());
-	// File restoredFile =
-	// MylarMonitorPlugin.getDefault().moveMonitorLogFile(defaultFile.getAbsolutePath());
-	// assertNotNull(restoredFile);
-	// }
 
 	public void testUrlFilter() {
 		browserMonitor.setAcceptedUrls("url1,url2,url3");
@@ -158,4 +131,60 @@ public class MonitorTest extends TestCase {
 
 		perspectiveMonitor.perspectiveActivated(null, perspective);
 	}
+	
+	boolean monitorRunning = false;
+	public void startMonitoring() {
+		monitorRunning = true;
+	}
+
+	public void stopMonitoring() {
+		monitorRunning = false;
+	}
+
+	public void testLifecycleCallbacks() {
+		assertFalse(monitorRunning);
+		MylarMonitorPlugin.getDefault().stopMonitoring();
+		MylarMonitorPlugin.getDefault().addMonitoringLifecycleListener(this);
+		assertFalse(monitorRunning);
+		
+		MylarMonitorPlugin.getDefault().startMonitoring();
+		assertTrue(monitorRunning);
+		MylarMonitorPlugin.getDefault().stopMonitoring();
+		assertFalse(monitorRunning);
+		
+		MylarMonitorPlugin.getDefault().startMonitoring();
+		assertTrue(monitorRunning);
+		MylarMonitorPlugin.getDefault().stopMonitoring();
+		assertFalse(monitorRunning);
+
+		MylarMonitorPlugin.getDefault().removeMonitoringLifecycleListener(this);
+	}
 }
+
+// public void testLogFileMove() throws IOException {
+// File defaultFile = MylarMonitorPlugin.getDefault().getMonitorLogFile();
+// MylarMonitorPlugin.getDefault().stopMonitoring();
+// assertTrue(logger.clearInteractionHistory());
+//    	
+// MylarMonitorPlugin.getDefault().startMonitoring();
+// generateSelection();
+// generateSelection();
+// assertEquals(2, logger.getHistoryFromFile(defaultFile).size());
+//        
+// File newFile =
+// MylarMonitorPlugin.getDefault().moveMonitorLogFile(MylarPlugin.getDefault().getMylarDataDirectory()
+// + "/monitor-test-new.xml");
+// assertNotNull(newFile);
+// File movedFile = MylarMonitorPlugin.getDefault().getMonitorLogFile();
+// assertTrue(!newFile.equals(defaultFile));
+// assertEquals(newFile, movedFile);
+// assertEquals(newFile, logger.getOutputFile());
+// assertEquals(2, logger.getHistoryFromFile(newFile).size());
+// assertEquals(0, logger.getHistoryFromFile(defaultFile).size());
+//    	
+// generateSelection();
+// assertEquals(3, logger.getHistoryFromFile(newFile).size());
+// File restoredFile =
+// MylarMonitorPlugin.getDefault().moveMonitorLogFile(defaultFile.getAbsolutePath());
+// assertNotNull(restoredFile);
+// }

@@ -67,7 +67,8 @@ public class InteractionEventLogger implements IInteractionEventListener {
 		}
 		try {
 			if (started) {
-				String xml = interactionEventToXml(event);
+//				String xml = writeLegacyEvent(event);
+				String xml = getXmlForEvent(event);
 				outputStream.write(xml.getBytes());
 			} else {
 				queue.add(event);
@@ -78,6 +79,10 @@ public class InteractionEventLogger implements IInteractionEventListener {
 		} catch (Throwable t) {
 			MylarStatusHandler.log(t, "could not log interaction event");
 		}
+	}
+
+	private String getXmlForEvent(InteractionEvent event) {
+		return writeLegacyEvent(event);
 	}
 
 	public void startObserving() {
@@ -197,7 +202,7 @@ public class InteractionEventLogger implements IInteractionEventListener {
 			while ((index = buf.indexOf(tag)) != -1) {
 				index += tag.length();
 				xml = buf.substring(0, index);
-				InteractionEvent event = readEvent(xml);
+				InteractionEvent event = readLegacyEvent(xml);
 				if (event != null)
 					events.add(event);
 
@@ -221,7 +226,8 @@ public class InteractionEventLogger implements IInteractionEventListener {
 
 	private static final String TAB = "\t";
 
-	public String interactionEventToXml(InteractionEvent e) {
+	@Deprecated
+	public String writeLegacyEvent(InteractionEvent e) {
 		StringBuffer res = new StringBuffer();
 		String tag = "interactionEvent";
 		String f = "yyyy-MM-dd HH:mm:ss.S z";
@@ -248,7 +254,7 @@ public class InteractionEventLogger implements IInteractionEventListener {
 		return res.toString();
 	}
 
-	public InteractionEvent readEvent(String xml) {
+	public InteractionEvent readLegacyEvent(String xml) {
 		Reader reader = new StringReader(xml);
 		HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
 		String kind = "";
