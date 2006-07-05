@@ -21,9 +21,8 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.forms.widgets.Form;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * @author Rob Elves
@@ -38,8 +37,6 @@ public class ContextAttachWizardPage extends WizardPage {
 
 	private Text commentText;
 
-	private Form form;
-
 	private boolean complete = true;
 	
 	protected ContextAttachWizardPage(TaskRepository repository, AbstractRepositoryTask task) {
@@ -50,15 +47,14 @@ public class ContextAttachWizardPage extends WizardPage {
 	}
 
 	public void createControl(Composite parent) {
-		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
-		form = toolkit.createForm(parent);
-		form.getBody().setLayout(new GridLayout(1, false));
-		form.setBackground(parent.getBackground());
-		toolkit.setBackground(parent.getBackground());
-		toolkit.createLabel(form.getBody(), "Task: " + task.getDescription());
-		toolkit.createLabel(form.getBody(), "Repository: " + repository.getUrl());
-		toolkit.createLabel(form.getBody(), "Comment: ");
-		commentText = toolkit.createText(form.getBody(), "", SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
+		Composite composite = new Composite(parent, SWT.NONE);
+		composite.setLayout(new GridLayout());
+		
+		new Label(composite, SWT.NONE).setText("Task: " + task.getDescription());
+		new Label(composite, SWT.NONE).setText("Repository: " + repository.getUrl());
+		new Label(composite, SWT.NONE).setText("Comment: ");
+		commentText = new Text(composite, SWT.V_SCROLL | SWT.MULTI | SWT.BORDER | SWT.WRAP);
+		commentText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	
 		commentText.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
@@ -70,11 +66,7 @@ public class ContextAttachWizardPage extends WizardPage {
 			}
 		});
 
-		commentText.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-		toolkit.paintBordersFor(form.getBody());
-
-		setControl(form.getBody());
+		setControl(composite);
 		
 		if(task.getSyncState() != RepositoryTaskSyncState.SYNCHRONIZED) {
 			setErrorMessage("Task must be synchronized before attaching context");

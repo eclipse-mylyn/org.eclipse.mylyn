@@ -20,7 +20,6 @@ import java.util.Map;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.internal.tasklist.LocalAttachment;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -28,9 +27,10 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * A wizard page to enter details of a new attachment.
@@ -85,34 +85,49 @@ public class NewAttachmentPage extends WizardPage {
 	}
 
 	public void createControl(Composite parent) {
-
-		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
-		toolkit.setBackground(parent.getBackground());
-		Composite composite = toolkit.createComposite(parent);
-//		composite.setBackground(parent.getBackground());		
+		Composite composite = new Composite(parent, SWT.NONE);
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 3;
+		composite.setLayout(gridLayout);
 		setControl(composite);
 
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		composite.setLayout(new GridLayout(3, false));
 
-		toolkit.createLabel(composite, "File");//.setBackground(parent.getBackground());
-		filePath = new Text(composite, SWT.LEFT); 
-		
+		final NewAttachmentPage thisPage = this;
+
+		new Label(composite, SWT.NONE).setText("File");
+		filePath = new Text(composite, SWT.BORDER);
 		filePath.setEditable(false);
-		filePath.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 2, 1));
+		filePath.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1));
 
-		toolkit.createLabel(composite, "Description");//.setBackground(parent.getBackground());
-		attachmentDesc = toolkit.createText(composite, "");
-		attachmentDesc.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 2, 1));
+		new Label(composite, SWT.NONE).setText("Description");
+		attachmentDesc = new Text(composite, SWT.BORDER);
+		attachmentDesc.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1));
 
-		toolkit.createLabel(composite, "Comment");//.setBackground(parent.getBackground());
-		attachmentComment = toolkit.createText(composite, "", SWT.WRAP);
+		attachmentDesc.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				if ("".equals(attachmentDesc.getText())) {
+					thisPage.setErrorMessage("Description required");
+				} else {
+					if (!"".equals(filePath.getText())) {
+						thisPage.setPageComplete(true);
+						thisPage.setErrorMessage(null);
+					}
+				}
+			}
+
+		});
+
+		Label label = new Label(composite, SWT.NONE);
+		label.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false));
+		label.setText("Comment");
+		attachmentComment = new Text(composite, SWT.V_SCROLL | SWT.BORDER | SWT.WRAP);
 		attachmentComment.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
-		toolkit.createLabel(composite, "Content Type");//.setBackground(parent.getBackground());
-		final CCombo contentTypeList = new CCombo(composite, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
-		final Button isPatchButton = toolkit.createButton(composite, "Patch", SWT.CHECK);
-//		isPatchButton.setBackground(parent.getBackground());
+		new Label(composite, SWT.NONE).setText("Content Type");//.setBackground(parent.getBackground());
+		
+		final Combo contentTypeList = new Combo(composite, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
 		final HashMap<String, Integer> contentTypeIndices = new HashMap<String, Integer>();
 		Iterator<String> iter = contentTypes.iterator();
 		int i = 0;
@@ -136,7 +151,9 @@ public class NewAttachmentPage extends WizardPage {
 		contentTypeList.select(0);
 		attachment.setContentType(contentTypeList.getItem(0));
 
-		final NewAttachmentPage thisPage = this;
+		final Button isPatchButton = new Button(composite, SWT.CHECK);
+		isPatchButton.setText("Patch");
+
 		/*
 		 * Attachment file name listener, update the local attachment
 		 * accordingly
@@ -186,22 +203,6 @@ public class NewAttachmentPage extends WizardPage {
 				}
 			}
 		});
-
-		attachmentDesc.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				if ("".equals(attachmentDesc.getText())) {
-					thisPage.setErrorMessage("Description required");
-				} else {
-					if (!"".equals(filePath.getText())) {
-						thisPage.setPageComplete(true);
-						thisPage.setErrorMessage(null);
-					}
-				}
-			}
-
-		});
-		
-		toolkit.paintBordersFor(composite);
 	}
 
 	public boolean isPageComplete() {
