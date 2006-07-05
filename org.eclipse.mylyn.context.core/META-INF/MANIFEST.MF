@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.core; singleton:=true
-Bundle-Version: 0.6.0.v20060704-2200
+Bundle-Version: 0.6.0.v20060705-1300
 Bundle-Activator: org.eclipse.mylar.provisional.core.MylarPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
@@ -23,9 +23,7 @@ Export-Package: org.apache.commons.codec,
  org.apache.commons.httpclient.params,
  org.apache.commons.httpclient.protocol,
  org.apache.commons.httpclient.util,
- org.apache.commons.logging,
- org.apache.commons.logging.impl,
- org.eclipse.mylar.internal.core,
+ org.eclipse.mylar.internal.core, 
  org.eclipse.mylar.internal.core.search,
  org.eclipse.mylar.internal.core.util,
  org.eclipse.mylar.provisional.core
