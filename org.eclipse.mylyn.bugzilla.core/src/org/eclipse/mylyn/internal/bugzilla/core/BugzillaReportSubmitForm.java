@@ -232,12 +232,19 @@ public class BugzillaReportSubmitForm {
 			} else if (a != null && a.getID() != null && a.getID().compareTo("") != 0 && a.isHidden()) {
 				// we have a hidden attribute and we should send it back.
 				// System.err.println(a.getID()+" "+a.getValue());
-				bugReportPostHandler.add(a.getID(), a.getValue());
+				String value = a.getValue();				
+
+				// Strip off timezone information
+				// 149513: Constant bugzilla mid-air collisions
+				if (a.getID().equals(BugzillaReportElement.DELTA_TS.getKeyString()) && value != null) {								
+					value = stripTimeZone(value);
+				}
+				bugReportPostHandler.add(a.getID(), value);
 			}
 		}
 
 		bugReportPostHandler.add("cc", "somewhere@nowhere.com");
-		
+
 		// when posting the bug id is encoded in a hidden field named 'id'
 		bugReportPostHandler.add(KEY_ID, bug.getAttributeValue(BugzillaReportElement.BUG_ID.getKeyString()));
 
@@ -277,6 +284,18 @@ public class BugzillaReportSubmitForm {
 		return bugReportPostHandler;
 	}
 
+	
+	public static String stripTimeZone(String longTime) {
+		String result = longTime;
+		if (longTime != null) {
+			String[] values = longTime.split(" ");
+			if (values != null && values.length > 2) {
+				result = values[0] + " " + values[1];
+			}
+		}
+		return result;
+	}
+	
 	private static String toCommaSeparatedList(String[] strings) {
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < strings.length; i++) {
@@ -409,7 +428,7 @@ public class BugzillaReportSubmitForm {
 				in.reset();
 				BugzillaRepositoryUtil.parseHtmlError(in);
 			}
-			
+
 			if (!isNewBugPost && existingBugPosted == true && attachment != null) {
 				try {
 					// upload the attachment if any
@@ -435,7 +454,6 @@ public class BugzillaReportSubmitForm {
 							"Could not upload attachment.  Communications error: " + e.getMessage(), e);
 				}
 			}
-			
 
 		} catch (KeyManagementException e) {
 			throw new BugzillaException("Could not POST form.  Communications error: " + e.getMessage(), e);

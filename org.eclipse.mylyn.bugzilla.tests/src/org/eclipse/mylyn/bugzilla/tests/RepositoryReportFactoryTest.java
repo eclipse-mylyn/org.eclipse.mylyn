@@ -26,6 +26,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryReportFactory;
@@ -434,4 +435,20 @@ public class RepositoryReportFactoryTest extends TestCase {
 		// assertEquals("1",
 		// report.getAttachments().get(0).getAttribute(BugzillaReportElement.ATTACHID.getKeyString()).getValue());
 	}
+	
+	
+	public void testDeltaTsTruncation() {
+		String ts1 = "2006-07-06 03:22:08 0900";
+		String ts1_truncated = "2006-07-06 03:22:08";
+		assertEquals(ts1_truncated, BugzillaReportSubmitForm.stripTimeZone(ts1));
+		
+		String ts2 = "2006-07-06 03:22:08";
+		String ts2_truncated = "2006-07-06 03:22:08";
+		assertEquals(ts2_truncated, BugzillaReportSubmitForm.stripTimeZone(ts2));
+		
+		String ts3 = "2006-07-06 03:22:08 PST";
+		String ts3_truncated = "2006-07-06 03:22:08";
+		assertEquals(ts3_truncated, BugzillaReportSubmitForm.stripTimeZone(ts3));
+	}
+	
 }
