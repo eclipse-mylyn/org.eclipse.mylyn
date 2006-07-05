@@ -85,17 +85,20 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 	protected void init222() {
 		init(IBugzillaConstants.TEST_BUGZILLA_222_URL);
 	}
+
 	protected void init2201() {
 		init(IBugzillaConstants.TEST_BUGZILLA_2201_URL);
 	}
+
 	protected void init220() {
 		init(IBugzillaConstants.TEST_BUGZILLA_220_URL);
 	}
+
 	protected void init218() {
 		init(IBugzillaConstants.TEST_BUGZILLA_218_URL);
 	}
-	
-	protected void init (String url) {
+
+	protected void init(String url) {
 		repository = new TaskRepository(DEFAULT_KIND, url);
 		// Valid user name and password must be set for tests to pass
 		try {
@@ -139,10 +142,10 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 
 		BugzillaTask task = (BugzillaTask) client.createTaskFromExistingKey(repository, "1");
 		assertNotNull(task);
-		//assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
-		//client.synchronize(task, true, null);
+		// assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
+		// client.synchronize(task, true, null);
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
-		
+
 		BugzillaTask retrievedTask = (BugzillaTask) taskList.getTask(task.getHandleIdentifier());
 		assertNotNull(retrievedTask);
 		assertEquals(task.getHandleIdentifier(), retrievedTask.getHandleIdentifier());
@@ -160,8 +163,8 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(task);
 		assertTrue(task.isDownloaded());
 		// (The initial local copy from server)
-		//assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
-		//client.synchronize(task, true, null);
+		// assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
+		// client.synchronize(task, true, null);
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
 		// Modify it
 		String newCommentText = "BugzillaRepositoryClientTest.testSynchronize(): " + (new Date()).toString();
@@ -272,11 +275,11 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		String taskNumber = "6";
 		BugzillaTask task = (BugzillaTask) client.createTaskFromExistingKey(repository, taskNumber);
 		assertNotNull(task);
-		//assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
+		// assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
 		assertTrue(task.isDownloaded());
-		//client.synchronize(task, true, null);
+		// client.synchronize(task, true, null);
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
-		
+
 		assertEquals(6, task.getTaskData().getId());
 		int numAttached = task.getTaskData().getAttachments().size();
 		String fileName = "test-attach-" + System.currentTimeMillis() + ".txt";
@@ -332,18 +335,20 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		assertEquals(4, task4.getTaskData().getId());
 
 		BugzillaTask task5 = generateLocalTaskAndDownload("5");
- 		assertEquals(5, task5.getTaskData().getId());
-		
+		assertEquals(5, task5.getTaskData().getId());
+
 		Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
 		tasks.add(task4);
 		tasks.add(task5);
 
 		synchAndAssertState(tasks, RepositoryTaskSyncState.SYNCHRONIZED);
-		
+
 		MylarTaskListPlugin.getRepositoryManager().setSyncTime(repository, null);
 		client.synchronizeChanged(repository);
-		// synchronizeChanged uses the date stamp from the most recent task returned so
-		// this should always result in 1 task being returned (the most recently modified task). 
+		// synchronizeChanged uses the date stamp from the most recent task
+		// returned so
+		// this should always result in 1 task being returned (the most recently
+		// modified task).
 		Set<AbstractRepositoryTask> changedTasks = client.getChangedSinceLastSync(repository, tasks);
 		assertEquals(1, changedTasks.size());
 
@@ -369,43 +374,45 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		assertNotNull(repository.getPassword());
 
 		BugzillaReportSubmitForm bugzillaReportSubmitForm;
-		
+
 		for (AbstractRepositoryTask task : tasks) {
 			bugzillaReportSubmitForm = makeExistingBugPost(task.getTaskData());
-			bugzillaReportSubmitForm.submitReportToRepository();	
+			bugzillaReportSubmitForm.submitReportToRepository();
 		}
 
 		assertEquals("Changed reports expected ", 2, client.getChangedSinceLastSync(repository, tasks).size());
-		
+
 		synchAndAssertState(tasks, RepositoryTaskSyncState.INCOMING);
 		synchAndAssertState(tasks, RepositoryTaskSyncState.SYNCHRONIZED);
-		
+
 		assertEquals(priority4, task4.getPriority());
 		assertEquals(priority5, task5.getPriority());
 	}
-	
+
 	public void testIncomingWhenOfflineDeleted() throws Exception {
 
 		init222();
 		BugzillaTask task7 = generateLocalTaskAndDownload("7");
 		assertEquals(7, task7.getTaskData().getId());
-		
+
 		Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
 		tasks.add(task7);
 		synchAndAssertState(tasks, RepositoryTaskSyncState.SYNCHRONIZED);
-		
+
 		RepositoryTaskData recentTaskData = task7.getTaskData();
 		assertNotNull(recentTaskData);
-		
-		assertFalse(MylarTaskListPlugin.getDefault().getOfflineReportsFile().find(IBugzillaConstants.TEST_BUGZILLA_222_URL, 7) == -1);
-		ArrayList<RepositoryTaskData> taskDataList = new ArrayList<RepositoryTaskData>();		
+
+		assertFalse(MylarTaskListPlugin.getDefault().getOfflineReportsFile().find(
+				IBugzillaConstants.TEST_BUGZILLA_222_URL, 7) == -1);
+		ArrayList<RepositoryTaskData> taskDataList = new ArrayList<RepositoryTaskData>();
 		taskDataList.add(task7.getTaskData());
 		MylarTaskListPlugin.getDefault().getOfflineReportsFile().remove(taskDataList);
-		assertTrue(MylarTaskListPlugin.getDefault().getOfflineReportsFile().find(IBugzillaConstants.TEST_BUGZILLA_222_URL, 7) == -1);
-		
+		assertTrue(MylarTaskListPlugin.getDefault().getOfflineReportsFile().find(
+				IBugzillaConstants.TEST_BUGZILLA_222_URL, 7) == -1);
+
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task7.getSyncState());
-		// Task no longer stored offline		
-		// make an external change		
+		// Task no longer stored offline
+		// make an external change
 		assertNotNull(repository.getUserName());
 		assertNotNull(repository.getPassword());
 
@@ -417,28 +424,30 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 			priority = "P1";
 			recentTaskData.setAttributeValue(BugzillaReportElement.PRIORITY.getKeyString(), priority);
 		}
-		
+
 		BugzillaReportSubmitForm bugzillaReportSubmitForm;
 		bugzillaReportSubmitForm = makeExistingBugPost(recentTaskData);
-		bugzillaReportSubmitForm.submitReportToRepository();		
+		bugzillaReportSubmitForm.submitReportToRepository();
 		client.synchronizeChanged(repository);
-		
-		assertEquals(RepositoryTaskSyncState.INCOMING, task7.getSyncState());		
+
+		assertEquals(RepositoryTaskSyncState.INCOMING, task7.getSyncState());
 	}
-	
+
 	private BugzillaTask generateLocalTaskAndDownload(String taskNumber) {
 		BugzillaTask task = (BugzillaTask) client.createTaskFromExistingKey(repository, taskNumber);
 		assertNotNull(task);
 		MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(task);
 		assertTrue(task.isDownloaded());
-		
+
 		return task;
 	}
-	private BugzillaReportSubmitForm makeExistingBugPost(RepositoryTaskData taskData) throws UnsupportedEncodingException {
-		return BugzillaReportSubmitForm.makeExistingBugPost(taskData, repository
-				.getUrl(), repository.getUserName(), repository.getPassword(), null, null, repository
-				.getCharacterEncoding());
+
+	private BugzillaReportSubmitForm makeExistingBugPost(RepositoryTaskData taskData)
+			throws UnsupportedEncodingException {
+		return BugzillaReportSubmitForm.makeExistingBugPost(taskData, repository.getUrl(), repository.getUserName(),
+				repository.getPassword(), null, null, repository.getCharacterEncoding());
 	}
+
 	private void synchAndAssertState(Set<AbstractRepositoryTask> tasks, RepositoryTaskSyncState state) {
 		for (AbstractRepositoryTask task : tasks) {
 			client.synchronize(task, true, null);
@@ -450,20 +459,25 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		init222();
 		timeTracker(14, true);
 	}
+
 	public void testTimeTracker2201() throws Exception {
 		init2201();
 		timeTracker(22, true);
 	}
+
 	public void testTimeTracker220() throws Exception {
 		init220();
 		timeTracker(8, true);
 	}
+
 	public void testTimeTracker218() throws Exception {
 		init218();
 		timeTracker(18, false);
 	}
+
 	/**
-	 * @param enableDeadline bugzilla 218 doesn't support deadlines
+	 * @param enableDeadline
+	 *            bugzilla 218 doesn't support deadlines
 	 */
 	protected void timeTracker(int taskid, boolean enableDeadline) throws Exception {
 		BugzillaTask bugtask = generateLocalTaskAndDownload("" + taskid);
@@ -471,9 +485,9 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 
 		Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
 		tasks.add(bugtask);
-		
+
 		synchAndAssertState(tasks, RepositoryTaskSyncState.SYNCHRONIZED);
-		
+
 		MylarTaskListPlugin.getRepositoryManager().setSyncTime(repository, null);
 		client.synchronizeChanged(repository);
 		// if a task or two has changed the last sync date is updated to 1s
@@ -485,52 +499,56 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 
 		assertNotNull(repository.getUserName());
 		assertNotNull(repository.getPassword());
-		
+
 		float estimatedTime, remainingTime, actualTime, addTime;
 		String deadline = null;
 
 		RepositoryTaskData bugtaskdata = bugtask.getTaskData();
-		estimatedTime = Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.ESTIMATED_TIME.getKeyString()));
-		remainingTime = Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString()));
-		actualTime 	  =	Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.ACTUAL_TIME.getKeyString()));
-		if (enableDeadline) 
+		estimatedTime = Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.ESTIMATED_TIME
+				.getKeyString()));
+		remainingTime = Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.REMAINING_TIME
+				.getKeyString()));
+		actualTime = Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.ACTUAL_TIME.getKeyString()));
+		if (enableDeadline)
 			deadline = bugtaskdata.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString());
-		
+
 		estimatedTime += 2;
 		remainingTime += 1.5;
 		addTime = 0.75f;
-		if (enableDeadline) 
+		if (enableDeadline)
 			deadline = generateNewDay();
-				
+
 		bugtaskdata.setAttributeValue(BugzillaReportElement.ESTIMATED_TIME.getKeyString(), "" + estimatedTime);
 		bugtaskdata.setAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString(), "" + remainingTime);
-		bugtaskdata.setAttributeValue(BugzillaReportElement.WORK_TIME.getKeyString(), 	  "" + addTime);
+		bugtaskdata.setAttributeValue(BugzillaReportElement.WORK_TIME.getKeyString(), "" + addTime);
 		if (enableDeadline)
 			bugtaskdata.setAttributeValue(BugzillaReportElement.DEADLINE.getKeyString(), deadline);
-		
+
 		BugzillaReportSubmitForm bugzillaReportSubmitForm;
-		
+
 		for (AbstractRepositoryTask task : tasks) {
-			task.getTaskData().setAttributeValue(BugzillaReportElement.ADD_COMMENT.getKeyString(), 
-					"New Estimate: " + estimatedTime + "\nNew Remaining: " + remainingTime + "\nAdd: " + addTime );
+			task.getTaskData().setAttributeValue(BugzillaReportElement.ADD_COMMENT.getKeyString(),
+					"New Estimate: " + estimatedTime + "\nNew Remaining: " + remainingTime + "\nAdd: " + addTime);
 			bugzillaReportSubmitForm = makeExistingBugPost(task.getTaskData());
-			bugzillaReportSubmitForm.submitReportToRepository();	
+			bugzillaReportSubmitForm.submitReportToRepository();
 		}
 
 		assertEquals("Changed reports expected ", 1, client.getChangedSinceLastSync(repository, tasks).size());
-		
+
 		synchAndAssertState(tasks, RepositoryTaskSyncState.INCOMING);
 		synchAndAssertState(tasks, RepositoryTaskSyncState.SYNCHRONIZED);
-		
+
 		bugtaskdata = bugtask.getTaskData();
-		
-		
-		assertEquals(estimatedTime, Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.ESTIMATED_TIME.getKeyString())));
-		assertEquals(remainingTime, Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString())));
-		assertEquals(actualTime + addTime, Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.ACTUAL_TIME.getKeyString())));
+
+		assertEquals(estimatedTime, Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.ESTIMATED_TIME
+				.getKeyString())));
+		assertEquals(remainingTime, Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.REMAINING_TIME
+				.getKeyString())));
+		assertEquals(actualTime + addTime, Float.parseFloat(bugtaskdata
+				.getAttributeValue(BugzillaReportElement.ACTUAL_TIME.getKeyString())));
 		if (enableDeadline)
 			assertEquals(deadline, bugtaskdata.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString()));
-		
+
 	}
 
 	public void testUrlParsers() {
@@ -551,35 +569,39 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 	}
 
 	/**
-	 * Though unlikely, this may fail randomly if it tries to bind to a port that happens to be in use.  
+	 * Though unlikely, this may fail randomly if it tries to bind to a port
+	 * that happens to be in use.
 	 */
 	public void testTrustAllSslProtocolSocketFactory() throws Exception {
 		TrustAllSslProtocolSocketFactory factory = new TrustAllSslProtocolSocketFactory();
 		Socket s;
-		
+
 		s = factory.createSocket("mylar.eclipse.org", 80);
 		assertNotNull(s);
 		assertTrue(s.isConnected());
 		s.close();
 
-		s = factory.createSocket("mylar.eclipse.org", 80, InetAddress.getLocalHost(), (int)(Math.random() * 1000 + 20000));
+		s = factory.createSocket("mylar.eclipse.org", 80, InetAddress.getLocalHost(),
+				(int) (Math.random() * 1000 + 20000));
 		assertNotNull(s);
 		assertTrue(s.isConnected());
 		s.close();
 
 		HttpConnectionParams params = new HttpConnectionParams();
-		s = factory.createSocket("mylar.eclipse.org", 80, InetAddress.getLocalHost(), (int)(Math.random() * 1000 + 20000), null);
+		s = factory.createSocket("mylar.eclipse.org", 80, InetAddress.getLocalHost(),
+				(int) (Math.random() * 1000 + 20000), null);
 		assertNotNull(s);
 		assertTrue(s.isConnected());
 		s.close();
-		
+
 		params.setConnectionTimeout(100);
-		s = factory.createSocket("mylar.eclipse.org", 80, InetAddress.getLocalHost(), (int)(Math.random() * 1000 + 20000), params);
+		s = factory.createSocket("mylar.eclipse.org", 80, InetAddress.getLocalHost(),
+				(int) (Math.random() * 1000 + 20000), params);
 		assertNotNull(s);
 		assertTrue(s.isConnected());
 		s.close();
 	}
-	
+
 	private String generateNewDay() {
 		int year = 2006;
 		int month = (int) (Math.random() * 12 + 1);
