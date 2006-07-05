@@ -29,7 +29,6 @@ import java.util.List;
 
 import javax.security.auth.login.LoginException;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESOLUTION;
