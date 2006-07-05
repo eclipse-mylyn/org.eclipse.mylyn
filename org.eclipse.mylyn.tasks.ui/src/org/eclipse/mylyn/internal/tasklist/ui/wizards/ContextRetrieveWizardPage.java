@@ -22,15 +22,13 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.ui.forms.widgets.Form;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * @author Rob Elves
@@ -50,8 +48,6 @@ public class ContextRetrieveWizardPage extends WizardPage {
 
 	private AbstractRepositoryTask task;
 
-	private Form form;
-
 	private RepositoryAttachment selectedContextAttachment = null;
 
 	protected ContextRetrieveWizardPage(TaskRepository repository, AbstractRepositoryTask task) {
@@ -62,18 +58,14 @@ public class ContextRetrieveWizardPage extends WizardPage {
 	}
 
 	public void createControl(Composite parent) {
-		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
-		form = toolkit.createForm(parent);
-		form.getBody().setLayout(new GridLayout(1, false));
+		Composite composite = new Composite(parent, SWT.NONE);
+		composite.setLayout(new GridLayout(1, false));
 		
-		Color formBackground = form.getBackground();
-		form.setBackground(parent.getBackground());
-		toolkit.setBackground(parent.getBackground());
-		toolkit.createLabel(form.getBody(), "Task: " + task.getDescription());
-		toolkit.createLabel(form.getBody(), "Repository: " + repository.getUrl());
-		toolkit.createLabel(form.getBody(), "Select context below:");
-		final Table contextTable = toolkit.createTable(form.getBody(), SWT.FULL_SELECTION | SWT.SINGLE | SWT.V_SCROLL);
-		contextTable.setBackground(formBackground);
+		new Label(composite, SWT.NONE).setText("Task: " + task.getDescription());
+		new Label(composite, SWT.NONE).setText("Repository: " + repository.getUrl());
+		new Label(composite, SWT.NONE).setText("Select context below:");
+
+		final Table contextTable = new Table(composite, SWT.FULL_SELECTION | SWT.BORDER);
 		contextTable.setHeaderVisible(true);
 		contextTable.setLinesVisible(true);
 		contextTable.addSelectionListener(new SelectionAdapter() {
@@ -113,10 +105,9 @@ public class ContextRetrieveWizardPage extends WizardPage {
 	      columns[i].pack();
 	    }
 		
-		GridData tableLayoutData = new GridData(GridData.FILL_BOTH);
-		contextTable.setLayoutData(tableLayoutData);
-		toolkit.paintBordersFor(form.getBody());
-		setControl(form.getBody());
+		contextTable.setLayoutData(new GridData(GridData.FILL_BOTH));
+		
+		setControl(composite);
 	}
 
 	public RepositoryAttachment getSelectedContext() {
