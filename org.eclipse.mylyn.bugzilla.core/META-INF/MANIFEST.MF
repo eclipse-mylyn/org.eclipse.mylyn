@@ -12,7 +12,8 @@ Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: lib/commons-logging.jar,
  lib/commons-codec-1.3.jar,
- lib/commons-httpclient-3.0.jar
+ lib/commons-httpclient-3.0.jar,
+ .
 Export-Package: org.apache.commons.httpclient,
  org.apache.commons.httpclient.auth,
  org.apache.commons.httpclient.cookie,
