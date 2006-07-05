@@ -250,6 +250,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 								} else if (throwable.getCause() instanceof UnrecognizedReponseException) {
 									WebBrowserDialog.openAcceptAgreement(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 											"Unrecognized response from server:", throwable.getCause().getMessage());									
+									MylarStatusHandler.log(throwable.getCause().getMessage(), this);
 									String attributes = "Attributes: ";
 									if (bugReport != null) {
 										for (RepositoryTaskAttribute attribute : bugReport.getAttributes()) {

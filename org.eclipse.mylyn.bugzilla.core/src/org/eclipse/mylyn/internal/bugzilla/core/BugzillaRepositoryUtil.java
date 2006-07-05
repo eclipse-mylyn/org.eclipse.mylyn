@@ -33,7 +33,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESOLUTION;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.RepositoryOperation;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
@@ -135,7 +134,7 @@ public class BugzillaRepositoryUtil {
 
 	}
 
-	// TODO: imrpove and move to repository connector?
+	// TODO: improve and move to repository connector?
 	public static void validateCredentials(String repositoryUrl, String userid, String password) throws IOException,
 			LoginException, BugzillaException {
 
@@ -196,8 +195,9 @@ public class BugzillaRepositoryUtil {
 				}
 			}
 
-			MylarStatusHandler.log("Unrecognized Reponse: " + body, BugzillaRepositoryUtil.class);
-			throw new UnrecognizedReponseException(body);
+			// MylarStatusHandler.log("Unrecognized Reponse: " + body,
+			// BugzillaRepositoryUtil.class);
+			throw new UnrecognizedReponseException("Unrecognized Response From Server: " + body);
 
 		} catch (ParseException e) {
 			throw new IOException("Unable to parse result from repository:\n" + e.getMessage());

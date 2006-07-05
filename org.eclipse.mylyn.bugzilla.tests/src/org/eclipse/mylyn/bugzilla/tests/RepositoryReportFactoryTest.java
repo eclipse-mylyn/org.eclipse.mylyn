@@ -36,10 +36,23 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 public class RepositoryReportFactoryTest extends TestCase {
 
 	RepositoryReportFactory factory = RepositoryReportFactory.getInstance();
+
 	BugzillaAttributeFactory attributeFactory = new BugzillaAttributeFactory();
 
 	private RepositoryTaskData init(String URL, int bugid) throws Exception {
-		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, URL);
+		TaskRepository repository = getRepository(BugzillaPlugin.REPOSITORY_KIND, URL);
+
+		RepositoryTaskData report = new RepositoryTaskData(attributeFactory, BugzillaPlugin.REPOSITORY_KIND, repository
+				.getUrl(), bugid);
+		BugzillaRepositoryUtil.setupExistingBugAttributes(repository.getUrl(), report);
+		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(),
+				null);
+
+		return report;
+	}
+
+	private TaskRepository getRepository(String kind, String url) {
+		TaskRepository repository = new TaskRepository(kind, url);
 
 		// Valid user name and password must be set for tests to pass
 		try {
@@ -52,24 +65,19 @@ public class RepositoryReportFactoryTest extends TestCase {
 		} catch (Throwable t) {
 			fail("must define credentials in <plug-in dir>/credentials.properties");
 		}
-		
-		RepositoryTaskData report = new RepositoryTaskData(attributeFactory, BugzillaPlugin.REPOSITORY_KIND, repository
-				.getUrl(), bugid);
-		BugzillaRepositoryUtil.setupExistingBugAttributes(repository.getUrl(), report);
-		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(),
-				null);
-
-		return report;
+		return repository;
 	}
 
-	public void testBugNoFound222() throws Exception {
+	public void testBugNotFound222() throws Exception {
 		int bugid = -1;
 		String errorMessage = "";
-		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
+		TaskRepository repository = getRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		try {
-			RepositoryTaskData report = new RepositoryTaskData(attributeFactory, BugzillaPlugin.REPOSITORY_KIND, repository.getUrl(), bugid);
-			factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
+			RepositoryTaskData report = new RepositoryTaskData(attributeFactory, repository.getKind(), repository
+					.getUrl(), bugid);
+			factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository
+					.getPassword(), null);
 		} catch (LoginException e) {
 			//
 		} catch (IOException e) {
@@ -85,8 +93,10 @@ public class RepositoryReportFactoryTest extends TestCase {
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		repository.setAuthenticationCredentials("invalid", "invalid");
 		try {
-			RepositoryTaskData report = new RepositoryTaskData(attributeFactory,  BugzillaPlugin.REPOSITORY_KIND, repository.getUrl(), bugid);
-			factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
+			RepositoryTaskData report = new RepositoryTaskData(attributeFactory, BugzillaPlugin.REPOSITORY_KIND,
+					repository.getUrl(), bugid);
+			factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository
+					.getPassword(), null);
 		} catch (LoginException e) {
 			errorMessage = e.getMessage();
 		} catch (IOException e) {
@@ -101,43 +111,57 @@ public class RepositoryReportFactoryTest extends TestCase {
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 
-		RepositoryTaskData report = new RepositoryTaskData(attributeFactory,  BugzillaPlugin.REPOSITORY_KIND, repository.getUrl(), bugid);
+		RepositoryTaskData report = new RepositoryTaskData(attributeFactory, BugzillaPlugin.REPOSITORY_KIND, repository
+				.getUrl(), bugid);
 		BugzillaRepositoryUtil.setupExistingBugAttributes(repository.getUrl(), report);
-		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
+		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(),
+				null);
 
 		assertNotNull(report);
-		assertEquals("search-match-test 1", report.getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString()).getValue());
+		assertEquals("search-match-test 1", report.getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString())
+				.getValue());
 		assertEquals("TestProduct", report.getAttribute(BugzillaReportElement.PRODUCT.getKeyString()).getValue());
 		assertEquals("PC", report.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
 		assertEquals("Windows", report.getAttribute(BugzillaReportElement.OP_SYS.getKeyString()).getValue());
-		// first comment (#0) is the description so this value is always 1 greater
+		// first comment (#0) is the description so this value is always 1
+		// greater
 		// than what is shown on the report ui
 		assertEquals(3, report.getComments().size());
 		assertEquals("search-match-test 1", report.getComments().get(0).getAttribute(
 				BugzillaReportElement.THETEXT.getKeyString()).getValue());
-//		assertEquals(15, report.getAttachments().size());
-//		assertEquals("1", report.getAttachments().get(0).getAttribute(BugzillaReportElement.ATTACHID).getValue());
-//		assertEquals("2006-03-10 14:11", report.getAttachments().get(0).getAttribute(BugzillaReportElement.DATE)
-//				.getValue());
-//		assertEquals("Testing upload", report.getAttachments().get(0).getAttribute(BugzillaReportElement.DESC)
-//				.getValue());
-//		assertEquals("patch130217.txt", report.getAttachments().get(0).getAttribute(BugzillaReportElement.FILENAME)
-//				.getValue());
-//		assertEquals("text/plain", report.getAttachments().get(0).getAttribute(BugzillaReportElement.TYPE).getValue());
+		// assertEquals(15, report.getAttachments().size());
+		// assertEquals("1",
+		// report.getAttachments().get(0).getAttribute(BugzillaReportElement.ATTACHID).getValue());
+		// assertEquals("2006-03-10 14:11",
+		// report.getAttachments().get(0).getAttribute(BugzillaReportElement.DATE)
+		// .getValue());
+		// assertEquals("Testing upload",
+		// report.getAttachments().get(0).getAttribute(BugzillaReportElement.DESC)
+		// .getValue());
+		// assertEquals("patch130217.txt",
+		// report.getAttachments().get(0).getAttribute(BugzillaReportElement.FILENAME)
+		// .getValue());
+		// assertEquals("text/plain",
+		// report.getAttachments().get(0).getAttribute(BugzillaReportElement.TYPE).getValue());
 	}
 
 	public void testReadingReport222() throws Exception {
 		int bugid = 2;
-//		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
-//				IBugzillaConstants.TEST_BUGZILLA_222_URL);
-//
-//		RepositoryTaskData report = new RepositoryTaskData(attributeFactory,  BugzillaPlugin.REPOSITORY_KIND, repository.getUrl(), bugid);
-//		BugzillaRepositoryUtil.setupExistingBugAttributes(repository.getUrl(), report);
-//		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
+		// TaskRepository repository = new
+		// TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
+		// IBugzillaConstants.TEST_BUGZILLA_222_URL);
+		//
+		// RepositoryTaskData report = new RepositoryTaskData(attributeFactory,
+		// BugzillaPlugin.REPOSITORY_KIND, repository.getUrl(), bugid);
+		// BugzillaRepositoryUtil.setupExistingBugAttributes(repository.getUrl(),
+		// report);
+		// factory.populateReport(report, repository.getUrl(), null,
+		// repository.getUserName(), repository.getPassword(), null);
 		RepositoryTaskData report = init(IBugzillaConstants.TEST_BUGZILLA_222_URL, bugid);
-		
+
 		assertNotNull(report);
-		assertEquals("search-match-test 1", report.getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString()).getValue());
+		assertEquals("search-match-test 1", report.getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString())
+				.getValue());
 		assertEquals("TestProduct", report.getAttribute(BugzillaReportElement.PRODUCT.getKeyString()).getValue());
 		assertEquals("TestComponent", report.getAttribute(BugzillaReportElement.COMPONENT.getKeyString()).getValue());
 		assertEquals("PC", report.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
@@ -145,19 +169,23 @@ public class RepositoryReportFactoryTest extends TestCase {
 		assertEquals("other", report.getAttribute(BugzillaReportElement.VERSION.getKeyString()).getValue());
 		assertEquals("P1", report.getAttribute(BugzillaReportElement.PRIORITY.getKeyString()).getValue());
 		assertEquals("normal", report.getAttribute(BugzillaReportElement.BUG_SEVERITY.getKeyString()).getValue());
-		assertEquals(""+bugid, report.getAttribute(BugzillaReportElement.BUG_ID.getKeyString()).getValue());
+		assertEquals("" + bugid, report.getAttribute(BugzillaReportElement.BUG_ID.getKeyString()).getValue());
 		assertEquals("NEW", report.getAttribute(BugzillaReportElement.BUG_STATUS.getKeyString()).getValue());
-		assertEquals("2006-05-23 17:46", report.getAttribute(BugzillaReportElement.CREATION_TS.getKeyString()).getValue());
-		assertEquals("2006-06-15 12:55:43", report.getAttribute(BugzillaReportElement.DELTA_TS.getKeyString()).getValue());
+		assertEquals("2006-05-23 17:46", report.getAttribute(BugzillaReportElement.CREATION_TS.getKeyString())
+				.getValue());
+		assertEquals("2006-06-15 12:55:43", report.getAttribute(BugzillaReportElement.DELTA_TS.getKeyString())
+				.getValue());
 		assertEquals("---", report.getAttribute(BugzillaReportElement.TARGET_MILESTONE.getKeyString()).getValue());
 		assertEquals("relves@cs.ubc.ca", report.getAttribute(BugzillaReportElement.REPORTER.getKeyString()).getValue());
-		assertEquals("nhapke@cs.ubc.ca", report.getAttribute(BugzillaReportElement.ASSIGNED_TO.getKeyString()).getValue());
+		assertEquals("nhapke@cs.ubc.ca", report.getAttribute(BugzillaReportElement.ASSIGNED_TO.getKeyString())
+				.getValue());
 		assertEquals(3, report.getComments().size());
-		assertEquals("relves@cs.ubc.ca", report.getComments().get(0).getAttribute(BugzillaReportElement.WHO.getKeyString()).getValue());
-		assertEquals("2006-05-23 17:46:24", report.getComments().get(0).getAttribute(BugzillaReportElement.BUG_WHEN.getKeyString())
-				.getValue());
-		assertEquals("search-match-test 1", report.getComments().get(0).getAttribute(BugzillaReportElement.THETEXT.getKeyString())
-				.getValue());
+		assertEquals("relves@cs.ubc.ca", report.getComments().get(0).getAttribute(
+				BugzillaReportElement.WHO.getKeyString()).getValue());
+		assertEquals("2006-05-23 17:46:24", report.getComments().get(0).getAttribute(
+				BugzillaReportElement.BUG_WHEN.getKeyString()).getValue());
+		assertEquals("search-match-test 1", report.getComments().get(0).getAttribute(
+				BugzillaReportElement.THETEXT.getKeyString()).getValue());
 		assertEquals(0, report.getAttachments().size());
 	}
 
@@ -195,19 +223,22 @@ public class RepositoryReportFactoryTest extends TestCase {
 		assertEquals("1.00", report.getAttribute(BugzillaReportElement.ACTUAL_TIME.getKeyString()).getValue());
 		assertEquals("3.00", report.getAttribute(BugzillaReportElement.REMAINING_TIME.getKeyString()).getValue());
 	}
-	
+
 	public void testReadingReport2201() throws Exception {
 		int bugid = 1;
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_2201_URL);
 
-		RepositoryTaskData report = new RepositoryTaskData(attributeFactory,  BugzillaPlugin.REPOSITORY_KIND, repository.getUrl(), bugid);
+		RepositoryTaskData report = new RepositoryTaskData(attributeFactory, BugzillaPlugin.REPOSITORY_KIND, repository
+				.getUrl(), bugid);
 		BugzillaRepositoryUtil.setupExistingBugAttributes(repository.getUrl(), report);
-		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
+		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(),
+				null);
 
 		assertNotNull(report);
 		assertEquals("1", report.getAttribute(BugzillaReportElement.BUG_ID.getKeyString()).getValue());
-		assertEquals("search-match-test 1", report.getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString()).getValue());
+		assertEquals("search-match-test 1", report.getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString())
+				.getValue());
 		assertEquals("TestProduct", report.getAttribute(BugzillaReportElement.PRODUCT.getKeyString()).getValue());
 		assertEquals("TestComponent", report.getAttribute(BugzillaReportElement.COMPONENT.getKeyString()).getValue());
 		assertEquals("PC", report.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
@@ -216,8 +247,10 @@ public class RepositoryReportFactoryTest extends TestCase {
 		assertEquals("P2", report.getAttribute(BugzillaReportElement.PRIORITY.getKeyString()).getValue());
 		assertEquals("normal", report.getAttribute(BugzillaReportElement.BUG_SEVERITY.getKeyString()).getValue());
 		assertEquals("NEW", report.getAttribute(BugzillaReportElement.BUG_STATUS.getKeyString()).getValue());
-		assertEquals("2006-03-02 18:13", report.getAttribute(BugzillaReportElement.CREATION_TS.getKeyString()).getValue());
-		assertEquals("2006-05-03 13:06:11", report.getAttribute(BugzillaReportElement.DELTA_TS.getKeyString()).getValue());
+		assertEquals("2006-03-02 18:13", report.getAttribute(BugzillaReportElement.CREATION_TS.getKeyString())
+				.getValue());
+		assertEquals("2006-05-03 13:06:11", report.getAttribute(BugzillaReportElement.DELTA_TS.getKeyString())
+				.getValue());
 		assertEquals("---", report.getAttribute(BugzillaReportElement.TARGET_MILESTONE.getKeyString()).getValue());
 		RepositoryTaskAttribute attribute = report.getAttribute(BugzillaReportElement.BLOCKED.getKeyString());
 		assertEquals(2, attribute.getValues().size());
@@ -228,13 +261,15 @@ public class RepositoryReportFactoryTest extends TestCase {
 		assertEquals("relves@cs.ubc.ca", attribute.getValues().get(0));
 		assertEquals("relves@gmail.com", attribute.getValues().get(1));
 		assertEquals("relves@cs.ubc.ca", report.getAttribute(BugzillaReportElement.REPORTER.getKeyString()).getValue());
-		assertEquals("relves@cs.ubc.ca", report.getAttribute(BugzillaReportElement.ASSIGNED_TO.getKeyString()).getValue());
+		assertEquals("relves@cs.ubc.ca", report.getAttribute(BugzillaReportElement.ASSIGNED_TO.getKeyString())
+				.getValue());
 		assertEquals(1, report.getComments().size());
-		assertEquals("relves@cs.ubc.ca", report.getComments().get(0).getAttribute(BugzillaReportElement.WHO.getKeyString()).getValue());
-		assertEquals("2006-03-02 18:13", report.getComments().get(0).getAttribute(BugzillaReportElement.BUG_WHEN.getKeyString())
-				.getValue());
-		assertEquals("search-match-test 1", report.getComments().get(0).getAttribute(BugzillaReportElement.THETEXT.getKeyString())
-				.getValue());
+		assertEquals("relves@cs.ubc.ca", report.getComments().get(0).getAttribute(
+				BugzillaReportElement.WHO.getKeyString()).getValue());
+		assertEquals("2006-03-02 18:13", report.getComments().get(0).getAttribute(
+				BugzillaReportElement.BUG_WHEN.getKeyString()).getValue());
+		assertEquals("search-match-test 1", report.getComments().get(0).getAttribute(
+				BugzillaReportElement.THETEXT.getKeyString()).getValue());
 		assertEquals(0, report.getAttachments().size());
 	}
 
@@ -243,13 +278,16 @@ public class RepositoryReportFactoryTest extends TestCase {
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
 
-		RepositoryTaskData report = new RepositoryTaskData(attributeFactory,  BugzillaPlugin.REPOSITORY_KIND, repository.getUrl(), bugid);
+		RepositoryTaskData report = new RepositoryTaskData(attributeFactory, BugzillaPlugin.REPOSITORY_KIND, repository
+				.getUrl(), bugid);
 		BugzillaRepositoryUtil.setupExistingBugAttributes(repository.getUrl(), report);
-		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
+		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(),
+				null);
 
 		assertNotNull(report);
 		assertEquals("24448", report.getAttribute(BugzillaReportElement.BUG_ID.getKeyString()).getValue());
-		assertEquals("Ant causing Out of Memory", report.getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString()).getValue());
+		assertEquals("Ant causing Out of Memory", report.getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString())
+				.getValue());
 		assertEquals("Platform", report.getAttribute(BugzillaReportElement.PRODUCT.getKeyString()).getValue());
 		assertEquals("Ant", report.getAttribute(BugzillaReportElement.COMPONENT.getKeyString()).getValue());
 		assertEquals("PC", report.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
@@ -259,9 +297,12 @@ public class RepositoryReportFactoryTest extends TestCase {
 		assertEquals("normal", report.getAttribute(BugzillaReportElement.BUG_SEVERITY.getKeyString()).getValue());
 		assertEquals("RESOLVED", report.getAttribute(BugzillaReportElement.BUG_STATUS.getKeyString()).getValue());
 		assertEquals("WONTFIX", report.getAttribute(BugzillaReportElement.RESOLUTION.getKeyString()).getValue());
-		assertEquals("2002-10-07 09:32", report.getAttribute(BugzillaReportElement.CREATION_TS.getKeyString()).getValue());
-		assertEquals("2006-02-03 12:03:57", report.getAttribute(BugzillaReportElement.DELTA_TS.getKeyString()).getValue());
-		assertEquals("core, performance, ui", report.getAttribute(BugzillaReportElement.KEYWORDS.getKeyString()).getValue());
+		assertEquals("2002-10-07 09:32", report.getAttribute(BugzillaReportElement.CREATION_TS.getKeyString())
+				.getValue());
+		assertEquals("2006-02-03 12:03:57", report.getAttribute(BugzillaReportElement.DELTA_TS.getKeyString())
+				.getValue());
+		assertEquals("core, performance, ui", report.getAttribute(BugzillaReportElement.KEYWORDS.getKeyString())
+				.getValue());
 		// RepositoryTaskAttribute attribute =
 		// report.getAttribute(BugzillaReportElement.CC);
 		// assertEquals(30, attribute.getValues().size());
@@ -288,13 +329,16 @@ public class RepositoryReportFactoryTest extends TestCase {
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_220_URL);
 
-		RepositoryTaskData report = new RepositoryTaskData(attributeFactory,  BugzillaPlugin.REPOSITORY_KIND, repository.getUrl(), bugid);
+		RepositoryTaskData report = new RepositoryTaskData(attributeFactory, BugzillaPlugin.REPOSITORY_KIND, repository
+				.getUrl(), bugid);
 		BugzillaRepositoryUtil.setupExistingBugAttributes(repository.getUrl(), report);
-		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
+		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(),
+				null);
 
 		assertNotNull(report);
 		assertEquals("1", report.getAttribute(BugzillaReportElement.BUG_ID.getKeyString()).getValue());
-		assertEquals("search-match-test", report.getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString()).getValue());
+		assertEquals("search-match-test", report.getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString())
+				.getValue());
 		assertEquals("TestProduct", report.getAttribute(BugzillaReportElement.PRODUCT.getKeyString()).getValue());
 		assertEquals("TestComponent", report.getAttribute(BugzillaReportElement.COMPONENT.getKeyString()).getValue());
 		assertEquals("PC", report.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
@@ -303,18 +347,22 @@ public class RepositoryReportFactoryTest extends TestCase {
 		assertEquals("P2", report.getAttribute(BugzillaReportElement.PRIORITY.getKeyString()).getValue());
 		assertEquals("normal", report.getAttribute(BugzillaReportElement.BUG_SEVERITY.getKeyString()).getValue());
 		assertEquals("NEW", report.getAttribute(BugzillaReportElement.BUG_STATUS.getKeyString()).getValue());
-		assertEquals("2006-03-02 17:30", report.getAttribute(BugzillaReportElement.CREATION_TS.getKeyString()).getValue());
-		assertEquals("2006-04-20 15:13:43", report.getAttribute(BugzillaReportElement.DELTA_TS.getKeyString()).getValue());
+		assertEquals("2006-03-02 17:30", report.getAttribute(BugzillaReportElement.CREATION_TS.getKeyString())
+				.getValue());
+		assertEquals("2006-04-20 15:13:43", report.getAttribute(BugzillaReportElement.DELTA_TS.getKeyString())
+				.getValue());
 		assertEquals("---", report.getAttribute(BugzillaReportElement.TARGET_MILESTONE.getKeyString()).getValue());
 		assertEquals("relves@cs.ubc.ca", report.getAttribute(BugzillaReportElement.REPORTER.getKeyString()).getValue());
-		assertEquals("relves@cs.ubc.ca", report.getAttribute(BugzillaReportElement.ASSIGNED_TO.getKeyString()).getValue());
+		assertEquals("relves@cs.ubc.ca", report.getAttribute(BugzillaReportElement.ASSIGNED_TO.getKeyString())
+				.getValue());
 		assertEquals("relves@cs.ubc.ca", report.getAttribute(BugzillaReportElement.CC.getKeyString()).getValue());
 		assertEquals(3, report.getComments().size());
-		assertEquals("relves@cs.ubc.ca", report.getComments().get(0).getAttribute(BugzillaReportElement.WHO.getKeyString()).getValue());
-		assertEquals("2006-03-02 17:30", report.getComments().get(0).getAttribute(BugzillaReportElement.BUG_WHEN.getKeyString())
-				.getValue());
-		assertEquals("search-match-test", report.getComments().get(0).getAttribute(BugzillaReportElement.THETEXT.getKeyString())
-				.getValue());
+		assertEquals("relves@cs.ubc.ca", report.getComments().get(0).getAttribute(
+				BugzillaReportElement.WHO.getKeyString()).getValue());
+		assertEquals("2006-03-02 17:30", report.getComments().get(0).getAttribute(
+				BugzillaReportElement.BUG_WHEN.getKeyString()).getValue());
+		assertEquals("search-match-test", report.getComments().get(0).getAttribute(
+				BugzillaReportElement.THETEXT.getKeyString()).getValue());
 		assertEquals(0, report.getAttachments().size());
 	}
 
@@ -323,13 +371,16 @@ public class RepositoryReportFactoryTest extends TestCase {
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_218_URL);
 
-		RepositoryTaskData report = new RepositoryTaskData(attributeFactory,  BugzillaPlugin.REPOSITORY_KIND, repository.getUrl(), bugid);
+		RepositoryTaskData report = new RepositoryTaskData(attributeFactory, BugzillaPlugin.REPOSITORY_KIND, repository
+				.getUrl(), bugid);
 		BugzillaRepositoryUtil.setupExistingBugAttributes(repository.getUrl(), report);
-		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
+		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(),
+				null);
 
 		assertNotNull(report);
 		assertEquals("1", report.getAttribute(BugzillaReportElement.BUG_ID.getKeyString()).getValue());
-		assertEquals("search-match-test 1", report.getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString()).getValue());
+		assertEquals("search-match-test 1", report.getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString())
+				.getValue());
 		assertEquals("TestProduct", report.getAttribute(BugzillaReportElement.PRODUCT.getKeyString()).getValue());
 		assertEquals("TestComponent", report.getAttribute(BugzillaReportElement.COMPONENT.getKeyString()).getValue());
 		assertEquals("PC", report.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
@@ -338,17 +389,21 @@ public class RepositoryReportFactoryTest extends TestCase {
 		assertEquals("P2", report.getAttribute(BugzillaReportElement.PRIORITY.getKeyString()).getValue());
 		assertEquals("normal", report.getAttribute(BugzillaReportElement.BUG_SEVERITY.getKeyString()).getValue());
 		assertEquals("NEW", report.getAttribute(BugzillaReportElement.BUG_STATUS.getKeyString()).getValue());
-		assertEquals("2006-03-02 18:09", report.getAttribute(BugzillaReportElement.CREATION_TS.getKeyString()).getValue());
-		assertEquals("2006-05-05 17:45:24", report.getAttribute(BugzillaReportElement.DELTA_TS.getKeyString()).getValue());
+		assertEquals("2006-03-02 18:09", report.getAttribute(BugzillaReportElement.CREATION_TS.getKeyString())
+				.getValue());
+		assertEquals("2006-05-05 17:45:24", report.getAttribute(BugzillaReportElement.DELTA_TS.getKeyString())
+				.getValue());
 		assertEquals("---", report.getAttribute(BugzillaReportElement.TARGET_MILESTONE.getKeyString()).getValue());
 		assertEquals("relves@cs.ubc.ca", report.getAttribute(BugzillaReportElement.REPORTER.getKeyString()).getValue());
-		assertEquals("relves@cs.ubc.ca", report.getAttribute(BugzillaReportElement.ASSIGNED_TO.getKeyString()).getValue());
+		assertEquals("relves@cs.ubc.ca", report.getAttribute(BugzillaReportElement.ASSIGNED_TO.getKeyString())
+				.getValue());
 		assertEquals(1, report.getComments().size());
-		assertEquals("relves@cs.ubc.ca", report.getComments().get(0).getAttribute(BugzillaReportElement.WHO.getKeyString()).getValue());
-		assertEquals("2006-03-02 18:09", report.getComments().get(0).getAttribute(BugzillaReportElement.BUG_WHEN.getKeyString())
-				.getValue());
-		assertEquals("search-match-test 1", report.getComments().get(0).getAttribute(BugzillaReportElement.THETEXT.getKeyString())
-				.getValue());
+		assertEquals("relves@cs.ubc.ca", report.getComments().get(0).getAttribute(
+				BugzillaReportElement.WHO.getKeyString()).getValue());
+		assertEquals("2006-03-02 18:09", report.getComments().get(0).getAttribute(
+				BugzillaReportElement.BUG_WHEN.getKeyString()).getValue());
+		assertEquals("search-match-test 1", report.getComments().get(0).getAttribute(
+				BugzillaReportElement.THETEXT.getKeyString()).getValue());
 		assertEquals(0, report.getAttachments().size());
 	}
 
@@ -357,9 +412,11 @@ public class RepositoryReportFactoryTest extends TestCase {
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 
-		RepositoryTaskData report = new RepositoryTaskData(attributeFactory,  BugzillaPlugin.REPOSITORY_KIND, repository.getUrl(), bugid);
+		RepositoryTaskData report = new RepositoryTaskData(attributeFactory, BugzillaPlugin.REPOSITORY_KIND, repository
+				.getUrl(), bugid);
 		BugzillaRepositoryUtil.setupExistingBugAttributes(repository.getUrl(), report);
-		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
+		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(),
+				null);
 
 		assertNotNull(report);
 		assertTrue(report instanceof RepositoryTaskData);

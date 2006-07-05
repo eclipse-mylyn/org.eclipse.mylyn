@@ -52,81 +52,86 @@ public class AbstractReportFactory {
 	private BufferedReader in = null;
 
 	private boolean clean = false;
-	
+
+	private HttpURLConnection connection = null;
+
 	protected void collectResults(URL url, Proxy proxySettings, String characterEncoding, DefaultHandler contentHandler)
 			throws IOException, LoginException, KeyManagementException, NoSuchAlgorithmException {
 		URLConnection cntx = BugzillaPlugin.getUrlConnection(url, proxySettings);
 		if (cntx == null || !(cntx instanceof HttpURLConnection)) {
 			throw new IOException("Could not form URLConnection.");
 		}
+		try {
+			connection = (HttpURLConnection) cntx;
+			connection.setConnectTimeout(COM_TIME_OUT);
+			connection.setReadTimeout(COM_TIME_OUT);
+			connection.connect();
+			int responseCode = connection.getResponseCode();
+			if (responseCode != HttpURLConnection.HTTP_OK) {
+				String msg;
+				if (responseCode == -1 || responseCode == HttpURLConnection.HTTP_FORBIDDEN)
+					msg = "Repository does not seem to be a valid Bugzilla server: " + url.toExternalForm();
+				else
+					msg = "HTTP Error " + responseCode + " (" + connection.getResponseMessage()
+							+ ") while querying Bugzilla server: " + url.toExternalForm();
 
-		HttpURLConnection connection = (HttpURLConnection) cntx;
-		connection.setConnectTimeout(COM_TIME_OUT);
-		connection.setReadTimeout(COM_TIME_OUT);		
-		connection.connect();
-		int responseCode = connection.getResponseCode();
-		if (responseCode != HttpURLConnection.HTTP_OK) {
-			String msg;
-			if (responseCode == -1 || responseCode == HttpURLConnection.HTTP_FORBIDDEN)
-				msg = "Repository does not seem to be a valid Bugzilla server: " + url.toExternalForm();
-			else
-				msg = "HTTP Error " + responseCode + " (" + connection.getResponseMessage()
-						+ ") while querying Bugzilla server: " + url.toExternalForm();
+				throw new IOException(msg);
+			}
 
-			throw new IOException(msg);
-		}
+			if (characterEncoding != null) {
+				in = new BufferedReader(new InputStreamReader(connection.getInputStream(), characterEncoding));
+			} else {
+				in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			}
 
-		if (characterEncoding != null) {
-			in = new BufferedReader(new InputStreamReader(connection.getInputStream(), characterEncoding));
-		} else {
-			in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-		}
+			if (clean) {
+				StringBuffer result = XmlCleaner.clean(in);
+				StringReader strReader = new StringReader(result.toString());
+				in = new BufferedReader(strReader);
+			}
 
-		
-		
-		if(clean) {
-			 StringBuffer result = XmlCleaner.clean(in);
-			 StringReader strReader = new StringReader(result.toString());
-			 in = new BufferedReader(strReader);
-		}
-		
-		if (connection.getContentType().contains(CONTENT_TYPE_APP_RDF_XML)
-				|| connection.getContentType().contains(CONTENT_TYPE_APP_XML)
-				|| connection.getContentType().contains(CONTENT_TYPE_TEXT_XML)) {
+			if (connection.getContentType().contains(CONTENT_TYPE_APP_RDF_XML)
+					|| connection.getContentType().contains(CONTENT_TYPE_APP_XML)
+					|| connection.getContentType().contains(CONTENT_TYPE_TEXT_XML)) {
 
-			try {
-				final XMLReader reader = XMLReaderFactory.createXMLReader();
-				reader.setContentHandler(contentHandler);
-				reader.setErrorHandler(new ErrorHandler() {
+				try {
+					final XMLReader reader = XMLReaderFactory.createXMLReader();
+					reader.setContentHandler(contentHandler);
+					reader.setErrorHandler(new ErrorHandler() {
 
-					public void error(SAXParseException exception) throws SAXException {
-						throw exception;
+						public void error(SAXParseException exception) throws SAXException {
+							throw exception;
+						}
+
+						public void fatalError(SAXParseException exception) throws SAXException {
+							throw exception;
+						}
+
+						public void warning(SAXParseException exception) throws SAXException {
+							throw exception;
+						}
+					});
+					reader.parse(new InputSource(in));
+				} catch (SAXException e) {
+					if (e.getMessage().equals(IBugzillaConstants.ERROR_INVALID_USERNAME_OR_PASSWORD)) {
+						throw new LoginException(e.getMessage());
+					} else {
+						throw new IOException(e.getMessage());
 					}
-
-					public void fatalError(SAXParseException exception) throws SAXException {
-						throw exception;
-					}
-
-					public void warning(SAXParseException exception) throws SAXException {
-						throw exception;
-					}
-				});
-				reader.parse(new InputSource(in));
-			} catch (SAXException e) {
-				if (e.getMessage().equals(IBugzillaConstants.ERROR_INVALID_USERNAME_OR_PASSWORD)) {
-					throw new LoginException(e.getMessage());
-				} else {
+				}
+			} else if (connection.getContentType().contains(CONTENT_TYPE_TEXT_HTML)) {
+				try {
+					BugzillaRepositoryUtil.parseHtmlError(in);
+				} catch (BugzillaException e) {
 					throw new IOException(e.getMessage());
 				}
+			} else {
+				throw new IOException("Unrecognized content type: " + connection.getContentType());
 			}
-		} else if (connection.getContentType().contains(CONTENT_TYPE_TEXT_HTML)) {			
-			try {
-				BugzillaRepositoryUtil.parseHtmlError(in);
-			} catch (BugzillaException e) {
-				throw new IOException(e.getMessage());
+		} finally {
+			if (connection != null) {
+				connection.disconnect();
 			}
-		} else {
-			throw new IOException("Unrecognized content type: " + connection.getContentType());
 		}
 	}
 
