@@ -10,8 +10,27 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
-Export-Package: org.eclipse.mylar.internal.core,
+Export-Package: org.apache.commons.codec,
+ org.apache.commons.codec.binary,
+ org.apache.commons.codec.digest,
+ org.apache.commons.codec.language,
+ org.apache.commons.codec.net,
+ org.apache.commons.httpclient,
+ org.apache.commons.httpclient.auth,
+ org.apache.commons.httpclient.cookie,
+ org.apache.commons.httpclient.methods,
+ org.apache.commons.httpclient.methods.multipart,
+ org.apache.commons.httpclient.params,
+ org.apache.commons.httpclient.protocol,
+ org.apache.commons.httpclient.util,
+ org.apache.commons.logging,
+ org.apache.commons.logging.impl,
+ org.eclipse.mylar.internal.core,
  org.eclipse.mylar.internal.core.search,
  org.eclipse.mylar.internal.core.util,
  org.eclipse.mylar.provisional.core
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ClassPath: lib/commons-codec-1.3.jar,
+ lib/commons-httpclient-3.0.jar,
+ lib/commons-logging.jar,
+ .
