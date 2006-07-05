@@ -19,6 +19,7 @@ reports marked help wanted</a>.&nbsp;</p>
 <!--	<li>Building</li>-->
 		</a></li>
 		<li><a href="#building-jira">Building the JIRA Connector</a></li>
+		<li><a href="#building-trac">Building the Trac Connector</a></li>
 		<li><a href="#building-dist">Building a distribution</a></li>
 		<li><a href="#web-site-authoring">Web site authoring</a></li>
 	</ul><hr width="50%">
@@ -69,7 +70,7 @@ and leave the password blank.</li>
 			http://jira-dashboard.tigris.org/svn/jira-dashboard/trunk</a></li>
 		</ul>
 		</li>
-		<li>Check out the JIRA Dashboard Core featureres:<ul>
+		<li>Check out the JIRA Dashboard Core features:<ul>
 			<li>org.tigris.jira.core</li>
 			<li>org.tigris.jira.core.soap</li>
 			<li>org.tigris.jira.core-feature</li>
@@ -81,7 +82,29 @@ and leave the password blank.</li>
 		org.eclipse.mylar.jira.tests.AllJiraTests</i></li>
 	</ul>
 	<hr>
-<h3><a name="bootstrap">Working bootsrapped</a> </h3>
+	<h3><a name="building-trac">Trac Connector</a></h3>
+	<ul>
+		<li>Get the latest <a href="http://subclipse.tigris.org/download.html">
+		Subclipse</a> plug-in, e.g. from the following update site: 
+		subclipse.tigris.org/update_1.0.x</li>
+		<li>Set up a Subversion repository for
+		<a href="https://oss.steffenpingel.de/">
+		oss.steffenpingel.de</a>:
+		<ul>
+			<li>repository:
+			<a href="https://oss.steffenpingel.de/svn/mylar-trac-connector/trunk">
+			https://oss.steffenpingel.de/svn/mylar-trac-connector/trunk</a></li>
+		</ul>
+		</li>
+		<li>Check out the library which is required by the connector:<ul>
+			<li>org.apache.xmlrpc</li>
+		</ul>
+		</li>
+		<li>Note that the Trac connector has it's own test suite: <i>
+		org.eclipse.mylar.trac.tests.AllTracTests</i></li>
+	</ul>
+	<hr>
+<h3><a name="bootstrap">Working bootstrapped</a> </h3>
 <p>Working bootstrapped (i.e. self-hosted) makes eating your own dog food easier 
 and avoids having to update to dev builds:</p>
 	<ul>
