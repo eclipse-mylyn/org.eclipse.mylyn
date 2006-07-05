@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.Socket;
@@ -31,7 +30,6 @@ import javax.security.auth.login.LoginException;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttachmentHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
@@ -271,8 +269,8 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 
 	public void testAttachToExistingReport() throws Exception {
 		init222();
-
-		String taskNumber = "6";
+		int bugId = 31;
+		String taskNumber = ""+bugId;
 		BugzillaTask task = (BugzillaTask) client.createTaskFromExistingKey(repository, taskNumber);
 		assertNotNull(task);
 		// assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
@@ -280,7 +278,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		// client.synchronize(task, true, null);
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
 
-		assertEquals(6, task.getTaskData().getId());
+		assertEquals(bugId, task.getTaskData().getId());
 		int numAttached = task.getTaskData().getAttachments().size();
 		String fileName = "test-attach-" + System.currentTimeMillis() + ".txt";
 
@@ -315,8 +313,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		assertEquals(numAttached, task.getTaskData().getAttachments().size());
 
 		/* Test uploading a proper file */
-		write.write("This is a test text file");
-		write.write("elif txet tset a si sihT");
+		write.write("test file");
 		write.close();
 		attachment.setFilePath(attachFile.getAbsolutePath());
 		assertTrue(attachmentHandler.uploadAttachment(attachment, repository.getUserName(), repository.getPassword(),
@@ -581,25 +578,25 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		assertTrue(s.isConnected());
 		s.close();
 
-		s = factory.createSocket("mylar.eclipse.org", 80, InetAddress.getLocalHost(),
-				(int) (Math.random() * 1000 + 20000));
-		assertNotNull(s);
-		assertTrue(s.isConnected());
-		s.close();
-
-		HttpConnectionParams params = new HttpConnectionParams();
-		s = factory.createSocket("mylar.eclipse.org", 80, InetAddress.getLocalHost(),
-				(int) (Math.random() * 1000 + 20000), null);
-		assertNotNull(s);
-		assertTrue(s.isConnected());
-		s.close();
-
-		params.setConnectionTimeout(100);
-		s = factory.createSocket("mylar.eclipse.org", 80, InetAddress.getLocalHost(),
-				(int) (Math.random() * 1000 + 20000), params);
-		assertNotNull(s);
-		assertTrue(s.isConnected());
-		s.close();
+//		s = factory.createSocket("mylar.eclipse.org", 80, InetAddress.getLocalHost(),
+//				(int) (Math.random() * 1000 + 20000));
+//		assertNotNull(s);
+//		assertTrue(s.isConnected());
+//		s.close();
+//
+//		HttpConnectionParams params = new HttpConnectionParams();
+//		s = factory.createSocket("mylar.eclipse.org", 80, InetAddress.getLocalHost(),
+//				(int) (Math.random() * 1000 + 20000), null);
+//		assertNotNull(s);
+//		assertTrue(s.isConnected());
+//		s.close();
+//
+//		params.setConnectionTimeout(100);
+//		s = factory.createSocket("mylar.eclipse.org", 80, InetAddress.getLocalHost(),
+//				(int) (Math.random() * 1000 + 20000), params);
+//		assertNotNull(s);
+//		assertTrue(s.isConnected());
+//		s.close();
 	}
 
 	private String generateNewDay() {
