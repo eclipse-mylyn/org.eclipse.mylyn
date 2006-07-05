@@ -37,6 +37,10 @@ public class MylarTracPlugin extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylar.trac";
 
+	public final static String REPOSITORY_KIND = "trac";
+	
+	public final static String TITLE_MESSAGE_DIALOG = "Mylar Trac Client";
+
 	private static MylarTracPlugin plugin;
 
 	public MylarTracPlugin() {

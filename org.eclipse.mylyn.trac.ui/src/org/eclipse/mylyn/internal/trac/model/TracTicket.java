@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
-import org.eclipse.mylar.internal.trac.core.ITracRepository;
+import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
 
 /**
@@ -128,7 +128,7 @@ public class TracTicket {
 
 	private Date parseTracDate(int seconds) {
 		Calendar c = Calendar.getInstance();
-		c.setTimeZone(TimeZone.getTimeZone(ITracRepository.TIME_ZONE));
+		c.setTimeZone(TimeZone.getTimeZone(ITracClient.TIME_ZONE));
 		c.setTimeInMillis(seconds * 1000l);
 		return c.getTime();
 	}

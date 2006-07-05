@@ -22,7 +22,7 @@ import org.eclipse.mylar.internal.trac.model.TracTicket;
  * 
  * @author Steffen Pingel
  */
-public interface ITracRepository {
+public interface ITracClient {
 
 	public enum Version {
 		TRAC_0_9, XML_RPC;

@@ -13,22 +13,22 @@ package org.eclipse.mylar.trac.tests;
 
 import java.net.URL;
 
-import org.eclipse.mylar.internal.trac.core.ITracRepository;
+import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.TracLoginException;
 import org.eclipse.mylar.internal.trac.core.TracRemoteException;
-import org.eclipse.mylar.internal.trac.core.TracXmlRpcRepository;
-import org.eclipse.mylar.internal.trac.core.ITracRepository.Version;
+import org.eclipse.mylar.internal.trac.core.TracXmlRpcClient;
+import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.trac.tests.support.AbstractTracRepositoryFactory;
 
 /**
  * @author Steffen Pingel
  */
-public class TracXmlRpcRepositoryTest extends AbstractTracRepositoryTest {
+public class TracXmlRpcClientTest extends AbstractTracClientTest {
 
-	public TracXmlRpcRepositoryTest() {
+	public TracXmlRpcClientTest() {
 		super(new AbstractTracRepositoryFactory() {
-			protected ITracRepository createRepository(String url, String username, String password) throws Exception {
-				return new TracXmlRpcRepository(new URL(url), Version.XML_RPC, username, password);
+			protected ITracClient createRepository(String url, String username, String password) throws Exception {
+				return new TracXmlRpcClient(new URL(url), Version.XML_RPC, username, password);
 			}
 		});
 	}
@@ -45,7 +45,7 @@ public class TracXmlRpcRepositoryTest extends AbstractTracRepositoryTest {
 	public void testMulticallExceptions() throws Exception {
 		factory.connectRepository1();
 		try {
-			((TracXmlRpcRepository) factory.repository).getTickets(new int[] { 1, Integer.MAX_VALUE });
+			((TracXmlRpcClient) factory.repository).getTickets(new int[] { 1, Integer.MAX_VALUE });
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}

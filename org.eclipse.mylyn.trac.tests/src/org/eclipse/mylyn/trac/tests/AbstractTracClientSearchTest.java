@@ -32,7 +32,7 @@ import org.eclipse.mylar.trac.tests.support.XmlRpcServer.Ticket;
  * 
  * @author Steffen Pingel
  */
-public abstract class AbstractTracRepositorySearchTest extends TestCase {
+public abstract class AbstractTracClientSearchTest extends TestCase {
 
 	protected XmlRpcServer server;
 
@@ -42,7 +42,7 @@ public abstract class AbstractTracRepositorySearchTest extends TestCase {
 
 	private static boolean setupRun = false;
 
-	public AbstractTracRepositorySearchTest(AbstractTracRepositoryFactory factory) {
+	public AbstractTracClientSearchTest(AbstractTracRepositoryFactory factory) {
 		this.factory = factory;
 	}
 

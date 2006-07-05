@@ -13,27 +13,22 @@ package org.eclipse.mylar.trac.tests;
 
 import java.net.URL;
 
-import org.eclipse.mylar.internal.trac.core.ITracRepository;
-import org.eclipse.mylar.internal.trac.core.Trac09Repository;
-import org.eclipse.mylar.internal.trac.core.ITracRepository.Version;
+import org.eclipse.mylar.internal.trac.core.ITracClient;
+import org.eclipse.mylar.internal.trac.core.Trac09Client;
+import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.trac.tests.support.AbstractTracRepositoryFactory;
 
 /**
  * @author Steffen Pingel
  */
-public class Trac09RepositoryTest extends AbstractTracRepositoryTest {
+public class Trac09ClientSearchTest extends AbstractTracClientSearchTest {
 
-	public Trac09RepositoryTest() {
+	public Trac09ClientSearchTest() {
 		super(new AbstractTracRepositoryFactory() {
-			protected ITracRepository createRepository(String url, String username, String password) throws Exception {
-				return new Trac09Repository(new URL(url), Version.TRAC_0_9, username, password);
+			protected ITracClient createRepository(String url, String username, String password) throws Exception {
+				return new Trac09Client(new URL(url), Version.TRAC_0_9, username, password);
 			}
 		});
-	}
-
-	public void testValidateAnonymousLogin() throws Exception {
-		factory.connect(Constants.TEST_REPOSITORY1_URL, "", "");
-		factory.repository.validate();
 	}
 
 }

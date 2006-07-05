@@ -21,11 +21,11 @@ import org.eclipse.mylar.trac.tests.support.AbstractTracRepositoryFactory;
  * 
  * @author Steffen Pingel
  */
-public abstract class AbstractTracRepositoryTest extends TestCase {
+public abstract class AbstractTracClientTest extends TestCase {
 
 	protected AbstractTracRepositoryFactory factory;
 
-	public AbstractTracRepositoryTest(AbstractTracRepositoryFactory factory) {
+	public AbstractTracClientTest(AbstractTracRepositoryFactory factory) {
 		this.factory = factory;
 	}
 

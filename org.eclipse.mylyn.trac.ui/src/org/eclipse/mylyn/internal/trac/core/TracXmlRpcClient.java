@@ -7,7 +7,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -26,13 +25,13 @@ import org.eclipse.mylar.internal.trac.model.TracTicket;
  * 
  * @author Steffen Pingel
  */
-public class TracXmlRpcRepository extends AbstractTracRepository {
+public class TracXmlRpcClient extends AbstractTracClient {
 
 	public static final String XMLRPC_URL = "/xmlrpc";
 
 	private XmlRpcClient xmlrpc;
 
-	public TracXmlRpcRepository(URL url, Version version, String username, String password) {
+	public TracXmlRpcClient(URL url, Version version, String username, String password) {
 		super(url, version, username, password);
 	}
 
@@ -42,7 +41,7 @@ public class TracXmlRpcRepository extends AbstractTracRepository {
 		}
 
 		// initialize XML-RPC library
-		XmlRpc.setDefaultInputEncoding(ITracRepository.CHARSET);
+		XmlRpc.setDefaultInputEncoding(ITracClient.CHARSET);
 
 		try {
 			String location = repositoryUrl.toString();
@@ -90,11 +89,9 @@ public class TracXmlRpcRepository extends AbstractTracRepository {
 		for (Object item : result) {
 			try {
 				checkForException(item);
-			}
-			catch (XmlRpcException e) {
+			} catch (XmlRpcException e) {
 				throw new TracRemoteException(e);
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				throw new TracException(e);
 			}
 		}
@@ -105,18 +102,21 @@ public class TracXmlRpcRepository extends AbstractTracRepository {
 		if (result instanceof Hashtable) {
 			Hashtable exceptionData = (Hashtable) result;
 			if (exceptionData.containsKey("faultCode") && exceptionData.containsKey("faultString")) {
-				throw new XmlRpcException(
-						Integer.parseInt(exceptionData.get("faultCode").toString()),
+				throw new XmlRpcException(Integer.parseInt(exceptionData.get("faultCode").toString()),
 						(String) exceptionData.get("faultString"));
 			}
 		}
 	}
-	
+
 	private Hashtable<String, Object> createMultiCall(String methodName, Object... parameters) throws TracException {
 		Hashtable<String, Object> table = new Hashtable<String, Object>();
 		table.put("methodName", methodName);
 		table.put("params", parameters);
 		return table;
+	}
+
+	private Object getMultiCallResult(Object item) {
+		return ((Vector) item).get(0);
 	}
 
 	public void validate() throws TracException {
@@ -151,14 +151,14 @@ public class TracXmlRpcRepository extends AbstractTracRepository {
 		}
 
 		Vector result = multicall(calls);
-		assert result.size() == ids.length; 
-		
+		assert result.size() == ids.length;
+
 		List<TracTicket> tickets = new ArrayList<TracTicket>(result.size());
-		for (Iterator it = result.iterator(); it.hasNext();) {
-			Vector ticketResult = (Vector) it.next();
+		for (Object item : result) {
+			Vector ticketResult = (Vector) getMultiCallResult(item);
 			tickets.add(parseTicket(ticketResult));
 		}
-		
+
 		return tickets;
 	}
 
@@ -173,8 +173,8 @@ public class TracXmlRpcRepository extends AbstractTracRepository {
 		}
 		result = multicall(calls);
 
-		for (Iterator it = result.iterator(); it.hasNext();) {
-			Vector ticketResult = (Vector) it.next();
+		for (Object item : result) {
+			Vector ticketResult = (Vector) getMultiCallResult(item);
 			tickets.add(parseTicket(ticketResult));
 		}
 	}

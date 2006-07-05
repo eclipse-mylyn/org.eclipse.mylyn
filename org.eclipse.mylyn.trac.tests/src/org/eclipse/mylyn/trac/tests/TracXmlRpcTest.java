@@ -30,8 +30,11 @@ import org.apache.xmlrpc.XmlRpcException;
 import org.eclipse.mylar.internal.trac.TrustAll;
 
 /**
- * Test cases for Trac XML-RPC Plugin API. This class does not depend on any of
- * the Mylar connector classes.
+ * Test cases for <a href="http://trac-hacks.org/wiki/XmlRpcPlugin">Trac XML-RPC
+ * Plugin</a> API. Revision 848 or higher is required.
+ * 
+ * <p>
+ * This class does not depend on any of the Mylar connector classes.
  * 
  * @author Steffen Pingel
  */
@@ -337,20 +340,25 @@ public class TracXmlRpcTest extends TestCase {
 		int id1 = (Integer) call("ticket.create", "summary1", "description1", new Hashtable());
 		int id2 = (Integer) call("ticket.create", "summary2", "description2", new Hashtable());
 
-		Object[] calls = new Object[] { createMultiCall("ticket.get", id1), createMultiCall("ticket.get", id2), };
-		Vector ret = (Vector) call("system.multicall", new Object[] { calls });
+		Vector<Hashtable> calls = new Vector<Hashtable>();
+		calls.add(createMultiCall("ticket.get", id1));
+		calls.add(createMultiCall("ticket.get", id2));
+		Vector ret = (Vector) call("system.multicall", calls);
 
-		Vector ticket = (Vector) ret.get(0);
+		Vector ticket = (Vector) ((Vector) ret.get(0)).get(0);
 		Hashtable<String, Object> attributes = new Hashtable<String, Object>();
 		attributes.put("summary", "summary1");
 		attributes.put("description", "description1");
 		assertTicketHasAttributes(attributes, id1, ticket);
 
-		ticket = (Vector) ret.get(1);
+		ticket = (Vector) ((Vector) ret.get(1)).get(0);
 		attributes.clear();
 		attributes.put("summary", "summary2");
 		attributes.put("description", "description2");
 		assertTicketHasAttributes(attributes, id2, ticket);
+
+		call("ticket.delete", id1);
+		call("ticket.delete", id2);
 	}
 
 	public void testAttachment() throws XmlRpcException, IOException {

@@ -35,7 +35,7 @@ import org.eclipse.mylar.internal.trac.model.TracTicket;
 import org.eclipse.mylar.internal.trac.model.TracSearchFilter.CompareOperator;
 import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
 
-public class Trac09Repository extends AbstractTracRepository {
+public class Trac09Client extends AbstractTracClient {
 
 	private static final String TICKET_SUMMARY_PREFIX = " <h2 class=\"summary\">";
 
@@ -45,7 +45,7 @@ public class Trac09Repository extends AbstractTracRepository {
 
 	private String authCookie;
 
-	public Trac09Repository(URL url, Version version, String username, String password) {
+	public Trac09Client(URL url, Version version, String username, String password) {
 		super(url, version, username, password);
 	}
 
@@ -132,9 +132,9 @@ public class Trac09Repository extends AbstractTracRepository {
 	 * @throws LoginException
 	 */
 	public TracTicket getTicket(int id) throws TracException {
-		connect(repositoryUrl + ITracRepository.TICKET_URL + id);
+		connect(repositoryUrl + ITracClient.TICKET_URL + id);
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(in, ITracRepository.CHARSET));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in, ITracClient.CHARSET));
 			String line;
 			while ((line = reader.readLine()) != null) {
 				// look for heading tags in html output
@@ -156,9 +156,9 @@ public class Trac09Repository extends AbstractTracRepository {
 	}
 
 	public void search(TracSearch query, List<TracTicket> tickets) throws TracException {
-		connect(repositoryUrl + ITracRepository.QUERY_URL + query.toUrl());
+		connect(repositoryUrl + ITracClient.QUERY_URL + query.toUrl());
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(in, ITracRepository.CHARSET));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in, ITracClient.CHARSET));
 			String line;
 
 			Map<String, String> constantValues = getExactMatchValues(query);

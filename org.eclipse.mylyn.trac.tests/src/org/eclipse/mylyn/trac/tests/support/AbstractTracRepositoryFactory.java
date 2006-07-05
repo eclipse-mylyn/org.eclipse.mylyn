@@ -13,7 +13,7 @@ package org.eclipse.mylar.trac.tests.support;
 
 import java.net.Authenticator;
 
-import org.eclipse.mylar.internal.trac.core.ITracRepository;
+import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.trac.tests.Constants;
 
 /**
@@ -24,18 +24,18 @@ public abstract class AbstractTracRepositoryFactory {
 
 	public String repositoryUrl;
 
-	public ITracRepository repository;
+	public ITracClient repository;
 
 	public String username;
 
 	public String password;
 
-	public ITracRepository connectRepository1() throws Exception {
+	public ITracClient connectRepository1() throws Exception {
 		return connect(Constants.TEST_REPOSITORY1_URL, Constants.TEST_REPOSITORY1_ADMIN_USERNAME,
 				Constants.TEST_REPOSITORY1_ADMIN_PASSWORD);
 	}
 
-	public ITracRepository connect(String url, String username, String password) throws Exception {
+	public ITracClient connect(String url, String username, String password) throws Exception {
 		this.repositoryUrl = url;
 		this.username = username;
 		this.password = password;
@@ -47,6 +47,6 @@ public abstract class AbstractTracRepositoryFactory {
 		return this.repository;
 	}
 
-	protected abstract ITracRepository createRepository(String url, String username, String password) throws Exception;
+	protected abstract ITracClient createRepository(String url, String username, String password) throws Exception;
 
 }

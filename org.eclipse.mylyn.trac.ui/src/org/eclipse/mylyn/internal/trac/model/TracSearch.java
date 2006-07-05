@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.trac.core.ITracRepository;
+import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.model.TracSearchFilter.CompareOperator;
 
 /**
@@ -128,8 +128,8 @@ public class TracSearch {
 				sb.append(filter.getFieldName());
 				sb.append("=");
 				try {
-					sb.append(URLEncoder.encode(filter.getOperator().getQueryValue(), ITracRepository.CHARSET));
-					sb.append(URLEncoder.encode(value, ITracRepository.CHARSET));
+					sb.append(URLEncoder.encode(filter.getOperator().getQueryValue(), ITracClient.CHARSET));
+					sb.append(URLEncoder.encode(value, ITracClient.CHARSET));
 				} catch (UnsupportedEncodingException e) {
 					MylarStatusHandler.log(e, "Unexpected exception while decoding URL");
 				}

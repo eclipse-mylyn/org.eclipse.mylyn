@@ -15,9 +15,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.mylar.internal.trac.core.ITracRepository;
-import org.eclipse.mylar.internal.trac.core.TracXmlRpcRepository;
-import org.eclipse.mylar.internal.trac.core.ITracRepository.Version;
+import org.eclipse.mylar.internal.trac.core.ITracClient;
+import org.eclipse.mylar.internal.trac.core.TracXmlRpcClient;
+import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.internal.trac.model.TracSearch;
 import org.eclipse.mylar.internal.trac.model.TracTicket;
 import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
@@ -26,12 +26,12 @@ import org.eclipse.mylar.trac.tests.support.AbstractTracRepositoryFactory;
 /**
  * @author Steffen Pingel
  */
-public class TracXmlRpcRepositorySearchTest extends AbstractTracRepositorySearchTest {
+public class TracXmlRpcClientSearchTest extends AbstractTracClientSearchTest {
 
-	public TracXmlRpcRepositorySearchTest() {
+	public TracXmlRpcClientSearchTest() {
 		super(new AbstractTracRepositoryFactory() {
-			protected ITracRepository createRepository(String url, String username, String password) throws Exception {
-				return new TracXmlRpcRepository(new URL(url), Version.XML_RPC, username, password);
+			protected ITracClient createRepository(String url, String username, String password) throws Exception {
+				return new TracXmlRpcClient(new URL(url), Version.XML_RPC, username, password);
 			}
 		});
 	}

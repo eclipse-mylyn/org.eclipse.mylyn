@@ -22,8 +22,8 @@ import java.util.Vector;
 
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
-import org.eclipse.mylar.internal.trac.core.TracXmlRpcRepository;
-import org.eclipse.mylar.internal.trac.core.ITracRepository.Version;
+import org.eclipse.mylar.internal.trac.core.TracXmlRpcClient;
+import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 
 /**
  * @author Steffen Pingel
@@ -262,7 +262,7 @@ public class XmlRpcServer {
 
 	private String password;
 
-	private TracXmlRpcRepository repository;
+	private TracXmlRpcClient repository;
 
 	private String url;
 
@@ -275,7 +275,7 @@ public class XmlRpcServer {
 
 		this.fixture = new TestFixture();
 
-		this.repository = new TracXmlRpcRepository(new URL(url), Version.XML_RPC, username, password);
+		this.repository = new TracXmlRpcClient(new URL(url), Version.XML_RPC, username, password);
 		this.client = repository.getClient();
 	}
 
@@ -300,7 +300,7 @@ public class XmlRpcServer {
 		return password;
 	}
 
-	public TracXmlRpcRepository getRepository() throws MalformedURLException {
+	public TracXmlRpcClient getRepository() throws MalformedURLException {
 		return repository;
 	}
 

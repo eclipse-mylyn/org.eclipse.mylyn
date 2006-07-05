@@ -16,7 +16,7 @@ import java.net.URL;
 /**
  * @author Steffen Pingel
  */
-public abstract class AbstractTracRepository implements ITracRepository {
+public abstract class AbstractTracClient implements ITracClient {
 
 	protected String username;
 
@@ -26,7 +26,7 @@ public abstract class AbstractTracRepository implements ITracRepository {
 
 	protected Version version;
 
-	public AbstractTracRepository(URL repositoryUrl, Version version, String username, String password) {
+	public AbstractTracClient(URL repositoryUrl, Version version, String username, String password) {
 		this.repositoryUrl = repositoryUrl;
 		this.version = version;
 		this.username = username;
