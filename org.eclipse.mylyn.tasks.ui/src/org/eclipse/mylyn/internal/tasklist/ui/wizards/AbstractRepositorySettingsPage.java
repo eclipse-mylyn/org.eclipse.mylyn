@@ -108,7 +108,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			@Override
 			protected void valueChanged() {
 				super.valueChanged();
-				getWizard().getContainer().updateButtons();
+				if (getWizard() != null) {
+					getWizard().getContainer().updateButtons();
+				}
 			}
 		};
 		serverUrlEditor.setErrorMessage("Server path must be a valid http(s):// url");
