@@ -45,6 +45,9 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 		setWindowTitle(TITLE);
 	}
 
+	/**
+	 * Custom properties should be set on the repository object to ensure they are saved.
+	 */
 	@Override
 	public boolean performFinish() {
 		if (canFinish()) {
@@ -56,15 +59,9 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 			repository.setUrl(newUrl);
 			repository.setVersion(abstractRepositorySettingsPage.getVersion());
 			repository.setCharacterEncoding(abstractRepositorySettingsPage.getCharacterEncoding());
-//			oldRepository.setTimeZoneId(abstractRepositorySettingsPage.getTimeZoneId());			
 			repository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(), abstractRepositorySettingsPage.getPassword());
 			
 			MylarTaskListPlugin.getRepositoryManager().saveRepositories();
-			
-			// MylarTaskListPlugin.getRepositoryManager().removeRepository(oldRepository);
-			// TaskRepository repository = abstractRepositorySettingsPage.createTaskRepository();
-			// MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
-			// MylarTaskListPlugin.getRepositoryManager().setSyncTime(repository, oldRepository.getSyncTimeStamp());
 			return true;
 		}
 		return false;
