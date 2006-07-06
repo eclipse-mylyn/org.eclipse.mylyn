@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Trac Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.trac;singleton:=true
-Bundle-Version: 0.5.3
+Bundle-Version: 0.6.0.v20060706-1440
 Bundle-Activator: org.eclipse.mylar.internal.trac.MylarTracPlugin
 Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin
