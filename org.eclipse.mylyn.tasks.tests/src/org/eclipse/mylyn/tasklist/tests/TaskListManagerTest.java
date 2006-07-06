@@ -45,6 +45,8 @@ import org.eclipse.mylar.provisional.tasklist.TaskCategory;
 import org.eclipse.mylar.provisional.tasklist.TaskList;
 import org.eclipse.mylar.provisional.tasklist.TaskListManager;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
+import org.eclipse.mylar.tasklist.tests.mockconnector.MockQueryHit;
+import org.eclipse.mylar.tasklist.tests.mockconnector.MockRepositoryConnector;
 import org.eclipse.mylar.tasklist.tests.mockconnector.MockRepositoryQuery;
 import org.eclipse.mylar.tasklist.tests.mockconnector.MockRepositoryTask;
 
@@ -63,36 +65,35 @@ public class TaskListManagerTest extends TestCase {
 		manager = MylarTaskListPlugin.getTaskListManager();
 		manager.resetTaskList();
 
-		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
-				IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
+		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
 		MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();		
+		super.tearDown();
 		manager.resetTaskList();
 		MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
 		MylarTaskListPlugin.getRepositoryManager().removeRepository(repository);
 	}
-	
+
 	public void testSingleTaskDeletion() {
 		MockRepositoryTask task = new MockRepositoryTask("mock-1");
 		manager.getTaskList().moveToRoot(task);
 		manager.saveTaskList();
 
 		manager.resetTaskList();
-		manager.readExistingOrCreateNewList(); 
+		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
-		
+
 		manager.getTaskList().deleteTask(task);
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
-		
+
 		manager.resetTaskList();
-		manager.readExistingOrCreateNewList(); 
-		assertEquals(0, manager.getTaskList().getAllTasks().size());	
+		manager.readExistingOrCreateNewList();
+		assertEquals(0, manager.getTaskList().getAllTasks().size());
 	}
-	
+
 	public void testMigrateTaskContextFiles() throws IOException {
 		File fileA = MylarPlugin.getContextManager().getFileForContext("http://a-1");
 		fileA.createNewFile();
@@ -103,7 +104,7 @@ public class TaskListManagerTest extends TestCase {
 		assertTrue(fileB.exists());
 		assertFalse(fileA.exists());
 	}
-	
+
 	public void testMigrateQueryHandles() {
 		AbstractRepositoryQuery query = new MockRepositoryQuery("mquery", manager.getTaskList());
 		query.setRepositoryUrl("http://a");
@@ -112,7 +113,7 @@ public class TaskListManagerTest extends TestCase {
 		assertFalse(manager.getTaskList().getRepositoryQueries("http://b").isEmpty());
 		assertTrue(manager.getTaskList().getRepositoryQueries("http://a").isEmpty());
 	}
-	
+
 	public void testMigrateTaskHandles() {
 		AbstractRepositoryTask task = new MockRepositoryTask("http://a-123");
 		manager.getTaskList().addTask(task);
@@ -120,29 +121,29 @@ public class TaskListManagerTest extends TestCase {
 		assertNull(manager.getTaskList().getTask("http://a-123"));
 		assertNotNull(manager.getTaskList().getTask("http://b-123"));
 	}
-	
+
 	public void testIsActiveToday() {
 		ITask task = new Task("1", "task-1", true);
 		assertFalse(manager.isReminderToday(task));
-		
+
 		task.setReminderDate(new Date());
 		assertFalse(manager.isReminderToday(task));
-		
+
 		task.setReminded(true);
 		assertFalse(manager.isReminderToday(task));
 		task.setReminded(true);
-		
+
 		Calendar inAnHour = Calendar.getInstance();
-		inAnHour.set(Calendar.HOUR_OF_DAY, inAnHour.get(Calendar.HOUR_OF_DAY)+1);
+		inAnHour.set(Calendar.HOUR_OF_DAY, inAnHour.get(Calendar.HOUR_OF_DAY) + 1);
 		inAnHour.getTime();
 		task.setReminderDate(inAnHour.getTime());
 		Calendar tomorrow = Calendar.getInstance();
 		manager.setSecheduledIn(tomorrow, 1);
 		assertEquals(-1, inAnHour.compareTo(tomorrow));
-		
-		assertTrue(manager.isReminderToday(task)); 
+
+		assertTrue(manager.isReminderToday(task));
 	}
-	
+
 	public void testLegacyTaskListReading() throws IOException {
 		File originalFile = manager.getTaskListFile();
 		File legacyListFile = new File("temptasklist.xml");
@@ -163,10 +164,10 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(0, allRootTasks.size());
 
 		manager.saveTaskList();
-//		manager.getTaskList().clear();
+		// manager.getTaskList().clear();
 		manager.resetTaskList();
-//		TaskList list = new TaskList();
-//		manager.setTaskList(list);
+		// TaskList list = new TaskList();
+		// manager.setTaskList(list);
 		manager.readExistingOrCreateNewList();
 
 		assertEquals(allRootTasks.size(), manager.getTaskList().getRootTasks().size());
@@ -176,10 +177,10 @@ public class TaskListManagerTest extends TestCase {
 
 		// rewrite and test again
 		manager.saveTaskList();
-//		manager.getTaskList().clear();
+		// manager.getTaskList().clear();
 		manager.resetTaskList();
-//		list = new TaskList();
-//		manager.setTaskList(list);
+		// list = new TaskList();
+		// manager.setTaskList(list);
 		manager.readExistingOrCreateNewList();
 
 		assertEquals(allRootTasks.size(), manager.getTaskList().getRootTasks().size());
@@ -191,7 +192,8 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testDeleteQuery() {
-		AbstractRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1", manager.getTaskList());
+		AbstractRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1", manager
+				.getTaskList());
 		manager.getTaskList().addQuery(query);
 
 		AbstractRepositoryQuery readQuery = manager.getTaskList().getQueries().iterator().next();
@@ -200,9 +202,10 @@ public class TaskListManagerTest extends TestCase {
 		manager.getTaskList().deleteQuery(query);
 		assertEquals(0, manager.getTaskList().getQueries().size());
 	}
-	
+
 	public void testDeleteQueryAfterRename() {
-		AbstractRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1", manager.getTaskList());
+		AbstractRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1", manager
+				.getTaskList());
 		manager.getTaskList().addQuery(query);
 
 		AbstractRepositoryQuery readQuery = manager.getTaskList().getQueries().iterator().next();
@@ -211,36 +214,38 @@ public class TaskListManagerTest extends TestCase {
 		manager.getTaskList().deleteQuery(query);
 		assertEquals(0, manager.getTaskList().getQueries().size());
 	}
-	
+
 	public void testCreateQueryWithSameName() {
-		AbstractRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1", manager.getTaskList());
+		AbstractRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1", manager
+				.getTaskList());
 		manager.getTaskList().addQuery(query);
 		assertEquals(1, manager.getTaskList().getQueries().size());
 		AbstractRepositoryQuery readQuery = manager.getTaskList().getQueries().iterator().next();
 		assertEquals(query, readQuery);
-		
-		manager.getTaskList().addQuery(new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1", manager.getTaskList()));
+
+		manager.getTaskList().addQuery(
+				new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1", manager.getTaskList()));
 		assertEquals(1, manager.getTaskList().getQueries().size());
 	}
-	
+
 	public void testMoveCategories() {
 		assertEquals(0, manager.getTaskList().getRootTasks().size());
 		Task task1 = new Task("t1", "t1", true);
-		
+
 		TaskCategory cat1 = new TaskCategory("cat1", manager.getTaskList());
 		manager.getTaskList().addCategory(cat1);
 		TaskCategory cat2 = new TaskCategory("cat2", manager.getTaskList());
 		manager.getTaskList().addCategory(cat2);
-		
+
 		manager.getTaskList().moveToContainer(cat1, task1);
 		assertEquals(1, manager.getTaskList().getContainerForHandle("cat1").getChildren().size());
 		assertEquals(0, manager.getTaskList().getContainerForHandle("cat2").getChildren().size());
 
 		manager.getTaskList().moveToContainer(cat2, task1);
 		assertEquals(0, manager.getTaskList().getContainerForHandle("cat1").getChildren().size());
-		assertEquals(1, manager.getTaskList().getContainerForHandle("cat2").getChildren().size());				
+		assertEquals(1, manager.getTaskList().getContainerForHandle("cat2").getChildren().size());
 	}
-	
+
 	public void testMoveToRoot() {
 		assertEquals(0, manager.getTaskList().getRootTasks().size());
 		Task task1 = new Task("t1", "t1", true);
@@ -278,21 +283,21 @@ public class TaskListManagerTest extends TestCase {
 
 		manager.saveTaskList();
 		manager.resetTaskList();
-		manager.readExistingOrCreateNewList(); 
-		assertEquals(""+manager.getTaskList().getCategories(), 2, manager.getTaskList().getCategories().size());
+		manager.readExistingOrCreateNewList();
+		assertEquals("" + manager.getTaskList().getCategories(), 2, manager.getTaskList().getCategories().size());
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
 	}
-	
+
 	public void testDeleteCategory() {
 		assertNotNull(manager.getTaskList());
 		assertEquals(1, manager.getTaskList().getCategories().size());
 		TaskCategory category = new TaskCategory("cat", manager.getTaskList());
 		manager.getTaskList().addCategory(category);
 		assertEquals(2, manager.getTaskList().getCategories().size());
-		manager.getTaskList().deleteCategory(category);		
+		manager.getTaskList().deleteCategory(category);
 		assertEquals(1, manager.getTaskList().getCategories().size());
 	}
-	
+
 	public void testDeleteCategoryMovesTasksToRoot() {
 		ITask task = new MockRepositoryTask("mock-delete");
 		TaskCategory category = new TaskCategory("mock-cat", manager.getTaskList());
@@ -302,11 +307,11 @@ public class TaskListManagerTest extends TestCase {
 		manager.getTaskList().deleteCategory(category);
 		assertEquals(1, manager.getTaskList().getRootCategory().getChildren().size());
 	}
-	
+
 	public void testRenameCategory() {
 
 		assertNotNull(manager.getTaskList());
-		
+
 		TaskCategory category = new TaskCategory("cat", manager.getTaskList());
 		manager.getTaskList().addCategory(category);
 		assertEquals(2, manager.getTaskList().getCategories().size());
@@ -318,7 +323,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.getTaskList().deleteCategory(container);
 		assertEquals(1, manager.getTaskList().getCategories().size());
 	}
-	
+
 	public void testDeleteCategoryAfterRename() {
 		String newDesc = "newDescription";
 		assertNotNull(manager.getTaskList());
@@ -327,10 +332,10 @@ public class TaskListManagerTest extends TestCase {
 		manager.getTaskList().addCategory(category);
 		assertEquals(2, manager.getTaskList().getCategories().size());
 		manager.getTaskList().renameContainer(category, newDesc);
-		manager.getTaskList().deleteCategory(category);		
+		manager.getTaskList().deleteCategory(category);
 		assertEquals(1, manager.getTaskList().getCategories().size());
 	}
-	
+
 	public void testCreateSameCategoryName() {
 		assertNotNull(manager.getTaskList());
 		assertEquals(1, manager.getTaskList().getCategories().size());
@@ -344,27 +349,76 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(container, category);
 	}
 
-	public void testDelete() {
+	public void testDeleteRootTask() {
 		ITask task = new Task("task-1", "label", true);
 		manager.getTaskList().addTask(task);
 		manager.getTaskList().internalAddRootTask(task);
 		manager.getTaskList().deleteTask(task);
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
+		assertEquals(0, manager.getTaskList().getRootTasks().size());
+		assertEquals(0, manager.getTaskList().getArchiveContainer().getChildren().size());
+	}
+
+	public void testDeleteFromCategory() {
+		assertEquals(0, manager.getTaskList().getAllTasks().size());
+		assertEquals(0, manager.getTaskList().getRootTasks().size());
+		assertEquals(0, manager.getTaskList().getArchiveContainer().getChildren().size());
+		assertEquals(1, manager.getTaskList().getCategories().size());
+
+		ITask task = new Task("task-1", "label", true);
+		TaskCategory category = new TaskCategory("handleAndDescription", manager.getTaskList());
+		manager.getTaskList().addTask(task);
+		assertEquals(1, manager.getTaskList().getArchiveContainer().getChildren().size());
+
+		manager.getTaskList().addCategory(category);
+		manager.getTaskList().moveToContainer(category, task);
+		assertEquals(2, manager.getTaskList().getCategories().size());
+		assertEquals(1, category.getChildren().size());
+		assertEquals(0, manager.getTaskList().getArchiveContainer().getChildren().size());
+		assertEquals(1, manager.getTaskList().getAllTasks().size());
+		assertEquals(0, manager.getTaskList().getRootTasks().size());
+
+		manager.getTaskList().deleteTask(task);
+		assertEquals(0, manager.getTaskList().getAllTasks().size());
+		assertEquals(0, manager.getTaskList().getRootTasks().size());
+		assertEquals(0, manager.getTaskList().getArchiveContainer().getChildren().size());
+		assertEquals(0, category.getChildren().size());
+	}
+
+	public void testDeleteRepositoryTask() {
+		String repositoryUrl = "http://somewhere.com";
+		repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_TYPE, repositoryUrl);
+		MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
+		MockRepositoryTask task = new MockRepositoryTask(repositoryUrl + "-1");
+		TaskList taskList = MylarTaskListPlugin.getTaskListManager().getTaskList();
+		taskList.moveToRoot(task);
+		MockRepositoryQuery query = new MockRepositoryQuery("query", taskList);
+		MockQueryHit hit = new MockQueryHit(repositoryUrl, task.getDescription(), "1");
+		hit.setCorrespondingTask(task);
+		query.addHit(new MockQueryHit(repositoryUrl, task.getDescription(), "1"));
+		taskList.addQuery(query);
+		assertEquals(1, taskList.getAllTasks().size());
+		assertEquals(1, taskList.getRootTasks().size());
+		taskList.deleteTask(task);
+		assertEquals(0, taskList.getAllTasks().size());
+		assertEquals(0, taskList.getRootTasks().size());
 	}
 
 	public void testBugzillaCustomQueryExternalization() {
-		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1", manager.getTaskList());
+		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1", manager
+				.getTaskList());
 		query.setCustomQuery(true);
 		manager.getTaskList().addQuery(query);
 		manager.saveTaskList();
 
 		manager.resetTaskList();
-//		manager.getTaskList().clear();
-//		TaskList list = new TaskList();
-//		manager.setTaskList(list);
+		// manager.getTaskList().clear();
+		// TaskList list = new TaskList();
+		// manager.setTaskList(list);
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getQueries().size());
-		BugzillaRepositoryQuery readQuery = (BugzillaRepositoryQuery) manager.getTaskList().getQueries().iterator().next();
+		BugzillaRepositoryQuery readQuery = (BugzillaRepositoryQuery) manager.getTaskList().getQueries().iterator()
+				.next();
 		assertTrue(readQuery.isCustomQuery());
 	}
 
@@ -403,7 +457,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getArchiveContainer().getChildren().size());
 		assertEquals(0, manager.getTaskList().getRootTasks().size());
-	} 
+	}
 
 	public void testRepositoryTaskExternalization() {
 		BugzillaTask repositoryTask = new BugzillaTask("bug-1", "label", true);
@@ -412,10 +466,10 @@ public class TaskListManagerTest extends TestCase {
 		manager.saveTaskList();
 
 		manager.resetTaskList();
-//		manager.getTaskList().clear();
-//		TaskList list = new TaskList();
-//		manager.setTaskList(list);
-		manager.readExistingOrCreateNewList(); 
+		// manager.getTaskList().clear();
+		// TaskList list = new TaskList();
+		// manager.setTaskList(list);
+		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getRootTasks().size());
 		AbstractRepositoryTask readTask = (AbstractRepositoryTask) manager.getTaskList().getRootTasks().iterator()
 				.next();
@@ -436,8 +490,8 @@ public class TaskListManagerTest extends TestCase {
 		manager.saveTaskList();
 		assertNotNull(manager.getTaskList());
 		manager.resetTaskList();
-//		manager.getTaskList().clear();
-//		manager.setTaskList(new TaskList());
+		// manager.getTaskList().clear();
+		// manager.setTaskList(new TaskList());
 		manager.readExistingOrCreateNewList();
 
 		// read once
@@ -451,8 +505,8 @@ public class TaskListManagerTest extends TestCase {
 		manager.saveTaskList();
 		assertNotNull(manager.getTaskList());
 		manager.resetTaskList();
-//		manager.getTaskList().clear();
-//		manager.setTaskList(new TaskList());
+		// manager.getTaskList().clear();
+		// manager.setTaskList(new TaskList());
 		manager.readExistingOrCreateNewList();
 
 		// read again
@@ -507,9 +561,9 @@ public class TaskListManagerTest extends TestCase {
 		manager.saveTaskList();
 		assertNotNull(manager.getTaskList());
 		manager.resetTaskList();
-//		manager.getTaskList().clear();
-//		TaskList list = new TaskList();
-//		manager.setTaskList(list);
+		// manager.getTaskList().clear();
+		// TaskList list = new TaskList();
+		// manager.setTaskList(list);
 		manager.readExistingOrCreateNewList();
 
 		assertNotNull(manager.getTaskList());
@@ -536,12 +590,12 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testExternalizationOfHandlesWithDash() {
 		Set<ITask> rootTasks = new HashSet<ITask>();
-		
+
 		String handle = AbstractRepositoryTask.getHandle("http://url/repo-location", 1);
 		Task task1 = new Task(handle, "task 1", true);
 		manager.getTaskList().moveToRoot(task1);
 		rootTasks.add(task1);
-		
+
 		manager.saveTaskList();
 		assertNotNull(manager.getTaskList());
 		manager.resetTaskList();
@@ -552,16 +606,20 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testScheduledRefreshJob() throws InterruptedException {
-		int counter = 3;		
-		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, true);
-		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, 1000L);
+		int counter = 3;
+		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
+				true);
+		MylarTaskListPlugin.getMylarCorePrefs().setValue(
+				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, 1000L);
 		assertEquals(0, ScheduledTaskListSynchJob.getCount());
 		TaskListSynchronizationManager manager = new TaskListSynchronizationManager(false);
 		manager.startSynchJob();
-		Thread.sleep(3000);		
-		assertTrue(ScheduledTaskListSynchJob.getCount()+ " smaller than " + counter, ScheduledTaskListSynchJob.getCount() >= counter);
+		Thread.sleep(3000);
+		assertTrue(ScheduledTaskListSynchJob.getCount() + " smaller than " + counter, ScheduledTaskListSynchJob
+				.getCount() >= counter);
 		manager.cancelAll();
-		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
+		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
+				false);
 	}
 
 	public void testgetQueriesAndHitsForHandle() {
@@ -574,10 +632,11 @@ public class TaskListManagerTest extends TestCase {
 		BugzillaQueryHit hit2twin = new BugzillaQueryHit("description2", "P1", "repositoryURL", "2", null, "status");
 		BugzillaQueryHit hit3twin = new BugzillaQueryHit("description3", "P1", "repositoryURL", "3", null, "status");
 
-		BugzillaRepositoryQuery query1 = new BugzillaRepositoryQuery("url","url", "queryl", "10", manager.getTaskList());
+		BugzillaRepositoryQuery query1 = new BugzillaRepositoryQuery("url", "url", "queryl", "10", manager
+				.getTaskList());
 
-		BugzillaRepositoryQuery query2 = new BugzillaRepositoryQuery("url2", "url2", "query2", "10", manager.getTaskList());
-		
+		BugzillaRepositoryQuery query2 = new BugzillaRepositoryQuery("url2", "url2", "query2", "10", manager
+				.getTaskList());
 
 		query1.addHit(hit1);
 		query1.addHit(hit2);
@@ -596,7 +655,7 @@ public class TaskListManagerTest extends TestCase {
 		Set<AbstractRepositoryQuery> queriesReturned = taskList.getQueriesForHandle(AbstractRepositoryTask.getHandle(
 				"repositoryURL", 1));
 		assertNotNull(queriesReturned);
-		assertEquals(2, queriesReturned.size()); 
+		assertEquals(2, queriesReturned.size());
 		assertTrue(queriesReturned.contains(query1));
 		assertTrue(queriesReturned.contains(query2));
 
@@ -608,7 +667,7 @@ public class TaskListManagerTest extends TestCase {
 		assertTrue(hitsReturned.contains(hit2twin));
 
 	}
-	
+
 	public void testUpdateQueryHits() {
 
 		BugzillaQueryHit hit1 = new BugzillaQueryHit("description1", "P1", "repositoryURL", "1", null, "status");
@@ -619,13 +678,14 @@ public class TaskListManagerTest extends TestCase {
 		BugzillaQueryHit hit2twin = new BugzillaQueryHit("description2", "P1", "repositoryURL", "2", null, "status");
 		BugzillaQueryHit hit3twin = new BugzillaQueryHit("description3", "P1", "repositoryURL", "3", null, "status");
 
-		BugzillaRepositoryQuery query1 = new BugzillaRepositoryQuery("url","url", "queryl", "10", manager.getTaskList());
+		BugzillaRepositoryQuery query1 = new BugzillaRepositoryQuery("url", "url", "queryl", "10", manager
+				.getTaskList());
 
 		query1.addHit(hit1);
-		query1.addHit(hit2);		
+		query1.addHit(hit2);
 		query1.addHit(hit3);
 		assertEquals(3, query1.getHits().size());
-		List<AbstractQueryHit> newHits = new ArrayList<AbstractQueryHit>();		
+		List<AbstractQueryHit> newHits = new ArrayList<AbstractQueryHit>();
 		query1.updateHits(newHits);
 		assertEquals(0, query1.getHits().size());
 		newHits.add(hit1);
@@ -643,50 +703,49 @@ public class TaskListManagerTest extends TestCase {
 		assertTrue(query1.getHits().contains(hit2twin));
 		assertTrue(query1.getHits().contains(hit3twin));
 		for (AbstractQueryHit hit : query1.getHits()) {
-			if(hit.equals(hit1twin)) {
+			if (hit.equals(hit1twin)) {
 				assertTrue(hit.isNotified());
 			} else {
 				assertFalse(hit.isNotified());
 			}
 		}
 	}
-		
+
 	public void testgetRepositoryTasks() {
 
 		String repositoryUrl = "https://bugs.eclipse.org/bugs";
-		
+
 		String bugNumber = "106939";
-		
-		BugzillaTask task1 = new BugzillaTask(repositoryUrl+"-"+bugNumber, "label", false);		
+
+		BugzillaTask task1 = new BugzillaTask(repositoryUrl + "-" + bugNumber, "label", false);
 		manager.getTaskList().addTask(task1);
-		
-		BugzillaTask task2 = new BugzillaTask("https://unresolved-"+bugNumber, "label", false);		
+
+		BugzillaTask task2 = new BugzillaTask("https://unresolved-" + bugNumber, "label", false);
 		manager.getTaskList().addTask(task2);
-		
+
 		TaskList taskList = manager.getTaskList();
 		assertEquals(2, taskList.getAllTasks().size());
 		Set<AbstractRepositoryTask> tasksReturned = taskList.getRepositoryTasks(repositoryUrl);
 		assertNotNull(tasksReturned);
-		assertEquals(1, tasksReturned.size()); 
+		assertEquals(1, tasksReturned.size());
 		assertTrue(tasksReturned.contains(task1));
 	}
-	
-	
+
 	public void testRemindedPersistance() {
 
 		String repositoryUrl = "https://bugs.eclipse.org/bugs";
-		
+
 		String bugNumber = "106939";
-		
-		BugzillaTask task1 = new BugzillaTask(repositoryUrl+"-"+bugNumber, "label", false);		
+
+		BugzillaTask task1 = new BugzillaTask(repositoryUrl + "-" + bugNumber, "label", false);
 		manager.getTaskList().addTask(task1);
-		
+
 		task1.setReminded(true);
-		
+
 		MylarTaskListPlugin.getTaskListManager().saveTaskList();
 		MylarTaskListPlugin.getTaskListManager().resetTaskList();
-		MylarTaskListPlugin.getTaskListManager().readExistingOrCreateNewList();	
-		
+		MylarTaskListPlugin.getTaskListManager().readExistingOrCreateNewList();
+
 		TaskList taskList = manager.getTaskList();
 		assertEquals(1, taskList.getAllTasks().size());
 		Set<AbstractRepositoryTask> tasksReturned = taskList.getRepositoryTasks(repositoryUrl);
@@ -694,7 +753,7 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(1, tasksReturned.size());
 		for (AbstractRepositoryTask task : tasksReturned) {
 			assertTrue(task.hasBeenReminded());
-		}		
+		}
 	}
-	
+
 }

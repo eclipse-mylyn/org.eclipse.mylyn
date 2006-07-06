@@ -34,7 +34,7 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
  */
 public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
-	private static final String REPOSITORY_TYPE = "mock";
+	public static final String REPOSITORY_TYPE = "mock";
 
 	@Override
 	public boolean canCreateNewTask() {

@@ -179,18 +179,16 @@ public class TaskList {
 
 	/**
 	 * TODO: refactor around querying containers for their tasks
+	 * 
+	 * Task is removed from all containers: root, archive, category, and tasks
+	 * catchall (Currently no support for deletion of subtasks)
 	 */
 	public void deleteTask(ITask task) {
-		deleteTaskHelper(archiveContainer.getChildren(), task);
-		boolean deleted = deleteTaskHelper(rootCategory.getChildren(), task);
-		task.setContainer(null);
-		if (!deleted) {
-			for (AbstractTaskContainer cat : getTaskContainers()) {
-				deleted = deleteTaskHelper(cat.getChildren(), task);
-				if (deleted) {
-					break;
-				}
-			}
+		archiveContainer.remove(task);
+		rootCategory.remove(task);
+		if (task.getContainer() != null) {
+			task.getContainer().remove(task);
+			task.setContainer(null);
 		}
 		tasks.remove(task.getHandleIdentifier());
 		for (ITaskListChangeListener listener : changeListeners) {
@@ -265,18 +263,18 @@ public class TaskList {
 		}
 	}
 
-	private boolean deleteTaskHelper(Set<ITask> tasks, ITask toDelete) {
-		for (ITask task : tasks) {
-			if (task.getHandleIdentifier().equals(toDelete.getHandleIdentifier())) {
-				tasks.remove(task);
-				return true;
-			} else {
-				if (deleteTaskHelper(task.getChildren(), toDelete))
-					return true;
-			}
-		}
-		return false;
-	}
+	// private boolean deleteTaskHelper(Set<ITask> tasks, ITask toDelete) {
+	// for (ITask task : tasks) {
+	// if (task.getHandleIdentifier().equals(toDelete.getHandleIdentifier())) {
+	// tasks.remove(task);
+	// return true;
+	// } else {
+	// if (deleteTaskHelper(task.getChildren(), toDelete))
+	// return true;
+	// }
+	// }
+	// return false;
+	//	}
 
 	private AbstractQueryHit findQueryHitHelper(Set<? extends ITaskListElement> elements, String handle) {
 		if (handle == null) {
