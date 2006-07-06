@@ -183,7 +183,7 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 	 */
 	public void showDirtyStatus(boolean isDirty) {
 		String prefix = (isDirty) ? "*" : "";
-		setPartName(prefix + "Bug #" + bugzillaEditorInput.getBugId());
+		setPartName(prefix + "Bug #" + bugzillaEditorInput.getId());
 	}
 
 

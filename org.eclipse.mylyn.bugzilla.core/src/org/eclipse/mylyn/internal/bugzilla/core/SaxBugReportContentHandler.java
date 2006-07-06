@@ -133,10 +133,10 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 		switch (tag) {
 		case BUG_ID: {
 			try {
-				if (report.getId() != Integer.parseInt(parsedText)) {
+				if (!report.getId().equals(parsedText)) {
 					errorMessage = "Requested report number does not match returned report number.";
 				}
-			} catch (NumberFormatException e) {
+			} catch (Exception e) {
 				errorMessage = "Bug id from server did not match requested id.";
 			}
 

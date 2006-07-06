@@ -28,20 +28,20 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
  */
 public class ExistingBugEditorInput extends AbstractBugEditorInput {
 
-	protected int bugId;
+	protected String id;
 
 	protected AbstractRepositoryTask repositoryTask = null;
 
 	// Called for existing report without a local task
 	public ExistingBugEditorInput(TaskRepository repository, RepositoryTaskData taskData) {
 		super(repository, taskData);
-		this.bugId = taskData.getId();
+		this.id = taskData.getId();
 	}
 
-	public ExistingBugEditorInput(TaskRepository repository, RepositoryTaskData taskData, int bugId)
+	public ExistingBugEditorInput(TaskRepository repository, RepositoryTaskData taskData, String bugId)
 			throws IOException, GeneralSecurityException {
 		super(repository, taskData);
-		this.bugId = bugId;
+		this.id = bugId;
 		// this.repository = repository;
 		// this.repositoryTaskData = getOfflineTaskData(repository,
 		// proxySettings, bugId);
@@ -85,8 +85,8 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 	/**
 	 * @return The id of the bug for this editor input.
 	 */
-	public int getBugId() {
-		return bugId;
+	public String getId() {
+		return id;
 	}
 
 	/**
@@ -95,9 +95,10 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 	 */
 	@Override
 	public boolean equals(Object o) {
+		// XXX: will equate two tasks with identical ids from different repositories
 		if (o instanceof ExistingBugEditorInput) {
 			ExistingBugEditorInput input = (ExistingBugEditorInput) o;
-			return getBugId() == input.getBugId();
+			return getId().equals(input.getId());
 		}
 		return false;
 	}

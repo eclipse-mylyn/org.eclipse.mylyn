@@ -30,7 +30,7 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 	static final String LABEL_NEW_COMMENT = "New Comment";
 
 	/** The id of the Bugzilla object that the selection was on. */
-	protected int id;
+	protected String id;
 
 	/** The server of the Bugzilla object that the selection was on. */
 	protected String server;
@@ -70,7 +70,7 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 	 * @param parent
 	 *            The parent of this node
 	 */
-	public RepositoryTaskOutlineNode(int id, String server, String key, Object data, String summary) {
+	public RepositoryTaskOutlineNode(String id, String server, String key, Object data, String summary) {
 		this.id = id;
 		this.server = server;
 		this.key = key;
@@ -216,7 +216,7 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 	 */
 	protected static RepositoryTaskOutlineNode parseExistingBugReport(RepositoryTaskData bug) {
 
-		int bugId = bug.getId();
+		String bugId = bug.getId();
 		String bugServer = bug.getRepositoryUrl();
 		RepositoryTaskOutlineNode topNode = new RepositoryTaskOutlineNode(bugId, bugServer, bug.getLabel(), bug, bug
 				.getSummary());
@@ -277,11 +277,11 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 		key = contents;
 	}
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

@@ -72,8 +72,7 @@ public class BugzillaPrioritySearchSorter extends ViewerSorter {
 	public int category(Object element) {
 		try {
 			BugzillaQueryHit hit = (BugzillaQueryHit) element;
-			return hit.getId();
-
+			return Integer.parseInt(hit.getId());
 		} catch (Exception ignored) {
 			// ignore if there is a problem
 		}

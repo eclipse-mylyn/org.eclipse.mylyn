@@ -662,8 +662,8 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
 						BugzillaPlugin.REPOSITORY_KIND, taskData.getRepositoryUrl());
 				serverBug = BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository
-						.getPassword(), editorInput.getProxySettings(), repository.getCharacterEncoding(), taskData
-						.getId());
+						.getPassword(), editorInput.getProxySettings(), repository.getCharacterEncoding(), 
+						Integer.parseInt(taskData.getId()));
 				// If no bug was found on the server, throw an exception so that
 				// the
 				// user gets the same message that appears when there is a

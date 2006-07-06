@@ -25,6 +25,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.actions.BugzillaSortAction;
 import org.eclipse.mylar.internal.bugzilla.ui.actions.OpenBugsAction;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskElementLabelProvider;
@@ -252,27 +253,15 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 	@Override
 	protected void showMatch(Match match, int currentOffset, int currentLength, boolean activate)
 			throws PartInitException {
-		// try {
 		BugzillaQueryHit repositoryHit = (BugzillaQueryHit) match.getElement();
-		String bugUrl = BugzillaRepositoryUtil.getBugUrlWithoutLogin(repositoryHit.getRepositoryUrl(), repositoryHit
-				.getId());
-		TaskUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), "" + repositoryHit.getId(), bugUrl);
-		// Object element = getCurrentMatch().getElement();
-		// if (element instanceof IMarker) {
-		//
-		// String repositoryUrl = (String) ((IMarker) element)
-		// .getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_REPOSITORY);
-		// Integer id = (Integer) ((IMarker)
-		// element).getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_ID);
-		// BugzillaUITools.show(repositoryUrl, id.intValue());
-		// }
-		// } catch (CoreException e) {
-		// // if an error occurs, handle and log it
-		// ExceptionHandler.handle(e, SearchMessages.Search_Error_search_title,
-		// SearchMessages.Search_Error_search_message); //$NON-NLS-2$
-		// //$NON-NLS-1$
-		// BugzillaPlugin.log(e.getStatus());
-		// }
+		
+		try {
+			int id = Integer.parseInt(repositoryHit.getId());
+			String bugUrl = BugzillaRepositoryUtil.getBugUrlWithoutLogin(repositoryHit.getRepositoryUrl(), id);
+			TaskUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), "" + repositoryHit.getId(), bugUrl);
+		} catch (NumberFormatException e) {
+			MylarStatusHandler.fail(e, "Could not open, malformed id: " + repositoryHit.getId(), true);
+		}
 	}
 
 	@Override

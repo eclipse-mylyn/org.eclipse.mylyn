@@ -95,7 +95,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 	}
 
 	public void testTaskListNotificationQueryIncoming() {
-		BugzillaQueryHit hit = new BugzillaQueryHit("description", "priority", "https://bugs.eclipse.org/bugs", 1,
+		BugzillaQueryHit hit = new BugzillaQueryHit("description", "priority", "https://bugs.eclipse.org/bugs", "1",
 				null, "status");
 		assertFalse(hit.isNotified());
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery("https://bugs.eclipse.org/bugs", "queryUrl",

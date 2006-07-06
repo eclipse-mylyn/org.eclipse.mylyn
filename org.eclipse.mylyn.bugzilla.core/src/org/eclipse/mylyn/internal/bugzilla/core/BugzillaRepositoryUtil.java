@@ -84,7 +84,7 @@ public class BugzillaRepositoryUtil {
 			LoginException, GeneralSecurityException {
 
 		RepositoryTaskData bugReport = new RepositoryTaskData(new BugzillaAttributeFactory(),
-				BugzillaPlugin.REPOSITORY_KIND, repositoryUrl, id);
+				BugzillaPlugin.REPOSITORY_KIND, repositoryUrl, ""+id);
 		setupExistingBugAttributes(repositoryUrl, bugReport);
 
 		RepositoryReportFactory reportFactory = RepositoryReportFactory.getInstance();

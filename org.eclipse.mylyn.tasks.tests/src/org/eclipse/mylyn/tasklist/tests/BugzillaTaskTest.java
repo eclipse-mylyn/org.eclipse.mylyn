@@ -47,9 +47,9 @@ public class BugzillaTaskTest extends TestCase {
 	}
 
 	public void testCompletionDate() throws Exception {
-		BugzillaTask task = new BugzillaTask("handle", "description", true);
+		BugzillaTask task = new BugzillaTask("bug-1", "description", true);
 		RepositoryTaskData report = new RepositoryTaskData(new BugzillaAttributeFactory(),
-				BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.ECLIPSE_BUGZILLA_URL, 1);
+				BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.ECLIPSE_BUGZILLA_URL, "1");
 		task.setTaskData(report);
 		assertNull(task.getCompletionDate());
 

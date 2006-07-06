@@ -63,7 +63,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		String handle = AbstractRepositoryTask.getHandle(url, id);
 		assertEquals(url, AbstractRepositoryTask.getRepositoryUrl(handle));
 		assertEquals(id, AbstractRepositoryTask.getTaskId(handle));
-		assertEquals(123, AbstractRepositoryTask.getTaskIdAsInt(handle));
+//		assertEquals(123, AbstractRepositoryTask.getTaskIdAsInt(handle));
 	}
 
 	public void testMultipleNotAdded() throws MalformedURLException {

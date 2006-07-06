@@ -112,6 +112,15 @@ public abstract class AbstractRepositoryTask extends Task {
 		return null;
 	}
 
+//	public static int getTaskIdAsInt(String taskHandle) {
+//		String idString = getTaskId(taskHandle);
+//		if (idString != null) {
+//			return Integer.parseInt(idString);
+//		} else {
+//			return -1;
+//		}
+//	}
+	
 	public static String getRepositoryUrl(String taskHandle) {
 		int index = taskHandle.lastIndexOf(AbstractRepositoryTask.HANDLE_DELIM);
 		String url = null;
@@ -128,22 +137,11 @@ public abstract class AbstractRepositoryTask extends Task {
 		return url;
 	}
 
-	public static int getTaskIdAsInt(String taskHandle) {
-		String idString = getTaskId(taskHandle);
-		if (idString != null) {
-			return Integer.parseInt(idString);
-		} else {
-			return -1;
-		}
-	}
-
-	/**
-	 * @param taskId
-	 *            must be an integer
-	 */
 	public static String getHandle(String repositoryUrl, String taskId) {
 		if (repositoryUrl == null) {
 			return TaskRepositoryManager.MISSING_REPOSITORY_HANDLE + taskId;
+		} else if (taskId.contains(MylarContextManager.CONTEXT_HANDLE_DELIM)) {
+			throw new RuntimeException("invalid handle for task, can not contain: " + MylarContextManager.CONTEXT_HANDLE_DELIM + ", was: " + taskId);
 		} else {
 			// MylarContextManager.CONTEXT_HANDLE_DELIM + taskId);
 			return repositoryUrl + MylarContextManager.CONTEXT_HANDLE_DELIM + taskId;
@@ -170,7 +168,7 @@ public abstract class AbstractRepositoryTask extends Task {
 		this.taskData = taskData;
 		// TODO: remove?
 		if (taskData != null) {
-			setDescription(HtmlStreamTokenizer.unescape(AbstractRepositoryTask.getTaskIdAsInt(getHandleIdentifier())
+			setDescription(HtmlStreamTokenizer.unescape(AbstractRepositoryTask.getTaskId(getHandleIdentifier())
 					+ ": " + taskData.getSummary()));
 		}
 	}

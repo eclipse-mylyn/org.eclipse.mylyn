@@ -131,7 +131,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		} catch (NumberFormatException nfe) {
 			if (!forceSyncExecForTesting) {
 				MessageDialog.openInformation(null, MylarTaskListPlugin.TITLE_DIALOG, "Invalid report id: " + id);
-			}
+			} 
 			return null;
 		}
 
@@ -351,7 +351,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				for (BugzillaSearchHit hit : collector.getResults()) {
 					String description = hit.getId() + ": " + hit.getDescription();
 					newHits.add(new BugzillaQueryHit(description, hit.getPriority(),
-							repositoryQuery.getRepositoryUrl(), hit.getId(), null, hit.getState()));
+							repositoryQuery.getRepositoryUrl(), ""+hit.getId(), null, hit.getState()));
 				}
 			}
 		});

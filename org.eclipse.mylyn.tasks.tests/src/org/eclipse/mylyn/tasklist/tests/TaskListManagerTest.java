@@ -190,27 +190,6 @@ public class TaskListManagerTest extends TestCase {
 		manager.deactivateTask(manager.getTaskList().getActiveTask());
 	}
 
-	public void testRepositoryUrlHandles() {
-
-		String repository = IBugzillaConstants.ECLIPSE_BUGZILLA_URL;
-		String id = "123";
-		String handle = AbstractRepositoryTask.getHandle(repository, id);
-		BugzillaTask bugTask = new BugzillaTask(handle, "label 124", true);
-		assertEquals(repository, bugTask.getRepositoryUrl());
-
-		manager.getTaskList().moveToRoot(bugTask);
-		manager.saveTaskList();
-//		manager.getTaskList().clear();
-		manager.resetTaskList();
-//		TaskList list = new TaskList();
-//		manager.setTaskList(list);
-		manager.readExistingOrCreateNewList();
-
-		BugzillaTask readReport = (BugzillaTask) manager.getTaskList().getRootTasks().iterator().next();
-		assertEquals(readReport.getDescription(), readReport.getDescription());
-		assertEquals(readReport.getRepositoryUrl(), readReport.getRepositoryUrl());
-	}
-
 	public void testDeleteQuery() {
 		AbstractRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1", manager.getTaskList());
 		manager.getTaskList().addQuery(query);
@@ -290,7 +269,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testCategoryPersistance() {
-		BugzillaTask task = new BugzillaTask("b1", "b 1", true);
+		BugzillaTask task = new BugzillaTask("bug-1", "b 1", true);
 		TaskCategory category = new TaskCategory("cat", manager.getTaskList());
 		manager.getTaskList().addCategory(category);
 		manager.getTaskList().moveToContainer(category, task);
@@ -366,7 +345,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testDelete() {
-		ITask task = new Task("handle", "label", true);
+		ITask task = new Task("task-1", "label", true);
 		manager.getTaskList().addTask(task);
 		manager.getTaskList().internalAddRootTask(task);
 		manager.getTaskList().deleteTask(task);
@@ -413,7 +392,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testArchiveRepositoryTaskExternalization() {
-		BugzillaTask repositoryTask = new BugzillaTask("handle", "label", true);
+		BugzillaTask repositoryTask = new BugzillaTask("bug-1", "label", true);
 		repositoryTask.setKind("kind");
 		manager.getTaskList().addTask(repositoryTask);
 		assertEquals(1, manager.getTaskList().getArchiveContainer().getChildren().size());
@@ -427,7 +406,7 @@ public class TaskListManagerTest extends TestCase {
 	} 
 
 	public void testRepositoryTaskExternalization() {
-		BugzillaTask repositoryTask = new BugzillaTask("handle", "label", true);
+		BugzillaTask repositoryTask = new BugzillaTask("bug-1", "label", true);
 		repositoryTask.setKind("kind");
 		manager.getTaskList().moveToRoot(repositoryTask);
 		manager.saveTaskList();
@@ -450,7 +429,7 @@ public class TaskListManagerTest extends TestCase {
 		TaskCategory cat1 = new TaskCategory("Category 1", manager.getTaskList());
 		manager.getTaskList().addCategory(cat1);
 
-		BugzillaTask reportInCat1 = new BugzillaTask("123", "label 123", true);
+		BugzillaTask reportInCat1 = new BugzillaTask("task-123", "label 123", true);
 		manager.getTaskList().moveToContainer(cat1, reportInCat1);
 		assertEquals(cat1, reportInCat1.getContainer());
 
@@ -514,12 +493,12 @@ public class TaskListManagerTest extends TestCase {
 		manager.getTaskList().moveToContainer(cat1, task4);
 		cat1Contents.add(task4);
 
-		BugzillaTask reportInCat1 = new BugzillaTask("123", "label 123", true);
+		BugzillaTask reportInCat1 = new BugzillaTask("task-123", "label 123", true);
 		manager.getTaskList().moveToContainer(cat1, reportInCat1);
 		assertEquals(cat1, reportInCat1.getContainer());
 		cat1Contents.add(reportInCat1);
 
-		BugzillaTask reportInRoot = new BugzillaTask("124", "label 124", true);
+		BugzillaTask reportInRoot = new BugzillaTask("task-124", "label 124", true);
 		manager.getTaskList().moveToRoot(reportInRoot);
 		rootTasks.add(reportInRoot);
 
@@ -587,13 +566,13 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testgetQueriesAndHitsForHandle() {
 
-		BugzillaQueryHit hit1 = new BugzillaQueryHit("description1", "P1", "repositoryURL", 1, null, "status");
-		BugzillaQueryHit hit2 = new BugzillaQueryHit("description2", "P1", "repositoryURL", 2, null, "status");
-		BugzillaQueryHit hit3 = new BugzillaQueryHit("description3", "P1", "repositoryURL", 3, null, "status");
+		BugzillaQueryHit hit1 = new BugzillaQueryHit("description1", "P1", "repositoryURL", "1", null, "status");
+		BugzillaQueryHit hit2 = new BugzillaQueryHit("description2", "P1", "repositoryURL", "2", null, "status");
+		BugzillaQueryHit hit3 = new BugzillaQueryHit("description3", "P1", "repositoryURL", "3", null, "status");
 
-		BugzillaQueryHit hit1twin = new BugzillaQueryHit("description1", "P1", "repositoryURL", 1, null, "status");
-		BugzillaQueryHit hit2twin = new BugzillaQueryHit("description2", "P1", "repositoryURL", 2, null, "status");
-		BugzillaQueryHit hit3twin = new BugzillaQueryHit("description3", "P1", "repositoryURL", 3, null, "status");
+		BugzillaQueryHit hit1twin = new BugzillaQueryHit("description1", "P1", "repositoryURL", "1", null, "status");
+		BugzillaQueryHit hit2twin = new BugzillaQueryHit("description2", "P1", "repositoryURL", "2", null, "status");
+		BugzillaQueryHit hit3twin = new BugzillaQueryHit("description3", "P1", "repositoryURL", "3", null, "status");
 
 		BugzillaRepositoryQuery query1 = new BugzillaRepositoryQuery("url","url", "queryl", "10", manager.getTaskList());
 
@@ -632,13 +611,13 @@ public class TaskListManagerTest extends TestCase {
 	
 	public void testUpdateQueryHits() {
 
-		BugzillaQueryHit hit1 = new BugzillaQueryHit("description1", "P1", "repositoryURL", 1, null, "status");
-		BugzillaQueryHit hit2 = new BugzillaQueryHit("description2", "P1", "repositoryURL", 2, null, "status");
-		BugzillaQueryHit hit3 = new BugzillaQueryHit("description3", "P1", "repositoryURL", 3, null, "status");
+		BugzillaQueryHit hit1 = new BugzillaQueryHit("description1", "P1", "repositoryURL", "1", null, "status");
+		BugzillaQueryHit hit2 = new BugzillaQueryHit("description2", "P1", "repositoryURL", "2", null, "status");
+		BugzillaQueryHit hit3 = new BugzillaQueryHit("description3", "P1", "repositoryURL", "3", null, "status");
 
-		BugzillaQueryHit hit1twin = new BugzillaQueryHit("description1", "P1", "repositoryURL", 1, null, "status");
-		BugzillaQueryHit hit2twin = new BugzillaQueryHit("description2", "P1", "repositoryURL", 2, null, "status");
-		BugzillaQueryHit hit3twin = new BugzillaQueryHit("description3", "P1", "repositoryURL", 3, null, "status");
+		BugzillaQueryHit hit1twin = new BugzillaQueryHit("description1", "P1", "repositoryURL", "1", null, "status");
+		BugzillaQueryHit hit2twin = new BugzillaQueryHit("description2", "P1", "repositoryURL", "2", null, "status");
+		BugzillaQueryHit hit3twin = new BugzillaQueryHit("description3", "P1", "repositoryURL", "3", null, "status");
 
 		BugzillaRepositoryQuery query1 = new BugzillaRepositoryQuery("url","url", "queryl", "10", manager.getTaskList());
 

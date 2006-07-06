@@ -56,7 +56,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 	public void testHasIncoming() {
 		AbstractRepositoryTask task = new MockRepositoryTask(HANDLE1);
 		RepositoryTaskData taskData = new RepositoryTaskData(new MockAttributeFactory(), connector.getRepositoryType(),
-				URL1, 1);
+				URL1, "1");
 		assertTrue(connector.checkHasIncoming(task, taskData));
 		task.setModifiedDateStamp("never");
 		assertTrue(connector.checkHasIncoming(task, taskData));
@@ -284,13 +284,13 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		RepositoryTaskData taskData = null;
 		AbstractRepositoryTask task = new MockRepositoryTask(HANDLE1);
 
-		taskData = new RepositoryTaskData(new MockAttributeFactory(), connector.getRepositoryType(), URL1, 1);
+		taskData = new RepositoryTaskData(new MockAttributeFactory(), connector.getRepositoryType(), URL1, "1");
 		taskData.setAttributeValue(RepositoryTaskAttribute.DATE_MODIFIED, DATE_STAMP_1);
 		task.setModifiedDateStamp(DATE_STAMP_1);
 		task.setTaskData(taskData);
 		task.setSyncState(localState);
 
-		newData = new RepositoryTaskData(new MockAttributeFactory(), connector.getRepositoryType(), URL1, 1);
+		newData = new RepositoryTaskData(new MockAttributeFactory(), connector.getRepositoryType(), URL1, "1");
 
 		switch (remoteState) {
 		case CONFLICT:

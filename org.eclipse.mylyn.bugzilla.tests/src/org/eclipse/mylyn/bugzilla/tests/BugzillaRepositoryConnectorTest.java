@@ -149,7 +149,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		assertEquals(task.getHandleIdentifier(), retrievedTask.getHandleIdentifier());
 
 		assertTrue(task.isDownloaded());
-		assertEquals(1, task.getTaskData().getId());
+		assertEquals(1, Integer.parseInt(task.getTaskData().getId()));
 	}
 
 	public void testSynchronize() throws InterruptedException, PartInitException, LoginException, BugzillaException,
@@ -219,13 +219,13 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 	public void testUniqueTaskObjects() {
 		init222();
 		String repositoryURL = "repositoryURL";
-		BugzillaQueryHit hit1 = new BugzillaQueryHit("description", "P1", repositoryURL, 1, null, "status");
+		BugzillaQueryHit hit1 = new BugzillaQueryHit("description", "P1", repositoryURL, "1", null, "status");
 		ITask task1 = hit1.getOrCreateCorrespondingTask();
 		assertNotNull(task1);
 		// taskList.renameTask(task1, "testing");
 		// task1.setDescription("testing");
 
-		BugzillaQueryHit hit1Twin = new BugzillaQueryHit("description", "P1", repositoryURL, 1, null, "status");
+		BugzillaQueryHit hit1Twin = new BugzillaQueryHit("description", "P1", repositoryURL, "1", null, "status");
 		ITask task2 = hit1Twin.getOrCreateCorrespondingTask();
 		assertEquals(task1.getDescription(), task2.getDescription());
 	}
@@ -278,7 +278,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		// client.synchronize(task, true, null);
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
 
-		assertEquals(bugId, task.getTaskData().getId());
+		assertEquals(bugId, Integer.parseInt(task.getTaskData().getId()));
 		int numAttached = task.getTaskData().getAttachments().size();
 		String fileName = "test-attach-" + System.currentTimeMillis() + ".txt";
 
@@ -329,10 +329,10 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 
 		init222();
 		BugzillaTask task4 = generateLocalTaskAndDownload("4");
-		assertEquals(4, task4.getTaskData().getId());
+		assertEquals(4, Integer.parseInt(task4.getTaskData().getId()));
 
 		BugzillaTask task5 = generateLocalTaskAndDownload("5");
-		assertEquals(5, task5.getTaskData().getId());
+		assertEquals(5, Integer.parseInt(task5.getTaskData().getId()));
 
 		Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
 		tasks.add(task4);
@@ -390,7 +390,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 
 		init222();
 		BugzillaTask task7 = generateLocalTaskAndDownload("7");
-		assertEquals(7, task7.getTaskData().getId());
+		assertEquals(7, Integer.parseInt(task7.getTaskData().getId()));
 
 		Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
 		tasks.add(task7);
@@ -400,12 +400,12 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		assertNotNull(recentTaskData);
 
 		assertFalse(MylarTaskListPlugin.getDefault().getOfflineReportsFile().find(
-				IBugzillaConstants.TEST_BUGZILLA_222_URL, 7) == -1);
+				IBugzillaConstants.TEST_BUGZILLA_222_URL, "7") == -1);
 		ArrayList<RepositoryTaskData> taskDataList = new ArrayList<RepositoryTaskData>();
 		taskDataList.add(task7.getTaskData());
 		MylarTaskListPlugin.getDefault().getOfflineReportsFile().remove(taskDataList);
 		assertTrue(MylarTaskListPlugin.getDefault().getOfflineReportsFile().find(
-				IBugzillaConstants.TEST_BUGZILLA_222_URL, 7) == -1);
+				IBugzillaConstants.TEST_BUGZILLA_222_URL, "7") == -1);
 
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task7.getSyncState());
 		// Task no longer stored offline
@@ -478,7 +478,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 	 */
 	protected void timeTracker(int taskid, boolean enableDeadline) throws Exception {
 		BugzillaTask bugtask = generateLocalTaskAndDownload("" + taskid);
-		assertEquals(taskid, bugtask.getTaskData().getId());
+		assertEquals(taskid, Integer.parseInt(bugtask.getTaskData().getId()));
 
 		Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
 		tasks.add(bugtask);

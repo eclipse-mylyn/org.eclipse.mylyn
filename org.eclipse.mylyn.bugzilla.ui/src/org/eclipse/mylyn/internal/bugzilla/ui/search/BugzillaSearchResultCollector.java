@@ -91,7 +91,7 @@ public class BugzillaSearchResultCollector implements IBugzillaSearchResultColle
 	public void accept(BugzillaSearchHit hit) throws CoreException {
 		String description = hit.getId() + ": " + hit.getDescription();
 
-		BugzillaQueryHit queryHit = new BugzillaQueryHit(description, hit.getPriority(), hit.getRepositoryUrl(), hit
+		BugzillaQueryHit queryHit = new BugzillaQueryHit(description, hit.getPriority(), hit.getRepositoryUrl(), ""+hit
 				.getId(), null, hit.getState());
 
 		ITask correspondingTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(

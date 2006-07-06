@@ -34,11 +34,11 @@ public class BugzillaIdSearchSorter extends ViewerSorter {
 		try {
 			// cast the object and get its bug id
 			BugzillaQueryHit entry1 = (BugzillaQueryHit) e1;
-			Integer id1 = entry1.getId();
+			Integer id1 = Integer.parseInt(entry1.getId());
 
 			// cast the other object and get its bug id
 			BugzillaQueryHit entry2 = (BugzillaQueryHit) e2;
-			Integer id2 = entry2.getId();
+			Integer id2 = Integer.parseInt(entry2.getId());
 
 			// if neither is null, compare the bug id's
 			if (id1 != null && id2 != null) {
@@ -65,10 +65,9 @@ public class BugzillaIdSearchSorter extends ViewerSorter {
 	public int category(Object element) {
 		try {
 			BugzillaQueryHit hit = (BugzillaQueryHit) element;
-			return hit.getId();
-			
+			return Integer.parseInt(hit.getId());
 		} catch (Exception ignored) {
-			// ignore if there is a problem
+			// ignore
 		}
 		// if that didn't work, use the default category method
 		return super.category(element);

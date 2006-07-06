@@ -175,7 +175,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		generator.run(new NullProgressMonitor());
 		assertEquals(0, generator.getAllCollectedTasks().size());
 
-		bugQuery.addHit(new BugzillaQueryHit("task1description", "low", "repositoryURL", 1, task1, "FIXED"));
+		bugQuery.addHit(new BugzillaQueryHit("task1description", "low", "repositoryURL", "1", task1, "FIXED"));
 
 		generator.run(new NullProgressMonitor());
 		assertEquals(0, generator.getAllCollectedTasks().size());

@@ -65,7 +65,7 @@ public class TaskTestUtil {
 
 	public static void setBugTaskCompleted(BugzillaTask bugzillaTask, boolean completed) {
 		RepositoryTaskData report = new RepositoryTaskData(new BugzillaAttributeFactory(),
-				BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.ECLIPSE_BUGZILLA_URL, 1);
+				BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.ECLIPSE_BUGZILLA_URL, "1");
 		bugzillaTask.setTaskData(report);
 		RepositoryTaskAttribute resolvedAttribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_STATUS
 				.getKeyString());

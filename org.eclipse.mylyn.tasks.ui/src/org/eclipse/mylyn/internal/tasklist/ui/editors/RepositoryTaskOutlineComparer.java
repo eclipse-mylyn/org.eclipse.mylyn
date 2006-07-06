@@ -29,7 +29,7 @@ public class RepositoryTaskOutlineComparer implements IElementComparer {
 
 			// An IRepositoryTaskSelection is uniquely defined by its handle and
 			// its contents
-			return ((OutlineTools.getHandle(s1).equals(OutlineTools.getHandle(s2))) && ((s1.getContents() == null) ? (s2
+			return ((ContentOutlineTools.getHandle(s1).equals(ContentOutlineTools.getHandle(s2))) && ((s1.getContents() == null) ? (s2
 					.getContents() == null)
 					: s1.getContents().equals(s2.getContents())));
 		}
@@ -42,7 +42,7 @@ public class RepositoryTaskOutlineComparer implements IElementComparer {
 
 			// An IRepositoryTaskSelection is uniquely defined by its handle and
 			// its contents
-			return (OutlineTools.getHandle(sel) + sel.getContents()).hashCode();
+			return (ContentOutlineTools.getHandle(sel) + sel.getContents()).hashCode();
 		}
 		return element.hashCode();
 	}

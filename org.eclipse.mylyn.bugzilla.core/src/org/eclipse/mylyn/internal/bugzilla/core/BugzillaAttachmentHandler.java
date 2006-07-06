@@ -92,7 +92,8 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 
 	public void uploadAttachment(TaskRepository repository, AbstractRepositoryTask task, String comment, String description, File file, String contentType, boolean isPatch, Proxy proxySettings) throws CoreException {
 		try {
-			uploadAttachment(repository.getUrl(), repository.getUserName(), repository.getPassword(), AbstractRepositoryTask.getTaskIdAsInt(task.getHandleIdentifier()), comment, description, file, contentType, isPatch, proxySettings);
+			int bugId = Integer.parseInt(AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()));
+			uploadAttachment(repository.getUrl(), repository.getUserName(), repository.getPassword(), bugId, comment, description, file, contentType, isPatch, proxySettings);
 		} catch (Exception e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, 0, "could not download", e));
 		}
@@ -248,7 +249,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 			return false;
 		}
 		
-		return uploadAttachment(attachment.getReport().getRepositoryUrl(), uname, password, attachment.getReport().getId(),
+		return uploadAttachment(attachment.getReport().getRepositoryUrl(), uname, password, Integer.parseInt(attachment.getReport().getId()),
 				attachment.getComment(), attachment.getDescription(), file,
 				attachment.getContentType(), attachment.isPatch(), proxySettings);
 	}

@@ -37,10 +37,10 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 	//private boolean offline;
 
 	public BugzillaTaskEditorInput(TaskRepository repository, BugzillaTask bugTask, boolean offline) throws IOException, GeneralSecurityException {
-		super(repository, bugTask.getTaskData(), AbstractRepositoryTask.getTaskIdAsInt(bugTask.getHandleIdentifier()));
+		super(repository, bugTask.getTaskData(), AbstractRepositoryTask.getTaskId(bugTask.getHandleIdentifier()));
 		this.bugTask = bugTask;
 //		offlineBug = bugTask.getTaskData();
-		bugId = AbstractRepositoryTask.getTaskIdAsInt(bugTask.getHandleIdentifier());
+		id = AbstractRepositoryTask.getTaskId(bugTask.getHandleIdentifier());
 		bugTitle = "";
 //		this.offline = offline;
 	}
@@ -80,10 +80,10 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 		return null;
 	}
 
-	@Override
-	public int getBugId() {
-		return bugId;
-	}
+//	@Override
+//	public int getId() {
+//		return id;
+//	}
 
 //	/**
 //	 * Returns the online server bug for this input
@@ -121,18 +121,18 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 	// }
 	//
 	// }
-	/**
-	 * Returns true if the argument is a bug report editor input on the same bug
-	 * id.
-	 */
-	@Override
-	public boolean equals(Object o) {
-		if (o instanceof BugzillaTaskEditorInput) {
-			BugzillaTaskEditorInput input = (BugzillaTaskEditorInput) o;
-			return getBugId() == input.getBugId();
-		}
-		return false;
-	}
+//	/**
+//	 * Returns true if the argument is a bug report editor input on the same bug
+//	 * id.
+//	 */
+//	@Override
+//	public boolean equals(Object o) {
+//		if (o instanceof BugzillaTaskEditorInput) {
+//			BugzillaTaskEditorInput input = (BugzillaTaskEditorInput) o;
+//			return getBugId() == input.getBugId();
+//		}
+//		return false;
+//	}
 
 	/**
 	 * @return Returns the <code>BugzillaTask</code>

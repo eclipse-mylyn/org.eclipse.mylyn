@@ -53,7 +53,7 @@ public interface IRepositoryTaskSelection extends ISelection {
 	/**
 	 * @return The id of the Bugzilla object that the selection was on.
 	 */
-	public int getId();
+	public String getId();
 
 	/**
 	 * Sets the id of the Bugzilla object that the selection was on.
@@ -61,7 +61,7 @@ public interface IRepositoryTaskSelection extends ISelection {
 	 * @param id
 	 *            The id of the bug.
 	 */
-	public void setId(int id);
+	public void setId(String id);
 
 	/**
 	 * @return The server of the Bugzilla object that the selection was on, or

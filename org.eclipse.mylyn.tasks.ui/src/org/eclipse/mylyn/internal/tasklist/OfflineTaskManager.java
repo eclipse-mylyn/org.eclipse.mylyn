@@ -424,9 +424,9 @@ public class OfflineTaskManager {
 	 * @return The id that a new offline bug should use. The value changes each
 	 *         time this method is called.
 	 */
-	public int getNextOfflineBugId() {
+	public String getNextOfflineBugId() {
 		latestNewBugId++;
-		return latestNewBugId;
+		return ""+latestNewBugId;
 	}
 
 	/**
@@ -437,11 +437,11 @@ public class OfflineTaskManager {
 	 * @return The index of the bug in the array if it exists, else -1. Locally
 	 *         created bugs are ignored.
 	 */
-	public int find(String repositoryUrl, int id) {
+	public int find(String repositoryUrl, String id) {
 		for (int i = 0; i < list.size(); i++) {
 			RepositoryTaskData currBug = list.get(i);
 			if (currBug != null && currBug.getRepositoryUrl() != null
-					&& (currBug.getRepositoryUrl().equals(repositoryUrl) && currBug.getId() == id)
+					&& (currBug.getRepositoryUrl().equals(repositoryUrl) && currBug.getId().equals(id))
 					&& !currBug.isLocallyCreated())
 				return i;
 		}
@@ -449,8 +449,8 @@ public class OfflineTaskManager {
 	}
 
 	// TODO: move to plugin
-	public static RepositoryTaskData findBug(String repositoryUrl, int bugId) {
-		int location = MylarTaskListPlugin.getDefault().getOfflineReportsFile().find(repositoryUrl, bugId);
+	public static RepositoryTaskData findBug(String repositoryUrl, String taskId) {
+		int location = MylarTaskListPlugin.getDefault().getOfflineReportsFile().find(repositoryUrl, taskId);
 		if (location != -1) {
 			return MylarTaskListPlugin.getDefault().getOfflineReportsFile().elements().get(location);
 		}

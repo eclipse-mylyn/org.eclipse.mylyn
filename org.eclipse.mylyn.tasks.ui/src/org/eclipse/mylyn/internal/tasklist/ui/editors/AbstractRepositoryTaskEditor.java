@@ -284,7 +284,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 					RepositoryTaskOutlineNode n = (RepositoryTaskOutlineNode) select;
 
 					if (n != null && lastSelected != null
-							&& OutlineTools.getHandle(n).equals(OutlineTools.getHandle(lastSelected))) {
+							&& ContentOutlineTools.getHandle(n).equals(ContentOutlineTools.getHandle(lastSelected))) {
 						// we don't need to set the selection if it is already
 						// set
 						return;

@@ -55,7 +55,7 @@ public class NewBugzillaReport extends RepositoryTaskData implements Serializabl
 	 * Creates a new <code>NewBugModel</code>. The id chosen for this bug is
 	 * based on the id of the last <code>NewBugModel</code> that was created.
 	 */
-	public NewBugzillaReport(String repositoryURL, int offlineId) {
+	public NewBugzillaReport(String repositoryURL, String offlineId) {
 		super(new BugzillaAttributeFactory(), BugzillaPlugin.REPOSITORY_KIND, repositoryURL, offlineId);
 	}
 

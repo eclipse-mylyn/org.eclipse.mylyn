@@ -34,6 +34,10 @@ import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
+/**
+ * @author Rob Elves
+ * @author Mik Kersten
+ */
 public class RepositoryReportFactoryTest extends TestCase {
 
 	RepositoryReportFactory factory = RepositoryReportFactory.getInstance();
@@ -44,7 +48,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 		TaskRepository repository = getRepository(BugzillaPlugin.REPOSITORY_KIND, URL);
 
 		RepositoryTaskData report = new RepositoryTaskData(attributeFactory, BugzillaPlugin.REPOSITORY_KIND, repository
-				.getUrl(), bugid);
+				.getUrl(), ""+bugid);
 		BugzillaRepositoryUtil.setupExistingBugAttributes(repository.getUrl(), report);
 		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(),
 				null);
@@ -70,7 +74,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 	}
 
 	public void testBugNotFound222() throws Exception {
-		int bugid = -1;
+		String bugid = "-1";
 		String errorMessage = "";
 		TaskRepository repository = getRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
@@ -88,7 +92,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 	}
 
 	public void testInvalidCredentials222() throws Exception {
-		int bugid = 1;
+		String bugid = "1";
 		String errorMessage = "";
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
@@ -108,7 +112,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 	}
 
 	public void testReadingReport() throws Exception {
-		int bugid = 2;
+		String bugid = "2";
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 
@@ -226,7 +230,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 	}
 
 	public void testReadingReport2201() throws Exception {
-		int bugid = 1;
+		String bugid = "1";
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_2201_URL);
 
@@ -275,7 +279,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 	}
 
 	public void testReadingReport2201Eclipse() throws Exception {
-		int bugid = 24448;
+		String bugid = "24448";
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
 
@@ -326,7 +330,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 	}
 
 	public void testReadingReport220() throws Exception {
-		int bugid = 1;
+		String bugid = "1";
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_220_URL);
 
@@ -368,7 +372,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 	}
 
 	public void testReadingReport218() throws Exception {
-		int bugid = 1;
+		String bugid = "1";
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_218_URL);
 
@@ -409,7 +413,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 	}
 
 	public void testBugReportAPI() throws Exception {
-		int bugid = 3;
+		String bugid = "3";
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 

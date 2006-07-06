@@ -40,7 +40,7 @@ public class RepositoryTaskOutlinePage extends ContentOutlinePage {
 								.getFirstElement();
 						IRepositoryTaskSelection brs2 = ((IRepositoryTaskSelection) ((IStructuredSelection) selection)
 								.getFirstElement());
-						if (OutlineTools.getHandle(brs1).compareTo(OutlineTools.getHandle(brs2)) == 0) {
+						if (ContentOutlineTools.getHandle(brs1).compareTo(ContentOutlineTools.getHandle(brs2)) == 0) {
 							// don't need to make a selection for the same
 							// element
 							return;

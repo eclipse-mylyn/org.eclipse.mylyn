@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchResultView;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 
 /**
@@ -57,26 +58,13 @@ public class OpenBugsAction extends Action {
 			// go through each of the selected items and show it in an editor
 			for (Iterator<BugzillaQueryHit> it = selection.iterator(); it.hasNext();) {
 				BugzillaQueryHit repositoryHit = it.next();
-				// try {
-				// BugzillaQueryHit repositoryHit = (BugzillaQueryHit)
-				// match.getElement();
-				String bugUrl = BugzillaRepositoryUtil.getBugUrlWithoutLogin(repositoryHit.getRepositoryUrl(),
-						repositoryHit.getId());
-				TaskUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), "" + repositoryHit.getId(), bugUrl);
-
-				// String repositoryUrl = (String)
-				// marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_REPOSITORY);
-				// Integer id = (Integer)
-				// marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_ID);
-				// BugzillaUITools.show(repositoryUrl, id.intValue());
-				// } catch (CoreException e) {
-				// // if an error occurs, handle and log it
-				// ExceptionHandler.handle(e,
-				// SearchMessages.Search_Error_search_title,
-				// SearchMessages.Search_Error_search_message); //$NON-NLS-2$
-				// //$NON-NLS-1$
-				// BugzillaPlugin.log(e.getStatus());
-				// }
+				try {
+					int id = Integer.parseInt(repositoryHit.getId());
+					String bugUrl = BugzillaRepositoryUtil.getBugUrlWithoutLogin(repositoryHit.getRepositoryUrl(), id);
+					TaskUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), "" + repositoryHit.getId(), bugUrl);
+				} catch (NumberFormatException e) {
+					MylarStatusHandler.fail(e, "Could not open, malformed id: " + repositoryHit.getId(), true);
+				}
 			}
 
 		}

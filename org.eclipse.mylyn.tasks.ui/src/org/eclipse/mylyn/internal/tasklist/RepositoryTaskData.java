@@ -34,7 +34,7 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 
 	public static final String VAL_STATUS_NEW = "NEW";
 	
-	private int reportID;
+	private String reportID;
 
 	private boolean hasChanges = false;
 	
@@ -85,7 +85,7 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 
 	protected String repositoryKind;
 
-	public RepositoryTaskData(AbstractAttributeFactory factory, String repositoryKind, String repositoryURL, int id) {
+	public RepositoryTaskData(AbstractAttributeFactory factory, String repositoryKind, String repositoryURL, String id) {
 		super(factory);
 		this.reportID = id;
 		this.repositoryKind = repositoryKind;
@@ -352,7 +352,7 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 		this.newAttachment = newAttachment;
 	}
 	
-	public int getId() {
+	public String getId() {
 		return reportID;
 	}
 

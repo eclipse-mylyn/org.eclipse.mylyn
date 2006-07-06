@@ -31,7 +31,7 @@ public class NewBugWizardTest extends TestCase {
 
 	public void testPlatformOptions() throws Exception {
 
-		NewBugzillaReport newReport = new NewBugzillaReport(IBugzillaConstants.TEST_BUGZILLA_220_URL, 1);	
+		NewBugzillaReport newReport = new NewBugzillaReport(IBugzillaConstants.TEST_BUGZILLA_220_URL, "1");	
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_220_URL);
 		BugzillaRepositoryUtil.setupNewBugAttributes(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), newReport, null);

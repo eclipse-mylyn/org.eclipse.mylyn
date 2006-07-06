@@ -63,9 +63,10 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 				BugzillaPlugin.REPOSITORY_KIND, bugzillaTask.getRepositoryUrl());
 		Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
 		try {
+			int bugId = Integer.parseInt(AbstractRepositoryTask.getTaskId(bugzillaTask.getHandleIdentifier()));
+
 			return BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository
-					.getPassword(), proxySettings, repository.getCharacterEncoding(), AbstractRepositoryTask
-					.getTaskIdAsInt(bugzillaTask.getHandleIdentifier()));
+					.getPassword(), proxySettings, repository.getCharacterEncoding(), bugId);
 		} catch (final LoginException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, 0, "Report download failed. Ensure proper repository configuration of " + bugzillaTask.getRepositoryUrl() + " in "
 					+ TaskRepositoriesView.NAME + ".", e ));

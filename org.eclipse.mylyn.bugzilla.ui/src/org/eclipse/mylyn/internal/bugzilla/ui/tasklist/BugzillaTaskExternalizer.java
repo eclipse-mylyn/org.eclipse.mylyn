@@ -227,7 +227,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	 */
 	public boolean readBugReport(BugzillaTask bugzillaTask) {
 		RepositoryTaskData tempBug = OfflineTaskManager.findBug(bugzillaTask.getRepositoryUrl(), AbstractRepositoryTask
-				.getTaskIdAsInt(bugzillaTask.getHandleIdentifier()));
+				.getTaskId(bugzillaTask.getHandleIdentifier()));
 		if (tempBug == null) {
 			bugzillaTask.setTaskData(null);
 			return true;
@@ -274,7 +274,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 			}
 		}
 		BugzillaQueryHit hit = new BugzillaQueryHit(label, priority, query.getRepositoryUrl(), AbstractRepositoryTask
-				.getTaskIdAsInt(handle), null, status);
+				.getTaskId(handle), null, status);
 		
 		if (element.hasAttribute(KEY_NOTIFIED_INCOMING) && element.getAttribute(KEY_NOTIFIED_INCOMING).compareTo(VAL_TRUE) == 0) {
 			hit.setNotified(true);

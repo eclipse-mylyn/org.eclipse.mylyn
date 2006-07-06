@@ -19,6 +19,7 @@ import java.util.List;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.Comment;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
@@ -46,13 +47,15 @@ public class BugzillaTask extends AbstractRepositoryTask {
 	}
 
 	private void initFromHandle() {
-		int id = AbstractRepositoryTask.getTaskIdAsInt(getHandleIdentifier());
+		String id = AbstractRepositoryTask.getTaskId(getHandleIdentifier());
 		String repositoryUrl = getRepositoryUrl();
-		if (repositoryUrl != null) {
-			String url = BugzillaRepositoryUtil.getBugUrlWithoutLogin(repositoryUrl, id);
+		try {
+			String url = BugzillaRepositoryUtil.getBugUrlWithoutLogin(repositoryUrl, Integer.parseInt(id));
 			if (url != null) {
 				super.setUrl(url);
 			}
+		} catch (Exception e) {
+			MylarStatusHandler.fail(e, "Task initialization failed due to malformed id or URL: " + getHandleIdentifier(), false);
 		}
 	}
 	
@@ -62,9 +65,9 @@ public class BugzillaTask extends AbstractRepositoryTask {
 			return super.getDescription();
 		} else {
 			if (!isSynchronizing()) {
-				return AbstractRepositoryTask.getTaskIdAsInt(getHandleIdentifier()) + ": <Could not find bug>";
+				return AbstractRepositoryTask.getTaskId(getHandleIdentifier()) + ": <Could not find bug>";
 			} else {
-				return AbstractRepositoryTask.getTaskIdAsInt(getHandleIdentifier()) + ":";
+				return AbstractRepositoryTask.getTaskId(getHandleIdentifier()) + ":";
 			}
 		}
 	}
@@ -99,8 +102,12 @@ public class BugzillaTask extends AbstractRepositoryTask {
 	public String getUrl() {
 		// fix for bug 103537 - should login automatically, but dont want to
 		// show the login info in the query string
-		return BugzillaRepositoryUtil.getBugUrlWithoutLogin(getRepositoryUrl(), AbstractRepositoryTask
-				.getTaskIdAsInt(handle));
+		try {
+			return BugzillaRepositoryUtil.getBugUrlWithoutLogin(getRepositoryUrl(), 
+				Integer.parseInt(AbstractRepositoryTask.getTaskId(handle)));
+		} catch (NumberFormatException nfe) {
+			return super.getUrl();
+		}
 	}
 
 	@Override

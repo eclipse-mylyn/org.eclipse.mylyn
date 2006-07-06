@@ -21,7 +21,7 @@ public class RepositoryTaskSelection implements IRepositoryTaskSelection {
 	/**
 	 * The id of the Bugzilla object that the selection was on.
 	 */
-	protected int id;
+	protected String id;
 
 	/** The server of the Bugzilla object that the selection was on. */
 	protected String server;
@@ -46,7 +46,7 @@ public class RepositoryTaskSelection implements IRepositoryTaskSelection {
 	 * @param server
 	 *            The server of the Bugzilla object that the selection was on.
 	 */
-	public RepositoryTaskSelection(int id, String server, String summary) {
+	public RepositoryTaskSelection(String id, String server, String summary) {
 		this(id, server, null, null, summary);
 	}
 
@@ -61,7 +61,7 @@ public class RepositoryTaskSelection implements IRepositoryTaskSelection {
 	 * @param contents
 	 *            The contents of the selection.
 	 */
-	public RepositoryTaskSelection(int id, String server, String contents, boolean isDescription, String summary) {
+	public RepositoryTaskSelection(String id, String server, String contents, boolean isDescription, String summary) {
 		this(id, server, contents, null, summary);
 		this.isDescription = isDescription;
 	}
@@ -79,7 +79,7 @@ public class RepositoryTaskSelection implements IRepositoryTaskSelection {
 	 *            comment was not selected, then this should be
 	 *            <code>null</code>.
 	 */
-	public RepositoryTaskSelection(int id, String server, Comment comment, String summary) {
+	public RepositoryTaskSelection(String id, String server, Comment comment, String summary) {
 		this(id, server, null, comment, summary);
 	}
 
@@ -97,7 +97,7 @@ public class RepositoryTaskSelection implements IRepositoryTaskSelection {
 	 *            comment was not selected, then this should be
 	 *            <code>null</code>.
 	 */
-	public RepositoryTaskSelection(int id, String server, String contents, Comment comment, String summary) {
+	public RepositoryTaskSelection(String id, String server, String contents, Comment comment, String summary) {
 		this.id = id;
 		this.server = server;
 		this.contents = contents;
@@ -125,11 +125,11 @@ public class RepositoryTaskSelection implements IRepositoryTaskSelection {
 		this.contents = contents;
 	}
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

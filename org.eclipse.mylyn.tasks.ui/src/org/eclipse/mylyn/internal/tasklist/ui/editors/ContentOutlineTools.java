@@ -10,13 +10,12 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasklist.ui.editors;
 
-import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 
 /**
  * @author Rob Elves
  * @author Mik Kersten
  */
-public class OutlineTools {
+public class ContentOutlineTools {
 
 	/** The default string used for locally created bugs. */
 	public static final String OFFLINE_SERVER_DEFAULT = "[local]";
@@ -54,16 +53,16 @@ public class OutlineTools {
 		return name;
 	}
 
-	public static String getHandle(RepositoryTaskData taskData) {
-		return getHandle(taskData.getRepositoryUrl(), taskData.getId());
-	}
+//	public static String getHandle(RepositoryTaskData taskData) {
+//		return getHandle(taskData.getRepositoryUrl(), taskData.getId());
+//	}
+//
+//	public static String getHandle(String server, String id) {
+//		return server + ";" + id;
+//	}
 
-	public static String getHandle(String server, int id) {
-		return server + ";" + id;
-	}
-
-	public static String getName(RepositoryTaskData taskData) {
-		return taskData.getRepositoryUrl() + ": Bug#: " + taskData.getId() + ": " + taskData.getSummary();
-	}
+//	public static String getName(RepositoryTaskData taskData) {
+//		return taskData.getRepositoryUrl() + ": Bug#: " + taskData.getId() + ": " + taskData.getSummary();
+//	}
 
 }
