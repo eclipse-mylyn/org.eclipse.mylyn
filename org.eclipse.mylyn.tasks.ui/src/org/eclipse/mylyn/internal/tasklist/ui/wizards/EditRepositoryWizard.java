@@ -29,11 +29,11 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 
 	private AbstractRepositorySettingsPage abstractRepositorySettingsPage;
 
-	private TaskRepository oldRepository;
+	private TaskRepository repository;
 
 	public EditRepositoryWizard(TaskRepository repository) {
 		super();
-		oldRepository = repository;
+		this.repository = repository;
 		AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
 				repository.getKind());
 		abstractRepositorySettingsPage = connector.getSettingsPage();
@@ -48,16 +48,17 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 	@Override
 	public boolean performFinish() {
 		if (canFinish()) {
-			String oldUrl = oldRepository.getUrl();
+			String oldUrl = repository.getUrl();
 			String newUrl = abstractRepositorySettingsPage.getServerUrl();
 			MylarTaskListPlugin.getTaskListManager().refactorRepositoryUrl(oldUrl, newUrl);
 			
-			oldRepository.flushAuthenticationCredentials();
-			oldRepository.setUrl(newUrl);
-			oldRepository.setVersion(abstractRepositorySettingsPage.getVersion());
-			oldRepository.setCharacterEncoding(abstractRepositorySettingsPage.getCharacterEncoding());
+			repository.flushAuthenticationCredentials();
+			repository.setUrl(newUrl);
+			repository.setVersion(abstractRepositorySettingsPage.getVersion());
+			repository.setCharacterEncoding(abstractRepositorySettingsPage.getCharacterEncoding());
 //			oldRepository.setTimeZoneId(abstractRepositorySettingsPage.getTimeZoneId());			
-			oldRepository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(), abstractRepositorySettingsPage.getPassword());
+			repository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(), abstractRepositorySettingsPage.getPassword());
+			
 			MylarTaskListPlugin.getRepositoryManager().saveRepositories();
 			
 			// MylarTaskListPlugin.getRepositoryManager().removeRepository(oldRepository);
@@ -85,5 +86,9 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 	/** public for testing */
 	public AbstractRepositorySettingsPage getSettingsPage() {
 		return abstractRepositorySettingsPage;
+	}
+
+	public TaskRepository getRepository() {
+		return repository;
 	}
 }

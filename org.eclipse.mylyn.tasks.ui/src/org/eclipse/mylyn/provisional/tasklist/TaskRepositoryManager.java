@@ -362,38 +362,6 @@ public class TaskRepositoryManager {
 			return false;
 		}
 		return true;
-		// for (AbstractRepositoryConnector repositoryConnector :
-		// repositoryConnectors.values()) {
-		// if
-		// (repositoryMap.containsKey(repositoryConnector.getRepositoryType()))
-		// {
-		// String repositoriesToStore = "";
-		// for (TaskRepository repository :
-		// repositoryMap.get(repositoryConnector.getRepositoryType())) {
-		//					
-		// repositoriesToStore += repository.getUrl() + PREF_STORE_DELIM;
-		//
-		// for (Map.Entry<String, String> property :
-		// repository.getProperties().entrySet()) {
-		// String key = repository.getUrl() + PROPERTY_DELIM +
-		// property.getKey();
-		// MylarTaskListPlugin.getMylarCorePrefs().setValue(key,
-		// property.getValue());
-		// }
-		//
-		// String prefIdSyncTime = repository.getUrl() + PROPERTY_DELIM +
-		// PROPERTY_SYNCTIMESTAMP;
-		// if (repository.getSyncTimeStamp() != null) {
-		// MylarTaskListPlugin.getMylarCorePrefs().setValue(prefIdSyncTime,
-		// repository.getSyncTimeStamp());
-		// }
-		// }
-		// String prefId = PREF_REPOSITORIES +
-		// repositoryConnector.getRepositoryType();
-		// MylarTaskListPlugin.getMylarCorePrefs().setValue(prefId,
-		// repositoriesToStore);
-		// }
-		// }
 	}
 
 	/**

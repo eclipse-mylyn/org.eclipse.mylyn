@@ -27,47 +27,46 @@ import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 public class TaskRepository {
 
 	public static final String DEFAULT_CHARACTER_ENCODING = "UTF-8";
-	
+
 	public static final String AUTH_PASSWORD = "org.eclipse.mylar.tasklist.repositories.password"; //$NON-NLS-1$ 
 
 	public static final String AUTH_USERNAME = "org.eclipse.mylar.tasklist.repositories.username"; //$NON-NLS-1$ 
 
 	public static final String NO_VERSION_SPECIFIED = "unknown";
-	
+
 	private static final String AUTH_SCHEME = "Basic";
 
 	private static final String AUTH_REALM = "";
 
-    private static final URL DEFAULT_URL;
-    
-    static {
-      URL u = null;
-      try {
-        u = new URL("http://eclipse.org/mylar");
-      } catch(Exception ex) {
-        // TODO ?
-      }
-      DEFAULT_URL = u; 
-    }
-	    
-    private Map<String, String> properties = new HashMap<String, String>();
-	
+	private static final URL DEFAULT_URL;
+
+	static {
+		URL u = null;
+		try {
+			u = new URL("http://eclipse.org/mylar");
+		} catch (Exception ex) {
+			// TODO ?
+		}
+		DEFAULT_URL = u;
+	}
+
+	private Map<String, String> properties = new HashMap<String, String>();
+
 	/**
 	 * for testing purposes
 	 */
 	public TaskRepository(String kind, String serverUrl) {
 		this(kind, serverUrl, NO_VERSION_SPECIFIED);
 	}
-	 
+
 	/**
-	 * for testing purposes
-	 * sets repository time zone to local default time zone
+	 * for testing purposes sets repository time zone to local default time zone
 	 * sets character encoding to DEFAULT_CHARACTER_ENCODING
-	 */ 
+	 */
 	public TaskRepository(String kind, String serverUrl, String version) {
-		this(kind, serverUrl, version, DEFAULT_CHARACTER_ENCODING, TimeZone.getDefault().getID());		
+		this(kind, serverUrl, version, DEFAULT_CHARACTER_ENCODING, TimeZone.getDefault().getID());
 	}
-	
+
 	public TaskRepository(String kind, String serverUrl, String version, String encoding, String timeZoneId) {
 		this.properties.put(TaskRepositoryManager.PROPERTY_KIND, kind);
 		this.properties.put(TaskRepositoryManager.PROPERTY_URL, serverUrl);
@@ -75,7 +74,7 @@ public class TaskRepository {
 		this.properties.put(TaskRepositoryManager.PROPERTY_ENCODING, encoding);
 		this.properties.put(TaskRepositoryManager.PROPERTY_TIMEZONE, timeZoneId);
 	}
-	
+
 	public TaskRepository(String kind, String serverUrl, Map<String, String> properties) {
 		this.properties.put(TaskRepositoryManager.PROPERTY_KIND, kind);
 		this.properties.put(TaskRepositoryManager.PROPERTY_URL, serverUrl);
@@ -83,16 +82,16 @@ public class TaskRepository {
 	}
 
 	public String getUrl() {
-		return properties.get(TaskRepositoryManager.PROPERTY_URL);		
+		return properties.get(TaskRepositoryManager.PROPERTY_URL);
 	}
-	
+
 	public void setUrl(String newUrl) {
 		properties.put(TaskRepositoryManager.PROPERTY_URL, newUrl);
 	}
-	
+
 	public boolean hasCredentials() {
 		String username = getUserName();
-		String password = getPassword();		
+		String password = getPassword();
 		return username != null && password != null;
 	}
 
@@ -141,7 +140,7 @@ public class TaskRepository {
 			MylarStatusHandler.fail(e, "could not set authorization", true);
 		}
 	}
-	
+
 	public void flushAuthenticationCredentials() {
 		try {
 			try {
@@ -157,10 +156,10 @@ public class TaskRepository {
 	private Map getAuthInfo() {
 		try {
 			return Platform.getAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME);
-		} catch(MalformedURLException ex) {
+		} catch (MalformedURLException ex) {
 			return Platform.getAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME);
 		}
-    }
+	}
 
 	@Override
 	public boolean equals(Object object) {
@@ -188,45 +187,45 @@ public class TaskRepository {
 		return properties.get(TaskRepositoryManager.PROPERTY_KIND);
 	}
 
-	
 	public String getVersion() {
 		final String version = properties.get(TaskRepositoryManager.PROPERTY_VERSION);
-		return version==null || "".equals(version) ? NO_VERSION_SPECIFIED : version;
+		return version == null || "".equals(version) ? NO_VERSION_SPECIFIED : version;
 	}
-	
+
 	public void setVersion(String ver) {
 		properties.put(TaskRepositoryManager.PROPERTY_VERSION, ver == null ? NO_VERSION_SPECIFIED : ver);
 	}
 
-	
 	public String getCharacterEncoding() {
 		final String encoding = properties.get(TaskRepositoryManager.PROPERTY_ENCODING);
-		return encoding==null || "".equals(encoding) ? DEFAULT_CHARACTER_ENCODING : encoding;
+		return encoding == null || "".equals(encoding) ? DEFAULT_CHARACTER_ENCODING : encoding;
 	}
-	
+
 	/**
 	 * for testing purposes
 	 */
 	public void setCharacterEncoding(String characterEncoding) {
-		properties.put(TaskRepositoryManager.PROPERTY_ENCODING, characterEncoding == null ? DEFAULT_CHARACTER_ENCODING : characterEncoding);
+		properties.put(TaskRepositoryManager.PROPERTY_ENCODING, characterEncoding == null ? DEFAULT_CHARACTER_ENCODING
+				: characterEncoding);
 	}
-	
+
 	public String getTimeZoneId() {
 		final String timeZoneId = properties.get(TaskRepositoryManager.PROPERTY_TIMEZONE);
-		return timeZoneId==null || "".equals(timeZoneId) ? TimeZone.getDefault().getID() : timeZoneId;
+		return timeZoneId == null || "".equals(timeZoneId) ? TimeZone.getDefault().getID() : timeZoneId;
 	}
 
 	public void setTimeZoneId(String timeZoneId) {
-		this.properties.put(TaskRepositoryManager.PROPERTY_TIMEZONE, timeZoneId == null ? TimeZone.getDefault().getID() : timeZoneId);
+		this.properties.put(TaskRepositoryManager.PROPERTY_TIMEZONE, timeZoneId == null ? TimeZone.getDefault().getID()
+				: timeZoneId);
 	}
 
 	public String getSyncTimeStamp() {
-		return this.properties.get(TaskRepositoryManager.PROPERTY_SYNCTIMESTAMP);		
+		return this.properties.get(TaskRepositoryManager.PROPERTY_SYNCTIMESTAMP);
 	}
 
 	/**
-	 * ONLY for use by TaskRepositoryManager.
-	 * To set the sync time call TaskRepositoryManager.setSyncTime(repository, date);
+	 * ONLY for use by TaskRepositoryManager. To set the sync time call
+	 * TaskRepositoryManager.setSyncTime(repository, date);
 	 */
 	public void setSyncTimeStamp(String syncTime) {
 		this.properties.put(TaskRepositoryManager.PROPERTY_SYNCTIMESTAMP, syncTime);
