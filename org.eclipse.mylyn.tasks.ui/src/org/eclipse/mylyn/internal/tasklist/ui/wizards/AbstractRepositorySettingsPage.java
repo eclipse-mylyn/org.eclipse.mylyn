@@ -70,7 +70,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	// private Combo timeZonesCombo;
 
-	private Button anonymousButton;
+	protected Button anonymousButton;
 
 	private String oldUsername;
 
@@ -93,8 +93,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		setNeedsTimeZone(true);
 	}
 
-	public void createControl(final Composite parent) {
-		Composite container = new Composite(parent, SWT.NULL);
+	public void createControl(Composite parent) {
+		final Composite container = new Composite(parent, SWT.NULL);
 		FillLayout layout = new FillLayout();
 		container.setLayout(layout);
 
@@ -114,24 +114,21 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		serverUrlEditor.setErrorMessage("Server path must be a valid http(s):// url");
 
 		if (needsAnonymousLogin()) {
-			Label anonymousLabel = new Label(parent, SWT.NONE);
-			anonymousLabel.setText("");
-			anonymousButton = new Button(parent, SWT.CHECK);
+			anonymousButton = new Button(container, SWT.CHECK);
 			anonymousButton.setText("Anonymous Access");
-			if (repository != null) {
-				anonymousButton.setSelection(isAnonymousAccess());
-			}
 			anonymousButton.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent e) {
 					boolean selected = anonymousButton.getSelection();
-					updateAnonymousButton(selected, parent);
+					updateAnonymousButton(selected, container);
 				}
 
 				public void widgetDefaultSelected(SelectionEvent e) {
 					// ignore
 				}
 			});
-			updateAnonymousButton(anonymousButton.getSelection(), parent);
+
+			Label anonymousLabel = new Label(container, SWT.NONE);
+			anonymousLabel.setText("");
 		}
 
 		userNameEditor = new StringFieldEditor("", LABEL_USER, StringFieldEditor.UNLIMITED, container);
@@ -152,6 +149,14 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		}
 		// bug 131656: must set echo char after setting value on Mac
 		((RepositoryStringFieldEditor) passwordEditor).getTextControl().setEchoChar('*');
+
+		if (needsAnonymousLogin()) {
+			// do this after username and password widgets have been intialized
+			if (repository != null) {
+				anonymousButton.setSelection(isAnonymousAccess());
+			}
+			updateAnonymousButton(anonymousButton.getSelection(), container);
+		}
 
 		// TODO: put this back if we can't get the info from all connectors
 		// if (needsTimeZone()) {
