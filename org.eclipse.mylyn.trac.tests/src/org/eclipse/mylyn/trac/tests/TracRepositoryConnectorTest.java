@@ -11,13 +11,18 @@
 
 package org.eclipse.mylar.trac.tests;
 
+import java.net.MalformedURLException;
+
 import junit.framework.TestCase;
 
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.mylar.internal.tasklist.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylar.internal.trac.MylarTracPlugin;
 import org.eclipse.mylar.internal.trac.TracRepositoryConnector;
 import org.eclipse.mylar.internal.trac.TracTask;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -25,6 +30,8 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.mylar.provisional.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.trac.tests.support.TestFixture;
 import org.eclipse.mylar.trac.tests.support.XmlRpcServer.TestData;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Steffen Pingel
@@ -63,7 +70,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		repository.setTimeZoneId(ITracClient.TIME_ZONE);
 		repository.setCharacterEncoding(ITracClient.CHARSET);
 		repository.setVersion(version.name());
-		
+
 		manager.addRepository(repository);
 
 		AbstractRepositoryConnector abstractConnector = manager.getRepositoryConnector(kind);
@@ -97,12 +104,30 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertNotNull(task);
 		assertEquals(TracTask.class, task.getClass());
 		assertTrue(task.getDescription().contains("summary1"));
-		assertEquals(repository.getUrl() + ITracClient.TICKET_URL +	id, task.getUrl());
-		
+		assertEquals(repository.getUrl() + ITracClient.TICKET_URL + id, task.getUrl());
+
 		task = connector.createTaskFromExistingKey(repository, "does not exist");
 		assertNull(task);
 
 		task = connector.createTaskFromExistingKey(repository, Integer.MAX_VALUE + "");
 		assertNull(task);
 	}
+
+	public void testClientManagerChangeTaskRepositorySettings() throws MalformedURLException {
+		init(Version.TRAC_0_9);
+		ITracClient client = connector.getClientManager().getRepository(repository);
+		assertEquals(Version.TRAC_0_9, client.getVersion());
+
+		EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		WizardDialog dialog = new WizardDialog(shell, wizard);
+		dialog.create();
+
+		((TracRepositorySettingsPage) wizard.getSettingsPage()).setTracVersion(Version.XML_RPC);
+		assertTrue(wizard.performFinish());
+
+		client = connector.getClientManager().getRepository(repository);
+		assertEquals(Version.XML_RPC, client.getVersion());
+	}
+
 }

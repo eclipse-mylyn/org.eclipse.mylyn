@@ -75,7 +75,7 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 		accessTypeCombo.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				if (accessTypeCombo.getSelectionIndex() > 0) {
-					setVersion(versions[accessTypeCombo.getSelectionIndex()].name());
+					setVersion(versions[accessTypeCombo.getSelectionIndex() - 1].name());
 				}
 				getWizard().getContainer().updateButtons();
 			}
@@ -104,7 +104,7 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 		return false;
 	}
 
-	private Version getTracVersion() {
+	public Version getTracVersion() {
 		if (accessTypeCombo.getSelectionIndex() == 0) {
 			return null;
 		} else {
@@ -112,7 +112,7 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 		}
 	}
 
-	private void setTracVersion(Version version) {
+	public void setTracVersion(Version version) {
 		if (version == null) {
 			// select "Automatic"
 			accessTypeCombo.select(0);

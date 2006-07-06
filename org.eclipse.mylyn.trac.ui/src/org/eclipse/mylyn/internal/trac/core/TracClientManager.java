@@ -35,7 +35,9 @@ public class TracClientManager {
 		if (repository == null) {
 			repository = TracClientFactory.createClient(taskRepository.getUrl(), Version.fromVersion(taskRepository
 					.getVersion()), taskRepository.getUserName(), taskRepository.getPassword());
-			clientByUrl.put(taskRepository.getUrl(), repository);
+			// TODO need to get notified when task repositories are removed or
+			// settings are changed therefore disable caching for now
+			// clientByUrl.put(taskRepository.getUrl(), repository);
 		}
 		return repository;
 	}

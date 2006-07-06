@@ -5,6 +5,8 @@ Bundle-SymbolicName: org.eclipse.mylar.trac.tests
 Bundle-Version: 0.0.0
 Bundle-Localization: plugin
 Require-Bundle: org.junit,
+ org.eclipse.ui,
+ org.eclipse.core.runtime,
  org.apache.xmlrpc,
  org.eclipse.mylar.tasklist,
  org.eclipse.mylar.trac
