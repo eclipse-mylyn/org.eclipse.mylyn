@@ -33,14 +33,13 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.ZipFileUtil;
 import org.eclipse.mylar.internal.tasklist.RepositoryAttachment;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
-import org.eclipse.mylar.internal.tasklist.ui.wizards.CommonAddExistingTaskWizard;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylar.internal.tasklist.ui.wizards.CommonAddExistingTaskWizard;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.ui.PlatformUI;
@@ -138,7 +137,7 @@ public abstract class AbstractRepositoryConnector {
 	public abstract Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
 			Set<AbstractRepositoryTask> tasks) throws Exception;
 
-	public Wizard getAddExistingTaskWizard(TaskRepository repository) {
+	public IWizard getAddExistingTaskWizard(TaskRepository repository) {
 		return new CommonAddExistingTaskWizard(repository);
 	}
 	

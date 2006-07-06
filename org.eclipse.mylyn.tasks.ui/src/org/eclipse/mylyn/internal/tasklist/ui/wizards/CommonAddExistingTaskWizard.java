@@ -35,6 +35,7 @@ public class CommonAddExistingTaskWizard extends Wizard {
 	public CommonAddExistingTaskWizard(TaskRepository repository) {
 		this.repository = repository;
 		setNeedsProgressMonitor(true);
+		setWindowTitle(AddExistingTaskWizard.TITLE);
 		init();
 	}
 
