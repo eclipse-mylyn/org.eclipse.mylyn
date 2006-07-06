@@ -44,6 +44,8 @@ public class ScheduledTaskListSynchJob extends Job {
 	private static long count = 0;
 
 	private TaskListManager taskListManager;
+	
+	private List<TaskRepository> repositories = null;
 
 	public ScheduledTaskListSynchJob(long schedule, TaskListManager taskListManager) {
 		super(JOB_NAME);
@@ -67,7 +69,9 @@ public class ScheduledTaskListSynchJob extends Job {
 			}
 
 			taskList = taskListManager.getTaskList();
-			List<TaskRepository> repositories = MylarTaskListPlugin.getRepositoryManager().getAllRepositories();
+			if(repositories == null) {
+				repositories = MylarTaskListPlugin.getRepositoryManager().getAllRepositories();
+			}
 			monitor.beginTask(LABEL_TASK, repositories.size());
 
 			for (TaskRepository repository : repositories) {
@@ -109,6 +113,10 @@ public class ScheduledTaskListSynchJob extends Job {
 
 	public void setSchedule(long schedule) {
 		this.scheduleDelay = schedule;
+	}
+	
+	public void setRepositories(List<TaskRepository> repositories) {
+		this.repositories = repositories;
 	}
 
 	/**

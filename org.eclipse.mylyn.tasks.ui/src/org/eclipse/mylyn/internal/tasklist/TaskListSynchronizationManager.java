@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
 /**
  * @author Rob Elves
@@ -85,9 +86,16 @@ public class TaskListSynchronizationManager implements IPropertyChangeListener {
 		jobsQueue.add(jobToAdd);
 	}
 
-	public void synchNow(long delay) {
+	
+	/**
+	 * @param delay  sync delay (ms)
+	 * @param repositories used to scope sync to queries associated with given repositories, can be null (sync all repositories)
+	 */
+	public void synchNow(long delay, List<TaskRepository> repositories) {
 		cancelAll();
-		addJobToQueue(new ScheduledTaskListSynchJob(delay, MylarTaskListPlugin.getTaskListManager()));
+		ScheduledTaskListSynchJob job = new ScheduledTaskListSynchJob(delay, MylarTaskListPlugin.getTaskListManager());
+		job.setRepositories(repositories);
+		addJobToQueue(job);
 		startSynchJob();
 	}
 

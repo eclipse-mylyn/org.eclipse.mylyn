@@ -12,6 +12,8 @@ package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
 import java.io.UnsupportedEncodingException;
 import java.net.Proxy;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -31,6 +33,7 @@ import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskCategory;
+import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -227,7 +230,9 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 				}
 
 				TaskUiUtil.refreshAndOpenTaskListElement(newTask);
-				MylarTaskListPlugin.getSynchronizationManager().synchNow(0);
+				List<TaskRepository> repositoriesToSync = new ArrayList<TaskRepository>();
+				repositoriesToSync.add(repository);
+				MylarTaskListPlugin.getSynchronizationManager().synchNow(0, repositoriesToSync);
 				return;
 			}
 

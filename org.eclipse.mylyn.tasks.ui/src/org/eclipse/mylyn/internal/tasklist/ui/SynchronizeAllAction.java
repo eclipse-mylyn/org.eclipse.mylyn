@@ -28,7 +28,7 @@ public class SynchronizeAllAction implements IViewActionDelegate {
 	}
 
 	public void run(IAction action) {
-		MylarTaskListPlugin.getSynchronizationManager().synchNow(0);
+		MylarTaskListPlugin.getSynchronizationManager().synchNow(0, null);
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
