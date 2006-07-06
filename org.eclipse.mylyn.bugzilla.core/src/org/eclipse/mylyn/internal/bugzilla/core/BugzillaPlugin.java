@@ -201,7 +201,11 @@ public class BugzillaPlugin extends Plugin {
 	 *            the exception to log
 	 */
 	public static void log(Exception e) {
-		log(new Status(Status.ERROR, BugzillaPlugin.PLUGIN_ID, 0, e.getMessage(), e));
+		String message = e.getMessage();
+		if(e.getMessage() == null) {
+			message = e.getClass().toString();
+		}
+		log(new Status(Status.ERROR, BugzillaPlugin.PLUGIN_ID, 0, message, e));
 	}
 
 	/**
