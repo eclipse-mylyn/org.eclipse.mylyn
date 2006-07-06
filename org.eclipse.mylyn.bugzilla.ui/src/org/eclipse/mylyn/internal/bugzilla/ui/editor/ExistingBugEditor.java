@@ -12,8 +12,11 @@ package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -48,6 +51,7 @@ import org.eclipse.mylar.internal.tasklist.ui.editors.AbstractRepositoryTaskEdit
 import org.eclipse.mylar.internal.tasklist.ui.editors.ExistingBugEditorInput;
 import org.eclipse.mylar.internal.tasklist.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylar.internal.tasklist.ui.editors.RepositoryTaskSelection;
+import org.eclipse.mylar.internal.tasklist.ui.views.DatePicker;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -59,6 +63,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -71,7 +76,9 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * An editor used to view a bug report that exists on a server. It uses a
@@ -81,6 +88,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  * @author Rob Elves (adaption to Eclipse Forms)
  */
 public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
+
+	private static final String LABEL_TIME_TRACKING = "Bugzilla Time Tracking";
 
 	private static final String REASSIGN_BUG_TO = "Reassign  bug to";
 
@@ -120,6 +129,8 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 
 	protected Text deadlineText;
 
+	protected DatePicker deadlinePicker;
+	
 	/**
 	 * Creates a new <code>ExistingBugEditor</code>.
 	 */
@@ -398,8 +409,6 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		FormToolkit toolkit = new FormToolkit(composite.getDisplay());
 		addCCList(toolkit, "", composite);
 		
-		if (getRepositoryTaskData().getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()) != null)
-			addBugzillaTimeTracker(toolkit, composite);
 		try {
 			addKeywordsList(toolkit, getRepositoryTaskData().getAttributeValue(RepositoryTaskAttribute.KEYWORDS),
 					composite);
@@ -408,14 +417,32 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 					"Could not retrieve keyword list, ensure proper configuration in " + TaskRepositoriesView.NAME
 							+ "\n\nError reported: " + e.getMessage());
 		}
-
+		
+		if (getRepositoryTaskData().getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()) != null)
+			addBugzillaTimeTracker(toolkit, composite);
 	}
 
 	protected void addBugzillaTimeTracker(FormToolkit toolkit, Composite parent) {
+		
+		Section timeSection = toolkit.createSection(parent, ExpandableComposite.TREE_NODE);
+		timeSection.setText(LABEL_TIME_TRACKING);
+		GridLayout gl = new GridLayout();
+		GridData gd = new GridData(SWT.FILL, SWT.NONE, true, false);
+		gd.horizontalSpan = 4;
+		timeSection.setLayout(gl);
+		timeSection.setLayoutData(gd);
+		
+		Composite timeComposite = toolkit.createComposite(timeSection);
+		gl = new GridLayout(4, true);
+		timeComposite.setLayout(gl);
+		gd = new GridData();
+		gd.horizontalSpan = 5;
+		timeComposite.setLayoutData(gd);
+		
 		RepositoryTaskData data = getRepositoryTaskData(); 
 		
-		toolkit.createLabel(parent, BugzillaReportElement.ESTIMATED_TIME.toString());
-		estimateText = toolkit.createText(parent, data.getAttributeValue(BugzillaReportElement.ESTIMATED_TIME.getKeyString()));
+		toolkit.createLabel(timeComposite, BugzillaReportElement.ESTIMATED_TIME.toString());
+		estimateText = toolkit.createText(timeComposite, data.getAttributeValue(BugzillaReportElement.ESTIMATED_TIME.getKeyString()), SWT.BORDER);
 		estimateText.setFont(TEXT_FONT);
 		estimateText.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		estimateText.addModifyListener(new ModifyListener() {
@@ -425,24 +452,24 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 			}
 		});
 		
-		toolkit.createLabel(parent, "Current Estimate:");
-		Text currentEstimate = toolkit.createText(parent, 
+		toolkit.createLabel(timeComposite, "Current Estimate:");
+		Text currentEstimate = toolkit.createText(timeComposite, 
 				"" + (Float.parseFloat(data.getAttributeValue(BugzillaReportElement.ACTUAL_TIME.getKeyString())) +
 				      Float.parseFloat(data.getAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString())))
-		); // TODO Remove border?
+		);
 		currentEstimate.setFont(TEXT_FONT);
 		currentEstimate.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		currentEstimate.setEditable(false);
 		
-		toolkit.createLabel(parent, BugzillaReportElement.ACTUAL_TIME.toString());
-		actualText = toolkit.createText(parent, data.getAttributeValue(BugzillaReportElement.ACTUAL_TIME.getKeyString()));
+		toolkit.createLabel(timeComposite, BugzillaReportElement.ACTUAL_TIME.toString());
+		actualText = toolkit.createText(timeComposite, data.getAttributeValue(BugzillaReportElement.ACTUAL_TIME.getKeyString()));
 		actualText.setFont(TEXT_FONT);
 		actualText.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		actualText.setEditable(false);
 				
-		data.setAttributeValue(BugzillaReportElement.WORK_TIME.getKeyString(), "0.0");
-		toolkit.createLabel(parent, BugzillaReportElement.WORK_TIME.toString());
-		addTimeText = toolkit.createText(parent, data.getAttributeValue(BugzillaReportElement.WORK_TIME.getKeyString()));
+		data.setAttributeValue(BugzillaReportElement.WORK_TIME.getKeyString(), "0");
+		toolkit.createLabel(timeComposite, BugzillaReportElement.WORK_TIME.toString());
+		addTimeText = toolkit.createText(timeComposite, data.getAttributeValue(BugzillaReportElement.WORK_TIME.getKeyString()), SWT.BORDER);
 		addTimeText.setFont(TEXT_FONT);
 		addTimeText.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		addTimeText.addModifyListener(new ModifyListener() {
@@ -452,8 +479,8 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 			}
 		});
 		
-		toolkit.createLabel(parent, BugzillaReportElement.REMAINING_TIME.toString());
-		remainingText = toolkit.createText(parent, data.getAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString())); 
+		toolkit.createLabel(timeComposite, BugzillaReportElement.REMAINING_TIME.toString());
+		remainingText = toolkit.createText(timeComposite, data.getAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString()), SWT.BORDER); 
 		remainingText.setFont(TEXT_FONT);
 		remainingText.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		remainingText.addModifyListener(new ModifyListener() {
@@ -463,16 +490,33 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 			}
 		});
 		
-		toolkit.createLabel(parent, BugzillaReportElement.DEADLINE.toString());
-		deadlineText = toolkit.createText(parent, data.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString()));
-		deadlineText.setFont(TEXT_FONT);
-		deadlineText.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
-		deadlineText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				changeDirtyStatus(true);
-				taskData.setAttributeValue(BugzillaReportElement.DEADLINE.getKeyString(), deadlineText.getText());
+		toolkit.createLabel(timeComposite, BugzillaReportElement.DEADLINE.toString());
+		
+		deadlinePicker = new DatePicker(timeComposite, /*SWT.NONE */ SWT.BORDER, 
+				data.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString())
+		);
+		deadlinePicker.setFont(TEXT_FONT);
+		deadlinePicker.setDatePattern("yyyy-MM-dd");
+		deadlinePicker.addPickerSelectionListener(new SelectionListener() {
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// ignore
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				Calendar cal = deadlinePicker.getDate();
+				if (cal != null) {
+					Date d = cal.getTime();
+					SimpleDateFormat f = (SimpleDateFormat) SimpleDateFormat.getDateInstance();
+					f.applyPattern("yyyy-MM-dd");
+
+					taskData.setAttributeValue(BugzillaReportElement.DEADLINE.getKeyString(), f.format(d));
+					changeDirtyStatus(true); // TODO goes dirty even if user presses cancel
+				}
 			}
 		});
+
+		timeSection.setClient(timeComposite);
 	}
 
 	protected void addKeywordsList(FormToolkit toolkit, String keywords, Composite attributesComposite)
@@ -846,6 +890,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		}
 	}
 
+	@Override
 	protected void validateInput() {
 		RepositoryOperation o = taskData.getSelectedOperation();
 		if (o != null && o.getKnobName().compareTo("resolve") == 0
