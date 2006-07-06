@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.tasklist.ui.wizards;
 
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
@@ -32,7 +33,9 @@ public class AddExistingTaskWizard extends MultiRepositoryAwareWizard {
 				AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
 						taskRepository.getKind());
 				if (connector.canCreateTaskFromKey()) {
-					return connector.getAddExistingTaskWizard(taskRepository);
+					Wizard wizard = connector.getAddExistingTaskWizard(taskRepository);
+					wizard.setWindowTitle(TITLE);
+					return wizard;
 				} else {
 					return null;
 				}

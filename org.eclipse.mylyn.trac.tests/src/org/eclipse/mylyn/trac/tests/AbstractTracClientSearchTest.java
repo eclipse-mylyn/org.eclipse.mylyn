@@ -23,7 +23,8 @@ import org.eclipse.mylar.internal.trac.model.TracSearch;
 import org.eclipse.mylar.internal.trac.model.TracTicket;
 import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
 import org.eclipse.mylar.trac.tests.support.AbstractTracRepositoryFactory;
-import org.eclipse.mylar.trac.tests.support.XmlRpcServer;
+import org.eclipse.mylar.trac.tests.support.TestFixture;
+import org.eclipse.mylar.trac.tests.support.XmlRpcServer.TestData;
 import org.eclipse.mylar.trac.tests.support.XmlRpcServer.Ticket;
 
 /**
@@ -34,13 +35,9 @@ import org.eclipse.mylar.trac.tests.support.XmlRpcServer.Ticket;
  */
 public abstract class AbstractTracClientSearchTest extends TestCase {
 
-	protected XmlRpcServer server;
-
 	protected AbstractTracRepositoryFactory factory;
 
-	protected static List<Ticket> tickets;
-
-	private static boolean setupRun = false;
+	protected List<Ticket> tickets;
 
 	public AbstractTracClientSearchTest(AbstractTracRepositoryFactory factory) {
 		this.factory = factory;
@@ -49,41 +46,16 @@ public abstract class AbstractTracClientSearchTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		server = new XmlRpcServer(Constants.TEST_REPOSITORY1_URL, Constants.TEST_REPOSITORY1_ADMIN_USERNAME,
-				Constants.TEST_REPOSITORY1_ADMIN_PASSWORD);
-
-		if (!setupRun) {
-			tickets = new ArrayList<Ticket>();
-
-			server.ticket().deleteAll();
-
-			server.ticketMilestone("m1").deleteAndCreate();
-			Ticket ticket = add(server.ticket().create("summary1", "description1"));
-			ticket.update("comment", "milestone", "m1");
-
-			server.ticketMilestone("m2").deleteAndCreate();
-			ticket = add(server.ticket().create("summary2", "description2"));
-			ticket.update("comment", "milestone", "m2");
-			ticket = add(server.ticket().create("summary3", "description3"));
-			ticket.update("comment", "milestone", "m2");
-
-			ticket = add(server.ticket().create("summary4", "description4"));
-
-			setupRun = true;
-		}
+		TestData data = TestFixture.initializeRepository1();
+		tickets = data.tickets;
 
 		factory.connectRepository1();
 	}
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
-
-		// server.getFixture().cleanup();
-	}
-
-	protected Ticket add(Ticket ticket) {
-		tickets.add(ticket);
-		return ticket;
+ 
+		// TestFixture.cleanupRepository1();
 	}
 
 	protected void assertTicketEquals(Ticket ticket, TracTicket tracTicket) throws Exception {

@@ -24,10 +24,13 @@ import org.eclipse.ui.IWorkbench;
 
 /**
  * @author Brock Janiczak
+ * @author Mik Kersten
  */
 public abstract class AbstractAddExistingTaskWizard extends Wizard {
 
 	private final TaskRepository repository;
+
+	private ExistingTaskWizardPage page;
 
 	public AbstractAddExistingTaskWizard(TaskRepository repository) {
 		this.repository = repository;
@@ -42,11 +45,12 @@ public abstract class AbstractAddExistingTaskWizard extends Wizard {
 		ITask newTask = connector.createTaskFromExistingKey(repository, getTaskId());
 
 		if (newTask != null && TaskListView.getFromActivePerspective() != null) {
-			Object selectedObject = ((IStructuredSelection) TaskListView.getFromActivePerspective().getViewer().getSelection())
-					.getFirstElement();
+			Object selectedObject = ((IStructuredSelection) TaskListView.getFromActivePerspective().getViewer()
+					.getSelection()).getFirstElement();
 
 			if (selectedObject instanceof TaskCategory) {
-				MylarTaskListPlugin.getTaskListManager().getTaskList().moveToContainer(((TaskCategory) selectedObject), newTask);
+				MylarTaskListPlugin.getTaskListManager().getTaskList().moveToContainer(((TaskCategory) selectedObject),
+						newTask);
 			} else {
 				MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(newTask);
 			}
@@ -65,5 +69,13 @@ public abstract class AbstractAddExistingTaskWizard extends Wizard {
 		super.setForcePreviousAndNextButtons(true);
 	}
 
-	protected abstract String getTaskId();
+	public void addPages() {
+		super.addPages();
+		this.page = new ExistingTaskWizardPage();
+		addPage(page);
+	}
+
+	protected String getTaskId() {
+		return page.getTaskId();
+	}
 }

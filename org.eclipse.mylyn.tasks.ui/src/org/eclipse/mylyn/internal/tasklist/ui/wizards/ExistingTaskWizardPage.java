@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.tasklist.ui.wizards;
 
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -26,9 +27,10 @@ import org.eclipse.swt.widgets.Text;
  */
 public class ExistingTaskWizardPage extends WizardPage {
 
-	private static final String TITLE = "Add Existing Task";
+	private static final String TITLE = "Enter Task ID";
 
-	private static final String DESCRIPTION = "Enter the identifier for the task, issue, or bug report.";
+	private static final String DESCRIPTION = "Provide the identifier for the task, issue, or bug report.\n" 
+		+ "The format is specific to the repository.";
 
 	private Text taskIdText;
 
@@ -36,6 +38,7 @@ public class ExistingTaskWizardPage extends WizardPage {
 		super(TITLE);
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);
+		setImageDescriptor(TaskListImages.BANNER_REPOSITORY);
 	}
 
 	public void createControl(Composite parent) {

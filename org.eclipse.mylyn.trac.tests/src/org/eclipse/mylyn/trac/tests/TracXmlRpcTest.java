@@ -246,13 +246,13 @@ public class TracXmlRpcTest extends TestCase {
 
 	public void testGetTicketNonExistant() throws XmlRpcException, IOException {
 		try {
-			call("ticket.delete", 1);
+			call("ticket.delete", Integer.MAX_VALUE);
 		} catch (Exception e) {
 			// ignore
 		}
 
 		try {
-			Vector ticket = (Vector) call("ticket.get", 1);
+			Vector ticket = (Vector) call("ticket.get", Integer.MAX_VALUE);
 			fail("Expected XmlRpcException, got ticket instead: " + ticket);
 		} catch (XmlRpcException e) {
 			// ignore

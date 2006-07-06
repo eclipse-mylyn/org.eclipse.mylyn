@@ -35,11 +35,11 @@ public class XmlRpcServer {
 		public abstract void delete() throws Exception;
 
 		protected void itemCreated() {
-			fixture.items.add(this);
+			data.items.add(this);
 		}
 
 		protected void itemDeleted() {
-			fixture.items.remove(this);
+			data.items.remove(this);
 		}
 
 	}
@@ -123,10 +123,14 @@ public class XmlRpcServer {
 	/**
 	 * Records changes to the repository.
 	 */
-	public class TestFixture {
+	public class TestData {
 
+		// all created items
 		List<AbstractTracItem> items = new ArrayList<AbstractTracItem>();
-
+		
+		// all created tickets
+		public List<Ticket> tickets = new ArrayList<Ticket>();
+		
 		/**
 		 * Undo all changes.
 		 */
@@ -187,6 +191,18 @@ public class XmlRpcServer {
 			return id;
 		}
 
+		@Override
+		protected void itemCreated() {
+			super.itemCreated();
+			data.tickets.add(this);
+		}
+		
+		@Override
+		protected void itemDeleted() {
+			super.itemDeleted();
+			data.tickets.remove(this);
+		}
+		
 		public Ticket update(String comment, String key, String value) throws Exception {
 			Hashtable<String, Object> attrs = new Hashtable<String, Object>();
 			attrs.put(key, value);
@@ -258,7 +274,7 @@ public class XmlRpcServer {
 
 	private XmlRpcClient client;
 
-	private TestFixture fixture;
+	private TestData data;
 
 	private String password;
 
@@ -273,7 +289,7 @@ public class XmlRpcServer {
 		this.username = username;
 		this.password = password;
 
-		this.fixture = new TestFixture();
+		this.data = new TestData();
 
 		this.repository = new TracXmlRpcClient(new URL(url), Version.XML_RPC, username, password);
 		this.client = repository.getClient();
@@ -292,8 +308,8 @@ public class XmlRpcServer {
 		return result;
 	}
 
-	public TestFixture getFixture() {
-		return fixture;
+	public TestData getData() {
+		return data;
 	}
 
 	public String getPassword() {

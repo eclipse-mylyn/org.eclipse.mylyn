@@ -31,6 +31,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.internal.bugzilla.core.AbstractReportFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttachmentHandler;
@@ -54,7 +55,6 @@ import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractAddExistingTaskWizard;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
-import org.eclipse.mylar.internal.tasklist.ui.wizards.ExistingTaskWizardPage;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
@@ -161,22 +161,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return new EditBugzillaQueryWizard(repository, (BugzillaRepositoryQuery) query);
 	}
 
-	public IWizard getAddExistingTaskWizard(TaskRepository repository) {
+	public Wizard getAddExistingTaskWizard(TaskRepository repository) {
 
 		// TODO create a propper subclass for Bugzilla
 		return new AbstractAddExistingTaskWizard(repository) {
-
-			private ExistingTaskWizardPage page;
-
-			public void addPages() {
-				super.addPages();
-				this.page = new ExistingTaskWizardPage();
-				addPage(page);
-			}
-
-			protected String getTaskId() {
-				return page.getTaskId();
-			}
 		};
 	}
 

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         id="org.eclipse.mylar.trac.repository"
+         name="Trac Repository"
+         point="org.eclipse.mylar.tasklist.repositories">
+      <repositoryType
+            class="org.eclipse.mylar.internal.trac.TracRepositoryConnector"
+            id="org.eclipse.mylar.trac.tasklist.repositories"
+            name="Trac Repository Client"
+            type="trac"/>
+      <externalizer
+            class="org.eclipse.mylar.internal.trac.TracTaskExternalizer"
+            id="org.eclipse.mylar.trac.tasklist.externalizer"/>
+   </extension>
+
+</plugin>

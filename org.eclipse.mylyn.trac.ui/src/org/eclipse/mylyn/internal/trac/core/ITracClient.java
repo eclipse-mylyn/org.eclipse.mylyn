@@ -41,7 +41,7 @@ public interface ITracClient {
 			case TRAC_0_9:
 				return "Trac 0.9 and higher";
 			case XML_RPC:
-				return "XML-RPC Plugin (Rev. 826)";
+				return "XML-RPC Plugin (Rev. 848)";
 			default:
 				return null;
 			}

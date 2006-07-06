@@ -33,6 +33,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.ZipFileUtil;
 import org.eclipse.mylar.internal.tasklist.RepositoryAttachment;
@@ -124,7 +125,7 @@ public abstract class AbstractRepositoryConnector {
 
 	public abstract void openEditQueryDialog(AbstractRepositoryQuery query);
 
-	public abstract IWizard getAddExistingTaskWizard(TaskRepository repository);
+	public abstract Wizard getAddExistingTaskWizard(TaskRepository repository);
 
 	public abstract IWizard getNewTaskWizard(TaskRepository taskRepository);
 

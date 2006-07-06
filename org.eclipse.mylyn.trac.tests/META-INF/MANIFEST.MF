@@ -6,5 +6,6 @@ Bundle-Version: 0.0.0
 Bundle-Localization: plugin
 Require-Bundle: org.junit,
  org.apache.xmlrpc,
+ org.eclipse.mylar.tasklist,
  org.eclipse.mylar.trac
 Export-Package: org.eclipse.mylar.trac.tests
