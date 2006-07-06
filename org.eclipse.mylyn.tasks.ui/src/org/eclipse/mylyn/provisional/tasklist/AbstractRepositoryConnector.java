@@ -39,6 +39,7 @@ import org.eclipse.mylar.internal.core.util.ZipFileUtil;
 import org.eclipse.mylar.internal.tasklist.RepositoryAttachment;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
+import org.eclipse.mylar.internal.tasklist.ui.wizards.CommonAddExistingTaskWizard;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
@@ -125,8 +126,6 @@ public abstract class AbstractRepositoryConnector {
 
 	public abstract void openEditQueryDialog(AbstractRepositoryQuery query);
 
-	public abstract Wizard getAddExistingTaskWizard(TaskRepository repository);
-
 	public abstract IWizard getNewTaskWizard(TaskRepository taskRepository);
 
 	public abstract List<String> getSupportedVersions();
@@ -139,6 +138,10 @@ public abstract class AbstractRepositoryConnector {
 	public abstract Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
 			Set<AbstractRepositoryTask> tasks) throws Exception;
 
+	public Wizard getAddExistingTaskWizard(TaskRepository repository) {
+		return new CommonAddExistingTaskWizard(repository);
+	}
+	
 	/**
 	 * Implementors of this repositoryOperations must perform it locally without
 	 * going to the server since it is used for frequent repositoryOperations

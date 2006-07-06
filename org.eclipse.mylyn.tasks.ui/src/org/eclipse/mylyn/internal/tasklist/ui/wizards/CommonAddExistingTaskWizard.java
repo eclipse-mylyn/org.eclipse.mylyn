@@ -26,13 +26,13 @@ import org.eclipse.ui.IWorkbench;
  * @author Brock Janiczak
  * @author Mik Kersten
  */
-public abstract class AbstractAddExistingTaskWizard extends Wizard {
+public class CommonAddExistingTaskWizard extends Wizard {
 
 	private final TaskRepository repository;
 
 	private ExistingTaskWizardPage page;
 
-	public AbstractAddExistingTaskWizard(TaskRepository repository) {
+	public CommonAddExistingTaskWizard(TaskRepository repository) {
 		this.repository = repository;
 		setNeedsProgressMonitor(true);
 		init();

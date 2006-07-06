@@ -19,7 +19,6 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
@@ -27,7 +26,6 @@ import org.eclipse.mylar.internal.trac.core.TracClientManager;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.internal.trac.model.TracTicket;
 import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
-import org.eclipse.mylar.internal.trac.ui.wizard.AddExistingTracTaskWizard;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
@@ -121,11 +119,6 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	protected void updateTaskState(AbstractRepositoryTask repositoryTask) {
 		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public Wizard getAddExistingTaskWizard(TaskRepository repository) {
-		return new AddExistingTracTaskWizard(repository);
 	}
 
 	@Override
