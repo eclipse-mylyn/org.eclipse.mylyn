@@ -296,8 +296,8 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 
 	class SearchViewTableLabelProvider extends TaskListTableLabelProvider {
 
-		public SearchViewTableLabelProvider(ILabelProvider provider, ILabelDecorator decorator, Color parentBacground) {
-			super(provider, decorator, parentBacground);
+		public SearchViewTableLabelProvider(ILabelProvider provider, ILabelDecorator decorator, Color parentBackground) {
+			super(provider, decorator, parentBackground, null);
 		}
 
 		@Override

@@ -13,6 +13,8 @@
  */
 package org.eclipse.mylar.internal.tasklist.ui.views;
 
+import java.util.Arrays;
+
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -26,8 +28,8 @@ import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
-import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
+import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.mylar.provisional.tasklist.TaskArchive;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
@@ -44,9 +46,15 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 	
 	private Color categoryBackgroundColor;
 		
-	public TaskListTableLabelProvider(ILabelProvider provider, ILabelDecorator decorator, Color parentBacground) {
+	private TaskListView view;
+	
+	/**
+	 * @param view	can be null
+	 */
+	public TaskListTableLabelProvider(ILabelProvider provider, ILabelDecorator decorator, Color parentBacground, TaskListView view) {
 		super(provider, decorator);
 		this.categoryBackgroundColor = parentBacground;
+		this.view = view;
 	}
 	
 	public String getColumnText(Object obj, int columnIndex) {
@@ -91,7 +99,7 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 				}
 			}
 		} else if (columnIndex == 1) {
-			if (element instanceof AbstractTaskContainer || element instanceof AbstractRepositoryQuery) {
+			if (element instanceof AbstractTaskContainer) {
 				return null;
 			}
 			return super.getImage(element); 
@@ -117,7 +125,18 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 				}
 			} else if (element instanceof AbstractQueryHit){
 				return TaskListImages.getImage(TaskListImages.STATUS_NORMAL_INCOMING);
-			} 
+			} else if (element instanceof AbstractTaskContainer
+					&& view != null && !Arrays.asList(view.getViewer().getExpandedElements()).contains(element)) {
+				AbstractTaskContainer container = (AbstractTaskContainer)element;
+				for (ITask task : container.getChildren()) {
+					if (task instanceof AbstractRepositoryTask) {
+						AbstractRepositoryTask containedRepositoryTask = (AbstractRepositoryTask)task;
+						if (containedRepositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
+							return TaskListImages.getImage(TaskListImages.STATUS_NORMAL_INCOMING);
+						}
+					}
+				}
+			}
 		}
 		return null;
 	}

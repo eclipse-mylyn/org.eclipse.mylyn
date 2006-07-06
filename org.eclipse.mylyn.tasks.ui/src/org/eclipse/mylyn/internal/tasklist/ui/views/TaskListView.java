@@ -850,12 +850,12 @@ public class TaskListView extends ViewPart {
 
 		filteredTree = new TaskListFilteredTree(parent, SWT.MULTI | SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL
 				| SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new TaskListPatternFilter());
-
+		
 		getViewer().getTree().setHeaderVisible(true);
 		getViewer().getTree().setLinesVisible(true);
 		getViewer().setColumnProperties(columnNames);
 		getViewer().setUseHashlookup(true);
-
+		
 		columns = new TreeColumn[columnNames.length];
 		for (int i = 0; i < columnNames.length; i++) {
 			columns[i] = new TreeColumn(getViewer().getTree(), 0); // SWT.LEFT
@@ -895,7 +895,7 @@ public class TaskListView extends ViewPart {
 				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
 
 		taskListTableLabelProvider = new TaskListTableLabelProvider(new TaskElementLabelProvider(), PlatformUI
-				.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground);
+				.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground, this);
 
 		CellEditor[] editors = new CellEditor[columnNames.length];
 		TextCellEditor textEditor = new TextCellEditor(getViewer().getTree());
