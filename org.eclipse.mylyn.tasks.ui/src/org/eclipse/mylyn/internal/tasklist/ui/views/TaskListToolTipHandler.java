@@ -125,7 +125,11 @@ public class TaskListToolTipHandler {
 			// tooltip += formatLastRefreshTime(query.getLastSynchronized()) +
 			// "\n";
 			if (repository != null) {
-				tooltip += "Last Sync: " + repository.getSyncTimeStamp() + "\n";
+				String syncStamp = "<unknown>";
+				if(repository.getSyncTimeStamp() != null) {
+					syncStamp = repository.getSyncTimeStamp();
+				}
+				tooltip += "Last Sync: " + syncStamp + "\n";
 			}
 			if (query.getHits().size() == 1) {
 				tooltip += "1 hit";
