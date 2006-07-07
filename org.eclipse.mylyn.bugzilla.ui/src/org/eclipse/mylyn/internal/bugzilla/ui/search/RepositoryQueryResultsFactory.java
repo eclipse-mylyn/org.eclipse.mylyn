@@ -27,19 +27,6 @@ import org.eclipse.mylar.internal.bugzilla.core.AbstractReportFactory;
  */
 public class RepositoryQueryResultsFactory extends AbstractReportFactory {
 
-	private static RepositoryQueryResultsFactory instance;
-
-	private RepositoryQueryResultsFactory() {
-		// no initial setup needed
-	}
-
-	public static RepositoryQueryResultsFactory getInstance() {
-		if (instance == null) {
-			instance = new RepositoryQueryResultsFactory();
-		}
-		return instance;
-	}
-
 	public void performQuery(String repositoryUrl, IBugzillaSearchResultCollector collector, String queryUrlString,
 			Proxy proxySettings, int maxHits, String characterEncoding) throws LoginException, KeyManagementException,
 			NoSuchAlgorithmException, IOException {
@@ -50,6 +37,6 @@ public class RepositoryQueryResultsFactory extends AbstractReportFactory {
 		
 		URL url = new URL(queryUrlString);
 		
-		collectResults(url, proxySettings, characterEncoding, contentHandler);
+		collectResults(url, proxySettings, characterEncoding, contentHandler, false);
 	}
 }

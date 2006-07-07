@@ -49,20 +49,15 @@ public class AbstractReportFactory {
 
 	public static final int RETURN_ALL_HITS = -1;
 
-	private BufferedReader in = null;
-
-	private boolean clean = false;
-
-	private HttpURLConnection connection = null;
-
-	protected void collectResults(URL url, Proxy proxySettings, String characterEncoding, DefaultHandler contentHandler)
+	protected void collectResults(URL url, Proxy proxySettings, String characterEncoding, DefaultHandler contentHandler, boolean clean)
 			throws IOException, LoginException, KeyManagementException, NoSuchAlgorithmException {
 		URLConnection cntx = BugzillaPlugin.getUrlConnection(url, proxySettings);
 		if (cntx == null || !(cntx instanceof HttpURLConnection)) {
 			throw new IOException("Could not form URLConnection.");
 		}
-		try {
-			connection = (HttpURLConnection) cntx;
+		
+		HttpURLConnection connection = (HttpURLConnection) cntx;
+		try {			
 			connection.setConnectTimeout(COM_TIME_OUT);
 			connection.setReadTimeout(COM_TIME_OUT);
 			connection.connect();
@@ -77,7 +72,9 @@ public class AbstractReportFactory {
 
 				throw new IOException(msg);
 			}
-
+			
+			BufferedReader in = null;
+			
 			if (characterEncoding != null) {
 				in = new BufferedReader(new InputStreamReader(connection.getInputStream(), characterEncoding));
 			} else {
@@ -134,9 +131,4 @@ public class AbstractReportFactory {
 			}
 		}
 	}
-
-	protected void setClean(boolean clean) {
-		this.clean = clean;
-	}
-
 }

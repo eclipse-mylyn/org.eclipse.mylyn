@@ -107,7 +107,8 @@ public class BugzillaPlugin extends Plugin {
 			cacheFileRead = true;
 		}
 		if (repositoryConfigurations.get(repositoryUrl) == null || forceRefresh) {
-			addRepositoryConfiguration(RepositoryConfigurationFactory.getInstance().getConfiguration(repositoryUrl,
+			RepositoryConfigurationFactory configFactory = new RepositoryConfigurationFactory();
+			addRepositoryConfiguration(configFactory.getConfiguration(repositoryUrl,
 					proxySettings, userName, password, encoding));
 		}
 		return repositoryConfigurations.get(repositoryUrl);

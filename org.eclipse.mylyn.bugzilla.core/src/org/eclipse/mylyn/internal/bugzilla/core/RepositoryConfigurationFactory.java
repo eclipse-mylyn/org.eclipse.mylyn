@@ -32,20 +32,6 @@ public class RepositoryConfigurationFactory extends AbstractReportFactory {
 
 	private static final String CONFIG_RDF_URL = "/config.cgi?ctype=rdf";
 
-	private static RepositoryConfigurationFactory instance;
-
-	private RepositoryConfigurationFactory() {
-		// no initial setup needed
-	}
-
-	public static RepositoryConfigurationFactory getInstance() {
-		if (instance == null) {
-			instance = new RepositoryConfigurationFactory();
-		}
-		instance.setClean(true);
-		return instance;
-	}
-
 	public RepositoryConfiguration getConfiguration(String repositoryUrl, Proxy proxySettings, String userName,
 			String password, String encoding) throws IOException, KeyManagementException, LoginException,
 			NoSuchAlgorithmException {
@@ -53,9 +39,9 @@ public class RepositoryConfigurationFactory extends AbstractReportFactory {
 		configUrlStr = BugzillaRepositoryUtil.addCredentials(configUrlStr, userName, password);
 		URL url = new URL(configUrlStr);
 		SaxConfigurationContentHandler contentHandler = new SaxConfigurationContentHandler();
-		collectResults(url, proxySettings, encoding, contentHandler);
+		collectResults(url, proxySettings, encoding, contentHandler, true);
 		RepositoryConfiguration config = contentHandler.getConfiguration();
-		if(config != null) {
+		if (config != null) {
 			config.setRepositoryUrl(repositoryUrl);
 		}
 		return config;

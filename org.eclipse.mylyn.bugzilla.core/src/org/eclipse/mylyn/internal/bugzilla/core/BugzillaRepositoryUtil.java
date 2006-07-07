@@ -87,7 +87,7 @@ public class BugzillaRepositoryUtil {
 				BugzillaPlugin.REPOSITORY_KIND, repositoryUrl, ""+id);
 		setupExistingBugAttributes(repositoryUrl, bugReport);
 
-		RepositoryReportFactory reportFactory = RepositoryReportFactory.getInstance();
+		RepositoryReportFactory reportFactory = new RepositoryReportFactory();
 		reportFactory.populateReport(bugReport, repositoryUrl, proxySettings, userName, password, characterEncoding);
 		updateBugAttributeOptions(repositoryUrl, proxySettings, userName, password, bugReport, characterEncoding);
 		addValidOperations(bugReport, userName);

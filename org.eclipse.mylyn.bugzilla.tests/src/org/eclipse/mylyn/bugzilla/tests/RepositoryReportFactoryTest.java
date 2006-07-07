@@ -40,7 +40,7 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
  */
 public class RepositoryReportFactoryTest extends TestCase {
 
-	RepositoryReportFactory factory = RepositoryReportFactory.getInstance();
+	RepositoryReportFactory factory = new RepositoryReportFactory();
 
 	BugzillaAttributeFactory attributeFactory = new BugzillaAttributeFactory();
 

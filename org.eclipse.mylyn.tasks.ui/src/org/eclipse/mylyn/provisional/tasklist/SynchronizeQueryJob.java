@@ -77,6 +77,7 @@ class SynchronizeQueryJob extends Job {
 				if (queryStatus.getChildren()[0].getException() == null) {
 					repositoryQuery.updateHits(newHits);
 					if (synchTasks) {
+						// TODO: Should sync changed per repository not per query
 						connector.synchronizeChanged(repository);
 					}
 

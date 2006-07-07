@@ -20,7 +20,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -44,7 +46,7 @@ public class ScheduledTaskListSynchJob extends Job {
 	private static long count = 0;
 
 	private TaskListManager taskListManager;
-	
+
 	private List<TaskRepository> repositories = null;
 
 	public ScheduledTaskListSynchJob(long schedule, TaskListManager taskListManager) {
@@ -63,23 +65,23 @@ public class ScheduledTaskListSynchJob extends Job {
 	}
 
 	public IStatus run(IProgressMonitor monitor) {
-		try {			
+		try {
 			if (monitor == null) {
 				monitor = new NullProgressMonitor();
 			}
 
 			taskList = taskListManager.getTaskList();
-			if(repositories == null) {
+			if (repositories == null) {
 				repositories = MylarTaskListPlugin.getRepositoryManager().getAllRepositories();
 			}
 			monitor.beginTask(LABEL_TASK, repositories.size());
 
-			for (TaskRepository repository : repositories) {
+			for (final TaskRepository repository : repositories) {
 				if (monitor.isCanceled()) {
 					scheduleDelay = -1;
 					throw new OperationCanceledException();
 				}
-				AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager()
+				final AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager()
 						.getRepositoryConnector(repository.getKind());
 				if (connector == null) {
 					monitor.worked(1);
@@ -90,20 +92,23 @@ public class ScheduledTaskListSynchJob extends Job {
 						.getRepositoryQueries(repository.getUrl()));
 				if (queries.size() > 0) {
 					if (connector != null) {
-						connector.synchronize(queries, null, Job.DECORATE, 0, false);
+						JobChangeAdapter jobAdapter = new JobChangeAdapter() {
+							@Override
+							public void done(IJobChangeEvent event) {
+								connector.synchronizeChanged(repository);
+							}
+						};
+						connector.synchronize(queries, jobAdapter, Job.DECORATE, 0, false);
 					}
+				} else {
+					connector.synchronizeChanged(repository);
 				}
-
-				connector.synchronizeChanged(repository);
 				monitor.worked(1);
 			}
 		} finally {
 			count++;
 			if (count == Long.MAX_VALUE)
 				count = 0;
-			// if (scheduleDelay != -1) {
-			// schedule(scheduleDelay);
-			//			}
 			if (monitor != null) {
 				monitor.done();
 			}
@@ -114,7 +119,7 @@ public class ScheduledTaskListSynchJob extends Job {
 	public void setSchedule(long schedule) {
 		this.scheduleDelay = schedule;
 	}
-	
+
 	public void setRepositories(List<TaskRepository> repositories) {
 		this.repositories = repositories;
 	}

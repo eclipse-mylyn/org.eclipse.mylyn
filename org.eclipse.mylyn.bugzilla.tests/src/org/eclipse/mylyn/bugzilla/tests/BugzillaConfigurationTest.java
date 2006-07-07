@@ -31,7 +31,7 @@ public class BugzillaConfigurationTest extends TestCase {
 
 	
 	public void test222RDFProductConfig() throws Exception {
-		RepositoryConfigurationFactory factory = RepositoryConfigurationFactory.getInstance();
+		RepositoryConfigurationFactory factory = new RepositoryConfigurationFactory();
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		RepositoryConfiguration config = factory.getConfiguration(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
 		assertNotNull(config);
@@ -50,7 +50,7 @@ public class BugzillaConfigurationTest extends TestCase {
 	}
 		
 	public void test2201RDFProductConfig() throws Exception {
-		RepositoryConfigurationFactory factory = RepositoryConfigurationFactory.getInstance();
+		RepositoryConfigurationFactory factory = new RepositoryConfigurationFactory();
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_2201_URL);
 		RepositoryConfiguration config = factory.getConfiguration(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
 		assertNotNull(config);
@@ -69,7 +69,7 @@ public class BugzillaConfigurationTest extends TestCase {
 	}
 	
 	public void test220RDFProductConfig() throws Exception {
-		RepositoryConfigurationFactory factory = RepositoryConfigurationFactory.getInstance();
+		RepositoryConfigurationFactory factory = new RepositoryConfigurationFactory();
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_220_URL);
 		RepositoryConfiguration config = factory.getConfiguration(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
 		assertNotNull(config);
@@ -88,7 +88,7 @@ public class BugzillaConfigurationTest extends TestCase {
 	}
 	
 	public void test218RDFProductConfig() throws Exception {
-		RepositoryConfigurationFactory factory = RepositoryConfigurationFactory.getInstance();
+		RepositoryConfigurationFactory factory = new RepositoryConfigurationFactory();
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_218_URL);
 		RepositoryConfiguration config = factory.getConfiguration(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
 		assertNotNull(config);
@@ -107,7 +107,7 @@ public class BugzillaConfigurationTest extends TestCase {
 	}
 	
 	public void testEclipseRDFProductConfig() throws Exception {
-		RepositoryConfigurationFactory factory = RepositoryConfigurationFactory.getInstance();
+		RepositoryConfigurationFactory factory = new RepositoryConfigurationFactory();
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
 		RepositoryConfiguration config = factory.getConfiguration(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
 		assertNotNull(config);

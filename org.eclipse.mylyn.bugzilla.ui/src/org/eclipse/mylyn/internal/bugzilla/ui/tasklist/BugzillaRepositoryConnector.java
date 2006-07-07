@@ -433,7 +433,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private void queryForChanged(TaskRepository repository, Set<AbstractRepositoryTask> changedTasks,
 			String urlQueryString) throws Exception {
-		RepositoryQueryResultsFactory queryFactory = RepositoryQueryResultsFactory.getInstance();
+		RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory();
 		BugzillaResultCollector collector = new BugzillaResultCollector();
 
 		queryFactory.performQuery(repository.getUrl(), collector, urlQueryString, MylarTaskListPlugin.getDefault()

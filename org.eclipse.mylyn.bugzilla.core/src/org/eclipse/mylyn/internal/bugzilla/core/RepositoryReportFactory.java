@@ -28,25 +28,12 @@ import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
  */
 public class RepositoryReportFactory extends AbstractReportFactory {
 
-	private static RepositoryReportFactory instance;
-	
 	private static BugzillaAttributeFactory bugzillaAttributeFactory = new BugzillaAttributeFactory();
 
 	private static final String SHOW_BUG_CGI_XML = "/show_bug.cgi?ctype=xml&id=";
 
-	private RepositoryReportFactory() {
-		// no initial setup needed
-	}
-
-	public static RepositoryReportFactory getInstance() {
-		if (instance == null) {
-			instance = new RepositoryReportFactory();
-		}
-		return instance;
-	}
-
-	public void populateReport(RepositoryTaskData bugReport, String repositoryUrl, Proxy proxySettings, String userName,
-			String password, String characterEncoding) throws LoginException, KeyManagementException,
+	public void populateReport(RepositoryTaskData bugReport, String repositoryUrl, Proxy proxySettings,
+			String userName, String password, String characterEncoding) throws LoginException, KeyManagementException,
 			NoSuchAlgorithmException, IOException {
 
 		SaxBugReportContentHandler contentHandler = new SaxBugReportContentHandler(bugzillaAttributeFactory, bugReport);
@@ -55,100 +42,11 @@ public class RepositoryReportFactory extends AbstractReportFactory {
 		xmlBugReportUrl = BugzillaRepositoryUtil.addCredentials(xmlBugReportUrl, userName, password);
 		URL serverURL = new URL(xmlBugReportUrl);
 
-		collectResults(serverURL, proxySettings, characterEncoding, contentHandler);
+		collectResults(serverURL, proxySettings, characterEncoding, contentHandler, false);
 
 		if (contentHandler.errorOccurred()) {
 			throw new IOException(contentHandler.getErrorMessage());
 		}
 
 	}
-
-//	public class BugzillaReportParseException extends IOException {
-//		private static final long serialVersionUID = 1609566799047500866L;
-//
-//		public BugzillaReportParseException(String message) {
-//			super(message);
-//		}
-//	}
 }
-
-// URLConnection connection =
-// BugzillaPlugin.getDefault().getUrlConnection(serverURL, proxySettings);
-// if (connection == null || !(connection instanceof HttpURLConnection)) {
-// return;
-// }
-//
-// // String contentEncoding = connection.getContentEncoding();
-// // if (contentEncoding != null) {
-// // String charsetFromContentType =
-// // BugzillaRepositoryUtil.getCharsetFromString(contentEncoding);
-// // if (charsetFromContentType != null) {
-// // bugReport.setCharset(charsetFromContentType);
-// // }
-// // } else {
-// // bugReport.setCharset(BugzillaPlugin.ENCODING_UTF_8);
-// // }
-//
-// try {
-//
-// if (characterEncoding != null) {
-// in = new BufferedReader(new InputStreamReader(connection.getInputStream(),
-// characterEncoding));
-// } else {
-// in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-// }
-//
-// XMLReader reader = XMLReaderFactory.createXMLReader();
-// reader.setContentHandler(contentHandler);
-// reader.setErrorHandler(new SaxErrorHandler());
-// reader.parse(new InputSource(in));
-//
-// if (contentHandler.errorOccurred()) {
-// throw new BugzillaReportParseException(contentHandler.getErrorMessage());
-// }
-//
-// } catch (SAXException e) {
-// if
-// (e.getMessage().equals(IBugzillaConstants.ERROR_INVALID_USERNAME_OR_PASSWORD))
-// {
-// throw new LoginException(e.getMessage());
-// } else {
-// throw new IOException(e.getMessage());
-// }
-// } finally {
-// try {
-// if (in != null)
-// in.close();
-// } catch (IOException e) {
-// BugzillaPlugin.log(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID,
-// IStatus.ERROR,
-// "Problem closing the stream", e));
-// }
-// }
-
-// class SaxErrorHandler implements ErrorHandler {
-//
-// public void error(SAXParseException exception) throws SAXException {
-// throw exception;
-// // MylarStatusHandler.fail(exception, "Mylar:
-// // RepositoryReportFactory Sax parser error", false);
-// // System.err.println("Error: " + exception.getLineNumber() + "\n" +
-// // exception.getLocalizedMessage());
-//
-// }
-//
-// public void fatalError(SAXParseException exception) throws SAXException {
-// // System.err.println("Fatal Error: " + exception.getLineNumber() +
-// // "\n" + exception.getLocalizedMessage());
-// // TODO: Need to determine actual error from html
-// throw new
-// SAXException(IBugzillaConstants.ERROR_INVALID_USERNAME_OR_PASSWORD);
-// }
-//
-// public void warning(SAXParseException exception) throws SAXException {
-// // System.err.println("Warning: " + exception.getLineNumber() + "\n"
-// // + exception.getLocalizedMessage());
-// }
-//
-// }
-//

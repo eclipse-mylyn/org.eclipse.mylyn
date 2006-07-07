@@ -127,7 +127,7 @@ public class BugzillaSearchEngine {
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException("Search cancelled");
 			}
-			RepositoryQueryResultsFactory queryFactory = RepositoryQueryResultsFactory.getInstance();
+			RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory();
 			queryFactory.performQuery(repository.getUrl(), collector, urlString, proxySettings, maxHits, repository
 					.getCharacterEncoding());
 
