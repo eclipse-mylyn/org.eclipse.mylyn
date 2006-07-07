@@ -128,17 +128,32 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 			} else if (element instanceof AbstractTaskContainer
 					&& view != null && !Arrays.asList(view.getViewer().getExpandedElements()).contains(element)) {
 				AbstractTaskContainer container = (AbstractTaskContainer)element;
-				for (ITask task : container.getChildren()) {
-					if (task instanceof AbstractRepositoryTask) {
-						AbstractRepositoryTask containedRepositoryTask = (AbstractRepositoryTask)task;
-						if (containedRepositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
-							return TaskListImages.getImage(TaskListImages.STATUS_NORMAL_INCOMING);
-						}
-					}
+				if (hasIncoming(container)) {
+					return TaskListImages.getImage(TaskListImages.STATUS_NORMAL_INCOMING);
 				}
 			}
 		}
 		return null;
+	}
+	
+	private boolean hasIncoming(AbstractTaskContainer container) {
+		for (ITask task : container.getChildren()) {
+			if (task instanceof AbstractRepositoryTask) {
+				AbstractRepositoryTask containedRepositoryTask = (AbstractRepositoryTask)task;
+				if (containedRepositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
+					return true;
+				}
+			}
+		}
+		if (container instanceof AbstractRepositoryQuery) {
+			AbstractRepositoryQuery query = (AbstractRepositoryQuery)container;
+			for (AbstractQueryHit hit : query.getHits()) {
+				if (hit.getCorrespondingTask() == null) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	public Font getFont(Object element, int columnIndex) {
