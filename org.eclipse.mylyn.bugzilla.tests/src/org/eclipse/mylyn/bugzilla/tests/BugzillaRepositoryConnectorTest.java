@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.Socket;
@@ -30,6 +31,7 @@ import javax.security.auth.login.LoginException;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttachmentHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
@@ -565,10 +567,6 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		assertEquals("", BugzillaAttachmentHandler.getRequestPath(url));
 	}
 
-	/**
-	 * Though unlikely, this may fail randomly if it tries to bind to a port
-	 * that happens to be in use.
-	 */
 	public void testTrustAllSslProtocolSocketFactory() throws Exception {
 		TrustAllSslProtocolSocketFactory factory = new TrustAllSslProtocolSocketFactory();
 		Socket s;
@@ -578,25 +576,24 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		assertTrue(s.isConnected());
 		s.close();
 
-//		s = factory.createSocket("mylar.eclipse.org", 80, InetAddress.getLocalHost(),
-//				(int) (Math.random() * 1000 + 20000));
-//		assertNotNull(s);
-//		assertTrue(s.isConnected());
-//		s.close();
-//
-//		HttpConnectionParams params = new HttpConnectionParams();
-//		s = factory.createSocket("mylar.eclipse.org", 80, InetAddress.getLocalHost(),
-//				(int) (Math.random() * 1000 + 20000), null);
-//		assertNotNull(s);
-//		assertTrue(s.isConnected());
-//		s.close();
-//
-//		params.setConnectionTimeout(100);
-//		s = factory.createSocket("mylar.eclipse.org", 80, InetAddress.getLocalHost(),
-//				(int) (Math.random() * 1000 + 20000), params);
-//		assertNotNull(s);
-//		assertTrue(s.isConnected());
-//		s.close();
+		InetAddress anyHost = new Socket().getLocalAddress();
+		
+		s = factory.createSocket("mylar.eclipse.org", 80, anyHost, 0);
+		assertNotNull(s);
+		assertTrue(s.isConnected());
+		s.close();
+
+		HttpConnectionParams params = new HttpConnectionParams();
+		s = factory.createSocket("mylar.eclipse.org", 80, anyHost, 0, null);
+		assertNotNull(s);
+		assertTrue(s.isConnected());
+		s.close();
+
+		params.setConnectionTimeout(1000);
+		s = factory.createSocket("mylar.eclipse.org", 80, anyHost, 0, params);
+		assertNotNull(s);
+		assertTrue(s.isConnected());
+		s.close();
 	}
 
 	private String generateNewDay() {
