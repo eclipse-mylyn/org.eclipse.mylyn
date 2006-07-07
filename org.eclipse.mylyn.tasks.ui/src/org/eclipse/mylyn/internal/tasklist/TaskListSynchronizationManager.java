@@ -51,7 +51,7 @@ public class TaskListSynchronizationManager implements IPropertyChangeListener {
 
 	public synchronized void startSynchJob() {
 		if (jobsQueue.size() == 0) {
-			scheduleRegularBackupJob();
+			scheduleRegularSynchronizationJob();
 		}
 		if (jobsQueue.size() > 0) {
 			refreshJob = jobsQueue.remove(0);
@@ -59,7 +59,7 @@ public class TaskListSynchronizationManager implements IPropertyChangeListener {
 		}
 	}
 
-	private void scheduleRegularBackupJob() {
+	private void scheduleRegularSynchronizationJob() {
 		boolean enabled = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED);
 		if (enabled) {

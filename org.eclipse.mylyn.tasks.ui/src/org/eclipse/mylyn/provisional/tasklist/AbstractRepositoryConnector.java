@@ -450,6 +450,7 @@ public abstract class AbstractRepositoryConnector {
 		if (listener != null) {
 			job.addJobChangeListener(listener);
 		}
+		job.setRule(rule);
 		job.setPriority(priority);
 		job.schedule(delay);
 		return job;
