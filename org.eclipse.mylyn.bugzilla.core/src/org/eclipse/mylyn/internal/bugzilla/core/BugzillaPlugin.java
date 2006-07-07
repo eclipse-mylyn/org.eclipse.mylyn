@@ -41,6 +41,8 @@ import org.osgi.framework.BundleContext;
  */
 public class BugzillaPlugin extends Plugin {
 
+	private static final String ERROR_DELETING_CONFIGURATION = "Error removing corrupt repository configuration file.";
+
 	public static final String REPOSITORY_KIND = "bugzilla";
 
 	public static final String ENCODING_UTF_8 = "UTF-8";
@@ -49,7 +51,7 @@ public class BugzillaPlugin extends Plugin {
 
 	/** Singleton instance of the plug-in */
 	private static BugzillaPlugin plugin;
-	
+
 	private static boolean cacheFileRead = false;
 
 	// /** The file that contains all of the bugzilla favorites */
@@ -95,18 +97,18 @@ public class BugzillaPlugin extends Plugin {
 	}
 
 	/**
-	 * Retrieves the latest repository configuration from the server 
+	 * Retrieves the latest repository configuration from the server
 	 */
-	public static RepositoryConfiguration getRepositoryConfiguration(boolean forceRefresh, String repositoryUrl, Proxy proxySettings,
-			String userName, String password, String encoding) throws IOException, KeyManagementException,
-			LoginException, NoSuchAlgorithmException {	
-		if(!cacheFileRead) {
+	public static RepositoryConfiguration getRepositoryConfiguration(boolean forceRefresh, String repositoryUrl,
+			Proxy proxySettings, String userName, String password, String encoding) throws IOException,
+			KeyManagementException, LoginException, NoSuchAlgorithmException {
+		if (!cacheFileRead) {
 			readRepositoryConfigurationFile();
 			cacheFileRead = true;
 		}
-		if(repositoryConfigurations.get(repositoryUrl) == null || forceRefresh) {
+		if (repositoryConfigurations.get(repositoryUrl) == null || forceRefresh) {
 			addRepositoryConfiguration(RepositoryConfigurationFactory.getInstance().getConfiguration(repositoryUrl,
-				proxySettings, userName, password, encoding));
+					proxySettings, userName, password, encoding));
 		}
 		return repositoryConfigurations.get(repositoryUrl);
 	}
@@ -134,7 +136,8 @@ public class BugzillaPlugin extends Plugin {
 	/** public for testing */
 	public static void readRepositoryConfigurationFile() {
 		IPath configFile = getProductConfigurationCachePath();
-		if(!configFile.toFile().exists()) return;
+		if (!configFile.toFile().exists())
+			return;
 		ObjectInputStream in = null;
 		try {
 			in = new ObjectInputStream(new FileInputStream(configFile.toFile()));
@@ -147,6 +150,21 @@ public class BugzillaPlugin extends Plugin {
 			}
 		} catch (Exception e) {
 			log(e);
+			try {
+				if (in != null) {
+					in.close();
+				}
+				if (configFile != null && configFile.toFile().exists()) {
+					if (configFile.toFile().delete()) {
+						// successfully deleted
+					} else {
+						log(new Status(Status.ERROR, BugzillaPlugin.PLUGIN_ID, 0, ERROR_DELETING_CONFIGURATION, e));
+					}
+				}
+
+			} catch (Exception ex) {
+				log(new Status(Status.ERROR, BugzillaPlugin.PLUGIN_ID, 0, ERROR_DELETING_CONFIGURATION, e));
+			}
 		} finally {
 			if (in != null) {
 				try {
@@ -172,7 +190,7 @@ public class BugzillaPlugin extends Plugin {
 				}
 			}
 		} catch (IOException e) {
-			log(e);			
+			log(e);
 		} finally {
 			if (out != null) {
 				try {
@@ -202,7 +220,7 @@ public class BugzillaPlugin extends Plugin {
 	 */
 	public static void log(Exception e) {
 		String message = e.getMessage();
-		if(e.getMessage() == null) {
+		if (e.getMessage() == null) {
 			message = e.getClass().toString();
 		}
 		log(new Status(Status.ERROR, BugzillaPlugin.PLUGIN_ID, 0, message, e));
