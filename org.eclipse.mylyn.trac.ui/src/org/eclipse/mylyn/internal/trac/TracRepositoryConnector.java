@@ -17,8 +17,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
@@ -26,6 +30,8 @@ import org.eclipse.mylar.internal.trac.core.TracClientManager;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.internal.trac.model.TracTicket;
 import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
+import org.eclipse.mylar.internal.trac.ui.wizard.EditTracQueryWizard;
+import org.eclipse.mylar.internal.trac.ui.wizard.NewTracQueryWizard;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
@@ -36,13 +42,15 @@ import org.eclipse.mylar.provisional.tasklist.IOfflineTaskHandler;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Steffen Pingel
  */
 public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
-	private final static String CLIENT_LABEL = "Trac (supports 0.9.0 and later)";
+	private final static String CLIENT_LABEL = "Trac";
 
 	private List<String> supportedVersions;
 
@@ -123,21 +131,73 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public IWizard getNewQueryWizard(TaskRepository repository) {
-		// TODO Auto-generated method stub
-		return null;
+		return new NewTracQueryWizard(repository);
 	}
 
 	@Override
 	public void openEditQueryDialog(AbstractRepositoryQuery query) {
-		// TODO Auto-generated method stub
+		if (!(query instanceof TracRepositoryQuery)) {
+			return;
+		}
 
+		try {
+			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+					query.getRepositoryKind(), query.getRepositoryUrl());
+			if (repository == null) {
+				return;
+			}
+
+			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+			if (shell != null && !shell.isDisposed()) {
+				IWizard wizard = new EditTracQueryWizard(repository, query);
+				WizardDialog dialog = new WizardDialog(shell, wizard);
+				dialog.create();
+				dialog.setTitle("Edit Trac Query");
+				dialog.setBlockOnOpen(true);
+				if (dialog.open() == Window.CANCEL) {
+					dialog.close();
+					return;
+				}
+			}
+		} catch (Exception e) {
+			MylarStatusHandler.fail(e, e.getMessage(), true);
+		}
 	}
 
 	@Override
 	public List<AbstractQueryHit> performQuery(AbstractRepositoryQuery query, IProgressMonitor monitor,
 			MultiStatus queryStatus) {
-		// TODO Auto-generated method stub
-		return null;
+		List<AbstractQueryHit> hits = new ArrayList<AbstractQueryHit>();
+		final List<TracTicket> tickets = new ArrayList<TracTicket>();
+
+		String url = query.getRepositoryUrl();
+		TaskRepository taskRepository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+				MylarTracPlugin.REPOSITORY_KIND, url);
+		ITracClient tracRepository;
+		try {
+			tracRepository = getClientManager().getRepository(taskRepository);
+			if (query instanceof TracRepositoryQuery) {
+				tracRepository.search(((TracRepositoryQuery) query).getTracSearch(), tickets);
+			}
+		} catch (Throwable e) {
+			queryStatus.add(new Status(IStatus.OK, MylarTaskListPlugin.PLUGIN_ID, IStatus.OK,
+					"Could not log in to server: " + query.getRepositoryUrl() + "\n\nCheck network connection.", e));
+			return hits;
+		}
+
+		for (TracTicket ticket : tickets) {
+			String handleIdentifier = AbstractRepositoryTask.getHandle(url, ticket.getId());
+			ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handleIdentifier);
+			if (!(task instanceof TracTask)) {
+				task = createTask(ticket, handleIdentifier);
+			}
+			updateTaskDetails(url, (TracTask) task, ticket);
+
+			TracQueryHit hit = new TracQueryHit((TracTask) task, query.getRepositoryUrl(), ticket.getId() + "");
+			hits.add(hit);
+		}
+		queryStatus.add(Status.OK_STATUS);
+		return hits;
 	}
 
 	@Override
@@ -188,7 +248,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			String url = repositoryUrl + ITracClient.TICKET_URL + ticket.getId();
 			task.setUrl(url);
 			if (ticket.getValue(Key.SUMMARY) != null) {
-				task.setDescription("#" + ticket.getId() + ": " + ticket.getValue(Key.SUMMARY));
+				task.setDescription(ticket.getId() + ": " + ticket.getValue(Key.SUMMARY));
 			}
 		}
 		if (ticket.getValue(Key.STATUS) != null) {

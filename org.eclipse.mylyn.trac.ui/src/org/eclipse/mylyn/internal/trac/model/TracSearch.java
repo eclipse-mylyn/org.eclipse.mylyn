@@ -54,6 +54,10 @@ public class TracSearch {
 		filter.addValue(value.substring(filter.getOperator().getQueryValue().length()));
 	}
 
+	public void addFilter(TracSearchFilter filter) {
+		filterByFieldName.put(filter.getFieldName(), filter);
+	}
+	
 	public List<TracSearchFilter> getFilters() {
 		return new ArrayList<TracSearchFilter>(filterByFieldName.values());
 	}
