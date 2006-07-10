@@ -178,7 +178,8 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 
 		// Submit changes
 		MockBugzillaReportSubmitForm form = new MockBugzillaReportSubmitForm(BugzillaPlugin.ENCODING_UTF_8);
-		client.submitBugReport(task.getTaskData(), form, null);
+		form.setTaskData(task.getTaskData());
+		client.submitBugReport(form, null);
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
 
 		// TODO: Test that comment was appended

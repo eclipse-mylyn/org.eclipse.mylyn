@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -21,7 +22,6 @@ import java.util.Set;
 
 import javax.security.auth.login.LoginException;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -40,16 +40,14 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
-import org.eclipse.mylar.internal.bugzilla.core.UnrecognizedReponseException;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
-import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
+import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchHit;
 import org.eclipse.mylar.internal.bugzilla.ui.search.RepositoryQueryResultsFactory;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaCategorySearchOperation.ICategorySearchListener;
 import org.eclipse.mylar.internal.bugzilla.ui.wizard.NewBugzillaReportWizard;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
@@ -65,7 +63,6 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 /**
  * @author Mik Kersten
@@ -129,7 +126,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		} catch (NumberFormatException nfe) {
 			if (!forceSyncExecForTesting) {
 				MessageDialog.openInformation(null, MylarTaskListPlugin.TITLE_DIALOG, "Invalid report id: " + id);
-			} 
+			}
 			return null;
 		}
 
@@ -188,87 +185,86 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
-	/**
-	 * @return bugid if bugReport was a new report created locally null if
-	 *         existing report
-	 */
-	public String submitBugReport(final RepositoryTaskData bugReport, final BugzillaReportSubmitForm form,
-			IJobChangeListener listener) {
+	public void submitBugReport(final BugzillaReportSubmitForm form, IJobChangeListener listener) {
 
 		if (forceSyncExecForTesting) {
-			return internalSubmitBugReport(bugReport, form);
-		} else {
-			// TODO: get rid of this idiom?
-			final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-				protected void execute(final IProgressMonitor monitor) throws CoreException {
-					internalSubmitBugReport(bugReport, form);
+			try {
+				String submittedBugId = form.submitReportToRepository();
+				if (form.isNewBugPost()) {
+					handleNewBugPost(form.getTaskData(), submittedBugId);
+				} else {
+					handleExistingBugPost(form.getTaskData(), submittedBugId);
 				}
-			};
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		} else {
 
-			Job job = new Job(LABEL_JOB_SUBMIT) {
+			Job submitJob = new Job(LABEL_JOB_SUBMIT) {
+
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
 					try {
-						op.run(monitor);
-					} catch (final Throwable throwable) {
-						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-							public void run() {
-								// TODO: clean up exception handling
-								if (throwable.getCause() instanceof BugzillaException) {
-									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-											"Bugzilla could not post your bug. \n\n"+ throwable.getCause().getMessage());
-								} else if (throwable.getCause() instanceof PossibleBugzillaFailureException) {
-									WebBrowserDialog.openAcceptAgreement(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-											"Possible problem posting Bugzilla report.\n"
-													+ throwable.getCause().getMessage(), form.getError());
-									String handle = AbstractRepositoryTask.getHandle(bugReport.getRepositoryUrl(), bugReport.getId());
-									ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
-									if (task != null && task instanceof AbstractRepositoryTask) {
-										synchronize((AbstractRepositoryTask)task, true, null);
-									}
-								} else if (throwable.getCause() instanceof UnrecognizedReponseException) {
-									WebBrowserDialog.openAcceptAgreement(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-											"Unrecognized response from server:", throwable.getCause().getMessage());									
-									MylarStatusHandler.log(throwable.getCause().getMessage(), this);
-									String attributes = "Attributes: ";
-									if (bugReport != null) {
-										for (RepositoryTaskAttribute attribute : bugReport.getAttributes()) {
-											attributes += attribute.getID() + "=" + attribute.getValue() + " | ";
-										}
-										
-										MylarStatusHandler.log(attributes, BugzillaRepositoryConnector.class);
-									}
-								} else if (throwable.getCause() instanceof LoginException) {
-									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-											"Bugzilla could not post your bug since your login name or password is incorrect."
-													+ " Ensure proper repository configuration in "
-													+ TaskRepositoriesView.NAME + ".");									
-								} else {
-									MylarStatusHandler.fail(throwable, "could not post bug", false);
-									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-											"Could not post bug.  Check repository credentials and connectivity.\n\n"
-													+ throwable);
-								}
-							}
-						});
-						return new Status(Status.INFO, "org.eclipse.mylar.internal.bugzilla.ui", Status.INFO,
-								"Failed to submit bug", throwable);
+						String submittedBugId = form.submitReportToRepository();
+
+						if (form.isNewBugPost()) {
+							handleNewBugPost(form.getTaskData(), submittedBugId);
+							return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.OK, submittedBugId, null);
+						} else {
+							handleExistingBugPost(form.getTaskData(), submittedBugId);
+							return Status.OK_STATUS;
+						}
+					} catch (LoginException e) {
+						return new Status(
+								Status.OK,
+								BugzillaUiPlugin.PLUGIN_ID,
+								Status.ERROR,
+								"Bugzilla could not post your bug since your login name or password is incorrect. Ensure proper repository configuration in "
+										+ TaskRepositoriesView.NAME + ".", e);
+					} catch (IOException e) {
+						return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.ERROR,
+								"Check repository credentials and connectivity.", e);
+					} catch (BugzillaException e) {
+						return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.ERROR,
+								"Bugzilla could not post your bug. \n\n" + e.getCause().getMessage(), e);
+					} catch (PossibleBugzillaFailureException e) {
+						return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.INFO, form.getError(), e);
 					}
-					return Status.OK_STATUS;
 				}
 			};
-			job.addJobChangeListener(listener);
-			job.schedule();
-			return null;
+
+			submitJob.addJobChangeListener(listener);
+			submitJob.schedule();
 		}
 	}
 
-	private String internalSubmitBugReport(RepositoryTaskData bugReport, BugzillaReportSubmitForm form) {
-		String resultId = null;
+	private void handleNewBugPost(RepositoryTaskData taskData, String resultId) throws BugzillaException {
+		int bugId = -1;
 		try {
-			resultId = form.submitReportToRepository();
-			//removeOfflineTaskData(bugReport);
-			String handle = AbstractRepositoryTask.getHandle(bugReport.getRepositoryUrl(), bugReport.getId());
+			bugId = Integer.parseInt(resultId);
+		} catch (NumberFormatException e) {
+			throw new BugzillaException("Invalid bug id returned by repository.");
+		}
+
+		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+				taskData.getRepositoryKind(), taskData.getRepositoryUrl());
+
+		BugzillaTask newTask = new BugzillaTask(AbstractRepositoryTask.getHandle(repository.getUrl(), bugId),
+				"<bugzilla info>", true);
+
+		MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask,
+				MylarTaskListPlugin.getTaskListManager().getTaskList().getRootCategory());
+
+		List<TaskRepository> repositoriesToSync = new ArrayList<TaskRepository>();
+		repositoriesToSync.add(repository);
+		MylarTaskListPlugin.getSynchronizationManager().synchNow(0, repositoriesToSync);
+
+	}
+
+	private void handleExistingBugPost(RepositoryTaskData repositoryTaskData, String resultId) {
+		try {
+			String handle = AbstractRepositoryTask.getHandle(repositoryTaskData.getRepositoryUrl(), repositoryTaskData
+					.getId());
 			ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
 			if (task != null) {
 				Set<AbstractRepositoryQuery> queriesWithHandle = MylarTaskListPlugin.getTaskListManager().getTaskList()
@@ -277,7 +273,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 				if (task instanceof AbstractRepositoryTask) {
 					AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
-					// Set to null in order for update to bypass ui override check with user
+					// TODO: This is set to null in order for update to bypass
+					// ui override check with user
+					// Need to change how this is achieved.
 					repositoryTask.setTaskData(null);
 					synchronize(repositoryTask, true, null);
 				}
@@ -286,8 +284,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		return resultId;
 	}
+
 
 	@Override
 	public boolean canCreateTaskFromKey() {
@@ -330,7 +328,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				for (BugzillaSearchHit hit : collector.getResults()) {
 					String description = hit.getId() + ": " + hit.getDescription();
 					newHits.add(new BugzillaQueryHit(description, hit.getPriority(),
-							repositoryQuery.getRepositoryUrl(), ""+hit.getId(), null, hit.getState()));
+							repositoryQuery.getRepositoryUrl(), "" + hit.getId(), null, hit.getState()));
 				}
 			}
 		});

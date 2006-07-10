@@ -12,16 +12,19 @@ package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
 import java.io.UnsupportedEncodingException;
 import java.net.Proxy;
-import java.util.ArrayList;
-import java.util.List;
 
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
+import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
@@ -31,9 +34,9 @@ import org.eclipse.mylar.internal.tasklist.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
+import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskCategory;
-import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -69,8 +72,6 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 	protected String newSummary = "";
 
 	protected String newDescription = "";
-
-	private String submittedBugId = null;
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
@@ -204,70 +205,73 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		updateBug();
 		Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
 		boolean wrap = IBugzillaConstants.BugzillaServerVersion.SERVER_218.equals(repository.getVersion());
-		BugzillaReportSubmitForm bugzillaReportSubmitForm;
+
 		try {
-			bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeNewBugPost(repository.getUrl(), repository
-					.getUserName(), repository.getPassword(), proxySettings, repository.getCharacterEncoding(),
-					taskData, wrap);
-			submittedBugId = bugzillaReportSubmitForm.submitReportToRepository();
-			if (submittedBugId != null) {
-				close();			
-				int bugId = -1;				
-				bugId = Integer.parseInt(submittedBugId);				
-				BugzillaTask newTask = new BugzillaTask(AbstractRepositoryTask.getHandle(repository.getUrl(), bugId),
-						"<bugzilla info>", true);
-				Object selectedObject = null;
-				if (TaskListView.getFromActivePerspective() != null)
-					selectedObject = ((IStructuredSelection) TaskListView.getFromActivePerspective().getViewer()
-							.getSelection()).getFirstElement();
+			final BugzillaReportSubmitForm bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeNewBugPost(
+					repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, repository
+							.getCharacterEncoding(), taskData, wrap);
 
-				if (selectedObject instanceof TaskCategory) {
-					MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask,
-							((TaskCategory) selectedObject));
-				} else {
-					MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask,
-							MylarTaskListPlugin.getTaskListManager().getTaskList().getRootCategory());
+			JobChangeAdapter submitJobListener = new JobChangeAdapter() {
+
+				public void done(final IJobChangeEvent event) {
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							if (event.getJob().getResult().getCode() == Status.OK
+									&& event.getJob().getResult().getMessage() != null) {
+								close();
+								String newTaskHandle = AbstractRepositoryTask.getHandle(repository.getUrl(), event
+										.getJob().getResult().getMessage());
+								ITask newTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(
+										newTaskHandle);
+								if (newTask != null) {
+
+									Object selectedObject = null;
+									if (TaskListView.getFromActivePerspective() != null)
+										selectedObject = ((IStructuredSelection) TaskListView
+												.getFromActivePerspective().getViewer().getSelection())
+												.getFirstElement();
+
+									if (selectedObject instanceof TaskCategory) {
+										MylarTaskListPlugin.getTaskListManager().getTaskList().moveToContainer(
+												((TaskCategory) selectedObject), newTask);
+									}
+
+									TaskUiUtil.refreshAndOpenTaskListElement(newTask);
+								}
+								return;
+							} else if (event.getJob().getResult().getCode() == Status.INFO) {
+								WebBrowserDialog.openAcceptAgreement(null, IBugzillaConstants.REPORT_SUBMIT_ERROR,
+										event.getJob().getResult().getException().getCause().getMessage(), event
+												.getJob().getResult().getMessage());
+								submitButton.setEnabled(true);
+								NewBugEditor.this.showBusy(false);
+							} else if (event.getJob().getResult().getCode() == Status.ERROR) {
+								MessageDialog.openError(null, IBugzillaConstants.REPORT_SUBMIT_ERROR, event
+										.getResult().getMessage());
+								submitButton.setEnabled(true);
+								NewBugEditor.this.showBusy(false);
+							}
+						}
+					});
 				}
+			};
 
-				TaskUiUtil.refreshAndOpenTaskListElement(newTask);
-				List<TaskRepository> repositoriesToSync = new ArrayList<TaskRepository>();
-				repositoriesToSync.add(repository);
-				MylarTaskListPlugin.getSynchronizationManager().synchNow(0, repositoriesToSync);
-				return;
-			}
+			BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) MylarTaskListPlugin
+					.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
+			bugzillaRepositoryClient.submitBugReport(bugzillaReportSubmitForm, submitJobListener);
 
 		} catch (UnsupportedEncodingException e) {
 			// should never get here but just in case...
 			MessageDialog.openError(null, "Posting Error", "Ensure proper encoding selected in "
 					+ TaskRepositoriesView.NAME + ".");
+			return;
 		} catch (Exception e) {
 			// TODO: Handle errors more appropriately (perhaps CoreException)
 			MessageDialog.openError(null, "Posting Error", "Ensure proper configuration in "
 					+ TaskRepositoriesView.NAME + ".");
+			return;
 		}
-		submitButton.setEnabled(true);
-		showBusy(false);
-		// final BugzillaRepositoryConnector bugzillaRepositoryClient =
-		// (BugzillaRepositoryConnector) MylarTaskListPlugin
-		// .getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
-		//
-		// IJobChangeListener closeEditorListener = new JobChangeAdapter() {
-		// public void done(IJobChangeEvent event) {
-		// if (event.getJob().getResult().equals(Status.OK_STATUS)) {
-		// close();
-		// if(submittedBugId != null) {
-		// TaskUiUtil.openRepositoryTask(repository.getUrl(), submittedBugId,
-		// AbstractRepositoryTask.getHandle(repository.getUrl(),
-		// submittedBugId));
-		// }
-		// } else {
-		// submitButton.setEnabled(true);
-		// NewBugEditor.this.showBusy(false);
-		// }
-		// }
-		// };
-		// submittedBugId = bugzillaRepositoryClient.submitBugReport(taskData,
-		// bugzillaReportSubmitForm, closeEditorListener);
+
 	}
 
 	@Override
@@ -301,8 +305,6 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		// ignore
 	}
 
-	
-	
 	@Override
 	public boolean isDirty() {
 		return true;

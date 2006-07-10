@@ -124,7 +124,9 @@ public class BugzillaReportSubmitForm {
 	private String postfix2;
 
 	private String error = null;
-
+	
+	private RepositoryTaskData taskData = null;
+	
 	/** The local attachment to attach to this report, null if none */
 	private LocalAttachment attachment = null;
 
@@ -146,6 +148,8 @@ public class BugzillaReportSubmitForm {
 			form = new BugzillaReportSubmitForm(BugzillaPlugin.ENCODING_UTF_8);
 		}
 
+		form.setTaskData(model);
+		
 		form.setPrefix(BugzillaReportSubmitForm.FORM_PREFIX_BUG_218);
 		form.setPrefix2(BugzillaReportSubmitForm.FORM_PREFIX_BUG_220);
 
@@ -200,23 +204,25 @@ public class BugzillaReportSubmitForm {
 	 * 
 	 * @throws UnsupportedEncodingException
 	 */
-	public static BugzillaReportSubmitForm makeExistingBugPost(RepositoryTaskData bug, String repositoryUrl,
+	public static BugzillaReportSubmitForm makeExistingBugPost(RepositoryTaskData model, String repositoryUrl,
 			String userName, String password, Proxy proxySettings, Set<String> removeCC, String characterEncoding)
 			throws UnsupportedEncodingException {
 
-		BugzillaReportSubmitForm bugReportPostHandler;
+		BugzillaReportSubmitForm form;
 
 		if (characterEncoding != null) {
-			bugReportPostHandler = new BugzillaReportSubmitForm(characterEncoding);
+			form = new BugzillaReportSubmitForm(characterEncoding);
 		} else {
-			bugReportPostHandler = new BugzillaReportSubmitForm(BugzillaPlugin.ENCODING_UTF_8);
+			form = new BugzillaReportSubmitForm(BugzillaPlugin.ENCODING_UTF_8);
 		}
 
+		form.setTaskData(model);
+		
 		// setDefaultCCValue(bug, userName);
-		setConnectionsSettings(bugReportPostHandler, repositoryUrl, userName, password, proxySettings, PROCESS_BUG_CGI);
+		setConnectionsSettings(form, repositoryUrl, userName, password, proxySettings, PROCESS_BUG_CGI);
 
 		// go through all of the attributes and add them to the bug post
-		for (Iterator<RepositoryTaskAttribute> it = bug.getAttributes().iterator(); it.hasNext();) {
+		for (Iterator<RepositoryTaskAttribute> it = model.getAttributes().iterator(); it.hasNext();) {
 			RepositoryTaskAttribute a = it.next();
 			if (a.getID().equals(BugzillaReportElement.CC.getKeyString())
 					|| a.getID().equals(BugzillaReportElement.REPORTER.getKeyString())
@@ -228,7 +234,7 @@ public class BugzillaReportSubmitForm {
 				String value = a.getValue();
 				// System.err.println(a.getID()+" "+a.getValue());
 				// add the attribute to the bug post
-				bugReportPostHandler.add(a.getID(), value != null ? value : "");
+				form.add(a.getID(), value != null ? value : "");
 			} else if (a != null && a.getID() != null && a.getID().compareTo("") != 0 && a.isHidden()) {
 				// we have a hidden attribute and we should send it back.
 				// System.err.println(a.getID()+" "+a.getValue());
@@ -239,49 +245,49 @@ public class BugzillaReportSubmitForm {
 				if (a.getID().equals(BugzillaReportElement.DELTA_TS.getKeyString()) && value != null) {								
 					value = stripTimeZone(value);
 				}
-				bugReportPostHandler.add(a.getID(), value);
+				form.add(a.getID(), value);
 			}
 		}
 
-		bugReportPostHandler.add("cc", "somewhere@nowhere.com");
+		form.add("cc", "somewhere@nowhere.com");
 
 		// when posting the bug id is encoded in a hidden field named 'id'
-		bugReportPostHandler.add(KEY_ID, bug.getAttributeValue(BugzillaReportElement.BUG_ID.getKeyString()));
+		form.add(KEY_ID, model.getAttributeValue(BugzillaReportElement.BUG_ID.getKeyString()));
 
 		// add the operation to the bug post
-		RepositoryOperation o = bug.getSelectedOperation();
+		RepositoryOperation o = model.getSelectedOperation();
 		if (o == null)
-			bugReportPostHandler.add(KEY_KNOB, VAL_NONE);
+			form.add(KEY_KNOB, VAL_NONE);
 		else {
-			bugReportPostHandler.add(KEY_KNOB, o.getKnobName());
+			form.add(KEY_KNOB, o.getKnobName());
 			if (o.hasOptions()) {
 				String sel = o.getOptionValue(o.getOptionSelection());
-				bugReportPostHandler.add(o.getOptionName(), sel);
+				form.add(o.getOptionName(), sel);
 			} else if (o.isInput()) {
 				String sel = o.getInputValue();
-				bugReportPostHandler.add(o.getInputName(), sel);
+				form.add(o.getInputName(), sel);
 			}
 		}
-		bugReportPostHandler.add(KEY_FORM_NAME, VAL_PROCESS_BUG);
+		form.add(KEY_FORM_NAME, VAL_PROCESS_BUG);
 
-		if (bug.getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString()) != null) {
-			bugReportPostHandler.add(KEY_SHORT_DESC, bug.getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString())
+		if (model.getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString()) != null) {
+			form.add(KEY_SHORT_DESC, model.getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString())
 					.getValue());
 		}
 
-		if (bug.getNewComment().length() != 0) {
-			bugReportPostHandler.add(KEY_COMMENT, bug.getNewComment());
+		if (model.getNewComment().length() != 0) {
+			form.add(KEY_COMMENT, model.getNewComment());
 		}
 
 		if (removeCC != null && removeCC.size() > 0) {
 			String[] s = new String[removeCC.size()];
-			bugReportPostHandler.add(KEY_CC, toCommaSeparatedList(removeCC.toArray(s)));
-			bugReportPostHandler.add(KEY_REMOVECC, VAL_TRUE);
+			form.add(KEY_CC, toCommaSeparatedList(removeCC.toArray(s)));
+			form.add(KEY_REMOVECC, VAL_TRUE);
 		}
 
-		bugReportPostHandler.attachment = bug.getNewAttachment();
+		form.attachment = model.getNewAttachment();
 
-		return bugReportPostHandler;
+		return form;
 	}
 
 	
@@ -658,5 +664,13 @@ public class BugzillaReportSubmitForm {
 
 	public void setNewBugPost(boolean isNewBugPost) {
 		this.isNewBugPost = isNewBugPost;
+	}
+
+	public RepositoryTaskData getTaskData() {
+		return taskData;
+	}
+
+	public void setTaskData(RepositoryTaskData taskData) {
+		this.taskData = taskData;
 	}
 }

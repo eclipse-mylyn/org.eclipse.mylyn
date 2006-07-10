@@ -29,8 +29,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -41,6 +41,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaCompareInput;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
+import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.tasklist.Comment;
 import org.eclipse.mylar.internal.tasklist.RepositoryOperation;
@@ -268,11 +269,10 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		FormToolkit toolkit = new FormToolkit(composite.getDisplay());
 		RepositoryTaskAttribute owner = taskData.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED);
 
-
 		if (owner != null && owner.getValue().indexOf(repository.getUserName()) != -1) {
 			return;
 		}
-		
+
 		RepositoryTaskAttribute reporter = taskData.getAttribute(RepositoryTaskAttribute.USER_REPORTER);
 		if (reporter != null && reporter.getValue().indexOf(repository.getUserName()) != -1) {
 			return;
@@ -292,9 +292,9 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		addSelfButton.addSelectionListener(new SelectionAdapter() {
 
 			@Override
-			public void widgetSelected(SelectionEvent e) {				
+			public void widgetSelected(SelectionEvent e) {
 				if (addSelfButton.getSelection()) {
-					taskData.setAttributeValue(BugzillaReportElement.ADDSELFCC.getKeyString(), "1");					
+					taskData.setAttributeValue(BugzillaReportElement.ADDSELFCC.getKeyString(), "1");
 				} else {
 					taskData.setAttributeValue(BugzillaReportElement.ADDSELFCC.getKeyString(), "0");
 				}
@@ -384,7 +384,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		}
 		updateBug();
 		submitButton.setEnabled(false);
-		ExistingBugEditor.this.showBusy(true);
+		showBusy(true);
 		BugzillaReportSubmitForm bugzillaReportSubmitForm;
 
 		try {
@@ -408,42 +408,34 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		final BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) MylarTaskListPlugin
 				.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
 
-		IJobChangeListener closeEditorListener = new IJobChangeListener() {
+		JobChangeAdapter submitJobListener = new JobChangeAdapter() {
 
 			public void done(final IJobChangeEvent event) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						if (event.getJob().getResult().equals(Status.OK_STATUS)) {
+						if (event.getJob().getResult().getCode() == Status.OK
+								&& event.getJob().getResult().getMessage() != null) {//
 							close();
-						} else {
+							return;
+						} else if (event.getJob().getResult().getCode() == Status.INFO) {
+							WebBrowserDialog.openAcceptAgreement(null, IBugzillaConstants.REPORT_SUBMIT_ERROR, event
+									.getJob().getResult().getException().getCause().getMessage(), event.getJob()
+									.getResult().getMessage());
+							submitButton.setEnabled(true);
+							ExistingBugEditor.this.showBusy(false);
+						} else if (event.getJob().getResult().getCode() == Status.ERROR) {
+							MessageDialog.openError(null, IBugzillaConstants.REPORT_SUBMIT_ERROR, event.getResult()
+									.getMessage());
 							submitButton.setEnabled(true);
 							ExistingBugEditor.this.showBusy(false);
 						}
 					}
 				});
 			}
-
-			public void aboutToRun(IJobChangeEvent event) {
-				// ignore
-			}
-
-			public void awake(IJobChangeEvent event) {
-				// ignore
-			}
-
-			public void running(IJobChangeEvent event) {
-				// ignore
-			}
-
-			public void scheduled(IJobChangeEvent event) {
-				// ignore
-			}
-
-			public void sleeping(IJobChangeEvent event) {
-				// ignore
-			}
 		};
-		bugzillaRepositoryClient.submitBugReport(taskData, bugzillaReportSubmitForm, closeEditorListener);
+		
+		bugzillaRepositoryClient.submitBugReport(bugzillaReportSubmitForm, submitJobListener);
+		
 	}
 
 	@Override
