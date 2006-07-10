@@ -26,11 +26,11 @@ import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
  */
 public class TaskEditorUrlHyperlinkDetector implements IHyperlinkDetector {
 
-	// Regexp from:
-	// http://www.forta.com/blog/index.cfm?mode=entry&entry=A61B9FF5-3048-80A9-EF09C0A7F1E9FBD3
-	private static final Pattern urlPattern = Pattern.compile(
-			"https?://([-\\w\\.]+)+(:\\d+)?(/([\\w/_\\.]*(\\?\\S+)?)?)?", Pattern.CASE_INSENSITIVE);
-
+	// URL BNF: http://www.foad.org/~abigail/Perl/url2.html
+	// Source: http://www.truerwords.net/articles/ut/urlactivation.html#expressions
+	// Original pattern: (^|[ \\t\\r\\n])((ftp|http|https|gopher|mailto|news|nntp|telnet|wais|file|prospero|aim|webcal):(([A-Za-z0-9$_.+!*(),;/?:@&~=-])|%[A-Fa-f0-9]{2}){2,}(#([a-zA-Z0-9][a-zA-Z0-9$_.+!*(),;/?:@&~=%-]*))?([A-Za-z0-9$_+!*();/?:~-]))
+	private static final Pattern urlPattern = Pattern.compile("((ftp|http|https|gopher|mailto|news|nntp|telnet|wais|file|prospero|aim|webcal):(([A-Za-z0-9$_.+!*,;/?:@&~=-])|%[A-Fa-f0-9]{2}){2,}(#([a-zA-Z0-9][a-zA-Z0-9$_.+!*,;/?:@&~=%-]*))?([A-Za-z0-9$_+!*;/?:~-]))", Pattern.CASE_INSENSITIVE);
+	
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 
 		if (region == null || textViewer == null)
