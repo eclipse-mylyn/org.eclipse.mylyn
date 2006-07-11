@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -78,7 +79,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public IWizard getNewTaskWizard(TaskRepository taskRepository) {
+	public IWizard getNewTaskWizard(TaskRepository taskRepository, IStructuredSelection selection) {
 		return null;
 	}
 
@@ -130,7 +131,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public IWizard getNewQueryWizard(TaskRepository repository) {
+	public IWizard getNewQueryWizard(TaskRepository repository, IStructuredSelection selection) {
 		return new NewTracQueryWizard(repository);
 	}
 

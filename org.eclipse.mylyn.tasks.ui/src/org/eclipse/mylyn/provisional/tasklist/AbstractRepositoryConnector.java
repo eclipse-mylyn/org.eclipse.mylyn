@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.ZipFileUtil;
@@ -121,11 +122,11 @@ public abstract class AbstractRepositoryConnector {
 
 	public abstract AbstractRepositorySettingsPage getSettingsPage();
 
-	public abstract IWizard getNewQueryWizard(TaskRepository repository);
+	public abstract IWizard getNewQueryWizard(TaskRepository repository, IStructuredSelection selection);
 
 	public abstract void openEditQueryDialog(AbstractRepositoryQuery query);
 
-	public abstract IWizard getNewTaskWizard(TaskRepository taskRepository);
+	public abstract IWizard getNewTaskWizard(TaskRepository taskRepository, IStructuredSelection selection);
 
 	public abstract List<String> getSupportedVersions();
 

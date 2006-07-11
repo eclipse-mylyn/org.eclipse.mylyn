@@ -11,6 +11,8 @@
 package org.eclipse.mylar.internal.bugzilla.ui.wizard;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
@@ -36,6 +39,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
@@ -50,7 +54,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -106,6 +109,8 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 
 	protected IPreferenceStore prefs = BugzillaUiPlugin.getDefault().getPreferenceStore();
 
+	private final IStructuredSelection selection;
+
 	/**
 	 * Constructor for BugzillaProductPage
 	 * 
@@ -115,9 +120,12 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 	 *            The bug wizard which created this page
 	 * @param repository
 	 *            The repository the data is coming from
+	 * @param selection
 	 */
-	public BugzillaProductPage(IWorkbench workbench, NewBugzillaReportWizard bugWiz, TaskRepository repository) {
+	public BugzillaProductPage(IWorkbench workbench, NewBugzillaReportWizard bugWiz, TaskRepository repository,
+			IStructuredSelection selection) {
 		super("Page1");
+		this.selection = selection;
 		setTitle(IBugzillaConstants.TITLE_NEW_BUG);
 		setDescription(DESCRIPTION);
 		this.workbench = workbench;
@@ -148,52 +156,27 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 
 	public void createControl(Composite parent) {
 		// create the composite to hold the widgets
-		GridData gd;
 		Composite composite = new Composite(parent, SWT.NULL);
 
 		// create the desired layout for this wizard page
-		GridLayout gl = new GridLayout();
-		int ncol = 1;
-		gl.numColumns = ncol;
-		composite.setLayout(gl);
+		composite.setLayout(new GridLayout(1, true));
 
 		// create the list of bug reports
-		gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.heightHint = 200;
 		listBox = new org.eclipse.swt.widgets.List(composite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL);
+		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+		gd.heightHint = 200;
 		listBox.setLayoutData(gd);
-
-		createLine(composite, ncol);
 
 		// Each wizard has different types of items to add to the list
 		populateList(true);
 
-		createAdditionalControls(composite);
-
-		// set the composite as the control for this page
-		setControl(composite);
 		listBox.addListener(SWT.Selection, this);
-	}
 
-	/**
-	 * Create a separator line in the dialog
-	 * 
-	 * @param parent
-	 *            The composite to create the line on
-	 * @param ncol
-	 *            The number of columns to span
-	 */
-	protected void createLine(Composite parent, int ncol) {
-		Label line = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL | SWT.BOLD);
-		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
-		gridData.horizontalSpan = ncol;
-		line.setLayoutData(gridData);
-	}
+		listBox.setSelection(getSelectedProducts());
+		listBox.showSelection();
 
-	public void createAdditionalControls(Composite parent) {
-		Button updateButton = new Button(parent, SWT.LEFT | SWT.PUSH);
+		Button updateButton = new Button(composite, SWT.LEFT | SWT.PUSH);
 		updateButton.setText(LABEL_UPDATE);
-
 		updateButton.setLayoutData(new GridData());
 
 		updateButton.addMouseListener(new MouseAdapter() {
@@ -236,6 +219,12 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 				}
 			}
 		});
+
+		// set the composite as the control for this page
+		setControl(composite);
+
+		isPageComplete();
+		getWizard().getContainer().updateButtons();
 	}
 
 	private void initProducts() {
@@ -288,6 +277,33 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 			}
 		}
 		listBox.setFocus();
+	}
+
+	private String[] getSelectedProducts() {
+		ArrayList<String> products = new ArrayList<String>();
+
+		Object element = selection.getFirstElement();
+		if (element instanceof BugzillaRepositoryQuery) {
+			BugzillaRepositoryQuery query = (BugzillaRepositoryQuery) element;
+			String queryUrl = query.getQueryUrl();
+			queryUrl = queryUrl.substring(queryUrl.indexOf("?") + 1);
+			String[] options = queryUrl.split("&");
+
+			for (String option : options) {
+				String key = option.substring(0, option.indexOf("="));
+				if ("product".equals(key)) {
+					try {
+						products.add(URLDecoder.decode(option.substring(option.indexOf("=") + 1), "UTF-8"));
+					} catch (UnsupportedEncodingException ex) {
+						// ignore
+					}
+				}
+			}
+		}
+
+		// TODO find a way to map from tasks/query hits back to query/category
+
+		return products.toArray(new String[products.size()]);
 	}
 
 	public void handleEvent(Event event) {

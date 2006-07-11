@@ -16,6 +16,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
@@ -78,13 +79,13 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public IWizard getNewQueryWizard(TaskRepository repository) {
+	public IWizard getNewQueryWizard(TaskRepository repository, IStructuredSelection selection) {
 		// ignore
 		return null;
 	}
 
 	@Override
-	public IWizard getNewTaskWizard(TaskRepository taskRepository) {
+	public IWizard getNewTaskWizard(TaskRepository taskRepository, IStructuredSelection selection) {
 		// ignore
 		return null;
 	}

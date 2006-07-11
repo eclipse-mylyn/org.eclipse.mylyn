@@ -14,18 +14,20 @@ package org.eclipse.mylar.internal.tasklist.ui.wizards;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 
 /**
  * @author Mik Kersten
+ * @author Eugene Kuleshov
  */
 public class NewRepositoryTaskWizard extends MultiRepositoryAwareWizard {
 
 	private static final String TITLE = "New Repostiory Task";
 	
-	public NewRepositoryTaskWizard() {
-		super(new NewRepositoryTaskPage(getConnectorKinds()), TITLE);
+	public NewRepositoryTaskWizard(IStructuredSelection selection) {
+		super(new NewRepositoryTaskPage(getConnectorKinds()).setSelection(selection), TITLE);
 		setNeedsProgressMonitor(true);
 	}
 

@@ -20,6 +20,7 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 
 /**
  * @author Mik Kersten
+ * @author Euegene Kuleshov
  */
 public class NewRepositoryTaskPage extends SelectRepositoryPage {
 	
@@ -31,6 +32,6 @@ public class NewRepositoryTaskPage extends SelectRepositoryPage {
 	protected IWizard createWizard(TaskRepository taskRepository) {
 		AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
 				taskRepository.getKind());
-		return connector.getNewTaskWizard(taskRepository);
+		return connector.getNewTaskWizard(taskRepository, getSelection());
 	}
 }

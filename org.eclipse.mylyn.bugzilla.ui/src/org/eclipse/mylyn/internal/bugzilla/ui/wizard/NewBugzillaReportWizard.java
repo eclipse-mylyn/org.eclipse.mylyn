@@ -50,8 +50,8 @@ public class NewBugzillaReportWizard extends Wizard implements INewWizard {
 	// TODO: Change model to a RepositoryTaskData
 	// protected RepositoryTaskData model;
 
-	public NewBugzillaReportWizard(TaskRepository repository) {
-		this(false, repository);
+	public NewBugzillaReportWizard(TaskRepository repository, IStructuredSelection selection) {
+		this(false, repository, selection);
 		model = new NewBugzillaReport(repository.getUrl(), MylarTaskListPlugin.getDefault().getOfflineReportsFile()
 				.getNextOfflineBugId());
 		super.setDefaultPageImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin(
@@ -59,10 +59,10 @@ public class NewBugzillaReportWizard extends Wizard implements INewWizard {
 		super.setWindowTitle(TITLE);
 	}
 
-	public NewBugzillaReportWizard(boolean fromDialog, TaskRepository repository) {
+	public NewBugzillaReportWizard(boolean fromDialog, TaskRepository repository, IStructuredSelection selection) {
 		super();
 		this.repository = repository;
-		this.productPage = new BugzillaProductPage(workbenchInstance, this, repository);
+		this.productPage = new BugzillaProductPage(workbenchInstance, this, repository, selection);
 	}
 
 	public void init(IWorkbench workbench, IStructuredSelection selection) {

@@ -11,24 +11,21 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.actions;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.NewRepositoryTaskWizard;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IViewActionDelegate;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
+ * @author Eugene Kuleshov
  */
-public class NewRepositoryTaskAction extends Action implements IViewActionDelegate {
+public class NewRepositoryTaskAction extends AbstractRepositoryAction {
 
 	public static final String ID = "org.eclipse.mylar.tasklist.ui.repositories.actions.create";
 			
@@ -43,10 +40,10 @@ public class NewRepositoryTaskAction extends Action implements IViewActionDelega
 		}
 		 
 //		IWizard wizard = new MultiRepositoryAwareWizard(new NewRepositoryTaskPage(connectorKinds), TITLE);
-		IWizard wizard = new NewRepositoryTaskWizard();
+		IWizard wizard = new NewRepositoryTaskWizard(getSelection());
 		
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		if (wizard != null && shell != null && !shell.isDisposed()) {
+		if (shell != null && !shell.isDisposed()) {
 
 			WizardDialog dialog = new WizardDialog(shell, wizard);
 			dialog.setBlockOnOpen(true);
@@ -57,15 +54,8 @@ public class NewRepositoryTaskAction extends Action implements IViewActionDelega
 		}
 	}
 
-	public void init(IViewPart view) {
-
-	}
-
 	public void run(IAction action) {
 		run();
 	}
 
-	public void selectionChanged(IAction action, ISelection selection) {
-
-	}
 }

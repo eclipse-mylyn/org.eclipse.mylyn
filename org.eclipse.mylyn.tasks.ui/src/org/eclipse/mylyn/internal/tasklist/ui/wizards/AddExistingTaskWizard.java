@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.wizards;
 
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -19,25 +20,29 @@ import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 /**
  * @author Mik Kersten
  * @author Brock Janiczak
+ * @author Eugene Kuleshov
  */
 public class AddExistingTaskWizard extends MultiRepositoryAwareWizard {
 
 	public static final String TITLE = "Add Existing Repository Task";
 	
-	public AddExistingTaskWizard() {
-		super(new SelectRepositoryPage() {
-
-			@Override
-			protected IWizard createWizard(TaskRepository taskRepository) {
-				AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
-						taskRepository.getKind());
-				if (connector.canCreateTaskFromKey()) {
-					IWizard wizard = connector.getAddExistingTaskWizard(taskRepository);
-					return wizard;
-				} else {
-					return null;
-				}
-			}
-		}, TITLE);
+	public AddExistingTaskWizard(IStructuredSelection selection) {
+		super(new SelectRepositoryPageForAddExistingTask().setSelection(selection), TITLE);
 	}
+
+	private static final class SelectRepositoryPageForAddExistingTask extends SelectRepositoryPage {
+	
+		@Override
+		protected IWizard createWizard(TaskRepository taskRepository) {
+			AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
+					taskRepository.getKind());
+			if (connector.canCreateTaskFromKey()) {
+				IWizard wizard = connector.getAddExistingTaskWizard(taskRepository);
+				return wizard;
+			} else {
+				return null;
+			}
+		}
+	}
+	
 }

@@ -11,34 +11,27 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.actions;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.NewQueryWizard;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IViewActionDelegate;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
+ * @author Eugene Kuleshov
  */
-public class NewQueryAction extends Action implements IViewActionDelegate {
+public class NewQueryAction extends AbstractRepositoryAction {
 
 	private static final String WIZARD_LABEL = "Add or modify repository query";
 
-	public void init(IViewPart view) {
-		// ignore
-	}
-
 	public void run(IAction action) {
 		try {
-			NewQueryWizard wizard = new NewQueryWizard();
+			NewQueryWizard wizard = new NewQueryWizard(getSelection());
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-			if (wizard != null && shell != null && !shell.isDisposed()) {
+			if (shell != null && !shell.isDisposed()) {
 				WizardDialog dialog = new WizardDialog(shell, wizard);
 				dialog.create();
 				dialog.setTitle(WIZARD_LABEL);
@@ -53,7 +46,4 @@ public class NewQueryAction extends Action implements IViewActionDelegate {
 		}
 	}
 
-	public void selectionChanged(IAction action, ISelection selection) {
-		// ignore
-	}
 }

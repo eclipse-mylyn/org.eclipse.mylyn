@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.internal.bugzilla.core.AbstractReportFactory;
@@ -145,10 +146,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return task;
 	}
 
-	public IWizard getNewQueryWizard(TaskRepository repository) {
-		return new NewBugzillaQueryWizard(repository);
-	}
-
 	public IWizard getEditQueryWizard(TaskRepository repository, AbstractRepositoryQuery query) {
 		if (!(query instanceof BugzillaRepositoryQuery)) {
 			return null;
@@ -156,6 +153,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return new EditBugzillaQueryWizard(repository, (BugzillaRepositoryQuery) query);
 	}
 
+	public IWizard getNewQueryWizard(TaskRepository repository, IStructuredSelection selection) {
+		return new NewBugzillaQueryWizard(repository);
+	}
+	
 	public void openEditQueryDialog(AbstractRepositoryQuery query) {
 		if (!(query instanceof BugzillaRepositoryQuery)) {
 			return;
@@ -298,8 +299,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public IWizard getNewTaskWizard(TaskRepository taskRepository) {
-		return new NewBugzillaReportWizard(taskRepository);
+	public IWizard getNewTaskWizard(TaskRepository taskRepository, IStructuredSelection selection) {
+		return new NewBugzillaReportWizard(taskRepository, selection);
 	}
 
 	public List<String> getSupportedVersions() {
