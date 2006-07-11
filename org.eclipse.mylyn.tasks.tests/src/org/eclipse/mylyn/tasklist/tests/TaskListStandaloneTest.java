@@ -20,6 +20,8 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskExternalizer;
 import org.eclipse.mylar.internal.tasklist.util.TaskListWriter;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.ITaskListExternalizer;
@@ -28,9 +30,8 @@ import org.eclipse.mylar.provisional.tasklist.Task;
 import org.eclipse.mylar.provisional.tasklist.TaskListManager;
 
 /**
- * Can be run without workbench
- * 
  * @author Mik Kersten
+ * @author Rob Elves
  */
 public class TaskListStandaloneTest extends TestCase {
 
@@ -38,13 +39,15 @@ public class TaskListStandaloneTest extends TestCase {
 
 	private File file;
 
+	List<ITaskListExternalizer> externalizers;
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		List<ITaskListExternalizer> externalizers = new ArrayList<ITaskListExternalizer>();
+		MylarTaskListPlugin.getRepositoryManager().clearRepositories();
+		externalizers = new ArrayList<ITaskListExternalizer>();
 
-		// bugzilla externalizer requires workbench
-		// externalizers.add(new BugzillaTaskExternalizer());
+		externalizers.add(new BugzillaTaskExternalizer());
 
 		TaskListWriter writer = new TaskListWriter();
 		writer.setDelegateExternalizers(externalizers);
@@ -59,9 +62,9 @@ public class TaskListStandaloneTest extends TestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-//		manager.getTaskList().clear();
+		// manager.getTaskList().clear();
 		manager.resetTaskList();
-//		manager.setTaskList(new TaskList());
+		// manager.setTaskList(new TaskList());
 		super.tearDown();
 	}
 
@@ -113,6 +116,43 @@ public class TaskListStandaloneTest extends TestCase {
 		assertEquals(task.getReminderDate(), readTask.getReminderDate());
 	}
 
+	public void testTaskRetentionWhenConnectorMissing() {
+
+		// make some tasks
+		// save them
+		BugzillaTask task = new BugzillaTask("http://bugs-1", "1", true);
+		manager.getTaskList().addTask(task);
+		manager.saveTaskList();
+
+		// reload tasklist and check that they persist
+		manager.resetTaskList();
+		manager.readExistingOrCreateNewList();
+		assertEquals(1, manager.getTaskList().getAllTasks().size());
+
+		// removed/disable externalizers
+		externalizers.clear();
+		manager.getTaskListWriter().setDelegateExternalizers(externalizers);
+		
+		// reload tasklist ensure task didn't load
+		manager.resetTaskList();
+		manager.readExistingOrCreateNewList();
+		assertEquals(0, manager.getTaskList().getAllTasks().size());
+		// Save the task list (tasks with missing connectors should get
+		// persisted)
+		manager.saveTaskList();
+
+		// re-enable connector
+		externalizers.add(new BugzillaTaskExternalizer());
+		manager.getTaskListWriter().setDelegateExternalizers(externalizers);
+
+		// re-load tasklist
+		manager.resetTaskList();
+		manager.readExistingOrCreateNewList();
+		
+		// ensure that task now gets loaded
+		assertEquals(1, manager.getTaskList().getAllTasks().size());
+	}
+	
 	public void assertDatesCloseEnough(Date first, Date second) {
 		assertTrue(second.getTime() - first.getTime() < 100);
 	}

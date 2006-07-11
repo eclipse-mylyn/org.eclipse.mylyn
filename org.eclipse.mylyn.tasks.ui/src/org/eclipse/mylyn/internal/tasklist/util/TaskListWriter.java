@@ -68,6 +68,8 @@ public class TaskListWriter {
 
 	private DelegatingTaskExternalizer delagatingExternalizer = new DelegatingTaskExternalizer();
 
+	private List<Node> orphanedTaskNodes = new ArrayList<Node>();
+	
 	private String readVersion = "";
 
 	private boolean hasCaughtException = false;
@@ -121,7 +123,14 @@ public class TaskListWriter {
 		for (ITask task : new ArrayList<ITask>(taskList.getAllTasks())) {
 			createTaskElement(doc, root, task);
 		}
-
+		
+		for (Node orphanedTaskNode : orphanedTaskNodes) {
+			Node tempNode = doc.importNode(orphanedTaskNode, true);
+			if(tempNode != null) {
+				root.appendChild(tempNode);
+			}
+		}		
+		
 		doc.appendChild(root);
 		writeDOMtoFile(doc, outFile);
 		return;
@@ -203,6 +212,7 @@ public class TaskListWriter {
 	 */
 	public void readTaskList(TaskList taskList, File inFile) {
 		hasCaughtException = false;
+		orphanedTaskNodes.clear();
 		try {
 			if (!inFile.exists())
 				return;
@@ -244,11 +254,21 @@ public class TaskListWriter {
 									wasRead = true;
 								}
 							}
+							
 							if (!wasRead && delagatingExternalizer.canReadTask(child)) {
 								delagatingExternalizer.readTask(child, taskList, null, null);
+								wasRead = true;
+							}
+							
+							if(!wasRead) {
+								orphanedTaskNodes.add(child);
 							}
 						}
 					} catch (Exception e) {
+						// TODO: Save orphans here too?
+						// If data is source of exception then error will just repeat
+						// now that orphans are re-saved upon task list save. So for now we
+						// log the error warning the user and make a copy of the bad tasklist.						
 						handleException(inFile, child, e);
 					}
 				}

@@ -64,9 +64,11 @@ public class TaskListManagerTest extends TestCase {
 		super.setUp();
 		manager = MylarTaskListPlugin.getTaskListManager();
 		manager.resetTaskList();
+		manager.readExistingOrCreateNewList();
 
 		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
 		MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
+		assertEquals(0, manager.getTaskList().getAllTasks().size());
 	}
 
 	@Override
@@ -77,7 +79,7 @@ public class TaskListManagerTest extends TestCase {
 		MylarTaskListPlugin.getRepositoryManager().removeRepository(repository);
 	}
 
-	public void testSingleTaskDeletion() {
+	public void testSingleTaskDeletion() {		
 		MockRepositoryTask task = new MockRepositoryTask("mock-1");
 		manager.getTaskList().moveToRoot(task);
 		manager.saveTaskList();
