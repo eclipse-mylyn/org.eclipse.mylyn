@@ -65,6 +65,10 @@ public class TaskRepositoriesView extends ViewPart {
 
 		public void repositoryRemoved(TaskRepository repository) {
 			refresh();			
+		}
+
+		public void repositorySettingsChanged(TaskRepository repository) {
+			refresh();
 		} 
 	};
 

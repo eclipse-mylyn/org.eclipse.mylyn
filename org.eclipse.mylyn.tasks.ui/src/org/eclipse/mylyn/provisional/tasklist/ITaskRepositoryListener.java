@@ -22,6 +22,6 @@ public interface ITaskRepositoryListener {
 	
 	public abstract void repositoryRemoved(TaskRepository repository);
 	
-//	public abstract void repositorySetUpdated();
+	public abstract void repositorySettingsChanged(TaskRepository repository);
 	
 }

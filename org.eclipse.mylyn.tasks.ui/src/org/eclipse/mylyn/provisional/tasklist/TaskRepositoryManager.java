@@ -378,4 +378,10 @@ public class TaskRepositoryManager {
 		// MylarTaskListPlugin.getMylarCorePrefs().setValue(prefId, "");
 		//		}
 	}
+
+	public void notifyRepositorySettingsChagned(TaskRepository repository) {
+		for (ITaskRepositoryListener listener : listeners) {
+			listener.repositorySettingsChanged(repository);
+		}
+	}
 }
