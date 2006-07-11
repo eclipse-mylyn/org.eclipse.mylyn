@@ -82,9 +82,11 @@ public class MylarContextExternalizer {
 
 	public MylarContext readContextFromXML(String handleIdentifier, File file) {
 		try {
-			if (!file.exists())
+			if (!file.exists()) {
 				return null;
-			return reader.readContext(handleIdentifier, file);
+			} else {
+				return reader.readContext(handleIdentifier, file);
+			}
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Could not read: " + file.getAbsolutePath(), true);
 		}

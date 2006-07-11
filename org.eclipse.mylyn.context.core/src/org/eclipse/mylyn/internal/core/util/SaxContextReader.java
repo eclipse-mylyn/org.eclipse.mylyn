@@ -30,13 +30,11 @@ public class SaxContextReader implements IContextReader {
 		if (!file.exists())
 			return null;
 		try {
-
 			SaxContextContentHandler contentHandler = new SaxContextContentHandler(handleIdentifier);
 			XMLReader reader = XMLReaderFactory.createXMLReader();
 			reader.setContentHandler(contentHandler);
 			reader.parse(new InputSource(new FileInputStream(file)));
 			return contentHandler.getContext();
-
 		} catch (Exception e) {
 			file.renameTo(new File(file.getAbsolutePath() + "-save"));
 			return null;

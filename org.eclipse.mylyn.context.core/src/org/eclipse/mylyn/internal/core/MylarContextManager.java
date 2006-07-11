@@ -12,6 +12,11 @@
 package org.eclipse.mylar.internal.core;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -954,4 +959,34 @@ public class MylarContextManager {
 	public ShellLifecycleListener getShellLifecycleListener() {
 		return shellLifecycleListener;
 	}
+
+	public boolean isValidContextFile(File file) {
+		if (file.exists() && file.getName().endsWith(MylarContextManager.CONTEXT_FILE_EXTENSION)) {
+			MylarContext context = externalizer.readContextFromXML("temp", file);
+			return context != null;
+		}
+		return false;
+	}
+
+	public void transferContextAndActivate(String handleIdentifier, File file) {
+		File contextFile = getFileForContext(handleIdentifier);
+		contextFile.delete();
+		try {
+			copy(file, contextFile);
+		} catch (IOException e) {
+			MylarStatusHandler.fail(e, "Cold not transfer context", false);
+		}	
+	}
+	
+	private void copy(File src, File dest) throws IOException {
+        InputStream in = new FileInputStream(src);
+        OutputStream out = new FileOutputStream(dest);
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = in.read(buf)) > 0) {
+            out.write(buf, 0, len);
+        }
+        in.close();
+        out.close();
+    }
 }
