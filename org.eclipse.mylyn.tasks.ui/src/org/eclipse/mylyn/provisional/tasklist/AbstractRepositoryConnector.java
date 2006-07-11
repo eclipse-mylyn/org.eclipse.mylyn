@@ -13,6 +13,7 @@ package org.eclipse.mylar.provisional.tasklist;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.NoRouteToHostException;
 import java.net.Proxy;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -476,6 +477,9 @@ public abstract class AbstractRepositoryConnector {
 			try {
 				changedTasks = getChangedSinceLastSync(repository, repositoryTasks);
 			} catch (UnknownHostException e) { 
+				// ignore, indicates working offline
+				return;
+			} catch (NoRouteToHostException e) {
 				// ignore, indicates working offline
 				return;
 			} catch (Exception e) {

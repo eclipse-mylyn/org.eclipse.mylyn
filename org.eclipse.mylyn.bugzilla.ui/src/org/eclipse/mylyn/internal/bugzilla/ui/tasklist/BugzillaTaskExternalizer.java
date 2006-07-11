@@ -158,7 +158,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		BugzillaTask task = new BugzillaTask(handle, label, false);
 		super.readTaskInfo(task, taskList, element, parent, category);
 
-		task.setCurrentlyDownloading(false);
+		task.setCurrentlySynchronizing(false);
 		if (element.hasAttribute(KEY_LAST_MOD_DATE) && !element.getAttribute(KEY_LAST_MOD_DATE).equals("")) {
 			task.setModifiedDateStamp(element.getAttribute(KEY_LAST_MOD_DATE));
 		} else {

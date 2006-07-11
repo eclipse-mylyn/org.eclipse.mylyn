@@ -99,8 +99,8 @@ public abstract class AbstractRepositoryTask extends Task {
 		return currentlySynchronizing;
 	}
 
-	public void setCurrentlyDownloading(boolean currentlyDownloading) {
-		this.currentlySynchronizing = currentlyDownloading;
+	public void setCurrentlySynchronizing(boolean currentlySychronizing) {
+		this.currentlySynchronizing = currentlySychronizing;
 	}
 
 	public static String getTaskId(String taskHandle) {

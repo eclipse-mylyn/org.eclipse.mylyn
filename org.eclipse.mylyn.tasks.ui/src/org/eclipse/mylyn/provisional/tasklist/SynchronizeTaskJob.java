@@ -11,6 +11,8 @@
 
 package org.eclipse.mylar.provisional.tasklist;
 
+import java.net.NoRouteToHostException;
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Set;
 
@@ -27,7 +29,6 @@ import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasklist.ui.editors.TaskEditorInput;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressConstants;
@@ -68,12 +69,12 @@ class SynchronizeTaskJob extends Job {
 					throw new OperationCanceledException();
 
 				// TODO: refactor conditions
-				boolean canNotSynch = repositoryTask.isDirty() || repositoryTask.isSynchronizing();
+				boolean canNotSynch = repositoryTask.isDirty();// || repositoryTask.isSynchronizing();
 				boolean hasLocalChanges = repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING
 						|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT;
 				if (forceSync || (!canNotSynch && !hasLocalChanges) || !repositoryTask.isDownloaded()) {
 					monitor.setTaskName(LABEL_SYNCHRONIZING + repositoryTask.getDescription());
-					repositoryTask.setCurrentlyDownloading(true);
+					repositoryTask.setCurrentlySynchronizing(true);
 					MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 					IOfflineTaskHandler offlineHandler = connector.getOfflineTaskHandler();
 					if (offlineHandler != null) {
@@ -81,7 +82,10 @@ class SynchronizeTaskJob extends Job {
 						try {
 							downloadedTaskData = offlineHandler.downloadTaskData(repositoryTask);
 						} catch (final CoreException e) {
-							MylarStatusHandler.log(e.getStatus());
+							if(!(e.getStatus().getException() instanceof UnknownHostException) && !(e.getStatus().getException() instanceof NoRouteToHostException)) {
+								MylarStatusHandler.log(e.getStatus());	
+							}							
+							return Status.OK_STATUS;
 						}
 
 						if (downloadedTaskData != null) {
@@ -92,13 +96,8 @@ class SynchronizeTaskJob extends Job {
 								refreshEditors(repositoryTask);
 							}
 						}
-					}
-					// else {
-					// MylarStatusHandler.log("No offline content handler
-					// available for "
-					// + connector.getRepositoryType() + " connector.", this);
-					// }
-					repositoryTask.setCurrentlyDownloading(false);
+					}					
+					repositoryTask.setCurrentlySynchronizing(false);
 					MylarTaskListPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 
 				}
@@ -114,7 +113,7 @@ class SynchronizeTaskJob extends Job {
 			monitor.done();
 		}
 		// this.connector.removeRefreshingTask(repositoryTask);
-		return new Status(IStatus.OK, MylarPlugin.PLUGIN_ID, IStatus.OK, "", null);
+		return Status.OK_STATUS;
 	}
 
 	private void refreshEditors(final AbstractRepositoryTask repositoryTask) {
