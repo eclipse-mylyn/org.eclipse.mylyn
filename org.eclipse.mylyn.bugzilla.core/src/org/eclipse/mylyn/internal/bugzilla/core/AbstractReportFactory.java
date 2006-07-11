@@ -21,6 +21,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.zip.GZIPInputStream;
 
 import javax.security.auth.login.LoginException;
 
@@ -37,6 +38,8 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public class AbstractReportFactory {
 
+	private static final String ENCODING_GZIP = "gzip";
+
 	private static final int COM_TIME_OUT = 30000;
 
 	private static final String CONTENT_TYPE_TEXT_HTML = "text/html";
@@ -49,17 +52,20 @@ public class AbstractReportFactory {
 
 	public static final int RETURN_ALL_HITS = -1;
 
-	protected void collectResults(URL url, Proxy proxySettings, String characterEncoding, DefaultHandler contentHandler, boolean clean)
-			throws IOException, LoginException, KeyManagementException, NoSuchAlgorithmException {
+	protected void collectResults(URL url, Proxy proxySettings, String characterEncoding,
+			DefaultHandler contentHandler, boolean clean) throws IOException, LoginException, KeyManagementException,
+			NoSuchAlgorithmException {
 		URLConnection cntx = BugzillaPlugin.getUrlConnection(url, proxySettings);
 		if (cntx == null || !(cntx instanceof HttpURLConnection)) {
 			throw new IOException("Could not form URLConnection.");
 		}
-		
+
 		HttpURLConnection connection = (HttpURLConnection) cntx;
-		try {			
+		try {
 			connection.setConnectTimeout(COM_TIME_OUT);
 			connection.setReadTimeout(COM_TIME_OUT);
+			connection.addRequestProperty("Accept-Encoding", ENCODING_GZIP);
+
 			connection.connect();
 			int responseCode = connection.getResponseCode();
 			if (responseCode != HttpURLConnection.HTTP_OK) {
@@ -72,13 +78,24 @@ public class AbstractReportFactory {
 
 				throw new IOException(msg);
 			}
-			
+
 			BufferedReader in = null;
-			
+
+			String contentEncoding = connection.getContentEncoding();
+			boolean gzipped = contentEncoding != null && ENCODING_GZIP.equals(contentEncoding);
 			if (characterEncoding != null) {
-				in = new BufferedReader(new InputStreamReader(connection.getInputStream(), characterEncoding));
+				if (gzipped) {
+					in = new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream()),
+							characterEncoding));
+				} else {
+					in = new BufferedReader(new InputStreamReader(connection.getInputStream(), characterEncoding));
+				}
 			} else {
-				in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				if (gzipped) {
+					in = new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream())));
+				} else {
+					in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				}
 			}
 
 			if (clean) {
