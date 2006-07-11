@@ -59,8 +59,8 @@ public class BugzillaTaskHyperlinkDetector implements IHyperlinkDetector {
 
 		int offsetInLine = offset - lineInfo.getOffset();
 
-		IHyperlink[] links = BugzillaHyperlinkUtil.findBugHyperlinks(repository.getUrl(), offsetInLine, lineInfo.getLength(),
-				line, lineInfo.getOffset());
+		IHyperlink[] links = BugzillaHyperlinkUtil.findBugHyperlinks(repository.getUrl(), offsetInLine, line, lineInfo
+				.getOffset());
 
 		return links;
 
