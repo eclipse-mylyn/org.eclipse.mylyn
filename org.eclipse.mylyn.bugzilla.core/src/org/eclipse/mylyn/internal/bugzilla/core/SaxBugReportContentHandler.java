@@ -102,9 +102,10 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 		case ATTACHMENT:
 			attachment = new RepositoryAttachment(attributeFactory);
 			if (attributes != null) {
-				if (attributes.getValue(BugzillaReportElement.IS_OBSOLETE.getKeyString()) != null) {
+				if ("1".equals(attributes.getValue(BugzillaReportElement.IS_OBSOLETE.getKeyString()))) {
 					attachment.addAttribute(BugzillaReportElement.IS_OBSOLETE.getKeyString(), attributeFactory
 							.createAttribute(BugzillaReportElement.IS_OBSOLETE.getKeyString()));
+					attachment.setObsolete(true);
 				}
 				if ("1".equals(attributes.getValue(BugzillaReportElement.IS_PATCH.getKeyString()))) {
 					attachment.setPatch(true);

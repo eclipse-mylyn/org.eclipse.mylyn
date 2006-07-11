@@ -37,14 +37,20 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.util.SafeRunnable;
+import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ILabelDecorator;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -62,8 +68,8 @@ import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.actions.CopyToClipboardAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.SaveRemoteFileAction;
-import org.eclipse.mylar.internal.tasklist.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.NewAttachmentWizard;
+import org.eclipse.mylar.internal.tasklist.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.IOfflineTaskHandler;
@@ -75,6 +81,7 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
@@ -97,6 +104,7 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.RetargetAction;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
@@ -212,7 +220,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	protected Text summaryText;
 
 	protected Text addCommentsText;
-	
+
 	protected Button submitButton;
 
 	protected Table attachmentsTable;
@@ -309,6 +317,87 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	};
 
 	private TableViewer attachmentsTableViewer;
+
+	private final class AttachmentLabelProvider extends LabelProvider implements IColorProvider {
+
+		public Color getBackground(Object element) {
+			return attachmentsTable.getDisplay().getSystemColor(SWT.COLOR_WHITE);
+		}
+
+		public Color getForeground(Object element) {
+			return attachmentsTable.getDisplay().getSystemColor(SWT.COLOR_BLACK);
+		}
+
+	}
+
+	private final class AttachmentTableLabelProvider extends DecoratingLabelProvider implements ITableColorProvider,
+			ITableLabelProvider {
+
+		public AttachmentTableLabelProvider(ILabelProvider provider, ILabelDecorator decorator) {
+			super(provider, decorator);
+		}
+
+		public Image getColumnImage(Object element, int columnIndex) {
+			// RepositoryAttachment attachment = (RepositoryAttachment)
+			// element;
+			return null;
+		}
+
+		public String getColumnText(Object element, int columnIndex) {
+			RepositoryAttachment attachment = (RepositoryAttachment) element;
+			switch (columnIndex) {
+			case 0:
+				return attachment.getDescription();
+			case 1:
+				if (attachment.isPatch()) {
+					return "patch";
+				} else {
+					return attachment.getContentType();
+				}
+			case 2:
+				return attachment.getCreator();
+			case 3:
+				return attachment.getDateCreated();
+			}
+			return "unrecognized column";
+		}
+
+		public void addListener(ILabelProviderListener listener) {
+			// ignore
+
+		}
+
+		public void dispose() {
+			// ignore
+
+		}
+
+		public boolean isLabelProperty(Object element, String property) {
+			// ignore
+			return false;
+		}
+
+		public void removeListener(ILabelProviderListener listener) {
+			// ignore
+
+		}
+
+		public Color getForeground(Object element, int columnIndex) {
+			RepositoryAttachment att = (RepositoryAttachment) element;
+			if (att.isObsolete()) {
+				return TaskListColorsAndFonts.COLOR_GRAY_LIGHT;
+			}
+			return super.getForeground(element);
+		}
+
+		public Color getBackground(Object element, int columnIndex) {
+			return super.getBackground(element);
+		}
+
+		public Font getFont(Object element, int columnIndex) {
+			return super.getFont(element);
+		}
+	}
 
 	private class ComboSelectionListener extends SelectionAdapter {
 
@@ -427,7 +516,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		editorComposite.setLayout(new GridLayout());
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		createContextMenu();
-		
+
 		createReportHeaderLayout(editorComposite);
 		Composite attribComp = createAttributeLayout(editorComposite);
 		createCustomAttributeLayout(attribComp);
@@ -435,9 +524,9 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		createAttachmentLayout(editorComposite);
 		createCommentLayout(editorComposite, form);
 		createButtonLayouts(editorComposite);
-		
-//		editorComposite.setMenu(contextMenuManager.createContextMenu(editorComposite));
-		
+
+		// editorComposite.setMenu(contextMenuManager.createContextMenu(editorComposite));
+
 		form.reflow(true);
 		getSite().getPage().addSelectionListener(selectionListener);
 		getSite().setSelectionProvider(selectionProvider);
@@ -603,9 +692,10 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 				// manager.add(revealAllAction);
 				manager.add(new Separator());
 				manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-			} 
+			}
 		});
-//		getSite().registerContextMenu(CONTEXT_MENU_ID, contextMenuManager, getSite().getSelectionProvider());
+		// getSite().registerContextMenu(CONTEXT_MENU_ID, contextMenuManager,
+		// getSite().getSelectionProvider());
 	}
 
 	/**
@@ -623,7 +713,8 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		toolkit.createLabel(summaryComposite, "Summary:").setFont(TITLE_FONT);
 		summaryText = toolkit.createText(summaryComposite, getRepositoryTaskData().getSummary(), SWT.FLAT);
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-		Font summaryFont = themeManager.getCurrentTheme().getFontRegistry().get(TaskListColorsAndFonts.TASK_EDITOR_FONT);
+		Font summaryFont = themeManager.getCurrentTheme().getFontRegistry()
+				.get(TaskListColorsAndFonts.TASK_EDITOR_FONT);
 		summaryText.setFont(summaryFont);
 		GridData summaryTextData = new GridData(GridData.FILL_HORIZONTAL);// HORIZONTAL_ALIGN_FILL
 		summaryTextData.horizontalSpan = 1;
@@ -709,54 +800,8 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 				}
 			});
 
-			attachmentsTableViewer.setLabelProvider(new ITableLabelProvider() {
-
-				public Image getColumnImage(Object element, int columnIndex) {
-					// RepositoryAttachment attachment = (RepositoryAttachment)
-					// element;
-					return null;
-				}
-
-				public String getColumnText(Object element, int columnIndex) {
-					RepositoryAttachment attachment = (RepositoryAttachment) element;
-					switch (columnIndex) {
-					case 0:
-						return attachment.getDescription();
-					case 1:
-						if (attachment.isPatch()) {
-							return "patch";
-						} else {
-							return attachment.getContentType();
-						}
-					case 2:
-						return attachment.getCreator();
-					case 3:
-						return attachment.getDateCreated();
-					}
-					return "unrecognized column";
-				}
-
-				public void addListener(ILabelProviderListener listener) {
-					// ignore
-
-				}
-
-				public void dispose() {
-					// ignore
-
-				}
-
-				public boolean isLabelProperty(Object element, String property) {
-					// ignore
-					return false;
-				}
-
-				public void removeListener(ILabelProviderListener listener) {
-					// ignore
-
-				}
-
-			});
+			attachmentsTableViewer.setLabelProvider(new AttachmentTableLabelProvider(new AttachmentLabelProvider(),
+					PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
 
 			attachmentsTableViewer.addDoubleClickListener(new IDoubleClickListener() {
 				public void doubleClick(DoubleClickEvent event) {
@@ -876,7 +921,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		newAttachment.setEditable(false);
 		newAttachment.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		newAttachment.setBackground(form.getBackground());
-		
+
 		addAttachmentButton.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// ignore
@@ -1150,7 +1195,8 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 				| SWT.V_SCROLL | SWT.WRAP);
 
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-		Font newCommnetFont = themeManager.getCurrentTheme().getFontRegistry().get(TaskListColorsAndFonts.TASK_EDITOR_FONT);
+		Font newCommnetFont = themeManager.getCurrentTheme().getFontRegistry().get(
+				TaskListColorsAndFonts.TASK_EDITOR_FONT);
 		addCommentsText.setFont(newCommnetFont);
 		toolkit.paintBordersFor(newCommentsComposite);
 		GridData addCommentsTextData = new GridData(GridData.FILL_HORIZONTAL);
@@ -1406,7 +1452,8 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 
-		commentViewer.getTextWidget().setFont(themeManager.getCurrentTheme().getFontRegistry().get(TaskListColorsAndFonts.TASK_EDITOR_FONT));
+		commentViewer.getTextWidget().setFont(
+				themeManager.getCurrentTheme().getFontRegistry().get(TaskListColorsAndFonts.TASK_EDITOR_FONT));
 
 		commentViewer.setEditable(false);
 		commentViewer.getTextWidget().addSelectionListener(new SelectionAdapter() {
@@ -1912,7 +1959,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	public Control getControl() {
 		return form;
 	}
-	
+
 	// private void addHyperlinks(final StyledText styledText, Composite
 	// composite) {
 	//
