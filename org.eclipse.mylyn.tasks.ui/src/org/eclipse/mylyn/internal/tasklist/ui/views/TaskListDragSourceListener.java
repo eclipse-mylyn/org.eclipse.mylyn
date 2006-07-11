@@ -11,9 +11,17 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.views;
 
+import java.io.File;
+
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylar.internal.tasklist.ui.actions.CopyDetailsAction;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
+import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.dnd.TextTransfer;
 
 /**
  * @author Mik Kersten
@@ -40,20 +48,21 @@ class TaskListDragSourceListener implements DragSourceListener {
 	}
 
 	public void dragSetData(DragSourceEvent event) {
-		event.data = ID_DATA_TASK_DRAG;
-		// StructuredSelection selection = (StructuredSelection)
-		// this.view.getViewer().getSelection();
-		// String data = "task-drag";
-		// for (Object selectedObject : ((IStructuredSelection)
-		// selection).toList()) {
-		// if (selectedObject instanceof ITaskListElement) {
-		// ITaskListElement element = (ITaskListElement) selectedObject;
-		// if (element.isDragAndDropEnabled()) {
-		// data += "task"
-		// data += element.getHandleIdentifier() + DELIM;
-		// }
-		// }
-		// }
+		StructuredSelection selection = (StructuredSelection) this.view.getViewer().getSelection();
+		ITaskListElement selectedElement = null;
+		if (((IStructuredSelection) selection).getFirstElement() instanceof ITaskListElement) {
+			selectedElement = (ITaskListElement)((IStructuredSelection) selection).getFirstElement();
+		}
+		if (FileTransfer.getInstance().isSupportedType(event.dataType)) {			
+			File file = MylarPlugin.getContextManager().getFileForContext(selectedElement.getHandleIdentifier());
+			if (file != null) {
+				event.data = new String[] { file.getAbsolutePath() };
+			}
+		} else if (TextTransfer.getInstance().isSupportedType(event.dataType)) {
+			event.data = CopyDetailsAction.getTextForTask(selectedElement);
+		} else {
+			event.data = ID_DATA_TASK_DRAG;
+		}
 		// if (data != null) {
 		// event.data = data;
 		// } else {

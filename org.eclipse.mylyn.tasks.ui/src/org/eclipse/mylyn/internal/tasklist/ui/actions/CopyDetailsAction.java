@@ -46,6 +46,17 @@ public class CopyDetailsAction extends Action {
 	public void run() {
 		ISelection selection = this.view.getViewer().getSelection();
 		Object object = ((IStructuredSelection) selection).getFirstElement();
+		String text = getTextForTask(object); 
+
+		// HACK: this should be done using proper copying
+		StyledText styledText = new StyledText(view.getDummyComposite(), SWT.NULL);
+		styledText.setText(text);
+		styledText.selectAll();
+		styledText.copy();
+		styledText.dispose();
+	}
+
+	public static String getTextForTask(Object object) {
 		String text = "";
 		if (object instanceof ITask || object instanceof AbstractQueryHit) {
 			ITask task = null;
@@ -69,13 +80,7 @@ public class CopyDetailsAction extends Action {
 		} else if (object instanceof ITaskListElement) {
 			ITaskListElement element = (ITaskListElement) object;
 			text = element.getDescription();
-		} 
-
-		// HACK: this should be done using proper copying
-		StyledText styledText = new StyledText(view.getDummyComposite(), SWT.NULL);
-		styledText.setText(text);
-		styledText.selectAll();
-		styledText.copy();
-		styledText.dispose();
+		}
+		return text;
 	}
 }

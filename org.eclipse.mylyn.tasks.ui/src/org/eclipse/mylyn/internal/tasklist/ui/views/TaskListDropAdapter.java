@@ -11,9 +11,11 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.views;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -23,6 +25,8 @@ import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.RetrieveTitleFromUrlJob;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasklist.ui.actions.TaskActivateAction;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.provisional.tasklist.ITask;
@@ -30,6 +34,7 @@ import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.Task;
 import org.eclipse.mylar.provisional.tasklist.TaskCategory;
+import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.TransferData;
 
@@ -41,6 +46,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 	private Task newTask = null;
 
+	private TransferData currentTransfer;
+
 	public TaskListDropAdapter(Viewer viewer) {
 		super(viewer);
 		setFeedbackEnabled(true);
@@ -50,11 +57,10 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 	public boolean performDrop(Object data) {
 		Object currentTarget = getCurrentTarget();
 		List<ITask> tasksToMove = new ArrayList<ITask>();
-		
+		ISelection selection = ((TreeViewer) getViewer()).getSelection();
 		if (isUrl(data) && createTaskFromUrl(data)) {
 			tasksToMove.add(newTask);
 		} else if (TaskListDragSourceListener.ID_DATA_TASK_DRAG.equals(data)){
-			ISelection selection = ((TreeViewer) getViewer()).getSelection();
 			for (Object selectedObject : ((IStructuredSelection) selection).toList()) {
 				ITask toMove = null;
 				if (selectedObject instanceof ITask) {
@@ -68,7 +74,25 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			}
 		} else if (data instanceof String && createTaskFromString((String)data)) {
 			tasksToMove.add(newTask);
-		} 
+		} else if (FileTransfer.getInstance().isSupportedType(currentTransfer)) {
+			ITask targetTask = null;
+			if (getCurrentTarget() instanceof ITask) {
+				targetTask = (ITask)getCurrentTarget();
+			}
+			if (targetTask != null) {
+				final String[] names = (String[]) data;
+				boolean confirmed = MessageDialog.openConfirm(getViewer().getControl().getShell(), MylarTaskListPlugin.TITLE_DIALOG, 
+						"Overwrite the context of the target task with the source's?");
+				if (confirmed) {
+					String path = names[0];
+					File file = new File(path);
+					if (MylarPlugin.getContextManager().isValidContextFile(file)) {
+						MylarPlugin.getContextManager().transferContextAndActivate(targetTask.getHandleIdentifier(), file);
+						new TaskActivateAction().run(targetTask);
+					}
+				}
+			}
+		}
 
 		for (ITask task : tasksToMove) {
 			if (currentTarget instanceof TaskCategory) {
@@ -150,13 +174,14 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 		newTask.setPriority(Task.PriorityLevel.P3.toString());
 		newTask.setUrl(url);
-		
-		// NOTE: setting boolean param as false so that we go directly to the browser tab
+
+		// NOTE: setting boolean param as false so that we go directly to the
+		// browser tab
 		// as with a previously-created task
 		TaskUiUtil.openEditor(newTask, false);
 		return true;
 	}
-	
+
 	public boolean createTaskFromString(String title) {
 		newTask = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), title, true);
 
@@ -171,9 +196,12 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 	@Override
 	public boolean validateDrop(Object targetObject, int operation, TransferData transferType) {
+		currentTransfer = transferType;
+
 		Object selectedObject = ((IStructuredSelection) ((TreeViewer) getViewer()).getSelection()).getFirstElement();
-		if (!(selectedObject instanceof AbstractRepositoryQuery)) {
-//		if (selectedObject instanceof ITaskListElement && ((ITaskListElement) selectedObject).isDragAndDropEnabled()) {
+		if (FileTransfer.getInstance().isSupportedType(currentTransfer) && getCurrentTarget() instanceof ITask) {
+			return true;
+		} else if (!(selectedObject instanceof AbstractRepositoryQuery)) {
 			if (getCurrentTarget() instanceof TaskCategory) {
 				return true;
 			} else if (getCurrentTarget() instanceof ITaskListElement

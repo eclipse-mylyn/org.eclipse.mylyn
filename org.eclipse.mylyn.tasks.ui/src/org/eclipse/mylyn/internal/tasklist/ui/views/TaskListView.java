@@ -90,6 +90,7 @@ import org.eclipse.mylar.provisional.tasklist.TaskArchive;
 import org.eclipse.mylar.provisional.tasklist.TaskCategory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.RTFTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
@@ -969,11 +970,10 @@ public class TaskListView extends ViewPart {
 	}
 
 	private void initDragAndDrop(Composite parent) {
-		Transfer[] types = new Transfer[] { TextTransfer.getInstance(), PluginTransfer.getInstance(),
+		Transfer[] types = new Transfer[] { TextTransfer.getInstance(), FileTransfer.getInstance(), PluginTransfer.getInstance(),
 				RTFTransfer.getInstance() };
 
-		getViewer().addDragSupport(DND.DROP_MOVE, types, new TaskListDragSourceListener(this));
-
+		getViewer().addDragSupport(DND.DROP_COPY | DND.DROP_MOVE, types, new TaskListDragSourceListener(this));
 		getViewer().addDropSupport(DND.DROP_COPY | DND.DROP_MOVE, types, new TaskListDropAdapter(getViewer()));
 	}
 
