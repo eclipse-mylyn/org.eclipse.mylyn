@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
@@ -45,6 +46,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.tasklist.LocalAttachment;
+import org.eclipse.mylar.internal.tasklist.RepositoryAttachment;
 import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
@@ -604,4 +606,28 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		return "" + year + "-" + ((month <= 9) ? "0" : "") + month + "-" + ((day <= 9) ? "0" : "") + day;
 	}
 
+	/**
+	 * Ensure obsoletes and patches are marked as such by the parser.
+	 */
+	public void testAttachmentAttributes() throws Exception {
+		init222();
+		int bugId = 19;
+		String taskNumber = "" + bugId;
+		BugzillaTask task = (BugzillaTask) client.createTaskFromExistingKey(repository, taskNumber);
+		assertNotNull(task);
+
+		boolean isPatch[] = { false, true, false, false, false, false, false, true };
+		boolean isObsolete[] = { false, true, false, true, false, false, false, false };
+
+		Iterator<RepositoryAttachment> iter = task.getTaskData().getAttachments().iterator();
+		int index = 0;
+		while (iter.hasNext()) {
+			assertTrue(validateAttachmentAttributes(iter.next(), isPatch[index], isObsolete[index]));
+			index++;
+		}
+	}
+
+	private boolean validateAttachmentAttributes(RepositoryAttachment att, boolean isPatch, boolean isObsolete) {
+		return (att.isPatch() == isPatch) && (att.isObsolete() == isObsolete);
+	}
 }
