@@ -13,7 +13,6 @@ package org.eclipse.mylar.internal.tasklist.ui;
 
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -27,14 +26,17 @@ import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskCategory;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.ActionDelegate;
+import org.eclipse.ui.actions.ActionFactory;
 
 /**
  * @author Ken Sueda and Mik Kersten
  */
-public class SynchronizeSelectedAction extends Action implements IViewActionDelegate {
+public class SynchronizeSelectedAction extends ActionDelegate implements IViewActionDelegate {
 
 	private AbstractRepositoryQuery query = null;
 
@@ -48,7 +50,7 @@ public class SynchronizeSelectedAction extends Action implements IViewActionDele
 			});
 		}
 	}
-
+	
 	public void run(IAction action) {
 		if (query != null) {
 			AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
@@ -104,12 +106,18 @@ public class SynchronizeSelectedAction extends Action implements IViewActionDele
 			TaskListView.getFromActivePerspective().getViewer().refresh();
 		}
 	}
-
-	public void init(IViewPart view) {
-		// ignore
+	
+	private IAction action;
+	
+	@Override
+	public void init(IAction action) {
+		this.action = action;
 	}
 	
-	public void selectionChanged(IAction action, ISelection selection) {
-		// ignore
+	public void init(IViewPart view) {
+		IActionBars actionBars = view.getViewSite().getActionBars();
+		actionBars.setGlobalActionHandler(ActionFactory.REFRESH.getId(), action);
+		actionBars.updateActionBars();
 	}
+	
 }

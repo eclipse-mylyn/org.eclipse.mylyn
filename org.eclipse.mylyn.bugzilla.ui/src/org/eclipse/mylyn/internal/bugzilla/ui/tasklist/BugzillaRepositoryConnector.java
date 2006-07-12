@@ -226,6 +226,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 						return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.ERROR,
 								"Check repository credentials and connectivity.", e);
 					} catch (BugzillaException e) {
+						MylarStatusHandler.fail(e, "Failed to submit", false);
 						return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.ERROR,
 								"Bugzilla could not post your bug. \n\n" + e.getCause().getMessage(), e);
 					} catch (PossibleBugzillaFailureException e) {

@@ -250,6 +250,7 @@
 
          <action
                class="org.eclipse.mylar.internal.tasklist.ui.SynchronizeSelectedAction"
+               definitionId="org.eclipse.ui.file.refresh"
                enablesFor="*"
                icon="icons/etool16/repository-synchronize.gif"
                id="org.eclipse.mylar.tasklist.synchronize.selected"
