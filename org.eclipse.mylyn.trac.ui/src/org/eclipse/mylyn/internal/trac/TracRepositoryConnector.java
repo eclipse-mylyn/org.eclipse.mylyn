@@ -26,6 +26,8 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylar.internal.trac.TracTask.Kind;
+import org.eclipse.mylar.internal.trac.TracTask.PriorityLevel;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.TracClientManager;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
@@ -259,12 +261,12 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			task.setCompleted(false);
 		}
 		if (ticket.getValue(Key.PRIORITY) != null) {
-			String translatedPriority = TracTask.PriorityLevel.fromPriority(ticket.getValue(Key.PRIORITY)).toString();
-			task.setPriority(translatedPriority);
+			PriorityLevel priority = TracTask.PriorityLevel.fromPriority(ticket.getValue(Key.PRIORITY));
+			task.setPriority((priority != null) ? priority.toString() : ticket.getValue(Key.PRIORITY));
 		}
 		if (ticket.getValue(Key.TYPE) != null) {
-			String translatedKind = TracTask.Kind.fromType(ticket.getValue(Key.TYPE)).toString();
-			task.setKind(translatedKind);
+			Kind kind = TracTask.Kind.fromType(ticket.getValue(Key.TYPE));
+			task.setKind((kind != null) ? kind.toString() : ticket.getValue(Key.TYPE));
 		}
 		if (ticket.getCreated() != null) {
 			task.setCreationDate(ticket.getCreated());

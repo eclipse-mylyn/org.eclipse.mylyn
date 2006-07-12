@@ -12,20 +12,31 @@
 package org.eclipse.mylar.trac.tests;
 
 import java.net.MalformedURLException;
+import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylar.internal.trac.MylarTracPlugin;
 import org.eclipse.mylar.internal.trac.TracRepositoryConnector;
+import org.eclipse.mylar.internal.trac.TracRepositoryQuery;
 import org.eclipse.mylar.internal.trac.TracTask;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
+import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylar.internal.trac.model.TracSearch;
+import org.eclipse.mylar.internal.trac.model.TracTicket;
+import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
+import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.provisional.tasklist.TaskList;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.mylar.provisional.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.trac.tests.support.TestFixture;
@@ -46,11 +57,15 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	private TracRepositoryConnector connector;
 
+	private TaskList tasklist;
+
 	protected void setUp() throws Exception {
 		super.setUp();
 
 		manager = MylarTaskListPlugin.getRepositoryManager();
 		manager.clearRepositories();
+
+		tasklist = MylarTaskListPlugin.getTaskListManager().getTaskList();
 
 		data = TestFixture.initializeRepository1();
 	}
@@ -128,6 +143,66 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 		client = connector.getClientManager().getRepository(repository);
 		assertEquals(Version.XML_RPC, client.getVersion());
+	}
+
+	public void testPerformQueryXmlRpc() {
+		init(Version.XML_RPC);
+		performQuery();
+	}
+
+	public void testPerformQueryTrac09() {
+		init(Version.TRAC_0_9);
+		performQuery();
+	}
+
+	protected void performQuery() {
+		TracSearch search = new TracSearch();
+		search.addFilter("milestone", "m1");
+		search.addFilter("milestone", "m2");
+		search.setOrderBy("id");
+
+		String queryUrl = Constants.TEST_REPOSITORY1_URL + ITracClient.QUERY_URL + search.toUrl();
+		TracRepositoryQuery query = new TracRepositoryQuery(Constants.TEST_REPOSITORY1_URL, queryUrl, "description",
+				tasklist);
+
+		MultiStatus queryStatus = new MultiStatus(MylarTracPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
+		List<AbstractQueryHit> result = connector.performQuery(query, new NullProgressMonitor(), queryStatus);
+
+		assertTrue(queryStatus.isOK());
+		assertEquals(3, result.size());
+		assertEquals(data.tickets.get(0).getId() + "", result.get(0).getId());
+		assertEquals(data.tickets.get(1).getId() + "", result.get(1).getId());
+		assertEquals(data.tickets.get(2).getId() + "", result.get(2).getId());
+	}
+
+	public void testUpdateTaskDetails() throws InvalidTicketException {
+		TracTicket ticket = new TracTicket(123);
+		ticket.putBuiltinValue(Key.DESCRIPTION, "mydescription");
+		ticket.putBuiltinValue(Key.PRIORITY, "mypriority");
+		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
+		ticket.putBuiltinValue(Key.TYPE, "mytype");
+
+		TracTask task = new TracTask("", "", true);
+		TracRepositoryConnector.updateTaskDetails(Constants.TEST_REPOSITORY1_URL, task, ticket);
+
+		assertEquals(Constants.TEST_REPOSITORY1_URL + ITracClient.TICKET_URL + "123", task.getUrl());
+		assertEquals("123: mysummary", task.getDescription());
+		assertEquals("mypriority", task.getPriority());
+		assertEquals("mytype", task.getTaskType());
+	}
+
+	public void testUpdateTaskDetailsSummaryOnly() throws InvalidTicketException {
+		TracTicket ticket = new TracTicket(456);
+		ticket.putBuiltinValue(Key.DESCRIPTION, "mydescription");
+
+		TracTask task = new TracTask("", "", true);
+		TracRepositoryConnector.updateTaskDetails(Constants.TEST_REPOSITORY1_URL, task, ticket);
+
+		assertEquals(Constants.TEST_REPOSITORY1_URL + ITracClient.TICKET_URL + "456", task.getUrl());
+		assertEquals("456: mysummary", task.getDescription());
+		assertEquals(null, task.getPriority());
+		assertEquals(null, task.getTaskType());
+		assertEquals(null, task.getCreationDate());
 	}
 
 }
