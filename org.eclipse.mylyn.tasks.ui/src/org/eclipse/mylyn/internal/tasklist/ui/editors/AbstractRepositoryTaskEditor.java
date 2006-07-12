@@ -1960,6 +1960,15 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		return form;
 	}
 
+
+	public void setSummaryText(String text) {
+		this.summaryText.setText(text);
+	}
+
+	public void setDescriptionText(String text) {
+		this.descriptionTextBox.setText(text);
+	}
+
 	// private void addHyperlinks(final StyledText styledText, Composite
 	// composite) {
 	//

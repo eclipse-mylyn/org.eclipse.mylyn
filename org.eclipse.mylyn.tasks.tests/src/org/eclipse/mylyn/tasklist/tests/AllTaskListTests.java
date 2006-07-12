@@ -48,6 +48,7 @@ public class AllTaskListTests {
 		suite.addTestSuite(TaskAttachmentActionsTest.class);
 		suite.addTestSuite(RepositorySettingsPageTest.class);
 		// suite.addTestSuite(RetrieveTitleFromUrlTest.class);
+		suite.addTestSuite(TaskEditorTest.class);
 		// $JUnit-END$
 		return suite;
 	}

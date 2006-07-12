@@ -44,8 +44,8 @@ import org.eclipse.swt.widgets.Composite;
  */
 public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
-	private static final String DESCRIPTION = "Add new repositories using the " + TaskRepositoriesView.NAME + " view.\n"
-		+ "If a repsitory is missing it does not support the requested operation.";
+	private static final String DESCRIPTION = "Add new repositories using the " + TaskRepositoriesView.NAME
+			+ " view.\n" + "If a repsitory is missing it does not support the requested operation.";
 
 	private static final String TITLE = "Select a repository";
 
@@ -93,11 +93,11 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		this.selection = selection;
 		return this;
 	}
-	
+
 	public IStructuredSelection getSelection() {
 		return this.selection;
 	}
-	
+
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 		FillLayout layout = new FillLayout();
@@ -120,7 +120,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		});
 
 		viewer.setSelection(new StructuredSelection(new Object[] { getSelectedRepository() }));
-		
+
 		viewer.addOpenListener(new IOpenListener() {
 
 			public void open(OpenEvent event) {
@@ -130,42 +130,48 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		});
 		viewer.getTable().showSelection();
 		viewer.getTable().setFocus();
-		
-//		TaskRepository defaultRepository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
-//				repositoryKind);
-//		if (defaultRepository != null) {
-//			viewer.setSelection(new StructuredSelection(defaultRepository));
-//		}
+
+		// TaskRepository defaultRepository =
+		// MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
+		// repositoryKind);
+		// if (defaultRepository != null) {
+		// viewer.setSelection(new StructuredSelection(defaultRepository));
+		// }
 
 		setControl(container);
 	}
 
 	protected TaskRepository getSelectedRepository() {
+		if (selection == null) {
+			return (TaskRepository) viewer.getElementAt(0);
+		}
+
 		Object element = selection.getFirstElement();
-		if(element instanceof AbstractRepositoryQuery) {
+		if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 			return getRepository(query.getRepositoryUrl(), query.getRepositoryKind());
 
-		} else if(element instanceof AbstractQueryHit) {
+		} else if (element instanceof AbstractQueryHit) {
 			AbstractQueryHit queryHit = (AbstractQueryHit) element;
 			AbstractRepositoryTask correspondingTask = queryHit.getOrCreateCorrespondingTask();
 			// TODO unclear how to properly get repository kind in this case
 			return getRepository(queryHit.getRepositoryUrl(), correspondingTask.getRepositoryKind());
-			
-		} else if(element instanceof AbstractRepositoryTask) {
+
+		} else if (element instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask task = (AbstractRepositoryTask) element;
 			return getRepository(task.getRepositoryUrl(), task.getRepositoryKind());
 		}
-		
-		// TODO handle task, query hit and project (when link to repository will be implementd)
-		
+
+		// TODO handle task, query hit and project (when link to repository will
+		// be implementd)
+
 		return null;
 	}
 
 	private TaskRepository getRepository(String repositoryUrl, String repositoryKind) {
-		return MylarTaskListPlugin.getRepositoryManager().getRepository(repositoryKind , repositoryUrl);
+		return MylarTaskListPlugin.getRepositoryManager().getRepository(repositoryKind, repositoryUrl);
 	}
-	
+
 	protected abstract IWizard createWizard(TaskRepository taskRepository);
 
 	private class CustomWizardNode implements IWizardNode {

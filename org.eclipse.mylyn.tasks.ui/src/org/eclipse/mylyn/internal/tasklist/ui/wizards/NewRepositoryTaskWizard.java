@@ -25,7 +25,12 @@ import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 public class NewRepositoryTaskWizard extends MultiRepositoryAwareWizard {
 
 	private static final String TITLE = "New Repostiory Task";
-	
+
+	public NewRepositoryTaskWizard() {
+		super(new NewRepositoryTaskPage(getConnectorKinds()), TITLE);
+		setNeedsProgressMonitor(true);
+	}
+
 	public NewRepositoryTaskWizard(IStructuredSelection selection) {
 		super(new NewRepositoryTaskPage(getConnectorKinds()).setSelection(selection), TITLE);
 		setNeedsProgressMonitor(true);
@@ -33,11 +38,11 @@ public class NewRepositoryTaskWizard extends MultiRepositoryAwareWizard {
 
 	private static List<String> getConnectorKinds() {
 		List<String> connectorKinds = new ArrayList<String>();
-		for (AbstractRepositoryConnector client: MylarTaskListPlugin.getRepositoryManager().getRepositoryConnectors()) {
+		for (AbstractRepositoryConnector client : MylarTaskListPlugin.getRepositoryManager().getRepositoryConnectors()) {
 			if (client.canCreateNewTask()) {
 				connectorKinds.add(client.getRepositoryType());
-			} 
-		} 
+			}
+		}
 		return connectorKinds;
 	}
 }

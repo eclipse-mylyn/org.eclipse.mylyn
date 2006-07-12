@@ -281,7 +281,10 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 
 	private String[] getSelectedProducts() {
 		ArrayList<String> products = new ArrayList<String>();
-
+		if (selection == null) {
+			return products.toArray(new String[0]);
+		}
+		
 		Object element = selection.getFirstElement();
 		if (element instanceof BugzillaRepositoryQuery) {
 			BugzillaRepositoryQuery query = (BugzillaRepositoryQuery) element;
