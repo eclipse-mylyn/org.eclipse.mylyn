@@ -26,6 +26,7 @@ import org.eclipse.mylar.internal.tasklist.ui.wizards.NewRepositoryTaskWizard;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.pde.internal.runtime.logview.LogEntry;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -40,7 +41,7 @@ public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionCh
 
 	public static final String ID = "org.eclipse.mylar.tasklist.ui.repositories.actions.create";
 
-	private LogEntry selection;
+	private TreeViewer treeViewer;
 
 	public void run() {
 		boolean offline = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
@@ -48,6 +49,12 @@ public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionCh
 			MessageDialog.openInformation(null, "Unable to create bug report",
 					"Unable to create a new bug report since you are currently offline");
 			return;
+		}
+
+		TreeItem[] items = treeViewer.getTree().getSelection();
+		LogEntry selection = null;
+		if (items.length > 0) {
+			selection = (LogEntry) items[0].getData();
 		}
 
 		IWizard wizard = new NewRepositoryTaskWizard();
@@ -70,6 +77,9 @@ public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionCh
 				System.err.println(e);
 			}
 
+			if (selection == null) {
+				return;
+			}
 			editor.setSummaryText(selection.getSeverityText() + ": \"" + selection.getMessage() + "\" in "
 					+ selection.getPluginId());
 			editor.setDescriptionText("\n\n-- Error Log --\nDate: " + selection.getDate() + "\nMessage: "
@@ -96,10 +106,6 @@ public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionCh
 	}
 
 	public void selectionChanged(SelectionChangedEvent event) {
-		selection = (LogEntry) ((TreeViewer) event.getSource()).getTree().getSelection()[0].getData();
-	}
-
-	public void setSelection(LogEntry l) {
-		selection = l;
+		treeViewer = (TreeViewer) event.getSource();
 	}
 }
