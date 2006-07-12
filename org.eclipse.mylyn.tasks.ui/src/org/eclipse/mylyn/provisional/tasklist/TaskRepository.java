@@ -231,6 +231,14 @@ public class TaskRepository {
 		this.properties.put(TaskRepositoryManager.PROPERTY_SYNCTIMESTAMP, syncTime);
 	}
 
+	public void setRepositoryLabel(String repositoryLabel) {
+		this.properties.put(TaskRepositoryManager.PROPERTY_LABEL, repositoryLabel);
+	}
+
+	public String getRepositoryLabel() {
+		return this.properties.get(TaskRepositoryManager.PROPERTY_LABEL);
+	}
+	
 	public Map<String, String> getProperties() {
 		return this.properties;
 	}

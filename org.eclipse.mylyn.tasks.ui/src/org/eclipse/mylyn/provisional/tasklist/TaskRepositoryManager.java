@@ -51,6 +51,8 @@ public class TaskRepositoryManager {
 
 	public static final String PROPERTY_URL = "url";
 
+	public static final String PROPERTY_LABEL = "label";
+
 	public static final String PROPERTY_DELIM = ":";
 
 	public static final String PROPERTY_MIGRATION060 = "migration060";

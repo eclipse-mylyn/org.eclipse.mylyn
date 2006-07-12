@@ -19,16 +19,17 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
+import org.eclipse.mylar.provisional.tasklist.TaskRepositoryManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
@@ -37,6 +38,8 @@ import org.eclipse.ui.IWorkbench;
  * @author Mik Kersten
  */
 public abstract class AbstractRepositorySettingsPage extends WizardPage {
+
+	protected static final String LABEL_LABEL = "Label/template: ";
 
 	protected static final String LABEL_SERVER = "Server: ";
 
@@ -48,8 +51,11 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	protected static final String URL_PREFIX_HTTP = "http://";
 
+
 	private AbstractRepositoryConnector connector;
 
+	protected Combo repositoryLabelCombo;
+	
 	protected StringFieldEditor serverUrlEditor;
 
 	protected StringFieldEditor userNameEditor;
@@ -98,6 +104,11 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		FillLayout layout = new FillLayout();
 		container.setLayout(layout);
 
+		new Label(container, SWT.NONE).setText(LABEL_LABEL);
+		
+		repositoryLabelCombo = new Combo(container, SWT.DROP_DOWN);
+		GridDataFactory.swtDefaults().grab(true, false).applyTo(repositoryLabelCombo);
+		
 		serverUrlEditor = new StringFieldEditor("", LABEL_SERVER, StringFieldEditor.UNLIMITED, container) {
 
 			@Override
@@ -117,6 +128,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 		if (needsAnonymousLogin()) {
 			anonymousButton = new Button(container, SWT.CHECK);
+			GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(anonymousButton);
+
 			anonymousButton.setText("Anonymous Access");
 			anonymousButton.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent e) {
@@ -129,8 +142,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				}
 			});
 
-			Label anonymousLabel = new Label(container, SWT.NONE);
-			anonymousLabel.setText("");
+//			Label anonymousLabel = new Label(container, SWT.NONE);
+//			anonymousLabel.setText("");
 		}
 
 		userNameEditor = new StringFieldEditor("", LABEL_USER, StringFieldEditor.UNLIMITED, container);
@@ -139,6 +152,11 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			oldUsername = repository.getUserName();
 			oldPassword = repository.getPassword();
 			try {
+				String repositoryLabel = repository.getProperty(TaskRepositoryManager.PROPERTY_LABEL);
+				if(repositoryLabel!=null && repositoryLabel.length()>0) {
+					repositoryLabelCombo.add(repositoryLabel);
+					repositoryLabelCombo.select(0);
+				}
 				serverUrlEditor.setStringValue(repository.getUrl());
 				userNameEditor.setStringValue(repository.getUserName());
 				passwordEditor.setStringValue(repository.getPassword());
@@ -185,21 +203,24 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		createAdditionalControls(container);
 
 		if (needsEncoding()) {
-			Composite encodingContainer = new Composite(container, SWT.NONE);
-			encodingContainer.setLayout(new GridLayout());
-			GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(encodingContainer);
+			Label encodingLabel = new Label(container, SWT.HORIZONTAL);
+			encodingLabel.setText("Character Encoding:");
+			GridDataFactory.fillDefaults().align(SWT.TOP, SWT.DEFAULT).applyTo(encodingLabel);
 
-			Group encodingGroup = new Group(encodingContainer, SWT.FLAT);
-			encodingGroup.setText("Character Encoding");
-			encodingGroup.setLayout(new GridLayout(2, false));
-			defaultEncoding = new Button(encodingGroup, SWT.RADIO);
+			Composite encodingContainer = new Composite(container, SWT.NONE);
+			GridLayout gridLayout = new GridLayout(2, false);
+			gridLayout.marginWidth = 0;
+			gridLayout.marginHeight = 0;
+			encodingContainer.setLayout(gridLayout);
+			
+			defaultEncoding = new Button(encodingContainer, SWT.RADIO);
+			defaultEncoding.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 			defaultEncoding.setText("Default (" + TaskRepository.DEFAULT_CHARACTER_ENCODING + ")");
 			defaultEncoding.setSelection(true);
-			GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(defaultEncoding);
 
-			final Button otherEncoding = new Button(encodingGroup, SWT.RADIO);
+			final Button otherEncoding = new Button(encodingContainer, SWT.RADIO);
 			otherEncoding.setText("Other:");
-			otherEncodingCombo = new Combo(encodingGroup, SWT.READ_ONLY);
+			otherEncodingCombo = new Combo(encodingContainer, SWT.READ_ONLY);
 			for (String encoding : Charset.availableCharsets().keySet()) {
 				if (!encoding.equals(TaskRepository.DEFAULT_CHARACTER_ENCODING)) {
 					otherEncodingCombo.add(encoding);
@@ -220,7 +241,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 					}
 				}
 			});
-
+			
 			if (repository != null) {
 				try {
 					String repositoryEncoding = repository.getCharacterEncoding();
@@ -242,6 +263,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		}
 
 		validateServerButton = new Button(container, SWT.PUSH);
+		GridDataFactory.swtDefaults().span(2, SWT.DEFAULT).grab(false, false).applyTo(validateServerButton);
 		validateServerButton.setText("Validate Settings");
 		validateServerButton.addSelectionListener(new SelectionAdapter() {
 
@@ -283,6 +305,10 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	protected abstract boolean isValidUrl(String name);
 
+	public String getRepositoryLabel() {
+		return repositoryLabelCombo.getText();
+	}
+	
 	public String getServerUrl() {
 		return serverUrlEditor.getStringValue();
 	}
@@ -304,8 +330,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	}
 
 	/**
-	 * Exposes StringFieldEditor.refreshValidState() TODO: is there a better
-	 * way?
+	 * Exposes StringFieldEditor.refreshValidState() 
+	 * 
+	 * TODO: is there a better way?
 	 */
 	private static class RepositoryStringFieldEditor extends StringFieldEditor {
 		public RepositoryStringFieldEditor(String name, String labelText, int style, Composite parent) {
@@ -382,7 +409,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 		TaskRepository repository = new TaskRepository(connector.getRepositoryType(), getServerUrl(), getVersion(),
 				getCharacterEncoding(), "");
-
+		repository.setRepositoryLabel(getRepositoryLabel());
 		repository.setAuthenticationCredentials(getUserName(), getPassword());
 		return repository;
 	}
