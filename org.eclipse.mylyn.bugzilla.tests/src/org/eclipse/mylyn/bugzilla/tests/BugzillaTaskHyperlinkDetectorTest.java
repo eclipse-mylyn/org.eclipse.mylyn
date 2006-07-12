@@ -27,6 +27,10 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 
+	private static final String DUPLICATE_NUMBER = "112233";
+
+	private static final String DUPLICATE = "duplicate of "+DUPLICATE_NUMBER;
+	
 	private String TASK_FORMAT_1 = "task#1";
 
 	private String TASK_FORMAT_2 = "task# 1";
@@ -44,7 +48,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 	private String BUG_FORMAT_4 = "bug #1";
 
 	private String BUG_FORMAT_1_2 = "bug# 2";
-
+	
 	private BugzillaTaskHyperlinkDetector detector = new BugzillaTaskHyperlinkDetector();
 
 	private TaskRepository dummyRepository = new TaskRepository("repository_kind", "repository_url");
@@ -115,5 +119,15 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		assertNotNull(links);
 		assertEquals(1, links.length);
 		assertEquals(testString.indexOf(BUG_FORMAT_1_2), links[0].getHyperlinkRegion().getOffset());
+	}
+	
+	public void testDuplicate() {
+		String testString = "*** This bug has been marked as a "+DUPLICATE+" ***";
+		viewer.setDocument(new Document(testString));
+		Region region = new Region(testString.indexOf(DUPLICATE), testString.length());
+		IHyperlink[] links = detector.detectHyperlinks(viewer, region, false);
+		assertNotNull(links);
+		assertEquals(1, links.length);
+		assertEquals(testString.indexOf(DUPLICATE_NUMBER), links[0].getHyperlinkRegion().getOffset());
 	}
 }

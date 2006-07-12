@@ -24,7 +24,9 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
  */
 public class BugzillaHyperlinkUtil {
 
-	private static final String regexp = "(bug|task)(\\s#|#|#\\s|\\s|)(\\s\\d+|\\d+)";
+	private static final int TASK_NUM_GROUP = 3;
+
+	private static final String regexp = "(duplicate of|bug|task)(\\s#|#|#\\s|\\s|)(\\s\\d+|\\d+)";
 
 	private static final Pattern PATTERN = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
 
@@ -48,7 +50,14 @@ public class BugzillaHyperlinkUtil {
 
 	private static IHyperlink extractHyperlink(String repositoryUrl, int lineOffset, Matcher m) {
 
-		int start = m.start();
+		int start = -1;
+		
+		if(m.group().startsWith("duplicate")) {
+			start = m.start() + m.group().indexOf(m.group(TASK_NUM_GROUP));			
+		} else {
+			start = m.start();
+		}
+		
 		int end = m.end();
 
 		if (end == -1)
