@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfiguration;
@@ -217,9 +218,10 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	 * @throws IOException
 	 * @throws NoSuchAlgorithmException 
 	 * @throws KeyManagementException 
+	 * @throws BugzillaException 
 	 */
 	public static void updateQueryOptions(TaskRepository repository, IProgressMonitor monitor) throws LoginException,
-			IOException, KeyManagementException, NoSuchAlgorithmException {
+			IOException, KeyManagementException, NoSuchAlgorithmException, BugzillaException {
 		
 		String repositoryUrl = repository.getUrl();
 

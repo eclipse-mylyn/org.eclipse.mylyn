@@ -81,7 +81,7 @@ public class BugzillaRepositoryUtil {
 
 	public static RepositoryTaskData getBug(String repositoryUrl, String userName, String password,
 			Proxy proxySettings, String characterEncoding, int id) throws IOException, MalformedURLException,
-			LoginException, GeneralSecurityException {
+			LoginException, GeneralSecurityException, BugzillaException {
 
 		RepositoryTaskData bugReport = new RepositoryTaskData(new BugzillaAttributeFactory(),
 				BugzillaPlugin.REPOSITORY_KIND, repositoryUrl, ""+id);
@@ -196,7 +196,7 @@ public class BugzillaRepositoryUtil {
 
 			// MylarStatusHandler.log("Unrecognized Reponse: " + body,
 			// BugzillaRepositoryUtil.class);
-			throw new UnrecognizedReponseException("Unrecognized Response From Server: " + body);
+			throw new UnrecognizedReponseException(body);
 
 		} catch (ParseException e) {
 			throw new IOException("Unable to parse result from repository:\n" + e.getMessage());
@@ -215,10 +215,11 @@ public class BugzillaRepositoryUtil {
 	 * @throws NoSuchAlgorithmException
 	 * @throws LoginException
 	 * @throws KeyManagementException
+	 * @throws BugzillaException 
 	 */
 	public static void setupNewBugAttributes(String repositoryUrl, Proxy proxySettings, String userName,
 			String password, NewBugzillaReport newReport, String characterEncoding) throws IOException,
-			KeyManagementException, LoginException, NoSuchAlgorithmException {
+			KeyManagementException, LoginException, NoSuchAlgorithmException, BugzillaException {
 
 		newReport.removeAllAttributes();
 
@@ -358,7 +359,7 @@ public class BugzillaRepositoryUtil {
 
 	private static void updateBugAttributeOptions(String repositoryUrl, Proxy proxySettings, String userName,
 			String password, RepositoryTaskData existingReport, String characterEncoding) throws IOException,
-			KeyManagementException, LoginException, NoSuchAlgorithmException {
+			KeyManagementException, LoginException, NoSuchAlgorithmException, BugzillaException {
 		String product = existingReport.getAttributeValue(BugzillaReportElement.PRODUCT.getKeyString());
 		for (RepositoryTaskAttribute attribute : existingReport.getAttributes()) {
 			BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getID().trim().toUpperCase());

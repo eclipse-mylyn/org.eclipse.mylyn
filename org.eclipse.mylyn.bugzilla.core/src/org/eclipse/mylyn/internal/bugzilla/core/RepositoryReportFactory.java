@@ -34,7 +34,7 @@ public class RepositoryReportFactory extends AbstractReportFactory {
 
 	public void populateReport(RepositoryTaskData bugReport, String repositoryUrl, Proxy proxySettings,
 			String userName, String password, String characterEncoding) throws LoginException, KeyManagementException,
-			NoSuchAlgorithmException, IOException {
+			NoSuchAlgorithmException, IOException, BugzillaException {
 
 		SaxBugReportContentHandler contentHandler = new SaxBugReportContentHandler(bugzillaAttributeFactory, bugReport);
 

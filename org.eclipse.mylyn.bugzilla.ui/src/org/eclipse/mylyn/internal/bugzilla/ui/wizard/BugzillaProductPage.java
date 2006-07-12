@@ -33,6 +33,7 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
@@ -376,8 +377,9 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 	 * @throws NoSuchAlgorithmException
 	 * @throws LoginException
 	 * @throws KeyManagementException
+	 * @throws BugzillaException 
 	 */
-	public void saveDataToModel() throws KeyManagementException, LoginException, NoSuchAlgorithmException, IOException {
+	public void saveDataToModel() throws KeyManagementException, LoginException, NoSuchAlgorithmException, IOException, BugzillaException {
 		NewBugzillaReport model = bugWizard.model;
 		prevProduct = model.getProduct();
 		model.setProduct((listBox.getSelection())[0]);

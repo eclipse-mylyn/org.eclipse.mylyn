@@ -98,10 +98,11 @@ public class BugzillaPlugin extends Plugin {
 
 	/**
 	 * Retrieves the latest repository configuration from the server
+	 * @throws BugzillaException 
 	 */
 	public static RepositoryConfiguration getRepositoryConfiguration(boolean forceRefresh, String repositoryUrl,
 			Proxy proxySettings, String userName, String password, String encoding) throws IOException,
-			KeyManagementException, LoginException, NoSuchAlgorithmException {
+			KeyManagementException, LoginException, NoSuchAlgorithmException, BugzillaException {
 		if (!cacheFileRead) {
 			readRepositoryConfigurationFile();
 			cacheFileRead = true;

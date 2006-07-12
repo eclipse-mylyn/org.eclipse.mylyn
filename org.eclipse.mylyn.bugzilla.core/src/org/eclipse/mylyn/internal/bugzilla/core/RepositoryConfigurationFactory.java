@@ -34,7 +34,7 @@ public class RepositoryConfigurationFactory extends AbstractReportFactory {
 
 	public RepositoryConfiguration getConfiguration(String repositoryUrl, Proxy proxySettings, String userName,
 			String password, String encoding) throws IOException, KeyManagementException, LoginException,
-			NoSuchAlgorithmException {
+			NoSuchAlgorithmException, BugzillaException {
 		String configUrlStr = repositoryUrl + CONFIG_RDF_URL;
 		configUrlStr = BugzillaRepositoryUtil.addCredentials(configUrlStr, userName, password);
 		URL url = new URL(configUrlStr);

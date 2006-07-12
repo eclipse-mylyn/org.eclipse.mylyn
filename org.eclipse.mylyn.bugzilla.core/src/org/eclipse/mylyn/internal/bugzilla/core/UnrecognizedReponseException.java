@@ -11,12 +11,11 @@
 
 package org.eclipse.mylar.internal.bugzilla.core;
 
-import java.io.IOException;
 
 /**
  * @author Rob Elves
  */
-public class UnrecognizedReponseException extends IOException {
+public class UnrecognizedReponseException extends BugzillaException {
 	private static final long serialVersionUID = 8419167415822022988L;
 
 	public UnrecognizedReponseException(String message) {

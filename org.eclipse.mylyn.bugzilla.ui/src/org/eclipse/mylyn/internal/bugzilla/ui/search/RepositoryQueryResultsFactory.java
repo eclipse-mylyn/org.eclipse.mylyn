@@ -20,6 +20,7 @@ import java.security.NoSuchAlgorithmException;
 import javax.security.auth.login.LoginException;
 
 import org.eclipse.mylar.internal.bugzilla.core.AbstractReportFactory;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 
 
 /**
@@ -29,7 +30,7 @@ public class RepositoryQueryResultsFactory extends AbstractReportFactory {
 
 	public void performQuery(String repositoryUrl, IBugzillaSearchResultCollector collector, String queryUrlString,
 			Proxy proxySettings, int maxHits, String characterEncoding) throws LoginException, KeyManagementException,
-			NoSuchAlgorithmException, IOException {
+			NoSuchAlgorithmException, IOException, BugzillaException {
 
 		
 		SaxBugzillaQueryContentHandler contentHandler = new SaxBugzillaQueryContentHandler(repositoryUrl,

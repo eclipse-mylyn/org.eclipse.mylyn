@@ -41,6 +41,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
+import org.eclipse.mylar.internal.bugzilla.core.UnrecognizedReponseException;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
@@ -156,7 +157,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	public IWizard getNewQueryWizard(TaskRepository repository, IStructuredSelection selection) {
 		return new NewBugzillaQueryWizard(repository);
 	}
-	
+
 	public void openEditQueryDialog(AbstractRepositoryQuery query) {
 		if (!(query instanceof BugzillaRepositoryQuery)) {
 			return;
@@ -225,12 +226,18 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					} catch (IOException e) {
 						return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.ERROR,
 								"Check repository credentials and connectivity.", e);
+					} catch (UnrecognizedReponseException e) {
+						return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.INFO,
+								"Unrecognized response from server", e);
 					} catch (BugzillaException e) {
-						MylarStatusHandler.fail(e, "Failed to submit", false);
+						// MylarStatusHandler.fail(e, "Failed to submit",
+						// false);
+						String message = e.getMessage();
 						return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.ERROR,
-								"Bugzilla could not post your bug. \n\n" + e.getCause().getMessage(), e);
+								"Bugzilla could not post your bug. \n\n" + message, e);
 					} catch (PossibleBugzillaFailureException e) {
-						return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.INFO, form.getError(), e);
+						return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.INFO,
+								"Possible bugzilla failure", e);
 					}
 				}
 			};
@@ -287,7 +294,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			throw new RuntimeException(e);
 		}
 	}
-
 
 	@Override
 	public boolean canCreateTaskFromKey() {

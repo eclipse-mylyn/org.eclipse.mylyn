@@ -54,7 +54,7 @@ public class AbstractReportFactory {
 
 	protected void collectResults(URL url, Proxy proxySettings, String characterEncoding,
 			DefaultHandler contentHandler, boolean clean) throws IOException, LoginException, KeyManagementException,
-			NoSuchAlgorithmException {
+			NoSuchAlgorithmException, BugzillaException {
 		URLConnection cntx = BugzillaPlugin.getUrlConnection(url, proxySettings);
 		if (cntx == null || !(cntx instanceof HttpURLConnection)) {
 			throw new IOException("Could not form URLConnection.");
@@ -134,11 +134,11 @@ public class AbstractReportFactory {
 					}
 				}
 			} else if (connection.getContentType().contains(CONTENT_TYPE_TEXT_HTML)) {
-				try {
+//				try {
 					BugzillaRepositoryUtil.parseHtmlError(in);
-				} catch (BugzillaException e) {
-					throw new IOException(e.getMessage());
-				}
+//				} catch (BugzillaException e) {
+//					throw new IOException(e.getMessage());
+//				}
 			} else {
 				throw new IOException("Unrecognized content type: " + connection.getContentType());
 			}

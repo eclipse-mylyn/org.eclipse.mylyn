@@ -418,9 +418,8 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 							close();
 							return;
 						} else if (event.getJob().getResult().getCode() == Status.INFO) {
-							WebBrowserDialog.openAcceptAgreement(null, IBugzillaConstants.REPORT_SUBMIT_ERROR, event
-									.getJob().getResult().getException().getCause().getMessage(), event.getJob()
-									.getResult().getMessage());
+							WebBrowserDialog.openAcceptAgreement(null, IBugzillaConstants.REPORT_SUBMIT_ERROR,
+									event.getJob().getResult().getMessage(), event.getJob().getResult().getException().getMessage());
 							submitButton.setEnabled(true);
 							ExistingBugEditor.this.showBusy(false);
 						} else if (event.getJob().getResult().getCode() == Status.ERROR) {
