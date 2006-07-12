@@ -57,12 +57,6 @@ public class DeleteAction extends Action {
 					return;
 				}
 
-				if (task.isActive()) {
-					MylarTaskListPlugin.getTaskListManager().deactivateTask(task);
-					TaskListView.getFromActivePerspective().refreshAndFocus(false);
-					TaskUiUtil.closeEditorInActivePage(task);					
-				}
-
 				String message = genDeleteConfirmationMessage(task);
 				boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 						.getShell(), "Confirm Delete", message);
