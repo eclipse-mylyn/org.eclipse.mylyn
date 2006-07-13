@@ -153,9 +153,9 @@ public class TaskUiUtil {
 
 				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(repositoryKind,
 						repositoryTask.getRepositoryUrl());
-				if (!repository.hasCredentials()) {
+				if (repository == null || !repository.hasCredentials()) {
 					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							MylarTaskListPlugin.TITLE_DIALOG, "Repository does not have credentials set, verify via "
+							MylarTaskListPlugin.TITLE_DIALOG, "Repository missing or does not have credentials set, verify via "
 									+ TaskRepositoriesView.NAME + " view");
 				}
 				if (connector != null)
