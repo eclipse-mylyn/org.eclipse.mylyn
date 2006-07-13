@@ -18,16 +18,15 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.internal.core.MylarContextManager;
-import org.eclipse.mylar.internal.monitor.MylarMonitorPlugin;
-import org.eclipse.mylar.provisional.core.InteractionEvent;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
-import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.monitor.usage.MylarUsageMonitorPlugin;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.Task;
 import org.eclipse.mylar.provisional.tasklist.TaskListManager;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.Task;
 
 /**
  * Tests changes to the main mylar data directory location.
@@ -39,7 +38,7 @@ public class ChangeDataDirTest extends TestCase {
 
 	private String newDataDir = null;
 
-	private final String defaultDir = MylarPlugin.getDefault().getDefaultDataDirectory();
+	private final String defaultDir = MylarTaskListPlugin.getDefault().getDefaultDataDirectory();
 
 	private TaskListManager manager = MylarTaskListPlugin.getTaskListManager();
 
@@ -59,30 +58,30 @@ public class ChangeDataDirTest extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		manager.resetTaskList();
-		MylarPlugin.getDefault().setDataDirectory(defaultDir);
+		MylarTaskListPlugin.getDefault().setDataDirectory(defaultDir);
 	}
 
 	public void testMonitorFileMove() {
-		MylarMonitorPlugin.getDefault().startMonitoring();
-		MylarMonitorPlugin.getDefault().getInteractionLogger().interactionObserved(
+		MylarUsageMonitorPlugin.getDefault().startMonitoring();
+		MylarUsageMonitorPlugin.getDefault().getInteractionLogger().interactionObserved(
 				InteractionEvent.makeCommand("id", "delta"));
-		String oldPath = MylarMonitorPlugin.getDefault().getInteractionLogger().getOutputFile().getAbsolutePath();
+		String oldPath = MylarUsageMonitorPlugin.getDefault().getInteractionLogger().getOutputFile().getAbsolutePath();
 		assertTrue(new File(oldPath).exists());
 
-		MylarPlugin.getDefault().setDataDirectory(newDataDir);
+		MylarTaskListPlugin.getDefault().setDataDirectory(newDataDir);
 
 		assertFalse(new File(oldPath).exists());
-		String newPath = MylarMonitorPlugin.getDefault().getInteractionLogger().getOutputFile().getAbsolutePath();
+		String newPath = MylarUsageMonitorPlugin.getDefault().getInteractionLogger().getOutputFile().getAbsolutePath();
 		assertTrue(new File(newPath).exists());
 
-		assertTrue(MylarMonitorPlugin.getDefault().getInteractionLogger().getOutputFile().exists());
-		String monitorFileName = MylarMonitorPlugin.MONITOR_LOG_NAME + MylarContextManager.CONTEXT_FILE_EXTENSION;
+		assertTrue(MylarUsageMonitorPlugin.getDefault().getInteractionLogger().getOutputFile().exists());
+		String monitorFileName = MylarUsageMonitorPlugin.MONITOR_LOG_NAME + MylarContextManager.CONTEXT_FILE_EXTENSION;
 		List<String> newFiles = Arrays.asList(new File(newDataDir).list());
 		assertTrue(newFiles.toString(), newFiles.contains(monitorFileName));
 
 		List<String> filesLeft = Arrays.asList(new File(defaultDir).list());
 		assertFalse(filesLeft.toString(), filesLeft.contains(monitorFileName));
-		MylarMonitorPlugin.getDefault().stopMonitoring();
+		MylarUsageMonitorPlugin.getDefault().stopMonitoring();
 	}
 
 	public void testDefaultDataDirectoryMove() {
@@ -90,8 +89,8 @@ public class ChangeDataDirTest extends TestCase {
 				+ ".mylar";
 		assertEquals(defaultDir, workspaceRelativeDir);
 
-		MylarPlugin.getDefault().setDataDirectory(newDataDir);
-		assertEquals(MylarPlugin.getDefault().getDataDirectory(), newDataDir);
+		MylarTaskListPlugin.getDefault().setDataDirectory(newDataDir);
+		assertEquals(MylarTaskListPlugin.getDefault().getDataDirectory(), newDataDir);
 	}
 
 	public void testTaskMove() {
@@ -101,7 +100,7 @@ public class ChangeDataDirTest extends TestCase {
 
 		ITask readTaskBeforeMove = manager.getTaskList().getTask(handle);
 		MylarTaskListPlugin.getDefault().getTaskListSaveManager().copyDataDirContentsTo(newDataDir);
-		MylarPlugin.getDefault().setDataDirectory(newDataDir);
+		MylarTaskListPlugin.getDefault().setDataDirectory(newDataDir);
 
 		ITask readTaskAfterMove = manager.getTaskList().getTask(handle);
 		assertNotNull(readTaskAfterMove);
@@ -120,7 +119,7 @@ public class ChangeDataDirTest extends TestCase {
 		assertEquals(refreshDate, readTaskBeforeMove.getLastModifiedDateStamp());
 
 		MylarTaskListPlugin.getDefault().getTaskListSaveManager().copyDataDirContentsTo(newDataDir);
-		MylarPlugin.getDefault().setDataDirectory(newDataDir);
+		MylarTaskListPlugin.getDefault().setDataDirectory(newDataDir);
 
 		BugzillaTask readTaskAfterMove = (BugzillaTask) manager.getTaskList().getTask(handle);
 		assertNotNull(readTaskAfterMove);

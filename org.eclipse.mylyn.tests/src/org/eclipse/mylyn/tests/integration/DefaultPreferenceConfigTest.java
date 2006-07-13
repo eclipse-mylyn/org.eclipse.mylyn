@@ -11,8 +11,8 @@
 
 package org.eclipse.mylar.tests.integration;
 
-import org.eclipse.mylar.internal.monitor.MylarMonitorPlugin;
 import org.eclipse.mylar.internal.monitor.MylarMonitorPreferenceConstants;
+import org.eclipse.mylar.monitor.usage.MylarUsageMonitorPlugin;
 
 import junit.framework.TestCase;
 
@@ -22,6 +22,6 @@ import junit.framework.TestCase;
 public class DefaultPreferenceConfigTest extends TestCase {
 
 	public void testMonitorPreferences() {
-		assertTrue(MylarMonitorPlugin.getPrefs().getBoolean(MylarMonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE));
+		assertTrue(MylarUsageMonitorPlugin.getPrefs().getBoolean(MylarMonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE));
 	}
 }
