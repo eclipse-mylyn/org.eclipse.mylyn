@@ -15,9 +15,9 @@ import org.eclipse.jdt.core.ElementChangedEvent;
 import org.eclipse.jdt.core.IElementChangedListener;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaElementDelta;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.provisional.core.IMylarElement;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 

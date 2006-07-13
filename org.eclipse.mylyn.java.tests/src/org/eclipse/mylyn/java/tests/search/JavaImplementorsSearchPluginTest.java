@@ -15,11 +15,11 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
+import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.core.tests.support.search.ISearchPluginTest;
 import org.eclipse.mylar.core.tests.support.search.TestActiveSearchListener;
-import org.eclipse.mylar.internal.core.search.IMylarSearchOperation;
+import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
 import org.eclipse.mylar.internal.java.search.JavaImplementorsProvider;
-import org.eclipse.mylar.provisional.core.IMylarElement;
 
 /*
  * TEST CASES TO HANDLE 1. all different degree of separations - with result,

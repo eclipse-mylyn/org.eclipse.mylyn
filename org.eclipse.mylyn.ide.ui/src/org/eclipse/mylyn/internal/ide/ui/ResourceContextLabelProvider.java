@@ -13,13 +13,13 @@ package org.eclipse.mylar.internal.ide.ui;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IMylarRelation;
+import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.internal.context.ui.AbstractContextLabelProvider;
+import org.eclipse.mylar.internal.context.ui.MylarImages;
 import org.eclipse.mylar.internal.ide.ResourceStructureBridge;
-import org.eclipse.mylar.internal.ui.AbstractContextLabelProvider;
-import org.eclipse.mylar.internal.ui.MylarImages;
-import org.eclipse.mylar.provisional.core.IMylarElement;
-import org.eclipse.mylar.provisional.core.IMylarRelation;
-import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.swt.graphics.Image;
 
 /**

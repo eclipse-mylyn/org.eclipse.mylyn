@@ -14,8 +14,8 @@ package org.eclipse.mylar.internal.ide.ui;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
+import org.eclipse.mylar.internal.context.ui.MylarImages;
 import org.eclipse.mylar.internal.ide.team.MylarActiveChangeSet;
-import org.eclipse.mylar.internal.ui.MylarImages;
 
 /**
  * @author Mik Kersten

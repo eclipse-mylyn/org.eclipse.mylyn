@@ -27,13 +27,14 @@ import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProvider;
 import org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProviderExtension;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.context.core.IMylarContext;
+import org.eclipse.mylar.context.core.IMylarContextListener;
+import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
+import org.eclipse.mylar.internal.java.MylarJavaPlugin;
 import org.eclipse.mylar.internal.java.MylarJavaPrefConstants;
-import org.eclipse.mylar.provisional.core.IMylarContext;
-import org.eclipse.mylar.provisional.core.IMylarContextListener;
-import org.eclipse.mylar.provisional.core.IMylarElement;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
 
 /**
  * @author Mik Kersten
@@ -66,7 +67,7 @@ public class ActiveFoldingListener implements IMylarContextListener {
 		MylarPlugin.getContextManager().addListener(this);
 		MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 
-		enabled = MylarPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPrefConstants.ACTIVE_FOLDING_ENABLED);
+		enabled = MylarJavaPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPrefConstants.ACTIVE_FOLDING_ENABLED);
 		try {
 			Object adapter = editor.getAdapter(IJavaFoldingStructureProvider.class);
 			if (adapter instanceof IJavaFoldingStructureProviderExtension) {
@@ -175,13 +176,13 @@ public class ActiveFoldingListener implements IMylarContextListener {
 	}
 
 	public void contextActivated(IMylarContext context) {
-		if (MylarPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPrefConstants.ACTIVE_FOLDING_ENABLED)) {
+		if (MylarJavaPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPrefConstants.ACTIVE_FOLDING_ENABLED)) {
 			updateFolding();
 		}
 	}
 
 	public void contextDeactivated(IMylarContext context) {
-		if (MylarPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPrefConstants.ACTIVE_FOLDING_ENABLED)) {
+		if (MylarJavaPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPrefConstants.ACTIVE_FOLDING_ENABLED)) {
 			updateFolding();
 		}
 	}

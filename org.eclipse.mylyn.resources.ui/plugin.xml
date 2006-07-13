@@ -2,35 +2,34 @@
 <?eclipse version="3.0"?>
 <?eclipse version="3.0"?>
 <plugin>
-	<extension point="org.eclipse.mylar.core.context">
+	<extension point="org.eclipse.mylar.context.core.context">
 		<structureBridge
-	        activeSearchIcon="icons/elcl16/edge-ref-xml.gif"
-	        activeSearchLabel="XML Search"
 	        class="org.eclipse.mylar.internal.xml.ant.AntStructureBridge"
 	        name="Ant Structure Bridge"
 	        parent="org.eclipse.mylar.internal.ide.ResourceStructureBridge"/>
 		<structureBridge
-	        activeSearchIcon="icons/elcl16/edge-ref-xml.gif"
-	        activeSearchLabel="XML Search"
 	        class="org.eclipse.mylar.internal.xml.pde.PdeStructureBridge"
 	        name="PDE Structure Bridge"
 	        parent="org.eclipse.mylar.internal.ide.ResourceStructureBridge"/>
 	</extension>
 
-   <extension point="org.eclipse.mylar.ui.context">
+   <extension point="org.eclipse.mylar.context.ui.context">
     <uiBridge
           class="org.eclipse.mylar.internal.xml.pde.PdeUiBridge"
-          contentType="plugin.xml"/>
+          contentType="plugin.xml"
+          activeSearchIcon="icons/elcl16/edge-ref-xml.gif"
+	      activeSearchLabel="XML Search"/>
     <labelProvider
           class="org.eclipse.mylar.internal.xml.pde.PdeContextLabelProvider"
           contentType="plugin.xml"/>
     <uiBridge
           class="org.eclipse.mylar.internal.xml.ant.AntUiBridge"
-          contentType="build.xml"/>
+          contentType="build.xml"
+          activeSearchIcon="icons/elcl16/edge-ref-xml.gif"
+	      activeSearchLabel="XML Search"/>
     <labelProvider
           class="org.eclipse.mylar.internal.xml.ant.AntContextLabelProvider"
           contentType="build.xml"/>
- </extension>
- 
+  </extension>
   
 </plugin>

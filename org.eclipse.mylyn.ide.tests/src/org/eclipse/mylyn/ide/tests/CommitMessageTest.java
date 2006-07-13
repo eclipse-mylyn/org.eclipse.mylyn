@@ -15,8 +15,8 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.internal.ide.team.MylarActiveChangeSet;
-import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.Task;
+import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.Task;
 
 /**
  * @author Mik Kersten

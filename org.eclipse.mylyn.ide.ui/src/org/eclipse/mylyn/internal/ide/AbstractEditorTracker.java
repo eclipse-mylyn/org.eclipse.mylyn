@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.internal.ide;
 
-import org.eclipse.mylar.internal.ui.AbstractPartTracker;
+import org.eclipse.mylar.internal.context.ui.AbstractPartTracker;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 

@@ -18,15 +18,14 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.internal.context.ui.MylarImages;
+import org.eclipse.mylar.internal.context.ui.MylarUiPrefContstants;
+import org.eclipse.mylar.internal.context.ui.MylarWorkingSetPage;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
 import org.eclipse.mylar.internal.java.MylarJavaPrefConstants;
 import org.eclipse.mylar.internal.java.ui.JavaUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.internal.ui.MylarImages;
-import org.eclipse.mylar.internal.ui.MylarUiPrefContstants;
-import org.eclipse.mylar.internal.ui.MylarWorkingSetPage;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
-import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
@@ -76,11 +75,11 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 		JavaUiUtil.installContentAssist(javaPrefs, mylarContentAssist);
 
 		if (preferencePage.isAutoFolding()) {
-			MylarPlugin.getDefault().getPreferenceStore().setValue(MylarJavaPrefConstants.ACTIVE_FOLDING_ENABLED, true);
+			MylarJavaPlugin.getDefault().getPreferenceStore().setValue(MylarJavaPrefConstants.ACTIVE_FOLDING_ENABLED, true);
 			javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, true);  
 			javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_PROVIDER, DEFAULT_FOLDING_PROVIDER); 
 		} else {
-			MylarPlugin.getDefault().getPreferenceStore().setValue(MylarJavaPrefConstants.ACTIVE_FOLDING_ENABLED, false);
+			MylarJavaPlugin.getDefault().getPreferenceStore().setValue(MylarJavaPrefConstants.ACTIVE_FOLDING_ENABLED, false);
 		}
 
 		if (preferencePage.closeEditors()) {

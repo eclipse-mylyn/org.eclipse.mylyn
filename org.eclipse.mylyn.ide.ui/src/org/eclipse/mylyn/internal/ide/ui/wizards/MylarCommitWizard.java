@@ -12,7 +12,7 @@
 package org.eclipse.mylar.internal.ide.ui.wizards;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.team.internal.ccvs.core.CVSException;
 import org.eclipse.team.internal.ccvs.ui.wizards.CommitWizard;
 

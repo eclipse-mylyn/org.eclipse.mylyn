@@ -7,19 +7,19 @@
    		schema="schema/javaEditorContributor.exsd"/>
    		
 	<extension
-	       point="org.eclipse.mylar.core.context">
+	       point="org.eclipse.mylar.context.core.context">
 	    <structureBridge
-           activeSearchIcon="icons/elcl16/edge-ref-java.gif"
-           activeSearchLabel="Java Search"
            class="org.eclipse.mylar.internal.java.JavaStructureBridge"
            name="Java Structure Bridge"
            parent="org.eclipse.mylar.internal.ide.ResourceStructureBridge"/>
 	</extension>
 	   
-	<extension point="org.eclipse.mylar.ui.context">
+	<extension point="org.eclipse.mylar.context.ui.context">
 	    <uiBridge
 	          class="org.eclipse.mylar.internal.java.ui.JavaUiBridge"
-	          contentType="java"/>
+	          contentType="java"
+	          activeSearchIcon="icons/elcl16/edge-ref-java.gif"
+           	  activeSearchLabel="Java Search"/>
 	    <labelProvider
 	          class="org.eclipse.mylar.internal.java.ui.JavaContextLabelProvider"
 	          contentType="java"/>
@@ -263,7 +263,7 @@
 	  		tooltip="Mark selected element as uninteresting"
 	  		menubarPath="mylar" 
 	  		id="org.eclipse.mylar.ui.actions.InterestDecrementAction" 
-	  		class="org.eclipse.mylar.internal.ui.actions.InterestDecrementAction"
+	  		class="org.eclipse.mylar.internal.context.ui.actions.InterestDecrementAction"
 	  		icon="icons/elcl16/interest-decrease.gif"
 	  		enablesFor="*"/>
 	    <action  
@@ -271,7 +271,7 @@
 	  		tooltip="Mark the selected element as a landmark"
 	  		menubarPath="mylar" 
 	  		id="org.eclipse.mylar.ui.actions.InterestIncrementAction" 
-	  		class="org.eclipse.mylar.internal.ui.actions.InterestIncrementAction"
+	  		class="org.eclipse.mylar.internal.context.ui.actions.InterestIncrementAction"
 	  		icon="icons/elcl16/interest-increase.gif"
 	  		enablesFor="*"/>
 	 </objectContribution>
@@ -296,7 +296,7 @@
         <action
                definitionId="org.eclipse.mylar.java.ui.search.context"
                label="Search the current task context"
-               class="org.eclipse.mylar.internal.java.ui.actions.FindReferencesInTaskscapeAction"
+               class="org.eclipse.mylar.internal.java.ui.actions.FindReferencesInContextAction"
                id="org.eclipse.mylar.java.ui.search.context">
          </action>
     </actionSet>

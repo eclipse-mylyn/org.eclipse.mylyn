@@ -30,10 +30,10 @@ import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.context.ui.IMylarUiBridge;
 import org.eclipse.mylar.internal.xml.MylarXmlPlugin;
-import org.eclipse.mylar.provisional.core.IMylarElement;
-import org.eclipse.mylar.provisional.ui.IMylarUiBridge;
 import org.eclipse.pde.internal.core.text.plugin.PluginObjectNode;
 import org.eclipse.pde.internal.ui.editor.FormOutlinePage;
 import org.eclipse.pde.internal.ui.editor.ISortableContentOutlinePage;
@@ -57,7 +57,7 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
  * @author Shawn Minto
  */
 public class PdeUiBridge implements IMylarUiBridge {
-
+	
 	private TreeViewerListener treeSelectionChangedListener;
 
 	public PdeUiBridge() {
@@ -65,7 +65,7 @@ public class PdeUiBridge implements IMylarUiBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.provisional.ui.IMylarUiBridge#open(org.eclipse.mylar.provisional.core.IMylarElement)
+	 * @see org.eclipse.mylar.context.ui.IMylarUiBridge#open(org.eclipse.mylar.context.core.IMylarElement)
 	 */
 	public void open(IMylarElement node) {
 		// get the handle of the node
@@ -312,5 +312,9 @@ public class PdeUiBridge implements IMylarUiBridge {
 	
 	public IMylarElement getElement(IEditorInput input) {
 		return null;
+	}
+
+	public String getContentType() {
+		return PdeStructureBridge.CONTENT_TYPE;
 	}
 }

@@ -13,13 +13,13 @@ package org.eclipse.mylar.java.tests.search;
 import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.InteractionEvent;
+import org.eclipse.mylar.context.core.MylarPlugin;
 import org.eclipse.mylar.core.tests.AbstractContextTest;
-import org.eclipse.mylar.internal.core.CompositeContext;
-import org.eclipse.mylar.internal.core.MylarContext;
-import org.eclipse.mylar.internal.core.MylarContextManager;
-import org.eclipse.mylar.provisional.core.IMylarElement;
-import org.eclipse.mylar.provisional.core.InteractionEvent;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.internal.context.core.CompositeContext;
+import org.eclipse.mylar.internal.context.core.MylarContext;
+import org.eclipse.mylar.internal.context.core.MylarContextManager;
 
 /**
  * @author Shawn Minto

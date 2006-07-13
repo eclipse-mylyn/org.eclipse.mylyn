@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylar.provisional.core.IMylarElement;
+import org.eclipse.mylar.context.core.IMylarElement;
 
 public interface ISearchPluginTest {
 	public List<?> search(int dos, IMylarElement node) throws IOException, CoreException;

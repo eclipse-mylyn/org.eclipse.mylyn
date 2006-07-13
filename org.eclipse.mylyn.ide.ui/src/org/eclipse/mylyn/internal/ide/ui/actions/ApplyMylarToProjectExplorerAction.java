@@ -17,8 +17,8 @@ import java.util.List;
 
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.mylar.internal.ui.actions.AbstractApplyMylarAction;
-import org.eclipse.mylar.provisional.ui.InterestFilter;
+import org.eclipse.mylar.context.ui.InterestFilter;
+import org.eclipse.mylar.internal.context.ui.actions.AbstractApplyMylarAction;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.navigator.CommonNavigator;
 

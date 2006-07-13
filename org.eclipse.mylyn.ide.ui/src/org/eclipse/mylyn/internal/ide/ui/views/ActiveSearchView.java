@@ -13,8 +13,6 @@ package org.eclipse.mylar.internal.ide.ui.views;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -29,21 +27,23 @@ import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.context.core.AbstractRelationProvider;
+import org.eclipse.mylar.context.core.IMylarContext;
+import org.eclipse.mylar.context.core.IMylarContextListener;
+import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.InterestComparator;
+import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.context.ui.IMylarUiBridge;
+import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.internal.context.ui.MylarImages;
+import org.eclipse.mylar.internal.context.ui.actions.ToggleRelationshipProviderAction;
+import org.eclipse.mylar.internal.context.ui.views.ContextContentProvider;
+import org.eclipse.mylar.internal.context.ui.views.ContextNodeOpenListener;
+import org.eclipse.mylar.internal.context.ui.views.DelegatingContextLabelProvider;
 import org.eclipse.mylar.internal.ide.ui.actions.LinkActiveSearchWithEditorAction;
 import org.eclipse.mylar.internal.ide.ui.actions.ShowQualifiedNamesAction;
-import org.eclipse.mylar.internal.ui.MylarImages;
-import org.eclipse.mylar.internal.ui.actions.ToggleRelationshipProviderAction;
-import org.eclipse.mylar.internal.ui.views.ContextContentProvider;
-import org.eclipse.mylar.internal.ui.views.ContextNodeOpenListener;
-import org.eclipse.mylar.internal.ui.views.DelegatingContextLabelProvider;
-import org.eclipse.mylar.provisional.core.AbstractRelationProvider;
-import org.eclipse.mylar.provisional.core.IMylarContext;
-import org.eclipse.mylar.provisional.core.IMylarContextListener;
-import org.eclipse.mylar.provisional.core.IMylarElement;
-import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
-import org.eclipse.mylar.provisional.core.InterestComparator;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
@@ -87,6 +87,7 @@ public class ActiveSearchView extends ViewPart {
 		}
 
 		public void contextActivated(IMylarContext taskscape) {
+			MylarUiPlugin.getDefault().refreshRelatedElements();
 			refresh(null, true);
 		}
 
@@ -154,7 +155,7 @@ public class ActiveSearchView extends ViewPart {
 		for (AbstractRelationProvider provider : MylarPlugin.getContextManager().getActiveRelationProviders()) {
 			provider.setEnabled(true);
 		}
-		MylarPlugin.getContextManager().refreshRelatedElements();
+		MylarUiPlugin.getDefault().refreshRelatedElements();
 	}
 
 	/**
@@ -308,12 +309,14 @@ public class ActiveSearchView extends ViewPart {
 	}
 
 	private void fillActions(IContributionManager manager) {
-		Map<String, IMylarStructureBridge> bridges = MylarPlugin.getDefault().getStructureBridges();
-		for (Entry<String, IMylarStructureBridge> entry : bridges.entrySet()) {
-			IMylarStructureBridge bridge = entry.getValue(); // bridges.get(extension);
-			List<AbstractRelationProvider> providers = bridge.getRelationshipProviders();
+		List<IMylarUiBridge> bridges = MylarUiPlugin.getDefault().getUiBridges();
+		for (IMylarUiBridge uiBridge : bridges) {
+			IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(uiBridge.getContentType());
+			
+//			IMylarStructureBridge bridge = entry.getValue(); // bridges.get(extension);
+			List<AbstractRelationProvider> providers = structureBridge.getRelationshipProviders();
 			if (providers != null && providers.size() > 0) {
-				ToggleRelationshipProviderAction action = new ToggleRelationshipProviderAction(bridge);
+				ToggleRelationshipProviderAction action = new ToggleRelationshipProviderAction(structureBridge, uiBridge);
 				relationshipProviderActions.add(action);
 				manager.add(action);
 			}

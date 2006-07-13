@@ -31,10 +31,10 @@ import org.eclipse.jdt.internal.core.search.indexing.IIndexConstants;
 import org.eclipse.jdt.internal.corext.util.OpenTypeHistory;
 import org.eclipse.jdt.internal.corext.util.TypeInfo;
 import org.eclipse.jdt.internal.corext.util.TypeInfoFactory;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.provisional.core.IMylarContext;
-import org.eclipse.mylar.provisional.core.IMylarContextListener;
-import org.eclipse.mylar.provisional.core.IMylarElement;
+import org.eclipse.mylar.context.core.IMylarContext;
+import org.eclipse.mylar.context.core.IMylarContextListener;
+import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 
 /**
  * @author Mik Kersten

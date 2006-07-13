@@ -16,9 +16,9 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylar.context.ui.MylarUiPlugin;
 import org.eclipse.mylar.core.tests.UiTestUtil;
 import org.eclipse.mylar.internal.java.ui.actions.ApplyMylarToPackageExplorerAction;
-import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
 
 /**
  * @author Mik Kersten

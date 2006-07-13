@@ -37,15 +37,15 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.mylar.internal.core.search.IActiveSearchListener;
-import org.eclipse.mylar.internal.core.search.IMylarSearchOperation;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.context.core.AbstractRelationProvider;
+import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.context.core.IActiveSearchListener;
+import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.internal.xml.pde.PdeStructureBridge;
-import org.eclipse.mylar.provisional.core.AbstractRelationProvider;
-import org.eclipse.mylar.provisional.core.IMylarElement;
-import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.search.core.text.TextSearchScope;
 import org.eclipse.search.internal.ui.text.FileSearchQuery;
 import org.eclipse.search.internal.ui.text.FileSearchResult;
@@ -74,7 +74,7 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.provisional.core.AbstractRelationProvider#findRelated(org.eclipse.mylar.provisional.core.IMylarElement,
+	 * @see org.eclipse.mylar.context.core.AbstractRelationProvider#findRelated(org.eclipse.mylar.context.core.IMylarElement,
 	 *      int)
 	 */
 	@Override

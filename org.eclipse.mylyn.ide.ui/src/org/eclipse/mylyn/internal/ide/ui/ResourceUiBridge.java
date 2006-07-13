@@ -18,12 +18,13 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.context.ui.IMylarUiBridge;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
-import org.eclipse.mylar.provisional.core.IMylarElement;
-import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
-import org.eclipse.mylar.provisional.ui.IMylarUiBridge;
+import org.eclipse.mylar.internal.ide.ResourceStructureBridge;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -113,5 +114,9 @@ public class ResourceUiBridge implements IMylarUiBridge {
 		} else {
 			return null;
 		}
+	}
+
+	public String getContentType() {
+		return ResourceStructureBridge.CONTENT_TYPE;
 	}
 }

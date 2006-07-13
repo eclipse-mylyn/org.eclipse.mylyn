@@ -16,11 +16,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.provisional.core.IMylarElement;
-import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
-import org.eclipse.mylar.provisional.core.InteractionEvent;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.InteractionEvent;
+import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 

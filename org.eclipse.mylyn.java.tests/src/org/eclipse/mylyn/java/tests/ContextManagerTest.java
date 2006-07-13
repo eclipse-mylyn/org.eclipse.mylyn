@@ -29,17 +29,17 @@ import org.eclipse.jdt.internal.core.JavaModel;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.internal.core.MylarContext;
-import org.eclipse.mylar.internal.core.MylarContextManager;
+import org.eclipse.mylar.context.core.AbstractRelationProvider;
+import org.eclipse.mylar.context.core.IMylarContext;
+import org.eclipse.mylar.context.core.IMylarContextListener;
+import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.InteractionEvent;
+import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.internal.context.core.MylarContext;
+import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.java.JavaProblemListener;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
-import org.eclipse.mylar.provisional.core.AbstractRelationProvider;
-import org.eclipse.mylar.provisional.core.IMylarContext;
-import org.eclipse.mylar.provisional.core.IMylarContextListener;
-import org.eclipse.mylar.provisional.core.IMylarElement;
-import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
-import org.eclipse.mylar.provisional.core.InteractionEvent;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
@@ -115,7 +115,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 	}
 
 	public void testHandleToPathConversion() throws IOException {
-		String handle = "https://bugs.eclipse.org/bugs" + MylarContextManager.CONTEXT_HANDLE_DELIM + "123";
+		String handle = "https://bugs.eclipse.org/bugs-123";
 		File file = manager.getFileForContext(handle);
 		assertFalse(file.exists());
 		file.createNewFile();

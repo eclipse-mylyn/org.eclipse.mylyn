@@ -11,16 +11,16 @@
 
 package org.eclipse.mylar.ide.tests;
 
+import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.ui.MylarUiPlugin;
 import org.eclipse.mylar.core.tests.AbstractContextTest;
-import org.eclipse.mylar.internal.core.MylarContext;
-import org.eclipse.mylar.internal.core.MylarContextManager;
-import org.eclipse.mylar.internal.core.ScalingFactors;
+import org.eclipse.mylar.internal.context.core.MylarContext;
+import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.internal.context.core.ScalingFactors;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.internal.ide.ResourceInteractionMonitor;
 import org.eclipse.mylar.internal.ide.ResourceStructureBridge;
 import org.eclipse.mylar.internal.ide.ui.IdeUiUtil;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
-import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 
 /**

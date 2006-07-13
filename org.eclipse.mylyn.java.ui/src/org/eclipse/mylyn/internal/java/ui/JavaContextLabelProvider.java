@@ -22,7 +22,11 @@ import org.eclipse.jdt.internal.ui.viewsupport.JavaElementImageProvider;
 import org.eclipse.jdt.internal.ui.viewsupport.TreeHierarchyLayoutProblemsDecorator;
 import org.eclipse.jdt.ui.JavaElementLabels;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.internal.core.MylarContextManager;
+import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IMylarRelation;
+import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.internal.context.ui.MylarImages;
+import org.eclipse.mylar.internal.context.ui.views.DelegatingContextLabelProvider;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
 import org.eclipse.mylar.internal.java.search.AbstractJavaRelationProvider;
@@ -31,10 +35,6 @@ import org.eclipse.mylar.internal.java.search.JavaImplementorsProvider;
 import org.eclipse.mylar.internal.java.search.JavaReadAccessProvider;
 import org.eclipse.mylar.internal.java.search.JavaReferencesProvider;
 import org.eclipse.mylar.internal.java.search.JavaWriteAccessProvider;
-import org.eclipse.mylar.internal.ui.MylarImages;
-import org.eclipse.mylar.internal.ui.views.DelegatingContextLabelProvider;
-import org.eclipse.mylar.provisional.core.IMylarElement;
-import org.eclipse.mylar.provisional.core.IMylarRelation;
 import org.eclipse.swt.graphics.Image;
 
 /**

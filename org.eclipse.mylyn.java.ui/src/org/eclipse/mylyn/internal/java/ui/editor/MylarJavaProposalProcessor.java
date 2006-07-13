@@ -18,10 +18,10 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.internal.ui.text.java.AbstractJavaCompletionProposal;
 import org.eclipse.jdt.internal.ui.text.java.JavaCompletionProposal;
 import org.eclipse.jdt.ui.text.java.IJavaCompletionProposalComputer;
-import org.eclipse.mylar.internal.core.MylarContextManager;
-import org.eclipse.mylar.internal.ui.MylarImages;
-import org.eclipse.mylar.provisional.core.IMylarElement;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.internal.context.ui.MylarImages;
 
 /**
  * TODO: parametrize relevance levels (requires JDT changes, bug 119063)

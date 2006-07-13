@@ -18,12 +18,13 @@ import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.java.ui.JavaUiUtil;
 import org.eclipse.mylar.internal.java.ui.LandmarkMarkerManager;
 import org.eclipse.mylar.internal.java.ui.editor.ActiveFoldingListener;
 import org.eclipse.mylar.internal.java.ui.wizards.MylarPreferenceWizard;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -87,10 +88,10 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 					}
 					getPreferenceStore().addPropertyChangeListener(problemListener);
 
-					MylarPlugin.getDefault().addWindowPostSelectionListener(packageExplorerManager);
+					MylarMonitorPlugin.getDefault().addWindowPostSelectionListener(packageExplorerManager);
 
 					javaEditingMonitor = new JavaEditingMonitor();
-					MylarPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
+					MylarMonitorPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
 					installEditorTracker(workbench);
 
 					// TODO: race conditions prevents this from running?
@@ -142,7 +143,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 			MylarPlugin.getContextManager().removeListener(typeHistoryManager);
 			MylarPlugin.getContextManager().removeListener(landmarkMarkerManager);
 
-			MylarPlugin.getDefault().getSelectionMonitors().remove(javaEditingMonitor);
+			MylarMonitorPlugin.getDefault().getSelectionMonitors().remove(javaEditingMonitor);
 
 //			if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
 //				getPreferenceStore().removePropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());

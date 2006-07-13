@@ -21,13 +21,13 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.context.ui.InterestFilter;
+import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.internal.context.ui.actions.AbstractApplyMylarAction;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
 import org.eclipse.mylar.internal.java.MylarJavaPrefConstants;
 import org.eclipse.mylar.internal.java.ui.JavaDeclarationsFilter;
-import org.eclipse.mylar.internal.ui.actions.AbstractApplyMylarAction;
-import org.eclipse.mylar.provisional.ui.InterestFilter;
-import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 

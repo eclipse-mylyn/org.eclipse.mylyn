@@ -14,10 +14,10 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.xml.ant.AntEditingMonitor;
 import org.eclipse.mylar.internal.xml.pde.PdeEditingMonitor;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -58,10 +58,10 @@ public class MylarXmlPlugin extends AbstractUIPlugin {
 			public void run() {
 				try {
 					pdeEditingMonitor = new PdeEditingMonitor();
-					MylarPlugin.getDefault().getSelectionMonitors().add(pdeEditingMonitor);
+					MylarMonitorPlugin.getDefault().getSelectionMonitors().add(pdeEditingMonitor);
 
 					antEditingMonitor = new AntEditingMonitor();
-					MylarPlugin.getDefault().getSelectionMonitors().add(antEditingMonitor);
+					MylarMonitorPlugin.getDefault().getSelectionMonitors().add(antEditingMonitor);
 				} catch (Exception e) {
 					MylarStatusHandler.fail(e, "Mylar IDE stop failed", true);
 				}
@@ -78,8 +78,8 @@ public class MylarXmlPlugin extends AbstractUIPlugin {
 			super.stop(context);
 			plugin = null;
 			resourceBundle = null;
-			MylarPlugin.getDefault().getSelectionMonitors().remove(pdeEditingMonitor);
-			MylarPlugin.getDefault().getSelectionMonitors().remove(antEditingMonitor);
+			MylarMonitorPlugin.getDefault().getSelectionMonitors().remove(pdeEditingMonitor);
+			MylarMonitorPlugin.getDefault().getSelectionMonitors().remove(antEditingMonitor);
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Mylar XML stop failed", false);
 		}

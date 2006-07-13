@@ -13,8 +13,8 @@ package org.eclipse.mylar.core.tests.support.search;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.mylar.internal.core.search.IActiveSearchListener;
-import org.eclipse.mylar.provisional.core.AbstractRelationProvider;
+import org.eclipse.mylar.context.core.AbstractRelationProvider;
+import org.eclipse.mylar.internal.context.core.IActiveSearchListener;
 
 public class TestActiveSearchListener implements IActiveSearchListener {
 

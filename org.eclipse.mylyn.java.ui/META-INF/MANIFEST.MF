@@ -27,14 +27,15 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.pde.ui,
  org.eclipse.pde.core,
  org.eclipse.ui.ide,
- org.eclipse.mylar.core,
+ org.eclipse.mylar.context.core,
  org.eclipse.mylar.ide,
  org.eclipse.mylar.tasklist,
- org.eclipse.mylar.ui,
+ org.eclipse.mylar.context.ui,
  org.eclipse.team.ui,
  org.eclipse.team.cvs.core,
  org.eclipse.team.core,
- org.eclipse.ui.forms
+ org.eclipse.ui.forms,
+ org.eclipse.mylar.monitor
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Export-Package: org.eclipse.mylar.internal.java,

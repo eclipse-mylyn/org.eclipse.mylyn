@@ -14,15 +14,15 @@ package org.eclipse.mylar.core.tests;
 import java.io.File;
 
 import org.eclipse.core.runtime.Path;
+import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IMylarRelation;
 import org.eclipse.mylar.core.tests.support.DomContextReader;
 import org.eclipse.mylar.core.tests.support.DomContextWriter;
 import org.eclipse.mylar.core.tests.support.FileTool;
-import org.eclipse.mylar.internal.core.MylarContext;
-import org.eclipse.mylar.internal.core.MylarContextExternalizer;
-import org.eclipse.mylar.internal.core.ScalingFactors;
-import org.eclipse.mylar.internal.core.util.SaxContextReader;
-import org.eclipse.mylar.provisional.core.IMylarElement;
-import org.eclipse.mylar.provisional.core.IMylarRelation;
+import org.eclipse.mylar.internal.context.core.MylarContext;
+import org.eclipse.mylar.internal.context.core.MylarContextExternalizer;
+import org.eclipse.mylar.internal.context.core.ScalingFactors;
+import org.eclipse.mylar.internal.context.core.util.SaxContextReader;
 
 /**
  * @author Mik Kersten

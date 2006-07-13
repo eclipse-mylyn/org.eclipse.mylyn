@@ -19,10 +19,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.MylarPlugin;
 import org.eclipse.mylar.core.tests.support.search.ISearchPluginTest;
-import org.eclipse.mylar.internal.core.CompositeContext;
-import org.eclipse.mylar.internal.core.MylarContext;
-import org.eclipse.mylar.internal.core.search.IMylarSearchOperation;
+import org.eclipse.mylar.internal.context.core.CompositeContext;
+import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
+import org.eclipse.mylar.internal.context.core.MylarContext;
 import org.eclipse.mylar.internal.ide.ResourceStructureBridge;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
 import org.eclipse.mylar.internal.xml.XmlReferencesProvider;
@@ -30,8 +32,6 @@ import org.eclipse.mylar.internal.xml.pde.PdeStructureBridge;
 import org.eclipse.mylar.java.tests.search.ActiveSearchNotifier;
 import org.eclipse.mylar.java.tests.search.SearchPluginTestHelper;
 import org.eclipse.mylar.java.tests.search.WorkspaceSetupHelper;
-import org.eclipse.mylar.provisional.core.IMylarElement;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
 
 /*
  * TEST CASES TO HANDLE 1. all dos - with and without results TODO - in both the

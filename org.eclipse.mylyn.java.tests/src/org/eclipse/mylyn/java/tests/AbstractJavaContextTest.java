@@ -18,17 +18,17 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
+import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.ui.MylarUiPlugin;
 import org.eclipse.mylar.core.tests.AbstractContextTest;
 import org.eclipse.mylar.ide.tests.ResourceTestUtil;
-import org.eclipse.mylar.internal.core.MylarContext;
-import org.eclipse.mylar.internal.core.MylarContextManager;
-import org.eclipse.mylar.internal.core.ScalingFactors;
+import org.eclipse.mylar.internal.context.core.MylarContext;
+import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.internal.context.core.ScalingFactors;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.internal.java.JavaEditingMonitor;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
-import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
 
 /**
  * @author Mik Kersten

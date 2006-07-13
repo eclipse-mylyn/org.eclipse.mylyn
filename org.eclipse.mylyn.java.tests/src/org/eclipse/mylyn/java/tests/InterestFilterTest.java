@@ -21,9 +21,9 @@ import org.eclipse.jdt.internal.ui.filters.ImportDeclarationFilter;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.mylar.context.ui.InterestFilter;
+import org.eclipse.mylar.internal.context.ui.actions.AbstractApplyMylarAction;
 import org.eclipse.mylar.internal.java.ui.actions.ApplyMylarToPackageExplorerAction;
-import org.eclipse.mylar.internal.ui.actions.AbstractApplyMylarAction;
-import org.eclipse.mylar.provisional.ui.InterestFilter;
 
 /**
  * @author Mik Kersten

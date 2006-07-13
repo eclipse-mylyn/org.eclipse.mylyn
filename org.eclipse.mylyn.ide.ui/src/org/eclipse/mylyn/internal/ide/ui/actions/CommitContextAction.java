@@ -22,7 +22,7 @@ import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.internal.ide.team.TeamRespositoriesManager;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.ide.team.TeamRepositoryProvider;
-import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 

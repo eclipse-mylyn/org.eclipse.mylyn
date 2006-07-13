@@ -23,11 +23,11 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.mylar.context.core.MylarPlugin;
 import org.eclipse.mylar.core.tests.support.ResourceHelper;
-import org.eclipse.mylar.internal.core.MylarContext;
-import org.eclipse.mylar.internal.core.ScalingFactors;
+import org.eclipse.mylar.internal.context.core.MylarContext;
+import org.eclipse.mylar.internal.context.core.ScalingFactors;
 import org.eclipse.mylar.java.tests.TestJavaProject;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
 
 public class WorkspaceSetupHelper {
 

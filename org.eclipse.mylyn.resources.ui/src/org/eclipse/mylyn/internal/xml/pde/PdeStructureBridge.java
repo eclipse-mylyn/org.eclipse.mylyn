@@ -24,14 +24,14 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.mylar.internal.core.DegreeOfSeparation;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.context.core.AbstractRelationProvider;
+import org.eclipse.mylar.context.core.IDegreeOfSeparation;
+import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.context.core.DegreeOfSeparation;
 import org.eclipse.mylar.internal.xml.XmlNodeHelper;
 import org.eclipse.mylar.internal.xml.XmlReferencesProvider;
-import org.eclipse.mylar.provisional.core.AbstractRelationProvider;
-import org.eclipse.mylar.provisional.core.IDegreeOfSeparation;
-import org.eclipse.mylar.provisional.core.IMylarElement;
-import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
 import org.eclipse.pde.internal.core.text.build.BuildEntry;
 import org.eclipse.pde.internal.core.text.plugin.PluginObjectNode;
 import org.eclipse.pde.internal.ui.editor.PDEFormPage;
@@ -105,7 +105,7 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.provisional.core.IMylarStructureBridge#getObjectForHandle(java.lang.String)
+	 * @see org.eclipse.mylar.context.core.IMylarStructureBridge#getObjectForHandle(java.lang.String)
 	 */
 	public Object getObjectForHandle(String handle) {
 		if (handle == null)
@@ -172,7 +172,7 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 	/**
 	 * Handle is filename;hashcodeOfElementAndAttributes
 	 * 
-	 * @see org.eclipse.mylar.provisional.core.IMylarStructureBridge#getHandleIdentifier(java.lang.Object)
+	 * @see org.eclipse.mylar.context.core.IMylarStructureBridge#getHandleIdentifier(java.lang.Object)
 	 */
 	public String getHandleIdentifier(Object object) {
 		// we can only create handles for PluginObjectNodes and plugin.xml files

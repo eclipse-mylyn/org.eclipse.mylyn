@@ -32,12 +32,12 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.context.core.AbstractRelationProvider;
+import org.eclipse.mylar.context.core.IDegreeOfSeparation;
+import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.xml.XmlNodeHelper;
-import org.eclipse.mylar.provisional.core.AbstractRelationProvider;
-import org.eclipse.mylar.provisional.core.IDegreeOfSeparation;
-import org.eclipse.mylar.provisional.core.IMylarElement;
-import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
@@ -55,7 +55,7 @@ public class AntStructureBridge implements IMylarStructureBridge {
 	private IMylarStructureBridge parentBridge;
 
 	/**
-	 * @see org.eclipse.mylar.provisional.core.IMylarStructureBridge#getContentType()
+	 * @see org.eclipse.mylar.context.core.IMylarStructureBridge#getContentType()
 	 */
 	public String getContentType() {
 		return CONTENT_TYPE;
@@ -74,7 +74,7 @@ public class AntStructureBridge implements IMylarStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.provisional.core.IMylarStructureBridge#getParentHandle(java.lang.String)
+	 * @see org.eclipse.mylar.context.core.IMylarStructureBridge#getParentHandle(java.lang.String)
 	 */
 	public String getParentHandle(String handle) {
 		Object o = getObjectForHandle(handle);
@@ -167,7 +167,7 @@ public class AntStructureBridge implements IMylarStructureBridge {
 	/**
 	 * Handle is filename;XPath
 	 * 
-	 * @see org.eclipse.mylar.provisional.core.IMylarStructureBridge#getHandleIdentifier(java.lang.Object)
+	 * @see org.eclipse.mylar.context.core.IMylarStructureBridge#getHandleIdentifier(java.lang.Object)
 	 */
 	public String getHandleIdentifier(Object object) {
 		// we can only create handles for AntElementNodes and build.xml Files
@@ -193,7 +193,7 @@ public class AntStructureBridge implements IMylarStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.provisional.core.IMylarStructureBridge#getName(java.lang.Object)
+	 * @see org.eclipse.mylar.context.core.IMylarStructureBridge#getName(java.lang.Object)
 	 */
 	public String getName(Object object) {
 		if (object instanceof AntElementNode) {
@@ -209,7 +209,7 @@ public class AntStructureBridge implements IMylarStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.provisional.core.IMylarStructureBridge#canBeLandmark(Object)
+	 * @see org.eclipse.mylar.context.core.IMylarStructureBridge#canBeLandmark(Object)
 	 * 
 	 * TODO: make a non-handle based test
 	 */
@@ -222,7 +222,7 @@ public class AntStructureBridge implements IMylarStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.provisional.core.IMylarStructureBridge#acceptsObject(java.lang.Object)
+	 * @see org.eclipse.mylar.context.core.IMylarStructureBridge#acceptsObject(java.lang.Object)
 	 */
 	public boolean acceptsObject(Object object) {
 		// we accept AntElementNode and build.xml File objects
@@ -240,21 +240,21 @@ public class AntStructureBridge implements IMylarStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.provisional.core.IMylarStructureBridge#canFilter(java.lang.Object)
+	 * @see org.eclipse.mylar.context.core.IMylarStructureBridge#canFilter(java.lang.Object)
 	 */
 	public boolean canFilter(Object element) {
 		return true;
 	}
 
 	/**
-	 * @see org.eclipse.mylar.provisional.core.IMylarStructureBridge#isDocument(java.lang.String)
+	 * @see org.eclipse.mylar.context.core.IMylarStructureBridge#isDocument(java.lang.String)
 	 */
 	public boolean isDocument(String handle) {
 		return handle.indexOf(';') == -1;
 	}
 
 	/**
-	 * @see org.eclipse.mylar.provisional.core.IMylarStructureBridge#getHandleForOffsetInObject(Object,
+	 * @see org.eclipse.mylar.context.core.IMylarStructureBridge#getHandleForOffsetInObject(Object,
 	 *      int)
 	 */
 	public String getHandleForOffsetInObject(Object resource, int offset) {

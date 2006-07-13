@@ -13,10 +13,10 @@ package org.eclipse.mylar.internal.ide.ui;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylar.provisional.core.IMylarElement;
-import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
-import org.eclipse.mylar.provisional.core.InterestComparator;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.InterestComparator;
+import org.eclipse.mylar.context.core.MylarPlugin;
 import org.eclipse.ui.views.markers.internal.FieldFolder;
 import org.eclipse.ui.views.markers.internal.FieldLineNumber;
 import org.eclipse.ui.views.markers.internal.FieldResource;
