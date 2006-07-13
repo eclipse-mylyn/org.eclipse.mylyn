@@ -21,8 +21,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
 import org.eclipse.mylar.context.core.MylarPlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.monitor.MylarMonitorPreferenceConstants;
-import org.eclipse.mylar.monitor.usage.MylarUsageMonitorPlugin;
 
 /**
  * @author Mik Kersten
@@ -35,10 +33,7 @@ public class HandleObfuscator {
 		
 	public static final String ENCRYPTION_ALGORITHM = "SHA";
 	
-	public boolean isObfuscationEnabled() {
-		return MylarUsageMonitorPlugin.getPrefs()
-			.getBoolean(MylarMonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE);
-	}
+	public static final String OBFUSCATED_LABEL = "[obfuscated]";
 	
 	public String obfuscateHandle(String structureKind, String structureHandle) {
 		if (structureHandle == null || structureHandle.equals("")) {
@@ -62,7 +57,6 @@ public class HandleObfuscator {
 	 * Encrypts the string using SHA, then makes it reasonable to print.
 	 */
 	public String obfuscateString(String string) {
-		if(!isObfuscationEnabled()) { return string; }
 		String obfuscatedString = null;
 		try {
 			MessageDigest md = MessageDigest.getInstance(ENCRYPTION_ALGORITHM);

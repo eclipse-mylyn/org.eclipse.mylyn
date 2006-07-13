@@ -9,11 +9,11 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.monitors;
+package org.eclipse.mylar.monitor.workbench;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.mylar.context.core.InteractionEvent;
-import org.eclipse.mylar.internal.monitor.IActionExecutionListener;
+import org.eclipse.mylar.monitor.IActionExecutionListener;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 
 /**

@@ -9,13 +9,13 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.monitors;
+package org.eclipse.mylar.monitor.workbench;
 
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.monitor.HandleObfuscator;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
-import org.eclipse.mylar.monitor.usage.MylarUsageMonitorPlugin;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Listener;
@@ -87,7 +87,7 @@ public class MenuCommandMonitor implements Listener {
 	 */
 	private String obfuscateValueIfContainsPath(String text) {
 		if (text.indexOf(".java") != -1 || text.indexOf(".xml") != -1) {
-			return MylarUsageMonitorPlugin.OBFUSCATED_LABEL;
+			return HandleObfuscator.OBFUSCATED_LABEL;
 		} else {
 			return text;
 		}

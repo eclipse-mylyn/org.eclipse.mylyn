@@ -9,14 +9,14 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.monitors;
+package org.eclipse.mylar.monitor.workbench;
 
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.monitor.HandleObfuscator;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
-import org.eclipse.mylar.monitor.usage.MylarUsageMonitorPlugin;
 
 /**
  * @author Mik Kersten
@@ -33,7 +33,7 @@ public class PreferenceChangeMonitor implements IPropertyChangeListener {
 
 	private String obfuscateValueIfContainsPath(String preferenceValue) {
 		if (preferenceValue.indexOf(java.io.File.separator) != -1 || preferenceValue.indexOf('/') != -1) {
-			return MylarUsageMonitorPlugin.OBFUSCATED_LABEL;
+			return HandleObfuscator.OBFUSCATED_LABEL;
 		} else {
 			return preferenceValue;
 		}
