@@ -53,7 +53,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -188,13 +187,13 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		UiExtensionPointReader.initExtensions();
 		initializeDefaultPreferences(getPreferenceStore());
 		initializeHighlighters();
 		initializeActions();
 		
-		final IWorkbench workbench = PlatformUI.getWorkbench();
-		workbench.getDisplay().asyncExec(new Runnable() {
+		UiExtensionPointReader.initExtensions();
+		
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
 					viewerManager = new MylarViewerManager();
@@ -424,14 +423,6 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 		this.intersectionHighlighter = intersectionHighlighter;
 	}
 
-//	public boolean isGlobalFoldingEnabled() {
-//		return getPreferenceStore().getBoolean(MylarUiPrefContstants.GLOBAL_FILTERING);
-//	}
-
-//	public void setGlobalFilteringEnabled(boolean globalFilteringEnabled) {
-//		getPreferenceStore().setValue(MylarUiPrefContstants.GLOBAL_FILTERING, globalFilteringEnabled);
-//	}
-
 	public boolean isIntersectionMode() {
 		return getPreferenceStore().getBoolean(MylarUiPrefContstants.INTERSECTION_MODE);
 	}
@@ -543,9 +534,10 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 		getPreferenceStore().setValue(MylarUiPrefContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier(), perspectiveId);
 	}
 	
-	public void addWorkingSetUpdater(MylarWorkingSetManager updater) {
-		if (workingSetUpdaters == null)
+	public void addWorkingSetManager(MylarWorkingSetManager updater) {
+		if (workingSetUpdaters == null) {
 			workingSetUpdaters = new ArrayList<MylarWorkingSetManager>();
+		}
 		workingSetUpdaters.add(updater);
 		MylarPlugin.getContextManager().addListener(updater);
 	}

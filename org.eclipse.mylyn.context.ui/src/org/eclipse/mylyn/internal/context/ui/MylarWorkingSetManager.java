@@ -35,7 +35,7 @@ public class MylarWorkingSetManager implements IWorkingSetUpdater, IMylarContext
 	private List<IWorkingSet> workingSets = new ArrayList<IWorkingSet>();
 
 	public MylarWorkingSetManager() {
-		MylarUiPlugin.getDefault().addWorkingSetUpdater(this);
+		MylarUiPlugin.getDefault().addWorkingSetManager(this);
 	}
 
 	public void add(IWorkingSet workingSet) {
