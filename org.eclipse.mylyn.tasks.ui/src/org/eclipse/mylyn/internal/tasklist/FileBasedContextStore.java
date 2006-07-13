@@ -13,13 +13,13 @@ package org.eclipse.mylar.internal.tasklist;
 
 import java.io.File;
 
-import org.eclipse.mylar.context.core.IMylarContextStore;
+import org.eclipse.mylar.context.core.AbstractContextStore;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 
 /**
  * @author Mik Kersten
  */
-public class FileBasedContextStore implements IMylarContextStore {
+public class FileBasedContextStore extends AbstractContextStore {
 
 	public File getRootDirectory() {
 //		return new File(MylarTaskListPlugin.getDefault().getDefaultDataDirectory());

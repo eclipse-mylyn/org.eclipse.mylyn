@@ -446,6 +446,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	public void setDataDirectory(String newPath) {
 		getPreferenceStore().setValue(MylarPreferenceContstants.PREF_DATA_DIR, newPath);
+		MylarPlugin.getDefault().getContextStore().notifyContextStoreMoved();
 	}
 
 //	// TODO: delete post 0.6?
