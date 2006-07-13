@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.internal.tasklist.ui;
 
-import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.swt.graphics.Color;
 
 /**

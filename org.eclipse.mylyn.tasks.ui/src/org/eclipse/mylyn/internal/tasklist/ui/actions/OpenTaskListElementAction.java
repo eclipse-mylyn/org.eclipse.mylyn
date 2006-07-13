@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
-import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
+import org.eclipse.mylar.tasks.core.ITaskListElement;
 
 /**
  * @author Mik Kersten

@@ -11,10 +11,10 @@
 
 package org.eclipse.mylar.tasklist.tests.mockconnector;
 
-import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
-import org.eclipse.mylar.provisional.tasklist.DelegatingTaskExternalizer;
-import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.DelegatingTaskExternalizer;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.w3c.dom.Node;
 
 /**

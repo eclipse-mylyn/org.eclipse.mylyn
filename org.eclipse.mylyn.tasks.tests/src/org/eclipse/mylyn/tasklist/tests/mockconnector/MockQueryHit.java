@@ -8,8 +8,8 @@
 
 package org.eclipse.mylar.tasklist.tests.mockconnector;
 
-import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 
 /**
  * @author Rob Elves

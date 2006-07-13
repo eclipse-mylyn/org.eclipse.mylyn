@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.tasklist.planner.ui;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.tasks.core.ITask;
 
 /**
  * @author Ken Sueda

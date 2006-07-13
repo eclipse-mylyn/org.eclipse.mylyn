@@ -12,7 +12,7 @@ package org.eclipse.mylar.internal.bugzilla.core;
 
 import java.io.Serializable;
 
-import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 
 
 /**

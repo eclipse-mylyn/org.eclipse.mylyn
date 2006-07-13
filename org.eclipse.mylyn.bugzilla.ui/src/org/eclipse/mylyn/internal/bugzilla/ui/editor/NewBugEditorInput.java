@@ -11,9 +11,9 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
-import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
 import org.eclipse.mylar.internal.tasklist.ui.editors.AbstractBugEditorInput;
-import org.eclipse.mylar.provisional.tasklist.TaskRepository;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylar.tasks.core.TaskRepository;
 
 /**
  * The <code>IEditorInput</code> implementation for <code>NewBugEditor</code>.

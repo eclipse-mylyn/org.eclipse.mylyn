@@ -35,15 +35,24 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.core.util.ZipFileUtil;
-import org.eclipse.mylar.internal.tasklist.RepositoryAttachment;
-import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
-import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
+import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.context.core.util.ZipFileUtil;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.CommonAddExistingTaskWizard;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.IAttachmentHandler;
+import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
+import org.eclipse.mylar.tasks.core.IRepositoryConstants;
+import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.RepositoryAttachment;
+import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylar.tasks.core.TaskList;
+import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -91,8 +100,8 @@ public abstract class AbstractRepositoryConnector {
 	public abstract boolean canCreateNewTask();
 
 	public String[] repositoryPropertyNames() {
-		return new String[] { TaskRepositoryManager.PROPERTY_VERSION, TaskRepositoryManager.PROPERTY_TIMEZONE,
-				TaskRepositoryManager.PROPERTY_ENCODING };
+		return new String[] { IRepositoryConstants.PROPERTY_VERSION, IRepositoryConstants.PROPERTY_TIMEZONE,
+				IRepositoryConstants.PROPERTY_ENCODING };
 	}
 
 	/**
@@ -227,7 +236,7 @@ public abstract class AbstractRepositoryConnector {
 		if (attachmentHandler != null) {
 			attachmentHandler.downloadAttachment(repository, task, attachment.getId(), destinationZipFile,
 					proxySettings);
-			ZipFileUtil.unzipFiles(destinationZipFile, MylarPlugin.getDefault().getDataDirectory());
+			ZipFileUtil.unzipFiles(destinationZipFile, MylarTaskListPlugin.getDefault().getDataDirectory());
 			if (destinationContextFile.exists()) {
 				MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
 				if (wasActive) {
@@ -447,7 +456,8 @@ public abstract class AbstractRepositoryConnector {
 
 	public final Job synchronize(final Set<AbstractRepositoryQuery> repositoryQueries, IJobChangeListener listener,
 			int priority, long delay, boolean syncTasks) {
-		SynchronizeQueryJob job = new SynchronizeQueryJob(this, repositoryQueries);
+		TaskList taskList = MylarTaskListPlugin.getTaskListManager().getTaskList();
+		SynchronizeQueryJob job = new SynchronizeQueryJob(this, repositoryQueries, taskList);
 		job.setSynchTasks(syncTasks);
 		if (listener != null) {
 			job.addJobChangeListener(listener);

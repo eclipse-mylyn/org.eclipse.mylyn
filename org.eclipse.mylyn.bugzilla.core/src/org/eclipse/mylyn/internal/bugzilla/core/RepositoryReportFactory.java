@@ -19,7 +19,7 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.security.auth.login.LoginException;
 
-import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 
 /**
  * Reads bug reports from repository.

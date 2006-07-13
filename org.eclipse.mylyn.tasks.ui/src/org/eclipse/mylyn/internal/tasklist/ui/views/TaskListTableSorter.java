@@ -14,11 +14,11 @@ package org.eclipse.mylar.internal.tasklist.ui.views;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
-import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
-import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
-import org.eclipse.mylar.provisional.tasklist.TaskArchive;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.ITaskListElement;
+import org.eclipse.mylar.tasks.core.TaskArchive;
 
 /**
  * @author Mik Kersten

@@ -18,8 +18,8 @@ import java.security.GeneralSecurityException;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.tasklist.ui.editors.ExistingBugEditorInput;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
-import org.eclipse.mylar.provisional.tasklist.TaskRepository;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.ui.IPersistableElement;
 
 /**

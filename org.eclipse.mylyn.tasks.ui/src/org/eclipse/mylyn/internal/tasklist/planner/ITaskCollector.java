@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.tasklist.planner;
 
 import java.util.Set;
 
-import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.tasks.core.ITask;
 
 /**
  * @author Ken Sueda

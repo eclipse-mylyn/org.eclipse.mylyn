@@ -11,8 +11,8 @@
 
 package org.eclipse.mylar.internal.bugzilla.core;
 
-import org.eclipse.mylar.internal.tasklist.AbstractAttributeFactory;
-import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
+import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
+import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 
 public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 

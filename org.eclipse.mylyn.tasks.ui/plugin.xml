@@ -5,6 +5,11 @@
     <extension-point id="repositories" name="Task Repositories" schema="schema/repositories.exsd"/>
     <extension-point id="editors" name="Task Editors" schema="schema/editors.exsd"/>
 
+    <extension
+         point="org.eclipse.mylar.context.core.context">
+   	  	<contextStore class="org.eclipse.mylar.internal.tasklist.FileBasedContextStore"/>
+    </extension>
+	
 	<extension point="org.eclipse.ui.views">
      	<category name="Mylar" id="org.eclipse.mylar"/>
     </extension>
@@ -101,7 +106,7 @@
 			Mylar Repository Task Decorator
 		 </description>
          <enablement>
-            <objectClass name="org.eclipse.mylar.provisional.tasklist.ITaskListElement"/>
+            <objectClass name="org.eclipse.mylar.tasks.core.ITaskListElement"/>
          </enablement>
       </decorator>
    </extension>
@@ -259,10 +264,10 @@
                tooltip="Synchronize with Repository">
             <enablement>
                <or>
-                    <objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractQueryHit"/>
-					<objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery"/>
-               		<objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask"/>
-                 <objectClass name="org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer"/>
+                    <objectClass name="org.eclipse.mylar.tasks.core.AbstractQueryHit"/>
+					<objectClass name="org.eclipse.mylar.tasks.core.AbstractRepositoryQuery"/>
+               		<objectClass name="org.eclipse.mylar.tasks.core.AbstractRepositoryTask"/>
+                 <objectClass name="org.eclipse.mylar.tasks.core.AbstractTaskContainer"/>
                </or>
             </enablement>
          </action>

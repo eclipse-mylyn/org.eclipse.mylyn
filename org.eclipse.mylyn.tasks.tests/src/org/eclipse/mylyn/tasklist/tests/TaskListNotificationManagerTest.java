@@ -21,12 +21,12 @@ import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListNotificationIncoming;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListNotificationManager;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListNotificationQueryIncoming;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
-import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.Task;
-import org.eclipse.mylar.provisional.tasklist.TaskRepository;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.Task;
+import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 
 /**
  * @author Rob Elves
@@ -100,7 +100,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 		assertFalse(hit.isNotified());
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery("https://bugs.eclipse.org/bugs", "queryUrl",
 				"description", "10", MylarTaskListPlugin.getTaskListManager().getTaskList());
-		query.addHit(hit);
+		query.addHit(hit, MylarTaskListPlugin.getTaskListManager().getTaskList());
 		MylarTaskListPlugin.getTaskListManager().getTaskList().addQuery(query);
 		TaskListNotificationManager notificationManager = MylarTaskListPlugin.getDefault()
 				.getTaskListNotificationManager();

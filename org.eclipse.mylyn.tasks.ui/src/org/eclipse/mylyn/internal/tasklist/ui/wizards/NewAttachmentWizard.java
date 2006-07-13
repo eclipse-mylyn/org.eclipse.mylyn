@@ -18,9 +18,9 @@ import java.io.IOException;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylar.internal.tasklist.LocalAttachment;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasks.core.LocalAttachment;
 
 /**
  * A wizard to add a new attachment to a task report.
@@ -48,7 +48,7 @@ public class NewAttachmentWizard extends Wizard {
 		setDefaultPageImageDescriptor(TaskListImages.BANNER_REPOSITORY);
 		attachment = new LocalAttachment();
 
-		IDialogSettings workbenchSettings = MylarPlugin.getDefault().getDialogSettings();
+		IDialogSettings workbenchSettings = MylarTaskListPlugin.getDefault().getDialogSettings();
 		IDialogSettings section = workbenchSettings.getSection(DIALOG_SETTINGS_KEY);
 		if (section == null) {
 			hasNewDialogSettings = true;
@@ -70,7 +70,7 @@ public class NewAttachmentWizard extends Wizard {
 				// TODO Handle error
 			}
 
-			File file = new File(MylarPlugin.getDefault().getDefaultDataDirectory()
+			File file = new File(MylarTaskListPlugin.getDefault().getDefaultDataDirectory()
 					+ System.getProperty("file.separator").charAt(0) + "Clipboard-attachment");
 			try {
 				FileWriter writer = new FileWriter(file);
@@ -87,7 +87,7 @@ public class NewAttachmentWizard extends Wizard {
 
 		// Save the dialog settings
 		if (hasNewDialogSettings) {
-			IDialogSettings workbenchSettings = MylarPlugin.getDefault().getDialogSettings();
+			IDialogSettings workbenchSettings = MylarTaskListPlugin.getDefault().getDialogSettings();
 			IDialogSettings section = workbenchSettings.getSection(DIALOG_SETTINGS_KEY);
 			section = workbenchSettings.addNewSection(DIALOG_SETTINGS_KEY);
 			setDialogSettings(section);

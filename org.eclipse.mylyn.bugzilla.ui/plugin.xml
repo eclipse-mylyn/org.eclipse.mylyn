@@ -61,7 +61,7 @@
             id="org.eclipse.mylar.bugzilla.ui.decorator.task"
             label="Mylar Bugzilla Task Decorator"
             lightweight="true"
-            objectClass="org.eclipse.mylar.provisional.tasklist.ITaskListElement"
+            objectClass="org.eclipse.mylar.tasks.core.ITaskListElement"
             state="true">
          <description>
 			Mylar Bugzilla Task Decorator

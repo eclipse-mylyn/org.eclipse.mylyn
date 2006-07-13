@@ -21,8 +21,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.workbench.texteditor,
  org.eclipse.update.ui,
  org.eclipse.mylar.bugzilla.core,
- org.eclipse.mylar.core,
- org.eclipse.mylar.tasklist
+ org.eclipse.mylar.context.core,
+ org.eclipse.mylar.tasklist,
+ org.eclipse.mylar.tasks.core
 Eclipse-AutoStart: true
 Export-Package: org.eclipse.mylar.internal.bugzilla.ui,
  org.eclipse.mylar.internal.bugzilla.ui.actions,

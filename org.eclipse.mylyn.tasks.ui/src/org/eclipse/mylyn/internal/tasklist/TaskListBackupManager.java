@@ -28,9 +28,9 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.mylar.context.core.MylarPlugin;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.TaskDataExportWizard;
 import org.eclipse.mylar.internal.tasklist.util.TaskDataExportJob;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
@@ -60,7 +60,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 //		boolean enabled = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(
 //				TaskListPreferenceConstants.BACKUP_AUTOMATICALLY);
 //		if (enabled) {
-		int days = MylarTaskListPlugin.getMylarCorePrefs().getInt(TaskListPreferenceConstants.BACKUP_SCHEDULE);
+		int days = MylarTaskListPlugin.getDefault().getPreferenceStore().getInt(TaskListPreferenceConstants.BACKUP_SCHEDULE);
 		if (days > 0) {
 			start(MINUTE);
 		}
@@ -111,7 +111,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 			IProgressService service = PlatformUI.getWorkbench().getProgressService();
 			try {
 				service.run(true, false, backupJob);
-				MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.BACKUP_LAST,
+				MylarTaskListPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.BACKUP_LAST,
 						new Date().getTime());
 			} catch (InterruptedException e) {
 				// ignore
@@ -125,7 +125,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 	/** public for testing purposes */
 	public void removeOldBackups(File folder) {
 
-		int maxBackups = MylarTaskListPlugin.getMylarCorePrefs().getInt(TaskListPreferenceConstants.BACKUP_MAXFILES);
+		int maxBackups = MylarTaskListPlugin.getDefault().getPreferenceStore().getInt(TaskListPreferenceConstants.BACKUP_MAXFILES);
 
 		File[] files = folder.listFiles();
 		ArrayList<File> backupFiles = new ArrayList<File>();
@@ -163,9 +163,9 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 			if (!Platform.isRunning() || MylarPlugin.getDefault() == null) {
 				return;
 			} else {
-				long lastBackup = MylarTaskListPlugin.getMylarCorePrefs().getLong(
+				long lastBackup = MylarTaskListPlugin.getDefault().getPreferenceStore().getLong(
 						TaskListPreferenceConstants.BACKUP_LAST);
-				int days = MylarTaskListPlugin.getMylarCorePrefs().getInt(TaskListPreferenceConstants.BACKUP_SCHEDULE);
+				int days = MylarTaskListPlugin.getDefault().getPreferenceStore().getInt(TaskListPreferenceConstants.BACKUP_SCHEDULE);
 				long waitPeriod = days * DAY;
 				final long now = new Date().getTime();
 
@@ -193,7 +193,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 		protected IStatus run(IProgressMonitor monitor) {
 			try {
 				backupJob.run(monitor);
-				MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.BACKUP_LAST,
+				MylarTaskListPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.BACKUP_LAST,
 						new Date().getTime());
 			} catch (InvocationTargetException e) {
 				MessageDialog

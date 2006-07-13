@@ -12,7 +12,7 @@
 package org.eclipse.mylar.internal.tasklist.ui.editors;
 
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.internal.tasklist.Comment;
+import org.eclipse.mylar.tasks.core.Comment;
 
 public interface IRepositoryTaskSelection extends ISelection {
 

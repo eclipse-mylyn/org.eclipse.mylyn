@@ -14,9 +14,9 @@ package org.eclipse.mylar.tasklist.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListTableSorter;
-import org.eclipse.mylar.provisional.tasklist.Task;
-import org.eclipse.mylar.provisional.tasklist.TaskCategory;
-import org.eclipse.mylar.provisional.tasklist.TaskList;
+import org.eclipse.mylar.tasks.core.Task;
+import org.eclipse.mylar.tasks.core.TaskCategory;
+import org.eclipse.mylar.tasks.core.TaskList;
 
 /**
  * @author Mik Kersten

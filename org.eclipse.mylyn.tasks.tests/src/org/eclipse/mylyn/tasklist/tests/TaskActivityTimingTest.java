@@ -12,14 +12,14 @@ package org.eclipse.mylar.tasklist.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.core.util.TimerThread;
+import org.eclipse.mylar.context.core.InteractionEvent;
+import org.eclipse.mylar.internal.context.core.util.TimerThread;
 import org.eclipse.mylar.internal.tasklist.util.TaskActivityTimer;
-import org.eclipse.mylar.provisional.core.InteractionEvent;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
-import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.Task;
 import org.eclipse.mylar.provisional.tasklist.TaskListManager;
+import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.Task;
 
 /**
  * @author Mik Kersten
@@ -51,8 +51,8 @@ public class TaskActivityTimingTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		task1 = new Task("t1", "t1", true);
-		originalActivityTimeout = MylarPlugin.getContextManager().getInactivityTimeout();
-		MylarPlugin.getContextManager().setInactivityTimeout(TIMEOUT);
+		originalActivityTimeout = MylarMonitorPlugin.getDefault().getInactivityTimeout();
+		MylarMonitorPlugin.getDefault().setInactivityTimeout(TIMEOUT);
 		manager.setTimerSleepInterval(SLEEP_INTERVAL);
 	}
 
@@ -62,7 +62,7 @@ public class TaskActivityTimingTest extends TestCase {
 		if (remaining != null) {
 			MylarTaskListPlugin.getTaskListManager().deactivateTask(remaining);
 		}
-		MylarPlugin.getContextManager().setInactivityTimeout(originalActivityTimeout);
+		MylarMonitorPlugin.getDefault().setInactivityTimeout(originalActivityTimeout);
 		manager.setTimerSleepInterval(TimerThread.DEFAULT_SLEEP_INTERVAL);
 	}
 
@@ -127,7 +127,7 @@ public class TaskActivityTimingTest extends TestCase {
 		long elapsedAfterInactivity = task1.getElapsedTime();
 		assertEquals("no accumulation if task inactive", elapsedAfterDeactivation, elapsedAfterInactivity);
 
-		MylarPlugin.getContextManager().setInactivityTimeout(SLEEP_TIMEOUT * 2);
+		MylarMonitorPlugin.getDefault().setInactivityTimeout(SLEEP_TIMEOUT * 2);
 		MylarTaskListPlugin.getTaskListManager().activateTask(task1);
 		Thread.sleep(SLEEP_TIMEOUT);
 		// Should not have timed out
@@ -170,7 +170,7 @@ public class TaskActivityTimingTest extends TestCase {
 	}
 
 	protected void mockInteraction() {
-		MylarPlugin.getDefault().notifyInteractionObserved(
+		MylarMonitorPlugin.getDefault().notifyInteractionObserved(
 				new InteractionEvent(InteractionEvent.Kind.EDIT, "java", "A.java", "mock-id"));
 	}
 }

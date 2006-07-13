@@ -36,13 +36,13 @@ import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylar.internal.tasklist.LocalAttachment;
-import org.eclipse.mylar.internal.tasklist.RepositoryOperation;
-import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
-import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
-import org.eclipse.mylar.internal.tasklist.util.HtmlStreamTokenizer;
-import org.eclipse.mylar.internal.tasklist.util.HtmlTag;
-import org.eclipse.mylar.internal.tasklist.util.HtmlStreamTokenizer.Token;
+import org.eclipse.mylar.tasks.core.LocalAttachment;
+import org.eclipse.mylar.tasks.core.RepositoryOperation;
+import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylar.tasks.core.util.HtmlStreamTokenizer;
+import org.eclipse.mylar.tasks.core.util.HtmlTag;
+import org.eclipse.mylar.tasks.core.util.HtmlStreamTokenizer.Token;
 
 /**
  * 

@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskRepository;
+import org.eclipse.mylar.tasks.core.TaskRepository;
 
 /**
  * @author Rob Elves
@@ -41,7 +41,7 @@ public class TaskListSynchronizationManager implements IPropertyChangeListener {
 	private final MutexRule rule = new MutexRule();
 	
 	public TaskListSynchronizationManager(boolean refreshOnStartup) {		
-		boolean enabled = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(
+		boolean enabled = MylarTaskListPlugin.getDefault().getPreferenceStore().getBoolean(
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED);
 		if (refreshOnStartup && enabled) {
 			addJobToQueue(new ScheduledTaskListSynchJob(DELAY_QUERY_REFRESH_ON_STARTUP, MylarTaskListPlugin
@@ -60,10 +60,10 @@ public class TaskListSynchronizationManager implements IPropertyChangeListener {
 	}
 
 	private void scheduleRegularSynchronizationJob() {
-		boolean enabled = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(
+		boolean enabled = MylarTaskListPlugin.getDefault().getPreferenceStore().getBoolean(
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED);
 		if (enabled) {
-			long miliseconds = MylarTaskListPlugin.getMylarCorePrefs().getLong(
+			long miliseconds = MylarTaskListPlugin.getDefault().getPreferenceStore().getLong(
 					TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
 			refreshJob = new ScheduledTaskListSynchJob(miliseconds, MylarTaskListPlugin.getTaskListManager());
 			refreshJob.setRule(rule);

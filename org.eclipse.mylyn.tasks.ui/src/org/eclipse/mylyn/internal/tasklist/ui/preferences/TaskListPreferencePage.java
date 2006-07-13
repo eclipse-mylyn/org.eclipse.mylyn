@@ -13,7 +13,6 @@ package org.eclipse.mylar.internal.tasklist.ui.preferences;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -88,7 +87,7 @@ public class TaskListPreferencePage extends PreferencePage implements IWorkbench
 
 	public TaskListPreferencePage() {
 		super();
-		setPreferenceStore(MylarTaskListPlugin.getMylarCorePrefs());
+		setPreferenceStore(MylarTaskListPlugin.getDefault().getPreferenceStore());
 	}
 
 	@Override
@@ -119,11 +118,11 @@ public class TaskListPreferencePage extends PreferencePage implements IWorkbench
 	public boolean performOk() {
 		String taskDirectory = taskDirectoryText.getText();
 		taskDirectory = taskDirectory.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
-		if (!taskDirectory.equals(MylarPlugin.getDefault().getDataDirectory())) {
+		if (!taskDirectory.equals(MylarTaskListPlugin.getDefault().getDataDirectory())) {
 			// NOTE: order matters
 			MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
 			MylarTaskListPlugin.getDefault().getTaskListSaveManager().copyDataDirContentsTo(taskDirectory);
-			MylarPlugin.getDefault().setDataDirectory(taskDirectory);
+			MylarTaskListPlugin.getDefault().setDataDirectory(taskDirectory);
 		}
 		getPreferenceStore().setValue(TaskListPreferenceConstants.NOTIFICATIONS_ENABLED,
 				notificationEnabledButton.getSelection());
@@ -150,7 +149,7 @@ public class TaskListPreferencePage extends PreferencePage implements IWorkbench
 
 	@Override
 	public boolean performCancel() {
-		taskDirectoryText.setText(MylarPlugin.getDefault().getDefaultDataDirectory());
+		taskDirectoryText.setText(MylarTaskListPlugin.getDefault().getDefaultDataDirectory());
 		notificationEnabledButton.setSelection(getPreferenceStore().getBoolean(
 				TaskListPreferenceConstants.NOTIFICATIONS_ENABLED));
 		backupScheduleTimeText.setText(getPreferenceStore().getString(TaskListPreferenceConstants.BACKUP_SCHEDULE));
@@ -175,7 +174,7 @@ public class TaskListPreferencePage extends PreferencePage implements IWorkbench
 	public void performDefaults() {
 		super.performDefaults();
 
-		taskDirectoryText.setText(MylarPlugin.getDefault().getDefaultDataDirectory());
+		taskDirectoryText.setText(MylarTaskListPlugin.getDefault().getDefaultDataDirectory());
 		notificationEnabledButton.setSelection(getPreferenceStore().getDefaultBoolean(
 				TaskListPreferenceConstants.NOTIFICATIONS_ENABLED));
 		backupScheduleTimeText.setText(getPreferenceStore().getDefaultString(
@@ -315,7 +314,7 @@ public class TaskListPreferencePage extends PreferencePage implements IWorkbench
 		label = new Label(dataDirComposite, SWT.NULL);
 		label.setText("Data directory: ");
 
-		String taskDirectory = MylarPlugin.getDefault().getDataDirectory();
+		String taskDirectory = MylarTaskListPlugin.getDefault().getDataDirectory();
 		taskDirectory = taskDirectory.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
 		taskDirectoryText = new Text(dataDirComposite, SWT.BORDER);
 		taskDirectoryText.setText(taskDirectory);

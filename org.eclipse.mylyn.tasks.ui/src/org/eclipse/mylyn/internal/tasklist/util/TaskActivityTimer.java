@@ -13,12 +13,12 @@ package org.eclipse.mylar.internal.tasklist.util;
 
 import java.util.Calendar;
 
-import org.eclipse.mylar.internal.core.util.ITimerThreadListener;
-import org.eclipse.mylar.internal.core.util.TimerThread;
-import org.eclipse.mylar.provisional.core.IInteractionEventListener;
-import org.eclipse.mylar.provisional.core.InteractionEvent;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
-import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.context.core.IInteractionEventListener;
+import org.eclipse.mylar.context.core.InteractionEvent;
+import org.eclipse.mylar.internal.context.core.util.ITimerThreadListener;
+import org.eclipse.mylar.internal.context.core.util.TimerThread;
+import org.eclipse.mylar.monitor.MylarMonitorPlugin;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -40,7 +40,7 @@ public class TaskActivityTimer implements ITimerThreadListener, IInteractionEven
 		this.task = task;
 		timer = new TimerThread(timeout, sleepInterval);
 		PlatformUI.getWorkbench().addWindowListener(this);
-		MylarPlugin.getDefault().addInteractionListener(this);
+		MylarMonitorPlugin.getDefault().addInteractionListener(this);
 		timer.addListener(this);
 	}
 
@@ -56,7 +56,7 @@ public class TaskActivityTimer implements ITimerThreadListener, IInteractionEven
 		}
 		timer.kill();
 		timer.removeListener(this);
-		MylarPlugin.getDefault().removeInteractionListener(this);
+		MylarMonitorPlugin.getDefault().removeInteractionListener(this);
 		PlatformUI.getWorkbench().removeWindowListener(this);
 		started = false;
 	}

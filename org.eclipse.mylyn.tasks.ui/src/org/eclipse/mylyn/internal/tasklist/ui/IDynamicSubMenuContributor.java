@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.tasklist.ui;
 import java.util.List;
 
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
+import org.eclipse.mylar.tasks.core.ITaskListElement;
 
 /**
  * @author Mik Kersten

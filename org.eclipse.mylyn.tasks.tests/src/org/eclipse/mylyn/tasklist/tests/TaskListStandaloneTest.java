@@ -23,11 +23,11 @@ import junit.framework.TestCase;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskExternalizer;
 import org.eclipse.mylar.internal.tasklist.util.TaskListWriter;
-import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.ITaskListExternalizer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.Task;
 import org.eclipse.mylar.provisional.tasklist.TaskListManager;
+import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.ITaskListExternalizer;
+import org.eclipse.mylar.tasks.core.Task;
 
 /**
  * @author Mik Kersten

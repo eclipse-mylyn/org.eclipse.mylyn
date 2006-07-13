@@ -15,6 +15,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylar.context.core.MylarPlugin;
 import org.eclipse.mylar.internal.tasklist.ui.actions.NextTaskDropDownAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.PreviousTaskDropDownAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.TaskActivateAction;
@@ -22,11 +23,10 @@ import org.eclipse.mylar.internal.tasklist.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.TaskNavigateDropDownAction.TaskNavigateAction;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskActivationHistory;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
-import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.Task;
 import org.eclipse.mylar.provisional.tasklist.TaskListManager;
+import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.ui.PartInitException;
 
 /**

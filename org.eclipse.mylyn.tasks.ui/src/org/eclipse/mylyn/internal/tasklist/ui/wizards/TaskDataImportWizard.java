@@ -32,13 +32,13 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylar.internal.core.MylarContextManager;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
-import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
+import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskList;
+import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -150,7 +150,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 						continue;
 					}
 
-					File destContextFile = new File(MylarPlugin.getDefault().getDataDirectory() + File.separator
+					File destContextFile = new File(MylarTaskListPlugin.getDefault().getDataDirectory() + File.separator
 							+ entry.getName());
 
 					if (!overwrite && destContextFile.exists()) {
@@ -189,7 +189,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 			for (int i = 0; i < children.length; i++) {
 				if (children[i].getAbsolutePath().matches(".*-\\d*" + MylarContextManager.CONTEXT_FILE_EXTENSION + "$")) {
 
-					File destContextFile = new File(MylarPlugin.getDefault().getDataDirectory() + File.separator
+					File destContextFile = new File(MylarTaskListPlugin.getDefault().getDataDirectory() + File.separator
 							+ children[i].getName());
 
 					if (!overwrite && destContextFile.exists()) {
@@ -294,7 +294,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 							return;
 						}
 
-						File destinationFile = new File(MylarPlugin.getDefault().getDataDirectory() + File.separator
+						File destinationFile = new File(MylarTaskListPlugin.getDefault().getDataDirectory() + File.separator
 								+ entry.getName());
 						if (destinationFile.exists()) {
 							destinationFile.delete();
@@ -323,7 +323,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 			monitor.beginTask(JOB_LABEL, jobSize);
 			
 			if(true) {				
-				String destRepositoriesPath = MylarPlugin.getDefault().getDataDirectory() + File.separator
+				String destRepositoriesPath = MylarTaskListPlugin.getDefault().getDataDirectory() + File.separator
 						+ MylarTaskListPlugin.DEFAULT_REPOSITORIES_FILE;
 				File destRepositoriesFile = new File(destRepositoriesPath);
 
@@ -340,7 +340,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 			
 			
 			if (importTaskList) {				
-				String destTaskListPath = MylarPlugin.getDefault().getDataDirectory() + File.separator
+				String destTaskListPath = MylarTaskListPlugin.getDefault().getDataDirectory() + File.separator
 						+ MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE;
 				File destTaskListFile = new File(destTaskListPath);
 
@@ -358,7 +358,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
 			if (importActivationHistory) {
 				try {
-					File destActivationHistoryFile = new File(MylarPlugin.getDefault().getDataDirectory()
+					File destActivationHistoryFile = new File(MylarTaskListPlugin.getDefault().getDataDirectory()
 							+ File.separator + MylarContextManager.CONTEXT_HISTORY_FILE_NAME
 							+ MylarContextManager.CONTEXT_FILE_EXTENSION);
 
@@ -378,7 +378,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 				boolean errorDisplayed = false;
 				for (File sourceContextFile : sourceContextFiles) {
 
-					File destContextFile = new File(MylarPlugin.getDefault().getDataDirectory() + File.separator
+					File destContextFile = new File(MylarTaskListPlugin.getDefault().getDataDirectory() + File.separator
 							+ sourceContextFile.getName());
 
 					if (destContextFile.exists()) {

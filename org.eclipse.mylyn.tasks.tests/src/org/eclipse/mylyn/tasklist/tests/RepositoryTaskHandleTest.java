@@ -12,10 +12,9 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.internal.core.MylarContextManager;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskListManager;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 
 /**
  * @author Mik Kersten
@@ -40,7 +39,7 @@ public class RepositoryTaskHandleTest extends TestCase {
 	public void testInvalidHandle() {
 //		MockRepositoryTask task = new MockRepositoryTask()
 		String url = "http://foo";
-		assertEquals(url + MylarContextManager.CONTEXT_HANDLE_DELIM + "abc", AbstractRepositoryTask.getHandle(url, "abc"));
+		assertEquals(url + "-" + "abc", AbstractRepositoryTask.getHandle(url, "abc"));
 		Exception caught = null;
 		try {
 			AbstractRepositoryTask.getHandle(url, "a-23");

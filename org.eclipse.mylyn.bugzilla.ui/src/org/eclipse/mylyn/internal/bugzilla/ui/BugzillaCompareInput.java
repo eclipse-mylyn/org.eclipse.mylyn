@@ -16,7 +16,7 @@ import org.eclipse.compare.CompareEditorInput;
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.compare.structuremergeviewer.IStructureComparator;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 
 /**
  * A two-way or three-way compare for <code>BugReport</code> objects.

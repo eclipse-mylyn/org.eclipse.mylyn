@@ -12,17 +12,17 @@ package org.eclipse.mylar.tasklist.tests;
 
 import java.io.File;
 
+import org.eclipse.mylar.context.core.InteractionEvent;
+import org.eclipse.mylar.context.core.MylarPlugin;
 import org.eclipse.mylar.core.tests.AbstractContextTest;
-import org.eclipse.mylar.internal.core.MylarContext;
-import org.eclipse.mylar.internal.core.MylarContextManager;
+import org.eclipse.mylar.internal.context.core.MylarContext;
+import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.TaskDataExportWizard;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.TaskDataExportWizardPage;
-import org.eclipse.mylar.provisional.core.InteractionEvent;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
-import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.Task;
 import org.eclipse.mylar.provisional.tasklist.TaskListManager;
+import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -56,7 +56,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 		assertNotNull(wizardPage);
 
 		// Create test export destination directory
-		destinationDir = new File(MylarPlugin.getDefault().getDataDirectory() + File.separator + "TestDir");
+		destinationDir = new File(MylarTaskListPlugin.getDefault().getDataDirectory() + File.separator + "TestDir");
 		destinationDir.mkdir();
 		assertTrue(destinationDir.exists());
 

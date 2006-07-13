@@ -29,8 +29,8 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositorySettingsPage;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.mylar.provisional.tasklist.TaskRepositoryManager;
+import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.ui.PlatformUI;
 
 /**

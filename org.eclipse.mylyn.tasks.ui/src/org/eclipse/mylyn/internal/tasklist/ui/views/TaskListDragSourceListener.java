@@ -15,9 +15,9 @@ import java.io.File;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylar.context.core.MylarPlugin;
 import org.eclipse.mylar.internal.tasklist.ui.actions.CopyDetailsAction;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
-import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
+import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
 import org.eclipse.swt.dnd.FileTransfer;

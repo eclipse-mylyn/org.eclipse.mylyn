@@ -16,10 +16,10 @@ import java.nio.charset.Charset;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
-import org.eclipse.mylar.provisional.tasklist.TaskRepository;
-import org.eclipse.mylar.provisional.tasklist.TaskRepositoryManager;
+import org.eclipse.mylar.tasks.core.IRepositoryConstants;
+import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -51,11 +51,10 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	protected static final String URL_PREFIX_HTTP = "http://";
 
-
 	private AbstractRepositoryConnector connector;
 
 	protected Combo repositoryLabelCombo;
-	
+
 	protected StringFieldEditor serverUrlEditor;
 
 	protected StringFieldEditor userNameEditor;
@@ -105,10 +104,10 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		container.setLayout(layout);
 
 		new Label(container, SWT.NONE).setText(LABEL_LABEL);
-		
+
 		repositoryLabelCombo = new Combo(container, SWT.DROP_DOWN);
 		GridDataFactory.swtDefaults().grab(true, false).applyTo(repositoryLabelCombo);
-		
+
 		serverUrlEditor = new StringFieldEditor("", LABEL_SERVER, StringFieldEditor.UNLIMITED, container) {
 
 			@Override
@@ -142,8 +141,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				}
 			});
 
-//			Label anonymousLabel = new Label(container, SWT.NONE);
-//			anonymousLabel.setText("");
+			// Label anonymousLabel = new Label(container, SWT.NONE);
+			// anonymousLabel.setText("");
 		}
 
 		userNameEditor = new StringFieldEditor("", LABEL_USER, StringFieldEditor.UNLIMITED, container);
@@ -152,8 +151,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			oldUsername = repository.getUserName();
 			oldPassword = repository.getPassword();
 			try {
-				String repositoryLabel = repository.getProperty(TaskRepositoryManager.PROPERTY_LABEL);
-				if(repositoryLabel!=null && repositoryLabel.length()>0) {
+				String repositoryLabel = repository.getProperty(IRepositoryConstants.PROPERTY_LABEL);
+				if (repositoryLabel != null && repositoryLabel.length() > 0) {
 					repositoryLabelCombo.add(repositoryLabel);
 					repositoryLabelCombo.select(0);
 				}
@@ -212,7 +211,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			gridLayout.marginWidth = 0;
 			gridLayout.marginHeight = 0;
 			encodingContainer.setLayout(gridLayout);
-			
+
 			defaultEncoding = new Button(encodingContainer, SWT.RADIO);
 			defaultEncoding.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 			defaultEncoding.setText("Default (" + TaskRepository.DEFAULT_CHARACTER_ENCODING + ")");
@@ -241,7 +240,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 					}
 				}
 			});
-			
+
 			if (repository != null) {
 				try {
 					String repositoryEncoding = repository.getCharacterEncoding();
@@ -308,7 +307,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	public String getRepositoryLabel() {
 		return repositoryLabelCombo.getText();
 	}
-	
+
 	public String getServerUrl() {
 		return serverUrlEditor.getStringValue();
 	}
@@ -330,7 +329,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	}
 
 	/**
-	 * Exposes StringFieldEditor.refreshValidState() 
+	 * Exposes StringFieldEditor.refreshValidState()
 	 * 
 	 * TODO: is there a better way?
 	 */

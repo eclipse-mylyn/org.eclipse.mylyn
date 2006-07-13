@@ -27,7 +27,7 @@ import java.util.StringTokenizer;
 
 import javax.security.auth.login.LoginException;
 
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.trac.MylarTracPlugin;
 import org.eclipse.mylar.internal.trac.model.TracSearch;
 import org.eclipse.mylar.internal.trac.model.TracSearchFilter;

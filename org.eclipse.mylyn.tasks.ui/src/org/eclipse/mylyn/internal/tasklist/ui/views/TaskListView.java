@@ -44,7 +44,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.ui.AbstractTaskListFilter;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
@@ -75,19 +75,19 @@ import org.eclipse.mylar.internal.tasklist.ui.actions.RemoveFromCategoryAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.RenameAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.TaskDeactivateAction;
-import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
-import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
-import org.eclipse.mylar.provisional.tasklist.DateRangeContainer;
-import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.ITaskActivityListener;
-import org.eclipse.mylar.provisional.tasklist.ITaskListChangeListener;
-import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.Task;
-import org.eclipse.mylar.provisional.tasklist.TaskArchive;
-import org.eclipse.mylar.provisional.tasklist.TaskCategory;
+import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylar.tasks.core.DateRangeContainer;
+import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.ITaskActivityListener;
+import org.eclipse.mylar.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylar.tasks.core.ITaskListElement;
+import org.eclipse.mylar.tasks.core.Task;
+import org.eclipse.mylar.tasks.core.TaskArchive;
+import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
@@ -410,7 +410,7 @@ public class TaskListView extends ViewPart {
 			Action P1 = new Action("", AS_CHECK_BOX) {
 				@Override
 				public void run() {
-					MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY,
+					MylarTaskListPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY,
 							Task.PriorityLevel.P1.toString());
 					// MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P1);
 					FILTER_PRIORITY.displayPrioritiesAbove(PRIORITY_LEVELS[0]);
@@ -426,7 +426,7 @@ public class TaskListView extends ViewPart {
 			Action P2 = new Action("", AS_CHECK_BOX) {
 				@Override
 				public void run() {
-					MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY,
+					MylarTaskListPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY,
 							Task.PriorityLevel.P2.toString());
 					// MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P2);
 					FILTER_PRIORITY.displayPrioritiesAbove(PRIORITY_LEVELS[1]);
@@ -442,7 +442,7 @@ public class TaskListView extends ViewPart {
 			Action P3 = new Action("", AS_CHECK_BOX) {
 				@Override
 				public void run() {
-					MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY,
+					MylarTaskListPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY,
 							Task.PriorityLevel.P3.toString());
 					// MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P3);
 					FILTER_PRIORITY.displayPrioritiesAbove(PRIORITY_LEVELS[2]);
@@ -458,7 +458,7 @@ public class TaskListView extends ViewPart {
 			Action P4 = new Action("", AS_CHECK_BOX) {
 				@Override
 				public void run() {
-					MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY,
+					MylarTaskListPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY,
 							Task.PriorityLevel.P4.toString());
 					// MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P4);
 					FILTER_PRIORITY.displayPrioritiesAbove(PRIORITY_LEVELS[3]);
@@ -474,7 +474,7 @@ public class TaskListView extends ViewPart {
 			Action P5 = new Action("", AS_CHECK_BOX) {
 				@Override
 				public void run() {
-					MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY,
+					MylarTaskListPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY,
 							Task.PriorityLevel.P5.toString());
 					// MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P5);
 					FILTER_PRIORITY.displayPrioritiesAbove(PRIORITY_LEVELS[4]);
@@ -536,8 +536,8 @@ public class TaskListView extends ViewPart {
 	}
 
 	public TaskListView() {
-		MylarTaskListPlugin.getTaskListManager().getTaskList().addChangeListener(TASK_REFERESH_LISTENER);
 		MylarTaskListPlugin.getTaskListManager().addActivityListener(TASK_ACTIVITY_LISTENER);
+		MylarTaskListPlugin.getTaskListManager().getTaskList().addChangeListener(TASK_REFERESH_LISTENER);
 	}
 
 	@Override
@@ -830,10 +830,10 @@ public class TaskListView extends ViewPart {
 		addFilter(FILTER_PRIORITY);
 		// if (MylarTaskListPlugin.getDefault().isFilterInCompleteMode())
 		// MylarTaskListPlugin.getTaskListManager().getTaskList().addFilter(inCompleteFilter);
-		if (MylarTaskListPlugin.getMylarCorePrefs().contains(TaskListPreferenceConstants.FILTER_COMPLETE_MODE))
+		if (MylarTaskListPlugin.getDefault().getPreferenceStore().contains(TaskListPreferenceConstants.FILTER_COMPLETE_MODE))
 			addFilter(FILTER_COMPLETE);
 
-		if (MylarTaskListPlugin.getMylarCorePrefs().contains(TaskListPreferenceConstants.FILTER_ARCHIVE_MODE))
+		if (MylarTaskListPlugin.getDefault().getPreferenceStore().contains(TaskListPreferenceConstants.FILTER_ARCHIVE_MODE))
 			addFilter(FILTER_ARCHIVE);
 
 		if (MylarTaskListPlugin.getDefault().isMultipleActiveTasksMode()) {
@@ -845,7 +845,7 @@ public class TaskListView extends ViewPart {
 	}
 
 	@Override
-	public void createPartControl(Composite parent) {
+	public void createPartControl(Composite parent) {		
 		themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		themeManager.addPropertyChangeListener(THEME_CHANGE_LISTENER);
 
@@ -1528,8 +1528,8 @@ public class TaskListView extends ViewPart {
 	}
 
 	public static String getCurrentPriorityLevel() {
-		if (MylarTaskListPlugin.getMylarCorePrefs().contains(TaskListPreferenceConstants.SELECTED_PRIORITY)) {
-			return MylarTaskListPlugin.getMylarCorePrefs().getString(TaskListPreferenceConstants.SELECTED_PRIORITY);
+		if (MylarTaskListPlugin.getDefault().getPreferenceStore().contains(TaskListPreferenceConstants.SELECTED_PRIORITY)) {
+			return MylarTaskListPlugin.getDefault().getPreferenceStore().getString(TaskListPreferenceConstants.SELECTED_PRIORITY);
 		} else {
 			return Task.PriorityLevel.P5.toString();
 		}

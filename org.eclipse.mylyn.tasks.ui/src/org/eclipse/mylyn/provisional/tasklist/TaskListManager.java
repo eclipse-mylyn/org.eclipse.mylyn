@@ -30,17 +30,24 @@ import java.util.TimerTask;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.mylar.internal.core.MylarContextManager;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.core.util.TimerThread;
+import org.eclipse.mylar.context.core.IMylarContext;
+import org.eclipse.mylar.context.core.IMylarContextListener;
+import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.InteractionEvent;
+import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.internal.context.core.util.TimerThread;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.util.TaskActivityTimer;
 import org.eclipse.mylar.internal.tasklist.util.TaskListWriter;
-import org.eclipse.mylar.provisional.core.IMylarContext;
-import org.eclipse.mylar.provisional.core.IMylarContextListener;
-import org.eclipse.mylar.provisional.core.IMylarElement;
-import org.eclipse.mylar.provisional.core.InteractionEvent;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.monitor.MylarMonitorPlugin;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
+import org.eclipse.mylar.tasks.core.DateRangeContainer;
+import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.ITaskActivityListener;
+import org.eclipse.mylar.tasks.core.TaskList;
 
 /**
  * TODO: clean-up
@@ -190,9 +197,13 @@ public class TaskListManager implements IPropertyChangeListener {
 		this.nextLocalTaskId = startId;
 		timer = new Timer();
 		timer.schedule(new RolloverCheck(), ROLLOVER_DELAY, ROLLOVER_DELAY);
-		MylarPlugin.getContextManager().addActivityMetaContextListener(CONTEXT_LISTENER);
 	}
 
+	public void init() {
+		// NOTE: this call can't be in the constructor due to startup concurrency
+		MylarPlugin.getContextManager().addActivityMetaContextListener(CONTEXT_LISTENER);
+	}
+	
 	public void dispose() {
 		MylarPlugin.getContextManager().removeActivityMetaContextListener(CONTEXT_LISTENER);
 	}
@@ -349,9 +360,9 @@ public class TaskListManager implements IPropertyChangeListener {
 		startDay = Calendar.MONDAY;
 		// MylarTaskListPlugin.getMylarCorePrefs().getInt(TaskListPreferenceConstants.PLANNING_ENDDAY);
 		endDay = Calendar.SUNDAY;
-		scheduledStartHour = MylarTaskListPlugin.getMylarCorePrefs().getInt(
+		scheduledStartHour = MylarTaskListPlugin.getDefault().getPreferenceStore().getInt(
 				TaskListPreferenceConstants.PLANNING_STARTHOUR);
-		scheduledEndHour = MylarTaskListPlugin.getMylarCorePrefs().getInt(TaskListPreferenceConstants.PLANNING_ENDHOUR);
+		scheduledEndHour = MylarTaskListPlugin.getDefault().getPreferenceStore().getInt(TaskListPreferenceConstants.PLANNING_ENDHOUR);
 
 		GregorianCalendar currentBegin = new GregorianCalendar();
 		currentBegin.setFirstDayOfWeek(startDay);
@@ -476,7 +487,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		}
 		taskList.refactorRepositoryUrl(oldUrl, newUrl);
 
-		File dataDir = new File(MylarPlugin.getDefault().getDataDirectory());
+		File dataDir = new File(MylarTaskListPlugin.getDefault().getDataDirectory());
 		if (dataDir.exists() && dataDir.isDirectory()) {
 			for (File file : dataDir.listFiles()) {
 				int dotIndex = file.getName().lastIndexOf('.');
@@ -504,7 +515,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		saveTaskList();
 	}
 
-	public boolean readExistingOrCreateNewList() {
+	public boolean readExistingOrCreateNewList() {	
 		try {
 			if (taskListFile.exists()) {
 				// taskList = new TaskList();
@@ -550,7 +561,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		try {
 			if (taskListInitialized) {
 				taskListWriter.writeTaskList(taskList, taskListFile);
-				MylarPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.TASK_ID,
+				MylarTaskListPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.TASK_ID,
 						nextLocalTaskId);
 			} else {
 				MylarStatusHandler.log("task list save attempted before initialization", this);
@@ -580,7 +591,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		}
 
 		try {
-			int timeout = MylarPlugin.getContextManager().getInactivityTimeout();
+			int timeout = MylarMonitorPlugin.getDefault().getInactivityTimeout();
 			TaskActivityTimer activityTimer = new TaskActivityTimer(task, timeout, timerSleepInterval);
 			activityTimer.startTimer();
 			timerMap.put(task, activityTimer);
@@ -735,9 +746,9 @@ public class TaskListManager implements IPropertyChangeListener {
 		if (event.getProperty().equals(TaskListPreferenceConstants.PLANNING_STARTHOUR)
 				|| event.getProperty().equals(TaskListPreferenceConstants.PLANNING_ENDHOUR)) {
 			// event.getProperty().equals(TaskListPreferenceConstants.PLANNING_STARTDAY)
-			scheduledStartHour = MylarTaskListPlugin.getMylarCorePrefs().getInt(
+			scheduledStartHour = MylarTaskListPlugin.getDefault().getPreferenceStore().getInt(
 					TaskListPreferenceConstants.PLANNING_STARTHOUR);
-			scheduledEndHour = MylarTaskListPlugin.getMylarCorePrefs().getInt(
+			scheduledEndHour = MylarTaskListPlugin.getDefault().getPreferenceStore().getInt(
 					TaskListPreferenceConstants.PLANNING_ENDHOUR);
 		}
 	}

@@ -223,7 +223,7 @@ litigation.
       <import plugin="org.eclipse.ui.views"/>
       <import plugin="org.eclipse.jface.text"/>
       <import plugin="org.eclipse.mylar.tasklist"/>
-      <import plugin="org.eclipse.mylar.core"/>
+      <import plugin="org.eclipse.mylar.context.core"/>
       <import feature="org.eclipse.mylar_feature" version="0.5.3" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.forms"/>
    </requires>

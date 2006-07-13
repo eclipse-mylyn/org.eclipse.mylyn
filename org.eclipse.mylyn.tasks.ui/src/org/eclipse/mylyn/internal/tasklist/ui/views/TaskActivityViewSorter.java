@@ -13,12 +13,12 @@ package org.eclipse.mylar.internal.tasklist.ui.views;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
-import org.eclipse.mylar.provisional.tasklist.DateRangeActivityDelegate;
-import org.eclipse.mylar.provisional.tasklist.DateRangeContainer;
-import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.Task;
-import org.eclipse.mylar.provisional.tasklist.Task.PriorityLevel;
+import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
+import org.eclipse.mylar.tasks.core.DateRangeContainer;
+import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.Task;
+import org.eclipse.mylar.tasks.core.Task.PriorityLevel;
 import org.eclipse.ui.IMemento;
 
 /**

@@ -11,8 +11,8 @@
 
 package org.eclipse.mylar.tasklist.tests.mockconnector;
 
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
-import org.eclipse.mylar.provisional.tasklist.TaskList;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.TaskList;
 
 /**
  * @author Mik Kersten

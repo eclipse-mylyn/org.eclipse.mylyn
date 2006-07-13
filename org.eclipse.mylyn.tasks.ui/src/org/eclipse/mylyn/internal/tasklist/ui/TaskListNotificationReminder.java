@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.tasklist.ui;
 
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskElementLabelProvider;
-import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
 

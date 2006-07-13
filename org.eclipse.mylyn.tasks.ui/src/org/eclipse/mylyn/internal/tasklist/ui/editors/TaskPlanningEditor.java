@@ -17,22 +17,23 @@ import java.util.Calendar;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylar.internal.core.util.DateUtil;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.context.core.util.DateUtil;
 import org.eclipse.mylar.internal.tasklist.RetrieveTitleFromUrlJob;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasklist.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.TaskEditorCopyAction;
 import org.eclipse.mylar.internal.tasklist.ui.views.DatePicker;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
-import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
-import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.ITaskListChangeListener;
+import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.Task;
-import org.eclipse.mylar.provisional.tasklist.Task.PriorityLevel;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylar.tasks.core.Task;
+import org.eclipse.mylar.tasks.core.Task.PriorityLevel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.KeyEvent;
@@ -85,7 +86,7 @@ public class TaskPlanningEditor extends EditorPart {
 	private static final String LABEL_SCHEDULE = "Scheduled for:";
 
 	private static final String DESCRIPTION_ESTIMATED = "Time that the task has been actively worked on.\n Inactivity timeout is "
-			+ MylarPlugin.getContextManager().getInactivityTimeout() + " seconds.";
+			+ MylarMonitorPlugin.getDefault().getInactivityTimeout() + " seconds.";
 
 	private static final String LABEL_INCOMPLETE = "Incomplete";
 

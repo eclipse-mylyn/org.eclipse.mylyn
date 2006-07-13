@@ -17,7 +17,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskCategory;
+import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.ui.PlatformUI;
 
 /**

@@ -18,9 +18,9 @@ import junit.framework.TestCase;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListDropAdapter;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.provisional.tasklist.TaskListManager;
+import org.eclipse.mylar.tasks.core.ITask;
 
 /**
  * @author Rob Elves

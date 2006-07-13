@@ -21,14 +21,14 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskEditorFactory;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
-import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
@@ -213,14 +213,14 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	}
 
 	private int createBrowserPage() {
-		if (!MylarTaskListPlugin.getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL)) {
+		if (!MylarTaskListPlugin.getDefault().getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL)) {
 			try {
 				webBrowser = new Browser(getContainer(), SWT.NONE);
 				int index = addPage(webBrowser);
 				setPageText(index, ISSUE_WEB_PAGE_LABEL);
 				webBrowser.setUrl(task.getUrl());
 
-				boolean openWithBrowser = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(
+				boolean openWithBrowser = MylarTaskListPlugin.getDefault().getPreferenceStore().getBoolean(
 						TaskListPreferenceConstants.REPORT_OPEN_INTERNAL);
 				// if (!(task instanceof AbstractRepositoryTask) ||
 				// openWithBrowser) {

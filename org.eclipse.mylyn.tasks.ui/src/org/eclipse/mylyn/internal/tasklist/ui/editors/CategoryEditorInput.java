@@ -12,8 +12,8 @@
 package org.eclipse.mylar.internal.tasklist.ui.editors;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 

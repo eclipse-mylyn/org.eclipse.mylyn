@@ -12,7 +12,6 @@
 package org.eclipse.mylar.internal.tasklist.ui.actions;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -20,10 +19,8 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.NewRepositoryTaskWizard;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.pde.internal.runtime.logview.LogEntry;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeItem;
@@ -44,12 +41,12 @@ public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionCh
 	private TreeViewer treeViewer;
 
 	public void run() {
-		boolean offline = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
-		if (offline) {
-			MessageDialog.openInformation(null, "Unable to create bug report",
-					"Unable to create a new bug report since you are currently offline");
-			return;
-		}
+//		boolean offline = MylarTaskListPlugin.getDefault().getPreferenceStore().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
+//		if (offline) {
+//			MessageDialog.openInformation(null, "Unable to create bug report",
+//					"Unable to create a new bug report since you are currently offline");
+//			return;
+//		}
 
 		TreeItem[] items = treeViewer.getTree().getSelection();
 		LogEntry selection = null;

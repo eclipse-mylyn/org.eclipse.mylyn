@@ -21,11 +21,11 @@ import junit.framework.TestCase;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.mylar.provisional.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.tasklist.tests.mockconnector.MockRepositoryConnector;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.TaskRepository;
 
 /**
  * @author Mik Kersten
@@ -75,7 +75,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 	}
 
 	public void testGet() throws MalformedURLException {
-		assertEquals("", MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
+		assertEquals("", MylarTaskListPlugin.getDefault().getPreferenceStore().getString(TaskRepositoryManager.PREF_REPOSITORIES));
 
 		TaskRepository repository = new TaskRepository(DEFAULT_KIND, DEFAULT_URL);
 		manager.addRepository(repository);
@@ -118,7 +118,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 	}
 
 	public void testRepositoryAttributePersistance() throws MalformedURLException {
-		assertEquals("", MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
+		assertEquals("", MylarTaskListPlugin.getDefault().getPreferenceStore().getString(TaskRepositoryManager.PREF_REPOSITORIES));
 
 		String version = "123";
 		String encoding = "UTF-16";

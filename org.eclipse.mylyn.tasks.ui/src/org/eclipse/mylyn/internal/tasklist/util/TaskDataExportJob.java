@@ -26,12 +26,12 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.mylar.internal.core.MylarContextManager;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.core.util.ZipFileUtil;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
-import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.internal.context.core.util.ZipFileUtil;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasks.core.ITask;
 
 /**
  * Job that performs exporting (copying or zipping) of Mylar Task List data
@@ -98,7 +98,7 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 			// Repositories always exported
 			MylarTaskListPlugin.getRepositoryManager().saveRepositories();
 
-			String sourceRepositoriesPath = MylarPlugin.getDefault().getDataDirectory() + File.separator
+			String sourceRepositoriesPath = MylarTaskListPlugin.getDefault().getDataDirectory() + File.separator
 					+ MylarTaskListPlugin.DEFAULT_REPOSITORIES_FILE;
 			File sourceRepositoriesFile = new File(sourceRepositoriesPath);
 			if (sourceRepositoriesFile.exists()) {
@@ -126,7 +126,7 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 		if (exportTaskList) {
 			MylarTaskListPlugin.getTaskListManager().saveTaskList();
 
-			String sourceTaskListPath = MylarPlugin.getDefault().getDataDirectory() + File.separator
+			String sourceTaskListPath = MylarTaskListPlugin.getDefault().getDataDirectory() + File.separator
 					+ MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE;
 			File sourceTaskListFile = new File(sourceTaskListPath);
 			if (sourceTaskListFile.exists()) {
@@ -151,7 +151,7 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 
 		if (exportActivationHistory) {
 			try {
-				File sourceActivationHistoryFile = new File(MylarPlugin.getDefault().getDataDirectory()
+				File sourceActivationHistoryFile = new File(MylarTaskListPlugin.getDefault().getDataDirectory()
 						+ File.separator + MylarContextManager.CONTEXT_HISTORY_FILE_NAME
 						+ MylarContextManager.CONTEXT_FILE_EXTENSION);
 

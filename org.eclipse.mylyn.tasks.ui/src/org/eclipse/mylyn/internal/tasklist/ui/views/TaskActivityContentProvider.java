@@ -14,9 +14,9 @@ package org.eclipse.mylar.internal.tasklist.ui.views;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylar.provisional.tasklist.DateRangeContainer;
-import org.eclipse.mylar.provisional.tasklist.DateRangeActivityDelegate;
 import org.eclipse.mylar.provisional.tasklist.TaskListManager;
+import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
+import org.eclipse.mylar.tasks.core.DateRangeContainer;
 
 /**
  * @author Rob Elves

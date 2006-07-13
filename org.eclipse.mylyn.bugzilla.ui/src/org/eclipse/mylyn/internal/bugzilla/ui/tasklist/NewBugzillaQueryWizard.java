@@ -14,12 +14,11 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskRepository;
+import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 /**
@@ -62,8 +61,8 @@ public class NewBugzillaQueryWizard extends Wizard {
 		final BugzillaRepositoryQuery queryCategory = page.getQuery();
 
 		MylarTaskListPlugin.getTaskListManager().getTaskList().addQuery(queryCategory);
-		boolean offline = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
-		if (!offline) {
+//		boolean offline = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
+//		if (!offline) {
 			WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
 				protected void execute(IProgressMonitor monitor) throws CoreException {
 					monitor.beginTask("Executing query", 50);
@@ -82,7 +81,7 @@ public class NewBugzillaQueryWizard extends Wizard {
 			} catch (Exception e) {
 				MylarStatusHandler.log(e, "There was a problem executing the query refresh");
 			}
-		}
+//		}
 
 		return true;
 	}

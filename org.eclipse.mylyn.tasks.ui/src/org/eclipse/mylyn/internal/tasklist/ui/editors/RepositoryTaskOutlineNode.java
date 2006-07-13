@@ -13,8 +13,8 @@ package org.eclipse.mylar.internal.tasklist.ui.editors;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.eclipse.mylar.internal.tasklist.Comment;
-import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
+import org.eclipse.mylar.tasks.core.Comment;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 
 /**
  * A node for the tree in the <code>RepositoryTaskOutlinePage</code>.

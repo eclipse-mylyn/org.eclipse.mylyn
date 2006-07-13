@@ -34,12 +34,12 @@ public class FilterArchiveContainerAction extends Action {
 		setToolTipText(LABEL);
 		setId(ID); 
 		setImageDescriptor(TaskListImages.FILTER_ARCHIVE);
-		setChecked(MylarTaskListPlugin.getMylarCorePrefs().contains(TaskListPreferenceConstants.FILTER_ARCHIVE_MODE));
+		setChecked(MylarTaskListPlugin.getDefault().getPreferenceStore().contains(TaskListPreferenceConstants.FILTER_ARCHIVE_MODE));
 	}
 
 	@Override
 	public void run() {
-		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.FILTER_ARCHIVE_MODE, isChecked());
+		MylarTaskListPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.FILTER_ARCHIVE_MODE, isChecked());
 		if (isChecked()) {
 			view.addFilter(view.getArchiveFilter());
 		} else {

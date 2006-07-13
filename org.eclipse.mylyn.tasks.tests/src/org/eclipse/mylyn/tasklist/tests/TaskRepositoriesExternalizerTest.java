@@ -17,8 +17,8 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.tasklist.util.TaskRepositoriesExternalizer;
-import org.eclipse.mylar.provisional.tasklist.TaskRepository;
+import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.core.util.TaskRepositoriesExternalizer;
 
 /** 
  * @author Rob Elves

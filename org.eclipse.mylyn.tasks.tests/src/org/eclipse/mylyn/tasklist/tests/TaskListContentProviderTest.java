@@ -8,11 +8,11 @@
 
 package org.eclipse.mylar.tasklist.tests;
 
+import junit.framework.TestCase;
+
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListContentProvider;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.provisional.tasklist.Task;
-
-import junit.framework.TestCase;
+import org.eclipse.mylar.tasks.core.Task;
 
 /**
  * @author Felix Schwarz

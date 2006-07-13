@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.editors;
 
-import org.eclipse.mylar.internal.tasklist.Comment;
+import org.eclipse.mylar.tasks.core.Comment;
 
 /**
  * A selection of an element in a view.

@@ -15,7 +15,7 @@ import java.util.Date;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.RetrieveTitleFromUrlJob;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;

@@ -8,7 +8,7 @@
 
 package org.eclipse.mylar.tasklist.tests.mockconnector;
 
-import org.eclipse.mylar.internal.tasklist.AbstractAttributeFactory;
+import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
 
 
 

@@ -14,9 +14,9 @@ package org.eclipse.mylar.internal.tasklist.ui.actions;
 import java.util.Iterator;
 
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
-import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
-import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**

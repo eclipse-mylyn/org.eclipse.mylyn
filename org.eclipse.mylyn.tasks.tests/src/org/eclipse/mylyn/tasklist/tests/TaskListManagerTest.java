@@ -24,6 +24,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylar.context.core.MylarPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
@@ -32,23 +33,22 @@ import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.tasklist.ScheduledTaskListSynchJob;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.TaskListSynchronizationManager;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
-import org.eclipse.mylar.provisional.tasklist.AbstractQueryHit;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryQuery;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
-import org.eclipse.mylar.provisional.tasklist.AbstractTaskContainer;
-import org.eclipse.mylar.provisional.tasklist.ITask;
-import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.Task;
-import org.eclipse.mylar.provisional.tasklist.TaskCategory;
-import org.eclipse.mylar.provisional.tasklist.TaskList;
 import org.eclipse.mylar.provisional.tasklist.TaskListManager;
-import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.mylar.tasklist.tests.mockconnector.MockQueryHit;
 import org.eclipse.mylar.tasklist.tests.mockconnector.MockRepositoryConnector;
 import org.eclipse.mylar.tasklist.tests.mockconnector.MockRepositoryQuery;
 import org.eclipse.mylar.tasklist.tests.mockconnector.MockRepositoryTask;
+import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.ITaskListElement;
+import org.eclipse.mylar.tasks.core.Task;
+import org.eclipse.mylar.tasks.core.TaskCategory;
+import org.eclipse.mylar.tasks.core.TaskList;
+import org.eclipse.mylar.tasks.core.TaskRepository;
 
 /**
  * @author Mik Kersten
@@ -397,7 +397,7 @@ public class TaskListManagerTest extends TestCase {
 		MockRepositoryQuery query = new MockRepositoryQuery("query", taskList);
 		MockQueryHit hit = new MockQueryHit(repositoryUrl, task.getDescription(), "1");
 		hit.setCorrespondingTask(task);
-		query.addHit(new MockQueryHit(repositoryUrl, task.getDescription(), "1"));
+		query.addHit(new MockQueryHit(repositoryUrl, task.getDescription(), "1"), manager.getTaskList());
 		taskList.addQuery(query);
 		assertEquals(1, taskList.getAllTasks().size());
 		assertEquals(1, taskList.getRootTasks().size());
@@ -609,9 +609,9 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testScheduledRefreshJob() throws InterruptedException {
 		int counter = 3;
-		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
+		MylarTaskListPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
 				true);
-		MylarTaskListPlugin.getMylarCorePrefs().setValue(
+		MylarTaskListPlugin.getDefault().getPreferenceStore().setValue(
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, 1000L);
 		assertEquals(0, ScheduledTaskListSynchJob.getCount());
 		TaskListSynchronizationManager manager = new TaskListSynchronizationManager(false);
@@ -620,7 +620,7 @@ public class TaskListManagerTest extends TestCase {
 		assertTrue(ScheduledTaskListSynchJob.getCount() + " smaller than " + counter, ScheduledTaskListSynchJob
 				.getCount() >= counter);
 		manager.cancelAll();
-		MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
+		MylarTaskListPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
 				false);
 	}
 
@@ -640,14 +640,14 @@ public class TaskListManagerTest extends TestCase {
 		BugzillaRepositoryQuery query2 = new BugzillaRepositoryQuery("url2", "url2", "query2", "10", manager
 				.getTaskList());
 
-		query1.addHit(hit1);
-		query1.addHit(hit2);
-		query1.addHit(hit3);
+		query1.addHit(hit1, manager.getTaskList());
+		query1.addHit(hit2, manager.getTaskList());
+		query1.addHit(hit3, manager.getTaskList());
 		assertEquals(query1.getHits().size(), 3);
 
-		query2.addHit(hit1twin);
-		query2.addHit(hit2twin);
-		query2.addHit(hit3twin);
+		query2.addHit(hit1twin, manager.getTaskList());
+		query2.addHit(hit2twin, manager.getTaskList());
+		query2.addHit(hit3twin, manager.getTaskList());
 		assertEquals(query2.getHits().size(), 3);
 
 		manager.getTaskList().addQuery(query1);
@@ -683,23 +683,23 @@ public class TaskListManagerTest extends TestCase {
 		BugzillaRepositoryQuery query1 = new BugzillaRepositoryQuery("url", "url", "queryl", "10", manager
 				.getTaskList());
 
-		query1.addHit(hit1);
-		query1.addHit(hit2);
-		query1.addHit(hit3);
+		query1.addHit(hit1, manager.getTaskList());
+		query1.addHit(hit2, manager.getTaskList());
+		query1.addHit(hit3, manager.getTaskList());
 		assertEquals(3, query1.getHits().size());
 		List<AbstractQueryHit> newHits = new ArrayList<AbstractQueryHit>();
-		query1.updateHits(newHits);
+		query1.updateHits(newHits, manager.getTaskList());
 		assertEquals(0, query1.getHits().size());
 		newHits.add(hit1);
 		newHits.add(hit2);
-		query1.updateHits(newHits);
+		query1.updateHits(newHits, manager.getTaskList());
 		assertEquals(2, query1.getHits().size());
 		hit1.setNotified(true);
 		newHits.clear();
 		newHits.add(hit1twin);
 		newHits.add(hit2twin);
 		newHits.add(hit3twin);
-		query1.updateHits(newHits);
+		query1.updateHits(newHits, manager.getTaskList());
 		assertEquals(3, query1.getHits().size());
 		assertTrue(query1.getHits().contains(hit1twin));
 		assertTrue(query1.getHits().contains(hit2twin));

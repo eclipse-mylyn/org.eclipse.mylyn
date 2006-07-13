@@ -52,7 +52,7 @@ public class TaskListPreferenceConstants {
 
 //	public static final String DEFAULT_URL_PREFIX = "org.eclipse.mylar.tasklist.defaultUrlPrefix";
 
-	public static final String WORK_OFFLINE = "org.eclipse.mylar.tasklist.work.offline";
+//	public static final String WORK_OFFLINE = "org.eclipse.mylar.tasklist.work.offline";
 
 	public static final String CONTEXTS_MIGRATED = "org.eclipse.mylar.tasklist.repositories.migrated.single";
 

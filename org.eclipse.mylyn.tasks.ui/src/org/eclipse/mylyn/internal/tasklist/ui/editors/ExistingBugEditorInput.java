@@ -13,11 +13,11 @@ package org.eclipse.mylar.internal.tasklist.ui.editors;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
-import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
-import org.eclipse.mylar.provisional.tasklist.ITask;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskRepository;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylar.tasks.core.TaskRepository;
 
 /**
  * The <code>IEditorInput</code> implementation for

@@ -17,14 +17,14 @@ import java.util.GregorianCalendar;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.core.MylarContextManager;
-import org.eclipse.mylar.provisional.core.InteractionEvent;
-import org.eclipse.mylar.provisional.tasklist.DateRangeActivityDelegate;
-import org.eclipse.mylar.provisional.tasklist.DateRangeContainer;
-import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.context.core.InteractionEvent;
+import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.Task;
-import org.eclipse.mylar.provisional.tasklist.TaskList;
+import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
+import org.eclipse.mylar.tasks.core.DateRangeContainer;
+import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.Task;
+import org.eclipse.mylar.tasks.core.TaskList;
 
 /**
  * @author Rob Elves

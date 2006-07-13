@@ -13,7 +13,6 @@ package org.eclipse.mylar.internal.bugzilla.ui.search;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaSearchOperation;
 
 /**
  * Interface for the bugzilla search result collector.

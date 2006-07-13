@@ -245,7 +245,7 @@ litigation.
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylar.core"
+         id="org.eclipse.mylar.context.core"
          download-size="0"
          install-size="0"
          version="0.6.0.v20060707-1900"
@@ -256,6 +256,13 @@ litigation.
          download-size="0"
          install-size="0"
          version="0.6.0.v20060707-1900"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylar.monitor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>

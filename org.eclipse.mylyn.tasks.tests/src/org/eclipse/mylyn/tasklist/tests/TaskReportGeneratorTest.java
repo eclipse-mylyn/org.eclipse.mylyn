@@ -24,11 +24,11 @@ import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.tasklist.planner.CompletedTaskCollector;
 import org.eclipse.mylar.internal.tasklist.planner.TaskReportGenerator;
-import org.eclipse.mylar.provisional.tasklist.ITaskListElement;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.Task;
-import org.eclipse.mylar.provisional.tasklist.TaskCategory;
 import org.eclipse.mylar.provisional.tasklist.TaskListManager;
+import org.eclipse.mylar.tasks.core.ITaskListElement;
+import org.eclipse.mylar.tasks.core.Task;
+import org.eclipse.mylar.tasks.core.TaskCategory;
 
 /**
  * @author Mik Kersten
@@ -175,7 +175,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		generator.run(new NullProgressMonitor());
 		assertEquals(0, generator.getAllCollectedTasks().size());
 
-		bugQuery.addHit(new BugzillaQueryHit("task1description", "low", "repositoryURL", "1", task1, "FIXED"));
+		bugQuery.addHit(new BugzillaQueryHit("task1description", "low", "repositoryURL", "1", task1, "FIXED"), manager.getTaskList());
 
 		generator.run(new NullProgressMonitor());
 		assertEquals(0, generator.getAllCollectedTasks().size());

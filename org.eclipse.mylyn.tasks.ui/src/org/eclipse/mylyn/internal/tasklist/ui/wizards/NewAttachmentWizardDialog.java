@@ -11,7 +11,7 @@ package org.eclipse.mylar.internal.tasklist.ui.wizards;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
@@ -31,7 +31,7 @@ public class NewAttachmentWizardDialog extends WizardDialog {
 	}
 
 	protected IDialogSettings getDialogBoundsSettings() {
-		IDialogSettings settings = MylarPlugin.getDefault().getDialogSettings();
+		IDialogSettings settings = MylarTaskListPlugin.getDefault().getDialogSettings();
 		IDialogSettings section = settings.getSection(ATTACHMENT_WIZARD_SETTINGS_SECTION);
 		if (section == null) {
 			section = settings.addNewSection(ATTACHMENT_WIZARD_SETTINGS_SECTION);

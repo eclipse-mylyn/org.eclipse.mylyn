@@ -23,6 +23,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
+import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.TaskList;
+import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressConstants;
@@ -41,11 +45,14 @@ class SynchronizeQueryJob extends Job {
 	private List<AbstractQueryHit> newHits = new ArrayList<AbstractQueryHit>();
 
 	private boolean synchTasks;
+	
+	private TaskList taskList;
 
-	public SynchronizeQueryJob(AbstractRepositoryConnector connector, Set<AbstractRepositoryQuery> queries) {
+	public SynchronizeQueryJob(AbstractRepositoryConnector connector, Set<AbstractRepositoryQuery> queries, TaskList taskList) {
 		super(JOB_LABEL + ": " + connector.getRepositoryType());
 		this.connector = connector;
 		this.queries = queries;
+		this.taskList = taskList;
 	}
 
 	@Override
@@ -75,7 +82,7 @@ class SynchronizeQueryJob extends Job {
 			newHits = this.connector.performQuery(repositoryQuery, new NullProgressMonitor(), queryStatus);
 			if (queryStatus.getChildren() != null && queryStatus.getChildren().length > 0) {
 				if (queryStatus.getChildren()[0].getException() == null) {
-					repositoryQuery.updateHits(newHits);
+					repositoryQuery.updateHits(newHits, taskList);
 					if (synchTasks) {
 						// TODO: Should sync changed per repository not per query
 						connector.synchronizeChanged(repository);

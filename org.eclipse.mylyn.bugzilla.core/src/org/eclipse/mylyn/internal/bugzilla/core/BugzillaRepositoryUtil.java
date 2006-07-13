@@ -29,15 +29,16 @@ import java.util.List;
 
 import javax.security.auth.login.LoginException;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESOLUTION;
-import org.eclipse.mylar.internal.tasklist.RepositoryOperation;
-import org.eclipse.mylar.internal.tasklist.RepositoryTaskAttribute;
-import org.eclipse.mylar.internal.tasklist.RepositoryTaskData;
-import org.eclipse.mylar.internal.tasklist.util.HtmlStreamTokenizer;
-import org.eclipse.mylar.internal.tasklist.util.HtmlTag;
-import org.eclipse.mylar.internal.tasklist.util.HtmlStreamTokenizer.Token;
+import org.eclipse.mylar.tasks.core.RepositoryOperation;
+import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylar.tasks.core.util.HtmlStreamTokenizer;
+import org.eclipse.mylar.tasks.core.util.HtmlTag;
+import org.eclipse.mylar.tasks.core.util.HtmlStreamTokenizer.Token;
 
 /**
  * @author Mik Kersten (some rewriting)

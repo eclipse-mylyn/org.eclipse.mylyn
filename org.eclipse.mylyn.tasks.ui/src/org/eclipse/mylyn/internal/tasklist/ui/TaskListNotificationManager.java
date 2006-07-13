@@ -163,7 +163,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 	}
 
 	public void startNotification(long initialStartupTime) {
-		if (MylarTaskListPlugin.getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.NOTIFICATIONS_ENABLED)) {
+		if (MylarTaskListPlugin.getDefault().getPreferenceStore().getBoolean(TaskListPreferenceConstants.NOTIFICATIONS_ENABLED)) {
 			if (!openJob.cancel()) {
 				try {					
 					openJob.join();
