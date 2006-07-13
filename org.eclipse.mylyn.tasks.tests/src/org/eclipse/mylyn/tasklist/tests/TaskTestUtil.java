@@ -27,7 +27,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaOfflineTaskHandler;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.tasks.core.Comment;
+import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 
@@ -71,12 +71,12 @@ public class TaskTestUtil {
 				.getKeyString());
 		if (completed) {
 			resolvedAttribute.setValue(RepositoryTaskData.VAL_STATUS_RESOLVED);
-			Comment comment = new Comment(new BugzillaAttributeFactory(), report, 1);
+			TaskComment taskComment = new TaskComment(new BugzillaAttributeFactory(), report, 1);
 			RepositoryTaskAttribute attribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_WHEN
 					.getKeyString());
 			attribute.setValue(BugzillaOfflineTaskHandler.comment_creation_ts_format.format(new Date()));
-			comment.addAttribute(BugzillaReportElement.BUG_WHEN.getKeyString(), attribute);
-			report.addComment(comment);
+			taskComment.addAttribute(BugzillaReportElement.BUG_WHEN.getKeyString(), attribute);
+			report.addComment(taskComment);
 		} else {
 			resolvedAttribute.setValue(RepositoryTaskData.VAL_STATUS_NEW);
 		}

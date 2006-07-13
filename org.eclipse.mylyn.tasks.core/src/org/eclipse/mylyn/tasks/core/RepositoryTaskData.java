@@ -45,7 +45,7 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 	/** The full path to the attachment to submit with this report, empty if none */
 	protected LocalAttachment newAttachment = null;
 	
-	private List<Comment> comments = new ArrayList<Comment>();
+	private List<TaskComment> taskComments = new ArrayList<TaskComment>();
 
 	private List<RepositoryAttachment> attachments = new ArrayList<RepositoryAttachment>();
 
@@ -311,24 +311,24 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 		this.newComment = newComment;
 	}
 
-	public void addComment(Comment comment) {
-		Comment preceding = null;
-		if (comments.size() > 0) {
+	public void addComment(TaskComment taskComment) {
+		TaskComment preceding = null;
+		if (taskComments.size() > 0) {
 			// if there are some comments, get the last comment and set the next
 			// value to be the new comment
-			preceding = comments.get(comments.size() - 1);
-			preceding.setNext(comment);
+			preceding = taskComments.get(taskComments.size() - 1);
+			preceding.setNext(taskComment);
 		}
-		comment.setPrevious(preceding);
-		comments.add(comment);
+		taskComment.setPrevious(preceding);
+		taskComments.add(taskComment);
 	}
 
-	public List<Comment> getComments() {
-		return comments;
+	public List<TaskComment> getComments() {
+		return taskComments;
 	}
 
 	public String getDescription() {
-		List<Comment> coms = this.getComments();
+		List<TaskComment> coms = this.getComments();
 		if (coms != null && coms.size() > 0) {
 			return coms.get(0).getText();
 		} else {
@@ -393,8 +393,8 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 	@Override
 	public void setAttributeFactory(AbstractAttributeFactory factory) {
 		super.setAttributeFactory(factory);
-		for (Comment comment : comments) {
-			comment.setAttributeFactory(factory);
+		for (TaskComment taskComment : taskComments) {
+			taskComment.setAttributeFactory(factory);
 		}
 		for (RepositoryAttachment attachment : attachments) {
 			attachment.setAttributeFactory(factory);

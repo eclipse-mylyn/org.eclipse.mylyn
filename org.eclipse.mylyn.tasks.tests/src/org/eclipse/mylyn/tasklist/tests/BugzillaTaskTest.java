@@ -21,7 +21,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaOfflineTaskHandler;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.tasks.core.Comment;
+import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 
@@ -56,12 +56,12 @@ public class BugzillaTaskTest extends TestCase {
 		Date now = new Date();
 		String nowTimeStamp = BugzillaOfflineTaskHandler.comment_creation_ts_format.format(now);
 
-		Comment comment = new Comment(new BugzillaAttributeFactory(), report, 1);
+		TaskComment taskComment = new TaskComment(new BugzillaAttributeFactory(), report, 1);
 		RepositoryTaskAttribute attribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_WHEN
 				.getKeyString());
 		attribute.setValue(nowTimeStamp);
-		comment.addAttribute(BugzillaReportElement.BUG_WHEN.getKeyString(), attribute);
-		report.addComment(comment);
+		taskComment.addAttribute(BugzillaReportElement.BUG_WHEN.getKeyString(), attribute);
+		report.addComment(taskComment);
 		assertNull(task.getCompletionDate());
 
 		RepositoryTaskAttribute resolvedAttribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_STATUS

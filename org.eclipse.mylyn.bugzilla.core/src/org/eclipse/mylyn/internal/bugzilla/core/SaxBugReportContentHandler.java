@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
-import org.eclipse.mylar.tasks.core.Comment;
+import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
@@ -35,9 +35,9 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 
 	private StringBuffer characters;
 
-	private Comment comment;
+	private TaskComment taskComment;
 
-	private final Map<Integer, Comment> attachIdToComment = new HashMap<Integer, Comment>();
+	private final Map<Integer, TaskComment> attachIdToComment = new HashMap<Integer, TaskComment>();
 
 	private int commentNum = 0;
 
@@ -97,7 +97,7 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			}
 			break;
 		case LONG_DESC:
-			comment = new Comment(attributeFactory, report, commentNum++);
+			taskComment = new TaskComment(attributeFactory, report, commentNum++);
 			break;
 		case ATTACHMENT:
 			attachment = new RepositoryAttachment(attributeFactory);
@@ -153,25 +153,25 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			// Comment attributes
 		case WHO:
 		case BUG_WHEN:
-			if (comment != null) {
+			if (taskComment != null) {
 				RepositoryTaskAttribute attr = attributeFactory.createAttribute(tag.getKeyString());
 				attr.setValue(parsedText);
-				comment.addAttribute(tag.getKeyString(), attr);
+				taskComment.addAttribute(tag.getKeyString(), attr);
 			}
 			break;
 		case THETEXT:
-			if (comment != null) {
+			if (taskComment != null) {
 				RepositoryTaskAttribute attr = attributeFactory.createAttribute(tag.getKeyString());
 				attr.setValue(parsedText);
-				comment.addAttribute(tag.getKeyString(), attr);
+				taskComment.addAttribute(tag.getKeyString(), attr);
 
 				// Check for attachment
-				parseAttachment(comment, parsedText);
+				parseAttachment(taskComment, parsedText);
 			}
 			break;
 		case LONG_DESC:
-			if (comment != null) {
-				report.addComment(comment);
+			if (taskComment != null) {
+				report.addComment(taskComment);
 			}
 			break;
 
@@ -227,9 +227,9 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 
 			// Set the creator name on all attachments
 			for (RepositoryAttachment attachment : report.getAttachments()) {
-				Comment comment = (Comment) attachIdToComment.get(attachment.getId());
-				if (comment != null) {
-					attachment.setCreator(comment.getAuthor());
+				TaskComment taskComment = (TaskComment) attachIdToComment.get(attachment.getId());
+				if (taskComment != null) {
+					attachment.setCreator(taskComment.getAuthor());
 				}
 			}
 			break;
@@ -250,7 +250,7 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 	}
 
 	/** determines attachment id from comment */
-	private void parseAttachment(Comment comment, String commentText) {
+	private void parseAttachment(TaskComment taskComment, String commentText) {
 
 		int attachmentID = -1;
 
@@ -260,9 +260,9 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 				if (endIndex > 0 && endIndex < commentText.length()) {
 					attachmentID = Integer
 							.parseInt(commentText.substring(COMMENT_ATTACHMENT_STRING.length(), endIndex));
-					comment.setHasAttachment(true);
-					comment.setAttachmentId(attachmentID);
-					attachIdToComment.put(attachmentID, comment);
+					taskComment.setHasAttachment(true);
+					taskComment.setAttachmentId(attachmentID);
+					attachIdToComment.put(attachmentID, taskComment);
 				}
 			} catch (NumberFormatException e) {
 				return;

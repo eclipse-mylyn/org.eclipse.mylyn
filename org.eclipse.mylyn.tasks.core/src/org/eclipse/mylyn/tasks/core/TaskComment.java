@@ -18,7 +18,7 @@ import java.io.Serializable;
  * 
  * @author Rob Elves (revisions for bug 136219)
  */
-public class Comment extends AttributeContainer implements Serializable {
+public class TaskComment extends AttributeContainer implements Serializable {
 
 	private static final long serialVersionUID = -1760372869047050979L;
 
@@ -36,16 +36,16 @@ public class Comment extends AttributeContainer implements Serializable {
 	// private Date created;
 
 	/** Preceding comment */
-	private Comment previous;
+	private TaskComment previous;
 
 	/** Following comment */
-	private Comment next;
+	private TaskComment next;
 
 	private boolean hasAttachment;
 
 	private int attachmentId;
 
-	public Comment(AbstractAttributeFactory attributeFactory, RepositoryTaskData report, int num) {
+	public TaskComment(AbstractAttributeFactory attributeFactory, RepositoryTaskData report, int num) {
 		super(attributeFactory);
 		this.bug = report;
 		this.number = num;
@@ -133,7 +133,7 @@ public class Comment extends AttributeContainer implements Serializable {
 	 * @return Returns the following comment, or <code>null</code> if the last
 	 *         one.
 	 */
-	public Comment getNext() {
+	public TaskComment getNext() {
 		return next;
 	}
 
@@ -143,7 +143,7 @@ public class Comment extends AttributeContainer implements Serializable {
 	 * @param next
 	 *            The comment that is after this one
 	 */
-	protected void setNext(Comment next) {
+	protected void setNext(TaskComment next) {
 		this.next = next;
 	}
 
@@ -153,7 +153,7 @@ public class Comment extends AttributeContainer implements Serializable {
 	 * @return Returns preceding comment, or <code>null</code> if the first
 	 *         one
 	 */
-	public Comment getPrevious() {
+	public TaskComment getPrevious() {
 		return previous;
 	}
 
@@ -163,7 +163,7 @@ public class Comment extends AttributeContainer implements Serializable {
 	 * @param previous
 	 *            The comment that is before this one
 	 */
-	protected void setPrevious(Comment previous) {
+	protected void setPrevious(TaskComment previous) {
 		this.previous = previous;
 	}
 

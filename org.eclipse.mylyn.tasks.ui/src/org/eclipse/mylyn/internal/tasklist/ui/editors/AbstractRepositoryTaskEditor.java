@@ -68,7 +68,7 @@ import org.eclipse.mylar.internal.tasklist.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.Comment;
+import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.LocalAttachment;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
@@ -1085,11 +1085,11 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		// }
 
 		StyledText styledText = null;
-		for (Iterator<Comment> it = getRepositoryTaskData().getComments().iterator(); it.hasNext();) {
-			final Comment comment = it.next();
+		for (Iterator<TaskComment> it = getRepositoryTaskData().getComments().iterator(); it.hasNext();) {
+			final TaskComment taskComment = it.next();
 
 			// skip comment 0 as it is the description
-			if (comment.getNumber() == 0)
+			if (taskComment.getNumber() == 0)
 				continue;
 
 			ExpandableComposite expandableComposite = toolkit.createExpandableComposite(addCommentsComposite,
@@ -1100,8 +1100,8 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 				expandableComposite.setExpanded(true);
 			}
 
-			expandableComposite.setText(comment.getNumber() + ": " + comment.getAuthorName() + ", "
-					+ comment.getCreated());
+			expandableComposite.setText(taskComment.getNumber() + ": " + taskComment.getAuthorName() + ", "
+					+ taskComment.getCreated());
 
 			expandableComposite.addExpansionListener(new ExpansionAdapter() {
 				public void expansionStateChanged(ExpansionEvent e) {
@@ -1161,14 +1161,14 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 			//
 			// }
 
-			TextViewer viewer = addRepositoryText(repository, ecComposite, comment.getText());
+			TextViewer viewer = addRepositoryText(repository, ecComposite, taskComment.getText());
 			styledText = viewer.getTextWidget();
 			GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(styledText);
 
 			// code for outline
 			commentStyleText.add(styledText);
 			texts.add(textsindex, styledText);
-			textHash.put(comment, styledText);
+			textHash.put(taskComment, styledText);
 			textsindex++;
 		}
 
@@ -1775,8 +1775,8 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 			return;
 
 		for (Object o : textHash.keySet()) {
-			if (o instanceof Comment) {
-				if (((Comment) o).getNumber() == commentNumber) {
+			if (o instanceof TaskComment) {
+				if (((TaskComment) o).getNumber() == commentNumber) {
 					select(o, true);
 				}
 			}

@@ -21,7 +21,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.Comment;
+import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 
 /**
@@ -115,10 +115,10 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		try {
 			if (taskData != null) {
 				if (taskData.isResolved()) {
-					List<Comment> comments = taskData.getComments();
-					if (comments != null && !comments.isEmpty()) {
+					List<TaskComment> taskComments = taskData.getComments();
+					if (taskComments != null && !taskComments.isEmpty()) {
 						// TODO: fix not to be based on comment
-						return offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.COMMENT_DATE, (comments.get(comments.size() - 1).getCreated()));
+						return offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.COMMENT_DATE, (taskComments.get(taskComments.size() - 1).getCreated()));
 					}
 				}
 			}

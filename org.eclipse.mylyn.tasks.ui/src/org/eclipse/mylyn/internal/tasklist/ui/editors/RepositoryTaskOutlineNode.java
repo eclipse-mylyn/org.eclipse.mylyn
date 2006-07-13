@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.tasklist.ui.editors;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.eclipse.mylar.tasks.core.Comment;
+import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 
 /**
@@ -228,17 +228,17 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 		topNode.addChild(desc);
 
 		RepositoryTaskOutlineNode comments = null;
-		for (Iterator<Comment> iter = bug.getComments().iterator(); iter.hasNext();) {
-			Comment comment = iter.next();
+		for (Iterator<TaskComment> iter = bug.getComments().iterator(); iter.hasNext();) {
+			TaskComment taskComment = iter.next();
 			// first comment is the bug description
-			if(comment.getNumber() == 0) continue;
+			if(taskComment.getNumber() == 0) continue;
 			if (comments == null) {
-				comments = new RepositoryTaskOutlineNode(bugId, bugServer, LABEL_COMMENTS, comment, bug
+				comments = new RepositoryTaskOutlineNode(bugId, bugServer, LABEL_COMMENTS, taskComment, bug
 						.getSummary());
 				comments.setIsCommentHeader(true);
 			}
-			comments.addChild(new RepositoryTaskOutlineNode(bugId, bugServer, comment.getCreated(),
-					comment, bug.getSummary()));
+			comments.addChild(new RepositoryTaskOutlineNode(bugId, bugServer, taskComment.getCreated(),
+					taskComment, bug.getSummary()));
 		}
 		if (comments != null) {
 			topNode.addChild(comments);
@@ -258,15 +258,15 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 		// If the comment category was selected, then the comment object is
 		// not the intended selection (it is just used to help find the correct
 		// location in the editor).
-		return (data instanceof Comment) && !(key.toLowerCase().equals("comments"));
+		return (data instanceof TaskComment) && !(key.toLowerCase().equals("comments"));
 	}
 
-	public Comment getComment() {
-		return (hasComment()) ? (Comment) data : null;
+	public TaskComment getComment() {
+		return (hasComment()) ? (TaskComment) data : null;
 	}
 
-	public void setComment(Comment comment) {
-		data = comment;
+	public void setComment(TaskComment taskComment) {
+		data = taskComment;
 	}
 
 	public String getContents() {

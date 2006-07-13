@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.editors;
 
-import org.eclipse.mylar.tasks.core.Comment;
+import org.eclipse.mylar.tasks.core.TaskComment;
 
 /**
  * A selection of an element in a view.
@@ -35,7 +35,7 @@ public class RepositoryTaskSelection implements IRepositoryTaskSelection {
 	 * The comment, if a comment was selected. If the selection was not a
 	 * comment, then this is <code>null</code>.
 	 */
-	protected Comment comment;
+	protected TaskComment taskComment;
 
 	/**
 	 * Creates a new <code>RepositoryTaskSelection</code> with no supplied
@@ -74,13 +74,13 @@ public class RepositoryTaskSelection implements IRepositoryTaskSelection {
 	 *            The id of the Bugzilla object that the selection was on.
 	 * @param server
 	 *            The server of the Bugzilla object that the selection was on.
-	 * @param comment
+	 * @param taskComment
 	 *            The <code>Comment</code> object for this selection. If a
 	 *            comment was not selected, then this should be
 	 *            <code>null</code>.
 	 */
-	public RepositoryTaskSelection(String id, String server, Comment comment, String summary) {
-		this(id, server, null, comment, summary);
+	public RepositoryTaskSelection(String id, String server, TaskComment taskComment, String summary) {
+		this(id, server, null, taskComment, summary);
 	}
 
 	/**
@@ -92,29 +92,29 @@ public class RepositoryTaskSelection implements IRepositoryTaskSelection {
 	 *            The server of the Bugzilla object that the selection was on.
 	 * @param contents
 	 *            The contents of the selection.
-	 * @param comment
+	 * @param taskComment
 	 *            The <code>Comment</code> object for this selection. If a
 	 *            comment was not selected, then this should be
 	 *            <code>null</code>.
 	 */
-	public RepositoryTaskSelection(String id, String server, String contents, Comment comment, String summary) {
+	public RepositoryTaskSelection(String id, String server, String contents, TaskComment taskComment, String summary) {
 		this.id = id;
 		this.server = server;
 		this.contents = contents;
-		this.comment = comment;
+		this.taskComment = taskComment;
 		this.bugSummary = summary;
 	}
 
 	public boolean hasComment() {
-		return comment != null;
+		return taskComment != null;
 	}
 
-	public Comment getComment() {
-		return comment;
+	public TaskComment getComment() {
+		return taskComment;
 	}
 
-	public void setComment(Comment comment) {
-		this.comment = comment;
+	public void setComment(TaskComment taskComment) {
+		this.taskComment = taskComment;
 	}
 
 	public String getContents() {
@@ -142,7 +142,7 @@ public class RepositoryTaskSelection implements IRepositoryTaskSelection {
 	}
 
 	public boolean isEmpty() {
-		return (server == null) || ((contents == null) && (comment == null));
+		return (server == null) || ((contents == null) && (taskComment == null));
 	}
 
 	private boolean isCommentHeader = false;

@@ -54,7 +54,7 @@ import org.eclipse.mylar.internal.tasklist.util.TaskListWriter;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.Comment;
+import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskActivityListener;
@@ -265,8 +265,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 						TaskListNotificationIncoming notification = new TaskListNotificationIncoming(repositoryTask);
 						
 						if(repositoryTask.getTaskData() != null && repositoryTask.getTaskData().getComments() != null) {
-							List<Comment> comments = repositoryTask.getTaskData().getComments();
-							Comment lastComment = comments.get(comments.size() - 1);
+							List<TaskComment> taskComments = repositoryTask.getTaskData().getComments();
+							TaskComment lastComment = taskComments.get(taskComments.size() - 1);
 							if(lastComment != null) {
 								notification.setDescription(lastComment.getText());
 							}

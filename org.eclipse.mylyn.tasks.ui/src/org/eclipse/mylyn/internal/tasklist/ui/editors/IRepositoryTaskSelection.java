@@ -12,7 +12,7 @@
 package org.eclipse.mylar.internal.tasklist.ui.editors;
 
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.tasks.core.Comment;
+import org.eclipse.mylar.tasks.core.TaskComment;
 
 public interface IRepositoryTaskSelection extends ISelection {
 
@@ -25,17 +25,17 @@ public interface IRepositoryTaskSelection extends ISelection {
 	 * @return the <code>Comment</code> object for this selection, or
 	 *         <code>null</code> if a comment was not selected.
 	 */
-	public Comment getComment();
+	public TaskComment getComment();
 
 	/**
 	 * Sets the <code>Comment</code> object for this selection. If a comment
 	 * was not selected, then this should be <code>null</code>.
 	 * 
-	 * @param comment
+	 * @param taskComment
 	 *            The selection's comment, or <code>null</code> if not
 	 *            applicable.
 	 */
-	public void setComment(Comment comment);
+	public void setComment(TaskComment taskComment);
 
 	/**
 	 * @return The contents of the selection. This can be <code>null</code>.

@@ -52,7 +52,7 @@ import org.eclipse.mylar.internal.tasklist.ui.views.DatePicker;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.tasks.core.Comment;
+import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.RepositoryOperation;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
@@ -827,22 +827,22 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	protected class CommentListener implements Listener {
 
 		/** The comment that this listener is for. */
-		private Comment comment;
+		private TaskComment taskComment;
 
 		/**
 		 * Creates a new <code>CommentListener</code>.
 		 * 
-		 * @param comment
+		 * @param taskComment
 		 *            The comment that this listener is for.
 		 */
-		public CommentListener(Comment comment) {
-			this.comment = comment;
+		public CommentListener(TaskComment taskComment) {
+			this.taskComment = taskComment;
 		}
 
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
-					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(), comment.getCreated(),
-							comment, taskData.getSummary()))));
+					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(), taskComment.getCreated(),
+							taskComment, taskData.getSummary()))));
 		}
 	}
 
