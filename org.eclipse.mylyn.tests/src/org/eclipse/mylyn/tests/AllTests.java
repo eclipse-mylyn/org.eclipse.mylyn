@@ -49,8 +49,8 @@ public class AllTests {
 		suite.addTest(AllTaskListTests.suite());
 		suite.addTest(AllXmlTests.suite());
 		suite.addTest(AllBugzillaTests.suite());
-//		suite.addTest(AllJiraTests.suite());  
 		suite.addTest(AllMiscTests.suite());
+//		suite.addTest(AllJiraTests.suite());  
 		// $JUnit-END$
 		return suite;
 	}
