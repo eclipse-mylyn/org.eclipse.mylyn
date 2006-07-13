@@ -16,11 +16,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.core.tests.AbstractContextTest;
 import org.eclipse.mylar.internal.monitor.InteractionEventLogger;
-import org.eclipse.mylar.internal.monitor.MylarMonitorPlugin;
 import org.eclipse.mylar.internal.monitor.MylarMonitorPreferenceConstants;
-import org.eclipse.mylar.provisional.core.InteractionEvent;
+import org.eclipse.mylar.monitor.usage.MylarUsageMonitorPlugin;
 
 /**
  * @author Mik Kersten
@@ -30,7 +30,7 @@ public class InteractionEventExternalizationTest extends AbstractContextTest {
 	private static final String PATH = "test-log.xml";
 
 	public void testManualExternalization() throws IOException {
-		MylarMonitorPlugin.getPrefs().setValue(MylarMonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE, false);
+		MylarUsageMonitorPlugin.getPrefs().setValue(MylarMonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE, false);
 
 		List<InteractionEvent> events = new ArrayList<InteractionEvent>();
 		File f = new File(PATH);
@@ -56,6 +56,6 @@ public class InteractionEventExternalizationTest extends AbstractContextTest {
 			assertEquals(events.get(i), readEvents.get(i));
 		}
 
-		MylarMonitorPlugin.getPrefs().setValue(MylarMonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE, true);
+		MylarUsageMonitorPlugin.getPrefs().setValue(MylarMonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE, true);
 	}
 }

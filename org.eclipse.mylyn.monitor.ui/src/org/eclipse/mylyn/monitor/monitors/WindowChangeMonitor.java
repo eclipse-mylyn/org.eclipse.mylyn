@@ -9,10 +9,10 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.monitor.monitors;
+package org.eclipse.mylar.monitor.monitors;
 
-import org.eclipse.mylar.provisional.core.InteractionEvent;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.context.core.InteractionEvent;
+import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchWindow;
 
@@ -41,25 +41,25 @@ public class WindowChangeMonitor implements IWindowListener {
 	public void windowOpened(IWorkbenchWindow window) {
 			InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window),
 					WINDOW_OPENED);
-			MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+			MylarMonitorPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 	public void windowClosed(IWorkbenchWindow window) {
 			InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window),
 					WINDOW_CLOSED);
-			MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+			MylarMonitorPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 	public void windowDeactivated(IWorkbenchWindow window) {
 		InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window),
 				WINDOW_DEACTIVATED);
-		MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+		MylarMonitorPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 	public void windowActivated(IWorkbenchWindow window) {
 		InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window),
 				WINDOW_ACTIVATED);
-		MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+		MylarMonitorPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 	protected String getWindowOrigin(IWorkbenchWindow window) {

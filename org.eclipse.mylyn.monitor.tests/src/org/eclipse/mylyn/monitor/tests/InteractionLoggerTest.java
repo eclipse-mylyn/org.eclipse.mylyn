@@ -16,16 +16,16 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.internal.monitor.InteractionEventLogger;
-import org.eclipse.mylar.internal.monitor.MylarMonitorPlugin;
-import org.eclipse.mylar.provisional.core.InteractionEvent;
+import org.eclipse.mylar.monitor.usage.MylarUsageMonitorPlugin;
 
 /**
  * @author Mik Kersten
  */
 public class InteractionLoggerTest extends TestCase {
 
-	private InteractionEventLogger logger = MylarMonitorPlugin.getDefault().getInteractionLogger();
+	private InteractionEventLogger logger = MylarUsageMonitorPlugin.getDefault().getInteractionLogger();
 
 	@Override
 	protected void setUp() throws Exception {
@@ -35,7 +35,7 @@ public class InteractionLoggerTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		MylarMonitorPlugin.getDefault().stopMonitoring();
+		MylarUsageMonitorPlugin.getDefault().stopMonitoring();
 	}
 
 	public void testClearHistory() throws IOException {

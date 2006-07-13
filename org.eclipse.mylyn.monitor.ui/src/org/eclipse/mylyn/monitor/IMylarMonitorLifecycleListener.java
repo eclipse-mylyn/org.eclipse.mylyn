@@ -9,16 +9,15 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.monitor;
-
-import java.io.File;
-
-import org.eclipse.jface.wizard.IWizardPage;
+package org.eclipse.mylar.monitor;
 
 /**
- * @author Leah Findlater
+ * @author Brian de Alwis
  */
-public interface IBackgroundPage extends IWizardPage {
+public interface IMylarMonitorLifecycleListener {
 
-	public abstract File createFeedbackFile();
+	void startMonitoring();
+
+	void stopMonitoring();
+
 }

@@ -19,11 +19,11 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylar.internal.monitor.InteractionEventLogger;
-import org.eclipse.mylar.internal.monitor.MylarMonitorPlugin;
 import org.eclipse.mylar.internal.monitor.reports.ReportGenerator;
 import org.eclipse.mylar.internal.monitor.reports.collectors.DataOverviewCollector;
 import org.eclipse.mylar.monitor.reports.IUsageCollector;
 import org.eclipse.mylar.monitor.tests.MylarMonitorTestsPlugin;
+import org.eclipse.mylar.monitor.usage.MylarUsageMonitorPlugin;
 
 /**
  * 
@@ -84,7 +84,7 @@ public class DataOverviewCollectorTest extends TestCase {
 		dataOverviewCollector = new DataOverviewCollector("test-");
 		collectors.add(dataOverviewCollector);
 
-		ReportGenerator generator = new ReportGenerator(MylarMonitorPlugin.getDefault().getInteractionLogger(),
+		ReportGenerator generator = new ReportGenerator(MylarUsageMonitorPlugin.getDefault().getInteractionLogger(),
 				collectors);
 		generator.getStatisticsFromInteractionHistories(interactionHistoryFiles);
 

@@ -9,13 +9,13 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.monitor.monitors;
+package org.eclipse.mylar.monitor.monitors;
 
 import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.monitor.MylarMonitorPlugin;
-import org.eclipse.mylar.provisional.core.InteractionEvent;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.context.core.InteractionEvent;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.monitor.MylarMonitorPlugin;
+import org.eclipse.mylar.monitor.usage.MylarUsageMonitorPlugin;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Listener;
@@ -75,7 +75,7 @@ public class MenuCommandMonitor implements Listener {
 				delta = TOOLBAR_ITEM_SELECTED;
 			}
 			InteractionEvent interactionEvent = InteractionEvent.makeCommand(id, delta);
-			MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+			MylarMonitorPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "Could not log selection", false);
@@ -87,7 +87,7 @@ public class MenuCommandMonitor implements Listener {
 	 */
 	private String obfuscateValueIfContainsPath(String text) {
 		if (text.indexOf(".java") != -1 || text.indexOf(".xml") != -1) {
-			return MylarMonitorPlugin.OBFUSCATED_LABEL;
+			return MylarUsageMonitorPlugin.OBFUSCATED_LABEL;
 		} else {
 			return text;
 		}

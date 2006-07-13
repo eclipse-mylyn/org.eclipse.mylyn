@@ -11,8 +11,8 @@
 
 package org.eclipse.mylar.monitor.tests;
 
-import org.eclipse.mylar.internal.core.util.ITimerThreadListener;
-import org.eclipse.mylar.internal.core.util.TimerThread;
+import org.eclipse.mylar.internal.context.core.util.ITimerThreadListener;
+import org.eclipse.mylar.internal.context.core.util.TimerThread;
 
 import junit.framework.TestCase;
 

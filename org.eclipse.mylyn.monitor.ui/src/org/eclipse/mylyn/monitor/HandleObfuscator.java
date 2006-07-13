@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.monitor;
+package org.eclipse.mylar.monitor;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -18,9 +18,11 @@ import org.eclipse.core.internal.preferences.Base64;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.monitor.MylarMonitorPreferenceConstants;
+import org.eclipse.mylar.monitor.usage.MylarUsageMonitorPlugin;
 
 /**
  * @author Mik Kersten
@@ -34,7 +36,7 @@ public class HandleObfuscator {
 	public static final String ENCRYPTION_ALGORITHM = "SHA";
 	
 	public boolean isObfuscationEnabled() {
-		return MylarMonitorPlugin.getPrefs()
+		return MylarUsageMonitorPlugin.getPrefs()
 			.getBoolean(MylarMonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE);
 	}
 	

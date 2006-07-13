@@ -9,10 +9,10 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.monitor.monitors;
+package org.eclipse.mylar.monitor.monitors;
 
-import org.eclipse.mylar.provisional.core.InteractionEvent;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.context.core.InteractionEvent;
+import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartReference;
@@ -39,7 +39,7 @@ public class PerspectiveChangeMonitor extends PerspectiveAdapter {
 		String source = this.getPerspectiveId(perspective);
 
 		InteractionEvent interactionEvent = InteractionEvent.makePreference(source, PERSPECTIVE_ACTIVATED);
-		MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+		MylarMonitorPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class PerspectiveChangeMonitor extends PerspectiveAdapter {
 		String source = partRef.getId();
 		InteractionEvent interactionEvent = InteractionEvent.makePreference(source, PERSPECTIVE_CHANGED + ": "
 				+ changeId);
-		MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+		MylarMonitorPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 	@Override
@@ -56,21 +56,21 @@ public class PerspectiveChangeMonitor extends PerspectiveAdapter {
 		String source = this.getPerspectiveId(perspective);
 		InteractionEvent interactionEvent = InteractionEvent.makePreference(source, PERSPECTIVE_CHANGED + ": "
 				+ changeId);
-		MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+		MylarMonitorPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 	@Override
 	public void perspectiveClosed(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
 		String source = this.getPerspectiveId(perspective);
 		InteractionEvent interactionEvent = InteractionEvent.makePreference(source, PERSPECTIVE_CLOSED);
-		MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+		MylarMonitorPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 	@Override
 	public void perspectiveOpened(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
 		String source = this.getPerspectiveId(perspective);
 		InteractionEvent interactionEvent = InteractionEvent.makePreference(source, PERSPECTIVE_OPENED);
-		MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+		MylarMonitorPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class PerspectiveChangeMonitor extends PerspectiveAdapter {
 			IPerspectiveDescriptor newPerspective) {
 		String source = this.getPerspectiveId(newPerspective);
 		InteractionEvent interactionEvent = InteractionEvent.makePreference(source, PERSPECTIVE_SAVED);
-		MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+		MylarMonitorPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 	private String getPerspectiveId(IPerspectiveDescriptor perspective) {

@@ -9,10 +9,10 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.monitor.monitors;
+package org.eclipse.mylar.monitor.monitors;
 
-import org.eclipse.mylar.provisional.core.InteractionEvent;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.context.core.InteractionEvent;
+import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.ui.activities.ActivityManagerEvent;
 import org.eclipse.ui.activities.IActivityManagerListener;
 
@@ -29,7 +29,7 @@ public class ActivityChangeMonitor implements IActivityManagerListener {
 			String delta = activityManagerEvent.getActivityManager().getEnabledActivityIds().toString();
 			InteractionEvent interactionEvent = InteractionEvent.makePreference(source, ACTIVITIES_CHANGED + ": "
 					+ delta);
-			MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+			MylarMonitorPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 		}
 	}
 }

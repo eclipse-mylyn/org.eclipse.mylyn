@@ -9,12 +9,12 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.monitor.monitors;
+package org.eclipse.mylar.monitor.monitors;
 
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.mylar.provisional.core.AbstractCommandMonitor;
-import org.eclipse.mylar.provisional.core.InteractionEvent;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.context.core.InteractionEvent;
+import org.eclipse.mylar.monitor.AbstractCommandMonitor;
+import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 
 /**
  * @author Mik Kersten
@@ -26,7 +26,7 @@ public class KeybindingCommandMonitor extends AbstractCommandMonitor {
 	@Override
 	protected void handleCommandExecution(String commandId, ExecutionEvent event) {
 		InteractionEvent interactionEvent = InteractionEvent.makeCommand(commandId, COMMAND_INVOKED);
-		MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+		MylarMonitorPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 }

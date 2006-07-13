@@ -21,10 +21,11 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.eclipse.mylar.context.core.MylarPlugin;
 import org.eclipse.mylar.core.tests.AbstractContextTest;
-import org.eclipse.mylar.internal.core.util.ZipFileUtil;
-import org.eclipse.mylar.internal.monitor.MylarMonitorPlugin;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.internal.context.core.util.ZipFileUtil;
+import org.eclipse.mylar.monitor.MylarMonitorPlugin;
+import org.eclipse.mylar.monitor.usage.MylarUsageMonitorPlugin;
 
 /**
  * @author Mik Kersten
@@ -32,27 +33,27 @@ import org.eclipse.mylar.provisional.core.MylarPlugin;
 public class MonitorPackagingTest extends AbstractContextTest {
 
 	public void testCreateUploadPackage() throws IOException, InterruptedException {
-		MylarMonitorPlugin.getDefault().getInteractionLogger().stopObserving();
+		MylarUsageMonitorPlugin.getDefault().getInteractionLogger().stopObserving();
 		// MylarMonitorPlugin.getDefault().stopLog();
 
-		File monitorFile = MylarMonitorPlugin.getDefault().getMonitorLogFile();
+		File monitorFile = MylarUsageMonitorPlugin.getDefault().getMonitorLogFile();
 		// File logFile = MylarMonitorPlugin.getDefault().getLogFile();
 
 		List<File> files = new ArrayList<File>();
 		files.add(monitorFile);
 		// files.add(logFile);
 
-		File zipFile = new File(MylarPlugin.getDefault().getDataDirectory() + "/mylarUpload.zip");
+		File zipFile = new File(MylarPlugin.getDefault().getContextStore().getRootDirectory() + "/mylarUpload.zip");
 
 		ZipFileUtil.createZipFile(zipFile, files);
 
 		// MylarMonitorPlugin.getDefault().startLog();
-		MylarMonitorPlugin.getDefault().getInteractionLogger().startObserving();
+		MylarUsageMonitorPlugin.getDefault().getInteractionLogger().startObserving();
 
 		// pretend to upload
 		Thread.sleep(1000);
 
-		zipFile = new File(MylarPlugin.getDefault().getDataDirectory() + "/mylarUpload.zip");
+		zipFile = new File(MylarPlugin.getDefault().getContextStore().getRootDirectory() + "/mylarUpload.zip");
 
 		// Open the ZIP file
 		ZipFile zf = new ZipFile(zipFile);
@@ -82,7 +83,7 @@ public class MonitorPackagingTest extends AbstractContextTest {
 	public void testCreateLargeUploadPackage() throws IOException, InterruptedException {
 
 		for (int i = 0; i < 20000; i++) {
-			MylarPlugin.getDefault().notifyInteractionObserved(mockSelection());
+			MylarMonitorPlugin.getDefault().notifyInteractionObserved(mockSelection());
 		}
 		testCreateUploadPackage();
 	}

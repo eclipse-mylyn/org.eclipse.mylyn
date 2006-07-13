@@ -20,14 +20,13 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.internal.monitor.IMylarMonitorLifecycleListener;
+import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.internal.monitor.InteractionEventLogger;
-import org.eclipse.mylar.internal.monitor.MylarMonitorPlugin;
-import org.eclipse.mylar.internal.monitor.monitors.BrowserMonitor;
-import org.eclipse.mylar.internal.monitor.monitors.KeybindingCommandMonitor;
-import org.eclipse.mylar.internal.monitor.monitors.PerspectiveChangeMonitor;
-import org.eclipse.mylar.provisional.core.InteractionEvent;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.monitor.IMylarMonitorLifecycleListener;
+import org.eclipse.mylar.monitor.monitors.BrowserMonitor;
+import org.eclipse.mylar.monitor.monitors.KeybindingCommandMonitor;
+import org.eclipse.mylar.monitor.monitors.PerspectiveChangeMonitor;
+import org.eclipse.mylar.monitor.usage.MylarUsageMonitorPlugin;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveRegistry;
 import org.eclipse.ui.PlatformUI;
@@ -37,7 +36,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class MonitorTest extends TestCase implements IMylarMonitorLifecycleListener {
 
-	private InteractionEventLogger logger = MylarMonitorPlugin.getDefault().getInteractionLogger();
+	private InteractionEventLogger logger = MylarUsageMonitorPlugin.getDefault().getInteractionLogger();
 
 	private MockSelectionMonitor selectionMonitor = new MockSelectionMonitor();
 
@@ -58,26 +57,26 @@ public class MonitorTest extends TestCase implements IMylarMonitorLifecycleListe
 	}
 
 	public void testEnablement() throws IOException {
-		File monitorFile = MylarMonitorPlugin.getDefault().getMonitorLogFile();
+		File monitorFile = MylarUsageMonitorPlugin.getDefault().getMonitorLogFile();
 		assertTrue(monitorFile.exists());
-		MylarMonitorPlugin.getDefault().stopMonitoring();
+		MylarUsageMonitorPlugin.getDefault().stopMonitoring();
 		logger.clearInteractionHistory();
 		assertEquals(0, logger.getHistoryFromFile(monitorFile).size());
 		generateSelection();
 		assertEquals(0, logger.getHistoryFromFile(monitorFile).size());
 
-		MylarMonitorPlugin.getDefault().startMonitoring();
+		MylarUsageMonitorPlugin.getDefault().startMonitoring();
 		generateSelection();
 		assertEquals(1, logger.getHistoryFromFile(monitorFile).size());
 
-		MylarMonitorPlugin.getDefault().stopMonitoring();
+		MylarUsageMonitorPlugin.getDefault().stopMonitoring();
 		generateSelection();
 		assertEquals(1, logger.getHistoryFromFile(monitorFile).size());
 
-		MylarMonitorPlugin.getDefault().startMonitoring();
+		MylarUsageMonitorPlugin.getDefault().startMonitoring();
 		generateSelection();
 		assertEquals(2, logger.getHistoryFromFile(monitorFile).size());
-		MylarMonitorPlugin.getDefault().stopMonitoring();
+		MylarUsageMonitorPlugin.getDefault().stopMonitoring();
 	}
 
 	public void testUrlFilter() {
@@ -93,14 +92,14 @@ public class MonitorTest extends TestCase implements IMylarMonitorLifecycleListe
 
 	@SuppressWarnings("deprecation")
 	public void testLogging() throws InterruptedException {
-		MylarMonitorPlugin.getDefault().startMonitoring();
+		MylarUsageMonitorPlugin.getDefault().startMonitoring();
 		logger.stopObserving();
-		MylarMonitorPlugin.getDefault().getMonitorLogFile().delete();
+		MylarUsageMonitorPlugin.getDefault().getMonitorLogFile().delete();
 		logger.startObserving();
 
 		generateSelection();
 		commandMonitor.preExecute("foo.command", new ExecutionEvent(new HashMap(), "trigger", "context"));
-		File monitorFile = MylarMonitorPlugin.getDefault().getMonitorLogFile();
+		File monitorFile = MylarUsageMonitorPlugin.getDefault().getMonitorLogFile();
 		assertTrue(monitorFile.exists());
 		logger.stopObserving();
 		List<InteractionEvent> events = logger.getHistoryFromFile(monitorFile);
@@ -109,7 +108,7 @@ public class MonitorTest extends TestCase implements IMylarMonitorLifecycleListe
 		logger.stopObserving();
 		events = logger.getHistoryFromFile(monitorFile);
 		assertTrue(events.size() >= 0);
-		MylarMonitorPlugin.getDefault().getMonitorLogFile().delete();
+		MylarUsageMonitorPlugin.getDefault().getMonitorLogFile().delete();
 		logger.startObserving();
 
 		generatePerspectiveSwitch();
@@ -125,7 +124,7 @@ public class MonitorTest extends TestCase implements IMylarMonitorLifecycleListe
 	}
 
 	private void generatePerspectiveSwitch() {
-		IPerspectiveRegistry registry = MylarPlugin.getDefault().getWorkbench().getPerspectiveRegistry();
+		IPerspectiveRegistry registry = PlatformUI.getWorkbench().getPerspectiveRegistry();
 		IPerspectiveDescriptor perspective = registry.clonePerspective("newId", "newLabel",
 				registry.getPerspectives()[0]);
 
@@ -143,21 +142,21 @@ public class MonitorTest extends TestCase implements IMylarMonitorLifecycleListe
 
 	public void testLifecycleCallbacks() {
 		assertFalse(monitorRunning);
-		MylarMonitorPlugin.getDefault().stopMonitoring();
-		MylarMonitorPlugin.getDefault().addMonitoringLifecycleListener(this);
+		MylarUsageMonitorPlugin.getDefault().stopMonitoring();
+		MylarUsageMonitorPlugin.getDefault().addMonitoringLifecycleListener(this);
 		assertFalse(monitorRunning);
 		
-		MylarMonitorPlugin.getDefault().startMonitoring();
+		MylarUsageMonitorPlugin.getDefault().startMonitoring();
 		assertTrue(monitorRunning);
-		MylarMonitorPlugin.getDefault().stopMonitoring();
+		MylarUsageMonitorPlugin.getDefault().stopMonitoring();
 		assertFalse(monitorRunning);
 		
-		MylarMonitorPlugin.getDefault().startMonitoring();
+		MylarUsageMonitorPlugin.getDefault().startMonitoring();
 		assertTrue(monitorRunning);
-		MylarMonitorPlugin.getDefault().stopMonitoring();
+		MylarUsageMonitorPlugin.getDefault().stopMonitoring();
 		assertFalse(monitorRunning);
 
-		MylarMonitorPlugin.getDefault().removeMonitoringLifecycleListener(this);
+		MylarUsageMonitorPlugin.getDefault().removeMonitoringLifecycleListener(this);
 	}
 }
 

@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.monitor.InteractionEventLogger;
-import org.eclipse.mylar.internal.monitor.MylarMonitorPlugin;
+import org.eclipse.mylar.monitor.usage.MylarUsageMonitorPlugin;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -35,7 +35,7 @@ import org.eclipse.ui.internal.WorkbenchWindow;
  */
 public class MultiWindowMonitorTest extends TestCase {
 
-	private InteractionEventLogger logger = MylarMonitorPlugin.getDefault().getInteractionLogger();
+	private InteractionEventLogger logger = MylarUsageMonitorPlugin.getDefault().getInteractionLogger();
 
 	private MockSelectionMonitor selectionMonitor = new MockSelectionMonitor();
 
@@ -47,8 +47,8 @@ public class MultiWindowMonitorTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		monitoringWasEnabled = MylarMonitorPlugin.getDefault().isMonitoringEnabled();
-		MylarMonitorPlugin.getDefault().stopMonitoring();
+		monitoringWasEnabled = MylarUsageMonitorPlugin.getDefault().isMonitoringEnabled();
+		MylarUsageMonitorPlugin.getDefault().stopMonitoring();
 		window1 = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		window2 = duplicateWindow(window1);
 		assertNotNull(window2);
@@ -59,7 +59,7 @@ public class MultiWindowMonitorTest extends TestCase {
 		super.tearDown();
 		window2.close();
 		if (monitoringWasEnabled) {
-			MylarMonitorPlugin.getDefault().startMonitoring();
+			MylarUsageMonitorPlugin.getDefault().startMonitoring();
 		}
 	}
 
@@ -68,14 +68,14 @@ public class MultiWindowMonitorTest extends TestCase {
 	}
 
 	public void testMultipleWindows() throws IOException {
-		File monitorFile = MylarMonitorPlugin.getDefault().getMonitorLogFile();
+		File monitorFile = MylarUsageMonitorPlugin.getDefault().getMonitorLogFile();
 		logger.clearInteractionHistory();
 		assertEquals(0, logger.getHistoryFromFile(monitorFile).size());
 		
 		generateSelection(window1);
 		assertEquals(0, logger.getHistoryFromFile(monitorFile).size());
 
-		MylarMonitorPlugin.getDefault().startMonitoring();
+		MylarUsageMonitorPlugin.getDefault().startMonitoring();
 		generateSelection(window1);
 		generateSelection(window2);
 		assertEquals(2, logger.getHistoryFromFile(monitorFile).size());

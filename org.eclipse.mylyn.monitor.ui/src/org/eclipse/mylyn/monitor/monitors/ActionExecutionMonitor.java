@@ -9,12 +9,12 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.monitor.monitors;
+package org.eclipse.mylar.monitor.monitors;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.internal.monitor.IActionExecutionListener;
-import org.eclipse.mylar.provisional.core.InteractionEvent;
-import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 
 /**
  * @author Mik Kersten
@@ -23,6 +23,6 @@ public class ActionExecutionMonitor implements IActionExecutionListener {
 
 	public void actionObserved(IAction action) {
 		InteractionEvent interactionEvent = InteractionEvent.makeCommand(action.getId(), "");
-		MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+		MylarMonitorPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 }
