@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.mylar.internal.context.ui.MylarImages;
 import org.eclipse.mylar.internal.ide.team.MylarActiveChangeSet;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
 
 /**
  * @author Mik Kersten
@@ -25,10 +26,10 @@ public class MylarChangeSetDecorator implements ILightweightLabelDecorator {
 	public void decorate(Object element, IDecoration decoration) {
 		if (element instanceof MylarActiveChangeSet) {
 			decoration.addOverlay(MylarImages.MYLAR_OVERLAY, IDecoration.BOTTOM_RIGHT);
-//			MylarActiveChangeSet changeSet = (MylarActiveChangeSet)element;
-//			if (changeSet.getTask().isActive()) {
-//				decoration.setFont(TaskListColorsAndFonts.BOLD);
-//			}
+			MylarActiveChangeSet changeSet = (MylarActiveChangeSet)element;
+			if (changeSet.getTask().isActive()) {    
+				decoration.setFont(TaskListColorsAndFonts.BOLD);
+			}
 		}
 	}
 
