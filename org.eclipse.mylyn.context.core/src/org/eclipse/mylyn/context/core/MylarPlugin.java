@@ -45,7 +45,7 @@ public class MylarPlugin extends Plugin {
 
 	private static MylarContextManager contextManager;
 
-	private static IMylarContextStore contextStore;
+	private static AbstractContextStore contextStore;
 	
 	private static final IMylarStructureBridge DEFAULT_BRIDGE = new IMylarStructureBridge() {
 
@@ -231,11 +231,11 @@ public class MylarPlugin extends Plugin {
 //		return resourceBundle;
 //	}
 
-	public IMylarContextStore getContextStore() {
+	public AbstractContextStore getContextStore() {
 		return contextStore;
 	}
 	
-	public static void setContextStore(IMylarContextStore contextStore) {
+	public static void setContextStore(AbstractContextStore contextStore) {
 		MylarPlugin.contextStore = contextStore;
 	}
 
@@ -295,12 +295,12 @@ public class MylarPlugin extends Plugin {
 				Object object = element
 						.createExecutableExtension(CoreExtensionPointReader.ELEMENT_CLASS);
 
-				if (!(object instanceof IMylarContextStore)) {
+				if (!(object instanceof AbstractContextStore)) {
 					MylarStatusHandler.log("Could not load bridge: " + object.getClass().getCanonicalName()
 							+ " must implement " + IMylarStructureBridge.class.getCanonicalName(), null);
 					return;
 				} else {
-					contextStore = (IMylarContextStore)object;
+					contextStore = (AbstractContextStore)object;
 				}
 			} catch (CoreException e) {
 				MylarStatusHandler.log(e, "Could not load bridge extension");

@@ -11,13 +11,11 @@
 
 package org.eclipse.mylar.context.core;
 
-import java.io.File;
-
 /**
  * @author Mik Kersten
  */
-public interface IMylarContextStore {
+public interface IContextStoreListener {
 
-	public abstract File getRootDirectory();
+	public abstract void contextStoreMoved();
 	
 }

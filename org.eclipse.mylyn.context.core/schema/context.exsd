@@ -93,7 +93,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.provisional.core.IMylarContextStore"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.context.core.AbstractContextStore"/>
                </appInfo>
             </annotation>
          </attribute>
