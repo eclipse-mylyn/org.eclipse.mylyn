@@ -27,6 +27,7 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -111,15 +112,19 @@ public class MylarMonitorPlugin extends AbstractUIPlugin {
 	
 	@Override
 	public void start(BundleContext context) throws Exception {
-		getWorkbench().addWindowListener(WINDOW_LISTENER);
-		shellLifecycleListener = new ShellLifecycleListener(MylarPlugin.getContextManager());		
-		
-		getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(
-				shellLifecycleListener);
-		
-		activityListener = new ActivityListener(TIMEOUT_INACTIVITY_MILLIS);// INACTIVITY_TIMEOUT_MILLIS);
-		MylarPlugin.getContextManager().addListener(activityListener);
-		activityListener.startObserving();
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				getWorkbench().addWindowListener(WINDOW_LISTENER);
+				shellLifecycleListener = new ShellLifecycleListener(MylarPlugin.getContextManager());		
+				
+				getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(
+						shellLifecycleListener);
+				
+				activityListener = new ActivityListener(TIMEOUT_INACTIVITY_MILLIS);// INACTIVITY_TIMEOUT_MILLIS);
+				MylarPlugin.getContextManager().addListener(activityListener);
+				activityListener.startObserving();
+			}
+		});
 	}
 	
 	@Override
