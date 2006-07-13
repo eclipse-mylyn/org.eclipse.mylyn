@@ -23,6 +23,7 @@ import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.context.core.MylarPlugin;
 import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.internal.context.ui.actions.AbstractApplyMylarAction;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
 import org.eclipse.mylar.internal.java.ui.actions.ApplyMylarToPackageExplorerAction;
 import org.eclipse.mylar.internal.monitor.reports.ReportGenerator;
@@ -144,6 +145,12 @@ public class StatisticsReportingTest extends TestCase {
 		assertNotNull(MylarUiPlugin.getDefault().getPreferenceStore());
 		String prefId = ApplyMylarToPackageExplorerAction.PREF_ID_PREFIX + PackageExplorerPart.VIEW_ID;
 		assertNotNull(prefId);
+		
+		PackageExplorerPart part = PackageExplorerPart.openInActivePerspective();
+		assertNotNull(part);
+//		AbstractApplyMylarAction action = ApplyMylarToPackageExplorerAction.getActionForPart(part);
+//		assertNotNull(action);
+		
 		MylarUiPlugin.getDefault().getPreferenceStore().setValue(prefId, true);
 
 		mockExplorerSelection("A.java");
@@ -160,9 +167,9 @@ public class StatisticsReportingTest extends TestCase {
 		report.getStatisticsFromInteractionHistory(logger.getOutputFile());
 
 		int normal = viewCollector.getNormalViewSelections().get(JavaUI.ID_PACKAGES);
-		int filtered = viewCollector.getFilteredViewSelections().get(JavaUI.ID_PACKAGES);
-
 		assertEquals(5, normal);
+		
+		int filtered = viewCollector.getFilteredViewSelections().get(JavaUI.ID_PACKAGES);
 		assertEquals(2, filtered);
 	}
 
