@@ -19,7 +19,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.internal.monitor.InteractionEventLogger;
+import org.eclipse.mylar.internal.monitor.usage.InteractionEventLogger;
 import org.eclipse.mylar.monitor.usage.MylarUsageMonitorPlugin;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IWorkbenchWindow;
