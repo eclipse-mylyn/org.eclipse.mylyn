@@ -30,7 +30,7 @@ import org.eclipse.mylar.internal.monitor.reports.collectors.MylarUsageAnalysisC
 import org.eclipse.mylar.internal.monitor.reports.collectors.MylarViewUsageCollector;
 import org.eclipse.mylar.internal.monitor.reports.ui.views.UsageStatisticsSummary;
 import org.eclipse.mylar.internal.monitor.usage.InteractionEventLogger;
-import org.eclipse.mylar.internal.tasks.ui.ui.actions.TaskActivateAction;
+import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.mylar.monitor.reports.IUsageCollector;
 import org.eclipse.mylar.monitor.usage.MylarUsageMonitorPlugin;
