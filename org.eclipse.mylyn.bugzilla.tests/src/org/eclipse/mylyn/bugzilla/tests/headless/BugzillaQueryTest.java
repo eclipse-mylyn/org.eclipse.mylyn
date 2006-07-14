@@ -24,7 +24,7 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
 /**
  * @author Rob Elves
  */
-public class BugzillaHeadlessTest extends TestCase {
+public class BugzillaQueryTest extends TestCase {
 
 	private TaskRepository repository;
 
@@ -32,19 +32,6 @@ public class BugzillaHeadlessTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
-		// try {
-		// Properties properties = new Properties();
-		// URL localURL =
-		// FileLocator.toFileURL(BugzillaTestPlugin.getDefault().getBundle().getEntry(
-		// "credentials.properties"));
-		// properties.load(new FileInputStream(new File(localURL.getFile())));
-		// repository.setAuthenticationCredentials(properties.getProperty("username"),
-		// properties
-		// .getProperty("password"));
-		// } catch (Throwable t) {
-		// fail("must define credentials in <plug-in
-		// dir>/credentials.properties");
-		// }
 	}
 
 	public void testQueryBugs() throws Exception {
@@ -61,7 +48,6 @@ public class BugzillaHeadlessTest extends TestCase {
 			assertTrue(hit.getDescription().startsWith("search-match-test"));
 		}
 	}
-
 
 	// public void testRetrieveBug() throws Exception {
 	// RepositoryTaskData taskData =

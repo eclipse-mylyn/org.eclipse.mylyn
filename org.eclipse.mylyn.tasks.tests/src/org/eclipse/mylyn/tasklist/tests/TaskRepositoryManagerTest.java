@@ -169,7 +169,13 @@ public class TaskRepositoryManagerTest extends TestCase {
 	}
 
 	public void testRepositoryWithCustomAttributes() throws Exception {
-		TaskRepository repository = new TaskRepository("web", "http://jroller.com/page/eu");
+		
+		// Note: if a connector doesn't exist the associated repositories are not loaded (orphaned) 
+		// causing this test to fail.
+		AbstractRepositoryConnector connector = new MockRepositoryConnector();
+		manager.addRepositoryConnector(connector);
+		
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_TYPE, "http://jroller.com/page/eu");
 		repository.setProperty("owner", "euxx");
 		manager.addRepository(repository);
 

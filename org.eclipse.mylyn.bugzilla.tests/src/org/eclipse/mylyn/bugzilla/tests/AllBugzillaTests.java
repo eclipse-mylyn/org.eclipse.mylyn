@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.bugzilla.tests;
 
-import org.eclipse.mylar.bugzilla.tests.headless.BugzillaHeadlessTest;
+import org.eclipse.mylar.bugzilla.tests.headless.BugzillaQueryTest;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -23,7 +23,7 @@ public class AllBugzillaTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.bugzilla.tests");
 		// $JUnit-BEGIN$		
-		suite.addTestSuite(BugzillaHeadlessTest.class);
+		suite.addTestSuite(BugzillaQueryTest.class);
 		suite.addTestSuite(RepositoryEditorWizardTest.class);
 		suite.addTestSuite(RepositoryReportFactoryTest.class);
 		suite.addTestSuite(BugzillaConfigurationTest.class);
