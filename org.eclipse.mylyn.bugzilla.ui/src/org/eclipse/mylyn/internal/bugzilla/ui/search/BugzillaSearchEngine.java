@@ -261,7 +261,9 @@ public class BugzillaSearchEngine {
 			s = new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK, "search failed", e);
 			((MultiStatus) status).add(s);
 		} finally {
-			monitor.done();
+			if(monitor != null) {
+				monitor.done();
+			}
 			collector.done();
 			try {
 				if (in != null)

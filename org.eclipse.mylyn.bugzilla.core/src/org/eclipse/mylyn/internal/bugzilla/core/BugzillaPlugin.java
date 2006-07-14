@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.core;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -53,13 +54,15 @@ public class BugzillaPlugin extends Plugin {
 	private static BugzillaPlugin plugin;
 
 	private static boolean cacheFileRead = false;
+	
+	private static File repositoryConfigurationFile = null;
 
 	// /** The file that contains all of the bugzilla favorites */
 	// private FavoritesFile favoritesFile;
 
 	/** Product configuration for the current server */
 	private static Map<String, RepositoryConfiguration> repositoryConfigurations = new HashMap<String, RepositoryConfiguration>();
-
+	
 	public BugzillaPlugin() {
 		super();
 	}
@@ -96,6 +99,11 @@ public class BugzillaPlugin extends Plugin {
 		return repositoryConfigurations.get(repositoryUrl);
 	}
 
+	
+	public static void setConfigurationCacheFile(File file) {
+		repositoryConfigurationFile = file;
+	}
+	
 	/**
 	 * Retrieves the latest repository configuration from the server
 	 * @throws BugzillaException 
@@ -121,14 +129,14 @@ public class BugzillaPlugin extends Plugin {
 		repositoryConfigurations.put(config.getRepositoryUrl(), config);
 	}
 
-	/**
-	 * Returns the path to the file cacheing the product configuration.
-	 */
-	private static IPath getProductConfigurationCachePath() {
-		IPath stateLocation = Platform.getStateLocation(BugzillaPlugin.getDefault().getBundle());
-		IPath configFile = stateLocation.append("repositoryConfigurations");
-		return configFile;
-	}
+//	/**
+//	 * Returns the path to the file cacheing the product configuration.
+//	 */
+//	private static IPath getProductConfigurationCachePath() {
+//		IPath stateLocation = Platform.getStateLocation(BugzillaPlugin.getDefault().getBundle());
+//		IPath configFile = stateLocation.append("repositoryConfigurations");
+//		return configFile;
+//	}
 
 	/** public for testing */
 	public void removeConfiguration(RepositoryConfiguration config) {
@@ -137,12 +145,12 @@ public class BugzillaPlugin extends Plugin {
 
 	/** public for testing */
 	public static void readRepositoryConfigurationFile() {
-		IPath configFile = getProductConfigurationCachePath();
-		if (!configFile.toFile().exists())
+		// IPath configFile = getProductConfigurationCachePath();
+		if (repositoryConfigurationFile == null || !repositoryConfigurationFile.exists())
 			return;
 		ObjectInputStream in = null;
 		try {
-			in = new ObjectInputStream(new FileInputStream(configFile.toFile()));
+			in = new ObjectInputStream(new FileInputStream(repositoryConfigurationFile));
 			int size = in.readInt();
 			for (int nX = 0; nX < size; nX++) {
 				RepositoryConfiguration item = (RepositoryConfiguration) in.readObject();
@@ -156,8 +164,8 @@ public class BugzillaPlugin extends Plugin {
 				if (in != null) {
 					in.close();
 				}
-				if (configFile != null && configFile.toFile().exists()) {
-					if (configFile.toFile().delete()) {
+				if (repositoryConfigurationFile != null && repositoryConfigurationFile.exists()) {
+					if (repositoryConfigurationFile.delete()) {
 						// successfully deleted
 					} else {
 						log(new Status(Status.ERROR, BugzillaPlugin.PLUGIN_ID, 0, ERROR_DELETING_CONFIGURATION, e));
@@ -180,25 +188,27 @@ public class BugzillaPlugin extends Plugin {
 
 	/** public for testing */
 	public static void writeRepositoryConfigFile() {
-		IPath configFile = getProductConfigurationCachePath();
-		ObjectOutputStream out = null;
-		try {
-			out = new ObjectOutputStream(new FileOutputStream(configFile.toFile()));
-			out.writeInt(repositoryConfigurations.size());
-			for (String key : repositoryConfigurations.keySet()) {
-				RepositoryConfiguration item = repositoryConfigurations.get(key);
-				if (item != null) {
-					out.writeObject(item);
+		// IPath configFile = getProductConfigurationCachePath();
+		if (repositoryConfigurationFile != null) {
+			ObjectOutputStream out = null;
+			try {
+				out = new ObjectOutputStream(new FileOutputStream(repositoryConfigurationFile));
+				out.writeInt(repositoryConfigurations.size());
+				for (String key : repositoryConfigurations.keySet()) {
+					RepositoryConfiguration item = repositoryConfigurations.get(key);
+					if (item != null) {
+						out.writeObject(item);
+					}
 				}
-			}
-		} catch (IOException e) {
-			log(e);
-		} finally {
-			if (out != null) {
-				try {
-					out.close();
-				} catch (IOException e) {
-					// ignore
+			} catch (IOException e) {
+				log(e);
+			} finally {
+				if (out != null) {
+					try {
+						out.close();
+					} catch (IOException e) {
+						// ignore
+					}
 				}
 			}
 		}

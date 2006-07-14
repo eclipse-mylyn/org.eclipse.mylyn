@@ -19,8 +19,10 @@ import java.util.List;
 
 import javax.security.auth.login.LoginException;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
@@ -100,7 +102,10 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		super.start(context);
 		getPreferenceStore().setDefault(IBugzillaConstants.MAX_RESULTS, 100);
 
-		// readOfflineReportsFile();
+		IPath repConfigCacheFile = getProductConfigurationCachePath();
+		if(repConfigCacheFile != null) {
+			BugzillaPlugin.setConfigurationCacheFile(repConfigCacheFile.toFile());
+		}
 
 		BugzillaUiPlugin.setResultEditorMatchAdapter(new BugzillaResultMatchAdapter());
 
@@ -114,6 +119,15 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		// migrateOldAuthenticationData();
 	}
 
+	/**
+	 * Returns the path to the file cacheing the product configuration.
+	 */
+	private static IPath getProductConfigurationCachePath() {
+		IPath stateLocation = Platform.getStateLocation(BugzillaPlugin.getDefault().getBundle());
+		IPath configFile = stateLocation.append("repositoryConfigurations");
+		return configFile;
+	}
+	
 	public int getMaxResults() {
 		return getPreferenceStore().getInt(IBugzillaConstants.MAX_RESULTS);
 	}
