@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -63,7 +63,7 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 
 	public String getBugUrl() {
 		Integer idInt = new Integer(id);
-		return BugzillaRepositoryUtil.getBugUrlWithoutLogin(repositoryUrl, idInt);
+		return BugzillaServerFacade.getBugUrlWithoutLogin(repositoryUrl, idInt);
 	}
 
 	public AbstractRepositoryTask getOrCreateCorrespondingTask() { 

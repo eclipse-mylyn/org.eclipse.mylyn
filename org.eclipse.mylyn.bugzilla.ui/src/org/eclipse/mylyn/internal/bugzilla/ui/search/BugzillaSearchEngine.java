@@ -26,7 +26,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.UnrecognizedReponseException;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
@@ -67,7 +67,7 @@ public class BugzillaSearchEngine {
 		this.proxySettings = proxySettings;
 		 if (repository.hasCredentials()) {
 			try {
-				urlString = BugzillaRepositoryUtil.addCredentials(urlString, repository.getUserName(), repository.getPassword());
+				urlString = BugzillaServerFacade.addCredentials(urlString, repository.getUserName(), repository.getPassword());
 			} catch (UnsupportedEncodingException e) {
 				/*
 				 * Do nothing. Every implementation of the Java platform is

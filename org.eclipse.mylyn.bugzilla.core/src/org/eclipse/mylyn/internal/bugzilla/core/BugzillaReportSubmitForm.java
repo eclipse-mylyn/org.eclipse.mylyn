@@ -432,7 +432,7 @@ public class BugzillaReportSubmitForm {
 
 			if ((!isNewBugPost && existingBugPosted != true) || (isNewBugPost && result == null)) {
 				in.reset();
-				BugzillaRepositoryUtil.parseHtmlError(in);
+				BugzillaServerFacade.parseHtmlError(in);
 			}
 
 			if (!isNewBugPost && existingBugPosted == true && attachment != null) {

@@ -16,7 +16,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 
@@ -53,7 +53,7 @@ public class BugzillaProductParserTest extends TestCase {
 		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL,
 				IBugzillaConstants.BugzillaServerVersion.SERVER_220.toString());
 
-		List<String> productList = BugzillaRepositoryUtil.getProductList(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
+		List<String> productList = BugzillaServerFacade.getProductList(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
 		Iterator<String> itr = productList.iterator();
 		assertTrue(itr.hasNext());
 		assertEquals("Read Only Test Cases", itr.next());
@@ -65,7 +65,7 @@ public class BugzillaProductParserTest extends TestCase {
 		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_2201_URL,
 				IBugzillaConstants.BugzillaServerVersion.SERVER_220.toString());
 
-		List<String> productList = BugzillaRepositoryUtil.getProductList(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
+		List<String> productList = BugzillaServerFacade.getProductList(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
 		Iterator<String> itr = productList.iterator();
 		assertTrue(itr.hasNext());
 		assertEquals("TestProduct", "TestProduct", itr.next());
@@ -77,7 +77,7 @@ public class BugzillaProductParserTest extends TestCase {
 		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_220_URL,
 				IBugzillaConstants.BugzillaServerVersion.SERVER_220.toString());
 
-		List<String> productList = BugzillaRepositoryUtil.getProductList(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
+		List<String> productList = BugzillaServerFacade.getProductList(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
 		assertEquals(2, productList.size());
 		assertTrue(productList.contains("TestProduct"));
 		assertTrue(productList.contains("Widget"));	
@@ -89,7 +89,7 @@ public class BugzillaProductParserTest extends TestCase {
 		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_218_URL,
 				IBugzillaConstants.BugzillaServerVersion.SERVER_218.toString());
 
-		List<String> productList = BugzillaRepositoryUtil.getProductList(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
+		List<String> productList = BugzillaServerFacade.getProductList(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
 		assertEquals(1, productList.size());
 		assertTrue(productList.contains("TestProduct"));
 

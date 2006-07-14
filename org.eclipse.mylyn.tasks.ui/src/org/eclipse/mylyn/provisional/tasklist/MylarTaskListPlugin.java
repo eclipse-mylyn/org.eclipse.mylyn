@@ -347,8 +347,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			 
 			taskListManager = new TaskListManager(taskListWriter, taskListFile, nextTaskId);
 			taskRepositoryManager = new TaskRepositoryManager();
-			
-			MylarStatusHandler.setStatusNotifier(new RepositoryAwareStatusNotifier());
 //			MylarPlugin.setContextStore(new FileBasedContextStore());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -366,6 +364,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			workbench.getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					try {
+						MylarStatusHandler.setStatusNotifier(new RepositoryAwareStatusNotifier());
+						
 						TaskListExtensionReader.initExtensions(taskListWriter);
 						taskRepositoryManager.readRepositories();
 

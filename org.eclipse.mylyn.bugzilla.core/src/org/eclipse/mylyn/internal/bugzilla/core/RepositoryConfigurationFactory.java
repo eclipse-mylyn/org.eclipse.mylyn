@@ -36,7 +36,7 @@ public class RepositoryConfigurationFactory extends AbstractReportFactory {
 			String password, String encoding) throws IOException, KeyManagementException, LoginException,
 			NoSuchAlgorithmException, BugzillaException {
 		String configUrlStr = repositoryUrl + CONFIG_RDF_URL;
-		configUrlStr = BugzillaRepositoryUtil.addCredentials(configUrlStr, userName, password);
+		configUrlStr = BugzillaServerFacade.addCredentials(configUrlStr, userName, password);
 		URL url = new URL(configUrlStr);
 		SaxConfigurationContentHandler contentHandler = new SaxConfigurationContentHandler();
 		collectResults(url, proxySettings, encoding, contentHandler, true);

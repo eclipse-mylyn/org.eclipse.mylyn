@@ -37,7 +37,7 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
@@ -238,7 +238,7 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 				if (storedProducts.length > 0) {
 					products = Arrays.asList(storedProducts);
 				} else {
-					products = BugzillaRepositoryUtil.getProductList(repository.getUrl(), MylarTaskListPlugin
+					products = BugzillaServerFacade.getProductList(repository.getUrl(), MylarTaskListPlugin
 							.getDefault().getProxySettings(), repository.getUserName(), repository.getPassword(),
 							repository.getCharacterEncoding());
 				}
@@ -385,7 +385,7 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 		model.setProduct((listBox.getSelection())[0]);
 
 		if (!model.hasParsedAttributes() || !model.getProduct().equals(prevProduct)) {
-			BugzillaRepositoryUtil.setupNewBugAttributes(repository.getUrl(), MylarTaskListPlugin.getDefault()
+			BugzillaServerFacade.setupNewBugAttributes(repository.getUrl(), MylarTaskListPlugin.getDefault()
 					.getProxySettings(), repository.getUserName(), repository.getPassword(), model, repository
 					.getCharacterEncoding());
 			model.setParsedAttributesStatus(true);

@@ -39,7 +39,7 @@ public class RepositoryReportFactory extends AbstractReportFactory {
 		SaxBugReportContentHandler contentHandler = new SaxBugReportContentHandler(bugzillaAttributeFactory, bugReport);
 
 		String xmlBugReportUrl = repositoryUrl + SHOW_BUG_CGI_XML + bugReport.getId();
-		xmlBugReportUrl = BugzillaRepositoryUtil.addCredentials(xmlBugReportUrl, userName, password);
+		xmlBugReportUrl = BugzillaServerFacade.addCredentials(xmlBugReportUrl, userName, password);
 		URL serverURL = new URL(xmlBugReportUrl);
 
 		collectResults(serverURL, proxySettings, characterEncoding, contentHandler, false);

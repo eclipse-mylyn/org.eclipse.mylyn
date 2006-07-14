@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.tasklist.ui.editors.AbstractBugEditorInput;
 import org.eclipse.mylar.internal.tasklist.ui.editors.AbstractRepositoryTaskEditor;
@@ -65,7 +65,7 @@ public class OpenBugzillaReportJob extends Job {
 				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
 						BugzillaPlugin.REPOSITORY_KIND, serverUrl);			
 				
-				RepositoryTaskData data = BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), MylarTaskListPlugin.getDefault().getProxySettings(), repository.getCharacterEncoding(), bugId.intValue());
+				RepositoryTaskData data = BugzillaServerFacade.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), MylarTaskListPlugin.getDefault().getProxySettings(), repository.getCharacterEncoding(), bugId.intValue());
 				final AbstractBugEditorInput editorInput = new ExistingBugEditorInput(repository, data);
 				
 				// final ExistingBugEditorInput editorInput = new

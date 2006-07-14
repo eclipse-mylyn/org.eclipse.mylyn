@@ -39,7 +39,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttachmentHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.internal.bugzilla.core.UnrecognizedReponseException;
@@ -363,7 +363,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		if (url == null) {
 			return null;
 		} else {
-			int index = url.indexOf(BugzillaRepositoryUtil.POST_ARGS_SHOW_BUG);
+			int index = url.indexOf(BugzillaServerFacade.POST_ARGS_SHOW_BUG);
 			if (index != -1) {
 				return url.substring(0, index);
 			} else {

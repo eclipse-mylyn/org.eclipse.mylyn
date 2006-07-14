@@ -26,7 +26,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryReportFactory;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
@@ -48,7 +48,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 
 		RepositoryTaskData report = new RepositoryTaskData(attributeFactory, BugzillaPlugin.REPOSITORY_KIND, repository
 				.getUrl(), ""+bugid);
-		BugzillaRepositoryUtil.setupExistingBugAttributes(repository.getUrl(), report);
+		BugzillaServerFacade.setupExistingBugAttributes(repository.getUrl(), report);
 		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(),
 				null);
 
@@ -117,7 +117,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 
 		RepositoryTaskData report = new RepositoryTaskData(attributeFactory, BugzillaPlugin.REPOSITORY_KIND, repository
 				.getUrl(), bugid);
-		BugzillaRepositoryUtil.setupExistingBugAttributes(repository.getUrl(), report);
+		BugzillaServerFacade.setupExistingBugAttributes(repository.getUrl(), report);
 		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(),
 				null);
 
@@ -235,7 +235,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 
 		RepositoryTaskData report = new RepositoryTaskData(attributeFactory, BugzillaPlugin.REPOSITORY_KIND, repository
 				.getUrl(), bugid);
-		BugzillaRepositoryUtil.setupExistingBugAttributes(repository.getUrl(), report);
+		BugzillaServerFacade.setupExistingBugAttributes(repository.getUrl(), report);
 		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(),
 				null);
 
@@ -284,7 +284,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 
 		RepositoryTaskData report = new RepositoryTaskData(attributeFactory, BugzillaPlugin.REPOSITORY_KIND, repository
 				.getUrl(), bugid);
-		BugzillaRepositoryUtil.setupExistingBugAttributes(repository.getUrl(), report);
+		BugzillaServerFacade.setupExistingBugAttributes(repository.getUrl(), report);
 		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(),
 				null);
 
@@ -335,7 +335,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 
 		RepositoryTaskData report = new RepositoryTaskData(attributeFactory, BugzillaPlugin.REPOSITORY_KIND, repository
 				.getUrl(), bugid);
-		BugzillaRepositoryUtil.setupExistingBugAttributes(repository.getUrl(), report);
+		BugzillaServerFacade.setupExistingBugAttributes(repository.getUrl(), report);
 		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(),
 				null);
 
@@ -377,7 +377,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 
 		RepositoryTaskData report = new RepositoryTaskData(attributeFactory, BugzillaPlugin.REPOSITORY_KIND, repository
 				.getUrl(), bugid);
-		BugzillaRepositoryUtil.setupExistingBugAttributes(repository.getUrl(), report);
+		BugzillaServerFacade.setupExistingBugAttributes(repository.getUrl(), report);
 		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(),
 				null);
 
@@ -418,7 +418,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 
 		RepositoryTaskData report = new RepositoryTaskData(attributeFactory, BugzillaPlugin.REPOSITORY_KIND, repository
 				.getUrl(), bugid);
-		BugzillaRepositoryUtil.setupExistingBugAttributes(repository.getUrl(), report);
+		BugzillaServerFacade.setupExistingBugAttributes(repository.getUrl(), report);
 		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(),
 				null);
 

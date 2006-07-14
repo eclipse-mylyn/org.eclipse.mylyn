@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.bugzilla.ui;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
 
@@ -55,7 +55,7 @@ public class BugzillaHyperLink implements IHyperlink {
 		// MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
 		// BugzillaPlugin.REPOSITORY_KIND);
 		if (repositoryUrl != null) {
-			TaskUiUtil.openRepositoryTask(repositoryUrl, id, repositoryUrl + BugzillaRepositoryUtil.POST_ARGS_SHOW_BUG
+			TaskUiUtil.openRepositoryTask(repositoryUrl, id, repositoryUrl + BugzillaServerFacade.POST_ARGS_SHOW_BUG
 					+ id);
 			// OpenBugzillaReportJob job = new
 			// OpenBugzillaReportJob(repository.getUrl(), id);

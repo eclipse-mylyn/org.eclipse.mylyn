@@ -22,7 +22,6 @@ import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 public class FileBasedContextStore extends AbstractContextStore {
 
 	public File getRootDirectory() {
-//		return new File(MylarTaskListPlugin.getDefault().getDefaultDataDirectory());
 		return new File(MylarTaskListPlugin.getDefault().getDataDirectory());
 	}
 

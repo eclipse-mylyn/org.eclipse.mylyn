@@ -16,7 +16,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchResultView;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
@@ -60,7 +60,7 @@ public class OpenBugsAction extends Action {
 				BugzillaQueryHit repositoryHit = it.next();
 				try {
 					int id = Integer.parseInt(repositoryHit.getId());
-					String bugUrl = BugzillaRepositoryUtil.getBugUrlWithoutLogin(repositoryHit.getRepositoryUrl(), id);
+					String bugUrl = BugzillaServerFacade.getBugUrlWithoutLogin(repositoryHit.getRepositoryUrl(), id);
 					TaskUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), "" + repositoryHit.getId(), bugUrl);
 				} catch (NumberFormatException e) {
 					MylarStatusHandler.fail(e, "Could not open, malformed id: " + repositoryHit.getId(), true);

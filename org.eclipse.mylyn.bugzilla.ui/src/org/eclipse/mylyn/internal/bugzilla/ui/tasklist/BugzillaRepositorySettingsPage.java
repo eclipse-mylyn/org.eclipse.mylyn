@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
@@ -120,7 +120,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 						HttpURLConnection serverConnection = (HttpURLConnection) cntx;
 						serverConnection.connect();
 
-						BugzillaRepositoryUtil.validateCredentials(serverUrl, newUserId, newPassword);
+						BugzillaServerFacade.validateCredentials(serverUrl, newUserId, newPassword);
 
 					} catch (Exception e) {
 						throw new InvocationTargetException(e);

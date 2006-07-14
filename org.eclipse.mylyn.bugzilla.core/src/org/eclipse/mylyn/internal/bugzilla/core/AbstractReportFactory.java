@@ -135,7 +135,7 @@ public class AbstractReportFactory {
 				}
 			} else if (connection.getContentType().contains(CONTENT_TYPE_TEXT_HTML)) {
 //				try {
-					BugzillaRepositoryUtil.parseHtmlError(in);
+					BugzillaServerFacade.parseHtmlError(in);
 //				} catch (BugzillaException e) {
 //					throw new IOException(e.getMessage());
 //				}

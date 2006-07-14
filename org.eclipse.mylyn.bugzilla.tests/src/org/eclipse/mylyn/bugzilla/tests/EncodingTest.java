@@ -18,7 +18,7 @@ import javax.security.auth.login.LoginException;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 
 /**
  * @author Mik Kersten
@@ -27,17 +27,17 @@ public class EncodingTest extends TestCase {
 
 	public void testEncodingSetting() throws LoginException, IOException, ParseException {
 
-		String charset = BugzillaRepositoryUtil.getCharsetFromString("text/html; charset=UTF-8");
+		String charset = BugzillaServerFacade.getCharsetFromString("text/html; charset=UTF-8");
 		assertEquals("UTF-8", charset);
 
-		charset = BugzillaRepositoryUtil.getCharsetFromString("text/html");
+		charset = BugzillaServerFacade.getCharsetFromString("text/html");
 		assertEquals(null, charset);
 
-		charset = BugzillaRepositoryUtil
+		charset = BugzillaServerFacade
 				.getCharsetFromString("<<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-2\">>");
 		assertEquals("iso-8859-2", charset);
 
-		charset = BugzillaRepositoryUtil.getCharsetFromString("<<meta http-equiv=\"Content-Type\" content=\"text/html\">>");
+		charset = BugzillaServerFacade.getCharsetFromString("<<meta http-equiv=\"Content-Type\" content=\"text/html\">>");
 		assertEquals(null, charset);
 	}
 

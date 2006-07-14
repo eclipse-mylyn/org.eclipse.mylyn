@@ -19,7 +19,7 @@ import java.util.List;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
@@ -50,7 +50,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		String id = AbstractRepositoryTask.getTaskId(getHandleIdentifier());
 		String repositoryUrl = getRepositoryUrl();
 		try {
-			String url = BugzillaRepositoryUtil.getBugUrlWithoutLogin(repositoryUrl, Integer.parseInt(id));
+			String url = BugzillaServerFacade.getBugUrlWithoutLogin(repositoryUrl, Integer.parseInt(id));
 			if (url != null) {
 				super.setUrl(url);
 			}
@@ -103,7 +103,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		// fix for bug 103537 - should login automatically, but dont want to
 		// show the login info in the query string
 		try {
-			return BugzillaRepositoryUtil.getBugUrlWithoutLogin(getRepositoryUrl(), 
+			return BugzillaServerFacade.getBugUrlWithoutLogin(getRepositoryUrl(), 
 				Integer.parseInt(AbstractRepositoryTask.getTaskId(handle)));
 		} catch (NumberFormatException nfe) {
 			return super.getUrl();

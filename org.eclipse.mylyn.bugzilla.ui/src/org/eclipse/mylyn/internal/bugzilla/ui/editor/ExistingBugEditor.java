@@ -37,7 +37,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaCompareInput;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
@@ -742,7 +742,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 			try {
 				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
 						BugzillaPlugin.REPOSITORY_KIND, taskData.getRepositoryUrl());
-				serverBug = BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository
+				serverBug = BugzillaServerFacade.getBug(repository.getUrl(), repository.getUserName(), repository
 						.getPassword(), editorInput.getProxySettings(), repository.getCharacterEncoding(), Integer
 						.parseInt(taskData.getId()));
 				// If no bug was found on the server, throw an exception so that

@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.UnrecognizedReponseException;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
@@ -65,7 +65,7 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 		try {
 			int bugId = Integer.parseInt(AbstractRepositoryTask.getTaskId(bugzillaTask.getHandleIdentifier()));
 
-			return BugzillaRepositoryUtil.getBug(repository.getUrl(), repository.getUserName(), repository
+			return BugzillaServerFacade.getBug(repository.getUrl(), repository.getUserName(), repository
 					.getPassword(), proxySettings, repository.getCharacterEncoding(), bugId);
 		} catch (final LoginException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, 0, "Report download failed. Ensure proper repository configuration of " + bugzillaTask.getRepositoryUrl() + " in "

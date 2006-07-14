@@ -41,10 +41,10 @@ import org.eclipse.mylar.tasks.core.util.HtmlTag;
 import org.eclipse.mylar.tasks.core.util.HtmlStreamTokenizer.Token;
 
 /**
- * @author Mik Kersten (some rewriting)
+ * @author Mik Kersten
  * @author Rob Elves
  */
-public class BugzillaRepositoryUtil {
+public class BugzillaServerFacade {
 
 	private static final String ATTR_CHARSET = "charset";
 
@@ -227,7 +227,7 @@ public class BugzillaRepositoryUtil {
 		RepositoryConfiguration repositoryConfiguration = BugzillaPlugin.getRepositoryConfiguration(false,
 				repositoryUrl, proxySettings, userName, password, characterEncoding);
 
-		RepositoryTaskAttribute a = BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.PRODUCT);
+		RepositoryTaskAttribute a = BugzillaServerFacade.makeNewAttribute(BugzillaReportElement.PRODUCT);
 		List<String> optionValues = repositoryConfiguration.getProducts();
 		Collections.sort(optionValues);
 		// for (String option : optionValues) {
@@ -238,7 +238,7 @@ public class BugzillaRepositoryUtil {
 		newReport.addAttribute(BugzillaReportElement.PRODUCT.getKeyString(), a);
 		// attributes.put(a.getName(), a);
 
-		a = BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.BUG_STATUS);
+		a = BugzillaServerFacade.makeNewAttribute(BugzillaReportElement.BUG_STATUS);
 		optionValues = repositoryConfiguration.getStatusValues();
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
@@ -247,7 +247,7 @@ public class BugzillaRepositoryUtil {
 		newReport.addAttribute(BugzillaReportElement.BUG_STATUS.getKeyString(), a);
 		// attributes.put(a.getName(), a);
 
-		a = BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.VERSION);
+		a = BugzillaServerFacade.makeNewAttribute(BugzillaReportElement.VERSION);
 		optionValues = repositoryConfiguration.getVersions(newReport.getProduct());
 		Collections.sort(optionValues);
 		for (String option : optionValues) {
@@ -259,7 +259,7 @@ public class BugzillaRepositoryUtil {
 		newReport.addAttribute(BugzillaReportElement.VERSION.getKeyString(), a);
 		// attributes.put(a.getName(), a);
 
-		a = BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.COMPONENT);
+		a = BugzillaServerFacade.makeNewAttribute(BugzillaReportElement.COMPONENT);
 		optionValues = repositoryConfiguration.getComponents(newReport.getProduct());
 		Collections.sort(optionValues);
 		for (String option : optionValues) {
@@ -270,7 +270,7 @@ public class BugzillaRepositoryUtil {
 		}
 		newReport.addAttribute(BugzillaReportElement.COMPONENT.getKeyString(), a);
 
-		a = BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.REP_PLATFORM);
+		a = BugzillaServerFacade.makeNewAttribute(BugzillaReportElement.REP_PLATFORM);
 		optionValues = repositoryConfiguration.getPlatforms();
 		Collections.sort(optionValues);
 		for (String option : optionValues) {
@@ -282,7 +282,7 @@ public class BugzillaRepositoryUtil {
 		newReport.addAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString(), a);
 		// attributes.put(a.getName(), a);
 
-		a = BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.OP_SYS);
+		a = BugzillaServerFacade.makeNewAttribute(BugzillaReportElement.OP_SYS);
 		optionValues = repositoryConfiguration.getOSs();
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
@@ -293,7 +293,7 @@ public class BugzillaRepositoryUtil {
 		newReport.addAttribute(BugzillaReportElement.OP_SYS.getKeyString(), a);
 		// attributes.put(a.getName(), a);
 
-		a = BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.PRIORITY);
+		a = BugzillaServerFacade.makeNewAttribute(BugzillaReportElement.PRIORITY);
 		optionValues = repositoryConfiguration.getPriorities();
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
@@ -302,7 +302,7 @@ public class BugzillaRepositoryUtil {
 		newReport.addAttribute(BugzillaReportElement.PRIORITY.getKeyString(), a);
 		// attributes.put(a.getName(), a);
 
-		a = BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.BUG_SEVERITY);
+		a = BugzillaServerFacade.makeNewAttribute(BugzillaReportElement.BUG_SEVERITY);
 		optionValues = repositoryConfiguration.getSeverities();
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
@@ -325,13 +325,13 @@ public class BugzillaRepositoryUtil {
 		// newReport.addAttribute(BugzillaReportElement.TARGET_MILESTONE, a);
 		// }
 
-		a = BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.ASSIGNED_TO);
+		a = BugzillaServerFacade.makeNewAttribute(BugzillaReportElement.ASSIGNED_TO);
 		a.setValue("");
 		a.setReadOnly(false);
 		newReport.addAttribute(BugzillaReportElement.ASSIGNED_TO.getKeyString(), a);
 		// attributes.put(a.getName(), a);
 
-		a = BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.BUG_FILE_LOC);
+		a = BugzillaServerFacade.makeNewAttribute(BugzillaReportElement.BUG_FILE_LOC);
 		a.setValue("http://");
 		a.setHidden(false);
 		newReport.addAttribute(BugzillaReportElement.BUG_FILE_LOC.getKeyString(), a);
@@ -353,7 +353,7 @@ public class BugzillaRepositoryUtil {
 				BugzillaReportElement.NEWCC, BugzillaReportElement.KEYWORDS };
 
 		for (BugzillaReportElement element : reportElements) {
-			RepositoryTaskAttribute reportAttribute = BugzillaRepositoryUtil.makeNewAttribute(element);
+			RepositoryTaskAttribute reportAttribute = BugzillaServerFacade.makeNewAttribute(element);
 			existingReport.addAttribute(element.getKeyString(), reportAttribute);
 		}
 	}

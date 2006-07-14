@@ -21,7 +21,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.actions.BugzillaSortAction;
 import org.eclipse.mylar.internal.bugzilla.ui.actions.OpenBugsAction;
@@ -257,7 +257,7 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 		
 		try {
 			int id = Integer.parseInt(repositoryHit.getId());
-			String bugUrl = BugzillaRepositoryUtil.getBugUrlWithoutLogin(repositoryHit.getRepositoryUrl(), id);
+			String bugUrl = BugzillaServerFacade.getBugUrlWithoutLogin(repositoryHit.getRepositoryUrl(), id);
 			TaskUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), "" + repositoryHit.getId(), bugUrl);
 		} catch (NumberFormatException e) {
 			MylarStatusHandler.fail(e, "Could not open, malformed id: " + repositoryHit.getId(), true);
