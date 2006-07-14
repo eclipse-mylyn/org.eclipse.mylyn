@@ -64,7 +64,7 @@ public abstract class AbstractTracClient implements ITracClient {
 	}
 
 	protected boolean hasAuthenticationCredentials() {
-		return username.length() > 0;
+		return username != null && username.length() > 0;
 	}
 
 
