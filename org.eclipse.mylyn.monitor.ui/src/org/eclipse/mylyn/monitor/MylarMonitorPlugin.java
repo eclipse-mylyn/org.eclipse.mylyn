@@ -114,6 +114,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin {
 	
 	@Override
 	public void start(BundleContext context) throws Exception {
+		super.start(context);
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				getWorkbench().addWindowListener(WINDOW_LISTENER);
