@@ -220,16 +220,14 @@ litigation.
    <requires>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.mylar.core"/>
-      <import plugin="org.eclipse.mylar.tasklist"/>
-      <import plugin="org.eclipse.ui.views"/>
-      <import plugin="org.eclipse.jface.text"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.jdt"/>
       <import plugin="org.eclipse.jdt.core"/>
       <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.jface.text"/>
       <import plugin="org.eclipse.ui.workbench.texteditor"/>
       <import plugin="org.eclipse.search"/>
+      <import plugin="org.eclipse.ui.views"/>
       <import plugin="org.eclipse.jdt.debug.ui"/>
       <import plugin="org.eclipse.jdt.ui"/>
       <import plugin="org.eclipse.team.cvs.ui"/>
@@ -246,11 +244,15 @@ litigation.
       <import plugin="org.eclipse.team.cvs.core"/>
       <import plugin="org.eclipse.team.core"/>
       <import plugin="org.eclipse.ui.forms"/>
-      <import plugin="org.eclipse.ant.ui"/>
-      <import feature="org.eclipse.mylar_feature" version="0.6.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.compare"/>
       <import plugin="org.eclipse.ui.navigator"/>
       <import plugin="org.eclipse.ui.navigator.resources"/>
+      <import plugin="org.eclipse.ant.ui"/>
+      <import feature="org.eclipse.mylar_feature" version="0.6.0.v20060714-1000" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylar.context.core"/>
+      <import plugin="org.eclipse.mylar.tasks.ui"/>
+      <import plugin="org.eclipse.mylar.monitor"/>
+      <import plugin="org.eclipse.mylar.tasks.core"/>
    </requires>
 
    <plugin
