@@ -22,11 +22,11 @@ import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.monitor.usage.MylarUsageMonitorPlugin;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskListManager;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.Task;
+import org.eclipse.mylar.tasks.ui.TaskListManager;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * Tests changes to the main mylar data directory location.
@@ -38,9 +38,9 @@ public class ChangeDataDirTest extends TestCase {
 
 	private String newDataDir = null;
 
-	private final String defaultDir = MylarTaskListPlugin.getDefault().getDefaultDataDirectory();
+	private final String defaultDir = TasksUiPlugin.getDefault().getDefaultDataDirectory();
 
-	private TaskListManager manager = MylarTaskListPlugin.getTaskListManager();
+	private TaskListManager manager = TasksUiPlugin.getTaskListManager();
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -52,13 +52,13 @@ public class ChangeDataDirTest extends TestCase {
 		dir.deleteOnExit();
 		manager.resetTaskList();
 		assertTrue(manager.getTaskList().isEmpty());
-		MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
+		TasksUiPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
 	}
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		manager.resetTaskList();
-		MylarTaskListPlugin.getDefault().setDataDirectory(defaultDir);
+		TasksUiPlugin.getDefault().setDataDirectory(defaultDir);
 	}
 
 	public void testMonitorFileMove() {
@@ -68,7 +68,7 @@ public class ChangeDataDirTest extends TestCase {
 		String oldPath = MylarUsageMonitorPlugin.getDefault().getInteractionLogger().getOutputFile().getAbsolutePath();
 		assertTrue(new File(oldPath).exists());
 
-		MylarTaskListPlugin.getDefault().setDataDirectory(newDataDir);
+		TasksUiPlugin.getDefault().setDataDirectory(newDataDir);
 
 		assertFalse(new File(oldPath).exists());
 		String newPath = MylarUsageMonitorPlugin.getDefault().getInteractionLogger().getOutputFile().getAbsolutePath();
@@ -89,8 +89,8 @@ public class ChangeDataDirTest extends TestCase {
 				+ ".mylar";
 		assertEquals(defaultDir, workspaceRelativeDir);
 
-		MylarTaskListPlugin.getDefault().setDataDirectory(newDataDir);
-		assertEquals(MylarTaskListPlugin.getDefault().getDataDirectory(), newDataDir);
+		TasksUiPlugin.getDefault().setDataDirectory(newDataDir);
+		assertEquals(TasksUiPlugin.getDefault().getDataDirectory(), newDataDir);
 	}
 
 	public void testTaskMove() {
@@ -99,8 +99,8 @@ public class ChangeDataDirTest extends TestCase {
 		manager.getTaskList().moveToRoot(task);
 
 		ITask readTaskBeforeMove = manager.getTaskList().getTask(handle);
-		MylarTaskListPlugin.getDefault().getTaskListSaveManager().copyDataDirContentsTo(newDataDir);
-		MylarTaskListPlugin.getDefault().setDataDirectory(newDataDir);
+		TasksUiPlugin.getDefault().getTaskListSaveManager().copyDataDirContentsTo(newDataDir);
+		TasksUiPlugin.getDefault().setDataDirectory(newDataDir);
 
 		ITask readTaskAfterMove = manager.getTaskList().getTask(handle);
 		assertNotNull(readTaskAfterMove);
@@ -118,8 +118,8 @@ public class ChangeDataDirTest extends TestCase {
 		assertNotNull(readTaskBeforeMove);
 		assertEquals(refreshDate, readTaskBeforeMove.getLastModifiedDateStamp());
 
-		MylarTaskListPlugin.getDefault().getTaskListSaveManager().copyDataDirContentsTo(newDataDir);
-		MylarTaskListPlugin.getDefault().setDataDirectory(newDataDir);
+		TasksUiPlugin.getDefault().getTaskListSaveManager().copyDataDirContentsTo(newDataDir);
+		TasksUiPlugin.getDefault().setDataDirectory(newDataDir);
 
 		BugzillaTask readTaskAfterMove = (BugzillaTask) manager.getTaskList().getTask(handle);
 		assertNotNull(readTaskAfterMove);
@@ -136,7 +136,7 @@ public class ChangeDataDirTest extends TestCase {
 
 		// BugzillaTaskHandler handler = new BugzillaTaskHandler();
 		// handler.addTaskToArchive(newTask);
-		MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(newTask);
+		TasksUiPlugin.getTaskListManager().getTaskList().moveToRoot(newTask);
 	}
 
 	// /**
@@ -147,11 +147,11 @@ public class ChangeDataDirTest extends TestCase {
 	//
 	// ITask mainDataDirTask = createAndSaveTask("Main Task", false);
 	//
-	// // MylarPlugin.getDefault().setDataDirectory(newDataDir);
+	// // ContextCorePlugin.getDefault().setDataDirectory(newDataDir);
 	// assertEquals(0, manager.getTaskList().getRootTasks().size());
 	//
 	// // Check that the main data dir task isn't in the list or the folder
-	// File taskFile = new File(MylarPlugin.getDefault().getDataDirectory() +
+	// File taskFile = new File(ContextCorePlugin.getDefault().getDataDirectory() +
 	// File.separator
 	// + mainDataDirTask.getContextPath() + MylarTaskListPlugin.FILE_EXTENSION);
 	// assertFalse(taskFile.exists());
@@ -161,25 +161,25 @@ public class ChangeDataDirTest extends TestCase {
 	// // Check that a newly created task appears in the right place (method
 	// // will check)
 	// ITask newDataDirTask = createAndSaveTask("New Data Dir", false);
-	// taskFile = new File(MylarPlugin.getDefault().getDataDirectory() +
+	// taskFile = new File(ContextCorePlugin.getDefault().getDataDirectory() +
 	// File.separator
 	// + newDataDirTask.getContextPath() + MylarTaskListPlugin.FILE_EXTENSION);
 	// assertTrue(taskFile.exists());
 	//
 	// // Check for other the tasklist file in the new dir
 	// File destTaskListFile = new
-	// File(MylarPlugin.getDefault().getDataDirectory() + File.separator
+	// File(ContextCorePlugin.getDefault().getDataDirectory() + File.separator
 	// + MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE);
 	// assertTrue(destTaskListFile.exists());
 	//
 	// // Switch back to the main task directory
-	// MylarPlugin.getDefault().setDataDirectory(MylarPlugin.getDefault().getDefaultDataDirectory());
+	// ContextCorePlugin.getDefault().setDataDirectory(ContextCorePlugin.getDefault().getDefaultDataDirectory());
 	//		
 	// // Check that the previously created main dir task is in the task list
 	// and its file exists
 	// assertNotNull(manager.getTaskForHandle(mainDataDirTask.getHandleIdentifier(),
 	// false));
-	// taskFile = new File(MylarPlugin.getDefault().getDataDirectory() +
+	// taskFile = new File(ContextCorePlugin.getDefault().getDataDirectory() +
 	// File.separator
 	// + mainDataDirTask.getContextPath() + MylarTaskListPlugin.FILE_EXTENSION);
 	// assertTrue(taskFile.exists());
@@ -216,20 +216,20 @@ public class ChangeDataDirTest extends TestCase {
 	// }
 	//
 	// MylarContext mockContext =
-	// MylarPlugin.getContextManager().loadContext(newTask.getHandleIdentifier(),
+	// ContextCorePlugin.getContextManager().loadContext(newTask.getHandleIdentifier(),
 	// newTask.getContextPath());
 	// InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.EDIT,
 	// "structureKind", "handle", "originId");
 	// mockContext.parseEvent(event);
-	// MylarPlugin.getContextManager().contextActivated(mockContext);
+	// ContextCorePlugin.getContextManager().contextActivated(mockContext);
 	//
 	// // Save the context file and check that it exists
-	// MylarPlugin.getContextManager().saveContext(mockContext.getId(),
+	// ContextCorePlugin.getContextManager().saveContext(mockContext.getId(),
 	// newTask.getContextPath());
-	// File taskFile = new File(MylarPlugin.getDefault().getDataDirectory() +
+	// File taskFile = new File(ContextCorePlugin.getDefault().getDataDirectory() +
 	// File.separator
 	// + newTask.getContextPath() + MylarContextManager.CONTEXT_FILE_EXTENSION);
-	// assertTrue(MylarPlugin.getContextManager().hasContext(newTask.getContextPath()));
+	// assertTrue(ContextCorePlugin.getContextManager().hasContext(newTask.getContextPath()));
 	// assertTrue(taskFile.exists());
 	//
 	// return newTask;
@@ -258,14 +258,14 @@ public class ChangeDataDirTest extends TestCase {
 	// false));
 	//
 	// // Switch task directory
-	// MylarPlugin.getDefault().setDataDirectory(newDataDir);
+	// ContextCorePlugin.getDefault().setDataDirectory(newDataDir);
 	//
 	// // Check that there are no tasks in the tasklist after switching to the
 	// // empty dir
 	// assertTrue(manager.getTaskList().getRootTasks().size() == 0);
 	//
 	// // Check that the main data dir task isn't in the list or the folder
-	// File taskFile = new File(MylarPlugin.getDefault().getDataDirectory() +
+	// File taskFile = new File(ContextCorePlugin.getDefault().getDataDirectory() +
 	// File.separator
 	// + mainDataDirTask.getContextPath() + MylarTaskListPlugin.FILE_EXTENSION);
 	// assertFalse(taskFile.exists());
@@ -275,24 +275,24 @@ public class ChangeDataDirTest extends TestCase {
 	// // Check that a newly created task appears in the right place (method
 	// // will check)
 	// ITask newDataDirTask = createAndSaveTask("New Data Dir", true);
-	// taskFile = new File(MylarPlugin.getDefault().getDataDirectory() +
+	// taskFile = new File(ContextCorePlugin.getDefault().getDataDirectory() +
 	// File.separator
 	// + newDataDirTask.getContextPath() + MylarTaskListPlugin.FILE_EXTENSION);
 	// assertTrue(taskFile.exists());
 	//
 	// // Check for tasklist file in the new dir
 	// File destTaskListFile = new
-	// File(MylarPlugin.getDefault().getDataDirectory() + File.separator
+	// File(ContextCorePlugin.getDefault().getDataDirectory() + File.separator
 	// + MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE);
 	// assertTrue(destTaskListFile.exists());
 	//
-	// MylarPlugin.getDefault().setDataDirectory(MylarPlugin.getDefault().getDefaultDataDirectory());
+	// ContextCorePlugin.getDefault().setDataDirectory(ContextCorePlugin.getDefault().getDefaultDataDirectory());
 	//
 	// // Check that the previously created main dir task is in the task list
 	// // and its file exists
 	// assertNotNull(manager.getTaskForHandle(mainDataDirTask.getHandleIdentifier(),
 	// false));
-	// taskFile = new File(MylarPlugin.getDefault().getDataDirectory() +
+	// taskFile = new File(ContextCorePlugin.getDefault().getDataDirectory() +
 	// File.separator
 	// + mainDataDirTask.getContextPath() + MylarTaskListPlugin.FILE_EXTENSION);
 	// assertTrue(taskFile.exists());

@@ -14,7 +14,7 @@ package org.eclipse.mylar.tests.integration;
 import junit.framework.TestCase;
 
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
@@ -29,7 +29,7 @@ public class ExtensionPointInitializationTest extends TestCase {
 //	}
 	
 	public void testBugzillaHyperlinkDetector() {
-		IHyperlinkDetector[] detectors = MylarTaskListPlugin.getDefault().getTaskHyperlinkDetectors();		
+		IHyperlinkDetector[] detectors = TasksUiPlugin.getDefault().getTaskHyperlinkDetectors();		
 		assertNotNull(detectors);
 		assertTrue(detectors.length > 0);
 	}

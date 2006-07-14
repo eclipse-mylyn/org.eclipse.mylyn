@@ -19,12 +19,12 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylar.core.tests.UiTestUtil;
 import org.eclipse.mylar.internal.context.ui.TaskListInterestFilter;
-import org.eclipse.mylar.internal.tasklist.ui.AbstractTaskListFilter;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskListManager;
+import org.eclipse.mylar.internal.tasks.ui.ui.AbstractTaskListFilter;
+import org.eclipse.mylar.internal.tasks.ui.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.Task;
+import org.eclipse.mylar.tasks.ui.TaskListManager;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
@@ -33,7 +33,7 @@ public class TaskListFilterTest extends TestCase {
 
 	private TaskListView view = TaskListView.openInActivePerspective();
 	
-	private TaskListManager manager = MylarTaskListPlugin.getTaskListManager();
+	private TaskListManager manager = TasksUiPlugin.getTaskListManager();
 	
 	private Set<AbstractTaskListFilter> previousFilters;
 	
