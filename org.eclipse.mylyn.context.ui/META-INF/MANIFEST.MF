@@ -2,13 +2,13 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar UI Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.context.ui;singleton:=true
-Bundle-Version: 0.6.0.v20060707-1900
+Bundle-Version: 0.6.0.v20060714-1000
 Bundle-Activator: org.eclipse.mylar.context.ui.ContextUiPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.mylar.context.core,
- org.eclipse.mylar.tasklist,
+ org.eclipse.mylar.tasks.ui,
  org.eclipse.ui.views,
  org.eclipse.jface.text,
  org.eclipse.core.resources,

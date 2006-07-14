@@ -26,7 +26,7 @@
 	</extension>
 	
 	<extension
-          point="org.eclipse.mylar.tasklist.editors">
+          point="org.eclipse.mylar.tasks.ui.editors">
        <hyperlinkDetector
              class="org.eclipse.mylar.internal.java.ui.JavaStackTraceHyperlinkDetector"
              id="org.eclipse.mylar.java.hyperlink.detector.stack"/>
