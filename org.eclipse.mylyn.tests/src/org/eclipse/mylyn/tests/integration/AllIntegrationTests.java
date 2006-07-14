@@ -12,6 +12,7 @@
 package org.eclipse.mylar.tests.integration;
 
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.tests.TestingStatusNotifier;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -24,7 +25,7 @@ public class AllIntegrationTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tests.integration");
 
-		MylarStatusHandler.setDumpErrorsForTesting(true);
+		MylarStatusHandler.setStatusNotifier(new TestingStatusNotifier());
 
 		// $JUnit-BEGIN$
 		suite.addTestSuite(TaskListFilterTest.class);
