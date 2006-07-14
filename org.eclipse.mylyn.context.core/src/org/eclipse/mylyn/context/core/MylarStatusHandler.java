@@ -11,25 +11,22 @@
 
 package org.eclipse.mylar.context.core;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylar.internal.context.core.util.DateUtil;
 
 /**
  * @author Mik Kersten
  */
 public class MylarStatusHandler {
 
-	private static boolean testingMode = false;
+//	private static boolean testingMode = false;
 
-	private static final String ERROR_MESSAGE = "Please report the following error by following the bugs link at:\n"
-			+ "http://eclipse.org/mylar\n\n"
-			+ "For details on this error please open the PDE Runtime -> Error Log view";
-
+	private static IStatusNotifier statusNotifier = null;
+	
+	public static void setStatusNotifier(IStatusNotifier notifier) {
+		statusNotifier = notifier;
+	}
+	
 	/**
 	 * Logs the specified status with this plug-in's log.
 	 * 
@@ -37,35 +34,9 @@ public class MylarStatusHandler {
 	 *            status to log
 	 */
 	public static void log(IStatus status) {
-		StringBuffer buffer = new StringBuffer();
-		buffer.append("[");
-		buffer.append(DateUtil.getFormattedDate());
-		buffer.append(", ");
-		buffer.append(DateUtil.getFormattedTime());
-		buffer.append("] ");
-		
-//		if (PlatformUI.getDefault() != null) {
-//			buffer.append("version: " + WorkbenchPlugin.getDefault().getBundle().getLocation() + ", ");
-//		}
-		buffer.append(status.toString() + ", ");
-
-		if (status.getException() != null) {
-			buffer.append("exception: ");
-			buffer.append(printStrackTrace(status.getException()));
-		}
-
 		if (MylarPlugin.getDefault() != null) {
 			MylarPlugin.getDefault().getLog().log(status);
 		}
-		if (testingMode) {
-			System.err.println(buffer.toString());
-		}
-	}
-
-	private static String printStrackTrace(Throwable t) {
-		StringWriter writer = new StringWriter();
-		t.printStackTrace(new PrintWriter(writer));
-		return writer.toString();
 	}
 
 	public static void log(String message, Object source) {
@@ -99,35 +70,12 @@ public class MylarStatusHandler {
 
 		final Status status = new Status(severity, MylarPlugin.PLUGIN_ID, IStatus.OK, message, throwable);
 		
-		if (informUser && Platform.isRunning()) {
-//			if (testingMode) {
-				log(status);
-//			}
-//			throw new CoreException(status);
-		} 
-//		else {
-//			log(status);
-//		}
-		
-//		if (informUser && PlatformUI.getWorkbench() != null) {
-//			try {
-//				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//					public void run() {
-//						Shell shell = null;
-//						if (PlatformUI.getWorkbench() != null
-//								&& PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
-//							shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-//						}
-//						ErrorDialog.openError(shell, "Mylar Error", MylarStatusHandler.ERROR_MESSAGE, status);
-//					}
-//				});
-//			} catch (Throwable t) {
-//				throwable.printStackTrace();
-//			}
-//		}
+		if (statusNotifier != null) {
+			statusNotifier.notify(status, informUser);
+		}
 	}
 
-	public static void setDumpErrorsForTesting(boolean dumpErrors) {
-		MylarStatusHandler.testingMode = dumpErrors;
-	}
+//	public static void setDumpErrorsForTesting(boolean dumpErrors) {
+//		MylarStatusHandler.testingMode = dumpErrors;
+//	}
 }
