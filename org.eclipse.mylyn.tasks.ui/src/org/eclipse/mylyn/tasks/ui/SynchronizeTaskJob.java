@@ -11,8 +11,7 @@
 
 package org.eclipse.mylar.tasks.ui;
 
-import java.net.NoRouteToHostException;
-import java.net.UnknownHostException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -71,7 +70,8 @@ class SynchronizeTaskJob extends Job {
 					throw new OperationCanceledException();
 
 				// TODO: refactor conditions
-				boolean canNotSynch = repositoryTask.isDirty();// || repositoryTask.isSynchronizing();
+				boolean canNotSynch = repositoryTask.isDirty();// ||
+																// repositoryTask.isSynchronizing();
 				boolean hasLocalChanges = repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING
 						|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT;
 				if (forceSync || (!canNotSynch && !hasLocalChanges) || !repositoryTask.isDownloaded()) {
@@ -84,21 +84,20 @@ class SynchronizeTaskJob extends Job {
 						try {
 							downloadedTaskData = offlineHandler.downloadTaskData(repositoryTask);
 						} catch (final CoreException e) {
-							if(!(e.getStatus().getException() instanceof UnknownHostException) && !(e.getStatus().getException() instanceof NoRouteToHostException)) {
-								MylarStatusHandler.log(e.getStatus());	
-							}							
+							if (!(e.getStatus().getException() instanceof IOException)) {
+								MylarStatusHandler.log(e.getStatus());
+							} else {
+								// ignore, indicates working offline
+							}
 							return Status.OK_STATUS;
 						}
 
 						if (downloadedTaskData != null) {
-							boolean changed = connector.updateOfflineState(repositoryTask, downloadedTaskData,
-									forceSync);
+							connector.updateOfflineState(repositoryTask, downloadedTaskData, forceSync);
 							connector.updateTaskState(repositoryTask);
-							if (changed) {
-								refreshEditors(repositoryTask);
-							}
+							refreshEditors(repositoryTask);
 						}
-					}					
+					}
 					repositoryTask.setCurrentlySynchronizing(false);
 					TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 
@@ -107,14 +106,14 @@ class SynchronizeTaskJob extends Job {
 				monitor.worked(1);
 			}
 
-			TasksUiPlugin.getDefault().getTaskListNotificationManager().startNotification(1);
+			//TasksUiPlugin.getDefault().getTaskListNotificationManager().startNotification(1);
 
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Could not download report", false);
 		} finally {
 			monitor.done();
 		}
-		// this.connector.removeRefreshingTask(repositoryTask);
+		
 		return Status.OK_STATUS;
 	}
 
