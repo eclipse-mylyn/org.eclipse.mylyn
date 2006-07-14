@@ -18,7 +18,7 @@ import java.util.Set;
 
 import org.eclipse.mylar.context.core.IInteractionEventListener;
 import org.eclipse.mylar.context.core.InteractionEvent;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IPartListener;
@@ -115,13 +115,13 @@ public class MylarMonitorPlugin extends AbstractUIPlugin {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				getWorkbench().addWindowListener(WINDOW_LISTENER);
-				shellLifecycleListener = new ShellLifecycleListener(MylarPlugin.getContextManager());		
+				shellLifecycleListener = new ShellLifecycleListener(ContextCorePlugin.getContextManager());		
 				
 				getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(
 						shellLifecycleListener);
 				
 				activityListener = new ActivityListener(TIMEOUT_INACTIVITY_MILLIS);// INACTIVITY_TIMEOUT_MILLIS);
-				MylarPlugin.getContextManager().addListener(activityListener);
+				ContextCorePlugin.getContextManager().addListener(activityListener);
 				activityListener.startObserving();
 			}
 		});

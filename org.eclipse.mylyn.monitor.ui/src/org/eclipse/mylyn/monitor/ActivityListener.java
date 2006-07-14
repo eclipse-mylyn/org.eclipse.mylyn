@@ -18,7 +18,7 @@ import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.InteractionEvent;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.context.core.util.ITimerThreadListener;
 import org.eclipse.mylar.internal.context.core.util.TimerThread;
 
@@ -59,7 +59,7 @@ class ActivityListener implements ITimerThreadListener, IInteractionEventListene
 
 	public void fireTimedOut() {
 		if (!isStalled) {
-			MylarPlugin.getContextManager().handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
+			ContextCorePlugin.getContextManager().handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
 					ACTIVITY_STRUCTURE_KIND, ACTIVITY_HANDLE_ATTENTION, ACTIVITY_ORIGIN_ID, null,
 					ACTIVITY_DELTA_DEACTIVATED, 1f));
 		}
@@ -74,7 +74,7 @@ class ActivityListener implements ITimerThreadListener, IInteractionEventListene
 	public void interactionObserved(InteractionEvent event) {
 		timer.resetTimer();
 		if (isStalled) {
-			MylarPlugin.getContextManager().handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
+			ContextCorePlugin.getContextManager().handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
 					ACTIVITY_STRUCTURE_KIND, ACTIVITY_HANDLE_ATTENTION, ACTIVITY_ORIGIN_ID, null,
 					ACTIVITY_DELTA_ACTIVATED, 1f));
 		}

@@ -19,7 +19,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 
 /**
@@ -40,7 +40,7 @@ public class HandleObfuscator {
 			return structureHandle;
 		}
 		StringBuilder obfuscated = new StringBuilder();
-		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(structureKind);
+		IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(structureKind);
 		Object object = bridge.getObjectForHandle(structureHandle);
 		if (object instanceof IAdaptable) {
 			Object adapter = ((IAdaptable)object).getAdapter(IResource.class);

@@ -14,7 +14,7 @@ package org.eclipse.mylar.monitor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
 import org.eclipse.mylar.context.core.InteractionEvent;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.context.core.InteractionEvent.Kind;
 import org.eclipse.ui.ISelectionListener;
@@ -52,7 +52,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		if (selection == null || selection.isEmpty())
 			return;
-		if (!MylarPlugin.getContextManager().isContextActive()) {
+		if (!ContextCorePlugin.getContextManager().isContextActive()) {
 			handleWorkbenchPartSelection(part, selection, false);
 		} else {
 			handleWorkbenchPartSelection(part, selection, true);
@@ -67,7 +67,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 	protected InteractionEvent handleElementSelection(IWorkbenchPart part, Object selectedElement, boolean contributeToContext) {
 		if (selectedElement == null || selectedElement.equals(lastSelectedElement))
 			return null;
-		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(selectedElement);
+		IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(selectedElement);
 		InteractionEvent selectionEvent;
 		if (bridge.getContentType() != null) {
 			selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION,
@@ -77,7 +77,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 					null, null, part.getSite().getId());			
 		}
 		if (contributeToContext) {
-			MylarPlugin.getContextManager().handleInteractionEvent(selectionEvent);
+			ContextCorePlugin.getContextManager().handleInteractionEvent(selectionEvent);
 		}
 		MylarMonitorPlugin.getDefault().notifyInteractionObserved(selectionEvent);
 		return selectionEvent;
@@ -89,11 +89,11 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 	protected void handleElementEdit(IWorkbenchPart part, Object selectedElement, boolean contributeToContext) {
 		if (selectedElement == null)
 			return;
-		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(selectedElement);
+		IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(selectedElement);
 		InteractionEvent editEvent = new InteractionEvent(InteractionEvent.Kind.EDIT, bridge.getContentType(),
 				bridge.getHandleIdentifier(selectedElement), part.getSite().getId());
 		if (contributeToContext) {
-			MylarPlugin.getContextManager().handleInteractionEvent(editEvent);
+			ContextCorePlugin.getContextManager().handleInteractionEvent(editEvent);
 		}
 		MylarMonitorPlugin.getDefault().notifyInteractionObserved(editEvent);
 	}
@@ -102,12 +102,12 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 	 * Intended to be called back by subclasses.
 	 */
 	protected void handleNavigation(IWorkbenchPart part, Object targetElement, String kind, boolean contributeToContext) {
-		IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(targetElement);
+		IMylarStructureBridge adapter = ContextCorePlugin.getDefault().getStructureBridge(targetElement);
 		if (adapter.getContentType() != null) {
 			InteractionEvent navigationEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, adapter
 					.getContentType(), adapter.getHandleIdentifier(targetElement), part.getSite().getId(), kind);
 			if (contributeToContext) {
-				MylarPlugin.getContextManager().handleInteractionEvent(navigationEvent);
+				ContextCorePlugin.getContextManager().handleInteractionEvent(navigationEvent);
 			}
 			MylarMonitorPlugin.getDefault().notifyInteractionObserved(navigationEvent);
 		}

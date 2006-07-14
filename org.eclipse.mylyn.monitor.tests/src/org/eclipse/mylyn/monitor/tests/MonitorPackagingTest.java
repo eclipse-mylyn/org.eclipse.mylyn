@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.tests.AbstractContextTest;
 import org.eclipse.mylar.internal.context.core.util.ZipFileUtil;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
@@ -43,7 +43,7 @@ public class MonitorPackagingTest extends AbstractContextTest {
 		files.add(monitorFile);
 		// files.add(logFile);
 
-		File zipFile = new File(MylarPlugin.getDefault().getContextStore().getRootDirectory() + "/mylarUpload.zip");
+		File zipFile = new File(ContextCorePlugin.getDefault().getContextStore().getRootDirectory() + "/mylarUpload.zip");
 
 		ZipFileUtil.createZipFile(zipFile, files);
 
@@ -53,7 +53,7 @@ public class MonitorPackagingTest extends AbstractContextTest {
 		// pretend to upload
 		Thread.sleep(1000);
 
-		zipFile = new File(MylarPlugin.getDefault().getContextStore().getRootDirectory() + "/mylarUpload.zip");
+		zipFile = new File(ContextCorePlugin.getDefault().getContextStore().getRootDirectory() + "/mylarUpload.zip");
 
 		// Open the ZIP file
 		ZipFile zf = new ZipFile(zipFile);

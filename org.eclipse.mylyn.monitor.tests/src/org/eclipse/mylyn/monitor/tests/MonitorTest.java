@@ -171,7 +171,7 @@ public class MonitorTest extends TestCase implements IMylarMonitorLifecycleListe
 // assertEquals(2, logger.getHistoryFromFile(defaultFile).size());
 //        
 // File newFile =
-// MylarMonitorPlugin.getDefault().moveMonitorLogFile(MylarPlugin.getDefault().getMylarDataDirectory()
+// MylarMonitorPlugin.getDefault().moveMonitorLogFile(ContextCorePlugin.getDefault().getMylarDataDirectory()
 // + "/monitor-test-new.xml");
 // assertNotNull(newFile);
 // File movedFile = MylarMonitorPlugin.getDefault().getMonitorLogFile();

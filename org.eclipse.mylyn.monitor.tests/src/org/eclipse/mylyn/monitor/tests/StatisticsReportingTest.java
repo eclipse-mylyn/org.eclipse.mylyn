@@ -21,8 +21,8 @@ import junit.framework.TestCase;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.mylar.context.core.InteractionEvent;
-import org.eclipse.mylar.context.core.MylarPlugin;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
 import org.eclipse.mylar.internal.java.ui.actions.ApplyMylarToPackageExplorerAction;
 import org.eclipse.mylar.internal.monitor.reports.ReportGenerator;
@@ -30,7 +30,7 @@ import org.eclipse.mylar.internal.monitor.reports.collectors.MylarUsageAnalysisC
 import org.eclipse.mylar.internal.monitor.reports.collectors.MylarViewUsageCollector;
 import org.eclipse.mylar.internal.monitor.reports.ui.views.UsageStatisticsSummary;
 import org.eclipse.mylar.internal.monitor.usage.InteractionEventLogger;
-import org.eclipse.mylar.internal.tasklist.ui.actions.TaskActivateAction;
+import org.eclipse.mylar.internal.tasks.ui.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.mylar.monitor.reports.IUsageCollector;
 import org.eclipse.mylar.monitor.usage.MylarUsageMonitorPlugin;
@@ -51,7 +51,7 @@ public class StatisticsReportingTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		assertNotNull(MylarPlugin.getDefault());
+		assertNotNull(ContextCorePlugin.getDefault());
 		assertNotNull(MylarJavaPlugin.getDefault());
 		assertNotNull(PackageExplorerPart.openInActivePerspective());
 
@@ -135,7 +135,7 @@ public class StatisticsReportingTest extends TestCase {
 
 	public void testFilteredModeDetection() throws IOException {
 		MylarUsageMonitorPlugin.getDefault().addMonitoredPreferences(
-				MylarUiPlugin.getDefault().getPluginPreferences());
+				ContextUiPlugin.getDefault().getPluginPreferences());
 		
 		MylarUsageMonitorPlugin.getDefault().getInteractionLogger().clearInteractionHistory();
 		mockExplorerSelection("A.java");
@@ -144,7 +144,7 @@ public class StatisticsReportingTest extends TestCase {
 		mockUserDelay();
 		mockTypesSelection("A.java");
 
-		assertNotNull(MylarUiPlugin.getDefault().getPreferenceStore());
+		assertNotNull(ContextUiPlugin.getDefault().getPreferenceStore());
 		String prefId = ApplyMylarToPackageExplorerAction.PREF_ID_PREFIX + PackageExplorerPart.VIEW_ID;
 		assertNotNull(prefId);
 		
@@ -153,7 +153,7 @@ public class StatisticsReportingTest extends TestCase {
 //		AbstractApplyMylarAction action = ApplyMylarToPackageExplorerAction.getActionForPart(part);
 //		assertNotNull(action);
 		
-		MylarUiPlugin.getDefault().getPreferenceStore().setValue(prefId, true);
+		ContextUiPlugin.getDefault().getPreferenceStore().setValue(prefId, true);
 
 		mockExplorerSelection("A.java");
 		mockUserDelay();
@@ -161,7 +161,7 @@ public class StatisticsReportingTest extends TestCase {
 		mockUserDelay();
 		mockTypesSelection("A.java");
 
-		MylarUiPlugin.getDefault().getPreferenceStore().setValue(prefId, false);
+		ContextUiPlugin.getDefault().getPreferenceStore().setValue(prefId, false);
 
 		mockExplorerSelection("A.java");
 
@@ -175,7 +175,7 @@ public class StatisticsReportingTest extends TestCase {
 		assertEquals(2, filtered);
 		
 		MylarUsageMonitorPlugin.getDefault().removeMonitoredPreferences(
-				MylarUiPlugin.getDefault().getPluginPreferences());
+				ContextUiPlugin.getDefault().getPluginPreferences());
 	}
 
 	/**
