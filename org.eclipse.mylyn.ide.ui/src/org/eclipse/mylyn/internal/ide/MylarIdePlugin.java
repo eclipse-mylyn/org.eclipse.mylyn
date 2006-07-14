@@ -21,13 +21,12 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.ide.team.MylarChangeSetManager;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -60,9 +59,9 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 
 	public static final String CHANGE_SET_MANAGE = "org.eclipse.mylar.team.changesets.manage";
 
-	public static final String COMMIT_PREFIX_COMPLETED = "org.eclipse.mylar.team.commit.prefix.completed";
+	public static final String COMMIT_PREFIX_COMPLETED = "org.eclipse.mylar.team.commit.template.completed";
 
-	public static final String COMMIT_PREFIX_PROGRESS = "org.eclipse.mylar.team.commit.prefix.progress";
+	public static final String COMMIT_PREFIX_PROGRESS = "org.eclipse.mylar.team.commit.template.progress";
 
 	public static final String DEFAULT_PREFIX_PROGRESS = "Progress on:";
 
@@ -141,17 +140,17 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 		getPreferenceStore().setDefault(COMMIT_PREFIX_PROGRESS, DEFAULT_PREFIX_PROGRESS);
 		getPreferenceStore().setDefault(PREF_RESOURCES_IGNORED, PREF_VAL_DEFAULT_RESOURCES_IGNORED);
 
-		// restore old preference values if set
-		if (MylarIdePlugin.getDefault() != null) {
-			if (MylarIdePlugin.getDefault().getPreferenceStore().contains(COMMIT_PREFIX_COMPLETED)) {
-				getPreferenceStore().setValue(COMMIT_PREFIX_COMPLETED,
-						TasksUiPlugin.getDefault().getPreferenceStore().getString(COMMIT_PREFIX_COMPLETED));
-			}
-			if (MylarIdePlugin.getDefault().getPreferenceStore().contains(COMMIT_PREFIX_PROGRESS)) {
-				getPreferenceStore().setValue(COMMIT_PREFIX_PROGRESS,
-						TasksUiPlugin.getDefault().getPreferenceStore().getString(COMMIT_PREFIX_PROGRESS));
-			} 
-		}
+//		// restore old preference values if set
+//		if (MylarIdePlugin.getDefault() != null) {
+//			if (MylarIdePlugin.getDefault().getPreferenceStore().contains(COMMIT_PREFIX_COMPLETED)) {
+//				getPreferenceStore().setValue(COMMIT_PREFIX_COMPLETED,
+//						TasksUiPlugin.getDefault().getPreferenceStore().getString(COMMIT_PREFIX_COMPLETED));
+//			}
+//			if (MylarIdePlugin.getDefault().getPreferenceStore().contains(COMMIT_PREFIX_PROGRESS)) {
+//				getPreferenceStore().setValue(COMMIT_PREFIX_PROGRESS,
+//						TasksUiPlugin.getDefault().getPreferenceStore().getString(COMMIT_PREFIX_PROGRESS));
+//			} 
+//		}
 	}
 
 	public void stop(BundleContext context) throws Exception {
