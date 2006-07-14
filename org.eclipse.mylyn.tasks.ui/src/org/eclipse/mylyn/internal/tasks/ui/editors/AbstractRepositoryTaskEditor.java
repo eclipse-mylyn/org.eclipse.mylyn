@@ -1221,57 +1221,6 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		addCommentsTextBox = addCommentsText;
 
 		sectionAdditionalComments.setClient(newCommentsComposite);
-
-		// TODO: move into ExistingBugEditor commands section
-		// // if they aren't already on the cc list create an add self check box
-		//
-		// RepositoryTaskAttribute owner =
-		// getReport().getAttribute(RepositoryTaskAttribute.USER_ASSIGNED);
-		//
-		// // Don't add addselfcc check box if the user is the bug owner
-		// if (owner != null &&
-		// owner.getValue().indexOf(repository.getUserName()) != -1) {
-		// return;
-		// }
-		// // Don't add addselfcc if already there
-		// RepositoryTaskAttribute ccAttribute =
-		// getReport().getAttribute(RepositoryTaskAttribute.USER_CC);
-		// if (ccAttribute != null &&
-		// ccAttribute.getValues().contains(repository.getUserName())) {
-		// return;
-		// }
-		// RepositoryTaskAttribute addselfcc =
-		// getReport().getAttribute(BugzillaReportElement.ADDSELFCC.getKeyString());
-		// if (addselfcc == null) {
-		// // addselfcc =
-		// //
-		// BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.ADDSELFCC);
-		// getReport().setAttributeValue(BugzillaReportElement.ADDSELFCC.getKeyString(),
-		// "0");
-		// } else {
-		// addselfcc.setValue("0");
-		// }
-		//
-		// final Button addSelfButton =
-		// toolkit.createButton(newCommentsComposite, "Add " +
-		// repository.getUserName()
-		// + " to CC list", SWT.CHECK);
-		//
-		// addSelfButton.addSelectionListener(new SelectionAdapter() {
-		//
-		// @Override
-		// public void widgetSelected(SelectionEvent e) {
-		// if (addSelfButton.getSelection()) {
-		// getReport().setAttributeValue(BugzillaReportElement.ADDSELFCC.getKeyString(),
-		// "1");
-		// // connector.getAttributeFactory().setAttributeValue(getReport(),
-		// // BugzillaReportElement.ADDSELFCC.getKeyString(), "1");
-		// } else {
-		// getReport().setAttributeValue(BugzillaReportElement.ADDSELFCC.getKeyString(),
-		// "0");
-		// }
-		// }
-		// });
 	}
 
 	protected abstract void validateInput();
@@ -1301,8 +1250,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		GridLayout buttonLayout = new GridLayout();
 		buttonLayout.numColumns = 4;
 		buttonComposite.setLayout(buttonLayout);
-		// buttonComposite.setBackground(background);
-		GridData buttonData = new GridData(GridData.FILL_BOTH);
+		GridData buttonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		buttonData.horizontalSpan = 1;
 		buttonData.grabExcessVerticalSpace = false;
 		buttonComposite.setLayoutData(buttonData);
@@ -1328,12 +1276,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	 */
 	protected void addActionButtons(Composite buttonComposite) {
 		submitButton = toolkit.createButton(buttonComposite, LABEL_BUTTON_SUBMIT, SWT.NONE);
-		// submitButton.setFont(TEXT_FONT);
 		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		// submitButtonData.widthHint =
-		// AbstractRepositoryTaskEditor.WRAP_LENGTH;
-		// submitButtonData.heightHint = 20;
-
 		submitButton.setLayoutData(submitButtonData);
 		submitButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
@@ -1341,24 +1284,6 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 			}
 		});
 		submitButton.addListener(SWT.FocusIn, new GenericListener());
-
-		// This is not needed anymore since we have the save working properly
-		// with ctrl-s and file->save
-		// saveButton = new Button(buttonComposite, SWT.NONE);
-		// saveButton.setFont(TEXT_FONT);
-		// GridData saveButtonData = new
-		// GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		// saveButtonData.widthHint = 100;
-		// saveButtonData.heightHint = 20;
-		// saveButton.setText("Save Offline");
-		// saveButton.setLayoutData(saveButtonData);
-		// saveButton.addListener(SWT.Selection, new Listener() {
-		// public void handleEvent(Event e) {
-		// saveBug();
-		// updateEditor();
-		// }
-		// });
-		// saveButton.addListener(SWT.FocusIn, new GenericListener());
 	}
 
 	/**

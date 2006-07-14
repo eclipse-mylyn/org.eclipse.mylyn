@@ -65,6 +65,8 @@ import org.eclipse.ui.themes.IThemeManager;
  */
 public class NewBugEditor extends AbstractRepositoryTaskEditor {
 
+	private static final String ERROR_CREATING_BUG_REPORT = "Error creating bug report";
+
 	protected RepositoryTaskData taskData;
 
 	protected Text descriptionText;
@@ -202,6 +204,27 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 	protected void submitBug() {
 		submitButton.setEnabled(false);
 		showBusy(true);
+		if(summaryText != null && summaryText.getText().trim().equals("")) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					MessageDialog.openInformation(NewBugEditor.this.getSite().getShell(), ERROR_CREATING_BUG_REPORT, "A summary must be provided with new bug reports.");
+					submitButton.setEnabled(true);
+					showBusy(false);
+				}
+			});
+			return;	
+		}
+		if(descriptionText != null && descriptionText.getText().trim().equals("")) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					MessageDialog.openInformation(NewBugEditor.this.getSite().getShell(), ERROR_CREATING_BUG_REPORT, "A description must be provided with new reports.");
+					submitButton.setEnabled(true);
+					showBusy(false);
+				}
+			});
+			return;	
+		}
+		
 		updateBug();
 		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
 		boolean wrap = IBugzillaConstants.BugzillaServerVersion.SERVER_218.equals(repository.getVersion());
@@ -239,14 +262,14 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 									TaskUiUtil.refreshAndOpenTaskListElement(newTask);
 								}
 								return;
-							} else if (event.getJob().getResult().getCode() == Status.INFO) {
-								WebBrowserDialog.openAcceptAgreement(null, IBugzillaConstants.REPORT_SUBMIT_ERROR,
-										event.getJob().getResult().getException().getCause().getMessage(), event
-												.getJob().getResult().getMessage());
+							} else if (event.getJob().getResult().getCode() == Status.INFO) {								
+								WebBrowserDialog.openAcceptAgreement(NewBugEditor.this.getSite().getShell(), IBugzillaConstants.REPORT_SUBMIT_ERROR,
+										event.getJob().getResult().getMessage(), event
+												.getJob().getResult().getException().getMessage());
 								submitButton.setEnabled(true);
 								NewBugEditor.this.showBusy(false);
 							} else if (event.getJob().getResult().getCode() == Status.ERROR) {
-								MessageDialog.openError(null, IBugzillaConstants.REPORT_SUBMIT_ERROR, event
+								MessageDialog.openError(NewBugEditor.this.getSite().getShell(), IBugzillaConstants.REPORT_SUBMIT_ERROR, event
 										.getResult().getMessage());
 								submitButton.setEnabled(true);
 								NewBugEditor.this.showBusy(false);
@@ -313,5 +336,25 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 	@Override
 	public boolean isSaveAsAllowed() {
 		return false;
+	}
+	
+	/**
+	 * Adds buttons to this composite. Subclasses can override this method to
+	 * provide different/additional buttons.
+	 * 
+	 * @param buttonComposite
+	 *            Composite to add the buttons to.
+	 */
+	protected void addActionButtons(Composite buttonComposite) {
+		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
+		submitButton = toolkit.createButton(buttonComposite, "Create", SWT.NONE);
+		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		submitButton.setLayoutData(submitButtonData);
+		submitButton.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				submitBug();
+			}
+		});
+		submitButton.addListener(SWT.FocusIn, new GenericListener());
 	}
 }

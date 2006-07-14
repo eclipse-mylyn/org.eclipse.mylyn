@@ -309,12 +309,8 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		super.addActionButtons(buttonComposite);
 
 		compareButton = toolkit.createButton(buttonComposite, LABEL_COMPARE_BUTTON, SWT.NONE);
-		// compareButton.setFont(TEXT_FONT);
-		GridData compareButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		// compareButtonData.widthHint = 100;
-		// compareButtonData.heightHint = 20;
-		// // compareButton.setText("Compare");
-		compareButton.setLayoutData(compareButtonData);
+//		GridData compareButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+//		compareButton.setLayoutData(compareButtonData);
 		compareButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
 				OpenCompareEditorJob compareJob = new OpenCompareEditorJob("Comparing bug with remote server...");
