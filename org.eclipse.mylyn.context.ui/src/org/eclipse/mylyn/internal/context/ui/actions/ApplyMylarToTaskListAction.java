@@ -23,9 +23,9 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.context.ui.InterestFilter;
 import org.eclipse.mylar.internal.context.ui.TaskListInterestFilter;
 import org.eclipse.mylar.internal.context.ui.TaskListInterestSorter;
-import org.eclipse.mylar.internal.tasks.ui.ui.AbstractTaskListFilter;
-import org.eclipse.mylar.internal.tasks.ui.ui.views.IFilteredTreeListener;
-import org.eclipse.mylar.internal.tasks.ui.ui.views.TaskListView;
+import org.eclipse.mylar.internal.tasks.ui.AbstractTaskListFilter;
+import org.eclipse.mylar.internal.tasks.ui.views.IFilteredTreeListener;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.ui.IViewPart;
 
 /**

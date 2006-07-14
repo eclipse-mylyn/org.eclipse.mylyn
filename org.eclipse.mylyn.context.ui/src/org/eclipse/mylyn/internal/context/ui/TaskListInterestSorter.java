@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.context.ui;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylar.internal.tasks.ui.ui.views.TaskKeyComparator;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskKeyComparator;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;

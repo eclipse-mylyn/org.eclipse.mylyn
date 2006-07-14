@@ -24,7 +24,7 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.context.ui.IMylarUiBridge;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
-import org.eclipse.mylar.internal.tasks.ui.ui.editors.TaskEditorInput;
+import org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IEditorInput;

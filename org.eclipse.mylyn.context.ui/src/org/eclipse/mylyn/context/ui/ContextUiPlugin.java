@@ -45,7 +45,7 @@ import org.eclipse.mylar.internal.context.ui.MylarPerspectiveManager;
 import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylar.internal.context.ui.MylarViewerManager;
 import org.eclipse.mylar.internal.context.ui.MylarWorkingSetManager;
-import org.eclipse.mylar.internal.tasks.ui.ui.ITaskHighlighter;
+import org.eclipse.mylar.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;

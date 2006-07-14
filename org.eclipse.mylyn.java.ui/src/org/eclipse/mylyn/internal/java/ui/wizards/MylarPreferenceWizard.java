@@ -24,7 +24,7 @@ import org.eclipse.mylar.internal.context.ui.MylarImages;
 import org.eclipse.mylar.internal.context.ui.MylarWorkingSetPage;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
 import org.eclipse.mylar.internal.java.ui.JavaUiUtil;
-import org.eclipse.mylar.internal.tasks.ui.ui.views.TaskListView;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;

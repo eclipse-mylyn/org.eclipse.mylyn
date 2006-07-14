@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.mylar.internal.context.ui.MylarImages;
 import org.eclipse.mylar.internal.ide.team.MylarActiveChangeSet;
-import org.eclipse.mylar.internal.tasks.ui.ui.TaskListColorsAndFonts;
+import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 
 /**
  * @author Mik Kersten
