@@ -11,14 +11,12 @@
 
 package org.eclipse.mylar.internal.trac.model;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TimeZone;
 
-import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
+import org.eclipse.mylar.internal.trac.core.TracUtils;
 
 /**
  * Represents a Trac ticket as it is retrieved from a Trac repository.
@@ -126,13 +124,6 @@ public class TracTicket {
 		return getId() != TracTicket.INVALID_ID;
 	}
 
-	private Date parseTracDate(int seconds) {
-		Calendar c = Calendar.getInstance();
-		c.setTimeZone(TimeZone.getTimeZone(ITracClient.TIME_ZONE));
-		c.setTimeInMillis(seconds * 1000l);
-		return c.getTime();
-	}
-
 	public void putBuiltinValue(Key key, String value) throws InvalidTicketException {
 		valueByKey.put(key, value);
 	}
@@ -166,7 +157,7 @@ public class TracTicket {
 	}
 
 	public void setCreated(int created) {
-		this.created = parseTracDate(created);
+		this.created = TracUtils.parseDate(created);
 	}
 
 	public void setId(int id) {
@@ -174,7 +165,7 @@ public class TracTicket {
 	}
 
 	public void setLastChanged(int lastChanged) {
-		this.lastChanged = parseTracDate(lastChanged);
+		this.lastChanged = TracUtils.parseDate(lastChanged);
 	}
 
 }

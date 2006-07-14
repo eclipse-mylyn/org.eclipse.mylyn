@@ -13,7 +13,7 @@ package org.eclipse.mylar.tasklist.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.tasks.ui.ui.views.TaskListTableSorter;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskListTableSorter;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.core.TaskList;

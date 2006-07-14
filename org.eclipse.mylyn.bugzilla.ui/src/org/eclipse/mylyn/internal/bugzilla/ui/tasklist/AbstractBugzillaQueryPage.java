@@ -12,7 +12,7 @@
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylar.internal.tasks.ui.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;

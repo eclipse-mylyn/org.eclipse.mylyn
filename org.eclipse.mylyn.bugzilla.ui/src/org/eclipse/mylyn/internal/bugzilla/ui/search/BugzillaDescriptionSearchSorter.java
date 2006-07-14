@@ -14,7 +14,7 @@ package org.eclipse.mylar.internal.bugzilla.ui.search;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
-import org.eclipse.mylar.internal.tasks.ui.ui.views.TaskKeyComparator;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskKeyComparator;
 
 /**
  * Sorts results of Bugzilla search by description.

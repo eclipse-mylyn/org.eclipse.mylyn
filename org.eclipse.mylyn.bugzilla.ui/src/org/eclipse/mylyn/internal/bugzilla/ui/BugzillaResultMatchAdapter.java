@@ -13,8 +13,8 @@ package org.eclipse.mylar.internal.bugzilla.ui;
 
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchResult;
 import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaResultEditorMatchAdapter;
-import org.eclipse.mylar.internal.tasks.ui.ui.editors.AbstractBugEditorInput;
-import org.eclipse.mylar.internal.tasks.ui.ui.editors.ExistingBugEditorInput;
+import org.eclipse.mylar.internal.tasks.ui.editors.AbstractBugEditorInput;
+import org.eclipse.mylar.internal.tasks.ui.editors.ExistingBugEditorInput;
 import org.eclipse.search.ui.text.AbstractTextSearchResult;
 import org.eclipse.search.ui.text.Match;
 import org.eclipse.ui.IEditorInput;

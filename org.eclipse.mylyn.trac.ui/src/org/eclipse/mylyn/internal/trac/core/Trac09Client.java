@@ -20,6 +20,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,13 +29,26 @@ import java.util.StringTokenizer;
 
 import javax.security.auth.login.LoginException;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.trac.MylarTracPlugin;
+import org.eclipse.mylar.internal.trac.model.TracComponent;
+import org.eclipse.mylar.internal.trac.model.TracMilestone;
+import org.eclipse.mylar.internal.trac.model.TracPriority;
 import org.eclipse.mylar.internal.trac.model.TracSearch;
 import org.eclipse.mylar.internal.trac.model.TracSearchFilter;
+import org.eclipse.mylar.internal.trac.model.TracSeverity;
 import org.eclipse.mylar.internal.trac.model.TracTicket;
+import org.eclipse.mylar.internal.trac.model.TracTicketResolution;
+import org.eclipse.mylar.internal.trac.model.TracTicketStatus;
+import org.eclipse.mylar.internal.trac.model.TracTicketType;
+import org.eclipse.mylar.internal.trac.model.TracVersion;
 import org.eclipse.mylar.internal.trac.model.TracSearchFilter.CompareOperator;
 import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
+import org.eclipse.mylar.tasks.core.util.HtmlStreamTokenizer;
+import org.eclipse.mylar.tasks.core.util.HtmlTag;
+import org.eclipse.mylar.tasks.core.util.HtmlStreamTokenizer.Token;
 
 public class Trac09Client extends AbstractTracClient {
 
@@ -70,7 +85,7 @@ public class Trac09Client extends AbstractTracClient {
 		}
 	}
 
-	public void connectInternal(URL serverURL) throws IOException, KeyManagementException, NoSuchAlgorithmException,
+	private void connectInternal(URL serverURL) throws IOException, KeyManagementException, NoSuchAlgorithmException,
 			TracLoginException {
 		for (int attempt = 0; attempt < 2; attempt++) {
 			HttpURLConnection serverConnection = MylarTracPlugin.getHttpConnection(serverURL);
@@ -243,6 +258,116 @@ public class Trac09Client extends AbstractTracClient {
 		} finally {
 			close();
 		}
+	}
+
+	public void updateAttributes(IProgressMonitor monitor) throws TracException {
+		monitor.beginTask("Updating attributes", IProgressMonitor.UNKNOWN);
+
+		connect(repositoryUrl + ITracClient.NEW_TICKET_URL);
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in, ITracClient.CHARSET));
+			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
+			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+				if (monitor.isCanceled()) {
+					throw new OperationCanceledException();
+				}
+
+				if (token.getType() == Token.TAG) {
+					HtmlTag tag = (HtmlTag) token.getValue();
+					if (tag.getTagType() == HtmlTag.Type.SELECT) {
+						String name = tag.getAttribute("id");
+						if ("component".equals(name)) {
+							List<String> values = getOptionValues(tokenizer);
+							components = new ArrayList<TracComponent>(values.size());
+							for (String value : values) {
+								components.add(new TracComponent(value));
+							}
+						} else if ("milestone".equals(name)) {
+							List<String> values = getOptionValues(tokenizer);
+							milestones = new ArrayList<TracMilestone>(values.size());
+							for (String value : values) {
+								milestones.add(new TracMilestone(value));
+							}
+						} else if ("priority".equals(name)) {
+							List<String> values = getOptionValues(tokenizer);
+							priorities = new ArrayList<TracPriority>(values.size());
+							for (int i = 0; i < values.size(); i++) {
+								priorities.add(new TracPriority(values.get(i), i + 1));
+							}
+						} else if ("severity".equals(name)) {
+							List<String> values = getOptionValues(tokenizer);
+							severities = new ArrayList<TracSeverity>(values.size());
+							for (int i = 0; i < values.size(); i++) {
+								severities.add(new TracSeverity(values.get(i), i + 1));
+							}
+						} else if ("type".equals(name)) {
+							List<String> values = getOptionValues(tokenizer);
+							ticketTypes = new ArrayList<TracTicketType>(values.size());
+							for (int i = 0; i < values.size(); i++) {
+								ticketTypes.add(new TracTicketType(values.get(i), i + 1));
+							}
+						} else if ("version".equals(name)) {
+							List<String> values = getOptionValues(tokenizer);
+							versions = new ArrayList<TracVersion>(values.size());
+							for (String value : values) {
+								versions.add(new TracVersion(value));
+							}
+						}
+					}
+				}
+			}
+			
+			ticketResolutions = new ArrayList<TracTicketResolution>(5);
+			ticketResolutions.add(new TracTicketResolution("fixed", 1));
+			ticketResolutions.add(new TracTicketResolution("invalid", 2));
+			ticketResolutions.add(new TracTicketResolution("wontfix", 3));
+			ticketResolutions.add(new TracTicketResolution("duplicate", 4));
+			ticketResolutions.add(new TracTicketResolution("worksforme", 5));
+			
+			ticketStatus = new ArrayList<TracTicketStatus>(4);
+			ticketStatus.add(new TracTicketStatus("new", 1));
+			ticketStatus.add(new TracTicketStatus("assigned", 2));
+			ticketStatus.add(new TracTicketStatus("reopened", 3));
+			ticketStatus.add(new TracTicketStatus("closed", 4));
+		} catch (IOException e) {
+			throw new TracException(e);
+		} catch (ParseException e) {
+			throw new TracException(e);
+		} finally {
+			close();
+		}
+	}
+
+	private List<String> getOptionValues(HtmlStreamTokenizer tokenizer) throws IOException, ParseException {
+		List<String> values = new ArrayList<String>();
+		for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+			if (token.getType() == Token.TAG) {
+				HtmlTag tag = (HtmlTag) token.getValue();
+				if (tag.getTagType() == HtmlTag.Type.OPTION && !tag.isEndTag()) {
+					String value = getText(tokenizer).trim();
+					if (value.length() > 0) {
+						values.add(value);
+					}
+				} else {
+					return values;
+				}
+			}
+		}
+		return values;
+	}
+
+	private String getText(HtmlStreamTokenizer tokenizer) throws IOException, ParseException {
+		StringBuffer sb = new StringBuffer();
+		for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+			if (token.getType() == Token.TEXT) {
+				sb.append(token.getValue());
+			} else if (token.getType() == Token.COMMENT) {
+				// ignore
+			} else {
+				break;
+			}
+		}
+		return sb.toString();
 	}
 
 }

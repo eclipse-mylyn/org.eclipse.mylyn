@@ -6,6 +6,7 @@
          name="Trac Repository"
          point="org.eclipse.mylar.tasklist.repositories">
       <repositoryType
+            brandingIcon="icons/eview16/trac-icon.gif"
             class="org.eclipse.mylar.internal.trac.TracRepositoryConnector"
             id="org.eclipse.mylar.trac.tasklist.repositories"
             name="Trac Repository Client"

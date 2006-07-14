@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
-import org.eclipse.mylar.internal.tasks.ui.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;

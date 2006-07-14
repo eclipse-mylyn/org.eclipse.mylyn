@@ -17,7 +17,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.NewBugEditorInput;
-import org.eclipse.mylar.internal.tasks.ui.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.INewWizard;

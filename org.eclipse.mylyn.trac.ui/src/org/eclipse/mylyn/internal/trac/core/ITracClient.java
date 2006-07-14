@@ -13,8 +13,17 @@ package org.eclipse.mylar.internal.trac.core;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylar.internal.trac.model.TracComponent;
+import org.eclipse.mylar.internal.trac.model.TracMilestone;
+import org.eclipse.mylar.internal.trac.model.TracPriority;
 import org.eclipse.mylar.internal.trac.model.TracSearch;
+import org.eclipse.mylar.internal.trac.model.TracSeverity;
 import org.eclipse.mylar.internal.trac.model.TracTicket;
+import org.eclipse.mylar.internal.trac.model.TracTicketResolution;
+import org.eclipse.mylar.internal.trac.model.TracTicketStatus;
+import org.eclipse.mylar.internal.trac.model.TracTicketType;
+import org.eclipse.mylar.internal.trac.model.TracVersion;
 
 /**
  * Defines the requirements for classes that provide remote access to Trac
@@ -39,7 +48,7 @@ public interface ITracClient {
 		public String toString() {
 			switch (this) {
 			case TRAC_0_9:
-				return "Trac 0.9 and higher";
+				return "Trac 0.9 and later";
 			case XML_RPC:
 				return "XML-RPC Plugin (Rev. 848)";
 			default:
@@ -58,6 +67,7 @@ public interface ITracClient {
 	public static final String QUERY_URL = "/query?format=tab";
 
 	public static final String TICKET_URL = "/ticket/";
+	public static final String NEW_TICKET_URL = "/newticket";
 
 	/**
 	 * Gets ticket with <code>id</code> from repository.
@@ -95,5 +105,29 @@ public interface ITracClient {
 	 *             thrown in case of a connection error
 	 */
 	void validate() throws TracException;
+
+	/**
+	 * Updates cached repository details: milestones, versions etc.
+	 * 
+	 * @throws TracException
+	 *             thrown in case of a connection error
+	 */
+	void updateAttributes(IProgressMonitor monitor) throws TracException;
+
+	TracComponent[] getComponents();
+
+	TracMilestone[] getMilestones();
+
+	TracPriority[] getPriorities();
+
+	TracSeverity[] getSeverities();
+
+	TracTicketResolution[] getTicketResolutions();
+
+	TracTicketStatus[] getTicketStatus();
+
+	TracTicketType[] getTicketTypes();
+
+	TracVersion[] getVersions();
 
 }

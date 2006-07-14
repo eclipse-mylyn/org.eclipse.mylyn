@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchPage;
-import org.eclipse.mylar.internal.tasks.ui.ui.wizards.AbstractEditQueryWizard;
+import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractEditQueryWizard;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;

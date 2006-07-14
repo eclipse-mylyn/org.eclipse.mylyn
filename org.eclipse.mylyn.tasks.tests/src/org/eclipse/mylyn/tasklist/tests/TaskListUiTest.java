@@ -16,9 +16,9 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.internal.tasks.ui.ui.TaskPriorityFilter;
-import org.eclipse.mylar.internal.tasks.ui.ui.TaskUiUtil;
-import org.eclipse.mylar.internal.tasks.ui.ui.views.TaskListView;
+import org.eclipse.mylar.internal.tasks.ui.TaskPriorityFilter;
+import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylar.tasks.core.Task;

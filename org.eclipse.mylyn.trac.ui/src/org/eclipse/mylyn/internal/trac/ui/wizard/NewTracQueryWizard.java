@@ -26,7 +26,7 @@ public class NewTracQueryWizard extends Wizard {
 
 	private final TaskRepository repository;
 
-	private TracQueryWizardPage queryPage;
+	private TracCustomQueryPage queryPage;
 
 	public NewTracQueryWizard(TaskRepository repository) {
 		this.repository = repository;
@@ -37,7 +37,7 @@ public class NewTracQueryWizard extends Wizard {
 
 	@Override
 	public void addPages() {
-		queryPage = new TracQueryWizardPage(repository);
+		queryPage = new TracCustomQueryPage(repository);
 		queryPage.setWizard(this);
 		addPage(queryPage);
 	}

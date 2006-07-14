@@ -25,7 +25,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.ui.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.internal.trac.TracTask.Kind;
 import org.eclipse.mylar.internal.trac.TracTask.PriorityLevel;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
@@ -42,6 +42,7 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -53,7 +54,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
-	private final static String CLIENT_LABEL = "Trac";
+	private final static String CLIENT_LABEL = "Trac (supports 0.9 and later or XML-RPC)";
 
 	private List<String> supportedVersions;
 
@@ -132,6 +133,13 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		// TODO Auto-generated method stub
 	}
 
+	public IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery query) {
+		if (query instanceof TracRepositoryQuery) {
+			return new EditTracQueryWizard(repository, query);
+		}
+		return null;
+	}
+
 	@Override
 	public IWizard getNewQueryWizard(TaskRepository repository, IStructuredSelection selection) {
 		return new NewTracQueryWizard(repository);
@@ -144,15 +152,19 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		}
 
 		try {
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-					query.getRepositoryKind(), query.getRepositoryUrl());
+			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(query.getRepositoryKind(),
+					query.getRepositoryUrl());
 			if (repository == null) {
+				return;
+			}
+
+			IWizard wizard = getQueryWizard(repository, query);
+			if (wizard == null) {
 				return;
 			}
 
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			if (shell != null && !shell.isDisposed()) {
-				IWizard wizard = new EditTracQueryWizard(repository, query);
 				WizardDialog dialog = new WizardDialog(shell, wizard);
 				dialog.create();
 				dialog.setTitle("Edit Trac Query");
@@ -183,8 +195,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 				tracRepository.search(((TracRepositoryQuery) query).getTracSearch(), tickets);
 			}
 		} catch (Throwable e) {
-			queryStatus.add(new Status(IStatus.OK, TasksUiPlugin.PLUGIN_ID, IStatus.OK,
-					"Could not log in to server: " + query.getRepositoryUrl() + "\n\nCheck network connection.", e));
+			queryStatus.add(new Status(IStatus.OK, TasksUiPlugin.PLUGIN_ID, IStatus.OK, "Could not log in to server: "
+					+ query.getRepositoryUrl() + "\n\nCheck network connection.", e));
 			return hits;
 		}
 
@@ -194,7 +206,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			if (!(task instanceof TracTask)) {
 				task = createTask(ticket, handleIdentifier);
 			}
-			updateTaskDetails(url, (TracTask) task, ticket);
+			updateTaskDetails(url, (TracTask) task, ticket, false);
 
 			TracQueryHit hit = new TracQueryHit((TracTask) task, query.getRepositoryUrl(), ticket.getId() + "");
 			hits.add(hit);
@@ -209,13 +221,13 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			// TODO do this in a non-blocking way like
 			// BugzillaRepositoryConnector once IOfflineTaskHandler has been
 			// implemented
-			
+
 			ITracClient connection = getClientManager().getRepository(repository);
 			TracTicket ticket = connection.getTicket(Integer.parseInt(id));
 
 			String handleIdentifier = AbstractRepositoryTask.getHandle(repository.getUrl(), ticket.getId());
 			TracTask task = createTask(ticket, handleIdentifier);
-			updateTaskDetails(repository.getUrl(), task, ticket);
+			updateTaskDetails(repository.getUrl(), task, ticket, true);
 
 			return task;
 		} catch (Exception e) {
@@ -246,7 +258,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	/**
 	 * Updates fields of <code>task</code> from <code>ticket</code>.
 	 */
-	public static void updateTaskDetails(String repositoryUrl, TracTask task, TracTicket ticket) {
+	public static void updateTaskDetails(String repositoryUrl, TracTask task, TracTicket ticket, boolean notify) {
 		if (ticket.isValid()) {
 			String url = repositoryUrl + ITracClient.TICKET_URL + ticket.getId();
 			task.setUrl(url);
@@ -262,7 +274,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		}
 		if (ticket.getValue(Key.PRIORITY) != null) {
 			PriorityLevel priority = TracTask.PriorityLevel.fromPriority(ticket.getValue(Key.PRIORITY));
-			task.setPriority((priority != null) ? priority.toString() : ticket.getValue(Key.PRIORITY));
+			task.setPriority((priority != null) ? priority.toString()
+					: /* ticket.getValue(Key.PRIORITY) */Task.PriorityLevel.P3.toString());
 		}
 		if (ticket.getValue(Key.TYPE) != null) {
 			Kind kind = TracTask.Kind.fromType(ticket.getValue(Key.TYPE));
@@ -272,7 +285,9 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			task.setCreationDate(ticket.getCreated());
 		}
 
-		TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
+		if (notify) {
+			TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
+		}
 	}
 
 }

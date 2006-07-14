@@ -11,7 +11,7 @@ package org.eclipse.mylar.tasklist.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.jface.preference.StringFieldEditor;
-import org.eclipse.mylar.internal.tasks.ui.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.tasklist.tests.mockconnector.MockRepositoryConnector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;

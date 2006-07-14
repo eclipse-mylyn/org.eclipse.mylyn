@@ -15,11 +15,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import junit.framework.TestCase;
+
 import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
 import org.eclipse.mylar.internal.trac.model.TracTicket;
 import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
-
-import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel

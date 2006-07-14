@@ -19,7 +19,7 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchResultView;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
-import org.eclipse.mylar.internal.tasks.ui.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 
 /**
  * This class is used to open a bug report in an editor.

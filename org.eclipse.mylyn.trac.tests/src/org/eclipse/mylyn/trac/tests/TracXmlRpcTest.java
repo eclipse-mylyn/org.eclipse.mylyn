@@ -411,21 +411,38 @@ public class TracXmlRpcTest extends TestCase {
 	}
 
 	public void testQuery() throws XmlRpcException, IOException {
-		Vector ret = (Vector) call("ticket.query", "summary=foobarsummary1|foobaz summary2");
+		Vector ret = (Vector) call("ticket.query", "summary~=foo|bar|baz|summary|ticket");
 		for (Object id : ret) {
 			call("ticket.delete", (Integer) id);
 		}
 
 		int id1 = (Integer) call("ticket.create", "foobarsummary1", "description", new Hashtable());
 		int id2 = (Integer) call("ticket.create", "foobaz summary2", "description", new Hashtable());
+		int id3 = (Integer) call("ticket.create", "ticket3", "description3", new Hashtable());
 
 		ret = (Vector) call("ticket.query", "summary=foobarsummary1|foobaz summary2");
 		assertEquals(2, ret.size());
 		assertEquals(ret.get(0), id1);
 		assertEquals(ret.get(1), id2);
 
+		ret = (Vector) call("ticket.query", "summary~=fooba&summary~=summary");
+		assertEquals(2, ret.size());
+		assertEquals(ret.get(0), id1);
+		assertEquals(ret.get(1), id2);
+
+		// ret = (Vector) call("ticket.query", "summary~=bar&summary~=baz");
+		// assertEquals(0, ret.size());
+
+		ret = (Vector) call("ticket.query", "summary~=bar|baz");
+		assertEquals(2, ret.size());
+
+		ret = (Vector) call("ticket.query", "description~=description3");
+		assertEquals(1, ret.size());
+		assertEquals(ret.get(0), id3);
+
 		call("ticket.delete", id1);
 		call("ticket.delete", id2);
+		call("ticket.delete", id3);
 	}
 
 	public void testQueryAll() throws XmlRpcException, IOException {

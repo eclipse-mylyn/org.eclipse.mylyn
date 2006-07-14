@@ -18,7 +18,7 @@ import java.net.URL;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.mylar.internal.tasks.ui.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.internal.trac.MylarTracPlugin;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.TracClientFactory;
@@ -42,7 +42,7 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 	private static final String TITLE = "Trac Repository Settings";
 
-	private static final String DESCRIPTION = "Example: http://projects.edgewall.com/trac";
+	private static final String DESCRIPTION = "Example: http://trac.edgewall.org";
 
 	private Combo accessTypeCombo;
 

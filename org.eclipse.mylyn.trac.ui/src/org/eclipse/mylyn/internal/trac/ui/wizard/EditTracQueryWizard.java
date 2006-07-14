@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.internal.trac.ui.wizard;
 
-import org.eclipse.mylar.internal.tasks.ui.ui.wizards.AbstractEditQueryWizard;
+import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractEditQueryWizard;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
@@ -22,7 +22,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
  */
 public class EditTracQueryWizard extends AbstractEditQueryWizard {
 
-	private TracQueryWizardPage queryPage;
+	private TracCustomQueryPage queryPage;
 
 	public EditTracQueryWizard(TaskRepository repository, AbstractRepositoryQuery query) {
 		super(repository, query);
@@ -30,7 +30,7 @@ public class EditTracQueryWizard extends AbstractEditQueryWizard {
 
 	@Override
 	public void addPages() {
-		queryPage = new TracQueryWizardPage(repository, query);
+		queryPage = new TracCustomQueryPage(repository, query);
 		queryPage.setWizard(this);
 		addPage(queryPage);
 	}

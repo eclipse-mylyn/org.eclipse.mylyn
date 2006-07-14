@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.internal.tasks.ui.ui.wizards.EditRepositoryWizard;
+import org.eclipse.mylar.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylar.internal.trac.MylarTracPlugin;
 import org.eclipse.mylar.internal.trac.TracRepositoryConnector;
 import org.eclipse.mylar.internal.trac.TracRepositoryQuery;
@@ -183,26 +183,25 @@ public class TracRepositoryConnectorTest extends TestCase {
 		ticket.putBuiltinValue(Key.TYPE, "mytype");
 
 		TracTask task = new TracTask("", "", true);
-		TracRepositoryConnector.updateTaskDetails(Constants.TEST_REPOSITORY1_URL, task, ticket);
+		TracRepositoryConnector.updateTaskDetails(Constants.TEST_REPOSITORY1_URL, task, ticket, false);
 
 		assertEquals(Constants.TEST_REPOSITORY1_URL + ITracClient.TICKET_URL + "123", task.getUrl());
 		assertEquals("123: mysummary", task.getDescription());
-		assertEquals("mypriority", task.getPriority());
+		assertEquals("P3", task.getPriority());
 		assertEquals("mytype", task.getTaskType());
 	}
 
 	public void testUpdateTaskDetailsSummaryOnly() throws InvalidTicketException {
 		TracTicket ticket = new TracTicket(456);
-		ticket.putBuiltinValue(Key.DESCRIPTION, "mydescription");
+		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
 
 		TracTask task = new TracTask("", "", true);
-		TracRepositoryConnector.updateTaskDetails(Constants.TEST_REPOSITORY1_URL, task, ticket);
+		TracRepositoryConnector.updateTaskDetails(Constants.TEST_REPOSITORY1_URL, task, ticket, false);
 
 		assertEquals(Constants.TEST_REPOSITORY1_URL + ITracClient.TICKET_URL + "456", task.getUrl());
 		assertEquals("456: mysummary", task.getDescription());
-		assertEquals(null, task.getPriority());
+		assertEquals("P3", task.getPriority());
 		assertEquals(null, task.getTaskType());
-		assertEquals(null, task.getCreationDate());
 	}
 
 }
