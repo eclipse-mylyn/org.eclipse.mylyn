@@ -25,6 +25,7 @@ import org.eclipse.mylar.internal.trac.core.TracClientFactory;
 import org.eclipse.mylar.internal.trac.core.TracException;
 import org.eclipse.mylar.internal.trac.core.TracLoginException;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylar.tasks.core.RepositoryTemplate;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -47,8 +48,8 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 	private Combo accessTypeCombo;
 
-	private static TracRepositoryInfo[] REPOSITORY_TEMPLATES = { new TracRepositoryInfo("Edgewall",
-			"http://trac.edgewall.org", true, Version.TRAC_0_9),
+	private static RepositoryTemplate[] REPOSITORY_TEMPLATES = { new RepositoryTemplate("Edgewall",
+			"http://trac.edgewall.org", Version.TRAC_0_9.toString(), null, null, true),
 	// new TracRepositoryInfo("Mylar Trac Client",
 	// "http://mylar.eclipse.org/mylar-trac-client", true, Version.XML_RPC),
 	};
@@ -61,22 +62,30 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 		setNeedsAnonymousLogin(true);
 		setNeedsEncoding(false);
-		setNeedsTimeZone(false);
+		setNeedsTimeZone(false);		
 	}
 
 	protected void createAdditionalControls(final Composite parent) {
-		for (TracRepositoryInfo info : REPOSITORY_TEMPLATES) {
+		for (RepositoryTemplate info : REPOSITORY_TEMPLATES) {			
 			repositoryLabelCombo.add(info.label);
 		}
 		repositoryLabelCombo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String text = repositoryLabelCombo.getText();
-				for (TracRepositoryInfo info : REPOSITORY_TEMPLATES) {
+				for (RepositoryTemplate info : REPOSITORY_TEMPLATES) {
+				
 					if (info.label.equals(text)) {
-						setUrl(info.url);
+						setUrl(info.repositoryUrl);
 						setAnonymous(info.anonymous);
-						setTracVersion(info.version);
+
+						try {
+							Version version = Version.valueOf(info.version);
+							setTracVersion(version);
+						} catch (RuntimeException ex) {
+							setTracVersion(Version.TRAC_0_9);
+						}
+
 						getContainer().updateButtons();
 						return;
 					}
@@ -207,24 +216,4 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 		super.getWizard().getContainer().updateButtons();
 	}
-
-	private static class TracRepositoryInfo {
-
-		final String label;
-
-		final String url;
-
-		final boolean anonymous;
-
-		final Version version;
-
-		public TracRepositoryInfo(String label, String url, boolean anonymous, Version version) {
-			this.label = label;
-			this.url = url;
-			this.anonymous = anonymous;
-			this.version = version;
-		}
-
-	}
-
 }

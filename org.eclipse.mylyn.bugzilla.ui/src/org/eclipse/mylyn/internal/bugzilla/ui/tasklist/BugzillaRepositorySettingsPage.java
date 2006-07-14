@@ -28,9 +28,11 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylar.tasks.core.RepositoryTemplate;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Combo;
@@ -48,13 +50,37 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	private static final String DESCRIPTION = "Example: https://bugs.eclipse.org/bugs (do not include index.cgi)";
 
+	private static RepositoryTemplate[] REPOSITORY_TEMPLATES = { new RepositoryTemplate("Eclipse.org",
+			"https://bugs.eclipse.org/bugs", "2.20", null, null, false), };
+
 	protected Combo repositoryVersionCombo;
 
 	public BugzillaRepositorySettingsPage(AbstractRepositoryConnector connector) {
 		super(TITLE, DESCRIPTION, connector);
+
 	}
 
 	protected void createAdditionalControls(Composite parent) {
+
+		for (RepositoryTemplate template : REPOSITORY_TEMPLATES) {
+			repositoryLabelCombo.add(template.label);
+		}
+		repositoryLabelCombo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String text = repositoryLabelCombo.getText();
+				for (RepositoryTemplate template : REPOSITORY_TEMPLATES) {
+					if (template.label.equals(text)) {
+						setUrl(template.repositoryUrl);
+						// setAnonymous(info.anonymous);
+						setBugzillaVersion(template.version);
+						getContainer().updateButtons();
+						return;
+					}
+				}
+			}
+		});
+
 		Label repositoryVersionLabel = new Label(parent, SWT.NONE);
 		repositoryVersionLabel.setText("Repository Version: ");
 		repositoryVersionCombo = new Combo(parent, SWT.READ_ONLY);
@@ -82,6 +108,19 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				// ignore
 			}
 		});
+	}
+
+	public void setBugzillaVersion(String version) {
+		if (version == null) {
+			// select "Automatic"
+			repositoryVersionCombo.select(0);
+		} else {
+			int i = repositoryVersionCombo.indexOf(version.toString());
+			if (i != -1) {
+				repositoryVersionCombo.select(i);
+			}
+			setVersion(version);
+		}
 	}
 
 	@Override
