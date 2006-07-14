@@ -35,7 +35,7 @@ import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
 import org.eclipse.mylar.context.core.InteractionEvent;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.context.core.MylarContext;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.java.JavaProblemListener;
@@ -123,14 +123,14 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 	}
 
 	public void testPauseAndResume() throws JavaModelException {
-		MylarPlugin.getContextManager().setContextCapturePaused(true);
-		MylarPlugin.getContextManager().handleInteractionEvent(mockInterestContribution("paused", 3));
-		IMylarElement paused = MylarPlugin.getContextManager().getElement("paused");
+		ContextCorePlugin.getContextManager().setContextCapturePaused(true);
+		ContextCorePlugin.getContextManager().handleInteractionEvent(mockInterestContribution("paused", 3));
+		IMylarElement paused = ContextCorePlugin.getContextManager().getElement("paused");
 		assertFalse(paused.getInterest().isInteresting());
 
-		MylarPlugin.getContextManager().setContextCapturePaused(false);
-		MylarPlugin.getContextManager().handleInteractionEvent(mockInterestContribution("paused", 3));
-		IMylarElement resumed = MylarPlugin.getContextManager().getElement("paused");
+		ContextCorePlugin.getContextManager().setContextCapturePaused(false);
+		ContextCorePlugin.getContextManager().handleInteractionEvent(mockInterestContribution("paused", 3));
+		IMylarElement resumed = ContextCorePlugin.getContextManager().getElement("paused");
 		assertTrue(resumed.getInterest().isInteresting());
 	}
 
@@ -154,12 +154,12 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 	}
 
 	public void testChangeHandle() {
-		MylarPlugin.getContextManager().handleInteractionEvent(mockInterestContribution("old", 3));
-		IMylarElement old = MylarPlugin.getContextManager().getElement("old");
+		ContextCorePlugin.getContextManager().handleInteractionEvent(mockInterestContribution("old", 3));
+		IMylarElement old = ContextCorePlugin.getContextManager().getElement("old");
 		assertTrue(old.getInterest().isInteresting());
 
-		MylarPlugin.getContextManager().getActiveContext().updateElementHandle(old, "new");
-		IMylarElement changed = MylarPlugin.getContextManager().getElement("new");
+		ContextCorePlugin.getContextManager().getActiveContext().updateElementHandle(old, "new");
+		IMylarElement changed = ContextCorePlugin.getContextManager().getElement("new");
 		assertTrue(changed.getInterest().isInteresting());
 	}
 
@@ -192,10 +192,10 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 		assertEquals(1, type1.getMethods().length);
 
 		monitor.selectionChanged(part, new StructuredSelection(m1));
-		IMylarElement m1Node = MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier());
+		IMylarElement m1Node = ContextCorePlugin.getContextManager().getElement(m1.getHandleIdentifier());
 		assertTrue(m1Node.getInterest().isInteresting());
 		monitor.selectionChanged(part, new StructuredSelection(m2));
-		IMylarElement m2Node = MylarPlugin.getContextManager().getElement(m2.getHandleIdentifier());
+		IMylarElement m2Node = ContextCorePlugin.getContextManager().getElement(m2.getHandleIdentifier());
 		manager.handleInteractionEvent(mockInterestContribution(m2.getHandleIdentifier(), scaling.getLandmark()));
 		assertTrue(m2Node.getInterest().isLandmark());
 
@@ -210,7 +210,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 	}
 
 	public void testPredictedInterest() {
-		IMylarElement node = MylarPlugin.getContextManager().getElement("doesn't exist");
+		IMylarElement node = ContextCorePlugin.getContextManager().getElement("doesn't exist");
 		assertFalse(node.getInterest().isInteresting());
 		assertFalse(node.getInterest().isPropagated());
 	}
@@ -232,7 +232,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 		assertEquals(1, type1.getMethods().length);
 
 		monitor.selectionChanged(part, new StructuredSelection(m1));
-		IMylarElement m1Node = MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier());
+		IMylarElement m1Node = ContextCorePlugin.getContextManager().getElement(m1.getHandleIdentifier());
 		assertTrue(m1Node.getInterest().isInteresting());
 
 		// delete method to cause error
@@ -245,7 +245,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 		assertEquals(1, markers.length);
 
 		String resourceHandle = new JavaStructureBridge().getHandleIdentifier(m2.getCompilationUnit());
-		assertTrue(MylarPlugin.getContextManager().getElement(resourceHandle).getInterest().isInteresting());
+		assertTrue(ContextCorePlugin.getContextManager().getElement(resourceHandle).getInterest().isInteresting());
 
 		// put it back
 		type1.createMethod("public void m1() { }", null, true, null);
@@ -255,7 +255,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 		// project.build();
 		// project.build(); // HACK
 		// project.build(); // HACK
-		// assertFalse(MylarPlugin.getContextManager().getElement(resourceHandle).getInterest().isInteresting());
+		// assertFalse(ContextCorePlugin.getContextManager().getElement(resourceHandle).getInterest().isInteresting());
 	}
 
 	public void testParentInterestAfterDecay() throws JavaModelException {
@@ -264,54 +264,54 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 		StructuredSelection sm1 = new StructuredSelection(m1);
 		monitor.selectionChanged(part, sm1);
 
-		IMylarElement node = MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier());
+		IMylarElement node = ContextCorePlugin.getContextManager().getElement(m1.getHandleIdentifier());
 		assertTrue(node.getInterest().isInteresting());
-		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
-		IMylarElement parent = MylarPlugin.getContextManager().getElement(
+		IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(node.getContentType());
+		IMylarElement parent = ContextCorePlugin.getContextManager().getElement(
 				bridge.getParentHandle(node.getHandleIdentifier()));
 		assertTrue(parent.getInterest().isInteresting());
 		assertTrue(parent.getInterest().isPropagated());
 
 		for (int i = 0; i < 1 / (scaling.getDecay().getValue()) * 3; i++) {
-			MylarPlugin.getContextManager().handleInteractionEvent(mockSelection());
+			ContextCorePlugin.getContextManager().handleInteractionEvent(mockSelection());
 		}
 
-		assertFalse(MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier()).getInterest().isInteresting());
-		MylarPlugin.getContextManager().handleInteractionEvent(mockSelection(m1.getHandleIdentifier()));
-		assertTrue(MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier()).getInterest().isInteresting());
+		assertFalse(ContextCorePlugin.getContextManager().getElement(m1.getHandleIdentifier()).getInterest().isInteresting());
+		ContextCorePlugin.getContextManager().handleInteractionEvent(mockSelection(m1.getHandleIdentifier()));
+		assertTrue(ContextCorePlugin.getContextManager().getElement(m1.getHandleIdentifier()).getInterest().isInteresting());
 	}
 
 	public void testPropagation() throws JavaModelException, Exception {
 		IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
-		IMylarElement node = MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier());
+		IMylarElement node = ContextCorePlugin.getContextManager().getElement(m1.getHandleIdentifier());
 		assertFalse(node.getInterest().isInteresting());
 
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, new JavaStructureBridge().getContentType(), m1.getHandleIdentifier(), "source");
-		MylarPlugin.getContextManager().handleInteractionEvent(event, true);
+		ContextCorePlugin.getContextManager().handleInteractionEvent(event, true);
 		
-		node = MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier());
+		node = ContextCorePlugin.getContextManager().getElement(m1.getHandleIdentifier());
 		assertTrue(node.getInterest().isInteresting());
 
 		project.build();
 		IJavaElement parent = m1.getParent();
-		IMylarElement parentNode = MylarPlugin.getContextManager().getElement(parent.getHandleIdentifier());
+		IMylarElement parentNode = ContextCorePlugin.getContextManager().getElement(parent.getHandleIdentifier());
 		assertFalse(parentNode.getInterest().isInteresting());
 		
 		InteractionEvent selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, new JavaStructureBridge().getContentType(), m1.getHandleIdentifier(), "source");
-		MylarPlugin.getContextManager().handleInteractionEvent(selectionEvent, true);
-		parentNode = MylarPlugin.getContextManager().getElement(parent.getHandleIdentifier());
+		ContextCorePlugin.getContextManager().handleInteractionEvent(selectionEvent, true);
+		parentNode = ContextCorePlugin.getContextManager().getElement(parent.getHandleIdentifier());
 		assertTrue(parentNode.getInterest().isInteresting()); 
 	}
 	
 	public void testIncremenOfParentDoi() throws JavaModelException, Exception {
 		IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
 		IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
-		IMylarElement node = MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier());
+		IMylarElement node = ContextCorePlugin.getContextManager().getElement(m1.getHandleIdentifier());
 		assertFalse(node.getInterest().isInteresting());
 
 		StructuredSelection sm1 = new StructuredSelection(m1);
 		monitor.selectionChanged(part, sm1);
-		node = MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier());
+		node = ContextCorePlugin.getContextManager().getElement(m1.getHandleIdentifier());
 		assertTrue(node.getInterest().isInteresting());
 
 		project.build();
@@ -319,7 +319,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 		int level = 1;
 		do {
 			level++;
-			IMylarElement parentNode = MylarPlugin.getContextManager().getElement(parent.getHandleIdentifier());
+			IMylarElement parentNode = ContextCorePlugin.getContextManager().getElement(parent.getHandleIdentifier());
 			if (!(parent instanceof JavaModel)) {
 				assertEquals("failed on: " + parent.getClass(), node.getInterest().getValue(), parentNode.getInterest()
 						.getValue());
@@ -332,11 +332,11 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 		IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
 		IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
 		IMethod m2 = type1.createMethod("void m2() { }", null, true, null);
-		IMylarElement node = MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier());
+		IMylarElement node = ContextCorePlugin.getContextManager().getElement(m1.getHandleIdentifier());
 		assertFalse(node.getInterest().isInteresting());
 
 		monitor.selectionChanged(part, new StructuredSelection(m1));
-		node = MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier());
+		node = ContextCorePlugin.getContextManager().getElement(m1.getHandleIdentifier());
 		assertTrue(node.getInterest().isInteresting());
 
 		// make all the parents interest propated to have negative interest
@@ -344,12 +344,12 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 		int level = 1;
 		do {
 			level++;
-			IMylarElement parentNode = MylarPlugin.getContextManager().getElement(parent.getHandleIdentifier());
+			IMylarElement parentNode = ContextCorePlugin.getContextManager().getElement(parent.getHandleIdentifier());
 			if (!(parent instanceof JavaModel)) {
 				assertTrue(parentNode.getInterest().isInteresting());
-				MylarPlugin.getContextManager().handleInteractionEvent(mockInterestContribution(parentNode.getHandleIdentifier(), 
+				ContextCorePlugin.getContextManager().handleInteractionEvent(mockInterestContribution(parentNode.getHandleIdentifier(), 
 						-2*parentNode.getInterest().getValue()));
-				IMylarElement updatedParent = MylarPlugin.getContextManager().getElement(parent.getHandleIdentifier());
+				IMylarElement updatedParent = ContextCorePlugin.getContextManager().getElement(parent.getHandleIdentifier());
 				assertFalse(updatedParent.getInterest().isInteresting());
 			}
 			parent = parent.getParent();
@@ -360,7 +360,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 		// select the element, should propagate up
 		monitor.selectionChanged(part, new StructuredSelection(m2));
 		monitor.selectionChanged(part, new StructuredSelection(m1));
-		node = MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier());
+		node = ContextCorePlugin.getContextManager().getElement(m1.getHandleIdentifier());
 		assertTrue(node.getInterest().isInteresting());
 		
 		project.build();
@@ -368,7 +368,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 		level = 1;
 		do {
 			level++;
-			IMylarElement parentNode = MylarPlugin.getContextManager().getElement(parent.getHandleIdentifier());
+			IMylarElement parentNode = ContextCorePlugin.getContextManager().getElement(parent.getHandleIdentifier());
 			if (!(parent instanceof JavaModel)) {
 				assertTrue(parentNode.getInterest().isInteresting());
 //				assertEquals("failed on: " + parent.getClass(), node.getInterest().getValue(), parentNode.getInterest()
@@ -398,7 +398,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 		manager.handleInteractionEvent(mockInterestContribution(m1.getCompilationUnit().getParent().getParent()
 				.getParent().getHandleIdentifier(), scaling.getLandmark()));
 
-		assertEquals(1, MylarPlugin.getContextManager().getActiveLandmarks().size());
+		assertEquals(1, ContextCorePlugin.getContextManager().getActiveLandmarks().size());
 		assertEquals(1, listener.numAdditions);
 
 		manager.handleInteractionEvent(mockInterestContribution(m1.getHandleIdentifier(), -scaling.getLandmark()));

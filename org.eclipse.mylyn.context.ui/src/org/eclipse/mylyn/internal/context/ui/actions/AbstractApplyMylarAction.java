@@ -22,10 +22,10 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.context.ui.InterestFilter;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.context.ui.MylarImages;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IActionDelegate2;
@@ -103,7 +103,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 	 */
 	public void update() {
 		if (globalPrefId != null) {
-			update(MylarUiPlugin.getDefault().getPreferenceStore().getBoolean(globalPrefId));
+			update(ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(globalPrefId));
 		}
 	}
 
@@ -118,20 +118,20 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 		if (PlatformUI.getWorkbench().isClosing()) {
 			return;
 		}
-		boolean wasPaused = MylarPlugin.getContextManager().isContextCapturePaused();
+		boolean wasPaused = ContextCorePlugin.getContextManager().isContextCapturePaused();
 		try {
 			if (!wasPaused) {
-				MylarPlugin.getContextManager().setContextCapturePaused(true);
+				ContextCorePlugin.getContextManager().setContextCapturePaused(true);
 			}
 			setChecked(on);
 			action.setChecked(on);
-			if (store && MylarPlugin.getDefault() != null) {
-				MylarUiPlugin.getDefault().getPreferenceStore().setValue(globalPrefId, on);
+			if (store && ContextCorePlugin.getDefault() != null) {
+				ContextUiPlugin.getDefault().getPreferenceStore().setValue(globalPrefId, on);
 			}
 
 			for (StructuredViewer viewer : getViewers()) {
 				if (viewPart != null && !viewer.getControl().isDisposed()) {
-					MylarUiPlugin.getDefault().getViewerManager().addManagedViewer(viewer, viewPart);
+					ContextUiPlugin.getDefault().getViewerManager().addManagedViewer(viewer, viewPart);
 				}
 				updateInterestFilter(on, viewer);
 			}
@@ -139,7 +139,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 			MylarStatusHandler.fail(t, "Could not install viewer manager on: " + globalPrefId, false);
 		} finally {
 			if (!wasPaused) {
-				MylarPlugin.getContextManager().setContextCapturePaused(false);
+				ContextCorePlugin.getContextManager().setContextCapturePaused(false);
 			}
 		}
 	}
@@ -151,9 +151,9 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 		if (viewer != null) {
 			if (on) {
 				installInterestFilter(viewer);
-				MylarUiPlugin.getDefault().getViewerManager().addFilteredViewer(viewer);
+				ContextUiPlugin.getDefault().getViewerManager().addFilteredViewer(viewer);
 			} else {
-				MylarUiPlugin.getDefault().getViewerManager().removeFilteredViewer(viewer);
+				ContextUiPlugin.getDefault().getViewerManager().removeFilteredViewer(viewer);
 				uninstallInterestFilter(viewer);
 			}
 		}
@@ -176,7 +176,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 			return false;
 		} else if (viewer.getControl().isDisposed()) {
 			// TODO: do this with part listener, not lazily?
-			MylarUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer, viewPart);
+			ContextUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer, viewPart);
 			return false;
 		}
 
@@ -211,7 +211,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 			return;
 		} else if (viewer.getControl().isDisposed()) {
 			// TODO: do this with part listener, not lazily?
-			MylarUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer, viewPart);
+			ContextUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer, viewPart);
 			return;
 		}
 
@@ -246,7 +246,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 		partMap.remove(getPartForAction());
 		if (viewPart != null && !PlatformUI.getWorkbench().isClosing()) {
 			for (StructuredViewer viewer : getViewers()) {
-				MylarUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer, viewPart);
+				ContextUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer, viewPart);
 			}
 		}
 	}

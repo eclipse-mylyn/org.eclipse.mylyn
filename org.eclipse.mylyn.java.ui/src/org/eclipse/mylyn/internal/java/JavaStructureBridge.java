@@ -43,7 +43,7 @@ import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.IDegreeOfSeparation;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.DegreeOfSeparation;
 import org.eclipse.mylar.internal.ide.ResourceStructureBridge;
@@ -221,7 +221,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 			for (int i = 0; i < children.length; i++) {
 				if (children[i] instanceof JarPackageFragmentRoot) {
 					JarPackageFragmentRoot element = (JarPackageFragmentRoot) children[i];
-					IMylarElement node = MylarPlugin.getContextManager().getElement(element.getHandleIdentifier());
+					IMylarElement node = ContextCorePlugin.getContextManager().getElement(element.getHandleIdentifier());
 					if (node != null && node.getInterest().isInteresting()) {
 						return false;
 					}
@@ -233,7 +233,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 				IAdaptable[] elements = workingSet.getElements();
 				for (int i = 0; i < elements.length; i++) {
 					IAdaptable adaptable = elements[i];
-					IMylarElement element = MylarPlugin.getContextManager().getElement(getHandleIdentifier(adaptable));
+					IMylarElement element = ContextCorePlugin.getContextManager().getElement(getHandleIdentifier(adaptable));
 					if (element.getInterest().isInteresting())
 						return false;
 				}

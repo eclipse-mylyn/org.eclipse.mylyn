@@ -32,7 +32,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
 
@@ -62,7 +62,7 @@ public class LandmarkMarkerManager implements IMylarContextListener {
 				landmarkRemoved(node);
 			}
 			markerMap.clear();
-			for (IMylarElement node : MylarPlugin.getContextManager().getActiveLandmarks()) {
+			for (IMylarElement node : ContextCorePlugin.getContextManager().getActiveLandmarks()) {
 				landmarkAdded(node);
 			}
 		} catch (Throwable t) {

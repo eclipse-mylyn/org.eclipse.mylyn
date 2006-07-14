@@ -254,7 +254,7 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 // // get the node that was selected
 // XMLNode node = rec.getNodeFromLine(start);
 //                    
-// MylarPlugin.getTaskscapeManager().handleElementSelected(
+// ContextCorePlugin.getTaskscapeManager().handleElementSelected(
 // node.getHandle(), node.getCanName(),
 // IDegreeOfInterest.Value.Selections,
 // ITaskscapeNode.Kind.XML);

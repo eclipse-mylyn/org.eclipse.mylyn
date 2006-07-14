@@ -18,8 +18,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
-import org.eclipse.mylar.context.core.MylarPlugin;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.core.tests.AbstractContextTest;
 import org.eclipse.mylar.ide.tests.ResourceTestUtil;
 import org.eclipse.mylar.internal.context.core.MylarContext;
@@ -35,7 +35,7 @@ import org.eclipse.mylar.internal.java.MylarJavaPlugin;
  */
 public abstract class AbstractJavaContextTest extends AbstractContextTest {
 
-	protected MylarContextManager manager = MylarPlugin.getContextManager();
+	protected MylarContextManager manager = ContextCorePlugin.getContextManager();
 
 	protected JavaEditingMonitor monitor = new JavaEditingMonitor();
 
@@ -63,10 +63,10 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 		context.reset();
 		manager.activateContext(context);
 		assertNotNull(MylarJavaPlugin.getDefault());
-		assertTrue(MylarPlugin.getDefault().getStructureBridges().toString().indexOf(
+		assertTrue(ContextCorePlugin.getDefault().getStructureBridges().toString().indexOf(
 				JavaStructureBridge.class.getCanonicalName()) != -1);
 
-		MylarUiPlugin.getDefault().getViewerManager().setSyncRefreshMode(true);
+		ContextUiPlugin.getDefault().getViewerManager().setSyncRefreshMode(true);
 		MylarIdePlugin.getDefault().setResourceMonitoringEnabled(false);
 	}
 

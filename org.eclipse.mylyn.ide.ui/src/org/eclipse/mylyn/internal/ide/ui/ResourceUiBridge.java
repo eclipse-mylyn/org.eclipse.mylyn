@@ -20,7 +20,7 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.context.ui.IMylarUiBridge;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
@@ -40,7 +40,7 @@ import org.eclipse.ui.ide.IDE;
 public class ResourceUiBridge implements IMylarUiBridge {
 
 	public void open(IMylarElement element) {
-		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
+		IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element.getContentType());
 		if (bridge == null) {
 			return;
 		} else {
@@ -71,7 +71,7 @@ public class ResourceUiBridge implements IMylarUiBridge {
 	}
 
 	public void close(IMylarElement element) {
-		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
+		IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element.getContentType());
 		Object object = bridge.getObjectForHandle(element.getHandleIdentifier());
 		if (object instanceof IFile) {
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -109,8 +109,8 @@ public class ResourceUiBridge implements IMylarUiBridge {
 		Object adapter = input.getAdapter(IResource.class);
 		if (adapter instanceof IFile) {
 			IFile javaElement = (IFile) adapter;
-			String handle = MylarPlugin.getDefault().getStructureBridge(javaElement).getHandleIdentifier(javaElement);
-			return MylarPlugin.getContextManager().getElement(handle);
+			String handle = ContextCorePlugin.getDefault().getStructureBridge(javaElement).getHandleIdentifier(javaElement);
+			return ContextCorePlugin.getContextManager().getElement(handle);
 		} else {
 			return null;
 		}

@@ -21,7 +21,7 @@ import org.eclipse.mylar.context.core.IDegreeOfSeparation;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.context.ui.IMylarUiBridge;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
@@ -43,10 +43,10 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 	public ToggleRelationshipProviderAction(IMylarStructureBridge structureBridge, IMylarUiBridge uiBridge) {
 		super();
 		this.structureBridge = structureBridge;
-		setImageDescriptor(MylarUiPlugin.getDefault().getActiveSearchIcon(uiBridge));
+		setImageDescriptor(ContextUiPlugin.getDefault().getActiveSearchIcon(uiBridge));
 		setId(ID);
-		setText(MylarUiPlugin.getDefault().getActiveSearchLabel(uiBridge));
-		setToolTipText(MylarUiPlugin.getDefault().getActiveSearchLabel(uiBridge));
+		setText(ContextUiPlugin.getDefault().getActiveSearchLabel(uiBridge));
+		setToolTipText(ContextUiPlugin.getDefault().getActiveSearchLabel(uiBridge));
 		setMenuCreator(this);
 
 		AbstractRelationProvider provider = structureBridge.getRelationshipProviders().get(0);
@@ -58,7 +58,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 
 	@Override
 	public void run() {
-		MylarUiPlugin.getDefault()
+		ContextUiPlugin.getDefault()
 				.updateDegreesOfSeparation(structureBridge.getRelationshipProviders(), degreeOfSeparation);
 	}
 
@@ -107,7 +107,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 				public void run() {
 					try {
 						degreeOfSeparation = Integer.parseInt(getId());
-						MylarUiPlugin.getDefault().updateDegreesOfSeparation(structureBridge.getRelationshipProviders(),
+						ContextUiPlugin.getDefault().updateDegreesOfSeparation(structureBridge.getRelationshipProviders(),
 								degreeOfSeparation);
 					} catch (NumberFormatException e) {
 						// ignore this for now

@@ -21,7 +21,7 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.ide.tests.ResourceTestUtil;
 import org.eclipse.mylar.internal.context.core.MylarContext;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
@@ -36,7 +36,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class JavaStructureTest extends AbstractJavaContextTest {
 
-	private MylarContextManager manager = MylarPlugin.getContextManager();
+	private MylarContextManager manager = ContextCorePlugin.getContextManager();
 
 	private JavaEditingMonitor monitor = new JavaEditingMonitor();
 

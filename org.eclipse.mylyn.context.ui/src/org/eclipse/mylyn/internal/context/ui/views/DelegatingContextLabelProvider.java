@@ -18,8 +18,8 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarObject;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.MylarPlugin;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -41,12 +41,12 @@ public class DelegatingContextLabelProvider implements ILabelProvider {
 
 	public Image getImage(Object element) {
 		if (element instanceof IMylarObject) {
-			ILabelProvider provider = MylarUiPlugin.getDefault().getContextLabelProvider(
+			ILabelProvider provider = ContextUiPlugin.getDefault().getContextLabelProvider(
 					((IMylarObject) element).getContentType());
 			return provider.getImage(element);
 		} else {
-			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element);
-			ILabelProvider provider = MylarUiPlugin.getDefault().getContextLabelProvider(bridge.getContentType());
+			IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element);
+			ILabelProvider provider = ContextUiPlugin.getDefault().getContextLabelProvider(bridge.getContentType());
 			if (provider != null)
 				return provider.getImage(element);
 		}
@@ -56,19 +56,19 @@ public class DelegatingContextLabelProvider implements ILabelProvider {
 	public String getText(Object object) {
 		if (object instanceof IMylarObject) {
 			IMylarObject element = (IMylarObject) object;
-			ILabelProvider provider = MylarUiPlugin.getDefault().getContextLabelProvider(element.getContentType());
-			if (MylarUiPlugin.getDefault().isDecorateInterestMode()) { // TODO:
+			ILabelProvider provider = ContextUiPlugin.getDefault().getContextLabelProvider(element.getContentType());
+			if (ContextUiPlugin.getDefault().isDecorateInterestMode()) { // TODO:
 																		// move
 				return provider.getText(element) + " [" + element.getInterest().getValue() + "]";
 			} else {
 				return provider.getText(element);
 			}
 		} else {
-			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(object);
-			ILabelProvider provider = MylarUiPlugin.getDefault().getContextLabelProvider(bridge.getContentType());
+			IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
+			ILabelProvider provider = ContextUiPlugin.getDefault().getContextLabelProvider(bridge.getContentType());
 			if (provider != null) {
-				if (MylarUiPlugin.getDefault().isDecorateInterestMode()) {
-					IMylarElement element = MylarPlugin.getContextManager().getElement(
+				if (ContextUiPlugin.getDefault().isDecorateInterestMode()) {
+					IMylarElement element = ContextCorePlugin.getContextManager().getElement(
 							bridge.getHandleIdentifier(object));
 					return provider.getText(object) + " [" + element.getInterest().getValue() + "]";
 				} else {

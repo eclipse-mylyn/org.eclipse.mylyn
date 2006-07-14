@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.IDegreeOfSeparation;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 
@@ -37,7 +37,7 @@ import org.eclipse.ui.views.markers.internal.ConcreteMarker;
  */
 public class ResourceStructureBridge implements IMylarStructureBridge {
 
-	public final static String CONTENT_TYPE = MylarPlugin.CONTENT_TYPE_ANY;
+	public final static String CONTENT_TYPE = ContextCorePlugin.CONTENT_TYPE_ANY;
 
 	public ResourceStructureBridge() {
 		// if (false) {

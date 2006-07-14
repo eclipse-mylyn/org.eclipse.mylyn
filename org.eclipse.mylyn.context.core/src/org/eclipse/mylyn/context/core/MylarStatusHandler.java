@@ -34,8 +34,8 @@ public class MylarStatusHandler {
 	 *            status to log
 	 */
 	public static void log(IStatus status) {
-		if (MylarPlugin.getDefault() != null) {
-			MylarPlugin.getDefault().getLog().log(status);
+		if (ContextCorePlugin.getDefault() != null) {
+			ContextCorePlugin.getDefault().getLog().log(status);
 		}
 	}
 
@@ -44,7 +44,7 @@ public class MylarStatusHandler {
 		if (source != null)
 			message += ", source: " + source.getClass().getName();
 
-		log(new Status(IStatus.INFO, MylarPlugin.PLUGIN_ID, IStatus.OK, message, null));
+		log(new Status(IStatus.INFO, ContextCorePlugin.PLUGIN_ID, IStatus.OK, message, null));
 	}
 
 	public static void log(Throwable throwable, String message) {
@@ -68,7 +68,7 @@ public class MylarStatusHandler {
 			message = "no message";
 		message += "\n";
 
-		final Status status = new Status(severity, MylarPlugin.PLUGIN_ID, IStatus.OK, message, throwable);
+		final Status status = new Status(severity, ContextCorePlugin.PLUGIN_ID, IStatus.OK, message, throwable);
 		
 		if (statusNotifier != null) {
 			statusNotifier.notify(status, informUser);

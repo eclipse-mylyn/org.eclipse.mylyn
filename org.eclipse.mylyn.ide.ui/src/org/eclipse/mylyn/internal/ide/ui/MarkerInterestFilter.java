@@ -15,7 +15,7 @@ package org.eclipse.mylar.internal.ide.ui;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.ui.InterestFilter;
 import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 import org.eclipse.ui.views.markers.internal.MarkerNode;
@@ -56,12 +56,12 @@ public class MarkerInterestFilter extends InterestFilter {
 		if (isImplicitlyInteresting(marker)) {
 			return true;
 		} else {
-			String handle = MylarPlugin.getDefault().getStructureBridge(marker.getResource().getFileExtension())
+			String handle = ContextCorePlugin.getDefault().getStructureBridge(marker.getResource().getFileExtension())
 					.getHandleForOffsetInObject(marker, 0);
 			if (handle == null) {
 				return false;
 			} else {
-				return super.select(viewer, parent, MylarPlugin.getContextManager().getElement(handle));
+				return super.select(viewer, parent, ContextCorePlugin.getContextManager().getElement(handle));
 			}
 		}
 

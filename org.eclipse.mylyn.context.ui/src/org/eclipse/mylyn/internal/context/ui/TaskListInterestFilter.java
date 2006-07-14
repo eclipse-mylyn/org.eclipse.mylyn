@@ -12,13 +12,13 @@
 package org.eclipse.mylar.internal.context.ui;
 
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.ui.AbstractTaskListFilter;
-import org.eclipse.mylar.internal.tasklist.ui.actions.NewLocalTaskAction;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasks.ui.ui.AbstractTaskListFilter;
+import org.eclipse.mylar.internal.tasks.ui.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * Goal is to have this reuse as much of the super as possible.
@@ -56,9 +56,9 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	protected boolean isUninteresting(ITask task) {
 		return !task.isActive()
 				&& ((task.isCompleted() 
-						&& !MylarTaskListPlugin.getTaskListManager().isCompletedToday(task)
+						&& !TasksUiPlugin.getTaskListManager().isCompletedToday(task)
 						&& !hasChanges(task)) 
-					|| (MylarTaskListPlugin.getTaskListManager().isReminderAfterThisWeek(task)) && !hasChanges(task));
+					|| (TasksUiPlugin.getTaskListManager().isReminderAfterThisWeek(task)) && !hasChanges(task));
 	}
 
 	// TODO: make meta-context more explicit
@@ -70,14 +70,14 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	public boolean shouldAlwaysShow(ITask task) {
 		return super.shouldAlwaysShow(task) 
 			|| hasChanges(task) 
-			|| (MylarTaskListPlugin.getTaskListManager().isCompletedToday(task))
+			|| (TasksUiPlugin.getTaskListManager().isCompletedToday(task))
 			|| (isInterestingForThisWeek(task) && !task.isCompleted())
 			|| NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(task.getDescription());
 	}
 
 	public static boolean isInterestingForThisWeek(ITask task) {
-		return MylarTaskListPlugin.getTaskListManager().isReminderThisWeek(task)
-			|| MylarTaskListPlugin.getTaskListManager().isReminderToday(task) 
+		return TasksUiPlugin.getTaskListManager().isReminderThisWeek(task)
+			|| TasksUiPlugin.getTaskListManager().isReminderToday(task) 
 			|| task.isPastReminder();
 	}
 

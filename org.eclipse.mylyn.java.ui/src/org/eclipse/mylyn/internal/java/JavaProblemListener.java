@@ -19,7 +19,7 @@ import org.eclipse.jdt.internal.ui.viewsupport.IProblemChangedListener;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 
 /**
@@ -32,7 +32,7 @@ public class JavaProblemListener implements IProblemChangedListener, IPropertyCh
 
 	public void problemsChanged(IResource[] changedResources, boolean isMarkerChange) {
 		try {
-			if (!MylarPlugin.getContextManager().isContextActive()) {
+			if (!ContextCorePlugin.getContextManager().isContextActive()) {
 				return;
 			} else {
 				for (int i = 0; i < changedResources.length; i++) {
@@ -40,13 +40,13 @@ public class JavaProblemListener implements IProblemChangedListener, IPropertyCh
 					if (resource instanceof IFile) {
 						IJavaElement javaElement = (IJavaElement) resource.getAdapter(IJavaElement.class);
 						if (javaElement != null) {
-							IMylarElement element = MylarPlugin.getContextManager().getElement(
+							IMylarElement element = ContextCorePlugin.getContextManager().getElement(
 									javaElement.getHandleIdentifier());
 							if (!javaStructureBridge.containsProblem(element)) {
-								MylarPlugin.getContextManager().removeErrorPredictedInterest(
+								ContextCorePlugin.getContextManager().removeErrorPredictedInterest(
 										element.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, true);
 							} else {
-								MylarPlugin.getContextManager().addErrorPredictedInterest(
+								ContextCorePlugin.getContextManager().addErrorPredictedInterest(
 										element.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, true);
 							}
 						}

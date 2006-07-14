@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.tests.support.ResourceHelper;
 import org.eclipse.mylar.core.tests.support.search.ISearchPluginTest;
 import org.eclipse.mylar.internal.context.core.CompositeContext;
@@ -55,7 +55,7 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest {
 		plugin1 = WorkspaceSetupHelper.getFile(jp1, "plugin.xml");
 
 		MylarContext t = WorkspaceSetupHelper.getContext();
-		MylarPlugin.getContextManager().activateContext(t.getHandleIdentifier());// ,
+		ContextCorePlugin.getContextManager().activateContext(t.getHandleIdentifier());// ,
 																					// t.getId());
 		helper = new SearchPluginTestHelper(this);
 	}
@@ -70,7 +70,7 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest {
 
 		int dos = 4;
 
-		CompositeContext t = (CompositeContext) MylarPlugin.getContextManager().getActiveContext();
+		CompositeContext t = (CompositeContext) ContextCorePlugin.getContextManager().getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
 		IMylarElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 
@@ -93,7 +93,7 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest {
 	public void testRemoveProject() throws Exception {
 		int dos = 4;
 
-		CompositeContext t = (CompositeContext) MylarPlugin.getContextManager().getActiveContext();
+		CompositeContext t = (CompositeContext) ContextCorePlugin.getContextManager().getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
 		IMylarElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 

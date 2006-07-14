@@ -14,10 +14,10 @@ package org.eclipse.mylar.internal.context.ui.actions;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.context.core.MylarPlugin;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.internal.tasks.ui.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
@@ -42,14 +42,14 @@ public class ContextClearAction implements IViewActionDelegate {
 				return;
 			
 			if (task.isActive()) {
-				MylarTaskListPlugin.getTaskListManager().deactivateTask(task);
-				MylarPlugin.getContextManager().deleteContext((task).getHandleIdentifier());
-				MylarTaskListPlugin.getTaskListManager().activateTask(task);
+				TasksUiPlugin.getTaskListManager().deactivateTask(task);
+				ContextCorePlugin.getContextManager().deleteContext((task).getHandleIdentifier());
+				TasksUiPlugin.getTaskListManager().activateTask(task);
 			} else {
-				MylarPlugin.getContextManager().deleteContext((task).getHandleIdentifier());
+				ContextCorePlugin.getContextManager().deleteContext((task).getHandleIdentifier());
 			}
-//			MylarPlugin.getContextManager().contextDeleted((task).getHandleIdentifier());																					// ((Task)selectedObject).getContextPath());
-//			MylarPlugin.getContextManager().contextActivated((task).getHandleIdentifier());
+//			ContextCorePlugin.getContextManager().contextDeleted((task).getHandleIdentifier());																					// ((Task)selectedObject).getContextPath());
+//			ContextCorePlugin.getContextManager().contextActivated((task).getHandleIdentifier());
 																												// ((Task)selectedObject).getContextPath());
 			TaskListView.getFromActivePerspective().getViewer().refresh();
 		}

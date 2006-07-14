@@ -42,7 +42,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.ide.ui.views.ActiveViewDelegatingDragAdapter;
 import org.eclipse.mylar.internal.ide.ui.views.ActiveViewDropAdapter;
@@ -168,7 +168,7 @@ public class ActiveHierarchyView extends ViewPart {
 	}
 
 	public ActiveHierarchyView() {
-		MylarPlugin.getContextManager().addListener(MODEL_LISTENER);
+		ContextCorePlugin.getContextManager().addListener(MODEL_LISTENER);
 		refreshHierarchy();
 	}
 
@@ -184,7 +184,7 @@ public class ActiveHierarchyView extends ViewPart {
 			if (root != null && root.getChildren().length > 0)
 				root.removeAllChildren();
 			nodeMap.clear();
-			List<IMylarElement> landmarks = MylarPlugin.getContextManager().getActiveLandmarks();
+			List<IMylarElement> landmarks = ContextCorePlugin.getContextManager().getActiveLandmarks();
 			for (Iterator<IMylarElement> it = landmarks.iterator(); it.hasNext();) {
 				IMylarElement node = it.next();
 				IJavaElement element = null;
@@ -429,7 +429,7 @@ class TreeParent implements IAdaptable {
 // public Color getForeground(Object element) {
 // IJavaElement javaElement = ((TreeParent)element).getElement();
 // IMylarElement node =
-// MylarPlugin.getContextManager().getNode(javaElement.getHandleIdentifier());
+// ContextCorePlugin.getContextManager().getNode(javaElement.getHandleIdentifier());
 // return UiUtil.getForegroundForElement(node);
 // }
 //
@@ -437,7 +437,7 @@ class TreeParent implements IAdaptable {
 // public Color getBackground(Object element) {
 // IJavaElement javaElement = ((TreeParent)element).getElement();
 // IMylarElement node =
-// MylarPlugin.getContextManager().getNode(javaElement.getHandleIdentifier());
+// ContextCorePlugin.getContextManager().getNode(javaElement.getHandleIdentifier());
 // return UiUtil.getBackgroundForElement(node);
 // }
 //
@@ -454,7 +454,7 @@ class TreeParent implements IAdaptable {
 // public Font getFont(Object element) {
 // IJavaElement javaElement = ((TreeParent)element).getElement();
 // IMylarElement node =
-// MylarPlugin.getContextManager().getNode(javaElement.getHandleIdentifier());
+// ContextCorePlugin.getContextManager().getNode(javaElement.getHandleIdentifier());
 // if (node.getDegreeOfInterest().isLandmark() &&
 // !node.getDegreeOfInterest().isPropagated()) {
 // return MylarUiPlugin.BOLD;

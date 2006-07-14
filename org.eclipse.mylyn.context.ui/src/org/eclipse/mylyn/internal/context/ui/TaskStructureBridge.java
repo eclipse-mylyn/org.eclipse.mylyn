@@ -17,10 +17,10 @@ import java.util.List;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.IDegreeOfSeparation;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
@@ -50,7 +50,7 @@ public class TaskStructureBridge implements IMylarStructureBridge {
 	}
 
 	public Object getObjectForHandle(String handle) {
-		return MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
+		return TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
 	}
 
 	public List<String> getChildHandles(String handle) {

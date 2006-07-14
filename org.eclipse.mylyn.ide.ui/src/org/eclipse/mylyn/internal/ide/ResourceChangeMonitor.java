@@ -23,7 +23,7 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.mylar.context.core.InteractionEvent;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 
 /**
@@ -34,7 +34,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 	private boolean enabled = true;
 
 	public void resourceChanged(IResourceChangeEvent event) { 
-		if (!enabled || !MylarPlugin.getContextManager().isContextActive()) {
+		if (!enabled || !ContextCorePlugin.getContextManager().isContextActive()) {
 			return;
 		}
 		if (event.getType() != IResourceChangeEvent.POST_CHANGE) {

@@ -31,7 +31,7 @@ import org.osgi.framework.BundleContext;
 /**
  * @author Mik Kersten
  */
-public class MylarPlugin extends Plugin {
+public class ContextCorePlugin extends Plugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylar.core";
 
@@ -41,7 +41,7 @@ public class MylarPlugin extends Plugin {
 
 	private IMylarStructureBridge defaultBridge = null;
 
-	private static MylarPlugin INSTANCE;
+	private static ContextCorePlugin INSTANCE;
 
 	private static MylarContextManager contextManager;
 
@@ -115,7 +115,7 @@ public class MylarPlugin extends Plugin {
 		}
 	};
 
-	public MylarPlugin() {
+	public ContextCorePlugin() {
 		INSTANCE = this;
 	}
 
@@ -157,7 +157,7 @@ public class MylarPlugin extends Plugin {
 		}
 	}
 
-	public static MylarPlugin getDefault() {
+	public static ContextCorePlugin getDefault() {
 		return INSTANCE;
 	}
 
@@ -205,38 +205,12 @@ public class MylarPlugin extends Plugin {
 		}
 	}
 
-//	/**
-//	 * Returns the string from the plugin's resource bundle, or 'key' if not
-//	 * found.
-//	 */
-//	public static String getResourceString(String key) {
-//		ResourceBundle bundle = MylarPlugin.getDefault().getResourceBundle();
-//		try {
-//			return (bundle != null) ? bundle.getString(key) : key;
-//		} catch (MissingResourceException e) {
-//			return key;
-//		}
-//	}
-
-//	/**
-//	 * Returns the plugin's resource bundle,
-//	 */
-//	public ResourceBundle getResourceBundle() {
-//		try {
-//			if (resourceBundle == null)
-//				resourceBundle = ResourceBundle.getBundle("org.eclipse.mylar.core.MylarPluginResources");
-//		} catch (MissingResourceException x) {
-//			resourceBundle = null;
-//		}
-//		return resourceBundle;
-//	}
-
 	public AbstractContextStore getContextStore() {
 		return contextStore;
 	}
 	
 	public static void setContextStore(AbstractContextStore contextStore) {
-		MylarPlugin.contextStore = contextStore;
+		ContextCorePlugin.contextStore = contextStore;
 	}
 
 	public boolean suppressWizardsOnStartup() {
@@ -320,7 +294,7 @@ public class MylarPlugin extends Plugin {
 				}
 
 				IMylarStructureBridge bridge = (IMylarStructureBridge) object;
-				MylarPlugin.getDefault().internalAddBridge(bridge);
+				ContextCorePlugin.getDefault().internalAddBridge(bridge);
 				if (element.getAttribute(CoreExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE_PARENT) != null) {
 					Object parent = element
 							.createExecutableExtension(CoreExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE_PARENT);

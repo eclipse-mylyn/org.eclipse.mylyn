@@ -34,7 +34,7 @@ import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarRelation;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.ui.AbstractContextLabelProvider;
 import org.eclipse.mylar.internal.context.ui.ColorMap;
@@ -45,10 +45,10 @@ import org.eclipse.mylar.internal.context.ui.MylarPerspectiveManager;
 import org.eclipse.mylar.internal.context.ui.MylarUiPrefContstants;
 import org.eclipse.mylar.internal.context.ui.MylarViewerManager;
 import org.eclipse.mylar.internal.context.ui.MylarWorkingSetManager;
-import org.eclipse.mylar.internal.tasklist.ui.ITaskHighlighter;
+import org.eclipse.mylar.internal.tasks.ui.ui.ITaskHighlighter;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
@@ -60,7 +60,7 @@ import org.osgi.framework.BundleContext;
 /**
  * @author Mik Kersten
  */
-public class MylarUiPlugin extends AbstractUIPlugin {
+public class ContextUiPlugin extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylar.ui";
 
@@ -68,7 +68,7 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 
 	private Map<String, ILabelProvider> contextLabelProviders = new HashMap<String, ILabelProvider>();
 
-	private static MylarUiPlugin plugin;
+	private static ContextUiPlugin plugin;
 
 	private ResourceBundle resourceBundle;
 
@@ -172,7 +172,7 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 		}
 	};
 
-	public MylarUiPlugin() {
+	public ContextUiPlugin() {
 		super();
 		plugin = this;
 		try {
@@ -197,11 +197,11 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 			public void run() {
 				try {
 					viewerManager = new MylarViewerManager();
-					MylarPlugin.getContextManager().addListener(viewerManager);
-					MylarTaskListPlugin.getTaskListManager().addActivityListener(perspectiveManager);
+					ContextCorePlugin.getContextManager().addListener(viewerManager);
+					TasksUiPlugin.getTaskListManager().addActivityListener(perspectiveManager);
 
 					MylarMonitorPlugin.getDefault().addWindowPartListener(contentOutlineManager);
-					MylarTaskListPlugin.getDefault().setHighlighter(DEFAULT_HIGHLIGHTER);
+					TasksUiPlugin.getDefault().setHighlighter(DEFAULT_HIGHLIGHTER);
 				} catch (Exception e) {
 					MylarStatusHandler.fail(e, "Mylar UI initialization failed", true);
 				}
@@ -216,9 +216,9 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		try {
 			super.stop(context);
-			MylarPlugin.getContextManager().removeListener(viewerManager);
+			ContextCorePlugin.getContextManager().removeListener(viewerManager);
 			MylarMonitorPlugin.getDefault().removeWindowPartListener(contentOutlineManager);
-//			MylarPlugin.getDefault().removeWindowPageListener(contentOutlineManager);
+//			ContextCorePlugin.getDefault().removeWindowPageListener(contentOutlineManager);
 			viewerManager.dispose();
 			colorMap.dispose();
 			highlighters.dispose();
@@ -263,7 +263,7 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 	/**
 	 * Returns the shared instance.
 	 */
-	public static MylarUiPlugin getDefault() {
+	public static ContextUiPlugin getDefault() {
 		return plugin;
 	}
 
@@ -272,7 +272,7 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 	 * found.
 	 */
 	public static String getResourceString(String key) {
-		ResourceBundle bundle = MylarUiPlugin.getDefault().getResourceBundle();
+		ResourceBundle bundle = ContextUiPlugin.getDefault().getResourceBundle();
 		try {
 			return (bundle != null) ? bundle.getString(key) : key;
 		} catch (MissingResourceException e) {
@@ -474,7 +474,7 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 				Object provider = element.createExecutableExtension(UiExtensionPointReader.ELEMENT_UI_CLASS);
 				Object contentType = element.getAttribute(UiExtensionPointReader.ELEMENT_UI_BRIDGE_CONTENT_TYPE);
 				if (provider instanceof ILabelProvider && contentType != null) {
-					MylarUiPlugin.getDefault().internalAddContextLabelProvider((String) contentType,
+					ContextUiPlugin.getDefault().internalAddContextLabelProvider((String) contentType,
 							(ILabelProvider) provider);
 				} else {
 					MylarStatusHandler.log("Could not load label provider: " + provider.getClass().getCanonicalName()
@@ -491,18 +491,18 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 				Object bridge = element.createExecutableExtension(UiExtensionPointReader.ELEMENT_UI_CLASS);
 				Object contentType = element.getAttribute(UiExtensionPointReader.ELEMENT_UI_BRIDGE_CONTENT_TYPE);
 				if (bridge instanceof IMylarUiBridge && contentType != null) {
-					MylarUiPlugin.getDefault().internalAddBridge((String) contentType, (IMylarUiBridge) bridge);
+					ContextUiPlugin.getDefault().internalAddBridge((String) contentType, (IMylarUiBridge) bridge);
 				
 					String iconPath = element.getAttribute(ELEMENT_STRUCTURE_BRIDGE_SEARCH_ICON);
 					if (iconPath != null) {
 						ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(element.getDeclaringExtension().getNamespace(), iconPath);
 						if (descriptor != null) {
-							MylarUiPlugin.getDefault().setActiveSearchIcon((IMylarUiBridge)bridge, descriptor);
+							ContextUiPlugin.getDefault().setActiveSearchIcon((IMylarUiBridge)bridge, descriptor);
 						}
 					}
 					String label = element.getAttribute(ELEMENT_STRUCTURE_BRIDGE_SEARCH_LABEL);
 					if (label != null) {
-						MylarUiPlugin.getDefault().setActiveSearchLabel((IMylarUiBridge)bridge, label);
+						ContextUiPlugin.getDefault().setActiveSearchLabel((IMylarUiBridge)bridge, label);
 					}
 				
 				} else {
@@ -539,7 +539,7 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 			workingSetUpdaters = new ArrayList<MylarWorkingSetManager>();
 		}
 		workingSetUpdaters.add(updater);
-		MylarPlugin.getContextManager().addListener(updater);
+		ContextCorePlugin.getContextManager().addListener(updater);
 	}
 
 	public MylarWorkingSetManager getWorkingSetUpdater() {
@@ -576,10 +576,10 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 	}
 	
 	public void updateDegreeOfSeparation(AbstractRelationProvider provider, int degreeOfSeparation) {
-		MylarPlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
-		MylarUiPlugin.getDefault().getPreferenceStore().setValue(provider.getGenericId(), degreeOfSeparation);
+		ContextCorePlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
+		ContextUiPlugin.getDefault().getPreferenceStore().setValue(provider.getGenericId(), degreeOfSeparation);
 		provider.setDegreeOfSeparation(degreeOfSeparation);
-		for (IMylarElement element : MylarPlugin.getContextManager().getActiveContext().getInteresting()) {
+		for (IMylarElement element : ContextCorePlugin.getContextManager().getActiveContext().getInteresting()) {
 			if (element.getInterest().isLandmark()) {
 				provider.landmarkAdded(element);
 			}
@@ -588,7 +588,7 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 	
 	public void refreshRelatedElements() {
 		try {
-			for (IMylarStructureBridge bridge : MylarPlugin.getDefault().getStructureBridges().values()) {
+			for (IMylarStructureBridge bridge : ContextCorePlugin.getDefault().getStructureBridges().values()) {
 				if (bridge.getRelationshipProviders() != null) {
 					for (AbstractRelationProvider provider : bridge.getRelationshipProviders()) {
 						List<AbstractRelationProvider> providerList = new ArrayList<AbstractRelationProvider>();

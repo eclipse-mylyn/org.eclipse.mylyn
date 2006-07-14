@@ -17,8 +17,8 @@ import org.eclipse.jface.viewers.*;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarRelation;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.MylarPlugin;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 
 /**
  * @author Mik Kersten
@@ -38,11 +38,11 @@ public class ContextNodeOpenListener implements IOpenListener {
 		if (object instanceof IMylarElement) {
 			node = (IMylarElement) object;
 		} else if (!(object instanceof IMylarRelation)) {
-			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(object);
+			IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
 			String handle = bridge.getHandleIdentifier(object);
-			node = MylarPlugin.getContextManager().getElement(handle);
+			node = ContextCorePlugin.getContextManager().getElement(handle);
 		}
 		if (node != null)
-			MylarUiPlugin.getDefault().getUiBridge(node.getContentType()).open(node);
+			ContextUiPlugin.getDefault().getUiBridge(node.getContentType()).open(node);
 	}
 }

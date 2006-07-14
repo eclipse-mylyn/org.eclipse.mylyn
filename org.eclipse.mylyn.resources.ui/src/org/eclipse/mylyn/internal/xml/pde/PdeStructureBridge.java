@@ -164,7 +164,7 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 			}
 		} catch (Exception e) {
 			// ignore, means file doesn't exist
-			// MylarPlugin.log(e, "handle failed");
+			// ContextCorePlugin.log(e, "handle failed");
 		}
 		return null;
 	}
@@ -184,7 +184,7 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 				// get the handle for the PluginObjectNode
 				if (node.getModel() == null || node.getModel().getUnderlyingResource() == null
 						|| node.getModel().getUnderlyingResource().getFullPath() == null) {
-					// MylarPlugin.log("PDE xml node's resource or model is
+					// ContextCorePlugin.log("PDE xml node's resource or model is
 					// null: " + node.getName(), this);
 					return null;
 				}

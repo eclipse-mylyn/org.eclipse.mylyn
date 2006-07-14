@@ -22,17 +22,17 @@ import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.provisional.ide.team.TeamRepositoryProvider;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskActivityListener;
 import org.eclipse.mylar.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
 import org.eclipse.team.internal.core.subscribers.IChangeSetChangeListener;
@@ -161,10 +161,10 @@ public class MylarChangeSetManager implements IMylarContextListener {
 
 	public void enable() {
 		if (!isEnabled) {
-			MylarPlugin.getContextManager().addListener(this);
-			MylarTaskListPlugin.getTaskListManager().getTaskList().addChangeListener(TASK_CHANGE_LISTENER);
-			MylarTaskListPlugin.getTaskListManager().addActivityListener(TASK_ACTIVITY_LISTENER);
-			if (MylarTaskListPlugin.getTaskListManager().isTaskListInitialized()) {
+			ContextCorePlugin.getContextManager().addListener(this);
+			TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(TASK_CHANGE_LISTENER);
+			TasksUiPlugin.getTaskListManager().addActivityListener(TASK_ACTIVITY_LISTENER);
+			if (TasksUiPlugin.getTaskListManager().isTaskListInitialized()) {
 				initContextChangeSets(); // otherwise listener will do it
 			}
 			for (ActiveChangeSetManager collector : collectors) {
@@ -175,9 +175,9 @@ public class MylarChangeSetManager implements IMylarContextListener {
 	}
 
 	public void disable() {
-		MylarPlugin.getContextManager().removeListener(this);
-		MylarTaskListPlugin.getTaskListManager().removeActivityListener(TASK_ACTIVITY_LISTENER);
-		MylarTaskListPlugin.getTaskListManager().getTaskList().removeChangeListener(TASK_CHANGE_LISTENER);
+		ContextCorePlugin.getContextManager().removeListener(this);
+		TasksUiPlugin.getTaskListManager().removeActivityListener(TASK_ACTIVITY_LISTENER);
+		TasksUiPlugin.getTaskListManager().getTaskList().removeChangeListener(TASK_CHANGE_LISTENER);
 		for (ActiveChangeSetManager collector : collectors) {
 			collector.removeListener(CHANGE_SET_LISTENER);
 		}
@@ -192,7 +192,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 				if (!(restoredSet instanceof MylarActiveChangeSet)) {
 					String encodedTitle = restoredSet.getName();
 					String taskHandle = MylarActiveChangeSet.getHandleFromPersistedTitle(encodedTitle);
-					ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(taskHandle);
+					ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(taskHandle);
 					if (task != null) {
 						try {
 							MylarActiveChangeSet contextChangeSet = new MylarActiveChangeSet(task, collector);
@@ -277,7 +277,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 	}
 
 	private ITask getTask(IMylarContext context) {
-		List<ITask> activeTasks = MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTasks();
+		List<ITask> activeTasks = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTasks();
 
 		// TODO: support multiple tasks
 		if (activeTasks.size() > 0) {
@@ -298,7 +298,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 
 	public void interestChanged(List<IMylarElement> elements) {
 		for (IMylarElement element : elements) {
-			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
+			IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element.getContentType());
 			try {
 				if (bridge.isDocument(element.getHandleIdentifier())) {
 					IResource resource = MylarIdePlugin.getDefault().getResourceForElement(element, false);

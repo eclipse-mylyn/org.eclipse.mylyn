@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.context.ui;
 
 import java.util.List;
 
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskActivityListener;
@@ -27,10 +27,10 @@ import org.eclipse.ui.WorkbenchException;
 public class MylarPerspectiveManager implements ITaskActivityListener {
 
 	public void taskActivated(ITask task) {
-		String perspectiveId = MylarUiPlugin.getDefault().getPerspectiveIdFor(task);
+		String perspectiveId = ContextUiPlugin.getDefault().getPerspectiveIdFor(task);
 		
 		if (perspectiveId != null && !"".equals(perspectiveId) 
-				&& MylarUiPlugin.getDefault().getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_PERSPECTIVES)) {
+				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_PERSPECTIVES)) {
 			try {
 				PlatformUI.getWorkbench().showPerspective(perspectiveId, PlatformUI.getWorkbench().getActiveWorkbenchWindow());
 			} catch (WorkbenchException e) {
@@ -41,10 +41,10 @@ public class MylarPerspectiveManager implements ITaskActivityListener {
 
 	public void taskDeactivated(ITask task) {
 		if (PlatformUI.isWorkbenchRunning() 
-				&& MylarUiPlugin.getDefault().getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_PERSPECTIVES)) {
+				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_PERSPECTIVES)) {
 			IPerspectiveDescriptor descriptor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 					.getPerspective();
-			MylarUiPlugin.getDefault().setPerspectiveIdFor(task, descriptor.getId());
+			ContextUiPlugin.getDefault().setPerspectiveIdFor(task, descriptor.getId());
 		}
 	}
 

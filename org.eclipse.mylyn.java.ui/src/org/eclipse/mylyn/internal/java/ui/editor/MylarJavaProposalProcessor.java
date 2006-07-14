@@ -19,7 +19,7 @@ import org.eclipse.jdt.internal.ui.text.java.AbstractJavaCompletionProposal;
 import org.eclipse.jdt.internal.ui.text.java.JavaCompletionProposal;
 import org.eclipse.jdt.ui.text.java.IJavaCompletionProposalComputer;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.context.ui.MylarImages;
 
@@ -65,7 +65,7 @@ public class MylarJavaProposalProcessor {
 
 	@SuppressWarnings("unchecked")
 	public List projectInterestModel(IJavaCompletionProposalComputer proposalComputer, List proposals) {
-		if (!MylarPlugin.getContextManager().isContextActive()) {
+		if (!ContextCorePlugin.getContextManager().isContextActive()) {
 			return proposals;
 		} else {
 			boolean hasInterestingProposals = false;
@@ -106,7 +106,7 @@ public class MylarJavaProposalProcessor {
 		boolean hasInteresting = false;
 		IJavaElement javaElement = proposal.getJavaElement();
 		if (javaElement != null) {
-			IMylarElement mylarElement = MylarPlugin.getContextManager().getElement(javaElement.getHandleIdentifier());
+			IMylarElement mylarElement = ContextCorePlugin.getContextManager().getElement(javaElement.getHandleIdentifier());
 			float interest = mylarElement.getInterest().getValue();
 			if (interest > MylarContextManager.getScalingFactors().getInteresting()) {
 				// TODO: losing precision here, only going to one decimal place

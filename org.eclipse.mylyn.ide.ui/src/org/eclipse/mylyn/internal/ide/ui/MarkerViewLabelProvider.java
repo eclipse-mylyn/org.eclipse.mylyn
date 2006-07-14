@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.ide.ui;
 
 import org.eclipse.jface.viewers.*;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.context.ui.MylarUiPrefContstants;
 import org.eclipse.mylar.internal.context.ui.UiUtil;
 import org.eclipse.swt.graphics.*;
@@ -33,10 +33,10 @@ public class MarkerViewLabelProvider implements ITableLabelProvider, IColorProvi
 
 	public Font getFont(Object element) {
 		if (element instanceof ConcreteMarker) {
-			String handle = MylarPlugin.getDefault().getStructureBridge(
+			String handle = ContextCorePlugin.getDefault().getStructureBridge(
 					((ConcreteMarker) element).getResource().getFileExtension()).getHandleForOffsetInObject(
 					((ConcreteMarker) element), 0);
-			IMylarElement node = MylarPlugin.getContextManager().getElement(handle);
+			IMylarElement node = ContextCorePlugin.getContextManager().getElement(handle);
 			if (node != null) {
 				if (node.getInterest().isLandmark() && !node.getInterest().isPropagated()) {
 					return MylarUiPrefContstants.BOLD;
@@ -56,10 +56,10 @@ public class MarkerViewLabelProvider implements ITableLabelProvider, IColorProvi
 
 	public Color getForeground(Object element) {
 		if (element instanceof ConcreteMarker) {
-			String handle = MylarPlugin.getDefault().getStructureBridge(
+			String handle = ContextCorePlugin.getDefault().getStructureBridge(
 					((ConcreteMarker) element).getResource().getFileExtension()).getHandleForOffsetInObject(
 					((ConcreteMarker) element), 0);
-			return UiUtil.getForegroundForElement(MylarPlugin.getContextManager().getElement(handle));
+			return UiUtil.getForegroundForElement(ContextCorePlugin.getContextManager().getElement(handle));
 		} else {
 			return null;
 		}
@@ -67,10 +67,10 @@ public class MarkerViewLabelProvider implements ITableLabelProvider, IColorProvi
 
 	public Color getBackground(Object element) {
 		if (element instanceof ConcreteMarker) {
-			String handle = MylarPlugin.getDefault().getStructureBridge(
+			String handle = ContextCorePlugin.getDefault().getStructureBridge(
 					((ConcreteMarker) element).getResource().getFileExtension()).getHandleForOffsetInObject(
 					((ConcreteMarker) element), 0);
-			return UiUtil.getBackgroundForElement(MylarPlugin.getContextManager().getElement(handle));
+			return UiUtil.getBackgroundForElement(ContextCorePlugin.getContextManager().getElement(handle));
 		} else {
 			return null;
 		}

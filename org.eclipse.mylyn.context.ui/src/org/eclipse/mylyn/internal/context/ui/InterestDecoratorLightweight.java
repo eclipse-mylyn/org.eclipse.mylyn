@@ -16,9 +16,9 @@ import java.util.ConcurrentModificationException;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.context.core.MylarContextRelation;
 
 /**
@@ -33,21 +33,21 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
 	public void decorate(Object element, IDecoration decoration) {
 		IMylarStructureBridge bridge = null;
 		try {
-			if (MylarPlugin.getDefault() == null)
+			if (ContextCorePlugin.getDefault() == null)
 				return;
-			bridge = MylarPlugin.getDefault().getStructureBridge(element);
+			bridge = ContextCorePlugin.getDefault().getStructureBridge(element);
 		} catch (ConcurrentModificationException cme) {
 			// ignored, because we can add structure bridges during decoration
 		}
 		try {
 			IMylarElement node = null;
 			if (element instanceof MylarContextRelation) {
-				decoration.setForegroundColor(MylarUiPlugin.getDefault().getColorMap().RELATIONSHIP);
+				decoration.setForegroundColor(ContextUiPlugin.getDefault().getColorMap().RELATIONSHIP);
 			} else if (element instanceof IMylarElement) {
 				node = (IMylarElement) element;
 			} else {
 				if (bridge != null && bridge.getContentType() != null) {
-					node = MylarPlugin.getContextManager().getElement(bridge.getHandleIdentifier(element));
+					node = ContextCorePlugin.getContextManager().getElement(bridge.getHandleIdentifier(element));
 				}
 			}
 			if (node != null) {

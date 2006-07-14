@@ -13,14 +13,14 @@ package org.eclipse.mylar.internal.context.ui;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskKeyComparator;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasks.ui.ui.views.TaskKeyComparator;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.TaskArchive;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
@@ -115,11 +115,11 @@ public class TaskListInterestSorter extends ViewerSorter {
 	}
 
 	private int compareToday(ITask task1, ITask task2) {
-		if (MylarTaskListPlugin.getTaskListManager().isReminderToday(task1)
-				&& !MylarTaskListPlugin.getTaskListManager().isReminderToday(task2)) {
+		if (TasksUiPlugin.getTaskListManager().isReminderToday(task1)
+				&& !TasksUiPlugin.getTaskListManager().isReminderToday(task2)) {
 			return -1;
-		} else if (!MylarTaskListPlugin.getTaskListManager().isReminderToday(task1)
-				&& MylarTaskListPlugin.getTaskListManager().isReminderToday(task2)) {
+		} else if (!TasksUiPlugin.getTaskListManager().isReminderToday(task1)
+				&& TasksUiPlugin.getTaskListManager().isReminderToday(task2)) {
 			return 1;
 			// } else if
 			// (MylarTaskListPlugin.getTaskListManager().isReminderToday(task1)
@@ -146,11 +146,11 @@ public class TaskListInterestSorter extends ViewerSorter {
 	}
 
 	private int compareThisWeek(ITask task1, ITask task2) {
-		if (MylarTaskListPlugin.getTaskListManager().isReminderThisWeek(task1)
-				&& !MylarTaskListPlugin.getTaskListManager().isReminderThisWeek(task2)) {
+		if (TasksUiPlugin.getTaskListManager().isReminderThisWeek(task1)
+				&& !TasksUiPlugin.getTaskListManager().isReminderThisWeek(task2)) {
 			return 1;
-		} else if (!MylarTaskListPlugin.getTaskListManager().isReminderThisWeek(task1)
-				&& MylarTaskListPlugin.getTaskListManager().isReminderThisWeek(task2)) {
+		} else if (!TasksUiPlugin.getTaskListManager().isReminderThisWeek(task1)
+				&& TasksUiPlugin.getTaskListManager().isReminderThisWeek(task2)) {
 			return -1;
 			// } else if
 			// (MylarTaskListPlugin.getTaskListManager().isReminderThisWeek(task1)

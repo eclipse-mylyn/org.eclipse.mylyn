@@ -21,7 +21,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.tests.support.search.ISearchPluginTest;
 import org.eclipse.mylar.core.tests.support.search.TestActiveSearchListener;
 import org.eclipse.mylar.internal.context.core.CompositeContext;
@@ -65,22 +65,22 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 		plugin1 = WorkspaceSetupHelper.getFile(jp1, "plugin.xml");
 
 		MylarContext context = WorkspaceSetupHelper.getContext();
-		MylarPlugin.getContextManager().activateContext(context.getHandleIdentifier());
+		ContextCorePlugin.getContextManager().activateContext(context.getHandleIdentifier());
 		helper = new SearchPluginTestHelper(this);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		WorkspaceSetupHelper.clearDoiModel();
-		MylarPlugin.getContextManager().deactivateContext(WorkspaceSetupHelper.getContext().getHandleIdentifier());
-		assertFalse(MylarPlugin.getContextManager().isContextActive());
+		ContextCorePlugin.getContextManager().deactivateContext(WorkspaceSetupHelper.getContext().getHandleIdentifier());
+		assertFalse(ContextCorePlugin.getContextManager().isContextActive());
 	}
 
 	public void testJavaReferencesSearchDOS1() throws IOException, CoreException {
 
 		int dos = 1;
 
-		CompositeContext t = (CompositeContext) MylarPlugin.getContextManager().getActiveContext();
+		CompositeContext t = (CompositeContext) ContextCorePlugin.getContextManager().getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
 		IMylarElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 
@@ -119,7 +119,7 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 	public void testJavaReferencesSearchDOS2() throws CoreException, IOException {
 		int dos = 2;
 
-		CompositeContext t = (CompositeContext) MylarPlugin.getContextManager().getActiveContext();
+		CompositeContext t = (CompositeContext) ContextCorePlugin.getContextManager().getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
 		IMylarElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 
@@ -167,7 +167,7 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 	public void testJavaReferencesSearchDOS3() throws Exception {
 		int dos = 3;
 
-		CompositeContext t = (CompositeContext) MylarPlugin.getContextManager().getActiveContext();
+		CompositeContext t = (CompositeContext) ContextCorePlugin.getContextManager().getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
 		IMylarElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 
@@ -217,7 +217,7 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 
 		int dos = 4;
 
-		CompositeContext t = (CompositeContext) MylarPlugin.getContextManager().getActiveContext();
+		CompositeContext t = (CompositeContext) ContextCorePlugin.getContextManager().getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
 		IMylarElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 
@@ -265,7 +265,7 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 		int dos = 5;
 
 		// NOTE: as of 3.2M3 there is a plugin.xml reference
-		CompositeContext t = (CompositeContext) MylarPlugin.getContextManager().getActiveContext();
+		CompositeContext t = (CompositeContext) ContextCorePlugin.getContextManager().getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
 		IMylarElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 

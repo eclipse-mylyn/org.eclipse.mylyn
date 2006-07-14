@@ -91,7 +91,7 @@ public class XmlNodeHelper {
 	// selections
 	// // are made to new nodes
 	// startOffset = 0;
-	// MylarPlugin.log(e, "Unable to get start line from the editor: " +
+	// ContextCorePlugin.log(e, "Unable to get start line from the editor: " +
 	// filename + ":" + offset);
 	// }
 	// }

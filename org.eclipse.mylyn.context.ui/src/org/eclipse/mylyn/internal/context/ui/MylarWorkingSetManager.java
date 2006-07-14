@@ -19,8 +19,8 @@ import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.MylarPlugin;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetUpdater;
@@ -35,7 +35,7 @@ public class MylarWorkingSetManager implements IWorkingSetUpdater, IMylarContext
 	private List<IWorkingSet> workingSets = new ArrayList<IWorkingSet>();
 
 	public MylarWorkingSetManager() {
-		MylarUiPlugin.getDefault().addWorkingSetManager(this);
+		ContextUiPlugin.getDefault().addWorkingSetManager(this);
 	}
 
 	public void add(IWorkingSet workingSet) {
@@ -112,9 +112,9 @@ public class MylarWorkingSetManager implements IWorkingSetUpdater, IMylarContext
 	}
 
 	public static void getElementsFromTaskscape(List<IAdaptable> elements) {
-		// IMylarContext t = MylarPlugin.getContextManager().getActiveContext();
-		for (IMylarElement node : MylarPlugin.getContextManager().getInterestingDocuments()) {
-			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
+		// IMylarContext t = ContextCorePlugin.getContextManager().getActiveContext();
+		for (IMylarElement node : ContextCorePlugin.getContextManager().getInterestingDocuments()) {
+			IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(node.getContentType());
 
 			// HACK comparing extension to string
 			// No need to add bugzilla resources to the taskscape

@@ -20,7 +20,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.java.InterestUpdateDeltaListener;
 import org.eclipse.ui.IViewPart;
 
@@ -48,14 +48,14 @@ public class RefactoringTest extends AbstractJavaContextTest {
 
 		IMethod method = type.createMethod("public void deleteMe() { }", null, true, null);
 		monitor.selectionChanged(view, new StructuredSelection(method));
-		IMylarElement node = MylarPlugin.getContextManager().getElement(method.getHandleIdentifier());
+		IMylarElement node = ContextCorePlugin.getContextManager().getElement(method.getHandleIdentifier());
 		assertTrue(node.getInterest().isInteresting());
 		project.build();
 		TestProgressMonitor monitor = new TestProgressMonitor();
 		method.delete(true, monitor);
 		if (!monitor.isDone())
 			Thread.sleep(100);
-		IMylarElement deletedNode = MylarPlugin.getContextManager().getElement(method.getHandleIdentifier());
+		IMylarElement deletedNode = ContextCorePlugin.getContextManager().getElement(method.getHandleIdentifier());
 		assertFalse(deletedNode.getInterest().isInteresting());
 	}
 
@@ -67,8 +67,8 @@ public class RefactoringTest extends AbstractJavaContextTest {
 		monitor.selectionChanged(view, new StructuredSelection(type));
 		monitor.selectionChanged(view, new StructuredSelection(type.getParent()));
 		project.build();
-		IMylarElement node = MylarPlugin.getContextManager().getElement(type.getHandleIdentifier());
-		IMylarElement parentNode = MylarPlugin.getContextManager().getElement(type.getParent().getHandleIdentifier());
+		IMylarElement node = ContextCorePlugin.getContextManager().getElement(type.getHandleIdentifier());
+		IMylarElement parentNode = ContextCorePlugin.getContextManager().getElement(type.getParent().getHandleIdentifier());
 		assertTrue(node.getInterest().isInteresting());
 		assertTrue(parentNode.getInterest().isInteresting());
 
@@ -80,17 +80,17 @@ public class RefactoringTest extends AbstractJavaContextTest {
 		ICompilationUnit unit = (ICompilationUnit) p1.getChildren()[0];
 
 		IType newType = (IType) unit.getTypes()[0];
-		IMylarElement newParentNode = MylarPlugin.getContextManager().getElement(
+		IMylarElement newParentNode = ContextCorePlugin.getContextManager().getElement(
 				newType.getParent().getHandleIdentifier());
-		IMylarElement oldParentNode = MylarPlugin.getContextManager().getElement(parentNode.getHandleIdentifier());
+		IMylarElement oldParentNode = ContextCorePlugin.getContextManager().getElement(parentNode.getHandleIdentifier());
 		assertFalse(oldParentNode.getInterest().isInteresting());
 		assertTrue(newParentNode.getInterest().isInteresting());
 
 		// IMylarElement newNode =
-		// MylarPlugin.getContextManager().getElement(newType.getHandleIdentifier());
+		// ContextCorePlugin.getContextManager().getElement(newType.getHandleIdentifier());
 		// assertTrue(newNode.getInterest().isInteresting());
 		// IMylarElement oldNode =
-		// MylarPlugin.getContextManager().getElement(node.getHandleIdentifier());
+		// ContextCorePlugin.getContextManager().getElement(node.getHandleIdentifier());
 		// assertFalse(oldNode.getInterest().isInteresting());
 	}
 
@@ -102,7 +102,7 @@ public class RefactoringTest extends AbstractJavaContextTest {
 		assertEquals(1, type.getMethods().length);
 
 		monitor.selectionChanged(view, new StructuredSelection(method));
-		IMylarElement node = MylarPlugin.getContextManager().getElement(method.getHandleIdentifier());
+		IMylarElement node = ContextCorePlugin.getContextManager().getElement(method.getHandleIdentifier());
 		assertTrue(node.getInterest().isInteresting());
 
 		project.build();
@@ -112,10 +112,10 @@ public class RefactoringTest extends AbstractJavaContextTest {
 			Thread.sleep(200);
 		IMethod newMethod = type.getMethods()[0];
 		assertTrue(newMethod.getElementName().equals("refactored"));
-		IMylarElement newNode = MylarPlugin.getContextManager().getElement(newMethod.getHandleIdentifier());
+		IMylarElement newNode = ContextCorePlugin.getContextManager().getElement(newMethod.getHandleIdentifier());
 		assertTrue(newNode.getInterest().isInteresting());
 
-		IMylarElement goneNode = MylarPlugin.getContextManager().getElement(node.getHandleIdentifier());
+		IMylarElement goneNode = ContextCorePlugin.getContextManager().getElement(node.getHandleIdentifier());
 		assertFalse(goneNode.getInterest().isInteresting());
 	}
 }

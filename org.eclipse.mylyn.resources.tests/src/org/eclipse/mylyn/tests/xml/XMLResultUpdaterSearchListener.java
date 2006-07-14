@@ -17,10 +17,10 @@ import java.util.Map;
 
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
 import org.eclipse.mylar.context.core.InteractionEvent;
-import org.eclipse.mylar.context.core.MylarPlugin;
 import org.eclipse.mylar.core.tests.support.search.TestActiveSearchListener;
 import org.eclipse.mylar.internal.xml.XmlNodeHelper;
 import org.eclipse.mylar.internal.xml.XmlReferencesProvider;
@@ -73,7 +73,7 @@ public class XMLResultUpdaterSearchListener extends TestActiveSearchListener {
 						try {
 							XmlNodeHelper xnode = new XmlNodeHelper(fei.getFile().getFullPath().toString(), m
 									.getOffset());
-							IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(f.getName());
+							IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(f.getName());
 							String handle = xnode.getHandle();
 							Object o = bridge.getObjectForHandle(handle);
 							String name = bridge.getName(o);
@@ -101,7 +101,7 @@ public class XMLResultUpdaterSearchListener extends TestActiveSearchListener {
 									// TaskscapeManager.getScalingFactors().getDegreeOfSeparationScale();
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PREDICTION, elementKind, elementHandle,
 				XmlReferencesProvider.SOURCE_ID, XmlReferencesProvider.SOURCE_ID, null, predictedInterest);
-		MylarPlugin.getContextManager().handleInteractionEvent(event);
+		ContextCorePlugin.getContextManager().handleInteractionEvent(event);
 
 	}
 

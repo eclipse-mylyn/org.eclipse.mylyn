@@ -15,8 +15,8 @@ import java.util.List;
 
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.MylarPlugin;
 import org.eclipse.mylar.core.tests.support.search.TestActiveSearchListener;
 import org.eclipse.mylar.internal.xml.XmlNodeHelper;
 import org.eclipse.search.internal.ui.text.FileSearchResult;
@@ -57,7 +57,7 @@ public class XMLTestActiveSearchListener extends TestActiveSearchListener {
 						Match m = mar[j];
 						try {
 
-							IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(f.getName());
+							IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(f.getName());
 
 							String handle = bridge.getHandleForOffsetInObject(f, m.getOffset());
 

@@ -27,7 +27,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.context.ui.views.ContextContentProvider;
 import org.eclipse.mylar.internal.context.ui.views.ContextNodeOpenListener;
 import org.eclipse.mylar.internal.context.ui.views.DelegatingContextLabelProvider;
@@ -540,9 +540,9 @@ public class ActiveSearchQuickView {
 	}
 
 	private IDialogSettings getDialogSettings() {
-		IDialogSettings settings = MylarUiPlugin.getDefault().getDialogSettings().getSection(sectionName);
+		IDialogSettings settings = ContextUiPlugin.getDefault().getDialogSettings().getSection(sectionName);
 		if (settings == null)
-			settings = MylarUiPlugin.getDefault().getDialogSettings().addNewSection(sectionName);
+			settings = ContextUiPlugin.getDefault().getDialogSettings().addNewSection(sectionName);
 
 		return settings;
 	}

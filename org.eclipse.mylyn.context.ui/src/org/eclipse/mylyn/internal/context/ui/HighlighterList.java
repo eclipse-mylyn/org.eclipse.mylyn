@@ -16,8 +16,8 @@ import java.util.List;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.context.core.IMylarContextListener;
-import org.eclipse.mylar.context.core.MylarPlugin;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Display;
  */
 public class HighlighterList {
 
-	public static final Highlighter DEFAULT_HIGHLIGHTER = new Highlighter("<none>", MylarUiPlugin.getDefault()
+	public static final Highlighter DEFAULT_HIGHLIGHTER = new Highlighter("<none>", ContextUiPlugin.getDefault()
 			.getColorMap().DEFAULT, false);
 
 	private List<Highlighter> highlighters;
@@ -58,25 +58,25 @@ public class HighlighterList {
 	public void setToDefaultList() {
 		this.highlighters.clear();
 		highlighters.add(DEFAULT_HIGHLIGHTER);
-		highlighters.add(new Highlighter("yellow", MylarUiPlugin.getDefault().getColorMap().HIGHLIGHTER_YELLOW, false));
-		highlighters.add(new Highlighter("rose", MylarUiPlugin.getDefault().getColorMap().PANTONE_PASTEL_ROSE, false));
-		highlighters.add(new Highlighter("purple", MylarUiPlugin.getDefault().getColorMap().PANTONE_PASTEL_PURPLE,
+		highlighters.add(new Highlighter("yellow", ContextUiPlugin.getDefault().getColorMap().HIGHLIGHTER_YELLOW, false));
+		highlighters.add(new Highlighter("rose", ContextUiPlugin.getDefault().getColorMap().PANTONE_PASTEL_ROSE, false));
+		highlighters.add(new Highlighter("purple", ContextUiPlugin.getDefault().getColorMap().PANTONE_PASTEL_PURPLE,
 				false));
-		highlighters.add(new Highlighter("blue", MylarUiPlugin.getDefault().getColorMap().PANTONE_PASTEL_BLUE, false));
+		highlighters.add(new Highlighter("blue", ContextUiPlugin.getDefault().getColorMap().PANTONE_PASTEL_BLUE, false));
 		highlighters
-				.add(new Highlighter("green", MylarUiPlugin.getDefault().getColorMap().PANTONE_PASTERL_GREEN, false));
+				.add(new Highlighter("green", ContextUiPlugin.getDefault().getColorMap().PANTONE_PASTERL_GREEN, false));
 		highlighters.add(new Highlighter("blue gradient",
-				MylarUiPlugin.getDefault().getColorMap().HIGLIGHTER_BLUE_GRADIENT, true));
+				ContextUiPlugin.getDefault().getColorMap().HIGLIGHTER_BLUE_GRADIENT, true));
 		highlighters.add(new Highlighter("orange gradient",
-				MylarUiPlugin.getDefault().getColorMap().HIGHLIGHTER_ORANGE_GRADIENT, true));
+				ContextUiPlugin.getDefault().getColorMap().HIGHLIGHTER_ORANGE_GRADIENT, true));
 
 		Highlighter intersectionHighlighter = new Highlighter("intersection",
-				MylarUiPlugin.getDefault().getColorMap().HIGLIGHTER_RED_INTERSECTION, false);
+				ContextUiPlugin.getDefault().getColorMap().HIGLIGHTER_RED_INTERSECTION, false);
 		intersectionHighlighter.setIntersection(true);
-		MylarUiPlugin.getDefault().setIntersectionHighlighter(intersectionHighlighter);
+		ContextUiPlugin.getDefault().setIntersectionHighlighter(intersectionHighlighter);
 
-		if (MylarPlugin.getContextManager() != null && Platform.isRunning()) {
-			MylarPlugin.getContextManager().notifyPostPresentationSettingsChange(
+		if (ContextCorePlugin.getContextManager() != null && Platform.isRunning()) {
+			ContextCorePlugin.getContextManager().notifyPostPresentationSettingsChange(
 					IMylarContextListener.UpdateKind.HIGHLIGHTER);
 		}
 	}
@@ -152,7 +152,7 @@ public class HighlighterList {
 		} else if (res > 0) {
 			darkenAllColors(Math.abs(res));
 		}
-		MylarPlugin.getContextManager().notifyPostPresentationSettingsChange(
+		ContextCorePlugin.getContextManager().notifyPostPresentationSettingsChange(
 				IMylarContextListener.UpdateKind.HIGHLIGHTER);
 	}
 

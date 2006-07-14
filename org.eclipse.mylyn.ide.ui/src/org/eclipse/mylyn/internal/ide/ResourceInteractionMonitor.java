@@ -19,7 +19,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.monitor.AbstractUserInteractionMonitor;
 import org.eclipse.ui.IWorkbenchPart;
@@ -46,7 +46,7 @@ public class ResourceInteractionMonitor extends AbstractUserInteractionMonitor {
 					Object object = ((EditorPart) part).getEditorInput().getAdapter(IResource.class);
 					if (object instanceof IFile) {
 						IFile file = (IFile) object;
-						if (!MylarPlugin.getDefault().getKnownContentTypes().contains(file.getFileExtension())) {
+						if (!ContextCorePlugin.getDefault().getKnownContentTypes().contains(file.getFileExtension())) {
 							super.handleElementEdit(part, object, contributeToContext);
 						}
 					}

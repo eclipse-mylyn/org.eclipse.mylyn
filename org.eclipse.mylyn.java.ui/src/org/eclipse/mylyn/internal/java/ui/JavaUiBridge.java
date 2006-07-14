@@ -29,7 +29,7 @@ import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.context.ui.IMylarUiBridge;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
@@ -137,8 +137,8 @@ public class JavaUiBridge implements IMylarUiBridge {
 		Object adapter = input.getAdapter(IJavaElement.class);
 		if (adapter instanceof IJavaElement) {
 			IJavaElement javaElement = (IJavaElement)adapter;
-			String handle = MylarPlugin.getDefault().getStructureBridge(javaElement).getHandleIdentifier(javaElement);
-			return MylarPlugin.getContextManager().getElement(handle);
+			String handle = ContextCorePlugin.getDefault().getStructureBridge(javaElement).getHandleIdentifier(javaElement);
+			return ContextCorePlugin.getContextManager().getElement(handle);
 		} else {
 			return null;
 		}

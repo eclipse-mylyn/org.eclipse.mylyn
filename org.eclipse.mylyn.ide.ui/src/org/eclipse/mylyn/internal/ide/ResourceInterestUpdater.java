@@ -19,7 +19,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
 import org.eclipse.mylar.context.core.InteractionEvent;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -58,10 +58,10 @@ public class ResourceInterestUpdater {
 		List<InteractionEvent> interactionEvents = new ArrayList<InteractionEvent>();
 		for (IResource resource : resources) {
 			if (acceptResource(resource)) {
-				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(resource);
+				IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(resource);
 				String handle = bridge.getHandleIdentifier(resource);
 				if (handle != null) {
-					IMylarElement element = MylarPlugin.getContextManager().getElement(handle);
+					IMylarElement element = ContextCorePlugin.getContextManager().getElement(handle);
 					if (element != null && !element.getInterest().isInteresting()) {
 						InteractionEvent interactionEvent = new InteractionEvent(interactionKind, bridge
 								.getContentType(), handle, SOURCE_ID);
@@ -71,9 +71,9 @@ public class ResourceInterestUpdater {
 			}
 		}  
 		if (InteractionEvent.Kind.SELECTION.equals(interactionKind)) {
-			MylarPlugin.getContextManager().handleInteractionEvents(interactionEvents, true);
+			ContextCorePlugin.getContextManager().handleInteractionEvents(interactionEvents, true);
 		} else {
-			MylarPlugin.getContextManager().handleInteractionEvents(interactionEvents, false);
+			ContextCorePlugin.getContextManager().handleInteractionEvents(interactionEvents, false);
 		}
 	}
 

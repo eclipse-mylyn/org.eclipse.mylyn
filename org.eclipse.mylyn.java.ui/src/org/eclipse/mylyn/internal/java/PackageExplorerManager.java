@@ -28,7 +28,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.ui.actions.AbstractApplyMylarAction;
 import org.eclipse.mylar.internal.java.ui.JavaDeclarationsFilter;
@@ -49,7 +49,7 @@ public class PackageExplorerManager implements IMylarContextListener, ISelection
 			return;
 		}		
 		AbstractApplyMylarAction applyAction = AbstractApplyMylarAction.getActionForPart((PackageExplorerPart)part);		
-		if (!MylarPlugin.getContextManager().isContextActive()
+		if (!ContextCorePlugin.getContextManager().isContextActive()
 			|| (applyAction != null && !applyAction.isChecked())) {
 			return;
 		}
@@ -106,7 +106,7 @@ public class PackageExplorerManager implements IMylarContextListener, ISelection
 
 	public void contextActivated(IMylarContext taskscape) {
 //		try {
-//			if (MylarPlugin.getContextManager().isContextActive()
+//			if (ContextCorePlugin.getContextManager().isContextActive()
 //					&& ApplyMylarToPackageExplorerAction.getDefault() != null
 //					&& ApplyMylarToPackageExplorerAction.getDefault().isChecked()) {
 //

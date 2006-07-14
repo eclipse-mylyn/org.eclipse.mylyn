@@ -114,7 +114,7 @@ public class PdeUiBridge implements IMylarUiBridge {
 			// }
 
 		} catch (Exception e) {
-			// MylarPlugin.log(e, "ERROR OPENING XML EDITOR\n" +
+			// ContextCorePlugin.log(e, "ERROR OPENING XML EDITOR\n" +
 			// e.getMessage());
 		}
 	}

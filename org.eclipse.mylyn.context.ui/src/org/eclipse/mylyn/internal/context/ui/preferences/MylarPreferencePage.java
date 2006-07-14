@@ -31,7 +31,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.context.ui.Highlighter;
 import org.eclipse.mylar.internal.context.ui.HighlighterImageDescriptor;
 import org.eclipse.mylar.internal.context.ui.HighlighterList;
@@ -101,7 +101,7 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 	 */
 	public MylarPreferencePage() {
 		super();
-		setPreferenceStore(MylarUiPlugin.getDefault().getPreferenceStore());
+		setPreferenceStore(ContextUiPlugin.getDefault().getPreferenceStore());
 		setTitle("Mylar");
 	}
 
@@ -120,7 +120,7 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 		contentProvider = new HighlighterContentProvider();
 		tableViewer.setContentProvider(contentProvider);
 		tableViewer.setLabelProvider(new HighlighterLabelProvider());
-		tableViewer.setInput(MylarUiPlugin.getDefault().getHighlighterList());
+		tableViewer.setInput(ContextUiPlugin.getDefault().getHighlighterList());
 
 		return entryTable;
 	}
@@ -143,7 +143,7 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 	@Override
 	public boolean performOk() {
 		getPreferenceStore().setValue(MylarUiPrefContstants.HIGHLIGHTER_PREFIX,
-				MylarUiPlugin.getDefault().getHighlighterList().externalizeToString());
+				ContextUiPlugin.getDefault().getHighlighterList().externalizeToString());
 		getPreferenceStore().setValue(MylarUiPrefContstants.INTEREST_FILTER_EXCLUSION,
 				exclusionFieldEditor.getStringValue());
 		getPreferenceStore().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, manageEditorsButton.getSelection());
@@ -162,7 +162,7 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 	@Override
 	public boolean performCancel() {
 		String highlighters = getPreferenceStore().getString(MylarUiPrefContstants.HIGHLIGHTER_PREFIX);
-		MylarUiPlugin.getDefault().getHighlighterList().internalizeFromString(highlighters);
+		ContextUiPlugin.getDefault().getHighlighterList().internalizeFromString(highlighters);
 
 		contentProvider = new HighlighterContentProvider();
 		tableViewer.setContentProvider(contentProvider);
@@ -179,7 +179,7 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 
 		contentProvider = new HighlighterContentProvider();
 		tableViewer.setContentProvider(contentProvider);
-		MylarUiPlugin.getDefault().getHighlighterList().setToDefaultList();
+		ContextUiPlugin.getDefault().getHighlighterList().setToDefaultList();
 		return;
 	}
 
@@ -281,7 +281,7 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 		 * getElements - returns array of Highlighters for table
 		 */
 		public Object[] getElements(Object inputElement) {
-			return MylarUiPlugin.getDefault().getHighlighterList().getHighlighters().toArray();
+			return ContextUiPlugin.getDefault().getHighlighterList().getHighlighters().toArray();
 		}
 
 		public void dispose() {
@@ -602,7 +602,7 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Highlighter hl = MylarUiPlugin.getDefault().getHighlighterList().addHighlighter();
+				Highlighter hl = ContextUiPlugin.getDefault().getHighlighterList().addHighlighter();
 				contentProvider.addHighlighter(hl);
 			}
 		});
@@ -619,7 +619,7 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 			public void widgetSelected(SelectionEvent e) {
 				Highlighter hl = (Highlighter) ((IStructuredSelection) tableViewer.getSelection()).getFirstElement();
 				if (hl != null) {
-					MylarUiPlugin.getDefault().getHighlighterList().removeHighlighter(hl);
+					ContextUiPlugin.getDefault().getHighlighterList().removeHighlighter(hl);
 					contentProvider.removeHighlighter(hl);
 				}
 			}

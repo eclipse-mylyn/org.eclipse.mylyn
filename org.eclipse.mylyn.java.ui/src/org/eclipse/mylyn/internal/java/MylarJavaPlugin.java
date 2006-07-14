@@ -18,7 +18,7 @@ import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.java.ui.JavaUiUtil;
 import org.eclipse.mylar.internal.java.ui.LandmarkMarkerManager;
@@ -79,9 +79,9 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 					setPreferenceDefaults();
 					savePluginPreferences();
 
-					MylarPlugin.getContextManager().addListener(packageExplorerManager);
-					MylarPlugin.getContextManager().addListener(typeHistoryManager);
-					MylarPlugin.getContextManager().addListener(landmarkMarkerManager);
+					ContextCorePlugin.getContextManager().addListener(packageExplorerManager);
+					ContextCorePlugin.getContextManager().addListener(typeHistoryManager);
+					ContextCorePlugin.getContextManager().addListener(landmarkMarkerManager);
 
 					if (getPreferenceStore().getBoolean(MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS)) {
 						problemListener.enable();
@@ -106,7 +106,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 						JavaUiUtil.installContentAssist(JavaPlugin.getDefault().getPreferenceStore(), true);
 					}
 
-					if (!MylarPlugin.getDefault().suppressWizardsOnStartup()
+					if (!ContextCorePlugin.getDefault().suppressWizardsOnStartup()
 							&& !getPreferenceStore().contains(MylarPreferenceWizard.MYLAR_FIRST_RUN)) {
 						MylarPreferenceWizard wizard = new MylarPreferenceWizard();
 						Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
@@ -139,9 +139,9 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 			plugin = null;
 			resourceBundle = null;
 
-			MylarPlugin.getContextManager().removeListener(packageExplorerManager);
-			MylarPlugin.getContextManager().removeListener(typeHistoryManager);
-			MylarPlugin.getContextManager().removeListener(landmarkMarkerManager);
+			ContextCorePlugin.getContextManager().removeListener(packageExplorerManager);
+			ContextCorePlugin.getContextManager().removeListener(typeHistoryManager);
+			ContextCorePlugin.getContextManager().removeListener(landmarkMarkerManager);
 
 			MylarMonitorPlugin.getDefault().getSelectionMonitors().remove(javaEditingMonitor);
 

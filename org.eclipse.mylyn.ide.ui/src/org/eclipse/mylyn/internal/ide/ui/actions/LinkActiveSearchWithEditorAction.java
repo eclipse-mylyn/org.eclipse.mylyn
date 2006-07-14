@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.context.ui.IMylarUiBridge;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.context.ui.MylarImages;
 import org.eclipse.mylar.internal.ide.ui.views.ActiveSearchView;
 import org.eclipse.swt.widgets.Event;
@@ -49,8 +49,8 @@ public class LinkActiveSearchWithEditorAction extends Action {
 		setImageDescriptor(MylarImages.LINK_WITH_EDITOR);
 		setText(LABEL);
 		setToolTipText(LABEL);
-		MylarUiPlugin.getDefault().getPreferenceStore().setDefault(ID, true);
-		update(MylarUiPlugin.getDefault().getPreferenceStore().getBoolean(ID));
+		ContextUiPlugin.getDefault().getPreferenceStore().setDefault(ID, true);
+		update(ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ID));
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class LinkActiveSearchWithEditorAction extends Action {
 
 	public void update(boolean on) {
 		setChecked(on);
-		MylarUiPlugin.getDefault().getPreferenceStore().setValue(ID, on);
+		ContextUiPlugin.getDefault().getPreferenceStore().setValue(ID, on);
 		ISelectionService service = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
 		if (on) {
 			service.addPostSelectionListener(selectionTracker);
@@ -76,7 +76,7 @@ public class LinkActiveSearchWithEditorAction extends Action {
 					ActiveSearchView view = ActiveSearchView.getFromActivePerspective();
 					if (view == null || !view.getViewer().getControl().isVisible())
 						return;
-					IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor((IEditorPart) part);
+					IMylarUiBridge bridge = ContextUiPlugin.getDefault().getUiBridgeForEditor((IEditorPart) part);
 					Object toSelect = bridge.getObjectForTextSelection((TextSelection) selection, (IEditorPart) part);
 					if (toSelect != null && view.getViewer().testFindItem(toSelect) != null) {
 						view.getViewer().setSelection(new StructuredSelection(toSelect), true);

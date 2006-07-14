@@ -22,8 +22,8 @@ import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.MylarPlugin;
 import org.eclipse.mylar.core.tests.UiTestUtil;
 import org.eclipse.mylar.core.tests.support.search.TestActiveSearchListener;
 import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
@@ -59,7 +59,7 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
 		view = (ActiveSearchView) JavaPlugin.getActivePage().showView(ActiveSearchView.ID);
 		ActiveSearchView.getFromActivePerspective().setSyncExecForTesting(false);
 
-		for (AbstractRelationProvider provider : MylarPlugin.getContextManager().getActiveRelationProviders()) {
+		for (AbstractRelationProvider provider : ContextCorePlugin.getContextManager().getActiveRelationProviders()) {
 			assertTrue(provider.isEnabled());
 		}
 		assertEquals(0, view.getViewer().getTree().getItemCount());
@@ -75,7 +75,7 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
 		// ((MylarContextElement)((CompositeContextElement)node).getNodes().iterator().next()).addEdge(new
 		// MylarContextRelation("kind", "edgeKind", node, node, context));
 
-		assertEquals(1, MylarPlugin.getContextManager().getActiveLandmarks().size());
+		assertEquals(1, ContextCorePlugin.getContextManager().getActiveLandmarks().size());
 
 		assertEquals(1, search(2, node).size());
 
@@ -90,7 +90,7 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
 
 	public void testSearchNotRunIfViewDeactivated() throws PartInitException, JavaModelException {
 		view = (ActiveSearchView) JavaPlugin.getActivePage().showView(ActiveSearchView.ID);
-		for (AbstractRelationProvider provider : MylarPlugin.getContextManager().getActiveRelationProviders()) {
+		for (AbstractRelationProvider provider : ContextCorePlugin.getContextManager().getActiveRelationProviders()) {
 			assertTrue(provider.getCurrentDegreeOfSeparation() > 0);
 		}
 		JavaPlugin.getActivePage().showView("org.eclipse.ui.views.ProblemView"); 
@@ -101,12 +101,12 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
 //		assertTrue(perspective.canCloseView(view));
 		assertTrue(perspective.hideView(reference));
 
-		for (AbstractRelationProvider provider : MylarPlugin.getContextManager().getActiveRelationProviders()) {
+		for (AbstractRelationProvider provider : ContextCorePlugin.getContextManager().getActiveRelationProviders()) {
 			assertFalse(provider.isEnabled());
 		}
 
 		JavaPlugin.getActivePage().showView(ActiveSearchView.ID);
-		for (AbstractRelationProvider provider : MylarPlugin.getContextManager().getActiveRelationProviders()) {
+		for (AbstractRelationProvider provider : ContextCorePlugin.getContextManager().getActiveRelationProviders()) {
 			assertTrue(provider.isEnabled());
 		}
 	}
@@ -123,7 +123,7 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
 			monitor.selectionChanged(part, sm2);
 			IMylarElement node = manager.handleInteractionEvent(mockInterestContribution(m2.getHandleIdentifier(),
 					scaling.getLandmark()));
-			assertEquals(1, MylarPlugin.getContextManager().getActiveLandmarks().size());
+			assertEquals(1, ContextCorePlugin.getContextManager().getActiveLandmarks().size());
 
 			assertEquals(1, search(2, node).size());
 

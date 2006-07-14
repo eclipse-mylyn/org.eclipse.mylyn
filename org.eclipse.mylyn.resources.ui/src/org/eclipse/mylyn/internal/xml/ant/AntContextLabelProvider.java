@@ -14,7 +14,7 @@ package org.eclipse.mylar.internal.xml.ant;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarRelation;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.context.ui.AbstractContextLabelProvider;
 import org.eclipse.mylar.internal.context.ui.MylarImages;
 import org.eclipse.mylar.internal.xml.MylarXmlPlugin;
@@ -38,7 +38,7 @@ public class AntContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
 	protected String getText(IMylarElement node) {
-		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(AntStructureBridge.CONTENT_TYPE);
+		IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(AntStructureBridge.CONTENT_TYPE);
 		return bridge.getName(bridge.getObjectForHandle(node.getHandleIdentifier()));
 	}
 
@@ -54,7 +54,7 @@ public class AntContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
 	protected String getTextForObject(Object object) {
-		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(AntStructureBridge.CONTENT_TYPE);
+		IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(AntStructureBridge.CONTENT_TYPE);
 		return bridge.getName(object);
 	}
 

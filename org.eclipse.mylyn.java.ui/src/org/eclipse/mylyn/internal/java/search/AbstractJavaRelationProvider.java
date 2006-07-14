@@ -44,7 +44,7 @@ import org.eclipse.jdt.ui.search.QuerySpecification;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.IActiveSearchListener;
 import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
@@ -95,14 +95,14 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 	}
 
 	private IJavaSearchScope createJavaSearchScope(IJavaElement element, int degreeOfSeparation) {
-		List<IMylarElement> landmarks = MylarPlugin.getContextManager().getActiveLandmarks();
-		List<IMylarElement> interestingElements = MylarPlugin.getContextManager().getActiveContext().getInteresting();
+		List<IMylarElement> landmarks = ContextCorePlugin.getContextManager().getActiveLandmarks();
+		List<IMylarElement> interestingElements = ContextCorePlugin.getContextManager().getActiveContext().getInteresting();
 
 		Set<IJavaElement> searchElements = new HashSet<IJavaElement>();
 		int includeMask = IJavaSearchScope.SOURCES;
 		if (degreeOfSeparation == 1) {
 			for (IMylarElement landmark : landmarks) {
-				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(landmark.getContentType());
+				IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(landmark.getContentType());
 				if (includeNodeInScope(landmark, bridge)) {
 					Object o = bridge.getObjectForHandle(landmark.getHandleIdentifier());
 					if (o instanceof IJavaElement) {
@@ -119,7 +119,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 			}
 		} else if (degreeOfSeparation == 2) {
 			for (IMylarElement interesting : interestingElements) {
-				IMylarStructureBridge bridge = MylarPlugin.getDefault()
+				IMylarStructureBridge bridge = ContextCorePlugin.getDefault()
 						.getStructureBridge(interesting.getContentType());
 				if (includeNodeInScope(interesting, bridge)) {
 					Object object = bridge.getObjectForHandle(interesting.getHandleIdentifier());
@@ -137,7 +137,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 			}
 		} else if (degreeOfSeparation == 3 || degreeOfSeparation == 4) {
 			for (IMylarElement interesting : interestingElements) {
-				IMylarStructureBridge bridge = MylarPlugin.getDefault()
+				IMylarStructureBridge bridge = ContextCorePlugin.getDefault()
 						.getStructureBridge(interesting.getContentType());
 				if (includeNodeInScope(interesting, bridge)) {
 					// TODO what to do when the element is not a java element,
@@ -329,7 +329,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 				MylarStatusHandler.log(t, "java search failed");
 			}
 
-			IStatus status = new Status(IStatus.WARNING, MylarPlugin.PLUGIN_ID, IStatus.OK,
+			IStatus status = new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, IStatus.OK,
 					"could not run Java search", null);
 			notifySearchCompleted(null);
 			return status;

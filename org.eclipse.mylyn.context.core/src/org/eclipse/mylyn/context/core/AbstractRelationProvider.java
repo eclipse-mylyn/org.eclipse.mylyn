@@ -38,8 +38,8 @@ public abstract class AbstractRelationProvider implements IMylarContextListener 
 	public AbstractRelationProvider(String structureKind, String id) {
 		this.id = id;
 		this.structureKind = structureKind;
-//		if (MylarPlugin.getDefault().getPreferenceStore().contains(getGenericId())) {
-//			degreeOfSeparation = MylarPlugin.getDefault().getPreferenceStore().getInt(getGenericId());
+//		if (ContextCorePlugin.getDefault().getPreferenceStore().contains(getGenericId())) {
+//			degreeOfSeparation = ContextCorePlugin.getDefault().getPreferenceStore().getInt(getGenericId());
 //		} else {
 		degreeOfSeparation = getDefaultDegreeOfSeparation();
 //		}
@@ -73,12 +73,12 @@ public abstract class AbstractRelationProvider implements IMylarContextListener 
 	}
 
 	public void landmarkRemoved(IMylarElement node) {
-		// MylarPlugin.getTaskscapeManager().removeEdge(element, id);
+		// ContextCorePlugin.getTaskscapeManager().removeEdge(element, id);
 	}
 
 	protected void searchCompleted(IMylarElement landmark) {
 		if (landmark.getRelations().size() > 0) {
-			MylarPlugin.getContextManager().notifyRelationshipsChanged(landmark);
+			ContextCorePlugin.getContextManager().notifyRelationshipsChanged(landmark);
 		}
 	}
 
@@ -88,7 +88,7 @@ public abstract class AbstractRelationProvider implements IMylarContextListener 
 		// TaskscapeManager.getScalingFactors().getDegreeOfSeparationScale();
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PREDICTION, elementKind, elementHandle,
 				getSourceId(), getId(), null, predictedInterest);
-		MylarPlugin.getContextManager().handleInteractionEvent(event, false, false);
+		ContextCorePlugin.getContextManager().handleInteractionEvent(event, false, false);
 		createEdge(node, elementKind, elementHandle);
 	}
 
@@ -96,7 +96,7 @@ public abstract class AbstractRelationProvider implements IMylarContextListener 
 	 * Public for testing
 	 */
 	public void createEdge(IMylarElement toNode, String elementKind, String targetHandle) {
-		CompositeContextElement targetNode = (CompositeContextElement) MylarPlugin.getContextManager().getElement(
+		CompositeContextElement targetNode = (CompositeContextElement) ContextCorePlugin.getContextManager().getElement(
 				targetHandle);
 		if (targetNode == null)
 			return;

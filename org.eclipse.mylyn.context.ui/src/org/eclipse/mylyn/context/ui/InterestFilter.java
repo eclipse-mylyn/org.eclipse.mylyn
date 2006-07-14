@@ -25,7 +25,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.context.ui.MylarUiPrefContstants;
@@ -45,7 +45,7 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 	private String excludedMatches = null;
 
 	public InterestFilter() {
-		MylarUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
+		ContextUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 			if (object instanceof IMylarElement) {
 				element = (IMylarElement) object;
 			} else {
-				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(object);
+				IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
 				if (bridge.getContentType() == null) {
 					// try to resolve the resource
 					if (object instanceof IAdaptable) {
@@ -76,7 +76,7 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 						if (adapted instanceof IResource) {
 							object = adapted;
 						}
-						bridge = MylarPlugin.getDefault().getStructureBridge(object);
+						bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
 					} else {
 //						System.err.println(">>" + object.getClass());
 						return false;
@@ -91,7 +91,7 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 				
 				if (!object.getClass().getName().equals(Object.class.getCanonicalName())) {
 					String handle = bridge.getHandleIdentifier(object);
-					element = MylarPlugin.getContextManager().getElement(handle);
+					element = ContextCorePlugin.getContextManager().getElement(handle);
 				} else {
 					return true;
 				}

@@ -16,15 +16,15 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarContextListener;
-import org.eclipse.mylar.context.core.MylarPlugin;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.context.ui.actions.EditHighlightersAction;
-import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasks.ui.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
@@ -35,7 +35,7 @@ public class TaskListHighlighterMenuContributor implements IDynamicSubMenuContri
 
 	public MenuManager getSubMenuManager(final List<ITaskListElement> selectedElements) {
 		final MenuManager subMenuManager = new MenuManager(CHOOSE_HIGHLIGHTER);
-		for (final Highlighter highlighter : MylarUiPlugin.getDefault().getHighlighters()) {
+		for (final Highlighter highlighter : ContextUiPlugin.getDefault().getHighlighters()) {
 			Action action = new Action() {
 				@Override
 				public void run() {
@@ -49,11 +49,11 @@ public class TaskListHighlighterMenuContributor implements IDynamicSubMenuContri
 							}
 						}
 						if (task != null) {
-							MylarUiPlugin.getDefault().setHighlighterMapping(task.getHandleIdentifier(),
+							ContextUiPlugin.getDefault().setHighlighterMapping(task.getHandleIdentifier(),
 									highlighter.getName());
-							MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
+							TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
 //							taskListView.getViewer().refresh();
-							MylarPlugin.getContextManager().notifyPostPresentationSettingsChange(
+							ContextCorePlugin.getContextManager().notifyPostPresentationSettingsChange(
 									IMylarContextListener.UpdateKind.HIGHLIGHTER);
 						}
 					}

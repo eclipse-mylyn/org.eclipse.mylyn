@@ -20,9 +20,9 @@ import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.ui.IMylarUiBridge;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.core.tests.UiTestUtil;
 import org.eclipse.mylar.internal.context.ui.actions.ApplyMylarToOutlineAction;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
@@ -46,7 +46,7 @@ public class ApplyMylarActionTest extends AbstractJavaContextTest {
 		super.setUp();
 		view = openView(ApplyMylarToOutlineAction.ID_CONTENT_OUTLINE);
 		assertNotNull(view);
-		assertNotNull(MylarUiPlugin.getDefault());
+		assertNotNull(ContextUiPlugin.getDefault());
 		assertNotNull(MylarJavaPlugin.getDefault());
 		action = new ApplyMylarToOutlineAction();
 	}
@@ -58,15 +58,15 @@ public class ApplyMylarActionTest extends AbstractJavaContextTest {
 	
 	public void testPreservationOfContextPause() {
 		ApplyMylarToPackageExplorerAction action = new ApplyMylarToPackageExplorerAction();
-		MylarPlugin.getContextManager().setContextCapturePaused(true);
+		ContextCorePlugin.getContextManager().setContextCapturePaused(true);
 		action.update(true);
-		assertTrue(MylarPlugin.getContextManager().isContextCapturePaused());
+		assertTrue(ContextCorePlugin.getContextManager().isContextCapturePaused());
 		
-		MylarPlugin.getContextManager().setContextCapturePaused(false);
+		ContextCorePlugin.getContextManager().setContextCapturePaused(false);
 		action.update(false);
-		assertFalse(MylarPlugin.getContextManager().isContextCapturePaused());
+		assertFalse(ContextCorePlugin.getContextManager().isContextCapturePaused());
 		action.update(true);
-		assertFalse(MylarPlugin.getContextManager().isContextCapturePaused());
+		assertFalse(ContextCorePlugin.getContextManager().isContextCapturePaused());
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -80,7 +80,7 @@ public class ApplyMylarActionTest extends AbstractJavaContextTest {
 		IEditorPart[] parts = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditors();
 		for (int i = 0; i < parts.length; i++) {
 			if (parts[i].getTitle().equals("Type1.java")) {
-				IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(parts[i]);
+				IMylarUiBridge bridge = ContextUiPlugin.getDefault().getUiBridgeForEditor(parts[i]);
 				List<TreeViewer> outlineViewers = bridge.getContentOutlineViewers(parts[i]);
 				for (TreeViewer viewer : outlineViewers) {
 					if (viewer != null && !viewers.contains(viewer))

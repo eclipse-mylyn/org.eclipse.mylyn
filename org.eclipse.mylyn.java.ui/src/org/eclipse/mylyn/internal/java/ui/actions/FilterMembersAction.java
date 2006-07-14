@@ -30,7 +30,7 @@ public class FilterMembersAction extends Action implements IViewActionDelegate {
 		// setChecked(true);
 		// try {
 		// boolean checked=
-		// MylarPlugin.getDefault().getPreferenceStore().getBoolean(PREF_ID);
+		// ContextCorePlugin.getDefault().getPreferenceStore().getBoolean(PREF_ID);
 		// valueChanged(true, true);
 		// } catch (Exception e) {
 		//            

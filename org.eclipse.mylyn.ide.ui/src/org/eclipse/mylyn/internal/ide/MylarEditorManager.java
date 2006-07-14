@@ -19,14 +19,14 @@ import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.context.ui.IMylarUiBridge;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.context.ui.MylarUiPrefContstants;
-import org.eclipse.mylar.internal.tasklist.ui.editors.TaskEditorInput;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasks.ui.ui.editors.TaskEditorInput;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
@@ -44,42 +44,42 @@ public class MylarEditorManager implements IMylarContextListener {
 	private boolean previousCloseEditorsSetting = Workbench.getInstance().getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
 	
 	public void contextActivated(IMylarContext context) {
-		if (MylarUiPlugin.getDefault().getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)) {
+		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)) {
 			previousCloseEditorsSetting = Workbench.getInstance().getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
 			Workbench.getInstance().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN, false);
 			
 			Workbench workbench = (Workbench) PlatformUI.getWorkbench();
-			boolean wasPaused = MylarPlugin.getContextManager().isContextCapturePaused();
+			boolean wasPaused = ContextCorePlugin.getContextManager().isContextCapturePaused();
 			try {
 				if (!wasPaused) {
-					MylarPlugin.getContextManager().setContextCapturePaused(true);
+					ContextCorePlugin.getContextManager().setContextCapturePaused(true);
 				}
 				workbench.largeUpdateStart();
 
-				List<IMylarElement> documents = MylarPlugin.getContextManager().getInterestingDocuments();
+				List<IMylarElement> documents = ContextCorePlugin.getContextManager().getInterestingDocuments();
 				int opened = 0;
-				int threshold = MylarUiPlugin.getDefault().getPreferenceStore().getInt(MylarUiPrefContstants.AUTO_MANAGE_EDITORS_OPEN_NUM);
+				int threshold = ContextUiPlugin.getDefault().getPreferenceStore().getInt(MylarUiPrefContstants.AUTO_MANAGE_EDITORS_OPEN_NUM);
 				for (Iterator iter = documents.iterator(); iter.hasNext() && opened < threshold - 1; opened++) {
 					IMylarElement document = (IMylarElement) iter.next();
-					IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridge(document.getContentType());
+					IMylarUiBridge bridge = ContextUiPlugin.getDefault().getUiBridge(document.getContentType());
 					bridge.restoreEditor(document);
 					opened++;
 				}
 				IMylarElement activeNode = context.getActiveNode();
 				if (activeNode != null) {
-					MylarUiPlugin.getDefault().getUiBridge(activeNode.getContentType()).open(activeNode);
+					ContextUiPlugin.getDefault().getUiBridge(activeNode.getContentType()).open(activeNode);
 				}
 			} catch (Exception e) {
 				MylarStatusHandler.fail(e, "failed to open editors on activation", false);
 			} finally {
-				MylarPlugin.getContextManager().setContextCapturePaused(false);
+				ContextCorePlugin.getContextManager().setContextCapturePaused(false);
 				workbench.largeUpdateEnd();
 			}
 		}
 	}
 
 	public void contextDeactivated(IMylarContext context) {
-		if (MylarUiPlugin.getDefault().getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)) {
+		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)) {
 			Workbench.getInstance().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN, previousCloseEditorsSetting);
 			closeAllEditors();
 		}
@@ -109,7 +109,7 @@ public class MylarEditorManager implements IMylarContextListener {
 	}
 
 	private boolean isActiveTaskEditor(IEditorReference editorReference) {
-		ITask activeTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTask();
+		ITask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 		try {
 			IEditorInput input = editorReference.getEditorInput();
 			if (input instanceof TaskEditorInput) {
@@ -135,11 +135,11 @@ public class MylarEditorManager implements IMylarContextListener {
 
 	public void interestChanged(List<IMylarElement> elements) {
 		for (IMylarElement element : elements) {
-			if (MylarUiPlugin.getDefault().getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)) {
+			if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)) {
 				if (!element.getInterest().isInteresting()) {
-					IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
+					IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element.getContentType());
 					if (bridge.isDocument(element.getHandleIdentifier())) {
-						IMylarUiBridge uiBridge = MylarUiPlugin.getDefault().getUiBridge(element.getContentType());
+						IMylarUiBridge uiBridge = ContextUiPlugin.getDefault().getUiBridge(element.getContentType());
 						uiBridge.close(element);
 					}
 				}

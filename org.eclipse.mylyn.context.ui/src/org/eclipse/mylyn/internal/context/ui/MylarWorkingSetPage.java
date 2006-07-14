@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -39,8 +39,8 @@ public class MylarWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	public static final String WORKING_SET_NAME = "Mylar Task Context (for search)";
 
 	public MylarWorkingSetPage() {
-		super("org.eclipse.mylar.monitor.workingSetPage", "Mylar Task Context Working Set", MylarUiPlugin
-				.imageDescriptorFromPlugin(MylarUiPlugin.PLUGIN_ID, "icons/wizban/banner-prefs.gif"));
+		super("org.eclipse.mylar.monitor.workingSetPage", "Mylar Task Context Working Set", ContextUiPlugin
+				.imageDescriptorFromPlugin(ContextUiPlugin.PLUGIN_ID, "icons/wizban/banner-prefs.gif"));
 		setDescription("Create the Mylar Task Context working set.  It will be updated automatically to contain\n"
 				+ "all of the resources related to the active task.");
 	}
@@ -106,7 +106,7 @@ public class MylarWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(1);
 		MylarWorkingSetManager.getElementsFromTaskscape(elements);
 		if (workingSet == null) {
-			IWorkingSetManager workingSetManager = MylarUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
+			IWorkingSetManager workingSetManager = ContextUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
 			if ((workingSet = workingSetManager.getWorkingSet(workingSetName)) == null) {
 				workingSet = workingSetManager.createWorkingSet(workingSetName, elements
 						.toArray(new IAdaptable[elements.size()]));
@@ -117,7 +117,7 @@ public class MylarWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	@Override
 	public boolean isPageComplete() {
 		String workingSetName = workingSetNameText.getText();
-		IWorkingSetManager workingSetManager = MylarUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
+		IWorkingSetManager workingSetManager = ContextUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
 		if (workingSetManager.getWorkingSet(workingSetName) != null) {
 			setErrorMessage("Cannot create another Active Taskscape Working Set");
 			return false;

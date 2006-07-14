@@ -33,10 +33,10 @@ import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
 import org.eclipse.mylar.context.core.InterestComparator;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.context.ui.IMylarUiBridge;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.context.ui.MylarImages;
 import org.eclipse.mylar.internal.context.ui.actions.ToggleRelationshipProviderAction;
 import org.eclipse.mylar.internal.context.ui.views.ContextContentProvider;
@@ -87,7 +87,7 @@ public class ActiveSearchView extends ViewPart {
 		}
 
 		public void contextActivated(IMylarContext taskscape) {
-			MylarUiPlugin.getDefault().refreshRelatedElements();
+			ContextUiPlugin.getDefault().refreshRelatedElements();
 			refresh(null, true);
 		}
 
@@ -147,15 +147,15 @@ public class ActiveSearchView extends ViewPart {
 	@Override
 	public void dispose() {
 		super.dispose();
-		MylarPlugin.getContextManager().removeListener(REFRESH_UPDATE_LISTENER);
+		ContextCorePlugin.getContextManager().removeListener(REFRESH_UPDATE_LISTENER);
 	}
 
 	public ActiveSearchView() {
-		MylarPlugin.getContextManager().addListener(REFRESH_UPDATE_LISTENER);
-		for (AbstractRelationProvider provider : MylarPlugin.getContextManager().getActiveRelationProviders()) {
+		ContextCorePlugin.getContextManager().addListener(REFRESH_UPDATE_LISTENER);
+		for (AbstractRelationProvider provider : ContextCorePlugin.getContextManager().getActiveRelationProviders()) {
 			provider.setEnabled(true);
 		}
-		MylarUiPlugin.getDefault().refreshRelatedElements();
+		ContextUiPlugin.getDefault().refreshRelatedElements();
 	}
 
 	/**
@@ -194,7 +194,7 @@ public class ActiveSearchView extends ViewPart {
 	private void internalRefresh(final IMylarElement node, boolean updateLabels) {
 		Object toRefresh = null;
 		if (node != null) {
-			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
+			IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(node.getContentType());
 			toRefresh = bridge.getObjectForHandle(node.getHandleIdentifier());
 		}
 		if (viewer != null && !viewer.getTree().isDisposed()) {
@@ -294,7 +294,7 @@ public class ActiveSearchView extends ViewPart {
 		IAction stopAction = new Action() {
 			@Override
 			public void run() {
-				for (AbstractRelationProvider provider : MylarPlugin.getContextManager().getActiveRelationProviders()) {
+				for (AbstractRelationProvider provider : ContextCorePlugin.getContextManager().getActiveRelationProviders()) {
 					provider.stopAllRunningJobs();
 				}
 			}
@@ -309,9 +309,9 @@ public class ActiveSearchView extends ViewPart {
 	}
 
 	private void fillActions(IContributionManager manager) {
-		List<IMylarUiBridge> bridges = MylarUiPlugin.getDefault().getUiBridges();
+		List<IMylarUiBridge> bridges = ContextUiPlugin.getDefault().getUiBridges();
 		for (IMylarUiBridge uiBridge : bridges) {
-			IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(uiBridge.getContentType());
+			IMylarStructureBridge structureBridge = ContextCorePlugin.getDefault().getStructureBridge(uiBridge.getContentType());
 			
 //			IMylarStructureBridge bridge = entry.getValue(); // bridges.get(extension);
 			List<AbstractRelationProvider> providers = structureBridge.getRelationshipProviders();

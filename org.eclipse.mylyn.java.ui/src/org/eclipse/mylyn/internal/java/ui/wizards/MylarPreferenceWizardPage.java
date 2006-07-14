@@ -13,8 +13,8 @@ package org.eclipse.mylar.internal.java.ui.wizards;
 
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
-import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.ui.TaskListColorsAndFonts;
+import org.eclipse.mylar.internal.tasks.ui.ui.TaskUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;

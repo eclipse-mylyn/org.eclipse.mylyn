@@ -23,11 +23,11 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.ide.team.MylarChangeSetManager;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -92,14 +92,14 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 					if (getPreferenceStore().getBoolean(CHANGE_SET_MANAGE)) {
 						changeSetManager.enable();
 					}
-					// MylarPlugin.getContextManager().addListener(navigatorRefreshListener);
+					// ContextCorePlugin.getContextManager().addListener(navigatorRefreshListener);
 
 					resourceInteractionMonitor = new ResourceInteractionMonitor();
 					// Display.getDefault().addFilter(SWT.Selection,
 					// resourceInteractionMonitor);
 
 					MylarMonitorPlugin.getDefault().getSelectionMonitors().add(resourceInteractionMonitor);
-					MylarPlugin.getContextManager().addListener(editorManager);
+					ContextCorePlugin.getContextManager().addListener(editorManager);
 
 					ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeMonitor,
 							IResourceChangeEvent.POST_CHANGE);
@@ -145,11 +145,11 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 		if (MylarIdePlugin.getDefault() != null) {
 			if (MylarIdePlugin.getDefault().getPreferenceStore().contains(COMMIT_PREFIX_COMPLETED)) {
 				getPreferenceStore().setValue(COMMIT_PREFIX_COMPLETED,
-						MylarTaskListPlugin.getDefault().getPreferenceStore().getString(COMMIT_PREFIX_COMPLETED));
+						TasksUiPlugin.getDefault().getPreferenceStore().getString(COMMIT_PREFIX_COMPLETED));
 			}
 			if (MylarIdePlugin.getDefault().getPreferenceStore().contains(COMMIT_PREFIX_PROGRESS)) {
 				getPreferenceStore().setValue(COMMIT_PREFIX_PROGRESS,
-						MylarTaskListPlugin.getDefault().getPreferenceStore().getString(COMMIT_PREFIX_PROGRESS));
+						TasksUiPlugin.getDefault().getPreferenceStore().getString(COMMIT_PREFIX_PROGRESS));
 			} 
 		}
 	}
@@ -158,9 +158,9 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 		try {
 			super.stop(context);
 			plugin = null;
-			MylarPlugin.getContextManager().removeListener(editorManager);
+			ContextCorePlugin.getContextManager().removeListener(editorManager);
 			MylarMonitorPlugin.getDefault().getSelectionMonitors().remove(resourceInteractionMonitor);
-			// MylarPlugin.getContextManager().removeListener(navigatorRefreshListener);
+			// ContextCorePlugin.getContextManager().removeListener(navigatorRefreshListener);
 			changeSetManager.disable();
 
 			ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeMonitor);
@@ -197,7 +197,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 
 	public List<IResource> getInterestingResources() {
 		List<IResource> interestingResources = new ArrayList<IResource>();
-		List<IMylarElement> resourceElements = MylarPlugin.getContextManager().getInterestingDocuments();
+		List<IMylarElement> resourceElements = ContextCorePlugin.getContextManager().getInterestingDocuments();
 		for (IMylarElement element : resourceElements) {
 			IResource resource = getResourceForElement(element, false);
 			if (resource != null)
@@ -230,7 +230,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 	public IResource getResourceForElement(IMylarElement element, boolean findContainingResource) {
 		if (element == null)
 			return null;
-		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
+		IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element.getContentType());
 		Object object = bridge.getObjectForHandle(element.getHandleIdentifier());
 		if (object instanceof IResource) {
 			return (IResource) object;
@@ -245,7 +245,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 			if (element.getHandleIdentifier().equals(parentHandle)) {
 				return null;
 			} else {
-				return getResourceForElement(MylarPlugin.getContextManager().getElement(parentHandle), true);
+				return getResourceForElement(ContextCorePlugin.getContextManager().getElement(parentHandle), true);
 			}
 		} else {
 			return null;

@@ -29,7 +29,7 @@ import org.eclipse.jdt.internal.junit.launcher.TestSearchResult;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarRelation;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
 import org.eclipse.mylar.internal.java.search.JUnitReferencesProvider;
@@ -51,8 +51,8 @@ public class MylarContextTestUtil {
 	
 	public static Set<IType> getTestCasesInContext() {
 		Set<IType> testTypes = new HashSet<IType>();
-		List<IMylarElement> interesting = MylarPlugin.getContextManager().getActiveContext().getInteresting();
-		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(JavaStructureBridge.CONTENT_TYPE);
+		List<IMylarElement> interesting = ContextCorePlugin.getContextManager().getActiveContext().getInteresting();
+		IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(JavaStructureBridge.CONTENT_TYPE);
 		try {
 			for (IMylarElement element : interesting) {
 				if (element.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)) {
@@ -100,7 +100,7 @@ public class MylarContextTestUtil {
 				}
 			}
 		} catch (JavaModelException e) {
-			// MylarPlugin.log(e, "could not determine test type");
+			// ContextCorePlugin.log(e, "could not determine test type");
 			// ignore, hierarchy is probably inconsistent
 		}
 		return false;

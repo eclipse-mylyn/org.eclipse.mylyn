@@ -14,8 +14,8 @@ package org.eclipse.mylar.internal.context.ui;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.MylarPlugin;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.context.core.MylarContextRelation;
 import org.eclipse.swt.graphics.*;
 
@@ -35,8 +35,8 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
 		if (element instanceof IMylarElement) {
 			node = (IMylarElement) element;
 		} else {
-			IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(element);
-			node = MylarPlugin.getContextManager().getElement(adapter.getHandleIdentifier(element));
+			IMylarStructureBridge adapter = ContextCorePlugin.getDefault().getStructureBridge(element);
+			node = ContextCorePlugin.getContextManager().getElement(adapter.getHandleIdentifier(element));
 		}
 		return node;
 	}
@@ -78,7 +78,7 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
 	public Color decorateForeground(Object element) {
 		IMylarElement node = getNode(element);
 		if (element instanceof MylarContextRelation) {
-			return MylarUiPlugin.getDefault().getColorMap().RELATIONSHIP;
+			return ContextUiPlugin.getDefault().getColorMap().RELATIONSHIP;
 		} else if (node != null) {
 			UiUtil.getForegroundForElement(node);
 		}

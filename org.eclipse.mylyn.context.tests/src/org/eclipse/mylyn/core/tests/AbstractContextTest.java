@@ -17,7 +17,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.InteractionEvent;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -36,8 +36,8 @@ public abstract class AbstractContextTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		if (MylarPlugin.getContextManager() != null) {
-			assertFalse("" + MylarPlugin.getContextManager().getActiveContexts(), MylarPlugin.getContextManager()
+		if (ContextCorePlugin.getContextManager() != null) {
+			assertFalse("" + ContextCorePlugin.getContextManager().getActiveContexts(), ContextCorePlugin.getContextManager()
 					.isContextActive());
 		}
 	}
@@ -45,8 +45,8 @@ public abstract class AbstractContextTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		if (MylarPlugin.getContextManager() != null) {
-			assertFalse("" + MylarPlugin.getContextManager().getActiveContexts(), MylarPlugin.getContextManager()
+		if (ContextCorePlugin.getContextManager() != null) {
+			assertFalse("" + ContextCorePlugin.getContextManager().getActiveContexts(), ContextCorePlugin.getContextManager()
 					.isContextActive());
 		}
 	}

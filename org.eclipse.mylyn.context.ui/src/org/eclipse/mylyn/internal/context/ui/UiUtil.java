@@ -12,9 +12,9 @@
 package org.eclipse.mylar.internal.context.ui;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.MylarPlugin;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
@@ -43,15 +43,15 @@ public class UiUtil {
 		}
 
 		boolean isMultiple = false;
-		String contextId = MylarPlugin.getContextManager().getDominantContextHandleForElement(node);
+		String contextId = ContextCorePlugin.getContextManager().getDominantContextHandleForElement(node);
 
 		if (contextId != null) {
-			Highlighter highlighter = MylarUiPlugin.getDefault().getHighlighterForContextId(contextId);
+			Highlighter highlighter = ContextUiPlugin.getDefault().getHighlighterForContextId(contextId);
 			if (highlighter == null) {
 				return null;
-			} else if (MylarUiPlugin.getDefault().isIntersectionMode()) {
+			} else if (ContextUiPlugin.getDefault().isIntersectionMode()) {
 				if (isMultiple) {
-					return MylarUiPlugin.getDefault().getIntersectionHighlighter().getHighlightColor();
+					return ContextUiPlugin.getDefault().getIntersectionHighlighter().getHighlightColor();
 				} else {
 					return null;
 				}
@@ -59,7 +59,7 @@ public class UiUtil {
 				return highlighter.getHighlight(node, false);
 			}
 		} else {
-			return MylarUiPlugin.getDefault().getColorMap().BACKGROUND_COLOR;
+			return ContextUiPlugin.getDefault().getColorMap().BACKGROUND_COLOR;
 		}
 	}
 
@@ -68,18 +68,18 @@ public class UiUtil {
 			return null;
 		if (node.getInterest().isPredicted() || node.getInterest().isPropagated()) {
 			if (node.getInterest().getValue() >= MylarContextManager.getScalingFactors().getLandmark() / 3) {
-				return MylarUiPlugin.getDefault().getColorMap().GRAY_DARK;
+				return ContextUiPlugin.getDefault().getColorMap().GRAY_DARK;
 			} else if (node.getInterest().getValue() >= 10) {
-				return MylarUiPlugin.getDefault().getColorMap().GRAY_MEDIUM;
+				return ContextUiPlugin.getDefault().getColorMap().GRAY_MEDIUM;
 			} else {
-				return MylarUiPlugin.getDefault().getColorMap().GRAY_LIGHT;
+				return ContextUiPlugin.getDefault().getColorMap().GRAY_LIGHT;
 			}
 		} else if (node.getInterest().isLandmark()) {
-			return MylarUiPlugin.getDefault().getColorMap().LANDMARK;
+			return ContextUiPlugin.getDefault().getColorMap().LANDMARK;
 		} else if (node.getInterest().isInteresting()) {
 			return null;
 		}
-		return MylarUiPlugin.getDefault().getColorMap().GRAY_MEDIUM;
+		return ContextUiPlugin.getDefault().getColorMap().GRAY_MEDIUM;
 	}
 }
 

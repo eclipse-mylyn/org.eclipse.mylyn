@@ -16,9 +16,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
 import org.eclipse.mylar.context.core.InteractionEvent;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.ui.IMylarUiBridge;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.context.ui.MylarUiPrefContstants;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -39,10 +39,10 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 		Object object = part.getEditorInput().getAdapter(IResource.class);
 		if (object instanceof IResource) {
 			IResource resource = (IResource)object;
-			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(resource);
+			IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(resource);
 			InteractionEvent selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION,
 					bridge.getContentType(), bridge.getHandleIdentifier(resource), part.getSite().getId());
-			MylarPlugin.getContextManager().handleInteractionEvent(selectionEvent);
+			ContextCorePlugin.getContextManager().handleInteractionEvent(selectionEvent);
 		}
 	}
 	
@@ -57,8 +57,8 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 			if (editorToClose != null) {
 				adapter = editorToClose.getEditorInput().getAdapter(IResource.class);
 				if (adapter instanceof IFile) {
-					String handle = MylarPlugin.getDefault().getStructureBridge(adapter).getHandleIdentifier(adapter);
-					element = MylarPlugin.getContextManager().getElement(handle);
+					String handle = ContextCorePlugin.getDefault().getStructureBridge(adapter).getHandleIdentifier(adapter);
+					element = ContextCorePlugin.getContextManager().getElement(handle);
 				}
 				if (element != null && !element.getInterest().isInteresting() && !isSameEditor(editorPartOpened, editorToClose)) {
 					page.closeEditor(editorToClose, true);
@@ -79,26 +79,26 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 	public void editorClosed(IEditorPart editorPart) {
 		if (PlatformUI.getWorkbench().isClosing() || editorPart instanceof IContextIgnoringEditor) {
 			return;
-		} else if (MylarUiPlugin.getDefault().getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)
+		} else if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)
 			&& !Workbench.getInstance().getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN)) {
 			IMylarElement element = null;
-			IMylarUiBridge uiBridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
+			IMylarUiBridge uiBridge = ContextUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
 			Object object = uiBridge.getObjectForTextSelection(null, editorPart);
 			if (object != null) {
-				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(object);
-				element = MylarPlugin.getContextManager().getElement(bridge.getHandleIdentifier(object));
+				IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
+				element = ContextCorePlugin.getContextManager().getElement(bridge.getHandleIdentifier(object));
 			}
 			if (element == null) { // TODO: probably should be refactored into
 				// delegation
 				Object adapter = editorPart.getEditorInput().getAdapter(IResource.class);
 				if (adapter instanceof IResource) {
 					IResource resource = (IResource) adapter;
-					IMylarStructureBridge resourceBridge = MylarPlugin.getDefault().getStructureBridge(resource);
-					element = MylarPlugin.getContextManager().getElement(resourceBridge.getHandleIdentifier(resource));
+					IMylarStructureBridge resourceBridge = ContextCorePlugin.getDefault().getStructureBridge(resource);
+					element = ContextCorePlugin.getContextManager().getElement(resourceBridge.getHandleIdentifier(resource));
 				}
 			}
 			if (element != null) {
-				MylarPlugin.getContextManager().manipulateInterestForElement(element, false, false, SOURCE_ID);
+				ContextCorePlugin.getContextManager().manipulateInterestForElement(element, false, false, SOURCE_ID);
 			}
 		}
 	}

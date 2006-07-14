@@ -30,7 +30,7 @@ import org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProviderExtension;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
@@ -44,7 +44,7 @@ public class ActiveFoldingListener implements IMylarContextListener {
 
 	private IJavaFoldingStructureProviderExtension updater;
 
-	private static JavaStructureBridge bridge = (JavaStructureBridge) MylarPlugin.getDefault().getStructureBridge(
+	private static JavaStructureBridge bridge = (JavaStructureBridge) ContextCorePlugin.getDefault().getStructureBridge(
 			JavaStructureBridge.CONTENT_TYPE);
 
 	private boolean enabled = false;
@@ -64,8 +64,8 @@ public class ActiveFoldingListener implements IMylarContextListener {
 
 	public ActiveFoldingListener(JavaEditor editor) {
 		this.editor = editor;
-		MylarPlugin.getContextManager().addListener(this);
-		MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
+		ContextCorePlugin.getContextManager().addListener(this);
+		ContextCorePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 
 		enabled = MylarJavaPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPrefConstants.ACTIVE_FOLDING_ENABLED);
 		try {
@@ -83,8 +83,8 @@ public class ActiveFoldingListener implements IMylarContextListener {
 	}
 
 	public void dispose() {
-		MylarPlugin.getContextManager().removeListener(this);
-		MylarPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
+		ContextCorePlugin.getContextManager().removeListener(this);
+		ContextCorePlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
 	}
 
 	public static void resetProjection(JavaEditor javaEditor) {
@@ -92,7 +92,7 @@ public class ActiveFoldingListener implements IMylarContextListener {
 	}
 
 	public void updateFolding() {
-		if (!enabled || !MylarPlugin.getContextManager().isContextActive()) {
+		if (!enabled || !ContextCorePlugin.getContextManager().isContextActive()) {
 			editor.resetProjection();
 		} else if (editor.getEditorInput() == null) {
 			return;
@@ -106,7 +106,7 @@ public class ActiveFoldingListener implements IMylarContextListener {
 					ICompilationUnit compilationUnit = (ICompilationUnit) element;
 					List<IJavaElement> allChildren = getAllChildren(compilationUnit);
 					for (IJavaElement child : allChildren) {
-						IMylarElement mylarElement = MylarPlugin.getContextManager().getElement(
+						IMylarElement mylarElement = ContextCorePlugin.getContextManager().getElement(
 								bridge.getHandleIdentifier(child));
 						if (mylarElement != null && mylarElement.getInterest().isInteresting()) {
 							toExpand.add(child);

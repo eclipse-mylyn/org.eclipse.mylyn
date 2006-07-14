@@ -17,12 +17,12 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.ide.team.MylarActiveChangeSet;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
-import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasks.ui.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.ui.TaskUiUtil;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.team.core.history.IFileRevision;
 import org.eclipse.team.internal.ccvs.core.client.listeners.LogEntry;
@@ -104,17 +104,17 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 				String fullUrl = MylarActiveChangeSet.getUrlFromComment(comment);
 				String repositoryUrl = null;
 				if (fullUrl != null) {
-					AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager()
+					AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 							.getRepositoryForTaskUrl(fullUrl);
 					if (connector != null) {
 						repositoryUrl = connector.getRepositoryUrlFromTaskUrl(fullUrl);
 					}
 				} else {
-					ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTask();
+					ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 					if (task instanceof AbstractRepositoryTask) {
 						repositoryUrl = ((AbstractRepositoryTask) task).getRepositoryUrl();
-					} else if (MylarTaskListPlugin.getRepositoryManager().getAllRepositories().size() == 1) {
-						repositoryUrl = MylarTaskListPlugin.getRepositoryManager().getAllRepositories().get(0).getUrl();
+					} else if (TasksUiPlugin.getRepositoryManager().getAllRepositories().size() == 1) {
+						repositoryUrl = TasksUiPlugin.getRepositoryManager().getAllRepositories().get(0).getUrl();
 					}
 				}
 				String id = MylarActiveChangeSet.getTaskIdFromCommentOrLabel(comment);

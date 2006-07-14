@@ -23,7 +23,7 @@ import org.eclipse.jdt.ui.search.ElementQuerySpecification;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.context.ui.MylarWorkingSetManager;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.ui.IEditorPart;
@@ -46,7 +46,7 @@ public class FindReferencesInContextAction extends Action implements IWorkbenchW
 				if (resolved != null && resolved.length == 1 && resolved[0] != null) {
 					IJavaElement element = resolved[0];
 
-					MylarWorkingSetManager updater = MylarUiPlugin.getDefault().getWorkingSetUpdater();
+					MylarWorkingSetManager updater = ContextUiPlugin.getDefault().getWorkingSetUpdater();
 					if (updater != null && updater.getWorkingSet() != null) {
 						IJavaSearchScope scope = JavaSearchScopeFactory.getInstance().createJavaSearchScope(
 								updater.getWorkingSet(), false);

@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
@@ -31,7 +31,7 @@ public class ResourceStructureMappingTest extends AbstractJavaContextTest {
 		IMethod m1 = type1.createMethod("public void m1() { }", null, true, null);
 
 		monitor.selectionChanged(part, new StructuredSelection(m1));
-		IMylarElement m1Node = MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier());
+		IMylarElement m1Node = ContextCorePlugin.getContextManager().getElement(m1.getHandleIdentifier());
 		assertTrue(m1Node.getInterest().isInteresting());
 		
 		IResource containingResource = MylarIdePlugin.getDefault().getResourceForElement(m1Node, true);

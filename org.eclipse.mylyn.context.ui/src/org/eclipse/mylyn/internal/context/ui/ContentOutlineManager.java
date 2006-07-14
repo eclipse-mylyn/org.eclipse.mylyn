@@ -21,7 +21,7 @@ import org.eclipse.ui.IWorkbenchPart;
 public class ContentOutlineManager implements IPartListener {
 
 	public void partBroughtToTop(IWorkbenchPart part) {
-//		if (!MylarPlugin.getContextManager().isContextActive()) {
+//		if (!ContextCorePlugin.getContextManager().isContextActive()) {
 //			return;
 //		} else {
 		if (part instanceof IEditorPart) {

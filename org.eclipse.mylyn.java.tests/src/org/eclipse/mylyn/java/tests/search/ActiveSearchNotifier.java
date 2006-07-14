@@ -15,7 +15,7 @@ import java.io.IOException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.InteractionEvent;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.tests.AbstractContextTest;
 import org.eclipse.mylar.internal.context.core.CompositeContext;
 import org.eclipse.mylar.internal.context.core.MylarContext;
@@ -58,7 +58,7 @@ public class ActiveSearchNotifier extends AbstractContextTest {
 
 	public IMylarElement getElement(String handle, String kind) {
 		IMylarElement node = context.addEvent(mockSelection(handle, kind, source));
-		MylarPlugin.getContextManager().handleInteractionEvent(
+		ContextCorePlugin.getContextManager().handleInteractionEvent(
 				mockUserEvent(handle, kind, source, (1 / MylarContextManager.getScalingFactors().getLandmark()) * -2),
 				true);
 		// context.addEvent(mockUserEvent(handle, kind, source,
@@ -70,8 +70,8 @@ public class ActiveSearchNotifier extends AbstractContextTest {
 		WorkspaceSetupHelper.clearDoiModel();
 		try {
 			MylarContext workspaceContext = WorkspaceSetupHelper.getContext();
-			MylarPlugin.getContextManager().activateContext(workspaceContext.getHandleIdentifier());
-			context = (CompositeContext) MylarPlugin.getContextManager().getActiveContext();
+			ContextCorePlugin.getContextManager().activateContext(workspaceContext.getHandleIdentifier());
+			context = (CompositeContext) ContextCorePlugin.getContextManager().getActiveContext();
 		} catch (Exception e) {
 			fail();
 		}

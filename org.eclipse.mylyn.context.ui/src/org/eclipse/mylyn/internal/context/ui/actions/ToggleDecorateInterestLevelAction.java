@@ -12,9 +12,9 @@
 package org.eclipse.mylar.internal.context.ui.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarContextListener;
-import org.eclipse.mylar.context.core.MylarPlugin;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.context.ui.MylarImages;
 
 /**
@@ -29,7 +29,7 @@ public class ToggleDecorateInterestLevelAction extends Action {
 		setImageDescriptor(MylarImages.DECORATE_INTEREST);
 		setToolTipText("Toggle Interest Level Decorator");
 
-		boolean checked = MylarUiPlugin.getDefault().getPreferenceStore().getBoolean(PREF_ID);
+		boolean checked = ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(PREF_ID);
 		valueChanged(checked, false);
 	}
 
@@ -41,8 +41,8 @@ public class ToggleDecorateInterestLevelAction extends Action {
 	private void valueChanged(final boolean on, boolean store) {
 		setChecked(on);
 		if (store)
-			MylarUiPlugin.getDefault().getPreferenceStore().setValue(PREF_ID, on);
-		MylarUiPlugin.getDefault().setDecorateInterestMode(on);
-		MylarPlugin.getContextManager().notifyActivePresentationSettingsChange(IMylarContextListener.UpdateKind.UPDATE);
+			ContextUiPlugin.getDefault().getPreferenceStore().setValue(PREF_ID, on);
+		ContextUiPlugin.getDefault().setDecorateInterestMode(on);
+		ContextCorePlugin.getContextManager().notifyActivePresentationSettingsChange(IMylarContextListener.UpdateKind.UPDATE);
 	}
 }

@@ -23,7 +23,7 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.tests.support.ResourceHelper;
 import org.eclipse.mylar.internal.context.core.MylarContext;
 import org.eclipse.mylar.internal.context.core.ScalingFactors;
@@ -79,7 +79,7 @@ public class WorkspaceSetupHelper {
 	}
 
 	public static void clearDoiModel() throws CoreException {
-		MylarPlugin.getContextManager().deleteContext(HELPER_CONTEXT_ID);
+		ContextCorePlugin.getContextManager().deleteContext(HELPER_CONTEXT_ID);
 		taskscape = new MylarContext(HELPER_CONTEXT_ID, new ScalingFactors());
 	}
 

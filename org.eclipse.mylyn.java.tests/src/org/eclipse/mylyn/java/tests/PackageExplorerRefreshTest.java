@@ -16,7 +16,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.core.tests.UiTestUtil;
 import org.eclipse.mylar.internal.java.ui.actions.ApplyMylarToPackageExplorerAction;
 
@@ -34,7 +34,7 @@ public class PackageExplorerRefreshTest extends AbstractJavaContextTest {
 		super.setUp();
 		view = PackageExplorerPart.openInActivePerspective();
 		viewer = view.getTreeViewer();
-		MylarUiPlugin.getDefault().getViewerManager().setSyncRefreshMode(true);
+		ContextUiPlugin.getDefault().getViewerManager().setSyncRefreshMode(true);
 		ApplyMylarToPackageExplorerAction.getActionForPart(view).update(true);
 	}
 

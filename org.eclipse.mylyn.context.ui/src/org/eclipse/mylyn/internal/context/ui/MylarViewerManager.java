@@ -25,9 +25,9 @@ import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.context.ui.actions.AbstractApplyMylarAction;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
@@ -88,7 +88,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 	};
 	
 	public MylarViewerManager() {
-		MylarUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
+		ContextUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
 		VIEWER_PART_TRACKER.install(PlatformUI.getWorkbench());
 	}
 	
@@ -221,7 +221,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 				} else { // don't need to worry about content changes 
 					viewer.getControl().setRedraw(false);
 					for (IMylarElement node : nodesToRefresh) {
-						IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(
+						IMylarStructureBridge structureBridge = ContextCorePlugin.getDefault().getStructureBridge(
 								node.getContentType());
 						Object objectToRefresh = structureBridge.getObjectForHandle(node.getHandleIdentifier());
 						if (objectToRefresh != null) {
@@ -247,8 +247,8 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 	}
 
 	public void nodeDeleted(IMylarElement node) {
-		IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
-		IMylarElement parent = MylarPlugin.getContextManager().getElement(
+		IMylarStructureBridge structureBridge = ContextCorePlugin.getDefault().getStructureBridge(node.getContentType());
+		IMylarElement parent = ContextCorePlugin.getContextManager().getElement(
 				structureBridge.getParentHandle(node.getHandleIdentifier()));
 		ArrayList<IMylarElement> toRefresh = new ArrayList<IMylarElement>();
   

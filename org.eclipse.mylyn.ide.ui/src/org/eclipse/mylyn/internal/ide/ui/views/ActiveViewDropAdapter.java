@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.context.ui.UiUtil;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
@@ -37,10 +37,10 @@ public class ActiveViewDropAdapter extends ViewerDropAdapter {
 	public boolean performDrop(Object data) {
 		if (data instanceof StructuredSelection) {
 			Object firstElement = ((StructuredSelection) data).getFirstElement();
-			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(firstElement);
+			IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(firstElement);
 			String handle = bridge.getHandleIdentifier(firstElement);
-			IMylarElement node = MylarPlugin.getContextManager().getElement(handle);
-			boolean manipulated = MylarPlugin.getContextManager().manipulateInterestForElement(node, true, true,
+			IMylarElement node = ContextCorePlugin.getContextManager().getElement(handle);
+			boolean manipulated = ContextCorePlugin.getContextManager().manipulateInterestForElement(node, true, true,
 					ID_MANIPULATION);
 			if (!manipulated) {
 				UiUtil.displayInterestManipulationFailure();

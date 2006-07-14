@@ -16,7 +16,7 @@ import java.net.URL;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -32,7 +32,7 @@ public class MylarImages {
 
 	public static final String T_VIEW = "eview16";
 	
-	private static final URL baseURL = MylarUiPlugin.getDefault().getBundle().getEntry("/icons/");
+	private static final URL baseURL = ContextUiPlugin.getDefault().getBundle().getEntry("/icons/");
 
 	public static final ImageDescriptor MYLAR = create(T_ELCL, "mylar.gif");
 

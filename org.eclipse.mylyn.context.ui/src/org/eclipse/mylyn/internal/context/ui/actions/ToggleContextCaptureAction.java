@@ -14,8 +14,8 @@ package org.eclipse.mylar.internal.context.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.context.core.MylarPlugin;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.internal.tasks.ui.ui.views.TaskListView;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 
@@ -42,12 +42,12 @@ public class ToggleContextCaptureAction extends Action implements IViewActionDel
 	}
 
 	public void pause() {
-		MylarPlugin.getContextManager().setContextCapturePaused(true);
+		ContextCorePlugin.getContextManager().setContextCapturePaused(true);
 		TaskListView.getFromActivePerspective().indicatePaused(true);
 	}
 
 	public void resume() {
-		MylarPlugin.getContextManager().setContextCapturePaused(false);
+		ContextCorePlugin.getContextManager().setContextCapturePaused(false);
 		TaskListView.getFromActivePerspective().indicatePaused(false);
 	}
 

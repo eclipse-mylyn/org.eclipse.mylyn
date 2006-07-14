@@ -13,7 +13,7 @@
  */
 package org.eclipse.mylar.internal.context.ui;
 
-import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
+import org.eclipse.mylar.internal.tasks.ui.ui.TaskListColorsAndFonts;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 

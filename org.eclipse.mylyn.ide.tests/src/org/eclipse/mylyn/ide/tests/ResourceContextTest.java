@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 
 /**
@@ -43,17 +43,17 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 	}
 
 	public void testResourceSelect() throws CoreException {
-		MylarPlugin.getContextManager().setContextCapturePaused(true);
+		ContextCorePlugin.getContextManager().setContextCapturePaused(true);
 		IFile file = project.getProject().getFile("file");
 		file.create(null, true, null);
 		assertTrue(file.exists());
 
-		IMylarElement element = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
+		IMylarElement element = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
 		assertFalse(element.getInterest().isInteresting());
-		MylarPlugin.getContextManager().setContextCapturePaused(false);
+		ContextCorePlugin.getContextManager().setContextCapturePaused(false);
 
 		monitor.selectionChanged(navigator, new StructuredSelection(file));
-		element = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
+		element = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
 		assertTrue(element.getInterest().isInteresting());
 	}
 
@@ -67,7 +67,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		file.create(null, true, null);
 		assertTrue(file.exists());
 
-		IMylarElement element = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
+		IMylarElement element = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
 		assertFalse(element.getInterest().isInteresting());
 		MylarIdePlugin.getDefault().setExcludedResourcePatterns(previousExcludions);
 	}
@@ -82,7 +82,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		file.create(null, true, null);
 		assertTrue(file.exists());
 
-		IMylarElement element = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
+		IMylarElement element = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
 		assertFalse(element.getInterest().isInteresting());
 		MylarIdePlugin.getDefault().setExcludedResourcePatterns(previousExcludions);
 	}
@@ -103,13 +103,13 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		IFile file = project.getProject().getFile(".boring");
 		file.create(null, true, null);
 		assertTrue(file.exists());
-		IMylarElement element = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
+		IMylarElement element = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
 		assertFalse(element.getInterest().isInteresting());
 		
 		file = project.getProject().getFile("boring");
 		file.create(null, true, null);
 		assertTrue(file.exists());
-		element = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
+		element = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
 		assertTrue(element.getInterest().isInteresting());
 		
 		MylarIdePlugin.getDefault().setExcludedResourcePatterns(previousExcludions);
@@ -120,7 +120,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		file.create(null, true, null);
 		assertTrue(file.exists());
 
-		IMylarElement element = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
+		IMylarElement element = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
 		assertTrue(element.getInterest().isInteresting());
 	}
 
@@ -129,7 +129,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		folder.create(true, true, null);
 		assertTrue(folder.exists());
 
-		IMylarElement element = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(folder));
+		IMylarElement element = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(folder));
 		assertTrue(element.getInterest().isInteresting());
 	}
 
@@ -142,15 +142,15 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		monitor.selectionChanged(navigator, new StructuredSelection(file));
 		monitor.selectionChanged(navigator, new StructuredSelection(folder));
 
-		IMylarElement fileElement = MylarPlugin.getContextManager().getElement(
+		IMylarElement fileElement = ContextCorePlugin.getContextManager().getElement(
 				structureBridge.getHandleIdentifier(file));
-		IMylarElement folderElement = MylarPlugin.getContextManager().getElement(
+		IMylarElement folderElement = ContextCorePlugin.getContextManager().getElement(
 				structureBridge.getHandleIdentifier(folder));
 
 		assertTrue(fileElement.getInterest().isInteresting());
 		assertTrue(folderElement.getInterest().isInteresting());
 
-		assertTrue(MylarPlugin.getContextManager().manipulateInterestForElement(folderElement, false, false, "test"));
+		assertTrue(ContextCorePlugin.getContextManager().manipulateInterestForElement(folderElement, false, false, "test"));
 
 		assertFalse(folderElement.getInterest().isInteresting());
 		assertFalse(fileElement.getInterest().isInteresting());

@@ -18,14 +18,14 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.context.ui.MylarImages;
 import org.eclipse.mylar.internal.context.ui.MylarUiPrefContstants;
 import org.eclipse.mylar.internal.context.ui.MylarWorkingSetPage;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
 import org.eclipse.mylar.internal.java.MylarJavaPrefConstants;
 import org.eclipse.mylar.internal.java.ui.JavaUiUtil;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
+import org.eclipse.mylar.internal.tasks.ui.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
@@ -83,13 +83,13 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 		}
 
 		if (preferencePage.closeEditors()) {
-			MylarUiPlugin.getDefault().getPreferenceStore().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, true);
+			ContextUiPlugin.getDefault().getPreferenceStore().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, true);
 		} else {
-			MylarUiPlugin.getDefault().getPreferenceStore().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, false);
+			ContextUiPlugin.getDefault().getPreferenceStore().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, false);
 		}
 
 		if (preferencePage.isCreateWorkingSet()) {
-			IWorkingSetManager workingSetManager = MylarUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
+			IWorkingSetManager workingSetManager = ContextUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
 			IWorkingSetNewWizard wizard = workingSetManager
 					.createWorkingSetNewWizard(new String[] { "org.eclipse.mylar.workingSetPage" });
 			if (wizard != null && workingSetManager.getWorkingSet(MylarWorkingSetPage.WORKING_SET_NAME) == null) {
@@ -103,7 +103,7 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 				}
 			}
 		} else {
-			IWorkingSetManager workingSetManager = MylarUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
+			IWorkingSetManager workingSetManager = ContextUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
 			IWorkingSet workingSet = workingSetManager.getWorkingSet(MylarWorkingSetPage.WORKING_SET_NAME);
 			if (workingSet != null) {
 				workingSetManager.removeWorkingSet(workingSet);

@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
 import org.eclipse.mylar.context.core.InterestComparator;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.ui.views.markers.internal.FieldFolder;
 import org.eclipse.ui.views.markers.internal.FieldLineNumber;
 import org.eclipse.ui.views.markers.internal.FieldResource;
@@ -72,12 +72,12 @@ public class ProblemsListInterestSorter extends TableSorter {
 					&& marker1.getSeverity() < IMarker.SEVERITY_ERROR) {
 				return 1;
 			} else {
-				if (MylarPlugin.getContextManager().isContextActive()) {
-					IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(
+				if (ContextCorePlugin.getContextManager().isContextActive()) {
+					IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
 							marker1.getResource().getFileExtension());
-					IMylarElement node1 = MylarPlugin.getContextManager().getElement(
+					IMylarElement node1 = ContextCorePlugin.getContextManager().getElement(
 							bridge.getHandleForOffsetInObject(marker1, 0));
-					IMylarElement node2 = MylarPlugin.getContextManager().getElement(
+					IMylarElement node2 = ContextCorePlugin.getContextManager().getElement(
 							bridge.getHandleForOffsetInObject(marker2, 0));
 					return interestComparator.compare(node1, node2);
 				}

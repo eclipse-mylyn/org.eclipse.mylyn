@@ -38,9 +38,9 @@ import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.MylarPlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.IActiveSearchListener;
 import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
@@ -95,7 +95,7 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
 	}
 
 	protected TextSearchScope createTextSearchScope(int degreeOfSeparation) {
-		List<IMylarElement> landmarks = MylarPlugin.getContextManager().getActiveLandmarks();
+		List<IMylarElement> landmarks = ContextCorePlugin.getContextManager().getActiveLandmarks();
 
 		switch (degreeOfSeparation) {
 		case 1:
@@ -131,7 +131,7 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
 			// create a search scope for the projects of landmarks
 			Set<IProject> projectsToSearch = new HashSet<IProject>();
 			for (IMylarElement landmark : landmarks) {
-				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(landmark.getContentType());
+				IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(landmark.getContentType());
 				IResource resource = MylarIdePlugin.getDefault().getResourceForElement(landmark, true);
 				IProject project = null;
 				if (resource != null) {
@@ -208,7 +208,7 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
 								for (int j = 0; j < mar.length; j++) {
 									Match m = mar[j];
 									try {
-										IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(
+										IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
 												f.getName());
 										String handle = bridge.getHandleForOffsetInObject(f, m.getOffset());
 										if (handle != null) {
@@ -328,7 +328,7 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
 				}
 				return Status.OK_STATUS;
 			} catch (Throwable t) {
-				return new Status(IStatus.WARNING, MylarPlugin.PLUGIN_ID, 0, "skipped xml search", null);
+				return new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, 0, "skipped xml search", null);
 			}
 		}
 

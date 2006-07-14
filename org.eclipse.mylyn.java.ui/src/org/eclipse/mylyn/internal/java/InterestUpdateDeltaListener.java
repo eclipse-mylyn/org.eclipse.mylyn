@@ -16,7 +16,7 @@ import org.eclipse.jdt.core.IElementChangedListener;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaElementDelta;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -53,11 +53,11 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 			}
 
 			if (added != null && removed != null) {
-				IMylarElement element = MylarPlugin.getContextManager().getElement(removed.getHandleIdentifier());
+				IMylarElement element = ContextCorePlugin.getContextManager().getElement(removed.getHandleIdentifier());
 				if (element != null)
 					resetHandle(element, added.getHandleIdentifier());
 			} else if (removed != null) {
-				IMylarElement element = MylarPlugin.getContextManager().getElement(removed.getHandleIdentifier());
+				IMylarElement element = ContextCorePlugin.getContextManager().getElement(removed.getHandleIdentifier());
 				if (element != null)
 					delete(element);
 			}
@@ -68,13 +68,13 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 
 	private void resetHandle(final IMylarElement element, final String newHandle) {
 		if (!asyncExecMode) {
-			MylarPlugin.getContextManager().updateHandle(element, newHandle);
+			ContextCorePlugin.getContextManager().updateHandle(element, newHandle);
 		} else {
 			IWorkbench workbench = PlatformUI.getWorkbench();
 			if (workbench != null) {
 				workbench.getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						MylarPlugin.getContextManager().updateHandle(element, newHandle);
+						ContextCorePlugin.getContextManager().updateHandle(element, newHandle);
 					}
 				});
 			}
@@ -83,13 +83,13 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 
 	private void delete(final IMylarElement element) {
 		if (!asyncExecMode) {
-			MylarPlugin.getContextManager().delete(element);
+			ContextCorePlugin.getContextManager().delete(element);
 		} else {
 			IWorkbench workbench = PlatformUI.getWorkbench();
 			if (workbench != null) {
 				workbench.getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						MylarPlugin.getContextManager().delete(element);
+						ContextCorePlugin.getContextManager().delete(element);
 					}
 				});
 			}

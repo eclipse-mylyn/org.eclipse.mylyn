@@ -11,8 +11,8 @@
 
 package org.eclipse.mylar.ide.tests;
 
-import org.eclipse.mylar.context.core.MylarPlugin;
-import org.eclipse.mylar.context.ui.MylarUiPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.core.tests.AbstractContextTest;
 import org.eclipse.mylar.internal.context.core.MylarContext;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
@@ -28,7 +28,7 @@ import org.eclipse.ui.views.navigator.ResourceNavigator;
  */
 public abstract class AbstractResourceContextTest extends AbstractContextTest {
 
-	protected MylarContextManager manager = MylarPlugin.getContextManager();
+	protected MylarContextManager manager = ContextCorePlugin.getContextManager();
 
 	protected ResourceInteractionMonitor monitor = new ResourceInteractionMonitor();
 
@@ -52,7 +52,7 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 		context = new MylarContext(taskId, scaling);
 		context.reset();
 		manager.activateContext(context);
-		MylarUiPlugin.getDefault().getViewerManager().setSyncRefreshMode(true);
+		ContextUiPlugin.getDefault().getViewerManager().setSyncRefreshMode(true);
 		navigator = (ResourceNavigator) openView(IdeUiUtil.ID_NAVIGATOR);
 		assertNotNull(navigator);
 	}

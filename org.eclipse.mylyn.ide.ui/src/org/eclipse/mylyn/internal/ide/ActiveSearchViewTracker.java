@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.internal.ide;
 
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.ide.ui.views.ActiveSearchView;
 import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IPartListener2;
@@ -29,13 +29,13 @@ public class ActiveSearchViewTracker implements IPartListener2, IWindowListener,
 
 	public void partClosed(IWorkbenchPartReference partRef) {
 		if (partRef.getId().equals(ActiveSearchView.ID)) {
-			MylarPlugin.getContextManager().setActiveSearchEnabled(false);
+			ContextCorePlugin.getContextManager().setActiveSearchEnabled(false);
 		}
 	}
 
 	public void partOpened(IWorkbenchPartReference partRef) {
 		if (partRef.getId().equals(ActiveSearchView.ID)) {
-			MylarPlugin.getContextManager().setActiveSearchEnabled(true);
+			ContextCorePlugin.getContextManager().setActiveSearchEnabled(true);
 		}
 	}
 
