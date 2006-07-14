@@ -19,8 +19,8 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylar.core.tests.UiTestUtil;
 import org.eclipse.mylar.internal.context.ui.TaskListInterestFilter;
-import org.eclipse.mylar.internal.tasks.ui.ui.AbstractTaskListFilter;
-import org.eclipse.mylar.internal.tasks.ui.ui.views.TaskListView;
+import org.eclipse.mylar.internal.tasks.ui.AbstractTaskListFilter;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.ui.TaskListManager;
