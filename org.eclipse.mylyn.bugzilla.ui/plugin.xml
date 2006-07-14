@@ -25,7 +25,7 @@
    <extension
          id="org.eclipse.mylar.bugzilla.repository" 
          name="Bugzilla Repository"
-         point="org.eclipse.mylar.tasklist.repositories">
+         point="org.eclipse.mylar.tasks.ui.repositories">
 
       <repositoryType
             brandingIcon="icons/eview16/bugzilla-logo.gif"
@@ -40,7 +40,7 @@
    </extension> 
   
    <extension
-         point="org.eclipse.mylar.tasklist.editors">
+         point="org.eclipse.mylar.tasks.ui.editors">
       <editorFactory class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaReportEditorFactory"/>
       <hyperlinkDetector
             class="org.eclipse.mylar.internal.bugzilla.ui.BugzillaTaskHyperlinkDetector"

@@ -5,7 +5,7 @@
    <extension
          id="org.eclipse.mylar.jira.repository"
          name="JIRA Repository"
-         point="org.eclipse.mylar.tasklist.repositories">
+         point="org.eclipse.mylar.tasks.ui.repositories">
 
       <repositoryType
             class="org.eclipse.mylar.tasklist.tests.mockconnector.MockRepositoryConnector"

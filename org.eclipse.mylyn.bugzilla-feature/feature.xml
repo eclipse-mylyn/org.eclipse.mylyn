@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylar.bugzilla_feature"
       label="Mylar Connector: Bugzilla"
-      version="0.6.0.v20060707-1900"
+      version="0.6.0.v20060714-1000"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylar">
 
@@ -219,7 +219,7 @@ litigation.
 
    <requires>
       <import plugin="org.eclipse.core.runtime" version="0.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.mylar.tasklist"/>
+      <import plugin="org.eclipse.mylar.tasks.ui"/>
       <import plugin="org.eclipse.ui" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.resources" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.compare" version="0.0.0" match="greaterOrEqual"/>
@@ -241,14 +241,14 @@ litigation.
          id="org.eclipse.mylar.bugzilla.core"
          download-size="0"
          install-size="0"
-         version="0.6.0.v20060707-1900"
+         version="0.6.0.v20060714-1000"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.bugzilla.ui"
          download-size="0"
          install-size="0"
-         version="0.6.0.v20060707-1900"
+         version="0.6.0.v20060714-1000"
          unpack="false"/>
 
 </feature>

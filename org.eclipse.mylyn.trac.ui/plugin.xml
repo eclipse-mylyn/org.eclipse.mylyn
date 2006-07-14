@@ -4,7 +4,7 @@
    <extension
          id="org.eclipse.mylar.trac.repository"
          name="Trac Repository"
-         point="org.eclipse.mylar.tasklist.repositories">
+         point="org.eclipse.mylar.tasks.ui.repositories">
       <repositoryType
             brandingIcon="icons/eview16/trac-icon.gif"
             class="org.eclipse.mylar.internal.trac.TracRepositoryConnector"

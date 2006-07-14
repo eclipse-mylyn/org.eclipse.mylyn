@@ -435,12 +435,12 @@
    </extension>
   
      
-   <extension point="org.eclipse.mylar.tasklist.providers">    
+   <extension point="org.eclipse.mylar.tasks.ui.providers">    
       <dynamicPopupMenu class="org.eclipse.mylar.internal.tasks.ui.TaskReminderMenuContributor"/>
       <dynamicPopupMenu class="org.eclipse.mylar.internal.tasks.ui.MoveToCategoryMenuContributor"/>
    </extension>
    <extension
-         point="org.eclipse.mylar.tasklist.editors">
+         point="org.eclipse.mylar.tasks.ui.editors">
       <hyperlinkDetector
             class="org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorUrlHyperlinkDetector"
             id="org.eclipse.mylar.tasklist.hyperlinkdetector.url"/>
