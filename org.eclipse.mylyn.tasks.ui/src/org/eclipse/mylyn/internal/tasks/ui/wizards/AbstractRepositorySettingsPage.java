@@ -87,6 +87,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	private boolean needsEncoding;
 
+	private Composite container;
+
 	public AbstractRepositorySettingsPage(String title, String description, AbstractRepositoryConnector connector) {
 		super(title);
 		super.setTitle(title);
@@ -99,7 +101,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	}
 
 	public void createControl(Composite parent) {
-		final Composite container = new Composite(parent, SWT.NULL);
+		container = new Composite(parent, SWT.NULL);
 		FillLayout layout = new FillLayout();
 		container.setLayout(layout);
 
@@ -132,8 +134,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			anonymousButton.setText("Anonymous Access");
 			anonymousButton.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent e) {
-					boolean selected = anonymousButton.getSelection();
-					updateAnonymousButton(selected, container);
+					setAnonymous(anonymousButton.getSelection());
 				}
 
 				public void widgetDefaultSelected(SelectionEvent e) {
@@ -172,9 +173,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		if (needsAnonymousLogin()) {
 			// do this after username and password widgets have been intialized
 			if (repository != null) {
-				anonymousButton.setSelection(isAnonymousAccess());
+				setAnonymous(isAnonymousAccess());
 			}
-			updateAnonymousButton(anonymousButton.getSelection(), container);
 		}
 
 		// TODO: put this back if we can't get the info from all connectors
@@ -283,7 +283,13 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		}
 	}
 
-	private void updateAnonymousButton(boolean selected, Composite parent) {
+	public void setAnonymous(boolean selected) {
+		if (!needsAnonymousLogin) {
+			return;
+		}
+
+		anonymousButton.setSelection(selected);
+		
 		if (selected) {
 			oldUsername = userNameEditor.getStringValue();
 			oldPassword = ((StringFieldEditor) passwordEditor).getStringValue();
@@ -294,8 +300,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			((StringFieldEditor) passwordEditor).setStringValue(oldPassword);
 		}
 
-		userNameEditor.setEnabled(!selected, parent);
-		((StringFieldEditor) passwordEditor).setEnabled(!selected, parent);
+		userNameEditor.setEnabled(!selected, container);
+		((StringFieldEditor) passwordEditor).setEnabled(!selected, container);
 	}
 
 	protected abstract void createAdditionalControls(Composite parent);

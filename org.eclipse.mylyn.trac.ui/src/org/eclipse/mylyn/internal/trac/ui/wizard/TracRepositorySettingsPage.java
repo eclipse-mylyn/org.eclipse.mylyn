@@ -27,6 +27,7 @@ import org.eclipse.mylar.internal.trac.core.TracLoginException;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Combo;
@@ -46,6 +47,12 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 	private Combo accessTypeCombo;
 
+	private static TracRepositoryInfo[] REPOSITORY_TEMPLATES = { new TracRepositoryInfo("Edgewall",
+			"http://trac.edgewall.org", true, Version.TRAC_0_9),
+	// new TracRepositoryInfo("Mylar Trac Client",
+	// "http://mylar.eclipse.org/mylar-trac-client", true, Version.XML_RPC),
+	};
+
 	/** Supported access types. */
 	private Version[] versions;
 
@@ -58,6 +65,25 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 	}
 
 	protected void createAdditionalControls(final Composite parent) {
+		for (TracRepositoryInfo info : REPOSITORY_TEMPLATES) {
+			repositoryLabelCombo.add(info.label);
+		}
+		repositoryLabelCombo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String text = repositoryLabelCombo.getText();
+				for (TracRepositoryInfo info : REPOSITORY_TEMPLATES) {
+					if (info.label.equals(text)) {
+						setUrl(info.url);
+						setAnonymous(info.anonymous);
+						setTracVersion(info.version);
+						getContainer().updateButtons();
+						return;
+					}
+				}
+			}
+		});
+
 		Label accessTypeLabel = new Label(parent, SWT.NONE);
 		accessTypeLabel.setText("Access Type: ");
 		accessTypeCombo = new Combo(parent, SWT.READ_ONLY);
@@ -153,8 +179,12 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 				}
 			});
 
-			MessageDialog.openInformation(null, MylarTracPlugin.TITLE_MESSAGE_DIALOG,
-					"Authentication credentials are valid.");
+			if (username.length() > 0) {
+				MessageDialog.openInformation(null, MylarTracPlugin.TITLE_MESSAGE_DIALOG,
+						"Authentication credentials are valid.");
+			} else {
+				MessageDialog.openInformation(null, MylarTracPlugin.TITLE_MESSAGE_DIALOG, "Repository is valid.");
+			}
 
 			if (result[0] != null) {
 				setTracVersion(result[0]);
@@ -176,6 +206,25 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 		}
 
 		super.getWizard().getContainer().updateButtons();
+	}
+
+	private static class TracRepositoryInfo {
+
+		final String label;
+
+		final String url;
+
+		final boolean anonymous;
+
+		final Version version;
+
+		public TracRepositoryInfo(String label, String url, boolean anonymous, Version version) {
+			this.label = label;
+			this.url = url;
+			this.anonymous = anonymous;
+			this.version = version;
+		}
+
 	}
 
 }
