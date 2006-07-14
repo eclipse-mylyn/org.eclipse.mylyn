@@ -131,10 +131,9 @@ public class MylarMonitorPlugin extends AbstractUIPlugin {
 	
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		super.stop(context);
+		INSTANCE = null;
 		try {
-			super.stop(context);
-			INSTANCE = null;
-			
 			if (getWorkbench() != null && !getWorkbench().isClosing()) {
 				getWorkbench().removeWindowListener(WINDOW_LISTENER);
 				getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(
