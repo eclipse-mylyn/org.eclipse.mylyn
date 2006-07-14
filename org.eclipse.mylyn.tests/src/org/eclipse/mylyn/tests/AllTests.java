@@ -22,7 +22,7 @@ import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.java.tests.AllJavaTests;
 import org.eclipse.mylar.monitor.reports.tests.AllMonitorReportTests;
 import org.eclipse.mylar.monitor.tests.AllMonitorTests;
-import org.eclipse.mylar.tasklist.tests.AllTaskListTests;
+import org.eclipse.mylar.tasks.tests.AllTaskListTests;
 import org.eclipse.mylar.tests.integration.AllIntegrationTests;
 import org.eclipse.mylar.tests.misc.AllMiscTests;
 import org.eclipse.mylar.tests.xml.AllXmlTests;
