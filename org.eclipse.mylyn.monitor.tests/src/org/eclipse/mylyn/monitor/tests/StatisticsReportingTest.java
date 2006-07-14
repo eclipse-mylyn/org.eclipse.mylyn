@@ -23,7 +23,6 @@ import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.context.core.MylarPlugin;
 import org.eclipse.mylar.context.ui.MylarUiPlugin;
-import org.eclipse.mylar.internal.context.ui.actions.AbstractApplyMylarAction;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
 import org.eclipse.mylar.internal.java.ui.actions.ApplyMylarToPackageExplorerAction;
 import org.eclipse.mylar.internal.monitor.reports.ReportGenerator;
@@ -135,6 +134,9 @@ public class StatisticsReportingTest extends TestCase {
 	}
 
 	public void testFilteredModeDetection() throws IOException {
+		MylarUsageMonitorPlugin.getDefault().addMonitoredPreferences(
+				MylarUiPlugin.getDefault().getPluginPreferences());
+		
 		MylarUsageMonitorPlugin.getDefault().getInteractionLogger().clearInteractionHistory();
 		mockExplorerSelection("A.java");
 		mockUserDelay();
@@ -171,6 +173,9 @@ public class StatisticsReportingTest extends TestCase {
 		
 		int filtered = viewCollector.getFilteredViewSelections().get(JavaUI.ID_PACKAGES);
 		assertEquals(2, filtered);
+		
+		MylarUsageMonitorPlugin.getDefault().removeMonitoredPreferences(
+				MylarUiPlugin.getDefault().getPluginPreferences());
 	}
 
 	/**
