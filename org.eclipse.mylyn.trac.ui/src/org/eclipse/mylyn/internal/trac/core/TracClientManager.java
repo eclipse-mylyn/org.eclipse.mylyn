@@ -16,29 +16,49 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylar.tasks.core.ITaskRepositoryListener;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * Caches {@link ITracClient} objects.
  * 
  * @author Steffen Pingel
  */
-public class TracClientManager {
+public class TracClientManager implements ITaskRepositoryListener {
 
 	Map<String, ITracClient> clientByUrl = new HashMap<String, ITracClient>();
 
 	public TracClientManager() {
+		TasksUiPlugin.getRepositoryManager().addListener(this);
 	}
 
-	public ITracClient getRepository(TaskRepository taskRepository) throws MalformedURLException {
+	public synchronized ITracClient getRepository(TaskRepository taskRepository) throws MalformedURLException {
 		ITracClient repository = clientByUrl.get(taskRepository.getUrl());
 		if (repository == null) {
 			repository = TracClientFactory.createClient(taskRepository.getUrl(), Version.fromVersion(taskRepository
 					.getVersion()), taskRepository.getUserName(), taskRepository.getPassword());
-			// TODO need to get notified when task repositories are removed or
-			// settings are changed therefore disable caching for now
-			// clientByUrl.put(taskRepository.getUrl(), repository);
+			// TODO read cached client attributes, see bug #150670
+			clientByUrl.put(taskRepository.getUrl(), repository);
 		}
 		return repository;
 	}
+
+	public void repositoriesRead() {
+		// ignore
+	}
+
+	public synchronized void repositoryAdded(TaskRepository repository) {
+		// make sure there is no stale client still in the cache, bug #149939
+		clientByUrl.remove(repository.getUrl());
+	}
+
+	public synchronized void repositoryRemoved(TaskRepository repository) {
+		clientByUrl.remove(repository.getUrl());
+	}
+
+	public synchronized void repositorySettingsChanged(TaskRepository repository) {
+		clientByUrl.remove(repository.getUrl());
+	}
+
 }
