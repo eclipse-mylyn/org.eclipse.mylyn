@@ -359,7 +359,7 @@
   		</action> 
   	</viewContribution>
     <viewContribution
-         id="org.eclipse.mylar.tasklist.contribution.context"
+         id="org.eclipse.mylar.tasks.contribution.context"
          targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
       <action
             class="org.eclipse.mylar.internal.context.ui.actions.ToggleContextCaptureAction"
