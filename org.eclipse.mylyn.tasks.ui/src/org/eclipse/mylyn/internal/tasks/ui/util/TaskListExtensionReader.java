@@ -36,7 +36,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class TaskListExtensionReader {
 
-	public static final String EXTENSION_REPOSITORIES = "org.eclipse.mylar.tasklist.repositories";
+	public static final String EXTENSION_REPOSITORIES = "org.eclipse.mylar.tasks.ui.repositories";
 
 	public static final String ELMNT_REPOSITORY_TYPE = "repositoryType";
 
@@ -50,23 +50,15 @@ public class TaskListExtensionReader {
 
 	public static final String ELMNT_SETTINGS_PAGE = "settingsPage";
 
-	public static final String EXTENSION_TASK_CONTRIBUTOR = "org.eclipse.mylar.tasklist.providers";
-
-//	public static final String ELMNT_TASK_HANDLER = "taskHandler";
-
-//	public static final String ATTR_EXTERNALIZER_CLASS = "externalizerClass";
+	public static final String EXTENSION_TASK_CONTRIBUTOR = "org.eclipse.mylar.tasks.ui.providers";
 
 	public static final String ATTR_ACTION_CONTRIBUTOR_CLASS = "taskHandlerClass";
-
-	// public static final String TASK_LISTENER_ELEMENT = "taskListener";
-
-	// public static final String TASK_LISTENER_CLASS_ID = "class";
 
 	public static final String DYNAMIC_POPUP_ELEMENT = "dynamicPopupMenu";
 
 	public static final String ATTR_CLASS = "class";
 
-	public static final String EXTENSION_EDITORS = "org.eclipse.mylar.tasklist.editors";
+	public static final String EXTENSION_EDITORS = "org.eclipse.mylar.tasks.ui.editors";
 
 	public static final String ELMNT_EDITOR_FACTORY = "editorFactory";
 
@@ -77,8 +69,6 @@ public class TaskListExtensionReader {
 	private static boolean extensionsRead = false;
 
 	public static void initExtensions(TaskListWriter writer) {
-		// code from "contributing to eclipse" with modifications for deprecated
-		// code
 		List<ITaskListExternalizer> externalizers = new ArrayList<ITaskListExternalizer>();
 		if (!extensionsRead) {
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
