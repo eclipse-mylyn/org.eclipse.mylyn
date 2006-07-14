@@ -4,12 +4,13 @@
 <plugin>
    <extension-point id="teamProviders" name="Mylar Team Providers" schema="schema/teamProviders.exsd"/>
    <extension
-         point="org.eclipse.mylar.context.core.context">
-      <structureBridge class="org.eclipse.mylar.internal.ide.ResourceStructureBridge"/> 
+         point="org.eclipse.mylar.context.core.bridges">
+      <structureBridge 
+      	class="org.eclipse.mylar.internal.ide.ResourceStructureBridge"/> 
    </extension>
    
    <extension
-         point="org.eclipse.mylar.context.ui.context">
+         point="org.eclipse.mylar.context.ui.bridges">
       <uiBridge
             class="org.eclipse.mylar.internal.ide.ui.ResourceUiBridge"
             contentType="*"/>

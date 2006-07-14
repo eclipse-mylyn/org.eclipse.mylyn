@@ -2,14 +2,15 @@
 <?eclipse version="3.0"?>
 <?eclipse version="3.0"?>
 <plugin>
-    <extension-point id="context" name="context" schema="schema/context.exsd"/>
+    <extension-point id="bridges" name="bridges" schema="schema/bridges.exsd"/>
  
     <extension
-         point="org.eclipse.mylar.context.core.context">
-      <structureBridge class="org.eclipse.mylar.internal.context.ui.TaskStructureBridge"/> 
+         point="org.eclipse.mylar.context.core.bridges">
+      <structureBridge 
+      	class="org.eclipse.mylar.internal.context.ui.TaskStructureBridge"/> 
    </extension>
    <extension
-         point="org.eclipse.mylar.context.ui.context">
+         point="org.eclipse.mylar.context.ui.bridges">
       <uiBridge
             class="org.eclipse.mylar.internal.context.ui.TaskUiBridge"
             contentType="meta/task"/>

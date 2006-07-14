@@ -257,7 +257,7 @@ public class MylarPlugin extends Plugin {
 
 	static class CoreExtensionPointReader {
 
-		public static final String EXTENSION_ID_CONTEXT = "org.eclipse.mylar.context.core.context";
+		public static final String EXTENSION_ID_CONTEXT = "org.eclipse.mylar.context.core.bridges";
 
 		public static final String ELEMENT_STRUCTURE_BRIDGE = "structureBridge";
 

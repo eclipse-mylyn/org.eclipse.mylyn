@@ -2,7 +2,7 @@
 <?eclipse version="3.0"?>
 <?eclipse version="3.0"?>
 <plugin>
-	<extension point="org.eclipse.mylar.context.core.context">
+	<extension point="org.eclipse.mylar.context.core.bridges">
 		<structureBridge
 	        class="org.eclipse.mylar.internal.xml.ant.AntStructureBridge"
 	        name="Ant Structure Bridge"
@@ -13,7 +13,7 @@
 	        parent="org.eclipse.mylar.internal.ide.ResourceStructureBridge"/>
 	</extension>
 
-   <extension point="org.eclipse.mylar.context.ui.context">
+   <extension point="org.eclipse.mylar.context.ui.bridges">
     <uiBridge
           class="org.eclipse.mylar.internal.xml.pde.PdeUiBridge"
           contentType="plugin.xml"

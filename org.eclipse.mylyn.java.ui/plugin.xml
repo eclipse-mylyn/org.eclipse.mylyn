@@ -7,14 +7,14 @@
    		schema="schema/javaEditorContributor.exsd"/>
    		
 	<extension
-	       point="org.eclipse.mylar.context.core.context">
+	       point="org.eclipse.mylar.context.core.bridges">
 	    <structureBridge
            class="org.eclipse.mylar.internal.java.JavaStructureBridge"
            name="Java Structure Bridge"
            parent="org.eclipse.mylar.internal.ide.ResourceStructureBridge"/>
 	</extension>
 	   
-	<extension point="org.eclipse.mylar.context.ui.context">
+	<extension point="org.eclipse.mylar.context.ui.bridges">
 	    <uiBridge
 	          class="org.eclipse.mylar.internal.java.ui.JavaUiBridge"
 	          contentType="java"

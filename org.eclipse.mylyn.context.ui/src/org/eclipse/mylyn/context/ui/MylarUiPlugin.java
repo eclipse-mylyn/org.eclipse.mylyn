@@ -514,7 +514,7 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 			}
 		}
 
-		public static final String EXTENSION_ID_CONTEXT = "org.eclipse.mylar.context.ui.context";
+		public static final String EXTENSION_ID_CONTEXT = "org.eclipse.mylar.context.ui.bridges";
 
 		public static final String ELEMENT_UI_BRIDGE = "uiBridge";
 
