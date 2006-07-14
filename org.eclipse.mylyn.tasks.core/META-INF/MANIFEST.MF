@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylar Bugs Plug-in
+Bundle-Name: Mylar Tasks Core Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.tasks.core;singleton:=true
 Bundle-Version: 0.5.2.v20060601-2000
 Bundle-Localization: plugin
