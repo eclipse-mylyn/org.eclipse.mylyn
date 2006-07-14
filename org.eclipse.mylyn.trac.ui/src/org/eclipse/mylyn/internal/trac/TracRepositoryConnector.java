@@ -35,6 +35,7 @@ import org.eclipse.mylar.internal.trac.model.TracTicket;
 import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
 import org.eclipse.mylar.internal.trac.ui.wizard.EditTracQueryWizard;
 import org.eclipse.mylar.internal.trac.ui.wizard.NewTracQueryWizard;
+import org.eclipse.mylar.internal.trac.ui.wizard.NewTracTaskWizard;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
@@ -62,7 +63,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public boolean canCreateNewTask() {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -83,7 +84,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public IWizard getNewTaskWizard(TaskRepository taskRepository, IStructuredSelection selection) {
-		return null;
+		return new NewTracTaskWizard(taskRepository);
 	}
 
 	@Override
