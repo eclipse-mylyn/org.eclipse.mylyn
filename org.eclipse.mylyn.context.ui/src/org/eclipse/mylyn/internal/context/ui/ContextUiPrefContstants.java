@@ -17,8 +17,10 @@ import org.eclipse.swt.graphics.Font;
 /**
  * @author Mik Kersten
  */
-public class MylarUiPrefContstants {
+public class ContextUiPrefContstants {
 
+	public static final String ACTIVE_FOLDING_ENABLED = "org.eclipse.mylar.context.ui.editor.folding.enabled";
+	
 	public static final String PREFIX_TASK_TO_PERSPECTIVE = "org.eclipse.mylar.ui.perspectives.task.";
 	
 	public static final String MARKER_LANDMARK = "org.eclipse.mylar.ui.interest.landmark";

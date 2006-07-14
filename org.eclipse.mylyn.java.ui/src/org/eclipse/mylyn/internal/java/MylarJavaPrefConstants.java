@@ -17,8 +17,6 @@ package org.eclipse.mylar.internal.java;
  */
 public class MylarJavaPrefConstants {
 
-	public static final String ACTIVE_FOLDING_ENABLED = "org.eclipse.mylar.java.ui.editor.folding.auto.enabled";
-
 	public static final String PACKAGE_EXPLORER_AUTO_FILTER_ENABLE = "org.eclipse.mylar.java.ui.explorer.filter.auto.enable";
 
 	public static final String PREDICTED_INTEREST_ERRORS = "org.eclipse.mylar.java.interest.predicted.errors";

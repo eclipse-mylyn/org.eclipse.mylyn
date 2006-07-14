@@ -73,7 +73,7 @@ public class MylarWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		label = new Label(composite, SWT.WRAP);
 		label
 				.setText("NOTE: this working set should only be used for searches.  Do not select it in the Package Explorer.");
-		label.setFont(MylarUiPrefContstants.BOLD);
+		label.setFont(ContextUiPrefContstants.BOLD);
 		gd = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
 		label.setLayoutData(gd);
 

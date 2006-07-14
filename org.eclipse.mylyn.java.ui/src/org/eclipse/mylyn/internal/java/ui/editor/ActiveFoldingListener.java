@@ -27,14 +27,14 @@ import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProvider;
 import org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProviderExtension;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
+import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
-import org.eclipse.mylar.internal.java.MylarJavaPlugin;
-import org.eclipse.mylar.internal.java.MylarJavaPrefConstants;
 
 /**
  * @author Mik Kersten
@@ -51,7 +51,7 @@ public class ActiveFoldingListener implements IMylarContextListener {
 
 	private IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getProperty().equals(MylarJavaPrefConstants.ACTIVE_FOLDING_ENABLED)) {
+			if (event.getProperty().equals(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED)) {
 				if (event.getNewValue().equals(Boolean.TRUE.toString())) {
 					enabled = true;
 				} else {
@@ -65,9 +65,9 @@ public class ActiveFoldingListener implements IMylarContextListener {
 	public ActiveFoldingListener(JavaEditor editor) {
 		this.editor = editor;
 		ContextCorePlugin.getContextManager().addListener(this);
-		ContextCorePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
+		ContextUiPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 
-		enabled = MylarJavaPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPrefConstants.ACTIVE_FOLDING_ENABLED);
+		enabled = ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED);
 		try {
 			Object adapter = editor.getAdapter(IJavaFoldingStructureProvider.class);
 			if (adapter instanceof IJavaFoldingStructureProviderExtension) {
@@ -84,7 +84,7 @@ public class ActiveFoldingListener implements IMylarContextListener {
 
 	public void dispose() {
 		ContextCorePlugin.getContextManager().removeListener(this);
-		ContextCorePlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
+		ContextUiPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
 	}
 
 	public static void resetProjection(JavaEditor javaEditor) {
@@ -176,13 +176,13 @@ public class ActiveFoldingListener implements IMylarContextListener {
 	}
 
 	public void contextActivated(IMylarContext context) {
-		if (MylarJavaPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPrefConstants.ACTIVE_FOLDING_ENABLED)) {
+		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED)) {
 			updateFolding();
 		}
 	}
 
 	public void contextDeactivated(IMylarContext context) {
-		if (MylarJavaPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPrefConstants.ACTIVE_FOLDING_ENABLED)) {
+		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED)) {
 			updateFolding();
 		}
 	}

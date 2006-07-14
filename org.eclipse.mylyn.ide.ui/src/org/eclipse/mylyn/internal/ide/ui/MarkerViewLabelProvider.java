@@ -14,7 +14,7 @@ package org.eclipse.mylar.internal.ide.ui;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.internal.context.ui.MylarUiPrefContstants;
+import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylar.internal.context.ui.UiUtil;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.ui.views.markers.internal.ConcreteMarker;
@@ -39,7 +39,7 @@ public class MarkerViewLabelProvider implements ITableLabelProvider, IColorProvi
 			IMylarElement node = ContextCorePlugin.getContextManager().getElement(handle);
 			if (node != null) {
 				if (node.getInterest().isLandmark() && !node.getInterest().isPropagated()) {
-					return MylarUiPrefContstants.BOLD;
+					return ContextUiPrefContstants.BOLD;
 				}
 			}
 		} 

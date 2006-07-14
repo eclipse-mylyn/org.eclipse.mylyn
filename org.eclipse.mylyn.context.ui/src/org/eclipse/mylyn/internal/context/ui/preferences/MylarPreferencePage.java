@@ -35,7 +35,7 @@ import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.context.ui.Highlighter;
 import org.eclipse.mylar.internal.context.ui.HighlighterImageDescriptor;
 import org.eclipse.mylar.internal.context.ui.HighlighterList;
-import org.eclipse.mylar.internal.context.ui.MylarUiPrefContstants;
+import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -142,12 +142,12 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 
 	@Override
 	public boolean performOk() {
-		getPreferenceStore().setValue(MylarUiPrefContstants.HIGHLIGHTER_PREFIX,
+		getPreferenceStore().setValue(ContextUiPrefContstants.HIGHLIGHTER_PREFIX,
 				ContextUiPlugin.getDefault().getHighlighterList().externalizeToString());
-		getPreferenceStore().setValue(MylarUiPrefContstants.INTEREST_FILTER_EXCLUSION,
+		getPreferenceStore().setValue(ContextUiPrefContstants.INTEREST_FILTER_EXCLUSION,
 				exclusionFieldEditor.getStringValue());
-		getPreferenceStore().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, manageEditorsButton.getSelection());
-		getPreferenceStore().setValue(MylarUiPrefContstants.AUTO_MANAGE_PERSPECTIVES, managePerspectivesButton.getSelection());
+		getPreferenceStore().setValue(ContextUiPrefContstants.AUTO_MANAGE_EDITORS, manageEditorsButton.getSelection());
+		getPreferenceStore().setValue(ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES, managePerspectivesButton.getSelection());
 //		int value = autoOpenEditorsNum.getIntValue();
 //		if (value > 0) {
 //			getPreferenceStore().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS_OPEN_NUM, value);
@@ -161,7 +161,7 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 	 */
 	@Override
 	public boolean performCancel() {
-		String highlighters = getPreferenceStore().getString(MylarUiPrefContstants.HIGHLIGHTER_PREFIX);
+		String highlighters = getPreferenceStore().getString(ContextUiPrefContstants.HIGHLIGHTER_PREFIX);
 		ContextUiPlugin.getDefault().getHighlighterList().internalizeFromString(highlighters);
 
 		contentProvider = new HighlighterContentProvider();
@@ -641,7 +641,7 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 
 		exclusionFieldEditor = new StringFieldEditor("", "", StringFieldEditor.UNLIMITED, composite	);
 
-		String text = getPreferenceStore().getString(MylarUiPrefContstants.INTEREST_FILTER_EXCLUSION);
+		String text = getPreferenceStore().getString(ContextUiPrefContstants.INTEREST_FILTER_EXCLUSION);
 		if (text != null)
 			exclusionFieldEditor.setStringValue(text);
 		return;
@@ -656,11 +656,11 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 
 		managePerspectivesButton = new Button(group, SWT.CHECK);
 		managePerspectivesButton.setText("Open last used perspective on task activation");
-		managePerspectivesButton.setSelection(getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_PERSPECTIVES));
+		managePerspectivesButton.setSelection(getPreferenceStore().getBoolean(ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES));
 		
 		manageEditorsButton = new Button(group, SWT.CHECK);
 		manageEditorsButton.setText("Manage open editors to match task context");
-		manageEditorsButton.setSelection(getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS));
+		manageEditorsButton.setSelection(getPreferenceStore().getBoolean(ContextUiPrefContstants.AUTO_MANAGE_EDITORS));
 		
 		String prefName = WorkbenchMessages.WorkbenchPreference_reuseEditors;
 		if (getContainer() instanceof IWorkbenchPreferenceContainer) {

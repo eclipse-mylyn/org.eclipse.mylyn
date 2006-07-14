@@ -42,7 +42,7 @@ import org.eclipse.mylar.internal.context.ui.ContentOutlineManager;
 import org.eclipse.mylar.internal.context.ui.Highlighter;
 import org.eclipse.mylar.internal.context.ui.HighlighterList;
 import org.eclipse.mylar.internal.context.ui.MylarPerspectiveManager;
-import org.eclipse.mylar.internal.context.ui.MylarUiPrefContstants;
+import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylar.internal.context.ui.MylarViewerManager;
 import org.eclipse.mylar.internal.context.ui.MylarWorkingSetManager;
 import org.eclipse.mylar.internal.tasks.ui.ui.ITaskHighlighter;
@@ -232,7 +232,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	}
 
 	private void initializeHighlighters() {
-		String hlist = getPreferenceStore().getString(MylarUiPrefContstants.HIGHLIGHTER_PREFIX);
+		String hlist = getPreferenceStore().getString(ContextUiPrefContstants.HIGHLIGHTER_PREFIX);
 		if (hlist != null && hlist.length() != 0) {
 			highlighters = new HighlighterList(hlist);
 		} else {
@@ -240,23 +240,23 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			// mylar. load default colors
 			highlighters = new HighlighterList();
 			highlighters.setToDefaultList();
-			getPreferenceStore().setValue(MylarUiPrefContstants.HIGHLIGHTER_PREFIX, this.highlighters.externalizeToString());
+			getPreferenceStore().setValue(ContextUiPrefContstants.HIGHLIGHTER_PREFIX, this.highlighters.externalizeToString());
 		}
 	}
 
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
-		store.setDefault(MylarUiPrefContstants.AUTO_MANAGE_PERSPECTIVES, false);
-		store.setDefault(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, true);
-		store.setDefault(MylarUiPrefContstants.AUTO_MANAGE_EDITORS_OPEN_NUM, 8);
+		store.setDefault(ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES, false);
+		store.setDefault(ContextUiPrefContstants.AUTO_MANAGE_EDITORS, true);
+		store.setDefault(ContextUiPrefContstants.AUTO_MANAGE_EDITORS_OPEN_NUM, 8);
 
-		store.setDefault(MylarUiPrefContstants.GAMMA_SETTING_LIGHTENED, false);
-		store.setDefault(MylarUiPrefContstants.GAMMA_SETTING_STANDARD, true);
-		store.setDefault(MylarUiPrefContstants.GAMMA_SETTING_DARKENED, false);
+		store.setDefault(ContextUiPrefContstants.GAMMA_SETTING_LIGHTENED, false);
+		store.setDefault(ContextUiPrefContstants.GAMMA_SETTING_STANDARD, true);
+		store.setDefault(ContextUiPrefContstants.GAMMA_SETTING_DARKENED, false);
 	}
 
 	public void setHighlighterMapping(String id, String name) {
-		String prefId = MylarUiPrefContstants.TASK_HIGHLIGHTER_PREFIX + id;
+		String prefId = ContextUiPrefContstants.TASK_HIGHLIGHTER_PREFIX + id;
 		getPreferenceStore().putValue(prefId, name);
 	}
 
@@ -392,7 +392,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	}
 
 	public Highlighter getHighlighterForContextId(String id) {
-		String prefId = MylarUiPrefContstants.TASK_HIGHLIGHTER_PREFIX + id;
+		String prefId = ContextUiPrefContstants.TASK_HIGHLIGHTER_PREFIX + id;
 		String highlighterName = getPreferenceStore().getString(prefId);
 		return getHighlighter(highlighterName);
 	}
@@ -424,11 +424,11 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	}
 
 	public boolean isIntersectionMode() {
-		return getPreferenceStore().getBoolean(MylarUiPrefContstants.INTERSECTION_MODE);
+		return getPreferenceStore().getBoolean(ContextUiPrefContstants.INTERSECTION_MODE);
 	}
 
 	public void setIntersectionMode(boolean isIntersectionMode) {
-		getPreferenceStore().setValue(MylarUiPrefContstants.INTERSECTION_MODE, isIntersectionMode);
+		getPreferenceStore().setValue(ContextUiPrefContstants.INTERSECTION_MODE, isIntersectionMode);
 	}
 
 	public MylarViewerManager getViewerManager() {
@@ -527,11 +527,11 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	
 
 	public String getPerspectiveIdFor(ITask task) {
-		return getPreferenceStore().getString(MylarUiPrefContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier());
+		return getPreferenceStore().getString(ContextUiPrefContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier());
 	}
 
 	public void setPerspectiveIdFor(ITask task, String perspectiveId) {
-		getPreferenceStore().setValue(MylarUiPrefContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier(), perspectiveId);
+		getPreferenceStore().setValue(ContextUiPrefContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier(), perspectiveId);
 	}
 	
 	public void addWorkingSetManager(MylarWorkingSetManager updater) {

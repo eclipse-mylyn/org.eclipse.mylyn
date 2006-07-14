@@ -19,7 +19,7 @@ import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.ui.IMylarUiBridge;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.internal.context.ui.MylarUiPrefContstants;
+import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
@@ -79,7 +79,7 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 	public void editorClosed(IEditorPart editorPart) {
 		if (PlatformUI.getWorkbench().isClosing() || editorPart instanceof IContextIgnoringEditor) {
 			return;
-		} else if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)
+		} else if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.AUTO_MANAGE_EDITORS)
 			&& !Workbench.getInstance().getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN)) {
 			IMylarElement element = null;
 			IMylarUiBridge uiBridge = ContextUiPlugin.getDefault().getUiBridgeForEditor(editorPart);

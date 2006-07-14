@@ -19,11 +19,10 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
+import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylar.internal.context.ui.MylarImages;
-import org.eclipse.mylar.internal.context.ui.MylarUiPrefContstants;
 import org.eclipse.mylar.internal.context.ui.MylarWorkingSetPage;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
-import org.eclipse.mylar.internal.java.MylarJavaPrefConstants;
 import org.eclipse.mylar.internal.java.ui.JavaUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
@@ -75,17 +74,17 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 		JavaUiUtil.installContentAssist(javaPrefs, mylarContentAssist);
 
 		if (preferencePage.isAutoFolding()) {
-			MylarJavaPlugin.getDefault().getPreferenceStore().setValue(MylarJavaPrefConstants.ACTIVE_FOLDING_ENABLED, true);
+			ContextUiPlugin.getDefault().getPreferenceStore().setValue(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED, true);
 			javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, true);  
 			javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_PROVIDER, DEFAULT_FOLDING_PROVIDER); 
 		} else {
-			MylarJavaPlugin.getDefault().getPreferenceStore().setValue(MylarJavaPrefConstants.ACTIVE_FOLDING_ENABLED, false);
+			ContextUiPlugin.getDefault().getPreferenceStore().setValue(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED, false);
 		}
 
 		if (preferencePage.closeEditors()) {
-			ContextUiPlugin.getDefault().getPreferenceStore().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, true);
+			ContextUiPlugin.getDefault().getPreferenceStore().setValue(ContextUiPrefContstants.AUTO_MANAGE_EDITORS, true);
 		} else {
-			ContextUiPlugin.getDefault().getPreferenceStore().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, false);
+			ContextUiPlugin.getDefault().getPreferenceStore().setValue(ContextUiPrefContstants.AUTO_MANAGE_EDITORS, false);
 		}
 
 		if (preferencePage.isCreateWorkingSet()) {

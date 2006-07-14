@@ -28,7 +28,7 @@ import org.eclipse.mylar.context.core.IMylarStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
-import org.eclipse.mylar.internal.context.ui.MylarUiPrefContstants;
+import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.swt.widgets.Tree;
 
 /**
@@ -168,7 +168,7 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {
-		if (MylarUiPrefContstants.INTEREST_FILTER_EXCLUSION.equals(event.getProperty())
+		if (ContextUiPrefContstants.INTEREST_FILTER_EXCLUSION.equals(event.getProperty())
 				&& event.getNewValue() instanceof String) {
 
 			excludedMatches = (String) event.getNewValue();

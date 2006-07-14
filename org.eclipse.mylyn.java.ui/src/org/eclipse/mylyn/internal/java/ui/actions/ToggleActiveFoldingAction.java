@@ -19,9 +19,9 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
+import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylar.internal.context.ui.MylarImages;
-import org.eclipse.mylar.internal.java.MylarJavaPlugin;
-import org.eclipse.mylar.internal.java.MylarJavaPrefConstants;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IActionDelegate2;
 import org.eclipse.ui.IEditorPart;
@@ -30,6 +30,8 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 /**
  * @author Mik Kersten
+ * 
+ * TODO: move to UI
  */
 public class ToggleActiveFoldingAction extends Action implements IWorkbenchWindowActionDelegate, IActionDelegate2 {
 
@@ -61,7 +63,7 @@ public class ToggleActiveFoldingAction extends Action implements IWorkbenchWindo
 				JavaPlugin.getDefault().getPreferenceStore().setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, true);
 			}
 			action.setChecked(on);
-			MylarJavaPlugin.getDefault().getPreferenceStore().setValue(MylarJavaPrefConstants.ACTIVE_FOLDING_ENABLED, on);
+			ContextUiPlugin.getDefault().getPreferenceStore().setValue(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED, on);
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "Could not enable editor management", true);
 		}
@@ -77,8 +79,8 @@ public class ToggleActiveFoldingAction extends Action implements IWorkbenchWindo
 
 	public void init(IAction action) {
 		this.parentAction = action;
-		valueChanged(action, MylarJavaPlugin.getDefault().getPreferenceStore().getBoolean(
-				MylarJavaPrefConstants.ACTIVE_FOLDING_ENABLED));
+		valueChanged(action, ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED));
 	}
 
 	public void dispose() {

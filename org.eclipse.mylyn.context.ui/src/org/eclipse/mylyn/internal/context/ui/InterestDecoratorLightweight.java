@@ -56,7 +56,7 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
 				if (bridge != null && bridge.canBeLandmark(node.getHandleIdentifier())
 						&& node.getInterest().isLandmark() && !node.getInterest().isPropagated()
 						&& !node.getInterest().isPredicted()) {
-					decoration.setFont(MylarUiPrefContstants.BOLD);
+					decoration.setFont(ContextUiPrefContstants.BOLD);
 				}
 			}
 		} catch (Exception e) {
