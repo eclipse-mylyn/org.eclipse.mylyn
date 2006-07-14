@@ -34,6 +34,7 @@ import org.eclipse.mylar.context.core.MylarPlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarPreferenceContstants;
 import org.eclipse.mylar.internal.tasklist.OfflineTaskManager;
+import org.eclipse.mylar.internal.tasklist.RepositoryAwareStatusNotifier;
 import org.eclipse.mylar.internal.tasklist.TaskListBackupManager;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.TaskListSynchronizationManager;
@@ -347,6 +348,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			taskListManager = new TaskListManager(taskListWriter, taskListFile, nextTaskId);
 			taskRepositoryManager = new TaskRepositoryManager();
 			
+			MylarStatusHandler.setStatusNotifier(new RepositoryAwareStatusNotifier());
 //			MylarPlugin.setContextStore(new FileBasedContextStore());
 		} catch (Exception e) {
 			e.printStackTrace();
