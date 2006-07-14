@@ -24,7 +24,7 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
 /**
  * @author Rob Elves
  */
-public class BugzillaHeadlessTest extends TestCase {
+public class BugzillaQueryTest extends TestCase {
 
 	private TaskRepository repository;
 
@@ -47,18 +47,7 @@ public class BugzillaHeadlessTest extends TestCase {
 		// }
 	}
 
-	// public void testRetrieveBug() throws Exception {
-	// RepositoryTaskData taskData =
-	// BugzillaRepositoryUtil.getBug(IBugzillaConstants.TEST_BUGZILLA_222_URL,
-	// "", "", null, "UTF-8", 1);
-	// assertNotNull(taskData);
-	// }
-
 	public void testQueryBugs() throws Exception {
-
-		// TaskRepository repository = new
-		// TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
-		// IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		BugzillaResultCollector collector = new BugzillaResultCollector();
 		collector.setProgressMonitor(new NullProgressMonitor());
 		BugzillaSearchOperation operation = new BugzillaSearchOperation(
@@ -73,4 +62,11 @@ public class BugzillaHeadlessTest extends TestCase {
 		}
 	}
 
+
+	// public void testRetrieveBug() throws Exception {
+	// RepositoryTaskData taskData =
+	// BugzillaRepositoryUtil.getBug(IBugzillaConstants.TEST_BUGZILLA_222_URL,
+	// "", "", null, "UTF-8", 1);
+	// assertNotNull(taskData);
+	// }
 }
