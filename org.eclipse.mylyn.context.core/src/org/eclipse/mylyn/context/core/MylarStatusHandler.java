@@ -73,6 +73,7 @@ public class MylarStatusHandler {
 		if (statusNotifier != null) {
 			statusNotifier.notify(status, informUser);
 		}
+		log(status);
 	}
 
 //	public static void setDumpErrorsForTesting(boolean dumpErrors) {
