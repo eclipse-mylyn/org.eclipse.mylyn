@@ -26,13 +26,13 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.UnrecognizedReponseException;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasks.ui.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
@@ -59,9 +59,9 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 	private AbstractAttributeFactory attributeFactory = new BugzillaAttributeFactory();
 	
 	public RepositoryTaskData downloadTaskData(final AbstractRepositoryTask bugzillaTask) throws CoreException {
-		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 				BugzillaPlugin.REPOSITORY_KIND, bugzillaTask.getRepositoryUrl());
-		Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
+		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
 		try {
 			int bugId = Integer.parseInt(AbstractRepositoryTask.getTaskId(bugzillaTask.getHandleIdentifier()));
 

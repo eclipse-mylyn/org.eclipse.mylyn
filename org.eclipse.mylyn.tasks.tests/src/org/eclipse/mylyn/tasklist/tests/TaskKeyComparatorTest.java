@@ -15,7 +15,7 @@ import java.util.Arrays;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskKeyComparator;
+import org.eclipse.mylar.internal.tasks.ui.ui.views.TaskKeyComparator;
 
 /**
  * @author Eugene Kuleshov https://bugs.eclipse.org/bugs/show_bug.cgi?id=129511

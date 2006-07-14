@@ -22,12 +22,12 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskExternalizer;
-import org.eclipse.mylar.internal.tasklist.util.TaskListWriter;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskListManager;
+import org.eclipse.mylar.internal.tasks.ui.util.TaskListWriter;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListExternalizer;
 import org.eclipse.mylar.tasks.core.Task;
+import org.eclipse.mylar.tasks.ui.TaskListManager;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
@@ -44,7 +44,7 @@ public class TaskListStandaloneTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		MylarTaskListPlugin.getRepositoryManager().clearRepositories();
+		TasksUiPlugin.getRepositoryManager().clearRepositories();
 		externalizers = new ArrayList<ITaskListExternalizer>();
 
 		externalizers.add(new BugzillaTaskExternalizer());
@@ -52,7 +52,7 @@ public class TaskListStandaloneTest extends TestCase {
 		TaskListWriter writer = new TaskListWriter();
 		writer.setDelegateExternalizers(externalizers);
 
-		file = new File("foo" + MylarTaskListPlugin.FILE_EXTENSION);
+		file = new File("foo" + TasksUiPlugin.FILE_EXTENSION);
 		file.deleteOnExit();
 		manager = new TaskListManager(writer, file, 1);
 		manager.resetTaskList();

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylar.bugzilla.tests;
 
+import org.eclipse.mylar.bugzilla.tests.headless.BugzillaHeadlessTest;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 

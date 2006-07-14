@@ -16,9 +16,9 @@ import junit.framework.TestCase;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchPage;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TaskRepositoryManager;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -33,7 +33,7 @@ public class BugzillaSearchDialogTest extends TestCase {
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		manager = MylarTaskListPlugin.getRepositoryManager();
+		manager = TasksUiPlugin.getRepositoryManager();
 		assertNotNull(manager);
 		manager.clearRepositories();
 	}

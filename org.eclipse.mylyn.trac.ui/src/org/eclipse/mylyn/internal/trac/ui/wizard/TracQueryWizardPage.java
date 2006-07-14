@@ -23,9 +23,9 @@ import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.model.TracSearch;
 import org.eclipse.mylar.internal.trac.model.TracSearchFilter;
 import org.eclipse.mylar.internal.trac.model.TracSearchFilter.CompareOperator;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.KeyEvent;
@@ -232,7 +232,7 @@ public class TracQueryWizardPage extends WizardPage {
 
 	public TracRepositoryQuery getQuery() {
 		return new TracRepositoryQuery(repository.getUrl(), getQueryUrl(repository.getUrl()), titleText.getText(),
-				MylarTaskListPlugin.getTaskListManager().getTaskList());
+				TasksUiPlugin.getTaskListManager().getTaskList());
 	}
 
 	private void hideSearchField(SearchField field) {

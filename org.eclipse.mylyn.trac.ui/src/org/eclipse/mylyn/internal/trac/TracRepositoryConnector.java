@@ -25,7 +25,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylar.internal.tasks.ui.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.internal.trac.TracTask.Kind;
 import org.eclipse.mylar.internal.trac.TracTask.PriorityLevel;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
@@ -36,8 +36,6 @@ import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
 import org.eclipse.mylar.internal.trac.ui.wizard.EditTracQueryWizard;
 import org.eclipse.mylar.internal.trac.ui.wizard.NewTracQueryWizard;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -45,6 +43,8 @@ import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
@@ -144,7 +144,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		}
 
 		try {
-			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 					query.getRepositoryKind(), query.getRepositoryUrl());
 			if (repository == null) {
 				return;
@@ -174,7 +174,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		final List<TracTicket> tickets = new ArrayList<TracTicket>();
 
 		String url = query.getRepositoryUrl();
-		TaskRepository taskRepository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+		TaskRepository taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(
 				MylarTracPlugin.REPOSITORY_KIND, url);
 		ITracClient tracRepository;
 		try {
@@ -183,14 +183,14 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 				tracRepository.search(((TracRepositoryQuery) query).getTracSearch(), tickets);
 			}
 		} catch (Throwable e) {
-			queryStatus.add(new Status(IStatus.OK, MylarTaskListPlugin.PLUGIN_ID, IStatus.OK,
+			queryStatus.add(new Status(IStatus.OK, TasksUiPlugin.PLUGIN_ID, IStatus.OK,
 					"Could not log in to server: " + query.getRepositoryUrl() + "\n\nCheck network connection.", e));
 			return hits;
 		}
 
 		for (TracTicket ticket : tickets) {
 			String handleIdentifier = AbstractRepositoryTask.getHandle(url, ticket.getId());
-			ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handleIdentifier);
+			ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handleIdentifier);
 			if (!(task instanceof TracTask)) {
 				task = createTask(ticket, handleIdentifier);
 			}
@@ -233,12 +233,12 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	public static TracTask createTask(TracTicket ticket, String handleIdentifier) {
 		TracTask task;
-		ITask existingTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handleIdentifier);
+		ITask existingTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handleIdentifier);
 		if (existingTask instanceof TracTask) {
 			task = (TracTask) existingTask;
 		} else {
 			task = new TracTask(handleIdentifier, ticket.getValue(Key.SUMMARY), true);
-			MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task);
+			TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		}
 		return task;
 	}
@@ -272,7 +272,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			task.setCreationDate(ticket.getCreated());
 		}
 
-		MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
+		TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
 	}
 
 }

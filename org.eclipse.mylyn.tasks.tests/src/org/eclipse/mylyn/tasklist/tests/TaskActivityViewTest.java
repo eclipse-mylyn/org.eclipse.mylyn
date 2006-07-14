@@ -19,12 +19,12 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskList;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Rob Elves
@@ -39,12 +39,12 @@ public class TaskActivityViewTest extends TestCase {
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		taskList = MylarTaskListPlugin.getTaskListManager().getTaskList();
+		taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 	}
 
 	protected void tearDown() throws Exception {
 //		MylarTaskListPlugin.getTaskListManager().readExistingOrCreateNewList();
-		MylarTaskListPlugin.getTaskListManager().resetTaskList();
+		TasksUiPlugin.getTaskListManager().resetTaskList();
 		super.tearDown();
 	}
 
@@ -96,11 +96,11 @@ public class TaskActivityViewTest extends TestCase {
 
 		ITask task1 = new Task("task 1", "Task 1", true);
 		ITask task2 = new Task("task 2", "Task 2", true);
-		MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task1);
-		MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task2);
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task2);
 
 		// test this week
-		DateRangeContainer thisWeekActivity = MylarTaskListPlugin.getTaskListManager().getActivityThisWeek();
+		DateRangeContainer thisWeekActivity = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
 		assertNotNull(thisWeekActivity);
 		assertEquals(0, thisWeekActivity.getChildren().size());
 		assertEquals(0, thisWeekActivity.getTotalElapsed());
@@ -118,14 +118,14 @@ public class TaskActivityViewTest extends TestCase {
 				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f,
 				thisWeekCalendarStop.getTime(), thisWeekCalendarStop.getTime());
 
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event1);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event2);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
 		assertEquals(1, thisWeekActivity.getChildren().size());
 		assertEquals(thisWeekCalendarStop.getTime().getTime() - thisWeekCalendarStart.getTime().getTime(),
 				thisWeekActivity.getTotalElapsed());
 
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event1);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event2);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
 		assertEquals(1, thisWeekActivity.getChildren().size());
 		assertEquals(2 * (thisWeekCalendarStop.getTime().getTime() - thisWeekCalendarStart.getTime().getTime()),
 				thisWeekActivity.getTotalElapsed());
@@ -139,12 +139,12 @@ public class TaskActivityViewTest extends TestCase {
 		event2 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task2.getHandleIdentifier(),
 				"originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f, thisWeekCalendarStop
 						.getTime(), thisWeekCalendarStop.getTime());
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event1);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event2);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
 		assertEquals(2, thisWeekActivity.getChildren().size());
 
 		// test Past
-		DateRangeContainer pastActivity = MylarTaskListPlugin.getTaskListManager().getActivityPast();
+		DateRangeContainer pastActivity = TasksUiPlugin.getTaskListManager().getActivityPast();
 		assertNotNull(pastActivity);
 		assertEquals(0, pastActivity.getChildren().size());
 
@@ -155,12 +155,12 @@ public class TaskActivityViewTest extends TestCase {
 				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f,
 				pastActivity.getEnd().getTime(), pastActivity.getEnd().getTime());
 
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event3);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event4);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event3);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event4);
 		assertEquals(1, pastActivity.getChildren().size());
 
 		// test Future
-		DateRangeContainer futureActivity = MylarTaskListPlugin.getTaskListManager().getActivityFuture();
+		DateRangeContainer futureActivity = TasksUiPlugin.getTaskListManager().getActivityFuture();
 		assertNotNull(futureActivity);
 		assertEquals(0, futureActivity.getChildren().size());
 
@@ -171,12 +171,12 @@ public class TaskActivityViewTest extends TestCase {
 				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f,
 				futureActivity.getEnd().getTime(), futureActivity.getEnd().getTime());
 
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event5);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event6);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event5);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event6);
 		assertEquals(1, futureActivity.getChildren().size());
 
 		// test Next week activity
-		DateRangeContainer activityNextWeek = MylarTaskListPlugin.getTaskListManager().getActivityNextWeek();
+		DateRangeContainer activityNextWeek = TasksUiPlugin.getTaskListManager().getActivityNextWeek();
 		assertNotNull(activityNextWeek);
 		assertEquals(0, activityNextWeek.getChildren().size());
 
@@ -187,12 +187,12 @@ public class TaskActivityViewTest extends TestCase {
 				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f,
 				activityNextWeek.getEnd().getTime(), activityNextWeek.getEnd().getTime());
 
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event7);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event8);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event7);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event8);
 		assertEquals(1, activityNextWeek.getChildren().size());
 
 		// test Previous week activity
-		DateRangeContainer activityPreviousWeek = MylarTaskListPlugin.getTaskListManager().getActivityPrevious();
+		DateRangeContainer activityPreviousWeek = TasksUiPlugin.getTaskListManager().getActivityPrevious();
 		assertNotNull(activityPreviousWeek);
 		assertEquals(0, activityPreviousWeek.getChildren().size());
 
@@ -203,8 +203,8 @@ public class TaskActivityViewTest extends TestCase {
 				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f,
 				activityPreviousWeek.getEnd().getTime(), activityPreviousWeek.getEnd().getTime());
 
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event9);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event10);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event9);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event10);
 		assertEquals(1, activityPreviousWeek.getChildren().size());
 	}
 
@@ -214,8 +214,8 @@ public class TaskActivityViewTest extends TestCase {
 	 */
 	public void testTaskListManagerActivity2(){
 		ITask task1 = new Task("task 1", "Task 1", true);
-		MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task1);
-		DateRangeContainer thisWeekActivity = MylarTaskListPlugin.getTaskListManager().getActivityThisWeek();
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
+		DateRangeContainer thisWeekActivity = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
 		assertNotNull(thisWeekActivity);
 		assertEquals(0, thisWeekActivity.getChildren().size());
 		assertEquals(0, thisWeekActivity.getTotalElapsed());
@@ -243,12 +243,12 @@ public class TaskActivityViewTest extends TestCase {
 		InteractionEvent event6 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task1handle,
 				"originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f, time6, time6);
 
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event1);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event2);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event3);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event4);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event5);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event6);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event3);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event4);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event5);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event6);
 		assertEquals(1, thisWeekActivity.getChildren().size());
 		long expectedTotalTime = time6.getTime() - time5.getTime() + time2.getTime() - time1.getTime();
 		assertEquals(expectedTotalTime, thisWeekActivity.getTotalElapsed());
@@ -262,8 +262,8 @@ public class TaskActivityViewTest extends TestCase {
 	 */
 	public void testTaskListManagerActivity3(){
 		ITask task1 = new Task("task 1", "Task 1", true);
-		MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task1);
-		DateRangeContainer thisWeekActivity = MylarTaskListPlugin.getTaskListManager().getActivityThisWeek();
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
+		DateRangeContainer thisWeekActivity = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
 		assertNotNull(thisWeekActivity);
 		assertEquals(0, thisWeekActivity.getChildren().size());
 		assertEquals(0, thisWeekActivity.getTotalElapsed());
@@ -294,13 +294,13 @@ public class TaskActivityViewTest extends TestCase {
 		InteractionEvent event7 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task1handle,
 				"originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f, time7, time7);
 
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event1);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event2);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event3);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event4);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event5);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event6);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event7);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event3);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event4);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event5);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event6);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event7);
 		assertEquals(1, thisWeekActivity.getChildren().size());
 		long expectedTotalTime = 
 			time6.getTime() - time5.getTime() + 
@@ -314,9 +314,9 @@ public class TaskActivityViewTest extends TestCase {
 	public void testTaskListManagerInactivity() {
 
 		ITask task1 = new Task("task 1", "Task 1", true);
-		MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task1);
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
 
-		DateRangeContainer activityThisWeek = MylarTaskListPlugin.getTaskListManager().getActivityThisWeek();
+		DateRangeContainer activityThisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
 		assertNotNull(activityThisWeek);
 		assertEquals(0, activityThisWeek.getChildren().size());
 
@@ -338,10 +338,10 @@ public class TaskActivityViewTest extends TestCase {
 				MylarContextManager.ACTIVITY_HANDLE_ATTENTION, "originId", "navigatedRelation",
 				MylarContextManager.ACTIVITY_DELTA_ACTIVATED, 2f, inactivityEnd.getTime(), inactivityEnd.getTime());
 
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event1);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(inactivityEvent1);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(inactivityEvent2);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event2);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(inactivityEvent1);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(inactivityEvent2);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
 		assertEquals(1, activityThisWeek.getChildren().size());
 
 		long expectedTotalTime = (activityThisWeek.getEnd().getTime().getTime() - activityThisWeek.getStart().getTime()
@@ -358,9 +358,9 @@ public class TaskActivityViewTest extends TestCase {
 	public void testInterleavedActivation() {
 
 		ITask task1 = new Task("task 1", "Task 1", true);
-		MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task1);
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
 
-		DateRangeContainer activityThisWeek = MylarTaskListPlugin.getTaskListManager().getActivityThisWeek();
+		DateRangeContainer activityThisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
 		assertNotNull(activityThisWeek);
 		assertEquals(0, activityThisWeek.getChildren().size());
 
@@ -388,10 +388,10 @@ public class TaskActivityViewTest extends TestCase {
 				MylarContextManager.ACTIVITY_HANDLE_ATTENTION, "originId", "navigatedRelation",
 				MylarContextManager.ACTIVITY_DELTA_ACTIVATED, 2f, inactivityStop.getTime(), inactivityStop.getTime());
 
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(inactivityEvent1);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event1);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(inactivityEvent2);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event2);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(inactivityEvent1);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(inactivityEvent2);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
 		assertEquals(1, activityThisWeek.getChildren().size());
 
 		long expectedTotalTime = taskActivationStop.getTimeInMillis() - taskActivationStart.getTimeInMillis();
@@ -405,9 +405,9 @@ public class TaskActivityViewTest extends TestCase {
 	public void testInterleavedActivation2() {
 
 		ITask task1 = new Task("task 1", "Task 1", true);
-		MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task1);
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
 
-		DateRangeContainer activityThisWeek = MylarTaskListPlugin.getTaskListManager().getActivityThisWeek();
+		DateRangeContainer activityThisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
 		assertNotNull(activityThisWeek);
 		assertEquals(0, activityThisWeek.getChildren().size());
 
@@ -435,10 +435,10 @@ public class TaskActivityViewTest extends TestCase {
 				MylarContextManager.ACTIVITY_HANDLE_ATTENTION, "originId", "navigatedRelation",
 				MylarContextManager.ACTIVITY_DELTA_ACTIVATED, 2f, inactivityStop.getTime(), inactivityStop.getTime());
 
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event1);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(inactivityEvent1);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event2);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(inactivityEvent2);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(inactivityEvent1);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(inactivityEvent2);
 		assertEquals(1, activityThisWeek.getChildren().size());
 
 		long expectedTotalTime = inactivityStart.getTimeInMillis() - taskActivationStart.getTimeInMillis();
@@ -449,11 +449,11 @@ public class TaskActivityViewTest extends TestCase {
 	
 	public void testResetAndRollOver() {
 		
-		DateRangeContainer pastWeeks = MylarTaskListPlugin.getTaskListManager().getActivityPast();
-		DateRangeContainer previousWeek = MylarTaskListPlugin.getTaskListManager().getActivityPrevious();
-		DateRangeContainer thisWeek = MylarTaskListPlugin.getTaskListManager().getActivityThisWeek();
-		DateRangeContainer nextWeek = MylarTaskListPlugin.getTaskListManager().getActivityNextWeek();
-		DateRangeContainer futureWeeks = MylarTaskListPlugin.getTaskListManager().getActivityFuture();
+		DateRangeContainer pastWeeks = TasksUiPlugin.getTaskListManager().getActivityPast();
+		DateRangeContainer previousWeek = TasksUiPlugin.getTaskListManager().getActivityPrevious();
+		DateRangeContainer thisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
+		DateRangeContainer nextWeek = TasksUiPlugin.getTaskListManager().getActivityNextWeek();
+		DateRangeContainer futureWeeks = TasksUiPlugin.getTaskListManager().getActivityFuture();
 		
 		assertTrue(thisWeek.isPresent());
 		assertTrue(nextWeek.isFuture());
@@ -489,7 +489,7 @@ public class TaskActivityViewTest extends TestCase {
 		assertTrue(futureWeeks.includes(futureWeekTaskStart));
 		
 		ITask task1 = new Task("task 1", "Task 1", true);
-		MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task1);		
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);		
 		InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task1
 				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_ACTIVATED, 2f,
 				thisWeekTaskStart.getTime(), thisWeekTaskStart.getTime());
@@ -497,25 +497,25 @@ public class TaskActivityViewTest extends TestCase {
 				.getHandleIdentifier(), "originId", "navigatedRelation", MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f,
 				thisWeekTaskStop.getTime(), thisWeekTaskStop.getTime());
 
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event1);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event2);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
 		assertEquals(1, thisWeek.getChildren().size());
 		assertEquals(thisWeekTaskStop.getTime().getTime() - thisWeekTaskStart.getTime().getTime(),
 				thisWeek.getTotalElapsed());
 				
 		// ROLL OVER		
-		MylarTaskListPlugin.getTaskListManager().startTime = new Date(nextWeek.getStart().getTimeInMillis() + 10);
-		MylarTaskListPlugin.getTaskListManager().resetAndRollOver();
+		TasksUiPlugin.getTaskListManager().startTime = new Date(nextWeek.getStart().getTimeInMillis() + 10);
+		TasksUiPlugin.getTaskListManager().resetAndRollOver();
 		
 	
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event1);
-		MylarTaskListPlugin.getTaskListManager().parseInteractionEvent(event2);		
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
+		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);		
 		
 		
-		DateRangeContainer newPastWeeks = MylarTaskListPlugin.getTaskListManager().getActivityPast();
-		DateRangeContainer newPreviousWeek = MylarTaskListPlugin.getTaskListManager().getActivityPrevious();
-		DateRangeContainer newThisWeek = MylarTaskListPlugin.getTaskListManager().getActivityThisWeek();
-		DateRangeContainer newNextWeek = MylarTaskListPlugin.getTaskListManager().getActivityNextWeek();
+		DateRangeContainer newPastWeeks = TasksUiPlugin.getTaskListManager().getActivityPast();
+		DateRangeContainer newPreviousWeek = TasksUiPlugin.getTaskListManager().getActivityPrevious();
+		DateRangeContainer newThisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
+		DateRangeContainer newNextWeek = TasksUiPlugin.getTaskListManager().getActivityNextWeek();
 		//DateRangeContainer newFutureWeeks = MylarTaskListPlugin.getTaskListManager().getActivityFuture();
 		
 		assertTrue(newPastWeeks.includes(previousWeekTaskStart));

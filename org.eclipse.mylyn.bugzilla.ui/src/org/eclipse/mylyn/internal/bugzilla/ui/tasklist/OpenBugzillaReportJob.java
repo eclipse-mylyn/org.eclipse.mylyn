@@ -24,12 +24,12 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylar.internal.tasklist.ui.editors.AbstractBugEditorInput;
-import org.eclipse.mylar.internal.tasklist.ui.editors.AbstractRepositoryTaskEditor;
-import org.eclipse.mylar.internal.tasklist.ui.editors.ExistingBugEditorInput;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasks.ui.ui.editors.AbstractBugEditorInput;
+import org.eclipse.mylar.internal.tasks.ui.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylar.internal.tasks.ui.ui.editors.ExistingBugEditorInput;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -62,10 +62,10 @@ public class OpenBugzillaReportJob extends Job {
 
 			try {				
 				// try to open a new editor on the bug
-				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 						BugzillaPlugin.REPOSITORY_KIND, serverUrl);			
 				
-				RepositoryTaskData data = BugzillaServerFacade.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), MylarTaskListPlugin.getDefault().getProxySettings(), repository.getCharacterEncoding(), bugId.intValue());
+				RepositoryTaskData data = BugzillaServerFacade.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), TasksUiPlugin.getDefault().getProxySettings(), repository.getCharacterEncoding(), bugId.intValue());
 				final AbstractBugEditorInput editorInput = new ExistingBugEditorInput(repository, data);
 				
 				// final ExistingBugEditorInput editorInput = new

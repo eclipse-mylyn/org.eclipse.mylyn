@@ -15,9 +15,9 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.tasklist.util.BackgroundSaveTimer;
-import org.eclipse.mylar.internal.tasklist.util.TaskListSaveManager;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasks.ui.util.BackgroundSaveTimer;
+import org.eclipse.mylar.internal.tasks.ui.util.TaskListSaveManager;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * Tests the mechanism for saving the task data periodically. If this test fails
@@ -34,22 +34,22 @@ public class BackgroundSaveTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		policy = MylarTaskListPlugin.getDefault().getTaskListSaveManager();
+		policy = TasksUiPlugin.getDefault().getTaskListSaveManager();
 
-		saveTimer = new BackgroundSaveTimer(MylarTaskListPlugin.getDefault().getTaskListSaveManager());
+		saveTimer = new BackgroundSaveTimer(TasksUiPlugin.getDefault().getTaskListSaveManager());
 		saveTimer.setSaveIntervalMillis(50);
 		saveTimer.start();
-		MylarTaskListPlugin.getDefault().getTaskListSaveManager().setForceBackgroundSave(true);
+		TasksUiPlugin.getDefault().getTaskListSaveManager().setForceBackgroundSave(true);
 	}
 
 	protected void tearDown() throws Exception {
 		saveTimer.stop();
 		super.tearDown();
-		MylarTaskListPlugin.getDefault().getTaskListSaveManager().setForceBackgroundSave(false);
+		TasksUiPlugin.getDefault().getTaskListSaveManager().setForceBackgroundSave(false);
 	}
 
 	public void testBackgroundSave() throws InterruptedException, IOException {
-		File file = MylarTaskListPlugin.getTaskListManager().getTaskListFile();
+		File file = TasksUiPlugin.getTaskListManager().getTaskListFile();
 		long previouslyModified = file.lastModified();
 		policy.saveTaskList(true);
 		

@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Mylar TaskList Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.tasklist; singleton:=true
 Bundle-Version: 0.6.0.v20060707-1900
-Bundle-Activator: org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin
+Bundle-Activator: org.eclipse.mylar.tasks.ui.TasksUiPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -22,15 +22,15 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylar.monitor
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
-Export-Package: org.eclipse.mylar.internal.tasklist,
- org.eclipse.mylar.internal.tasklist.planner,
- org.eclipse.mylar.internal.tasklist.planner.ui,
- org.eclipse.mylar.internal.tasklist.ui,
- org.eclipse.mylar.internal.tasklist.ui.actions,
- org.eclipse.mylar.internal.tasklist.ui.editors,
- org.eclipse.mylar.internal.tasklist.ui.preferences,
- org.eclipse.mylar.internal.tasklist.ui.views,
- org.eclipse.mylar.internal.tasklist.ui.wizards,
- org.eclipse.mylar.internal.tasklist.util,
- org.eclipse.mylar.provisional.tasklist
+Export-Package: org.eclipse.mylar.internal.tasks.ui,
+ org.eclipse.mylar.internal.tasks.ui.planner,
+ org.eclipse.mylar.internal.tasks.ui.planner.ui,
+ org.eclipse.mylar.internal.tasks.ui.ui,
+ org.eclipse.mylar.internal.tasks.ui.ui.actions,
+ org.eclipse.mylar.internal.tasks.ui.ui.editors,
+ org.eclipse.mylar.internal.tasks.ui.ui.preferences,
+ org.eclipse.mylar.internal.tasks.ui.ui.views,
+ org.eclipse.mylar.internal.tasks.ui.ui.wizards,
+ org.eclipse.mylar.internal.tasks.ui.util,
+ org.eclipse.mylar.tasks.ui
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

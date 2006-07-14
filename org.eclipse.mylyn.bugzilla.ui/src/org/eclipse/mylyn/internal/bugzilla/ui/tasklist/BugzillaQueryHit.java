@@ -12,10 +12,10 @@
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Ken Sueda
@@ -68,7 +68,7 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 
 	public AbstractRepositoryTask getOrCreateCorrespondingTask() { 
 		
-		ITask existingTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(
+		ITask existingTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 				getHandleIdentifier());
 		 
 		if (existingTask instanceof BugzillaTask) {
@@ -76,7 +76,7 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 		} else {
 			task = new BugzillaTask(this, true);
 			//task.setSyncState(RepositoryTaskSyncState.INCOMING);
-			MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task);			
+			TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);			
 		} 	
 		return task;
 	}

@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
-import org.eclipse.mylar.internal.tasklist.ui.editors.AbstractBugEditorInput;
+import org.eclipse.mylar.internal.tasks.ui.ui.editors.AbstractBugEditorInput;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 

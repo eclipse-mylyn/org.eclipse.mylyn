@@ -31,7 +31,7 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.UnrecognizedReponseException;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
+import org.eclipse.mylar.internal.tasks.ui.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.ui.PlatformUI;
 

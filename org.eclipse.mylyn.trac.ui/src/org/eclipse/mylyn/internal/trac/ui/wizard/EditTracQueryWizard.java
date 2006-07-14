@@ -11,11 +11,11 @@
 
 package org.eclipse.mylar.internal.trac.ui.wizard;
 
-import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractEditQueryWizard;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasks.ui.ui.wizards.AbstractEditQueryWizard;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Steffen Pingel
@@ -47,10 +47,10 @@ public class EditTracQueryWizard extends AbstractEditQueryWizard {
 	public boolean performFinish() {
 		AbstractRepositoryQuery q = queryPage.getQuery();
 		if (q != null) {
-			MylarTaskListPlugin.getTaskListManager().getTaskList().deleteQuery(query);
-			MylarTaskListPlugin.getTaskListManager().getTaskList().addQuery(q);
+			TasksUiPlugin.getTaskListManager().getTaskList().deleteQuery(query);
+			TasksUiPlugin.getTaskListManager().getTaskList().addQuery(q);
 
-			AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
+			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 					repository.getKind());
 			if (connector != null) {
 				connector.synchronize(q, null);

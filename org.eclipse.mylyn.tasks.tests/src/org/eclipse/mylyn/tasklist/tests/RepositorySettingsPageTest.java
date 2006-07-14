@@ -11,10 +11,10 @@ package org.eclipse.mylar.tasklist.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.jface.preference.StringFieldEditor;
-import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
+import org.eclipse.mylar.internal.tasks.ui.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.tasklist.tests.mockconnector.MockRepositoryConnector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;

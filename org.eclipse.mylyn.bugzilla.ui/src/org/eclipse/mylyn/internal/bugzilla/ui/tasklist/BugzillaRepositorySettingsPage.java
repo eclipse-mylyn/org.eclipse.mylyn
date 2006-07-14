@@ -27,9 +27,9 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasks.ui.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -111,7 +111,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					monitor.beginTask("Validating server settings", IProgressMonitor.UNKNOWN);
 					try {
-						Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
+						Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
 						URLConnection cntx = BugzillaPlugin.getUrlConnection(serverURL, proxySettings);
 						if (cntx == null || !(cntx instanceof HttpURLConnection)) {
 							throw new MalformedURLException();

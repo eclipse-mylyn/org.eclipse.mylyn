@@ -14,12 +14,12 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.internal.context.core.util.TimerThread;
-import org.eclipse.mylar.internal.tasklist.util.TaskActivityTimer;
+import org.eclipse.mylar.internal.tasks.ui.util.TaskActivityTimer;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskListManager;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.Task;
+import org.eclipse.mylar.tasks.ui.TaskListManager;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
@@ -42,7 +42,7 @@ public class TaskActivityTimingTest extends TestCase {
 	// it will have woken up and suspended.
 	private static final int SLEEP_TIMEOUT = TIMEOUT + SLOP; // 5.5 seconds
 
-	protected TaskListManager manager = MylarTaskListPlugin.getTaskListManager();
+	protected TaskListManager manager = TasksUiPlugin.getTaskListManager();
 
 	protected Task task1 = null;
 
@@ -57,10 +57,10 @@ public class TaskActivityTimingTest extends TestCase {
 	}
 
 	public void tearDown() {
-		MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
-		ITask remaining = MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTask();
+		TasksUiPlugin.getTaskListManager().deactivateTask(task1);
+		ITask remaining = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 		if (remaining != null) {
-			MylarTaskListPlugin.getTaskListManager().deactivateTask(remaining);
+			TasksUiPlugin.getTaskListManager().deactivateTask(remaining);
 		}
 		MylarMonitorPlugin.getDefault().setInactivityTimeout(originalActivityTimeout);
 		manager.setTimerSleepInterval(TimerThread.DEFAULT_SLEEP_INTERVAL);
@@ -68,12 +68,12 @@ public class TaskActivityTimingTest extends TestCase {
 
 	public void testDeactivation() throws InterruptedException {
 		assertEquals(0, task1.getElapsedTime());
-		MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
+		TasksUiPlugin.getTaskListManager().deactivateTask(task1);
 		assertEquals(0, task1.getElapsedTime());
 
-		MylarTaskListPlugin.getTaskListManager().activateTask(task1);
+		TasksUiPlugin.getTaskListManager().activateTask(task1);
 		Thread.sleep(SLEEP_NOTIMEOUT);
-		MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
+		TasksUiPlugin.getTaskListManager().deactivateTask(task1);
 		assertTrue("elapsed: " + task1.getElapsedTime(), task1.getElapsedTime() >= SLEEP_NOTIMEOUT - 2*SLOP);
 	}
 
@@ -86,7 +86,7 @@ public class TaskActivityTimingTest extends TestCase {
 
 		long elapsed = task1.getElapsedTime();
 		assertEquals(0, elapsed);
-		MylarTaskListPlugin.getTaskListManager().activateTask(task1);
+		TasksUiPlugin.getTaskListManager().activateTask(task1);
 		TaskActivityTimer timer1 = manager.getTimerMap().get(task1);
 		// previous task was deactivated
 		assertEquals(1, manager.getTimerMap().values().size());
@@ -110,7 +110,7 @@ public class TaskActivityTimingTest extends TestCase {
 	public void testElapsedTimeCapture() throws InterruptedException {
 		long elapsed = task1.getElapsedTime();
 		assertEquals(0, elapsed);
-		MylarTaskListPlugin.getTaskListManager().activateTask(task1);
+		TasksUiPlugin.getTaskListManager().activateTask(task1);
 		Thread.sleep(SLEEP_TIMEOUT);
 
 		elapsed = task1.getElapsedTime();
@@ -118,7 +118,7 @@ public class TaskActivityTimingTest extends TestCase {
 
 		// Task should be inactive so no time accumulated
 		Thread.sleep(SLEEP_TIMEOUT);
-		MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
+		TasksUiPlugin.getTaskListManager().deactivateTask(task1);
 
 		long elapsedAfterDeactivation = task1.getElapsedTime();
 		assertEquals(elapsed, elapsedAfterDeactivation);
@@ -128,10 +128,10 @@ public class TaskActivityTimingTest extends TestCase {
 		assertEquals("no accumulation if task inactive", elapsedAfterDeactivation, elapsedAfterInactivity);
 
 		MylarMonitorPlugin.getDefault().setInactivityTimeout(SLEEP_TIMEOUT * 2);
-		MylarTaskListPlugin.getTaskListManager().activateTask(task1);
+		TasksUiPlugin.getTaskListManager().activateTask(task1);
 		Thread.sleep(SLEEP_TIMEOUT);
 		// Should not have timed out
-		MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
+		TasksUiPlugin.getTaskListManager().deactivateTask(task1);
 		long elpasedAfterReactivation = task1.getElapsedTime();
 
 		// adds some slop
@@ -165,7 +165,7 @@ public class TaskActivityTimingTest extends TestCase {
 		manager.deactivateTask(task0);
 
 		assertTrue(task0.getElapsedTime() > timeAfterSleep);
-		MylarTaskListPlugin.getTaskListManager().deactivateTask(task0);
+		TasksUiPlugin.getTaskListManager().deactivateTask(task0);
 
 	}
 

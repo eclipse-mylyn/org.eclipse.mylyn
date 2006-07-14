@@ -50,10 +50,8 @@ import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchHit;
 import org.eclipse.mylar.internal.bugzilla.ui.search.RepositoryQueryResultsFactory;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaCategorySearchOperation.ICategorySearchListener;
 import org.eclipse.mylar.internal.bugzilla.ui.wizard.NewBugzillaReportWizard;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
-import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasks.ui.ui.views.TaskRepositoriesView;
+import org.eclipse.mylar.internal.tasks.ui.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -62,6 +60,8 @@ import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -127,17 +127,17 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			}
 		} catch (NumberFormatException nfe) {
 			if (!forceSyncExecForTesting) {
-				MessageDialog.openInformation(null, MylarTaskListPlugin.TITLE_DIALOG, "Invalid report id: " + id);
+				MessageDialog.openInformation(null, TasksUiPlugin.TITLE_DIALOG, "Invalid report id: " + id);
 			}
 			return null;
 		}
 
 		String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), bugId);
-		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
+		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
 
 		if (task == null) {
 			task = new BugzillaTask(handle, DESCRIPTION_DEFAULT, true);
-			MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task);
+			TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		}
 
 		// MylarTaskListPlugin.BgetTaskListManager().getTaskList().addTaskToArchive(newTask);
@@ -164,7 +164,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 
 		try {
-			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 					query.getRepositoryKind(), query.getRepositoryUrl());
 			if (repository == null)
 				return;
@@ -255,18 +255,18 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			throw new BugzillaException("Invalid bug id returned by repository.");
 		}
 
-		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 				taskData.getRepositoryKind(), taskData.getRepositoryUrl());
 
 		BugzillaTask newTask = new BugzillaTask(AbstractRepositoryTask.getHandle(repository.getUrl(), bugId),
 				"<bugzilla info>", true);
 
-		MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(newTask,
-				MylarTaskListPlugin.getTaskListManager().getTaskList().getRootCategory());
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask,
+				TasksUiPlugin.getTaskListManager().getTaskList().getRootCategory());
 
 		List<TaskRepository> repositoriesToSync = new ArrayList<TaskRepository>();
 		repositoriesToSync.add(repository);
-		MylarTaskListPlugin.getSynchronizationManager().synchNow(0, repositoriesToSync);
+		TasksUiPlugin.getSynchronizationManager().synchNow(0, repositoriesToSync);
 
 	}
 
@@ -274,9 +274,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		try {
 			String handle = AbstractRepositoryTask.getHandle(repositoryTaskData.getRepositoryUrl(), repositoryTaskData
 					.getId());
-			ITask task = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
+			ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
 			if (task != null) {
-				Set<AbstractRepositoryQuery> queriesWithHandle = MylarTaskListPlugin.getTaskListManager().getTaskList()
+				Set<AbstractRepositoryQuery> queriesWithHandle = TasksUiPlugin.getTaskListManager().getTaskList()
 						.getQueriesForHandle(task.getHandleIdentifier());
 				synchronize(queriesWithHandle, null, Job.SHORT, 0, true);
 
@@ -324,7 +324,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public List<AbstractQueryHit> performQuery(final AbstractRepositoryQuery repositoryQuery, IProgressMonitor monitor,
 			MultiStatus status) {
-		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 				repositoryQuery.getRepositoryKind(), repositoryQuery.getRepositoryUrl());
 
 		final BugzillaCategorySearchOperation categorySearch = new BugzillaCategorySearchOperation(repository,
@@ -345,7 +345,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		try {
 			IStatus queryStatus = categorySearch.getStatus();
 			if (!queryStatus.isOK()) {
-				status.add(new Status(IStatus.OK, MylarTaskListPlugin.PLUGIN_ID, IStatus.OK, queryStatus.getMessage(),
+				status.add(new Status(IStatus.OK, TasksUiPlugin.PLUGIN_ID, IStatus.OK, queryStatus.getMessage(),
 						queryStatus.getException()));
 			} else {
 				status.add(queryStatus);
@@ -353,7 +353,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		} catch (LoginException e) {
 			// TODO: Set some form of disconnect status on Query?
 			MylarStatusHandler.fail(e, "login failure for repository url: " + repository, false);
-			status.add(new Status(IStatus.OK, MylarTaskListPlugin.PLUGIN_ID, IStatus.OK, "Could not log in", e));
+			status.add(new Status(IStatus.OK, TasksUiPlugin.PLUGIN_ID, IStatus.OK, "Could not log in", e));
 		}
 
 		return newHits;
@@ -442,12 +442,12 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory();
 		BugzillaResultCollector collector = new BugzillaResultCollector();
 
-		queryFactory.performQuery(repository.getUrl(), collector, urlQueryString, MylarTaskListPlugin.getDefault()
+		queryFactory.performQuery(repository.getUrl(), collector, urlQueryString, TasksUiPlugin.getDefault()
 				.getProxySettings(), AbstractReportFactory.RETURN_ALL_HITS, repository.getCharacterEncoding());
 
 		for (BugzillaSearchHit hit : collector.getResults()) {
 			String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), hit.getId());
-			ITask correspondingTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(handle);
+			ITask correspondingTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
 			if (correspondingTask != null && correspondingTask instanceof AbstractRepositoryTask) {
 				changedTasks.add((AbstractRepositoryTask) correspondingTask);
 			}

@@ -33,9 +33,9 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.AbstractBugzillaQueryPage;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TaskRepositoryManager;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.search.ui.ISearchPage;
 import org.eclipse.search.ui.ISearchPageContainer;
 import org.eclipse.search.ui.NewSearchUI;
@@ -218,7 +218,7 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String repositoryUrl = repositoryCombo.getItem(repositoryCombo.getSelectionIndex());
-				repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND,
+				repository = TasksUiPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND,
 						repositoryUrl);
 				updateAttributesFromRepository(repositoryUrl, null, false);
 				restoring = true;
@@ -922,7 +922,7 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 
 		IBugzillaSearchResultCollector collector = new BugzillaSearchResultCollector();
 
-		Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
+		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
 		IBugzillaSearchOperation op = new BugzillaSearchOperation(repository, queryUrl, proxySettings, collector,
 				getMaxHits());
 
@@ -944,10 +944,10 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 		if (visible && summaryPattern != null) {
 			if (firstTime) {
 				if (repository == null) {
-					repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
+					repository = TasksUiPlugin.getRepositoryManager().getDefaultRepository(
 							BugzillaPlugin.REPOSITORY_KIND);
 				}
-				Set<TaskRepository> repositories = MylarTaskListPlugin.getRepositoryManager().getRepositories(
+				Set<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getRepositories(
 						BugzillaPlugin.REPOSITORY_KIND);
 				String[] repositoryUrls = new String[repositories.size()];
 				int i = 0;
@@ -975,10 +975,10 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 						String selectRepo = settings.get(STORE_REPO_ID);
 						if (selectRepo != null) {
 							repositoryCombo.setText(selectRepo);
-							repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+							repository = TasksUiPlugin.getRepositoryManager().getRepository(
 									BugzillaPlugin.REPOSITORY_KIND, repositoryCombo.getText());
 							if (repository == null) {
-								repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
+								repository = TasksUiPlugin.getRepositoryManager().getDefaultRepository(
 										BugzillaPlugin.REPOSITORY_KIND);
 							}
 						} else {
@@ -1689,7 +1689,7 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 		if (originalQuery == null) {
 			try {
 				originalQuery = new BugzillaRepositoryQuery(repository.getUrl(), getQueryURL(repository,
-						getQueryParameters()), getQueryTitle(), getMaxHits(), MylarTaskListPlugin.getTaskListManager()
+						getQueryParameters()), getQueryTitle(), getMaxHits(), TasksUiPlugin.getTaskListManager()
 						.getTaskList());
 			} catch (UnsupportedEncodingException e) {
 				return null;

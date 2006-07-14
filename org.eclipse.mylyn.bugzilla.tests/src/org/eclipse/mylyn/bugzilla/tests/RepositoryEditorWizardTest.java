@@ -27,10 +27,10 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositorySettingsPage;
-import org.eclipse.mylar.internal.tasklist.ui.wizards.EditRepositoryWizard;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskRepositoryManager;
+import org.eclipse.mylar.internal.tasks.ui.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TaskRepositoryManager;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -45,7 +45,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		manager = MylarTaskListPlugin.getRepositoryManager();
+		manager = TasksUiPlugin.getRepositoryManager();
 		manager.clearRepositories();
 		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		// Valid user name and password must be set for tests to pass
@@ -60,7 +60,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 			fail("Must define credentials in <plug-in dir>/credentials.properties");
 		}
 
-		MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
+		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 	}
 
 	public void testValidationInvalidPassword() throws Exception {

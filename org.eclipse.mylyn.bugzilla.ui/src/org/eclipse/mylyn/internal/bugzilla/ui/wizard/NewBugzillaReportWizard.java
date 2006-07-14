@@ -17,9 +17,9 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.NewBugEditorInput;
-import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasks.ui.ui.TaskUiUtil;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -52,7 +52,7 @@ public class NewBugzillaReportWizard extends Wizard implements INewWizard {
 
 	public NewBugzillaReportWizard(TaskRepository repository, IStructuredSelection selection) {
 		this(false, repository, selection);
-		model = new NewBugzillaReport(repository.getUrl(), MylarTaskListPlugin.getDefault().getOfflineReportsFile()
+		model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault().getOfflineReportsFile()
 				.getNextOfflineBugId());
 		super.setDefaultPageImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin(
 				"org.eclipse.mylar.internal.bugzilla.ui", "icons/wizban/bug-wizard.gif"));

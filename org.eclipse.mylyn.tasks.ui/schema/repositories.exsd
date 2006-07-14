@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.mylar.tasklist">
+<schema targetNamespace="org.eclipse.mylar.tasks.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.mylar.tasklist" id="repositories" name="Repositories"/>
+         <meta.schema plugin="org.eclipse.mylar.tasks.ui" id="repositories" name="Repositories"/>
       </appInfo>
       <documentation>
          [Enter description of this extension point.]

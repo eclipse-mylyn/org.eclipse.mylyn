@@ -14,7 +14,7 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchPage;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.ui.TaskListImages;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;

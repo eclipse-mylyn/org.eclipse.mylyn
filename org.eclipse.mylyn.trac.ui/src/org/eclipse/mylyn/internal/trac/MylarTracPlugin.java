@@ -23,7 +23,7 @@ import java.security.NoSuchAlgorithmException;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -67,7 +67,7 @@ public class MylarTracPlugin extends AbstractUIPlugin {
 	 */
 	public static HttpURLConnection getHttpConnection(URL url) throws IOException, NoSuchAlgorithmException,
 			KeyManagementException, MalformedURLException {
-		Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
+		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
 		URLConnection cntx = getUrlConnection(url, proxySettings);
 		if (cntx == null || !(cntx instanceof HttpURLConnection)) {
 			throw new MalformedURLException();

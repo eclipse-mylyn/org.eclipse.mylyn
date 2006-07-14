@@ -25,18 +25,18 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListColorsAndFonts;
-import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
-import org.eclipse.mylar.internal.tasklist.ui.editors.AbstractRepositoryTaskEditor;
-import org.eclipse.mylar.internal.tasklist.ui.editors.RepositoryTaskOutlineNode;
-import org.eclipse.mylar.internal.tasklist.ui.editors.RepositoryTaskSelection;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasks.ui.ui.TaskListColorsAndFonts;
+import org.eclipse.mylar.internal.tasks.ui.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylar.internal.tasks.ui.ui.editors.RepositoryTaskOutlineNode;
+import org.eclipse.mylar.internal.tasks.ui.ui.editors.RepositoryTaskSelection;
+import org.eclipse.mylar.internal.tasks.ui.ui.views.TaskListView;
+import org.eclipse.mylar.internal.tasks.ui.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskCategory;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -203,7 +203,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		submitButton.setEnabled(false);
 		showBusy(true);
 		updateBug();
-		Proxy proxySettings = MylarTaskListPlugin.getDefault().getProxySettings();
+		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
 		boolean wrap = IBugzillaConstants.BugzillaServerVersion.SERVER_218.equals(repository.getVersion());
 
 		try {
@@ -221,7 +221,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 								close();
 								String newTaskHandle = AbstractRepositoryTask.getHandle(repository.getUrl(), event
 										.getJob().getResult().getMessage());
-								ITask newTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(
+								ITask newTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 										newTaskHandle);
 								if (newTask != null) {
 
@@ -232,7 +232,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 												.getFirstElement();
 
 									if (selectedObject instanceof TaskCategory) {
-										MylarTaskListPlugin.getTaskListManager().getTaskList().moveToContainer(
+										TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(
 												((TaskCategory) selectedObject), newTask);
 									}
 
@@ -256,7 +256,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 				}
 			};
 
-			BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) MylarTaskListPlugin
+			BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) TasksUiPlugin
 					.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
 			bugzillaRepositoryClient.submitBugReport(bugzillaReportSubmitForm, submitJobListener);
 

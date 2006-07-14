@@ -12,7 +12,6 @@
 package org.eclipse.mylar.internal.trac;
 
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -22,6 +21,7 @@ import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListExternalizer;
 import org.eclipse.mylar.tasks.core.TaskExternalizationException;
 import org.eclipse.mylar.tasks.core.TaskList;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -184,7 +184,7 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 			throw new TaskExternalizationException("Description not stored for task");
 		}
 
-		TracRepositoryQuery query = new TracRepositoryQuery(repositoryUrl, queryUrl, label, MylarTaskListPlugin
+		TracRepositoryQuery query = new TracRepositoryQuery(repositoryUrl, queryUrl, label, TasksUiPlugin
 				.getTaskListManager().getTaskList());
 
 		NodeList list = node.getChildNodes();

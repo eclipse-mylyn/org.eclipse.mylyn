@@ -13,16 +13,16 @@ package org.eclipse.mylar.tasklist.tests;
 import java.io.File;
 
 import org.eclipse.mylar.context.core.InteractionEvent;
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.tests.AbstractContextTest;
 import org.eclipse.mylar.internal.context.core.MylarContext;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
-import org.eclipse.mylar.internal.tasklist.ui.wizards.TaskDataExportWizard;
-import org.eclipse.mylar.internal.tasklist.ui.wizards.TaskDataExportWizardPage;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskListManager;
+import org.eclipse.mylar.internal.tasks.ui.ui.wizards.TaskDataExportWizard;
+import org.eclipse.mylar.internal.tasks.ui.ui.wizards.TaskDataExportWizardPage;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.Task;
+import org.eclipse.mylar.tasks.ui.TaskListManager;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -41,7 +41,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 
 	private ITask task1 = null;
 
-	private TaskListManager manager = MylarTaskListPlugin.getTaskListManager();
+	private TaskListManager manager = TasksUiPlugin.getTaskListManager();
 
 	private MylarContext mockContext;
 
@@ -56,22 +56,22 @@ public class TaskDataExportTest extends AbstractContextTest {
 		assertNotNull(wizardPage);
 
 		// Create test export destination directory
-		destinationDir = new File(MylarTaskListPlugin.getDefault().getDataDirectory() + File.separator + "TestDir");
+		destinationDir = new File(TasksUiPlugin.getDefault().getDataDirectory() + File.separator + "TestDir");
 		destinationDir.mkdir();
 		assertTrue(destinationDir.exists());
 
 		// Create a task and context with an interaction event to be saved
-		task1 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "Export Test Task", true);
+		task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "Export Test Task", true);
 		manager.getTaskList().moveToRoot(task1);
-		mockContext = MylarPlugin.getContextManager().loadContext(task1.getHandleIdentifier());
+		mockContext = ContextCorePlugin.getContextManager().loadContext(task1.getHandleIdentifier());
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.EDIT, "structureKind", "handle", "originId");
 		mockContext.parseEvent(event);
-		MylarPlugin.getContextManager().activateContext(mockContext);
+		ContextCorePlugin.getContextManager().activateContext(mockContext);
 
 		// Save the context file and check that it exists
-		MylarPlugin.getContextManager().saveContext(mockContext.getHandleIdentifier());
-		File taskFile = MylarPlugin.getContextManager().getFileForContext(task1.getHandleIdentifier());
-		assertTrue(MylarPlugin.getContextManager().hasContext(task1.getHandleIdentifier()));
+		ContextCorePlugin.getContextManager().saveContext(mockContext.getHandleIdentifier());
+		File taskFile = ContextCorePlugin.getContextManager().getFileForContext(task1.getHandleIdentifier());
+		assertTrue(ContextCorePlugin.getContextManager().hasContext(task1.getHandleIdentifier()));
 		assertTrue(taskFile.exists());
 	}
 
@@ -83,7 +83,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 
 		destinationDir.delete();
 		assertFalse(destinationDir.exists());
-		MylarPlugin.getContextManager().deactivateContext(mockContext.getHandleIdentifier());
+		ContextCorePlugin.getContextManager().deactivateContext(mockContext.getHandleIdentifier());
 		super.tearDown();
 	}
 
@@ -112,7 +112,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 		wizard.performFinish();
 
 		// Check that the task list file was exported
-		File destTaskListFile = new File(destinationDir + File.separator + MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE);
+		File destTaskListFile = new File(destinationDir + File.separator + TasksUiPlugin.DEFAULT_TASK_LIST_FILE);
 		assertTrue(destTaskListFile.exists());
 
 		// Check that the activity history file was exported
@@ -121,7 +121,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 		assertTrue(destActivationHistoryFile.exists());
 
 		// Check that the task context file created in setUp() was exported
-		File destTaskContextFile = MylarPlugin.getContextManager().getFileForContext(task1.getHandleIdentifier());
+		File destTaskContextFile = ContextCorePlugin.getContextManager().getFileForContext(task1.getHandleIdentifier());
 		// File destTaskContextFile = new File(destinationDir + File.separator +
 		// task1.getContextPath() + MylarContextManager.CONTEXT_FILE_EXTENSION);
 		assertTrue(destTaskContextFile.exists());

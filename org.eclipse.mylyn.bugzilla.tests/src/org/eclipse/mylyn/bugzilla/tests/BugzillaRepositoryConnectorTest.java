@@ -45,9 +45,6 @@ import org.eclipse.mylar.internal.bugzilla.core.TrustAllSslProtocolSocketFactory
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.LocalAttachment;
@@ -56,6 +53,9 @@ import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.ui.TaskRepositoryManager;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PartInitException;
 
 /**
@@ -80,7 +80,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		manager = MylarTaskListPlugin.getRepositoryManager();
+		manager = TasksUiPlugin.getRepositoryManager();
 		manager.clearRepositories();
 	}
 
@@ -117,7 +117,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		repository.setTimeZoneId("Canada/Eastern");
 		manager.addRepository(repository);
 		assertNotNull(manager);
-		taskList = MylarTaskListPlugin.getTaskListManager().getTaskList();
+		taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 
 		AbstractRepositoryConnector abstractRepositoryClient = manager.getRepositoryConnector(DEFAULT_KIND);
 
@@ -132,7 +132,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		super.tearDown();
 		// taskList.clearArchive();
 		// client.clearAllRefreshes();
-		MylarTaskListPlugin.getTaskListManager().resetTaskList();
+		TasksUiPlugin.getTaskListManager().resetTaskList();
 		manager.clearRepositories();
 
 	}
@@ -162,7 +162,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 
 		// Get the task
 		BugzillaTask task = (BugzillaTask) client.createTaskFromExistingKey(repository, "1");
-		MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(task);
+		TasksUiPlugin.getTaskListManager().getTaskList().moveToRoot(task);
 		assertTrue(task.isDownloaded());
 		// (The initial local copy from server)
 		// assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
@@ -345,7 +345,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 
 		synchAndAssertState(tasks, RepositoryTaskSyncState.SYNCHRONIZED);
 
-		MylarTaskListPlugin.getRepositoryManager().setSyncTime(repository, null);
+		TasksUiPlugin.getRepositoryManager().setSyncTime(repository, null);
 		client.synchronizeChanged(repository);
 		// synchronizeChanged uses the date stamp from the most recent task
 		// returned so
@@ -404,12 +404,12 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		RepositoryTaskData recentTaskData = task7.getTaskData();
 		assertNotNull(recentTaskData);
 
-		assertFalse(MylarTaskListPlugin.getDefault().getOfflineReportsFile().find(
+		assertFalse(TasksUiPlugin.getDefault().getOfflineReportsFile().find(
 				IBugzillaConstants.TEST_BUGZILLA_222_URL, "7") == -1);
 		ArrayList<RepositoryTaskData> taskDataList = new ArrayList<RepositoryTaskData>();
 		taskDataList.add(task7.getTaskData());
-		MylarTaskListPlugin.getDefault().getOfflineReportsFile().remove(taskDataList);
-		assertTrue(MylarTaskListPlugin.getDefault().getOfflineReportsFile().find(
+		TasksUiPlugin.getDefault().getOfflineReportsFile().remove(taskDataList);
+		assertTrue(TasksUiPlugin.getDefault().getOfflineReportsFile().find(
 				IBugzillaConstants.TEST_BUGZILLA_222_URL, "7") == -1);
 
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task7.getSyncState());
@@ -438,7 +438,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 	private BugzillaTask generateLocalTaskAndDownload(String taskNumber) {
 		BugzillaTask task = (BugzillaTask) client.createTaskFromExistingKey(repository, taskNumber);
 		assertNotNull(task);
-		MylarTaskListPlugin.getTaskListManager().getTaskList().moveToRoot(task);
+		TasksUiPlugin.getTaskListManager().getTaskList().moveToRoot(task);
 		assertTrue(task.isDownloaded());
 
 		return task;
@@ -490,7 +490,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 
 		synchAndAssertState(tasks, RepositoryTaskSyncState.SYNCHRONIZED);
 
-		MylarTaskListPlugin.getRepositoryManager().setSyncTime(repository, null);
+		TasksUiPlugin.getRepositoryManager().setSyncTime(repository, null);
 		client.synchronizeChanged(repository);
 		// if a task or two has changed the last sync date is updated to 1s
 		// after most recent change

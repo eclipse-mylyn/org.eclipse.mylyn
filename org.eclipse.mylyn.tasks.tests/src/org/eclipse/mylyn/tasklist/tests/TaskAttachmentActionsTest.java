@@ -16,8 +16,8 @@ import java.net.URLConnection;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.tasklist.ui.actions.CopyToClipboardAction;
-import org.eclipse.mylar.internal.tasklist.ui.actions.SaveRemoteFileAction;
+import org.eclipse.mylar.internal.tasks.ui.ui.actions.CopyToClipboardAction;
+import org.eclipse.mylar.internal.tasks.ui.ui.actions.SaveRemoteFileAction;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.widgets.Control;

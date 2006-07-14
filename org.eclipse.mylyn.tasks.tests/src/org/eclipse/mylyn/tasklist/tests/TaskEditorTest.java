@@ -15,10 +15,10 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.NewBugEditorInput;
-import org.eclipse.mylar.internal.tasklist.ui.TaskUiUtil;
-import org.eclipse.mylar.internal.tasklist.ui.editors.AbstractRepositoryTaskEditor;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasks.ui.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
@@ -38,7 +38,7 @@ public class TaskEditorTest extends TestCase {
 		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 
-		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), MylarTaskListPlugin.getDefault()
+		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
 				.getOfflineReportsFile().getNextOfflineBugId());
 		NewBugEditorInput editorInput = new NewBugEditorInput(repository, model);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();

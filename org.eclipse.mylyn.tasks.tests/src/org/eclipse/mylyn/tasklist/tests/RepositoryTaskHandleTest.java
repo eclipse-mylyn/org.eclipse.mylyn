@@ -12,21 +12,21 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskListManager;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.ui.TaskListManager;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
  */
 public class RepositoryTaskHandleTest extends TestCase {
 
-	private TaskListManager manager = MylarTaskListPlugin.getTaskListManager();
+	private TaskListManager manager = TasksUiPlugin.getTaskListManager();
 	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		manager = MylarTaskListPlugin.getTaskListManager();
+		manager = TasksUiPlugin.getTaskListManager();
 		manager.resetTaskList();
 	}
 

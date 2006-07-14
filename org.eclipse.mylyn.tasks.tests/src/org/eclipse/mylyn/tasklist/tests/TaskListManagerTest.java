@@ -24,17 +24,15 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.context.core.MylarPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.internal.tasklist.ScheduledTaskListSynchJob;
-import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasklist.TaskListSynchronizationManager;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskListManager;
+import org.eclipse.mylar.internal.tasks.ui.ScheduledTaskListSynchJob;
+import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylar.internal.tasks.ui.TaskListSynchronizationManager;
 import org.eclipse.mylar.tasklist.tests.mockconnector.MockQueryHit;
 import org.eclipse.mylar.tasklist.tests.mockconnector.MockRepositoryConnector;
 import org.eclipse.mylar.tasklist.tests.mockconnector.MockRepositoryQuery;
@@ -49,6 +47,8 @@ import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TaskListManager;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
@@ -62,12 +62,12 @@ public class TaskListManagerTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		manager = MylarTaskListPlugin.getTaskListManager();
+		manager = TasksUiPlugin.getTaskListManager();
 		manager.resetTaskList();
 		manager.readExistingOrCreateNewList();
 
 		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
-		MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
+		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
 	}
 
@@ -75,8 +75,8 @@ public class TaskListManagerTest extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		manager.resetTaskList();
-		MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
-		MylarTaskListPlugin.getRepositoryManager().removeRepository(repository);
+		TasksUiPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
+		TasksUiPlugin.getRepositoryManager().removeRepository(repository);
 	}
 
 	public void testSingleTaskDeletion() {		
@@ -97,12 +97,12 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testMigrateTaskContextFiles() throws IOException {
-		File fileA = MylarPlugin.getContextManager().getFileForContext("http://a-1");
+		File fileA = ContextCorePlugin.getContextManager().getFileForContext("http://a-1");
 		fileA.createNewFile();
 		fileA.deleteOnExit();
 		assertTrue(fileA.exists());
 		manager.refactorRepositoryUrl("http://a", "http://b");
-		File fileB = MylarPlugin.getContextManager().getFileForContext("http://b-1");
+		File fileB = ContextCorePlugin.getContextManager().getFileForContext("http://b-1");
 		assertTrue(fileB.exists());
 		assertFalse(fileA.exists());
 	}
@@ -152,7 +152,7 @@ public class TaskListManagerTest extends TestCase {
 		legacyListFile.deleteOnExit();
 		TaskTestUtil.copy(TaskTestUtil.getLocalFile("testdata/legacy/tasklist_0_4_8.xml"), legacyListFile);
 
-		assertEquals(362445, legacyListFile.length());
+		assertEquals(362451, legacyListFile.length());
 		assertTrue(legacyListFile.exists());
 
 		manager.setTaskListFile(legacyListFile);
@@ -390,9 +390,9 @@ public class TaskListManagerTest extends TestCase {
 	public void testDeleteRepositoryTask() {
 		String repositoryUrl = "http://somewhere.com";
 		repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_TYPE, repositoryUrl);
-		MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
+		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 		MockRepositoryTask task = new MockRepositoryTask(repositoryUrl + "-1");
-		TaskList taskList = MylarTaskListPlugin.getTaskListManager().getTaskList();
+		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		taskList.moveToRoot(task);
 		MockRepositoryQuery query = new MockRepositoryQuery("query", taskList);
 		MockQueryHit hit = new MockQueryHit(repositoryUrl, task.getDescription(), "1");
@@ -609,9 +609,9 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testScheduledRefreshJob() throws InterruptedException {
 		int counter = 3;
-		MylarTaskListPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
+		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
 				true);
-		MylarTaskListPlugin.getDefault().getPreferenceStore().setValue(
+		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, 1000L);
 		assertEquals(0, ScheduledTaskListSynchJob.getCount());
 		TaskListSynchronizationManager manager = new TaskListSynchronizationManager(false);
@@ -620,7 +620,7 @@ public class TaskListManagerTest extends TestCase {
 		assertTrue(ScheduledTaskListSynchJob.getCount() + " smaller than " + counter, ScheduledTaskListSynchJob
 				.getCount() >= counter);
 		manager.cancelAll();
-		MylarTaskListPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
+		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
 				false);
 	}
 
@@ -744,9 +744,9 @@ public class TaskListManagerTest extends TestCase {
 
 		task1.setReminded(true);
 
-		MylarTaskListPlugin.getTaskListManager().saveTaskList();
-		MylarTaskListPlugin.getTaskListManager().resetTaskList();
-		MylarTaskListPlugin.getTaskListManager().readExistingOrCreateNewList();
+		TasksUiPlugin.getTaskListManager().saveTaskList();
+		TasksUiPlugin.getTaskListManager().resetTaskList();
+		TasksUiPlugin.getTaskListManager().readExistingOrCreateNewList();
 
 		TaskList taskList = manager.getTaskList();
 		assertEquals(1, taskList.getAllTasks().size());

@@ -43,20 +43,20 @@ import org.eclipse.mylar.internal.bugzilla.ui.BugzillaCompareInput;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
-import org.eclipse.mylar.internal.tasklist.ui.editors.AbstractBugEditorInput;
-import org.eclipse.mylar.internal.tasklist.ui.editors.AbstractRepositoryTaskEditor;
-import org.eclipse.mylar.internal.tasklist.ui.editors.ExistingBugEditorInput;
-import org.eclipse.mylar.internal.tasklist.ui.editors.RepositoryTaskOutlineNode;
-import org.eclipse.mylar.internal.tasklist.ui.editors.RepositoryTaskSelection;
-import org.eclipse.mylar.internal.tasklist.ui.views.DatePicker;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasks.ui.ui.editors.AbstractBugEditorInput;
+import org.eclipse.mylar.internal.tasks.ui.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylar.internal.tasks.ui.ui.editors.ExistingBugEditorInput;
+import org.eclipse.mylar.internal.tasks.ui.ui.editors.RepositoryTaskOutlineNode;
+import org.eclipse.mylar.internal.tasks.ui.ui.editors.RepositoryTaskSelection;
+import org.eclipse.mylar.internal.tasks.ui.ui.views.DatePicker;
+import org.eclipse.mylar.internal.tasks.ui.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.RepositoryOperation;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.ModifyEvent;
@@ -158,7 +158,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		editorInput = (AbstractBugEditorInput) input;
 		taskData = editorInput.getRepositoryTaskData();
 		repository = editorInput.getRepository();
-		connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
+		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
 
 		setSite(site);
 		setInput(input);
@@ -405,7 +405,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 			return;
 		}
 
-		final BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) MylarTaskListPlugin
+		final BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) TasksUiPlugin
 				.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
 
 		JobChangeAdapter submitJobListener = new JobChangeAdapter() {
@@ -585,7 +585,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		java.util.List<String> validKeywords = new ArrayList<String>();
 		try {
 			validKeywords = BugzillaPlugin.getRepositoryConfiguration(false, repository.getUrl(),
-					MylarTaskListPlugin.getDefault().getProxySettings(), repository.getUserName(),
+					TasksUiPlugin.getDefault().getProxySettings(), repository.getUserName(),
 					repository.getPassword(), repository.getCharacterEncoding()).getKeywords();
 		} catch (Exception e) {
 			// ignore
@@ -740,7 +740,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		protected IStatus run(IProgressMonitor monitor) {
 			final RepositoryTaskData serverBug;
 			try {
-				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 						BugzillaPlugin.REPOSITORY_KIND, taskData.getRepositoryUrl());
 				serverBug = BugzillaServerFacade.getBug(repository.getUrl(), repository.getUserName(), repository
 						.getPassword(), editorInput.getProxySettings(), repository.getCharacterEncoding(), Integer

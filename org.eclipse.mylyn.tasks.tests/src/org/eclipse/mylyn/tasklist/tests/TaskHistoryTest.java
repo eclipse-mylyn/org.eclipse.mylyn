@@ -15,18 +15,18 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.context.core.MylarPlugin;
-import org.eclipse.mylar.internal.tasklist.ui.actions.NextTaskDropDownAction;
-import org.eclipse.mylar.internal.tasklist.ui.actions.PreviousTaskDropDownAction;
-import org.eclipse.mylar.internal.tasklist.ui.actions.TaskActivateAction;
-import org.eclipse.mylar.internal.tasklist.ui.actions.TaskDeactivateAction;
-import org.eclipse.mylar.internal.tasklist.ui.actions.TaskNavigateDropDownAction.TaskNavigateAction;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskActivationHistory;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskListManager;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.internal.tasks.ui.ui.actions.NextTaskDropDownAction;
+import org.eclipse.mylar.internal.tasks.ui.ui.actions.PreviousTaskDropDownAction;
+import org.eclipse.mylar.internal.tasks.ui.ui.actions.TaskActivateAction;
+import org.eclipse.mylar.internal.tasks.ui.ui.actions.TaskDeactivateAction;
+import org.eclipse.mylar.internal.tasks.ui.ui.actions.TaskNavigateDropDownAction.TaskNavigateAction;
+import org.eclipse.mylar.internal.tasks.ui.ui.views.TaskActivationHistory;
+import org.eclipse.mylar.internal.tasks.ui.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.Task;
+import org.eclipse.mylar.tasks.ui.TaskListManager;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PartInitException;
 
 /**
@@ -34,7 +34,7 @@ import org.eclipse.ui.PartInitException;
  */
 public class TaskHistoryTest extends TestCase {
 
-	protected TaskListManager manager = MylarTaskListPlugin.getTaskListManager();
+	protected TaskListManager manager = TasksUiPlugin.getTaskListManager();
 
 	protected TaskListView taskView = null;
 
@@ -52,7 +52,7 @@ public class TaskHistoryTest extends TestCase {
 		super.setUp();
 
 		try {
-			MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(
+			TasksUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(
 					"org.eclipse.mylar.tasks.ui.views.TaskListView");
 		} catch (PartInitException e) {
 			// TODO Auto-generated catch block
@@ -65,11 +65,11 @@ public class TaskHistoryTest extends TestCase {
 
 		resetHistory();
 
-		task1 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1", true);
-		task2 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 2", true);
-		task3 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 3", true);
-		task4 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 4", true);
-		task5 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 5", true);
+		task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1", true);
+		task2 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 2", true);
+		task3 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 3", true);
+		task4 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 4", true);
+		task5 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 5", true);
 
 		manager.getTaskList().moveToRoot(task1);
 		manager.getTaskList().moveToRoot(task2);
@@ -81,7 +81,7 @@ public class TaskHistoryTest extends TestCase {
 
 	private void resetHistory() {
 		taskView.clearTaskHistory();
-		MylarPlugin.getContextManager().resetActivityHistory();
+		ContextCorePlugin.getContextManager().resetActivityHistory();
 	}
 
 	/**

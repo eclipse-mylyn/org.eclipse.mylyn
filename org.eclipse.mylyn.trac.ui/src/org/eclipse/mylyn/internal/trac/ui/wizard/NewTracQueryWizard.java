@@ -12,10 +12,10 @@
 package org.eclipse.mylar.internal.trac.ui.wizard;
 
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Steffen Pingel
@@ -54,8 +54,8 @@ public class NewTracQueryWizard extends Wizard {
 	public boolean performFinish() {
 		AbstractRepositoryQuery query = queryPage.getQuery();
 		if (query != null) {
-			MylarTaskListPlugin.getTaskListManager().getTaskList().addQuery(query);
-			AbstractRepositoryConnector connector = MylarTaskListPlugin.getRepositoryManager().getRepositoryConnector(
+			TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
+			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 					repository.getKind());
 			if (connector != null) {
 				connector.synchronize(query, null);

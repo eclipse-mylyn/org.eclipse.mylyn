@@ -18,15 +18,15 @@ import junit.framework.TestCase;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListNotificationIncoming;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListNotificationManager;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListNotificationQueryIncoming;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasks.ui.ui.TaskListNotificationIncoming;
+import org.eclipse.mylar.internal.tasks.ui.ui.TaskListNotificationManager;
+import org.eclipse.mylar.internal.tasks.ui.ui.TaskListNotificationQueryIncoming;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Rob Elves
@@ -55,21 +55,21 @@ public class TaskListNotificationManagerTest extends TestCase {
 		task1.setReminderDate(new Date(now.getTime() - 2000));
 		task2.setReminderDate(new Date(now.getTime() - 2000));
 
-		MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task0);
-		MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task1);
-		MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task2);
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task0);
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task2);
 
-		TaskListNotificationManager notificationManager = MylarTaskListPlugin.getDefault()
+		TaskListNotificationManager notificationManager = TasksUiPlugin.getDefault()
 				.getTaskListNotificationManager();
 		notificationManager.collectNotifications();
 
-		task0 = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask("t0");
+		task0 = TasksUiPlugin.getTaskListManager().getTaskList().getTask("t0");
 		assertNotNull(task0);
 		assertTrue(task0.hasBeenReminded());
-		task1 = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask("t1");
+		task1 = TasksUiPlugin.getTaskListManager().getTaskList().getTask("t1");
 		assertNotNull(task1);
 		assertTrue(task1.hasBeenReminded());
-		task2 = MylarTaskListPlugin.getTaskListManager().getTaskList().getTask("t2");
+		task2 = TasksUiPlugin.getTaskListManager().getTaskList().getTask("t2");
 		assertNotNull(task2);
 		assertTrue(task2.hasBeenReminded());
 
@@ -78,17 +78,17 @@ public class TaskListNotificationManagerTest extends TestCase {
 	public void testTaskListNotificationIncoming() {
 
 		TaskRepository repository = new TaskRepository("bugzilla", "https://bugs.eclipse.org/bugs");
-		MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
+		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 		AbstractRepositoryTask task = new BugzillaTask("https://bugs.eclipse.org/bugs-142891", "label", true);
 		assertTrue(task.getSyncState() == RepositoryTaskSyncState.INCOMING);
 		assertTrue(task.isNotified());
 		task.setNotified(false);
-		MylarTaskListPlugin.getTaskListManager().getTaskList().addTask(task);
-		TaskListNotificationManager notificationManager = MylarTaskListPlugin.getDefault()
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
+		TaskListNotificationManager notificationManager = TasksUiPlugin.getDefault()
 				.getTaskListNotificationManager();
 		notificationManager.collectNotifications();
 		assertTrue(notificationManager.getNotifications().contains(new TaskListNotificationIncoming(task)));
-		task = (AbstractRepositoryTask) MylarTaskListPlugin.getTaskListManager().getTaskList().getTask(
+		task = (AbstractRepositoryTask) TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 				"https://bugs.eclipse.org/bugs-142891");
 		assertNotNull(task);
 		assertTrue(task.isNotified());
@@ -99,10 +99,10 @@ public class TaskListNotificationManagerTest extends TestCase {
 				null, "status");
 		assertFalse(hit.isNotified());
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery("https://bugs.eclipse.org/bugs", "queryUrl",
-				"description", "10", MylarTaskListPlugin.getTaskListManager().getTaskList());
-		query.addHit(hit, MylarTaskListPlugin.getTaskListManager().getTaskList());
-		MylarTaskListPlugin.getTaskListManager().getTaskList().addQuery(query);
-		TaskListNotificationManager notificationManager = MylarTaskListPlugin.getDefault()
+				"description", "10", TasksUiPlugin.getTaskListManager().getTaskList());
+		query.addHit(hit, TasksUiPlugin.getTaskListManager().getTaskList());
+		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
+		TaskListNotificationManager notificationManager = TasksUiPlugin.getDefault()
 				.getTaskListNotificationManager();
 		notificationManager.collectNotifications();
 		assertTrue(notificationManager.getNotifications().contains(new TaskListNotificationQueryIncoming(hit)));

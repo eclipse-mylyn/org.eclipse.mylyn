@@ -11,9 +11,9 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
-import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasks.ui.ui.TaskListImages;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -122,7 +122,7 @@ public class BugzillaCustomQueryWizardPage extends AbstractBugzillaQueryPage {
 	public BugzillaRepositoryQuery getQuery() {
 		if (query == null) {
 			query = new BugzillaRepositoryQuery(repository.getUrl(), queryText.getText(), this.getQueryTitle(), "-1",
-					MylarTaskListPlugin.getTaskListManager().getTaskList());
+					TasksUiPlugin.getTaskListManager().getTaskList());
 			query.setCustomQuery(true);
 		} else {
 			query.setQueryUrl(queryText.getText());

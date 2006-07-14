@@ -16,11 +16,11 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListDropAdapter;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.provisional.tasklist.TaskListManager;
+import org.eclipse.mylar.internal.tasks.ui.ui.views.TaskListDropAdapter;
+import org.eclipse.mylar.internal.tasks.ui.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.ui.TaskListManager;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Rob Elves
@@ -34,7 +34,7 @@ public class TaskListDnDTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		manager = MylarTaskListPlugin.getTaskListManager();
+		manager = TasksUiPlugin.getTaskListManager();
 		manager.resetTaskList();
 
 		TreeViewer viewer = TaskListView.getFromActivePerspective().getViewer();
@@ -46,7 +46,7 @@ public class TaskListDnDTest extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		manager.resetTaskList();
-		MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
+		TasksUiPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
 	}
 
 	public void testisUrl() {

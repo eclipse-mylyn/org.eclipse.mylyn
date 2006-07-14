@@ -16,10 +16,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchPage;
-import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractEditQueryWizard;
-import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryConnector;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasks.ui.ui.wizards.AbstractEditQueryWizard;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 /**
@@ -50,7 +50,7 @@ public class EditBugzillaQueryWizard extends AbstractEditQueryWizard {
 
 		final String queryTitle = page.getQueryTitle().trim();
 
-		MylarTaskListPlugin.getTaskListManager().getTaskList().renameContainer(query, queryTitle);
+		TasksUiPlugin.getTaskListManager().getTaskList().renameContainer(query, queryTitle);
 
 //		boolean offline = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
 //		if (!offline) {
@@ -58,7 +58,7 @@ public class EditBugzillaQueryWizard extends AbstractEditQueryWizard {
 				protected void execute(IProgressMonitor monitor) throws CoreException {
 					monitor.beginTask("Executing query", 50);
 					try {
-						AbstractRepositoryConnector client = MylarTaskListPlugin.getRepositoryManager()
+						AbstractRepositoryConnector client = TasksUiPlugin.getRepositoryManager()
 								.getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
 
 						client.synchronize(query, null);

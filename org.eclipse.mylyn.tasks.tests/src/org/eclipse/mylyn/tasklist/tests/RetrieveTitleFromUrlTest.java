@@ -16,7 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylar.internal.tasklist.RetrieveTitleFromUrlJob;
+import org.eclipse.mylar.internal.tasks.ui.RetrieveTitleFromUrlJob;
 
 /**
  * @author Mik Kersten

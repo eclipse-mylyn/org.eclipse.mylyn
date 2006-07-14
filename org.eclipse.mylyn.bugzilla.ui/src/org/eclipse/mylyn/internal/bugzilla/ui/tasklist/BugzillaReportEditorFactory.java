@@ -17,12 +17,12 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditor;
-import org.eclipse.mylar.internal.tasklist.ui.ITaskEditorFactory;
-import org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
-import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasks.ui.ui.ITaskEditorFactory;
+import org.eclipse.mylar.internal.tasks.ui.ui.editors.MylarTaskEditor;
+import org.eclipse.mylar.internal.tasks.ui.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -49,7 +49,7 @@ public class BugzillaReportEditorFactory implements ITaskEditorFactory {
 	public IEditorInput createEditorInput(ITask task) {
 		if (task instanceof BugzillaTask) {
 			BugzillaTask bugzillaTask = (BugzillaTask) task;
-			final TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+			final TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 					BugzillaPlugin.REPOSITORY_KIND, bugzillaTask.getRepositoryUrl());
 			try {
 				BugzillaTaskEditorInput input = new BugzillaTaskEditorInput(repository, bugzillaTask, true);
