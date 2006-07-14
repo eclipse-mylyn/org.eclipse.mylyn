@@ -269,4 +269,11 @@ litigation.
          version="0.6.0.v20060714-1330"
          unpack="false"/>
 
+   <plugin
+         id="org.eclipse.mylar.tasks.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
 </feature>

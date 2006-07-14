@@ -222,7 +222,7 @@ litigation.
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.mylar.context.core"/>
       <import plugin="org.eclipse.mylar.tasks.ui"/>
-      <import feature="org.eclipse.mylar_feature" version="0.6.0.v20060714-1000" match="greaterOrEqual"/>
+      <import feature="org.eclipse.mylar_feature" version="0.6.0.v20060714-1330" match="greaterOrEqual"/>
       <import plugin="org.eclipse.mylar.tasks.core"/>
    </requires>
 

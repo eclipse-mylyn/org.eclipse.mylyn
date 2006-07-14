@@ -17,7 +17,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylar.bugzilla.ui,
  org.eclipse.mylar.tasks.ui,
  org.eclipse.mylar.core.tests,
- org.eclipse.mylar.tasklist.tests,
+ org.eclipse.mylar.tasks.tests,
  org.eclipse.mylar.context.core,
  org.eclipse.mylar.tasks.core
 Eclipse-AutoStart: true

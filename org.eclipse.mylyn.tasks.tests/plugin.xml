@@ -8,12 +8,12 @@
          point="org.eclipse.mylar.tasks.ui.repositories">
 
       <repositoryType
-            class="org.eclipse.mylar.tasklist.tests.mockconnector.MockRepositoryConnector"
+            class="org.eclipse.mylar.tasks.tests.mockconnector.MockRepositoryConnector"
             id="org.eclipse.mylar.tasklist.tests.repositories"
             name="Mock Repository Client"
             type="mock"/>
       <externalizer 
-            class="org.eclipse.mylar.tasklist.tests.mockconnector.MockRepositoryExternalizer"
+            class="org.eclipse.mylar.tasks.tests.mockconnector.MockRepositoryExternalizer"
             id="org.eclipse.mylar.tasklist.tests.externalizer"/>
    </extension>  
    

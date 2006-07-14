@@ -44,7 +44,7 @@
       <editorFactory class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaReportEditorFactory"/>
       <hyperlinkDetector
             class="org.eclipse.mylar.internal.bugzilla.ui.BugzillaTaskHyperlinkDetector"
-            id="org.eclipse.mylar.tasklist.hyperlinkdetector.bugzillatask"/>
+            id="org.eclipse.mylar.tasks.hyperlinkdetector.bugzillatask"/>
    </extension>
    
    <extension 

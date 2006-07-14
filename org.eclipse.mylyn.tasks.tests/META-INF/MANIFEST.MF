@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylar Tasklist Tests Plug-in
-Bundle-SymbolicName: org.eclipse.mylar.tasklist.tests;singleton:=true
+Bundle-Name: Mylar Tasks Tests Plug-in
+Bundle-SymbolicName: org.eclipse.mylar.tasks.tests;singleton:=true
 Bundle-Version: 0.0.0
-Bundle-Activator: org.eclipse.mylar.tasklist.tests.MylarTasksTestsPlugin
+Bundle-Activator: org.eclipse.mylar.tasks.tests.MylarTasksTestsPlugin
 Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
@@ -21,5 +21,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylar.monitor
 Eclipse-AutoStart: true
 Bundle-ClassPath: mylar-tasklist-tests.jar
-Export-Package: org.eclipse.mylar.tasklist.tests
+Export-Package: org.eclipse.mylar.tasks.tests
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
