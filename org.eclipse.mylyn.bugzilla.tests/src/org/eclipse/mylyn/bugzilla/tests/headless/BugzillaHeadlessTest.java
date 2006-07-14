@@ -24,7 +24,7 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
 /**
  * @author Rob Elves
  */
-public class BugzillaQueryTest extends TestCase {
+public class BugzillaHeadlessTest extends TestCase {
 
 	private TaskRepository repository;
 
