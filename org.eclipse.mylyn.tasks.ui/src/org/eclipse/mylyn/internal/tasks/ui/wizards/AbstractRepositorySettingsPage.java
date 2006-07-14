@@ -156,6 +156,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				if (repositoryLabel != null && repositoryLabel.length() > 0) {
 					repositoryLabelCombo.add(repositoryLabel);
 					repositoryLabelCombo.select(0);
+					repositoryLabelCombo.setText(repositoryLabel);
 				}
 				serverUrlEditor.setStringValue(repository.getUrl());
 				userNameEditor.setStringValue(repository.getUserName());
