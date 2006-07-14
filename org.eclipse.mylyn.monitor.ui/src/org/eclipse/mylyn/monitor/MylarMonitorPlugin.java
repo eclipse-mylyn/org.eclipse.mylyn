@@ -62,6 +62,8 @@ public class MylarMonitorPlugin extends AbstractUIPlugin {
 
 	protected Set<ISelectionListener> postSelectionListeners = new HashSet<ISelectionListener>();
 
+	public static final String OBFUSCATED_LABEL = "[obfuscated]";
+	
 	protected IWindowListener WINDOW_LISTENER = new IWindowListener() {
 		public void windowActivated(IWorkbenchWindow window) {
 			// ignore

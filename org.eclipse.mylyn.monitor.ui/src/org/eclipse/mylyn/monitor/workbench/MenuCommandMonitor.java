@@ -14,7 +14,6 @@ package org.eclipse.mylar.monitor.workbench;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.monitor.HandleObfuscator;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Item;
@@ -87,7 +86,7 @@ public class MenuCommandMonitor implements Listener {
 	 */
 	private String obfuscateValueIfContainsPath(String text) {
 		if (text.indexOf(".java") != -1 || text.indexOf(".xml") != -1) {
-			return HandleObfuscator.OBFUSCATED_LABEL;
+			return MylarMonitorPlugin.OBFUSCATED_LABEL;
 		} else {
 			return text;
 		}
