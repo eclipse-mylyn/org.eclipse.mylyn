@@ -186,4 +186,5 @@ public class TaskReportGeneratorTest extends TestCase {
 		assertEquals(1, generator.getAllCollectedTasks().size());
 		assertEquals(task1, generator.getAllCollectedTasks().get(0));
 	}
+
 }

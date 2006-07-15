@@ -185,4 +185,19 @@ public class TaskRepositoryManagerTest extends TestCase {
 		assertNotNull(temp);
 		assertEquals("euxx", temp.getProperty("owner"));
 	}
+
+	public void testRepositoryPersistanceSameUrl() throws MalformedURLException {
+		TaskRepository repository1 = new TaskRepository("bugzilla", "http://repository");
+		TaskRepository repository2 = new TaskRepository("jira", "http://repository");
+		manager.addRepository(repository1);
+		manager.addRepository(repository2);
+		assertEquals(2, manager.getAllRepositories().size());
+
+		List<TaskRepository> repositoryList = new ArrayList<TaskRepository>();
+		repositoryList.add(repository2);
+		repositoryList.add(repository1);
+		manager.readRepositories();
+
+		assertEquals(1, manager.getAllRepositories().size());
+	}
 }
