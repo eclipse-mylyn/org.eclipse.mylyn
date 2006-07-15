@@ -65,7 +65,7 @@ public class BugzillaHyperlinkUtil {
 
 		try {
 
-			String bugId = m.group(3).trim();
+			String bugId = m.group(TASK_NUM_GROUP).trim();
 			start += lineOffset;
 			end += lineOffset;
 

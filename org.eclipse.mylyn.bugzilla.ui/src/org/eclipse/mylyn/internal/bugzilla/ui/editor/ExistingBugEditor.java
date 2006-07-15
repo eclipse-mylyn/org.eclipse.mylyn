@@ -23,13 +23,9 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.eclipse.compare.CompareConfiguration;
-import org.eclipse.compare.CompareUI;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -37,10 +33,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaCompareInput;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractBugEditorInput;
@@ -50,11 +43,10 @@ import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylar.internal.tasks.ui.views.DatePicker;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
-import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.RepositoryOperation;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
-import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
@@ -95,13 +87,13 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 
 	private static final String REASSIGN_BUG_TO = "Reassign  bug to";
 
-	private static final String LABEL_COMPARE_BUTTON = "Compare";
+	//private static final String LABEL_COMPARE_BUTTON = "Compare";
 
 	protected Set<String> removeCC = new HashSet<String>();
 
-	protected BugzillaCompareInput compareInput;
+	//protected BugzillaCompareInput compareInput;
 
-	protected Button compareButton;
+	//protected Button compareButton;
 
 	protected Button[] radios;
 
@@ -147,7 +139,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		config.setRightLabel("Remote Bug Report");
 		config.setLeftImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT));
 		config.setRightImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT));
-		compareInput = new BugzillaCompareInput(config);
+		//compareInput = new BugzillaCompareInput(config);
 	}
 
 	// @SuppressWarnings("deprecation")
@@ -303,45 +295,49 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		});
 	}
 
-	@Override
-	protected void addActionButtons(Composite buttonComposite) {
-		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
-		super.addActionButtons(buttonComposite);
-		compareButton = toolkit.createButton(buttonComposite, LABEL_COMPARE_BUTTON, SWT.NONE);
-		GridData compareButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		compareButton.setLayoutData(compareButtonData);
-		compareButton.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event e) {
-				OpenCompareEditorJob compareJob = new OpenCompareEditorJob("Comparing bug with remote server...");
-				compareJob.schedule();
-			}
-		});
-		compareButton.addListener(SWT.FocusIn, new GenericListener());
+//	@Override
+//	protected void addActionButtons(Composite buttonComposite) {
+//		//TODO: removed compare as it doesn't work at the moment
+//		// FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
+//		// super.addActionButtons(buttonComposite);
+//		// compareButton = toolkit.createButton(buttonComposite,
+//		// LABEL_COMPARE_BUTTON, SWT.NONE);
+//		// GridData compareButtonData = new
+//		// GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+//		// compareButton.setLayoutData(compareButtonData);
+//		// compareButton.addListener(SWT.Selection, new Listener() {
+//		// public void handleEvent(Event e) {
+//		// OpenCompareEditorJob compareJob = new OpenCompareEditorJob("Comparing
+//		// bug with remote server...");
+//		// compareJob.schedule();
+//		// }
+//		// });
+//		// compareButton.addListener(SWT.FocusIn, new GenericListener());
+//
+//
+//		// TODO used for spell checking. Add back when we want to support this
+//		// checkSpellingButton = new Button(buttonComposite, SWT.NONE);
+//		// checkSpellingButton.setFont(TEXT_FONT);
+//		// compareButtonData = new
+//		// GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+//		// compareButtonData.widthHint = 100;
+//		// compareButtonData.heightHint = 20;
+//		// checkSpellingButton.setText("CheckSpelling");
+//		// checkSpellingButton.setLayoutData(compareButtonData);
+//		// checkSpellingButton.addListener(SWT.Selection, new Listener() {
+//		// public void handleEvent(Event e) {
+//		// checkSpelling();
+//		// }
+//		// });
+//		// checkSpellingButton.addListener(SWT.FocusIn, new GenericListener());
+//	}
 
-
-		// TODO used for spell checking. Add back when we want to support this
-		// checkSpellingButton = new Button(buttonComposite, SWT.NONE);
-		// checkSpellingButton.setFont(TEXT_FONT);
-		// compareButtonData = new
-		// GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		// compareButtonData.widthHint = 100;
-		// compareButtonData.heightHint = 20;
-		// checkSpellingButton.setText("CheckSpelling");
-		// checkSpellingButton.setLayoutData(compareButtonData);
-		// checkSpellingButton.addListener(SWT.Selection, new Listener() {
-		// public void handleEvent(Event e) {
-		// checkSpelling();
-		// }
-		// });
-		// checkSpellingButton.addListener(SWT.FocusIn, new GenericListener());
-	}
-
-	/**
-	 * @return Returns the compareInput.
-	 */
-	public BugzillaCompareInput getCompareInput() {
-		return compareInput;
-	}
+//	/**
+//	 * @return Returns the compareInput.
+//	 */
+//	public BugzillaCompareInput getCompareInput() {
+//		return compareInput;
+//	}
 
 
 	@Override
@@ -702,50 +698,50 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	 * This job opens a compare editor to compare the current state of the bug
 	 * in the editor with the bug on the server.
 	 */
-	protected class OpenCompareEditorJob extends Job {
-
-		public OpenCompareEditorJob(String name) {
-			super(name);
-		}
-
-		@Override
-		protected IStatus run(IProgressMonitor monitor) {
-			final RepositoryTaskData serverBug;
-			try {
-				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-						BugzillaPlugin.REPOSITORY_KIND, taskData.getRepositoryUrl());
-				serverBug = BugzillaServerFacade.getBug(repository.getUrl(), repository.getUserName(), repository
-						.getPassword(), editorInput.getProxySettings(), repository.getCharacterEncoding(), Integer
-						.parseInt(taskData.getId()));
-				// If no bug was found on the server, throw an exception so that
-				// the
-				// user gets the same message that appears when there is a
-				// problem reading the server.
-				if (serverBug == null)
-					throw new Exception();
-			} catch (Exception e) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-								"Could not open bug.", "Bug #" + taskData.getId()
-										+ " could not be read from the server.");
-					}
-				});
-				return new Status(IStatus.OK, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK,
-						"Could not get the bug report from the server.", null);
-			}
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					compareInput.setTitle("Bug #" + taskData.getId());
-					compareInput.setLeft(taskData);
-					compareInput.setRight(serverBug);
-					CompareUI.openCompareEditor(compareInput);
-				}
-			});
-			return new Status(IStatus.OK, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK, "", null);
-		}
-
-	}
+//	protected class OpenCompareEditorJob extends Job {
+//
+//		public OpenCompareEditorJob(String name) {
+//			super(name);
+//		}
+//
+//		@Override
+//		protected IStatus run(IProgressMonitor monitor) {
+//			final RepositoryTaskData serverBug;
+//			try {
+//				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+//						BugzillaPlugin.REPOSITORY_KIND, taskData.getRepositoryUrl());
+//				serverBug = BugzillaServerFacade.getBug(repository.getUrl(), repository.getUserName(), repository
+//						.getPassword(), editorInput.getProxySettings(), repository.getCharacterEncoding(), Integer
+//						.parseInt(taskData.getId()));
+//				// If no bug was found on the server, throw an exception so that
+//				// the
+//				// user gets the same message that appears when there is a
+//				// problem reading the server.
+//				if (serverBug == null)
+//					throw new Exception();
+//			} catch (Exception e) {
+//				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//					public void run() {
+//						MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+//								"Could not open bug.", "Bug #" + taskData.getId()
+//										+ " could not be read from the server.");
+//					}
+//				});
+//				return new Status(IStatus.OK, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK,
+//						"Could not get the bug report from the server.", null);
+//			}
+//			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//				public void run() {
+//					compareInput.setTitle("Bug #" + taskData.getId());
+//					compareInput.setLeft(taskData);
+//					compareInput.setRight(serverBug);
+//					CompareUI.openCompareEditor(compareInput);
+//				}
+//			});
+//			return new Status(IStatus.OK, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK, "", null);
+//		}
+//
+//	}
 
 	/**
 	 * Class to handle the selection change of the keywords.
@@ -903,7 +899,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	protected void validateInput() {
 		RepositoryOperation o = taskData.getSelectedOperation();
 		if (o != null && o.getKnobName().compareTo("resolve") == 0
-				&& (addCommentsText.getText() == null || addCommentsText.getText().equals(""))) {
+				&& (addCommentsTextBox.getText() == null || addCommentsTextBox.getText().equals(""))) {
 			// TODO: Highlight (change to light red?) New Comment area to
 			// indicate need for message
 			submitButton.setEnabled(false);

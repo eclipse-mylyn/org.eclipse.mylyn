@@ -203,6 +203,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 				public void run() {
 					MessageDialog.openInformation(NewBugEditor.this.getSite().getShell(), ERROR_CREATING_BUG_REPORT,
 							"A summary must be provided with new bug reports.");
+					summaryText.setFocus();
 					submitButton.setEnabled(true);
 					showBusy(false);
 				}
@@ -214,6 +215,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 				public void run() {
 					MessageDialog.openInformation(NewBugEditor.this.getSite().getShell(), ERROR_CREATING_BUG_REPORT,
 							"A description must be provided with new reports.");
+					descriptionText.setFocus();
 					submitButton.setEnabled(true);
 					showBusy(false);
 				}
