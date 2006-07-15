@@ -100,34 +100,28 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 	@Override
 	protected void createDescriptionLayout(Composite composite) {
 		FormToolkit toolkit = new FormToolkit(composite.getDisplay());
-		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR);
 		section.setText(LABEL_SECTION_DESCRIPTION);
 		section.setExpanded(true);
 		section.setLayout(new GridLayout());
-		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		section.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		Composite descriptionComposite = toolkit.createComposite(section);
 		GridLayout descriptionLayout = new GridLayout();
-		descriptionLayout.numColumns = 4;
+
 		descriptionComposite.setLayout(descriptionLayout);
-		// descriptionComposite.setBackground(background);
 		GridData descriptionData = new GridData(GridData.FILL_BOTH);
-		descriptionData.horizontalSpan = 1;
-		descriptionData.grabExcessVerticalSpace = false;
+		descriptionData.grabExcessVerticalSpace = true;
 		descriptionComposite.setLayoutData(descriptionData);
-		// End Description Area
 		section.setClient(descriptionComposite);
 
 		descriptionText = new Text(descriptionComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
-		// descriptionText.setFont(COMMENT_FONT);
 		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 		Font descriptionFont = themeManager.getCurrentTheme().getFontRegistry().get(
 				TaskListColorsAndFonts.TASK_EDITOR_FONT);
 		descriptionText.setFont(descriptionFont);
-		GridData descriptionTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		descriptionTextData.horizontalSpan = 4;
-		descriptionTextData.widthHint = DESCRIPTION_WIDTH;
-		descriptionTextData.heightHint = DESCRIPTION_HEIGHT;
+		GridData descriptionTextData = new GridData(GridData.FILL_BOTH);
+
 		descriptionText.setLayoutData(descriptionTextData);
 		descriptionText.setText(taskData.getDescription());
 		descriptionText.addModifyListener(new ModifyListener() {
@@ -204,27 +198,29 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 	protected void submitBug() {
 		submitButton.setEnabled(false);
 		showBusy(true);
-		if(summaryText != null && summaryText.getText().trim().equals("")) {
+		if (summaryText != null && summaryText.getText().trim().equals("")) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					MessageDialog.openInformation(NewBugEditor.this.getSite().getShell(), ERROR_CREATING_BUG_REPORT, "A summary must be provided with new bug reports.");
+					MessageDialog.openInformation(NewBugEditor.this.getSite().getShell(), ERROR_CREATING_BUG_REPORT,
+							"A summary must be provided with new bug reports.");
 					submitButton.setEnabled(true);
 					showBusy(false);
 				}
 			});
-			return;	
+			return;
 		}
-		if(descriptionText != null && descriptionText.getText().trim().equals("")) {
+		if (descriptionText != null && descriptionText.getText().trim().equals("")) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					MessageDialog.openInformation(NewBugEditor.this.getSite().getShell(), ERROR_CREATING_BUG_REPORT, "A description must be provided with new reports.");
+					MessageDialog.openInformation(NewBugEditor.this.getSite().getShell(), ERROR_CREATING_BUG_REPORT,
+							"A description must be provided with new reports.");
 					submitButton.setEnabled(true);
 					showBusy(false);
 				}
 			});
-			return;	
+			return;
 		}
-		
+
 		updateBug();
 		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
 		boolean wrap = IBugzillaConstants.BugzillaServerVersion.SERVER_218.equals(repository.getVersion());
@@ -244,8 +240,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 								close();
 								String newTaskHandle = AbstractRepositoryTask.getHandle(repository.getUrl(), event
 										.getJob().getResult().getMessage());
-								ITask newTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-										newTaskHandle);
+								ITask newTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(newTaskHandle);
 								if (newTask != null) {
 
 									Object selectedObject = null;
@@ -262,15 +257,16 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 									TaskUiUtil.refreshAndOpenTaskListElement(newTask);
 								}
 								return;
-							} else if (event.getJob().getResult().getCode() == Status.INFO) {								
-								WebBrowserDialog.openAcceptAgreement(NewBugEditor.this.getSite().getShell(), IBugzillaConstants.REPORT_SUBMIT_ERROR,
-										event.getJob().getResult().getMessage(), event
-												.getJob().getResult().getException().getMessage());
+							} else if (event.getJob().getResult().getCode() == Status.INFO) {
+								WebBrowserDialog.openAcceptAgreement(NewBugEditor.this.getSite().getShell(),
+										IBugzillaConstants.REPORT_SUBMIT_ERROR,
+										event.getJob().getResult().getMessage(), event.getJob().getResult()
+												.getException().getMessage());
 								submitButton.setEnabled(true);
 								NewBugEditor.this.showBusy(false);
 							} else if (event.getJob().getResult().getCode() == Status.ERROR) {
-								MessageDialog.openError(NewBugEditor.this.getSite().getShell(), IBugzillaConstants.REPORT_SUBMIT_ERROR, event
-										.getResult().getMessage());
+								MessageDialog.openError(NewBugEditor.this.getSite().getShell(),
+										IBugzillaConstants.REPORT_SUBMIT_ERROR, event.getResult().getMessage());
 								submitButton.setEnabled(true);
 								NewBugEditor.this.showBusy(false);
 							}
@@ -337,14 +333,33 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 	public boolean isSaveAsAllowed() {
 		return false;
 	}
+
 	
 	/**
-	 * Adds buttons to this composite. Subclasses can override this method to
-	 * provide different/additional buttons.
-	 * 
-	 * @param buttonComposite
-	 *            Composite to add the buttons to.
+	 * Creates the button layout. This displays options and buttons at the
+	 * bottom of the editor to allow actions to be performed on the bug.
 	 */
+	protected void createActionsLayouts(Composite formComposite) {
+		FormToolkit toolkit = new FormToolkit(formComposite.getDisplay());
+		Section section = toolkit.createSection(formComposite, ExpandableComposite.TITLE_BAR);
+		section.setText(LABEL_SECTION_ACTIONS);
+		section.setExpanded(true);
+		section.setLayout(new GridLayout());
+		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+
+		Composite buttonComposite = toolkit.createComposite(section);
+		GridLayout buttonLayout = new GridLayout();
+		buttonLayout.numColumns = 4;
+		buttonComposite.setLayout(buttonLayout);
+		GridData buttonData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		buttonData.horizontalSpan = 1;
+		buttonData.grabExcessVerticalSpace = false;
+		buttonComposite.setLayoutData(buttonData);
+		section.setClient(buttonComposite);		
+		addActionButtons(buttonComposite);
+	}
+
 	protected void addActionButtons(Composite buttonComposite) {
 		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
 		submitButton = toolkit.createButton(buttonComposite, "Create", SWT.NONE);
