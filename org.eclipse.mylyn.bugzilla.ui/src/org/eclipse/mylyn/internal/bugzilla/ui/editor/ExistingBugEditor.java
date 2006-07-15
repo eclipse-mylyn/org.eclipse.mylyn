@@ -307,10 +307,9 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	protected void addActionButtons(Composite buttonComposite) {
 		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
 		super.addActionButtons(buttonComposite);
-
 		compareButton = toolkit.createButton(buttonComposite, LABEL_COMPARE_BUTTON, SWT.NONE);
-//		GridData compareButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-//		compareButton.setLayoutData(compareButtonData);
+		GridData compareButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		compareButton.setLayoutData(compareButtonData);
 		compareButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
 				OpenCompareEditorJob compareJob = new OpenCompareEditorJob("Comparing bug with remote server...");
@@ -319,22 +318,6 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		});
 		compareButton.addListener(SWT.FocusIn, new GenericListener());
 
-		// Button expandAll = toolkit.createButton(buttonComposite,
-		// LABEL_EXPAND_ALL_BUTTON, SWT.NONE);
-		// expandAll.setLayoutData(new
-		// GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
-		// expandAll.addSelectionListener(new SelectionListener() {
-		//
-		// public void widgetDefaultSelected(SelectionEvent e) {
-		// // ignore
-		//
-		// }
-		//
-		// public void widgetSelected(SelectionEvent e) {
-		// revealAllComments();
-		//
-		// }
-		// });
 
 		// TODO used for spell checking. Add back when we want to support this
 		// checkSpellingButton = new Button(buttonComposite, SWT.NONE);
@@ -360,16 +343,9 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		return compareInput;
 	}
 
-	// @Override
-	// public RepositoryTaskData getBug() {
-	// return taskData;
-	// }
 
 	@Override
 	protected String getTitleString() {
-		// Attribute summary = bug.getAttribute(ATTR_SUMMARY);
-		// String summaryVal = ((null != summary) ? summary.getNewValue() :
-		// null);
 		return taskData.getLabel();// + ": " + checkText(summaryVal);
 	}
 

@@ -1250,7 +1250,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		GridLayout buttonLayout = new GridLayout();
 		buttonLayout.numColumns = 4;
 		buttonComposite.setLayout(buttonLayout);
-		GridData buttonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		GridData buttonData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		buttonData.horizontalSpan = 1;
 		buttonData.grabExcessVerticalSpace = false;
 		buttonComposite.setLayoutData(buttonData);
