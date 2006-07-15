@@ -17,6 +17,7 @@ import java.util.Calendar;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.text.Document;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.util.DateUtil;
@@ -32,6 +33,7 @@ import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylar.tasks.core.Task;
+import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.Task.PriorityLevel;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
@@ -43,7 +45,6 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -134,7 +135,9 @@ public class TaskPlanningEditor extends EditorPart {
 
 	private Combo statusCombo;
 
-	private Text notes;
+	// private Text notes;
+
+	RepositoryTextViewer commentViewer;
 
 	private Spinner estimated;
 
@@ -271,10 +274,10 @@ public class TaskPlanningEditor extends EditorPart {
 			}
 		}
 
-		String note = notes.getText();
+		String note = commentViewer.getTextWidget().getText();// notes.getText();
 		task.setNotes(note);
 		task.setEstimatedTimeHours(estimated.getSelection());
-		 if (datePicker != null && datePicker.getDate() != null) {
+		if (datePicker != null && datePicker.getDate() != null) {
 			TasksUiPlugin.getTaskListManager().setReminder(task, datePicker.getDate().getTime());
 			// task.setReminderDate(datePicker.getDate().getTime());
 		} else {
@@ -603,17 +606,41 @@ public class TaskPlanningEditor extends EditorPart {
 		Composite container = toolkit.createComposite(section);
 		section.setClient(container);
 		container.setLayout(new GridLayout());
+		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		notes = toolkit.createText(container, task.getNotes(), SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		notes.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		
+		// notes = toolkit.createText(container, task.getNotes(), SWT.FLAT |
+		// SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		// notes.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		//		
+		// IThemeManager themeManager =
+		// getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+		// Font notesFont =
+		// themeManager.getCurrentTheme().getFontRegistry().get(TaskListColorsAndFonts.TASK_EDITOR_FONT);
+		// notes.setFont(notesFont);
+		// GridData notesDataLayout = new GridData(GridData.FILL_BOTH);
+		// notes.setLayoutData(notesDataLayout);
+		// notes.addModifyListener(new ModifyListener() {
+		// public void modifyText(ModifyEvent e) {
+		// markDirty(true);
+		// }
+		// });
+		TaskRepository repository = null;
+		if (task instanceof AbstractRepositoryTask) {
+			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+			repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryTask.getRepositoryKind(),
+					repositoryTask.getRepositoryUrl());
+		}
+		commentViewer = new RepositoryTextViewer(repository, container, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		commentViewer.getTextWidget().setLayoutData(new GridData(GridData.FILL_BOTH));
+		commentViewer.getTextWidget().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-		Font notesFont = themeManager.getCurrentTheme().getFontRegistry().get(TaskListColorsAndFonts.TASK_EDITOR_FONT);
-		notes.setFont(notesFont);
-		
-		GridData notesDataLayout = new GridData(GridData.FILL_BOTH);
-		notes.setLayoutData(notesDataLayout);
-		notes.addModifyListener(new ModifyListener() {
+
+		commentViewer.getTextWidget().setFont(
+				themeManager.getCurrentTheme().getFontRegistry().get(TaskListColorsAndFonts.TASK_EDITOR_FONT));
+		commentViewer.setDocument(new Document(task.getNotes()));
+		commentViewer.setEditable(true);
+		commentViewer.getTextWidget().addModifyListener(new ModifyListener() {
+
 			public void modifyText(ModifyEvent e) {
 				markDirty(true);
 			}
@@ -852,7 +879,8 @@ public class TaskPlanningEditor extends EditorPart {
 		Label l2 = toolkit.createLabel(container, "Task context file:");
 		l2.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		File contextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
-		// String contextPath = ContextCorePlugin.getDefault().getDataDirectory()
+		// String contextPath =
+		// ContextCorePlugin.getDefault().getDataDirectory()
 		// + '/' + task.getContextPath() +
 		// MylarContextManager.CONTEXT_FILE_EXTENSION;
 		if (contextFile != null) {
@@ -885,7 +913,8 @@ public class TaskPlanningEditor extends EditorPart {
 		// String[] ext = { "*.xml" };
 		// dialog.setFilterExtensions(ext);
 		//
-		// String mylarDir = ContextCorePlugin.getDefault().getDataDirectory() + "/";
+		// String mylarDir = ContextCorePlugin.getDefault().getDataDirectory() +
+		// "/";
 		// mylarDir = mylarDir.replaceAll("\\\\", "/");
 		// dialog.setFilterPath(mylarDir);
 		//

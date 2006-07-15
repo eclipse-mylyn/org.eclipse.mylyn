@@ -8,6 +8,8 @@
 
 package org.eclipse.mylar.internal.tasks.ui.editors;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,16 +29,23 @@ import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 public class TaskEditorUrlHyperlinkDetector implements IHyperlinkDetector {
 
 	// URL BNF: http://www.foad.org/~abigail/Perl/url2.html
-	// Source: http://www.truerwords.net/articles/ut/urlactivation.html#expressions
-	// Original pattern: (^|[ \\t\\r\\n])((ftp|http|https|gopher|mailto|news|nntp|telnet|wais|file|prospero|aim|webcal):(([A-Za-z0-9$_.+!*(),;/?:@&~=-])|%[A-Fa-f0-9]{2}){2,}(#([a-zA-Z0-9][a-zA-Z0-9$_.+!*(),;/?:@&~=%-]*))?([A-Za-z0-9$_+!*();/?:~-]))
-	private static final Pattern urlPattern = Pattern.compile("((ftp|http|https|gopher|mailto|news|nntp|telnet|wais|file|prospero|aim|webcal):(([A-Za-z0-9$_.+!*,;/?:@&~=-])|%[A-Fa-f0-9]{2}){2,}(#([a-zA-Z0-9][a-zA-Z0-9$_.+!*,;/?:@&~=%-]*))?([A-Za-z0-9$_+!*;/?:~-]))", Pattern.CASE_INSENSITIVE);
-	
+	// Source:
+	// http://www.truerwords.net/articles/ut/urlactivation.html#expressions
+	// Original pattern: (^|[
+	// \\t\\r\\n])((ftp|http|https|gopher|mailto|news|nntp|telnet|wais|file|prospero|aim|webcal):(([A-Za-z0-9$_.+!*(),;/?:@&~=-])|%[A-Fa-f0-9]{2}){2,}(#([a-zA-Z0-9][a-zA-Z0-9$_.+!*(),;/?:@&~=%-]*))?([A-Za-z0-9$_+!*();/?:~-]))
+	private static final Pattern urlPattern = Pattern
+			.compile(
+					"((ftp|http|https|gopher|mailto|news|nntp|telnet|wais|file|prospero|aim|webcal):(([A-Za-z0-9$_.+!*,;/?:@&~=-])|%[A-Fa-f0-9]{2}){2,}(#([a-zA-Z0-9][a-zA-Z0-9$_.+!*,;/?:@&~=%-]*))?([A-Za-z0-9$_+!*;/?:~-]))",
+					Pattern.CASE_INSENSITIVE);
+
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 
 		if (region == null || textViewer == null)
 			return null;
 
 		IDocument document = textViewer.getDocument();
+
+		List<IHyperlink> hyperlinksFound = new ArrayList<IHyperlink>();
 
 		int offset = region.getOffset();
 
@@ -52,14 +61,39 @@ public class TaskEditorUrlHyperlinkDetector implements IHyperlinkDetector {
 			return null;
 		}
 
+		int offsetInLine = offset - lineInfo.getOffset();
+
 		Matcher m = urlPattern.matcher(line);
 
-		if (m.find()) {
-			IRegion urlRegion = new Region(lineInfo.getOffset() + m.start(), m.end() - m.start());
-			return new IHyperlink[] { new TaskEditorUrlHyperlink(urlRegion, m.group()) };
+		while (m.find()) {
+			if (offsetInLine >= m.start() && offsetInLine <= m.end()) {
+				IHyperlink link = extractHyperlink(lineInfo.getOffset(), m);
+				if (link != null)
+					hyperlinksFound.add(link);
+			}
+		}
+
+		if (hyperlinksFound.size() > 0) {
+			return hyperlinksFound.toArray(new IHyperlink[hyperlinksFound.size()]);
 		}
 
 		return null;
+
+	}
+
+	private TaskEditorUrlHyperlink extractHyperlink(int lineOffset, Matcher m) {
+
+		int start = m.start();
+		int end = m.end();
+
+		if (end == -1)
+			end = m.group().length();
+
+		start += lineOffset;
+		end += lineOffset;
+
+		IRegion sregion = new Region(start, end - start);
+		return new TaskEditorUrlHyperlink(sregion, m.group());
 	}
 
 	class TaskEditorUrlHyperlink extends URLHyperlink {

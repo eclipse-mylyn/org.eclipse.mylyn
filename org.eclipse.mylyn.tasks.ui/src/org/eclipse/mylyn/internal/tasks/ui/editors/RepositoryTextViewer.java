@@ -103,7 +103,7 @@ public class RepositoryTextViewer extends SourceViewer {
 
 		public RepositoryTextScanner() {
 			IToken bugToken = new Token(new TextAttribute(URL_COLOR));
-			IRule[] rules = new IRule[7];
+			IRule[] rules = new IRule[15];
 			rules[0] = (new SingleLineRule("http://", " ", bugToken));
 			rules[1] = (new SingleLineRule("https://", " ", bugToken));
 			rules[2] = (new MultiLineRule("bug#", " ", bugToken));
@@ -111,8 +111,14 @@ public class RepositoryTextViewer extends SourceViewer {
 			rules[4] = (new SingleLineRule("bug #", "\n", bugToken));
 			rules[5] = (new SingleLineRule("http://", "\n", bugToken));
 			rules[6] = (new SingleLineRule("https://", "\n", bugToken));
-			// rules[7] = (new MultiLineRule(" bug ", " ", bugToken));
-			// rules[8] = (new SingleLineRule(" at ", ")", bugToken));
+			rules[7] = (new MultiLineRule("task#", " ", bugToken));
+			rules[8] = (new MultiLineRule("task#", "\n", bugToken));
+			rules[9] = (new MultiLineRule("task# ", " ", bugToken));
+			rules[10] = (new SingleLineRule("task #", "\n", bugToken));
+			rules[11] = (new SingleLineRule("*** This bug has been ", "***", bugToken));
+			rules[12] = (new SingleLineRule("http://", "", bugToken));
+			rules[13] = (new SingleLineRule("https://", "", bugToken));
+			rules[14] = (new MultiLineRule("task #", " ", bugToken));
 			setRules(rules);
 		}
 

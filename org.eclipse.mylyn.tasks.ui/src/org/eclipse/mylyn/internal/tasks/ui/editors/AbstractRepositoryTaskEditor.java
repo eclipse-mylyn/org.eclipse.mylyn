@@ -78,6 +78,8 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -219,7 +221,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 	protected Text summaryText;
 
-	protected Text addCommentsText;
+	// protected Text addCommentsText;
 
 	protected Button submitButton;
 
@@ -759,8 +761,8 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 			attachmentsTableViewer.setUseHashlookup(true);
 			attachmentsTableViewer.setColumnProperties(attachmentsColumns);
 
-			final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
-					.getRepositoryConnector(getRepositoryTaskData().getRepositoryKind());
+			final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+					getRepositoryTaskData().getRepositoryKind());
 
 			if (connector != null) {
 				final IOfflineTaskHandler offlineHandler = connector.getOfflineTaskHandler();
@@ -1074,15 +1076,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		GridLayout addCommentsLayout = new GridLayout();
 		addCommentsLayout.numColumns = 1;
 		addCommentsComposite.setLayout(addCommentsLayout);
-		// addCommentsComposite.setBackground(background);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(addCommentsComposite);
-		// End Additional (read-only) Comments Area
-		// Date lastSynced = new Date();
-		// if(this.getEditorInput() instanceof ExistingBugEditorInput) {
-		// ExistingBugEditorInput input =
-		// (ExistingBugEditorInput)this.getEditorInput();
-		// lastSynced = input.getRepositoryTask().getLastSynchronized();
-		// }
 
 		StyledText styledText = null;
 		for (Iterator<TaskComment> it = getRepositoryTaskData().getComments().iterator(); it.hasNext();) {
@@ -1120,46 +1114,6 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 			ecComposite.setLayout(ecLayout);
 			ecComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			expandableComposite.setClient(ecComposite);
-			// toolkit.paintBordersFor(expandableComposite);
-
-			// TODO: Attachments are no longer 'attached' to Comments
-
-			// if (comment.hasAttachment()) {
-			//
-			// Link attachmentLink = new Link(ecComposite, SWT.NONE);
-			//
-			// String attachmentHeader;
-			//
-			// if (!comment.isObsolete()) {
-			// attachmentHeader = " Attached: " +
-			// comment.getAttachmentDescription() + " [<a>view</a>]";
-			// } else {
-			// attachmentHeader = " Deprecated: " +
-			// comment.getAttachmentDescription();
-			// }
-			// // String result = MessageFormat.format(attachmentHeader, new
-			// // String[] { node
-			// // .getLabelText() });
-			//
-			// attachmentLink.addSelectionListener(new SelectionAdapter() {
-			// /*
-			// * (non-Javadoc)
-			// *
-			// * @see
-			// org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-			// */
-			// public void widgetSelected(SelectionEvent e) {
-			// String address = repository.getUrl() + "/attachment.cgi?id=" +
-			// comment.getAttachmentId()
-			// + "&amp;action=view";
-			// TaskUiUtil.openUrl(address, address, address);
-			//
-			// }
-			// });
-			//
-			// attachmentLink.setText(attachmentHeader);
-			//
-			// }
 
 			TextViewer viewer = addRepositoryText(repository, ecComposite, taskComment.getText());
 			styledText = viewer.getTextWidget();
@@ -1190,26 +1144,24 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 		Composite newCommentsComposite = toolkit.createComposite(sectionAdditionalComments);
 		newCommentsComposite.setLayout(new GridLayout());
-		newCommentsComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		addCommentsText = toolkit.createText(newCommentsComposite, getRepositoryTaskData().getNewComment(), SWT.MULTI
-				| SWT.V_SCROLL | SWT.WRAP);
 
-		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-		Font newCommnetFont = themeManager.getCurrentTheme().getFontRegistry().get(
-				TaskListColorsAndFonts.TASK_EDITOR_FONT);
-		addCommentsText.setFont(newCommnetFont);
-		toolkit.paintBordersFor(newCommentsComposite);
+		RepositoryTextViewer newCommentTextViewer = new RepositoryTextViewer(repository, newCommentsComposite, SWT.FLAT
+				| SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		GridData addCommentsTextData = new GridData(GridData.FILL_HORIZONTAL);
 		addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
 		addCommentsTextData.heightHint = DESCRIPTION_HEIGHT;
 		addCommentsTextData.grabExcessHorizontalSpace = true;
+		newCommentTextViewer.getTextWidget().setLayoutData(addCommentsTextData);
+		newCommentTextViewer.getTextWidget().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+		newCommentTextViewer.getTextWidget().setFont(
+				themeManager.getCurrentTheme().getFontRegistry().get(TaskListColorsAndFonts.TASK_EDITOR_FONT));
+		newCommentTextViewer.setDocument(new Document(getRepositoryTaskData().getNewComment()));
+		newCommentTextViewer.setEditable(true);
+		newCommentTextViewer.getTextWidget().addModifyListener(new ModifyListener() {
 
-		addCommentsText.setLayoutData(addCommentsTextData);
-
-		addCommentsText.addListener(SWT.KeyUp, new Listener() {
-
-			public void handleEvent(Event event) {
-				String sel = addCommentsText.getText();
+			public void modifyText(ModifyEvent e) {
+				String sel = addCommentsTextBox.getText();
 				if (!(getRepositoryTaskData().getNewComment().equals(sel))) {
 					getRepositoryTaskData().setNewComment(sel);
 					changeDirtyStatus(true);
@@ -1217,61 +1169,49 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 				validateInput();
 			}
 		});
-		addCommentsText.addListener(SWT.FocusIn, new NewCommentListener());
-		addCommentsTextBox = addCommentsText;
+
+		newCommentTextViewer.getTextWidget().addListener(SWT.FocusIn, new NewCommentListener());
+		addCommentsTextBox = newCommentTextViewer.getTextWidget();
 
 		sectionAdditionalComments.setClient(newCommentsComposite);
 
-		// TODO: move into ExistingBugEditor commands section
-		// // if they aren't already on the cc list create an add self check box
+		toolkit.paintBordersFor(newCommentsComposite);
+
+		// newCommentsComposite.setLayoutData(new
+		// GridData(GridData.FILL_HORIZONTAL));
+		// addCommentsText = toolkit.createText(newCommentsComposite,
+		// getRepositoryTaskData().getNewComment(), SWT.MULTI
+		// | SWT.V_SCROLL | SWT.WRAP);
 		//
-		// RepositoryTaskAttribute owner =
-		// getReport().getAttribute(RepositoryTaskAttribute.USER_ASSIGNED);
+		// IThemeManager themeManager =
+		// getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+		// Font newCommnetFont =
+		// themeManager.getCurrentTheme().getFontRegistry().get(
+		// TaskListColorsAndFonts.TASK_EDITOR_FONT);
+		// addCommentsText.setFont(newCommnetFont);
+		// toolkit.paintBordersFor(newCommentsComposite);
+		// GridData addCommentsTextData = new
+		// GridData(GridData.FILL_HORIZONTAL);
+		// addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
+		// addCommentsTextData.heightHint = DESCRIPTION_HEIGHT;
+		// addCommentsTextData.grabExcessHorizontalSpace = true;
 		//
-		// // Don't add addselfcc check box if the user is the bug owner
-		// if (owner != null &&
-		// owner.getValue().indexOf(repository.getUserName()) != -1) {
-		// return;
+		// addCommentsText.setLayoutData(addCommentsTextData);
+		//
+		// addCommentsText.addListener(SWT.KeyUp, new Listener() {
+		//
+		// public void handleEvent(Event event) {
+		// String sel = addCommentsText.getText();
+		// if (!(getRepositoryTaskData().getNewComment().equals(sel))) {
+		// getRepositoryTaskData().setNewComment(sel);
+		// changeDirtyStatus(true);
 		// }
-		// // Don't add addselfcc if already there
-		// RepositoryTaskAttribute ccAttribute =
-		// getReport().getAttribute(RepositoryTaskAttribute.USER_CC);
-		// if (ccAttribute != null &&
-		// ccAttribute.getValues().contains(repository.getUserName())) {
-		// return;
-		// }
-		// RepositoryTaskAttribute addselfcc =
-		// getReport().getAttribute(BugzillaReportElement.ADDSELFCC.getKeyString());
-		// if (addselfcc == null) {
-		// // addselfcc =
-		// //
-		// BugzillaRepositoryUtil.makeNewAttribute(BugzillaReportElement.ADDSELFCC);
-		// getReport().setAttributeValue(BugzillaReportElement.ADDSELFCC.getKeyString(),
-		// "0");
-		// } else {
-		// addselfcc.setValue("0");
-		// }
-		//
-		// final Button addSelfButton =
-		// toolkit.createButton(newCommentsComposite, "Add " +
-		// repository.getUserName()
-		// + " to CC list", SWT.CHECK);
-		//
-		// addSelfButton.addSelectionListener(new SelectionAdapter() {
-		//
-		// @Override
-		// public void widgetSelected(SelectionEvent e) {
-		// if (addSelfButton.getSelection()) {
-		// getReport().setAttributeValue(BugzillaReportElement.ADDSELFCC.getKeyString(),
-		// "1");
-		// // connector.getAttributeFactory().setAttributeValue(getReport(),
-		// // BugzillaReportElement.ADDSELFCC.getKeyString(), "1");
-		// } else {
-		// getReport().setAttributeValue(BugzillaReportElement.ADDSELFCC.getKeyString(),
-		// "0");
-		// }
+		// validateInput();
 		// }
 		// });
+		// addCommentsText.addListener(SWT.FocusIn, new NewCommentListener());
+		// addCommentsTextBox = addCommentsText;
+
 	}
 
 	protected abstract void validateInput();
@@ -1758,7 +1698,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	/** Index into the styled texts */
 	protected int textsindex = 0;
 
-	protected Text addCommentsTextBox = null;
+	protected StyledText addCommentsTextBox = null;
 
 	protected Text descriptionTextBox = null;
 
@@ -1959,7 +1899,6 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	public Control getControl() {
 		return form;
 	}
-
 
 	public void setSummaryText(String text) {
 		this.summaryText.setText(text);
