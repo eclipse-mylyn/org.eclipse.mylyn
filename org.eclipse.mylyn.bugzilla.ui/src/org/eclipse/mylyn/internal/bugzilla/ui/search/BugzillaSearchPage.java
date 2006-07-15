@@ -42,8 +42,6 @@ import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -841,10 +839,10 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 
 		updateButton.setLayoutData(new GridData());
 
-		updateButton.addMouseListener(new MouseAdapter() {
+		updateButton.addSelectionListener(new SelectionAdapter() {
 
 			@Override
-			public void mouseUp(MouseEvent e) {
+			public void widgetSelected(SelectionEvent e) {
 				if (repository != null) {
 					updateAttributesFromRepository(repository.getUrl(), null, true);
 				} else {
