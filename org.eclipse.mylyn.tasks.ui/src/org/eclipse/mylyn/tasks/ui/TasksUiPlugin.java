@@ -48,7 +48,7 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListNotificationQueryIncoming;
 import org.eclipse.mylar.internal.tasks.ui.TaskListNotificationReminder;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskListSynchronizationManager;
-import org.eclipse.mylar.internal.tasks.ui.util.TaskListExtensionReader;
+import org.eclipse.mylar.internal.tasks.ui.util.TasksUitExtensionReader;
 import org.eclipse.mylar.internal.tasks.ui.util.TaskListSaveManager;
 import org.eclipse.mylar.internal.tasks.ui.util.TaskListWriter;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
@@ -366,7 +366,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 					try {
 						MylarStatusHandler.setStatusNotifier(new RepositoryAwareStatusNotifier());
 						
-						TaskListExtensionReader.initExtensions(taskListWriter);
+						TasksUitExtensionReader.initExtensions(taskListWriter);
 						taskRepositoryManager.readRepositories();
 
 						// Must be called after repositories read

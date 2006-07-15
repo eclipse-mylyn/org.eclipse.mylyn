@@ -34,7 +34,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * @author Shawn Minto
  * @author Mik Kersten
  */
-public class TaskListExtensionReader {
+public class TasksUitExtensionReader {
 
 	public static final String EXTENSION_REPOSITORIES = "org.eclipse.mylar.tasks.ui.repositories";
 

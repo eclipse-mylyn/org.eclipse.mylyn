@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.tasks.ui.wizards;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylar.internal.tasks.ui.actions.AddRepositoryAction;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IWorkbench;
@@ -19,11 +20,12 @@ import org.eclipse.ui.IWorkbench;
 /**
  * @author Mik Kersten
  */
-public class AddRepositoryWizard extends AbstractRepositoryClientWizard {
+public class NewRepositoryWizard extends AbstractRepositoryClientWizard {
 
-	public AddRepositoryWizard() {
+	public NewRepositoryWizard() {
 		super();
 		super.setForcePreviousAndNextButtons(true);
+		setWindowTitle(AddRepositoryAction.TITLE);
 	}
 
 	@Override
@@ -42,11 +44,6 @@ public class AddRepositoryWizard extends AbstractRepositoryClientWizard {
 	@Override
 	public void addPages() {
 		super.addPages();
-		// addPage(abstractRepositorySettingsPage);
-	}
-
-	public AbstractRepositorySettingsPage getRepositorySettingsPage() {
-		return abstractRepositorySettingsPage;
 	}
 
 	public void setRepositorySettingsPage(AbstractRepositorySettingsPage abstractRepositorySettingsPage) {

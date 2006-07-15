@@ -18,7 +18,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
-import org.eclipse.mylar.internal.tasks.ui.wizards.AddRepositoryWizard;
+import org.eclipse.mylar.internal.tasks.ui.wizards.NewRepositoryWizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
@@ -28,7 +28,8 @@ import org.eclipse.ui.PlatformUI;
  */
 public class AddRepositoryAction extends Action {
 
-	private static final String TITLE = "Add Task Repository";
+	public static final String TITLE = "Add Task Repository";
+	
 	private static final String ID = "org.eclipse.mylar.tasklist.repositories.add";
 
 	public AddRepositoryAction() {
@@ -43,7 +44,7 @@ public class AddRepositoryAction extends Action {
 
 	public void run() {
 		try {
-			AddRepositoryWizard wizard = new AddRepositoryWizard();
+			NewRepositoryWizard wizard = new NewRepositoryWizard();
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			if (wizard != null && shell != null && !shell.isDisposed()) {
 				WizardDialog dialog = new WizardDialog(shell, wizard);
