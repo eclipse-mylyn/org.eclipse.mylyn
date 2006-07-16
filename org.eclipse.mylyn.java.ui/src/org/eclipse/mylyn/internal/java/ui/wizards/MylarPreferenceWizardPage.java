@@ -15,6 +15,7 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -47,7 +48,7 @@ public class MylarPreferenceWizardPage extends WizardPage {
 
 	private static final String CONTENT_ASSIST_WARNING = "Toggle via Preferences->Java->Editor->Content Assist->Advanced ";
 	
-	private static final String OPEN_TASK_LIST = "Open the Mylar Tasks view";
+	private static final String OPEN_TASK_LIST = "Open the " + TaskListView.LABEL_VIEW + " view";
 
 	private Button contentAssistButton;
 
