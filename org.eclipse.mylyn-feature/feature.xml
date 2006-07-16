@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.mylar_feature"
-      label="Mylar Task List (Required)"
-      version="0.6.0.v20060714-1830"
+      label="Mylar Task Manager (Required)"
+      version="0.6.0.v20060715-1400"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylar">
 
@@ -238,42 +238,42 @@ litigation.
          id="org.eclipse.mylar.doc"
          download-size="0"
          install-size="0"
-         version="0.6.0.v20060714-1830"
+         version="0.6.0.v20060715-1400"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar"
          download-size="0"
          install-size="0"
-         version="0.6.0.v20060714-1830"
+         version="0.6.0.v20060715-1400"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.context.core"
          download-size="0"
          install-size="0"
-         version="0.6.0.v20060714-1830"
+         version="0.6.0.v20060715-1400"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.tasks.ui"
          download-size="0"
          install-size="0"
-         version="0.6.0.v20060714-1830"
+         version="0.6.0.v20060715-1400"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.monitor"
          download-size="0"
          install-size="0"
-         version="0.6.0.v20060714-1830"
+         version="0.6.0.v20060715-1400"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.tasks.core"
          download-size="0"
          install-size="0"
-         version="0.6.0.v20060714-1830"
+         version="0.6.0.v20060715-1400"
          unpack="false"/>
 
 </feature>
