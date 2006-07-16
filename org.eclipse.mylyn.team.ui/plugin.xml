@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="providers" name="Mylar Team Providers" schema="schema/providers.exsd"/>
+   <extension
+         point="org.eclipse.mylar.context.core.bridges">
+      <structureBridge 
+      	class="org.eclipse.mylar.internal.ide.ResourceStructureBridge"/> 
+   </extension>
+    
+   <extension
+         point="org.eclipse.mylar.team.providers">
+      <repository class="org.eclipse.mylar.internal.team.cvs.CVSRepositoryProvider"/>
+      <repository class="org.eclipse.mylar.internal.team.subclipse.SubclipseTeamRepositoryProvider"/>
+   </extension>
+    
+   <extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            class="org.eclipse.mylar.internal.team.ui.MylarChangeSetDecorator"
+            id="org.eclipse.mylar.team.changeset.decorator"
+            label="Mylar Change Set Decorator"
+            lightweight="true"
+            objectClass="org.eclipse.mylar.internal.team.MylarActiveChangeSet"
+            state="true">
+      </decorator>
+    </extension>
+    
+     <extension point="org.eclipse.ui.popupMenus"> 
+		<objectContribution
+            objectClass="org.eclipse.team.ui.synchronize.ISynchronizeModelElement"
+            id="org.eclipse.mylar.ui.team.synchronize.open.report">
+         <action
+	           class="org.eclipse.mylar.internal.team.ui.actions.OpenCorrespondingTaskAction"
+	           enablesFor="1" 
+	           icon="icons/elcl16/task-repository.gif"
+	           id="org.eclipse.mylar.ui.team.synchronize.contribution.open.report"
+	           label="Open Corresponding Task"
+	           menubarPath="mylar"
+	           tooltip="Open Corresponding Task"> 
+	  		</action> 
+	    </objectContribution>
+	   	<objectContribution
+            objectClass="org.eclipse.team.internal.ccvs.core.client.listeners.LogEntry"
+            id="org.eclipse.mylar.ui.team.history.open.report">
+         <action
+	           class="org.eclipse.mylar.internal.team.ui.actions.OpenCorrespondingTaskAction"
+	           enablesFor="1" 
+	           icon="icons/elcl16/task-repository.gif"
+	           id="org.eclipse.mylar.ui.team.synchronize.contribution.open.report"
+	           label="Open Corresponding Task"
+	           menubarPath="mylar"
+	           tooltip="Open Corresponding Task"> 
+	  		</action> 
+	    </objectContribution>
+		<objectContribution
+            objectClass="org.eclipse.team.core.history.IFileRevision"
+            id="org.eclipse.mylar.ui.team.synchronize.open.report">
+         <action
+	           class="org.eclipse.mylar.internal.team.ui.actions.OpenCorrespondingTaskAction"
+	           enablesFor="1" 
+	           icon="icons/elcl16/task-repository.gif"
+	           id="org.eclipse.mylar.ui.team.synchronize.contribution.open.report"
+	           label="Open Corresponding Task"
+	           menubarPath="mylar"
+	           tooltip="Open Corresponding Task"> 
+	  		</action> 
+	    </objectContribution>
+	    <!--
+		<objectContribution
+            objectClass="org.eclipse.team.internal.ui.synchronize.ChangeSetDiffNode"
+            id="org.eclipse.mylar.ui.team.synchronize.open.report">
+         <action
+	           class="org.eclipse.mylar.internal.ide.ui.actions.OpenCorrespondingTaskAction"
+	           enablesFor="1" 
+	           icon="icons/elcl16/task-repository.gif"
+	           id="org.eclipse.mylar.ui.team.synchronize.contribution.open.report"
+	           label="Open Corresponding Task"
+	           menubarPath="mylar"
+	           tooltip="Open Corresponding Task"> 
+	  		</action> 
+	    </objectContribution>
+	    -->
+	</extension>
+    
+    <extension point="org.eclipse.ui.navigator.navigatorContent">
+	   <actionProvider           
+	   	 class="org.eclipse.mylar.internal.team.ui.actions.TaskResourceMappingActionProvider"
+	     id="org.eclipse.mylar.ide.ui.actions.TaskResourceMappingActionProvider">
+	     <enablement>
+	       <adapt type="org.eclipse.core.resources.mapping.ResourceMapping"/>
+	     </enablement>
+	   </actionProvider>
+	</extension>
+	
+	<extension point = "org.eclipse.ui.popupMenus">
+	    <objectContribution
+	           adaptable="false"
+	           id="org.eclipse.mylar.ide.team.ui.objectContribution"
+	           objectClass="org.eclipse.mylar.tasks.core.AbstractQueryHit">
+			<action
+	              class="org.eclipse.mylar.internal.team.ui.actions.CommitContextAction"
+	              enablesFor="*"
+	              icon="icons/elcl16/context-commit.gif"
+	              id="org.eclipse.mylar.ide.ui.team.context.commit"
+	              label="Commit Context..."
+	              menubarPath="context"
+	              tooltip="Commit Context...">
+	        </action>
+		</objectContribution>
+	     <objectContribution
+	           adaptable="false"
+	           id="org.eclipse.mylar.ide.team.ui.objectContribution"
+	           objectClass="org.eclipse.mylar.tasks.core.ITask">
+			<action
+	              class="org.eclipse.mylar.internal.team.ui.actions.CommitContextAction"
+	              enablesFor="*"
+	              icon="icons/elcl16/context-commit.gif"
+	              id="org.eclipse.mylar.ide.ui.team.context.commit"
+	              label="Commit Context..."
+	              menubarPath="context"
+	              tooltip="Commit Context...">
+	        </action>
+		</objectContribution>
+   </extension>
+	
+  <extension point="org.eclipse.ui.preferencePages">
+      <page 
+         name="Team"
+         class="org.eclipse.mylar.internal.team.ui.preferences.MylarTeamPreferencePage"
+         id="org.eclipse.mylar.team.ui.preferences"
+         category="org.eclipse.mylar.ui.preferences">
+      </page>
+   </extension>
+	
+</plugin>
