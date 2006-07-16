@@ -129,6 +129,10 @@ import org.eclipse.ui.themes.IThemeManager;
  */
 public class TaskListView extends ViewPart {
 
+	public static final String ID = "org.eclipse.mylar.tasks.ui.views.TaskListView";
+
+	public static final String LABEL_VIEW = "Task List";
+	
 	private static final String MEMENTO_KEY_SORT_DIRECTION = "sortDirection";
 
 	private static final String MEMENTO_KEY_SORTER = "sorter";
@@ -146,9 +150,7 @@ public class TaskListView extends ViewPart {
 	private static final String SEPARATOR_REPORTS = "reports";
 
 	private static final String LABEL_NO_TASKS = "no task active";
-
-	public static final String ID = "org.eclipse.mylar.tasks.ui.views.TaskListView";
-
+	
 	public static final String[] PRIORITY_LEVELS = { Task.PriorityLevel.P1.toString(),
 			Task.PriorityLevel.P2.toString(), Task.PriorityLevel.P3.toString(), Task.PriorityLevel.P4.toString(),
 			Task.PriorityLevel.P5.toString() };

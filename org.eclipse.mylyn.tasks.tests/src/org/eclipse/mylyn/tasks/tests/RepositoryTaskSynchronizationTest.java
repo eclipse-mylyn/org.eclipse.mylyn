@@ -201,11 +201,9 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		connector.updateOfflineState(task, newData, true);
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
 		assertEquals(DATE_STAMP_1, task.getLastModifiedDateStamp());
-		
-		
+
 		// Forced with Incoming (user submits a report)
-		task = primeTaskAndRepository(RepositoryTaskSyncState.OUTGOING,
-				RepositoryTaskSyncState.INCOMING);
+		task = primeTaskAndRepository(RepositoryTaskSyncState.OUTGOING, RepositoryTaskSyncState.INCOMING);
 		task.setTaskData(null);
 		assertEquals(DATE_STAMP_1, task.getLastModifiedDateStamp());
 		connector.updateOfflineState(task, newData, true);
@@ -273,9 +271,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		// protected RepositoryTaskData
 		// loadOfflineTaskData(AbstractRepositoryTask repositoryTask) {
 		// return repositoryTask.getTaskData();
-		//		}
-		
-		
+		// }
 
 	}
 

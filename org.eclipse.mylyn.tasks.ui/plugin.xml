@@ -48,19 +48,19 @@
             class="org.eclipse.mylar.internal.tasks.ui.wizards.NewLocalTaskWizard"
             icon="icons/etool16/task-new.gif"
             id="org.eclipse.mylar.tasklist.wizard.new.task"
-            name="New Local Task"/>
+            name="New Task"/>
 	  <wizard
             category="org.eclipse.mylar.wizards"
             class="org.eclipse.mylar.internal.tasks.ui.wizards.NewRepositoryTaskWizard"
             icon="icons/etool16/task-repository-new.gif"
             id="org.eclipse.mylar.tasklist.wizard.new.repository.task"
-            name="New Repository Task"/>
+            name="New Shared Task"/>
       <wizard
             category="org.eclipse.mylar.wizards"
             class="org.eclipse.mylar.internal.tasks.ui.wizards.NewQueryWizard"
             icon="icons/etool16/query-new.gif"
             id="org.eclipse.mylar.tasklist.wizard.new.query"
-            name="New Repository Query"/>
+            name="New Query"/>
 	</extension>
 
   <extension
@@ -224,10 +224,10 @@
                enablesFor="*"
                icon="icons/etool16/task-repository-new.gif"
                id="org.eclipse.mylar.tasklist.new.repositorytask"
-               label="New Repository Task"
+               label="New Shared Task"
                style="push"
                toolbarPath="reports"
-               tooltip="New Repository Task"> 
+               tooltip="New Shared Task"> 
   		</action>
   		
   		<action
@@ -279,9 +279,9 @@
               icon="icons/etool16/task-repository.gif"
               id="org.eclipse.mylar.tasklist.actions.addQuery"
               menubarPath="reports"
-              label="Add Existing Repository Task"
+              label="Add Existing Task"
               style="push"
-              tooltip="Add Repository Task"> 
+              tooltip="Add Existing Task"> 
   		</action>
   		
   		<action
@@ -289,9 +289,9 @@
 	        enablesFor="*"
 	        icon="icons/etool16/task-repository-new.gif"
 	        id="org.eclipse.mylar.tasklist.new.repositorytask"
-	        label="New Repository Task"
+	        label="New Shared Task"
 	        menubarPath="reports"
-	        tooltip="New Repository Task"/>
+	        tooltip="New Shared Task"/>
 	              
 		<action
               class="org.eclipse.mylar.internal.tasks.ui.actions.NewQueryAction"
@@ -299,9 +299,9 @@
               icon="icons/etool16/query-new.gif"
               id="org.eclipse.mylar.tasklist.actions.addQuery"
               menubarPath="reports"
-              label="New Repository Query"
+              label="New Query"
               style="push"
-              tooltip="New Repository Query"> 
+              tooltip="New Query"> 
   		</action>
       </viewerContribution>
       
@@ -319,7 +319,7 @@
 
   <extension point="org.eclipse.ui.preferencePages">
       <page 
-         name="Task List"
+         name="Tasks"
          class="org.eclipse.mylar.internal.tasks.ui.preferences.TaskListPreferencePage"
          id="org.eclipse.mylar.tasklist.ui.preferences"
          category="org.eclipse.mylar.ui.preferences">
