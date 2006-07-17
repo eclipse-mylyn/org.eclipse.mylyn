@@ -152,6 +152,10 @@ public class DateUtil {
 		return formatter.format(date);
 	}
 	
+	public static String getFormattedDate(Date date, String format) {
+		formatter.applyPattern(format);
+		return formatter.format(date);
+	}
 	
 	public static TimeZone getTimeZone(String zoneId) {
 		TimeZone timeZone = TimeZone.getTimeZone(zoneId);
