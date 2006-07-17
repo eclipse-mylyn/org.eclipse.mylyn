@@ -11,6 +11,9 @@
 
 package org.eclipse.mylar.context.core;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
@@ -21,10 +24,14 @@ public class MylarStatusHandler {
 
 //	private static boolean testingMode = false;
 
-	private static IStatusNotifier statusNotifier = null;
+	private static Set<IStatusHandler> handlers = new HashSet<IStatusHandler>();
 	
-	public static void setStatusNotifier(IStatusNotifier notifier) {
-		statusNotifier = notifier;
+	public static void addStatusHandler(IStatusHandler handler) {
+		handlers.add(handler);
+	}
+	
+	public static void removeStatusHandler(IStatusHandler handler) {
+		handlers.remove(handler);
 	}
 	
 	/**
@@ -70,8 +77,8 @@ public class MylarStatusHandler {
 
 		final Status status = new Status(severity, ContextCorePlugin.PLUGIN_ID, IStatus.OK, message, throwable);
 		
-		if (statusNotifier != null) {
-			statusNotifier.notify(status, informUser);
+		for (IStatusHandler handler : handlers) {
+			handler.notify(status, informUser);
 		}
 		log(status);
 	}

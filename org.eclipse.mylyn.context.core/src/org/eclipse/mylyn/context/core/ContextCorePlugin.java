@@ -46,7 +46,7 @@ public class ContextCorePlugin extends Plugin {
 	private static MylarContextManager contextManager;
 
 	private static AbstractContextStore contextStore;
-	
+
 	private static final IMylarStructureBridge DEFAULT_BRIDGE = new IMylarStructureBridge() {
 
 		public String getContentType() {
@@ -125,13 +125,13 @@ public class ContextCorePlugin extends Plugin {
 		ContextStoreExtensionReader.initExtensions();
 		contextManager = new MylarContextManager();
 		BridgesExtensionPointReader.initExtensions();
-			
+
 		for (IMylarStructureBridge bridge : bridges.values()) {
 			if (bridge.getRelationshipProviders() != null) {
 				for (AbstractRelationProvider provider : bridge.getRelationshipProviders()) {
 					getContextManager().addListener(provider);
 				}
-			}	
+			}
 		}
 	}
 
@@ -140,7 +140,7 @@ public class ContextCorePlugin extends Plugin {
 		try {
 			super.stop(context);
 			INSTANCE = null;
-//			resourceBundle = null;
+			// resourceBundle = null;
 
 			// Stop all running jobs when we exit if the plugin didn't do it
 			Map<String, IMylarStructureBridge> bridges = getStructureBridges();
@@ -209,7 +209,7 @@ public class ContextCorePlugin extends Plugin {
 	public AbstractContextStore getContextStore() {
 		return contextStore;
 	}
-	
+
 	public static void setContextStore(AbstractContextStore contextStore) {
 		ContextCorePlugin.contextStore = contextStore;
 	}
@@ -231,11 +231,11 @@ public class ContextCorePlugin extends Plugin {
 	}
 
 	static class ContextStoreExtensionReader {
-		
+
 		private static final String ELEMENT_CONTEXT_STORE = "contextStore";
-				
+
 		private static boolean extensionsRead = false;
-		
+
 		public static void initExtensions() {
 			if (!extensionsRead) {
 				IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -244,7 +244,7 @@ public class ContextCorePlugin extends Plugin {
 				IExtension[] extensions = extensionPoint.getExtensions();
 				for (int i = 0; i < extensions.length; i++) {
 					IConfigurationElement[] elements = extensions[i].getConfigurationElements();
-					for (int j = 0; j < elements.length; j++) { 
+					for (int j = 0; j < elements.length; j++) {
 						if (elements[j].getName().compareTo(ELEMENT_CONTEXT_STORE) == 0) {
 							readStore(elements[j]);
 						}
@@ -253,25 +253,24 @@ public class ContextCorePlugin extends Plugin {
 				extensionsRead = true;
 			}
 		}
-		
+
 		private static void readStore(IConfigurationElement element) {
 			try {
-				Object object = element
-						.createExecutableExtension(BridgesExtensionPointReader.ELEMENT_CLASS);
+				Object object = element.createExecutableExtension(BridgesExtensionPointReader.ELEMENT_CLASS);
 
 				if (!(object instanceof AbstractContextStore)) {
 					MylarStatusHandler.log("Could not load bridge: " + object.getClass().getCanonicalName()
 							+ " must implement " + IMylarStructureBridge.class.getCanonicalName(), null);
 					return;
 				} else {
-					contextStore = (AbstractContextStore)object;
+					contextStore = (AbstractContextStore) object;
 				}
 			} catch (CoreException e) {
 				MylarStatusHandler.log(e, "Could not load bridge extension");
 			}
 		}
 	}
-	
+
 	static class BridgesExtensionPointReader {
 
 		private static final String EXTENSION_ID_CONTEXT = "org.eclipse.mylar.context.core.bridges";
@@ -281,7 +280,7 @@ public class ContextCorePlugin extends Plugin {
 		private static final String ELEMENT_CLASS = "class";
 
 		private static final String ELEMENT_STRUCTURE_BRIDGE_PARENT = "parent";
-		
+
 		private static boolean extensionsRead = false;
 
 		public static void initExtensions() {
@@ -295,18 +294,17 @@ public class ContextCorePlugin extends Plugin {
 					for (int j = 0; j < elements.length; j++) {
 						if (elements[j].getName().compareTo(BridgesExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE) == 0) {
 							readBridge(elements[j]);
-						}  
+						}
 					}
 				}
 				extensionsRead = true;
 			}
 		}
-		
+
 		@SuppressWarnings("deprecation")
 		private static void readBridge(IConfigurationElement element) {
 			try {
-				Object object = element
-						.createExecutableExtension(BridgesExtensionPointReader.ELEMENT_CLASS);
+				Object object = element.createExecutableExtension(BridgesExtensionPointReader.ELEMENT_CLASS);
 				if (!(object instanceof IMylarStructureBridge)) {
 					MylarStatusHandler.log("Could not load bridge: " + object.getClass().getCanonicalName()
 							+ " must implement " + IMylarStructureBridge.class.getCanonicalName(), null);
@@ -316,7 +314,7 @@ public class ContextCorePlugin extends Plugin {
 				IMylarStructureBridge bridge = (IMylarStructureBridge) object;
 				ContextCorePlugin.getDefault().internalAddBridge(bridge);
 				try {
-				if (element.getAttribute(BridgesExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE_PARENT) != null) {
+					if (element.getAttribute(BridgesExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE_PARENT) != null) {
 						Object parent = element
 								.createExecutableExtension(BridgesExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE_PARENT);
 						if (parent instanceof IMylarStructureBridge) {
@@ -332,6 +330,50 @@ public class ContextCorePlugin extends Plugin {
 				}
 			} catch (CoreException e) {
 				MylarStatusHandler.log(e, "Could not load bridge extension");
+			}
+		}
+	}
+
+	static class HandlersExtensionPointReader {
+
+		private static final String EXTENSION_ID_HANDLERS = "org.eclipse.mylar.context.core.handlers";
+
+		private static final String ELEMENT_STATUS = "status";
+
+		private static final String ELEMENT_CLASS = "class";
+
+		private static boolean extensionsRead = false;
+
+		public static void initExtensions() {
+			if (!extensionsRead) {
+				IExtensionRegistry registry = Platform.getExtensionRegistry();
+				IExtensionPoint extensionPoint = registry.getExtensionPoint(EXTENSION_ID_HANDLERS);
+				IExtension[] extensions = extensionPoint.getExtensions();
+				for (int i = 0; i < extensions.length; i++) {
+					IConfigurationElement[] elements = extensions[i].getConfigurationElements();
+					for (int j = 0; j < elements.length; j++) {
+						if (elements[j].getName().compareTo(ELEMENT_STATUS) == 0) {
+							readHandler(elements[j]);
+						}
+					}
+				}
+				extensionsRead = true;
+			}
+		}
+
+		@SuppressWarnings("deprecation")
+		private static void readHandler(IConfigurationElement element) {
+			try {
+				Object object = element.createExecutableExtension(ELEMENT_CLASS);
+				if (!(object instanceof IStatusHandler)) {
+					MylarStatusHandler.log("Could not load handler: " + object.getClass().getCanonicalName()
+							+ " must implement " + IMylarStructureBridge.class.getCanonicalName(), null);
+					return;
+				}
+
+				IStatusHandler handler = (IStatusHandler) object;
+				MylarStatusHandler.addStatusHandler(handler);
+			} catch (CoreException e) {
 			}
 		}
 	}

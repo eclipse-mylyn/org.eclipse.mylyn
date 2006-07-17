@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.Status;
 /**
  * @author Mik Kersten
  */
-public interface IStatusNotifier {
+public interface IStatusHandler {
 	
 	public abstract void notify(Status status, boolean informUser);
 	
