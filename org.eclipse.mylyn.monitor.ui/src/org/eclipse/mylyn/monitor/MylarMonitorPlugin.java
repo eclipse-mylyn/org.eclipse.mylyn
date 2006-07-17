@@ -27,6 +27,7 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -38,11 +39,11 @@ public class MylarMonitorPlugin extends AbstractUIPlugin {
 	private static final int TIMEOUT_INACTIVITY_MILLIS = 2 * 60 * 1000;
 
 	private int inactivityTimeout = TIMEOUT_INACTIVITY_MILLIS;
-		
+
 	private static MylarMonitorPlugin INSTANCE;
-	
+
 	private ShellLifecycleListener shellLifecycleListener;
-	
+
 	private List<AbstractUserInteractionMonitor> selectionMonitors = new ArrayList<AbstractUserInteractionMonitor>();
 
 	/**
@@ -50,9 +51,9 @@ public class MylarMonitorPlugin extends AbstractUIPlugin {
 	 * requiring update from the monitor.
 	 */
 	private List<IInteractionEventListener> interactionListeners = new ArrayList<IInteractionEventListener>();
-	
+
 	private ActivityListener activityListener;
-	
+
 	protected Set<IPartListener> partListeners = new HashSet<IPartListener>();
 
 	protected Set<IPageListener> pageListeners = new HashSet<IPageListener>();
@@ -62,7 +63,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin {
 	protected Set<ISelectionListener> postSelectionListeners = new HashSet<ISelectionListener>();
 
 	public static final String OBFUSCATED_LABEL = "[obfuscated]";
-	
+
 	protected IWindowListener WINDOW_LISTENER = new IWindowListener() {
 		public void windowActivated(IWorkbenchWindow window) {
 			// ignore
@@ -110,25 +111,28 @@ public class MylarMonitorPlugin extends AbstractUIPlugin {
 	public MylarMonitorPlugin() {
 		INSTANCE = this;
 	}
-	
+
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-//		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//			public void run() {
-				getWorkbench().addWindowListener(WINDOW_LISTENER);
-				shellLifecycleListener = new ShellLifecycleListener(ContextCorePlugin.getContextManager());		
-				
-				getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(
-						shellLifecycleListener);
-				
-				activityListener = new ActivityListener(TIMEOUT_INACTIVITY_MILLIS);// INACTIVITY_TIMEOUT_MILLIS);
-				ContextCorePlugin.getContextManager().addListener(activityListener);
-				activityListener.startObserving();
-//			}
-//		});
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				try {
+					getWorkbench().addWindowListener(WINDOW_LISTENER);
+					shellLifecycleListener = new ShellLifecycleListener(ContextCorePlugin.getContextManager());
+
+					getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(shellLifecycleListener);
+
+					activityListener = new ActivityListener(TIMEOUT_INACTIVITY_MILLIS);// INACTIVITY_TIMEOUT_MILLIS);
+					ContextCorePlugin.getContextManager().addListener(activityListener);
+					activityListener.startObserving();
+				} catch (Exception e) {
+					MylarStatusHandler.fail(e, "Mylar Monitor start failed", false);
+				}
+			}
+		});
 	}
-	
+
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
@@ -136,19 +140,18 @@ public class MylarMonitorPlugin extends AbstractUIPlugin {
 		try {
 			if (getWorkbench() != null && !getWorkbench().isClosing()) {
 				getWorkbench().removeWindowListener(WINDOW_LISTENER);
-				getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(
-						shellLifecycleListener);
+				getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(shellLifecycleListener);
 			}
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Mylar Monitor stop failed", false);
 		}
 	}
-	
+
 	public ShellLifecycleListener getShellLifecycleListener() {
 		return shellLifecycleListener;
 	}
-	
- 	public void setInactivityTimeout(int millis) {
+
+	public void setInactivityTimeout(int millis) {
 		inactivityTimeout = millis;
 		activityListener.setTimeout(millis);
 	}
@@ -159,7 +162,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin {
 	public int getInactivityTimeout() {
 		return inactivityTimeout;
 	}
-	
+
 	public void addWindowPartListener(IPartListener listener) {
 		partListeners.add(listener);
 		for (IWorkbenchWindow window : getWorkbench().getWorkbenchWindows()) {
@@ -217,7 +220,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin {
 			service.removePostSelectionListener(listener);
 		}
 	}
-	
+
 	public static MylarMonitorPlugin getDefault() {
 		return INSTANCE;
 	}
@@ -225,7 +228,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin {
 	public List<AbstractUserInteractionMonitor> getSelectionMonitors() {
 		return selectionMonitors;
 	}
-	
+
 	public void addInteractionListener(IInteractionEventListener listener) {
 		interactionListeners.add(listener);
 	}
@@ -246,6 +249,5 @@ public class MylarMonitorPlugin extends AbstractUIPlugin {
 	public List<IInteractionEventListener> getInteractionListeners() {
 		return interactionListeners;
 	}
-	
-}
 
+}
