@@ -22,7 +22,7 @@ import org.eclipse.mylar.java.tests.AllJavaTests;
 import org.eclipse.mylar.monitor.reports.tests.AllMonitorReportTests;
 import org.eclipse.mylar.monitor.tests.AllMonitorTests;
 import org.eclipse.mylar.resources.MylarResourcesPlugin;
-import org.eclipse.mylar.tasks.tests.AllTaskListTests;
+import org.eclipse.mylar.tasks.tests.AllTasksTests;
 import org.eclipse.mylar.tests.integration.AllIntegrationTests;
 import org.eclipse.mylar.tests.misc.AllMiscTests;
 import org.eclipse.mylar.tests.xml.AllXmlTests;
@@ -46,7 +46,7 @@ public class AllTests {
 		suite.addTest(AllCoreTests.suite());
 		suite.addTest(AllIdeTests.suite());
 		suite.addTest(AllJavaTests.suite());
-		suite.addTest(AllTaskListTests.suite());
+		suite.addTest(AllTasksTests.suite());
 		suite.addTest(AllXmlTests.suite());
 		suite.addTest(AllBugzillaTests.suite());
 		suite.addTest(AllMiscTests.suite());
