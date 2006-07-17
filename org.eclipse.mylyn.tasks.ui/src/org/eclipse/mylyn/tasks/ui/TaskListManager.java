@@ -132,7 +132,7 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	private boolean taskActivityHistoryInitialized = false;
 
-	private int nextLocalTaskId;
+//	private int nextLocalTaskId;
 
 	private int timerSleepInterval = TimerThread.DEFAULT_SLEEP_INTERVAL;
 
@@ -191,15 +191,15 @@ public class TaskListManager implements IPropertyChangeListener {
 		}
 	};
 
-	public TaskListManager(TaskListWriter taskListWriter, File file, int startId) {
+	public TaskListManager(TaskListWriter taskListWriter, File file) {
 		this.taskListFile = file;
 		this.taskListWriter = taskListWriter;
-		this.nextLocalTaskId = startId;
-		timer = new Timer();
-		timer.schedule(new RolloverCheck(), ROLLOVER_DELAY, ROLLOVER_DELAY);
 	}
 
 	public void init() {
+		timer = new Timer();
+		timer.schedule(new RolloverCheck(), ROLLOVER_DELAY, ROLLOVER_DELAY);
+
 		// NOTE: this call can't be in the constructor due to startup concurrency
 		ContextCorePlugin.getContextManager().addActivityMetaContextListener(CONTEXT_LISTENER);
 	}
@@ -474,7 +474,8 @@ public class TaskListManager implements IPropertyChangeListener {
 	}
 
 	public String genUniqueTaskHandle() {
-		return TaskRepositoryManager.PREFIX_LOCAL + nextLocalTaskId++;
+		int nextId = taskList.findLargestTaskHandle()+1;
+		return TaskRepositoryManager.PREFIX_LOCAL + nextId;//nextLocalTaskId++;
 	}
 
 	public void refactorRepositoryUrl(String oldUrl, String newUrl) {
@@ -520,10 +521,10 @@ public class TaskListManager implements IPropertyChangeListener {
 			if (taskListFile.exists()) {
 				// taskList = new TaskList();
 				taskListWriter.readTaskList(taskList, taskListFile);
-				int maxHandle = taskList.findLargestTaskHandle();
-				if (maxHandle >= nextLocalTaskId) {
-					nextLocalTaskId = maxHandle + 1;
-				}
+//				int maxHandle = taskList.findLargestTaskHandle();
+//				if (maxHandle >= nextLocalTaskId) {
+//					nextLocalTaskId = maxHandle + 1;
+//				}
 			} else {
 				resetTaskList();
 			}
@@ -561,8 +562,8 @@ public class TaskListManager implements IPropertyChangeListener {
 		try {
 			if (taskListInitialized) {
 				taskListWriter.writeTaskList(taskList, taskListFile);
-				TasksUiPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.TASK_ID,
-						nextLocalTaskId);
+//				TasksUiPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.TASK_ID,
+//				nextLocalTaskId);
 			} else {
 				MylarStatusHandler.log("task list save attempted before initialization", this);
 			}

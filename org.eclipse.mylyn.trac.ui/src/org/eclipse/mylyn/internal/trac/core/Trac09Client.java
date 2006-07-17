@@ -32,6 +32,9 @@ import javax.security.auth.login.LoginException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer;
+import org.eclipse.mylar.internal.tasks.core.HtmlTag;
+import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer.Token;
 import org.eclipse.mylar.internal.trac.MylarTracPlugin;
 import org.eclipse.mylar.internal.trac.model.TracComponent;
 import org.eclipse.mylar.internal.trac.model.TracMilestone;
@@ -46,9 +49,6 @@ import org.eclipse.mylar.internal.trac.model.TracTicketType;
 import org.eclipse.mylar.internal.trac.model.TracVersion;
 import org.eclipse.mylar.internal.trac.model.TracSearchFilter.CompareOperator;
 import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
-import org.eclipse.mylar.tasks.core.util.HtmlStreamTokenizer;
-import org.eclipse.mylar.tasks.core.util.HtmlTag;
-import org.eclipse.mylar.tasks.core.util.HtmlStreamTokenizer.Token;
 
 public class Trac09Client extends AbstractTracClient {
 

@@ -13,7 +13,7 @@ package org.eclipse.mylar.tasks.core;
 
 import java.util.Date;
 
-import org.eclipse.mylar.tasks.core.util.HtmlStreamTokenizer;
+import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer;
 
 /**
  * Virtual proxy for a repository task.

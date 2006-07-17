@@ -22,11 +22,11 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasks.core.TaskRepositoriesExternalizer;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskRepositoryListener;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.core.util.TaskRepositoriesExternalizer;
 
 /**
  * @author Mik Kersten

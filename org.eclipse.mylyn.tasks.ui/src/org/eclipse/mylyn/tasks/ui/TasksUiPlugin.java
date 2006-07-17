@@ -39,7 +39,6 @@ import org.eclipse.mylar.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylar.internal.tasks.ui.ITaskListNotification;
 import org.eclipse.mylar.internal.tasks.ui.ITaskListNotificationProvider;
 import org.eclipse.mylar.internal.tasks.ui.OfflineTaskManager;
-import org.eclipse.mylar.internal.tasks.ui.RepositoryAwareStatusNotifier;
 import org.eclipse.mylar.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TaskListNotificationIncoming;
@@ -48,24 +47,23 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListNotificationQueryIncoming;
 import org.eclipse.mylar.internal.tasks.ui.TaskListNotificationReminder;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskListSynchronizationManager;
-import org.eclipse.mylar.internal.tasks.ui.util.TasksUitExtensionReader;
 import org.eclipse.mylar.internal.tasks.ui.util.TaskListSaveManager;
 import org.eclipse.mylar.internal.tasks.ui.util.TaskListWriter;
+import org.eclipse.mylar.internal.tasks.ui.util.TasksUitExtensionReader;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskActivityListener;
 import org.eclipse.mylar.tasks.core.Task;
+import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWindowListener;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -336,17 +334,51 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			
 			String path = getDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;
 			File taskListFile = new File(path);
+			
+			taskListManager = new TaskListManager(taskListWriter, taskListFile);
+			
+			taskRepositoryManager = new TaskRepositoryManager();
 
-			int nextTaskId = 1;
-			if (ContextCorePlugin.getDefault() != null
-					&& getPreferenceStore().contains(TaskListPreferenceConstants.TASK_ID)) {
-				nextTaskId = getPreferenceStore().getInt(TaskListPreferenceConstants.TASK_ID);
-			}
+			// XXX: put back
+//			MylarStatusHandler.setStatusNotifier(new RepositoryAwareStatusNotifier());
+
+			// ----------------- FROM EARLY START
+			
+			TasksUitExtensionReader.initExtensions(taskListWriter);
+			taskRepositoryManager.readRepositories();
+
+			// Must be called after repositories read
+			readOfflineReportsFile();
+
+			taskListManager.init();
+			taskListManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
+			taskListManager.readExistingOrCreateNewList();
+			initialized = true;
+
+			PlatformUI.getWorkbench().addWindowListener(WINDOW_LISTENER);
+
+			taskListNotificationManager = new TaskListNotificationManager();
+			taskListNotificationManager.addNotificationProvider(REMINDER_NOTIFICATION_PROVIDER);
+			taskListNotificationManager.addNotificationProvider(INCOMING_NOTIFICATION_PROVIDER);
+			taskListNotificationManager.startNotification(NOTIFICATION_DELAY);
+			getPreferenceStore().addPropertyChangeListener(taskListNotificationManager);
+			
+			
+			taskListBackupManager = new TaskListBackupManager();
+			getPreferenceStore().addPropertyChangeListener(taskListBackupManager);
+
+			synchronizationManager = new TaskListSynchronizationManager(true);
+			synchronizationManager.startSynchJob();
+
+			taskListSaveManager = new TaskListSaveManager();
+			taskListManager.getTaskList().addChangeListener(taskListSaveManager);
+
+			ContextCorePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
+			getPreferenceStore().addPropertyChangeListener(synchronizationManager);
+			getPreferenceStore().addPropertyChangeListener(taskListManager);
+
 			
 //			ContextCorePlugin.getContextManager().loadActivityMetaContext();
-			 
-			taskListManager = new TaskListManager(taskListWriter, taskListFile, nextTaskId);
-			taskRepositoryManager = new TaskRepositoryManager();
 //			ContextCorePlugin.setContextStore(new FileBasedContextStore());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -359,60 +391,20 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	 */
 	public void earlyStartup() {
 		
-		try {
-			final IWorkbench workbench = PlatformUI.getWorkbench();
-			workbench.getDisplay().asyncExec(new Runnable() {
-				public void run() {
+//		try {
+//			final IWorkbench workbench = PlatformUI.getWorkbench();
+//			workbench.getDisplay().asyncExec(new Runnable() {
+//				public void run() {
 					try {
-						MylarStatusHandler.setStatusNotifier(new RepositoryAwareStatusNotifier());
 						
-						TasksUitExtensionReader.initExtensions(taskListWriter);
-						taskRepositoryManager.readRepositories();
-
-						// Must be called after repositories read
-						readOfflineReportsFile();
-
-						taskListManager.init();
-						taskListManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
-						taskListManager.readExistingOrCreateNewList();
-						initialized = true;
-//						migrateHandlesToRepositorySupport();
-
-						PlatformUI.getWorkbench().addWindowListener(WINDOW_LISTENER);
-
-						taskListNotificationManager = new TaskListNotificationManager();
-						taskListNotificationManager.addNotificationProvider(REMINDER_NOTIFICATION_PROVIDER);
-						taskListNotificationManager.addNotificationProvider(INCOMING_NOTIFICATION_PROVIDER);
-						taskListNotificationManager.startNotification(NOTIFICATION_DELAY);
-						getPreferenceStore().addPropertyChangeListener(taskListNotificationManager);
-						
-						
-						taskListBackupManager = new TaskListBackupManager();
-						getPreferenceStore().addPropertyChangeListener(taskListBackupManager);
-
-						synchronizationManager = new TaskListSynchronizationManager(true);
-						synchronizationManager.startSynchJob();
-
-						taskListSaveManager = new TaskListSaveManager();
-						taskListManager.getTaskList().addChangeListener(taskListSaveManager);
-
-						ContextCorePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
-						getPreferenceStore().addPropertyChangeListener(synchronizationManager);
-						getPreferenceStore().addPropertyChangeListener(taskListManager);
-
-						// if
-						// (getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP))
-						// {
-						// synchronizationManager.synchNow(DELAY_QUERY_REFRESH_ON_STARTUP);
-						// }
-					} catch (Exception e) {
+											} catch (Exception e) {
 						MylarStatusHandler.fail(e, "Task List initialization failed", true);
 					}
-				}
-			});
-		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Task List initialization failed", true);
-		}
+//				}
+//			});
+//		} catch (Exception e) {
+//			MylarStatusHandler.fail(e, "Task List initialization failed", true);
+//		}
 	}
 
 	@Override

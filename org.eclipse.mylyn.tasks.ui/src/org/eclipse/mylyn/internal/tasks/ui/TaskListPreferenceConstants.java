@@ -32,7 +32,7 @@ public class TaskListPreferenceConstants {
 
 	public static final String COPY_TASK_DATA = "org.eclipse.mylar.tasklist.preferences.copyTaskData";
 
-	public static final String TASK_ID = "org.eclipse.mylar.tasklist.userid";
+//	public static final String TASK_ID = "org.eclipse.mylar.tasklist.userid";
 
 	public static final String TASK_EDITOR_ID = "org.eclipse.mylar.tasklist.ui.taskEditor";
 
