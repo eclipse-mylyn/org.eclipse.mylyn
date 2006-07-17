@@ -37,7 +37,7 @@ import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.context.ui.IMylarUiBridge;
 import org.eclipse.mylar.internal.context.ui.ActiveViewSelectionDragAdapter;
 import org.eclipse.mylar.internal.context.ui.DoiOrderSorter;
-import org.eclipse.mylar.internal.context.ui.MylarImages;
+import org.eclipse.mylar.internal.context.ui.ContextUiImages;
 import org.eclipse.mylar.internal.context.ui.actions.LinkActiveSearchWithEditorAction;
 import org.eclipse.mylar.internal.context.ui.actions.ShowQualifiedNamesAction;
 import org.eclipse.mylar.internal.context.ui.actions.ToggleRelationshipProviderAction;
@@ -130,12 +130,6 @@ public class ActiveSearchView extends ViewPart {
 		return null;
 	}
 
-	@Override
-	public void dispose() {
-		super.dispose();
-		ContextCorePlugin.getContextManager().removeListener(REFRESH_UPDATE_LISTENER);
-	}
-
 	public ActiveSearchView() {
 		ContextCorePlugin.getContextManager().addListener(REFRESH_UPDATE_LISTENER);
 		for (AbstractRelationProvider provider : ContextCorePlugin.getContextManager().getActiveRelationProviders()) {
@@ -144,6 +138,12 @@ public class ActiveSearchView extends ViewPart {
 		ContextUiPlugin.getDefault().refreshRelatedElements();
 	}
 
+	@Override
+	public void dispose() {
+		super.dispose();
+		ContextCorePlugin.getContextManager().removeListener(REFRESH_UPDATE_LISTENER);
+	}
+	
 	/**
 	 * fix for bug 109235
 	 * 
@@ -287,7 +287,7 @@ public class ActiveSearchView extends ViewPart {
 		};
 		stopAction.setToolTipText(STOP_JOBS_LABEL);
 		stopAction.setText(STOP_JOBS_LABEL);
-		stopAction.setImageDescriptor(MylarImages.STOP_SEARCH);
+		stopAction.setImageDescriptor(ContextUiImages.STOP_SEARCH);
 		manager.add(stopAction);
 		manager.add(new Separator());
 		manager.add(new LinkActiveSearchWithEditorAction());

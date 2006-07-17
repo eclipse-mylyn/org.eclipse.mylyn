@@ -20,7 +20,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
-import org.eclipse.mylar.internal.context.ui.MylarImages;
+import org.eclipse.mylar.internal.context.ui.ContextUiImages;
 import org.eclipse.mylar.internal.context.ui.MylarWorkingSetPage;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
 import org.eclipse.mylar.internal.java.ui.JavaUiUtil;
@@ -43,7 +43,7 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 	private IPreferenceStore javaPrefs = JavaPlugin.getDefault().getPreferenceStore();
 
 	public void init() {
-		setDefaultPageImageDescriptor(MylarImages.MYLAR);
+		setDefaultPageImageDescriptor(ContextUiImages.MYLAR);
 		setWindowTitle("Mylar Recommended Preferences");
 		super.setDefaultPageImageDescriptor(MylarJavaPlugin.imageDescriptorFromPlugin(MylarJavaPlugin.PLUGIN_ID,
 				"icons/wizban/banner-prefs.gif"));

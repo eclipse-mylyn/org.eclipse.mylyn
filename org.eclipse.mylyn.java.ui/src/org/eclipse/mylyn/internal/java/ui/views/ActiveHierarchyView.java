@@ -75,9 +75,6 @@ public class ActiveHierarchyView extends ViewPart {
 
 	private Map<String, TreeParent> nodeMap = new HashMap<String, TreeParent>();
 
-	// private List<ITypeHierarchy> currentHierarchies = new
-	// ArrayList<ITypeHierarchy>();
-
 	final IMylarContextListener MODEL_LISTENER = new IMylarContextListener() {
 
 		public void contextActivated(IMylarContext taskscape) {
@@ -166,11 +163,6 @@ public class ActiveHierarchyView extends ViewPart {
 		}
 	}
 
-	public ActiveHierarchyView() {
-		ContextCorePlugin.getContextManager().addListener(MODEL_LISTENER);
-		refreshHierarchy();
-	}
-
 	private void refreshHierarchy() {
 		refreshHierarchy(true);
 	}
@@ -248,6 +240,9 @@ public class ActiveHierarchyView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		try {
+			ContextCorePlugin.getContextManager().addListener(MODEL_LISTENER);
+			refreshHierarchy();
+			
 			viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 			viewer.setContentProvider(new ViewContentProvider());
 			viewer.setLabelProvider(new DecoratingLabelProvider(JavaContextLabelProvider.createJavaUiLabelProvider(),
@@ -410,54 +405,3 @@ class TreeParent implements IAdaptable {
 		return children.size() > 0;
 	}
 }
-
-// /**
-// * Unwraps the elements.
-// * TODO: use workbench decorator mechanism?
-// *
-// * @author Mik Kersten
-// */
-// class HierarchyLabelProvider extends AppearanceAwareLabelProvider implements
-// IFontProvider {
-//
-// public HierarchyLabelProvider(JavaUILabelProvider labelProvider) {
-// // super(labelProvider,
-// PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
-// }
-// @Override
-// public Color getForeground(Object element) {
-// IJavaElement javaElement = ((TreeParent)element).getElement();
-// IMylarElement node =
-// ContextCorePlugin.getContextManager().getNode(javaElement.getHandleIdentifier());
-// return UiUtil.getForegroundForElement(node);
-// }
-//
-// @Override
-// public Color getBackground(Object element) {
-// IJavaElement javaElement = ((TreeParent)element).getElement();
-// IMylarElement node =
-// ContextCorePlugin.getContextManager().getNode(javaElement.getHandleIdentifier());
-// return UiUtil.getBackgroundForElement(node);
-// }
-//
-// @Override
-// public Image getImage(Object element) {
-// return super.getImage(((TreeParent)element).getElement());
-// }
-//
-// @Override
-// public String getText(Object element) {
-// return super.getText(((TreeParent)element).getElement());
-// }
-//    
-// public Font getFont(Object element) {
-// IJavaElement javaElement = ((TreeParent)element).getElement();
-// IMylarElement node =
-// ContextCorePlugin.getContextManager().getNode(javaElement.getHandleIdentifier());
-// if (node.getDegreeOfInterest().isLandmark() &&
-// !node.getDegreeOfInterest().isPropagated()) {
-// return MylarUiPlugin.BOLD;
-// }
-// return null;
-// }
-// }

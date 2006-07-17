@@ -47,7 +47,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.context.core.IStatusHandler"/>
+                  <meta.attribute kind="java"/>
                </appInfo>
             </annotation>
          </attribute>

@@ -22,7 +22,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Mik Kersten
  */
-public class MylarImages {
+public class ContextUiImages {
 
 	private static ImageRegistry imageRegistry;
 

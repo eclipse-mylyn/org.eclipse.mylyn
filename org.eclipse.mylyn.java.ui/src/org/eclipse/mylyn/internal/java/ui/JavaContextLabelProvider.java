@@ -25,7 +25,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarRelation;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
-import org.eclipse.mylar.internal.context.ui.MylarImages;
+import org.eclipse.mylar.internal.context.ui.ContextUiImages;
 import org.eclipse.mylar.internal.context.ui.views.DelegatingContextLabelProvider;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
@@ -45,7 +45,6 @@ public class JavaContextLabelProvider extends AppearanceAwareLabelProvider {
 	private static final ImageDescriptor EDGE_REF_JUNIT = MylarJavaPlugin.getImageDescriptor("icons/elcl16/edge-ref-junit.gif");
 	
 	public JavaContextLabelProvider() {
-		// super(createJavaUiLabelProvider());
 		super(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | JavaElementLabels.P_COMPRESSED,
 				AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS | JavaElementImageProvider.SMALL_ICONS);
 	}
@@ -96,7 +95,7 @@ public class JavaContextLabelProvider extends AppearanceAwareLabelProvider {
 		} else if (object instanceof IMylarRelation) {
 			ImageDescriptor descriptor = getIconForRelationship(((IMylarRelation) object).getRelationshipHandle());
 			if (descriptor != null) {
-				return MylarImages.getImage(descriptor);
+				return ContextUiImages.getImage(descriptor);
 			} else {
 				return null;
 			}
@@ -106,17 +105,17 @@ public class JavaContextLabelProvider extends AppearanceAwareLabelProvider {
 
 	private ImageDescriptor getIconForRelationship(String relationshipHandle) {
 		if (relationshipHandle.equals(AbstractJavaRelationProvider.ID_GENERIC)) {
-			return MylarImages.EDGE_REFERENCE;
+			return ContextUiImages.EDGE_REFERENCE;
 		} else if (relationshipHandle.equals(JavaReferencesProvider.ID)) {
-			return MylarImages.EDGE_REFERENCE;
+			return ContextUiImages.EDGE_REFERENCE;
 		} else if (relationshipHandle.equals(JavaImplementorsProvider.ID)) {
-			return MylarImages.EDGE_INHERITANCE;
+			return ContextUiImages.EDGE_INHERITANCE;
 		} else if (relationshipHandle.equals(JUnitReferencesProvider.ID)) {
 			return EDGE_REF_JUNIT;
 		} else if (relationshipHandle.equals(JavaWriteAccessProvider.ID)) {
-			return MylarImages.EDGE_ACCESS_WRITE;
+			return ContextUiImages.EDGE_ACCESS_WRITE;
 		} else if (relationshipHandle.equals(JavaReadAccessProvider.ID)) {
-			return MylarImages.EDGE_ACCESS_READ;
+			return ContextUiImages.EDGE_ACCESS_READ;
 		} else {
 			return null;
 		}

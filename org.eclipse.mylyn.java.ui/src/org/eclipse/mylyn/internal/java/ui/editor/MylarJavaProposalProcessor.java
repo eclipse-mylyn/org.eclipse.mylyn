@@ -21,7 +21,7 @@ import org.eclipse.jdt.ui.text.java.IJavaCompletionProposalComputer;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
-import org.eclipse.mylar.internal.context.ui.MylarImages;
+import org.eclipse.mylar.internal.context.ui.ContextUiImages;
 
 /**
  * TODO: parametrize relevance levels (requires JDT changes, bug 119063)
@@ -127,7 +127,7 @@ public class MylarJavaProposalProcessor {
 
 	static class MylarProposalSeparator extends JavaCompletionProposal {
 		public MylarProposalSeparator() {
-			super("", 0, 0, MylarImages.getImage(MylarImages.CONTENT_ASSIST_SEPARATOR), LABEL_SEPARATOR,
+			super("", 0, 0, ContextUiImages.getImage(ContextUiImages.CONTENT_ASSIST_SEPARATOR), LABEL_SEPARATOR,
 					MylarJavaProposalProcessor.THRESHOLD_INTEREST);
 		}
 	}

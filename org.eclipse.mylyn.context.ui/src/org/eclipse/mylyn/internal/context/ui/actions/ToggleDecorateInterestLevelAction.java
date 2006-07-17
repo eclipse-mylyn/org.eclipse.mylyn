@@ -15,7 +15,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.internal.context.ui.MylarImages;
+import org.eclipse.mylar.internal.context.ui.ContextUiImages;
 
 /**
  * @author Mik Kersten
@@ -26,7 +26,7 @@ public class ToggleDecorateInterestLevelAction extends Action {
 
 	public ToggleDecorateInterestLevelAction() {
 		super();
-		setImageDescriptor(MylarImages.DECORATE_INTEREST);
+		setImageDescriptor(ContextUiImages.DECORATE_INTEREST);
 		setToolTipText("Toggle Interest Level Decorator");
 
 		boolean checked = ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(PREF_ID);

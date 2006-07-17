@@ -193,21 +193,20 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		
+
 		initializeDefaultPreferences(getPreferenceStore());
 		initializeHighlighters();
 		initializeActions();
 		
-		UiExtensionPointReader.initExtensions();
-
 		viewerManager = new MylarViewerManager();
-		ContextCorePlugin.getContextManager().addListener(viewerManager);
-		MylarMonitorPlugin.getDefault().addWindowPartListener(contentOutlineManager);
 		
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
+					ContextCorePlugin.getContextManager().addListener(viewerManager);
+					MylarMonitorPlugin.getDefault().addWindowPartListener(contentOutlineManager);
+					
 					// NOTE: task list must have finished initializing
 					TasksUiPlugin.getDefault().setHighlighter(DEFAULT_HIGHLIGHTER);
 					TasksUiPlugin.getTaskListManager().addActivityListener(perspectiveManager);
@@ -341,6 +340,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	}
 
 	public List<IMylarUiBridge> getUiBridges() {
+		UiExtensionPointReader.initExtensions();
 		return new ArrayList<IMylarUiBridge>(bridges.values());
 	}
 
@@ -349,8 +349,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	 *         behavior otherwise (so null is never returned)
 	 */
 	public IMylarUiBridge getUiBridge(String contentType) {
-//		if (!UiExtensionPointReader.extensionsRead)
-//			UiExtensionPointReader.initExtensions();
+		UiExtensionPointReader.initExtensions();
 		IMylarUiBridge bridge = bridges.get(contentType);
 		if (bridge != null) {
 			return bridge;
@@ -363,8 +362,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	 * TODO: cache this to improve performance?
 	 */
 	public IMylarUiBridge getUiBridgeForEditor(IEditorPart editorPart) {
-//		if (!UiExtensionPointReader.extensionsRead)
-//			UiExtensionPointReader.initExtensions();
+		UiExtensionPointReader.initExtensions();
 		IMylarUiBridge foundBridge = null;
 		for (IMylarUiBridge bridge : bridges.values()) {
 			if (bridge.acceptsEditor(editorPart)) {
@@ -473,14 +471,22 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 		private static UiExtensionPointReader thisReader = new UiExtensionPointReader();
 
+		public static final String EXTENSION_ID_CONTEXT = "org.eclipse.mylar.context.ui.bridges";
+
+		public static final String ELEMENT_UI_BRIDGE = "uiBridge";
+
+		public static final String ELEMENT_UI_CLASS = "class";
+
+		public static final String ELEMENT_UI_CONTEXT_LABEL_PROVIDER = "labelProvider";
+
+		public static final String ELEMENT_UI_BRIDGE_CONTENT_TYPE = "contentType";
+		
 		public static final String ELEMENT_STRUCTURE_BRIDGE_SEARCH_ICON = "activeSearchIcon";
 
 		public static final String ELEMENT_STRUCTURE_BRIDGE_SEARCH_LABEL = "activeSearchLabel";
 		
 		// read the extensions and load the required plugins
 		public static void initExtensions() {
-			// code from "contributing to eclipse" with modifications for
-			// deprecated code
 			if (!extensionsRead) {
 				IExtensionRegistry registry = Platform.getExtensionRegistry();
 				IExtensionPoint extensionPoint = registry
@@ -545,16 +551,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 				MylarStatusHandler.log(e, "Could not load bridge extension");
 			}
 		}
-
-		public static final String EXTENSION_ID_CONTEXT = "org.eclipse.mylar.context.ui.bridges";
-
-		public static final String ELEMENT_UI_BRIDGE = "uiBridge";
-
-		public static final String ELEMENT_UI_CLASS = "class";
-
-		public static final String ELEMENT_UI_CONTEXT_LABEL_PROVIDER = "labelProvider";
-
-		public static final String ELEMENT_UI_BRIDGE_CONTENT_TYPE = "contentType";
 	}
 	
 
@@ -586,8 +582,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	}
 
 	public ImageDescriptor getActiveSearchIcon(IMylarUiBridge bridge) {
-//		if (!CoreExtensionPointReader.extensionsRead)
-//			CoreExtensionPointReader.initExtensions();
+		UiExtensionPointReader.initExtensions();
 		return activeSearchIcons.get(bridge);
 	}
 
@@ -596,8 +591,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	}
 
 	public String getActiveSearchLabel(IMylarUiBridge bridge) {
-//		if (!CoreExtensionPointReader.extensionsRead)
-//			CoreExtensionPointReader.initExtensions();
+		UiExtensionPointReader.initExtensions();
 		return activeSearchLabels.get(bridge);
 	}
 

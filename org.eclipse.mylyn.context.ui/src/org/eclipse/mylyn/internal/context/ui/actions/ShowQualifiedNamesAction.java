@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.context.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.internal.context.ui.MylarImages;
+import org.eclipse.mylar.internal.context.ui.ContextUiImages;
 import org.eclipse.mylar.internal.context.ui.views.ActiveSearchView;
 
 /**
@@ -33,7 +33,7 @@ public class ShowQualifiedNamesAction extends Action {
 		setId(ID);
 		setText(LABEL);
 		setToolTipText(LABEL);
-		setImageDescriptor(MylarImages.QUALIFY_NAMES);
+		setImageDescriptor(ContextUiImages.QUALIFY_NAMES);
 		update(ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ID));
 	}
 

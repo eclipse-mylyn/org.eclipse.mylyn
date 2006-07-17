@@ -21,7 +21,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
-import org.eclipse.mylar.internal.context.ui.MylarImages;
+import org.eclipse.mylar.internal.context.ui.ContextUiImages;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IActionDelegate2;
 import org.eclipse.ui.IEditorPart;
@@ -43,7 +43,7 @@ public class ToggleActiveFoldingAction extends Action implements IWorkbenchWindo
 		super();
 		INSTANCE = this;
 		setText("Auto fold");
-		setImageDescriptor(MylarImages.INTEREST_FOLDING);
+		setImageDescriptor(ContextUiImages.INTEREST_FOLDING);
 		setToolTipText("Auto Manage Editors and Folding");
 	}
 

@@ -20,7 +20,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.context.ui.IMylarUiBridge;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.internal.context.ui.MylarImages;
+import org.eclipse.mylar.internal.context.ui.ContextUiImages;
 import org.eclipse.mylar.internal.context.ui.views.ActiveSearchView;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IEditorPart;
@@ -46,7 +46,7 @@ public class LinkActiveSearchWithEditorAction extends Action {
 		super(LABEL, IAction.AS_CHECK_BOX);
 		INSTANCE = this;
 		setId(ID);
-		setImageDescriptor(MylarImages.LINK_WITH_EDITOR);
+		setImageDescriptor(ContextUiImages.LINK_WITH_EDITOR);
 		setText(LABEL);
 		setToolTipText(LABEL);
 		ContextUiPlugin.getDefault().getPreferenceStore().setDefault(ID, true);

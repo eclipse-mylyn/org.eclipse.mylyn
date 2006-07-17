@@ -71,18 +71,17 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 	 */
 	@Override
 	public void start(BundleContext context) throws Exception {
-		super.start(context);
+		super.start(context);	
+		initDefaultPrefs();
+	
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
-					setPreferenceDefaults();
-					savePluginPreferences();
-
 					ContextCorePlugin.getContextManager().addListener(packageExplorerManager);
 					ContextCorePlugin.getContextManager().addListener(typeHistoryManager);
 					ContextCorePlugin.getContextManager().addListener(landmarkMarkerManager);
-
+				
 					if (getPreferenceStore().getBoolean(MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS)) {
 						problemListener.enable();
 					}
@@ -126,7 +125,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 		});
 	}
 
-	private void setPreferenceDefaults() {
+	private void initDefaultPrefs() {
 		getPreferenceStore().setDefault(MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE, true);
 //		getPreferenceStore().setDefault(MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_EXPAND, true);
 		getPreferenceStore().setDefault(MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS, false);

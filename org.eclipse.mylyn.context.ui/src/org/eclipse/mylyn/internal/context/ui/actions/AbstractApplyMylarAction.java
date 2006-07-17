@@ -26,7 +26,7 @@ import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.context.ui.InterestFilter;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.internal.context.ui.MylarImages;
+import org.eclipse.mylar.internal.context.ui.ContextUiImages;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IActionDelegate2;
 import org.eclipse.ui.IViewActionDelegate;
@@ -78,7 +78,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 		this.interestFilter = interestFilter;
 		setText(ACTION_LABEL);
 		setToolTipText(ACTION_LABEL);
-		setImageDescriptor(MylarImages.INTEREST_FILTERING);
+		setImageDescriptor(ContextUiImages.INTEREST_FILTERING);
 	}
 
 	public void init(IAction action) {

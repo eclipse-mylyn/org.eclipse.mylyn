@@ -20,7 +20,7 @@ import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylar.internal.context.ui.MylarImages;
+import org.eclipse.mylar.internal.context.ui.ContextUiImages;
 import org.eclipse.mylar.internal.context.ui.preferences.MylarPreferencePage;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
@@ -39,7 +39,7 @@ public class EditHighlightersAction extends Action implements IViewActionDelegat
 		setText("Edit Highlighters...");
 		setToolTipText("Edit Highlighters...");
 		setId(ID);
-		setImageDescriptor(MylarImages.COLOR_PALETTE);
+		setImageDescriptor(ContextUiImages.COLOR_PALETTE);
 	}
 
 	@Override
