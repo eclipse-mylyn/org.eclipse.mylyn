@@ -39,15 +39,14 @@ import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.ide.ui.views.ActiveViewDelegatingDragAdapter;
-import org.eclipse.mylar.internal.ide.ui.views.ActiveViewDropAdapter;
-import org.eclipse.mylar.internal.ide.ui.views.ActiveViewResourceDragAdapter;
-import org.eclipse.mylar.internal.ide.ui.views.ActiveViewSelectionDragAdapter;
+import org.eclipse.mylar.internal.context.ui.ActiveViewSelectionDragAdapter;
+import org.eclipse.mylar.internal.context.ui.views.ActiveViewDelegatingDragAdapter;
+import org.eclipse.mylar.internal.context.ui.views.ActiveViewDropAdapter;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
 import org.eclipse.mylar.internal.java.ui.JavaContextLabelProvider;
 import org.eclipse.swt.SWT;
@@ -289,7 +288,7 @@ public class ActiveHierarchyView extends ViewPart {
 		int ops = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
 		Transfer[] transfers = new Transfer[] { LocalSelectionTransfer.getInstance(), ResourceTransfer.getInstance() };
 		TransferDragSourceListener[] dragListeners = new TransferDragSourceListener[] {
-				new ActiveViewSelectionDragAdapter(viewer), new ActiveViewResourceDragAdapter(viewer) };
+				new ActiveViewSelectionDragAdapter(viewer) };//, new ActiveViewResourceDragAdapter(viewer) };
 		viewer.addDragSupport(ops, transfers, new ActiveViewDelegatingDragAdapter(dragListeners));
 	}
 

@@ -28,12 +28,12 @@ import org.eclipse.jdt.internal.ui.javaeditor.JavaOutlinePage;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.context.ui.IMylarUiBridge;
-import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
+import org.eclipse.mylar.resources.MylarResourcesPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -96,7 +96,7 @@ public class JavaUiBridge implements IMylarUiBridge {
 //	}
 
 	public void restoreEditor(IMylarElement document) {
-		IResource resource = MylarIdePlugin.getDefault().getResourceForElement(document, false);
+		IResource resource = MylarResourcesPlugin.getDefault().getResourceForElement(document, false);
 		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (resource instanceof IFile && resource.exists()) {
 			try {

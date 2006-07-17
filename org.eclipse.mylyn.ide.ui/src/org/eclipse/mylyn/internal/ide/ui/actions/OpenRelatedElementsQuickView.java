@@ -15,7 +15,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.internal.ide.ui.views.ActiveSearchQuickView;
+import org.eclipse.mylar.internal.context.ui.views.ActiveSearchQuickView;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;

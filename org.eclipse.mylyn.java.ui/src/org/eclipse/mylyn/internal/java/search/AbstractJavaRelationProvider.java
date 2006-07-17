@@ -42,14 +42,14 @@ import org.eclipse.jdt.internal.ui.search.JavaSearchResult;
 import org.eclipse.jdt.ui.search.ElementQuerySpecification;
 import org.eclipse.jdt.ui.search.QuerySpecification;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.IActiveSearchListener;
 import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
-import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
+import org.eclipse.mylar.resources.MylarResourcesPlugin;
 import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.search2.internal.ui.InternalSearchUI;
 
@@ -142,7 +142,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 				if (includeNodeInScope(interesting, bridge)) {
 					// TODO what to do when the element is not a java element,
 					// how determine if a javaProject?
-					IResource resource = MylarIdePlugin.getDefault().getResourceForElement(interesting, true);
+					IResource resource = MylarResourcesPlugin.getDefault().getResourceForElement(interesting, true);
 					if (resource != null) {
 						IProject project = resource.getProject();
 						if (project != null && JavaProject.hasJavaNature(project) && project.exists()) {

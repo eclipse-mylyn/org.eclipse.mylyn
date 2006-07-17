@@ -11,14 +11,9 @@
 
 package org.eclipse.mylar.internal.ide.ui;
 
-import org.eclipse.team.internal.ccvs.core.mapping.ChangeSetModelProvider;
-import org.eclipse.team.internal.ui.mapping.ModelSynchronizePage;
-import org.eclipse.team.internal.ui.synchronize.SynchronizeView;
-import org.eclipse.team.ui.synchronize.ModelSynchronizeParticipant;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 
 /**
@@ -38,25 +33,25 @@ public class IdeUiUtil {
 		return view;
 	}
 
-	public static void forceSynchronizeViewUpdate() {
-		IViewPart view = getView(ID_VIEW_SYNCHRONIZE);
-		if (view instanceof SynchronizeView) {
-			SynchronizeView syncView = (SynchronizeView)view;
-			IPage currentPage = syncView.getCurrentPage();
-			if (currentPage instanceof ModelSynchronizePage) {
-				ModelSynchronizePage modelPage = (ModelSynchronizePage)currentPage;
-//				String currentProvider = (String)modelPage.getConfiguration().getProperty(ModelSynchronizeParticipant.P_VISIBLE_MODEL_PROVIDER);
+//	public static void forceSynchronizeViewUpdate() {
+//		IViewPart view = getView(ID_VIEW_SYNCHRONIZE);
+//		if (view instanceof SynchronizeView) {
+//			SynchronizeView syncView = (SynchronizeView)view;
+//			IPage currentPage = syncView.getCurrentPage();
+//			if (currentPage instanceof ModelSynchronizePage) {
+//				ModelSynchronizePage modelPage = (ModelSynchronizePage)currentPage;
+////				String currentProvider = (String)modelPage.getConfiguration().getProperty(ModelSynchronizeParticipant.P_VISIBLE_MODEL_PROVIDER);
+////				modelPage.getConfiguration().setProperty(
+////						ModelSynchronizeParticipant.P_VISIBLE_MODEL_PROVIDER, 
+////						ResourceModelProvider.RESOURCE_MODEL_PROVIDER_ID);
+//				
 //				modelPage.getConfiguration().setProperty(
 //						ModelSynchronizeParticipant.P_VISIBLE_MODEL_PROVIDER, 
-//						ResourceModelProvider.RESOURCE_MODEL_PROVIDER_ID);
-				
-				modelPage.getConfiguration().setProperty(
-						ModelSynchronizeParticipant.P_VISIBLE_MODEL_PROVIDER, 
-						ChangeSetModelProvider.ID);
-				
-			}
-		}
-	}
+//						ChangeSetModelProvider.ID);
+//				
+//			}
+//		}
+//	}
 	
 	public static ResourceNavigator getNavigatorFromActivePage() {
 		if (PlatformUI.getWorkbench() == null || PlatformUI.getWorkbench().getActiveWorkbenchWindow() == null)
