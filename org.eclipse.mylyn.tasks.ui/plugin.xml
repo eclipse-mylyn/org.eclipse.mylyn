@@ -10,7 +10,12 @@
          point="org.eclipse.mylar.context.core.bridges">
    	  	<contextStore class="org.eclipse.mylar.internal.tasks.ui.FileBasedContextStore"/>
     </extension>
-	
+
+    <extension
+         point="org.eclipse.mylar.context.core.handlers">
+   	  	<contextStore class="org.eclipse.mylar.internal.tasks.ui.FileBasedContextStore"/>
+    </extension>
+
 	<extension point="org.eclipse.ui.views">
      	<category name="Mylar" id="org.eclipse.mylar"/>
     </extension>
