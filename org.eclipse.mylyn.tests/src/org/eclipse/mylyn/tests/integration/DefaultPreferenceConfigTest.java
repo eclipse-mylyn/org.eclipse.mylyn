@@ -22,6 +22,7 @@ import junit.framework.TestCase;
 public class DefaultPreferenceConfigTest extends TestCase {
 
 	public void testMonitorPreferences() {
+		assertNotNull(MylarUsageMonitorPlugin.getDefault());
 		assertTrue(MylarUsageMonitorPlugin.getPrefs().getBoolean(MylarMonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE));
 	}
 }
