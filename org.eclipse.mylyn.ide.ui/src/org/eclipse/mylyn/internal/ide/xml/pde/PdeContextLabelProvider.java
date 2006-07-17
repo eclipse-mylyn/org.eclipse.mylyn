@@ -16,7 +16,7 @@ import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarRelation;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
 import org.eclipse.mylar.internal.context.ui.AbstractContextLabelProvider;
-import org.eclipse.mylar.internal.context.ui.MylarImages;
+import org.eclipse.mylar.internal.context.ui.ContextUiImages;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.internal.ide.xml.XmlReferencesProvider;
 import org.eclipse.swt.graphics.Image;
@@ -28,12 +28,12 @@ public class PdeContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
 	protected Image getImage(IMylarElement node) {
-		return MylarImages.getImage(MylarImages.FILE_XML);
+		return ContextUiImages.getImage(ContextUiImages.FILE_XML);
 	}
 
 	@Override
 	protected Image getImage(IMylarRelation edge) {
-		return MylarImages.getImage(MylarIdePlugin.EDGE_REF_XML);
+		return ContextUiImages.getImage(MylarIdePlugin.EDGE_REF_XML);
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class PdeContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
 	protected Image getImageForObject(Object object) {
-		return MylarImages.getImage(MylarImages.FILE_XML);
+		return ContextUiImages.getImage(ContextUiImages.FILE_XML);
 	}
 
 	@Override

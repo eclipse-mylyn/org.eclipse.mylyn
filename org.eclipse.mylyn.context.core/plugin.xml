@@ -2,5 +2,5 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension-point id="bridges" name="bridges" schema="schema/bridges.exsd"/>
-   <extension-point id="handlers" name="handlers" schema="schema/handles.exsd"/>
+   <extension-point id="handlers" name="handlers" schema="schema/handlers.exsd"/>
 </plugin>

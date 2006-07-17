@@ -124,7 +124,7 @@ public class ContextCorePlugin extends Plugin {
 		super.start(context);
 		ContextStoreExtensionReader.initExtensions();
 		contextManager = new MylarContextManager();
-		BridgesExtensionPointReader.initExtensions();
+		HandlersExtensionPointReader.initExtensions();
 
 		for (IMylarStructureBridge bridge : bridges.values()) {
 			if (bridge.getRelationshipProviders() != null) {
@@ -167,10 +167,12 @@ public class ContextCorePlugin extends Plugin {
 	}
 
 	public Map<String, IMylarStructureBridge> getStructureBridges() {
+		BridgesExtensionPointReader.initExtensions();
 		return bridges;
 	}
 
 	public IMylarStructureBridge getStructureBridge(String contentType) {
+		BridgesExtensionPointReader.initExtensions();
 		IMylarStructureBridge bridge = bridges.get(contentType);
 		if (bridge != null) {
 			return bridge;
@@ -179,6 +181,7 @@ public class ContextCorePlugin extends Plugin {
 	}
 
 	public Set<String> getKnownContentTypes() {
+		BridgesExtensionPointReader.initExtensions();
 		return bridges.keySet();
 	}
 
@@ -188,6 +191,7 @@ public class ContextCorePlugin extends Plugin {
 	 * @return null if there are no bridges loaded, null bridge otherwise
 	 */
 	public IMylarStructureBridge getStructureBridge(Object object) {
+		BridgesExtensionPointReader.initExtensions();
 		for (IMylarStructureBridge structureBridge : bridges.values()) {
 			if (structureBridge.acceptsObject(object)) {
 				return structureBridge;

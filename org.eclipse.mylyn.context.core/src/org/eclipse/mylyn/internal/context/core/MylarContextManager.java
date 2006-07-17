@@ -108,8 +108,6 @@ public class MylarContextManager {
 	private static ScalingFactors scalingFactors = new ScalingFactors();
 
 	public MylarContextManager() {
-//		File storeDir = new File(ContextCorePlugin.getDefault().getDataDirectory());
-//		storeDir.mkdirs();
 		loadActivityMetaContext();
 	}
 

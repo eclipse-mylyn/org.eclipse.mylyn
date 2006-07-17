@@ -18,7 +18,7 @@ import org.eclipse.mylar.context.core.IMylarRelation;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.context.ui.AbstractContextLabelProvider;
-import org.eclipse.mylar.internal.context.ui.MylarImages;
+import org.eclipse.mylar.internal.context.ui.ContextUiImages;
 import org.eclipse.mylar.internal.resources.ResourceStructureBridge;
 import org.eclipse.swt.graphics.Image;
 
@@ -37,9 +37,9 @@ public class ResourceContextLabelProvider extends AbstractContextLabelProvider {
 	@Override
 	protected Image getImageForObject(Object object) {
 		if (object instanceof IFile) {
-			return MylarImages.getImage(MylarImages.FILE_GENERIC);
+			return ContextUiImages.getImage(ContextUiImages.FILE_GENERIC);
 		} else if (object instanceof IContainer) {
-			return MylarImages.getImage(MylarImages.FOLDER_GENERIC);
+			return ContextUiImages.getImage(ContextUiImages.FOLDER_GENERIC);
 		}
 		return null;
 	}

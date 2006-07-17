@@ -14,7 +14,7 @@ package org.eclipse.mylar.internal.team.ui;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
-import org.eclipse.mylar.internal.context.ui.MylarImages;
+import org.eclipse.mylar.internal.context.ui.ContextUiImages;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.team.ContextChangeSet;
 
@@ -25,7 +25,7 @@ public class ContextChangeSetDecorator implements ILightweightLabelDecorator {
 
 	public void decorate(Object element, IDecoration decoration) {
 		if (element instanceof ContextChangeSet) {
-			decoration.addOverlay(MylarImages.MYLAR_OVERLAY, IDecoration.BOTTOM_RIGHT);
+			decoration.addOverlay(ContextUiImages.MYLAR_OVERLAY, IDecoration.BOTTOM_RIGHT);
 			ContextChangeSet changeSet = (ContextChangeSet)element;
 			if (changeSet.getTask().isActive()) {    
 				decoration.setFont(TaskListColorsAndFonts.BOLD);
