@@ -441,7 +441,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			String urlQueryString) throws Exception {
 		RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory();
 		BugzillaResultCollector collector = new BugzillaResultCollector();
-
+		if(repository.hasCredentials()) {
+			urlQueryString = BugzillaServerFacade.addCredentials(urlQueryString, repository.getUserName(), repository.getPassword());
+		}
 		queryFactory.performQuery(repository.getUrl(), collector, urlQueryString, TasksUiPlugin.getDefault()
 				.getProxySettings(), AbstractReportFactory.RETURN_ALL_HITS, repository.getCharacterEncoding());
 
