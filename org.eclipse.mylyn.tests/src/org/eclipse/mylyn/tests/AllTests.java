@@ -35,7 +35,7 @@ public class AllTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tests");
 
-		MylarStatusHandler.setStatusNotifier(new TestingStatusNotifier());
+		MylarStatusHandler.addStatusHandler(new TestingStatusNotifier());
 		MylarResourcesPlugin.getDefault().setResourceMonitoringEnabled(false);
 
 		// TODO: the order of these tests might still matter, but shouldn't
