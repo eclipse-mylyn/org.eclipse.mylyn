@@ -11,14 +11,14 @@ package org.eclipse.mylar.internal.tasks.ui;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.mylar.context.core.IStatusNotifier;
+import org.eclipse.mylar.context.core.IStatusHandler;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
  */
-public class RepositoryAwareStatusNotifier implements IStatusNotifier {
+public class RepositoryAwareStatusNotifier implements IStatusHandler {
 
 	protected static final String ERROR_MESSAGE = "Please report the following error by following the bugs link at:\n"
 		+ "http://eclipse.org/mylar\n\n"

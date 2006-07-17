@@ -78,9 +78,9 @@ import org.osgi.framework.BundleContext;
 public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	// TODO: move constants
-	
+
 	private static final String NAME_DATA_DIR = ".mylar";
-	
+
 	private static final String DEFAULT_BACKUP_FOLDER_NAME = "backup";
 
 	private static final char DEFAULT_PATH_SEPARATOR = '/';
@@ -90,7 +90,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	public static final String FILE_EXTENSION = ".xml";
 
 	public static final String DEFAULT_TASK_LIST_FILE = "tasklist" + FILE_EXTENSION;
-	
+
 	public static final String DEFAULT_REPOSITORIES_FILE = "repositories" + FILE_EXTENSION;
 
 	public static final String TITLE_DIALOG = "Mylar Information";
@@ -252,34 +252,36 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			return reminders;
 		}
 	};
-	
+
 	private static ITaskListNotificationProvider INCOMING_NOTIFICATION_PROVIDER = new ITaskListNotificationProvider() {
 		// TODO: use push rather than pull for incoming notification?
 		public Set<ITaskListNotification> getNotifications() {
-			Set<ITaskListNotification> notifications = new HashSet<ITaskListNotification>();	
+			Set<ITaskListNotification> notifications = new HashSet<ITaskListNotification>();
 			// Incoming Changes
 			for (TaskRepository repository : getRepositoryManager().getAllRepositories()) {
-				for (AbstractRepositoryTask repositoryTask : TasksUiPlugin.getTaskListManager().getTaskList().getRepositoryTasks(repository.getUrl())) {
-					if(repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING && repositoryTask.isNotified() == false) {
+				for (AbstractRepositoryTask repositoryTask : TasksUiPlugin.getTaskListManager().getTaskList()
+						.getRepositoryTasks(repository.getUrl())) {
+					if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING
+							&& repositoryTask.isNotified() == false) {
 						TaskListNotificationIncoming notification = new TaskListNotificationIncoming(repositoryTask);
-						
-						if(repositoryTask.getTaskData() != null && repositoryTask.getTaskData().getComments() != null) {
+
+						if (repositoryTask.getTaskData() != null && repositoryTask.getTaskData().getComments() != null) {
 							List<TaskComment> taskComments = repositoryTask.getTaskData().getComments();
 							TaskComment lastComment = taskComments.get(taskComments.size() - 1);
-							if(lastComment != null) {
+							if (lastComment != null) {
 								notification.setDescription(lastComment.getText());
 							}
-						}					
-						
+						}
+
 						notifications.add(notification);
 						repositoryTask.setNotified(true);
 					}
-				}			
+				}
 			}
 			// New query hits
 			for (AbstractRepositoryQuery query : TasksUiPlugin.getTaskListManager().getTaskList().getQueries()) {
 				for (AbstractQueryHit hit : query.getHits()) {
-					if(hit.getCorrespondingTask() == null && hit.isNotified() == false) {
+					if (hit.getCorrespondingTask() == null && hit.isNotified() == false) {
 						notifications.add(new TaskListNotificationQueryIncoming(hit));
 						hit.setNotified(true);
 					}
@@ -325,25 +327,19 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		// NOTE: Startup order is very sensitive
 		try {
 			initializeDefaultPreferences(getPreferenceStore());
 			taskListWriter = new TaskListWriter();
-			
+
 			File dataDir = new File(getDataDirectory());
 			dataDir.mkdirs();
-			
 			String path = getDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;
 			File taskListFile = new File(path);
-			
+
 			taskListManager = new TaskListManager(taskListWriter, taskListFile);
-			
 			taskRepositoryManager = new TaskRepositoryManager();
 
-			// XXX: put back
-//			MylarStatusHandler.setStatusNotifier(new RepositoryAwareStatusNotifier());
-
-			// ----------------- FROM EARLY START
-			
 			TasksUitExtensionReader.initExtensions(taskListWriter);
 			taskRepositoryManager.readRepositories();
 
@@ -362,8 +358,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			taskListNotificationManager.addNotificationProvider(INCOMING_NOTIFICATION_PROVIDER);
 			taskListNotificationManager.startNotification(NOTIFICATION_DELAY);
 			getPreferenceStore().addPropertyChangeListener(taskListNotificationManager);
-			
-			
+
 			taskListBackupManager = new TaskListBackupManager();
 			getPreferenceStore().addPropertyChangeListener(taskListBackupManager);
 
@@ -376,35 +371,14 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			ContextCorePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 			getPreferenceStore().addPropertyChangeListener(synchronizationManager);
 			getPreferenceStore().addPropertyChangeListener(taskListManager);
-
-			
-//			ContextCorePlugin.getContextManager().loadActivityMetaContext();
-//			ContextCorePlugin.setContextStore(new FileBasedContextStore());
 		} catch (Exception e) {
 			e.printStackTrace();
 			MylarStatusHandler.fail(e, "Mylar Task List initialization failed", false);
 		}
 	}
-	
-	/**
-	 * NOTE: Startup order is very sensitive
-	 */
+
 	public void earlyStartup() {
-		
-//		try {
-//			final IWorkbench workbench = PlatformUI.getWorkbench();
-//			workbench.getDisplay().asyncExec(new Runnable() {
-//				public void run() {
-					try {
-						
-											} catch (Exception e) {
-						MylarStatusHandler.fail(e, "Task List initialization failed", true);
-					}
-//				}
-//			});
-//		} catch (Exception e) {
-//			MylarStatusHandler.fail(e, "Task List initialization failed", true);
-//		}
+		// ignore
 	}
 
 	@Override
@@ -421,7 +395,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				taskListManager.dispose();
 				TaskListColorsAndFonts.dispose();
 				if (ContextCorePlugin.getDefault() != null) {
-					ContextCorePlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
+					ContextCorePlugin.getDefault().getPluginPreferences().removePropertyChangeListener(
+							PREFERENCE_LISTENER);
 				}
 				PlatformUI.getWorkbench().removeWindowListener(WINDOW_LISTENER);
 			}
@@ -429,11 +404,11 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			MylarStatusHandler.log(e, "Mylar Task List stop terminated abnormally");
 		}
 	}
-	
+
 	public String getDefaultDataDirectory() {
 		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/' + NAME_DATA_DIR;
 	}
-	
+
 	public String getDataDirectory() {
 		return getPreferenceStore().getString(MylarPreferenceContstants.PREF_DATA_DIR);
 	}
@@ -443,66 +418,76 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		ContextCorePlugin.getDefault().getContextStore().notifyContextStoreMoved();
 	}
 
-//	// TODO: delete post 0.6?
-//	private void migrateHandlesToRepositorySupport() {
-//		boolean migrated = false;
-//		getMylarCorePrefs().setDefault(TaskListPreferenceConstants.CONTEXTS_MIGRATED, false);
-//		// NOTE: gets/checks preference in both stores to accidental migration
-//		if (!(getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.CONTEXTS_MIGRATED) || getPreferenceStore()
-//				.getBoolean(TaskListPreferenceConstants.CONTEXTS_MIGRATED))) {
-//			try {
-//				File dataDir = new File(ContextCorePlugin.getDefault().getDataDirectory());
-//				TaskRepository defaultRepository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
-//						TaskRepositoryManager.PREFIX_REPOSITORY_OLD.toLowerCase());
-//				if (defaultRepository != null) {
-//					String repositoryUrl = defaultRepository.getUrl();
-//					migrated = true;
-//					if (dataDir.exists() && dataDir.isDirectory()) {
-//						for (File file : dataDir.listFiles()) {
-//							int dotIndex = file.getName().lastIndexOf('.');
-//							if (dotIndex != -1) {
-//								String oldHandle = file.getName().substring(0, dotIndex);
-//								if (oldHandle.startsWith(TaskRepositoryManager.PREFIX_REPOSITORY_OLD)) {
-//									String id = AbstractRepositoryTask.getTaskId(oldHandle);
-//									String newHandle = AbstractRepositoryTask.getHandle(repositoryUrl, id);
-//									File newFile = ContextCorePlugin.getContextManager().getFileForContext(newHandle);
-//									file.renameTo(newFile);
-//								}
-//							}
-//						}
-//					}
-//					for (ITask task : taskListManager.getTaskList().getAllTasks()) {
-//						if (task instanceof AbstractRepositoryTask) {
-//							String id = AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
-//							String newHandle = AbstractRepositoryTask.getHandle(repositoryUrl, id);
-//							task.setHandleIdentifier(newHandle);
-//						}
-//					}
-//
-//					for (AbstractRepositoryQuery query : taskListManager.getTaskList().getQueries()) {
-//						query.setRepositoryUrl(repositoryUrl);
-//						for (AbstractQueryHit hit : query.getHits()) {
-//							hit.setRepositoryUrl(repositoryUrl);
-//						}
-//					}
-//					taskListManager.saveTaskList();
-//					taskListManager.readExistingOrCreateNewList();
-//				}
-//			} catch (Throwable t) {
-//				MylarStatusHandler.fail(t, "task list migration failed", true);
-//			}
-//		}
-//		if (migrated) {
-//			MylarStatusHandler.log("Migrated context files to repository-aware paths", this);
-//			getMylarCorePrefs().setValue(TaskListPreferenceConstants.CONTEXTS_MIGRATED, true);
-//			getPreferenceStore().setValue(TaskListPreferenceConstants.CONTEXTS_MIGRATED, true);
-//		}
-//	}
+	// // TODO: delete post 0.6?
+	// private void migrateHandlesToRepositorySupport() {
+	// boolean migrated = false;
+	// getMylarCorePrefs().setDefault(TaskListPreferenceConstants.CONTEXTS_MIGRATED,
+	// false);
+	// // NOTE: gets/checks preference in both stores to accidental migration
+	// if
+	// (!(getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.CONTEXTS_MIGRATED)
+	// || getPreferenceStore()
+	// .getBoolean(TaskListPreferenceConstants.CONTEXTS_MIGRATED))) {
+	// try {
+	// File dataDir = new
+	// File(ContextCorePlugin.getDefault().getDataDirectory());
+	// TaskRepository defaultRepository =
+	// MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
+	// TaskRepositoryManager.PREFIX_REPOSITORY_OLD.toLowerCase());
+	// if (defaultRepository != null) {
+	// String repositoryUrl = defaultRepository.getUrl();
+	// migrated = true;
+	// if (dataDir.exists() && dataDir.isDirectory()) {
+	// for (File file : dataDir.listFiles()) {
+	// int dotIndex = file.getName().lastIndexOf('.');
+	// if (dotIndex != -1) {
+	// String oldHandle = file.getName().substring(0, dotIndex);
+	// if (oldHandle.startsWith(TaskRepositoryManager.PREFIX_REPOSITORY_OLD)) {
+	// String id = AbstractRepositoryTask.getTaskId(oldHandle);
+	// String newHandle = AbstractRepositoryTask.getHandle(repositoryUrl, id);
+	// File newFile =
+	// ContextCorePlugin.getContextManager().getFileForContext(newHandle);
+	// file.renameTo(newFile);
+	// }
+	// }
+	// }
+	// }
+	// for (ITask task : taskListManager.getTaskList().getAllTasks()) {
+	// if (task instanceof AbstractRepositoryTask) {
+	// String id = AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
+	// String newHandle = AbstractRepositoryTask.getHandle(repositoryUrl, id);
+	// task.setHandleIdentifier(newHandle);
+	// }
+	// }
+	//
+	// for (AbstractRepositoryQuery query :
+	// taskListManager.getTaskList().getQueries()) {
+	// query.setRepositoryUrl(repositoryUrl);
+	// for (AbstractQueryHit hit : query.getHits()) {
+	// hit.setRepositoryUrl(repositoryUrl);
+	// }
+	// }
+	// taskListManager.saveTaskList();
+	// taskListManager.readExistingOrCreateNewList();
+	// }
+	// } catch (Throwable t) {
+	// MylarStatusHandler.fail(t, "task list migration failed", true);
+	// }
+	// }
+	// if (migrated) {
+	// MylarStatusHandler.log("Migrated context files to repository-aware
+	// paths", this);
+	// getMylarCorePrefs().setValue(TaskListPreferenceConstants.CONTEXTS_MIGRATED,
+	// true);
+	// getPreferenceStore().setValue(TaskListPreferenceConstants.CONTEXTS_MIGRATED,
+	// true);
+	// }
+	// }
 
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
 		store.setDefault(MylarPreferenceContstants.PREF_DATA_DIR, getDefaultDataDirectory());
-		
+
 		store.setDefault(TaskListPreferenceConstants.NOTIFICATIONS_ENABLED, true);
 		store.setDefault(TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P5.toString());
 		store.setDefault(TaskListPreferenceConstants.REPORT_OPEN_EDITOR, true);
@@ -527,13 +512,12 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		store.setDefault(TaskListPreferenceConstants.FILTER_ARCHIVE_MODE, true);
 		store.setDefault(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS, false);
 		store.setValue(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS, false);
-		
-		
-		//store.setDefault(TaskListPreferenceConstants.PLANNING_STARTDAY, 2);
-		//store.setDefault(TaskListPreferenceConstants.PLANNING_ENDDAY, 6);	
+
+		// store.setDefault(TaskListPreferenceConstants.PLANNING_STARTDAY, 2);
+		// store.setDefault(TaskListPreferenceConstants.PLANNING_ENDDAY, 6);
 		store.setDefault(TaskListPreferenceConstants.PLANNING_STARTHOUR, 8);
 		store.setDefault(TaskListPreferenceConstants.PLANNING_ENDHOUR, 23);
-		
+
 		store.setDefault(TaskListPreferenceConstants.SAVE_TASKLIST_MODE, TaskListSaveMode.THREE_HOURS.toString());
 	}
 
@@ -552,7 +536,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	public static TaskListManager getTaskListManager() {
 		return taskListManager;
 	}
-	
+
 	public TaskListNotificationManager getTaskListNotificationManager() {
 		return taskListNotificationManager;
 	}
@@ -564,12 +548,12 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		return INSTANCE;
 	}
 
-//	public static IPreferenceStore getMylarCorePrefs() {
-//		// TODO: should be using the task list's prefernece store, but can't
-//		// change without migrating because this will cause people to lose
-//		// repositories
-//		return ContextCorePlugin.getDefault().getPreferenceStore();
-//	}
+	// public static IPreferenceStore getMylarCorePrefs() {
+	// // TODO: should be using the task list's prefernece store, but can't
+	// // change without migrating because this will cause people to lose
+	// // repositories
+	// return ContextCorePlugin.getDefault().getPreferenceStore();
+	// }
 
 	private void checkTaskListBackup() {
 		Date currentTime = new Date();
