@@ -126,11 +126,14 @@ public class ScheduledTaskListSynchJob extends Job {
 
 	/**
 	 * for testing purposes
-	 * 
-	 * @return
 	 */
 	public static long getCount() {
 		return count;
+	}
+	
+	/** for testing */
+	public static void resetCount() {
+		count = 0;
 	}
 
 	public long getScheduleDelay() {

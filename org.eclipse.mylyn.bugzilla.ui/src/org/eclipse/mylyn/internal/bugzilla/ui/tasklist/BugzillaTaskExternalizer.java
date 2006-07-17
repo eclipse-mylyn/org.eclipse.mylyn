@@ -77,15 +77,9 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		if (node.getNodeName().equals(TAG_BUGZILLA_CUSTOM_QUERY)) {
 			query.setCustomQuery(true);
 		}
-		// if (!element.getAttribute(KEY_LAST_REFRESH).equals("")) {
-		// Date refreshDate = new Date();
-		// try {
-		// refreshDate.setTime(Long.parseLong(element.getAttribute(KEY_LAST_REFRESH)));
-		// query.setLastRefresh(refreshDate);
-		// } catch (NumberFormatException e) {
-		// // ignore
-		//			}
-		//		}
+		if (element.getAttribute(KEY_LAST_REFRESH) != null && !element.getAttribute(KEY_LAST_REFRESH).equals("")) {
+			query.setLastRefreshTimeStamp(element.getAttribute(KEY_LAST_REFRESH));
+		}
 
 		NodeList list = node.getChildNodes();
 		for (int i = 0; i < list.getLength(); i++) {

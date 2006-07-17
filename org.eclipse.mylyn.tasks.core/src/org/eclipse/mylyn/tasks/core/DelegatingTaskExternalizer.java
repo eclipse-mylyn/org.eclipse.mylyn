@@ -45,7 +45,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	
 	public static final String KEY_NOTIFIED_INCOMING = "NotifiedIncoming";
 
-	//public static final String KEY_LAST_REFRESH = "LastRefresh";
+	public static final String KEY_LAST_REFRESH = "LastRefreshTimeStamp";
 
 	public static final String KEY_LABEL = "Label";
 
@@ -403,10 +403,9 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		node.setAttribute(KEY_QUERY_MAX_HITS, query.getMaxHits() + "");
 		node.setAttribute(KEY_QUERY_STRING, query.getQueryUrl());
 		node.setAttribute(KEY_REPOSITORY_URL, query.getRepositoryUrl());
-		// if (query.getLastSynchronized() != null) {
-		// node.setAttribute(KEY_LAST_REFRESH,
-		// String.valueOf(query.getLastSynchronized().getTime()));
-		//		}
+		if (query.getLastRefreshTimeStamp() != null) {
+			node.setAttribute(KEY_LAST_REFRESH, query.getLastRefreshTimeStamp());
+		}
 		for (AbstractQueryHit hit : new ArrayList<AbstractQueryHit>(query.getHits())) {
 			try {
 				Element element = null;

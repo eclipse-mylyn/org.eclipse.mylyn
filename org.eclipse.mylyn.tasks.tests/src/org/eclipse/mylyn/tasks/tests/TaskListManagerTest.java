@@ -432,6 +432,8 @@ public class TaskListManagerTest extends TestCase {
 		// query.setLastRefresh(oldDate);
 		assertEquals("repositoryUrl", query.getRepositoryUrl());
 		assertEquals("queryUrl", query.getQueryUrl());
+		assertEquals("<never>", query.getLastRefreshTimeStamp());
+		query.setLastRefreshTimeStamp("today");
 		// assertEquals(time, query.getLastSynchronized().getTime());
 		manager.getTaskList().addQuery(query);
 		manager.saveTaskList();
@@ -443,6 +445,7 @@ public class TaskListManagerTest extends TestCase {
 		AbstractRepositoryQuery readQuery = manager.getTaskList().getQueries().iterator().next();
 		assertEquals(query.getQueryUrl(), readQuery.getQueryUrl());
 		assertEquals(query.getRepositoryUrl(), readQuery.getRepositoryUrl());
+		assertEquals("today", query.getLastRefreshTimeStamp());
 		assertEquals("repositoryUrl", readQuery.getRepositoryUrl());
 		// assertEquals(time, readQuery.getLastSynchronized().getTime());
 	}
@@ -609,6 +612,7 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testScheduledRefreshJob() throws InterruptedException {
 		int counter = 3;
+		ScheduledTaskListSynchJob.resetCount();
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
 				true);
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(

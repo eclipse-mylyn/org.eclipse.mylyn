@@ -12,6 +12,7 @@
 package org.eclipse.mylar.tasks.ui;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -22,6 +23,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.mylar.internal.context.core.util.DateUtil;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
@@ -95,7 +97,7 @@ class SynchronizeQueryJob extends Job {
 			}
 
 			repositoryQuery.setCurrentlySynchronizing(false);
-			//repositoryQuery.setLastRefresh(new Date());
+			repositoryQuery.setLastRefreshTimeStamp(DateUtil.getFormattedDate(new Date(), "MMM d")+", "+DateUtil.getFormattedTime());
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyQueryUpdated(repositoryQuery);
 			monitor.worked(1);
 		}

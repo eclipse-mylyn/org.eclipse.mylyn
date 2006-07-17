@@ -29,7 +29,7 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 
 	private Set<AbstractQueryHit> hits = new HashSet<AbstractQueryHit>();
 
-	// protected Date lastRefresh;
+	protected String lastRefreshTimeStamp = "<never>";
 
 	private boolean currentlySynchronizing = false;
 
@@ -137,14 +137,6 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		this.repositoryUrl = repositoryUrl;
 	}
 
-	// public Date getLastSynchronized() {
-	// return lastRefresh;
-	// }
-
-	// public void setLastRefresh(Date lastRefresh) {
-	// this.lastRefresh = lastRefresh;
-	// }
-
 	public boolean isSynchronizing() {
 		return currentlySynchronizing;
 	}
@@ -156,5 +148,13 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 	@Override
 	final void add(ITask task) {
 		// ignore, can not add tasks to a query
+	}
+
+	public String getLastRefreshTimeStamp() {
+		return lastRefreshTimeStamp;
+	}
+
+	public void setLastRefreshTimeStamp(String lastRefreshTimeStamp) {
+		this.lastRefreshTimeStamp = lastRefreshTimeStamp;
 	}
 }

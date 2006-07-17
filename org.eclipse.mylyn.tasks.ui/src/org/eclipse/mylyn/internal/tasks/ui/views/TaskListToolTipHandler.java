@@ -21,7 +21,6 @@ import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
-import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
@@ -114,23 +113,22 @@ public class TaskListToolTipHandler {
 		String priority = "";
 		if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-					query.getRepositoryKind(), query.getRepositoryUrl());
+			// TaskRepository repository =
+			// TasksUiPlugin.getRepositoryManager().getRepository(
+			// query.getRepositoryKind(), query.getRepositoryUrl());
 			try {
 				tooltip += new URL(query.getRepositoryUrl()).getHost();
 				tooltip += "\n---------------\n";
 			} catch (Exception e) {
 				// ignore
 			}
-			// tooltip += formatLastRefreshTime(query.getLastSynchronized()) +
-			// "\n";
-			if (repository != null) {
-				String syncStamp = "<unknown>";
-				if(repository.getSyncTimeStamp() != null) {
-					syncStamp = repository.getSyncTimeStamp();
-				}
-				tooltip += "Last Sync: " + syncStamp + "\n";
+
+			String syncStamp = query.getLastRefreshTimeStamp();
+			if (syncStamp == null) {
+				syncStamp = "<never>";
 			}
+			tooltip += "Last Sync: " + syncStamp + "\n";
+
 			if (query.getHits().size() == 1) {
 				tooltip += "1 hit";
 			} else {
@@ -225,8 +223,8 @@ public class TaskListToolTipHandler {
 				repositoryTask = (AbstractRepositoryTask) element;
 			}
 			if (repositoryTask != null) {
-				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
-						.getRepositoryConnector(repositoryTask.getRepositoryKind());
+				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+						repositoryTask.getRepositoryKind());
 				if (connector != null) {
 					return TasksUiPlugin.getDefault().getBrandingIcons().get(connector);
 				}
