@@ -525,7 +525,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		createDescriptionLayout(editorComposite);
 		createAttachmentLayout(editorComposite);
 		createCommentLayout(editorComposite, form);
-		createButtonLayouts(editorComposite);
+		createActionsLayout(editorComposite);
 
 		// editorComposite.setMenu(contextMenuManager.createContextMenu(editorComposite));
 
@@ -1220,7 +1220,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	 * Creates the button layout. This displays options and buttons at the
 	 * bottom of the editor to allow actions to be performed on the bug.
 	 */
-	protected void createButtonLayouts(Composite formComposite) {
+	protected void createActionsLayout(Composite formComposite) {
 		Section section = toolkit.createSection(formComposite, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText(LABEL_SECTION_ACTIONS);
 		section.setExpanded(true);

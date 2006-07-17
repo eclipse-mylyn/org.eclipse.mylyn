@@ -341,7 +341,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 	 * Creates the button layout. This displays options and buttons at the
 	 * bottom of the editor to allow actions to be performed on the bug.
 	 */
-	protected void createActionsLayouts(Composite formComposite) {
+	protected void createActionsLayout(Composite formComposite) {
 		FormToolkit toolkit = new FormToolkit(formComposite.getDisplay());
 		Section section = toolkit.createSection(formComposite, ExpandableComposite.TITLE_BAR);
 		section.setText(LABEL_SECTION_ACTIONS);
