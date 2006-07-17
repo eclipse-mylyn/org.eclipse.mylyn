@@ -50,7 +50,6 @@ public class TaskHistoryTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		assertNull(manager.getTaskList().getActiveTask());
 		
 		try {
 			TasksUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(
@@ -67,17 +66,19 @@ public class TaskHistoryTest extends TestCase {
 		resetHistory();
 
 		task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1", true);
-		task2 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 2", true);
-		task3 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 3", true);
-		task4 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 4", true);
-		task5 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 5", true);
-
 		manager.getTaskList().moveToRoot(task1);
+		
+		task2 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 2", true);
 		manager.getTaskList().moveToRoot(task2);
+		
+		task3 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 3", true);
 		manager.getTaskList().moveToRoot(task3);
+		
+		task4 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 4", true);
 		manager.getTaskList().moveToRoot(task4);
-		manager.getTaskList().moveToRoot(task5);
 
+		task5 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 5", true);
+		manager.getTaskList().moveToRoot(task5);
 	}
 
 	private void resetHistory() {
@@ -101,7 +102,7 @@ public class TaskHistoryTest extends TestCase {
 
 		taskView.getPreviousTaskAction().run();
 		assertTrue(task2.isActive());
-
+ 
 		taskView.getPreviousTaskAction().run();
 		assertTrue(task1.isActive());
 

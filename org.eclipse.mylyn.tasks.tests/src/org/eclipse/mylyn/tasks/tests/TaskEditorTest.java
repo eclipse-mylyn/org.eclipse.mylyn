@@ -10,6 +10,7 @@ package org.eclipse.mylar.tasks.tests;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
@@ -45,6 +46,7 @@ public class TaskEditorTest extends TestCase {
 		TaskUiUtil.openEditor(editorInput, BugzillaUiPlugin.NEW_BUG_EDITOR_ID, page);
 
 		assertTrue(page.getActiveEditor() instanceof AbstractRepositoryTaskEditor);
+
 		AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor) page.getActiveEditor();
 
 		String desc = "description";
@@ -52,8 +54,9 @@ public class TaskEditorTest extends TestCase {
 		// ensure we have access without exceptions
 		editor.setDescriptionText(desc);
 		editor.setSummaryText(summary);
-
+		editor.doSave(new NullProgressMonitor());
 		editor.changeDirtyStatus(false);
 		editor.close();
+//		Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true);
 	}
 }
