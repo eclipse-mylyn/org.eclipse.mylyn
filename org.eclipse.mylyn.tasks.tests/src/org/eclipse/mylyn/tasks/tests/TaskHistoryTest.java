@@ -50,7 +50,8 @@ public class TaskHistoryTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-
+		assertNull(manager.getTaskList().getActiveTask());
+		
 		try {
 			TasksUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(
 					"org.eclipse.mylar.tasks.ui.views.TaskListView");

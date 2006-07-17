@@ -17,7 +17,7 @@ import junit.framework.TestSuite;
 /**
  * @author Mik Kersten
  */
-public class AllTaskListTests {
+public class AllTasksTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tasklist.tests");
@@ -39,7 +39,6 @@ public class AllTaskListTests {
 		suite.addTestSuite(TaskListManagerTest.class);
 		suite.addTestSuite(TaskListUiTest.class);
 		suite.addTestSuite(TaskListDnDTest.class);
-		suite.addTestSuite(TaskHistoryTest.class);
 		suite.addTestSuite(TaskDataExportTest.class);
 		suite.addTestSuite(TaskDataImportTest.class);
 		suite.addTestSuite(BackgroundSaveTest.class);
@@ -49,6 +48,7 @@ public class AllTaskListTests {
 		suite.addTestSuite(RepositorySettingsPageTest.class);
 		// suite.addTestSuite(RetrieveTitleFromUrlTest.class);
 		suite.addTestSuite(TaskEditorTest.class);
+		suite.addTestSuite(TaskHistoryTest.class);
 		// $JUnit-END$
 		return suite;
 	}
