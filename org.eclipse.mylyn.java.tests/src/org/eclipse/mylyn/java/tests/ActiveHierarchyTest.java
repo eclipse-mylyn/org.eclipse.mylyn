@@ -20,7 +20,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.core.tests.UiTestUtil;
+import org.eclipse.mylar.core.core.tests.UiTestUtil;
 import org.eclipse.mylar.internal.java.ui.views.ActiveHierarchyView;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;

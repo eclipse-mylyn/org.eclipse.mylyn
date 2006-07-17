@@ -20,16 +20,16 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
-import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.core.tests.support.search.ISearchPluginTest;
-import org.eclipse.mylar.core.tests.support.search.TestActiveSearchListener;
+import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.core.core.tests.support.search.ISearchPluginTest;
+import org.eclipse.mylar.core.core.tests.support.search.TestActiveSearchListener;
 import org.eclipse.mylar.internal.context.core.CompositeContext;
 import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
 import org.eclipse.mylar.internal.context.core.MylarContext;
+import org.eclipse.mylar.internal.ide.xml.pde.PdeStructureBridge;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
 import org.eclipse.mylar.internal.java.search.JavaReferencesProvider;
-import org.eclipse.mylar.internal.xml.pde.PdeStructureBridge;
 
 /**
  * @author Shawn Minto

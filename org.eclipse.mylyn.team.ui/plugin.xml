@@ -3,26 +3,21 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension-point id="providers" name="Mylar Team Providers" schema="schema/providers.exsd"/>
-   <extension
-         point="org.eclipse.mylar.context.core.bridges">
-      <structureBridge 
-      	class="org.eclipse.mylar.internal.ide.ResourceStructureBridge"/> 
-   </extension>
     
    <extension
          point="org.eclipse.mylar.team.providers">
-      <repository class="org.eclipse.mylar.internal.team.cvs.CVSRepositoryProvider"/>
+      <repository class="org.eclipse.mylar.internal.team.ccvs.CvsRepositoryProvider"/>
       <repository class="org.eclipse.mylar.internal.team.subclipse.SubclipseTeamRepositoryProvider"/>
    </extension>
     
    <extension
          point="org.eclipse.ui.decorators">
       <decorator
-            class="org.eclipse.mylar.internal.team.ui.MylarChangeSetDecorator"
+            class="org.eclipse.mylar.internal.team.ui.ContextChangeSetDecorator"
             id="org.eclipse.mylar.team.changeset.decorator"
             label="Mylar Change Set Decorator"
             lightweight="true"
-            objectClass="org.eclipse.mylar.internal.team.MylarActiveChangeSet"
+            objectClass="org.eclipse.mylar.internal.team.ContextChangeSet"
             state="true">
       </decorator>
     </extension>
@@ -133,5 +128,15 @@
          category="org.eclipse.mylar.ui.preferences">
       </page>
    </extension>
+   
+   	<extension point="org.eclipse.ui.navigator.viewer">
+	   <viewerActionBinding
+	      viewerId="org.eclipse.team.cvs.ui.workspaceSynchronization">
+	        <includes>
+	           <actionExtension
+			       pattern="org.eclipse.mylar.ide.ui.actions.TaskResourceMappingActionProvider"/>
+	        </includes>
+	   </viewerActionBinding>
+	</extension>
 	
 </plugin>

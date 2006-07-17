@@ -2,30 +2,23 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Resources Plugin
 Bundle-SymbolicName: org.eclipse.mylar.resources;singleton:=true
-Bundle-Version: 0.6.0.v20060715-1400
-Bundle-Activator: org.eclipse.mylar.internal.xml.MylarXmlPlugin
+Bundle-Version: 0.6.0.v20060714-1830
+Bundle-Activator: org.eclipse.mylar.resources.MylarResourcesPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.jface.text,
  org.eclipse.ui.ide,
- org.eclipse.search,
- org.eclipse.ant.ui,
- org.eclipse.pde.ui,
- org.eclipse.ui.forms,
- org.eclipse.ui.workbench.texteditor,
- org.eclipse.ui.views,
- org.eclipse.pde.core,
  org.eclipse.mylar.context.core,
  org.eclipse.mylar.context.ui,
- org.eclipse.mylar.ide,
- org.eclipse.ui.editors,
- org.eclipse.jdt.core,
- org.eclipse.mylar.monitor
+ org.eclipse.mylar.monitor,
+ org.eclipse.mylar.tasks.core,
+ org.eclipse.mylar.tasks.ui
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
-Export-Package: org.eclipse.mylar.internal.xml,
- org.eclipse.mylar.internal.xml.ant,
- org.eclipse.mylar.internal.xml.pde
+Export-Package: org.eclipse.mylar.internal.resources,
+ org.eclipse.mylar.internal.resources.ui,
+ org.eclipse.mylar.internal.resources.ui.preferences,
+ org.eclipse.mylar.resources
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

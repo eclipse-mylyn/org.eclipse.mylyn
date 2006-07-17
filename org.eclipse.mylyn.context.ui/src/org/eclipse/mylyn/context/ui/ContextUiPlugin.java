@@ -31,18 +31,19 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarRelation;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.ui.AbstractContextLabelProvider;
+import org.eclipse.mylar.internal.context.ui.ActiveSearchViewTracker;
 import org.eclipse.mylar.internal.context.ui.ColorMap;
 import org.eclipse.mylar.internal.context.ui.ContentOutlineManager;
+import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylar.internal.context.ui.Highlighter;
 import org.eclipse.mylar.internal.context.ui.HighlighterList;
 import org.eclipse.mylar.internal.context.ui.MylarPerspectiveManager;
-import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylar.internal.context.ui.MylarViewerManager;
 import org.eclipse.mylar.internal.context.ui.MylarWorkingSetManager;
 import org.eclipse.mylar.internal.tasks.ui.ITaskHighlighter;
@@ -53,6 +54,9 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -87,6 +91,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	private ContentOutlineManager contentOutlineManager = new ContentOutlineManager();
 	
 	private List<MylarWorkingSetManager> workingSetUpdaters = null;
+	
+	private ActiveSearchViewTracker activeSearchViewTracker = new ActiveSearchViewTracker();
 	
 	private Map<IMylarUiBridge, ImageDescriptor> activeSearchIcons = new HashMap<IMylarUiBridge, ImageDescriptor>();
 
@@ -187,23 +193,36 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		
 		initializeDefaultPreferences(getPreferenceStore());
 		initializeHighlighters();
 		initializeActions();
 		
 		UiExtensionPointReader.initExtensions();
+
+		viewerManager = new MylarViewerManager();
+		ContextCorePlugin.getContextManager().addListener(viewerManager);
+		MylarMonitorPlugin.getDefault().addWindowPartListener(contentOutlineManager);
 		
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+		final IWorkbench workbench = PlatformUI.getWorkbench();
+		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
-					viewerManager = new MylarViewerManager();
-					ContextCorePlugin.getContextManager().addListener(viewerManager);
-					TasksUiPlugin.getTaskListManager().addActivityListener(perspectiveManager);
-
-					MylarMonitorPlugin.getDefault().addWindowPartListener(contentOutlineManager);
+					// NOTE: task list must have finished initializing
 					TasksUiPlugin.getDefault().setHighlighter(DEFAULT_HIGHLIGHTER);
+					TasksUiPlugin.getTaskListManager().addActivityListener(perspectiveManager);
+				
+					workbench.addWindowListener(activeSearchViewTracker);
+					IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
+					for (int i = 0; i < windows.length; i++) {
+						windows[i].addPageListener(activeSearchViewTracker);
+						IWorkbenchPage[] pages = windows[i].getPages();
+						for (int j = 0; j < pages.length; j++) {
+							pages[j].addPartListener(activeSearchViewTracker);
+						}
+					}
 				} catch (Exception e) {
-					MylarStatusHandler.fail(e, "Mylar UI initialization failed", true);
+					MylarStatusHandler.fail(e, "Context UI initialization failed", true);
 				}
 			}
 		});
@@ -218,7 +237,20 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			super.stop(context);
 			ContextCorePlugin.getContextManager().removeListener(viewerManager);
 			MylarMonitorPlugin.getDefault().removeWindowPartListener(contentOutlineManager);
-//			ContextCorePlugin.getDefault().removeWindowPageListener(contentOutlineManager);
+			
+			IWorkbench workbench = PlatformUI.getWorkbench();
+			if (workbench != null) {
+				workbench.removeWindowListener(activeSearchViewTracker);
+				IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
+				for (int i = 0; i < windows.length; i++) {
+					IWorkbenchPage[] pages = windows[i].getPages();
+					windows[i].removePageListener(activeSearchViewTracker);
+					for (int j = 0; j < pages.length; j++) {
+						pages[j].removePartListener(activeSearchViewTracker);
+					}
+				}
+			}
+			
 			viewerManager.dispose();
 			colorMap.dispose();
 			highlighters.dispose();

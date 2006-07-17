@@ -7,7 +7,7 @@
     <extension
          point="org.eclipse.mylar.context.core.bridges">
       <structureBridge 
-      	class="org.eclipse.mylar.internal.context.ui.TaskStructureBridge"/> 
+      		class="org.eclipse.mylar.internal.context.ui.TaskStructureBridge"/> 
    </extension>
    <extension
          point="org.eclipse.mylar.context.ui.bridges">
@@ -15,6 +15,17 @@
             class="org.eclipse.mylar.internal.context.ui.TaskUiBridge"
             contentType="meta/task"/>
    </extension>   
+ 
+    <extension point="org.eclipse.ui.views"> 
+   	  <view
+          allowMultiple="false"
+          category="org.eclipse.mylar"
+          class="org.eclipse.mylar.internal.context.ui.views.ActiveSearchView"
+          icon="icons/eview16/active-search.gif"
+          id="org.eclipse.mylar.ui.views.active.search"
+          name="Active Search (Experimental)"/>
+   </extension>
+ 
  
   	<extension point = "org.eclipse.ui.popupMenus">
      <objectContribution

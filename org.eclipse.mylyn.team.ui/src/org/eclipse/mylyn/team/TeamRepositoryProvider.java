@@ -14,7 +14,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 
 /**
- * Integrates an Eclipt Team repository with Mylar.
+ * Integrates an Eclipe Team repository with Mylar.
  */
 public abstract class TeamRepositoryProvider {
 

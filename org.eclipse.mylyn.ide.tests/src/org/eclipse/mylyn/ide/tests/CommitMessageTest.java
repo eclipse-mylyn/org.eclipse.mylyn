@@ -13,10 +13,10 @@ package org.eclipse.mylar.ide.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.ide.MylarIdePlugin;
-import org.eclipse.mylar.internal.ide.team.MylarActiveChangeSet;
+import org.eclipse.mylar.internal.team.ContextChangeSet;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.Task;
+import org.eclipse.mylar.team.MylarTeamPlugin;
 
 /**
  * @author Mik Kersten
@@ -30,9 +30,9 @@ public class CommitMessageTest extends TestCase {
 				return false;
 			}
 		};
-		String comment = MylarActiveChangeSet.generateComment(task, MylarIdePlugin.DEFAULT_PREFIX_COMPLETED,
-				MylarIdePlugin.DEFAULT_PREFIX_PROGRESS);
-		String bugId = MylarActiveChangeSet.getTaskIdFromCommentOrLabel(comment);
+		String comment = ContextChangeSet.generateComment(task, MylarTeamPlugin.DEFAULT_PREFIX_COMPLETED,
+				MylarTeamPlugin.DEFAULT_PREFIX_PROGRESS);
+		String bugId = ContextChangeSet.getTaskIdFromCommentOrLabel(comment);
 		assertEquals("111", bugId);
 	}
 
@@ -40,23 +40,23 @@ public class CommitMessageTest extends TestCase {
 	public void testLocalTaskCommentParsing() {
 		ITask task = new Task("handle", "foo", false);
 		task.setUrl("http://eclipse.org/mylar");
-		String comment = MylarActiveChangeSet.generateComment(task, MylarIdePlugin.DEFAULT_PREFIX_COMPLETED,
-				MylarIdePlugin.DEFAULT_PREFIX_PROGRESS);
+		String comment = ContextChangeSet.generateComment(task, MylarTeamPlugin.DEFAULT_PREFIX_COMPLETED,
+				MylarTeamPlugin.DEFAULT_PREFIX_PROGRESS);
 //		String bugId = MylarContextChangeSet.getTaskIdFromCommentOrLabel(comment);
 //		assertEquals(null, bugId);
-		String url = MylarActiveChangeSet.getUrlFromComment(comment);
+		String url = ContextChangeSet.getUrlFromComment(comment);
 		assertEquals("http://eclipse.org/mylar", url);
 
 		task.setUrl("http://eclipse.org/mylar bla \n bla");
-		String comment2 = MylarActiveChangeSet.generateComment(task, MylarIdePlugin.DEFAULT_PREFIX_COMPLETED,
-				MylarIdePlugin.DEFAULT_PREFIX_PROGRESS);
-		String url2 = MylarActiveChangeSet.getUrlFromComment(comment2);
+		String comment2 = ContextChangeSet.generateComment(task, MylarTeamPlugin.DEFAULT_PREFIX_COMPLETED,
+				MylarTeamPlugin.DEFAULT_PREFIX_PROGRESS);
+		String url2 = ContextChangeSet.getUrlFromComment(comment2);
 		assertEquals("http://eclipse.org/mylar", url2);
 	}
 	
 	public void testChangeSetLabelParsing() {
 		String label = "1: foo";
-		String id = MylarActiveChangeSet.getTaskIdFromCommentOrLabel(label);
+		String id = ContextChangeSet.getTaskIdFromCommentOrLabel(label);
 		assertEquals("1", id);
 	}
 

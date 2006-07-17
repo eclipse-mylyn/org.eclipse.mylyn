@@ -19,7 +19,7 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.core.tests.support.search.ISearchPluginTest;
+import org.eclipse.mylar.core.core.tests.support.search.ISearchPluginTest;
 import org.eclipse.mylar.internal.context.core.IActiveSearchListener;
 import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
 

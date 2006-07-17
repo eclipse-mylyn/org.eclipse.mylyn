@@ -20,9 +20,9 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.internal.ide.MylarIdePlugin;
+import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.resources.MylarResourcesPlugin;
 
 /**
  * @author Mik Kersten
@@ -32,14 +32,14 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		MylarIdePlugin.getDefault().setResourceMonitoringEnabled(true);
-		MylarIdePlugin.getDefault().getInterestUpdater().setSyncExec(true);
+		MylarResourcesPlugin.getDefault().setResourceMonitoringEnabled(true);
+		MylarResourcesPlugin.getDefault().getInterestUpdater().setSyncExec(true);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		MylarIdePlugin.getDefault().getInterestUpdater().setSyncExec(false);
+		MylarResourcesPlugin.getDefault().getInterestUpdater().setSyncExec(false);
 	}
 
 	public void testResourceSelect() throws CoreException {
@@ -58,10 +58,10 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 	}
 
 	public void testFileNotAddedIfExcluded() throws CoreException {
-		Set<String> previousExcludions = MylarIdePlugin.getDefault().getExcludedResourcePatterns();
+		Set<String> previousExcludions = MylarResourcesPlugin.getDefault().getExcludedResourcePatterns();
 		Set<String> exclude = new HashSet<String>();
 		exclude.add("boring");
-		MylarIdePlugin.getDefault().setExcludedResourcePatterns(exclude);
+		MylarResourcesPlugin.getDefault().setExcludedResourcePatterns(exclude);
 		
 		IFile file = project.getProject().getFile("boring");
 		file.create(null, true, null);
@@ -69,14 +69,14 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 
 		IMylarElement element = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
 		assertFalse(element.getInterest().isInteresting());
-		MylarIdePlugin.getDefault().setExcludedResourcePatterns(previousExcludions);
+		MylarResourcesPlugin.getDefault().setExcludedResourcePatterns(previousExcludions);
 	}
 	
 	public void testPatternNotAddedIfExcluded() throws CoreException {
-		Set<String> previousExcludions = MylarIdePlugin.getDefault().getExcludedResourcePatterns();
+		Set<String> previousExcludions = MylarResourcesPlugin.getDefault().getExcludedResourcePatterns();
 		Set<String> exclude = new HashSet<String>();
 		exclude.add("b*.txt");
-		MylarIdePlugin.getDefault().setExcludedResourcePatterns(exclude);
+		MylarResourcesPlugin.getDefault().setExcludedResourcePatterns(exclude);
 		
 		IFile file = project.getProject().getFile("boring.txt");
 		file.create(null, true, null);
@@ -84,14 +84,14 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 
 		IMylarElement element = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
 		assertFalse(element.getInterest().isInteresting());
-		MylarIdePlugin.getDefault().setExcludedResourcePatterns(previousExcludions);
+		MylarResourcesPlugin.getDefault().setExcludedResourcePatterns(previousExcludions);
 	}
 
 	public void testPatternNotAddedMatching() throws CoreException {
-		Set<String> previousExcludions = MylarIdePlugin.getDefault().getExcludedResourcePatterns();
+		Set<String> previousExcludions = MylarResourcesPlugin.getDefault().getExcludedResourcePatterns();
 		Set<String> exclude = new HashSet<String>();
 		exclude.add(".*");
-		MylarIdePlugin.getDefault().setExcludedResourcePatterns(exclude);
+		MylarResourcesPlugin.getDefault().setExcludedResourcePatterns(exclude);
 		
 		String pattern = ".*";
 		String segment = "boring";
@@ -112,7 +112,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		element = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
 		assertTrue(element.getInterest().isInteresting());
 		
-		MylarIdePlugin.getDefault().setExcludedResourcePatterns(previousExcludions);
+		MylarResourcesPlugin.getDefault().setExcludedResourcePatterns(previousExcludions);
 	}
 	
 	public void testFileAdded() throws CoreException {

@@ -18,13 +18,14 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
-import org.eclipse.mylar.internal.ide.team.MylarChangeSetManager;
-import org.eclipse.mylar.internal.ide.team.MylarActiveChangeSet;
+import org.eclipse.mylar.internal.team.ContextChangeSet;
+import org.eclipse.mylar.internal.team.ContextChangeSetManager;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.team.MylarTeamPlugin;
 import org.eclipse.team.internal.ccvs.ui.CVSUIPlugin;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
@@ -34,7 +35,7 @@ import org.eclipse.team.internal.core.subscribers.ChangeSet;
  */
 public class ChangeSetManagerTest extends AbstractResourceContextTest {
 
-	private MylarChangeSetManager changeSetManager;
+	private ContextChangeSetManager changeSetManager;
 
 	private ActiveChangeSetManager collector;
 
@@ -42,7 +43,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		assertNotNull(MylarIdePlugin.getDefault());
-		changeSetManager = MylarIdePlugin.getDefault().getChangeSetManager();
+		changeSetManager = MylarTeamPlugin.getDefault().getChangeSetManager();
 		collector = CVSUIPlugin.getPlugin().getChangeSetManager();
 		assertNotNull(changeSetManager);
 		assertEquals(0, TasksUiPlugin.getTaskListManager().getTaskList().getActiveTasks().size());
@@ -63,7 +64,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		changeSetManager.clearActiveChangeSets();
 		assertEquals(0, changeSetManager.getActiveChangeSets().size());
 
-		MylarIdePlugin.getDefault().getChangeSetManager().disable();
+		MylarTeamPlugin.getDefault().getChangeSetManager().disable();
 
 		Task task1 = new Task("task1", "label", true);
 		TasksUiPlugin.getTaskListManager().activateTask(task1);
@@ -71,7 +72,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		assertEquals(0, collector.getSets().length);
 
 		TasksUiPlugin.getTaskListManager().deactivateTask(task1);
-		MylarIdePlugin.getDefault().getChangeSetManager().enable();
+		MylarTeamPlugin.getDefault().getChangeSetManager().enable();
 	}
 
 	public void testSingleContextActivation() {
@@ -111,9 +112,9 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 				structureBridge.getHandleIdentifier(file));
 		assertTrue(fileElement.getInterest().isInteresting());
 
-		List<MylarActiveChangeSet> changeSets = changeSetManager.getActiveChangeSets();
+		List<ContextChangeSet> changeSets = changeSetManager.getActiveChangeSets();
 		assertEquals(1, changeSets.size());
-		MylarActiveChangeSet set = changeSets.get(0);
+		ContextChangeSet set = changeSets.get(0);
 		IResource[] resources = set.getResources();
 		// can have .project file in there
 		assertTrue("length: " + resources.length, resources.length <= 2); 

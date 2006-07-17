@@ -13,14 +13,14 @@ package org.eclipse.mylar.ide.tests;
 
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.core.tests.AbstractContextTest;
+import org.eclipse.mylar.core.core.tests.AbstractContextTest;
 import org.eclipse.mylar.internal.context.core.MylarContext;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.context.core.ScalingFactors;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
-import org.eclipse.mylar.internal.ide.ResourceInteractionMonitor;
-import org.eclipse.mylar.internal.ide.ResourceStructureBridge;
 import org.eclipse.mylar.internal.ide.ui.IdeUiUtil;
+import org.eclipse.mylar.internal.resources.ResourceInteractionMonitor;
+import org.eclipse.mylar.internal.resources.ResourceStructureBridge;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 
 /**

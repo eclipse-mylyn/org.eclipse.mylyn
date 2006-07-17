@@ -22,7 +22,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.context.ui.IMylarUiBridge;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.core.tests.UiTestUtil;
+import org.eclipse.mylar.core.core.tests.UiTestUtil;
 import org.eclipse.mylar.internal.context.ui.actions.ApplyMylarToOutlineAction;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
 import org.eclipse.ui.IEditorPart;

@@ -1,6 +1,6 @@
 package org.eclipse.mylar.team;
 
-import org.eclipse.mylar.internal.team.MylarChangeSetManager;
+import org.eclipse.mylar.internal.team.ContextChangeSetManager;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -13,7 +13,7 @@ public class MylarTeamPlugin extends AbstractUIPlugin {
 
 	private static MylarTeamPlugin plugin;
 
-	private MylarChangeSetManager changeSetManager;
+	private ContextChangeSetManager changeSetManager;
 	
 	public static final String CHANGE_SET_MANAGE = "org.eclipse.mylar.team.changesets.manage";
 
@@ -32,7 +32,8 @@ public class MylarTeamPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		initPreferenceDefaults();
-		changeSetManager = new MylarChangeSetManager();
+		changeSetManager = new ContextChangeSetManager();
+		
 		if (getPreferenceStore().getBoolean(CHANGE_SET_MANAGE)) {
 			changeSetManager.enable();
 		}
@@ -54,7 +55,7 @@ public class MylarTeamPlugin extends AbstractUIPlugin {
 		return plugin;
 	}
 	
-	public MylarChangeSetManager getChangeSetManager() {
+	public ContextChangeSetManager getChangeSetManager() {
 		return changeSetManager;
 	}
 }

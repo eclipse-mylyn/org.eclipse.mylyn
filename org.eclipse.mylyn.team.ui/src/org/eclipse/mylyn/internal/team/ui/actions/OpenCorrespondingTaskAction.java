@@ -18,7 +18,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
-import org.eclipse.mylar.internal.team.MylarActiveChangeSet;
+import org.eclipse.mylar.internal.team.ContextChangeSet;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
@@ -77,8 +77,8 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 			element = findParent((ISynchronizeModelElement) element);
 		}
 		
-		if (element instanceof MylarActiveChangeSet) {
-			ITask task = ((MylarActiveChangeSet)element).getTask();
+		if (element instanceof ContextChangeSet) {
+			ITask task = ((ContextChangeSet)element).getTask();
 			if (task != null) {
 				TaskUiUtil.openEditor(task, false);
 				resolved = true;
@@ -88,8 +88,8 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 				comment = ((CVSCheckedInChangeSet)element).getComment();
 			} else if (element instanceof ChangeSetDiffNode) {
 				ChangeSetDiffNode diffNode = (ChangeSetDiffNode) element;
-				if (diffNode.getSet() instanceof MylarActiveChangeSet) {
-					ITask task = ((MylarActiveChangeSet) diffNode.getSet()).getTask();
+				if (diffNode.getSet() instanceof ContextChangeSet) {
+					ITask task = ((ContextChangeSet) diffNode.getSet()).getTask();
 					TaskUiUtil.openEditor(task, false);
 					return;
 				} else {
@@ -101,7 +101,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 				comment = ((IFileRevision) element).getComment();
 			} 
 			if (comment != null) {
-				String fullUrl = MylarActiveChangeSet.getUrlFromComment(comment);
+				String fullUrl = ContextChangeSet.getUrlFromComment(comment);
 				String repositoryUrl = null;
 				if (fullUrl != null) {
 					AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
@@ -117,7 +117,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 						repositoryUrl = TasksUiPlugin.getRepositoryManager().getAllRepositories().get(0).getUrl();
 					}
 				}
-				String id = MylarActiveChangeSet.getTaskIdFromCommentOrLabel(comment);
+				String id = ContextChangeSet.getTaskIdFromCommentOrLabel(comment);
 				resolved = TaskUiUtil.openRepositoryTask(repositoryUrl, id, fullUrl);
 	
 				if (!resolved) {

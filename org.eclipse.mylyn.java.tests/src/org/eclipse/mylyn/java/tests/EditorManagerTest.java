@@ -21,19 +21,19 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
 import org.eclipse.mylar.context.core.InteractionEvent;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.ui.IMylarUiBridge;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
+import org.eclipse.mylar.context.ui.IMylarUiBridge;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
-import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.internal.java.ActiveFoldingEditorTracker;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.resources.MylarResourcesPlugin;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.ui.IViewPart;
@@ -64,7 +64,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		MylarIdePlugin.getDefault().getEditorManager().closeAllEditors();
+		MylarResourcesPlugin.getDefault().getEditorManager().closeAllEditors();
 	}
 
 	public void testInterestCapturedForResourceOnFocus() throws CoreException, InvocationTargetException,
@@ -113,7 +113,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 
 	public void testWaitingListenersDoNotLeakOnEditorActivation() throws JavaModelException {
 		manager.deleteContext(contextId);
-		MylarIdePlugin.getDefault().getEditorManager().closeAllEditors();
+		MylarResourcesPlugin.getDefault().getEditorManager().closeAllEditors();
 
 		int initialNumListeners = manager.getListeners().size();
 		manager.activateContext(contextId);
@@ -139,7 +139,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 	}
 
 	public void testEditorTrackerListenerRegistration() throws JavaModelException {
-		MylarIdePlugin.getDefault().getEditorManager().closeAllEditors();
+		MylarResourcesPlugin.getDefault().getEditorManager().closeAllEditors();
 
 		ActiveFoldingEditorTracker tracker = MylarJavaPlugin.getDefault().getEditorTracker();
 		assertTrue(tracker.getEditorListenerMap().isEmpty());
@@ -155,7 +155,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 		assertEquals(numListeners + 1, ContextCorePlugin.getContextManager().getListeners().size());
 		assertEquals(1, page.getEditorReferences().length);
 		assertEquals(1, tracker.getEditorListenerMap().size());
-		MylarIdePlugin.getDefault().getEditorManager().closeAllEditors();
+		MylarResourcesPlugin.getDefault().getEditorManager().closeAllEditors();
 
 		assertEquals(numListeners, ContextCorePlugin.getContextManager().getListeners().size());
 		assertEquals(0, page.getEditorReferences().length);
@@ -175,7 +175,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 
 	@SuppressWarnings("deprecation")
 	public void testAutoCloseWithDecay() throws JavaModelException, InvocationTargetException, InterruptedException {
-		MylarIdePlugin.getDefault().getEditorManager().closeAllEditors();
+		MylarResourcesPlugin.getDefault().getEditorManager().closeAllEditors();
 		assertEquals(0, page.getEditors().length);
 		IMylarUiBridge bridge = ContextUiPlugin.getDefault().getUiBridge(JavaStructureBridge.CONTENT_TYPE);
 		IMethod m1 = type1.createMethod("void m111() { }", null, true, null);
@@ -204,7 +204,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 
 	@SuppressWarnings("deprecation")
 	public void testAutoClose() throws JavaModelException, InvocationTargetException, InterruptedException {
-		MylarIdePlugin.getDefault().getEditorManager().closeAllEditors();
+		MylarResourcesPlugin.getDefault().getEditorManager().closeAllEditors();
 		assertEquals(0, page.getEditors().length);
 		IMylarUiBridge bridge = ContextUiPlugin.getDefault().getUiBridge(JavaStructureBridge.CONTENT_TYPE);
 		IMethod m1 = type1.createMethod("void m111() { }", null, true, null);
@@ -220,7 +220,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 	@SuppressWarnings("deprecation")
 	public void testAutoOpen() throws JavaModelException, InvocationTargetException, InterruptedException {
 		manager.deleteContext(contextId);
-		MylarIdePlugin.getDefault().getEditorManager().closeAllEditors();
+		MylarResourcesPlugin.getDefault().getEditorManager().closeAllEditors();
 		assertEquals(0, page.getEditors().length);
 
 		manager.activateContext(contextId);

@@ -16,12 +16,12 @@ import junit.framework.TestSuite;
 
 import org.eclipse.mylar.ide.tests.ChangeSetManagerTest;
 import org.eclipse.mylar.ide.tests.CommitMessageTest;
-import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.java.tests.search.JUnitReferencesSearchPluginTest;
 import org.eclipse.mylar.java.tests.search.JavaImplementorsSearchPluginTest;
 import org.eclipse.mylar.java.tests.search.JavaReadAccessSearchPluginTest;
 import org.eclipse.mylar.java.tests.search.JavaReferencesSearchTest;
 import org.eclipse.mylar.java.tests.search.JavaWriteAccessSearchPluginTest;
+import org.eclipse.mylar.resources.MylarResourcesPlugin;
 
 /**
  * @author Mik Kersten
@@ -54,7 +54,7 @@ public class AllJavaTests {
 		suite.addTestSuite(JUnitReferencesSearchPluginTest.class);
 		// $JUnit-END$
 
-		MylarIdePlugin.getDefault().setResourceMonitoringEnabled(true);
+		MylarResourcesPlugin.getDefault().setResourceMonitoringEnabled(true);
 		return suite;
 	}
 }

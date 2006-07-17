@@ -20,15 +20,15 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.core.tests.AbstractContextTest;
+import org.eclipse.mylar.core.core.tests.AbstractContextTest;
 import org.eclipse.mylar.ide.tests.ResourceTestUtil;
 import org.eclipse.mylar.internal.context.core.MylarContext;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.context.core.ScalingFactors;
-import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.internal.java.JavaEditingMonitor;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
+import org.eclipse.mylar.resources.MylarResourcesPlugin;
 
 /**
  * @author Mik Kersten
@@ -67,7 +67,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 				JavaStructureBridge.class.getCanonicalName()) != -1);
 
 		ContextUiPlugin.getDefault().getViewerManager().setSyncRefreshMode(true);
-		MylarIdePlugin.getDefault().setResourceMonitoringEnabled(false);
+		MylarResourcesPlugin.getDefault().setResourceMonitoringEnabled(false);
 	}
 
 	@Override
