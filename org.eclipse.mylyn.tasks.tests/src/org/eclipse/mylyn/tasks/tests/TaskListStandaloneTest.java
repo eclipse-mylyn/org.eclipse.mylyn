@@ -54,7 +54,7 @@ public class TaskListStandaloneTest extends TestCase {
 
 		file = new File("foo" + TasksUiPlugin.FILE_EXTENSION);
 		file.deleteOnExit();
-		manager = new TaskListManager(writer, file, 1);
+		manager = new TaskListManager(writer, file);
 		manager.resetTaskList();
 		assertEquals("should be empty: " + manager.getTaskList().getRootTasks(), 0, manager.getTaskList()
 				.getRootTasks().size());

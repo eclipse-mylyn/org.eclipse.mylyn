@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.core.util;
+package org.eclipse.mylar.internal.tasks.core;
 
 import java.io.File;
 import java.io.FileInputStream;

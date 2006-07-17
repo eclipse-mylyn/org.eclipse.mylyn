@@ -43,10 +43,10 @@ import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.tests.mockconnector.MockQueryHit;
-import org.eclipse.mylar.tasks.tests.mockconnector.MockRepositoryConnector;
-import org.eclipse.mylar.tasks.tests.mockconnector.MockRepositoryQuery;
-import org.eclipse.mylar.tasks.tests.mockconnector.MockRepositoryTask;
+import org.eclipse.mylar.tasks.tests.connector.MockQueryHit;
+import org.eclipse.mylar.tasks.tests.connector.MockRepositoryConnector;
+import org.eclipse.mylar.tasks.tests.connector.MockRepositoryQuery;
+import org.eclipse.mylar.tasks.tests.connector.MockRepositoryTask;
 import org.eclipse.mylar.tasks.ui.TaskListManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 

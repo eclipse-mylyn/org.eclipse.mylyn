@@ -21,9 +21,9 @@ import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
-import org.eclipse.mylar.tasks.tests.mockconnector.MockAttributeFactory;
-import org.eclipse.mylar.tasks.tests.mockconnector.MockRepositoryConnector;
-import org.eclipse.mylar.tasks.tests.mockconnector.MockRepositoryTask;
+import org.eclipse.mylar.tasks.tests.connector.MockAttributeFactory;
+import org.eclipse.mylar.tasks.tests.connector.MockRepositoryConnector;
+import org.eclipse.mylar.tasks.tests.connector.MockRepositoryTask;
 
 /**
  * @author Rob Elves

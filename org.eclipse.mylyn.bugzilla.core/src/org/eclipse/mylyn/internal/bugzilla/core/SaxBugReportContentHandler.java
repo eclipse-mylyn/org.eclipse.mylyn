@@ -14,12 +14,12 @@ package org.eclipse.mylar.internal.bugzilla.core;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer;
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
-import org.eclipse.mylar.tasks.core.util.HtmlStreamTokenizer;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;

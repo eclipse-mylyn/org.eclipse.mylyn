@@ -33,12 +33,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESOLUTION;
+import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer;
+import org.eclipse.mylar.internal.tasks.core.HtmlTag;
+import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer.Token;
 import org.eclipse.mylar.tasks.core.RepositoryOperation;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
-import org.eclipse.mylar.tasks.core.util.HtmlStreamTokenizer;
-import org.eclipse.mylar.tasks.core.util.HtmlTag;
-import org.eclipse.mylar.tasks.core.util.HtmlStreamTokenizer.Token;
 
 /**
  * @author Mik Kersten

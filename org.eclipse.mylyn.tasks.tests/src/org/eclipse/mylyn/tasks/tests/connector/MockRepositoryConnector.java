@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.tests.mockconnector;
+package org.eclipse.mylar.tasks.tests.connector;
 
 import java.util.List;
 import java.util.Set;

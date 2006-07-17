@@ -9,32 +9,23 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.tests.mockconnector;
+package org.eclipse.mylar.tasks.tests.connector;
 
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.TaskList;
 
 /**
  * @author Mik Kersten
  */
-public class MockRepositoryTask extends AbstractRepositoryTask {
-	
-	public MockRepositoryTask(String handle) {
-		super(handle, "label for " + handle, true);
+public class MockRepositoryQuery extends AbstractRepositoryQuery {
+
+	public MockRepositoryQuery(String description, TaskList taskList) {
+		super(description, taskList);
 	}
 
 	@Override
 	public String getRepositoryKind() {
 		return "mock";
-	}
-
-	@Override
-	public boolean isDownloaded() {
-		return false;
-	}
-
-	@Override
-	public boolean isPersistentInWorkspace() {
-		return false;
 	}
 
 }
