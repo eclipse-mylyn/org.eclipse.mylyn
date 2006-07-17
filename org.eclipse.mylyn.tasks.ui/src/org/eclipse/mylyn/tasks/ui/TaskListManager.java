@@ -194,14 +194,13 @@ public class TaskListManager implements IPropertyChangeListener {
 	public TaskListManager(TaskListWriter taskListWriter, File file) {
 		this.taskListFile = file;
 		this.taskListWriter = taskListWriter;
-	}
-
-	public void init() {
+		
 		timer = new Timer();
 		timer.schedule(new RolloverCheck(), ROLLOVER_DELAY, ROLLOVER_DELAY);
-
-		// NOTE: this call can't be in the constructor due to startup concurrency
-		ContextCorePlugin.getContextManager().addActivityMetaContextListener(CONTEXT_LISTENER);
+	}
+	
+	public void init() {
+		ContextCorePlugin.getContextManager().addActivityMetaContextListener(CONTEXT_LISTENER);		
 	}
 	
 	public void dispose() {

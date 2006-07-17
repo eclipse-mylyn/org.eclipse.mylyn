@@ -18,7 +18,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Mik Kersten
  */
-public class RepositoryAwareStatusNotifier implements IStatusHandler {
+public class RepositoryAwareStatusHandler implements IStatusHandler {
 
 	protected static final String ERROR_MESSAGE = "Please report the following error by following the bugs link at:\n"
 		+ "http://eclipse.org/mylar\n\n"

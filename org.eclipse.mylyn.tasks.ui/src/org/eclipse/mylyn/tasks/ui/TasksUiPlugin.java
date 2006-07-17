@@ -346,31 +346,41 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			// Must be called after repositories read
 			readOfflineReportsFile();
 
-			taskListManager.init();
-			taskListManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
-			taskListManager.readExistingOrCreateNewList();
-			initialized = true;
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					try {
+						taskListManager.init();
+						taskListManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
+						taskListManager.readExistingOrCreateNewList();
+						initialized = true;
 
-			PlatformUI.getWorkbench().addWindowListener(WINDOW_LISTENER);
+						PlatformUI.getWorkbench().addWindowListener(WINDOW_LISTENER);
 
-			taskListNotificationManager = new TaskListNotificationManager();
-			taskListNotificationManager.addNotificationProvider(REMINDER_NOTIFICATION_PROVIDER);
-			taskListNotificationManager.addNotificationProvider(INCOMING_NOTIFICATION_PROVIDER);
-			taskListNotificationManager.startNotification(NOTIFICATION_DELAY);
-			getPreferenceStore().addPropertyChangeListener(taskListNotificationManager);
+						taskListNotificationManager = new TaskListNotificationManager();
+						taskListNotificationManager.addNotificationProvider(REMINDER_NOTIFICATION_PROVIDER);
+						taskListNotificationManager.addNotificationProvider(INCOMING_NOTIFICATION_PROVIDER);
+						taskListNotificationManager.startNotification(NOTIFICATION_DELAY);
+						getPreferenceStore().addPropertyChangeListener(taskListNotificationManager);
 
-			taskListBackupManager = new TaskListBackupManager();
-			getPreferenceStore().addPropertyChangeListener(taskListBackupManager);
+						taskListBackupManager = new TaskListBackupManager();
+						getPreferenceStore().addPropertyChangeListener(taskListBackupManager);
 
-			synchronizationManager = new TaskListSynchronizationManager(true);
-			synchronizationManager.startSynchJob();
+						synchronizationManager = new TaskListSynchronizationManager(true);
+						synchronizationManager.startSynchJob();
 
-			taskListSaveManager = new TaskListSaveManager();
-			taskListManager.getTaskList().addChangeListener(taskListSaveManager);
+						taskListSaveManager = new TaskListSaveManager();
+						taskListManager.getTaskList().addChangeListener(taskListSaveManager);
 
-			ContextCorePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
-			getPreferenceStore().addPropertyChangeListener(synchronizationManager);
-			getPreferenceStore().addPropertyChangeListener(taskListManager);
+						ContextCorePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(
+								PREFERENCE_LISTENER);
+						getPreferenceStore().addPropertyChangeListener(synchronizationManager);
+						getPreferenceStore().addPropertyChangeListener(taskListManager);
+					} catch (Exception e) {
+						MylarStatusHandler.fail(e, "Mylar Tasks UI start failed", false);
+					}
+				}
+			});
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			MylarStatusHandler.fail(e, "Mylar Task List initialization failed", false);

@@ -11,10 +11,6 @@
    	  	<contextStore class="org.eclipse.mylar.internal.tasks.ui.FileBasedContextStore"/>
     </extension>
 
-    <extension
-         point="org.eclipse.mylar.context.core.handlers">
-   	  	<contextStore class="org.eclipse.mylar.internal.tasks.ui.FileBasedContextStore"/>
-    </extension>
 
 	<extension point="org.eclipse.ui.views">
      	<category name="Mylar" id="org.eclipse.mylar"/>
@@ -450,6 +446,10 @@
       <hyperlinkDetector
             class="org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorUrlHyperlinkDetector"
             id="org.eclipse.mylar.tasklist.hyperlinkdetector.url"/>
+   </extension>
+   <extension
+         point="org.eclipse.mylar.context.core.handlers">
+      <status class="org.eclipse.mylar.internal.tasks.ui.RepositoryAwareStatusHandler"/>
    </extension>
    
    <!--
