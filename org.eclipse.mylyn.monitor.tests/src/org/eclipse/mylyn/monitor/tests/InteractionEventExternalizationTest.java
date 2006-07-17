@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.mylar.context.core.InteractionEvent;
-import org.eclipse.mylar.core.tests.AbstractContextTest;
+import org.eclipse.mylar.core.core.tests.AbstractContextTest;
 import org.eclipse.mylar.internal.monitor.usage.InteractionEventLogger;
 import org.eclipse.mylar.internal.monitor.usage.MylarMonitorPreferenceConstants;
 import org.eclipse.mylar.monitor.usage.MylarUsageMonitorPlugin;
@@ -44,7 +44,7 @@ public class InteractionEventExternalizationTest extends AbstractContextTest {
 		for (int i = 0; i < 100; i++) {
 			handle += "1";
 			InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", handle,
-					"originId", "navigatedRelation", "delta", 2f, new Date(0), new Date());
+					"originId", "navigatedRelation", "delta", 2f, new Date(), new Date());
 			events.add(event);
 			logger.interactionObserved(event);
 		}
@@ -53,7 +53,9 @@ public class InteractionEventExternalizationTest extends AbstractContextTest {
 		File infile = new File(PATH);
 		List<InteractionEvent> readEvents = logger.getHistoryFromFile(infile);
 		for (int i = 0; i < events.size(); i++) {
+			// NOTE: shouldn't use toString(), but get timezone failures
 			assertEquals(events.get(i), readEvents.get(i));
+//			assertEquals(events.get(i), readEvents.get(i));
 		}
 
 		MylarUsageMonitorPlugin.getPrefs().setValue(MylarMonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE, true);

@@ -16,9 +16,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IInteractionEventListener;
 import org.eclipse.mylar.context.core.InteractionEvent;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IPartListener;
@@ -27,7 +27,6 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -115,8 +114,8 @@ public class MylarMonitorPlugin extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			public void run() {
+//		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//			public void run() {
 				getWorkbench().addWindowListener(WINDOW_LISTENER);
 				shellLifecycleListener = new ShellLifecycleListener(ContextCorePlugin.getContextManager());		
 				
@@ -126,8 +125,8 @@ public class MylarMonitorPlugin extends AbstractUIPlugin {
 				activityListener = new ActivityListener(TIMEOUT_INACTIVITY_MILLIS);// INACTIVITY_TIMEOUT_MILLIS);
 				ContextCorePlugin.getContextManager().addListener(activityListener);
 				activityListener.startObserving();
-			}
-		});
+//			}
+//		});
 	}
 	
 	@Override
