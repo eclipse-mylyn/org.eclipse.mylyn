@@ -23,19 +23,28 @@ public class RepositoryTemplate {
 
 	public final String newTaskUrl;
 
-	public final String taskPrefix;
+	public final String taskPrefixUrl;
+
+	public final String taskQueryUrl;
+
+	public final String taskRegexp;
 
 	public final boolean anonymous;
 
 	public final String version;
 
+	public final boolean addAutomatically;
+
 	public RepositoryTemplate(String label, String repositoryUrl, String version, String newTaskUrl, String taskPrefix,
-			boolean anonymous) {
+			String taskQuery, String taskRegexp, boolean anonymous, boolean addAutomatically) {
 		this.label = label;
 		this.repositoryUrl = repositoryUrl;
 		this.newTaskUrl = newTaskUrl;
-		this.taskPrefix = taskPrefix;
+		this.taskPrefixUrl = taskPrefix;
+		this.taskQueryUrl = taskQuery;
+		this.taskRegexp = taskRegexp;
 		this.version = version;
 		this.anonymous = anonymous;
+		this.addAutomatically = addAutomatically;
 	}
 }

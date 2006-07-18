@@ -127,6 +127,15 @@
             searchResultClass="org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchResult"
             id="org.eclipse.mylar.bugzilla.BugzillaSearchResultPage"/>
    </extension>
+   <extension
+         point="org.eclipse.mylar.tasks.ui.templates">
+      <repository
+            addAutomatically="true"
+            label="Eclipse.org"
+            repositoryKind="bugzilla"
+            repositoryUrl="https://bugs.eclipse.org/bugs"           
+            version="2.20"/>
+   </extension>
 <!--   <extension
          point="org.eclipse.mylar.tasklist.editors">
       <hyperlinkListener

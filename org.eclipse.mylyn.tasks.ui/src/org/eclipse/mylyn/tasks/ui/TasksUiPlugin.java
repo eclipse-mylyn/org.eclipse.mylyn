@@ -49,7 +49,7 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskListSynchronizationManager;
 import org.eclipse.mylar.internal.tasks.ui.util.TaskListSaveManager;
 import org.eclipse.mylar.internal.tasks.ui.util.TaskListWriter;
-import org.eclipse.mylar.internal.tasks.ui.util.TasksUitExtensionReader;
+import org.eclipse.mylar.internal.tasks.ui.util.TasksUiExtensionReader;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
@@ -343,7 +343,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					try {
-						TasksUitExtensionReader.initExtensions(taskListWriter);
+						TasksUiExtensionReader.initExtensions(taskListWriter);
 						taskRepositoryManager.readRepositories();
 						// Must be called after repositories read
 						readOfflineReportsFile();

@@ -48,6 +48,7 @@ import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylar.tasks.core.RepositoryTemplate;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
@@ -80,6 +81,8 @@ public abstract class AbstractRepositoryConnector {
 	private boolean updateLocalCopy = false;
 	
 	private final MutexRule rule = new MutexRule();
+
+	protected Set<RepositoryTemplate> templates = new HashSet<RepositoryTemplate>();
 
 	/**
 	 * @return null if not supported
@@ -606,5 +609,13 @@ public abstract class AbstractRepositoryConnector {
 		public boolean contains(ISchedulingRule rule) {
 			return rule == this;
 		}
+	}
+
+	public void addTemplate(RepositoryTemplate template) {
+		this.templates.add(template);		
+	}
+	
+	public Set<RepositoryTemplate> getTemplates() {
+		return templates;
 	}
 }

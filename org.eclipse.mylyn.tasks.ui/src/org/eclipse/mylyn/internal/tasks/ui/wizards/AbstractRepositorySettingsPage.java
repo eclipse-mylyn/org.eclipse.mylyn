@@ -55,7 +55,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	protected static final String URL_PREFIX_HTTP = "http://";
 
-	private AbstractRepositoryConnector connector;
+	protected AbstractRepositoryConnector connector;
 
 	protected Combo repositoryLabelCombo;
 

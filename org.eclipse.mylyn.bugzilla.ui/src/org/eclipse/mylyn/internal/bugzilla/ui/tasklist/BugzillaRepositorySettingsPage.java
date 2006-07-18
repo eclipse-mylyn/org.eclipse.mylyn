@@ -50,9 +50,6 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	private static final String DESCRIPTION = "Example: https://bugs.eclipse.org/bugs (do not include index.cgi)";
 
-	private static RepositoryTemplate[] REPOSITORY_TEMPLATES = { new RepositoryTemplate("Eclipse.org",
-			"https://bugs.eclipse.org/bugs", "2.20", null, null, false), };
-
 	protected Combo repositoryVersionCombo;
 
 	public BugzillaRepositorySettingsPage(AbstractRepositoryConnector connector) {
@@ -62,14 +59,14 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	protected void createAdditionalControls(Composite parent) {
 
-		for (RepositoryTemplate template : REPOSITORY_TEMPLATES) {
+		for (RepositoryTemplate template : connector.getTemplates()) {
 			repositoryLabelCombo.add(template.label);
 		}
 		repositoryLabelCombo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String text = repositoryLabelCombo.getText();
-				for (RepositoryTemplate template : REPOSITORY_TEMPLATES) {
+				for (RepositoryTemplate template : connector.getTemplates()) {
 					if (template.label.equals(text)) {
 						setUrl(template.repositoryUrl);
 						// setAnonymous(info.anonymous);
@@ -112,7 +109,6 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	public void setBugzillaVersion(String version) {
 		if (version == null) {
-			// select "Automatic"
 			repositoryVersionCombo.select(0);
 		} else {
 			int i = repositoryVersionCombo.indexOf(version.toString());

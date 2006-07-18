@@ -15,5 +15,15 @@
             class="org.eclipse.mylar.internal.trac.TracTaskExternalizer"
             id="org.eclipse.mylar.trac.tasklist.externalizer"/>
    </extension>
+   <extension
+         point="org.eclipse.mylar.tasks.ui.templates">
+      <repository
+            addAutomatically="false"
+            anonymous="true"
+            label="Edgewall"
+            repositoryKind="trac"
+            repositoryUrl="http://trac.edgewall.org"
+            version="TRAC_0_9"/>
+   </extension>
 
 </plugin>

@@ -48,11 +48,13 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 	private Combo accessTypeCombo;
 
-	private static RepositoryTemplate[] REPOSITORY_TEMPLATES = { new RepositoryTemplate("Edgewall",
-			"http://trac.edgewall.org", Version.TRAC_0_9.toString(), null, null, true),
-	// new TracRepositoryInfo("Mylar Trac Client",
-	// "http://mylar.eclipse.org/mylar-trac-client", true, Version.XML_RPC),
-	};
+	// private static RepositoryTemplate[] REPOSITORY_TEMPLATES = { new
+	// RepositoryTemplate("Edgewall",
+	// "http://trac.edgewall.org", Version.TRAC_0_9.toString(), null, null,
+	// true),
+	// // new TracRepositoryInfo("Mylar Trac Client",
+	// // "http://mylar.eclipse.org/mylar-trac-client", true, Version.XML_RPC),
+	//	};
 
 	/** Supported access types. */
 	private Version[] versions;
@@ -66,14 +68,14 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 	}
 
 	protected void createAdditionalControls(final Composite parent) {
-		for (RepositoryTemplate info : REPOSITORY_TEMPLATES) {			
+		for (RepositoryTemplate info : connector.getTemplates()) {			
 			repositoryLabelCombo.add(info.label);
 		}
 		repositoryLabelCombo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String text = repositoryLabelCombo.getText();
-				for (RepositoryTemplate info : REPOSITORY_TEMPLATES) {
+				for (RepositoryTemplate info :  connector.getTemplates()) {
 				
 					if (info.label.equals(text)) {
 						setUrl(info.repositoryUrl);

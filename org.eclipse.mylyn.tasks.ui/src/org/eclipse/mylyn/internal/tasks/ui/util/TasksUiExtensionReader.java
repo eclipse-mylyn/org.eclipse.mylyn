@@ -26,6 +26,7 @@ import org.eclipse.mylar.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.internal.tasks.ui.ITaskEditorFactory;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.tasks.core.ITaskListExternalizer;
+import org.eclipse.mylar.tasks.core.RepositoryTemplate;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -33,15 +34,40 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 /**
  * @author Mik Kersten
  * @author Shawn Minto
+ * @author Rob Elves
  */
-public class TasksUitExtensionReader {
+public class TasksUiExtensionReader {
 
 	public static final String EXTENSION_REPOSITORIES = "org.eclipse.mylar.tasks.ui.repositories";
+
+	public static final String EXTENSION_TEMPLATES = "org.eclipse.mylar.tasks.ui.templates";
+
+	public static final String EXTENSION_TMPL_REPOSITORY = "repository";
+
+	public static final String ELMNT_TMPL_LABEL = "label";
+
+	public static final String ELMNT_TMPL_REPOSITORYURL = "repositoryUrl";
+
+	public static final String ELMNT_TMPL_REPOSITORYKIND = "repositoryKind";
+
+	public static final String ELMNT_TMPL_ANONYMOUS = "anonymous";
+
+	public static final String ELMNT_TMPL_VERSION = "version";
+
+	public static final String ELMNT_TMPL_NEWTASKURL = "newTaskUrl";
+
+	public static final String ELMNT_TMPL_TASKPREFIXURL = "taskPrefixUrl";
+
+	public static final String ELMNT_TMPL_TASKQUERYURL = "taskQueryUrl";
+
+	public static final String ELMNT_TMPL_TASKREGEXP = "taskRegexp";
+
+	public static final String ELMNT_TMPL_ADDAUTO = "addAutomatically";
 
 	public static final String ELMNT_REPOSITORY_TYPE = "repositoryType";
 
 	public static final String ELMNT_EXTERNALIZER = "externalizer";
-	
+
 	public static final String ATTR_BRANDING_ICON = "brandingIcon";
 
 	public static final String ELMNT_TYPE = "type";
@@ -63,7 +89,7 @@ public class TasksUitExtensionReader {
 	public static final String ELMNT_EDITOR_FACTORY = "editorFactory";
 
 	public static final String ELMNT_HYPERLINK_LISTENER = "hyperlinkListener";
-	
+
 	public static final String ELMNT_HYPERLINK_DETECTOR = "hyperlinkDetector";
 
 	private static boolean extensionsRead = false;
@@ -92,14 +118,27 @@ public class TasksUitExtensionReader {
 			for (int i = 0; i < extensions.length; i++) {
 				IConfigurationElement[] elements = extensions[i].getConfigurationElements();
 				for (int j = 0; j < elements.length; j++) {
-//					if (elements[j].getName().compareTo(ELMNT_TASK_HANDLER) == 0) {
-//						readExternalizer(elements[j], externalizers);
-//					} else 
+					// if (elements[j].getName().compareTo(ELMNT_TASK_HANDLER)
+					// == 0) {
+					// readExternalizer(elements[j], externalizers);
+					// } else
 					if (elements[j].getName().equals(DYNAMIC_POPUP_ELEMENT)) {
 						readDynamicPopupContributor(elements[j]);
 					}
 				}
 			}
+
+			IExtensionPoint templatesExtensionPoint = registry.getExtensionPoint(EXTENSION_TEMPLATES);
+			IExtension[] templateExtensions = templatesExtensionPoint.getExtensions();
+			for (int i = 0; i < templateExtensions.length; i++) {
+				IConfigurationElement[] elements = templateExtensions[i].getConfigurationElements();
+				for (int j = 0; j < elements.length; j++) {
+					if (elements[j].getName().equals(EXTENSION_TMPL_REPOSITORY)) {
+						readRepositoryTemplate(elements[j]);
+					}
+				}
+			}
+
 			// for (int i = 0; i < extensions.length; i++) {
 			// IConfigurationElement[] elements =
 			// extensions[i].getConfigurationElements();
@@ -118,13 +157,15 @@ public class TasksUitExtensionReader {
 				for (int j = 0; j < elements.length; j++) {
 					if (elements[j].getName().equals(ELMNT_EDITOR_FACTORY)) {
 						readEditorFactory(elements[j]);
-					//} else if (elements[j].getName().equals(ELMNT_HYPERLINK_LISTENER)) {
-					//	readHyperlinkListener(elements[j]);
+						// } else if
+						// (elements[j].getName().equals(ELMNT_HYPERLINK_LISTENER))
+						// {
+						// readHyperlinkListener(elements[j]);
 					} else if (elements[j].getName().equals(ELMNT_HYPERLINK_DETECTOR)) {
 						readHyperlinkDetector(elements[j]);
 					}
 				}
-			}			
+			}
 			writer.setDelegateExternalizers(externalizers);
 			extensionsRead = true;
 		}
@@ -136,13 +177,13 @@ public class TasksUitExtensionReader {
 			if (hyperlinkDetector instanceof IHyperlinkDetector) {
 				TasksUiPlugin.getDefault().addTaskHyperlinkDetector((IHyperlinkDetector) hyperlinkDetector);
 			} else {
-				MylarStatusHandler.log("Could not load detector: " + hyperlinkDetector.getClass().getCanonicalName(), null);
+				MylarStatusHandler.log("Could not load detector: " + hyperlinkDetector.getClass().getCanonicalName(),
+						null);
 			}
 		} catch (CoreException e) {
 			MylarStatusHandler.log(e, "Could not load tasklist hyperlink detector extension");
 		}
 	}
-	
 
 	// private static void readHyperlinkListener(IConfigurationElement element)
 	// {
@@ -159,9 +200,9 @@ public class TasksUitExtensionReader {
 	// }
 	// } catch (CoreException e) {
 	// MylarStatusHandler.log(e, "Could not load tasklist listener extension");
-	//		}
-	//	}
-	
+	// }
+	// }
+
 	private static void readEditorFactory(IConfigurationElement element) {
 		try {
 			Object editor = element.createExecutableExtension(ATTR_CLASS);
@@ -182,23 +223,54 @@ public class TasksUitExtensionReader {
 			Object repository = element.createExecutableExtension(ATTR_CLASS);
 			if (repository instanceof AbstractRepositoryConnector && type != null) {
 				TasksUiPlugin.getRepositoryManager().addRepositoryConnector((AbstractRepositoryConnector) repository);
-				
+
 				String iconPath = element.getAttribute(ATTR_BRANDING_ICON);
 				if (iconPath != null) {
-					
-					ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(element.getContributor().getName(),
-							iconPath);
+
+					ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(element.getContributor()
+							.getName(), iconPath);
 					if (descriptor != null) {
-						TasksUiPlugin.getDefault().getBrandingIcons().put((AbstractRepositoryConnector) repository, TaskListImages.getImage(descriptor));
+						TasksUiPlugin.getDefault().getBrandingIcons().put((AbstractRepositoryConnector) repository,
+								TaskListImages.getImage(descriptor));
 					}
 				}
-			
+
 			} else {
 				MylarStatusHandler.log("could not not load extension: " + repository, null);
 			}
 
 		} catch (CoreException e) {
 			MylarStatusHandler.log(e, "Could not load tasklist listener extension");
+		}
+	}
+
+	private static void readRepositoryTemplate(IConfigurationElement element) {
+
+		boolean anonymous = false;
+		boolean addAuto = false;
+
+		String label = element.getAttribute(ELMNT_TMPL_LABEL);
+		String serverUrl = element.getAttribute(ELMNT_TMPL_REPOSITORYURL);
+		String repKind = element.getAttribute(ELMNT_TMPL_REPOSITORYKIND);
+		String version = element.getAttribute(ELMNT_TMPL_VERSION);
+		String newTaskUrl = element.getAttribute(ELMNT_TMPL_NEWTASKURL);
+		String taskPrefix = element.getAttribute(ELMNT_TMPL_TASKPREFIXURL);
+		String taskQueryUrl = element.getAttribute(ELMNT_TMPL_TASKQUERYURL);
+		String taskRegexp = element.getAttribute(ELMNT_TMPL_TASKREGEXP);
+		addAuto = Boolean.parseBoolean(element.getAttribute(ELMNT_TMPL_ADDAUTO));
+		anonymous = Boolean.parseBoolean(element.getAttribute(ELMNT_TMPL_ANONYMOUS));
+
+		if (serverUrl != null && label != null && repKind != null
+				&& TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repKind) != null) {
+			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+					.getRepositoryConnector(repKind);
+			RepositoryTemplate template = new RepositoryTemplate(label, serverUrl, version, newTaskUrl, taskPrefix,
+					taskQueryUrl, taskRegexp, anonymous, addAuto);
+			connector.addTemplate(template);
+
+		} else {
+			MylarStatusHandler.log("Could not load repository template extension " + element.getName(),
+					TasksUiExtensionReader.class);
 		}
 	}
 

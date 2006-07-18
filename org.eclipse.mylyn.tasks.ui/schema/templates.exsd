@@ -6,7 +6,7 @@
          <meta.schema plugin="org.eclipse.mylar.tasks.ui" id="templates" name="templates"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         Templates describing default parameters for new repository configurations.
       </documentation>
    </annotation>
 
@@ -44,13 +44,6 @@
 
    <element name="repository">
       <complexType>
-         <attribute name="serverUrl" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
-         </attribute>
          <attribute name="label" type="string" use="required">
             <annotation>
                <documentation>
@@ -58,10 +51,17 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="anonymous" type="boolean">
+         <attribute name="repositoryUrl" type="string" use="required">
             <annotation>
                <documentation>
-                  True if an anonymous login is accepted for this repository.
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="repositoryKind" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Connector Kind, as declared by the Connector (e.g. &quot;bugzilla&quot;).
                </documentation>
             </annotation>
          </attribute>
@@ -79,24 +79,38 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="taskUrlPrefix" type="string">
+         <attribute name="taskPrefixUrl" type="string">
             <annotation>
                <documentation>
                   
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="addAutmatically" type="boolean">
+         <attribute name="taskQueryUrl" type="string">
             <annotation>
                <documentation>
                   
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="kind" type="string">
+         <attribute name="taskRegexp" type="string">
             <annotation>
                <documentation>
-                  Connector Kind, as declared by the Connector (e.g. &quot;bugzilla&quot;).
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="addAutomatically" type="boolean">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="anonymous" type="boolean">
+            <annotation>
+               <documentation>
+                  True if an anonymous login is accepted for this repository.
                </documentation>
             </annotation>
          </attribute>
