@@ -31,8 +31,8 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
- * @author Shawn Minto
  * @author Mik Kersten
+ * @author Shawn Minto
  */
 public class TasksUitExtensionReader {
 
