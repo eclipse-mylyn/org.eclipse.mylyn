@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.tests.xml;
+package org.eclipse.mylar.java.tests.xml;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +29,7 @@ import org.eclipse.search.internal.ui.text.FileSearchResult;
 import org.eclipse.search.ui.text.Match;
 import org.eclipse.ui.part.FileEditorInput;
 
-public class XMLResultUpdaterSearchListener extends TestActiveSearchListener {
+public class XmlResultUpdaterSearchListener extends TestActiveSearchListener {
 
 	private List<IMylarElement> results = null;
 
@@ -37,7 +37,7 @@ public class XMLResultUpdaterSearchListener extends TestActiveSearchListener {
 
 	private int degreeOfSeparation;
 
-	public XMLResultUpdaterSearchListener(AbstractRelationProvider prov, IMylarElement searchNode,
+	public XmlResultUpdaterSearchListener(AbstractRelationProvider prov, IMylarElement searchNode,
 			int degreeOfSeparation) {
 		super(prov);
 		this.node = searchNode;

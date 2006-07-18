@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tests.xml;
+package org.eclipse.mylar.resources.tests;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -17,12 +17,12 @@ import junit.framework.TestSuite;
 /**
  * @author Mik Kersten
  */
-public class AllXmlTests {
+public class AllResourcesTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tests.xml");
 		// $JUnit-BEGIN$
-		suite.addTestSuite(XMLSearchPluginTest.class);
+		suite.addTestSuite(ResourceContextTest.class);
 		// suite.addTestSuite(ResultUpdaterTest.class);
 		// $JUnit-END$
 		return suite;

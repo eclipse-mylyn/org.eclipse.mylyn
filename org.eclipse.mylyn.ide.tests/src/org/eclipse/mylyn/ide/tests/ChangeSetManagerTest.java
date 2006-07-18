@@ -23,6 +23,7 @@ import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.internal.team.ContextChangeSet;
 import org.eclipse.mylar.internal.team.ContextChangeSetManager;
+import org.eclipse.mylar.resources.tests.AbstractResourceContextTest;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.team.MylarTeamPlugin;

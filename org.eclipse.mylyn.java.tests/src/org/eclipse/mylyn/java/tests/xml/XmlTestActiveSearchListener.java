@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.tests.xml;
+package org.eclipse.mylar.java.tests.xml;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +22,11 @@ import org.eclipse.mylar.internal.ide.xml.XmlNodeHelper;
 import org.eclipse.search.internal.ui.text.FileSearchResult;
 import org.eclipse.search.ui.text.Match;
 
-public class XMLTestActiveSearchListener extends TestActiveSearchListener {
+public class XmlTestActiveSearchListener extends TestActiveSearchListener {
 
 	private List<?> results = null;
 
-	public XMLTestActiveSearchListener(AbstractRelationProvider prov) {
+	public XmlTestActiveSearchListener(AbstractRelationProvider prov) {
 		super(prov);
 	}
 

@@ -21,6 +21,7 @@ import org.eclipse.mylar.java.tests.search.JavaImplementorsSearchPluginTest;
 import org.eclipse.mylar.java.tests.search.JavaReadAccessSearchPluginTest;
 import org.eclipse.mylar.java.tests.search.JavaReferencesSearchTest;
 import org.eclipse.mylar.java.tests.search.JavaWriteAccessSearchPluginTest;
+import org.eclipse.mylar.java.tests.xml.XmlSearchPluginTest;
 import org.eclipse.mylar.resources.MylarResourcesPlugin;
 
 /**
@@ -52,6 +53,7 @@ public class AllJavaTests {
 		suite.addTestSuite(JavaReferencesSearchTest.class);
 		suite.addTestSuite(JavaWriteAccessSearchPluginTest.class);
 		suite.addTestSuite(JUnitReferencesSearchPluginTest.class);
+		suite.addTestSuite(XmlSearchPluginTest.class);
 		// $JUnit-END$
 
 		MylarResourcesPlugin.getDefault().setResourceMonitoringEnabled(true);

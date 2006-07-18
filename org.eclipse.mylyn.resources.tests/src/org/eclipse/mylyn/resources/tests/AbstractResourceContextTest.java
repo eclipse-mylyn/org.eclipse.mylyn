@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.ide.tests;
+package org.eclipse.mylar.resources.tests;
 
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;

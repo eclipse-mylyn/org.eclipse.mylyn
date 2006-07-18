@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.tests.xml;
+package org.eclipse.mylar.java.tests.xml;
 
 import java.io.IOException;
 import java.util.List;
@@ -42,7 +42,7 @@ import org.eclipse.mylar.java.tests.search.WorkspaceSetupHelper;
  * workspace 4 workspace 5 NONE
  */
 
-public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest {
+public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 
 	private IType type1;
 
@@ -316,7 +316,7 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest {
 		if (o == null)
 			return null;
 
-		XMLTestActiveSearchListener l = new XMLTestActiveSearchListener(prov);
+		XmlTestActiveSearchListener l = new XmlTestActiveSearchListener(prov);
 		SearchPluginTestHelper.search(o, l);
 
 		return l.getResults();

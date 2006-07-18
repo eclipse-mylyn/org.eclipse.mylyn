@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tests.xml;
+package org.eclipse.mylar.java.tests.xml;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -21,8 +21,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.core.core.tests.support.ResourceHelper;
 import org.eclipse.mylar.core.core.tests.support.search.ISearchPluginTest;
 import org.eclipse.mylar.internal.context.core.CompositeContext;
@@ -125,7 +125,7 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest {
 		if (o == null)
 			return null;
 
-		XMLResultUpdaterSearchListener l = new XMLResultUpdaterSearchListener(prov, node, dos);
+		XmlResultUpdaterSearchListener l = new XmlResultUpdaterSearchListener(prov, node, dos);
 		SearchPluginTestHelper.search(o, l);
 
 		return l.getResults();
