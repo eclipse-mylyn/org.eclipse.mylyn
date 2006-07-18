@@ -41,7 +41,7 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  * @author Mik Kersten
  * @author Rob Elves
  */
-public class TaskListPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+public class TasksPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	private static final String FOLDER_SELECTION_MESSAGE = "Specify the folder for tasks";
 
@@ -51,7 +51,7 @@ public class TaskListPreferencePage extends PreferencePage implements IWorkbench
 
 	private static final String START_HOUR_LABEL = "Work day start (24hr): ";
 
-	private static final String GROUP_WORK_WEEK_LABEL = "Planning";
+	private static final String GROUP_WORK_WEEK_LABEL = "Scheduling";
 
 	private static final String FORWARDSLASH = "/";
 
@@ -85,7 +85,7 @@ public class TaskListPreferencePage extends PreferencePage implements IWorkbench
 
 	private Spinner hourDayEnd;
 
-	public TaskListPreferencePage() {
+	public TasksPreferencePage() {
 		super();
 		setPreferenceStore(TasksUiPlugin.getDefault().getPreferenceStore());
 	}
@@ -206,7 +206,7 @@ public class TaskListPreferencePage extends PreferencePage implements IWorkbench
 
 	private void createTaskRefreshScheduleGroup(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		group.setText("Repository Synchronization");
+		group.setText("Synchronization");
 		GridLayout gridLayout = new GridLayout(1, false);
 		// gridLayout.marginLeft = 0;
 		group.setLayout(gridLayout);
@@ -233,7 +233,7 @@ public class TaskListPreferencePage extends PreferencePage implements IWorkbench
 		enableSynch.setLayout(gridLayout);
 		enableBackgroundSynch = new Button(enableSynch, SWT.CHECK);
 		// enableBackgroundSynch.setLayoutData(gridData);
-		enableBackgroundSynch.setText("Synchronize every");
+		enableBackgroundSynch.setText("Synchronize with repositories every");
 		enableBackgroundSynch.setSelection(getPreferenceStore().getBoolean(
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
 		enableBackgroundSynch.addSelectionListener(new SelectionListener() {
