@@ -11,24 +11,28 @@
 
 package org.eclipse.mylar.ide.tests;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import java.util.List;
+
+import junit.framework.TestCase;
+
+import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.context.core.IMylarContextListener;
+import org.eclipse.mylar.internal.team.ContextChangeSetManager;
 
 /**
  * @author Mik Kersten
  */
-public class AllIdeTests {
+public class IdeStartupTest extends TestCase {
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.ide.tests");
-
-		// $JUnit-BEGIN$
-		suite.addTestSuite(IdeStartupTest.class);
-		suite.addTestSuite(IdePreferencesTest.class);
-		suite.addTestSuite(ChangeSetManagerTest.class);
-		suite.addTestSuite(CommitMessageTest.class);
-		// $JUnit-END$
-
-		return suite;
+	public void testChangeSetsStartup() {
+		List<IMylarContextListener> listeners = ContextCorePlugin.getContextManager().getListeners();
+		boolean containsManager = false;
+		for (IMylarContextListener listener : listeners) {
+			if (listener instanceof ContextChangeSetManager) {
+				containsManager = true;
+			}
+		}
+		assertTrue(containsManager);
 	}
+	
 }

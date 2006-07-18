@@ -22,6 +22,11 @@
       </decorator>
     </extension>
     
+	<extension
+         name="Mylar Team Startup (Change Set management)"
+         point="org.eclipse.ui.startup">
+    </extension>
+    
      <extension point="org.eclipse.ui.popupMenus"> 
 		<objectContribution
             objectClass="org.eclipse.team.ui.synchronize.ISynchronizeModelElement"
