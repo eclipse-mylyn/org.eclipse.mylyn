@@ -12,6 +12,9 @@
 package org.eclipse.mylar.internal.tasks.ui.wizards;
 
 import java.nio.charset.Charset;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -20,6 +23,7 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.IRepositoryConstants;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -88,6 +92,10 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	private boolean needsEncoding;
 
 	private Composite container;
+	
+	private Set<String> repositoryUrls;
+
+	private String originalUrl;
 
 	public AbstractRepositorySettingsPage(String title, String description, AbstractRepositoryConnector connector) {
 		super(title);
@@ -149,6 +157,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		userNameEditor = new StringFieldEditor("", LABEL_USER, StringFieldEditor.UNLIMITED, container);
 		passwordEditor = new RepositoryStringFieldEditor("", LABEL_PASSWORD, StringFieldEditor.UNLIMITED, container);
 		if (repository != null) {
+			originalUrl = repository.getUrl();
 			oldUsername = repository.getUserName();
 			oldPassword = repository.getPassword();
 			try {
@@ -363,7 +372,26 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	@Override
 	public boolean isPageComplete() {
-		return isValidUrl(serverUrlEditor.getStringValue());
+		return isUniqueUrl(serverUrlEditor.getStringValue()) && isValidUrl(serverUrlEditor.getStringValue());
+	}
+
+	protected boolean isUniqueUrl(String urlString) {
+		if (!urlString.equals(originalUrl)) {
+			if (repositoryUrls == null) {
+				List<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getAllRepositories();
+				repositoryUrls = new HashSet<String>(repositories.size());
+				for (TaskRepository repository : repositories) {
+					repositoryUrls.add(repository.getUrl());
+				}
+			}
+
+			if (repositoryUrls.contains(urlString)) {
+				setErrorMessage("Repository already exists.");
+				return false;
+			}
+		}
+		setErrorMessage(null);
+		return true;
 	}
 
 	public void setRepository(TaskRepository repository) {
