@@ -66,18 +66,20 @@ import org.eclipse.mylar.internal.tasks.ui.actions.SaveRemoteFileAction;
 import org.eclipse.mylar.internal.tasks.ui.wizards.NewAttachmentWizard;
 import org.eclipse.mylar.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.LocalAttachment;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -517,7 +519,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		editorComposite = form.getBody();
 		editorComposite.setLayout(new GridLayout());
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-		createContextMenu();
+		createContextMenu(editorComposite);
 
 		createReportHeaderLayout(editorComposite);
 		Composite attribComp = createAttributeLayout(editorComposite);
@@ -678,7 +680,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 	public abstract void createCustomAttributeLayout();
 
-	protected void createContextMenu() {
+	protected void createContextMenu(final Composite comp) {
 		contextMenuManager = new MenuManager(CONTEXT_MENU_ID);
 		contextMenuManager.setRemoveAllWhenShown(true);
 		contextMenuManager.addMenuListener(new IMenuListener() {
@@ -686,6 +688,15 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 				manager.add(cutAction);
 				manager.add(copyAction);
 				manager.add(pasteAction);
+//				Clipboard clipboard = new Clipboard(comp.getDisplay());
+//				TextTransfer textTransfer = TextTransfer.getInstance();
+//				String textData = (String) clipboard.getContents(textTransfer);
+//				if (textData != null) {
+//					pasteAction.setEnabled(true);
+//				} else {
+//					pasteAction.setEnabled(false);
+//				}
+
 				if (currentSelectedText == null || currentSelectedText.getSelectionText().length() == 0) {
 					copyAction.setEnabled(false);
 				} else {
@@ -1019,7 +1030,8 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		GridData sectionCompositeData = new GridData(GridData.FILL_HORIZONTAL);
 		sectionComposite.setLayoutData(sectionCompositeData);
 
-		TextViewer viewer = addRepositoryText(repository, sectionComposite, getRepositoryTaskData().getDescription());
+		TextViewer viewer = addRepositoryText(repository, sectionComposite, getRepositoryTaskData().getDescription(),
+				SWT.MULTI | SWT.WRAP);
 		final StyledText styledText = viewer.getTextWidget();
 		styledText.addListener(SWT.FocusIn, new DescriptionListener());
 		styledText.setLayout(new GridLayout());
@@ -1115,7 +1127,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 			ecComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			expandableComposite.setClient(ecComposite);
 
-			TextViewer viewer = addRepositoryText(repository, ecComposite, taskComment.getText());
+			TextViewer viewer = addRepositoryText(repository, ecComposite, taskComment.getText(), SWT.MULTI | SWT.WRAP);
 			styledText = viewer.getTextWidget();
 			GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(styledText);
 
@@ -1145,19 +1157,31 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		Composite newCommentsComposite = toolkit.createComposite(sectionAdditionalComments);
 		newCommentsComposite.setLayout(new GridLayout());
 
-		RepositoryTextViewer newCommentTextViewer = new RepositoryTextViewer(repository, newCommentsComposite, SWT.FLAT
-				| SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		final TextViewer newCommentTextViewer = addRepositoryText(repository, newCommentsComposite,
+				getRepositoryTaskData().getNewComment(), SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		newCommentTextViewer.setEditable(true);
+
 		GridData addCommentsTextData = new GridData(GridData.FILL_HORIZONTAL);
 		addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
 		addCommentsTextData.heightHint = DESCRIPTION_HEIGHT;
 		addCommentsTextData.grabExcessHorizontalSpace = true;
 		newCommentTextViewer.getTextWidget().setLayoutData(addCommentsTextData);
 		newCommentTextViewer.getTextWidget().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-		newCommentTextViewer.getTextWidget().setFont(
-				themeManager.getCurrentTheme().getFontRegistry().get(TaskListColorsAndFonts.TASK_EDITOR_FONT));
-		newCommentTextViewer.setDocument(new Document(getRepositoryTaskData().getNewComment()));
-		newCommentTextViewer.setEditable(true);
+
+		// TODO: Hack to get undo working in editor.
+		newCommentTextViewer.getTextWidget().addKeyListener(new KeyListener() {
+
+			public void keyPressed(KeyEvent e) {
+				if (((int) e.character == 26) && (e.stateMask == (SWT.CTRL))) {
+					newCommentTextViewer.getUndoManager().undo();
+				}
+			}
+
+			public void keyReleased(KeyEvent e) {
+
+			}
+		});
+
 		newCommentTextViewer.getTextWidget().addModifyListener(new ModifyListener() {
 
 			public void modifyText(ModifyEvent e) {
@@ -1387,8 +1411,8 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		return resultText;
 	}
 
-	protected TextViewer addRepositoryText(TaskRepository repository, Composite composite, String text) {
-		RepositoryTextViewer commentViewer = new RepositoryTextViewer(repository, composite, SWT.MULTI | SWT.WRAP);
+	protected TextViewer addRepositoryText(TaskRepository repository, Composite composite, String text, int style) {
+		RepositoryTextViewer commentViewer = new RepositoryTextViewer(repository, composite, style);
 
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 

@@ -645,6 +645,20 @@ public class TaskPlanningEditor extends EditorPart {
 				markDirty(true);
 			}
 		});
+		
+		// TODO: Hack to get undo working in editor.
+		commentViewer.getTextWidget().addKeyListener(new KeyListener() {
+
+			public void keyPressed(KeyEvent e) {
+				if (((int) e.character == 26) && (e.stateMask == (SWT.CTRL))) {
+					commentViewer.getUndoManager().undo();
+				}
+			}
+
+			public void keyReleased(KeyEvent e) {
+
+			}
+		});
 
 		toolkit.paintBordersFor(container);
 	}

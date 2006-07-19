@@ -87,13 +87,13 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 
 	private static final String REASSIGN_BUG_TO = "Reassign  bug to";
 
-	//private static final String LABEL_COMPARE_BUTTON = "Compare";
+	// private static final String LABEL_COMPARE_BUTTON = "Compare";
 
 	protected Set<String> removeCC = new HashSet<String>();
 
-	//protected BugzillaCompareInput compareInput;
+	// protected BugzillaCompareInput compareInput;
 
-	//protected Button compareButton;
+	// protected Button compareButton;
 
 	protected Button[] radios;
 
@@ -139,7 +139,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		config.setRightLabel("Remote Bug Report");
 		config.setLeftImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT));
 		config.setRightImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT));
-		//compareInput = new BugzillaCompareInput(config);
+		// compareInput = new BugzillaCompareInput(config);
 	}
 
 	// @SuppressWarnings("deprecation")
@@ -295,50 +295,49 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		});
 	}
 
-//	@Override
-//	protected void addActionButtons(Composite buttonComposite) {
-//		//TODO: removed compare as it doesn't work at the moment
-//		// FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
-//		// super.addActionButtons(buttonComposite);
-//		// compareButton = toolkit.createButton(buttonComposite,
-//		// LABEL_COMPARE_BUTTON, SWT.NONE);
-//		// GridData compareButtonData = new
-//		// GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-//		// compareButton.setLayoutData(compareButtonData);
-//		// compareButton.addListener(SWT.Selection, new Listener() {
-//		// public void handleEvent(Event e) {
-//		// OpenCompareEditorJob compareJob = new OpenCompareEditorJob("Comparing
-//		// bug with remote server...");
-//		// compareJob.schedule();
-//		// }
-//		// });
-//		// compareButton.addListener(SWT.FocusIn, new GenericListener());
-//
-//
-//		// TODO used for spell checking. Add back when we want to support this
-//		// checkSpellingButton = new Button(buttonComposite, SWT.NONE);
-//		// checkSpellingButton.setFont(TEXT_FONT);
-//		// compareButtonData = new
-//		// GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-//		// compareButtonData.widthHint = 100;
-//		// compareButtonData.heightHint = 20;
-//		// checkSpellingButton.setText("CheckSpelling");
-//		// checkSpellingButton.setLayoutData(compareButtonData);
-//		// checkSpellingButton.addListener(SWT.Selection, new Listener() {
-//		// public void handleEvent(Event e) {
-//		// checkSpelling();
-//		// }
-//		// });
-//		// checkSpellingButton.addListener(SWT.FocusIn, new GenericListener());
-//	}
+	// @Override
+	// protected void addActionButtons(Composite buttonComposite) {
+	// //TODO: removed compare as it doesn't work at the moment
+	// // FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
+	// // super.addActionButtons(buttonComposite);
+	// // compareButton = toolkit.createButton(buttonComposite,
+	// // LABEL_COMPARE_BUTTON, SWT.NONE);
+	// // GridData compareButtonData = new
+	// // GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+	// // compareButton.setLayoutData(compareButtonData);
+	// // compareButton.addListener(SWT.Selection, new Listener() {
+	// // public void handleEvent(Event e) {
+	// // OpenCompareEditorJob compareJob = new OpenCompareEditorJob("Comparing
+	// // bug with remote server...");
+	// // compareJob.schedule();
+	// // }
+	// // });
+	// // compareButton.addListener(SWT.FocusIn, new GenericListener());
+	//
+	//
+	// // TODO used for spell checking. Add back when we want to support this
+	// // checkSpellingButton = new Button(buttonComposite, SWT.NONE);
+	// // checkSpellingButton.setFont(TEXT_FONT);
+	// // compareButtonData = new
+	// // GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+	// // compareButtonData.widthHint = 100;
+	// // compareButtonData.heightHint = 20;
+	// // checkSpellingButton.setText("CheckSpelling");
+	// // checkSpellingButton.setLayoutData(compareButtonData);
+	// // checkSpellingButton.addListener(SWT.Selection, new Listener() {
+	// // public void handleEvent(Event e) {
+	// // checkSpelling();
+	// // }
+	// // });
+	// // checkSpellingButton.addListener(SWT.FocusIn, new GenericListener());
+	// }
 
-//	/**
-//	 * @return Returns the compareInput.
-//	 */
-//	public BugzillaCompareInput getCompareInput() {
-//		return compareInput;
-//	}
-
+	// /**
+	// * @return Returns the compareInput.
+	// */
+	// public BugzillaCompareInput getCompareInput() {
+	// return compareInput;
+	// }
 
 	@Override
 	protected String getTitleString() {
@@ -386,8 +385,9 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 							close();
 							return;
 						} else if (event.getJob().getResult().getCode() == Status.INFO) {
-							WebBrowserDialog.openAcceptAgreement(null, IBugzillaConstants.REPORT_SUBMIT_ERROR,
-									event.getJob().getResult().getMessage(), event.getJob().getResult().getException().getMessage());
+							WebBrowserDialog.openAcceptAgreement(null, IBugzillaConstants.REPORT_SUBMIT_ERROR, event
+									.getJob().getResult().getMessage(), event.getJob().getResult().getException()
+									.getMessage());
 							submitButton.setEnabled(true);
 							ExistingBugEditor.this.showBusy(false);
 						} else if (event.getJob().getResult().getCode() == Status.ERROR) {
@@ -400,9 +400,9 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 				});
 			}
 		};
-		
+
 		bugzillaRepositoryClient.submitBugReport(bugzillaReportSubmitForm, submitJobListener);
-		
+
 	}
 
 	@Override
@@ -553,8 +553,8 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		java.util.List<String> validKeywords = new ArrayList<String>();
 		try {
 			validKeywords = BugzillaPlugin.getRepositoryConfiguration(false, repository.getUrl(),
-					TasksUiPlugin.getDefault().getProxySettings(), repository.getUserName(),
-					repository.getPassword(), repository.getCharacterEncoding()).getKeywords();
+					TasksUiPlugin.getDefault().getProxySettings(), repository.getUserName(), repository.getPassword(),
+					repository.getCharacterEncoding()).getKeywords();
 		} catch (Exception e) {
 			// ignore
 		}
@@ -698,51 +698,54 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	 * This job opens a compare editor to compare the current state of the bug
 	 * in the editor with the bug on the server.
 	 */
-//	protected class OpenCompareEditorJob extends Job {
-//
-//		public OpenCompareEditorJob(String name) {
-//			super(name);
-//		}
-//
-//		@Override
-//		protected IStatus run(IProgressMonitor monitor) {
-//			final RepositoryTaskData serverBug;
-//			try {
-//				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-//						BugzillaPlugin.REPOSITORY_KIND, taskData.getRepositoryUrl());
-//				serverBug = BugzillaServerFacade.getBug(repository.getUrl(), repository.getUserName(), repository
-//						.getPassword(), editorInput.getProxySettings(), repository.getCharacterEncoding(), Integer
-//						.parseInt(taskData.getId()));
-//				// If no bug was found on the server, throw an exception so that
-//				// the
-//				// user gets the same message that appears when there is a
-//				// problem reading the server.
-//				if (serverBug == null)
-//					throw new Exception();
-//			} catch (Exception e) {
-//				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//					public void run() {
-//						MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-//								"Could not open bug.", "Bug #" + taskData.getId()
-//										+ " could not be read from the server.");
-//					}
-//				});
-//				return new Status(IStatus.OK, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK,
-//						"Could not get the bug report from the server.", null);
-//			}
-//			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//				public void run() {
-//					compareInput.setTitle("Bug #" + taskData.getId());
-//					compareInput.setLeft(taskData);
-//					compareInput.setRight(serverBug);
-//					CompareUI.openCompareEditor(compareInput);
-//				}
-//			});
-//			return new Status(IStatus.OK, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK, "", null);
-//		}
-//
-//	}
-
+	// protected class OpenCompareEditorJob extends Job {
+	//
+	// public OpenCompareEditorJob(String name) {
+	// super(name);
+	// }
+	//
+	// @Override
+	// protected IStatus run(IProgressMonitor monitor) {
+	// final RepositoryTaskData serverBug;
+	// try {
+	// TaskRepository repository =
+	// TasksUiPlugin.getRepositoryManager().getRepository(
+	// BugzillaPlugin.REPOSITORY_KIND, taskData.getRepositoryUrl());
+	// serverBug = BugzillaServerFacade.getBug(repository.getUrl(),
+	// repository.getUserName(), repository
+	// .getPassword(), editorInput.getProxySettings(),
+	// repository.getCharacterEncoding(), Integer
+	// .parseInt(taskData.getId()));
+	// // If no bug was found on the server, throw an exception so that
+	// // the
+	// // user gets the same message that appears when there is a
+	// // problem reading the server.
+	// if (serverBug == null)
+	// throw new Exception();
+	// } catch (Exception e) {
+	// PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+	// public void run() {
+	// MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+	// "Could not open bug.", "Bug #" + taskData.getId()
+	// + " could not be read from the server.");
+	// }
+	// });
+	// return new Status(IStatus.OK, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK,
+	// "Could not get the bug report from the server.", null);
+	// }
+	// PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+	// public void run() {
+	// compareInput.setTitle("Bug #" + taskData.getId());
+	// compareInput.setLeft(taskData);
+	// compareInput.setRight(serverBug);
+	// CompareUI.openCompareEditor(compareInput);
+	// }
+	// });
+	// return new Status(IStatus.OK, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK, "",
+	// null);
+	// }
+	//
+	// }
 	/**
 	 * Class to handle the selection change of the keywords.
 	 */
@@ -809,8 +812,8 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
-					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(), taskComment.getCreated(),
-							taskComment, taskData.getSummary()))));
+					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(),
+							taskComment.getCreated(), taskComment, taskData.getSummary()))));
 		}
 	}
 
@@ -943,30 +946,12 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	@Override
 	public void createCustomAttributeLayout() {
 		// ignore
-
 	}
 
 	@Override
 	public RepositoryTaskData getRepositoryTaskData() {
 		return editorInput.getRepositoryTaskData();
 	}
-
-	// @Override
-	// public AbstractRepositoryTask getRepositoryTask() {
-	// // ignore
-	// return null;
-	// }
-
-	// @Override
-	// public void handleSummaryEvent() {
-	// String sel = summaryText.getText();
-	// RepositoryTaskAttribute a =
-	// getReport().getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString());
-	// if (!(a.getValue().equals(sel))) {
-	// a.setValue(sel);
-	// changeDirtyStatus(true);
-	// }
-	// }
 
 	// TODO used for spell checking. Add back when we want to support this
 	// protected Button checkSpellingButton;
