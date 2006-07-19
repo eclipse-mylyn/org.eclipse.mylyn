@@ -67,7 +67,6 @@ import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskIncompleteAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.NewCategoryAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.NextTaskDropDownAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.OpenWithBrowserAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.PreviousTaskDropDownAction;
@@ -211,7 +210,7 @@ public class TaskListView extends ViewPart {
 
 	private PreviousTaskDropDownAction previousTaskAction;
 
-	private NextTaskDropDownAction nextTaskAction;
+//	private NextTaskDropDownAction nextTaskAction;
 
 	private static TaskPriorityFilter FILTER_PRIORITY = new TaskPriorityFilter();
 
@@ -240,11 +239,6 @@ public class TaskListView extends ViewPart {
 	private int sortIndex = 2;
 
 	int sortDirection = DEFAULT_SORT_DIRECTION;
-
-	/**
-	 * TODO: move out of UI.
-	 */
-	private TaskActivationHistory taskHistory = new TaskActivationHistory();
 
 	/**
 	 * True if the view should indicate that interaction monitoring is paused
@@ -717,11 +711,13 @@ public class TaskListView extends ViewPart {
 						if (task != null) {
 							if (task.isActive()) {
 								new TaskDeactivateAction().run(task);
-								nextTaskAction.setEnabled(taskHistory.hasNext());
-								previousTaskAction.setEnabled(taskHistory.hasPrevious());
+								//nextTaskAction.setEnabled(taskHistory.hasNext());
+								//previousTaskAction.setEnabled(TasksUiPlugin.getTaskListManager().getTaskActivationHistory().hasPrevious());
+								previousTaskAction.setButtonStatus();
 							} else {
 								new TaskActivateAction().run(task);
 								addTaskToHistory(task);
+								previousTaskAction.setButtonStatus();
 							}
 						}
 						break;
@@ -755,15 +751,15 @@ public class TaskListView extends ViewPart {
 
 	public void addTaskToHistory(ITask task) {
 		if (!TasksUiPlugin.getDefault().isMultipleActiveTasksMode()) {
-			taskHistory.addTask(task);
-			nextTaskAction.setEnabled(taskHistory.hasNext());
-			previousTaskAction.setEnabled(taskHistory.hasPrevious());
+			TasksUiPlugin.getTaskListManager().getTaskActivationHistory().addTask(task);
+			//nextTaskAction.setEnabled(taskHistory.hasNext());
+			//previousTaskAction.setEnabled(TasksUiPlugin.getTaskListManager().getTaskActivationHistory().hasPrevious());
 		}
 	}
-
-	public void clearTaskHistory() {
-		taskHistory.clear();
-	}
+//
+//	public void clearTaskHistory() {
+//		TasksUiPlugin.getTaskListManager().getTaskActivationHistory().clear();
+//	}
 
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
@@ -840,7 +836,7 @@ public class TaskListView extends ViewPart {
 
 		if (TasksUiPlugin.getDefault().isMultipleActiveTasksMode()) {
 			togglePreviousAction(false);
-			toggleNextAction(false);
+			//toggleNextAction(false);
 		}
 
 		getViewer().refresh();
@@ -968,7 +964,7 @@ public class TaskListView extends ViewPart {
 		if (activeTasks.size() > 0) {
 			updateDescription(activeTasks.get(0));
 		}
-		getSite().setSelectionProvider(getViewer());
+		getSite().setSelectionProvider(getViewer());		
 	}
 
 	private void initDragAndDrop(Composite parent) {
@@ -1030,7 +1026,7 @@ public class TaskListView extends ViewPart {
 		manager.add(new Separator("navigation"));
 		// manager.add(new Separator(SEPARATOR_CONTEXT));
 		manager.add(previousTaskAction);
-		manager.add(nextTaskAction);
+		//manager.add(nextTaskAction);
 		manager.add(new Separator(SEPARATOR_CONTEXT));
 		// manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
@@ -1221,20 +1217,19 @@ public class TaskListView extends ViewPart {
 		filterCompleteTask = new FilterCompletedTasksAction(this);
 		filterArchiveCategory = new FilterArchiveContainerAction(this);
 		filterOnPriority = new PriorityDropDownAction();
-		previousTaskAction = new PreviousTaskDropDownAction(this, taskHistory);
-		nextTaskAction = new NextTaskDropDownAction(this, taskHistory);
+		previousTaskAction = new PreviousTaskDropDownAction(this, TasksUiPlugin.getTaskListManager().getTaskActivationHistory());
+		//nextTaskAction = new NextTaskDropDownAction(this, TasksUiPlugin.getTaskListManager().getTaskActivationHistory());
 	}
 
-	public void toggleNextAction(boolean enable) {
-		nextTaskAction.setEnabled(enable);
-	}
-
+//	public void toggleNextAction(boolean enable) {
+//		nextTaskAction.setEnabled(enable);
+//	}
+//	public NextTaskDropDownAction getNextTaskAction() {
+//	return nextTaskAction;
+//}
+	
 	public void togglePreviousAction(boolean enable) {
 		previousTaskAction.setEnabled(enable);
-	}
-
-	public NextTaskDropDownAction getNextTaskAction() {
-		return nextTaskAction;
 	}
 
 	public PreviousTaskDropDownAction getPreviousTaskAction() {
@@ -1360,12 +1355,12 @@ public class TaskListView extends ViewPart {
 		isInRenameAction = b;
 	}
 
-	/**
-	 * This method is for testing only
-	 */
-	public TaskActivationHistory getTaskActivationHistory() {
-		return taskHistory;
-	}
+//	/**
+//	 * This method is for testing only
+//	 */
+//	public TaskActivationHistory getTaskActivationHistory() {
+//		return TasksUiPlugin.getTaskListManager().getTaskActivationHistory();
+//	}
 
 	public void goIntoCategory() {
 		ISelection selection = getViewer().getSelection();

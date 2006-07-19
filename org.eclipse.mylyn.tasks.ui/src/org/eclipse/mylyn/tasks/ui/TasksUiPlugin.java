@@ -297,9 +297,11 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			if (event.getProperty().equals(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS)) {
 				TaskListView.getFromActivePerspective().togglePreviousAction(
 						!getPreferenceStore().getBoolean(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS));
-				TaskListView.getFromActivePerspective().toggleNextAction(
-						!getPreferenceStore().getBoolean(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS));
-				TaskListView.getFromActivePerspective().clearTaskHistory();
+//				TaskListView.getFromActivePerspective().toggleNextAction(
+//						!getPreferenceStore().getBoolean(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS));
+//				TaskListView.getFromActivePerspective().clearTaskHistory();
+				getTaskListManager().getTaskActivationHistory().clear();
+				
 			}
 			if (event.getProperty().equals(MylarPreferenceContstants.PREF_DATA_DIR)) {
 				if (event.getOldValue() instanceof String) {
@@ -310,10 +312,10 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 					getTaskListManager().resetTaskList();
 					getTaskListManager().setTaskListFile(new File(taskListFilePath));
 					getTaskListManager().readExistingOrCreateNewList();
-
-					if (TaskListView.getFromActivePerspective() != null) {
-						TaskListView.getFromActivePerspective().clearTaskHistory();
-					}
+					getTaskListManager().getTaskActivationHistory().clear();
+//					if (TaskListView.getFromActivePerspective() != null) {
+//						TaskListView.getFromActivePerspective().clearTaskHistory();
+//					}
 				}
 			}
 		}

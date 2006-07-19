@@ -45,6 +45,9 @@ public class PreviousTaskDropDownAction extends TaskNavigateDropDownAction {
 			ITask currTask = tasks.get(i);
 			Action taskNavAction = new TaskNavigateAction(currTask);
 			ActionContributionItem item = new ActionContributionItem(taskNavAction);
+			if(currTask.isActive()) {
+				taskNavAction.setChecked(true);
+			}
 			item.fill(dropDownMenu, -1);
 		}
 	}

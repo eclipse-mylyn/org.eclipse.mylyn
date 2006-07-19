@@ -16,7 +16,6 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.internal.tasks.ui.actions.NextTaskDropDownAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.PreviousTaskDropDownAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskDeactivateAction;
@@ -31,10 +30,13 @@ import org.eclipse.ui.PartInitException;
 
 /**
  * @author Wes Coelho
+ * @author Rob Elves
  */
 public class TaskHistoryTest extends TestCase {
 
 	protected TaskListManager manager = TasksUiPlugin.getTaskListManager();
+
+	protected TaskActivationHistory history;
 
 	protected TaskListView taskView = null;
 
@@ -50,7 +52,7 @@ public class TaskHistoryTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		
+
 		try {
 			TasksUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(
 					"org.eclipse.mylar.tasks.ui.views.TaskListView");
@@ -67,22 +69,24 @@ public class TaskHistoryTest extends TestCase {
 
 		task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1", true);
 		manager.getTaskList().moveToRoot(task1);
-		
+
 		task2 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 2", true);
 		manager.getTaskList().moveToRoot(task2);
-		
+
 		task3 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 3", true);
 		manager.getTaskList().moveToRoot(task3);
-		
+
 		task4 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 4", true);
 		manager.getTaskList().moveToRoot(task4);
 
 		task5 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 5", true);
 		manager.getTaskList().moveToRoot(task5);
+
+		history = manager.getTaskActivationHistory();
 	}
 
 	private void resetHistory() {
-		taskView.clearTaskHistory();
+		manager.getTaskActivationHistory().clear();
 		ContextCorePlugin.getContextManager().resetActivityHistory();
 	}
 
@@ -91,52 +95,58 @@ public class TaskHistoryTest extends TestCase {
 	 */
 	public void testBasicHistoryNavigation() {
 		(new TaskActivateAction()).run(task1);
-		taskView.addTaskToHistory(task1);
+		history.addTask(task1);
 		(new TaskActivateAction()).run(task2);
-		taskView.addTaskToHistory(task2);
+		history.addTask(task2);
 		(new TaskActivateAction()).run(task3);
-		taskView.addTaskToHistory(task3);
+		history.addTask(task3);
 
 		assertTrue(task3.isActive());
 		assertFalse(task2.isActive());
 
 		taskView.getPreviousTaskAction().run();
 		assertTrue(task2.isActive());
- 
-		taskView.getPreviousTaskAction().run();
-		assertTrue(task1.isActive());
 
 		taskView.getPreviousTaskAction().run();
 		assertTrue(task1.isActive());
 
-		taskView.getNextTaskAction().run();
-		assertTrue(task2.isActive());
-
-		taskView.getNextTaskAction().run();
-		assertTrue(task3.isActive());
-
-		taskView.getNextTaskAction().run();
-		assertTrue(task3.isActive());
-
 		taskView.getPreviousTaskAction().run();
-		assertTrue(task2.isActive());
+		assertTrue(task1.isActive());
 
-		taskView.getNextTaskAction().run();
-		assertTrue(task3.isActive());
+		// taskView.getPreviousTaskAction().run();
+		// assertTrue(task1.isActive());
+		//		
+		// taskView.getPreviousTaskAction().run();
+		// assertTrue(task1.isActive());
 
-		(new TaskActivateAction()).run(task4);
-		taskView.addTaskToHistory(task4); // Simulate clicking on it rather
-											// than navigating next or previous
-		assertTrue(task4.isActive());
-
-		taskView.getNextTaskAction().run();
-		assertTrue(task4.isActive());
-
-		taskView.getPreviousTaskAction().run();
-		assertTrue(task3.isActive());
-
-		taskView.getNextTaskAction().run();
-		assertTrue(task4.isActive());
+		// taskView.getNextTaskAction().run();
+		// assertTrue(task2.isActive());
+		//
+		// taskView.getNextTaskAction().run();
+		// assertTrue(task3.isActive());
+		//
+		// taskView.getNextTaskAction().run();
+		// assertTrue(task3.isActive());
+		//
+		// taskView.getPreviousTaskAction().run();
+		// assertTrue(task2.isActive());
+		//
+		// taskView.getNextTaskAction().run();
+		// assertTrue(task3.isActive());
+		//
+		// (new TaskActivateAction()).run(task4);
+		// history.addTask(task4); // Simulate clicking on it rather
+		// // than navigating next or previous
+		// assertTrue(task4.isActive());
+		//
+		// taskView.getNextTaskAction().run();
+		// assertTrue(task4.isActive());
+		//
+		// taskView.getPreviousTaskAction().run();
+		// assertTrue(task3.isActive());
+		//
+		// taskView.getNextTaskAction().run();
+		// assertTrue(task4.isActive());
 
 	}
 
@@ -151,61 +161,98 @@ public class TaskHistoryTest extends TestCase {
 		// Simulate activating the tasks by clicking rather than
 		// navigating previous/next
 		(new TaskActivateAction()).run(task1);
-		taskView.addTaskToHistory(task1);
+		history.addTask(task1);
 		(new TaskActivateAction()).run(task2);
-		taskView.addTaskToHistory(task2);
+		history.addTask(task2);
 		(new TaskActivateAction()).run(task3);
-		taskView.addTaskToHistory(task3);
+		history.addTask(task3);
 		(new TaskActivateAction()).run(task4);
-		taskView.addTaskToHistory(task4);
+		history.addTask(task4);
 
 		assertTrue(task4.isActive());
-		TaskActivationHistory taskHistory = taskView.getTaskActivationHistory();
-		List<ITask> prevHistoryList = taskHistory.getPreviousTasks();
+		//TaskActivationHistory taskHistory = taskView.getTaskActivationHistory();
+		List<ITask> prevHistoryList = history.getPreviousTasks();
 
 		// Check that the previous history list looks right
 		assertTrue(prevHistoryList.size() >= 3);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task3);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task2);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task1);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task3);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task2);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task1);
 
 		// Get a task from the list and activate it
-		PreviousTaskDropDownAction prevAction = new PreviousTaskDropDownAction(taskView, taskHistory);
+		PreviousTaskDropDownAction prevAction = new PreviousTaskDropDownAction(taskView, history);
 		TaskNavigateAction navigateAction = prevAction.new TaskNavigateAction(task2);
 		navigateAction.run();
-		taskHistory.navigatedToTask(task2);
-
 		assertTrue(task2.isActive());
 
 		// Now check that the next and prev lists look right
-		prevHistoryList = taskHistory.getPreviousTasks();
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task1);
-		List<ITask> nextHistoryList = taskHistory.getNextTasks();
-		assertTrue(nextHistoryList.get(0) == task3);
-		assertTrue(nextHistoryList.get(1) == task4);
+		prevHistoryList = history.getPreviousTasks();
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task4);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task3);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task2);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task1);
 
-		// Navigate to a next item
-		NextTaskDropDownAction nextAction = new NextTaskDropDownAction(taskView, taskHistory);
-		navigateAction = nextAction.new TaskNavigateAction(task4);
-		navigateAction.run();
-		taskHistory.navigatedToTask(task4);
-
-		assertTrue(task4.isActive());
-
-		// Check that the prev and next lists look right
-		nextHistoryList = taskHistory.getNextTasks();
-		prevHistoryList = taskHistory.getPreviousTasks();
-		assertTrue(nextHistoryList.size() == 0);
+		// Activation of task outside of history navigation tool
+		history.addTask(task3);
+		prevHistoryList = history.getPreviousTasks();
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task3);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task2);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task1);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task4);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task2);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task1);
 
-		// Check that a deactivated task appears first on the history list
-		(new TaskActivateAction()).run(task5);
-		(new TaskDeactivateAction()).run(task5);
-		taskView.addTaskToHistory(task5);
-		prevHistoryList = taskHistory.getPreviousTasks();
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task5);
+		history.addTask(task1);
+		prevHistoryList = history.getPreviousTasks();
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task1);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task3);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task4);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task2);
+		
+		
+		
+		navigateAction = prevAction.new TaskNavigateAction(task3);
+		navigateAction.run();
+		assertTrue(task3.isActive());
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task1);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task3);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task4);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task2);
+		
+		taskView.getPreviousTaskAction().run();
+		assertTrue(task4.isActive());
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task1);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task3);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task4);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task2);
+		
+		(new TaskDeactivateAction()).run(task4);
+		
+		// List<ITask> nextHistoryList = taskHistory.getNextTasks();
+		// assertTrue(nextHistoryList.get(0) == task3);
+		// assertTrue(nextHistoryList.get(1) == task4);
+		//
+		// // Navigate to a next item
+		// NextTaskDropDownAction nextAction = new
+		// NextTaskDropDownAction(taskView, taskHistory);
+		// navigateAction = nextAction.new TaskNavigateAction(task4);
+		// navigateAction.run();
+		// taskHistory.navigatedToTask(task4);
+		//
+		// assertTrue(task4.isActive());
+		//
+		// // Check that the prev and next lists look right
+		// nextHistoryList = taskHistory.getNextTasks();
+		// prevHistoryList = taskHistory.getPreviousTasks();
+		// assertTrue(nextHistoryList.size() == 0);
+		// assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task3);
+		// assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task2);
+		// assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task1);
+		//
+		// // Check that a deactivated task appears first on the history list
+		// (new TaskActivateAction()).run(task5);
+		// (new TaskDeactivateAction()).run(task5);
+		// taskView.addTaskToHistory(task5);
+		// prevHistoryList = taskHistory.getPreviousTasks();
+		// assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task5);
 
 	}
 

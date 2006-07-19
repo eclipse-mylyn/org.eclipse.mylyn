@@ -41,6 +41,7 @@ import org.eclipse.mylar.internal.context.core.util.TimerThread;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.util.TaskActivityTimer;
 import org.eclipse.mylar.internal.tasks.ui.util.TaskListWriter;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
@@ -128,6 +129,8 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	private TaskList taskList = new TaskList();
 
+	private TaskActivationHistory taskActivationHistory = new TaskActivationHistory();
+	
 	private boolean taskListInitialized = false;
 
 	private boolean taskActivityHistoryInitialized = false;
@@ -547,6 +550,7 @@ public class TaskListManager implements IPropertyChangeListener {
 				activateTask(activeTasks.get(0));
 			}
 			parseTaskActivityInteractionHistory();
+			taskActivationHistory.loadPersistentHistory();
 		} catch (Exception e) {
 			MylarStatusHandler.log(e, "Could not read task list");
 			return false;
@@ -586,7 +590,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	public void activateTask(ITask task) {
 		if (!TasksUiPlugin.getDefault().isMultipleActiveTasksMode()) {
 			for (ITask activeTask : new ArrayList<ITask>(taskList.getActiveTasks())) {
-				deactivateTask(activeTask);
+				deactivateTask(activeTask);			
 			}
 		}
 
@@ -595,7 +599,7 @@ public class TaskListManager implements IPropertyChangeListener {
 			TaskActivityTimer activityTimer = new TaskActivityTimer(task, timeout, timerSleepInterval);
 			activityTimer.startTimer();
 			timerMap.put(task, activityTimer);
-			taskList.setActive(task, true);
+			taskList.setActive(task, true);			
 			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
 				listener.taskActivated(task);
 			}
@@ -607,13 +611,14 @@ public class TaskListManager implements IPropertyChangeListener {
 	public void deactivateTask(ITask task) {
 		if (task == null) {
 			return;
-		}
+		}	
+		
 		TaskActivityTimer taskTimer = timerMap.remove(task);
 		if (taskTimer != null) {
 			taskTimer.stopTimer();
 		}
 		if (task.isActive()) {
-			taskList.setActive(task, false);
+			taskList.setActive(task, false);			
 			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
 				try {
 					listener.taskDeactivated(task);
@@ -785,6 +790,11 @@ public class TaskListManager implements IPropertyChangeListener {
 				}
 			}
 		}
+	}
+
+	
+	public TaskActivationHistory getTaskActivationHistory() {
+		return taskActivationHistory;
 	}
 
 }

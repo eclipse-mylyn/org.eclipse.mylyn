@@ -103,9 +103,9 @@ public abstract class TaskNavigateDropDownAction extends Action implements IMenu
 		return dropDownMenu;
 	}
 
-	protected void setButtonStatus() {
-		view.getPreviousTaskAction().setEnabled(taskHistory.hasPrevious());
-		view.getNextTaskAction().setEnabled(taskHistory.hasNext());
+	public void setButtonStatus() {
+		setEnabled(taskHistory.getPreviousTasks() != null && taskHistory.getPreviousTasks().size() > 0);
+		//view.getNextTaskAction().setEnabled(taskHistory.hasNext());
 	}
 
 	protected abstract void addActionsToMenu();

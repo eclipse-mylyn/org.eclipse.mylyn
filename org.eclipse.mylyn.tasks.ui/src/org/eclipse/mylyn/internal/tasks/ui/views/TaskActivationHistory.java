@@ -23,6 +23,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
  * @author Ken Sueda (original prototype)
  * @author Wesley Coelho (Added persistent tasks)
  * @author Mik Kersten (hardening)
+ * @author Rob Elves
  */
 public class TaskActivationHistory {
 
@@ -46,13 +47,15 @@ public class TaskActivationHistory {
 	 * 
 	 * @author Wesley Coelho
 	 */
-	protected void loadPersistentHistory() {
+	public void loadPersistentHistory() {
 		int tasksAdded = 0;
-
-		for (int i = ContextCorePlugin.getContextManager().getActivityHistoryMetaContext().getInteractionHistory().size() - 1; i >= 0; i--) {
+		history.clear();
+		for (int i = ContextCorePlugin.getContextManager().getActivityHistoryMetaContext().getInteractionHistory()
+				.size() - 1; i >= 0; i--) {
 			ITask prevTask = getHistoryTaskAt(i);
 
-			if (prevTask != null && !isDuplicate(prevTask, i + 1)) {
+			if (prevTask != null && !history.contains(prevTask)) {
+				// !isDuplicate(prevTask, i + 1)) {
 				history.add(0, prevTask);
 				currentIndex++;
 				tasksAdded++;
@@ -61,31 +64,35 @@ public class TaskActivationHistory {
 				}
 			}
 		}
+		persistentHistoryLoaded = true;
 	}
 
-	/**
-	 * Returns true if the specified task appears in the activity history
-	 * between the starting index and the end of the history list.
-	 * 
-	 * @author Wesley Coelho
-	 */
-	protected boolean isDuplicate(ITask task, int startingIndex) {
-		for (int i = startingIndex; i < ContextCorePlugin.getContextManager().getActivityHistoryMetaContext().getInteractionHistory()
-				.size(); i++) {
-			ITask currTask = getHistoryTaskAt(i);
-			if (currTask != null && currTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
-				return true;
-			}
-		}
-		return false;
-	}
+	// /**
+	// * Returns true if the specified task appears in the activity history
+	// * between the starting index and the end of the history list.
+	// *
+	// * @author Wesley Coelho
+	// */
+	// protected boolean isDuplicate(ITask task, int startingIndex) {
+	// for (int i = startingIndex; i <
+	// ContextCorePlugin.getContextManager().getActivityHistoryMetaContext().getInteractionHistory()
+	// .size(); i++) {
+	// ITask currTask = getHistoryTaskAt(i);
+	// if (currTask != null &&
+	// currTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
+	// return true;
+	// }
+	// }
+	// return false;
+	// }
 
 	/**
 	 * Returns the task corresponding to the interaction event history item at
 	 * the specified position
 	 */
 	protected ITask getHistoryTaskAt(int pos) {
-		InteractionEvent event = ContextCorePlugin.getContextManager().getActivityHistoryMetaContext().getInteractionHistory().get(pos);
+		InteractionEvent event = ContextCorePlugin.getContextManager().getActivityHistoryMetaContext()
+				.getInteractionHistory().get(pos);
 		return TasksUiPlugin.getTaskListManager().getTaskList().getTask(event.getStructureHandle());
 	}
 
@@ -96,16 +103,14 @@ public class TaskActivationHistory {
 				persistentHistoryLoaded = true;
 			}
 
-			if (hasNext()) {
-				for (int i = currentIndex + 1; i < history.size();) {
-					history.remove(i);
-				}
-			}
-			if (history.remove(task)) {
-				currentIndex--;
-			}
+			// if (hasNext()) {
+			// for (int i = currentIndex + 1; i < history.size();) {
+			// history.remove(i);
+			// }
+			// }
+			history.remove(task);
 			history.add(task);
-			currentIndex++;
+			currentIndex = history.size() - 1;
 		} catch (RuntimeException e) {
 			MylarStatusHandler.fail(e, "could not add task to history", false);
 		}
@@ -128,46 +133,53 @@ public class TaskActivationHistory {
 		}
 	}
 
-	/**
-	 * Get a list of the preceding tasks in the history. navigatedToTask(Task)
-	 * should be called to notify the history if the user navigates to an
-	 * arbitrary previous task from this list
-	 * 
-	 * @author Wesley Coelho
-	 */
 	public List<ITask> getPreviousTasks() {
-		try {
-
-			if (!hasPrevious()) {
-				return new ArrayList<ITask>();
-			}
-
-			if (history.get(currentIndex).isActive()) {
-				return history.subList(0, currentIndex);
-			} else {
-				return history.subList(0, currentIndex + 1);
-			}
-		} catch (RuntimeException e) {
-			MylarStatusHandler.fail(e, "could not get previous tasks from history", false);
-			return new ArrayList<ITask>();
-		}
+		return history;
 	}
 
-	/**
-	 * Get a list of the next tasks in the history. navigatedToTask(Task) should
-	 * be called to notify the history if the user navigates to an arbitrary
-	 * next task from this list
-	 * 
-	 * @author Wesley Coelho
-	 */
-	public List<ITask> getNextTasks() {
-		try {
-			return history.subList(currentIndex + 1, history.size());
-		} catch (RuntimeException e) {
-			MylarStatusHandler.fail(e, "could not get next tasks from history", false);
-			return new ArrayList<ITask>();
-		}
-	}
+	// /**
+	// * Get a list of the preceding tasks in the history. navigatedToTask(Task)
+	// * should be called to notify the history if the user navigates to an
+	// * arbitrary previous task from this list
+	// *
+	// * @author Wesley Coelho
+	// */
+	// public List<ITask> getPreviousTasks() {
+	// try {
+	//
+	// if (!hasPrevious()) {
+	// return new ArrayList<ITask>();
+	// }
+	//
+	// if (history.get(currentIndex).isActive()) {
+	// return history.subList(0, currentIndex);
+	// } else {
+	// return history.subList(0, currentIndex + 1);
+	// }
+	// } catch (RuntimeException e) {
+	// MylarStatusHandler.fail(e, "could not get previous tasks from history",
+	// false);
+	// return new ArrayList<ITask>();
+	// }
+	// }
+
+	// /**
+	// * Get a list of the next tasks in the history. navigatedToTask(Task)
+	// should
+	// * be called to notify the history if the user navigates to an arbitrary
+	// * next task from this list
+	// *
+	// * @author Wesley Coelho
+	// */
+	// public List<ITask> getNextTasks() {
+	// try {
+	// return history.subList(currentIndex + 1, history.size());
+	// } catch (RuntimeException e) {
+	// MylarStatusHandler.fail(e, "could not get next tasks from history",
+	// false);
+	// return new ArrayList<ITask>();
+	// }
+	// }
 
 	/**
 	 * Use this method to notify the task history that the user has navigated to
@@ -200,27 +212,27 @@ public class TaskActivationHistory {
 		}
 	}
 
-	public ITask getNextTask() {
-		try {
-			if (hasNext()) {
-				return history.get(++currentIndex);
-			} else {
-				return null;
-			}
-		} catch (RuntimeException e) {
-			MylarStatusHandler.fail(e, "could not get next task", false);
-			return null;
-		}
-	}
+	// public ITask getNextTask() {
+	// try {
+	// if (hasNext()) {
+	// return history.get(++currentIndex);
+	// } else {
+	// return null;
+	// }
+	// } catch (RuntimeException e) {
+	// MylarStatusHandler.fail(e, "could not get next task", false);
+	// return null;
+	// }
+	// }
 
-	public boolean hasNext() {
-		try {
-			return currentIndex < history.size() - 1;
-		} catch (RuntimeException e) {
-			MylarStatusHandler.fail(e, "could not get next task", false);
-			return false;
-		}
-	}
+	// public boolean hasNext() {
+	// try {
+	// return currentIndex < history.size() - 1;
+	// } catch (RuntimeException e) {
+	// MylarStatusHandler.fail(e, "could not get next task", false);
+	// return false;
+	// }
+	// }
 
 	public void clear() {
 		try {
