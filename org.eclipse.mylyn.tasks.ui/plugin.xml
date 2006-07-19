@@ -413,16 +413,17 @@
      </colorDefinition>
          
 	<fontDefinition
-        categoryId="org.eclipse.mylar.tasklist.ui.presentation"
-        defaultsTo="org.eclipse.jface.dialogfont"
-        id="org.eclipse.mylar.tasklist.ui.fonts.task.editor.comment"
-        isEditable="true"
-        label="Task Editor - Notes and Comments">
+       categoryId="org.eclipse.mylar.tasklist.ui.presentation"
+       id="org.eclipse.mylar.tasklist.ui.fonts.task.editor.comment"
+       isEditable="true"
+       label="Task Editor - Notes and Comments"
+       value="Tahoma-regular-10">
          <description>
             Text font used for task editor text areas.
          </description>
       </fontDefinition>
    </extension>
+   <!-- defaultsTo="org.eclipse.jface.dialogfont"-->
    
     
 
