@@ -476,6 +476,10 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		this.needsAnonymousLogin = needsAnonymousLogin;
 	}
 
+	public void updateProperties(TaskRepository repository) {
+		// none
+	}
+	
 	/** for testing */
 	public void setUrl(String url) {
 		serverUrlEditor.setStringValue(url);
