@@ -445,6 +445,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				getCharacterEncoding(), "");
 		repository.setRepositoryLabel(getRepositoryLabel());
 		repository.setAuthenticationCredentials(getUserName(), getPassword());
+		updateProperties(repository);
 		return repository;
 	}
 
