@@ -625,6 +625,8 @@ public class TaskListView extends ViewPart {
 						int priorityInt = new Integer(priorityString);
 						return priorityInt - 1;
 					case 3:
+						return "";
+					case 4: 
 						return taskListElement.getDescription();
 					}
 				} else if (element instanceof AbstractTaskContainer) {
