@@ -97,7 +97,7 @@ class SynchronizeQueryJob extends Job {
 			}
 
 			repositoryQuery.setCurrentlySynchronizing(false);
-			repositoryQuery.setLastRefreshTimeStamp(DateUtil.getFormattedDate(new Date(), "MMM d")+", "+DateUtil.getFormattedTime());
+			repositoryQuery.setLastRefreshTimeStamp(DateUtil.getFormattedDate(new Date(), "MMM d, H:mm:ss"));
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyQueryUpdated(repositoryQuery);
 			monitor.worked(1);
 		}
