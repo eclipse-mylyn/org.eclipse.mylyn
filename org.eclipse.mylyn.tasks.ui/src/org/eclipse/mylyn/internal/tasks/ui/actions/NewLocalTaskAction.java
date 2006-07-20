@@ -18,7 +18,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskInputDialog;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -87,7 +86,8 @@ public class NewLocalTaskAction extends Action {
 			TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask,
 					TasksUiPlugin.getTaskListManager().getTaskList().getRootCategory());
 		}
-		TaskUiUtil.openEditor(newTask, true);
+		
+		//TaskUiUtil.openEditor(newTask, true);
 		
 		if (view != null) {
 			view.getViewer().refresh();		
