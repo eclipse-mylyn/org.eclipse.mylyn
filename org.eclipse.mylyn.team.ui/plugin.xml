@@ -103,7 +103,7 @@
 	              class="org.eclipse.mylar.internal.team.ui.actions.CommitContextAction"
 	              enablesFor="*"
 	              icon="icons/elcl16/context-commit.gif"
-	              id="org.eclipse.mylar.ide.ui.team.context.commit"
+	              id="org.eclipse.mylar.team.context.commit.hit"
 	              label="Commit Context..."
 	              menubarPath="context"
 	              tooltip="Commit Context...">
@@ -117,7 +117,7 @@
 	              class="org.eclipse.mylar.internal.team.ui.actions.CommitContextAction"
 	              enablesFor="*"
 	              icon="icons/elcl16/context-commit.gif"
-	              id="org.eclipse.mylar.ide.ui.team.context.commit"
+	              id="org.eclipse.mylar.team.context.commit.task"
 	              label="Commit Context..."
 	              menubarPath="context"
 	              tooltip="Commit Context...">
