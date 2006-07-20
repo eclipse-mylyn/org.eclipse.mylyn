@@ -109,7 +109,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 		List<String> zipFilesToExtract = new ArrayList<String>();
 		boolean overwrite = importPage.overwrite();
 		boolean zip = importPage.zip();
-
+		
 		if (zip) {
 
 			String sourceZip = importPage.getSourceZipFile();
