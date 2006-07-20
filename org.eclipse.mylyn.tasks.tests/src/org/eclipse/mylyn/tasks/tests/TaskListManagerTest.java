@@ -431,7 +431,7 @@ public class TaskListManagerTest extends TestCase {
 		// Date oldDate = new Date(time);
 		// query.setLastRefresh(oldDate);
 		assertEquals("repositoryUrl", query.getRepositoryUrl());
-		assertEquals("queryUrl", query.getQueryUrl());
+		assertEquals("queryUrl", query.getUrl());
 		assertEquals("<never>", query.getLastRefreshTimeStamp());
 		query.setLastRefreshTimeStamp("today");
 		// assertEquals(time, query.getLastSynchronized().getTime());
@@ -443,7 +443,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getQueries().size());
 		AbstractRepositoryQuery readQuery = manager.getTaskList().getQueries().iterator().next();
-		assertEquals(query.getQueryUrl(), readQuery.getQueryUrl());
+		assertEquals(query.getUrl(), readQuery.getUrl());
 		assertEquals(query.getRepositoryUrl(), readQuery.getRepositoryUrl());
 		assertEquals("today", query.getLastRefreshTimeStamp());
 		assertEquals("repositoryUrl", readQuery.getRepositoryUrl());

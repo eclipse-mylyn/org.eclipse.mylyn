@@ -54,7 +54,7 @@
             class="org.eclipse.mylar.internal.tasks.ui.wizards.NewRepositoryTaskWizard"
             icon="icons/etool16/task-repository-new.gif"
             id="org.eclipse.mylar.tasklist.wizard.new.repository.task"
-            name="New Shared Task"/>
+            name="New Repository Task"/>
       <wizard
             category="org.eclipse.mylar.wizards"
             class="org.eclipse.mylar.internal.tasks.ui.wizards.NewQueryWizard"
@@ -224,10 +224,10 @@
                enablesFor="*"
                icon="icons/etool16/task-repository-new.gif"
                id="org.eclipse.mylar.tasklist.new.repositorytask"
-               label="New Shared Task"
+               label="New Repository Task"
                style="push"
                toolbarPath="reports"
-               tooltip="New Shared Task"> 
+               tooltip="New Repository Task"> 
   		</action>
   		
   		<action
@@ -289,9 +289,9 @@
 	        enablesFor="*"
 	        icon="icons/etool16/task-repository-new.gif"
 	        id="org.eclipse.mylar.tasklist.new.repositorytask"
-	        label="New Shared Task"
+	        label="New Repository Task"
 	        menubarPath="reports"
-	        tooltip="New Shared Task"/>
+	        tooltip="New Repository Task"/>
 	              
 		<action
               class="org.eclipse.mylar.internal.tasks.ui.actions.NewQueryAction"

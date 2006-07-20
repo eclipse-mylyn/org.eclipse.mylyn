@@ -401,7 +401,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		Element node = doc.createElement(queryTagName);
 		node.setAttribute(KEY_NAME, query.getDescription());
 		node.setAttribute(KEY_QUERY_MAX_HITS, query.getMaxHits() + "");
-		node.setAttribute(KEY_QUERY_STRING, query.getQueryUrl());
+		node.setAttribute(KEY_QUERY_STRING, query.getUrl());
 		node.setAttribute(KEY_REPOSITORY_URL, query.getRepositoryUrl());
 		if (query.getLastRefreshTimeStamp() != null) {
 			node.setAttribute(KEY_LAST_REFRESH, query.getLastRefreshTimeStamp());

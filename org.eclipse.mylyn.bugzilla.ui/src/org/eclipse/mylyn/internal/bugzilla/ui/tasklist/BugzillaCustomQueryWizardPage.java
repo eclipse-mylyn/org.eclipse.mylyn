@@ -86,7 +86,7 @@ public class BugzillaCustomQueryWizardPage extends AbstractBugzillaQueryPage {
 		queryText.setLayoutData(gd);
 
 		if (query != null) {
-			queryText.setText(query.getQueryUrl());
+			queryText.setText(query.getUrl());
 		}
 
 		queryText.addKeyListener(new KeyListener() {
@@ -125,7 +125,7 @@ public class BugzillaCustomQueryWizardPage extends AbstractBugzillaQueryPage {
 					TasksUiPlugin.getTaskListManager().getTaskList());
 			query.setCustomQuery(true);
 		} else {
-			query.setQueryUrl(queryText.getText());
+			query.setUrl(queryText.getText());
 		}
 		return query;
 	}

@@ -26,10 +26,11 @@ public abstract class AbstractTaskContainer implements ITaskListElement {
 
 	private TaskList taskList;
 	
-//	public abstract boolean isArchive();
-//
-//	public abstract void setIsArchive(boolean isArchive);
-
+	/**
+	 * Optional URL corresponding to the web resource associated with this container.
+	 */
+	protected String url = null;	
+	
 	public AbstractTaskContainer(String handleAndDescription, TaskList taskList) {
 		assert handle != null;
 		this.handle = handleAndDescription;
@@ -79,6 +80,14 @@ public abstract class AbstractTaskContainer implements ITaskListElement {
 
 	public int hashCode() {
 		return handle.hashCode();
+	}
+	
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getUrl() {
+		return url;
 	}
 	
 	@Override

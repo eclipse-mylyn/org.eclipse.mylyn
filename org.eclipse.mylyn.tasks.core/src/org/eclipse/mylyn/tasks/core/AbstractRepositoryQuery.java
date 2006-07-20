@@ -23,8 +23,6 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 
 	protected String repositoryUrl;
 
-	protected String queryUrl;
-
 	protected int maxHits;
 
 	private Set<AbstractQueryHit> hits = new HashSet<AbstractQueryHit>();
@@ -37,10 +35,6 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 
 	public AbstractRepositoryQuery(String description, TaskList taskList) {
 		super(description, taskList);
-	}
-
-	public String getQueryUrl() {
-		return queryUrl;
 	}
 
 	// TODO: this overriding is a bit weird
@@ -94,10 +88,6 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 
 	public void removeHit(AbstractQueryHit hit) {
 		hits.remove(hit);
-	}
-
-	public void setQueryUrl(String url) {
-		this.queryUrl = url;
 	}
 
 	public String getPriority() {

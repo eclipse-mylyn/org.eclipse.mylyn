@@ -328,7 +328,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				repositoryQuery.getRepositoryKind(), repositoryQuery.getRepositoryUrl());
 
 		final BugzillaCategorySearchOperation categorySearch = new BugzillaCategorySearchOperation(repository,
-				repositoryQuery.getQueryUrl(), repositoryQuery.getMaxHits());
+				repositoryQuery.getUrl(), repositoryQuery.getMaxHits());
 
 		final ArrayList<AbstractQueryHit> newHits = new ArrayList<AbstractQueryHit>();
 		categorySearch.addResultsListener(new ICategorySearchListener() {

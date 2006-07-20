@@ -76,7 +76,7 @@ public class CopyDetailsAction extends Action {
 		} else if (object instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery)object;
 			text += query.getDescription();
-			text += "\n" + query.getQueryUrl();
+			text += "\n" + query.getUrl();
 		} else if (object instanceof ITaskListElement) {
 			ITaskListElement element = (ITaskListElement) object;
 			text = element.getDescription();

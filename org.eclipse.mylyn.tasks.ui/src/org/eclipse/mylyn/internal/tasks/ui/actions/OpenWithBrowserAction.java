@@ -57,7 +57,7 @@ public class OpenWithBrowserAction extends BaseSelectionListenerAction {
 			urlString = task.getUrl();
 		} else if (selectedObject instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) selectedObject;
-			urlString = query.getQueryUrl();
+			urlString = query.getUrl();
 		}
 		if (urlString != null) {
 			TaskUiUtil.openUrl(urlString);

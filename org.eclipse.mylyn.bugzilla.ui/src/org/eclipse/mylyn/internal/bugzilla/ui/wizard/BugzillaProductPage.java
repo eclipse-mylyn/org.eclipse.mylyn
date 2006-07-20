@@ -289,7 +289,7 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 		Object element = selection.getFirstElement();
 		if (element instanceof BugzillaRepositoryQuery) {
 			BugzillaRepositoryQuery query = (BugzillaRepositoryQuery) element;
-			String queryUrl = query.getQueryUrl();
+			String queryUrl = query.getUrl();
 			queryUrl = queryUrl.substring(queryUrl.indexOf("?") + 1);
 			String[] options = queryUrl.split("&");
 

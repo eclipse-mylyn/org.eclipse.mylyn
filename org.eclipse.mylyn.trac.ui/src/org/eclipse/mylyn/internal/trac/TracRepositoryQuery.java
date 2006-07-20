@@ -32,7 +32,7 @@ public class TracRepositoryQuery extends AbstractRepositoryQuery {
 		assert queryUrl.startsWith(repositoryUrl + ITracClient.QUERY_URL);
 		
 		setRepositoryUrl(repositoryUrl);
-		setQueryUrl(queryUrl);
+		setUrl(queryUrl);
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class TracRepositoryQuery extends AbstractRepositoryQuery {
 	}
 
 	public String getQueryParameter() {
-		String url = getQueryUrl();
+		String url = getUrl();
 		int i = url.indexOf(ITracClient.QUERY_URL);
 		if (i == -1) {
 			return null;

@@ -1010,7 +1010,7 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 				}
 				if (originalQuery != null) {
 					try {
-						updateDefaults(originalQuery.getQueryUrl(), String.valueOf(originalQuery.getMaxHits()));
+						updateDefaults(originalQuery.getUrl(), String.valueOf(originalQuery.getMaxHits()));
 					} catch (UnsupportedEncodingException e) {
 						// ignore
 					}
@@ -1695,7 +1695,7 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 
 		} else {
 			try {
-				originalQuery.setQueryUrl(getQueryURL(repository, getQueryParameters()));
+				originalQuery.setUrl(getQueryURL(repository, getQueryParameters()));
 				originalQuery.setMaxHits(Integer.parseInt(getMaxHits()));
 
 			} catch (UnsupportedEncodingException e) {
