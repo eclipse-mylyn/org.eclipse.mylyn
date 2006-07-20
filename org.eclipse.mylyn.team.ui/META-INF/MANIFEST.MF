@@ -32,3 +32,4 @@ Export-Package: org.eclipse.mylar.internal.team,
  org.eclipse.mylar.internal.team.ui.preferences,
  org.eclipse.mylar.internal.team.ui.wizards,
  org.eclipse.mylar.team
+Bundle-ClassPath: .
