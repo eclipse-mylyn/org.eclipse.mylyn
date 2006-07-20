@@ -12,6 +12,7 @@ package org.eclipse.mylar.internal.bugzilla.ui.wizard;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -29,7 +30,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
@@ -47,8 +48,8 @@ import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -104,9 +105,6 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 	private String prevProduct;
 
 	private final TaskRepository repository;
-
-	protected ProgressMonitorDialog monitorDialog = new ProgressMonitorDialog(PlatformUI.getWorkbench()
-			.getActiveWorkbenchWindow().getShell());
 
 	protected IPreferenceStore prefs = BugzillaUiPlugin.getDefault().getPreferenceStore();
 
@@ -180,43 +178,52 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 		updateButton.setText(LABEL_UPDATE);
 		updateButton.setLayoutData(new GridData());
 
-		updateButton.addMouseListener(new MouseAdapter() {
+		updateButton.addSelectionListener(new SelectionAdapter() {
 
 			@Override
-			public void mouseUp(MouseEvent e) {
-
-				monitorDialog.open();
-				IProgressMonitor monitor = monitorDialog.getProgressMonitor();
-				monitor.beginTask("Updating repository report options...", 55);
-
+			public void widgetSelected(SelectionEvent e) {
 				try {
-					BugzillaUiPlugin.updateQueryOptions(repository, monitor);
+					getContainer().run(true, false, new IRunnableWithProgress() {
+						public void run(IProgressMonitor monitor) throws InvocationTargetException,
+								InterruptedException {
+							monitor.beginTask("Updating repository report options...", IProgressMonitor.UNKNOWN);
+							try {
+								BugzillaUiPlugin.updateQueryOptions(repository, monitor);
 
-					products = new ArrayList<String>();
-					for (String product : BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT, null,
-							repository.getUrl())) {
-						products.add(product);
-					}
-					monitor.worked(1);
+								products = new ArrayList<String>();
+								for (String product : BugzillaUiPlugin.getQueryOptions(
+										IBugzillaConstants.VALUES_PRODUCT, null, repository.getUrl())) {
+									products.add(product);
+								}
+							} catch (LoginException exception) {
+								// we had a problem that seems to have been
+								// caused from bad login info
+								MessageDialog
+										.openError(
+												null,
+												"Login Error",
+												"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
+								BugzillaPlugin.log(exception);
+							} catch (IOException exception) {
+								MessageDialog.openError(null, "Connection Error",
+										"\nPlease check your settings in the bugzilla preferences. ");
+							} catch (KeyManagementException e) {
+								throw new InvocationTargetException(e);
+							} catch (NoSuchAlgorithmException e) {
+								throw new InvocationTargetException(e);
+							} catch (BugzillaException e) {
+								throw new InvocationTargetException(e);
+							} finally {
+								monitor.done();
+							}
+						}
+					});
 					populateList(false);
-				} catch (LoginException exception) {
-					// we had a problem that seems to have been caused from bad
-					// login info
-					MessageDialog
-							.openError(
-									null,
-									"Login Error",
-									"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
-					BugzillaPlugin.log(exception);
-				} catch (IOException exception) {
-					MessageDialog.openError(null, "Connection Error",
-							"\nPlease check your settings in the bugzilla preferences. ");
-				} catch (Exception exception) {
+				} catch (InvocationTargetException ex) {
 					MessageDialog.openError(null, "Error updating product list", "Error reported:\n"
-							+ exception.getMessage());
-				} finally {
-					monitor.done();
-					monitorDialog.close();
+							+ ex.getCause().getMessage());
+				} catch (InterruptedException ex) {
+					// Was cancelled...
 				}
 			}
 		});
@@ -238,9 +245,9 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 				if (storedProducts.length > 0) {
 					products = Arrays.asList(storedProducts);
 				} else {
-					products = BugzillaServerFacade.getProductList(repository.getUrl(), TasksUiPlugin
-							.getDefault().getProxySettings(), repository.getUserName(), repository.getPassword(),
-							repository.getCharacterEncoding());
+					products = BugzillaServerFacade.getProductList(repository.getUrl(), TasksUiPlugin.getDefault()
+							.getProxySettings(), repository.getUserName(), repository.getPassword(), repository
+							.getCharacterEncoding());
 				}
 				bugWizard.model.setConnected(true);
 				bugWizard.model.setParsedProductsStatus(true);
@@ -285,7 +292,7 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 		if (selection == null) {
 			return products.toArray(new String[0]);
 		}
-		
+
 		Object element = selection.getFirstElement();
 		if (element instanceof BugzillaRepositoryQuery) {
 			BugzillaRepositoryQuery query = (BugzillaRepositoryQuery) element;
@@ -377,9 +384,10 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 	 * @throws NoSuchAlgorithmException
 	 * @throws LoginException
 	 * @throws KeyManagementException
-	 * @throws BugzillaException 
+	 * @throws BugzillaException
 	 */
-	public void saveDataToModel() throws KeyManagementException, LoginException, NoSuchAlgorithmException, IOException, BugzillaException {
+	public void saveDataToModel() throws KeyManagementException, LoginException, NoSuchAlgorithmException, IOException,
+			BugzillaException {
 		NewBugzillaReport model = bugWizard.model;
 		prevProduct = model.getProduct();
 		model.setProduct((listBox.getSelection())[0]);

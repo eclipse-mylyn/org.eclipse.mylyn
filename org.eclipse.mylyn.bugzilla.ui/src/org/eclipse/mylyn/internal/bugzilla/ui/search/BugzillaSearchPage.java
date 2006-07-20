@@ -12,9 +12,12 @@ package org.eclipse.mylar.internal.bugzilla.ui.search;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.Proxy;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -26,8 +29,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
@@ -59,6 +63,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.help.WorkbenchHelpSystem;
+import org.eclipse.ui.progress.IProgressService;
 
 /**
  * Bugzilla search page
@@ -1357,9 +1362,6 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 
 	protected Button updateButton;
 
-	protected ProgressMonitorDialog monitorDialog = new ProgressMonitorDialog(PlatformUI.getWorkbench()
-			.getActiveWorkbenchWindow().getShell());
-
 	public IDialogSettings getDialogSettings() {
 		IDialogSettings settings = BugzillaUiPlugin.getDefault().getDialogSettings();
 		fDialogSettings = settings.getSection(PAGE_NAME);
@@ -1378,36 +1380,52 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 	private void updateAttributesFromRepository(String repositoryUrl, String[] selectedProducts, boolean connect) {
 
 		if (connect) {
-			// TODO: make cancelable (bug 143011)
-			monitorDialog.setCancelable(false);
-			monitorDialog.open();
-			IProgressMonitor monitor = monitorDialog.getProgressMonitor();
 			try {
-				monitor.beginTask("Updating search options...", 55);
-				BugzillaUiPlugin.updateQueryOptions(repository, monitor);
-			} catch (LoginException exception) {
-				// we had a problem that seems to have been caused from bad
-				// login info
-				MessageDialog
-						.openError(
-								null,
-								"Login Error",
-								"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
-				// BugzillaPlugin.log(exception);
-				return;
-			} catch (IOException e) {
-				MessageDialog.openError(null, "Connection Error", e.getMessage()
-						+ "\nPlease check your settings in the bugzilla preferences. ");
-				return;
-			} catch (OperationCanceledException exception) {
-				return;
-			} catch (Exception e) {
-				MessageDialog.openError(null, "Error updating search options", "Error was : " + e.getMessage());
-				return;
-			} finally {
+				
+				 IRunnableWithProgress updateRunnable = new IRunnableWithProgress() {
+					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+						monitor.beginTask("Updating search options...", IProgressMonitor.UNKNOWN);
+						try {
+							BugzillaUiPlugin.updateQueryOptions(repository, monitor);
+						} catch (LoginException exception) {
+							MessageDialog
+									.openError(
+											null,
+											"Login Error",
+											"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
+							return;
+						} catch (IOException e) {
+							MessageDialog.openError(null, "Connection Error", e.getMessage()
+									+ "\nPlease check your settings in the bugzilla preferences. ");
+							return;
+						} catch (OperationCanceledException exception) {
+							return;
+						} catch (KeyManagementException e) {
+							throw new InvocationTargetException(e);
+						} catch (NoSuchAlgorithmException e) {
+							throw new InvocationTargetException(e);
+						} catch (BugzillaException e) {
+							throw new InvocationTargetException(e);
+						} finally {
+							monitor.done();
+						}
+					}
+				};
 
-				monitor.done();
-				monitorDialog.close();
+				// TODO: make cancelable (bug 143011)
+				if (getContainer() != null) {
+					getContainer().run(true, false, updateRunnable);
+				} else {
+					IProgressService service = PlatformUI.getWorkbench().getProgressService();
+					service.run(true, false, updateRunnable);
+				}
+				
+				
+			} catch (InvocationTargetException e) {
+				MessageDialog.openError(null, "Error updating search options", "Error was : "
+						+ e.getCause().getMessage());
+			} catch (InterruptedException e) {
+				// Was cancelled...
 			}
 		}
 

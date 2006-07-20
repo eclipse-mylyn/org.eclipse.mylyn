@@ -57,6 +57,7 @@ public class NewBugzillaReportWizard extends Wizard implements INewWizard {
 		super.setDefaultPageImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin(
 				"org.eclipse.mylar.internal.bugzilla.ui", "icons/wizban/bug-wizard.gif"));
 		super.setWindowTitle(TITLE);
+		setNeedsProgressMonitor(true);
 	}
 
 	public NewBugzillaReportWizard(boolean fromDialog, TaskRepository repository, IStructuredSelection selection) {
