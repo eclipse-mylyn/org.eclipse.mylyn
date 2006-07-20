@@ -618,4 +618,14 @@ public abstract class AbstractRepositoryConnector {
 	public Set<RepositoryTemplate> getTemplates() {
 		return templates;
 	}
+	
+	/** returns null if template not found */
+	public RepositoryTemplate getTemplate(String label) {
+		for (RepositoryTemplate template : getTemplates()) {
+			if (template.label.equals(label)) {				
+				return template;
+			}
+		}
+		return null;
+	}
 }

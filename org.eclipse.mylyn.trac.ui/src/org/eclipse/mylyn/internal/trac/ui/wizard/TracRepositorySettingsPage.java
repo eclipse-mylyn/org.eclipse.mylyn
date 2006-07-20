@@ -54,7 +54,7 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 	// true),
 	// // new TracRepositoryInfo("Mylar Trac Client",
 	// // "http://mylar.eclipse.org/mylar-trac-client", true, Version.XML_RPC),
-	//	};
+	// };
 
 	/** Supported access types. */
 	private Version[] versions;
@@ -64,33 +64,31 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 		setNeedsAnonymousLogin(true);
 		setNeedsEncoding(false);
-		setNeedsTimeZone(false);		
+		setNeedsTimeZone(false);
 	}
 
 	protected void createAdditionalControls(final Composite parent) {
-		for (RepositoryTemplate info : connector.getTemplates()) {			
+		for (RepositoryTemplate info : connector.getTemplates()) {
 			repositoryLabelCombo.add(info.label);
 		}
 		repositoryLabelCombo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String text = repositoryLabelCombo.getText();
-				for (RepositoryTemplate info :  connector.getTemplates()) {
-				
-					if (info.label.equals(text)) {
-						setUrl(info.repositoryUrl);
-						setAnonymous(info.anonymous);
+				RepositoryTemplate template = connector.getTemplate(text);
+				if (template != null) {
+					setUrl(template.repositoryUrl);
+					setAnonymous(template.anonymous);
 
-						try {
-							Version version = Version.valueOf(info.version);
-							setTracVersion(version);
-						} catch (RuntimeException ex) {
-							setTracVersion(Version.TRAC_0_9);
-						}
-
-						getContainer().updateButtons();
-						return;
+					try {
+						Version version = Version.valueOf(template.version);
+						setTracVersion(version);
+					} catch (RuntimeException ex) {
+						setTracVersion(Version.TRAC_0_9);
 					}
+
+					getContainer().updateButtons();
+					return;
 				}
 			}
 		});
