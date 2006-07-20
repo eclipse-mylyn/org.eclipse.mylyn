@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -82,7 +83,7 @@ public abstract class AbstractRepositoryConnector {
 	
 	private final MutexRule rule = new MutexRule();
 
-	protected Set<RepositoryTemplate> templates = new HashSet<RepositoryTemplate>();
+	protected Set<RepositoryTemplate> templates = new LinkedHashSet<RepositoryTemplate>();
 
 	/**
 	 * @return null if not supported
