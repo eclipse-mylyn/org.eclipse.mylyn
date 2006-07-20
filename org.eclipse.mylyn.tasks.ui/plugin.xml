@@ -417,7 +417,7 @@
        id="org.eclipse.mylar.tasklist.ui.fonts.task.editor.comment"
        isEditable="true"
        label="Task Editor - Notes and Comments"
-       value="Tahoma-regular-10">
+       value="null-regular-10">
          <description>
             Text font used for task editor text areas.
          </description>
