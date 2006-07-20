@@ -67,25 +67,6 @@ public class TaskActivationHistory {
 		persistentHistoryLoaded = true;
 	}
 
-	// /**
-	// * Returns true if the specified task appears in the activity history
-	// * between the starting index and the end of the history list.
-	// *
-	// * @author Wesley Coelho
-	// */
-	// protected boolean isDuplicate(ITask task, int startingIndex) {
-	// for (int i = startingIndex; i <
-	// ContextCorePlugin.getContextManager().getActivityHistoryMetaContext().getInteractionHistory()
-	// .size(); i++) {
-	// ITask currTask = getHistoryTaskAt(i);
-	// if (currTask != null &&
-	// currTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
-	// return true;
-	// }
-	// }
-	// return false;
-	// }
-
 	/**
 	 * Returns the task corresponding to the interaction event history item at
 	 * the specified position
@@ -103,11 +84,6 @@ public class TaskActivationHistory {
 				persistentHistoryLoaded = true;
 			}
 
-			// if (hasNext()) {
-			// for (int i = currentIndex + 1; i < history.size();) {
-			// history.remove(i);
-			// }
-			// }
 			history.remove(task);
 			history.add(task);
 			currentIndex = history.size() - 1;
@@ -118,8 +94,16 @@ public class TaskActivationHistory {
 
 	public ITask getPreviousTask() {
 		try {
+			boolean active = false;
+			for (ITask task: history) {
+				if(task.isActive()) {
+					active = true;
+					break;
+				}
+			}
+			
 			if (hasPrevious()) {
-				if ((currentIndex == 0 && !history.get(currentIndex).isActive())) {
+				if ((currentIndex == 0 && !history.get(currentIndex).isActive()) || !active) {
 					return history.get(currentIndex);
 				} else {
 					return history.get(--currentIndex);
@@ -135,6 +119,29 @@ public class TaskActivationHistory {
 
 	public List<ITask> getPreviousTasks() {
 		return history;
+	}
+
+	public boolean hasPrevious() {
+		try {
+			if (!persistentHistoryLoaded) {
+				loadPersistentHistory();
+				persistentHistoryLoaded = true;
+			}
+
+			return (currentIndex == 0 && !history.get(currentIndex).isActive()) || currentIndex > 0;
+		} catch (RuntimeException e) {
+			MylarStatusHandler.fail(e, "could determine previous task", false);
+			return false;
+		}
+	}
+
+	public void clear() {
+		try {
+			history.clear();
+			currentIndex = -1;
+		} catch (RuntimeException e) {
+			MylarStatusHandler.fail(e, "could not clear history", false);
+		}
 	}
 
 	// /**
@@ -181,36 +188,25 @@ public class TaskActivationHistory {
 	// }
 	// }
 
-	/**
-	 * Use this method to notify the task history that the user has navigated to
-	 * an arbitrary task in the history without using getNextTask() or
-	 * getPreviousTask()
-	 * 
-	 * @author Wesley Coelho
-	 */
-	public void navigatedToTask(ITask task) {
-		for (int i = 0; i < history.size(); i++) {
-			if (history.get(i).getHandleIdentifier() != null
-					&& history.get(i).getHandleIdentifier().equals(task.getHandleIdentifier())) {
-				currentIndex = i;
-				break;
-			}
-		}
-	}
-
-	public boolean hasPrevious() {
-		try {
-			if (!persistentHistoryLoaded) {
-				loadPersistentHistory();
-				persistentHistoryLoaded = true;
-			}
-
-			return (currentIndex == 0 && !history.get(currentIndex).isActive()) || currentIndex > 0;
-		} catch (RuntimeException e) {
-			MylarStatusHandler.fail(e, "could determine previous task", false);
-			return false;
-		}
-	}
+	// /**
+	// * Use this method to notify the task history that the user has navigated
+	// to
+	// * an arbitrary task in the history without using getNextTask() or
+	// * getPreviousTask()
+	// *
+	// * @author Wesley Coelho
+	// */
+	// public void navigatedToTask(ITask task) {
+	// for (int i = 0; i < history.size(); i++) {
+	// if (history.get(i).getHandleIdentifier() != null
+	// &&
+	// history.get(i).getHandleIdentifier().equals(task.getHandleIdentifier()))
+	// {
+	// currentIndex = i;
+	// break;
+	// }
+	// }
+	// }
 
 	// public ITask getNextTask() {
 	// try {
@@ -234,12 +230,22 @@ public class TaskActivationHistory {
 	// }
 	// }
 
-	public void clear() {
-		try {
-			history.clear();
-			currentIndex = -1;
-		} catch (RuntimeException e) {
-			MylarStatusHandler.fail(e, "could not clear history", false);
-		}
-	}
+	// /**
+	// * Returns true if the specified task appears in the activity history
+	// * between the starting index and the end of the history list.
+	// *
+	// * @author Wesley Coelho
+	// */
+	// protected boolean isDuplicate(ITask task, int startingIndex) {
+	// for (int i = startingIndex; i <
+	// ContextCorePlugin.getContextManager().getActivityHistoryMetaContext().getInteractionHistory()
+	// .size(); i++) {
+	// ITask currTask = getHistoryTaskAt(i);
+	// if (currTask != null &&
+	// currTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
+	// return true;
+	// }
+	// }
+	// return false;
+	// }
 }

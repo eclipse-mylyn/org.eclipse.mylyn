@@ -72,7 +72,8 @@ public abstract class TaskNavigateDropDownAction extends Action implements IMenu
 
 		public void run() {
 			new TaskActivateAction().run(targetTask);
-			taskHistory.navigatedToTask(targetTask);
+			// taskHistory.navigatedToTask(targetTask);
+			taskHistory.addTask(targetTask);
 			setButtonStatus();
 			view.refreshAndFocus(false);
 		}
@@ -105,7 +106,7 @@ public abstract class TaskNavigateDropDownAction extends Action implements IMenu
 
 	public void setButtonStatus() {
 		setEnabled(taskHistory.getPreviousTasks() != null && taskHistory.getPreviousTasks().size() > 0);
-		//view.getNextTaskAction().setEnabled(taskHistory.hasNext());
+		// view.getNextTaskAction().setEnabled(taskHistory.hasNext());
 	}
 
 	protected abstract void addActionsToMenu();

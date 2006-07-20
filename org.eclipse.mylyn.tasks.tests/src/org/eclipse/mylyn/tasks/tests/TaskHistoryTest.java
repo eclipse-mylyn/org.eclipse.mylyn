@@ -187,44 +187,37 @@ public class TaskHistoryTest extends TestCase {
 
 		// Now check that the next and prev lists look right
 		prevHistoryList = history.getPreviousTasks();
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task4);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task3);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task2);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task2);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task4);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task3);
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task1);
 
 		// Activation of task outside of history navigation tool
 		history.addTask(task3);
 		prevHistoryList = history.getPreviousTasks();
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task3);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task4);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task2);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task4);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task1);
+		
+		// Pick a task from drop down history
+		navigateAction = prevAction.new TaskNavigateAction(task4);
+		navigateAction.run();
+		assertTrue(task4.isActive());
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task4);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task3);
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task2);
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task1);
-
-		history.addTask(task1);
-		prevHistoryList = history.getPreviousTasks();
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task1);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task3);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task4);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task2);
 		
-		
-		
-		navigateAction = prevAction.new TaskNavigateAction(task3);
-		navigateAction.run();
-		assertTrue(task3.isActive());
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task1);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task3);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task4);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task2);
-		
+		// Hit previous task button
 		taskView.getPreviousTaskAction().run();
-		assertTrue(task4.isActive());
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task1);
+		assertTrue(task3.isActive());
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task4);
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task3);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task4);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task2);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task2);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task1);
 		
-		(new TaskDeactivateAction()).run(task4);
+		(new TaskDeactivateAction()).run(task3);
 		
 		// List<ITask> nextHistoryList = taskHistory.getNextTasks();
 		// assertTrue(nextHistoryList.get(0) == task3);
