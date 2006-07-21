@@ -588,80 +588,7 @@ public class TaskPlanningEditor extends EditorPart {
 		}
 	}
 
-	private void createNotesSection(Composite parent, FormToolkit toolkit) {
-		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
-		section.setText(LABEL_NOTES);
-		section.setExpanded(true);
-		section.setLayout(new GridLayout());
-		section.setLayoutData(new GridData(GridData.FILL_BOTH));
-		section.addExpansionListener(new IExpansionListener() {
-			public void expansionStateChanging(ExpansionEvent e) {
-				form.reflow(true);
-			}
-
-			public void expansionStateChanged(ExpansionEvent e) {
-				form.reflow(true);
-			}
-		});
-		Composite container = toolkit.createComposite(section);
-		section.setClient(container);
-		container.setLayout(new GridLayout());
-		container.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-		// notes = toolkit.createText(container, task.getNotes(), SWT.FLAT |
-		// SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		// notes.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		//		
-		// IThemeManager themeManager =
-		// getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-		// Font notesFont =
-		// themeManager.getCurrentTheme().getFontRegistry().get(TaskListColorsAndFonts.TASK_EDITOR_FONT);
-		// notes.setFont(notesFont);
-		// GridData notesDataLayout = new GridData(GridData.FILL_BOTH);
-		// notes.setLayoutData(notesDataLayout);
-		// notes.addModifyListener(new ModifyListener() {
-		// public void modifyText(ModifyEvent e) {
-		// markDirty(true);
-		// }
-		// });
-		TaskRepository repository = null;
-		if (task instanceof AbstractRepositoryTask) {
-			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
-			repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryTask.getRepositoryKind(),
-					repositoryTask.getRepositoryUrl());
-		}
-		commentViewer = new RepositoryTextViewer(repository, container, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		commentViewer.getTextWidget().setLayoutData(new GridData(GridData.FILL_BOTH));
-		commentViewer.getTextWidget().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-
-		commentViewer.getTextWidget().setFont(
-				themeManager.getCurrentTheme().getFontRegistry().get(TaskListColorsAndFonts.TASK_EDITOR_FONT));
-		commentViewer.setDocument(new Document(task.getNotes()));
-		commentViewer.setEditable(true);
-		commentViewer.getTextWidget().addModifyListener(new ModifyListener() {
-
-			public void modifyText(ModifyEvent e) {
-				markDirty(true);
-			}
-		});
-		
-		// TODO: Hack to get undo working in editor.
-		commentViewer.getTextWidget().addKeyListener(new KeyListener() {
-
-			public void keyPressed(KeyEvent e) {
-				if (((int) e.character == 26) && (e.stateMask == (SWT.CTRL))) {
-					commentViewer.getUndoManager().undo();
-				}
-			}
-
-			public void keyReleased(KeyEvent e) {
-
-			}
-		});
-
-		toolkit.paintBordersFor(container);
-	}
+	
 
 	private void createPlanningSection(Composite parent, FormToolkit toolkit) {
 
@@ -851,6 +778,85 @@ public class TaskPlanningEditor extends EditorPart {
 		toolkit.paintBordersFor(elapsedComposite);
 	}
 
+	
+	private void createNotesSection(Composite parent, FormToolkit toolkit) {
+		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
+		section.setText(LABEL_NOTES);
+		section.setExpanded(true);
+		section.setLayout(new GridLayout());
+		section.setLayoutData(new GridData(GridData.FILL_BOTH));
+		section.addExpansionListener(new IExpansionListener() {
+			public void expansionStateChanging(ExpansionEvent e) {
+				form.reflow(true);
+			}
+
+			public void expansionStateChanged(ExpansionEvent e) {
+				form.reflow(true);
+			}
+		});
+		Composite container = toolkit.createComposite(section);
+		section.setClient(container);
+		container.setLayout(new GridLayout());
+		container.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+		// notes = toolkit.createText(container, task.getNotes(), SWT.FLAT |
+		// SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		// notes.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		//		
+		// IThemeManager themeManager =
+		// getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+		// Font notesFont =
+		// themeManager.getCurrentTheme().getFontRegistry().get(TaskListColorsAndFonts.TASK_EDITOR_FONT);
+		// notes.setFont(notesFont);
+		// GridData notesDataLayout = new GridData(GridData.FILL_BOTH);
+		// notes.setLayoutData(notesDataLayout);
+		// notes.addModifyListener(new ModifyListener() {
+		// public void modifyText(ModifyEvent e) {
+		// markDirty(true);
+		// }
+		// });
+		TaskRepository repository = null;
+		if (task instanceof AbstractRepositoryTask) {
+			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+			repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryTask.getRepositoryKind(),
+					repositoryTask.getRepositoryUrl());
+		}
+		commentViewer = new RepositoryTextViewer(repository, container, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		commentViewer.getTextWidget().setLayoutData(new GridData(GridData.FILL_BOTH));
+		commentViewer.getTextWidget().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+
+		commentViewer.getTextWidget().setFont(
+				themeManager.getCurrentTheme().getFontRegistry().get(TaskListColorsAndFonts.TASK_EDITOR_FONT));
+		commentViewer.setDocument(new Document(task.getNotes()));
+		commentViewer.setEditable(true);
+		commentViewer.getTextWidget().addModifyListener(new ModifyListener() {
+
+			public void modifyText(ModifyEvent e) {
+				markDirty(true);
+			}
+		});
+		
+		// TODO: Hack to get undo working in editor.
+		commentViewer.getTextWidget().addKeyListener(new KeyListener() {
+
+			public void keyPressed(KeyEvent e) {
+				if (((int) e.character == 26) && (e.stateMask == (SWT.CTRL))) {
+					commentViewer.getUndoManager().undo();
+				} else if (((int) e.character == 25) && (e.stateMask == (SWT.CTRL))) {
+					commentViewer.getUndoManager().redo();
+				}
+			}
+
+			public void keyReleased(KeyEvent e) {
+
+			}
+		});
+
+		toolkit.paintBordersFor(container);
+	}
+	
+	
 	private String getTaskDateString(ITask task) {
 
 		if (task == null)

@@ -25,7 +25,6 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
-import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
@@ -38,15 +37,11 @@ import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -55,7 +50,6 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * An editor used to view a locally created bug that does not yet exist on a
@@ -69,11 +63,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 
 	protected RepositoryTaskData taskData;
 
-	protected Text descriptionText;
-
 	protected String newSummary = "";
-
-	protected String newDescription = "";
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
@@ -86,7 +76,6 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(editorInput.getRepositoryTaskData());
 		taskData = ei.getRepositoryTaskData();
 		newSummary = taskData.getSummary();
-		newDescription = taskData.getDescription();
 		repository = editorInput.getRepository();
 		isDirty = false;
 		updateEditorTitle();
@@ -115,29 +104,16 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		descriptionComposite.setLayoutData(descriptionData);
 		section.setClient(descriptionComposite);
 
-		descriptionText = new Text(descriptionComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
-		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
-		Font descriptionFont = themeManager.getCurrentTheme().getFontRegistry().get(
-				TaskListColorsAndFonts.TASK_EDITOR_FONT);
-		descriptionText.setFont(descriptionFont);
+		newDescriptionTextViewer = addRepositoryText(repository, descriptionComposite, getRepositoryTaskData()
+				.getNewComment(), SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		newDescriptionTextViewer.setEditable(true);
+
 		GridData descriptionTextData = new GridData(GridData.FILL_BOTH);
+		newDescriptionTextViewer.getTextWidget().setLayoutData(descriptionTextData);
+		newDescriptionTextViewer.getTextWidget().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 
-		descriptionText.setLayoutData(descriptionTextData);
-		descriptionText.setText(taskData.getDescription());
-		descriptionText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				String sel = descriptionText.getText();
-				if (!(newDescription.equals(sel))) {
-					newDescription = sel;
-					changeDirtyStatus(true);
-				}
-			}
-		});
-		descriptionText.addListener(SWT.FocusIn, new DescriptionListener());
+		toolkit.paintBordersFor(descriptionComposite);
 
-		super.descriptionTextBox = descriptionText;
-
-		this.createSeparatorSpace(descriptionComposite);
 	}
 
 	@Override
@@ -210,12 +186,12 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 			});
 			return;
 		}
-		if (descriptionText != null && descriptionText.getText().trim().equals("")) {
+		if (newDescriptionTextViewer != null && newDescriptionTextViewer.getTextWidget().getText().trim().equals("")) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					MessageDialog.openInformation(NewBugEditor.this.getSite().getShell(), ERROR_CREATING_BUG_REPORT,
 							"A description must be provided with new reports.");
-					descriptionText.setFocus();
+					newDescriptionTextViewer.getTextWidget().setFocus();
 					submitButton.setEnabled(true);
 					showBusy(false);
 				}
@@ -298,7 +274,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 	@Override
 	protected void updateBug() {
 		taskData.setSummary(newSummary);
-		taskData.setDescription(newDescription);
+		taskData.setDescription(newDescriptionTextViewer.getTextWidget().getText());
 	}
 
 	/**
@@ -336,7 +312,6 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		return false;
 	}
 
-	
 	/**
 	 * Creates the button layout. This displays options and buttons at the
 	 * bottom of the editor to allow actions to be performed on the bug.
@@ -349,7 +324,6 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		section.setLayout(new GridLayout());
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-
 		Composite buttonComposite = toolkit.createComposite(section);
 		GridLayout buttonLayout = new GridLayout();
 		buttonLayout.numColumns = 4;
@@ -358,7 +332,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		buttonData.horizontalSpan = 1;
 		buttonData.grabExcessVerticalSpace = false;
 		buttonComposite.setLayoutData(buttonData);
-		section.setClient(buttonComposite);		
+		section.setClient(buttonComposite);
 		addActionButtons(buttonComposite);
 	}
 
@@ -374,4 +348,5 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		});
 		submitButton.addListener(SWT.FocusIn, new GenericListener());
 	}
+	
 }

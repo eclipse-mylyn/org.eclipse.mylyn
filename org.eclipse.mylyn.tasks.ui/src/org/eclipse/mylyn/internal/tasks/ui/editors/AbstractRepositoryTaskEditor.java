@@ -1168,20 +1168,6 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		newCommentTextViewer.getTextWidget().setLayoutData(addCommentsTextData);
 		newCommentTextViewer.getTextWidget().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 
-		// TODO: Hack to get undo working in editor.
-		newCommentTextViewer.getTextWidget().addKeyListener(new KeyListener() {
-
-			public void keyPressed(KeyEvent e) {
-				if (((int) e.character == 26) && (e.stateMask == (SWT.CTRL))) {
-					newCommentTextViewer.getUndoManager().undo();
-				}
-			}
-
-			public void keyReleased(KeyEvent e) {
-
-			}
-		});
-
 		newCommentTextViewer.getTextWidget().addModifyListener(new ModifyListener() {
 
 			public void modifyText(ModifyEvent e) {
@@ -1200,41 +1186,6 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		sectionAdditionalComments.setClient(newCommentsComposite);
 
 		toolkit.paintBordersFor(newCommentsComposite);
-
-		// newCommentsComposite.setLayoutData(new
-		// GridData(GridData.FILL_HORIZONTAL));
-		// addCommentsText = toolkit.createText(newCommentsComposite,
-		// getRepositoryTaskData().getNewComment(), SWT.MULTI
-		// | SWT.V_SCROLL | SWT.WRAP);
-		//
-		// IThemeManager themeManager =
-		// getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-		// Font newCommnetFont =
-		// themeManager.getCurrentTheme().getFontRegistry().get(
-		// TaskListColorsAndFonts.TASK_EDITOR_FONT);
-		// addCommentsText.setFont(newCommnetFont);
-		// toolkit.paintBordersFor(newCommentsComposite);
-		// GridData addCommentsTextData = new
-		// GridData(GridData.FILL_HORIZONTAL);
-		// addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
-		// addCommentsTextData.heightHint = DESCRIPTION_HEIGHT;
-		// addCommentsTextData.grabExcessHorizontalSpace = true;
-		//
-		// addCommentsText.setLayoutData(addCommentsTextData);
-		//
-		// addCommentsText.addListener(SWT.KeyUp, new Listener() {
-		//
-		// public void handleEvent(Event event) {
-		// String sel = addCommentsText.getText();
-		// if (!(getRepositoryTaskData().getNewComment().equals(sel))) {
-		// getRepositoryTaskData().setNewComment(sel);
-		// changeDirtyStatus(true);
-		// }
-		// validateInput();
-		// }
-		// });
-		// addCommentsText.addListener(SWT.FocusIn, new NewCommentListener());
-		// addCommentsTextBox = addCommentsText;
 
 	}
 
@@ -1265,7 +1216,6 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		GridLayout buttonLayout = new GridLayout();
 		buttonLayout.numColumns = 4;
 		buttonComposite.setLayout(buttonLayout);
-		// buttonComposite.setBackground(background);
 		GridData buttonData = new GridData(GridData.FILL_BOTH);
 		buttonData.horizontalSpan = 1;
 		buttonData.grabExcessVerticalSpace = false;
@@ -1292,12 +1242,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	 */
 	protected void addActionButtons(Composite buttonComposite) {
 		submitButton = toolkit.createButton(buttonComposite, LABEL_BUTTON_SUBMIT, SWT.NONE);
-		// submitButton.setFont(TEXT_FONT);
 		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		// submitButtonData.widthHint =
-		// AbstractRepositoryTaskEditor.WRAP_LENGTH;
-		// submitButtonData.heightHint = 20;
-
 		submitButton.setLayoutData(submitButtonData);
 		submitButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
@@ -1306,23 +1251,6 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		});
 		submitButton.addListener(SWT.FocusIn, new GenericListener());
 
-		// This is not needed anymore since we have the save working properly
-		// with ctrl-s and file->save
-		// saveButton = new Button(buttonComposite, SWT.NONE);
-		// saveButton.setFont(TEXT_FONT);
-		// GridData saveButtonData = new
-		// GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		// saveButtonData.widthHint = 100;
-		// saveButtonData.heightHint = 20;
-		// saveButton.setText("Save Offline");
-		// saveButton.setLayoutData(saveButtonData);
-		// saveButton.addListener(SWT.Selection, new Listener() {
-		// public void handleEvent(Event e) {
-		// saveBug();
-		// updateEditor();
-		// }
-		// });
-		// saveButton.addListener(SWT.FocusIn, new GenericListener());
 	}
 
 	/**
@@ -1412,7 +1340,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	}
 
 	protected TextViewer addRepositoryText(TaskRepository repository, Composite composite, String text, int style) {
-		RepositoryTextViewer commentViewer = new RepositoryTextViewer(repository, composite, style);
+		final RepositoryTextViewer commentViewer = new RepositoryTextViewer(repository, composite, style);
 
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 
@@ -1430,6 +1358,23 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 					}
 					currentSelectedText = styledText;
 				}
+			}
+		});
+		
+
+		// TODO: Hack to get undo working in editor.
+		commentViewer.getTextWidget().addKeyListener(new KeyListener() {
+
+			public void keyPressed(KeyEvent e) {
+				if (((int) e.character == 26) && (e.stateMask == (SWT.CTRL))) {
+					commentViewer.getUndoManager().undo();
+				} else if (((int) e.character == 25) && (e.stateMask == (SWT.CTRL))) {
+					commentViewer.getUndoManager().redo();
+				}
+			}
+
+			public void keyReleased(KeyEvent e) {
+
 			}
 		});
 
@@ -1724,7 +1669,8 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 	protected StyledText addCommentsTextBox = null;
 
-	protected Text descriptionTextBox = null;
+//	protected Text descriptionTextBox = null;
+	protected TextViewer newDescriptionTextViewer = null;
 
 	// private FormText previousText = null;
 
@@ -1800,7 +1746,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	}
 
 	public void selectNewDescription() {
-		focusOn(descriptionTextBox, false);
+		focusOn(newDescriptionTextViewer.getTextWidget(), false);
 	}
 
 	/**
@@ -1929,101 +1875,9 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	}
 
 	public void setDescriptionText(String text) {
-		this.descriptionTextBox.setText(text);
+		this.newDescriptionTextViewer.setDocument(new Document(text));
 	}
-
-	// private void addHyperlinks(final StyledText styledText, Composite
-	// composite) {
-	//
-	// StringMatcher javaElementMatcher = new StringMatcher("*(*.java:*)", true,
-	// false);
-	// String[] lines = styledText.getText().split("\r\n|\n");
-	//
-	// int totalLength = 0;
-	// for (int x = 0; x < lines.length; x++) {
-	//
-	// String line = lines[x];
-	// Position position = javaElementMatcher.find(line, 0, line.length());
-	// if (position != null) {
-	// String linkText = line.substring(position.getStart() + 1,
-	// position.getEnd() - 1);
-	// // Link hyperlink = new Link(styledText, SWT.NONE);
-	// IRegion region = new Region(styledText.getText().indexOf(line) +
-	// position.getStart(), position.getEnd()
-	// - position.getStart());
-	// addControl(styledText, region, linkText, line, HYPERLINK_TYPE_JAVA);
-	// }
-	//
-	// IHyperlink[] bugHyperlinks = BugzillaUITools.findBugHyperlinks(0,
-	// line.length(), line, 0);
-	// if (bugHyperlinks != null) {
-	// for (IHyperlink hyperlink : bugHyperlinks) {
-	// String linkText = hyperlink.getHyperlinkText();
-	// int index = linkText.lastIndexOf('=');
-	// if (index >= 0) {
-	// String taskId = linkText.substring(index + 1);
-	// String href = repository.getUrl() + hyperlink.getHyperlinkText();
-	// addControl(styledText, hyperlink.getHyperlinkRegion(), "bug# " + taskId,
-	// href,
-	// HYPERLINK_TYPE_TASK);
-	// }
-	//
-	// }
-	// }
-	//
-	// totalLength = totalLength + line.length();
-	//
-	// } // bottom of for loop
-	//
-	// // reposition widgets on paint event
-	// styledText.addPaintObjectListener(new PaintObjectListener() {
-	// public void paintObject(PaintObjectEvent event) {
-	// StyleRange style = event.style;
-	// int start = style.start;
-	// Map<Integer, Control> controlMap = controls.get(styledText);
-	// Control control = controlMap.get(start);
-	// if (control != null) {
-	// Point pt = control.getSize();
-	// int x = event.x + MARGIN;
-	// int y = event.y + event.ascent - 2 * pt.y / 3;
-	// control.setLocation(x, y);
-	// }
-	// }
-	// });
-	// }
-
-	// private void addControl(final StyledText styledText, IRegion region,
-	// String linkText, String href,
-	// final String listenerType) {
-	// Hyperlink hyperlink = toolkit.createHyperlink(styledText, linkText,
-	// SWT.NONE);
-	// hyperlink.setText(linkText);
-	// hyperlink.setFont(COMMENT_FONT);
-	// hyperlink.setHref(href);
-	// IHyperlinkListener hyperlinkListener =
-	// MylarTaskListPlugin.getDefault().getTaskHyperlinkListeners().get(
-	// listenerType);
-	// if (hyperlinkListener != null) {
-	// hyperlink.addHyperlinkListener(hyperlinkListener);
-	// }
-	// Map<Integer, Control> controlMap = controls.get(styledText);
-	// if (controlMap == null) {
-	// controlMap = new HashMap<Integer, Control>();
-	// controls.put(styledText, controlMap);
-	// }
-	// controlMap.put(new Integer(region.getOffset()), hyperlink);
-	// StyleRange style = new StyleRange();
-	// style.start = region.getOffset();
-	// style.length = region.getLength();
-	// hyperlink.pack();
-	// Rectangle rect = hyperlink.getBounds();
-	// int ascent = 2 * rect.height / 3;
-	// int descent = rect.height - ascent;
-	// style.metrics = new GlyphMetrics(ascent + MARGIN, descent + MARGIN,
-	// rect.width + 2 * MARGIN);
-	// styledText.setStyleRange(style);
-	// }
-
+	
 	// private class DisplayableLocalAttachment extends RepositoryAttachment {
 	// private static final long serialVersionUID = 900218036143022422L;
 	//		
