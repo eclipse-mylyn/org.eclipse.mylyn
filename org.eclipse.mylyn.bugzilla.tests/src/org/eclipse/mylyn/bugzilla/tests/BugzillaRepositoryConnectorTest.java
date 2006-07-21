@@ -41,10 +41,10 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
-import org.eclipse.mylar.internal.bugzilla.core.TrustAllSslProtocolSocketFactory;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
+import org.eclipse.mylar.internal.tasks.core.SslProtocolSocketFactory;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.LocalAttachment;
@@ -571,7 +571,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 	}
 
 	public void testTrustAllSslProtocolSocketFactory() throws Exception {
-		TrustAllSslProtocolSocketFactory factory = new TrustAllSslProtocolSocketFactory();
+		SslProtocolSocketFactory factory = new SslProtocolSocketFactory();
 		Socket s;
 
 		s = factory.createSocket("mylar.eclipse.org", 80);

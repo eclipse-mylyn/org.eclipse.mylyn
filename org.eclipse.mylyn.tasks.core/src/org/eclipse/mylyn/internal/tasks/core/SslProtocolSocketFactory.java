@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.core;
+package org.eclipse.mylar.internal.tasks.core;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -28,7 +28,7 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 /** 
  * @author Nathan Hapke
  */
-public class TrustAllSslProtocolSocketFactory implements ProtocolSocketFactory {
+public class SslProtocolSocketFactory implements ProtocolSocketFactory {
 
 	private SSLContext sslContext;
 
@@ -36,7 +36,7 @@ public class TrustAllSslProtocolSocketFactory implements ProtocolSocketFactory {
 		if (sslContext == null) {
 			try {
 				sslContext = SSLContext.getInstance("SSL");
-				sslContext.init(null, new TrustManager[] { new TrustAll() }, null);
+				sslContext.init(null, new TrustManager[] { new RepositoryTrustManager() }, null);
 			} catch (Exception e) {
 				MylarStatusHandler.log(e, "could not get SSL context");
 			} 

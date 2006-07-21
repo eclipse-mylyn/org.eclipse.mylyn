@@ -17,15 +17,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Proxy;
-import java.net.URL;
-import java.net.URLConnection;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
 import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.IPath;
@@ -246,171 +242,6 @@ public class BugzillaPlugin extends Plugin {
 		IPath bugFile = stateLocation.append("bugReports");
 		return bugFile;
 	}
-
-	/**
-	 * @param url
-	 * @param proxy
-	 *            can be null
-	 */
-	public static URLConnection getUrlConnection(URL url, Proxy proxy) throws IOException, NoSuchAlgorithmException,
-			KeyManagementException {
-		SSLContext ctx = SSLContext.getInstance("TLS");
-
-		javax.net.ssl.TrustManager[] tm = new javax.net.ssl.TrustManager[] { new TrustAll() };
-		ctx.init(null, tm, null);
-		HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());
-
-		if (proxy == null) {
-			proxy = Proxy.NO_PROXY;
-		}
-		URLConnection connection = url.openConnection(proxy);
-		return connection;
-	}
-
-	// /**
-	// * Get the favorites file contatining the favorites
-	// *
-	// * @return The FavoritesFile
-	// */
-	// public FavoritesFile getFavorites() {
-	// return favoritesFile;
-	// }
-
-	// /**
-	// * // * Get the name of the bugzilla server // * // *
-	// *
-	// * @return A string containing the prefered name of the bugzilla server //
-	// */
-	// // public String getServerName() {
-	// // return
-	// //
-	// plugin.getPreferenceStore().getString(IBugzillaConstants.BUGZILLA_SERVER);
-	// // }
-	// public boolean isServerCompatability218() {
-	// return
-	// IBugzillaConstants.SERVER_218.equals(getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION))
-	// || IBugzillaConstants.SERVER_220.equals(getPreferenceStore().getString(
-	// IBugzillaConstants.SERVER_VERSION));
-	// }
-	//
-	// public boolean isServerCompatability220() {
-	// return
-	// IBugzillaConstants.SERVER_220.equals(getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION));
-	// }
-
-	// public RepositoryConfiguration getProductConfiguration(String serverUrl)
-	// {
-	// if (!repositoryConfigurations.containsKey(serverUrl)) {
-	// try {
-	// repositoryConfigurations.put(serverUrl,
-	// RepositoryConfigurationFactory.getInstance().getConfiguration(
-	// serverUrl));
-	// } catch (IOException e) {
-	// MessageDialog.openInformation(null, "Retrieval of Bugzilla
-	// Configuration",
-	// "Bugzilla configuration retrieval failed.");
-	// }
-	// }
-	//
-	// return repositoryConfigurations.get(serverUrl);
-	// }
-
-	// protected void setProductConfiguration(String serverUrl,
-	// RepositoryConfiguration repositoryConfiguration) {
-	// repositoryConfigurations.put(serverUrl, repositoryConfiguration);
-	// // this.productConfiguration = productConfiguration;
-	// }
-
-	// private void readFavoritesFile() {
-	// IPath favoritesPath = getFavoritesFile();
-	//
-	// try {
-	// favoritesFile = new FavoritesFile(favoritesPath.toFile());
-	// } catch (Exception e) {
-	// logAndShowExceptionDetailsDialog(e, "occurred while restoring saved
-	// Bugzilla favorites.",
-	// "Bugzilla Favorites Error");
-	// }
-	// }
-
-	// /**
-	// * Returns the path to the file cacheing the query favorites.
-	// */
-	// private IPath getFavoritesFile() {
-	// IPath stateLocation =
-	// Platform.getStateLocation(BugzillaPlugin.getDefault().getBundle());
-	// IPath configFile = stateLocation.append("favorites");
-	// return configFile;
-	// }
-
-	// public IStatus logAndShowExceptionDetailsDialog(Exception e, String
-	// message, String title) {
-	// MultiStatus status = new MultiStatus(BugzillaPlugin.PLUGIN_ID,
-	// IStatus.ERROR, e.getClass().toString() + " "
-	// + message + "\n\n" + "Click Details or see log for more information.",
-	// e);
-	// Status s = new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID,
-	// IStatus.ERROR, e.getClass().toString()
-	// + ": ", e);
-	// status.add(s);
-	// String error = (e.getMessage() == null) ? e.getClass().toString() :
-	// e.getMessage();
-	// s = new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, IStatus.ERROR,
-	// error, e);
-	// status.add(s);
-	// log(status);
-	// ErrorDialog.openError(null, title, null, status);
-	// return status;
-	// }
-
-	// public boolean refreshOnStartUpEnabled() {
-	// return getPreferenceStore().getBoolean(IBugzillaConstants.REFRESH_QUERY);
-	// }
-
-	// private void setDefaultQueryOptions() {
-	// // get the preferences store for the bugzilla preferences
-	// IPreferenceStore prefs = getPreferenceStore();
-	//
-	// prefs.setDefault(IBugzillaConstants.VALUES_STATUS, BugzillaRepositoryUtil
-	// .queryOptionsToString(IBugzillaConstants.DEFAULT_STATUS_VALUES));
-	//
-	// prefs.setDefault(IBugzillaConstants.VALUSE_STATUS_PRESELECTED,
-	// BugzillaRepositoryUtil
-	// .queryOptionsToString(IBugzillaConstants.DEFAULT_PRESELECTED_STATUS_VALUES));
-	//
-	// prefs.setDefault(IBugzillaConstants.VALUES_RESOLUTION,
-	// BugzillaRepositoryUtil
-	// .queryOptionsToString(IBugzillaConstants.DEFAULT_RESOLUTION_VALUES));
-	//
-	// prefs.setDefault(IBugzillaConstants.VALUES_SEVERITY,
-	// BugzillaRepositoryUtil
-	// .queryOptionsToString(IBugzillaConstants.DEFAULT_SEVERITY_VALUES));
-	//
-	// prefs.setDefault(IBugzillaConstants.VALUES_PRIORITY,
-	// BugzillaRepositoryUtil
-	// .queryOptionsToString(IBugzillaConstants.DEFAULT_PRIORITY_VALUES));
-	//
-	// prefs.setDefault(IBugzillaConstants.VALUES_HARDWARE,
-	// BugzillaRepositoryUtil
-	// .queryOptionsToString(IBugzillaConstants.DEFAULT_HARDWARE_VALUES));
-	//
-	// prefs.setDefault(IBugzillaConstants.VALUES_OS, BugzillaRepositoryUtil
-	// .queryOptionsToString(IBugzillaConstants.DEFAULT_OS_VALUES));
-	//
-	// prefs.setDefault(IBugzillaConstants.VALUES_PRODUCT,
-	// BugzillaRepositoryUtil
-	// .queryOptionsToString(IBugzillaConstants.DEFAULT_PRODUCT_VALUES));
-	//
-	// prefs.setDefault(IBugzillaConstants.VALUES_COMPONENT,
-	// BugzillaRepositoryUtil
-	// .queryOptionsToString(IBugzillaConstants.DEFAULT_COMPONENT_VALUES));
-	//
-	// prefs.setDefault(IBugzillaConstants.VALUES_VERSION,
-	// BugzillaRepositoryUtil
-	// .queryOptionsToString(IBugzillaConstants.DEFAULT_VERSION_VALUES));
-	//
-	// prefs.setDefault(IBugzillaConstants.VALUES_TARGET, BugzillaRepositoryUtil
-	// .queryOptionsToString(IBugzillaConstants.DEFAULT_TARGET_VALUES));
-	// }
-
 }
+
+

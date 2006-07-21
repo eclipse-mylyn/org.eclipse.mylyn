@@ -41,6 +41,8 @@ import org.apache.commons.httpclient.protocol.Protocol;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylar.internal.tasks.core.SslProtocolSocketFactory;
+import org.eclipse.mylar.internal.tasks.core.UrlConnectionUtil;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.LocalAttachment;
@@ -125,7 +127,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 		
 		PostMethod postMethod;
 		if (repositoryUsesHttps(repositoryUrl)) {
-			Protocol acceptAllSsl = new Protocol("https", new TrustAllSslProtocolSocketFactory(), getSslPort(repositoryUrl));
+			Protocol acceptAllSsl = new Protocol("https", new SslProtocolSocketFactory(), getSslPort(repositoryUrl));
 			client.getHostConfiguration().setHost(getDomain(repositoryUrl), getSslPort(repositoryUrl), acceptAllSsl);
 			
 			postMethod = new PostMethod(getRequestPath(repositoryUrl) + POST_ARGS_ATTACHMENT_UPLOAD);
@@ -263,7 +265,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 			String url = repositoryUrl + POST_ARGS_ATTACHMENT_DOWNLOAD + id;
 			url = BugzillaServerFacade.addCredentials(url, userName, password);
 			URL downloadUrl = new URL(url);
-			URLConnection connection = BugzillaPlugin.getUrlConnection(downloadUrl, proxySettings);
+			URLConnection connection = UrlConnectionUtil.getUrlConnection(downloadUrl, proxySettings);
 			if (connection != null) {
 				InputStream input = connection.getInputStream();
 				outStream = new FileOutputStream(destinationFile);

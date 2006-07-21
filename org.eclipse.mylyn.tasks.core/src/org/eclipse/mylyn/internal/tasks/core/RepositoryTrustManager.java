@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.core;
+package org.eclipse.mylar.internal.tasks.core;
 
 import javax.net.ssl.X509TrustManager;
 
@@ -17,7 +17,7 @@ import javax.net.ssl.X509TrustManager;
  * TrustAll class implements X509TrustManager to access all https servers with
  * signed and unsigned certificates.
  */
-public class TrustAll implements X509TrustManager {
+public class RepositoryTrustManager implements X509TrustManager {
 	// seems to be no purpose
 	public boolean checkClientTrusted(java.security.cert.X509Certificate[] chain) {
 		return true;

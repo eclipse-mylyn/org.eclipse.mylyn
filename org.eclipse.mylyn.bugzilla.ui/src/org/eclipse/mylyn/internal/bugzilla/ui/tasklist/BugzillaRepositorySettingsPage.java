@@ -24,9 +24,9 @@ import javax.security.auth.login.LoginException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.tasks.core.UrlConnectionUtil;
 import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.RepositoryTemplate;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
@@ -146,7 +146,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 					monitor.beginTask("Validating server settings", IProgressMonitor.UNKNOWN);
 					try {
 						Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
-						URLConnection cntx = BugzillaPlugin.getUrlConnection(serverURL, proxySettings);
+						URLConnection cntx = UrlConnectionUtil.getUrlConnection(serverURL, proxySettings);
 						if (cntx == null || !(cntx instanceof HttpURLConnection)) {
 							throw new MalformedURLException();
 						}
