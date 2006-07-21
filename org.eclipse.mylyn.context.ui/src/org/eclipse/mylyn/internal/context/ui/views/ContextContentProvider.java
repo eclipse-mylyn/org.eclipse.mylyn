@@ -131,8 +131,9 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 
 	private boolean isRootItem(Object object) {
 		boolean isRootItem = false;
-		for (int i = 0; i < tree.getItems().length; i++) {
-			TreeItem item = tree.getItems()[i];
+		TreeItem[] items = tree.getItems();
+		for (int i = 0; i < items.length; i++) {
+			TreeItem item = items[i];
 			if (object.equals(item.getData()))
 				isRootItem = true;
 		}
