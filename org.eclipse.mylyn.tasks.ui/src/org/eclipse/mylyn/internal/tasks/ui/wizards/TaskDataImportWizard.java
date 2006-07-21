@@ -175,7 +175,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 			String sourceDir = importPage.getSourceDirectory();
 			sourceDirFile = new File(sourceDir);
 			if (!sourceDirFile.exists() || !sourceDirFile.isDirectory()) {		
-				MessageDialog.openError(getShell(), "Location not found", sourceZipFile.toString() + " could not be found or is not a folder.");		
+				MessageDialog.openError(getShell(), "Source location not found", "Resrouce could not be found or is not a folder.");		
 				return false;
 			}
 
