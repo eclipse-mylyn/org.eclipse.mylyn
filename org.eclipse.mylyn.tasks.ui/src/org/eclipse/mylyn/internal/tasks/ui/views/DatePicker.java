@@ -19,12 +19,14 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 import org.eclipse.jface.window.Window;
+import org.eclipse.mylar.internal.tasks.ui.planner.DateSelectionDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -34,8 +36,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-
-import org.eclipse.mylar.internal.tasks.ui.planner.DateSelectionDialog;
 
 /**
  * Temporary date picker from patch posted to:
@@ -62,8 +62,8 @@ public class DatePicker extends Composite {
 
 	private List<SelectionListener> pickerListeners = new LinkedList<SelectionListener>();
 
-	private SimpleDateFormat simpleDateFormat = (SimpleDateFormat) DateFormat.getDateInstance(
-			DateFormat.LONG, Locale.ENGLISH);
+	private SimpleDateFormat simpleDateFormat = (SimpleDateFormat) DateFormat.getDateTimeInstance(DateFormat.MEDIUM,
+			DateFormat.SHORT);
 
 	private String initialText = "Select Date";
 
@@ -88,15 +88,29 @@ public class DatePicker extends Composite {
 		gridLayout.makeColumnsEqualWidth = false;
 		this.setLayout(gridLayout);
 
-		simpleDateFormat.applyPattern("MM/dd/yy h:mm aa");
 		dateText = new Text(this, SWT.NONE);
 
 		GridData dateTextGridData = new org.eclipse.swt.layout.GridData();
-		dateTextGridData.widthHint = 95;
+		dateTextGridData.widthHint = 110;
 		dateTextGridData.horizontalAlignment = GridData.FILL;
 
 		dateText.setLayoutData(dateTextGridData);
 		dateText.setText(initialText);
+		dateText.addKeyListener(new KeyListener() {
+
+			public void keyPressed(KeyEvent e) {
+				// key listener used because setting of date picker text causes
+				// modify litener to fire which results in perpetual dirty
+				// editor
+				notifyPickerListeners();
+			}
+
+			public void keyReleased(KeyEvent e) {
+				// ignore
+
+			}
+		});
+
 		dateText.addFocusListener(new FocusListener() {
 
 			Calendar calendar = Calendar.getInstance();
@@ -126,10 +140,9 @@ public class DatePicker extends Composite {
 
 			public void widgetSelected(SelectionEvent arg0) {
 				Calendar newCalendar = GregorianCalendar.getInstance();
-				if(date != null) {
+				if (date != null) {
 					newCalendar.setTime(date.getTime());
 				}
-
 
 				Shell shell = null;
 				if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
