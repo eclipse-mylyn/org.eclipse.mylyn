@@ -257,9 +257,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 				.getValue());
 		assertEquals("---", report.getAttribute(BugzillaReportElement.TARGET_MILESTONE.getKeyString()).getValue());
 		RepositoryTaskAttribute attribute = report.getAttribute(BugzillaReportElement.BLOCKED.getKeyString());
-		assertEquals(2, attribute.getValues().size());
-		assertEquals("2", attribute.getValues().get(0));
-		assertEquals("9", attribute.getValues().get(1));
+		assertEquals("2, 9", attribute.getValue());
 		attribute = report.getAttribute(BugzillaReportElement.CC.getKeyString());
 		assertEquals(2, attribute.getValues().size());
 		assertEquals("relves@cs.ubc.ca", attribute.getValues().get(0));
@@ -410,6 +408,24 @@ public class RepositoryReportFactoryTest extends TestCase {
 				BugzillaReportElement.THETEXT.getKeyString()).getValue());
 		assertEquals(0, report.getAttachments().size());
 	}
+	
+	public void testMultipleDepensOn() throws Exception {
+		String bugid = "5";
+		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
+				IBugzillaConstants.TEST_BUGZILLA_218_URL);
+
+		RepositoryTaskData report = new RepositoryTaskData(attributeFactory, BugzillaPlugin.REPOSITORY_KIND, repository
+				.getUrl(), bugid);
+		BugzillaServerFacade.setupExistingBugAttributes(repository.getUrl(), report);
+		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(),
+				null);
+
+		assertNotNull(report);
+		assertEquals("5", report.getAttribute(BugzillaReportElement.BUG_ID.getKeyString()).getValue());
+		assertEquals("6, 7", report.getAttribute(BugzillaReportElement.DEPENDSON.getKeyString()).getValue());
+		assertEquals("13, 14", report.getAttribute(BugzillaReportElement.BLOCKED.getKeyString()).getValue());
+	}
+
 
 	public void testBugReportAPI() throws Exception {
 		String bugid = "3";

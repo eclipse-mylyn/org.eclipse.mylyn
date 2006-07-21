@@ -234,6 +234,21 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			}
 			break;
 
+		case BLOCKED:
+		case DEPENDSON:
+			RepositoryTaskAttribute dependancyAttribute = report.getAttribute(tag.getKeyString());
+			if (dependancyAttribute == null) {
+				dependancyAttribute = attributeFactory.createAttribute(tag.getKeyString());
+				dependancyAttribute.setValue(parsedText);
+				report.addAttribute(tag.getKeyString(), dependancyAttribute);
+			} else {
+				if(dependancyAttribute.getValue().equals("")) {
+					dependancyAttribute.setValue(parsedText);
+				} else {
+					dependancyAttribute.setValue(dependancyAttribute.getValue()+", "+parsedText);
+				}
+			}
+			break;
 		// All others added as report attribute
 		default:
 			RepositoryTaskAttribute attribute = report.getAttribute(tag.getKeyString());
