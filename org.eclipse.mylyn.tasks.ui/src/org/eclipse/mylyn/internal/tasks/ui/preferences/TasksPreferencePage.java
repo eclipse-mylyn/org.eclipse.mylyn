@@ -246,7 +246,7 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		});
 		synchScheduleTime = new Text(enableSynch, SWT.BORDER | SWT.RIGHT);
 		GridData gridData = new GridData();
-		gridData.widthHint = 20;
+		gridData.widthHint = 25;
 		synchScheduleTime.setLayoutData(gridData);
 		synchScheduleTime.setText(getMinutesString());
 		synchScheduleTime.addModifyListener(new ModifyListener() {
