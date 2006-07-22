@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.internal.tasks.ui.views;
 
+import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -111,9 +112,15 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 	 */
 	private void createTimeList(Composite composite) {
 		timeList = new org.eclipse.swt.widgets.List(composite, SWT.READ_ONLY | SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
-		timeList.setItems(new String[] { "12:00 AM", "1:00 AM", "2:00 AM", "3:00 AM", "4:00 AM", "5:00 AM", "6:00 AM",
-				"7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM",
-				"4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM", "10:00 PM", "11:00 PM" });
+		DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
+		Calendar tempCalendar = Calendar.getInstance();		
+		tempCalendar.set(Calendar.MINUTE, 0);
+		tempCalendar.set(Calendar.SECOND, 0);
+		for(int x = 0; x < 24; x++) {
+			tempCalendar.set(Calendar.HOUR_OF_DAY, x);
+			timeList.add(dateFormat.format(tempCalendar.getTime()));
+		}
+
 		if (date == null) {
 			timeList.select(Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
 		} else {
