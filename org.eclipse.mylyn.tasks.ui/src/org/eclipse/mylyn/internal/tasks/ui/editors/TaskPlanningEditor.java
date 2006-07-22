@@ -156,11 +156,15 @@ public class TaskPlanningEditor extends EditorPart {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
 
-							if (datePicker != null && !datePicker.isDisposed() && updateTask.getReminderDate() != null) {
-								Calendar cal = Calendar.getInstance();
-								cal.setTime(updateTask.getReminderDate());
-								datePicker.setDate(cal);
-							}
+							if (datePicker != null && !datePicker.isDisposed()) {
+								if (updateTask.getReminderDate() != null) {
+									Calendar cal = Calendar.getInstance();
+									cal.setTime(updateTask.getReminderDate());
+									datePicker.setDate(cal);
+								} else {
+									datePicker.setDate(null);
+								}
+							} 
 
 							if (description == null)
 								return;
