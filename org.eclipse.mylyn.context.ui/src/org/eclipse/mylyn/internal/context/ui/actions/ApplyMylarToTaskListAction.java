@@ -52,7 +52,7 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction impleme
 		super.init(view);
 		IViewPart part = super.getPartForAction();
 		if (part instanceof TaskListView) {
-			((TaskListView) part).getFilteredTree().addListener(this);
+			((TaskListView) part).getFilteredTree().getRefreshPolicy().addListener(this);
 		}
 	}
 
@@ -61,7 +61,7 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction impleme
 		super.dispose();
 		IViewPart part = super.getPartForAction();
 		if (part instanceof TaskListView) {
-			((TaskListView) part).getFilteredTree().removeListener(this);
+			((TaskListView) part).getFilteredTree().getRefreshPolicy().removeListener(this);
 		}
 	}
 

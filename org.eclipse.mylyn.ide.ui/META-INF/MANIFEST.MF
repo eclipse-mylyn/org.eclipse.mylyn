@@ -23,7 +23,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylar.context.core,
  org.eclipse.mylar.context.ui,
  org.eclipse.mylar.monitor,
- org.eclipse.mylar.resources
+ org.eclipse.mylar.resources,
+ org.eclipse.ui.navigator.resources
 Eclipse-AutoStart: true
 Export-Package: org.eclipse.mylar.internal.ide,
  org.eclipse.mylar.internal.ide.ui,
