@@ -114,28 +114,12 @@ public abstract class AbstractRepositoryTask extends Task {
 		return null;
 	}
 
-//	public static int getTaskIdAsInt(String taskHandle) {
-//		String idString = getTaskId(taskHandle);
-//		if (idString != null) {
-//			return Integer.parseInt(idString);
-//		} else {
-//			return -1;
-//		}
-//	}
-	
 	public static String getRepositoryUrl(String taskHandle) {
 		int index = taskHandle.lastIndexOf(AbstractRepositoryTask.HANDLE_DELIM);
 		String url = null;
 		if (index != -1) {
 			url = taskHandle.substring(0, index);
 		}
-//		if (url != null && url.equals(TaskRepositoryManager.PREFIX_REPOSITORY_OLD)) {
-//			String repositoryKind = TaskRepositoryManager.PREFIX_REPOSITORY_OLD.toLowerCase();
-//			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(repositoryKind);
-//			if (repository != null) {
-//				url = repository.getUrl();
-//			}
-//		}
 		return url;
 	}
 
@@ -145,7 +129,6 @@ public abstract class AbstractRepositoryTask extends Task {
 		} else if (taskId.contains(CONTEXT_HANDLE_DELIM)) {
 			throw new RuntimeException("invalid handle for task, can not contain: " + CONTEXT_HANDLE_DELIM + ", was: " + taskId);
 		} else {
-			// MylarContextManager.CONTEXT_HANDLE_DELIM + taskId);
 			return repositoryUrl + CONTEXT_HANDLE_DELIM + taskId;
 		}
 	}

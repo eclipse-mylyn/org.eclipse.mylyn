@@ -254,7 +254,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			if (repository != null) {
 				try {
 					String repositoryEncoding = repository.getCharacterEncoding();
-					if (repositoryEncoding != null && !repositoryEncoding.equals(defaultEncoding)) {
+					if (repositoryEncoding != null) {// && !repositoryEncoding.equals(defaultEncoding)) {
 						if (otherEncodingCombo.getItemCount() > 0
 								&& otherEncodingCombo.indexOf(repositoryEncoding) > -1) {
 							otherEncodingCombo.setEnabled(true);

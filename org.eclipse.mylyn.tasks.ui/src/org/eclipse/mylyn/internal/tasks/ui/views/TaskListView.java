@@ -150,7 +150,7 @@ public class TaskListView extends ViewPart {
 
 	private static final String LABEL_NO_TASKS = "no task active";
 	
-	public static final String[] PRIORITY_LEVELS = { Task.PriorityLevel.P1.toString(),
+	static final String[] PRIORITY_LEVELS = { Task.PriorityLevel.P1.toString(),
 			Task.PriorityLevel.P2.toString(), Task.PriorityLevel.P3.toString(), Task.PriorityLevel.P4.toString(),
 			Task.PriorityLevel.P5.toString() };
 
@@ -616,7 +616,7 @@ public class TaskListView extends ViewPart {
 						if (task == null) {
 							return Boolean.TRUE;
 						} else {
-							return new Boolean(task.isCompleted());
+							return Boolean.valueOf(task.isCompleted());
 						}
 					case 1:
 						return "";
@@ -633,7 +633,7 @@ public class TaskListView extends ViewPart {
 					AbstractTaskContainer cat = (AbstractTaskContainer) element;
 					switch (columnIndex) {
 					case 0:
-						return new Boolean(false);
+						return Boolean.FALSE;
 					case 1:
 						return "";
 					case 2:
@@ -645,7 +645,7 @@ public class TaskListView extends ViewPart {
 					AbstractRepositoryQuery cat = (AbstractRepositoryQuery) element;
 					switch (columnIndex) {
 					case 0:
-						return new Boolean(false);
+						return Boolean.FALSE;
 					case 1:
 						return "";
 					case 2:
@@ -1060,8 +1060,7 @@ public class TaskListView extends ViewPart {
 				task = (ITask) element;
 			}
 			addAction(openWithBrowser, manager, element);
-			if (!(element instanceof AbstractRepositoryTask) || element instanceof AbstractTaskContainer
-					|| element instanceof AbstractRepositoryQuery) {
+			if (!(element instanceof AbstractRepositoryTask) || element instanceof AbstractTaskContainer) {
 				addAction(renameAction, manager, element);
 			}
 			addAction(copyDetailsAction, manager, element);

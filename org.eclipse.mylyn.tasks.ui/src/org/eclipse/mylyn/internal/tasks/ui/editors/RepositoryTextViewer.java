@@ -98,7 +98,7 @@ public class RepositoryTextViewer extends SourceViewer {
 		}
 	}
 
-	class RepositoryTextScanner extends RuleBasedScanner {
+	static class RepositoryTextScanner extends RuleBasedScanner {
 		private Color URL_COLOR = new Color(Display.getCurrent(), new RGB(0, 0, 200));
 
 		public RepositoryTextScanner() {

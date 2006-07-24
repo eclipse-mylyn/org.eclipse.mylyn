@@ -124,7 +124,7 @@ public class TaskListSynchronizationManager implements IPropertyChangeListener {
 		}
 	}
 	
-	class MutexRule implements ISchedulingRule {
+	static class MutexRule implements ISchedulingRule {
 	      public boolean isConflicting(ISchedulingRule rule) {
 	         return rule == this;
 	      }

@@ -34,11 +34,9 @@ import org.eclipse.ui.actions.ActionDelegate;
 import org.eclipse.ui.actions.ActionFactory;
 
 /**
- * @author Ken Sueda and Mik Kersten
+ * @author Mik Kersten
  */
 public class SynchronizeSelectedAction extends ActionDelegate implements IViewActionDelegate {
-
-	private AbstractRepositoryQuery query = null;
 
 	private void checkSyncResult(final IJobChangeEvent event, final AbstractRepositoryQuery problemQuery) {
 		if (event.getResult().getException() != null) {
@@ -52,17 +50,7 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 	}
 	
 	public void run(IAction action) {
-		if (query != null) {
-			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-					query.getRepositoryKind());
-			if (connector != null)
-				connector.synchronize(query, new JobChangeAdapter() {
-					public void done(IJobChangeEvent event) {
-						checkSyncResult(event, query);
-					}
-				});
-
-		} else if (TaskListView.getFromActivePerspective() != null) {
+		if (TaskListView.getFromActivePerspective() != null) {
 			ISelection selection = TaskListView.getFromActivePerspective().getViewer().getSelection();
 			for (Object obj : ((IStructuredSelection) selection).toList()) {
 				if (obj instanceof AbstractRepositoryQuery) {

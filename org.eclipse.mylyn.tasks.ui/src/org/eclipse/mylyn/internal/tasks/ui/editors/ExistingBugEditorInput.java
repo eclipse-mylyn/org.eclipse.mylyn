@@ -89,18 +89,33 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 		return id;
 	}
 
-	/**
-	 * @return <code>true</code> if the argument is a bug report editor input
-	 *         on the same bug id.
-	 */
+	
 	@Override
-	public boolean equals(Object o) {
-		// XXX: will equate two tasks with identical ids from different repositories
-		if (o instanceof ExistingBugEditorInput) {
-			ExistingBugEditorInput input = (ExistingBugEditorInput) o;
-			return getId().equals(input.getId());
-		}
-		return false;
+	public int hashCode() {
+		final int PRIME = 31;
+		int result = 1;
+		result = PRIME * result + ((repositoryTask == null) ? 0 : repositoryTask.hashCode());
+		return result;
 	}
+	
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final ExistingBugEditorInput other = (ExistingBugEditorInput) obj;
+		if (repositoryTask == null) {
+			if (other.repositoryTask != null)
+				return false;
+		} else if (!repositoryTask.equals(other.repositoryTask))
+			return false;
+		return true;
+	}
+
+
 
 }

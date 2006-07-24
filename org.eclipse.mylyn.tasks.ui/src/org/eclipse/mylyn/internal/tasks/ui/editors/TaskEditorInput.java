@@ -119,17 +119,29 @@ public class TaskEditorInput implements IEditorInput {
 		return label;
 	}
 
-	/**
-	 * Returns true if the argument is a bug report editor input on the same bug
-	 * id.
-	 */
 	@Override
-	public boolean equals(Object o) {
-		if (o instanceof TaskEditorInput) {
-			TaskEditorInput input = (TaskEditorInput) o;
-			return getId() != null && getId().equals(input.getId());
-		}
-		return false;
+	public int hashCode() {
+		final int PRIME = 31;
+		int result = 1;
+		result = PRIME * result + ((task == null) ? 0 : task.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final TaskEditorInput other = (TaskEditorInput) obj;
+		if (task == null) {
+			if (other.task != null)
+				return false;
+		} else if (!task.equals(other.task))
+			return false;
+		return true;
 	}
 
 	public boolean isNewTask() {

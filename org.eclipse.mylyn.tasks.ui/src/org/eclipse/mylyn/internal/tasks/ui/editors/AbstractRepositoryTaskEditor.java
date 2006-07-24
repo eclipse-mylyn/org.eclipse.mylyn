@@ -334,7 +334,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 	}
 
-	private final class AttachmentTableLabelProvider extends DecoratingLabelProvider implements ITableColorProvider,
+	private static final class AttachmentTableLabelProvider extends DecoratingLabelProvider implements ITableColorProvider,
 			ITableLabelProvider {
 
 		public AttachmentTableLabelProvider(ILabelProvider provider, ILabelDecorator decorator) {

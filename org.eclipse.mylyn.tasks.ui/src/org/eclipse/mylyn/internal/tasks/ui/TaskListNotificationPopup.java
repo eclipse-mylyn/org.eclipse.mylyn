@@ -38,20 +38,7 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class TaskListNotificationPopup extends PopupDialog {
 
-
-	static boolean takeFocusOnOpen = false;
-
-	static boolean persistBounds = false;
-
-	static boolean showDialogMenu =false;
-
-	static boolean showPersistAction = false;
-
-	static String titleText;
-
-	static final String MYLAR_NOTIFICATION_LABEL = "Mylar Notification";
-
-	static String infoText = null;
+	private static final String MYLAR_NOTIFICATION_LABEL = "Mylar Notification";
 
 	private FormToolkit toolkit;
 
@@ -59,13 +46,13 @@ public class TaskListNotificationPopup extends PopupDialog {
 
 	private Rectangle bounds;
 
-	List<ITaskListNotification> notifications;
+	private List<ITaskListNotification> notifications;
 
 	private Composite sectionClient;
 
 	public TaskListNotificationPopup(Shell parent) {
-		super(parent, PopupDialog.INFOPOPUP_SHELLSTYLE | SWT.ON_TOP, takeFocusOnOpen, persistBounds, showDialogMenu,
-				showPersistAction, titleText, infoText);
+		super(parent, PopupDialog.INFOPOPUP_SHELLSTYLE | SWT.ON_TOP, false, false, false,
+				false, null, null);
 	}
 
 	public void setContents(List<ITaskListNotification> notifications) {

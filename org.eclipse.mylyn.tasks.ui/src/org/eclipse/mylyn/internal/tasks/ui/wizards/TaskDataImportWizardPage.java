@@ -286,13 +286,12 @@ public class TaskDataImportWizardPage extends WizardPage {
 				}
 
 			});
-		}
-
-		for (File file : backupFileArray) {
-			TableItem item = new TableItem(backupFilesTable, SWT.NONE);
-			item.setData(file.getAbsolutePath());
-			Date fileModified = new Date(file.lastModified());
-			item.setText(new String[] { DateUtil.formatDate(fileModified, DateUtil.PATTERN_RFC1123) });
+			for (File file : backupFileArray) {
+				TableItem item = new TableItem(backupFilesTable, SWT.NONE);
+				item.setData(file.getAbsolutePath());
+				Date fileModified = new Date(file.lastModified());
+				item.setText(new String[] { DateUtil.formatDate(fileModified, DateUtil.PATTERN_RFC1123) });
+			}
 		}
 
 		backupFilesTable.addSelectionListener(new SelectionAdapter() {

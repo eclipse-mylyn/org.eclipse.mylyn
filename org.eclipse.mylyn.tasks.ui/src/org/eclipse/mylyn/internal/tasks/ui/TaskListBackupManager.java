@@ -180,7 +180,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 		}
 	}
 
-	class ExportJob extends Job {
+	static class ExportJob extends Job {
 
 		final TaskDataExportJob backupJob;
 

@@ -96,7 +96,7 @@ public class TaskEditorUrlHyperlinkDetector implements IHyperlinkDetector {
 		return new TaskEditorUrlHyperlink(sregion, m.group());
 	}
 
-	class TaskEditorUrlHyperlink extends URLHyperlink {
+	static class TaskEditorUrlHyperlink extends URLHyperlink {
 
 		public TaskEditorUrlHyperlink(IRegion region, String urlString) {
 			super(region, urlString);

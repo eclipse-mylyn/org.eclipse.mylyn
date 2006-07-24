@@ -39,7 +39,7 @@ public class SelectRepositoryClientPage extends WizardPage {
 
 	private AbstractRepositoryClientWizard wizard;
 
-	class RepositoryContentProvider implements IStructuredContentProvider {
+	static class RepositoryContentProvider implements IStructuredContentProvider {
 
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}

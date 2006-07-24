@@ -131,7 +131,7 @@ public class RepositoryTaskOutlinePage extends ContentOutlinePage {
 	 * 
 	 * @see ITreeContentProvider
 	 */
-	protected class BugTaskOutlineContentProvider implements ITreeContentProvider {
+	protected static class BugTaskOutlineContentProvider implements ITreeContentProvider {
 
 		public Object[] getChildren(Object parentElement) {
 			if (parentElement instanceof RepositoryTaskOutlineNode) {

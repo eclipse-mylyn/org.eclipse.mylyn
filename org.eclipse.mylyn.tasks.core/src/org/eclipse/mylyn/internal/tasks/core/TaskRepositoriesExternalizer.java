@@ -65,7 +65,7 @@ public class TaskRepositoriesExternalizer {
 			reader.setContentHandler(contentHandler);
 			reader.parse(new InputSource(new FileInputStream(file)));
 			return contentHandler.getRepositories();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			file.renameTo(new File(file.getAbsolutePath() + "-save"));
 			return null;
 		}

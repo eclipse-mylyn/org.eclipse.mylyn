@@ -291,12 +291,12 @@ public abstract class AbstractRepositoryConnector {
 								updateLocalCopy = MessageDialog
 										.openQuestion(
 												null,
-												"Update Local Copy",
-												"Local copy of Report "
+												"Local Task Conflicts with Repository",
+												"Local copy of: "
 														+ repositoryTask.getDescription()
-														+ " on "
+														+ "\n\n on: "
 														+ repositoryTask.getRepositoryUrl()
-														+ " has changes.\nWould you like to override local changes? \n\nNote: if you select No, only the new comment will be saved with the updated bug, all other changes will be lost.");
+														+ "\n\n has changes, override local? \n\nNOTE: if you select No, only the new comment will be saved with the updated bug, all other changes will be lost.");
 							}
 						});
 					} else {
@@ -602,7 +602,7 @@ public abstract class AbstractRepositoryConnector {
 				TasksUiPlugin.TITLE_DIALOG, "Not supported by connector: " + getLabel());
 	}
 	
-	private class MutexRule implements ISchedulingRule {
+	private static class MutexRule implements ISchedulingRule {
 		public boolean isConflicting(ISchedulingRule rule) {
 			return rule == this;
 		}

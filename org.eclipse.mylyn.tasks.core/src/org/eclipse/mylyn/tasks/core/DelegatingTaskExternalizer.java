@@ -262,11 +262,11 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			}
 
 			if (category != null) {
-				if (category.equals(VAL_ROOT)) {
-					taskList.internalAddRootTask(task);
-				} else {
-					taskList.internalAddTask(task, category);
-				}
+//				if (category.equals(VAL_ROOT)) {
+//					taskList.internalAddRootTask(task);
+//				} else {
+				taskList.internalAddTask(task, category);
+//				}
 			} else if (parent == null) {
 				taskList.internalAddRootTask(task);
 			}

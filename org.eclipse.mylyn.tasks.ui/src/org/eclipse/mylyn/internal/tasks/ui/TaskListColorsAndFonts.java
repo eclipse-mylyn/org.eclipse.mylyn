@@ -67,7 +67,7 @@ public class TaskListColorsAndFonts {
 				Field strikeOutFiled = clazz.getDeclaredField("lfStrikeOut");
 				strikeOutFiled.set(dataObject, (byte) 1);
 				STRIKETHROUGH = new Font(Display.getCurrent(), data);
-			} catch (Exception e) {
+			} catch (Throwable t) {
 				// Linux or other platform
 				STRIKETHROUGH = defaultFont;
 			}

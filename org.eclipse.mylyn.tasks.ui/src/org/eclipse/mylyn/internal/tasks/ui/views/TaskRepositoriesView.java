@@ -72,7 +72,7 @@ public class TaskRepositoriesView extends ViewPart {
 		} 
 	};
 
-	class ViewContentProvider implements IStructuredContentProvider {
+	static class ViewContentProvider implements IStructuredContentProvider {
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}
 

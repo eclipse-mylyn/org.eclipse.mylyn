@@ -14,6 +14,10 @@ package org.eclipse.mylar.internal.bugzilla.core;
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 
+/**
+ * @author Rob Elves
+ * @author Mik Kersten
+ */
 public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 
 	private static final long serialVersionUID = 5087501781682994759L;

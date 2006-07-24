@@ -33,7 +33,9 @@ import org.eclipse.swt.widgets.Shell;
 public class DateSelectionDialog extends Dialog {
 
 	private Date reminderDate = null;
+
 	private String title = "Date Selection";
+
 	private Calendar initialCalendar = GregorianCalendar.getInstance();
 
 	public DateSelectionDialog(Shell parentShell, String title) {
@@ -42,10 +44,10 @@ public class DateSelectionDialog extends Dialog {
 
 	public DateSelectionDialog(Shell parentShell, Calendar initialDate, String title) {
 		super(parentShell);
-		if(title != null) {
+		if (title != null) {
 			this.title = title;
 		}
-		if(initialDate != null) {
+		if (initialDate != null) {
 			this.initialCalendar.setTime(initialDate.getTime());
 		}
 		reminderDate = initialCalendar.getTime();
