@@ -67,8 +67,6 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 
 	private Button enableBackgroundSynch;
 
-	// private Button synchQueries = null;
-
 	private Text taskDirectoryText = null;
 
 	private Button browse = null;

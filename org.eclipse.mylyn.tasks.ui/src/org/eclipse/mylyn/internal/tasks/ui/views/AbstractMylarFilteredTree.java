@@ -12,11 +12,7 @@
 package org.eclipse.mylar.internal.tasks.ui.views;
 
 import java.lang.reflect.Field;
-import java.util.HashSet;
-import java.util.Set;
 
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.swt.SWT;
@@ -26,7 +22,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 
@@ -35,49 +30,14 @@ import org.eclipse.ui.dialogs.PatternFilter;
  */
 public abstract class AbstractMylarFilteredTree extends FilteredTree {
 
-	private static final int DELAY_REFRESH = 700;
-
 	private static final int filterWidth = 70;
 
-	private static final String LABEL_FIND = " Find:";
-
-	private Set<IFilteredTreeListener> listeners = new HashSet<IFilteredTreeListener>();
+	public static final String LABEL_FIND = " Find:";
 
 	private Job refreshJob;
-
-	private final IJobChangeListener REFRESH_JOB_LISTENER = new IJobChangeListener() {
-
-		public void aboutToRun(IJobChangeEvent event) {
-			// ignore
-		}
-
-		public void awake(IJobChangeEvent event) {
-			// ignore
-		}
-
-		public void done(IJobChangeEvent event) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					for (IFilteredTreeListener listener : listeners) {
-						listener.filterTextChanged(AbstractMylarFilteredTree.this.filterText.getText());
-					}
-				}
-			});
-		}
-
-		public void running(IJobChangeEvent event) {
-			// ignore
-		}
-
-		public void scheduled(IJobChangeEvent event) {
-			// ignore
-		}
-
-		public void sleeping(IJobChangeEvent event) {
-			// ignore
-		}
-	};
-
+	
+	private AdaptiveRefreshPolicy refreshPolicy;
+	
 	/**
 	 * HACK: using reflectoin to gain access
 	 */
@@ -88,7 +48,7 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 			refreshField = FilteredTree.class.getDeclaredField("refreshJob");
 			refreshField.setAccessible(true);
 			refreshJob = (Job) refreshField.get(this);
-			refreshJob.addJobChangeListener(REFRESH_JOB_LISTENER);
+			refreshPolicy = new AdaptiveRefreshPolicy(refreshJob, this);
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Could not get refresh job", false);
 		}
@@ -98,9 +58,6 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 	@Override
 	public void dispose() {
 		super.dispose();
-		if (refreshJob != null) {
-			refreshJob.removeJobChangeListener(REFRESH_JOB_LISTENER);
-		}
 	}
 
 	@Override
@@ -141,24 +98,16 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 	protected abstract Composite createStatusComposite(Composite container);
 
 	protected void textChanged() {
-		if (refreshJob == null)
-			return;
-		refreshJob.cancel();
-		int refreshDelay = 0;
-		final String text = filterText.getText();
-		int textLength = text.length();
-		if (textLength > 0) {
-			refreshDelay = DELAY_REFRESH / textLength;
+		if (refreshPolicy != null) {
+			refreshPolicy.textChanged(filterText.getText());
 		}
-		refreshJob.addJobChangeListener(REFRESH_JOB_LISTENER);
-		refreshJob.schedule(refreshDelay);
 	}
 
-	public void addListener(IFilteredTreeListener listener) {
-		listeners.add(listener);
+	protected Job getRefreshJob() {
+		return refreshJob;
 	}
 
-	public void removeListener(IFilteredTreeListener listener) {
-		listeners.remove(listener);
+	public AdaptiveRefreshPolicy getRefreshPolicy() {
+		return refreshPolicy;
 	}
 }
