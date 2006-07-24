@@ -158,7 +158,7 @@ public class AntStructureBridge implements IMylarStructureBridge {
 					return AntEditingMonitor.getNode(am, elementPath);
 				}
 			}
-		} catch (Exception e) {
+		} catch (Throwable t) {
 			// ignore this, means that the file or node doesn't exist
 		}
 		return null;

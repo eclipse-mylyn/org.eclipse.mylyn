@@ -25,7 +25,7 @@ public interface IMylarContextListener {
 	 * TODO: refactor
 	 */
 	public enum UpdateKind {
-		HIGHLIGHTER, SCALING, UPDATE, FILTER
+		HIGHLIGHTER, SCALING, UPDATE
 	}
 
 	public void contextActivated(IMylarContext context);

@@ -31,8 +31,6 @@ import org.eclipse.ui.PlatformUI;
  */
 public class ContextRetrieveAction implements IViewActionDelegate {
 	
-	ISelection selection = null;
-	
 	public void init(IViewPart view) {
 		// ignore
 	}
@@ -60,7 +58,7 @@ public class ContextRetrieveAction implements IViewActionDelegate {
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		this.selection = selection;
+		// ignore
 	}
 
 }

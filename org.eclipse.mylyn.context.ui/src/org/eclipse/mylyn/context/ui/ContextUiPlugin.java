@@ -72,7 +72,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private Map<String, ILabelProvider> contextLabelProviders = new HashMap<String, ILabelProvider>();
 
-	private static ContextUiPlugin plugin;
+	private static ContextUiPlugin INSTANCE;
 
 	private ResourceBundle resourceBundle;
 
@@ -180,7 +180,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	public ContextUiPlugin() {
 		super();
-		plugin = this;
+		INSTANCE = this;
 		try {
 			resourceBundle = ResourceBundle.getBundle("org.eclipse.mylar.MylarUiPluginResources");
 		} catch (MissingResourceException x) {
@@ -295,7 +295,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	 * Returns the shared instance.
 	 */
 	public static ContextUiPlugin getDefault() {
-		return plugin;
+		return INSTANCE;
 	}
 
 	/**

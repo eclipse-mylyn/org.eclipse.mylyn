@@ -14,7 +14,7 @@ public class MylarTeamPlugin extends AbstractUIPlugin implements IStartup {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylar.team";
 
-	private static MylarTeamPlugin plugin;
+	private static MylarTeamPlugin INSTANCE;
 
 	private ContextChangeSetManager changeSetManager;
 
@@ -29,7 +29,7 @@ public class MylarTeamPlugin extends AbstractUIPlugin implements IStartup {
 	public static final String DEFAULT_PREFIX_COMPLETED = "Completed:";
 
 	public MylarTeamPlugin() {
-		plugin = this;
+		INSTANCE = this;
 	}
 
 	public void start(BundleContext context) throws Exception {
@@ -56,7 +56,7 @@ public class MylarTeamPlugin extends AbstractUIPlugin implements IStartup {
 	}
 	
 	public void stop(BundleContext context) throws Exception {
-		plugin = null;
+		INSTANCE = null;
 		super.stop(context);
 		changeSetManager.disable();
 	}
@@ -70,7 +70,7 @@ public class MylarTeamPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	public static MylarTeamPlugin getDefault() {
-		return plugin;
+		return INSTANCE;
 	}
 
 	public ContextChangeSetManager getChangeSetManager() {

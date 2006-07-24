@@ -31,12 +31,8 @@ import org.eclipse.ui.PlatformUI;
  */
 public class ContextAttachAction implements IViewActionDelegate {
 
-	ISelection selection = null;
-
-	IViewPart view = null;
-
 	public void init(IViewPart view) {
-		this.view = view;
+		// ignore
 	}
 
 	public void run(IAction action) {
@@ -62,7 +58,7 @@ public class ContextAttachAction implements IViewActionDelegate {
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		this.selection = selection;
+		// ignore
 	}
 
 }

@@ -64,9 +64,9 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
 
 	public static final int DEFAULT_DEGREE = 3;
 
-	public static List<Job> runningJobs = new ArrayList<Job>();
+	public static final List<Job> runningJobs = new ArrayList<Job>();
 
-	public static Map<Match, XmlNodeHelper> nodeMap = new HashMap<Match, XmlNodeHelper>();
+	public static final Map<Match, XmlNodeHelper> nodeMap = new HashMap<Match, XmlNodeHelper>();
 
 	public XmlReferencesProvider() {
 		// TODO: should this be a generic XML extension?
@@ -271,7 +271,7 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
 			return m.getDeclaringType().getFullyQualifiedName() + "." + m.getElementName();
 	}
 
-	public class XMLSearchJob extends Job {
+	public static class XMLSearchJob extends Job {
 
 		private XMLSearchOperation op;
 
@@ -292,7 +292,7 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
 
 	}
 
-	public class XMLSearchOperation extends FileSearchQuery implements IMylarSearchOperation {
+	public static class XMLSearchOperation extends FileSearchQuery implements IMylarSearchOperation {
 
 		@Override
 		public ISearchResult getSearchResult() {

@@ -53,8 +53,6 @@ public class JavaContextLabelProvider extends AppearanceAwareLabelProvider {
 	public String getText(Object object) {
 		if (object instanceof IMylarElement) {
 			IMylarElement node = (IMylarElement) object;
-			if (node == null)
-				return "<missing info>";
 			if (JavaStructureBridge.CONTENT_TYPE.equals(node.getContentType())) {
 				IJavaElement element = JavaCore.create(node.getHandleIdentifier());
 				if (element == null) {
@@ -87,8 +85,6 @@ public class JavaContextLabelProvider extends AppearanceAwareLabelProvider {
 	public Image getImage(Object object) {
 		if (object instanceof IMylarElement) {
 			IMylarElement node = (IMylarElement) object;
-			if (node == null)
-				return null;
 			if (node.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)) {
 				return super.getImage(JavaCore.create(node.getHandleIdentifier()));
 			}

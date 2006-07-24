@@ -63,7 +63,7 @@ public class MylarContextExternalizer {
 
 	private static final String DATE_FORMAT_STRING = "yyyy-MM-dd HH:mm:ss.S z";
 
-	public static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT_STRING, Locale.ENGLISH);
+	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT_STRING, Locale.ENGLISH);
 
 	public void writeContextToXml(MylarContext context, File file) {
 		if (context.getInteractionHistory().isEmpty())

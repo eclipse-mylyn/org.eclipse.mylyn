@@ -43,7 +43,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylar.java";
 
-	private static MylarJavaPlugin plugin;
+	private static MylarJavaPlugin INSTANCE;
 
 	private ResourceBundle resourceBundle;
 
@@ -63,7 +63,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 	public MylarJavaPlugin() {
 		super();
-		plugin = this;
+		INSTANCE = this;
 	}
 
 	/**
@@ -135,7 +135,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		try {
 			super.stop(context);
-			plugin = null;
+			INSTANCE = null;
 			resourceBundle = null;
 
 			ContextCorePlugin.getContextManager().removeListener(packageExplorerManager);
@@ -196,7 +196,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 	 * Returns the shared instance.
 	 */
 	public static MylarJavaPlugin getDefault() {
-		return plugin;
+		return INSTANCE;
 	}
 
 	/**

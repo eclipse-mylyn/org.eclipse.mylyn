@@ -123,6 +123,12 @@ public class XmlNodeHelper {
 		return false;
 	}
 
+	@Override
+	public int hashCode() {
+		return getHandle().hashCode();
+	}
+	
+
 	/**
 	 * Get the contents of an InputStream
 	 * 

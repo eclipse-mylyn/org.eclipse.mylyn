@@ -130,7 +130,7 @@ public class MylarContext implements IMylarContext {
 //			Set<String> keys = Collections.synchronizedSet(elementMap.keySet());
 			for (String key : elementMap.keySet()) {
 				MylarContextElement info = elementMap.get(key);
-				if (info.getInterest().isInteresting()) {
+				if (info != null && info.getInterest().isInteresting()) {
 					elements.add(info);
 				}
 			}

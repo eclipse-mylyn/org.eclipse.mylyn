@@ -31,9 +31,9 @@ import org.eclipse.ui.texteditor.ITextEditor;
  */
 public class JavaStackTraceFileHyperlink implements IHyperlink {
 
-	IRegion region;
+	private IRegion region;
 
-	String traceLine;
+	private String traceLine;
 
 	public JavaStackTraceFileHyperlink(IRegion region, String traceLine) {
 		this.region = region;
@@ -119,7 +119,6 @@ public class JavaStackTraceFileHyperlink implements IHyperlink {
 
 			// get File name (w/o .java)
 			String typeName = traceLine.substring(start + 1, end);
-			typeName.indexOf(".");
 			typeName = typeName.substring(0, typeName.indexOf("."));
 
 			String qualifier = traceLine.substring(0, start);
@@ -128,7 +127,7 @@ public class JavaStackTraceFileHyperlink implements IHyperlink {
 
 			if (start >= 0) {
 				// remove the class name
-				start = new String((String) qualifier.subSequence(0, start)).lastIndexOf('.');
+				start = (qualifier.subSequence(0, start).toString()).lastIndexOf('.');
 				if (start == -1) {
 					start = 0; // default package
 				}

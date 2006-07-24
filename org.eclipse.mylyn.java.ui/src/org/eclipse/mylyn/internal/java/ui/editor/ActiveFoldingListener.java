@@ -152,15 +152,13 @@ public class ActiveFoldingListener implements IMylarContextListener {
 						updater.expandElements(new IJavaElement[] { member });
 						// expand the next 2 children down (e.g. anonymous types)
 						try {
-							if (member instanceof IParent) {
-								IJavaElement[] children = ((IParent)member).getChildren();
-								if (children.length == 1) {
-									updater.expandElements(new IJavaElement[] { children[0] });
-									if (children[0] instanceof IParent) {
-										IJavaElement[] childsChildren = ((IParent)children[0]).getChildren();
-										if (childsChildren.length == 1) {
-											updater.expandElements(new IJavaElement[] { childsChildren[0] });
-										}
+							IJavaElement[] children = ((IParent)member).getChildren();
+							if (children.length == 1) {
+								updater.expandElements(new IJavaElement[] { children[0] });
+								if (children[0] instanceof IParent) {
+									IJavaElement[] childsChildren = ((IParent)children[0]).getChildren();
+									if (childsChildren.length == 1) {
+										updater.expandElements(new IJavaElement[] { childsChildren[0] });
 									}
 								}
 							}

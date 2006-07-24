@@ -59,7 +59,7 @@ public class UiUtil {
 				return highlighter.getHighlight(node, false);
 			}
 		} else {
-			return ContextUiPlugin.getDefault().getColorMap().BACKGROUND_COLOR;
+			return ColorMap.BACKGROUND_COLOR;
 		}
 	}
 
@@ -68,18 +68,18 @@ public class UiUtil {
 			return null;
 		if (node.getInterest().isPredicted() || node.getInterest().isPropagated()) {
 			if (node.getInterest().getValue() >= MylarContextManager.getScalingFactors().getLandmark() / 3) {
-				return ContextUiPlugin.getDefault().getColorMap().GRAY_DARK;
+				return ColorMap.GRAY_DARK;
 			} else if (node.getInterest().getValue() >= 10) {
-				return ContextUiPlugin.getDefault().getColorMap().GRAY_MEDIUM;
+				return ColorMap.GRAY_MEDIUM;
 			} else {
-				return ContextUiPlugin.getDefault().getColorMap().GRAY_LIGHT;
+				return ColorMap.GRAY_LIGHT;
 			}
 		} else if (node.getInterest().isLandmark()) {
-			return ContextUiPlugin.getDefault().getColorMap().LANDMARK;
+			return ColorMap.LANDMARK;
 		} else if (node.getInterest().isInteresting()) {
 			return null;
 		}
-		return ContextUiPlugin.getDefault().getColorMap().GRAY_MEDIUM;
+		return ColorMap.GRAY_MEDIUM;
 	}
 }
 

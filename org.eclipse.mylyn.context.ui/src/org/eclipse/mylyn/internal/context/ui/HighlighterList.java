@@ -27,8 +27,7 @@ import org.eclipse.swt.widgets.Display;
  */
 public class HighlighterList {
 
-	public static final Highlighter DEFAULT_HIGHLIGHTER = new Highlighter("<none>", ContextUiPlugin.getDefault()
-			.getColorMap().DEFAULT, false);
+	public static final Highlighter DEFAULT_HIGHLIGHTER = new Highlighter("<none>", ColorMap.DEFAULT, false);
 
 	private List<Highlighter> highlighters;
 
@@ -58,20 +57,20 @@ public class HighlighterList {
 	public void setToDefaultList() {
 		this.highlighters.clear();
 		highlighters.add(DEFAULT_HIGHLIGHTER);
-		highlighters.add(new Highlighter("yellow", ContextUiPlugin.getDefault().getColorMap().HIGHLIGHTER_YELLOW, false));
-		highlighters.add(new Highlighter("rose", ContextUiPlugin.getDefault().getColorMap().PANTONE_PASTEL_ROSE, false));
-		highlighters.add(new Highlighter("purple", ContextUiPlugin.getDefault().getColorMap().PANTONE_PASTEL_PURPLE,
+		highlighters.add(new Highlighter("yellow", ColorMap.HIGHLIGHTER_YELLOW, false));
+		highlighters.add(new Highlighter("rose", ColorMap.PANTONE_PASTEL_ROSE, false));
+		highlighters.add(new Highlighter("purple", ColorMap.PANTONE_PASTEL_PURPLE,
 				false));
-		highlighters.add(new Highlighter("blue", ContextUiPlugin.getDefault().getColorMap().PANTONE_PASTEL_BLUE, false));
+		highlighters.add(new Highlighter("blue", ColorMap.PANTONE_PASTEL_BLUE, false));
 		highlighters
-				.add(new Highlighter("green", ContextUiPlugin.getDefault().getColorMap().PANTONE_PASTERL_GREEN, false));
+				.add(new Highlighter("green", ColorMap.PANTONE_PASTERL_GREEN, false));
 		highlighters.add(new Highlighter("blue gradient",
-				ContextUiPlugin.getDefault().getColorMap().HIGLIGHTER_BLUE_GRADIENT, true));
+				ColorMap.HIGLIGHTER_BLUE_GRADIENT, true));
 		highlighters.add(new Highlighter("orange gradient",
-				ContextUiPlugin.getDefault().getColorMap().HIGHLIGHTER_ORANGE_GRADIENT, true));
+				ColorMap.HIGHLIGHTER_ORANGE_GRADIENT, true));
 
 		Highlighter intersectionHighlighter = new Highlighter("intersection",
-				ContextUiPlugin.getDefault().getColorMap().HIGLIGHTER_RED_INTERSECTION, false);
+				ColorMap.HIGLIGHTER_RED_INTERSECTION, false);
 		intersectionHighlighter.setIntersection(true);
 		ContextUiPlugin.getDefault().setIntersectionHighlighter(intersectionHighlighter);
 
@@ -93,8 +92,8 @@ public class HighlighterList {
 	}
 
 	public Highlighter addHighlighter() {
-		ColorMap colorMap = new ColorMap();
-		Highlighter hl = new Highlighter("new", colorMap.GRAY_DARK, false);
+//		ColorMap colorMap = new ColorMap();
+		Highlighter hl = new Highlighter("new", ColorMap.GRAY_DARK, false);
 		this.highlighters.add(hl);
 		return hl;
 	}

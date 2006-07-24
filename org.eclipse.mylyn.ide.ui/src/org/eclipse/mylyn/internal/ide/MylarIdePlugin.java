@@ -25,16 +25,16 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 	
 	public static final String PLUGIN_ID = "org.eclipse.mylar.ide";
 	
-	private static MylarIdePlugin plugin;
+	private static MylarIdePlugin INSTANCE;
 
-	public static ImageDescriptor EDGE_REF_XML = getImageDescriptor("icons/elcl16/edge-ref-xml.gif");
+	public static final ImageDescriptor EDGE_REF_XML = getImageDescriptor("icons/elcl16/edge-ref-xml.gif");
 
 	private PdeEditingMonitor pdeEditingMonitor;
 
 	private AntEditingMonitor antEditingMonitor;
 		
 	public MylarIdePlugin() {
-		plugin = this;
+		INSTANCE = this;
 	}
 
 	public void start(BundleContext context) throws Exception {
@@ -65,7 +65,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		try {
 			super.stop(context);
-			plugin = null;
+			INSTANCE = null;
 			MylarMonitorPlugin.getDefault().getSelectionMonitors().remove(pdeEditingMonitor);
 			MylarMonitorPlugin.getDefault().getSelectionMonitors().remove(antEditingMonitor);
 		} catch (Exception e) {
@@ -76,7 +76,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 	}
 
 	public static MylarIdePlugin getDefault() {
-		return plugin;
+		return INSTANCE;
 	}
 
 	/**

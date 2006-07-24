@@ -11,13 +11,17 @@
 
 package org.eclipse.mylar.internal.context.ui;
 
-import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.viewers.IColorDecorator;
+import org.eclipse.jface.viewers.IFontDecorator;
+import org.eclipse.jface.viewers.ILabelDecorator;
+import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.context.core.MylarContextRelation;
-import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * Not currently used.
@@ -78,7 +82,7 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
 	public Color decorateForeground(Object element) {
 		IMylarElement node = getNode(element);
 		if (element instanceof MylarContextRelation) {
-			return ContextUiPlugin.getDefault().getColorMap().RELATIONSHIP;
+			return ColorMap.RELATIONSHIP;
 		} else if (node != null) {
 			UiUtil.getForegroundForElement(node);
 		}

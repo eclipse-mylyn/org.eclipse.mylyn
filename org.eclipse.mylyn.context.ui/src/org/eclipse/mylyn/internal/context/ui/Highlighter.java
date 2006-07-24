@@ -173,9 +173,9 @@ public class Highlighter {
 		return ColorMap.COLOR_WHITE;
 	}
 
-	public void setBase(Color base) {
-		ColorMap.COLOR_WHITE = base;
-	}
+//	public void setBase(Color base) {
+//		ColorMap.COLOR_WHITE = base;
+//	}
 
 	public static Color blend(List<Highlighter> highlighters, IMylarElement info, boolean isLandmark) {
 		int red = 0;

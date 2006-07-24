@@ -121,13 +121,13 @@ public class ActiveSearchQuickView {
 
 	private MenuManager viewMenuManager;
 
-	/**
-	 * Fields which are updated by the IWorkbenchWindowActionDelegate to record
-	 * the selection in the editor
-	 */
-	private ISelection lastSelection;
-
-	private IWorkbenchPart workbenchPart;
+//	/**
+//	 * Fields which are updated by the IWorkbenchWindowActionDelegate to record
+//	 * the selection in the editor
+//	 */
+//	private ISelection lastSelection;
+//
+//	private IWorkbenchPart workbenchPart;
 
 	private boolean isDeactivateListenerActive = false;
 
@@ -691,12 +691,12 @@ public class ActiveSearchQuickView {
 
 		filterText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				String text = ((Text) e.widget).getText();
-				int length = text.length();
-				if (length > 0 && text.charAt(length - 1) != '*') {//$NON-NLS-1$
-					text = text + '*';//$NON-NLS-1$
-				}
-				// setMatcherString(text);
+//				String text = ((Text) e.widget).getText();
+//				int length = text.length();
+//				if (length > 0 && text.charAt(length - 1) != '*') {
+//					text = text + '*';
+//				}
+//				 setMatcherString(text);
 			}
 		});
 	}
@@ -906,13 +906,13 @@ public class ActiveSearchQuickView {
 	// --------------------
 
 	private void createContents() {
-		if (lastSelection != null && workbenchPart != null) {
-			// IXReferenceAdapter xra =
-			// XRefUIUtils.getXRefAdapterForSelection(workbenchPart,lastSelection);
-			// if (xra != null) {
-			// viewer.setInput(xra);
-			// }
-		}
+//		if (lastSelection != null && workbenchPart != null) {
+// IXReferenceAdapter xra =
+// XRefUIUtils.getXRefAdapterForSelection(workbenchPart,lastSelection);
+// if (xra != null) {
+// viewer.setInput(xra);
+// }
+//		}
 	}
 
 	/**
@@ -920,7 +920,7 @@ public class ActiveSearchQuickView {
 	 *            The lastSelection to set.
 	 */
 	public void setLastSelection(ISelection lastSelection) {
-		this.lastSelection = lastSelection;
+//		this.lastSelection = lastSelection;
 	}
 
 	/**
@@ -928,7 +928,7 @@ public class ActiveSearchQuickView {
 	 *            The workbenchPart to set.
 	 */
 	public void setWorkbenchPart(IWorkbenchPart workbenchPart) {
-		this.workbenchPart = workbenchPart;
+//		this.workbenchPart = workbenchPart;
 	}
 
 	public boolean isOpen() {

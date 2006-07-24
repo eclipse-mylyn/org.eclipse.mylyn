@@ -13,7 +13,6 @@ package org.eclipse.mylar.internal.java;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
@@ -25,16 +24,15 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.ui.actions.AbstractApplyMylarAction;
 import org.eclipse.mylar.internal.java.ui.JavaDeclarationsFilter;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.part.EditorPart;
 
 /**
  * Sets member selections on the Package Explorer when appropriate, and manages
@@ -61,9 +59,9 @@ public class PackageExplorerManager implements IMylarContextListener, ISelection
 				if (javaElement != null)
 					elementToSelect = javaElement;
 			} else if (changedSelection instanceof TextSelection) {
-				if (part instanceof EditorPart) {
-					elementToSelect = ((EditorPart) part).getEditorInput().getAdapter(IResource.class);
-				}
+//				if (part instanceof EditorPart) {
+//					elementToSelect = ((EditorPart) part).getEditorInput().getAdapter(IResource.class);
+//				}
 			} else {
 				return;
 			}

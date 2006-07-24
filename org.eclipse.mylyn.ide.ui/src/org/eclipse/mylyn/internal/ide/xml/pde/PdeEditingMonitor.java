@@ -108,9 +108,9 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 								.hashCode());
 
 						// get the name for the node
-						String name = node.getXMLAttributeValue("name");
-						if (name == null)
-							name = node.getXMLTagName();
+//						String name = node.getXMLAttributeValue("name");
+//						if (name == null)
+//							name = node.getXMLTagName();
 						super.handleElementSelection(part, xnode, contributeToContext);
 					}
 				} catch (Exception e) {

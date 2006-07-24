@@ -35,7 +35,7 @@ public class SaxContextReader implements IContextReader {
 			reader.setContentHandler(contentHandler);
 			reader.parse(new InputSource(new FileInputStream(file)));
 			return contentHandler.getContext();
-		} catch (Exception e) {
+		} catch (Throwable t) {
 			file.renameTo(new File(file.getAbsolutePath() + "-save"));
 			return null;
 		}
