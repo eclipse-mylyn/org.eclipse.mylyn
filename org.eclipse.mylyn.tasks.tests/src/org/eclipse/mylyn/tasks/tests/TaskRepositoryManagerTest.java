@@ -18,8 +18,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.tests.connector.MockRepositoryConnector;
@@ -33,7 +31,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
  */
 public class TaskRepositoryManagerTest extends TestCase {
 
-	private static final String DEFAULT_KIND = BugzillaPlugin.REPOSITORY_KIND;
+	private static final String DEFAULT_KIND = MockRepositoryConnector.REPOSITORY_KIND;
 
 	private static final String DEFAULT_URL = "http://eclipse.org";
 
@@ -58,7 +56,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 	}
 
 	public void testHandles() {
-		String url = IBugzillaConstants.ECLIPSE_BUGZILLA_URL;
+		String url = "http://foo.bar";
 		String id = "123";
 		String handle = AbstractRepositoryTask.getHandle(url, id);
 		assertEquals(url, AbstractRepositoryTask.getRepositoryUrl(handle));
@@ -175,7 +173,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		AbstractRepositoryConnector connector = new MockRepositoryConnector();
 		manager.addRepositoryConnector(connector);
 		
-		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_TYPE, "http://jroller.com/page/eu");
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, "http://jroller.com/page/eu");
 		repository.setProperty("owner", "euxx");
 		manager.addRepository(repository);
 

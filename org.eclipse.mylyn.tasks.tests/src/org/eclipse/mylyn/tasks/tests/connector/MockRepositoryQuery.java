@@ -19,8 +19,16 @@ import org.eclipse.mylar.tasks.core.TaskList;
  */
 public class MockRepositoryQuery extends AbstractRepositoryQuery {
 
+	public String MOCK_URL = "http://mock.repository";
+
 	public MockRepositoryQuery(String description, TaskList taskList) {
 		super(description, taskList);
+		super.setUrl(MOCK_URL);
+	}
+	
+	public MockRepositoryQuery(String description, TaskList taskList, String url) {
+		super(description, taskList);
+		super.setUrl(url);
 	}
 
 	@Override

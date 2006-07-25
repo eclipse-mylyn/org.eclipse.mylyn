@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.mylar.bugzilla.tests;
 
-import org.eclipse.mylar.bugzilla.tests.headless.BugzillaQueryTest;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
+import org.eclipse.mylar.bugzilla.tests.headless.BugzillaQueryTest;
 
 /**
  * @author Mik Kersten
@@ -23,6 +23,13 @@ public class AllBugzillaTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.bugzilla.tests");
 		// $JUnit-BEGIN$		
+		suite.addTestSuite(RepositoryTaskHandleTest.class);
+		suite.addTestSuite(TaskListNotificationManagerTest.class);
+		suite.addTestSuite(BugzillaTaskTest.class);
+		suite.addTestSuite(TaskReportGeneratorTest.class);
+		suite.addTestSuite(TaskListStandaloneTest.class);
+		suite.addTestSuite(BugzillaTaskListManagerTest.class);
+		suite.addTestSuite(TaskEditorTest.class);
 		suite.addTestSuite(BugzillaQueryTest.class);
 		suite.addTestSuite(RepositoryEditorWizardTest.class);
 		suite.addTestSuite(RepositoryReportFactoryTest.class);

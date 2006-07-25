@@ -23,20 +23,15 @@ public class AllTasksTests {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tasklist.tests");
 
 		// $JUnit-BEGIN$
-		suite.addTestSuite(RepositoryTaskHandleTest.class);
+		suite.addTestSuite(TaskListManagerTest.class);
 		suite.addTestSuite(RepositoryTaskSynchronizationTest.class);
+		suite.addTestSuite(TaskRepositoryManagerTest.class);
 		suite.addTestSuite(TaskRepositoriesExternalizerTest.class);
 		suite.addTestSuite(TaskListContentProviderTest.class);
 		suite.addTestSuite(TaskListBackupManagerTest.class);
 		suite.addTestSuite(TableSorterTest.class);
 		suite.addTestSuite(TaskKeyComparatorTest.class); 
-		suite.addTestSuite(TaskListNotificationManagerTest.class);
-		suite.addTestSuite(BugzillaTaskTest.class);
-		suite.addTestSuite(TaskReportGeneratorTest.class);
 		suite.addTestSuite(TaskTest.class);
-		suite.addTestSuite(TaskRepositoryManagerTest.class);
-		suite.addTestSuite(TaskListStandaloneTest.class);
-		suite.addTestSuite(TaskListManagerTest.class);
 		suite.addTestSuite(TaskListUiTest.class);
 		suite.addTestSuite(TaskListDnDTest.class);
 		suite.addTestSuite(TaskDataExportTest.class);
@@ -47,7 +42,6 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskAttachmentActionsTest.class);
 		suite.addTestSuite(RepositorySettingsPageTest.class);
 		// suite.addTestSuite(RetrieveTitleFromUrlTest.class);
-		suite.addTestSuite(TaskEditorTest.class);
 		suite.addTestSuite(TaskHistoryTest.class);
 		// $JUnit-END$
 		return suite;

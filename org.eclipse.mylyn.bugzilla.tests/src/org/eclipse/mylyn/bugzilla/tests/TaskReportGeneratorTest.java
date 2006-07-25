@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.tests;
+package org.eclipse.mylar.bugzilla.tests;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
@@ -102,7 +102,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		generator.run(new NullProgressMonitor());
 		assertEquals(0, generator.getAllCollectedTasks().size());
 
-		TaskTestUtil.setBugTaskCompleted(task1, true);
+		BugzillaTestUtil.setBugTaskCompleted(task1, true);
 		generator.run(new NullProgressMonitor());
 		assertEquals(1, generator.getAllCollectedTasks().size());
 		assertEquals(task1, generator.getAllCollectedTasks().get(0));
@@ -135,7 +135,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		BugzillaTask task1 = new BugzillaTask(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1",
 				true);
 		manager.getTaskList().moveToRoot(task1);
-		TaskTestUtil.setBugTaskCompleted(task1, true);
+		BugzillaTestUtil.setBugTaskCompleted(task1, true);
 		TaskCategory cat1 = new TaskCategory("TaskReportGeneratorTest Category", manager.getTaskList());
 		manager.getTaskList().addCategory(cat1);
 
@@ -159,7 +159,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		BugzillaTask task1 = new BugzillaTask(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1",
 				true);
 		manager.getTaskList().moveToRoot(task1);
-		TaskTestUtil.setBugTaskCompleted(task1, false);
+		BugzillaTestUtil.setBugTaskCompleted(task1, false);
 
 		BugzillaRepositoryQuery bugQuery = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl",
 				"TaskReportGeneratorBugzillaQueryCategory", "maxHits", manager.getTaskList());
@@ -180,7 +180,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		generator.run(new NullProgressMonitor());
 		assertEquals(0, generator.getAllCollectedTasks().size());
 
-		TaskTestUtil.setBugTaskCompleted(task1, true);
+		BugzillaTestUtil.setBugTaskCompleted(task1, true);
 
 		generator.run(new NullProgressMonitor());
 		assertEquals(1, generator.getAllCollectedTasks().size());

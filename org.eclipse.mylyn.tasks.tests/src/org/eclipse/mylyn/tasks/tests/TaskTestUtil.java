@@ -18,25 +18,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import java.util.Date;
 
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttributeFactory;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaOfflineTaskHandler;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.tasks.core.TaskComment;
-import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 
 /**
  * @author Mik Kersten
  */
 public class TaskTestUtil {
-
-	private static BugzillaAttributeFactory attributeFactory = new BugzillaAttributeFactory();
 
 	public static File getLocalFile(String path) {
 		try {
@@ -61,27 +49,6 @@ public class TaskTestUtil {
 		}
 		in.close();
 		out.close();
-	}
-
-	public static void setBugTaskCompleted(BugzillaTask bugzillaTask, boolean completed) {
-		RepositoryTaskData report = new RepositoryTaskData(new BugzillaAttributeFactory(),
-				BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.ECLIPSE_BUGZILLA_URL, "1");
-		bugzillaTask.setTaskData(report);
-		RepositoryTaskAttribute resolvedAttribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_STATUS
-				.getKeyString());
-		if (completed) {
-			resolvedAttribute.setValue(RepositoryTaskData.VAL_STATUS_RESOLVED);
-			TaskComment taskComment = new TaskComment(new BugzillaAttributeFactory(), report, 1);
-			RepositoryTaskAttribute attribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_WHEN
-					.getKeyString());
-			attribute.setValue(BugzillaOfflineTaskHandler.comment_creation_ts_format.format(new Date()));
-			taskComment.addAttribute(BugzillaReportElement.BUG_WHEN.getKeyString(), attribute);
-			report.addComment(taskComment);
-		} else {
-			resolvedAttribute.setValue(RepositoryTaskData.VAL_STATUS_NEW);
-		}
-
-		report.addAttribute(BugzillaReportElement.BUG_STATUS.getKeyString(), resolvedAttribute);
 	}
 
 }
