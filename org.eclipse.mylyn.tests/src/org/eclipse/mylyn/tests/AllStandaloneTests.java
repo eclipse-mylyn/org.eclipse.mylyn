@@ -14,9 +14,9 @@ package org.eclipse.mylar.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylar.bugzilla.tests.TaskListStandaloneTest;
 import org.eclipse.mylar.core.core.tests.ContextTest;
 import org.eclipse.mylar.core.core.tests.DegreeOfInterestTest;
-import org.eclipse.mylar.tasks.tests.TaskListStandaloneTest;
 
 /**
  * @author Mik Kersten

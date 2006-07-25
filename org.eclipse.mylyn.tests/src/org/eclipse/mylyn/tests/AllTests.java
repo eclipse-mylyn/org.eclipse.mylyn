@@ -19,6 +19,7 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.core.core.tests.AllCoreTests;
 import org.eclipse.mylar.ide.tests.AllIdeTests;
 import org.eclipse.mylar.java.tests.AllJavaTests;
+import org.eclipse.mylar.jira.tests.AllJiraTests;
 import org.eclipse.mylar.monitor.reports.tests.AllMonitorReportTests;
 import org.eclipse.mylar.monitor.tests.AllMonitorTests;
 import org.eclipse.mylar.resources.MylarResourcesPlugin;
@@ -50,7 +51,7 @@ public class AllTests {
 		suite.addTest(AllResourcesTests.suite());
 		suite.addTest(AllBugzillaTests.suite());
 		suite.addTest(AllMiscTests.suite());
-//		suite.addTest(AllJiraTests.suite());  
+		suite.addTest(AllJiraTests.suite());  
 		// $JUnit-END$
 		return suite;
 	}
