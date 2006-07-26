@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Plug-in
 Bundle-SymbolicName: org.eclipse.mylar
-Bundle-Version: 0.6.0.v20060717-2300
+Bundle-Version: 0.6.0.v20060726-0900
 Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin
 Eclipse-AutoStart: true
