@@ -12,6 +12,8 @@ package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
 import java.io.UnsupportedEncodingException;
 import java.net.Proxy;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
@@ -232,6 +234,10 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 												((TaskCategory) selectedObject), newTask);
 									}
 
+									Calendar reminderCalendar = GregorianCalendar.getInstance();
+									TasksUiPlugin.getTaskListManager().setScheduledToday(reminderCalendar);
+									TasksUiPlugin.getTaskListManager().setReminder(newTask, reminderCalendar.getTime());
+									
 									TaskUiUtil.refreshAndOpenTaskListElement(newTask);
 								}
 								return;

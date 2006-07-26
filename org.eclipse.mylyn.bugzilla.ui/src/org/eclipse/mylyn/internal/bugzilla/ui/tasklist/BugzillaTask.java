@@ -65,7 +65,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 			return super.getDescription();
 		} else {
 			if (!isSynchronizing()) {
-				return AbstractRepositoryTask.getTaskId(getHandleIdentifier()) + ": <Could not find bug>";
+				return AbstractRepositoryTask.getTaskId(getHandleIdentifier()) + ": <synchronizing>";
 			} else {
 				return AbstractRepositoryTask.getTaskId(getHandleIdentifier()) + ":";
 			}
