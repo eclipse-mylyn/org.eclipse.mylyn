@@ -261,6 +261,10 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		FormToolkit toolkit = new FormToolkit(composite.getDisplay());
 		RepositoryTaskAttribute owner = taskData.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED);
 
+		if (repository.getUserName() == null) {
+			return;
+		}
+		
 		if (owner != null && owner.getValue().indexOf(repository.getUserName()) != -1) {
 			return;
 		}

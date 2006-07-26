@@ -37,6 +37,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Table;
 
 /**
  * @author Mik Kersten
@@ -103,6 +104,19 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		FillLayout layout = new FillLayout();
 		container.setLayout(layout);
 
+		createTableViewer(container);
+
+		// TaskRepository defaultRepository =
+		// MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
+		// repositoryKind);
+		// if (defaultRepository != null) {
+		// viewer.setSelection(new StructuredSelection(defaultRepository));
+		// }
+
+		setControl(container);
+	}
+
+	protected Table createTableViewer(Composite container) {
 		viewer = new TableViewer(container, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		viewer.setContentProvider(new RepositoryContentProvider());
 		viewer.setLabelProvider(new TaskRepositoryLabelProvider());
@@ -130,15 +144,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		});
 		viewer.getTable().showSelection();
 		viewer.getTable().setFocus();
-
-		// TaskRepository defaultRepository =
-		// MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
-		// repositoryKind);
-		// if (defaultRepository != null) {
-		// viewer.setSelection(new StructuredSelection(defaultRepository));
-		// }
-
-		setControl(container);
+		return viewer.getTable();
 	}
 
 	protected TaskRepository getSelectedRepository() {

@@ -287,7 +287,7 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 		listBox.setFocus();
 	}
 
-	private String[] getSelectedProducts() {
+	protected String[] getSelectedProducts() {
 		ArrayList<String> products = new ArrayList<String>();
 		if (selection == null) {
 			return products.toArray(new String[0]);

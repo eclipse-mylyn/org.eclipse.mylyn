@@ -17,9 +17,10 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylar.internal.tasks.ui.editors.ExistingBugEditorInput;
+import org.eclipse.mylar.internal.tasks.ui.wizards.DuplicateDetectionData;
 import org.eclipse.mylar.internal.tasks.ui.wizards.NewRepositoryTaskWizard;
 import org.eclipse.pde.internal.runtime.logview.LogEntry;
 import org.eclipse.swt.widgets.Shell;
@@ -41,12 +42,13 @@ public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionCh
 	private TreeViewer treeViewer;
 
 	public void run() {
-//		boolean offline = MylarTaskListPlugin.getDefault().getPreferenceStore().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
-//		if (offline) {
-//			MessageDialog.openInformation(null, "Unable to create bug report",
-//					"Unable to create a new bug report since you are currently offline");
-//			return;
-//		}
+		// boolean offline =
+		// MylarTaskListPlugin.getDefault().getPreferenceStore().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
+		// if (offline) {
+		// MessageDialog.openInformation(null, "Unable to create bug report",
+		// "Unable to create a new bug report since you are currently offline");
+		// return;
+		// }
 
 		TreeItem[] items = treeViewer.getTree().getSelection();
 		LogEntry selection = null;
@@ -54,7 +56,14 @@ public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionCh
 			selection = (LogEntry) items[0].getData();
 		}
 
-		IWizard wizard = new NewRepositoryTaskWizard();
+		NewRepositoryTaskWizard wizard = new NewRepositoryTaskWizard();
+		if (selection != null) {
+			DuplicateDetectionData dup = new DuplicateDetectionData();
+			dup.setStackTrace(((selection.getStack() == null) ? "no stack trace available" : selection.getStack()));
+			// getSummaryString(selection);
+
+			wizard.setDuplicateData(dup);
+		}
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		if (wizard != null && shell != null && !shell.isDisposed()) {
@@ -74,9 +83,10 @@ public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionCh
 				System.err.println(e);
 			}
 
-			if (selection == null) {
+			if (selection == null || editor.getEditorInput() instanceof ExistingBugEditorInput) {
 				return;
 			}
+
 			editor.setSummaryText(selection.getSeverityText() + ": \"" + selection.getMessage() + "\" in "
 					+ selection.getPluginId());
 			editor.setDescriptionText("\n\n-- Error Log --\nDate: " + selection.getDate() + "\nMessage: "

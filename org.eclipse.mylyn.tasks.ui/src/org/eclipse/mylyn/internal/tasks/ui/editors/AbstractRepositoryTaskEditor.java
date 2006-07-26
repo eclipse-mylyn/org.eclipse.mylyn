@@ -1872,6 +1872,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 	public void setSummaryText(String text) {
 		this.summaryText.setText(text);
+		handleSummaryEvent();
 	}
 
 	public void setDescriptionText(String text) {
