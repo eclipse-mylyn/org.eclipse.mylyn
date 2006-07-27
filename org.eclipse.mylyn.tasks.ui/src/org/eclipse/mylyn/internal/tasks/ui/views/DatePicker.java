@@ -140,7 +140,7 @@ public class DatePicker extends Composite {
 
 			public void widgetSelected(SelectionEvent arg0) {
 				Calendar newCalendar = GregorianCalendar.getInstance();
-				if (date != null) {
+				if(date != null) {
 					newCalendar.setTime(date.getTime());
 				}
 
@@ -155,7 +155,11 @@ public class DatePicker extends Composite {
 				dateText.setEnabled(false);
 
 				int dialogResponse = dialog.open();
-				newCalendar.setTime(dialog.getDate());
+				if(dialog.getDate()!=null) {
+					newCalendar.setTime(dialog.getDate());
+				} else {
+					newCalendar = null;
+				}
 				dateSelected(dialogResponse == Window.CANCEL, newCalendar);
 
 				// Display display = Display.getCurrent();
@@ -242,9 +246,7 @@ public class DatePicker extends Composite {
 	protected void dateSelected(boolean canceled, Calendar selectedDate) {
 
 		if (!canceled) {
-			if (selectedDate != null) {
-				this.date = selectedDate;
-			}
+			this.date = selectedDate != null ? selectedDate : null;
 			updateDateText();
 		}
 
