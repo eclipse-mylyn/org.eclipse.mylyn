@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.internal.tasks.ui.wizards.EditRepositoryWizard;
-import org.eclipse.mylar.internal.trac.MylarTracPlugin;
+import org.eclipse.mylar.internal.trac.TracUiPlugin;
 import org.eclipse.mylar.internal.trac.TracRepositoryConnector;
 import org.eclipse.mylar.internal.trac.TracRepositoryQuery;
 import org.eclipse.mylar.internal.trac.TracTask;
@@ -77,7 +77,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 	}
 
 	protected void init(Version version) {
-		String kind = MylarTracPlugin.REPOSITORY_KIND;
+		String kind = TracUiPlugin.REPOSITORY_KIND;
 
 		repository = new TaskRepository(kind, Constants.TEST_REPOSITORY1_URL);
 		repository.setAuthenticationCredentials(Constants.TEST_REPOSITORY1_USERNAME,
@@ -165,7 +165,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		TracRepositoryQuery query = new TracRepositoryQuery(Constants.TEST_REPOSITORY1_URL, queryUrl, "description",
 				tasklist);
 
-		MultiStatus queryStatus = new MultiStatus(MylarTracPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
+		MultiStatus queryStatus = new MultiStatus(TracUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
 		List<AbstractQueryHit> result = connector.performQuery(query, new NullProgressMonitor(), queryStatus);
 
 		assertTrue(queryStatus.isOK());

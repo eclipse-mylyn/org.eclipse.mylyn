@@ -12,7 +12,6 @@
 package org.eclipse.mylar.trac.tests;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -61,7 +60,7 @@ public abstract class AbstractTracClientSearchTest extends TestCase {
 	protected void assertTicketEquals(Ticket ticket, TracTicket tracTicket) throws Exception {
 		assertTrue(tracTicket.isValid());
 
-		Hashtable expectedValues = ticket.getValues();
+		Map expectedValues = ticket.getValues();
 		Map<String, String> values = tracTicket.getValues();
 		for (String key : values.keySet()) {
 			assertEquals("Values for key '" + key + "' did not match", expectedValues.get(key), values.get(key));

@@ -22,8 +22,8 @@ public class AllTracTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.trac.tests");
-		//$JUnit-BEGIN$
-		suite.addTestSuite(TracXmlRpcTest.class);
+		// $JUnit-BEGIN$
+		// suite.addTestSuite(TracXmlRpcTest.class);
 		suite.addTestSuite(TracSearchTest.class);
 		suite.addTestSuite(TracTicketTest.class);
 		suite.addTestSuite(TracXmlRpcClientTest.class);
@@ -33,7 +33,8 @@ public class AllTracTests {
 		suite.addTestSuite(TracClientFactoryTest.class);
 		suite.addTestSuite(TracRepositoryConnectorTest.class);
 		suite.addTestSuite(TracQueryTest.class);
-		//$JUnit-END$
+		suite.addTestSuite(TracRepositoryQueryTest.class);
+		// $JUnit-END$
 		return suite;
 	}
 

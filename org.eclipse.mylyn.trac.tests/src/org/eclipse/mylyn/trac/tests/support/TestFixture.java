@@ -30,6 +30,10 @@ public class TestFixture {
 			XmlRpcServer server = new XmlRpcServer(Constants.TEST_REPOSITORY1_URL,
 					Constants.TEST_REPOSITORY1_ADMIN_USERNAME, Constants.TEST_REPOSITORY1_ADMIN_PASSWORD);
 
+			server.ticketVersion(null).deleteAll();
+			server.ticketVersion("v1").create(86400, "description1");
+			server.ticketVersion("v2").create(86400 * 2, "description2");
+			
 			server.ticket().deleteAll();
 
 			server.ticketMilestone("m1").deleteAndCreate();

@@ -12,10 +12,14 @@
 package org.eclipse.mylar.trac.tests;
 
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Comparator;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.Trac09Client;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylar.internal.trac.model.TracVersion;
 import org.eclipse.mylar.trac.tests.support.AbstractTracRepositoryFactory;
 
 /**
@@ -35,5 +39,21 @@ public class Trac09ClientTest extends AbstractTracClientTest {
 		factory.connect(Constants.TEST_REPOSITORY1_URL, "", "");
 		factory.repository.validate();
 	}
+
+	public void testUpdateAttributes() throws Exception {
+		factory.connectRepository1();
+		assertNull(factory.repository.getMilestones());
+		factory.repository.updateAttributes(new NullProgressMonitor());
+		TracVersion[] versions = factory.repository.getVersions();
+		assertEquals(2, versions.length);
+		Arrays.sort(versions, new Comparator<TracVersion>() {
+			public int compare(TracVersion o1, TracVersion o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+		assertEquals("v1", versions[0].getName());
+		assertEquals("v2", versions[1].getName());
+	}
+
 
 }

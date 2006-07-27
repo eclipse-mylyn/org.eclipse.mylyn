@@ -233,10 +233,4 @@ litigation.
          version="0.6.0.v20060726-0900"
          unpack="false"/>
 
-   <plugin
-         id="org.apache.xmlrpc"
-         download-size="0"
-         install-size="0"
-         version="2.0.1"/>
-
 </feature>

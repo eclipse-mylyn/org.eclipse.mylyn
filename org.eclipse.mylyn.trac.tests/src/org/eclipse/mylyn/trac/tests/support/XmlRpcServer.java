@@ -18,10 +18,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
-import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
+import org.apache.xmlrpc.client.XmlRpcClient;
 import org.eclipse.mylar.internal.trac.core.TracXmlRpcClient;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 
@@ -80,12 +81,8 @@ public class XmlRpcServer {
 		}
 
 		public ModelEnum deleteAndCreate(Object... params) throws Exception {
-			try {
-				if (Arrays.asList(getAll()).contains(id)) {
-					delete();
-				}
-			} catch (Exception e) {
-				// ignore
+			if (Arrays.asList(getAll()).contains(id)) {
+				delete();
 			}
 
 			return create(params);
@@ -102,7 +99,7 @@ public class XmlRpcServer {
 
 		@SuppressWarnings("unchecked")
 		public String[] getAll() throws Exception {
-			return (String[]) ((Vector) call(module + ".getAll")).toArray(new String[0]);
+			return Arrays.asList((Object[]) call(module + ".getAll")).toArray(new String[0]);
 		}
 
 		private Hashtable<String, Object> toMap(Object... params) {
@@ -178,13 +175,13 @@ public class XmlRpcServer {
 			return getValues().get(key);
 		}
 
-		public Hashtable getValues() throws Exception {
-			return (Hashtable) ((Vector) call("ticket.get", id)).get(3);
+		public Map getValues() throws Exception {
+			return (Map) ((Object[]) call("ticket.get", id))[3];
 		}
 
 		@SuppressWarnings("unchecked")
 		public Integer[] getAll() throws Exception {
-			return (Integer[]) ((Vector) call("ticket.query", "order=id")).toArray(new Integer[0]);
+			return Arrays.asList((Object[]) call("ticket.query", "order=id")).toArray(new Integer[0]);
 		}
 
 		public int getId() {
@@ -245,12 +242,8 @@ public class XmlRpcServer {
 		}
 
 		public TicketEnum deleteAndCreate(String param) throws Exception {
-			try {
-				if (Arrays.asList(getAll()).contains(id)) {
-					delete();
-				}
-			} catch (Exception e) {
-				// ignore
+			if (Arrays.asList(getAll()).contains(id)) {
+				delete();
 			}
 
 			return create(param);
@@ -262,7 +255,7 @@ public class XmlRpcServer {
 
 		@SuppressWarnings("unchecked")
 		public String[] getAll() throws Exception {
-			return (String[]) ((Vector) call(module + ".getAll")).toArray(new String[0]);
+			return Arrays.asList((Object[]) call(module + ".getAll")).toArray(new String[0]);
 		}
 
 		public TicketEnum update(String param) throws Exception {

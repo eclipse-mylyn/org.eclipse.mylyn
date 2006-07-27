@@ -12,12 +12,17 @@
 package org.eclipse.mylar.trac.tests;
 
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.TracLoginException;
 import org.eclipse.mylar.internal.trac.core.TracRemoteException;
 import org.eclipse.mylar.internal.trac.core.TracXmlRpcClient;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylar.internal.trac.model.TracVersion;
 import org.eclipse.mylar.trac.tests.support.AbstractTracRepositoryFactory;
 
 /**
@@ -49,6 +54,25 @@ public class TracXmlRpcClientTest extends AbstractTracClientTest {
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}
+	}
+
+	public void testUpdateAttributes() throws Exception {
+		factory.connectRepository1();
+		assertNull(factory.repository.getMilestones());
+		factory.repository.updateAttributes(new NullProgressMonitor());
+		TracVersion[] versions = factory.repository.getVersions();
+		assertEquals(2, versions.length);
+		Arrays.sort(versions, new Comparator<TracVersion>() {
+			public int compare(TracVersion o1, TracVersion o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+		assertEquals("v1", versions[0].getName());
+		assertEquals("description1", versions[0].getDescription());
+		assertEquals(new Date(86400 * 1000), versions[0].getTime());
+		assertEquals("v2", versions[1].getName());
+		assertEquals("description2", versions[1].getDescription());
+		assertEquals(new Date(86400 * 2 * 1000), versions[1].getTime());
 	}
 
 }

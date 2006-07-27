@@ -43,6 +43,7 @@ public class AllTasksTests {
 		suite.addTestSuite(RepositorySettingsPageTest.class);
 		// suite.addTestSuite(RetrieveTitleFromUrlTest.class);
 		suite.addTestSuite(TaskHistoryTest.class);
+		suite.addTestSuite(UrlConnectionUtilTest.class);
 		// $JUnit-END$
 		return suite;
 	}

@@ -11,6 +11,8 @@
 
 package org.eclipse.mylar.trac.tests;
 
+import java.net.Authenticator;
+
 import junit.framework.TestCase;
 
 import org.eclipse.mylar.internal.trac.core.ITracClient;
@@ -26,6 +28,14 @@ import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
  */
 public class TracClientFactoryTest extends TestCase {
 
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		
+		// make sure no dialog pops up to prompt for a password
+		Authenticator.setDefault(null);
+	}
+	
 	public void testCreateClient() throws Exception {
 		ITracClient client = TracClientFactory.createClient(Constants.TEST_REPOSITORY1_URL, Version.TRAC_0_9, "user",
 				"password");
