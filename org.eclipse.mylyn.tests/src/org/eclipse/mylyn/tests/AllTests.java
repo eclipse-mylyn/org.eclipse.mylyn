@@ -27,6 +27,7 @@ import org.eclipse.mylar.resources.tests.AllResourcesTests;
 import org.eclipse.mylar.tasks.tests.AllTasksTests;
 import org.eclipse.mylar.tests.integration.AllIntegrationTests;
 import org.eclipse.mylar.tests.misc.AllMiscTests;
+import org.eclipse.mylar.trac.tests.AllTracTests;
 
 /**
  * @author Mik Kersten
@@ -51,7 +52,8 @@ public class AllTests {
 		suite.addTest(AllResourcesTests.suite());
 		suite.addTest(AllBugzillaTests.suite());
 		suite.addTest(AllMiscTests.suite());
-		suite.addTest(AllJiraTests.suite());  
+		suite.addTest(AllJiraTests.suite());
+		suite.addTest(AllTracTests.suite());
 		// $JUnit-END$
 		return suite;
 	}
