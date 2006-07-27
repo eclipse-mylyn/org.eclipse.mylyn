@@ -20,7 +20,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.trac.MylarTracPlugin;
+import org.eclipse.mylar.internal.trac.TracUiPlugin;
 import org.eclipse.mylar.internal.trac.TracRepositoryConnector;
 import org.eclipse.mylar.internal.trac.TracRepositoryQuery;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
@@ -295,7 +295,7 @@ public class TracCustomQueryPage extends WizardPage {
 					updateAttributesFromRepository(true);
 				} else {
 					MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
-							MylarTracPlugin.TITLE_MESSAGE_DIALOG, TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
+							TracUiPlugin.TITLE_MESSAGE_DIALOG, TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
 				}
 			}
 		});
@@ -305,12 +305,12 @@ public class TracCustomQueryPage extends WizardPage {
 
 	private void updateAttributesFromRepository(boolean connect) {
 		TracRepositoryConnector connector = (TracRepositoryConnector) TasksUiPlugin.getRepositoryManager()
-				.getRepositoryConnector(MylarTracPlugin.REPOSITORY_KIND);
+				.getRepositoryConnector(TracUiPlugin.REPOSITORY_KIND);
 		final ITracClient client;
 		try {
 			client = connector.getClientManager().getRepository(repository);
 		} catch (MalformedURLException e) {
-			MylarTracPlugin.handleTracException(e);
+			TracUiPlugin.handleTracException(e);
 			return;
 		}
 
@@ -326,7 +326,7 @@ public class TracCustomQueryPage extends WizardPage {
 					}
 				});
 			} catch (InvocationTargetException e) {
-				MylarTracPlugin.handleTracException(e.getCause());
+				TracUiPlugin.handleTracException(e.getCause());
 			} catch (InterruptedException e) {
 				return;
 			}

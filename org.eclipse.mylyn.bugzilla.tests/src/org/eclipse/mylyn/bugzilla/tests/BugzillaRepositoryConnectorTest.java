@@ -553,23 +553,6 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 
 	}
 
-	public void testUrlParsers() {
-		String url = "https://example.com:444/folder/file.txt";
-		assertEquals(444, BugzillaAttachmentHandler.getSslPort(url));
-		assertEquals("example.com", BugzillaAttachmentHandler.getDomain(url));
-		assertEquals("/folder/file.txt", BugzillaAttachmentHandler.getRequestPath(url));
-
-		url = "http://example.com/";
-		assertEquals(443, BugzillaAttachmentHandler.getSslPort(url));
-		assertEquals("example.com", BugzillaAttachmentHandler.getDomain(url));
-		assertEquals("/", BugzillaAttachmentHandler.getRequestPath(url));
-
-		url = "https://example.com:321";
-		assertEquals(321, BugzillaAttachmentHandler.getSslPort(url));
-		assertEquals("example.com", BugzillaAttachmentHandler.getDomain(url));
-		assertEquals("", BugzillaAttachmentHandler.getRequestPath(url));
-	}
-
 	public void testTrustAllSslProtocolSocketFactory() throws Exception {
 		SslProtocolSocketFactory factory = new SslProtocolSocketFactory();
 		Socket s;

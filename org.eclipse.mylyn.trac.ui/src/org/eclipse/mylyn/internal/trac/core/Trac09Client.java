@@ -35,7 +35,7 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer;
 import org.eclipse.mylar.internal.tasks.core.HtmlTag;
 import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer.Token;
-import org.eclipse.mylar.internal.trac.MylarTracPlugin;
+import org.eclipse.mylar.internal.trac.TracUiPlugin;
 import org.eclipse.mylar.internal.trac.model.TracComponent;
 import org.eclipse.mylar.internal.trac.model.TracMilestone;
 import org.eclipse.mylar.internal.trac.model.TracPriority;
@@ -88,7 +88,7 @@ public class Trac09Client extends AbstractTracClient {
 	private void connectInternal(URL serverURL) throws IOException, KeyManagementException, NoSuchAlgorithmException,
 			TracLoginException {
 		for (int attempt = 0; attempt < 2; attempt++) {
-			HttpURLConnection serverConnection = MylarTracPlugin.getHttpConnection(serverURL);
+			HttpURLConnection serverConnection = TracUiPlugin.getHttpConnection(serverURL);
 			setupSession(serverConnection);
 
 			serverConnection.connect();
@@ -112,9 +112,9 @@ public class Trac09Client extends AbstractTracClient {
 		if (hasAuthenticationCredentials()) {
 			if (authCookie == null) {
 				// go through the /login page redirection
-				HttpURLConnection loginConnection = MylarTracPlugin
+				HttpURLConnection loginConnection = TracUiPlugin
 						.getHttpConnection(new URL(repositoryUrl + LOGIN_URL));
-				MylarTracPlugin.setAuthCredentials(loginConnection, username, password);
+				TracUiPlugin.setAuthCredentials(loginConnection, username, password);
 
 				loginConnection.connect();
 

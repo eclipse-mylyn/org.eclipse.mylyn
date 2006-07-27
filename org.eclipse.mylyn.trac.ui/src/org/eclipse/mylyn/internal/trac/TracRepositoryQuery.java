@@ -37,7 +37,7 @@ public class TracRepositoryQuery extends AbstractRepositoryQuery {
 
 	@Override
 	public String getRepositoryKind() {
-		return MylarTracPlugin.REPOSITORY_KIND;
+		return TracUiPlugin.REPOSITORY_KIND;
 	}
 
 	public String getQueryParameter() {

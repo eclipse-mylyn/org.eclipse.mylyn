@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractRepositorySettingsPage;
-import org.eclipse.mylar.internal.trac.MylarTracPlugin;
+import org.eclipse.mylar.internal.trac.TracUiPlugin;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.TracClientFactory;
 import org.eclipse.mylar.internal.trac.core.TracException;
@@ -189,10 +189,10 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 			});
 
 			if (username.length() > 0) {
-				MessageDialog.openInformation(null, MylarTracPlugin.TITLE_MESSAGE_DIALOG,
+				MessageDialog.openInformation(null, TracUiPlugin.TITLE_MESSAGE_DIALOG,
 						"Authentication credentials are valid.");
 			} else {
-				MessageDialog.openInformation(null, MylarTracPlugin.TITLE_MESSAGE_DIALOG, "Repository is valid.");
+				MessageDialog.openInformation(null, TracUiPlugin.TITLE_MESSAGE_DIALOG, "Repository is valid.");
 			}
 
 			if (result[0] != null) {
@@ -200,18 +200,18 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 			}
 		} catch (InvocationTargetException e) {
 			if (e.getCause() instanceof MalformedURLException) {
-				MessageDialog.openWarning(null, MylarTracPlugin.TITLE_MESSAGE_DIALOG, "Repository url is invalid.");
+				MessageDialog.openWarning(null, TracUiPlugin.TITLE_MESSAGE_DIALOG, "Repository url is invalid.");
 			} else if (e.getCause() instanceof TracLoginException) {
-				MessageDialog.openWarning(null, MylarTracPlugin.TITLE_MESSAGE_DIALOG,
+				MessageDialog.openWarning(null, TracUiPlugin.TITLE_MESSAGE_DIALOG,
 						"Unable to authenticate with repository. Login credentials invalid.");
 			} else if (e.getCause() instanceof TracException) {
 				MessageDialog
-						.openWarning(null, MylarTracPlugin.TITLE_MESSAGE_DIALOG, "No Trac repository found at url");
+						.openWarning(null, TracUiPlugin.TITLE_MESSAGE_DIALOG, "No Trac repository found at url");
 			} else {
-				MessageDialog.openWarning(null, MylarTracPlugin.TITLE_MESSAGE_DIALOG, MESSAGE_FAILURE_UNKNOWN);
+				MessageDialog.openWarning(null, TracUiPlugin.TITLE_MESSAGE_DIALOG, MESSAGE_FAILURE_UNKNOWN);
 			}
 		} catch (InterruptedException e) {
-			MessageDialog.openWarning(null, MylarTracPlugin.TITLE_MESSAGE_DIALOG, MESSAGE_FAILURE_UNKNOWN);
+			MessageDialog.openWarning(null, TracUiPlugin.TITLE_MESSAGE_DIALOG, MESSAGE_FAILURE_UNKNOWN);
 		}
 
 		super.getWizard().getContainer().updateButtons();

@@ -89,7 +89,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public String getRepositoryType() {
-		return MylarTracPlugin.REPOSITORY_KIND;
+		return TracUiPlugin.REPOSITORY_KIND;
 	}
 
 	@Override
@@ -188,7 +188,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 		String url = query.getRepositoryUrl();
 		TaskRepository taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(
-				MylarTracPlugin.REPOSITORY_KIND, url);
+				TracUiPlugin.REPOSITORY_KIND, url);
 		ITracClient tracRepository;
 		try {
 			tracRepository = getClientManager().getRepository(taskRepository);

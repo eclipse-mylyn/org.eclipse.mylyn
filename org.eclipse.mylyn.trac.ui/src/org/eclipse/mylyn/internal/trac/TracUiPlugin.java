@@ -38,7 +38,7 @@ import sun.misc.BASE64Encoder;
  * @author Mik Kersten
  * @author Steffen Pingel
  */
-public class MylarTracPlugin extends AbstractUIPlugin {
+public class TracUiPlugin extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylar.trac";
 
@@ -46,9 +46,9 @@ public class MylarTracPlugin extends AbstractUIPlugin {
 
 	public final static String TITLE_MESSAGE_DIALOG = "Mylar Trac Client";
 
-	private static MylarTracPlugin plugin;
+	private static TracUiPlugin plugin;
 
-	public MylarTracPlugin() {
+	public TracUiPlugin() {
 		plugin = this;
 	}
 
@@ -61,7 +61,7 @@ public class MylarTracPlugin extends AbstractUIPlugin {
 		super.stop(context);
 	}
 
-	public static MylarTracPlugin getDefault() {
+	public static TracUiPlugin getDefault() {
 		return plugin;
 	}
 

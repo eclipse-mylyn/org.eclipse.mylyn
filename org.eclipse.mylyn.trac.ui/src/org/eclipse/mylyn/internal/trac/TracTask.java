@@ -124,7 +124,7 @@ public class TracTask extends AbstractRepositoryTask {
 
 	@Override
 	public String getRepositoryKind() {
-		return MylarTracPlugin.REPOSITORY_KIND;
+		return TracUiPlugin.REPOSITORY_KIND;
 	}
 
 	@Override
