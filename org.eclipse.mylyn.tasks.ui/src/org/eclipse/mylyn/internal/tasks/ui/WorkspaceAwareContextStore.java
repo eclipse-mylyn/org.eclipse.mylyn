@@ -19,7 +19,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 /**
  * @author Mik Kersten
  */
-public class FileBasedContextStore extends AbstractContextStore {
+public class WorkspaceAwareContextStore extends AbstractContextStore {
 
 	public File getRootDirectory() {
 		return new File(TasksUiPlugin.getDefault().getDataDirectory());

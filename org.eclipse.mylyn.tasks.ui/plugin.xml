@@ -8,7 +8,7 @@
 
     <extension
          point="org.eclipse.mylar.context.core.bridges">
-   	  	<contextStore class="org.eclipse.mylar.internal.tasks.ui.FileBasedContextStore"/>
+   	  	<contextStore class="org.eclipse.mylar.internal.tasks.ui.WorkspaceAwareContextStore"/>
     </extension>
 
 	<extension point="org.eclipse.ui.views">
