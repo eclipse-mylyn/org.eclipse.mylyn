@@ -55,9 +55,19 @@ public class CategoryEditorInput implements IEditorInput {
 	public String getCategoryName() {
 		return category.getDescription();
 	}
+	
+	public String getUrl() {
+		return category.getUrl();
+	}
 
 	public void setCategoryName(String description) {
 		TasksUiPlugin.getTaskListManager().getTaskList().renameContainer(category, description);
 //		category.setDescription(description);
 	}
+	
+	public void setUrl(String url) {
+		category.setUrl(url);
+		TasksUiPlugin.getTaskListManager().getTaskList().notifyContainerUpdated(category);
+	}
+	
 }

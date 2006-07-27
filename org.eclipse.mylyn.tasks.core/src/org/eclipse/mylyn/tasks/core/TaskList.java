@@ -538,10 +538,10 @@ public class TaskList {
 		}
 	}
 
-	public void notifyQueryUpdated(AbstractRepositoryQuery query) {
+	public void notifyContainerUpdated(AbstractTaskContainer container) {
 		for (ITaskListChangeListener listener : new ArrayList<ITaskListChangeListener>(changeListeners)) {
 			try {
-				listener.containerInfoChanged(query);
+				listener.containerInfoChanged(container);
 			} catch (Throwable t) {
 				MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
 			}

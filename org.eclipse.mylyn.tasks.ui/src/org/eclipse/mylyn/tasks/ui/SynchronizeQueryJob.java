@@ -98,7 +98,7 @@ class SynchronizeQueryJob extends Job {
 
 			repositoryQuery.setCurrentlySynchronizing(false);
 			repositoryQuery.setLastRefreshTimeStamp(DateUtil.getFormattedDate(new Date(), "MMM d, H:mm:ss"));
-			TasksUiPlugin.getTaskListManager().getTaskList().notifyQueryUpdated(repositoryQuery);
+			TasksUiPlugin.getTaskListManager().getTaskList().notifyContainerUpdated(repositoryQuery);
 			monitor.worked(1);
 		}
 		return Status.OK_STATUS;

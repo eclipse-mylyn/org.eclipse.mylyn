@@ -15,7 +15,7 @@ import java.util.Iterator;
 
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
@@ -55,8 +55,8 @@ public class OpenWithBrowserAction extends BaseSelectionListenerAction {
 		String urlString = null;
 		if (task != null && task.hasValidUrl()) {
 			urlString = task.getUrl();
-		} else if (selectedObject instanceof AbstractRepositoryQuery) {
-			AbstractRepositoryQuery query = (AbstractRepositoryQuery) selectedObject;
+		} else if (selectedObject instanceof AbstractTaskContainer) {
+			AbstractTaskContainer query = (AbstractTaskContainer) selectedObject;
 			urlString = query.getUrl();
 		}
 		if (urlString != null) {

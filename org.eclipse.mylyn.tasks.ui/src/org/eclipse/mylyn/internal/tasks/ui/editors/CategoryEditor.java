@@ -36,6 +36,7 @@ import org.eclipse.ui.part.EditorPart;
  */
 public class CategoryEditor extends EditorPart {
 
+	private Text url;
 	private CategoryEditorInput input = null;
 
 	private boolean isDirty = false;
@@ -45,6 +46,7 @@ public class CategoryEditor extends EditorPart {
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		input.setCategoryName(description.getText());
+		input.setUrl(url.getText());
 		isDirty = false;
 		// TODO: save the list
 //		MylarTaskListPlugin.getTaskListManager().notifyListUpdated();
@@ -94,21 +96,33 @@ public class CategoryEditor extends EditorPart {
 		summarySection.setText("Category Summary");
 		summarySection.setLayout(new TableWrapLayout());
 		summarySection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		
 		Composite summaryContainer = toolkit.createComposite(summarySection);
 		summarySection.setClient(summaryContainer);
 		TableWrapLayout layout = new TableWrapLayout();
 		layout.numColumns = 2;
 		summaryContainer.setLayout(layout);
 
-		Label label = toolkit.createLabel(summaryContainer, "Description: ", SWT.NULL);
-		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		description = toolkit.createText(summaryContainer, input.getCategoryName(), SWT.BORDER);
-		description.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-		description.addModifyListener(new ModifyListener() {
+		ModifyListener modifyListener = new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				markDirty();
 			}
-		});
+		};
+
+		Label lblDescription = toolkit.createLabel(summaryContainer, "Description: ", SWT.NULL);
+		lblDescription.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		description = toolkit.createText(summaryContainer, input.getCategoryName(), SWT.FLAT);
+		description.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		description.setData(FormToolkit.KEY_DRAW_BORDER);
+		description.addModifyListener(modifyListener);
+
+		Label lblUrl = toolkit.createLabel(summaryContainer, "URL: ", SWT.NONE);
+		lblUrl.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		url = toolkit.createText(summaryContainer, input.getUrl(), SWT.FLAT);
+		url.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.TOP));
+		url.addModifyListener(modifyListener);
+		
+		toolkit.paintBordersFor(summaryContainer);
 	}
 
 	private void markDirty() {
