@@ -12,6 +12,7 @@ package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
 import java.io.UnsupportedEncodingException;
 import java.net.Proxy;
+import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -26,6 +27,11 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
+import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchOperation;
+import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchQuery;
+import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchResultCollector;
+import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaSearchOperation;
+import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaSearchResultCollector;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
@@ -38,9 +44,11 @@ import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -61,11 +69,17 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class NewBugEditor extends AbstractRepositoryTaskEditor {
 
+	private static final String NO_STACK_MESSAGE = "Unable to locate a stack trace in the description text.\nDuplicate search currently only supports stack trace matching.";
+
 	private static final String ERROR_CREATING_BUG_REPORT = "Error creating bug report";
+
+	private static final String LABEL_BUTTON_SEARCH_DUPS = "Search for Duplicates";
 
 	protected RepositoryTaskData taskData;
 
 	protected String newSummary = "";
+
+	private Button searchDuplicatesButton;
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
@@ -172,6 +186,45 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		return taskData.getLabel();
 	}
 
+	protected void searchForDuplicates() {
+
+		String stackTrace = getStackTraceFromDescription();
+		if (stackTrace == null) {
+			MessageDialog.openWarning(null, "No Stack Trace Found", NO_STACK_MESSAGE);
+			return;
+		}
+
+		String queryUrl = "";
+		try {
+			queryUrl = repository.getUrl() + "/buglist.cgi?long_desc_type=allwordssubstr&long_desc="
+					+ URLEncoder.encode("Stack Trace:\n" + stackTrace, BugzillaPlugin.ENCODING_UTF_8);
+		} catch (UnsupportedEncodingException e) {
+			// This should never happen
+		}
+
+		queryUrl += "&product=" + getRepositoryTaskData().getProduct();
+
+		IBugzillaSearchResultCollector resultCollector = new BugzillaSearchResultCollector();
+		IBugzillaSearchOperation operation = new BugzillaSearchOperation(repository, queryUrl, TasksUiPlugin
+				.getDefault().getProxySettings(), resultCollector, "100");
+		BugzillaSearchQuery query = new BugzillaSearchQuery(operation);
+
+		NewSearchUI.runQueryInBackground(query);
+	}
+
+	private String getStackTraceFromDescription() {
+		String description = newDescriptionTextViewer.getTextWidget().getText().trim();
+		// TODO: improve stack trace detection
+		int index;
+		String stackIdentifier = "Stack Trace:\n";
+		if (description == null || (index = description.indexOf(stackIdentifier)) < 0) {
+			return null;
+		}
+
+		description = description.substring(index + stackIdentifier.length());
+		return description;
+	}
+
 	@Override
 	protected void submitBug() {
 		submitButton.setEnabled(false);
@@ -237,7 +290,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 									Calendar reminderCalendar = GregorianCalendar.getInstance();
 									TasksUiPlugin.getTaskListManager().setScheduledToday(reminderCalendar);
 									TasksUiPlugin.getTaskListManager().setReminder(newTask, reminderCalendar.getTime());
-									
+
 									TaskUiUtil.refreshAndOpenTaskListElement(newTask);
 								}
 								return;
@@ -344,6 +397,15 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 
 	protected void addActionButtons(Composite buttonComposite) {
 		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
+		searchDuplicatesButton = toolkit.createButton(buttonComposite, LABEL_BUTTON_SEARCH_DUPS, SWT.NONE);
+		GridData searchDuplicatesButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		searchDuplicatesButton.setLayoutData(searchDuplicatesButtonData);
+		searchDuplicatesButton.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				searchForDuplicates();
+			}
+		});
+
 		submitButton = toolkit.createButton(buttonComposite, "Create", SWT.NONE);
 		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		submitButton.setLayoutData(submitButtonData);
@@ -354,5 +416,5 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		});
 		submitButton.addListener(SWT.FocusIn, new GenericListener());
 	}
-	
+
 }

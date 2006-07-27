@@ -20,7 +20,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.ExistingBugEditorInput;
-import org.eclipse.mylar.internal.tasks.ui.wizards.DuplicateDetectionData;
 import org.eclipse.mylar.internal.tasks.ui.wizards.NewRepositoryTaskWizard;
 import org.eclipse.pde.internal.runtime.logview.LogEntry;
 import org.eclipse.swt.widgets.Shell;
@@ -57,13 +56,6 @@ public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionCh
 		}
 
 		NewRepositoryTaskWizard wizard = new NewRepositoryTaskWizard();
-		if (selection != null) {
-			DuplicateDetectionData dup = new DuplicateDetectionData();
-			dup.setStackTrace(((selection.getStack() == null) ? "no stack trace available" : selection.getStack()));
-			// getSummaryString(selection);
-
-			wizard.setDuplicateData(dup);
-		}
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		if (wizard != null && shell != null && !shell.isDisposed()) {

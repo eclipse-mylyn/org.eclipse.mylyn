@@ -10,31 +10,15 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui.wizard;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.NewBugEditorInput;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
-import org.eclipse.mylar.internal.tasks.ui.editors.AbstractBugEditorInput;
-import org.eclipse.mylar.internal.tasks.ui.editors.ExistingBugEditorInput;
-import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractDuplicateDetectingReportWizard;
-import org.eclipse.mylar.internal.tasks.ui.wizards.DuplicateDetectionData;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
@@ -45,7 +29,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @author Rob Elves
  */
-public class NewBugzillaReportWizard extends AbstractDuplicateDetectingReportWizard implements INewWizard {
+public class NewBugzillaReportWizard extends Wizard implements INewWizard {
 
 	private static final String TITLE = "New Bugzilla Task";
 
@@ -91,28 +75,16 @@ public class NewBugzillaReportWizard extends AbstractDuplicateDetectingReportWiz
 		super.addPages();
 		addPage(productPage);
 
-		super.addQueuedPages();
 	}
 
 	@Override
 	public boolean canFinish() {
-		return completed && super.canFinish();
+		return completed;
 	}
 
 	@Override
 	public boolean performFinish() {
-		List<AbstractRepositoryTask> dups = getSelectedDuplicates();
-		if (dups != null && !dups.isEmpty()) {
-			Iterator<AbstractRepositoryTask> iter = dups.iterator();
-			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			while (iter.hasNext()) {
-				AbstractRepositoryTask task = iter.next();
-				AbstractBugEditorInput editorInput = new ExistingBugEditorInput(TasksUiPlugin.getRepositoryManager()
-						.getRepository(task.getRepositoryKind(), task.getRepositoryUrl()), task.getTaskData());
-				TaskUiUtil.openEditor(editorInput, BugzillaUiPlugin.EXISTING_BUG_EDITOR_ID, page);
-			}
-			return true;
-		}
+
 		try {
 			productPage.saveDataToModel();
 			NewBugEditorInput editorInput = new NewBugEditorInput(repository, model);
@@ -126,49 +98,6 @@ public class NewBugzillaReportWizard extends AbstractDuplicateDetectingReportWiz
 		return false;
 	}
 
-	/**
-	 * Perform a query using the given duplicate detection criteria and return a
-	 * list of tasks which match.
-	 */
-	@Override
-	public List<AbstractRepositoryTask> searchForDuplicates(DuplicateDetectionData data) {
-		// RepositoryQueryResultsFactory factory = new
-		// RepositoryQueryResultsFactory();
-		// IBugzillaSearchResultCollector collector = new
-		// BugzillaSearchResultCollector();
-		// factory.performQuery(repository.getUrl(), collector, queryUrl,
-		// proxySettings, 20, BugzillaPlugin.ENCODING_UTF_8);
-
-		String[] products = productPage.getSelectedProducts();
-
-		// TODO: Is there a class that can create this string?
-		String queryUrl;
-		try {
-			queryUrl = repository.getUrl() + "/buglist.cgi?long_desc_type=allwordssubstr&long_desc="
-					+ URLEncoder.encode("Stack Trace:\n" + data.getStackTrace(), BugzillaPlugin.ENCODING_UTF_8);
-		} catch (UnsupportedEncodingException e) {
-			// This should never happen
-			return null;
-		}
-
-		for (int i = 0; i < products.length; i++) {
-			queryUrl += "&product=" + products[i];
-		}
-
-		List<AbstractRepositoryTask> tasks = new LinkedList<AbstractRepositoryTask>();
-		BugzillaRepositoryQuery repositoryQuery = new BugzillaRepositoryQuery(repository.getUrl(), queryUrl,
-				"DUPLICATE_DETECTION_QUERY", "20", TasksUiPlugin.getTaskListManager().getTaskList());
-		AbstractRepositoryConnector connector = (AbstractRepositoryConnector) TasksUiPlugin.getRepositoryManager()
-				.getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
-		List<AbstractQueryHit> hits = connector.performQuery(repositoryQuery, new NullProgressMonitor(),
-				new MultiStatus(TasksUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null));
-		Iterator<AbstractQueryHit> iterator = hits.iterator();
-		while (iterator.hasNext()) {
-			tasks.add(iterator.next().getOrCreateCorrespondingTask());
-		}
-
-		return tasks;
-	}
 }
 
 // @Override

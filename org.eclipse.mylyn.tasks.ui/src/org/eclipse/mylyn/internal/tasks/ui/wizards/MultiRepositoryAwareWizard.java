@@ -52,8 +52,4 @@ public class MultiRepositoryAwareWizard extends Wizard implements INewWizard {
 		// Can't finish on the first page
 		return false;
 	}
-
-	public SelectRepositoryPage getSelectRepositoryPage() {
-		return selectRepositoryPage;
-	}
 }

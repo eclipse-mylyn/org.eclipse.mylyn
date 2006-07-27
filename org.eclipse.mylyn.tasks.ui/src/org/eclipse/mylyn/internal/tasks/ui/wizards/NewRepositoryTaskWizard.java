@@ -45,9 +45,4 @@ public class NewRepositoryTaskWizard extends MultiRepositoryAwareWizard {
 		}
 		return connectorKinds;
 	}
-	
-	public void setDuplicateData(DuplicateDetectionData duplicateData) {
-		((NewRepositoryTaskPage)getSelectRepositoryPage()).setDuplicateData(duplicateData);
-		((NewRepositoryTaskPage)getSelectRepositoryPage()).setUseStackTrace(true);
-	}
 }
