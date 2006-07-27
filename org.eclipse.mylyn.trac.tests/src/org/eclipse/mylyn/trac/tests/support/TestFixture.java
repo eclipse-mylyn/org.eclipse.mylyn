@@ -25,7 +25,7 @@ public class TestFixture {
 
 	public static XmlRpcServer.TestData data1;
 
-	public static XmlRpcServer.TestData initializeRepository1() throws Exception {
+	public static XmlRpcServer.TestData init010() throws Exception {
 		if (data1 == null) {
 			XmlRpcServer server = new XmlRpcServer(Constants.TEST_REPOSITORY1_URL,
 					Constants.TEST_REPOSITORY1_ADMIN_USERNAME, Constants.TEST_REPOSITORY1_ADMIN_PASSWORD);
@@ -33,7 +33,7 @@ public class TestFixture {
 			server.ticketVersion(null).deleteAll();
 			server.ticketVersion("v1").create(86400, "description1");
 			server.ticketVersion("v2").create(86400 * 2, "description2");
-			
+
 			server.ticket().deleteAll();
 
 			server.ticketMilestone("m1").deleteAndCreate();
@@ -53,7 +53,7 @@ public class TestFixture {
 		return data1;
 	}
 
-	public static void cleanupRepository1() throws Exception {
+	public static void cleanup010() throws Exception {
 		if (data1 != null) {
 			data1.cleanup();
 			data1 = null;

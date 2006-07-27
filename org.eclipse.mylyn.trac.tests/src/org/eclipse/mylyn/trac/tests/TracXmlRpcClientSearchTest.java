@@ -11,17 +11,13 @@
 
 package org.eclipse.mylar.trac.tests;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.mylar.internal.trac.core.ITracClient;
-import org.eclipse.mylar.internal.trac.core.TracXmlRpcClient;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.internal.trac.model.TracSearch;
 import org.eclipse.mylar.internal.trac.model.TracTicket;
 import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
-import org.eclipse.mylar.trac.tests.support.AbstractTracRepositoryFactory;
 
 /**
  * @author Steffen Pingel
@@ -29,24 +25,20 @@ import org.eclipse.mylar.trac.tests.support.AbstractTracRepositoryFactory;
 public class TracXmlRpcClientSearchTest extends AbstractTracClientSearchTest {
 
 	public TracXmlRpcClientSearchTest() {
-		super(new AbstractTracRepositoryFactory() {
-			protected ITracClient createRepository(String url, String username, String password) throws Exception {
-				return new TracXmlRpcClient(new URL(url), Version.XML_RPC, username, password);
-			}
-		});
+		super(Version.XML_RPC);
 	}
 
 	public void testSearchValidateTicket() throws Exception {
 		TracSearch search = new TracSearch();
 		search.addFilter("summary", "summary1");
 		List<TracTicket> result = new ArrayList<TracTicket>();
-		factory.repository.search(search, result);
+		repository.search(search, result);
 		assertEquals(1, result.size());
 		assertTicketEquals(tickets.get(0), result.get(0));
 		assertEquals("component1", result.get(0).getValue(Key.COMPONENT));
 		assertEquals("description1", result.get(0).getValue(Key.DESCRIPTION));
 		assertEquals("m1", result.get(0).getValue(Key.MILESTONE));
-		assertEquals(factory.username, result.get(0).getValue(Key.REPORTER));
+		assertEquals(username, result.get(0).getValue(Key.REPORTER));
 		assertEquals("summary1", result.get(0).getValue(Key.SUMMARY));
 		// assertEquals("", result.get(0).getValue(Key.VERSION));
 	}

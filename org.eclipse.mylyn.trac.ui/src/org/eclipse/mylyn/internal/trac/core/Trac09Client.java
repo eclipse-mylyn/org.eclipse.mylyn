@@ -11,15 +11,11 @@
 
 package org.eclipse.mylar.internal.trac.core;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,13 +25,20 @@ import java.util.StringTokenizer;
 
 import javax.security.auth.login.LoginException;
 
+import org.apache.commons.httpclient.Credentials;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthScope;
+import org.apache.commons.httpclient.cookie.CookiePolicy;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer;
 import org.eclipse.mylar.internal.tasks.core.HtmlTag;
+import org.eclipse.mylar.internal.tasks.core.UrlConnectionUtil;
 import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer.Token;
-import org.eclipse.mylar.internal.trac.TracUiPlugin;
+import org.eclipse.mylar.internal.trac.core.TracHttpClientTransportFactory.TracHttpException;
 import org.eclipse.mylar.internal.trac.model.TracComponent;
 import org.eclipse.mylar.internal.trac.model.TracMilestone;
 import org.eclipse.mylar.internal.trac.model.TracPriority;
@@ -49,35 +52,27 @@ import org.eclipse.mylar.internal.trac.model.TracTicketType;
 import org.eclipse.mylar.internal.trac.model.TracVersion;
 import org.eclipse.mylar.internal.trac.model.TracSearchFilter.CompareOperator;
 import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
+/**
+ * Represents a Trac repository that is accessed through the Trac's query script
+ * and web interface.
+ * 
+ * @author Steffen Pingel
+ */
 public class Trac09Client extends AbstractTracClient {
 
-	private static final String TICKET_SUMMARY_PREFIX = " <h2 class=\"summary\">";
+	private HttpClient httpClient = new HttpClient();
 
-	private static final String TICKET_SUMMARY_POSTFIX = "</h2>";
-
-	private InputStream in;
-
-	private String authCookie;
+	private boolean authenticated;
 
 	public Trac09Client(URL url, Version version, String username, String password) {
 		super(url, version, username, password);
 	}
 
-	public void close() {
-		if (in != null) {
-			try {
-				in.close();
-			} catch (IOException e) {
-				MylarStatusHandler.log(e, "Error closing connection");
-			}
-			in = null;
-		}
-	}
-
-	public void connect(String serverURL) throws TracException {
+	private GetMethod connect(String serverURL) throws TracException {
 		try {
-			connectInternal(new URL(serverURL));
+			return connectInternal(serverURL);
 		} catch (TracException e) {
 			throw e;
 		} catch (Exception e) {
@@ -85,58 +80,64 @@ public class Trac09Client extends AbstractTracClient {
 		}
 	}
 
-	private void connectInternal(URL serverURL) throws IOException, KeyManagementException, NoSuchAlgorithmException,
-			TracLoginException {
+	private GetMethod connectInternal(String serverURL) throws TracLoginException, IOException, TracHttpException {
+		UrlConnectionUtil.setupHttpClient(httpClient, TasksUiPlugin.getDefault().getProxySettings(), serverURL);
+
 		for (int attempt = 0; attempt < 2; attempt++) {
-			HttpURLConnection serverConnection = TracUiPlugin.getHttpConnection(serverURL);
-			setupSession(serverConnection);
-
-			serverConnection.connect();
-
-			int code = serverConnection.getResponseCode();
-			if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
-				// retry to authenticate due to an expired session
-				authCookie = null;
-				continue;
+			// force authentication
+			if (!authenticated && hasAuthenticationCredentials()) {
+				authenticate();
 			}
 
-			in = new BufferedInputStream(serverConnection.getInputStream());
-			return;
+			GetMethod method = new GetMethod(UrlConnectionUtil.getRequestPath(serverURL));
+			method.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
+			int code;
+			try {
+				code = httpClient.executeMethod(method);
+			} catch (IOException e) {
+				method.releaseConnection();
+				throw e;
+			}
+
+			if (code == HttpURLConnection.HTTP_OK) {
+				return method;
+			} else if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
+				// login or reauthenticate due to an expired session
+				method.releaseConnection();
+				authenticated = false;
+				authenticate();
+			} else {
+				throw new TracHttpException(code);
+			}
 		}
 
 		throw new TracLoginException();
 	}
 
-	private void setupSession(HttpURLConnection serverConnection) throws IOException, TracLoginException,
-			KeyManagementException, NoSuchAlgorithmException {
-		if (hasAuthenticationCredentials()) {
-			if (authCookie == null) {
-				// go through the /login page redirection
-				HttpURLConnection loginConnection = TracUiPlugin
-						.getHttpConnection(new URL(repositoryUrl + LOGIN_URL));
-				TracUiPlugin.setAuthCredentials(loginConnection, username, password);
-
-				loginConnection.connect();
-
-				int code = loginConnection.getResponseCode();
-				if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
-					throw new TracLoginException();
-				}
-
-				String cookie = loginConnection.getHeaderField("Set-Cookie");
-				if (cookie == null) {
-					throw new TracLoginException("Missing authorization cookie");
-				}
-
-				int index = cookie.indexOf(";");
-				if (index >= 0) {
-					cookie = cookie.substring(0, index);
-				}
-				authCookie = cookie;
-			}
-
-			serverConnection.setRequestProperty("Cookie", authCookie);
+	private void authenticate() throws TracLoginException, IOException {
+		if (!hasAuthenticationCredentials()) {
+			throw new TracLoginException();
 		}
+
+		Credentials credentials = new UsernamePasswordCredentials(username, password);
+		httpClient.getState().setCredentials(
+				new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM), credentials);
+
+		GetMethod method = new GetMethod(UrlConnectionUtil.getRequestPath(repositoryUrl + LOGIN_URL));
+		method.setFollowRedirects(false);
+
+		try {
+			httpClient.getParams().setAuthenticationPreemptive(true);
+			int code = httpClient.executeMethod(method);
+			if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
+				throw new TracLoginException();
+			}
+		} finally {
+			method.releaseConnection();
+			httpClient.getParams().setAuthenticationPreemptive(false);
+		}
+
+		authenticated = true;
 	}
 
 	/**
@@ -147,33 +148,76 @@ public class Trac09Client extends AbstractTracClient {
 	 * @throws LoginException
 	 */
 	public TracTicket getTicket(int id) throws TracException {
-		connect(repositoryUrl + ITracClient.TICKET_URL + id);
+		GetMethod method = connect(repositoryUrl + ITracClient.TICKET_URL + id);
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(in, ITracClient.CHARSET));
-			String line;
-			while ((line = reader.readLine()) != null) {
-				// look for heading tags in html output
-				if (line.startsWith(TICKET_SUMMARY_PREFIX) && line.endsWith(TICKET_SUMMARY_POSTFIX)) {
-					String summary = line.substring(TICKET_SUMMARY_PREFIX.length(), line.length()
-							- TICKET_SUMMARY_POSTFIX.length());
+			TracTicket ticket = new TracTicket(id);
 
-					TracTicket ticket = new TracTicket(id);
-					ticket.putBuiltinValue(Key.SUMMARY, summary);
-					return ticket;
+			BufferedReader reader = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(),
+					ITracClient.CHARSET));
+			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
+			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+				if (token.getType() == Token.TAG) {
+					HtmlTag tag = (HtmlTag) token.getValue();
+					if (tag.getTagType() == HtmlTag.Type.TD) {
+						String headers = tag.getAttribute("headers");
+						if ("h_component".equals(headers)) {
+							ticket.putBuiltinValue(Key.COMPONENT, getText(tokenizer));
+						} else if ("h_milestone".equals(headers)) {
+							ticket.putBuiltinValue(Key.MILESTONE, getText(tokenizer));
+						} else if ("h_priority".equals(headers)) {
+							ticket.putBuiltinValue(Key.PRIORITY, getText(tokenizer));
+						} else if ("h_severity".equals(headers)) {
+							ticket.putBuiltinValue(Key.SEVERITY, getText(tokenizer));
+						} else if ("h_version".equals(headers)) {
+							ticket.putBuiltinValue(Key.VERSION, getText(tokenizer));
+						} else if ("h_keywords".equals(headers)) {
+							ticket.putBuiltinValue(Key.KEYWORDS, getText(tokenizer));
+						} else if ("h_cc".equals(headers)) {
+							ticket.putBuiltinValue(Key.CC, getText(tokenizer));
+						} else if ("h_owner".equals(headers)) {
+							ticket.putBuiltinValue(Key.OWNER, getText(tokenizer));
+						} else if ("h_reporter".equals(headers)) {
+							ticket.putBuiltinValue(Key.REPORTER, getText(tokenizer));
+						}
+						// TODO handle custom fields
+					} else if (tag.getTagType() == HtmlTag.Type.H2 && "summary".equals(tag.getAttribute("class"))) {
+						ticket.putBuiltinValue(Key.SUMMARY, getText(tokenizer));
+					} else if (tag.getTagType() == HtmlTag.Type.H3 && "status".equals(tag.getAttribute("class"))) {
+						String text = getStrongText(tokenizer);
+						if (text.length() > 0) {
+							int i = text.indexOf(" (");
+							if (i != -1) {
+								// status contains resolution as well
+								ticket.putBuiltinValue(Key.STATUS, text.substring(0, i));
+								ticket.putBuiltinValue(Key.RESOLUTION, text.substring(i, text.length() - 1));
+							} else {
+								ticket.putBuiltinValue(Key.STATUS, text);
+							}
+						}
+					}
+					// TODO parse description
 				}
 			}
+
+			if (ticket.isValid() && ticket.getValue(Key.SUMMARY) != null) {
+				return ticket;
+			}
+
 			throw new InvalidTicketException();
 		} catch (IOException e) {
 			throw new TracException(e);
+		} catch (ParseException e) {
+			throw new TracException(e);
 		} finally {
-			close();
+			method.releaseConnection();
 		}
 	}
 
 	public void search(TracSearch query, List<TracTicket> tickets) throws TracException {
-		connect(repositoryUrl + ITracClient.QUERY_URL + query.toUrl());
+		GetMethod method = connect(repositoryUrl + ITracClient.QUERY_URL + query.toUrl());
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(in, ITracClient.CHARSET));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(),
+					ITracClient.CHARSET));
 			String line;
 
 			Map<String, String> constantValues = getExactMatchValues(query);
@@ -222,7 +266,7 @@ public class Trac09Client extends AbstractTracClient {
 		} catch (IOException e) {
 			throw new TracException(e);
 		} finally {
-			close();
+			method.releaseConnection();
 		}
 	}
 
@@ -253,19 +297,17 @@ public class Trac09Client extends AbstractTracClient {
 	}
 
 	public void validate() throws TracException {
-		try {
-			connect(repositoryUrl + "/");
-		} finally {
-			close();
-		}
+		GetMethod method = connect(repositoryUrl + "/");
+		method.releaseConnection();
 	}
 
 	public void updateAttributes(IProgressMonitor monitor) throws TracException {
 		monitor.beginTask("Updating attributes", IProgressMonitor.UNKNOWN);
 
-		connect(repositoryUrl + ITracClient.NEW_TICKET_URL);
+		GetMethod method = connect(repositoryUrl + ITracClient.NEW_TICKET_URL);
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(in, ITracClient.CHARSET));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(),
+					ITracClient.CHARSET));
 			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
 			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 				if (monitor.isCanceled()) {
@@ -316,14 +358,14 @@ public class Trac09Client extends AbstractTracClient {
 					}
 				}
 			}
-			
+
 			ticketResolutions = new ArrayList<TracTicketResolution>(5);
 			ticketResolutions.add(new TracTicketResolution("fixed", 1));
 			ticketResolutions.add(new TracTicketResolution("invalid", 2));
 			ticketResolutions.add(new TracTicketResolution("wontfix", 3));
 			ticketResolutions.add(new TracTicketResolution("duplicate", 4));
 			ticketResolutions.add(new TracTicketResolution("worksforme", 5));
-			
+
 			ticketStatus = new ArrayList<TracTicketStatus>(4);
 			ticketStatus.add(new TracTicketStatus("new", 1));
 			ticketStatus.add(new TracTicketStatus("assigned", 2));
@@ -334,7 +376,7 @@ public class Trac09Client extends AbstractTracClient {
 		} catch (ParseException e) {
 			throw new TracException(e);
 		} finally {
-			close();
+			method.releaseConnection();
 		}
 	}
 
@@ -368,6 +410,25 @@ public class Trac09Client extends AbstractTracClient {
 			}
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * Looks for a <code>strong</code> tag and returns the text enclosed by
+	 * the tag.
+	 */
+	private String getStrongText(HtmlStreamTokenizer tokenizer) throws IOException, ParseException {
+		for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+			if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == HtmlTag.Type.STRONG) {
+				return getText(tokenizer);
+			} else if (token.getType() == Token.COMMENT) {
+				// ignore
+			} else if (token.getType() == Token.TEXT) {
+				// ignore
+			} else {
+				break;
+			}
+		}
+		return "";
 	}
 
 }

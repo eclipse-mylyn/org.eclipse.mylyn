@@ -35,7 +35,7 @@ public class UrlConnectionUtil {
 
 	private static final int HTTPS_PORT = 443;
 
-	static {
+	public static void initCommonsLoggingSettings() {
 		// TODO: move?
 		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
 		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "off");

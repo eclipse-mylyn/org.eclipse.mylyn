@@ -31,9 +31,10 @@ public class TracTicket {
 	 * @author Steffen Pingel
 	 */
 	public enum Key {
-		CHANGE_TIME("changetime"), COMPONENT("component"), DESCRIPTION("description"), ID("id"), KEYWORDS("keywords"), MILESTONE(
-				"milestone"), OWNER("owner"), PRIORITY("priority"), REPORTER("reporter"), RESOLUTION("resolution"), STATUS(
-				"status"), SUMMARY("summary"), TIME("time"), TYPE("type"), VERSION("version");
+		CC("cc"), CHANGE_TIME("changetime"), COMPONENT("component"), DESCRIPTION("description"), ID("id"), KEYWORDS(
+				"keywords"), MILESTONE("milestone"), OWNER("owner"), PRIORITY("priority"), REPORTER("reporter"), RESOLUTION(
+				"resolution"), STATUS("status"), SEVERITY("severity"), SUMMARY("summary"), TIME("time"), TYPE("type"), VERSION(
+				"version");
 
 		public static Key fromKey(String name) {
 			for (Key key : Key.values()) {

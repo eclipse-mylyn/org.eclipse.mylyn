@@ -11,56 +11,49 @@
 
 package org.eclipse.mylar.trac.tests;
 
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.TracLoginException;
 import org.eclipse.mylar.internal.trac.core.TracRemoteException;
 import org.eclipse.mylar.internal.trac.core.TracXmlRpcClient;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.internal.trac.model.TracVersion;
-import org.eclipse.mylar.trac.tests.support.AbstractTracRepositoryFactory;
 
 /**
  * @author Steffen Pingel
  */
-public class TracXmlRpcClientTest extends AbstractTracClientTest {
+public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 
 	public TracXmlRpcClientTest() {
-		super(new AbstractTracRepositoryFactory() {
-			protected ITracClient createRepository(String url, String username, String password) throws Exception {
-				return new TracXmlRpcClient(new URL(url), Version.XML_RPC, username, password);
-			}
-		});
+		super(Version.XML_RPC);
 	}
 
 	public void testValidateFailNoAuth() throws Exception {
-		factory.connect(Constants.TEST_REPOSITORY1_URL, "", "");
+		connect(Constants.TEST_REPOSITORY1_URL, "", "");
 		try {
-			factory.repository.validate();
+			repository.validate();
 			fail("Expected TracLoginException");
 		} catch (TracLoginException e) {
 		}
 	}
 
 	public void testMulticallExceptions() throws Exception {
-		factory.connectRepository1();
+		connect010();
 		try {
-			((TracXmlRpcClient) factory.repository).getTickets(new int[] { 1, Integer.MAX_VALUE });
+			((TracXmlRpcClient) repository).getTickets(new int[] { 1, Integer.MAX_VALUE });
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}
 	}
 
 	public void testUpdateAttributes() throws Exception {
-		factory.connectRepository1();
-		assertNull(factory.repository.getMilestones());
-		factory.repository.updateAttributes(new NullProgressMonitor());
-		TracVersion[] versions = factory.repository.getVersions();
+		connect010();
+		assertNull(repository.getMilestones());
+		repository.updateAttributes(new NullProgressMonitor());
+		TracVersion[] versions = repository.getVersions();
 		assertEquals(2, versions.length);
 		Arrays.sort(versions, new Comparator<TracVersion>() {
 			public int compare(TracVersion o1, TracVersion o2) {

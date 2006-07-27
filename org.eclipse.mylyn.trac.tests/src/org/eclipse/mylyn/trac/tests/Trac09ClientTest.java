@@ -11,40 +11,37 @@
 
 package org.eclipse.mylar.trac.tests;
 
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Comparator;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylar.internal.trac.core.ITracClient;
-import org.eclipse.mylar.internal.trac.core.Trac09Client;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.internal.trac.model.TracVersion;
-import org.eclipse.mylar.trac.tests.support.AbstractTracRepositoryFactory;
 
 /**
  * @author Steffen Pingel
  */
-public class Trac09ClientTest extends AbstractTracClientTest {
+public class Trac09ClientTest extends AbstractTracClientRepositoryTest {
 
 	public Trac09ClientTest() {
-		super(new AbstractTracRepositoryFactory() {
-			protected ITracClient createRepository(String url, String username, String password) throws Exception {
-				return new Trac09Client(new URL(url), Version.TRAC_0_9, username, password);
-			}
-		});
+		super(Version.TRAC_0_9);
+	}
+
+	public void testValidate096() throws Exception {
+		connect096();
+		validate();
 	}
 
 	public void testValidateAnonymousLogin() throws Exception {
-		factory.connect(Constants.TEST_REPOSITORY1_URL, "", "");
-		factory.repository.validate();
+		connect(Constants.TEST_REPOSITORY1_URL, "", "");
+		repository.validate();
 	}
 
 	public void testUpdateAttributes() throws Exception {
-		factory.connectRepository1();
-		assertNull(factory.repository.getMilestones());
-		factory.repository.updateAttributes(new NullProgressMonitor());
-		TracVersion[] versions = factory.repository.getVersions();
+		connect010();
+		assertNull(repository.getMilestones());
+		repository.updateAttributes(new NullProgressMonitor());
+		TracVersion[] versions = repository.getVersions();
 		assertEquals(2, versions.length);
 		Arrays.sort(versions, new Comparator<TracVersion>() {
 			public int compare(TracVersion o1, TracVersion o2) {
@@ -54,6 +51,5 @@ public class Trac09ClientTest extends AbstractTracClientTest {
 		assertEquals("v1", versions[0].getName());
 		assertEquals("v2", versions[1].getName());
 	}
-
 
 }

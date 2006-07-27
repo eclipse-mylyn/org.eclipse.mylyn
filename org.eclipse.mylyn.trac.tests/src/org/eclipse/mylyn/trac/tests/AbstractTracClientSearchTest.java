@@ -15,45 +15,42 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
+import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.TracException;
+import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.internal.trac.model.TracSearch;
 import org.eclipse.mylar.internal.trac.model.TracTicket;
 import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
-import org.eclipse.mylar.trac.tests.support.AbstractTracRepositoryFactory;
 import org.eclipse.mylar.trac.tests.support.TestFixture;
 import org.eclipse.mylar.trac.tests.support.XmlRpcServer.TestData;
 import org.eclipse.mylar.trac.tests.support.XmlRpcServer.Ticket;
 
 /**
  * Test cases that validate search results for classes that implement
- * {@link ITracRepositor}.
+ * {@link ITracClient}.
  * 
  * @author Steffen Pingel
  */
-public abstract class AbstractTracClientSearchTest extends TestCase {
-
-	protected AbstractTracRepositoryFactory factory;
+public abstract class AbstractTracClientSearchTest extends AbstractTracClientTest {
 
 	protected List<Ticket> tickets;
 
-	public AbstractTracClientSearchTest(AbstractTracRepositoryFactory factory) {
-		this.factory = factory;
+	public AbstractTracClientSearchTest(Version version) {
+		super(version);
 	}
 
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		TestData data = TestFixture.initializeRepository1();
+		TestData data = TestFixture.init010();
 		tickets = data.tickets;
 
-		factory.connectRepository1();
+		connect010();
 	}
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
- 
+
 		// TestFixture.cleanupRepository1();
 	}
 
@@ -68,16 +65,16 @@ public abstract class AbstractTracClientSearchTest extends TestCase {
 	}
 
 	public void testGetTicket() throws Exception {
-		TracTicket ticket = factory.repository.getTicket(tickets.get(0).getId());
+		TracTicket ticket = repository.getTicket(tickets.get(0).getId());
 		assertTicketEquals(tickets.get(0), ticket);
 
-		ticket = factory.repository.getTicket(tickets.get(1).getId());
+		ticket = repository.getTicket(tickets.get(1).getId());
 		assertTicketEquals(tickets.get(1), ticket);
 	}
 
 	public void testGetTicketInvalidId() throws Exception {
 		try {
-			factory.repository.getTicket(Integer.MAX_VALUE);
+			repository.getTicket(Integer.MAX_VALUE);
 			fail("Expected TracException");
 		} catch (TracException e) {
 		}
@@ -85,8 +82,12 @@ public abstract class AbstractTracClientSearchTest extends TestCase {
 
 	public void testSearchAll() throws Exception {
 		TracSearch search = new TracSearch();
+		// TODO figure out why search must be ordered when logged in (otherwise
+		// no results will be returned)
+		search.setOrderBy("id");
 		List<TracTicket> result = new ArrayList<TracTicket>();
-		factory.repository.search(search, result);
+		repository.search(search, result);
+		System.out.println(result.size());
 		assertEquals(tickets.size(), result.size());
 	}
 
@@ -94,7 +95,7 @@ public abstract class AbstractTracClientSearchTest extends TestCase {
 		TracSearch search = new TracSearch();
 		search.addFilter("milestone", "does not exist");
 		List<TracTicket> result = new ArrayList<TracTicket>();
-		factory.repository.search(search, result);
+		repository.search(search, result);
 		assertEquals(0, result.size());
 	}
 
@@ -102,7 +103,7 @@ public abstract class AbstractTracClientSearchTest extends TestCase {
 		TracSearch search = new TracSearch();
 		search.addFilter("milestone", "m1");
 		List<TracTicket> result = new ArrayList<TracTicket>();
-		factory.repository.search(search, result);
+		repository.search(search, result);
 		assertEquals(1, result.size());
 		assertTicketEquals(tickets.get(0), result.get(0));
 	}
@@ -113,7 +114,7 @@ public abstract class AbstractTracClientSearchTest extends TestCase {
 		search.addFilter("milestone", "m2");
 		search.setOrderBy("id");
 		List<TracTicket> result = new ArrayList<TracTicket>();
-		factory.repository.search(search, result);
+		repository.search(search, result);
 		assertEquals(3, result.size());
 		assertTicketEquals(tickets.get(0), result.get(0));
 		assertTicketEquals(tickets.get(1), result.get(1));
@@ -125,7 +126,7 @@ public abstract class AbstractTracClientSearchTest extends TestCase {
 		search.addFilter("milestone", "m1");
 		search.addFilter("summary", "summary1");
 		List<TracTicket> result = new ArrayList<TracTicket>();
-		factory.repository.search(search, result);
+		repository.search(search, result);
 		assertEquals(1, result.size());
 		assertTicketEquals(tickets.get(0), result.get(0));
 		assertEquals("m1", result.get(0).getValue(Key.MILESTONE));

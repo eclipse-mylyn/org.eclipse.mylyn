@@ -11,9 +11,12 @@
 
 package org.eclipse.mylar.internal.trac.core;
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.util.zip.GZIPInputStream;
@@ -21,6 +24,7 @@ import java.util.zip.GZIPInputStream;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpVersion;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.XmlRpcRequest;
 import org.apache.xmlrpc.client.XmlRpcClient;
@@ -28,6 +32,7 @@ import org.apache.xmlrpc.client.XmlRpcCommonsTransport;
 import org.apache.xmlrpc.client.XmlRpcHttpClientConfig;
 import org.apache.xmlrpc.client.XmlRpcTransport;
 import org.apache.xmlrpc.client.XmlRpcTransportFactoryImpl;
+import org.apache.xmlrpc.util.XmlRpcIOException;
 import org.eclipse.mylar.internal.tasks.core.UrlConnectionUtil;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
@@ -53,6 +58,8 @@ public class TracHttpClientTransportFactory extends XmlRpcTransportFactoryImpl {
 	 * A transport that uses the Apache HttpClient library.
 	 */
 	public static class TracHttpClientTransport extends XmlRpcCommonsTransport {
+
+		private int contentLength;
 
 		public TracHttpClientTransport(XmlRpcClient client) {
 			super(client);
@@ -147,6 +154,52 @@ public class TracHttpClientTransportFactory extends XmlRpcTransportFactoryImpl {
 			} finally {
 				if (!closed) { try { close(); } catch (Throwable ignore) {} }
 			}
+		}
+
+		@Override
+		protected void writeRequest(final RequestWriter pWriter) throws XmlRpcException {
+			getMethod().setRequestEntity(new RequestEntity(){
+				public boolean isRepeatable() { return true; }
+				public void writeRequest(OutputStream pOut) throws IOException {
+					/* Make sure, that the socket is not closed by replacing it with our
+					 * own BufferedOutputStream.
+					 */
+					BufferedOutputStream bos = new BufferedOutputStream(pOut){
+						public void close() throws IOException {
+							flush();
+						}
+					};
+					try {
+						Method m = RequestWriter.class.getDeclaredMethod("write", new Class[] { OutputStream.class });
+						m.setAccessible(true);
+						m.invoke(pWriter, bos);
+					} catch (Exception e) {
+						throw new XmlRpcIOException(e);
+					}
+				}
+				public long getContentLength() { return contentLength; }
+				public String getContentType() { return "text/xml"; }
+			});
+			
+			try {
+				getHttpClient().executeMethod(getMethod());
+			} catch (XmlRpcIOException e) {
+				Throwable t = e.getLinkedException();
+				if (t instanceof XmlRpcException) {
+					throw (XmlRpcException) t;
+				} else {
+					throw new XmlRpcException("Unexpected exception: " + t.getMessage(), t);
+				}
+			} catch (IOException e) {
+				throw new XmlRpcException("I/O error while communicating with HTTP server: " + e.getMessage(), e);
+			}
+		}
+
+		@Override
+		protected void setContentLength(int pLength) {
+			super.setContentLength(pLength);
+			
+			this.contentLength = pLength;
 		}
 
 	}

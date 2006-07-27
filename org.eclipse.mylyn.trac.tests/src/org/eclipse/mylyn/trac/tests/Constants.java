@@ -28,4 +28,10 @@ public class Constants {
 
 	public static final String TEST_REPOSITORY1_PASSWORD = "trac-test";
 
+	public static final String TEST_TRAC_096_URL = "http://mylar.eclipse.org/trac096";
+
+	public static final String TEST_TRAC_010_URL = "http://mylar.eclipse.org/trac010";
+
+	public static final String TEST_TRAC_010_DIGEST_AUTH_URL = "http://mylar.eclipse.org/trac010digest";
+
 }

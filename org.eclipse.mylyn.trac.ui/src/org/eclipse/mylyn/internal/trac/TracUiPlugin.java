@@ -11,28 +11,13 @@
 
 package org.eclipse.mylar.internal.trac;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.Proxy;
-import java.net.URL;
-import java.net.URLConnection;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.internal.trac.core.TracException;
 import org.eclipse.mylar.internal.trac.core.TracLoginException;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-
-import sun.misc.BASE64Encoder;
 
 /**
  * @author Mik Kersten
@@ -65,49 +50,6 @@ public class TracUiPlugin extends AbstractUIPlugin {
 		return plugin;
 	}
 
-	/**
-	 * Copied from BugzillaPlugin.
-	 * 
-	 * TODO refactor into common utility method
-	 */
-	public static HttpURLConnection getHttpConnection(URL url) throws IOException, NoSuchAlgorithmException,
-			KeyManagementException, MalformedURLException {
-		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
-		URLConnection cntx = getUrlConnection(url, proxySettings);
-		if (cntx == null || !(cntx instanceof HttpURLConnection)) {
-			throw new MalformedURLException();
-		}
-
-		HttpURLConnection connection = (HttpURLConnection) cntx;
-		return connection;
-	}
-
-	/**
-	 * Copied from BugzillaPlugin.getUrlConnection().
-	 * 
-	 * TODO refactor into common utility method
-	 */
-	public static URLConnection getUrlConnection(URL url, Proxy proxy) throws IOException, NoSuchAlgorithmException,
-			KeyManagementException {
-		SSLContext ctx = SSLContext.getInstance("TLS");
-
-		javax.net.ssl.TrustManager[] tm = new javax.net.ssl.TrustManager[] { new TrustAll() };
-		ctx.init(null, tm, null);
-		HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());
-
-		if (proxy == null) {
-			proxy = Proxy.NO_PROXY;
-		}
-		URLConnection connection = url.openConnection(proxy);
-		return connection;
-	}
-
-	public static void setAuthCredentials(URLConnection connection, String username, String password) {
-		byte[] credentials = (username + ":" + password).getBytes();
-		BASE64Encoder encoder = new BASE64Encoder();
-		connection.setRequestProperty("Authorization", "Basic " + encoder.encode(credentials));
-	}
-
 	public static void handleTracException(Throwable e) {
 		if (e instanceof TracLoginException) {
 			MessageDialog.openError(null, TITLE_MESSAGE_DIALOG,
@@ -121,4 +63,5 @@ public class TracUiPlugin extends AbstractUIPlugin {
 			MylarStatusHandler.fail(e, "Unexpected error: " + e.getMessage(), true);
 		}
 	}
+
 }

@@ -67,7 +67,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 		tasklist = TasksUiPlugin.getTaskListManager().getTaskList();
 
-		data = TestFixture.initializeRepository1();
+		data = TestFixture.init010();
 	}
 
 	protected void tearDown() throws Exception {

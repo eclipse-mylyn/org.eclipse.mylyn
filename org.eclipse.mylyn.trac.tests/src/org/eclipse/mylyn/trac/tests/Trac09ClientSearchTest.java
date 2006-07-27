@@ -11,12 +11,7 @@
 
 package org.eclipse.mylar.trac.tests;
 
-import java.net.URL;
-
-import org.eclipse.mylar.internal.trac.core.ITracClient;
-import org.eclipse.mylar.internal.trac.core.Trac09Client;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
-import org.eclipse.mylar.trac.tests.support.AbstractTracRepositoryFactory;
 
 /**
  * @author Steffen Pingel
@@ -24,11 +19,7 @@ import org.eclipse.mylar.trac.tests.support.AbstractTracRepositoryFactory;
 public class Trac09ClientSearchTest extends AbstractTracClientSearchTest {
 
 	public Trac09ClientSearchTest() {
-		super(new AbstractTracRepositoryFactory() {
-			protected ITracClient createRepository(String url, String username, String password) throws Exception {
-				return new Trac09Client(new URL(url), Version.TRAC_0_9, username, password);
-			}
-		});
+		super(Version.TRAC_0_9);
 	}
 
 }
