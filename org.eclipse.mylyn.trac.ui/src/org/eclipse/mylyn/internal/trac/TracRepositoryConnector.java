@@ -26,6 +26,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylar.internal.tasks.ui.wizards.NewWebTaskWizard;
 import org.eclipse.mylar.internal.trac.TracTask.Kind;
 import org.eclipse.mylar.internal.trac.TracTask.PriorityLevel;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
@@ -35,7 +36,6 @@ import org.eclipse.mylar.internal.trac.model.TracTicket;
 import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
 import org.eclipse.mylar.internal.trac.ui.wizard.EditTracQueryWizard;
 import org.eclipse.mylar.internal.trac.ui.wizard.NewTracQueryWizard;
-import org.eclipse.mylar.internal.trac.ui.wizard.NewTracTaskWizard;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
@@ -84,7 +84,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public IWizard getNewTaskWizard(TaskRepository taskRepository, IStructuredSelection selection) {
-		return new NewTracTaskWizard(taskRepository);
+		return new NewWebTaskWizard(taskRepository, taskRepository.getUrl() + ITracClient.NEW_TICKET_URL);
 	}
 
 	@Override

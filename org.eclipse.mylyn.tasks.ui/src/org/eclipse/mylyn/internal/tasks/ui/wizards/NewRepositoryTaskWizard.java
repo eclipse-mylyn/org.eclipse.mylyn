@@ -24,7 +24,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
  */
 public class NewRepositoryTaskWizard extends MultiRepositoryAwareWizard {
 
-	private static final String TITLE = "New Repostiory Task";
+	private static final String TITLE = "New Repository Task";
 
 	public NewRepositoryTaskWizard() {
 		super(new NewRepositoryTaskPage(getConnectorKinds()), TITLE);
