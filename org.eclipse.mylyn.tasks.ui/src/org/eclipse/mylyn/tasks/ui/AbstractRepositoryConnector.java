@@ -475,30 +475,30 @@ public abstract class AbstractRepositoryConnector {
 				.getRepositoryTasks(repository.getUrl()));
 
 		final Set<AbstractRepositoryTask> tasksToSync = new HashSet<AbstractRepositoryTask>();
-		Set<AbstractRepositoryTask> changedTasks = null;
+		Set<AbstractRepositoryTask> changedTasks = new HashSet<AbstractRepositoryTask>();
 		int attempts = 0;
 
-		if (getOfflineTaskHandler() != null) {
-		while (attempts < MAX_QUERY_ATTEMPTS && changedTasks == null) {
-			attempts++;
-			try {
-				changedTasks = getOfflineTaskHandler().getChangedSinceLastSync(repository, repositoryTasks);
-			} catch (Exception e) {
-				if (attempts == MAX_QUERY_ATTEMPTS) {
-					if(!(e instanceof IOException)) {
-						MylarStatusHandler.log(e, "Could not determine modified tasks for " + repository.getUrl() + ".");
-					} else {
-						// ignore, indicates working offline						
-					}
-					return;
-				}
+		if (getOfflineTaskHandler() != null) {	
+			while (attempts < MAX_QUERY_ATTEMPTS && changedTasks == null) {
+				attempts++;
 				try {
-					Thread.sleep(RETRY_DELAY);
-				} catch (InterruptedException e1) {
-					return;
+					changedTasks = getOfflineTaskHandler().getChangedSinceLastSync(repository, repositoryTasks);
+				} catch (Exception e) {
+					if (attempts == MAX_QUERY_ATTEMPTS) {
+						if(!(e instanceof IOException)) {
+							MylarStatusHandler.log(e, "Could not determine modified tasks for " + repository.getUrl() + ".");
+						} else {
+							// ignore, indicates working offline						
+						}
+						return;
+					}
+					try {
+						Thread.sleep(RETRY_DELAY);
+					} catch (InterruptedException e1) {
+						return;
+					}
 				}
 			}
-		}
 		}
 
 		for (AbstractRepositoryTask task : changedTasks) {

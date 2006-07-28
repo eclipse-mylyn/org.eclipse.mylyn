@@ -24,11 +24,14 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 public class NewQueryWizard extends MultiRepositoryAwareWizard {
 
 	private static final String TITLE = "New Repository Query";
-		
+
+	public NewQueryWizard() {
+		super(new SelectRepositoryPageForNewQuery(), TITLE);
+	}
+	
 	public NewQueryWizard(IStructuredSelection selection) {
 		super(new SelectRepositoryPageForNewQuery().setSelection(selection), TITLE);
 	}
-
 	
 	private static final class SelectRepositoryPageForNewQuery extends SelectRepositoryPage {
 		@Override
