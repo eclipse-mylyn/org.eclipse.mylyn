@@ -12,12 +12,17 @@
 package org.eclipse.mylar.internal.tasks.ui.views;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.tasks.ui.actions.CopyDetailsAction;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
+import org.eclipse.mylar.tasks.ui.TaskTransfer;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
 import org.eclipse.swt.dnd.FileTransfer;
@@ -28,12 +33,12 @@ import org.eclipse.swt.dnd.TextTransfer;
  */
 class TaskListDragSourceListener implements DragSourceListener {
 
-	static final String ID_DATA_TASK_DRAG = "task-drag";
-
 	static final String DELIM = ", ";
 
 	private final TaskListView view;
 
+//	static final String ID_DATA_TASK_DRAG = "task-drag";
+	
 	/**
 	 * @param view
 	 */
@@ -53,21 +58,26 @@ class TaskListDragSourceListener implements DragSourceListener {
 		if (((IStructuredSelection) selection).getFirstElement() instanceof ITaskListElement) {
 			selectedElement = (ITaskListElement)((IStructuredSelection) selection).getFirstElement();
 		}
-		if (FileTransfer.getInstance().isSupportedType(event.dataType)) {			
+		if (TaskTransfer.getInstance().isSupportedType(event.dataType)) {
+			List<ITask> tasks = new ArrayList<ITask>();
+			for (Iterator iter = selection.iterator(); iter.hasNext();) {
+				ITaskListElement element = (ITaskListElement) iter.next();
+				if (element instanceof ITask) {
+					tasks.add((ITask)element);
+				}
+			}
+			event.data = tasks.toArray();
+		} else if (FileTransfer.getInstance().isSupportedType(event.dataType)) {	
 			File file = ContextCorePlugin.getContextManager().getFileForContext(selectedElement.getHandleIdentifier());
 			if (file != null) {
 				event.data = new String[] { file.getAbsolutePath() };
 			}
 		} else if (TextTransfer.getInstance().isSupportedType(event.dataType)) {
 			event.data = CopyDetailsAction.getTextForTask(selectedElement);
-		} else {
-			event.data = ID_DATA_TASK_DRAG;
-		}
-		// if (data != null) {
-		// event.data = data;
-		// } else {
-		// event.data = "null";
-		// }
+		} 
+//		else {
+//			event.data = ID_DATA_TASK_DRAG;
+//		}
 	}
 
 	public void dragFinished(DragSourceEvent event) {

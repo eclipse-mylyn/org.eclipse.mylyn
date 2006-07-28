@@ -86,6 +86,7 @@ import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskArchive;
 import org.eclipse.mylar.tasks.core.TaskCategory;
+import org.eclipse.mylar.tasks.ui.TaskTransfer;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -118,7 +119,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.DrillDownAdapter;
-import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.themes.IThemeManager;
 
@@ -970,11 +970,13 @@ public class TaskListView extends ViewPart {
 	}
 
 	private void initDragAndDrop(Composite parent) {
-		Transfer[] types = new Transfer[] { TextTransfer.getInstance(), FileTransfer.getInstance(), PluginTransfer.getInstance(),
+		Transfer[] dragTypes = new Transfer[] { TaskTransfer.getInstance(), TextTransfer.getInstance(), FileTransfer.getInstance() };
+
+		Transfer[] dropTypes = new Transfer[] { TaskTransfer.getInstance(), TextTransfer.getInstance(), FileTransfer.getInstance(), //PluginTransfer.getInstance(),
 				RTFTransfer.getInstance() };
 
-		getViewer().addDragSupport(DND.DROP_COPY | DND.DROP_MOVE, types, new TaskListDragSourceListener(this));
-		getViewer().addDropSupport(DND.DROP_COPY | DND.DROP_MOVE, types, new TaskListDropAdapter(getViewer()));
+		getViewer().addDragSupport(DND.DROP_COPY | DND.DROP_MOVE, dragTypes, new TaskListDragSourceListener(this));
+		getViewer().addDropSupport(DND.DROP_COPY | DND.DROP_MOVE, dropTypes, new TaskListDropAdapter(getViewer()));
 	}
 
 	void expandToActiveTasks() {

@@ -33,6 +33,7 @@ import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskCategory;
+import org.eclipse.mylar.tasks.ui.TaskTransfer;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -60,7 +61,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 		ISelection selection = ((TreeViewer) getViewer()).getSelection();
 		if (isUrl(data) && createTaskFromUrl(data)) {
 			tasksToMove.add(newTask);
-		} else if (TaskListDragSourceListener.ID_DATA_TASK_DRAG.equals(data)){
+		} else if (TaskTransfer.getInstance().isSupportedType(currentTransfer)) {
 			for (Object selectedObject : ((IStructuredSelection) selection).toList()) {
 				ITask toMove = null;
 				if (selectedObject instanceof ITask) {
@@ -120,6 +121,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 		return true;
 
 	}
+
 
 	/**
 	 * @return true if string is a http(s) url
