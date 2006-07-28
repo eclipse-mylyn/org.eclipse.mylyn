@@ -11,12 +11,17 @@
 
 package org.eclipse.mylar.tasks.core;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Eugene Kuleshov
  * @author Steffen Pingel
  */
 public class RepositoryTemplate {
 
+	public final Map<String, String> genericAttributes = new HashMap<String, String>();
+	
 	public final String label;
 
 	public final String repositoryUrl;
@@ -27,7 +32,7 @@ public class RepositoryTemplate {
 
 	public final String taskQueryUrl;
 
-	public final String taskRegexp;
+	public final String newAccountUrl;
 
 	public final boolean anonymous;
 
@@ -36,15 +41,23 @@ public class RepositoryTemplate {
 	public final boolean addAutomatically;
 
 	public RepositoryTemplate(String label, String repositoryUrl, String version, String newTaskUrl, String taskPrefix,
-			String taskQuery, String taskRegexp, boolean anonymous, boolean addAutomatically) {
+			String taskQuery, String newAccountUrl, boolean anonymous, boolean addAutomatically) {
 		this.label = label;
 		this.repositoryUrl = repositoryUrl;
 		this.newTaskUrl = newTaskUrl;
 		this.taskPrefixUrl = taskPrefix;
 		this.taskQueryUrl = taskQuery;
-		this.taskRegexp = taskRegexp;
+		this.newAccountUrl = newAccountUrl;
 		this.version = version;
 		this.anonymous = anonymous;
 		this.addAutomatically = addAutomatically;
+	}
+	
+	public void addAttribute(String name, String value) {
+		genericAttributes.put(name, value);
+	}
+	
+	public String getAttribute(String name) {
+		return genericAttributes.get(name);
 	}
 }

@@ -46,7 +46,7 @@ public class TasksUiExtensionReader {
 
 	public static final String ELMNT_TMPL_LABEL = "label";
 
-	public static final String ELMNT_TMPL_REPOSITORYURL = "repositoryUrl";
+	public static final String ELMNT_TMPL_URLREPOSITORY = "urlRepository";
 
 	public static final String ELMNT_TMPL_REPOSITORYKIND = "repositoryKind";
 
@@ -54,13 +54,13 @@ public class TasksUiExtensionReader {
 
 	public static final String ELMNT_TMPL_VERSION = "version";
 
-	public static final String ELMNT_TMPL_NEWTASKURL = "newTaskUrl";
+	public static final String ELMNT_TMPL_URLNEWTASK = "urlNewTask";
 
-	public static final String ELMNT_TMPL_TASKPREFIXURL = "taskPrefixUrl";
+	public static final String ELMNT_TMPL_URLTASK = "urlTask";
 
-	public static final String ELMNT_TMPL_TASKQUERYURL = "taskQueryUrl";
+	public static final String ELMNT_TMPL_URLTASKQUERY = "urlTaskQuery";
 
-	public static final String ELMNT_TMPL_TASKREGEXP = "taskRegexp";
+	public static final String ELMNT_TMPL_NEWACCOUNTURL = "urlNewAccount";
 
 	public static final String ELMNT_TMPL_ADDAUTO = "addAutomatically";
 
@@ -250,13 +250,13 @@ public class TasksUiExtensionReader {
 		boolean addAuto = false;
 
 		String label = element.getAttribute(ELMNT_TMPL_LABEL);
-		String serverUrl = element.getAttribute(ELMNT_TMPL_REPOSITORYURL);
+		String serverUrl = element.getAttribute(ELMNT_TMPL_URLREPOSITORY);
 		String repKind = element.getAttribute(ELMNT_TMPL_REPOSITORYKIND);
 		String version = element.getAttribute(ELMNT_TMPL_VERSION);
-		String newTaskUrl = element.getAttribute(ELMNT_TMPL_NEWTASKURL);
-		String taskPrefix = element.getAttribute(ELMNT_TMPL_TASKPREFIXURL);
-		String taskQueryUrl = element.getAttribute(ELMNT_TMPL_TASKQUERYURL);
-		String taskRegexp = element.getAttribute(ELMNT_TMPL_TASKREGEXP);
+		String newTaskUrl = element.getAttribute(ELMNT_TMPL_URLNEWTASK);
+		String taskPrefix = element.getAttribute(ELMNT_TMPL_URLTASK);
+		String taskQueryUrl = element.getAttribute(ELMNT_TMPL_URLTASKQUERY);
+		String newAccountUrl = element.getAttribute(ELMNT_TMPL_NEWACCOUNTURL);
 		addAuto = Boolean.parseBoolean(element.getAttribute(ELMNT_TMPL_ADDAUTO));
 		anonymous = Boolean.parseBoolean(element.getAttribute(ELMNT_TMPL_ANONYMOUS));
 
@@ -265,9 +265,17 @@ public class TasksUiExtensionReader {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 					.getRepositoryConnector(repKind);
 			RepositoryTemplate template = new RepositoryTemplate(label, serverUrl, version, newTaskUrl, taskPrefix,
-					taskQueryUrl, taskRegexp, anonymous, addAuto);
+					taskQueryUrl, newAccountUrl, anonymous, addAuto);
 			connector.addTemplate(template);
-
+			
+			for (IConfigurationElement configElement : element.getChildren()) {
+				String name = configElement.getAttribute("name");
+				String value = configElement.getAttribute("value");
+				if(name != null && !name.equals("") && value != null) {
+					template.addAttribute(name, value);
+				}
+			}
+			
 		} else {
 			MylarStatusHandler.log("Could not load repository template extension " + element.getName(),
 					TasksUiExtensionReader.class);

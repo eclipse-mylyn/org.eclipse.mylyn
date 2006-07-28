@@ -44,6 +44,9 @@
 
    <element name="repository">
       <complexType>
+         <sequence>
+            <element ref="attribute" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
          <attribute name="label" type="string" use="required">
             <annotation>
                <documentation>
@@ -51,7 +54,7 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="repositoryUrl" type="string" use="required">
+         <attribute name="urlRepository" type="string" use="required">
             <annotation>
                <documentation>
                   
@@ -72,28 +75,28 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="newTaskUrl" type="string">
+         <attribute name="urlNewAccount" type="string">
             <annotation>
                <documentation>
                   
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="taskPrefixUrl" type="string">
+         <attribute name="urlNewTask" type="string">
             <annotation>
                <documentation>
                   
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="taskQueryUrl" type="string">
+         <attribute name="urlTask" type="string">
             <annotation>
                <documentation>
                   
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="taskRegexp" type="string">
+         <attribute name="urlTaskQuery" type="string">
             <annotation>
                <documentation>
                   
@@ -111,6 +114,25 @@
             <annotation>
                <documentation>
                   True if an anonymous login is accepted for this repository.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="attribute">
+      <complexType>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="value" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
                </documentation>
             </annotation>
          </attribute>

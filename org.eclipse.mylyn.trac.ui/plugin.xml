@@ -22,7 +22,7 @@
             anonymous="true"
             label="Edgewall"
             repositoryKind="trac"
-            repositoryUrl="http://trac.edgewall.org"
+            urlRepository="http://trac.edgewall.org"
             version="TRAC_0_9"/>
    </extension>
 

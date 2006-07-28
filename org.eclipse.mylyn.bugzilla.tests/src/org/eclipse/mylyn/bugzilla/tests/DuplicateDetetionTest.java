@@ -20,6 +20,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.NewBugEditor;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.NewBugEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IWorkbenchPage;
@@ -50,8 +51,9 @@ public class DuplicateDetetionTest extends TestCase {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewBugEditorInput input = new NewBugEditorInput(repository, model);
 		TaskUiUtil.openEditor(input, BugzillaUiPlugin.NEW_BUG_EDITOR_ID, page);
-
-		NewBugEditor editor = (NewBugEditor) page.getActiveEditor();
+		
+		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();		
+		NewBugEditor editor = (NewBugEditor) taskEditor.getActivePageInstance();
 		assertTrue(editor.searchForDuplicates());
 
 		editor.markDirty(false);
@@ -68,7 +70,8 @@ public class DuplicateDetetionTest extends TestCase {
 		NewBugEditorInput input = new NewBugEditorInput(repository, model);
 		TaskUiUtil.openEditor(input, BugzillaUiPlugin.NEW_BUG_EDITOR_ID, page);
 
-		NewBugEditor editor = (NewBugEditor) page.getActiveEditor();
+		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();		
+		NewBugEditor editor = (NewBugEditor) taskEditor.getActivePageInstance();
 		assertNull(editor.getStackTraceFromDescription());
 
 		editor.markDirty(false);

@@ -134,7 +134,7 @@
             addAutomatically="true"
             label="Eclipse.org"
             repositoryKind="bugzilla"
-            repositoryUrl="https://bugs.eclipse.org/bugs"           
+            urlRepository="https://bugs.eclipse.org/bugs"           
             version="2.20"/>
    </extension>
 <!--   <extension
