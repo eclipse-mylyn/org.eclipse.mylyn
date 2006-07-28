@@ -116,7 +116,7 @@
    <extension
          point="org.eclipse.ui.views">
       <view
-         allowMultiple="false"
+         allowMultiple="true"
          category="org.eclipse.mylar"
          class="org.eclipse.mylar.internal.tasks.ui.views.TaskListView"
          icon="icons/eview16/task-list.gif"
