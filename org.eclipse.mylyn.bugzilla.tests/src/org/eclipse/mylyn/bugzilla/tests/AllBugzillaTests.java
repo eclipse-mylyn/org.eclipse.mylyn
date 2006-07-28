@@ -51,6 +51,7 @@ public class AllBugzillaTests {
 		// TODO: enable
 		// suite.addTest(new TestSuite(BugzillaParserTest.class));
 		suite.addTestSuite(BugzillaSearchDialogTest.class);
+		suite.addTestSuite(DuplicateDetetionTest.class);
 		// $JUnit-END$
 		return suite;
 	}

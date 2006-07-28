@@ -15,6 +15,7 @@ import java.net.Proxy;
 import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
@@ -69,11 +70,13 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class NewBugEditor extends AbstractRepositoryTaskEditor {
 
+	private static final String LABEL_SEARCH_DUPS = "Search for Duplicates";
+
+	private static final String LABEL_CREATE = "Create New";
+	
 	private static final String NO_STACK_MESSAGE = "Unable to locate a stack trace in the description text.\nDuplicate search currently only supports stack trace matching.";
 
 	private static final String ERROR_CREATING_BUG_REPORT = "Error creating bug report";
-
-	private static final String LABEL_BUTTON_SEARCH_DUPS = "Search for Duplicates";
 
 	protected RepositoryTaskData taskData;
 
@@ -186,18 +189,18 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		return taskData.getLabel();
 	}
 
-	protected void searchForDuplicates() {
+	public boolean searchForDuplicates() {
 
 		String stackTrace = getStackTraceFromDescription();
 		if (stackTrace == null) {
 			MessageDialog.openWarning(null, "No Stack Trace Found", NO_STACK_MESSAGE);
-			return;
+			return false;
 		}
 
 		String queryUrl = "";
 		try {
 			queryUrl = repository.getUrl() + "/buglist.cgi?long_desc_type=allwordssubstr&long_desc="
-					+ URLEncoder.encode("Stack Trace:\n" + stackTrace, BugzillaPlugin.ENCODING_UTF_8);
+					+ URLEncoder.encode(stackTrace, BugzillaPlugin.ENCODING_UTF_8);
 		} catch (UnsupportedEncodingException e) {
 			// This should never happen
 		}
@@ -210,19 +213,47 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		BugzillaSearchQuery query = new BugzillaSearchQuery(operation);
 
 		NewSearchUI.runQueryInBackground(query);
+		return true;
 	}
 
-	private String getStackTraceFromDescription() {
+	public String getStackTraceFromDescription() {
 		String description = newDescriptionTextViewer.getTextWidget().getText().trim();
-		// TODO: improve stack trace detection
-		int index;
-		String stackIdentifier = "Stack Trace:\n";
-		if (description == null || (index = description.indexOf(stackIdentifier)) < 0) {
+		String stackTrace = null;
+
+		if (description == null) {
 			return null;
 		}
 
-		description = description.substring(index + stackIdentifier.length());
-		return description;
+		// Temporary stack trace identifying until a better regex based method
+		// can be implemented
+		// Find a sequence of lines containing "at " and ".java" as well as the
+		// line that precedes the sequence
+		StringTokenizer tok = new StringTokenizer(description, "\n");
+		StringBuffer stackBuffer = new StringBuffer();
+		String prevLine = "";
+		boolean hit = false;
+		while (tok.hasMoreTokens() && stackBuffer.length() == 0) {
+			String line = tok.nextToken().trim();
+			while (line.indexOf("at ") < 0 && line.indexOf(".java:") < 0 && tok.hasMoreTokens()) {
+				prevLine = line;
+				line = tok.nextToken();
+				hit = true;
+			}
+
+			if (!hit) {
+				return null;
+			}
+			stackBuffer.append(prevLine + "\n" + line + "\n");
+			while (line.indexOf(".java:") > 0 && line.indexOf("at ") == 0 && tok.hasMoreTokens()) {
+				line = tok.nextToken();
+				stackBuffer.append(line + "\n");
+			}
+		}
+		if (stackBuffer.length() > 0) {
+			stackTrace = stackBuffer.toString();
+		}
+
+		return stackTrace;
 	}
 
 	@Override
@@ -397,7 +428,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 
 	protected void addActionButtons(Composite buttonComposite) {
 		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
-		searchDuplicatesButton = toolkit.createButton(buttonComposite, LABEL_BUTTON_SEARCH_DUPS, SWT.NONE);
+		searchDuplicatesButton = toolkit.createButton(buttonComposite, LABEL_SEARCH_DUPS, SWT.NONE);
 		GridData searchDuplicatesButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		searchDuplicatesButton.setLayoutData(searchDuplicatesButtonData);
 		searchDuplicatesButton.addListener(SWT.Selection, new Listener() {
@@ -406,7 +437,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 			}
 		});
 
-		submitButton = toolkit.createButton(buttonComposite, "Create", SWT.NONE);
+		submitButton = toolkit.createButton(buttonComposite, LABEL_CREATE, SWT.NONE);
 		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		submitButton.setLayoutData(submitButtonData);
 		submitButton.addListener(SWT.Selection, new Listener() {
