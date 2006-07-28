@@ -87,7 +87,6 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 		search.setOrderBy("id");
 		List<TracTicket> result = new ArrayList<TracTicket>();
 		repository.search(search, result);
-		System.out.println(result.size());
 		assertEquals(tickets.size(), result.size());
 	}
 
