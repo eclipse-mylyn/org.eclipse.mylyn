@@ -10,25 +10,25 @@ package org.eclipse.mylar.tasks.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.tasks.core.UrlConnectionUtil;
+import org.eclipse.mylar.internal.tasks.core.WebClientUtil;
 
 public class UrlConnectionUtilTest extends TestCase {
 
 	public void testUrlParsers() {
 		String url = "https://example.com:444/folder/file.txt";
-		assertEquals(444, UrlConnectionUtil.getPort(url));
-		assertEquals("example.com", UrlConnectionUtil.getDomain(url));
-		assertEquals("/folder/file.txt", UrlConnectionUtil.getRequestPath(url));
+		assertEquals(444, WebClientUtil.getPort(url));
+		assertEquals("example.com", WebClientUtil.getDomain(url));
+		assertEquals("/folder/file.txt", WebClientUtil.getRequestPath(url));
 	
 		url = "http://example.com/";
-		assertEquals(80, UrlConnectionUtil.getPort(url));
-		assertEquals("example.com", UrlConnectionUtil.getDomain(url));
-		assertEquals("/", UrlConnectionUtil.getRequestPath(url));
+		assertEquals(80, WebClientUtil.getPort(url));
+		assertEquals("example.com", WebClientUtil.getDomain(url));
+		assertEquals("/", WebClientUtil.getRequestPath(url));
 	
 		url = "https://example.com:321";
-		assertEquals(321, UrlConnectionUtil.getPort(url));
-		assertEquals("example.com", UrlConnectionUtil.getDomain(url));
-		assertEquals("", UrlConnectionUtil.getRequestPath(url));
+		assertEquals(321, WebClientUtil.getPort(url));
+		assertEquals("example.com", WebClientUtil.getDomain(url));
+		assertEquals("", WebClientUtil.getRequestPath(url));
 	}
 
 }

@@ -33,7 +33,7 @@ import org.apache.xmlrpc.client.XmlRpcHttpClientConfig;
 import org.apache.xmlrpc.client.XmlRpcTransport;
 import org.apache.xmlrpc.client.XmlRpcTransportFactoryImpl;
 import org.apache.xmlrpc.util.XmlRpcIOException;
-import org.eclipse.mylar.internal.tasks.core.UrlConnectionUtil;
+import org.eclipse.mylar.internal.tasks.core.WebClientUtil;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
@@ -120,9 +120,9 @@ public class TracHttpClientTransportFactory extends XmlRpcTransportFactoryImpl {
 			
 			String url = config.getServerURL().toString();
 			Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
-			UrlConnectionUtil.setupHttpClient(getHttpClient(), proxySettings, url);
+			WebClientUtil.setupHttpClient(getHttpClient(), proxySettings, url);
 			
-			PostMethod method = new PostMethod(UrlConnectionUtil.getRequestPath(url));
+			PostMethod method = new PostMethod(WebClientUtil.getRequestPath(url));
 	        
 	        if (config.getConnectionTimeout() != 0)
 	            getHttpClient().getHttpConnectionManager().getParams().setConnectionTimeout(config.getConnectionTimeout());

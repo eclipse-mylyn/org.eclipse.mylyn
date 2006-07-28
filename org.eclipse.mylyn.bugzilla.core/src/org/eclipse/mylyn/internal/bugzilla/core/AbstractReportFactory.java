@@ -25,7 +25,7 @@ import java.util.zip.GZIPInputStream;
 
 import javax.security.auth.login.LoginException;
 
-import org.eclipse.mylar.internal.tasks.core.UrlConnectionUtil;
+import org.eclipse.mylar.internal.tasks.core.WebClientUtil;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -56,7 +56,7 @@ public class AbstractReportFactory {
 	protected void collectResults(URL url, Proxy proxySettings, String characterEncoding,
 			DefaultHandler contentHandler, boolean clean) throws IOException, LoginException, KeyManagementException,
 			NoSuchAlgorithmException, BugzillaException {
-		URLConnection cntx = UrlConnectionUtil.getUrlConnection(url, proxySettings, false);
+		URLConnection cntx = WebClientUtil.getUrlConnection(url, proxySettings, false);
 		if (cntx == null || !(cntx instanceof HttpURLConnection)) {
 			throw new IOException("Could not form URLConnection.");
 		}

@@ -39,7 +39,7 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylar.internal.tasks.core.UrlConnectionUtil;
+import org.eclipse.mylar.internal.tasks.core.WebClientUtil;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.LocalAttachment;
@@ -117,8 +117,8 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 		
 //		Protocol.registerProtocol("https", new Protocol("https", new TrustAllSslProtocolSocketFactory(), 443));
 		HttpClient client = new HttpClient();
-		UrlConnectionUtil.setupHttpClient(client, proxySettings, repositoryUrl);
-		PostMethod postMethod = new PostMethod(UrlConnectionUtil.getRequestPath(repositoryUrl) + POST_ARGS_ATTACHMENT_UPLOAD);
+		WebClientUtil.setupHttpClient(client, proxySettings, repositoryUrl);
+		PostMethod postMethod = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl) + POST_ARGS_ATTACHMENT_UPLOAD);
 
 		// My understanding is that this option causes the client to first check
 		// with the server to see if it will in fact recieve the post before
@@ -195,7 +195,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 			String url = repositoryUrl + POST_ARGS_ATTACHMENT_DOWNLOAD + id;
 			url = BugzillaServerFacade.addCredentials(url, userName, password);
 			URL downloadUrl = new URL(url);
-			URLConnection connection = UrlConnectionUtil.getUrlConnection(downloadUrl, proxySettings, false);
+			URLConnection connection = WebClientUtil.getUrlConnection(downloadUrl, proxySettings, false);
 			if (connection != null) {
 				InputStream input = connection.getInputStream();
 				outStream = new FileOutputStream(destinationFile);

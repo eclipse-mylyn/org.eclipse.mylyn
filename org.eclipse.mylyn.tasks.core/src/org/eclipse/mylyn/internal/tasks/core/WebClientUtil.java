@@ -29,7 +29,7 @@ import org.apache.commons.httpclient.protocol.Protocol;
  * @author Mik Kersten
  * @author Steffen Pingel
  */
-public class UrlConnectionUtil {
+public class WebClientUtil {
 
 	private static final int HTTP_PORT = 80;
 
@@ -127,14 +127,14 @@ public class UrlConnectionUtil {
 			client.getHostConfiguration().setProxy(address.getHostName(), address.getPort());
 		}
 
-		if (UrlConnectionUtil.repositoryUsesHttps(repositoryUrl)) {
-			Protocol acceptAllSsl = new Protocol("https", new SslProtocolSocketFactory(), UrlConnectionUtil
+		if (WebClientUtil.repositoryUsesHttps(repositoryUrl)) {
+			Protocol acceptAllSsl = new Protocol("https", new SslProtocolSocketFactory(), WebClientUtil
 					.getPort(repositoryUrl));
-			client.getHostConfiguration().setHost(UrlConnectionUtil.getDomain(repositoryUrl),
-					UrlConnectionUtil.getPort(repositoryUrl), acceptAllSsl);
+			client.getHostConfiguration().setHost(WebClientUtil.getDomain(repositoryUrl),
+					WebClientUtil.getPort(repositoryUrl), acceptAllSsl);
 		} else {
-			client.getHostConfiguration().setHost(UrlConnectionUtil.getDomain(repositoryUrl),
-					UrlConnectionUtil.getPort(repositoryUrl));
+			client.getHostConfiguration().setHost(WebClientUtil.getDomain(repositoryUrl),
+					WebClientUtil.getPort(repositoryUrl));
 		}
 	}
 

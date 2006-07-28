@@ -36,7 +36,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer;
 import org.eclipse.mylar.internal.tasks.core.HtmlTag;
-import org.eclipse.mylar.internal.tasks.core.UrlConnectionUtil;
+import org.eclipse.mylar.internal.tasks.core.WebClientUtil;
 import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer.Token;
 import org.eclipse.mylar.internal.trac.core.TracHttpClientTransportFactory.TracHttpException;
 import org.eclipse.mylar.internal.trac.model.TracComponent;
@@ -81,7 +81,7 @@ public class Trac09Client extends AbstractTracClient {
 	}
 
 	private GetMethod connectInternal(String serverURL) throws TracLoginException, IOException, TracHttpException {
-		UrlConnectionUtil.setupHttpClient(httpClient, TasksUiPlugin.getDefault().getProxySettings(), serverURL);
+		WebClientUtil.setupHttpClient(httpClient, TasksUiPlugin.getDefault().getProxySettings(), serverURL);
 
 		for (int attempt = 0; attempt < 2; attempt++) {
 			// force authentication
@@ -89,7 +89,7 @@ public class Trac09Client extends AbstractTracClient {
 				authenticate();
 			}
 
-			GetMethod method = new GetMethod(UrlConnectionUtil.getRequestPath(serverURL));
+			GetMethod method = new GetMethod(WebClientUtil.getRequestPath(serverURL));
 			method.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 			int code;
 			try {
@@ -123,7 +123,7 @@ public class Trac09Client extends AbstractTracClient {
 		httpClient.getState().setCredentials(
 				new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM), credentials);
 
-		GetMethod method = new GetMethod(UrlConnectionUtil.getRequestPath(repositoryUrl + LOGIN_URL));
+		GetMethod method = new GetMethod(WebClientUtil.getRequestPath(repositoryUrl + LOGIN_URL));
 		method.setFollowRedirects(false);
 
 		try {

@@ -38,7 +38,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer;
 import org.eclipse.mylar.internal.tasks.core.HtmlTag;
-import org.eclipse.mylar.internal.tasks.core.UrlConnectionUtil;
+import org.eclipse.mylar.internal.tasks.core.WebClientUtil;
 import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer.Token;
 import org.eclipse.mylar.tasks.core.LocalAttachment;
 import org.eclipse.mylar.tasks.core.RepositoryOperation;
@@ -344,7 +344,7 @@ public class BugzillaReportSubmitForm {
 		String result = null;
 		try {
 			// connect to the bugzilla server
-			URLConnection cntx = UrlConnectionUtil.getUrlConnection(postUrl, proxySettings, false);
+			URLConnection cntx = WebClientUtil.getUrlConnection(postUrl, proxySettings, false);
 			if (cntx == null || !(cntx instanceof HttpURLConnection))
 				return null;
 
