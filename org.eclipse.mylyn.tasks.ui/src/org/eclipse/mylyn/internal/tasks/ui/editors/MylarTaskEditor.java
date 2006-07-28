@@ -19,8 +19,6 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.ITaskEditorFactory;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
@@ -32,6 +30,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -42,16 +41,18 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.part.MultiPageEditorPart;
-import org.eclipse.ui.part.MultiPageSelectionProvider;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.forms.editor.IFormPage;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * @author Mik Kersten
  * @author Eric Booth (initial prototype)
  */
-public class MylarTaskEditor extends MultiPageEditorPart {
+public class MylarTaskEditor extends FormEditor {
 
-	private static final String TASK_INFO_PAGE_LABEL = "Planning";
+	// private static final String TASK_INFO_PAGE_LABEL = "Planning";
 
 	private static final String ISSUE_WEB_PAGE_LABEL = "Browser";
 
@@ -71,112 +72,121 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 
 	private IEditorPart contentOutlineProvider = null;
 
-	private static class TaskEditorSelectionProvider extends MultiPageSelectionProvider {
-		private ISelection globalSelection;
-
-		public TaskEditorSelectionProvider(MylarTaskEditor taskEditor) {
-			super(taskEditor);
-		}
-
-		public ISelection getSelection() {
-			IEditorPart activeEditor = ((MylarTaskEditor) getMultiPageEditor()).getActiveEditor();
-			if (activeEditor != null && activeEditor.getSite() != null) {
-				ISelectionProvider selectionProvider = activeEditor.getSite().getSelectionProvider();
-				if (selectionProvider != null)
-					return selectionProvider.getSelection();
-			}
-			return globalSelection;
-		}
-
-		public void setSelection(ISelection selection) {
-			IEditorPart activeEditor = ((MylarTaskEditor) getMultiPageEditor()).getActiveEditor();
-			if (activeEditor != null && activeEditor.getSite() != null) {
-				ISelectionProvider selectionProvider = activeEditor.getSite().getSelectionProvider();
-				if (selectionProvider != null)
-					selectionProvider.setSelection(selection);
-			} else {
-				this.globalSelection = selection;
-				fireSelectionChanged(new SelectionChangedEvent(this, globalSelection));
-			}
-		}
-	}
+	// private TaskEditorSelectionProvider selectionProvider;
+	//
+	// private static class TaskEditorSelectionProvider extends
+	// MultiPageSelectionProvider {
+	// private ISelection globalSelection;
+	//
+	// public TaskEditorSelectionProvider(MylarTaskEditor taskEditor) {
+	// super(taskEditor);
+	// }
+	//
+	// public ISelection getSelection() {
+	// IEditorPart activeEditor = ((MylarTaskEditor)
+	// getMultiPageEditor()).getActiveEditor();
+	// if (activeEditor != null && activeEditor.getSite() != null) {
+	// ISelectionProvider selectionProvider =
+	// activeEditor.getSite().getSelectionProvider();
+	// if (selectionProvider != null)
+	// return selectionProvider.getSelection();
+	// }
+	//
+	// return globalSelection;
+	// }
+	//
+	// public void setSelection(ISelection selection) {
+	// IEditorPart activeEditor = ((MylarTaskEditor)
+	// getMultiPageEditor()).getActiveEditor();
+	// if (activeEditor != null && activeEditor.getSite() != null) {
+	// ISelectionProvider selectionProvider =
+	// activeEditor.getSite().getSelectionProvider();
+	// if (selectionProvider != null)
+	// selectionProvider.setSelection(selection);
+	// } else {
+	// this.globalSelection = selection;
+	// fireSelectionChanged(new SelectionChangedEvent(this, globalSelection));
+	// }
+	// }
+	// }
 
 	public MylarTaskEditor() {
 		super();
-		taskPlanningEditor = new TaskPlanningEditor();
-		taskPlanningEditor.setParentEditor(this);
+		taskPlanningEditor = new TaskPlanningEditor(this);
+		// taskPlanningEditor.setParentEditor(this);
 	}
 
-	@Override
-	protected void createPages() {
-		try {
-			MenuManager manager = new MenuManager();
-			IMenuListener listener = new IMenuListener() {
-				public void menuAboutToShow(IMenuManager manager) {
-					contextMenuAboutToShow(manager);
-				}
-			};
-			manager.setRemoveAllWhenShown(true);
-			manager.addMenuListener(listener);
-			contextMenu = manager.createContextMenu(getContainer());
-			getContainer().setMenu(contextMenu);
-
-			int index = 0;
-			index = createTaskSummaryPage();
-			int selectedIndex = index;
-			for (ITaskEditorFactory factory : TasksUiPlugin.getDefault().getTaskEditorFactories()) {
-				if (factory.canCreateEditorFor(task)) {
-					try {
-						IEditorPart editor = factory.createEditor(this);
-						IEditorInput input = factory.createEditorInput(task);
-						if (editor != null && input != null) {
-							editors.add(editor);
-							if (editor instanceof AbstractRepositoryTaskEditor) {
-								AbstractRepositoryTaskEditor repositoryTaskEditor = (AbstractRepositoryTaskEditor)editor;
-								repositoryTaskEditor.setParentEditor(this);
-								editor.init(getEditorSite(), input);
-								repositoryTaskEditor.createPartControl(getContainer());
-								index = addPage(repositoryTaskEditor.getControl());
-							} else {
-								index = addPage(editor, input);
-							}
-							selectedIndex = index;
-							setPageText(index++, factory.getTitle());
-						}
-						// HACK: overwrites if multiple present
-						if (factory.providesOutline()) {
-							contentOutlineProvider = editor;
-						}
-					} catch (Exception e) {
-						MylarStatusHandler.fail(e, "Could not create editor via factory: " + factory, true);
-					}
-				}
-			}
-			if (hasValidUrl()) {
-				int browserIndex = createBrowserPage();
-				if (selectedIndex == 0 && !taskEditorInput.isNewTask()) {
-					selectedIndex = browserIndex;
-				}
-			}
-			setActivePage(selectedIndex);
-
-			if (task instanceof AbstractRepositoryTask) {
-				setTitleImage(TaskListImages.getImage(TaskListImages.TASK_REPOSITORY));
-			} else if (hasValidUrl()) {
-				setTitleImage(TaskListImages.getImage(TaskListImages.TASK_WEB));
-			}
-		} catch (PartInitException e) {
-			MylarStatusHandler.fail(e, "failed to create task editor pages", false);
-		}
-	}
+	// @Override
+	// protected void createPages() {
+	// try {
+	// MenuManager manager = new MenuManager();
+	// IMenuListener listener = new IMenuListener() {
+	// public void menuAboutToShow(IMenuManager manager) {
+	// contextMenuAboutToShow(manager);
+	// }
+	// };
+	// manager.setRemoveAllWhenShown(true);
+	// manager.addMenuListener(listener);
+	// contextMenu = manager.createContextMenu(getContainer());
+	// getContainer().setMenu(contextMenu);
+	//
+	// int index = 0;
+	// index = createTaskSummaryPage();
+	// int selectedIndex = index;
+	// for (ITaskEditorFactory factory :
+	// TasksUiPlugin.getDefault().getTaskEditorFactories()) {
+	// if (factory.canCreateEditorFor(task)) {
+	// try {
+	// IEditorPart editor = factory.createEditor(this);
+	// IEditorInput input = factory.createEditorInput(task);
+	// if (editor != null && input != null) {
+	// editors.add(editor);
+	// if (editor instanceof AbstractRepositoryTaskEditor) {
+	// AbstractRepositoryTaskEditor repositoryTaskEditor =
+	// (AbstractRepositoryTaskEditor)editor;
+	// repositoryTaskEditor.setParentEditor(this);
+	// editor.init(getEditorSite(), input);
+	// repositoryTaskEditor.createPartControl(getContainer());
+	// index = addPage(repositoryTaskEditor.getControl());
+	// } else {
+	// index = addPage(editor, input);
+	// }
+	// selectedIndex = index;
+	// setPageText(index++, factory.getTitle());
+	// }
+	// // HACK: overwrites if multiple present
+	// if (factory.providesOutline()) {
+	// contentOutlineProvider = editor;
+	// }
+	// } catch (Exception e) {
+	// MylarStatusHandler.fail(e, "Could not create editor via factory: " +
+	// factory, true);
+	// }
+	// }
+	// }
+	// if (hasValidUrl()) {
+	// int browserIndex = createBrowserPage();
+	// if (selectedIndex == 0 && !taskEditorInput.isNewTask()) {
+	// selectedIndex = browserIndex;
+	// }
+	// }
+	// setActivePage(selectedIndex);
+	//
+	// if (task instanceof AbstractRepositoryTask) {
+	// setTitleImage(TaskListImages.getImage(TaskListImages.TASK_REPOSITORY));
+	// } else if (hasValidUrl()) {
+	// setTitleImage(TaskListImages.getImage(TaskListImages.TASK_WEB));
+	// }
+	// } catch (PartInitException e) {
+	// MylarStatusHandler.fail(e, "failed to create task editor pages", false);
+	// }
+	// }
 
 	protected void contextMenuAboutToShow(IMenuManager manager) {
 		TaskEditorActionContributor contributor = getContributor();
 		// IFormPage page = getActivePageInstance();
-		// if (page instanceof PDEFormPage)
-		// ((PDEFormPage) page).contextMenuAboutToShow(manager);
-		// if (contributor != null)
-		contributor.contextMenuAboutToShow(manager);
+		if (contributor != null)
+			contributor.contextMenuAboutToShow(manager);
 	}
 
 	public TaskEditorActionContributor getContributor() {
@@ -197,23 +207,9 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		return super.getActiveEditor();
 	}
 
-	private int createTaskSummaryPage() throws PartInitException {
-		try {
-			taskPlanningEditor.createPartControl(getContainer());
-			taskPlanningEditor.setParentEditor(this);
-			editors.add(taskPlanningEditor);
-
-			int index = addPage(taskPlanningEditor.getControl());
-			setPageText(index, TASK_INFO_PAGE_LABEL);
-			return index;
-		} catch (RuntimeException e) {
-			MylarStatusHandler.fail(e, "could not add task editor", false);
-		}
-		return 0;
-	}
-
 	private int createBrowserPage() {
-		if (!TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL)) {
+		if (!TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL)) {
 			try {
 				webBrowser = new Browser(getContainer(), SWT.NONE);
 				int index = addPage(webBrowser);
@@ -239,23 +235,58 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		for (IEditorPart editor : editors) {
-			if (editor.isDirty())
-				editor.doSave(monitor);
+		// commitFormPages(true);
+		// editorDirtyStateChanged();
+
+		for (IFormPage page : getPages()) {
+			if (page.isDirty()) {
+				page.doSave(monitor);
+			}
 		}
 
-		if (webBrowser != null) {
-			webBrowser.setUrl(task.getUrl());
-		} else if (hasValidUrl()) {
-			createBrowserPage();
+		editorDirtyStateChanged();
+
+		// for (IEditorPart editor : editors) {
+		// if (editor.isDirty())
+		// editor.doSave(monitor);
+		// }
+		//
+		// if (webBrowser != null) {
+		// webBrowser.setUrl(task.getUrl());
+		// } else if (hasValidUrl()) {
+		// createBrowserPage();
+		// }
+	}
+
+	// // see PDEFormEditor
+	// private void commitFormPages(boolean onSave) {
+	// IFormPage[] pages = getPages();
+	// for (int i = 0; i < pages.length; i++) {
+	// IFormPage page = pages[i];
+	// IManagedForm mform = page.getManagedForm();
+	// if (mform != null && mform.isDirty()) {
+	// mform.commit(true);
+	// }
+	// }
+	// }
+
+	// see PDEFormEditor
+	/* package */@SuppressWarnings("unchecked")
+	IFormPage[] getPages() {
+		ArrayList formPages = new ArrayList();
+		for (int i = 0; i < pages.size(); i++) {
+			Object page = pages.get(i);
+			if (page instanceof IFormPage)
+				formPages.add(page);
 		}
+		return (IFormPage[]) formPages.toArray(new IFormPage[formPages.size()]);
 	}
 
 	/**
 	 * HACK: perform real check
 	 */
 	private boolean hasValidUrl() {
-		return task.getUrl().length() > 9;
+		return task != null && task.getUrl().length() > 9;
 	}
 
 	/**
@@ -265,41 +296,45 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	 * 
 	 * @see org.eclipse.ui.ISaveablePart#doSaveAs()
 	 */
-	@SuppressWarnings("deprecation")
 	@Override
 	public void doSaveAs() {
 		IEditorPart editor = getEditor(0);
-		editor.doSaveAs();
-		setPageText(0, editor.getTitle());
-		setInput(editor.getEditorInput());
+		if (editor != null) {
+			editor.doSaveAs();
+			setPageText(0, editor.getTitle());
+			setInput(editor.getEditorInput());
+		}
 	}
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		taskEditorInput = (TaskEditorInput) input;
+
 		partListener = new TaskEditorListener();
 		site.getPage().addPartListener(partListener);
-
 		super.init(site, input);
 
+		// taskEditorInput = (TaskEditorInput) input;
 		setSite(site);
-		site.setSelectionProvider(new TaskEditorSelectionProvider(this));
-
-		/*
-		 * The task data is saved only once, at the initialization of the
-		 * editor. This is then passed to each of the child editors. This way,
-		 * only one instance of the task data is stored for each editor opened.
-		 */
-		task = taskEditorInput.getTask();
-
-		try {
-			taskPlanningEditor.init(this.getEditorSite(), this.getEditorInput());
-			taskPlanningEditor.setTask(task);
-			// Set the title on the editor's tab
-			this.setPartName(taskEditorInput.getLabel());
-		} catch (Exception e) {
-			throw new PartInitException(e.getMessage());
-		}
+		// // selectionProvider = new TaskEditorSelectionProvider(this);
+		// // site.setSelectionProvider(selectionProvider);
+		//
+		// /*
+		// * The task data is saved only once, at the initialization of the
+		// * editor. This is then passed to each of the child editors. This way,
+		// * only one instance of the task data is stored for each editor
+		// opened.
+		// */
+		// task = taskEditorInput.getTask();
+		//
+		// try {
+		// // taskPlanningEditor.init(this.getEditorSite(),
+		// // this.getEditorInput());
+		// // taskPlanningEditor.setTask(task);
+		// // Set the title on the editor's tab
+		// this.setPartName(taskEditorInput.getLabel());
+		// } catch (Exception e) {
+		// throw new PartInitException(e.getMessage());
+		// }
 	}
 
 	public void notifyTaskChanged() {
@@ -311,24 +346,37 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		return false;
 	}
 
+	// public boolean isDirty() {
+	// fLastDirtyState = computeDirtyState();
+	// return fLastDirtyState;
+	// }
+
+	// private boolean computeDirtyState() {
+	// IFormPage page = getActivePageInstance();
+	// if (page != null && page.isDirty())
+	// return true;
+	// return super.isDirty();
+	// }
+
 	@Override
 	public boolean isDirty() {
-		for (IEditorPart editor : editors) {
-			if (editor.isDirty()) {
+		for (IFormPage page : getPages()) {
+			if (page.isDirty()) {
 				return true;
 			}
 		}
 		return false;
-		// return taskInfoEditor.isDirty();
 	}
 
 	private class TaskEditorListener implements IPartListener {
 
 		public void partActivated(IWorkbenchPart part) {
 			if (part.equals(MylarTaskEditor.this)) {
-				ITask task = taskEditorInput.getTask();
-				if (TaskListView.getFromActivePerspective() != null) {
-					TaskListView.getFromActivePerspective().selectedAndFocusTask(task);
+				if (taskEditorInput != null) {
+					ITask task = taskEditorInput.getTask();
+					if (TaskListView.getFromActivePerspective() != null) {
+						TaskListView.getFromActivePerspective().selectedAndFocusTask(task);
+					}
 				}
 			}
 		}
@@ -385,12 +433,12 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 
 	@Override
 	protected void pageChange(int newPageIndex) {
-		// super.pageChange(newPageIndex);
 		for (ITaskEditorFactory factory : TasksUiPlugin.getDefault().getTaskEditorFactories()) {
 			for (IEditorPart editor : editors) {
 				factory.notifyEditorActivationChange(editor);
 			}
 		}
+		super.pageChange(newPageIndex);
 	}
 
 	public void dispose() {
@@ -399,11 +447,12 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		}
 		if (taskPlanningEditor != null)
 			taskPlanningEditor.dispose();
-		if (webBrowser != null)
+		if (webBrowser != null) {
 			webBrowser.dispose();
+		}
 
 		IWorkbench workbench = TasksUiPlugin.getDefault().getWorkbench();
-		if (workbench != null) {
+		if (workbench != null && partListener != null) {
 			for (IWorkbenchWindow window : workbench.getWorkbenchWindows()) {
 				IWorkbenchPage activePage = window.getActivePage();
 				if (activePage != null) {
@@ -411,9 +460,92 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 				}
 			}
 		}
+		super.dispose();
 	}
 
 	public TaskEditorInput getTaskEditorInput() {
 		return taskEditorInput;
 	}
+
+	@Override
+	protected void addPages() {
+		try {
+			MenuManager manager = new MenuManager();
+			IMenuListener listener = new IMenuListener() {
+				public void menuAboutToShow(IMenuManager manager) {
+					contextMenuAboutToShow(manager);
+				}
+			};
+			manager.setRemoveAllWhenShown(true);
+			manager.addMenuListener(listener);
+			contextMenu = manager.createContextMenu(getContainer());
+			getContainer().setMenu(contextMenu);
+			int index = -1;
+			if (getEditorInput() instanceof TaskEditorInput) {
+				addPage(taskPlanningEditor);
+				index++;
+				taskEditorInput = (TaskEditorInput) getEditorInput();
+				task = taskEditorInput.getTask();
+				setPartName(taskEditorInput.getLabel());
+			}
+
+			int selectedIndex = index;
+			for (ITaskEditorFactory factory : TasksUiPlugin.getDefault().getTaskEditorFactories()) {
+				if ((task != null && factory.canCreateEditorFor(task)) || factory.canCreateEditorFor(getEditorInput())) {
+					try {
+						IEditorPart editor = factory.createEditor(this);
+						IEditorInput input = task != null ? factory.createEditorInput(task) : getEditorInput();
+						if (editor != null && input != null) {
+							if (editor instanceof AbstractRepositoryTaskEditor) {
+								TaskFormPage repositoryTaskEditor = (TaskFormPage) editor;
+								// repositoryTaskEditor.setParentEditor(this);								
+								editor.init(getEditorSite(), input);
+								repositoryTaskEditor.createPartControl(getContainer());
+								index = addPage(repositoryTaskEditor);
+								if(getEditorInput() instanceof ExistingBugEditorInput) {
+									setPartName(((ExistingBugEditorInput)getEditorInput()).getToolTipText());
+								}
+							} else {
+								index = addPage(editor, input);
+							}
+							selectedIndex = index;
+							setPageText(index++, factory.getTitle());
+						}
+
+						// HACK: overwrites if multiple present
+						if (factory.providesOutline()) {
+							contentOutlineProvider = editor;
+						}
+					} catch (Exception e) {
+						MylarStatusHandler.fail(e, "Could not create editor via factory: " + factory, true);
+					}
+				}
+			}
+			if (hasValidUrl()) {
+				int browserIndex = createBrowserPage();
+				if (selectedIndex == 0 && !taskEditorInput.isNewTask()) {
+					selectedIndex = browserIndex;
+				}
+			}
+			setActivePage(selectedIndex);
+
+			if (task instanceof AbstractRepositoryTask) {
+				setTitleImage(TaskListImages.getImage(TaskListImages.TASK_REPOSITORY));
+			} else if (hasValidUrl()) {
+				setTitleImage(TaskListImages.getImage(TaskListImages.TASK_WEB));
+			}
+		} catch (PartInitException e) {
+			MylarStatusHandler.fail(e, "failed to create task editor pages", false);
+		}
+	}
+
+	protected FormToolkit createToolkit(Display display) {
+		// Create a toolkit that shares colors between editors.
+		return new FormToolkit(PlatformUI.getWorkbench().getDisplay());
+	}
+
+	public ISelection getSelection() {
+		return getSite().getSelectionProvider().getSelection();
+	}
+
 }

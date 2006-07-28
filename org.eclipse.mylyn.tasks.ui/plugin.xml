@@ -153,10 +153,11 @@
            name="Category Editor"
            id="org.eclipse.mylar.tasklist.ui.catEditor"/>
     <editor
-           icon="icons/eview16/task-list.gif"
-           class="org.eclipse.mylar.internal.tasks.ui.planner.TaskActivityEditorPart"
-           name="Mylar Task Planner"
-           id="org.eclipse.mylar.tasklist.ui.planner.editor"/>                      
+          class="org.eclipse.mylar.internal.tasks.ui.planner.TaskActivityEditorPart"
+          contributorClass="org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorActionContributor"
+          icon="icons/eview16/task-list.gif"
+          id="org.eclipse.mylar.tasklist.ui.planner.editor"
+          name="Mylar Task Planner"/>                      
   </extension>
   
       <extension point="org.eclipse.ui.perspectiveExtensions">

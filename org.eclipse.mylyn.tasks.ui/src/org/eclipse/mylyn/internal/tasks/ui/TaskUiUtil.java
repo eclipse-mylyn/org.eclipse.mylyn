@@ -155,7 +155,8 @@ public class TaskUiUtil {
 				if (repository == null || !repository.hasCredentials()) {
 					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 							TasksUiPlugin.TITLE_DIALOG, "Repository missing or does not have credentials set, verify via "
-									+ TaskRepositoriesView.NAME + " view");
+									+ TaskRepositoriesView.NAME + ".");
+					return;
 				}
 				if (connector != null)
 					if (repositoryTask.getTaskData() != null) {

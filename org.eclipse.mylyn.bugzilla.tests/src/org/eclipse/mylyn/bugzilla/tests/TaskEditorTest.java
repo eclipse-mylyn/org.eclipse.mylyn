@@ -18,6 +18,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.NewBugEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IWorkbenchPage;
@@ -44,10 +45,10 @@ public class TaskEditorTest extends TestCase {
 		NewBugEditorInput editorInput = new NewBugEditorInput(repository, model);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		TaskUiUtil.openEditor(editorInput, BugzillaUiPlugin.NEW_BUG_EDITOR_ID, page);
-
-		assertTrue(page.getActiveEditor() instanceof AbstractRepositoryTaskEditor);
-
-		AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor) page.getActiveEditor();
+		assertTrue(page.getActiveEditor() instanceof MylarTaskEditor);
+		MylarTaskEditor taskEditor = (MylarTaskEditor)page.getActiveEditor();		
+		assertTrue(taskEditor.getActivePageInstance() instanceof AbstractRepositoryTaskEditor);
+		AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor) taskEditor.getActivePageInstance();
 
 		String desc = "description";
 		String summary = "summary";
@@ -55,7 +56,7 @@ public class TaskEditorTest extends TestCase {
 		editor.setDescriptionText(desc);
 		editor.setSummaryText(summary);
 		editor.doSave(new NullProgressMonitor());
-		editor.changeDirtyStatus(false);
+		editor.markDirty(false);
 		editor.close();
 //		Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true);
 	}

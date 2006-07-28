@@ -32,4 +32,6 @@ public interface ITaskEditorFactory {
 	public void notifyEditorActivationChange(IEditorPart editor);
 
 	public boolean canCreateEditorFor(ITask task);
+	
+	public boolean canCreateEditorFor(IEditorInput input);
 }

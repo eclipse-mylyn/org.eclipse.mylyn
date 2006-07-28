@@ -18,6 +18,7 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditor;
 import org.eclipse.mylar.internal.tasks.ui.ITaskEditorFactory;
+import org.eclipse.mylar.internal.tasks.ui.editors.ExistingBugEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -41,8 +42,7 @@ public class BugzillaReportEditorFactory implements ITaskEditorFactory {
 	}
 
 	public EditorPart createEditor(MylarTaskEditor parentEditor) {
-		ExistingBugEditor editor = new ExistingBugEditor();
-		editor.setParentEditor(parentEditor);
+		ExistingBugEditor editor = new ExistingBugEditor(parentEditor);
 		return editor;
 	}
 
@@ -80,5 +80,9 @@ public class BugzillaReportEditorFactory implements ITaskEditorFactory {
 
 	public boolean providesOutline() {
 		return true;
+	}
+
+	public boolean canCreateEditorFor(IEditorInput input) {
+		return input instanceof ExistingBugEditorInput;
 	}
 }

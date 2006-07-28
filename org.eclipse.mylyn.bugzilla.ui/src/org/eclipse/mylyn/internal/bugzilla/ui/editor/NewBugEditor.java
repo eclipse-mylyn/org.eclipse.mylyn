@@ -55,8 +55,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
@@ -84,10 +84,15 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 
 	private Button searchDuplicatesButton;
 
+	public NewBugEditor(FormEditor editor) {
+		super(editor);
+	}
+
 	@Override
-	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		if (!(input instanceof NewBugEditorInput))
-			throw new PartInitException("Invalid Input: Must be NewBugEditorInput");
+	public void init(IEditorSite site, IEditorInput input) {
+		// if (!(input instanceof NewBugEditorInput))
+		// throw new PartInitException("Invalid Input: Must be
+		// NewBugEditorInput");
 		NewBugEditorInput ei = (NewBugEditorInput) input;
 		setSite(site);
 		setInput(input);
@@ -97,7 +102,6 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		newSummary = taskData.getSummary();
 		repository = editorInput.getRepository();
 		isDirty = false;
-		updateEditorTitle();
 	}
 
 	@Override
@@ -123,7 +127,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		descriptionComposite.setLayoutData(descriptionData);
 		section.setClient(descriptionComposite);
 
-		newDescriptionTextViewer = addRepositoryText(repository, descriptionComposite, getRepositoryTaskData()
+		newDescriptionTextViewer = addRepositoryTextViewer(repository, descriptionComposite, getRepositoryTaskData()
 				.getNewComment(), SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		newDescriptionTextViewer.setEditable(true);
 
@@ -383,7 +387,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		String sel = summaryText.getText();
 		if (!(newSummary.equals(sel))) {
 			newSummary = sel;
-			changeDirtyStatus(true);
+			markDirty(true);
 		}
 	}
 

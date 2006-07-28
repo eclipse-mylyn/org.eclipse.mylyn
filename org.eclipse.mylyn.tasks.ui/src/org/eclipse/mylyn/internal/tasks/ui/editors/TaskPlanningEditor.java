@@ -16,15 +16,12 @@ import java.text.DateFormat;
 import java.util.Calendar;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.TextViewer;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.util.DateUtil;
 import org.eclipse.mylar.internal.tasks.ui.RetrieveTitleFromUrlJob;
-import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.TaskEditorCopyAction;
 import org.eclipse.mylar.internal.tasks.ui.views.DatePicker;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
@@ -37,7 +34,6 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.Task.PriorityLevel;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
@@ -55,34 +51,25 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.ActionFactory;
-import org.eclipse.ui.actions.RetargetAction;
 import org.eclipse.ui.forms.FormColors;
+import org.eclipse.ui.forms.IManagedForm;
+import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.internal.WorkbenchImages;
-import org.eclipse.ui.internal.WorkbenchMessages;
-import org.eclipse.ui.part.EditorPart;
-import org.eclipse.ui.themes.IThemeManager;
 
 /**
- * For details on forms, go to:
- * http://dev.eclipse.org/viewcvs/index.cgi/%7Echeckout%7E/pde-ui-home/working/EclipseForms/EclipseForms.html
- * 
  * @author Mik Kersten
  * @author Ken Sueda (initial prototype)
  * @author Rob Elves
  */
-public class TaskPlanningEditor extends EditorPart {
+public class TaskPlanningEditor extends TaskFormPage {
+
+	public static final String PLANNING_EDITOR_ID = "org.eclipse.mylar.editors.planning";
 
 	private static final String LABEL_SCHEDULE = "Scheduled for:";
 
@@ -105,19 +92,9 @@ public class TaskPlanningEditor extends EditorPart {
 
 	private ITask task;
 
-	private TaskEditorInput editorInput;
-
 	private Composite editorComposite;
 
-	private TaskEditorCopyAction copyAction;
-
-	private RetargetAction pasteAction;
-
-	private RetargetAction cutAction;
-
-	private static final String cutActionDefId = "org.eclipse.ui.edit.cut";
-
-	private static final String pasteActionDefId = "org.eclipse.ui.edit.paste";
+	protected static final String CONTEXT_MENU_ID = "#MylarPlanningEditor";
 
 	private Button removeReminder;
 
@@ -135,15 +112,11 @@ public class TaskPlanningEditor extends EditorPart {
 
 	private Combo statusCombo;
 
-	// private Text notes;
-
-	RepositoryTextViewer commentViewer;
+	private TextViewer commentViewer;
 
 	private Spinner estimated;
 
 	private Button getDescButton;
-
-	private boolean isDirty = false;
 
 	private MylarTaskEditor parentEditor = null;
 
@@ -164,7 +137,7 @@ public class TaskPlanningEditor extends EditorPart {
 								} else {
 									datePicker.setDate(null);
 								}
-							} 
+							}
 
 							if (description == null)
 								return;
@@ -227,33 +200,10 @@ public class TaskPlanningEditor extends EditorPart {
 
 	};
 
-	public TaskPlanningEditor() {
-		super();
-		cutAction = new RetargetAction(ActionFactory.CUT.getId(), WorkbenchMessages.Workbench_cut);
-		cutAction.setToolTipText(WorkbenchMessages.Workbench_cutToolTip);
-		cutAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
-		cutAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
-		cutAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT_DISABLED));
-		cutAction.setAccelerator(SWT.CTRL | 'x');
-		cutAction.setActionDefinitionId(cutActionDefId);
+	private FormToolkit toolkit;
 
-		pasteAction = new RetargetAction(ActionFactory.PASTE.getId(), WorkbenchMessages.Workbench_paste);
-		pasteAction.setToolTipText(WorkbenchMessages.Workbench_pasteToolTip);
-		pasteAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
-		pasteAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
-		pasteAction.setDisabledImageDescriptor(WorkbenchImages
-				.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE_DISABLED));
-		pasteAction.setAccelerator(SWT.CTRL | 'v');
-		pasteAction.setActionDefinitionId(pasteActionDefId);
-
-		copyAction = new TaskEditorCopyAction();
-		copyAction.setText(WorkbenchMessages.Workbench_copy);
-		copyAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
-		copyAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
-		copyAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY_DISABLED));
-		copyAction.setAccelerator(SWT.CTRL | 'c');
-
-		copyAction.setEnabled(false);
+	public TaskPlanningEditor(FormEditor editor) {
+		super(editor, PLANNING_EDITOR_ID, "Planning");
 		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(TASK_LIST_LISTENER);
 	}
 
@@ -310,17 +260,17 @@ public class TaskPlanningEditor extends EditorPart {
 		// don't support saving as
 	}
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		if (!(input instanceof TaskEditorInput)) {
-			throw new PartInitException("Invalid Input: Must be TaskEditorInput");
-		}
-		setSite(site);
-		setInput(input);
-		editorInput = (TaskEditorInput) input;
-		setPartName(editorInput.getLabel());
-	}
+	// @SuppressWarnings("deprecation")
+	// @Override
+	// public void init(IEditorSite site, IEditorInput input) {
+	// // if (!(input instanceof TaskEditorInput)) {
+	// // throw new PartInitException("Invalid Input: Must be TaskEditorInput");
+	// // }
+	// setSite(site);
+	// setInput(input);
+	// editorInput = (TaskEditorInput) input;
+	// setPartName(editorInput.getLabel());
+	// }
 
 	@Override
 	public boolean isDirty() {
@@ -332,21 +282,88 @@ public class TaskPlanningEditor extends EditorPart {
 		return false;
 	}
 
-	@Override
-	public void createPartControl(Composite parent) {
-		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
-		form = toolkit.createScrolledForm(parent);
+	protected void createFormContent(IManagedForm managedForm) {
+		super.createFormContent(managedForm);
+		TaskEditorInput taskEditorInput = (TaskEditorInput) getEditorInput();
+
+		task = taskEditorInput.getTask();
+
+		form = managedForm.getForm();
+		toolkit = managedForm.getToolkit();
 		form.setText(task.getDescription());
 
 		editorComposite = form.getBody();
 		editorComposite.setLayout(new GridLayout());
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-		createContent(editorComposite, toolkit);
+		// try {
+		if (!(task instanceof AbstractRepositoryTask)) {
+			createSummarySection(editorComposite);
+		}
+		createPlanningSection(editorComposite);
+		createNotesSection(editorComposite);
+		createResourcesSection(editorComposite);
+		// } catch (SWTException e) {
+		// MylarStatusHandler.log(e, "content failed");
+		// }
 		if (description != null && NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(description.getText())) {
 			description.setSelection(0);
 			description.setFocus();
 		}
+
+		// createContextMenu();
+
 	}
+
+	// protected void createContextMenu() {
+	//		
+	// contextMenuManager = new MenuManager(CONTEXT_MENU_ID);
+	// contextMenuManager.setRemoveAllWhenShown(true);
+	// contextMenuManager.addMenuListener(new IMenuListener() {
+	// public void menuAboutToShow(IMenuManager manager) {
+	// manager.add(cutAction);
+	// manager.add(copyAction);
+	// manager.add(pasteAction);
+	// // Clipboard clipboard = new Clipboard(comp.getDisplay());
+	// // TextTransfer textTransfer = TextTransfer.getInstance();
+	// // String textData = (String)
+	// // clipboard.getContents(textTransfer);
+	// // if (textData != null) {
+	// // pasteAction.setEnabled(true);
+	// // } else {
+	// // pasteAction.setEnabled(false);
+	// // }
+	//
+	// // if (currentSelectedText == null ||
+	// currentSelectedText.getSelectionText().length() == 0) {
+	// // copyAction.setEnabled(false);
+	// // } else {
+	// // copyAction.setEnabled(true);
+	// // }
+	// // manager.add(revealAllAction);
+	// manager.add(new Separator());
+	// manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+	// }
+	// });
+	// // getSite().registerContextMenu(CONTEXT_MENU_ID, contextMenuManager,
+	// // getSite().getSelectionProvider());
+	// }
+
+	// @Override
+	// public void createPartControl(Composite parent) {
+	// FormToolkit toolkit = new FormToolkit(parent.getDisplay());
+	// form = toolkit.createScrolledForm(parent);
+	// form.setText(task.getDescription());
+	//
+	// editorComposite = form.getBody();
+	// editorComposite.setLayout(new GridLayout());
+	// editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+	// createContent(editorComposite, toolkit);
+	// if (description != null &&
+	// NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(description.getText())) {
+	// description.setSelection(0);
+	// description.setFocus();
+	// }
+	// }
 
 	@Override
 	public void setFocus() {
@@ -357,36 +374,37 @@ public class TaskPlanningEditor extends EditorPart {
 		return form;
 	}
 
-	public void setTask(ITask task) throws Exception {
-		if (task == null)
-			throw new Exception("ITask object is null.");
-		this.task = task;
-	}
+	// public void setTask(ITask task) throws Exception {
+	// if (task == null)
+	// throw new Exception("ITask object is null.");
+	// this.task = task;
+	// }
 
-	private Composite createContent(Composite parent, FormToolkit toolkit) {
-		TaskEditorInput taskEditorInput = (TaskEditorInput) getEditorInput();
+	// private Composite createContent(Composite parent, FormToolkit toolkit) {
+	// TaskEditorInput taskEditorInput = (TaskEditorInput) getEditorInput();
+	//
+	// task = taskEditorInput.getTask();
+	// if (task == null) {
+	// MessageDialog.openError(parent.getShell(), "No such task", "No task
+	// exists with this id");
+	// return null;
+	// }
+	//
+	// try {
+	// if (!(task instanceof AbstractRepositoryTask)) {
+	// createSummarySection(parent, toolkit);
+	// }
+	// createPlanningSection(parent, toolkit);
+	// createNotesSection(parent, toolkit);
+	// // // createRelatedLinksSection(parent, toolkit);
+	// createResourcesSection(parent, toolkit);
+	// } catch (SWTException e) {
+	// MylarStatusHandler.log(e, "content failed");
+	// }
+	// return null;
+	// }
 
-		task = taskEditorInput.getTask();
-		if (task == null) {
-			MessageDialog.openError(parent.getShell(), "No such task", "No task exists with this id");
-			return null;
-		}
-
-		try {
-			if (!(task instanceof AbstractRepositoryTask)) {
-				createSummarySection(parent, toolkit);
-			}
-			createPlanningSection(parent, toolkit);
-			createNotesSection(parent, toolkit);
-			// // createRelatedLinksSection(parent, toolkit);
-			createResourcesSection(parent, toolkit);
-		} catch (SWTException e) {
-			MylarStatusHandler.log(e, "content failed");
-		}
-		return null;
-	}
-
-	private void createSummarySection(Composite parent, FormToolkit toolkit) {
+	private void createSummarySection(Composite parent) {
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText(LABEL_OVERVIEW);
 		section.setExpanded(true);
@@ -592,9 +610,7 @@ public class TaskPlanningEditor extends EditorPart {
 		}
 	}
 
-	
-
-	private void createPlanningSection(Composite parent, FormToolkit toolkit) {
+	private void createPlanningSection(Composite parent) {
 
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText(LABEL_PLAN);
@@ -782,8 +798,7 @@ public class TaskPlanningEditor extends EditorPart {
 		toolkit.paintBordersFor(elapsedComposite);
 	}
 
-	
-	private void createNotesSection(Composite parent, FormToolkit toolkit) {
+	private void createNotesSection(Composite parent) {
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
 		section.setText(LABEL_NOTES);
 		section.setExpanded(true);
@@ -803,64 +818,38 @@ public class TaskPlanningEditor extends EditorPart {
 		container.setLayout(new GridLayout());
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		// notes = toolkit.createText(container, task.getNotes(), SWT.FLAT |
-		// SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		// notes.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		//		
-		// IThemeManager themeManager =
-		// getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-		// Font notesFont =
-		// themeManager.getCurrentTheme().getFontRegistry().get(TaskListColorsAndFonts.TASK_EDITOR_FONT);
-		// notes.setFont(notesFont);
-		// GridData notesDataLayout = new GridData(GridData.FILL_BOTH);
-		// notes.setLayoutData(notesDataLayout);
-		// notes.addModifyListener(new ModifyListener() {
-		// public void modifyText(ModifyEvent e) {
-		// markDirty(true);
-		// }
-		// });
 		TaskRepository repository = null;
 		if (task instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
 			repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryTask.getRepositoryKind(),
 					repositoryTask.getRepositoryUrl());
 		}
-		commentViewer = new RepositoryTextViewer(repository, container, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+
+		commentViewer = addRepositoryTextViewer(repository, container, task.getNotes(), SWT.FLAT | SWT.MULTI | SWT.WRAP
+				| SWT.V_SCROLL);
+
 		commentViewer.getTextWidget().setLayoutData(new GridData(GridData.FILL_BOTH));
 		commentViewer.getTextWidget().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-
-		commentViewer.getTextWidget().setFont(
-				themeManager.getCurrentTheme().getFontRegistry().get(TaskListColorsAndFonts.TASK_EDITOR_FONT));
-		commentViewer.setDocument(new Document(task.getNotes()));
 		commentViewer.setEditable(true);
+
 		commentViewer.getTextWidget().addModifyListener(new ModifyListener() {
 
 			public void modifyText(ModifyEvent e) {
 				markDirty(true);
 			}
 		});
-		
-		// TODO: Hack to get undo working in editor.
-		commentViewer.getTextWidget().addKeyListener(new KeyListener() {
 
-			public void keyPressed(KeyEvent e) {
-				if (((int) e.character == 26) && (e.stateMask == (SWT.CTRL))) {
-					commentViewer.getUndoManager().undo();
-				} else if (((int) e.character == 25) && (e.stateMask == (SWT.CTRL))) {
-					commentViewer.getUndoManager().redo();
-				}
-			}
-
-			public void keyReleased(KeyEvent e) {
-
-			}
-		});
+		// commentViewer.addSelectionChangedListener(new
+		// ISelectionChangedListener() {
+		//
+		// public void selectionChanged(SelectionChangedEvent event) {
+		// getSite().getSelectionProvider().setSelection(commentViewer.getSelection());
+		//				
+		// }});
 
 		toolkit.paintBordersFor(container);
 	}
-	
-	
+
 	private String getTaskDateString(ITask task) {
 
 		if (task == null)
@@ -878,7 +867,7 @@ public class TaskPlanningEditor extends EditorPart {
 		return completionDateString;
 	}
 
-	private void createResourcesSection(Composite parent, FormToolkit toolkit) {
+	private void createResourcesSection(Composite parent) {
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText("Resources");
 		section.setLayout(new GridLayout());
@@ -955,14 +944,6 @@ public class TaskPlanningEditor extends EditorPart {
 		// l = toolkit.createLabel(container, "Go to Task List Preferences to
 		// change task context directory");
 		// l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-	}
-
-	private void markDirty(boolean dirty) {
-		isDirty = dirty;
-		if (parentEditor != null) {
-			parentEditor.markDirty();
-		}
-		return;
 	}
 
 	public void setParentEditor(MylarTaskEditor parentEditor) {

@@ -54,7 +54,7 @@ public class DuplicateDetetionTest extends TestCase {
 		NewBugEditor editor = (NewBugEditor) page.getActiveEditor();
 		assertTrue(editor.searchForDuplicates());
 
-		editor.changeDirtyStatus(false);
+		editor.markDirty(false);
 		editor.close();
 	}
 
@@ -71,7 +71,7 @@ public class DuplicateDetetionTest extends TestCase {
 		NewBugEditor editor = (NewBugEditor) page.getActiveEditor();
 		assertNull(editor.getStackTraceFromDescription());
 
-		editor.changeDirtyStatus(false);
+		editor.markDirty(false);
 		editor.close();
 	}
 }

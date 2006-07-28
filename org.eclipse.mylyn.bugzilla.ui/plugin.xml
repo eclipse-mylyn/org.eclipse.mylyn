@@ -87,10 +87,11 @@
             class="org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditor"
             id="org.eclipse.mylar.bugzilla.ui.existingBugEditor">
       </editor>
-      <editor
+     <editor
       		name="Bugzilla viewer"
       		icon="icons/etool16/task-remote.gif"
-      		class="org.eclipse.mylar.internal.bugzilla.ui.editor.NewBugEditor"
+      		class="org.eclipse.mylar.internal.bugzilla.ui.editor.NewBugzillaTaskEditor"
+    		contributorClass="org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorActionContributor"
       		id="org.eclipse.mylar.bugzilla.ui.newBugEditor">
       </editor>
            <editor

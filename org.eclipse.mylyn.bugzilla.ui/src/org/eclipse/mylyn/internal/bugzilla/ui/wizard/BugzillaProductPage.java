@@ -252,13 +252,14 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 				bugWizard.model.setConnected(true);
 				bugWizard.model.setParsedProductsStatus(true);
 
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				bugWizard.model.setConnected(false);
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						MessageDialog.openError(Display.getDefault().getActiveShell(), NEW_BUGZILLA_TASK_ERROR_TITLE,
 								"Unable to get products. Ensure proper repository configuration in "
-										+ TaskRepositoriesView.NAME + ".");
+										+ TaskRepositoriesView.NAME + ".\n\n");
+						MylarStatusHandler.log(e, "Failed to retrieve products from server");
 					}
 				});
 			}

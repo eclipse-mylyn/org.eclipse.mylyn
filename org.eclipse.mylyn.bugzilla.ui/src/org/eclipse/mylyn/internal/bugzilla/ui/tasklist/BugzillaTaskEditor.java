@@ -16,11 +16,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditor;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
-import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.IRepositoryTaskAttributeListener;
 import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorInput;
+import org.eclipse.mylar.internal.tasks.ui.editors.TaskFormPage;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -57,12 +57,11 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 
 	public BugzillaTaskEditor() {
 		super();
-		bugzillaEditor = new ExistingBugEditor();
-		bugzillaEditor.setParentEditor(this);
+		bugzillaEditor = new ExistingBugEditor(this);
 		bugzillaEditor.addAttributeListener(ATTRIBUTE_LISTENER);
 	}
 
-	public AbstractRepositoryTaskEditor getBugzillaEditor() {
+	public TaskFormPage getBugzillaEditor() {
 		return bugzillaEditor;
 	}
 

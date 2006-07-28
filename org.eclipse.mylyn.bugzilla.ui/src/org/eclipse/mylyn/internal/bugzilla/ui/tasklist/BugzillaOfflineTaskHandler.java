@@ -81,6 +81,10 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 	public RepositoryTaskData downloadTaskData(final AbstractRepositoryTask bugzillaTask) throws CoreException {
 		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 				BugzillaPlugin.REPOSITORY_KIND, bugzillaTask.getRepositoryUrl());
+		
+		if(repository == null) throw new CoreException(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, 0, "Associated repository could not be found. Ensure proper repository configuration of " + bugzillaTask.getRepositoryUrl() + " in "
+				+ TaskRepositoriesView.NAME + ".", null ));
+		
 		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
 		try {
 			int bugId = Integer.parseInt(AbstractRepositoryTask.getTaskId(bugzillaTask.getHandleIdentifier()));

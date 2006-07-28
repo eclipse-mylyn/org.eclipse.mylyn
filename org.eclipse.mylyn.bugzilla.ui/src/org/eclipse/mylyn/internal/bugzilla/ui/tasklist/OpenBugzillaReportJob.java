@@ -24,8 +24,8 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
+import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractBugEditorInput;
-import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.ExistingBugEditorInput;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -37,7 +37,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Mik Kersten
  */
-public class OpenBugzillaReportJob extends Job { 
+public class OpenBugzillaReportJob extends Job {
 
 	private int id;
 
@@ -46,7 +46,7 @@ public class OpenBugzillaReportJob extends Job {
 	private IWorkbenchPage page;
 
 	public OpenBugzillaReportJob(String serverUrl, int id, IWorkbenchPage page) {
-		 super("Opening Bugzilla report: " + id);
+		super("Opening Bugzilla report: " + id);
 		this.id = id;
 		this.serverUrl = serverUrl;
 		this.page = page;
@@ -60,14 +60,16 @@ public class OpenBugzillaReportJob extends Job {
 			monitor.beginTask("Opening Bugzilla Report", 10);
 			Integer bugId = id;
 
-			try {				
+			try {
 				// try to open a new editor on the bug
 				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-						BugzillaPlugin.REPOSITORY_KIND, serverUrl);			
-				
-				RepositoryTaskData data = BugzillaServerFacade.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), TasksUiPlugin.getDefault().getProxySettings(), repository.getCharacterEncoding(), bugId.intValue());
+						BugzillaPlugin.REPOSITORY_KIND, serverUrl);
+
+				RepositoryTaskData data = BugzillaServerFacade.getBug(repository.getUrl(), repository.getUserName(),
+						repository.getPassword(), TasksUiPlugin.getDefault().getProxySettings(), repository
+								.getCharacterEncoding(), bugId.intValue());
 				final AbstractBugEditorInput editorInput = new ExistingBugEditorInput(repository, data);
-				
+
 				// final ExistingBugEditorInput editorInput = new
 				// ExistingBugEditorInput(repository, bugId.intValue());
 
@@ -78,9 +80,14 @@ public class OpenBugzillaReportJob extends Job {
 							MessageDialog.openError(null, "Server Setting Error", "Incorrect server set for the bug.");
 						} else {
 							try {
-								AbstractRepositoryTaskEditor abe = (AbstractRepositoryTaskEditor) page.openEditor(editorInput,
-										BugzillaUiPlugin.EXISTING_BUG_EDITOR_ID);
-								abe.selectDescription();
+								page.openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID);
+
+								// AbstractRepositoryTaskEditor abe =
+								// (AbstractRepositoryTaskEditor)
+								// page.openEditor(editorInput,
+								// TaskListPreferenceConstants.TASK_EDITOR_ID);//BugzillaUiPlugin.EXISTING_BUG_EDITOR_ID
+								// abe.selectDescription();
+
 								// if (commentNumber == 0) {
 								// abe.selectDescription();
 								// } else if (commentNumber == 1) {
@@ -109,6 +116,6 @@ public class OpenBugzillaReportJob extends Job {
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Unable to open Bug report: " + id, true);
 		}
-		 return new Status(IStatus.OK, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK, "", null);
+		return new Status(IStatus.OK, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK, "", null);
 	}
 }

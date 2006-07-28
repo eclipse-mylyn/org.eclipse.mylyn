@@ -27,9 +27,6 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -78,8 +75,6 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -105,12 +100,11 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.RetargetAction;
+import org.eclipse.ui.forms.IManagedForm;
+import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
@@ -121,9 +115,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.internal.WorkbenchImages;
-import org.eclipse.ui.internal.WorkbenchMessages;
-import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.themes.IThemeManager;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -132,7 +123,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @author Mik Kersten
  * @author Rob Elves
  */
-public abstract class AbstractRepositoryTaskEditor extends EditorPart {
+public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private static final String ATTACHMENT_DEFAULT_NAME = "attachment";
 
@@ -243,20 +234,9 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 	public boolean isDirty = false;
 
-	/** Manager controlling the context menu */
-	protected MenuManager contextMenuManager;
-
 	protected StyledText currentSelectedText;
 
-	protected static final String cutActionDefId = "org.eclipse.ui.edit.cut"; //$NON-NLS-1$
-
-	protected static final String copyActionDefId = "org.eclipse.ui.edit.copy"; //$NON-NLS-1$
-
-	protected static final String pasteActionDefId = "org.eclipse.ui.edit.paste"; //$NON-NLS-1$
-
 	protected RetargetAction cutAction;
-
-	protected RepositoryTaskEditorCopyAction copyAction;
 
 	protected RetargetAction pasteAction;
 
@@ -425,7 +405,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 						for (IRepositoryTaskAttributeListener client : attributesListeners) {
 							client.attributeChanged(attribute.getName(), sel);
 						}
-						changeDirtyStatus(true);
+						markDirty(true);
 					}
 				}
 			}
@@ -436,46 +416,16 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	 * Creates a new <code>AbstractRepositoryTaskEditor</code>. Sets up the
 	 * default fonts and cut/copy/paste actions.
 	 */
-	public AbstractRepositoryTaskEditor() {
+	public AbstractRepositoryTaskEditor(FormEditor editor) {
 		// set the scroll increments so the editor scrolls normally with the
 		// scroll wheel
+		super(editor, "id", "label"); //$NON-NLS-1$ //$NON-NLS-2$
 		FontData[] fd = TEXT_FONT.getFontData();
 		int cushion = 4;
 		scrollIncrement = fd[0].getHeight() + cushion;
 		scrollVertPageIncrement = 0;
 		scrollHorzPageIncrement = 0;
 
-		makeContextMenuActions();
-	}
-
-	private void makeContextMenuActions() {
-		// set up actions for the context menu
-		cutAction = new RetargetAction(ActionFactory.CUT.getId(), WorkbenchMessages.Workbench_cut);
-		cutAction.setToolTipText(WorkbenchMessages.Workbench_cutToolTip);// WorkbenchMessages.getString("Workbench.cutToolTip"));
-		// //$NON-NLS-1$
-		cutAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
-		cutAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
-		cutAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT_DISABLED));
-		cutAction.setAccelerator(SWT.CTRL | 'x');
-		cutAction.setActionDefinitionId(cutActionDefId);
-
-		pasteAction = new RetargetAction(ActionFactory.PASTE.getId(), WorkbenchMessages.Workbench_paste);
-		pasteAction.setToolTipText(WorkbenchMessages.Workbench_pasteToolTip);
-		pasteAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
-		pasteAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
-		pasteAction.setDisabledImageDescriptor(WorkbenchImages
-				.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE_DISABLED));
-		pasteAction.setAccelerator(SWT.CTRL | 'v');
-		pasteAction.setActionDefinitionId(pasteActionDefId);
-
-		copyAction = new RepositoryTaskEditorCopyAction(this);
-		copyAction.setText(WorkbenchMessages.Workbench_copy);// WorkbenchMessages.getString("Workbench.copy"));
-		copyAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
-		copyAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
-		copyAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY_DISABLED));
-		copyAction.setAccelerator(SWT.CTRL | 'c');
-
-		copyAction.setEnabled(false);
 	}
 
 	/**
@@ -487,25 +437,20 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		return addCommentsTextBox.getText();
 	}
 
-	/**
-	 * @return Any currently selected text.
-	 */
-	protected StyledText getCurrentText() {
-		return currentSelectedText;
-	}
+//	/**
+//	 * @return Any currently selected text.
+//	 */
+//	protected StyledText getCurrentText() {
+//		return currentSelectedText;
+//	}
 
-	/**
-	 * @return The action used to copy selected text from a bug editor to the
-	 *         clipboard.
-	 */
-	protected RepositoryTaskEditorCopyAction getCopyAction() {
-		return copyAction;
-	}
-
-	@Override
-	public void createPartControl(Composite parent) {
+	
+	protected void createFormContent(final IManagedForm managedForm) {
+		super.createFormContent(managedForm);
+		form = managedForm.getForm();
+		toolkit = managedForm.getToolkit();		
 		if (getRepositoryTaskData() == null) {
-			Composite composite = new Composite(parent, SWT.NULL);
+			Composite composite = new Composite(form.getBody(), SWT.NULL);
 			composite.setLayout(new GridLayout());
 			Label noBugLabel = new Label(composite, SWT.NULL);
 			noBugLabel.setText("Could not download task data, possibly due to timeout or connectivity problem.\n"
@@ -513,13 +458,10 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 			return;
 		}
 
-		toolkit = new FormToolkit(parent.getDisplay());
-		form = toolkit.createScrolledForm(parent);
-
 		editorComposite = form.getBody();
 		editorComposite.setLayout(new GridLayout());
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-		createContextMenu(editorComposite);
+		///createContextMenu(editorComposite);
 
 		createReportHeaderLayout(editorComposite);
 		Composite attribComp = createAttributeLayout(editorComposite);
@@ -535,6 +477,40 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		getSite().getPage().addSelectionListener(selectionListener);
 		getSite().setSelectionProvider(selectionProvider);
 	}
+	
+//	@Override
+//	public void createPartControl(Composite parent) {
+//		if (getRepositoryTaskData() == null) {
+//			Composite composite = new Composite(parent, SWT.NULL);
+//			composite.setLayout(new GridLayout());
+//			Label noBugLabel = new Label(composite, SWT.NULL);
+//			noBugLabel.setText("Could not download task data, possibly due to timeout or connectivity problem.\n"
+//					+ "Please check connection and try again.");
+//			return;
+//		}
+//
+//		toolkit = new FormToolkit(parent.getDisplay());
+//		form = toolkit.createScrolledForm(parent);
+//
+//		editorComposite = form.getBody();
+//		editorComposite.setLayout(new GridLayout());
+//		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+//		createContextMenu(editorComposite);
+//
+//		createReportHeaderLayout(editorComposite);
+//		Composite attribComp = createAttributeLayout(editorComposite);
+//		createCustomAttributeLayout(attribComp);
+//		createDescriptionLayout(editorComposite);
+//		createAttachmentLayout(editorComposite);
+//		createCommentLayout(editorComposite, form);
+//		createActionsLayout(editorComposite);
+//
+//		// editorComposite.setMenu(contextMenuManager.createContextMenu(editorComposite));
+//
+//		form.reflow(true);
+//		getSite().getPage().addSelectionListener(selectionListener);
+//		getSite().setSelectionProvider(selectionProvider);
+//	}
 
 	/**
 	 * By default puts task number, date opened and date modified in header
@@ -653,7 +629,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 							RepositoryTaskAttribute a = (RepositoryTaskAttribute) text.getData();
 							if (!(a.getValue().equals(sel))) {
 								a.setValue(sel);
-								changeDirtyStatus(true);
+								markDirty(true);
 							}
 						}
 					});
@@ -680,36 +656,36 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 
 	public abstract void createCustomAttributeLayout();
 
-	protected void createContextMenu(final Composite comp) {
-		contextMenuManager = new MenuManager(CONTEXT_MENU_ID);
-		contextMenuManager.setRemoveAllWhenShown(true);
-		contextMenuManager.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				manager.add(cutAction);
-				manager.add(copyAction);
-				manager.add(pasteAction);
-//				Clipboard clipboard = new Clipboard(comp.getDisplay());
-//				TextTransfer textTransfer = TextTransfer.getInstance();
-//				String textData = (String) clipboard.getContents(textTransfer);
-//				if (textData != null) {
-//					pasteAction.setEnabled(true);
+//	protected void createContextMenu(final Composite comp) {
+//		contextMenuManager = new MenuManager(CONTEXT_MENU_ID);
+//		contextMenuManager.setRemoveAllWhenShown(true);
+//		contextMenuManager.addMenuListener(new IMenuListener() {
+//			public void menuAboutToShow(IMenuManager manager) {
+//				manager.add(cutAction);
+//				manager.add(copyAction);
+//				manager.add(pasteAction);
+////				Clipboard clipboard = new Clipboard(comp.getDisplay());
+////				TextTransfer textTransfer = TextTransfer.getInstance();
+////				String textData = (String) clipboard.getContents(textTransfer);
+////				if (textData != null) {
+////					pasteAction.setEnabled(true);
+////				} else {
+////					pasteAction.setEnabled(false);
+////				}
+//
+//				if (currentSelectedText == null || currentSelectedText.getSelectionText().length() == 0) {
+//					copyAction.setEnabled(false);
 //				} else {
-//					pasteAction.setEnabled(false);
+//					copyAction.setEnabled(true);
 //				}
-
-				if (currentSelectedText == null || currentSelectedText.getSelectionText().length() == 0) {
-					copyAction.setEnabled(false);
-				} else {
-					copyAction.setEnabled(true);
-				}
-				// manager.add(revealAllAction);
-				manager.add(new Separator());
-				manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-			}
-		});
-		// getSite().registerContextMenu(CONTEXT_MENU_ID, contextMenuManager,
-		// getSite().getSelectionProvider());
-	}
+//				// manager.add(revealAllAction);
+//				manager.add(new Separator());
+//				manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+//			}
+//		});
+//		// getSite().registerContextMenu(CONTEXT_MENU_ID, contextMenuManager,
+//		// getSite().getSelectionProvider());
+//	}
 
 	/**
 	 * Adds a text field to display and edit the bug's summary.
@@ -1030,7 +1006,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		GridData sectionCompositeData = new GridData(GridData.FILL_HORIZONTAL);
 		sectionComposite.setLayoutData(sectionCompositeData);
 
-		TextViewer viewer = addRepositoryText(repository, sectionComposite, getRepositoryTaskData().getDescription(),
+		TextViewer viewer = addRepositoryTextViewer(repository, sectionComposite, getRepositoryTaskData().getDescription(),
 				SWT.MULTI | SWT.WRAP);
 		final StyledText styledText = viewer.getTextWidget();
 		styledText.addListener(SWT.FocusIn, new DescriptionListener());
@@ -1127,7 +1103,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 			ecComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			expandableComposite.setClient(ecComposite);
 
-			TextViewer viewer = addRepositoryText(repository, ecComposite, taskComment.getText(), SWT.MULTI | SWT.WRAP);
+			TextViewer viewer = addRepositoryTextViewer(repository, ecComposite, taskComment.getText(), SWT.MULTI | SWT.WRAP);
 			styledText = viewer.getTextWidget();
 			GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(styledText);
 
@@ -1157,7 +1133,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		Composite newCommentsComposite = toolkit.createComposite(sectionAdditionalComments);
 		newCommentsComposite.setLayout(new GridLayout());
 
-		final TextViewer newCommentTextViewer = addRepositoryText(repository, newCommentsComposite,
+		final TextViewer newCommentTextViewer = addRepositoryTextViewer(repository, newCommentsComposite,
 				getRepositoryTaskData().getNewComment(), SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		newCommentTextViewer.setEditable(true);
 
@@ -1174,7 +1150,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 				String sel = addCommentsTextBox.getText();
 				if (!(getRepositoryTaskData().getNewComment().equals(sel))) {
 					getRepositoryTaskData().setNewComment(sel);
-					changeDirtyStatus(true);
+					markDirty(true);
 				}
 				validateInput();
 			}
@@ -1274,114 +1250,6 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 	 */
 	protected abstract String getTitleString();
 
-	/**
-	 * Creates an uneditable text field for displaying data.
-	 */
-	protected StyledText newLayout(Composite composite, int colSpan, String text, String style) {
-		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		data.horizontalSpan = colSpan;
-
-		StyledText resultText;
-		if (style.equalsIgnoreCase(VALUE)) {
-			resultText = new StyledText(composite, SWT.READ_ONLY);
-			resultText.setText(checkText(text));
-			resultText.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					StyledText c = (StyledText) e.widget;
-					if (c != null && !c.getSelectionText().equals("")) {
-						if (currentSelectedText != null && !currentSelectedText.equals(c)) {
-							currentSelectedText.setSelectionRange(0, 0);
-						}
-						currentSelectedText = c;
-					}
-
-				}
-			});
-			resultText.setLayoutData(data);
-		} else if (style.equalsIgnoreCase(PROPERTY)) {
-			resultText = new StyledText(composite, SWT.READ_ONLY);
-			resultText.setText(checkText(text));
-			resultText.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					StyledText c = (StyledText) e.widget;
-					if (c != null && !c.getSelectionText().equals("")) {
-						if (currentSelectedText != null && !currentSelectedText.equals(c)) {
-							currentSelectedText.setSelectionRange(0, 0);
-						}
-						currentSelectedText = c;
-					}
-
-				}
-			});
-			resultText.setLayoutData(data);
-		} else {
-			resultText = new StyledText(composite, SWT.READ_ONLY);
-			resultText.setText(checkText(text));
-			resultText.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					StyledText c = (StyledText) e.widget;
-					if (c != null && !c.getSelectionText().equals("")) {
-						if (currentSelectedText != null && !currentSelectedText.equals(c)) {
-							currentSelectedText.setSelectionRange(0, 0);
-						}
-						currentSelectedText = c;
-					}
-
-				}
-			});
-			resultText.setLayoutData(data);
-		}
-
-		// composite.setMenu(contextMenuManager.createContextMenu(composite));
-		return resultText;
-	}
-
-	protected TextViewer addRepositoryText(TaskRepository repository, Composite composite, String text, int style) {
-		final RepositoryTextViewer commentViewer = new RepositoryTextViewer(repository, composite, style);
-
-		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-
-		commentViewer.getTextWidget().setFont(
-				themeManager.getCurrentTheme().getFontRegistry().get(TaskListColorsAndFonts.TASK_EDITOR_FONT));
-
-		commentViewer.setEditable(false);
-		commentViewer.getTextWidget().addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				StyledText styledText = (StyledText) e.widget;
-				if (styledText != null && !styledText.getSelectionText().equals("")) {
-					if (currentSelectedText != null && !currentSelectedText.equals(styledText)) {
-						currentSelectedText.setSelectionRange(0, 0);
-					}
-					currentSelectedText = styledText;
-				}
-			}
-		});
-		
-
-		// TODO: Hack to get undo working in editor.
-		commentViewer.getTextWidget().addKeyListener(new KeyListener() {
-
-			public void keyPressed(KeyEvent e) {
-				if (((int) e.character == 26) && (e.stateMask == (SWT.CTRL))) {
-					commentViewer.getUndoManager().undo();
-				} else if (((int) e.character == 25) && (e.stateMask == (SWT.CTRL))) {
-					commentViewer.getUndoManager().redo();
-				}
-			}
-
-			public void keyReleased(KeyEvent e) {
-
-			}
-		});
-
-		commentViewer.getTextWidget().setMenu(contextMenuManager.createContextMenu(commentViewer.getTextWidget()));
-		commentViewer.setDocument(new Document(text));
-		return commentViewer;
-	}
 
 	/**
 	 * This refreshes the text in the title label of the info area (it contains
@@ -1440,27 +1308,6 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		// generalTitleText.redraw();
 	}
 
-	/**
-	 * Creates some blank space underneath the supplied composite.
-	 * 
-	 * @param parent
-	 *            The composite to add the blank space to.
-	 */
-	protected void createSeparatorSpace(Composite parent) {
-		GridData separatorData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		separatorData.verticalSpan = 1;
-		separatorData.grabExcessVerticalSpace = false;
-
-		Composite separatorComposite = new Composite(parent, SWT.NONE);
-		GridLayout separatorLayout = new GridLayout();
-		separatorLayout.marginHeight = 0;
-		separatorLayout.verticalSpacing = 0;
-		separatorComposite.setLayout(separatorLayout);
-		// separatorComposite.setBackground(background);
-		separatorComposite.setLayoutData(separatorData);
-		newLayout(separatorComposite, 1, "", VALUE);
-	}
-
 	protected abstract void submitBug();
 
 	/**
@@ -1494,7 +1341,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 				// For new bug reports something along these lines...
 				// repositoryClient.saveOffline(getRepositoryTaskData());
 			}
-			changeDirtyStatus(false);
+			markDirty(false);
 			if (parentEditor != null) {
 				parentEditor.notifyTaskChanged();
 			}
@@ -1519,28 +1366,23 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		form.setFocus();
 	}
 
-	@Override
-	public boolean isDirty() {
-		return isDirty;
-	}
-
-	/**
-	 * Updates the dirty status of this editor page. The dirty status is true if
-	 * the bug report has been modified but not saved. The title of the editor
-	 * is also updated to reflect the status.
-	 * 
-	 * @param newDirtyStatus
-	 *            is true when the bug report has been modified but not saved
-	 */
-	public void changeDirtyStatus(boolean newDirtyStatus) {
-		isDirty = newDirtyStatus;
-		if (parentEditor == null) {
-			firePropertyChange(PROP_DIRTY);
-		} else {
-			parentEditor.markDirty();
-		}
-
-	}
+//	/**
+//	 * Updates the dirty status of this editor page. The dirty status is true if
+//	 * the bug report has been modified but not saved. The title of the editor
+//	 * is also updated to reflect the status.
+//	 * 
+//	 * @param newDirtyStatus
+//	 *            is true when the bug report has been modified but not saved
+//	 */
+//	public void changeDirtyStatus(boolean newDirtyStatus) {
+//		isDirty = newDirtyStatus;
+////		if (parentEditor == null) {
+////			firePropertyChange(PROP_DIRTY);
+////		} else {
+////			parentEditor.markDirty();
+////		}
+//		getManagedForm().dirtyStateChanged();
+//	}
 
 	/**
 	 * Updates the title of the editor to reflect dirty status. If the bug
@@ -1649,7 +1491,7 @@ public abstract class AbstractRepositoryTaskEditor extends EditorPart {
 		RepositoryTaskAttribute a = getRepositoryTaskData().getAttribute(RepositoryTaskAttribute.SUMMARY);
 		if (!(a.getValue().equals(sel))) {
 			a.setValue(sel);
-			changeDirtyStatus(true);
+			markDirty(true);
 		}
 	}
 

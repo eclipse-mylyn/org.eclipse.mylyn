@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
@@ -67,9 +66,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
@@ -128,25 +126,25 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	/**
 	 * Creates a new <code>ExistingBugEditor</code>.
 	 */
-	public ExistingBugEditor() {
-		super();
+	public ExistingBugEditor(FormEditor editor) {
+		super(editor);
 
 		// Set up the input for comparing the bug report to the server
-		CompareConfiguration config = new CompareConfiguration();
-		config.setLeftEditable(false);
-		config.setRightEditable(false);
-		config.setLeftLabel("Local Bug Report");
-		config.setRightLabel("Remote Bug Report");
-		config.setLeftImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT));
-		config.setRightImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT));
+		// CompareConfiguration config = new CompareConfiguration();
+		// config.setLeftEditable(false);
+		// config.setRightEditable(false);
+		// config.setLeftLabel("Local Bug Report");
+		// config.setRightLabel("Remote Bug Report");
+		// config.setLeftImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT));
+		//		config.setRightImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT));
 		// compareInput = new BugzillaCompareInput(config);
 	}
 
-	// @SuppressWarnings("deprecation")
 	@Override
-	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		if (!(input instanceof ExistingBugEditorInput))
-			throw new PartInitException("Invalid Input: Must be ExistingBugEditorInput");
+	public void init(IEditorSite site, IEditorInput input) {
+		 if (!(input instanceof ExistingBugEditorInput))
+			return;//MylarStatusHandler.log("Invalid Input: Must be ExistingBugEditorInput", this);
+
 		editorInput = (AbstractBugEditorInput) input;
 		taskData = editorInput.getRepositoryTaskData();
 		repository = editorInput.getRepository();
@@ -261,6 +259,10 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		FormToolkit toolkit = new FormToolkit(composite.getDisplay());
 		RepositoryTaskAttribute owner = taskData.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED);
 
+		if (repository.getUserName() == null) {
+			return;
+		}
+		
 		if (owner != null && owner.getValue().indexOf(repository.getUserName()) != -1) {
 			return;
 		}
@@ -290,7 +292,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 				} else {
 					taskData.setAttributeValue(BugzillaReportElement.ADDSELFCC.getKeyString(), "0");
 				}
-				changeDirtyStatus(true);
+				markDirty(true);
 			}
 		});
 	}
@@ -449,7 +451,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		estimateText.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		estimateText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				changeDirtyStatus(true);
+				markDirty(true);
 				taskData.setAttributeValue(BugzillaReportElement.ESTIMATED_TIME.getKeyString(), estimateText.getText());
 			}
 		});
@@ -477,7 +479,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		addTimeText.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		addTimeText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				changeDirtyStatus(true);
+				markDirty(true);
 				taskData.setAttributeValue(BugzillaReportElement.WORK_TIME.getKeyString(), addTimeText.getText());
 			}
 		});
@@ -489,7 +491,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		remainingText.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		remainingText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				changeDirtyStatus(true);
+				markDirty(true);
 				taskData
 						.setAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString(), remainingText.getText());
 			}
@@ -515,7 +517,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 					f.applyPattern("yyyy-MM-dd");
 
 					taskData.setAttributeValue(BugzillaReportElement.DEADLINE.getKeyString(), f.format(d));
-					changeDirtyStatus(true); // TODO goes dirty even if user
+					markDirty(true); // TODO goes dirty even if user
 					// presses cancel
 				}
 			}
@@ -589,7 +591,8 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	protected void addCCList(FormToolkit toolkit, String ccValue, Composite attributesComposite) {
-		newLayout(attributesComposite, 1, "Add CC:", PROPERTY);
+		//newLayout(attributesComposite, 1, "Add CC:", PROPERTY);
+		toolkit.createLabel(attributesComposite, "Add CC:");
 		ccText = toolkit.createText(attributesComposite, ccValue);
 		ccText.setFont(TEXT_FONT);
 		ccText.setEditable(true);
@@ -604,7 +607,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		ccText.addModifyListener(new ModifyListener() {
 
 			public void modifyText(ModifyEvent e) {
-				changeDirtyStatus(true);
+				markDirty(true);
 				taskData.setAttributeValue(BugzillaReportElement.NEWCC.getKeyString(), ccText.getText());
 			}
 
@@ -633,7 +636,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		ccList.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent e) {
-				changeDirtyStatus(true);
+				markDirty(true);
 
 				for (String cc : ccList.getItems()) {
 					int index = ccList.indexOf(cc);
@@ -755,7 +758,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		 * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
 		 */
 		public void widgetSelected(SelectionEvent arg0) {
-			changeDirtyStatus(true);
+			markDirty(true);
 
 			// get the selected keywords and create a string to submit
 			StringBuffer keywords = new StringBuffer();
@@ -841,7 +844,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 				if (e.widget == radios[i]) {
 					RepositoryOperation o = taskData.getOperation(radios[i].getText());
 					taskData.setSelectedOperation(o);
-					ExistingBugEditor.this.changeDirtyStatus(true);
+					ExistingBugEditor.this.markDirty(true);
 				} else if (e.widget == radioOptions[i]) {
 					RepositoryOperation o = taskData.getOperation(radios[i].getText());
 					o.setOptionSelection(((CCombo) radioOptions[i]).getItem(((CCombo) radioOptions[i])
@@ -856,7 +859,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 					if (selected != null && selected != radios[i]) {
 						selected.setSelection(false);
 					}
-					ExistingBugEditor.this.changeDirtyStatus(true);
+					ExistingBugEditor.this.markDirty(true);
 				}
 			}
 			validateInput();
@@ -877,7 +880,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 				if (e.widget == radios[i]) {
 					RepositoryOperation o = taskData.getOperation(radios[i].getText());
 					taskData.setSelectedOperation(o);
-					ExistingBugEditor.this.changeDirtyStatus(true);
+					ExistingBugEditor.this.markDirty(true);
 				} else if (e.widget == radioOptions[i]) {
 					RepositoryOperation o = taskData.getOperation(radios[i].getText());
 					o.setInputValue(((Text) radioOptions[i]).getText());
@@ -891,7 +894,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 					if (selected != null && selected != radios[i]) {
 						selected.setSelection(false);
 					}
-					ExistingBugEditor.this.changeDirtyStatus(true);
+					ExistingBugEditor.this.markDirty(true);
 				}
 			}
 			validateInput();
@@ -936,7 +939,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 						BugzillaReportElement.BUG_FILE_LOC.getKeyString());
 				if (!(a.getValue().equals(sel))) {
 					a.setValue(sel);
-					changeDirtyStatus(true);
+					markDirty(true);
 				}
 			}
 		});

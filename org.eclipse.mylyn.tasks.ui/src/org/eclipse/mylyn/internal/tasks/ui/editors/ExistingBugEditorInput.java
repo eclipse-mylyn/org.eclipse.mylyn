@@ -109,8 +109,11 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 			return false;
 		final ExistingBugEditorInput other = (ExistingBugEditorInput) obj;
 		if (repositoryTask == null) {
-			if (other.repositoryTask != null)
+			if (other.repositoryTask != null) {
 				return false;
+			} else if(other.getId() != this.getId()) {
+				return false;
+			}
 		} else if (!repositoryTask.equals(other.repositoryTask))
 			return false;
 		return true;
