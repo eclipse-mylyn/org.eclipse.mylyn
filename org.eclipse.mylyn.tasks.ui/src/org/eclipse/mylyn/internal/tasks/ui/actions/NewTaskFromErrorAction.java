@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -21,7 +22,11 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.ExistingBugEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.wizards.NewRepositoryTaskWizard;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.pde.internal.runtime.logview.LogEntry;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewActionDelegate;
@@ -68,23 +73,35 @@ public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionCh
 
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			AbstractRepositoryTaskEditor editor = null;
+
+			String summary = selection.getSeverityText() + ": \"" + selection.getMessage() + "\" in "
+					+ selection.getPluginId();
+			String description = "\n\n-- Error Log --\nDate: " + selection.getDate() + "\nMessage: "
+					+ selection.getMessage() + "\nSeverity: " + selection.getSeverityText() + "\nPlugin ID: "
+					+ selection.getPluginId() + "\nStack Trace:\n"
+					+ ((selection.getStack() == null) ? "no stack trace available" : selection.getStack());
+
 			try {
 				editor = (AbstractRepositoryTaskEditor) page.getActiveEditor();
 			} catch (ClassCastException e) {
-				// TODO: Handle error if editor is not created.
-				System.err.println(e);
+				Clipboard clipboard = new Clipboard(page.getWorkbenchWindow().getShell().getDisplay());
+				clipboard.setContents(new Object[] { summary + "\n" + description }, new Transfer[] { TextTransfer.getInstance() });
+
+				MessageDialog
+						.openInformation(
+								page.getWorkbenchWindow().getShell(),
+								TasksUiPlugin.TITLE_DIALOG,
+								"This connector does not provide a rich task editor for creating tasks.\n\n"
+								+ "The error contents have been placed in the clipboard so that you can paste them into the entry form.");
+				return;
 			}
 
 			if (selection == null || editor.getEditorInput() instanceof ExistingBugEditorInput) {
 				return;
 			}
 
-			editor.setSummaryText(selection.getSeverityText() + ": \"" + selection.getMessage() + "\" in "
-					+ selection.getPluginId());
-			editor.setDescriptionText("\n\n-- Error Log --\nDate: " + selection.getDate() + "\nMessage: "
-					+ selection.getMessage() + "\nSeverity: " + selection.getSeverityText() + "\nPlugin ID: "
-					+ selection.getPluginId() + "\nStack Trace:\n"
-					+ ((selection.getStack() == null) ? "no stack trace available" : selection.getStack()));
+			editor.setSummaryText(summary);
+			editor.setDescriptionText(description);
 
 		}
 	}
