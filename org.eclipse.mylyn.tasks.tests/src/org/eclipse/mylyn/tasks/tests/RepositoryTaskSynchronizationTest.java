@@ -11,6 +11,7 @@ package org.eclipse.mylar.tasks.tests;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -20,6 +21,7 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.tasks.tests.connector.MockAttributeFactory;
 import org.eclipse.mylar.tasks.tests.connector.MockRepositoryConnector;
@@ -246,6 +248,10 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 			} catch (ParseException e) {
 				return null;
 			}
+		}
+
+		public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository, Set<AbstractRepositoryTask> tasks) throws Exception {
+			return null;
 		}
 
 	}

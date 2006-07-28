@@ -144,12 +144,6 @@ public abstract class AbstractRepositoryConnector {
 
 	protected abstract void updateTaskState(AbstractRepositoryTask repositoryTask);
 
-	/**
-	 * returns all tasks if date is null or an error occurs
-	 */
-	public abstract Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
-			Set<AbstractRepositoryTask> tasks) throws Exception;
-
 	public IWizard getAddExistingTaskWizard(TaskRepository repository) {
 		return new CommonAddExistingTaskWizard(repository);
 	}
@@ -484,10 +478,11 @@ public abstract class AbstractRepositoryConnector {
 		Set<AbstractRepositoryTask> changedTasks = null;
 		int attempts = 0;
 
+		if (getOfflineTaskHandler() != null) {
 		while (attempts < MAX_QUERY_ATTEMPTS && changedTasks == null) {
 			attempts++;
 			try {
-				changedTasks = getChangedSinceLastSync(repository, repositoryTasks);
+				changedTasks = getOfflineTaskHandler().getChangedSinceLastSync(repository, repositoryTasks);
 			} catch (Exception e) {
 				if (attempts == MAX_QUERY_ATTEMPTS) {
 					if(!(e instanceof IOException)) {
@@ -504,12 +499,11 @@ public abstract class AbstractRepositoryConnector {
 				}
 			}
 		}
+		}
 
 		for (AbstractRepositoryTask task : changedTasks) {
 			if (task.getSyncState() == RepositoryTaskSyncState.SYNCHRONIZED) {
 				tasksToSync.add(task);
-				// MylarStatusHandler.log("Changed: "+repository.getUrl()+" **
-				// "+task.getDescription(), this);
 			}
 		}
 

@@ -12,11 +12,7 @@
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -34,20 +30,17 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.bugzilla.core.AbstractReportFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttachmentHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.internal.bugzilla.core.UnrecognizedReponseException;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchHit;
-import org.eclipse.mylar.internal.bugzilla.ui.search.RepositoryQueryResultsFactory;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaCategorySearchOperation.ICategorySearchListener;
 import org.eclipse.mylar.internal.bugzilla.ui.wizard.NewBugzillaReportWizard;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
@@ -71,19 +64,6 @@ import org.eclipse.ui.PlatformUI;
  * @author Rob Elves
  */
 public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
-
-	private static final String BUG_ID = "&bug_id=";
-
-	private static final int MAX_URL_LENGTH = 2000;
-
-	// private static final String CHANGED_BUGS_START_DATE_SHORT = "yyyy-MM-dd";
-	//
-	// private static final String CHANGED_BUGS_START_DATE_LONG = "yyyy-MM-dd
-	// HH:mm:ss";
-
-	private static final String CHANGED_BUGS_CGI_ENDDATE = "&chfieldto=Now";
-
-	private static final String CHANGED_BUGS_CGI_QUERY = "/buglist.cgi?query_format=advanced&chfieldfrom=";
 
 	private static final String LABEL_JOB_SUBMIT = "Submitting to Bugzilla repository";
 
@@ -383,76 +363,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			OpenBugzillaReportJob job = new OpenBugzillaReportJob(repositoryUrl, id, page);
 			job.schedule();
-		}
-	}
-
-	@Override
-	public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
-			Set<AbstractRepositoryTask> tasks) throws Exception {
-
-		Set<AbstractRepositoryTask> changedTasks = new HashSet<AbstractRepositoryTask>();
-
-		if (repository.getSyncTimeStamp() == null) {
-			return tasks;
-		}
-
-		String dateString = repository.getSyncTimeStamp();
-		if (dateString == null) {
-			dateString = "";
-		}
-		String urlQueryBase;
-		String urlQueryString;
-
-		try {
-			urlQueryBase = repository.getUrl() + CHANGED_BUGS_CGI_QUERY
-					+ URLEncoder.encode(dateString, repository.getCharacterEncoding()) + CHANGED_BUGS_CGI_ENDDATE;
-		} catch (UnsupportedEncodingException e1) {
-			MylarStatusHandler.log(e1, "Mylar: Check encoding settings in " + TaskRepositoriesView.NAME + ".");
-			urlQueryBase = repository.getUrl() + CHANGED_BUGS_CGI_QUERY + dateString + CHANGED_BUGS_CGI_ENDDATE;
-		}
-
-		urlQueryString = new String(urlQueryBase + BUG_ID);
-
-		int queryCounter = -1;
-		Iterator itr = tasks.iterator();
-		while (itr.hasNext()) {
-			queryCounter++;
-			ITask task = (ITask) itr.next();
-			String newurlQueryString = URLEncoder.encode(AbstractRepositoryTask.getTaskId(task.getHandleIdentifier())
-					+ ",", repository.getCharacterEncoding());
-			if ((urlQueryString.length() + newurlQueryString.length() + IBugzillaConstants.CONTENT_TYPE_RDF.length()) > MAX_URL_LENGTH) {
-				urlQueryString += IBugzillaConstants.CONTENT_TYPE_RDF;
-				queryForChanged(repository, changedTasks, urlQueryString);
-				queryCounter = 0;
-				urlQueryString = new String(urlQueryBase + BUG_ID);
-				urlQueryString += newurlQueryString;
-			} else if (!itr.hasNext()) {
-				urlQueryString += newurlQueryString;
-				urlQueryString += IBugzillaConstants.CONTENT_TYPE_RDF;
-				queryForChanged(repository, changedTasks, urlQueryString);
-			} else {
-				urlQueryString += newurlQueryString;
-			}
-		}
-		return changedTasks;
-	}
-
-	private void queryForChanged(TaskRepository repository, Set<AbstractRepositoryTask> changedTasks,
-			String urlQueryString) throws Exception {
-		RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory();
-		BugzillaResultCollector collector = new BugzillaResultCollector();
-		if(repository.hasCredentials()) {
-			urlQueryString = BugzillaServerFacade.addCredentials(urlQueryString, repository.getUserName(), repository.getPassword());
-		}
-		queryFactory.performQuery(repository.getUrl(), collector, urlQueryString, TasksUiPlugin.getDefault()
-				.getProxySettings(), AbstractReportFactory.RETURN_ALL_HITS, repository.getCharacterEncoding());
-
-		for (BugzillaSearchHit hit : collector.getResults()) {
-			String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), hit.getId());
-			ITask correspondingTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
-			if (correspondingTask != null && correspondingTask instanceof AbstractRepositoryTask) {
-				changedTasks.add((AbstractRepositoryTask) correspondingTask);
-			}
 		}
 	}
 

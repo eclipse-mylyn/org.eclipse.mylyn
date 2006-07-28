@@ -12,9 +12,7 @@
 package org.eclipse.mylar.internal.trac;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -69,12 +67,6 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public boolean canCreateTaskFromKey() {
 		return true;
-	}
-
-	@Override
-	public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
-			Set<AbstractRepositoryTask> tasks) throws Exception {
-		return Collections.emptySet();
 	}
 
 	@Override

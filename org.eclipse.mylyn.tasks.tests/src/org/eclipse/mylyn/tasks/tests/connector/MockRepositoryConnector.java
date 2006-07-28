@@ -12,7 +12,6 @@
 package org.eclipse.mylar.tasks.tests.connector;
 
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.MultiStatus;
@@ -63,12 +62,6 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public IAttachmentHandler getAttachmentHandler() {
-		// ignore
-		return null;
-	}
-
-	@Override
-	public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository, Set<AbstractRepositoryTask> tasks) throws Exception {
 		// ignore
 		return null;
 	}

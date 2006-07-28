@@ -351,7 +351,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		// returned so
 		// this should always result in 1 task being returned (the most recently
 		// modified task).
-		Set<AbstractRepositoryTask> changedTasks = client.getChangedSinceLastSync(repository, tasks);
+		Set<AbstractRepositoryTask> changedTasks = client.getOfflineTaskHandler().getChangedSinceLastSync(repository, tasks);
 		assertEquals(1, changedTasks.size());
 
 		String priority4 = null;
@@ -382,7 +382,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 			bugzillaReportSubmitForm.submitReportToRepository();
 		}
 
-		assertEquals("Changed reports expected ", 2, client.getChangedSinceLastSync(repository, tasks).size());
+		assertEquals("Changed reports expected ", 2, client.getOfflineTaskHandler().getChangedSinceLastSync(repository, tasks).size());
 
 		synchAndAssertState(tasks, RepositoryTaskSyncState.INCOMING);
 		synchAndAssertState(tasks, RepositoryTaskSyncState.SYNCHRONIZED);
@@ -496,7 +496,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		// after most recent change
 		// therefore the following call should generally result in 0 changed
 		// tasks returned.
-		Set<AbstractRepositoryTask> changedTasks = client.getChangedSinceLastSync(repository, tasks);
+		Set<AbstractRepositoryTask> changedTasks = client.getOfflineTaskHandler().getChangedSinceLastSync(repository, tasks);
 		assertEquals(1, changedTasks.size());
 
 		assertNotNull(repository.getUserName());
@@ -535,7 +535,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 			bugzillaReportSubmitForm.submitReportToRepository();
 		}
 
-		assertEquals("Changed reports expected ", 1, client.getChangedSinceLastSync(repository, tasks).size());
+		assertEquals("Changed reports expected ", 1, client.getOfflineTaskHandler().getChangedSinceLastSync(repository, tasks).size());
 
 		synchAndAssertState(tasks, RepositoryTaskSyncState.INCOMING);
 		synchAndAssertState(tasks, RepositoryTaskSyncState.SYNCHRONIZED);

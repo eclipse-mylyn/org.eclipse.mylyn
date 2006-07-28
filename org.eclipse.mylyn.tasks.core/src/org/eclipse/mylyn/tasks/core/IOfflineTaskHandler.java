@@ -12,6 +12,7 @@
 package org.eclipse.mylar.tasks.core;
 
 import java.util.Date;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 
@@ -29,5 +30,10 @@ public interface IOfflineTaskHandler {
 	public AbstractAttributeFactory getAttributeFactory();
 	
 	public RepositoryTaskData downloadTaskData(AbstractRepositoryTask repositoryTask) throws CoreException;
-	
+		
+	/**
+	 * returns all tasks if date is null or an error occurs
+	 */
+	public abstract Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
+			Set<AbstractRepositoryTask> tasks) throws Exception;
 }
