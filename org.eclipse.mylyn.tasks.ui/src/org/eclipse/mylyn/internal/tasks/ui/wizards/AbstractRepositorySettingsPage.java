@@ -320,12 +320,21 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	protected abstract boolean isValidUrl(String name);
 
+	/* Public for testing. */
+	public static String stripSlashes(String url) {
+		StringBuilder sb = new StringBuilder(url.trim());
+		while (sb.length() > 0 && sb.charAt(sb.length() - 1) == '/') {
+			sb.deleteCharAt(sb.length() - 1);
+		}
+		return sb.toString();
+	}
+
 	public String getRepositoryLabel() {
 		return repositoryLabelCombo.getText();
 	}
 
 	public String getServerUrl() {
-		return serverUrlEditor.getStringValue();
+		return stripSlashes(serverUrlEditor.getStringValue());
 	}
 
 	public String getUserName() {
@@ -372,7 +381,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	@Override
 	public boolean isPageComplete() {
-		return isUniqueUrl(serverUrlEditor.getStringValue()) && isValidUrl(serverUrlEditor.getStringValue());
+		String url = getServerUrl();
+		return isUniqueUrl(url) && isValidUrl(url);
 	}
 
 	protected boolean isUniqueUrl(String urlString) {
