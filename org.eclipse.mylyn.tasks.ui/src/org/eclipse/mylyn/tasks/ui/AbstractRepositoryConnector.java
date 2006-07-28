@@ -475,7 +475,7 @@ public abstract class AbstractRepositoryConnector {
 				.getRepositoryTasks(repository.getUrl()));
 
 		final Set<AbstractRepositoryTask> tasksToSync = new HashSet<AbstractRepositoryTask>();
-		Set<AbstractRepositoryTask> changedTasks = new HashSet<AbstractRepositoryTask>();
+		Set<AbstractRepositoryTask> changedTasks = null;
 		int attempts = 0;
 
 		if (getOfflineTaskHandler() != null) {	
@@ -500,10 +500,11 @@ public abstract class AbstractRepositoryConnector {
 				}
 			}
 		}
-
-		for (AbstractRepositoryTask task : changedTasks) {
-			if (task.getSyncState() == RepositoryTaskSyncState.SYNCHRONIZED) {
-				tasksToSync.add(task);
+		if (changedTasks != null) {
+			for (AbstractRepositoryTask task : changedTasks) {
+				if (task.getSyncState() == RepositoryTaskSyncState.SYNCHRONIZED) {
+					tasksToSync.add(task);
+				}
 			}
 		}
 
