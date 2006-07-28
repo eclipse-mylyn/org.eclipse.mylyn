@@ -47,9 +47,13 @@ public class UrlConnectionUtil {
 	 * @param proxy
 	 *            can be null
 	 */
-	public static URLConnection getUrlConnection(URL url, Proxy proxy) throws IOException, NoSuchAlgorithmException,
-			KeyManagementException {
-		SSLContext ctx = SSLContext.getInstance("TLS");
+	public static URLConnection getUrlConnection(URL url, Proxy proxy, boolean useTls) throws IOException,
+			NoSuchAlgorithmException, KeyManagementException {
+		SSLContext ctx;
+		if (useTls)
+			ctx = SSLContext.getInstance("TLS");
+		else
+			ctx = SSLContext.getInstance("SSL");
 
 		javax.net.ssl.TrustManager[] tm = new javax.net.ssl.TrustManager[] { new RepositoryTrustManager() };
 		ctx.init(null, tm, null);

@@ -33,7 +33,7 @@ import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarPreferenceContstants;
-import org.eclipse.mylar.internal.tasks.core.UrlConnectionUtil;
+import org.eclipse.mylar.internal.tasks.core.WebClientUtil;
 import org.eclipse.mylar.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.internal.tasks.ui.ITaskEditorFactory;
 import org.eclipse.mylar.internal.tasks.ui.ITaskHighlighter;
@@ -332,7 +332,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		super.start(context);
 		// NOTE: Startup order is very sensitive
 		try {
-			UrlConnectionUtil.initCommonsLoggingSettings();
+			WebClientUtil.initCommonsLoggingSettings();
 			initializeDefaultPreferences(getPreferenceStore());
 			taskListWriter = new TaskListWriter();
 

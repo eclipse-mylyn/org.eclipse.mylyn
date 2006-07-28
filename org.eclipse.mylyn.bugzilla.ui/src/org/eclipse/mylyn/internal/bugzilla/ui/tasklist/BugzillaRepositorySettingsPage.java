@@ -146,7 +146,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 					monitor.beginTask("Validating server settings", IProgressMonitor.UNKNOWN);
 					try {
 						Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
-						URLConnection cntx = UrlConnectionUtil.getUrlConnection(serverURL, proxySettings);
+						URLConnection cntx = UrlConnectionUtil.getUrlConnection(serverURL, proxySettings, false);
 						if (cntx == null || !(cntx instanceof HttpURLConnection)) {
 							throw new MalformedURLException();
 						}
