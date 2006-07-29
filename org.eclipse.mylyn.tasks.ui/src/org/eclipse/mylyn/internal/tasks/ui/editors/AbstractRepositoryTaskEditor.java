@@ -122,6 +122,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 /**
  * @author Mik Kersten
  * @author Rob Elves
+ * @author Jeff Pound (Attachment work)
  */
 public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
@@ -314,8 +315,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	}
 
-	private static final class AttachmentTableLabelProvider extends DecoratingLabelProvider implements ITableColorProvider,
-			ITableLabelProvider {
+	private static final class AttachmentTableLabelProvider extends DecoratingLabelProvider implements
+			ITableColorProvider, ITableLabelProvider {
 
 		public AttachmentTableLabelProvider(ILabelProvider provider, ILabelDecorator decorator) {
 			super(provider, decorator);
@@ -437,18 +438,17 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		return addCommentsTextBox.getText();
 	}
 
-//	/**
-//	 * @return Any currently selected text.
-//	 */
-//	protected StyledText getCurrentText() {
-//		return currentSelectedText;
-//	}
+	// /**
+	// * @return Any currently selected text.
+	// */
+	// protected StyledText getCurrentText() {
+	// return currentSelectedText;
+	// }
 
-	
 	protected void createFormContent(final IManagedForm managedForm) {
 		super.createFormContent(managedForm);
 		form = managedForm.getForm();
-		toolkit = managedForm.getToolkit();		
+		toolkit = managedForm.getToolkit();
 		if (getRepositoryTaskData() == null) {
 			Composite composite = new Composite(form.getBody(), SWT.NULL);
 			composite.setLayout(new GridLayout());
@@ -461,7 +461,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		editorComposite = form.getBody();
 		editorComposite.setLayout(new GridLayout());
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-		///createContextMenu(editorComposite);
+		// /createContextMenu(editorComposite);
 
 		createReportHeaderLayout(editorComposite);
 		Composite attribComp = createAttributeLayout(editorComposite);
@@ -477,40 +477,42 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		getSite().getPage().addSelectionListener(selectionListener);
 		getSite().setSelectionProvider(selectionProvider);
 	}
-	
-//	@Override
-//	public void createPartControl(Composite parent) {
-//		if (getRepositoryTaskData() == null) {
-//			Composite composite = new Composite(parent, SWT.NULL);
-//			composite.setLayout(new GridLayout());
-//			Label noBugLabel = new Label(composite, SWT.NULL);
-//			noBugLabel.setText("Could not download task data, possibly due to timeout or connectivity problem.\n"
-//					+ "Please check connection and try again.");
-//			return;
-//		}
-//
-//		toolkit = new FormToolkit(parent.getDisplay());
-//		form = toolkit.createScrolledForm(parent);
-//
-//		editorComposite = form.getBody();
-//		editorComposite.setLayout(new GridLayout());
-//		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-//		createContextMenu(editorComposite);
-//
-//		createReportHeaderLayout(editorComposite);
-//		Composite attribComp = createAttributeLayout(editorComposite);
-//		createCustomAttributeLayout(attribComp);
-//		createDescriptionLayout(editorComposite);
-//		createAttachmentLayout(editorComposite);
-//		createCommentLayout(editorComposite, form);
-//		createActionsLayout(editorComposite);
-//
-//		// editorComposite.setMenu(contextMenuManager.createContextMenu(editorComposite));
-//
-//		form.reflow(true);
-//		getSite().getPage().addSelectionListener(selectionListener);
-//		getSite().setSelectionProvider(selectionProvider);
-//	}
+
+	// @Override
+	// public void createPartControl(Composite parent) {
+	// if (getRepositoryTaskData() == null) {
+	// Composite composite = new Composite(parent, SWT.NULL);
+	// composite.setLayout(new GridLayout());
+	// Label noBugLabel = new Label(composite, SWT.NULL);
+	// noBugLabel.setText("Could not download task data, possibly due to timeout
+	// or connectivity problem.\n"
+	// + "Please check connection and try again.");
+	// return;
+	// }
+	//
+	// toolkit = new FormToolkit(parent.getDisplay());
+	// form = toolkit.createScrolledForm(parent);
+	//
+	// editorComposite = form.getBody();
+	// editorComposite.setLayout(new GridLayout());
+	// editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+	// createContextMenu(editorComposite);
+	//
+	// createReportHeaderLayout(editorComposite);
+	// Composite attribComp = createAttributeLayout(editorComposite);
+	// createCustomAttributeLayout(attribComp);
+	// createDescriptionLayout(editorComposite);
+	// createAttachmentLayout(editorComposite);
+	// createCommentLayout(editorComposite, form);
+	// createActionsLayout(editorComposite);
+	//
+	// //
+	// editorComposite.setMenu(contextMenuManager.createContextMenu(editorComposite));
+	//
+	// form.reflow(true);
+	// getSite().getPage().addSelectionListener(selectionListener);
+	// getSite().setSelectionProvider(selectionProvider);
+	// }
 
 	/**
 	 * By default puts task number, date opened and date modified in header
@@ -656,36 +658,37 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	public abstract void createCustomAttributeLayout();
 
-//	protected void createContextMenu(final Composite comp) {
-//		contextMenuManager = new MenuManager(CONTEXT_MENU_ID);
-//		contextMenuManager.setRemoveAllWhenShown(true);
-//		contextMenuManager.addMenuListener(new IMenuListener() {
-//			public void menuAboutToShow(IMenuManager manager) {
-//				manager.add(cutAction);
-//				manager.add(copyAction);
-//				manager.add(pasteAction);
-////				Clipboard clipboard = new Clipboard(comp.getDisplay());
-////				TextTransfer textTransfer = TextTransfer.getInstance();
-////				String textData = (String) clipboard.getContents(textTransfer);
-////				if (textData != null) {
-////					pasteAction.setEnabled(true);
-////				} else {
-////					pasteAction.setEnabled(false);
-////				}
-//
-//				if (currentSelectedText == null || currentSelectedText.getSelectionText().length() == 0) {
-//					copyAction.setEnabled(false);
-//				} else {
-//					copyAction.setEnabled(true);
-//				}
-//				// manager.add(revealAllAction);
-//				manager.add(new Separator());
-//				manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-//			}
-//		});
-//		// getSite().registerContextMenu(CONTEXT_MENU_ID, contextMenuManager,
-//		// getSite().getSelectionProvider());
-//	}
+	// protected void createContextMenu(final Composite comp) {
+	// contextMenuManager = new MenuManager(CONTEXT_MENU_ID);
+	// contextMenuManager.setRemoveAllWhenShown(true);
+	// contextMenuManager.addMenuListener(new IMenuListener() {
+	// public void menuAboutToShow(IMenuManager manager) {
+	// manager.add(cutAction);
+	// manager.add(copyAction);
+	// manager.add(pasteAction);
+	// // Clipboard clipboard = new Clipboard(comp.getDisplay());
+	// // TextTransfer textTransfer = TextTransfer.getInstance();
+	// // String textData = (String) clipboard.getContents(textTransfer);
+	// // if (textData != null) {
+	// // pasteAction.setEnabled(true);
+	// // } else {
+	// // pasteAction.setEnabled(false);
+	// // }
+	//
+	// if (currentSelectedText == null ||
+	// currentSelectedText.getSelectionText().length() == 0) {
+	// copyAction.setEnabled(false);
+	// } else {
+	// copyAction.setEnabled(true);
+	// }
+	// // manager.add(revealAllAction);
+	// manager.add(new Separator());
+	// manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+	// }
+	// });
+	// // getSite().registerContextMenu(CONTEXT_MENU_ID, contextMenuManager,
+	// // getSite().getSelectionProvider());
+	// }
 
 	/**
 	 * Adds a text field to display and edit the bug's summary.
@@ -928,6 +931,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					final LocalAttachment att = naw.getAttachment();
 					att.setReport(getRepositoryTaskData());
 					getRepositoryTaskData().setNewAttachment(att);
+					setAttachContext(att.isPatch());
 
 					// TODO: Add row to table
 					// RepositoryTaskData data = getRepositoryTaskData();
@@ -1006,8 +1010,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		GridData sectionCompositeData = new GridData(GridData.FILL_HORIZONTAL);
 		sectionComposite.setLayoutData(sectionCompositeData);
 
-		TextViewer viewer = addRepositoryTextViewer(repository, sectionComposite, getRepositoryTaskData().getDescription(),
-				SWT.MULTI | SWT.WRAP);
+		TextViewer viewer = addRepositoryTextViewer(repository, sectionComposite, getRepositoryTaskData()
+				.getDescription(), SWT.MULTI | SWT.WRAP);
 		final StyledText styledText = viewer.getTextWidget();
 		styledText.addListener(SWT.FocusIn, new DescriptionListener());
 		styledText.setLayout(new GridLayout());
@@ -1103,7 +1107,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			ecComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			expandableComposite.setClient(ecComposite);
 
-			TextViewer viewer = addRepositoryTextViewer(repository, ecComposite, taskComment.getText(), SWT.MULTI | SWT.WRAP);
+			TextViewer viewer = addRepositoryTextViewer(repository, ecComposite, taskComment.getText(), SWT.MULTI
+					| SWT.WRAP);
 			styledText = viewer.getTextWidget();
 			GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(styledText);
 
@@ -1250,7 +1255,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 */
 	protected abstract String getTitleString();
 
-
 	/**
 	 * This refreshes the text in the title label of the info area (it contains
 	 * elements which can change).
@@ -1366,23 +1370,24 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		form.setFocus();
 	}
 
-//	/**
-//	 * Updates the dirty status of this editor page. The dirty status is true if
-//	 * the bug report has been modified but not saved. The title of the editor
-//	 * is also updated to reflect the status.
-//	 * 
-//	 * @param newDirtyStatus
-//	 *            is true when the bug report has been modified but not saved
-//	 */
-//	public void changeDirtyStatus(boolean newDirtyStatus) {
-//		isDirty = newDirtyStatus;
-////		if (parentEditor == null) {
-////			firePropertyChange(PROP_DIRTY);
-////		} else {
-////			parentEditor.markDirty();
-////		}
-//		getManagedForm().dirtyStateChanged();
-//	}
+	// /**
+	// * Updates the dirty status of this editor page. The dirty status is true
+	// if
+	// * the bug report has been modified but not saved. The title of the editor
+	// * is also updated to reflect the status.
+	// *
+	// * @param newDirtyStatus
+	// * is true when the bug report has been modified but not saved
+	// */
+	// public void changeDirtyStatus(boolean newDirtyStatus) {
+	// isDirty = newDirtyStatus;
+	// // if (parentEditor == null) {
+	// // firePropertyChange(PROP_DIRTY);
+	// // } else {
+	// // parentEditor.markDirty();
+	// // }
+	// getManagedForm().dirtyStateChanged();
+	// }
 
 	/**
 	 * Updates the title of the editor to reflect dirty status. If the bug
@@ -1511,7 +1516,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected StyledText addCommentsTextBox = null;
 
-//	protected Text descriptionTextBox = null;
+	// protected Text descriptionTextBox = null;
 	protected TextViewer newDescriptionTextViewer = null;
 
 	// private FormText previousText = null;
@@ -1662,6 +1667,17 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		return isDisposed;
 	}
 
+	// The implementation of the attach context UI is connector dependant.
+	protected boolean getAttachContext() {
+		return false;
+	}
+
+	// The implementation of the attach context UI is connector dependant.
+	// this method is called when a user attaches a patch to the task
+	protected void setAttachContext(boolean attachContext) {
+
+	}
+
 	public void close() {
 		Display activeDisplay = getSite().getShell().getDisplay();
 		activeDisplay.asyncExec(new Runnable() {
@@ -1720,7 +1736,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	public void setDescriptionText(String text) {
 		this.newDescriptionTextViewer.setDocument(new Document(text));
 	}
-	
+
 	// private class DisplayableLocalAttachment extends RepositoryAttachment {
 	// private static final long serialVersionUID = 900218036143022422L;
 	//		

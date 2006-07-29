@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
@@ -29,6 +30,7 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
@@ -42,6 +44,8 @@ import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylar.internal.tasks.ui.views.DatePicker;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryOperation;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
@@ -78,6 +82,7 @@ import org.eclipse.ui.forms.widgets.Section;
  * 
  * @author Mik Kersten (hardening of prototype)
  * @author Rob Elves (adaption to Eclipse Forms)
+ * @authos Jeff Pound (Attachment work)
  */
 public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 
@@ -96,6 +101,8 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	protected Button[] radios;
 
 	protected Control[] radioOptions;
+
+	protected Button attachContextButton;
 
 	protected List keyWordsList;
 
@@ -136,14 +143,15 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		// config.setLeftLabel("Local Bug Report");
 		// config.setRightLabel("Remote Bug Report");
 		// config.setLeftImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT));
-		//		config.setRightImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT));
+		// config.setRightImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT));
 		// compareInput = new BugzillaCompareInput(config);
 	}
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) {
-		 if (!(input instanceof ExistingBugEditorInput))
-			return;//MylarStatusHandler.log("Invalid Input: Must be ExistingBugEditorInput", this);
+		if (!(input instanceof ExistingBugEditorInput))
+			return;// MylarStatusHandler.log("Invalid Input: Must be
+		// ExistingBugEditorInput", this);
 
 		editorInput = (AbstractBugEditorInput) input;
 		taskData = editorInput.getRepositoryTaskData();
@@ -163,6 +171,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	@Override
 	protected void addRadioButtons(Composite buttonComposite) {
 		addSelfToCC(buttonComposite);
+		addAttachContextButton(buttonComposite);
 		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
 		int i = 0;
 		Button selected = null;
@@ -254,6 +263,19 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		toolkit.paintBordersFor(buttonComposite);
 	}
 
+	private void addAttachContextButton(Composite buttonComposite) {
+		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+				AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
+		File contextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+
+		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
+		attachContextButton = toolkit.createButton(buttonComposite, "Attach Context", SWT.CHECK);
+		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+//		data.horizontalSpan = 4;
+		attachContextButton.setLayoutData(data);
+		attachContextButton.setEnabled(contextFile != null && contextFile.exists());
+	}
+
 	private void addSelfToCC(Composite composite) {
 		// if they aren't already on the cc list create an add self check box
 		FormToolkit toolkit = new FormToolkit(composite.getDisplay());
@@ -262,7 +284,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		if (repository.getUserName() == null) {
 			return;
 		}
-		
+
 		if (owner != null && owner.getValue().indexOf(repository.getUserName()) != -1) {
 			return;
 		}
@@ -277,10 +299,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 			return;
 		}
 
-		// taskData.setAttributeValue(BugzillaReportElement.ADDSELFCC.getKeyString(),
-		// "0");
-
-		final Button addSelfButton = toolkit.createButton(composite, "Add " + repository.getUserName() + " to CC list",
+		final Button addSelfButton = toolkit.createButton(composite, "Add " + repository.getUserName() + " to CC",
 				SWT.CHECK);
 
 		addSelfButton.addSelectionListener(new SelectionAdapter() {
@@ -296,50 +315,6 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 			}
 		});
 	}
-
-	// @Override
-	// protected void addActionButtons(Composite buttonComposite) {
-	// //TODO: removed compare as it doesn't work at the moment
-	// // FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
-	// // super.addActionButtons(buttonComposite);
-	// // compareButton = toolkit.createButton(buttonComposite,
-	// // LABEL_COMPARE_BUTTON, SWT.NONE);
-	// // GridData compareButtonData = new
-	// // GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-	// // compareButton.setLayoutData(compareButtonData);
-	// // compareButton.addListener(SWT.Selection, new Listener() {
-	// // public void handleEvent(Event e) {
-	// // OpenCompareEditorJob compareJob = new OpenCompareEditorJob("Comparing
-	// // bug with remote server...");
-	// // compareJob.schedule();
-	// // }
-	// // });
-	// // compareButton.addListener(SWT.FocusIn, new GenericListener());
-	//
-	//
-	// // TODO used for spell checking. Add back when we want to support this
-	// // checkSpellingButton = new Button(buttonComposite, SWT.NONE);
-	// // checkSpellingButton.setFont(TEXT_FONT);
-	// // compareButtonData = new
-	// // GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-	// // compareButtonData.widthHint = 100;
-	// // compareButtonData.heightHint = 20;
-	// // checkSpellingButton.setText("CheckSpelling");
-	// // checkSpellingButton.setLayoutData(compareButtonData);
-	// // checkSpellingButton.addListener(SWT.Selection, new Listener() {
-	// // public void handleEvent(Event e) {
-	// // checkSpelling();
-	// // }
-	// // });
-	// // checkSpellingButton.addListener(SWT.FocusIn, new GenericListener());
-	// }
-
-	// /**
-	// * @return Returns the compareInput.
-	// */
-	// public BugzillaCompareInput getCompareInput() {
-	// return compareInput;
-	// }
 
 	@Override
 	protected String getTitleString() {
@@ -384,6 +359,18 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 					public void run() {
 						if (event.getJob().getResult().getCode() == Status.OK
 								&& event.getJob().getResult().getMessage() != null) {//
+							// Attach context
+							if (getAttachContext()) {
+								ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+										AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
+								try {
+									bugzillaRepositoryClient.attachContext(repository, (AbstractRepositoryTask) task,
+											"");
+								} catch (Exception e) {
+									// TODO
+									e.printStackTrace();
+								}
+							}
 							close();
 							return;
 						} else if (event.getJob().getResult().getCode() == Status.INFO) {
@@ -404,7 +391,6 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		};
 
 		bugzillaRepositoryClient.submitBugReport(bugzillaReportSubmitForm, submitJobListener);
-
 	}
 
 	@Override
@@ -591,7 +577,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	protected void addCCList(FormToolkit toolkit, String ccValue, Composite attributesComposite) {
-		//newLayout(attributesComposite, 1, "Add CC:", PROPERTY);
+		// newLayout(attributesComposite, 1, "Add CC:", PROPERTY);
 		toolkit.createLabel(attributesComposite, "Add CC:");
 		ccText = toolkit.createText(attributesComposite, ccValue);
 		ccText.setFont(TEXT_FONT);
@@ -954,6 +940,19 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	@Override
 	public RepositoryTaskData getRepositoryTaskData() {
 		return editorInput.getRepositoryTaskData();
+	}
+
+	public boolean getAttachContext() {
+		if (attachContextButton == null) {
+			return false;
+		}
+		return attachContextButton.getSelection();
+	}
+
+	public void setAttachContext(boolean attachContext) {
+		if (attachContextButton != null && attachContextButton.isEnabled()) {
+			attachContextButton.setSelection(attachContext);
+		}
 	}
 
 	// TODO used for spell checking. Add back when we want to support this
