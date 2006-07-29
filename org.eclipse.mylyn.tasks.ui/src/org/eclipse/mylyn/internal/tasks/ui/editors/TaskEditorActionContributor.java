@@ -38,7 +38,6 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.SubActionBars;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
@@ -242,16 +241,6 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		sourceActionBars = new SubActionBars(bars);
 	}
 
-	public void init(IActionBars bars, IWorkbenchPage page) {
-		super.init(bars, page);
-		bars.setGlobalActionHandler(ActionFactory.CUT.getId(), cutAction);
-		bars.setGlobalActionHandler(ActionFactory.PASTE.getId(), pasteAction);
-		bars.setGlobalActionHandler(ActionFactory.COPY.getId(), copyAction);
-		bars.setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
-		bars.setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
-		bars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), selectAllAction);
-	}
-
 	public MylarTaskEditor getEditor() {
 		return editor;
 	}
@@ -301,4 +290,25 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			}
 		}
 	}
+	
+	public void registerGlobalHandlers(IActionBars bars) {
+		bars.setGlobalActionHandler(ActionFactory.CUT.getId(), cutAction);
+		bars.setGlobalActionHandler(ActionFactory.PASTE.getId(), pasteAction);
+		bars.setGlobalActionHandler(ActionFactory.COPY.getId(), copyAction);
+		bars.setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
+		bars.setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
+		bars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), selectAllAction);
+		bars.updateActionBars();
+	}
+	
+	public void unregisterGlobalHandlers(IActionBars bars) {
+		bars.setGlobalActionHandler(ActionFactory.CUT.getId(), null);
+		bars.setGlobalActionHandler(ActionFactory.PASTE.getId(), null);
+		bars.setGlobalActionHandler(ActionFactory.COPY.getId(), null);
+		bars.setGlobalActionHandler(ActionFactory.UNDO.getId(), null);
+		bars.setGlobalActionHandler(ActionFactory.REDO.getId(), null);
+		bars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), null);
+		bars.updateActionBars();
+	}
+	
 }

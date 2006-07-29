@@ -36,7 +36,9 @@ import org.eclipse.ui.themes.IThemeManager;
 public class TaskFormPage extends FormPage {
 
 	protected boolean isDirty;
-	
+
+	protected TaskEditorActionContributor actionContributor;
+
 	protected List<TextViewer> textViewers = new ArrayList<TextViewer>();
 
 	private void addTextViewer(TextViewer viewer) {
@@ -132,8 +134,12 @@ public class TaskFormPage extends FormPage {
 		return false;
 	}
 
-	// TODO: there is probably a 'proper' way to get notifiaction of selection/focus changes to the action contributer
 	protected TextViewer addRepositoryTextViewer(TaskRepository repository, Composite composite, String text, int style) {
+
+		if (actionContributor == null) {
+			actionContributor = ((MylarTaskEditor) getEditor()).getContributor();
+		}
+
 		final RepositoryTextViewer commentViewer = new RepositoryTextViewer(repository, composite, style);
 
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
@@ -141,43 +147,32 @@ public class TaskFormPage extends FormPage {
 		commentViewer.getTextWidget().setFont(
 				themeManager.getCurrentTheme().getFontRegistry().get(TaskListColorsAndFonts.TASK_EDITOR_FONT));
 
-		commentViewer.addSelectionChangedListener(((TaskEditorActionContributor) getEditorSite()
-				.getActionBarContributor()));
+		commentViewer.addSelectionChangedListener(actionContributor);
+
 		commentViewer.getTextWidget().addFocusListener(new FocusListener() {
 
 			public void focusGained(FocusEvent e) {
-				// getEditorSite().getActionBarContributor().setActiveEditor(AbstractRepositoryTaskEditor.this.getEditor());
-				((TaskEditorActionContributor) getEditorSite().getActionBarContributor())
-						.updateSelectableActions(commentViewer.getSelection());
+
+				actionContributor.registerGlobalHandlers(getEditorSite().getActionBars());
+
+				actionContributor.updateSelectableActions(commentViewer.getSelection());
+
 			}
 
 			public void focusLost(FocusEvent e) {
 				commentViewer.setSelectedRange(0, 0);
+				actionContributor.unregisterGlobalHandlers(getEditorSite().getActionBars());
 
 			}
 		});
-		
+
 		commentViewer.addTextListener(new ITextListener() {
 			public void textChanged(TextEvent event) {
-				((TaskEditorActionContributor) getEditorSite().getActionBarContributor())
-				.updateSelectableActions(commentViewer.getSelection());
-			}});
+				actionContributor.updateSelectableActions(commentViewer.getSelection());
 
-		// commentViewer.getTextWidget().addSelectionListener(new
-		// SelectionAdapter() {
-		// @Override
-		// public void widgetSelected(SelectionEvent e) {
-		// StyledText styledText = (StyledText) e.widget;
-		// if (styledText != null && !styledText.getSelectionText().equals(""))
-		// {
-		// if (currentSelectedText != null &&
-		// !currentSelectedText.equals(styledText)) {
-		// currentSelectedText.setSelectionRange(0, 0);
-		// }
-		// currentSelectedText = styledText;
-		// }
-		// }
-		// });
+			}
+		});
+
 		commentViewer.setEditable(false);
 		commentViewer.getTextWidget().setMenu(getManagedForm().getForm().getMenu());
 		commentViewer.setDocument(new Document(text));
@@ -187,11 +182,11 @@ public class TaskFormPage extends FormPage {
 
 	@Override
 	public boolean isDirty() {
-		return isDirty;		
+		return isDirty;
 	}
-	
+
 	public void markDirty(boolean dirty) {
-		isDirty = dirty;	
+		isDirty = dirty;
 		getManagedForm().dirtyStateChanged();
 		return;
 	}
