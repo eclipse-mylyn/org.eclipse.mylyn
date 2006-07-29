@@ -42,8 +42,11 @@ import org.eclipse.swt.graphics.Image;
  */
 public class JavaContextLabelProvider extends AppearanceAwareLabelProvider {
 
-	private static final ImageDescriptor EDGE_REF_JUNIT = MylarJavaPlugin.getImageDescriptor("icons/elcl16/edge-ref-junit.gif");
-	
+	private static final String LABEL_ELEMENT_MISSING = "<missing element>";
+
+	private static final ImageDescriptor EDGE_REF_JUNIT = MylarJavaPlugin
+			.getImageDescriptor("icons/elcl16/edge-ref-junit.gif");
+
 	public JavaContextLabelProvider() {
 		super(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | JavaElementLabels.P_COMPRESSED,
 				AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS | JavaElementImageProvider.SMALL_ICONS);
@@ -56,7 +59,7 @@ public class JavaContextLabelProvider extends AppearanceAwareLabelProvider {
 			if (JavaStructureBridge.CONTENT_TYPE.equals(node.getContentType())) {
 				IJavaElement element = JavaCore.create(node.getHandleIdentifier());
 				if (element == null) {
-					return "<missing element>";
+					return LABEL_ELEMENT_MISSING;
 				} else {
 					return getTextForElement(element);
 				}
@@ -78,7 +81,11 @@ public class JavaContextLabelProvider extends AppearanceAwareLabelProvider {
 				}
 			}
 		}
-		return super.getText(element);
+		if (element.exists()) {
+			return super.getText(element);
+		} else {
+			return LABEL_ELEMENT_MISSING;
+		}
 	}
 
 	@Override
