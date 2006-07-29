@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Resources Plugin
 Bundle-SymbolicName: org.eclipse.mylar.resources;singleton:=true
-Bundle-Version: 0.6.0.v20060727-1630
+Bundle-Version: 0.6.0.v20060728-1800
 Bundle-Activator: org.eclipse.mylar.resources.MylarResourcesPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
