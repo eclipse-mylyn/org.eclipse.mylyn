@@ -24,9 +24,9 @@ import org.eclipse.mylar.core.core.tests.AbstractContextTest;
 import org.eclipse.mylar.internal.context.core.MylarContext;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.context.core.ScalingFactors;
-import org.eclipse.mylar.internal.java.JavaEditingMonitor;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
+import org.eclipse.mylar.internal.java.ui.JavaEditingMonitor;
 import org.eclipse.mylar.resources.MylarResourcesPlugin;
 import org.eclipse.mylar.resources.tests.ResourceTestUtil;
 

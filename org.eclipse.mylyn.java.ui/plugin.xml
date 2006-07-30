@@ -12,6 +12,9 @@
            class="org.eclipse.mylar.internal.java.JavaStructureBridge"
            name="Java Structure Bridge"
            parent="org.eclipse.mylar.internal.resources.ResourceStructureBridge"/>
+     <structureBridge
+           class="org.eclipse.mylar.internal.java.JavaDebugStructureBridge"
+           name="Java Debug Structure Bridge"/>
 	</extension>
 	   
 	<extension point="org.eclipse.mylar.context.ui.bridges">
@@ -252,6 +255,22 @@
        id="org.eclipse.mylar.ui.views.active.search.contribution"
        targetID="org.eclipse.mylar.ui.views.active.search">
  		</viewContribution>
+ 		
+ 	<viewContribution 
+		id="org.eclipse.mylar.ui.debug.view.contribution" 
+   		targetID="org.eclipse.debug.ui.DebugView">
+    	<action
+           class="org.eclipse.mylar.internal.java.ui.actions.ApplyMylarToDebugView"
+           enablesFor="*"
+           icon="icons/elcl16/interest-filtering.gif"
+           id="org.eclipse.mylar.ui.actions.FilterResourceNavigatorAction"
+           label="Apply Mylar (Experimental)"
+           menubarPath="mylar"
+           style="toggle"
+           toolbarPath="mylar"
+           tooltip="Apply Mylar"> 
+  		</action> 
+      </viewContribution> 
 	</extension>
 	
   <extension point="org.eclipse.ui.popupMenus"> 
