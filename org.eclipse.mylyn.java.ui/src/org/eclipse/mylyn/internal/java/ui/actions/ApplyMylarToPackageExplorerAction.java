@@ -18,38 +18,19 @@ import org.eclipse.jdt.internal.ui.filters.ImportDeclarationFilter;
 import org.eclipse.jdt.internal.ui.filters.PackageDeclarationFilter;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.context.ui.InterestFilter;
-import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.internal.context.ui.actions.AbstractApplyMylarAction;
-import org.eclipse.mylar.internal.java.MylarJavaPlugin;
-import org.eclipse.mylar.internal.java.MylarJavaPrefConstants;
+import org.eclipse.mylar.internal.context.ui.actions.AbstractAutoApplyMylarAction;
 import org.eclipse.mylar.internal.java.ui.JavaDeclarationsFilter;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
  */
-public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction implements IPropertyChangeListener {
+public class ApplyMylarToPackageExplorerAction extends AbstractAutoApplyMylarAction {
 
 	public ApplyMylarToPackageExplorerAction() {
 		super(new InterestFilter());
-		MylarJavaPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
-	}
-
-	public void init(IAction action) {
-		super.init(action);
-		configureAction();
-	}
-
-	@Override
-	public void update() {
-		super.update();
-		configureAction();
 	}
 
 	@Override
@@ -66,31 +47,6 @@ public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction 
 			viewers.add(((PackageExplorerPart) part).getTreeViewer());
 		}
 		return viewers;
-	}
-
-	public void propertyChange(PropertyChangeEvent event) {
-		if (MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE.equals(event.getProperty())) {
-			configureAction();
-		}
-	}
-
-	private void configureAction() {
-		// can't do htis until the workbench/view is active
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
-			public void run() {
-				try {
-					if (MylarJavaPlugin.getDefault().getPreferenceStore().getBoolean(
-							MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE)) {
-						ContextUiPlugin.getDefault().getViewerManager().addManagedAction(ApplyMylarToPackageExplorerAction.this);
-					} else if (ContextUiPlugin.getDefault() != null) {
-						ContextUiPlugin.getDefault().getViewerManager().removeManagedAction(ApplyMylarToPackageExplorerAction.this);
-					}
-				} catch (Exception e) {
-					MylarStatusHandler.fail(e, "could not toggle Mylar on view: " + getPartForAction(), true);
-				}
-			}
-		});
 	}
 
 	public void propertyChange(org.eclipse.core.runtime.Preferences.PropertyChangeEvent event) {

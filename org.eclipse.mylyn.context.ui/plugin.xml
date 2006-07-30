@@ -171,9 +171,10 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            name="Mylar"
-            class="org.eclipse.mylar.internal.context.ui.preferences.MylarPreferencePage"
-            id="org.eclipse.mylar.ui.preferences">
+            name="Context"
+            class="org.eclipse.mylar.internal.context.ui.preferences.ContextUiPreferencePage"
+            id="org.eclipse.mylar.context.ui.preferences"
+            category="org.eclipse.mylar.ui.preferences">
       </page>  
    </extension>
  

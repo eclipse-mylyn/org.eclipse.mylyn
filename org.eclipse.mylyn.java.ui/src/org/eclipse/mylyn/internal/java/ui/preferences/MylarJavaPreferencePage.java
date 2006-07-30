@@ -28,8 +28,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  */
 public class MylarJavaPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
-	private Button autoEnableExplorerFilter = null;
-
 	private Button enableErrorInterest = null;
 
 	public MylarJavaPreferencePage() {
@@ -53,15 +51,10 @@ public class MylarJavaPreferencePage extends PreferencePage implements IWorkbenc
 
 	private void createUserbooleanControl(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		group.setText("Package Explorer");
+		group.setText("Context");
 		GridLayout gl = new GridLayout(1, false);
 		group.setLayout(gl);
-
-		autoEnableExplorerFilter = new Button(group, SWT.CHECK);
-		autoEnableExplorerFilter.setText("Automatically toggle interest filter on task activation/deactivation.");
-		autoEnableExplorerFilter.setSelection(getPreferenceStore().getBoolean(
-				MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE));
-
+		
 		enableErrorInterest = new Button(group, SWT.CHECK);
 		enableErrorInterest.setText("Enable predicted interest of errors (significantly increases view refresh).");
 		enableErrorInterest.setSelection(getPreferenceStore().getBoolean(
@@ -70,8 +63,6 @@ public class MylarJavaPreferencePage extends PreferencePage implements IWorkbenc
 
 	@Override
 	public boolean performOk() {
-		getPreferenceStore().setValue(MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE,
-				autoEnableExplorerFilter.getSelection());
 		getPreferenceStore().setValue(MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS,
 				enableErrorInterest.getSelection());
 		return true;
@@ -79,8 +70,6 @@ public class MylarJavaPreferencePage extends PreferencePage implements IWorkbenc
 
 	@Override
 	public boolean performCancel() {
-		autoEnableExplorerFilter.setSelection(getPreferenceStore().getBoolean(
-				MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE));
 		enableErrorInterest.setSelection(getPreferenceStore().getBoolean(
 				MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS));
 		return true;

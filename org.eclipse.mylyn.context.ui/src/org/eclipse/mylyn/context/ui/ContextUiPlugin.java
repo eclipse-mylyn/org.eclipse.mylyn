@@ -277,6 +277,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
+		store.setDefault(ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE, true);
+		
 		store.setDefault(ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES, false);
 		store.setDefault(ContextUiPrefContstants.AUTO_MANAGE_EDITORS, true);
 		store.setDefault(ContextUiPrefContstants.AUTO_MANAGE_EDITORS_OPEN_NUM, 8);

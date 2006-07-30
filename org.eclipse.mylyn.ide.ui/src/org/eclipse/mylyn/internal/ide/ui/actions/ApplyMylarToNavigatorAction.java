@@ -18,14 +18,14 @@ import java.util.List;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylar.context.ui.InterestFilter;
-import org.eclipse.mylar.internal.context.ui.actions.AbstractApplyMylarAction;
+import org.eclipse.mylar.internal.context.ui.actions.AbstractAutoApplyMylarAction;
 import org.eclipse.mylar.internal.ide.ui.IdeUiUtil;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 
 /**
  * @author Mik Kersten
  */
-public class ApplyMylarToNavigatorAction extends AbstractApplyMylarAction {
+public class ApplyMylarToNavigatorAction extends AbstractAutoApplyMylarAction {
 
 	public ApplyMylarToNavigatorAction() {
 		super(new InterestFilter());

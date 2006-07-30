@@ -18,14 +18,14 @@ import java.util.List;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylar.context.ui.InterestFilter;
-import org.eclipse.mylar.internal.context.ui.actions.AbstractApplyMylarAction;
+import org.eclipse.mylar.internal.context.ui.actions.AbstractAutoApplyMylarAction;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.navigator.CommonNavigator;
 
 /**
  * @author Mik Kersten
  */
-public class ApplyMylarToProjectExplorerAction extends AbstractApplyMylarAction {
+public class ApplyMylarToProjectExplorerAction extends AbstractAutoApplyMylarAction {
 
 //	private boolean wasLinkingEnabled = false;
 //	

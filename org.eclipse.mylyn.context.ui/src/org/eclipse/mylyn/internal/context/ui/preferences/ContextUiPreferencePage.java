@@ -17,7 +17,6 @@ package org.eclipse.mylar.internal.context.ui.preferences;
 import java.util.Arrays;
 
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColorCellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
@@ -32,10 +31,10 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
+import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylar.internal.context.ui.Highlighter;
 import org.eclipse.mylar.internal.context.ui.HighlighterImageDescriptor;
 import org.eclipse.mylar.internal.context.ui.HighlighterList;
-import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -50,7 +49,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -64,10 +62,12 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 /**
  * @author Mik Kersten
  */
-public class MylarPreferencePage extends PreferencePage implements IWorkbenchPreferencePage, SelectionListener,
+public class ContextUiPreferencePage extends PreferencePage implements IWorkbenchPreferencePage, SelectionListener,
 		ICellEditorListener {
 
-	private StringFieldEditor exclusionFieldEditor;
+	private Button autoEnableExplorerFilter = null;
+	
+//	private StringFieldEditor exclusionFieldEditor;
 
 	private Table table;
 
@@ -99,7 +99,7 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 	 * page because it needs access to the highlighters on start up.
 	 * 
 	 */
-	public MylarPreferencePage() {
+	public ContextUiPreferencePage() {
 		super();
 		setPreferenceStore(ContextUiPlugin.getDefault().getPreferenceStore());
 		setTitle("Mylar");
@@ -113,7 +113,7 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 		entryTable.setLayout(layout);
 
 		createUiManagementSection(entryTable);
-		createExclusionFilterControl(entryTable);
+//		createExclusionFilterControl(entryTable);
 
 		createTable(entryTable);
 		createTableViewer();
@@ -142,16 +142,16 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 
 	@Override
 	public boolean performOk() {
+		getPreferenceStore().setValue(ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE,
+				autoEnableExplorerFilter.getSelection());
+		
 		getPreferenceStore().setValue(ContextUiPrefContstants.HIGHLIGHTER_PREFIX,
 				ContextUiPlugin.getDefault().getHighlighterList().externalizeToString());
-		getPreferenceStore().setValue(ContextUiPrefContstants.INTEREST_FILTER_EXCLUSION,
-				exclusionFieldEditor.getStringValue());
+//		getPreferenceStore().setValue(ContextUiPrefContstants.INTEREST_FILTER_EXCLUSION,
+//				exclusionFieldEditor.getStringValue());
+		
 		getPreferenceStore().setValue(ContextUiPrefContstants.AUTO_MANAGE_EDITORS, manageEditorsButton.getSelection());
 		getPreferenceStore().setValue(ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES, managePerspectivesButton.getSelection());
-//		int value = autoOpenEditorsNum.getIntValue();
-//		if (value > 0) {
-//			getPreferenceStore().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS_OPEN_NUM, value);
-//		}
 
 		return true;
 	}
@@ -161,6 +161,9 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 	 */
 	@Override
 	public boolean performCancel() {
+		autoEnableExplorerFilter.setSelection(getPreferenceStore().getBoolean(
+				ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE));
+				
 		String highlighters = getPreferenceStore().getString(ContextUiPrefContstants.HIGHLIGHTER_PREFIX);
 		ContextUiPlugin.getDefault().getHighlighterList().internalizeFromString(highlighters);
 
@@ -626,26 +629,24 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 		});
 	}
 
-	private void createExclusionFilterControl(Composite parent) {
-		Group exclusionControl = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		exclusionControl.setLayout(new GridLayout(1, false));
-		exclusionControl.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
-		Composite composite = new Composite(exclusionControl, SWT.NULL);
-		composite.setLayout(new GridLayout(1, false));
-		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		exclusionControl.setText("Interest Filter");
-
-		Label label = new Label(composite, SWT.LEFT);
-		label.setText("Exclusion pattern, matches will always be shown (e.g. build*.xml):");
-
-		exclusionFieldEditor = new StringFieldEditor("", "", StringFieldEditor.UNLIMITED, composite	);
-
-		String text = getPreferenceStore().getString(ContextUiPrefContstants.INTEREST_FILTER_EXCLUSION);
-		if (text != null)
-			exclusionFieldEditor.setStringValue(text);
-		return;
-	}
+//	private void createExclusionFilterControl(Composite parent) {
+//		Group exclusionControl = new Group(parent, SWT.SHADOW_ETCHED_IN);
+//		exclusionControl.setLayout(new GridLayout(1, false));
+//		exclusionControl.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+//		
+//		Composite composite = new Composite(exclusionControl, SWT.NULL);
+//		composite.setLayout(new GridLayout(1, false));
+//		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+//		exclusionControl.setText("Interest Filter");
+//
+//		Label label = new Label(composite, SWT.LEFT);
+//		label.setText("Exclusion pattern, matches will always be shown (e.g. build*.xml):");
+//		exclusionFieldEditor = new StringFieldEditor("", "", StringFieldEditor.UNLIMITED, composite	);
+//		String text = getPreferenceStore().getString(ContextUiPrefContstants.INTEREST_FILTER_EXCLUSION);
+//		if (text != null)
+//			exclusionFieldEditor.setStringValue(text);
+//		return;
+//	}
 
 	private void createUiManagementSection(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
@@ -658,6 +659,11 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 		managePerspectivesButton.setText("Open last used perspective on task activation");
 		managePerspectivesButton.setSelection(getPreferenceStore().getBoolean(ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES));
 		
+		autoEnableExplorerFilter = new Button(group, SWT.CHECK);
+		autoEnableExplorerFilter.setText("Toggle Mylar on navigator views with task activation");
+		autoEnableExplorerFilter.setSelection(getPreferenceStore().getBoolean(
+				ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE));
+				
 		manageEditorsButton = new Button(group, SWT.CHECK);
 		manageEditorsButton.setText("Manage open editors to match task context");
 		manageEditorsButton.setSelection(getPreferenceStore().getBoolean(ContextUiPrefContstants.AUTO_MANAGE_EDITORS));

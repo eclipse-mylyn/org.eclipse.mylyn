@@ -17,18 +17,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.internal.context.ui.actions.AbstractApplyMylarAction;
 import org.eclipse.mylar.monitor.workbench.AbstractPartTracker;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
@@ -40,13 +36,13 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Mik Kersten
  */
-public class MylarViewerManager implements IMylarContextListener, IPropertyChangeListener {
+public class MylarViewerManager implements IMylarContextListener { //, IPropertyChangeListener {
 
 	private List<StructuredViewer> managedViewers = new ArrayList<StructuredViewer>();
 
 	private List<StructuredViewer> filteredViewers = new ArrayList<StructuredViewer>();
 
-	private List<AbstractApplyMylarAction> managedActions = new ArrayList<AbstractApplyMylarAction>();
+//	private List<AbstractApplyMylarAction> managedActions = new ArrayList<AbstractApplyMylarAction>();
 
 	private Map<StructuredViewer, BrowseFilteredListener> listenerMap = new HashMap<StructuredViewer, BrowseFilteredListener>();
 
@@ -89,7 +85,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 	};
 	
 	public MylarViewerManager() {
-		ContextUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
+//		ContextUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
 		VIEWER_PART_TRACKER.install(PlatformUI.getWorkbench());
 	}
 	
@@ -97,13 +93,13 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 		VIEWER_PART_TRACKER.dispose(PlatformUI.getWorkbench());
 	}
 
-	public void addManagedAction(AbstractApplyMylarAction action) {
-		managedActions.add(action);
-	}
-
-	public void removeManagedAction(AbstractApplyMylarAction action) {
-		managedActions.remove(action);
-	}
+//	public void addManagedAction(AbstractApplyMylarAction action) {
+//		managedActions.add(action);
+//	}
+//
+//	public void removeManagedAction(AbstractApplyMylarAction action) {
+//		managedActions.remove(action);
+//	}
 
 	public void addManagedViewer(StructuredViewer viewer, IViewPart viewPart) {
 		if (!managedViewers.contains(viewer)) {
@@ -137,18 +133,18 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 	}
 
 	public void contextActivated(IMylarContext context) {
-		if (context.getActiveNode() != null) {
-			for (AbstractApplyMylarAction action : managedActions) {
-				action.update(true);
-			}
-		}
+//		if (context.getActiveNode() != null) {
+//			for (AbstractApplyMylarAction action : managedActions) {
+//				action.update(true);
+//			}
+//		}
 		refreshViewers();
 	}
 
 	public void contextDeactivated(IMylarContext context) {
-		for (AbstractApplyMylarAction action : managedActions) {
-			action.update(false);
-		}
+//		for (AbstractApplyMylarAction action : managedActions) {
+//			action.update(false);
+//		}
 		refreshViewers();
 	}
 
@@ -271,11 +267,11 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 		// ignore
 	}
 
-	public void propertyChange(PropertyChangeEvent event) {
-		if (ContextUiPrefContstants.INTEREST_FILTER_EXCLUSION.equals(event.getProperty())) {
-			refreshViewers();
-		}
-	}
+//	public void propertyChange(PropertyChangeEvent event) {
+//		if (ContextUiPrefContstants.INTEREST_FILTER_EXCLUSION.equals(event.getProperty())) {
+//			refreshViewers();
+//		}
+//	}
 
 	/**
 	 * Set to true for testing

@@ -17,18 +17,15 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
-import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.swt.widgets.Tree;
 
 /**
@@ -38,14 +35,11 @@ import org.eclipse.swt.widgets.Tree;
  * 
  * @author Mik Kersten
  */
-public class InterestFilter extends ViewerFilter implements IPropertyChangeListener {
+public class InterestFilter extends ViewerFilter {
 
 	private Object temporarilyUnfiltered = null;
 
-	private String excludedMatches = null;
-
 	public InterestFilter() {
-		ContextUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
 	}
 
 	@Override
@@ -85,9 +79,9 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 				if (!bridge.canFilter(object)) {
 					return true;
 				}
-				if (isImplicitlyInteresting(object, bridge)) {
-					return true;
-				}
+//				if (isImplicitlyInteresting(object, bridge)) {
+//					return true;
+//				}
 				
 				if (!object.getClass().getName().equals(Object.class.getCanonicalName())) {
 					String handle = bridge.getHandleIdentifier(object);
@@ -117,18 +111,7 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 		return temporarilyUnfiltered != null && temporarilyUnfiltered.equals(parent);
 	}
 
-	protected boolean isImplicitlyInteresting(Object element, IMylarStructureBridge bridge) {
-		if (excludedMatches == null)
-			return false;
-		if (excludedMatches.equals("*"))
-			return false;
-		try {
-			String name = bridge.getName(element);
-			return name.matches(excludedMatches.replaceAll("\\.", "\\\\.").replaceAll("\\*", ".*"));
-		} catch (Throwable t) {
-			return false;
-		}
-	}
+
 
 	protected boolean containsMylarInterestFilter(StructuredViewer viewer) {
 	    for (ViewerFilter filter : viewer.getFilters()) {
@@ -159,19 +142,32 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 		return temporarilyUnfiltered;
 	}
 
-	public String getExcludedMatches() {
-		return excludedMatches;
-	}
-
-	public void setExcludedMatches(String excludedMatches) {
-		this.excludedMatches = excludedMatches;
-	}
-
-	public void propertyChange(PropertyChangeEvent event) {
-		if (ContextUiPrefContstants.INTEREST_FILTER_EXCLUSION.equals(event.getProperty())
-				&& event.getNewValue() instanceof String) {
-
-			excludedMatches = (String) event.getNewValue();
-		}
-	}
+//	public String getExcludedMatches() {
+//		return excludedMatches;
+//	}
+//
+//	public void setExcludedMatches(String excludedMatches) {
+//		this.excludedMatches = excludedMatches;
+//	}
+//
+//	protected boolean isImplicitlyInteresting(Object element, IMylarStructureBridge bridge) {
+//	if (excludedMatches == null)
+//		return false;
+//	if (excludedMatches.equals("*"))
+//		return false;
+//	try {
+//		String name = bridge.getName(element);
+//		return name.matches(excludedMatches.replaceAll("\\.", "\\\\.").replaceAll("\\*", ".*"));
+//	} catch (Throwable t) {
+//		return false;
+//	}
+//}
+//	
+//	public void propertyChange(PropertyChangeEvent event) {
+//		if (ContextUiPrefContstants.INTEREST_FILTER_EXCLUSION.equals(event.getProperty())
+//				&& event.getNewValue() instanceof String) {
+//
+//			excludedMatches = (String) event.getNewValue();
+//		}
+//	}
 }

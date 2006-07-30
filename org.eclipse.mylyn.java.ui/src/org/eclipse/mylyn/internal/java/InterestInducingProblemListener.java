@@ -18,14 +18,14 @@ import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.viewsupport.IProblemChangedListener;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 
 /**
  * @author Mik Kersten
  */
-public class JavaProblemListener implements IProblemChangedListener, IPropertyChangeListener {
+public class InterestInducingProblemListener implements IProblemChangedListener, IPropertyChangeListener {
 
 	// TODO: consider getting rid of this
 	private JavaStructureBridge javaStructureBridge = new JavaStructureBridge();

@@ -21,7 +21,7 @@ import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.internal.context.ui.ContextUiImages;
-import org.eclipse.mylar.internal.context.ui.preferences.MylarPreferencePage;
+import org.eclipse.mylar.internal.context.ui.preferences.ContextUiPreferencePage;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
@@ -44,7 +44,7 @@ public class EditHighlightersAction extends Action implements IViewActionDelegat
 
 	@Override
 	public void run() {
-		IPreferencePage page = new MylarPreferencePage();
+		IPreferencePage page = new ContextUiPreferencePage();
 		showPreferencePage("org.eclipse.mylar.internal.ui.preferences", page);
 	}
 

@@ -55,7 +55,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 	private LandmarkMarkerManager landmarkMarkerManager = new LandmarkMarkerManager();
 
-	private JavaProblemListener problemListener = new JavaProblemListener();
+	private InterestInducingProblemListener problemListener = new InterestInducingProblemListener();
 
 	private JavaEditingMonitor javaEditingMonitor;
 
@@ -126,7 +126,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 	}
 
 	private void initDefaultPrefs() {
-		getPreferenceStore().setDefault(MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE, true);
 //		getPreferenceStore().setDefault(MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_EXPAND, true);
 		getPreferenceStore().setDefault(MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS, false);
 	}
