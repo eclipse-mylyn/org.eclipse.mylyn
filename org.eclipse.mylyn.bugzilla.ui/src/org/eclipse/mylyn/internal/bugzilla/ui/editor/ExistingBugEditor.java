@@ -171,7 +171,11 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	@Override
 	protected void addRadioButtons(Composite buttonComposite) {
 		addSelfToCC(buttonComposite);
-		addAttachContextButton(buttonComposite);
+		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+				AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
+		if (task != null) {
+			addAttachContextButton(buttonComposite, task);
+		}
 		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
 		int i = 0;
 		Button selected = null;
@@ -263,9 +267,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		toolkit.paintBordersFor(buttonComposite);
 	}
 
-	private void addAttachContextButton(Composite buttonComposite) {
-		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-				AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
+	private void addAttachContextButton(Composite buttonComposite, ITask task) {
 		File contextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
 
 		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());

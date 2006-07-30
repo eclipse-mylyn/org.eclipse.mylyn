@@ -238,7 +238,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		boolean hit = false;
 		while (tok.hasMoreTokens() && stackBuffer.length() == 0) {
 			String line = tok.nextToken().trim();
-			while (line.indexOf("at ") < 0 && line.indexOf(".java:") < 0 && tok.hasMoreTokens()) {
+			while ((line.indexOf("at ") < 0 || line.indexOf(".java:") < 0) && tok.hasMoreTokens()) {
 				prevLine = line;
 				line = tok.nextToken();
 				hit = true;
@@ -247,10 +247,15 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 			if (!hit) {
 				return null;
 			}
-			stackBuffer.append(prevLine + "\n" + line + "\n");
-			while (line.indexOf(".java:") > 0 && line.indexOf("at ") == 0 && tok.hasMoreTokens()) {
-				line = tok.nextToken();
+			stackBuffer.append(prevLine + "\n");
+			while (line.indexOf(".java:") > 0 && line.indexOf("at ") == 0) {
 				stackBuffer.append(line + "\n");
+				if (tok.hasMoreTokens()) {
+					line = tok.nextToken();
+				}
+				else {
+					line = "";
+				}
 			}
 		}
 		if (stackBuffer.length() > 0) {

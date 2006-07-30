@@ -51,8 +51,8 @@ public class DuplicateDetetionTest extends TestCase {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewBugEditorInput input = new NewBugEditorInput(repository, model);
 		TaskUiUtil.openEditor(input, BugzillaUiPlugin.NEW_BUG_EDITOR_ID, page);
-		
-		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();		
+
+		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
 		NewBugEditor editor = (NewBugEditor) taskEditor.getActivePageInstance();
 		assertTrue(editor.searchForDuplicates());
 
@@ -70,9 +70,30 @@ public class DuplicateDetetionTest extends TestCase {
 		NewBugEditorInput input = new NewBugEditorInput(repository, model);
 		TaskUiUtil.openEditor(input, BugzillaUiPlugin.NEW_BUG_EDITOR_ID, page);
 
-		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();		
+		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
 		NewBugEditor editor = (NewBugEditor) taskEditor.getActivePageInstance();
 		assertNull(editor.getStackTraceFromDescription());
+
+		editor.markDirty(false);
+		editor.close();
+	}
+
+	public void testStackTraceWithAppendedText() throws Exception {
+
+		String stackTrace = "java.lang.NullPointerException\nat jeff.testing.stack.trace.functionality(jeff.java:481)";
+		String extraText = "\nExtra text that isnt' part of the stack trace java:";
+
+		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
+				.getOfflineReportsFile().getNextOfflineBugId());
+		model.setNewComment(extraText + "\n" + stackTrace + "\n");
+		model.setHasLocalChanges(true);
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		NewBugEditorInput input = new NewBugEditorInput(repository, model);
+		TaskUiUtil.openEditor(input, BugzillaUiPlugin.NEW_BUG_EDITOR_ID, page);
+
+		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
+		NewBugEditor editor = (NewBugEditor) taskEditor.getActivePageInstance();
+		assertEquals(stackTrace, editor.getStackTraceFromDescription().trim());
 
 		editor.markDirty(false);
 		editor.close();
