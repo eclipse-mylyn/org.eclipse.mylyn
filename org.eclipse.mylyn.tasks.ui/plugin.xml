@@ -319,6 +319,11 @@
    </extension>
 
   <extension point="org.eclipse.ui.preferencePages">
+	  <page
+            name="Mylar"
+            class="org.eclipse.mylar.internal.tasks.ui.preferences.MylarPreferencePage"
+            id="org.eclipse.mylar.ui.preferences">
+      </page>  
       <page 
          name="Tasks"
          class="org.eclipse.mylar.internal.tasks.ui.preferences.TasksPreferencePage"

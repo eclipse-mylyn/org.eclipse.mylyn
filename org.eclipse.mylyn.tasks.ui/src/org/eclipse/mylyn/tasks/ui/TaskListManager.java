@@ -521,12 +521,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	public boolean readExistingOrCreateNewList() {	
 		try {
 			if (taskListFile.exists()) {
-				// taskList = new TaskList();
 				taskListWriter.readTaskList(taskList, taskListFile);
-//				int maxHandle = taskList.findLargestTaskHandle();
-//				if (maxHandle >= nextLocalTaskId) {
-//					nextLocalTaskId = maxHandle + 1;
-//				}
 			} else {
 				resetTaskList();
 			}
@@ -545,9 +540,8 @@ public class TaskListManager implements IPropertyChangeListener {
 
 			// only activate the first task to avoid confusion of mutliple
 			// active tasks on startup
-			List<ITask> activeTasks = taskList.getActiveTasks();
-			if (activeTasks.size() > 0) {
-				activateTask(activeTasks.get(0));
+			if (taskList.getActiveTask() != null) {
+				activateTask(taskList.getActiveTask());
 			}
 			parseTaskActivityInteractionHistory();
 			taskActivationHistory.loadPersistentHistory();
