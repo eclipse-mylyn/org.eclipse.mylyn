@@ -12,6 +12,8 @@
 package org.eclipse.mylar.internal.java;
 
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunch;
@@ -32,6 +34,14 @@ public class JavaDebugStructureBridge implements IMylarStructureBridge {
 	public final static String CONTENT_TYPE = "java/debug";
 	
 	private JavaStructureBridge javaStructureBridge = new JavaStructureBridge();
+	
+	/**
+	 * Needed due to slowness in resolving type names.  We expect the stack frame elements
+	 * to disappear, they are never explicitly removed.
+	 * 
+	 * TODO: consider clearing on each re-launch
+	 */
+	private Map<JDIStackFrame, IType> stackFrameMap = new WeakHashMap<JDIStackFrame, IType>();
 	
 	public boolean acceptsObject(Object object) {
 		return object instanceof ILaunch || object instanceof JDIDebugElement || object instanceof RuntimeProcess;
@@ -68,13 +78,19 @@ public class JavaDebugStructureBridge implements IMylarStructureBridge {
 	public String getHandleIdentifier(Object object) {
 		if (object instanceof JDIStackFrame) {
 			JDIStackFrame stackFrame = (JDIStackFrame)object;
-			try {
-				IType type = JavaDebugUtils.resolveDeclaringType(stackFrame);
-				if (type != null && type.exists()) {
-					return javaStructureBridge.getHandleIdentifier(type);
+			IType type = null;
+			if (stackFrameMap.containsKey(stackFrame)) {
+				type = stackFrameMap.get(stackFrame); 
+			} else {
+				try {
+					type = JavaDebugUtils.resolveDeclaringType(stackFrame);
+					stackFrameMap.put(stackFrame, type);
+				} catch (CoreException e) {
+					// ignore
 				}
-			} catch (CoreException e) {
-				// ignore
+			}
+			if (type != null && type.exists()) {
+				return javaStructureBridge.getHandleIdentifier(type);
 			}
 		}
 		return null;
