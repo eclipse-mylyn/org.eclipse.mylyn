@@ -282,9 +282,12 @@ public class TaskUiUtil {
 			for (int i = 0; i < editorReferences.length; i++) {
 				IEditorPart editor = editorReferences[i].getEditor(false);
 				if (editor instanceof MylarTaskEditor) {
-					TaskEditorInput input = (TaskEditorInput) ((MylarTaskEditor) editor).getEditorInput();
-					if (input.getTask() instanceof AbstractRepositoryTask) {
-						repositoryTaskEditors.add((MylarTaskEditor) editor);
+					MylarTaskEditor taskEditor = (MylarTaskEditor) editor;
+					if (taskEditor.getEditorInput() instanceof TaskEditorInput) {
+						TaskEditorInput input = (TaskEditorInput) taskEditor.getEditorInput();
+						if (input.getTask() instanceof AbstractRepositoryTask) {
+							repositoryTaskEditors.add((MylarTaskEditor) editor);
+						}
 					}
 				}
 			}
