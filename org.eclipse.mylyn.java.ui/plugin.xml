@@ -268,7 +268,7 @@
            menubarPath="mylar"
            style="toggle"
            toolbarPath="mylar"
-           tooltip="Apply Mylar"> 
+           tooltip="Apply Mylar (Experimental)"> 
   		</action> 
       </viewContribution> 
 	</extension>
