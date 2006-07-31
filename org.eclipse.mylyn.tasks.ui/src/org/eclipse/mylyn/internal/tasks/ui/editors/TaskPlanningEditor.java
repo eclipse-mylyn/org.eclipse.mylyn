@@ -143,12 +143,16 @@ public class TaskPlanningEditor extends TaskFormPage {
 								return;
 							if (!description.isDisposed()) {
 								if (!description.getText().equals(updateTask.getDescription())) {
-									description.setText(updateTask.getDescription());
-									if (parentEditor != null) {
-										parentEditor.changeTitle();
-									}
+									description.setText(updateTask.getDescription());									
+								}
+								if (parentEditor != null) {
+									parentEditor.changeTitle();
+								}
+								if(form != null && task != null) {
+									form.setText(task.getDescription());
 								}
 							}
+							
 							if (!priorityCombo.isDisposed()) {
 								PriorityLevel level = PriorityLevel.fromString(updateTask.getPriority());
 								if (level != null) {
