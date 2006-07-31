@@ -148,8 +148,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 								if (parentEditor != null) {
 									parentEditor.changeTitle();
 								}
-								if(form != null && task != null) {
-									form.setText(task.getDescription());
+								if(form != null && updateTask != null) {
+									form.setText(updateTask.getDescription());
 								}
 							}
 							
