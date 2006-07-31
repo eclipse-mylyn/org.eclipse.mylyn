@@ -36,7 +36,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
@@ -196,17 +195,30 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 									products.add(product);
 								}
 							} catch (LoginException exception) {
-								// we had a problem that seems to have been
-								// caused from bad login info
-								MessageDialog
-										.openError(
-												null,
-												"Login Error",
-												"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
-								BugzillaPlugin.log(exception);
+								PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+									public void run() {
+										if (PlatformUI.getWorkbench() != null
+												&& PlatformUI.getWorkbench().getDisplay() != null) {
+											MessageDialog
+													.openError(
+															getContainer().getShell(),
+															"Login Error",
+															"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease ensure proper configuration in "
+																	+ TaskRepositoriesView.NAME + ". ");
+										}
+									}
+								});
 							} catch (IOException exception) {
-								MessageDialog.openError(null, "Connection Error",
-										"\nPlease check your settings in the bugzilla preferences. ");
+								PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+									public void run() {
+										if (PlatformUI.getWorkbench() != null
+												&& PlatformUI.getWorkbench().getDisplay() != null) {
+											MessageDialog.openError(getContainer().getShell(), "Connection Error",
+													"\nPlease ensure proper configuration in "
+															+ TaskRepositoriesView.NAME + ". ");
+										}
+									}
+								});
 							} catch (KeyManagementException e) {
 								throw new InvocationTargetException(e);
 							} catch (NoSuchAlgorithmException e) {
