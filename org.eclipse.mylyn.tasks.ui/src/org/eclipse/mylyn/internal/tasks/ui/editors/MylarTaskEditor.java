@@ -487,10 +487,9 @@ public class MylarTaskEditor extends FormEditor {
 				taskEditorInput = (TaskEditorInput) getEditorInput();
 				task = taskEditorInput.getTask();
 				setPartName(taskEditorInput.getLabel());					
+			} else {
+				this.setTitleImage(TaskListImages.getImage(TaskListImages.TASK_REMOTE));
 			}
-//			else {
-//				this.setTitleImage(TaskListImages.getImage(TaskListImages.O));
-//			}
 			
 			int selectedIndex = index;
 			for (ITaskEditorFactory factory : TasksUiPlugin.getDefault().getTaskEditorFactories()) {
