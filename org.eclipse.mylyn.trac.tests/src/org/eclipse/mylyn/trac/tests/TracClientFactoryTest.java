@@ -11,10 +11,11 @@
 
 package org.eclipse.mylar.trac.tests;
 
-import java.net.Authenticator;
-
 import junit.framework.TestCase;
 
+import org.eclipse.mylar.core.core.tests.support.MylarTestUtils;
+import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.Credentials;
+import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.PrivilegeLevel;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.Trac09Client;
 import org.eclipse.mylar.internal.trac.core.TracClientFactory;
@@ -28,53 +29,59 @@ import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
  */
 public class TracClientFactoryTest extends TestCase {
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		
-		// make sure no dialog pops up to prompt for a password
-		Authenticator.setDefault(null);
-	}
-	
 	public void testCreateClient() throws Exception {
-		ITracClient client = TracClientFactory.createClient(Constants.TEST_REPOSITORY1_URL, Version.TRAC_0_9, "user",
+		ITracClient client = TracClientFactory.createClient(Constants.TEST_TRAC_010_URL, Version.TRAC_0_9, "user",
 				"password");
 		assertTrue(client instanceof Trac09Client);
-		client = TracClientFactory.createClient(Constants.TEST_REPOSITORY1_SSL_URL, Version.TRAC_0_9, "user",
-				"password");
+		client = TracClientFactory.createClient(Constants.TEST_TRAC_010_SSL_URL, Version.TRAC_0_9, "user", "password");
 		assertTrue(client instanceof Trac09Client);
 
-		client = TracClientFactory.createClient(Constants.TEST_REPOSITORY1_URL, Version.XML_RPC, "user", "password");
+		client = TracClientFactory.createClient(Constants.TEST_TRAC_010_URL, Version.XML_RPC, "user", "password");
 		assertTrue(client instanceof TracXmlRpcClient);
-		client = TracClientFactory
-				.createClient(Constants.TEST_REPOSITORY1_SSL_URL, Version.XML_RPC, "user", "password");
+		client = TracClientFactory.createClient(Constants.TEST_TRAC_010_SSL_URL, Version.XML_RPC, "user", "password");
 		assertTrue(client instanceof TracXmlRpcClient);
 	}
 
 	public void testCreateClientNull() throws Exception {
 		try {
-			TracClientFactory.createClient(Constants.TEST_REPOSITORY1_SSL_URL, null, "user", "password");
+			TracClientFactory.createClient(Constants.TEST_TRAC_010_URL, null, "user", "password");
 			fail("Expected Exception");
 		} catch (Exception e) {
 		}
 	}
 
-	public void testProbeClient() throws Exception {
-		Version version = TracClientFactory.probeClient(Constants.TEST_REPOSITORY1_URL,
-				Constants.TEST_REPOSITORY1_USERNAME, Constants.TEST_REPOSITORY1_PASSWORD);
-		assertEquals(Version.XML_RPC, version);
+	public void testProbeClient096() throws Exception {
+		probeClient(Constants.TEST_TRAC_096_URL, false);
+	}
 
-		version = TracClientFactory.probeClient(Constants.TEST_REPOSITORY1_URL, "", "");
+	public void testProbeClient010() throws Exception {
+		probeClient(Constants.TEST_TRAC_010_URL, true);
+	}
+
+	public void testProbeClient010DigestAuth() throws Exception {
+		probeClient(Constants.TEST_TRAC_010_DIGEST_AUTH_URL, true);
+	}
+
+	protected void probeClient(String url, boolean xmlrpcInstalled) throws Exception {
+		Credentials credentials = MylarTestUtils.readCredentials(PrivilegeLevel.USER);
+		Version version = TracClientFactory.probeClient(url, credentials.username, credentials.password);
+		if (xmlrpcInstalled) {
+			assertEquals(Version.XML_RPC, version);
+		} else {
+			assertEquals(Version.TRAC_0_9, version);
+		}
+
+		version = TracClientFactory.probeClient(url, "", "");
 		assertEquals(Version.TRAC_0_9, version);
 
 		try {
-			version = TracClientFactory.probeClient(Constants.TEST_REPOSITORY1_URL, "invaliduser", "password");
+			version = TracClientFactory.probeClient(url, "invaliduser", "password");
 			fail("Expected TracLoginException, got " + version);
 		} catch (TracLoginException e) {
 		}
 
 		try {
-			version = TracClientFactory.probeClient(Constants.TEST_REPOSITORY1_URL + "/nonexistant", "", "");
+			version = TracClientFactory.probeClient(url + "/nonexistant", "", "");
 			fail("Expected TracException, got " + version);
 		} catch (TracException e) {
 		}

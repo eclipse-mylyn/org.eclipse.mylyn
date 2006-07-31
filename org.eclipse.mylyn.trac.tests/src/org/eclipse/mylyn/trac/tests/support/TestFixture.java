@@ -11,8 +11,10 @@
 
 package org.eclipse.mylar.trac.tests.support;
 
+import org.eclipse.mylar.core.core.tests.support.MylarTestUtils;
+import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.Credentials;
+import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.PrivilegeLevel;
 import org.eclipse.mylar.trac.tests.Constants;
-import org.eclipse.mylar.trac.tests.support.XmlRpcServer.Ticket;
 
 /**
  * Initializes Trac repositories to a defined state. This is done once per test
@@ -23,40 +25,64 @@ import org.eclipse.mylar.trac.tests.support.XmlRpcServer.Ticket;
  */
 public class TestFixture {
 
-	public static XmlRpcServer.TestData data1;
+	public static XmlRpcServer.TestData data010;
+
+	/**
+	 * Adds the existing repository content to the test data of
+	 * <code>server</code>.
+	 */
+	private static void initializeTestData(XmlRpcServer server) throws Exception {
+		server.ticketMilestone("milestone1").itemCreated();
+		server.ticketMilestone("milestone2").itemCreated();
+		server.ticketMilestone("milestone3").itemCreated();
+		server.ticketMilestone("milestone4").itemCreated();
+
+		server.ticketVersion("1.0").itemCreated();
+		server.ticketVersion("2.0").itemCreated();
+
+		server.ticket(1).itemCreated();
+		server.ticket(2).itemCreated();
+		server.ticket(3).itemCreated();
+		server.ticket(4).itemCreated();
+	}
+
+//	private static void initializeRepository(XmlRpcServer server) throws Exception {
+//		server.ticketVersion(null).deleteAll();
+//		server.ticketVersion("1.0").create(0, "");
+//		server.ticketVersion("2.0").create(0, "");
+//
+//		server.ticketMilestone(null).deleteAll();
+//		server.ticketMilestone("milestone1").create();
+//		server.ticketMilestone("milestone2").create();
+//		server.ticketMilestone("milestone3").create();
+//		server.ticketMilestone("milestone4").create();
+//
+//		server.ticket().deleteAll();
+//		Ticket ticket = server.ticket().create("summary1", "description1");
+//		ticket.update("comment", "milestone", "milestone1");
+//		ticket = server.ticket().create("summary2", "description2");
+//		ticket.update("comment", "milestone", "milestone2");
+//		ticket = server.ticket().create("summary3", "description3");
+//		ticket.update("comment", "milestone", "milestone2");
+//		ticket = server.ticket().create("summary4", "description4");
+//	}
 
 	public static XmlRpcServer.TestData init010() throws Exception {
-		if (data1 == null) {
-			XmlRpcServer server = new XmlRpcServer(Constants.TEST_REPOSITORY1_URL,
-					Constants.TEST_REPOSITORY1_ADMIN_USERNAME, Constants.TEST_REPOSITORY1_ADMIN_PASSWORD);
+		if (data010 == null) {
+			Credentials credentials = MylarTestUtils.readCredentials(PrivilegeLevel.USER);
+			XmlRpcServer server = new XmlRpcServer(Constants.TEST_TRAC_010_URL, credentials.username,
+					credentials.password);
 
-			server.ticketVersion(null).deleteAll();
-			server.ticketVersion("v1").create(86400, "description1");
-			server.ticketVersion("v2").create(86400 * 2, "description2");
-
-			server.ticket().deleteAll();
-
-			server.ticketMilestone("m1").deleteAndCreate();
-			Ticket ticket = server.ticket().create("summary1", "description1");
-			ticket.update("comment", "milestone", "m1");
-
-			server.ticketMilestone("m2").deleteAndCreate();
-			ticket = server.ticket().create("summary2", "description2");
-			ticket.update("comment", "milestone", "m2");
-			ticket = server.ticket().create("summary3", "description3");
-			ticket.update("comment", "milestone", "m2");
-
-			ticket = server.ticket().create("summary4", "description4");
-
-			data1 = server.getData();
+			initializeTestData(server);
+			data010 = server.getData();
 		}
-		return data1;
+		return data010;
 	}
 
 	public static void cleanup010() throws Exception {
-		if (data1 != null) {
-			data1.cleanup();
-			data1 = null;
+		if (data010 != null) {
+			// data010.cleanup();
+			data010 = null;
 		}
 	}
 

@@ -11,6 +11,9 @@
 
 package org.eclipse.mylar.trac.tests;
 
+import org.eclipse.mylar.core.core.tests.support.MylarTestUtils;
+import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.Credentials;
+import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.PrivilegeLevel;
 import org.eclipse.mylar.internal.trac.core.TracException;
 import org.eclipse.mylar.internal.trac.core.TracLoginException;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
@@ -27,39 +30,38 @@ public class AbstractTracClientRepositoryTest extends AbstractTracClientTest {
 	}
 
 	public void testValidate010() throws Exception {
-		connect010();
-		validate();
+		validate(Constants.TEST_TRAC_010_URL);
 	}	
 
 	public void testValidate010DigestAuth() throws Exception {
-		connect010DigestAuth();
-		validate();
+		validate(Constants.TEST_TRAC_010_DIGEST_AUTH_URL);
 	}	
 
-	protected void validate() throws TracException {
+	protected void validate(String url) throws Exception {
+		Credentials credentials = MylarTestUtils.readCredentials(PrivilegeLevel.USER);
+		
+		// standard connect
+		connect(url);
 		repository.validate();
-	}
 
-	public void testValidateFailWrongUrl() throws Exception {
+		// invalid url
 		connect("http://non.existant/repository");
 		try {
 			repository.validate();
 			fail("Expected TracException");
 		} catch (TracException e) {
 		}
-	}
 
-	public void testValidateFailAuthWrongPassword() throws Exception {
-		connect(Constants.TEST_REPOSITORY1_URL, Constants.TEST_REPOSITORY1_ADMIN_USERNAME, "wrongpassword");
+		// invalid password
+		connect(url, credentials.username, "wrongpassword");
 		try {
 			repository.validate();
 			fail("Expected TracLoginException");
 		} catch (TracLoginException e) {
 		}
-	}
 
-	public void testValidateFailAuthWrongUsername() throws Exception {
-		connect(Constants.TEST_REPOSITORY1_URL, "wrongusername", Constants.TEST_REPOSITORY1_ADMIN_PASSWORD);
+		// invalid username
+		connect(url, "wrongusername", credentials.password);
 		try {
 			repository.validate();
 			fail("Expected TracLoginException");

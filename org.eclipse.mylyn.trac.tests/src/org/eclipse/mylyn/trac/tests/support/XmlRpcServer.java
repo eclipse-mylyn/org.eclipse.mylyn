@@ -35,11 +35,11 @@ public class XmlRpcServer {
 
 		public abstract void delete() throws Exception;
 
-		protected void itemCreated() {
+		void itemCreated() {
 			data.items.add(this);
 		}
 
-		protected void itemDeleted() {
+		void itemDeleted() {
 			data.items.remove(this);
 		}
 

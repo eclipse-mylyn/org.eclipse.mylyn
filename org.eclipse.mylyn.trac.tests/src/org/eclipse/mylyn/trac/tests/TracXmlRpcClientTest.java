@@ -32,7 +32,7 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 	}
 
 	public void testValidateFailNoAuth() throws Exception {
-		connect(Constants.TEST_REPOSITORY1_URL, "", "");
+		connect(Constants.TEST_TRAC_010_URL, "", "");
 		try {
 			repository.validate();
 			fail("Expected TracLoginException");
@@ -60,12 +60,12 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 				return o1.getName().compareTo(o2.getName());
 			}
 		});
-		assertEquals("v1", versions[0].getName());
-		assertEquals("description1", versions[0].getDescription());
-		assertEquals(new Date(86400 * 1000), versions[0].getTime());
-		assertEquals("v2", versions[1].getName());
-		assertEquals("description2", versions[1].getDescription());
-		assertEquals(new Date(86400 * 2 * 1000), versions[1].getTime());
+		assertEquals("1.0", versions[0].getName());
+		assertEquals("", versions[0].getDescription());
+		assertEquals(new Date(0), versions[0].getTime());
+		assertEquals("2.0", versions[1].getName());
+		assertEquals("", versions[1].getDescription());
+		assertEquals(new Date(0), versions[1].getTime());
 	}
 
 }

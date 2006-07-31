@@ -37,8 +37,8 @@ public class TracXmlRpcClientSearchTest extends AbstractTracClientSearchTest {
 		assertTicketEquals(tickets.get(0), result.get(0));
 		assertEquals("component1", result.get(0).getValue(Key.COMPONENT));
 		assertEquals("description1", result.get(0).getValue(Key.DESCRIPTION));
-		assertEquals("m1", result.get(0).getValue(Key.MILESTONE));
-		assertEquals(username, result.get(0).getValue(Key.REPORTER));
+		assertEquals("milestone1", result.get(0).getValue(Key.MILESTONE));
+		assertEquals("anonymous", result.get(0).getValue(Key.REPORTER));
 		assertEquals("summary1", result.get(0).getValue(Key.SUMMARY));
 		// assertEquals("", result.get(0).getValue(Key.VERSION));
 	}

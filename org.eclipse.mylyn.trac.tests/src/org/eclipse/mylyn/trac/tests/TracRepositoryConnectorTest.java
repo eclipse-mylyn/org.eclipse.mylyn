@@ -20,11 +20,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.mylar.core.core.tests.support.MylarTestUtils;
+import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.Credentials;
+import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.PrivilegeLevel;
 import org.eclipse.mylar.internal.tasks.ui.wizards.EditRepositoryWizard;
-import org.eclipse.mylar.internal.trac.TracUiPlugin;
 import org.eclipse.mylar.internal.trac.TracRepositoryConnector;
 import org.eclipse.mylar.internal.trac.TracRepositoryQuery;
 import org.eclipse.mylar.internal.trac.TracTask;
+import org.eclipse.mylar.internal.trac.TracUiPlugin;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
@@ -76,12 +79,12 @@ public class TracRepositoryConnectorTest extends TestCase {
 		// TestFixture.cleanupRepository1();
 	}
 
-	protected void init(Version version) {
+	protected void init(String url, Version version) {
 		String kind = TracUiPlugin.REPOSITORY_KIND;
+		Credentials credentials = MylarTestUtils.readCredentials(PrivilegeLevel.USER);
 
-		repository = new TaskRepository(kind, Constants.TEST_REPOSITORY1_URL);
-		repository.setAuthenticationCredentials(Constants.TEST_REPOSITORY1_USERNAME,
-				Constants.TEST_REPOSITORY1_USERNAME);
+		repository = new TaskRepository(kind, url);
+		repository.setAuthenticationCredentials(credentials.username, credentials.password);
 		repository.setTimeZoneId(ITracClient.TIME_ZONE);
 		repository.setCharacterEncoding(ITracClient.CHARSET);
 		repository.setVersion(version.name());
@@ -103,13 +106,18 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertEquals(null, connector.getRepositoryUrlFromTaskUrl("http://host/repo/ticket-2342"));
 	}
 
-	public void testCreateTaskFromExistingKeyXmlRpc() {
-		init(Version.XML_RPC);
+	public void testCreateTaskFromExistingKeyXmlRpc_010() {
+		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
 		createTaskFromExistingKey();
 	}
 
-	public void testCreateTaskFromExistingKeyTrac09() {
-		init(Version.TRAC_0_9);
+	public void testCreateTaskFromExistingKeyTrac09_010() {
+		init(Constants.TEST_TRAC_010_URL, Version.TRAC_0_9);
+		createTaskFromExistingKey();
+	}
+
+	public void testCreateTaskFromExistingKeyTrac09_096() {
+		init(Constants.TEST_TRAC_096_URL, Version.TRAC_0_9);
 		createTaskFromExistingKey();
 	}
 
@@ -129,7 +137,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 	}
 
 	public void testClientManagerChangeTaskRepositorySettings() throws MalformedURLException {
-		init(Version.TRAC_0_9);
+		init(Constants.TEST_TRAC_010_URL, Version.TRAC_0_9);
 		ITracClient client = connector.getClientManager().getRepository(repository);
 		assertEquals(Version.TRAC_0_9, client.getVersion());
 
@@ -145,25 +153,28 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertEquals(Version.XML_RPC, client.getVersion());
 	}
 
-	public void testPerformQueryXmlRpc() {
-		init(Version.XML_RPC);
-		performQuery();
+	public void testPerformQueryXmlRpc_010() {
+		performQuery(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
 	}
 
-	public void testPerformQueryTrac09() {
-		init(Version.TRAC_0_9);
-		performQuery();
+	public void testPerformQueryTrac09_010() {
+		performQuery(Constants.TEST_TRAC_010_URL, Version.TRAC_0_9);
 	}
 
-	protected void performQuery() {
+	public void testPerformQueryTrac09_096() {
+		performQuery(Constants.TEST_TRAC_096_URL, Version.TRAC_0_9);
+	}
+
+	protected void performQuery(String url, Version version) {
+		init(url, version);
+
 		TracSearch search = new TracSearch();
-		search.addFilter("milestone", "m1");
-		search.addFilter("milestone", "m2");
+		search.addFilter("milestone", "milestone1");
+		search.addFilter("milestone", "milestone2");
 		search.setOrderBy("id");
 
-		String queryUrl = Constants.TEST_REPOSITORY1_URL + ITracClient.QUERY_URL + search.toUrl();
-		TracRepositoryQuery query = new TracRepositoryQuery(Constants.TEST_REPOSITORY1_URL, queryUrl, "description",
-				tasklist);
+		String queryUrl = url + ITracClient.QUERY_URL + search.toUrl();
+		TracRepositoryQuery query = new TracRepositoryQuery(url, queryUrl, "description", tasklist);
 
 		MultiStatus queryStatus = new MultiStatus(TracUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
 		List<AbstractQueryHit> result = connector.performQuery(query, new NullProgressMonitor(), queryStatus);
@@ -183,9 +194,9 @@ public class TracRepositoryConnectorTest extends TestCase {
 		ticket.putBuiltinValue(Key.TYPE, "mytype");
 
 		TracTask task = new TracTask("", "", true);
-		TracRepositoryConnector.updateTaskDetails(Constants.TEST_REPOSITORY1_URL, task, ticket, false);
+		TracRepositoryConnector.updateTaskDetails(Constants.TEST_TRAC_010_URL, task, ticket, false);
 
-		assertEquals(Constants.TEST_REPOSITORY1_URL + ITracClient.TICKET_URL + "123", task.getUrl());
+		assertEquals(Constants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "123", task.getUrl());
 		assertEquals("123: mysummary", task.getDescription());
 		assertEquals("P3", task.getPriority());
 		assertEquals("mytype", task.getTaskType());
@@ -196,9 +207,9 @@ public class TracRepositoryConnectorTest extends TestCase {
 		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
 
 		TracTask task = new TracTask("", "", true);
-		TracRepositoryConnector.updateTaskDetails(Constants.TEST_REPOSITORY1_URL, task, ticket, false);
+		TracRepositoryConnector.updateTaskDetails(Constants.TEST_TRAC_010_URL, task, ticket, false);
 
-		assertEquals(Constants.TEST_REPOSITORY1_URL + ITracClient.TICKET_URL + "456", task.getUrl());
+		assertEquals(Constants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "456", task.getUrl());
 		assertEquals("456: mysummary", task.getDescription());
 		assertEquals("P3", task.getPriority());
 		assertEquals(null, task.getTaskType());

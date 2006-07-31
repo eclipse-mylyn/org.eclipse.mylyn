@@ -13,19 +13,16 @@ package org.eclipse.mylar.bugzilla.tests;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.Socket;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Properties;
 import java.util.Set;
 
 import javax.security.auth.login.LoginException;
@@ -33,7 +30,8 @@ import javax.security.auth.login.LoginException;
 import junit.framework.TestCase;
 
 import org.apache.commons.httpclient.params.HttpConnectionParams;
-import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.mylar.core.core.tests.support.MylarTestUtils;
+import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttachmentHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
@@ -102,17 +100,8 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 
 	protected void init(String url) {
 		repository = new TaskRepository(DEFAULT_KIND, url);
-		// Valid user name and password must be set for tests to pass
-		try {
-			Properties properties = new Properties();
-			URL localURL = FileLocator.toFileURL(BugzillaTestPlugin.getDefault().getBundle().getEntry(
-					"credentials.properties"));
-			properties.load(new FileInputStream(new File(localURL.getFile())));
-			repository.setAuthenticationCredentials(properties.getProperty("username"), properties
-					.getProperty("password"));
-		} catch (Throwable t) {
-			fail("must define credentials in <plug-in dir>/credentials.properties");
-		}
+		Credentials credentials = MylarTestUtils.readCredentials();
+		repository.setAuthenticationCredentials(credentials.username, credentials.password);
 
 		repository.setTimeZoneId("Canada/Eastern");
 		manager.addRepository(repository);

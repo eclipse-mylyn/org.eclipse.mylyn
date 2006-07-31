@@ -28,12 +28,14 @@ public class Trac09ClientTest extends AbstractTracClientRepositoryTest {
 	}
 
 	public void testValidate096() throws Exception {
-		connect096();
-		validate();
+		validate(Constants.TEST_TRAC_096_URL);
 	}
 
 	public void testValidateAnonymousLogin() throws Exception {
-		connect(Constants.TEST_REPOSITORY1_URL, "", "");
+		connect(Constants.TEST_TRAC_010_URL, "", "");
+		repository.validate();
+		
+		connect(Constants.TEST_TRAC_096_URL, "", "");
 		repository.validate();
 	}
 
@@ -48,8 +50,8 @@ public class Trac09ClientTest extends AbstractTracClientRepositoryTest {
 				return o1.getName().compareTo(o2.getName());
 			}
 		});
-		assertEquals("v1", versions[0].getName());
-		assertEquals("v2", versions[1].getName());
+		assertEquals("1.0", versions[0].getName());
+		assertEquals("2.0", versions[1].getName());
 	}
 
 }

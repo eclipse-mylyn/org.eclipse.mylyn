@@ -16,22 +16,13 @@ package org.eclipse.mylar.trac.tests;
  */
 public class Constants {
 
-	public static final String TEST_REPOSITORY1_URL = "http://trac.steffenpingel.de/mylar-test";
-
-	public static final String TEST_REPOSITORY1_SSL_URL = "https://trac.steffenpingel.de/mylar-test";
-
-	public static final String TEST_REPOSITORY1_ADMIN_USERNAME = "trac-ticket-admin";
-
-	public static final String TEST_REPOSITORY1_ADMIN_PASSWORD = "trac-ticket-admin";
-
-	public static final String TEST_REPOSITORY1_USERNAME = "trac-test";
-
-	public static final String TEST_REPOSITORY1_PASSWORD = "trac-test";
-
 	public static final String TEST_TRAC_096_URL = "http://mylar.eclipse.org/trac096";
 
 	public static final String TEST_TRAC_010_URL = "http://mylar.eclipse.org/trac010";
 
+	public static final String TEST_TRAC_010_SSL_URL = "https://mylar.eclipse.org/trac010";
+
 	public static final String TEST_TRAC_010_DIGEST_AUTH_URL = "http://mylar.eclipse.org/trac010digest";
+	
 
 }

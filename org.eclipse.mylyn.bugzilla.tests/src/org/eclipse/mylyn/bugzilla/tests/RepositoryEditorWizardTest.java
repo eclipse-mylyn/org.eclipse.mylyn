@@ -11,18 +11,15 @@
 
 package org.eclipse.mylar.bugzilla.tests;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.net.URL;
 import java.net.UnknownHostException;
-import java.util.Properties;
 
 import javax.security.auth.login.LoginException;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.mylar.core.core.tests.support.MylarTestUtils;
+import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
@@ -48,17 +45,8 @@ public class RepositoryEditorWizardTest extends TestCase {
 		manager = TasksUiPlugin.getRepositoryManager();
 		manager.clearRepositories();
 		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
-		// Valid user name and password must be set for tests to pass
-		try {
-			Properties properties = new Properties();
-			URL localURL = FileLocator.toFileURL(BugzillaTestPlugin.getDefault().getBundle().getEntry(
-					"credentials.properties"));
-			properties.load(new FileInputStream(new File(localURL.getFile())));
-			repository.setAuthenticationCredentials(properties.getProperty("username"), properties
-					.getProperty("password"));
-		} catch (Throwable t) {
-			fail("Must define credentials in <plug-in dir>/credentials.properties");
-		}
+		Credentials credentials = MylarTestUtils.readCredentials();
+		repository.setAuthenticationCredentials(credentials.username, credentials.password);
 
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 	}
