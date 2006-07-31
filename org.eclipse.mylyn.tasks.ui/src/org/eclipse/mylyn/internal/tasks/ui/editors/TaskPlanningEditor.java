@@ -142,9 +142,11 @@ public class TaskPlanningEditor extends TaskFormPage {
 							if (description == null)
 								return;
 							if (!description.isDisposed()) {
-								description.setText(updateTask.getDescription());
-								if (parentEditor != null) {
-									parentEditor.changeTitle();
+								if (!description.getText().equals(updateTask.getDescription())) {
+									description.setText(updateTask.getDescription());
+									if (parentEditor != null) {
+										parentEditor.changeTitle();
+									}
 								}
 							}
 							if (!priorityCombo.isDisposed()) {
