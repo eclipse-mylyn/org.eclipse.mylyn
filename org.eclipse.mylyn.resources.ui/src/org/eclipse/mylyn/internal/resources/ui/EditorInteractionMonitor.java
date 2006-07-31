@@ -34,19 +34,19 @@ import org.eclipse.ui.internal.Workbench;
 public class EditorInteractionMonitor extends AbstractEditorTracker {
 
 	public static final String SOURCE_ID = "org.eclipse.mylar.ide.editor.tracker.interest";
-	
+
 	@Override
 	protected void editorBroughtToTop(IEditorPart part) {
 		Object object = part.getEditorInput().getAdapter(IResource.class);
 		if (object instanceof IResource) {
-			IResource resource = (IResource)object;
+			IResource resource = (IResource) object;
 			IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(resource);
-			InteractionEvent selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION,
-					bridge.getContentType(), bridge.getHandleIdentifier(resource), part.getSite().getId());
+			InteractionEvent selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, bridge
+					.getContentType(), bridge.getHandleIdentifier(resource), part.getSite().getId());
 			ContextCorePlugin.getContextManager().handleInteractionEvent(selectionEvent);
 		}
 	}
-	
+
 	@Override
 	public void editorOpened(IEditorPart editorPartOpened) {
 		IWorkbenchPage page = editorPartOpened.getSite().getPage();
@@ -58,10 +58,12 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 			if (editorToClose != null) {
 				adapter = editorToClose.getEditorInput().getAdapter(IResource.class);
 				if (adapter instanceof IFile) {
-					String handle = ContextCorePlugin.getDefault().getStructureBridge(adapter).getHandleIdentifier(adapter);
+					String handle = ContextCorePlugin.getDefault().getStructureBridge(adapter).getHandleIdentifier(
+							adapter);
 					element = ContextCorePlugin.getContextManager().getElement(handle);
 				}
-				if (element != null && !element.getInterest().isInteresting() && !isSameEditor(editorPartOpened, editorToClose)) {
+				if (element != null && !element.getInterest().isInteresting()
+						&& !isSameEditor(editorPartOpened, editorToClose)) {
 					page.closeEditor(editorToClose, true);
 				}
 			}
@@ -80,8 +82,10 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 	public void editorClosed(IEditorPart editorPart) {
 		if (PlatformUI.getWorkbench().isClosing() || editorPart instanceof IContextIgnoringEditor) {
 			return;
-		} else if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.AUTO_MANAGE_EDITORS)
-			&& !Workbench.getInstance().getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN)) {
+		} else if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				ContextUiPrefContstants.AUTO_MANAGE_EDITORS)
+				&& !Workbench.getInstance().getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN)
+				&& !otherEditorsOpenForResource(editorPart)) {
 			IMylarElement element = null;
 			IMylarUiBridge uiBridge = ContextUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
 			Object object = uiBridge.getObjectForTextSelection(null, editorPart);
@@ -89,19 +93,40 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 				IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
 				element = ContextCorePlugin.getContextManager().getElement(bridge.getHandleIdentifier(object));
 			}
-			if (element == null) { // TODO: probably should be refactored into
-				// delegation
+			// TODO: probably should be refactored into delegation
+			if (element == null) {
 				Object adapter = editorPart.getEditorInput().getAdapter(IResource.class);
 				if (adapter instanceof IResource) {
 					IResource resource = (IResource) adapter;
 					IMylarStructureBridge resourceBridge = ContextCorePlugin.getDefault().getStructureBridge(resource);
-					element = ContextCorePlugin.getContextManager().getElement(resourceBridge.getHandleIdentifier(resource));
+					element = ContextCorePlugin.getContextManager().getElement(
+							resourceBridge.getHandleIdentifier(resource));
 				}
 			}
 			if (element != null) {
 				ContextCorePlugin.getContextManager().manipulateInterestForElement(element, false, false, SOURCE_ID);
 			}
 		}
+	}
+
+	private boolean otherEditorsOpenForResource(IEditorPart editorPart) {
+		Object adapter = editorPart.getEditorInput().getAdapter(IResource.class);
+		if (adapter instanceof IResource) {
+			IResource resource = (IResource) adapter;
+			IWorkbenchPage page = editorPart.getSite().getPage();
+			IEditorReference[] editorReferences = page.getEditorReferences();
+			for (int i = 0; i < editorReferences.length; i++) {
+				Object otherAdapter;
+				IEditorPart otherEditor = editorReferences[i].getEditor(false);
+				if (otherEditor != null) {
+					otherAdapter = otherEditor.getEditorInput().getAdapter(IResource.class);
+					if (otherAdapter instanceof IResource && otherAdapter.equals(resource)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 }
