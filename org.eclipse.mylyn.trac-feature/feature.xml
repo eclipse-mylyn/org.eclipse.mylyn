@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylar.trac_feature"
       label="Mylar Connector: Trac (Experimental)"
-      version="0.6.0.v20060731-1030"
+      version="0.6.1"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylar">
 
@@ -220,9 +220,9 @@ litigation.
    <requires>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.mylar.context.core"/>
-      <import plugin="org.eclipse.mylar.tasks.ui"/>
-      <import feature="org.eclipse.mylar_feature" version="0.6.0.v20060717-1600" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylar.context.core" version="0.6.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylar.tasks.ui" version=""/>
+      <import feature="org.eclipse.mylar_feature" version="0.6.1" match="greaterOrEqual"/>
       <import plugin="org.eclipse.mylar.tasks.core"/>
    </requires>
 
@@ -230,7 +230,7 @@ litigation.
          id="org.eclipse.mylar.trac.ui"
          download-size="0"
          install-size="0"
-         version="0.6.0.v20060731-1030"
+         version="0.6.1"
          unpack="false"/>
 
 </feature>
