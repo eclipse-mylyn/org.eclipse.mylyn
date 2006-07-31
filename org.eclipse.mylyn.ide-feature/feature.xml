@@ -248,8 +248,8 @@ litigation.
       <import plugin="org.eclipse.ui.navigator"/>
       <import plugin="org.eclipse.ui.navigator.resources"/>
       <import plugin="org.eclipse.ant.ui"/>
-      <import feature="org.eclipse.mylar_feature" version="0.6.0.v20060717-1600" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.mylar.context.core"/>
+      <import feature="org.eclipse.mylar_feature" version="0.6.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylar.context.core" version="0.6.1" match="greaterOrEqual"/>
       <import plugin="org.eclipse.mylar.tasks.ui"/>
       <import plugin="org.eclipse.mylar.monitor"/>
       <import plugin="org.eclipse.mylar.tasks.core"/>
