@@ -113,7 +113,7 @@ public class MylarTaskEditor extends FormEditor {
 	public MylarTaskEditor() {
 		super();
 		taskPlanningEditor = new TaskPlanningEditor(this);
-		// taskPlanningEditor.setParentEditor(this);
+		taskPlanningEditor.setParentEditor(this);
 	}
 
 	// @Override
@@ -486,9 +486,11 @@ public class MylarTaskEditor extends FormEditor {
 				index++;
 				taskEditorInput = (TaskEditorInput) getEditorInput();
 				task = taskEditorInput.getTask();
-				setPartName(taskEditorInput.getLabel());
+				setPartName(taskEditorInput.getLabel());					
+			} else {
+				this.setTitleImage(TaskListImages.getImage(TaskListImages.OVERLAY_REPOSITORY));
 			}
-
+			
 			int selectedIndex = index;
 			for (ITaskEditorFactory factory : TasksUiPlugin.getDefault().getTaskEditorFactories()) {
 				if ((task != null && factory.canCreateEditorFor(task)) || factory.canCreateEditorFor(getEditorInput())) {
