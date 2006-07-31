@@ -37,6 +37,7 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.AbstractBugzillaQueryPage;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -1387,15 +1388,31 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 						try {
 							BugzillaUiPlugin.updateQueryOptions(repository, monitor);
 						} catch (LoginException exception) {
-							MessageDialog
-									.openError(
-											null,
-											"Login Error",
-											"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
+							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+								public void run() {
+									if (PlatformUI.getWorkbench() != null
+											&& PlatformUI.getWorkbench().getDisplay() != null) {
+										MessageDialog
+												.openError(
+														null,
+														"Login Error",
+														"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease ensure proper configuration in "
+																+ TaskRepositoriesView.NAME + ". ");
+									}
+								}
+							});
 							return;
 						} catch (IOException e) {
-							MessageDialog.openError(null, "Connection Error", e.getMessage()
-									+ "\nPlease check your settings in the bugzilla preferences. ");
+							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+								public void run() {
+									if (PlatformUI.getWorkbench() != null
+											&& PlatformUI.getWorkbench().getDisplay() != null) {
+										MessageDialog.openError(null, "Connection Error",
+												"\nPlease ensure proper configuration in "
+														+ TaskRepositoriesView.NAME + ". ");
+									}
+								}
+							});
 							return;
 						} catch (OperationCanceledException exception) {
 							return;
