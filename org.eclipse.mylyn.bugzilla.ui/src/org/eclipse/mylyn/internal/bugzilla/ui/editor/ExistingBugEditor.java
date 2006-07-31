@@ -37,6 +37,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
+import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractBugEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.ExistingBugEditorInput;
@@ -272,8 +273,9 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 
 		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
 		attachContextButton = toolkit.createButton(buttonComposite, "Attach Context", SWT.CHECK);
+		attachContextButton.setImage(TaskListImages.getImage(TaskListImages.CONTEXT_ATTACH));
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-//		data.horizontalSpan = 4;
+		data.horizontalSpan = 3;
 		attachContextButton.setLayoutData(data);
 		attachContextButton.setEnabled(contextFile != null && contextFile.exists());
 	}
@@ -303,7 +305,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 
 		final Button addSelfButton = toolkit.createButton(composite, "Add " + repository.getUserName() + " to CC",
 				SWT.CHECK);
-
+		addSelfButton.setImage(TaskListImages.getImage(TaskListImages.PERSON));
 		addSelfButton.addSelectionListener(new SelectionAdapter() {
 
 			@Override

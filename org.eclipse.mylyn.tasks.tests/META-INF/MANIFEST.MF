@@ -20,5 +20,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.forms
 Eclipse-AutoStart: true
 Bundle-ClassPath: mylar-tasklist-tests.jar
-Export-Package: org.eclipse.mylar.tasks.tests
+Export-Package: org.eclipse.mylar.tasks.tests,
+ org.eclipse.mylar.tasks.tests.connector
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
