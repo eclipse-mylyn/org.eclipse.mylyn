@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.mylar.ide_feature"
-      label="Mylar Conext Manager"
+      label="Mylar Focused UI (Recommended)"
       version="0.6.1"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylar">
@@ -240,19 +240,22 @@ litigation.
       <import plugin="org.eclipse.pde.ui"/>
       <import plugin="org.eclipse.pde.core"/>
       <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.mylar.context.core" version="0.6.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylar.tasks.ui"/>
       <import plugin="org.eclipse.team.ui"/>
       <import plugin="org.eclipse.team.cvs.core"/>
       <import plugin="org.eclipse.team.core"/>
       <import plugin="org.eclipse.ui.forms"/>
-      <import plugin="org.eclipse.compare"/>
-      <import plugin="org.eclipse.ui.navigator"/>
-      <import plugin="org.eclipse.ui.navigator.resources"/>
-      <import plugin="org.eclipse.ant.ui"/>
-      <import feature="org.eclipse.mylar_feature" version="0.6.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.mylar.context.core" version="0.6.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.mylar.tasks.ui"/>
       <import plugin="org.eclipse.mylar.monitor"/>
+      <import plugin="org.eclipse.ui.navigator"/>
+      <import plugin="org.eclipse.ant.ui"/>
+      <import plugin="org.eclipse.ui.navigator.resources"/>
       <import plugin="org.eclipse.mylar.tasks.core"/>
+      <import plugin="org.eclipse.compare"/>
+      <import feature="org.eclipse.mylar_feature" version="0.6.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.jdt.debug"/>
+      <import plugin="org.eclipse.jface"/>
+      <import plugin="org.eclipse.ui.workbench"/>
    </requires>
 
    <plugin
