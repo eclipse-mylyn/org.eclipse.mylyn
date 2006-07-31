@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.mylar_feature"
-      label="Mylar Task Manager (Required)"
+      label="Mylar Task List (Required)"
       version="0.6.1"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylar">
@@ -226,12 +226,12 @@ litigation.
       <import plugin="org.eclipse.ui.browser"/>
       <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.ui.views"/>
-      <import plugin="org.eclipse.core.resources" version="0.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.ui.workbench.texteditor"/>
       <import plugin="org.eclipse.pde.runtime"/>
-      <import plugin="org.eclipse.mylar.tasks.core"/>
+      <import plugin="org.eclipse.core.resources" version="0.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.ide"/>
       <import feature="org.eclipse.platform" version="3.2.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.search"/>
    </requires>
 
    <plugin
