@@ -59,7 +59,7 @@ public class TracCustomQueryPage extends WizardPage {
 
 	private static final String TITLE = "New Trac Query";
 
-	private static final String DESCRIPTION = "Add search filters to define query.";
+	private static final String DESCRIPTION = "Add search filters	 to define query.";
 
 	private static final String TITLE_QUERY_TITLE = "Query Title:";
 
