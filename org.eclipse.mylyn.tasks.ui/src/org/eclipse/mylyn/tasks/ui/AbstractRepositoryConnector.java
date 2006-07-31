@@ -126,6 +126,12 @@ public abstract class AbstractRepositoryConnector {
 	public abstract String getRepositoryType();
 
 	/**
+	 * Reset and update the repository attributes from the server (e.g. products, components)
+	 * @param monitor 
+	 */
+	public abstract void updateAttributes(TaskRepository repository, IProgressMonitor monitor);
+	
+	/**
 	 * @param id
 	 *            identifier, e.g. "123" bug Bugzilla bug 123
 	 * @return null if task could not be created
@@ -566,22 +572,6 @@ public abstract class AbstractRepositoryConnector {
 		bugList.add(bug);
 		TasksUiPlugin.getDefault().getOfflineReportsFile().remove(bugList);
 	}
-
-	// /** non-final for testing purposes */
-	// protected RepositoryTaskData loadOfflineTaskData(AbstractRepositoryTask
-	// repositoryTask) {
-	//
-	// String url =
-	// AbstractRepositoryTask.getRepositoryUrl(repositoryTask.getHandleIdentifier());
-	// String id =
-	// AbstractRepositoryTask.getTaskId(repositoryTask.getHandleIdentifier());
-	// try {
-	// return OfflineTaskManager.findBug(url, Integer.parseInt(id));
-	// } catch (Exception e) {
-	// return null;
-	// }
-	//
-	// }
 
 	/** non-final for testing purposes */
 	public void saveOffline(RepositoryTaskData taskData) {

@@ -1381,7 +1381,6 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 
 		if (connect) {
 			try {
-				
 				 IRunnableWithProgress updateRunnable = new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 						monitor.beginTask("Updating search options...", IProgressMonitor.UNKNOWN);

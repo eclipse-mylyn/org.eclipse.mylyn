@@ -127,5 +127,9 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 		// ignore
 	}
 
+	@Override
+	public void updateAttributes(TaskRepository repository, IProgressMonitor monitor) {
+		// ignore
+	}
 
 }

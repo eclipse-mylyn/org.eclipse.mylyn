@@ -371,4 +371,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		// TODO: implement once this is consistent with offline task data
 	}
 
+	@Override
+	public void updateAttributes(TaskRepository repository, IProgressMonitor monitor) {
+		try {
+			BugzillaUiPlugin.updateQueryOptions(repository, monitor);
+		} catch (Exception e) {
+			MylarStatusHandler.fail(e, "Could not update attributes", false);
+		} 
+	}
+
 }

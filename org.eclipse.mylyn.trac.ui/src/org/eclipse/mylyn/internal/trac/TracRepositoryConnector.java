@@ -283,4 +283,9 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
+	@Override
+	public void updateAttributes(TaskRepository repository, IProgressMonitor monitor) {
+		// TODO: implement
+	}
+
 }

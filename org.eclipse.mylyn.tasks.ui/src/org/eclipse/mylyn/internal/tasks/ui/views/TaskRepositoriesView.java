@@ -53,6 +53,8 @@ public class TaskRepositoriesView extends ViewPart {
 
 	private Action repositoryPropertiesAction = new EditRepositoryPropertiesAction(this);
 
+	private Action resetConrigurationAction = new ResetRepositoryConfigurationAction(this);
+	
 	private final ITaskRepositoryListener REPOSITORY_LISTENER = new ITaskRepositoryListener() {
 
 		public void repositoriesRead() {
@@ -150,6 +152,7 @@ public class TaskRepositoriesView extends ViewPart {
 		manager.add(deleteRepositoryAction);
 		manager.add(new Separator());
 		manager.add(repositoryPropertiesAction);
+		manager.add(resetConrigurationAction);
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 

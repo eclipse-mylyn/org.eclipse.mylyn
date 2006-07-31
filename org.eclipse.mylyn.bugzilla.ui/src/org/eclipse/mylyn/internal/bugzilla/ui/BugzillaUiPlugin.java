@@ -308,7 +308,6 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 					+ PREF_DELIM_REPOSITORY + product, queryOptionsToString(config.getTargetMilestones(product)));
 			monitor.worked(1);
 		}
-
 	}
 }
 
