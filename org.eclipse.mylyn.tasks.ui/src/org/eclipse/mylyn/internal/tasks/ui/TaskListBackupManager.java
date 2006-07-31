@@ -192,9 +192,11 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			try {
-				backupJob.run(monitor);
-				TasksUiPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.BACKUP_LAST,
-						new Date().getTime());
+				if (Platform.isRunning()) {
+					backupJob.run(monitor);
+					TasksUiPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.BACKUP_LAST,
+							new Date().getTime());
+				}
 			} catch (InvocationTargetException e) {
 				MessageDialog
 						.openError(null, BACKUP_JOB_NAME,
