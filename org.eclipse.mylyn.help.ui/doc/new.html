@@ -63,13 +63,13 @@ Mylar 0.3.x</a></b></li>
 			<p align="right"><b>Report Bugs from Error Log</b></p>
 			</td>
 			<td valign="top" width="70%">
-			Bugs can be automatically reported by right-clicking events in the 
-			Error Log view.&nbsp; 
+			Bugs can created directly from events in the 
+			<i>Error Log</i> view.&nbsp; 
 			This will create a new repository task editor with the summary and 
-			description auto-populated with the error event's details.&nbsp; If 
-			the Connector you are using does not have a rich editor the event 
+			description populated with the error event's details.&nbsp; If 
+			the Connector you are using does not have a rich editor, the event 
 			details will be placed into the clipboard so that you can paste them 
-			into the web editor that is opened.<p>
+			into the web-based editor that will be opened automatically.<p>
 			<img src="images/0.6.1/tasks-create-error-log.gif"></td>
 		</tr>
 		<tr>
@@ -85,15 +85,15 @@ Mylar 0.3.x</a></b></li>
 			<p align="right"><b>Automatic Duplicate Detection</b></p>
 			</td>
 			<td valign="top" width="70%">
-			The new <i>Search for Duplicates</i> button on the <i>New Repository 
-			Task</i> editor makes it easy to search for duplicates before 
-			submitting a new bug report.&nbsp; Search results are displayed in 
-			the <i>Search</i> view which you can use to open matches and comment 
-			on those bugs before creating a new one.&nbsp; The current duplicate 
-			detection mechanism uses the exception stack trace that was put into 
-			the description area by the <i>Report as Bug</i> mechanism or by 
-			pasting in manually.&nbsp; The description and comments of bugs are 
-			searched in order to find matches.<p>
+			The <i>Search for Duplicates</i> button on the <i>New Repository 
+			Task</i> editor encourages and facilitates finding similar bug 
+			reports before creating a new one.&nbsp; Potential duplicates are displayed in 
+			the <i>Search</i> view which can be used to open a bug and comment 
+			or vote if a duplicate is found.&nbsp; The current duplicate 
+			detection mechanism uses stack traces, either automatically inserted 
+			by the <i>Report as Bug</i> mechanism, or manually pasted into the
+			<i>Description </i>area.&nbsp; All descriptions and comments of bugs 
+			on the corresponding repository are included in the search.<p>
 			<img src="images/0.6.1/tasks-duplicate-detection.gif"></td>
 		</tr>
 		<tr>
@@ -112,10 +112,9 @@ Mylar 0.3.x</a></b></li>
 			All hyperlinks (URLs, bug/task references, Java stack traces) now 
 			work in the <i>New Comment</i> and <i>Notes</i> editors.&nbsp; Note 
 			that hyperlinks need to be hovered over in order to get underlined.&nbsp; 
-			Multiple undo/redo and other editor shortcuts now work, and the 
-			editing actions are integrated into the context menu.&nbsp; Also 
-			note that when submitting comments context can now be more easily 
-			attached by selecting the corresponding check-box in the <i>Actions</i> 
+			Multiple undo/redo and other editor shortcuts now work, and 
+			editing actions are integrated into the context menu.&nbsp; When 
+			submitting comments, contexts can be more easily attached by selecting the corresponding check-box in the <i>Actions</i> 
 			section.<p>
 			<img src="images/0.6.1/tasks-editor-hyperlinks.gif"></td>
 		</tr>
@@ -131,8 +130,9 @@ Mylar 0.3.x</a></b></li>
 			(Experimental)</b></p>
 			</td>
 			<td valign="top" width="70%">
-			Mylar can now be applied to the <i>Debug</i> view, causing only the 
-			stack frames in the context of the active task to be shown. <p>
+			Mylar can now be applied to the <i>Debug</i> view, resulting in the 
+			thread tree focusing on the task context by hiding uninteresting 
+			stack frames. <p>
 			<img src="images/0.6.1/context-debug.gif"></td>
 		</tr>
 		<tr>
@@ -150,8 +150,8 @@ Mylar 0.3.x</a></b></li>
 			<td valign="top" width="70%">
 			For navigator views (<i>Package Explorer</i>, <i>Project 
 			Explorer</i> and <i>Navigator</i>) the <i>Apply Mylar</i> button can be set to automatically toggle on 
-			with task activation and off with task deactivation, saving clicks.&nbsp; 
-			Note that the Context preferences including this are now in <i>
+			with task activation and off with task deactivation.&nbsp; 
+			Note that the context-related preferences including this are now in <i>
 			Preferences -&gt; Mylar -&gt; Context</i>.<p>
 			<img src="images/0.6.1/context-prefs-ui-management.gif"></td>
 		</tr>
