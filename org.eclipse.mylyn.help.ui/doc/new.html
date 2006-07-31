@@ -27,7 +27,14 @@
 		<a href="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&product=Mylar&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&bug_status=RESOLVED&bug_status=VERIFIED&bug_status=CLOSED&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=2006-07-01&chfieldto=2006-07-31&chfield=resolution&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=">
 		82<br>
 		reports</a></font></td>
-		<td bgcolor="#E0D0E6"><font size="1">Jeff...</font></td>
+		<td bgcolor="#E0D0E6"><font size="1">Steffen Pingel contributed Trac 
+		support as well as numerous patches to the Tasks framework.&nbsp; Jeff 
+		Pound contributed duplicate detection, Error Log bug reporting and 
+		streamlined context attachments. Eugene Kuleshov improved the JIRA query 
+		dialog and provided numerous patches for the sandbox web repository 
+		connector. Willian Mitsuda provided a patches for Tasks UI streamlining.&nbsp; 
+		Brian de Alwis, Brock Janiczak, Izzet Safer and Nathan Hapke also 
+		contributed useful patches and tests.</font></td>
 	</tr>
 	</table>
 
@@ -41,33 +48,29 @@ Mylar 0.3.x</a></b></li>
 
 <p>Update instructions:</p>
 <ul>
+	<li>Note that your Task List </li>
 	<li>Task list preferences (including data directory) will be reset due to 
 	plug-in name changes</li>
 </ul>
 
 <hr>
 
-<p>TO ADD:</p>
-<ul>
-	<li>Drag and drop of contexts and tasks</li>
-	<li>Report bugs directly from Error Log view, works via clipboard for 
-	connectors without new task editor</li>
-	<li>Duplicate detection, button is in place of Create button to encourage 
-	always checking before submission</li>
-	<li>Hyperlinks in task editor box, better editing support (edit menu, context menu, actions work), 
-	attach context inlined</li>
-	<li>Apply Mylar is automated for navigator views (see Context prefs page)</li>
-	<li>Apply Mylar to Debug view</li>
-</ul>
 <h2>Task List</h2>
 
 <table cellpadding="10" cellspacing="0" http://www.eclipse.org/mylar/doc/images/dev/ id="table256">
 		<tr>
 			<td align="left" valign="top" width="15%" bgcolor=#E0D0E6>
-			<p align="right"><b>...</b></p>
+			<p align="right"><b>Report Bugs from Error Log</b></p>
 			</td>
 			<td valign="top" width="70%">
-			...</td>
+			Bugs can be automatically reported by right-clicking events in the 
+			Error Log view.&nbsp; 
+			This will create a new repository task editor with the summary and 
+			description auto-populated with the error event's details.&nbsp; If 
+			the Connector you are using does not have a rich editor the event 
+			details will be placed into the clipboard so that you can paste them 
+			into the web editor that is opened.<p>
+			<img src="images/0.6.1/tasks-create-error-log.gif"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -75,6 +78,48 @@ Mylar 0.3.x</a></b></li>
 			</td>
 		</tr>
 </table>
+
+<table cellpadding="10" cellspacing="0" http://www.eclipse.org/mylar/doc/images/dev/ id="table259">
+		<tr>
+			<td align="left" valign="top" width="15%" bgcolor=#E0D0E6>
+			<p align="right"><b>Automatic Duplicate Detection</b></p>
+			</td>
+			<td valign="top" width="70%">
+			The new <i>Search for Duplicates</i> button on the <i>New Repository 
+			Task</i> editor makes it easy to search for duplicates before 
+			submitting a new bug report.&nbsp; Search results are displayed in 
+			the <i>Search</i> view which you can use to open matches and comment 
+			on those bugs before creating a new one.&nbsp; The current duplicate 
+			detection mechanism uses the exception stack trace that was put into 
+			the description area by the <i>Report as Bug</i> mechanism or by 
+			pasting in manually.&nbsp; The description and comments of bugs are 
+			searched in order to find matches.<p>
+			<img src="images/0.6.1/tasks-duplicate-detection.gif"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" http://www.eclipse.org/mylar/doc/images/dev/ id="table260">
+		<tr>
+			<td align="left" valign="top" width="15%" bgcolor=#E0D0E6>
+			<p align="right"><b>Task Editor Improvements</b></p>
+			</td>
+			<td valign="top" width="70%">
+			All hyperlinks (URLs, bug/task references, Java stack traces) now 
+			work in the <i>New Comment</i> and <i>Notes</i> editors.&nbsp; Note 
+			that hyperlinks need to be hovered over in order to get underlined.&nbsp; 
+			Multiple undo/redo and other editor shortcuts now work, and the 
+			editing actions are integrated into the context menu.&nbsp; Also 
+			note that when submitting comments context can now be more easily 
+			attached by selecting the corresponding check-box in the <i>Actions</i> 
+			section.<p>
+			<img src="images/0.6.1/tasks-editor-hyperlinks.gif"></td>
+		</tr>
+		</table>
 
 <h2>&nbsp; </h2>
 <h2>Task Context</h2>
@@ -82,10 +127,13 @@ Mylar 0.3.x</a></b></li>
 <table cellpadding="10" cellspacing="0" http://www.eclipse.org/mylar/doc/images/dev/ id="table255">
 		<tr>
 			<td align="left" valign="top" width="15%" bgcolor=#E0D0E6>
-			<p align="right"><b>...</b></p>
+			<p align="right"><b>Apply Mylar to Debug view<br>
+			(Experimental)</b></p>
 			</td>
 			<td valign="top" width="70%">
-			...</td>
+			Mylar can now be applied to the <i>Debug</i> view, causing only the 
+			stack frames in the context of the active task to be shown. <p>
+			<img src="images/0.6.1/context-debug.gif"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -94,60 +142,56 @@ Mylar 0.3.x</a></b></li>
 		</tr>
 </table>
 
-<p>&nbsp;&nbsp;&nbsp; </p>
-
-<h2>Team</h2>
-
-<table cellpadding="10" cellspacing="0" http://www.eclipse.org/mylar/doc/images/dev/ id="table258">
-		<tr>
-			<td align="left" valign="top" width="15%" bgcolor=#FAF7FB>
-			<p align="right"><b>...</b></p>
-			</td>
-			<td valign="top" width="70%">
-			...</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-		<h2>&nbsp; </h2>
-<h2>Bugzilla Connector</h2>
-
-<table cellpadding="10" cellspacing="0" http://www.eclipse.org/mylar/doc/images/dev/ id="table252">
+<table cellpadding="10" cellspacing="0" http://www.eclipse.org/mylar/doc/images/dev/ id="table261">
 		<tr>
 			<td align="left" valign="top" width="15%" bgcolor=#E0D0E6>
-			<p align="right"><b>...</b></p>
+			<p align="right"><b>Auto Apply Mylar on Navigator views</b></p>
 			</td>
 			<td valign="top" width="70%">
-			...</td>
+			For navigator views (<i>Package Explorer</i>, <i>Project 
+			Explorer</i> and <i>Navigator</i>) the <i>Apply Mylar</i> button can be set to automatically toggle on 
+			with task activation and off with task deactivation, saving clicks.&nbsp; 
+			Note that the Context preferences including this are now in <i>
+			Preferences -&gt; Mylar -&gt; Context</i>.<p>
+			<img src="images/0.6.1/context-prefs-ui-management.gif"></td>
 		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
+		</table>
 
-<h2>&nbsp; </h2>
-<h2>JIRA Connector</h2>
+<h2>&nbsp;</h2>
+<h2>Trac Connector</h2>
 
 <table cellpadding="10" cellspacing="0" http://www.eclipse.org/mylar/doc/images/dev/ id="table257">
 		<tr>
 			<td align="left" valign="top" width="15%" bgcolor=#E0D0E6>
-			<p align="right"><b>...</b></p>
+			<p align="right"><b>Trac query integration<br>
+			(Experimental)</b></p>
 			</td>
 			<td valign="top" width="70%">
-			...</td>
+			The new connector for the open source
+			<a href="http://trac.edgewall.org/">Trac</a> issue tracking system 
+			integrates Trac queries into the Task List. <p>
+			<img src="images/0.6.1/trac-add-repository.gif"></p>
+			<p>
+			<img src="images/0.6.1/trac-query.gif"><p>
+			<img src="images/0.6.1/trac-editor-web.gif"></td>
 		</tr>
+		</table>
+
+<p>&nbsp;</p>
+<h2>JIRA Connector</h2>
+
+<table cellpadding="10" cellspacing="0" http://www.eclipse.org/mylar/doc/images/dev/ id="table262">
 		<tr>
-			<td colspan="2">
-			<hr>
+			<td align="left" valign="top" width="15%" bgcolor=#E0D0E6>
+			<p align="right"><b>Improved JIRA query dialog</b></p>
+			</td>
+			<td valign="top" width="70%">
+			The JIRA query dialog has been streamline into a single page and 
+			provides additional parameters such as date ranges.<p>
+			<img src="images/0.6.1/jira-query.gif"></p>
 			</td>
 		</tr>
-</table>
+		</table>
 
 </body>
 </html>

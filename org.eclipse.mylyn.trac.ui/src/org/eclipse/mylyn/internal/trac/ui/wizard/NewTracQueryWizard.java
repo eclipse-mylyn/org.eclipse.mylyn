@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.trac.ui.wizard;
 
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
@@ -33,6 +34,7 @@ public class NewTracQueryWizard extends Wizard {
 
 		setNeedsProgressMonitor(true);
 		setWindowTitle(TITLE);
+		setDefaultPageImageDescriptor(TaskListImages.BANNER_REPOSITORY);
 	}
 
 	@Override
