@@ -42,9 +42,8 @@ public class ToggleActiveFoldingAction extends Action implements IWorkbenchWindo
 	public ToggleActiveFoldingAction() {
 		super();
 		INSTANCE = this;
-		setText("Auto fold");
+		setText("Active folding");
 		setImageDescriptor(ContextUiImages.INTEREST_FOLDING);
-		setToolTipText("Auto Manage Editors and Folding");
 	}
 
 	public static void toggleFolding(boolean on) {

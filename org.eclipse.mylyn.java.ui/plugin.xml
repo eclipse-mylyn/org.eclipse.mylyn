@@ -393,6 +393,7 @@
       </command>
    </extension>
 
+<!--
    <extension point="org.eclipse.ui.bindings">   
         <key
             sequence="M1+M2+M3+ARROW_RIGHT"
@@ -413,7 +414,7 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
    </extension> 
-   
+-->
 </plugin>
 
      
