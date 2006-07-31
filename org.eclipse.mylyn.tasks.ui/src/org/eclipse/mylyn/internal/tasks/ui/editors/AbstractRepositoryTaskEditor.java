@@ -92,7 +92,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
@@ -449,19 +448,16 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		super.createFormContent(managedForm);
 		form = managedForm.getForm();
 		toolkit = managedForm.getToolkit();
-		if (getRepositoryTaskData() == null) {
-			Composite composite = new Composite(form.getBody(), SWT.NULL);
-			composite.setLayout(new GridLayout());
-			Label noBugLabel = new Label(composite, SWT.NULL);
-			noBugLabel.setText("Could not download task data, possibly due to timeout or connectivity problem.\n"
-					+ "Please check connection and try again.");
-			return;
-		}
-
+	
 		editorComposite = form.getBody();
 		editorComposite.setLayout(new GridLayout());
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-		// /createContextMenu(editorComposite);
+		
+		if (getRepositoryTaskData() == null) {			
+			toolkit.createLabel(editorComposite, "Could not download task data, possibly due to timeout or connectivity problem.\n"
+					+ "Please check connection and try again.");
+			return;
+		}
 
 		createReportHeaderLayout(editorComposite);
 		Composite attribComp = createAttributeLayout(editorComposite);
@@ -470,8 +466,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		createAttachmentLayout(editorComposite);
 		createCommentLayout(editorComposite, form);
 		createActionsLayout(editorComposite);
-
-		// editorComposite.setMenu(contextMenuManager.createContextMenu(editorComposite));
 
 		form.reflow(true);
 		getSite().getPage().addSelectionListener(selectionListener);
