@@ -143,7 +143,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 								return;
 							if (!description.isDisposed()) {
 								if (!description.getText().equals(updateTask.getDescription())) {
+									boolean wasDirty = TaskPlanningEditor.this.isDirty;
 									description.setText(updateTask.getDescription());									
+									TaskPlanningEditor.this.markDirty(wasDirty);									
 								}
 								if (parentEditor != null) {
 									parentEditor.changeTitle();
