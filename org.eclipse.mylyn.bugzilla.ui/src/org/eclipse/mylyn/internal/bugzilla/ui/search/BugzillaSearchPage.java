@@ -404,6 +404,9 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 					restoring = false;
 					restoreWidgetValues();
 				}
+				if(scontainer != null) {
+					scontainer.setPerformActionEnabled(canQuery());
+				}
 			}
 		});
 
