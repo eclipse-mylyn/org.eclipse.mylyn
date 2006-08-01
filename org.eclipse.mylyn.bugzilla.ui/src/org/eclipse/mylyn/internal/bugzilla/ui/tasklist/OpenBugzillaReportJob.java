@@ -25,6 +25,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractBugEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.editors.ExistingBugEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
@@ -72,12 +73,13 @@ public class OpenBugzillaReportJob extends Job {
 							MessageDialog.openError(null, "Repository Not Found",
 									"Could not find repository configuration for " + serverUrl
 											+ ". \nPlease set up repository via " + TaskRepositoriesView.NAME + ".");
+							TaskUiUtil.openUrl(serverUrl);
 						}
 
 					});
 					return Status.OK_STATUS;
 				}
-				
+
 				RepositoryTaskData data = BugzillaServerFacade.getBug(repository.getUrl(), repository.getUserName(),
 						repository.getPassword(), TasksUiPlugin.getDefault().getProxySettings(), repository
 								.getCharacterEncoding(), bugId.intValue());
