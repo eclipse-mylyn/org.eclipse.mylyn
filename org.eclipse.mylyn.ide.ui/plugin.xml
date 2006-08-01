@@ -106,6 +106,20 @@
       </viewContribution> 
     </extension>
     
+    
+    <extension point="org.eclipse.ui.popupMenus">
+        <viewerContribution
+		    id="org.eclipse.mylar.tasklist.ui.objectContribution"
+            targetID="org.eclipse.pde.runtime.LogView">
+      	<action
+	      	class="org.eclipse.mylar.internal.ide.ui.actions.NewTaskFromErrorAction"
+	        icon="icons/etool16/task-repository-new.gif"
+	        id="org.eclipse.mylar.tasklist.actions.newTaskFromErrorLog"
+	        label="Report as Bug"
+	        menubarPath="org.eclipse.pde.runtime.LogView"/>
+      </viewerContribution>
+   </extension>
+    
     <extension
          id="org.eclipse.mylar.helpDocs"
          name="Mylar Help"
