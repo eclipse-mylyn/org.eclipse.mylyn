@@ -302,7 +302,8 @@ public class NavigatorFilterBar extends Composite {
 				if (hasItems && e.keyCode == SWT.ARROW_DOWN) {
 					treeViewer.getTree().setFocus();
 				} else if (e.character == SWT.CR) {
-					return;
+					textChanged();
+//					return;
 				} else if (e.character == SWT.ESC) {
 					setFilterText("");
 				}
@@ -341,7 +342,7 @@ public class NavigatorFilterBar extends Composite {
 			 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
 			 */
 			public void modifyText(ModifyEvent e) {
-				textChanged();
+//				textChanged();
 			}
 		});
 		filterText.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
