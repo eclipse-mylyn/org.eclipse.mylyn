@@ -27,6 +27,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractBugEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.editors.ExistingBugEditorInput;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -65,6 +66,18 @@ public class OpenBugzillaReportJob extends Job {
 				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 						BugzillaPlugin.REPOSITORY_KIND, serverUrl);
 
+				if (repository == null) {
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							MessageDialog.openError(null, "Repository Not Found",
+									"Could not find repository configuration for " + serverUrl
+											+ ". \nPlease set up repository via " + TaskRepositoriesView.NAME + ".");
+						}
+
+					});
+					return Status.OK_STATUS;
+				}
+				
 				RepositoryTaskData data = BugzillaServerFacade.getBug(repository.getUrl(), repository.getUserName(),
 						repository.getPassword(), TasksUiPlugin.getDefault().getProxySettings(), repository
 								.getCharacterEncoding(), bugId.intValue());
@@ -102,17 +115,21 @@ public class OpenBugzillaReportJob extends Job {
 					}
 				});
 			} catch (LoginException e) {
-				MessageDialog
-						.openError(
-								null,
-								"Login Error",
-								"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
-				BugzillaPlugin.log(e);
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
+					public void run() {
+						MessageDialog
+								.openError(
+										null,
+										"Login Error",
+										"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
+					}
+				});
 			} catch (IOException e) {
 				MylarStatusHandler.fail(e, "Error opening Bugzilla report", true);
+			} finally {
+				monitor.done();
 			}
-			monitor.done();
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Unable to open Bug report: " + id, true);
 		}
