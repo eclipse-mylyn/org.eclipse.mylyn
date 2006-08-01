@@ -25,10 +25,25 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * 
  * @author Jeff Pound
  */
 public class TaskEditorTest extends TestCase {
+
+	private static final String DESCRIPTION = "description";
+
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
+		TasksUiPlugin.getRepositoryManager().clearRepositories();
+		TasksUiPlugin.getTaskListManager().resetTaskList();
+		TasksUiPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
+		super.tearDown();
+	}
 
 	/**
 	 * Automated task creation needs to access newly created task editors. This
@@ -46,18 +61,16 @@ public class TaskEditorTest extends TestCase {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		TaskUiUtil.openEditor(editorInput, BugzillaUiPlugin.NEW_BUG_EDITOR_ID, page);
 		assertTrue(page.getActiveEditor() instanceof MylarTaskEditor);
-		MylarTaskEditor taskEditor = (MylarTaskEditor)page.getActiveEditor();		
+		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
 		assertTrue(taskEditor.getActivePageInstance() instanceof AbstractRepositoryTaskEditor);
 		AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor) taskEditor.getActivePageInstance();
 
-		String desc = "description";
+		String desc = DESCRIPTION;
 		String summary = "summary";
 		// ensure we have access without exceptions
 		editor.setDescriptionText(desc);
 		editor.setSummaryText(summary);
 		editor.doSave(new NullProgressMonitor());
-		editor.markDirty(false);
-		editor.close();
-//		Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true);
 	}
+
 }

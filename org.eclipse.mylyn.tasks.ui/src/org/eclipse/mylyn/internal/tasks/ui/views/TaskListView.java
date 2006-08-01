@@ -735,11 +735,7 @@ public class TaskListView extends ViewPart {
 					case 4:
 						if (!(task instanceof AbstractRepositoryTask)) {
 							TasksUiPlugin.getTaskListManager().getTaskList().renameTask((Task) task,
-									((String) value).trim());
-							// task.setDescription(((String) value).trim());
-							// MylarTaskListPlugin.getTaskListManager().notifyTaskPropertyChanged(task,
-							// columnNames[3]);
-							TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
+									((String) value).trim());							
 						}
 						break;
 					}

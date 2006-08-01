@@ -129,50 +129,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
 
-							if (datePicker != null && !datePicker.isDisposed()) {
-								if (updateTask.getReminderDate() != null) {
-									Calendar cal = Calendar.getInstance();
-									cal.setTime(updateTask.getReminderDate());
-									datePicker.setDate(cal);
-								} else {
-									datePicker.setDate(null);
-								}
-							}
-
-							if (description == null)
-								return;
-							if (!description.isDisposed()) {
-								if (!description.getText().equals(updateTask.getDescription())) {
-									boolean wasDirty = TaskPlanningEditor.this.isDirty;
-									description.setText(updateTask.getDescription());									
-									TaskPlanningEditor.this.markDirty(wasDirty);									
-								}
-								if (parentEditor != null) {
-									parentEditor.changeTitle();
-								}
-								if(form != null && updateTask != null) {
-									form.setText(updateTask.getDescription());
-								}
-							}
-							
-							if (!priorityCombo.isDisposed()) {
-								PriorityLevel level = PriorityLevel.fromString(updateTask.getPriority());
-								if (level != null) {
-									int prioritySelectionIndex = priorityCombo.indexOf(level.getDescription());
-									priorityCombo.select(prioritySelectionIndex);
-								}
-							}
-							if (!statusCombo.isDisposed()) {
-								if (task.isCompleted()) {
-									statusCombo.select(0);
-								} else {
-									statusCombo.select(1);
-								}
-							}
-							if (!(updateTask instanceof AbstractRepositoryTask) && !endDate.isDisposed()) {
-								endDate.setText(getTaskDateString(updateTask));
-							}
+							updateTaskData(updateTask);
 						}
+						
 					});
 				}
 			}
@@ -215,6 +174,54 @@ public class TaskPlanningEditor extends TaskFormPage {
 		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(TASK_LIST_LISTENER);
 	}
 
+	/** public for testing */
+	public void updateTaskData(final ITask updateTask) {
+		if (datePicker != null && !datePicker.isDisposed()) {
+			if (updateTask.getReminderDate() != null) {
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(updateTask.getReminderDate());
+				datePicker.setDate(cal);
+			} else {
+				datePicker.setDate(null);
+			}
+		}
+
+		if (description == null)
+			return;
+		if (!description.isDisposed()) {
+			if (!description.getText().equals(updateTask.getDescription())) {
+				boolean wasDirty = TaskPlanningEditor.this.isDirty;
+				description.setText(updateTask.getDescription());
+				TaskPlanningEditor.this.markDirty(wasDirty);
+			}
+			if (parentEditor != null) {
+				parentEditor.changeTitle();
+			}
+			if (form != null && updateTask != null) {
+				form.setText(updateTask.getDescription());
+			}
+		}
+
+		if (!priorityCombo.isDisposed()) {
+			PriorityLevel level = PriorityLevel.fromString(updateTask.getPriority());
+			if (level != null) {
+				int prioritySelectionIndex = priorityCombo.indexOf(level.getDescription());
+				priorityCombo.select(prioritySelectionIndex);
+			}
+		}
+		if (!statusCombo.isDisposed()) {
+			if (task.isCompleted()) {
+				statusCombo.select(0);
+			} else {
+				statusCombo.select(1);
+			}
+		}
+		if (!(updateTask instanceof AbstractRepositoryTask) && !endDate.isDisposed()) {
+			endDate.setText(getTaskDateString(updateTask));
+		}
+	}
+	
+	
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		if (!(task instanceof AbstractRepositoryTask)) {
@@ -966,6 +973,26 @@ public class TaskPlanningEditor extends TaskFormPage {
 	@Override
 	public String toString() {
 		return "(info editor for task: " + task + ")";
+	}
+
+	/** for testing - should cause dirty state */
+	public void setNotes(String notes) {
+		this.commentViewer.getTextWidget().setText(notes);
+	}
+
+	/** for testing - should cause dirty state */
+	public void setDescription(String desc) {
+		this.description.setText(desc);
+	}
+
+	/** for testing */
+	public String getDescription() {
+		return this.description.getText();
+	}
+	
+	/** for testing */
+	public String getFormTitle() {
+		return form.getText();
 	}
 
 }
