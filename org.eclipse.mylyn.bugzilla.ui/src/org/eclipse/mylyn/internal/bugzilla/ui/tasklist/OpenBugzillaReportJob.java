@@ -73,7 +73,8 @@ public class OpenBugzillaReportJob extends Job {
 							MessageDialog.openError(null, "Repository Not Found",
 									"Could not find repository configuration for " + serverUrl
 											+ ". \nPlease set up repository via " + TaskRepositoriesView.NAME + ".");
-							TaskUiUtil.openUrl(serverUrl);
+							String bugUrl = BugzillaServerFacade.getBugUrlWithoutLogin(serverUrl, id);
+							TaskUiUtil.openUrl(bugUrl);
 						}
 
 					});
