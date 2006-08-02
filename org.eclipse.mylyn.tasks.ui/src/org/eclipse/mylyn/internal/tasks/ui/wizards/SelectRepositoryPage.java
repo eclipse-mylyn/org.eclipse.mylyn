@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Table;
 public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
 	private static final String DESCRIPTION = "Add new repositories using the " + TaskRepositoriesView.NAME
-			+ " view.\n" + "If a repsitory is missing it does not support the requested operation.";
+			+ " view.\n" + "If a repository is missing it does not support the requested operation.";
 
 	private static final String TITLE = "Select a repository";
 

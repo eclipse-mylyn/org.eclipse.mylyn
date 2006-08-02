@@ -518,7 +518,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		// store.setDefault(TaskListPreferenceConstants.BACKUP_FOLDER,
 		// ContextCorePlugin.getDefault().getDataDirectory()
 		// + DEFAULT_PATH_SEPARATOR + DEFAULT_BACKUP_FOLDER_NAME);
-		store.setDefault(TaskListPreferenceConstants.BACKUP_SCHEDULE, 5);
+		store.setDefault(TaskListPreferenceConstants.BACKUP_SCHEDULE, 1);
 		store.setDefault(TaskListPreferenceConstants.BACKUP_MAXFILES, 20);
 		store.setDefault(TaskListPreferenceConstants.BACKUP_LAST, 0f);
 
