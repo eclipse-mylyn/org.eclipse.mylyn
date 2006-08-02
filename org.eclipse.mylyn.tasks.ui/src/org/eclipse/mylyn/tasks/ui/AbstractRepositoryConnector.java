@@ -97,9 +97,9 @@ public abstract class AbstractRepositoryConnector {
 
 	public abstract String getRepositoryUrlFromTaskUrl(String url);
 
-	public abstract boolean canCreateTaskFromKey();
+	public abstract boolean canCreateTaskFromKey(TaskRepository repository);
 
-	public abstract boolean canCreateNewTask();
+	public abstract boolean canCreateNewTask(TaskRepository repository);
 
 	public String[] repositoryPropertyNames() {
 		return new String[] { IRepositoryConstants.PROPERTY_VERSION, IRepositoryConstants.PROPERTY_TIMEZONE,

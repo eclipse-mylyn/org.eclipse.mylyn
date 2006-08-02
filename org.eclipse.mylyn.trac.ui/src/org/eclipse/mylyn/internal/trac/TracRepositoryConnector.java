@@ -60,12 +60,12 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	private TracClientManager clientManager;
 
 	@Override
-	public boolean canCreateNewTask() {
+	public boolean canCreateNewTask(TaskRepository repository) {
 		return true;
 	}
 
 	@Override
-	public boolean canCreateTaskFromKey() {
+	public boolean canCreateTaskFromKey(TaskRepository repository) {
 		return true;
 	}
 
@@ -188,6 +188,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 				tracRepository.search(((TracRepositoryQuery) query).getTracSearch(), tickets);
 			}
 		} catch (Throwable e) {
+			// TODO fix error message
 			queryStatus.add(new Status(IStatus.OK, TasksUiPlugin.PLUGIN_ID, IStatus.OK, "Could not log in to server: "
 					+ query.getRepositoryUrl() + "\n\nCheck network connection.", e));
 			return hits;

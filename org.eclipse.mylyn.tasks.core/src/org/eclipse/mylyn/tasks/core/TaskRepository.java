@@ -251,4 +251,9 @@ public class TaskRepository {
 		this.properties.put(name, value);
 	}
 
+	public boolean hasProperty(String name) {
+		String value = getProperty(name);
+		return value != null && value.trim().length() > 0;
+	}
+
 }

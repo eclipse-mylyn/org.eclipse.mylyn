@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * @author Mik Kersten
  * @author Brock Janiczak
+ * @author Steffen Pingel
  */
 public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
@@ -54,8 +55,8 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
 	protected MultiRepositoryAwareWizard wizard;
 
-	private List<String> repositoryKinds = null;
-
+	private TaskRepository[] repositories = null;
+	
 	private IStructuredSelection selection;
 
 	class RepositoryContentProvider implements IStructuredContentProvider {
@@ -67,29 +68,35 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		}
 
 		public Object[] getElements(Object parent) {
-			if (repositoryKinds != null) {
-				List<TaskRepository> repositories = new ArrayList<TaskRepository>();
-				for (String repositoryKind : repositoryKinds) {
-					repositories.addAll(TasksUiPlugin.getRepositoryManager().getRepositories(repositoryKind));
-				}
-				return repositories.toArray();
-			} else {
-				return TasksUiPlugin.getRepositoryManager().getAllRepositories().toArray();
-			}
+			return repositories;
 		}
 	}
 
-	public SelectRepositoryPage() {
+	public SelectRepositoryPage(TaskRepository[] repositories) {
 		super(TITLE);
+		
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);
+
+		this.repositories = repositories;
 	}
 
 	public SelectRepositoryPage(List<String> repositoryKinds) {
-		this();
-		this.repositoryKinds = repositoryKinds;
+		this(getTaskRepositories(repositoryKinds));
 	}
 
+	public SelectRepositoryPage() {
+		this(TasksUiPlugin.getRepositoryManager().getAllRepositories().toArray(new TaskRepository[0]));
+	}
+
+	private static TaskRepository[] getTaskRepositories(List<String> repositoryKinds) {
+		List<TaskRepository> repositories = new ArrayList<TaskRepository>();
+		for (String repositoryKind : repositoryKinds) {
+			repositories.addAll(TasksUiPlugin.getRepositoryManager().getRepositories(repositoryKind));
+		}
+		return repositories.toArray(new TaskRepository[0]);
+	}
+	
 	public SelectRepositoryPage setSelection(IStructuredSelection selection) {
 		this.selection = selection;
 		return this;

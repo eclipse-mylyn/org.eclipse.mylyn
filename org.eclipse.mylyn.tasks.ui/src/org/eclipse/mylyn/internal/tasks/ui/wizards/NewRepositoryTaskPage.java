@@ -11,8 +11,6 @@
 
 package org.eclipse.mylar.internal.tasks.ui.wizards;
 
-import java.util.List;
-
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
@@ -28,8 +26,8 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class NewRepositoryTaskPage extends SelectRepositoryPage {
 
-	public NewRepositoryTaskPage(List<String> kinds) {
-		super(kinds);
+	public NewRepositoryTaskPage(TaskRepository[] repositories) {
+		super(repositories);
 	}
 
 	@Override

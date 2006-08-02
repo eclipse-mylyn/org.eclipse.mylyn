@@ -276,12 +276,12 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public boolean canCreateTaskFromKey() {
+	public boolean canCreateTaskFromKey(TaskRepository repository) {
 		return true;
 	}
 
 	@Override
-	public boolean canCreateNewTask() {
+	public boolean canCreateNewTask(TaskRepository repository) {
 		return true;
 	}
 
