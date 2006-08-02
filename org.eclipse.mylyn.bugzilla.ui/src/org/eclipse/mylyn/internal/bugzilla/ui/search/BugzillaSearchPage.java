@@ -967,7 +967,7 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 					// }
 					if (repository != null && repository.equals(currRepsitory)) {
 						indexToSelect = i;
-					}
+					}					
 					repositoryUrls[i] = currRepsitory.getUrl();
 					i++;
 				}
@@ -980,7 +980,7 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 								IBugzillaConstants.TITLE_MESSAGE_DIALOG, TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
 					} else {
 						String selectRepo = settings.get(STORE_REPO_ID);
-						if (selectRepo != null) {
+						if (selectRepo != null && repositoryCombo.indexOf(selectRepo) > -1) {
 							repositoryCombo.setText(selectRepo);
 							repository = TasksUiPlugin.getRepositoryManager().getRepository(
 									BugzillaPlugin.REPOSITORY_KIND, repositoryCombo.getText());
@@ -1037,7 +1037,9 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 				if (getWizard() == null && restoreQueryOptions && settings.getArray(STORE_PRODUCT_ID + repoId) != null
 						&& product != null) {
 					product.setSelection(nonNullArray(settings, STORE_PRODUCT_ID + repoId));
-					updateAttributesFromRepository(repository.getUrl(), product.getSelection(), false);
+					if(product.getSelection().length > 0) {
+						updateAttributesFromRepository(repository.getUrl(), product.getSelection(), false);
+					}
 					restoreWidgetValues();
 				}
 			}
