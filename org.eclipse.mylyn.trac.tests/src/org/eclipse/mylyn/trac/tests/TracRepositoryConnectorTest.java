@@ -12,6 +12,8 @@
 package org.eclipse.mylar.trac.tests;
 
 import java.net.MalformedURLException;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -33,6 +35,7 @@ import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.internal.trac.model.TracSearch;
 import org.eclipse.mylar.internal.trac.model.TracTicket;
+import org.eclipse.mylar.internal.trac.model.TracVersion;
 import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
@@ -153,15 +156,15 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertEquals(Version.XML_RPC, client.getVersion());
 	}
 
-	public void testPerformQueryXmlRpc_010() {
+	public void testPerformQueryXmlRpc010() {
 		performQuery(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
 	}
 
-	public void testPerformQueryTrac09_010() {
+	public void testPerformQueryWeb010() {
 		performQuery(Constants.TEST_TRAC_010_URL, Version.TRAC_0_9);
 	}
 
-	public void testPerformQueryTrac09_096() {
+	public void testPerformQueryWeb096() {
 		performQuery(Constants.TEST_TRAC_096_URL, Version.TRAC_0_9);
 	}
 
@@ -213,6 +216,36 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertEquals("456: mysummary", task.getDescription());
 		assertEquals("P3", task.getPriority());
 		assertEquals(null, task.getTaskType());
+	}
+
+	public void testUpdateAttributesWeb096() throws Exception {
+		init(Constants.TEST_TRAC_096_URL, Version.TRAC_0_9);
+		updateAttributes();
+	}
+
+	public void testUpdateAttributesWeb010() throws Exception {
+		init(Constants.TEST_TRAC_010_URL, Version.TRAC_0_9);
+		updateAttributes();
+	}
+
+	public void testUpdateAttributesXmlRpc010() throws Exception {
+		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
+		updateAttributes();
+	}
+
+	protected void updateAttributes() throws Exception {
+		connector.updateAttributes(repository, new NullProgressMonitor());
+		
+		ITracClient server = connector.getClientManager().getRepository(repository);
+		TracVersion[] versions = server.getVersions();
+		assertEquals(2, versions.length);
+		Arrays.sort(versions, new Comparator<TracVersion>() {
+			public int compare(TracVersion o1, TracVersion o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+		assertEquals("1.0", versions[0].getName());
+		assertEquals("2.0", versions[1].getName());
 	}
 
 }

@@ -285,7 +285,12 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public void updateAttributes(TaskRepository repository, IProgressMonitor monitor) {
-		// TODO: implement
+		try {
+			ITracClient client = getClientManager().getRepository(repository);
+			client.updateAttributes(monitor);
+		} catch (Exception e) {
+			MylarStatusHandler.fail(e, "Could not update attributes", false);
+		}
 	}
 
 }
