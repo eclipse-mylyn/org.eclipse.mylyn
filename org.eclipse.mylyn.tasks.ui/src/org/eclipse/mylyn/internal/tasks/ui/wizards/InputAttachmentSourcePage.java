@@ -108,6 +108,8 @@ public class InputAttachmentSourcePage extends WizardPage {
 
 	private NewAttachmentWizard wizard;
 
+	private String clipboardContents;
+
 	class ActivationListener extends ShellAdapter {
 		public void shellActivated(ShellEvent e) {
 			// allow error messages if the selected input actually has something
@@ -251,6 +253,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 				int state = getInputMethod();
 				setEnableAttachmentFile(state == FILE);
 				setEnableWorkspaceAttachment(state == WORKSPACE);
+				storeClipboardContents();
 				updateWidgetEnablements();
 			}
 		});
@@ -419,6 +422,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 		}
 
 		setPageComplete(attachmentFound);
+		wizard.getAttachment().setFilePath(getAbsoluteAttachmentPath());
 
 		if (showError) {
 			setErrorMessage(error);
@@ -497,7 +501,12 @@ public class InputAttachmentSourcePage extends WizardPage {
 		case CLIPBOARD:
 			return CLIPBOARD_LABEL;
 		case WORKSPACE:
-			return getResources(treeViewer.getSelection())[0].getRawLocation().toOSString();
+			IResource[] resources = getResources(treeViewer.getSelection());
+			if (resources.length > 0 && resources[0].getRawLocation() != null) {
+				return resources[0].getRawLocation().toOSString();
+			} else {
+				return null;
+			}
 		case FILE:
 		default:
 			return getAttachmentFilePath();
@@ -553,17 +562,19 @@ public class InputAttachmentSourcePage extends WizardPage {
 		return (IResource[]) tmp.toArray(new IResource[tmp.size()]);
 	}
 
-	public String getClipboardContents() {
+	private void storeClipboardContents() {
 		Control c = getControl();
 		if (c != null) {
 			Clipboard clipboard = new Clipboard(c.getDisplay());
 			Object o = clipboard.getContents(TextTransfer.getInstance());
 			clipboard.dispose();
 			if (o instanceof String) {
-				return ((String) o).trim();
+				clipboardContents = ((String) o).trim();
 			}
 		}
-		return null;
 	}
 
+	public String getClipboardContents() {
+		return clipboardContents;
+	}
 }

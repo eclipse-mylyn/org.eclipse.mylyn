@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.tasks.core.LocalAttachment;
 import org.eclipse.swt.SWT;
@@ -107,7 +108,7 @@ public class NewAttachmentPage extends WizardPage {
 
 		attachmentDesc.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				if ("".equals(attachmentDesc.getText())) {
+				if ("".equals(attachmentDesc.getText().trim())) {
 					thisPage.setErrorMessage("Description required");
 				} else {
 					if (!"".equals(filePath.getText())) {
@@ -125,8 +126,8 @@ public class NewAttachmentPage extends WizardPage {
 		attachmentComment = new Text(composite, SWT.V_SCROLL | SWT.BORDER | SWT.WRAP);
 		attachmentComment.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
-		new Label(composite, SWT.NONE).setText("Content Type");//.setBackground(parent.getBackground());
-		
+		new Label(composite, SWT.NONE).setText("Content Type");// .setBackground(parent.getBackground());
+
 		final Combo contentTypeList = new Combo(composite, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
 		final HashMap<String, Integer> contentTypeIndices = new HashMap<String, Integer>();
 		Iterator<String> iter = contentTypes.iterator();
@@ -206,7 +207,7 @@ public class NewAttachmentPage extends WizardPage {
 	}
 
 	public boolean isPageComplete() {
-		return !"".equals(filePath.getText()) && !"".equals(attachmentDesc.getText());
+		return !"".equals(filePath.getText().trim()) && !"".equals(attachmentDesc.getText().trim());
 	}
 
 	public void populateAttachment() {
@@ -219,10 +220,17 @@ public class NewAttachmentPage extends WizardPage {
 	}
 
 	public boolean canFlipToNextPage() {
-		return false;
+		return isPageComplete();
 	}
 
 	public void setFilePath(String path) {
 		filePath.setText(path);
+	}
+
+	public IWizardPage getNextPage() {
+		populateAttachment();
+		PreviewAttachmentPage page = new PreviewAttachmentPage(getAttachment());
+		page.setWizard(getWizard());
+		return page;
 	}
 }

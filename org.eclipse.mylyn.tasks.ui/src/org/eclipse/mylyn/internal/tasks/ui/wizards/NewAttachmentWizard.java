@@ -127,4 +127,8 @@ public class NewAttachmentWizard extends Wizard {
 	public void setDialog(NewAttachmentWizardDialog dialog) {
 		this.dialog = dialog;
 	}
+
+	public String getClipboardContents() {
+		return inputPage.getClipboardContents();
+	}
 }
