@@ -44,7 +44,7 @@ import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylar.internal.context.ui.Highlighter;
 import org.eclipse.mylar.internal.context.ui.HighlighterList;
 import org.eclipse.mylar.internal.context.ui.MylarPerspectiveManager;
-import org.eclipse.mylar.internal.context.ui.MylarViewerManager;
+import org.eclipse.mylar.internal.context.ui.ContextViewerManager;
 import org.eclipse.mylar.internal.context.ui.MylarWorkingSetManager;
 import org.eclipse.mylar.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
@@ -84,7 +84,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private ColorMap colorMap = new ColorMap();
 
-	private MylarViewerManager viewerManager;
+	private ContextViewerManager viewerManager;
 
 	private MylarPerspectiveManager perspectiveManager = new MylarPerspectiveManager();
 	
@@ -198,7 +198,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		initializeHighlighters();
 		initializeActions();
 		
-		viewerManager = new MylarViewerManager();
+		viewerManager = new ContextViewerManager();
 		
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.getDisplay().asyncExec(new Runnable() {
@@ -463,7 +463,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		getPreferenceStore().setValue(ContextUiPrefContstants.INTERSECTION_MODE, isIntersectionMode);
 	}
 
-	public MylarViewerManager getViewerManager() {
+	public ContextViewerManager getViewerManager() {
 		return viewerManager;
 	}
 

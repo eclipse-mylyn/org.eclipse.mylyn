@@ -10,7 +10,6 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -45,7 +44,9 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.WorkbenchJob;
 
 /**
- * Based on @see{FilteredTree}
+ * Based on
+ * 
+ * @see{FilteredTree}
  */
 public class NavigatorFilterBar extends Composite {
 
@@ -53,7 +54,7 @@ public class NavigatorFilterBar extends Composite {
 
 	private InterestFilter suppressedFilter = null;
 
-	private AdaptiveRefreshPolicy filterTreeRefresh;
+	private AdaptiveRefreshPolicy refreshPolicy;
 
 	public static class ResourcePatternFilter extends TaskListPatternFilter {
 		@Override
@@ -70,7 +71,7 @@ public class NavigatorFilterBar extends Composite {
 		createRefreshJob();
 		setInitialText("");
 		setFont(parent.getFont());
-		filterTreeRefresh = new AdaptiveRefreshPolicy(refreshJob, null);
+		refreshPolicy = new AdaptiveRefreshPolicy(refreshJob, null);
 	}
 
 	protected void textChanged() {
@@ -84,8 +85,8 @@ public class NavigatorFilterBar extends Composite {
 			getViewer().expandAll();
 			suppressedFilter = null;
 		}
-		if (filterTreeRefresh != null) {
-			filterTreeRefresh.textChanged(filterText.getText());
+		if (refreshPolicy != null) {
+			refreshPolicy.textChanged(filterText.getText());
 		}
 		// super.textChanged();
 	}
@@ -163,16 +164,16 @@ public class NavigatorFilterBar extends Composite {
 		return parent;
 	}
 
-	private TreeItem getFirstMatchingItem(TreeItem[] items) {
-		for (int i = 0; i < items.length; i++) {
-			if (patternFilter.isLeafMatch(treeViewer, items[i].getData())
-					&& patternFilter.isElementSelectable(items[i].getData())) {
-				return items[i];
-			}
-			return getFirstMatchingItem(items[i].getItems());
-		}
-		return null;
-	}
+//	private TreeItem getFirstMatchingItem(TreeItem[] items) {
+//		for (int i = 0; i < items.length; i++) {
+//			if (patternFilter.isLeafMatch(treeViewer, items[i].getData())
+//					&& patternFilter.isElementSelectable(items[i].getData())) {
+//				return items[i];
+//			}
+//			return getFirstMatchingItem(items[i].getItems());
+//		}
+//		return null;
+//	}
 
 	private void createRefreshJob() {
 		refreshJob = new WorkbenchJob("Refresh Filter") {//$NON-NLS-1$
@@ -300,12 +301,13 @@ public class NavigatorFilterBar extends Composite {
 				// on a CR we want to transfer focus to the list
 				boolean hasItems = getViewer().getTree().getItemCount() > 0;
 				if (hasItems && e.keyCode == SWT.ARROW_DOWN) {
-					treeViewer.getTree().setFocus();
+					// treeViewer.getTree().setFocus();
 				} else if (e.character == SWT.CR) {
 					textChanged();
-//					return;
+					// return;
 				} else if (e.character == SWT.ESC) {
 					setFilterText("");
+					textChanged();
 				}
 			}
 		});
@@ -320,16 +322,20 @@ public class NavigatorFilterBar extends Composite {
 					} else {
 						// if the initial filter text hasn't changed, do not try
 						// to match
-						boolean hasFocus = getViewer().getTree().setFocus();
-						boolean textChanged = !getInitialText().equals(filterText.getText().trim());
-						if (hasFocus && textChanged && filterText.getText().trim().length() > 0) {
-							TreeItem item = getFirstMatchingItem(getViewer().getTree().getItems());
-							if (item != null) {
-								getViewer().getTree().setSelection(new TreeItem[] { item });
-								ISelection sel = getViewer().getSelection();
-								getViewer().setSelection(sel, true);
-							}
-						}
+						// boolean hasFocus = getViewer().getTree().setFocus();
+						// boolean textChanged =
+						// !getInitialText().equals(filterText.getText().trim());
+						// if (hasFocus && textChanged &&
+						// filterText.getText().trim().length() > 0) {
+						// TreeItem item =
+						// getFirstMatchingItem(getViewer().getTree().getItems());
+						// if (item != null) {
+						// getViewer().getTree().setSelection(new TreeItem[] {
+						// item });
+						// ISelection sel = getViewer().getSelection();
+						// getViewer().setSelection(sel, true);
+						// }
+						// }
 					}
 				}
 			}
@@ -342,7 +348,7 @@ public class NavigatorFilterBar extends Composite {
 			 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
 			 */
 			public void modifyText(ModifyEvent e) {
-//				textChanged();
+				// textChanged();
 			}
 		});
 		filterText.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
@@ -446,6 +452,10 @@ public class NavigatorFilterBar extends Composite {
 			}
 		}
 		return null;
+	}
+
+	public AdaptiveRefreshPolicy getRefreshPolicy() {
+		return refreshPolicy;
 	}
 
 }

@@ -31,18 +31,16 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * Encapsualted the element refresh and expansion state policy for all viewers
+ * Encapsulates the element refresh and expansion state policy for all viewers
  * showing Mylar context.
  * 
  * @author Mik Kersten
  */
-public class MylarViewerManager implements IMylarContextListener { //, IPropertyChangeListener {
+public class ContextViewerManager implements IMylarContextListener { //, IPropertyChangeListener {
 
 	private List<StructuredViewer> managedViewers = new ArrayList<StructuredViewer>();
 
 	private List<StructuredViewer> filteredViewers = new ArrayList<StructuredViewer>();
-
-//	private List<AbstractApplyMylarAction> managedActions = new ArrayList<AbstractApplyMylarAction>();
 
 	private Map<StructuredViewer, BrowseFilteredListener> listenerMap = new HashMap<StructuredViewer, BrowseFilteredListener>();
 
@@ -84,23 +82,14 @@ public class MylarViewerManager implements IMylarContextListener { //, IProperty
 		}
 	};
 	
-	public MylarViewerManager() {
-//		ContextUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
+	public ContextViewerManager() {
 		VIEWER_PART_TRACKER.install(PlatformUI.getWorkbench());
 	}
 	
 	public void dispose() {
 		VIEWER_PART_TRACKER.dispose(PlatformUI.getWorkbench());
 	}
-
-//	public void addManagedAction(AbstractApplyMylarAction action) {
-//		managedActions.add(action);
-//	}
-//
-//	public void removeManagedAction(AbstractApplyMylarAction action) {
-//		managedActions.remove(action);
-//	}
-
+	
 	public void addManagedViewer(StructuredViewer viewer, IViewPart viewPart) {
 		if (!managedViewers.contains(viewer)) {
 			managedViewers.add(viewer);
@@ -133,18 +122,10 @@ public class MylarViewerManager implements IMylarContextListener { //, IProperty
 	}
 
 	public void contextActivated(IMylarContext context) {
-//		if (context.getActiveNode() != null) {
-//			for (AbstractApplyMylarAction action : managedActions) {
-//				action.update(true);
-//			}
-//		}
 		refreshViewers();
 	}
 
 	public void contextDeactivated(IMylarContext context) {
-//		for (AbstractApplyMylarAction action : managedActions) {
-//			action.update(false);
-//		}
 		refreshViewers();
 	}
 
@@ -266,12 +247,6 @@ public class MylarViewerManager implements IMylarContextListener { //, IProperty
 	public void edgesChanged(IMylarElement node) {
 		// ignore
 	}
-
-//	public void propertyChange(PropertyChangeEvent event) {
-//		if (ContextUiPrefContstants.INTEREST_FILTER_EXCLUSION.equals(event.getProperty())) {
-//			refreshViewers();
-//		}
-//	}
 
 	/**
 	 * Set to true for testing
