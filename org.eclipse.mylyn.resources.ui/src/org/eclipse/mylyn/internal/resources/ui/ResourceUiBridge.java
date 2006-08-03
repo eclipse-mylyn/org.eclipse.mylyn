@@ -62,11 +62,20 @@ public class ResourceUiBridge implements IMylarUiBridge {
 		try {
 			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			IEditorDescriptor editorDescriptor = IDE.getDefaultEditor(file);
-			if (editorDescriptor != null && editorDescriptor.isInternal()) {
+			if (editorDescriptor != null && editorDescriptor.isInternal() && !editorDescriptor.isOpenInPlace() && !isContextIgnoring(editorDescriptor)) {
 				IDE.openEditor(activePage, (IFile) file, activate);
 			}
 		} catch (PartInitException e) {
 			MylarStatusHandler.fail(e, "failed to open editor for: " + file, false);
+		}
+	}
+
+	private boolean isContextIgnoring(IEditorDescriptor editorDescriptor) {
+		// TODO: could find a better mechanism than tagging the ID
+		if (editorDescriptor.getId() != null && editorDescriptor.getId().endsWith(".contextIgnoring")) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 
