@@ -96,7 +96,7 @@ public class PreviewAttachmentPage extends WizardPage {
 	}
 
 	private void createTextPreview(Composite composite, String contents) {
-		Text text = new Text(composite, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
+		Text text = new Text(composite, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.heightHint = composite.getBounds().y;
 		gd.widthHint = composite.getBounds().x;
@@ -126,7 +126,7 @@ public class PreviewAttachmentPage extends WizardPage {
 	private void createImagePreview(Composite composite, LocalAttachment attachment) {
 		final Image image = new Image(composite.getDisplay(), attachment.getFilePath());
 		final Canvas canvas = new Canvas(composite, SWT.NO_BACKGROUND | SWT.NO_REDRAW_RESIZE | SWT.V_SCROLL
-				| SWT.H_SCROLL);
+				| SWT.H_SCROLL | SWT.BORDER);
 		canvas.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		// Adapted from snippit 48
