@@ -236,7 +236,7 @@ public abstract class AbstractRepositoryConnector {
 		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
 		IAttachmentHandler attachmentHandler = getAttachmentHandler();
 		if (attachmentHandler != null) {
-			attachmentHandler.downloadAttachment(repository, task, attachment.getId(), destinationZipFile,
+			attachmentHandler.downloadAttachment(repository, task, attachment, destinationZipFile,
 					proxySettings);
 			ZipFileUtil.unzipFiles(destinationZipFile, TasksUiPlugin.getDefault().getDataDirectory());
 			if (destinationContextFile.exists()) {

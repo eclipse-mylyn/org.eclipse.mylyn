@@ -43,6 +43,7 @@ import org.eclipse.mylar.internal.tasks.core.WebClientUtil;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.LocalAttachment;
+import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 
 /**
@@ -81,13 +82,22 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 
 	private static final String ATTRIBUTE_ACTION = "action";
 	
-	public void downloadAttachment(TaskRepository repository, AbstractRepositoryTask task, int attachmentId, File file, Proxy proxySettings) throws CoreException {
+	
+	public void downloadAttachment(TaskRepository repository, AbstractRepositoryTask task, RepositoryAttachment attachment, File file, Proxy proxySettings) throws CoreException {
 		try {
-			downloadAttachment(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, attachmentId, file, true);
+			downloadAttachment(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, attachment.getId(), file, true);
 		} catch (Exception e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "could not download", e));
 		}
 	}
+	
+//	public void downloadAttachment(TaskRepository repository, AbstractRepositoryTask task, int attachmentId, File file, Proxy proxySettings) throws CoreException {
+//		try {
+//			downloadAttachment(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, attachmentId, file, true);
+//		} catch (Exception e) {
+//			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "could not download", e));
+//		}
+//	}
 
 	public void uploadAttachment(TaskRepository repository, AbstractRepositoryTask task, String comment, String description, File file, String contentType, boolean isPatch, Proxy proxySettings) throws CoreException {
 		try {
