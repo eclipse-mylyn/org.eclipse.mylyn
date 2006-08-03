@@ -18,7 +18,7 @@ public interface IInteractionEventListener {
 
 	public abstract void interactionObserved(InteractionEvent event);
 
-	public abstract void startObserving();
+	public abstract void startMonitoring();
 
-	public abstract void stopObserving();
+	public abstract void stopMonitoring();
 }
