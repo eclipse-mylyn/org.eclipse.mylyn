@@ -81,11 +81,11 @@ public class TaskActivityTimer implements ITimerThreadListener, IInteractionEven
 		lastActivity = Calendar.getInstance().getTimeInMillis();
 	}
 
-	public void startObserving() {
+	public void startMonitoring() {
 
 	}
 
-	public void stopObserving() {
+	public void stopMonitoring() {
 
 	}
 
