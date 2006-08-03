@@ -15,11 +15,16 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.LocalAttachment;
+import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
@@ -41,8 +46,14 @@ public class NewAttachmentWizard extends Wizard {
 
 	private boolean hasNewDialogSettings;
 
-	public NewAttachmentWizard() {
+	private TaskRepository repository;
+
+	private AbstractRepositoryTask task;
+
+	public NewAttachmentWizard(TaskRepository repository, AbstractRepositoryTask task) {
 		super();
+		this.task = task;
+		this.repository = repository;
 		setNeedsProgressMonitor(true);
 		setWindowTitle("Add Attachment");
 		setDefaultPageImageDescriptor(TaskListImages.BANNER_REPOSITORY);
@@ -92,6 +103,38 @@ public class NewAttachmentWizard extends Wizard {
 			section = workbenchSettings.addNewSection(DIALOG_SETTINGS_KEY);
 			setDialogSettings(section);
 		}
+
+		// upload the attachment
+		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				repository.getKind());
+		IAttachmentHandler attachmentHandler = connector.getAttachmentHandler();
+		if (attachmentHandler == null) {
+			return false;
+		}
+		try {
+			attachmentHandler.uploadAttachment(repository, task, attachment.getComment(), attachment.getDescription(),
+					new File(attachment.getFilePath()), attachment.getContentType(), attachment.isPatch(),
+					TasksUiPlugin.getDefault().getProxySettings());
+
+//			IWorkbenchSite site = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart().getSite();
+//			if (site instanceof IViewSite) {
+//				IStatusLineManager statusLineManager = ((IViewSite)site).getActionBars().getStatusLineManager();
+//				statusLineManager.setMessage(TaskListImages.getImage(TaskListImages.TASKLIST),
+//						"Attachment uploaded to task: " + task.getDescription());
+//			}
+			
+			if (attachment.getDeleteAfterUpload()) {
+				File file = new File(attachment.getFilePath());
+				if (!file.delete()) {
+					// TODO: Handle bad clean up
+				}
+			}
+
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		return true;
 	}
 

@@ -231,6 +231,7 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 				if (taskComment != null) {
 					attachment.setCreator(taskComment.getAuthor());
 				}
+				attachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_URL, report.getRepositoryUrl()+IBugzillaConstants.ATTACHMENT_URL_SUFFIX+attachment.getId());
 			}
 			break;
 

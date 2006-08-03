@@ -11,7 +11,6 @@
 package org.eclipse.mylar.internal.tasks.ui.editors;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -53,7 +52,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
@@ -64,7 +62,7 @@ import org.eclipse.mylar.internal.tasks.ui.wizards.NewAttachmentWizard;
 import org.eclipse.mylar.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
-import org.eclipse.mylar.tasks.core.LocalAttachment;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
@@ -139,7 +137,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private static final String LABEL_OPEN_IN_BROWSER = "Open in Browser";
 
-	private static final String ATTACHMENT_URL_SUFFIX = "/attachment.cgi?id=";
+//	private static final String ATTACHMENT_URL_SUFFIX = "/attachment.cgi?id=";
 
 	protected static final String CONTEXT_MENU_ID = "#MylarRepositoryEditor";
 
@@ -448,14 +446,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		super.createFormContent(managedForm);
 		form = managedForm.getForm();
 		toolkit = managedForm.getToolkit();
-	
+
 		editorComposite = form.getBody();
 		editorComposite.setLayout(new GridLayout());
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-		
-		if (getRepositoryTaskData() == null) {			
-			toolkit.createLabel(editorComposite, "Could not download task data, possibly due to timeout or connectivity problem.\n"
-					+ "Please check connection and try again.");
+
+		if (getRepositoryTaskData() == null) {
+			toolkit.createLabel(editorComposite,
+					"Could not download task data, possibly due to timeout or connectivity problem.\n"
+							+ "Please check connection and try again.");
 			return;
 		}
 
@@ -791,13 +790,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			attachmentsTableViewer.addDoubleClickListener(new IDoubleClickListener() {
 				public void doubleClick(DoubleClickEvent event) {
-					String address = repository.getUrl() + ATTACHMENT_URL_SUFFIX;
+					//String address = repository.getUrl() + ATTACHMENT_URL_SUFFIX;
 					if (!event.getSelection().isEmpty()) {
 						StructuredSelection selection = (StructuredSelection) event.getSelection();
 						RepositoryAttachment attachment = (RepositoryAttachment) selection.getFirstElement();
-						address += attachment.getId() + "&amp;action=view";
-						;
-						TaskUiUtil.openUrl(address);
+						//address += attachment.getId() + "&amp;action=view";						
+						TaskUiUtil.openUrl(attachment.getUrl());
 					}
 				}
 			});
@@ -807,23 +805,22 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			final MenuManager popupMenu = new MenuManager();
 			popupMenu.add(new Action(LABEL_OPEN_IN_BROWSER) {
 				public void run() {
-					RepositoryAttachment att = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
+					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
 							.getSelection()).getFirstElement());
-					String url = repository.getUrl() + ATTACHMENT_URL_SUFFIX + att.getId();
-					TaskUiUtil.openUrl(url);
+					TaskUiUtil.openUrl(attachment.getUrl());
 				}
 			});
 
 			popupMenu.add(new Action(SaveRemoteFileAction.TITLE) {
 				public void run() {
-					RepositoryAttachment att = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
+					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
 							.getSelection()).getFirstElement());
 					/* Launch Browser */
 					FileDialog fileChooser = new FileDialog(attachmentsTable.getShell(), SWT.SAVE);
-					String fname = att.getAttributeValue(ATTR_FILENAME);
+					String fname = attachment.getAttributeValue(ATTR_FILENAME);
 					// Default name if none is found
 					if (fname.equals("")) {
-						String ctype = att.getContentType();
+						String ctype = attachment.getContentType();
 						if (ctype.endsWith(CTYPE_HTML)) {
 							fname = ATTACHMENT_DEFAULT_NAME + ".html";
 						} else if (ctype.startsWith(CTYPE_TEXT)) {
@@ -837,26 +834,26 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						}
 					}
 					fileChooser.setFileName(fname);
-					String file = fileChooser.open();
+					String filePath = fileChooser.open();
 
 					// Check if the dialog was canceled or an error occured
-					if (file == null) {
+					if (filePath == null) {
 						return;
-					}
+					}					
+								
+					// TODO: Use IAttachmentHandler instead
 					SaveRemoteFileAction save = new SaveRemoteFileAction();
-					save.setDestinationFilePath(file);
-					save.setInputStream(getAttachmentInputStream(repository.getUrl() + ATTACHMENT_URL_SUFFIX
-							+ att.getId()));
-					save.run();
+					save.setDestinationFilePath(filePath);
+					save.setInputStream(getAttachmentInputStream(attachment.getUrl()));
+					save.run();					
 				}
 			});
 			final Action copyToClip = new Action(CopyToClipboardAction.TITLE) {
 				public void run() {
-					RepositoryAttachment att = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
+					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
 							.getSelection()).getFirstElement());
 					CopyToClipboardAction copyToClip = new CopyToClipboardAction();
-					copyToClip.setContents(getAttachmentContents(repository.getUrl() + ATTACHMENT_URL_SUFFIX
-							+ att.getId()));
+					copyToClip.setContents(getAttachmentContents(attachment.getUrl()));
 					copyToClip.setControl(attachmentsTable.getParent());
 					copyToClip.run();
 				}
@@ -908,31 +905,32 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		newAttachment.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		newAttachment.setBackground(form.getBackground());
 
+		final RepositoryTaskData taskData = getRepositoryTaskData();
+		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+				AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
+		if (task == null) {
+			addAttachmentButton.setEnabled(false);
+		}
+
 		addAttachmentButton.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// ignore
 			}
 
 			public void widgetSelected(SelectionEvent e) {
-				NewAttachmentWizard naw = new NewAttachmentWizard();
+				final RepositoryTaskData taskData = getRepositoryTaskData();
+				ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+						AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
+				if (!(task instanceof AbstractRepositoryTask)) {
+					// Should not happen
+					return;
+				}
+
+				NewAttachmentWizard naw = new NewAttachmentWizard(repository, (AbstractRepositoryTask) task);
 				NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(attachmentsComposite.getShell(), naw);
 				naw.setDialog(dialog);
 				dialog.create();
 				dialog.open();
-				if (dialog.getReturnCode() == WizardDialog.CANCEL) {
-					getRepositoryTaskData().setNewAttachment(null);
-				} else {
-					final LocalAttachment att = naw.getAttachment();
-					att.setReport(getRepositoryTaskData());
-					getRepositoryTaskData().setNewAttachment(att);
-					setAttachContext(att.isPatch());
-
-					// TODO: Add row to table
-					// RepositoryTaskData data = getRepositoryTaskData();
-					// data.addAttachment(new DisplayableLocalAttachment(att));
-					// attachmentsTableViewer.setInput(data);
-					newAttachment.setText((new File(att.getFilePath())).getName() + " <not yet submitted>");
-				}
 			}
 		});
 	}

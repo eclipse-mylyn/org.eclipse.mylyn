@@ -12,7 +12,6 @@ package org.eclipse.mylar.internal.bugzilla.core;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
@@ -22,7 +21,6 @@ import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -40,7 +38,6 @@ import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer;
 import org.eclipse.mylar.internal.tasks.core.HtmlTag;
 import org.eclipse.mylar.internal.tasks.core.WebClientUtil;
 import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer.Token;
-import org.eclipse.mylar.tasks.core.LocalAttachment;
 import org.eclipse.mylar.tasks.core.RepositoryOperation;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
@@ -102,8 +99,6 @@ public class BugzillaReportSubmitForm {
 
 	public static final String FORM_PREFIX_BUG_220 = "Issue ";
 
-	private BugzillaAttachmentHandler attachmentHandler = new BugzillaAttachmentHandler();
-
 	/** The fields that are to be changed/maintained */
 	private Map<String, String> fields = new HashMap<String, String>();
 
@@ -128,9 +123,6 @@ public class BugzillaReportSubmitForm {
 	
 	private RepositoryTaskData taskData = null;
 	
-	/** The local attachment to attach to this report, null if none */
-	private LocalAttachment attachment = null;
-
 	private boolean isNewBugPost = false;
 
 	public BugzillaReportSubmitForm(String charEncoding) {
@@ -286,8 +278,6 @@ public class BugzillaReportSubmitForm {
 			form.add(KEY_REMOVECC, VAL_TRUE);
 		}
 
-		form.attachment = model.getNewAttachment();
-
 		return form;
 	}
 
@@ -435,33 +425,6 @@ public class BugzillaReportSubmitForm {
 				in.reset();
 				BugzillaServerFacade.parseHtmlError(in);
 			}
-
-			if (!isNewBugPost && existingBugPosted == true && attachment != null) {
-				try {
-					// upload the attachment if any
-
-					if (attachment.getDescription() == null || attachment.getDescription().equals("")) {
-						throw new BugzillaException("Attachment must have a description");
-					}
-
-					String uname = URLDecoder.decode(fields.get(KEY_BUGZILLA_LOGIN), this.charset);
-					String password = URLDecoder.decode(fields.get(KEY_BUGZILLA_PASSWORD), this.charset);
-					if (!attachmentHandler.uploadAttachment(attachment, uname, password, proxySettings)) {
-						throw new BugzillaException("Could not upload attachment.");
-					}
-					if (attachment.getDeleteAfterUpload()) {
-						File file = new File(attachment.getFilePath());
-						if (!file.delete()) {
-							// TODO: Handle bad clean up
-						}
-					}
-
-				} catch (IOException e) {
-					throw new BugzillaException(
-							"Could not upload attachment.  Communications error: " + e.getMessage(), e);
-				}
-			}
-
 		} catch (KeyManagementException e) {
 			throw new BugzillaException("Could not POST form.  Communications error: " + e.getMessage(), e);
 		} catch (NoSuchAlgorithmException e) {

@@ -43,6 +43,10 @@ public class RepositoryTaskAttribute implements Serializable {
 	public static final String ATTACHMENT_CTYPE = "task.common.attachment.ctype";
 	
 	public static final String ATTACHMENT_DATE = "task.common.attachment.date";
+	
+	public static final String ATTACHMENT_URL = "task.common.attachment.url";
+
+	public static final String ATTACHMENT_FILENAME = "filename";
 
 	public static final String USER_ASSIGNED = "task.common.user.assigned";
 

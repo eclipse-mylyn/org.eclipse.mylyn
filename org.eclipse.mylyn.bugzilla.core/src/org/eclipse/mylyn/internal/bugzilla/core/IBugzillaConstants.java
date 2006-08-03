@@ -34,6 +34,8 @@ public interface IBugzillaConstants {
 
 	public static final String CONTENT_TYPE_RDF = "&ctype=rdf";
 
+	public static final String ATTACHMENT_URL_SUFFIX = "/attachment.cgi?id=";
+
 	/** Supported bugzilla repository versions */
 	static public enum BugzillaServerVersion {
 		SERVER_218, SERVER_220, SERVER_222;

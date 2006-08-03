@@ -94,7 +94,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 			int bugId = Integer.parseInt(AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()));
 			uploadAttachment(repository.getUrl(), repository.getUserName(), repository.getPassword(), bugId, comment, description, file, contentType, isPatch, proxySettings);
 		} catch (Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, 0, "could not download", e));
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, 0, "could not upload", e));
 		}
 	}
 	

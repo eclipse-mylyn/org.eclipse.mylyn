@@ -84,6 +84,10 @@ public class RepositoryAttachment extends AttributeContainer implements Serializ
 		}
 	}
 
+ 	public String getUrl() {
+ 		return getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_URL);
+ 	}
+	
 	public String getContentType() {
 		// I've seen both "ctype" and "type" occur for this, investigate
 		if (getAttribute(RepositoryTaskAttribute.ATTACHMENT_TYPE) != null) {
