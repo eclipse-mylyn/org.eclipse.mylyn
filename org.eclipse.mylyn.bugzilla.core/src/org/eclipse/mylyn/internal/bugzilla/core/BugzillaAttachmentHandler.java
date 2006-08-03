@@ -90,14 +90,6 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "could not download", e));
 		}
 	}
-	
-//	public void downloadAttachment(TaskRepository repository, AbstractRepositoryTask task, int attachmentId, File file, Proxy proxySettings) throws CoreException {
-//		try {
-//			downloadAttachment(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, attachmentId, file, true);
-//		} catch (Exception e) {
-//			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "could not download", e));
-//		}
-//	}
 
 	public void uploadAttachment(TaskRepository repository, AbstractRepositoryTask task, String comment, String description, File file, String contentType, boolean isPatch, Proxy proxySettings) throws CoreException {
 		try {
