@@ -81,7 +81,7 @@ class ActivityListener implements ITimerThreadListener, IInteractionEventListene
 		isStalled = false;
 	}
 
-	public void startObserving() {
+	public void startMonitoring() {
 	}
 
 	public void stopTimer() {
@@ -89,7 +89,7 @@ class ActivityListener implements ITimerThreadListener, IInteractionEventListene
 		MylarMonitorPlugin.getDefault().removeInteractionListener(this);
 	}
 
-	public void stopObserving() {
+	public void stopMonitoring() {
 	}
 
 	public void setTimeout(int millis) {

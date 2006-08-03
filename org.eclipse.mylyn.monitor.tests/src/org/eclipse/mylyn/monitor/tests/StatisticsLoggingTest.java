@@ -39,7 +39,7 @@ public class StatisticsLoggingTest extends ContextTest {
 		logFile = new File("test-log.xml");
 		logFile.delete();
 		logger = new InteractionEventLogger(logFile);
-		logger.startObserving();
+		logger.startMonitoring();
 		List<IUsageCollector> collectors = new ArrayList<IUsageCollector>();
 		collectors.add(new SummaryCollector());
 		report = new ReportGenerator(logger, collectors);
@@ -55,7 +55,7 @@ public class StatisticsLoggingTest extends ContextTest {
 		logger.interactionObserved(mockSelection());
 		mockUserDelay();
 		logger.interactionObserved(mockSelection());
-		logger.stopObserving();
+		logger.stopMonitoring();
 
 		List<InteractionEventSummary> summary = report.getStatisticsFromInteractionHistory(logFile)
 				.getSingleSummaries();

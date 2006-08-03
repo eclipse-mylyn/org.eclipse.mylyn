@@ -20,6 +20,7 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylar.internal.monitor.reports.ReportGenerator;
 import org.eclipse.mylar.internal.monitor.reports.collectors.DataOverviewCollector;
+import org.eclipse.mylar.internal.monitor.usage.AbstractMonitorLog;
 import org.eclipse.mylar.internal.monitor.usage.InteractionEventLogger;
 import org.eclipse.mylar.monitor.reports.IUsageCollector;
 import org.eclipse.mylar.monitor.tests.MylarMonitorTestsPlugin;
@@ -76,8 +77,8 @@ public class DataOverviewCollectorTest extends TestCase {
 		// Initialize fake logger
 		File logFile = new File("test-log.xml");
 		logFile.delete();
-		InteractionEventLogger logger = new InteractionEventLogger(logFile);
-		logger.startObserving();
+		AbstractMonitorLog logger = new InteractionEventLogger(logFile);
+		logger.startMonitoring();
 
 		// Prepare collectors
 		List<IUsageCollector> collectors = new ArrayList<IUsageCollector>();

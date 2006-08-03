@@ -39,7 +39,7 @@ public class InteractionEventExternalizationTest extends AbstractContextTest {
 		}
 		InteractionEventLogger logger = new InteractionEventLogger(f);
 		logger.clearInteractionHistory();
-		logger.startObserving();
+		logger.startMonitoring();
 		String handle = "";
 		for (int i = 0; i < 100; i++) {
 			handle += "1";
@@ -48,7 +48,7 @@ public class InteractionEventExternalizationTest extends AbstractContextTest {
 			events.add(event);
 			logger.interactionObserved(event);
 		}
-		logger.stopObserving();
+		logger.stopMonitoring();
 
 		File infile = new File(PATH);
 		List<InteractionEvent> readEvents = logger.getHistoryFromFile(infile);

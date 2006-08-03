@@ -89,12 +89,12 @@ public class StatisticsReportingTest extends TestCase {
 	}
 
 	public void testEditRatio() throws InvocationTargetException, InterruptedException {
-		logger.stopObserving();
+		logger.stopMonitoring();
 		PackageExplorerPart part = PackageExplorerPart.openInActivePerspective();
 		assertNotNull(part.getTreeViewer());
 		part.setFocus();
 
-		logger.startObserving();
+		logger.startMonitoring();
 		final InteractionEvent first = mockExplorerSelection("A.java");
 		mockUserDelay();
 		mockUserDelay();
@@ -118,7 +118,7 @@ public class StatisticsReportingTest extends TestCase {
 		mockUserDelay();
 		mockEdit("A.java");
 
-		logger.stopObserving();
+		logger.stopMonitoring();
 		report.getStatisticsFromInteractionHistory(logger.getOutputFile());
 
 		// TODO: these are off from expected when test run alone, due to unknown
@@ -165,7 +165,7 @@ public class StatisticsReportingTest extends TestCase {
 
 		mockExplorerSelection("A.java");
 
-		logger.stopObserving();
+		logger.stopMonitoring();
 		report.getStatisticsFromInteractionHistory(logger.getOutputFile());
 
 		int normal = viewCollector.getNormalViewSelections().get(JavaUI.ID_PACKAGES);

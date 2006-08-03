@@ -93,27 +93,27 @@ public class MonitorTest extends TestCase implements IMylarMonitorLifecycleListe
 	@SuppressWarnings("deprecation")
 	public void testLogging() throws InterruptedException {
 		MylarUsageMonitorPlugin.getDefault().startMonitoring();
-		logger.stopObserving();
+		logger.stopMonitoring();
 		MylarUsageMonitorPlugin.getDefault().getMonitorLogFile().delete();
-		logger.startObserving();
+		logger.startMonitoring();
 
 		generateSelection();
 		commandMonitor.preExecute("foo.command", new ExecutionEvent(new HashMap(), "trigger", "context"));
 		File monitorFile = MylarUsageMonitorPlugin.getDefault().getMonitorLogFile();
 		assertTrue(monitorFile.exists());
-		logger.stopObserving();
+		logger.stopMonitoring();
 		List<InteractionEvent> events = logger.getHistoryFromFile(monitorFile);
 		assertTrue("" + events.size(), events.size() >= 2);
 
-		logger.stopObserving();
+		logger.stopMonitoring();
 		events = logger.getHistoryFromFile(monitorFile);
 		assertTrue(events.size() >= 0);
 		MylarUsageMonitorPlugin.getDefault().getMonitorLogFile().delete();
-		logger.startObserving();
+		logger.startMonitoring();
 
 		generatePerspectiveSwitch();
 		assertTrue(monitorFile.exists());
-		logger.stopObserving();
+		logger.stopMonitoring();
 		events = logger.getHistoryFromFile(monitorFile);
 		assertTrue(events.size() >= 1);
 	}

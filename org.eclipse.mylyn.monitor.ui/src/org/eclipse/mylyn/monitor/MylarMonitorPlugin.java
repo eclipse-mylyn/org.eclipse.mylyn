@@ -125,7 +125,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin {
 
 					activityListener = new ActivityListener(TIMEOUT_INACTIVITY_MILLIS);// INACTIVITY_TIMEOUT_MILLIS);
 					ContextCorePlugin.getContextManager().addListener(activityListener);
-					activityListener.startObserving();
+					activityListener.startMonitoring();
 				} catch (Exception e) {
 					MylarStatusHandler.fail(e, "Mylar Monitor start failed", false);
 				}
