@@ -48,7 +48,7 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 			refreshField = FilteredTree.class.getDeclaredField("refreshJob");
 			refreshField.setAccessible(true);
 			refreshJob = (Job) refreshField.get(this);
-			refreshPolicy = new AdaptiveRefreshPolicy(refreshJob, this);
+			refreshPolicy = new AdaptiveRefreshPolicy(refreshJob, super.getFilterControl());
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Could not get refresh job", false);
 		}

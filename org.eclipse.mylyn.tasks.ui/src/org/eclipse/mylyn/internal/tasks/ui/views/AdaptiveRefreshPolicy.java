@@ -14,8 +14,8 @@ import java.util.Set;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.FilteredTree;
 
 /**
  * @author Mik Kersten
@@ -26,7 +26,7 @@ public class AdaptiveRefreshPolicy {
 
 	private Set<IFilteredTreeListener> listeners = new HashSet<IFilteredTreeListener>();
 	
-	private FilteredTree filteredTree = null;
+	private Text filterText = null;
 	
 	private Job refreshJob;
 	
@@ -34,9 +34,9 @@ public class AdaptiveRefreshPolicy {
 	 * @param refreshJob
 	 * @param filteredTree	can be null
 	 */
-	public AdaptiveRefreshPolicy(Job refreshJob, FilteredTree filteredTree) {
+	public AdaptiveRefreshPolicy(Job refreshJob, Text filterText) {
 		this.refreshJob = refreshJob;
-		this.filteredTree = filteredTree;
+		this.filterText = filterText;
 		refreshJob.addJobChangeListener(REFRESH_JOB_LISTENER);
 	}
 	
@@ -60,7 +60,7 @@ public class AdaptiveRefreshPolicy {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					for (IFilteredTreeListener listener : listeners) {
-						listener.filterTextChanged(filteredTree.getFilterControl().getText());
+						listener.filterTextChanged(filterText.getText());
 					}
 				}
 			});
