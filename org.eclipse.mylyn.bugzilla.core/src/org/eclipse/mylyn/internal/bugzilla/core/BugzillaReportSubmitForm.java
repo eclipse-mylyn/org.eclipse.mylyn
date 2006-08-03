@@ -138,7 +138,7 @@ public class BugzillaReportSubmitForm {
 		if (characterEncoding != null) {
 			form = new BugzillaReportSubmitForm(characterEncoding);
 		} else {
-			form = new BugzillaReportSubmitForm(BugzillaPlugin.ENCODING_UTF_8);
+			form = new BugzillaReportSubmitForm(BugzillaCorePlugin.ENCODING_UTF_8);
 		}
 
 		form.setTaskData(model);
@@ -206,7 +206,7 @@ public class BugzillaReportSubmitForm {
 		if (characterEncoding != null) {
 			form = new BugzillaReportSubmitForm(characterEncoding);
 		} else {
-			form = new BugzillaReportSubmitForm(BugzillaPlugin.ENCODING_UTF_8);
+			form = new BugzillaReportSubmitForm(BugzillaCorePlugin.ENCODING_UTF_8);
 		}
 
 		form.setTaskData(model);
@@ -439,7 +439,7 @@ public class BugzillaReportSubmitForm {
 					out.close();
 
 			} catch (IOException e) {
-				BugzillaPlugin.log(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, IStatus.ERROR,
+				BugzillaCorePlugin.log(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.ERROR,
 						"Problem posting the bug", e));
 			}
 		}

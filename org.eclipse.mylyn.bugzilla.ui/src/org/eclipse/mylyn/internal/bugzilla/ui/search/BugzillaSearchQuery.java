@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.search.ui.ISearchResult;
@@ -87,7 +87,7 @@ public class BugzillaSearchQuery implements ISearchQuery {
 							null,
 							"Bugzilla Login Error",
 							MESSAGE_LOGIN_FAILURE);
-			BugzillaPlugin.log(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK, "", e));
+			BugzillaCorePlugin.log(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK, "", e));
 		} catch (InterruptedException e) {
 			// ignore
 		} catch (LoginException e) {
@@ -96,7 +96,7 @@ public class BugzillaSearchQuery implements ISearchQuery {
 							null,
 							"Bugzilla Login Error",
 							MESSAGE_LOGIN_FAILURE);
-			BugzillaPlugin.log(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK, "", e));
+			BugzillaCorePlugin.log(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK, "", e));
 		}
 		// } catch (LoginException e) {
 		// // we had a problem while searching that seems like a login info

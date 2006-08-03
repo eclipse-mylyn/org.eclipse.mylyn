@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.UnrecognizedReponseException;
@@ -219,7 +219,7 @@ public class BugzillaSearchEngine {
 			((MultiStatus) status).add(e.getStatus());
 
 			// write error to log
-			BugzillaPlugin.log(status);
+			BugzillaCorePlugin.log(status);
 		} catch (OperationCanceledException e) {
 			status = new Status(IStatus.CANCEL, BugzillaUiPlugin.PLUGIN_ID, IStatus.CANCEL, "", null);
 		} catch (LoginException e) {
@@ -269,7 +269,7 @@ public class BugzillaSearchEngine {
 				if (in != null)
 					in.close();
 			} catch (IOException e) {
-				BugzillaPlugin.log(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, IStatus.ERROR,
+				BugzillaCorePlugin.log(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, IStatus.ERROR,
 						"Problem closing the stream", e));
 			}
 		}

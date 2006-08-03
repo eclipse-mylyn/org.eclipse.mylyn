@@ -14,7 +14,7 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractEditQueryWizard;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -59,7 +59,7 @@ public class EditBugzillaQueryWizard extends AbstractEditQueryWizard {
 					monitor.beginTask("Executing query", 50);
 					try {
 						AbstractRepositoryConnector client = TasksUiPlugin.getRepositoryManager()
-								.getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
+								.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 
 						client.synchronize(query, null);
 					} finally {

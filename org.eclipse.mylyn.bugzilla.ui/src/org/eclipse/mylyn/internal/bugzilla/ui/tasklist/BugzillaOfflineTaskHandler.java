@@ -29,7 +29,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.AbstractReportFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttributeFactory;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
@@ -80,9 +80,9 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 	
 	public RepositoryTaskData downloadTaskData(final AbstractRepositoryTask bugzillaTask) throws CoreException {
 		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-				BugzillaPlugin.REPOSITORY_KIND, bugzillaTask.getRepositoryUrl());
+				BugzillaCorePlugin.REPOSITORY_KIND, bugzillaTask.getRepositoryUrl());
 		
-		if(repository == null) throw new CoreException(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, 0, "Associated repository could not be found. Ensure proper repository configuration of " + bugzillaTask.getRepositoryUrl() + " in "
+		if(repository == null) throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "Associated repository could not be found. Ensure proper repository configuration of " + bugzillaTask.getRepositoryUrl() + " in "
 				+ TaskRepositoriesView.NAME + ".", null ));
 		
 		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
@@ -92,14 +92,14 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 			return BugzillaServerFacade.getBug(repository.getUrl(), repository.getUserName(), repository
 					.getPassword(), proxySettings, repository.getCharacterEncoding(), bugId);
 		} catch (final LoginException e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, 0, "Report download failed. Ensure proper repository configuration of " + bugzillaTask.getRepositoryUrl() + " in "
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "Report download failed. Ensure proper repository configuration of " + bugzillaTask.getRepositoryUrl() + " in "
 					+ TaskRepositoriesView.NAME + ".", e ));
 		} catch (final UnrecognizedReponseException e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, 0, "Report download failed. Unrecognized response from " + bugzillaTask.getRepositoryUrl() + ".", e ));
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "Report download failed. Unrecognized response from " + bugzillaTask.getRepositoryUrl() + ".", e ));
 		} catch (final FileNotFoundException e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, 0, "Report download from " + bugzillaTask.getRepositoryUrl() + " failed. File not found: "+e.getMessage(), e ));
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "Report download from " + bugzillaTask.getRepositoryUrl() + " failed. File not found: "+e.getMessage(), e ));
 		} catch (final Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, 0, "Report download from " + bugzillaTask.getRepositoryUrl() + " failed, please see details.", e ));
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "Report download from " + bugzillaTask.getRepositoryUrl() + " failed, please see details.", e ));
 		}
 	}
 

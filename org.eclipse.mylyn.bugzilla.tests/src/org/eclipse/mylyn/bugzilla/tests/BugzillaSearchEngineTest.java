@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
@@ -43,7 +43,7 @@ public class BugzillaSearchEngineTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		TasksUiPlugin.getRepositoryManager().clearRepositories();
-		assertEquals(NUM_REPOSITORIES, TasksUiPlugin.getRepositoryManager().getRepositories(BugzillaPlugin.REPOSITORY_KIND).size());
+		assertEquals(NUM_REPOSITORIES, TasksUiPlugin.getRepositoryManager().getRepositories(BugzillaCorePlugin.REPOSITORY_KIND).size());
 	}
 
 	protected void tearDown() throws Exception {
@@ -60,28 +60,28 @@ public class BugzillaSearchEngineTest extends TestCase {
 //	}
 	
 	public void testSearching218() throws MalformedURLException {
-		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
+		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_218_URL, IBugzillaConstants.BugzillaServerVersion.SERVER_218.toString());
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 		assertEquals(NUM_EXPECTED_HITS, runQuery(IBugzillaConstants.TEST_BUGZILLA_218_URL, SEARCH_DESCRIPTION).size());		
 	}
 		
 	public void testSearching220() throws MalformedURLException {
-		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
+		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_220_URL, IBugzillaConstants.BugzillaServerVersion.SERVER_220.toString());
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 		assertEquals(NUM_EXPECTED_HITS, runQuery(IBugzillaConstants.TEST_BUGZILLA_220_URL, SEARCH_DESCRIPTION).size());		
 	}
 		
 	public void testSearching2201() throws MalformedURLException {
-		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
+		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_2201_URL, IBugzillaConstants.BugzillaServerVersion.SERVER_220.toString());
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);		
 		assertEquals(NUM_EXPECTED_HITS, runQuery(IBugzillaConstants.TEST_BUGZILLA_2201_URL, SEARCH_DESCRIPTION).size());		
 	}
 	
 	public void testSearching222() throws MalformedURLException {
-		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, 
+		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, 
 				IBugzillaConstants.TEST_BUGZILLA_222_URL, IBugzillaConstants.BugzillaServerVersion.SERVER_222.toString());
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);		
 		List<AbstractQueryHit> hits = runQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL, SEARCH_DESCRIPTION);
@@ -90,7 +90,7 @@ public class BugzillaSearchEngineTest extends TestCase {
 		
 	private List<AbstractQueryHit> runQuery(String repositoryURL, String SearchString) {
 		ArrayList<AbstractQueryHit> results = new ArrayList<AbstractQueryHit>();
-		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, repositoryURL);
+		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(BugzillaCorePlugin.REPOSITORY_KIND, repositoryURL);
 		assertNotNull(repository);		
 		
 		final BugzillaRepositoryQuery repositoryQuery = new BugzillaRepositoryQuery(
@@ -99,7 +99,7 @@ public class BugzillaSearchEngineTest extends TestCase {
 				QUERY_NAME, 
 				MAX_HITS, TasksUiPlugin.getTaskListManager().getTaskList());
 		
-		AbstractRepositoryConnector connector = (AbstractRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
+		AbstractRepositoryConnector connector = (AbstractRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 		results.addAll(connector.performQuery(repositoryQuery, new NullProgressMonitor(), new MultiStatus(TasksUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null)));
 		return results;	
 	}

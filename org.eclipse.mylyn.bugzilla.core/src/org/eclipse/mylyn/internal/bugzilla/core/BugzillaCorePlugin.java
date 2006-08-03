@@ -32,11 +32,11 @@ import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
 
 /**
- * The main plugin class to be used in the desktop.
+ * The main plug-in class to be used in the desktop.
  * 
  * @author Mik Kersten (added support for multiple repositories)
  */
-public class BugzillaPlugin extends Plugin {
+public class BugzillaCorePlugin extends Plugin {
 
 	private static final String ERROR_DELETING_CONFIGURATION = "Error removing corrupt repository configuration file.";
 
@@ -46,37 +46,27 @@ public class BugzillaPlugin extends Plugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylar.bugzilla";
 
-	/** Singleton instance of the plug-in */
-	private static BugzillaPlugin plugin;
+	private static BugzillaCorePlugin INSTANCE;
 
 	private static boolean cacheFileRead = false;
 	
 	private static File repositoryConfigurationFile = null;
 
-	// /** The file that contains all of the bugzilla favorites */
-	// private FavoritesFile favoritesFile;
-
 	/** Product configuration for the current server */
 	private static Map<String, RepositoryConfiguration> repositoryConfigurations = new HashMap<String, RepositoryConfiguration>();
 	
-	public BugzillaPlugin() {
+	public BugzillaCorePlugin() {
 		super();
 	}
 
-	/**
-	 * Get the singleton instance for the plugin
-	 * 
-	 * @return The instance of the plugin
-	 */
-	public static BugzillaPlugin getDefault() {
-		return plugin;
+	public static BugzillaCorePlugin getDefault() {
+		return INSTANCE;
 	}
 
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		plugin = this;
-		// readFavoritesFile();
+		INSTANCE = this;
 	}
 
 	@Override
@@ -84,7 +74,7 @@ public class BugzillaPlugin extends Plugin {
 		if (!repositoryConfigurations.isEmpty()) {
 			writeRepositoryConfigFile();
 		}
-		plugin = null;
+		INSTANCE = null;
 		super.stop(context);
 	}
 
@@ -164,12 +154,12 @@ public class BugzillaPlugin extends Plugin {
 					if (repositoryConfigurationFile.delete()) {
 						// successfully deleted
 					} else {
-						log(new Status(Status.ERROR, BugzillaPlugin.PLUGIN_ID, 0, ERROR_DELETING_CONFIGURATION, e));
+						log(new Status(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, ERROR_DELETING_CONFIGURATION, e));
 					}
 				}
 
 			} catch (Exception ex) {
-				log(new Status(Status.ERROR, BugzillaPlugin.PLUGIN_ID, 0, ERROR_DELETING_CONFIGURATION, e));
+				log(new Status(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, ERROR_DELETING_CONFIGURATION, e));
 			}
 		} finally {
 			if (in != null) {
@@ -231,14 +221,14 @@ public class BugzillaPlugin extends Plugin {
 		if (e.getMessage() == null) {
 			message = e.getClass().toString();
 		}
-		log(new Status(Status.ERROR, BugzillaPlugin.PLUGIN_ID, 0, message, e));
+		log(new Status(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, message, e));
 	}
 
 	/**
 	 * Returns the path to the file caching bug reports created while offline.
 	 */
 	protected IPath getCachedBugReportPath() {
-		IPath stateLocation = Platform.getStateLocation(BugzillaPlugin.getDefault().getBundle());
+		IPath stateLocation = Platform.getStateLocation(BugzillaCorePlugin.getDefault().getBundle());
 		IPath bugFile = stateLocation.append("bugReports");
 		return bugFile;
 	}

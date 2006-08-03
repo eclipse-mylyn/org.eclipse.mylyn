@@ -56,7 +56,7 @@ public class NewBugzillaReport extends RepositoryTaskData implements Serializabl
 	 * based on the id of the last <code>NewBugModel</code> that was created.
 	 */
 	public NewBugzillaReport(String repositoryURL, String offlineId) {
-		super(new BugzillaAttributeFactory(), BugzillaPlugin.REPOSITORY_KIND, repositoryURL, offlineId);
+		super(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND, repositoryURL, offlineId);
 	}
 
 	public String getLabel() {

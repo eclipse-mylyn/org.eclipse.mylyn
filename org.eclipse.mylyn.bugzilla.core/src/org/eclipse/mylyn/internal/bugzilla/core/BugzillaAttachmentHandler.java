@@ -85,7 +85,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 		try {
 			downloadAttachment(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, attachmentId, file, true);
 		} catch (Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, 0, "could not download", e));
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "could not download", e));
 		}
 	}
 
@@ -94,7 +94,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 			int bugId = Integer.parseInt(AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()));
 			uploadAttachment(repository.getUrl(), repository.getUserName(), repository.getPassword(), bugId, comment, description, file, contentType, isPatch, proxySettings);
 		} catch (Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, 0, "could not upload", e));
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "could not upload", e));
 		}
 	}
 	
@@ -210,7 +210,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 				if (outStream != null)
 					outStream.close();
 			} catch (IOException e) {
-				BugzillaPlugin.log(new Status(IStatus.ERROR, BugzillaPlugin.PLUGIN_ID, IStatus.ERROR,
+				BugzillaCorePlugin.log(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.ERROR,
 						"Problem closing the stream", e));
 			}
 		}

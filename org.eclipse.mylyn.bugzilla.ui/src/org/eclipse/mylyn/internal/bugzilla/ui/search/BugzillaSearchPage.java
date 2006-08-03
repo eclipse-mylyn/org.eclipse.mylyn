@@ -32,7 +32,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.AbstractBugzillaQueryPage;
@@ -222,7 +222,7 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String repositoryUrl = repositoryCombo.getItem(repositoryCombo.getSelectionIndex());
-				repository = TasksUiPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND,
+				repository = TasksUiPlugin.getRepositoryManager().getRepository(BugzillaCorePlugin.REPOSITORY_KIND,
 						repositoryUrl);
 				updateAttributesFromRepository(repositoryUrl, null, false);
 				restoring = true;
@@ -952,10 +952,10 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 			if (firstTime) {
 				if (repository == null) {
 					repository = TasksUiPlugin.getRepositoryManager().getDefaultRepository(
-							BugzillaPlugin.REPOSITORY_KIND);
+							BugzillaCorePlugin.REPOSITORY_KIND);
 				}
 				Set<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getRepositories(
-						BugzillaPlugin.REPOSITORY_KIND);
+						BugzillaCorePlugin.REPOSITORY_KIND);
 				String[] repositoryUrls = new String[repositories.size()];
 				int i = 0;
 				int indexToSelect = 0;
@@ -983,10 +983,10 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 						if (selectRepo != null && repositoryCombo.indexOf(selectRepo) > -1) {
 							repositoryCombo.setText(selectRepo);
 							repository = TasksUiPlugin.getRepositoryManager().getRepository(
-									BugzillaPlugin.REPOSITORY_KIND, repositoryCombo.getText());
+									BugzillaCorePlugin.REPOSITORY_KIND, repositoryCombo.getText());
 							if (repository == null) {
 								repository = TasksUiPlugin.getRepositoryManager().getDefaultRepository(
-										BugzillaPlugin.REPOSITORY_KIND);
+										BugzillaCorePlugin.REPOSITORY_KIND);
 							}
 						} else {
 							repositoryCombo.select(indexToSelect);

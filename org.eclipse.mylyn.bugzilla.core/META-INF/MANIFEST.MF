@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Bugzilla Connector Core Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.bugzilla.core; singleton:=true
 Bundle-Version: 0.6.1.v20060731-2330
-Bundle-Activator: org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin
+Bundle-Activator: org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylar.context.core,

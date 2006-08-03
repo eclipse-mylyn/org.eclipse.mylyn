@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.Credentials;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositorySettingsPage;
@@ -44,7 +44,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		super.setUp();
 		manager = TasksUiPlugin.getRepositoryManager();
 		manager.clearRepositories();
-		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
+		repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		Credentials credentials = MylarTestUtils.readCredentials();
 		repository.setAuthenticationCredentials(credentials.username, credentials.password);
 
@@ -109,7 +109,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		page.setUrl(IBugzillaConstants.TEST_BUGZILLA_218_URL);
 		wizard.performFinish();
 		assertEquals(1, manager.getAllRepositories().size());
-		TaskRepository repositoryTest = manager.getRepository(BugzillaPlugin.REPOSITORY_KIND,
+		TaskRepository repositoryTest = manager.getRepository(BugzillaCorePlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_218_URL);
 		assertNotNull(repositoryTest);
 		assertEquals(tempUid, repositoryTest.getUserName());
@@ -126,7 +126,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		page.setUserId("bogus");
 		wizard.performFinish();
 		assertEquals(1, manager.getAllRepositories().size());
-		TaskRepository repositoryTest = manager.getRepository(BugzillaPlugin.REPOSITORY_KIND,
+		TaskRepository repositoryTest = manager.getRepository(BugzillaCorePlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		assertNotNull(repositoryTest);
 		wizard = new EditRepositoryWizard(repositoryTest);

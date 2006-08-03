@@ -14,7 +14,7 @@ package org.eclipse.mylar.bugzilla.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
@@ -32,7 +32,7 @@ public class NewBugWizardTest extends TestCase {
 	public void testPlatformOptions() throws Exception {
 
 		NewBugzillaReport newReport = new NewBugzillaReport(IBugzillaConstants.TEST_BUGZILLA_220_URL, "1");	
-		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
+		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_220_URL);
 		BugzillaServerFacade.setupNewBugAttributes(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), newReport, null);
 		BugzillaProductPage page = new BugzillaProductPage(PlatformUI.getWorkbench(), null, repository, null);

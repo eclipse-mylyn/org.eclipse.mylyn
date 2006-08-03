@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskList;
 
@@ -35,7 +35,7 @@ public class BugzillaRepositoryQuery extends AbstractRepositoryQuery {
 	}
 
 	public String getRepositoryKind() {
-		return BugzillaPlugin.REPOSITORY_KIND;
+		return BugzillaCorePlugin.REPOSITORY_KIND;
 	}
 
 	public boolean isCustomQuery() {

@@ -13,7 +13,7 @@ package org.eclipse.mylar.bugzilla.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -53,7 +53,7 @@ public class BugzillaSearchDialogTest extends TestCase {
 	 * @throws Exception
 	 */
 	public void testSearchDialogInit() throws Exception {
-		TaskRepository repo = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
+		TaskRepository repo = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL, IBugzillaConstants.BugzillaServerVersion.SERVER_222
 						.toString());
 		manager.addRepository(repo);

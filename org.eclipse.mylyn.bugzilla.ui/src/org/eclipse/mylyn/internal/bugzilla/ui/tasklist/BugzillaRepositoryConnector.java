@@ -32,7 +32,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttachmentHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
@@ -94,7 +94,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	public String getRepositoryType() {
-		return BugzillaPlugin.REPOSITORY_KIND;
+		return BugzillaCorePlugin.REPOSITORY_KIND;
 	}
 
 	public ITask createTaskFromExistingKey(TaskRepository repository, String id) {

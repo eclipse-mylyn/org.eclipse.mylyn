@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
@@ -65,7 +65,7 @@ public class OpenBugzillaReportJob extends Job {
 			try {
 				// try to open a new editor on the bug
 				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-						BugzillaPlugin.REPOSITORY_KIND, serverUrl);
+						BugzillaCorePlugin.REPOSITORY_KIND, serverUrl);
 
 				if (repository == null) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -112,7 +112,7 @@ public class OpenBugzillaReportJob extends Job {
 								// abe.select(commentNumber - 1);
 								// }
 							} catch (PartInitException e) {
-								BugzillaPlugin.log(e);
+								BugzillaCorePlugin.log(e);
 							}
 						}
 					}

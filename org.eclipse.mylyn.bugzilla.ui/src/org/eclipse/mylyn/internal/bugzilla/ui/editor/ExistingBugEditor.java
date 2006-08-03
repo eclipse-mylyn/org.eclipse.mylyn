@@ -31,7 +31,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
@@ -354,7 +354,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		}
 
 		final BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) TasksUiPlugin
-				.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
+				.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 
 		JobChangeAdapter submitJobListener = new JobChangeAdapter() {
 
@@ -544,7 +544,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 
 		java.util.List<String> validKeywords = new ArrayList<String>();
 		try {
-			validKeywords = BugzillaPlugin.getRepositoryConfiguration(false, repository.getUrl(),
+			validKeywords = BugzillaCorePlugin.getRepositoryConfiguration(false, repository.getUrl(),
 					TasksUiPlugin.getDefault().getProxySettings(), repository.getUserName(), repository.getPassword(),
 					repository.getCharacterEncoding()).getKeywords();
 		} catch (Exception e) {

@@ -34,7 +34,7 @@ import org.eclipse.mylar.core.core.tests.support.MylarTestUtils;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttachmentHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
@@ -63,7 +63,7 @@ import org.eclipse.ui.PartInitException;
  */
 public class BugzillaRepositoryConnectorTest extends TestCase {
 
-	private static final String DEFAULT_KIND = BugzillaPlugin.REPOSITORY_KIND;
+	private static final String DEFAULT_KIND = BugzillaCorePlugin.REPOSITORY_KIND;
 
 	private BugzillaRepositoryConnector client;
 
@@ -168,7 +168,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		assertEquals(RepositoryTaskSyncState.OUTGOING, task.getSyncState());
 
 		// Submit changes
-		MockBugzillaReportSubmitForm form = new MockBugzillaReportSubmitForm(BugzillaPlugin.ENCODING_UTF_8);
+		MockBugzillaReportSubmitForm form = new MockBugzillaReportSubmitForm(BugzillaCorePlugin.ENCODING_UTF_8);
 		form.setTaskData(task.getTaskData());
 		client.submitBugReport(form, null);
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());

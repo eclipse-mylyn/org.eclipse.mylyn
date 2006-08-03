@@ -26,7 +26,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaResultEditorMatchAdapter;
@@ -104,7 +104,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 
 		IPath repConfigCacheFile = getProductConfigurationCachePath();
 		if(repConfigCacheFile != null) {
-			BugzillaPlugin.setConfigurationCacheFile(repConfigCacheFile.toFile());
+			BugzillaCorePlugin.setConfigurationCacheFile(repConfigCacheFile.toFile());
 		}
 
 		BugzillaUiPlugin.setResultEditorMatchAdapter(new BugzillaResultMatchAdapter());
@@ -123,7 +123,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	 * Returns the path to the file cacheing the product configuration.
 	 */
 	private static IPath getProductConfigurationCachePath() {
-		IPath stateLocation = Platform.getStateLocation(BugzillaPlugin.getDefault().getBundle());
+		IPath stateLocation = Platform.getStateLocation(BugzillaCorePlugin.getDefault().getBundle());
 		IPath configFile = stateLocation.append("repositoryConfigurations");
 		return configFile;
 	}
@@ -243,7 +243,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 			throw new OperationCanceledException();
 		
 		// TODO: pass monitor along since it is this call that does the work and can hang due to network IO
-		RepositoryConfiguration config = BugzillaPlugin.getRepositoryConfiguration(true, repository.getUrl(), TasksUiPlugin.getDefault().getProxySettings(), repository.getUserName(), repository.getPassword(), repository.getCharacterEncoding());
+		RepositoryConfiguration config = BugzillaCorePlugin.getRepositoryConfiguration(true, repository.getUrl(), TasksUiPlugin.getDefault().getProxySettings(), repository.getUserName(), repository.getPassword(), repository.getCharacterEncoding());
 
 		if(monitor.isCanceled())
 			throw new OperationCanceledException();

@@ -13,7 +13,7 @@ package org.eclipse.mylar.bugzilla.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfigurationFactory;
@@ -32,7 +32,7 @@ public class BugzillaConfigurationTest extends TestCase {
 	
 	public void test222RDFProductConfig() throws Exception {
 		RepositoryConfigurationFactory factory = new RepositoryConfigurationFactory();
-		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
+		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		RepositoryConfiguration config = factory.getConfiguration(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
 		assertNotNull(config);
 		assertEquals("2.22", config.getInstallVersion());
@@ -51,7 +51,7 @@ public class BugzillaConfigurationTest extends TestCase {
 		
 	public void test2201RDFProductConfig() throws Exception {
 		RepositoryConfigurationFactory factory = new RepositoryConfigurationFactory();
-		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_2201_URL);
+		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_2201_URL);
 		RepositoryConfiguration config = factory.getConfiguration(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
 		assertNotNull(config);
 		assertEquals("2.20.1", config.getInstallVersion());
@@ -70,7 +70,7 @@ public class BugzillaConfigurationTest extends TestCase {
 	
 	public void test220RDFProductConfig() throws Exception {
 		RepositoryConfigurationFactory factory = new RepositoryConfigurationFactory();
-		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_220_URL);
+		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_220_URL);
 		RepositoryConfiguration config = factory.getConfiguration(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
 		assertNotNull(config);
 		assertEquals("2.20", config.getInstallVersion());
@@ -89,7 +89,7 @@ public class BugzillaConfigurationTest extends TestCase {
 	
 	public void test218RDFProductConfig() throws Exception {
 		RepositoryConfigurationFactory factory = new RepositoryConfigurationFactory();
-		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_218_URL);
+		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_218_URL);
 		RepositoryConfiguration config = factory.getConfiguration(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
 		assertNotNull(config);
 		assertEquals("2.18.5", config.getInstallVersion());
@@ -108,7 +108,7 @@ public class BugzillaConfigurationTest extends TestCase {
 	
 	public void testEclipseRDFProductConfig() throws Exception {
 		RepositoryConfigurationFactory factory = new RepositoryConfigurationFactory();
-		TaskRepository repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
+		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
 		RepositoryConfiguration config = factory.getConfiguration(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), null);
 		assertNotNull(config);
 		assertEquals("2.20.1", config.getInstallVersion());
@@ -137,17 +137,17 @@ public class BugzillaConfigurationTest extends TestCase {
 		configuration2.addProduct("Test Product 2");
 		assertEquals(1, configuration2.getProducts().size());
 		
-		BugzillaPlugin.addRepositoryConfiguration(configuration1);
-		BugzillaPlugin.addRepositoryConfiguration(configuration2);
-		BugzillaPlugin.writeRepositoryConfigFile();
-		BugzillaPlugin.getDefault().removeConfiguration(configuration1);
-		BugzillaPlugin.getDefault().removeConfiguration(configuration2);
-		assertNull(BugzillaPlugin.getRepositoryConfiguration(configuration1.getRepositoryUrl()));
-		assertNull(BugzillaPlugin.getRepositoryConfiguration(configuration2.getRepositoryUrl()));
-		BugzillaPlugin.readRepositoryConfigurationFile();
-		assertNotNull(BugzillaPlugin.getRepositoryConfiguration(configuration1.getRepositoryUrl()));
-		assertNotNull(BugzillaPlugin.getRepositoryConfiguration(configuration2.getRepositoryUrl()));
-		RepositoryConfiguration testLoadedConfig = BugzillaPlugin.getRepositoryConfiguration(configuration1.getRepositoryUrl());
+		BugzillaCorePlugin.addRepositoryConfiguration(configuration1);
+		BugzillaCorePlugin.addRepositoryConfiguration(configuration2);
+		BugzillaCorePlugin.writeRepositoryConfigFile();
+		BugzillaCorePlugin.getDefault().removeConfiguration(configuration1);
+		BugzillaCorePlugin.getDefault().removeConfiguration(configuration2);
+		assertNull(BugzillaCorePlugin.getRepositoryConfiguration(configuration1.getRepositoryUrl()));
+		assertNull(BugzillaCorePlugin.getRepositoryConfiguration(configuration2.getRepositoryUrl()));
+		BugzillaCorePlugin.readRepositoryConfigurationFile();
+		assertNotNull(BugzillaCorePlugin.getRepositoryConfiguration(configuration1.getRepositoryUrl()));
+		assertNotNull(BugzillaCorePlugin.getRepositoryConfiguration(configuration2.getRepositoryUrl()));
+		RepositoryConfiguration testLoadedConfig = BugzillaCorePlugin.getRepositoryConfiguration(configuration1.getRepositoryUrl());
 		assertEquals(1, testLoadedConfig.getProducts().size());
 		assertEquals(configuration1.getProducts().get(0), testLoadedConfig.getProducts().get(0));
 	}

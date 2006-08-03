@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -130,7 +130,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 	}
 
 	public String getRepositoryKind() {
-		return BugzillaPlugin.REPOSITORY_KIND;
+		return BugzillaCorePlugin.REPOSITORY_KIND;
 	}
 
 	@Override

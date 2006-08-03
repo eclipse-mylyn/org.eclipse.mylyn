@@ -24,7 +24,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
@@ -204,7 +204,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		String queryUrl = "";
 		try {
 			queryUrl = repository.getUrl() + "/buglist.cgi?long_desc_type=allwordssubstr&long_desc="
-					+ URLEncoder.encode(stackTrace, BugzillaPlugin.ENCODING_UTF_8);
+					+ URLEncoder.encode(stackTrace, BugzillaCorePlugin.ENCODING_UTF_8);
 		} catch (UnsupportedEncodingException e) {
 			// This should never happen
 		}
@@ -353,7 +353,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 			};
 
 			BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) TasksUiPlugin
-					.getRepositoryManager().getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
+					.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 			bugzillaRepositoryClient.submitBugReport(bugzillaReportSubmitForm, submitJobListener);
 
 		} catch (UnsupportedEncodingException e) {

@@ -15,7 +15,7 @@ import javax.security.auth.login.LoginException;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditor;
 import org.eclipse.mylar.internal.tasks.ui.ITaskEditorFactory;
 import org.eclipse.mylar.internal.tasks.ui.editors.ExistingBugEditorInput;
@@ -50,7 +50,7 @@ public class BugzillaReportEditorFactory implements ITaskEditorFactory {
 		if (task instanceof BugzillaTask) {
 			BugzillaTask bugzillaTask = (BugzillaTask) task;
 			final TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-					BugzillaPlugin.REPOSITORY_KIND, bugzillaTask.getRepositoryUrl());
+					BugzillaCorePlugin.REPOSITORY_KIND, bugzillaTask.getRepositoryUrl());
 			try {
 				BugzillaTaskEditorInput input = new BugzillaTaskEditorInput(repository, bugzillaTask, true);
 				//input.setOfflineBug(bugzillaTask.getTaskData());

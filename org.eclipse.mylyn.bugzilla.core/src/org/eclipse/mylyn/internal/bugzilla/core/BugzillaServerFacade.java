@@ -85,7 +85,7 @@ public class BugzillaServerFacade {
 			LoginException, GeneralSecurityException, BugzillaException {
 
 		RepositoryTaskData bugReport = new RepositoryTaskData(new BugzillaAttributeFactory(),
-				BugzillaPlugin.REPOSITORY_KIND, repositoryUrl, ""+id);
+				BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl, ""+id);
 		setupExistingBugAttributes(repositoryUrl, bugReport);
 
 		RepositoryReportFactory reportFactory = new RepositoryReportFactory();
@@ -100,8 +100,8 @@ public class BugzillaServerFacade {
 			throws UnsupportedEncodingException {
 		if (userName != null && password != null) {
 			// if (repository.hasCredentials()) {
-			url += "&" + POST_ARGS_LOGIN + URLEncoder.encode(userName, BugzillaPlugin.ENCODING_UTF_8)
-					+ POST_ARGS_PASSWORD + URLEncoder.encode(password, BugzillaPlugin.ENCODING_UTF_8);
+			url += "&" + POST_ARGS_LOGIN + URLEncoder.encode(userName, BugzillaCorePlugin.ENCODING_UTF_8)
+					+ POST_ARGS_PASSWORD + URLEncoder.encode(password, BugzillaCorePlugin.ENCODING_UTF_8);
 		}
 		return url;
 	}
@@ -121,7 +121,7 @@ public class BugzillaServerFacade {
 	public static List<String> getProductList(String repositoryUrl, Proxy proxySettings, String userName,
 			String password, String encoding) throws IOException, LoginException, Exception {
 
-		return BugzillaPlugin.getRepositoryConfiguration(true, repositoryUrl, proxySettings, userName, password,
+		return BugzillaCorePlugin.getRepositoryConfiguration(true, repositoryUrl, proxySettings, userName, password,
 				encoding).getProducts();
 
 		// BugzillaQueryPageParser parser = new
@@ -139,8 +139,8 @@ public class BugzillaServerFacade {
 			LoginException, BugzillaException {
 
 		String url = repositoryUrl + "/index.cgi?" + POST_ARGS_LOGIN
-				+ URLEncoder.encode(userid, BugzillaPlugin.ENCODING_UTF_8) + POST_ARGS_PASSWORD
-				+ URLEncoder.encode(password, BugzillaPlugin.ENCODING_UTF_8);
+				+ URLEncoder.encode(userid, BugzillaCorePlugin.ENCODING_UTF_8) + POST_ARGS_PASSWORD
+				+ URLEncoder.encode(password, BugzillaCorePlugin.ENCODING_UTF_8);
 
 		URL serverURL = new URL(url);
 		URLConnection connection = serverURL.openConnection();
@@ -224,7 +224,7 @@ public class BugzillaServerFacade {
 
 		newReport.removeAllAttributes();
 
-		RepositoryConfiguration repositoryConfiguration = BugzillaPlugin.getRepositoryConfiguration(false,
+		RepositoryConfiguration repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(false,
 				repositoryUrl, proxySettings, userName, password, characterEncoding);
 
 		RepositoryTaskAttribute a = BugzillaServerFacade.makeNewAttribute(BugzillaReportElement.PRODUCT);
@@ -365,7 +365,7 @@ public class BugzillaServerFacade {
 		for (RepositoryTaskAttribute attribute : existingReport.getAttributes()) {
 			BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getID().trim().toUpperCase());
 			attribute.clearOptions();
-			List<String> optionValues = BugzillaPlugin.getRepositoryConfiguration(false, repositoryUrl, proxySettings,
+			List<String> optionValues = BugzillaCorePlugin.getRepositoryConfiguration(false, repositoryUrl, proxySettings,
 					userName, password, characterEncoding).getOptionValues(element, product);
 			if (element != BugzillaReportElement.OP_SYS && element != BugzillaReportElement.BUG_SEVERITY
 					&& element != BugzillaReportElement.PRIORITY && element != BugzillaReportElement.BUG_STATUS) {
