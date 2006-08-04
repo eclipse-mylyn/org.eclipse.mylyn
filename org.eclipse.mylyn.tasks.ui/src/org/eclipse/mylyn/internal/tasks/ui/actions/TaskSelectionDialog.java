@@ -1,0 +1,259 @@
+/*******************************************************************************
+ * Copyright (c) 2004 - 2006 Mylar committers and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
+
+package org.eclipse.mylar.internal.tasks.ui.actions;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
+
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
+import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.ITaskListElement;
+import org.eclipse.mylar.tasks.core.TaskList;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.dialogs.SelectionStatusDialog;
+
+/**
+ * @author wmitsuda
+ */
+public class TaskSelectionDialog extends SelectionStatusDialog {
+
+	/**
+	 * Implements a {@link ViewFilter} based on content typed in the filter
+	 * field
+	 * 
+	 * @author wmitsuda
+	 */
+	private static class TaskFilter extends ViewerFilter {
+
+		private Pattern pattern;
+
+		public void setFilterText(String filterText) {
+			if (filterText.trim().equals("")) {
+				pattern = null;
+			} else {
+				filterText = filterText.replace("\\", "\\\\");
+				filterText = filterText.replace(".", "\\.");
+				filterText = filterText.replace("*", ".*");
+				filterText = filterText.replace("?", ".?");
+				pattern = Pattern.compile(filterText, Pattern.CASE_INSENSITIVE);
+			}
+		}
+
+		@Override
+		public boolean select(Viewer viewer, Object parentElement, Object element) {
+			if (pattern == null) {
+				return TasksUiPlugin.getTaskListManager().getTaskActivationHistory().getPreviousTasks().contains(
+						element);
+			}
+			if (element instanceof ITask) {
+				ITask task = (ITask) element;
+				String description = task.getDescription();
+				return pattern.matcher(description).find();
+			} else if (element instanceof AbstractQueryHit) {
+				AbstractQueryHit hit = (AbstractQueryHit) element;
+				String description = hit.getDescription();
+				return pattern.matcher(description).find();
+			}
+			return false;
+		}
+
+	}
+
+	private TableViewer viewer;
+
+	private Button openInBrowserCheck;
+
+	private boolean openInBrowser;
+
+	public boolean getOpenInBrowser() {
+		return openInBrowser;
+	}
+
+	public void setOpenInBrowser(boolean openInBrowser) {
+		this.openInBrowser = openInBrowser;
+	}
+
+	public TaskSelectionDialog(Shell parent) {
+		super(parent);
+		setShellStyle(getShellStyle() | SWT.RESIZE);
+	}
+
+	private boolean showOpenInBrowserOption;
+
+	public void setShowOpenInBrowserOption(boolean showOpenInBrowserOption) {
+		this.showOpenInBrowserOption = showOpenInBrowserOption;
+	}
+
+	public boolean getShowOpenInBrowserOption() {
+		return showOpenInBrowserOption;
+	}
+
+	@Override
+	protected Control createDialogArea(Composite parent) {
+		Composite area = (Composite) super.createDialogArea(parent);
+
+		Label message = new Label(area, SWT.NONE);
+		message.setText("&Select a task to open (? = any character, * = any String):");
+		final Text filterText = new Text(area, SWT.SINGLE | SWT.BORDER);
+		filterText.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
+
+		Label matches = new Label(area, SWT.NONE);
+		matches.setText("&Matching tasks:");
+		viewer = new TableViewer(area);
+		Control control = viewer.getControl();
+		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+		control.setLayoutData(gd);
+		gd.widthHint = 400;
+		gd.heightHint = 200;
+
+		if (showOpenInBrowserOption) {
+			openInBrowserCheck = new Button(area, SWT.CHECK);
+			openInBrowserCheck.setText("Open in &Browser?");
+			openInBrowserCheck.setSelection(openInBrowser);
+		}
+
+		final TaskElementLabelProvider labelProvider = new TaskElementLabelProvider();
+		viewer.setLabelProvider(labelProvider);
+		viewer.setContentProvider(new ArrayContentProvider());
+
+		// Compute all existing tasks or query hits (if corresponding task does
+		// not exist yet...)
+		Collection<ITaskListElement> allTasks = new HashSet<ITaskListElement>();
+		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		allTasks.addAll(taskList.getAllTasks());
+		for (AbstractRepositoryQuery query : taskList.getQueries()) {
+			for (AbstractQueryHit hit : query.getHits()) {
+				ITask task = hit.getCorrespondingTask();
+				if (task == null) {
+					allTasks.add(hit);
+				}
+			}
+		}
+
+		// Compute the task navigation history (in recent-to-older order)
+		final List<ITask> taskHistory = new ArrayList<ITask>(TasksUiPlugin.getTaskListManager()
+				.getTaskActivationHistory().getPreviousTasks());
+		Collections.reverse(taskHistory);
+
+		// Compute the task set who will be presented on dialog; the trick to
+		// make the task history appear first on the list is to add them before
+		// all other tasks; being a LinkedHashSet, it will not be duplicated
+		// (this is VERY IMPORTANT)
+		Set<ITaskListElement> taskSet = new LinkedHashSet<ITaskListElement>(taskHistory);
+		taskSet.addAll(allTasks);
+		viewer.setInput(taskSet);
+
+		final TaskSelectionDialog.TaskFilter filter = new TaskSelectionDialog.TaskFilter();
+		viewer.addFilter(filter);
+		viewer.setComparator(new ViewerComparator() {
+
+			private ITask getCorrespondingTask(Object o) {
+				if (o instanceof ITask) {
+					return (ITask) o;
+				}
+				if (o instanceof AbstractQueryHit) {
+					AbstractQueryHit hit = (AbstractQueryHit) o;
+					return hit.getCorrespondingTask();
+				}
+				return null;
+			}
+
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				ITask t1 = getCorrespondingTask(e1);
+				ITask t2 = getCorrespondingTask(e2);
+				boolean isInHistory1 = taskHistory.contains(t1);
+				boolean isInHistory2 = taskHistory.contains(t2);
+
+				// Being on task history takes precedence...
+				if (isInHistory1 && !isInHistory2) {
+					return -1;
+				}
+				if (!isInHistory1 && isInHistory2) {
+					return 1;
+				}
+
+				// Both are in task history; who is more recent?
+				if (isInHistory1 && isInHistory2) {
+					return taskHistory.indexOf(t1) - taskHistory.indexOf(t2);
+				}
+
+				// Both are not in task history; sort by description...
+				return labelProvider.getText(e1).compareTo(labelProvider.getText(e2));
+			}
+
+		});
+
+		filterText.addKeyListener(new KeyAdapter() {
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.keyCode == SWT.ARROW_DOWN) {
+					viewer.getControl().setFocus();
+				}
+			}
+
+		});
+		filterText.addModifyListener(new ModifyListener() {
+
+			public void modifyText(ModifyEvent e) {
+				filter.setFilterText(filterText.getText());
+				viewer.refresh(false);
+				Object first = viewer.getElementAt(0);
+				if (first != null) {
+					viewer.setSelection(new StructuredSelection(first));
+				}
+			}
+
+		});
+
+		return area;
+	}
+
+	@Override
+	protected void computeResult() {
+		setResult(((IStructuredSelection) viewer.getSelection()).toList());
+	}
+
+	@Override
+	public boolean close() {
+		if (openInBrowserCheck != null) {
+			openInBrowser = openInBrowserCheck.getSelection();
+		}
+		return super.close();
+	}
+
+}

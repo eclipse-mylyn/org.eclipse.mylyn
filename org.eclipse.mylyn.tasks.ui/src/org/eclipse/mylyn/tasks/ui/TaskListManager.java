@@ -581,11 +581,10 @@ public class TaskListManager implements IPropertyChangeListener {
 		activityListeners.remove(listener);
 	}
 
+
 	public void activateTask(ITask task) {
 		if (!TasksUiPlugin.getDefault().isMultipleActiveTasksMode()) {
-			for (ITask activeTask : new ArrayList<ITask>(taskList.getActiveTasks())) {
-				deactivateTask(activeTask);			
-			}
+			deactivateAllTasks();
 		}
 
 		try {
@@ -599,6 +598,16 @@ public class TaskListManager implements IPropertyChangeListener {
 			}
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "could not activate task", false);
+		}
+	}
+
+	
+	public void deactivateAllTasks() {
+		// Make a copy to avoid modification on list being traversed; can result
+		// in a ConcurrentModificationException
+		List<ITask> activeTasks = new ArrayList<ITask>(taskList.getActiveTasks());
+		for (ITask task : activeTasks) {
+			deactivateTask(task);
 		}
 	}
 

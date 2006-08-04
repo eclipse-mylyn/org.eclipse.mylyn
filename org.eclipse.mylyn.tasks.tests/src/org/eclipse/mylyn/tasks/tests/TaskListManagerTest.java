@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -577,6 +578,21 @@ public class TaskListManagerTest extends TestCase {
 		assertNotNull(tasksReturned);
 		assertEquals(1, tasksReturned.size());
 		assertTrue(tasksReturned.contains(task1));
+	}
+
+	public void testAllTasksDeactivation() {
+		Task task1 = new Task("task1", "description1", true);
+		Task task2 = new Task("task2", "description2", true);
+		TaskList taskList = manager.getTaskList();
+		taskList.addTask(task1);
+		taskList.addTask(task2);
+		assertTrue(taskList.getActiveTasks().isEmpty());
+
+		manager.activateTask(task2);
+		assertEquals(Collections.singletonList(task2), taskList.getActiveTasks());
+
+		manager.deactivateAllTasks();
+		assertTrue(taskList.getActiveTasks().isEmpty());
 	}
 
 }

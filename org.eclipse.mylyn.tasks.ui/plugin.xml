@@ -448,6 +448,68 @@
       <status class="org.eclipse.mylar.internal.tasks.ui.RepositoryAwareStatusHandler"/>
    </extension>
    
+      <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="org.eclipse.mylar.tasks.navigation"
+            label="Task Navigation"
+            visible="true">
+         <action
+               class="org.eclipse.mylar.internal.tasks.ui.actions.OpenTaskAction"
+               definitionId="org.eclipse.mylar.tasks.command.openTask"
+               id="org.eclipse.mylar.tasks.ui.openTask"
+               label="Open Tas&amp;k..."
+               menubarPath="navigate/open.ext"
+               style="push"/>
+         <action
+               class="org.eclipse.mylar.internal.tasks.ui.actions.ActivateTaskAction"
+               definitionId="org.eclipse.mylar.tasks.command.activateTask"
+               id="org.eclipse.mylar.tasks.ui.switchTask"
+               label="&amp;Activate Task..."
+               menubarPath="navigate/open.ext"
+               style="push"/>
+         <action
+               class="org.eclipse.mylar.internal.tasks.ui.actions.DeactivateAllTasksAction"
+               definitionId="org.eclipse.mylar.tasks.command.deactivateAllTasks"
+               id="org.eclipse.mylar.tasks.ui.deactivateAllTasks"
+               label="&amp;Deactivate All Tasks"
+               menubarPath="navigate/open.ext"
+               style="push"/>
+      </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            categoryId="org.eclipse.ui.category.navigate"
+            id="org.eclipse.mylar.tasks.command.openTask"
+            name="Open Task"/>
+      <command
+            categoryId="org.eclipse.ui.category.navigate"
+            id="org.eclipse.mylar.tasks.command.activateTask"
+            name="Activate Task"/>
+      <command
+            categoryId="org.eclipse.ui.category.navigate"
+            id="org.eclipse.mylar.tasks.command.deactivateAllTasks"
+            name="Deactivate All Tasks"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.eclipse.mylar.tasks.command.openTask"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+F11"/>
+      <key
+            commandId="org.eclipse.mylar.tasks.command.activateTask"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+F12"/>
+      <key
+            commandId="org.eclipse.mylar.tasks.command.deactivateAllTasks"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+F9"/>
+   </extension>
+  
+</plugin>
+
    <!--
    <extension
          point="org.eclipse.mylar.tasklist.editors">
@@ -462,10 +524,6 @@
              id="org.eclipse.mylar.tasklist.hyperlinkLister.task"
              type="task"/>
     </extension>-->
-
-  
-</plugin>
-
 
 <!--	
      	<action  
