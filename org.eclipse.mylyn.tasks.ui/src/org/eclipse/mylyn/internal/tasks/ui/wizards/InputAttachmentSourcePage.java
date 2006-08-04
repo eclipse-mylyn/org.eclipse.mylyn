@@ -110,6 +110,8 @@ public class InputAttachmentSourcePage extends WizardPage {
 
 	private String clipboardContents;
 
+	private boolean initUseClipboard = false;
+
 	class ActivationListener extends ShellAdapter {
 		public void shellActivated(ShellEvent e) {
 			// allow error messages if the selected input actually has something
@@ -216,6 +218,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 		useClipboardButton = new Button(composite, SWT.RADIO);
 		useClipboardButton.setText("Clipboard");
 		useClipboardButton.setLayoutData(gd);
+		useClipboardButton.setSelection(initUseClipboard);
 
 		// 2nd row
 		useFileButton = new Button(composite, SWT.RADIO);
@@ -225,6 +228,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.widthHint = SIZING_TEXT_FIELD_WIDTH;
 		fileNameField.setLayoutData(gd);
+		fileNameField.setText(wizard.getAttachment().getFilePath());
 
 		fileBrowseButton = new Button(composite, SWT.PUSH);
 		fileBrowseButton.setText("Browse...");
@@ -336,15 +340,14 @@ public class InputAttachmentSourcePage extends WizardPage {
 								treeViewer.expandToLevel(res, 1);
 							}
 						} else if (res instanceof IFile) {
-							// TODO - support double click file
-							// wizard.showPage(getNextPage());
+							wizard.showPage(getNextPage());
 						}
 					}
 				}
 			}
 		});
 
-		useFileButton.setSelection(true);
+		useFileButton.setSelection(!initUseClipboard);
 		setEnableWorkspaceAttachment(false);
 	}
 
@@ -480,6 +483,12 @@ public class InputAttachmentSourcePage extends WizardPage {
 	}
 
 	protected int getInputMethod() {
+		if (useClipboardButton == null) {
+			if (initUseClipboard) {
+				return CLIPBOARD;
+			}
+			return FILE;
+		}
 		if (useClipboardButton.getSelection()) {
 			return CLIPBOARD;
 		}
@@ -493,7 +502,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 		if (fileNameField != null) {
 			return fileNameField.getText();
 		}
-		return ""; //$NON-NLS-1$
+		return wizard.getAttachment().getFilePath();
 	}
 
 	public String getAbsoluteAttachmentPath() {
@@ -576,5 +585,16 @@ public class InputAttachmentSourcePage extends WizardPage {
 
 	public String getClipboardContents() {
 		return clipboardContents;
+	}
+
+	public void setClipboardContents(String attachContents) {
+		clipboardContents = attachContents;
+	}
+
+	public void setUseClipboard(boolean b) {
+		if (useClipboardButton != null) {
+			useClipboardButton.setSelection(b);
+		}
+		initUseClipboard = b;
 	}
 }

@@ -184,6 +184,8 @@ public class NewAttachmentPage extends WizardPage {
 			}
 		});
 
+		filePath.setText(attachment.getFilePath());
+
 		/* Listener for isPatch */
 		isPatchButton.addSelectionListener(new SelectionListener() {
 			private int lastSelected;

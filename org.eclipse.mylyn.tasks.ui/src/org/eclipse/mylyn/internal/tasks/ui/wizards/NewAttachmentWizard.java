@@ -58,6 +58,8 @@ public class NewAttachmentWizard extends Wizard {
 		setWindowTitle("Add Attachment");
 		setDefaultPageImageDescriptor(TaskListImages.BANNER_REPOSITORY);
 		attachment = new LocalAttachment();
+		attachment.setFilePath("");
+		inputPage = new InputAttachmentSourcePage(this);
 
 		IDialogSettings workbenchSettings = TasksUiPlugin.getDefault().getDialogSettings();
 		IDialogSettings section = workbenchSettings.getSection(DIALOG_SETTINGS_KEY);
@@ -67,6 +69,18 @@ public class NewAttachmentWizard extends Wizard {
 			hasNewDialogSettings = false;
 			setDialogSettings(section);
 		}
+	}
+
+	public NewAttachmentWizard(TaskRepository repository, AbstractRepositoryTask task, File attachFile) {
+		this(repository, task);
+		attachment.setFilePath(attachFile.getAbsolutePath());
+	}
+
+	public NewAttachmentWizard(TaskRepository repository, AbstractRepositoryTask task, String attachContents) {
+		this(repository, task);
+		inputPage.setUseClipboard(true);
+		inputPage.setClipboardContents(attachContents);
+		attachment.setFilePath(InputAttachmentSourcePage.CLIPBOARD_LABEL);
 	}
 
 	@Override
@@ -116,13 +130,15 @@ public class NewAttachmentWizard extends Wizard {
 					new File(attachment.getFilePath()), attachment.getContentType(), attachment.isPatch(),
 					TasksUiPlugin.getDefault().getProxySettings());
 
-//			IWorkbenchSite site = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart().getSite();
-//			if (site instanceof IViewSite) {
-//				IStatusLineManager statusLineManager = ((IViewSite)site).getActionBars().getStatusLineManager();
-//				statusLineManager.setMessage(TaskListImages.getImage(TaskListImages.TASKLIST),
-//						"Attachment uploaded to task: " + task.getDescription());
-//			}
-			
+			// IWorkbenchSite site =
+			// PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart().getSite();
+			// if (site instanceof IViewSite) {
+			// IStatusLineManager statusLineManager =
+			// ((IViewSite)site).getActionBars().getStatusLineManager();
+			// statusLineManager.setMessage(TaskListImages.getImage(TaskListImages.TASKLIST),
+			// "Attachment uploaded to task: " + task.getDescription());
+			// }
+
 			if (attachment.getDeleteAfterUpload()) {
 				File file = new File(attachment.getFilePath());
 				if (!file.delete()) {
@@ -146,7 +162,9 @@ public class NewAttachmentWizard extends Wizard {
 	@Override
 	public void addPages() {
 		super.addPages();
-		addPage((inputPage = new InputAttachmentSourcePage(this)));
+		if ("".equals(attachment.getFilePath())) {
+			addPage(inputPage);
+		}
 		addPage((attachPage = new NewAttachmentPage(attachment)));
 	}
 
@@ -173,5 +191,9 @@ public class NewAttachmentWizard extends Wizard {
 
 	public String getClipboardContents() {
 		return inputPage.getClipboardContents();
+	}
+
+	public boolean needsPreviousAndNextButtons() {
+		return true;
 	}
 }

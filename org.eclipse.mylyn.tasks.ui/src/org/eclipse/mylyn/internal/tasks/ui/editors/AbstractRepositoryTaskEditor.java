@@ -11,6 +11,7 @@
 package org.eclipse.mylar.internal.tasks.ui.editors;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -73,6 +74,13 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.DropTargetListener;
+import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -90,6 +98,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
@@ -137,7 +146,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private static final String LABEL_OPEN_IN_BROWSER = "Open in Browser";
 
-//	private static final String ATTACHMENT_URL_SUFFIX = "/attachment.cgi?id=";
+	// private static final String ATTACHMENT_URL_SUFFIX =
+	// "/attachment.cgi?id=";
 
 	protected static final String CONTEXT_MENU_ID = "#MylarRepositoryEditor";
 
@@ -469,6 +479,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		form.reflow(true);
 		getSite().getPage().addSelectionListener(selectionListener);
 		getSite().setSelectionProvider(selectionProvider);
+		if (this.addCommentsTextBox != null) {
+			registerDropListener(this.addCommentsTextBox);
+		}
 	}
 
 	// @Override
@@ -719,17 +732,18 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		final Composite attachmentsComposite = toolkit.createComposite(section);
-		attachmentsComposite.setLayout(new GridLayout(2, false));
+		attachmentsComposite.setLayout(new GridLayout(1, false));
 		attachmentsComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		section.setClient(attachmentsComposite);
 
 		if (getRepositoryTaskData().getAttachments().size() > 0) {
 
 			attachmentsTable = toolkit.createTable(attachmentsComposite, SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION);
+			registerDropListener(attachmentsTable);
 			attachmentsTable.setLinesVisible(true);
 			attachmentsTable.setHeaderVisible(true);
 			attachmentsTable.setLayout(new GridLayout());
-			GridData tableGridData = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
+			GridData tableGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
 			// tableGridData.heightHint = 100;
 			tableGridData.widthHint = DESCRIPTION_WIDTH;
 			attachmentsTable.setLayoutData(tableGridData);
@@ -790,11 +804,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			attachmentsTableViewer.addDoubleClickListener(new IDoubleClickListener() {
 				public void doubleClick(DoubleClickEvent event) {
-					//String address = repository.getUrl() + ATTACHMENT_URL_SUFFIX;
+					// String address = repository.getUrl() +
+					// ATTACHMENT_URL_SUFFIX;
 					if (!event.getSelection().isEmpty()) {
 						StructuredSelection selection = (StructuredSelection) event.getSelection();
 						RepositoryAttachment attachment = (RepositoryAttachment) selection.getFirstElement();
-						//address += attachment.getId() + "&amp;action=view";						
+						// address += attachment.getId() + "&amp;action=view";
 						TaskUiUtil.openUrl(attachment.getUrl());
 					}
 				}
@@ -839,13 +854,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					// Check if the dialog was canceled or an error occured
 					if (filePath == null) {
 						return;
-					}					
-								
+					}
+
 					// TODO: Use IAttachmentHandler instead
 					SaveRemoteFileAction save = new SaveRemoteFileAction();
 					save.setDestinationFilePath(filePath);
 					save.setInputStream(getAttachmentInputStream(attachment.getUrl()));
-					save.run();					
+					save.run();
 				}
 			});
 			final Action copyToClip = new Action(CopyToClipboardAction.TITLE) {
@@ -894,16 +909,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			});
 
 		} else {
-			toolkit.createLabel(attachmentsComposite, "No attachments");
-			toolkit.createLabel(attachmentsComposite, "");
+			Label label = toolkit.createLabel(attachmentsComposite, "No attachments");
+			registerDropListener(label);
 		}
 
 		/* Launch a NewAttachemntWizard */
 		Button addAttachmentButton = toolkit.createButton(attachmentsComposite, "Add...", SWT.PUSH);
-		final Text newAttachment = new Text(attachmentsComposite, SWT.LEFT);
-		newAttachment.setEditable(false);
-		newAttachment.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		newAttachment.setBackground(form.getBackground());
 
 		final RepositoryTaskData taskData = getRepositoryTaskData();
 		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
@@ -931,6 +942,113 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				naw.setDialog(dialog);
 				dialog.create();
 				dialog.open();
+			}
+		});
+
+		registerDropListener(section);
+		registerDropListener(attachmentsComposite);
+		registerDropListener(addAttachmentButton);
+	}
+
+	private void registerDropListener(final Control control) {
+		DropTarget target = new DropTarget(control, DND.DROP_COPY | DND.DROP_DEFAULT);
+		final TextTransfer textTransfer = TextTransfer.getInstance();
+		final FileTransfer fileTransfer = FileTransfer.getInstance();
+		Transfer[] types = new Transfer[] { textTransfer, fileTransfer };
+		target.setTransfer(types);
+
+		// Adapted from eclipse.org DND Article by Veronika Irvine, IBM OTI Labs
+		// http://www.eclipse.org/articles/Article-SWT-DND/DND-in-SWT.html#_dt10D
+		target.addDropListener(new DropTargetListener() {
+			public void dragEnter(DropTargetEvent event) {
+				if (event.detail == DND.DROP_DEFAULT) {
+					if ((event.operations & DND.DROP_COPY) != 0) {
+						event.detail = DND.DROP_COPY;
+					} else {
+						event.detail = DND.DROP_NONE;
+					}
+				}
+				// will accept text but prefer to have files dropped
+				for (int i = 0; i < event.dataTypes.length; i++) {
+					if (fileTransfer.isSupportedType(event.dataTypes[i])) {
+						event.currentDataType = event.dataTypes[i];
+						// files should only be copied
+						if (event.detail != DND.DROP_COPY) {
+							event.detail = DND.DROP_NONE;
+						}
+						break;
+					}
+				}
+			}
+
+			public void dragOver(DropTargetEvent event) {
+				event.feedback = DND.FEEDBACK_SELECT | DND.FEEDBACK_SCROLL;
+				// if (textTransfer.isSupportedType(event.currentDataType)) {
+				// // NOTE: on unsupported platforms this will return null
+				// Object o = textTransfer.nativeToJava(event.currentDataType);
+				// String t = (String)o;
+				// if (t != null) System.out.println(t);
+				// }
+			}
+
+			public void dragOperationChanged(DropTargetEvent event) {
+				if ((event.detail == DND.DROP_DEFAULT) || (event.operations & DND.DROP_COPY) != 0) {
+
+					event.detail = DND.DROP_COPY;
+				} else {
+					event.detail = DND.DROP_NONE;
+				}
+
+				// allow text to be moved but files should only be copied
+				if (fileTransfer.isSupportedType(event.currentDataType)) {
+					if (event.detail != DND.DROP_COPY) {
+						event.detail = DND.DROP_NONE;
+					}
+				}
+			}
+
+			public void dragLeave(DropTargetEvent event) {
+			}
+
+			public void dropAccept(DropTargetEvent event) {
+			}
+
+			public void drop(DropTargetEvent event) {
+				if (textTransfer.isSupportedType(event.currentDataType)) {
+					String text = (String) event.data;
+					final RepositoryTaskData taskData = getRepositoryTaskData();
+					ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+							AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
+					if (!(task instanceof AbstractRepositoryTask)) {
+						// Should not happen
+						return;
+					}
+
+					NewAttachmentWizard naw = new NewAttachmentWizard(repository, (AbstractRepositoryTask) task, text);
+					NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(control.getShell(), naw);
+					naw.setDialog(dialog);
+					dialog.create();
+					dialog.open();
+				}
+				if (fileTransfer.isSupportedType(event.currentDataType)) {
+					String[] files = (String[]) event.data;
+					if (files.length > 0) {
+						final RepositoryTaskData taskData = getRepositoryTaskData();
+						ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+								AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
+						if (!(task instanceof AbstractRepositoryTask)) {
+							// Should not happen
+							return;
+						}
+
+						NewAttachmentWizard naw = new NewAttachmentWizard(repository, (AbstractRepositoryTask) task,
+								new File(files[0]));
+						NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(control.getShell(), naw);
+						naw.setDialog(dialog);
+						dialog.create();
+						dialog.open();
+					}
+				}
 			}
 		});
 	}
