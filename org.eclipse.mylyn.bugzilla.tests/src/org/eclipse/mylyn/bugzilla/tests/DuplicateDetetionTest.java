@@ -98,4 +98,60 @@ public class DuplicateDetetionTest extends TestCase {
 		editor.markDirty(false);
 		editor.close();
 	}
+	
+	public void testStackTraceWithExtraSpace() throws Exception {
+
+		String stackTrace = "java.lang.IllegalStateException: zip file closed\n" +
+		"     at java.util.zip.ZipFile.ensureOpen (ZipFile.java:518)\n" +
+		"     at java.util.zip.ZipFile.getEntry (ZipFile.java:251)\n" +
+		"     at java.util.jar.JarFile.getEntry(JarFile.java:200)\n" +
+		"     at sun.net.www.protocol.jar.URLJarFile.getEntry(URLJarFile.java:90)\n" +
+		"     at sun.net.www.protocol.jar.JarURLConnection.connect(JarURLConnection.java:112)\n" +
+		"     at sun.net.www.protocol.jar.JarURLConnection.getInputStream(JarURLConnection.java:124)\n" +
+		"     at org.eclipse.jdt.internal.core.JavaElement.getURLContents(JavaElement.java:734)";
+
+		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
+				.getOfflineReportsFile().getNextOfflineBugId());
+		model.setNewComment(stackTrace);
+		model.setHasLocalChanges(true);
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		NewBugEditorInput input = new NewBugEditorInput(repository, model);
+		TaskUiUtil.openEditor(input, BugzillaUiPlugin.NEW_BUG_EDITOR_ID, page);
+
+		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
+		NewBugEditor editor = (NewBugEditor) taskEditor.getActivePageInstance();
+		assertEquals(stackTrace, editor.getStackTraceFromDescription().trim());
+
+		editor.markDirty(false);
+		editor.close();
+	}
+	
+	public void testStackTraceMisaligned() throws Exception {
+
+		String stackTrace = "java.lang.IllegalStateException: zip file closed\n" +
+		"     at java.util.zip.ZipFile.ensureOpen(ZipFile.java:518)\n" +
+		"at java.util.zip.ZipFile.getEntry(ZipFile.java:251)\n" +
+		"   at java.util.jar.JarFile.getEntry(JarFile.java:200)\n" +
+		"at sun.net.www.protocol.jar.URLJarFile.getEntry\n" +
+		"     (URLJarFile.java:90)\n" +
+		"at sun.net.www.protocol.jar.JarURLConnection.connect(JarURLConnection.java:112)\n" +
+		"at sun.net.www.protocol.jar.JarURLConnection.getInputStream\n" +
+		"(JarURLConnection.java:124)\n" +
+		"at org.eclipse.jdt.internal.core.JavaElement\n.getURLContents(JavaElement.java:734)";
+
+		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
+				.getOfflineReportsFile().getNextOfflineBugId());
+		model.setNewComment(stackTrace);
+		model.setHasLocalChanges(true);
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		NewBugEditorInput input = new NewBugEditorInput(repository, model);
+		TaskUiUtil.openEditor(input, BugzillaUiPlugin.NEW_BUG_EDITOR_ID, page);
+
+		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
+		NewBugEditor editor = (NewBugEditor) taskEditor.getActivePageInstance();
+		assertEquals(stackTrace, editor.getStackTraceFromDescription().trim());
+
+		editor.markDirty(false);
+		editor.close();
+	}
 }

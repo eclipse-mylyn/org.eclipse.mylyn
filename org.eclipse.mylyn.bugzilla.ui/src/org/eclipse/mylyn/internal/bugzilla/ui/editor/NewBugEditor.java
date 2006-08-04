@@ -15,7 +15,8 @@ import java.net.Proxy;
 import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
@@ -73,7 +74,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 	private static final String LABEL_SEARCH_DUPS = "Search for Duplicates";
 
 	private static final String LABEL_CREATE = "Create New";
-	
+
 	private static final String NO_STACK_MESSAGE = "Unable to locate a stack trace in the description text.\nDuplicate search currently only supports stack trace matching.";
 
 	private static final String ERROR_CREATING_BUG_REPORT = "Error creating bug report";
@@ -228,38 +229,39 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 			return null;
 		}
 
-		// Temporary stack trace identifying until a better regex based method
-		// can be implemented
-		// Find a sequence of lines containing "at " and ".java" as well as the
-		// line that precedes the sequence
-		StringTokenizer tok = new StringTokenizer(description, "\n");
-		StringBuffer stackBuffer = new StringBuffer();
-		String prevLine = "";
-		boolean hit = false;
-		while (tok.hasMoreTokens() && stackBuffer.length() == 0) {
-			String line = tok.nextToken().trim();
-			while ((line.indexOf("at ") < 0 || line.indexOf(".java:") < 0) && tok.hasMoreTokens()) {
-				prevLine = line;
-				line = tok.nextToken();
-				hit = true;
+		String punct = "!\"#$%&'\\(\\)*+,-./:;\\<=\\>?@\\[\\]^_`\\{|\\}~\n";
+		String lineRegex = " *at\\s+[\\w" + punct + "]+ ?\\(.*\\) *\n?";
+		Pattern tracePattern = Pattern.compile(lineRegex);
+		Matcher match = tracePattern.matcher(description);
+
+		if (match.find()) {
+			// record the index of the first stack trace line
+			int start = match.start();
+			int lastEnd = match.end();
+
+			// find the last stack trace line
+			while (match.find()) {
+				lastEnd = match.end();
 			}
 
-			if (!hit) {
+			// make sure there's still room to find the exception
+			if (start <= 0) {
 				return null;
 			}
-			stackBuffer.append(prevLine + "\n");
-			while (line.indexOf(".java:") > 0 && line.indexOf("at ") == 0) {
-				stackBuffer.append(line + "\n");
-				if (tok.hasMoreTokens()) {
-					line = tok.nextToken();
-				}
-				else {
-					line = "";
-				}
+
+			// count back to the line before the stack trace to find the
+			// exception
+			int stackStart = 0;
+			int index = start - 1;
+			while (index > 1 && description.charAt(index) == ' ') {
+				index--;
 			}
-		}
-		if (stackBuffer.length() > 0) {
-			stackTrace = stackBuffer.toString();
+
+			// locate the exception line index
+			stackStart = description.substring(0, index - 1).lastIndexOf("\n");
+			stackStart = (stackStart == -1) ? 0 : stackStart + 1;
+
+			stackTrace = description.substring(stackStart, lastEnd);
 		}
 
 		return stackTrace;
