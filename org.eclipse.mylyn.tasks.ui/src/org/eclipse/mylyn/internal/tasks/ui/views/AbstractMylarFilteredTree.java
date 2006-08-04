@@ -39,7 +39,7 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 	private AdaptiveRefreshPolicy refreshPolicy;
 	
 	/**
-	 * HACK: using reflectoin to gain access
+	 * HACK: using reflection to gain access
 	 */
 	public AbstractMylarFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
 		super(parent, treeStyle, filter);
