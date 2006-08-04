@@ -380,4 +380,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		} 
 	}
 
+	@Override
+	public boolean hasRichEditor() {
+		return true;
+	}
+
 }

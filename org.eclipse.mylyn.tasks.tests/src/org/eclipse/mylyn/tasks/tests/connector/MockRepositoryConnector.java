@@ -132,4 +132,10 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 		// ignore
 	}
 
+	@Override
+	public boolean hasRichEditor() {
+		// ignore
+		return false;
+	}
+
 }

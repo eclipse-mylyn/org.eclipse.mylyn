@@ -49,7 +49,9 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 			AbstractRepositoryTask task = (AbstractRepositoryTask)element;
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(task.getRepositoryKind());
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryKind(), task.getRepositoryUrl());
-			if (connector != null && connector.hasRepositoryContext(repository, task)) { 
+			if (!connector.hasRichEditor()) {
+				decoration.addOverlay(TaskListImages.OVERLAY_WEB, IDecoration.BOTTOM_LEFT);
+			} else if (connector != null && connector.hasRepositoryContext(repository, task)) { 
 				decoration.addOverlay(TaskListImages.OVERLAY_REPOSITORY_CONTEXT, IDecoration.BOTTOM_LEFT);
 			} else {
 				decoration.addOverlay(TaskListImages.OVERLAY_REPOSITORY, IDecoration.BOTTOM_LEFT);

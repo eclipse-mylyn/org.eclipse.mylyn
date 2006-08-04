@@ -294,4 +294,9 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
+	@Override
+	public boolean hasRichEditor() {
+		return false;
+	}
+
 }

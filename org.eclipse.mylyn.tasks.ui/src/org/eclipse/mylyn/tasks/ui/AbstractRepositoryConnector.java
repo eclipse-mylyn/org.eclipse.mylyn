@@ -148,6 +148,8 @@ public abstract class AbstractRepositoryConnector {
 
 	public abstract List<String> getSupportedVersions();
 
+	public abstract boolean hasRichEditor();
+	
 	protected abstract void updateTaskState(AbstractRepositoryTask repositoryTask);
 
 	public IWizard getAddExistingTaskWizard(TaskRepository repository) {
