@@ -16,7 +16,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
@@ -27,6 +34,8 @@ import org.eclipse.mylar.tasks.core.LocalAttachment;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * A wizard to add a new attachment to a task report.
@@ -122,42 +131,55 @@ public class NewAttachmentWizard extends Wizard {
 		// upload the attachment
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				repository.getKind());
-		IAttachmentHandler attachmentHandler = connector.getAttachmentHandler();
+		final IAttachmentHandler attachmentHandler = connector.getAttachmentHandler();
 		if (attachmentHandler == null) {
 			return false;
 		}
-		try {
-			attachmentHandler.uploadAttachment(repository, task, attachment.getComment(), attachment.getDescription(),
-					new File(attachment.getFilePath()), attachment.getContentType(), attachment.isPatch(),
-					TasksUiPlugin.getDefault().getProxySettings());
+		final boolean attachContext = attachPage.getAttachContext();
 
-			// IWorkbenchSite site =
-			// PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart().getSite();
-			// if (site instanceof IViewSite) {
-			// IStatusLineManager statusLineManager =
-			// ((IViewSite)site).getActionBars().getStatusLineManager();
-			// statusLineManager.setMessage(TaskListImages.getImage(TaskListImages.TASKLIST),
-			// "Attachment uploaded to task: " + task.getDescription());
-			// }
-
-			if (attachment.getDeleteAfterUpload()) {
-				File file = new File(attachment.getFilePath());
-				if (!file.delete()) {
-					// TODO: Handle bad clean up
-				}
-			}
-
-			if (attachPage.getAttachContext()) {
+		Job submitJob = new Job("Submitting attachment") {
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
 				AbstractRepositoryConnector repositoryClient = TasksUiPlugin.getRepositoryManager()
 						.getRepositoryConnector(repository.getKind());
-				repositoryClient.attachContext(repository, (AbstractRepositoryTask) task, "");
+				try {
+					attachmentHandler.uploadAttachment(repository, task, attachment.getComment(), attachment
+							.getDescription(), new File(attachment.getFilePath()), attachment.getContentType(),
+							attachment.isPatch(), TasksUiPlugin.getDefault().getProxySettings());
+
+					if (attachment.getDeleteAfterUpload()) {
+						File file = new File(attachment.getFilePath());
+						if (!file.delete()) {
+							// TODO: Handle bad clean up
+						}
+					}
+
+					if (attachContext) {
+						repositoryClient.attachContext(repository, (AbstractRepositoryTask) task, "");
+					}
+
+				} catch (CoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				repositoryClient.synchronize(task, true, new JobChangeAdapter() {
+					public void done(final IJobChangeEvent event) {
+						if (event.getResult().getException() != null) {
+							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+								public void run() {
+									MessageDialog.openError(Display.getDefault().getActiveShell(),
+											TasksUiPlugin.TITLE_DIALOG, event.getResult().getMessage());
+								}
+							});
+						}
+					}
+				});
+				return Status.OK_STATUS;
 			}
+		};
 
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		submitJob.schedule();
 		return true;
 	}
 
