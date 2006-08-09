@@ -19,6 +19,7 @@ import java.util.Map;
 
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.tasks.core.LocalAttachment;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -47,6 +48,10 @@ public class NewAttachmentPage extends WizardPage {
 	private Text attachmentDesc;
 
 	private Text attachmentComment;
+
+	private Button isPatchButton;
+
+	private Button attachContextButton;
 
 	private static List<String> contentTypes;
 
@@ -129,6 +134,7 @@ public class NewAttachmentPage extends WizardPage {
 		new Label(composite, SWT.NONE).setText("Content Type");// .setBackground(parent.getBackground());
 
 		final Combo contentTypeList = new Combo(composite, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
+		contentTypeList.setLayoutData(new GridData(SWT.DEFAULT, SWT.DEFAULT, false, false, 2, 1));
 		final HashMap<String, Integer> contentTypeIndices = new HashMap<String, Integer>();
 		Iterator<String> iter = contentTypes.iterator();
 		int i = 0;
@@ -152,8 +158,21 @@ public class NewAttachmentPage extends WizardPage {
 		contentTypeList.select(0);
 		attachment.setContentType(contentTypeList.getItem(0));
 
-		final Button isPatchButton = new Button(composite, SWT.CHECK);
+		// TODO: is there a better way to pad?
+		new Label(composite, SWT.NONE);
+
+		isPatchButton = new Button(composite, SWT.CHECK);
+		isPatchButton.setLayoutData(new GridData(SWT.DEFAULT, SWT.DEFAULT, false, false, 2, 1));
 		isPatchButton.setText("Patch");
+
+		// TODO: is there a better way to pad?
+		new Label(composite, SWT.NONE);
+
+		attachContextButton = new Button(composite, SWT.CHECK);
+		attachContextButton.setLayoutData(new GridData(SWT.DEFAULT, SWT.DEFAULT, false, false, 2, 1));
+		attachContextButton.setText("Attach Context");
+		attachContextButton.setImage(TaskListImages.getImage(TaskListImages.CONTEXT_ATTACH));
+		attachContextButton.setEnabled((((NewAttachmentWizard) getWizard()).hasContext()));
 
 		/*
 		 * Attachment file name listener, update the local attachment
@@ -200,6 +219,9 @@ public class NewAttachmentPage extends WizardPage {
 					lastSelected = contentTypeList.getSelectionIndex();
 					contentTypeList.select(0);
 					contentTypeList.setEnabled(false);
+					if (attachContextButton.isEnabled()) {
+						attachContextButton.setSelection(true);
+					}
 				} else {
 					contentTypeList.setEnabled(true);
 					contentTypeList.select(lastSelected);
@@ -227,6 +249,9 @@ public class NewAttachmentPage extends WizardPage {
 
 	public void setFilePath(String path) {
 		filePath.setText(path);
+		if (path.endsWith(".patch")) {
+			isPatchButton.setSelection(true);
+		}
 	}
 
 	public IWizardPage getNextPage() {
@@ -234,5 +259,9 @@ public class NewAttachmentPage extends WizardPage {
 		PreviewAttachmentPage page = new PreviewAttachmentPage(getAttachment());
 		page.setWizard(getWizard());
 		return page;
+	}
+
+	public boolean getAttachContext() {
+		return attachContextButton.getSelection();
 	}
 }

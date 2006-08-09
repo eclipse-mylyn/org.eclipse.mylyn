@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
@@ -146,12 +147,22 @@ public class NewAttachmentWizard extends Wizard {
 				}
 			}
 
+			if (attachPage.getAttachContext()) {
+				AbstractRepositoryConnector repositoryClient = TasksUiPlugin.getRepositoryManager()
+						.getRepositoryConnector(repository.getKind());
+				repositoryClient.attachContext(repository, (AbstractRepositoryTask) task, "");
+			}
+
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		return true;
+	}
+
+	protected boolean hasContext() {
+		return ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier());
 	}
 
 	@Override
