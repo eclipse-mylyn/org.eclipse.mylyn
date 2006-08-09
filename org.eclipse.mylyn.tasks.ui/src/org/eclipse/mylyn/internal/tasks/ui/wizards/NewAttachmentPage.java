@@ -251,6 +251,9 @@ public class NewAttachmentPage extends WizardPage {
 		filePath.setText(path);
 		if (path.endsWith(".patch")) {
 			isPatchButton.setSelection(true);
+			if (attachContextButton.isEnabled()) {
+				attachContextButton.setSelection(true);
+			}
 		}
 	}
 
