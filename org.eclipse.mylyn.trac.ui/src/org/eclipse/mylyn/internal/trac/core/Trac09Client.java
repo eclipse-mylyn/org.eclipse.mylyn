@@ -402,14 +402,14 @@ public class Trac09Client extends AbstractTracClient {
 		StringBuffer sb = new StringBuffer();
 		for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 			if (token.getType() == Token.TEXT) {
-				sb.append(token.getValue());
+				sb.append(token.toString());
 			} else if (token.getType() == Token.COMMENT) {
 				// ignore
 			} else {
 				break;
 			}
 		}
-		return sb.toString();
+		return HtmlStreamTokenizer.unescape(sb).toString();
 	}
 
 	/**
