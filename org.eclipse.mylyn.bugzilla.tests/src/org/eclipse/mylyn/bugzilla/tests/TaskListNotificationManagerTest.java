@@ -108,5 +108,32 @@ public class TaskListNotificationManagerTest extends TestCase {
 		assertTrue(notificationManager.getNotifications().contains(new TaskListNotificationQueryIncoming(hit)));
 		assertTrue(hit.isNotified());
 	}
+	
+	public void testTaskListNotificationQueryIncomingRepeats() {
+		TasksUiPlugin.getTaskListManager().resetTaskList();
+		BugzillaQueryHit hit = new BugzillaQueryHit("description", "priority", "https://bugs.eclipse.org/bugs", "1",
+				null, "status");
+		String hitHandle = hit.getHandleIdentifier();
+		assertFalse(hit.isNotified());
+		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery("https://bugs.eclipse.org/bugs", "queryUrl",
+				"description", "10", TasksUiPlugin.getTaskListManager().getTaskList());		
+		query.addHit(hit, TasksUiPlugin.getTaskListManager().getTaskList());
+		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);		
+		TaskListNotificationManager notificationManager = TasksUiPlugin.getDefault()
+				.getTaskListNotificationManager();
+		notificationManager.collectNotifications();
+		assertTrue(notificationManager.getNotifications().contains(new TaskListNotificationQueryIncoming(hit)));
+		assertTrue(hit.isNotified());
+		
+		TasksUiPlugin.getTaskListManager().saveTaskList();
+		TasksUiPlugin.getTaskListManager().resetTaskList();
+		assertEquals(0, TasksUiPlugin.getTaskListManager().getTaskList().getQueries().size());
+		assertTrue(TasksUiPlugin.getTaskListManager().readExistingOrCreateNewList());
+		assertEquals(1, TasksUiPlugin.getTaskListManager().getTaskList().getQueries().size());
+		BugzillaQueryHit hitLoaded = (BugzillaQueryHit)TasksUiPlugin.getTaskListManager().getTaskList().getQueryHitForHandle(hitHandle);
+		assertNotNull(hitLoaded);
+		assertTrue(hitLoaded.isNotified());
+		
+	}
 
 }
