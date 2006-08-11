@@ -27,6 +27,8 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.security.auth.login.LoginException;
+
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -52,10 +54,14 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
  */
 public class BugzillaAttachmentHandler implements IAttachmentHandler {
 
+	private static final int CONNECT_TIMEOUT = 5000;
+
+	private static final String CHANGES_SUBMITTED = "Changes Submitted";
+
 	public static final String POST_ARGS_ATTACHMENT_DOWNLOAD = "/attachment.cgi?id=";
 
 	public static final String POST_ARGS_ATTACHMENT_UPLOAD = "/attachment.cgi";// ?action=insert";//&bugid=";
-	
+
 	private static final String VALUE_CONTENTTYPEMETHOD_MANUAL = "manual";
 
 	private static final String VALUE_ISPATCH = "1";
@@ -81,28 +87,33 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 	private static final String ATTRIBUTE_BUGZILLA_LOGIN = "Bugzilla_login";
 
 	private static final String ATTRIBUTE_ACTION = "action";
-	
-	
-	public void downloadAttachment(TaskRepository repository, AbstractRepositoryTask task, RepositoryAttachment attachment, File file, Proxy proxySettings) throws CoreException {
+
+	public void downloadAttachment(TaskRepository repository, AbstractRepositoryTask task,
+			RepositoryAttachment attachment, File file, Proxy proxySettings) throws CoreException {
 		try {
-			downloadAttachment(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, attachment.getId(), file, true);
+			downloadAttachment(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings,
+					attachment.getId(), file, true);
 		} catch (Exception e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "could not download", e));
 		}
 	}
 
-	public void uploadAttachment(TaskRepository repository, AbstractRepositoryTask task, String comment, String description, File file, String contentType, boolean isPatch, Proxy proxySettings) throws CoreException {
-		try {
-			int bugId = Integer.parseInt(AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()));
-			uploadAttachment(repository.getUrl(), repository.getUserName(), repository.getPassword(), bugId, comment, description, file, contentType, isPatch, proxySettings);
-		} catch (Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "could not upload", e));
-		}
+	public void uploadAttachment(TaskRepository repository, AbstractRepositoryTask task, String comment,
+			String description, File file, String contentType, boolean isPatch, Proxy proxySettings)
+			throws CoreException {
+		// try {
+		int bugId = Integer.parseInt(AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()));
+		uploadAttachment(repository.getUrl(), repository.getUserName(), repository.getPassword(), bugId, comment,
+				description, file, contentType, isPatch, proxySettings);
+		// } catch (Exception e) {
+		// throw new CoreException(new Status(IStatus.ERROR,
+		// BugzillaCorePlugin.PLUGIN_ID, 0, "could not upload", e));
+		// }
 	}
-	
+
 	private boolean uploadAttachment(String repositoryUrl, String userName, String password, int bugReportID,
-			String comment, String description, File sourceFile, String contentType, boolean isPatch, Proxy proxySettings)
-			throws IOException {
+			String comment, String description, File sourceFile, String contentType, boolean isPatch,
+			Proxy proxySettings) throws CoreException {
 
 		// Note: The following debug code requires http commons-logging and
 		// commons-logging-api jars
@@ -116,11 +127,13 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 		// "debug");
 
 		boolean uploadResult = true;
-		
-//		Protocol.registerProtocol("https", new Protocol("https", new TrustAllSslProtocolSocketFactory(), 443));
+
+		// Protocol.registerProtocol("https", new Protocol("https", new
+		// TrustAllSslProtocolSocketFactory(), 443));
 		HttpClient client = new HttpClient();
 		WebClientUtil.setupHttpClient(client, proxySettings, repositoryUrl);
-		PostMethod postMethod = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl) + POST_ARGS_ATTACHMENT_UPLOAD);
+		PostMethod postMethod = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl)
+				+ POST_ARGS_ATTACHMENT_UPLOAD);
 
 		// My understanding is that this option causes the client to first check
 		// with the server to see if it will in fact recieve the post before
@@ -146,51 +159,60 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 
 			postMethod.setRequestEntity(new MultipartRequestEntity(parts.toArray(new Part[1]), postMethod.getParams()));
 
-			client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+			client.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
 			int status = client.executeMethod(postMethod);
 			if (status == HttpStatus.SC_OK) {
 				InputStreamReader reader = new InputStreamReader(postMethod.getResponseBodyAsStream(), postMethod
 						.getResponseCharSet());
 				BufferedReader bufferedReader = new BufferedReader(reader);
-				String newLine;
-				while ((newLine = bufferedReader.readLine()) != null) {
-					if (newLine.indexOf("Invalid Username Or Password") >= 0) {
-						throw new IOException(
-								"Invalid Username Or Password - Check credentials in Task Repositories view.");
-					}
-					// TODO: test for no comment and no description etc.
-				}
+
+				BugzillaServerFacade.parseHtmlError(bufferedReader);
+
 			} else {
-				// MylarStatusHandler.log(HttpStatus.getStatusText(status),
-				// BugzillaRepositoryUtil.class);
 				uploadResult = false;
+				throw new CoreException(new Status(Status.OK, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
+						"Communication error occurred during upload.", new IOException(
+								"A communication error occurred.")));
 			}
-			// } catch (HttpException e) {
-			// MylarStatusHandler.log("Attachment upload failed\n" +
-			// e.getMessage(), BugzillaRepositoryUtil.class);
-			// uploadResult = false;
+
+		} catch (LoginException e) {
+			throw new CoreException(new Status(Status.OK, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
+					"Your login name or password is incorrect. Ensure proper repository configuration.", e));
+		} catch (IOException e) {
+			throw new CoreException(new Status(Status.OK, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
+					"Check repository credentials and connectivity.", e));
+		} catch (UnrecognizedReponseException e) {
+			if (e.getMessage().indexOf(CHANGES_SUBMITTED) > -1) {
+				return true;
+			}
+			throw new CoreException(new Status(Status.OK, BugzillaCorePlugin.PLUGIN_ID, Status.INFO,
+					"Response from server", e));
+		} catch (BugzillaException e) {
+			String message = e.getMessage();
+			throw new CoreException(new Status(Status.OK, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
+					"Bugzilla could not post your bug. \n\n" + message, e));
 		} finally {
 			postMethod.releaseConnection();
 		}
 
 		return uploadResult;
 	}
-	
-	public boolean uploadAttachment(LocalAttachment attachment, String uname, String password, Proxy proxySettings) throws IOException {
-		
+
+	public boolean uploadAttachment(LocalAttachment attachment, String uname, String password, Proxy proxySettings)
+			throws CoreException {
+
 		File file = new File(attachment.getFilePath());
 		if (!file.exists() || file.length() <= 0) {
 			return false;
 		}
-		
-		return uploadAttachment(attachment.getReport().getRepositoryUrl(), uname, password, Integer.parseInt(attachment.getReport().getId()),
-				attachment.getComment(), attachment.getDescription(), file,
-				attachment.getContentType(), attachment.isPatch(), proxySettings);
+
+		return uploadAttachment(attachment.getReport().getRepositoryUrl(), uname, password, Integer.parseInt(attachment
+				.getReport().getId()), attachment.getComment(), attachment.getDescription(), file, attachment
+				.getContentType(), attachment.isPatch(), proxySettings);
 	}
-	
-	private boolean downloadAttachment(String repositoryUrl, String userName, String password,
-			Proxy proxySettings, int id, File destinationFile, boolean overwrite) throws IOException,
-			GeneralSecurityException {
+
+	private boolean downloadAttachment(String repositoryUrl, String userName, String password, Proxy proxySettings,
+			int id, File destinationFile, boolean overwrite) throws IOException, GeneralSecurityException {
 		BufferedInputStream in = null;
 		FileOutputStream outStream = null;
 		try {
@@ -218,7 +240,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 		}
 		return false;
 	}
-	
+
 	private void copyByteStream(InputStream in, OutputStream out) throws IOException {
 		if (in != null && out != null) {
 			BufferedInputStream inBuffered = new BufferedInputStream(in);

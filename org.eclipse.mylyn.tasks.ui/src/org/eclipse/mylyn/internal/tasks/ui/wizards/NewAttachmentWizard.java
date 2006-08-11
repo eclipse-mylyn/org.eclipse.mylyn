@@ -28,6 +28,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.LocalAttachment;
@@ -158,9 +159,21 @@ public class NewAttachmentWizard extends Wizard {
 						repositoryClient.attachContext(repository, (AbstractRepositoryTask) task, "");
 					}
 
-				} catch (CoreException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				} catch (final CoreException e) {
+					if (e.getStatus().getCode() == Status.INFO) {
+						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+							public void run() {
+								WebBrowserDialog.openAcceptAgreement(null, "Upload Error", e.getStatus().getMessage(),
+										e.getStatus().getException().getMessage());
+							}
+						});
+					} else if (e.getStatus().getCode() == Status.ERROR) {
+						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+							public void run() {
+								MessageDialog.openError(null, "Upload Error", e.getStatus().getMessage());
+							}
+						});
+					}
 				}
 
 				repositoryClient.synchronize(task, true, new JobChangeAdapter() {
