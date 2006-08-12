@@ -188,15 +188,15 @@ public class BugzillaServerFacade {
 								|| (title.indexOf("invalid") != -1 && title.indexOf("password") != -1)
 								|| title.indexOf("check e-mail") != -1) {
 							throw new LoginException(IBugzillaConstants.ERROR_INVALID_USERNAME_OR_PASSWORD);
-						} else if (title.indexOf("collision") != -1) {
-							throw new BugzillaException(IBugzillaConstants.ERROR_MIDAIR_COLLISION);
+						} else if (title.indexOf(IBugzillaConstants.ERROR_MIDAIR_COLLISION) != -1) {
+							throw new BugzillaException(IBugzillaConstants.ERROR_MSG_MIDAIR_COLLISION);
+						} else if (title.indexOf(IBugzillaConstants.ERROR_COMMENT_REQUIRED) != -1) {
+							throw new BugzillaException(IBugzillaConstants.ERROR_MSG_COMMENT_REQUIRED);
 						}
 					}
 				}
 			}
 
-			// MylarStatusHandler.log("Unrecognized Reponse: " + body,
-			// BugzillaRepositoryUtil.class);
 			throw new UnrecognizedReponseException(body);
 
 		} catch (ParseException e) {

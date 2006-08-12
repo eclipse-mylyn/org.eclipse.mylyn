@@ -893,15 +893,16 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 
 	@Override
 	protected void validateInput() {
-		RepositoryOperation o = taskData.getSelectedOperation();
-		if (o != null && o.getKnobName().compareTo("resolve") == 0
-				&& (addCommentsTextBox.getText() == null || addCommentsTextBox.getText().equals(""))) {
-			// TODO: Highlight (change to light red?) New Comment area to
-			// indicate need for message
-			submitButton.setEnabled(false);
-		} else {
-			submitButton.setEnabled(true);
-		}
+		// RepositoryOperation o = taskData.getSelectedOperation();
+		// if (o != null && o.getKnobName().compareTo("resolve") == 0
+		// && (addCommentsTextBox.getText() == null ||
+		// addCommentsTextBox.getText().equals(""))) {
+		// // TODO: Highlight (change to light red?) New Comment area to
+		// // indicate need for message
+		// submitButton.setEnabled(false);
+		// } else {
+		// submitButton.setEnabled(true);
+		//		}
 	}
 
 	/**

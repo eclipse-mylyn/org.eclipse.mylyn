@@ -15,19 +15,24 @@ package org.eclipse.mylar.internal.bugzilla.core;
  */
 public interface IBugzillaConstants {
 
-	static final String ERROR_MIDAIR_COLLISION = "A mid-air collision has occurred. Please synchronize by selecting Synchronize in the task's context menu.";
-	
-	// Error response from bugzilla server upon bug request
+	static final String ERROR_MIDAIR_COLLISION = "collision";
+
+	static final String ERROR_MSG_MIDAIR_COLLISION = "A mid-air collision has occurred. Please synchronize by selecting Synchronize in the task's context menu.";
+
+	static final String ERROR_COMMENT_REQUIRED = "comment required";
+
+	static final String ERROR_MSG_COMMENT_REQUIRED = "You have to specify a new comment when making this change. Please comment on the reason for this change.";
+
 	static final String ERROR_INVALID_BUG_ID = "InvalidBugId";
 
-	static final String ERROR_INVALID_USERNAME_OR_PASSWORD = "Invalid Username Or Password";
+	static final String ERROR_INVALID_USERNAME_OR_PASSWORD = "Invalid Username or Password";
 
 	static final String MOST_RECENT_QUERY = "org.eclipse.mylar.bugzilla.query.last";
 
 	static final String SERVER_VERSION = "org.eclipse.mylar.bugzilla.server.version";
 
-//	static final String SERVER_220 = "2.20";
-//	static final String SERVER_218 = "2.18";
+	// static final String SERVER_220 = "2.20";
+	// static final String SERVER_218 = "2.18";
 
 	/** Used by search engine */
 	public static final int RETURN_ALL_HITS = -1;
@@ -140,7 +145,7 @@ public interface IBugzillaConstants {
 	static final String[] DEFAULT_TARGET_VALUES = {};
 
 	public static final String TITLE_MESSAGE_DIALOG = "Mylar Bugzilla Connector";
-	
+
 	public static final String REPORT_SUBMIT_ERROR = "Report Submission Error";
 
 	public static final String TITLE_NEW_BUG = "New Bugzilla Report";
