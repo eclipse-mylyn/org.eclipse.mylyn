@@ -23,49 +23,32 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.search.ui.ISearchQuery;
-import org.eclipse.search.ui.ISearchResult;
+import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositorySearchQuery;
 import org.eclipse.search.ui.text.AbstractTextSearchResult;
 import org.eclipse.ui.PlatformUI;
 
 /**
  * This class performs a search query on Bugzilla bug reports.
  * 
- * @see org.eclipse.search.ui.ISearchQuery
+ * @author Rob Elves (modifications)
  */
-public class BugzillaSearchQuery implements ISearchQuery {
+public class BugzillaSearchQuery extends AbstractRepositorySearchQuery {
 
-	private static final String MESSAGE_LOGIN_FAILURE = "Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ";
-
-	/** The collection of all the bugzilla matches. */
-	private BugzillaSearchResult bugResult;
-
+	private static final String MESSAGE_LOGIN_FAILURE = "Could not log you in to get the information you requested since login name or password is incorrect.\nPlease check settings.";
+	
 	/** The operation that performs the Bugzilla search query. */
 	private IBugzillaSearchOperation operation;
-
-	/**
-	 * Constructor
-	 * 
-	 * @param operation
-	 *            The operation that performs the Bugzilla search query.
-	 */
+	
 	public BugzillaSearchQuery(IBugzillaSearchOperation operation) {
 		this.operation = operation;
 		operation.setQuery(this);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.search.ui.ISearchQuery#run(org.eclipse.core.runtime.IProgressMonitor)
-	 */
 	public IStatus run(IProgressMonitor monitor) throws OperationCanceledException {
 		final IStatus[] status = new IStatus[1];
 		final AbstractTextSearchResult textResult = (AbstractTextSearchResult) getSearchResult();
-		textResult.removeAll(); // Remove any existing search results from the
-		// view.
+		textResult.removeAll(); 
 
-		// try {
 		try {
 			operation.run(monitor);
 
@@ -76,12 +59,13 @@ public class BugzillaSearchQuery implements ISearchQuery {
 			} else if (!status[0].isOK()) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						ErrorDialog.openError(null, "Bugzilla Search Error", null, status[0]);
+						ErrorDialog.openError(null, "Repository Search Error", null, status[0]);
 					}
 				});
 				status[0] = Status.OK_STATUS;
 			}
 		} catch (InvocationTargetException e) {
+			// TODO: Display exceptions properly
 			MessageDialog
 					.openInformation(
 							null,
@@ -98,51 +82,7 @@ public class BugzillaSearchQuery implements ISearchQuery {
 							MESSAGE_LOGIN_FAILURE);
 			BugzillaCorePlugin.log(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK, "", e));
 		}
-		// } catch (LoginException e) {
-		// // we had a problem while searching that seems like a login info
-		// // problem thrown in BugzillaSearchOperation
-		//			
-		// }
+
 		return status[0];
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.search.ui.ISearchQuery#getLabel()
-	 */
-	public String getLabel() {
-		return BugzillaSearchEngine.QUERYING_SERVER;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.search.ui.ISearchQuery#canRerun()
-	 */
-	public boolean canRerun() {
-		return true;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.search.ui.ISearchQuery#canRunInBackground()
-	 */
-	public boolean canRunInBackground() {
-		return true;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.search.ui.ISearchQuery#getSearchResult()
-	 */
-	public ISearchResult getSearchResult() {
-		if (bugResult == null) {
-			bugResult = new BugzillaSearchResult(this);
-		}
-		return bugResult;
-	}
-
 }

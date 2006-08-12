@@ -20,8 +20,6 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Set;
 
 import javax.security.auth.login.LoginException;
 
@@ -31,18 +29,17 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.AbstractBugzillaQueryPage;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
+import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositoryQueryPage;
+import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositorySearchQuery;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.search.ui.ISearchPage;
-import org.eclipse.search.ui.ISearchPageContainer;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -71,7 +68,7 @@ import org.eclipse.ui.progress.IProgressService;
  * 
  * @author Mik Kersten (hardening of prototype)
  */
-public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISearchPage, Listener {
+public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements Listener {
 
 	private static final String MAX_HITS_GREATER = "Max hits shown must be greater than 0 or enter -1 for all results found.";
 
@@ -87,15 +84,13 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 
 	protected Combo summaryPattern = null;
 
-	protected Combo repositoryCombo = null;
+	// protected Combo repositoryCombo = null;
 
 	private static ArrayList<BugzillaSearchData> previousSummaryPatterns = new ArrayList<BugzillaSearchData>(20);
 
 	private static ArrayList<BugzillaSearchData> previousEmailPatterns = new ArrayList<BugzillaSearchData>(20);
 
 	private static ArrayList<BugzillaSearchData> previousCommentPatterns = new ArrayList<BugzillaSearchData>(20);
-
-	protected ISearchPageContainer scontainer = null;
 
 	private boolean firstTime = true;
 
@@ -172,17 +167,18 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		control.setLayout(layout);
-		GridData gd = new GridData(GridData.FILL_BOTH);
+		GridData gd = new GridData(GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL);
 		control.setLayoutData(gd);
 
 		if (scontainer == null) {
-			// Not presenting in search pane so add parent's content
+			// Not presenting in search pane so want query title
 			super.createControl(control);
-		} else {
-			// if (repository == null) {
-			// search pane so add repository selection
-			createRepositoryGroup(control);
 		}
+		// else {
+		// // if (repository == null) {
+		// // search pane so add repository selection
+		// createRepositoryGroup(control);
+		// }
 		createSearchGroup(control);
 		createOptionsGroup(control);
 
@@ -207,31 +203,33 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 		WorkbenchHelpSystem.getInstance().setHelp(control, BugzillaUiPlugin.SEARCH_PAGE_CONTEXT);
 	}
 
-	private void createRepositoryGroup(Composite control) {
-		Group group = new Group(control, SWT.NONE);
-		group.setText("Repository");
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;
-		group.setLayout(layout);
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.horizontalSpan = 2;
-		group.setLayoutData(gd);
-
-		repositoryCombo = new Combo(group, SWT.SINGLE | SWT.BORDER);
-		repositoryCombo.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				String repositoryUrl = repositoryCombo.getItem(repositoryCombo.getSelectionIndex());
-				repository = TasksUiPlugin.getRepositoryManager().getRepository(BugzillaCorePlugin.REPOSITORY_KIND,
-						repositoryUrl);
-				updateAttributesFromRepository(repositoryUrl, null, false);
-				restoring = true;
-				restoreWidgetValues();
-			}
-		});
-		gd = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
-		repositoryCombo.setLayoutData(gd);
-	}
+	// private void createRepositoryGroup(Composite control) {
+	// Group group = new Group(control, SWT.NONE);
+	// group.setText("Repository");
+	// GridLayout layout = new GridLayout();
+	// layout.numColumns = 1;
+	// group.setLayout(layout);
+	// GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+	// gd.horizontalSpan = 2;
+	// group.setLayoutData(gd);
+	//
+	// repositoryCombo = new Combo(group, SWT.SINGLE | SWT.BORDER);
+	// repositoryCombo.addSelectionListener(new SelectionAdapter() {
+	// @Override
+	// public void widgetSelected(SelectionEvent e) {
+	// String repositoryUrl =
+	// repositoryCombo.getItem(repositoryCombo.getSelectionIndex());
+	// repository =
+	// TasksUiPlugin.getRepositoryManager().getRepository(BugzillaCorePlugin.REPOSITORY_KIND,
+	// repositoryUrl);
+	// updateAttributesFromRepository(repositoryUrl, null, false);
+	// restoring = true;
+	// restoreWidgetValues();
+	// }
+	// });
+	// gd = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
+	// repositoryCombo.setLayoutData(gd);
+	// }
 
 	private void createSearchGroup(Composite control) {
 		Group group = new Group(control, SWT.NONE);
@@ -404,7 +402,7 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 					restoring = false;
 					restoreWidgetValues();
 				}
-				if(scontainer != null) {
+				if (scontainer != null) {
 					scontainer.setPerformActionEnabled(canQuery());
 				}
 			}
@@ -723,6 +721,7 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 			}
 		});
 		gd = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
+		gd.widthHint = 110;
 		emailPattern.setLayoutData(gd);
 
 		// operation combo
@@ -933,17 +932,10 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 		IBugzillaSearchOperation op = new BugzillaSearchOperation(repository, queryUrl, proxySettings, collector,
 				getMaxHits());
 
-		BugzillaSearchQuery searchQuery = new BugzillaSearchQuery(op);
+		AbstractRepositorySearchQuery searchQuery = new BugzillaSearchQuery(op);
 		NewSearchUI.runQueryInBackground(searchQuery);
 
 		return true;
-	}
-
-	/**
-	 * @see ISearchPage#setContainer(ISearchPageContainer)
-	 */
-	public void setContainer(ISearchPageContainer container) {
-		scontainer = container;
 	}
 
 	@Override
@@ -954,46 +946,54 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 					repository = TasksUiPlugin.getRepositoryManager().getDefaultRepository(
 							BugzillaCorePlugin.REPOSITORY_KIND);
 				}
-				Set<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getRepositories(
-						BugzillaCorePlugin.REPOSITORY_KIND);
-				String[] repositoryUrls = new String[repositories.size()];
-				int i = 0;
-				int indexToSelect = 0;
-				for (Iterator<TaskRepository> iter = repositories.iterator(); iter.hasNext();) {
-					TaskRepository currRepsitory = iter.next();
-					// if (i == 0 && repository == null) {
-					// repository = currRepsitory;
-					// indexToSelect = 0;
-					// }
-					if (repository != null && repository.equals(currRepsitory)) {
-						indexToSelect = i;
-					}					
-					repositoryUrls[i] = currRepsitory.getUrl();
-					i++;
-				}
+				// Set<TaskRepository> repositories =
+				// TasksUiPlugin.getRepositoryManager().getRepositories(
+				// BugzillaCorePlugin.REPOSITORY_KIND);
+				// String[] repositoryUrls = new String[repositories.size()];
+				// int i = 0;
+				// int indexToSelect = 0;
+				// for (Iterator<TaskRepository> iter = repositories.iterator();
+				// iter.hasNext();) {
+				// TaskRepository currRepsitory = iter.next();
+				// // if (i == 0 && repository == null) {
+				// // repository = currRepsitory;
+				// // indexToSelect = 0;
+				// // }
+				// if (repository != null && repository.equals(currRepsitory)) {
+				// indexToSelect = i;
+				// }
+				// repositoryUrls[i] = currRepsitory.getUrl();
+				// i++;
+				// }
 
-				IDialogSettings settings = getDialogSettings();
-				if (repositoryCombo != null) {
-					repositoryCombo.setItems(repositoryUrls);
-					if (repositoryUrls.length == 0) {
-						MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
-								IBugzillaConstants.TITLE_MESSAGE_DIALOG, TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
-					} else {
-						String selectRepo = settings.get(STORE_REPO_ID);
-						if (selectRepo != null && repositoryCombo.indexOf(selectRepo) > -1) {
-							repositoryCombo.setText(selectRepo);
-							repository = TasksUiPlugin.getRepositoryManager().getRepository(
-									BugzillaCorePlugin.REPOSITORY_KIND, repositoryCombo.getText());
-							if (repository == null) {
-								repository = TasksUiPlugin.getRepositoryManager().getDefaultRepository(
-										BugzillaCorePlugin.REPOSITORY_KIND);
-							}
-						} else {
-							repositoryCombo.select(indexToSelect);
-						}
-						updateAttributesFromRepository(repositoryCombo.getText(), null, false);
-					}
-				}
+				// IDialogSettings settings = getDialogSettings();
+				// if (repositoryCombo != null) {
+				// repositoryCombo.setItems(repositoryUrls);
+				// if (repositoryUrls.length == 0) {
+				// MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+				// IBugzillaConstants.TITLE_MESSAGE_DIALOG,
+				// TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
+				// } else {
+				// String selectRepo = settings.get(STORE_REPO_ID);
+				// if (selectRepo != null && repositoryCombo.indexOf(selectRepo)
+				// > -1) {
+				// repositoryCombo.setText(selectRepo);
+				// repository =
+				// TasksUiPlugin.getRepositoryManager().getRepository(
+				// BugzillaCorePlugin.REPOSITORY_KIND,
+				// repositoryCombo.getText());
+				// if (repository == null) {
+				// repository =
+				// TasksUiPlugin.getRepositoryManager().getDefaultRepository(
+				// BugzillaCorePlugin.REPOSITORY_KIND);
+				// }
+				// } else {
+				// repositoryCombo.select(indexToSelect);
+				// }
+				// updateAttributesFromRepository(repositoryCombo.getText(),
+				// null, false);
+				// }
+				// }
 
 				firstTime = false;
 				// Set item and text here to prevent page from resizing
@@ -1037,7 +1037,7 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 				if (getWizard() == null && restoreQueryOptions && settings.getArray(STORE_PRODUCT_ID + repoId) != null
 						&& product != null) {
 					product.setSelection(nonNullArray(settings, STORE_PRODUCT_ID + repoId));
-					if(product.getSelection().length > 0) {
+					if (product.getSelection().length > 0) {
 						updateAttributesFromRepository(repository.getUrl(), product.getSelection(), false);
 					}
 					restoreWidgetValues();
@@ -1317,7 +1317,7 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 
 	private static final String STORE_EMAILADDRESS_ID = PAGE_NAME + ".EMAILADDRESS";
 
-	private static final String STORE_REPO_ID = PAGE_NAME + ".REPO";
+	// private static final String STORE_REPO_ID = PAGE_NAME + ".REPO";
 
 	protected Combo summaryOperation;
 
@@ -1387,7 +1387,7 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 
 		if (connect) {
 			try {
-				 IRunnableWithProgress updateRunnable = new IRunnableWithProgress() {
+				IRunnableWithProgress updateRunnable = new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 						monitor.beginTask("Updating search options...", IProgressMonitor.UNKNOWN);
 						try {
@@ -1413,8 +1413,8 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 									if (PlatformUI.getWorkbench() != null
 											&& PlatformUI.getWorkbench().getDisplay() != null) {
 										MessageDialog.openError(null, "Connection Error",
-												"\nPlease ensure proper configuration in "
-														+ TaskRepositoriesView.NAME + ". ");
+												"\nPlease ensure proper configuration in " + TaskRepositoriesView.NAME
+														+ ". ");
 									}
 								}
 							});
@@ -1440,8 +1440,7 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 					IProgressService service = PlatformUI.getWorkbench().getProgressService();
 					service.run(true, false, updateRunnable);
 				}
-				
-				
+
 			} catch (InvocationTargetException e) {
 				MessageDialog.openError(null, "Error updating search options", "Error was : "
 						+ e.getCause().getMessage());
@@ -1810,7 +1809,7 @@ public class BugzillaSearchPage extends AbstractBugzillaQueryPage implements ISe
 		settings.put(STORE_SUMMARYTEXT_ID + repoId, summaryPattern.getText());
 		settings.put(STORE_COMMENTTEXT_ID + repoId, commentPattern.getText());
 		settings.put(STORE_EMAILADDRESS_ID + repoId, emailPattern.getText());
-		settings.put(STORE_REPO_ID, repositoryCombo.getText());
+		// settings.put(STORE_REPO_ID, repositoryCombo.getText());
 	}
 
 	/* Testing hook to see if any products are present */

@@ -18,11 +18,11 @@ import java.util.Map;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.trac.TracUiPlugin;
+import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositoryQueryPage;
 import org.eclipse.mylar.internal.trac.TracRepositoryConnector;
 import org.eclipse.mylar.internal.trac.TracRepositoryQuery;
+import org.eclipse.mylar.internal.trac.TracUiPlugin;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.TracException;
 import org.eclipse.mylar.internal.trac.model.TracSearch;
@@ -48,6 +48,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.IProgressService;
 
 /**
  * Trac search page. Provides a form similar to the one the Bugzilla connector
@@ -55,7 +57,7 @@ import org.eclipse.swt.widgets.Text;
  * 
  * @author Steffen Pingel
  */
-public class TracCustomQueryPage extends WizardPage {
+public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 	private static final String TITLE = "New Trac Query";
 
@@ -118,6 +120,7 @@ public class TracCustomQueryPage extends WizardPage {
 	}
 
 	public void createControl(Composite parent) {
+		
 		Composite control = new Composite(parent, SWT.NONE);
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		control.setLayoutData(gd);
@@ -125,7 +128,7 @@ public class TracCustomQueryPage extends WizardPage {
 		control.setLayout(layout);
 
 		createTitleGroup(control);
-
+		
 		summaryField = new TextSearchField("summary");
 		summaryField.createControls(control, "Summary");
 
@@ -170,7 +173,7 @@ public class TracCustomQueryPage extends WizardPage {
 		// group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		// group.setText(TITLE_QUERY_TITLE);
 		// group.setLayout(new GridLayout(1, false));
-
+		if(inSearchContainer()) return;
 		Label titleLabel = new Label(control, SWT.NONE);
 		titleLabel.setText(TITLE_QUERY_TITLE);
 
@@ -316,7 +319,8 @@ public class TracCustomQueryPage extends WizardPage {
 
 		if (connect) {
 			try {
-				getContainer().run(true, true, new IRunnableWithProgress() {
+
+				IRunnableWithProgress runnable = new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 						try {
 							client.updateAttributes(monitor);
@@ -324,7 +328,14 @@ public class TracCustomQueryPage extends WizardPage {
 							throw new InvocationTargetException(e);
 						}
 					}
-				});
+				};
+
+				if (getContainer() != null) {
+					getContainer().run(true, true, runnable);
+				} else {
+					IProgressService service = PlatformUI.getWorkbench().getProgressService();
+					service.run(true, true, runnable);
+				}
 			} catch (InvocationTargetException e) {
 				TracUiPlugin.handleTracException(e.getCause());
 			} catch (InterruptedException e) {

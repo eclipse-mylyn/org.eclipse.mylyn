@@ -9,21 +9,21 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui.actions;
+package org.eclipse.mylar.internal.tasks.ui.search;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchResultView;
 
 /**
- * This class sorts Bugzilla search results by a supplied category.
+ * This class sorts search results by a supplied category.
+ * @author Rob Elves (moved to tasks.ui)
  */
-public class BugzillaSortAction extends Action {
+public class SearchResultSortAction extends Action {
 
 	/** The category that this class sorts Bugzilla search results by. */
 	private int bugSortOrder;
 
 	/** The view where the Bugzilla search results are displayed. */
-	private BugzillaSearchResultView bugPage;
+	private RepositorySearchResultView bugPage;
 
 	/**
 	 * Constructor
@@ -36,7 +36,7 @@ public class BugzillaSortAction extends Action {
 	 * @param sortOrder
 	 *            The category that this class sorts Bugzilla search results by
 	 */
-	public BugzillaSortAction(String label, BugzillaSearchResultView page, int sortOrder) {
+	public SearchResultSortAction(String label, RepositorySearchResultView page, int sortOrder) {
 		super(label);
 		bugPage = page;
 		bugSortOrder = sortOrder;

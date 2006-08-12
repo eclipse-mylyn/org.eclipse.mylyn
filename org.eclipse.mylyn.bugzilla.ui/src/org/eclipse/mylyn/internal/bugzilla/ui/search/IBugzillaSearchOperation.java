@@ -15,6 +15,7 @@ import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositorySearchQuery;
 
 /**
  * Interface for the bugzilla search operation
@@ -36,7 +37,7 @@ public interface IBugzillaSearchOperation extends IRunnableWithProgress {
 	 * 
 	 * @return The bugzilla search query
 	 */
-	public BugzillaSearchQuery getQuery();
+	public AbstractRepositorySearchQuery getQuery();
 
 	/**
 	 * Sets the bugzilla search query
@@ -44,7 +45,7 @@ public interface IBugzillaSearchOperation extends IRunnableWithProgress {
 	 * @param newQuery
 	 *            The bugzilla search query to be set
 	 */
-	public void setQuery(BugzillaSearchQuery newQuery);
+	public void setQuery(AbstractRepositorySearchQuery newQuery);
 
 	public String getName();
 }

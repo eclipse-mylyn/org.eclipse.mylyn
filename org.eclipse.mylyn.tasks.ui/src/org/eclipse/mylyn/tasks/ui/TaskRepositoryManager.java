@@ -115,6 +115,20 @@ public class TaskRepositoryManager {
 		}
 		return null;
 	}
+	
+	/**
+	 * @return first repository that matches the given url
+	 */
+	public TaskRepository getRepository(String urlString) {
+		for (String kind: repositoryMap.keySet()) {
+			for (TaskRepository repository : repositoryMap.get(kind)) {
+				if (repository.getUrl().equals(urlString)) {
+					return repository;
+				}
+			}
+		}		
+		return null;
+	}
 
 	/**
 	 * @return the first connector to accept the URL

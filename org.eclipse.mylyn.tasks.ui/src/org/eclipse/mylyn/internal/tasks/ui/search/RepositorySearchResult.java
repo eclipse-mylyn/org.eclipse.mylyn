@@ -9,10 +9,9 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui.search;
+package org.eclipse.mylar.internal.tasks.ui.search;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.search.internal.ui.SearchPluginImages;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.search.ui.text.AbstractTextSearchResult;
@@ -20,38 +19,41 @@ import org.eclipse.search.ui.text.IEditorMatchAdapter;
 import org.eclipse.search.ui.text.IFileMatchAdapter;
 
 /**
- * The collection of all the bugzilla matches.
+ * The collection of all the matches.
  * 
+ * @author Rob Elves (moved into task.ui)
  * @see org.eclipse.search.ui.text.AbstractTextSearchResult
  */
-public class BugzillaSearchResult extends AbstractTextSearchResult {
+public class RepositorySearchResult extends AbstractTextSearchResult {
 
 	/**
 	 * The query producing this result.
 	 */
-	private BugzillaSearchQuery bugQuery;
+	private AbstractRepositorySearchQuery repositoryQuery;
 
 	/**
-	 * Constructor for <code>BugzillaSearchResult</code> class.
+	 * Constructor for <code>RepositorySearchResult</code> class.
 	 * 
 	 * @param query
-	 *            <code>BugzillaSearchQuery</code> that is producing this
-	 *            result.
+	 *            <code>AbstractRepositorySearchQuery</code> that is producing
+	 *            this result.
 	 */
-	public BugzillaSearchResult(BugzillaSearchQuery query) {
+	public RepositorySearchResult(AbstractRepositorySearchQuery query) {
 		super();
-		bugQuery = query;
+		repositoryQuery = query;
 	}
 
 	@Override
 	public IEditorMatchAdapter getEditorMatchAdapter() {
-		IBugzillaResultEditorMatchAdapter adapter = BugzillaUiPlugin.getResultEditorMatchAdapter();
-		if (adapter == null) {
-			return null;
-		} else {
-			adapter.setResult(this);
-			return adapter;
-		}
+		// IBugzillaResultEditorMatchAdapter adapter =
+		// BugzillaUiPlugin.getResultEditorMatchAdapter();
+		// if (adapter == null) {
+		// return null;
+		// } else {
+		// adapter.setResult(this);
+		// return adapter;
+		// }
+		return null;
 	}
 
 	/**
@@ -81,7 +83,7 @@ public class BugzillaSearchResult extends AbstractTextSearchResult {
 	 * @return The singular label
 	 */
 	protected String getSingularLabel() {
-		return "Bugzilla search - 1 match";
+		return "Repository search - 1 match";
 	}
 
 	/**
@@ -90,7 +92,7 @@ public class BugzillaSearchResult extends AbstractTextSearchResult {
 	 * @return The plural label
 	 */
 	protected String getPluralLabel() {
-		return "Bugzilla search - " + getMatchCount() + " matches";
+		return "Repository search - " + getMatchCount() + " matches";
 	}
 
 	/*
@@ -117,7 +119,7 @@ public class BugzillaSearchResult extends AbstractTextSearchResult {
 	 * @see org.eclipse.search.ui.ISearchResult#getQuery()
 	 */
 	public ISearchQuery getQuery() {
-		return bugQuery;
+		return repositoryQuery;
 	}
 
 }

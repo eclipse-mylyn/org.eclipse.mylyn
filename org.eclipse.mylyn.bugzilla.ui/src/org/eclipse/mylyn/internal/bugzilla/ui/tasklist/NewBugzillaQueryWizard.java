@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositoryQueryPage;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -50,15 +51,15 @@ public class NewBugzillaQueryWizard extends Wizard {
 	@Override
 	public boolean performFinish() {
 
-		AbstractBugzillaQueryPage page;
+		AbstractRepositoryQueryPage page;
 
-		if (page1.getNextPage() != null && page1.getNextPage() instanceof AbstractBugzillaQueryPage) {
-			page = (AbstractBugzillaQueryPage) page1.getNextPage();
+		if (page1.getNextPage() != null && page1.getNextPage() instanceof AbstractRepositoryQueryPage) {
+			page = (AbstractRepositoryQueryPage) page1.getNextPage();
 		} else {
 			return false;
 		}
 
-		final BugzillaRepositoryQuery queryCategory = page.getQuery();
+		final BugzillaRepositoryQuery queryCategory = (BugzillaRepositoryQuery) page.getQuery();
 
 		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(queryCategory);
 //		boolean offline = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);

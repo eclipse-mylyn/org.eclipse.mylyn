@@ -34,6 +34,7 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.util.ZipFileUtil;
@@ -141,7 +142,7 @@ public abstract class AbstractRepositoryConnector {
 	public abstract AbstractRepositorySettingsPage getSettingsPage();
 
 	public abstract IWizard getNewQueryWizard(TaskRepository repository, IStructuredSelection selection);
-
+	
 	public abstract void openEditQueryDialog(AbstractRepositoryQuery query);
 
 	public abstract IWizard getNewTaskWizard(TaskRepository taskRepository, IStructuredSelection selection);
@@ -154,6 +155,14 @@ public abstract class AbstractRepositoryConnector {
 
 	public IWizard getAddExistingTaskWizard(TaskRepository repository) {
 		return new CommonAddExistingTaskWizard(repository);
+	}
+	
+	public boolean hasSearchPage() {
+		return false;
+	}
+	
+	public WizardPage getSearchPage(TaskRepository repository, IStructuredSelection selection) {
+		return null;
 	}
 	
 	/**
@@ -616,4 +625,5 @@ public abstract class AbstractRepositoryConnector {
 		}
 		return null;
 	}
+
 }

@@ -41,8 +41,10 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServe
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchHit;
+import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaCategorySearchOperation.ICategorySearchListener;
 import org.eclipse.mylar.internal.bugzilla.ui.wizard.NewBugzillaReportWizard;
+import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositoryQueryPage;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
@@ -136,6 +138,12 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	public IWizard getNewQueryWizard(TaskRepository repository, IStructuredSelection selection) {
 		return new NewBugzillaQueryWizard(repository);
+	}
+	
+
+	@Override
+	public AbstractRepositoryQueryPage getSearchPage(TaskRepository repository, IStructuredSelection selection) {
+		return new BugzillaSearchPage(repository);
 	}
 
 	public void openEditQueryDialog(AbstractRepositoryQuery query) {
@@ -369,6 +377,11 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	protected void updateTaskState(AbstractRepositoryTask repositoryTask) {
 		// TODO: implement once this is consistent with offline task data
+	}
+
+	@Override
+	public boolean hasSearchPage() {
+		return true;
 	}
 
 	@Override

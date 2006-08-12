@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.search;
 
+import org.eclipse.mylar.internal.tasks.ui.search.RepositorySearchResult;
 import org.eclipse.search.ui.text.AbstractTextSearchResult;
 import org.eclipse.search.ui.text.IEditorMatchAdapter;
 import org.eclipse.search.ui.text.Match;
@@ -25,5 +26,5 @@ public interface IBugzillaResultEditorMatchAdapter extends IEditorMatchAdapter {
 
 	public Match[] computeContainedMatches(AbstractTextSearchResult result, IEditorPart editor);
 
-	public void setResult(BugzillaSearchResult result);
+	public void setResult(RepositorySearchResult result);
 }

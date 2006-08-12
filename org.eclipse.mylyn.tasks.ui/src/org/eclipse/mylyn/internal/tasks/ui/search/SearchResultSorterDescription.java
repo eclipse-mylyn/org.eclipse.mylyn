@@ -9,26 +9,26 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui.search;
-
-import java.util.Arrays;
-import java.util.List;
+package org.eclipse.mylar.internal.tasks.ui.search;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskKeyComparator;
+import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 
 /**
- * Sorts results of Bugzilla search by bug priority.
+ * Sorts search results by description.
+ * 
+ * @author Rob Elves
  */
-public class BugzillaPrioritySearchSorter extends ViewerSorter {
+public class SearchResultSorterDescription extends ViewerSorter {
+
+	private TaskKeyComparator taskKeyComparator = new TaskKeyComparator();
 
 	/**
 	 * Returns a negative, zero, or positive number depending on whether the
-	 * first bug's priority goes before, is the same as, or goes after the
-	 * second element's priority.
+	 * first bug's description goes before, is the same as, or goes after the
+	 * second element's description.
 	 * <p>
 	 * 
 	 * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer,
@@ -38,19 +38,9 @@ public class BugzillaPrioritySearchSorter extends ViewerSorter {
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		try {
 
-			BugzillaQueryHit entry1 = (BugzillaQueryHit) e1;
-			String[] priorityLevels = BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRIORITY, null, entry1
-					.getRepositoryUrl());
-			if (priorityLevels != null && priorityLevels.length > 0) {
-				List<String> levels = Arrays.asList(priorityLevels);
-				Integer pr1 = new Integer(levels.indexOf(entry1.getPriority()));
-
-				BugzillaQueryHit entry2 = (BugzillaQueryHit) e2;
-				Integer pr2 = new Integer(levels.indexOf(entry2.getPriority()));
-				if (pr1 != null && pr2 != null) {
-					return pr1.compareTo(pr2);
-				}
-			}
+			AbstractQueryHit entry1 = (AbstractQueryHit) e1;
+			AbstractQueryHit entry2 = (AbstractQueryHit) e2;
+			return taskKeyComparator.compare(entry1.getDescription(), entry2.getDescription());
 		} catch (Exception ignored) {
 			// do nothing
 		}
@@ -71,10 +61,10 @@ public class BugzillaPrioritySearchSorter extends ViewerSorter {
 	@Override
 	public int category(Object element) {
 		try {
-			BugzillaQueryHit hit = (BugzillaQueryHit) element;
+			AbstractQueryHit hit = (AbstractQueryHit) element;
 			return Integer.parseInt(hit.getId());
 		} catch (Exception ignored) {
-			// ignore if there is a problem
+			// ignore if 
 		}
 		// if that didn't work, use the default category method
 		return super.category(element);

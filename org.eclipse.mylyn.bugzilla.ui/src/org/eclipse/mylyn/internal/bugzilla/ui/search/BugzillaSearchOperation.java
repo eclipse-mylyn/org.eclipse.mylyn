@@ -16,12 +16,13 @@ import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositorySearchQuery;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 
 /**
  * An operation to perform Bugzilla search query.
  * 
- * @author Mik Kersten (hardening of prototype
+ * @author Mik Kersten (hardening of prototype)
  */
 public class BugzillaSearchOperation implements IBugzillaSearchOperation {
 	private String queryUrl;
@@ -30,7 +31,7 @@ public class BugzillaSearchOperation implements IBugzillaSearchOperation {
 	private IBugzillaSearchResultCollector collector;
 
 	/** The bugzilla search query */
-	private BugzillaSearchQuery query;
+	private AbstractRepositorySearchQuery query;
 
 	/** The status of the search operation */
 	private IStatus status;
@@ -85,14 +86,14 @@ public class BugzillaSearchOperation implements IBugzillaSearchOperation {
 	/**
 	 * @see org.eclipse.mylar.internal.bugzilla.core.search.IBugzillaSearchOperation#getQuery()
 	 */
-	public BugzillaSearchQuery getQuery() {
+	public AbstractRepositorySearchQuery getQuery() {
 		return query;
 	}
 
 	/**
-	 * @see org.eclipse.mylar.internal.bugzilla.core.search.IBugzillaSearchOperation#setQuery(org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchQuery)
+	 * @see org.eclipse.mylar.internal.bugzilla.core.search.IBugzillaSearchOperation#setQuery(org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositorySearchQuery)
 	 */
-	public void setQuery(BugzillaSearchQuery newQuery) {
+	public void setQuery(AbstractRepositorySearchQuery newQuery) {
 		this.query = newQuery;
 	}
 

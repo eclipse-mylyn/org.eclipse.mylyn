@@ -9,10 +9,13 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
+package org.eclipse.mylar.internal.tasks.ui.search;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.search.ui.ISearchPage;
+import org.eclipse.search.ui.ISearchPageContainer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -25,7 +28,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * @author Rob Elves
  */
-public abstract class AbstractBugzillaQueryPage extends WizardPage {
+public abstract class AbstractRepositoryQueryPage extends WizardPage implements ISearchPage {
 
 	private static final String TITLE_QUERY_TITLE = "Query Title";
 
@@ -37,7 +40,9 @@ public abstract class AbstractBugzillaQueryPage extends WizardPage {
 
 	private String titleString = "";
 
-	public AbstractBugzillaQueryPage(String wizardTitle) {
+	protected ISearchPageContainer scontainer = null;
+
+	public AbstractRepositoryQueryPage(String wizardTitle) {
 		this(wizardTitle, "");
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);
@@ -45,24 +50,27 @@ public abstract class AbstractBugzillaQueryPage extends WizardPage {
 		setPageComplete(false);
 	}
 
-	public AbstractBugzillaQueryPage(String wizardTitle, String queryTitle) {
+	public AbstractRepositoryQueryPage(String wizardTitle, String queryTitle) {
 		super(wizardTitle);
 		titleString = queryTitle;
 	}
 
 	public void createControl(Composite parent) {
-		createTitleGroup(parent);
-		title.setFocus();
+		if (scontainer == null) {
+			createTitleGroup(parent);
+			title.setFocus();
+		}
 	}
 
 	private void createTitleGroup(Composite composite) {
+		if(scontainer != null) return;
 		Group group = new Group(composite, SWT.NONE);
 		group.setText(TITLE_QUERY_TITLE);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 1;
 		group.setLayout(layout);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.horizontalSpan = 2;
+		gd.horizontalSpan = 1;
 		group.setLayoutData(gd);
 
 		title = new Text(group, SWT.BORDER);
@@ -101,9 +109,22 @@ public abstract class AbstractBugzillaQueryPage extends WizardPage {
 		return title.getText();
 	}
 
-	public abstract BugzillaRepositoryQuery getQuery();
+	public abstract AbstractRepositoryQuery getQuery();
 
 	public void saveWidgetValues() {
 		// empty
 	}
+	
+	public void setContainer(ISearchPageContainer container) {
+		scontainer = container;
+	}
+	
+	public boolean inSearchContainer() {
+		return scontainer != null;
+	}
+
+	public boolean performAction() {
+		return false;
+	}
+
 }

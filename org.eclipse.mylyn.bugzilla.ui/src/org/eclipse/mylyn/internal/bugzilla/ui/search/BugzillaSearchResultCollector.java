@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
+import org.eclipse.mylar.internal.tasks.ui.search.RepositorySearchResult;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
@@ -35,7 +36,7 @@ public class BugzillaSearchResultCollector implements IBugzillaSearchResultColle
 	private IBugzillaSearchOperation operation;
 
 	/** The collection of all the bugzilla matches */
-	private BugzillaSearchResult searchResult;
+	private RepositorySearchResult searchResult;
 
 	/** The progress monitor for the search operation */
 	private IProgressMonitor monitor;
@@ -79,7 +80,7 @@ public class BugzillaSearchResultCollector implements IBugzillaSearchResultColle
 	public void aboutToStart(int startMatchCount) throws CoreException {
 		NewSearchUI.activateSearchResultView();
 		matchCount = startMatchCount;
-		searchResult = (BugzillaSearchResult) getOperation().getQuery().getSearchResult();
+		searchResult = (RepositorySearchResult) getOperation().getQuery().getSearchResult();
 
 		// set the progress monitor to say that we are querying the server
 		monitor.setTaskName(STARTING);

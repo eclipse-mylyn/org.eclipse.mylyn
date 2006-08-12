@@ -38,6 +38,7 @@ import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskSelection;
+import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositorySearchQuery;
 import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
@@ -215,7 +216,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		IBugzillaSearchResultCollector resultCollector = new BugzillaSearchResultCollector();
 		IBugzillaSearchOperation operation = new BugzillaSearchOperation(repository, queryUrl, TasksUiPlugin
 				.getDefault().getProxySettings(), resultCollector, "100");
-		BugzillaSearchQuery query = new BugzillaSearchQuery(operation);
+		AbstractRepositorySearchQuery query = new BugzillaSearchQuery(operation);
 
 		NewSearchUI.runQueryInBackground(query);
 		return true;

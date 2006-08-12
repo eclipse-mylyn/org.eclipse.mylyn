@@ -11,10 +11,10 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui;
 
-import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchResult;
 import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaResultEditorMatchAdapter;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractBugEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.editors.ExistingBugEditorInput;
+import org.eclipse.mylar.internal.tasks.ui.search.RepositorySearchResult;
 import org.eclipse.search.ui.text.AbstractTextSearchResult;
 import org.eclipse.search.ui.text.Match;
 import org.eclipse.ui.IEditorInput;
@@ -28,7 +28,7 @@ public class BugzillaResultMatchAdapter implements IBugzillaResultEditorMatchAda
 	/** An empty array of matches */
 	private final Match[] EMPTY_ARR = new Match[0];
 
-	private BugzillaSearchResult result;
+	private RepositorySearchResult result;
 
 	/*
 	 * (non-Javadoc)
@@ -64,7 +64,7 @@ public class BugzillaResultMatchAdapter implements IBugzillaResultEditorMatchAda
 		return EMPTY_ARR;
 	}
 
-	public void setResult(BugzillaSearchResult result) {
+	public void setResult(RepositorySearchResult result) {
 		this.result = result;
 	}
 

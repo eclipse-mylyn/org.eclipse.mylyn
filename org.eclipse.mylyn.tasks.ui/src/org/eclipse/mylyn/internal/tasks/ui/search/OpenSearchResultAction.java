@@ -8,26 +8,23 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.bugzilla.ui.actions;
+package org.eclipse.mylar.internal.tasks.ui.search;
 
 import java.util.Iterator;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
-import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchResultView;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 
 /**
  * This class is used to open a bug report in an editor.
  */
-public class OpenBugsAction extends Action {
+public class OpenSearchResultAction extends Action {
 
 	/** The view this action works on */
-	private BugzillaSearchResultView resultView;
+	private RepositorySearchResultView resultView;
 
 	/**
 	 * Constructor
@@ -35,10 +32,10 @@ public class OpenBugsAction extends Action {
 	 * @param text
 	 *            The text for this action
 	 * @param resultView
-	 *            The <code>BugzillaSearchResultView</code> this action works
-	 *            on
+	 *            The <code>RepositorySearchResultView</code> this action
+	 *            works on
 	 */
-	public OpenBugsAction(String text, BugzillaSearchResultView resultView) {
+	public OpenSearchResultAction(String text, RepositorySearchResultView resultView) {
 		setText(text);
 		this.resultView = resultView;
 	}
@@ -56,15 +53,23 @@ public class OpenBugsAction extends Action {
 			IStructuredSelection selection = (IStructuredSelection) s;
 
 			// go through each of the selected items and show it in an editor
-			for (Iterator<BugzillaQueryHit> it = selection.iterator(); it.hasNext();) {
-				BugzillaQueryHit repositoryHit = it.next();
-				try {
-					int id = Integer.parseInt(repositoryHit.getId());
-					String bugUrl = BugzillaServerFacade.getBugUrlWithoutLogin(repositoryHit.getRepositoryUrl(), id);
-					TaskUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), "" + repositoryHit.getId(), bugUrl);
-				} catch (NumberFormatException e) {
-					MylarStatusHandler.fail(e, "Could not open, malformed id: " + repositoryHit.getId(), true);
-				}
+			for (Iterator<AbstractQueryHit> it = selection.iterator(); it.hasNext();) {
+				AbstractQueryHit repositoryHit = it.next();
+				TaskUiUtil.refreshAndOpenTaskListElement(repositoryHit);
+				// TODO: Should query hits have a url so that we can call
+				// openRepositoryTask? (see below)
+
+				// try {
+				// int id = Integer.parseInt(repositoryHit.getId());
+				// String bugUrl =
+				// BugzillaServerFacade.getBugUrlWithoutLogin(repositoryHit.getRepositoryUrl(),
+				// id);
+				// TaskUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(),
+				// "" + repositoryHit.getId(), bugUrl);
+				// } catch (NumberFormatException e) {
+				// MylarStatusHandler.fail(e, "Could not open, malformed id: " +
+				// repositoryHit.getId(), true);
+				// }
 			}
 
 		}

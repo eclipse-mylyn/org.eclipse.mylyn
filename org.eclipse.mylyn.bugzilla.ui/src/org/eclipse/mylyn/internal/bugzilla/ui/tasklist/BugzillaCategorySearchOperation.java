@@ -24,8 +24,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchEngine;
-import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchQuery;
 import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaSearchOperation;
+import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositorySearchQuery;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -139,11 +139,11 @@ public class BugzillaCategorySearchOperation extends WorkspaceModifyOperation im
 		return null;
 	}
 
-	public BugzillaSearchQuery getQuery() {
+	public AbstractRepositorySearchQuery getQuery() {
 		return null;
 	}
 
-	public void setQuery(BugzillaSearchQuery newQuery) {
+	public void setQuery(AbstractRepositorySearchQuery newQuery) {
 	}
 
 	private List<ICategorySearchListener> listeners = new ArrayList<ICategorySearchListener>();

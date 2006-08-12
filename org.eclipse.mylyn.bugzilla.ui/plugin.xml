@@ -108,7 +108,7 @@
       		file="bugzilla-help.xml">
       </contexts>
    </extension>
-   <extension
+<!--   <extension
          point="org.eclipse.search.searchPages"
          id="org.eclipse.mylar.bugzilla.core.search.searchPage"
          name="Bugzilla Search Page">
@@ -124,10 +124,10 @@
          id="BugzillaSearchPage"
          point="org.eclipse.search.searchResultViewPages">
       <viewPage
-            class="org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchResultView"
+            class="org.eclipse.mylar.internal.tasks.ui.search.RepositorySearchResultView"
             searchResultClass="org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchResult"
             id="org.eclipse.mylar.bugzilla.BugzillaSearchResultPage"/>
-   </extension>
+   </extension>-->
    <extension
          point="org.eclipse.mylar.tasks.ui.templates">
       <repository
@@ -137,6 +137,18 @@
             urlRepository="https://bugs.eclipse.org/bugs"           
             version="2.20"/>
    </extension>
+<!--   <extension
+         id="org.eclipse.mylar.bugzilla.core.search.repositorySearchPage"
+         name="Repository Search Page"
+         point="org.eclipse.search.searchPages">
+       <page
+            class="org.eclipse.mylar.internal.tasks.ui.RepositorySearchPage"
+            enabled="true"
+            icon="icons/elcl16/bug-search.gif"
+            id="org.eclipse.mylar.bugzilla.core.search.repositorySearchPage"
+            label="Repository Search"
+            tabPosition="999"/>
+   </extension>-->
 <!--   <extension
          point="org.eclipse.mylar.tasklist.editors">
       <hyperlinkListener

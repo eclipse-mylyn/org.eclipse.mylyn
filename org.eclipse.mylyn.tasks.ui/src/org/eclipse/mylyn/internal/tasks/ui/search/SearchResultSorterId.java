@@ -9,26 +9,21 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui.search;
+package org.eclipse.mylar.internal.tasks.ui.search;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskKeyComparator;
+import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 
 /**
- * Sorts results of Bugzilla search by description.
- * 
- * @author Rob Elves
+ * Sorts search results (AbstractQueryHit) by id.
  */
-public class BugzillaDescriptionSearchSorter extends ViewerSorter {
-
-	private TaskKeyComparator taskKeyComparator = new TaskKeyComparator();
+public class SearchResultSorterId extends ViewerSorter {
 
 	/**
 	 * Returns a negative, zero, or positive number depending on whether the
-	 * first bug's description goes before, is the same as, or goes after the
-	 * second element's description.
+	 * first bug's id is less than, equal to, or greater than the second bug's
+	 * id.
 	 * <p>
 	 * 
 	 * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer,
@@ -37,12 +32,20 @@ public class BugzillaDescriptionSearchSorter extends ViewerSorter {
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		try {
+			// cast the object and get its bug id
+			AbstractQueryHit entry1 = (AbstractQueryHit) e1;
+			Integer id1 = Integer.parseInt(entry1.getId());
 
-			BugzillaQueryHit entry1 = (BugzillaQueryHit) e1;
-			BugzillaQueryHit entry2 = (BugzillaQueryHit) e2;
-			return taskKeyComparator.compare(entry1.getDescription(), entry2.getDescription());
+			// cast the other object and get its bug id
+			AbstractQueryHit entry2 = (AbstractQueryHit) e2;
+			Integer id2 = Integer.parseInt(entry2.getId());
+
+			// if neither is null, compare the bug id's
+			if (id1 != null && id2 != null) {
+				return id1.compareTo(id2);
+			}
 		} catch (Exception ignored) {
-			// do nothing
+			// ignore if there is a problem
 		}
 
 		// if that didn't work, use the default compare method
@@ -61,10 +64,10 @@ public class BugzillaDescriptionSearchSorter extends ViewerSorter {
 	@Override
 	public int category(Object element) {
 		try {
-			BugzillaQueryHit hit = (BugzillaQueryHit) element;
+			AbstractQueryHit hit = (AbstractQueryHit) element;
 			return Integer.parseInt(hit.getId());
 		} catch (Exception ignored) {
-			// ignore if 
+			// ignore
 		}
 		// if that didn't work, use the default category method
 		return super.category(element);

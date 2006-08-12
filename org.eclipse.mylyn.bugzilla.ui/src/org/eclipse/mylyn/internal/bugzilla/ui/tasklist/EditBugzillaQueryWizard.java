@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchPage;
+import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositoryQueryPage;
 import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractEditQueryWizard;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
@@ -31,7 +32,7 @@ public class EditBugzillaQueryWizard extends AbstractEditQueryWizard {
 		super(repository, query);
 	}
 
-	private AbstractBugzillaQueryPage page;
+	private AbstractRepositoryQueryPage page;
 
 	@Override
 	public void addPages() {

@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui.search;
+package org.eclipse.mylar.internal.tasks.ui.search;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -17,13 +17,15 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.search.internal.ui.SearchPreferencePage;
 
 /**
- * This implementation of <code>BugzillaContentProvider</code> is used for the
+ * This implementation of <code>SearchResultContentProvider</code> is used for the
  * table view of a Bugzilla search result.
+ * 
+ * @author Rob Elves (moved into task.ui)
  */
-public class BugzillaTableContentProvider extends BugzillaContentProvider implements IStructuredContentProvider {
+public class SearchResultTableContentProvider extends SearchResultContentProvider implements IStructuredContentProvider {
 
 	/** The page the Bugzilla search results are displayed in */
-	private BugzillaSearchResultView bugPage;
+	private RepositorySearchResultView bugPage;
 
 	/**
 	 * Constructor
@@ -31,14 +33,14 @@ public class BugzillaTableContentProvider extends BugzillaContentProvider implem
 	 * @param page
 	 *            The page the Bugzilla search results are displayed in
 	 */
-	public BugzillaTableContentProvider(BugzillaSearchResultView page) {
+	public SearchResultTableContentProvider(RepositorySearchResultView page) {
 		bugPage = page;
 	}
 
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		if (newInput instanceof BugzillaSearchResult) {
-			bugResult = (BugzillaSearchResult) newInput;
+		if (newInput instanceof RepositorySearchResult) {
+			searchResult = (RepositorySearchResult) newInput;
 		}
 	}
 
@@ -47,7 +49,7 @@ public class BugzillaTableContentProvider extends BugzillaContentProvider implem
 		TableViewer viewer = getViewer();
 		boolean tableLimited = SearchPreferencePage.isTableLimited();
 		for (int i = 0; i < updatedElements.length; i++) {
-			if (bugResult.getMatchCount(updatedElements[i]) > 0) {
+			if (searchResult.getMatchCount(updatedElements[i]) > 0) {
 				if (viewer.testFindItem(updatedElements[i]) != null)
 					viewer.update(updatedElements[i], null);
 				else {
@@ -75,8 +77,8 @@ public class BugzillaTableContentProvider extends BugzillaContentProvider implem
 	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
 	 */
 	public Object[] getElements(Object inputElement) {
-		if (inputElement instanceof BugzillaSearchResult) {
-			Object[] elements = ((BugzillaSearchResult) inputElement).getElements();
+		if (inputElement instanceof RepositorySearchResult) {
+			Object[] elements = ((RepositorySearchResult) inputElement).getElements();
 			int tableLimit = SearchPreferencePage.getTableLimit();
 			if (SearchPreferencePage.isTableLimited() && elements.length > tableLimit) {
 				Object[] shownElements = new Object[tableLimit];

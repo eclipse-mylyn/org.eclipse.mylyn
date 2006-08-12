@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.bugzilla.ui.search;
+package org.eclipse.mylar.internal.tasks.ui.search;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.action.IMenuManager;
@@ -20,16 +20,12 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylar.internal.bugzilla.ui.actions.BugzillaSortAction;
-import org.eclipse.mylar.internal.bugzilla.ui.actions.OpenBugsAction;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListTableLabelProvider;
+import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.search.internal.ui.SearchMessages;
 import org.eclipse.search.internal.ui.SearchPlugin;
 import org.eclipse.search.internal.ui.SearchPreferencePage;
@@ -48,11 +44,11 @@ import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.themes.IThemeManager;
 
 /**
- * Displays the results of a Bugzilla search.
+ * Displays the results of a Repository search.
  * 
  * @see org.eclipse.search.ui.text.AbstractTextSearchViewPage
  */
-public class BugzillaSearchResultView extends AbstractTextSearchViewPage implements IAdaptable {
+public class RepositorySearchResultView extends AbstractTextSearchViewPage implements IAdaptable {
 
 	// The categories to sort bug results by
 
@@ -68,25 +64,25 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 
 	public static final int ORDER_DEFAULT = ORDER_PRIORITY;
 
-	private static final String KEY_SORTING = BugzillaUiPlugin.PLUGIN_ID + ".search.resultpage.sorting"; //$NON-NLS-1$
+	private static final String KEY_SORTING = TasksUiPlugin.PLUGIN_ID + ".search.resultpage.sorting"; //$NON-NLS-1$
 
-	private BugzillaContentProvider bugContentProvider;
+	private SearchResultContentProvider bugContentProvider;
 
 	private int bugCurrentSortOrder;
 
-	// private BugzillaSortAction bugSortByIDAction;
+	// private SearchResultSortAction bugSortByIDAction;
 
-	// private BugzillaSortAction bugSortBySeverityAction;
+	// private SearchResultSortAction bugSortBySeverityAction;
 
-	private BugzillaSortAction bugSortByPriorityAction;
+	private SearchResultSortAction bugSortByPriorityAction;
 
-	private BugzillaSortAction bugSortByDescriptionAction;
+	private SearchResultSortAction bugSortByDescriptionAction;
 
-	// private BugzillaSortAction bugSortByStatusAction;
+	// private SearchResultSortAction bugSortByStatusAction;
 
 	// private AddFavoriteAction addToFavoritesAction;
 
-	private OpenBugsAction openInEditorAction;
+	private OpenSearchResultAction openInEditorAction;
 
 	private static final String[] SHOW_IN_TARGETS = new String[] { IPageLayout.ID_RES_NAV };
 
@@ -101,22 +97,24 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 	/**
 	 * Constructor
 	 */
-	public BugzillaSearchResultView() {
+	public RepositorySearchResultView() {
 		// Only use the table layout.
 		super(FLAG_LAYOUT_FLAT);
 
-		bugSortByPriorityAction = new BugzillaSortAction("Bug priority", this, ORDER_PRIORITY);
-		bugSortByDescriptionAction = new BugzillaSortAction("Bug Description", this, ORDER_DESCRIPTION);
-		// bugSortByIDAction = new BugzillaSortAction("Bug ID", this, ORDER_ID);
-		// bugSortBySeverityAction = new BugzillaSortAction("Bug severity",
+		bugSortByPriorityAction = new SearchResultSortAction("Bug priority", this, ORDER_PRIORITY);
+		bugSortByDescriptionAction = new SearchResultSortAction("Bug Description", this, ORDER_DESCRIPTION);
+		// bugSortByIDAction = new SearchResultSortAction("Bug ID", this,
+		// ORDER_ID);
+		// bugSortBySeverityAction = new SearchResultSortAction("Bug severity",
 		// this, ORDER_SEVERITY);
-		// bugSortByStatusAction = new BugzillaSortAction("Bug status", this,
+		// bugSortByStatusAction = new SearchResultSortAction("Bug status",
+		// this,
 		// ORDER_STATUS);
 		bugCurrentSortOrder = ORDER_DEFAULT;
 
 		// addToFavoritesAction = new AddFavoriteAction("Mark Result as
 		// Favorite", this);
-		openInEditorAction = new OpenBugsAction("Open Bug in Editor", this);
+		openInEditorAction = new OpenSearchResultAction("Open in Editor", this);
 
 		bugPropertyChangeListener = new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
@@ -193,13 +191,13 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 				categoryBackground);
 
 		viewer.setLabelProvider(taskListTableLabelProvider);
-		viewer.setContentProvider(new BugzillaTableContentProvider(this));
+		viewer.setContentProvider(new SearchResultTableContentProvider(this));
 
 		// Set the order when the search view is loading so that the items are
 		// sorted right away
 		setSortOrder(bugCurrentSortOrder);
 
-		bugContentProvider = (BugzillaContentProvider) viewer.getContentProvider();
+		bugContentProvider = (SearchResultContentProvider) viewer.getContentProvider();
 	}
 
 	/**
@@ -213,25 +211,25 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 
 		switch (sortOrder) {
 		case ORDER_ID:
-			viewer.setSorter(new BugzillaIdSearchSorter());
+			viewer.setSorter(new SearchResultSorterId());
 			break;
 		case ORDER_DESCRIPTION:
-			viewer.setSorter(new BugzillaDescriptionSearchSorter());
+			viewer.setSorter(new SearchResultSorterDescription());
 			break;
 		case ORDER_PRIORITY:
-			viewer.setSorter(new BugzillaPrioritySearchSorter());
+			viewer.setSorter(new SearchResultSorterPriority());
 			break;
-		case ORDER_SEVERITY:
-			viewer.setSorter(new BugzillaSeveritySearchSorter());
-			break;
-		case ORDER_STATUS:
-			viewer.setSorter(new BugzillaStateSearchSorter());
-			break;
+		// case ORDER_SEVERITY:
+		// viewer.setSorter(new BugzillaSeveritySearchSorter());
+		// break;
+		// case ORDER_STATUS:
+		// viewer.setSorter(new BugzillaStateSearchSorter());
+		// break;
 		default:
 			// If the setting is not one of the four valid ones,
 			// use the default order setting.
 			sortOrder = ORDER_DEFAULT;
-			viewer.setSorter(new BugzillaPrioritySearchSorter());
+			viewer.setSorter(new SearchResultSorterPriority());
 			break;
 		}
 		bugCurrentSortOrder = sortOrder;
@@ -253,15 +251,20 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 	@Override
 	protected void showMatch(Match match, int currentOffset, int currentLength, boolean activate)
 			throws PartInitException {
-		BugzillaQueryHit repositoryHit = (BugzillaQueryHit) match.getElement();
-		
-		try {
-			int id = Integer.parseInt(repositoryHit.getId());
-			String bugUrl = BugzillaServerFacade.getBugUrlWithoutLogin(repositoryHit.getRepositoryUrl(), id);
-			TaskUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), "" + repositoryHit.getId(), bugUrl);
-		} catch (NumberFormatException e) {
-			MylarStatusHandler.fail(e, "Could not open, malformed id: " + repositoryHit.getId(), true);
-		}
+		AbstractQueryHit repositoryHit = (AbstractQueryHit) match.getElement();
+		TaskUiUtil.refreshAndOpenTaskListElement(repositoryHit);
+
+		// try {
+		// int id = Integer.parseInt(repositoryHit.getId());
+		// String bugUrl =
+		// BugzillaServerFacade.getBugUrlWithoutLogin(repositoryHit.getRepositoryUrl(),
+		// id);
+		// TaskUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(),
+		// repositoryHit.getId(), bugUrl);
+		// } catch (NumberFormatException e) {
+		// MylarStatusHandler.fail(e, "Could not open, malformed id: " +
+		// repositoryHit.getId(), true);
+		// }
 	}
 
 	@Override

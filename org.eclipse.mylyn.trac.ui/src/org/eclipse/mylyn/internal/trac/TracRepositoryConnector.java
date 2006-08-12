@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.internal.tasks.ui.wizards.NewWebTaskWizard;
@@ -34,6 +35,7 @@ import org.eclipse.mylar.internal.trac.model.TracTicket;
 import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
 import org.eclipse.mylar.internal.trac.ui.wizard.EditTracQueryWizard;
 import org.eclipse.mylar.internal.trac.ui.wizard.NewTracQueryWizard;
+import org.eclipse.mylar.internal.trac.ui.wizard.TracCustomQueryPage;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
@@ -296,6 +298,16 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public boolean hasRichEditor() {
+		return false;
+	}
+
+	@Override
+	public WizardPage getSearchPage(TaskRepository repository, IStructuredSelection selection) {
+		return new TracCustomQueryPage(repository);
+	}
+
+	@Override
+	public boolean hasSearchPage() {
 		return false;
 	}
 

@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositoryQueryPage;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
@@ -27,7 +28,7 @@ import org.eclipse.swt.widgets.Text;
  * @author Rob Elves
  * @author Mik Kersten
  */
-public class BugzillaCustomQueryWizardPage extends AbstractBugzillaQueryPage {
+public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 
 	private static final String LABEL_CUSTOM_QUERY = "Enter query URL";
 
