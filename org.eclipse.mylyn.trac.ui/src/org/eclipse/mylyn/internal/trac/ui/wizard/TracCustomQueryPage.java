@@ -15,11 +15,13 @@ import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositoryQueryPage;
+import org.eclipse.mylar.internal.tasks.ui.search.RepositorySearchResult;
 import org.eclipse.mylar.internal.trac.TracRepositoryConnector;
 import org.eclipse.mylar.internal.trac.TracRepositoryQuery;
 import org.eclipse.mylar.internal.trac.TracUiPlugin;
@@ -28,10 +30,16 @@ import org.eclipse.mylar.internal.trac.core.TracException;
 import org.eclipse.mylar.internal.trac.model.TracSearch;
 import org.eclipse.mylar.internal.trac.model.TracSearchFilter;
 import org.eclipse.mylar.internal.trac.model.TracSearchFilter.CompareOperator;
+import org.eclipse.mylar.internal.trac.ui.search.AbstractQueryHitCollector;
+import org.eclipse.mylar.internal.trac.ui.search.IQueryHitCollector;
+import org.eclipse.mylar.internal.trac.ui.search.RepositorySearchQuery;
+import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.search.ui.NewSearchUI;
+import org.eclipse.search.ui.text.Match;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -120,7 +128,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 	}
 
 	public void createControl(Composite parent) {
-		
+
 		Composite control = new Composite(parent, SWT.NONE);
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		control.setLayoutData(gd);
@@ -128,7 +136,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		control.setLayout(layout);
 
 		createTitleGroup(control);
-		
+
 		summaryField = new TextSearchField("summary");
 		summaryField.createControls(control, "Summary");
 
@@ -169,11 +177,10 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 	}
 
 	private void createTitleGroup(Composite control) {
-		// Group group = new Group(composite, SWT.NONE);
-		// group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		// group.setText(TITLE_QUERY_TITLE);
-		// group.setLayout(new GridLayout(1, false));
-		if(inSearchContainer()) return;
+		if (inSearchContainer()) {
+			return;
+		}
+
 		Label titleLabel = new Label(control, SWT.NONE);
 		titleLabel.setText(TITLE_QUERY_TITLE);
 
@@ -306,6 +313,15 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		return group;
 	}
 
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		
+		if (scontainer != null) {
+			scontainer.setPerformActionEnabled(true);
+		}
+	}
+	
 	private void updateAttributesFromRepository(boolean connect) {
 		TracRepositoryConnector connector = (TracRepositoryConnector) TasksUiPlugin.getRepositoryManager()
 				.getRepositoryConnector(TracUiPlugin.REPOSITORY_KIND);
@@ -386,8 +402,45 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 	}
 
 	public TracRepositoryQuery getQuery() {
-		return new TracRepositoryQuery(repository.getUrl(), getQueryUrl(repository.getUrl()), titleText.getText(),
+		return new TracRepositoryQuery(repository.getUrl(), getQueryUrl(repository.getUrl()), getTitleText(),
 				TasksUiPlugin.getTaskListManager().getTaskList());
+	}
+
+	private String getTitleText() {
+		return (titleText != null) ? titleText.getText() : "<search>";
+	}
+
+	public boolean performAction() {
+		if (repository == null) {
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), TracUiPlugin.TITLE_MESSAGE_DIALOG,
+					TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
+			return false;
+		}
+
+		final RepositorySearchQuery searchQuery = new RepositorySearchQuery(repository, getQuery());
+		IQueryHitCollector collector = new AbstractQueryHitCollector() {
+			
+			private RepositorySearchResult searchResult;
+
+			@Override
+			public void aboutToStart(int startMatchCount) throws CoreException {
+				super.aboutToStart(startMatchCount);
+
+				NewSearchUI.activateSearchResultView();
+				searchResult = (RepositorySearchResult) searchQuery.getSearchResult();
+				searchResult.removeAll();
+			}
+
+			@Override
+			public void addMatch(AbstractQueryHit hit) {
+				searchResult.addMatch(new Match(hit, 0, 0));
+			}
+
+		};
+		searchQuery.setCollector(collector);
+		NewSearchUI.runQueryInBackground(searchQuery);
+
+		return true;
 	}
 
 	private abstract class SearchField {

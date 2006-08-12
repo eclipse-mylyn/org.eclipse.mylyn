@@ -308,7 +308,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public boolean hasSearchPage() {
-		return false;
+		return true;
 	}
 
 }

@@ -215,10 +215,13 @@ public class RepositorySearchPage extends DialogPage implements ISearchPage {
 					// null, false);
 				}
 			}
-			firstView = false;
-			pageContainer.setPerformActionEnabled(false);
+			firstView = false;			
 		}
 
+		if(queryPages == null) {
+			pageContainer.setPerformActionEnabled(false);
+		}
+		
 		super.setVisible(visible);
 	}
 
