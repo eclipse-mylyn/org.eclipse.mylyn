@@ -77,7 +77,7 @@ public class RepositorySearchPage extends DialogPage implements ISearchPage {
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		fParentComposite.setLayout(layout);
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
+		GridData gd = new GridData(GridData.FILL_BOTH);
 		fParentComposite.setLayoutData(gd);
 		createRepositoryGroup(fParentComposite);
 		this.setControl(fParentComposite);
@@ -132,7 +132,6 @@ public class RepositorySearchPage extends DialogPage implements ISearchPage {
 			GridData data = (GridData) queryPages[currentPageIndex].getControl().getLayoutData();
 			data.exclude = true;
 			queryPages[currentPageIndex].getControl().setLayoutData(data);
-			fParentComposite.pack(true);
 		}
 
 		if (queryPages[pageIndex] == null) {
@@ -151,7 +150,7 @@ public class RepositorySearchPage extends DialogPage implements ISearchPage {
 		}
 
 		currentPageIndex = pageIndex;
-		fParentComposite.pack(true);
+		fParentComposite.getParent().layout(true, true);
 	}
 
 	@Override
