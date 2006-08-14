@@ -45,6 +45,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -182,51 +183,19 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
+
+					final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+							.getRepositoryConnector(repository.getKind());
+
 					getContainer().run(true, false, new IRunnableWithProgress() {
 						public void run(IProgressMonitor monitor) throws InvocationTargetException,
 								InterruptedException {
 							monitor.beginTask("Updating repository report options...", IProgressMonitor.UNKNOWN);
-							try {
-								BugzillaUiPlugin.updateQueryOptions(repository, monitor);
-
-								products = new ArrayList<String>();
-								for (String product : BugzillaUiPlugin.getQueryOptions(
-										IBugzillaConstants.VALUES_PRODUCT, null, repository.getUrl())) {
-									products.add(product);
-								}
-							} catch (LoginException exception) {
-								PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-									public void run() {
-										if (PlatformUI.getWorkbench() != null
-												&& PlatformUI.getWorkbench().getDisplay() != null) {
-											MessageDialog
-													.openError(
-															getContainer().getShell(),
-															"Login Error",
-															"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease ensure proper configuration in "
-																	+ TaskRepositoriesView.NAME + ". ");
-										}
-									}
-								});
-							} catch (IOException exception) {
-								PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-									public void run() {
-										if (PlatformUI.getWorkbench() != null
-												&& PlatformUI.getWorkbench().getDisplay() != null) {
-											MessageDialog.openError(getContainer().getShell(), "Connection Error",
-													"\nPlease ensure proper configuration in "
-															+ TaskRepositoriesView.NAME + ". ");
-										}
-									}
-								});
-							} catch (KeyManagementException e) {
-								throw new InvocationTargetException(e);
-							} catch (NoSuchAlgorithmException e) {
-								throw new InvocationTargetException(e);
-							} catch (BugzillaException e) {
-								throw new InvocationTargetException(e);
-							} finally {
-								monitor.done();
+							connector.updateAttributes(repository, monitor);
+							products = new ArrayList<String>();
+							for (String product : BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT,
+									null, repository.getUrl())) {
+								products.add(product);
 							}
 						}
 					});

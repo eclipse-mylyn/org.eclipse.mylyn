@@ -21,6 +21,7 @@ import javax.security.auth.login.LoginException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
@@ -31,8 +32,8 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttachmentHandler;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
@@ -139,7 +140,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	public IWizard getNewQueryWizard(TaskRepository repository, IStructuredSelection selection) {
 		return new NewBugzillaQueryWizard(repository);
 	}
-	
 
 	@Override
 	public AbstractRepositoryQueryPage getSearchPage(TaskRepository repository, IStructuredSelection selection) {
@@ -152,8 +152,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 
 		try {
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-					query.getRepositoryKind(), query.getRepositoryUrl());
+			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(query.getRepositoryKind(),
+					query.getRepositoryUrl());
 			if (repository == null)
 				return;
 
@@ -243,8 +243,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			throw new BugzillaException("Invalid bug id returned by repository.");
 		}
 
-		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-				taskData.getRepositoryKind(), taskData.getRepositoryUrl());
+		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(taskData.getRepositoryKind(),
+				taskData.getRepositoryUrl());
 
 		BugzillaTask newTask = new BugzillaTask(AbstractRepositoryTask.getHandle(repository.getUrl(), bugId),
 				"<bugzilla info>", true);
@@ -388,9 +388,43 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	public void updateAttributes(TaskRepository repository, IProgressMonitor monitor) {
 		try {
 			BugzillaUiPlugin.updateQueryOptions(repository, monitor);
-		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Could not update attributes", false);
-		} 
+		} catch (LoginException exception) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					if (PlatformUI.getWorkbench() != null && PlatformUI.getWorkbench().getDisplay() != null) {
+						MessageDialog
+								.openError(
+										null,
+										"Login Error",
+										"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease ensure proper configuration in "
+												+ TaskRepositoriesView.NAME + ". ");
+					}
+				}
+			});
+			return;
+		} catch (IOException e) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					if (PlatformUI.getWorkbench() != null && PlatformUI.getWorkbench().getDisplay() != null) {
+						MessageDialog.openError(null, "Connection Error", "\nPlease ensure proper configuration in "
+								+ TaskRepositoriesView.NAME + ". ");
+					}
+				}
+			});
+			return;
+		} catch (OperationCanceledException exception) {
+			return;
+		} catch (final Exception e) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					if (PlatformUI.getWorkbench() != null && PlatformUI.getWorkbench().getDisplay() != null) {
+						String message = e.getCause() != null ? e.getCause().getMessage() : "<No message provided>";
+						MessageDialog.openError(null, "Error updating repository attributes", "Error was : " + message);
+					}
+				}
+			});
+			return;
+		}
 	}
 
 	@Override

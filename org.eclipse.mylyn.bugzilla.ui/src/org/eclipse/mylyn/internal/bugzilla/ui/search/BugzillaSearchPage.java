@@ -10,34 +10,27 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui.search;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Proxy;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import javax.security.auth.login.LoginException;
-
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositoryQueryPage;
 import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositorySearchQuery;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.search.ui.NewSearchUI;
@@ -1386,53 +1379,62 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private void updateAttributesFromRepository(String repositoryUrl, String[] selectedProducts, boolean connect) {
 
 		if (connect) {
-			try {
-				IRunnableWithProgress updateRunnable = new IRunnableWithProgress() {
-					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-						monitor.beginTask("Updating search options...", IProgressMonitor.UNKNOWN);
-						try {
-							BugzillaUiPlugin.updateQueryOptions(repository, monitor);
-						} catch (LoginException exception) {
-							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-								public void run() {
-									if (PlatformUI.getWorkbench() != null
-											&& PlatformUI.getWorkbench().getDisplay() != null) {
-										MessageDialog
-												.openError(
-														null,
-														"Login Error",
-														"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease ensure proper configuration in "
-																+ TaskRepositoriesView.NAME + ". ");
-									}
-								}
-							});
-							return;
-						} catch (IOException e) {
-							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-								public void run() {
-									if (PlatformUI.getWorkbench() != null
-											&& PlatformUI.getWorkbench().getDisplay() != null) {
-										MessageDialog.openError(null, "Connection Error",
-												"\nPlease ensure proper configuration in " + TaskRepositoriesView.NAME
-														+ ". ");
-									}
-								}
-							});
-							return;
-						} catch (OperationCanceledException exception) {
-							return;
-						} catch (KeyManagementException e) {
-							throw new InvocationTargetException(e);
-						} catch (NoSuchAlgorithmException e) {
-							throw new InvocationTargetException(e);
-						} catch (BugzillaException e) {
-							throw new InvocationTargetException(e);
-						} finally {
-							monitor.done();
-						}
-					}
-				};
+			final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+					repository.getKind());
 
+			IRunnableWithProgress updateRunnable = new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					monitor.beginTask("Updating search options...", IProgressMonitor.UNKNOWN);
+					// try {
+					connector.updateAttributes(repository, monitor);
+					// BugzillaUiPlugin.updateQueryOptions(repository, monitor);
+					// } catch (LoginException exception) {
+					// PlatformUI.getWorkbench().getDisplay().asyncExec(new
+					// Runnable() {
+					// public void run() {
+					// if (PlatformUI.getWorkbench() != null
+					// && PlatformUI.getWorkbench().getDisplay() != null) {
+					// MessageDialog
+					// .openError(
+					// null,
+					// "Login Error",
+					// "Bugzilla could not log you in to get the information you
+					// requested since login name or password is
+					// incorrect.\nPlease ensure proper configuration in "
+					// + TaskRepositoriesView.NAME + ". ");
+					// }
+					// }
+					// });
+					// return;
+					// } catch (IOException e) {
+					// PlatformUI.getWorkbench().getDisplay().asyncExec(new
+					// Runnable() {
+					// public void run() {
+					// if (PlatformUI.getWorkbench() != null
+					// && PlatformUI.getWorkbench().getDisplay() != null) {
+					// MessageDialog.openError(null, "Connection Error",
+					// "\nPlease ensure proper configuration in " +
+					// TaskRepositoriesView.NAME
+					// + ". ");
+					// }
+					// }
+					// });
+					// return;
+					// } catch (OperationCanceledException exception) {
+					// return;
+					// } catch (KeyManagementException e) {
+					// throw new InvocationTargetException(e);
+					// } catch (NoSuchAlgorithmException e) {
+					// throw new InvocationTargetException(e);
+					// } catch (BugzillaException e) {
+					// throw new InvocationTargetException(e);
+					// } finally {
+					// monitor.done();
+					// }
+				}
+			};
+
+			try {
 				// TODO: make cancelable (bug 143011)
 				if (getContainer() != null) {
 					getContainer().run(true, false, updateRunnable);
