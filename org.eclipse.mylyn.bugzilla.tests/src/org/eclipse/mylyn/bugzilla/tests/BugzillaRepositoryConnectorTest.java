@@ -104,8 +104,9 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		repository.setAuthenticationCredentials(credentials.username, credentials.password);
 
 		repository.setTimeZoneId("Canada/Eastern");
-		manager.addRepository(repository);
 		assertNotNull(manager);
+		manager.addRepository(repository);
+		
 		taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 
 		AbstractRepositoryConnector abstractRepositoryClient = manager.getRepositoryConnector(DEFAULT_KIND);

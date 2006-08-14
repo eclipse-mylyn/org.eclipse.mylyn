@@ -1175,36 +1175,36 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		sb.append(patternOperationValues[summaryOperation.getSelectionIndex()]);
 
 		sb.append("&short_desc=");
-		sb.append(URLEncoder.encode(summaryPattern.getText(), "UTF-8"));
+		sb.append(URLEncoder.encode(summaryPattern.getText(), repository.getCharacterEncoding()));
 
 		int[] selected = product.getSelectionIndices();
 		for (int i = 0; i < selected.length; i++) {
 			sb.append("&product=");
-			sb.append(URLEncoder.encode(product.getItem(selected[i]), "UTF-8"));
+			sb.append(URLEncoder.encode(product.getItem(selected[i]), repository.getCharacterEncoding()));
 		}
 
 		selected = component.getSelectionIndices();
 		for (int i = 0; i < selected.length; i++) {
 			sb.append("&component=");
-			sb.append(URLEncoder.encode(component.getItem(selected[i]), "UTF-8"));
+			sb.append(URLEncoder.encode(component.getItem(selected[i]), repository.getCharacterEncoding()));
 		}
 
 		selected = version.getSelectionIndices();
 		for (int i = 0; i < selected.length; i++) {
 			sb.append("&version=");
-			sb.append(URLEncoder.encode(version.getItem(selected[i]), "UTF-8"));
+			sb.append(URLEncoder.encode(version.getItem(selected[i]), repository.getCharacterEncoding()));
 		}
 
 		selected = target.getSelectionIndices();
 		for (int i = 0; i < selected.length; i++) {
 			sb.append("&target_milestone=");
-			sb.append(URLEncoder.encode(target.getItem(selected[i]), "UTF-8"));
+			sb.append(URLEncoder.encode(target.getItem(selected[i]), repository.getCharacterEncoding()));
 		}
 
 		sb.append("&long_desc_type=");
 		sb.append(patternOperationValues[commentOperation.getSelectionIndex()]);
 		sb.append("&long_desc=");
-		sb.append(URLEncoder.encode(commentPattern.getText(), "UTF-8"));
+		sb.append(URLEncoder.encode(commentPattern.getText(), repository.getCharacterEncoding()));
 
 		selected = status.getSelectionIndices();
 		for (int i = 0; i < selected.length; i++) {
@@ -1233,13 +1233,13 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		selected = hardware.getSelectionIndices();
 		for (int i = 0; i < selected.length; i++) {
 			sb.append("&ref_platform=");
-			sb.append(URLEncoder.encode(hardware.getItem(selected[i]), "UTF-8"));
+			sb.append(URLEncoder.encode(hardware.getItem(selected[i]), repository.getCharacterEncoding()));
 		}
 
 		selected = os.getSelectionIndices();
 		for (int i = 0; i < selected.length; i++) {
 			sb.append("&op_sys=");
-			sb.append(URLEncoder.encode(os.getItem(selected[i]), "UTF-8"));
+			sb.append(URLEncoder.encode(os.getItem(selected[i]), repository.getCharacterEncoding()));
 		}
 
 		if (emailPattern.getText() != null) {
@@ -1253,14 +1253,14 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			sb.append("&emailtype1=");
 			sb.append(emailOperationValues[emailOperation.getSelectionIndex()]);
 			sb.append("&email1=");
-			sb.append(URLEncoder.encode(emailPattern.getText(), "UTF-8"));
+			sb.append(URLEncoder.encode(emailPattern.getText(), repository.getCharacterEncoding()));
 		}
 
 		if (daysText.getText() != null && !daysText.getText().equals("")) {
 			try {
 				Integer.parseInt(daysText.getText());
 				sb.append("&changedin=");
-				sb.append(URLEncoder.encode(daysText.getText(), "UTF-8"));
+				sb.append(URLEncoder.encode(daysText.getText(), repository.getCharacterEncoding()));
 			} catch (NumberFormatException ignored) {
 				// this means that the days is not a number, so don't worry
 			}
@@ -1556,7 +1556,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		String[] options = startingUrl.split("&");
 		for (String option : options) {
 			String key = option.substring(0, option.indexOf("="));
-			String value = URLDecoder.decode(option.substring(option.indexOf("=") + 1), "UTF-8");
+			String value = URLDecoder.decode(option.substring(option.indexOf("=") + 1), repository.getCharacterEncoding());
 			if (key == null)
 				continue;
 
