@@ -61,7 +61,7 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 		}
 	}
 
-	public String getBugUrl() {
+	public String getUrl() {
 		Integer idInt = new Integer(id);
 		return BugzillaServerFacade.getBugUrlWithoutLogin(repositoryUrl, idInt);
 	}
@@ -93,5 +93,5 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 	public void setHandleIdentifier(String id) {
 		// can't change the handle
 	}
-
+	
 }

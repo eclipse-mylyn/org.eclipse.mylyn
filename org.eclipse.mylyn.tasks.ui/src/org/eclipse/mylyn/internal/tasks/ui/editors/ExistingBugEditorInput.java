@@ -29,13 +29,14 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 public class ExistingBugEditorInput extends AbstractBugEditorInput {
 
 	protected String id;
-
+	protected String url;
 	protected AbstractRepositoryTask repositoryTask = null;
 
 	// Called for existing report without a local task
-	public ExistingBugEditorInput(TaskRepository repository, RepositoryTaskData taskData) {
+	public ExistingBugEditorInput(String url, TaskRepository repository, RepositoryTaskData taskData) {
 		super(repository, taskData);
 		this.id = taskData.getId();
+		this.url = url;
 	}
 
 	public ExistingBugEditorInput(TaskRepository repository, RepositoryTaskData taskData, String bugId)
@@ -119,6 +120,12 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 		return true;
 	}
 
-
+	
+	/**
+	 * @return url for the repositoryTask/hit. Used by MylarTaskEditor when opening browser
+	 */
+	public String getUrl() {
+		return url;
+	}
 
 }

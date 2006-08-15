@@ -81,6 +81,12 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 		return this.getHandleIdentifier().hashCode();
 	}
 	
+	/**
+	 * @return the url of the hit without any additional login information etc.
+	 */
+	public String getUrl() {
+		return "";
+	}
 	
 	
 }

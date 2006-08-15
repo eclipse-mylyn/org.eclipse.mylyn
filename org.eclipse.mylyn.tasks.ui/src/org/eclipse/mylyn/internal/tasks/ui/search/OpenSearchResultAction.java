@@ -55,10 +55,7 @@ public class OpenSearchResultAction extends Action {
 			// go through each of the selected items and show it in an editor
 			for (Iterator<AbstractQueryHit> it = selection.iterator(); it.hasNext();) {
 				AbstractQueryHit repositoryHit = it.next();
-				TaskUiUtil.refreshAndOpenTaskListElement(repositoryHit);
-				// TODO: Should query hits have a url so that we can call
-				// openRepositoryTask? (see below)
-
+				TaskUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), repositoryHit.getId(), repositoryHit.getUrl());
 				// try {
 				// int id = Integer.parseInt(repositoryHit.getId());
 				// String bugUrl =

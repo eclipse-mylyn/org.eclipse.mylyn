@@ -252,7 +252,8 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 	protected void showMatch(Match match, int currentOffset, int currentLength, boolean activate)
 			throws PartInitException {
 		AbstractQueryHit repositoryHit = (AbstractQueryHit) match.getElement();
-		TaskUiUtil.refreshAndOpenTaskListElement(repositoryHit);
+		
+		TaskUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), repositoryHit.getId(), repositoryHit.getUrl());
 
 		// try {
 		// int id = Integer.parseInt(repositoryHit.getId());

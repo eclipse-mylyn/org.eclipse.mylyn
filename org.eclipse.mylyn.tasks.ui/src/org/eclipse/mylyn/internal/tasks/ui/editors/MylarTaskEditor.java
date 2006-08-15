@@ -207,14 +207,14 @@ public class MylarTaskEditor extends FormEditor {
 		return super.getActiveEditor();
 	}
 
-	private int createBrowserPage() {
+	private int createBrowserPage(String url) {
 		if (!TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL)) {
 			try {
 				webBrowser = new Browser(getContainer(), SWT.NONE);
 				int index = addPage(webBrowser);
 				setPageText(index, ISSUE_WEB_PAGE_LABEL);
-				webBrowser.setUrl(task.getUrl());
+				webBrowser.setUrl(url);
 
 				boolean openWithBrowser = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 						TaskListPreferenceConstants.REPORT_OPEN_INTERNAL);
@@ -285,8 +285,14 @@ public class MylarTaskEditor extends FormEditor {
 	/**
 	 * HACK: perform real check
 	 */
-	private boolean hasValidUrl() {
-		return task != null && task.getUrl().length() > 9;
+	private String getUrl() {
+		String url = null;
+		if(getEditorInput() instanceof ExistingBugEditorInput) {
+			url  = ((ExistingBugEditorInput)getEditorInput()).getUrl();			
+		} else if(task != null && task.getUrl().length() > 9){
+			url = task.getUrl();
+		}
+		return url;
 	}
 
 	/**
@@ -487,8 +493,6 @@ public class MylarTaskEditor extends FormEditor {
 				taskEditorInput = (TaskEditorInput) getEditorInput();
 				task = taskEditorInput.getTask();
 				setPartName(taskEditorInput.getLabel());					
-			} else {
-				this.setTitleImage(TaskListImages.getImage(TaskListImages.TASK_REMOTE));
 			}
 			
 			int selectedIndex = index;
@@ -505,7 +509,8 @@ public class MylarTaskEditor extends FormEditor {
 								repositoryTaskEditor.createPartControl(getContainer());
 								index = addPage(repositoryTaskEditor);
 								if(getEditorInput() instanceof ExistingBugEditorInput) {
-									setPartName(((ExistingBugEditorInput)getEditorInput()).getToolTipText());
+									ExistingBugEditorInput existingInput = (ExistingBugEditorInput)getEditorInput();
+									setPartName(existingInput.getId()+": "+existingInput.getName());
 								}
 							} else {
 								index = addPage(editor, input);
@@ -523,9 +528,10 @@ public class MylarTaskEditor extends FormEditor {
 					}
 				}
 			}
-			if (hasValidUrl()) {
-				int browserIndex = createBrowserPage();
-				if (selectedIndex == 0 && !taskEditorInput.isNewTask()) {
+			String urlToOpen = getUrl();
+			if (urlToOpen != null && !urlToOpen.equals("")) {
+				int browserIndex = createBrowserPage(urlToOpen);
+				if (selectedIndex == 0 && taskEditorInput != null && !taskEditorInput.isNewTask()) {
 					selectedIndex = browserIndex;
 				}
 			}
@@ -533,7 +539,9 @@ public class MylarTaskEditor extends FormEditor {
 
 			if (task instanceof AbstractRepositoryTask) {
 				setTitleImage(TaskListImages.getImage(TaskListImages.TASK_REPOSITORY));
-			} else if (hasValidUrl()) {
+			} else if(getEditorInput() instanceof AbstractBugEditorInput) {
+				this.setTitleImage(TaskListImages.getImage(TaskListImages.TASK_REMOTE));
+			} else if (getUrl() != null) {
 				setTitleImage(TaskListImages.getImage(TaskListImages.TASK_WEB));
 			}
 		} catch (PartInitException e) {

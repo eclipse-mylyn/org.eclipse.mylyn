@@ -84,8 +84,11 @@ public class OpenBugzillaReportJob extends Job {
 				RepositoryTaskData data = BugzillaServerFacade.getBug(repository.getUrl(), repository.getUserName(),
 						repository.getPassword(), TasksUiPlugin.getDefault().getProxySettings(), repository
 								.getCharacterEncoding(), bugId.intValue());
-				final AbstractBugEditorInput editorInput = new ExistingBugEditorInput(repository, data);
-
+				
+				String url = BugzillaServerFacade.getBugUrlWithoutLogin(repository.getUrl(), id);
+				
+				final AbstractBugEditorInput editorInput = new ExistingBugEditorInput(url, repository, data);
+								
 				// final ExistingBugEditorInput editorInput = new
 				// ExistingBugEditorInput(repository, bugId.intValue());
 
