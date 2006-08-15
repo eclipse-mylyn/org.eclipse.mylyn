@@ -677,7 +677,7 @@ public class TaskListManager implements IPropertyChangeListener {
 			
 			if(task instanceof AbstractRepositoryTask) {
 				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)task;
-				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryTask.getRepositoryUrl());
+				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
 				if(repository != null && repositoryTask.getOwner() != null && !repositoryTask.getOwner().equals(repository.getUserName())) return false;
 			}
 
