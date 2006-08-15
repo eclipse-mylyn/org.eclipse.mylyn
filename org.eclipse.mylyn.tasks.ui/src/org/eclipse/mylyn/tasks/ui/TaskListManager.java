@@ -49,6 +49,7 @@ import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskActivityListener;
 import org.eclipse.mylar.tasks.core.TaskList;
+import org.eclipse.mylar.tasks.core.TaskRepository;
 
 /**
  * TODO: clean-up
@@ -672,7 +673,14 @@ public class TaskListManager implements IPropertyChangeListener {
 	}
 
 	public boolean isCompletedToday(ITask task) {
-		if (task != null) {
+		if (task != null) {	
+			
+			if(task instanceof AbstractRepositoryTask) {
+				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)task;
+				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryTask.getRepositoryUrl());
+				if(repository != null && repositoryTask.getOwner() != null && !repositoryTask.getOwner().equals(repository.getUserName())) return false;
+			}
+
 			Date completionDate = task.getCompletionDate();
 			if (completionDate != null) {
 				Calendar tomorrow = Calendar.getInstance();

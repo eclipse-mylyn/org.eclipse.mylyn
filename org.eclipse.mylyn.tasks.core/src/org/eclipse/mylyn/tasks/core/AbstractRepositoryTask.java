@@ -165,4 +165,9 @@ public abstract class AbstractRepositoryTask extends Task {
 	public void setNotified(boolean notified) {
 		isNotifiedIncoming = notified;
 	}
+
+	
+	public String getOwner() {
+		return "<unknown>";
+	}
 }

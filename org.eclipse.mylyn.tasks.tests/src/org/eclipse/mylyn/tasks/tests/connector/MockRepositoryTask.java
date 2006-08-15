@@ -18,6 +18,8 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
  */
 public class MockRepositoryTask extends AbstractRepositoryTask {
 	
+	private String ownerId;
+	
 	public MockRepositoryTask(String handle) {
 		super(handle, "label for " + handle, true);
 	}
@@ -35,6 +37,18 @@ public class MockRepositoryTask extends AbstractRepositoryTask {
 	@Override
 	public boolean isPersistentInWorkspace() {
 		return false;
+	}
+	
+	public void setOwner(String ownerId) {
+		this.ownerId = ownerId;
+	}
+	
+	public String getOwner() {
+		if(ownerId == null) {
+			return super.getOwner();
+		} else {
+			return ownerId;
+		}
 	}
 
 }

@@ -143,6 +143,15 @@ public class BugzillaTask extends AbstractRepositoryTask {
 	}
 
 	@Override
+	public String getOwner() {
+		if (taskData != null && taskData.getAttribute(BugzillaReportElement.ASSIGNED_TO.getKeyString()) != null) {
+			return taskData.getAttribute(BugzillaReportElement.ASSIGNED_TO.getKeyString()).getValue();
+		} else {
+			return super.getOwner();
+		}
+	}
+	
+	@Override
 	public boolean isPersistentInWorkspace() {
 		return true;
 	}

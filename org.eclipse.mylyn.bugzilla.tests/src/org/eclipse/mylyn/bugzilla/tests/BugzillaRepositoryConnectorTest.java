@@ -589,8 +589,8 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		BugzillaTask task = (BugzillaTask) client.createTaskFromExistingKey(repository, taskNumber);
 		assertNotNull(task);
 
-		boolean isPatch[] = { false, true, false, false, false, false, false, true };
-		boolean isObsolete[] = { false, true, false, true, false, false, false, false };
+		boolean isPatch[] = { false, true, false, false, false, false, false, true, false, false };
+		boolean isObsolete[] = { false, true, false, true, false, false, false, false, false, false };
 
 		Iterator<RepositoryAttachment> iter = task.getTaskData().getAttachments().iterator();
 		int index = 0;

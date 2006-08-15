@@ -49,6 +49,8 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
  */
 public class TaskListManagerTest extends TestCase {
 
+	private static final String MOCK_REPOSITORY_URL = "http://mock.repository";
+
 	private TaskListManager manager;
 
 	private TaskRepository repository;
@@ -60,7 +62,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.resetTaskList();
 		manager.readExistingOrCreateNewList();
 		
-		repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, "http://mock.repository");
+		repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, MOCK_REPOSITORY_URL);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 		
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
@@ -141,6 +143,28 @@ public class TaskListManagerTest extends TestCase {
 		assertTrue(manager.isReminderToday(task));
 	}
 
+	public void testIsCompletedToday() {
+		ITask task = new Task("1", "task-1", true);
+		task.setCompleted(true);
+		task.setCompletionDate(new Date());
+		assertTrue(manager.isCompletedToday(task));
+		
+		MockRepositoryTask mockTask = new MockRepositoryTask(MOCK_REPOSITORY_URL+"-1");
+		manager.getTaskList().addTask(mockTask);
+		mockTask.setCompleted(true);
+		mockTask.setCompletionDate(new Date());
+		assertFalse(manager.isCompletedToday(mockTask));
+		
+		mockTask = new MockRepositoryTask(MOCK_REPOSITORY_URL+"-2");
+		manager.getTaskList().addTask(mockTask);
+		mockTask.setCompleted(true);
+		mockTask.setCompletionDate(new Date());
+		repository.setAuthenticationCredentials("testUser", "testPassword");
+		mockTask.setOwner("testUser");
+		assertTrue(manager.isCompletedToday(mockTask));
+		
+	}
+	
 	public void testMoveCategories() {
 		assertEquals(0, manager.getTaskList().getRootTasks().size());
 		Task task1 = new Task("t1", "t1", true);
