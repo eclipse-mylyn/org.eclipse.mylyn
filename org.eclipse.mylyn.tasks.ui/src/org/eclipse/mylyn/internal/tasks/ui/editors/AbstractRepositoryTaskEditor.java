@@ -104,9 +104,13 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IStorageEditorInput;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.RetargetAction;
 import org.eclipse.ui.forms.IManagedForm;
@@ -144,7 +148,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private static final String CTYPE_HTML = "html";
 
-	private static final String LABEL_OPEN_IN_BROWSER = "Open in Browser";
+	private static final String LABEL_OPEN_WITH_BROWSER = "Open With Browser";
+	
+	private static final String LABEL_OPEN_WITH_DEFUALT_EDITOR = "Open With Defualt Editor";
 
 	// private static final String ATTACHMENT_URL_SUFFIX =
 	// "/attachment.cgi?id=";
@@ -818,15 +824,45 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			attachmentsTableViewer.setInput(getRepositoryTaskData());
 
 			final MenuManager popupMenu = new MenuManager();
-			popupMenu.add(new Action(LABEL_OPEN_IN_BROWSER) {
+			Menu menu = popupMenu.createContextMenu(attachmentsTable);
+			attachmentsTable.setMenu(menu);
+
+			final Action openWithBrowserAction = new Action(LABEL_OPEN_WITH_BROWSER) {
 				public void run() {
 					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
 							.getSelection()).getFirstElement());
 					TaskUiUtil.openUrl(attachment.getUrl());
 				}
-			});
+			};
 
-			popupMenu.add(new Action(SaveRemoteFileAction.TITLE) {
+			final Action openWithDefaultAction = new Action(LABEL_OPEN_WITH_DEFUALT_EDITOR) {
+				public void run() {
+					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
+							.getSelection()).getFirstElement());
+
+					// browser shortcut
+					if (attachment.getContentType().endsWith(CTYPE_HTML)) {
+						TaskUiUtil.openUrl(attachment.getUrl());
+						return;
+					}
+					
+					IStorageEditorInput input = new RepositoryAttachmentEditorInput(attachment);
+					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+					if (page == null) {
+						return;
+					}
+					IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(
+							input.getName());
+					try {
+						page.openEditor(input, desc.getId());
+					} catch (PartInitException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			};
+			
+			final Action saveAction = new Action(SaveRemoteFileAction.TITLE) {
 				public void run() {
 					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
 							.getSelection()).getFirstElement());
@@ -862,8 +898,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					save.setInputStream(getAttachmentInputStream(attachment.getUrl()));
 					save.run();
 				}
-			});
-			final Action copyToClip = new Action(CopyToClipboardAction.TITLE) {
+			};
+			
+			final Action copyToClipAction = new Action(CopyToClipboardAction.TITLE) {
 				public void run() {
 					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
 							.getSelection()).getFirstElement());
@@ -873,37 +910,41 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					copyToClip.run();
 				}
 			};
-			copyToClip.setId("ID_COPY_TO_CLIPBOARD");
 
-			final Action applyPatch = new Action("Apply Patch...") {
+			final Action applyPatchAction = new Action("Apply Patch...") {
 				public void run() {
 					// RepositoryAttachment att =
 					// (RepositoryAttachment)(((StructuredSelection)attachmentsTableViewer.getSelection()).getFirstElement());
 					// implementation pending bug 98707
 				}
 			};
-			applyPatch.setId("ID_APPLY_PATCH");
-			applyPatch.setEnabled(false); // pending bug 98707
-
-			popupMenu.add(new Separator());
-			Menu menu = popupMenu.createContextMenu(attachmentsTable);
-			attachmentsTable.setMenu(menu);
+			applyPatchAction.setEnabled(false); // pending bug 98707
 
 			/*
-			 * Add the apply patch option if the attachment is a patch. Add the
-			 * copy to clipboard option if the attachment is text or xml
+			 * Rebuild menu with the appropriate items for the selection
 			 */
 			attachmentsTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 				public void selectionChanged(SelectionChangedEvent e) {
 					RepositoryAttachment att = (RepositoryAttachment) (((StructuredSelection) e.getSelection())
 							.getFirstElement());
-					popupMenu.remove("ID_APPLY_PATCH");
-					popupMenu.remove("ID_COPY_TO_CLIPBOARD");
+					popupMenu.removeAll();
+					popupMenu.add(openWithBrowserAction);
+					
+					IStorageEditorInput input = new RepositoryAttachmentEditorInput(att);
+					IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(
+							input.getName());
+					if (desc != null) {
+						popupMenu.add(openWithDefaultAction);
+					}
+					
+					popupMenu.add(new Separator());
+					popupMenu.add(saveAction);
+					
 					if (att.getContentType().startsWith(CTYPE_TEXT) || att.getContentType().endsWith("xml")) {
-						popupMenu.add(copyToClip);
+						popupMenu.add(copyToClipAction);
 					}
 					if (att.isPatch()) {
-						popupMenu.add(applyPatch);
+						popupMenu.add(applyPatchAction);
 					}
 				}
 			});
