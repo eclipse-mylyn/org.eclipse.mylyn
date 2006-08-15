@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
@@ -30,7 +29,6 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
@@ -269,15 +267,14 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	private void addAttachContextButton(Composite buttonComposite, ITask task) {
-		File contextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
-
+		//File contextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
 		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
 		attachContextButton = toolkit.createButton(buttonComposite, "Attach Context", SWT.CHECK);
 		attachContextButton.setImage(TaskListImages.getImage(TaskListImages.CONTEXT_ATTACH));
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		data.horizontalSpan = 3;
 		attachContextButton.setLayoutData(data);
-		attachContextButton.setEnabled(contextFile != null && contextFile.exists());
+		//attachContextButton.setEnabled(contextFile != null && (contextFile.exists() || task.isActive()));
 	}
 
 	private void addSelfToCC(Composite composite) {
