@@ -83,6 +83,7 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		if (correspondingTask instanceof AbstractRepositoryTask) {
 			hit.setCorrespondingTask((AbstractRepositoryTask) correspondingTask);
 		}
+		hit.setParent(this);
 		hits.add(hit);
 	}
 

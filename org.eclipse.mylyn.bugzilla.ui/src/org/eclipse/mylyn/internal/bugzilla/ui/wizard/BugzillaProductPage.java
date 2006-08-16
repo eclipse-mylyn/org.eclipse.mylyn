@@ -41,6 +41,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
@@ -275,9 +276,19 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 			return products.toArray(new String[0]);
 		}
 
+		BugzillaRepositoryQuery query = null;
 		Object element = selection.getFirstElement();
 		if (element instanceof BugzillaRepositoryQuery) {
-			BugzillaRepositoryQuery query = (BugzillaRepositoryQuery) element;
+			query = (BugzillaRepositoryQuery) element;
+
+		} else if (element instanceof BugzillaQueryHit) {
+			BugzillaQueryHit hit = (BugzillaQueryHit) element;
+			if (hit.getParent() != null && hit.getParent() instanceof BugzillaRepositoryQuery) {
+				query = (BugzillaRepositoryQuery) hit.getParent();
+			}
+		}
+
+		if (query != null) {
 			String queryUrl = query.getUrl();
 			queryUrl = queryUrl.substring(queryUrl.indexOf("?") + 1);
 			String[] options = queryUrl.split("&");
@@ -286,16 +297,16 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 				String key = option.substring(0, option.indexOf("="));
 				if ("product".equals(key)) {
 					try {
-						products.add(URLDecoder.decode(option.substring(option.indexOf("=") + 1), "UTF-8"));
+						products.add(URLDecoder.decode(option.substring(option.indexOf("=") + 1), repository.getCharacterEncoding()));
+						// TODO: list box only accepts a single selection so we break on first found
+						break;
 					} catch (UnsupportedEncodingException ex) {
 						// ignore
 					}
 				}
 			}
 		}
-
-		// TODO find a way to map from tasks/query hits back to query/category
-
+		
 		return products.toArray(new String[products.size()]);
 	}
 

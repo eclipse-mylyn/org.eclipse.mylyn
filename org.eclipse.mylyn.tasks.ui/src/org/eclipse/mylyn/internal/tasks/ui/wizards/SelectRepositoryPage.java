@@ -56,7 +56,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 	protected MultiRepositoryAwareWizard wizard;
 
 	private TaskRepository[] repositories = null;
-	
+
 	private IStructuredSelection selection;
 
 	class RepositoryContentProvider implements IStructuredContentProvider {
@@ -74,7 +74,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
 	public SelectRepositoryPage(TaskRepository[] repositories) {
 		super(TITLE);
-		
+
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);
 
@@ -96,7 +96,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		}
 		return repositories.toArray(new TaskRepository[0]);
 	}
-	
+
 	public SelectRepositoryPage setSelection(IStructuredSelection selection) {
 		this.selection = selection;
 		return this;
@@ -166,17 +166,18 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
 		} else if (element instanceof AbstractQueryHit) {
 			AbstractQueryHit queryHit = (AbstractQueryHit) element;
-			AbstractRepositoryTask correspondingTask = queryHit.getOrCreateCorrespondingTask();
-			// TODO unclear how to properly get repository kind in this case
-			return getRepository(queryHit.getRepositoryUrl(), correspondingTask.getRepositoryKind());
-
+			if (queryHit.getParent() != null) {
+				return getRepository(queryHit.getRepositoryUrl(), queryHit.getParent().getRepositoryKind());
+			} else {
+				return TasksUiPlugin.getRepositoryManager().getRepository(queryHit.getRepositoryUrl());
+			}
 		} else if (element instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask task = (AbstractRepositoryTask) element;
 			return getRepository(task.getRepositoryUrl(), task.getRepositoryKind());
 		}
 
-		// TODO handle task, query hit and project (when link to repository will
-		// be implementd)
+		// TODO handle project (when link from projects to repositories is
+		// implemented)
 
 		return null;
 	}

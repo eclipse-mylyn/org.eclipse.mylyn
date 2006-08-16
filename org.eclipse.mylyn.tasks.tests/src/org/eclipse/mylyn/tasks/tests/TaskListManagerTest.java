@@ -542,6 +542,15 @@ public class TaskListManagerTest extends TestCase {
 
 	}
 
+	public void testQueryHitHasParent() {
+		MockQueryHit hit1 = new MockQueryHit(MOCK_REPOSITORY_URL, "description1", "1");
+		assertNull(hit1.getParent());
+		MockRepositoryQuery query1 = new MockRepositoryQuery("query1", manager.getTaskList());		
+		query1.addHit(hit1, manager.getTaskList());
+		assertEquals(query1, hit1.getParent());
+		
+	}
+	
 	public void testUpdateQueryHits() {
 
 		MockQueryHit hit1 = new MockQueryHit("repositoryURL", "description1", "1");

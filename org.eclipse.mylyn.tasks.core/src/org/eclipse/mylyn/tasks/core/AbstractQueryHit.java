@@ -25,11 +25,21 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 	protected String id;
 
 	protected boolean isNotified = false;
+
+	private AbstractRepositoryQuery parent;
 	
 	protected AbstractQueryHit(String repositoryUrl, String description, String id) {
 		this.repositoryUrl = repositoryUrl;
 		this.description = description;
 		this.id = id;
+	}
+	
+	public AbstractRepositoryQuery getParent() {
+		return parent;
+	}
+
+	public void setParent(AbstractRepositoryQuery parent) {
+		this.parent = parent;
 	}
 	
 	public String getRepositoryUrl() {
