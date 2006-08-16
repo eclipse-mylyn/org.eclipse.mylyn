@@ -172,6 +172,8 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		MockBugzillaReportSubmitForm form = new MockBugzillaReportSubmitForm(BugzillaCorePlugin.ENCODING_UTF_8);
 		form.setTaskData(task.getTaskData());
 		client.submitBugReport(form, null);
+		// submit casuses a synch which should result in
+		// a synchronized state (not incoming)
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
 
 		// TODO: Test that comment was appended
@@ -180,9 +182,6 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		// assertTrue(comments.size() > 0);
 		// Comment lastComment = comments.get(comments.size() - 1);
 		// assertEquals(newCommentText, lastComment.getText());
-
-		client.synchronize(task, true, null);
-		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
 
 		// OUTGOING with forceddSynch=false
 		task.setSyncState(RepositoryTaskSyncState.OUTGOING);
