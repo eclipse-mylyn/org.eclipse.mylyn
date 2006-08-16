@@ -148,9 +148,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private static final String CTYPE_HTML = "html";
 
-	private static final String LABEL_OPEN_WITH_BROWSER = "Open With Browser";
-	
-	private static final String LABEL_OPEN_WITH_DEFUALT_EDITOR = "Open With Defualt Editor";
+	private static final String LABEL_BROWSER = "Browser";
+
+	private static final String LABEL_DEFAULT_EDITOR = "Default Editor";
+
+	private static final String LABEL_TEXT_EDITOR = "Text Editor";
 
 	// private static final String ATTACHMENT_URL_SUFFIX =
 	// "/attachment.cgi?id=";
@@ -827,7 +829,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			Menu menu = popupMenu.createContextMenu(attachmentsTable);
 			attachmentsTable.setMenu(menu);
 
-			final Action openWithBrowserAction = new Action(LABEL_OPEN_WITH_BROWSER) {
+			final MenuManager openMenu = new MenuManager("Open With");
+
+			final Action openWithBrowserAction = new Action(LABEL_BROWSER) {
 				public void run() {
 					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
 							.getSelection()).getFirstElement());
@@ -835,7 +839,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				}
 			};
 
-			final Action openWithDefaultAction = new Action(LABEL_OPEN_WITH_DEFUALT_EDITOR) {
+			final Action openWithDefaultAction = new Action(LABEL_DEFAULT_EDITOR) {
 				public void run() {
 					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
 							.getSelection()).getFirstElement());
@@ -845,7 +849,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						TaskUiUtil.openUrl(attachment.getUrl());
 						return;
 					}
-					
+
 					IStorageEditorInput input = new RepositoryAttachmentEditorInput(attachment);
 					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 					if (page == null) {
@@ -856,12 +860,29 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					try {
 						page.openEditor(input, desc.getId());
 					} catch (PartInitException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						MylarStatusHandler.fail(e, "Unable to open editor for: "+attachment.getDescription(), false);
 					}
 				}
 			};
-			
+
+			final Action openWithTextEditorAction = new Action(LABEL_TEXT_EDITOR) {
+				public void run() {
+					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
+							.getSelection()).getFirstElement());
+					IStorageEditorInput input = new RepositoryAttachmentEditorInput(attachment);
+					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+					if (page == null) {
+						return;
+					}
+
+					try {
+						page.openEditor(input, "org.eclipse.ui.DefaultTextEditor");
+					} catch (PartInitException e) {
+						MylarStatusHandler.fail(e, "Unable to open editor for: "+attachment.getDescription(), false);
+					}
+				}
+			};
+
 			final Action saveAction = new Action(SaveRemoteFileAction.TITLE) {
 				public void run() {
 					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
@@ -899,7 +920,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					save.run();
 				}
 			};
-			
+
 			final Action copyToClipAction = new Action(CopyToClipboardAction.TITLE) {
 				public void run() {
 					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
@@ -928,18 +949,21 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					RepositoryAttachment att = (RepositoryAttachment) (((StructuredSelection) e.getSelection())
 							.getFirstElement());
 					popupMenu.removeAll();
-					popupMenu.add(openWithBrowserAction);
-					
+					popupMenu.add(openMenu);
+					openMenu.removeAll();
+
 					IStorageEditorInput input = new RepositoryAttachmentEditorInput(att);
 					IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(
 							input.getName());
 					if (desc != null) {
-						popupMenu.add(openWithDefaultAction);
+						openMenu.add(openWithDefaultAction);
 					}
-					
+					openMenu.add(openWithBrowserAction);
+					openMenu.add(openWithTextEditorAction);
+
 					popupMenu.add(new Separator());
 					popupMenu.add(saveAction);
-					
+
 					if (att.getContentType().startsWith(CTYPE_TEXT) || att.getContentType().endsWith("xml")) {
 						popupMenu.add(copyToClipAction);
 					}
@@ -1103,11 +1127,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			stream = urlConnect.getInputStream();
 
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			MylarStatusHandler.fail(e, "Attachment url was malformed.", false);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			MylarStatusHandler.fail(e, "I/O Error occurred reading attachment.", false);
 		}
 		return stream;
 	}
@@ -1126,11 +1148,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			}
 			stream.close();
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			MylarStatusHandler.fail(e, "Attachment url was malformed.", false);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			MylarStatusHandler.fail(e, "I/O Error occurred reading attachment.", false);
 		}
 		return contents.toString();
 	}
