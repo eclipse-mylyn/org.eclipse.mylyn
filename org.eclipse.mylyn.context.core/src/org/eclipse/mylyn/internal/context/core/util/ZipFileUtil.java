@@ -19,6 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -42,22 +43,27 @@ public class ZipFileUtil {
 	 * @param zipped
 	 *            file
 	 * @param destPath Destination path
+	 * @return Files that were unzipped
 	 */
-	public static void unzipFiles(File zippedfile, String destPath) throws FileNotFoundException, IOException {
+	public static List<File> unzipFiles(File zippedfile, String destPath) throws FileNotFoundException, IOException {
+		ZipFile zipFile = new ZipFile(zippedfile);
 
-			ZipFile zipFile = new ZipFile(zippedfile);
+		Enumeration entries = zipFile.entries();
+		List<File> outputFiles = new ArrayList<File>();
 
-			Enumeration entries = zipFile.entries();
+		while (entries.hasMoreElements()) {
+			ZipEntry entry = (ZipEntry) entries.nextElement();
+			if (entry.isDirectory())
+				continue;
 
-			while (entries.hasMoreElements()) {
-				ZipEntry entry = (ZipEntry) entries.nextElement();
-				if (entry.isDirectory())
-					continue;
+			InputStream inputStream = zipFile.getInputStream(entry);
+			File outputFile = new File(destPath + File.separator + entry.getName());
+			FileOutputStream outStream = new FileOutputStream(outputFile);
+			copyByteStream(inputStream, outStream);
 
-				InputStream inputStream = zipFile.getInputStream(entry);
-				FileOutputStream outStream = new FileOutputStream(destPath + File.separator + entry.getName());
-				copyByteStream(inputStream, outStream);
-			}			
+			outputFiles.add(outputFile);
+		}
+		return outputFiles;
 	}
 
 	public static void copyByteStream(InputStream in, OutputStream out) throws IOException {
