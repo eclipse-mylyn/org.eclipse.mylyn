@@ -11,9 +11,15 @@
 
 package org.eclipse.mylar.internal.tasks.ui.wizards;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskCategory;
@@ -32,6 +38,8 @@ public class CommonAddExistingTaskWizard extends Wizard {
 
 	private ExistingTaskWizardPage page;
 
+	private ITask newTask = null;
+
 	public CommonAddExistingTaskWizard(TaskRepository repository) {
 		this.repository = repository;
 		setNeedsProgressMonitor(true);
@@ -41,9 +49,32 @@ public class CommonAddExistingTaskWizard extends Wizard {
 
 	@Override
 	public final boolean performFinish() {
-		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+		final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				this.repository.getKind());
-		ITask newTask = connector.createTaskFromExistingKey(repository, getTaskId());
+
+		final String taskId = getTaskId();
+
+		try {
+			getContainer().run(true, false, new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					monitor.beginTask("Retrieving task...", IProgressMonitor.UNKNOWN);
+					try {
+						newTask = connector.createTaskFromExistingKey(repository, taskId);
+					} catch (Exception e) {
+						throw new InvocationTargetException(e);
+					} finally {
+						monitor.done();
+					}
+				}
+			});
+		} catch (InvocationTargetException e) {
+			String message = e.getCause() != null ? e.getCause().getMessage() : "None provided";
+			MessageDialog.openWarning(this.getShell(), "Add Existing Task Failed",
+					"Unable to retrieve existing task from repository, error was: \n\n" + message);
+		} catch (InterruptedException e) {
+			// cancelled
+			return true;
+		}
 
 		if (newTask != null && TaskListView.getFromActivePerspective() != null) {
 			Object selectedObject = ((IStructuredSelection) TaskListView.getFromActivePerspective().getViewer()
@@ -58,6 +89,13 @@ public class CommonAddExistingTaskWizard extends Wizard {
 			if (TaskListView.getFromActivePerspective() != null) {
 				TaskListView.getFromActivePerspective().getViewer().setSelection(new StructuredSelection(newTask));
 			}
+			TaskUiUtil.openEditor(newTask, false);
+		} else {
+			// TODO: createTaskFromExistingKey needs to throw exceptions so that
+			// we can provide the correct error handling in
+			// the try catch above.
+			MessageDialog.openWarning(this.getShell(), "Add Existing Task Failed",
+					"Unable to retrieve task from repository.");
 		}
 
 		return true;

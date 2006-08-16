@@ -70,7 +70,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private static final String LABEL_JOB_SUBMIT = "Submitting to Bugzilla repository";
 
-	private static final String DESCRIPTION_DEFAULT = "<needs synchronize>";
+	//private static final String DESCRIPTION_DEFAULT = "<needs synchronize>";
 
 	private static final String CLIENT_LABEL = "Bugzilla (supports uncustomized 2.18-2.22)";
 
@@ -117,13 +117,21 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 		String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), bugId);
 		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
-
-		if (task == null) {
-			task = new BugzillaTask(handle, DESCRIPTION_DEFAULT, true);
-			TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
+				
+		if (task == null) {			
+			RepositoryTaskData taskData = null;
+			try {
+				taskData = BugzillaServerFacade.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), TasksUiPlugin.getDefault().getProxySettings(), repository.getCharacterEncoding(), bugId);
+			} catch (Throwable e) {
+				return null;
+			}
+			if(taskData != null) {				
+				task = new BugzillaTask(handle, taskData.getId()+": "+taskData.getDescription(), true);
+				((BugzillaTask)task).setTaskData(taskData);
+				TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);								
+			}			
 		}
 
-		// MylarTaskListPlugin.BgetTaskListManager().getTaskList().addTaskToArchive(newTask);
 		if (task instanceof AbstractRepositoryTask) {
 			synchronize((AbstractRepositoryTask) task, true, null);
 		}
