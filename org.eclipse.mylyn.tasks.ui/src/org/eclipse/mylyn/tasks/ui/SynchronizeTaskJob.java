@@ -78,7 +78,7 @@ class SynchronizeTaskJob extends Job {
 				if (forceSync || (!canNotSynch && !hasLocalChanges) || !repositoryTask.isDownloaded()) {
 					monitor.setTaskName(LABEL_SYNCHRONIZING + repositoryTask.getDescription());
 					// repositoryTask.setCurrentlySynchronizing(true);
-					//TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
+					TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 					IOfflineTaskHandler offlineHandler = connector.getOfflineTaskHandler();
 					if (offlineHandler != null) {
 						RepositoryTaskData downloadedTaskData = null;
