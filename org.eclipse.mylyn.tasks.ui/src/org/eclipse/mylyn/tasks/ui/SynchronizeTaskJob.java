@@ -65,19 +65,24 @@ class SynchronizeTaskJob extends Job {
 		try {
 			monitor.beginTask(LABEL_SYNCHRONIZE_TASK, repositoryTasks.size());
 			setProperty(IProgressConstants.ICON_PROPERTY, TaskListImages.REPOSITORY_SYNCHRONIZE);
+
+			for (AbstractRepositoryTask repositoryTask : repositoryTasks) {
+				repositoryTask.setCurrentlySynchronizing(true);
+			}
+
 			for (final AbstractRepositoryTask repositoryTask : repositoryTasks) {
 				if (monitor.isCanceled())
 					throw new OperationCanceledException();
 
 				// TODO: refactor conditions
 				boolean canNotSynch = repositoryTask.isDirty();// ||
-																// repositoryTask.isSynchronizing();
+				// repositoryTask.isSynchronizing();
 				boolean hasLocalChanges = repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING
 						|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT;
 				if (forceSync || (!canNotSynch && !hasLocalChanges) || !repositoryTask.isDownloaded()) {
 					monitor.setTaskName(LABEL_SYNCHRONIZING + repositoryTask.getDescription());
-					repositoryTask.setCurrentlySynchronizing(true);
-					TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
+					// repositoryTask.setCurrentlySynchronizing(true);
+					//TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 					IOfflineTaskHandler offlineHandler = connector.getOfflineTaskHandler();
 					if (offlineHandler != null) {
 						RepositoryTaskData downloadedTaskData = null;
@@ -89,7 +94,7 @@ class SynchronizeTaskJob extends Job {
 							} else {
 								// ignore, indicates working offline
 							}
-							return Status.OK_STATUS;
+							continue;
 						}
 
 						if (downloadedTaskData != null) {
@@ -106,14 +111,14 @@ class SynchronizeTaskJob extends Job {
 				monitor.worked(1);
 			}
 
-			//TasksUiPlugin.getDefault().getTaskListNotificationManager().startNotification(1);
+			// TasksUiPlugin.getDefault().getTaskListNotificationManager().startNotification(1);
 
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Could not download report", false);
 		} finally {
 			monitor.done();
 		}
-		
+
 		return Status.OK_STATUS;
 	}
 

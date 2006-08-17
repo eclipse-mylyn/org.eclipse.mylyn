@@ -430,7 +430,7 @@ public abstract class AbstractRepositoryConnector {
 	 * @param listener
 	 *            can be null
 	 */
-	private Job synchronize(Set<AbstractRepositoryTask> repositoryTasks, boolean forceSynch,
+	public final Job synchronize(Set<AbstractRepositoryTask> repositoryTasks, boolean forceSynch,
 			final IJobChangeListener listener) {
 
 		final SynchronizeTaskJob synchronizeJob = new SynchronizeTaskJob(this, repositoryTasks);
@@ -556,15 +556,6 @@ public abstract class AbstractRepositoryConnector {
 				TasksUiPlugin.getRepositoryManager().setSyncTime(repository, mostRecentTimeStamp);
 			}
 		});
-	}
-
-	/**
-	 * Force the given task to be refreshed from the repository
-	 */
-	public final void forceRefresh(AbstractRepositoryTask task) {
-		Set<AbstractRepositoryTask> toRefresh = new HashSet<AbstractRepositoryTask>();
-		toRefresh.add(task);
-		synchronize(toRefresh, true, null);
 	}
 
 	/**

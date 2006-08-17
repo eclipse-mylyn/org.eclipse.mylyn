@@ -47,10 +47,11 @@ class SynchronizeQueryJob extends Job {
 	private List<AbstractQueryHit> newHits = new ArrayList<AbstractQueryHit>();
 
 	private boolean synchTasks;
-	
+
 	private TaskList taskList;
 
-	public SynchronizeQueryJob(AbstractRepositoryConnector connector, Set<AbstractRepositoryQuery> queries, TaskList taskList) {
+	public SynchronizeQueryJob(AbstractRepositoryConnector connector, Set<AbstractRepositoryQuery> queries,
+			TaskList taskList) {
 		super(JOB_LABEL + ": " + connector.getRepositoryType());
 		this.connector = connector;
 		this.queries = queries;
@@ -60,20 +61,24 @@ class SynchronizeQueryJob extends Job {
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
 		monitor.beginTask(JOB_LABEL, queries.size());
+
 		for (AbstractRepositoryQuery repositoryQuery : queries) {
-			if (repositoryQuery.isSynchronizing())
-				continue;
+			repositoryQuery.setCurrentlySynchronizing(true);
+		}
+
+		for (AbstractRepositoryQuery repositoryQuery : queries) {
+			// if (repositoryQuery.isSynchronizing())
+			// continue;
 			monitor.setTaskName("Synchronizing: " + repositoryQuery.getDescription());
 			setProperty(IProgressConstants.ICON_PROPERTY, TaskListImages.REPOSITORY_SYNCHRONIZE);
-			repositoryQuery.setCurrentlySynchronizing(true);
+			// repositoryQuery.setCurrentlySynchronizing(true);
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 					repositoryQuery.getRepositoryKind(), repositoryQuery.getRepositoryUrl());
 			if (repository == null) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						MessageDialog
-								.openInformation(Display.getDefault().getActiveShell(),
-										TasksUiPlugin.TITLE_DIALOG,
+								.openInformation(Display.getDefault().getActiveShell(), TasksUiPlugin.TITLE_DIALOG,
 										"No task repository associated with this query. Open the query to associate it with a repository.");
 					}
 				});
@@ -86,7 +91,8 @@ class SynchronizeQueryJob extends Job {
 				if (queryStatus.getChildren()[0].getException() == null) {
 					repositoryQuery.updateHits(newHits, taskList);
 					if (synchTasks) {
-						// TODO: Should sync changed per repository not per query
+						// TODO: Should sync changed per repository not per
+						// query
 						connector.synchronizeChanged(repository);
 					}
 
