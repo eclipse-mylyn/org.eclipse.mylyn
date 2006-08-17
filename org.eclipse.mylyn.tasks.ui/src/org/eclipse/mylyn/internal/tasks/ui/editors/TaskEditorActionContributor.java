@@ -38,6 +38,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.SubActionBars;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
@@ -241,6 +242,12 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		sourceActionBars = new SubActionBars(bars);
 	}
 
+	public void init(IActionBars bars, IWorkbenchPage page) {
+		super.init(bars, page);
+		registerGlobalHandlers(bars);
+		
+	}
+
 	public MylarTaskEditor getEditor() {
 		return editor;
 	}
@@ -309,6 +316,15 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		bars.setGlobalActionHandler(ActionFactory.REDO.getId(), null);
 		bars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), null);
 		bars.updateActionBars();
+	}
+	
+	public void forceActionsEnabled() {
+		cutAction.setEnabled(true);
+		copyAction.setEnabled(true);
+		pasteAction.setEnabled(true);
+		selectAllAction.setEnabled(true);
+		undoAction.setEnabled(false);
+		redoAction.setEnabled(false);		
 	}
 	
 }

@@ -24,6 +24,7 @@ import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -31,7 +32,7 @@ import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.themes.IThemeManager;
 
 /**
- * @author Rob Elves
+ * @author Rob Elves ref: PDEFormPage.class
  */
 public class TaskFormPage extends FormPage {
 
@@ -58,12 +59,42 @@ public class TaskFormPage extends FormPage {
 					return canDoGlobalAction(actionId, viewer);
 				}
 			}
+		} else {
+			if (actionId.equals(ActionFactory.UNDO.getId()) || actionId.equals(ActionFactory.REDO.getId())) {
+				return false;
+			} else {
+				return true;
+			}
 		}
+		// else if (focusControl instanceof Text) {
+		//
+		// Text textControl = (Text) focusControl;
+		// if (actionId.equals(ActionFactory.CUT.getId())) {
+		// return textControl.getSelectionText().length() > 0;
+		// }
+		// if (actionId.equals(ActionFactory.COPY.getId())) {
+		// return textControl.getSelectionText().length() > 0;
+		// }
+		// if (actionId.equals(ActionFactory.PASTE.getId())) {
+		// return true;
+		// }
+		// if (actionId.equals(ActionFactory.SELECT_ALL.getId())) {
+		// return textControl.getText().length() > 0;
+		// }
+		// if (actionId.equals(ActionFactory.DELETE.getId())) {
+		// return textControl.getSelectionText().length() > 0;
+		// }
+		// }
 		return false;
 	}
 
 	public void doAction(String actionId) {
 		Control focusControl = getFocusControl();
+		if (focusControl == null)
+			return;
+		if (canPerformDirectly(actionId, focusControl)) {
+			return;
+		}
 		if (focusControl instanceof StyledText) {
 			StyledText text = (StyledText) focusControl;
 			for (TextViewer viewer : textViewers) {
@@ -73,6 +104,38 @@ public class TaskFormPage extends FormPage {
 				}
 			}
 		}
+	}
+
+	protected boolean canPerformDirectly(String id, Control control) {
+		if (control instanceof Text) {
+			Text text = (Text) control;
+			if (id.equals(ActionFactory.CUT.getId())) {
+				text.cut();
+				return true;
+			}
+			if (id.equals(ActionFactory.COPY.getId())) {
+				text.copy();
+				return true;
+			}
+			if (id.equals(ActionFactory.PASTE.getId())) {
+				text.paste();
+				return true;
+			}
+			if (id.equals(ActionFactory.SELECT_ALL.getId())) {
+				text.selectAll();
+				return true;
+			}
+			if (id.equals(ActionFactory.DELETE.getId())) {
+				int count = text.getSelectionCount();
+				if (count == 0) {
+					int caretPos = text.getCaretPosition();
+					text.setSelection(caretPos, caretPos + 1);
+				}
+				text.insert(""); //$NON-NLS-1$
+				return true;
+			}
+		}
+		return false;
 	}
 
 	protected Control getFocusControl() {
@@ -134,6 +197,46 @@ public class TaskFormPage extends FormPage {
 		return false;
 	}
 
+	// protected Text addTextBox(Composite composite, String text, int style) {
+	// if (actionContributor == null) {
+	// actionContributor = ((MylarTaskEditor) getEditor()).getContributor();
+	// }
+	//
+	// final Text textBox =
+	// this.getManagedForm().getToolkit().createText(composite, text);
+	// textBox.addFocusListener(new FocusListener() {
+	//
+	// public void focusGained(FocusEvent e) {
+	//
+	// //
+	// actionContributor.registerGlobalHandlers(getEditorSite().getActionBars());
+	//
+	// actionContributor.updateSelectableActions(null);
+	//
+	// }
+	//
+	// public void focusLost(FocusEvent e) {
+	// textBox.setSelection(0, 0);
+	// //
+	// actionContributor.unregisterGlobalHandlers(getEditorSite().getActionBars());
+	//
+	// }
+	// });
+	//
+	// textBox.addKeyListener(new KeyListener() {
+	//
+	// public void keyPressed(KeyEvent e) {
+	// // ignore
+	//
+	// }
+	//
+	// public void keyReleased(KeyEvent e) {
+	// actionContributor.updateSelectableActions(null);
+	// }
+	// });
+	// return textBox;
+	// }
+
 	protected TextViewer addRepositoryTextViewer(TaskRepository repository, Composite composite, String text, int style) {
 
 		if (actionContributor == null) {
@@ -153,16 +256,13 @@ public class TaskFormPage extends FormPage {
 
 			public void focusGained(FocusEvent e) {
 
-				actionContributor.registerGlobalHandlers(getEditorSite().getActionBars());
-
 				actionContributor.updateSelectableActions(commentViewer.getSelection());
 
 			}
 
 			public void focusLost(FocusEvent e) {
 				commentViewer.setSelectedRange(0, 0);
-				actionContributor.unregisterGlobalHandlers(getEditorSite().getActionBars());
-
+				actionContributor.forceActionsEnabled();
 			}
 		});
 
