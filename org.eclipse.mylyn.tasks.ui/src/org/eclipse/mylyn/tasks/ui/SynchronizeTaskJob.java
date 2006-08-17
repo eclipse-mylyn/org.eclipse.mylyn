@@ -66,10 +66,6 @@ class SynchronizeTaskJob extends Job {
 			monitor.beginTask(LABEL_SYNCHRONIZE_TASK, repositoryTasks.size());
 			setProperty(IProgressConstants.ICON_PROPERTY, TaskListImages.REPOSITORY_SYNCHRONIZE);
 
-			for (AbstractRepositoryTask repositoryTask : repositoryTasks) {
-				repositoryTask.setCurrentlySynchronizing(true);
-			}
-
 			for (final AbstractRepositoryTask repositoryTask : repositoryTasks) {
 				if (monitor.isCanceled())
 					throw new OperationCanceledException();

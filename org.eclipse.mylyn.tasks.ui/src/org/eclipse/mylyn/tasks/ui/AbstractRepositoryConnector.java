@@ -440,7 +440,9 @@ public abstract class AbstractRepositoryConnector {
 		if (listener != null) {
 			synchronizeJob.addJobChangeListener(listener);
 		}
-
+		for (AbstractRepositoryTask repositoryTask : repositoryTasks) {
+			repositoryTask.setCurrentlySynchronizing(true);
+		}
 		if (!forceSyncExecForTesting) {
 			synchronizeJob.schedule();
 		} else {
@@ -472,6 +474,9 @@ public abstract class AbstractRepositoryConnector {
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		SynchronizeQueryJob job = new SynchronizeQueryJob(this, repositoryQueries, taskList);
 		job.setSynchTasks(syncTasks);
+		for (AbstractRepositoryQuery repositoryQuery : repositoryQueries) {
+			repositoryQuery.setCurrentlySynchronizing(true);
+		}
 		if (listener != null) {
 			job.addJobChangeListener(listener);
 		}

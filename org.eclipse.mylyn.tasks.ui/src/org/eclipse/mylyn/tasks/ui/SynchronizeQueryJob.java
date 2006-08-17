@@ -63,10 +63,6 @@ class SynchronizeQueryJob extends Job {
 		monitor.beginTask(JOB_LABEL, queries.size());
 
 		for (AbstractRepositoryQuery repositoryQuery : queries) {
-			repositoryQuery.setCurrentlySynchronizing(true);
-		}
-
-		for (AbstractRepositoryQuery repositoryQuery : queries) {
 			// if (repositoryQuery.isSynchronizing())
 			// continue;
 			monitor.setTaskName("Synchronizing: " + repositoryQuery.getDescription());

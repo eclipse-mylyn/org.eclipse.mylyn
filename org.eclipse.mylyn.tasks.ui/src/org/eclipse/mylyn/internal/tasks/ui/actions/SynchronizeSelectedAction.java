@@ -103,22 +103,6 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 			if (!queriesToSyncMap.isEmpty()) {
 				for (AbstractRepositoryConnector connector : queriesToSyncMap.keySet()) {
 					List<AbstractRepositoryQuery> queriesToSync = queriesToSyncMap.get(connector);
-					for (AbstractRepositoryQuery query : queriesToSync) {
-						query.setCurrentlySynchronizing(true);
-					}
-				}
-			}
-			if (!tasksToSyncMap.isEmpty()) {
-				for (AbstractRepositoryConnector connector : tasksToSyncMap.keySet()) {
-					List<AbstractRepositoryTask> tasksToSync = tasksToSyncMap.get(connector);
-					for (AbstractRepositoryTask task : tasksToSync) {
-						task.setCurrentlySynchronizing(true);
-					}
-				}
-			}
-			if (!queriesToSyncMap.isEmpty()) {
-				for (AbstractRepositoryConnector connector : queriesToSyncMap.keySet()) {
-					List<AbstractRepositoryQuery> queriesToSync = queriesToSyncMap.get(connector);
 					if (queriesToSync != null && queriesToSync.size() > 0) {
 						connector.synchronize(new HashSet<AbstractRepositoryQuery>(queriesToSync), null, Job.LONG, 0,
 								true);
