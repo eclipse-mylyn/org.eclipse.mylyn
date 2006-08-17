@@ -9,26 +9,37 @@
 	<p><b>Bugzilla Client</b></p>
 	
 	<ul>
-		<li>OFFLINE<ul>
-		<li>Ensure that when a bug report is opened offline that has no offline 
+		<li>Offline Reports<ul>
+		<li><font color="#FF6600">Ensure that when a bug report is opened offline that has no offline 
 		data the bug page reads: &quot;Repository task data not available, please 
-		synchronize.&quot;</li>
+		synchronize.&quot; (Aug 17, 2006 [0.6.2] page reads &quot;Could not download 
+		task data...&quot;</font></li>
+		<li>In the case of migration ensure that offline reports still open correctly (if not 
+		lost completely).</li>
 	</ul>
 		</li>
-		<li>Migration: Ensure that offline reports still open correctly (if not 
-		lost completely).</li>
 		<li>Editor Hyperlinking - URL Hyperlinks, Bug hyperlinks (bug# 123, bug 12312,  
 		task# 1, task 12, duplicate bug links), stack trace links</li>
 		<li>Editor menu/commands - Cut/Copy/Paste/Select-all&nbsp; from menu and 
 		using shortcut keys</li>
-		<li>Test of Search &gt; Search... &gt; Bugzilla Search tab
-		<ul>
-			<li>Requires that a bugzilla repository is 
-			configured in the Mylar Task Repositories view</li>
-			<li>Test opening non-local report</li>
-			<li>Test opening report with local task</li>
+		<li>Repository Search&nbsp;&nbsp; (Search &gt; Search... &gt; Repository Search tab)<ul>
+			<li>Repository search page<ul>
+				<li>Ensure warning if no repository exists.</li>
+				<li>Cycle through available repository search pages ensuring 
+				that they populate with the last search performed on the 
+				respective repository</li>
+				<li>Ensure other repository types search pages appear when 
+				selected</li>
+			</ul></li>
+			<li>Repository Search Results View<ul>
+				<li>Test opening non-local report (Bug should open in bugzilla 
+				editor (blue bin icon) and the browser tab should be available)</li>
+				<li>Test opening report with local data (Bug should open in 
+				bugzilla editor (clipboard with blue bin overlay icon) and the 
+				Planning tab and Browser tab should be available)</li>
+			</ul></li>
 		</ul></li>
-		<li>Test Bugzilla Query Wizard</li><ul>
+		<li>Bugzilla Query Wizard</li> (Tasklist)<ul>
 			<li>Create new query</li>
 			<li>Open query to see that parameters are still there</li>
 			<li>Check for error handling (enter invalid number in max returned etc)</li>
@@ -36,9 +47,17 @@
 		<li>New Bug submission (valid credentials)<ul>
 			<li>Test new bug submission for each Bugzilla server version</li>
 		</ul></li>
-		<li>Check error handling for update of repository attributes via context 
-		menu in TaskRepositoriesView and button on BugzillaProductPage etc. 
-		Dialog should be produced when io error occurs and login exceptions etc.</li>
+		<li>Update of Repository Configuration<ul>
+		<li>Test from TaskRepositoriesView context menu</li>
+		<li>Test from BugzillaProductPage</li>
+		<li>A dialog should be produced in either case when an io or login 
+		exceptions occur.</li>
+		<li>Configuration caching<ul>
+			<li>Run new bug wizard, update products...</li>
+			<li>Restart eclipse, rerun wizard, products should appear immediately</li>
+		</ul></li>
+	</ul>
+		</li>
 		<li>New Bug submission (invalid credentials)<ul>
 			<li>Remove username and password from a repository configuration in the 
 		Task Repositories view</li>
@@ -57,8 +76,8 @@
 		<li>Submission of changes to a Bugzilla report should result in all 
 		parent queries being re-synchronized as well as the task itself being 
 		synchronized</li>
-		<li>Make sure submission of comment doesn't remove 
-	dependencies</li>
+		<li>Ensure submission of comment doesn't remove any depends on / blocks 
+		bugs</li>
 		<li>Submission of changes to existing bug with invalid repository 
 		credentials<ul>
 			<li>Mylar Bugzilla Client Dialog: Bugzilla could not post your bug since your login name or password is incorrect.
@@ -66,13 +85,11 @@
 		</ul></li>
 		<li><font color="#FF6600">Bug Compare (ensure attribute compare works) 
 		(July 31, 2006 [0.6.1] - Compare button removed)</font></li>
-		<li>Synchronize Reports (invalid userid and password)<ul>
-			<li>Report Download Failed Dialog: Ensure proper repository 
-		configuration in Task Repositories view.</li>
-		</ul></li>
-		<li>Product configuration caching<ul>
-			<li>Run new bug wizard</li>
-			<li>Restart, rerun, products should appear immediately</li>
+		<li>Synchronize from context menu (invalid userid and password)<ul>
+			<li><font color="#FF6600">Report Download Failed Dialog: Ensure proper repository 
+		configuration in Task Repositories view. (Aug 17, 2006 [0.6.2] - 
+			currently upon failure the task remains italic and if the error is 
+			not an io related exception it is logged.)</font></li>
 		</ul></li>
 		<li>Synchronizing while disconnected should not put errors in the 
 		eclipse log</li>
@@ -139,8 +156,8 @@
 			<li>Ensure that incoming on existing tasks appears after auto 
 		synchronization&nbsp;&nbsp;&nbsp; </li>
 		</ul></li>
-		<li>If editor open and task gets incoming dialog 
-		presented asking if user wants to refresh and reopen.</li>
+		<li>If editor open and task gets incoming, dialog 
+		should be presented asking if user wants to refresh and reopen.</li>
 		<li>Check that if changes are made to the notes field of the Planning 
 		editor that save still works (editor doesn't remain dirty).</li>
 		<li>Ensure that when offline reports file is deleted, tasks don't 
