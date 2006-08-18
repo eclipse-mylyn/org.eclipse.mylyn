@@ -35,10 +35,21 @@ public class InProgressTaskCollector implements ITaskCollector {
 
 	private Date periodStartDate;
 
-	// private long DAY = 24*3600*1000;
+	protected static boolean hasActivitySince(ITask task, Date startDate) {
+		IMylarContext mylarContext = ContextCorePlugin.getContextManager().loadContext(task.getHandleIdentifier());
+		if (mylarContext != null) {
+			List<InteractionEvent> events = mylarContext.getInteractionHistory();
+			if (events.size() > 0) {
+				InteractionEvent latestEvent = events.get(events.size() - 1);
+				if (latestEvent.getDate().compareTo(startDate) > 0) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	public InProgressTaskCollector(Date periodStartDate) {
-		// periodStartDate = new Date(new Date().getTime() - prevDays * DAY);
 		this.periodStartDate = periodStartDate;
 	}
 
@@ -51,20 +62,6 @@ public class InProgressTaskCollector implements ITaskCollector {
 				&& !inProgressTasks.containsKey(task.getHandleIdentifier())) {
 			inProgressTasks.put(task.getHandleIdentifier(), task);
 		}
-	}
-
-	protected boolean hasActivitySince(ITask task, Date startDate) {
-		IMylarContext mylarContext = ContextCorePlugin.getContextManager().loadContext(task.getHandleIdentifier());// ,task.getContextPath());
-		if (mylarContext != null) {
-			List<InteractionEvent> events = mylarContext.getInteractionHistory();
-			if (events.size() > 0) {
-				InteractionEvent latestEvent = events.get(events.size() - 1);
-				if (latestEvent.getDate().compareTo(periodStartDate) > 0) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	public Set<ITask> getTasks() {
