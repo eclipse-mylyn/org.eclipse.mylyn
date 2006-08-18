@@ -99,11 +99,41 @@ public class DuplicateDetetionTest extends TestCase {
 		editor.close();
 	}
 	
-	public void testStackTraceWithExtraSpace() throws Exception {
+	public void testStackTraceMisaligned() throws Exception {
 
 		String stackTrace = "java.lang.IllegalStateException: zip file closed\n" +
 		"     at java.util.zip.ZipFile.ensureOpen (ZipFile.java:518)\n" +
-		"     at java.util.zip.ZipFile.getEntry (ZipFile.java:251)\n" +
+		"at java.util.zip.ZipFile.getEntry (ZipFile.java:251)\n" +
+		"   at java.util.jar.JarFile.getEntry(JarFile.java:200)\n" +
+		"at sun.net.www.protocol.jar.URLJarFile.getEntry\n" +
+		"     (URLJarFile.java:90)\n" +
+		"at sun.net.www.protocol.jar.JarURLConnection.connect(JarURLConnection.java:112)\n" +
+		"at sun.net.www.protocol.jar.JarURLConnection.getInputStream\n" +
+		"(JarURLConnection.java:124)\n" +
+		"at org.eclipse.jdt.internal.core.JavaElement\n.getURLContents(JavaElement.java:734)";
+
+		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
+				.getOfflineReportsFile().getNextOfflineBugId());
+		model.setNewComment(stackTrace);
+		model.setHasLocalChanges(true);
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		NewBugEditorInput input = new NewBugEditorInput(repository, model);
+		TaskUiUtil.openEditor(input, BugzillaUiPlugin.NEW_BUG_EDITOR_ID, page);
+
+		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
+		NewBugEditor editor = (NewBugEditor) taskEditor.getActivePageInstance();
+		assertEquals(stackTrace, editor.getStackTraceFromDescription().trim());
+
+		editor.markDirty(false);
+		editor.close();
+	}
+	
+	public void testStackTraceSUN() throws Exception {
+
+		// SUN, IBM (no space before brackets, one set of brackets)
+		String stackTrace = "java.lang.IllegalStateException: zip file closed\n" +
+		"     at java.util.zip.ZipFile.ensureOpen(ZipFile.java:518)\n" +
+		"     at java.util.zip.ZipFile.getEntry(ZipFile.java:251)\n" +
 		"     at java.util.jar.JarFile.getEntry(JarFile.java:200)\n" +
 		"     at sun.net.www.protocol.jar.URLJarFile.getEntry(URLJarFile.java:90)\n" +
 		"     at sun.net.www.protocol.jar.JarURLConnection.connect(JarURLConnection.java:112)\n" +
@@ -126,19 +156,14 @@ public class DuplicateDetetionTest extends TestCase {
 		editor.close();
 	}
 	
-	public void testStackTraceMisaligned() throws Exception {
+	public void testStackTraceGCJ() throws Exception {
 
-		String stackTrace = "java.lang.IllegalStateException: zip file closed\n" +
-		"     at java.util.zip.ZipFile.ensureOpen(ZipFile.java:518)\n" +
-		"at java.util.zip.ZipFile.getEntry(ZipFile.java:251)\n" +
-		"   at java.util.jar.JarFile.getEntry(JarFile.java:200)\n" +
-		"at sun.net.www.protocol.jar.URLJarFile.getEntry\n" +
-		"     (URLJarFile.java:90)\n" +
-		"at sun.net.www.protocol.jar.JarURLConnection.connect(JarURLConnection.java:112)\n" +
-		"at sun.net.www.protocol.jar.JarURLConnection.getInputStream\n" +
-		"(JarURLConnection.java:124)\n" +
-		"at org.eclipse.jdt.internal.core.JavaElement\n.getURLContents(JavaElement.java:734)";
-
+		// gcj/gij (path and lib names in additional brackets)
+		String stackTrace = "java.lang.Error: Something bad happened\n" +
+		"	   at testcase.main(java.lang.String[]) (Unknown Source)\n" +
+		"	   at gnu.java.lang.MainThread.call_main() (/usr/lib/libgcj.so.6.0.0)\n" +
+		"	   at gnu.java.lang.MainThread.run() (/usr/lib/libgcj.so.6.0.0)";
+		
 		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
 				.getOfflineReportsFile().getNextOfflineBugId());
 		model.setNewComment(stackTrace);
@@ -150,7 +175,79 @@ public class DuplicateDetetionTest extends TestCase {
 		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
 		NewBugEditor editor = (NewBugEditor) taskEditor.getActivePageInstance();
 		assertEquals(stackTrace, editor.getStackTraceFromDescription().trim());
+		
+		editor.markDirty(false);
+		editor.close();
+	}
+	
+	public void testStackTraceNoLineNums() throws Exception {
 
+		// ikvm (no line numbers)
+		String stackTrace = "java.lang.Error: Something bad happened\n" +
+		"	at testcase.main (testcase.java)\n" +
+		"	at java.lang.reflect.Method.Invoke (Method.java)";
+		
+		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
+				.getOfflineReportsFile().getNextOfflineBugId());
+		model.setNewComment(stackTrace);
+		model.setHasLocalChanges(true);
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		NewBugEditorInput input = new NewBugEditorInput(repository, model);
+		TaskUiUtil.openEditor(input, BugzillaUiPlugin.NEW_BUG_EDITOR_ID, page);
+
+		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
+		NewBugEditor editor = (NewBugEditor) taskEditor.getActivePageInstance();
+		assertEquals(stackTrace, editor.getStackTraceFromDescription().trim());
+		
+		editor.markDirty(false);
+		editor.close();
+	}
+	
+	public void testStackTraceJRockit() throws Exception {
+
+		// jrockit (slash delimiters)
+		String stackTrace = "java.lang.Error: Something bad happened\n" +
+		"	at java/io/BufferedReader.readLine(BufferedReader.java:331)\n" +
+		"	at java/io/BufferedReader.readLine(BufferedReader.java:362)\n" +
+		"	at java/util/Properties.load(Properties.java:192)\n" +
+		"	at java/util/logging/LogManager.readConfiguration(L:555)";
+	    
+		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
+				.getOfflineReportsFile().getNextOfflineBugId());
+		model.setNewComment(stackTrace);
+		model.setHasLocalChanges(true);
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		NewBugEditorInput input = new NewBugEditorInput(repository, model);
+		TaskUiUtil.openEditor(input, BugzillaUiPlugin.NEW_BUG_EDITOR_ID, page);
+
+		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
+		NewBugEditor editor = (NewBugEditor) taskEditor.getActivePageInstance();
+		assertEquals(stackTrace, editor.getStackTraceFromDescription().trim());
+		
+		editor.markDirty(false);
+		editor.close();
+	}
+	
+	public void testStackTraceOther() throws Exception {
+
+		// jamvm, sablevm, kaffe, cacao (space before brackets, one set of brackets)
+		String stackTrace = "java.lang.Error: Something bad happened\n" +
+		"	   at testcase.main (testcase.java:3)\n" +
+		"	   at java.lang.VirtualMachine.invokeMain (VirtualMachine.java)\n" +
+		"	   at java.lang.VirtualMachine.main (VirtualMachine.java:108)";
+		
+		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
+				.getOfflineReportsFile().getNextOfflineBugId());
+		model.setNewComment(stackTrace);
+		model.setHasLocalChanges(true);
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		NewBugEditorInput input = new NewBugEditorInput(repository, model);
+		TaskUiUtil.openEditor(input, BugzillaUiPlugin.NEW_BUG_EDITOR_ID, page);
+
+		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
+		NewBugEditor editor = (NewBugEditor) taskEditor.getActivePageInstance();
+		assertEquals(stackTrace, editor.getStackTraceFromDescription().trim());
+		
 		editor.markDirty(false);
 		editor.close();
 	}
