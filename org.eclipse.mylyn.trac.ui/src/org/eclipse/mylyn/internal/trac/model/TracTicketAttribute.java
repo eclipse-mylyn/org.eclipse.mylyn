@@ -8,19 +8,24 @@
 
 package org.eclipse.mylar.internal.trac.model;
 
+import java.io.Serializable;
+
 /**
  * @author Steffen Pingel
  */
-public class TracTicketAttribute implements Comparable<TracTicketAttribute> {
+public class TracTicketAttribute implements Comparable<TracTicketAttribute>, Serializable {
+
+	private static final long serialVersionUID = -8611030780681519787L;
 
 	private String name;
+
 	private int value;
-	
+
 	public TracTicketAttribute(String name, int value) {
 		this.name = name;
 		this.value = value;
 	}
-	
+
 	public int compareTo(TracTicketAttribute o) {
 		return value - o.value;
 	}
@@ -28,14 +33,14 @@ public class TracTicketAttribute implements Comparable<TracTicketAttribute> {
 	public String getName() {
 		return name;
 	}
-	
+
 	public int getValue() {
 		return value;
 	}
-	
+
 	@Override
 	public String toString() {
 		return name;
 	}
-	
+
 }

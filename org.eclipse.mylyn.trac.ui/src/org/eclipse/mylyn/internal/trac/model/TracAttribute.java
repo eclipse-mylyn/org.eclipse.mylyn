@@ -8,11 +8,15 @@
 
 package org.eclipse.mylar.internal.trac.model;
 
+import java.io.Serializable;
+
 /**
  * @author Steffen Pingel
  */
-public class TracAttribute {
+public class TracAttribute implements Serializable {
 
+	private static final long serialVersionUID = -4535033208999685315L;
+	
 	private String name;
 
 	public TracAttribute(String name) {

@@ -69,6 +69,8 @@ public interface ITracClient {
 	public static final String TICKET_URL = "/ticket/";
 	public static final String NEW_TICKET_URL = "/newticket";
 
+	public static final String TICKET_ATTACHMENT_URL = "/attachment/ticket/";
+
 	/**
 	 * Gets ticket with <code>id</code> from repository.
 	 * 
@@ -112,7 +114,7 @@ public interface ITracClient {
 	 * @throws TracException
 	 *             thrown in case of a connection error
 	 */
-	void updateAttributes(IProgressMonitor monitor) throws TracException;
+	void updateAttributes(IProgressMonitor monitor, boolean force) throws TracException;
 
 	TracComponent[] getComponents();
 
@@ -130,4 +132,19 @@ public interface ITracClient {
 
 	TracVersion[] getVersions();
 
+	byte[] getAttachmentData(int id, String filename) throws TracException;
+
+	void putAttachmentData(int id, String name, String description, byte[] data) throws TracException;
+
+	void createTicket(TracTicket ticket) throws TracException;
+	
+	void updateTicket(TracTicket ticket, String comment) throws TracException;
+	
+	/**
+	 * Sets a reference to the cached repository attributes.  
+	 *  
+	 * @param data cached repository attributes
+	 */
+	void setData(TracClientData data);
+	
 }

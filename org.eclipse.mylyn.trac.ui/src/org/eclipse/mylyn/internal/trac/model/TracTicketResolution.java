@@ -13,6 +13,8 @@ package org.eclipse.mylar.internal.trac.model;
  */
 public class TracTicketResolution extends TracTicketAttribute {
 
+	private static final long serialVersionUID = -6933211257044813716L;
+
 	public TracTicketResolution(String name, int value) {
 		super(name, value);
 	}

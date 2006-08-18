@@ -25,6 +25,7 @@ import org.eclipse.mylar.internal.trac.model.TracTicketResolution;
 import org.eclipse.mylar.internal.trac.model.TracTicketStatus;
 import org.eclipse.mylar.internal.trac.model.TracTicketType;
 import org.eclipse.mylar.internal.trac.model.TracVersion;
+import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
 
 /**
  * Represents a Trac repository that is accessed through the Trac XmlRpcPlugin.
@@ -51,10 +52,10 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		config.setBasicUserName(username);
 		config.setBasicPassword(password);
 		config.setServerURL(getXmlRpcUrl());
-		
+
 		xmlrpc = new XmlRpcClient();
 		xmlrpc.setConfig(config);
-		
+
 		TracHttpClientTransportFactory factory = new TracHttpClientTransportFactory(xmlrpc);
 		xmlrpc.setTransportFactory(factory);
 
@@ -81,8 +82,7 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		try {
 			return xmlrpc.execute(method, parameters);
 		} catch (TracHttpException e) {
-			if (e.code == HttpURLConnection.HTTP_FORBIDDEN
-					|| e.code == HttpURLConnection.HTTP_UNAUTHORIZED) {
+			if (e.code == HttpURLConnection.HTTP_FORBIDDEN || e.code == HttpURLConnection.HTTP_UNAUTHORIZED) {
 				throw new TracLoginException();
 			} else {
 				throw new TracException(e);
@@ -150,9 +150,11 @@ public class TracXmlRpcClient extends AbstractTracClient {
 
 	public TracTicket getTicket(int id) throws TracException {
 		Object[] result = (Object[]) call("ticket.get", id);
-		return parseTicket(result);
+		TracTicket ticket = parseTicket(result);
+		return ticket;
 	}
 
+	/* public for testing */
 	@SuppressWarnings("unchecked")
 	public List<TracTicket> getTickets(int[] ids) throws TracException {
 		Map<String, Object>[] calls = new Map[ids.length];
@@ -195,7 +197,7 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		ticket.setLastChanged((Integer) ticketResult[2]);
 		Map attributes = (Map) ticketResult[3];
 		for (Object key : attributes.keySet()) {
-			ticket.putTracValue(key.toString(), attributes.get(key).toString());
+			ticket.putValue(key.toString(), attributes.get(key).toString());
 		}
 		return ticket;
 	}
@@ -204,77 +206,77 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		monitor.beginTask("Updating attributes", 8);
 
 		Object[] result = getAttributes("ticket.component");
-		components = new ArrayList<TracComponent>(result.length);
+		data.components = new ArrayList<TracComponent>(result.length);
 		for (Object item : result) {
-			components.add(parseComponent((Map) getMultiCallResult(item)));
+			data.components.add(parseComponent((Map) getMultiCallResult(item)));
 		}
 		monitor.worked(1);
 		if (monitor.isCanceled())
 			throw new OperationCanceledException();
 
 		result = getAttributes("ticket.milestone");
-		milestones = new ArrayList<TracMilestone>(result.length);
+		data.milestones = new ArrayList<TracMilestone>(result.length);
 		for (Object item : result) {
-			milestones.add(parseMilestone((Map) getMultiCallResult(item)));
+			data.milestones.add(parseMilestone((Map) getMultiCallResult(item)));
 		}
 		monitor.worked(1);
 		if (monitor.isCanceled())
 			throw new OperationCanceledException();
 
 		List<TicketAttributeResult> attributes = getTicketAttributes("ticket.priority");
-		priorities = new ArrayList<TracPriority>(result.length);
+		data.priorities = new ArrayList<TracPriority>(result.length);
 		for (TicketAttributeResult attribute : attributes) {
-			priorities.add(new TracPriority(attribute.name, attribute.value));
+			data.priorities.add(new TracPriority(attribute.name, attribute.value));
 		}
-		Collections.sort(priorities);
+		Collections.sort(data.priorities);
 		monitor.worked(1);
 		if (monitor.isCanceled())
 			throw new OperationCanceledException();
 
 		attributes = getTicketAttributes("ticket.resolution");
-		ticketResolutions = new ArrayList<TracTicketResolution>(result.length);
+		data.ticketResolutions = new ArrayList<TracTicketResolution>(result.length);
 		for (TicketAttributeResult attribute : attributes) {
-			ticketResolutions.add(new TracTicketResolution(attribute.name, attribute.value));
+			data.ticketResolutions.add(new TracTicketResolution(attribute.name, attribute.value));
 		}
-		Collections.sort(ticketResolutions);
+		Collections.sort(data.ticketResolutions);
 		monitor.worked(1);
 		if (monitor.isCanceled())
 			throw new OperationCanceledException();
 
 		attributes = getTicketAttributes("ticket.severity");
-		severities = new ArrayList<TracSeverity>(result.length);
+		data.severities = new ArrayList<TracSeverity>(result.length);
 		for (TicketAttributeResult attribute : attributes) {
-			severities.add(new TracSeverity(attribute.name, attribute.value));
+			data.severities.add(new TracSeverity(attribute.name, attribute.value));
 		}
-		Collections.sort(severities);
+		Collections.sort(data.severities);
 		monitor.worked(1);
 		if (monitor.isCanceled())
 			throw new OperationCanceledException();
 
 		attributes = getTicketAttributes("ticket.status");
-		ticketStatus = new ArrayList<TracTicketStatus>(result.length);
+		data.ticketStatus = new ArrayList<TracTicketStatus>(result.length);
 		for (TicketAttributeResult attribute : attributes) {
-			ticketStatus.add(new TracTicketStatus(attribute.name, attribute.value));
+			data.ticketStatus.add(new TracTicketStatus(attribute.name, attribute.value));
 		}
-		Collections.sort(ticketStatus);
+		Collections.sort(data.ticketStatus);
 		monitor.worked(1);
 		if (monitor.isCanceled())
 			throw new OperationCanceledException();
 
 		attributes = getTicketAttributes("ticket.type");
-		ticketTypes = new ArrayList<TracTicketType>(result.length);
+		data.ticketTypes = new ArrayList<TracTicketType>(result.length);
 		for (TicketAttributeResult attribute : attributes) {
-			ticketTypes.add(new TracTicketType(attribute.name, attribute.value));
+			data.ticketTypes.add(new TracTicketType(attribute.name, attribute.value));
 		}
-		Collections.sort(ticketTypes);
+		Collections.sort(data.ticketTypes);
 		monitor.worked(1);
 		if (monitor.isCanceled())
 			throw new OperationCanceledException();
 
 		result = getAttributes("ticket.version");
-		versions = new ArrayList<TracVersion>(result.length);
+		data.versions = new ArrayList<TracVersion>(result.length);
 		for (Object item : result) {
-			versions.add(parseVersion((Map) getMultiCallResult(item)));
+			data.versions.add(parseVersion((Map) getMultiCallResult(item)));
 		}
 		monitor.worked(1);
 		if (monitor.isCanceled())
@@ -344,12 +346,35 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		return attributes;
 	}
 
+	public byte[] getAttachmentData(int ticketId, String filename) throws TracException {
+		return (byte[]) call("ticket.getAttachment", ticketId, filename);
+	}
+
+	public void putAttachmentData(int ticketId, String filename, String description, byte[] data) throws TracException {
+		call("ticket.putAttachment", ticketId, filename, description, data, true);
+	}
+
 	private class TicketAttributeResult {
 
 		String name;
 
 		int value;
 
+	}
+
+	public void createTicket(TracTicket ticket) throws TracException {
+		Map<String, String> attributes = ticket.getValues();
+		String summary = attributes.remove(Key.SUMMARY.getKey());
+		String description = attributes.remove(Key.DESCRIPTION.getKey());
+		if (summary == null || description == null) {
+			throw new InvalidTicketException();
+		}
+		call("ticket.create", summary, description, attributes);
+	}
+
+	public void updateTicket(TracTicket ticket, String comment) throws TracException {
+		Map<String, String> attributes = ticket.getValues();
+		call("ticket.update", ticket.getId(), comment, attributes);
 	}
 
 }

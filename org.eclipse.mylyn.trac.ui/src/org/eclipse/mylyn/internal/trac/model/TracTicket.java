@@ -38,7 +38,7 @@ public class TracTicket {
 
 		public static Key fromKey(String name) {
 			for (Key key : Key.values()) {
-				if (key.toString().equals(name)) {
+				if (key.getKey().equals(name)) {
 					return key;
 				}
 			}
@@ -52,6 +52,10 @@ public class TracTicket {
 		}
 
 		public String toString() {
+			return key;
+		}
+
+		public String getKey() {
 			return key;
 		}
 	}
@@ -113,7 +117,7 @@ public class TracTicket {
 	public Map<String, String> getValues() {
 		Map<String, String> result = new HashMap<String, String>();
 		for (Key key : valueByKey.keySet()) {
-			result.put(key.toString(), valueByKey.get(key));
+			result.put(key.getKey(), valueByKey.get(key));
 		}
 		if (customValueByKey != null) {
 			result.putAll(customValueByKey);
@@ -142,11 +146,11 @@ public class TracTicket {
 	 * @throws InvalidTicketException
 	 *             thrown if the type of <code>value</code> is not valid
 	 */
-	public void putTracValue(String keyName, String value) throws InvalidTicketException {
+	public boolean putValue(String keyName, String value) throws InvalidTicketException {
 		Key key = Key.fromKey(keyName);
 		if (key != null) {
 			if (key == Key.ID || key == Key.TIME || key == Key.CHANGE_TIME) {
-				throw new RuntimeException("The '" + key + "' field must be accessed through a set() method");
+				return false;
 			}
 			putBuiltinValue(key, value);
 		} else if (value instanceof String) {
@@ -155,6 +159,7 @@ public class TracTicket {
 			throw new InvalidTicketException("Expected string value for custom key '" + keyName + "', got '" + value
 					+ "'");
 		}
+		return true;
 	}
 
 	public void setCreated(int created) {

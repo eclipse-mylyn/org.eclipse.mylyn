@@ -15,7 +15,10 @@ import java.util.Date;
  */
 public class TracVersion extends TracAttribute {
 
+	private static final long serialVersionUID = 9018237956062697410L;
+
 	private Date time;
+
 	private String description;
 
 	public TracVersion(String name) {
@@ -37,5 +40,5 @@ public class TracVersion extends TracAttribute {
 	public void setTime(Date time) {
 		this.time = time;
 	}
-	
+
 }

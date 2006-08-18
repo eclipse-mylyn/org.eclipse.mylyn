@@ -52,7 +52,7 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 	public void testUpdateAttributes() throws Exception {
 		connect010();
 		assertNull(repository.getMilestones());
-		repository.updateAttributes(new NullProgressMonitor());
+		repository.updateAttributes(new NullProgressMonitor(), true);
 		TracVersion[] versions = repository.getVersions();
 		assertEquals(2, versions.length);
 		Arrays.sort(versions, new Comparator<TracVersion>() {

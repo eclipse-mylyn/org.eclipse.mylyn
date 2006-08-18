@@ -8,12 +8,15 @@
 
 package org.eclipse.mylar.internal.trac.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author Steffen Pingel
  */
-public class TracMilestone extends TracAttribute {
+public class TracMilestone extends TracAttribute implements Serializable {
+
+	private static final long serialVersionUID = 6648558552508886484L;
 
 	private Date due;
 

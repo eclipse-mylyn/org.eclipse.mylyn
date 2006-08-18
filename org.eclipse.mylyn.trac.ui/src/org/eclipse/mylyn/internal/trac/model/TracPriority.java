@@ -13,6 +13,8 @@ package org.eclipse.mylar.internal.trac.model;
  */
 public class TracPriority extends TracTicketAttribute {
 
+	private static final long serialVersionUID = 3617078252773178266L;
+
 	public TracPriority(String name, int value) {
 		super(name, value);
 	}

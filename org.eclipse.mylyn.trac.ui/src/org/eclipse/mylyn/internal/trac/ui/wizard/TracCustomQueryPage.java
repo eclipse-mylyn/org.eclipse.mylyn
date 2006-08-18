@@ -339,7 +339,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 				IRunnableWithProgress runnable = new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 						try {
-							client.updateAttributes(monitor);
+							client.updateAttributes(monitor, true);
 						} catch (TracException e) {
 							throw new InvocationTargetException(e);
 						}

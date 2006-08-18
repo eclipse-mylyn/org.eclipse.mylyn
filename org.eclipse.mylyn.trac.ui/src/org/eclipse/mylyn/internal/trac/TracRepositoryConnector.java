@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.internal.trac;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +61,11 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	private List<String> supportedVersions;
 
 	private TracClientManager clientManager;
-
+	
+	public TracRepositoryConnector() {
+		TracUiPlugin.getDefault().setConnector(this);
+	}
+	
 	@Override
 	public boolean canCreateNewTask(TaskRepository repository) {
 		return true;
@@ -113,13 +118,11 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public IAttachmentHandler getAttachmentHandler() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public IOfflineTaskHandler getOfflineTaskHandler() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -234,7 +237,11 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	public synchronized TracClientManager getClientManager() {
 		if (clientManager == null) {
-			clientManager = new TracClientManager();
+			File cacheFile = null;
+			if (TracUiPlugin.getDefault().getRepostioryAttributeCachePath() != null) {
+				cacheFile = TracUiPlugin.getDefault().getRepostioryAttributeCachePath().toFile();
+			}
+			clientManager = new TracClientManager(cacheFile);
 		}
 		return clientManager;
 	}
@@ -290,7 +297,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	public void updateAttributes(TaskRepository repository, IProgressMonitor monitor) {
 		try {
 			ITracClient client = getClientManager().getRepository(repository);
-			client.updateAttributes(monitor);
+			client.updateAttributes(monitor, true);
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Could not update attributes", false);
 		}
@@ -309,6 +316,24 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public boolean hasSearchPage() {
 		return true;
+	}
+
+	public boolean hasRichEditor(AbstractRepositoryTask task) {
+		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+				TracUiPlugin.REPOSITORY_KIND, task.getRepositoryUrl());
+		return Version.XML_RPC.name().equals(repository.getVersion());
+	}
+
+	public boolean hasAttachmentSupport(AbstractRepositoryTask task) {
+		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+				TracUiPlugin.REPOSITORY_KIND, task.getRepositoryUrl());
+		return Version.XML_RPC.name().equals(repository.getVersion());
+	}
+
+	public void stop() {
+		if (clientManager != null) {
+			clientManager.writeCache();
+		}
 	}
 
 }

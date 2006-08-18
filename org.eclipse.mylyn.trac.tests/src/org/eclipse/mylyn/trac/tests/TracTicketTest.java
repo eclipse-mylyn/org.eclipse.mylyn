@@ -36,13 +36,13 @@ public class TracTicketTest extends TestCase {
 
 	public void testPutTracValue() throws InvalidTicketException {
 		TracTicket ticket = new TracTicket(1);
-		ticket.putTracValue("summary", "a");
+		ticket.putValue("summary", "a");
 		assertEquals("a", ticket.getValue(Key.SUMMARY));
 		assertEquals(null, ticket.getCustomValue("summary"));
 		assertEquals(null, ticket.getCustomValue("a"));
 
-		ticket.putTracValue("summary", "b");
-		ticket.putTracValue("custom", "c");
+		ticket.putValue("summary", "b");
+		ticket.putValue("custom", "c");
 		assertEquals("b", ticket.getValue(Key.SUMMARY));
 		assertEquals(null, ticket.getCustomValue("summary"));
 		assertEquals("c", ticket.getCustomValue("custom"));
@@ -50,11 +50,7 @@ public class TracTicketTest extends TestCase {
 
 	public void testPutTracValueId() throws InvalidTicketException {
 		TracTicket ticket = new TracTicket();
-		try {
-			ticket.putTracValue("id", "1");
-			fail("Expected RuntimeException");
-		} catch (RuntimeException e) {
-		}
+		assertFalse(ticket.putValue("id", "1"));
 	}
 
 	public void testSetCreated() throws InvalidTicketException {

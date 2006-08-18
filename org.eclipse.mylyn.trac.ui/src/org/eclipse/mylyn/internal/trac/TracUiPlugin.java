@@ -11,7 +11,11 @@
 
 package org.eclipse.mylar.internal.trac;
 
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.internal.trac.core.TracException;
@@ -33,6 +37,8 @@ public class TracUiPlugin extends AbstractUIPlugin {
 
 	private static TracUiPlugin plugin;
 
+	private TracRepositoryConnector connector;
+	
 	public TracUiPlugin() {
 		plugin = this;
 	}
@@ -42,6 +48,11 @@ public class TracUiPlugin extends AbstractUIPlugin {
 	}
 
 	public void stop(BundleContext context) throws Exception {
+		if (connector != null) {
+			connector.stop();
+			connector = null;
+		}
+		
 		plugin = null;
 		super.stop(context);
 	}
@@ -50,18 +61,70 @@ public class TracUiPlugin extends AbstractUIPlugin {
 		return plugin;
 	}
 
-	public static void handleTracException(Throwable e) {
+	void setConnector(TracRepositoryConnector connector) {
+		this.connector = connector;
+	}
+
+
+	/**
+	 * Returns the path to the file caching repository attributes.
+	 */
+	protected IPath getRepostioryAttributeCachePath() {
+		IPath stateLocation = Platform.getStateLocation(TracUiPlugin.getDefault().getBundle());
+		IPath cacheFile = stateLocation.append("repositoryConfigurations");
+		return cacheFile;
+	}
+
+	public static IStatus toStatus(Throwable e) {
 		if (e instanceof TracLoginException) {
-			MessageDialog.openError(null, TITLE_MESSAGE_DIALOG,
+			return new Status(Status.ERROR, PLUGIN_ID, IStatus.INFO, 
 					"Your login name or password is incorrect. Ensure proper repository configuration in "
-							+ TaskRepositoriesView.NAME + ".");
+					+ TaskRepositoriesView.NAME + ".", null);
 		} else if (e instanceof TracException) {
-			MessageDialog.openError(null, TITLE_MESSAGE_DIALOG, "Connection Error: " + e.getMessage());
+			return new Status(Status.ERROR, PLUGIN_ID, IStatus.INFO, 
+					"Connection Error: " + e.getMessage(), e);
 		} else if (e instanceof ClassCastException) {
-			MessageDialog.openError(null, TITLE_MESSAGE_DIALOG, "Error parsing server response");
+			return new Status(Status.ERROR, PLUGIN_ID, IStatus.INFO, "Error parsing server response", e);
 		} else {
-			MylarStatusHandler.fail(e, "Unexpected error: " + e.getMessage(), true);
+			return new Status(Status.ERROR, PLUGIN_ID, IStatus.ERROR, "Unexpected error", e);
 		}
+	}
+	
+	public static void handleTracException(Throwable e) {
+		handleTracException(toStatus(e));
+	}
+
+	public static void handleTracException(IStatus status) {
+		if (status.getCode() == IStatus.ERROR) {
+			MylarStatusHandler.log(status);
+			ErrorDialog.openError(null, TITLE_MESSAGE_DIALOG, null, status);
+		} else if (status.getCode() == IStatus.INFO) {
+			ErrorDialog.openError(null, TITLE_MESSAGE_DIALOG, null, status);
+		}
+	}
+	
+	/**
+	 * Convenience method for logging statuses to the plugin log
+	 * 
+	 * @param status
+	 *            the status to log
+	 */
+	public static void log(IStatus status) {
+		getDefault().getLog().log(status);
+	}
+
+	/**
+	 * Convenience method for logging exceptions to the plugin log
+	 * 
+	 * @param e
+	 *            the exception to log
+	 */
+	public static void log(Throwable e) {
+		String message = e.getMessage();
+		if (e.getMessage() == null) {
+			message = e.getClass().toString();
+		}
+		log(new Status(Status.ERROR, TracUiPlugin.PLUGIN_ID, 0, message, e));
 	}
 
 }

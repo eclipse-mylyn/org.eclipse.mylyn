@@ -257,7 +257,7 @@ public class Trac09Client extends AbstractTracClient {
 
 				if (ticket.isValid()) {
 					for (String key : constantValues.keySet()) {
-						ticket.putTracValue(key, parseTicketValue(constantValues.get(key)));
+						ticket.putValue(key, parseTicketValue(constantValues.get(key)));
 					}
 
 					tickets.add(ticket);
@@ -320,57 +320,57 @@ public class Trac09Client extends AbstractTracClient {
 						String name = tag.getAttribute("id");
 						if ("component".equals(name)) {
 							List<String> values = getOptionValues(tokenizer);
-							components = new ArrayList<TracComponent>(values.size());
+							data.components = new ArrayList<TracComponent>(values.size());
 							for (String value : values) {
-								components.add(new TracComponent(value));
+								data.components.add(new TracComponent(value));
 							}
 						} else if ("milestone".equals(name)) {
 							List<String> values = getOptionValues(tokenizer);
-							milestones = new ArrayList<TracMilestone>(values.size());
+							data.milestones = new ArrayList<TracMilestone>(values.size());
 							for (String value : values) {
-								milestones.add(new TracMilestone(value));
+								data.milestones.add(new TracMilestone(value));
 							}
 						} else if ("priority".equals(name)) {
 							List<String> values = getOptionValues(tokenizer);
-							priorities = new ArrayList<TracPriority>(values.size());
+							data.priorities = new ArrayList<TracPriority>(values.size());
 							for (int i = 0; i < values.size(); i++) {
-								priorities.add(new TracPriority(values.get(i), i + 1));
+								data.priorities.add(new TracPriority(values.get(i), i + 1));
 							}
 						} else if ("severity".equals(name)) {
 							List<String> values = getOptionValues(tokenizer);
-							severities = new ArrayList<TracSeverity>(values.size());
+							data.severities = new ArrayList<TracSeverity>(values.size());
 							for (int i = 0; i < values.size(); i++) {
-								severities.add(new TracSeverity(values.get(i), i + 1));
+								data.severities.add(new TracSeverity(values.get(i), i + 1));
 							}
 						} else if ("type".equals(name)) {
 							List<String> values = getOptionValues(tokenizer);
-							ticketTypes = new ArrayList<TracTicketType>(values.size());
+							data.ticketTypes = new ArrayList<TracTicketType>(values.size());
 							for (int i = 0; i < values.size(); i++) {
-								ticketTypes.add(new TracTicketType(values.get(i), i + 1));
+								data.ticketTypes.add(new TracTicketType(values.get(i), i + 1));
 							}
 						} else if ("version".equals(name)) {
 							List<String> values = getOptionValues(tokenizer);
-							versions = new ArrayList<TracVersion>(values.size());
+							data.versions = new ArrayList<TracVersion>(values.size());
 							for (String value : values) {
-								versions.add(new TracVersion(value));
+								data.versions.add(new TracVersion(value));
 							}
 						}
 					}
 				}
 			}
 
-			ticketResolutions = new ArrayList<TracTicketResolution>(5);
-			ticketResolutions.add(new TracTicketResolution("fixed", 1));
-			ticketResolutions.add(new TracTicketResolution("invalid", 2));
-			ticketResolutions.add(new TracTicketResolution("wontfix", 3));
-			ticketResolutions.add(new TracTicketResolution("duplicate", 4));
-			ticketResolutions.add(new TracTicketResolution("worksforme", 5));
+			data.ticketResolutions = new ArrayList<TracTicketResolution>(5);
+			data.ticketResolutions.add(new TracTicketResolution("fixed", 1));
+			data.ticketResolutions.add(new TracTicketResolution("invalid", 2));
+			data.ticketResolutions.add(new TracTicketResolution("wontfix", 3));
+			data.ticketResolutions.add(new TracTicketResolution("duplicate", 4));
+			data.ticketResolutions.add(new TracTicketResolution("worksforme", 5));
 
-			ticketStatus = new ArrayList<TracTicketStatus>(4);
-			ticketStatus.add(new TracTicketStatus("new", 1));
-			ticketStatus.add(new TracTicketStatus("assigned", 2));
-			ticketStatus.add(new TracTicketStatus("reopened", 3));
-			ticketStatus.add(new TracTicketStatus("closed", 4));
+			data.ticketStatus = new ArrayList<TracTicketStatus>(4);
+			data.ticketStatus.add(new TracTicketStatus("new", 1));
+			data.ticketStatus.add(new TracTicketStatus("assigned", 2));
+			data.ticketStatus.add(new TracTicketStatus("reopened", 3));
+			data.ticketStatus.add(new TracTicketStatus("closed", 4));
 		} catch (IOException e) {
 			throw new TracException(e);
 		} catch (ParseException e) {
@@ -429,6 +429,22 @@ public class Trac09Client extends AbstractTracClient {
 			}
 		}
 		return "";
+	}
+
+	public byte[] getAttachmentData(int id, String filename) throws TracException {
+		throw new TracException("Unsupported operation");
+	}
+
+	public void putAttachmentData(int id, String name, String description, byte[] data) throws TracException {
+		throw new TracException("Unsupported operation");
+	}
+
+	public void createTicket(TracTicket ticket) throws TracException {
+		throw new TracException("Unsupported operation");
+	}
+
+	public void updateTicket(TracTicket ticket, String comment) throws TracException {
+		throw new TracException("Unsupported operation");
 	}
 
 }

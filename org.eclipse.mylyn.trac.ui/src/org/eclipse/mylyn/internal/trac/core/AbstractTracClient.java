@@ -12,8 +12,8 @@
 package org.eclipse.mylar.internal.trac.core;
 
 import java.net.URL;
-import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylar.internal.trac.model.TracComponent;
 import org.eclipse.mylar.internal.trac.model.TracMilestone;
 import org.eclipse.mylar.internal.trac.model.TracPriority;
@@ -36,27 +36,15 @@ public abstract class AbstractTracClient implements ITracClient {
 
 	protected Version version;
 
-	protected List<TracComponent> components;
-	
-	protected List<TracMilestone> milestones;
-	
-	protected List<TracPriority> priorities;
-	
-	protected List<TracSeverity> severities;
-	
-	protected List<TracTicketResolution> ticketResolutions;
-	
-	protected List<TracTicketStatus> ticketStatus;
-	
-	protected List<TracTicketType> ticketTypes;
-	
-	protected List<TracVersion> versions;
+	protected TracClientData data;
 	
 	public AbstractTracClient(URL repositoryUrl, Version version, String username, String password) {
 		this.repositoryUrl = repositoryUrl;
 		this.version = version;
 		this.username = username;
 		this.password = password;
+		
+		this.data = new TracClientData();
 	}
 
 	public Version getVersion() {
@@ -69,35 +57,48 @@ public abstract class AbstractTracClient implements ITracClient {
 
 
 	public TracComponent[] getComponents() {
-		return (components != null) ? components.toArray(new TracComponent[0]) : null;
+		return (data.components != null) ? data.components.toArray(new TracComponent[0]) : null;
 	}
 
 	public TracMilestone[] getMilestones() {
-		return (milestones != null) ? milestones.toArray(new TracMilestone[0]) : null;
+		return (data.milestones != null) ? data.milestones.toArray(new TracMilestone[0]) : null;
 	}
 
 	public TracPriority[] getPriorities() {
-		return (priorities != null) ? priorities.toArray(new TracPriority[0]) : null;
+		return (data.priorities != null) ? data.priorities.toArray(new TracPriority[0]) : null;
 	}
 
 	public TracSeverity[] getSeverities() {
-		return (severities != null) ? severities.toArray(new TracSeverity[0]) : null;
+		return (data.severities != null) ? data.severities.toArray(new TracSeverity[0]) : null;
 	}
 	
 	public TracTicketResolution[] getTicketResolutions() {
-		return (ticketResolutions != null) ? ticketResolutions.toArray(new TracTicketResolution[0]) : null;
+		return (data.ticketResolutions != null) ? data.ticketResolutions.toArray(new TracTicketResolution[0]) : null;
 	}
 
 	public TracTicketStatus[] getTicketStatus() {
-		return (ticketStatus != null) ? ticketStatus.toArray(new TracTicketStatus[0]) : null;
+		return (data.ticketStatus != null) ? data.ticketStatus.toArray(new TracTicketStatus[0]) : null;
 	}
 
 	public TracTicketType[] getTicketTypes() {
-		return (ticketTypes != null) ? ticketTypes.toArray(new TracTicketType[0]) : null;
+		return (data.ticketTypes != null) ? data.ticketTypes.toArray(new TracTicketType[0]) : null;
 	}
 
 	public TracVersion[] getVersions() {
-		return (versions != null) ? versions.toArray(new TracVersion[0]) : null;
+		return (data.versions != null) ? data.versions.toArray(new TracVersion[0]) : null;
 	}
 
+	public void updateAttributes(IProgressMonitor monitor, boolean force) throws TracException {
+		if (data.lastUpdate == 0 || force) {
+			updateAttributes(monitor);
+			data.lastUpdate = System.currentTimeMillis();
+		}
+	}
+	
+	public abstract void updateAttributes(IProgressMonitor monitor) throws TracException;
+
+	public void setData(TracClientData data) {
+		this.data = data;
+	}
+	
 }
