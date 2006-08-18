@@ -70,7 +70,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private static final String LABEL_JOB_SUBMIT = "Submitting to Bugzilla repository";
 
-	//private static final String DESCRIPTION_DEFAULT = "<needs synchronize>";
+	// private static final String DESCRIPTION_DEFAULT = "<needs synchronize>";
 
 	private static final String CLIENT_LABEL = "Bugzilla (supports uncustomized 2.18-2.22)";
 
@@ -117,19 +117,21 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 		String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), bugId);
 		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
-				
-		if (task == null) {			
+
+		if (task == null) {
 			RepositoryTaskData taskData = null;
 			try {
-				taskData = BugzillaServerFacade.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(), TasksUiPlugin.getDefault().getProxySettings(), repository.getCharacterEncoding(), bugId);
+				taskData = BugzillaServerFacade.getBug(repository.getUrl(), repository.getUserName(), repository
+						.getPassword(), TasksUiPlugin.getDefault().getProxySettings(), repository
+						.getCharacterEncoding(), bugId);
 			} catch (Throwable e) {
 				return null;
 			}
-			if(taskData != null) {				
-				task = new BugzillaTask(handle, taskData.getId()+": "+taskData.getDescription(), true);
-				((BugzillaTask)task).setTaskData(taskData);
-				TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);								
-			}			
+			if (taskData != null) {
+				task = new BugzillaTask(handle, taskData.getId() + ": " + taskData.getDescription(), true);
+				((BugzillaTask) task).setTaskData(taskData);
+				TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
+			}
 		}
 
 		if (task instanceof AbstractRepositoryTask) {
@@ -393,7 +395,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateAttributes(TaskRepository repository, IProgressMonitor monitor) {
+	public void updateAttributes(final TaskRepository repository, IProgressMonitor monitor) {
 		try {
 			BugzillaUiPlugin.updateQueryOptions(repository, monitor);
 		} catch (LoginException exception) {
@@ -410,13 +412,14 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				}
 			});
 			return;
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					if (PlatformUI.getWorkbench() != null && PlatformUI.getWorkbench().getDisplay() != null) {
 						MessageDialog.openError(null, "Connection Error", "\nPlease ensure proper configuration in "
-								+ TaskRepositoriesView.NAME + ". ");
+								+ TaskRepositoriesView.NAME + ".");
 					}
+					MylarStatusHandler.fail(e, "IO Error while updating attribute for " + repository.getUrl(), false);
 				}
 			});
 			return;
@@ -429,6 +432,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 						String message = e.getCause() != null ? e.getCause().getMessage() : "<No message provided>";
 						MessageDialog.openError(null, "Error updating repository attributes", "Error was : " + message);
 					}
+					MylarStatusHandler
+							.fail(e, "Error updating repository attributes for " + repository.getUrl(), false);
 				}
 			});
 			return;
