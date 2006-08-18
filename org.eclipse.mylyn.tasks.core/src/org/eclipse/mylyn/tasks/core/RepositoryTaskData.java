@@ -138,11 +138,6 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 		return getAttributeValue(RepositoryTaskAttribute.DATE_MODIFIED);
 	}
 
-	public void setDescription(String description) {
-		// ignore, used by NewBugReport
-		// this.description = decodeStringFromCharset(description);
-	}
-
 	// public void setKeywords(List<String> keywords) {
 	// this.validKeywords = keywords;
 	// }
@@ -323,16 +318,32 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 	public List<TaskComment> getComments() {
 		return taskComments;
 	}
-
-	public String getDescription() {
-		List<TaskComment> coms = this.getComments();
-		if (coms != null && coms.size() > 0) {
-			return coms.get(0).getText();
-		} else {
-			return "";
+	
+	public void setDescription(String description) {
+		RepositoryTaskAttribute attribute = getDescriptionAttribute();
+		if(attribute != null) {
+			attribute.setValue(description);
 		}
 	}
 
+	public String getDescription() {
+		RepositoryTaskAttribute attribute = getDescriptionAttribute();
+		return (attribute != null) ? attribute.getValue() : "";
+	}
+
+	public RepositoryTaskAttribute getDescriptionAttribute() {
+		RepositoryTaskAttribute attribute = getAttribute(RepositoryTaskAttribute.DESCRIPTION);
+		if (attribute != null) {
+			return attribute;
+		} else {
+			List<TaskComment> coms = this.getComments();
+			if (coms != null && coms.size() > 0) {
+				return coms.get(0).getAttribute(RepositoryTaskAttribute.COMMENT_TEXT);
+			}
+		}
+		return null;
+	}
+	
 	public void addAttachment(RepositoryAttachment attachment) {
 		attachments.add(attachment);
 	}

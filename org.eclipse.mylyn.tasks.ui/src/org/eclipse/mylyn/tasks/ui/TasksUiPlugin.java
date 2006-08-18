@@ -255,7 +255,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	};
 
 	private static ITaskListNotificationProvider INCOMING_NOTIFICATION_PROVIDER = new ITaskListNotificationProvider() {
-		// TODO: use push rather than pull for incoming notification?
+		
 		public Set<ITaskListNotification> getNotifications() {
 			Set<ITaskListNotification> notifications = new HashSet<ITaskListNotification>();
 			// Incoming Changes
@@ -266,11 +266,18 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 							&& repositoryTask.isNotified() == false) {
 						TaskListNotificationIncoming notification = new TaskListNotificationIncoming(repositoryTask);
 
-						if (repositoryTask.getTaskData() != null && repositoryTask.getTaskData().getComments() != null) {
+						if (repositoryTask.getTaskData() != null) {
 							List<TaskComment> taskComments = repositoryTask.getTaskData().getComments();
-							TaskComment lastComment = taskComments.get(taskComments.size() - 1);
-							if (lastComment != null) {
-								notification.setDescription(lastComment.getText());
+							if (taskComments != null && taskComments.size() > 0) {
+								TaskComment lastComment = taskComments.get(taskComments.size() - 1);
+								if (lastComment != null) {
+									notification.setDescription(lastComment.getText());
+								}
+							} else {
+								String description = repositoryTask.getTaskData().getDescription();
+								if (description != null) {
+									notification.setDescription(description);
+								}
 							}
 						}
 
