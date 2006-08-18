@@ -245,6 +245,8 @@ public class HtmlTag {
 				sb.append("=\"");
 				sb.append(value);
 				sb.append('"');
+			} else {
+				sb.append("=\"\"");
 			}
 		}
 		if(selfTerminating) {
