@@ -190,18 +190,6 @@ public class TaskUiUtil {
 		openEditor(task, true, newTask);
 	}
 	
-//	private static void openEditorThenSync(final AbstractRepositoryConnector connector, final ITask task) {
-//		final IEditorInput editorInput = new TaskEditorInput(task, false);
-//		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//			public void run() {
-//				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-//				if(openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page) != null) {
-//					connector.synchronize((AbstractRepositoryTask) task, false, null);
-//				}
-//			}
-//		});
-//	}
-
 	/**
 	 * Set asyncExec false for testing purposes.
 	 */
