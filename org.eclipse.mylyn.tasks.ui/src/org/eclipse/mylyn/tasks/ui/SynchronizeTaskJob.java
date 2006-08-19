@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.tasks.ui;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
@@ -87,8 +88,11 @@ class SynchronizeTaskJob extends Job {
 						} catch (final CoreException e) {
 							if (!(e.getStatus().getException() instanceof IOException)) {
 								MylarStatusHandler.log(e.getStatus());
+							} else if(e.getStatus().getException() instanceof FileNotFoundException){
+								// can be casue by empty urlbase parameter on bugzilla server
+								MylarStatusHandler.log(e.getStatus());
 							} else {
-								// ignore, indicates working offline
+								// ignore, assume working offline
 							}
 							continue;
 						}
@@ -102,6 +106,8 @@ class SynchronizeTaskJob extends Job {
 					repositoryTask.setCurrentlySynchronizing(false);
 					TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 
+				} else {
+					repositoryTask.setCurrentlySynchronizing(false);
 				}
 
 				monitor.worked(1);
