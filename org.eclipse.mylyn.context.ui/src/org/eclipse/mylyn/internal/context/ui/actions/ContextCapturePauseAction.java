@@ -11,10 +11,15 @@
 
 package org.eclipse.mylar.internal.context.ui.actions;
 
+import java.util.List;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.context.core.IMylarContext;
+import org.eclipse.mylar.context.core.IMylarContextListener;
+import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -25,20 +30,23 @@ import org.eclipse.ui.IViewPart;
  * 
  * @author Mik Kersten
  */
-public class ToggleContextCaptureAction extends Action implements IViewActionDelegate {
+public class ContextCapturePauseAction extends Action implements IViewActionDelegate, IMylarContextListener {
+	
+	protected IAction initAction = null;
 	
 	public void init(IViewPart view) {
-		// ignore
+		// NOTE: not disposed until shutdown
+		ContextCorePlugin.getContextManager().addListener(this);
 	}
 
 	public void run(IAction action) {
+		initAction = action;
 		setChecked(!action.isChecked());
 		if (isChecked()) {
 			resume();
 		} else {
 			pause();
 		}
-		// super.setChecked(!super.isChecked());
 	}
 
 	public void pause() {
@@ -51,6 +59,46 @@ public class ToggleContextCaptureAction extends Action implements IViewActionDel
 		TaskListView.getFromActivePerspective().indicatePaused(false);
 	}
 
+	public void contextActivated(IMylarContext context) {
+		resume();
+		setChecked(false);
+		if (initAction != null) {
+			initAction.setChecked(false);
+		}
+	}
+
+	public void contextDeactivated(IMylarContext context) {
+		// ignore
+	}
+
+	public void edgesChanged(IMylarElement element) {
+		// ignore
+	}
+
+	public void interestChanged(List<IMylarElement> elements) {
+		// ignore
+	}
+
+	public void landmarkAdded(IMylarElement element) {
+		// ignore
+	}
+
+	public void landmarkRemoved(IMylarElement element) {
+		// ignore
+	}
+
+	public void nodeDeleted(IMylarElement element) {
+		// ignore
+	}
+
+	public void presentationSettingsChanged(UpdateKind kind) {
+		// ignore
+	}
+
+	public void presentationSettingsChanging(UpdateKind kind) {
+		// ignore
+	}
+	
 	public void selectionChanged(IAction action, ISelection selection) {
 		// ignore
 	}
