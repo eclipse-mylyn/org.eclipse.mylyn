@@ -13,13 +13,18 @@ package org.eclipse.mylar.internal.context.ui.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.internal.tasks.ui.wizards.ContextAttachWizard;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -28,37 +33,59 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Mik Kersten
  * @author Rob Elves
+ * @author Steffen Pingel
  */
 public class ContextAttachAction implements IViewActionDelegate {
+
+	private AbstractRepositoryTask task;
+	private TaskRepository repository;
+	private AbstractRepositoryConnector connector;
 
 	public void init(IViewPart view) {
 		// ignore
 	}
 
 	public void run(IAction action) {
-		ITask task = TaskListView.getFromActivePerspective().getSelectedTask();
-		if (task instanceof AbstractRepositoryTask) {
-			try {	
-				ContextAttachWizard wizard = new ContextAttachWizard((AbstractRepositoryTask)task);
-				Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-				if (wizard != null && shell != null && !shell.isDisposed()) {
-					WizardDialog dialog = new WizardDialog(shell, wizard);
-					dialog.create();
-					dialog.setTitle(ContextAttachWizard.WIZARD_TITLE);
-					dialog.setBlockOnOpen(true);
-					if (dialog.open() == Dialog.CANCEL) {
-						dialog.close();
-						return;
-					}
-				}
-			} catch (Exception e) {
-				MylarStatusHandler.fail(e, e.getMessage(), true);
+		if (task == null) {
+			return;
+		}
+
+		if (!connector.validate(repository)) {
+			return;
+		}
+		if(task.getSyncState() != RepositoryTaskSyncState.SYNCHRONIZED) {
+			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					TasksUiPlugin.TITLE_DIALOG, "Task must be synchronized before attaching context");
+			return;
+		}
+
+		ContextAttachWizard wizard = new ContextAttachWizard((AbstractRepositoryTask)task);
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		if (wizard != null && shell != null && !shell.isDisposed()) {
+			WizardDialog dialog = new WizardDialog(shell, wizard);
+			dialog.create();
+			dialog.setTitle(ContextAttachWizard.WIZARD_TITLE);
+			dialog.setBlockOnOpen(true);
+			if (dialog.open() == Dialog.CANCEL) {
+				dialog.close();
+				return;
 			}
 		}
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		// ignore
+		ITask selectedTask = TaskListView.getSelectedTask(selection);
+		if (selectedTask instanceof AbstractRepositoryTask) {
+			task = (AbstractRepositoryTask)selectedTask;
+			repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryKind(),
+					task.getRepositoryUrl());
+			connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(task.getRepositoryKind());
+			IAttachmentHandler handler = connector.getAttachmentHandler();
+			action.setEnabled(handler != null && handler.canUploadAttachment(repository, (AbstractRepositoryTask)task));
+		} else {
+			task = null;
+			action.setEnabled(false);
+		}
 	}
 
 }
