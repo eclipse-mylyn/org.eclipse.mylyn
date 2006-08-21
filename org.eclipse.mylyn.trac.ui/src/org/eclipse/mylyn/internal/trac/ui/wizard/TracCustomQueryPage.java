@@ -113,6 +113,8 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 	private Map<String, SearchField> searchFieldByName = new HashMap<String, SearchField>();
 
+	private boolean firstTime = true;
+
 	public TracCustomQueryPage(TaskRepository repository, AbstractRepositoryQuery query) {
 		super(TITLE);
 
@@ -150,10 +152,6 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		keywordsField.createControls(control, "Keywords");
 
 		createOptionsGroup(control);
-
-		if (repository != null) {
-			updateAttributesFromRepository(false);
-		}
 
 		if (query != null) {
 			titleText.setText(query.getDescription());
@@ -320,9 +318,22 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		if (scontainer != null) {
 			scontainer.setPerformActionEnabled(true);
 		}
+		
+		if (visible && firstTime) {
+			firstTime = false;
+			// delay the execution so the dialog's progress bar is visible when
+			// the attributes are updated
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					if (getControl() != null && !getControl().isDisposed()) {
+						updateAttributesFromRepository(false);
+					}
+				}
+			});
+		}
 	}
 	
-	private void updateAttributesFromRepository(boolean connect) {
+	private void updateAttributesFromRepository(final boolean force) {
 		TracRepositoryConnector connector = (TracRepositoryConnector) TasksUiPlugin.getRepositoryManager()
 				.getRepositoryConnector(TracUiPlugin.REPOSITORY_KIND);
 		final ITracClient client;
@@ -333,30 +344,27 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 			return;
 		}
 
-		if (connect) {
-			try {
-
-				IRunnableWithProgress runnable = new IRunnableWithProgress() {
-					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-						try {
-							client.updateAttributes(monitor, true);
-						} catch (TracException e) {
-							throw new InvocationTargetException(e);
-						}
+		try {
+			IRunnableWithProgress runnable = new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					try {
+						client.updateAttributes(monitor, force);
+					} catch (TracException e) {
+						throw new InvocationTargetException(e);
 					}
-				};
-
-				if (getContainer() != null) {
-					getContainer().run(true, true, runnable);
-				} else {
-					IProgressService service = PlatformUI.getWorkbench().getProgressService();
-					service.run(true, true, runnable);
 				}
-			} catch (InvocationTargetException e) {
-				TracUiPlugin.handleTracException(e.getCause());
-			} catch (InterruptedException e) {
-				return;
+			};
+
+			if (getContainer() != null) {
+				getContainer().run(true, true, runnable);
+			} else {
+				IProgressService service = PlatformUI.getWorkbench().getProgressService();
+				service.run(true, true, runnable);
 			}
+		} catch (InvocationTargetException e) {
+			TracUiPlugin.handleTracException(e.getCause());
+		} catch (InterruptedException e) {
+			return;
 		}
 
 		statusField.setValues(client.getTicketStatus());
@@ -419,7 +427,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 		final RepositorySearchQuery searchQuery = new RepositorySearchQuery(repository, getQuery());
 		IQueryHitCollector collector = new AbstractQueryHitCollector() {
-			
+
 			private RepositorySearchResult searchResult;
 
 			@Override
