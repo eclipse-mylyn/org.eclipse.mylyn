@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.tasks.ui.wizards;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IStatusLineManager;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
@@ -27,6 +28,7 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Rob Elves
+ * @author Steffen Pingel
  */
 public class ContextAttachWizard extends Wizard {
 
@@ -60,16 +62,21 @@ public class ContextAttachWizard extends Wizard {
 				this.repository.getKind());
 
 		try {
-			connector.attachContext(repository, task, wizardPage.getComment());
-			IWorkbenchSite site = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart().getSite();
-			if (site instanceof IViewSite) {
-				IStatusLineManager statusLineManager = ((IViewSite)site).getActionBars().getStatusLineManager();
-				statusLineManager.setMessage(TaskListImages.getImage(TaskListImages.TASKLIST),
-						"Context attached to task: " + task.getDescription());
+			if (!connector.attachContext(repository, task, wizardPage.getComment())) {
+				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+						TasksUiPlugin.TITLE_DIALOG, AbstractRepositoryConnector.MESSAGE_ATTACHMENTS_NOT_SUPPORTED + connector.getLabel());
+			} else {
+				IWorkbenchSite site = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart().getSite();
+				if (site instanceof IViewSite) {
+					IStatusLineManager statusLineManager = ((IViewSite)site).getActionBars().getStatusLineManager();
+					statusLineManager.setMessage(TaskListImages.getImage(TaskListImages.TASKLIST),
+							"Context attached to task: " + task.getDescription());
+				}
 			}
-		} catch (CoreException ce) {
-			MessageDialog.openError(null, "Context Attachment", "Attachment of task context FAILED.\n" + ce.getMessage());
-			MylarStatusHandler.log(ce.getStatus());
+		} catch (CoreException e) {
+			ErrorDialog.openError(null, TasksUiPlugin.TITLE_DIALOG, "Attachment of task context FAILED.", e.getStatus());
+			MylarStatusHandler.log(e.getStatus());
+			return false;
 		}
 
 		return true;

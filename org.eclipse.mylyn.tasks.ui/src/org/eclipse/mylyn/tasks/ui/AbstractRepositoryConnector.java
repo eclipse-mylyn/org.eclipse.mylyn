@@ -24,8 +24,10 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -64,7 +66,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public abstract class AbstractRepositoryConnector {
 
-	private static final String MESSAGE_ATTACHMENTS_NOT_SUPPORTED = "Attachments not supported by connector: ";
+	public static final String MESSAGE_ATTACHMENTS_NOT_SUPPORTED = "Attachments not supported by connector: ";
 
 	private static final int RETRY_DELAY = 3000;
 
@@ -194,72 +196,88 @@ public abstract class AbstractRepositoryConnector {
 		}
 	}
 
-	public final void attachContext(TaskRepository repository, AbstractRepositoryTask task, String longComment)
+	/**
+	 * Attaches the assoicated context to <code>task</code>.
+	 *
+	 * @return false, if operation is not supported by repository
+	 */
+	public final boolean attachContext(TaskRepository repository, AbstractRepositoryTask task, String longComment)
 			throws CoreException {
-		if (!repository.hasCredentials()) {
-			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					TasksUiPlugin.TITLE_DIALOG, "Repository credentials missing or invalid.");
-			return;
-		} else {
-			ContextCorePlugin.getContextManager().saveContext(task.getHandleIdentifier());
-			File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+		ContextCorePlugin.getContextManager().saveContext(task.getHandleIdentifier());
+		File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
 
-			if (sourceContextFile != null && sourceContextFile.exists()) {
-				try {
-					List<File> filesToZip = new ArrayList<File>();
-					filesToZip.add(sourceContextFile);
-
-					File destinationFile = File.createTempFile(sourceContextFile.getName(), ZIPFILE_EXTENSION);
-					destinationFile.deleteOnExit();
-					ZipFileUtil.createZipFile(destinationFile, filesToZip, new NullProgressMonitor());
-
-					IAttachmentHandler handler = getAttachmentHandler();
-					if (handler != null) {
-						// TODO: 'faking' outgoing state 
-						task.setSyncState(RepositoryTaskSyncState.OUTGOING);
-						handler.uploadAttachment(repository, task, longComment, MYLAR_CONTEXT_DESCRIPTION,
-								destinationFile, APPLICATION_OCTET_STREAM, false, null);
-						task.setTaskData(null);
-						synchronize(task, true, null);
-					} else {
-						MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-								TasksUiPlugin.TITLE_DIALOG, MESSAGE_ATTACHMENTS_NOT_SUPPORTED + getLabel());
-					}
-				} catch (Exception e) {
-					MylarStatusHandler.fail(e, "Could not export task context as zip file", true);
-				}
+		if (sourceContextFile != null && sourceContextFile.exists()) {
+			IAttachmentHandler handler = getAttachmentHandler();
+			if (handler == null) {
+				return false;
 			}
+
+			// compress context file
+			List<File> filesToZip = new ArrayList<File>();
+			filesToZip.add(sourceContextFile);
+
+			File destinationFile;
+			try {
+				destinationFile = File.createTempFile(sourceContextFile.getName(), ZIPFILE_EXTENSION);
+				destinationFile.deleteOnExit();
+				ZipFileUtil.createZipFile(destinationFile, filesToZip, new NullProgressMonitor());
+			} catch (IOException e) {
+				throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, 0, "Error compressing context file", e));
+			}
+
+			// upload context file
+			// TODO: 'faking' outgoing state 
+			task.setSyncState(RepositoryTaskSyncState.OUTGOING);
+			Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
+			handler.uploadAttachment(repository, task, longComment, MYLAR_CONTEXT_DESCRIPTION,
+					destinationFile, APPLICATION_OCTET_STREAM, false, proxySettings);
+			task.setTaskData(null);
+			synchronize(task, true, null);
 		}
+		return true;
 	}
 
-	public final void retrieveContext(TaskRepository repository, AbstractRepositoryTask task,
-			RepositoryAttachment attachment) throws CoreException, IOException {
+	/**
+	 * Retrieves a context stored in <code>attachment</code> from <code>task</code>.
+	 *
+	 * @return false, if operation is not supported by repository
+	 */
+	public final boolean retrieveContext(TaskRepository repository, AbstractRepositoryTask task,
+			RepositoryAttachment attachment) throws CoreException {
+		IAttachmentHandler attachmentHandler = getAttachmentHandler();
+		if (attachmentHandler == null) {
+			return false;
+		}
+		
 		boolean wasActive = false;
 		if (task.isActive()) {
 			wasActive = true;
 			TasksUiPlugin.getTaskListManager().deactivateTask(task);
 		}
 
-		File destinationContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+		try {
+			File destinationContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+			// TODO what if destinationContextFile == null?
+			File destinationZipFile = new File(destinationContextFile.getPath() + ZIPFILE_EXTENSION);
 
-		File destinationZipFile = new File(destinationContextFile.getPath() + ZIPFILE_EXTENSION);
-
-		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
-		IAttachmentHandler attachmentHandler = getAttachmentHandler();
-		if (attachmentHandler != null) {
+			Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
 			attachmentHandler.downloadAttachment(repository, task, attachment, destinationZipFile,
-					proxySettings);
-			ZipFileUtil.unzipFiles(destinationZipFile, TasksUiPlugin.getDefault().getDataDirectory());
-			if (destinationContextFile.exists()) {
-				TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
-				if (wasActive) {
-					TasksUiPlugin.getTaskListManager().activateTask(task);
-				}
+					proxySettings); 
+			// if (destinationContextFile.exists()) {
+			try {
+				ZipFileUtil.unzipFiles(destinationZipFile, TasksUiPlugin.getDefault().getDataDirectory());
+			} catch (IOException e) {
+				throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, 0, "Error extracting context file", e));
 			}
-		} else {
-			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					TasksUiPlugin.TITLE_DIALOG, MESSAGE_ATTACHMENTS_NOT_SUPPORTED + getLabel());
+			TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
+			// }
+		} finally {		
+			if (wasActive) {
+				TasksUiPlugin.getTaskListManager().activateTask(task);
+			}
 		}
+		
+		return true;
 	}
 
 	// Precondition of note: offline file is removed upon submit to repository

@@ -28,4 +28,8 @@ public interface IAttachmentHandler {
 	public void downloadAttachment(TaskRepository taskRepository, AbstractRepositoryTask task,
 			RepositoryAttachment attachment, File file, Proxy proxySettings) throws CoreException;
 
+	public boolean canUploadAttachment(TaskRepository repository, AbstractRepositoryTask task);
+	
+	public boolean canDownloadAttachment(TaskRepository repository, AbstractRepositoryTask task);
+
 }

@@ -264,4 +264,12 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 			in.close();
 		}
 	}
+
+	public boolean canDownloadAttachment(TaskRepository repository, AbstractRepositoryTask task) {
+		return true;
+	}
+
+	public boolean canUploadAttachment(TaskRepository repository, AbstractRepositoryTask task) {
+		return true;
+	}
 }

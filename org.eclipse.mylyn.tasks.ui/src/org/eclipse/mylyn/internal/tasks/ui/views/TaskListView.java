@@ -1396,6 +1396,23 @@ public class TaskListView extends ViewPart {
 		return null;
 	}
 
+	public static ITask getSelectedTask(ISelection selection) {
+		if (selection instanceof StructuredSelection) {
+			StructuredSelection structuredSelection = (StructuredSelection) selection;
+			if (structuredSelection.size() != 1) {
+				return null;
+			}
+			
+			Object element = structuredSelection.getFirstElement();
+			if (element instanceof ITask) {
+				return (ITask) structuredSelection.getFirstElement();
+			} else if (element instanceof AbstractQueryHit) {
+				return ((AbstractQueryHit) element).getOrCreateCorrespondingTask();
+			}
+		}
+		return null;
+	}
+
 	public void indicatePaused(boolean paused) {
 		isPaused = paused;
 		IStatusLineManager statusLineManager = getViewSite().getActionBars().getStatusLineManager();

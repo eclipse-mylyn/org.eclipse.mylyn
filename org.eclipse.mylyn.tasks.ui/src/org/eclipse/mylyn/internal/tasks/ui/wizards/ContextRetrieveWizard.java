@@ -11,18 +11,23 @@
 
 package org.eclipse.mylar.internal.tasks.ui.wizards;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Rob Elves
  * @author Mik Kersten
+ * @author Steffen Pingel
  */
 public class ContextRetrieveWizard extends Wizard {
 
@@ -58,10 +63,14 @@ public class ContextRetrieveWizard extends Wizard {
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				this.repository.getKind());
 		try {
-			connector.retrieveContext(repository, task, delegate);
-		} catch (Exception e) {
-			MessageDialog.openError(null, TasksUiPlugin.TITLE_DIALOG, "Retrieval of task context FAILED.\n"
-					+ e.getMessage());
+			if (!connector.retrieveContext(repository, task, delegate)) {
+				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+						TasksUiPlugin.TITLE_DIALOG, AbstractRepositoryConnector.MESSAGE_ATTACHMENTS_NOT_SUPPORTED + connector.getLabel());
+			}
+		} catch (CoreException e) {
+			ErrorDialog.openError(null, TasksUiPlugin.TITLE_DIALOG, "Retrieval of task context FAILED.", e.getStatus());
+			MylarStatusHandler.log(e.getStatus());
+			return false;
 		}
 		return true;
 	}
