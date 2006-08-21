@@ -445,4 +445,15 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return true;
 	}
 
+	@Override
+	public boolean validate(TaskRepository repository) {
+		if (!repository.hasCredentials()) {
+			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					TasksUiPlugin.TITLE_DIALOG, "Repository missing or does not have credentials set, verify via "
+							+ TaskRepositoriesView.NAME + ".");
+			return false;
+		}
+		return true;
+	}
+
 }

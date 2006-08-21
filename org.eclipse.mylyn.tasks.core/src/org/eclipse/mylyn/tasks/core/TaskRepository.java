@@ -92,7 +92,7 @@ public class TaskRepository {
 	public boolean hasCredentials() {
 		String username = getUserName();
 		String password = getPassword();
-		return username != null && password != null;
+		return username != null && username.length() > 0 && password != null && password.length() > 0;
 	}
 
 	@SuppressWarnings("unchecked")

@@ -336,4 +336,9 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
+	@Override
+	public boolean validate(TaskRepository repository) {
+		return true;
+	}
+
 }

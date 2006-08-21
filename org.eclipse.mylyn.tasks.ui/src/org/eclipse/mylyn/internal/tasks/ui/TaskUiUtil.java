@@ -24,7 +24,6 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.editors.CategoryEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorInput;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -152,12 +151,10 @@ public class TaskUiUtil {
 
 				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryKind,
 						repositoryTask.getRepositoryUrl());
-				if (repository == null || !repository.hasCredentials()) {
-					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							TasksUiPlugin.TITLE_DIALOG, "Repository missing or does not have credentials set, verify via "
-									+ TaskRepositoriesView.NAME + ".");
+				if (repository == null || !connector.validate(repository)) {
 					return;
 				}
+
 				if (connector != null)
 					if (repositoryTask.getTaskData() != null) {
 						TaskUiUtil.openEditor(task, false, false);

@@ -622,4 +622,6 @@ public abstract class AbstractRepositoryConnector {
 		return null;
 	}
 
+	public abstract boolean validate(TaskRepository repository);
+	
 }
