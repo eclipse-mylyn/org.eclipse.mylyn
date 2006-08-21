@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylar.internal.trac.core.TracException;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.internal.trac.model.TracVersion;
 
@@ -29,6 +30,15 @@ public class Trac09ClientTest extends AbstractTracClientRepositoryTest {
 
 	public void testValidate096() throws Exception {
 		validate(Constants.TEST_TRAC_096_URL);
+	}
+
+	public void testValidateAnyPage() throws Exception {
+		connect("http://mylar.eclipse.org/");
+		try {
+			repository.validate();
+			fail("Expected TracException");
+		} catch (TracException e) {
+		}
 	}
 
 	public void testValidateAnonymousLogin() throws Exception {

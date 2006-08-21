@@ -298,7 +298,30 @@ public class Trac09Client extends AbstractTracClient {
 
 	public void validate() throws TracException {
 		GetMethod method = connect(repositoryUrl + "/");
-		method.releaseConnection();
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(),
+					ITracClient.CHARSET));
+			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
+			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+				if (token.getType() == Token.TAG) {
+					HtmlTag tag = (HtmlTag) token.getValue();
+					if (tag.getTagType() == HtmlTag.Type.A) {
+						String id = tag.getAttribute("id");
+						if ("tracpowered".equals(id)) {
+							return;
+						}
+					}
+				}
+			}
+
+			throw new TracException("Not a valid Trac repository");
+		} catch (IOException e) {
+			throw new TracException(e);
+		} catch (ParseException e) {
+			throw new TracException(e);
+		} finally {
+			method.releaseConnection();
+		}
 	}
 
 	public void updateAttributes(IProgressMonitor monitor) throws TracException {
