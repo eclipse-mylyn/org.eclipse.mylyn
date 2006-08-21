@@ -99,7 +99,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		setSite(site);
 		setInput(input);
 		editorInput = ei;
-		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(editorInput.getRepositoryTaskData());
+		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(editorInput.getRepositoryTaskData(), false);
 		taskData = ei.getRepositoryTaskData();
 		newSummary = taskData.getSummary();
 		repository = editorInput.getRepository();
@@ -129,13 +129,13 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		descriptionComposite.setLayoutData(descriptionData);
 		section.setClient(descriptionComposite);
 
-		newDescriptionTextViewer = addRepositoryTextViewer(repository, descriptionComposite, getRepositoryTaskData()
+		descriptionTextViewer = addRepositoryTextViewer(repository, descriptionComposite, getRepositoryTaskData()
 				.getNewComment(), SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		newDescriptionTextViewer.setEditable(true);
+		descriptionTextViewer.setEditable(true);
 
 		GridData descriptionTextData = new GridData(GridData.FILL_BOTH);
-		newDescriptionTextViewer.getTextWidget().setLayoutData(descriptionTextData);
-		newDescriptionTextViewer.getTextWidget().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		descriptionTextViewer.getTextWidget().setLayoutData(descriptionTextData);
+		descriptionTextViewer.getTextWidget().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 
 		toolkit.paintBordersFor(descriptionComposite);
 
@@ -223,7 +223,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	public String getStackTraceFromDescription() {
-		String description = newDescriptionTextViewer.getTextWidget().getText().trim();
+		String description = descriptionTextViewer.getTextWidget().getText().trim();
 		String stackTrace = null;
 
 		if (description == null) {
@@ -284,12 +284,12 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 			});
 			return;
 		}
-		if (newDescriptionTextViewer != null && newDescriptionTextViewer.getTextWidget().getText().trim().equals("")) {
+		if (descriptionTextViewer != null && descriptionTextViewer.getTextWidget().getText().trim().equals("")) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					MessageDialog.openInformation(NewBugEditor.this.getSite().getShell(), ERROR_CREATING_BUG_REPORT,
 							"A description must be provided with new reports.");
-					newDescriptionTextViewer.getTextWidget().setFocus();
+					descriptionTextViewer.getTextWidget().setFocus();
 					submitButton.setEnabled(true);
 					showBusy(false);
 				}
@@ -376,7 +376,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 	@Override
 	protected void updateBug() {
 		taskData.setSummary(newSummary);
-		taskData.setDescription(newDescriptionTextViewer.getTextWidget().getText());
+		taskData.setDescription(descriptionTextViewer.getTextWidget().getText());
 	}
 
 	/**

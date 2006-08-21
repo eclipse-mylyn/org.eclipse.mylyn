@@ -65,6 +65,11 @@ public class NewBugzillaTaskEditor extends MylarTaskEditor {
 		}
 	}
 	
+	@Override
+	public Object getAdapter(Class adapter) {
+		return newBugEditor.getAdapter(adapter);
+	}
+
 	public NewBugEditor getPage() {
 		return newBugEditor;
 	}

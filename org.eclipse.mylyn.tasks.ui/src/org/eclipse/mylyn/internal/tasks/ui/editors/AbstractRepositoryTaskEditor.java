@@ -306,8 +306,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					}
 					if (n.getKey().toLowerCase().equals("new comment")) {
 						selectNewComment();
-					} else if (n.getKey().toLowerCase().equals("new description")) {
-						selectNewDescription();
+					} else if (n.getKey().toLowerCase().equals("description")) {
+						selectDescription();
 					} else if (data != null) {
 						select(data, highlight);
 					}
@@ -1181,9 +1181,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		GridData sectionCompositeData = new GridData(GridData.FILL_HORIZONTAL);
 		sectionComposite.setLayoutData(sectionCompositeData);
 
-		TextViewer viewer = addRepositoryTextViewer(repository, sectionComposite, getRepositoryTaskData()
+		descriptionTextViewer = addRepositoryTextViewer(repository, sectionComposite, getRepositoryTaskData()
 				.getDescription(), SWT.MULTI | SWT.WRAP);
-		final StyledText styledText = viewer.getTextWidget();
+		final StyledText styledText = descriptionTextViewer.getTextWidget();
 		styledText.addListener(SWT.FocusIn, new DescriptionListener());
 		styledText.setLayout(new GridLayout());
 		GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(styledText);
@@ -1688,7 +1688,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected StyledText addCommentsTextBox = null;
 
 	// protected Text descriptionTextBox = null;
-	protected TextViewer newDescriptionTextViewer = null;
+	protected TextViewer descriptionTextViewer = null;
 
 	// private FormText previousText = null;
 
@@ -1751,20 +1751,20 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 	}
 
-	public void selectDescription() {
-		for (Object o : textHash.keySet()) {
-			if (o.equals(editorInput.getRepositoryTaskData().getDescription())) {
-				select(o, true);
-			}
-		}
-	}
+//	public void selectDescription() {
+//		for (Object o : textHash.keySet()) {
+//			if (o.equals(editorInput.getRepositoryTaskData().getDescription())) {
+//				select(o, true);
+//			}
+//		}
+//	}
 
 	public void selectNewComment() {
 		focusOn(addCommentsTextBox, false);
 	}
 
-	public void selectNewDescription() {
-		focusOn(newDescriptionTextViewer.getTextWidget(), false);
+	public void selectDescription() {
+		focusOn(descriptionTextViewer.getTextWidget(), false);
 	}
 
 	/**
@@ -1905,7 +1905,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	public void setDescriptionText(String text) {
-		this.newDescriptionTextViewer.setDocument(new Document(text));
+		this.descriptionTextViewer.setDocument(new Document(text));
 	}
 
 	// private class DisplayableLocalAttachment extends RepositoryAttachment {
