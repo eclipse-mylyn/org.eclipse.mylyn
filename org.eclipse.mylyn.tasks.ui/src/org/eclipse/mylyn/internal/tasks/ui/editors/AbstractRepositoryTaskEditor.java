@@ -133,6 +133,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @author Mik Kersten
  * @author Rob Elves
  * @author Jeff Pound (Attachment work)
+ * @author Steffen Pingel
  */
 public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
@@ -143,8 +144,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	private static final String CTYPE_OCTET_STREAM = "octet-stream";
 
 	private static final String CTYPE_TEXT = "text";
-
-	private static final String ATTR_FILENAME = "filename";
 
 	private static final String CTYPE_HTML = "html";
 
@@ -284,6 +283,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private IRepositoryTaskSelection lastSelected = null;
 
+	/**
+	 * Focuses on form widgets when an item in the outline is selected.
+	 */
 	protected final ISelectionListener selectionListener = new ISelectionListener() {
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 			if ((part instanceof ContentOutline) && (selection instanceof StructuredSelection)) {
@@ -301,12 +303,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 					Object data = n.getData();
 					boolean highlight = true;
-					if (n.getKey().toLowerCase().equals("comments")) {
+					if (n.getKey().toLowerCase().equals(RepositoryTaskOutlineNode.LABEL_COMMENTS)) {
 						highlight = false;
 					}
-					if (n.getKey().toLowerCase().equals("new comment")) {
+					if (n.getKey().toLowerCase().equals(RepositoryTaskOutlineNode.LABEL_NEW_COMMENT)) {
 						selectNewComment();
-					} else if (n.getKey().toLowerCase().equals("description")) {
+					} else if (n.getKey().toLowerCase().equals(RepositoryTaskOutlineNode.LABEL_DESCRIPTION)) {
 						selectDescription();
 					} else if (data != null) {
 						select(data, highlight);
@@ -481,7 +483,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		createCustomAttributeLayout(attribComp);
 		createDescriptionLayout(editorComposite);
 		createAttachmentLayout(editorComposite);
-		createCommentLayout(editorComposite, form);
+		createCommentLayout(editorComposite);
+		createNewCommentLayout(editorComposite);
 		createActionsLayout(editorComposite);
 
 		form.reflow(true);
@@ -554,23 +557,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * of the bug (some of which are editable).
 	 */
 	protected Composite createAttributeLayout(Composite composite) {
-
 		String title = getTitleString();
-		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
-		section.setText(LABEL_SECTION_ATTRIBUTES);
-		section.setExpanded(true);
-		section.setLayout(new GridLayout());
-		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		section.addExpansionListener(new IExpansionListener() {
-			public void expansionStateChanging(ExpansionEvent e) {
-				form.reflow(true);
-			}
-
-			public void expansionStateChanged(ExpansionEvent e) {
-				form.reflow(true);
-			}
-		});
+		Section section = createSection(composite, LABEL_SECTION_ATTRIBUTES);
 
 		// Attributes Composite- this holds all the combo fields and text fields
 		Composite attributesComposite = toolkit.createComposite(section);
@@ -733,11 +722,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected void createAttachmentLayout(Composite composite) {
-		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
-		section.setText(LABEL_SECTION_ATTACHMENTS);
+		Section section = createSection(composite, LABEL_SECTION_ATTACHMENTS);
 		section.setExpanded(getRepositoryTaskData().getAttachments().size() > 0);
-		section.setLayout(new GridLayout());
-		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		final Composite attachmentsComposite = toolkit.createComposite(section);
 		attachmentsComposite.setLayout(new GridLayout(1, false));
@@ -860,7 +846,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					try {
 						page.openEditor(input, desc.getId());
 					} catch (PartInitException e) {
-						MylarStatusHandler.fail(e, "Unable to open editor for: "+attachment.getDescription(), false);
+						MylarStatusHandler.fail(e, "Unable to open editor for: " + attachment.getDescription(), false);
 					}
 				}
 			};
@@ -878,7 +864,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					try {
 						page.openEditor(input, "org.eclipse.ui.DefaultTextEditor");
 					} catch (PartInitException e) {
-						MylarStatusHandler.fail(e, "Unable to open editor for: "+attachment.getDescription(), false);
+						MylarStatusHandler.fail(e, "Unable to open editor for: " + attachment.getDescription(), false);
 					}
 				}
 			};
@@ -889,7 +875,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							.getSelection()).getFirstElement());
 					/* Launch Browser */
 					FileDialog fileChooser = new FileDialog(attachmentsTable.getShell(), SWT.SAVE);
-					String fname = attachment.getAttributeValue(ATTR_FILENAME);
+					String fname = attachment.getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_FILENAME);
 					// Default name if none is found
 					if (fname.equals("")) {
 						String ctype = attachment.getContentType();
@@ -1158,20 +1144,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected abstract void createCustomAttributeLayout(Composite composite);
 
 	protected void createDescriptionLayout(Composite composite) {
-		final Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
-		section.setText(LABEL_SECTION_DESCRIPTION);
-		section.setExpanded(true);
-		section.setLayout(new GridLayout());
-		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		section.addExpansionListener(new IExpansionListener() {
-			public void expansionStateChanging(ExpansionEvent e) {
-				form.reflow(true);
-			}
-
-			public void expansionStateChanged(ExpansionEvent e) {
-				form.reflow(true);
-			}
-		});
+		final Section section = createSection(composite, LABEL_SECTION_DESCRIPTION);
 
 		final Composite sectionComposite = toolkit.createComposite(section);
 		section.setClient(sectionComposite);
@@ -1181,16 +1154,55 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		GridData sectionCompositeData = new GridData(GridData.FILL_HORIZONTAL);
 		sectionComposite.setLayoutData(sectionCompositeData);
 
-		descriptionTextViewer = addRepositoryTextViewer(repository, sectionComposite, getRepositoryTaskData()
-				.getDescription(), SWT.MULTI | SWT.WRAP);
-		final StyledText styledText = descriptionTextViewer.getTextWidget();
-		styledText.addListener(SWT.FocusIn, new DescriptionListener());
-		styledText.setLayout(new GridLayout());
-		GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(styledText);
+		// descriptionTextViewer = addRepositoryTextViewer(repository,
+		// sectionComposite, getRepositoryTaskData()
+		// .getDescription(), SWT.MULTI | SWT.WRAP);
+		// final StyledText styledText = descriptionTextViewer.getTextWidget();
+		// styledText.addListener(SWT.FocusIn, new DescriptionListener());
+		// styledText.setLayout(new GridLayout());
+		// GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH,
+		// SWT.DEFAULT).applyTo(styledText);
+		//
+		// texts.add(textsindex, styledText);
+		// textHash.put(getRepositoryTaskData().getDescription(), styledText);
+		// textsindex++;
 
-		texts.add(textsindex, styledText);
-		textHash.put(getRepositoryTaskData().getDescription(), styledText);
-		textsindex++;
+		RepositoryTaskAttribute attribute = getRepositoryTaskData().getDescriptionAttribute();
+		if (attribute != null && !attribute.isReadOnly()) {
+			descriptionTextViewer = addRepositoryTextViewer(repository, sectionComposite, getRepositoryTaskData()
+					.getDescription(), SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+			descriptionTextViewer.setEditable(true);
+
+			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+			gd.widthHint = DESCRIPTION_WIDTH;
+			gd.heightHint = DESCRIPTION_HEIGHT;
+			gd.grabExcessHorizontalSpace = true;
+			descriptionTextViewer.getTextWidget().setLayoutData(gd);
+			descriptionTextViewer.getTextWidget().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+			descriptionTextViewer.getTextWidget().addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					String sel = descriptionTextViewer.getTextWidget().getText();
+					if (!(getRepositoryTaskData().getDescription().equals(sel))) {
+						getRepositoryTaskData().setDescription(sel);
+						markDirty(true);
+					}
+					validateInput();
+				}
+			});
+		} else {
+			String text = getRepositoryTaskData().getDescription();
+			descriptionTextViewer = addRepositoryTextViewer(repository, sectionComposite, text, SWT.MULTI | SWT.WRAP);
+			StyledText styledText = descriptionTextViewer.getTextWidget();
+			styledText.setLayout(new GridLayout());
+			GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(styledText);
+
+			textHash.put(text, styledText);
+		}
+
+		descriptionTextViewer.getTextWidget().addListener(SWT.FocusIn, new DescriptionListener());
+
+		toolkit.paintBordersFor(sectionComposite);
+
 	}
 
 	/**
@@ -1205,21 +1217,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 	}
 
-	protected void createCommentLayout(Composite composite, final ScrolledForm form) {
-		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
-		section.setText(LABEL_SECTION_COMMENTS);
-		section.setExpanded(true);
-		section.setLayout(new GridLayout());
-		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		section.addExpansionListener(new IExpansionListener() {
-			public void expansionStateChanging(ExpansionEvent e) {
-				form.reflow(true);
-			}
-
-			public void expansionStateChanged(ExpansionEvent e) {
-				form.reflow(true);
-			}
-		});
+	protected void createCommentLayout(Composite composite) {
+		Section section = createSection(composite, LABEL_SECTION_COMMENTS);
 
 		ImageHyperlink hyperlink = toolkit.createImageHyperlink(section, SWT.NONE);
 		hyperlink.setBackgroundMode(SWT.INHERIT_NONE);
@@ -1285,28 +1284,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			// code for outline
 			commentStyleText.add(styledText);
-			texts.add(textsindex, styledText);
 			textHash.put(taskComment, styledText);
-			textsindex++;
 		}
+	}
 
-		Section sectionAdditionalComments = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR
-				| Section.TWISTIE);
-		sectionAdditionalComments.setText(LABEL_SECTION_NEW_COMMENT);
-		sectionAdditionalComments.setExpanded(true);
+	protected void createNewCommentLayout(Composite composite) {
+		Section section = createSection(composite, LABEL_SECTION_NEW_COMMENT);
 
-		sectionAdditionalComments.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		sectionAdditionalComments.addExpansionListener(new IExpansionListener() {
-			public void expansionStateChanging(ExpansionEvent e) {
-				form.reflow(true);
-			}
-
-			public void expansionStateChanged(ExpansionEvent e) {
-				form.reflow(true);
-			}
-		});
-
-		Composite newCommentsComposite = toolkit.createComposite(sectionAdditionalComments);
+		Composite newCommentsComposite = toolkit.createComposite(section);
 		newCommentsComposite.setLayout(new GridLayout());
 
 		final TextViewer newCommentTextViewer = addRepositoryTextViewer(repository, newCommentsComposite,
@@ -1335,7 +1320,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		newCommentTextViewer.getTextWidget().addListener(SWT.FocusIn, new NewCommentListener());
 		addCommentsTextBox = newCommentTextViewer.getTextWidget();
 
-		sectionAdditionalComments.setClient(newCommentsComposite);
+		section.setClient(newCommentsComposite);
 
 		toolkit.paintBordersFor(newCommentsComposite);
 
@@ -1347,22 +1332,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * Creates the button layout. This displays options and buttons at the
 	 * bottom of the editor to allow actions to be performed on the bug.
 	 */
-	protected void createActionsLayout(Composite formComposite) {
-		Section section = toolkit.createSection(formComposite, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
-		section.setText(LABEL_SECTION_ACTIONS);
-		section.setExpanded(true);
-		section.setLayout(new GridLayout());
-		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-		section.addExpansionListener(new IExpansionListener() {
-			public void expansionStateChanging(ExpansionEvent e) {
-				form.reflow(true);
-			}
-
-			public void expansionStateChanged(ExpansionEvent e) {
-				form.reflow(true);
-			}
-		});
+	protected void createActionsLayout(Composite composite) {
+		Section section = createSection(composite, LABEL_SECTION_ACTIONS);
 
 		Composite buttonComposite = toolkit.createComposite(section);
 		GridLayout buttonLayout = new GridLayout();
@@ -1375,6 +1346,24 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		section.setClient(buttonComposite);
 		addRadioButtons(buttonComposite);
 		addActionButtons(buttonComposite);
+	}
+
+	protected Section createSection(Composite composite, String title) {
+		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+		section.setText(title);
+		section.setExpanded(true);
+		section.setLayout(new GridLayout());
+		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		section.addExpansionListener(new IExpansionListener() {
+			public void expansionStateChanging(ExpansionEvent e) {
+				form.reflow(true);
+			}
+
+			public void expansionStateChanged(ExpansionEvent e) {
+				form.reflow(true);
+			}
+		});
+		return section;
 	}
 
 	/**
@@ -1676,8 +1665,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 *----------------------------------------------------------*/
 
 	/** List of the StyledText's so that we can get the previous and the next */
-	protected ArrayList<StyledText> texts = new ArrayList<StyledText>();
-
+	// protected ArrayList<StyledText> texts = new ArrayList<StyledText>();
 	protected HashMap<Object, StyledText> textHash = new HashMap<Object, StyledText>();
 
 	protected List<StyledText> commentStyleText = new ArrayList<StyledText>();
@@ -1751,13 +1739,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 	}
 
-//	public void selectDescription() {
-//		for (Object o : textHash.keySet()) {
-//			if (o.equals(editorInput.getRepositoryTaskData().getDescription())) {
-//				select(o, true);
-//			}
-//		}
-//	}
+	// public void selectDescription() {
+	// for (Object o : textHash.keySet()) {
+	// if (o.equals(editorInput.getRepositoryTaskData().getDescription())) {
+	// select(o, true);
+	// }
+	// }
+	// }
 
 	public void selectNewComment() {
 		focusOn(addCommentsTextBox, false);

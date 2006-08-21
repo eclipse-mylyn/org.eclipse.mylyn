@@ -61,7 +61,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 
 /**
@@ -112,7 +111,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	@Override
-	protected void createDescriptionLayout(Composite composite) {
+	protected void createDescriptionLayout(Composite composite) { 
 		FormToolkit toolkit = new FormToolkit(composite.getDisplay());
 		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR);
 		section.setText(LABEL_SECTION_DESCRIPTION);
@@ -168,7 +167,13 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	@Override
-	protected void createCommentLayout(Composite comp, final ScrolledForm form) {
+	protected void createCommentLayout(Composite comp) {
+		// Since NewBugModels have no comments, there is no
+		// GUI for them.
+	}
+
+	@Override
+	protected void createNewCommentLayout(Composite comp) {
 		// Since NewBugModels have no comments, there is no
 		// GUI for them.
 	}
