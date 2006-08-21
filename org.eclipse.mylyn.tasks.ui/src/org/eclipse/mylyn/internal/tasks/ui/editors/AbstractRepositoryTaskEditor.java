@@ -301,14 +301,16 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					}
 					lastSelected = n;
 
-					Object data = n.getData();
 					boolean highlight = true;
-					if (n.getKey().toLowerCase().equals(RepositoryTaskOutlineNode.LABEL_COMMENTS)) {
+					if (n.getKey().equals(RepositoryTaskOutlineNode.LABEL_COMMENTS)) {
 						highlight = false;
 					}
-					if (n.getKey().toLowerCase().equals(RepositoryTaskOutlineNode.LABEL_NEW_COMMENT)) {
+
+					Object data = n.getData();
+					if (n.getKey().equals(RepositoryTaskOutlineNode.LABEL_NEW_COMMENT)) {
 						selectNewComment();
-					} else if (n.getKey().toLowerCase().equals(RepositoryTaskOutlineNode.LABEL_DESCRIPTION)) {
+					} else if (n.getKey().equals(RepositoryTaskOutlineNode.LABEL_DESCRIPTION)
+							&& descriptionTextViewer.isEditable()) {
 						selectDescription();
 					} else if (data != null) {
 						select(data, highlight);
