@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
-import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -30,11 +29,13 @@ import javax.security.auth.login.LoginException;
 import junit.framework.TestCase;
 
 import org.apache.commons.httpclient.params.HttpConnectionParams;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttachmentHandler;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
@@ -127,7 +128,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 
 	}
 
-	public void testCreateTaskFromExistingId() throws MalformedURLException, InterruptedException {
+	public void testCreateTaskFromExistingId() throws Exception {
 		init222();
 		BugzillaTask badId = (BugzillaTask) client.createTaskFromExistingKey(repository, "bad-id");
 		assertNull(badId);
@@ -144,6 +145,25 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 
 		assertTrue(task.isDownloaded());
 		assertEquals(1, Integer.parseInt(task.getTaskData().getId()));
+	}
+
+	public void testContextAttachFailure() throws Exception {
+		init218();
+		BugzillaTask task = (BugzillaTask) client.createTaskFromExistingKey(repository, "3");
+		assertNotNull(task.getTaskData());
+		TasksUiPlugin.getTaskListManager().activateTask(task);
+		File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+		sourceContextFile.createNewFile();
+		sourceContextFile.deleteOnExit();
+		repository.setAuthenticationCredentials("wrong", "wrong");
+		try {
+			client.attachContext(repository, task, "");
+		} catch (CoreException e) {
+			assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
+			assertNotNull(task.getTaskData());
+			return;
+		}
+		fail("Should have failed due to invalid userid and password.");
 	}
 
 	public void testSynchronize() throws InterruptedException, PartInitException, LoginException, BugzillaException,
@@ -251,6 +271,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		attachment.setFilePath("/this/is/not/a/real-file");
 		assertFalse(attachmentHandler.uploadAttachment(attachment, repository.getUserName(), repository.getPassword(),
 				Proxy.NO_PROXY));
+		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
 		task = (BugzillaTask) client.createTaskFromExistingKey(repository, taskNumber);
 		assertEquals(numAttached, task.getTaskData().getAttachments().size());
 

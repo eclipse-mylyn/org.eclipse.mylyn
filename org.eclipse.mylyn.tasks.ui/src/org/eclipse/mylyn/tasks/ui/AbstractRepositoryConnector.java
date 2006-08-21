@@ -83,7 +83,7 @@ public abstract class AbstractRepositoryConnector {
 	protected boolean forceSyncExecForTesting = false;
 
 	private boolean updateLocalCopy = false;
-	
+
 	private final MutexRule rule = new MutexRule();
 
 	protected Set<RepositoryTemplate> templates = new LinkedHashSet<RepositoryTemplate>();
@@ -129,11 +129,13 @@ public abstract class AbstractRepositoryConnector {
 	public abstract String getRepositoryType();
 
 	/**
-	 * Reset and update the repository attributes from the server (e.g. products, components)
-	 * @param monitor 
+	 * Reset and update the repository attributes from the server (e.g.
+	 * products, components)
+	 * 
+	 * @param monitor
 	 */
 	public abstract void updateAttributes(TaskRepository repository, IProgressMonitor monitor);
-	
+
 	/**
 	 * @param id
 	 *            identifier, e.g. "123" bug Bugzilla bug 123
@@ -144,7 +146,7 @@ public abstract class AbstractRepositoryConnector {
 	public abstract AbstractRepositorySettingsPage getSettingsPage();
 
 	public abstract IWizard getNewQueryWizard(TaskRepository repository, IStructuredSelection selection);
-	
+
 	public abstract void openEditQueryDialog(AbstractRepositoryQuery query);
 
 	public abstract IWizard getNewTaskWizard(TaskRepository taskRepository, IStructuredSelection selection);
@@ -152,21 +154,21 @@ public abstract class AbstractRepositoryConnector {
 	public abstract List<String> getSupportedVersions();
 
 	public abstract boolean hasRichEditor();
-	
+
 	protected abstract void updateTaskState(AbstractRepositoryTask repositoryTask);
 
 	public IWizard getAddExistingTaskWizard(TaskRepository repository) {
 		return new CommonAddExistingTaskWizard(repository);
 	}
-	
+
 	public boolean hasSearchPage() {
 		return false;
 	}
-	
+
 	public WizardPage getSearchPage(TaskRepository repository, IStructuredSelection selection) {
 		return null;
 	}
-	
+
 	/**
 	 * Implementors of this repositoryOperations must perform it locally without
 	 * going to the server since it is used for frequent repositoryOperations
@@ -198,7 +200,7 @@ public abstract class AbstractRepositoryConnector {
 
 	/**
 	 * Attaches the assoicated context to <code>task</code>.
-	 *
+	 * 
 	 * @return false, if operation is not supported by repository
 	 */
 	public final boolean attachContext(TaskRepository repository, AbstractRepositoryTask task, String longComment)
@@ -222,15 +224,20 @@ public abstract class AbstractRepositoryConnector {
 				destinationFile.deleteOnExit();
 				ZipFileUtil.createZipFile(destinationFile, filesToZip, new NullProgressMonitor());
 			} catch (IOException e) {
-				throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, 0, "Error compressing context file", e));
+				throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, 0,
+						"Error compressing context file", e));
 			}
 
-			// upload context file
-			// TODO: 'faking' outgoing state 
-			task.setSyncState(RepositoryTaskSyncState.OUTGOING);
 			Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
-			handler.uploadAttachment(repository, task, longComment, MYLAR_CONTEXT_DESCRIPTION,
-					destinationFile, APPLICATION_OCTET_STREAM, false, proxySettings);
+			try {
+				// TODO: 'faking' outgoing state
+				task.setSyncState(RepositoryTaskSyncState.OUTGOING);
+				handler.uploadAttachment(repository, task, longComment, MYLAR_CONTEXT_DESCRIPTION, destinationFile,
+						APPLICATION_OCTET_STREAM, false, proxySettings);
+			} catch (CoreException e) {
+				task.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
+				throw e;
+			}
 			task.setTaskData(null);
 			synchronize(task, true, null);
 		}
@@ -238,8 +245,9 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
-	 * Retrieves a context stored in <code>attachment</code> from <code>task</code>.
-	 *
+	 * Retrieves a context stored in <code>attachment</code> from
+	 * <code>task</code>.
+	 * 
 	 * @return false, if operation is not supported by repository
 	 */
 	public final boolean retrieveContext(TaskRepository repository, AbstractRepositoryTask task,
@@ -248,7 +256,7 @@ public abstract class AbstractRepositoryConnector {
 		if (attachmentHandler == null) {
 			return false;
 		}
-		
+
 		boolean wasActive = false;
 		if (task.isActive()) {
 			wasActive = true;
@@ -256,27 +264,28 @@ public abstract class AbstractRepositoryConnector {
 		}
 
 		try {
-			File destinationContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+			File destinationContextFile = ContextCorePlugin.getContextManager().getFileForContext(
+					task.getHandleIdentifier());
 			// TODO what if destinationContextFile == null?
 			File destinationZipFile = new File(destinationContextFile.getPath() + ZIPFILE_EXTENSION);
 
 			Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
-			attachmentHandler.downloadAttachment(repository, task, attachment, destinationZipFile,
-					proxySettings); 
+			attachmentHandler.downloadAttachment(repository, task, attachment, destinationZipFile, proxySettings);
 			// if (destinationContextFile.exists()) {
 			try {
 				ZipFileUtil.unzipFiles(destinationZipFile, TasksUiPlugin.getDefault().getDataDirectory());
 			} catch (IOException e) {
-				throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, 0, "Error extracting context file", e));
+				throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, 0,
+						"Error extracting context file", e));
 			}
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
 			// }
-		} finally {		
+		} finally {
 			if (wasActive) {
 				TasksUiPlugin.getTaskListManager().activateTask(task);
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -373,7 +382,7 @@ public abstract class AbstractRepositoryConnector {
 		repositoryTask.setTaskData(newTaskData);
 		repositoryTask.setSyncState(status);
 		saveOffline(newTaskData);
-		if(status == RepositoryTaskSyncState.INCOMING) {
+		if (status == RepositoryTaskSyncState.INCOMING) {
 			repositoryTask.setNotified(false);
 		}
 		return startState != repositoryTask.getSyncState();
@@ -518,17 +527,18 @@ public abstract class AbstractRepositoryConnector {
 		Set<AbstractRepositoryTask> changedTasks = null;
 		int attempts = 0;
 
-		if (getOfflineTaskHandler() != null) {	
+		if (getOfflineTaskHandler() != null) {
 			while (attempts < MAX_QUERY_ATTEMPTS && changedTasks == null) {
 				attempts++;
 				try {
 					changedTasks = getOfflineTaskHandler().getChangedSinceLastSync(repository, repositoryTasks);
 				} catch (Exception e) {
 					if (attempts == MAX_QUERY_ATTEMPTS) {
-						if(!(e instanceof IOException)) {
-							MylarStatusHandler.log(e, "Could not determine modified tasks for " + repository.getUrl() + ".");
+						if (!(e instanceof IOException)) {
+							MylarStatusHandler.log(e, "Could not determine modified tasks for " + repository.getUrl()
+									+ ".");
 						} else {
-							// ignore, indicates working offline						
+							// ignore, indicates working offline
 						}
 						return;
 					}
@@ -611,7 +621,7 @@ public abstract class AbstractRepositoryConnector {
 		MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 				TasksUiPlugin.TITLE_DIALOG, "Not supported by connector: " + getLabel());
 	}
-	
+
 	private static class MutexRule implements ISchedulingRule {
 		public boolean isConflicting(ISchedulingRule rule) {
 			return rule == this;
@@ -623,17 +633,17 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	public void addTemplate(RepositoryTemplate template) {
-		this.templates.add(template);		
+		this.templates.add(template);
 	}
-	
+
 	public Set<RepositoryTemplate> getTemplates() {
 		return templates;
 	}
-	
+
 	/** returns null if template not found */
 	public RepositoryTemplate getTemplate(String label) {
 		for (RepositoryTemplate template : getTemplates()) {
-			if (template.label.equals(label)) {				
+			if (template.label.equals(label)) {
 				return template;
 			}
 		}
@@ -641,5 +651,5 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	public abstract boolean validate(TaskRepository repository);
-	
+
 }
