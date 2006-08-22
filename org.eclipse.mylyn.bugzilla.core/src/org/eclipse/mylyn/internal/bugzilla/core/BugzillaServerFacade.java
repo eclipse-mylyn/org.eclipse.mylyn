@@ -98,8 +98,7 @@ public class BugzillaServerFacade {
 
 	public static String addCredentials(String url, String userName, String password)
 			throws UnsupportedEncodingException {
-		if (userName != null && password != null) {
-			// if (repository.hasCredentials()) {
+		if ((userName != null && userName.length() > 0) && (password != null && password.length() > 0)) {
 			url += "&" + POST_ARGS_LOGIN + URLEncoder.encode(userName, BugzillaCorePlugin.ENCODING_UTF_8)
 					+ POST_ARGS_PASSWORD + URLEncoder.encode(password, BugzillaCorePlugin.ENCODING_UTF_8);
 		}

@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -74,6 +75,9 @@ public class ContextAttachWizard extends Wizard {
 		} catch (final CoreException e) {			
 			String message = e.getStatus().getMessage() != null ? e.getStatus().getMessage() : "";
 			MessageDialog.openError(null, TasksUiPlugin.TITLE_DIALOG, "Attachment of task context FAILED. \n\n"+message);
+			if(message.length() == 0) {
+				MylarStatusHandler.log(e.getStatus());
+			}
 			//ErrorDialog.openError(null, TasksUiPlugin.TITLE_DIALOG, "Attachment of task context FAILED.", e.getStatus());
 			return false;
 		}

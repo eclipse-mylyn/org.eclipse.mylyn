@@ -135,11 +135,7 @@ public class AbstractReportFactory {
 					}
 				}
 			} else if (connection.getContentType().contains(CONTENT_TYPE_TEXT_HTML)) {
-//				try {
-					BugzillaServerFacade.parseHtmlError(in);
-//				} catch (BugzillaException e) {
-//					throw new IOException(e.getMessage());
-//				}
+				BugzillaServerFacade.parseHtmlError(in);
 			} else {
 				throw new IOException("Unrecognized content type: " + connection.getContentType());
 			}
