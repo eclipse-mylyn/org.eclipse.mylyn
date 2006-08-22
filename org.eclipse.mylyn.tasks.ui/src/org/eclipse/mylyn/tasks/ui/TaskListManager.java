@@ -144,7 +144,7 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	private int endDay;
 
-	private int scheduledStartHour;
+//	private int scheduledStartHour;
 
 	private int scheduledEndHour;
 
@@ -363,8 +363,8 @@ public class TaskListManager implements IPropertyChangeListener {
 		startDay = Calendar.MONDAY;
 		// MylarTaskListPlugin.getMylarCorePrefs().getInt(TaskListPreferenceConstants.PLANNING_ENDDAY);
 		endDay = Calendar.SUNDAY;
-		scheduledStartHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
-				TaskListPreferenceConstants.PLANNING_STARTHOUR);
+//		scheduledStartHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
+//				TaskListPreferenceConstants.PLANNING_STARTHOUR);
 		scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(TaskListPreferenceConstants.PLANNING_ENDHOUR);
 
 		GregorianCalendar currentBegin = new GregorianCalendar();
@@ -456,7 +456,7 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	public Calendar setSecheduledIn(Calendar calendar, int days) {
 		calendar.add(Calendar.DAY_OF_MONTH, days);
-		calendar.set(Calendar.HOUR_OF_DAY, scheduledStartHour);
+		calendar.set(Calendar.HOUR_OF_DAY, scheduledEndHour);
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
@@ -762,8 +762,8 @@ public class TaskListManager implements IPropertyChangeListener {
 		if (event.getProperty().equals(TaskListPreferenceConstants.PLANNING_STARTHOUR)
 				|| event.getProperty().equals(TaskListPreferenceConstants.PLANNING_ENDHOUR)) {
 			// event.getProperty().equals(TaskListPreferenceConstants.PLANNING_STARTDAY)
-			scheduledStartHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
-					TaskListPreferenceConstants.PLANNING_STARTHOUR);
+//			scheduledStartHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
+//					TaskListPreferenceConstants.PLANNING_STARTHOUR);
 			scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
 					TaskListPreferenceConstants.PLANNING_ENDHOUR);
 		}
