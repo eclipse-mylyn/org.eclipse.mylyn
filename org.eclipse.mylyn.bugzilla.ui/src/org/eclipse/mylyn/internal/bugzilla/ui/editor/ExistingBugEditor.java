@@ -957,16 +957,16 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		}
 	}
 	
-	protected void createDescriptionLayout(Composite composite) {
-		// This is migration code from 0.6.1 -> 0.6.2
-		// Changes to the abstract editor causes the description
-		// field of the bugzilla editor to be editable if the offline
-		// task data hasn't been saved yet. Upon being saved it works fine but
-		// the initial load of the page would have an editable description
-		// area if this was not present.  TODO: Remove post 0.6.1.
-		super.createDescriptionLayout(composite);
-		descriptionTextViewer.setEditable(false);
-	}
+//	protected void createDescriptionLayout(Composite composite) {
+//		// This is migration code from 0.6.1 -> 0.6.2
+//		// Changes to the abstract editor causes the description
+//		// field of the bugzilla editor to be editable if the offline
+//		// task data hasn't been saved yet. Upon being saved it works fine but
+//		// the initial load of the page would have an editable description
+//		// area if this was not present.  TODO: Remove post 0.6.1.
+//		super.createDescriptionLayout(composite);
+//		descriptionTextViewer.setEditable(false);
+//	}
 
 	// TODO used for spell checking. Add back when we want to support this
 	// protected Button checkSpellingButton;

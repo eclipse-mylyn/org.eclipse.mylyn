@@ -14,7 +14,6 @@ package org.eclipse.mylar.bugzilla.tests;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.Proxy;
 import java.net.Socket;
@@ -26,13 +25,9 @@ import java.util.Set;
 
 import javax.security.auth.login.LoginException;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.core.core.tests.support.MylarTestUtils;
-import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttachmentHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
@@ -41,7 +36,6 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.tasks.core.SslProtocolSocketFactory;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -49,11 +43,7 @@ import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.LocalAttachment;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
-import org.eclipse.mylar.tasks.core.TaskList;
-import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
-import org.eclipse.mylar.tasks.ui.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PartInitException;
 
@@ -62,71 +52,9 @@ import org.eclipse.ui.PartInitException;
  * @author Rob Elves
  * @author Nathan Hapke
  */
-public class BugzillaRepositoryConnectorTest extends TestCase {
-
-	private static final String DEFAULT_KIND = BugzillaCorePlugin.REPOSITORY_KIND;
-
-	private BugzillaRepositoryConnector client;
-
-	private TaskRepositoryManager manager;
-
-	private TaskRepository repository;
-
-	private TaskList taskList;
+public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 	private BugzillaAttachmentHandler attachmentHandler = new BugzillaAttachmentHandler();
-
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		manager = TasksUiPlugin.getRepositoryManager();
-		manager.clearRepositories();
-	}
-
-	protected void init222() {
-		init(IBugzillaConstants.TEST_BUGZILLA_222_URL);
-	}
-
-	protected void init2201() {
-		init(IBugzillaConstants.TEST_BUGZILLA_2201_URL);
-	}
-
-	protected void init220() {
-		init(IBugzillaConstants.TEST_BUGZILLA_220_URL);
-	}
-
-	protected void init218() {
-		init(IBugzillaConstants.TEST_BUGZILLA_218_URL);
-	}
-
-	protected void init(String url) {
-		repository = new TaskRepository(DEFAULT_KIND, url);
-		Credentials credentials = MylarTestUtils.readCredentials();
-		repository.setAuthenticationCredentials(credentials.username, credentials.password);
-
-		repository.setTimeZoneId("Canada/Eastern");
-		assertNotNull(manager);
-		manager.addRepository(repository);
-
-		taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-
-		AbstractRepositoryConnector abstractRepositoryClient = manager.getRepositoryConnector(DEFAULT_KIND);
-
-		assertEquals(abstractRepositoryClient.getRepositoryType(), DEFAULT_KIND);
-
-		client = (BugzillaRepositoryConnector) abstractRepositoryClient;
-		client.setForceSyncExec(true);
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		// taskList.clearArchive();
-		// client.clearAllRefreshes();
-		TasksUiPlugin.getTaskListManager().resetTaskList();
-		manager.clearRepositories();
-
-	}
 
 	public void testCreateTaskFromExistingId() throws Exception {
 		init222();
@@ -146,7 +74,7 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		assertTrue(task.isDownloaded());
 		assertEquals(1, Integer.parseInt(task.getTaskData().getId()));
 	}
-
+	
 	public void testContextAttachFailure() throws Exception {
 		init218();
 		BugzillaTask task = (BugzillaTask) client.createTaskFromExistingKey(repository, "3");
@@ -407,28 +335,6 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		assertEquals(RepositoryTaskSyncState.INCOMING, task7.getSyncState());
 	}
 
-	private BugzillaTask generateLocalTaskAndDownload(String taskNumber) {
-		BugzillaTask task = (BugzillaTask) client.createTaskFromExistingKey(repository, taskNumber);
-		assertNotNull(task);
-		TasksUiPlugin.getTaskListManager().getTaskList().moveToRoot(task);
-		assertTrue(task.isDownloaded());
-
-		return task;
-	}
-
-	private BugzillaReportSubmitForm makeExistingBugPost(RepositoryTaskData taskData)
-			throws UnsupportedEncodingException {
-		return BugzillaReportSubmitForm.makeExistingBugPost(taskData, repository.getUrl(), repository.getUserName(),
-				repository.getPassword(), null, null, repository.getCharacterEncoding());
-	}
-
-	private void synchAndAssertState(Set<AbstractRepositoryTask> tasks, RepositoryTaskSyncState state) {
-		for (AbstractRepositoryTask task : tasks) {
-			client.synchronize(task, true, null);
-			assertEquals(task.getSyncState(), state);
-		}
-	}
-
 	public void testTimeTracker222() throws Exception {
 		init222();
 		timeTracker(14, true);
@@ -586,21 +492,22 @@ public class BugzillaRepositoryConnectorTest extends TestCase {
 		}
 	}
 
+	
 	private boolean validateAttachmentAttributes(RepositoryAttachment att, boolean isPatch, boolean isObsolete) {
 		return (att.isPatch() == isPatch) && (att.isObsolete() == isObsolete);
 	}
 
-	class MockBugzillaReportSubmitForm extends BugzillaReportSubmitForm {
-
-		public MockBugzillaReportSubmitForm(String encoding_utf_8) {
-			super(encoding_utf_8);
-		}
-
-		@Override
-		public String submitReportToRepository() throws BugzillaException, LoginException,
-				PossibleBugzillaFailureException {
-			return "test-submit";
-		}
-
-	}
+//	class MockBugzillaReportSubmitForm extends BugzillaReportSubmitForm {
+//
+//		public MockBugzillaReportSubmitForm(String encoding_utf_8) {
+//			super(encoding_utf_8);
+//		}
+//
+//		@Override
+//		public String submitReportToRepository() throws BugzillaException, LoginException,
+//				PossibleBugzillaFailureException {
+//			return "test-submit";
+//		}
+//
+//	}
 }

@@ -19,6 +19,7 @@ import java.security.GeneralSecurityException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.tasks.ui.editors.ExistingBugEditorInput;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.ui.IPersistableElement;
 
@@ -30,19 +31,16 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 
 	private String bugTitle;
 
-	//private RepositoryTaskData offlineBug;
-
 	private BugzillaTask bugTask;
 
-	//private boolean offline;
-
-	public BugzillaTaskEditorInput(TaskRepository repository, BugzillaTask bugTask, boolean offline) throws IOException, GeneralSecurityException {
+	public BugzillaTaskEditorInput(TaskRepository repository, BugzillaTask bugTask, boolean offline)
+			throws IOException, GeneralSecurityException {
 		super(repository, bugTask.getTaskData(), AbstractRepositoryTask.getTaskId(bugTask.getHandleIdentifier()));
 		this.bugTask = bugTask;
-//		offlineBug = bugTask.getTaskData();
+		migrateDescToReadOnly(bugTask);
 		id = AbstractRepositoryTask.getTaskId(bugTask.getHandleIdentifier());
 		bugTitle = "";
-//		this.offline = offline;
+
 	}
 
 	protected void setBugTitle(String str) {
@@ -80,64 +78,18 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 		return null;
 	}
 
-//	@Override
-//	public int getId() {
-//		return id;
-//	}
-
-//	/**
-//	 * Returns the online server bug for this input
-//	 * 
-//	 * @see BugzillaRepositoryUtil
-//	 * @see BugReport
-//	 */
-//	// public BugReport getServerBug() {
-//	// return serverBug;
-//	// }
-//	/**
-//	 * Returns the offline bug for this input's Bugzilla task
-//	 */
-//	public RepositoryTaskData getOfflineBug() {
-//		if (offline || bugTask.getSyncState() == RepositoryTaskSyncState.OUTGOING
-//				|| bugTask.getSyncState() == RepositoryTaskSyncState.CONFLICT)
-//			return offlineBug;
-//		else
-//			return super.getBug();
-//	}
-//
-//	public void setOfflineBug(RepositoryTaskData offlineBug) {
-//		this.offlineBug = offlineBug;
-//	}
-
-	/**
-	 * Gets the bug page input stream
-	 */
-	// public InputStream getInputStream() throws IOException {
-	// try {
-	// return url.openStream();
-	// }
-	// catch (Exception e) {
-	// throw new IOException(e.getMessage());
-	// }
-	//
-	// }
-//	/**
-//	 * Returns true if the argument is a bug report editor input on the same bug
-//	 * id.
-//	 */
-//	@Override
-//	public boolean equals(Object o) {
-//		if (o instanceof BugzillaTaskEditorInput) {
-//			BugzillaTaskEditorInput input = (BugzillaTaskEditorInput) o;
-//			return getBugId() == input.getBugId();
-//		}
-//		return false;
-//	}
-
 	/**
 	 * @return Returns the <code>BugzillaTask</code>
 	 */
 	public BugzillaTask getBugTask() {
 		return bugTask;
+	}
+
+	// TODO: migration code 0.6.1 -> 0.6.2
+	private void migrateDescToReadOnly(BugzillaTask task) {
+		RepositoryTaskAttribute attrib = task.getTaskData().getDescriptionAttribute();
+		if (attrib != null) {
+			attrib.setReadOnly(true);
+		}
 	}
 }
