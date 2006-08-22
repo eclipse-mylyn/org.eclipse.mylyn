@@ -75,9 +75,7 @@ public class ContextAttachWizard extends Wizard {
 		} catch (final CoreException e) {			
 			String message = e.getStatus().getMessage() != null ? e.getStatus().getMessage() : "";
 			MessageDialog.openError(null, TasksUiPlugin.TITLE_DIALOG, "Attachment of task context FAILED. \n\n"+message);
-			if(message.length() == 0) {
-				MylarStatusHandler.log(e.getStatus());
-			}
+			MylarStatusHandler.log(e.getStatus());			
 			//ErrorDialog.openError(null, TasksUiPlugin.TITLE_DIALOG, "Attachment of task context FAILED.", e.getStatus());
 			return false;
 		}

@@ -171,8 +171,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 			} else {
 				uploadResult = false;
 				throw new CoreException(new Status(Status.OK, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
-						"Communication error occurred during upload.", new IOException(
-								"A communication error occurred.")));
+						"Communication error occurred during upload. \n\n" + HttpStatus.getStatusText(status), null));
 			}
 
 		} catch (LoginException e) {
