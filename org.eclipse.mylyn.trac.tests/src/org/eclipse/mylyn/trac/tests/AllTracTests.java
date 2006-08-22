@@ -37,6 +37,7 @@ public class AllTracTests {
 		suite.addTestSuite(TracQueryTest.class);
 		suite.addTestSuite(TracRepositoryQueryTest.class);
 		suite.addTestSuite(TracClientManagerTest.class);
+		suite.addTestSuite(TracAttachmentHandlerTest.class);
 		// $JUnit-END$
 		return suite;
 	}

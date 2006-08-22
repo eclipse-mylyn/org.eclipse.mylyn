@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.trac.tests;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -18,10 +19,12 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.PrivilegeLevel;
@@ -235,7 +238,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	protected void updateAttributes() throws Exception {
 		connector.updateAttributes(repository, new NullProgressMonitor());
-		
+
 		ITracClient server = connector.getClientManager().getRepository(repository);
 		TracVersion[] versions = server.getVersions();
 		assertEquals(2, versions.length);
@@ -246,6 +249,34 @@ public class TracRepositoryConnectorTest extends TestCase {
 		});
 		assertEquals("1.0", versions[0].getName());
 		assertEquals("2.0", versions[1].getName());
+	}
+
+	public void testContext010() throws Exception {
+		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
+		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.attachmentTicketId + "");
+
+		File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+		sourceContextFile.createNewFile();
+		sourceContextFile.deleteOnExit();
+
+		assertTrue(connector.attachContext(repository, task, ""));
+		// TODO check if context was attached, requires RepositoryTaskData (bug
+		// #151899)
+	}
+
+	public void testContext096() throws Exception {
+		init(Constants.TEST_TRAC_096_URL, Version.TRAC_0_9);
+		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.attachmentTicketId + "");
+
+		File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+		sourceContextFile.createNewFile();
+		sourceContextFile.deleteOnExit();
+
+		try {
+			connector.attachContext(repository, task, "");
+			fail("expected CoreException"); // operation should not be supported
+		} catch (CoreException e) {
+		}
 	}
 
 }

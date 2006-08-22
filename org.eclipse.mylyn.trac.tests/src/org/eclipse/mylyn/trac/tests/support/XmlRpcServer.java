@@ -128,6 +128,10 @@ public class XmlRpcServer {
 		// all created tickets
 		public List<Ticket> tickets = new ArrayList<Ticket>();
 		
+		public int attachmentTicketId = 5;
+		
+		public int htmlEntitiesTicketId = 6;
+		
 		/**
 		 * Undo all changes.
 		 */

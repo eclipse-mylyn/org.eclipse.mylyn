@@ -62,6 +62,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	private TracClientManager clientManager;
 	
+	private TracAttachmentHandler attachmentHandler = new TracAttachmentHandler(this);
+	
 	public TracRepositoryConnector() {
 		TracUiPlugin.getDefault().setConnector(this);
 	}
@@ -118,7 +120,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public IAttachmentHandler getAttachmentHandler() {
-		return null;
+		return attachmentHandler;
 	}
 
 	@Override
