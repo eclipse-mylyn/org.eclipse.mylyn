@@ -35,7 +35,7 @@ public abstract class AbstractTracClientTest extends TestCase {
 
 	public String password;
 
-	private Version version;
+	public Version version;
 
 	public AbstractTracClientTest(Version version) {
 		this.version = version;

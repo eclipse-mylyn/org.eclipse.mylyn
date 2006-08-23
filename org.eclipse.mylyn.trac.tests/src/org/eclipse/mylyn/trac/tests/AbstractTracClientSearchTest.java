@@ -35,6 +35,8 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 
 	protected List<Ticket> tickets;
 
+	private TestData data;
+
 	public AbstractTracClientSearchTest(Version version) {
 		super(version);
 	}
@@ -42,7 +44,7 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		TestData data = TestFixture.init010();
+		data = TestFixture.init010();
 		tickets = data.tickets;
 
 		connect010();
@@ -77,6 +79,16 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 			repository.getTicket(Integer.MAX_VALUE);
 			fail("Expected TracException");
 		} catch (TracException e) {
+		}
+	}
+
+	public void testGetTicketUmlaute() throws Exception {
+		TracTicket ticket = repository.getTicket(data.htmlEntitiesTicketId);
+		assertEquals("test html entities: äöü", ticket.getValue(Key.SUMMARY));
+		if (version == Version.XML_RPC) {
+			assertEquals("ÄÖÜ\n\nmulti\nline\n\n'''bold'''\n", ticket.getValue(Key.DESCRIPTION));
+		} else {
+			assertEquals(null, ticket.getValue(Key.DESCRIPTION));
 		}
 	}
 
