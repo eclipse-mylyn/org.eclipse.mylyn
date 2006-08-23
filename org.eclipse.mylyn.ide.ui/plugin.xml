@@ -51,11 +51,11 @@
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylar.ui.actions.FilterResourceNavigatorAction"
-           label="Apply Mylar"
+           label="Focus on Active Task"
            menubarPath="mylar"
            style="toggle"
            toolbarPath="mylar"
-           tooltip="Apply Mylar"> 
+           tooltip="Focus on Active Task"> 
   		</action> 
       </viewContribution> 
       
@@ -67,11 +67,11 @@
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylar.ui.actions.FilterResourceNavigatorAction"
-           label="Apply Mylar"
+           label="Focus on Active Task"
            menubarPath="mylar"
            style="toggle"
            toolbarPath="mylar"
-           tooltip="Apply Mylar"> 
+           tooltip="Focus on Active Task"> 
   		</action> 
       </viewContribution> 
       <viewContribution 
@@ -82,11 +82,11 @@
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylar.ui.actions.ApplyMylarToProblemsListAction"
-           label="Apply Mylar"
+           label="Focus on Active Task"
            menubarPath="mylar"
            style="toggle"
            toolbarPath="mylar"
-           tooltip="Apply Mylar"> 
+           tooltip="Focus on Active Task"> 
   		</action>  
       </viewContribution> 
 	  <viewContribution 
@@ -97,11 +97,11 @@
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylar.ui.actions.ApplyMylarToProblemsListAction"
-           label="Apply Mylar"
+           label="Focus on Active Task"
            menubarPath="mylar"
            style="toggle"
            toolbarPath="mylar"
-           tooltip="Apply Mylar"> 
+           tooltip="Focus on Active Task"> 
   		</action>  
       </viewContribution> 
     </extension>

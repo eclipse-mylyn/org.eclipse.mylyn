@@ -244,11 +244,11 @@
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylar.actions.filter.packageExplorer"
-           label="Apply Mylar"
+           label="Focus on Active Task"
            menubarPath="mylar"
            style="toggle"
            toolbarPath="mylar"
-           tooltip="Apply Mylar"> 
+           tooltip="Focus on Active Task"> 
   		</action> 
       </viewContribution>
  	  <viewContribution
@@ -264,11 +264,11 @@
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylar.ui.actions.FilterResourceNavigatorAction"
-           label="Apply Mylar (Experimental)"
+           label="Focus on Active Task (Experimental)"
            menubarPath="mylar"
            style="toggle"
            toolbarPath="mylar"
-           tooltip="Apply Mylar (Experimental)"> 
+           tooltip="Focus on Active Task (Experimental)"> 
   		</action> 
       </viewContribution> 
 	</extension>

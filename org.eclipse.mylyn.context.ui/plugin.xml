@@ -349,10 +349,10 @@
            enablesFor="*"
            icon="icons/eview16/mylar-apply-activity.gif"
            id="org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction"
-           label="Apply Mylar (Experimental)"
+           label="Focus on Workweek"
            style="toggle"
            toolbarPath="context"
-           tooltip="Apply Mylar (Experimental)"> 
+           tooltip="Focus on Workweek"> 
   		</action> 
   	</viewContribution>
 	<viewContribution 
@@ -363,11 +363,11 @@
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction"
-           label="Apply Mylar"
+           label="Focus on Active Task"
            menubarPath="mylar"
            style="toggle"
            toolbarPath="mylar"
-           tooltip="Apply Mylar"> 
+           tooltip="Focus on Active Task"> 
   		</action> 
   	</viewContribution>
     <viewContribution
