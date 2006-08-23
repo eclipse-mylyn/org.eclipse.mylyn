@@ -55,7 +55,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	public BugzillaRepositorySettingsPage(AbstractRepositoryConnector connector) {
 		super(TITLE, DESCRIPTION, connector);
 		setNeedsAnonymousLogin(true);
-		setNeedsEncoding(false);
+		setNeedsEncoding(true);
 		setNeedsTimeZone(false);
 	}
 
