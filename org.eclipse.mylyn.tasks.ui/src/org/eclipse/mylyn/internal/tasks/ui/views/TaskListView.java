@@ -45,6 +45,7 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasks.core.WebTask;
 import org.eclipse.mylar.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylar.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.internal.tasks.ui.TaskArchiveFilter;
@@ -1064,7 +1065,7 @@ public class TaskListView extends ViewPart {
 			addAction(copyDetailsAction, manager, element);
 
 			if (task != null) {
-				if (!(task instanceof AbstractRepositoryTask)) {
+				if (!(task instanceof AbstractRepositoryTask) || task instanceof WebTask) {
 					if (task.isCompleted()) {
 						addAction(markCompleteAction, manager, element);
 					} else {

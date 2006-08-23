@@ -15,9 +15,12 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylar.internal.tasks.core.WebTask;
 import org.eclipse.mylar.internal.tasks.ui.TaskPriorityFilter;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListChangeListener;
@@ -159,6 +162,19 @@ public class TaskListUiTest extends TestCase {
 		// clear everything
 	}
 
+	public void testMarkWebTaskCompleted() {
+		TaskListView view = TaskListView.getFromActivePerspective();
+		assertNotNull(view);
+		WebTask webTask = new WebTask("1", "1", "", "", "web");
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(webTask, TasksUiPlugin.getTaskListManager().getTaskList().getRootCategory());
+		view.getViewer().refresh();
+//		Arrays.asList(view.getViewer().getVisibleExpandedElements());
+		assertFalse(webTask.isCompleted());
+		view.getViewer().setSelection(new StructuredSelection(webTask));
+		new MarkTaskCompleteAction(TaskListView.getFromActivePerspective()).run();
+		assertTrue(webTask.isCompleted());
+	}
+	
 	public void testUiFilter() {
 		try {
 			assertNotNull(TaskListView.getFromActivePerspective());

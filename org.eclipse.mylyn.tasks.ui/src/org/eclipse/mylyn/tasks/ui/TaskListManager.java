@@ -38,6 +38,7 @@ import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.context.core.util.TimerThread;
+import org.eclipse.mylar.internal.tasks.core.WebTask;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.util.TaskActivityTimer;
 import org.eclipse.mylar.internal.tasks.ui.util.TaskListWriter;
@@ -131,12 +132,12 @@ public class TaskListManager implements IPropertyChangeListener {
 	private TaskList taskList = new TaskList();
 
 	private TaskActivationHistory taskActivationHistory = new TaskActivationHistory();
-	
+
 	private boolean taskListInitialized = false;
 
 	private boolean taskActivityHistoryInitialized = false;
 
-//	private int nextLocalTaskId;
+	// private int nextLocalTaskId;
 
 	private int timerSleepInterval = TimerThread.DEFAULT_SLEEP_INTERVAL;
 
@@ -144,7 +145,7 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	private int endDay;
 
-//	private int scheduledStartHour;
+	// private int scheduledStartHour;
 
 	private int scheduledEndHour;
 
@@ -198,15 +199,15 @@ public class TaskListManager implements IPropertyChangeListener {
 	public TaskListManager(TaskListWriter taskListWriter, File file) {
 		this.taskListFile = file;
 		this.taskListWriter = taskListWriter;
-		
+
 		timer = new Timer();
 		timer.schedule(new RolloverCheck(), ROLLOVER_DELAY, ROLLOVER_DELAY);
 	}
-	
+
 	public void init() {
-		ContextCorePlugin.getContextManager().addActivityMetaContextListener(CONTEXT_LISTENER);		
+		ContextCorePlugin.getContextManager().addActivityMetaContextListener(CONTEXT_LISTENER);
 	}
-	
+
 	public void dispose() {
 		ContextCorePlugin.getContextManager().removeActivityMetaContextListener(CONTEXT_LISTENER);
 	}
@@ -282,8 +283,7 @@ public class TaskListManager implements IPropertyChangeListener {
 					totalInactive = 0;
 					startInactive = 0;
 				}
-				currentTask = TasksUiPlugin.getTaskListManager().getTaskList()
-						.getTask(event.getStructureHandle());
+				currentTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(event.getStructureHandle());
 				if (currentTask != null) {
 					GregorianCalendar calendar = new GregorianCalendar();
 					calendar.setFirstDayOfWeek(startDay);
@@ -363,9 +363,11 @@ public class TaskListManager implements IPropertyChangeListener {
 		startDay = Calendar.MONDAY;
 		// MylarTaskListPlugin.getMylarCorePrefs().getInt(TaskListPreferenceConstants.PLANNING_ENDDAY);
 		endDay = Calendar.SUNDAY;
-//		scheduledStartHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
-//				TaskListPreferenceConstants.PLANNING_STARTHOUR);
-		scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(TaskListPreferenceConstants.PLANNING_ENDHOUR);
+		// scheduledStartHour =
+		// TasksUiPlugin.getDefault().getPreferenceStore().getInt(
+		// TaskListPreferenceConstants.PLANNING_STARTHOUR);
+		scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
+				TaskListPreferenceConstants.PLANNING_ENDHOUR);
 
 		GregorianCalendar currentBegin = new GregorianCalendar();
 		currentBegin.setFirstDayOfWeek(startDay);
@@ -477,8 +479,8 @@ public class TaskListManager implements IPropertyChangeListener {
 	}
 
 	public String genUniqueTaskHandle() {
-		int nextId = taskList.findLargestTaskHandle()+1;
-		return TaskRepositoryManager.PREFIX_LOCAL + nextId;//nextLocalTaskId++;
+		int nextId = taskList.findLargestTaskHandle() + 1;
+		return TaskRepositoryManager.PREFIX_LOCAL + nextId;// nextLocalTaskId++;
 	}
 
 	public void refactorRepositoryUrl(String oldUrl, String newUrl) {
@@ -519,7 +521,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		saveTaskList();
 	}
 
-	public boolean readExistingOrCreateNewList() {	
+	public boolean readExistingOrCreateNewList() {
 		try {
 			if (taskListFile.exists()) {
 				taskListWriter.readTaskList(taskList, taskListFile);
@@ -560,8 +562,8 @@ public class TaskListManager implements IPropertyChangeListener {
 		try {
 			if (taskListInitialized) {
 				taskListWriter.writeTaskList(taskList, taskListFile);
-//				TasksUiPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.TASK_ID,
-//				nextLocalTaskId);
+				// TasksUiPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.TASK_ID,
+				// nextLocalTaskId);
 			} else {
 				MylarStatusHandler.log("task list save attempted before initialization", this);
 			}
@@ -582,7 +584,6 @@ public class TaskListManager implements IPropertyChangeListener {
 		activityListeners.remove(listener);
 	}
 
-
 	public void activateTask(ITask task) {
 		if (!TasksUiPlugin.getDefault().isMultipleActiveTasksMode()) {
 			deactivateAllTasks();
@@ -593,7 +594,7 @@ public class TaskListManager implements IPropertyChangeListener {
 			TaskActivityTimer activityTimer = new TaskActivityTimer(task, timeout, timerSleepInterval);
 			activityTimer.startTimer();
 			timerMap.put(task, activityTimer);
-			taskList.setActive(task, true);			
+			taskList.setActive(task, true);
 			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
 				listener.taskActivated(task);
 			}
@@ -602,7 +603,6 @@ public class TaskListManager implements IPropertyChangeListener {
 		}
 	}
 
-	
 	public void deactivateAllTasks() {
 		// Make a copy to avoid modification on list being traversed; can result
 		// in a ConcurrentModificationException
@@ -615,14 +615,14 @@ public class TaskListManager implements IPropertyChangeListener {
 	public void deactivateTask(ITask task) {
 		if (task == null) {
 			return;
-		}	
-		
+		}
+
 		TaskActivityTimer taskTimer = timerMap.remove(task);
 		if (taskTimer != null) {
 			taskTimer.stopTimer();
 		}
 		if (task.isActive()) {
-			taskList.setActive(task, false);			
+			taskList.setActive(task, false);
 			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
 				try {
 					listener.taskDeactivated(task);
@@ -673,12 +673,15 @@ public class TaskListManager implements IPropertyChangeListener {
 	}
 
 	public boolean isCompletedToday(ITask task) {
-		if (task != null) {	
+		if (task != null) {
 			
-			if(task instanceof AbstractRepositoryTask) {
-				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)task;
-				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
-				if(repository != null && repositoryTask.getOwner() != null && !repositoryTask.getOwner().equals(repository.getUserName())) return false;
+			if (task instanceof AbstractRepositoryTask && !(task instanceof WebTask)) {
+				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+						repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
+				if (repository != null && repositoryTask.getOwner() != null
+						&& !repositoryTask.getOwner().equals(repository.getUserName()))
+					return false;
 			}
 
 			Date completionDate = task.getCompletionDate();
@@ -762,8 +765,9 @@ public class TaskListManager implements IPropertyChangeListener {
 		if (event.getProperty().equals(TaskListPreferenceConstants.PLANNING_STARTHOUR)
 				|| event.getProperty().equals(TaskListPreferenceConstants.PLANNING_ENDHOUR)) {
 			// event.getProperty().equals(TaskListPreferenceConstants.PLANNING_STARTDAY)
-//			scheduledStartHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
-//					TaskListPreferenceConstants.PLANNING_STARTHOUR);
+			// scheduledStartHour =
+			// TasksUiPlugin.getDefault().getPreferenceStore().getInt(
+			// TaskListPreferenceConstants.PLANNING_STARTHOUR);
 			scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
 					TaskListPreferenceConstants.PLANNING_ENDHOUR);
 		}
@@ -803,7 +807,6 @@ public class TaskListManager implements IPropertyChangeListener {
 		}
 	}
 
-	
 	public TaskActivationHistory getTaskActivationHistory() {
 		return taskActivationHistory;
 	}

@@ -13,8 +13,10 @@ package org.eclipse.mylar.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylar.internal.tasks.core.WebTask;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
@@ -40,6 +42,11 @@ public class MarkTaskIncompleteAction extends Action {
 		for (Object selectedObject : ((IStructuredSelection) this.view.getViewer().getSelection()).toList()) {
 			if (selectedObject instanceof ITask) {
 				TasksUiPlugin.getTaskListManager().getTaskList().markComplete(((ITask) selectedObject), false);
+			} else if (selectedObject instanceof AbstractQueryHit) {
+				ITask task = ((AbstractQueryHit)selectedObject).getCorrespondingTask();
+				if (task instanceof WebTask) {
+					TasksUiPlugin.getTaskListManager().getTaskList().markComplete(task, false);
+				}
 			}
 		}
 	}
