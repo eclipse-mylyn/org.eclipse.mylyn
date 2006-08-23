@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylar.context.core,
  org.eclipse.mylar.tasks.ui,
  org.eclipse.mylar.tasks.core,
- org.eclipse.search
+ org.eclipse.search,
+ org.eclipse.mylar.trac.core
 Eclipse-LazyStart: true
 Export-Package: org.eclipse.mylar.internal.trac,
  org.eclipse.mylar.internal.trac.core,
