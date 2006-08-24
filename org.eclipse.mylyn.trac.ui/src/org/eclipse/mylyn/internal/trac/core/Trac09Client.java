@@ -473,7 +473,7 @@ public class Trac09Client extends AbstractTracClient {
 	}
 
 	public Set<Integer> getChangedTickets(Date since) throws TracException {
-		throw new TracException("Unsupported operation");
+		return null;
 	}
 
 }

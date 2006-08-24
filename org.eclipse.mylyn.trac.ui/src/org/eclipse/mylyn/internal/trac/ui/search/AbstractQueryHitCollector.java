@@ -15,6 +15,9 @@ import java.text.MessageFormat;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * Collects results of a search.
@@ -47,6 +50,12 @@ public abstract class AbstractQueryHitCollector implements IQueryHitCollector {
 	}
 
 	public void accept(AbstractQueryHit hit) throws CoreException {
+		ITask correspondingTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+				hit.getHandleIdentifier());
+		if (correspondingTask instanceof AbstractRepositoryTask) {
+			hit.setCorrespondingTask((AbstractRepositoryTask) correspondingTask);
+		}
+
 		addMatch(hit);
 		
 		// increment the match count

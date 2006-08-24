@@ -233,11 +233,13 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 			return tasks;
 		}
 
-		String dateString = repository.getSyncTimeStamp();
-		if (dateString == null) {
-			dateString = "0";
+		Date since = new Date(0);
+		if (repository.getSyncTimeStamp() != null) {
+			try {
+				since = TracUtils.parseDate(Integer.parseInt(repository.getSyncTimeStamp()));
+			} catch (NumberFormatException e) {
+			}
 		}
-		Date since = TracUtils.parseDate(Integer.parseInt(dateString));
 
 		ITracClient client = connector.getClientManager().getRepository(repository);
 		Set<Integer> ids = client.getChangedTickets(since);

@@ -125,7 +125,12 @@ public class TracSearch {
 			if (!ascending) {
 				sb.append("&desc=1");
 			}
+		} else if (filterByFieldName.isEmpty()) {
+			// TODO figure out why search must be ordered when logged in (otherwise
+			// no results will be returned)
+			sb.append("&order=id");
 		}
+
 		for (TracSearchFilter filter : filterByFieldName.values()) {
 			for (String value : filter.getValues()) {
 				sb.append("&");

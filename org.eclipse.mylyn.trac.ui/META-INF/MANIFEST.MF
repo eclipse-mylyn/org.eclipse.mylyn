@@ -18,4 +18,5 @@ Eclipse-LazyStart: true
 Export-Package: org.eclipse.mylar.internal.trac,
  org.eclipse.mylar.internal.trac.core,
  org.eclipse.mylar.internal.trac.model,
+ org.eclipse.mylar.internal.trac.ui.search,
  org.eclipse.mylar.internal.trac.ui.wizard

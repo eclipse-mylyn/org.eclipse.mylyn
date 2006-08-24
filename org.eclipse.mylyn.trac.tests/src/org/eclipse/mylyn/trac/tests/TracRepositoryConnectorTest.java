@@ -43,6 +43,7 @@ import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
@@ -254,14 +255,21 @@ public class TracRepositoryConnectorTest extends TestCase {
 	public void testContext010() throws Exception {
 		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
 		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.attachmentTicketId + "");
+		connector.synchronize(task, true, null);
+
+		int size = task.getTaskData().getAttachments().size();
 
 		File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
 		sourceContextFile.createNewFile();
 		sourceContextFile.deleteOnExit();
 
 		assertTrue(connector.attachContext(repository, task, ""));
-		// TODO check if context was attached, requires RepositoryTaskData (bug
-		// #151899)
+		
+		connector.synchronize(task, true, null);
+		assertEquals(size + 1, task.getTaskData().getAttachments().size());
+		
+		RepositoryAttachment attachment = task.getTaskData().getAttachments().get(size);
+		assertTrue(connector.retrieveContext(repository, task, attachment));
 	}
 
 	public void testContext096() throws Exception {

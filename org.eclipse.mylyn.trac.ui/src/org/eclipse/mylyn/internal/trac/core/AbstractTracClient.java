@@ -102,7 +102,7 @@ public abstract class AbstractTracClient implements ITracClient {
 	}
 	
 	public String[] getDefaultTicketResolutions() {
-		return new String[] { "fixed", "invalid", "wontfix", "duplicat", "worksforme" }; 
+		return new String[] { "fixed", "invalid", "wontfix", "duplicate", "worksforme" }; 
 	}
 	
 	public String[] getDefaultTicketActions(String status) {

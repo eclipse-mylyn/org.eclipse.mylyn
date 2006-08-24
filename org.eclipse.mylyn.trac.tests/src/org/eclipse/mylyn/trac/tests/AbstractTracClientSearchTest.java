@@ -94,9 +94,6 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 
 	public void testSearchAll() throws Exception {
 		TracSearch search = new TracSearch();
-		// TODO figure out why search must be ordered when logged in (otherwise
-		// no results will be returned)
-		search.setOrderBy("id");
 		List<TracTicket> result = new ArrayList<TracTicket>();
 		repository.search(search, result);
 		assertEquals(tickets.size(), result.size());

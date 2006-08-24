@@ -101,9 +101,7 @@ public class TracAttachmentHandler implements IAttachmentHandler {
 	}
 
 	public boolean canDownloadAttachment(TaskRepository repository, AbstractRepositoryTask task) {
-		// requires RepositoryTaskData (bug #151899)
-		//return connector.hasAttachmentSupport(task);
-		return false;
+		return connector.hasAttachmentSupport(task);
 	}
 
 	public boolean canUploadAttachment(TaskRepository repository, AbstractRepositoryTask task) {

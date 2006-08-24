@@ -85,7 +85,10 @@ public class TracSearchTest extends TestCase {
 	}
 
 	public void testToUrlEmpty() {
-		assertEquals("", new TracSearch().toUrl());
+		// assertEquals("", new TracSearch().toUrl());
+		// returns non-empty string to work around a strange Trac behaviour, see
+		// TracSearch.toUrl()
+		assertEquals("&order=id", new TracSearch().toUrl());
 	}
 
 	public void testToUrlEncoding() {
