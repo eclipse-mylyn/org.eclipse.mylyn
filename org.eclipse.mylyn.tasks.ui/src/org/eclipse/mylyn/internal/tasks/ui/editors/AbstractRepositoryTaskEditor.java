@@ -18,6 +18,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -65,6 +66,7 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
+import org.eclipse.mylar.tasks.core.RepositoryOperation;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskComment;
@@ -195,6 +197,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	public static final int DESCRIPTION_WIDTH = 79 * 8; // 500;
 
 	public static final int DESCRIPTION_HEIGHT = 10 * 14;
+
+	private static final String REASSIGN_BUG_TO = "Reassign  bug to";
 
 	protected AbstractBugEditorInput editorInput;
 
@@ -1382,14 +1386,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	/**
-	 * Adds radio buttons to this composite.
-	 * 
-	 * @param buttonComposite
-	 *            Composite to add the radio buttons to.
-	 */
-	abstract protected void addRadioButtons(Composite buttonComposite);
-
-	/**
 	 * Adds buttons to this composite. Subclasses can override this method to
 	 * provide different/additional buttons.
 	 * 
@@ -1837,6 +1833,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private boolean isDisposed = false;
 
+	protected Button[] radios;
+
+	protected Control[] radioOptions;
+
+	protected Button attachContextButton;
+
 	public boolean isDisposed() {
 		return isDisposed;
 	}
@@ -1911,6 +1913,157 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		this.descriptionTextViewer.setDocument(new Document(text));
 	}
 
+	protected void addRadioButtons(Composite buttonComposite) {
+		addSelfToCC(buttonComposite);
+		RepositoryTaskData taskData = getRepositoryTaskData();
+		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+				AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
+		if (task != null) {
+			addAttachContextButton(buttonComposite, task);
+		}
+		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
+		int i = 0;
+		Button selected = null;
+		radios = new Button[taskData.getOperations().size()];
+		radioOptions = new Control[taskData.getOperations().size()];
+		for (Iterator<RepositoryOperation> it = taskData.getOperations().iterator(); it.hasNext();) {
+			RepositoryOperation o = it.next();
+			radios[i] = toolkit.createButton(buttonComposite, "", SWT.RADIO);
+			radios[i].setFont(TEXT_FONT);
+			GridData radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+			if (!o.hasOptions() && !o.isInput())
+				radioData.horizontalSpan = 4;
+			else
+				radioData.horizontalSpan = 3;
+			radioData.heightHint = 20;
+			String opName = o.getOperationName();
+			opName = opName.replaceAll("</.*>", "");
+			opName = opName.replaceAll("<.*>", "");
+			radios[i].setText(opName);
+			radios[i].setLayoutData(radioData);
+			// radios[i].setBackground(background);
+			radios[i].addSelectionListener(new RadioButtonListener());
+			radios[i].addListener(SWT.FocusIn, new GenericListener());
+	
+			if (o.hasOptions()) {
+				radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+				radioData.horizontalSpan = 1;
+				radioData.heightHint = 20;
+				radioData.widthHint = AbstractRepositoryTaskEditor.WRAP_LENGTH;
+				// radioOptions[i] = new Combo(buttonComposite, SWT.NULL);
+				radioOptions[i] = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY);
+				toolkit.adapt(radioOptions[i], true, true);
+				// radioOptions[i] = new Combo(buttonComposite, SWT.MULTI |
+				// SWT.V_SCROLL | SWT.READ_ONLY);
+				// radioOptions[i].setData(FormToolkit.KEY_DRAW_BORDER,
+				// FormToolkit.TEXT_BORDER);
+				// radioOptions[i] = new Combo(buttonComposite,
+				// SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
+				// | SWT.READ_ONLY);
+				radioOptions[i].setFont(TEXT_FONT);
+				radioOptions[i].setLayoutData(radioData);
+				// radioOptions[i].setBackground(background);
+	
+				Object[] a = o.getOptionNames().toArray();
+				Arrays.sort(a);
+				for (int j = 0; j < a.length; j++) {
+					((CCombo) radioOptions[i]).add((String) a[j]);
+				}
+				((CCombo) radioOptions[i]).select(0);
+				((CCombo) radioOptions[i]).addSelectionListener(new RadioButtonListener());
+			} else if (o.isInput()) {
+				radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+				radioData.horizontalSpan = 1;
+				radioData.widthHint = 120;
+	
+				// TODO: add condition for if opName = reassign to...
+				String assignmentValue = "";
+				if (opName.equals(REASSIGN_BUG_TO)) {
+					assignmentValue = repository.getUserName();
+				}
+				radioOptions[i] = toolkit.createText(buttonComposite, assignmentValue);// ,
+				// SWT.SINGLE);
+				radioOptions[i].setFont(TEXT_FONT);
+				radioOptions[i].setLayoutData(radioData);
+				// radioOptions[i].setBackground(background);
+				((Text) radioOptions[i]).setText(o.getInputValue());
+				((Text) radioOptions[i]).addModifyListener(new RadioButtonListener());
+			}
+	
+			if (i == 0 || o.isChecked()) {
+				if (selected != null)
+					selected.setSelection(false);
+				selected = radios[i];
+				radios[i].setSelection(true);
+				if (o.hasOptions() && o.getOptionSelection() != null) {
+					int j = 0;
+					for (String s : ((CCombo) radioOptions[i]).getItems()) {
+						if (s.compareTo(o.getOptionSelection()) == 0) {
+							((CCombo) radioOptions[i]).select(j);
+						}
+						j++;
+					}
+				}
+				taskData.setSelectedOperation(o);
+			}
+	
+			i++;
+		}
+		toolkit.paintBordersFor(buttonComposite);
+	}
+
+	private void addAttachContextButton(Composite buttonComposite, ITask task) {
+		//File contextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
+		attachContextButton = toolkit.createButton(buttonComposite, "Attach Context", SWT.CHECK);
+		attachContextButton.setImage(TaskListImages.getImage(TaskListImages.CONTEXT_ATTACH));
+		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		data.horizontalSpan = 3;
+		attachContextButton.setLayoutData(data);
+		//attachContextButton.setEnabled(contextFile != null && (contextFile.exists() || task.isActive()));
+	}
+
+	private void addSelfToCC(Composite composite) {
+		// if they aren't already on the cc list create an add self check box
+		FormToolkit toolkit = new FormToolkit(composite.getDisplay());
+		final RepositoryTaskData taskData = getRepositoryTaskData();
+		RepositoryTaskAttribute owner = taskData.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED);
+	
+		if (repository.getUserName() == null) {
+			return;
+		}
+	
+		if (owner != null && owner.getValue().indexOf(repository.getUserName()) != -1) {
+			return;
+		}
+	
+		RepositoryTaskAttribute reporter = taskData.getAttribute(RepositoryTaskAttribute.USER_REPORTER);
+		if (reporter != null && reporter.getValue().indexOf(repository.getUserName()) != -1) {
+			return;
+		}
+		// Don't add addselfcc if already there
+		RepositoryTaskAttribute ccAttribute = taskData.getAttribute(RepositoryTaskAttribute.USER_CC);
+		if (ccAttribute != null && ccAttribute.getValues().contains(repository.getUserName())) {
+			return;
+		}
+	
+		final Button addSelfButton = toolkit.createButton(composite, "Add " + repository.getUserName() + " to CC",
+				SWT.CHECK);
+		addSelfButton.setImage(TaskListImages.getImage(TaskListImages.PERSON));
+		addSelfButton.addSelectionListener(new SelectionAdapter() {
+	
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (addSelfButton.getSelection()) {
+					taskData.setAttributeValue(RepositoryTaskAttribute.ADD_SELF_CC, "1");
+				} else {
+					taskData.setAttributeValue(RepositoryTaskAttribute.ADD_SELF_CC, "0");
+				}
+				markDirty(true);
+			}
+		});
+	}
+
 	// private class DisplayableLocalAttachment extends RepositoryAttachment {
 	// private static final long serialVersionUID = 900218036143022422L;
 	//		
@@ -1950,4 +2103,89 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	// setDateCreated(new Date());
 	// }
 	// }
+	
+
+	/**
+	 * Class to handle the selection change of the radio buttons.
+	 */
+	private class RadioButtonListener implements SelectionListener, ModifyListener {
+
+		public void widgetDefaultSelected(SelectionEvent e) {
+			widgetSelected(e);
+		}
+
+		public void widgetSelected(SelectionEvent e) {
+			Button selected = null;
+			for (int i = 0; i < radios.length; i++) {
+				if (radios[i].getSelection())
+					selected = radios[i];
+			}
+			// determine the operation to do to the bug
+			for (int i = 0; i < radios.length; i++) {
+				if (radios[i] != e.widget && radios[i] != selected) {
+					radios[i].setSelection(false);
+				}
+				
+				RepositoryTaskData taskData = getRepositoryTaskData();
+				if (e.widget == radios[i]) {
+					RepositoryOperation o = taskData.getOperation(radios[i].getText());
+					taskData.setSelectedOperation(o);
+					AbstractRepositoryTaskEditor.this.markDirty(true);
+				} else if (e.widget == radioOptions[i]) {
+					RepositoryOperation o = taskData.getOperation(radios[i].getText());
+					o.setOptionSelection(((CCombo) radioOptions[i]).getItem(((CCombo) radioOptions[i])
+							.getSelectionIndex()));
+
+					if (taskData.getSelectedOperation() != null)
+						taskData.getSelectedOperation().setChecked(false);
+					o.setChecked(true);
+
+					taskData.setSelectedOperation(o);
+					radios[i].setSelection(true);
+					if (selected != null && selected != radios[i]) {
+						selected.setSelection(false);
+					}
+					AbstractRepositoryTaskEditor.this.markDirty(true);
+				}
+			}
+			validateInput();
+		}
+
+		public void modifyText(ModifyEvent e) {
+			Button selected = null;
+			for (int i = 0; i < radios.length; i++) {
+				if (radios[i].getSelection())
+					selected = radios[i];
+			}
+			// determine the operation to do to the bug
+			for (int i = 0; i < radios.length; i++) {
+				if (radios[i] != e.widget && radios[i] != selected) {
+					radios[i].setSelection(false);
+				}
+
+				RepositoryTaskData taskData = getRepositoryTaskData();
+				if (e.widget == radios[i]) {
+					RepositoryOperation o = taskData.getOperation(radios[i].getText());
+					taskData.setSelectedOperation(o);
+					AbstractRepositoryTaskEditor.this.markDirty(true);
+				} else if (e.widget == radioOptions[i]) {
+					RepositoryOperation o = taskData.getOperation(radios[i].getText());
+					o.setInputValue(((Text) radioOptions[i]).getText());
+
+					if (taskData.getSelectedOperation() != null)
+						taskData.getSelectedOperation().setChecked(false);
+					o.setChecked(true);
+
+					taskData.setSelectedOperation(o);
+					radios[i].setSelection(true);
+					if (selected != null && selected != radios[i]) {
+						selected.setSelection(false);
+					}
+					AbstractRepositoryTaskEditor.this.markDirty(true);
+				}
+			}
+			validateInput();
+		}
+	}
+	
 }

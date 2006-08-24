@@ -66,6 +66,8 @@ public class RepositoryTaskAttribute implements Serializable {
 
 	public static final String KEYWORDS = "task.common.keywords";
 	
+	public static final String ADD_SELF_CC = "task.common.addselfcc";
+	
 	private boolean hidden = false;
 	
 	private boolean isReadOnly = false;
