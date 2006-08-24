@@ -372,7 +372,7 @@ public class TaskRepositoryManager {
 	}
 
 	public boolean saveRepositories() {
-		if (!Platform.isRunning() || TasksUiPlugin.getDefault() != null) {
+		if (!Platform.isRunning() || TasksUiPlugin.getDefault() == null) {
 			return false;
 		}
 		Set<TaskRepository> repositoriesToWrite = new HashSet<TaskRepository>(getAllRepositories());

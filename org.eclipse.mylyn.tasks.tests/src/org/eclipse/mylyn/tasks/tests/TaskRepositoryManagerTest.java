@@ -103,6 +103,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		repositoryList.add(repository2);
 		repositoryList.add(repository1);
 		manager.readRepositories();
+		
 		// NOTE: different conditions for running with and without the JIRA
 		// Connector
 		if (manager.getRepositoryConnectors().size() > 1) {
