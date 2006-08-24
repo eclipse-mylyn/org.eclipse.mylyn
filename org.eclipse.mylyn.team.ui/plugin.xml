@@ -131,7 +131,15 @@
          class="org.eclipse.mylar.internal.team.ui.preferences.MylarTeamPreferencePage"
          id="org.eclipse.mylar.team.ui.preferences"
          category="org.eclipse.mylar.ui.preferences">
-      </page>
+         <keywordReference id="org.eclipse.mylar.team.keywords"/>
+      </page> 
+   </extension>
+   
+   <extension
+   		point="org.eclipse.ui.keywords">
+      <keyword
+            label="mylar team"
+            id="org.eclipse.mylar.team.keywords"/>
    </extension>
    
    	<extension point="org.eclipse.ui.navigator.viewer">

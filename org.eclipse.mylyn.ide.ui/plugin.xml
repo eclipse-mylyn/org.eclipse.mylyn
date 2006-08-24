@@ -39,8 +39,17 @@
          class="org.eclipse.mylar.internal.resources.ui.preferences.MylarResourcesPreferencePage"
          id="org.eclipse.mylar.ide.preferences.resources"
          category="org.eclipse.mylar.ui.preferences">
-      </page>  
+         <keywordReference id="org.eclipse.mylar.ide.keywords"/>
+      </page> 
    </extension>
+   
+   <extension
+   		point="org.eclipse.ui.keywords">
+      <keyword
+            label="mylar resources"
+            id="org.eclipse.mylar.ide.keywords"/>
+   </extension>
+ 
 
     <extension point="org.eclipse.ui.viewActions"> 
 	  <viewContribution 

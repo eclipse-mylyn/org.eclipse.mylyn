@@ -165,8 +165,7 @@
               tooltip="Clear Context">
         </action>
 	 </objectContribution>
-  </extension>
-    
+   </extension>
     
    <extension
          point="org.eclipse.ui.preferencePages">
@@ -175,7 +174,15 @@
             class="org.eclipse.mylar.internal.context.ui.preferences.ContextUiPreferencePage"
             id="org.eclipse.mylar.context.ui.preferences"
             category="org.eclipse.mylar.ui.preferences">
-      </page>  
+         <keywordReference id="org.eclipse.mylar.context.keywords"/>
+      </page> 
+   </extension>
+   
+   <extension
+   		point="org.eclipse.ui.keywords">
+      <keyword
+            label="mylar context"
+            id="org.eclipse.mylar.context.keywords"/>
    </extension>
  
   <!--  MARKER STUFF -->
