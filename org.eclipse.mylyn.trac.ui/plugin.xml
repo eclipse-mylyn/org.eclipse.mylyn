@@ -25,5 +25,9 @@
             urlRepository="http://trac.edgewall.org"
             version="TRAC_0_9"/>
    </extension>
+   <extension
+         point="org.eclipse.mylar.tasks.ui.editors">
+      <editorFactory class="org.eclipse.mylar.internal.trac.ui.editor.TracTaskEditorFactory"/>
+   </extension>
 
 </plugin>
