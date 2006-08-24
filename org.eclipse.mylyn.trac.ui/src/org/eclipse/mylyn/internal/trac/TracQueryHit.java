@@ -11,8 +11,11 @@
 
 package org.eclipse.mylar.internal.trac;
 
+import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Steffen Pingel
@@ -20,11 +23,10 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 public class TracQueryHit extends AbstractQueryHit {
 
 	private TracTask task;
+	private boolean completed;
 
-	protected TracQueryHit(TracTask task, String repositoryUrl, String id) {
-		super(repositoryUrl, task.getDescription(), id);
-
-		this.task = task;
+	protected TracQueryHit(String repositoryUrl, String description, String id) {
+		super(repositoryUrl, description, id);
 	}
 
 	protected TracQueryHit(String handle) {
@@ -38,12 +40,22 @@ public class TracQueryHit extends AbstractQueryHit {
 
 	@Override
 	public AbstractRepositoryTask getOrCreateCorrespondingTask() {
+		ITask existingTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+				getHandleIdentifier());
+		if (existingTask instanceof TracTask) {
+			this.task = (TracTask)existingTask;
+		} else {
+			this.task = new TracTask(getHandleIdentifier(), getDescription(), true);
+			task.setCompleted(isCompleted());
+			task.setPriority(getPriority());
+			TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);			
+		} 	
 		return task;
 	}
 
 	@Override
 	public boolean isCompleted() {
-		return (task != null) ? task.isCompleted() : false;
+		return (task != null) ? task.isCompleted() : completed;
 	}
 
 	@Override
@@ -51,6 +63,14 @@ public class TracQueryHit extends AbstractQueryHit {
 		if (task instanceof TracTask) {
 			this.task = (TracTask) task;
 		}
+	}
+
+	public String getUrl() {
+		return getRepositoryUrl() + ITracClient.TICKET_URL + getId();
+	}
+
+	public void setCompleted(boolean completed) {
+		this.completed = completed;
 	}
 
 }

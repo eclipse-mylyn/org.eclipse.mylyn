@@ -56,13 +56,9 @@ public abstract class AbstractRepositoryTask extends Task {
 
 	public abstract String getRepositoryKind();
 
-	/**
-	 * @return true if the task can be queried and manipulated without
-	 *         connecting to the server
-	 */
-	public abstract boolean isPersistentInWorkspace();
-
-	public abstract boolean isDownloaded();
+	public boolean isDownloaded() {
+		return taskData != null;
+	}
 
 	public String getLastModifiedDateStamp() {
 		return lastModified;

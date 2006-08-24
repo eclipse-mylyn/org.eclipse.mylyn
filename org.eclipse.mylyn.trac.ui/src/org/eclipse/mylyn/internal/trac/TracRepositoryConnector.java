@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -197,21 +196,22 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 				tracRepository.search(((TracRepositoryQuery) query).getTracSearch(), tickets);
 			}
 		} catch (Throwable e) {
-			// TODO fix error message
-			queryStatus.add(new Status(IStatus.OK, TasksUiPlugin.PLUGIN_ID, IStatus.OK, "Could not log in to server: "
-					+ query.getRepositoryUrl() + "\n\nCheck network connection.", e));
+			queryStatus.add(TracUiPlugin.toStatus(e));
 			return hits;
 		}
 
 		for (TracTicket ticket : tickets) {
-			String handleIdentifier = AbstractRepositoryTask.getHandle(url, ticket.getId());
-			ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handleIdentifier);
-			if (!(task instanceof TracTask)) {
-				task = createTask(ticket, handleIdentifier);
-			}
-			updateTaskDetails(url, (TracTask) task, ticket, false);
+//			String handleIdentifier = AbstractRepositoryTask.getHandle(url, ticket.getId());
+//			ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handleIdentifier);
+//			if (!(task instanceof TracTask)) {
+//				task = createTask(ticket, handleIdentifier);
+//			}
+//			updateTaskDetails(url, (TracTask) task, ticket, false);
 
-			TracQueryHit hit = new TracQueryHit((TracTask) task, query.getRepositoryUrl(), ticket.getId() + "");
+			String description = ticket.getValue(Key.SUMMARY);
+			TracQueryHit hit = new TracQueryHit(query.getRepositoryUrl(), description, ticket.getId() + "");
+			hit.setCompleted(isCompleted(ticket));
+			hit.setPriority(getPriority(ticket));
 			hits.add(hit);
 		}
 		queryStatus.add(Status.OK_STATUS);
@@ -261,7 +261,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		}
 		return task;
 	}
-
+	
 	/**
 	 * Updates fields of <code>task</code> from <code>ticket</code>.
 	 */
@@ -273,17 +273,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 				task.setDescription(ticket.getId() + ": " + ticket.getValue(Key.SUMMARY));
 			}
 		}
-		if (ticket.getValue(Key.STATUS) != null) {
-			TracTask.Status status = TracTask.Status.fromStatus(ticket.getValue(Key.STATUS));
-			task.setCompleted(status != null && status == TracTask.Status.CLOSED);
-		} else {
-			task.setCompleted(false);
-		}
-		if (ticket.getValue(Key.PRIORITY) != null) {
-			PriorityLevel priority = TracTask.PriorityLevel.fromPriority(ticket.getValue(Key.PRIORITY));
-			task.setPriority((priority != null) ? priority.toString()
-					: /* ticket.getValue(Key.PRIORITY) */Task.PriorityLevel.P3.toString());
-		}
+		task.setCompleted(isCompleted(ticket));
+		task.setPriority(getPriority(ticket));
 		if (ticket.getValue(Key.TYPE) != null) {
 			Kind kind = TracTask.Kind.fromType(ticket.getValue(Key.TYPE));
 			task.setKind((kind != null) ? kind.toString() : ticket.getValue(Key.TYPE));
@@ -295,6 +286,25 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		if (notify) {
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
 		}
+	}
+
+	public static boolean isCompleted(TracTicket ticket) {
+		if (ticket.getValue(Key.STATUS) != null) {
+			TracTask.Status status = TracTask.Status.fromStatus(ticket.getValue(Key.STATUS));
+			return status != null && status == TracTask.Status.CLOSED;
+		} 
+		return false;
+	}
+
+	private static String getPriority(TracTicket ticket) {
+		if (ticket.getValue(Key.PRIORITY) != null) {
+			PriorityLevel priority = TracTask.PriorityLevel.fromPriority(ticket.getValue(Key.PRIORITY));
+			if (priority != null) {
+				return priority.toString();
+			}
+			// else return ticket.getValue(Key.PRIORITY)
+		}
+		return Task.PriorityLevel.P3.toString();
 	}
 
 	@Override

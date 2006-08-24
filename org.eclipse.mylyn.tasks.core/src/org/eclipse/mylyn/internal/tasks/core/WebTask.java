@@ -41,14 +41,6 @@ public class WebTask extends AbstractRepositoryTask {
 		return repsitoryType;
 	}
 
-	public boolean isDownloaded() {
-		return false;
-	}
-
-	public boolean isPersistentInWorkspace() {
-		return false;
-	}
-
 	public String getTaskPrefix() {
 		return this.taskPrefix;
 	}

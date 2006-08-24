@@ -199,6 +199,13 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 		}
 
 		TracQueryHit hit = new TracQueryHit(handle);
+		// TODO move to DelegationTaskExternalizer
+		if (element.hasAttribute(KEY_COMPLETE)
+				&& element.getAttribute(KEY_COMPLETE).compareTo(VAL_TRUE) == 0) {
+			hit.setCompleted(true);
+		} else {
+			hit.setCompleted(false);
+		}
 		readQueryHitInfo(hit, taskList, query, element);
 	}
 
