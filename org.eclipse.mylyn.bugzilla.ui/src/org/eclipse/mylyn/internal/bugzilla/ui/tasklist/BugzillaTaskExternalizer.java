@@ -241,24 +241,12 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 			throws TaskExternalizationException {
 		Element element = (Element) node;
 		String handle;
-		String label;
-		String priority;
 		String status;
 		if (element.hasAttribute(KEY_HANDLE)) {
 			handle = element.getAttribute(KEY_HANDLE);
 		} else {
 			throw new TaskExternalizationException("Handle not stored for bug report");
 		}
-		if (element.hasAttribute(KEY_NAME)) {
-			label = element.getAttribute(KEY_NAME);
-		} else {
-			throw new TaskExternalizationException("Description not stored for bug report");
-		}
-		if (element.hasAttribute(KEY_PRIORITY)) {
-			priority = element.getAttribute(KEY_PRIORITY);
-		} else {
-			throw new TaskExternalizationException("Description not stored for bug report");
-		}		
 
 		status = STATUS_NEW;
 		if (element.hasAttribute(KEY_COMPLETE)) {
@@ -267,21 +255,9 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 				status = STATUS_RESO;
 			}
 		}
-		BugzillaQueryHit hit = new BugzillaQueryHit(label, priority, query.getRepositoryUrl(), AbstractRepositoryTask
+		BugzillaQueryHit hit = new BugzillaQueryHit("", "", query.getRepositoryUrl(), AbstractRepositoryTask
 				.getTaskId(handle), null, status);
-		
-		if (element.hasAttribute(KEY_NOTIFIED_INCOMING) && element.getAttribute(KEY_NOTIFIED_INCOMING).compareTo(VAL_TRUE) == 0) {
-			hit.setNotified(true);
-		} else {
-			hit.setNotified(false);
-		}
-		
-		ITask correspondingTask = taskList.getTask(hit.getHandleIdentifier());
-		if (correspondingTask instanceof BugzillaTask) {
-			hit.setCorrespondingTask((BugzillaTask) correspondingTask);
-		}
-
-		query.addHit(hit, taskList);
+		readQueryHitInfo(hit, taskList, query, element);
 	}
 
 	@Override

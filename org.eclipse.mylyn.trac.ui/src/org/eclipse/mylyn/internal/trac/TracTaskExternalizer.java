@@ -14,7 +14,6 @@ package org.eclipse.mylar.internal.trac;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.DelegatingTaskExternalizer;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -138,18 +137,6 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 	}
 
 	@Override
-	public Element createQueryHitElement(AbstractQueryHit queryHit, Document doc, Element parent) {
-		Element node = doc.createElement(getQueryHitTagName());
-
-		node.setAttribute(KEY_HANDLE, queryHit.getHandleIdentifier());
-		node.setAttribute(KEY_PRIORITY, queryHit.getPriority());
-
-		parent.appendChild(node);
-		return null;
-	}
-
-
-	@Override
 	public String getQueryHitTagName() {
 		return KEY_TRAC_QUERY_HIT;
 	}
@@ -211,13 +198,8 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 			throw new TaskExternalizationException("Handle not stored for bug report");
 		}
 
-		ITask correspondingTask = taskList.getTask(handle);
-		if (correspondingTask instanceof TracTask) {
-			String id = AbstractRepositoryTask.getTaskId(handle);
-			TracQueryHit hit = new TracQueryHit((TracTask) correspondingTask, query.getRepositoryUrl(), id);
-			hit.setHandleIdentifier(handle);
-			query.addHit(hit, taskList);
-		}
+		TracQueryHit hit = new TracQueryHit(handle);
+		readQueryHitInfo(hit, taskList, query, element);
 	}
 
 }

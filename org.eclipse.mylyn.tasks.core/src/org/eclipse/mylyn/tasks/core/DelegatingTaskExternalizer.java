@@ -42,7 +42,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	public static final String KEY_QUERY_MAX_HITS = "MaxHits";
 
 	public static final String KEY_QUERY_STRING = "QueryString";
-	
+
 	public static final String KEY_NOTIFIED_INCOMING = "NotifiedIncoming";
 
 	public static final String KEY_LAST_REFRESH = "LastRefreshTimeStamp";
@@ -262,17 +262,17 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			}
 
 			if (category != null) {
-//				if (category.equals(VAL_ROOT)) {
-//					taskList.internalAddRootTask(task);
-//				} else {
+				// if (category.equals(VAL_ROOT)) {
+				// taskList.internalAddRootTask(task);
+				// } else {
 				taskList.internalAddTask(task, category);
-//				}
+				// }
 			} else if (parent == null) {
 				taskList.internalAddRootTask(task);
 			}
 		} else if (legacyCategory != null && !(legacyCategory instanceof TaskArchive)) { // &&
-																							// !legacyCategory.getHandleIdentifier().equals(TaskList.LABEL_ARCHIVE))
-																							// {
+			// !legacyCategory.getHandleIdentifier().equals(TaskList.LABEL_ARCHIVE))
+			// {
 			task.setContainer(legacyCategory);
 			legacyCategory.add(task);
 		} else if (legacyCategory == null && parent == null) {
@@ -391,7 +391,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	public String getTaskTagName() {
 		return KEY_TASK;
 	}
-	
+
 	public boolean canCreateElementFor(AbstractRepositoryQuery query) {
 		return true;
 	}
@@ -470,6 +470,30 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	public void readQueryHit(Node node, TaskList tlist, AbstractRepositoryQuery query)
 			throws TaskExternalizationException {
 		// doesn't know how to read a query hit
+	}
+
+	public void readQueryHitInfo(AbstractQueryHit hit, TaskList taskList, AbstractRepositoryQuery query, Element element)
+			throws TaskExternalizationException {
+		if (element.hasAttribute(KEY_NAME)) {
+			hit.setDescription(element.getAttribute(KEY_NAME));
+		}
+		if (element.hasAttribute(KEY_PRIORITY)) {
+			hit.setPriority(element.getAttribute(KEY_PRIORITY));
+		}
+		
+		if (element.hasAttribute(KEY_NOTIFIED_INCOMING)
+				&& element.getAttribute(KEY_NOTIFIED_INCOMING).compareTo(VAL_TRUE) == 0) {
+			hit.setNotified(true);
+		} else {
+			hit.setNotified(false);
+		}
+
+		ITask correspondingTask = taskList.getTask(hit.getHandleIdentifier());
+		if (correspondingTask instanceof AbstractRepositoryTask) {
+			hit.setCorrespondingTask((AbstractRepositoryTask) correspondingTask);
+		}
+
+		query.addHit(hit, taskList);
 	}
 
 	public List<ITaskListExternalizer> getDelegateExternalizers() {

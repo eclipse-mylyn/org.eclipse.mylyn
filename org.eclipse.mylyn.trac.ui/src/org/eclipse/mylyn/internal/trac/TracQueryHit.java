@@ -27,6 +27,10 @@ public class TracQueryHit extends AbstractQueryHit {
 		this.task = task;
 	}
 
+	protected TracQueryHit(String handle) {
+		super(AbstractRepositoryTask.getRepositoryUrl(handle), "", AbstractRepositoryTask.getTaskId(handle));
+	}
+	
 	@Override
 	public AbstractRepositoryTask getCorrespondingTask() {
 		return task;
@@ -39,7 +43,7 @@ public class TracQueryHit extends AbstractQueryHit {
 
 	@Override
 	public boolean isCompleted() {
-		return task.isCompleted();
+		return (task != null) ? task.isCompleted() : false;
 	}
 
 	@Override
@@ -47,18 +51,6 @@ public class TracQueryHit extends AbstractQueryHit {
 		if (task instanceof TracTask) {
 			this.task = (TracTask) task;
 		}
-	}
-
-	public String getDescription() {
-		return task.getDescription();
-	}
-
-	public String getPriority() {
-		return task.getPriority();
-	}
-
-	public void setHandleIdentifier(String id) {
-		task.setHandleIdentifier(id);
 	}
 
 }

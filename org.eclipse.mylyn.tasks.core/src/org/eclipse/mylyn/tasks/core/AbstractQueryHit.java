@@ -98,5 +98,34 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 		return "";
 	}
 	
+	public String getPriority() {
+		AbstractRepositoryTask task = getCorrespondingTask();
+		if (task != null) {
+			return task.getPriority();
+		} else {
+			return priority;
+		}
+	}
+
+	public String getDescription() {
+		AbstractRepositoryTask task = getCorrespondingTask();
+		if (task != null) {
+			return task.getDescription();
+		} else {
+			return description;
+		}
+	}
+
+	public void setPriority(String priority) {
+		this.priority = priority;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setHandleIdentifier(String id) {
+		//ignore
+	}
 	
 }

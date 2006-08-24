@@ -42,16 +42,4 @@ public class MockQueryHit extends AbstractQueryHit {
 		this.task = task;
 	}
 
-	public String getDescription() {
-		return task.getDescription();
-	}
-
-	public String getPriority() {
-		return task.getPriority();
-	}
-
-	public void setHandleIdentifier(String id) {
-		// ignore
-	}
-
 }

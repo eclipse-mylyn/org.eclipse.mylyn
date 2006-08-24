@@ -90,8 +90,4 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 		return false;
 	}
 
-	public void setHandleIdentifier(String id) {
-		// can't change the handle
-	}
-	
 }
