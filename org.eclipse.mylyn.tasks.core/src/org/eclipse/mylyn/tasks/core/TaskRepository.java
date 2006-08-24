@@ -22,7 +22,21 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 
 /**
+ * Note that task repositories use Strings for storing time stamps because using
+ * Date objects led to the following problems:
+ * <ul>
+ * <li>Often we are unable to get the time zone of the repository so
+ * interpreting the date string correctly doesn't work.</li>
+ * <li>Even if we do know the time zone information the local clock may be
+ * wrong. This can cause lost incoming when asking the repository for all
+ * changes since date X.</li>
+ * <li>The solution we have come up with thus far is not to interpret the date
+ * as a DATE object but rather simply use the date string given to us by the
+ * repository itself.</li>
+ * </ul>
+ * 
  * @author Mik Kersten
+ * @author Rob Elves
  */
 public class TaskRepository {
 
@@ -238,7 +252,7 @@ public class TaskRepository {
 	public String getRepositoryLabel() {
 		return this.properties.get(IRepositoryConstants.PROPERTY_LABEL);
 	}
-	
+
 	public Map<String, String> getProperties() {
 		return this.properties;
 	}
