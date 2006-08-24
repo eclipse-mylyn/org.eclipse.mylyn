@@ -127,16 +127,4 @@ public class TracTask extends AbstractRepositoryTask {
 		return TracUiPlugin.REPOSITORY_KIND;
 	}
 
-	@Override
-	public boolean isDownloaded() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isPersistentInWorkspace() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 }

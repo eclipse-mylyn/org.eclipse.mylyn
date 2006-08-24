@@ -80,10 +80,6 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		}
 	}
 
-	public boolean isDownloaded() {
-		return taskData != null;
-	}
-
 	@Override
 	public String toString() {
 		return "bugzilla report id: " + getHandleIdentifier();
@@ -151,8 +147,4 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		}
 	}
 	
-	@Override
-	public boolean isPersistentInWorkspace() {
-		return true;
-	}
 }

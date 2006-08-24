@@ -29,16 +29,6 @@ public class MockRepositoryTask extends AbstractRepositoryTask {
 		return "mock";
 	}
 
-	@Override
-	public boolean isDownloaded() {
-		return false;
-	}
-
-	@Override
-	public boolean isPersistentInWorkspace() {
-		return false;
-	}
-	
 	public void setOwner(String ownerId) {
 		this.ownerId = ownerId;
 	}
