@@ -36,31 +36,32 @@
 
     <extension point="org.eclipse.ui.newWizards">
       <wizard
-            category="org.eclipse.mylar.wizards"
-            class="org.eclipse.mylar.internal.tasks.ui.planner.TaskActivityWizard"
-            icon="icons/eview16/task-list.gif"
-            id="org.eclipse.mylar.tasklist.report.ui.planningGameWizard"
-            name="Task Activity Report (Experimental)">
-      </wizard>
-      <wizard
-            canFinishEarly="true"
+            canFinishEarly="true" 
             category="org.eclipse.mylar.wizards"
             class="org.eclipse.mylar.internal.tasks.ui.wizards.NewLocalTaskWizard"
+            hasPages="false"
             icon="icons/etool16/task-new.gif"
-            id="org.eclipse.mylar.tasklist.wizard.new.task"
-            name="New Task"/>
+            id="org.eclipse.mylar.tasks.ui.wizard.new.task"
+            name="Task"/>
 	  <wizard
             category="org.eclipse.mylar.wizards"
             class="org.eclipse.mylar.internal.tasks.ui.wizards.NewRepositoryTaskWizard"
             icon="icons/etool16/task-repository-new.gif"
-            id="org.eclipse.mylar.tasklist.wizard.new.repository.task"
-            name="New Repository Task"/>
+            id="org.eclipse.mylar.tasks.ui.wizard.new.repository.task"
+            name="Repository Task"/>
       <wizard
             category="org.eclipse.mylar.wizards"
             class="org.eclipse.mylar.internal.tasks.ui.wizards.NewQueryWizard"
             icon="icons/etool16/query-new.gif"
-            id="org.eclipse.mylar.tasklist.wizard.new.query"
-            name="New Query"/>
+            id="org.eclipse.mylar.tasks.ui.wizard.new.query"
+            name="Query"/>
+	  <wizard
+            category="org.eclipse.mylar.wizards"
+            class="org.eclipse.mylar.internal.tasks.ui.planner.TaskActivityWizard"
+            icon="icons/eview16/task-list.gif"
+            id="org.eclipse.mylar.tasks.ui.activity.report"
+            name="Task Activity Report (Experimental)">
+      </wizard> 
 	</extension>
 
   <extension

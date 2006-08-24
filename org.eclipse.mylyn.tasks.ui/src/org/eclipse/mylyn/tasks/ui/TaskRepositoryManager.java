@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.core.TaskRepositoriesExternalizer;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -371,6 +372,9 @@ public class TaskRepositoryManager {
 	}
 
 	public boolean saveRepositories() {
+		if (!Platform.isRunning()) {
+			return false;
+		}
 		Set<TaskRepository> repositoriesToWrite = new HashSet<TaskRepository>(getAllRepositories());
 		// if for some reason a repository is added/changed to equal one in the
 		// orphaned set the orphan is discarded
