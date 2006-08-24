@@ -313,21 +313,24 @@
             name="Mylar"
             class="org.eclipse.mylar.internal.tasks.ui.preferences.MylarPreferencePage"
             id="org.eclipse.mylar.ui.preferences">
+            <keywordReference id="org.eclipse.mylar.tasks.keywords"/>
       </page>  
       <page 
          name="Tasks"
          class="org.eclipse.mylar.internal.tasks.ui.preferences.TasksPreferencePage"
          id="org.eclipse.mylar.tasklist.ui.preferences"
          category="org.eclipse.mylar.ui.preferences">
-      </page>
-      <!--
-      <page
-            category="org.eclipse.mylar.ui.preferences"
-            class="org.eclipse.mylar.internal.tasklist.ui.preferences.MylarRepositoriesPreferencePage"
-            id="org.eclipse.mylar.tasklist.ui.preferences.repositories"
-            name="Task Repositories"/> 
-       -->
+         <keywordReference id="org.eclipse.mylar.tasks.keywords"/>
+      </page> 
    </extension>
+   
+   <extension
+   		point="org.eclipse.ui.keywords">
+      <keyword
+            label="mylar tasks"
+            id="org.eclipse.mylar.tasks.keywords"/>
+   </extension>
+ 
 
 
 <!--
