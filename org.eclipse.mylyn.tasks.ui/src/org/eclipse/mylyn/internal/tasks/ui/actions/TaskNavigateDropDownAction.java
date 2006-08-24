@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Menu;
  * @author Mik Kersten
  */
 public abstract class TaskNavigateDropDownAction extends Action implements IMenuCreator {
+	
 	protected final TaskListView view;
 
 	protected TaskActivationHistory taskHistory;
@@ -71,6 +72,9 @@ public abstract class TaskNavigateDropDownAction extends Action implements IMenu
 		}
 
 		public void run() {
+			if (targetTask.isActive()) {
+				return;
+			}
 			new TaskActivateAction().run(targetTask);
 			// taskHistory.navigatedToTask(targetTask);
 			taskHistory.addTask(targetTask);
