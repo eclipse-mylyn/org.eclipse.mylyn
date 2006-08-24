@@ -11,8 +11,10 @@
 
 package org.eclipse.mylar.internal.trac.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
@@ -77,6 +79,14 @@ public class TracTicket {
 
 	/** Trac's built-in ticket properties. */
 	private Map<Key, String> valueByKey = new HashMap<Key, String>();
+
+	private List<TracComment> comments;
+
+	private List<TracAttachment> attachments;
+
+	private String[] actions;
+
+	private String[] resolutions;
 
 	public TracTicket() {
 	}
@@ -174,4 +184,42 @@ public class TracTicket {
 		this.lastChanged = TracUtils.parseDate(lastChanged);
 	}
 
+	public void addComment(TracComment comment) {
+		if (comments == null) {
+			comments = new ArrayList<TracComment>();
+		}
+		comments.add(comment);
+	}
+
+	public void addAttachment(TracAttachment attachment) {
+		if (attachments == null) {
+			attachments = new ArrayList<TracAttachment>();
+		}
+		attachments.add(attachment);
+	}
+
+	public TracComment[] getComments() {
+		return (comments != null) ? comments.toArray(new TracComment[0]) : null;
+	}
+
+	public TracAttachment[] getAttachments() {
+		return (attachments != null) ? attachments.toArray(new TracAttachment[0]) : null;
+	}
+
+	public void setActions(String[] actions) {
+		this.actions = actions;
+	}
+	
+	public String[] getActions() {
+		return actions;
+	}
+	
+	public void setResolutions(String[] resolutions) {
+		this.resolutions = resolutions;
+	}
+	
+	public String[] getResolutions() {
+		return resolutions;
+	}
+	
 }

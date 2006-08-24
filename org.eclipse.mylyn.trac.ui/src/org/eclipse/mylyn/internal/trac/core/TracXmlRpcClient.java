@@ -4,9 +4,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
@@ -15,6 +18,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.trac.core.TracHttpClientTransportFactory.TracHttpException;
+import org.eclipse.mylar.internal.trac.model.TracAttachment;
+import org.eclipse.mylar.internal.trac.model.TracComment;
 import org.eclipse.mylar.internal.trac.model.TracComponent;
 import org.eclipse.mylar.internal.trac.model.TracMilestone;
 import org.eclipse.mylar.internal.trac.model.TracPriority;
@@ -151,7 +156,48 @@ public class TracXmlRpcClient extends AbstractTracClient {
 	public TracTicket getTicket(int id) throws TracException {
 		Object[] result = (Object[]) call("ticket.get", id);
 		TracTicket ticket = parseTicket(result);
+
+		result = (Object[]) call("ticket.changeLog", id, 0);
+		for (Object item : result) {
+			ticket.addComment(parseChangeLogEntry((Object[]) item));
+		}
+
+		result = (Object[]) call("ticket.listAttachments", id);
+		for (Object item : result) {
+			ticket.addAttachment(parseAttachment((Object[]) item));
+		}
+
+		try {
+			String[] actions = getActions(id);
+			ticket.setActions(actions);
+		} catch (TracException e) {
+			// remove this if getActions() has been implemented in XmlRpcPlugin
+			String status = ticket.getValue(Key.STATUS);
+			ticket.setActions(getDefaultTicketActions(status));
+		}
+		
+		ticket.setResolutions(getDefaultTicketResolutions());
+		
 		return ticket;
+	}
+
+	private TracAttachment parseAttachment(Object[] entry) {
+		TracAttachment attachment = new TracAttachment((String) entry[0]);
+		attachment.setDescription((String) entry[1]);
+		attachment.setSize((Integer) entry[2]);
+		attachment.setCreated(TracUtils.parseDate((Integer) entry[3]));
+		attachment.setAuthor((String) entry[4]);
+		return attachment;
+	}
+
+	private TracComment parseChangeLogEntry(Object[] entry) {
+		TracComment comment = new TracComment();
+		comment.setCreated(TracUtils.parseDate((Integer) entry[0]));
+		comment.setAuthor((String) entry[1]);
+		comment.setField((String) entry[2]);
+		comment.setOldValue((String) entry[3]);
+		comment.setNewValue((String) entry[4]);
+		return comment;
 	}
 
 	/* public for testing */
@@ -375,6 +421,30 @@ public class TracXmlRpcClient extends AbstractTracClient {
 	public void updateTicket(TracTicket ticket, String comment) throws TracException {
 		Map<String, String> attributes = ticket.getValues();
 		call("ticket.update", ticket.getId(), comment, attributes);
+	}
+
+	public Set<Integer> getChangedTickets(Date since) throws TracException {
+		Object[] ids;
+		try {
+			ids = (Object[]) call("ticket.getRecentChanges", since);
+		} catch (TracException e) {
+			// TODO remove this once getRecentChanges is supported by the XmlRpcPlugin
+			return null;
+		}
+		Set<Integer> result = new HashSet<Integer>();
+		for (Object id : ids) {
+			result.add((Integer) id);
+		}
+		return result;
+	}
+
+	public String[] getActions(int id) throws TracException {
+		Object[] actions = (Object[]) call("ticket.getAvailableActions", id);
+		String[] result = new String[actions.length];
+		for (int i = 0; i < result.length; i++) {
+			result[i] = (String) actions[i];
+		}
+		return result;
 	}
 
 }

@@ -101,4 +101,21 @@ public abstract class AbstractTracClient implements ITracClient {
 		this.data = data;
 	}
 	
+	public String[] getDefaultTicketResolutions() {
+		return new String[] { "fixed", "invalid", "wontfix", "duplicat", "worksforme" }; 
+	}
+	
+	public String[] getDefaultTicketActions(String status) {
+		if ("new".equals(status)) {
+			return new String[] { "leave", "resolve", "reassign", "accept" };
+		} else if ("assigned".equals(status)) {
+			return new String[] { "leave", "resolve", "reassign" };
+		} else if ("reopened".equals(status)) {
+			return new String[] { "leave", "resolve", "reassign" };
+		} else if ("closed".equals(status)) {
+			return new String[] { "leave", "reopen" };
+		}
+		return null;
+	}
+
 }

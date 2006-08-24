@@ -61,13 +61,15 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	private List<String> supportedVersions;
 
 	private TracClientManager clientManager;
-	
+
+	private TracOfflineTaskHandler offlineTaskHandler = new TracOfflineTaskHandler(this);
+
 	private TracAttachmentHandler attachmentHandler = new TracAttachmentHandler(this);
-	
+
 	public TracRepositoryConnector() {
 		TracUiPlugin.getDefault().setConnector(this);
 	}
-	
+
 	@Override
 	public boolean canCreateNewTask(TaskRepository repository) {
 		return true;
@@ -125,7 +127,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public IOfflineTaskHandler getOfflineTaskHandler() {
-		return null;
+		return offlineTaskHandler;
 	}
 
 	@Override

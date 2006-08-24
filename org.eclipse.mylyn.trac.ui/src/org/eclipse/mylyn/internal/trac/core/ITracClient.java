@@ -11,7 +11,9 @@
 
 package org.eclipse.mylar.internal.trac.core;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylar.internal.trac.model.TracComponent;
@@ -146,5 +148,7 @@ public interface ITracClient {
 	 * @param data cached repository attributes
 	 */
 	void setData(TracClientData data);
+
+	Set<Integer> getChangedTickets(Date since) throws TracException;
 	
 }

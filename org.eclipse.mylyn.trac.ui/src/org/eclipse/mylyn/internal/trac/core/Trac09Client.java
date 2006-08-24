@@ -18,9 +18,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import javax.security.auth.login.LoginException;
@@ -467,6 +469,10 @@ public class Trac09Client extends AbstractTracClient {
 	}
 
 	public void updateTicket(TracTicket ticket, String comment) throws TracException {
+		throw new TracException("Unsupported operation");
+	}
+
+	public Set<Integer> getChangedTickets(Date since) throws TracException {
 		throw new TracException("Unsupported operation");
 	}
 

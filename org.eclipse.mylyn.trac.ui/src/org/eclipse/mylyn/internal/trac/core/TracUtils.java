@@ -19,11 +19,18 @@ import java.util.TimeZone;
  */
 public class TracUtils {
 
-	public static Date parseDate(int seconds) {
+	public static Date parseDate(long seconds) {
 		Calendar c = Calendar.getInstance();
 		c.setTimeZone(TimeZone.getTimeZone(ITracClient.TIME_ZONE));
 		c.setTimeInMillis(seconds * 1000l);
 		return c.getTime();
+	}
+
+	public static long toTracTime(Date date) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		c.setTimeZone(TimeZone.getTimeZone(ITracClient.TIME_ZONE));
+		return c.getTimeInMillis() / 1000l;
 	}
 
 }
