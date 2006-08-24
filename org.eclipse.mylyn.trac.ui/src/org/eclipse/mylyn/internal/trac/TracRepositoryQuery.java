@@ -22,7 +22,7 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskList;
 
 /**
- * @author Steffen Pingel 
+ * @author Steffen Pingel
  */
 public class TracRepositoryQuery extends AbstractRepositoryQuery {
 
@@ -30,7 +30,7 @@ public class TracRepositoryQuery extends AbstractRepositoryQuery {
 		super(description, taskList);
 
 		assert queryUrl.startsWith(repositoryUrl + ITracClient.QUERY_URL);
-		
+
 		setRepositoryUrl(repositoryUrl);
 		setUrl(queryUrl);
 	}
@@ -67,7 +67,7 @@ public class TracRepositoryQuery extends AbstractRepositoryQuery {
 				try {
 					String key = URLDecoder.decode(token.substring(0, i), ITracClient.CHARSET);
 					String value = URLDecoder.decode(token.substring(i + 1), ITracClient.CHARSET);
-					                                               
+
 					if ("order".equals(key)) {
 						list.setOrderBy(value);
 					} else if ("desc".equals(key)) {

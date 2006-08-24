@@ -17,12 +17,37 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.mylar.internal.trac.TracRepositoryQuery;
+import org.eclipse.mylar.internal.trac.TracUiPlugin;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.model.TracSearch;
 import org.eclipse.mylar.internal.trac.model.TracSearchFilter;
+import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TaskRepositoryManager;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 public class TracRepositoryQueryTest extends TestCase {
 
+	public void testChangeRepositoryUrl() {
+		TaskRepositoryManager manager = TasksUiPlugin.getRepositoryManager();
+		manager.clearRepositories();
+
+		TaskRepository repository = new TaskRepository(TracUiPlugin.REPOSITORY_KIND, Constants.TEST_TRAC_096_URL);	
+		manager.addRepository(repository);
+
+		TracSearch search = new TracSearch();
+		String queryUrl = repository.getUrl() + ITracClient.QUERY_URL + search.toUrl();
+		TracRepositoryQuery query = new TracRepositoryQuery(repository.getUrl(), queryUrl, "description", null);
+		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
+		
+		String oldUrl = repository.getUrl();
+		String newUrl = Constants.TEST_TRAC_010_URL;
+		TasksUiPlugin.getTaskListManager().refactorRepositoryUrl(oldUrl, newUrl);	
+		repository.setUrl(newUrl);
+		
+		assertEquals(newUrl, query.getRepositoryUrl());
+		assertEquals(newUrl + ITracClient.QUERY_URL + search.toUrl(), query.getUrl());
+	}
+	
 	public void testGetFilterList() {
 		String repositoryUrl = "https://foo.bar/repo";
 		String parameterUrl = "&status=new&status=assigned&status=reopened&milestone=0.1";

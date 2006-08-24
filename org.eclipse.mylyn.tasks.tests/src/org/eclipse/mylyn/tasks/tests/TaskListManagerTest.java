@@ -104,6 +104,16 @@ public class TaskListManagerTest extends TestCase {
 		assertFalse(fileA.exists());
 	}
 
+	public void testMigrateQueryUrlHandles() {
+		AbstractRepositoryQuery query = new MockRepositoryQuery("mquery", manager.getTaskList());
+		query.setRepositoryUrl("http://foo.bar");
+		query.setUrl("http://foo.bar/b");
+		manager.getTaskList().addQuery(query);
+		manager.refactorRepositoryUrl("http://foo.bar", "http://bar.baz");
+		AbstractRepositoryQuery changedQuery = manager.getTaskList().getRepositoryQueries("http://bar.baz").iterator().next();
+		assertEquals("http://bar.baz/b", changedQuery.getUrl());
+	}
+	
 	public void testMigrateQueryHandles() {
 		AbstractRepositoryQuery query = new MockRepositoryQuery("mquery", manager.getTaskList());
 		query.setRepositoryUrl("http://a");

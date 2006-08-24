@@ -124,8 +124,12 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		return repositoryUrl;
 	}
 
-	public void setRepositoryUrl(String repositoryUrl) {
-		this.repositoryUrl = repositoryUrl;
+	public void setRepositoryUrl(String newRepositoryUrl) {
+		if (repositoryUrl != null && url != null) {
+			// the repository url has changed, so change corresponding part of query URL
+			this.url = newRepositoryUrl + url.substring(repositoryUrl.length());
+		}
+		this.repositoryUrl = newRepositoryUrl;
 	}
 
 	public boolean isSynchronizing() {
