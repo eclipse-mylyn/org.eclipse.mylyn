@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -65,7 +66,9 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 	public IViewPart getPartForAction() {
 		if (viewPart == null) {
 			if (this instanceof IWorkbenchWindowActionDelegate) {
-				throw new RuntimeException("not supported on IWorkbenchWindowActionDelegate");
+				if (Platform.isRunning()) {
+					throw new RuntimeException("not supported on IWorkbenchWindowActionDelegate");
+				}
 			} else {
 				throw new RuntimeException("error: viewPart is null");
 			}
