@@ -57,7 +57,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	private BugzillaAttachmentHandler attachmentHandler = new BugzillaAttachmentHandler();
 
 	private BugzillaOfflineTaskHandler offlineHandler = new BugzillaOfflineTaskHandler();
-	
+
+	private boolean forceSynchExecForTesting = false;
+		
 	public String getLabel() {
 		return CLIENT_LABEL;
 	}
@@ -85,7 +87,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				return null;
 			}
 		} catch (NumberFormatException nfe) {
-			MessageDialog.openInformation(null, TasksUiPlugin.TITLE_DIALOG, "Invalid report id: " + id);
+			if (!forceSynchExecForTesting) {
+				MessageDialog.openInformation(null, TasksUiPlugin.TITLE_DIALOG, "Invalid report id: " + id);
+			}
 			return null;
 		}
 
@@ -262,6 +266,10 @@ public void updateAttributes(final TaskRepository repository, IProgressMonitor m
 //			return false;
 //		}
 //		return true;
+	}
+
+	public void setForceSynchExecForTesting(boolean forceSynchExecForTesting) {
+		this.forceSynchExecForTesting = forceSynchExecForTesting;
 	}
 
 }

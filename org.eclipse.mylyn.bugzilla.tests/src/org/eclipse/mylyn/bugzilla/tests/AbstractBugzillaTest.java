@@ -103,6 +103,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		assertEquals(abstractRepositoryClient.getRepositoryType(), DEFAULT_KIND);
 
 		connector = (BugzillaRepositoryConnector) abstractRepositoryClient;
+		connector.setForceSynchExecForTesting(true);
 		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
 	}
 

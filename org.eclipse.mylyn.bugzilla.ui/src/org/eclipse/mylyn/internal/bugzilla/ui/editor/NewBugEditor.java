@@ -93,9 +93,6 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) {
-		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
-		submissionHandler = new BugSubmissionHandler(connector);
-				
 		NewBugEditorInput ei = (NewBugEditorInput) input;
 		setSite(site);
 		setInput(input);
@@ -105,6 +102,9 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		newSummary = taskData.getSummary();
 		repository = editorInput.getRepository();
 		isDirty = false;
+		
+		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
+		submissionHandler = new BugSubmissionHandler(connector);
 	}
 
 	@Override
