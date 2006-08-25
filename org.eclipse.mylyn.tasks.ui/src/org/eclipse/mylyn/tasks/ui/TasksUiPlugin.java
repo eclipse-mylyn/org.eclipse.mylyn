@@ -355,7 +355,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 			taskListManager = new TaskListManager(taskListWriter, taskListFile);
 			taskRepositoryManager = new TaskRepositoryManager();
-
+			synchronizationManager = new RepositorySynchronizationManager();
+			
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					try {
@@ -380,8 +381,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 						taskListBackupManager = new TaskListBackupManager();
 						getPreferenceStore().addPropertyChangeListener(taskListBackupManager);
 
-						synchronizationManager = new RepositorySynchronizationManager();
-						
 						synchronizationScheduler = new TaskListSynchronizationScheduler(true);
 						synchronizationScheduler.startSynchJob();
 

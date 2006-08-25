@@ -141,7 +141,7 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 
 		if (showOpenInBrowserOption) {
 			openInBrowserCheck = new Button(area, SWT.CHECK);
-			openInBrowserCheck.setText("Open in &Browser?");
+			openInBrowserCheck.setText("Open with &Browser");
 			openInBrowserCheck.setSelection(openInBrowser);
 		}
 
