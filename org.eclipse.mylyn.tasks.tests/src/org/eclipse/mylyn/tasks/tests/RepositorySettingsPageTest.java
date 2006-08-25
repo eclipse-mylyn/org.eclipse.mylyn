@@ -13,8 +13,8 @@ import junit.framework.TestCase;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.tests.connector.MockConnectorUi;
-import org.eclipse.mylar.tasks.ui.AbstractConnectorUi;
+import org.eclipse.mylar.tasks.tests.connector.MockRepositoryUi;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -31,7 +31,7 @@ public class RepositorySettingsPageTest extends TestCase {
 		TaskRepository repository = new TaskRepository("kind", "http://localhost/");
 		repository.setCharacterEncoding("UTF-8");
 
-		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockConnectorUi());
+		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockRepositoryUi());
 		page.setNeedsEncoding(true);
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
@@ -43,7 +43,7 @@ public class RepositorySettingsPageTest extends TestCase {
 	}
 
 	public void testNeedsEncodingFalse() {
-		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockConnectorUi());
+		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockRepositoryUi());
 		page.setNeedsEncoding(false);
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
@@ -54,7 +54,7 @@ public class RepositorySettingsPageTest extends TestCase {
 	}
 
 	public void testNeedsAnonyoumousLoginFalse() {
-		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockConnectorUi());
+		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockRepositoryUi());
 		page.setNeedsAnonymousLogin(false);
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
@@ -65,7 +65,7 @@ public class RepositorySettingsPageTest extends TestCase {
 	}
 
 	public void testNeedsAnonyoumousLoginNoRepository() {
-		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockConnectorUi());
+		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockRepositoryUi());
 		page.setNeedsAnonymousLogin(true);
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
@@ -83,7 +83,7 @@ public class RepositorySettingsPageTest extends TestCase {
 
 	public void testNeedsAnonyoumousLogin() {
 		TaskRepository repository = new TaskRepository("kind", "http://localhost/");
-		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockConnectorUi());
+		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockRepositoryUi());
 		page.setNeedsAnonymousLogin(true);
 		page.setRepository(repository);
 
@@ -129,7 +129,7 @@ public class RepositorySettingsPageTest extends TestCase {
 
 		private Composite parent;
 
-		public MockRepositorySettingsPage(AbstractConnectorUi repositoryUi) {
+		public MockRepositorySettingsPage(AbstractRepositoryUi repositoryUi) {
 			super("title", "description", repositoryUi);
 		}
 

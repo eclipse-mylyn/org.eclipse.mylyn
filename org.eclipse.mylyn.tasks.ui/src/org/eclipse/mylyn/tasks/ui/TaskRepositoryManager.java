@@ -40,7 +40,7 @@ public class TaskRepositoryManager {
 
 	private Map<String, AbstractRepositoryConnector> repositoryConnectors = new HashMap<String, AbstractRepositoryConnector>();
 
-	private Map<String, AbstractConnectorUi> repositoryConnectorUis = new HashMap<String, AbstractConnectorUi>();
+	private Map<String, AbstractRepositoryUi> repositoryConnectorUis = new HashMap<String, AbstractRepositoryUi>();
 	
 	private Map<String, Set<TaskRepository>> repositoryMap = new HashMap<String, Set<TaskRepository>>();
 
@@ -68,15 +68,15 @@ public class TaskRepositoryManager {
 		}
 	}
 
-	public Collection<AbstractConnectorUi> getRepositoryConnectorsUis() {
+	public Collection<AbstractRepositoryUi> getRepositoryUis() {
 		return Collections.unmodifiableCollection(repositoryConnectorUis.values());
 	}
 
-	public AbstractConnectorUi getRepositoryConnectorUi(String kind) {
+	public AbstractRepositoryUi getRepositoryUi(String kind) {
 		return repositoryConnectorUis.get(kind);
 	}
 
-	public void addRepositoryConnectorUi(AbstractConnectorUi repositoryConnectorUi) {
+	public void addRepositoryUi(AbstractRepositoryUi repositoryConnectorUi) {
 		if (!repositoryConnectorUis.values().contains(repositoryConnectorUi)) {
 			repositoryConnectorUis.put(repositoryConnectorUi.getRepositoryType(), repositoryConnectorUi);
 		}

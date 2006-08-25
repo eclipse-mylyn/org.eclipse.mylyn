@@ -23,7 +23,7 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractConnectorUi;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
@@ -49,7 +49,7 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 		} else if (element instanceof AbstractRepositoryTask) { 
 			AbstractRepositoryTask task = (AbstractRepositoryTask)element;
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(task.getRepositoryKind());
-			AbstractConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryConnectorUi(
+			AbstractRepositoryUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryUi(
 					task.getRepositoryKind());
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryKind(), task.getRepositoryUrl());
 			if (!connectorUi.hasRichEditor()) {

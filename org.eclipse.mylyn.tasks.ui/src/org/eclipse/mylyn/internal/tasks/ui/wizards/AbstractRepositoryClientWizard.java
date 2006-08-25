@@ -16,7 +16,7 @@ import java.util.Collection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylar.tasks.ui.AbstractConnectorUi;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.INewWizard;
 
@@ -50,7 +50,7 @@ public abstract class AbstractRepositoryClientWizard extends Wizard implements I
 		if (connectors.size() == 1) {
 			AbstractRepositoryConnector connector = connectors.toArray(new AbstractRepositoryConnector[1])[0];
 			setRepositoryConnector(connector);
-			AbstractConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryConnectorUi(
+			AbstractRepositoryUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryUi(
 					connector.getRepositoryType());
 			AbstractRepositorySettingsPage nextPage = connectorUi.getSettingsPage();
 			setRepositorySettingsPage(nextPage);

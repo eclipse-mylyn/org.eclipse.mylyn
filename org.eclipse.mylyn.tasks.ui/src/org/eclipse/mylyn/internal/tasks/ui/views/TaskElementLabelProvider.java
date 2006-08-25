@@ -25,7 +25,7 @@ import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.TaskArchive;
 import org.eclipse.mylar.tasks.core.TaskCategory;
-import org.eclipse.mylar.tasks.ui.AbstractConnectorUi;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -60,7 +60,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			// TODO: fix this mess that delaying decoration got us into
 			if (task.isCompleted()) {
 				if (task instanceof AbstractRepositoryTask) {
-					AbstractConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryConnectorUi(
+					AbstractRepositoryUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryUi(
 							((AbstractRepositoryTask)task).getRepositoryKind());
 					if (connectorUi != null && !connectorUi.hasRichEditor()) {
 						return TaskListImages.getImage(TaskListImages.TASK_COMPLETED);
@@ -72,7 +72,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				}
 			} else if (task.getNotes() != null && !task.getNotes().trim().equals("")) {
 				if (task instanceof AbstractRepositoryTask) {
-					AbstractConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryConnectorUi(
+					AbstractRepositoryUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryUi(
 							((AbstractRepositoryTask)task).getRepositoryKind());
 					if (connectorUi != null && !connectorUi.hasRichEditor()) {
 						return TaskListImages.getImage(TaskListImages.TASK_NOTES);
@@ -84,7 +84,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				}
 			} else {
 				if (task instanceof AbstractRepositoryTask) {
-					AbstractConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryConnectorUi(
+					AbstractRepositoryUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryUi(
 							((AbstractRepositoryTask)task).getRepositoryKind());
 					if (connectorUi != null && !connectorUi.hasRichEditor()) {
 						return TaskListImages.getImage(TaskListImages.TASK);

@@ -27,12 +27,17 @@
          name="Bugzilla Repository"
          point="org.eclipse.mylar.tasks.ui.repositories">
 
-      <repositoryType
-            brandingIcon="icons/eview16/bugzilla-logo.gif"
+      <repositoryConnector
+            
             class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector"
             id="org.eclipse.mylar.bugzilla.tasklist.repositories"
-            name="Bugzilla Repository Client"
+            name="Bugzilla Repository Connector"
             type="bugzilla"/>
+            
+      <repositoryUi
+            brandingIcon="icons/eview16/bugzilla-logo.gif"
+            class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryUi"
+            name="Bugzilla Repository Ui"/>
              
 		<externalizer 
             class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskExternalizer"

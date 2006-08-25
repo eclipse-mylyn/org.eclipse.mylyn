@@ -7,7 +7,7 @@
          name="JIRA Repository"
          point="org.eclipse.mylar.tasks.ui.repositories">
 
-      <repositoryType
+      <repositoryConnector
             class="org.eclipse.mylar.tasks.tests.connector.MockRepositoryConnector"
             id="org.eclipse.mylar.tasklist.tests.repositories"
             name="Mock Repository Client"

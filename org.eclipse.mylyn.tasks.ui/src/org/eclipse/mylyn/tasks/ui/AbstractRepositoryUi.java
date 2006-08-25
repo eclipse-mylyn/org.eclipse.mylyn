@@ -21,7 +21,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Mik Kersten
  */
-public abstract class AbstractConnectorUi {
+public abstract class AbstractRepositoryUi {
 	
 	/**
 	 * @return the unique type of the repository, e.g. "bugzilla"
@@ -37,13 +37,11 @@ public abstract class AbstractConnectorUi {
 	public abstract boolean hasRichEditor();
 	
 	public abstract IWizard getNewTaskWizard(TaskRepository taskRepository, IStructuredSelection selection);
-	
+		
+	public abstract boolean hasSearchPage();
+		
 	public IWizard getAddExistingTaskWizard(TaskRepository repository) {
 		return new CommonAddExistingTaskWizard(repository);
-	}
-
-	public boolean hasSearchPage() {
-		return false;
 	}
 
 	public WizardPage getSearchPage(TaskRepository repository, IStructuredSelection selection) {

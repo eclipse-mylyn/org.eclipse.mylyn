@@ -28,6 +28,7 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.ITaskListExternalizer;
 import org.eclipse.mylar.tasks.core.RepositoryTemplate;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
@@ -64,8 +65,10 @@ public class TasksUiExtensionReader {
 
 	public static final String ELMNT_TMPL_ADDAUTO = "addAutomatically";
 
-	public static final String ELMNT_REPOSITORY_TYPE = "repositoryType";
+	public static final String ELMNT_REPOSITORY_CONNECTOR = "repositoryConnector";
 
+	public static final String ELMNT_REPOSITORY_UI= "repositoryUi";
+	
 	public static final String ELMNT_EXTERNALIZER = "externalizer";
 
 	public static final String ATTR_BRANDING_ICON = "brandingIcon";
@@ -105,8 +108,10 @@ public class TasksUiExtensionReader {
 			for (int i = 0; i < repositoryExtensions.length; i++) {
 				IConfigurationElement[] elements = repositoryExtensions[i].getConfigurationElements();
 				for (int j = 0; j < elements.length; j++) {
-					if (elements[j].getName().equals(ELMNT_REPOSITORY_TYPE)) {
+					if (elements[j].getName().equals(ELMNT_REPOSITORY_CONNECTOR)) {
 						readRepositoryConnector(elements[j]);
+					} else if (elements[j].getName().equals(ELMNT_REPOSITORY_UI)) {
+						readRepositoryUi(elements[j]);
 					} else if (elements[j].getName().equals(ELMNT_EXTERNALIZER)) {
 						readExternalizer(elements[j], externalizers);
 					}
@@ -186,18 +191,6 @@ public class TasksUiExtensionReader {
 			Object repository = element.createExecutableExtension(ATTR_CLASS);
 			if (repository instanceof AbstractRepositoryConnector && type != null) {
 				TasksUiPlugin.getRepositoryManager().addRepositoryConnector((AbstractRepositoryConnector) repository);
-
-				String iconPath = element.getAttribute(ATTR_BRANDING_ICON);
-				if (iconPath != null) {
-
-					ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(element.getContributor()
-							.getName(), iconPath);
-					if (descriptor != null) {
-						TasksUiPlugin.getDefault().getBrandingIcons().put((AbstractRepositoryConnector) repository,
-								TaskListImages.getImage(descriptor));
-					}
-				}
-
 			} else {
 				MylarStatusHandler.log("could not not load extension: " + repository, null);
 			}
@@ -207,6 +200,31 @@ public class TasksUiExtensionReader {
 		}
 	}
 
+	private static void readRepositoryUi(IConfigurationElement element) {
+		try {
+			Object type = element.getAttribute(ELMNT_TYPE);
+			Object repository = element.createExecutableExtension(ATTR_CLASS);
+			if (repository instanceof AbstractRepositoryConnector && type != null) {
+				TasksUiPlugin.getRepositoryManager().addRepositoryUi((AbstractRepositoryUi) repository);
+
+				String iconPath = element.getAttribute(ATTR_BRANDING_ICON);
+				if (iconPath != null) {
+					ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(element.getContributor()
+							.getName(), iconPath);
+					if (descriptor != null) {
+						TasksUiPlugin.getDefault().getBrandingIcons().put((AbstractRepositoryConnector) repository,
+								TaskListImages.getImage(descriptor));
+					}
+				}
+			} else {
+				MylarStatusHandler.log("could not not load extension: " + repository, null);
+			}
+
+		} catch (CoreException e) {
+			MylarStatusHandler.log(e, "Could not load tasklist listener extension");
+		}
+	}
+	
 	private static void readRepositoryTemplate(IConfigurationElement element) {
 
 		boolean anonymous = false;

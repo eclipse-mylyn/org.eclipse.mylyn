@@ -23,7 +23,7 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.IRepositoryConstants;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractConnectorUi;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -98,7 +98,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	private String originalUrl;
 
-	public AbstractRepositorySettingsPage(String title, String description, AbstractConnectorUi repositoryUi) {
+	public AbstractRepositorySettingsPage(String title, String description, AbstractRepositoryUi repositoryUi) {
 		super(title);
 		super.setTitle(title);
 		super.setDescription(description);

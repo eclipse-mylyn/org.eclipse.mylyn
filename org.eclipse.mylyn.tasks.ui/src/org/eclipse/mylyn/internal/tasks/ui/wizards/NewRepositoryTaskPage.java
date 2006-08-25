@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.tasks.ui.wizards;
 
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractConnectorUi;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -32,7 +32,7 @@ public class NewRepositoryTaskPage extends SelectRepositoryPage {
 
 	@Override
 	protected IWizard createWizard(TaskRepository taskRepository) {
-		AbstractConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryConnectorUi(
+		AbstractRepositoryUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryUi(
 				taskRepository.getKind());
 		return connectorUi.getNewTaskWizard(taskRepository, getSelection());
 	}

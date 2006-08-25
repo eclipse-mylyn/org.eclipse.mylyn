@@ -23,7 +23,7 @@ import org.eclipse.mylar.internal.trac.ui.wizard.TracCustomQueryPage;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractConnectorUi;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -32,7 +32,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @author Steffen Pingel
  */
-public class TracRepositoryUi extends AbstractConnectorUi {
+public class TracRepositoryUi extends AbstractRepositoryUi {
 
 	@Override
 	public AbstractRepositorySettingsPage getSettingsPage() {

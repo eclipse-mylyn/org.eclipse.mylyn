@@ -29,7 +29,7 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.tasks.core.WebClientUtil;
 import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.RepositoryTemplate;
-import org.eclipse.mylar.tasks.ui.AbstractConnectorUi;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -52,7 +52,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	protected Combo repositoryVersionCombo;
 
-	public BugzillaRepositorySettingsPage(AbstractConnectorUi repositoryUi) {
+	public BugzillaRepositorySettingsPage(AbstractRepositoryUi repositoryUi) {
 		super(TITLE, DESCRIPTION, repositoryUi);
 		setNeedsAnonymousLogin(true);
 		setNeedsEncoding(true);

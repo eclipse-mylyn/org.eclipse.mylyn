@@ -11,10 +11,16 @@
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <documentation>
+            (no description available)
+         </documentation>
+      </annotation>
       <complexType>
          <sequence>
-            <element ref="repositoryType"/>
+            <element ref="repositoryConnector"/>
             <element ref="externalizer"/>
+            <element ref="repositoryUi"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -48,6 +54,9 @@
          <appInfo>
             <meta.element labelAttribute="name"/>
          </appInfo>
+         <documentation>
+            (no description available)
+         </documentation>
       </annotation>
       <complexType>
          <attribute name="class" type="string" use="required">
@@ -80,7 +89,12 @@
       </complexType>
    </element>
 
-   <element name="repositoryType">
+   <element name="repositoryConnector">
+      <annotation>
+         <documentation>
+            (no description available)
+         </documentation>
+      </annotation>
       <complexType>
          <attribute name="class" type="string" use="required">
             <annotation>
@@ -113,14 +127,48 @@
                </documentation>
             </annotation>
          </attribute>
+      </complexType>
+   </element>
+
+   <element name="repositoryUi">
+      <annotation>
+         <documentation>
+            (no description available)
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  (no description available)
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.tasks.ui.AbstractConnectorUi"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  (no description available)
+               </documentation>
+            </annotation>
+         </attribute>
          <attribute name="brandingIcon" type="string">
             <annotation>
                <documentation>
-                  
+                  (no description available)
                </documentation>
                <appInfo>
                   <meta.attribute kind="resource"/>
                </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  (no description available)
+               </documentation>
             </annotation>
          </attribute>
       </complexType>

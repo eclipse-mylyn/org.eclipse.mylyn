@@ -35,7 +35,7 @@ import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractConnectorUi;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -120,7 +120,7 @@ public class TaskUiUtil {
 		} else {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryForTaskUrl(
 					fullUrl);
-			AbstractConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryConnectorUi(
+			AbstractRepositoryUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryUi(
 					connector.getRepositoryType());
 			
 			if (connector != null) {
@@ -181,7 +181,7 @@ public class TaskUiUtil {
 			TaskUiUtil.openEditor((AbstractTaskContainer) element);
 		} else if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
-			AbstractConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryConnectorUi(
+			AbstractRepositoryUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryUi(
 					query.getRepositoryKind());
 			connectorUi.openEditQueryDialog(query);
 		}
