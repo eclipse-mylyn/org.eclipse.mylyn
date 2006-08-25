@@ -28,6 +28,7 @@ import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
 import org.eclipse.mylar.internal.trac.model.TracTicket;
 import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryOperation;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
@@ -49,6 +50,16 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 
 	public TracTaskEditor(FormEditor editor) {
 		super(editor);
+	}
+
+	@Override
+	protected void addAttachContextButton(Composite buttonComposite, ITask task) {
+		// disabled, see bug 155151
+	}
+
+	@Override
+	protected void addSelfToCC(Composite composite) {
+		// disabled, see bug 155151
 	}
 
 	@Override
@@ -81,7 +92,7 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 
 		setSite(site);
 		setInput(input);
-		
+
 		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(editorInput.getRepositoryTaskData());
 
 		isDirty = false;
@@ -107,17 +118,18 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 		final String comment = getNewCommentText();
 		final AbstractRepositoryTask task = (AbstractRepositoryTask) TasksUiPlugin.getTaskListManager().getTaskList()
 				.getTask(AbstractRepositoryTask.getHandle(repository.getUrl(), getRepositoryTaskData().getId()));
-
+		final boolean attachContext = false; // getAttachContext();
 
 		JobChangeAdapter listener = new JobChangeAdapter() {
 			public void done(final IJobChangeEvent event) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						if (event.getJob().getResult().isOK()) {
-							if (getAttachContext()) {
+							if (attachContext) {
 								// TODO should be done as part of job
 								try {
-									connector.attachContext(repository, (AbstractRepositoryTask) task, "", TasksUiPlugin.getDefault().getProxySettings());
+									connector.attachContext(repository, (AbstractRepositoryTask) task, "",
+											TasksUiPlugin.getDefault().getProxySettings());
 								} catch (Exception e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
@@ -125,7 +137,9 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 							}
 							close();
 						} else {
-							TracUiPlugin.handleTracException(event.getResult());
+							// TracUiPlugin.handleTracException(event.getResult());
+							submitButton.setEnabled(true);
+							TracTaskEditor.this.showBusy(false);
 						}
 					}
 				});
@@ -139,7 +153,8 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 				try {
 					ITracClient server = connector.getClientManager().getRepository(repository);
 					server.updateTicket(ticket, comment);
-					// XXX hack to avoid message about lost changes to local task
+					// XXX hack to avoid message about lost changes to local
+					// task
 					task.setTaskData(null);
 					TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 					return Status.OK_STATUS;
@@ -166,9 +181,9 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 
 	TracTicket getTracTicket() throws InvalidTicketException {
 		RepositoryTaskData data = getRepositoryTaskData();
-		
+
 		TracTicket ticket = new TracTicket(Integer.parseInt(data.getId()));
-		
+
 		List<RepositoryTaskAttribute> attributes = data.getAttributes();
 		for (RepositoryTaskAttribute attribute : attributes) {
 			if (!attribute.isReadOnly()) {
@@ -180,7 +195,7 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 			String cc = data.getAttributeValue(RepositoryTaskAttribute.USER_CC);
 			ticket.putBuiltinValue(Key.CC, cc + "," + repository.getUserName());
 		}
-				
+
 		RepositoryOperation operation = data.getSelectedOperation();
 		if (operation != null) {
 			String action = operation.getKnobName();
@@ -200,7 +215,7 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 				}
 			}
 		}
-		
+
 		return ticket;
 	}
 
