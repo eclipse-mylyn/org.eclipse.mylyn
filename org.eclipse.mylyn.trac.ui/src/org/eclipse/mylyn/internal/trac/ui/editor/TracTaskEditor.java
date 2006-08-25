@@ -182,20 +182,22 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 		}
 				
 		RepositoryOperation operation = data.getSelectedOperation();
-		String action = operation.getKnobName();
-		if (!"leave".equals(action)) {
-			if ("accept".equals(action)) {
-				ticket.putValue("status", "assigned");
-				ticket.putValue("owner", TracRepositoryConnector.getDisplayUsername(repository));
-			} else if ("resolve".equals(action)) {
-				ticket.putValue("status", "closed");
-				ticket.putValue("resolution", operation.getOptionSelection());
-			} else if ("reopen".equals(action)) {
-				ticket.putValue("status", "reopened");
-				ticket.putValue("resolution", "");
-			} else if ("reassign".equals(operation.getKnobName())) {
-				ticket.putValue("status", "new");
-				ticket.putValue("owner", operation.getInputValue());
+		if (operation != null) {
+			String action = operation.getKnobName();
+			if (!"leave".equals(action)) {
+				if ("accept".equals(action)) {
+					ticket.putValue("status", "assigned");
+					ticket.putValue("owner", TracRepositoryConnector.getDisplayUsername(repository));
+				} else if ("resolve".equals(action)) {
+					ticket.putValue("status", "closed");
+					ticket.putValue("resolution", operation.getOptionSelection());
+				} else if ("reopen".equals(action)) {
+					ticket.putValue("status", "reopened");
+					ticket.putValue("resolution", "");
+				} else if ("reassign".equals(operation.getKnobName())) {
+					ticket.putValue("status", "new");
+					ticket.putValue("owner", operation.getInputValue());
+				}
 			}
 		}
 		

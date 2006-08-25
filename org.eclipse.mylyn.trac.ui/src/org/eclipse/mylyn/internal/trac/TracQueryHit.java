@@ -25,11 +25,11 @@ public class TracQueryHit extends AbstractQueryHit {
 	private TracTask task;
 	private boolean completed;
 
-	protected TracQueryHit(String repositoryUrl, String description, String id) {
+	public TracQueryHit(String repositoryUrl, String description, String id) {
 		super(repositoryUrl, description, id);
 	}
 
-	protected TracQueryHit(String handle) {
+	public TracQueryHit(String handle) {
 		super(AbstractRepositoryTask.getRepositoryUrl(handle), "", AbstractRepositoryTask.getTaskId(handle));
 	}
 	
@@ -46,8 +46,8 @@ public class TracQueryHit extends AbstractQueryHit {
 			this.task = (TracTask)existingTask;
 		} else {
 			this.task = new TracTask(getHandleIdentifier(), getDescription(), true);
-			task.setCompleted(isCompleted());
-			task.setPriority(getPriority());
+			task.setCompleted(completed);
+			task.setPriority(priority);
 			TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);			
 		} 	
 		return task;

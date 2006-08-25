@@ -11,8 +11,11 @@
 
 package org.eclipse.mylar.internal.trac;
 
+import org.eclipse.mylar.internal.trac.TracAttributeFactory.Attribute;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylar.tasks.core.Task;
 
 /**
  * @author Steffen Pingel
@@ -89,7 +92,7 @@ public class TracTask extends AbstractRepositoryTask {
 	}
 
 	public enum Status {
-		NEW, ASSIGNED, CLOSED;
+		NEW, ASSIGNED, REOPENED, CLOSED;
 
 		@Override
 		public String toString() {
@@ -98,6 +101,8 @@ public class TracTask extends AbstractRepositoryTask {
 				return "New";
 			case ASSIGNED:
 				return "Assigned";
+			case REOPENED:
+				return "Reopened";
 			case CLOSED:
 				return "Closed";
 			default:
@@ -112,6 +117,8 @@ public class TracTask extends AbstractRepositoryTask {
 				return NEW;
 			if (status.equals("assigned"))
 				return ASSIGNED;
+			if (status.equals("reopened"))
+				return REOPENED;
 			if (status.equals("closed"))
 				return CLOSED;
 			return null;
@@ -121,14 +128,15 @@ public class TracTask extends AbstractRepositoryTask {
 
 	public TracTask(String handle, String label, boolean newTask) {
 		super(handle, label, newTask);
-		
-		setUrl(AbstractRepositoryTask.getRepositoryUrl(handle) + ITracClient.TICKET_URL + AbstractRepositoryTask.getTaskId(handle));
+
+		setUrl(AbstractRepositoryTask.getRepositoryUrl(handle) + ITracClient.TICKET_URL
+				+ AbstractRepositoryTask.getTaskId(handle));
 	}
-	
+
 	@Override
 	public boolean isCompleted() {
 		if (taskData != null) {
-			return Status.CLOSED.toString().toLowerCase().equals(taskData.getStatus());
+			return isCompleted(taskData.getStatus());
 		} else {
 			return super.isCompleted();
 		}
@@ -137,6 +145,40 @@ public class TracTask extends AbstractRepositoryTask {
 	@Override
 	public String getRepositoryKind() {
 		return TracUiPlugin.REPOSITORY_KIND;
+	}
+
+	@Override
+	public String getPriority() {
+		if (taskData != null && taskData.getAttribute(Attribute.PRIORITY.getTracKey()) != null) {
+			return getMylarPriority(taskData.getAttributeValue(Attribute.PRIORITY.getTracKey()));
+		} else {
+			return super.getPriority();
+		}
+	}
+
+	@Override
+	public String getOwner() {
+		if (taskData != null && taskData.getAttribute(RepositoryTaskAttribute.USER_OWNER) != null) {
+			return taskData.getAttributeValue(RepositoryTaskAttribute.USER_OWNER);
+		} else {
+			return super.getOwner();
+		}
+	}
+
+	// TODO use priority attributes from repository instead of hard coded enum
+	public static String getMylarPriority(String tracPriority) {
+		if (tracPriority != null) {
+			PriorityLevel priority = PriorityLevel.fromPriority(tracPriority);
+			if (priority != null) {
+				return priority.toString();
+			}
+		}
+		return Task.PriorityLevel.P3.toString();
+	}
+
+	public static boolean isCompleted(String tracStatus) {
+		TracTask.Status status = TracTask.Status.fromStatus(tracStatus);
+		return status == TracTask.Status.CLOSED;
 	}
 
 }

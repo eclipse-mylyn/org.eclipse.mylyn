@@ -40,6 +40,8 @@ public class AllTracTests {
 		suite.addTestSuite(TracAttachmentHandlerTest.class);
 		suite.addTestSuite(RepositorySearchQueryTest.class);
 		suite.addTestSuite(TracOfflineTaskHandlerTest.class);
+		suite.addTestSuite(TracTaskTest.class);
+		suite.addTestSuite(TracQueryHitTest.class);
 		// $JUnit-END$
 		return suite;
 	}

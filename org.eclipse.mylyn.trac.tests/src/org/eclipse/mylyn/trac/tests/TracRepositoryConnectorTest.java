@@ -42,6 +42,7 @@ import org.eclipse.mylar.internal.trac.model.TracVersion;
 import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.TaskList;
@@ -200,9 +201,11 @@ public class TracRepositoryConnectorTest extends TestCase {
 		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
 		ticket.putBuiltinValue(Key.TYPE, "mytype");
 
-		TracTask task = new TracTask("", "", true);
-		TracRepositoryConnector.updateTaskDetails(Constants.TEST_TRAC_010_URL, task, ticket, false);
-
+		TracTask task = new TracTask(AbstractRepositoryTask.getHandle(Constants.TEST_TRAC_010_URL, 123), "desc", true);
+		assertEquals(Constants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "123", task.getUrl());
+		assertEquals("desc", task.getDescription());
+		
+		TracRepositoryConnector.updateTaskDetails(task, ticket, false);
 		assertEquals(Constants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "123", task.getUrl());
 		assertEquals("123: mysummary", task.getDescription());
 		assertEquals("P3", task.getPriority());
@@ -213,9 +216,9 @@ public class TracRepositoryConnectorTest extends TestCase {
 		TracTicket ticket = new TracTicket(456);
 		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
 
-		TracTask task = new TracTask("", "", true);
-		TracRepositoryConnector.updateTaskDetails(Constants.TEST_TRAC_010_URL, task, ticket, false);
+		TracTask task = new TracTask(AbstractRepositoryTask.getHandle(Constants.TEST_TRAC_010_URL, 456), "desc", true);
 
+		TracRepositoryConnector.updateTaskDetails(task, ticket, false);
 		assertEquals(Constants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "456", task.getUrl());
 		assertEquals("456: mysummary", task.getDescription());
 		assertEquals("P3", task.getPriority());
