@@ -2002,7 +2002,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		toolkit.paintBordersFor(buttonComposite);
 	}
 
-	private void addAttachContextButton(Composite buttonComposite, ITask task) {
+	protected void addAttachContextButton(Composite buttonComposite, ITask task) {
 		//File contextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
 		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
 		attachContextButton = toolkit.createButton(buttonComposite, "Attach Context", SWT.CHECK);
@@ -2013,7 +2013,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		//attachContextButton.setEnabled(contextFile != null && (contextFile.exists() || task.isActive()));
 	}
 
-	private void addSelfToCC(Composite composite) {
+	protected void addSelfToCC(Composite composite) {
 		// if they aren't already on the cc list create an add self check box
 		FormToolkit toolkit = new FormToolkit(composite.getDisplay());
 		final RepositoryTaskData taskData = getRepositoryTaskData();
