@@ -28,7 +28,7 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.ITaskListExternalizer;
 import org.eclipse.mylar.tasks.core.RepositoryTemplate;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryUi;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
@@ -65,9 +65,9 @@ public class TasksUiExtensionReader {
 
 	public static final String ELMNT_TMPL_ADDAUTO = "addAutomatically";
 
-	public static final String ELMNT_REPOSITORY_CONNECTOR = "repositoryConnector";
+	public static final String ELMNT_REPOSITORY_CONNECTOR = "connectorCore";
 
-	public static final String ELMNT_REPOSITORY_UI= "repositoryUi";
+	public static final String ELMNT_REPOSITORY_UI= "connectorUi";
 	
 	public static final String ELMNT_EXTERNALIZER = "externalizer";
 
@@ -205,7 +205,7 @@ public class TasksUiExtensionReader {
 			Object type = element.getAttribute(ELMNT_TYPE);
 			Object repository = element.createExecutableExtension(ATTR_CLASS);
 			if (repository instanceof AbstractRepositoryConnector && type != null) {
-				TasksUiPlugin.getRepositoryManager().addRepositoryUi((AbstractRepositoryUi) repository);
+				TasksUiPlugin.getRepositoryManager().addRepositoryUi((AbstractRepositoryConnectorUi) repository);
 
 				String iconPath = element.getAttribute(ATTR_BRANDING_ICON);
 				if (iconPath != null) {

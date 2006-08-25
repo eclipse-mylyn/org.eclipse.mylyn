@@ -13,12 +13,12 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryUi;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 
 /**
  * @author Mik Kersten
  */
-public class MockRepositoryUi extends AbstractRepositoryUi {
+public class MockRepositoryUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public IWizard getNewQueryWizard(TaskRepository repository, IStructuredSelection selection) {

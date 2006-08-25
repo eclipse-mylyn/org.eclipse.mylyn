@@ -21,7 +21,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Mik Kersten
  */
-public abstract class AbstractRepositoryUi {
+public abstract class AbstractRepositoryConnectorUi {
 	
 	/**
 	 * @return the unique type of the repository, e.g. "bugzilla"

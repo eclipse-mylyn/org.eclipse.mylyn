@@ -5,12 +5,14 @@
          id="org.eclipse.mylar.trac.repository"
          name="Trac Repository"
          point="org.eclipse.mylar.tasks.ui.repositories">
-      <repositoryType
-            brandingIcon="icons/eview16/trac-icon.gif"
+      <connectorCore
             class="org.eclipse.mylar.internal.trac.TracRepositoryConnector"
             id="org.eclipse.mylar.trac.tasklist.repositories"
             name="Trac Repository Client"
             type="trac"/>
+      <connectorUi
+            class="org.eclipse.mylar.internal.trac.TracRepositoryUi"
+            brandingIcon="icons/eview16/trac-icon.gif"/>
       <externalizer
             class="org.eclipse.mylar.internal.trac.TracTaskExternalizer"
             id="org.eclipse.mylar.trac.tasklist.externalizer"/>

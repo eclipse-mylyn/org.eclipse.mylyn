@@ -27,14 +27,13 @@
          name="Bugzilla Repository"
          point="org.eclipse.mylar.tasks.ui.repositories">
 
-      <repositoryConnector
-            
+      <connectorCore
             class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector"
             id="org.eclipse.mylar.bugzilla.tasklist.repositories"
             name="Bugzilla Repository Connector"
             type="bugzilla"/>
             
-      <repositoryUi
+      <connectorUi
             brandingIcon="icons/eview16/bugzilla-logo.gif"
             class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryUi"
             name="Bugzilla Repository Ui"/>

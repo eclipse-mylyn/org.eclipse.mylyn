@@ -26,7 +26,7 @@ import org.eclipse.mylar.internal.trac.core.TracException;
 import org.eclipse.mylar.internal.trac.core.TracLoginException;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.tasks.core.RepositoryTemplate;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryUi;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -59,7 +59,7 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 	/** Supported access types. */
 	private Version[] versions;
 
-	public TracRepositorySettingsPage(AbstractRepositoryUi repositoryUi) {
+	public TracRepositorySettingsPage(AbstractRepositoryConnectorUi repositoryUi) {
 		super(TITLE, DESCRIPTION, repositoryUi);
 
 		setNeedsAnonymousLogin(true);
