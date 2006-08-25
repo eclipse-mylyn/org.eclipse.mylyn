@@ -550,7 +550,7 @@
          point="org.eclipse.search.searchPages">
        <page
             class="org.eclipse.mylar.internal.tasks.ui.TaskSearchPage"
-            enabled="true"
+            enabled="true" 
             icon="icons/elcl16/task-search.gif"
             id="org.eclipse.mylar.tasks.ui.core.search.page"
             label="Task Search" 

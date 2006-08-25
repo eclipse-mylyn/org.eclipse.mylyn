@@ -17,6 +17,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -190,6 +191,9 @@ public class RepositorySynchronizationManager {
 
 			@Override
 			public void done(IJobChangeEvent event) {
+				if (!Platform.isRunning()) {
+					return;
+				}
 				Date mostRecent = new Date(0);
 				String mostRecentTimeStamp = repository.getSyncTimeStamp();
 				for (AbstractRepositoryTask task : tasksToSync) {
