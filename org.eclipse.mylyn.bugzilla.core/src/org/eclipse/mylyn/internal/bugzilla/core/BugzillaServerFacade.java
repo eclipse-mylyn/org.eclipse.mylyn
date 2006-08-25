@@ -134,15 +134,17 @@ public class BugzillaServerFacade {
 	}
 
 	// TODO: improve and move to repository connector?
-	public static void validateCredentials(String repositoryUrl, String userid, String password) throws IOException,
+	public static void validateCredentials(Proxy proxySettings, String repositoryUrl, String userid, String password) throws IOException,
 			LoginException, BugzillaException {
 
+		proxySettings = proxySettings == null ? Proxy.NO_PROXY : proxySettings;
+		
 		String url = repositoryUrl + "/index.cgi?" + POST_ARGS_LOGIN
 				+ URLEncoder.encode(userid, BugzillaCorePlugin.ENCODING_UTF_8) + POST_ARGS_PASSWORD
 				+ URLEncoder.encode(password, BugzillaCorePlugin.ENCODING_UTF_8);
 
 		URL serverURL = new URL(url);
-		URLConnection connection = serverURL.openConnection();
+		URLConnection connection = serverURL.openConnection(proxySettings);
 		BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 		try {
 			parseHtmlError(in);

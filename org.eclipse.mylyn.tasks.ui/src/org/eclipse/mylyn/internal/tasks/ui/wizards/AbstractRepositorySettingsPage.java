@@ -351,7 +351,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		// ignore
 	}
 
-	private boolean isAnonymousAccess() {
+	public boolean isAnonymousAccess() {
 		return "".equals(getUserName()) && "".equals(getPassword());
 	}
 

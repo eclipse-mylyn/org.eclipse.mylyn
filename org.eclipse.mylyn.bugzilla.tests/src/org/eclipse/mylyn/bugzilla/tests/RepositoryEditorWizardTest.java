@@ -57,10 +57,10 @@ public class RepositoryEditorWizardTest extends TestCase {
 		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard);
 		dialog.create();
 		BugzillaRepositorySettingsPage page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
-		BugzillaServerFacade.validateCredentials(page.getServerUrl(), page.getUserName(), page.getPassword());
+		BugzillaServerFacade.validateCredentials(null, page.getServerUrl(), page.getUserName(), page.getPassword());
 		page.setPassword("bogus");
 		try {
-			BugzillaServerFacade.validateCredentials(page.getServerUrl(), page.getUserName(), page.getPassword());
+			BugzillaServerFacade.validateCredentials(null, page.getServerUrl(), page.getUserName(), page.getPassword());
 		} catch (LoginException e) {
 			return;
 		}
@@ -72,10 +72,10 @@ public class RepositoryEditorWizardTest extends TestCase {
 		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard);
 		dialog.create();
 		BugzillaRepositorySettingsPage page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
-		BugzillaServerFacade.validateCredentials(page.getServerUrl(), page.getUserName(), page.getPassword());
+		BugzillaServerFacade.validateCredentials(null, page.getServerUrl(), page.getUserName(), page.getPassword());
 		page.setUserId("bogus");
 		try {
-			BugzillaServerFacade.validateCredentials(page.getServerUrl(), page.getUserName(), page.getPassword());
+			BugzillaServerFacade.validateCredentials(null, page.getServerUrl(), page.getUserName(), page.getPassword());
 		} catch (LoginException e) {
 			return;
 		}
@@ -87,10 +87,10 @@ public class RepositoryEditorWizardTest extends TestCase {
 		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard);
 		dialog.create();
 		BugzillaRepositorySettingsPage page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
-		BugzillaServerFacade.validateCredentials(page.getServerUrl(), page.getUserName(), page.getPassword());
+		BugzillaServerFacade.validateCredentials(null, page.getServerUrl(), page.getUserName(), page.getPassword());
 		page.setUrl("http://invalid");
 		try {
-			BugzillaServerFacade.validateCredentials(page.getServerUrl(), page.getUserName(), page.getPassword());
+			BugzillaServerFacade.validateCredentials(null, page.getServerUrl(), page.getUserName(), page.getPassword());
 		} catch (UnknownHostException e) {
 			return;
 		}
@@ -105,7 +105,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard);
 		dialog.create();
 		BugzillaRepositorySettingsPage page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
-		BugzillaServerFacade.validateCredentials(page.getServerUrl(), page.getUserName(), page.getPassword());
+		BugzillaServerFacade.validateCredentials(null, page.getServerUrl(), page.getUserName(), page.getPassword());
 		page.setUrl(IBugzillaConstants.TEST_BUGZILLA_218_URL);
 		wizard.performFinish();
 		assertEquals(1, manager.getAllRepositories().size());
@@ -122,7 +122,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard);
 		dialog.create();
 		BugzillaRepositorySettingsPage page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
-		BugzillaServerFacade.validateCredentials(page.getServerUrl(), page.getUserName(), page.getPassword());
+		BugzillaServerFacade.validateCredentials(null, page.getServerUrl(), page.getUserName(), page.getPassword());
 		page.setUserId("bogus");
 		wizard.performFinish();
 		assertEquals(1, manager.getAllRepositories().size());
@@ -134,7 +134,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		dialog.create();
 		page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
 		try {
-			BugzillaServerFacade.validateCredentials(page.getServerUrl(), page.getUserName(), page.getPassword());
+			BugzillaServerFacade.validateCredentials(null, page.getServerUrl(), page.getUserName(), page.getPassword());
 		} catch (LoginException e) {
 			return;
 		}

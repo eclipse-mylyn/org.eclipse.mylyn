@@ -69,13 +69,13 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			public void widgetSelected(SelectionEvent e) {
 				String text = repositoryLabelCombo.getText();
 				RepositoryTemplate template = connector.getTemplate(text);
-				if(template != null) {
+				if (template != null) {
 					setUrl(template.repositoryUrl);
 					// setAnonymous(info.anonymous);
 					setBugzillaVersion(template.version);
 					getContainer().updateButtons();
-					return;					
-				}				
+					return;
+				}
 			}
 		});
 
@@ -143,10 +143,14 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			final String serverUrl = getServerUrl();
 			final String newUserId = getUserName();
 			final String newPassword = getPassword();
+			final boolean isAnonymous = isAnonymousAccess();
 			getWizard().getContainer().run(true, false, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					monitor.beginTask("Validating server settings", IProgressMonitor.UNKNOWN);
 					try {
+						
+						// TODO: all of this should be encapsulated by validateCredentials
+						
 						Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
 						URLConnection cntx = WebClientUtil.getUrlConnection(serverURL, proxySettings, false);
 						if (cntx == null || !(cntx instanceof HttpURLConnection)) {
@@ -155,8 +159,11 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 						HttpURLConnection serverConnection = (HttpURLConnection) cntx;
 						serverConnection.connect();
-
-						BugzillaServerFacade.validateCredentials(serverUrl, newUserId, newPassword);
+						serverConnection.getInputStream();
+						
+						if (!isAnonymous) {
+							BugzillaServerFacade.validateCredentials(proxySettings, serverUrl, newUserId, newPassword);
+						}
 
 					} catch (Exception e) {
 						throw new InvocationTargetException(e);
