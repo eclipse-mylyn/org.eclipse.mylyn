@@ -162,6 +162,8 @@ public interface IBugzillaConstants {
 
 	public static final String VALUE_STATUS_ASSIGNED = "ASSIGNED";
 
+	public static final String VALUE_STATUS_VERIFIED = "VERIFIED";
+	
 	public static final String VALUE_RESOLUTION_LATER = "LATER";
 
 	public static enum BUGZILLA_OPERATION {
@@ -169,10 +171,6 @@ public interface IBugzillaConstants {
 	}
 
 	public static enum BUGZILLA_REPORT_STATUS {
-		UNCONFIRMED, NEW, ASSIGNED, REOPENED, RESOLVED, VERIFIED, CLOSED;
-	}
-
-	public static enum BUGZILLA_REPORT_SEVERITY {
 		UNCONFIRMED, NEW, ASSIGNED, REOPENED, RESOLVED, VERIFIED, CLOSED;
 	}
 

@@ -26,12 +26,6 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 
 	private static final long serialVersionUID = 2746931358107812373L;
 
-	public static final String VAL_STATUS_VERIFIED = "VERIFIED";
-
-	public static final String VAL_STATUS_CLOSED = "CLOSED";
-
-	public static final String VAL_STATUS_RESOLVED = "RESOLVED";
-
 	public static final String VAL_STATUS_NEW = "NEW";
 	
 	private String reportID;
@@ -89,27 +83,20 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 		this.repositoryURL = repositoryURL;
 	}
 
-	/**
-	 * TODO: move?
-	 */
-	public static boolean isResolvedStatus(String status) {
-		if (status != null) {
-			return status.equals(VAL_STATUS_RESOLVED) || status.equals(VAL_STATUS_CLOSED)
-					|| status.equals(VAL_STATUS_VERIFIED);
-		} else {
-			return false;
-		}
-	}
-
-	// public void addCC(String email) {
-	// addAttributeValue(RepositoryTaskAttribute.KEY_CC, email);
-	// addAttributeValue(BugzillaReportElement.CC.getKeyString(), email);
-	// }
+//	/**
+//	 * TODO: move?
+//	 */
+//	public static boolean isResolvedStatus(String status) {
+//		if (status != null) {
+//			return status.equals(VAL_STATUS_RESOLVED) || status.equals(VAL_STATUS_CLOSED)
+//					|| status.equals(VAL_STATUS_VERIFIED);
+//		} else {
+//			return false;
+//		}
+//	}
 
 	public String getLabel() {
 		return getSummary();
-		// return getId() + ": " +
-		// getAttributeValue(BugzillaReportElement.SHORT_DESC.getKeyString());
 	}
 
 	/**
@@ -119,8 +106,6 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 	 */
 	public String getResolution() {
 		return getAttributeValue(RepositoryTaskAttribute.RESOLUTION);
-		// return
-		// getAttributeValue(BugzillaReportElement.RESOLUTION.getKeyString());
 	}
 
 	/**
@@ -130,21 +115,11 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 	 */
 	public String getStatus() {
 		return getAttributeValue(RepositoryTaskAttribute.STATUS);
-		// return
-		// getAttributeValue(BugzillaReportElement.BUG_STATUS.getKeyString());
 	}
 
 	public String getLastModified() {
 		return getAttributeValue(RepositoryTaskAttribute.DATE_MODIFIED);
 	}
-
-	// public void setKeywords(List<String> keywords) {
-	// this.validKeywords = keywords;
-	// }
-
-	// public void setOfflineState(boolean newOfflineState) {
-	// savedOffline = newOfflineState;
-	// }
 
 	public void setSelectedOperation(RepositoryOperation o) {
 		selectedOperation = o;
@@ -153,11 +128,6 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 	public RepositoryOperation getSelectedOperation() {
 		return selectedOperation;
 	}
-
-	// @Override
-	// public RepositoryTaskAttributeFactory getAttributeFactory() {
-	// return attributeFactory;
-	// }
 
 	/**
 	 * Get all of the repositoryOperations that can be done to the bug
@@ -227,15 +197,9 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 		return false;
 	}
 
-	public boolean isResolved() {
-		// RepositoryTaskAttribute status =
-		// getAttribute(BugzillaReportElement.BUG_STATUS.getKeyString());
-		return isResolvedStatus(getStatus());
-	}
-
-	// public boolean isSavedOffline() {
-	// return savedOffline;
-	// }
+//	public boolean isResolved() {
+//		return isResolvedStatus(getStatus());
+//	}
 
 	/**
 	 * Get the date that the bug was created
@@ -401,5 +365,4 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 		}
 	}
 
-	// public abstract RepositoryTaskAttributeFactory getAttributeFactory();
 }

@@ -266,12 +266,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	 * Updates fields of <code>task</code> from <code>ticket</code>.
 	 */
 	public static void updateTaskDetails(String repositoryUrl, TracTask task, TracTicket ticket, boolean notify) {
-		if (ticket.isValid()) {
-			String url = repositoryUrl + ITracClient.TICKET_URL + ticket.getId();
-			task.setUrl(url);
-			if (ticket.getValue(Key.SUMMARY) != null) {
-				task.setDescription(ticket.getId() + ": " + ticket.getValue(Key.SUMMARY));
-			}
+		if (ticket.getValue(Key.SUMMARY) != null) {
+			task.setDescription(ticket.getId() + ": " + ticket.getValue(Key.SUMMARY));
 		}
 		task.setCompleted(isCompleted(ticket));
 		task.setPriority(getPriority(ticket));
@@ -319,7 +315,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public boolean hasRichEditor() {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -355,4 +351,11 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		return true;
 	}
 
+	public static String getDisplayUsername(TaskRepository repository) {
+		if (!repository.hasCredentials()) {
+			return ITracClient.DEFAULT_USERNAME;
+		}
+		return repository.getUserName();
+	}
+	
 }

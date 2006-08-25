@@ -66,7 +66,7 @@ public class BugzillaTaskTest extends TestCase {
 
 		RepositoryTaskAttribute resolvedAttribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_STATUS
 				.getKeyString());
-		resolvedAttribute.setValue(RepositoryTaskData.VAL_STATUS_RESOLVED);
+		resolvedAttribute.setValue(IBugzillaConstants.VALUE_STATUS_RESOLVED);
 		report.addAttribute(BugzillaReportElement.BUG_STATUS.getKeyString(), resolvedAttribute);
 		assertNotNull(task.getCompletionDate());
 		assertEquals(offlineHandler

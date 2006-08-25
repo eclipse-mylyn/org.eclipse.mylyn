@@ -26,7 +26,9 @@ import org.eclipse.mylar.internal.trac.TracUiPlugin;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
 import org.eclipse.mylar.internal.trac.model.TracTicket;
+import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.RepositoryOperation;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -50,13 +52,7 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	@Override
-	protected void addRadioButtons(Composite buttonComposite) {
-		// TODO remove when operation handling has been implemented
-	}
-	
-	@Override
 	public void createCustomAttributeLayout() {
-
 	}
 
 	@Override
@@ -170,11 +166,39 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 
 	TracTicket getTracTicket() throws InvalidTicketException {
 		RepositoryTaskData data = getRepositoryTaskData();
+		
 		TracTicket ticket = new TracTicket(Integer.parseInt(data.getId()));
+		
 		List<RepositoryTaskAttribute> attributes = data.getAttributes();
 		for (RepositoryTaskAttribute attribute : attributes) {
-			ticket.putValue(attribute.getID(), attribute.getValue());
+			if (!attribute.isReadOnly()) {
+				ticket.putValue(attribute.getID(), attribute.getValue());
+			}
 		}
+		// TODO "1" should not be hard coded here
+		if ("1".equals(data.getAttributeValue(RepositoryTaskAttribute.ADD_SELF_CC))) {
+			String cc = data.getAttributeValue(RepositoryTaskAttribute.USER_CC);
+			ticket.putBuiltinValue(Key.CC, cc + "," + repository.getUserName());
+		}
+				
+		RepositoryOperation operation = data.getSelectedOperation();
+		String action = operation.getKnobName();
+		if (!"leave".equals(action)) {
+			if ("accept".equals(action)) {
+				ticket.putValue("status", "assigned");
+				ticket.putValue("owner", TracRepositoryConnector.getDisplayUsername(repository));
+			} else if ("resolve".equals(action)) {
+				ticket.putValue("status", "closed");
+				ticket.putValue("resolution", operation.getOptionSelection());
+			} else if ("reopen".equals(action)) {
+				ticket.putValue("status", "reopened");
+				ticket.putValue("resolution", "");
+			} else if ("reassign".equals(operation.getKnobName())) {
+				ticket.putValue("status", "new");
+				ticket.putValue("owner", operation.getInputValue());
+			}
+		}
+		
 		return ticket;
 	}
 

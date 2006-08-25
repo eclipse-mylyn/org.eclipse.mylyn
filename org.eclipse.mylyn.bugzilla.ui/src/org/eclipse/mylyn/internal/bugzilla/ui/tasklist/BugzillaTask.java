@@ -20,6 +20,7 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
+import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
@@ -30,7 +31,7 @@ import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 public class BugzillaTask extends AbstractRepositoryTask {
 
 	BugzillaOfflineTaskHandler offlineHandler = new BugzillaOfflineTaskHandler();
-	
+
 	public BugzillaTask(String handle, String label, boolean newTask) {
 		super(handle, label, newTask);
 		if (newTask) {
@@ -55,10 +56,11 @@ public class BugzillaTask extends AbstractRepositoryTask {
 				super.setUrl(url);
 			}
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Task initialization failed due to malformed id or URL: " + getHandleIdentifier(), false);
+			MylarStatusHandler.fail(e, "Task initialization failed due to malformed id or URL: "
+					+ getHandleIdentifier(), false);
 		}
 	}
-	
+
 	@Override
 	public String getDescription() {
 		if (this.isDownloaded() || !super.getDescription().startsWith("<")) {
@@ -86,23 +88,29 @@ public class BugzillaTask extends AbstractRepositoryTask {
 	}
 
 	@Override
-	public boolean isCompleted() {
-		if (taskData != null) {
-			return taskData.isResolved();
-		} else {
-			return super.isCompleted();
-		}
-	}
-
-	@Override
 	public String getUrl() {
 		// fix for bug 103537 - should login automatically, but dont want to
 		// show the login info in the query string
 		try {
-			return BugzillaServerFacade.getBugUrlWithoutLogin(getRepositoryUrl(), 
-				Integer.parseInt(AbstractRepositoryTask.getTaskId(handle)));
+			return BugzillaServerFacade.getBugUrlWithoutLogin(getRepositoryUrl(), Integer
+					.parseInt(AbstractRepositoryTask.getTaskId(handle)));
 		} catch (NumberFormatException nfe) {
 			return super.getUrl();
+		}
+	}
+
+	@Override
+	public boolean isCompleted() {
+		if (taskData != null) {
+			if (taskData.getStatus() != null) {
+				return taskData.getStatus().equals(IBugzillaConstants.VALUE_STATUS_RESOLVED)
+						|| taskData.getStatus().equals(IBugzillaConstants.VALUE_STATUS_CLOSED)
+						|| taskData.getStatus().equals(IBugzillaConstants.VALUE_STATUS_VERIFIED);
+			} else {
+				return false;
+			}
+		} else {
+			return super.isCompleted();
 		}
 	}
 
@@ -110,18 +118,20 @@ public class BugzillaTask extends AbstractRepositoryTask {
 	public Date getCompletionDate() {
 		try {
 			if (taskData != null) {
-				if (taskData.isResolved()) {
+				if (isCompleted()) {
+					// if (taskData.isResolved()) {
 					List<TaskComment> taskComments = taskData.getComments();
 					if (taskComments != null && !taskComments.isEmpty()) {
 						// TODO: fix not to be based on comment
-						return offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.COMMENT_DATE, (taskComments.get(taskComments.size() - 1).getCreated()));
+						return offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.COMMENT_DATE,
+								(taskComments.get(taskComments.size() - 1).getCreated()));
 					}
 				}
 			}
 		} catch (Exception e) {
 			// ignore
 			e.printStackTrace();
-		}		
+		}
 		return super.getCompletionDate();
 	}
 
@@ -146,5 +156,5 @@ public class BugzillaTask extends AbstractRepositoryTask {
 			return super.getOwner();
 		}
 	}
-	
+
 }

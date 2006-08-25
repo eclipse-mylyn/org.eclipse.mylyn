@@ -11,8 +11,11 @@
 
 package org.eclipse.mylar.internal.trac;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -143,13 +146,23 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 		}
 		
 		String[] actions = ticket.getActions();
-		for (String action : actions) {
-			addOperation(repository, data, ticket, action);
+		if (actions != null) {
+			// add operations in a defined order
+			List<String> actionList = new ArrayList<String>(Arrays.asList(actions));
+			addOperation(repository, data, ticket, actionList, "leave");
+			addOperation(repository, data, ticket, actionList, "accept");
+			addOperation(repository, data, ticket, actionList, "resolve");
+			addOperation(repository, data, ticket, actionList, "reassign");
+			addOperation(repository, data, ticket, actionList, "reopen");
 		}
 	}
 
 	// TODO Reuse Labels from BugzillaServerFacade
-	private static void addOperation(TaskRepository repository, RepositoryTaskData data, TracTicket ticket, String action) {
+	private static void addOperation(TaskRepository repository, RepositoryTaskData data, TracTicket ticket, List<String> actions, String action) {
+		if (!actions.remove(action)) {
+			return;
+		}
+		
 		RepositoryOperation operation = null;
 		if ("leave".equals(action)) {
 			operation = new RepositoryOperation(action, "Leave as " + data.getStatus() + " "
@@ -164,11 +177,9 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 				operation.addOption(resolution, resolution);
 			}
 		} else if ("reassign".equals(action)) {
-			String localUser = repository.getUserName();
 			operation = new RepositoryOperation(action, "Reassing bug to");
-			// FIXME owner?
-			operation.setInputName("assign_to");
-			operation.setInputValue(localUser);
+			operation.setInputName("owner");
+			operation.setInputValue(TracRepositoryConnector.getDisplayUsername(repository));
 		} else if ("reopen".equals(action)) {
 			operation = new RepositoryOperation(action, "Reopen");
 		}

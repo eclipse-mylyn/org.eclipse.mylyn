@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.internal.trac;
 
+import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 
 /**
@@ -120,6 +121,17 @@ public class TracTask extends AbstractRepositoryTask {
 
 	public TracTask(String handle, String label, boolean newTask) {
 		super(handle, label, newTask);
+		
+		setUrl(AbstractRepositoryTask.getRepositoryUrl(handle) + ITracClient.TICKET_URL + AbstractRepositoryTask.getTaskId(handle));
+	}
+	
+	@Override
+	public boolean isCompleted() {
+		if (taskData != null) {
+			return Status.CLOSED.toString().toLowerCase().equals(taskData.getStatus());
+		} else {
+			return super.isCompleted();
+		}
 	}
 
 	@Override
