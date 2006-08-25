@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
@@ -57,6 +58,7 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		config.setBasicUserName(username);
 		config.setBasicPassword(password);
 		config.setServerURL(getXmlRpcUrl());
+		config.setTimeZone(TimeZone.getTimeZone(ITracClient.TIME_ZONE));
 
 		xmlrpc = new XmlRpcClient();
 		xmlrpc.setConfig(config);
