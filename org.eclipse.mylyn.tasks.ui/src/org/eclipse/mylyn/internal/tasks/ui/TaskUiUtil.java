@@ -120,7 +120,7 @@ public class TaskUiUtil {
 		} else {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryForTaskUrl(
 					fullUrl);
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryUi(
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(
 					connector.getRepositoryType());
 			
 			if (connector != null) {
@@ -181,7 +181,7 @@ public class TaskUiUtil {
 			TaskUiUtil.openEditor((AbstractTaskContainer) element);
 		} else if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryUi(
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(
 					query.getRepositoryKind());
 			connectorUi.openEditQueryDialog(query);
 		}

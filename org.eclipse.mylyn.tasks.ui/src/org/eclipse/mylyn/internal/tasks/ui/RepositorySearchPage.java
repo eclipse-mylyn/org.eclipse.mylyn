@@ -20,8 +20,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositoryQueryPage;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
-import org.eclipse.mylar.tasks.ui.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.search.ui.ISearchPage;
 import org.eclipse.search.ui.ISearchPageContainer;
@@ -106,7 +106,7 @@ public class RepositorySearchPage extends DialogPage implements ISearchPage {
 
 	private WizardPage createPage(TaskRepository repository) {
 		if (repository != null) {
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryUi(
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(
 					repository.getKind());
 			if (connectorUi != null) {
 				WizardPage searchPage = connectorUi.getSearchPage(repository, null);
@@ -159,7 +159,7 @@ public class RepositorySearchPage extends DialogPage implements ISearchPage {
 			List<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getAllRepositories();
 			List<TaskRepository> searchableRepositories = new ArrayList<TaskRepository>();
 			for (TaskRepository repository : repositories) {
-				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryUi(
+				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(
 						repository.getKind());
 				if (connectorUi != null && connectorUi.hasSearchPage()) {
 					searchableRepositories.add(repository);

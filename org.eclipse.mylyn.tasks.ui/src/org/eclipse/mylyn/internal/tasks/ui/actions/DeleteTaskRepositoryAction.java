@@ -79,7 +79,7 @@ public class DeleteTaskRepositoryAction extends Action {
 				}
 
 				for (TaskRepository taskRepository : repositoriesToDelete) {
-					TasksUiPlugin.getRepositoryManager().removeRepository(taskRepository);
+					TasksUiPlugin.getRepositoryManager().removeRepository(taskRepository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 				}
 
 				if (repositoriesInUse.size() > 0) {

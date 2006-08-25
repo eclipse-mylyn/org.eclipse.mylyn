@@ -31,7 +31,7 @@ import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TaskRepositoryManager;
+import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.trac.tests.support.TestFixture;
 import org.eclipse.mylar.trac.tests.support.XmlRpcServer.TestData;
@@ -57,7 +57,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 		super.setUp();
 
 		manager = TasksUiPlugin.getRepositoryManager();
-		manager.clearRepositories();
+		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		proxySettings = TasksUiPlugin.getDefault().getProxySettings();
 
@@ -78,7 +78,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 		repository.setCharacterEncoding(ITracClient.CHARSET);
 		repository.setVersion(version.name());
 
-		manager.addRepository(repository);
+		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		AbstractRepositoryConnector abstractConnector = manager.getRepositoryConnector(kind);
 		connector = (TracRepositoryConnector) abstractConnector;

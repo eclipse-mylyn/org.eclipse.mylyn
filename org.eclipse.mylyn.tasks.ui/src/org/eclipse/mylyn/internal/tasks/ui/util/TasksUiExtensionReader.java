@@ -109,9 +109,9 @@ public class TasksUiExtensionReader {
 				IConfigurationElement[] elements = repositoryExtensions[i].getConfigurationElements();
 				for (int j = 0; j < elements.length; j++) {
 					if (elements[j].getName().equals(ELMNT_REPOSITORY_CONNECTOR)) {
-						readRepositoryConnector(elements[j]);
+						readRepositoryConnectorCore(elements[j]);
 					} else if (elements[j].getName().equals(ELMNT_REPOSITORY_UI)) {
-						readRepositoryUi(elements[j]);
+						readRepositoryConnectorUi(elements[j]);
 					} else if (elements[j].getName().equals(ELMNT_EXTERNALIZER)) {
 						readExternalizer(elements[j], externalizers);
 					}
@@ -185,14 +185,14 @@ public class TasksUiExtensionReader {
 		}
 	}
 
-	private static void readRepositoryConnector(IConfigurationElement element) {
+	private static void readRepositoryConnectorCore(IConfigurationElement element) {
 		try {
 			Object type = element.getAttribute(ELMNT_TYPE);
-			Object repository = element.createExecutableExtension(ATTR_CLASS);
-			if (repository instanceof AbstractRepositoryConnector && type != null) {
-				TasksUiPlugin.getRepositoryManager().addRepositoryConnector((AbstractRepositoryConnector) repository);
+			Object connectorCore = element.createExecutableExtension(ATTR_CLASS);
+			if (connectorCore instanceof AbstractRepositoryConnector && type != null) {
+				TasksUiPlugin.getRepositoryManager().addRepositoryConnector((AbstractRepositoryConnector) connectorCore);
 			} else {
-				MylarStatusHandler.log("could not not load extension: " + repository, null);
+				MylarStatusHandler.log("could not not load connector core: " + connectorCore, null);
 			}
 
 		} catch (CoreException e) {
@@ -200,24 +200,24 @@ public class TasksUiExtensionReader {
 		}
 	}
 
-	private static void readRepositoryUi(IConfigurationElement element) {
+	private static void readRepositoryConnectorUi(IConfigurationElement element) {
 		try {
-			Object type = element.getAttribute(ELMNT_TYPE);
-			Object repository = element.createExecutableExtension(ATTR_CLASS);
-			if (repository instanceof AbstractRepositoryConnector && type != null) {
-				TasksUiPlugin.getRepositoryManager().addRepositoryUi((AbstractRepositoryConnectorUi) repository);
+//			Object type = element.getAttribute(ELMNT_TYPE);
+			Object connectorUi = element.createExecutableExtension(ATTR_CLASS);
+			if (connectorUi instanceof AbstractRepositoryConnectorUi) {
+				TasksUiPlugin.addRepositoryConnectorUi((AbstractRepositoryConnectorUi) connectorUi);
 
 				String iconPath = element.getAttribute(ATTR_BRANDING_ICON);
 				if (iconPath != null) {
 					ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(element.getContributor()
 							.getName(), iconPath);
 					if (descriptor != null) {
-						TasksUiPlugin.getDefault().getBrandingIcons().put((AbstractRepositoryConnector) repository,
+						TasksUiPlugin.getDefault().addBrandingIcon(((AbstractRepositoryConnectorUi)connectorUi).getRepositoryType(),
 								TaskListImages.getImage(descriptor));
 					}
 				}
 			} else {
-				MylarStatusHandler.log("could not not load extension: " + repository, null);
+				MylarStatusHandler.log("could not not load connector ui: " + connectorUi, null);
 			}
 
 		} catch (CoreException e) {

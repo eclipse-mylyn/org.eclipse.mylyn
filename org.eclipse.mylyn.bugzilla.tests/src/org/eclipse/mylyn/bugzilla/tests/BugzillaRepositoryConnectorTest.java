@@ -275,7 +275,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		tasks.add(task4);
 		tasks.add(task5);
 
-		TasksUiPlugin.getRepositoryManager().setSyncTime(repository, task5.getLastModifiedDateStamp());
+		TasksUiPlugin.getRepositoryManager().setSyncTime(repository, task5.getLastModifiedDateStamp(), TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		Set<AbstractRepositoryTask> changedTasks = connector.getOfflineTaskHandler().getChangedSinceLastSync(repository,
 				tasks);
@@ -337,7 +337,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		RepositoryTaskData recentTaskData = task7.getTaskData();
 		assertNotNull(recentTaskData);
 
-		TasksUiPlugin.getRepositoryManager().setSyncTime(repository, task7.getLastModifiedDateStamp());
+		TasksUiPlugin.getRepositoryManager().setSyncTime(repository, task7.getLastModifiedDateStamp(), TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		assertFalse(TasksUiPlugin.getDefault().getOfflineReportsFile().find(IBugzillaConstants.TEST_BUGZILLA_222_URL,
 				"7") == -1);
@@ -405,7 +405,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 		// synchAndAssertState(tasks, RepositoryTaskSyncState.SYNCHRONIZED);
 
-		TasksUiPlugin.getRepositoryManager().setSyncTime(repository, bugtask.getLastModifiedDateStamp());
+		TasksUiPlugin.getRepositoryManager().setSyncTime(repository, bugtask.getLastModifiedDateStamp(), TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		// connector.synchronizeChanged(repository);
 
 		// Set<AbstractRepositoryTask> changedTasks =

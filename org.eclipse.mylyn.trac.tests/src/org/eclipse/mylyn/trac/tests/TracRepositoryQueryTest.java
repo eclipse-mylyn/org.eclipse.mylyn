@@ -22,17 +22,20 @@ import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.model.TracSearch;
 import org.eclipse.mylar.internal.trac.model.TracSearchFilter;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TaskRepositoryManager;
+import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
+/**
+ * @author Steffen Pingel
+ */
 public class TracRepositoryQueryTest extends TestCase {
 
 	public void testChangeRepositoryUrl() {
 		TaskRepositoryManager manager = TasksUiPlugin.getRepositoryManager();
-		manager.clearRepositories();
+		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		TaskRepository repository = new TaskRepository(TracUiPlugin.REPOSITORY_KIND, Constants.TEST_TRAC_096_URL);	
-		manager.addRepository(repository);
+		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		TracSearch search = new TracSearch();
 		String queryUrl = repository.getUrl() + ITracClient.QUERY_URL + search.toUrl();

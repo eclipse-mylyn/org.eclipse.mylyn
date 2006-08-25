@@ -60,7 +60,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			// TODO: fix this mess that delaying decoration got us into
 			if (task.isCompleted()) {
 				if (task instanceof AbstractRepositoryTask) {
-					AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryUi(
+					AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(
 							((AbstractRepositoryTask)task).getRepositoryKind());
 					if (connectorUi != null && !connectorUi.hasRichEditor()) {
 						return TaskListImages.getImage(TaskListImages.TASK_COMPLETED);
@@ -72,7 +72,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				}
 			} else if (task.getNotes() != null && !task.getNotes().trim().equals("")) {
 				if (task instanceof AbstractRepositoryTask) {
-					AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryUi(
+					AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(
 							((AbstractRepositoryTask)task).getRepositoryKind());
 					if (connectorUi != null && !connectorUi.hasRichEditor()) {
 						return TaskListImages.getImage(TaskListImages.TASK_NOTES);
@@ -84,7 +84,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				}
 			} else {
 				if (task instanceof AbstractRepositoryTask) {
-					AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryUi(
+					AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(
 							((AbstractRepositoryTask)task).getRepositoryKind());
 					if (connectorUi != null && !connectorUi.hasRichEditor()) {
 						return TaskListImages.getImage(TaskListImages.TASK);

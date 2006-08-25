@@ -34,7 +34,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 	public EditRepositoryWizard(TaskRepository repository) {
 		super();
 		this.repository = repository;
-		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryUi(
+		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(
 				repository.getKind());
 		abstractRepositorySettingsPage = connectorUi.getSettingsPage();
 		abstractRepositorySettingsPage.setRepository(repository);
@@ -62,7 +62,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 			repository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(), abstractRepositorySettingsPage.getPassword());
 			abstractRepositorySettingsPage.updateProperties(repository);
 			TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChagned(repository);
-			TasksUiPlugin.getRepositoryManager().saveRepositories();
+			TasksUiPlugin.getRepositoryManager().saveRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 			return true;
 		}
 		return false;

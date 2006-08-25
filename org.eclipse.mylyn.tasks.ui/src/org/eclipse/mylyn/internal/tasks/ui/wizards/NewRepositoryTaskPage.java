@@ -32,7 +32,7 @@ public class NewRepositoryTaskPage extends SelectRepositoryPage {
 
 	@Override
 	protected IWizard createWizard(TaskRepository taskRepository) {
-		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryUi(
+		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(
 				taskRepository.getKind());
 		return connectorUi.getNewTaskWizard(taskRepository, getSelection());
 	}

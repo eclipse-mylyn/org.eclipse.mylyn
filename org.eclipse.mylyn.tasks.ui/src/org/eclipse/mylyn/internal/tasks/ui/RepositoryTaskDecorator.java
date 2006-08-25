@@ -49,7 +49,7 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 		} else if (element instanceof AbstractRepositoryTask) { 
 			AbstractRepositoryTask task = (AbstractRepositoryTask)element;
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(task.getRepositoryKind());
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryUi(
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(
 					task.getRepositoryKind());
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryKind(), task.getRepositoryUrl());
 			if (!connectorUi.hasRichEditor()) {

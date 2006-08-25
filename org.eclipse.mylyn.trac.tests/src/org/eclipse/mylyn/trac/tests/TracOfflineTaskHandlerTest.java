@@ -27,7 +27,7 @@ import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TaskRepositoryManager;
+import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.trac.tests.support.TestFixture;
 
@@ -53,7 +53,7 @@ public class TracOfflineTaskHandlerTest extends TestCase {
 		TestFixture.init010();
 
 		manager = TasksUiPlugin.getRepositoryManager();
-		manager.clearRepositories();
+		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		connector = (TracRepositoryConnector) manager.getRepositoryConnector(TracUiPlugin.REPOSITORY_KIND);
 		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
@@ -70,7 +70,7 @@ public class TracOfflineTaskHandlerTest extends TestCase {
 		repository.setCharacterEncoding(ITracClient.CHARSET);
 		repository.setVersion(version.name());
 
-		manager.addRepository(repository);
+		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
 
 	public void testGetChangedSinceLastSyncWeb096() throws Exception {

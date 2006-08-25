@@ -42,12 +42,12 @@ public class BugzillaSearchEngineTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		TasksUiPlugin.getRepositoryManager().clearRepositories();
+		TasksUiPlugin.getRepositoryManager().clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		assertEquals(NUM_REPOSITORIES, TasksUiPlugin.getRepositoryManager().getRepositories(BugzillaCorePlugin.REPOSITORY_KIND).size());
 	}
 
 	protected void tearDown() throws Exception {
-		TasksUiPlugin.getRepositoryManager().clearRepositories();
+		TasksUiPlugin.getRepositoryManager().clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		super.tearDown();
 	}
 
@@ -62,28 +62,28 @@ public class BugzillaSearchEngineTest extends TestCase {
 	public void testSearching218() throws MalformedURLException {
 		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_218_URL, IBugzillaConstants.BugzillaServerVersion.SERVER_218.toString());
-		TasksUiPlugin.getRepositoryManager().addRepository(repository);
+		TasksUiPlugin.getRepositoryManager().addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		assertEquals(NUM_EXPECTED_HITS, runQuery(IBugzillaConstants.TEST_BUGZILLA_218_URL, SEARCH_DESCRIPTION).size());		
 	}
 		
 	public void testSearching220() throws MalformedURLException {
 		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_220_URL, IBugzillaConstants.BugzillaServerVersion.SERVER_220.toString());
-		TasksUiPlugin.getRepositoryManager().addRepository(repository);
+		TasksUiPlugin.getRepositoryManager().addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		assertEquals(NUM_EXPECTED_HITS, runQuery(IBugzillaConstants.TEST_BUGZILLA_220_URL, SEARCH_DESCRIPTION).size());		
 	}
 		
 	public void testSearching2201() throws MalformedURLException {
 		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_2201_URL, IBugzillaConstants.BugzillaServerVersion.SERVER_220.toString());
-		TasksUiPlugin.getRepositoryManager().addRepository(repository);		
+		TasksUiPlugin.getRepositoryManager().addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());		
 		assertEquals(NUM_EXPECTED_HITS, runQuery(IBugzillaConstants.TEST_BUGZILLA_2201_URL, SEARCH_DESCRIPTION).size());		
 	}
 	
 	public void testSearching222() throws MalformedURLException {
 		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, 
 				IBugzillaConstants.TEST_BUGZILLA_222_URL, IBugzillaConstants.BugzillaServerVersion.SERVER_222.toString());
-		TasksUiPlugin.getRepositoryManager().addRepository(repository);		
+		TasksUiPlugin.getRepositoryManager().addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());		
 		List<AbstractQueryHit> hits = runQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL, SEARCH_DESCRIPTION);
 		assertEquals(NUM_EXPECTED_HITS, hits.size());		
 	}

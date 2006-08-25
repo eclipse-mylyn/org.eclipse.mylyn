@@ -17,7 +17,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TaskRepositoryManager;
+import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 
@@ -35,14 +35,14 @@ public class BugzillaSearchDialogTest extends TestCase {
 		super.setUp();
 		manager = TasksUiPlugin.getRepositoryManager();
 		assertNotNull(manager);
-		manager.clearRepositories();
+		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		if (manager != null) {
-			manager.clearRepositories();
+			manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		}
 	}
 
@@ -56,7 +56,7 @@ public class BugzillaSearchDialogTest extends TestCase {
 		TaskRepository repo = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL, IBugzillaConstants.BugzillaServerVersion.SERVER_222
 						.toString());
-		manager.addRepository(repo);
+		manager.addRepository(repo, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		BugzillaSearchPage page = new BugzillaSearchPage(repo);
 		Shell shell = BugzillaTestPlugin.getDefault().getWorkbench().getDisplay().getShells()[0];
 		page.createControl(shell);

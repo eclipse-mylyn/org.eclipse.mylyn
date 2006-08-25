@@ -208,7 +208,7 @@ public class RepositorySynchronizationManager {
 				}
 				// TODO: Get actual time stamp of query from repository rather
 				// than above hack
-				TasksUiPlugin.getRepositoryManager().setSyncTime(repository, mostRecentTimeStamp);
+				TasksUiPlugin.getRepositoryManager().setSyncTime(repository, mostRecentTimeStamp, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 			}
 		});
 	}

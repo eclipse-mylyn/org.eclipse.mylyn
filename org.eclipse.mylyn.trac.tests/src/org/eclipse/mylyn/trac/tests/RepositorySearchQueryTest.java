@@ -27,7 +27,7 @@ import org.eclipse.mylar.internal.trac.ui.search.AbstractQueryHitCollector;
 import org.eclipse.mylar.internal.trac.ui.search.RepositorySearchQuery;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TaskRepositoryManager;
+import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.trac.tests.support.TestFixture;
 import org.eclipse.mylar.trac.tests.support.XmlRpcServer.TestData;
@@ -53,7 +53,7 @@ public class RepositorySearchQueryTest extends TestCase {
 
 		data = TestFixture.init010();
 		manager = TasksUiPlugin.getRepositoryManager();
-		manager.clearRepositories();
+		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 //		connector = (TracRepositoryConnector) manager.getRepositoryConnector(TracUiPlugin.REPOSITORY_KIND);
 		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
@@ -68,7 +68,7 @@ public class RepositorySearchQueryTest extends TestCase {
 		repository.setCharacterEncoding(ITracClient.CHARSET);
 		repository.setVersion(version.name());
 
-		manager.addRepository(repository);
+		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
 
 	public void testSearch() {

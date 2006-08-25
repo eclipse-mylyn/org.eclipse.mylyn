@@ -53,7 +53,6 @@ import org.eclipse.mylar.internal.tasks.ui.util.TaskListWriter;
 import org.eclipse.mylar.internal.tasks.ui.util.TasksUiExtensionReader;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
@@ -62,6 +61,7 @@ import org.eclipse.mylar.tasks.core.ITaskActivityListener;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IStartup;
@@ -111,6 +111,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	
 	private static RepositorySynchronizationManager synchronizationManager;
 
+	private static Map<String, AbstractRepositoryConnectorUi> repositoryConnectorUis = new HashMap<String, AbstractRepositoryConnectorUi>();
+	
 	private TaskListSaveManager taskListSaveManager;
 
 	private TaskListNotificationManager taskListNotificationManager;
@@ -137,7 +139,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private boolean initialized = false;
 
-	private Map<AbstractRepositoryConnector, Image> brandingIcons = new HashMap<AbstractRepositoryConnector, Image>();
+	private Map<String, Image> brandingIcons = new HashMap<String, Image>();
 
 	public enum TaskListSaveMode {
 		ONE_HOUR, THREE_HOURS, DAY;
@@ -358,7 +360,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				public void run() {
 					try {
 						TasksUiExtensionReader.initExtensions(taskListWriter);
-						taskRepositoryManager.readRepositories();
+						taskRepositoryManager.readRepositories(getRepositoriesFilePath());
 						// Must be called after repositories read
 						readOfflineReportsFile();
 						
@@ -642,8 +644,12 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		return taskRepositoryManager;
 	}
 
-	public Map<AbstractRepositoryConnector, Image> getBrandingIcons() {
-		return brandingIcons;
+	public void addBrandingIcon(String repositoryType, Image icon) {
+		brandingIcons.put(repositoryType, icon);
+	}
+	
+	public Image getBrandingIcon(String repositoryType) {
+		return brandingIcons.get(repositoryType);
 	}
 
 	public boolean isInitialized() {
@@ -701,12 +707,26 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		return offlineTaskManager;
 	}
 
+	public static void addRepositoryConnectorUi(AbstractRepositoryConnectorUi repositoryConnectorUi) {
+		if (!repositoryConnectorUis.values().contains(repositoryConnectorUi)) {
+			repositoryConnectorUis.put(repositoryConnectorUi.getRepositoryType(), repositoryConnectorUi);
+		}
+	}
+
+	public static AbstractRepositoryConnectorUi getRepositoryUi(String kind) {
+		return repositoryConnectorUis.get(kind);
+	}
+
 	public static TaskListSynchronizationScheduler getSynchronizationScheduler() {
 		return synchronizationScheduler;
 	}
 
 	public static RepositorySynchronizationManager getSynchronizationManager() {
 		return synchronizationManager;
+	}
+
+	public String getRepositoriesFilePath() {
+		return getDataDirectory() + File.separator + DEFAULT_REPOSITORIES_FILE;
 	}
 
 }

@@ -96,7 +96,7 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 
 		if (true) {
 			// Repositories always exported
-			TasksUiPlugin.getRepositoryManager().saveRepositories();
+			TasksUiPlugin.getRepositoryManager().saveRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 			String sourceRepositoriesPath = TasksUiPlugin.getDefault().getDataDirectory() + File.separator
 					+ TasksUiPlugin.DEFAULT_REPOSITORIES_FILE;

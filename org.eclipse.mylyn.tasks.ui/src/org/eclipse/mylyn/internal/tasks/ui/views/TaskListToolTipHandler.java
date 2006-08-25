@@ -213,7 +213,7 @@ public class TaskListToolTipHandler {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 					query.getRepositoryKind());
 			if (connector != null) {
-				return TasksUiPlugin.getDefault().getBrandingIcons().get(connector);
+				return TasksUiPlugin.getDefault().getBrandingIcon(connector.getRepositoryType());
 			}
 		} else if (element instanceof AbstractRepositoryTask || element instanceof AbstractQueryHit) {
 			AbstractRepositoryTask repositoryTask;
@@ -226,7 +226,7 @@ public class TaskListToolTipHandler {
 				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 						repositoryTask.getRepositoryKind());
 				if (connector != null) {
-					return TasksUiPlugin.getDefault().getBrandingIcons().get(connector);
+					return TasksUiPlugin.getDefault().getBrandingIcon(connector.getRepositoryType());
 				}
 			}
 		}

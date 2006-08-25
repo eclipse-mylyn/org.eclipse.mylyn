@@ -39,7 +39,7 @@ public class TaskEditorTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
-		TasksUiPlugin.getRepositoryManager().clearRepositories();
+		TasksUiPlugin.getRepositoryManager().clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		TasksUiPlugin.getTaskListManager().resetTaskList();
 		TasksUiPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
 		super.tearDown();

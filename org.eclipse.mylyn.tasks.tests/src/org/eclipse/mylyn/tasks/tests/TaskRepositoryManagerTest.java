@@ -21,8 +21,8 @@ import junit.framework.TestCase;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.tests.connector.MockRepositoryConnector;
-import org.eclipse.mylar.tasks.ui.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
@@ -44,14 +44,14 @@ public class TaskRepositoryManagerTest extends TestCase {
 		super.setUp();
 		manager = TasksUiPlugin.getRepositoryManager();
 		assertNotNull(manager);
-		manager.clearRepositories();
+		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		if (manager != null) {
-			manager.clearRepositories();
+			manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		}
 	}
 
@@ -66,9 +66,9 @@ public class TaskRepositoryManagerTest extends TestCase {
 
 	public void testMultipleNotAdded() throws MalformedURLException {
 		TaskRepository repository = new TaskRepository(DEFAULT_KIND, DEFAULT_URL);
-		manager.addRepository(repository);
+		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		TaskRepository repository2 = new TaskRepository(DEFAULT_KIND, DEFAULT_URL);
-		manager.addRepository(repository2);
+		manager.addRepository(repository2, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		assertEquals(1, manager.getAllRepositories().size());
 	}
 
@@ -76,7 +76,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		assertEquals("", TasksUiPlugin.getDefault().getPreferenceStore().getString(TaskRepositoryManager.PREF_REPOSITORIES));
 
 		TaskRepository repository = new TaskRepository(DEFAULT_KIND, DEFAULT_URL);
-		manager.addRepository(repository);
+		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		assertEquals(repository, manager.getRepository(DEFAULT_KIND, DEFAULT_URL));
 		assertNull(manager.getRepository(DEFAULT_KIND, "foo"));
 		assertNull(manager.getRepository("foo", DEFAULT_URL));
@@ -94,15 +94,15 @@ public class TaskRepositoryManagerTest extends TestCase {
 
 		TaskRepository repository1 = new TaskRepository("bugzilla", "http://bugzilla");
 		TaskRepository repository2 = new TaskRepository("jira", "http://jira");
-		manager.addRepository(repository1);
-		manager.addRepository(repository2);
+		manager.addRepository(repository1, TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		manager.addRepository(repository2, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		// assertNotNull(MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
 
 		List<TaskRepository> repositoryList = new ArrayList<TaskRepository>();
 		repositoryList.add(repository2);
 		repositoryList.add(repository1);
-		manager.readRepositories();
+		manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		
 		// NOTE: different conditions for running with and without the JIRA
 		// Connector
@@ -130,9 +130,9 @@ public class TaskRepositoryManagerTest extends TestCase {
 		repository1.setCharacterEncoding(encoding);
 		repository1.setTimeZoneId(fakeTimeZone);
 		repository1.setSyncTimeStamp(dateString);
-		manager.addRepository(repository1);
+		manager.addRepository(repository1, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
-		manager.readRepositories();
+		manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		TaskRepository temp = manager.getRepository(repository1.getKind(), repository1.getUrl());
 		assertNotNull(temp);
 		assertEquals(version, temp.getVersion());
@@ -145,14 +145,14 @@ public class TaskRepositoryManagerTest extends TestCase {
 	public void testRepositoryPersistanceAfterDelete() throws MalformedURLException {
 
 		TaskRepository repository = new TaskRepository(DEFAULT_KIND, DEFAULT_URL);
-		manager.addRepository(repository);
+		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		assertNotNull(manager.getRepository(repository.getKind(), repository.getUrl()));
 	
 		TaskRepository repository2 = new TaskRepository(DEFAULT_KIND, ANOTHER_URL);
-		manager.addRepository(repository2);
+		manager.addRepository(repository2, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		assertNotNull(manager.getRepository(repository2.getKind(), repository2.getUrl()));
 
-		manager.removeRepository(repository2);
+		manager.removeRepository(repository2, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		assertNull(manager.getRepository(repository2.getKind(), repository2.getUrl()));
 	}
@@ -176,9 +176,9 @@ public class TaskRepositoryManagerTest extends TestCase {
 		
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, "http://jroller.com/page/eu");
 		repository.setProperty("owner", "euxx");
-		manager.addRepository(repository);
+		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
-		manager.readRepositories();
+		manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		TaskRepository temp = manager.getRepository(repository.getKind(), repository.getUrl());
 		assertNotNull(temp);
@@ -188,14 +188,14 @@ public class TaskRepositoryManagerTest extends TestCase {
 	public void testRepositoryPersistanceSameUrl() throws MalformedURLException {
 		TaskRepository repository1 = new TaskRepository("bugzilla", "http://repository");
 		TaskRepository repository2 = new TaskRepository("jira", "http://repository");
-		manager.addRepository(repository1);
-		manager.addRepository(repository2);
+		manager.addRepository(repository1, TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		manager.addRepository(repository2, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		assertEquals(2, manager.getAllRepositories().size());
 
 		List<TaskRepository> repositoryList = new ArrayList<TaskRepository>();
 		repositoryList.add(repository2);
 		repositoryList.add(repository1);
-		manager.readRepositories();
+		manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		assertEquals(1, manager.getAllRepositories().size());
 	}

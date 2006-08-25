@@ -447,7 +447,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 	private void readTaskListData() {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {				
-				TasksUiPlugin.getRepositoryManager().readRepositories();
+				TasksUiPlugin.getRepositoryManager().readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 				ContextCorePlugin.getContextManager().loadActivityMetaContext();
 				TasksUiPlugin.getTaskListManager().resetTaskList();
 				TasksUiPlugin.getTaskListManager().readExistingOrCreateNewList();

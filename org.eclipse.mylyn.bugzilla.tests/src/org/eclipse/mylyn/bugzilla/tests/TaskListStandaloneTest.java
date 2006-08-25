@@ -44,7 +44,7 @@ public class TaskListStandaloneTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		TasksUiPlugin.getRepositoryManager().clearRepositories();
+		TasksUiPlugin.getRepositoryManager().clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		externalizers = new ArrayList<ITaskListExternalizer>();
 
 		externalizers.add(new BugzillaTaskExternalizer());

@@ -50,7 +50,7 @@ public abstract class AbstractRepositoryClientWizard extends Wizard implements I
 		if (connectors.size() == 1) {
 			AbstractRepositoryConnector connector = connectors.toArray(new AbstractRepositoryConnector[1])[0];
 			setRepositoryConnector(connector);
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryUi(
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(
 					connector.getRepositoryType());
 			AbstractRepositorySettingsPage nextPage = connectorUi.getSettingsPage();
 			setRepositorySettingsPage(nextPage);

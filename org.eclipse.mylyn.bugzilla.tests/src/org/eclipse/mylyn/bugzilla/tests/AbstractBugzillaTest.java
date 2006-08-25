@@ -16,6 +16,8 @@ import java.util.Set;
 
 import javax.security.auth.login.LoginException;
 
+import junit.framework.TestCase;
+
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
@@ -30,11 +32,9 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
-import org.eclipse.mylar.tasks.ui.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-
-import junit.framework.TestCase;
 
 /**
  * @author Mik Kersten
@@ -61,14 +61,14 @@ public abstract class AbstractBugzillaTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		manager = TasksUiPlugin.getRepositoryManager();
-		manager.clearRepositories();
+		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		TasksUiPlugin.getTaskListManager().resetTaskList();
-		manager.clearRepositories();
+		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
 
 	protected void init222() {
@@ -94,7 +94,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 
 		repository.setTimeZoneId("Canada/Eastern");
 		assertNotNull(manager);
-		manager.addRepository(repository);
+		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 
