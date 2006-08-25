@@ -98,10 +98,10 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		label.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
 		label.setText(CONTENT_ASSIST_WARNING);
 		
-		label = new Label(buttonComposite, SWT.NONE);
-		label = new Label(buttonComposite, SWT.NONE);
-		label.setText("NOTE: if Mylar is uninstalled you must Restore Defaults on above page ");
-		label.setForeground(TaskListColorsAndFonts.COLOR_LABEL_CAUTION);
+//		label = new Label(buttonComposite, SWT.NONE);
+//		label = new Label(buttonComposite, SWT.NONE);
+//		label.setText("NOTE: if Mylar is uninstalled you must Restore Defaults on above page ");
+//		label.setForeground(TaskListColorsAndFonts.COLOR_LABEL_CAUTION);
 		
 		gd = new GridData();
 		label.setLayoutData(gd);
