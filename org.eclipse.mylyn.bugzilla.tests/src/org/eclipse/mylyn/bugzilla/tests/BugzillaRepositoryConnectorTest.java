@@ -316,10 +316,12 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 		BugzillaReportSubmitForm bugzillaReportSubmitForm;
 
-		for (AbstractRepositoryTask task : tasks) {
-			bugzillaReportSubmitForm = makeExistingBugPost(task.getTaskData());
-			bugzillaReportSubmitForm.submitReportToRepository();
-		}
+		
+		bugzillaReportSubmitForm = makeExistingBugPost(task4.getTaskData());
+		bugzillaReportSubmitForm.submitReportToRepository();
+		bugzillaReportSubmitForm = makeExistingBugPost(task5.getTaskData());
+		bugzillaReportSubmitForm.submitReportToRepository();
+		
 
 		changedTasks = connector.getOfflineTaskHandler().getChangedSinceLastSync(repository, tasks);
 		assertEquals("Changed reports expected ", 2, changedTasks.size());
