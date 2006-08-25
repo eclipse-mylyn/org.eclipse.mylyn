@@ -25,6 +25,7 @@ import org.eclipse.mylar.internal.tasks.ui.editors.CategoryEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
@@ -34,7 +35,7 @@ import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.ui.AbstractConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -119,8 +120,11 @@ public class TaskUiUtil {
 		} else {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryForTaskUrl(
 					fullUrl);
+			AbstractConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryConnectorUi(
+					connector.getRepositoryType());
+			
 			if (connector != null) {
-				connector.openRemoteTask(repositoryUrl, taskId);
+				connectorUi.openRemoteTask(repositoryUrl, taskId);
 				opened = true;
 			}
 		}
@@ -158,9 +162,9 @@ public class TaskUiUtil {
 				if (connector != null)
 					if (repositoryTask.getTaskData() != null) {
 						TaskUiUtil.openEditor(task, false, false);
-						connector.synchronize(repositoryTask, false, null);
+						TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, false, null);
 					} else {
-						Job refreshJob = connector.synchronize(repositoryTask, true,
+						Job refreshJob = TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, true,
 								new JobChangeAdapter() {
 									public void done(IJobChangeEvent event) {
 										TaskUiUtil.openEditor(task, false);
@@ -177,9 +181,9 @@ public class TaskUiUtil {
 			TaskUiUtil.openEditor((AbstractTaskContainer) element);
 		} else if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
-			AbstractRepositoryConnector client = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+			AbstractConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryConnectorUi(
 					query.getRepositoryKind());
-			client.openEditQueryDialog(query);
+			connectorUi.openEditQueryDialog(query);
 		}
 	}
 

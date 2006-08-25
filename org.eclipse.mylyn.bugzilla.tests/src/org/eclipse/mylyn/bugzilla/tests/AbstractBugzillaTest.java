@@ -25,12 +25,12 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
@@ -45,7 +45,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 
 	static final String DEFAULT_KIND = BugzillaCorePlugin.REPOSITORY_KIND;
 
-	protected BugzillaRepositoryConnector client;
+	protected BugzillaRepositoryConnector connector;
 
 	protected TaskRepositoryManager manager;
 
@@ -102,12 +102,12 @@ public abstract class AbstractBugzillaTest extends TestCase {
 
 		assertEquals(abstractRepositoryClient.getRepositoryType(), DEFAULT_KIND);
 
-		client = (BugzillaRepositoryConnector) abstractRepositoryClient;
-		client.setForceSyncExec(true);
+		connector = (BugzillaRepositoryConnector) abstractRepositoryClient;
+		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
 	}
 
 	protected BugzillaTask generateLocalTaskAndDownload(String taskNumber) {
-		BugzillaTask task = (BugzillaTask) client.createTaskFromExistingKey(repository, taskNumber);
+		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber);
 		assertNotNull(task);
 		TasksUiPlugin.getTaskListManager().getTaskList().moveToRoot(task);
 		assertTrue(task.isDownloaded());
@@ -122,7 +122,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 
 	protected void synchAndAssertState(Set<AbstractRepositoryTask> tasks, RepositoryTaskSyncState state) {
 		for (AbstractRepositoryTask task : tasks) {
-			client.synchronize(task, true, null);
+			TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 			assertEquals(task.getSyncState(), state);
 		}
 	}

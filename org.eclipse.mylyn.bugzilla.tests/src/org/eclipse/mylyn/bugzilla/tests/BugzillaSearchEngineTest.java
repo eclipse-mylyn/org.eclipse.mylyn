@@ -24,8 +24,8 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**

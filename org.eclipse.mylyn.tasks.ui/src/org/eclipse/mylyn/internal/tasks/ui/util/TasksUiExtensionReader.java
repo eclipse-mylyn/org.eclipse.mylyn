@@ -25,9 +25,9 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.internal.tasks.ui.ITaskEditorFactory;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.ITaskListExternalizer;
 import org.eclipse.mylar.tasks.core.RepositoryTemplate;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
@@ -106,7 +106,7 @@ public class TasksUiExtensionReader {
 				IConfigurationElement[] elements = repositoryExtensions[i].getConfigurationElements();
 				for (int j = 0; j < elements.length; j++) {
 					if (elements[j].getName().equals(ELMNT_REPOSITORY_TYPE)) {
-						readRepositoryClient(elements[j]);
+						readRepositoryConnector(elements[j]);
 					} else if (elements[j].getName().equals(ELMNT_EXTERNALIZER)) {
 						readExternalizer(elements[j], externalizers);
 					}
@@ -118,10 +118,6 @@ public class TasksUiExtensionReader {
 			for (int i = 0; i < extensions.length; i++) {
 				IConfigurationElement[] elements = extensions[i].getConfigurationElements();
 				for (int j = 0; j < elements.length; j++) {
-					// if (elements[j].getName().compareTo(ELMNT_TASK_HANDLER)
-					// == 0) {
-					// readExternalizer(elements[j], externalizers);
-					// } else
 					if (elements[j].getName().equals(DYNAMIC_POPUP_ELEMENT)) {
 						readDynamicPopupContributor(elements[j]);
 					}
@@ -139,17 +135,6 @@ public class TasksUiExtensionReader {
 				}
 			}
 
-			// for (int i = 0; i < extensions.length; i++) {
-			// IConfigurationElement[] elements =
-			// extensions[i].getConfigurationElements();
-			// for (int j = 0; j < elements.length; j++) {
-			// if (elements[j].getName().compareTo(ELMNT_REPOSITORY_CLIENT) ==
-			// 0) {
-			// readRepositoryClient(elements[j]);
-			// }
-			// }
-			// }
-
 			IExtensionPoint editorsExtensionPoint = registry.getExtensionPoint(EXTENSION_EDITORS);
 			IExtension[] editors = editorsExtensionPoint.getExtensions();
 			for (int i = 0; i < editors.length; i++) {
@@ -157,10 +142,6 @@ public class TasksUiExtensionReader {
 				for (int j = 0; j < elements.length; j++) {
 					if (elements[j].getName().equals(ELMNT_EDITOR_FACTORY)) {
 						readEditorFactory(elements[j]);
-						// } else if
-						// (elements[j].getName().equals(ELMNT_HYPERLINK_LISTENER))
-						// {
-						// readHyperlinkListener(elements[j]);
 					} else if (elements[j].getName().equals(ELMNT_HYPERLINK_DETECTOR)) {
 						readHyperlinkDetector(elements[j]);
 					}
@@ -185,24 +166,6 @@ public class TasksUiExtensionReader {
 		}
 	}
 
-	// private static void readHyperlinkListener(IConfigurationElement element)
-	// {
-	// try {
-	// Object type = element.getAttribute(ELMNT_TYPE);
-	// Object hyperlinkListener = element.createExecutableExtension(ATTR_CLASS);
-	// if (hyperlinkListener instanceof IHyperlinkListener && type instanceof
-	// String) {
-	// MylarTaskListPlugin.getDefault().addTaskHyperlinkListener((String)type,
-	// (IHyperlinkListener) hyperlinkListener);
-	// } else {
-	// MylarStatusHandler.log("Could not load listener: " +
-	// hyperlinkListener.getClass().getCanonicalName(), null);
-	// }
-	// } catch (CoreException e) {
-	// MylarStatusHandler.log(e, "Could not load tasklist listener extension");
-	// }
-	// }
-
 	private static void readEditorFactory(IConfigurationElement element) {
 		try {
 			Object editor = element.createExecutableExtension(ATTR_CLASS);
@@ -217,7 +180,7 @@ public class TasksUiExtensionReader {
 		}
 	}
 
-	private static void readRepositoryClient(IConfigurationElement element) {
+	private static void readRepositoryConnector(IConfigurationElement element) {
 		try {
 			Object type = element.getAttribute(ELMNT_TYPE);
 			Object repository = element.createExecutableExtension(ATTR_CLASS);

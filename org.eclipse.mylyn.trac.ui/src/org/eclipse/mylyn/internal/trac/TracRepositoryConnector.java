@@ -18,35 +18,22 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractRepositorySettingsPage;
-import org.eclipse.mylar.internal.tasks.ui.wizards.NewWebTaskWizard;
 import org.eclipse.mylar.internal.trac.TracTask.Kind;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.TracClientManager;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.internal.trac.model.TracTicket;
 import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
-import org.eclipse.mylar.internal.trac.ui.wizard.EditTracQueryWizard;
-import org.eclipse.mylar.internal.trac.ui.wizard.NewTracQueryWizard;
-import org.eclipse.mylar.internal.trac.ui.wizard.TracCustomQueryPage;
-import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Steffen Pingel
@@ -83,11 +70,6 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public IWizard getNewTaskWizard(TaskRepository taskRepository, IStructuredSelection selection) {
-		return new NewWebTaskWizard(taskRepository, taskRepository.getUrl() + ITracClient.NEW_TICKET_URL);
-	}
-
-	@Override
 	public String getRepositoryType() {
 		return TracUiPlugin.REPOSITORY_KIND;
 	}
@@ -99,11 +81,6 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		}
 		int i = url.lastIndexOf(ITracClient.TICKET_URL);
 		return (i != -1) ? url.substring(0, i) : null;
-	}
-
-	@Override
-	public AbstractRepositorySettingsPage getSettingsPage() {
-		return new TracRepositorySettingsPage(this);
 	}
 
 	@Override
@@ -128,54 +105,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	protected void updateTaskState(AbstractRepositoryTask repositoryTask) {
+	public void updateTaskState(AbstractRepositoryTask repositoryTask) {
 		// TODO Auto-generated method stub
-	}
-
-	public IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery query) {
-		if (query instanceof TracRepositoryQuery) {
-			return new EditTracQueryWizard(repository, query);
-		}
-		return null;
-	}
-
-	@Override
-	public IWizard getNewQueryWizard(TaskRepository repository, IStructuredSelection selection) {
-		return new NewTracQueryWizard(repository);
-	}
-
-	@Override
-	public void openEditQueryDialog(AbstractRepositoryQuery query) {
-		if (!(query instanceof TracRepositoryQuery)) {
-			return;
-		}
-
-		try {
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(query.getRepositoryKind(),
-					query.getRepositoryUrl());
-			if (repository == null) {
-				return;
-			}
-
-			IWizard wizard = getQueryWizard(repository, query);
-			if (wizard == null) {
-				return;
-			}
-
-			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-			if (shell != null && !shell.isDisposed()) {
-				WizardDialog dialog = new WizardDialog(shell, wizard);
-				dialog.create();
-				dialog.setTitle("Edit Trac Query");
-				dialog.setBlockOnOpen(true);
-				if (dialog.open() == Window.CANCEL) {
-					dialog.close();
-					return;
-				}
-			}
-		} catch (Exception e) {
-			MylarStatusHandler.fail(e, e.getMessage(), true);
-		}
 	}
 
 	@Override
@@ -287,21 +218,6 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Could not update attributes", false);
 		}
-	}
-
-	@Override
-	public boolean hasRichEditor() {
-		return true;
-	}
-
-	@Override
-	public WizardPage getSearchPage(TaskRepository repository, IStructuredSelection selection) {
-		return new TracCustomQueryPage(repository);
-	}
-
-	@Override
-	public boolean hasSearchPage() {
-		return true;
 	}
 
 	public boolean hasRichEditor(AbstractRepositoryTask task) {

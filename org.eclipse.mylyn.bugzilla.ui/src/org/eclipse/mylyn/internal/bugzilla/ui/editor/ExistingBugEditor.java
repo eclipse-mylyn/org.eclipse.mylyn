@@ -41,12 +41,12 @@ import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylar.internal.tasks.ui.views.DatePicker;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskComment;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -79,7 +79,9 @@ import org.eclipse.ui.forms.widgets.Section;
 public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 
 	private static final String LABEL_TIME_TRACKING = "Bugzilla Time Tracking";
-
+	
+	private BugSubmissionHandler submissionHandler;	
+	
 	protected Set<String> removeCC = new HashSet<String>();
 
 	// protected BugzillaCompareInput compareInput;
@@ -139,7 +141,8 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		taskData = editorInput.getRepositoryTaskData();
 		repository = editorInput.getRepository();
 		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
-
+		submissionHandler = new BugSubmissionHandler(connector);
+		
 		setSite(site);
 		setInput(input);
 
@@ -199,7 +202,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 										AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
 								try {
 									bugzillaRepositoryClient.attachContext(repository, (AbstractRepositoryTask) task,
-											"");
+											"", TasksUiPlugin.getDefault().getProxySettings());
 								} catch (Exception e) {
 									// TODO
 									e.printStackTrace();
@@ -224,7 +227,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 			}
 		};
 
-		bugzillaRepositoryClient.submitBugReport(bugzillaReportSubmitForm, submitJobListener);
+		submissionHandler.submitBugReport(bugzillaReportSubmitForm, submitJobListener);
 	}
 
 	@Override
@@ -651,7 +654,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		// submitButton.setEnabled(false);
 		// } else {
 		// submitButton.setEnabled(true);
-		//		}
+		// }
 	}
 
 	/**
@@ -708,17 +711,17 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 			attachContextButton.setSelection(attachContext);
 		}
 	}
-	
-//	protected void createDescriptionLayout(Composite composite) {
-//		// This is migration code from 0.6.1 -> 0.6.2
-//		// Changes to the abstract editor causes the description
-//		// field of the bugzilla editor to be editable if the offline
-//		// task data hasn't been saved yet. Upon being saved it works fine but
-//		// the initial load of the page would have an editable description
-//		// area if this was not present.  TODO: Remove post 0.6.1.
-//		super.createDescriptionLayout(composite);
-//		descriptionTextViewer.setEditable(false);
-//	}
+
+	// protected void createDescriptionLayout(Composite composite) {
+	// // This is migration code from 0.6.1 -> 0.6.2
+	// // Changes to the abstract editor causes the description
+	// // field of the bugzilla editor to be editable if the offline
+	// // task data hasn't been saved yet. Upon being saved it works fine but
+	// // the initial load of the page would have an editable description
+	// // area if this was not present. TODO: Remove post 0.6.1.
+	// super.createDescriptionLayout(composite);
+	// descriptionTextViewer.setEditable(false);
+	// }
 
 	// TODO used for spell checking. Add back when we want to support this
 	// protected Button checkSpellingButton;
@@ -780,5 +783,4 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	// "Spell Checking Finished", "The spell check has finished");
 	// }
 	// }
-
 }

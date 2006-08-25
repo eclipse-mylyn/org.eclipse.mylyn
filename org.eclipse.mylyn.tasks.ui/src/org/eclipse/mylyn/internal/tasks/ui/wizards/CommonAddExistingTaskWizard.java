@@ -21,10 +21,11 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IWorkbench;
 
@@ -60,6 +61,9 @@ public class CommonAddExistingTaskWizard extends Wizard {
 					monitor.beginTask("Retrieving task...", IProgressMonitor.UNKNOWN);
 					try {
 						newTask = connector.createTaskFromExistingKey(repository, taskId);
+						if (newTask instanceof AbstractRepositoryTask) {
+							TasksUiPlugin.getSynchronizationManager().synchronize(connector, (AbstractRepositoryTask)newTask, true, null);
+						}
 					} catch (Exception e) {
 						throw new InvocationTargetException(e);
 					} finally {

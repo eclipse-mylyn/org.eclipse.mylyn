@@ -117,7 +117,7 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 							if (getAttachContext()) {
 								// TODO should be done as part of job
 								try {
-									connector.attachContext(repository, (AbstractRepositoryTask) task, "");
+									connector.attachContext(repository, (AbstractRepositoryTask) task, "", TasksUiPlugin.getDefault().getProxySettings());
 								} catch (Exception e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
@@ -141,7 +141,7 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 					server.updateTicket(ticket, comment);
 					// XXX hack to avoid message about lost changes to local task
 					task.setTaskData(null);
-					connector.synchronize(task, true, null);
+					TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 					return Status.OK_STATUS;
 				} catch (Exception e) {
 					return TracUiPlugin.toStatus(e);

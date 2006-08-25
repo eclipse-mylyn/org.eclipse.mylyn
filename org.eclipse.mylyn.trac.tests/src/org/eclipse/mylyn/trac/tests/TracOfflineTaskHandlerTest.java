@@ -56,7 +56,7 @@ public class TracOfflineTaskHandlerTest extends TestCase {
 		manager.clearRepositories();
 
 		connector = (TracRepositoryConnector) manager.getRepositoryConnector(TracUiPlugin.REPOSITORY_KIND);
-		connector.setForceSyncExec(true);
+		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
 
 		offlineHandler = connector.getOfflineTaskHandler();
 	}
@@ -93,7 +93,7 @@ public class TracOfflineTaskHandlerTest extends TestCase {
 	public void testGetChangedSinceLastSyncXmlRpc010() throws Exception {
 		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
 		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, "1");
-		connector.synchronize(task, true, null);
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		
 		Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
 		tasks.add(task);

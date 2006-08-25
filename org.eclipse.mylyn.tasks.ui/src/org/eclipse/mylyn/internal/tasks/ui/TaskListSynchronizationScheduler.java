@@ -28,7 +28,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
  * @author Rob Elves
  * @author Mik Kersten
  */
-public class TaskListSynchronizationManager implements IPropertyChangeListener {
+public class TaskListSynchronizationScheduler implements IPropertyChangeListener {
 
 	private static final int DELAY_QUERY_REFRESH_ON_STARTUP = 10000;
 
@@ -40,7 +40,7 @@ public class TaskListSynchronizationManager implements IPropertyChangeListener {
 
 	private final MutexRule rule = new MutexRule();
 	
-	public TaskListSynchronizationManager(boolean refreshOnStartup) {		
+	public TaskListSynchronizationScheduler(boolean refreshOnStartup) {		
 		boolean enabled = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED);
 		if (refreshOnStartup && enabled) {
@@ -85,7 +85,6 @@ public class TaskListSynchronizationManager implements IPropertyChangeListener {
 		});
 		jobsQueue.add(jobToAdd);
 	}
-
 	
 	/**
 	 * @param delay  sync delay (ms)

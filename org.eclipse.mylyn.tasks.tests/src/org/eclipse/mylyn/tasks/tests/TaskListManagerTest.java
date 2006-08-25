@@ -27,7 +27,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.tasks.ui.ScheduledTaskListSynchJob;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasks.ui.TaskListSynchronizationManager;
+import org.eclipse.mylar.internal.tasks.ui.TaskListSynchronizationScheduler;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -499,7 +499,7 @@ public class TaskListManagerTest extends TestCase {
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, 1000L);
 		assertEquals(0, ScheduledTaskListSynchJob.getCount());
-		TaskListSynchronizationManager manager = new TaskListSynchronizationManager(false);
+		TaskListSynchronizationScheduler manager = new TaskListSynchronizationScheduler(false);
 		manager.startSynchJob();
 		Thread.sleep(3000);
 		assertTrue(ScheduledTaskListSynchJob.getCount() + " smaller than " + counter, ScheduledTaskListSynchJob

@@ -20,7 +20,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoryLabelProvider;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.ui.AbstractConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -62,7 +63,7 @@ public class SelectRepositoryClientPage extends WizardPage {
 
 	@Override
 	public boolean canFlipToNextPage() {
-		return wizard.getRepositoryClient() != null;
+		return wizard.getRepositoryConnector() != null;
 	}
 
 	public void createControl(Composite parent) {
@@ -79,7 +80,7 @@ public class SelectRepositoryClientPage extends WizardPage {
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				if (selection.getFirstElement() instanceof AbstractRepositoryConnector) {
-					wizard.setRepositoryClient((AbstractRepositoryConnector) selection.getFirstElement());
+					wizard.setRepositoryConnector((AbstractRepositoryConnector) selection.getFirstElement());
 					SelectRepositoryClientPage.this.setPageComplete(true);
 					wizard.getContainer().updateButtons();
 				}
@@ -92,7 +93,10 @@ public class SelectRepositoryClientPage extends WizardPage {
 	@Override
 	public IWizardPage getNextPage() {
 		if (isPageComplete()) {
-			AbstractRepositorySettingsPage nextPage = wizard.getRepositoryClient().getSettingsPage();
+			AbstractConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryConnectorUi(
+					wizard.getRepositoryConnector().getRepositoryType());
+			
+			AbstractRepositorySettingsPage nextPage = connectorUi.getSettingsPage();
 			wizard.setRepositorySettingsPage(nextPage);
 			nextPage.setWizard(wizard);
 			return nextPage;

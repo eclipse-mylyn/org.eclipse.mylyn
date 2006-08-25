@@ -29,11 +29,11 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.LocalAttachment;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
@@ -141,7 +141,7 @@ public class NewAttachmentWizard extends Wizard {
 		Job submitJob = new Job("Submitting attachment") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				AbstractRepositoryConnector repositoryClient = TasksUiPlugin.getRepositoryManager()
+				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 						.getRepositoryConnector(repository.getKind());
 				try {
 					attachmentHandler.uploadAttachment(repository, task, attachment.getComment(), attachment
@@ -156,7 +156,7 @@ public class NewAttachmentWizard extends Wizard {
 					}
 
 					if (attachContext) {
-						repositoryClient.attachContext(repository, (AbstractRepositoryTask) task, "");
+						connector.attachContext(repository, (AbstractRepositoryTask) task, "", TasksUiPlugin.getDefault().getProxySettings());
 					}
 
 				} catch (final CoreException e) {
@@ -176,7 +176,7 @@ public class NewAttachmentWizard extends Wizard {
 					}
 				}
 
-				repositoryClient.synchronize(task, true, new JobChangeAdapter() {
+				TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, new JobChangeAdapter() {
 					public void done(final IJobChangeEvent event) {
 						if (event.getResult().getException() != null) {
 							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

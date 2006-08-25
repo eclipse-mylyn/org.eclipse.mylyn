@@ -20,7 +20,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositoryQueryPage;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.ui.AbstractConnectorUi;
 import org.eclipse.mylar.tasks.ui.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.search.ui.ISearchPage;
@@ -106,10 +106,10 @@ public class RepositorySearchPage extends DialogPage implements ISearchPage {
 
 	private WizardPage createPage(TaskRepository repository) {
 		if (repository != null) {
-			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+			AbstractConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryConnectorUi(
 					repository.getKind());
-			if (connector != null) {
-				WizardPage searchPage = connector.getSearchPage(repository, null);
+			if (connectorUi != null) {
+				WizardPage searchPage = connectorUi.getSearchPage(repository, null);
 				if (searchPage != null) {
 					((ISearchPage) searchPage).setContainer(pageContainer);
 					searchPage.createControl(fParentComposite);
@@ -155,18 +155,13 @@ public class RepositorySearchPage extends DialogPage implements ISearchPage {
 
 	@Override
 	public void setVisible(boolean visible) {
-
-		// if (repository == null) {
-		// repository =
-		// TasksUiPlugin.getRepositoryManager().getDefaultRepository(BugzillaCorePlugin.REPOSITORY_KIND);
-		// }
 		if (firstView) {
 			List<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getAllRepositories();
 			List<TaskRepository> searchableRepositories = new ArrayList<TaskRepository>();
 			for (TaskRepository repository : repositories) {
-				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				AbstractConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryConnectorUi(
 						repository.getKind());
-				if (connector != null && connector.hasSearchPage()) {
+				if (connectorUi != null && connectorUi.hasSearchPage()) {
 					searchableRepositories.add(repository);
 				}
 			}

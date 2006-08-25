@@ -26,6 +26,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.context.core.util.DateUtil;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -37,7 +38,7 @@ import org.eclipse.ui.progress.IProgressConstants;
  * @author Mik Kersten
  */
 class SynchronizeQueryJob extends Job {
-
+	
 	private final AbstractRepositoryConnector connector;
 
 	private static final String JOB_LABEL = "Synchronizing queries";
@@ -50,7 +51,7 @@ class SynchronizeQueryJob extends Job {
 
 	private TaskList taskList;
 
-	public SynchronizeQueryJob(AbstractRepositoryConnector connector, Set<AbstractRepositoryQuery> queries,
+	public SynchronizeQueryJob(RepositorySynchronizationManager synchronizationManager, AbstractRepositoryConnector connector, Set<AbstractRepositoryQuery> queries,
 			TaskList taskList) {
 		super(JOB_LABEL + ": " + connector.getRepositoryType());
 		this.connector = connector;
@@ -82,14 +83,13 @@ class SynchronizeQueryJob extends Job {
 
 			MultiStatus queryStatus = new MultiStatus(TasksUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
 
-			newHits = this.connector.performQuery(repositoryQuery, new NullProgressMonitor(), queryStatus);
+			newHits = connector.performQuery(repositoryQuery, new NullProgressMonitor(), queryStatus);
 			if (queryStatus.getChildren() != null && queryStatus.getChildren().length > 0) {
 				if (queryStatus.getChildren()[0].getException() == null) {
 					repositoryQuery.updateHits(newHits, taskList);
 					if (synchTasks) {
-						// TODO: Should sync changed per repository not per
-						// query
-						connector.synchronizeChanged(repository);
+						// TODO: Should sync changed per repository not per query
+						TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
 					}
 
 				} else {

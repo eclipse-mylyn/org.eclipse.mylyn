@@ -18,11 +18,12 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.ui.AbstractConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
@@ -48,8 +49,10 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 		} else if (element instanceof AbstractRepositoryTask) { 
 			AbstractRepositoryTask task = (AbstractRepositoryTask)element;
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(task.getRepositoryKind());
+			AbstractConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryConnectorUi(
+					task.getRepositoryKind());
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryKind(), task.getRepositoryUrl());
-			if (!connector.hasRichEditor()) {
+			if (!connectorUi.hasRichEditor()) {
 				decoration.addOverlay(TaskListImages.OVERLAY_WEB, IDecoration.BOTTOM_LEFT);
 			} else if (connector != null && connector.hasRepositoryContext(repository, task)) { 
 				decoration.addOverlay(TaskListImages.OVERLAY_REPOSITORY_CONTEXT, IDecoration.BOTTOM_LEFT);

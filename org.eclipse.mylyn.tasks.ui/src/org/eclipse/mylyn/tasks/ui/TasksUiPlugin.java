@@ -47,12 +47,13 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListNotificationManager;
 import org.eclipse.mylar.internal.tasks.ui.TaskListNotificationQueryIncoming;
 import org.eclipse.mylar.internal.tasks.ui.TaskListNotificationReminder;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasks.ui.TaskListSynchronizationManager;
+import org.eclipse.mylar.internal.tasks.ui.TaskListSynchronizationScheduler;
 import org.eclipse.mylar.internal.tasks.ui.util.TaskListSaveManager;
 import org.eclipse.mylar.internal.tasks.ui.util.TaskListWriter;
 import org.eclipse.mylar.internal.tasks.ui.util.TasksUiExtensionReader;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
@@ -106,7 +107,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private static TaskRepositoryManager taskRepositoryManager;
 
-	private static TaskListSynchronizationManager synchronizationManager;
+	private static TaskListSynchronizationScheduler synchronizationScheduler;
+	
+	private static RepositorySynchronizationManager synchronizationManager;
 
 	private TaskListSaveManager taskListSaveManager;
 
@@ -375,15 +378,17 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 						taskListBackupManager = new TaskListBackupManager();
 						getPreferenceStore().addPropertyChangeListener(taskListBackupManager);
 
-						synchronizationManager = new TaskListSynchronizationManager(true);
-						synchronizationManager.startSynchJob();
+						synchronizationManager = new RepositorySynchronizationManager();
+						
+						synchronizationScheduler = new TaskListSynchronizationScheduler(true);
+						synchronizationScheduler.startSynchJob();
 
 						taskListSaveManager = new TaskListSaveManager();
 						taskListManager.getTaskList().addChangeListener(taskListSaveManager);
 
 						ContextCorePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(
 								PREFERENCE_LISTENER);
-						getPreferenceStore().addPropertyChangeListener(synchronizationManager);
+						getPreferenceStore().addPropertyChangeListener(synchronizationScheduler);
 						getPreferenceStore().addPropertyChangeListener(taskListManager);
 					} catch (Exception e) {
 						MylarStatusHandler.fail(e, "Mylar Tasks UI start failed", false);
@@ -410,7 +415,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				getPreferenceStore().removePropertyChangeListener(taskListNotificationManager);
 				getPreferenceStore().removePropertyChangeListener(taskListBackupManager);
 				getPreferenceStore().removePropertyChangeListener(taskListManager);
-				getPreferenceStore().removePropertyChangeListener(synchronizationManager);
+				getPreferenceStore().removePropertyChangeListener(synchronizationScheduler);
 				taskListManager.getTaskList().removeChangeListener(taskListSaveManager);
 				taskListManager.dispose();
 				TaskListColorsAndFonts.dispose();
@@ -696,7 +701,11 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		return offlineTaskManager;
 	}
 
-	public static TaskListSynchronizationManager getSynchronizationManager() {
+	public static TaskListSynchronizationScheduler getSynchronizationScheduler() {
+		return synchronizationScheduler;
+	}
+
+	public static RepositorySynchronizationManager getSynchronizationManager() {
 		return synchronizationManager;
 	}
 

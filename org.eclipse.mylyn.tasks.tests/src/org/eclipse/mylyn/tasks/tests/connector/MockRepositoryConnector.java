@@ -15,18 +15,14 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 
 /**
  * @author Mik Kersten
@@ -55,12 +51,6 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public Wizard getAddExistingTaskWizard(TaskRepository repository) {
-		// ignore
-		return null;
-	}
-
-	@Override
 	public IAttachmentHandler getAttachmentHandler() {
 		// ignore
 		return null;
@@ -69,18 +59,6 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public String getLabel() {
 		return "Mock Repository (for unit tests)";
-	}
-
-	@Override
-	public IWizard getNewQueryWizard(TaskRepository repository, IStructuredSelection selection) {
-		// ignore
-		return null;
-	}
-
-	@Override
-	public IWizard getNewTaskWizard(TaskRepository taskRepository, IStructuredSelection selection) {
-		// ignore
-		return null;
 	}
 
 	@Override
@@ -101,30 +79,14 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public AbstractRepositorySettingsPage getSettingsPage() {
-		// ignore
-		return null;
-	}
-
-	@Override
 	public List<String> getSupportedVersions() {
 		// ignore
 		return null;
 	}
-
-	@Override
-	public void openEditQueryDialog(AbstractRepositoryQuery query) {
-		// ignore
-	}
-
+	
 	@Override
 	public List<AbstractQueryHit> performQuery(AbstractRepositoryQuery query, IProgressMonitor monitor, MultiStatus queryStatus) {
 		return null;
-	}
-
-	@Override
-	protected void updateTaskState(AbstractRepositoryTask repositoryTask) {
-		// ignore
 	}
 
 	@Override
@@ -133,14 +95,13 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public boolean hasRichEditor() {
-		// ignore
-		return false;
+	public boolean validate(TaskRepository repository) {
+		return true;
 	}
 
 	@Override
-	public boolean validate(TaskRepository repository) {
-		return true;
+	public void updateTaskState(AbstractRepositoryTask repositoryTask) {
+		// ignore
 	}
 
 }

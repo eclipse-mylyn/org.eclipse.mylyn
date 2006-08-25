@@ -17,8 +17,9 @@ import java.util.Set;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.ui.AbstractConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
@@ -43,9 +44,9 @@ public class AddExistingTaskWizard extends MultiRepositoryAwareWizard {
 
 		@Override
 		protected IWizard createWizard(TaskRepository taskRepository) {
-			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+			AbstractConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryConnectorUi(
 					taskRepository.getKind());
-			return connector.getAddExistingTaskWizard(taskRepository);
+			return connectorUi.getAddExistingTaskWizard(taskRepository);
 		}
 	}
 

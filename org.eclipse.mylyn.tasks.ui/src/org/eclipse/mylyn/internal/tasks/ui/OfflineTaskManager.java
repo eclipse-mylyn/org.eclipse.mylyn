@@ -23,8 +23,8 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**

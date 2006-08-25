@@ -24,6 +24,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.core.TaskRepositoriesExternalizer;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskRepositoryListener;
@@ -39,6 +40,8 @@ public class TaskRepositoryManager {
 
 	private Map<String, AbstractRepositoryConnector> repositoryConnectors = new HashMap<String, AbstractRepositoryConnector>();
 
+	private Map<String, AbstractConnectorUi> repositoryConnectorUis = new HashMap<String, AbstractConnectorUi>();
+	
 	private Map<String, Set<TaskRepository>> repositoryMap = new HashMap<String, Set<TaskRepository>>();
 
 	private Set<ITaskRepositoryListener> listeners = new HashSet<ITaskRepositoryListener>();
@@ -47,13 +50,7 @@ public class TaskRepositoryManager {
 
 	public static final String MESSAGE_NO_REPOSITORY = "No repository available, please add one using the Task Repositories view.";
 
-	public static final String PREFIX_LOCAL_OLD = "task-";
-
 	public static final String PREFIX_LOCAL = "local-";
-
-	// public static final String PREFIX_REPOSITORY_OLD = "Bugzilla";
-
-	// private static final String PREF_STORE_DELIM = ", ";
 
 	private TaskRepositoriesExternalizer externalizer = new TaskRepositoriesExternalizer();
 
@@ -71,6 +68,20 @@ public class TaskRepositoryManager {
 		}
 	}
 
+	public Collection<AbstractConnectorUi> getRepositoryConnectorsUis() {
+		return Collections.unmodifiableCollection(repositoryConnectorUis.values());
+	}
+
+	public AbstractConnectorUi getRepositoryConnectorUi(String kind) {
+		return repositoryConnectorUis.get(kind);
+	}
+
+	public void addRepositoryConnectorUi(AbstractConnectorUi repositoryConnectorUi) {
+		if (!repositoryConnectorUis.values().contains(repositoryConnectorUi)) {
+			repositoryConnectorUis.put(repositoryConnectorUi.getRepositoryType(), repositoryConnectorUi);
+		}
+	}
+	
 	public void addRepository(TaskRepository repository) {
 		Set<TaskRepository> repositories;
 		if (!repositoryMap.containsKey(repository.getKind())) {
@@ -320,19 +331,6 @@ public class TaskRepositoryManager {
 			MylarStatusHandler.fail(t, "could not load repositories", false);
 		}
 	}
-
-	// migrate to new time stamp 0.5.3 -> 0.6.0
-	// private String migrateOldBugzillaSyncDate(long oldTime) {
-	// String newDate = "";
-	// String DATE_FORMAT_2 = "yyyy-MM-dd HH:mm:ss";
-	// try {
-	// SimpleDateFormat delta_ts_format = new SimpleDateFormat(DATE_FORMAT_2);
-	// newDate = delta_ts_format.format(new Date(oldTime));
-	// } catch (Exception e) {
-	// // ignore
-	// }
-	// return newDate;
-	// }
 
 	/**
 	 * for testing purposes

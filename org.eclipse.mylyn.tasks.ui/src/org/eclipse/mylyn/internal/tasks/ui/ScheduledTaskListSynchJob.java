@@ -23,10 +23,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TaskListManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
@@ -95,13 +95,13 @@ public class ScheduledTaskListSynchJob extends Job {
 						JobChangeAdapter jobAdapter = new JobChangeAdapter() {
 							@Override
 							public void done(IJobChangeEvent event) {
-								connector.synchronizeChanged(repository);
+								TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
 							}
 						};
-						connector.synchronize(queries, jobAdapter, Job.DECORATE, 0, false);
+						TasksUiPlugin.getSynchronizationManager().synchronize(connector, queries, jobAdapter, Job.DECORATE, 0, false);
 					}
 				} else {
-					connector.synchronizeChanged(repository);
+					TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
 				}
 				monitor.worked(1);
 			}

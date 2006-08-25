@@ -33,7 +33,6 @@ import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchQuery;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchResultCollector;
 import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaSearchOperation;
 import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaSearchResultCollector;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
@@ -42,6 +41,7 @@ import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositorySearchQuery;
 import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
@@ -85,15 +85,17 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 
 	private Button searchDuplicatesButton;
 
+	private BugSubmissionHandler submissionHandler;
+
 	public NewBugEditor(FormEditor editor) {
 		super(editor);
 	}
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) {
-		// if (!(input instanceof NewBugEditorInput))
-		// throw new PartInitException("Invalid Input: Must be
-		// NewBugEditorInput");
+		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
+		submissionHandler = new BugSubmissionHandler(connector);
+				
 		NewBugEditorInput ei = (NewBugEditorInput) input;
 		setSite(site);
 		setInput(input);
@@ -360,9 +362,9 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 				}
 			};
 
-			BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) TasksUiPlugin
-					.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
-			bugzillaRepositoryClient.submitBugReport(bugzillaReportSubmitForm, submitJobListener);
+//			BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) TasksUiPlugin
+//					.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
+			submissionHandler.submitBugReport(bugzillaReportSubmitForm, submitJobListener);
 
 		} catch (UnsupportedEncodingException e) {
 			// should never get here but just in case...

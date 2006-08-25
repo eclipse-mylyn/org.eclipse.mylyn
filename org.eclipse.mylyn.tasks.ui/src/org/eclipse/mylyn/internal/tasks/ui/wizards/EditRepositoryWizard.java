@@ -15,7 +15,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.ui.AbstractConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
@@ -34,9 +34,9 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 	public EditRepositoryWizard(TaskRepository repository) {
 		super();
 		this.repository = repository;
-		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+		AbstractConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryConnectorUi(
 				repository.getKind());
-		abstractRepositorySettingsPage = connector.getSettingsPage();
+		abstractRepositorySettingsPage = connectorUi.getSettingsPage();
 		abstractRepositorySettingsPage.setRepository(repository);
 		abstractRepositorySettingsPage.setVersion(repository.getVersion());
 		abstractRepositorySettingsPage.setWizard(this);		

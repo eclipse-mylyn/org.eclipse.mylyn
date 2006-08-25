@@ -28,9 +28,9 @@ import org.eclipse.mylar.internal.trac.TracTask;
 import org.eclipse.mylar.internal.trac.TracUiPlugin;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.trac.tests.support.TestFixture;
@@ -82,7 +82,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 
 		AbstractRepositoryConnector abstractConnector = manager.getRepositoryConnector(kind);
 		connector = (TracRepositoryConnector) abstractConnector;
-		connector.setForceSyncExec(true);
+		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
 
 		attachmentHandler = connector.getAttachmentHandler();
 	}
@@ -90,7 +90,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 	public void testDownloadAttachmentXmlRpc() throws Exception {
 		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
 		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.attachmentTicketId + "");
-		connector.synchronize(task, true, null);
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		assertTrue(task.getTaskData().getAttachments().size() > 0);
 		File file = File.createTempFile("attachment", null);
 		file.deleteOnExit();

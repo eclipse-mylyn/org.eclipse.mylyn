@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**

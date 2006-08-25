@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.PrivilegeLevel;
-import org.eclipse.mylar.internal.trac.TracRepositoryConnector;
 import org.eclipse.mylar.internal.trac.TracRepositoryQuery;
 import org.eclipse.mylar.internal.trac.TracUiPlugin;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
@@ -39,8 +38,11 @@ import org.eclipse.mylar.trac.tests.support.XmlRpcServer.TestData;
 public class RepositorySearchQueryTest extends TestCase {
 
 	private TestData data;
+
 	private TaskRepositoryManager manager;
-	private TracRepositoryConnector connector;
+
+//	private TracRepositoryConnector connector;
+
 	private TaskRepository repository;
 
 	public RepositorySearchQueryTest() {
@@ -53,8 +55,8 @@ public class RepositorySearchQueryTest extends TestCase {
 		manager = TasksUiPlugin.getRepositoryManager();
 		manager.clearRepositories();
 
-		connector = (TracRepositoryConnector) manager.getRepositoryConnector(TracUiPlugin.REPOSITORY_KIND);
-		connector.setForceSyncExec(true);
+//		connector = (TracRepositoryConnector) manager.getRepositoryConnector(TracUiPlugin.REPOSITORY_KIND);
+		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
 	}
 
 	protected void init(String url, Version version) {
@@ -70,7 +72,7 @@ public class RepositorySearchQueryTest extends TestCase {
 	}
 
 	public void testSearch() {
-		init(Constants.TEST_TRAC_096_URL, Version.TRAC_0_9);	
+		init(Constants.TEST_TRAC_096_URL, Version.TRAC_0_9);
 
 		TracSearch search = new TracSearch();
 		String queryUrl = repository.getUrl() + ITracClient.QUERY_URL + search.toUrl();

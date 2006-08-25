@@ -15,7 +15,8 @@ import java.util.Collection;
 
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.ui.AbstractConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.INewWizard;
 
@@ -35,11 +36,11 @@ public abstract class AbstractRepositoryClientWizard extends Wizard implements I
 		setDefaultPageImageDescriptor(TaskListImages.BANNER_REPOSITORY);
 	} 
 	
-	public void setRepositoryClient(AbstractRepositoryConnector repositoryConnector) {
+	public void setRepositoryConnector(AbstractRepositoryConnector repositoryConnector) {
 		this.repositoryConnector = repositoryConnector;
 	}
 
-	public AbstractRepositoryConnector getRepositoryClient() {
+	public AbstractRepositoryConnector getRepositoryConnector() {
 		return repositoryConnector;
 	}
 
@@ -48,8 +49,10 @@ public abstract class AbstractRepositoryClientWizard extends Wizard implements I
 		Collection<AbstractRepositoryConnector> connectors = TasksUiPlugin.getRepositoryManager().getRepositoryConnectors();
 		if (connectors.size() == 1) {
 			AbstractRepositoryConnector connector = connectors.toArray(new AbstractRepositoryConnector[1])[0];
-			setRepositoryClient(connector);
-			AbstractRepositorySettingsPage nextPage = connector.getSettingsPage();
+			setRepositoryConnector(connector);
+			AbstractConnectorUi connectorUi = TasksUiPlugin.getRepositoryManager().getRepositoryConnectorUi(
+					connector.getRepositoryType());
+			AbstractRepositorySettingsPage nextPage = connectorUi.getSettingsPage();
 			setRepositorySettingsPage(nextPage);
 			nextPage.setWizard(this);
 			addPage(nextPage);

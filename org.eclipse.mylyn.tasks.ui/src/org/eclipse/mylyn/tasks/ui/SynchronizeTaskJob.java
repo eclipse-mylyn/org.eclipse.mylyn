@@ -28,6 +28,7 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorInput;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
@@ -46,7 +47,9 @@ class SynchronizeTaskJob extends Job {
 	private static final String LABEL_SYNCHRONIZE_TASK = "Task Synchronization";
 
 	private final AbstractRepositoryConnector connector;
-
+	
+//	private final RepositorySynchronizationManager synchronizationManager;
+	
 	private Set<AbstractRepositoryTask> repositoryTasks;
 
 	private boolean forceSync = false;
@@ -55,6 +58,7 @@ class SynchronizeTaskJob extends Job {
 		super(LABEL_SYNCHRONIZE_TASK + " (" + repositoryTasks.size() + " tasks)");
 		this.connector = connector;
 		this.repositoryTasks = repositoryTasks;
+//		this.synchronizationManager = synchronizationManager;
 	}
 
 	public void setForceSynch(boolean forceUpdate) {
@@ -98,7 +102,7 @@ class SynchronizeTaskJob extends Job {
 						}
 
 						if (downloadedTaskData != null) {
-							connector.updateOfflineState(repositoryTask, downloadedTaskData, forceSync);
+							TasksUiPlugin.getSynchronizationManager().updateOfflineState(connector, repositoryTask, downloadedTaskData, forceSync);
 							connector.updateTaskState(repositoryTask);
 							refreshEditors(repositoryTask);
 						}
@@ -148,18 +152,5 @@ class SynchronizeTaskJob extends Job {
 			}
 		}
 	}
-
-	// private boolean isDirty(AbstractRepositoryTask task) {
-	// // TODO: move out of SynchronizeTaskJob
-	// List<MylarTaskEditor> editors =
-	// TaskUiUtil.getActiveRepositoryTaskEditors();
-	// for (final MylarTaskEditor editor : editors) {
-	// TaskEditorInput input = (TaskEditorInput) editor.getEditorInput();
-	// if (input.getTask().equals(task) && editor.isDirty()) {
-	// return true;
-	// }
-	// }
-	// return false;
-	// }
 
 }

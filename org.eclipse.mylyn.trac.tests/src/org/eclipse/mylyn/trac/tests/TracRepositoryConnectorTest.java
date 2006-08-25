@@ -42,12 +42,12 @@ import org.eclipse.mylar.internal.trac.model.TracVersion;
 import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.trac.tests.support.TestFixture;
@@ -103,7 +103,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertEquals(abstractConnector.getRepositoryType(), kind);
 
 		connector = (TracRepositoryConnector) abstractConnector;
-		connector.setForceSyncExec(true);
+		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
 	}
 
 	public void testGetRepositoryUrlFromTaskUrl() {
@@ -258,7 +258,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 	public void testContext010() throws Exception {
 		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
 		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.attachmentTicketId + "");
-		connector.synchronize(task, true, null);
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 
 		int size = task.getTaskData().getAttachments().size();
 
@@ -266,13 +266,13 @@ public class TracRepositoryConnectorTest extends TestCase {
 		sourceContextFile.createNewFile();
 		sourceContextFile.deleteOnExit();
 
-		assertTrue(connector.attachContext(repository, task, ""));
+		assertTrue(connector.attachContext(repository, task, "", TasksUiPlugin.getDefault().getProxySettings()));
 		
-		connector.synchronize(task, true, null);
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		assertEquals(size + 1, task.getTaskData().getAttachments().size());
 		
 		RepositoryAttachment attachment = task.getTaskData().getAttachments().get(size);
-		assertTrue(connector.retrieveContext(repository, task, attachment));
+		assertTrue(connector.retrieveContext(repository, task, attachment, TasksUiPlugin.getDefault().getProxySettings(), TasksUiPlugin.getDefault().getDataDirectory()));
 	}
 
 	public void testContext096() throws Exception {
@@ -284,7 +284,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		sourceContextFile.deleteOnExit();
 
 		try {
-			connector.attachContext(repository, task, "");
+			connector.attachContext(repository, task, "", TasksUiPlugin.getDefault().getProxySettings());
 			fail("expected CoreException"); // operation should not be supported
 		} catch (CoreException e) {
 		}

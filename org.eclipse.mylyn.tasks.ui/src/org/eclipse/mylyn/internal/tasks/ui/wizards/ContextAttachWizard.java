@@ -17,9 +17,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchSite;
@@ -61,7 +61,7 @@ public class ContextAttachWizard extends Wizard {
 				this.repository.getKind());
 
 		try {
-			if (!connector.attachContext(repository, task, wizardPage.getComment())) {
+			if (!connector.attachContext(repository, task, wizardPage.getComment(), TasksUiPlugin.getDefault().getProxySettings())) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 						TasksUiPlugin.TITLE_DIALOG, AbstractRepositoryConnector.MESSAGE_ATTACHMENTS_NOT_SUPPORTED + connector.getLabel());
 			} else {

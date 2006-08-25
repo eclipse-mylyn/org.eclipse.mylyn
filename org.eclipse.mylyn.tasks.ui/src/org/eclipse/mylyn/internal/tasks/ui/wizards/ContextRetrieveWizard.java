@@ -17,10 +17,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PlatformUI;
 
@@ -63,9 +63,23 @@ public class ContextRetrieveWizard extends Wizard {
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				this.repository.getKind());
 		try {
-			if (!connector.retrieveContext(repository, task, delegate)) {
-				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						TasksUiPlugin.TITLE_DIALOG, AbstractRepositoryConnector.MESSAGE_ATTACHMENTS_NOT_SUPPORTED + connector.getLabel());
+			boolean wasActive = false;
+			if (task.isActive()) {
+				wasActive = true;
+				TasksUiPlugin.getTaskListManager().deactivateTask(task);
+			}
+			try {
+				if (!connector.retrieveContext(repository, task, delegate, TasksUiPlugin.getDefault().getProxySettings(), TasksUiPlugin.getDefault().getDataDirectory())) {
+					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+							TasksUiPlugin.TITLE_DIALOG, AbstractRepositoryConnector.MESSAGE_ATTACHMENTS_NOT_SUPPORTED
+									+ connector.getLabel());
+				} else {
+					TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
+				}
+			} finally {
+				if (wasActive) {
+					TasksUiPlugin.getTaskListManager().activateTask(task);
+				}
 			}
 		} catch (CoreException e) {
 			ErrorDialog.openError(null, TasksUiPlugin.TITLE_DIALOG, "Retrieval of task context FAILED.", e.getStatus());

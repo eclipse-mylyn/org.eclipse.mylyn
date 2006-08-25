@@ -23,11 +23,11 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskCategory;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewActionDelegate;
@@ -104,7 +104,7 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 				for (AbstractRepositoryConnector connector : queriesToSyncMap.keySet()) {
 					List<AbstractRepositoryQuery> queriesToSync = queriesToSyncMap.get(connector);
 					if (queriesToSync != null && queriesToSync.size() > 0) {
-						connector.synchronize(new HashSet<AbstractRepositoryQuery>(queriesToSync), null, Job.LONG, 0,
+						TasksUiPlugin.getSynchronizationManager().synchronize(connector, new HashSet<AbstractRepositoryQuery>(queriesToSync), null, Job.LONG, 0,
 								true);
 					}
 				}
@@ -113,7 +113,7 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 				for (AbstractRepositoryConnector connector : tasksToSyncMap.keySet()) {
 					List<AbstractRepositoryTask> tasksToSync = tasksToSyncMap.get(connector);
 					if (tasksToSync != null && tasksToSync.size() > 0) {
-						connector.synchronize(new HashSet<AbstractRepositoryTask>(tasksToSync), true, null);
+						TasksUiPlugin.getSynchronizationManager().synchronize(connector, new HashSet<AbstractRepositoryTask>(tasksToSync), true, null);
 					}
 				}
 			}

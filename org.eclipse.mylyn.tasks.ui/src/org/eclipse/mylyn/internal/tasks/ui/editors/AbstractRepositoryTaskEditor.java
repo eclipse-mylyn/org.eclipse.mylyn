@@ -62,6 +62,7 @@ import org.eclipse.mylar.internal.tasks.ui.actions.CopyToClipboardAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.SaveRemoteFileAction;
 import org.eclipse.mylar.internal.tasks.ui.wizards.NewAttachmentWizard;
 import org.eclipse.mylar.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -71,7 +72,6 @@ import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -1493,7 +1493,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		try {
 			updateBug();
 
-			final AbstractRepositoryConnector repositoryClient = (AbstractRepositoryConnector) TasksUiPlugin
+			final AbstractRepositoryConnector connector = (AbstractRepositoryConnector) TasksUiPlugin
 					.getRepositoryManager().getRepositoryConnector(getRepositoryTaskData().getRepositoryKind());
 
 			IEditorInput input = this.getEditorInput();
@@ -1508,7 +1508,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					// repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
 					// }
 					if (getRepositoryTaskData().hasLocalChanges() == true) {
-						repositoryClient.updateOfflineState(repositoryTask, getRepositoryTaskData(), false);
+						TasksUiPlugin.getSynchronizationManager().updateOfflineState(connector, repositoryTask, getRepositoryTaskData(), false);
 					}
 					TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 				}
