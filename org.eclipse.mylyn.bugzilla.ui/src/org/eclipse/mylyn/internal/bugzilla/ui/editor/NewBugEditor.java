@@ -130,13 +130,13 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		descriptionComposite.setLayoutData(descriptionData);
 		section.setClient(descriptionComposite);
 
-		descriptionTextViewer = addRepositoryTextViewer(repository, descriptionComposite, getRepositoryTaskData()
-				.getNewComment(), SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		descriptionTextViewer = addTextEditor(repository, descriptionComposite, getRepositoryTaskData()
+				.getNewComment(), true, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		descriptionTextViewer.setEditable(true);
 
 		GridData descriptionTextData = new GridData(GridData.FILL_BOTH);
-		descriptionTextViewer.getTextWidget().setLayoutData(descriptionTextData);
-		descriptionTextViewer.getTextWidget().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		descriptionTextViewer.getControl().setLayoutData(descriptionTextData);
+		descriptionTextViewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 
 		toolkit.paintBordersFor(descriptionComposite);
 

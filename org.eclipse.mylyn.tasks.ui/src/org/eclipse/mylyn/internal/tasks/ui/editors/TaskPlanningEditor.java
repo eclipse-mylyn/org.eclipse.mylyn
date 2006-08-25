@@ -112,7 +112,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private Combo statusCombo;
 
-	private TextViewer commentViewer;
+	private TextViewer noteEditor;
 
 	private Spinner estimated;
 
@@ -243,7 +243,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			}
 		}
 
-		String note = commentViewer.getTextWidget().getText();// notes.getText();
+		String note = noteEditor.getTextWidget().getText();// notes.getText();
 		task.setNotes(note);
 		task.setEstimatedTimeHours(estimated.getSelection());
 		if (datePicker != null && datePicker.getDate() != null) {
@@ -840,14 +840,14 @@ public class TaskPlanningEditor extends TaskFormPage {
 					repositoryTask.getRepositoryUrl());
 		}
 
-		commentViewer = addRepositoryTextViewer(repository, container, task.getNotes(), SWT.FLAT | SWT.MULTI | SWT.WRAP
+		noteEditor = addTextEditor(repository, container, task.getNotes(), true, SWT.FLAT | SWT.MULTI | SWT.WRAP
 				| SWT.V_SCROLL);
 
-		commentViewer.getTextWidget().setLayoutData(new GridData(GridData.FILL_BOTH));
-		commentViewer.getTextWidget().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		commentViewer.setEditable(true);
+		noteEditor.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
+		noteEditor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		noteEditor.setEditable(true);
 
-		commentViewer.getTextWidget().addModifyListener(new ModifyListener() {
+		noteEditor.getTextWidget().addModifyListener(new ModifyListener() {
 
 			public void modifyText(ModifyEvent e) {
 				markDirty(true);
@@ -861,7 +861,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		// getSite().getSelectionProvider().setSelection(commentViewer.getSelection());
 		//				
 		// }});
-
+		
 		toolkit.paintBordersFor(container);
 	}
 
@@ -977,7 +977,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	/** for testing - should cause dirty state */
 	public void setNotes(String notes) {
-		this.commentViewer.getTextWidget().setText(notes);
+		this.noteEditor.getTextWidget().setText(notes);
 	}
 
 	/** for testing - should cause dirty state */

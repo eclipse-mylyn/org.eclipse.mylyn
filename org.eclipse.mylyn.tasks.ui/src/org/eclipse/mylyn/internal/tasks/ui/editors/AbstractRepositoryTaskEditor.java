@@ -32,7 +32,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
@@ -1188,16 +1187,16 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		RepositoryTaskAttribute attribute = getRepositoryTaskData().getDescriptionAttribute();
 		if (attribute != null && !attribute.isReadOnly()) {
-			descriptionTextViewer = addRepositoryTextViewer(repository, sectionComposite, getRepositoryTaskData()
-					.getDescription(), SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+			descriptionTextViewer = addTextEditor(repository, sectionComposite, getRepositoryTaskData()
+					.getDescription(), true, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 			descriptionTextViewer.setEditable(true);
-
+			StyledText styledText = descriptionTextViewer.getTextWidget();
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 			gd.widthHint = DESCRIPTION_WIDTH;
-			gd.heightHint = DESCRIPTION_HEIGHT;
+			gd.heightHint = SWT.DEFAULT;
 			gd.grabExcessHorizontalSpace = true;
-			descriptionTextViewer.getTextWidget().setLayoutData(gd);
-			descriptionTextViewer.getTextWidget().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+			descriptionTextViewer.getControl().setLayoutData(gd);
+			descriptionTextViewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 			descriptionTextViewer.getTextWidget().addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
 					String sel = descriptionTextViewer.getTextWidget().getText();
@@ -1208,12 +1207,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					validateInput();
 				}
 			});
+			textHash.put(getRepositoryTaskData().getDescription(), styledText);
 		} else {
 			String text = getRepositoryTaskData().getDescription();
-			descriptionTextViewer = addRepositoryTextViewer(repository, sectionComposite, text, SWT.MULTI | SWT.WRAP);
-			StyledText styledText = descriptionTextViewer.getTextWidget();
-			styledText.setLayout(new GridLayout());
-			GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(styledText);
+			descriptionTextViewer = addTextViewer(repository, sectionComposite, text, SWT.MULTI | SWT.WRAP);
+			StyledText styledText = descriptionTextViewer.getTextWidget();			
+			GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(descriptionTextViewer.getControl());
 
 			textHash.put(text, styledText);
 		}
@@ -1287,7 +1286,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			expandableComposite.setLayout(new GridLayout());
 			expandableComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-			Composite ecComposite = toolkit.createComposite(expandableComposite);
+			Composite ecComposite = toolkit.createComposite(expandableComposite);			
 			GridLayout ecLayout = new GridLayout();
 			ecLayout.marginHeight = 0;
 			ecLayout.marginBottom = 10;
@@ -1296,11 +1295,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			ecComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			expandableComposite.setClient(ecComposite);
 
-			TextViewer viewer = addRepositoryTextViewer(repository, ecComposite, taskComment.getText(), SWT.MULTI
+			TextViewer viewer = addTextViewer(repository, ecComposite, taskComment.getText(), SWT.MULTI
 					| SWT.WRAP);
-			styledText = viewer.getTextWidget();
+			viewer.getControl().setBackground(new Color(expandableComposite.getDisplay(), 123, 34, 155));
+			styledText = viewer.getTextWidget();			
 			GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(styledText);
-
+			//GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(viewer.getControl());
+			
 			// code for outline
 			commentStyleText.add(styledText);
 			textHash.put(taskComment, styledText);
@@ -1313,16 +1314,16 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		Composite newCommentsComposite = toolkit.createComposite(section);
 		newCommentsComposite.setLayout(new GridLayout());
 
-		final TextViewer newCommentTextViewer = addRepositoryTextViewer(repository, newCommentsComposite,
-				getRepositoryTaskData().getNewComment(), SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		final TextViewer newCommentTextViewer = addTextEditor(repository, newCommentsComposite,
+				getRepositoryTaskData().getNewComment(), true, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		newCommentTextViewer.setEditable(true);
 
 		GridData addCommentsTextData = new GridData(GridData.FILL_HORIZONTAL);
 		addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
 		addCommentsTextData.heightHint = DESCRIPTION_HEIGHT;
 		addCommentsTextData.grabExcessHorizontalSpace = true;
-		newCommentTextViewer.getTextWidget().setLayoutData(addCommentsTextData);
-		newCommentTextViewer.getTextWidget().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		newCommentTextViewer.getControl().setLayoutData(addCommentsTextData);
+		newCommentTextViewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 
 		newCommentTextViewer.getTextWidget().addModifyListener(new ModifyListener() {
 
@@ -1910,7 +1911,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	public void setDescriptionText(String text) {
-		this.descriptionTextViewer.setDocument(new Document(text));
+		this.descriptionTextViewer.getDocument().set(text);
 	}
 
 	protected void addRadioButtons(Composite buttonComposite) {
