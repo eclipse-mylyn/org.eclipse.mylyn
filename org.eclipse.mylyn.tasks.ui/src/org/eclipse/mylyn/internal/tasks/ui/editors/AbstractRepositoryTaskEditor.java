@@ -1844,17 +1844,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		return isDisposed;
 	}
 
-	// The implementation of the attach context UI is connector dependant.
-	protected boolean getAttachContext() {
-		return false;
-	}
-
-	// The implementation of the attach context UI is connector dependant.
-	// this method is called when a user attaches a patch to the task
-	protected void setAttachContext(boolean attachContext) {
-
-	}
-
 	public void close() {
 		Display activeDisplay = getSite().getShell().getDisplay();
 		activeDisplay.asyncExec(new Runnable() {
@@ -2065,46 +2054,29 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		});
 	}
 
-	// private class DisplayableLocalAttachment extends RepositoryAttachment {
-	// private static final long serialVersionUID = 900218036143022422L;
-	//		
-	// private Date date;
-	// private String description;
-	// private String creator;
-	// private String name;
-	//		
-	// public String getCreator() {
-	// return creator;
-	// }
-	// public void setCreator(String creator) {
-	// this.creator = creator;
-	// }
-	// public Date getDateCreated() {
-	// return date;
-	// }
-	// public void setDateCreated(Date date) {
-	// this.date = date;
-	// }
-	// public String getDescription() {
-	// return description;
-	// }
-	// public void setDescription(String description) {
-	// this.description = description;
-	// }
-	// public String getName() {
-	// return name;
-	// }
-	// public void setName(String name) {
-	// this.name = name;
-	// }
-	// public DisplayableLocalAttachment(LocalAttachment att) {
-	// super(null);
-	// setName(att.getFilePath());
-	// setDescription(att.getDescription());
-	// setDateCreated(new Date());
-	// }
-	// }
+//	// The implementation of the attach context UI is connector dependant.
+//	protected boolean getAttachContext() {
+//		return false;
+//	}
+//
+//	// The implementation of the attach context UI is connector dependant.
+//	// this method is called when a user attaches a patch to the task
+//	protected void setAttachContext(boolean attachContext) {
+//
+//	}
 	
+	public boolean getAttachContext() {
+		if (attachContextButton == null) {
+			return false;
+		}
+		return attachContextButton.getSelection();
+	}
+
+	public void setAttachContext(boolean attachContext) {
+		if (attachContextButton != null && attachContextButton.isEnabled()) {
+			attachContextButton.setSelection(attachContext);
+		}
+	}
 
 	/**
 	 * Class to handle the selection change of the radio buttons.
@@ -2190,3 +2162,43 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 	
 }
+
+// private class DisplayableLocalAttachment extends RepositoryAttachment {
+// private static final long serialVersionUID = 900218036143022422L;
+//		
+// private Date date;
+// private String description;
+// private String creator;
+// private String name;
+//		
+// public String getCreator() {
+// return creator;
+// }
+// public void setCreator(String creator) {
+// this.creator = creator;
+// }
+// public Date getDateCreated() {
+// return date;
+// }
+// public void setDateCreated(Date date) {
+// this.date = date;
+// }
+// public String getDescription() {
+// return description;
+// }
+// public void setDescription(String description) {
+// this.description = description;
+// }
+// public String getName() {
+// return name;
+// }
+// public void setName(String name) {
+// this.name = name;
+// }
+// public DisplayableLocalAttachment(LocalAttachment att) {
+// super(null);
+// setName(att.getFilePath());
+// setDescription(att.getDescription());
+// setDateCreated(new Date());
+// }
+// }

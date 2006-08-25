@@ -699,19 +699,6 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		return editorInput.getRepositoryTaskData();
 	}
 
-	public boolean getAttachContext() {
-		if (attachContextButton == null) {
-			return false;
-		}
-		return attachContextButton.getSelection();
-	}
-
-	public void setAttachContext(boolean attachContext) {
-		if (attachContextButton != null && attachContextButton.isEnabled()) {
-			attachContextButton.setSelection(attachContext);
-		}
-	}
-
 	// protected void createDescriptionLayout(Composite composite) {
 	// // This is migration code from 0.6.1 -> 0.6.2
 	// // Changes to the abstract editor causes the description
