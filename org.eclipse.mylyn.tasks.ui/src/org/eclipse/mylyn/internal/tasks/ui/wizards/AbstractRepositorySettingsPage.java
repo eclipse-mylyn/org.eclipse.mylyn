@@ -44,7 +44,7 @@ import org.eclipse.ui.IWorkbench;
  */
 public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
-	protected static final String LABEL_LABEL = "Label/template: ";
+	protected static final String LABEL_TEMPLATE = "Template: ";
 
 	protected static final String LABEL_SERVER = "Server: ";
 
@@ -115,7 +115,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		FillLayout layout = new FillLayout();
 		container.setLayout(layout);
 
-		new Label(container, SWT.NONE).setText(LABEL_LABEL);
+		new Label(container, SWT.NONE).setText(LABEL_TEMPLATE);
 
 		repositoryLabelCombo = new Combo(container, SWT.DROP_DOWN);
 		GridDataFactory.swtDefaults().grab(true, false).applyTo(repositoryLabelCombo);
