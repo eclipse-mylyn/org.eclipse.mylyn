@@ -205,8 +205,12 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 				MessageDialog.openWarning(null, TracUiPlugin.TITLE_MESSAGE_DIALOG,
 						"Unable to authenticate with repository. Login credentials invalid.");
 			} else if (e.getCause() instanceof TracException) {
+				String message = "No Trac repository found at url";
+				if (e.getCause().getMessage() != null) {
+					message += ": " + e.getCause().getMessage();
+				}
 				MessageDialog
-						.openWarning(null, TracUiPlugin.TITLE_MESSAGE_DIALOG, "No Trac repository found at url");
+						.openWarning(null, TracUiPlugin.TITLE_MESSAGE_DIALOG, message);
 			} else {
 				MessageDialog.openWarning(null, TracUiPlugin.TITLE_MESSAGE_DIALOG, MESSAGE_FAILURE_UNKNOWN);
 			}

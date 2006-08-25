@@ -52,7 +52,7 @@ public interface ITracClient {
 			case TRAC_0_9:
 				return "Trac 0.9 and later";
 			case XML_RPC:
-				return "XML-RPC Plugin (Rev. 848)";
+				return "XML-RPC Plugin (Rev. " + TracXmlRpcClient.REQUIRED_REVISION + ")";
 			default:
 				return null;
 			}

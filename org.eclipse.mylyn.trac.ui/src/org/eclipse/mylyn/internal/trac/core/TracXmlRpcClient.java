@@ -42,6 +42,8 @@ public class TracXmlRpcClient extends AbstractTracClient {
 
 	public static final String XMLRPC_URL = "/xmlrpc";
 
+	public static final String REQUIRED_REVISION = "1175";
+
 	private XmlRpcClient xmlrpc;
 
 	public TracXmlRpcClient(URL url, Version version, String username, String password) {
@@ -138,7 +140,7 @@ public class TracXmlRpcClient extends AbstractTracClient {
 
 	public void validate() throws TracException {
 		Object[] result = (Object[]) call("system.listMethods");
-		boolean hasGetTicket = false, hasQuery = false;
+		boolean hasGetTicket = false, hasQuery = false, hasWikiToHtml = false;
 		for (Object methodName : result) {
 			if ("ticket.get".equals(methodName)) {
 				hasGetTicket = true;
@@ -146,13 +148,17 @@ public class TracXmlRpcClient extends AbstractTracClient {
 			if ("ticket.query".equals(methodName)) {
 				hasQuery = true;
 			}
+			if ("wiki.wikiToHtml".equals(methodName)) {
+				// added in rev. 1175
+				hasWikiToHtml = true;
+			}
 
-			if (hasGetTicket && hasQuery) {
+			if (hasGetTicket && hasQuery && hasWikiToHtml) {
 				return;
 			}
 		}
 
-		throw new TracException("XML-RPC is missing required API calls");
+		throw new TracException("Required API calls are missing, please update your Trac XML-RPC Plugin to revision " + REQUIRED_REVISION + " or later");
 	}
 
 	public TracTicket getTicket(int id) throws TracException {

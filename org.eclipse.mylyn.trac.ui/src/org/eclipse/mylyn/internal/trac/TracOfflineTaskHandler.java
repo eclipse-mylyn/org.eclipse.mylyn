@@ -245,11 +245,9 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 		}
 
 		Date since = new Date(0);
-		if (repository.getSyncTimeStamp() != null) {
-			try {
-				since = TracUtils.parseDate(Integer.parseInt(repository.getSyncTimeStamp()));
-			} catch (NumberFormatException e) {
-			}
+		try {
+			since = TracUtils.parseDate(Integer.parseInt(repository.getSyncTimeStamp()));
+		} catch (NumberFormatException e) {
 		}
 
 		ITracClient client = connector.getClientManager().getRepository(repository);
