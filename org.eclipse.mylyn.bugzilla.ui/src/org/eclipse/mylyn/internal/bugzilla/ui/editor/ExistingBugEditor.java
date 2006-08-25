@@ -227,7 +227,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 			}
 		};
 
-		submissionHandler.submitBugReport(bugzillaReportSubmitForm, submitJobListener);
+		submissionHandler.submitBugReport(bugzillaReportSubmitForm, submitJobListener, false);
 	}
 
 	@Override

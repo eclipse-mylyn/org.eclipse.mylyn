@@ -153,7 +153,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		// Submit changes
 		MockBugzillaReportSubmitForm form = new MockBugzillaReportSubmitForm(BugzillaCorePlugin.ENCODING_UTF_8);
 		form.setTaskData(task.getTaskData());
-		new BugSubmissionHandler(connector).submitBugReport(form, null);
+		new BugSubmissionHandler(connector).submitBugReport(form, null, true);
 		// submit casuses a synch which should result in
 		// a synchronized state (not incoming)
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());

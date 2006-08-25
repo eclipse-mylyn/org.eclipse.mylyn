@@ -45,16 +45,13 @@ public class BugSubmissionHandler {
 	private static final String LABEL_JOB_SUBMIT = "Submitting to Bugzilla repository";
 	
 	private AbstractRepositoryConnector connector;
-	
-	private boolean forceSyncExecForTesting;
 
 	public BugSubmissionHandler(AbstractRepositoryConnector connector) {
 		this.connector = connector;
 	}
 	
-	public void submitBugReport(final BugzillaReportSubmitForm form, IJobChangeListener listener) {
-
-		if (forceSyncExecForTesting) {
+	public void submitBugReport(final BugzillaReportSubmitForm form, IJobChangeListener listener, boolean synchExec) {
+		if (synchExec) {
 			try {
 				String submittedBugId = form.submitReportToRepository();
 				if (form.isNewBugPost()) {
@@ -158,14 +155,6 @@ public class BugSubmissionHandler {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	/**
-	 * For testing
-	 */
-	@Deprecated
-	public void setForceSyncExecForTesting(boolean forceSyncExecForTesting) {
-		this.forceSyncExecForTesting = forceSyncExecForTesting;
 	}
 	
 }

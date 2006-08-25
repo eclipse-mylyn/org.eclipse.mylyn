@@ -364,7 +364,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 
 //			BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) TasksUiPlugin
 //					.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
-			submissionHandler.submitBugReport(bugzillaReportSubmitForm, submitJobListener);
+			submissionHandler.submitBugReport(bugzillaReportSubmitForm, submitJobListener, false);
 
 		} catch (UnsupportedEncodingException e) {
 			// should never get here but just in case...
