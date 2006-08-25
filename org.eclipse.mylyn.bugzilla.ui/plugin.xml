@@ -146,7 +146,7 @@
          name="Repository Search Page"
          point="org.eclipse.search.searchPages">
        <page
-            class="org.eclipse.mylar.internal.tasks.ui.RepositorySearchPage"
+            class="org.eclipse.mylar.internal.tasks.ui.TaskSearchPage"
             enabled="true"
             icon="icons/elcl16/bug-search.gif"
             id="org.eclipse.mylar.bugzilla.core.search.repositorySearchPage"

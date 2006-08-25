@@ -60,6 +60,9 @@ public class TaskListSynchronizationScheduler implements IPropertyChangeListener
 	}
 
 	private void scheduleRegularSynchronizationJob() {
+		if (TasksUiPlugin.getDefault() == null) {
+			return;
+		}
 		boolean enabled = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED);
 		if (enabled) {

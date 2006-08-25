@@ -546,14 +546,14 @@
    </extension>
     <extension
          id="org.eclipse.mylar.tasks.ui.repositorySearchPage"
-         name="Repository Search Page"
+         name="Task Search Page"
          point="org.eclipse.search.searchPages">
        <page
-            class="org.eclipse.mylar.internal.tasks.ui.RepositorySearchPage"
+            class="org.eclipse.mylar.internal.tasks.ui.TaskSearchPage"
             enabled="true"
-            icon="icons/elcl16/bug-search.gif"
-            id="org.eclipse.mylar.bugzilla.core.search.repositorySearchPage"
-            label="Repository Search"
+            icon="icons/elcl16/task-search.gif"
+            id="org.eclipse.mylar.tasks.ui.core.search.page"
+            label="Task Search" 
             tabPosition="999"/>
    </extension>
   

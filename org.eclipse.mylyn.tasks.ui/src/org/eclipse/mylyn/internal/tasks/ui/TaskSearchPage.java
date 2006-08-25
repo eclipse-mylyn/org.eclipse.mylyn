@@ -38,11 +38,11 @@ import org.eclipse.swt.widgets.Group;
 /**
  * @author Rob Elves
  */
-public class RepositorySearchPage extends DialogPage implements ISearchPage {
+public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 	private static final String TITLE_REPOSITORY_SEARCH = "Repository Search";
 
-	private static final String PAGE_NAME = "RepositorySearchPage";
+	private static final String PAGE_NAME = "TaskSearchPage";
 
 	private static final String STORE_REPO_ID = PAGE_NAME + ".REPO";
 
