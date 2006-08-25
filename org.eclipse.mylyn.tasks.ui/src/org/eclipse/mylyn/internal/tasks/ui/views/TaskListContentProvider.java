@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.tasks.ui.views;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -214,9 +215,11 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 				}
 				return children;
 			} else if (parent instanceof AbstractRepositoryQuery) {
-				Set<AbstractQueryHit> list = ((AbstractRepositoryQuery) parent).getHits();
-				synchronized(list) {
-					for (ITaskListElement element : list) {
+				Set<AbstractQueryHit> hits = ((AbstractRepositoryQuery) parent).getHits();
+				synchronized(hits) {
+					// TODO: still some synchronization weirdness here, see bug 154895
+					// shouldn not need to create new set
+					for (ITaskListElement element : new HashSet<AbstractQueryHit>(hits)) {
 						if (!filter(element)) {
 							children.add(element);
 						}
