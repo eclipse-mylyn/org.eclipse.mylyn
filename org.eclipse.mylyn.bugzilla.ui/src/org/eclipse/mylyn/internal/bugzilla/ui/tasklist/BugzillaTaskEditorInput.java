@@ -87,9 +87,11 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 
 	// TODO: migration code 0.6.1 -> 0.6.2
 	private void migrateDescToReadOnly(BugzillaTask task) {
-		RepositoryTaskAttribute attrib = task.getTaskData().getDescriptionAttribute();
-		if (attrib != null) {
-			attrib.setReadOnly(true);
+		if (task != null && task.getTaskData() != null) {
+			RepositoryTaskAttribute attrib = task.getTaskData().getDescriptionAttribute();
+			if (attrib != null) {
+				attrib.setReadOnly(true);
+			}
 		}
 	}
 }

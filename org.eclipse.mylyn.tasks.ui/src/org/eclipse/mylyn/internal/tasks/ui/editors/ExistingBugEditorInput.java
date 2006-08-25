@@ -80,7 +80,13 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 	// }
 
 	public String getName() {
-		return repositoryTaskData.getLabel();
+		if(repositoryTaskData != null && repositoryTaskData.getLabel() != null) {
+			return repositoryTaskData.getLabel();
+		} else if(id != null){
+			return id;
+		} else {
+			return "<unknown>";
+		}
 	}
 
 	/**
