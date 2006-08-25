@@ -109,6 +109,8 @@ public abstract class AbstractBugzillaTest extends TestCase {
 
 	protected BugzillaTask generateLocalTaskAndDownload(String taskNumber) {
 		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber);
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+				
 		assertNotNull(task);
 		TasksUiPlugin.getTaskListManager().getTaskList().moveToRoot(task);
 		assertTrue(task.isDownloaded());

@@ -35,6 +35,8 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncSta
 import org.eclipse.ui.PlatformUI;
 
 /**
+ * TODO: move into core?
+ * 
  * @author Mik Kersten
  * @author Rob Elves
  */

@@ -68,6 +68,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertNull(badId);
 
 		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "1");
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		assertNotNull(task);
 		// assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
 		// connector.synchronize(task, true, null);
@@ -112,6 +113,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	public void testContextAttachFailure() throws Exception {
 		init218();
 		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "3");
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+				
 		assertNotNull(task.getTaskData());
 		TasksUiPlugin.getTaskListManager().activateTask(task);
 		File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
@@ -134,6 +137,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 		// Get the task
 		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "1");
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+				
 		TasksUiPlugin.getTaskListManager().getTaskList().moveToRoot(task);
 		assertTrue(task.isDownloaded());
 		// (The initial local copy from server)
@@ -211,6 +216,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		int bugId = 31;
 		String taskNumber = "" + bugId;
 		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber);
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+				
 		assertNotNull(task);
 		assertTrue(task.isDownloaded());
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
@@ -235,6 +242,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				Proxy.NO_PROXY));
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
 		task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber);
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+				
 		assertEquals(numAttached, task.getTaskData().getAttachments().size());
 
 		/* Test attempt to upload an empty file */
@@ -244,6 +253,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertFalse(attachmentHandler.uploadAttachment(attachment, repository.getUserName(), repository.getPassword(),
 				Proxy.NO_PROXY));
 		task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber);
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+		
 		assertEquals(numAttached, task.getTaskData().getAttachments().size());
 
 		/* Test uploading a proper file */
@@ -253,6 +264,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertTrue(attachmentHandler.uploadAttachment(attachment, repository.getUserName(), repository.getPassword(),
 				Proxy.NO_PROXY));
 		task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber);
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		assertEquals(numAttached + 1, task.getTaskData().getAttachments().size());
 
 		// use assertion to track clean-up
@@ -513,6 +525,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		int bugId = 19;
 		String taskNumber = "" + bugId;
 		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber);
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+				
 		assertNotNull(task);
 
 		boolean isPatch[] = { false, true, false, false, false, false, false, true, false, false };
