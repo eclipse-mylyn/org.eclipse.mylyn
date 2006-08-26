@@ -199,7 +199,7 @@
       </launchConfigurationTabGroup>
     </extension>	
 
-
+	<!--
 	<extension
 	     id="org.eclipse.mylar.helpDocs"
 	     name="Mylar Help"
@@ -209,7 +209,7 @@
 	        primary="false">
 	  </toc>
    </extension>
-  
+  -->
   
    <extension point="org.eclipse.ui.perspectiveExtensions">
           <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
