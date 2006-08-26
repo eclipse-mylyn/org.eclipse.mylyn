@@ -46,10 +46,7 @@ public class NewTracQueryWizard extends Wizard {
 
 	@Override
 	public boolean canFinish() {
-		if (queryPage.getNextPage() == null) {
-			return queryPage.isPageComplete();
-		}
-		return queryPage.getNextPage().isPageComplete();
+		return queryPage.isPageComplete();
 	}
 
 	@Override

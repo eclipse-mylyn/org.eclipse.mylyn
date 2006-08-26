@@ -161,6 +161,10 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		setControl(control);
 	}
 
+	public boolean canFlipToNextPage() {
+		return false;
+	}
+
 	private void restoreSearchFilterFromQuery(TracRepositoryQuery query) {
 		TracSearch search = query.getTracSearch();
 		java.util.List<TracSearchFilter> filters = search.getFilters();
