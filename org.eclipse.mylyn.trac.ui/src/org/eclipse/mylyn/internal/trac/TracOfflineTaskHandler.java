@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.trac;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -244,6 +245,11 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 			return tasks;
 		}
 
+		if (!connector.hasChangedSince(repository)) {
+			// return an empty list to avoid causing all tasks to synchronized
+			return Collections.emptySet();
+		}
+
 		Date since = new Date(0);
 		try {
 			since = TracUtils.parseDate(Integer.parseInt(repository.getSyncTimeStamp()));
@@ -252,16 +258,14 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 
 		ITracClient client = connector.getClientManager().getRepository(repository);
 		Set<Integer> ids = client.getChangedTickets(since);
-		if (ids == null) {
-			// the call is not supported, any task may have changed
-			return tasks;
-		}
 		
 		Set<AbstractRepositoryTask> result = new HashSet<AbstractRepositoryTask>();
-		for (AbstractRepositoryTask task : tasks) {
-			Integer id = Integer.parseInt(AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()));
-			if (ids.contains(id)) {
-				result.add(task);
+		if (!ids.isEmpty()) {
+			for (AbstractRepositoryTask task : tasks) {
+				Integer id = Integer.parseInt(AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()));
+				if (ids.contains(id)) {
+					result.add(task);
+				}
 			}
 		}
 		return result;

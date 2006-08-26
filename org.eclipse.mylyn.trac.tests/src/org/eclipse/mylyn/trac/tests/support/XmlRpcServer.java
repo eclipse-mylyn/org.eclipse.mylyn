@@ -132,6 +132,8 @@ public class XmlRpcServer {
 		
 		public int htmlEntitiesTicketId = 6;
 		
+		public int offlineHandlerTicketId = 7;
+		
 		/**
 		 * Undo all changes.
 		 */

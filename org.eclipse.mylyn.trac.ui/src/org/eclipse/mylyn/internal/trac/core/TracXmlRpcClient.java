@@ -175,14 +175,8 @@ public class TracXmlRpcClient extends AbstractTracClient {
 			ticket.addAttachment(parseAttachment((Object[]) item));
 		}
 
-		try {
-			String[] actions = getActions(id);
-			ticket.setActions(actions);
-		} catch (TracException e) {
-			// remove this if getActions() has been implemented in XmlRpcPlugin
-			String status = ticket.getValue(Key.STATUS);
-			ticket.setActions(getDefaultTicketActions(status));
-		}
+		String[] actions = getActions(id);
+		ticket.setActions(actions);
 		
 		ticket.setResolutions(getDefaultTicketResolutions());
 		
@@ -433,12 +427,7 @@ public class TracXmlRpcClient extends AbstractTracClient {
 
 	public Set<Integer> getChangedTickets(Date since) throws TracException {
 		Object[] ids;
-		try {
-			ids = (Object[]) call("ticket.getRecentChanges", since);
-		} catch (TracException e) {
-			// TODO remove this once getRecentChanges is supported by the XmlRpcPlugin
-			return null;
-		}
+		ids = (Object[]) call("ticket.getRecentChanges", since);
 		Set<Integer> result = new HashSet<Integer>();
 		for (Object id : ids) {
 			result.add((Integer) id);

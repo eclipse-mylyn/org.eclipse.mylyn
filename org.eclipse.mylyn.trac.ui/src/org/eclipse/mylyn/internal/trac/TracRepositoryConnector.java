@@ -220,6 +220,10 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
+	public boolean hasChangedSince(TaskRepository repository) {
+		return Version.XML_RPC.name().equals(repository.getVersion());
+	}
+
 	public boolean hasRichEditor(AbstractRepositoryTask task) {
 		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(TracUiPlugin.REPOSITORY_KIND,
 				task.getRepositoryUrl());

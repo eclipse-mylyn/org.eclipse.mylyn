@@ -46,6 +46,7 @@ public class TestFixture {
 		server.ticket(4).itemCreated();
 		server.ticket(5).itemCreated();
 		server.ticket(6).itemCreated();
+		server.ticket(7).itemCreated();
 	}
 
 //	private static void initializeRepository(XmlRpcServer server) throws Exception {
@@ -68,8 +69,10 @@ public class TestFixture {
 //		ticket.update("comment", "milestone", "milestone2");
 //		ticket = server.ticket().create("summary4", "description4");
 //	
-//	    Ticket ticket = server.ticket().create("attachment test", "");
+//	    ticket = server.ticket().create("attachment test", "");
 //	    // create attachment named attachment.txt that contains the text "Mylar"
+//	    ticket = server.ticket().create("test html entities: äöü", "ÄÖÜ\n\nmulti\nline\n\n'''bold'''\n");
+// 	    ticket = server.ticket().create("offline handler test", "");
 //	}
 
 	public static XmlRpcServer.TestData init010() throws Exception {
