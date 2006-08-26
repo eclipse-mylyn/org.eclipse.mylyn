@@ -26,6 +26,7 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -36,7 +37,7 @@ public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 	public AbstractRepositorySettingsPage getSettingsPage() {
 		return new BugzillaRepositorySettingsPage(this);
 	}
-	
+
 	@Override
 	public AbstractRepositoryQueryPage getSearchPage(TaskRepository repository, IStructuredSelection selection) {
 		return new BugzillaSearchPage(repository);
@@ -46,15 +47,15 @@ public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 		if (!(query instanceof BugzillaRepositoryQuery)) {
 			return;
 		}
-	
+
 		try {
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(query.getRepositoryKind(),
 					query.getRepositoryUrl());
 			if (repository == null)
 				return;
-	
+
 			IWizard wizard = this.getEditQueryWizard(repository, query);
-	
+
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			if (wizard != null && shell != null && !shell.isDisposed()) {
 				WizardDialog dialog = new WizardDialog(shell, wizard);
@@ -100,6 +101,21 @@ public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 	@Override
 	public String getRepositoryType() {
 		return BugzillaCorePlugin.REPOSITORY_KIND;
+	}
+
+	@Override
+	public void openRemoteTask(String repositoryUrl, String idString) {
+		int id = -1;
+		try {
+			id = Integer.parseInt(idString);
+		} catch (NumberFormatException e) {
+			// ignore
+		}
+		if (id != -1) {
+			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			OpenBugzillaReportJob job = new OpenBugzillaReportJob(repositoryUrl, id, page);
+			job.schedule();
+		}
 	}
 
 }

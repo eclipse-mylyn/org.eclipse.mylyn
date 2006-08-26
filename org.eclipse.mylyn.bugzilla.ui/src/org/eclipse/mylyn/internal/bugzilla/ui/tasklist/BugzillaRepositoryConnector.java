@@ -43,7 +43,6 @@ import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -59,7 +58,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	private BugzillaOfflineTaskHandler offlineHandler = new BugzillaOfflineTaskHandler();
 
 	private boolean forceSynchExecForTesting = false;
-		
+
 	public String getLabel() {
 		return CLIENT_LABEL;
 	}
@@ -112,9 +111,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			}
 		}
 
-//		if (task instanceof AbstractRepositoryTask) {
-//			synchronize((AbstractRepositoryTask) task, true, null);
-//		}
+		// if (task instanceof AbstractRepositoryTask) {
+		// synchronize((AbstractRepositoryTask) task, true, null);
+		// }
 		return task;
 	}
 
@@ -190,19 +189,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
-	public void openRemoteTask(String repositoryUrl, String idString) {
-		int id = -1;
-		try {
-			id = Integer.parseInt(idString);
-		} catch (NumberFormatException e) {
-			// ignore
-		}
-		if (id != -1) {
-			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			OpenBugzillaReportJob job = new OpenBugzillaReportJob(repositoryUrl, id, page);
-			job.schedule();
-		}
-	}
 
 	@Override
 	public void updateTaskState(AbstractRepositoryTask repositoryTask) {
@@ -210,7 +196,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-public void updateAttributes(final TaskRepository repository, IProgressMonitor monitor) {
+	public void updateAttributes(final TaskRepository repository, IProgressMonitor monitor) {
 		try {
 			BugzillaUiPlugin.updateQueryOptions(repository, monitor);
 		} catch (LoginException exception) {
@@ -255,17 +241,17 @@ public void updateAttributes(final TaskRepository repository, IProgressMonitor m
 		}
 	}
 
-
 	@Override
 	public boolean validate(TaskRepository repository) {
 		return repository != null;
-//		if (!repository.hasCredentials()) {
-//			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-//					TasksUiPlugin.TITLE_DIALOG, "Repository missing or does not have credentials set, verify via "
-//							+ TaskRepositoriesView.NAME + ".");
-//			return false;
-//		}
-//		return true;
+		// if (!repository.hasCredentials()) {
+		// MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+		// TasksUiPlugin.TITLE_DIALOG, "Repository missing or does not have
+		// credentials set, verify via "
+		// + TaskRepositoriesView.NAME + ".");
+		// return false;
+		// }
+		// return true;
 	}
 
 	public void setForceSynchExecForTesting(boolean forceSynchExecForTesting) {
