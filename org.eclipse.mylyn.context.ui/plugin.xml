@@ -232,14 +232,14 @@
             id="org.eclipse.mylar.ui.mylar.actionSet">
          <action
                definitionId="org.eclipse.mylar.ui.interest.increment"
-               label="Make landmark"
+               label="Mark as Landmark"
                class="org.eclipse.mylar.internal.context.ui.actions.InterestIncrementAction"
                menubarPath="navigate/open.ext2"
                id="org.eclipse.mylar.ui.actions.InterestIncrementAction">
          </action>
          <action
                definitionId="org.eclipse.mylar.ui.interest.decrement"
-               label="Make less interesting"
+               label="Mark Less Interesting"
                class="org.eclipse.mylar.internal.context.ui.actions.InterestDecrementAction"
                menubarPath="navigate/open.ext2"
                id="org.eclipse.mylar.ui.actions.InterestDecrementAction">
