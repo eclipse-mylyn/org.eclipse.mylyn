@@ -482,20 +482,23 @@
             id="org.eclipse.mylar.tasks.navigation"
             label="Task Navigation"
             visible="true">
-         <action
-               class="org.eclipse.mylar.internal.tasks.ui.actions.OpenTaskAction"
-               definitionId="org.eclipse.mylar.tasks.command.openTask"
-               id="org.eclipse.mylar.tasks.ui.openTask"
-               label="Open Tas&amp;k..."
-               menubarPath="navigate/open.ext"
-               style="push"/>
-         <action
+		<action
                class="org.eclipse.mylar.internal.tasks.ui.actions.ActivateTaskAction"
                definitionId="org.eclipse.mylar.tasks.command.activateTask"
                id="org.eclipse.mylar.tasks.ui.switchTask"
                label="&amp;Activate Task..."
                menubarPath="navigate/open.ext"
                style="push"/>
+         <action
+               class="org.eclipse.mylar.internal.tasks.ui.actions.OpenTaskAction"
+               definitionId="org.eclipse.mylar.tasks.command.openTask"
+               icon="icons/etool16/open-task.gif"
+               id="org.eclipse.mylar.tasks.ui.openTask"
+               label="Open Tas&amp;k..."
+               menubarPath="navigate/open.ext"
+               style="push"
+               toolbarPath="org.eclipse.search.searchActionSet/Search"
+               tooltip="Open Task"/>
          <action
                class="org.eclipse.mylar.internal.tasks.ui.actions.DeactivateAllTasksAction"
                definitionId="org.eclipse.mylar.tasks.command.deactivateAllTasks"

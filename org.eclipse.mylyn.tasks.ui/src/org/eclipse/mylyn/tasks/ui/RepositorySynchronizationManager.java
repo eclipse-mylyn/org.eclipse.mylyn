@@ -191,7 +191,7 @@ public class RepositorySynchronizationManager {
 
 			@Override
 			public void done(IJobChangeEvent event) {
-				if (!Platform.isRunning()) {
+				if (!Platform.isRunning() || TasksUiPlugin.getRepositoryManager() == null) {
 					return;
 				}
 				Date mostRecent = new Date(0);
