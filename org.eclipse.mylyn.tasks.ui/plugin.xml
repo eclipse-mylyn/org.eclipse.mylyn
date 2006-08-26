@@ -482,12 +482,19 @@
             id="org.eclipse.mylar.tasks.navigation"
             label="Task Navigation"
             visible="true">
+         <action
+               class="org.eclipse.mylar.internal.tasks.ui.actions.DeactivateAllTasksAction"
+               definitionId="org.eclipse.mylar.tasks.command.deactivateAllTasks"
+               id="org.eclipse.mylar.tasks.ui.deactivateAllTasks"
+               label="&amp;Deactivate Task"
+               menubarPath="navigate/open.ext2"
+               style="push"/>
 		<action
                class="org.eclipse.mylar.internal.tasks.ui.actions.ActivateTaskAction"
                definitionId="org.eclipse.mylar.tasks.command.activateTask"
                id="org.eclipse.mylar.tasks.ui.switchTask"
                label="&amp;Activate Task..."
-               menubarPath="navigate/open.ext"
+               menubarPath="navigate/open.ext2"
                style="push"/>
          <action
                class="org.eclipse.mylar.internal.tasks.ui.actions.OpenTaskAction"
@@ -495,17 +502,10 @@
                icon="icons/etool16/open-task.gif"
                id="org.eclipse.mylar.tasks.ui.openTask"
                label="Open Tas&amp;k..."
-               menubarPath="navigate/open.ext"
+               menubarPath="navigate/open.ext2"
                style="push"
                toolbarPath="org.eclipse.search.searchActionSet/Search"
                tooltip="Open Task"/>
-         <action
-               class="org.eclipse.mylar.internal.tasks.ui.actions.DeactivateAllTasksAction"
-               definitionId="org.eclipse.mylar.tasks.command.deactivateAllTasks"
-               id="org.eclipse.mylar.tasks.ui.deactivateAllTasks"
-               label="&amp;Deactivate All Tasks"
-               menubarPath="navigate/open.ext"
-               style="push"/>
       </actionSet>
    </extension>
    <extension
@@ -521,7 +521,7 @@
       <command
             categoryId="org.eclipse.ui.category.navigate"
             id="org.eclipse.mylar.tasks.command.deactivateAllTasks"
-            name="Deactivate All Tasks"/>
+            name="Deactivate Task"/>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
