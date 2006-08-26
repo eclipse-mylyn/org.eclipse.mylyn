@@ -42,7 +42,7 @@ public class TracXmlRpcClient extends AbstractTracClient {
 
 	public static final String XMLRPC_URL = "/xmlrpc";
 
-	public static final String REQUIRED_REVISION = "1175";
+	public static final String REQUIRED_REVISION = "1188";
 
 	private XmlRpcClient xmlrpc;
 
@@ -140,7 +140,7 @@ public class TracXmlRpcClient extends AbstractTracClient {
 
 	public void validate() throws TracException {
 		Object[] result = (Object[]) call("system.listMethods");
-		boolean hasGetTicket = false, hasQuery = false, hasWikiToHtml = false;
+		boolean hasGetTicket = false, hasQuery = false, isRecentRevision = false;
 		for (Object methodName : result) {
 			if ("ticket.get".equals(methodName)) {
 				hasGetTicket = true;
@@ -148,12 +148,12 @@ public class TracXmlRpcClient extends AbstractTracClient {
 			if ("ticket.query".equals(methodName)) {
 				hasQuery = true;
 			}
-			if ("wiki.wikiToHtml".equals(methodName)) {
-				// added in rev. 1175
-				hasWikiToHtml = true;
+			if ("ticket.getRecentChanges".equals(methodName)) {
+				// this call was added in rev. 1188
+				isRecentRevision = true;
 			}
 
-			if (hasGetTicket && hasQuery && hasWikiToHtml) {
+			if (hasGetTicket && hasQuery && isRecentRevision) {
 				return;
 			}
 		}
