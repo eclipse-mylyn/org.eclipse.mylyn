@@ -4,7 +4,6 @@
 <toc label="Mylar"> 
 	<topic label="Overview" href="doc/overview.html"/>
 	<topic label="New &amp; Noteworthy" href="doc/new.html"/>
-	<topic label="FAQ" href="doc/faq.html"/>
 	<anchor id="concepts"/>
 	<anchor id="tasklist"/>
 	<anchor id="java"/>

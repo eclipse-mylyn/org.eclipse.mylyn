@@ -72,17 +72,7 @@
 		 </description>
       </decorator>
    </extension>
-
-   <extension
-         id="org.eclipse.mylar.bugzilla.help.browser"
-         name="Bugzilla Help"
-         point="org.eclipse.help.toc">
-      <toc
-            file="doc/toc.xml"
-            primary="false">
-      </toc>
-   </extension>
-
+   
    <extension
          point="org.eclipse.ui.editors">
       <editor
