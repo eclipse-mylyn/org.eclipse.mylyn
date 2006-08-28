@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.tasks.ui.wizards;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylar.tasks.core.TaskRepositoryFilter;
 
 /**
  * @author Mik Kersten
