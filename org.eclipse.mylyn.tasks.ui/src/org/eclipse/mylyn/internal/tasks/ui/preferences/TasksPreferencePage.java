@@ -61,6 +61,8 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 
 	private Button disableInternal;
 
+	private Button activateOnOpen;
+	
 	private Button reportInternal;
 
 	private Text synchScheduleTime = null;
@@ -130,7 +132,9 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		getPreferenceStore().setValue(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL, reportInternal.getSelection());
 		getPreferenceStore().setValue(TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL,
 				disableInternal.getSelection());
-
+		getPreferenceStore().setValue(TaskListPreferenceConstants.ACTIVATE_ON_OPEN,
+				activateOnOpen.getSelection());		
+		
 		// getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP,
 		// synchQueries.getSelection());
 		getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
@@ -157,6 +161,8 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		reportInternal.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL));
 		disableInternal.setSelection(getPreferenceStore().getBoolean(
 				TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL));
+		activateOnOpen.setSelection(getPreferenceStore().getBoolean(
+				TaskListPreferenceConstants.ACTIVATE_ON_OPEN));
 		// synchQueries.setSelection(getPreferenceStore().getBoolean(
 		// TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
 		enableBackgroundSynch.setSelection(getPreferenceStore().getBoolean(
@@ -274,11 +280,19 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		reportInternal = new Button(container, SWT.RADIO);
 		reportInternal.setText("Internal browser");
 		reportInternal.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL));
+		
 		disableInternal = new Button(container, SWT.CHECK);
 		disableInternal.setText("Disable internal browser");
 		disableInternal.setEnabled(!reportInternal.getSelection());
 		disableInternal.setSelection(getPreferenceStore().getBoolean(
 				TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL));
+		
+		activateOnOpen = new Button(container, SWT.CHECK);
+		activateOnOpen.setText("Active on open (Experimental)");
+		activateOnOpen.setEnabled(!reportInternal.getSelection());
+		activateOnOpen.setSelection(getPreferenceStore().getBoolean(
+				TaskListPreferenceConstants.ACTIVATE_ON_OPEN));
+		
 		reportInternal.addListener(SWT.Selection, new Listener() {
 
 			public void handleEvent(Event event) {
@@ -289,7 +303,6 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 					disableInternal.setEnabled(true);
 				}
 			}
-
 		});
 	}
 
