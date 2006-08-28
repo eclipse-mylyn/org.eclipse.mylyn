@@ -34,35 +34,21 @@ public abstract class AbstractAutoApplyMylarAction extends AbstractApplyMylarAct
 
 	public AbstractAutoApplyMylarAction(InterestFilter interestFilter) {
 		super(interestFilter);
-//		ContextUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
 		ContextCorePlugin.getContextManager().addListener(this);
 	}
 
 	public void dispose() {
 		ContextCorePlugin.getContextManager().removeListener(this);
 	}
-	
-//	public void propertyChange(PropertyChangeEvent event) {
-//		if (ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE.equals(event.getProperty())) {
-//			configureAction();
-//		}
-//	}
 
 	public void init(IAction action) {
 		super.init(action);
 		configureAction();
 	}
-//
-//	@Override
-//	public void update() {
-//		super.update();
-//		configureAction();
-//	}
-	
+
 	private void configureAction() {
 		// can not run this until the view has been initialized
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//
 			public void run() {
 				try {
 					if (ContextCorePlugin.getContextManager().isContextActive() &&
@@ -70,9 +56,6 @@ public abstract class AbstractAutoApplyMylarAction extends AbstractApplyMylarAct
 							ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE)) {
 						update(true);
 					} 
-//					else if (ContextUiPlugin.getDefault() != null) {
-//						ContextUiPlugin.getDefault().getViewerManager().removeManagedAction(AbstractAutoApplyMylarAction.this);
-//					}
 				} catch (Exception e) {
 					MylarStatusHandler.fail(e, "could not toggle Mylar on view: " + getPartForAction(), true);
 				}

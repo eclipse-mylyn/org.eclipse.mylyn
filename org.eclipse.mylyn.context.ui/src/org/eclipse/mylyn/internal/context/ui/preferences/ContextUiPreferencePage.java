@@ -660,7 +660,7 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 		managePerspectivesButton.setSelection(getPreferenceStore().getBoolean(ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES));
 		
 		autoEnableExplorerFilter = new Button(group, SWT.CHECK);
-		autoEnableExplorerFilter.setText("Toggle Mylar on navigator views with task activation");
+		autoEnableExplorerFilter.setText("Toggle focused mode on navigator views when task activated");
 		autoEnableExplorerFilter.setSelection(getPreferenceStore().getBoolean(
 				ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE));
 				

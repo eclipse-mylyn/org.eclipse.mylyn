@@ -26,6 +26,7 @@ import org.eclipse.mylar.internal.context.ui.TaskListInterestSorter;
 import org.eclipse.mylar.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylar.internal.tasks.ui.views.IFilteredTreeListener;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IViewPart;
 
 /**
@@ -53,6 +54,9 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction impleme
 		IViewPart part = super.getPartForAction();
 		if (part instanceof TaskListView) {
 			((TaskListView) part).getFilteredTree().getRefreshPolicy().addListener(this);
+		}
+		if (!TasksUiPlugin.getTaskListManager().getActivityThisWeek().getChildren().isEmpty()) {
+			update(true);
 		}
 	}
 
