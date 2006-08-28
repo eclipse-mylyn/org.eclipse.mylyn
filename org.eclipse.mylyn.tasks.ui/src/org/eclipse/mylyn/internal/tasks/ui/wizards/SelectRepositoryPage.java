@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.tasks.ui.wizards;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -26,16 +27,23 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardNode;
 import org.eclipse.jface.wizard.WizardSelectionPage;
+import org.eclipse.mylar.internal.tasks.ui.actions.AddRepositoryAction;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoryLabelProvider;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 
@@ -43,6 +51,7 @@ import org.eclipse.swt.widgets.Table;
  * @author Mik Kersten
  * @author Brock Janiczak
  * @author Steffen Pingel
+ * @author Eugene Kuleshov
  */
 public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
@@ -59,6 +68,8 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
 	private IStructuredSelection selection;
 
+	private final TaskRepositoryFilter taskRepositoryFilter;
+
 	class RepositoryContentProvider implements IStructuredContentProvider {
 
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
@@ -72,31 +83,31 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		}
 	}
 
-	public SelectRepositoryPage(TaskRepository[] repositories) {
+	public SelectRepositoryPage(TaskRepositoryFilter taskRepositoryFilter) {
 		super(TITLE);
-
+		
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);
-
-		this.repositories = repositories;
+		
+		this.taskRepositoryFilter = taskRepositoryFilter;
+		this.repositories = getTaskRepositories();
 	}
 
-	public SelectRepositoryPage(List<String> repositoryKinds) {
-		this(getTaskRepositories(repositoryKinds));
-	}
-
-	public SelectRepositoryPage() {
-		this(TasksUiPlugin.getRepositoryManager().getAllRepositories().toArray(new TaskRepository[0]));
-	}
-
-	private static TaskRepository[] getTaskRepositories(List<String> repositoryKinds) {
+	private TaskRepository[] getTaskRepositories() {
 		List<TaskRepository> repositories = new ArrayList<TaskRepository>();
-		for (String repositoryKind : repositoryKinds) {
-			repositories.addAll(TasksUiPlugin.getRepositoryManager().getRepositories(repositoryKind));
+		TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
+		for (AbstractRepositoryConnector connector : repositoryManager.getRepositoryConnectors()) {
+			Set<TaskRepository> connectorRepositories = repositoryManager.getRepositories(connector.getRepositoryType());
+			for (TaskRepository repository : connectorRepositories) {
+				if(taskRepositoryFilter.accept(repository, connector)) {
+					repositories.add(repository);
+				}
+			}
 		}
-		return repositories.toArray(new TaskRepository[0]);
+		return repositories.toArray(new TaskRepository[repositories.size()]);
 	}
-
+	
+	
 	public SelectRepositoryPage setSelection(IStructuredSelection selection) {
 		this.selection = selection;
 		return this;
@@ -108,10 +119,12 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
-		FillLayout layout = new FillLayout();
+		GridLayout layout = new GridLayout(1, true);
 		container.setLayout(layout);
 
-		createTableViewer(container);
+		Table table = createTableViewer(container);
+		GridData gridData = new GridData(GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL);
+		table.setLayoutData(gridData);
 
 		// TaskRepository defaultRepository =
 		// MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
@@ -119,6 +132,19 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		// if (defaultRepository != null) {
 		// viewer.setSelection(new StructuredSelection(defaultRepository));
 		// }
+
+		final AddRepositoryAction action = new AddRepositoryAction();
+		
+		Button button = new Button(container, SWT.NONE);
+		button.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING));
+		button.setText(AddRepositoryAction.TITLE);
+		button.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent e) {
+					action.run();
+					SelectRepositoryPage.this.repositories = getTaskRepositories();
+					viewer.setInput(TasksUiPlugin.getRepositoryManager().getRepositoryConnectors());
+				}
+			});
 
 		setControl(container);
 	}

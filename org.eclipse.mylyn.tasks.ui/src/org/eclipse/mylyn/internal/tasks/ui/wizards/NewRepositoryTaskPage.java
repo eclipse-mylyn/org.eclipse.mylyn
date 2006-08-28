@@ -15,10 +15,6 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author Mik Kersten
@@ -26,8 +22,8 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class NewRepositoryTaskPage extends SelectRepositoryPage {
 
-	public NewRepositoryTaskPage(TaskRepository[] repositories) {
-		super(repositories);
+	public NewRepositoryTaskPage(TaskRepositoryFilter taskRepositoryFilter) {
+		super(taskRepositoryFilter);
 	}
 
 	@Override
@@ -37,26 +33,4 @@ public class NewRepositoryTaskPage extends SelectRepositoryPage {
 		return connectorUi.getNewTaskWizard(taskRepository, getSelection());
 	}
 
-	public void createControl(Composite parent) {
-		Composite container = new Composite(parent, SWT.NONE);
-		container.setLayout(new GridLayout());
-
-//		Link link = new Link(container, SWT.NONE);
-//		link.setText("<A>Close wizard and search for related reports before continuing</A>");
-//		link.addSelectionListener(new SelectionListener() {
-//			public void widgetDefaultSelected(SelectionEvent arg0) {
-//				// ignore
-//			}
-//
-//			public void widgetSelected(SelectionEvent arg0) {
-//				getWizard().performCancel();
-//				getWizard().getContainer().getShell().dispose();
-//				NewSearchUI.openSearchDialog(NewSearchUI.getSearchResultView().getSite().getWorkbenchWindow(), "");
-//
-//			}
-//		});
-
-		createTableViewer(container).setLayoutData(new GridData(GridData.FILL_BOTH));
-		setControl(container);
-	}
 }

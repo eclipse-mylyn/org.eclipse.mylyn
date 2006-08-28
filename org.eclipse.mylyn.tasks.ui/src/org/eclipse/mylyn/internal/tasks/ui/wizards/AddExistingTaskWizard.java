@@ -11,13 +11,8 @@
 
 package org.eclipse.mylar.internal.tasks.ui.wizards;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -33,13 +28,13 @@ public class AddExistingTaskWizard extends MultiRepositoryAwareWizard {
 	public static final String TITLE = "Add Existing Repository Task";
 
 	public AddExistingTaskWizard(IStructuredSelection selection) {
-		super(new SelectRepositoryPageForAddExistingTask(getTaskRepositories()).setSelection(selection), TITLE);
+		super(new SelectRepositoryPageForAddExistingTask(TaskRepositoryFilter.CAN_CREATE_TASK_FROM_KEY).setSelection(selection), TITLE);
 	}
 
 	private static final class SelectRepositoryPageForAddExistingTask extends SelectRepositoryPage {
 
-		public SelectRepositoryPageForAddExistingTask(TaskRepository[] repositories) {
-			super(repositories);
+		public SelectRepositoryPageForAddExistingTask(TaskRepositoryFilter filter) {
+			super(filter);
 		}
 
 		@Override
@@ -48,20 +43,6 @@ public class AddExistingTaskWizard extends MultiRepositoryAwareWizard {
 					taskRepository.getKind());
 			return connectorUi.getAddExistingTaskWizard(taskRepository);
 		}
-	}
-
-	private static TaskRepository[] getTaskRepositories() {
-		List<TaskRepository> repositories = new ArrayList<TaskRepository>();
-		for (AbstractRepositoryConnector client : TasksUiPlugin.getRepositoryManager().getRepositoryConnectors()) {
-			Set<TaskRepository> clientRepositories = TasksUiPlugin.getRepositoryManager().getRepositories(
-					client.getRepositoryType());
-			for (TaskRepository repository : clientRepositories) {
-				if (client.canCreateTaskFromKey(repository)) {
-					repositories.add(repository);
-				}
-			}
-		}
-		return repositories.toArray(new TaskRepository[0]);
 	}
 
 }

@@ -11,14 +11,7 @@
 
 package org.eclipse.mylar.internal.tasks.ui.wizards;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
@@ -30,27 +23,13 @@ public class NewRepositoryTaskWizard extends MultiRepositoryAwareWizard {
 	private static final String TITLE = "New Repository Task";
 
 	public NewRepositoryTaskWizard() {
-		super(new NewRepositoryTaskPage(getTaskRepositories()), TITLE);
+		super(new NewRepositoryTaskPage(TaskRepositoryFilter.CAN_CREATE_NEW_TASK), TITLE);
 		setNeedsProgressMonitor(true);
 	}
 
 	public NewRepositoryTaskWizard(IStructuredSelection selection) {
-		super(new NewRepositoryTaskPage(getTaskRepositories()).setSelection(selection), TITLE);
+		super(new NewRepositoryTaskPage(TaskRepositoryFilter.CAN_CREATE_NEW_TASK).setSelection(selection), TITLE);
 		setNeedsProgressMonitor(true);
-	}
-
-	private static TaskRepository[] getTaskRepositories() {
-		List<TaskRepository> repositories = new ArrayList<TaskRepository>();
-		for (AbstractRepositoryConnector client : TasksUiPlugin.getRepositoryManager().getRepositoryConnectors()) {
-			Set<TaskRepository> clientRepositories = TasksUiPlugin.getRepositoryManager().getRepositories(
-					client.getRepositoryType());
-			for (TaskRepository repository : clientRepositories) {
-				if (client.canCreateNewTask(repository)) {
-					repositories.add(repository);
-				}
-			}
-		}
-		return repositories.toArray(new TaskRepository[0]);
 	}
 
 }
