@@ -122,7 +122,7 @@
               enablesFor="1"
               icon="icons/etool16/context-retrieve.gif"
               id="org.eclipse.mylar.ui.context.repository.retrieve"
-              label="Retrieve Context"
+              label="Retrieve Context..."
               menubarPath="context">
         </action> 
         <action
