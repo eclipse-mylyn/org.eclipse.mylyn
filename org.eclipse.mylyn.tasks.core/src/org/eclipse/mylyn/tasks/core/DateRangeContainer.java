@@ -39,8 +39,6 @@ public class DateRangeContainer extends AbstractTaskContainer {
 
 	private long totalEstimated = 0;
 
-	// private String description;
-
 	public DateRangeContainer(GregorianCalendar startDate, GregorianCalendar endDate, String description,
 			TaskList taskList) {
 		super(description, taskList);
@@ -133,10 +131,6 @@ public class DateRangeContainer extends AbstractTaskContainer {
 		return totalEstimated;
 	}
 
-	// public Set<TaskActivityDurationDelegate> getElements() {
-	// return tasks;
-	// }
-
 	public boolean isArchive() {
 		return false;
 	}
@@ -149,28 +143,12 @@ public class DateRangeContainer extends AbstractTaskContainer {
 		return "";
 	}
 
-	// public String getDescription() {
-	// return description;
-	// }
-
-	// public void setDescription(String description) {
-	// this.description = description;
-	// }
-
-	// public String getHandleIdentifier() {
-	// return description;
-	// }
-
 	public void setHandleIdentifier(String id) {
 		// ignore
 	}
 
 	public Set<ITask> getChildren() {
-		// Set<ITask> taskSet = new HashSet<ITask>();
-		// taskSet.addAll(tasks);
 		return children;
-		// Set<ITask> emptySet = Collections.emptySet();
-		// return emptySet;
 	}
 
 	public boolean isFuture() {
