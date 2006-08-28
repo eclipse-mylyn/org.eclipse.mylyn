@@ -320,18 +320,14 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				if (event.getOldValue() instanceof String) {
 					String newDirPath = getDefault().getDataDirectory();
 					String taskListFilePath = newDirPath + File.separator + DEFAULT_TASK_LIST_FILE;
-
-					getTaskListSaveManager().saveTaskList(true);
-					getTaskListManager().resetTaskList();
-					getTaskListManager().setTaskListFile(new File(taskListFilePath));
-					getTaskListManager().readExistingOrCreateNewList();
-					getTaskListManager().getTaskActivationHistory().clear();
+					reloadFromNewFolder(taskListFilePath);
 //					if (TaskListView.getFromActivePerspective() != null) {
 //						TaskListView.getFromActivePerspective().clearTaskHistory();
 //					}
 				}
 			}
 		}
+
 	};
 
 	public TasksUiPlugin() {
@@ -389,6 +385,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 						ContextCorePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(
 								PREFERENCE_LISTENER);
+						
 						getPreferenceStore().addPropertyChangeListener(synchronizationScheduler);
 						getPreferenceStore().addPropertyChangeListener(taskListManager);
 					} catch (Exception e) {
@@ -441,9 +438,17 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	public void setDataDirectory(String newPath) {
 		getPreferenceStore().setValue(MylarPreferenceContstants.PREF_DATA_DIR, newPath);
-		ContextCorePlugin.getDefault().getContextStore().notifyContextStoreMoved();
+		ContextCorePlugin.getDefault().getContextStore().notifyContextStoreMoved();		
 	}
 
+	public void reloadFromNewFolder(String taskListFilePath) {
+		getTaskListSaveManager().saveTaskList(true);
+		getTaskListManager().resetTaskList();
+		getTaskListManager().setTaskListFile(new File(taskListFilePath));
+		getTaskListManager().readExistingOrCreateNewList();
+		getTaskListManager().getTaskActivationHistory().clear();
+	}
+	
 	// // TODO: delete post 0.6?
 	// private void migrateHandlesToRepositorySupport() {
 	// boolean migrated = false;

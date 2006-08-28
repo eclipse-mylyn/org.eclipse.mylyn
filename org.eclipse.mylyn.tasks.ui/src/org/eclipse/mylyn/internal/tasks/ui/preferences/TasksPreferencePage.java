@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasks.ui.preferences;
 
+import java.io.File;
+
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
@@ -42,6 +46,12 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  * @author Rob Elves
  */
 public class TasksPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+
+	private static final int OVERWRITE = 0;
+
+	private static final int LOAD_EXISTING = 1;
+
+	private static final int CANCEL = 2;
 
 	private static final String FOLDER_SELECTION_MESSAGE = "Specify the folder for tasks";
 
@@ -84,6 +94,8 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 	private Spinner hourDayStart;
 
 	private Spinner hourDayEnd;
+	
+	private int taskDataDirectoryAction = -1;
 
 	public TasksPreferencePage() {
 		super();
@@ -105,7 +117,7 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		createSchedulingGroup(container);
 		createOpenWith(container);
 		createTaskDataControl(container);
-		
+
 		updateRefreshGroupEnablements();
 		return container;
 	}
@@ -118,11 +130,19 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 	public boolean performOk() {
 		String taskDirectory = taskDirectoryText.getText();
 		taskDirectory = taskDirectory.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
+
 		if (!taskDirectory.equals(TasksUiPlugin.getDefault().getDataDirectory())) {
-			// NOTE: order matters
-			TasksUiPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
-			TasksUiPlugin.getDefault().getTaskListSaveManager().copyDataDirContentsTo(taskDirectory);
-			TasksUiPlugin.getDefault().setDataDirectory(taskDirectory);
+			if (taskDataDirectoryAction == OVERWRITE) {
+				TasksUiPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
+				TasksUiPlugin.getDefault().getTaskListSaveManager().copyDataDirContentsTo(taskDirectory);
+				TasksUiPlugin.getDefault().setDataDirectory(taskDirectory);
+			} else if (taskDataDirectoryAction == LOAD_EXISTING) {				
+				TasksUiPlugin.getDefault().setDataDirectory(taskDirectory);				
+				String taskListFilePath = taskDirectory + File.separator + TasksUiPlugin.DEFAULT_TASK_LIST_FILE;
+				TasksUiPlugin.getDefault().reloadFromNewFolder(taskListFilePath);				
+			} else if (taskDataDirectoryAction == CANCEL) {
+				// shouldn't get here
+			}
 		}
 		getPreferenceStore().setValue(TaskListPreferenceConstants.NOTIFICATIONS_ENABLED,
 				notificationEnabledButton.getSelection());
@@ -348,7 +368,28 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 				dir = dialog.open();
 				if (dir == null || dir.equals(""))
 					return;
-				taskDirectoryText.setText(dir);
+				dir = dir.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
+				File newDataFolder = new File(dir);
+				if (newDataFolder.exists()) {
+					for (String filename : newDataFolder.list()) {
+						if (filename.equals(TasksUiPlugin.DEFAULT_TASK_LIST_FILE)) {
+
+							MessageDialog dialogConfirm = new MessageDialog(
+									null,
+									"Tasklist found at destination",
+									null,
+									"Overwrite existing tasklist with current data or load tasklist from new destination?",
+									MessageDialog.WARNING, new String[] { "Overwrite", "Load",
+											IDialogConstants.CANCEL_LABEL }, CANCEL);
+							taskDataDirectoryAction = dialogConfirm.open();							
+							break;
+						}
+					}
+				}
+
+				if (taskDataDirectoryAction != CANCEL) {
+					taskDirectoryText.setText(dir);
+				}
 			}
 		});
 
