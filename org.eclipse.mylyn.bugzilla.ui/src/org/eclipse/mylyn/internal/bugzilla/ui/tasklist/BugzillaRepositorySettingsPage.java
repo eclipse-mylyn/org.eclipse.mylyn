@@ -47,6 +47,8 @@ import org.eclipse.swt.widgets.Label;
  */
 public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
+	public static final String LABEL_AUTOMATIC_VERSION = "Automatic (Use Validate Settings)";
+
 	private static final String MESSAGE_FAILURE_UNKNOWN = "Unknown error occured. Check that server url and credentials are valid.";
 
 	private static final String TITLE = "Bugzilla Repository Settings";
@@ -54,6 +56,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	private static final String DESCRIPTION = "Example: https://bugs.eclipse.org/bugs (do not include index.cgi)";
 
 	protected Combo repositoryVersionCombo;
+
+	private boolean testing = false;
 
 	public BugzillaRepositorySettingsPage(AbstractRepositoryConnectorUi repositoryUi) {
 		super(TITLE, DESCRIPTION, repositoryUi);
@@ -86,7 +90,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		repositoryVersionLabel.setText("Repository Version: ");
 		repositoryVersionCombo = new Combo(parent, SWT.READ_ONLY);
 
-		repositoryVersionCombo.add("Automatic (Use Validate Settings)");
+		repositoryVersionCombo.add(LABEL_AUTOMATIC_VERSION);
 
 		for (String version : getConnector().getSupportedVersions()) {
 			repositoryVersionCombo.add(version);
@@ -157,7 +161,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		return false;
 	}
 
-	protected void validateSettings() {
+	/* public for testing */
+	public void validateSettings() {
 
 		try {
 			final URL serverURL = new URL(super.getServerUrl());
@@ -206,12 +211,15 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 					}
 				}
 			});
+
 			if (version[0] != null) {
 				setBugzillaVersion(version[0]);
 			}
 
-			MessageDialog.openInformation(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-					"Authentication credentials are valid.");
+			if (!testing) {
+				MessageDialog.openInformation(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
+						"Authentication credentials are valid.");
+			}
 		} catch (InvocationTargetException e) {
 			if (e.getCause() instanceof MalformedURLException) {
 				MessageDialog.openWarning(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, "Server URL is invalid.");
@@ -232,4 +240,9 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 		super.getWizard().getContainer().updateButtons();
 	}
+
+	public void setTesting(boolean testing) {
+		this.testing = testing;
+	}
+
 }

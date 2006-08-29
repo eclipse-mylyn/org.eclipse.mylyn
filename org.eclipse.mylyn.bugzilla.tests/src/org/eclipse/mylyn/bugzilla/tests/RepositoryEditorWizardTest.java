@@ -141,4 +141,16 @@ public class RepositoryEditorWizardTest extends TestCase {
 		fail("LoginException didn't occur!");
 	}
 
+	public void testAutoVersion() throws Exception {
+		repository.setVersion(BugzillaRepositorySettingsPage.LABEL_AUTOMATIC_VERSION);
+		EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
+		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard);
+		dialog.create();
+		BugzillaRepositorySettingsPage page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
+		page.setTesting(true);
+		assertEquals(BugzillaRepositorySettingsPage.LABEL_AUTOMATIC_VERSION, page.getVersion());
+		page.validateSettings();
+		assertEquals("2.22", page.getVersion());
+	}
+	
 }
