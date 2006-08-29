@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Tasks Core Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.tasks.core;singleton:=true
-Bundle-Version: 0.6.2
+Bundle-Version: 0.6.2.v20060828-1600
 Bundle-Localization: plugin
 Eclipse-AutoStart: true 
 Bundle-Vendor: Eclipse.org
