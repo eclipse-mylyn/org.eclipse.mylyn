@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylar.ide_feature"
       label="Mylar Focused UI (Recommended)"
-      version="0.6.2"
+      version="0.6.2.v20060828-1600"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylar">
 
@@ -262,35 +262,35 @@ litigation.
          id="org.eclipse.mylar.java"
          download-size="0"
          install-size="0"
-         version="0.6.2"
+         version="0.6.2.v20060828-1600"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.ide"
          download-size="0"
          install-size="0"
-         version="0.6.2"
+         version="0.6.2.v20060828-1600"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.resources"
          download-size="0"
          install-size="0"
-         version="0.6.2"
+         version="0.6.2.v20060828-1600"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.context.ui"
          download-size="0"
          install-size="0"
-         version="0.6.2"
+         version="0.6.2.v20060828-1600"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.team"
          download-size="0"
          install-size="0"
-         version="0.6.2"
+         version="0.6.2.v20060828-1600"
          unpack="false"/>
 
 </feature>
