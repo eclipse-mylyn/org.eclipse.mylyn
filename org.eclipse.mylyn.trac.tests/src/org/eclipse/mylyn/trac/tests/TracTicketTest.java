@@ -18,8 +18,8 @@ import java.util.TimeZone;
 import junit.framework.TestCase;
 
 import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
-import org.eclipse.mylar.internal.trac.model.TracTicket;
-import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
+import org.eclipse.mylar.internal.trac.core.model.TracTicket;
+import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
 
 /**
  * @author Steffen Pingel

@@ -19,11 +19,11 @@ import junit.framework.TestCase;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.PrivilegeLevel;
-import org.eclipse.mylar.internal.trac.TracRepositoryConnector;
-import org.eclipse.mylar.internal.trac.TracTask;
-import org.eclipse.mylar.internal.trac.TracUiPlugin;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
+import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylar.internal.trac.ui.TracRepositoryConnector;
+import org.eclipse.mylar.internal.trac.ui.TracTask;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -58,7 +58,7 @@ public class TracOfflineTaskHandlerTest extends TestCase {
 		manager = TasksUiPlugin.getRepositoryManager();
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
-		connector = (TracRepositoryConnector) manager.getRepositoryConnector(TracUiPlugin.REPOSITORY_KIND);
+		connector = (TracRepositoryConnector) manager.getRepositoryConnector(TracCorePlugin.REPOSITORY_KIND);
 		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
 
 		offlineHandler = connector.getOfflineTaskHandler();
@@ -67,7 +67,7 @@ public class TracOfflineTaskHandlerTest extends TestCase {
 	protected void init(String url, Version version) {
 		Credentials credentials = MylarTestUtils.readCredentials(PrivilegeLevel.USER);
 
-		repository = new TaskRepository(TracUiPlugin.REPOSITORY_KIND, url);
+		repository = new TaskRepository(TracCorePlugin.REPOSITORY_KIND, url);
 		repository.setAuthenticationCredentials(credentials.username, credentials.password);
 		repository.setTimeZoneId(ITracClient.TIME_ZONE);
 		repository.setCharacterEncoding(ITracClient.CHARSET);

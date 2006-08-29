@@ -18,11 +18,11 @@ import java.util.Set;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.trac.TracRepositoryQuery;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
-import org.eclipse.mylar.internal.trac.model.TracSearch;
-import org.eclipse.mylar.internal.trac.model.TracSearchFilter;
-import org.eclipse.mylar.internal.trac.model.TracSearchFilter.CompareOperator;
+import org.eclipse.mylar.internal.trac.core.model.TracSearch;
+import org.eclipse.mylar.internal.trac.core.model.TracSearchFilter;
+import org.eclipse.mylar.internal.trac.core.model.TracSearchFilter.CompareOperator;
+import org.eclipse.mylar.internal.trac.ui.TracRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;

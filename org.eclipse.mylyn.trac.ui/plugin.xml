@@ -6,16 +6,18 @@
          name="Trac Repository"
          point="org.eclipse.mylar.tasks.ui.repositories">
       <connectorCore
-            class="org.eclipse.mylar.internal.trac.TracRepositoryConnector"
+            class="org.eclipse.mylar.internal.trac.ui.TracRepositoryConnector"
             id="org.eclipse.mylar.trac.tasklist.repositories"
-            name="Trac Repository Client"
+            name="Trac Headless Client"
             type="trac"/>
       <connectorUi
-            class="org.eclipse.mylar.internal.trac.TracRepositoryUi"
-            brandingIcon="icons/eview16/trac-icon.gif"/>
+            brandingIcon="icons/eview16/trac-icon.gif"
+            class="org.eclipse.mylar.internal.trac.ui.TracRepositoryUi"
+            id="Trac UI Client"/>
       <externalizer
-            class="org.eclipse.mylar.internal.trac.TracTaskExternalizer"
-            id="org.eclipse.mylar.trac.tasklist.externalizer"/>
+            class="org.eclipse.mylar.internal.trac.ui.TracTaskExternalizer"
+            id="org.eclipse.mylar.trac.tasklist.externalizer"
+            name="Trac Externalizer"/>
    </extension>
    <extension
          point="org.eclipse.mylar.tasks.ui.templates">

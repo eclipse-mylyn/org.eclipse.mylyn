@@ -29,17 +29,18 @@ import org.eclipse.mylar.core.core.tests.support.MylarTestUtils;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.PrivilegeLevel;
 import org.eclipse.mylar.internal.tasks.ui.wizards.EditRepositoryWizard;
-import org.eclipse.mylar.internal.trac.TracRepositoryConnector;
-import org.eclipse.mylar.internal.trac.TracRepositoryQuery;
-import org.eclipse.mylar.internal.trac.TracTask;
-import org.eclipse.mylar.internal.trac.TracUiPlugin;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
+import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
-import org.eclipse.mylar.internal.trac.model.TracSearch;
-import org.eclipse.mylar.internal.trac.model.TracTicket;
-import org.eclipse.mylar.internal.trac.model.TracVersion;
-import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
+import org.eclipse.mylar.internal.trac.core.model.TracSearch;
+import org.eclipse.mylar.internal.trac.core.model.TracTicket;
+import org.eclipse.mylar.internal.trac.core.model.TracVersion;
+import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
+import org.eclipse.mylar.internal.trac.ui.TracRepositoryConnector;
+import org.eclipse.mylar.internal.trac.ui.TracRepositoryQuery;
+import org.eclipse.mylar.internal.trac.ui.TracTask;
+import org.eclipse.mylar.internal.trac.ui.TracUiPlugin;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
@@ -88,7 +89,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 	}
 
 	protected void init(String url, Version version) {
-		String kind = TracUiPlugin.REPOSITORY_KIND;
+		String kind = TracCorePlugin.REPOSITORY_KIND;
 		Credentials credentials = MylarTestUtils.readCredentials(PrivilegeLevel.USER);
 
 		repository = new TaskRepository(kind, url);

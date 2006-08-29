@@ -22,14 +22,15 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositoryQueryPage;
 import org.eclipse.mylar.internal.tasks.ui.search.RepositorySearchResult;
-import org.eclipse.mylar.internal.trac.TracRepositoryConnector;
-import org.eclipse.mylar.internal.trac.TracRepositoryQuery;
-import org.eclipse.mylar.internal.trac.TracUiPlugin;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
+import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylar.internal.trac.core.TracException;
-import org.eclipse.mylar.internal.trac.model.TracSearch;
-import org.eclipse.mylar.internal.trac.model.TracSearchFilter;
-import org.eclipse.mylar.internal.trac.model.TracSearchFilter.CompareOperator;
+import org.eclipse.mylar.internal.trac.core.model.TracSearch;
+import org.eclipse.mylar.internal.trac.core.model.TracSearchFilter;
+import org.eclipse.mylar.internal.trac.core.model.TracSearchFilter.CompareOperator;
+import org.eclipse.mylar.internal.trac.ui.TracRepositoryConnector;
+import org.eclipse.mylar.internal.trac.ui.TracRepositoryQuery;
+import org.eclipse.mylar.internal.trac.ui.TracUiPlugin;
 import org.eclipse.mylar.internal.trac.ui.search.AbstractQueryHitCollector;
 import org.eclipse.mylar.internal.trac.ui.search.IQueryHitCollector;
 import org.eclipse.mylar.internal.trac.ui.search.RepositorySearchQuery;
@@ -339,7 +340,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 	
 	private void updateAttributesFromRepository(final boolean force) {
 		TracRepositoryConnector connector = (TracRepositoryConnector) TasksUiPlugin.getRepositoryManager()
-				.getRepositoryConnector(TracUiPlugin.REPOSITORY_KIND);
+				.getRepositoryConnector(TracCorePlugin.REPOSITORY_KIND);
 		final ITracClient client;
 		try {
 			client = connector.getClientManager().getRepository(repository);

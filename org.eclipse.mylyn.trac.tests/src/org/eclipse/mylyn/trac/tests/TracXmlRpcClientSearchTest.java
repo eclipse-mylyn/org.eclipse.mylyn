@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
-import org.eclipse.mylar.internal.trac.model.TracSearch;
-import org.eclipse.mylar.internal.trac.model.TracTicket;
-import org.eclipse.mylar.internal.trac.model.TracTicket.Key;
+import org.eclipse.mylar.internal.trac.core.model.TracSearch;
+import org.eclipse.mylar.internal.trac.core.model.TracTicket;
+import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
 
 /**
  * @author Steffen Pingel

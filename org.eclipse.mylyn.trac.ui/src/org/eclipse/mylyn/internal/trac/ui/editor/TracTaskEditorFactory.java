@@ -10,9 +10,9 @@ package org.eclipse.mylar.internal.trac.ui.editor;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.ITaskEditorFactory;
 import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
-import org.eclipse.mylar.internal.trac.TracRepositoryConnector;
-import org.eclipse.mylar.internal.trac.TracTask;
-import org.eclipse.mylar.internal.trac.TracUiPlugin;
+import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
+import org.eclipse.mylar.internal.trac.ui.TracRepositoryConnector;
+import org.eclipse.mylar.internal.trac.ui.TracTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -27,7 +27,7 @@ public class TracTaskEditorFactory implements ITaskEditorFactory {
 	public boolean canCreateEditorFor(ITask task) {
 		if (task instanceof TracTask) {
 			TracRepositoryConnector connector = (TracRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-					TracUiPlugin.REPOSITORY_KIND);
+					TracCorePlugin.REPOSITORY_KIND);
 			return connector.hasRichEditor((TracTask) task);
 		}
 		return task instanceof TracTask;
@@ -47,7 +47,7 @@ public class TracTaskEditorFactory implements ITaskEditorFactory {
 	public IEditorInput createEditorInput(ITask task) {
 		TracTask tracTask = (TracTask) task;
 		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-				TracUiPlugin.REPOSITORY_KIND, tracTask.getRepositoryUrl());
+				TracCorePlugin.REPOSITORY_KIND, tracTask.getRepositoryUrl());
 		try {
 			return new TracTaskEditorInput(repository, tracTask);
 		} catch (Exception e) {

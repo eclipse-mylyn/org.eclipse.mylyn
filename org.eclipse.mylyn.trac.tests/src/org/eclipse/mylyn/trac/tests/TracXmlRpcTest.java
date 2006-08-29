@@ -28,7 +28,7 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.PrivilegeLevel;
-import org.eclipse.mylar.internal.trac.core.TracHttpClientTransportFactory;
+import org.eclipse.mylar.internal.trac.core.util.TracHttpClientTransportFactory;
 
 /**
  * Test cases for <a href="http://trac-hacks.org/wiki/XmlRpcPlugin">Trac XML-RPC

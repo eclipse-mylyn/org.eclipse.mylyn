@@ -18,11 +18,11 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.PrivilegeLevel;
-import org.eclipse.mylar.internal.trac.TracRepositoryQuery;
-import org.eclipse.mylar.internal.trac.TracUiPlugin;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
+import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
-import org.eclipse.mylar.internal.trac.model.TracSearch;
+import org.eclipse.mylar.internal.trac.core.model.TracSearch;
+import org.eclipse.mylar.internal.trac.ui.TracRepositoryQuery;
 import org.eclipse.mylar.internal.trac.ui.search.AbstractQueryHitCollector;
 import org.eclipse.mylar.internal.trac.ui.search.RepositorySearchQuery;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
@@ -62,7 +62,7 @@ public class RepositorySearchQueryTest extends TestCase {
 	protected void init(String url, Version version) {
 		Credentials credentials = MylarTestUtils.readCredentials(PrivilegeLevel.USER);
 
-		repository = new TaskRepository(TracUiPlugin.REPOSITORY_KIND, url);
+		repository = new TaskRepository(TracCorePlugin.REPOSITORY_KIND, url);
 		repository.setAuthenticationCredentials(credentials.username, credentials.password);
 		repository.setTimeZoneId(ITracClient.TIME_ZONE);
 		repository.setCharacterEncoding(ITracClient.CHARSET);

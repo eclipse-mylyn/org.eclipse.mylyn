@@ -13,9 +13,9 @@ package org.eclipse.mylar.trac.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.trac.TracRepositoryQuery;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
-import org.eclipse.mylar.internal.trac.model.TracSearch;
+import org.eclipse.mylar.internal.trac.core.model.TracSearch;
+import org.eclipse.mylar.internal.trac.ui.TracRepositoryQuery;
 
 /**
  * @author Steffen Pingel

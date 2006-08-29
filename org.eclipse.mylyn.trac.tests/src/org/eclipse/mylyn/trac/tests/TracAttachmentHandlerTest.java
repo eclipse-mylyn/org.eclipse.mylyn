@@ -23,11 +23,11 @@ import junit.framework.TestCase;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.PrivilegeLevel;
-import org.eclipse.mylar.internal.trac.TracRepositoryConnector;
-import org.eclipse.mylar.internal.trac.TracTask;
-import org.eclipse.mylar.internal.trac.TracUiPlugin;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
+import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylar.internal.trac.ui.TracRepositoryConnector;
+import org.eclipse.mylar.internal.trac.ui.TracTask;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -69,7 +69,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 	}
 
 	protected void init(String url, Version version) {
-		String kind = TracUiPlugin.REPOSITORY_KIND;
+		String kind = TracCorePlugin.REPOSITORY_KIND;
 		Credentials credentials = MylarTestUtils.readCredentials(PrivilegeLevel.USER);
 
 		repository = new TaskRepository(kind, url);

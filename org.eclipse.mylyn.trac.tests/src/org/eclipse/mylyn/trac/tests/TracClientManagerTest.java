@@ -17,11 +17,11 @@ import java.util.Arrays;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylar.internal.trac.TracUiPlugin;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.TracClientManager;
+import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
-import org.eclipse.mylar.internal.trac.model.TracMilestone;
+import org.eclipse.mylar.internal.trac.core.model.TracMilestone;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 
 /**
@@ -30,7 +30,7 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
 public class TracClientManagerTest extends TestCase {
 
 	public void testNullCache() throws Exception {
-		TaskRepository taskRepository = new TaskRepository(TracUiPlugin.REPOSITORY_KIND, Constants.TEST_TRAC_096_URL);
+		TaskRepository taskRepository = new TaskRepository(TracCorePlugin.REPOSITORY_KIND, Constants.TEST_TRAC_096_URL);
 		taskRepository.setVersion(Version.TRAC_0_9.name());
 		
 		TracClientManager manager = new TracClientManager(null);
@@ -42,7 +42,7 @@ public class TracClientManagerTest extends TestCase {
 	}
 
 	public void testReadCache() throws Exception {
-		TaskRepository taskRepository = new TaskRepository(TracUiPlugin.REPOSITORY_KIND, Constants.TEST_TRAC_096_URL);
+		TaskRepository taskRepository = new TaskRepository(TracCorePlugin.REPOSITORY_KIND, Constants.TEST_TRAC_096_URL);
 		taskRepository.setVersion(Version.TRAC_0_9.name());
 		
 		File file = File.createTempFile("mylar", null);
@@ -54,7 +54,7 @@ public class TracClientManagerTest extends TestCase {
 	}
 	
 	public void testWriteCache() throws Exception {
-		TaskRepository taskRepository = new TaskRepository(TracUiPlugin.REPOSITORY_KIND, Constants.TEST_TRAC_096_URL);
+		TaskRepository taskRepository = new TaskRepository(TracCorePlugin.REPOSITORY_KIND, Constants.TEST_TRAC_096_URL);
 		taskRepository.setVersion(Version.TRAC_0_9.name());
 		
 		File file = File.createTempFile("mylar", null);

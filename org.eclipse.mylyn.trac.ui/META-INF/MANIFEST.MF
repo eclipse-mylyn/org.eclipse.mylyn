@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Trac UI Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.trac.ui;singleton:=true
 Bundle-Version: 0.6.2.v20060828-1600
-Bundle-Activator: org.eclipse.mylar.internal.trac.TracUiPlugin
+Bundle-Activator: org.eclipse.mylar.internal.trac.ui.TracUiPlugin
 Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
@@ -15,9 +15,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.search,
  org.eclipse.mylar.trac.core
 Eclipse-LazyStart: true
-Export-Package: org.eclipse.mylar.internal.trac,
- org.eclipse.mylar.internal.trac.core,
- org.eclipse.mylar.internal.trac.model,
+Export-Package: org.eclipse.mylar.internal.trac.ui,
  org.eclipse.mylar.internal.trac.ui.editor,
  org.eclipse.mylar.internal.trac.ui.search,
  org.eclipse.mylar.internal.trac.ui.wizard

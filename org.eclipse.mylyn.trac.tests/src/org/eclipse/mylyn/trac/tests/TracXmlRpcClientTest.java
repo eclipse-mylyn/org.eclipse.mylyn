@@ -20,7 +20,7 @@ import org.eclipse.mylar.internal.trac.core.TracLoginException;
 import org.eclipse.mylar.internal.trac.core.TracRemoteException;
 import org.eclipse.mylar.internal.trac.core.TracXmlRpcClient;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
-import org.eclipse.mylar.internal.trac.model.TracVersion;
+import org.eclipse.mylar.internal.trac.core.model.TracVersion;
 
 /**
  * @author Steffen Pingel

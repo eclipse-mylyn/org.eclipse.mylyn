@@ -17,7 +17,7 @@ import java.util.Comparator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.internal.trac.core.TracException;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
-import org.eclipse.mylar.internal.trac.model.TracVersion;
+import org.eclipse.mylar.internal.trac.core.model.TracVersion;
 
 /**
  * @author Steffen Pingel

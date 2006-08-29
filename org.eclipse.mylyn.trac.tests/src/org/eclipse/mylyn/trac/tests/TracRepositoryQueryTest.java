@@ -16,11 +16,11 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.trac.TracRepositoryQuery;
-import org.eclipse.mylar.internal.trac.TracUiPlugin;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
-import org.eclipse.mylar.internal.trac.model.TracSearch;
-import org.eclipse.mylar.internal.trac.model.TracSearchFilter;
+import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
+import org.eclipse.mylar.internal.trac.core.model.TracSearch;
+import org.eclipse.mylar.internal.trac.core.model.TracSearchFilter;
+import org.eclipse.mylar.internal.trac.ui.TracRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -34,7 +34,7 @@ public class TracRepositoryQueryTest extends TestCase {
 		TaskRepositoryManager manager = TasksUiPlugin.getRepositoryManager();
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
-		TaskRepository repository = new TaskRepository(TracUiPlugin.REPOSITORY_KIND, Constants.TEST_TRAC_096_URL);	
+		TaskRepository repository = new TaskRepository(TracCorePlugin.REPOSITORY_KIND, Constants.TEST_TRAC_096_URL);	
 		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		TracSearch search = new TracSearch();
