@@ -24,8 +24,11 @@ import javax.security.auth.login.LoginException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylar.internal.tasks.core.WebClientUtil;
 import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.RepositoryTemplate;
@@ -83,6 +86,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		repositoryVersionLabel.setText("Repository Version: ");
 		repositoryVersionCombo = new Combo(parent, SWT.READ_ONLY);
 
+		repositoryVersionCombo.add("Automatic (Use Validate Settings)");
+
 		for (String version : getConnector().getSupportedVersions()) {
 			repositoryVersionCombo.add(version);
 		}
@@ -115,8 +120,24 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			int i = repositoryVersionCombo.indexOf(version.toString());
 			if (i != -1) {
 				repositoryVersionCombo.select(i);
+				setVersion(version);
+			} else {
+				for (IBugzillaConstants.BugzillaServerVersion serverVersion : IBugzillaConstants.BugzillaServerVersion
+						.values()) {
+					if (version.startsWith(serverVersion.toString())) {
+						i = repositoryVersionCombo.indexOf(serverVersion.toString());
+						if (i != -1) {
+							repositoryVersionCombo.select(i);
+							setVersion(serverVersion.toString());
+							break;
+						}
+					}
+				}
+				if (i == -1) {
+					MylarStatusHandler.log("Could not resolve repository version: " + version, this);
+					setVersion(IBugzillaConstants.BugzillaServerVersion.SERVER_218.toString());
+				}
 			}
-			setVersion(version);
 		}
 	}
 
@@ -144,13 +165,17 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			final String newUserId = getUserName();
 			final String newPassword = getPassword();
 			final boolean isAnonymous = isAnonymousAccess();
+			final String newEncoding = getCharacterEncoding();
+			final boolean checkVersion = repositoryVersionCombo.getSelectionIndex() == 0;
+			final String[] version = new String[1];
 			getWizard().getContainer().run(true, false, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					monitor.beginTask("Validating server settings", IProgressMonitor.UNKNOWN);
 					try {
-						
-						// TODO: all of this should be encapsulated by validateCredentials
-						
+
+						// TODO: all of this should be encapsulated by
+						// validateCredentials
+
 						Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
 						URLConnection cntx = WebClientUtil.getUrlConnection(serverURL, proxySettings, false);
 						if (cntx == null || !(cntx instanceof HttpURLConnection)) {
@@ -160,9 +185,18 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 						HttpURLConnection serverConnection = (HttpURLConnection) cntx;
 						serverConnection.connect();
 						serverConnection.getInputStream();
-						
+
 						if (!isAnonymous) {
 							BugzillaServerFacade.validateCredentials(proxySettings, serverUrl, newUserId, newPassword);
+						}
+
+						if (checkVersion) {
+							RepositoryConfiguration config = BugzillaCorePlugin.getRepositoryConfiguration(true,
+									repository.getUrl(), proxySettings, newUserId, newPassword, newEncoding);
+
+							if (config != null) {
+								version[0] = config.getInstallVersion();
+							}
 						}
 
 					} catch (Exception e) {
@@ -172,6 +206,9 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 					}
 				}
 			});
+			if (version[0] != null) {
+				setBugzillaVersion(version[0]);
+			}
 
 			MessageDialog.openInformation(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 					"Authentication credentials are valid.");
