@@ -108,11 +108,11 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	private static TaskRepositoryManager taskRepositoryManager;
 
 	private static TaskListSynchronizationScheduler synchronizationScheduler;
-	
+
 	private static RepositorySynchronizationManager synchronizationManager;
 
 	private static Map<String, AbstractRepositoryConnectorUi> repositoryConnectorUis = new HashMap<String, AbstractRepositoryConnectorUi>();
-	
+
 	private TaskListSaveManager taskListSaveManager;
 
 	private TaskListNotificationManager taskListNotificationManager;
@@ -260,7 +260,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	};
 
 	private static ITaskListNotificationProvider INCOMING_NOTIFICATION_PROVIDER = new ITaskListNotificationProvider() {
-		
+
 		public Set<ITaskListNotification> getNotifications() {
 			Set<ITaskListNotification> notifications = new HashSet<ITaskListNotification>();
 			// Incoming Changes
@@ -310,20 +310,35 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			if (event.getProperty().equals(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS)) {
 				TaskListView.getFromActivePerspective().togglePreviousAction(
 						!getPreferenceStore().getBoolean(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS));
-//				TaskListView.getFromActivePerspective().toggleNextAction(
-//						!getPreferenceStore().getBoolean(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS));
-//				TaskListView.getFromActivePerspective().clearTaskHistory();
+				// TaskListView.getFromActivePerspective().toggleNextAction(
+				// !getPreferenceStore().getBoolean(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS));
+				// TaskListView.getFromActivePerspective().clearTaskHistory();
 				getTaskListManager().getTaskActivationHistory().clear();
-				
+
 			}
+			// TODO: do we ever get here?
 			if (event.getProperty().equals(MylarPreferenceContstants.PREF_DATA_DIR)) {
 				if (event.getOldValue() instanceof String) {
 					String newDirPath = getDefault().getDataDirectory();
 					String taskListFilePath = newDirPath + File.separator + DEFAULT_TASK_LIST_FILE;
 					reloadFromNewFolder(taskListFilePath);
-//					if (TaskListView.getFromActivePerspective() != null) {
-//						TaskListView.getFromActivePerspective().clearTaskHistory();
-//					}
+					// if (TaskListView.getFromActivePerspective() != null) {
+					// TaskListView.getFromActivePerspective().clearTaskHistory();
+					// }
+				}
+			}
+		}
+
+	};
+
+	private final org.eclipse.jface.util.IPropertyChangeListener PROPERTY_LISTENER = new org.eclipse.jface.util.IPropertyChangeListener() {
+
+		public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent event) {
+			if (event.getProperty().equals(MylarPreferenceContstants.PREF_DATA_DIR)) {
+				if (event.getOldValue() instanceof String) {
+					String newDirPath = getDefault().getDataDirectory();
+					String taskListFilePath = newDirPath + File.separator + DEFAULT_TASK_LIST_FILE;
+					reloadFromNewFolder(taskListFilePath);
 				}
 			}
 		}
@@ -352,7 +367,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			taskListManager = new TaskListManager(taskListWriter, taskListFile);
 			taskRepositoryManager = new TaskRepositoryManager();
 			synchronizationManager = new RepositorySynchronizationManager();
-			
+
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					try {
@@ -360,7 +375,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 						taskRepositoryManager.readRepositories(getRepositoriesFilePath());
 						// Must be called after repositories read
 						readOfflineReportsFile();
-						
+
 						taskListManager.init();
 						taskListManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
 						taskListManager.readExistingOrCreateNewList();
@@ -385,7 +400,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 						ContextCorePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(
 								PREFERENCE_LISTENER);
-						
+
+						getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
 						getPreferenceStore().addPropertyChangeListener(synchronizationScheduler);
 						getPreferenceStore().addPropertyChangeListener(taskListManager);
 					} catch (Exception e) {
@@ -414,6 +430,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				getPreferenceStore().removePropertyChangeListener(taskListBackupManager);
 				getPreferenceStore().removePropertyChangeListener(taskListManager);
 				getPreferenceStore().removePropertyChangeListener(synchronizationScheduler);
+				getPreferenceStore().removePropertyChangeListener(PROPERTY_LISTENER);				
 				taskListManager.getTaskList().removeChangeListener(taskListSaveManager);
 				taskListManager.dispose();
 				TaskListColorsAndFonts.dispose();
@@ -438,17 +455,17 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	public void setDataDirectory(String newPath) {
 		getPreferenceStore().setValue(MylarPreferenceContstants.PREF_DATA_DIR, newPath);
-		ContextCorePlugin.getDefault().getContextStore().notifyContextStoreMoved();		
+		ContextCorePlugin.getDefault().getContextStore().notifyContextStoreMoved();
 	}
 
-	public void reloadFromNewFolder(String taskListFilePath) {
+	private void reloadFromNewFolder(String taskListFilePath) {
 		getTaskListSaveManager().saveTaskList(true);
 		getTaskListManager().resetTaskList();
 		getTaskListManager().setTaskListFile(new File(taskListFilePath));
 		getTaskListManager().readExistingOrCreateNewList();
 		getTaskListManager().getTaskActivationHistory().clear();
 	}
-	
+
 	// // TODO: delete post 0.6?
 	// private void migrateHandlesToRepositorySupport() {
 	// boolean migrated = false;
@@ -652,7 +669,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	public void addBrandingIcon(String repositoryType, Image icon) {
 		brandingIcons.put(repositoryType, icon);
 	}
-	
+
 	public Image getBrandingIcon(String repositoryType) {
 		return brandingIcons.get(repositoryType);
 	}

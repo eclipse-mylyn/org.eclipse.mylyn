@@ -72,7 +72,7 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 	private Button disableInternal;
 
 	private Button activateOnOpen;
-	
+
 	private Button reportInternal;
 
 	private Text synchScheduleTime = null;
@@ -94,7 +94,7 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 	private Spinner hourDayStart;
 
 	private Spinner hourDayEnd;
-	
+
 	private int taskDataDirectoryAction = -1;
 
 	public TasksPreferencePage() {
@@ -136,10 +136,8 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 				TasksUiPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
 				TasksUiPlugin.getDefault().getTaskListSaveManager().copyDataDirContentsTo(taskDirectory);
 				TasksUiPlugin.getDefault().setDataDirectory(taskDirectory);
-			} else if (taskDataDirectoryAction == LOAD_EXISTING) {				
-				TasksUiPlugin.getDefault().setDataDirectory(taskDirectory);				
-				String taskListFilePath = taskDirectory + File.separator + TasksUiPlugin.DEFAULT_TASK_LIST_FILE;
-				TasksUiPlugin.getDefault().reloadFromNewFolder(taskListFilePath);				
+			} else if (taskDataDirectoryAction == LOAD_EXISTING) {
+				TasksUiPlugin.getDefault().setDataDirectory(taskDirectory);
 			} else if (taskDataDirectoryAction == CANCEL) {
 				// shouldn't get here
 			}
@@ -152,9 +150,8 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		getPreferenceStore().setValue(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL, reportInternal.getSelection());
 		getPreferenceStore().setValue(TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL,
 				disableInternal.getSelection());
-		getPreferenceStore().setValue(TaskListPreferenceConstants.ACTIVATE_ON_OPEN,
-				activateOnOpen.getSelection());		
-		
+		getPreferenceStore().setValue(TaskListPreferenceConstants.ACTIVATE_ON_OPEN, activateOnOpen.getSelection());
+
 		// getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP,
 		// synchQueries.getSelection());
 		getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
@@ -181,8 +178,7 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		reportInternal.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL));
 		disableInternal.setSelection(getPreferenceStore().getBoolean(
 				TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL));
-		activateOnOpen.setSelection(getPreferenceStore().getBoolean(
-				TaskListPreferenceConstants.ACTIVATE_ON_OPEN));
+		activateOnOpen.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.ACTIVATE_ON_OPEN));
 		// synchQueries.setSelection(getPreferenceStore().getBoolean(
 		// TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
 		enableBackgroundSynch.setSelection(getPreferenceStore().getBoolean(
@@ -300,19 +296,18 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		reportInternal = new Button(container, SWT.RADIO);
 		reportInternal.setText("Internal browser");
 		reportInternal.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL));
-		
+
 		disableInternal = new Button(container, SWT.CHECK);
 		disableInternal.setText("Disable internal browser");
 		disableInternal.setEnabled(!reportInternal.getSelection());
 		disableInternal.setSelection(getPreferenceStore().getBoolean(
 				TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL));
-		
+
 		activateOnOpen = new Button(container, SWT.CHECK);
 		activateOnOpen.setText("Active on open (Experimental)");
 		activateOnOpen.setEnabled(!reportInternal.getSelection());
-		activateOnOpen.setSelection(getPreferenceStore().getBoolean(
-				TaskListPreferenceConstants.ACTIVATE_ON_OPEN));
-		
+		activateOnOpen.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.ACTIVATE_ON_OPEN));
+
 		reportInternal.addListener(SWT.Selection, new Listener() {
 
 			public void handleEvent(Event event) {
@@ -381,7 +376,7 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 									"Overwrite existing tasklist with current data or load tasklist from new destination?",
 									MessageDialog.WARNING, new String[] { "Overwrite", "Load",
 											IDialogConstants.CANCEL_LABEL }, CANCEL);
-							taskDataDirectoryAction = dialogConfirm.open();							
+							taskDataDirectoryAction = dialogConfirm.open();
 							break;
 						}
 					}
