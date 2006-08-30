@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
@@ -26,12 +26,12 @@ import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylar.internal.trac.ui.TracTask.Kind;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
+import org.eclipse.mylar.tasks.core.IQueryHitCollector;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -110,10 +110,41 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		// TODO Auto-generated method stub
 	}
 
+//	@Override
+//	public List<AbstractQueryHit> performQuery(AbstractRepositoryQuery query, IProgressMonitor monitor,
+//			MultiStatus queryStatus) {
+//		List<AbstractQueryHit> hits = new ArrayList<AbstractQueryHit>();
+//		final List<TracTicket> tickets = new ArrayList<TracTicket>();
+//
+//		String url = query.getRepositoryUrl();
+//		TaskRepository taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(
+//				TracCorePlugin.REPOSITORY_KIND, url);
+//		ITracClient tracRepository;
+//		try {
+//			tracRepository = getClientManager().getRepository(taskRepository);
+//			if (query instanceof TracRepositoryQuery) {
+//				tracRepository.search(((TracRepositoryQuery) query).getTracSearch(), tickets);
+//			}
+//		} catch (Throwable e) {
+//			queryStatus.add(TracUiPlugin.toStatus(e));
+//			return hits;
+//		}
+//
+//		for (TracTicket ticket : tickets) {
+//			TracQueryHit hit = new TracQueryHit(query.getRepositoryUrl(), getTicketDescription(ticket), ticket.getId()
+//					+ "");
+//			hit.setCompleted(TracTask.isCompleted(ticket.getValue(Key.STATUS)));
+//			hit.setPriority(TracTask.getMylarPriority(ticket.getValue(Key.PRIORITY)));
+//			hits.add(hit);
+//		}
+//		queryStatus.add(Status.OK_STATUS);
+//		return hits;
+//	}
+
 	@Override
-	public List<AbstractQueryHit> performQuery(AbstractRepositoryQuery query, IProgressMonitor monitor,
-			MultiStatus queryStatus) {
-		List<AbstractQueryHit> hits = new ArrayList<AbstractQueryHit>();
+	public IStatus performQuery(AbstractRepositoryQuery query, IProgressMonitor monitor,
+			IQueryHitCollector resultCollector) {
+
 		final List<TracTicket> tickets = new ArrayList<TracTicket>();
 
 		String url = query.getRepositoryUrl();
@@ -125,22 +156,24 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			if (query instanceof TracRepositoryQuery) {
 				tracRepository.search(((TracRepositoryQuery) query).getTracSearch(), tickets);
 			}
-		} catch (Throwable e) {
-			queryStatus.add(TracUiPlugin.toStatus(e));
-			return hits;
+
+			for (TracTicket ticket : tickets) {
+				TracQueryHit hit = new TracQueryHit(query.getRepositoryUrl(), getTicketDescription(ticket), ticket
+						.getId()
+						+ "");
+				hit.setCompleted(TracTask.isCompleted(ticket.getValue(Key.STATUS)));
+				hit.setPriority(TracTask.getMylarPriority(ticket.getValue(Key.PRIORITY)));
+				resultCollector.accept(hit);
+			}
+		} catch (Throwable e) {			
+			return TracUiPlugin.toStatus(e);			
 		}
 
-		for (TracTicket ticket : tickets) {
-			TracQueryHit hit = new TracQueryHit(query.getRepositoryUrl(), getTicketDescription(ticket), ticket.getId()
-					+ "");
-			hit.setCompleted(TracTask.isCompleted(ticket.getValue(Key.STATUS)));
-			hit.setPriority(TracTask.getMylarPriority(ticket.getValue(Key.PRIORITY)));
-			hits.add(hit);
-		}
-		queryStatus.add(Status.OK_STATUS);
-		return hits;
+		return Status.OK_STATUS;
 	}
 
+	
+	
 	@Override
 	public ITask createTaskFromExistingKey(TaskRepository repository, String id) {
 		try {

@@ -26,6 +26,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchEngine;
 import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaSearchOperation;
 import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositorySearchQuery;
+import org.eclipse.mylar.tasks.core.IQueryHitCollector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -39,11 +40,11 @@ public class BugzillaCategorySearchOperation extends WorkspaceModifyOperation im
 	/** The IMember we are doing the search for */
 
 	public interface ICategorySearchListener {
-		public void searchCompleted(BugzillaResultCollector collector);
+		public void searchCompleted(IQueryHitCollector collector);
 	}
 
 	/** The bugzilla collector for the search */
-	private BugzillaResultCollector collector = null;
+	private IQueryHitCollector collector = null;
 
 	/** The status of the search operation */
 	private IStatus status;
@@ -65,16 +66,20 @@ public class BugzillaCategorySearchOperation extends WorkspaceModifyOperation im
 	 * @param m
 	 *            The member that we are doing the search for
 	 */
-	public BugzillaCategorySearchOperation(TaskRepository repository, String queryUrl, int maxHits) {
+	public BugzillaCategorySearchOperation(TaskRepository repository, String queryUrl, int maxHits,
+			IQueryHitCollector collector) {
 		this.queryUrl = queryUrl;
 		this.maxHits = maxHits;
 		this.repository = repository;
+		this.collector = collector;
 	}
 
 	@Override
 	public void execute(IProgressMonitor monitor) {
-		collector = new BugzillaResultCollector();
-		collector.setOperation(this);
+		// XXX: Hack
+		if (collector instanceof BugzillaResultCollector) {
+			((BugzillaResultCollector) collector).setOperation(this);
+		}
 		collector.setProgressMonitor(monitor);
 		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
 		search(queryUrl, proxySettings, monitor);
@@ -93,7 +98,7 @@ public class BugzillaCategorySearchOperation extends WorkspaceModifyOperation im
 	 *            The progress monitor to use for the search
 	 * @return The BugzillaResultCollector with the search results
 	 */
-	private BugzillaResultCollector search(String queryUrl, Proxy proxySettings, IProgressMonitor monitor) {
+	private IQueryHitCollector search(String queryUrl, Proxy proxySettings, IProgressMonitor monitor) {
 
 		// set the initial number of matches to 0
 		int matches = 0;
@@ -108,11 +113,11 @@ public class BugzillaCategorySearchOperation extends WorkspaceModifyOperation im
 			// check the status so that we don't keep searching if there
 			// is a problem
 			if (status.getCode() == IStatus.CANCEL) {
-//				MylarStatusHandler.log("search cancelled", this);
+				// MylarStatusHandler.log("search cancelled", this);
 				return null;
 			} else if (!status.isOK()) {
-//				MylarStatusHandler.log("search error", this);
-//				MylarStatusHandler.log(status);
+				// MylarStatusHandler.log("search error", this);
+				// MylarStatusHandler.log(status);
 				return null;
 			}
 			isMaxReached = engine.isMaxReached();

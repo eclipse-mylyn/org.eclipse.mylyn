@@ -13,6 +13,7 @@ package org.eclipse.mylar.trac.tests;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -21,13 +22,13 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.PrivilegeLevel;
+import org.eclipse.mylar.internal.tasks.ui.search.AbstractQueryHitCollector;
 import org.eclipse.mylar.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
@@ -40,7 +41,6 @@ import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylar.internal.trac.ui.TracRepositoryConnector;
 import org.eclipse.mylar.internal.trac.ui.TracRepositoryQuery;
 import org.eclipse.mylar.internal.trac.ui.TracTask;
-import org.eclipse.mylar.internal.trac.ui.TracUiPlugin;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
@@ -185,8 +185,15 @@ public class TracRepositoryConnectorTest extends TestCase {
 		String queryUrl = url + ITracClient.QUERY_URL + search.toUrl();
 		TracRepositoryQuery query = new TracRepositoryQuery(url, queryUrl, "description", tasklist);
 
-		MultiStatus queryStatus = new MultiStatus(TracUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
-		List<AbstractQueryHit> result = connector.performQuery(query, new NullProgressMonitor(), queryStatus);
+		//MultiStatus queryStatus = new MultiStatus(TracUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
+		final List<AbstractQueryHit> result = new ArrayList<AbstractQueryHit>();
+		AbstractQueryHitCollector hitCollector = new AbstractQueryHitCollector() {
+
+			@Override
+			public void addMatch(AbstractQueryHit hit) {
+				result.add(hit);
+			}};
+		IStatus queryStatus = connector.performQuery(query, new NullProgressMonitor(), hitCollector);
 
 		assertTrue(queryStatus.isOK());
 		assertEquals(3, result.size());

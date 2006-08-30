@@ -8,24 +8,27 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.trac.ui.search;
+package org.eclipse.mylar.internal.tasks.ui.search;
 
 import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.IQueryHitCollector;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * Collects results of a search.
+ * @author Rob Elves (generalized from bugzilla)
  */
 public abstract class AbstractQueryHitCollector implements IQueryHitCollector {
 
 	/** The progress monitor for the search operation */
-	private IProgressMonitor monitor;
+	private IProgressMonitor monitor = new NullProgressMonitor();
 
 	/** The number of matches found */
 	private int matchCount;
@@ -42,14 +45,15 @@ public abstract class AbstractQueryHitCollector implements IQueryHitCollector {
 	/** The string to display to the user when the query is done */
 	private static final String DONE = "done";
 
+	public abstract void addMatch(AbstractQueryHit hit);
+	
 	public void aboutToStart(int startMatchCount) throws CoreException {
-		matchCount = startMatchCount;
-
-		// set the progress monitor to say that we are querying the server
+		matchCount = startMatchCount;		
 		monitor.setTaskName(STARTING);
 	}
 
 	public void accept(AbstractQueryHit hit) throws CoreException {
+
 		ITask correspondingTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 				hit.getHandleIdentifier());
 		if (correspondingTask instanceof AbstractRepositoryTask) {
@@ -68,8 +72,6 @@ public abstract class AbstractQueryHitCollector implements IQueryHitCollector {
 			getProgressMonitor().worked(1);
 		}
 	}
-
-	public abstract void addMatch(AbstractQueryHit hit);
 
 	public void done() {
 		if (!monitor.isCanceled()) {

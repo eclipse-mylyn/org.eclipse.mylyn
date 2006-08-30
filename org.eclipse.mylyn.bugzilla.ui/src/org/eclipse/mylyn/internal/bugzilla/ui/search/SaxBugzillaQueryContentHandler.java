@@ -15,7 +15,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer;
+import org.eclipse.mylar.tasks.core.IQueryHitCollector;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -27,19 +29,31 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 
+	/** The bug id */
+	private String id;
+
+	/** The description of the bug */
+	private String description;
+
+	/** The priority of the bug */
+	private String priority;
+
+	/** The state of the bug */
+	private String state;
+
 	private StringBuffer characters;
 
-	private IBugzillaSearchResultCollector collector;
+	private IQueryHitCollector collector;
 
 	private String repositoryUrl;
 
-	private BugzillaSearchHit hit;
+	private BugzillaQueryHit hit;
 
 	private int maxHits = 100;
 
 	private int numCollected = 0;
 
-	public SaxBugzillaQueryContentHandler(String repositoryUrl, IBugzillaSearchResultCollector col, int maxHits) {
+	public SaxBugzillaQueryContentHandler(String repositoryUrl, IQueryHitCollector col, int maxHits) {
 		this.repositoryUrl = repositoryUrl;
 		collector = col;
 		this.maxHits = maxHits;
@@ -58,9 +72,9 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 			tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase());
 			switch (tag) {
 			case LI:
-				hit = new BugzillaSearchHit();
-				hit.setRepository(repositoryUrl);
-				break;
+//				hit = new BugzillaQueryHit();
+//				hit.setRepository(repositoryUrl);
+//				break;
 			}
 		} catch (RuntimeException e) {
 			if (e instanceof IllegalArgumentException) {
@@ -82,34 +96,38 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 			tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase());
 			switch (tag) {
 			case ID:
-				hit.setId(Integer.parseInt(parsedText));
+				id = parsedText;
 				break;
-			case BUG_SEVERITY:
-				hit.setSeverity(parsedText);
-				break;
+//			case BUG_SEVERITY:
+//				severity = parsedText;
+//				break;
 			case PRIORITY:
-				hit.setPriority(parsedText);
+				priority = parsedText;
 				break;
-			case REP_PLATFORM:
-				hit.setPlatform(parsedText);
-				break;
+//			case REP_PLATFORM:
+//				platform = parsedText;
+//				break;
 			case ASSIGNED_TO:
-				hit.setOwner(parsedText);
+				//hit.setOwner(parsedText);
 				break;
 			case BUG_STATUS:
-				hit.setState(parsedText);
+				state = parsedText;
 				break;
-			case RESOLUTION:
-				hit.setResolution(parsedText);
-				break;
+//			case RESOLUTION:
+//				resolution = parsedText;
+//				break;
 			case SHORT_SHORT_DESC:
-				hit.setDescription(parsedText);
+				description = parsedText;
 				break;
 			case LI:
 				try {
 					if (numCollected < maxHits || maxHits == IBugzillaConstants.RETURN_ALL_HITS) {
+						description = id + ": " + description;
+						hit = new BugzillaQueryHit(description, priority, repositoryUrl, id, null, state);						
 						collector.accept(hit);
 						numCollected++;
+					} else {
+						break;
 					}
 				} catch (CoreException e) {
 					MylarStatusHandler.fail(e, "Problem recording Bugzilla search hit information", false);

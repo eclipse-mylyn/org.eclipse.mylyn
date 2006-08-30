@@ -35,10 +35,10 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.UnrecognizedReponseException;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
-import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchHit;
 import org.eclipse.mylar.internal.bugzilla.ui.search.RepositoryQueryResultsFactory;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
+import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -192,7 +192,7 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 		queryFactory.performQuery(repository.getUrl(), collector, urlQueryString, TasksUiPlugin.getDefault()
 				.getProxySettings(), AbstractReportFactory.RETURN_ALL_HITS, repository.getCharacterEncoding());
 
-		for (BugzillaSearchHit hit : collector.getResults()) {
+		for (AbstractQueryHit hit : collector.getResults()) {
 			String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), hit.getId());
 			ITask correspondingTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
 			if (correspondingTask != null && correspondingTask instanceof AbstractRepositoryTask) {

@@ -23,7 +23,6 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
@@ -61,7 +60,7 @@ public abstract class AbstractRepositoryConnector {
 	public abstract IOfflineTaskHandler getOfflineTaskHandler();
 
 	public abstract boolean validate(TaskRepository repository);
-	
+
 	public abstract String getRepositoryUrlFromTaskUrl(String url);
 
 	public abstract boolean canCreateTaskFromKey(TaskRepository repository);
@@ -74,18 +73,17 @@ public abstract class AbstractRepositoryConnector {
 	 * @return null if task could not be created
 	 */
 	public abstract ITask createTaskFromExistingKey(TaskRepository repository, String id);
-	
+
 	/**
 	 * Implementors must execute query synchronously.
 	 * 
 	 * @param query
 	 * @param monitor
-	 * @param queryStatus
-	 *            set an exception on queryStatus.getChildren[0] to indicate
-	 *            failure
+	 * @param resultCollector
+	 *            IQueryHitCollector that collects the hits found
 	 */
-	public abstract List<AbstractQueryHit> performQuery(AbstractRepositoryQuery query, IProgressMonitor monitor,
-			MultiStatus queryStatus);
+	public abstract IStatus performQuery(AbstractRepositoryQuery query, IProgressMonitor monitor,
+			IQueryHitCollector resultCollector);
 
 	public abstract String getLabel();
 
@@ -110,7 +108,7 @@ public abstract class AbstractRepositoryConnector {
 		return new String[] { IRepositoryConstants.PROPERTY_VERSION, IRepositoryConstants.PROPERTY_TIMEZONE,
 				IRepositoryConstants.PROPERTY_ENCODING };
 	}
-	
+
 	/**
 	 * Implementors of this repositoryOperations must perform it locally without
 	 * going to the server since it is used for frequent repositoryOperations
@@ -145,8 +143,8 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @return false, if operation is not supported by repository
 	 */
-	public final boolean attachContext(TaskRepository repository, AbstractRepositoryTask task, String longComment, Proxy proxySettings)
-			throws CoreException {
+	public final boolean attachContext(TaskRepository repository, AbstractRepositoryTask task, String longComment,
+			Proxy proxySettings) throws CoreException {
 		ContextCorePlugin.getContextManager().saveContext(task.getHandleIdentifier());
 		File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
 
@@ -180,7 +178,7 @@ public abstract class AbstractRepositoryConnector {
 				throw e;
 			}
 			task.setTaskData(null);
-//			synchronize(task, true, null);
+			// synchronize(task, true, null);
 		}
 		return true;
 	}

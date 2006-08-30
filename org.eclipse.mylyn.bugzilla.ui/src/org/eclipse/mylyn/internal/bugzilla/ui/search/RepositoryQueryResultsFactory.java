@@ -21,6 +21,7 @@ import javax.security.auth.login.LoginException;
 
 import org.eclipse.mylar.internal.bugzilla.core.AbstractReportFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
+import org.eclipse.mylar.tasks.core.IQueryHitCollector;
 
 
 /**
@@ -28,7 +29,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
  */
 public class RepositoryQueryResultsFactory extends AbstractReportFactory {
 
-	public void performQuery(String repositoryUrl, IBugzillaSearchResultCollector collector, String queryUrlString,
+	public void performQuery(String repositoryUrl, IQueryHitCollector collector, String queryUrlString,
 			Proxy proxySettings, int maxHits, String characterEncoding) throws LoginException, KeyManagementException,
 			NoSuchAlgorithmException, IOException, BugzillaException {
 

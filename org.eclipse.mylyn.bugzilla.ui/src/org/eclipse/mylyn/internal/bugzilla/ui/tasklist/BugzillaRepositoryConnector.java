@@ -19,7 +19,6 @@ import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -29,16 +28,13 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
-import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchHit;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaCategorySearchOperation.ICategorySearchListener;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
+import org.eclipse.mylar.tasks.core.IQueryHitCollector;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -137,43 +133,86 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return supportedVersions;
 	}
 
-	/** public for testing purposes * */
+
+//	@Override
+//	public List<AbstractQueryHit> performQuery(final AbstractRepositoryQuery repositoryQuery, IProgressMonitor monitor,
+//			MultiStatus status) {
+//		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+//				repositoryQuery.getRepositoryKind(), repositoryQuery.getRepositoryUrl());
+//
+//		final BugzillaCategorySearchOperation categorySearch = new BugzillaCategorySearchOperation(repository,
+//				repositoryQuery.getUrl(), repositoryQuery.getMaxHits());
+//
+//		final ArrayList<AbstractQueryHit> newHits = new ArrayList<AbstractQueryHit>();
+//		categorySearch.addResultsListener(new ICategorySearchListener() {
+//			public void searchCompleted(BugzillaResultCollector collector) {
+//				for (BugzillaSearchHit hit : collector.getResults()) {
+//					String description = hit.getId() + ": " + hit.getDescription();
+//					newHits.add(new BugzillaQueryHit(description, hit.getPriority(),
+//							repositoryQuery.getRepositoryUrl(), "" + hit.getId(), null, hit.getState()));
+//				}
+//			}
+//		});
+//
+//		categorySearch.execute(monitor);
+//		try {
+//			IStatus queryStatus = categorySearch.getStatus();
+//			if (!queryStatus.isOK()) {
+//				status.add(new Status(IStatus.OK, TasksUiPlugin.PLUGIN_ID, IStatus.OK, queryStatus.getMessage(),
+//						queryStatus.getException()));
+//			} else {
+//				status.add(queryStatus);
+//			}
+//		} catch (LoginException e) {
+//			// TODO: Set some form of disconnect status on Query?
+//			MylarStatusHandler.fail(e, "login failure for repository url: " + repository, false);
+//			status.add(new Status(IStatus.OK, TasksUiPlugin.PLUGIN_ID, IStatus.OK, "Could not log in", e));
+//		}
+//
+//		return newHits;
+//	}
+	
 	@Override
-	public List<AbstractQueryHit> performQuery(final AbstractRepositoryQuery repositoryQuery, IProgressMonitor monitor,
-			MultiStatus status) {
+	public IStatus performQuery(final AbstractRepositoryQuery query, IProgressMonitor monitor,
+            IQueryHitCollector resultCollector) {
+		
+		IStatus queryStatus = null;
+		
 		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-				repositoryQuery.getRepositoryKind(), repositoryQuery.getRepositoryUrl());
+				query.getRepositoryKind(), query.getRepositoryUrl());
 
 		final BugzillaCategorySearchOperation categorySearch = new BugzillaCategorySearchOperation(repository,
-				repositoryQuery.getUrl(), repositoryQuery.getMaxHits());
+				query.getUrl(), query.getMaxHits(), resultCollector);
 
-		final ArrayList<AbstractQueryHit> newHits = new ArrayList<AbstractQueryHit>();
-		categorySearch.addResultsListener(new ICategorySearchListener() {
-			public void searchCompleted(BugzillaResultCollector collector) {
-				for (BugzillaSearchHit hit : collector.getResults()) {
-					String description = hit.getId() + ": " + hit.getDescription();
-					newHits.add(new BugzillaQueryHit(description, hit.getPriority(),
-							repositoryQuery.getRepositoryUrl(), "" + hit.getId(), null, hit.getState()));
-				}
-			}
-		});
+//		final ArrayList<AbstractQueryHit> newHits = new ArrayList<AbstractQueryHit>();
+//		categorySearch.addResultsListener(new ICategorySearchListener() {
+//			public void searchCompleted(IQueryHitCollector collector) {
+//				for (AbstractQueryHit hit : collector.getResults()) {					
+//					String description = hit.getId() + ": " + hit.getDescription();
+//					newHits.add(new BugzillaQueryHit(description, hit.getPriority(),
+//							query.getRepositoryUrl(), "" + hit.getId(), null, hit.getState()));
+//				}
+//			}
+//		});
 
 		categorySearch.execute(monitor);
 		try {
-			IStatus queryStatus = categorySearch.getStatus();
-			if (!queryStatus.isOK()) {
-				status.add(new Status(IStatus.OK, TasksUiPlugin.PLUGIN_ID, IStatus.OK, queryStatus.getMessage(),
-						queryStatus.getException()));
-			} else {
-				status.add(queryStatus);
-			}
+			queryStatus = categorySearch.getStatus();
+//			if (!queryStatus.isOK()) {
+//				status.add(new Status(IStatus.OK, TasksUiPlugin.PLUGIN_ID, IStatus.OK, queryStatus.getMessage(),
+//						queryStatus.getException()));
+//			} else {
+//				status.add(queryStatus);
+//			}
 		} catch (LoginException e) {
 			// TODO: Set some form of disconnect status on Query?
 			MylarStatusHandler.fail(e, "login failure for repository url: " + repository, false);
-			status.add(new Status(IStatus.OK, TasksUiPlugin.PLUGIN_ID, IStatus.OK, "Could not log in", e));
+			queryStatus = new Status(IStatus.OK, TasksUiPlugin.PLUGIN_ID, IStatus.OK, "Could not log in", e);
 		}
 
-		return newHits;
+		return queryStatus;
+		
+		
 	}
 
 	public String getRepositoryUrlFromTaskUrl(String url) {

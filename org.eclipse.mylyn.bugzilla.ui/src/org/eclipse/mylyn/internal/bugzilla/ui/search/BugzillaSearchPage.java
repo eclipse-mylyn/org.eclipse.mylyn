@@ -919,11 +919,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		BugzillaUiPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.MOST_RECENT_QUERY, summaryText);
 
-		IBugzillaSearchResultCollector collector = new BugzillaSearchResultCollector();
+		BugzillaSearchResultCollector collector = new BugzillaSearchResultCollector();
 
 		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
 		IBugzillaSearchOperation op = new BugzillaSearchOperation(repository, queryUrl, proxySettings, collector,
-				getMaxHits());
+				getMaxHits());		
 
 		AbstractRepositorySearchQuery searchQuery = new BugzillaSearchQuery(op);
 		NewSearchUI.runQueryInBackground(searchQuery);

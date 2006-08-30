@@ -39,7 +39,6 @@ import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.BugSubmissionHandler;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
-import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchHit;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchOperation;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
@@ -99,10 +98,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				null, collector, "-1");
 		operation.run(new NullProgressMonitor());
 
-		assertEquals(2, collector.getResults().size());
-		for (BugzillaSearchHit hit : collector.getResults()) {
-			assertTrue(hit.getDescription().startsWith("search-match-test"));
-		}
+		assertEquals(2, collector.getResults().size());		
 		
 		//test anonymous update of configuration
 		RepositoryConfiguration config = BugzillaCorePlugin.getRepositoryConfiguration(true, repository.getUrl(), TasksUiPlugin.getDefault().getProxySettings(), repository.getUserName(), repository.getPassword(), repository.getCharacterEncoding());

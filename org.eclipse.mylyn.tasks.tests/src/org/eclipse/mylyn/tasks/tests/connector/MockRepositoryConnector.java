@@ -14,13 +14,13 @@ package org.eclipse.mylar.tasks.tests.connector;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
+import org.eclipse.mylar.tasks.core.IQueryHitCollector;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 
@@ -85,11 +85,6 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 	
 	@Override
-	public List<AbstractQueryHit> performQuery(AbstractRepositoryQuery query, IProgressMonitor monitor, MultiStatus queryStatus) {
-		return null;
-	}
-
-	@Override
 	public void updateAttributes(TaskRepository repository, IProgressMonitor monitor) {
 		// ignore
 	}
@@ -102,6 +97,11 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public void updateTaskState(AbstractRepositoryTask repositoryTask) {
 		// ignore
+	}
+
+	@Override
+	public IStatus performQuery(AbstractRepositoryQuery query, IProgressMonitor monitor, IQueryHitCollector resultCollector) {
+		return null;
 	}
 
 }

@@ -83,7 +83,7 @@ public class RepositorySearchResult extends AbstractTextSearchResult {
 	 * @return The singular label
 	 */
 	protected String getSingularLabel() {
-		return "Repository search - 1 match";
+		return "Task search - 1 match";
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class RepositorySearchResult extends AbstractTextSearchResult {
 	 * @return The plural label
 	 */
 	protected String getPluralLabel() {
-		return "Repository search - " + getMatchCount() + " matches";
+		return "Task search - " + getMatchCount() + " matches";
 	}
 
 	/*

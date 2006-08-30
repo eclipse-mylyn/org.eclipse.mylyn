@@ -11,19 +11,16 @@
 
 package org.eclipse.mylar.internal.trac.ui.search;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositorySearchQuery;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.IQueryHitCollector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PlatformUI;
@@ -55,7 +52,8 @@ public class RepositorySearchQuery extends AbstractRepositorySearchQuery {
 	}
 
 	public IStatus run(IProgressMonitor monitor) throws OperationCanceledException {
-		MultiStatus queryStatus = new MultiStatus(TasksUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
+		//MultiStatus queryStatus = new MultiStatus(TasksUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
+		IStatus queryStatus = Status.OK_STATUS;
 		try {
 			collector.setProgressMonitor(monitor);
 			collector.aboutToStart(0);
@@ -63,11 +61,7 @@ public class RepositorySearchQuery extends AbstractRepositorySearchQuery {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 					repository.getKind());
 
-			// TODO pass collector to performQuery() so results show up right away
-			List<AbstractQueryHit> result = connector.performQuery(query, monitor, queryStatus);
-			for (AbstractQueryHit hit : result) {
-				collector.accept(hit);
-			}
+			queryStatus = connector.performQuery(query, monitor, collector);			
 			collector.done();
 		} catch (final CoreException e) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -78,7 +72,7 @@ public class RepositorySearchQuery extends AbstractRepositorySearchQuery {
 			return Status.OK_STATUS;
 		}
 
-		final IStatus status = queryStatus.getChildren()[0];
+		final IStatus status = queryStatus;
 		if (status.getCode() == IStatus.CANCEL) {
 			return Status.OK_STATUS;
 		} else if (!status.isOK()) {

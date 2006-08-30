@@ -27,10 +27,8 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
 public class BugzillaSearchOperation implements IBugzillaSearchOperation {
 	private String queryUrl;
 
-	/** The bugzilla collector for the search */
-	private IBugzillaSearchResultCollector collector;
+	private BugzillaResultCollector collector;
 
-	/** The bugzilla search query */
 	private AbstractRepositorySearchQuery query;
 
 	/** The status of the search operation */
@@ -46,12 +44,13 @@ public class BugzillaSearchOperation implements IBugzillaSearchOperation {
 	private Proxy proxySettings;
 	
 	public BugzillaSearchOperation(TaskRepository repository, String queryUrl, Proxy proxySettings,
-			IBugzillaSearchResultCollector collector, String maxHits) {
+			BugzillaResultCollector collector, String maxHits) {
 		this.repository = repository;
 		this.queryUrl = queryUrl;
 		this.collector = collector;
-		this.proxySettings = proxySettings;
-		collector.setOperation(this);
+		this.proxySettings = proxySettings;				
+		collector.setOperation(this);	
+		
 		try {
 			this.maxHits = Integer.parseInt(maxHits);
 		} catch (Exception e) {

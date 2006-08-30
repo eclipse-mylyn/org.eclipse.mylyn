@@ -32,7 +32,6 @@ import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchOperation;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchQuery;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchResultCollector;
 import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaSearchOperation;
-import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaSearchResultCollector;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
@@ -220,7 +219,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 
 		queryUrl += "&product=" + getRepositoryTaskData().getProduct();
 
-		IBugzillaSearchResultCollector resultCollector = new BugzillaSearchResultCollector();
+		BugzillaSearchResultCollector resultCollector = new BugzillaSearchResultCollector();
 		IBugzillaSearchOperation operation = new BugzillaSearchOperation(repository, queryUrl, TasksUiPlugin
 				.getDefault().getProxySettings(), resultCollector, "100");
 		AbstractRepositorySearchQuery query = new BugzillaSearchQuery(operation);

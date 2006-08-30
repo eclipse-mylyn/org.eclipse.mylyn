@@ -30,8 +30,10 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.UnrecognizedReponseException;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
+import org.eclipse.mylar.tasks.core.IQueryHitCollector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.ui.PlatformUI;
 
@@ -84,7 +86,7 @@ public class BugzillaSearchEngine {
 	 * @param collector -
 	 *            The collector for the results to go into
 	 */
-	public IStatus search(IBugzillaSearchResultCollector collector) throws LoginException {
+	public IStatus search(IQueryHitCollector collector) throws LoginException {
 		return this.search(collector, 0, IBugzillaConstants.RETURN_ALL_HITS);
 	}
 
@@ -96,7 +98,7 @@ public class BugzillaSearchEngine {
 	 * @param startMatches -
 	 *            The number of matches to start with for the progress monitor
 	 */
-	public IStatus search(IBugzillaSearchResultCollector collector, int startMatches) throws LoginException {
+	public IStatus search(IQueryHitCollector collector, int startMatches) throws LoginException {
 		return this.search(collector, startMatches, BugzillaUiPlugin.getDefault().getMaxResults());
 	}
 
@@ -112,7 +114,7 @@ public class BugzillaSearchEngine {
 	 *            the maximum number of matches to return or
 	 *            IBugzillaConstants.RETURN_ALL_HITS for unlimited
 	 */
-	public IStatus search(IBugzillaSearchResultCollector collector, int startMatches, int maxHits)
+	public IStatus search(IQueryHitCollector collector, int startMatches, int maxHits)
 			throws LoginException {
 		IProgressMonitor monitor = collector.getProgressMonitor();
 		IStatus status = null;
@@ -287,16 +289,16 @@ public class BugzillaSearchEngine {
 			return status;
 	}
 
-	/** Old code used by a unit test. */
-	public static BugzillaSearchHit createHit(Pattern regularExpression, IProgressMonitor monitor, BufferedReader in,
+//	/** Old code used by a unit test. */
+	public static BugzillaQueryHit createHit(Pattern regularExpression, IProgressMonitor monitor, BufferedReader in,
 			String serverUrl, int id) throws IOException {
 		String line;
-		String severity = null;
+//		String severity = null;
 		String priority = null;
-		String platform = null;
-		String owner = null;
+//		String platform = null;
+//		String owner = null;
 		String state = null;
-		String result = null;
+//		String result = null;
 		for (int i = 0; i < 6; i++) {
 			Matcher matcher;
 			do {
@@ -312,24 +314,24 @@ public class BugzillaSearchEngine {
 			} while (!matcher.find());
 			if (null != matcher) {
 				switch (i) {
-				case 0:
-					severity = matcher.group(1);
-					break;
+//				case 0:
+//					severity = matcher.group(1);
+//					break;
 				case 1:
 					priority = matcher.group(1);
 					break;
-				case 2:
-					platform = matcher.group(1);
-					break;
-				case 3:
-					owner = matcher.group(1);
-					break;
+//				case 2:
+//					platform = matcher.group(1);
+//					break;
+//				case 3:
+//					owner = matcher.group(1);
+//					break;
 				case 4:
 					state = matcher.group(1);
 					break;
 				case 5:
-					result = matcher.group(1);
-					break;
+//					result = matcher.group(1);
+//					break;
 				}
 			}
 		}
@@ -346,17 +348,18 @@ public class BugzillaSearchEngine {
 			description = description.substring(1);
 		}
 
-		String query = "";
-		try {
-			String recentQuery = BugzillaUiPlugin.getMostRecentQuery();
-			if (recentQuery != null)
-				query = recentQuery;
-		} catch (Exception e) {
-			// ignore, for testing
-		}
+//		String query = "";
+//		try {
+//			String recentQuery = BugzillaUiPlugin.getMostRecentQuery();
+//			if (recentQuery != null)
+//				query = recentQuery;
+//		} catch (Exception e) {
+//			// ignore, for testing
+//		}
 
-		BugzillaSearchHit hit = new BugzillaSearchHit(serverUrl, id, description, severity, priority, platform, state,
-				result, owner, query);
+		BugzillaQueryHit hit = new BugzillaQueryHit(description, priority, serverUrl, String.valueOf(id), null, state);
+		
+		
 		return hit;
 	}
 
