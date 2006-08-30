@@ -11,6 +11,8 @@
 
 package org.eclipse.mylar.tasks.ui;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +23,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.util.DateUtil;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.search.AbstractQueryHitCollector;
@@ -104,16 +107,27 @@ class SynchronizeQueryJob extends Job {
 			if (resultingStatus.getException() == null) {
 				repositoryQuery.updateHits(newHits, taskList);
 				if (synchTasks) {
-					// TODO: Should sync changed per repository not per query
+					// TODO: Should sync changed per repository not per
+					// query
 					TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
 				}
-
-			} else {
-				// TODO: log the error?
+			} else if (!(resultingStatus.getException() instanceof IOException)) {
+				MylarStatusHandler.log(resultingStatus);
 				repositoryQuery.setCurrentlySynchronizing(false);
-				return resultingStatus;
+				return Status.OK_STATUS;
+			} else if (resultingStatus.getException() instanceof FileNotFoundException) {
+				// can be caused by empty urlbase parameter on bugzilla
+				// server
+				MylarStatusHandler.log(resultingStatus);
+				repositoryQuery.setCurrentlySynchronizing(false);
+				return Status.OK_STATUS;
+			} else {
+				// assume working offline
+				return Status.OK_STATUS;
 			}
-
+			
+			
+			
 			// if (queryStatus.getChildren() != null &&
 			// queryStatus.getChildren().length > 0) {
 			// if (queryStatus.getChildren()[0].getException() == null) {
