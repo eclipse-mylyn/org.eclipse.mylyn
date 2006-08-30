@@ -8,11 +8,7 @@
 
 package org.eclipse.mylar.internal.trac.core.util;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
-
-import org.eclipse.mylar.internal.trac.core.ITracClient;
 
 /**
  * Provides static helper methods.
@@ -22,17 +18,19 @@ import org.eclipse.mylar.internal.trac.core.ITracClient;
 public class TracUtils {
 
 	public static Date parseDate(long seconds) {
-		Calendar c = Calendar.getInstance();
-		c.setTimeZone(TimeZone.getTimeZone(ITracClient.TIME_ZONE));
-		c.setTimeInMillis(seconds * 1000l);
-		return c.getTime();
+		return new Date(seconds * 1000l);
+//		Calendar c = Calendar.getInstance();
+//		c.setTimeZone(TimeZone.getTimeZone(ITracClient.TIME_ZONE));
+//		c.setTimeInMillis(seconds * 1000l);
+//		return c.getTime();
 	}
 
 	public static long toTracTime(Date date) {
-		Calendar c = Calendar.getInstance();
-		c.setTime(date);
-		c.setTimeZone(TimeZone.getTimeZone(ITracClient.TIME_ZONE));
-		return c.getTimeInMillis() / 1000l;
+//		Calendar c = Calendar.getInstance();
+//		c.setTime(date);
+//		c.setTimeZone(TimeZone.getTimeZone(ITracClient.TIME_ZONE));
+//		return c.getTimeInMillis() / 1000l;
+		return date.getTime() / 1000l;
 	}
 
 }

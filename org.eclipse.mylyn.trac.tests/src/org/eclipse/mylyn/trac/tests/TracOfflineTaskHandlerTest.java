@@ -22,6 +22,8 @@ import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.PrivilegeLevel;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylar.internal.trac.core.model.TracTicket;
+import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylar.internal.trac.ui.TracRepositoryConnector;
 import org.eclipse.mylar.internal.trac.ui.TracTask;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -97,7 +99,7 @@ public class TracOfflineTaskHandlerTest extends TestCase {
 		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
 		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.offlineHandlerTicketId + "");
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
-//		int lastModified = Integer.parseInt(task.getTaskData().getLastModified());
+		int lastModified = Integer.parseInt(task.getTaskData().getLastModified());
 		
 		Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
 		tasks.add(task);
@@ -107,28 +109,28 @@ public class TracOfflineTaskHandlerTest extends TestCase {
 		assertEquals(tasks, result);
 
 		// always returns the ticket because time comparison mode is >=
-//		repository.setSyncTimeStamp(lastModified + "");
-//		result = offlineHandler.getChangedSinceLastSync(repository, tasks);
-//		assertEquals(tasks, result);
-//
-//		repository.setSyncTimeStamp((lastModified + 1) + "");
-//		result = offlineHandler.getChangedSinceLastSync(repository, tasks);		
-//		assertTrue(result.isEmpty());
-//		
-//		// change ticket making sure it gets a new change time
-//		Thread.currentThread().wait(1000);
-//		ITracClient client = connector.getClientManager().getRepository(repository);
-//		TracTicket ticket = client.getTicket(data.offlineHandlerTicketId);
-//		if (ticket.getValue(Key.DESCRIPTION).equals(lastModified + "")) {
-//			ticket.putBuiltinValue(Key.DESCRIPTION, lastModified + "x");
-//		} else {
-//			ticket.putBuiltinValue(Key.DESCRIPTION, lastModified + "");
-//		}
-//		client.updateTicket(ticket, "comment");
-//
-//		repository.setSyncTimeStamp((lastModified + 1) + "");
-//		result = offlineHandler.getChangedSinceLastSync(repository, tasks);		
-//		assertEquals(tasks, result);
+		repository.setSyncTimeStamp(lastModified + "");
+		result = offlineHandler.getChangedSinceLastSync(repository, tasks);
+		assertEquals(tasks, result);
+
+		repository.setSyncTimeStamp((lastModified + 1) + "");
+		result = offlineHandler.getChangedSinceLastSync(repository, tasks);		
+		assertTrue(result.isEmpty());
+		
+		// change ticket making sure it gets a new change time
+		Thread.sleep(1000);
+		ITracClient client = connector.getClientManager().getRepository(repository);
+		TracTicket ticket = client.getTicket(data.offlineHandlerTicketId);
+		if (ticket.getValue(Key.DESCRIPTION).equals(lastModified + "")) {
+			ticket.putBuiltinValue(Key.DESCRIPTION, lastModified + "x");
+		} else {
+			ticket.putBuiltinValue(Key.DESCRIPTION, lastModified + "");
+		}
+		client.updateTicket(ticket, "comment");
+
+		repository.setSyncTimeStamp((lastModified + 1) + "");
+		result = offlineHandler.getChangedSinceLastSync(repository, tasks);		
+		assertEquals(tasks, result);
 	}
 
 }
