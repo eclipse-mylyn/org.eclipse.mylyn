@@ -133,7 +133,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 				}
 			}
 		} catch (Exception e) {
-			MylarStatusHandler.log(e, "BugzillaTask.getCompletionDate()");
+			//MylarStatusHandler.log(e, "BugzillaTask.getCompletionDate()");
 			return null;
 		}
 		return super.getCompletionDate();
