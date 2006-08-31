@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.ui.search.AbstractQueryHitCollector;
 import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositoryQueryPage;
 import org.eclipse.mylar.internal.tasks.ui.search.RepositorySearchResult;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
@@ -34,6 +33,7 @@ import org.eclipse.mylar.internal.trac.ui.TracRepositoryQuery;
 import org.eclipse.mylar.internal.trac.ui.TracUiPlugin;
 import org.eclipse.mylar.internal.trac.ui.search.RepositorySearchQuery;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractQueryHitCollector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.IQueryHitCollector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -431,7 +431,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		}
 
 		final RepositorySearchQuery searchQuery = new RepositorySearchQuery(repository, getQuery());
-		IQueryHitCollector collector = new AbstractQueryHitCollector() {
+		IQueryHitCollector collector = new AbstractQueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList()) {
 
 			private RepositorySearchResult searchResult;
 

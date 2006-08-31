@@ -9,13 +9,14 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui.search;
+package org.eclipse.mylar.internal.bugzilla.core;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.mylar.internal.tasks.ui.search.AbstractQueryHitCollector;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractQueryHitCollector;
+import org.eclipse.mylar.tasks.core.TaskList;
 
 /**
  * Collector for the Bugzilla query results
@@ -27,20 +28,26 @@ import org.eclipse.mylar.tasks.core.AbstractQueryHit;
  */
 public class BugzillaResultCollector extends AbstractQueryHitCollector {
 
+	public BugzillaResultCollector(TaskList tasklist) {
+		super(tasklist);		
+	}
+
 	private List<AbstractQueryHit> results = new ArrayList<AbstractQueryHit>();
 
-	private IBugzillaSearchOperation operation;
-
-	public void setOperation(IBugzillaSearchOperation operation) {
-		this.operation = operation;
-	}
-
-	public IBugzillaSearchOperation getOperation() {
-		return operation;
-	}
+//	private IBugzillaSearchOperation operation;
+//
+//	public void setOperation(IBugzillaSearchOperation operation) {
+//		this.operation = operation;
+//	}
+//
+//	public IBugzillaSearchOperation getOperation() {
+//		return operation;
+//	}
 
 	@Override
 	public void addMatch(AbstractQueryHit hit) {
+		String description = hit.getId() + ": " + hit.getDescription();
+		hit.setDescription(description);
 		results.add(hit);
 	}
 	

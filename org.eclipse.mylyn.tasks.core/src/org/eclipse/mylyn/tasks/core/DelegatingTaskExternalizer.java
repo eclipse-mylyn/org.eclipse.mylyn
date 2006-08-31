@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -28,6 +29,7 @@ import org.w3c.dom.NodeList;
 /**
  * @author Mik Kersten
  * @author Ken Sueda (XML serialization support)
+ * @author Steffen Pingel
  */
 public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 
@@ -101,6 +103,10 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 
 	public static final String KEY_LAST_MOD_DATE = "LastModified";
 
+	public static final String KEY_DIRTY = "Dirty";
+
+	public static final String KEY_SYNC_STATE = "offlineSyncState";
+
 	private List<ITaskListExternalizer> delegateExternalizers = new ArrayList<ITaskListExternalizer>();
 
 	/**
@@ -169,6 +175,27 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			node.setAttribute(KEY_REMINDED, VAL_FALSE);
 		}
 
+		if (task instanceof AbstractRepositoryTask) {
+			AbstractRepositoryTask abstractTask = (AbstractRepositoryTask) task;
+			if (abstractTask.getLastModifiedDateStamp() != null) {
+				node.setAttribute(KEY_LAST_MOD_DATE, abstractTask.getLastModifiedDateStamp());
+			}
+
+			if(abstractTask.isNotified()) {
+				node.setAttribute(KEY_NOTIFIED_INCOMING, VAL_TRUE);		
+			} else {
+				node.setAttribute(KEY_NOTIFIED_INCOMING, VAL_FALSE);
+			}
+			
+			node.setAttribute(KEY_SYNC_STATE, abstractTask.getSyncState().toString());
+
+			if (abstractTask.isDirty()) {
+				node.setAttribute(KEY_DIRTY, VAL_TRUE);
+			} else {
+				node.setAttribute(KEY_DIRTY, VAL_FALSE);
+			}
+		}
+		
 		for (ITask t : task.getChildren()) {
 			createTaskElement(t, doc, node);
 		}
@@ -363,11 +390,54 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			task.setReminded(false);
 		}
 
+		if (task instanceof AbstractRepositoryTask) {
+			AbstractRepositoryTask abstractTask = (AbstractRepositoryTask) task;
+			abstractTask.setCurrentlySynchronizing(false);
+			if (element.hasAttribute(KEY_LAST_MOD_DATE) && !element.getAttribute(KEY_LAST_MOD_DATE).equals("")) {
+				abstractTask.setModifiedDateStamp(element.getAttribute(KEY_LAST_MOD_DATE));
+			}
+
+			if (VAL_TRUE.equals(element.getAttribute(KEY_DIRTY))) {
+				abstractTask.setDirty(true);
+			} else {
+				abstractTask.setDirty(false);
+			}
+			
+			if (VAL_TRUE.equals(element.getAttribute(KEY_NOTIFIED_INCOMING))) {
+				abstractTask.setNotified(true);
+			} else {
+				abstractTask.setNotified(false);
+			}
+			
+			try {
+				readTaskData(abstractTask);
+			} catch (Exception e) {
+				MylarStatusHandler.log(e, "Failed to read bug report");
+			}
+
+			if (element.hasAttribute(KEY_SYNC_STATE)) {
+				String syncState = element.getAttribute(KEY_SYNC_STATE);
+				if (syncState.compareTo(RepositoryTaskSyncState.SYNCHRONIZED.toString()) == 0) {
+					abstractTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);				
+				} else if (syncState.compareTo(RepositoryTaskSyncState.INCOMING.toString()) == 0) {
+					abstractTask.setSyncState(RepositoryTaskSyncState.INCOMING);
+				} else if (syncState.compareTo(RepositoryTaskSyncState.OUTGOING.toString()) == 0) {
+					abstractTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
+				} else if (syncState.compareTo(RepositoryTaskSyncState.CONFLICT.toString()) == 0) {
+					abstractTask.setSyncState(RepositoryTaskSyncState.CONFLICT);
+				}
+			}
+		}
+		
 		NodeList list = element.getChildNodes();
 		for (int j = 0; j < list.getLength(); j++) {
 			Node child = list.item(j);
 			task.addSubTask(readTask(child, taskList, null, task));
 		}
+	}
+
+	// TODO pull up implementation from BugzillaTaskExternalizer and TracTaskExternalizer
+	protected void readTaskData(AbstractRepositoryTask task) {
 	}
 
 	protected Date getDateFromString(String dateString) {

@@ -31,11 +31,11 @@ import org.eclipse.mylar.internal.bugzilla.core.AbstractReportFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaResultCollector;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.bugzilla.core.RepositoryQueryResultsFactory;
 import org.eclipse.mylar.internal.bugzilla.core.UnrecognizedReponseException;
-import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
-import org.eclipse.mylar.internal.bugzilla.ui.search.RepositoryQueryResultsFactory;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
@@ -113,17 +113,17 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 		}
 		try {
 			String mappedKey = attributeFactory.mapCommonAttributeKey(attributeKey);
-			Date lastModified = null;
+			Date parsedDate = null;
 			if (mappedKey.equals(BugzillaReportElement.DELTA_TS.getKeyString())) {
-				lastModified = delta_ts_format.parse(dateString);
+				parsedDate = delta_ts_format.parse(dateString);
 			} else if (mappedKey.equals(BugzillaReportElement.CREATION_TS.getKeyString())) {
-				lastModified = creation_ts_format.parse(dateString);
+				parsedDate = creation_ts_format.parse(dateString);
 			} else if (mappedKey.equals(BugzillaReportElement.BUG_WHEN.getKeyString())) {
-				lastModified = comment_creation_ts_format.parse(dateString);
+				parsedDate = comment_creation_ts_format.parse(dateString);
 			} else if (mappedKey.equals(BugzillaReportElement.DATE.getKeyString())) {
-				lastModified = attachment_creation_ts_format.parse(dateString);
+				parsedDate = attachment_creation_ts_format.parse(dateString);
 			}
-			return lastModified;
+			return parsedDate;
 		} catch (Exception e) {
 			return null;
 			// throw new CoreException(new Status(IStatus.ERROR,
@@ -185,11 +185,11 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 	private void queryForChanged(TaskRepository repository, Set<AbstractRepositoryTask> changedTasks,
 			String urlQueryString) throws Exception {
 		RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory();
-		BugzillaResultCollector collector = new BugzillaResultCollector();
+		BugzillaResultCollector collector = new BugzillaResultCollector(TasksUiPlugin.getTaskListManager().getTaskList());
 		if(repository.hasCredentials()) {
 			urlQueryString = BugzillaServerFacade.addCredentials(urlQueryString, repository.getUserName(), repository.getPassword());
 		}
-		queryFactory.performQuery(repository.getUrl(), collector, urlQueryString, TasksUiPlugin.getDefault()
+		queryFactory.performQuery(TasksUiPlugin.getTaskListManager().getTaskList(), repository.getUrl(), collector, urlQueryString, TasksUiPlugin.getDefault()
 				.getProxySettings(), AbstractReportFactory.RETURN_ALL_HITS, repository.getCharacterEncoding());
 
 		for (AbstractQueryHit hit : collector.getResults()) {

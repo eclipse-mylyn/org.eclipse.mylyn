@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.bugzilla.tests;
 
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskEditorInput;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 

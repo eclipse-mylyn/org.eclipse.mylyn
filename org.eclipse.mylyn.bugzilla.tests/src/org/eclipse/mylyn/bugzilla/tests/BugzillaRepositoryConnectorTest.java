@@ -32,17 +32,19 @@ import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttachmentHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.BugSubmissionHandler;
-import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchOperation;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
+import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchQuery;
+import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchResultCollector;
 import org.eclipse.mylar.internal.tasks.core.SslProtocolSocketFactory;
+import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.LocalAttachment;
@@ -87,18 +89,24 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		repository.setAuthenticationCredentials("", "");
 		// test anonymous task retrieval
 		BugzillaTask task = this.generateLocalTaskAndDownload("2");
-		assertNotNull(task);
+		assertNotNull(task);	
 		
-		// test anonymous query
-		BugzillaResultCollector collector = new BugzillaResultCollector();
+		// test anonymous query (note that this demonstrates query via eclipse search (ui)
+		BugzillaSearchResultCollector collector = new BugzillaSearchResultCollector(taskList);
 		collector.setProgressMonitor(new NullProgressMonitor());
 		BugzillaSearchOperation operation = new BugzillaSearchOperation(
 				repository,
 				"http://mylar.eclipse.org/bugs218/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=",
 				null, collector, "-1");
-		operation.run(new NullProgressMonitor());
-
-		assertEquals(2, collector.getResults().size());		
+		
+		//operation.run(new NullProgressMonitor());
+		BugzillaSearchQuery searchQuery = new BugzillaSearchQuery(operation);
+		searchQuery.run(new NullProgressMonitor());
+		assertEquals(2, collector.getResults().size());	
+		
+		for (AbstractQueryHit hit : collector.getResults()) {
+			assertTrue(hit.getDescription().contains("search-match-test"));
+		}
 		
 		//test anonymous update of configuration
 		RepositoryConfiguration config = BugzillaCorePlugin.getRepositoryConfiguration(true, repository.getUrl(), TasksUiPlugin.getDefault().getProxySettings(), repository.getUserName(), repository.getPassword(), repository.getCharacterEncoding());
@@ -196,13 +204,13 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	public void testUniqueTaskObjects() {
 		init222();
 		String repositoryURL = "repositoryURL";
-		BugzillaQueryHit hit1 = new BugzillaQueryHit("description", "P1", repositoryURL, "1", null, "status");
+		BugzillaQueryHit hit1 = new BugzillaQueryHit(taskList, "description", "P1", repositoryURL, "1", null, "status");
 		ITask task1 = hit1.getOrCreateCorrespondingTask();
 		assertNotNull(task1);
 		// taskList.renameTask(task1, "testing");
 		// task1.setDescription("testing");
 
-		BugzillaQueryHit hit1Twin = new BugzillaQueryHit("description", "P1", repositoryURL, "1", null, "status");
+		BugzillaQueryHit hit1Twin = new BugzillaQueryHit(taskList, "description", "P1", repositoryURL, "1", null, "status");
 		ITask task2 = hit1Twin.getOrCreateCorrespondingTask();
 		assertEquals(task1.getDescription(), task2.getDescription());
 	}

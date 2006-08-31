@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui.search;
+package org.eclipse.mylar.internal.bugzilla.core;
 
 import java.io.IOException;
 import java.net.Proxy;
@@ -19,9 +19,8 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.security.auth.login.LoginException;
 
-import org.eclipse.mylar.internal.bugzilla.core.AbstractReportFactory;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.tasks.core.IQueryHitCollector;
+import org.eclipse.mylar.tasks.core.TaskList;
 
 
 /**
@@ -29,12 +28,13 @@ import org.eclipse.mylar.tasks.core.IQueryHitCollector;
  */
 public class RepositoryQueryResultsFactory extends AbstractReportFactory {
 
-	public void performQuery(String repositoryUrl, IQueryHitCollector collector, String queryUrlString,
+	/** expects rdf returned from repository (ctype=rdf in url) */
+	public void performQuery(TaskList taskList, String repositoryUrl, IQueryHitCollector collector, String queryUrlString,
 			Proxy proxySettings, int maxHits, String characterEncoding) throws LoginException, KeyManagementException,
 			NoSuchAlgorithmException, IOException, BugzillaException {
 
 		
-		SaxBugzillaQueryContentHandler contentHandler = new SaxBugzillaQueryContentHandler(repositoryUrl,
+		SaxBugzillaQueryContentHandler contentHandler = new SaxBugzillaQueryContentHandler(taskList, repositoryUrl,
 				collector, maxHits);
 		
 		URL url = new URL(queryUrlString);

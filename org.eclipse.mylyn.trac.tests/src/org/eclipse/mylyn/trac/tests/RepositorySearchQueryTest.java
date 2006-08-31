@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.PrivilegeLevel;
-import org.eclipse.mylar.internal.tasks.ui.search.AbstractQueryHitCollector;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
@@ -26,6 +25,7 @@ import org.eclipse.mylar.internal.trac.core.model.TracSearch;
 import org.eclipse.mylar.internal.trac.ui.TracRepositoryQuery;
 import org.eclipse.mylar.internal.trac.ui.search.RepositorySearchQuery;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractQueryHitCollector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -80,7 +80,7 @@ public class RepositorySearchQueryTest extends TestCase {
 
 		final int count[] = new int[1];
 		RepositorySearchQuery searchQuery = new RepositorySearchQuery(repository, query);
-		searchQuery.setCollector(new AbstractQueryHitCollector() {
+		searchQuery.setCollector(new AbstractQueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList()) {
 			@Override
 			public void addMatch(AbstractQueryHit hit) {
 				assertEquals(Constants.TEST_TRAC_096_URL, hit.getRepositoryUrl());

@@ -9,15 +9,13 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui.search;
+package org.eclipse.mylar.internal.bugzilla.core;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer;
 import org.eclipse.mylar.tasks.core.IQueryHitCollector;
+import org.eclipse.mylar.tasks.core.TaskList;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -48,12 +46,15 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 	private String repositoryUrl;
 
 	private BugzillaQueryHit hit;
+	
+	private TaskList taskList;
 
 	private int maxHits = 100;
 
 	private int numCollected = 0;
 
-	public SaxBugzillaQueryContentHandler(String repositoryUrl, IQueryHitCollector col, int maxHits) {
+	public SaxBugzillaQueryContentHandler(TaskList tasklist, String repositoryUrl, IQueryHitCollector col, int maxHits) {
+		this.taskList = tasklist;
 		this.repositoryUrl = repositoryUrl;
 		collector = col;
 		this.maxHits = maxHits;
@@ -121,9 +122,8 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 				break;
 			case LI:
 				try {
-					if (numCollected < maxHits || maxHits == IBugzillaConstants.RETURN_ALL_HITS) {
-						description = id + ": " + description;
-						hit = new BugzillaQueryHit(description, priority, repositoryUrl, id, null, state);						
+					if (numCollected < maxHits || maxHits == IBugzillaConstants.RETURN_ALL_HITS) {						
+						hit = new BugzillaQueryHit(taskList, description, priority, repositoryUrl, id, null, state);						
 						collector.accept(hit);
 						numCollected++;
 					} else {

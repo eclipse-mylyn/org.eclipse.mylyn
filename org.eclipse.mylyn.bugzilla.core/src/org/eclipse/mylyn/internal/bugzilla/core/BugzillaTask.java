@@ -11,26 +11,27 @@
 /*
  * Created on 14-Jan-2005
  */
-package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
+package org.eclipse.mylar.internal.bugzilla.core;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.TaskComment;
-import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 
 /**
  * @author Mik Kersten
  */
 public class BugzillaTask extends AbstractRepositoryTask {
 
-	BugzillaOfflineTaskHandler offlineHandler = new BugzillaOfflineTaskHandler();
+	// BugzillaOfflineTaskHandler offlineHandler = new
+	// BugzillaOfflineTaskHandler();
+
+	private static final String COMMENT_FORMAT = "yyyy-MM-dd HH:mm";
+
+	private static SimpleDateFormat comment_creation_ts_format = new SimpleDateFormat(COMMENT_FORMAT);
 
 	public BugzillaTask(String handle, String label, boolean newTask) {
 		super(handle, label, newTask);
@@ -123,14 +124,17 @@ public class BugzillaTask extends AbstractRepositoryTask {
 					List<TaskComment> taskComments = taskData.getComments();
 					if (taskComments != null && !taskComments.isEmpty()) {
 						// TODO: fix not to be based on comment
-						return offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.COMMENT_DATE,
-								(taskComments.get(taskComments.size() - 1).getCreated()));
+						return comment_creation_ts_format.parse(taskComments.get(taskComments.size() - 1).getCreated());
+						// return
+						// offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.COMMENT_DATE,
+						// (taskComments.get(taskComments.size() -
+						// 1).getCreated()));
 					}
 				}
 			}
 		} catch (Exception e) {
-			// ignore
-			e.printStackTrace();
+			MylarStatusHandler.log(e, "BugzillaTask.getCompletionDate()");
+			return null;
 		}
 		return super.getCompletionDate();
 	}

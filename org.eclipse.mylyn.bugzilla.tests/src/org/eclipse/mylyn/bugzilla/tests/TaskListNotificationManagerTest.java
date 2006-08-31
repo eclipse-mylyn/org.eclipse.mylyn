@@ -15,9 +15,9 @@ import java.util.Date;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaQueryHit;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.tasks.ui.TaskListNotificationIncoming;
 import org.eclipse.mylar.internal.tasks.ui.TaskListNotificationManager;
 import org.eclipse.mylar.internal.tasks.ui.TaskListNotificationQueryIncoming;
@@ -95,7 +95,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 	}
 
 	public void testTaskListNotificationQueryIncoming() {
-		BugzillaQueryHit hit = new BugzillaQueryHit("description", "priority", "https://bugs.eclipse.org/bugs", "1",
+		BugzillaQueryHit hit = new BugzillaQueryHit(null, "description", "priority", "https://bugs.eclipse.org/bugs", "1",
 				null, "status");
 		assertFalse(hit.isNotified());
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery("https://bugs.eclipse.org/bugs", "queryUrl",
@@ -111,7 +111,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 	
 	public void testTaskListNotificationQueryIncomingRepeats() {
 		TasksUiPlugin.getTaskListManager().resetTaskList();
-		BugzillaQueryHit hit = new BugzillaQueryHit("description", "priority", "https://bugs.eclipse.org/bugs", "1",
+		BugzillaQueryHit hit = new BugzillaQueryHit(null, "description", "priority", "https://bugs.eclipse.org/bugs", "1",
 				null, "status");
 		String hitHandle = hit.getHandleIdentifier();
 		assertFalse(hit.isNotified());

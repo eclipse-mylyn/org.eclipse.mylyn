@@ -26,15 +26,17 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.bugzilla.core.RepositoryQueryResultsFactory;
 import org.eclipse.mylar.internal.bugzilla.core.UnrecognizedReponseException;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.IQueryHitCollector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -130,7 +132,7 @@ public class BugzillaSearchEngine {
 				throw new OperationCanceledException("Search cancelled");
 			}
 			RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory();
-			queryFactory.performQuery(repository.getUrl(), collector, urlString, proxySettings, maxHits, repository
+			queryFactory.performQuery(TasksUiPlugin.getTaskListManager().getTaskList(), repository.getUrl(), collector, urlString, proxySettings, maxHits, repository
 					.getCharacterEncoding());
 
 			// URLConnection cntx =
@@ -357,7 +359,7 @@ public class BugzillaSearchEngine {
 //			// ignore, for testing
 //		}
 
-		BugzillaQueryHit hit = new BugzillaQueryHit(description, priority, serverUrl, String.valueOf(id), null, state);
+		BugzillaQueryHit hit = new BugzillaQueryHit(TasksUiPlugin.getTaskListManager().getTaskList(), description, priority, serverUrl, String.valueOf(id), null, state);
 		
 		
 		return hit;

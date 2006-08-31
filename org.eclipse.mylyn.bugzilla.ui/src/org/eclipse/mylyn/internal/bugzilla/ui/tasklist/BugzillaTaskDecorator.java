@@ -14,6 +14,8 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaQueryHit;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaImages;
 
 /**

@@ -28,7 +28,6 @@ import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.PrivilegeLevel;
-import org.eclipse.mylar.internal.tasks.ui.search.AbstractQueryHitCollector;
 import org.eclipse.mylar.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
@@ -43,6 +42,7 @@ import org.eclipse.mylar.internal.trac.ui.TracRepositoryQuery;
 import org.eclipse.mylar.internal.trac.ui.TracTask;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractQueryHitCollector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -187,7 +187,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 		//MultiStatus queryStatus = new MultiStatus(TracUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
 		final List<AbstractQueryHit> result = new ArrayList<AbstractQueryHit>();
-		AbstractQueryHitCollector hitCollector = new AbstractQueryHitCollector() {
+		AbstractQueryHitCollector hitCollector = new AbstractQueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList()) {
 
 			@Override
 			public void addMatch(AbstractQueryHit hit) {

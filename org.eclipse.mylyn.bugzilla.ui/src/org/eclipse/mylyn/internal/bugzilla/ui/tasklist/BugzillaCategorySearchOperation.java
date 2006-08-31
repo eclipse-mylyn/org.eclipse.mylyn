@@ -22,8 +22,8 @@ import javax.security.auth.login.LoginException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchEngine;
+import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchResultCollector;
 import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaSearchOperation;
 import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositorySearchQuery;
 import org.eclipse.mylar.tasks.core.IQueryHitCollector;
@@ -77,8 +77,8 @@ public class BugzillaCategorySearchOperation extends WorkspaceModifyOperation im
 	@Override
 	public void execute(IProgressMonitor monitor) {
 		// XXX: Hack
-		if (collector instanceof BugzillaResultCollector) {
-			((BugzillaResultCollector) collector).setOperation(this);
+		if (collector instanceof BugzillaSearchResultCollector) {
+			((BugzillaSearchResultCollector) collector).setOperation(this);
 		}
 		collector.setProgressMonitor(monitor);
 		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();

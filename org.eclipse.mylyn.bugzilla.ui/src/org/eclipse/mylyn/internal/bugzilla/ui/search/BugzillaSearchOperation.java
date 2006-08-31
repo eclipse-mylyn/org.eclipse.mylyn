@@ -16,6 +16,7 @@ import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaResultCollector;
 import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositorySearchQuery;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 
@@ -44,7 +45,7 @@ public class BugzillaSearchOperation implements IBugzillaSearchOperation {
 	private Proxy proxySettings;
 	
 	public BugzillaSearchOperation(TaskRepository repository, String queryUrl, Proxy proxySettings,
-			BugzillaResultCollector collector, String maxHits) {
+			BugzillaSearchResultCollector collector, String maxHits) {
 		this.repository = repository;
 		this.queryUrl = queryUrl;
 		this.collector = collector;

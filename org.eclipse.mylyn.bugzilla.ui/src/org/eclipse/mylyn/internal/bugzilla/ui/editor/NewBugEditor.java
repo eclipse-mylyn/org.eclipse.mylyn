@@ -219,7 +219,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 
 		queryUrl += "&product=" + getRepositoryTaskData().getProduct();
 
-		BugzillaSearchResultCollector resultCollector = new BugzillaSearchResultCollector();
+		BugzillaSearchResultCollector resultCollector = new BugzillaSearchResultCollector(TasksUiPlugin.getTaskListManager().getTaskList());
 		IBugzillaSearchOperation operation = new BugzillaSearchOperation(repository, queryUrl, TasksUiPlugin
 				.getDefault().getProxySettings(), resultCollector, "100");
 		AbstractRepositorySearchQuery query = new BugzillaSearchQuery(operation);

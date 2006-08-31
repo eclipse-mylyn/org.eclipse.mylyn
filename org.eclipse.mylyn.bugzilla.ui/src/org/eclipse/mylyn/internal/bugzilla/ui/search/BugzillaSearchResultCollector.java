@@ -11,8 +11,10 @@
 package org.eclipse.mylar.internal.bugzilla.ui.search;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaResultCollector;
 import org.eclipse.mylar.internal.tasks.ui.search.RepositorySearchResult;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.search.ui.text.Match;
 
@@ -26,23 +28,37 @@ import org.eclipse.search.ui.text.Match;
  */
 public class BugzillaSearchResultCollector extends BugzillaResultCollector {
 
+	private IBugzillaSearchOperation operation;
+	
+	public BugzillaSearchResultCollector(TaskList tasklist) {
+		super(tasklist);
+	}
+
 	private RepositorySearchResult searchResult;
 
 	public void aboutToStart(int startMatchCount) throws CoreException {
-		NewSearchUI.activateSearchResultView();
-		searchResult = (RepositorySearchResult) getOperation().getQuery().getSearchResult();
 		super.aboutToStart(startMatchCount);
+		NewSearchUI.activateSearchResultView();
+		searchResult = (RepositorySearchResult) getOperation().getQuery().getSearchResult();		
 	}
 
-	public void done() {
-		searchResult = null;
+	public void done() {		
 		super.done();
+		searchResult = null;
 	}
 
 	@Override
 	public void addMatch(AbstractQueryHit hit) {
-		searchResult.addMatch(new Match(hit, 0, 0));
 		super.addMatch(hit);
+		searchResult.addMatch(new Match(hit, 0, 0));		
+	}
+	
+	public void setOperation(IBugzillaSearchOperation operation) {
+		this.operation = operation;
+	}
+
+	public IBugzillaSearchOperation getOperation() {
+		return operation;
 	}
 
 }

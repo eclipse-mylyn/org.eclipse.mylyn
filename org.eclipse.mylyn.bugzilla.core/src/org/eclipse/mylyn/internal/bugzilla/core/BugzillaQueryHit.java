@@ -9,13 +9,12 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
+package org.eclipse.mylar.internal.bugzilla.core;
 
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.core.TaskList;
 
 /**
  * @author Ken Sueda
@@ -27,9 +26,13 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 
 	private String status;
 
-	public BugzillaQueryHit(String description, String priority, String repositoryUrl, String id, BugzillaTask task, String status) {
+	private TaskList taskList;
+
+	public BugzillaQueryHit(TaskList tasklist, String description, String priority, String repositoryUrl, String id,
+			BugzillaTask task, String status) {
 		super(repositoryUrl, description, id);
 		super.priority = priority;
+		this.taskList = tasklist;
 		this.task = task;
 		this.status = status;
 	}
@@ -40,7 +43,7 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 
 	public void setCorrespondingTask(AbstractRepositoryTask task) {
 		if (task instanceof BugzillaTask) {
-			this.task = (BugzillaTask)task;
+			this.task = (BugzillaTask) task;
 		}
 	}
 
@@ -66,18 +69,19 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 		return BugzillaServerFacade.getBugUrlWithoutLogin(repositoryUrl, idInt);
 	}
 
-	public AbstractRepositoryTask getOrCreateCorrespondingTask() { 
-		
-		ITask existingTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-				getHandleIdentifier());
-		 
+	public AbstractRepositoryTask getOrCreateCorrespondingTask() {
+		if (taskList == null)
+			return null;
+
+		ITask existingTask = taskList.getTask(getHandleIdentifier());
+
 		if (existingTask instanceof BugzillaTask) {
-			this.task = (BugzillaTask)existingTask;
+			this.task = (BugzillaTask) existingTask;
 		} else {
 			task = new BugzillaTask(this, true);
-			//task.setSyncState(RepositoryTaskSyncState.INCOMING);
-			TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);			
-		} 	
+			// task.setSyncState(RepositoryTaskSyncState.INCOMING);
+			taskList.addTask(task);
+		}
 		return task;
 	}
 
@@ -86,7 +90,7 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 				&& (status.startsWith("RESO") || status.startsWith("CLO") || status.startsWith("VERI") || status
 						.startsWith("FIXED"))) {
 			return true;
-		} 
+		}
 		return false;
 	}
 

@@ -53,6 +53,7 @@ public class AbstractReportFactory {
 
 	public static final int RETURN_ALL_HITS = -1;
 
+	/** expects rdf returned from repository (ctype=rdf in url) */
 	protected void collectResults(URL url, Proxy proxySettings, String characterEncoding,
 			DefaultHandler contentHandler, boolean clean) throws IOException, LoginException, KeyManagementException,
 			NoSuchAlgorithmException, BugzillaException {

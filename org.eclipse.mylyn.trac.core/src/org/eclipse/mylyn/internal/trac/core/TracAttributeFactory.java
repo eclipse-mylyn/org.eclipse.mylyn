@@ -102,6 +102,10 @@ public class TracAttributeFactory extends AbstractAttributeFactory {
 		}
 	}
 
+	static {
+		// make sure hash maps get initialized when class is loaded
+		Attribute.values();
+	}
 
 	@Override
 	public boolean getIsHidden(String key) {
