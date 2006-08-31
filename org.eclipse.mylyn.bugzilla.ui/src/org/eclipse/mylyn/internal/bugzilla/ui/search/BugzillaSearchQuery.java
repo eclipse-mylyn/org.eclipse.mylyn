@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
@@ -35,10 +34,10 @@ import org.eclipse.ui.PlatformUI;
 public class BugzillaSearchQuery extends AbstractRepositorySearchQuery {
 
 	private static final String MESSAGE_LOGIN_FAILURE = "Could not log you in to get the information you requested since login name or password is incorrect.\nPlease check settings.";
-	
+
 	/** The operation that performs the Bugzilla search query. */
 	private IBugzillaSearchOperation operation;
-	
+
 	public BugzillaSearchQuery(IBugzillaSearchOperation operation) {
 		this.operation = operation;
 		operation.setQuery(this);
@@ -47,7 +46,7 @@ public class BugzillaSearchQuery extends AbstractRepositorySearchQuery {
 	public IStatus run(IProgressMonitor monitor) throws OperationCanceledException {
 		final IStatus[] status = new IStatus[1];
 		final AbstractTextSearchResult textResult = (AbstractTextSearchResult) getSearchResult();
-		textResult.removeAll(); 
+		textResult.removeAll();
 
 		try {
 			operation.run(monitor);
@@ -57,30 +56,28 @@ public class BugzillaSearchQuery extends AbstractRepositorySearchQuery {
 			if (status[0].getCode() == IStatus.CANCEL) {
 				status[0] = Status.OK_STATUS;
 			} else if (!status[0].isOK()) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 					public void run() {
-						ErrorDialog.openError(null, "Repository Search Error", null, status[0]);
+						MessageDialog.openError(null, "Repository Search Error", status[0].getMessage());
 					}
 				});
 				status[0] = Status.OK_STATUS;
 			}
 		} catch (InvocationTargetException e) {
-			// TODO: Display exceptions properly
-			MessageDialog
-					.openInformation(
-							null,
-							"Bugzilla Login Error",
-							MESSAGE_LOGIN_FAILURE);
-			BugzillaCorePlugin.log(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK, "", e));
+			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+				public void run() {
+					MessageDialog.openInformation(null, "Bugzilla Login Error", MESSAGE_LOGIN_FAILURE);
+				}
+			});
 		} catch (InterruptedException e) {
 			// ignore
-		} catch (LoginException e) {
-			MessageDialog
-					.openInformation(
-							null,
-							"Bugzilla Login Error",
-							MESSAGE_LOGIN_FAILURE);
-			BugzillaCorePlugin.log(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK, "", e));
+		} catch (final LoginException e) {
+			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+				public void run() {
+					MessageDialog.openInformation(null, "Bugzilla Login Error", MESSAGE_LOGIN_FAILURE);
+					BugzillaCorePlugin.log(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK, "", e));
+				}
+			});
 		}
 
 		return status[0];
