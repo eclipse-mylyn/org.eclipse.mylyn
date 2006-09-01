@@ -75,9 +75,7 @@ class SynchronizeTaskJob extends Job {
 				if (monitor.isCanceled())
 					throw new OperationCanceledException();
 
-				// TODO: refactor conditions
-				boolean canNotSynch = repositoryTask.isDirty();// ||
-				// repositoryTask.isSynchronizing();
+				boolean canNotSynch = repositoryTask.isDirty();
 				boolean hasLocalChanges = repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING
 						|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT;
 				if (forceSync || (!canNotSynch && !hasLocalChanges) || !repositoryTask.isDownloaded()) {
@@ -93,7 +91,7 @@ class SynchronizeTaskJob extends Job {
 							if (!(e.getStatus().getException() instanceof IOException)) {
 								MylarStatusHandler.log(e.getStatus());
 							} else if(e.getStatus().getException() instanceof FileNotFoundException){
-								// can be casue by empty urlbase parameter on bugzilla server
+								// can be caused by empty urlbase parameter on bugzilla server
 								MylarStatusHandler.log(e.getStatus());
 							} else {
 								// ignore, assume working offline

@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasks.ui.OfflineTaskManager;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -48,13 +49,13 @@ public class RepositorySynchronizationManager {
 	private static final int MAX_QUERY_ATTEMPTS = 3;
 
 	private boolean updateLocalCopy = false;
-		
+
 	private final MutexRule rule = new MutexRule();
-	
+
 	protected boolean forceSyncExecForTesting = false;
-		
-	/** 
-	 * non-final for testing purposes 
+
+	/**
+	 * non-final for testing purposes
 	 */
 	public void saveOffline(RepositoryTaskData taskData) {
 		try {
@@ -63,7 +64,7 @@ public class RepositorySynchronizationManager {
 			MylarStatusHandler.fail(e, e.getMessage(), false);
 		}
 	}
-	
+
 	/**
 	 * Synchronize a single task. Note that if you have a collection of tasks to
 	 * synchronize with this connector then you should call synchronize(Set<Set<AbstractRepositoryTask>
@@ -72,7 +73,8 @@ public class RepositorySynchronizationManager {
 	 * @param listener
 	 *            can be null
 	 */
-	public final Job synchronize(AbstractRepositoryConnector connector, AbstractRepositoryTask repositoryTask, boolean forceSynch, IJobChangeListener listener) {
+	public final Job synchronize(AbstractRepositoryConnector connector, AbstractRepositoryTask repositoryTask,
+			boolean forceSynch, IJobChangeListener listener) {
 		Set<AbstractRepositoryTask> toSync = new HashSet<AbstractRepositoryTask>();
 		toSync.add(repositoryTask);
 		return synchronize(connector, toSync, forceSynch, listener);
@@ -82,8 +84,8 @@ public class RepositorySynchronizationManager {
 	 * @param listener
 	 *            can be null
 	 */
-	public final Job synchronize(AbstractRepositoryConnector connector, Set<AbstractRepositoryTask> repositoryTasks, boolean forceSynch,
-			final IJobChangeListener listener) {
+	public final Job synchronize(AbstractRepositoryConnector connector, Set<AbstractRepositoryTask> repositoryTasks,
+			boolean forceSynch, final IJobChangeListener listener) {
 
 		final SynchronizeTaskJob synchronizeJob = new SynchronizeTaskJob(connector, repositoryTasks);
 		synchronizeJob.setForceSynch(forceSynch);
@@ -110,19 +112,21 @@ public class RepositorySynchronizationManager {
 		return synchronizeJob;
 
 	}
-	
+
 	/**
 	 * For synchronizing a single query. Use synchronize(Set,
 	 * IJobChangeListener) if synchronizing multiple queries at a time.
 	 */
-	public final Job synchronize(AbstractRepositoryConnector connector, final AbstractRepositoryQuery repositoryQuery, IJobChangeListener listener) {
+	public final Job synchronize(AbstractRepositoryConnector connector, final AbstractRepositoryQuery repositoryQuery,
+			IJobChangeListener listener) {
 		HashSet<AbstractRepositoryQuery> items = new HashSet<AbstractRepositoryQuery>();
 		items.add(repositoryQuery);
 		return synchronize(connector, items, listener, Job.LONG, 0, true);
 	}
-	
-	public final Job synchronize(AbstractRepositoryConnector connector, final Set<AbstractRepositoryQuery> repositoryQueries, IJobChangeListener listener,
-			int priority, long delay, boolean syncTasks) {
+
+	public final Job synchronize(AbstractRepositoryConnector connector,
+			final Set<AbstractRepositoryQuery> repositoryQueries, IJobChangeListener listener, int priority,
+			long delay, boolean syncTasks) {
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		SynchronizeQueryJob job = new SynchronizeQueryJob(this, connector, repositoryQueries, taskList);
 		job.setSynchTasks(syncTasks);
@@ -137,7 +141,7 @@ public class RepositorySynchronizationManager {
 		job.schedule(delay);
 		return job;
 	}
-	
+
 	/**
 	 * Synchronizes only those tasks that have changed since the last time the
 	 * given repository was synchronized. Calls to this method set
@@ -156,7 +160,8 @@ public class RepositorySynchronizationManager {
 			while (attempts < MAX_QUERY_ATTEMPTS && changedTasks == null) {
 				attempts++;
 				try {
-					changedTasks = connector.getOfflineTaskHandler().getChangedSinceLastSync(repository, repositoryTasks);
+					changedTasks = connector.getOfflineTaskHandler().getChangedSinceLastSync(repository,
+							repositoryTasks);
 				} catch (Exception e) {
 					if (attempts == MAX_QUERY_ATTEMPTS) {
 						if (!(e instanceof IOException)) {
@@ -177,7 +182,8 @@ public class RepositorySynchronizationManager {
 		}
 		if (changedTasks != null) {
 			for (AbstractRepositoryTask task : changedTasks) {
-				if (task.getSyncState() == RepositoryTaskSyncState.SYNCHRONIZED) {
+				if (task.getSyncState() == RepositoryTaskSyncState.SYNCHRONIZED
+						|| task.getSyncState() == RepositoryTaskSyncState.INCOMING) {
 					tasksToSync.add(task);
 				}
 			}
@@ -214,19 +220,20 @@ public class RepositorySynchronizationManager {
 				}
 				// TODO: Get actual time stamp of query from repository rather
 				// than above hack
-				TasksUiPlugin.getRepositoryManager().setSyncTime(repository, mostRecentTimeStamp, TasksUiPlugin.getDefault().getRepositoriesFilePath());
+				TasksUiPlugin.getRepositoryManager().setSyncTime(repository, mostRecentTimeStamp,
+						TasksUiPlugin.getDefault().getRepositoriesFilePath());
 			}
 		});
 	}
 
 	/**
-	 * Precondition: offline file is removed upon submit to repository
-	 * resulting in a synchronized state.
+	 * Precondition: offline file is removed upon submit to repository resulting
+	 * in a synchronized state.
 	 * 
 	 * @return true if call results in change of syc state
 	 */
-	public synchronized boolean updateOfflineState(AbstractRepositoryConnector connector, final AbstractRepositoryTask repositoryTask,
-			final RepositoryTaskData newTaskData, boolean forceSync) {
+	public synchronized boolean updateOfflineState(AbstractRepositoryConnector connector,
+			final AbstractRepositoryTask repositoryTask, final RepositoryTaskData newTaskData, boolean forceSync) {
 		RepositoryTaskSyncState startState = repositoryTask.getSyncState();
 		RepositoryTaskSyncState status = repositoryTask.getSyncState();
 
@@ -304,11 +311,10 @@ public class RepositorySynchronizationManager {
 				break;
 			}
 
-			repositoryTask.setModifiedDateStamp(newTaskData.getLastModified());
+			if (status == RepositoryTaskSyncState.SYNCHRONIZED) {
+				repositoryTask.setModifiedDateStamp(newTaskData.getLastModified());
+			}
 		}
-		// if (offlineTaskData != null) {
-		// removeOfflineTaskData(offlineTaskData);
-		// }
 
 		repositoryTask.setTaskData(newTaskData);
 		repositoryTask.setSyncState(status);
@@ -317,28 +323,20 @@ public class RepositorySynchronizationManager {
 			repositoryTask.setNotified(false);
 		}
 		return startState != repositoryTask.getSyncState();
-		// } catch (final CoreException e) {
-		// if (forceSync) {
-		// PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-		// public void run() {
-		// ErrorDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-		// "Error Downloading Report", "Unable to synchronize " +
-		// repositoryTask.getDescription(),
-		// e.getStatus());
-		// }
-		// });
-		// }
-		// // else {
-		// // MylarStatusHandler.fail(e, "Unable to synchronize " +
-		// // repositoryTask.getDescription()
-		// // + " on " + repository.getUrl(), false);
-		// // }
-		// return;
-		// }
+
 	}
-	
+
 	/** public for testing purposes */
-	public boolean checkHasIncoming(AbstractRepositoryConnector connector, AbstractRepositoryTask repositoryTask, RepositoryTaskData newData) {
+	public boolean checkHasIncoming(AbstractRepositoryConnector connector, AbstractRepositoryTask repositoryTask,
+			RepositoryTaskData newData) {
+		String lastModified = repositoryTask.getLastModifiedDateStamp();
+		if (newData != null) {
+			RepositoryTaskData oldTaskData = OfflineTaskManager.findBug(repositoryTask.getRepositoryUrl(),
+					newData.getId());
+			if (oldTaskData != null) {
+				lastModified = oldTaskData.getLastModified();
+			}
+		}
 
 		RepositoryTaskAttribute modifiedDateAttribute = newData.getAttribute(RepositoryTaskAttribute.DATE_MODIFIED);
 		if (repositoryTask.getLastModifiedDateStamp() != null && modifiedDateAttribute != null
@@ -346,7 +344,7 @@ public class RepositorySynchronizationManager {
 			Date newModifiedDate = connector.getOfflineTaskHandler().getDateForAttributeType(
 					RepositoryTaskAttribute.DATE_MODIFIED, modifiedDateAttribute.getValue());
 			Date oldModifiedDate = connector.getOfflineTaskHandler().getDateForAttributeType(
-					RepositoryTaskAttribute.DATE_MODIFIED, repositoryTask.getLastModifiedDateStamp());
+					RepositoryTaskAttribute.DATE_MODIFIED, lastModified);
 			if (oldModifiedDate != null && newModifiedDate != null) {
 				if (newModifiedDate.compareTo(oldModifiedDate) <= 0) {
 					// leave in SYNCHRONIZED state
@@ -369,7 +367,7 @@ public class RepositorySynchronizationManager {
 		// }
 		// return true;
 	}
-	
+
 	/** non-final for testing purposes */
 	protected void removeOfflineTaskData(RepositoryTaskData bug) {
 		if (bug == null)
@@ -379,7 +377,7 @@ public class RepositorySynchronizationManager {
 		bugList.add(bug);
 		TasksUiPlugin.getDefault().getOfflineReportsFile().remove(bugList);
 	}
-	
+
 	/**
 	 * For testing
 	 */
@@ -396,5 +394,5 @@ public class RepositorySynchronizationManager {
 			return rule == this;
 		}
 	}
-	
+
 }

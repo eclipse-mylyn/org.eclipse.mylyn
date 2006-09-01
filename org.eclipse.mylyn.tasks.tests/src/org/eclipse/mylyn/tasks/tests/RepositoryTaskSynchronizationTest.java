@@ -87,7 +87,8 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		assertEquals(DATE_STAMP_1, task.getLastModifiedDateStamp());
 		TasksUiPlugin.getSynchronizationManager().updateOfflineState(connector, task, newData, false);
 		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
-		assertEquals(DATE_STAMP_2, task.getLastModifiedDateStamp());
+		assertEquals(DATE_STAMP_2, task.getTaskData().getLastModified());
+		// assertEquals(DATE_STAMP_2, task.getLastModifiedDateStamp());
 
 	}
 
@@ -129,7 +130,8 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		assertEquals(DATE_STAMP_1, task.getLastModifiedDateStamp());
 		TasksUiPlugin.getSynchronizationManager().updateOfflineState(connector, task, newData, false);
 		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
-		assertEquals(DATE_STAMP_2, task.getLastModifiedDateStamp());
+		assertEquals(DATE_STAMP_2, task.getTaskData().getLastModified());
+		// assertEquals(DATE_STAMP_2, task.getLastModifiedDateStamp());
 	}
 
 	public void testSynchronizedToSynchronized() {
@@ -165,7 +167,8 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		assertEquals(DATE_STAMP_1, task.getLastModifiedDateStamp());
 		TasksUiPlugin.getSynchronizationManager().updateOfflineState(connector, task, newData, true);
 		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
-		assertEquals(DATE_STAMP_2, task.getLastModifiedDateStamp());
+		assertEquals(DATE_STAMP_2, task.getTaskData().getLastModified());
+		// assertEquals(DATE_STAMP_2, task.getLastModifiedDateStamp());
 	}
 
 	public void testConflictToSynchonized() {
@@ -193,7 +196,8 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		assertEquals(DATE_STAMP_1, task.getLastModifiedDateStamp());
 		TasksUiPlugin.getSynchronizationManager().updateOfflineState(connector, task, newData, true);
 		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
-		assertEquals(DATE_STAMP_2, task.getLastModifiedDateStamp());
+		assertEquals(DATE_STAMP_2, task.getTaskData().getLastModified());
+		// assertEquals(DATE_STAMP_2, task.getLastModifiedDateStamp());
 	}
 
 	public void testOutgoingToSynchronized() {
@@ -251,7 +255,8 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 			}
 		}
 
-		public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository, Set<AbstractRepositoryTask> tasks) throws Exception {
+		public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
+				Set<AbstractRepositoryTask> tasks) throws Exception {
 			return null;
 		}
 
@@ -264,15 +269,15 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 			return handler;
 		}
 
-//		@Override
-//		protected void removeOfflineTaskData(RepositoryTaskData bug) {
-//			// ignore
-//		}
-//
-//		@Override
-//		public void saveOffline(RepositoryTaskData taskData) {
-//			// ignore
-//		}
+		// @Override
+		// protected void removeOfflineTaskData(RepositoryTaskData bug) {
+		// // ignore
+		// }
+		//
+		// @Override
+		// public void saveOffline(RepositoryTaskData taskData) {
+		// // ignore
+		// }
 
 		// @Override
 		// protected RepositoryTaskData
