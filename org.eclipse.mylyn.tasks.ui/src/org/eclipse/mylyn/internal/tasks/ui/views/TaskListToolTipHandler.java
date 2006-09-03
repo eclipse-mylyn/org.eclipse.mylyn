@@ -15,6 +15,7 @@
 package org.eclipse.mylar.internal.tasks.ui.views;
 
 import java.net.URL;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
@@ -129,10 +130,11 @@ public class TaskListToolTipHandler {
 			}
 			tooltip += "Last Sync: " + syncStamp + "\n";
 
-			if (query.getHits().size() == 1) {
+			Set<AbstractQueryHit> hits = query.getHits();  // FIXME provide getHitsSize() method
+			if (hits.size() == 1) {
 				tooltip += "1 hit";
 			} else {
-				tooltip += query.getHits().size() + " hits";
+				tooltip += hits.size() + " hits";
 			}
 			if (query.getMaxHits() != -1) {
 				tooltip += " (max set to: " + query.getMaxHits() + ")";

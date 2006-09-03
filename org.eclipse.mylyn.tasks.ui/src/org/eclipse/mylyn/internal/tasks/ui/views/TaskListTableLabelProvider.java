@@ -147,7 +147,7 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 		}
 		if (container instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery)container;
-			for (AbstractQueryHit hit : query.getHits()) {
+			for (AbstractQueryHit hit : query.getHits()) {  // FIXME should not create new tasks!
 				if (hit.getCorrespondingTask() == null) {
 					return true;
 				}

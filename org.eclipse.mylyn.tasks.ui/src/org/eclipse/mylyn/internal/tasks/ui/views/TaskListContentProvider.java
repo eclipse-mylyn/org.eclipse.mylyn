@@ -12,7 +12,6 @@
 package org.eclipse.mylar.internal.tasks.ui.views;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -79,10 +78,11 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 	public boolean hasChildren(Object parent) {
 		if (parent instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery t = (AbstractRepositoryQuery) parent;
-			return t.getHits() != null && t.getHits().size() > 0;
+			Set<AbstractQueryHit> hits = t.getHits();  // FIXME should provide hasHits() method!
+			return hits != null && hits.size() > 0;
 		} else if (parent instanceof AbstractTaskContainer) {
 			AbstractTaskContainer cat = (AbstractTaskContainer) parent;
-			return cat.getChildren() != null && cat.getChildren().size() > 0;
+			return cat.getChildren() != null && cat.getChildren().size() > 0;  // FIXME should provide hasChildren method!
 		} else if (parent instanceof ITask) {
 			return taskHasUnfilteredChildren((ITask) parent);
 		} 
@@ -134,11 +134,11 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 	}
 
 	private boolean selectQuery(AbstractRepositoryQuery cat) {
-		Set<? extends ITaskListElement> list = cat.getHits();
-		if (list.size() == 0) {
+		Set<AbstractQueryHit> hits = cat.getHits();
+		if (hits.size() == 0) {
 			return true;
 		}
-		for (ITaskListElement element : list) {
+		for (AbstractQueryHit element : hits) {
 			if (!filter(element)) {
 				return true;
 			}
@@ -215,14 +215,9 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 				}
 				return children;
 			} else if (parent instanceof AbstractRepositoryQuery) {
-				Set<AbstractQueryHit> hits = ((AbstractRepositoryQuery) parent).getHits();
-				synchronized(hits) {
-					// TODO: still some synchronization weirdness here, see bug 154895
-					// shouldn not need to create new set
-					for (ITaskListElement element : new HashSet<AbstractQueryHit>(hits)) {
-						if (!filter(element)) {
-							children.add(element);
-						}
+				for (ITaskListElement element : ((AbstractRepositoryQuery) parent).getHits()) {
+					if (!filter(element)) {
+						children.add(element);
 					}
 				}
 				return children;

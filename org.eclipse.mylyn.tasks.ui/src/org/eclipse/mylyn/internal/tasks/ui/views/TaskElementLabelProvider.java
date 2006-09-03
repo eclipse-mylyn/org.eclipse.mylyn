@@ -119,12 +119,11 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				}
 			}
 		} else if (object instanceof AbstractRepositoryQuery) {
-			for (ITaskListElement child : ((AbstractRepositoryQuery) object).getHits()) {
-				if (child instanceof AbstractQueryHit) {
-					ITask task = ((AbstractQueryHit) child).getCorrespondingTask();
-					if (task != null && task.isActive()) {
-						return TaskListColorsAndFonts.COLOR_TASK_ACTIVE;
-					}
+			// FIXME AbstractRepositoryQuery is a subclass of AbstractTaskContainer so this is probably a dead branch! 
+			for (AbstractQueryHit child : ((AbstractRepositoryQuery) object).getHits()) {
+				ITask task = ((AbstractQueryHit) child).getCorrespondingTask();
+				if (task != null && task.isActive()) {
+					return TaskListColorsAndFonts.COLOR_TASK_ACTIVE;
 				}
 			}
 		} else if (object instanceof AbstractQueryHit && ((AbstractQueryHit) object).getCorrespondingTask() == null) {
