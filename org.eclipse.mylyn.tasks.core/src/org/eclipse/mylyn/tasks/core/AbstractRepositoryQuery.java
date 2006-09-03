@@ -10,14 +10,13 @@
  *******************************************************************************/
 package org.eclipse.mylar.tasks.core;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 /**
  * @author Mik Kersten
+ * @author Eugene Kuleshov
  */
 public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 
@@ -40,7 +39,7 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 	// TODO: this overriding is a bit weird
 	public Set<ITask> getChildren() {
 		Set<ITask> tasks = new HashSet<ITask>();
-		for (AbstractQueryHit hit : new ArrayList<AbstractQueryHit>(getHits())) {
+		for (AbstractQueryHit hit : getHits()) {
 			ITask task = hit.getCorrespondingTask();
 			if (task != null) {
 				tasks.add(task);
@@ -57,13 +56,24 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		// ignore
 	}
 
-	public Set<AbstractQueryHit> getHits() {
-		return Collections.synchronizedSet(hits);
+	public synchronized AbstractQueryHit findQueryHit(String handle) {
+		if (handle != null) {
+			for (AbstractQueryHit hit : hits) {
+				if (handle.equals(hit.getHandleIdentifier())) {
+					return hit;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public synchronized Set<AbstractQueryHit> getHits() {
+		return new HashSet<AbstractQueryHit>(hits);
 	}
 
-	public void updateHits(List<AbstractQueryHit> newHits, TaskList taskList) {
+	public synchronized void updateHits(List<AbstractQueryHit> newHits, TaskList taskList) {
 		Set<AbstractQueryHit> oldHits = new HashSet<AbstractQueryHit>(hits);
-		clearHits();
+		hits.clear();
 		for (AbstractQueryHit oldHit : oldHits) {
 			if (newHits.contains(oldHit)) {
 				newHits.get(newHits.indexOf(oldHit)).setNotified(oldHit.isNotified);
@@ -74,11 +84,7 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		}
 	}
 
-	private void clearHits() {
-		hits.clear();
-	}
-
-	public void addHit(AbstractQueryHit hit, TaskList taskList) {
+	public synchronized void addHit(AbstractQueryHit hit, TaskList taskList) {
 		ITask correspondingTask = taskList.getTask(hit.getHandleIdentifier());
 		if (correspondingTask instanceof AbstractRepositoryTask) {
 			hit.setCorrespondingTask((AbstractRepositoryTask) correspondingTask);
@@ -87,15 +93,15 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		hits.add(hit);
 	}
 
-	public void removeHit(AbstractQueryHit hit) {
+	public synchronized void removeHit(AbstractQueryHit hit) {
 		hits.remove(hit);
 	}
 
-	public String getPriority() {
-		String highestPriority = Task.PriorityLevel.P5.toString();
+	public synchronized String getPriority() {
 		if (hits.isEmpty()) {
 			return Task.PriorityLevel.P1.toString();
 		}
+		String highestPriority = Task.PriorityLevel.P5.toString();
 		for (AbstractQueryHit hit : hits) {
 			if (highestPriority.compareTo(hit.getPriority()) > 0) {
 				highestPriority = hit.getPriority();

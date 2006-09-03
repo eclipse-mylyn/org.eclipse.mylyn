@@ -276,23 +276,6 @@ public class TaskList {
 	// return false;
 	//	}
 
-	private AbstractQueryHit findQueryHitHelper(Set<? extends ITaskListElement> elements, String handle) {
-		if (handle == null) {
-			return null;
-		}
-		synchronized (elements) {
-			for (ITaskListElement element : elements) {
-				if (element instanceof AbstractQueryHit) {
-					AbstractQueryHit hit = (AbstractQueryHit) element;
-					if (hit.getHandleIdentifier().compareTo(handle) == 0) {
-						return hit;
-					}
-				}
-			}
-		}
-		return null;
-	}
-
 	public List<ITask> getActiveTasks() {
 		return activeTasks;
 	}
@@ -390,7 +373,7 @@ public class TaskList {
 			return null;
 		}
 		for (AbstractRepositoryQuery query : queries) {
-			if ((findQueryHitHelper(query.getHits(), handle)) != null) {
+			if (query.findQueryHit(handle) != null) {
 				return query;
 			}
 		}
@@ -402,16 +385,15 @@ public class TaskList {
 	 * it is matched in.
 	 */
 	public AbstractQueryHit getQueryHitForHandle(String handle) {
-		if (handle == null) {
-			return null;
-		}
-		AbstractQueryHit foundHit = null;
-		for (AbstractRepositoryQuery query : queries) {
-			if ((foundHit = findQueryHitHelper(query.getHits(), handle)) != null) {
-				return foundHit;
+		if (handle != null) {
+			for (AbstractRepositoryQuery query : queries) {
+				AbstractQueryHit foundHit = query.findQueryHit(handle);
+				if (foundHit!= null) {
+					return foundHit;
+				}
 			}
 		}
-		return foundHit;
+		return null;
 	}
 
 	public boolean isEmpty() {
@@ -446,12 +428,12 @@ public class TaskList {
 
 	/** if handle == null or no queries found an empty set is returned * */
 	public Set<AbstractRepositoryQuery> getQueriesForHandle(String handle) {
-		Set<AbstractRepositoryQuery> queriesForHandle = new HashSet<AbstractRepositoryQuery>();
 		if (handle == null) {
-			return queriesForHandle;
+			return Collections.emptySet();
 		}
+		Set<AbstractRepositoryQuery> queriesForHandle = new HashSet<AbstractRepositoryQuery>();
 		for (AbstractRepositoryQuery query : queries) {
-			if ((findQueryHitHelper(query.getHits(), handle)) != null) {
+			if (query.findQueryHit(handle) != null) {
 				queriesForHandle.add(query);
 			}
 		}
@@ -493,13 +475,13 @@ public class TaskList {
 
 	/** if handle == null or no query hits found an empty set is returned * */
 	public Set<AbstractQueryHit> getQueryHitsForHandle(String handle) {
-		Set<AbstractQueryHit> hitsForHandle = new HashSet<AbstractQueryHit>();
 		if (handle == null) {
-			return hitsForHandle;
+			return Collections.emptySet();
 		}
-		AbstractQueryHit foundHit = null;
+		Set<AbstractQueryHit> hitsForHandle = new HashSet<AbstractQueryHit>();
 		for (AbstractRepositoryQuery query : queries) {
-			if ((foundHit = findQueryHitHelper(query.getHits(), handle)) != null) {
+			AbstractQueryHit foundHit = query.findQueryHit(handle);
+			if (foundHit != null) {
 				hitsForHandle.add(foundHit);
 			}
 		}

@@ -476,7 +476,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		if (query.getLastRefreshTimeStamp() != null) {
 			node.setAttribute(KEY_LAST_REFRESH, query.getLastRefreshTimeStamp());
 		}
-		for (AbstractQueryHit hit : new ArrayList<AbstractQueryHit>(query.getHits())) {
+		for (AbstractQueryHit hit : query.getHits()) {
 			try {
 				Element element = null;
 				for (ITaskListExternalizer externalizer : delegateExternalizers) {
