@@ -83,11 +83,11 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private static final String NAME_DATA_DIR = ".mylar";
 
-	private static final String DEFAULT_BACKUP_FOLDER_NAME = "backup";
-
 	private static final char DEFAULT_PATH_SEPARATOR = '/';
 
 	private static final int NOTIFICATION_DELAY = 5000;
+	
+	public static final String DEFAULT_BACKUP_FOLDER_NAME = "backup";
 
 	public static final String FILE_EXTENSION = ".xml";
 

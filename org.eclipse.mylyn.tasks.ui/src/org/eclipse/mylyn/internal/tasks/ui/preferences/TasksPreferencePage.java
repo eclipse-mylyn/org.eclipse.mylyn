@@ -162,7 +162,7 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 
 		getPreferenceStore().setValue(TaskListPreferenceConstants.PLANNING_STARTHOUR, hourDayStart.getSelection());
 		getPreferenceStore().setValue(TaskListPreferenceConstants.PLANNING_ENDHOUR, hourDayEnd.getSelection());
-
+		backupNow.setEnabled(true);
 		return true;
 	}
 
@@ -187,19 +187,33 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 
 		hourDayStart.setSelection(getPreferenceStore().getInt(TaskListPreferenceConstants.PLANNING_STARTHOUR));
 		hourDayEnd.setSelection(getPreferenceStore().getInt(TaskListPreferenceConstants.PLANNING_ENDHOUR));
-
+		backupNow.setEnabled(true);
 		return true;
 	}
 
 	public void performDefaults() {
 		super.performDefaults();
+		String taskDirectory = TasksUiPlugin.getDefault().getDefaultDataDirectory();				
+		if (!taskDirectory.equals(TasksUiPlugin.getDefault().getDataDirectory())) {
+			checkForExistingTasklist(taskDirectory);
+			if (taskDataDirectoryAction != CANCEL) {
+				taskDirectoryText.setText(taskDirectory);				
+				backupFolderText.setText(taskDirectory + FORWARDSLASH
+						+ TasksUiPlugin.DEFAULT_BACKUP_FOLDER_NAME);
+				backupNow.setEnabled(false);
+			}
+		} else {
+			taskDirectoryText.setText(taskDirectory);				
+			backupFolderText.setText(taskDirectory + FORWARDSLASH
+					+ TasksUiPlugin.DEFAULT_BACKUP_FOLDER_NAME);
+			backupNow.setEnabled(true);
+		}
 
-		taskDirectoryText.setText(TasksUiPlugin.getDefault().getDefaultDataDirectory());
 		notificationEnabledButton.setSelection(getPreferenceStore().getDefaultBoolean(
 				TaskListPreferenceConstants.NOTIFICATIONS_ENABLED));
 		backupScheduleTimeText.setText(getPreferenceStore().getDefaultString(
-				TaskListPreferenceConstants.BACKUP_SCHEDULE));
-		backupFolderText.setText(TasksUiPlugin.getDefault().getBackupFolderPath());
+				TaskListPreferenceConstants.BACKUP_SCHEDULE));		
+		
 
 		reportEditor.setSelection(getPreferenceStore()
 				.getDefaultBoolean(TaskListPreferenceConstants.REPORT_OPEN_EDITOR));
@@ -220,7 +234,6 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 
 		hourDayStart.setSelection(getPreferenceStore().getDefaultInt(TaskListPreferenceConstants.PLANNING_STARTHOUR));
 		hourDayEnd.setSelection(getPreferenceStore().getDefaultInt(TaskListPreferenceConstants.PLANNING_ENDHOUR));
-
 		updateRefreshGroupEnablements();
 	}
 
@@ -364,28 +377,15 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 				if (dir == null || dir.equals(""))
 					return;
 				dir = dir.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
-				File newDataFolder = new File(dir);
-				if (newDataFolder.exists()) {
-					for (String filename : newDataFolder.list()) {
-						if (filename.equals(TasksUiPlugin.DEFAULT_TASK_LIST_FILE)) {
-
-							MessageDialog dialogConfirm = new MessageDialog(
-									null,
-									"Tasklist found at destination",
-									null,
-									"Overwrite existing tasklist with current data or load tasklist from new destination?",
-									MessageDialog.WARNING, new String[] { "Overwrite", "Load",
-											IDialogConstants.CANCEL_LABEL }, CANCEL);
-							taskDataDirectoryAction = dialogConfirm.open();
-							break;
-						}
-					}
-				}
+				checkForExistingTasklist(dir);
 
 				if (taskDataDirectoryAction != CANCEL) {
 					taskDirectoryText.setText(dir);
+					backupFolderText.setText(dir + FORWARDSLASH + TasksUiPlugin.DEFAULT_BACKUP_FOLDER_NAME);
+					backupNow.setEnabled(false);
 				}
 			}
+
 		});
 
 		Composite backupComposite = new Composite(taskDataGroup, SWT.NULL);
@@ -572,4 +572,26 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		return "" + minutes;
 	}
 
+	private void checkForExistingTasklist(String dir) {
+		File newDataFolder = new File(dir);
+		if (newDataFolder.exists()) {
+			for (String filename : newDataFolder.list()) {
+				if (filename.equals(TasksUiPlugin.DEFAULT_TASK_LIST_FILE)) {
+
+					MessageDialog dialogConfirm = new MessageDialog(
+							null,
+							"Tasklist found at destination",
+							null,
+							"Overwrite existing tasklist with current data or load tasklist from new destination?",
+							MessageDialog.WARNING, new String[] { "Overwrite", "Load",
+									IDialogConstants.CANCEL_LABEL }, CANCEL);
+					taskDataDirectoryAction = dialogConfirm.open();
+					break;
+				}
+			}
+			if(taskDataDirectoryAction == -1) {
+				taskDataDirectoryAction = OVERWRITE;
+			}
+		}
+	}
 }
