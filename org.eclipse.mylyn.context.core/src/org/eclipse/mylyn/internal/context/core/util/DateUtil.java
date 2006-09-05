@@ -153,6 +153,7 @@ public class DateUtil {
 	}
 	
 	public static String getFormattedDate(Date date, String format) {
+		formatter.setTimeZone(TimeZone.getDefault());
 		formatter.applyPattern(format);
 		return formatter.format(date);
 	}
