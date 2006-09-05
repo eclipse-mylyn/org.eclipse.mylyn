@@ -54,6 +54,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.context.core.util.DateUtil;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
@@ -138,6 +139,8 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  */
 public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
+	private static final String HEADER_DATE_FORMAT = "EEE d MMM yyyy HH:mm:ss";
+	
 	private static final String ATTACHMENT_DEFAULT_NAME = "attachment";
 
 	private static final String CTYPE_ZIP = "zip";
@@ -153,9 +156,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	private static final String LABEL_DEFAULT_EDITOR = "Default Editor";
 
 	private static final String LABEL_TEXT_EDITOR = "Text Editor";
-
-	// private static final String ATTACHMENT_URL_SUFFIX =
-	// "/attachment.cgi?id=";
 
 	protected static final String CONTEXT_MENU_ID = "#MylarRepositoryEditor";
 
@@ -554,11 +554,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (offlineHandler != null) {
 			Date created = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.DATE_CREATION,
 					getRepositoryTaskData().getCreated());
-			openedDateString = created.toString();
+			openedDateString = created != null ? DateUtil.getFormattedDate(created, HEADER_DATE_FORMAT) : "";
 
 			Date modified = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED,
 					getRepositoryTaskData().getLastModified());
-			modifiedDateString = modified.toString();
+			modifiedDateString = modified != null ? DateUtil.getFormattedDate(modified, HEADER_DATE_FORMAT) : "";
 		}
 
 		toolkit.createLabel(headerInfoComposite, " Opened: ").setFont(TITLE_FONT);
@@ -1292,7 +1292,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			}
 			// if(!it.hasNext()) {
 			// expandableComposite.setExpanded(true);
-			//			}
+			// }
 
 			expandableComposite.setText(taskComment.getNumber() + ": " + taskComment.getAuthorName() + ", "
 					+ taskComment.getCreated());
@@ -2183,7 +2183,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			validateInput();
 		}
 	}
-
 }
 
 // private class DisplayableLocalAttachment extends RepositoryAttachment {
