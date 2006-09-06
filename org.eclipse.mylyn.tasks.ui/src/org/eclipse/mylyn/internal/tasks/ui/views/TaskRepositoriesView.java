@@ -118,7 +118,7 @@ public class TaskRepositoriesView extends ViewPart {
 			}
 		});
 		viewer.setInput(getViewSite());
-
+		
 		hookContextMenu();
 		contributeToActionBars();
 		getSite().setSelectionProvider(getViewer());

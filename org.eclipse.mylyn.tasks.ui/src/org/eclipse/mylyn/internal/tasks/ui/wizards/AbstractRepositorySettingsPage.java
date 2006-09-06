@@ -21,11 +21,12 @@ import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylar.tasks.core.IRepositoryConstants;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -44,7 +45,7 @@ import org.eclipse.ui.IWorkbench;
  */
 public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
-	protected static final String LABEL_TEMPLATE = "Template: ";
+	protected static final String LABEL_REPOSITORY_LABEL = "Label: ";
 
 	protected static final String LABEL_SERVER = "Server: ";
 
@@ -58,9 +59,11 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	protected AbstractRepositoryConnector connector;
 
-	protected Combo repositoryLabelCombo;
+	protected StringFieldEditor repositoryLabelEditor;
 
-	protected StringFieldEditor serverUrlEditor;
+	protected Combo serverUrlCombo;
+
+	// protected StringFieldEditor serverUrlEditor;
 
 	protected StringFieldEditor userNameEditor;
 
@@ -93,7 +96,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	private boolean needsEncoding;
 
 	private Composite container;
-	
+
 	private Set<String> repositoryUrls;
 
 	private String originalUrl;
@@ -102,7 +105,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		super(title);
 		super.setTitle(title);
 		super.setDescription(description);
-		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repositoryUi.getRepositoryType());
+		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				repositoryUi.getRepositoryType());
 		this.connector = connector;
 
 		setNeedsAnonymousLogin(false);
@@ -115,16 +119,41 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		FillLayout layout = new FillLayout();
 		container.setLayout(layout);
 
-		new Label(container, SWT.NONE).setText(LABEL_TEMPLATE);
+		new Label(container, SWT.NONE).setText(LABEL_SERVER);
+		serverUrlCombo = new Combo(container, SWT.DROP_DOWN);
+		serverUrlCombo.addModifyListener(new ModifyListener() {
 
-		repositoryLabelCombo = new Combo(container, SWT.DROP_DOWN);
-		GridDataFactory.swtDefaults().grab(true, false).applyTo(repositoryLabelCombo);
+			public void modifyText(ModifyEvent e) {
+				isValidUrl(serverUrlCombo.getText());
+				if (getWizard() != null) {
+					getWizard().getContainer().updateButtons();
+				}
+			}
+		});
+		serverUrlCombo.addSelectionListener(new SelectionListener() {
 
-		serverUrlEditor = new StringFieldEditor("", LABEL_SERVER, StringFieldEditor.UNLIMITED, container) {
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// ignore
+
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				isValidUrl(serverUrlCombo.getText());
+				if (getWizard() != null) {
+					getWizard().getContainer().updateButtons();
+				}
+			}
+		});
+
+		GridDataFactory.swtDefaults().hint(200, SWT.DEFAULT).grab(true, false).applyTo(serverUrlCombo);
+
+		repositoryLabelEditor = new StringFieldEditor("", LABEL_REPOSITORY_LABEL, StringFieldEditor.UNLIMITED,
+				container) {
 
 			@Override
 			protected boolean doCheckState() {
-				return isValidUrl(getStringValue());
+				return true;
+				// return isValidUrl(getStringValue());
 			}
 
 			@Override
@@ -135,7 +164,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				}
 			}
 		};
-		serverUrlEditor.setErrorMessage("Server path must be a valid http(s):// url");
+		// repositoryLabelEditor.setErrorMessage("error");
 
 		if (needsAnonymousLogin()) {
 			anonymousButton = new Button(container, SWT.CHECK);
@@ -163,13 +192,13 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			oldUsername = repository.getUserName();
 			oldPassword = repository.getPassword();
 			try {
-				String repositoryLabel = repository.getProperty(IRepositoryConstants.PROPERTY_LABEL);
+				String repositoryLabel = repository.getRepositoryLabel();
 				if (repositoryLabel != null && repositoryLabel.length() > 0) {
-					repositoryLabelCombo.add(repositoryLabel);
-					repositoryLabelCombo.select(0);
-					repositoryLabelCombo.setText(repositoryLabel);
+					// repositoryLabelCombo.add(repositoryLabel);
+					// repositoryLabelCombo.select(0);
+					repositoryLabelEditor.setStringValue(repositoryLabel);
 				}
-				serverUrlEditor.setStringValue(repository.getUrl());
+				serverUrlCombo.setText(repository.getUrl());
 				userNameEditor.setStringValue(repository.getUserName());
 				passwordEditor.setStringValue(repository.getPassword());
 			} catch (Throwable t) {
@@ -256,7 +285,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			if (repository != null) {
 				try {
 					String repositoryEncoding = repository.getCharacterEncoding();
-					if (repositoryEncoding != null) {// && !repositoryEncoding.equals(defaultEncoding)) {
+					if (repositoryEncoding != null) {// &&
+						// !repositoryEncoding.equals(defaultEncoding))
+						// {
 						if (otherEncodingCombo.getItemCount() > 0
 								&& otherEncodingCombo.indexOf(repositoryEncoding) > -1) {
 							otherEncodingCombo.setEnabled(true);
@@ -301,7 +332,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		}
 
 		anonymousButton.setSelection(selected);
-		
+
 		if (selected) {
 			oldUsername = userNameEditor.getStringValue();
 			oldPassword = ((StringFieldEditor) passwordEditor).getStringValue();
@@ -332,11 +363,11 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	}
 
 	public String getRepositoryLabel() {
-		return repositoryLabelCombo.getText();
+		return repositoryLabelEditor.getStringValue();
 	}
 
 	public String getServerUrl() {
-		return stripSlashes(serverUrlEditor.getStringValue());
+		return stripSlashes(serverUrlCombo.getText());
 	}
 
 	public String getUserName() {
@@ -492,10 +523,10 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	public void updateProperties(TaskRepository repository) {
 		// none
 	}
-	
+
 	/** for testing */
 	public void setUrl(String url) {
-		serverUrlEditor.setStringValue(url);
+		serverUrlCombo.setText(url);
 	}
 
 	/** for testing */

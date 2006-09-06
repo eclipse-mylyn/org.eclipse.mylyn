@@ -68,15 +68,17 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 	}
 
 	protected void createAdditionalControls(final Composite parent) {
-		for (RepositoryTemplate info : connector.getTemplates()) {
-			repositoryLabelCombo.add(info.label);
+		
+		for (RepositoryTemplate template : connector.getTemplates()) {
+			serverUrlCombo.add(template.label);
 		}
-		repositoryLabelCombo.addSelectionListener(new SelectionAdapter() {
+		serverUrlCombo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String text = repositoryLabelCombo.getText();
+				String text = serverUrlCombo.getText();
 				RepositoryTemplate template = connector.getTemplate(text);
 				if (template != null) {
+					repositoryLabelEditor.setStringValue(template.label);
 					setUrl(template.repositoryUrl);
 					setAnonymous(template.anonymous);
 
@@ -92,7 +94,7 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 				}
 			}
 		});
-
+		
 		Label accessTypeLabel = new Label(parent, SWT.NONE);
 		accessTypeLabel.setText("Access Type: ");
 		accessTypeCombo = new Combo(parent, SWT.READ_ONLY);

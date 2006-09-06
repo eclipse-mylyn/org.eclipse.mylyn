@@ -69,14 +69,15 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	protected void createAdditionalControls(Composite parent) {
 
 		for (RepositoryTemplate template : connector.getTemplates()) {
-			repositoryLabelCombo.add(template.label);
+			serverUrlCombo.add(template.label);
 		}
-		repositoryLabelCombo.addSelectionListener(new SelectionAdapter() {
+		serverUrlCombo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String text = repositoryLabelCombo.getText();
+				String text = serverUrlCombo.getText();
 				RepositoryTemplate template = connector.getTemplate(text);
 				if (template != null) {
+					repositoryLabelEditor.setStringValue(template.label);
 					setUrl(template.repositoryUrl);
 					// setAnonymous(info.anonymous);
 					setBugzillaVersion(template.version);

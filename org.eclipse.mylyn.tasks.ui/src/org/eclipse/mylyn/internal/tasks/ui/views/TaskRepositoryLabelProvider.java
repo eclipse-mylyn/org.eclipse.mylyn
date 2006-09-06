@@ -27,9 +27,13 @@ public class TaskRepositoryLabelProvider extends LabelProvider implements ITable
 	public String getColumnText(Object object, int index) {
 		if (object instanceof TaskRepository) {
 			TaskRepository repository = (TaskRepository) object;
-			return repository.getKind() + ": " + repository.getUrl();
+			if (!"".equals(repository.getRepositoryLabel())) {
+				return repository.getRepositoryLabel();
+			} else {
+				return repository.getUrl();
+			}
 		} else if (object instanceof AbstractRepositoryConnector) {
-			return ((AbstractRepositoryConnector)object).getLabel();
+			return ((AbstractRepositoryConnector) object).getLabel();
 		} else {
 			return getText(object);
 		}
@@ -40,9 +44,16 @@ public class TaskRepositoryLabelProvider extends LabelProvider implements ITable
 	}
 
 	public Image getImage(Object object) {
+		String kind = null;
 		if (object instanceof AbstractRepositoryConnector) {
-			AbstractRepositoryConnector repositoryConnector = (AbstractRepositoryConnector)object;
-			Image image = TasksUiPlugin.getDefault().getBrandingIcon(repositoryConnector.getRepositoryType());
+			AbstractRepositoryConnector repositoryConnector = (AbstractRepositoryConnector) object;
+			kind = repositoryConnector.getRepositoryType();
+		} else if (object instanceof TaskRepository) {
+			TaskRepository repository = (TaskRepository) object;
+			kind = repository.getKind();
+		}
+		if (kind != null) {
+			Image image = TasksUiPlugin.getDefault().getBrandingIcon(kind);
 			if (image != null) {
 				return image;
 			}
