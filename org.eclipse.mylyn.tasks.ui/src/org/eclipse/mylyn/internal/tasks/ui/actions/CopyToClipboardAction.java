@@ -37,7 +37,7 @@ public class CopyToClipboardAction extends Action {
 		}
 		
 		// use system line endings
-		contents = contents.replaceAll("\n", System.getProperty("line.separator"));
+		contents = contents.replaceAll("\r\n|\n", System.getProperty("line.separator"));
 
 		if (control != null && contents != null) {
 			Clipboard clipboard = new Clipboard(control.getDisplay());
