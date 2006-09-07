@@ -25,22 +25,43 @@ import org.eclipse.swt.graphics.Image;
 public class TaskRepositoryLabelProvider extends LabelProvider implements ITableLabelProvider {
 
 	public String getColumnText(Object object, int index) {
-		if (object instanceof TaskRepository) {
-			TaskRepository repository = (TaskRepository) object;
-			if (repository.getRepositoryLabel() != null && repository.getRepositoryLabel().length() > 0) {
-				return repository.getRepositoryLabel();
+		switch(index) {
+		case 0: 
+			return null; 
+		case 1:
+			if (object instanceof TaskRepository) {
+				TaskRepository repository = (TaskRepository) object;
+				if (repository.getRepositoryLabel() != null && repository.getRepositoryLabel().length() > 0) {
+					return repository.getRepositoryLabel();
+				} else {
+					return repository.getUrl();
+				}
+			} else if (object instanceof AbstractRepositoryConnector) {
+				return ((AbstractRepositoryConnector) object).getLabel();
 			} else {
-				return repository.getUrl();
+				return getText(object);
 			}
-		} else if (object instanceof AbstractRepositoryConnector) {
-			return ((AbstractRepositoryConnector) object).getLabel();
-		} else {
-			return getText(object);
+		case 2:
+			if (object instanceof TaskRepository) {
+				TaskRepository repository = (TaskRepository) object;			
+				return repository.getUrl();				
+			} else if (object instanceof AbstractRepositoryConnector) {
+				return ((AbstractRepositoryConnector) object).getLabel();
+			} else {
+				return getText(object);
+			}		
 		}
+
+		return null;
+		
 	}
 
 	public Image getColumnImage(Object obj, int index) {
-		return getImage(obj);
+		if(index == 0) { 
+			return getImage(obj);		
+		} else {
+			return null;
+		}
 	}
 
 	public Image getImage(Object object) {
