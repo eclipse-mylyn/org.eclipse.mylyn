@@ -74,7 +74,7 @@ public class ContextRetrieveAction implements IViewActionDelegate {
 					task.getRepositoryUrl());
 			connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(task.getRepositoryKind());
 			IAttachmentHandler handler = connector.getAttachmentHandler();
-			action.setEnabled(handler != null && handler.canDownloadAttachment(repository, (AbstractRepositoryTask)task));
+			action.setEnabled(handler != null && handler.canDownloadAttachment(repository, task) && connector.hasRepositoryContext(repository, task));
 		} else {
 			task = null;
 			action.setEnabled(false);

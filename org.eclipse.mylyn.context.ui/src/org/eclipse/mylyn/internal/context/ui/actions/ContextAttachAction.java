@@ -16,6 +16,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.internal.tasks.ui.wizards.ContextAttachWizard;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
@@ -38,7 +39,9 @@ import org.eclipse.ui.PlatformUI;
 public class ContextAttachAction implements IViewActionDelegate {
 
 	private AbstractRepositoryTask task;
+
 	private TaskRepository repository;
+
 	private AbstractRepositoryConnector connector;
 
 	public void init(IViewPart view) {
@@ -53,13 +56,13 @@ public class ContextAttachAction implements IViewActionDelegate {
 		if (!connector.validate(repository)) {
 			return;
 		}
-		if(task.getSyncState() != RepositoryTaskSyncState.SYNCHRONIZED) {
+		if (task.getSyncState() != RepositoryTaskSyncState.SYNCHRONIZED) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 					TasksUiPlugin.TITLE_DIALOG, "Task must be synchronized before attaching context");
 			return;
 		}
 
-		ContextAttachWizard wizard = new ContextAttachWizard((AbstractRepositoryTask)task);
+		ContextAttachWizard wizard = new ContextAttachWizard((AbstractRepositoryTask) task);
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		if (wizard != null && shell != null && !shell.isDisposed()) {
 			WizardDialog dialog = new WizardDialog(shell, wizard);
@@ -76,12 +79,16 @@ public class ContextAttachAction implements IViewActionDelegate {
 	public void selectionChanged(IAction action, ISelection selection) {
 		ITask selectedTask = TaskListView.getSelectedTask(selection);
 		if (selectedTask instanceof AbstractRepositoryTask) {
-			task = (AbstractRepositoryTask)selectedTask;
+			task = (AbstractRepositoryTask) selectedTask;
 			repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryKind(),
 					task.getRepositoryUrl());
 			connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(task.getRepositoryKind());
 			IAttachmentHandler handler = connector.getAttachmentHandler();
-			action.setEnabled(handler != null && handler.canUploadAttachment(repository, (AbstractRepositoryTask)task));
+			action
+					.setEnabled(handler != null
+							&& handler.canUploadAttachment(repository, (AbstractRepositoryTask) task)
+							&& (task.isActive() || ContextCorePlugin.getContextManager().hasContext(
+									task.getHandleIdentifier())));
 		} else {
 			task = null;
 			action.setEnabled(false);
