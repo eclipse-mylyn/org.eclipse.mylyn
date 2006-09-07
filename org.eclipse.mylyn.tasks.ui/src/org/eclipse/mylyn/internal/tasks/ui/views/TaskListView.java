@@ -1274,11 +1274,16 @@ public class TaskListView extends ViewPart {
 	private void hookOpenAction() {
 		getViewer().addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
-				openTaskEditor.run();
 				if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 						TaskListPreferenceConstants.ACTIVATE_ON_OPEN)) {
-					activateAction.run();
+					ITask selectedTask = TaskListView.getFromActivePerspective().getSelectedTask();
+					if (selectedTask != null) {
+						activateAction.run(selectedTask);
+						addTaskToHistory(selectedTask);
+						previousTaskAction.setButtonStatus();
+					}
 				}
+				openTaskEditor.run();
 			}
 		});
 	}
