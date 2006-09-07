@@ -177,8 +177,7 @@ public abstract class AbstractRepositoryConnector {
 				task.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
 				throw e;
 			}
-			task.setTaskData(null);
-			// synchronize(task, true, null);
+			task.setTaskData(null);			
 		}
 		return true;
 	}
