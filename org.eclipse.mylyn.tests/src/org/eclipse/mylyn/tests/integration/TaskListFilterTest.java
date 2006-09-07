@@ -17,7 +17,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.core.core.tests.UiTestUtil;
+import org.eclipse.mylar.context.tests.UiTestUtil;
 import org.eclipse.mylar.internal.context.ui.TaskListInterestFilter;
 import org.eclipse.mylar.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
