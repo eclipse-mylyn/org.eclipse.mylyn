@@ -15,7 +15,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.mylar.core.core.tests.ContextTest;
+import org.eclipse.mylar.context.tests.ContextTest;
 import org.eclipse.mylar.internal.monitor.reports.InteractionEventSummary;
 import org.eclipse.mylar.internal.monitor.reports.ReportGenerator;
 import org.eclipse.mylar.internal.monitor.reports.collectors.SummaryCollector;
