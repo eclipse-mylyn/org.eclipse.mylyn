@@ -8,14 +8,26 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.core.core.tests.support.search;
 
-import java.io.IOException;
-import java.util.List;
+package org.eclipse.mylar.context.tests;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylar.context.core.IMylarElement;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
-public interface ISearchPluginTest {
-	public List<?> search(int dos, IMylarElement node) throws IOException, CoreException;
+/**
+ * @author Mik Kersten
+ */
+public class AllCoreTests {
+
+	public static Test suite() {
+		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.core.tests");
+		// $JUnit-BEGIN$
+		suite.addTestSuite(ContextExternalizerTest.class);
+		suite.addTestSuite(DegreeOfInterestTest.class);
+		suite.addTestSuite(ContextTest.class);
+		suite.addTestSuite(InteractionEventTest.class);
+		// $JUnit-END$
+		return suite;
+	}
+
 }

@@ -12,8 +12,8 @@
 package org.eclipse.mylar.resources.tests;
 
 import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.context.tests.AbstractContextTest;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.core.core.tests.AbstractContextTest;
 import org.eclipse.mylar.internal.context.core.MylarContext;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.context.core.ScalingFactors;

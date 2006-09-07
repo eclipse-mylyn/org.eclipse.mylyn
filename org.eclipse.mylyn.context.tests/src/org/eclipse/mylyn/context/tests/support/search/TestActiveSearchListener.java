@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.core.core.tests.support.search;
+package org.eclipse.mylar.context.tests.support.search;
 
 import java.util.ArrayList;
 import java.util.List;

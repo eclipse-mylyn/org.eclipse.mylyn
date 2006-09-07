@@ -11,7 +11,7 @@
 /*
  * Created on Jul 8, 2004
  */
-package org.eclipse.mylar.core.core.tests;
+package org.eclipse.mylar.context.tests;
 
 import junit.framework.TestCase;
 

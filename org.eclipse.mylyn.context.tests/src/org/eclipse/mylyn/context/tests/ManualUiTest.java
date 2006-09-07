@@ -8,20 +8,27 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+/*
+ * Created on Aug 3, 2004
+ */
+package org.eclipse.mylar.context.tests;
 
-package org.eclipse.mylar.core.core.tests;
-
-import org.eclipse.mylar.context.core.InteractionEvent;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 
 /**
  * @author Mik Kersten
  */
-public class InteractionEventTest extends AbstractContextTest {
+public class ManualUiTest extends AbstractManualTest {
 
-	public void testCopy() throws InterruptedException {
-		InteractionEvent original = mockSelection();
-		Thread.sleep(1000);
-		InteractionEvent copy = InteractionEvent.makeCopy(original, original.getInterestContribution());
-		assertEquals(original, copy);
-	} 
+	public void testErrorDialog() {
+		try {
+			int i = 10 / 0;
+			System.out.println(i);
+		} catch (Throwable t) {
+			MylarStatusHandler.fail(t, "whoops", true);
+		}
+		MylarStatusHandler.fail(null, "whoops", true);
+		assertTrue(confirmWithUser("Did an error dialog show up correctly?"));
+	}
+
 }

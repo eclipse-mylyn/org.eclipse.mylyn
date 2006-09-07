@@ -112,7 +112,7 @@
 	<extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
-            name="Mylar Active Suite"
+            name="Mylar Context Test"
             delegate="org.eclipse.mylar.internal.java.ui.junit.MylarJUnitLaunchConfiguration"
             modes="run, debug"
             id="org.eclipse.mylar.java.junit.launchconfig"
@@ -129,7 +129,7 @@
       </launchConfigurationType>
          <launchConfigurationType
             sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
-            name="Mylar Active Plug-in Suite"
+            name="Mylar Context Plug-in Test"
             sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer"
             delegate="org.eclipse.mylar.internal.java.ui.junit.MylarPdeJUnitLaunchConfiguration"
             modes="run, debug"
@@ -232,7 +232,7 @@
             class="org.eclipse.mylar.internal.java.ui.views.ActiveHierarchyView"
             icon="icons/eview16/active-hierarchy.gif"
             id="org.eclipse.mylar.ui.views.active.hierarchy"
-            name="Active Hierarchy"/>
+            name="Context Hierarchy"/>
    </extension>
   
    <extension point="org.eclipse.ui.viewActions"> 

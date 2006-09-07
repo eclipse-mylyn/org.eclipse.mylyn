@@ -11,7 +11,7 @@
 /*
  * Created on Feb 9, 2005
  */
-package org.eclipse.mylar.core.core.tests.support;
+package org.eclipse.mylar.context.tests.support;
 
 import java.util.ArrayList;
 import java.util.List;

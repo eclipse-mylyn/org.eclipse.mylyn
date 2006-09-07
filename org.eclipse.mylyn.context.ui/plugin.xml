@@ -23,7 +23,7 @@
           class="org.eclipse.mylar.internal.context.ui.views.ActiveSearchView"
           icon="icons/eview16/active-search.gif"
           id="org.eclipse.mylar.ui.views.active.search"
-          name="Active Search (Experimental)"/>
+          name="Context Search (Experimental)"/>
    </extension>
  
  

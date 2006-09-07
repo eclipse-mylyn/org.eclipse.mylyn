@@ -9,16 +9,16 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.core.core.tests;
+package org.eclipse.mylar.context.tests;
 
 import java.io.File;
 
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarRelation;
-import org.eclipse.mylar.core.core.tests.support.DomContextReader;
-import org.eclipse.mylar.core.core.tests.support.DomContextWriter;
-import org.eclipse.mylar.core.core.tests.support.FileTool;
+import org.eclipse.mylar.context.tests.support.DomContextReader;
+import org.eclipse.mylar.context.tests.support.DomContextWriter;
+import org.eclipse.mylar.context.tests.support.FileTool;
 import org.eclipse.mylar.internal.context.core.MylarContext;
 import org.eclipse.mylar.internal.context.core.MylarContextExternalizer;
 import org.eclipse.mylar.internal.context.core.ScalingFactors;

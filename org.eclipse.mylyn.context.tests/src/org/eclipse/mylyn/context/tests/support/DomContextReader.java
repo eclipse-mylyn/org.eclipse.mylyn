@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.core.core.tests.support;
+package org.eclipse.mylar.context.tests.support;
 
 import java.io.File;
 import java.io.IOException;

@@ -24,7 +24,7 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.core.core.tests.support.ResourceHelper;
+import org.eclipse.mylar.context.tests.support.ResourceHelper;
 import org.eclipse.mylar.internal.context.core.MylarContext;
 import org.eclipse.mylar.internal.context.core.ScalingFactors;
 import org.eclipse.mylar.java.tests.TestJavaProject;

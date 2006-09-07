@@ -9,25 +9,19 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.core.core.tests;
+package org.eclipse.mylar.context.tests;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.eclipse.mylar.context.core.InteractionEvent;
 
 /**
  * @author Mik Kersten
  */
-public class AllCoreTests {
+public class InteractionEventTest extends AbstractContextTest {
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.core.tests");
-		// $JUnit-BEGIN$
-		suite.addTestSuite(ContextExternalizerTest.class);
-		suite.addTestSuite(DegreeOfInterestTest.class);
-		suite.addTestSuite(ContextTest.class);
-		suite.addTestSuite(InteractionEventTest.class);
-		// $JUnit-END$
-		return suite;
-	}
-
+	public void testCopy() throws InterruptedException {
+		InteractionEvent original = mockSelection();
+		Thread.sleep(1000);
+		InteractionEvent copy = InteractionEvent.makeCopy(original, original.getInterestContribution());
+		assertEquals(original, copy);
+	} 
 }

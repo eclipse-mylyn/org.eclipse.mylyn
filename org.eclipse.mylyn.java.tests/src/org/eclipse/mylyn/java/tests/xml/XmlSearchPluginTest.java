@@ -21,7 +21,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.core.core.tests.support.search.ISearchPluginTest;
+import org.eclipse.mylar.context.tests.support.search.ISearchPluginTest;
 import org.eclipse.mylar.internal.context.core.CompositeContext;
 import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
 import org.eclipse.mylar.internal.context.core.MylarContext;

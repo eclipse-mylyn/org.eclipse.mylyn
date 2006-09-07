@@ -8,27 +8,14 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Aug 3, 2004
- */
-package org.eclipse.mylar.core.core.tests;
+package org.eclipse.mylar.context.tests.support.search;
 
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import java.io.IOException;
+import java.util.List;
 
-/**
- * @author Mik Kersten
- */
-public class ManualUiTest extends AbstractManualTest {
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.mylar.context.core.IMylarElement;
 
-	public void testErrorDialog() {
-		try {
-			int i = 10 / 0;
-			System.out.println(i);
-		} catch (Throwable t) {
-			MylarStatusHandler.fail(t, "whoops", true);
-		}
-		MylarStatusHandler.fail(null, "whoops", true);
-		assertTrue(confirmWithUser("Did an error dialog show up correctly?"));
-	}
-
+public interface ISearchPluginTest {
+	public List<?> search(int dos, IMylarElement node) throws IOException, CoreException;
 }

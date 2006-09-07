@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Core Tests Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.core.tests
 Bundle-Version: 0.0.0
-Bundle-Activator: org.eclipse.mylar.core.core.tests.MylarCoreTestsPlugin
+Bundle-Activator: org.eclipse.mylar.context.tests.MylarCoreTestsPlugin
 Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.resources,
@@ -18,7 +18,7 @@ Require-Bundle: org.eclipse.core.resources,
  org.eclipse.mylar.monitor
 Eclipse-AutoStart: true
 Bundle-ClassPath: mylar-core-tests.jar
-Export-Package: org.eclipse.mylar.core.core.tests,
- org.eclipse.mylar.core.core.tests.support,
- org.eclipse.mylar.core.core.tests.support.search
+Export-Package: org.eclipse.mylar.context.tests,
+ org.eclipse.mylar.context.tests.support,
+ org.eclipse.mylar.context.tests.support.search
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

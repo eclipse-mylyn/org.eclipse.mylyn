@@ -17,7 +17,7 @@ import org.eclipse.core.internal.resources.File;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.core.core.tests.support.search.TestActiveSearchListener;
+import org.eclipse.mylar.context.tests.support.search.TestActiveSearchListener;
 import org.eclipse.mylar.internal.ide.xml.XmlNodeHelper;
 import org.eclipse.search.internal.ui.text.FileSearchResult;
 import org.eclipse.search.ui.text.Match;
