@@ -18,8 +18,8 @@ import javax.security.auth.login.LoginException;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.core.core.tests.support.MylarTestUtils;
-import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.Credentials;
+import org.eclipse.mylar.context.tests.support.MylarTestUtils;
+import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;

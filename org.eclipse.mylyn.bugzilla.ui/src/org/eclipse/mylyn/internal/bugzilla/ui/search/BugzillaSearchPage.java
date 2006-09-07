@@ -147,6 +147,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		super(TITLE_BUGZILLA_QUERY, origQuery.getDescription());
 		originalQuery = origQuery;
 		this.repository = repository;
+		setDescription("Select the Bugzilla query parameters.  Use the Update Attributes button to retrieve " +
+				"updated values from the repository.");
 		// setTitle(TITLE);
 		// setDescription(DESCRIPTION);
 		// setPageComplete(false);

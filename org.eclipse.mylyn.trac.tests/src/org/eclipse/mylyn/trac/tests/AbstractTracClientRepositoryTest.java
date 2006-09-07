@@ -11,9 +11,9 @@
 
 package org.eclipse.mylar.trac.tests;
 
-import org.eclipse.mylar.core.core.tests.support.MylarTestUtils;
-import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.Credentials;
-import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.PrivilegeLevel;
+import org.eclipse.mylar.context.tests.support.MylarTestUtils;
+import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
+import org.eclipse.mylar.context.tests.support.MylarTestUtils.PrivilegeLevel;
 import org.eclipse.mylar.internal.trac.core.TracException;
 import org.eclipse.mylar.internal.trac.core.TracLoginException;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;

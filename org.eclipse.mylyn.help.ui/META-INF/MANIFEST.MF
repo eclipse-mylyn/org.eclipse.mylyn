@@ -6,3 +6,9 @@ Bundle-Version: 0.6.2.v20060828-1600
 Bundle-Localization: plugin
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.ui.forms,
+ org.eclipse.mylar.tasks.ui
+Export-Package: org.eclipse.mylar.doc.internal.actions,
+ org.eclipse.mylar.doc.internal.dialogs
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

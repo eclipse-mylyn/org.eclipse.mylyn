@@ -16,9 +16,9 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.core.core.tests.support.MylarTestUtils;
-import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.Credentials;
-import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.PrivilegeLevel;
+import org.eclipse.mylar.context.tests.support.MylarTestUtils;
+import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
+import org.eclipse.mylar.context.tests.support.MylarTestUtils.PrivilegeLevel;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;

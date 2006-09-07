@@ -25,9 +25,9 @@ import junit.framework.TestCase;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
-import org.eclipse.mylar.core.core.tests.support.MylarTestUtils;
-import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.Credentials;
-import org.eclipse.mylar.core.core.tests.support.MylarTestUtils.PrivilegeLevel;
+import org.eclipse.mylar.context.tests.support.MylarTestUtils;
+import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
+import org.eclipse.mylar.context.tests.support.MylarTestUtils.PrivilegeLevel;
 import org.eclipse.mylar.internal.trac.core.util.TracHttpClientTransportFactory;
 
 /**

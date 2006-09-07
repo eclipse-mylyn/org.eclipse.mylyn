@@ -14,7 +14,7 @@ import java.io.File;
 import java.util.Collection;
 
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.core.core.tests.AbstractContextTest;
+import org.eclipse.mylar.context.tests.AbstractContextTest;
 import org.eclipse.mylar.internal.context.core.MylarContext;
 import org.eclipse.mylar.internal.tasks.ui.wizards.TaskDataImportWizard;
 import org.eclipse.mylar.internal.tasks.ui.wizards.TaskDataImportWizardPage;
