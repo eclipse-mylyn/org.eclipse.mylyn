@@ -10,25 +10,30 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui.search;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Proxy;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositoryQueryPage;
 import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositorySearchQuery;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
@@ -147,8 +152,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		super(TITLE_BUGZILLA_QUERY, origQuery.getDescription());
 		originalQuery = origQuery;
 		this.repository = repository;
-		setDescription("Select the Bugzilla query parameters.  Use the Update Attributes button to retrieve " +
-				"updated values from the repository.");
+		setDescription("Select the Bugzilla query parameters.  Use the Update Attributes button to retrieve "
+				+ "updated values from the repository.");
 		// setTitle(TITLE);
 		// setDescription(DESCRIPTION);
 		// setPageComplete(false);
@@ -921,11 +926,12 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		BugzillaUiPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.MOST_RECENT_QUERY, summaryText);
 
-		BugzillaSearchResultCollector collector = new BugzillaSearchResultCollector(TasksUiPlugin.getTaskListManager().getTaskList());
+		BugzillaSearchResultCollector collector = new BugzillaSearchResultCollector(TasksUiPlugin.getTaskListManager()
+				.getTaskList());
 
 		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
 		IBugzillaSearchOperation op = new BugzillaSearchOperation(repository, queryUrl, proxySettings, collector,
-				getMaxHits());		
+				getMaxHits());
 
 		AbstractRepositorySearchQuery searchQuery = new BugzillaSearchQuery(op);
 		NewSearchUI.runQueryInBackground(searchQuery);
@@ -1387,52 +1393,25 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			IRunnableWithProgress updateRunnable = new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					monitor.beginTask("Updating search options...", IProgressMonitor.UNKNOWN);
-					// try {
-					connector.updateAttributes(repository, monitor);
-					// BugzillaUiPlugin.updateQueryOptions(repository, monitor);
-					// } catch (LoginException exception) {
-					// PlatformUI.getWorkbench().getDisplay().asyncExec(new
-					// Runnable() {
-					// public void run() {
-					// if (PlatformUI.getWorkbench() != null
-					// && PlatformUI.getWorkbench().getDisplay() != null) {
-					// MessageDialog
-					// .openError(
-					// null,
-					// "Login Error",
-					// "Bugzilla could not log you in to get the information you
-					// requested since login name or password is
-					// incorrect.\nPlease ensure proper configuration in "
-					// + TaskRepositoriesView.NAME + ". ");
-					// }
-					// }
-					// });
-					// return;
-					// } catch (IOException e) {
-					// PlatformUI.getWorkbench().getDisplay().asyncExec(new
-					// Runnable() {
-					// public void run() {
-					// if (PlatformUI.getWorkbench() != null
-					// && PlatformUI.getWorkbench().getDisplay() != null) {
-					// MessageDialog.openError(null, "Connection Error",
-					// "\nPlease ensure proper configuration in " +
-					// TaskRepositoriesView.NAME
-					// + ". ");
-					// }
-					// }
-					// });
-					// return;
-					// } catch (OperationCanceledException exception) {
-					// return;
-					// } catch (KeyManagementException e) {
-					// throw new InvocationTargetException(e);
-					// } catch (NoSuchAlgorithmException e) {
-					// throw new InvocationTargetException(e);
-					// } catch (BugzillaException e) {
-					// throw new InvocationTargetException(e);
-					// } finally {
-					// monitor.done();
-					// }
+
+					try {
+						connector.updateAttributes(repository, TasksUiPlugin.getDefault().getProxySettings(), monitor);
+					} catch (CoreException ce) {
+						if (ce.getStatus().getException() instanceof GeneralSecurityException) {
+							MylarStatusHandler.fail(ce,
+									"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\n"
+											+ "Please ensure proper configuration in " + TaskRepositoriesView.NAME
+											+ ". ", true);
+						} else if (ce.getStatus().getException() instanceof IOException) {
+							MylarStatusHandler.fail(ce, "Connection Error, please ensure proper configuration in "
+									+ TaskRepositoriesView.NAME + ".", true);
+						} else {
+							MylarStatusHandler.fail(ce, "Error updating repository attributes for "
+									+ repository.getUrl(), true);
+						}
+						return;
+					}
+					BugzillaUiPlugin.updateQueryOptions(repository, monitor);
 				}
 			};
 
@@ -1558,7 +1537,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		String[] options = startingUrl.split("&");
 		for (String option : options) {
 			String key = option.substring(0, option.indexOf("="));
-			String value = URLDecoder.decode(option.substring(option.indexOf("=") + 1), repository.getCharacterEncoding());
+			String value = URLDecoder.decode(option.substring(option.indexOf("=") + 1), repository
+					.getCharacterEncoding());
 			if (key == null)
 				continue;
 

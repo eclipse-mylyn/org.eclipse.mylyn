@@ -108,7 +108,7 @@ public class BugzillaSearchEngineTest extends TestCase {
 			
 		};
 		
-		connector.performQuery(repositoryQuery, new NullProgressMonitor(), collector);
+		connector.performQuery(repositoryQuery, repository, TasksUiPlugin.getDefault().getProxySettings(), new NullProgressMonitor(), collector);
 		
 		//results.addAll(connector.performQuery(repositoryQuery, new NullProgressMonitor(), new MultiStatus(TasksUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null)));
 		return results;	

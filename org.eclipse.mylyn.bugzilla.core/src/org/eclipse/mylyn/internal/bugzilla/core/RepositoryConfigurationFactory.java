@@ -14,10 +14,7 @@ package org.eclipse.mylar.internal.bugzilla.core;
 import java.io.IOException;
 import java.net.Proxy;
 import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-
-import javax.security.auth.login.LoginException;
+import java.security.GeneralSecurityException;
 
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
@@ -33,8 +30,7 @@ public class RepositoryConfigurationFactory extends AbstractReportFactory {
 	private static final String CONFIG_RDF_URL = "/config.cgi?ctype=rdf";
 
 	public RepositoryConfiguration getConfiguration(String repositoryUrl, Proxy proxySettings, String userName,
-			String password, String encoding) throws IOException, KeyManagementException, LoginException,
-			NoSuchAlgorithmException, BugzillaException {
+			String password, String encoding) throws IOException, BugzillaException, GeneralSecurityException {
 		String configUrlStr = repositoryUrl + CONFIG_RDF_URL;
 		configUrlStr = BugzillaServerFacade.addCredentials(configUrlStr, userName, password);
 		URL url = new URL(configUrlStr);

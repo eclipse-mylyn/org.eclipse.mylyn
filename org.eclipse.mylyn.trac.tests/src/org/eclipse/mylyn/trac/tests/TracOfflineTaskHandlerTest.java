@@ -80,13 +80,13 @@ public class TracOfflineTaskHandlerTest extends TestCase {
 
 	public void testGetChangedSinceLastSyncWeb096() throws Exception {
 		init(Constants.TEST_TRAC_096_URL, Version.TRAC_0_9);
-		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.offlineHandlerTicketId + "");
+		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.offlineHandlerTicketId + "", null);
 
 		Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
 		tasks.add(task);
 		
 		assertEquals(null, repository.getSyncTimeStamp());
-		Set<AbstractRepositoryTask> result = offlineHandler.getChangedSinceLastSync(repository, tasks);
+		Set<AbstractRepositoryTask> result = offlineHandler.getChangedSinceLastSync(repository, tasks, null);
 		assertEquals(tasks, result);
 		assertEquals(null, repository.getSyncTimeStamp());
 		
@@ -97,7 +97,7 @@ public class TracOfflineTaskHandlerTest extends TestCase {
 
 	public void testGetChangedSinceLastSyncXmlRpc010() throws Exception {
 		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
-		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.offlineHandlerTicketId + "");
+		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.offlineHandlerTicketId + "", null);
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		int lastModified = Integer.parseInt(task.getTaskData().getLastModified());
 		
@@ -105,16 +105,16 @@ public class TracOfflineTaskHandlerTest extends TestCase {
 		tasks.add(task);
 
 		assertEquals(null, repository.getSyncTimeStamp());
-		Set<AbstractRepositoryTask> result = offlineHandler.getChangedSinceLastSync(repository, tasks);
+		Set<AbstractRepositoryTask> result = offlineHandler.getChangedSinceLastSync(repository, tasks, null);
 		assertEquals(tasks, result);
 
 		// always returns the ticket because time comparison mode is >=
 		repository.setSyncTimeStamp(lastModified + "");
-		result = offlineHandler.getChangedSinceLastSync(repository, tasks);
+		result = offlineHandler.getChangedSinceLastSync(repository, tasks, null);
 		assertEquals(tasks, result);
 
 		repository.setSyncTimeStamp((lastModified + 1) + "");
-		result = offlineHandler.getChangedSinceLastSync(repository, tasks);		
+		result = offlineHandler.getChangedSinceLastSync(repository, tasks, null);		
 		assertTrue(result.isEmpty());
 		
 		// change ticket making sure it gets a new change time
@@ -129,7 +129,7 @@ public class TracOfflineTaskHandlerTest extends TestCase {
 		client.updateTicket(ticket, "comment");
 
 		repository.setSyncTimeStamp((lastModified + 1) + "");
-		result = offlineHandler.getChangedSinceLastSync(repository, tasks);		
+		result = offlineHandler.getChangedSinceLastSync(repository, tasks, null);		
 		assertEquals(tasks, result);
 	}
 

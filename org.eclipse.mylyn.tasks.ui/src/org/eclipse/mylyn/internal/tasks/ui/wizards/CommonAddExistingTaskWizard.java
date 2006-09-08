@@ -60,7 +60,7 @@ public class CommonAddExistingTaskWizard extends Wizard {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					monitor.beginTask("Retrieving task...", IProgressMonitor.UNKNOWN);
 					try {
-						newTask = connector.createTaskFromExistingKey(repository, taskId);
+						newTask = connector.createTaskFromExistingKey(repository, taskId, null);
 						if (newTask instanceof AbstractRepositoryTask) {
 							TasksUiPlugin.getSynchronizationManager().synchronize(connector, (AbstractRepositoryTask)newTask, true, null);
 						}

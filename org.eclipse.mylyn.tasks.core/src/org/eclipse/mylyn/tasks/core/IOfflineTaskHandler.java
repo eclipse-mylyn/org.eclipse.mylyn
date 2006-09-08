@@ -11,8 +11,12 @@
 
 package org.eclipse.mylar.tasks.core;
 
+import java.io.UnsupportedEncodingException;
+import java.net.Proxy;
 import java.util.Date;
 import java.util.Set;
+
+import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.CoreException;
 
@@ -29,11 +33,11 @@ public interface IOfflineTaskHandler {
 	
 	public AbstractAttributeFactory getAttributeFactory();
 	
-	public RepositoryTaskData downloadTaskData(AbstractRepositoryTask repositoryTask) throws CoreException;
+	public RepositoryTaskData downloadTaskData(AbstractRepositoryTask repositoryTask, TaskRepository repository, Proxy proxySettings) throws CoreException, LoginException;
 		
 	/**
 	 * returns all tasks if date is null or an error occurs
 	 */
 	public abstract Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
-			Set<AbstractRepositoryTask> tasks) throws Exception;
-}
+			Set<AbstractRepositoryTask> tasks, Proxy proxySettings) throws CoreException, UnsupportedEncodingException;
+ }

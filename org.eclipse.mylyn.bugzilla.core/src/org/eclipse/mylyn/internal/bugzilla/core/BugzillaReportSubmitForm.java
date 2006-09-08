@@ -22,6 +22,7 @@ import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
@@ -29,8 +30,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
-import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -326,9 +325,9 @@ public class BugzillaReportSubmitForm {
 	 * Post the bug to the bugzilla server
 	 * 
 	 * @return The result of the responses
+	 * @throws GeneralSecurityException 
 	 */
-	public String submitReportToRepository() throws IOException, BugzillaException, LoginException,
-			PossibleBugzillaFailureException {
+	public String submitReportToRepository() throws IOException, BugzillaException, PossibleBugzillaFailureException, GeneralSecurityException {
 		BufferedOutputStream out = null;
 		BufferedReader in = null;
 		String result = null;

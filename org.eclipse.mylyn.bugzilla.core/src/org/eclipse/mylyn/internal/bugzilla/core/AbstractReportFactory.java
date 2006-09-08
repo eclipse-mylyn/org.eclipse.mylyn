@@ -19,8 +19,7 @@ import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
+import java.security.GeneralSecurityException;
 import java.util.zip.GZIPInputStream;
 
 import javax.security.auth.login.LoginException;
@@ -53,10 +52,10 @@ public class AbstractReportFactory {
 
 	public static final int RETURN_ALL_HITS = -1;
 
-	/** expects rdf returned from repository (ctype=rdf in url) */
+	/** expects rdf returned from repository (ctype=rdf in url) 
+	 * @throws GeneralSecurityException */
 	protected void collectResults(URL url, Proxy proxySettings, String characterEncoding,
-			DefaultHandler contentHandler, boolean clean) throws IOException, LoginException, KeyManagementException,
-			NoSuchAlgorithmException, BugzillaException {
+			DefaultHandler contentHandler, boolean clean) throws IOException, BugzillaException, GeneralSecurityException {
 		URLConnection cntx = WebClientUtil.getUrlConnection(url, proxySettings, false);
 		if (cntx == null || !(cntx instanceof HttpURLConnection)) {
 			throw new IOException("Could not form URLConnection.");

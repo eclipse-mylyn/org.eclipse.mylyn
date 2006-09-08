@@ -52,7 +52,6 @@ import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.ui.PartInitException;
 
 /**
  * @author Mik Kersten
@@ -65,10 +64,10 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 	public void testCreateTaskFromExistingId() throws Exception {
 		init222();
-		BugzillaTask badId = (BugzillaTask) connector.createTaskFromExistingKey(repository, "bad-id");
+		BugzillaTask badId = (BugzillaTask) connector.createTaskFromExistingKey(repository, "bad-id", null);
 		assertNull(badId);
 
-		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "1");
+		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "1", null);
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		assertNotNull(task);
 		// assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
@@ -116,7 +115,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	
 	public void testContextAttachFailure() throws Exception {
 		init218();
-		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "3");
+		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "3", null);
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 				
 		assertNotNull(task.getTaskData());
@@ -135,12 +134,12 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		fail("Should have failed due to invalid userid and password.");
 	}
 
-	public void testSynchronize() throws InterruptedException, PartInitException, LoginException, BugzillaException,
-			PossibleBugzillaFailureException {
+	public void testSynchronize() throws InterruptedException, LoginException, BugzillaException,
+			PossibleBugzillaFailureException, CoreException {
 		init222();
 
 		// Get the task
-		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "1");
+		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "1", null);
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 				
 		TasksUiPlugin.getTaskListManager().getTaskList().moveToRoot(task);
@@ -219,7 +218,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		init222();
 		int bugId = 31;
 		String taskNumber = "" + bugId;
-		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber);
+		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber, null);
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 				
 		assertNotNull(task);
@@ -245,7 +244,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertFalse(attachmentHandler.uploadAttachment(attachment, repository.getUserName(), repository.getPassword(),
 				Proxy.NO_PROXY));
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
-		task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber);
+		task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber, null);
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 				
 		assertEquals(numAttached, task.getTaskData().getAttachments().size());
@@ -256,7 +255,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
 		assertFalse(attachmentHandler.uploadAttachment(attachment, repository.getUserName(), repository.getPassword(),
 				Proxy.NO_PROXY));
-		task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber);
+		task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber, null);
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		
 		assertEquals(numAttached, task.getTaskData().getAttachments().size());
@@ -267,7 +266,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		attachment.setFilePath(attachFile.getAbsolutePath());
 		assertTrue(attachmentHandler.uploadAttachment(attachment, repository.getUserName(), repository.getPassword(),
 				Proxy.NO_PROXY));
-		task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber);
+		task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber, null);
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		assertEquals(numAttached + 1, task.getTaskData().getAttachments().size());
 
@@ -294,7 +293,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		TasksUiPlugin.getRepositoryManager().setSyncTime(repository, task5.getLastModifiedDateStamp(), TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		Set<AbstractRepositoryTask> changedTasks = connector.getOfflineTaskHandler().getChangedSinceLastSync(repository,
-				tasks);
+				tasks, null);
 		assertEquals(1, changedTasks.size());
 
 		String priority4 = null;
@@ -327,7 +326,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		bugzillaReportSubmitForm.submitReportToRepository();
 		
 
-		changedTasks = connector.getOfflineTaskHandler().getChangedSinceLastSync(repository, tasks);
+		changedTasks = connector.getOfflineTaskHandler().getChangedSinceLastSync(repository, tasks, null);
 		assertEquals("Changed reports expected ", 2, changedTasks.size());
 		assertTrue(tasks.containsAll(changedTasks));
 		for (AbstractRepositoryTask task : changedTasks) {
@@ -530,7 +529,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		init222();
 		int bugId = 19;
 		String taskNumber = "" + bugId;
-		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber);
+		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber, null);
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 				
 		assertNotNull(task);

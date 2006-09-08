@@ -32,7 +32,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 /**
- * Bugzilla search operation for Mylar
+ * TODO: delete?
  * 
  * @author Shawn Minto
  */
@@ -106,18 +106,14 @@ public class BugzillaCategorySearchOperation extends WorkspaceModifyOperation im
 		collector.setProgressMonitor(monitor);
 		BugzillaSearchEngine engine = new BugzillaSearchEngine(repository, queryUrl, proxySettings);
 		try {
-
 			// perform the search
 			status = engine.search(collector, matches, maxHits);
 
 			// check the status so that we don't keep searching if there
 			// is a problem
 			if (status.getCode() == IStatus.CANCEL) {
-				// MylarStatusHandler.log("search cancelled", this);
 				return null;
 			} else if (!status.isOK()) {
-				// MylarStatusHandler.log("search error", this);
-				// MylarStatusHandler.log(status);
 				return null;
 			}
 			isMaxReached = engine.isMaxReached();

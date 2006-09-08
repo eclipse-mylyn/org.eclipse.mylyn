@@ -61,7 +61,7 @@ public class RepositorySearchQuery extends AbstractRepositorySearchQuery {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 					repository.getKind());
 
-			queryStatus = connector.performQuery(query, monitor, collector);			
+			queryStatus = connector.performQuery(query, repository, TasksUiPlugin.getDefault().getProxySettings(), monitor, collector);			
 			collector.done();
 		} catch (final CoreException e) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

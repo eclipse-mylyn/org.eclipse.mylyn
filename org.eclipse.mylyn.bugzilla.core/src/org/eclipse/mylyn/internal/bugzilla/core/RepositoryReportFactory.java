@@ -14,10 +14,9 @@ package org.eclipse.mylar.internal.bugzilla.core;
 import java.io.IOException;
 import java.net.Proxy;
 import java.net.URL;
+import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-
-import javax.security.auth.login.LoginException;
 
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 
@@ -33,7 +32,7 @@ public class RepositoryReportFactory extends AbstractReportFactory {
 	private static final String SHOW_BUG_CGI_XML = "/show_bug.cgi?ctype=xml&id=";
 
 	public void populateReport(RepositoryTaskData bugReport, String repositoryUrl, Proxy proxySettings,
-			String userName, String password, String characterEncoding) throws LoginException, KeyManagementException,
+			String userName, String password, String characterEncoding) throws GeneralSecurityException, KeyManagementException,
 			NoSuchAlgorithmException, IOException, BugzillaException {
 
 		SaxBugReportContentHandler contentHandler = new SaxBugReportContentHandler(bugzillaAttributeFactory, bugReport);

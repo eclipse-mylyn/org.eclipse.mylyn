@@ -11,6 +11,8 @@
 
 package org.eclipse.mylar.internal.trac.ui;
 
+import java.io.UnsupportedEncodingException;
+import java.net.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -41,7 +43,6 @@ import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Steffen Pingel
@@ -56,18 +57,17 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 		this.connector = connector;
 	}
 
-	public RepositoryTaskData downloadTaskData(final AbstractRepositoryTask task) throws CoreException {
+	public RepositoryTaskData downloadTaskData(final AbstractRepositoryTask task, TaskRepository repository, Proxy proxySettings) throws CoreException {
 		if (!connector.hasRichEditor(task)) {
 			// offline mode is only supported for XML-RPC
 			return null;
 		}
-
-		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(TracCorePlugin.REPOSITORY_KIND,
-				task.getRepositoryUrl());
+//		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(TracCorePlugin.REPOSITORY_KIND,
+//				task.getRepositoryUrl());
 		try {
 			int id = Integer.parseInt(AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()));
-			RepositoryTaskData data = new RepositoryTaskData(attributeFactory, TracCorePlugin.REPOSITORY_KIND, repository
-					.getUrl(), id + "");
+			RepositoryTaskData data = new RepositoryTaskData(attributeFactory, TracCorePlugin.REPOSITORY_KIND,
+					repository.getUrl(), id + "");
 			ITracClient client = connector.getClientManager().getRepository(repository);
 			client.updateAttributes(new NullProgressMonitor(), false);
 			TracTicket ticket = client.getTicket(id);
@@ -116,8 +116,7 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 		TracComment[] comments = ticket.getComments();
 		if (comments != null) {
 			for (int i = 0; i < comments.length; i++) {
-				if (!"comment".equals(comments[i].getField())
-						|| "".equals(comments[i].getNewValue())) {
+				if (!"comment".equals(comments[i].getField()) || "".equals(comments[i].getNewValue())) {
 					continue;
 				}
 
@@ -147,7 +146,7 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 				data.addAttachment(taskAttachment);
 			}
 		}
-		
+
 		String[] actions = ticket.getActions();
 		if (actions != null) {
 			// add operations in a defined order
@@ -161,15 +160,15 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 	}
 
 	// TODO Reuse Labels from BugzillaServerFacade
-	private static void addOperation(TaskRepository repository, RepositoryTaskData data, TracTicket ticket, List<String> actions, String action) {
+	private static void addOperation(TaskRepository repository, RepositoryTaskData data, TracTicket ticket,
+			List<String> actions, String action) {
 		if (!actions.remove(action)) {
 			return;
 		}
-		
+
 		RepositoryOperation operation = null;
 		if ("leave".equals(action)) {
-			operation = new RepositoryOperation(action, "Leave as " + data.getStatus() + " "
-					+ data.getResolution());
+			operation = new RepositoryOperation(action, "Leave as " + data.getStatus() + " " + data.getResolution());
 			operation.setChecked(true);
 		} else if ("accept".equals(action)) {
 			operation = new RepositoryOperation(action, "Accept");
@@ -186,7 +185,7 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 		} else if ("reopen".equals(action)) {
 			operation = new RepositoryOperation(action, "Reopen");
 		}
-		
+
 		if (operation != null) {
 			data.addOperation(operation);
 		}
@@ -222,7 +221,7 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 				attr.addOptionValue(values[i].toString(), values[i].toString());
 			}
 		} else {
-			//attr.setHidden(true);
+			// attr.setHidden(true);
 			attr.setReadOnly(true);
 		}
 		data.addAttribute(attribute.getTracKey(), attr);
@@ -242,7 +241,7 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 	}
 
 	public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
-			Set<AbstractRepositoryTask> tasks) throws Exception {
+			Set<AbstractRepositoryTask> tasks, Proxy proxySettings) throws CoreException, UnsupportedEncodingException {
 		if (repository.getSyncTimeStamp() == null) {
 			return tasks;
 		}
@@ -258,19 +257,23 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 		} catch (NumberFormatException e) {
 		}
 
-		ITracClient client = connector.getClientManager().getRepository(repository);
-		Set<Integer> ids = client.getChangedTickets(since);
-		
-		Set<AbstractRepositoryTask> result = new HashSet<AbstractRepositoryTask>();
-		if (!ids.isEmpty()) {
-			for (AbstractRepositoryTask task : tasks) {
-				Integer id = Integer.parseInt(AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()));
-				if (ids.contains(id)) {
-					result.add(task);
+		ITracClient client;
+		try {
+			client = connector.getClientManager().getRepository(repository);
+			Set<Integer> ids = client.getChangedTickets(since);
+
+			Set<AbstractRepositoryTask> result = new HashSet<AbstractRepositoryTask>();
+			if (!ids.isEmpty()) {
+				for (AbstractRepositoryTask task : tasks) {
+					Integer id = Integer.parseInt(AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()));
+					if (ids.contains(id)) {
+						result.add(task);
+					}
 				}
 			}
+			return result;
+		} catch (Exception e) {
+			throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.PLUGIN_ID, IStatus.OK, "could not determine changed tasks", e));
 		}
-		return result;
 	}
-
 }

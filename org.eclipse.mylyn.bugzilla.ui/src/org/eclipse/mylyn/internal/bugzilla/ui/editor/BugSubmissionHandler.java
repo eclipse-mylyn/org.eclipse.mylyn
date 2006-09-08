@@ -12,10 +12,9 @@
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Set;
-
-import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -43,13 +42,13 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 public class BugSubmissionHandler {
 
 	private static final String LABEL_JOB_SUBMIT = "Submitting to Bugzilla repository";
-	
+
 	private AbstractRepositoryConnector connector;
 
 	public BugSubmissionHandler(AbstractRepositoryConnector connector) {
 		this.connector = connector;
 	}
-	
+
 	public void submitBugReport(final BugzillaReportSubmitForm form, IJobChangeListener listener, boolean synchExec) {
 		if (synchExec) {
 			try {
@@ -78,12 +77,12 @@ public class BugSubmissionHandler {
 							handleExistingBugPost(form.getTaskData(), submittedBugId);
 							return Status.OK_STATUS;
 						}
-					} catch (LoginException e) {
+					} catch (GeneralSecurityException e) {
 						return new Status(
 								Status.OK,
 								BugzillaUiPlugin.PLUGIN_ID,
 								Status.ERROR,
-								"Bugzilla could not post your bug since your login name or password is incorrect. Ensure proper repository configuration in "
+								"Bugzilla could not post your bug, probably because your credentials are incorrect. Ensure proper repository configuration in "
 										+ TaskRepositoriesView.NAME + ".", e);
 					} catch (IOException e) {
 						return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.ERROR,
@@ -140,7 +139,8 @@ public class BugSubmissionHandler {
 			if (task != null) {
 				Set<AbstractRepositoryQuery> queriesWithHandle = TasksUiPlugin.getTaskListManager().getTaskList()
 						.getQueriesForHandle(task.getHandleIdentifier());
-				TasksUiPlugin.getSynchronizationManager().synchronize(connector, queriesWithHandle, null, Job.SHORT, 0, true);
+				TasksUiPlugin.getSynchronizationManager().synchronize(connector, queriesWithHandle, null, Job.SHORT, 0,
+						true);
 
 				if (task instanceof AbstractRepositoryTask) {
 					AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
@@ -156,5 +156,5 @@ public class BugSubmissionHandler {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 }

@@ -10,6 +10,7 @@ package org.eclipse.mylar.internal.tasks.ui.views;
 
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -50,8 +51,7 @@ public class ResetRepositoryConfigurationAction extends Action {
 				Object selectedObject = iter.next();
 				if (selectedObject instanceof TaskRepository) {
 					final TaskRepository repository = (TaskRepository) selectedObject;
-					final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
-							.getRepositoryConnector(repository.getKind());
+					final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
 					if (connector != null) {
 						final String jobName = "Updating attributes for: " + repository.getUrl();
 						Job updateJob = new Job(jobName) {
@@ -60,7 +60,12 @@ public class ResetRepositoryConfigurationAction extends Action {
 							protected IStatus run(IProgressMonitor monitor) {
 								monitor.beginTask(jobName,
 										IProgressMonitor.UNKNOWN);
-								connector.updateAttributes(repository, monitor);
+								try {
+									connector.updateAttributes(repository, TasksUiPlugin.getDefault().getProxySettings(), monitor);
+								} catch (CoreException ce) {
+									MylarStatusHandler.fail(ce, ce.getStatus().getMessage(), true);
+								}
+								
 								monitor.done();	
 								return Status.OK_STATUS;
 							}

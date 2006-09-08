@@ -58,5 +58,4 @@ public class MockRepositoryUi extends AbstractRepositoryConnectorUi {
 	public boolean hasSearchPage() {
 		return false;
 	}
-
 }

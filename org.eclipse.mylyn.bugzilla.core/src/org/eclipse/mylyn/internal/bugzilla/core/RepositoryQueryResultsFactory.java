@@ -14,10 +14,7 @@ package org.eclipse.mylar.internal.bugzilla.core;
 import java.io.IOException;
 import java.net.Proxy;
 import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-
-import javax.security.auth.login.LoginException;
+import java.security.GeneralSecurityException;
 
 import org.eclipse.mylar.tasks.core.IQueryHitCollector;
 import org.eclipse.mylar.tasks.core.TaskList;
@@ -28,17 +25,14 @@ import org.eclipse.mylar.tasks.core.TaskList;
  */
 public class RepositoryQueryResultsFactory extends AbstractReportFactory {
 
-	/** expects rdf returned from repository (ctype=rdf in url) */
+	/** expects rdf returned from repository (ctype=rdf in url) 
+	 * @throws GeneralSecurityException */
 	public void performQuery(TaskList taskList, String repositoryUrl, IQueryHitCollector collector, String queryUrlString,
-			Proxy proxySettings, int maxHits, String characterEncoding) throws LoginException, KeyManagementException,
-			NoSuchAlgorithmException, IOException, BugzillaException {
-
+			Proxy proxySettings, int maxHits, String characterEncoding) throws IOException, BugzillaException, GeneralSecurityException {
 		
 		SaxBugzillaQueryContentHandler contentHandler = new SaxBugzillaQueryContentHandler(taskList, repositoryUrl,
 				collector, maxHits);
-		
 		URL url = new URL(queryUrlString);
-		
 		collectResults(url, proxySettings, characterEncoding, contentHandler, false);
 	}
 }

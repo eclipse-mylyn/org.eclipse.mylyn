@@ -118,5 +118,4 @@ public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 			job.schedule();
 		}
 	}
-
 }

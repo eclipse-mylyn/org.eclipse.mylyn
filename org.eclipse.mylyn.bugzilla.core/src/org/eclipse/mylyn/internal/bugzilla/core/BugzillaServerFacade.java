@@ -221,7 +221,7 @@ public class BugzillaServerFacade {
 	 */
 	public static void setupNewBugAttributes(String repositoryUrl, Proxy proxySettings, String userName,
 			String password, NewBugzillaReport newReport, String characterEncoding) throws IOException,
-			KeyManagementException, LoginException, NoSuchAlgorithmException, BugzillaException {
+			KeyManagementException, GeneralSecurityException, NoSuchAlgorithmException, BugzillaException {
 
 		newReport.removeAllAttributes();
 
@@ -361,7 +361,7 @@ public class BugzillaServerFacade {
 
 	private static void updateBugAttributeOptions(String repositoryUrl, Proxy proxySettings, String userName,
 			String password, RepositoryTaskData existingReport, String characterEncoding) throws IOException,
-			KeyManagementException, LoginException, NoSuchAlgorithmException, BugzillaException {
+			KeyManagementException, GeneralSecurityException, BugzillaException {
 		String product = existingReport.getAttributeValue(BugzillaReportElement.PRODUCT.getKeyString());
 		for (RepositoryTaskAttribute attribute : existingReport.getAttributes()) {
 			BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getID().trim().toUpperCase());

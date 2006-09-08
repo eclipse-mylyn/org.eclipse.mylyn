@@ -28,7 +28,7 @@
          point="org.eclipse.mylar.tasks.ui.repositories">
 
       <connectorCore
-            class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector"
+            class="org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector"
             id="org.eclipse.mylar.bugzilla.tasklist.repositories"
             name="Bugzilla Repository Connector"
             type="bugzilla"/>

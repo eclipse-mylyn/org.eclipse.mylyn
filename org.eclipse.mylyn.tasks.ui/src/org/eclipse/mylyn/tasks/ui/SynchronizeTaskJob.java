@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
+import javax.security.auth.login.LoginException;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -28,10 +30,12 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorInput;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressConstants;
@@ -47,9 +51,9 @@ class SynchronizeTaskJob extends Job {
 	private static final String LABEL_SYNCHRONIZE_TASK = "Task Synchronization";
 
 	private final AbstractRepositoryConnector connector;
-	
-//	private final RepositorySynchronizationManager synchronizationManager;
-	
+
+	// private final RepositorySynchronizationManager synchronizationManager;
+
 	private Set<AbstractRepositoryTask> repositoryTasks;
 
 	private boolean forceSync = false;
@@ -58,7 +62,7 @@ class SynchronizeTaskJob extends Job {
 		super(LABEL_SYNCHRONIZE_TASK + " (" + repositoryTasks.size() + " tasks)");
 		this.connector = connector;
 		this.repositoryTasks = repositoryTasks;
-//		this.synchronizationManager = synchronizationManager;
+		// this.synchronizationManager = synchronizationManager;
 	}
 
 	public void setForceSynch(boolean forceUpdate) {
@@ -86,11 +90,24 @@ class SynchronizeTaskJob extends Job {
 					if (offlineHandler != null) {
 						RepositoryTaskData downloadedTaskData = null;
 						try {
-							downloadedTaskData = offlineHandler.downloadTaskData(repositoryTask);
+							TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+									repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
+							if (repository == null) {
+								throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, 0,
+										"Associated repository could not be found. Ensure proper repository configuration of "
+												+ repositoryTask.getRepositoryUrl() + " in " + TaskRepositoriesView.NAME
+												+ ".", null));
+							} else {
+								downloadedTaskData = offlineHandler.downloadTaskData(repositoryTask, repository,
+										TasksUiPlugin.getDefault().getProxySettings());
+							}
+						} catch (final LoginException e) {
+							throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, 0, "Report download failed. Ensure proper repository configuration of " + repositoryTask.getRepositoryUrl() + " in "
+									+ TaskRepositoriesView.NAME + ".", e ));
 						} catch (final CoreException e) {
 							if (!(e.getStatus().getException() instanceof IOException)) {
 								MylarStatusHandler.log(e.getStatus());
-							} else if(e.getStatus().getException() instanceof FileNotFoundException){
+							} else if (e.getStatus().getException() instanceof FileNotFoundException) {
 								// can be caused by empty urlbase parameter on bugzilla server
 								MylarStatusHandler.log(e.getStatus());
 							} else {
@@ -100,7 +117,8 @@ class SynchronizeTaskJob extends Job {
 						}
 
 						if (downloadedTaskData != null) {
-							TasksUiPlugin.getSynchronizationManager().updateOfflineState(connector, repositoryTask, downloadedTaskData, forceSync);
+							TasksUiPlugin.getSynchronizationManager().updateOfflineState(connector, repositoryTask,
+									downloadedTaskData, forceSync);
 							connector.updateTaskState(repositoryTask);
 							refreshEditors(repositoryTask);
 						}

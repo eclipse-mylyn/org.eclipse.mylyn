@@ -49,6 +49,12 @@ public abstract class AbstractRepositoryConnector {
 
 	protected Set<RepositoryTemplate> templates = new LinkedHashSet<RepositoryTemplate>();
 
+	protected TaskList taskList;
+	
+	public void init(TaskList taskList) {
+		this.taskList = taskList;
+	}
+	
 	/**
 	 * @return null if not supported
 	 */
@@ -59,8 +65,6 @@ public abstract class AbstractRepositoryConnector {
 	 */
 	public abstract IOfflineTaskHandler getOfflineTaskHandler();
 
-	public abstract boolean validate(TaskRepository repository);
-
 	public abstract String getRepositoryUrlFromTaskUrl(String url);
 
 	public abstract boolean canCreateTaskFromKey(TaskRepository repository);
@@ -68,22 +72,34 @@ public abstract class AbstractRepositoryConnector {
 	public abstract boolean canCreateNewTask(TaskRepository repository);
 
 	/**
+	 * Reset and update the repository attributes from the server (e.g.
+	 * products, components)
+	 * @param proxySettings TODO
+	 * @throws CoreException TODO
+	 */
+	public abstract void updateAttributes(TaskRepository repository, Proxy proxySettings, IProgressMonitor monitor) throws CoreException;
+	
+	/**
 	 * @param id
 	 *            identifier, e.g. "123" bug Bugzilla bug 123
+	 * @param proxySettings TODO
 	 * @return null if task could not be created
+	 * @throws CoreException TODO
 	 */
-	public abstract ITask createTaskFromExistingKey(TaskRepository repository, String id);
+	public abstract ITask createTaskFromExistingKey(TaskRepository repository, String id, Proxy proxySettings) throws CoreException;
 
 	/**
 	 * Implementors must execute query synchronously.
 	 * 
 	 * @param query
+	 * @param repository TODO
+	 * @param proxySettings TODO
 	 * @param monitor
 	 * @param resultCollector
 	 *            IQueryHitCollector that collects the hits found
 	 */
-	public abstract IStatus performQuery(AbstractRepositoryQuery query, IProgressMonitor monitor,
-			IQueryHitCollector resultCollector);
+	public abstract IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository,
+			Proxy proxySettings, IProgressMonitor monitor, IQueryHitCollector resultCollector);
 
 	public abstract String getLabel();
 
@@ -91,14 +107,6 @@ public abstract class AbstractRepositoryConnector {
 	 * @return the unique type of the repository, e.g. "bugzilla"
 	 */
 	public abstract String getRepositoryType();
-
-	/**
-	 * Reset and update the repository attributes from the server (e.g.
-	 * products, components)
-	 * 
-	 * @param monitor
-	 */
-	public abstract void updateAttributes(TaskRepository repository, IProgressMonitor monitor);
 
 	public abstract List<String> getSupportedVersions();
 

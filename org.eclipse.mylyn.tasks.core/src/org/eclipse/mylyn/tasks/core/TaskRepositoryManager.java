@@ -47,6 +47,12 @@ public class TaskRepositoryManager {
 
 	private TaskRepositoriesExternalizer externalizer = new TaskRepositoriesExternalizer();
 
+	private TaskList taskList;
+	
+	public TaskRepositoryManager(TaskList taskList) {
+		this.taskList = taskList;
+	}
+
 	public Collection<AbstractRepositoryConnector> getRepositoryConnectors() {
 		return Collections.unmodifiableCollection(repositoryConnectors.values());
 	}
@@ -57,6 +63,7 @@ public class TaskRepositoryManager {
 
 	public void addRepositoryConnector(AbstractRepositoryConnector repositoryConnector) {
 		if (!repositoryConnectors.values().contains(repositoryConnector)) {
+			repositoryConnector.init(taskList);
 			repositoryConnectors.put(repositoryConnector.getRepositoryType(), repositoryConnector);
 		}
 	}

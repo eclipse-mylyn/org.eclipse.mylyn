@@ -100,7 +100,7 @@ class SynchronizeQueryJob extends Job {
 
 			};			
 
-			IStatus resultingStatus = connector.performQuery(repositoryQuery, monitor, collector);
+			IStatus resultingStatus = connector.performQuery(repositoryQuery, repository, TasksUiPlugin.getDefault().getProxySettings(), monitor, collector);
 			// connector.performQuery(repositoryQuery, new
 			// NullProgressMonitor(), queryStatus);
 

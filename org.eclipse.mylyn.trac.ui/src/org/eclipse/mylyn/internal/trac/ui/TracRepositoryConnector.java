@@ -12,9 +12,11 @@
 package org.eclipse.mylar.internal.trac.ui;
 
 import java.io.File;
+import java.net.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -142,19 +144,19 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 //	}
 
 	@Override
-	public IStatus performQuery(AbstractRepositoryQuery query, IProgressMonitor monitor,
-			IQueryHitCollector resultCollector) {
+	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository,
+			Proxy proxySettings, IProgressMonitor monitor, IQueryHitCollector resultCollector) {
 
 		final List<TracTicket> tickets = new ArrayList<TracTicket>();
 
 		String url = query.getRepositoryUrl();
 		TaskRepository taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(
 				TracCorePlugin.REPOSITORY_KIND, url);
-		ITracClient tracRepository;
+		ITracClient tracClient;
 		try {
-			tracRepository = getClientManager().getRepository(taskRepository);
+			tracClient = getClientManager().getRepository(taskRepository);
 			if (query instanceof TracRepositoryQuery) {
-				tracRepository.search(((TracRepositoryQuery) query).getTracSearch(), tickets);
+				tracClient.search(((TracRepositoryQuery) query).getTracSearch(), tickets);
 			}
 
 			for (TracTicket ticket : tickets) {
@@ -175,7 +177,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	
 	
 	@Override
-	public ITask createTaskFromExistingKey(TaskRepository repository, String id) {
+	public ITask createTaskFromExistingKey(TaskRepository repository, String id, Proxy proxySettings) throws CoreException {
 		try {
 			// TODO do this in a non-blocking way like
 			// BugzillaRepositoryConnector once IOfflineTaskHandler has been
@@ -245,16 +247,6 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		return ticket.getId() + ": " + ticket.getValue(Key.SUMMARY);
 	}
 
-	@Override
-	public void updateAttributes(TaskRepository repository, IProgressMonitor monitor) {
-		try {
-			ITracClient client = getClientManager().getRepository(repository);
-			client.updateAttributes(monitor, true);
-		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Could not update attributes", false);
-		}
-	}
-
 	public boolean hasChangedSince(TaskRepository repository) {
 		return Version.XML_RPC.name().equals(repository.getVersion());
 	}
@@ -278,10 +270,15 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public boolean validate(TaskRepository repository) {
-		return true;
+	public void updateAttributes(TaskRepository repository, Proxy proxySettings, IProgressMonitor monitor) throws CoreException {
+		try {
+			ITracClient client = getClientManager().getRepository(repository);
+			client.updateAttributes(monitor, true);
+		} catch (Exception e) {
+			MylarStatusHandler.fail(e, "Could not update attributes", false);
+		}
 	}
-
+	
 	public static String getDisplayUsername(TaskRepository repository) {
 		if (!repository.hasCredentials()) {
 			return ITracClient.DEFAULT_USERNAME;

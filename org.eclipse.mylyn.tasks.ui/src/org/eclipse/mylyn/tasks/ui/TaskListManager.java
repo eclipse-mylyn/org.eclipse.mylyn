@@ -130,6 +130,7 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	private File taskListFile;
 
+	// TODO: guard against overwriting the single instance?
 	private TaskList taskList = new TaskList();
 
 	private TaskActivationHistory taskActivationHistory = new TaskActivationHistory();
@@ -138,15 +139,11 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	private boolean taskActivityHistoryInitialized = false;
 
-	// private int nextLocalTaskId;
-
 	private int timerSleepInterval = TimerThread.DEFAULT_SLEEP_INTERVAL;
 
 	private int startDay;
 
 	private int endDay;
-
-	// private int scheduledStartHour;
 
 	private int scheduledEndHour;
 

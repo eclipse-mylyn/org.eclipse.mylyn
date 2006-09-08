@@ -34,16 +34,6 @@ public class BugzillaResultCollector extends AbstractQueryHitCollector {
 
 	private List<AbstractQueryHit> results = new ArrayList<AbstractQueryHit>();
 
-//	private IBugzillaSearchOperation operation;
-//
-//	public void setOperation(IBugzillaSearchOperation operation) {
-//		this.operation = operation;
-//	}
-//
-//	public IBugzillaSearchOperation getOperation() {
-//		return operation;
-//	}
-
 	@Override
 	public void addMatch(AbstractQueryHit hit) {
 		String description = hit.getId() + ": " + hit.getDescription();

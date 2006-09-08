@@ -110,5 +110,4 @@ public class TracRepositoryUi extends AbstractRepositoryConnectorUi {
 	public String getRepositoryType() {
 		return TracCorePlugin.REPOSITORY_KIND;
 	}
-	
 }

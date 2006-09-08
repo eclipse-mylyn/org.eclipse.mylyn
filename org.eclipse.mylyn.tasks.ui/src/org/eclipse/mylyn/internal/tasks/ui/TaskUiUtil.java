@@ -155,7 +155,7 @@ public class TaskUiUtil {
 
 				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryKind,
 						repositoryTask.getRepositoryUrl());
-				if (repository == null || !connector.validate(repository)) {
+				if (repository == null) { // || !connector.validate(repository)) {
 					return;
 				}
 

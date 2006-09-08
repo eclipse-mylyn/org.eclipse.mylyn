@@ -365,7 +365,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			File taskListFile = new File(path);
 
 			taskListManager = new TaskListManager(taskListWriter, taskListFile);
-			taskRepositoryManager = new TaskRepositoryManager();
+			taskRepositoryManager = new TaskRepositoryManager(taskListManager.getTaskList());
 			synchronizationManager = new RepositorySynchronizationManager();
 
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

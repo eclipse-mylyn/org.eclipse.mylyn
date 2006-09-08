@@ -62,7 +62,6 @@ public abstract class AbstractQueryHitCollector implements IQueryHitCollector {
 		}
 
 		addMatch(hit);
-
 		matchCount++;
 
 		if (!getProgressMonitor().isCanceled()) {

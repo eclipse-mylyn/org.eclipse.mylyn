@@ -115,33 +115,33 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertEquals(null, connector.getRepositoryUrlFromTaskUrl("http://host/repo/ticket-2342"));
 	}
 
-	public void testCreateTaskFromExistingKeyXmlRpc_010() {
+	public void testCreateTaskFromExistingKeyXmlRpc_010() throws CoreException {
 		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
 		createTaskFromExistingKey();
 	}
 
-	public void testCreateTaskFromExistingKeyTrac09_010() {
+	public void testCreateTaskFromExistingKeyTrac09_010() throws CoreException {
 		init(Constants.TEST_TRAC_010_URL, Version.TRAC_0_9);
 		createTaskFromExistingKey();
 	}
 
-	public void testCreateTaskFromExistingKeyTrac09_096() {
+	public void testCreateTaskFromExistingKeyTrac09_096() throws CoreException {
 		init(Constants.TEST_TRAC_096_URL, Version.TRAC_0_9);
 		createTaskFromExistingKey();
 	}
 
-	protected void createTaskFromExistingKey() {
+	protected void createTaskFromExistingKey() throws CoreException {
 		String id = data.tickets.get(0).getId() + "";
-		ITask task = connector.createTaskFromExistingKey(repository, id);
+		ITask task = connector.createTaskFromExistingKey(repository, id, null);
 		assertNotNull(task);
 		assertEquals(TracTask.class, task.getClass());
 		assertTrue(task.getDescription().contains("summary1"));
 		assertEquals(repository.getUrl() + ITracClient.TICKET_URL + id, task.getUrl());
 
-		task = connector.createTaskFromExistingKey(repository, "does not exist");
+		task = connector.createTaskFromExistingKey(repository, "does not exist", null);
 		assertNull(task);
 
-		task = connector.createTaskFromExistingKey(repository, Integer.MAX_VALUE + "");
+		task = connector.createTaskFromExistingKey(repository, Integer.MAX_VALUE + "", null);
 		assertNull(task);
 	}
 
@@ -193,7 +193,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 			public void addMatch(AbstractQueryHit hit) {
 				result.add(hit);
 			}};
-		IStatus queryStatus = connector.performQuery(query, new NullProgressMonitor(), hitCollector);
+		IStatus queryStatus = connector.performQuery(query, repository, TasksUiPlugin.getDefault().getProxySettings(), new NullProgressMonitor(), hitCollector);
 
 		assertTrue(queryStatus.isOK());
 		assertEquals(3, result.size());
@@ -249,7 +249,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 	}
 
 	protected void updateAttributes() throws Exception {
-		connector.updateAttributes(repository, new NullProgressMonitor());
+		connector.updateAttributes(repository, null, new NullProgressMonitor());
 
 		ITracClient server = connector.getClientManager().getRepository(repository);
 		TracVersion[] versions = server.getVersions();
@@ -265,7 +265,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	public void testContext010() throws Exception {
 		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
-		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.attachmentTicketId + "");
+		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.attachmentTicketId + "", null);
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 
 		int size = task.getTaskData().getAttachments().size();
@@ -285,7 +285,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	public void testContext096() throws Exception {
 		init(Constants.TEST_TRAC_096_URL, Version.TRAC_0_9);
-		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.attachmentTicketId + "");
+		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.attachmentTicketId + "", null);
 
 		File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
 		sourceContextFile.createNewFile();

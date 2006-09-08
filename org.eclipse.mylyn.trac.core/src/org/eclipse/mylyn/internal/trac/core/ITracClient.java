@@ -157,5 +157,5 @@ public interface ITracClient {
 	Set<Integer> getChangedTickets(Date since) throws TracException;
 
 	void setProxy(Proxy proxy);
-	
+
 }

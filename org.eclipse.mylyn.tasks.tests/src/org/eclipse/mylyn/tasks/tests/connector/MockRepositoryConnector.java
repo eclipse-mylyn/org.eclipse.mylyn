@@ -11,8 +11,10 @@
 
 package org.eclipse.mylar.tasks.tests.connector;
 
+import java.net.Proxy;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
@@ -45,7 +47,7 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public ITask createTaskFromExistingKey(TaskRepository repository, String id) {
+	public ITask createTaskFromExistingKey(TaskRepository repository, String id, Proxy proxySettings) throws CoreException {
 		// ignore
 		return null;
 	}
@@ -85,13 +87,8 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 	
 	@Override
-	public void updateAttributes(TaskRepository repository, IProgressMonitor monitor) {
+	public void updateAttributes(TaskRepository repository, Proxy proxySettings, IProgressMonitor monitor) throws CoreException {
 		// ignore
-	}
-
-	@Override
-	public boolean validate(TaskRepository repository) {
-		return true;
 	}
 
 	@Override
@@ -100,7 +97,7 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public IStatus performQuery(AbstractRepositoryQuery query, IProgressMonitor monitor, IQueryHitCollector resultCollector) {
+	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, Proxy proxySettings, IProgressMonitor monitor, IQueryHitCollector resultCollector) {
 		return null;
 	}
 

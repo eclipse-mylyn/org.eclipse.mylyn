@@ -8,10 +8,14 @@
 
 package org.eclipse.mylar.tasks.tests;
 
+import java.io.UnsupportedEncodingException;
+import java.net.Proxy;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
+
+import javax.security.auth.login.LoginException;
 
 import junit.framework.TestCase;
 
@@ -237,10 +241,6 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 
 		private final SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT_2);
 
-		public RepositoryTaskData downloadTaskData(AbstractRepositoryTask repositoryTask) throws CoreException {
-			return null;
-		}
-
 		public AbstractAttributeFactory getAttributeFactory() {
 			// ignore
 			return null;
@@ -256,7 +256,12 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		}
 
 		public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
-				Set<AbstractRepositoryTask> tasks) throws Exception {
+				Set<AbstractRepositoryTask> tasks, Proxy proxySettings) throws CoreException, UnsupportedEncodingException {
+			return null;
+		}
+
+		public RepositoryTaskData downloadTaskData(AbstractRepositoryTask repositoryTask, TaskRepository repository,
+				Proxy proxySettings) throws CoreException, LoginException {
 			return null;
 		}
 

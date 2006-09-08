@@ -18,15 +18,16 @@ import javax.security.auth.login.LoginException;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
@@ -107,8 +108,8 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
 	}
 
-	protected BugzillaTask generateLocalTaskAndDownload(String taskNumber) {
-		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber);
+	protected BugzillaTask generateLocalTaskAndDownload(String taskNumber) throws CoreException {
+		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber, null);
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 				
 		assertNotNull(task);

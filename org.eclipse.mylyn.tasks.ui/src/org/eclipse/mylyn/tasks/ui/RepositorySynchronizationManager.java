@@ -161,7 +161,7 @@ public class RepositorySynchronizationManager {
 				attempts++;
 				try {
 					changedTasks = connector.getOfflineTaskHandler().getChangedSinceLastSync(repository,
-							repositoryTasks);
+							repositoryTasks, null);
 				} catch (Exception e) {
 					if (attempts == MAX_QUERY_ATTEMPTS) {
 						if (!(e instanceof IOException)) {

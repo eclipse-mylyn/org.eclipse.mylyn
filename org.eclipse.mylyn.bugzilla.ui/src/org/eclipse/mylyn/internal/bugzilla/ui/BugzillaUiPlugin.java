@@ -17,16 +17,15 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.security.auth.login.LoginException;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaResultEditorMatchAdapter;
@@ -234,8 +233,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	 * @throws KeyManagementException 
 	 * @throws BugzillaException 
 	 */
-	public static void updateQueryOptions(TaskRepository repository, IProgressMonitor monitor) throws LoginException,
-			IOException, KeyManagementException, NoSuchAlgorithmException, BugzillaException {
+	public static void updateQueryOptions(TaskRepository repository, IProgressMonitor monitor) {
 		
 		String repositoryUrl = repository.getUrl();
 
@@ -243,7 +241,13 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 			throw new OperationCanceledException();
 		
 		// TODO: pass monitor along since it is this call that does the work and can hang due to network IO
-		RepositoryConfiguration config = BugzillaCorePlugin.getRepositoryConfiguration(true, repository.getUrl(), TasksUiPlugin.getDefault().getProxySettings(), repository.getUserName(), repository.getPassword(), repository.getCharacterEncoding());
+		RepositoryConfiguration config = null;
+		try {
+			config = BugzillaCorePlugin.getRepositoryConfiguration(false, repository.getUrl(), TasksUiPlugin.getDefault().getProxySettings(), repository.getUserName(), repository.getPassword(), repository.getCharacterEncoding());
+		} catch (Exception e) {
+			MylarStatusHandler.fail(e, "Could not retrieve repository configuration for: " + repository, true);
+			return;
+		}
 
 		if(monitor.isCanceled())
 			throw new OperationCanceledException();

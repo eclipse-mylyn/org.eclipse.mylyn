@@ -17,12 +17,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Proxy;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
+import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -49,12 +46,12 @@ public class BugzillaCorePlugin extends Plugin {
 	private static BugzillaCorePlugin INSTANCE;
 
 	private static boolean cacheFileRead = false;
-	
+
 	private static File repositoryConfigurationFile = null;
 
 	/** Product configuration for the current server */
 	private static Map<String, RepositoryConfiguration> repositoryConfigurations = new HashMap<String, RepositoryConfiguration>();
-	
+
 	public BugzillaCorePlugin() {
 		super();
 	}
@@ -85,26 +82,28 @@ public class BugzillaCorePlugin extends Plugin {
 		return repositoryConfigurations.get(repositoryUrl);
 	}
 
-	
 	public static void setConfigurationCacheFile(File file) {
 		repositoryConfigurationFile = file;
 	}
-	
+
 	/**
 	 * Retrieves the latest repository configuration from the server
-	 * @throws BugzillaException 
+	 * 
+	 * @throws BugzillaException
+	 * @throws GeneralSecurityException
+	 * @throws
 	 */
 	public static RepositoryConfiguration getRepositoryConfiguration(boolean forceRefresh, String repositoryUrl,
 			Proxy proxySettings, String userName, String password, String encoding) throws IOException,
-			KeyManagementException, LoginException, NoSuchAlgorithmException, BugzillaException {
+			BugzillaException, GeneralSecurityException {
 		if (!cacheFileRead) {
 			readRepositoryConfigurationFile();
 			cacheFileRead = true;
 		}
 		if (repositoryConfigurations.get(repositoryUrl) == null || forceRefresh) {
 			RepositoryConfigurationFactory configFactory = new RepositoryConfigurationFactory();
-			addRepositoryConfiguration(configFactory.getConfiguration(repositoryUrl,
-					proxySettings, userName, password, encoding));
+			addRepositoryConfiguration(configFactory.getConfiguration(repositoryUrl, proxySettings, userName, password,
+					encoding));
 		}
 		return repositoryConfigurations.get(repositoryUrl);
 	}
@@ -115,14 +114,15 @@ public class BugzillaCorePlugin extends Plugin {
 		repositoryConfigurations.put(config.getRepositoryUrl(), config);
 	}
 
-//	/**
-//	 * Returns the path to the file cacheing the product configuration.
-//	 */
-//	private static IPath getProductConfigurationCachePath() {
-//		IPath stateLocation = Platform.getStateLocation(BugzillaPlugin.getDefault().getBundle());
-//		IPath configFile = stateLocation.append("repositoryConfigurations");
-//		return configFile;
-//	}
+	// /**
+	// * Returns the path to the file cacheing the product configuration.
+	// */
+	// private static IPath getProductConfigurationCachePath() {
+	// IPath stateLocation =
+	// Platform.getStateLocation(BugzillaPlugin.getDefault().getBundle());
+	// IPath configFile = stateLocation.append("repositoryConfigurations");
+	// return configFile;
+	// }
 
 	/** public for testing */
 	public void removeConfiguration(RepositoryConfiguration config) {
@@ -233,5 +233,3 @@ public class BugzillaCorePlugin extends Plugin {
 		return bugFile;
 	}
 }
-
-

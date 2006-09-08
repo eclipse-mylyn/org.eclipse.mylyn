@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
+import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.Map;
 
 import javax.security.auth.login.LoginException;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -184,7 +186,6 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-
 					final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 							.getRepositoryConnector(repository.getKind());
 
@@ -192,7 +193,27 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 						public void run(IProgressMonitor monitor) throws InvocationTargetException,
 								InterruptedException {
 							monitor.beginTask("Updating repository report options...", IProgressMonitor.UNKNOWN);
-							connector.updateAttributes(repository, monitor);
+							try {
+								connector.updateAttributes(repository, TasksUiPlugin.getDefault().getProxySettings(),
+										monitor);
+							} catch (CoreException ce) {
+								if (ce.getStatus().getException() instanceof GeneralSecurityException) {
+									MylarStatusHandler.fail(ce,
+											"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\n"
+													+ "Please ensure proper configuration in "
+													+ TaskRepositoriesView.NAME + ". ", true);
+								} else if (ce.getStatus().getException() instanceof IOException) {
+									MylarStatusHandler.fail(ce,
+											"Connection Error, please ensure proper configuration in "
+													+ TaskRepositoriesView.NAME + ".", true);
+								} else {
+									MylarStatusHandler.fail(ce, "Error updating repository attributes for "
+											+ repository.getUrl(), true);
+								}
+								return;
+							}
+							BugzillaUiPlugin.updateQueryOptions(repository, monitor);
+
 							products = new ArrayList<String>();
 							for (String product : BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT,
 									null, repository.getUrl())) {
@@ -297,8 +318,10 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 				String key = option.substring(0, option.indexOf("="));
 				if ("product".equals(key)) {
 					try {
-						products.add(URLDecoder.decode(option.substring(option.indexOf("=") + 1), repository.getCharacterEncoding()));
-						// TODO: list box only accepts a single selection so we break on first found
+						products.add(URLDecoder.decode(option.substring(option.indexOf("=") + 1), repository
+								.getCharacterEncoding()));
+						// TODO: list box only accepts a single selection so we
+						// break on first found
 						break;
 					} catch (UnsupportedEncodingException ex) {
 						// ignore
@@ -306,7 +329,7 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 				}
 			}
 		}
-		
+
 		return products.toArray(new String[products.size()]);
 	}
 
@@ -379,7 +402,7 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 	 * @throws KeyManagementException
 	 * @throws BugzillaException
 	 */
-	public void saveDataToModel() throws KeyManagementException, LoginException, NoSuchAlgorithmException, IOException,
+	public void saveDataToModel() throws KeyManagementException, GeneralSecurityException, IOException,
 			BugzillaException {
 		NewBugzillaReport model = bugWizard.model;
 		prevProduct = model.getProduct();

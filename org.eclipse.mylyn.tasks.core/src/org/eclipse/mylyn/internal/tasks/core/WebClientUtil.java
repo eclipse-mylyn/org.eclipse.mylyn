@@ -16,8 +16,8 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -46,15 +46,17 @@ public class WebClientUtil {
 	 * @param url
 	 * @param proxy
 	 *            can be null
+	 * @throws GeneralSecurityException 
 	 */
 	public static URLConnection getUrlConnection(URL url, Proxy proxy, boolean useTls) throws IOException,
-			NoSuchAlgorithmException, KeyManagementException {
+			KeyManagementException, GeneralSecurityException {
 		SSLContext ctx;
-		if (useTls)
+		if (useTls) {
 			ctx = SSLContext.getInstance("TLS");
-		else
+		} else {
 			ctx = SSLContext.getInstance("SSL");
-
+		}
+			
 		javax.net.ssl.TrustManager[] tm = new javax.net.ssl.TrustManager[] { new RepositoryTrustManager() };
 		ctx.init(null, tm, null);
 		HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());

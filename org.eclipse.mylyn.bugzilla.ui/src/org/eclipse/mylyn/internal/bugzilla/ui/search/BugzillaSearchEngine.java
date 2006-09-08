@@ -44,6 +44,7 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Mik Kersten (hardening of initial prototype)
  */
+
 public class BugzillaSearchEngine {
 
 	protected static final String QUERYING_SERVER = "Querying Bugzilla Server...";
@@ -81,8 +82,7 @@ public class BugzillaSearchEngine {
 				 * required to support the standard charset "UTF-8"
 				 */
 			}
-		}
-
+		}	
 	}
 
 	/**
@@ -137,87 +137,6 @@ public class BugzillaSearchEngine {
 			RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory();
 			queryFactory.performQuery(TasksUiPlugin.getTaskListManager().getTaskList(), repository.getUrl(), collector, urlString, proxySettings, maxHits, repository
 					.getCharacterEncoding());
-
-			// URLConnection cntx =
-			// BugzillaPlugin.getDefault().getUrlConnection(new URL(urlString),
-			// proxySettings);
-			// if (cntx == null || !(cntx instanceof HttpURLConnection)) {
-			// return null;
-			// }
-			//
-			// HttpURLConnection connection = (HttpURLConnection) cntx;
-			// connection.connect();
-			// int responseCode = connection.getResponseCode();
-			// if (responseCode != HttpURLConnection.HTTP_OK) {
-			// String msg;
-			// if (responseCode == -1 || responseCode ==
-			// HttpURLConnection.HTTP_FORBIDDEN)
-			// msg = repository.getUrl()
-			// + " does not seem to be a valid Bugzilla server. Check Bugzilla
-			// preferences.";
-			// else
-			// msg = "HTTP Error " + responseCode + " (" +
-			// connection.getResponseMessage()
-			// + ") while querying Bugzilla Server. Check Bugzilla
-			// preferences.";
-			//
-			// throw new BugzillaException(msg);
-			// }
-			//
-			// if (monitor.isCanceled()) {
-			// throw new OperationCanceledException("Search cancelled");
-			// }
-			//			
-			//			
-			// if (characterEncoding != null) {
-			// in = new BufferedReader(new
-			// InputStreamReader(connection.getInputStream(),
-			// characterEncoding));
-			// } else {
-			// in = new BufferedReader(new
-			// InputStreamReader(connection.getInputStream()));
-			// }
-			//			
-			// if (monitor.isCanceled()) {
-			// throw new OperationCanceledException("Search cancelled");
-			// }
-			//
-			// SaxBugzillaQueryContentHandler contentHandler = new
-			// SaxBugzillaQueryContentHandler(repository, collector,
-			// maxMatches);
-			//
-			// try {
-			// XMLReader reader = XMLReaderFactory.createXMLReader();
-			// reader.setContentHandler(contentHandler);
-			// reader.setErrorHandler(new ErrorHandler() {
-			//
-			// public void error(SAXParseException exception) throws
-			// SAXException {
-			// MylarStatusHandler.fail(exception, "Mylar: BugzillaSearchEngine
-			// Sax parser error", false);
-			// }
-			//
-			// public void fatalError(SAXParseException arg0) throws
-			// SAXException {
-			// // ignore
-			//
-			// }
-			//
-			// public void warning(SAXParseException exception) throws
-			// SAXException {
-			// // ignore
-			//
-			// }
-			// });
-			// reader.parse(new InputSource(in));
-			//
-			// // if (contentHandler.errorOccurred()) {
-			// // throw new IOException(contentHandler.getErrorMessage());
-			// // }
-			//
-			// } catch (SAXException e) {
-			// throw new IOException(e.getMessage());
-			// }
 
 		} catch (CoreException e) {
 			status = new MultiStatus(BugzillaUiPlugin.PLUGIN_ID, IStatus.ERROR,
