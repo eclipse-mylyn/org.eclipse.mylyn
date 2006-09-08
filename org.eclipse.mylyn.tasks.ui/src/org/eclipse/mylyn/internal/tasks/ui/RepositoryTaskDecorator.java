@@ -14,6 +14,7 @@ package org.eclipse.mylar.internal.tasks.ui;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
@@ -70,7 +71,12 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 			if (url != null && !url.trim().equals("") && !url.equals("http://")) {
 				decoration.addOverlay(TaskListImages.OVERLAY_WEB, IDecoration.BOTTOM_LEFT);
 			}
-		} 
+		} else if (element instanceof TaskRepository) {
+			ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(((TaskRepository)element).getKind());
+			if (overlay != null) {
+				decoration.addOverlay(overlay, IDecoration.BOTTOM_RIGHT);
+			}
+		}
 	} 
 
 	public void addListener(ILabelProviderListener listener) {

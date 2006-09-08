@@ -16,6 +16,8 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -104,7 +106,14 @@ public class TaskRepositoriesView extends ViewPart {
 	public void createPartControl(Composite parent) {
 		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		viewer.setContentProvider(new ViewContentProvider());
-		viewer.setLabelProvider(new TaskRepositoryLabelProvider());
+		
+//		taskListTableLabelProvider = new TaskListTableLabelProvider(new TaskElementLabelProvider(), PlatformUI
+//				.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground, this);
+		
+		viewer.setLabelProvider(new TaskRepositoriesTableLabelProvider(
+				new TaskRepositoryLabelProvider(),
+				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
+		
 		viewer.getTable().setHeaderVisible(true);
 
 		TableColumn column = new TableColumn(viewer.getTable(), SWT.LEFT);
@@ -112,7 +121,7 @@ public class TaskRepositoriesView extends ViewPart {
 		column.setWidth(25);
 		column = new TableColumn(viewer.getTable(), SWT.LEFT);
 		column.setText("Label");
-		column.setWidth(250);
+		column.setWidth(130);
 		column = new TableColumn(viewer.getTable(), SWT.LEFT);
 		column.setText("URL");
 		column.setWidth(250);
@@ -131,7 +140,13 @@ public class TaskRepositoriesView extends ViewPart {
 			}
 		});
 		viewer.setInput(getViewSite());
+		viewer.addDoubleClickListener(new IDoubleClickListener() {
 
+			public void doubleClick(DoubleClickEvent event) {
+				repositoryPropertiesAction.run();
+			}
+		});
+		
 		hookContextMenu();
 		contributeToActionBars();
 		getSite().setSelectionProvider(getViewer());

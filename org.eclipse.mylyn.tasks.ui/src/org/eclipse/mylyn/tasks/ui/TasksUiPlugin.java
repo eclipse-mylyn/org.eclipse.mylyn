@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
@@ -141,6 +142,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private Map<String, Image> brandingIcons = new HashMap<String, Image>();
 
+	private Map<String, ImageDescriptor> overlayIcons = new HashMap<String, ImageDescriptor>();
+	
 	public enum TaskListSaveMode {
 		ONE_HOUR, THREE_HOURS, DAY;
 		@Override
@@ -674,6 +677,14 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		return brandingIcons.get(repositoryType);
 	}
 
+	public void addOverlayIcon(String repositoryType, ImageDescriptor icon) {
+		overlayIcons.put(repositoryType, icon);
+	}
+
+	public ImageDescriptor getOverlayIcon(String repositoryType) {
+		return overlayIcons.get(repositoryType);
+	}
+	
 	public boolean isInitialized() {
 		return initialized;
 	}

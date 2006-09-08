@@ -11,8 +11,8 @@
 
 package org.eclipse.mylar.internal.tasks.ui.views;
 
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -22,39 +22,9 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Mik Kersten
  */
-public class TaskRepositoryLabelProvider extends LabelProvider implements ITableLabelProvider {
+public class TaskRepositoryLabelProvider implements ILabelProvider {
 
-	public String getColumnText(Object object, int index) {
-		switch(index) {
-		case 0: 
-			return null; 
-		case 1:
-			if (object instanceof TaskRepository) {
-				TaskRepository repository = (TaskRepository) object;
-				if (repository.getRepositoryLabel() != null && repository.getRepositoryLabel().length() > 0) {
-					return repository.getRepositoryLabel();
-				} else {
-					return repository.getUrl();
-				}
-			} else if (object instanceof AbstractRepositoryConnector) {
-				return ((AbstractRepositoryConnector) object).getLabel();
-			} else {
-				return getText(object);
-			}
-		case 2:
-			if (object instanceof TaskRepository) {
-				TaskRepository repository = (TaskRepository) object;			
-				return repository.getUrl();				
-			} else if (object instanceof AbstractRepositoryConnector) {
-				return ((AbstractRepositoryConnector) object).getLabel();
-			} else {
-				return getText(object);
-			}		
-		}
-
-		return null;
-		
-	}
+//extends LabelProvider implements ITableLabelProvider {
 
 	public Image getColumnImage(Object obj, int index) {
 		if(index == 0) { 
@@ -65,20 +35,52 @@ public class TaskRepositoryLabelProvider extends LabelProvider implements ITable
 	}
 
 	public Image getImage(Object object) {
-		String kind = null;
 		if (object instanceof AbstractRepositoryConnector) {
 			AbstractRepositoryConnector repositoryConnector = (AbstractRepositoryConnector) object;
-			kind = repositoryConnector.getRepositoryType();
-		} else if (object instanceof TaskRepository) {
-			TaskRepository repository = (TaskRepository) object;
-			kind = repository.getKind();
-		}
-		if (kind != null) {
-			Image image = TasksUiPlugin.getDefault().getBrandingIcon(kind);
+			Image image = TasksUiPlugin.getDefault().getBrandingIcon(repositoryConnector.getRepositoryType());
 			if (image != null) {
 				return image;
+			} else {
+				return TaskListImages.getImage(TaskListImages.REPOSITORY);
 			}
+		} else if (object instanceof TaskRepository) {
+			return TaskListImages.getImage(TaskListImages.REPOSITORY);
 		}
-		return TaskListImages.getImage(TaskListImages.REPOSITORY);
+		return null;
+	}
+
+	public String getText(Object object) {
+		if (object instanceof TaskRepository) {
+			TaskRepository repository = (TaskRepository) object;
+			if (repository.getRepositoryLabel() != null && repository.getRepositoryLabel().length() > 0) {
+				return repository.getRepositoryLabel();
+			} else {
+				return repository.getUrl();
+			}
+		} else if (object instanceof AbstractRepositoryConnector) {
+			return ((AbstractRepositoryConnector) object).getLabel();
+		} else {
+			return getText(object);
+		}		
+	}
+
+	public void addListener(ILabelProviderListener listener) {
+		// ignore
+		
+	}
+
+	public void dispose() {
+		// ignore
+		
+	}
+
+	public boolean isLabelProperty(Object element, String property) {
+		// ignore
+		return false;
+	}
+
+	public void removeListener(ILabelProviderListener listener) {
+		// ignore
+		
 	}
 }

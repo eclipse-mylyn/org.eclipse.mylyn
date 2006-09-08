@@ -73,6 +73,8 @@ public class TasksUiExtensionReader {
 
 	public static final String ATTR_BRANDING_ICON = "brandingIcon";
 
+	public static final String ATTR_OVERLAY_ICON = "overlayIcon";
+
 	public static final String ELMNT_TYPE = "type";
 
 	public static final String ELMNT_QUERY_PAGE = "queryPage";
@@ -214,6 +216,15 @@ public class TasksUiExtensionReader {
 					if (descriptor != null) {
 						TasksUiPlugin.getDefault().addBrandingIcon(((AbstractRepositoryConnectorUi)connectorUi).getRepositoryType(),
 								TaskListImages.getImage(descriptor));
+					}
+				}
+				String overlayIconPath = element.getAttribute(ATTR_OVERLAY_ICON);
+				if (overlayIconPath != null) {
+					ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(element.getContributor()
+							.getName(), overlayIconPath);
+					if (descriptor != null) {
+						TasksUiPlugin.getDefault().addOverlayIcon(((AbstractRepositoryConnectorUi)connectorUi).getRepositoryType(),
+								descriptor);
 					}
 				}
 			} else {

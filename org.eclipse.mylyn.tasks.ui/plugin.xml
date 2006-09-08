@@ -117,7 +117,14 @@
 			Mylar Repository Task Decorator
 		 </description>
          <enablement>
-            <objectClass name="org.eclipse.mylar.tasks.core.ITaskListElement"/>
+            <or>
+               <objectClass
+                     name="org.eclipse.mylar.tasks.core.ITaskListElement">
+               </objectClass>
+               <objectClass
+                     name="org.eclipse.mylar.tasks.core.TaskRepository">
+               </objectClass>
+            </or>
          </enablement>
       </decorator>
    </extension>

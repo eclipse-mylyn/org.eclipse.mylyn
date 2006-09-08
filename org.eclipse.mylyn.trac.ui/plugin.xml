@@ -8,12 +8,13 @@
       <connectorCore
             class="org.eclipse.mylar.internal.trac.core.TracRepositoryConnector"
             id="org.eclipse.mylar.trac.tasklist.repositories"
-            name="Trac Headless Client"
+            name="Trac Repository Connector"
             type="trac"/>
       <connectorUi
             brandingIcon="icons/eview16/trac-icon.gif"
             class="org.eclipse.mylar.internal.trac.ui.TracRepositoryUi"
-            id="Trac UI Client"/>
+            id="Trac Repository UI"
+            overlayIcon="icons/eview16/overlay-trac.gif"/>
       <externalizer
             class="org.eclipse.mylar.internal.trac.ui.TracTaskExternalizer"
             id="org.eclipse.mylar.trac.tasklist.externalizer"

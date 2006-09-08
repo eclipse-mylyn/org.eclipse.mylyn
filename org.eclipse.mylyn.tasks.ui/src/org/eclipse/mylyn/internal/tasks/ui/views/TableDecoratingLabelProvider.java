@@ -65,7 +65,6 @@ public class TableDecoratingLabelProvider extends DecoratingLabelProvider implem
 	}
 
 	public String getColumnText(Object element, int columnIndex) {
-		// ignore
 		return null;
 	}
 
