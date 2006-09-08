@@ -115,17 +115,17 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertEquals(null, connector.getRepositoryUrlFromTaskUrl("http://host/repo/ticket-2342"));
 	}
 
-	public void testCreateTaskFromExistingKeyXmlRpc_010() throws CoreException {
+	public void testCreateTaskFromExistingKeyXmlRpc010() throws CoreException {
 		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
 		createTaskFromExistingKey();
 	}
 
-	public void testCreateTaskFromExistingKeyTrac09_010() throws CoreException {
+	public void testCreateTaskFromExistingKeyTracWeb010() throws CoreException {
 		init(Constants.TEST_TRAC_010_URL, Version.TRAC_0_9);
 		createTaskFromExistingKey();
 	}
 
-	public void testCreateTaskFromExistingKeyTrac09_096() throws CoreException {
+	public void testCreateTaskFromExistingKeyTracWeb096() throws CoreException {
 		init(Constants.TEST_TRAC_096_URL, Version.TRAC_0_9);
 		createTaskFromExistingKey();
 	}
@@ -138,11 +138,17 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertTrue(task.getDescription().contains("summary1"));
 		assertEquals(repository.getUrl() + ITracClient.TICKET_URL + id, task.getUrl());
 
-		task = connector.createTaskFromExistingKey(repository, "does not exist", null);
-		assertNull(task);
+		try {
+			task = connector.createTaskFromExistingKey(repository, "does not exist", null);
+			fail("Expected CoreException");
+		} catch (CoreException e) {
+		}
 
-		task = connector.createTaskFromExistingKey(repository, Integer.MAX_VALUE + "", null);
-		assertNull(task);
+		try {
+			task = connector.createTaskFromExistingKey(repository, Integer.MAX_VALUE + "", null);
+			fail("Expected CoreException");
+		} catch (CoreException e) {
+		}
 	}
 
 	public void testClientManagerChangeTaskRepositorySettings() throws MalformedURLException {

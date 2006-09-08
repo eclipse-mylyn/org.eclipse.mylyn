@@ -148,9 +148,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 			return task;
 		} catch (Exception e) {
-			MylarStatusHandler.log(e, "Error creating task from key " + id);
+			throw new CoreException(TracCorePlugin.toStatus(e));
 		}
-		return null;
 	}
 
 	public synchronized TracClientManager getClientManager() {
