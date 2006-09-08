@@ -75,6 +75,7 @@ public class CommonAddExistingTaskWizard extends Wizard {
 			String message = e.getCause() != null ? e.getCause().getMessage() : "None provided";
 			MessageDialog.openWarning(this.getShell(), "Add Existing Task Failed",
 					"Unable to retrieve existing task from repository, error was: \n\n" + message);
+			return false;
 		} catch (InterruptedException e) {
 			// cancelled
 			return true;
