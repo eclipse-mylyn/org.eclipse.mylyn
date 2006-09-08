@@ -121,7 +121,7 @@ public class TaskRepositoriesView extends ViewPart {
 		column.setWidth(25);
 		column = new TableColumn(viewer.getTable(), SWT.LEFT);
 		column.setText("Label");
-		column.setWidth(130);
+		column.setWidth(110);
 		column = new TableColumn(viewer.getTable(), SWT.LEFT);
 		column.setText("URL");
 		column.setWidth(250);
