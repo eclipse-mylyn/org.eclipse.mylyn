@@ -9,7 +9,7 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.trac.ui;
+package org.eclipse.mylar.internal.trac.core;
 
 import java.io.File;
 import java.net.Proxy;
@@ -21,13 +21,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.trac.core.ITracClient;
-import org.eclipse.mylar.internal.trac.core.TracClientManager;
-import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylar.internal.trac.core.TracTask.Kind;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
-import org.eclipse.mylar.internal.trac.ui.TracTask.Kind;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -36,7 +33,6 @@ import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.IQueryHitCollector;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Steffen Pingel
@@ -54,7 +50,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	private TracAttachmentHandler attachmentHandler = new TracAttachmentHandler(this);
 
 	public TracRepositoryConnector() {
-		TracUiPlugin.getDefault().setConnector(this);
+		TracCorePlugin.getDefault().setConnector(this);
 	}
 
 	@Override
@@ -112,55 +108,21 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		// TODO Auto-generated method stub
 	}
 
-//	@Override
-//	public List<AbstractQueryHit> performQuery(AbstractRepositoryQuery query, IProgressMonitor monitor,
-//			MultiStatus queryStatus) {
-//		List<AbstractQueryHit> hits = new ArrayList<AbstractQueryHit>();
-//		final List<TracTicket> tickets = new ArrayList<TracTicket>();
-//
-//		String url = query.getRepositoryUrl();
-//		TaskRepository taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(
-//				TracCorePlugin.REPOSITORY_KIND, url);
-//		ITracClient tracRepository;
-//		try {
-//			tracRepository = getClientManager().getRepository(taskRepository);
-//			if (query instanceof TracRepositoryQuery) {
-//				tracRepository.search(((TracRepositoryQuery) query).getTracSearch(), tickets);
-//			}
-//		} catch (Throwable e) {
-//			queryStatus.add(TracUiPlugin.toStatus(e));
-//			return hits;
-//		}
-//
-//		for (TracTicket ticket : tickets) {
-//			TracQueryHit hit = new TracQueryHit(query.getRepositoryUrl(), getTicketDescription(ticket), ticket.getId()
-//					+ "");
-//			hit.setCompleted(TracTask.isCompleted(ticket.getValue(Key.STATUS)));
-//			hit.setPriority(TracTask.getMylarPriority(ticket.getValue(Key.PRIORITY)));
-//			hits.add(hit);
-//		}
-//		queryStatus.add(Status.OK_STATUS);
-//		return hits;
-//	}
-
 	@Override
 	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository,
 			Proxy proxySettings, IProgressMonitor monitor, IQueryHitCollector resultCollector) {
 
 		final List<TracTicket> tickets = new ArrayList<TracTicket>();
 
-		String url = query.getRepositoryUrl();
-		TaskRepository taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(
-				TracCorePlugin.REPOSITORY_KIND, url);
 		ITracClient tracClient;
 		try {
-			tracClient = getClientManager().getRepository(taskRepository);
+			tracClient = getClientManager().getRepository(repository);
 			if (query instanceof TracRepositoryQuery) {
 				tracClient.search(((TracRepositoryQuery) query).getTracSearch(), tickets);
 			}
 
 			for (TracTicket ticket : tickets) {
-				TracQueryHit hit = new TracQueryHit(query.getRepositoryUrl(), getTicketDescription(ticket), ticket
+				TracQueryHit hit = new TracQueryHit(taskList, query.getRepositoryUrl(), getTicketDescription(ticket), ticket
 						.getId()
 						+ "");
 				hit.setCompleted(TracTask.isCompleted(ticket.getValue(Key.STATUS)));
@@ -168,21 +130,15 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 				resultCollector.accept(hit);
 			}
 		} catch (Throwable e) {			
-			return TracUiPlugin.toStatus(e);			
+			return TracCorePlugin.toStatus(e);			
 		}
 
 		return Status.OK_STATUS;
 	}
-
-	
 	
 	@Override
 	public ITask createTaskFromExistingKey(TaskRepository repository, String id, Proxy proxySettings) throws CoreException {
 		try {
-			// TODO do this in a non-blocking way like
-			// BugzillaRepositoryConnector once IOfflineTaskHandler has been
-			// implemented
-
 			ITracClient connection = getClientManager().getRepository(repository);
 			TracTicket ticket = connection.getTicket(Integer.parseInt(id));
 
@@ -200,23 +156,22 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	public synchronized TracClientManager getClientManager() {
 		if (clientManager == null) {
 			File cacheFile = null;
-			if (TracUiPlugin.getDefault().getRepostioryAttributeCachePath() != null) {
-				cacheFile = TracUiPlugin.getDefault().getRepostioryAttributeCachePath().toFile();
+			if (TracCorePlugin.getDefault().getRepostioryAttributeCachePath() != null) {
+				cacheFile = TracCorePlugin.getDefault().getRepostioryAttributeCachePath().toFile();
 			}
 			clientManager = new TracClientManager(cacheFile);
-			TasksUiPlugin.getRepositoryManager().addListener(clientManager);
 		}
 		return clientManager;
 	}
 
-	public static TracTask createTask(TracTicket ticket, String handleIdentifier) {
+	public TracTask createTask(TracTicket ticket, String handleIdentifier) {
 		TracTask task;
-		ITask existingTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handleIdentifier);
+		ITask existingTask = taskList.getTask(handleIdentifier);
 		if (existingTask instanceof TracTask) {
 			task = (TracTask) existingTask;
 		} else {
 			task = new TracTask(handleIdentifier, getTicketDescription(ticket), true);
-			TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
+			taskList.addTask(task);
 		}
 		return task;
 	}
@@ -224,7 +179,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	/**
 	 * Updates fields of <code>task</code> from <code>ticket</code>.
 	 */
-	public static void updateTaskDetails(TracTask task, TracTicket ticket, boolean notify) {
+	public void updateTaskDetails(TracTask task, TracTicket ticket, boolean notify) {
 		if (ticket.getValue(Key.SUMMARY) != null) {
 			task.setDescription(getTicketDescription(ticket));
 		}
@@ -239,7 +194,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		}
 
 		if (notify) {
-			TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
+			taskList.notifyLocalInfoChanged(task);
 		}
 	}
 
@@ -251,15 +206,11 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		return Version.XML_RPC.name().equals(repository.getVersion());
 	}
 
-	public boolean hasRichEditor(AbstractRepositoryTask task) {
-		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(TracCorePlugin.REPOSITORY_KIND,
-				task.getRepositoryUrl());
+	public boolean hasRichEditor(TaskRepository repository, AbstractRepositoryTask task) {
 		return Version.XML_RPC.name().equals(repository.getVersion());
 	}
 
-	public boolean hasAttachmentSupport(AbstractRepositoryTask task) {
-		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(TracCorePlugin.REPOSITORY_KIND,
-				task.getRepositoryUrl());
+	public boolean hasAttachmentSupport(TaskRepository repository, AbstractRepositoryTask task) {
 		return Version.XML_RPC.name().equals(repository.getVersion());
 	}
 

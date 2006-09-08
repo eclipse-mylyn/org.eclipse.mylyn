@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 import org.eclipse.mylar.internal.tasks.ui.editors.ExistingBugEditorInput;
-import org.eclipse.mylar.internal.trac.ui.TracTask;
+import org.eclipse.mylar.internal.trac.core.TracTask;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 

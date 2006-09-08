@@ -13,7 +13,7 @@ package org.eclipse.mylar.trac.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.trac.ui.TracTask;
+import org.eclipse.mylar.internal.trac.core.TracTask;
 
 /**
  * @author Steffen Pingel

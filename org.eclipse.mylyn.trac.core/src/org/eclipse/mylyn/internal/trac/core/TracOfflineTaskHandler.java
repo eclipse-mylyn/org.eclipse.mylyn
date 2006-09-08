@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.trac.ui;
+package org.eclipse.mylar.internal.trac.core;
 
 import java.io.UnsupportedEncodingException;
 import java.net.Proxy;
@@ -26,9 +26,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylar.internal.trac.core.ITracClient;
-import org.eclipse.mylar.internal.trac.core.TracAttributeFactory;
-import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylar.internal.trac.core.TracAttributeFactory.Attribute;
 import org.eclipse.mylar.internal.trac.core.model.TracAttachment;
 import org.eclipse.mylar.internal.trac.core.model.TracComment;
@@ -58,12 +55,11 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 	}
 
 	public RepositoryTaskData downloadTaskData(final AbstractRepositoryTask task, TaskRepository repository, Proxy proxySettings) throws CoreException {
-		if (!connector.hasRichEditor(task)) {
+		if (!connector.hasRichEditor(repository, task)) {
 			// offline mode is only supported for XML-RPC
 			return null;
 		}
-//		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(TracCorePlugin.REPOSITORY_KIND,
-//				task.getRepositoryUrl());
+
 		try {
 			int id = Integer.parseInt(AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()));
 			RepositoryTaskData data = new RepositoryTaskData(attributeFactory, TracCorePlugin.REPOSITORY_KIND,
@@ -75,7 +71,7 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 			updateTaskData(repository, attributeFactory, data, ticket);
 			return data;
 		} catch (Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR, TracUiPlugin.PLUGIN_ID, 0, "Ticket download from "
+			throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.PLUGIN_ID, 0, "Ticket download from "
 					+ task.getRepositoryUrl() + " failed, please see details.", e));
 		}
 	}

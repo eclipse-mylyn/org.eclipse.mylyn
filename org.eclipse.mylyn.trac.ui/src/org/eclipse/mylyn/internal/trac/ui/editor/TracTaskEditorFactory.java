@@ -11,8 +11,8 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.ITaskEditorFactory;
 import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
-import org.eclipse.mylar.internal.trac.ui.TracRepositoryConnector;
-import org.eclipse.mylar.internal.trac.ui.TracTask;
+import org.eclipse.mylar.internal.trac.core.TracRepositoryConnector;
+import org.eclipse.mylar.internal.trac.core.TracTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -28,7 +28,9 @@ public class TracTaskEditorFactory implements ITaskEditorFactory {
 		if (task instanceof TracTask) {
 			TracRepositoryConnector connector = (TracRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 					TracCorePlugin.REPOSITORY_KIND);
-			return connector.hasRichEditor((TracTask) task);
+			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(TracCorePlugin.REPOSITORY_KIND,
+					((TracTask)task).getRepositoryUrl());
+			return connector.hasRichEditor(repository, (TracTask) task);
 		}
 		return task instanceof TracTask;
 	}

@@ -18,6 +18,7 @@ import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractRepositorySettingsPag
 import org.eclipse.mylar.internal.tasks.ui.wizards.NewWebTaskWizard;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
+import org.eclipse.mylar.internal.trac.core.TracRepositoryQuery;
 import org.eclipse.mylar.internal.trac.ui.wizard.EditTracQueryWizard;
 import org.eclipse.mylar.internal.trac.ui.wizard.NewTracQueryWizard;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracCustomQueryPage;

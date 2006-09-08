@@ -10,7 +10,9 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.trac.core;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
@@ -29,6 +31,8 @@ public class TracCorePlugin extends Plugin {
 	private static TracCorePlugin plugin;
 
 	public final static String REPOSITORY_KIND = "trac";
+
+	private TracRepositoryConnector connector;
 	
 	public TracCorePlugin() {
 	}
@@ -45,8 +49,43 @@ public class TracCorePlugin extends Plugin {
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		if (connector != null) {
+			connector.stop();
+			connector = null;
+		}
+		
 		plugin = null;
 		super.stop(context);
+	}
+
+	public TracRepositoryConnector getConnector() {
+		return connector;
+	}
+	
+	void setConnector(TracRepositoryConnector connector) {
+		this.connector = connector;
+	}
+
+	/**
+	 * Returns the path to the file caching repository attributes.
+	 */
+	protected IPath getRepostioryAttributeCachePath() {
+		IPath stateLocation = Platform.getStateLocation(TracCorePlugin.getDefault().getBundle());
+		IPath cacheFile = stateLocation.append("repositoryConfigurations");
+		return cacheFile;
+	}
+
+	public static IStatus toStatus(Throwable e) {
+		if (e instanceof TracLoginException) {
+			return new Status(Status.ERROR, PLUGIN_ID, IStatus.INFO, 
+					"Your login name or password is incorrect. Ensure proper repository configuration in Task Repositories View.", null);
+		} else if (e instanceof TracException) {
+			return new Status(Status.ERROR, PLUGIN_ID, IStatus.INFO, "Connection Error: " + e.getMessage(), e);
+		} else if (e instanceof ClassCastException) {
+			return new Status(Status.ERROR, PLUGIN_ID, IStatus.INFO, "Error parsing server response", e);
+		} else {
+			return new Status(Status.ERROR, PLUGIN_ID, IStatus.ERROR, "Unexpected error", e);
+		}
 	}
 
 	/**

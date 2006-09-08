@@ -13,8 +13,10 @@ package org.eclipse.mylar.trac.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.trac.ui.TracQueryHit;
-import org.eclipse.mylar.internal.trac.ui.TracTask;
+import org.eclipse.mylar.internal.trac.core.TracQueryHit;
+import org.eclipse.mylar.internal.trac.core.TracTask;
+import org.eclipse.mylar.tasks.core.TaskList;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Steffen Pingel
@@ -22,7 +24,8 @@ import org.eclipse.mylar.internal.trac.ui.TracTask;
 public class TracQueryHitTest extends TestCase {
 
 	public void testAttributes() {
-		TracQueryHit hit = new TracQueryHit("url", "description", "123");
+		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		TracQueryHit hit = new TracQueryHit(taskList, "url", "description", "123");
 		hit.setPriority("P1");
 		hit.setCompleted(true);
 		

@@ -23,9 +23,10 @@ import org.eclipse.mylar.internal.tasks.ui.editors.ExistingBugEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
+import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
+import org.eclipse.mylar.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
-import org.eclipse.mylar.internal.trac.ui.TracRepositoryConnector;
 import org.eclipse.mylar.internal.trac.ui.TracUiPlugin;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -159,7 +160,7 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 					TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 					return Status.OK_STATUS;
 				} catch (Exception e) {
-					return TracUiPlugin.toStatus(e);
+					return TracCorePlugin.toStatus(e);
 				}
 			}
 

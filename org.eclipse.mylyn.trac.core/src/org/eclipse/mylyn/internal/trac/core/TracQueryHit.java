@@ -9,13 +9,12 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.trac.ui;
+package org.eclipse.mylar.internal.trac.core;
 
-import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.core.TaskList;
 
 /**
  * @author Steffen Pingel
@@ -23,16 +22,23 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 public class TracQueryHit extends AbstractQueryHit {
 
 	private TracTask task;
+
 	private boolean completed;
 
-	public TracQueryHit(String repositoryUrl, String description, String id) {
+	private TaskList taskList;
+
+	public TracQueryHit(TaskList taskList, String repositoryUrl, String description, String id) {
 		super(repositoryUrl, description, id);
+
+		this.taskList = taskList;
 	}
 
-	public TracQueryHit(String handle) {
+	public TracQueryHit(TaskList taskList, String handle) {
 		super(AbstractRepositoryTask.getRepositoryUrl(handle), "", AbstractRepositoryTask.getTaskId(handle));
+
+		this.taskList = taskList;
 	}
-	
+
 	@Override
 	public AbstractRepositoryTask getCorrespondingTask() {
 		return task;
@@ -40,16 +46,15 @@ public class TracQueryHit extends AbstractQueryHit {
 
 	@Override
 	public AbstractRepositoryTask getOrCreateCorrespondingTask() {
-		ITask existingTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-				getHandleIdentifier());
+		ITask existingTask = taskList.getTask(getHandleIdentifier());
 		if (existingTask instanceof TracTask) {
-			this.task = (TracTask)existingTask;
+			this.task = (TracTask) existingTask;
 		} else {
 			this.task = new TracTask(getHandleIdentifier(), getDescription(), true);
 			task.setCompleted(completed);
 			task.setPriority(priority);
-			TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);			
-		} 	
+			taskList.addTask(task);
+		}
 		return task;
 	}
 

@@ -11,15 +11,11 @@
 
 package org.eclipse.mylar.internal.trac.ui;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
-import org.eclipse.mylar.internal.trac.core.TracException;
-import org.eclipse.mylar.internal.trac.core.TracLoginException;
+import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -35,21 +31,18 @@ public class TracUiPlugin extends AbstractUIPlugin {
 
 	private static TracUiPlugin plugin;
 
-	private TracRepositoryConnector connector;
-	
 	public TracUiPlugin() {
 		plugin = this;
 	}
 
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		
+		TasksUiPlugin.getRepositoryManager().addListener(TracCorePlugin.getDefault().getConnector().getClientManager());
 	}
 
 	public void stop(BundleContext context) throws Exception {
-		if (connector != null) {
-			connector.stop();
-			connector = null;
-		}
+		TasksUiPlugin.getRepositoryManager().removeListener(TracCorePlugin.getDefault().getConnector().getClientManager());
 		
 		plugin = null;
 		super.stop(context);
@@ -59,37 +52,8 @@ public class TracUiPlugin extends AbstractUIPlugin {
 		return plugin;
 	}
 
-	void setConnector(TracRepositoryConnector connector) {
-		this.connector = connector;
-	}
-
-
-	/**
-	 * Returns the path to the file caching repository attributes.
-	 */
-	protected IPath getRepostioryAttributeCachePath() {
-		IPath stateLocation = Platform.getStateLocation(TracUiPlugin.getDefault().getBundle());
-		IPath cacheFile = stateLocation.append("repositoryConfigurations");
-		return cacheFile;
-	}
-
-	public static IStatus toStatus(Throwable e) {
-		if (e instanceof TracLoginException) {
-			return new Status(Status.ERROR, PLUGIN_ID, IStatus.INFO, 
-					"Your login name or password is incorrect. Ensure proper repository configuration in "
-					+ TaskRepositoriesView.NAME + ".", null);
-		} else if (e instanceof TracException) {
-			return new Status(Status.ERROR, PLUGIN_ID, IStatus.INFO, 
-					"Connection Error: " + e.getMessage(), e);
-		} else if (e instanceof ClassCastException) {
-			return new Status(Status.ERROR, PLUGIN_ID, IStatus.INFO, "Error parsing server response", e);
-		} else {
-			return new Status(Status.ERROR, PLUGIN_ID, IStatus.ERROR, "Unexpected error", e);
-		}
-	}
-	
 	public static void handleTracException(Throwable e) {
-		handleTracException(toStatus(e));
+		handleTracException(TracCorePlugin.toStatus(e));
 	}
 
 	public static void handleTracException(IStatus status) {

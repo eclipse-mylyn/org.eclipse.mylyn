@@ -13,6 +13,9 @@ package org.eclipse.mylar.internal.trac.ui;
 
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.OfflineTaskManager;
+import org.eclipse.mylar.internal.trac.core.TracQueryHit;
+import org.eclipse.mylar.internal.trac.core.TracRepositoryQuery;
+import org.eclipse.mylar.internal.trac.core.TracTask;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -24,7 +27,6 @@ import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskExternalizationException;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -187,8 +189,7 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 			throw new TaskExternalizationException("Description not stored for task");
 		}
 
-		TracRepositoryQuery query = new TracRepositoryQuery(repositoryUrl, queryUrl, label, TasksUiPlugin
-				.getTaskListManager().getTaskList());
+		TracRepositoryQuery query = new TracRepositoryQuery(repositoryUrl, queryUrl, label, taskList);
 
 		NodeList list = node.getChildNodes();
 		for (int i = 0; i < list.getLength(); i++) {
@@ -214,7 +215,7 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 			throw new TaskExternalizationException("Handle not stored for bug report");
 		}
 
-		TracQueryHit hit = new TracQueryHit(handle);
+		TracQueryHit hit = new TracQueryHit(taskList, handle);
 		// TODO move to DelegationTaskExternalizer
 		if (element.hasAttribute(KEY_COMPLETE)
 				&& element.getAttribute(KEY_COMPLETE).compareTo(VAL_TRUE) == 0) {
