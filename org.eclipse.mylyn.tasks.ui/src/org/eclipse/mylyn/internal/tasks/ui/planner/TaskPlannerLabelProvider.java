@@ -19,6 +19,7 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.util.DateUtil;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
@@ -60,7 +61,7 @@ public class TaskPlannerLabelProvider extends TaskElementLabelProvider implement
 						return "";
 					}
 				case 5:
-					return DateUtil.getFormattedDurationShort(task.getElapsedTime());
+					return DateUtil.getFormattedDurationShort(TasksUiPlugin.getTaskListManager().getElapsedTime(task));
 				case 6:
 					return task.getEstimateTimeHours() + " hours";
 				}

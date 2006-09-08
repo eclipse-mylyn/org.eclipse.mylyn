@@ -14,6 +14,7 @@ package org.eclipse.mylar.internal.tasks.ui.planner;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Ken Sueda
@@ -91,6 +92,6 @@ public class TaskActivitySorter extends ViewerSorter {
 	}
 
 	protected int compareDuration(ITask task1, ITask task2) {
-		return task1.getElapsedTime() < task2.getElapsedTime() ? 1 : -1;
+		return TasksUiPlugin.getTaskListManager().getElapsedTime(task1) < TasksUiPlugin.getTaskListManager().getElapsedTime(task2) ? 1 : -1;
 	}
 }

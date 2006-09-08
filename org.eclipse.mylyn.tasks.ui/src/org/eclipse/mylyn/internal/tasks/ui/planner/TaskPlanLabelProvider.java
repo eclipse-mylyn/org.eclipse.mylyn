@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.mylar.internal.context.core.util.DateUtil;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -42,7 +43,7 @@ public class TaskPlanLabelProvider extends TaskElementLabelProvider implements I
 			case 2:
 				return task.getDescription();
 			case 3:
-				return DateUtil.getFormattedDurationShort(task.getElapsedTime());
+				return DateUtil.getFormattedDurationShort(TasksUiPlugin.getTaskListManager().getElapsedTime(task));
 			case 4:
 				return task.getEstimateTimeHours() + " hours";
 			case 5:

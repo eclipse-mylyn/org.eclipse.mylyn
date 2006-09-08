@@ -52,11 +52,6 @@ public interface ITask extends ITaskListElement {
 	public abstract void setNotes(String notes);
 
 	/**
-	 * @param time in milliseconds
-	 */
-	public abstract void setElapsedTime(long elapsed);
-
-	/**
 	 * TODO: change to millis
 	 */
 	public abstract int getEstimateTimeHours();
@@ -77,8 +72,6 @@ public interface ITask extends ITaskListElement {
 	 * @return null if root task
 	 */
 	public abstract AbstractTaskContainer getContainer();
-
-	public abstract long getElapsedTime();
 
 	public abstract Date getCompletionDate();
 

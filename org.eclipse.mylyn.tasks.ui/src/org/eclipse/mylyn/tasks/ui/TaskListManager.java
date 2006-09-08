@@ -37,13 +37,10 @@ import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
-import org.eclipse.mylar.internal.context.core.util.TimerThread;
 import org.eclipse.mylar.internal.tasks.core.WebTask;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasks.ui.util.TaskActivityTimer;
 import org.eclipse.mylar.internal.tasks.ui.util.TaskListWriter;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskActivationHistory;
-import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
@@ -122,7 +119,7 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	private Calendar currentTaskEnd = null;
 
-	private Map<ITask, TaskActivityTimer> timerMap = new HashMap<ITask, TaskActivityTimer>();
+	private Map<ITask, Long> taskElapsedTimeMap = new HashMap<ITask, Long>();
 
 	private List<ITaskActivityListener> activityListeners = new ArrayList<ITaskActivityListener>();
 
@@ -138,8 +135,6 @@ public class TaskListManager implements IPropertyChangeListener {
 	private boolean taskListInitialized = false;
 
 	private boolean taskActivityHistoryInitialized = false;
-
-	private int timerSleepInterval = TimerThread.DEFAULT_SLEEP_INTERVAL;
 
 	private int startDay;
 
@@ -218,6 +213,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	}
 
 	private void resetActivity() {
+		taskElapsedTimeMap.clear();
 		dateRangeContainers.clear();
 		setupCalendarRanges();
 	}
@@ -308,8 +304,17 @@ public class TaskListManager implements IPropertyChangeListener {
 				for (DateRangeContainer week : dateRangeContainers) {
 					if (week.includes(currentTaskStart)) {
 						if (currentTask != null) {
-							week.addTask(new DateRangeActivityDelegate(week, currentTask, currentTaskStart,
-									currentTaskEnd, totalInactive));
+							// add to date range 'bin'
+							DateRangeActivityDelegate delegate = new DateRangeActivityDelegate(week, currentTask,
+									currentTaskStart, currentTaskEnd, totalInactive);
+							week.addTask(delegate);
+							// add to running total
+							if (taskElapsedTimeMap.containsKey(currentTask)) {
+								taskElapsedTimeMap.put(currentTask, taskElapsedTimeMap.get(currentTask)
+										+ delegate.getActivity());
+							} else {
+								taskElapsedTimeMap.put(currentTask, delegate.getActivity());
+							}
 							if (taskActivityHistoryInitialized) {
 								for (ITaskActivityListener listener : activityListeners) {
 									listener.activityChanged(week);
@@ -354,6 +359,20 @@ public class TaskListManager implements IPropertyChangeListener {
 	/** public for testing * */
 	public DateRangeContainer getActivityPrevious() {
 		return activityPreviousWeek;
+	}
+
+	/** total elapsed time based on activation history */
+	public long getElapsedTime(ITask task) {
+		long unaccounted = 0;
+		if (task.equals(currentTask)) {
+			unaccounted = Calendar.getInstance().getTimeInMillis() - currentTaskStart.getTimeInMillis() - totalInactive;
+			unaccounted = unaccounted < 0 ? 0 : unaccounted;
+		}
+		if (taskElapsedTimeMap.containsKey(task)) {
+			return unaccounted + taskElapsedTimeMap.get(task);
+		} else {
+			return 0;
+		}
 	}
 
 	private void setupCalendarRanges() {
@@ -588,10 +607,6 @@ public class TaskListManager implements IPropertyChangeListener {
 		}
 
 		try {
-			int timeout = MylarMonitorPlugin.getDefault().getInactivityTimeout();
-			TaskActivityTimer activityTimer = new TaskActivityTimer(task, timeout, timerSleepInterval);
-			activityTimer.startTimer();
-			timerMap.put(task, activityTimer);
 			taskList.setActive(task, true);
 			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
 				listener.taskActivated(task);
@@ -615,10 +630,6 @@ public class TaskListManager implements IPropertyChangeListener {
 			return;
 		}
 
-		TaskActivityTimer taskTimer = timerMap.remove(task);
-		if (taskTimer != null) {
-			taskTimer.stopTimer();
-		}
 		if (task.isActive()) {
 			taskList.setActive(task, false);
 			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
@@ -647,20 +658,6 @@ public class TaskListManager implements IPropertyChangeListener {
 		return taskListFile;
 	}
 
-	/**
-	 * Public for testing
-	 */
-	public Map<ITask, TaskActivityTimer> getTimerMap() {
-		return timerMap;
-	}
-
-	/**
-	 * For testing
-	 */
-	public void setTimerSleepInterval(int timerSleepInterval) {
-		this.timerSleepInterval = timerSleepInterval;
-	}
-
 	public boolean isActiveThisWeek(ITask task) {
 		for (ITask activityDelegateTask : activityThisWeek.getChildren()) {
 			if (activityDelegateTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
@@ -672,7 +669,7 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	public boolean isCompletedToday(ITask task) {
 		if (task != null) {
-			
+
 			if (task instanceof AbstractRepositoryTask && !(task instanceof WebTask)) {
 				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
 				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(

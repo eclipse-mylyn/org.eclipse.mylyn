@@ -38,7 +38,6 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskDataExportTest.class);
 		suite.addTestSuite(TaskDataImportTest.class);
 		suite.addTestSuite(BackgroundSaveTest.class);
-		suite.addTestSuite(TaskActivityTimingTest.class);
 		suite.addTestSuite(TaskActivityViewTest.class);
 		suite.addTestSuite(TaskAttachmentActionsTest.class);
 		suite.addTestSuite(RepositorySettingsPageTest.class);

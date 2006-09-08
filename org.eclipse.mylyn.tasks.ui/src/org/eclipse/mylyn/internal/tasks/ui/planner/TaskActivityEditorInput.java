@@ -117,7 +117,7 @@ public class TaskActivityEditorInput implements IEditorInput {
 	public long getTotalTimeSpentOnCompletedTasks() {
 		long duration = 0;
 		for (ITask t : completedTasks) {
-			duration += t.getElapsedTime();
+			duration += TasksUiPlugin.getTaskListManager().getElapsedTime(t);
 		}
 		return duration;
 	}
@@ -125,7 +125,7 @@ public class TaskActivityEditorInput implements IEditorInput {
 	public long getTotalTimeSpentOnInProgressTasks() {
 		long duration = 0;
 		for (ITask t : inProgressTasks) {
-			duration += t.getElapsedTime();
+			duration += TasksUiPlugin.getTaskListManager().getElapsedTime(t);
 		}
 		return duration;
 	}

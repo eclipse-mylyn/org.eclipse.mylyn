@@ -252,6 +252,7 @@ public class TaskActivityViewTest extends TestCase {
 		assertEquals(1, thisWeekActivity.getChildren().size());
 		long expectedTotalTime = time6.getTime() - time5.getTime() + time2.getTime() - time1.getTime();
 		assertEquals(expectedTotalTime, thisWeekActivity.getTotalElapsed());
+		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskListManager().getElapsedTime(task1));
 		assertEquals(expectedTotalTime, thisWeekActivity.getElapsed(new DateRangeActivityDelegate(thisWeekActivity,
 				task1, null, null)));
 	}

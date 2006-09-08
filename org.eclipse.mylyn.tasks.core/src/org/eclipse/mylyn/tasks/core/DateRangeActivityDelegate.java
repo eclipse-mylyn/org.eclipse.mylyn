@@ -133,10 +133,6 @@ public class DateRangeActivityDelegate implements ITask {
 		return task.getDescription();
 	}
 
-	public long getElapsedTime() {
-		return task.getElapsedTime();
-	}
-
 	public int getEstimateTimeHours() {
 		return task.getEstimateTimeHours();
 	}
@@ -211,14 +207,6 @@ public class DateRangeActivityDelegate implements ITask {
 
 	public void setCreationDate(Date date) {
 		task.setCreationDate(date);
-	}
-
-	// public void setDescription(String description) {
-	// task.setDescription(description);
-	// }
-
-	public void setElapsedTime(long elapsed) {
-		task.setElapsedTime(elapsed);
 	}
 
 	public void setEstimatedTimeHours(int estimated) {

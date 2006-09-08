@@ -35,6 +35,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.util.DateUtil;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -729,7 +730,7 @@ public class TaskActivityEditorPart extends EditorPart {
 				String formatString = "dd-MM-yyyy";
 				SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
 
-				String elapsedTimeString = DateUtil.getFormattedDuration(currentTask.getElapsedTime(), false);
+				String elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskListManager().getElapsedTime(currentTask), false);
 				String estimatedTimeString = currentTask.getEstimateTimeHours() + " hours";
 				if (elapsedTimeString.equals(""))
 					elapsedTimeString = BLANK_CELL;
@@ -779,7 +780,7 @@ public class TaskActivityEditorPart extends EditorPart {
 				String formatString = "dd-MM-yyyy";
 				SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
 
-				String elapsedTimeString = DateUtil.getFormattedDuration(currentTask.getElapsedTime(), false);
+				String elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskListManager().getElapsedTime(currentTask), false);
 				String estimatedTimeString = currentTask.getEstimateTimeHours() + " hours";
 				if (elapsedTimeString.equals(""))
 					elapsedTimeString = NO_TIME_ELAPSED;

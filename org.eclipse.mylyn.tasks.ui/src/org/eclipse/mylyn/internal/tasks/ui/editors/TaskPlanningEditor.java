@@ -778,7 +778,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		String elapsedTimeString = NO_TIME_ELAPSED;
 		try {
-			elapsedTimeString = DateUtil.getFormattedDuration(task.getElapsedTime(), true);
+			elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskListManager().getElapsedTime(task), true);
 			if (elapsedTimeString.equals(""))
 				elapsedTimeString = NO_TIME_ELAPSED;
 		} catch (RuntimeException e) {
@@ -787,8 +787,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		final Text elapsedTimeText = toolkit.createText(elapsedComposite, elapsedTimeString, SWT.NONE);
 		GridData td = new GridData(GridData.FILL_HORIZONTAL);
+		td.widthHint = 110;
 		elapsedTimeText.setLayoutData(td);
-		elapsedTimeText.setEditable(false);
+		elapsedTimeText.setEditable(false);		
 
 		// Refresh Button
 		Button timeRefresh = toolkit.createButton(elapsedComposite, "Refresh", SWT.PUSH | SWT.CENTER);
@@ -798,7 +799,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			public void widgetSelected(SelectionEvent e) {
 				String elapsedTimeString = NO_TIME_ELAPSED;
 				try {
-					elapsedTimeString = DateUtil.getFormattedDuration(task.getElapsedTime(), true);
+					elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskListManager().getElapsedTime(task), true);
 					if (elapsedTimeString.equals("")) {
 						elapsedTimeString = NO_TIME_ELAPSED;
 					}

@@ -71,8 +71,6 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 
 	public static final String KEY_TIME_ESTIMATED = "Estimated";
 
-	public static final String KEY_TIME_ELAPSED = "Elapsed";
-
 	public static final String KEY_ISSUEURL = "IssueURL";
 
 	public static final String KEY_NOTES = "Notes";
@@ -164,7 +162,6 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			node.setAttribute(KEY_ISSUEURL, task.getUrl());
 		}
 		node.setAttribute(KEY_NOTES, task.getNotes());
-		node.setAttribute(KEY_TIME_ELAPSED, "" + task.getElapsedTime());
 		node.setAttribute(KEY_TIME_ESTIMATED, "" + task.getEstimateTimeHours());
 		node.setAttribute(KEY_DATE_END, formatExternDate(task.getCompletionDate()));
 		node.setAttribute(KEY_DATE_CREATION, formatExternDate(task.getCreationDate()));
@@ -339,19 +336,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		} else {
 			task.setNotes("");
 		}
-		if (element.hasAttribute(KEY_TIME_ELAPSED)) {
-			long elapsed = 0;
-			try {
-				long read = Long.parseLong(element.getAttribute(KEY_TIME_ELAPSED));
-				if (read > 0)
-					elapsed = read;
-			} catch (NumberFormatException e) {
-				// ignore
-			}
-			task.setElapsedTime(elapsed);
-		} else {
-			task.setElapsedTime(0);
-		}
+		
 		if (element.hasAttribute(KEY_TIME_ESTIMATED)) {
 			String est = element.getAttribute(KEY_TIME_ESTIMATED);
 			try {
