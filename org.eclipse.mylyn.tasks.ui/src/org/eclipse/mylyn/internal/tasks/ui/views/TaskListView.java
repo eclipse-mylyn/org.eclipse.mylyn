@@ -912,7 +912,7 @@ public class TaskListView extends ViewPart {
 		getViewer().setLabelProvider(taskListTableLabelProvider);
 		getViewer().setInput(getViewSite());
 		getViewer().getTree().addKeyListener(new KeyListener() {
-
+			
 			public void keyPressed(KeyEvent e) {
 				if (e.keyCode == SWT.F2 && e.stateMask == 0) {
 					if (renameAction.isEnabled()) {
@@ -926,6 +926,13 @@ public class TaskListView extends ViewPart {
 					newLocalTaskAction.run();
 				} else if (e.keyCode == 'f' && e.stateMask == SWT.MOD1) {
 					filteredTree.getFilterControl().setFocus();
+				} else if (e.stateMask == 0) {
+					if (Character.isLetter((char)e.keyCode) || Character.isDigit((char)e.keyCode)) {
+						String string = new Character((char)e.keyCode).toString();
+						filteredTree.getFilterControl().setText(string);
+						filteredTree.getFilterControl().setSelection(1, 1);
+						filteredTree.getFilterControl().setFocus();
+					}
 				}
 			}
 
