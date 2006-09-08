@@ -16,8 +16,8 @@ import java.lang.reflect.Field;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -32,7 +32,7 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 
 	private static final int filterWidth = 70;
 
-	public static final String LABEL_FIND = " Find:";
+	public static final String LABEL_FIND = "Find:";
 
 	private Job refreshJob;
 	
@@ -56,43 +56,43 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 	}
 
 	@Override
-	public void dispose() {
-		super.dispose();
+	protected void createControl(Composite parent, int treeStyle) {
+		super.createControl(parent, treeStyle);
+		
+		// Override superclass layout settings...
+		GridLayout layout = (GridLayout) getLayout();
+		layout.verticalSpacing = 0;
+		layout.horizontalSpacing = 0;
 	}
 
 	@Override
 	protected Composite createFilterControls(Composite parent) {
-		Composite container = new Composite(parent, SWT.NULL);
-		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
-		container.setLayoutData(gridData);
 		GridLayout gridLayout = new GridLayout(4, false);
-		gridLayout.marginHeight = 0;
-		gridLayout.marginWidth = 0;
-		container.setLayout(gridLayout);
+		gridLayout.marginWidth = 2;
+		gridLayout.marginHeight = 2;
+		parent.setLayout(gridLayout);
 
-		Label label = new Label(container, SWT.LEFT);
+		Label label = new Label(parent, SWT.NONE);
 		label.setText(LABEL_FIND);
 
-		super.createFilterControls(container);
+		super.createFilterControls(parent);
 
-		filterText.addKeyListener(new KeyListener() {
+        GridData gd = new GridData(SWT.FILL, SWT.DEFAULT, true, false);
+        gd.minimumWidth = filterWidth;
+		filterText.setLayoutData(gd);
+		filterText.addKeyListener(new KeyAdapter() {
 
+			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.character == SWT.ESC) {
 					setFilterText("");
 				}
 			}
 
-			public void keyReleased(KeyEvent e) {
-				// ignore
-			}
 		});
 
-		Composite status = createStatusComposite(container);
-		if (status != null) {
-			filterText.setLayoutData(new GridData(filterWidth, label.getSize().y));
-		}
-		return container;
+		createStatusComposite(parent);
+		return parent;
 	}
 
 	protected abstract Composite createStatusComposite(Composite container);

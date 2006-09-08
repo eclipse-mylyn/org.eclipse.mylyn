@@ -14,9 +14,8 @@ package org.eclipse.mylar.internal.tasks.ui.views;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.forms.widgets.Hyperlink;
@@ -41,16 +40,10 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 		if (activeTask != null) {
 			indicateActiveTask(activeTask);
 		}
-		GridData labelData = new GridData(SWT.FILL, SWT.END, true, true);
-		activeTaskLabel.setLayoutData(labelData);
-		activeTaskLabel.setLayoutData(labelData);
 		
-		activeTaskLabel.addMouseListener(new MouseListener() {
+		activeTaskLabel.addMouseListener(new MouseAdapter() {
 
-			public void mouseDoubleClick(MouseEvent e) {
-				// ignore
-			}
-
+			@Override
 			public void mouseDown(MouseEvent e) {
 				TaskListFilteredTree.super.filterText.setText("");
 				if (TaskListView.getFromActivePerspective().getDrilledIntoCategory() != null) {
@@ -62,9 +55,6 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 				);
 			}
 
-			public void mouseUp(MouseEvent e) {
-				// ignore
-			}
 		});
 		return activeTaskLabel;
 	}
@@ -74,12 +64,14 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
     	activeTaskLabel.setText(text);
 		activeTaskLabel.setUnderlined(true);
 		activeTaskLabel.setToolTipText(task.getDescription());
+		filterComposite.layout();
     }
     
     public void indicateNoActiveTask() {
     	activeTaskLabel.setText(LABEL_NO_ACTIVE);
 		activeTaskLabel.setUnderlined(false);
 		activeTaskLabel.setToolTipText("");
+		filterComposite.layout();
     }
     
 	public void setFilterText(String string) {
