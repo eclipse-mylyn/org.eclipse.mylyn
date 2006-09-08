@@ -71,7 +71,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return BugzillaCorePlugin.REPOSITORY_KIND;
 	}
 
-	public ITask createTaskFromExistingKey(TaskRepository repository, String id, Proxy proxySettings) throws CoreException {
+	public ITask createTaskFromExistingKey(TaskRepository repository, String id, Proxy proxySettings)
+			throws CoreException {
 		int bugId = -1;
 		try {
 			if (id != null) {
@@ -81,8 +82,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			}
 		} catch (NumberFormatException nfe) {
 			if (!forceSynchExecForTesting) {
-				throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK, "invalid report id: " + id, nfe));
-//				MessageDialog.openInformation(null, TasksUiPlugin.TITLE_DIALOG, "Invalid report id: " + id);
+				throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK,
+						"invalid report id: " + id, nfe));
+				// MessageDialog.openInformation(null,
+				// TasksUiPlugin.TITLE_DIALOG, "Invalid report id: " + id);
 			}
 			return null;
 		}
@@ -128,54 +131,75 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public IStatus performQuery(final AbstractRepositoryQuery query, TaskRepository repository,
-			Proxy proxySettings, IProgressMonitor monitor, IQueryHitCollector resultCollector) {
+	public IStatus performQuery(final AbstractRepositoryQuery query, TaskRepository repository, Proxy proxySettings,
+			IProgressMonitor monitor, IQueryHitCollector resultCollector) {
 
 		IStatus queryStatus = Status.OK_STATUS;
 
 		// Note need for ctype=rdf in query url
-//		String urlString = "http://mylar.eclipse.org/bugs222/buglist.cgi?ctype=rdf&query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
+		// String urlString =
+		// "http://mylar.eclipse.org/bugs222/buglist.cgi?ctype=rdf&query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
 		RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory();
-		
-		// Tasklist can be null but calls to hit.getOrCreateCorrespondingTask() will return null.
+
+		// Tasklist can be null but calls to hit.getOrCreateCorrespondingTask()
+		// will return null.
 		try {
 			String queryUrl = query.getUrl();
 			queryUrl = queryUrl.concat(IBugzillaConstants.CONTENT_TYPE_RDF);
-			if (repository.hasCredentials()) { 
+			if (repository.hasCredentials()) {
 				try {
-					queryUrl = BugzillaServerFacade.addCredentials(queryUrl, repository.getUserName(), repository.getPassword());
+					queryUrl = BugzillaServerFacade.addCredentials(queryUrl, repository.getUserName(), repository
+							.getPassword());
 				} catch (UnsupportedEncodingException e) {
 					// ignore
 				}
 			}
-			queryFactory.performQuery(taskList, repository.getUrl(), resultCollector, queryUrl, proxySettings, query.getMaxHits(), repository
-					.getCharacterEncoding());
+			queryFactory.performQuery(taskList, repository.getUrl(), resultCollector, queryUrl, proxySettings, query
+					.getMaxHits(), repository.getCharacterEncoding());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// MylarStatusHandler.fail(e, "I/O error occurred during query of
+			// repository: " + repository.getUrl(), true);
+			queryStatus = new Status(Status.OK, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
+					"Check repository credentials and connectivity.", e);
 		} catch (BugzillaException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if (e instanceof UnrecognizedReponseException) {
+				// MylarStatusHandler.fail(e, "Bugzilla error occurred for
+				// repository: " + repository.getUrl(), true);
+				queryStatus = new Status(Status.OK, BugzillaCorePlugin.PLUGIN_ID, Status.INFO,
+						"Unrecognized response from server", e);
+			} else {
+				// MylarStatusHandler.fail(e, "Bugzilla error occurred for
+				// repository: " + repository.getUrl(), true);
+				queryStatus = new Status(IStatus.OK, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK,
+						"Unable to perform query due to Bugzilla error", e);
+			}
 		} catch (GeneralSecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// MylarStatusHandler.fail(e, "unable to perform query due to
+			// repository configuration error: "
+			// + repository.getUrl(), true);
+			queryStatus = new Status(IStatus.OK, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK,
+					"Unable to perform query due to repository configuration error", e);
 		}
-		
-//		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(query.getRepositoryKind(),
-//				query.getRepositoryUrl());
 
-//		final BugzillaCategorySearchOperation categorySearch = new BugzillaCategorySearchOperation(repository, query
-//				.getUrl(), query.getMaxHits(), resultCollector);
-//
-//		categorySearch.execute(monitor);
-//		try {
-//			queryStatus = categorySearch.getStatus();
-//		} catch (LoginException e) {
-//			// TODO: Set some form of disconnect status on Query?
-//			MylarStatusHandler.fail(e, "login failure for repository url: " + repository, false);
-//			queryStatus = new Status(IStatus.OK, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK, "Could not log in", e);
-//		}
-//
+		// TaskRepository repository =
+		// TasksUiPlugin.getRepositoryManager().getRepository(query.getRepositoryKind(),
+		// query.getRepositoryUrl());
+
+		// final BugzillaCategorySearchOperation categorySearch = new
+		// BugzillaCategorySearchOperation(repository, query
+		// .getUrl(), query.getMaxHits(), resultCollector);
+		//
+		// categorySearch.execute(monitor);
+		// try {
+		// queryStatus = categorySearch.getStatus();
+		// } catch (LoginException e) {
+		// // TODO: Set some form of disconnect status on Query?
+		// MylarStatusHandler.fail(e, "login failure for repository url: " +
+		// repository, false);
+		// queryStatus = new Status(IStatus.OK, BugzillaCorePlugin.PLUGIN_ID,
+		// IStatus.OK, "Could not log in", e);
+		// }
+		//
 		return queryStatus;
 
 	}
@@ -194,14 +218,17 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateAttributes(final TaskRepository repository, Proxy proxySettings, IProgressMonitor monitor) throws CoreException {
+	public void updateAttributes(final TaskRepository repository, Proxy proxySettings, IProgressMonitor monitor)
+			throws CoreException {
 		try {
-			BugzillaCorePlugin.getRepositoryConfiguration(true, repository.getUrl(), proxySettings, repository.getUserName(), repository.getPassword(), repository.getCharacterEncoding());
+			BugzillaCorePlugin.getRepositoryConfiguration(true, repository.getUrl(), proxySettings, repository
+					.getUserName(), repository.getPassword(), repository.getCharacterEncoding());
 		} catch (Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK, "could not update repository configuration", e));
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK,
+					"could not update repository configuration", e));
 		}
-	}	
-	
+	}
+
 	@Override
 	public void updateTaskState(AbstractRepositoryTask repositoryTask) {
 		// TODO: implement once this is consistent with offline task data
