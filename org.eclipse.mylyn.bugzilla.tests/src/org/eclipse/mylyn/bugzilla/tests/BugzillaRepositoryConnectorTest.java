@@ -294,7 +294,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 		Set<AbstractRepositoryTask> changedTasks = connector.getOfflineTaskHandler().getChangedSinceLastSync(repository,
 				tasks, null);
-		assertEquals(1, changedTasks.size());
+		assertEquals(0, changedTasks.size());
 
 		String priority4 = null;
 		if (task4.getPriority().equals("P1")) {

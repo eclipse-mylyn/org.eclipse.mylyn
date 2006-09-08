@@ -37,6 +37,8 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
  */
 public class RepositoryTaskSynchronizationTest extends TestCase {
 
+	private static final String DATE_STAMP_3 = "2006-06-21 15:29:42";
+	
 	private static final String DATE_STAMP_2 = "2006-06-21 15:29:41";
 
 	private static final String DATE_STAMP_1 = "2006-06-21 15:29:40";
@@ -76,7 +78,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		task.setModifiedDateStamp(DATE_STAMP_2);
 		assertFalse(TasksUiPlugin.getSynchronizationManager().checkHasIncoming(connector, task, taskData));
 	}
-
+	
 	public void testIncomingToIncoming() {
 		/*
 		 * - Synchronize task with incoming changes - Make another change using
@@ -92,8 +94,19 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		TasksUiPlugin.getSynchronizationManager().updateOfflineState(connector, task, newData, false);
 		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
 		assertEquals(DATE_STAMP_2, task.getTaskData().getLastModified());
-		// assertEquals(DATE_STAMP_2, task.getLastModifiedDateStamp());
-
+		// and again...
+		newData.setAttributeValue(RepositoryTaskAttribute.DATE_MODIFIED, DATE_STAMP_3);
+		TasksUiPlugin.getSynchronizationManager().updateOfflineState(connector, task, newData, false);
+		// last modified stamp not updated until user synchronizes
+		assertEquals(DATE_STAMP_1, task.getLastModifiedDateStamp()); 
+		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
+		assertEquals(DATE_STAMP_3, task.getTaskData().getLastModified());
+		// If task was in changed set but we already got the incoming, this should
+		// not cause a synchronized state.
+		TasksUiPlugin.getSynchronizationManager().updateOfflineState(connector, task, newData, false);
+		assertEquals(DATE_STAMP_1, task.getLastModifiedDateStamp()); 
+		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
+		assertEquals(DATE_STAMP_3, task.getTaskData().getLastModified());
 	}
 
 	public void testIncomingToSynchronized() {

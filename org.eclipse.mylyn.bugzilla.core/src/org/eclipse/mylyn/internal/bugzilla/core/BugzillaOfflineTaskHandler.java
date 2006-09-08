@@ -133,7 +133,7 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 			return tasks;
 		}
 
-		String dateString = repository.getSyncTimeStamp();
+		String dateString = repository.getSyncTimeStamp();		
 		if (dateString == null) {
 			dateString = "";
 		}
@@ -194,7 +194,18 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 			String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), hit.getId());
 			ITask correspondingTask = taskList.getTask(handle);
 			if (correspondingTask != null && correspondingTask instanceof AbstractRepositoryTask) {
-				changedTasks.add((AbstractRepositoryTask) correspondingTask);
+				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)correspondingTask;
+				// Hack to avoid re-syncing last task from previous synchronization
+				// This can be removed once we are getting a query timestamp from the repository rather than
+				// using the last modified stamp of the last task modified in the return hits.
+				// (or the changeddate field in the hit rdf becomes consistent, currently it doesn't return a proper modified date string)
+				if(repositoryTask.getTaskData() != null && repositoryTask.getTaskData().getLastModified().equals(repository.getSyncTimeStamp())) {
+					RepositoryTaskData taskData = downloadTaskData(repositoryTask, repository, proxySettings);
+					if(taskData != null && taskData.getLastModified().equals(repository.getSyncTimeStamp())) {
+						continue;
+					}
+				}				
+				changedTasks.add(repositoryTask);
 			}
 		}
 	}
