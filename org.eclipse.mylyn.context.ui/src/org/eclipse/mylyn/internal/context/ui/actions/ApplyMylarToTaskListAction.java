@@ -84,7 +84,7 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction impleme
 		IViewPart part = super.getPartForAction();
 		if (part instanceof TaskListView) {
 			TaskListView taskListView = (TaskListView) part;
-			previousSorter = TaskListView.getFromActivePerspective().getViewer().getSorter();
+			previousSorter = taskListView.getViewer().getSorter();
 			taskListView.getViewer().setSorter(taskListInterestSorter);
 			previousFilters = new HashSet<AbstractTaskListFilter>(taskListView.getFilters());
 			taskListView.clearFilters(true);
