@@ -48,10 +48,9 @@ public class ContextRetrieveAction implements IViewActionDelegate {
 			return;
 		}
 		
-		if (!connector.validate(repository)) {
-			return;
-		}
-
+//		if (!connector.validate(repository)) {
+//			return;
+//		}
 		ContextRetrieveWizard wizard = new ContextRetrieveWizard((AbstractRepositoryTask)task);
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		if (wizard != null && shell != null && !shell.isDisposed()) {
