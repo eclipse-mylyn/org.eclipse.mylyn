@@ -116,7 +116,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		TasksUiPlugin.getSynchronizationManager().updateOfflineState(connector, task, newData, false);
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
 		assertEquals(DATE_STAMP_1, task.getLastModifiedDateStamp());
-
+		
 		// Test forced
 		task = primeTaskAndRepository(RepositoryTaskSyncState.INCOMING, RepositoryTaskSyncState.SYNCHRONIZED);
 		assertEquals(DATE_STAMP_1, task.getLastModifiedDateStamp());
@@ -130,9 +130,27 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		TasksUiPlugin.getSynchronizationManager().updateOfflineState(connector, task, newData, true);
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
 		assertEquals(DATE_STAMP_2, task.getLastModifiedDateStamp());
-
+		
 	}
 
+	public void testIncomingToSynchronizedWithVoidSyncTime() {
+		// IF the last sync time (modified timestamp on task) is null, this can result
+		// in the editor refresh/repoen going into an infinite loops since the task never
+		// gets to a synchronized state if the last mod time isn't set. It is now being set
+		// if found to be null.
+		AbstractRepositoryTask task = primeTaskAndRepository(RepositoryTaskSyncState.INCOMING,
+				RepositoryTaskSyncState.SYNCHRONIZED);
+		assertEquals(DATE_STAMP_1, task.getLastModifiedDateStamp());
+		task.setModifiedDateStamp(null);
+		TasksUiPlugin.getSynchronizationManager().updateOfflineState(connector, task, newData, false);
+		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
+		assertEquals(DATE_STAMP_1, task.getLastModifiedDateStamp());
+		
+		TasksUiPlugin.getSynchronizationManager().updateOfflineState(connector, task, newData, false);
+		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
+		assertEquals(DATE_STAMP_1, task.getLastModifiedDateStamp());
+	}
+	
 	/*
 	 * public void testIncomingToConflict() { // invalid }
 	 */

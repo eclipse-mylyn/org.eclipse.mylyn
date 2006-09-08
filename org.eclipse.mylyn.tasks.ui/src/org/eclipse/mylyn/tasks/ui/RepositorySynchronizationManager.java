@@ -9,6 +9,7 @@
 package org.eclipse.mylar.tasks.ui;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -163,8 +164,11 @@ public class RepositorySynchronizationManager {
 					changedTasks = connector.getOfflineTaskHandler().getChangedSinceLastSync(repository,
 							repositoryTasks, null);
 				} catch (Exception e) {
-					if (attempts == MAX_QUERY_ATTEMPTS) {
-						if (!(e instanceof IOException)) {
+					if (attempts == MAX_QUERY_ATTEMPTS) {						
+						if ((e instanceof CoreException && !(((CoreException)e).getStatus().getException() instanceof IOException))) {
+							MylarStatusHandler.log(e, "Could not determine modified tasks for " + repository.getUrl()
+									+ ".");
+						} else if(e instanceof UnsupportedEncodingException){
 							MylarStatusHandler.log(e, "Could not determine modified tasks for " + repository.getUrl()
 									+ ".");
 						} else {
@@ -311,7 +315,7 @@ public class RepositorySynchronizationManager {
 				break;
 			}
 
-			if (status == RepositoryTaskSyncState.SYNCHRONIZED) {
+			if (status == RepositoryTaskSyncState.SYNCHRONIZED || repositoryTask.getLastModifiedDateStamp() == null) {
 				repositoryTask.setModifiedDateStamp(newTaskData.getLastModified());
 			}
 		}
