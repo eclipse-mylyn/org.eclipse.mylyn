@@ -12,16 +12,16 @@ package org.eclipse.mylar.internal.trac.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositoryQueryPage;
-import org.eclipse.mylar.internal.tasks.ui.search.RepositorySearchResult;
+import org.eclipse.mylar.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylar.internal.trac.core.TracException;
@@ -31,16 +31,11 @@ import org.eclipse.mylar.internal.trac.core.model.TracSearch;
 import org.eclipse.mylar.internal.trac.core.model.TracSearchFilter;
 import org.eclipse.mylar.internal.trac.core.model.TracSearchFilter.CompareOperator;
 import org.eclipse.mylar.internal.trac.ui.TracUiPlugin;
-import org.eclipse.mylar.internal.trac.ui.search.RepositorySearchQuery;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
-import org.eclipse.mylar.tasks.core.AbstractQueryHitCollector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.IQueryHitCollector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.search.ui.NewSearchUI;
-import org.eclipse.search.ui.text.Match;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -429,29 +424,11 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 					TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
 			return false;
 		}
-
-		final RepositorySearchQuery searchQuery = new RepositorySearchQuery(repository, getQuery());
-		IQueryHitCollector collector = new AbstractQueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList()) {
-
-			private RepositorySearchResult searchResult;
-
-			@Override
-			public void aboutToStart(int startMatchCount) throws CoreException {
-				super.aboutToStart(startMatchCount);
-
-				NewSearchUI.activateSearchResultView();
-				searchResult = (RepositorySearchResult) searchQuery.getSearchResult();
-				searchResult.removeAll();
-			}
-
-			@Override
-			public void addMatch(AbstractQueryHit hit) {
-				searchResult.addMatch(new Match(hit, 0, 0));
-			}
-
-		};
-		searchQuery.setCollector(collector);
-		NewSearchUI.runQueryInBackground(searchQuery);
+	
+		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
+		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager()
+				.getTaskList(), repository, getQuery(), proxySettings);
+		NewSearchUI.runQueryInBackground(collector);
 
 		return true;
 	}

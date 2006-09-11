@@ -12,7 +12,8 @@ Require-Bundle: org.junit,
  org.eclipse.mylar.tasks.core,
  org.eclipse.mylar.core.tests,
  org.eclipse.mylar.trac.ui,
- org.eclipse.mylar.trac.core
+ org.eclipse.mylar.trac.core,
+ org.eclipse.search
 Export-Package: org.eclipse.mylar.trac.tests
 Bundle-Activator: org.eclipse.mylar.trac.tests.TracTestPlugin
 Eclipse-LazyStart: true

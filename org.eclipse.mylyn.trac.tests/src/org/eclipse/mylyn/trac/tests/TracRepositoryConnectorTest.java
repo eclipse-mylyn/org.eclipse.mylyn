@@ -42,7 +42,7 @@ import org.eclipse.mylar.internal.trac.core.model.TracVersion;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
-import org.eclipse.mylar.tasks.core.AbstractQueryHitCollector;
+import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -193,7 +193,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 		//MultiStatus queryStatus = new MultiStatus(TracUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
 		final List<AbstractQueryHit> result = new ArrayList<AbstractQueryHit>();
-		AbstractQueryHitCollector hitCollector = new AbstractQueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList()) {
+		QueryHitCollector hitCollector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList()) {
 
 			@Override
 			public void addMatch(AbstractQueryHit hit) {

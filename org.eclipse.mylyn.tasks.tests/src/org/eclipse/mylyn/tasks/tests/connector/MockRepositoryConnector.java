@@ -22,8 +22,8 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
-import org.eclipse.mylar.tasks.core.IQueryHitCollector;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 
 /**
@@ -97,7 +97,7 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, Proxy proxySettings, IProgressMonitor monitor, IQueryHitCollector resultCollector) {
+	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, Proxy proxySettings, IProgressMonitor monitor, QueryHitCollector resultCollector) {
 		return null;
 	}
 

@@ -11,17 +11,22 @@
 package org.eclipse.mylar.tasks.core;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
 /**
- * Collects results of a search.
+ * Collects QueryHits resulting from repository search
  * 
+ * @author Shawn Minto
  * @author Rob Elves (generalized from bugzilla)
  */
-public abstract class AbstractQueryHitCollector implements IQueryHitCollector {
+public class QueryHitCollector {
+
+	private List<AbstractQueryHit> results = new ArrayList<AbstractQueryHit>();
 
 	/** The progress monitor for the search operation */
 	private IProgressMonitor monitor = new NullProgressMonitor();
@@ -43,13 +48,12 @@ public abstract class AbstractQueryHitCollector implements IQueryHitCollector {
 
 	private TaskList taskList;
 
-	public abstract void addMatch(AbstractQueryHit hit);
-
-	public AbstractQueryHitCollector(TaskList tasklist) {
+	public QueryHitCollector(TaskList tasklist) {
 		this.taskList = tasklist;
 	}
 
 	public void aboutToStart(int startMatchCount) throws CoreException {
+		results.clear();
 		matchCount = startMatchCount;
 		monitor.setTaskName(STARTING);
 	}
@@ -65,7 +69,7 @@ public abstract class AbstractQueryHitCollector implements IQueryHitCollector {
 		matchCount++;
 
 		if (!getProgressMonitor().isCanceled()) {
-			// if the operation is cancelled finish with whatever data was
+			// if the operation is canceled finish with whatever data was
 			// already found
 			getProgressMonitor().subTask(getFormattedMatchesString(matchCount));
 			getProgressMonitor().worked(1);
@@ -73,30 +77,22 @@ public abstract class AbstractQueryHitCollector implements IQueryHitCollector {
 	}
 
 	public void done() {
-		if (!monitor.isCanceled()) {
+		if (monitor != null && !monitor.isCanceled()) {
 			// if the operation is cancelled, finish with the data that we
 			// already have
 			String matchesString = getFormattedMatchesString(matchCount);
 			monitor.setTaskName(MessageFormat.format(DONE, new Object[] { matchesString }));
+			monitor.done();
 		}
 
 		// Cut no longer used references because the collector might be re-used
 		monitor = null;
 	}
 
-	/**
-	 * Get the string specifying the number of matches found
-	 * 
-	 * @param count
-	 *            The number of matches found
-	 * @return The <code>String</code> specifying the number of matches found
-	 */
 	protected String getFormattedMatchesString(int count) {
-		// if only 1 match, return the singular match string
-		if (count == 1)
+		if (count == 1) {
 			return MATCH;
-
-		// format the matches string and return it
+		}
 		Object[] messageFormatArgs = { new Integer(count) };
 		return MessageFormat.format(MATCHES, messageFormatArgs);
 	}
@@ -107,6 +103,16 @@ public abstract class AbstractQueryHitCollector implements IQueryHitCollector {
 
 	public void setProgressMonitor(IProgressMonitor monitor) {
 		this.monitor = monitor;
+	}
+
+	public void addMatch(AbstractQueryHit hit) {
+		String description = hit.getId() + ": " + hit.getDescription();
+		hit.setDescription(description);
+		results.add(hit);
+	}
+
+	public List<AbstractQueryHit> getHits() {
+		return results;
 	}
 
 }

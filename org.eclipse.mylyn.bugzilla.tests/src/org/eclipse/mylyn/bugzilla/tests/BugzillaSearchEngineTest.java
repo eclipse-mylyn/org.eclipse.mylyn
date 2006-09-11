@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.bugzilla.tests;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -21,8 +20,8 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
-import org.eclipse.mylar.tasks.core.AbstractQueryHitCollector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
@@ -86,8 +85,7 @@ public class BugzillaSearchEngineTest extends TestCase {
 		assertEquals(NUM_EXPECTED_HITS, hits.size());		
 	}
 		
-	private List<AbstractQueryHit> runQuery(String repositoryURL, String SearchString) throws Exception {
-		final ArrayList<AbstractQueryHit> results = new ArrayList<AbstractQueryHit>();
+	private List<AbstractQueryHit> runQuery(String repositoryURL, String SearchString) throws Exception {		
 		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(BugzillaCorePlugin.REPOSITORY_KIND, repositoryURL);
 		assertNotNull(repository);		
 		
@@ -99,19 +97,12 @@ public class BugzillaSearchEngineTest extends TestCase {
 		
 		AbstractRepositoryConnector connector = (AbstractRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 		
-		AbstractQueryHitCollector collector = new AbstractQueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList()) {
-
-			@Override
-			public void addMatch(AbstractQueryHit hit) {
-				results.add(hit);
-			}
-			
-		};
+		QueryHitCollector collector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList());
 		
 		connector.performQuery(repositoryQuery, repository, TasksUiPlugin.getDefault().getProxySettings(), new NullProgressMonitor(), collector);
 		
 		//results.addAll(connector.performQuery(repositoryQuery, new NullProgressMonitor(), new MultiStatus(TasksUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null)));
-		return results;	
+		return collector.getHits();			
 	}
 	
 	

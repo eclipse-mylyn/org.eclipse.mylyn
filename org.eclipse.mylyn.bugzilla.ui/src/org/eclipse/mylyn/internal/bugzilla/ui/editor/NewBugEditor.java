@@ -27,16 +27,13 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchOperation;
-import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchQuery;
-import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchResultCollector;
-import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaSearchOperation;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskSelection;
-import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositorySearchQuery;
+import org.eclipse.mylar.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
@@ -219,12 +216,14 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 
 		queryUrl += "&product=" + getRepositoryTaskData().getProduct();
 
-		BugzillaSearchResultCollector resultCollector = new BugzillaSearchResultCollector(TasksUiPlugin.getTaskListManager().getTaskList());
-		IBugzillaSearchOperation operation = new BugzillaSearchOperation(repository, queryUrl, TasksUiPlugin
-				.getDefault().getProxySettings(), resultCollector, "100");
-		AbstractRepositorySearchQuery query = new BugzillaSearchQuery(operation);
+		BugzillaRepositoryQuery bugzillaQuery = new BugzillaRepositoryQuery(repository.getUrl(), queryUrl, "search", "100", TasksUiPlugin.getTaskListManager()
+				.getTaskList());
+		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
+		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager()
+				.getTaskList(), repository, bugzillaQuery, proxySettings);
+		
 
-		NewSearchUI.runQueryInBackground(query);
+		NewSearchUI.runQueryInBackground(collector);
 		return true;
 	}
 

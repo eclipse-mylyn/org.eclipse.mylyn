@@ -28,8 +28,8 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
-import org.eclipse.mylar.tasks.core.IQueryHitCollector;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -132,17 +132,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public IStatus performQuery(final AbstractRepositoryQuery query, TaskRepository repository, Proxy proxySettings,
-			IProgressMonitor monitor, IQueryHitCollector resultCollector) {
+			IProgressMonitor monitor, QueryHitCollector resultCollector) {
 
 		IStatus queryStatus = Status.OK_STATUS;
-
-		// Note need for ctype=rdf in query url
-		// String urlString =
-		// "http://mylar.eclipse.org/bugs222/buglist.cgi?ctype=rdf&query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
 		RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory();
-
-		// Tasklist can be null but calls to hit.getOrCreateCorrespondingTask()
-		// will return null.
 		try {
 			String queryUrl = query.getUrl();
 			queryUrl = queryUrl.concat(IBugzillaConstants.CONTENT_TYPE_RDF);
@@ -157,49 +150,20 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			queryFactory.performQuery(taskList, repository.getUrl(), resultCollector, queryUrl, proxySettings, query
 					.getMaxHits(), repository.getCharacterEncoding());
 		} catch (IOException e) {
-			// MylarStatusHandler.fail(e, "I/O error occurred during query of
-			// repository: " + repository.getUrl(), true);
-			queryStatus = new Status(Status.OK, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
+			queryStatus = new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
 					"Check repository credentials and connectivity.", e);
 		} catch (BugzillaException e) {
 			if (e instanceof UnrecognizedReponseException) {
-				// MylarStatusHandler.fail(e, "Bugzilla error occurred for
-				// repository: " + repository.getUrl(), true);
-				queryStatus = new Status(Status.OK, BugzillaCorePlugin.PLUGIN_ID, Status.INFO,
+				queryStatus = new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, Status.INFO,
 						"Unrecognized response from server", e);
 			} else {
-				// MylarStatusHandler.fail(e, "Bugzilla error occurred for
-				// repository: " + repository.getUrl(), true);
-				queryStatus = new Status(IStatus.OK, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK,
+				queryStatus = new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK,
 						"Unable to perform query due to Bugzilla error", e);
 			}
 		} catch (GeneralSecurityException e) {
-			// MylarStatusHandler.fail(e, "unable to perform query due to
-			// repository configuration error: "
-			// + repository.getUrl(), true);
-			queryStatus = new Status(IStatus.OK, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK,
+			queryStatus = new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK,
 					"Unable to perform query due to repository configuration error", e);
 		}
-
-		// TaskRepository repository =
-		// TasksUiPlugin.getRepositoryManager().getRepository(query.getRepositoryKind(),
-		// query.getRepositoryUrl());
-
-		// final BugzillaCategorySearchOperation categorySearch = new
-		// BugzillaCategorySearchOperation(repository, query
-		// .getUrl(), query.getMaxHits(), resultCollector);
-		//
-		// categorySearch.execute(monitor);
-		// try {
-		// queryStatus = categorySearch.getStatus();
-		// } catch (LoginException e) {
-		// // TODO: Set some form of disconnect status on Query?
-		// MylarStatusHandler.fail(e, "login failure for repository url: " +
-		// repository, false);
-		// queryStatus = new Status(IStatus.OK, BugzillaCorePlugin.PLUGIN_ID,
-		// IStatus.OK, "Could not log in", e);
-		// }
-		//
 		return queryStatus;
 
 	}

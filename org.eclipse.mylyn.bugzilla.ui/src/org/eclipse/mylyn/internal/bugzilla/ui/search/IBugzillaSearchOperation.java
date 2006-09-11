@@ -21,6 +21,8 @@ import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositorySearchQuery;
  * Interface for the bugzilla search operation
  * 
  * @author Shawn Minto
+ * 
+ * TODO: Delete once not requred by sandbox
  */
 public interface IBugzillaSearchOperation extends IRunnableWithProgress {
 

@@ -34,7 +34,7 @@ import org.eclipse.mylar.internal.bugzilla.core.UnrecognizedReponseException;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
-import org.eclipse.mylar.tasks.core.IQueryHitCollector;
+import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PlatformUI;
@@ -44,7 +44,7 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Mik Kersten (hardening of initial prototype)
  */
-
+// TODO: Delete once not needed by sandbox
 public class BugzillaSearchEngine {
 
 	protected static final String QUERYING_SERVER = "Querying Bugzilla Server...";
@@ -91,7 +91,7 @@ public class BugzillaSearchEngine {
 	 * @param collector -
 	 *            The collector for the results to go into
 	 */
-	public IStatus search(IQueryHitCollector collector) throws LoginException {
+	public IStatus search(QueryHitCollector collector) throws LoginException {
 		return this.search(collector, 0, IBugzillaConstants.RETURN_ALL_HITS);
 	}
 
@@ -103,7 +103,7 @@ public class BugzillaSearchEngine {
 	 * @param startMatches -
 	 *            The number of matches to start with for the progress monitor
 	 */
-	public IStatus search(IQueryHitCollector collector, int startMatches) throws LoginException {
+	public IStatus search(QueryHitCollector collector, int startMatches) throws LoginException {
 		return this.search(collector, startMatches, BugzillaUiPlugin.getDefault().getMaxResults());
 	}
 
@@ -119,7 +119,7 @@ public class BugzillaSearchEngine {
 	 *            the maximum number of matches to return or
 	 *            IBugzillaConstants.RETURN_ALL_HITS for unlimited
 	 */
-	public IStatus search(IQueryHitCollector collector, int startMatches, int maxHits)
+	public IStatus search(QueryHitCollector collector, int startMatches, int maxHits)
 			throws LoginException {
 		IProgressMonitor monitor = collector.getProgressMonitor();
 		IStatus status = null;

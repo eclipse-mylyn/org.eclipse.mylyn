@@ -13,9 +13,7 @@ package org.eclipse.mylar.tasks.ui;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -26,10 +24,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.util.DateUtil;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
-import org.eclipse.mylar.tasks.core.AbstractQueryHitCollector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.swt.widgets.Display;
@@ -46,8 +43,6 @@ class SynchronizeQueryJob extends Job {
 	private static final String JOB_LABEL = "Synchronizing queries";
 
 	private Set<AbstractRepositoryQuery> queries;
-
-	private List<AbstractQueryHit> newHits = new ArrayList<AbstractQueryHit>();
 
 	private boolean synchTasks;
 
@@ -83,29 +78,12 @@ class SynchronizeQueryJob extends Job {
 				});
 			}
 
-			// MultiStatus queryStatus = new
-			// MultiStatus(TasksUiPlugin.PLUGIN_ID, IStatus.OK, "Query result",
-			// null);
-
-			newHits.clear();
-			AbstractQueryHitCollector collector = new AbstractQueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList()) {
-				
-				@Override
-				public void addMatch(AbstractQueryHit hit) {
-					// TODO: do hit -> task matching here rather than in
-					// abstract?
-					newHits.add(hit);
-
-				}
-
-			};			
-
-			IStatus resultingStatus = connector.performQuery(repositoryQuery, repository, TasksUiPlugin.getDefault().getProxySettings(), monitor, collector);
-			// connector.performQuery(repositoryQuery, new
-			// NullProgressMonitor(), queryStatus);
+			QueryHitCollector collector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList());
+			IStatus resultingStatus = connector.performQuery(repositoryQuery, repository, TasksUiPlugin.getDefault()
+					.getProxySettings(), monitor, collector);
 
 			if (resultingStatus.getException() == null) {
-				repositoryQuery.updateHits(newHits, taskList);
+				repositoryQuery.updateHits(collector.getHits(), taskList);
 				if (synchTasks) {
 					// TODO: Should sync changed per repository not per
 					// query
@@ -125,24 +103,6 @@ class SynchronizeQueryJob extends Job {
 				// assume working offline
 				return Status.OK_STATUS;
 			}
-			
-			
-			
-			// if (queryStatus.getChildren() != null &&
-			// queryStatus.getChildren().length > 0) {
-			// if (queryStatus.getChildren()[0].getException() == null) {
-			// repositoryQuery.updateHits(newHits, taskList);
-			// if (synchTasks) {
-			// // TODO: Should sync changed per repository not per query
-			// TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector,
-			// repository);
-			// }
-			//
-			// } else {
-			// repositoryQuery.setCurrentlySynchronizing(false);
-			// return queryStatus.getChildren()[0];
-			// }
-			// }
 
 			repositoryQuery.setCurrentlySynchronizing(false);
 			repositoryQuery.setLastRefreshTimeStamp(DateUtil.getFormattedDate(new Date(), "MMM d, H:mm:ss"));

@@ -13,19 +13,17 @@ package org.eclipse.mylar.trac.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils.PrivilegeLevel;
+import org.eclipse.mylar.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylar.internal.trac.core.TracRepositoryQuery;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.internal.trac.core.model.TracSearch;
-import org.eclipse.mylar.internal.trac.ui.search.RepositorySearchQuery;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
-import org.eclipse.mylar.tasks.core.AbstractQueryHitCollector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -78,18 +76,16 @@ public class RepositorySearchQueryTest extends TestCase {
 		String queryUrl = repository.getUrl() + ITracClient.QUERY_URL + search.toUrl();
 		TracRepositoryQuery query = new TracRepositoryQuery(repository.getUrl(), queryUrl, "description", null);
 
-		final int count[] = new int[1];
-		RepositorySearchQuery searchQuery = new RepositorySearchQuery(repository, query);
-		searchQuery.setCollector(new AbstractQueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList()) {
+		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager()
+				.getTaskList(), repository, query, null) {
 			@Override
 			public void addMatch(AbstractQueryHit hit) {
-				assertEquals(Constants.TEST_TRAC_096_URL, hit.getRepositoryUrl());
-				count[0]++;
+				super.addMatch(hit);
+				assertEquals(Constants.TEST_TRAC_096_URL, hit.getRepositoryUrl());				
 			}
-		});
-		IStatus status = searchQuery.run(new NullProgressMonitor());
-		assertTrue(status.isOK());
-		assertEquals(data.tickets.size(), count[0]);
+		};
+		collector.run(new NullProgressMonitor());
+		assertEquals(data.tickets.size(), collector.getHits().size());
 	}
 
 }

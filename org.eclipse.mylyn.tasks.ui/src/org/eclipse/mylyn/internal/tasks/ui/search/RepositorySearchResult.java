@@ -29,7 +29,7 @@ public class RepositorySearchResult extends AbstractTextSearchResult {
 	/**
 	 * The query producing this result.
 	 */
-	private AbstractRepositorySearchQuery repositoryQuery;
+	private ISearchQuery repositoryQuery;
 
 	/**
 	 * Constructor for <code>RepositorySearchResult</code> class.
@@ -38,7 +38,7 @@ public class RepositorySearchResult extends AbstractTextSearchResult {
 	 *            <code>AbstractRepositorySearchQuery</code> that is producing
 	 *            this result.
 	 */
-	public RepositorySearchResult(AbstractRepositorySearchQuery query) {
+	public RepositorySearchResult(ISearchQuery query) {
 		super();
 		repositoryQuery = query;
 	}

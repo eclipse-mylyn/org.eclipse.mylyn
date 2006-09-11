@@ -106,7 +106,7 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 	}
 
 	public String getQueryTitle() {
-		return title.getText();
+		return title != null ? title.getText() : "";
 	}
 
 	public abstract AbstractRepositoryQuery getQuery();

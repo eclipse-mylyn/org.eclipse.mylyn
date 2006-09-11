@@ -23,11 +23,11 @@ import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaResultCollector;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryQueryResultsFactory;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -104,7 +104,7 @@ public class BugzillaQueryTest extends TestCase {
 
 	public void testQueryBugs() throws Exception {
 
-		BugzillaResultCollector collector = new BugzillaResultCollector(new TaskList());
+		QueryHitCollector collector = new QueryHitCollector(new TaskList());
 
 		// Note need for ctype=rdf in query url
 		String urlString = "http://mylar.eclipse.org/bugs222/buglist.cgi?ctype=rdf&query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
@@ -114,8 +114,8 @@ public class BugzillaQueryTest extends TestCase {
 		queryFactory.performQuery(null, repository.getUrl(), collector, urlString, null, -1, repository
 				.getCharacterEncoding());
 
-		assertEquals(2, collector.getResults().size());
-		for (AbstractQueryHit hit : collector.getResults()) {
+		assertEquals(2, collector.getHits().size());
+		for (AbstractQueryHit hit : collector.getHits()) {
 			assertTrue(hit.getDescription().contains("search-match-test"));
 		}
 	}

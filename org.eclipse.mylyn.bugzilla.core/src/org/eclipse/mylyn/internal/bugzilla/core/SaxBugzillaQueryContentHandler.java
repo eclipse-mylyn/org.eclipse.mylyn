@@ -14,7 +14,7 @@ package org.eclipse.mylar.internal.bugzilla.core;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer;
-import org.eclipse.mylar.tasks.core.IQueryHitCollector;
+import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -41,7 +41,7 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 
 	private StringBuffer characters;
 
-	private IQueryHitCollector collector;
+	private QueryHitCollector collector;
 
 	private String repositoryUrl;
 
@@ -53,7 +53,7 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 
 	private int numCollected = 0;
 
-	public SaxBugzillaQueryContentHandler(TaskList tasklist, String repositoryUrl, IQueryHitCollector col, int maxHits) {
+	public SaxBugzillaQueryContentHandler(TaskList tasklist, String repositoryUrl, QueryHitCollector col, int maxHits) {
 		this.taskList = tasklist;
 		this.repositoryUrl = repositoryUrl;
 		collector = col;

@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
@@ -178,7 +179,7 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 	private void queryForChanged(TaskRepository repository, Set<AbstractRepositoryTask> changedTasks,
 			String urlQueryString, Proxy proxySettings) throws UnsupportedEncodingException, CoreException {
 		RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory();
-		BugzillaResultCollector collector = new BugzillaResultCollector(taskList);
+		QueryHitCollector collector = new QueryHitCollector(taskList);
 		if (repository.hasCredentials()) {
 			urlQueryString = BugzillaServerFacade.addCredentials(urlQueryString, repository.getUserName(), repository
 					.getPassword());
@@ -190,7 +191,7 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK, "failed to perform query", e));
 		}
 
-		for (AbstractQueryHit hit : collector.getResults()) {
+		for (AbstractQueryHit hit : collector.getHits()) {
 			String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), hit.getId());
 			ITask correspondingTask = taskList.getTask(handle);
 			if (correspondingTask != null && correspondingTask instanceof AbstractRepositoryTask) {

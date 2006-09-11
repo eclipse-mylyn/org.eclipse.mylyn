@@ -99,7 +99,7 @@ public abstract class AbstractRepositoryConnector {
 	 *            IQueryHitCollector that collects the hits found
 	 */
 	public abstract IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository,
-			Proxy proxySettings, IProgressMonitor monitor, IQueryHitCollector resultCollector);
+			Proxy proxySettings, IProgressMonitor monitor, QueryHitCollector resultCollector);
 
 	public abstract String getLabel();
 

@@ -35,15 +35,14 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.BugSubmissionHandler;
-import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchOperation;
-import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchQuery;
-import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchResultCollector;
 import org.eclipse.mylar.internal.tasks.core.SslProtocolSocketFactory;
+import org.eclipse.mylar.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -90,20 +89,31 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		BugzillaTask task = this.generateLocalTaskAndDownload("2");
 		assertNotNull(task);	
 		
-		// test anonymous query (note that this demonstrates query via eclipse search (ui)
-		BugzillaSearchResultCollector collector = new BugzillaSearchResultCollector(taskList);
-		collector.setProgressMonitor(new NullProgressMonitor());
-		BugzillaSearchOperation operation = new BugzillaSearchOperation(
-				repository,
-				"http://mylar.eclipse.org/bugs218/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=",
-				null, collector, "-1");
+//		// test anonymous query (note that this demonstrates query via eclipse search (ui)
+//		SearchHitCollector collector = new SearchHitCollector(taskList);
+//		collector.setProgressMonitor(new NullProgressMonitor());
+//		BugzillaSearchOperation operation = new BugzillaSearchOperation(
+//				repository,
+//				"http://mylar.eclipse.org/bugs218/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=",
+//				null, collector, "-1");
+//		
+		String queryUrl = "http://mylar.eclipse.org/bugs218/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0="; 
+		BugzillaRepositoryQuery bugzillaQuery = new BugzillaRepositoryQuery(repository.getUrl(), queryUrl, "search", "-1", taskList);
+	
+		
+		
+		
+		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager()
+				.getTaskList(), repository, bugzillaQuery, null);
+		
+		
 		
 		//operation.run(new NullProgressMonitor());
-		BugzillaSearchQuery searchQuery = new BugzillaSearchQuery(operation);
-		searchQuery.run(new NullProgressMonitor());
-		assertEquals(2, collector.getResults().size());	
+		//BugzillaSearchQuery searchQuery = new BugzillaSearchQuery(collector);
+		collector.run(new NullProgressMonitor());
+		assertEquals(2, collector.getHits().size());	
 		
-		for (AbstractQueryHit hit : collector.getResults()) {
+		for (AbstractQueryHit hit : collector.getHits()) {
 			assertTrue(hit.getDescription().contains("search-match-test"));
 		}
 		

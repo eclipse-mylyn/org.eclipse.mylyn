@@ -32,7 +32,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositoryQueryPage;
-import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositorySearchQuery;
+import org.eclipse.mylar.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -889,28 +889,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		getPatternData(commentPattern, commentOperation, previousCommentPatterns);
 		getPatternData(this.emailPattern, emailOperation, previousEmailPatterns);
 
-		String summaryText;
-		String queryUrl;
-		// if (rememberedQuery == true) {
-		// queryUrl = getQueryURL(repository, new
-		// StringBuffer(input.getQueryParameters(selIndex)));
-		// summaryText = input.getSummaryText(selIndex);
-		// } else {
-		try {
-			StringBuffer params = getQueryParameters();
-			queryUrl = getQueryURL(repository, params);
-			summaryText = summaryPattern.getText();
-		} catch (UnsupportedEncodingException e) {
-			/*
-			 * These statements should never be executed. Every implementation
-			 * of the Java platform is required to support the standard charset
-			 * "UTF-8"
-			 */
-			queryUrl = "";
-			summaryText = "";
-		}
-		// }
-
 		// try {
 		// // if the summary contains a single bug id, open the bug directly
 		// int id = Integer.parseInt(summaryText);
@@ -924,17 +902,13 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		// the view if no searching is going to take place.
 		NewSearchUI.activateSearchResultView();
 
+		String summaryText = summaryPattern.getText();
 		BugzillaUiPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.MOST_RECENT_QUERY, summaryText);
 
-		BugzillaSearchResultCollector collector = new BugzillaSearchResultCollector(TasksUiPlugin.getTaskListManager()
-				.getTaskList());
-
 		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
-		IBugzillaSearchOperation op = new BugzillaSearchOperation(repository, queryUrl, proxySettings, collector,
-				getMaxHits());
-
-		AbstractRepositorySearchQuery searchQuery = new BugzillaSearchQuery(op);
-		NewSearchUI.runQueryInBackground(searchQuery);
+		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
+				repository, getQuery(), proxySettings);
+		NewSearchUI.runQueryInBackground(collector);
 
 		return true;
 	}
