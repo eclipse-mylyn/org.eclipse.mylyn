@@ -22,7 +22,7 @@ import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.internal.team.TeamRespositoriesManager;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.team.MylarTeamPlugin;
-import org.eclipse.mylar.team.TeamRepositoryProvider;
+import org.eclipse.mylar.team.AbstractTeamRepositoryProvider;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 
@@ -44,10 +44,10 @@ public class CommitContextAction implements IViewActionDelegate {
 			return;
 		}
 
-		List<TeamRepositoryProvider> providers = TeamRespositoriesManager.getInstance().getProviders();
+		List<AbstractTeamRepositoryProvider> providers = TeamRespositoriesManager.getInstance().getProviders();
 		for (Iterator iter = providers.iterator(); iter.hasNext();) {
 			try {
-				TeamRepositoryProvider provider = (TeamRepositoryProvider) iter.next();
+				AbstractTeamRepositoryProvider provider = (AbstractTeamRepositoryProvider) iter.next();
 				if (provider.hasOutgoingChanges(resources)) {
 					provider.commit(resources);
 				}

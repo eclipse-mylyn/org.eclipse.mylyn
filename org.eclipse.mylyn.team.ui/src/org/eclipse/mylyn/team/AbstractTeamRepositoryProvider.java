@@ -14,9 +14,12 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 
 /**
- * Integrates an Eclipe Team repository with Mylar.
+ * Integrates an Eclipse Team repository with Mylar.
+ * 
+ * @author Gunnar Wagenknecht
+ * @author Mik Kersten
  */
-public abstract class TeamRepositoryProvider {
+public abstract class AbstractTeamRepositoryProvider {
 
 	/**
 	 * Return the change set collector that manages the active change set for

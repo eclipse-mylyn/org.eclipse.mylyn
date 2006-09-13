@@ -32,7 +32,7 @@ import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskActivityListener;
 import org.eclipse.mylar.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.team.TeamRepositoryProvider;
+import org.eclipse.mylar.team.AbstractTeamRepositoryProvider;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
 import org.eclipse.team.internal.core.subscribers.IChangeSetChangeListener;
@@ -151,8 +151,8 @@ public class ContextChangeSetManager implements IMylarContextListener {
 	private boolean isEnabled = false;
 
 	public ContextChangeSetManager() {
-		List<TeamRepositoryProvider> providerList = TeamRespositoriesManager.getInstance().getProviders();
-		for (TeamRepositoryProvider provider : providerList) {
+		List<AbstractTeamRepositoryProvider> providerList = TeamRespositoriesManager.getInstance().getProviders();
+		for (AbstractTeamRepositoryProvider provider : providerList) {
 			ActiveChangeSetManager changeSetManager = provider.getActiveChangeSetManager();
 			if(null != changeSetManager)
 				collectors.add(changeSetManager);

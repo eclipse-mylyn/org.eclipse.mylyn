@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.team.MylarTeamPlugin;
-import org.eclipse.mylar.team.TeamRepositoryProvider;
+import org.eclipse.mylar.team.AbstractTeamRepositoryProvider;
 
 /**
  * Manages the registeres repository provides.
@@ -56,14 +56,14 @@ public class TeamRespositoriesManager {
 		sharedInstance = new TeamRespositoriesManager();
 	}
 
-	private List<TeamRepositoryProvider> provider;
+	private List<AbstractTeamRepositoryProvider> provider;
 
 	private TeamRespositoriesManager() {
 		readExtensions();
 	}
 
 	private void readExtensions() {
-		ArrayList<TeamRepositoryProvider> providerList = new ArrayList<TeamRepositoryProvider>();
+		ArrayList<AbstractTeamRepositoryProvider> providerList = new ArrayList<AbstractTeamRepositoryProvider>();
 		IExtensionPoint teamProvider = Platform.getExtensionRegistry().getExtensionPoint(
 				MylarTeamPlugin.PLUGIN_ID, EXT_POINT_TEAM_REPOSITORY_PROVIDER);
 		IExtension[] extensions = teamProvider.getExtensions();
@@ -77,7 +77,7 @@ public class TeamRespositoriesManager {
 					// necessary; if somebode initializes this manager, he
 					// really wants the repositories
 					try {
-						TeamRepositoryProvider provider = (TeamRepositoryProvider) element
+						AbstractTeamRepositoryProvider provider = (AbstractTeamRepositoryProvider) element
 								.createExecutableExtension(ATTR_CLASS);
 						providerList.add(provider);
 					} catch (CoreException e) {
@@ -94,11 +94,11 @@ public class TeamRespositoriesManager {
 	}
 
 	/**
-	 * Returns the list of contributed {@link TeamRepositoryProvider}.
+	 * Returns the list of contributed {@link AbstractTeamRepositoryProvider}.
 	 * 
-	 * @return a list of {@link TeamRepositoryProvider}
+	 * @return a list of {@link AbstractTeamRepositoryProvider}
 	 */
-	public List<TeamRepositoryProvider> getProviders() {
+	public List<AbstractTeamRepositoryProvider> getProviders() {
 		return provider;
 	}
 

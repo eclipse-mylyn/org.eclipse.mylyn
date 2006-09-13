@@ -16,7 +16,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.internal.team.ui.wizards.CommitContextWizard;
-import org.eclipse.mylar.team.TeamRepositoryProvider;
+import org.eclipse.mylar.team.AbstractTeamRepositoryProvider;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.team.internal.ccvs.core.CVSException;
 import org.eclipse.team.internal.ccvs.core.mapping.CVSActiveChangeSetCollector;
@@ -27,7 +27,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * CVS integration for Mylar.
  */
-public class CvsRepositoryProvider extends TeamRepositoryProvider {
+public class CvsRepositoryProvider extends AbstractTeamRepositoryProvider {
 	private static final String WIZARD_LABEL = "Commit Resources in Task Context";
 	
 	@Override

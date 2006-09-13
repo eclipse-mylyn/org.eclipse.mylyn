@@ -17,14 +17,14 @@ import java.lang.reflect.Method;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.mylar.team.TeamRepositoryProvider;
+import org.eclipse.mylar.team.AbstractTeamRepositoryProvider;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 import org.osgi.framework.Bundle;
 
 /**
  * Subclipse integration for Mylar.
  */
-public class SubclipseTeamRepositoryProvider extends TeamRepositoryProvider {
+public class SubclipseTeamRepositoryProvider extends AbstractTeamRepositoryProvider {
 
 	@Override
 	public ActiveChangeSetManager getActiveChangeSetManager() {
