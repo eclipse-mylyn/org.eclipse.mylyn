@@ -503,14 +503,14 @@
                definitionId="org.eclipse.mylar.tasks.command.deactivateAllTasks"
                id="org.eclipse.mylar.tasks.ui.deactivateAllTasks"
                label="&amp;Deactivate Task"
-               menubarPath="navigate/open.ext2"
+               menubarPath="navigate/open.ext3"
                style="push"/>
 		<action
                class="org.eclipse.mylar.internal.tasks.ui.actions.ActivateTaskAction"
                definitionId="org.eclipse.mylar.tasks.command.activateTask"
                id="org.eclipse.mylar.tasks.ui.switchTask"
                label="&amp;Activate Task..."
-               menubarPath="navigate/open.ext2"
+               menubarPath="navigate/open.ext3"
                style="push"/>
          <action
                class="org.eclipse.mylar.internal.tasks.ui.actions.OpenTaskAction"
@@ -518,7 +518,7 @@
                icon="icons/etool16/open-task.gif"
                id="org.eclipse.mylar.tasks.ui.openTask"
                label="Open Tas&amp;k..."
-               menubarPath="navigate/open.ext2"
+               menubarPath="navigate/open.ext3"
                style="push"
                toolbarPath="org.eclipse.search.searchActionSet/Search"
                tooltip="Open Task"/>
