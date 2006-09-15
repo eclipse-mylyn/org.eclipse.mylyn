@@ -32,7 +32,7 @@ import org.eclipse.mylar.internal.trac.core.util.TracHttpClientTransportFactory;
 
 /**
  * Test cases for <a href="http://trac-hacks.org/wiki/XmlRpcPlugin">Trac XML-RPC
- * Plugin</a> API. Revision 1070 or higher is required.
+ * Plugin</a> API. Revision 1188 or higher is required.
  * 
  * <p>
  * This class does not depend on any Mylar (connector) classes except for
@@ -356,41 +356,54 @@ public class TracXmlRpcTest extends TestCase {
 	public void testAttachment() throws XmlRpcException, IOException {
 		int id = createTicket("summary", "description", new Hashtable());
 
-		String filename = (String) call("ticket.putAttachment", id, "attach.txt", "data".getBytes(), true);
+		String filename = (String) call("ticket.putAttachment", id, "attach.txt", "description", "data".getBytes(), true);
 		// the returned filename may differ, since another ticket may have an
 		// attachment named "attach.txt"
 		// assertEquals("attach.txt", filename);
 
 		Object[] ret = (Object[]) call("ticket.listAttachments", id);
 		assertEquals(1, ret.length);
-		assertHasValue(ret, filename);
-
+		Object[] attachment = (Object[]) ret[0];  
+		assertEquals("attach.txt", attachment[0]);
+		assertEquals("description", attachment[1]);
+		assertEquals(4, attachment[2]);
+		// date
+		assertEquals(username, attachment[4]);
+		
 		byte[] bytes = (byte[]) call("ticket.getAttachment", id, filename);
 		String data = new String(bytes);
 		assertEquals("data", data);
 
-		String filename2 = (String) call("ticket.putAttachment", id, filename, "data".getBytes(), true);
+		// test override
+		
+		String filename2 = (String) call("ticket.putAttachment", id, filename, "newdescription", "newdata".getBytes(), true);
 		assertEquals(filename, filename2);
 		ret = (Object[]) call("ticket.listAttachments", id);
 		assertEquals(1, ret.length);
-		assertHasValue(ret, filename);
+		attachment = (Object[]) ret[0];  
+		assertEquals("attach.txt", attachment[0]);
+		assertEquals("newdescription", attachment[1]);
+		assertEquals(7, attachment[2]);
+		// date
+		assertEquals(username, attachment[4]);
+		bytes = (byte[]) call("ticket.getAttachment", id, filename);
+		data = new String(bytes);
+		assertEquals("newdata", data);
 
-		String filename3 = (String) call("ticket.putAttachment", id, "attach.txt", "data".getBytes(), false);
+
+		String filename3 = (String) call("ticket.putAttachment", id, "attach.txt", "description", "data".getBytes(), false);
 		assertFalse("attach.txt".equals(filename3));
 		ret = (Object[]) call("ticket.listAttachments", id);
 		assertEquals(2, ret.length);
-		assertHasValue(ret, filename);
-		assertHasValue(ret, filename3);
 	}
 
 	public void testDeleteAttachment() throws XmlRpcException, IOException {
 		int id = createTicket("summary", "description", new Hashtable());
 
-		String filename = (String) call("ticket.putAttachment", id, "attach.txt", "data".getBytes(), true);
+		String filename = (String) call("ticket.putAttachment", id, "attach.txt", "description", "data".getBytes(), true);
 
 		Object[] ret = (Object[]) call("ticket.listAttachments", id);
 		assertEquals(1, ret.length);
-		assertHasValue(ret, filename);
 
 		call("ticket.deleteAttachment", id, filename);
 
@@ -398,6 +411,24 @@ public class TracXmlRpcTest extends TestCase {
 		assertEquals(0, ret.length);
 	}
 
+	public void testDuplicateAttachment() throws XmlRpcException, IOException {
+		int id1 = createTicket("summary", "description", new Hashtable());
+		int id2 = createTicket("summary", "description", new Hashtable());
+
+		String filename1 = (String) call("ticket.putAttachment", id1, "attach.txt", "description", "data".getBytes(), true);
+		String filename2 = (String) call("ticket.putAttachment", id2, "attach.txt", "description", "data2".getBytes(), true);
+		assertEquals("attach.txt", filename1);
+		assertEquals(filename1, filename2);
+		
+		byte[] bytes = (byte[]) call("ticket.getAttachment", id1, "attach.txt");
+		String data = new String(bytes);
+		assertEquals("data", data);
+
+		bytes = (byte[]) call("ticket.getAttachment", id2, "attach.txt");
+		data = new String(bytes);
+		assertEquals("data2", data);
+	}
+	
 	public void testQuery() throws XmlRpcException, IOException {
 		Object[] ret = (Object[]) call("ticket.query", "summary~=foo|bar|baz");
 		for (Object id : ret) {
