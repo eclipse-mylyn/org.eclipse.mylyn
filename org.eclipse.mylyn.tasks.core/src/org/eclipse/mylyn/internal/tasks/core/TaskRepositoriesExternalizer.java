@@ -15,12 +15,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
@@ -43,15 +47,33 @@ public class TaskRepositoriesExternalizer {
 	public void writeRepositoriesToXML(Collection<TaskRepository> repositories, File file) {
 		if (repositories.isEmpty())
 			return;
+		ZipOutputStream outputStream = null;
 		try {
 			if (!file.exists())
 				file.createNewFile();
-			OutputStream stream = new FileOutputStream(file);
-			writer.setOutputStream(stream);
+
+			outputStream = new ZipOutputStream(new FileOutputStream(file));
+			ZipEntry zipEntry = new ZipEntry(TaskRepositoryManager.OLD_REPOSITORIES_FILE);
+			outputStream.putNextEntry(zipEntry);
+			outputStream.setMethod(ZipOutputStream.DEFLATED);
+
+			// OutputStream stream = new FileOutputStream(file);
+			writer.setOutputStream(outputStream);
 			writer.writeRepositoriesToStream(repositories);
-			stream.close();
+			outputStream.flush();
+			outputStream.closeEntry();
+			outputStream.close();
+
 		} catch (IOException e) {
 			MylarStatusHandler.fail(e, "Could not write: " + file.getAbsolutePath(), true);
+		} finally {
+			if (outputStream != null) {
+				try {
+					outputStream.close();
+				} catch (IOException e) {
+					MylarStatusHandler.fail(e, "Unable to terminate output stream to repositories file.", false);
+				}
+			}
 		}
 	}
 
@@ -59,15 +81,27 @@ public class TaskRepositoriesExternalizer {
 
 		if (!file.exists())
 			return null;
+		InputStream inputStream = null;
 		try {
+			inputStream = new ZipInputStream(new FileInputStream(file));
+			((ZipInputStream) inputStream).getNextEntry();
 			SaxRepositoriesContentHandler contentHandler = new SaxRepositoriesContentHandler();
 			XMLReader reader = XMLReaderFactory.createXMLReader();
 			reader.setContentHandler(contentHandler);
-			reader.parse(new InputSource(new FileInputStream(file)));
+			reader.parse(new InputSource(inputStream));
 			return contentHandler.getRepositories();
 		} catch (Throwable e) {
 			file.renameTo(new File(file.getAbsolutePath() + "-save"));
+			MylarStatusHandler.log(e, "Error while reading context file");
 			return null;
+		} finally {
+			if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					MylarStatusHandler.fail(e, "Failed to close repositories input stream.", false);
+				}
+			}
 		}
 	}
 }

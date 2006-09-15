@@ -18,6 +18,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -69,7 +72,7 @@ public class TaskListWriter {
 	private DelegatingTaskExternalizer delagatingExternalizer = new DelegatingTaskExternalizer();
 
 	private List<Node> orphanedTaskNodes = new ArrayList<Node>();
-	
+
 	private String readVersion = "";
 
 	private boolean hasCaughtException = false;
@@ -118,19 +121,20 @@ public class TaskListWriter {
 				MylarStatusHandler.log("Did not externalize: " + query, this);
 			}
 		}
-//		Collection<ITask> allTasks = Collections.synchronizedCollection(taskList.getAllTasks());
-//		synchronized (allTasks) {
+		// Collection<ITask> allTasks =
+		// Collections.synchronizedCollection(taskList.getAllTasks());
+		// synchronized (allTasks) {
 		for (ITask task : new ArrayList<ITask>(taskList.getAllTasks())) {
 			createTaskElement(doc, root, task);
 		}
-		
+
 		for (Node orphanedTaskNode : orphanedTaskNodes) {
 			Node tempNode = doc.importNode(orphanedTaskNode, true);
-			if(tempNode != null) {
+			if (tempNode != null) {
 				root.appendChild(tempNode);
 			}
-		}		
-		
+		}
+
 		doc.appendChild(root);
 		writeDOMtoFile(doc, outFile);
 		return;
@@ -162,10 +166,15 @@ public class TaskListWriter {
 	 */
 	private void writeDOMtoFile(Document doc, File file) {
 		try {
-			OutputStream outputStream = new FileOutputStream(file);
+			ZipOutputStream outputStream = new ZipOutputStream(new FileOutputStream(file));
+			ZipEntry zipEntry = new ZipEntry(TasksUiPlugin.OLD_TASK_LIST_FILE);
+			outputStream.putNextEntry(zipEntry);
+			outputStream.setMethod(ZipOutputStream.DEFLATED);
+			// OutputStream outputStream = new FileOutputStream(file);
 			writeDOMtoStream(doc, outputStream);
 			outputStream.flush();
-			outputStream.close(); 
+			outputStream.closeEntry();
+			outputStream.close();
 		} catch (Exception fnfe) {
 			MylarStatusHandler.log(fnfe, "TaskList could not be found");
 		}
@@ -254,21 +263,24 @@ public class TaskListWriter {
 									wasRead = true;
 								}
 							}
-							
+
 							if (!wasRead && delagatingExternalizer.canReadTask(child)) {
 								delagatingExternalizer.readTask(child, taskList, null, null);
 								wasRead = true;
 							}
-							
-							if(!wasRead) {
+
+							if (!wasRead) {
 								orphanedTaskNodes.add(child);
 							}
 						}
 					} catch (Exception e) {
 						// TODO: Save orphans here too?
-						// If data is source of exception then error will just repeat
-						// now that orphans are re-saved upon task list save. So for now we
-						// log the error warning the user and make a copy of the bad tasklist.						
+						// If data is source of exception then error will just
+						// repeat
+						// now that orphans are re-saved upon task list save. So
+						// for now we
+						// log the error warning the user and make a copy of the
+						// bad tasklist.
 						handleException(inFile, child, e);
 					}
 				}
@@ -336,7 +348,16 @@ public class TaskListWriter {
 		try {
 			// Parse the content of the given file as an XML document
 			// and return a new DOM Document object. Also throws IOException
-			document = builder.parse(inputFile);
+			InputStream inputStream = null;
+			if (inputFile.getName().endsWith(TasksUiPlugin.DEFAULT_TASK_LIST_FILE)) {
+				// is zipped context
+				inputStream = new ZipInputStream(new FileInputStream(inputFile));
+				((ZipInputStream) inputStream).getNextEntry();
+			} else {
+				inputStream = new FileInputStream(inputFile);
+			}
+			document = builder.parse(inputStream);
+			// document = builder.parse(inputFile);
 		} catch (SAXException se) {
 			File backup = new File(TasksUiPlugin.getDefault().getTaskListSaveManager().getBackupFilePath());
 			String message = "Restoring the tasklist failed.  Would you like to attempt to restore from the backup?\n\nTasklist XML File location: "
@@ -556,5 +577,9 @@ public class TaskListWriter {
 
 	public void setDelegatingExternalizer(DelegatingTaskExternalizer delagatingExternalizer) {
 		this.delagatingExternalizer = delagatingExternalizer;
+	}
+	
+	public List<ITaskListExternalizer> getExternalizers() {
+		return externalizers;
 	}
 }

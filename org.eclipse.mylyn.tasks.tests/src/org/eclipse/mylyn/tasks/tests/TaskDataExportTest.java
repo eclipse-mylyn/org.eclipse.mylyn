@@ -11,12 +11,15 @@
 package org.eclipse.mylar.tasks.tests;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
-import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.context.tests.AbstractContextTest;
 import org.eclipse.mylar.internal.context.core.MylarContext;
-import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.tasks.ui.wizards.TaskDataExportWizard;
 import org.eclipse.mylar.internal.tasks.ui.wizards.TaskDataExportWizardPage;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -48,6 +51,8 @@ public class TaskDataExportTest extends AbstractContextTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 
+		removeFiles(new File(TasksUiPlugin.getDefault().getDataDirectory()));
+		
 		// Create the export wizard
 		wizard = new TaskDataExportWizard();
 		wizard.addPages();
@@ -57,7 +62,11 @@ public class TaskDataExportTest extends AbstractContextTest {
 
 		// Create test export destination directory
 		destinationDir = new File(TasksUiPlugin.getDefault().getDataDirectory() + File.separator + "TestDir");
-		destinationDir.mkdir();
+		if(destinationDir.exists()) {
+			removeFiles(destinationDir);
+		} else {
+			destinationDir.mkdir();
+		}
 		assertTrue(destinationDir.exists());
 
 		// Create a task and context with an interaction event to be saved
@@ -75,12 +84,8 @@ public class TaskDataExportTest extends AbstractContextTest {
 		assertTrue(taskFile.exists());
 	}
 
-	protected void tearDown() throws Exception {
-		File[] files = destinationDir.listFiles();
-		for (File file : files) {
-			file.delete();
-		}
-
+	protected void tearDown() throws Exception {		
+		removeFiles(destinationDir);
 		destinationDir.delete();
 		assertFalse(destinationDir.exists());
 		ContextCorePlugin.getContextManager().deactivateContext(mockContext.getHandleIdentifier());
@@ -91,7 +96,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 	 * Tests the wizard when it has been asked to export all task data to a zip
 	 * file
 	 */
-	public void testExportAllToZip() {
+	public void testExportAllToZip() throws Exception {
 
 		// Set parameters in the wizard to simulate a user setting them and
 		// clicking "Finish"
@@ -101,29 +106,56 @@ public class TaskDataExportTest extends AbstractContextTest {
 		// Check that the task list file was exported
 		File destZipFile = new File(destinationDir + File.separator + TaskDataExportWizard.getZipFileName());
 		assertTrue(destZipFile.exists());
+		ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(destZipFile));
+		ArrayList<String> entries = new ArrayList<String>();
+
+		ZipEntry entry = zipInputStream.getNextEntry();
+		while (entry != null) {
+			entries.add(entry.getName());
+			entry = zipInputStream.getNextEntry();
+		}
+		zipInputStream.close();
+		assertEquals(2, entries.size());
+		assertTrue(entries.contains("tasklist.xml.zip"));
+		assertTrue(entries.contains("contexts/local-1.xml.zip"));
 	}
 
-	/** Tests the wizard when it has been asked to export all task data */
-	public void testExportAll() {
+	// /** Tests the wizard when it has been asked to export all task data */
+	// public void testExportAll() {
+	//
+	// // Set parameters in the wizard to simulate a user setting them and
+	// // clicking "Finish"
+	// wizardPage.setParameters(true, true, true, true, false,
+	// destinationDir.getPath());
+	// wizard.performFinish();
+	//
+	// // Check that the task list file was exported
+	// File destTaskListFile = new File(destinationDir + File.separator +
+	// TasksUiPlugin.OLD_TASK_LIST_FILE);
+	// assertTrue(destTaskListFile.exists());
+	//
+	// // Check that the activity history file was exported
+	// File destActivationHistoryFile = new File(destinationDir + File.separator
+	// + MylarContextManager.CONTEXT_HISTORY_FILE_NAME +
+	// MylarContextManager.OLD_CONTEXT_FILE_EXTENSION);
+	// assertTrue(destActivationHistoryFile.exists());
+	//
+	// // Check that the task context file created in setUp() was exported
+	// File destTaskContextFile =
+	// ContextCorePlugin.getContextManager().getFileForContext(task1.getHandleIdentifier());
+	// // File destTaskContextFile = new File(destinationDir + File.separator +
+	// // task1.getContextPath() + MylarContextManager.CONTEXT_FILE_EXTENSION);
+	// assertTrue(destTaskContextFile.exists());
+	// }
 
-		// Set parameters in the wizard to simulate a user setting them and
-		// clicking "Finish"
-		wizardPage.setParameters(true, true, true, true, false, destinationDir.getPath());
-		wizard.performFinish();
-
-		// Check that the task list file was exported
-		File destTaskListFile = new File(destinationDir + File.separator + TasksUiPlugin.DEFAULT_TASK_LIST_FILE);
-		assertTrue(destTaskListFile.exists());
-
-		// Check that the activity history file was exported
-		File destActivationHistoryFile = new File(destinationDir + File.separator
-				+ MylarContextManager.CONTEXT_HISTORY_FILE_NAME + MylarContextManager.CONTEXT_FILE_EXTENSION);
-		assertTrue(destActivationHistoryFile.exists());
-
-		// Check that the task context file created in setUp() was exported
-		File destTaskContextFile = ContextCorePlugin.getContextManager().getFileForContext(task1.getHandleIdentifier());
-		// File destTaskContextFile = new File(destinationDir + File.separator +
-		// task1.getContextPath() + MylarContextManager.CONTEXT_FILE_EXTENSION);
-		assertTrue(destTaskContextFile.exists());
+	private void removeFiles(File root) {
+		if (root.isDirectory()) {
+			for (File file : root.listFiles()) {
+				if (file.isDirectory()) {
+					removeFiles(file);
+				}
+				file.delete();
+			}
+		}
 	}
 }

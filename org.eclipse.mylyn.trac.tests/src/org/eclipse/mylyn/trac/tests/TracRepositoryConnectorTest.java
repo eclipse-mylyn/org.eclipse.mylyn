@@ -281,6 +281,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		int size = task.getTaskData().getAttachments().size();
 
 		File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+		//System.err.println(">>> " + sourceContextFile.exists() + "   " + sourceContextFile.length());
 		sourceContextFile.createNewFile();
 		sourceContextFile.deleteOnExit();
 

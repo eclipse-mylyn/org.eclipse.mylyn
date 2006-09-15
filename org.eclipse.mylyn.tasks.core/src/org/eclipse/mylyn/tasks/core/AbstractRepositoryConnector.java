@@ -12,9 +12,7 @@
 package org.eclipse.mylar.tasks.core;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.Proxy;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -23,10 +21,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.internal.context.core.util.ZipFileUtil;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 
 /**
@@ -43,18 +38,16 @@ public abstract class AbstractRepositoryConnector {
 
 	private static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
 
-	private static final String ZIPFILE_EXTENSION = ".zip";
-
 	protected List<String> supportedVersions;
 
 	protected Set<RepositoryTemplate> templates = new LinkedHashSet<RepositoryTemplate>();
 
 	protected TaskList taskList;
-	
+
 	public void init(TaskList taskList) {
 		this.taskList = taskList;
 	}
-	
+
 	/**
 	 * @return null if not supported
 	 */
@@ -74,32 +67,41 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * Reset and update the repository attributes from the server (e.g.
 	 * products, components)
-	 * @param proxySettings TODO
-	 * @throws CoreException TODO
+	 * 
+	 * @param proxySettings
+	 *            TODO
+	 * @throws CoreException
+	 *             TODO
 	 */
-	public abstract void updateAttributes(TaskRepository repository, Proxy proxySettings, IProgressMonitor monitor) throws CoreException;
-	
+	public abstract void updateAttributes(TaskRepository repository, Proxy proxySettings, IProgressMonitor monitor)
+			throws CoreException;
+
 	/**
 	 * @param id
 	 *            identifier, e.g. "123" bug Bugzilla bug 123
-	 * @param proxySettings TODO
+	 * @param proxySettings
+	 *            TODO
 	 * @return null if task could not be created
-	 * @throws CoreException TODO
+	 * @throws CoreException
+	 *             TODO
 	 */
-	public abstract ITask createTaskFromExistingKey(TaskRepository repository, String id, Proxy proxySettings) throws CoreException;
+	public abstract ITask createTaskFromExistingKey(TaskRepository repository, String id, Proxy proxySettings)
+			throws CoreException;
 
 	/**
 	 * Implementors must execute query synchronously.
 	 * 
 	 * @param query
-	 * @param repository TODO
-	 * @param proxySettings TODO
+	 * @param repository
+	 *            TODO
+	 * @param proxySettings
+	 *            TODO
 	 * @param monitor
 	 * @param resultCollector
 	 *            IQueryHitCollector that collects the hits found
 	 */
-	public abstract IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository,
-			Proxy proxySettings, IProgressMonitor monitor, QueryHitCollector resultCollector);
+	public abstract IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, Proxy proxySettings,
+			IProgressMonitor monitor, QueryHitCollector resultCollector);
 
 	public abstract String getLabel();
 
@@ -162,30 +164,16 @@ public abstract class AbstractRepositoryConnector {
 				return false;
 			}
 
-			// compress context file
-			List<File> filesToZip = new ArrayList<File>();
-			filesToZip.add(sourceContextFile);
-
-			File destinationFile;
-			try {
-				destinationFile = File.createTempFile(sourceContextFile.getName(), ZIPFILE_EXTENSION);
-				destinationFile.deleteOnExit();
-				ZipFileUtil.createZipFile(destinationFile, filesToZip, new NullProgressMonitor());
-			} catch (IOException e) {
-				throw new CoreException(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, 0,
-						"Error compressing context file", e));
-			}
-
 			try {
 				// TODO: 'faking' outgoing state
 				task.setSyncState(RepositoryTaskSyncState.OUTGOING);
-				handler.uploadAttachment(repository, task, longComment, MYLAR_CONTEXT_DESCRIPTION, destinationFile,
+				handler.uploadAttachment(repository, task, longComment, MYLAR_CONTEXT_DESCRIPTION, sourceContextFile,
 						APPLICATION_OCTET_STREAM, false, proxySettings);
 			} catch (CoreException e) {
 				task.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
 				throw e;
 			}
-			task.setTaskData(null);			
+			task.setTaskData(null);
 		}
 		return true;
 	}
@@ -205,18 +193,14 @@ public abstract class AbstractRepositoryConnector {
 
 		File destinationContextFile = ContextCorePlugin.getContextManager().getFileForContext(
 				task.getHandleIdentifier());
-		// TODO what if destinationContextFile == null?
-		File destinationZipFile = new File(destinationContextFile.getPath() + ZIPFILE_EXTENSION);
-
-		attachmentHandler.downloadAttachment(repository, task, attachment, destinationZipFile, proxySettings);
-		// if (destinationContextFile.exists()) {
-		try {
-			ZipFileUtil.unzipFiles(destinationZipFile, destinationPath);
-		} catch (IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, 0,
-					"Error extracting context file", e));
+		
+		// TODO: add functionality for not overwriting previous context
+		if(destinationContextFile.exists()) {
+			if(!destinationContextFile.delete()) {
+				return false;
+			}
 		}
-
+		attachmentHandler.downloadAttachment(repository, task, attachment, destinationContextFile, proxySettings);
 		return true;
 	}
 

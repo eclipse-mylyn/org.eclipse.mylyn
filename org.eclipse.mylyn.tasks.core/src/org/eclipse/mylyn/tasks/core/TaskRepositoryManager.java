@@ -31,6 +31,10 @@ import org.eclipse.mylar.internal.tasks.core.TaskRepositoriesExternalizer;
  */
 public class TaskRepositoryManager {
 
+	public static final String OLD_REPOSITORIES_FILE = "repositories.xml";
+
+	public static final String DEFAULT_REPOSITORIES_FILE = "repositories.xml.zip";
+	
 	public static final String PREF_REPOSITORIES = "org.eclipse.mylar.tasklist.repositories.";
 
 	private Map<String, AbstractRepositoryConnector> repositoryConnectors = new HashMap<String, AbstractRepositoryConnector>();

@@ -90,12 +90,12 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	
 	public static final String DEFAULT_BACKUP_FOLDER_NAME = "backup";
 
-	public static final String FILE_EXTENSION = ".xml";
+	public static final String FILE_EXTENSION = ".xml.zip";
+
+	public static final String OLD_TASK_LIST_FILE = "tasklist.xml";
 
 	public static final String DEFAULT_TASK_LIST_FILE = "tasklist" + FILE_EXTENSION;
-
-	public static final String DEFAULT_REPOSITORIES_FILE = "repositories" + FILE_EXTENSION;
-
+	
 	public static final String TITLE_DIALOG = "Mylar Information";
 
 	public static final String PLUGIN_ID = "org.eclipse.mylar.tasklist";
@@ -759,7 +759,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	public String getRepositoriesFilePath() {
-		return getDataDirectory() + File.separator + DEFAULT_REPOSITORIES_FILE;
+		return getDataDirectory() + File.separator + TaskRepositoryManager.DEFAULT_REPOSITORIES_FILE;
 	}
 
 }

@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 /**
@@ -52,7 +53,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 
 	private Button taskContextsCheckBox = null;
 
-	private Button zipCheckBox = null;
+	// private Button zipCheckBox = null;
 
 	private Button browseButton = null;
 
@@ -73,7 +74,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 
 	private final static String OVERWRITE_SETTING = "Overwrite setting";
 
-	private final static String ZIP_SETTING = "Zip Setting";
+	// private final static String ZIP_SETTING = "Zip Setting";
 
 	public TaskDataExportWizardPage() {
 		super("org.eclipse.mylar.tasklist.exportPage", PAGE_TITLE, TasksUiPlugin.imageDescriptorFromPlugin(
@@ -93,11 +94,11 @@ public class TaskDataExportWizardPage extends WizardPage {
 			Composite container = new Composite(parent, SWT.NONE);
 			GridLayout layout = new GridLayout(1, false);
 			container.setLayout(layout);
-
 			createFileSelectionControl(container);
 			createExportDirectoryControl(container);
 
-			zipCheckBox = createCheckBox(container, "Export to zip file: " + TaskDataExportWizard.getZipFileName());
+			// zipCheckBox = createCheckBox(container, "Export to zip file: " +
+			// TaskDataExportWizard.getZipFileName());
 			overwriteCheckBox = createCheckBox(container, "Overwrite existing files without warning");
 
 			initSettings();
@@ -134,7 +135,10 @@ public class TaskDataExportWizardPage extends WizardPage {
 		destDirGroup.setText("Export destination folder");
 		destDirGroup.setLayout(new GridLayout(2, false));
 		destDirGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		new Label(destDirGroup, SWT.NONE).setText("Export file: "+TaskDataExportWizard.getZipFileName());
+		new Label(destDirGroup, SWT.NONE);
 
+		
 		destDirText = new Text(destDirGroup, SWT.BORDER);
 		destDirText.setEditable(false);
 		destDirText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -174,7 +178,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 			taskContextsCheckBox.setSelection(true);
 			destDirText.setText("");
 			overwriteCheckBox.setSelection(true);
-			zipCheckBox.setSelection(false);
+			// zipCheckBox.setSelection(false);
 		} else {
 			// Retrieve previous values from the dialog settings
 			taskListCheckBox.setSelection(true); // force it
@@ -186,7 +190,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 				destDirText.setText(settings.get(DEST_DIR_SETTING));
 			}
 			overwriteCheckBox.setSelection(settings.getBoolean(OVERWRITE_SETTING));
-			zipCheckBox.setSelection(settings.getBoolean(ZIP_SETTING));
+			// zipCheckBox.setSelection(settings.getBoolean(ZIP_SETTING));
 		}
 	}
 
@@ -202,7 +206,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 		settings.put(CONTEXTS_SETTING, taskContextsCheckBox.getSelection());
 		settings.put(DEST_DIR_SETTING, destDirText.getText());
 		settings.put(OVERWRITE_SETTING, overwriteCheckBox.getSelection());
-		settings.put(ZIP_SETTING, zipCheckBox.getSelection());
+		// settings.put(ZIP_SETTING, zipCheckBox.getSelection());
 
 		settings.put(SETTINGS_SAVED, SETTINGS_SAVED);
 	}
@@ -275,7 +279,8 @@ public class TaskDataExportWizardPage extends WizardPage {
 
 	/** True if the user wants to write to a zip file */
 	public boolean zip() {
-		return zipCheckBox.getSelection();
+		// return zipCheckBox.getSelection();
+		return true;
 	}
 
 	/** For testing only. Sets controls to the specified values */
@@ -286,6 +291,6 @@ public class TaskDataExportWizardPage extends WizardPage {
 		taskActivationHistoryCheckBox.setSelection(exportActivationHistory);
 		taskContextsCheckBox.setSelection(exportTaskContexts);
 		destDirText.setText(destinationDir);
-		zipCheckBox.setSelection(zip);
+		// zipCheckBox.setSelection(zip);
 	}
 }

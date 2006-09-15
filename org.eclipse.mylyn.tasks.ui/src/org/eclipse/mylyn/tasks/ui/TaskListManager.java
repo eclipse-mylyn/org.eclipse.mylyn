@@ -508,12 +508,12 @@ public class TaskListManager implements IPropertyChangeListener {
 		for (ITask task : new ArrayList<ITask>(activeTasks)) {
 			deactivateTask(task);
 		}
-		taskList.refactorRepositoryUrl(oldUrl, newUrl);
-
-		File dataDir = new File(TasksUiPlugin.getDefault().getDataDirectory());
+		taskList.refactorRepositoryUrl(oldUrl, newUrl);		
+		
+		File dataDir = new File(TasksUiPlugin.getDefault().getDataDirectory(), MylarContextManager.CONTEXTS_DIRECTORY);
 		if (dataDir.exists() && dataDir.isDirectory()) {
 			for (File file : dataDir.listFiles()) {
-				int dotIndex = file.getName().lastIndexOf('.');
+				int dotIndex = file.getName().lastIndexOf(".xml");
 				if (dotIndex != -1) {
 					String storedHandle;
 					try {

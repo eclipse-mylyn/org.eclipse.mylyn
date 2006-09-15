@@ -44,10 +44,10 @@ public class BugzillaTaskListManagerTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		manager = TasksUiPlugin.getTaskListManager();
-		manager.resetTaskList();
+		manager = TasksUiPlugin.getTaskListManager();		
 		manager.readExistingOrCreateNewList();
-
+		manager.resetTaskList();
+		manager.saveTaskList();
 		repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		assertEquals(0, manager.getTaskList().getAllTasks().size());

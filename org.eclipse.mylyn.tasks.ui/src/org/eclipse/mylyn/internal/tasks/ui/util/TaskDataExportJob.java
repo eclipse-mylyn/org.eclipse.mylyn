@@ -31,6 +31,7 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.context.core.util.ZipFileUtil;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
@@ -94,16 +95,25 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 		// Map of file paths used to avoid duplicates
 		Map<String, String> filesToZipMap = new HashMap<String, String>();
 
+		
+		// Create folders in zip file before contained files
+		String sourceContextsPath = TasksUiPlugin.getDefault().getDataDirectory() + File.separator
+		+ MylarContextManager.CONTEXTS_DIRECTORY;
+		File contextsDirectory = new File(sourceContextsPath);
+//		if(contextsDirectory.exists()) {
+//			filesToZip.add(contextsDirectory);
+//		}
+		
 		if (true) {
 			// Repositories always exported
 			TasksUiPlugin.getRepositoryManager().saveRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 			String sourceRepositoriesPath = TasksUiPlugin.getDefault().getDataDirectory() + File.separator
-					+ TasksUiPlugin.DEFAULT_REPOSITORIES_FILE;
+					+ TaskRepositoryManager.DEFAULT_REPOSITORIES_FILE;
 			File sourceRepositoriesFile = new File(sourceRepositoriesPath);
 			if (sourceRepositoriesFile.exists()) {
 				File destRepositoriesFile = new File(destinationDirectory + File.separator
-						+ TasksUiPlugin.DEFAULT_REPOSITORIES_FILE);				
+						+ TaskRepositoryManager.DEFAULT_REPOSITORIES_FILE);				
 
 				if (zip) {
 					filesToZip.add(sourceRepositoriesFile);
@@ -151,8 +161,7 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 
 		if (exportActivationHistory) {
 			try {
-				File sourceActivationHistoryFile = new File(TasksUiPlugin.getDefault().getDataDirectory()
-						+ File.separator + MylarContextManager.CONTEXT_HISTORY_FILE_NAME
+				File sourceActivationHistoryFile = new File(contextsDirectory, MylarContextManager.CONTEXT_HISTORY_FILE_NAME
 						+ MylarContextManager.CONTEXT_FILE_EXTENSION);
 
 				if (sourceActivationHistoryFile.exists()) {
@@ -164,7 +173,7 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 							+ MylarContextManager.CONTEXT_FILE_EXTENSION);
 					
 
-					if (zip) {
+					if (zip) {						
 						filesToZip.add(sourceActivationHistoryFile);
 					} else if(!destActivationHistoryFile.equals(sourceActivationHistoryFile)){
 						if (destActivationHistoryFile.exists()) {
@@ -193,7 +202,6 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 
 				File destTaskFile = new File(destinationDirectory + File.separator + sourceTaskFile.getName());
 				
-
 				if (zip) {
 					if (!filesToZipMap.containsKey(task.getHandleIdentifier())) {
 						filesToZip.add(sourceTaskFile);
@@ -219,7 +227,7 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 				if (destZipFile.exists()) {
 					destZipFile.delete();
 				}
-				ZipFileUtil.createZipFile(destZipFile, filesToZip, monitor);
+				ZipFileUtil.createZipFile(destZipFile, filesToZip,TasksUiPlugin.getDefault().getDataDirectory(), monitor);
 			} catch (Exception e) {
 				MylarStatusHandler.fail(e, "Could not create zip file.", true);
 			}
