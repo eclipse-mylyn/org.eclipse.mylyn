@@ -16,9 +16,11 @@ package org.eclipse.mylar.internal.context.core;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.eclipse.mylar.context.core.IContextReader;
 import org.eclipse.mylar.context.core.IContextWriter;
@@ -34,7 +36,7 @@ public class MylarContextExternalizer {
 	private IContextReader reader = new SaxContextReader();
 
 	private IContextWriter writer = new SaxContextWriter();
-
+	
 	public static final String ELMNT_INTERACTION_HISTORY_OLD = "interactionEvent";
 
 	public static final String ELMNT_INTERACTION_HISTORY = "InteractionHistory";
@@ -69,12 +71,21 @@ public class MylarContextExternalizer {
 		if (context.getInteractionHistory().isEmpty())
 			return;
 		try {
-			if (!file.exists())
+			 if (!file.exists())
 				file.createNewFile();
-			OutputStream stream = new FileOutputStream(file);
-			writer.setOutputStream(stream);
+			String handleIdentifier = context.getHandleIdentifier();
+			String encoded = URLEncoder.encode(handleIdentifier, MylarContextManager.CONTEXT_FILENAME_ENCODING);		
+			ZipOutputStream outputStream = new ZipOutputStream(new FileOutputStream(file));
+			ZipEntry zipEntry = new ZipEntry(encoded + MylarContextManager.OLD_CONTEXT_FILE_EXTENSION);
+			outputStream.putNextEntry(zipEntry);
+			outputStream.setMethod(ZipOutputStream.DEFLATED);
+
+			// OutputStream stream = new FileOutputStream(file);
+			writer.setOutputStream(outputStream);
 			writer.writeContextToStream(context);
-			stream.close();
+			outputStream.closeEntry();
+			outputStream.flush();
+			outputStream.close();
 		} catch (IOException e) {
 			MylarStatusHandler.fail(e, "Could not write: " + file.getAbsolutePath(), true);
 		}

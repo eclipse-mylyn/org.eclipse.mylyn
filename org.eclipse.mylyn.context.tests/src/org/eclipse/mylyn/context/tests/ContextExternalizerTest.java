@@ -14,6 +14,7 @@ package org.eclipse.mylar.context.tests;
 import java.io.File;
 
 import org.eclipse.core.runtime.Path;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarRelation;
 import org.eclipse.mylar.context.tests.support.DomContextReader;
@@ -21,6 +22,7 @@ import org.eclipse.mylar.context.tests.support.DomContextWriter;
 import org.eclipse.mylar.context.tests.support.FileTool;
 import org.eclipse.mylar.internal.context.core.MylarContext;
 import org.eclipse.mylar.internal.context.core.MylarContextExternalizer;
+import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.context.core.ScalingFactors;
 import org.eclipse.mylar.internal.context.core.util.SaxContextReader;
 
@@ -47,7 +49,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 
 	public void testSaxExternalizationAgainstDom() {
 		File file = FileTool.getFileInPlugin(MylarCoreTestsPlugin.getDefault(), new Path(
-				"testdata/externalizer/testcontext.xml"));
+				"testdata/externalizer/testcontext.xml.zip"));
 		assertTrue(file.getAbsolutePath(), file.exists());
 		MylarContextExternalizer externalizer = new MylarContextExternalizer();
 		externalizer.setReader(new DomContextReader());
@@ -106,10 +108,10 @@ public class ContextExternalizerTest extends AbstractContextTest {
 	}
 
 	public void testExternalization() {
-		MylarContextExternalizer externalizer = new MylarContextExternalizer();
-		String path = "extern.xml";
-		File file = new File(path);
+		// Gets a file to write to and creates contexts folder if necessary
+		File file = ContextCorePlugin.getContextManager().getFileForContext(context.getHandleIdentifier());
 		file.deleteOnExit();
+		MylarContextExternalizer externalizer = new MylarContextExternalizer();
 
 		IMylarElement node = context.parseEvent(mockSelection("1"));
 		context.parseEvent(mockNavigation("2"));
@@ -126,7 +128,13 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertEquals("2", context.getActiveNode().getHandleIdentifier());
 
 		externalizer.writeContextToXml(context, file);
-		MylarContext loaded = externalizer.readContextFromXML("handle", file);
+
+		File dataDirectory = ContextCorePlugin.getDefault().getContextStore().getRootDirectory();
+		File contextsDirectory = new File(dataDirectory, MylarContextManager.CONTEXTS_DIRECTORY);
+		File zippedContextFile = new File(contextsDirectory, context.getHandleIdentifier()
+				+ MylarContextManager.CONTEXT_FILE_EXTENSION);
+		assertTrue(zippedContextFile.exists());
+		MylarContext loaded = externalizer.readContextFromXML("handle", zippedContextFile);
 		assertNotNull(loaded);
 		assertEquals(3, loaded.getInteractionHistory().size());
 		IMylarElement loadedNode = loaded.get("1");

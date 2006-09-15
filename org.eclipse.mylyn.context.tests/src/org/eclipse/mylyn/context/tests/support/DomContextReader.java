@@ -12,10 +12,12 @@
 package org.eclipse.mylar.context.tests.support;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.zip.ZipInputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -73,13 +75,24 @@ public class DomContextReader implements IContextReader {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = null;
 		Document document = null;
+		ZipInputStream inputStream = null;
 		try {
+			inputStream = new ZipInputStream(new FileInputStream(inputFile));
+			inputStream.getNextEntry();
 			builder = factory.newDocumentBuilder();
-			document = builder.parse(inputFile);
+			document = builder.parse(inputStream);
 		} catch (SAXException se) {
 			MylarStatusHandler.log(se, "could not build");
 		} catch (ParserConfigurationException e) {
 			MylarStatusHandler.log(e, "could not parse");
+		} finally {
+			if(inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					MylarStatusHandler.fail(e, "Failed to close context input stream.", false);
+				}
+			}
 		}
 		return document;
 	}
