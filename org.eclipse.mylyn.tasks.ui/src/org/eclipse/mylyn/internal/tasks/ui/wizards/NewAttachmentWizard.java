@@ -34,6 +34,7 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.LocalAttachment;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
@@ -157,6 +158,10 @@ public class NewAttachmentWizard extends Wizard {
 
 					if (attachContext) {
 						connector.attachContext(repository, (AbstractRepositoryTask) task, "", TasksUiPlugin.getDefault().getProxySettings());
+						// attachContext sets outgoing state but we want to recieve incoming
+						// on synchronization. This could result in lost edits so need to 
+						// review the whole attachment interaction.
+						task.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
 					}
 
 				} catch (final CoreException e) {
@@ -175,8 +180,8 @@ public class NewAttachmentWizard extends Wizard {
 						});
 					}
 				}
-
-				TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, new JobChangeAdapter() {
+				
+				TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, false, new JobChangeAdapter() {
 					public void done(final IJobChangeEvent event) {
 						if (event.getResult().getException() != null) {
 							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

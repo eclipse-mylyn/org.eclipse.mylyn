@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.TextViewer;
@@ -72,6 +73,7 @@ import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -249,8 +251,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected int scrollVertPageIncrement;
 
 	protected int scrollHorzPageIncrement;
-
-	public boolean isDirty = false;
 
 	protected StyledText currentSelectedText;
 
@@ -975,7 +975,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		/* Launch a NewAttachemntWizard */
 		Button addAttachmentButton = toolkit.createButton(attachmentsComposite, "Add...", SWT.PUSH);
-
+				
+		
 		final RepositoryTaskData taskData = getRepositoryTaskData();
 		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 				AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
@@ -994,6 +995,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
 				if (!(task instanceof AbstractRepositoryTask)) {
 					// Should not happen
+					return;
+				}
+				if(AbstractRepositoryTaskEditor.this.isDirty || ((AbstractRepositoryTask)task).getSyncState().equals(RepositoryTaskSyncState.OUTGOING)) {
+					MessageDialog.openInformation(attachmentsComposite.getShell(), "Task not synchronized or dirty editor", "Commit edits or synchronize task before adding attachments." );
 					return;
 				}
 
