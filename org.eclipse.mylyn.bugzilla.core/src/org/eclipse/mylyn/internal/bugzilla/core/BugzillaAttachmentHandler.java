@@ -271,4 +271,12 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 	public boolean canUploadAttachment(TaskRepository repository, AbstractRepositoryTask task) {
 		return true;
 	}
+
+	public boolean canDeprecate(TaskRepository repository, RepositoryAttachment attachment) {		
+		return false;
+	}
+
+	public void updateAttachment(TaskRepository repository, RepositoryAttachment attachment) throws CoreException {
+		// implement
+	}
 }

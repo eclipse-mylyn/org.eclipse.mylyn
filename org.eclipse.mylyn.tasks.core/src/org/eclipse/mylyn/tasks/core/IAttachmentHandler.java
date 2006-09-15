@@ -32,4 +32,9 @@ public interface IAttachmentHandler {
 	
 	public boolean canDownloadAttachment(TaskRepository repository, AbstractRepositoryTask task);
 
+	public boolean canDeprecate(TaskRepository repository, RepositoryAttachment attachment);
+
+	/** To deprecate, change the attribute on the RepositoryAttachment and pass to this method */	
+	public void updateAttachment(TaskRepository repository, RepositoryAttachment attachment) throws CoreException;
+
 }

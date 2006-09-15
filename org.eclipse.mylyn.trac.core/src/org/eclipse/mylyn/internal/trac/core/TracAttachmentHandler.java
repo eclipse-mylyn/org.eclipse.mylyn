@@ -106,5 +106,13 @@ public class TracAttachmentHandler implements IAttachmentHandler {
 	public boolean canUploadAttachment(TaskRepository repository, AbstractRepositoryTask task) {
 		return connector.hasAttachmentSupport(repository, task);
 	}
+
+	public boolean canDeprecate(TaskRepository repository, RepositoryAttachment attachment) {		
+		return false;
+	}
+
+	public void updateAttachment(TaskRepository repository, RepositoryAttachment attachment) throws CoreException {
+		// ignore
+	}
 	
 }
