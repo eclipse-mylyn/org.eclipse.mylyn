@@ -75,7 +75,7 @@ public class ChangeDataDirTest extends TestCase {
 		assertTrue(new File(newPath).exists());
 
 		assertTrue(MylarUsageMonitorPlugin.getDefault().getInteractionLogger().getOutputFile().exists());
-		String monitorFileName = MylarUsageMonitorPlugin.MONITOR_LOG_NAME + MylarContextManager.CONTEXT_FILE_EXTENSION;
+		String monitorFileName = MylarUsageMonitorPlugin.MONITOR_LOG_NAME + MylarContextManager.OLD_CONTEXT_FILE_EXTENSION;
 		List<String> newFiles = Arrays.asList(new File(newDataDir).list());
 		assertTrue(newFiles.toString(), newFiles.contains(monitorFileName));
 
