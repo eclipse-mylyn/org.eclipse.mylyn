@@ -16,6 +16,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -31,7 +32,6 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -106,25 +106,9 @@ public class TaskRepositoriesView extends ViewPart {
 	public void createPartControl(Composite parent) {
 		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		viewer.setContentProvider(new ViewContentProvider());
-		
-//		taskListTableLabelProvider = new TaskListTableLabelProvider(new TaskElementLabelProvider(), PlatformUI
-//				.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground, this);
-		
-		viewer.setLabelProvider(new TaskRepositoriesTableLabelProvider(
-				new TaskRepositoryLabelProvider(),
-				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
-		
-		viewer.getTable().setHeaderVisible(true);
 
-		TableColumn column = new TableColumn(viewer.getTable(), SWT.LEFT);
-		column.setText("");
-		column.setWidth(25);
-		column = new TableColumn(viewer.getTable(), SWT.LEFT);
-		column.setText("Label");
-		column.setWidth(110);
-		column = new TableColumn(viewer.getTable(), SWT.LEFT);
-		column.setText("URL");
-		column.setWidth(250);
+		viewer.setLabelProvider(new DecoratingLabelProvider(new TaskRepositoryLabelProvider(), PlatformUI
+				.getWorkbench().getDecoratorManager().getLabelDecorator()));
 
 		viewer.setSorter(new ViewerSorter() {
 
@@ -146,7 +130,7 @@ public class TaskRepositoriesView extends ViewPart {
 				repositoryPropertiesAction.run();
 			}
 		});
-		
+
 		hookContextMenu();
 		contributeToActionBars();
 		getSite().setSelectionProvider(getViewer());
