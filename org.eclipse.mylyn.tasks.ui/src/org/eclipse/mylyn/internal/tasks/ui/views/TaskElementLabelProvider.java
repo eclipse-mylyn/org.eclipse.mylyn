@@ -101,7 +101,22 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 	@Override
 	public String getText(Object object) {
-		if (object instanceof ITaskListElement) {
+		
+		if(object instanceof AbstractQueryHit) {
+			AbstractQueryHit hit = (AbstractQueryHit)object;
+			if(!hit.getDescription().contains(": ")) {
+				return hit.getId() + ": " + hit.getDescription();
+			} else {
+				return hit.getDescription();
+			}
+		} else if( object instanceof AbstractRepositoryTask) {
+			AbstractRepositoryTask task = (AbstractRepositoryTask)object;
+			if(!task.getDescription().contains(": ")) {
+				return AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()) + ": " + task.getDescription();
+			} else {
+				return task.getDescription();
+			}
+		} else if (object instanceof ITaskListElement) {
 			ITaskListElement element = (ITaskListElement) object;
 			return element.getDescription();
 		} else {

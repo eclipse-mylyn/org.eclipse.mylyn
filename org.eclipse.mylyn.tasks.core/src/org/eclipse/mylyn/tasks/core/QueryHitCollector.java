@@ -106,8 +106,6 @@ public class QueryHitCollector {
 	}
 
 	public void addMatch(AbstractQueryHit hit) {
-		String description = hit.getId() + ": " + hit.getDescription();
-		hit.setDescription(description);
 		results.add(hit);
 	}
 
