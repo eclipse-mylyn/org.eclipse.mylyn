@@ -72,115 +72,11 @@ public class MylarTaskEditor extends FormEditor {
 
 	private IEditorPart contentOutlineProvider = null;
 
-	// private TaskEditorSelectionProvider selectionProvider;
-	//
-	// private static class TaskEditorSelectionProvider extends
-	// MultiPageSelectionProvider {
-	// private ISelection globalSelection;
-	//
-	// public TaskEditorSelectionProvider(MylarTaskEditor taskEditor) {
-	// super(taskEditor);
-	// }
-	//
-	// public ISelection getSelection() {
-	// IEditorPart activeEditor = ((MylarTaskEditor)
-	// getMultiPageEditor()).getActiveEditor();
-	// if (activeEditor != null && activeEditor.getSite() != null) {
-	// ISelectionProvider selectionProvider =
-	// activeEditor.getSite().getSelectionProvider();
-	// if (selectionProvider != null)
-	// return selectionProvider.getSelection();
-	// }
-	//
-	// return globalSelection;
-	// }
-	//
-	// public void setSelection(ISelection selection) {
-	// IEditorPart activeEditor = ((MylarTaskEditor)
-	// getMultiPageEditor()).getActiveEditor();
-	// if (activeEditor != null && activeEditor.getSite() != null) {
-	// ISelectionProvider selectionProvider =
-	// activeEditor.getSite().getSelectionProvider();
-	// if (selectionProvider != null)
-	// selectionProvider.setSelection(selection);
-	// } else {
-	// this.globalSelection = selection;
-	// fireSelectionChanged(new SelectionChangedEvent(this, globalSelection));
-	// }
-	// }
-	// }
-
 	public MylarTaskEditor() {
 		super();
 		taskPlanningEditor = new TaskPlanningEditor(this);
 		taskPlanningEditor.setParentEditor(this);
 	}
-
-	// @Override
-	// protected void createPages() {
-	// try {
-	// MenuManager manager = new MenuManager();
-	// IMenuListener listener = new IMenuListener() {
-	// public void menuAboutToShow(IMenuManager manager) {
-	// contextMenuAboutToShow(manager);
-	// }
-	// };
-	// manager.setRemoveAllWhenShown(true);
-	// manager.addMenuListener(listener);
-	// contextMenu = manager.createContextMenu(getContainer());
-	// getContainer().setMenu(contextMenu);
-	//
-	// int index = 0;
-	// index = createTaskSummaryPage();
-	// int selectedIndex = index;
-	// for (ITaskEditorFactory factory :
-	// TasksUiPlugin.getDefault().getTaskEditorFactories()) {
-	// if (factory.canCreateEditorFor(task)) {
-	// try {
-	// IEditorPart editor = factory.createEditor(this);
-	// IEditorInput input = factory.createEditorInput(task);
-	// if (editor != null && input != null) {
-	// editors.add(editor);
-	// if (editor instanceof AbstractRepositoryTaskEditor) {
-	// AbstractRepositoryTaskEditor repositoryTaskEditor =
-	// (AbstractRepositoryTaskEditor)editor;
-	// repositoryTaskEditor.setParentEditor(this);
-	// editor.init(getEditorSite(), input);
-	// repositoryTaskEditor.createPartControl(getContainer());
-	// index = addPage(repositoryTaskEditor.getControl());
-	// } else {
-	// index = addPage(editor, input);
-	// }
-	// selectedIndex = index;
-	// setPageText(index++, factory.getTitle());
-	// }
-	// // HACK: overwrites if multiple present
-	// if (factory.providesOutline()) {
-	// contentOutlineProvider = editor;
-	// }
-	// } catch (Exception e) {
-	// MylarStatusHandler.fail(e, "Could not create editor via factory: " +
-	// factory, true);
-	// }
-	// }
-	// }
-	// if (hasValidUrl()) {
-	// int browserIndex = createBrowserPage();
-	// if (selectedIndex == 0 && !taskEditorInput.isNewTask()) {
-	// selectedIndex = browserIndex;
-	// }
-	// }
-	// setActivePage(selectedIndex);
-	//
-	// if (task instanceof AbstractRepositoryTask) {
-	// setTitleImage(TaskListImages.getImage(TaskListImages.TASK_REPOSITORY));
-	// } else if (hasValidUrl()) {
-	// setTitleImage(TaskListImages.getImage(TaskListImages.TASK_WEB));
-	// }
-	// } catch (PartInitException e) {
-	// MylarStatusHandler.fail(e, "failed to create task editor pages", false);
-	// }
-	// }
 
 	protected void contextMenuAboutToShow(IMenuManager manager) {
 		TaskEditorActionContributor contributor = getContributor();
@@ -257,18 +153,6 @@ public class MylarTaskEditor extends FormEditor {
 		// createBrowserPage();
 		// }
 	}
-
-	// // see PDEFormEditor
-	// private void commitFormPages(boolean onSave) {
-	// IFormPage[] pages = getPages();
-	// for (int i = 0; i < pages.length; i++) {
-	// IFormPage page = pages[i];
-	// IManagedForm mform = page.getManagedForm();
-	// if (mform != null && mform.isDirty()) {
-	// mform.commit(true);
-	// }
-	// }
-	// }
 
 	// see PDEFormEditor
 	/* package */@SuppressWarnings("unchecked")
