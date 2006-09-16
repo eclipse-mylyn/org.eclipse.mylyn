@@ -112,7 +112,7 @@ public class Task implements ITask {
 
 	private String notes = "";
 
-	private int estimatedTimeHours = 0;
+	private int estimatedTimeHours = 1;
 
 	private boolean completed;
 
