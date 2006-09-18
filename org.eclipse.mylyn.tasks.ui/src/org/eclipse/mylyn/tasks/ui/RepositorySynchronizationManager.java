@@ -164,11 +164,11 @@ public class RepositorySynchronizationManager {
 					changedTasks = connector.getOfflineTaskHandler().getChangedSinceLastSync(repository,
 							repositoryTasks, null);
 				} catch (Exception e) {
-					if (attempts == MAX_QUERY_ATTEMPTS) {						
-						if ((e instanceof CoreException && !(((CoreException)e).getStatus().getException() instanceof IOException))) {
+					if (attempts == MAX_QUERY_ATTEMPTS) {
+						if ((e instanceof CoreException && !(((CoreException) e).getStatus().getException() instanceof IOException))) {
 							MylarStatusHandler.log(e, "Could not determine modified tasks for " + repository.getUrl()
 									+ ".");
-						} else if(e instanceof UnsupportedEncodingException){
+						} else if (e instanceof UnsupportedEncodingException) {
 							MylarStatusHandler.log(e, "Could not determine modified tasks for " + repository.getUrl()
 									+ ".");
 						} else {
@@ -315,8 +315,8 @@ public class RepositorySynchronizationManager {
 				break;
 			}
 
-			if (status == RepositoryTaskSyncState.SYNCHRONIZED || repositoryTask.getLastModifiedDateStamp() == null) {
-				repositoryTask.setModifiedDateStamp(newTaskData.getLastModified());
+			if (status == RepositoryTaskSyncState.SYNCHRONIZED || repositoryTask.getLastSyncDateStamp() == null) {
+				repositoryTask.setLastSyncDateStamp(newTaskData.getLastModified());
 			}
 		}
 
@@ -333,17 +333,17 @@ public class RepositorySynchronizationManager {
 	/** public for testing purposes */
 	public boolean checkHasIncoming(AbstractRepositoryConnector connector, AbstractRepositoryTask repositoryTask,
 			RepositoryTaskData newData) {
-		String lastModified = repositoryTask.getLastModifiedDateStamp();
+		String lastModified = repositoryTask.getLastSyncDateStamp();
 		if (newData != null) {
-			RepositoryTaskData oldTaskData = OfflineTaskManager.findBug(repositoryTask.getRepositoryUrl(),
-					newData.getId());
+			RepositoryTaskData oldTaskData = OfflineTaskManager.findBug(repositoryTask.getRepositoryUrl(), newData
+					.getId());
 			if (oldTaskData != null) {
 				lastModified = oldTaskData.getLastModified();
 			}
 		}
 
 		RepositoryTaskAttribute modifiedDateAttribute = newData.getAttribute(RepositoryTaskAttribute.DATE_MODIFIED);
-		if (repositoryTask.getLastModifiedDateStamp() != null && modifiedDateAttribute != null
+		if (repositoryTask.getLastSyncDateStamp() != null && modifiedDateAttribute != null
 				&& modifiedDateAttribute.getValue() != null) {
 			Date newModifiedDate = connector.getOfflineTaskHandler().getDateForAttributeType(
 					RepositoryTaskAttribute.DATE_MODIFIED, modifiedDateAttribute.getValue());
@@ -380,6 +380,33 @@ public class RepositorySynchronizationManager {
 		ArrayList<RepositoryTaskData> bugList = new ArrayList<RepositoryTaskData>();
 		bugList.add(bug);
 		TasksUiPlugin.getDefault().getOfflineReportsFile().remove(bugList);
+	}
+
+	/**
+	 * Do what is necessary to put the task in a synchronized ('read') state. If
+	 * there is no backing task data a synchronization job will launch.
+	 */
+	public void markRead(AbstractRepositoryTask repositoryTask) {
+		if (repositoryTask.getSyncState().equals(RepositoryTaskSyncState.INCOMING)) {
+			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+					repositoryTask.getRepositoryKind());
+			if (connector == null)
+				return;
+			if (repositoryTask.getTaskData() != null && repositoryTask.getTaskData().getLastModified() != null) {
+				repositoryTask.setLastSyncDateStamp(repositoryTask.getTaskData().getLastModified());
+				repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);				
+				TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
+			} else {
+				this.synchronize(connector, repositoryTask, true, null);
+			}
+		}
+	}
+
+	public void markUnRead(AbstractRepositoryTask repositoryTask) {
+		if (repositoryTask.getSyncState().equals(RepositoryTaskSyncState.SYNCHRONIZED)) {
+			repositoryTask.setSyncState(RepositoryTaskSyncState.INCOMING);
+			TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
+		}
 	}
 
 	/**

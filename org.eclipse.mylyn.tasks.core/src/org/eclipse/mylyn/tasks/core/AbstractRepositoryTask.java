@@ -27,8 +27,8 @@ public abstract class AbstractRepositoryTask extends Task {
 	
 	private static final String MISSING_REPOSITORY_HANDLE = "norepository" + CONTEXT_HANDLE_DELIM;
 	
-	/** The last time this task's bug report was downloaded from the server. */
-	protected String lastModified;
+	/** The last time this task's bug report was in a synchronized (read?) state. */
+	protected String lastSynchronizedDateStamp;
 
 	protected transient RepositoryTaskData taskData;
 
@@ -60,12 +60,12 @@ public abstract class AbstractRepositoryTask extends Task {
 		return taskData != null;
 	}
 
-	public String getLastModifiedDateStamp() {
-		return lastModified;
+	public String getLastSyncDateStamp() {
+		return lastSynchronizedDateStamp;
 	}
 
-	public void setModifiedDateStamp(String lastModified) {
-		this.lastModified = lastModified;
+	public void setLastSyncDateStamp(String lastSyncDateStamp) {
+		this.lastSynchronizedDateStamp = lastSyncDateStamp;
 	}
 
 	public void setSyncState(RepositoryTaskSyncState syncState) {

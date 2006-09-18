@@ -1288,7 +1288,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			// Expand new comments
 			if (repositoryTask != null && offlineHandler != null) {
 				Date lastModDate = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED,
-						repositoryTask.getLastModifiedDateStamp());
+						repositoryTask.getLastSyncDateStamp());
 				Date commentDate = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.COMMENT_DATE,
 						taskComment.getCreated());
 				if (commentDate != null && lastModDate != null && commentDate.after(lastModDate)) {

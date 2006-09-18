@@ -11,11 +11,11 @@
 
 package org.eclipse.mylar.tasks.tests;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.internal.tasks.core.WebTask;
 import org.eclipse.mylar.internal.tasks.ui.TaskPriorityFilter;
@@ -24,6 +24,7 @@ import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.ui.TaskListManager;
@@ -166,27 +167,32 @@ public class TaskListUiTest extends TestCase {
 		TaskListView view = TaskListView.getFromActivePerspective();
 		assertNotNull(view);
 		WebTask webTask = new WebTask("1", "1", "", "", "web");
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(webTask, TasksUiPlugin.getTaskListManager().getTaskList().getRootCategory());
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(webTask,
+				TasksUiPlugin.getTaskListManager().getTaskList().getRootCategory());
 		view.getViewer().refresh();
-//		Arrays.asList(view.getViewer().getVisibleExpandedElements());
+		// Arrays.asList(view.getViewer().getVisibleExpandedElements());
 		assertFalse(webTask.isCompleted());
-		view.getViewer().setSelection(new StructuredSelection(webTask));
-		new MarkTaskCompleteAction(TaskListView.getFromActivePerspective()).run();
+		ArrayList<ITaskListElement> tasks = new ArrayList<ITaskListElement>();
+		tasks.add(webTask);
+		new MarkTaskCompleteAction(tasks).run();
 		assertTrue(webTask.isCompleted());
 	}
-	
+
 	public void testUiFilter() {
 		try {
 			assertNotNull(TaskListView.getFromActivePerspective());
 			TreeViewer viewer = TaskListView.getFromActivePerspective().getViewer();
-			TaskListView.getFromActivePerspective().addFilter(TaskListView.getFromActivePerspective().getCompleteFilter());
+			TaskListView.getFromActivePerspective().addFilter(
+					TaskListView.getFromActivePerspective().getCompleteFilter());
 			viewer.refresh();
 			viewer.expandAll();
 			TreeItem[] items = viewer.getTree().getItems();
 			assertTrue(checkFilter(CHECK_COMPLETE_FILTER, items));
-			TaskListView.getFromActivePerspective().removeFilter(TaskListView.getFromActivePerspective().getCompleteFilter());
+			TaskListView.getFromActivePerspective().removeFilter(
+					TaskListView.getFromActivePerspective().getCompleteFilter());
 
-			TaskPriorityFilter filter = (TaskPriorityFilter) TaskListView.getFromActivePerspective().getPriorityFilter();
+			TaskPriorityFilter filter = (TaskPriorityFilter) TaskListView.getFromActivePerspective()
+					.getPriorityFilter();
 			filter.displayPrioritiesAbove("P2");
 			TaskListView.getFromActivePerspective().addFilter(filter);
 			viewer.refresh();
@@ -214,11 +220,11 @@ public class TaskListUiTest extends TestCase {
 		numListenersBefore = listeners.size();
 
 		// open a task in editor
-//		cat1task1.setForceSyncOpen(true);
+		// cat1task1.setForceSyncOpen(true);
 		TaskUiUtil.openEditor(cat1task1, false, true);
-//		cat1task1.openTaskInEditor(false);
-//		cat1task2.setForceSyncOpen(true);
-//		cat1task2.openTaskInEditor(false);
+		// cat1task1.openTaskInEditor(false);
+		// cat1task2.setForceSyncOpen(true);
+		// cat1task2.openTaskInEditor(false);
 		TaskUiUtil.openEditor(cat1task2, false, true);
 
 		listeners = manager.getTaskList().getChangeListeners();
@@ -226,8 +232,7 @@ public class TaskListUiTest extends TestCase {
 
 		assertEquals(numListenersDuring, numListenersBefore + 2);
 
-		TasksUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(
-				false);
+		TasksUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
 
 		listeners = manager.getTaskList().getChangeListeners();
 		numListenersAfter = listeners.size();

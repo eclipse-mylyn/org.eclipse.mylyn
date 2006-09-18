@@ -480,6 +480,7 @@
    <extension point="org.eclipse.mylar.tasks.ui.providers">    
       <dynamicPopupMenu class="org.eclipse.mylar.internal.tasks.ui.TaskReminderMenuContributor"/>
       <dynamicPopupMenu class="org.eclipse.mylar.internal.tasks.ui.MoveToCategoryMenuContributor"/>
+       <dynamicPopupMenu class="org.eclipse.mylar.internal.tasks.ui.TaskStatusMenuContributor"/>
    </extension>
    <extension
          point="org.eclipse.mylar.tasks.ui.editors">

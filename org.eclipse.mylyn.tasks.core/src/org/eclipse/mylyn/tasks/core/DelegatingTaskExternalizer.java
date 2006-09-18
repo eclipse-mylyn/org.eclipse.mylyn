@@ -99,6 +99,10 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 
 	public static final String LABEL_AUTOMATIC = "<automatic>";
 
+	/** 
+	 * This element holds the date stamp recorded upon last 
+	 * transition to a synchronized state.
+	 */
 	public static final String KEY_LAST_MOD_DATE = "LastModified";
 
 	public static final String KEY_DIRTY = "Dirty";
@@ -174,8 +178,8 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 
 		if (task instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask abstractTask = (AbstractRepositoryTask) task;
-			if (abstractTask.getLastModifiedDateStamp() != null) {
-				node.setAttribute(KEY_LAST_MOD_DATE, abstractTask.getLastModifiedDateStamp());
+			if (abstractTask.getLastSyncDateStamp() != null) {
+				node.setAttribute(KEY_LAST_MOD_DATE, abstractTask.getLastSyncDateStamp());
 			}
 
 			if(abstractTask.isNotified()) {
@@ -379,7 +383,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			AbstractRepositoryTask abstractTask = (AbstractRepositoryTask) task;
 			abstractTask.setCurrentlySynchronizing(false);
 			if (element.hasAttribute(KEY_LAST_MOD_DATE) && !element.getAttribute(KEY_LAST_MOD_DATE).equals("")) {
-				abstractTask.setModifiedDateStamp(element.getAttribute(KEY_LAST_MOD_DATE));
+				abstractTask.setLastSyncDateStamp(element.getAttribute(KEY_LAST_MOD_DATE));
 			}
 
 			if (VAL_TRUE.equals(element.getAttribute(KEY_DIRTY))) {

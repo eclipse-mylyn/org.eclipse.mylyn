@@ -11,13 +11,15 @@
 
 package org.eclipse.mylar.internal.tasks.ui.actions;
 
+import java.util.List;
+
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.tasks.core.WebTask;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.ITaskListElement;
+import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
@@ -27,19 +29,20 @@ public class MarkTaskCompleteAction extends Action {
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.mark.completed";
 
-	private final TaskListView view;
-
-	public MarkTaskCompleteAction(TaskListView view) {
-		this.view = view;
+	private List<ITaskListElement> selectedElements;
+	
+	public MarkTaskCompleteAction(List<ITaskListElement> selectedElements) {
+		this.selectedElements = selectedElements;
 		setText("Mark Complete");
 		setToolTipText("Mark Complete");
 		setId(ID);
 		setImageDescriptor(TaskListImages.TASK_COMPLETE);
+		setEnabled(selectedElements.size() == 1 && (selectedElements.get(0) instanceof Task || selectedElements.get(0) instanceof AbstractQueryHit));
 	}
 
 	@Override
 	public void run() {
-		for (Object selectedObject : ((IStructuredSelection) this.view.getViewer().getSelection()).toList()) {
+		for (Object selectedObject : selectedElements) {
 			if (selectedObject instanceof ITask) {
 				TasksUiPlugin.getTaskListManager().getTaskList().markComplete(((ITask) selectedObject), true);
 			} else if (selectedObject instanceof AbstractQueryHit) {

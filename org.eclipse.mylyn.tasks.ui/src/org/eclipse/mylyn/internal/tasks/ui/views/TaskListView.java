@@ -45,7 +45,6 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.core.WebTask;
 import org.eclipse.mylar.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylar.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.internal.tasks.ui.TaskArchiveFilter;
@@ -198,9 +197,9 @@ public class TaskListView extends ViewPart {
 
 	private TaskDeactivateAction deactivateAction = new TaskDeactivateAction();
 
-	private MarkTaskCompleteAction markIncompleteAction;
+	// private MarkTaskCompleteAction markIncompleteAction;
 
-	private MarkTaskIncompleteAction markCompleteAction;
+	// private MarkTaskIncompleteAction markCompleteAction;
 
 	private FilterCompletedTasksAction filterCompleteTask;
 
@@ -912,7 +911,7 @@ public class TaskListView extends ViewPart {
 		getViewer().setLabelProvider(taskListTableLabelProvider);
 		getViewer().setInput(getViewSite());
 		getViewer().getTree().addKeyListener(new KeyListener() {
-			
+
 			public void keyPressed(KeyEvent e) {
 				if (e.keyCode == SWT.F2 && e.stateMask == 0) {
 					if (renameAction.isEnabled()) {
@@ -927,8 +926,8 @@ public class TaskListView extends ViewPart {
 				} else if (e.keyCode == 'f' && e.stateMask == SWT.MOD1) {
 					filteredTree.getFilterControl().setFocus();
 				} else if (e.stateMask == 0) {
-					if (Character.isLetter((char)e.keyCode) || Character.isDigit((char)e.keyCode)) {
-						String string = new Character((char)e.keyCode).toString();
+					if (Character.isLetter((char) e.keyCode) || Character.isDigit((char) e.keyCode)) {
+						String string = new Character((char) e.keyCode).toString();
 						filteredTree.getFilterControl().setText(string);
 						filteredTree.getFilterControl().setSelection(1, 1);
 						filteredTree.getFilterControl().setFocus();
@@ -1073,13 +1072,14 @@ public class TaskListView extends ViewPart {
 			addAction(copyDetailsAction, manager, element);
 
 			if (task != null) {
-				if (!(task instanceof AbstractRepositoryTask) || task instanceof WebTask) {
-					if (task.isCompleted()) {
-						addAction(markCompleteAction, manager, element);
-					} else {
-						addAction(markIncompleteAction, manager, element);
-					}
-				}
+				// if (!(task instanceof AbstractRepositoryTask) || task
+				// instanceof WebTask) {
+				// if (task.isCompleted()) {
+				// addAction(markCompleteAction, manager, element);
+				// } else {
+				// addAction(markIncompleteAction, manager, element);
+				// }
+				// }
 				addAction(removeFromCategoryAction, manager, element);
 				addAction(deleteAction, manager, element);
 				if (task.isActive()) {
@@ -1218,8 +1218,8 @@ public class TaskListView extends ViewPart {
 		collapseAll = new CollapseAllAction(this);
 		expandAll = new ExpandAllAction(this);
 		// autoClose = new ManageEditorsAction();
-		markIncompleteAction = new MarkTaskCompleteAction(this);
-		markCompleteAction = new MarkTaskIncompleteAction(this);
+		// markIncompleteAction = new MarkTaskCompleteAction(this);
+		// markCompleteAction = new MarkTaskIncompleteAction(this);
 		openTaskEditor = new OpenTaskListElementAction(this.getViewer());
 		openWithBrowser = new OpenWithBrowserAction();
 		filterCompleteTask = new FilterCompletedTasksAction(this);
@@ -1431,7 +1431,7 @@ public class TaskListView extends ViewPart {
 		}
 		return null;
 	}
-	
+
 	public void indicatePaused(boolean paused) {
 		isPaused = paused;
 		IStatusLineManager statusLineManager = getViewSite().getActionBars().getStatusLineManager();

@@ -136,13 +136,13 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 					try {
 						oldDateStamp = delta_ts_format.format(new Date(
 								new Long(element.getAttribute(KEY_OLD_LAST_DATE)).longValue()));
-						task.setModifiedDateStamp(oldDateStamp);
+						task.setLastSyncDateStamp(oldDateStamp);
 					} catch (NumberFormatException e) {
 						// For those who may have been working from head...
 						Date parsedDate = delta_ts_format.parse(element.getAttribute(KEY_OLD_LAST_DATE));
 						if (parsedDate != null) {
 							oldDateStamp = element.getAttribute(KEY_OLD_LAST_DATE);
-							task.setModifiedDateStamp(oldDateStamp);
+							task.setLastSyncDateStamp(oldDateStamp);
 						}
 					}
 				}
