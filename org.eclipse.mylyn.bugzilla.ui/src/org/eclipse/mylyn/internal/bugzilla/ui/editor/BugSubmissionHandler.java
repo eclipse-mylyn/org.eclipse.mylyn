@@ -12,6 +12,8 @@
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
 import java.io.IOException;
+import java.net.ConnectException;
+import java.net.Proxy;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Set;
@@ -68,7 +70,13 @@ public class BugSubmissionHandler {
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
 					try {
-						String submittedBugId = form.submitReportToRepository();
+						String submittedBugId = "";
+						try {
+							submittedBugId = form.submitReportToRepository();
+						} catch (ConnectException e) {
+							form.setProxySettings(Proxy.NO_PROXY);
+							submittedBugId = form.submitReportToRepository();
+						}
 
 						if (form.isNewBugPost()) {
 							handleNewBugPost(form.getTaskData(), submittedBugId);
@@ -84,7 +92,7 @@ public class BugSubmissionHandler {
 								Status.ERROR,
 								"Bugzilla could not post your bug, probably because your credentials are incorrect. Ensure proper repository configuration in "
 										+ TaskRepositoriesView.NAME + ".", e);
-					} catch (IOException e) {
+					} catch (IOException e) {					
 						return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.ERROR,
 								"Check repository credentials and connectivity.", e);
 					} catch (UnrecognizedReponseException e) {

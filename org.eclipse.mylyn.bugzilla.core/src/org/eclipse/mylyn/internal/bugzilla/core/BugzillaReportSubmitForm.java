@@ -20,7 +20,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
@@ -333,11 +332,7 @@ public class BugzillaReportSubmitForm {
 		String result = null;
 		try {
 			// connect to the bugzilla server
-			URLConnection cntx = WebClientUtil.getUrlConnection(postUrl, proxySettings, false);
-			if (cntx == null || !(cntx instanceof HttpURLConnection))
-				return null;
-
-			HttpURLConnection postConnection = (HttpURLConnection) cntx;
+			HttpURLConnection postConnection = WebClientUtil.getUrlConnection(postUrl, proxySettings, false);
 
 			// set the connection method
 			postConnection.setRequestMethod(METHOD_POST);
@@ -635,5 +630,10 @@ public class BugzillaReportSubmitForm {
 
 	public void setTaskData(RepositoryTaskData taskData) {
 		this.taskData = taskData;
+	}
+
+	
+	public void setProxySettings(Proxy proxySettings) {
+		this.proxySettings = proxySettings;
 	}
 }

@@ -14,10 +14,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
@@ -35,6 +35,7 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPO
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESOLUTION;
 import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer;
 import org.eclipse.mylar.internal.tasks.core.HtmlTag;
+import org.eclipse.mylar.internal.tasks.core.WebClientUtil;
 import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer.Token;
 import org.eclipse.mylar.tasks.core.RepositoryOperation;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
@@ -135,7 +136,7 @@ public class BugzillaServerFacade {
 
 	// TODO: improve and move to repository connector?
 	public static void validateCredentials(Proxy proxySettings, String repositoryUrl, String userid, String password) throws IOException,
-			LoginException, BugzillaException {
+			BugzillaException, KeyManagementException, GeneralSecurityException {
 
 		proxySettings = proxySettings == null ? Proxy.NO_PROXY : proxySettings;
 		
@@ -144,8 +145,8 @@ public class BugzillaServerFacade {
 				+ URLEncoder.encode(password, BugzillaCorePlugin.ENCODING_UTF_8);
 
 		URL serverURL = new URL(url);
-		URLConnection connection = serverURL.openConnection(proxySettings);
-		BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		HttpURLConnection serverConnection = WebClientUtil.openUrlConnection(serverURL, proxySettings, false);
+		BufferedReader in = new BufferedReader(new InputStreamReader(serverConnection.getInputStream()));
 		try {
 			parseHtmlError(in);
 		} catch (UnrecognizedReponseException e) {

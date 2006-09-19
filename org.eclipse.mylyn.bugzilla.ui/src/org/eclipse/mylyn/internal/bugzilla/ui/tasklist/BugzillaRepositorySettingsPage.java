@@ -13,11 +13,9 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
-import java.net.URLConnection;
 
 import javax.security.auth.login.LoginException;
 
@@ -179,20 +177,12 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 					monitor.beginTask("Validating server settings", IProgressMonitor.UNKNOWN);
 					try {
 
-						// TODO: all of this should be encapsulated by
-						// validateCredentials
-
-						Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
-						URLConnection cntx = WebClientUtil.getUrlConnection(serverURL, proxySettings, false);
-						if (cntx == null || !(cntx instanceof HttpURLConnection)) {
-							throw new MalformedURLException();
-						}
-
-						HttpURLConnection serverConnection = (HttpURLConnection) cntx;
-						serverConnection.connect();
-						serverConnection.getInputStream();
+						// Check that the server exists and we can connect (proxy or not)
+						Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();						
+						WebClientUtil.openUrlConnection(serverURL, proxySettings, false);
 
 						if (!isAnonymous) {
+							// Server exists, connect to service and validate credentials
 							BugzillaServerFacade.validateCredentials(proxySettings, serverUrl, newUserId, newPassword);
 						}
 

@@ -12,9 +12,11 @@
 package org.eclipse.mylar.bugzilla.tests.headless;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.security.GeneralSecurityException;
+import java.security.KeyManagementException;
 import java.util.List;
-
-import javax.security.auth.login.LoginException;
 
 import junit.framework.TestCase;
 
@@ -65,18 +67,16 @@ public class BugzillaQueryTest extends TestCase {
 		}
 	}
 
-	/**
-	 * @throws LoginException
-	 *             Username / Password invalid
-	 * @throws IOException
-	 *             Network or parse failed
-	 * @throws BugzillaException
-	 *             Midair collision, or other bugzilla failure. See
-	 *             {@link BugzillaServerFacade.parseHtmlError}
-	 */
-	public void testValidateCredentials() throws LoginException, IOException, BugzillaException {
+	public void testValidateCredentials() throws IOException, BugzillaException, KeyManagementException,
+			GeneralSecurityException {
 		BugzillaServerFacade.validateCredentials(null, repository.getUrl(), repository.getUserName(), repository
 				.getPassword());
+	}
+
+	public void testValidateCredentialsInvalidProxy() throws IOException, BugzillaException, KeyManagementException,
+			GeneralSecurityException {
+		BugzillaServerFacade.validateCredentials(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("localhost", 12356)),
+				repository.getUrl(), repository.getUserName(), repository.getPassword());
 	}
 
 	public void testGetBug() throws Exception {
@@ -103,14 +103,16 @@ public class BugzillaQueryTest extends TestCase {
 		assertTrue(products.contains("Read Write Test Cases"));
 		assertTrue(products.contains("TestProduct"));
 	}
-	
+
 	public void testQueryViaConnector() throws Exception {
-		String queryUrlString = repository.getUrl()+"/buglist.cgi?ctype=rdf&query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
+		String queryUrlString = repository.getUrl()
+				+ "/buglist.cgi?ctype=rdf&query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
 		TaskList taskList = new TaskList();
 		QueryHitCollector collector = new QueryHitCollector(new TaskList());
 		BugzillaRepositoryConnector connector = new BugzillaRepositoryConnector();
 		connector.init(taskList);
-		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), queryUrlString, "description", "-1", taskList);	
+		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), queryUrlString, "description",
+				"-1", taskList);
 		connector.performQuery(query, repository, null, new NullProgressMonitor(), collector);
 		assertEquals(2, collector.getHits().size());
 		for (AbstractQueryHit hit : collector.getHits()) {
@@ -119,20 +121,24 @@ public class BugzillaQueryTest extends TestCase {
 	}
 }
 
-//public void testQueryBugs() throws Exception {
+// public void testQueryBugs() throws Exception {
 //
-//		QueryHitCollector collector = new QueryHitCollector(new TaskList());
+// QueryHitCollector collector = new QueryHitCollector(new TaskList());
 //
-//		// Note need for ctype=rdf in query url
-//		String urlString = "http://mylar.eclipse.org/bugs222/buglist.cgi?ctype=rdf&query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
-//		RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory();
+// // Note need for ctype=rdf in query url
+// String urlString =
+// "http://mylar.eclipse.org/bugs222/buglist.cgi?ctype=rdf&query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
+// RepositoryQueryResultsFactory queryFactory = new
+// RepositoryQueryResultsFactory();
 //		
-//		// Tasklist can be null but calls to hit.getOrCreateCorrespondingTask() will return null.
-//		queryFactory.performQuery(null, repository.getUrl(), collector, urlString, null, -1, repository
-//				.getCharacterEncoding());
+// // Tasklist can be null but calls to hit.getOrCreateCorrespondingTask() will
+// return null.
+// queryFactory.performQuery(null, repository.getUrl(), collector, urlString,
+// null, -1, repository
+// .getCharacterEncoding());
 //
-//		assertEquals(2, collector.getHits().size());
-//		for (AbstractQueryHit hit : collector.getHits()) {
-//			assertTrue(hit.getDescription().contains("search-match-test"));
-//		}
-//	}
+// assertEquals(2, collector.getHits().size());
+// for (AbstractQueryHit hit : collector.getHits()) {
+// assertTrue(hit.getDescription().contains("search-match-test"));
+// }
+// }

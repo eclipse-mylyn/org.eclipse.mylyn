@@ -18,7 +18,6 @@ import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
-import java.net.URLConnection;
 import java.security.GeneralSecurityException;
 import java.util.zip.GZIPInputStream;
 
@@ -38,10 +37,6 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public class AbstractReportFactory {
 
-	private static final String ENCODING_GZIP = "gzip";
-
-	private static final int COM_TIME_OUT = 30000;
-
 	private static final String CONTENT_TYPE_TEXT_HTML = "text/html";
 
 	private static final String CONTENT_TYPE_APP_RDF_XML = "application/rdf+xml";
@@ -56,18 +51,9 @@ public class AbstractReportFactory {
 	 * @throws GeneralSecurityException */
 	protected void collectResults(URL url, Proxy proxySettings, String characterEncoding,
 			DefaultHandler contentHandler, boolean clean) throws IOException, BugzillaException, GeneralSecurityException {
-		URLConnection cntx = WebClientUtil.getUrlConnection(url, proxySettings, false);
-		if (cntx == null || !(cntx instanceof HttpURLConnection)) {
-			throw new IOException("Could not form URLConnection.");
-		}
-
-		HttpURLConnection connection = (HttpURLConnection) cntx;
+		
+		HttpURLConnection connection = WebClientUtil.openUrlConnection(url, proxySettings, false);
 		try {
-			connection.setConnectTimeout(COM_TIME_OUT);
-			connection.setReadTimeout(COM_TIME_OUT);
-			connection.addRequestProperty("Accept-Encoding", ENCODING_GZIP);
-
-			connection.connect();
 			int responseCode = connection.getResponseCode();
 			if (responseCode != HttpURLConnection.HTTP_OK) {
 				String msg;
@@ -83,7 +69,7 @@ public class AbstractReportFactory {
 			BufferedReader in = null;
 
 			String contentEncoding = connection.getContentEncoding();
-			boolean gzipped = contentEncoding != null && ENCODING_GZIP.equals(contentEncoding);
+			boolean gzipped = contentEncoding != null && WebClientUtil.ENCODING_GZIP.equals(contentEncoding);
 			if (characterEncoding != null) {
 				if (gzipped) {
 					in = new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream()),

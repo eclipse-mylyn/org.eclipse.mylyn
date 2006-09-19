@@ -218,7 +218,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 			String url = repositoryUrl + POST_ARGS_ATTACHMENT_DOWNLOAD + id;
 			url = BugzillaServerFacade.addCredentials(url, userName, password);
 			URL downloadUrl = new URL(url);
-			URLConnection connection = WebClientUtil.getUrlConnection(downloadUrl, proxySettings, false);
+			URLConnection connection = WebClientUtil.openUrlConnection(downloadUrl, proxySettings, false);
 			if (connection != null) {
 				InputStream input = connection.getInputStream();
 				outStream = new FileOutputStream(destinationFile);

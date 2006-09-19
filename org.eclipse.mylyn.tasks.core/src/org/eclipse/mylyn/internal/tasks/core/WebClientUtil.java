@@ -12,7 +12,10 @@
 package org.eclipse.mylar.internal.tasks.core;
 
 import java.io.IOException;
+import java.net.ConnectException;
+import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
@@ -35,20 +38,43 @@ public class WebClientUtil {
 
 	private static final int HTTPS_PORT = 443;
 
+	private static final int COM_TIME_OUT = 30000;
+
+	public static final String ENCODING_GZIP = "gzip";
+
 	public static void initCommonsLoggingSettings() {
 		// TODO: move?
 		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
 		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "off");
 		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "off");
 	}
-	
+
 	/**
-	 * @param url
-	 * @param proxy
-	 *            can be null
-	 * @throws GeneralSecurityException 
+	 * Returns an opened HttpURLConnection. If the proxy fails a direct connection
+	 * is attempted.
 	 */
-	public static URLConnection getUrlConnection(URL url, Proxy proxy, boolean useTls) throws IOException,
+	public static HttpURLConnection openUrlConnection(URL url, Proxy proxy, boolean useTls) throws IOException,
+			KeyManagementException, GeneralSecurityException {
+		
+		if (proxy == null) {
+			proxy = Proxy.NO_PROXY;
+		}
+		
+		HttpURLConnection remoteConnection = getUrlConnection(url, proxy, useTls);
+		try {
+			remoteConnection = openConnection(url, proxy);
+		} catch (ConnectException e) {
+			remoteConnection = openConnection(url, Proxy.NO_PROXY);
+		}
+
+		return remoteConnection;
+	}
+
+	/**
+	 * Returns connection that has yet to be opened (can still set connection parameters).
+	 * Catch ConnectException and retry with Proxy.NO_PROXY if necessary.
+	 */
+	public static HttpURLConnection getUrlConnection(URL url, Proxy proxy, boolean useTls) throws IOException,
 			KeyManagementException, GeneralSecurityException {
 		SSLContext ctx;
 		if (useTls) {
@@ -56,7 +82,7 @@ public class WebClientUtil {
 		} else {
 			ctx = SSLContext.getInstance("SSL");
 		}
-			
+
 		javax.net.ssl.TrustManager[] tm = new javax.net.ssl.TrustManager[] { new RepositoryTrustManager() };
 		ctx.init(null, tm, null);
 		HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());
@@ -64,8 +90,25 @@ public class WebClientUtil {
 		if (proxy == null) {
 			proxy = Proxy.NO_PROXY;
 		}
+		
+		URLConnection connection = url.openConnection(proxy);		
+		if (connection == null || !(connection instanceof HttpURLConnection)) {
+			throw new MalformedURLException();
+		}		
+		return (HttpURLConnection)connection;
+	}
+
+	private static HttpURLConnection openConnection(URL url, Proxy proxy) throws IOException {
 		URLConnection connection = url.openConnection(proxy);
-		return connection;
+		if (connection == null || !(connection instanceof HttpURLConnection)) {
+			throw new MalformedURLException();
+		}
+		HttpURLConnection remoteConnection = (HttpURLConnection) connection;
+		remoteConnection.addRequestProperty("Accept-Encoding", ENCODING_GZIP);
+		remoteConnection.setConnectTimeout(COM_TIME_OUT);
+		remoteConnection.setReadTimeout(COM_TIME_OUT);
+		remoteConnection.connect();
+		return remoteConnection;
 	}
 
 	/**
