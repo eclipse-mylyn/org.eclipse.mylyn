@@ -126,7 +126,7 @@ public class TaskListDataMigration implements IRunnableWithProgress {
 	public boolean migrateTaskContextData(IProgressMonitor monitor) {
 		ArrayList<File> contextFiles = new ArrayList<File>();
 		for (File file : dataDirectory.listFiles()) {
-			if (file.getName().startsWith("http") || file.getName().startsWith("local")) {
+			if (file.getName().startsWith("http") || file.getName().startsWith("local") || file.getName().startsWith("task")) {
 				if (!file.getName().endsWith(".zip")) {
 					contextFiles.add(file);
 				}

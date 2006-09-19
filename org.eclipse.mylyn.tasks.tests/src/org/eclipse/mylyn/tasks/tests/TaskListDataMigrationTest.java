@@ -64,18 +64,23 @@ public class TaskListDataMigrationTest extends TestCase {
 	public void testOldContextMigration() throws Exception {
 		String contextFileName1 = URLEncoder.encode("http://oldcontext1.xml", MylarContextManager.CONTEXT_FILENAME_ENCODING);
 		String contextFileName2 = URLEncoder.encode("http://oldcontext2.xml", MylarContextManager.CONTEXT_FILENAME_ENCODING);
+		String contextFileName3 = "task-1.xml";
 		File oldContextFile1 = new File(sourceDirFile, contextFileName1);
 		oldContextFile1.createNewFile();
 		File oldContextFile2 = new File(sourceDirFile, contextFileName2);
 		oldContextFile2.createNewFile();
+		File oldContextFile3 = new File(sourceDirFile, contextFileName3);
+		oldContextFile3.createNewFile();
 		File contextFolder = new File(sourceDirFile, MylarContextManager.CONTEXTS_DIRECTORY);
 		assertTrue(!contextFolder.exists());		
 		assertTrue(migrator.migrateTaskContextData(new NullProgressMonitor()));
 		assertFalse(oldContextFile1.exists());
 		assertFalse(oldContextFile2.exists());
+		assertFalse(oldContextFile3.exists());
 		assertTrue(contextFolder.exists());
 		assertTrue(new File(contextFolder, contextFileName1+".zip").exists());
 		assertTrue(new File(contextFolder, contextFileName2+".zip").exists());
+		assertTrue(new File(contextFolder, contextFileName3+".zip").exists());
 	}
 	
 	public void testOldActivityMigration() throws Exception {
