@@ -26,16 +26,20 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractBugEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.ExistingBugEditorInput;
+import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
@@ -64,8 +68,12 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
+import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 
 /**
@@ -79,9 +87,9 @@ import org.eclipse.ui.forms.widgets.Section;
 public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 
 	private static final String LABEL_TIME_TRACKING = "Bugzilla Time Tracking";
-	
-	private BugSubmissionHandler submissionHandler;	
-	
+
+	private BugSubmissionHandler submissionHandler;
+
 	protected Set<String> removeCC = new HashSet<String>();
 
 	// protected BugzillaCompareInput compareInput;
@@ -114,6 +122,8 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 
 	protected DatePicker deadlinePicker;
 
+	protected Text votesText;
+
 	/**
 	 * Creates a new <code>ExistingBugEditor</code>.
 	 */
@@ -142,7 +152,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		repository = editorInput.getRepository();
 		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
 		submissionHandler = new BugSubmissionHandler(connector);
-		
+
 		setSite(site);
 		setInput(input);
 
@@ -232,12 +242,38 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 
 	@Override
 	protected void createCustomAttributeLayout(Composite composite) {
-		FormToolkit toolkit = new FormToolkit(composite.getDisplay());
-		addCCList(toolkit, "", composite);
+		FormToolkit toolkit = getManagedForm().getToolkit();
+	
+		Hyperlink showDependencyTree = toolkit.createHyperlink(composite, "Show dependency tree", SWT.NONE);
+		showDependencyTree.addHyperlinkListener(new HyperlinkAdapter() {
+			public void linkActivated(HyperlinkEvent e) {
+				if (ExistingBugEditor.this.getEditor() instanceof MylarTaskEditor) {
+					MylarTaskEditor mylarTaskEditor = (MylarTaskEditor) ExistingBugEditor.this.getEditor();
+					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.DEPENDENCY_TREE_URL
+							+ getRepositoryTaskData().getId());
+				}
+			}
+		});
+
+		addBugHyperlinks(composite, BugzillaReportElement.DEPENDSON.getKeyString());
+
+		Hyperlink showDependencyGraph = toolkit.createHyperlink(composite, "Show dependency graph", SWT.NONE);
+		showDependencyGraph.addHyperlinkListener(new HyperlinkAdapter() {
+			public void linkActivated(HyperlinkEvent e) {
+				if (ExistingBugEditor.this.getEditor() instanceof MylarTaskEditor) {
+					MylarTaskEditor mylarTaskEditor = (MylarTaskEditor) ExistingBugEditor.this.getEditor();
+					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.DEPENDENCY_GRAPH_URL
+							+ getRepositoryTaskData().getId());
+				}
+			}
+		});
+
+		addBugHyperlinks(composite, BugzillaReportElement.BLOCKED.getKeyString());
+
+		addCCList("", composite);
 
 		try {
-			addKeywordsList(toolkit, getRepositoryTaskData().getAttributeValue(RepositoryTaskAttribute.KEYWORDS),
-					composite);
+			addKeywordsList(getRepositoryTaskData().getAttributeValue(RepositoryTaskAttribute.KEYWORDS), composite);
 		} catch (IOException e) {
 			MessageDialog.openInformation(null, "Attribute Display Error",
 					"Could not retrieve keyword list, ensure proper configuration in " + TaskRepositoriesView.NAME
@@ -246,6 +282,51 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 
 		if (getRepositoryTaskData().getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()) != null)
 			addBugzillaTimeTracker(toolkit, composite);
+
+		addVoting(composite);
+
+		Hyperlink viewActivity = toolkit.createHyperlink(composite, "Show Bug Activity", SWT.NONE);
+		viewActivity.addHyperlinkListener(new HyperlinkAdapter() {
+			public void linkActivated(HyperlinkEvent e) {
+				if (ExistingBugEditor.this.getEditor() instanceof MylarTaskEditor) {
+					MylarTaskEditor mylarTaskEditor = (MylarTaskEditor) ExistingBugEditor.this.getEditor();
+					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.BUG_ACTIVITY_URL
+							+ getRepositoryTaskData().getId());
+				}
+			}
+		});
+
+	}
+
+	private void addBugHyperlinks(Composite composite, String key) {
+		FormToolkit toolkit = getManagedForm().getToolkit();
+		String values = getRepositoryTaskData().getAttributeValue(key);
+		StringBuffer buf = new StringBuffer();
+		buf.append("<form>");
+		buf.append("<p> "); // bug in forms requires space to show content.
+		if (values != null && values.length() > 0) {
+			int counter = 0;
+			for (String bugNumber : values.split(",")) {
+				bugNumber = bugNumber.trim();
+				if (counter == 0) {
+					buf.append("<a href=\"" + bugNumber + "\">" + bugNumber + "</a>");
+				} else {
+					buf.append(", <a href=\"" + bugNumber + "\">" + bugNumber + "</a>");
+				}
+				counter++;
+			}
+		}
+		buf.append("</p>");
+		buf.append("</form>");
+		FormText formText = toolkit.createFormText(composite, true);
+		formText.setWhitespaceNormalized(true);
+		formText.setText(buf.toString(), true, false);
+		formText.addHyperlinkListener(new HyperlinkAdapter() {
+			public void linkActivated(HyperlinkEvent e) {
+				TaskUiUtil.openRepositoryTask(repository.getUrl(), e.getHref().toString(), repository.getUrl()
+						+ BugzillaServerFacade.POST_ARGS_SHOW_BUG + e.getHref().toString());
+			}
+		});
 	}
 
 	protected void addBugzillaTimeTracker(FormToolkit toolkit, Composite parent) {
@@ -349,9 +430,9 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		timeSection.setClient(timeComposite);
 	}
 
-	protected void addKeywordsList(FormToolkit toolkit, String keywords, Composite attributesComposite)
-			throws IOException {
+	protected void addKeywordsList(String keywords, Composite attributesComposite) throws IOException {
 		// newLayout(attributesComposite, 1, "Keywords:", PROPERTY);
+		FormToolkit toolkit = getManagedForm().getToolkit();
 		toolkit.createLabel(attributesComposite, "Keywords:");
 		keywordsText = toolkit.createText(attributesComposite, keywords);
 		keywordsText.setFont(TEXT_FONT);
@@ -413,8 +494,47 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		keyWordsList.addListener(SWT.FocusIn, new GenericListener());
 	}
 
-	protected void addCCList(FormToolkit toolkit, String ccValue, Composite attributesComposite) {
+	protected void addVoting(Composite attributesComposite) {
+		FormToolkit toolkit = getManagedForm().getToolkit();
+		toolkit.createLabel(attributesComposite, "Votes:");
+		Composite votingComposite = toolkit.createComposite(attributesComposite);
+		GridLayout layout = new GridLayout(3, false);
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		votingComposite.setLayout(layout);
+		GridDataFactory.fillDefaults().span(2, 1).applyTo(votingComposite);
+		RepositoryTaskAttribute votesAttribute = taskData.getAttribute(BugzillaReportElement.VOTES.getKeyString());
+		String voteValue = votesAttribute != null ? votesAttribute.getValue() : "0";
+		votesText = toolkit.createText(votingComposite, voteValue);
+		votesText.setFont(TEXT_FONT);
+		votesText.setEditable(false);
+
+		Hyperlink showVotesHyperlink = toolkit.createHyperlink(votingComposite, "Show votes for this bug", SWT.NONE);
+		showVotesHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+			public void linkActivated(HyperlinkEvent e) {
+				if (ExistingBugEditor.this.getEditor() instanceof MylarTaskEditor) {
+					MylarTaskEditor mylarTaskEditor = (MylarTaskEditor) ExistingBugEditor.this.getEditor();
+					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.SHOW_VOTES_URL
+							+ getRepositoryTaskData().getId());
+				}
+			}
+		});
+
+		Hyperlink voteHyperlink = toolkit.createHyperlink(votingComposite, "Vote for this bug", SWT.NONE);
+		voteHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+			public void linkActivated(HyperlinkEvent e) {
+				if (ExistingBugEditor.this.getEditor() instanceof MylarTaskEditor) {
+					MylarTaskEditor mylarTaskEditor = (MylarTaskEditor) ExistingBugEditor.this.getEditor();
+					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.VOTE_URL
+							+ getRepositoryTaskData().getId());
+				}
+			}
+		});
+	}
+
+	protected void addCCList(String ccValue, Composite attributesComposite) {
 		// newLayout(attributesComposite, 1, "Add CC:", PROPERTY);
+		FormToolkit toolkit = getManagedForm().getToolkit();
 		toolkit.createLabel(attributesComposite, "Add CC:");
 		ccText = toolkit.createText(attributesComposite, ccValue);
 		ccText.setFont(TEXT_FONT);

@@ -69,7 +69,7 @@ public enum BugzillaReportElement {
 	TYPE ("type", "type"),
 	UNKNOWN ("UNKNOWN", "UNKNOWN"),
 	VERSION ("Version:", "version", false),
-	VOTES ("Votes:", "votes", false, true),
+	VOTES ("Votes:", "votes", true, true),
 	WORK_TIME("Add Time:", "work_time", true, false),
 	WHO ("who", "who"),
 	QA_CONTACT("QA Contact", "qa_contact", false, false),

@@ -86,7 +86,7 @@ class SynchronizeQueryJob extends Job {
 				repositoryQuery.updateHits(collector.getHits(), taskList);
 				if (synchTasks) {
 					// TODO: Should sync changed per repository not per
-					// query
+					// query					
 					TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
 				}
 			} else if (!(resultingStatus.getException() instanceof IOException)) {

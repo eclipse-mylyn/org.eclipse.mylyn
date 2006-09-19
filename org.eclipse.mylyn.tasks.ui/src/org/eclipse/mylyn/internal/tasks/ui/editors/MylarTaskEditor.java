@@ -72,6 +72,8 @@ public class MylarTaskEditor extends FormEditor {
 
 	private IEditorPart contentOutlineProvider = null;
 
+	private int browserPageIndex;
+
 	public MylarTaskEditor() {
 		super();
 		taskPlanningEditor = new TaskPlanningEditor(this);
@@ -110,8 +112,8 @@ public class MylarTaskEditor extends FormEditor {
 				webBrowser = new Browser(getContainer(), SWT.NONE);
 				int index = addPage(webBrowser);
 				setPageText(index, ISSUE_WEB_PAGE_LABEL);
-				webBrowser.setUrl(url);
-
+				webBrowser.setUrl(url);	
+				
 				boolean openWithBrowser = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 						TaskListPreferenceConstants.REPORT_OPEN_INTERNAL);
 				// if (!(task instanceof AbstractRepositoryTask) ||
@@ -320,6 +322,15 @@ public class MylarTaskEditor extends FormEditor {
 	public Browser getWebBrowser() {
 		return webBrowser;
 	}
+	
+	public void revealBrowser() {
+		setActivePage(browserPageIndex);	
+	}
+	
+	public void displayInBrowser(String url) {
+		webBrowser.setUrl(url);
+		revealBrowser();
+	}
 
 	@Override
 	protected void pageChange(int newPageIndex) {
@@ -414,9 +425,9 @@ public class MylarTaskEditor extends FormEditor {
 			}
 			String urlToOpen = getUrl();
 			if (urlToOpen != null && !urlToOpen.equals("")) {
-				int browserIndex = createBrowserPage(urlToOpen);
+				browserPageIndex = createBrowserPage(urlToOpen);
 				if (selectedIndex == 0 && taskEditorInput != null && !taskEditorInput.isNewTask()) {
-					selectedIndex = browserIndex;
+					selectedIndex = browserPageIndex;
 				}
 			}
 			setActivePage(selectedIndex);

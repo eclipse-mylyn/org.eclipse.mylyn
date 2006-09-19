@@ -40,7 +40,17 @@ public interface IBugzillaConstants {
 	public static final String CONTENT_TYPE_RDF = "&ctype=rdf";
 
 	public static final String ATTACHMENT_URL_SUFFIX = "/attachment.cgi?id=";
-
+	
+	public static final String BUG_ACTIVITY_URL = "/show_activity.cgi?id=";
+	
+	public static final String SHOW_VOTES_URL = "/votes.cgi?action=show_bug&bug_id=";
+	
+	public static final String VOTE_URL = "/votes.cgi?action=show_user&bug_id=";
+	
+	public static final String DEPENDENCY_TREE_URL = "/showdependencytree.cgi?id=";
+	
+	public static final String DEPENDENCY_GRAPH_URL = "/showdependencygraph.cgi?id=";
+	
 	/** Supported bugzilla repository versions */
 	static public enum BugzillaServerVersion {
 		SERVER_218, SERVER_220, SERVER_222;

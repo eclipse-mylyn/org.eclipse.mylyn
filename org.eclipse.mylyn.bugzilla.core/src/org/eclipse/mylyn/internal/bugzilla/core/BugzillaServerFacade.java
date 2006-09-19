@@ -75,7 +75,7 @@ public class BugzillaServerFacade {
 
 	private static final String POST_ARGS_PASSWORD = "&Bugzilla_password=";
 
-	public static final String POST_ARGS_SHOW_BUG = "/show_bug.cgi?id=";// ctype=xml&
+	public static final String POST_ARGS_SHOW_BUG = "/show_bug.cgi?id=";
 
 	private static final String POST_ARGS_LOGIN = "GoAheadAndLogIn=1&Bugzilla_login=";
 
@@ -352,7 +352,7 @@ public class BugzillaServerFacade {
 				BugzillaReportElement.PRIORITY, BugzillaReportElement.BUG_SEVERITY, BugzillaReportElement.ASSIGNED_TO,
 				BugzillaReportElement.TARGET_MILESTONE, BugzillaReportElement.REPORTER,
 				BugzillaReportElement.DEPENDSON, BugzillaReportElement.BLOCKED, BugzillaReportElement.BUG_FILE_LOC,
-				BugzillaReportElement.NEWCC, BugzillaReportElement.KEYWORDS };
+				BugzillaReportElement.NEWCC, BugzillaReportElement.KEYWORDS }; // BugzillaReportElement.VOTES,
 
 		for (BugzillaReportElement element : reportElements) {
 			RepositoryTaskAttribute reportAttribute = BugzillaServerFacade.makeNewAttribute(element);

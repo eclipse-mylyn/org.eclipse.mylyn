@@ -148,8 +148,10 @@ public class BugSubmissionHandler {
 				Set<AbstractRepositoryQuery> queriesWithHandle = TasksUiPlugin.getTaskListManager().getTaskList()
 						.getQueriesForHandle(task.getHandleIdentifier());
 				TasksUiPlugin.getSynchronizationManager().synchronize(connector, queriesWithHandle, null, Job.SHORT, 0,
-						true);
-
+						false);
+				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+						repositoryTaskData.getRepositoryKind(), repositoryTaskData.getRepositoryUrl());
+				TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
 				if (task instanceof AbstractRepositoryTask) {
 					AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
 					// TODO: This is set to null in order for update to bypass
