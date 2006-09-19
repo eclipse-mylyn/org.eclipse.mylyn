@@ -26,7 +26,6 @@ import org.eclipse.mylar.internal.context.ui.TaskListInterestSorter;
 import org.eclipse.mylar.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylar.internal.tasks.ui.views.IFilteredTreeListener;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IViewPart;
 
 /**
@@ -55,9 +54,10 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction impleme
 		if (part instanceof TaskListView) {
 			((TaskListView) part).getFilteredTree().getRefreshPolicy().addListener(this);
 		}
-		if (!TasksUiPlugin.getTaskListManager().getActivityThisWeek().getChildren().isEmpty()) {
-			update(true);
-		}
+		// NOTE: if re-enabling this, ensure that two filters can not get added on startup
+//		if (!TasksUiPlugin.getTaskListManager().getActivityThisWeek().getChildren().isEmpty()) {
+//			update(true);
+//		}
 	}
 
 	@Override
@@ -88,7 +88,9 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction impleme
 			taskListView.getViewer().setSorter(taskListInterestSorter);
 			previousFilters = new HashSet<AbstractTaskListFilter>(taskListView.getFilters());
 			taskListView.clearFilters(true);
-			taskListView.addFilter(taskListInterestFilter);
+			if (!taskListView.getFilters().contains(taskListInterestFilter)) {
+				taskListView.addFilter(taskListInterestFilter);
+			}
 			taskListView.setPriorityButtonEnabled(false);
 			taskListView.refreshAndFocus(true);
 			return true;
