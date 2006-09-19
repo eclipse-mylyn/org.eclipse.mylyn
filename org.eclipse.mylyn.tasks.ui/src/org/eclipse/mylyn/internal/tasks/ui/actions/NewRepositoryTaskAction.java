@@ -11,10 +11,16 @@
 
 package org.eclipse.mylar.internal.tasks.ui.actions;
 
+import java.util.List;
+
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.internal.tasks.ui.wizards.NewRepositoryTaskWizard;
+import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
@@ -29,15 +35,17 @@ public class NewRepositoryTaskAction extends AbstractRepositoryAction {
 	@Override
 	public void run() {
 
-//		boolean offline = MylarTaskListPlugin.getDefault().getPreferenceStore().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
-//		if (offline) {
-//			MessageDialog.openInformation(null, "Unable to create bug report",
-//					"Unable to create a new bug report since you are currently offline");
-//			return;
-//		}
-		 
-//		IWizard wizard = new MultiRepositoryAwareWizard(new NewRepositoryTaskPage(connectorKinds), TITLE);
-		IWizard wizard = new NewRepositoryTaskWizard(getSelection());
+		IWizard wizard;
+		List<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getAllRepositories();
+		if (repositories.size() == 1) {
+			// NOTE: this click-saving should be generalized
+			TaskRepository taskRepository = repositories.get(0);
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(taskRepository.getKind());
+			
+			wizard = connectorUi.getNewTaskWizard(taskRepository, getSelection());
+		} else {
+			wizard = new NewRepositoryTaskWizard(getSelection());
+		}
 		
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		if (shell != null && !shell.isDisposed()) {

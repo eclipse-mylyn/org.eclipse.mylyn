@@ -67,7 +67,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
 	protected MultiRepositoryAwareWizard wizard;
 
-	private TaskRepository[] repositories = null;
+	private List<TaskRepository> repositories = new ArrayList<TaskRepository>();
 
 	private IStructuredSelection selection;
 
@@ -82,35 +82,35 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		}
 
 		public Object[] getElements(Object parent) {
-			return repositories;
+			return repositories.toArray();
 		}
 	}
 
 	public SelectRepositoryPage(TaskRepositoryFilter taskRepositoryFilter) {
 		super(TITLE);
-		
+
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);
-		
+
 		this.taskRepositoryFilter = taskRepositoryFilter;
 		this.repositories = getTaskRepositories();
 	}
 
-	private TaskRepository[] getTaskRepositories() {
+	public List<TaskRepository> getTaskRepositories() {
 		List<TaskRepository> repositories = new ArrayList<TaskRepository>();
 		TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
 		for (AbstractRepositoryConnector connector : repositoryManager.getRepositoryConnectors()) {
-			Set<TaskRepository> connectorRepositories = repositoryManager.getRepositories(connector.getRepositoryType());
+			Set<TaskRepository> connectorRepositories = repositoryManager
+					.getRepositories(connector.getRepositoryType());
 			for (TaskRepository repository : connectorRepositories) {
-				if(taskRepositoryFilter.accept(repository, connector)) {
+				if (taskRepositoryFilter.accept(repository, connector)) {
 					repositories.add(repository);
 				}
 			}
 		}
-		return repositories.toArray(new TaskRepository[repositories.size()]);
+		return repositories;
 	}
-	
-	
+
 	public SelectRepositoryPage setSelection(IStructuredSelection selection) {
 		this.selection = selection;
 		return this;
@@ -129,25 +129,18 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		GridData gridData = new GridData(GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL);
 		table.setLayoutData(gridData);
 
-		// TaskRepository defaultRepository =
-		// MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
-		// repositoryKind);
-		// if (defaultRepository != null) {
-		// viewer.setSelection(new StructuredSelection(defaultRepository));
-		// }
-
 		final AddRepositoryAction action = new AddRepositoryAction();
-		
+
 		Button button = new Button(container, SWT.NONE);
 		button.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING));
 		button.setText(AddRepositoryAction.TITLE);
 		button.addSelectionListener(new SelectionAdapter() {
-				public void widgetSelected(SelectionEvent e) {
-					action.run();
-					SelectRepositoryPage.this.repositories = getTaskRepositories();
-					viewer.setInput(TasksUiPlugin.getRepositoryManager().getRepositoryConnectors());
-				}
-			});
+			public void widgetSelected(SelectionEvent e) {
+				action.run();
+				SelectRepositoryPage.this.repositories = getTaskRepositories();
+				viewer.setInput(TasksUiPlugin.getRepositoryManager().getRepositoryConnectors());
+			}
+		});
 
 		setControl(container);
 	}
@@ -155,10 +148,9 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 	protected Table createTableViewer(Composite container) {
 		viewer = new TableViewer(container, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		viewer.setContentProvider(new RepositoryContentProvider());
-//		viewer.setLabelProvider(new TaskRepositoryLabelProvider());
-		viewer.setLabelProvider(new DecoratingLabelProvider(
-				new TaskRepositoryLabelProvider(),
-				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
+		// viewer.setLabelProvider(new TaskRepositoryLabelProvider());
+		viewer.setLabelProvider(new DecoratingLabelProvider(new TaskRepositoryLabelProvider(), PlatformUI
+				.getWorkbench().getDecoratorManager().getLabelDecorator()));
 		viewer.setInput(TasksUiPlugin.getRepositoryManager().getRepositoryConnectors());
 
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {

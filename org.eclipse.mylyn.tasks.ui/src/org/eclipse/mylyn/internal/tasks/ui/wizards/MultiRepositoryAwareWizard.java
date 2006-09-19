@@ -31,7 +31,7 @@ public class MultiRepositoryAwareWizard extends Wizard implements INewWizard {
 		setNeedsProgressMonitor(true);
 		setWindowTitle(title);
 		setDefaultPageImageDescriptor(TaskListImages.BANNER_REPOSITORY);
-	} 
+	}
 
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		// ignore

@@ -74,7 +74,6 @@ public class NewBugzillaReportWizard extends Wizard implements INewWizard {
 	public void addPages() {
 		super.addPages();
 		addPage(productPage);
-
 	}
 
 	@Override
