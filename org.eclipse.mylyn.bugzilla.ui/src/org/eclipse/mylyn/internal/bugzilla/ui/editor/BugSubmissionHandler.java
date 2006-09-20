@@ -51,12 +51,12 @@ public class BugSubmissionHandler {
 		this.connector = connector;
 	}
 
-	public void submitBugReport(final BugzillaReportSubmitForm form, IJobChangeListener listener, boolean synchExec) {
+	public void submitBugReport(final BugzillaReportSubmitForm form, IJobChangeListener listener, boolean synchExec, final boolean addToTaskListRoot) {
 		if (synchExec) {
 			try {
 				String submittedBugId = form.submitReportToRepository();
 				if (form.isNewBugPost()) {
-					handleNewBugPost(form.getTaskData(), submittedBugId);
+					handleNewBugPost(form.getTaskData(), submittedBugId, addToTaskListRoot);
 				} else {
 					handleExistingBugPost(form.getTaskData(), submittedBugId);
 				}
@@ -64,7 +64,6 @@ public class BugSubmissionHandler {
 				throw new RuntimeException(e);
 			}
 		} else {
-
 			Job submitJob = new Job(LABEL_JOB_SUBMIT) {
 
 				@Override
@@ -79,7 +78,7 @@ public class BugSubmissionHandler {
 						}
 
 						if (form.isNewBugPost()) {
-							handleNewBugPost(form.getTaskData(), submittedBugId);
+							handleNewBugPost(form.getTaskData(), submittedBugId, addToTaskListRoot);
 							return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.OK, submittedBugId, null);
 						} else {
 							handleExistingBugPost(form.getTaskData(), submittedBugId);
@@ -116,7 +115,7 @@ public class BugSubmissionHandler {
 		}
 	}
 
-	private void handleNewBugPost(RepositoryTaskData taskData, String resultId) throws BugzillaException {
+	private void handleNewBugPost(RepositoryTaskData taskData, String resultId, boolean addToRoot) throws BugzillaException {
 		int bugId = -1;
 		try {
 			bugId = Integer.parseInt(resultId);
@@ -130,9 +129,13 @@ public class BugSubmissionHandler {
 		BugzillaTask newTask = new BugzillaTask(AbstractRepositoryTask.getHandle(repository.getUrl(), bugId),
 				"<bugzilla info>", true);
 
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask,
-				TasksUiPlugin.getTaskListManager().getTaskList().getRootCategory());
-
+		if (addToRoot) {
+			TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask,
+					TasksUiPlugin.getTaskListManager().getTaskList().getRootCategory());
+		} else {
+			TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask);
+		}
+		
 		java.util.List<TaskRepository> repositoriesToSync = new ArrayList<TaskRepository>();
 		repositoriesToSync.add(repository);
 		TasksUiPlugin.getSynchronizationScheduler().synchNow(0, repositoriesToSync);

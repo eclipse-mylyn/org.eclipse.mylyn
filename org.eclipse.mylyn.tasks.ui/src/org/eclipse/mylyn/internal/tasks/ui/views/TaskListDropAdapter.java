@@ -26,6 +26,7 @@ import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
@@ -169,7 +170,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 		retrieveTaskDescription(url);
 
 		newTask = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), urlTitle, true);
-
+		NewLocalTaskAction.scheduleNewTask(newTask);
+		
 		if (newTask == null) {
 			return false;
 		}
@@ -178,15 +180,15 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 		newTask.setUrl(url);
 
 		// NOTE: setting boolean param as false so that we go directly to the
-		// browser tab
-		// as with a previously-created task
+		// browser tab as with a previously-created task
 		TaskUiUtil.openEditor(newTask, false);
 		return true;
 	}
 
 	public boolean createTaskFromString(String title) {
 		newTask = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), title, true);
-
+		NewLocalTaskAction.scheduleNewTask(newTask);
+		
 		if (newTask == null) {
 			return false;
 		} else {

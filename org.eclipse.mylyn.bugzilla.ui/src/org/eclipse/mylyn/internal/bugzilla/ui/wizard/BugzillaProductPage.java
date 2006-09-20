@@ -53,6 +53,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -66,6 +67,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Shawn Minto
  * @author Rob Elves
+ * @author Mik Kersten
  * 
  * Product selection page of new bug wizard
  */
@@ -84,13 +86,13 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 	private static final String LABEL_UPDATE = "Update Products from Repository";
 
 	/** The list of products to submit a bug report for */
-	static List<String> products = null;
+	private List<String> products = null;
 
 	/**
 	 * Reference to the bug wizard which created this page so we can create the
 	 * second page
 	 */
-	NewBugzillaReportWizard bugWizard;
+	private NewBugzillaTaskWizard bugWizard;
 
 	/** The instance of the workbench */
 	protected IWorkbench workbench;
@@ -124,7 +126,7 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 	 *            The repository the data is coming from
 	 * @param selection
 	 */
-	public BugzillaProductPage(IWorkbench workbench, NewBugzillaReportWizard bugWiz, TaskRepository repository,
+	public BugzillaProductPage(IWorkbench workbench, NewBugzillaTaskWizard bugWiz, TaskRepository repository,
 			IStructuredSelection selection) {
 		super("Page1");
 		this.selection = selection;
@@ -176,6 +178,19 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 
 		listBox.setSelection(getSelectedProducts());
 		listBox.showSelection();
+		listBox.addSelectionListener(new SelectionListener() {
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// ignore
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				getWizard().performFinish();
+				getWizard().dispose();
+				// TODO: is this the wrong way of doing the close?
+				getContainer().getShell().close();
+			}
+		});
 
 		Button updateButton = new Button(composite, SWT.LEFT | SWT.PUSH);
 		updateButton.setText(LABEL_UPDATE);
@@ -485,7 +500,7 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 	// public IWizardPage getNextPage() {
 	// // save the product information to the model
 	// saveDataToModel();
-	// NewBugzillaReportWizard wizard = (NewBugzillaReportWizard) getWizard();
+	// NewBugzillaTaskWizard wizard = (NewBugzillaTaskWizard) getWizard();
 	// NewBugzillaReport model = wizard.model;
 	//
 	// // try to get the attributes from the bugzilla server

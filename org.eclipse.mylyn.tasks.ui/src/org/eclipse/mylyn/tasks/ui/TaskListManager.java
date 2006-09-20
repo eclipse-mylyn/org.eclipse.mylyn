@@ -482,7 +482,14 @@ public class TaskListManager implements IPropertyChangeListener {
 		return calendar;
 	}
 
+	/**
+	 * Will schedule for today if past work-day's end.
+	 */
 	public Calendar setScheduledToday(Calendar calendar) {
+		Calendar now = Calendar.getInstance();
+		if (now.get(Calendar.HOUR_OF_DAY) >= scheduledEndHour) {
+			setSecheduledIn(calendar, 1);
+		} 
 		calendar.set(Calendar.HOUR_OF_DAY, scheduledEndHour);
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.SECOND, 0);

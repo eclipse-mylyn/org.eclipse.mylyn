@@ -57,7 +57,7 @@ public class NewBugzillaTaskEditor extends MylarTaskEditor {
 		try {
 			newBugEditor = new NewBugEditor(this);
 			int index = addPage(newBugEditor);
-			String label = "NEW ["+((NewBugEditorInput)getEditorInput()).getRepository().getUrl()+"]";
+			String label = "<unsubmitted> "+((NewBugEditorInput)getEditorInput()).getRepository().getUrl();
 			setPageText(index, "Bugzilla");			
 			setPartName(label);
 		} catch (PartInitException e) {

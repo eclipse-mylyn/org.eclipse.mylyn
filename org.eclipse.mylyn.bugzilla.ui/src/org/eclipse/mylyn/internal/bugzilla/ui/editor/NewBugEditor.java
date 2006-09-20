@@ -13,8 +13,6 @@ package org.eclipse.mylar.internal.bugzilla.ui.editor;
 import java.io.UnsupportedEncodingException;
 import java.net.Proxy;
 import java.net.URLEncoder;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,6 +28,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskSelection;
@@ -98,8 +97,9 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		newSummary = taskData.getSummary();
 		repository = editorInput.getRepository();
 		isDirty = false;
-		
-		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
+
+		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				repository.getKind());
 		submissionHandler = new BugSubmissionHandler(connector);
 	}
 
@@ -109,7 +109,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	@Override
-	protected void createDescriptionLayout(Composite composite) { 
+	protected void createDescriptionLayout(Composite composite) {
 		FormToolkit toolkit = new FormToolkit(composite.getDisplay());
 		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR);
 		section.setText(LABEL_SECTION_DESCRIPTION);
@@ -126,8 +126,8 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		descriptionComposite.setLayoutData(descriptionData);
 		section.setClient(descriptionComposite);
 
-		descriptionTextViewer = addTextEditor(repository, descriptionComposite, getRepositoryTaskData()
-				.getNewComment(), true, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		descriptionTextViewer = addTextEditor(repository, descriptionComposite,
+				getRepositoryTaskData().getNewComment(), true, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		descriptionTextViewer.setEditable(true);
 
 		GridData descriptionTextData = new GridData(GridData.FILL_BOTH);
@@ -216,12 +216,11 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 
 		queryUrl += "&product=" + getRepositoryTaskData().getProduct();
 
-		BugzillaRepositoryQuery bugzillaQuery = new BugzillaRepositoryQuery(repository.getUrl(), queryUrl, "search", "100", TasksUiPlugin.getTaskListManager()
-				.getTaskList());
+		BugzillaRepositoryQuery bugzillaQuery = new BugzillaRepositoryQuery(repository.getUrl(), queryUrl, "search",
+				"100", TasksUiPlugin.getTaskListManager().getTaskList());
 		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
-		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager()
-				.getTaskList(), repository, bugzillaQuery, proxySettings);
-		
+		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
+				repository, bugzillaQuery, proxySettings);
 
 		NewSearchUI.runQueryInBackground(collector);
 		return true;
@@ -322,8 +321,8 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 								String newTaskHandle = AbstractRepositoryTask.getHandle(repository.getUrl(), event
 										.getJob().getResult().getMessage());
 								ITask newTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(newTaskHandle);
+								NewLocalTaskAction.scheduleNewTask(newTask);
 								if (newTask != null) {
-
 									Object selectedObject = null;
 									if (TaskListView.getFromActivePerspective() != null)
 										selectedObject = ((IStructuredSelection) TaskListView
@@ -334,11 +333,6 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 										TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(
 												((TaskCategory) selectedObject), newTask);
 									}
-
-									Calendar reminderCalendar = GregorianCalendar.getInstance();
-									TasksUiPlugin.getTaskListManager().setScheduledToday(reminderCalendar);
-									TasksUiPlugin.getTaskListManager().setReminder(newTask, reminderCalendar.getTime());
-
 									TaskUiUtil.refreshAndOpenTaskListElement(newTask);
 								}
 								return;
@@ -360,9 +354,10 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 				}
 			};
 
-//			BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) TasksUiPlugin
-//					.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
-			submissionHandler.submitBugReport(bugzillaReportSubmitForm, submitJobListener, false);
+			// BugzillaRepositoryConnector bugzillaRepositoryClient =
+			// (BugzillaRepositoryConnector) TasksUiPlugin
+			// .getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
+			submissionHandler.submitBugReport(bugzillaReportSubmitForm, submitJobListener, false, addToTaskListRoot.getSelection());
 
 		} catch (UnsupportedEncodingException e) {
 			// should never get here but just in case...
@@ -433,14 +428,16 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 
 		Composite buttonComposite = toolkit.createComposite(section);
 		GridLayout buttonLayout = new GridLayout();
-		buttonLayout.numColumns = 4;
+		buttonLayout.numColumns = 3;
 		buttonComposite.setLayout(buttonLayout);
 		GridData buttonData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		buttonData.horizontalSpan = 1;
 		buttonData.grabExcessVerticalSpace = false;
 		buttonComposite.setLayoutData(buttonData);
 		section.setClient(buttonComposite);
+		
 		addActionButtons(buttonComposite);
+		addToTaskListRoot = toolkit.createButton(buttonComposite, "Add to Task List root", SWT.CHECK);
 	}
 
 	protected void addActionButtons(Composite buttonComposite) {

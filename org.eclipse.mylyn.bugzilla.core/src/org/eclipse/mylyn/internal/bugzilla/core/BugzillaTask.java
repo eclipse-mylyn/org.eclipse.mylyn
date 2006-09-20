@@ -26,9 +26,6 @@ import org.eclipse.mylar.tasks.core.TaskComment;
  */
 public class BugzillaTask extends AbstractRepositoryTask {
 
-	// BugzillaOfflineTaskHandler offlineHandler = new
-	// BugzillaOfflineTaskHandler();
-
 	private static final String COMMENT_FORMAT = "yyyy-MM-dd HH:mm";
 
 	private static SimpleDateFormat comment_creation_ts_format = new SimpleDateFormat(COMMENT_FORMAT);

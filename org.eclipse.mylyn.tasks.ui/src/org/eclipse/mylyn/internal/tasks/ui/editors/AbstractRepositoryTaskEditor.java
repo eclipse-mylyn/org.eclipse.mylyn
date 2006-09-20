@@ -234,10 +234,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected Text summaryText;
 
-	// protected Text addCommentsText;
-
 	protected Button submitButton;
 
+	protected Button addToTaskListRoot;
+	
 	protected Table attachmentsTable;
 
 	protected TableViewer attachmentTableViewer;

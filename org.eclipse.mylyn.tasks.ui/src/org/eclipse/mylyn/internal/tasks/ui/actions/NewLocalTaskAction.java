@@ -41,7 +41,7 @@ public class NewLocalTaskAction extends Action {
 	public NewLocalTaskAction() {
 		this(null);
 	}
-	
+
 	public NewLocalTaskAction(TaskListView view) {
 		this.view = view;
 		setText(TaskInputDialog.LABEL_SHELL);
@@ -54,9 +54,7 @@ public class NewLocalTaskAction extends Action {
 	public void run() {
 		Task newTask = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), DESCRIPTION_DEFAULT, true);
 
-		Calendar reminderCalendar = GregorianCalendar.getInstance();
-		TasksUiPlugin.getTaskListManager().setScheduledToday(reminderCalendar);
-		TasksUiPlugin.getTaskListManager().setReminder(newTask, reminderCalendar.getTime());
+		scheduleNewTask(newTask);
 
 		Object selectedObject = null;
 		if (view != null) {
@@ -67,8 +65,7 @@ public class NewLocalTaskAction extends Action {
 		} else if (selectedObject instanceof ITask) {
 			ITask task = (ITask) selectedObject;
 			if (task.getContainer() instanceof TaskCategory) {
-				TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask,
-						(TaskCategory) task.getContainer());
+				TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask, (TaskCategory) task.getContainer());
 			} else if (view.getDrilledIntoCategory() instanceof TaskCategory) {
 				TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask,
 						(TaskCategory) view.getDrilledIntoCategory());
@@ -81,20 +78,27 @@ public class NewLocalTaskAction extends Action {
 					(TaskCategory) view.getDrilledIntoCategory());
 		} else {
 			if (view != null && view.getDrilledIntoCategory() != null) {
-				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), TasksUiPlugin.TITLE_DIALOG, 
-						"The new task has been added to the root of the list, since tasks can not be added to a query.");
+				MessageDialog
+						.openInformation(Display.getCurrent().getActiveShell(), TasksUiPlugin.TITLE_DIALOG,
+								"The new task has been added to the root of the list, since tasks can not be added to a query.");
 			}
 			TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask,
 					TasksUiPlugin.getTaskListManager().getTaskList().getRootCategory());
 		}
-		
+
 		TaskUiUtil.openEditor(newTask, true);
-		
+
 		if (view != null) {
-			view.getViewer().refresh();		
+			view.getViewer().refresh();
 			view.setInRenameAction(true);
 			view.getViewer().editElement(newTask, 4);
 			view.setInRenameAction(false);
 		}
+	}
+
+	public static void scheduleNewTask(ITask newTask) {
+		Calendar reminderCalendar = GregorianCalendar.getInstance();
+		TasksUiPlugin.getTaskListManager().setScheduledToday(reminderCalendar);
+		TasksUiPlugin.getTaskListManager().setReminder(newTask, reminderCalendar.getTime());
 	}
 }

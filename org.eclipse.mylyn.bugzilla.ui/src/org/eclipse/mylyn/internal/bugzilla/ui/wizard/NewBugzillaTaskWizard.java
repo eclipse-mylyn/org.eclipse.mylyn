@@ -29,7 +29,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @author Rob Elves
  */
-public class NewBugzillaReportWizard extends Wizard implements INewWizard {
+public class NewBugzillaTaskWizard extends Wizard implements INewWizard {
 
 	private static final String TITLE = "New Bugzilla Task";
 
@@ -50,7 +50,7 @@ public class NewBugzillaReportWizard extends Wizard implements INewWizard {
 	// TODO: Change model to a RepositoryTaskData
 	// protected RepositoryTaskData model;
 
-	public NewBugzillaReportWizard(TaskRepository repository, IStructuredSelection selection) {
+	public NewBugzillaTaskWizard(TaskRepository repository, IStructuredSelection selection) {
 		this(false, repository, selection);
 		model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault().getOfflineReportsFile()
 				.getNextOfflineBugId());
@@ -60,7 +60,7 @@ public class NewBugzillaReportWizard extends Wizard implements INewWizard {
 		setNeedsProgressMonitor(true);
 	}
 
-	public NewBugzillaReportWizard(boolean fromDialog, TaskRepository repository, IStructuredSelection selection) {
+	public NewBugzillaTaskWizard(boolean fromDialog, TaskRepository repository, IStructuredSelection selection) {
 		super();
 		this.repository = repository;
 		this.productPage = new BugzillaProductPage(workbenchInstance, this, repository, selection);
