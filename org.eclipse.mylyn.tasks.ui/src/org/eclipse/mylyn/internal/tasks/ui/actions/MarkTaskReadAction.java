@@ -25,7 +25,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
  */
 public class MarkTaskReadAction extends Action {
 
-	private static final String ACTION_NAME = "Mark Read";
+	private static final String ACTION_NAME = "Read";
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.mark.read";
 
@@ -34,7 +34,7 @@ public class MarkTaskReadAction extends Action {
 	public MarkTaskReadAction(List<ITaskListElement> selectedElements) {
 		this.selectedElements = selectedElements;
 		setText(ACTION_NAME);
-		setToolTipText(ACTION_NAME);
+		setToolTipText("Mark "+ACTION_NAME);
 		setId(ID);
 		//setImageDescriptor(TaskListImages...);
 		setEnabled(selectedElements.size() > 0);

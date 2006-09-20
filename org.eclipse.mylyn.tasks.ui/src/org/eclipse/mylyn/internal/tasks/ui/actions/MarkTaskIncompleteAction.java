@@ -27,13 +27,15 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
  */
 public class MarkTaskIncompleteAction extends Action {
 
+	private static final String ACTION_NAME = "Incomplete";
+
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.mark.incomplete";
 
 	private List<ITaskListElement> selectedElements;
 	public MarkTaskIncompleteAction(List<ITaskListElement> selectedElements) {
 		this.selectedElements = selectedElements;
-		setText("Mark Incomplete");
-		setToolTipText("Mark Incomplete");
+		setText(ACTION_NAME);
+		setToolTipText("Mark "+ACTION_NAME);
 		setId(ID);
 		setImageDescriptor(TaskListImages.TASK_INCOMPLETE);
 		if(selectedElements.size() == 1 && (selectedElements.get(0) instanceof Task)) {

@@ -28,13 +28,15 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 public class MarkTaskCompleteAction extends Action {
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.mark.completed";
-
+	
+	private static final String ACTION_NAME = "Complete";
+	
 	private List<ITaskListElement> selectedElements;
 	
 	public MarkTaskCompleteAction(List<ITaskListElement> selectedElements) {
 		this.selectedElements = selectedElements;
-		setText("Mark Complete");
-		setToolTipText("Mark Complete");
+		setText(ACTION_NAME);
+		setToolTipText("Mark "+ACTION_NAME);
 		setId(ID);
 		setImageDescriptor(TaskListImages.TASK_COMPLETE);
 		if(selectedElements.size() == 1 && (selectedElements.get(0) instanceof Task)) {
