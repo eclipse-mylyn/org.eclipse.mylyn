@@ -44,6 +44,7 @@ public class TaskListDataMigration implements IRunnableWithProgress {
 
 	public void doMigration(IProgressMonitor monitor) {
 		try {
+			if(dataDirectory == null || !dataDirectory.exists()) return;
 			monitor.beginTask("Mylar Data Migration", 4);
 			migrateTaskList(new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
 			monitor.worked(1);
