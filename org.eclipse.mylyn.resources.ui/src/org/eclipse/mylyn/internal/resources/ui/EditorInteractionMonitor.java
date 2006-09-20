@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.internal.resources.ui;
 
+import org.eclipse.compare.internal.CompareEditor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
@@ -80,12 +81,14 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 
 	@Override
 	public void editorClosed(IEditorPart editorPart) {
-		if (PlatformUI.getWorkbench().isClosing() || editorPart instanceof IContextIgnoringEditor) {
+		if (PlatformUI.getWorkbench().isClosing()) {
 			return;
 		} else if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				ContextUiPrefContstants.AUTO_MANAGE_EDITORS)
 				&& !Workbench.getInstance().getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN)
-				&& !otherEditorsOpenForResource(editorPart)) {
+				&& !otherEditorsOpenForResource(editorPart)
+				&& !(editorPart instanceof CompareEditor)
+				&& !(editorPart instanceof IContextIgnoringEditor)) {
 			IMylarElement element = null;
 			IMylarUiBridge uiBridge = ContextUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
 			Object object = uiBridge.getObjectForTextSelection(null, editorPart);
