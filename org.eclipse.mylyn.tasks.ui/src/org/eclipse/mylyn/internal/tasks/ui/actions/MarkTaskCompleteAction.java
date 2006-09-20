@@ -37,7 +37,12 @@ public class MarkTaskCompleteAction extends Action {
 		setToolTipText("Mark Complete");
 		setId(ID);
 		setImageDescriptor(TaskListImages.TASK_COMPLETE);
-		setEnabled(selectedElements.size() == 1 && (selectedElements.get(0) instanceof Task || selectedElements.get(0) instanceof AbstractQueryHit));
+		if(selectedElements.size() == 1 && (selectedElements.get(0) instanceof Task)) {
+			Task task = (Task)selectedElements.get(0);
+			setEnabled(task.isLocal());
+		} else {
+			setEnabled(false);
+		}		
 	}
 
 	@Override

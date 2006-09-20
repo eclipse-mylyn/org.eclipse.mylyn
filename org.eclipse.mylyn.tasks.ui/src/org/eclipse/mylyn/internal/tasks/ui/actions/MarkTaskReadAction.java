@@ -17,6 +17,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
+import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
@@ -37,6 +38,12 @@ public class MarkTaskReadAction extends Action {
 		setId(ID);
 		//setImageDescriptor(TaskListImages...);
 		setEnabled(selectedElements.size() > 0);
+		if(selectedElements.size() == 1 && (selectedElements.get(0) instanceof Task)) {
+			Task task = (Task)selectedElements.get(0);
+			setEnabled(!task.isLocal());
+		} else {
+			setEnabled(true);
+		}
 	}
 
 	@Override
