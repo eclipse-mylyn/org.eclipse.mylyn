@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.ui.OfflineTaskManager;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -335,8 +334,8 @@ public class RepositorySynchronizationManager {
 			RepositoryTaskData newData) {
 		String lastModified = repositoryTask.getLastSyncDateStamp();
 		if (newData != null) {
-			RepositoryTaskData oldTaskData = OfflineTaskManager.findBug(repositoryTask.getRepositoryUrl(), newData
-					.getId());
+			RepositoryTaskData oldTaskData = repositoryTask.getTaskData();
+			//OfflineTaskManager.findBug(repositoryTask.getRepositoryUrl(), newData.getId());
 			if (oldTaskData != null) {
 				lastModified = oldTaskData.getLastModified();
 			}

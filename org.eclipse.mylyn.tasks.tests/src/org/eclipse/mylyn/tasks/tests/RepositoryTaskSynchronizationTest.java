@@ -91,21 +91,25 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		AbstractRepositoryTask task = primeTaskAndRepository(RepositoryTaskSyncState.INCOMING,
 				RepositoryTaskSyncState.INCOMING);
 		assertEquals(DATE_STAMP_1, task.getLastSyncDateStamp());
+		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
 		TasksUiPlugin.getSynchronizationManager().updateOfflineState(connector, task, newData, false);
+		assertEquals(DATE_STAMP_1, task.getLastSyncDateStamp());
 		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
 		assertEquals(DATE_STAMP_2, task.getTaskData().getLastModified());
 		// and again...
-		newData.setAttributeValue(RepositoryTaskAttribute.DATE_MODIFIED, DATE_STAMP_3);
-		TasksUiPlugin.getSynchronizationManager().updateOfflineState(connector, task, newData, false);
-		// last modified stamp not updated until user synchronizes
-		assertEquals(DATE_STAMP_1, task.getLastSyncDateStamp()); 
+		
+		RepositoryTaskData taskData3 = new RepositoryTaskData(new MockAttributeFactory(), connector.getRepositoryType(), URL1, "1");
+		taskData3.setAttributeValue(RepositoryTaskAttribute.DATE_MODIFIED, DATE_STAMP_3);		
+		TasksUiPlugin.getSynchronizationManager().updateOfflineState(connector, task, taskData3, false);
+		// last modified stamp not updated until user synchronizes (newdata == olddata)		 
 		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
+		assertEquals(DATE_STAMP_1, task.getLastSyncDateStamp());
 		assertEquals(DATE_STAMP_3, task.getTaskData().getLastModified());
-		// If task was in changed set but we already got the incoming, this should
-		// not cause a synchronized state.
-		TasksUiPlugin.getSynchronizationManager().updateOfflineState(connector, task, newData, false);
-		assertEquals(DATE_STAMP_1, task.getLastSyncDateStamp()); 
-		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
+
+		// Should result in synchronized state since same data being passed in
+		TasksUiPlugin.getSynchronizationManager().updateOfflineState(connector, task, taskData3, false);
+		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
+		assertEquals(DATE_STAMP_3, task.getLastSyncDateStamp()); 		
 		assertEquals(DATE_STAMP_3, task.getTaskData().getLastModified());
 	}
 

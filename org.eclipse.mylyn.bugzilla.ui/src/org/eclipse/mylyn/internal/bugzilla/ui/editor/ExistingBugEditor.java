@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
@@ -29,6 +28,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
@@ -51,6 +51,7 @@ import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskComment;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -59,6 +60,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.List;
@@ -71,7 +73,6 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.Section;
@@ -170,12 +171,18 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 
 	@Override
 	public void submitBug() {
-		if (isDirty()) {
-			this.doSave(new NullProgressMonitor());
-		}
-		updateBug();
 		submitButton.setEnabled(false);
 		showBusy(true);
+		updateBug();
+		
+		final AbstractRepositoryTask modifiedTask = (AbstractRepositoryTask) TasksUiPlugin.getTaskListManager()
+				.getTaskList().getTask(AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
+
+		if(modifiedTask != null) {
+			modifiedTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
+		}
+		
+		
 		BugzillaReportSubmitForm bugzillaReportSubmitForm;
 
 		try {
@@ -208,14 +215,15 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 								&& event.getJob().getResult().getMessage() != null) {//
 							// Attach context
 							if (getAttachContext()) {
-								ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-										AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
+								// ITask task =
+								// TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+								// AbstractRepositoryTask.getHandle(repository.getUrl(),
+								// taskData.getId()));
 								try {
-									bugzillaRepositoryClient.attachContext(repository, (AbstractRepositoryTask) task,
-											"", TasksUiPlugin.getDefault().getProxySettings());
+									bugzillaRepositoryClient.attachContext(repository, modifiedTask, "", TasksUiPlugin
+											.getDefault().getProxySettings());
 								} catch (Exception e) {
-									// TODO
-									e.printStackTrace();
+									MylarStatusHandler.fail(e, "Failed to attach task context.", true);
 								}
 							}
 							close();
@@ -236,40 +244,57 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 				});
 			}
 		};
-
 		submissionHandler.submitBugReport(bugzillaReportSubmitForm, submitJobListener, false, false);
 	}
 
 	@Override
 	protected void createCustomAttributeLayout(Composite composite) {
 		FormToolkit toolkit = getManagedForm().getToolkit();
-	
-		Hyperlink showDependencyTree = toolkit.createHyperlink(composite, "Show dependency tree", SWT.NONE);
-		showDependencyTree.addHyperlinkListener(new HyperlinkAdapter() {
-			public void linkActivated(HyperlinkEvent e) {
-				if (ExistingBugEditor.this.getEditor() instanceof MylarTaskEditor) {
-					MylarTaskEditor mylarTaskEditor = (MylarTaskEditor) ExistingBugEditor.this.getEditor();
-					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.DEPENDENCY_TREE_URL
-							+ getRepositoryTaskData().getId());
-				}
-			}
-		});
 
-		addBugHyperlinks(composite, BugzillaReportElement.DEPENDSON.getKeyString());
+		String dependson = getRepositoryTaskData().getAttributeValue(BugzillaReportElement.DEPENDSON.getKeyString());
+		String blocked = getRepositoryTaskData().getAttributeValue(BugzillaReportElement.BLOCKED.getKeyString());
+		boolean addHyperlinks = (dependson != null && dependson.length() > 0)
+				|| (blocked != null && blocked.length() > 0);
 
-		Hyperlink showDependencyGraph = toolkit.createHyperlink(composite, "Show dependency graph", SWT.NONE);
-		showDependencyGraph.addHyperlinkListener(new HyperlinkAdapter() {
-			public void linkActivated(HyperlinkEvent e) {
-				if (ExistingBugEditor.this.getEditor() instanceof MylarTaskEditor) {
-					MylarTaskEditor mylarTaskEditor = (MylarTaskEditor) ExistingBugEditor.this.getEditor();
-					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.DEPENDENCY_GRAPH_URL
-							+ getRepositoryTaskData().getId());
-				}
-			}
-		});
+		// Hyperlink showDependencyTree = toolkit.createHyperlink(composite,
+		// "Show dependency tree", SWT.NONE);
+		// showDependencyTree.addHyperlinkListener(new HyperlinkAdapter() {
+		// public void linkActivated(HyperlinkEvent e) {
+		// if (ExistingBugEditor.this.getEditor() instanceof MylarTaskEditor) {
+		// MylarTaskEditor mylarTaskEditor = (MylarTaskEditor)
+		// ExistingBugEditor.this.getEditor();
+		// mylarTaskEditor.displayInBrowser(repository.getUrl() +
+		// IBugzillaConstants.DEPENDENCY_TREE_URL
+		// + getRepositoryTaskData().getId());
+		// }
+		// }
+		// });
+		
+		if (addHyperlinks) {
+			toolkit.createLabel(composite, "");
+			addBugHyperlinks(composite, BugzillaReportElement.DEPENDSON.getKeyString());
+		}
 
-		addBugHyperlinks(composite, BugzillaReportElement.BLOCKED.getKeyString());
-
+		// Hyperlink showDependencyGraph = toolkit.createHyperlink(composite,
+		// "Show dependency graph", SWT.NONE);
+		// showDependencyGraph.addHyperlinkListener(new HyperlinkAdapter() {
+		// public void linkActivated(HyperlinkEvent e) {
+		// if (ExistingBugEditor.this.getEditor() instanceof MylarTaskEditor) {
+		// MylarTaskEditor mylarTaskEditor = (MylarTaskEditor)
+		// ExistingBugEditor.this.getEditor();
+		// mylarTaskEditor.displayInBrowser(repository.getUrl() +
+		// IBugzillaConstants.DEPENDENCY_GRAPH_URL
+		// + getRepositoryTaskData().getId());
+		// }
+		// }
+		// });
+		
+		
+		if (addHyperlinks) {
+			toolkit.createLabel(composite, "");
+			addBugHyperlinks(composite, BugzillaReportElement.BLOCKED.getKeyString());
+		}
+		
 		addCCList("", composite);
 
 		try {
@@ -300,33 +325,38 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 
 	private void addBugHyperlinks(Composite composite, String key) {
 		FormToolkit toolkit = getManagedForm().getToolkit();
+		Composite hyperlinksComposite = toolkit.createComposite(composite);
+		RowLayout rowLayout = new RowLayout();
+		rowLayout.marginBottom = 0;
+		rowLayout.marginLeft = 0;
+		rowLayout.marginRight = 0;
+		rowLayout.marginTop = 0;
+		rowLayout.spacing = 0;
+		hyperlinksComposite.setLayout(new RowLayout());
 		String values = getRepositoryTaskData().getAttributeValue(key);
-		StringBuffer buf = new StringBuffer();
-		buf.append("<form>");
-		buf.append("<p> "); // bug in forms requires space to show content.
+
 		if (values != null && values.length() > 0) {
-			int counter = 0;
 			for (String bugNumber : values.split(",")) {
-				bugNumber = bugNumber.trim();
-				if (counter == 0) {
-					buf.append("<a href=\"" + bugNumber + "\">" + bugNumber + "</a>");
-				} else {
-					buf.append(", <a href=\"" + bugNumber + "\">" + bugNumber + "</a>");
+				final String bugId = bugNumber.trim();
+				Hyperlink hyperlink = toolkit.createHyperlink(hyperlinksComposite, bugId, SWT.NONE);
+				final ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+						AbstractRepositoryTask.getHandle(repository.getUrl(), bugId));
+				if (task != null) {
+					hyperlink.setToolTipText(task.getDescription());
+					hyperlink.setHref(task);
 				}
-				counter++;
+				hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+					public void linkActivated(HyperlinkEvent e) {
+						if (task != null) {
+							TaskUiUtil.refreshAndOpenTaskListElement(task);
+						} else {
+							TaskUiUtil.openRepositoryTask(repository.getUrl(), bugId, repository.getUrl()
+									+ BugzillaServerFacade.POST_ARGS_SHOW_BUG + e.getHref().toString());
+						}
+					}
+				});
 			}
 		}
-		buf.append("</p>");
-		buf.append("</form>");
-		FormText formText = toolkit.createFormText(composite, true);
-		formText.setWhitespaceNormalized(true);
-		formText.setText(buf.toString(), true, false);
-		formText.addHyperlinkListener(new HyperlinkAdapter() {
-			public void linkActivated(HyperlinkEvent e) {
-				TaskUiUtil.openRepositoryTask(repository.getUrl(), e.getHref().toString(), repository.getUrl()
-						+ BugzillaServerFacade.POST_ARGS_SHOW_BUG + e.getHref().toString());
-			}
-		});
 	}
 
 	protected void addBugzillaTimeTracker(FormToolkit toolkit, Composite parent) {
