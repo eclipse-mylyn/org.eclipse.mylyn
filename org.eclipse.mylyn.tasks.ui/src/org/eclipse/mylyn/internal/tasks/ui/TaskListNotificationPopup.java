@@ -40,9 +40,9 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class TaskListNotificationPopup extends PopupDialog {
 
-	private static final String NOTIFICATIONS_HIDDEN = " notifications hidden.";
+	private static final String NOTIFICATIONS_HIDDEN = " more changes...";
 
-	private static final int NUM_NOTIFICATIONS_TO_DISPLAY = 4;
+	private static final int NUM_NOTIFICATIONS_TO_DISPLAY = 3;
 
 	private static final String MYLAR_NOTIFICATION_LABEL = "Mylar Notification";
 
