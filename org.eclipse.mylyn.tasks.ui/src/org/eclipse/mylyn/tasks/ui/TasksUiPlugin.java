@@ -54,11 +54,14 @@ import org.eclipse.mylar.internal.tasks.ui.util.TaskListWriter;
 import org.eclipse.mylar.internal.tasks.ui.util.TasksUiExtensionReader;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
+import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskActivityListener;
+import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -273,7 +276,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 					if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING
 							&& repositoryTask.isNotified() == false) {
 						TaskListNotificationIncoming notification = new TaskListNotificationIncoming(repositoryTask);
-
+						
 						if (repositoryTask.getTaskData() != null) {
 							List<TaskComment> taskComments = repositoryTask.getTaskData().getComments();
 							if (taskComments != null && taskComments.size() > 0) {
@@ -287,6 +290,16 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 									notification.setDescription(description);
 								}
 							}
+							
+							AbstractRepositoryConnector connector = getRepositoryManager().getRepositoryConnector(repositoryTask.getRepositoryKind());
+							if(connector != null) {
+								IOfflineTaskHandler offlineHandler = connector.getOfflineTaskHandler();
+								if(offlineHandler != null && repositoryTask.getTaskData().getLastModified() != null) {
+									Date modified = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED, repositoryTask.getTaskData().getLastModified());
+									notification.setDate(modified);
+								}
+							}
+							
 						}
 
 						notifications.add(notification);

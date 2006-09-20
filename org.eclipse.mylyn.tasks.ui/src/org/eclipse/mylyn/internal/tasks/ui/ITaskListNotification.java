@@ -11,12 +11,14 @@
 
 package org.eclipse.mylar.internal.tasks.ui;
 
+import java.util.Date;
+
 import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Rob Elves
  */
-public interface ITaskListNotification {
+public interface ITaskListNotification extends Comparable {
 
 	public void openTask();
 
@@ -27,4 +29,9 @@ public interface ITaskListNotification {
 	public Image getNotificationIcon();
 
 	public Image getOverlayIcon();
+	
+	public Date getDate();
+
+	public void setDate(Date date);
+
 }

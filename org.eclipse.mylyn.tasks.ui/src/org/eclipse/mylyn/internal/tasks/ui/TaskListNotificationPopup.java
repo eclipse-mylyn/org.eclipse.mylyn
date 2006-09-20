@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridLayout;
@@ -30,6 +31,7 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -37,6 +39,10 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author Rob Elves
  */
 public class TaskListNotificationPopup extends PopupDialog {
+
+	private static final String NOTIFICATIONS_HIDDEN = " notifications hidden.";
+
+	private static final int NUM_NOTIFICATIONS_TO_DISPLAY = 4;
 
 	private static final String MYLAR_NOTIFICATION_LABEL = "Mylar Notification";
 
@@ -51,8 +57,7 @@ public class TaskListNotificationPopup extends PopupDialog {
 	private Composite sectionClient;
 
 	public TaskListNotificationPopup(Shell parent) {
-		super(parent, PopupDialog.INFOPOPUP_SHELLSTYLE | SWT.ON_TOP, false, false, false,
-				false, null, null);
+		super(parent, PopupDialog.INFOPOPUP_SHELLSTYLE | SWT.ON_TOP, false, false, false, false, null, null);
 	}
 
 	public void setContents(List<ITaskListNotification> notifications) {
@@ -79,38 +84,60 @@ public class TaskListNotificationPopup extends PopupDialog {
 
 		sectionClient = toolkit.createComposite(section);
 		sectionClient.setLayout(new GridLayout(2, false));
+		int count = 0;
 		for (final ITaskListNotification notification : notifications) {
-
-			Label notificationLabelIcon = toolkit.createLabel(sectionClient, "");
-			notificationLabelIcon.setImage(notification.getOverlayIcon());
-			ImageHyperlink link = toolkit.createImageHyperlink(sectionClient, SWT.WRAP | SWT.TOP);
-			link.setText(notification.getLabel());
-			link.setImage(notification.getNotificationIcon());
-			link.addHyperlinkListener(new HyperlinkAdapter() {
-				public void linkActivated(HyperlinkEvent e) {
-					notification.openTask();
-					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-					if (window != null) {
-						Shell windowShell = window.getShell();
-						if (windowShell != null) {
-							windowShell.setMaximized(true);
-							windowShell.open();
+			if (count < NUM_NOTIFICATIONS_TO_DISPLAY) {
+				Label notificationLabelIcon = toolkit.createLabel(sectionClient, "");
+				notificationLabelIcon.setImage(notification.getOverlayIcon());
+				ImageHyperlink link = toolkit.createImageHyperlink(sectionClient, SWT.BEGINNING | SWT.WRAP); 
+				link.setText(notification.getLabel());
+				link.setImage(notification.getNotificationIcon());
+				link.addHyperlinkListener(new HyperlinkAdapter() {
+					public void linkActivated(HyperlinkEvent e) {
+						notification.openTask();
+						IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+						if (window != null) {
+							Shell windowShell = window.getShell();
+							if (windowShell != null) {
+								windowShell.setMaximized(true);
+								windowShell.open();
+							}
 						}
 					}
-				}
-			});
+				});
 
-			String descriptionText = null;
-			if (notification.getDescription() != null && notification.getDescription().length() > 40) {
-				String truncated = notification.getDescription().substring(0, 35);
-				descriptionText = truncated + "...";
-			} else if (notification.getDescription() != null) {
-				descriptionText = notification.getDescription();
+				String descriptionText = null;
+				if (notification.getDescription() != null && notification.getDescription().length() > 40) {
+					String truncated = notification.getDescription().substring(0, 35);
+					descriptionText = truncated + "...";
+				} else if (notification.getDescription() != null) {
+					descriptionText = notification.getDescription();
+				}
+				if (descriptionText != null) {
+					Label descriptionLabel = toolkit.createLabel(sectionClient, descriptionText);
+					GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(descriptionLabel);
+				}
+			} else {
+				int numNotificationsRemain = notifications.size() - count;
+				Hyperlink remainingHyperlink = toolkit.createHyperlink(sectionClient, numNotificationsRemain+NOTIFICATIONS_HIDDEN, SWT.NONE);
+				GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(remainingHyperlink);
+				remainingHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+
+					@Override
+					public void linkActivated(HyperlinkEvent e) {
+						TaskListView.getFromActivePerspective().setFocus();
+						IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+						if (window != null) {
+							Shell windowShell = window.getShell();
+							if (windowShell != null) {
+								windowShell.setMaximized(true);
+								windowShell.open();
+							}
+						}
+					}});
+				break;
 			}
-			if (descriptionText != null) {
-				Label descriptionLabel = toolkit.createLabel(sectionClient, descriptionText);
-				GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(descriptionLabel);
-			}
+			count++;
 		}
 
 		section.setClient(sectionClient);

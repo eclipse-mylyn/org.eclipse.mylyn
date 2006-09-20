@@ -11,6 +11,8 @@
 
 package org.eclipse.mylar.internal.tasks.ui;
 
+import java.util.Date;
+
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
@@ -26,6 +28,8 @@ public class TaskListNotificationQueryIncoming implements ITaskListNotification 
 
 	private DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new TaskElementLabelProvider(),
 			PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
+
+	private Date date;
 
 	public TaskListNotificationQueryIncoming(AbstractQueryHit hit) {
 		this.hit = hit;
@@ -73,4 +77,24 @@ public class TaskListNotificationQueryIncoming implements ITaskListNotification 
 		return TaskListImages.getImage(TaskListImages.OVERLAY_INCOMMING);
 	}
 
+	public Date getDate() {
+		return date;
+	}
+	
+	public void setDate(Date date) {	
+		this.date = date;
+	}
+	
+	public int compareTo(Object anotherNotification) throws ClassCastException {
+	    if (!(anotherNotification instanceof ITaskListNotification))
+	      throw new ClassCastException("A ITaskListNotification object expected.");
+	    Date anotherDate = ((ITaskListNotification) anotherNotification).getDate();
+	    if(date != null && anotherDate != null) {
+	    	return date.compareTo(anotherDate);
+	    } else if(date == null) {
+	    	return -1;
+	    } else {
+	    	return 1;
+	    }    
+	  }
 }

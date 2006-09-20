@@ -153,6 +153,14 @@ public class TaskListManagerTest extends TestCase {
 		assertTrue(manager.isReminderToday(task));
 	}
 
+	public void testSchedulePastEndOfMonth() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.MONTH, Calendar.SEPTEMBER);
+		calendar.set(Calendar.DAY_OF_MONTH, 30);
+		manager.setSecheduledIn(calendar, 1);
+		assertEquals("Should be October", Calendar.OCTOBER, calendar.get(Calendar.MONTH));
+	}
+	
 	public void testIsCompletedToday() {
 		ITask task = new Task("1", "task-1", true);
 		task.setCompleted(true);

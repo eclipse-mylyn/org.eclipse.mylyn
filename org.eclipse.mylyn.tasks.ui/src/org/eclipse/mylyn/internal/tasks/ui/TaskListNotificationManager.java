@@ -59,6 +59,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 
 				if (!PlatformUI.getWorkbench().getDisplay().isDisposed()) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+						@SuppressWarnings("unchecked")
 						public void run() {
 							if ((popup != null && popup.close()) || popup == null) {
 								closeJob.cancel();
@@ -68,7 +69,9 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 									if (currentlyNotifying.size() > 0) {
 										popup = new TaskListNotificationPopup(new Shell(PlatformUI.getWorkbench()
 												.getDisplay()));
-										popup.setContents(new ArrayList<ITaskListNotification>(currentlyNotifying));
+										ArrayList toDisplay = new ArrayList<ITaskListNotification>(currentlyNotifying);
+										Collections.sort(toDisplay);
+										popup.setContents(toDisplay);
 										cleanNotified();
 										popup.setBlockOnOpen(false);
 										popup.open();
