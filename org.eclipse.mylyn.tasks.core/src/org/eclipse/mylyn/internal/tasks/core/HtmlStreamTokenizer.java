@@ -50,6 +50,9 @@ public class HtmlStreamTokenizer {
 	/** current quote delimiter (single or double) */
 	private int quoteChar;
 
+	/** Allow class client to choose if tag attributes are escaped or not */
+	private boolean escapeTagValues;
+
 	/**
 	 * Constructor.
 	 * 
@@ -65,6 +68,11 @@ public class HtmlStreamTokenizer {
 		state = State.TEXT;
 		this.in = new BufferedReader(in);
 		this.base = base;
+		escapeTagValues = true;
+	}
+
+	public void escapeTagAttributes(boolean value) {
+		escapeTagValues = value;
 	}
 
 	/**
@@ -122,7 +130,7 @@ public class HtmlStreamTokenizer {
 				if (ch == '>') {
 					state = State.TEXT;
 					HtmlTag tag = new HtmlTag(base);
-					parseTag(textBuffer.toString(), tag);
+					parseTag(textBuffer.toString(), tag, escapeTagValues);
 					return new Token(tag, whitespaceBuffer);
 				}
 				if (ch == '<' && textBuffer.length() == 0) {
@@ -176,7 +184,7 @@ public class HtmlStreamTokenizer {
 	/**
 	 * Parses an HTML tag out of a string of characters.
 	 */
-	private static void parseTag(String s, HtmlTag tag) throws ParseException {
+	private static void parseTag(String s, HtmlTag tag, boolean escapeValues) throws ParseException {
 
 		int i = 0;
 		for (; i < s.length() && Character.isWhitespace(s.charAt(i)); i++) {
@@ -197,7 +205,7 @@ public class HtmlStreamTokenizer {
 		if (i == s.length()) {
 			return;
 		} else {
-			parseAttributes(tag, s, i);
+			parseAttributes(tag, s, i, escapeValues);
 			return;
 		}
 	}
@@ -205,7 +213,7 @@ public class HtmlStreamTokenizer {
 	/**
 	 * parses HTML tag attributes from a buffer and sets them in an HtmlTag
 	 */
-	private static void parseAttributes(HtmlTag tag, String s, int i) throws ParseException {
+	private static void parseAttributes(HtmlTag tag, String s, int i, boolean escapeValues) throws ParseException {
 		while (i < s.length()) {
 			// skip whitespace
 			while (i < s.length() && Character.isWhitespace(s.charAt(i)))
@@ -223,17 +231,17 @@ public class HtmlStreamTokenizer {
 			}
 			String attributeName = s.substring(start, i).toLowerCase();
 
-			if(attributeName.equals("/")) {
+			if (attributeName.equals("/")) {
 				tag.setSelfTerminating(true);
 				continue;
 			}
-			
+
 			for (; i < s.length() && Character.isWhitespace(s.charAt(i)); i++) {
 				// just move forward
 			}
 			if (i == s.length() || s.charAt(i) != '=') {
-				// no attribute value				
-				tag.setAttribute(attributeName, "");				
+				// no attribute value
+				tag.setAttribute(attributeName, "");
 				continue;
 			}
 
@@ -257,7 +265,10 @@ public class HtmlStreamTokenizer {
 				}
 				if (i == s.length())
 					return; // shouldn't happen if input returned by nextToken
-				attributeValue = unescape(s.substring(start, i));
+				if (escapeValues)
+					attributeValue = unescape(s.substring(start, i));
+				else
+					attributeValue = s.substring(start, i);
 				i++;
 			} else if (s.charAt(i) == '\'') {
 				start = ++i;
@@ -514,10 +525,10 @@ public class HtmlStreamTokenizer {
 	/*
 	 * Based on ISO 8879.
 	 * 
-	 * Portions (c) International Organization for Standardization 1986 Permission
-	 * to copy in any form is granted for use with conforming SGML systems and
-	 * applications as defined in ISO 8879, provided this notice is included in
-	 * all copies.
+	 * Portions (c) International Organization for Standardization 1986
+	 * Permission to copy in any form is granted for use with conforming SGML
+	 * systems and applications as defined in ISO 8879, provided this notice is
+	 * included in all copies.
 	 * 
 	 */
 	static {
