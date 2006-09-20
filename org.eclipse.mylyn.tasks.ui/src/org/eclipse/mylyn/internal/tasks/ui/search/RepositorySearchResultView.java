@@ -164,7 +164,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		int[] columnWidths = new int[] { 20, 20, 500 };
 		viewer.setColumnProperties(columnNames);
 
-		viewer.getTable().setHeaderVisible(true);
+		viewer.getTable().setHeaderVisible(false);
 		for (int i = 0; i < columnNames.length; i++) {
 			columns[i] = new TableColumn(viewer.getTable(), 0, i); // SWT.LEFT
 			columns[i].setText(columnNames[i]);
