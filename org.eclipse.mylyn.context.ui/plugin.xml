@@ -391,11 +391,7 @@
    </viewContribution>
    </extension>
    
-   <extension point="org.eclipse.mylar.tasks.ui.providers"> 
-      <dynamicPopupMenu class="org.eclipse.mylar.internal.context.ui.TaskListHighlighterMenuContributor"/>
-   </extension>
- 
-      <extension
+   <extension
           point="org.eclipse.ui.commands">
        <command
              defaultHandler="org.eclipse.mylar.internal.context.ui.commands.ApplyMylarHandler"
@@ -406,7 +402,7 @@
                 name="View ID to apply Mylar"
                 optional="false"/>
        </command>
-    </extension>
+   </extension>
     
  
    <!--
