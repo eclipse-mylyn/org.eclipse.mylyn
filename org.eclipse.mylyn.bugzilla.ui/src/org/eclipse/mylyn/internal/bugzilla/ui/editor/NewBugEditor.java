@@ -30,7 +30,6 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
-import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskSelection;
@@ -214,6 +213,9 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		datePicker = new DatePicker(sectionClient, SWT.NONE, DatePicker.LABEL_CHOOSE);
 		datePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		datePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		Calendar today = Calendar.getInstance();
+		TasksUiPlugin.getTaskListManager().setScheduledToday(today);
+		datePicker.setDate(today);
 		Button removeReminder = toolkit.createButton(sectionClient, "Clear", SWT.PUSH | SWT.CENTER);
 		removeReminder.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -403,9 +405,8 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 								ITask newTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(newTaskHandle);								
 								if (newTask != null) {									
 									Calendar selectedDate = datePicker.getDate();
-									if(selectedDate == null) {
-										NewLocalTaskAction.scheduleNewTask(newTask);										
-									} else {
+									if(selectedDate != null) {
+										//NewLocalTaskAction.scheduleNewTask(newTask);									
 										TasksUiPlugin.getTaskListManager().setReminder(newTask, selectedDate.getTime());											
 									}
 									
