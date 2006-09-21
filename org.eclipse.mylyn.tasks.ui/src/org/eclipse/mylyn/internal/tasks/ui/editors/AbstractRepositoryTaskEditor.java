@@ -19,6 +19,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -1289,15 +1290,21 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			if (repositoryTask != null && offlineHandler != null) {
 				Date lastModDate = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED,
 						repositoryTask.getLastSyncDateStamp());
+				
+				// reduce granularity to minutes
+				Calendar calLastMod = Calendar.getInstance();
+				calLastMod.setTime(lastModDate);
+				calLastMod.set(Calendar.SECOND, 0);
+				
 				Date commentDate = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.COMMENT_DATE,
 						taskComment.getCreated());
-				if (commentDate != null && lastModDate != null && commentDate.after(lastModDate)) {
+				if (commentDate != null && lastModDate != null && (commentDate.after(calLastMod.getTime()) || commentDate.equals(calLastMod.getTime()))) {
 					expandableComposite.setExpanded(true);
 				}
+			} else if(repositoryTask.getLastSyncDateStamp() == null && !it.hasNext()) {
+				// no task data (query hit?) so expand last comment
+				expandableComposite.setExpanded(true);
 			}
-			// if(!it.hasNext()) {
-			// expandableComposite.setExpanded(true);
-			// }
 
 			expandableComposite.setText(taskComment.getNumber() + ": " + taskComment.getAuthorName() + ", "
 					+ taskComment.getCreated());

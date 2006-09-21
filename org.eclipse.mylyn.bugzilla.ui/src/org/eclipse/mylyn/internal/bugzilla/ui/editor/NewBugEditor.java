@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.bugzilla.ui.editor;
 import java.io.UnsupportedEncodingException;
 import java.net.Proxy;
 import java.net.URLEncoder;
+import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,17 +24,18 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
-import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylar.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
+import org.eclipse.mylar.internal.tasks.ui.views.DatePicker;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
@@ -44,15 +46,21 @@ import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -66,6 +74,8 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class NewBugEditor extends AbstractRepositoryTaskEditor {
 
+	private static final int DEFAULT_ESTIMATED_TIME = 1;
+
 	private static final String LABEL_SEARCH_DUPS = "Search for Duplicates";
 
 	private static final String LABEL_CREATE = "Create New";
@@ -76,11 +86,15 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 
 	protected RepositoryTaskData taskData;
 
+	DatePicker datePicker;
+
 	protected String newSummary = "";
 
 	private Button searchDuplicatesButton;
 
 	private BugSubmissionHandler submissionHandler;
+
+	private Spinner estimated;
 
 	public NewBugEditor(FormEditor editor) {
 		super(editor);
@@ -110,7 +124,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 
 	@Override
 	protected void createDescriptionLayout(Composite composite) {
-		FormToolkit toolkit = new FormToolkit(composite.getDisplay());
+		FormToolkit toolkit = this.getManagedForm().getToolkit();
 		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR);
 		section.setText(LABEL_SECTION_DESCRIPTION);
 		section.setExpanded(true);
@@ -172,8 +186,73 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 
 	@Override
 	protected void createNewCommentLayout(Composite comp) {
-		// Since NewBugModels have no comments, there is no
-		// GUI for them.
+		createPlanningLayout(comp);
+	}
+
+	protected void createPlanningLayout(Composite comp) {
+		FormToolkit toolkit = this.getManagedForm().getToolkit();
+
+		Section section = toolkit.createSection(comp, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+		section.setText("Personal Planning");
+		section.setLayout(new GridLayout());
+		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		section.setExpanded(true);
+
+		Composite sectionClient = toolkit.createComposite(section);
+		section.setClient(sectionClient);
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 7;
+		layout.makeColumnsEqualWidth = false;
+		sectionClient.setLayout(layout);
+		GridData clientDataLayout = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		sectionClient.setLayoutData(clientDataLayout);
+
+		// Reminder
+		Label label = toolkit.createLabel(sectionClient, "Scheduled for:");
+		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		datePicker = new DatePicker(sectionClient, SWT.NONE, DatePicker.LABEL_CHOOSE);
+		datePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+		datePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		Button removeReminder = toolkit.createButton(sectionClient, "Clear", SWT.PUSH | SWT.CENTER);
+		removeReminder.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				datePicker.setDate(null);				
+			}
+		});
+
+		// 1 Blank column after Reminder clear button
+		Label dummy = toolkit.createLabel(sectionClient, "");
+		GridData dummyLabelDataLayout = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
+		dummyLabelDataLayout.horizontalSpan = 1;
+		dummyLabelDataLayout.widthHint = 30;
+		dummy.setLayoutData(dummyLabelDataLayout);
+
+		// Estimated time
+		label = toolkit.createLabel(sectionClient, "Estimated time:");
+		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		estimated = new Spinner(sectionClient, SWT.NONE);
+		estimated.setDigits(0);
+		estimated.setMaximum(100);
+		estimated.setMinimum(0);
+		estimated.setIncrement(1);
+		estimated.setSelection(DEFAULT_ESTIMATED_TIME);		
+		estimated.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		GridData estimatedDataLayout = new GridData();
+		estimatedDataLayout.widthHint = 110;
+		estimated.setLayoutData(estimatedDataLayout);
+		label = toolkit.createLabel(sectionClient, "hours ");
+		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+
+		// 1 Blank column
+		Label blankLabel2 = toolkit.createLabel(sectionClient, "");
+		GridData blankLabl2Layout = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
+		blankLabl2Layout.horizontalSpan = 1;
+		blankLabl2Layout.widthHint = 25;
+		blankLabel2.setLayoutData(blankLabl2Layout);
+
+		toolkit.paintBordersFor(sectionClient);
+
 	}
 
 	@Override
@@ -320,9 +399,18 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 								close();
 								String newTaskHandle = AbstractRepositoryTask.getHandle(repository.getUrl(), event
 										.getJob().getResult().getMessage());
-								ITask newTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(newTaskHandle);
-								NewLocalTaskAction.scheduleNewTask(newTask);
-								if (newTask != null) {
+								ITask newTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(newTaskHandle);								
+								if (newTask != null) {									
+									Calendar selectedDate = datePicker.getDate();
+									if(selectedDate == null) {
+										// uncomment to schedule new tasks for today by default
+										// NewLocalTaskAction.scheduleNewTask(newTask);										
+									} else {
+										TasksUiPlugin.getTaskListManager().setReminder(newTask, selectedDate.getTime());											
+									}
+									
+									newTask.setEstimatedTimeHours(estimated.getSelection());
+									
 									Object selectedObject = null;
 									if (TaskListView.getFromActivePerspective() != null)
 										selectedObject = ((IStructuredSelection) TaskListView
@@ -354,20 +442,15 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 				}
 			};
 
-			// BugzillaRepositoryConnector bugzillaRepositoryClient =
-			// (BugzillaRepositoryConnector) TasksUiPlugin
-			// .getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
-			submissionHandler.submitBugReport(bugzillaReportSubmitForm, submitJobListener, false, addToTaskListRoot.getSelection());
+			submissionHandler.submitBugReport(bugzillaReportSubmitForm, submitJobListener, false, addToTaskListRoot
+					.getSelection());
 
 		} catch (UnsupportedEncodingException e) {
-			// should never get here but just in case...
 			MessageDialog.openError(null, "Posting Error", "Ensure proper encoding selected in "
 					+ TaskRepositoriesView.NAME + ".");
 			return;
 		} catch (Exception e) {
-			// TODO: Handle errors more appropriately (perhaps CoreException)
-			MessageDialog.openError(null, "Posting Error", "Ensure proper configuration in "
-					+ TaskRepositoriesView.NAME + ".");
+			MylarStatusHandler.fail(e, "Posting Error. Ensure proper configuration in "+ TaskRepositoriesView.NAME + ".", true);
 			return;
 		}
 
@@ -435,7 +518,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		buttonData.grabExcessVerticalSpace = false;
 		buttonComposite.setLayoutData(buttonData);
 		section.setClient(buttonComposite);
-		
+
 		addActionButtons(buttonComposite);
 		addToTaskListRoot = toolkit.createButton(buttonComposite, "Add to Task List root", SWT.CHECK);
 	}
