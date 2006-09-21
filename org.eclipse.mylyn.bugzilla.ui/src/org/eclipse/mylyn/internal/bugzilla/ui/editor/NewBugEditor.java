@@ -30,6 +30,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskSelection;
@@ -403,8 +404,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 								if (newTask != null) {									
 									Calendar selectedDate = datePicker.getDate();
 									if(selectedDate == null) {
-										// uncomment to schedule new tasks for today by default
-										// NewLocalTaskAction.scheduleNewTask(newTask);										
+										NewLocalTaskAction.scheduleNewTask(newTask);										
 									} else {
 										TasksUiPlugin.getTaskListManager().setReminder(newTask, selectedDate.getTime());											
 									}
