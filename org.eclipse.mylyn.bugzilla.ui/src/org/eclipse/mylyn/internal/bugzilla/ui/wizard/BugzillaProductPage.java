@@ -53,7 +53,6 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -178,19 +177,19 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 
 		listBox.setSelection(getSelectedProducts());
 		listBox.showSelection();
-		listBox.addSelectionListener(new SelectionListener() {
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// ignore
-			}
-
-			public void widgetSelected(SelectionEvent e) {
-				getWizard().performFinish();
-				getWizard().dispose();
-				// TODO: is this the wrong way of doing the close?
-				getContainer().getShell().close();
-			}
-		});
+//		listBox.addSelectionListener(new SelectionListener() {
+//
+//			public void widgetDefaultSelected(SelectionEvent e) {
+//				// ignore
+//			}
+//
+//			public void widgetSelected(SelectionEvent e) {
+//				getWizard().performFinish();
+//				getWizard().dispose();
+//				// TODO: is this the wrong way of doing the close?
+//				getContainer().getShell().close();
+//			}
+//		});
 
 		Button updateButton = new Button(composite, SWT.LEFT | SWT.PUSH);
 		updateButton.setText(LABEL_UPDATE);

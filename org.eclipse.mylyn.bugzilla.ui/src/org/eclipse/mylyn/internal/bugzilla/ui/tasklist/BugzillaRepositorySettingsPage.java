@@ -188,7 +188,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 						if (checkVersion) {
 							RepositoryConfiguration config = BugzillaCorePlugin.getRepositoryConfiguration(true,
-									repository.getUrl(), proxySettings, newUserId, newPassword, newEncoding);
+									serverUrl, proxySettings, newUserId, newPassword, newEncoding);
 
 							if (config != null) {
 								version[0] = config.getInstallVersion();

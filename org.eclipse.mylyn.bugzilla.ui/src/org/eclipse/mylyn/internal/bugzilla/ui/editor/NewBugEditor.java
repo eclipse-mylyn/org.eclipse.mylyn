@@ -196,7 +196,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		section.setText("Personal Planning");
 		section.setLayout(new GridLayout());
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		section.setExpanded(true);
+		section.setExpanded(false);
 
 		Composite sectionClient = toolkit.createComposite(section);
 		section.setClient(sectionClient);
