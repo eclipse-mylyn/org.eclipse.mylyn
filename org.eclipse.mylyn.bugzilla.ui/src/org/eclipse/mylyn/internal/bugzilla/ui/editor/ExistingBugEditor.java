@@ -342,8 +342,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 				final ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 						AbstractRepositoryTask.getHandle(repository.getUrl(), bugId));
 				if (task != null) {
-					hyperlink.setToolTipText(task.getDescription());
-					hyperlink.setHref(task);
+					hyperlink.setToolTipText(task.getDescription());					
 				}
 				hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 					public void linkActivated(HyperlinkEvent e) {
@@ -351,7 +350,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 							TaskUiUtil.refreshAndOpenTaskListElement(task);
 						} else {
 							TaskUiUtil.openRepositoryTask(repository.getUrl(), bugId, repository.getUrl()
-									+ BugzillaServerFacade.POST_ARGS_SHOW_BUG + e.getHref().toString());
+									+ BugzillaServerFacade.POST_ARGS_SHOW_BUG + bugId);
 						}
 					}
 				});
