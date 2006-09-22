@@ -13,51 +13,17 @@ package org.eclipse.mylar.internal.ide.ui;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
 import org.eclipse.mylar.context.core.InterestComparator;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.ui.views.markers.internal.FieldFolder;
-import org.eclipse.ui.views.markers.internal.FieldLineNumber;
-import org.eclipse.ui.views.markers.internal.FieldResource;
-import org.eclipse.ui.views.markers.internal.FieldSeverityAndMessage;
-import org.eclipse.ui.views.markers.internal.IField;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
-import org.eclipse.ui.views.markers.internal.TableSorter;
 
 /**
  * @author Mik Kersten
  */
-public class ProblemsListInterestSorter extends TableSorter {
-
-	// COPIED: from ProblemView
-	private final static int ASCENDING = TableSorter.ASCENDING;
-
-	private final static int DESCENDING = TableSorter.DESCENDING;
-
-	private final static int SEVERITY = 0;
-
-	private final static int DOI = 1;
-
-	private final static int DESCRIPTION = 2;
-
-	private final static int RESOURCE = 3;
-
-	private final static int[] DEFAULT_PRIORITIES = { SEVERITY, DOI, DESCRIPTION, RESOURCE };
-
-	private final static int[] DEFAULT_DIRECTIONS = { DESCENDING, // severity
-			ASCENDING, // folder
-			ASCENDING, // resource
-			ASCENDING }; // location
-
-	private final static IField[] VISIBLE_FIELDS = { new FieldSeverityAndMessage(), new FieldFolder(), new FieldResource(),
-			new FieldLineNumber() };
-
-	// END COPY
-
-	public ProblemsListInterestSorter() {
-		super(VISIBLE_FIELDS, DEFAULT_PRIORITIES, DEFAULT_DIRECTIONS);
-	}
+public class MarkerViewerInterestSorter extends ViewerSorter {
 
 	protected InterestComparator<IMylarElement> interestComparator = new InterestComparator<IMylarElement>();
 
