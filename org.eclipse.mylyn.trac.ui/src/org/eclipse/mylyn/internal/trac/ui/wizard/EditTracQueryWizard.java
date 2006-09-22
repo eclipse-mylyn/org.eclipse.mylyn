@@ -12,17 +12,15 @@
 package org.eclipse.mylar.internal.trac.ui.wizard;
 
 import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractEditQueryWizard;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Steffen Pingel
  */
 public class EditTracQueryWizard extends AbstractEditQueryWizard {
 
-	private TracCustomQueryPage queryPage;
+//	private TracCustomQueryPage queryPage;
 
 	public EditTracQueryWizard(TaskRepository repository, AbstractRepositoryQuery query) {
 		super(repository, query);
@@ -30,34 +28,34 @@ public class EditTracQueryWizard extends AbstractEditQueryWizard {
 
 	@Override
 	public void addPages() {
-		queryPage = new TracCustomQueryPage(repository, query);
-		queryPage.setWizard(this);
-		addPage(queryPage);
+		page = new TracCustomQueryPage(repository, query);
+		page.setWizard(this);
+		addPage(page);
 	}
 
 	@Override
 	public boolean canFinish() {
-		if (queryPage.getNextPage() == null) {
-			return queryPage.isPageComplete();
+		if (page.getNextPage() == null) {
+			return page.isPageComplete();
 		}
-		return queryPage.getNextPage().isPageComplete();
+		return page.getNextPage().isPageComplete();
 	}
 
-	@Override
-	public boolean performFinish() {
-		AbstractRepositoryQuery q = queryPage.getQuery();
-		if (q != null) {
-			TasksUiPlugin.getTaskListManager().getTaskList().deleteQuery(query);
-			TasksUiPlugin.getTaskListManager().getTaskList().addQuery(q);
-
-			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-					repository.getKind());
-			if (connector != null) {
-				TasksUiPlugin.getSynchronizationManager().synchronize(connector, q, null);
-			}
-		}
-
-		return true;
-	}
+//	@Override
+//	public boolean performFinish() {
+//		AbstractRepositoryQuery q = queryPage.getQuery();
+//		if (q != null) {
+//			TasksUiPlugin.getTaskListManager().getTaskList().deleteQuery(query);
+//			TasksUiPlugin.getTaskListManager().getTaskList().addQuery(q);
+//
+//			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+//					repository.getKind());
+//			if (connector != null) {
+//				TasksUiPlugin.getSynchronizationManager().synchronize(connector, q, null);
+//			}
+//		}
+//
+//		return true;
+//	}
 
 }

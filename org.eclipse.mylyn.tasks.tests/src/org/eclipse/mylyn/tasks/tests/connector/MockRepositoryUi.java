@@ -21,12 +21,6 @@ import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 public class MockRepositoryUi extends AbstractRepositoryConnectorUi {
 
 	@Override
-	public IWizard getNewQueryWizard(TaskRepository repository, IStructuredSelection selection) {
-		// ignore
-		return null;
-	}
-
-	@Override
 	public IWizard getNewTaskWizard(TaskRepository taskRepository, IStructuredSelection selection) {
 		// ignore
 		return null;
@@ -50,12 +44,13 @@ public class MockRepositoryUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public void openEditQueryDialog(AbstractRepositoryQuery query) {
-		// ignore
+	public boolean hasSearchPage() {
+		return false;
 	}
 
 	@Override
-	public boolean hasSearchPage() {
-		return false;
+	public IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery query) {
+		// ignore
+		return null;
 	}
 }

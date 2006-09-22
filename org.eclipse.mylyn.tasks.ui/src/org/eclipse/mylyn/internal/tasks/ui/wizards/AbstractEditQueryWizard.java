@@ -13,8 +13,11 @@ package org.eclipse.mylar.internal.tasks.ui.wizards;
 
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositoryQueryPage;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
@@ -27,6 +30,8 @@ public abstract class AbstractEditQueryWizard extends Wizard {
 
 	protected AbstractRepositoryQuery query;
 	
+	protected AbstractRepositoryQueryPage page;
+	
 	public AbstractEditQueryWizard(TaskRepository repository, AbstractRepositoryQuery query) {
 		this.repository = repository;
 		this.query = query;
@@ -35,4 +40,20 @@ public abstract class AbstractEditQueryWizard extends Wizard {
 		setDefaultPageImageDescriptor(TaskListImages.BANNER_REPOSITORY);
 	}
 
+	@Override
+	public boolean performFinish() {
+		AbstractRepositoryQuery query = page.getQuery();
+		if (query != null) {
+			
+			TasksUiPlugin.getTaskListManager().getTaskList().deleteQuery(query);
+			TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
+			
+			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
+			if (connector != null) {
+				TasksUiPlugin.getSynchronizationManager().synchronize(connector, query, null);
+			}
+		} 
+
+		return true;
+	}
 }
