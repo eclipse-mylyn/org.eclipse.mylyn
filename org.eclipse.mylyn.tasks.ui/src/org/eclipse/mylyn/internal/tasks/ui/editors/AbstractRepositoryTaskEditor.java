@@ -1301,7 +1301,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				if (commentDate != null && lastModDate != null && (commentDate.after(calLastMod.getTime()) || commentDate.equals(calLastMod.getTime()))) {
 					expandableComposite.setExpanded(true);
 				}
-			} else if(repositoryTask.getLastSyncDateStamp() == null && !it.hasNext()) {
+			} else if(repositoryTask != null && repositoryTask.getLastSyncDateStamp() == null && !it.hasNext()) {
 				// no task data (query hit?) so expand last comment
 				expandableComposite.setExpanded(true);
 			}

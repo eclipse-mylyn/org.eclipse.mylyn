@@ -30,6 +30,7 @@ import java.util.List;
 import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESOLUTION;
@@ -85,8 +86,11 @@ public class BugzillaServerFacade {
 			Proxy proxySettings, String characterEncoding, int id) throws IOException, MalformedURLException,
 			LoginException, GeneralSecurityException, BugzillaException {
 
+		// >>> bug 154729
+		MylarStatusHandler.log("Retrieving task data from: " + repositoryUrl, BugzillaServerFacade.class);
+
 		RepositoryTaskData bugReport = new RepositoryTaskData(new BugzillaAttributeFactory(),
-				BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl, ""+id);
+				BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl, "" + id);
 		setupExistingBugAttributes(repositoryUrl, bugReport);
 
 		RepositoryReportFactory reportFactory = new RepositoryReportFactory();
@@ -135,11 +139,11 @@ public class BugzillaServerFacade {
 	}
 
 	// TODO: improve and move to repository connector?
-	public static void validateCredentials(Proxy proxySettings, String repositoryUrl, String userid, String password) throws IOException,
-			BugzillaException, KeyManagementException, GeneralSecurityException {
+	public static void validateCredentials(Proxy proxySettings, String repositoryUrl, String userid, String password)
+			throws IOException, BugzillaException, KeyManagementException, GeneralSecurityException {
 
 		proxySettings = proxySettings == null ? Proxy.NO_PROXY : proxySettings;
-		
+
 		String url = repositoryUrl + "/index.cgi?" + POST_ARGS_LOGIN
 				+ URLEncoder.encode(userid, BugzillaCorePlugin.ENCODING_UTF_8) + POST_ARGS_PASSWORD
 				+ URLEncoder.encode(password, BugzillaCorePlugin.ENCODING_UTF_8);
@@ -218,7 +222,7 @@ public class BugzillaServerFacade {
 	 * @throws NoSuchAlgorithmException
 	 * @throws LoginException
 	 * @throws KeyManagementException
-	 * @throws BugzillaException 
+	 * @throws BugzillaException
 	 */
 	public static void setupNewBugAttributes(String repositoryUrl, Proxy proxySettings, String userName,
 			String password, NewBugzillaReport newReport, String characterEncoding) throws IOException,
@@ -367,8 +371,8 @@ public class BugzillaServerFacade {
 		for (RepositoryTaskAttribute attribute : existingReport.getAttributes()) {
 			BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getID().trim().toUpperCase());
 			attribute.clearOptions();
-			List<String> optionValues = BugzillaCorePlugin.getRepositoryConfiguration(false, repositoryUrl, proxySettings,
-					userName, password, characterEncoding).getOptionValues(element, product);
+			List<String> optionValues = BugzillaCorePlugin.getRepositoryConfiguration(false, repositoryUrl,
+					proxySettings, userName, password, characterEncoding).getOptionValues(element, product);
 			if (element != BugzillaReportElement.OP_SYS && element != BugzillaReportElement.BUG_SEVERITY
 					&& element != BugzillaReportElement.PRIORITY && element != BugzillaReportElement.BUG_STATUS) {
 				Collections.sort(optionValues);

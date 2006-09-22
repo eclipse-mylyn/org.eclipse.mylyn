@@ -111,7 +111,8 @@ class SynchronizeTaskJob extends Job {
 								// can be caused by empty urlbase parameter on bugzilla server
 								MylarStatusHandler.log(e.getStatus());
 							} else {
-								// ignore, assume working offline
+								// >>> bug 154729
+								MylarStatusHandler.log(e.getStatus());
 							}
 							continue;
 						}

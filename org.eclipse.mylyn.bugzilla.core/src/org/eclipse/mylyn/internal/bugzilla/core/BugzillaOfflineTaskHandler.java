@@ -74,11 +74,6 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 
 	public RepositoryTaskData downloadTaskData(final AbstractRepositoryTask bugzillaTask, TaskRepository repository,
 			Proxy proxySettings) throws CoreException {
-		// TaskRepository repository =
-		// TasksUiPlugin.getRepositoryManager().getRepository(
-		// BugzillaCorePlugin.REPOSITORY_KIND, bugzillaTask.getRepositoryUrl());
-
-		// Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
 		try {
 			int bugId = Integer.parseInt(AbstractRepositoryTask.getTaskId(bugzillaTask.getHandleIdentifier()));
 
