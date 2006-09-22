@@ -24,6 +24,7 @@
          point="org.eclipse.ui.startup">
     </extension>
 
+   <!--
 	<extension
          id="org.eclipse.mylar.helpDocs"
          name="Mylar Help"
@@ -33,6 +34,7 @@
             primary="false">
       </toc>
     </extension>
+    -->
 
     <extension point="org.eclipse.ui.newWizards">
       <wizard
