@@ -87,7 +87,7 @@ public class BugzillaServerFacade {
 			LoginException, GeneralSecurityException, BugzillaException {
 
 		// >>> bug 154729
-		MylarStatusHandler.log("Retrieving task data from: " + repositoryUrl, BugzillaServerFacade.class);
+//		MylarStatusHandler.log("Retrieving task data from: " + repositoryUrl, BugzillaServerFacade.class);
 
 		RepositoryTaskData bugReport = new RepositoryTaskData(new BugzillaAttributeFactory(),
 				BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl, "" + id);

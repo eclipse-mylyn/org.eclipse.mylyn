@@ -112,7 +112,7 @@ class SynchronizeTaskJob extends Job {
 								MylarStatusHandler.log(e.getStatus());
 							} else {
 								// >>> bug 154729
-								MylarStatusHandler.log(e.getStatus());
+//								MylarStatusHandler.log(e.getStatus());
 							}
 							continue;
 						}
