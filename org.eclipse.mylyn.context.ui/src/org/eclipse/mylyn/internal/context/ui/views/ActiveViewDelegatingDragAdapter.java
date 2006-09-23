@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.util.TransferDragSourceListener;
 import org.eclipse.swt.dnd.DragSource;
 import org.eclipse.swt.dnd.DragSourceEvent;
@@ -39,8 +38,6 @@ public class ActiveViewDelegatingDragAdapter implements DragSourceListener {
 	}
 
 	protected void setPossibleListeners(TransferDragSourceListener[] listeners) {
-		Assert.isNotNull(listeners);
-		Assert.isTrue(fActiveListeners == null, "Can only set possible listeners before drag operation has started"); //$NON-NLS-1$
 		fPossibleListeners = listeners;
 	}
 

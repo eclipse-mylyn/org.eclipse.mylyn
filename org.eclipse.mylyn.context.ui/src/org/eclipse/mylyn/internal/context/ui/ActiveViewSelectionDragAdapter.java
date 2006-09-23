@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.internal.context.ui;
 
-import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.util.TransferDragSourceListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -29,7 +28,7 @@ public class ActiveViewSelectionDragAdapter extends DragSourceAdapter implements
 	private ISelectionProvider fProvider;
 
 	public ActiveViewSelectionDragAdapter(ISelectionProvider provider) {
-		Assert.isNotNull(provider);
+		assert provider != null;
 		fProvider = provider;
 	}
 
@@ -53,7 +52,7 @@ public class ActiveViewSelectionDragAdapter extends DragSourceAdapter implements
 	}
 
 	public void dragFinished(DragSourceEvent event) {
-		Assert.isTrue(event.detail != DND.DROP_MOVE);
+		assert event.detail != DND.DROP_MOVE;
 		LocalSelectionTransfer.getTransfer().setSelection(null);
 		LocalSelectionTransfer.getTransfer().setSelectionSetTime(0);
 	}
