@@ -16,7 +16,7 @@ import java.util.Set;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.internal.junit.launcher.JUnitLaunchConfigurationTab;
+import org.eclipse.jdt.junit.launcher.JUnitLaunchConfigurationTab;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
 import org.eclipse.swt.SWT;

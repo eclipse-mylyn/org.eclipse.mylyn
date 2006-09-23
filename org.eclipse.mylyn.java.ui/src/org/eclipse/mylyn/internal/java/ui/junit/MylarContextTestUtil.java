@@ -44,7 +44,7 @@ public class MylarContextTestUtil {
 		ITestKind testKind = TestKindRegistry.getDefault().getKind(configuration);
 		// HACK: only checks first type
 		if (contextTestCases.size() > 0) {
-			testKind = TestKindRegistry.getDefault().getKind(contextTestCases.iterator().next());
+			testKind = TestKindRegistry.getDefault().getKind(configuration);//contextTestCases.iterator().next());
 		}
 		return new TestSearchResult(contextTestCases.toArray(new IType[contextTestCases.size()]), testKind);
 	}
