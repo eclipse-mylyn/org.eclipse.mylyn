@@ -13,7 +13,6 @@ package org.eclipse.mylar.internal.bugzilla.ui;
 
 import org.eclipse.compare.structuremergeviewer.IStructureComparator;
 import org.eclipse.compare.structuremergeviewer.IStructureCreator;
-import org.eclipse.jface.util.Assert;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 
 /**
@@ -72,7 +71,7 @@ public class BugzillaCompareStructureCreator implements IStructureCreator {
 	 *            <code>getStructure</code>
 	 */
 	public void save(IStructureComparator node, Object input) {
-		Assert.isTrue(false); // Cannot update bug report object
+		// ignore
 	}
 
 }

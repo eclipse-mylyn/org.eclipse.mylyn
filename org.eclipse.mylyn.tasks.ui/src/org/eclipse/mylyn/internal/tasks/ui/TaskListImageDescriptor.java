@@ -13,7 +13,6 @@ package org.eclipse.mylar.internal.tasks.ui;
 
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.util.Assert;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 
@@ -82,8 +81,6 @@ public class TaskListImageDescriptor extends CompositeImageDescriptor {
 	 * @see ImageDescriptor#createImage()
 	 */
 	public void setImageSize(Point size) {
-		Assert.isNotNull(size);
-		Assert.isTrue(size.x >= 0 && size.y >= 0);
 		fSize = size;
 	}
 

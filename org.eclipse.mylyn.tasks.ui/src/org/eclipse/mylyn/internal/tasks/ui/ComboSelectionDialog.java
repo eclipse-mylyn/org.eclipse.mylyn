@@ -11,7 +11,6 @@
 package org.eclipse.mylar.internal.tasks.ui;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.util.Assert;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -46,10 +45,6 @@ public class ComboSelectionDialog extends Dialog {
 	public ComboSelectionDialog(Shell parentShell, String shellTitle, String labelText, String[] comboStrings,
 			int initialSelectionIndex) {
 		super(parentShell);
-		Assert.isNotNull(shellTitle);
-		Assert.isNotNull(labelText);
-		Assert.isTrue(comboStrings.length > 0);
-		Assert.isTrue(initialSelectionIndex >= 0 && initialSelectionIndex < comboStrings.length);
 		fShellTitle = shellTitle;
 		fLabelText = labelText;
 		fAllowedStrings = comboStrings;
