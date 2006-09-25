@@ -25,8 +25,6 @@ public class EditBugzillaQueryWizard extends AbstractEditQueryWizard {
 		super(repository, query);
 	}
 
-//	private AbstractRepositoryQueryPage page;
-
 	@Override
 	public void addPages() {
 		if (((BugzillaRepositoryQuery) query).isCustomQuery()) {
@@ -37,41 +35,11 @@ public class EditBugzillaQueryWizard extends AbstractEditQueryWizard {
 		addPage(page);
 	}
 
-//	@Override
-//	public boolean performFinish() {
-//		query = page.getQuery();
-//		final String queryTitle = page.getQueryTitle().trim();
-//
-//		TasksUiPlugin.getTaskListManager().getTaskList().renameContainer(query, queryTitle);
-//		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-//			protected void execute(IProgressMonitor monitor) throws CoreException {
-//				monitor.beginTask("Executing query", 50);
-//				try {
-//					AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
-//							.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
-//
-//					TasksUiPlugin.getSynchronizationManager().synchronize(connector, query, null);
-//				} finally {
-//					monitor.done();
-//				}
-//			}
-//		};
-//
-//		try {
-//			getContainer().run(true, false, op);
-//		} catch (Exception e) {
-//			MylarStatusHandler.log(e, "There was a problem executing the query refresh");
-//		}
-//
-//		return true;
-//	}
-
 	@Override
 	public boolean canFinish() {
 		if (page != null && page.isPageComplete()) {
 			return true;
 		}
-
 		return false;
 	}
 }
