@@ -335,7 +335,8 @@ public class RepositorySynchronizationManager {
 		String lastModified = repositoryTask.getLastSyncDateStamp();
 		if (newData != null) {
 			RepositoryTaskData oldTaskData = repositoryTask.getTaskData();
-			//OfflineTaskManager.findBug(repositoryTask.getRepositoryUrl(), newData.getId());
+			// OfflineTaskManager.findBug(repositoryTask.getRepositoryUrl(),
+			// newData.getId());
 			if (oldTaskData != null) {
 				lastModified = oldTaskData.getLastModified();
 			}
@@ -382,25 +383,22 @@ public class RepositorySynchronizationManager {
 	}
 
 	/**
-	 * Do what is necessary to put the task in a synchronized ('read') state. If
-	 * there is no backing task data a synchronization job will launch.
+	 * If task is in INCOMING state it is changed to OUTGOING. If the task data
+	 * isn't null the last sync timestamp is updated.
 	 */
 	public void markRead(AbstractRepositoryTask repositoryTask) {
 		if (repositoryTask.getSyncState().equals(RepositoryTaskSyncState.INCOMING)) {
-			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-					repositoryTask.getRepositoryKind());
-			if (connector == null)
-				return;
 			if (repositoryTask.getTaskData() != null && repositoryTask.getTaskData().getLastModified() != null) {
 				repositoryTask.setLastSyncDateStamp(repositoryTask.getTaskData().getLastModified());
-				repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);				
-				TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
-			} else {
-				this.synchronize(connector, repositoryTask, true, null);
 			}
+			repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
+			TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 		}
 	}
 
+	/**
+	 * If task in SYNCHRONIZED state it is changed to INCOMING.
+	 */
 	public void markUnRead(AbstractRepositoryTask repositoryTask) {
 		if (repositoryTask.getSyncState().equals(RepositoryTaskSyncState.SYNCHRONIZED)) {
 			repositoryTask.setSyncState(RepositoryTaskSyncState.INCOMING);
