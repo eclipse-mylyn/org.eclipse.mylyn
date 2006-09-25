@@ -138,8 +138,9 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 		if (object == null) {
 			return null;
 		} else if (!(object instanceof IJavaElement)) {
-			if (object instanceof IResource) {
-				Object adapter = ((IResource) object).getAdapter(IJavaElement.class);
+			
+			if (object instanceof IAdaptable) {
+				Object adapter = ((IAdaptable)object).getAdapter(IJavaElement.class);
 				if (adapter instanceof IJavaElement) {
 					return ((IJavaElement) adapter).getHandleIdentifier();
 				}
@@ -152,10 +153,13 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 		}
 	}
 
+	/**
+	 * TODO: remove after WTP 1.5.1 is generally available
+	 */
 	private String getWtpElementHandle(Object object) {
-		Class browserClass = object.getClass();
+		Class objectClass = object.getClass();
 		try {
-			Method getProjectMethod = browserClass.getMethod("getProject", new Class[0]);
+			Method getProjectMethod = objectClass.getMethod("getProject", new Class[0]);
 			Object javaProject = getProjectMethod.invoke(object, new Object[0]);
 			if (javaProject instanceof IJavaProject) {
 				return ((IJavaElement) javaProject).getHandleIdentifier();
