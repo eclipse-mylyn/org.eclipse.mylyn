@@ -33,7 +33,6 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractBugEditorInput;
@@ -350,7 +349,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 							TaskUiUtil.refreshAndOpenTaskListElement(task);
 						} else {
 							TaskUiUtil.openRepositoryTask(repository.getUrl(), bugId, repository.getUrl()
-									+ BugzillaServerFacade.POST_ARGS_SHOW_BUG + bugId);
+									+ IBugzillaConstants.POST_ARGS_SHOW_BUG + bugId);
 						}
 					}
 				});

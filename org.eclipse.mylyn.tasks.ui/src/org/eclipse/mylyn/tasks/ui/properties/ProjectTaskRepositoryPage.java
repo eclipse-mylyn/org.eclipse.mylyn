@@ -1,0 +1,179 @@
+/*******************************************************************************
+ * Copyright (c) 2004 - 2006 Mylar committers and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
+
+package org.eclipse.mylar.tasks.ui.properties;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.viewers.DecoratingLabelProvider;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasks.ui.actions.AddRepositoryAction;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesViewSorter;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoryLabelProvider;
+import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.PropertyPage;
+import org.eclipse.ui.internal.dialogs.DialogUtil;
+
+/**
+ * @author Rob Elves
+ * @see Adapted from org.eclipse.ui.internal.ide.dialogs.ProjectReferencePage
+ */
+public class ProjectTaskRepositoryPage extends PropertyPage {
+
+	private static final int REPOSITORY_LIST_MULTIPLIER = 30;
+
+	private IProject project;
+
+	private boolean modified = false;
+
+	private TableViewer listViewer;
+
+	public ProjectTaskRepositoryPage() {
+		// Do nothing on creation
+	}
+
+	protected Control createContents(Composite parent) {
+
+		Font font = parent.getFont();
+
+		Composite composite = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout();
+		composite.setLayout(layout);
+		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		composite.setFont(font);
+
+		initialize();
+
+		Label description = createDescriptionLabel(composite);
+		description.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+
+		listViewer = new TableViewer(composite, SWT.TOP | SWT.BORDER | SWT.SINGLE);
+		listViewer.getTable().setFont(font);
+		GridData data = new GridData(GridData.FILL_BOTH);
+		data.grabExcessHorizontalSpace = true;
+
+		// Only set a height hint if it will not result in a cut off dialog
+		if (DialogUtil.inRegularFontMode(parent)) {
+			data.heightHint = getDefaultFontHeight(listViewer.getTable(), REPOSITORY_LIST_MULTIPLIER);
+		}
+		listViewer.getTable().setLayoutData(data);
+		listViewer.getTable().setFont(font);
+
+		listViewer.setLabelProvider(new DecoratingLabelProvider(new TaskRepositoryLabelProvider(), PlatformUI
+				.getWorkbench().getDecoratorManager().getLabelDecorator()));
+		listViewer.setContentProvider(new IStructuredContentProvider() {
+			public void inputChanged(Viewer v, Object oldInput, Object newInput) {
+			}
+
+			public void dispose() {
+			}
+
+			public Object[] getElements(Object parent) {
+				return TasksUiPlugin.getRepositoryManager().getAllRepositories().toArray();
+			}
+
+		});
+
+		listViewer.setSorter(new TaskRepositoriesViewSorter());
+		listViewer.setInput(project.getWorkspace());
+
+		TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(project, true);
+		if (repository != null) {
+			Object[] repositories = new Object[] { repository };
+			listViewer.setSelection(new StructuredSelection(repositories));
+		}
+
+		listViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+			public void selectionChanged(SelectionChangedEvent event) {
+				modified = true;
+			}
+		});
+		
+		
+		final AddRepositoryAction action = new AddRepositoryAction();
+
+		Button button = new Button(composite, SWT.NONE);
+		button.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING));
+		button.setText(AddRepositoryAction.TITLE);
+		button.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				action.run();				
+				listViewer.setInput(project.getWorkspace());
+			}
+		});
+		
+		
+
+		return composite;
+	}
+
+	private static int getDefaultFontHeight(Control control, int lines) {
+		FontData[] viewerFontData = control.getFont().getFontData();
+		int fontHeight = 10;
+
+		// If we have no font data use our guess
+		if (viewerFontData.length > 0) {
+			fontHeight = viewerFontData[0].getHeight();
+		}
+		return lines * fontHeight;
+
+	}
+
+	/**
+	 * Initializes a ProjectReferencePage.
+	 */
+	private void initialize() {
+		project = (IProject) getElement().getAdapter(IResource.class);
+		noDefaultAndApplyButton();
+		setDescription("Select a task repository to associate with this project below:");
+	}
+
+	/**
+	 * @see PreferencePage#performOk
+	 */
+	public boolean performOk() {
+		if (!modified) {
+			return true;
+		}
+		if (!listViewer.getSelection().isEmpty()) {
+			StructuredSelection selection = (StructuredSelection) listViewer.getSelection();
+			if (selection.size() > 0) {
+				TaskRepository selectedRepository = (TaskRepository) selection.getFirstElement();
+				try {
+					TasksUiPlugin.getDefault().setRepositoryForResource(project, selectedRepository);
+				} catch (CoreException e) {
+					MylarStatusHandler.fail(e, "Unable to associate project with task repository", true);
+				}
+			}
+
+		}
+		return true;
+	}
+}

@@ -11,7 +11,7 @@
 package org.eclipse.mylar.internal.bugzilla.core;
 
 /**
- * @author Mik Kersten (hardening of prototype
+ * @author Mik Kersten
  */
 public interface IBugzillaConstants {
 
@@ -31,10 +31,6 @@ public interface IBugzillaConstants {
 
 	static final String SERVER_VERSION = "org.eclipse.mylar.bugzilla.server.version";
 
-	// static final String SERVER_220 = "2.20";
-	// static final String SERVER_218 = "2.18";
-
-	/** Used by search engine */
 	public static final int RETURN_ALL_HITS = -1;
 
 	public static final String CONTENT_TYPE_RDF = "&ctype=rdf";
@@ -50,6 +46,12 @@ public interface IBugzillaConstants {
 	public static final String DEPENDENCY_TREE_URL = "/showdependencytree.cgi?id=";
 	
 	public static final String DEPENDENCY_GRAPH_URL = "/showdependencygraph.cgi?id=";
+
+	public static final String POST_ARGS_SHOW_BUG = "/show_bug.cgi?id=";
+
+	public static final String POST_ARGS_PASSWORD = "&Bugzilla_password=";
+
+	public static final String POST_ARGS_LOGIN = "GoAheadAndLogIn=1&Bugzilla_login=";
 	
 	/** Supported bugzilla repository versions */
 	static public enum BugzillaServerVersion {
@@ -80,10 +82,6 @@ public interface IBugzillaConstants {
 			return null;
 		}
 	}
-
-	// static final String IS_216 = "BUGZILLA_IS_216";
-	// static final String IS_218 = "BUGZILLA_IS_218";
-	// static final String IS_220 = "BUGZILLA_IS_220";
 
 	static final String REFRESH_QUERY = "org.eclipse.mylar.bugzilla.query.refresh";
 

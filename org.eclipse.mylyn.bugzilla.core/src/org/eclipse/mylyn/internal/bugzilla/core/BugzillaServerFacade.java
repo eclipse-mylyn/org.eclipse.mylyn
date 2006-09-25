@@ -71,14 +71,6 @@ public class BugzillaServerFacade {
 
 	private static final String OPERATION_LABEL_ACCEPT = "Accept bug (change status to ASSIGNED)";
 
-	private static final String BUG_STATUS_NEW = "NEW";
-
-	private static final String POST_ARGS_PASSWORD = "&Bugzilla_password=";
-
-	public static final String POST_ARGS_SHOW_BUG = "/show_bug.cgi?id=";
-
-	private static final String POST_ARGS_LOGIN = "GoAheadAndLogIn=1&Bugzilla_login=";
-
 	private static final BugzillaAttributeFactory attributeFactory = new BugzillaAttributeFactory();
 
 	public static RepositoryTaskData getBug(String repositoryUrl, String userName, String password,
@@ -86,7 +78,8 @@ public class BugzillaServerFacade {
 			LoginException, GeneralSecurityException, BugzillaException {
 
 		// >>> bug 154729
-//		MylarStatusHandler.log("Retrieving task data from: " + repositoryUrl, BugzillaServerFacade.class);
+		// MylarStatusHandler.log("Retrieving task data from: " + repositoryUrl,
+		// BugzillaServerFacade.class);
 
 		RepositoryTaskData bugReport = new RepositoryTaskData(new BugzillaAttributeFactory(),
 				BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl, "" + id);
@@ -103,8 +96,10 @@ public class BugzillaServerFacade {
 	public static String addCredentials(String url, String userName, String password)
 			throws UnsupportedEncodingException {
 		if ((userName != null && userName.length() > 0) && (password != null && password.length() > 0)) {
-			url += "&" + POST_ARGS_LOGIN + URLEncoder.encode(userName, BugzillaCorePlugin.ENCODING_UTF_8)
-					+ POST_ARGS_PASSWORD + URLEncoder.encode(password, BugzillaCorePlugin.ENCODING_UTF_8);
+			url += "&" + IBugzillaConstants.POST_ARGS_LOGIN
+					+ URLEncoder.encode(userName, BugzillaCorePlugin.ENCODING_UTF_8)
+					+ IBugzillaConstants.POST_ARGS_PASSWORD
+					+ URLEncoder.encode(password, BugzillaCorePlugin.ENCODING_UTF_8);
 		}
 		return url;
 	}
@@ -143,8 +138,8 @@ public class BugzillaServerFacade {
 
 		proxySettings = proxySettings == null ? Proxy.NO_PROXY : proxySettings;
 
-		String url = repositoryUrl + "/index.cgi?" + POST_ARGS_LOGIN
-				+ URLEncoder.encode(userid, BugzillaCorePlugin.ENCODING_UTF_8) + POST_ARGS_PASSWORD
+		String url = repositoryUrl + "/index.cgi?" + IBugzillaConstants.POST_ARGS_LOGIN
+				+ URLEncoder.encode(userid, BugzillaCorePlugin.ENCODING_UTF_8) + IBugzillaConstants.POST_ARGS_PASSWORD
 				+ URLEncoder.encode(password, BugzillaCorePlugin.ENCODING_UTF_8);
 
 		URL serverURL = new URL(url);
@@ -248,7 +243,7 @@ public class BugzillaServerFacade {
 		for (String option : optionValues) {
 			a.addOptionValue(option, option);
 		}
-		a.setValue(BUG_STATUS_NEW);
+		a.setValue(IBugzillaConstants.VALUE_STATUS_NEW);
 		newReport.addAttribute(BugzillaReportElement.BUG_STATUS.getKeyString(), a);
 		// attributes.put(a.getName(), a);
 
@@ -477,7 +472,7 @@ public class BugzillaServerFacade {
 
 	public static String getBugUrl(String repositoryUrl, int id, String userName, String password) {
 
-		String url = repositoryUrl + POST_ARGS_SHOW_BUG + id;
+		String url = repositoryUrl + IBugzillaConstants.POST_ARGS_SHOW_BUG + id;
 		try {
 			url = addCredentials(url, userName, password);
 		} catch (UnsupportedEncodingException e) {
@@ -487,7 +482,7 @@ public class BugzillaServerFacade {
 	}
 
 	public static String getBugUrlWithoutLogin(String repositoryUrl, int id) {
-		String url = repositoryUrl + POST_ARGS_SHOW_BUG + id;
+		String url = repositoryUrl + IBugzillaConstants.POST_ARGS_SHOW_BUG + id;
 		return url;
 	}
 

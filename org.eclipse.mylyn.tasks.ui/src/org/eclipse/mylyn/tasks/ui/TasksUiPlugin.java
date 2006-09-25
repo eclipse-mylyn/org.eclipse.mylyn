@@ -23,11 +23,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
@@ -75,6 +82,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.update.internal.core.UpdateCore;
 import org.osgi.framework.BundleContext;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * @author Mik Kersten
@@ -85,12 +93,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	// TODO: move constants
 
-	private static final String NAME_DATA_DIR = ".mylar";
-
-	private static final char DEFAULT_PATH_SEPARATOR = '/';
-
-	private static final int NOTIFICATION_DELAY = 5000;
-	
 	public static final String DEFAULT_BACKUP_FOLDER_NAME = "backup";
 
 	public static final String FILE_EXTENSION = ".xml.zip";
@@ -98,12 +100,24 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	public static final String OLD_TASK_LIST_FILE = "tasklist.xml";
 
 	public static final String DEFAULT_TASK_LIST_FILE = "tasklist" + FILE_EXTENSION;
-	
+
 	public static final String TITLE_DIALOG = "Mylar Information";
 
 	public static final String PLUGIN_ID = "org.eclipse.mylar.tasklist";
 
 	public static final String URL_HOMEPAGE = "http://eclipse.org/mylar";
+
+	private static final String PROPERTY_PREFIX = "project.repository";
+
+	private static final String PROJECT_REPOSITORY_KIND = PROPERTY_PREFIX + ".kind";
+
+	private static final String PROJECT_REPOSITORY_URL = PROPERTY_PREFIX +".url";
+
+	private static final String NAME_DATA_DIR = ".mylar";
+
+	private static final char DEFAULT_PATH_SEPARATOR = '/';
+
+	private static final int NOTIFICATION_DELAY = 5000;
 
 	private static TasksUiPlugin INSTANCE;
 
@@ -146,7 +160,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	private Map<String, Image> brandingIcons = new HashMap<String, Image>();
 
 	private Map<String, ImageDescriptor> overlayIcons = new HashMap<String, ImageDescriptor>();
-	
+
 	public enum TaskListSaveMode {
 		ONE_HOUR, THREE_HOURS, DAY;
 		@Override
@@ -276,7 +290,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 					if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING
 							&& repositoryTask.isNotified() == false) {
 						TaskListNotificationIncoming notification = new TaskListNotificationIncoming(repositoryTask);
-						
+
 						if (repositoryTask.getTaskData() != null) {
 							List<TaskComment> taskComments = repositoryTask.getTaskData().getComments();
 							if (taskComments != null && taskComments.size() > 0) {
@@ -290,16 +304,19 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 									notification.setDescription(description);
 								}
 							}
-							
-							AbstractRepositoryConnector connector = getRepositoryManager().getRepositoryConnector(repositoryTask.getRepositoryKind());
-							if(connector != null) {
+
+							AbstractRepositoryConnector connector = getRepositoryManager().getRepositoryConnector(
+									repositoryTask.getRepositoryKind());
+							if (connector != null) {
 								IOfflineTaskHandler offlineHandler = connector.getOfflineTaskHandler();
-								if(offlineHandler != null && repositoryTask.getTaskData().getLastModified() != null) {
-									Date modified = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED, repositoryTask.getTaskData().getLastModified());
+								if (offlineHandler != null && repositoryTask.getTaskData().getLastModified() != null) {
+									Date modified = offlineHandler.getDateForAttributeType(
+											RepositoryTaskAttribute.DATE_MODIFIED, repositoryTask.getTaskData()
+													.getLastModified());
 									notification.setDate(modified);
 								}
 							}
-							
+
 						}
 
 						notifications.add(notification);
@@ -446,7 +463,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				getPreferenceStore().removePropertyChangeListener(taskListBackupManager);
 				getPreferenceStore().removePropertyChangeListener(taskListManager);
 				getPreferenceStore().removePropertyChangeListener(synchronizationScheduler);
-				getPreferenceStore().removePropertyChangeListener(PROPERTY_LISTENER);				
+				getPreferenceStore().removePropertyChangeListener(PROPERTY_LISTENER);
 				taskListManager.getTaskList().removeChangeListener(taskListSaveManager);
 				taskListManager.dispose();
 				TaskListColorsAndFonts.dispose();
@@ -697,7 +714,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	public ImageDescriptor getOverlayIcon(String repositoryType) {
 		return overlayIcons.get(repositoryType);
 	}
-	
+
 	public boolean isInitialized() {
 		return initialized;
 	}
@@ -773,6 +790,52 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	public String getRepositoriesFilePath() {
 		return getDataDirectory() + File.separator + TaskRepositoryManager.DEFAULT_REPOSITORIES_FILE;
+	}
+
+	/** 
+	 * Associate a Task Repository with a workbench project 
+	 * @param resource project or resource belonging to a project
+	 * @param repository task repository to associate with given project
+	 * @throws CoreException
+	 */
+	public void setRepositoryForResource(IResource resource, TaskRepository repository) throws CoreException {
+		if(resource == null || repository == null) return;		
+		IProject project = resource.getProject();		
+		if(project == null) return;
+		IScopeContext projectScope = new ProjectScope(project);
+		IEclipsePreferences projectNode = projectScope.getNode(PLUGIN_ID);
+		if (projectNode != null) {
+			projectNode.put(PROJECT_REPOSITORY_KIND, repository.getKind());
+			projectNode.put(PROJECT_REPOSITORY_URL, repository.getUrl());
+			try {
+				projectNode.flush();
+			} catch (BackingStoreException e) {
+				MylarStatusHandler.fail(e, "Failed to save task repository to project association preference", false);
+			}
+		}
+	}
+	
+	/**
+	 * Retrieve the task repository that has been associated with the given
+	 * project (or resource belonging to a project)
+	 */
+	public TaskRepository getRepositoryForResource(IResource resource, boolean silent) {
+		if(resource == null) return null;		
+		IProject project = resource.getProject();		
+		if(project == null) return null;
+		TaskRepository taskRepository = null;
+		IScopeContext projectScope = new ProjectScope(project);
+		IEclipsePreferences projectNode = projectScope.getNode(PLUGIN_ID);
+		if (projectNode != null) {
+			String kind = projectNode.get(PROJECT_REPOSITORY_KIND, "");
+			String urlString = projectNode.get(PROJECT_REPOSITORY_URL, "");
+			taskRepository = getRepositoryManager().getRepository(kind, urlString);
+			if (taskRepository == null && !silent) {
+				MessageDialog.openInformation(null, "No Repository Found",
+						"No repository was found. Associate a repository with this project via the project's property page.");				
+			}
+		}
+		return taskRepository;
 	}
 
 }

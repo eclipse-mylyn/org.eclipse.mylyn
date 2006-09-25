@@ -172,7 +172,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		if (url == null) {
 			return null;
 		} else {
-			int index = url.indexOf(BugzillaServerFacade.POST_ARGS_SHOW_BUG);
+			int index = url.indexOf(IBugzillaConstants.POST_ARGS_SHOW_BUG);
 			if (index != -1) {
 				return url.substring(0, index);
 			} else {
@@ -214,5 +214,4 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	public void setForceSynchExecForTesting(boolean forceSynchExecForTesting) {
 		this.forceSynchExecForTesting = forceSynchExecForTesting;
 	}
-
 }

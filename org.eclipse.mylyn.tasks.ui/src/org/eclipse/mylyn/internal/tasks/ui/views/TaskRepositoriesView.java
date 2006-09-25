@@ -22,7 +22,6 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.internal.tasks.ui.actions.AddRepositoryAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.DeleteTaskRepositoryAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.EditRepositoryPropertiesAction;
@@ -110,19 +109,21 @@ public class TaskRepositoriesView extends ViewPart {
 		viewer.setLabelProvider(new DecoratingLabelProvider(new TaskRepositoryLabelProvider(), PlatformUI
 				.getWorkbench().getDecoratorManager().getLabelDecorator()));
 
-		viewer.setSorter(new ViewerSorter() {
-
-			@Override
-			public int compare(Viewer viewer, Object e1, Object e2) {
-				if (e1 instanceof TaskRepository && e2 instanceof TaskRepository) {
-					TaskRepository t1 = (TaskRepository) e1;
-					TaskRepository t2 = (TaskRepository) e2;
-					return (t1.getKind() + t1.getUrl()).compareTo(t2.getKind() + t2.getUrl());
-				} else {
-					return super.compare(viewer, e1, e2);
-				}
-			}
-		});
+		viewer.setSorter(new TaskRepositoriesViewSorter());
+				
+//				new ViewerSorter() {
+//
+//			@Override
+//			public int compare(Viewer viewer, Object e1, Object e2) {
+//				if (e1 instanceof TaskRepository && e2 instanceof TaskRepository) {
+//					TaskRepository t1 = (TaskRepository) e1;
+//					TaskRepository t2 = (TaskRepository) e2;
+//					return (t1.getKind() + t1.getUrl()).compareTo(t2.getKind() + t2.getUrl());
+//				} else {
+//					return super.compare(viewer, e1, e2);
+//				}
+//			}
+//		});
 		viewer.setInput(getViewSite());
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 

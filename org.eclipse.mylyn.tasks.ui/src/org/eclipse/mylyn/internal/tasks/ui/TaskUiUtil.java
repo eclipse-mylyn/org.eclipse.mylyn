@@ -95,6 +95,23 @@ public class TaskUiUtil {
 		}
 	}
 
+	
+	public static boolean openRepositoryTask(TaskRepository repository, String taskId) {
+		boolean opened = false;
+		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(AbstractRepositoryTask.getHandle(repository.getUrl(), taskId));
+		if(task != null) {
+			TaskUiUtil.refreshAndOpenTaskListElement(task);
+			opened = true; 
+		} else {						
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getKind());
+			if(connectorUi != null) {				
+				connectorUi.openRemoteTask(repository.getUrl(), taskId);
+				opened = true;
+			}
+		}
+		return opened;
+	}
+	
 	/**
 	 * Either pass in a repository and id, or fullUrl, or all of them
 	 */

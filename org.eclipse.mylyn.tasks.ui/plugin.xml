@@ -578,6 +578,15 @@
             label="Task Search" 
             tabPosition="999"/>
    </extension>
+    <extension
+          point="org.eclipse.ui.propertyPages">
+       <page
+             adaptable="true"
+             class="org.eclipse.mylar.tasks.ui.properties.ProjectTaskRepositoryPage"
+             id="org.eclipse.mylar.tasks.ui.project.repository"
+             name="Task Repository"
+             objectClass="org.eclipse.core.resources.IProject"/>
+    </extension>
   
 </plugin>
 
