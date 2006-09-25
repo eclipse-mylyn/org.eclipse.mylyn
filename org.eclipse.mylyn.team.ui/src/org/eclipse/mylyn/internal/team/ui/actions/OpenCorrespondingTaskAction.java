@@ -11,6 +11,11 @@
 
 package org.eclipse.mylar.internal.team.ui.actions;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -22,11 +27,15 @@ import org.eclipse.mylar.internal.team.ContextChangeSet;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.team.core.history.IFileRevision;
+import org.eclipse.team.core.variants.IResourceVariant;
 import org.eclipse.team.internal.ccvs.core.client.listeners.LogEntry;
 import org.eclipse.team.internal.ccvs.core.mapping.CVSCheckedInChangeSet;
+import org.eclipse.team.internal.ccvs.core.resources.RemoteResource;
 import org.eclipse.team.internal.ui.synchronize.ChangeSetDiffNode;
 import org.eclipse.team.ui.synchronize.ISynchronizeModelElement;
 import org.eclipse.ui.IViewActionDelegate;
@@ -68,24 +77,39 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 		}
 	}
 
+	// TODO: clean up
 	private void run(StructuredSelection selection) {
 		Object element = selection.getFirstElement();
+		IProject project = null;
 		String comment = null;
 		boolean resolved = false;
+
+		if (element instanceof IAdaptable) {
+			// TODO: there must be a better way to get at the local resource
+			IResourceVariant resourceVariant = (IResourceVariant) ((IAdaptable) element)
+					.getAdapter(IResourceVariant.class);
+			if (resourceVariant != null && resourceVariant instanceof RemoteResource) {
+				RemoteResource remoteResource = (RemoteResource) resourceVariant;
+				String path = remoteResource.getRepositoryRelativePath();
+				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+				project = root.getProject(new Path(path).removeFirstSegments(1).uptoSegment(1).toString());
+			}
+		}
+
 		if (element instanceof ISynchronizeModelElement) {
 			// find change set if available
 			element = findParent((ISynchronizeModelElement) element);
 		}
-		
+
 		if (element instanceof ContextChangeSet) {
-			ITask task = ((ContextChangeSet)element).getTask();
+			ITask task = ((ContextChangeSet) element).getTask();
 			if (task != null) {
 				TaskUiUtil.openEditor(task, false);
 				resolved = true;
 			}
 		} else {
 			if (element instanceof CVSCheckedInChangeSet) {
-				comment = ((CVSCheckedInChangeSet)element).getComment();
+				comment = ((CVSCheckedInChangeSet) element).getComment();
 			} else if (element instanceof ChangeSetDiffNode) {
 				ChangeSetDiffNode diffNode = (ChangeSetDiffNode) element;
 				if (diffNode.getSet() instanceof ContextChangeSet) {
@@ -98,31 +122,49 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 			} else if (element instanceof LogEntry) {
 				comment = ((LogEntry) element).getComment();
 			} else if (element instanceof IFileRevision) {
-				comment = ((IFileRevision) element).getComment();
-			} 
+				comment = ((IFileRevision) element).getComment();				
+			}
+
 			if (comment != null) {
-				String fullUrl = ContextChangeSet.getUrlFromComment(comment);
-				String repositoryUrl = null;
-				if (fullUrl != null) {
-					AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
-							.getRepositoryForTaskUrl(fullUrl);
-					if (connector != null) {
-						repositoryUrl = connector.getRepositoryUrlFromTaskUrl(fullUrl);
-					}
-				} else {
-					ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
-					if (task instanceof AbstractRepositoryTask) {
-						repositoryUrl = ((AbstractRepositoryTask) task).getRepositoryUrl();
-					} else if (TasksUiPlugin.getRepositoryManager().getAllRepositories().size() == 1) {
-						repositoryUrl = TasksUiPlugin.getRepositoryManager().getAllRepositories().get(0).getUrl();
+
+				String id = ContextChangeSet.getTaskIdFromCommentOrLabel(comment);
+
+				if (project != null) {
+					TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(project, false);
+					if (repository != null) {
+						AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getKind());
+						if (connectorUi != null && id != null) {
+							resolved = TaskUiUtil.openRepositoryTask(repository, id);
+						}
 					}
 				}
-				String id = ContextChangeSet.getTaskIdFromCommentOrLabel(comment);
-				resolved = TaskUiUtil.openRepositoryTask(repositoryUrl, id, fullUrl);
-	
+
+				// Legacy:
 				if (!resolved) {
-					TaskUiUtil.openUrl(fullUrl);
-					resolved = true;
+					String fullUrl = ContextChangeSet.getUrlFromComment(comment);
+
+					String repositoryUrl = null;
+					if (fullUrl != null) {
+						AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+								.getRepositoryForTaskUrl(fullUrl);
+						if (connector != null) {
+							repositoryUrl = connector.getRepositoryUrlFromTaskUrl(fullUrl);
+						}
+					} else {
+						ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
+						if (task instanceof AbstractRepositoryTask) {
+							repositoryUrl = ((AbstractRepositoryTask) task).getRepositoryUrl();
+						} else if (TasksUiPlugin.getRepositoryManager().getAllRepositories().size() == 1) {
+							repositoryUrl = TasksUiPlugin.getRepositoryManager().getAllRepositories().get(0).getUrl();
+						}
+					}
+
+					resolved = TaskUiUtil.openRepositoryTask(repositoryUrl, id, fullUrl);
+
+					if (!resolved) {
+						TaskUiUtil.openUrl(fullUrl);
+						resolved = true;
+					}
 				}
 			}
 		}
