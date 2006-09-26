@@ -1034,8 +1034,7 @@ public class TaskListView extends ViewPart {
 		manager.add(new Separator("navigation"));
 		// manager.add(new Separator(SEPARATOR_CONTEXT));
 		manager.add(previousTaskAction);
-		// manager.add(nextTaskAction);
-		manager.add(goUpAction);
+		// manager.add(nextTaskAction);		
 		manager.add(new Separator(SEPARATOR_CONTEXT));
 		// manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
@@ -1391,6 +1390,9 @@ public class TaskListView extends ViewPart {
 			if (element instanceof AbstractTaskContainer) {
 				drilledIntoCategory = (AbstractTaskContainer) element;
 				drillDownAdapter.goInto();
+				IActionBars bars = getViewSite().getActionBars();				
+				bars.getToolBarManager().add(goUpAction);				
+				bars.updateActionBars();				
 				updateDrillDownActions();
 			}
 		}
@@ -1399,6 +1401,9 @@ public class TaskListView extends ViewPart {
 	public void goUpToRoot() {
 		drilledIntoCategory = null;
 		drillDownAdapter.goBack();
+		IActionBars bars = getViewSite().getActionBars();				
+		bars.getToolBarManager().remove(GoUpAction.ID);		
+		bars.updateActionBars();
 		updateDrillDownActions();
 	}
 
