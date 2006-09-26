@@ -118,7 +118,7 @@ class SynchronizeTaskJob extends Job {
 						}
 
 						if (downloadedTaskData != null) {
-							TasksUiPlugin.getSynchronizationManager().updateOfflineState(connector, repositoryTask,
+							TasksUiPlugin.getSynchronizationManager().updateOfflineState(repositoryTask,
 									downloadedTaskData, forceSync);
 							connector.updateTaskState(repositoryTask);
 							refreshEditors(repositoryTask);

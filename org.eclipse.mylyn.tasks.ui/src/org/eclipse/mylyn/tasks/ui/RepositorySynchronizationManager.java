@@ -148,6 +148,7 @@ public class RepositorySynchronizationManager {
 	 * TaskRepository.syncTime to now if sync was successful for all tasks.
 	 */
 	public final void synchronizeChanged(final AbstractRepositoryConnector connector, final TaskRepository repository) {
+
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		Set<AbstractRepositoryTask> repositoryTasks = Collections.unmodifiableSet(taskList
 				.getRepositoryTasks(repository.getUrl()));
@@ -161,7 +162,7 @@ public class RepositorySynchronizationManager {
 				attempts++;
 				try {
 					changedTasks = connector.getOfflineTaskHandler().getChangedSinceLastSync(repository,
-							repositoryTasks, null);
+							repositoryTasks, TasksUiPlugin.getDefault().getProxySettings());
 				} catch (Exception e) {
 					if (attempts == MAX_QUERY_ATTEMPTS) {
 						if ((e instanceof CoreException && !(((CoreException) e).getStatus().getException() instanceof IOException))) {
@@ -235,8 +236,7 @@ public class RepositorySynchronizationManager {
 	 * 
 	 * @return true if call results in change of syc state
 	 */
-	public synchronized boolean updateOfflineState(AbstractRepositoryConnector connector,
-			final AbstractRepositoryTask repositoryTask, final RepositoryTaskData newTaskData, boolean forceSync) {
+	public synchronized boolean updateOfflineState(final AbstractRepositoryTask repositoryTask, final RepositoryTaskData newTaskData, boolean forceSync) {
 		RepositoryTaskSyncState startState = repositoryTask.getSyncState();
 		RepositoryTaskSyncState status = repositoryTask.getSyncState();
 
@@ -247,7 +247,6 @@ public class RepositorySynchronizationManager {
 		}
 
 		RepositoryTaskData offlineTaskData = repositoryTask.getTaskData();
-		// loadOfflineTaskData(repositoryTask)
 
 		if (newTaskData.hasLocalChanges()) {
 			// Special case for saving changes to local task data
@@ -287,7 +286,7 @@ public class RepositorySynchronizationManager {
 						status = RepositoryTaskSyncState.CONFLICT;
 					} else {
 						newTaskData.setHasLocalChanges(false);
-						if (checkHasIncoming(connector, repositoryTask, newTaskData)) {
+						if (checkHasIncoming(repositoryTask, newTaskData)) {
 							status = RepositoryTaskSyncState.INCOMING;
 						} else {
 							status = RepositoryTaskSyncState.SYNCHRONIZED;
@@ -299,14 +298,14 @@ public class RepositorySynchronizationManager {
 				}
 				break;
 			case INCOMING:
-				if (!forceSync && checkHasIncoming(connector, repositoryTask, newTaskData)) {
+				if (!forceSync && checkHasIncoming(repositoryTask, newTaskData)) {
 					status = RepositoryTaskSyncState.INCOMING;
 				} else {
 					status = RepositoryTaskSyncState.SYNCHRONIZED;
 				}
 				break;
 			case SYNCHRONIZED:
-				if (checkHasIncoming(connector, repositoryTask, newTaskData)) {
+				if (checkHasIncoming(repositoryTask, newTaskData)) {
 					status = RepositoryTaskSyncState.INCOMING;
 				} else {
 					status = RepositoryTaskSyncState.SYNCHRONIZED;
@@ -330,43 +329,57 @@ public class RepositorySynchronizationManager {
 	}
 
 	/** public for testing purposes */
-	public boolean checkHasIncoming(AbstractRepositoryConnector connector, AbstractRepositoryTask repositoryTask,
-			RepositoryTaskData newData) {
+	public boolean checkHasIncoming(AbstractRepositoryTask repositoryTask, RepositoryTaskData newData) {
 		String lastModified = repositoryTask.getLastSyncDateStamp();
 		if (newData != null) {
 			RepositoryTaskData oldTaskData = repositoryTask.getTaskData();
-			// OfflineTaskManager.findBug(repositoryTask.getRepositoryUrl(),
-			// newData.getId());
 			if (oldTaskData != null) {
 				lastModified = oldTaskData.getLastModified();
+			} else if(lastModified == null && repositoryTask.getSyncState() != RepositoryTaskSyncState.INCOMING) {
+				// both lastModified and oldTaskData is null!
+				// (don't have a sync time or any offline data)
+				// HACK: Assume this is a query hit. 
+				// We can't get proper date stamp from query hits
+				// so mark read doesn't set proper date stamp.
+				// Once we have this data this should be fixed.
+				return false;
 			}
-		}
+		} 
 
 		RepositoryTaskAttribute modifiedDateAttribute = newData.getAttribute(RepositoryTaskAttribute.DATE_MODIFIED);
-		if (repositoryTask.getLastSyncDateStamp() != null && modifiedDateAttribute != null
-				&& modifiedDateAttribute.getValue() != null) {
-			Date newModifiedDate = connector.getOfflineTaskHandler().getDateForAttributeType(
-					RepositoryTaskAttribute.DATE_MODIFIED, modifiedDateAttribute.getValue());
-			Date oldModifiedDate = connector.getOfflineTaskHandler().getDateForAttributeType(
-					RepositoryTaskAttribute.DATE_MODIFIED, lastModified);
-			if (oldModifiedDate != null && newModifiedDate != null) {
-				if (newModifiedDate.compareTo(oldModifiedDate) <= 0) {
-					// leave in SYNCHRONIZED state
-					return false;
-				}
+		if (lastModified != null && modifiedDateAttribute != null && modifiedDateAttribute.getValue() != null) {
+			if (lastModified.trim().compareTo(modifiedDateAttribute.getValue().trim()) == 0
+					&& repositoryTask.getSyncState() != RepositoryTaskSyncState.INCOMING) {
+				// Only set to synchronized state if not in incoming state.
+				// Case of incoming->sync handled by markRead upon opening
+				// or a forced synchronization on the task only.
+				return false;
 			}
 		}
+
 		return true;
 
-		// THE FOLLOWING CODE CAN BE USED AFTER MIGRATION TO 0.6.0 IS COMPLETE
+		// DND - relves
 		// RepositoryTaskAttribute modifiedDateAttribute =
 		// newData.getAttribute(RepositoryTaskAttribute.DATE_MODIFIED);
-		// if (repositoryTask.getLastModifiedDateStamp() != null &&
-		// modifiedDateAttribute != null && modifiedDateAttribute.getValue() !=
-		// null) {
-		// if(repositoryTask.getLastModifiedDateStamp().trim().compareTo(modifiedDateAttribute.getValue().trim())
-		// == 0) {
+		// if (repositoryTask.getLastSyncDateStamp() != null &&
+		// modifiedDateAttribute != null
+		// && modifiedDateAttribute.getValue() != null) {
+		// Date newModifiedDate =
+		// connector.getOfflineTaskHandler().getDateForAttributeType(
+		// RepositoryTaskAttribute.DATE_MODIFIED,
+		// modifiedDateAttribute.getValue());
+		// Date oldModifiedDate =
+		// connector.getOfflineTaskHandler().getDateForAttributeType(
+		// RepositoryTaskAttribute.DATE_MODIFIED, lastModified);
+		// if (oldModifiedDate != null && newModifiedDate != null) {
+		// if (newModifiedDate.compareTo(oldModifiedDate) <= 0 &&
+		// repositoryTask.getSyncState() != RepositoryTaskSyncState.INCOMING) {
+		// // Only move to synchronized state if not in incoming state.
+		// // Case of incoming->sync handled by markRead upon opening
+		// // or a forced synchronization on the task.
 		// return false;
+		// }
 		// }
 		// }
 		// return true;

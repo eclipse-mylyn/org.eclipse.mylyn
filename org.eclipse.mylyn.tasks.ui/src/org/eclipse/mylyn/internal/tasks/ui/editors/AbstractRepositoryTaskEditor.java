@@ -1526,29 +1526,18 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		try {
 			updateBug();
 
-			final AbstractRepositoryConnector connector = (AbstractRepositoryConnector) TasksUiPlugin
-					.getRepositoryManager().getRepositoryConnector(getRepositoryTaskData().getRepositoryKind());
-
 			IEditorInput input = this.getEditorInput();
 			if (input instanceof ExistingBugEditorInput) {
 				ExistingBugEditorInput existingInput = (ExistingBugEditorInput) input;
 				AbstractRepositoryTask repositoryTask = existingInput.getRepositoryTask();
-				// AbstractRepositoryTask repositoryTask = getRepositoryTask();
 				if (repositoryTask != null) {
-					// if (getRepositoryTaskData().hasChanges()) {
-					// repositoryTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
-					// } else {
-					// repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
-					// }
+
 					if (getRepositoryTaskData().hasLocalChanges() == true) {
-						TasksUiPlugin.getSynchronizationManager().updateOfflineState(connector, repositoryTask,
+						TasksUiPlugin.getSynchronizationManager().updateOfflineState(repositoryTask,
 								getRepositoryTaskData(), false);
 					}
 					TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 				}
-
-				// For new bug reports something along these lines...
-				// repositoryClient.saveOffline(getRepositoryTaskData());
 			}
 			markDirty(false);
 			if (parentEditor != null) {
