@@ -1035,6 +1035,7 @@ public class TaskListView extends ViewPart {
 		// manager.add(new Separator(SEPARATOR_CONTEXT));
 		manager.add(previousTaskAction);
 		// manager.add(nextTaskAction);
+		manager.add(goUpAction);
 		manager.add(new Separator(SEPARATOR_CONTEXT));
 		// manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
@@ -1106,8 +1107,9 @@ public class TaskListView extends ViewPart {
 		manager.add(new Separator());
 		for (IDynamicSubMenuContributor contributor : TasksUiPlugin.getDefault().getDynamicMenuContributers()) {
 			MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
-			if (subMenuManager != null)
-				addMenuManager(subMenuManager, manager, element);
+			if (subMenuManager != null) {
+				addMenuManager(subMenuManager, manager, element);				
+			}
 		}
 
 		manager.add(new Separator(SEPARATOR_LOCAL));
