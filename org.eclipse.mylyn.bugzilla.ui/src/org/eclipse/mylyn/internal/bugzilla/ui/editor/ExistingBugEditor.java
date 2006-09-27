@@ -173,15 +173,14 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		submitButton.setEnabled(false);
 		showBusy(true);
 		updateBug();
-		
+
 		final AbstractRepositoryTask modifiedTask = (AbstractRepositoryTask) TasksUiPlugin.getTaskListManager()
 				.getTaskList().getTask(AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
 
-		if(modifiedTask != null) {
+		if (modifiedTask != null) {
 			modifiedTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
 		}
-		
-		
+
 		BugzillaReportSubmitForm bugzillaReportSubmitForm;
 
 		try {
@@ -247,54 +246,16 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	@Override
+	protected void createCollaboratorsLayout(Composite composite) {
+		composite.setLayout(new GridLayout(2, false));
+		GridDataFactory.fillDefaults().align(SWT.DEFAULT, SWT.TOP).applyTo(composite);
+		addCCList("", composite);
+		getManagedForm().getToolkit().paintBordersFor(composite);
+	}
+
+	@Override
 	protected void createCustomAttributeLayout(Composite composite) {
 		FormToolkit toolkit = getManagedForm().getToolkit();
-
-		String dependson = getRepositoryTaskData().getAttributeValue(BugzillaReportElement.DEPENDSON.getKeyString());
-		String blocked = getRepositoryTaskData().getAttributeValue(BugzillaReportElement.BLOCKED.getKeyString());
-		boolean addHyperlinks = (dependson != null && dependson.length() > 0)
-				|| (blocked != null && blocked.length() > 0);
-
-		// Hyperlink showDependencyTree = toolkit.createHyperlink(composite,
-		// "Show dependency tree", SWT.NONE);
-		// showDependencyTree.addHyperlinkListener(new HyperlinkAdapter() {
-		// public void linkActivated(HyperlinkEvent e) {
-		// if (ExistingBugEditor.this.getEditor() instanceof MylarTaskEditor) {
-		// MylarTaskEditor mylarTaskEditor = (MylarTaskEditor)
-		// ExistingBugEditor.this.getEditor();
-		// mylarTaskEditor.displayInBrowser(repository.getUrl() +
-		// IBugzillaConstants.DEPENDENCY_TREE_URL
-		// + getRepositoryTaskData().getId());
-		// }
-		// }
-		// });
-		
-		if (addHyperlinks) {
-			toolkit.createLabel(composite, "");
-			addBugHyperlinks(composite, BugzillaReportElement.DEPENDSON.getKeyString());
-		}
-
-		// Hyperlink showDependencyGraph = toolkit.createHyperlink(composite,
-		// "Show dependency graph", SWT.NONE);
-		// showDependencyGraph.addHyperlinkListener(new HyperlinkAdapter() {
-		// public void linkActivated(HyperlinkEvent e) {
-		// if (ExistingBugEditor.this.getEditor() instanceof MylarTaskEditor) {
-		// MylarTaskEditor mylarTaskEditor = (MylarTaskEditor)
-		// ExistingBugEditor.this.getEditor();
-		// mylarTaskEditor.displayInBrowser(repository.getUrl() +
-		// IBugzillaConstants.DEPENDENCY_GRAPH_URL
-		// + getRepositoryTaskData().getId());
-		// }
-		// }
-		// });
-		
-		
-		if (addHyperlinks) {
-			toolkit.createLabel(composite, "");
-			addBugHyperlinks(composite, BugzillaReportElement.BLOCKED.getKeyString());
-		}
-		
-		addCCList("", composite);
 
 		try {
 			addKeywordsList(getRepositoryTaskData().getAttributeValue(RepositoryTaskAttribute.KEYWORDS), composite);
@@ -322,6 +283,136 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 
 	}
 
+	protected void createDependencyLayout(Composite composite) {
+		FormToolkit toolkit = getManagedForm().getToolkit();
+		final Section section = createSection(composite, "Dependencies");
+		boolean expand = false;
+		final Composite sectionComposite = toolkit.createComposite(section);
+		section.setClient(sectionComposite);
+		GridLayout sectionLayout = new GridLayout(7, false);
+		sectionComposite.setLayout(sectionLayout);
+
+		toolkit.createLabel(sectionComposite, BugzillaReportElement.DEPENDSON.toString());
+		Composite textFieldComposite = toolkit.createComposite(sectionComposite);
+		GridLayout textLayout = new GridLayout();
+		textLayout.marginWidth = 1;
+		textLayout.marginHeight = 3;
+		textLayout.verticalSpacing = 3;
+		textFieldComposite.setLayout(textLayout);
+		GridData textData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		textData.horizontalSpan = 1;
+		textData.widthHint = 135;
+		RepositoryTaskAttribute attribute = this.getRepositoryTaskData().getAttribute(
+				BugzillaReportElement.DEPENDSON.getKeyString());
+		expand = attribute.getValue() != null && attribute.getValue().length() > 0;
+		if (!attribute.isReadOnly()) {
+			final Text text = toolkit.createText(textFieldComposite, attribute.getValue(), SWT.FLAT);
+			text.setLayoutData(textData);
+			toolkit.paintBordersFor(textFieldComposite);
+			text.setData(attribute);
+			text.addListener(SWT.KeyUp, new Listener() {
+				public void handleEvent(Event event) {
+					String sel = text.getText();
+					RepositoryTaskAttribute a = (RepositoryTaskAttribute) text.getData();
+					if (!(a.getValue().equals(sel))) {
+						a.setValue(sel);
+						markDirty(true);
+					}
+				}
+			});
+			text.addListener(SWT.FocusIn, new GenericListener());
+		}
+
+		addBugHyperlinks(sectionComposite, BugzillaReportElement.DEPENDSON.getKeyString());
+
+		// spacer
+		GridDataFactory.fillDefaults().hint(20, SWT.DEFAULT).applyTo(toolkit.createLabel(sectionComposite, ""));
+
+		toolkit.createLabel(sectionComposite, BugzillaReportElement.BLOCKED.toString());
+		textFieldComposite = toolkit.createComposite(sectionComposite);
+		textLayout = new GridLayout();
+		textLayout.marginWidth = 1;
+		textLayout.marginHeight = 3;
+		textLayout.verticalSpacing = 3;
+		textFieldComposite.setLayout(textLayout);
+		textData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		textData.horizontalSpan = 1;
+		textData.widthHint = 135;
+		attribute = this.getRepositoryTaskData().getAttribute(BugzillaReportElement.BLOCKED.getKeyString());
+		if(!expand) {
+			expand = attribute.getValue() != null && attribute.getValue().length() > 0;
+		}
+		if (!attribute.isReadOnly()) {
+			final Text text = toolkit.createText(textFieldComposite, attribute.getValue(), SWT.FLAT);
+			text.setLayoutData(textData);
+			toolkit.paintBordersFor(textFieldComposite);
+			text.setData(attribute);
+			text.addListener(SWT.KeyUp, new Listener() {
+				public void handleEvent(Event event) {
+					String sel = text.getText();
+					RepositoryTaskAttribute a = (RepositoryTaskAttribute) text.getData();
+					if (!(a.getValue().equals(sel))) {
+						a.setValue(sel);
+						markDirty(true);
+					}
+				}
+			});
+			text.addListener(SWT.FocusIn, new GenericListener());
+		}
+
+		addBugHyperlinks(sectionComposite, BugzillaReportElement.BLOCKED.getKeyString());
+
+		section.setExpanded(expand);
+		
+		// String dependson =
+		// getRepositoryTaskData().getAttributeValue(BugzillaReportElement.DEPENDSON.getKeyString());
+		// String blocked =
+		// getRepositoryTaskData().getAttributeValue(BugzillaReportElement.BLOCKED.getKeyString());
+		// boolean addHyperlinks = (dependson != null && dependson.length() > 0)
+		// || (blocked != null && blocked.length() > 0);
+
+		// Hyperlink showDependencyTree = toolkit.createHyperlink(composite,
+		// "Show dependency tree", SWT.NONE);
+		// showDependencyTree.addHyperlinkListener(new HyperlinkAdapter() {
+		// public void linkActivated(HyperlinkEvent e) {
+		// if (ExistingBugEditor.this.getEditor() instanceof MylarTaskEditor) {
+		// MylarTaskEditor mylarTaskEditor = (MylarTaskEditor)
+		// ExistingBugEditor.this.getEditor();
+		// mylarTaskEditor.displayInBrowser(repository.getUrl() +
+		// IBugzillaConstants.DEPENDENCY_TREE_URL
+		// + getRepositoryTaskData().getId());
+		// }
+		// }
+		// });
+
+		// if (addHyperlinks) {
+		// toolkit.createLabel(sectionComposite, "");
+		// addBugHyperlinks(sectionComposite,
+		// BugzillaReportElement.DEPENDSON.getKeyString());
+		// }
+
+		// Hyperlink showDependencyGraph = toolkit.createHyperlink(composite,
+		// "Show dependency graph", SWT.NONE);
+		// showDependencyGraph.addHyperlinkListener(new HyperlinkAdapter() {
+		// public void linkActivated(HyperlinkEvent e) {
+		// if (ExistingBugEditor.this.getEditor() instanceof MylarTaskEditor) {
+		// MylarTaskEditor mylarTaskEditor = (MylarTaskEditor)
+		// ExistingBugEditor.this.getEditor();
+		// mylarTaskEditor.displayInBrowser(repository.getUrl() +
+		// IBugzillaConstants.DEPENDENCY_GRAPH_URL
+		// + getRepositoryTaskData().getId());
+		// }
+		// }
+		// });
+
+		// if (addHyperlinks) {
+		// toolkit.createLabel(sectionComposite, "");
+		// addBugHyperlinks(sectionComposite,
+		// BugzillaReportElement.BLOCKED.getKeyString());
+		// }
+		
+	}
+
 	private void addBugHyperlinks(Composite composite, String key) {
 		FormToolkit toolkit = getManagedForm().getToolkit();
 		Composite hyperlinksComposite = toolkit.createComposite(composite);
@@ -341,7 +432,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 				final ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 						AbstractRepositoryTask.getHandle(repository.getUrl(), bugId));
 				if (task != null) {
-					hyperlink.setToolTipText(task.getDescription());					
+					hyperlink.setToolTipText(task.getDescription());
 				}
 				hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 					public void linkActivated(HyperlinkEvent e) {
@@ -571,7 +662,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		// ccText.setBackground(background);
 		GridData ccData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		ccData.horizontalSpan = 1;
-		ccData.widthHint = 200;
+		ccData.widthHint = 100;
 		ccText.setLayoutData(ccData);
 		// ccText.setText(ccValue);
 		ccText.addListener(SWT.FocusIn, new GenericListener());
@@ -835,11 +926,6 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 			}
 		});
 		urlText.addListener(SWT.FocusIn, new GenericListener());
-	}
-
-	@Override
-	public void createCustomAttributeLayout() {
-		// ignore
 	}
 
 	@Override

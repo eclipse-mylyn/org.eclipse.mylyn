@@ -143,7 +143,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private static final String HEADER_DATE_FORMAT = "EEE d MMM yyyy HH:mm:ss";
-	
+
 	private static final String ATTACHMENT_DEFAULT_NAME = "attachment";
 
 	private static final String CTYPE_ZIP = "zip";
@@ -238,7 +238,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected Button submitButton;
 
 	protected Button addToTaskListRoot;
-	
+
 	protected Table attachmentsTable;
 
 	protected TableViewer attachmentTableViewer;
@@ -408,7 +408,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 	}
 
-	private class ComboSelectionListener extends SelectionAdapter {
+	protected class ComboSelectionListener extends SelectionAdapter {
 
 		private CCombo combo;
 
@@ -437,6 +437,16 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 	}
 
+	public abstract RepositoryTaskData getRepositoryTaskData();
+
+	protected abstract void validateInput();
+
+	protected abstract String getTitleString();
+
+	protected abstract void submitBug();
+
+	protected abstract void updateBug();
+
 	/**
 	 * Creates a new <code>AbstractRepositoryTaskEditor</code>. Sets up the
 	 * default fonts and cut/copy/paste actions.
@@ -452,11 +462,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		scrollHorzPageIncrement = 0;
 
 	}
-
-	/**
-	 * @return The task data this editor is displaying.
-	 */
-	public abstract RepositoryTaskData getRepositoryTaskData();
 
 	public String getNewCommentText() {
 		return addCommentsTextBox.getText();
@@ -487,7 +492,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		createReportHeaderLayout(editorComposite);
 		Composite attribComp = createAttributeLayout(editorComposite);
-		createCustomAttributeLayout(attribComp);
+		createCustomAttributeLayout(attribComp);		
+		createDependencyLayout(editorComposite);
 		createDescriptionLayout(editorComposite);
 		createAttachmentLayout(editorComposite);
 		createCommentLayout(editorComposite);
@@ -545,8 +551,36 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		addSummaryText(composite);
 
 		Composite headerInfoComposite = toolkit.createComposite(composite);
-		headerInfoComposite.setLayout(new GridLayout(6, false));
-		toolkit.createLabel(headerInfoComposite, "ID: ").setFont(TITLE_FONT);
+		headerInfoComposite.setLayout(new GridLayout(10, false));
+
+		toolkit.createLabel(headerInfoComposite, " Status: ").setFont(TITLE_FONT);
+		String statusValue = this.getRepositoryTaskData().getAttributeValue(RepositoryTaskAttribute.STATUS);
+		toolkit.createText(headerInfoComposite, statusValue, SWT.FLAT | SWT.READ_ONLY);
+		toolkit.createLabel(headerInfoComposite, " Priority: ").setFont(TITLE_FONT);
+		RepositoryTaskAttribute attribute = getRepositoryTaskData().getAttribute(RepositoryTaskAttribute.PRIORITY);
+		if (attribute != null) {
+			String value = attribute.getValue() != null ? attribute.getValue() : "";
+			attributeCombo = new CCombo(headerInfoComposite, SWT.FLAT | SWT.READ_ONLY);
+			toolkit.adapt(attributeCombo, true, true);
+			attributeCombo.setFont(TEXT_FONT);
+			// attributeCombo.setLayoutData(data);
+			if (attribute.getValues() != null) {
+
+				Set<String> s = attribute.getOptionValues().keySet();
+				String[] a = s.toArray(new String[s.size()]);
+				for (int i = 0; i < a.length; i++) {
+					attributeCombo.add(a[i]);
+				}
+				if (attributeCombo.indexOf(value) != -1) {
+					attributeCombo.select(attributeCombo.indexOf(value));
+				}
+			}
+			attributeCombo.addSelectionListener(new ComboSelectionListener(attributeCombo));
+			comboListenerMap.put(attributeCombo, attribute);
+			attributeCombo.addListener(SWT.FocusIn, new GenericListener());			
+		}
+
+		toolkit.createLabel(headerInfoComposite, "  ID: ").setFont(TITLE_FONT);
 		toolkit.createText(headerInfoComposite, "" + getRepositoryTaskData().getId(), SWT.FLAT | SWT.READ_ONLY);
 
 		String openedDateString = "";
@@ -576,13 +610,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		String title = getTitleString();
 
 		Section section = createSection(composite, LABEL_SECTION_ATTRIBUTES);
-
+		section.setExpanded(false);
 		// Attributes Composite- this holds all the combo fields and text fields
 		Composite attributesComposite = toolkit.createComposite(section);
 		GridLayout attributesLayout = new GridLayout();
 		attributesLayout.numColumns = 4;
-		attributesLayout.horizontalSpacing = 14;
-		attributesLayout.verticalSpacing = 6;
+		attributesLayout.horizontalSpacing = 5;
+		attributesLayout.verticalSpacing = 3;
 		attributesComposite.setLayout(attributesLayout);
 		GridData attributesData = new GridData(GridData.FILL_BOTH);
 		attributesData.horizontalSpan = 1;
@@ -674,8 +708,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 		return attributesComposite;
 	}
-
-	public abstract void createCustomAttributeLayout();
 
 	// protected void createContextMenu(final Composite comp) {
 	// contextMenuManager = new MenuManager(CONTEXT_MENU_ID);
@@ -976,8 +1008,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		/* Launch a NewAttachemntWizard */
 		Button addAttachmentButton = toolkit.createButton(attachmentsComposite, "Add...", SWT.PUSH);
-				
-		
+
 		final RepositoryTaskData taskData = getRepositoryTaskData();
 		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 				AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
@@ -998,8 +1029,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					// Should not happen
 					return;
 				}
-				if(AbstractRepositoryTaskEditor.this.isDirty || ((AbstractRepositoryTask)task).getSyncState().equals(RepositoryTaskSyncState.OUTGOING)) {
-					MessageDialog.openInformation(attachmentsComposite.getShell(), "Task not synchronized or dirty editor", "Commit edits or synchronize task before adding attachments." );
+				if (AbstractRepositoryTaskEditor.this.isDirty
+						|| ((AbstractRepositoryTask) task).getSyncState().equals(RepositoryTaskSyncState.OUTGOING)) {
+					MessageDialog.openInformation(attachmentsComposite.getShell(),
+							"Task not synchronized or dirty editor",
+							"Commit edits or synchronize task before adding attachments.");
 					return;
 				}
 
@@ -1165,8 +1199,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		return contents.toString();
 	}
 
-	protected abstract void createCustomAttributeLayout(Composite composite);
-
 	protected void createDescriptionLayout(Composite composite) {
 		final Section section = createSection(composite, LABEL_SECTION_DESCRIPTION);
 
@@ -1230,6 +1262,18 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	}
 
+	protected void createCustomAttributeLayout(Composite composite) {
+		// override
+	}
+
+	protected void createCollaboratorsLayout(Composite composite) {
+		// override
+	}
+	
+	protected void createDependencyLayout(Composite composite) {
+		// override
+	}
+
 	/**
 	 * A listener for selection of the description field.
 	 */
@@ -1290,18 +1334,19 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			if (repositoryTask != null && offlineHandler != null) {
 				Date lastModDate = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED,
 						repositoryTask.getLastSyncDateStamp());
-				
+
 				// reduce granularity to minutes
 				Calendar calLastMod = Calendar.getInstance();
 				calLastMod.setTime(lastModDate);
 				calLastMod.set(Calendar.SECOND, 0);
-				
+
 				Date commentDate = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.COMMENT_DATE,
 						taskComment.getCreated());
-				if (commentDate != null && lastModDate != null && (commentDate.after(calLastMod.getTime()) || commentDate.equals(calLastMod.getTime()))) {
+				if (commentDate != null && lastModDate != null
+						&& (commentDate.after(calLastMod.getTime()) || commentDate.equals(calLastMod.getTime()))) {
 					expandableComposite.setExpanded(true);
 				}
-			} else if(repositoryTask != null && repositoryTask.getLastSyncDateStamp() == null && !it.hasNext()) {
+			} else if (repositoryTask != null && repositoryTask.getLastSyncDateStamp() == null && !it.hasNext()) {
 				// no task data (query hit?) so expand last comment
 				expandableComposite.setExpanded(true);
 			}
@@ -1336,7 +1381,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			// code for outline
 			commentStyleText.add(styledText);
-			textHash.put(taskComment, styledText);
+			textHash.put(taskComment, styledText);			
+		}		
+		if(getRepositoryTaskData().getComments() == null || getRepositoryTaskData().getComments().size() <= 1) {
+			section.setExpanded(false);
 		}
 	}
 
@@ -1378,16 +1426,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	}
 
-	protected abstract void validateInput();
-
 	/**
 	 * Creates the button layout. This displays options and buttons at the
 	 * bottom of the editor to allow actions to be performed on the bug.
 	 */
 	protected void createActionsLayout(Composite composite) {
 		Section section = createSection(composite, LABEL_SECTION_ACTIONS);
-
-		Composite buttonComposite = toolkit.createComposite(section);
+		Composite sectionComposite = toolkit.createComposite(section);
+		sectionComposite.setLayout(new GridLayout(2, false));
+		Composite buttonComposite = toolkit.createComposite(sectionComposite);
 		GridLayout buttonLayout = new GridLayout();
 		buttonLayout.numColumns = 4;
 		buttonComposite.setLayout(buttonLayout);
@@ -1395,9 +1442,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		buttonData.horizontalSpan = 1;
 		buttonData.grabExcessVerticalSpace = false;
 		buttonComposite.setLayoutData(buttonData);
-		section.setClient(buttonComposite);
+		section.setClient(sectionComposite);
 		addRadioButtons(buttonComposite);
 		addActionButtons(buttonComposite);
+		Composite collabComposite = toolkit.createComposite(sectionComposite);		
+		createCollaboratorsLayout(collabComposite);
+		
 	}
 
 	protected Section createSection(Composite composite, String title) {
@@ -1453,11 +1503,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		else
 			return text;
 	}
-
-	/**
-	 * @return A string to use as a title for this editor.
-	 */
-	protected abstract String getTitleString();
 
 	/**
 	 * This refreshes the text in the title label of the info area (it contains
@@ -1516,8 +1561,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		// generalTitleText.redraw();
 	}
 
-	protected abstract void submitBug();
-
 	/**
 	 * If there is no locally saved copy of the current bug, then it saved
 	 * offline. Otherwise, any changes are updated in the file.
@@ -1548,8 +1591,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 
 	}
-
-	protected abstract void updateBug();
 
 	/**
 	 * Refreshes any text labels in the editor that contain information that

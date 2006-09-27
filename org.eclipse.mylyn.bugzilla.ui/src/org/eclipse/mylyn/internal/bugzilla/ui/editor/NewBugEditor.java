@@ -265,12 +265,6 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	@Override
-	public void createCustomAttributeLayout() {
-		// ignore
-
-	}
-
-	@Override
 	protected void createCustomAttributeLayout(Composite composite) {
 		// ignore
 	}

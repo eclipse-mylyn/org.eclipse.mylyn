@@ -64,10 +64,6 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	@Override
-	public void createCustomAttributeLayout() {
-	}
-
-	@Override
 	protected void createCustomAttributeLayout(Composite composite) {
 	}
 

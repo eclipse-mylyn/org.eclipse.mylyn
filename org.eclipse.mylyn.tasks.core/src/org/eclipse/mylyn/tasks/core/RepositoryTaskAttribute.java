@@ -53,6 +53,8 @@ public class RepositoryTaskAttribute implements Serializable {
 	public static final String RESOLUTION = "task.common.resolution";
 
 	public static final String STATUS = "task.common.status";
+	
+	public static final String PRIORITY = "task.common.priority";
 
 	public static final String DATE_MODIFIED = "task.common.date.modified";
 
