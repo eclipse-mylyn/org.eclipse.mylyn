@@ -1,0 +1,62 @@
+/*******************************************************************************
+ * Copyright (c) 2004 - 2006 Mylar committers and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
+
+package org.eclipse.mylar.internal.tasks.ui.actions;
+
+import java.util.List;
+
+import org.eclipse.jface.action.Action;
+import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.ITaskListElement;
+
+/**
+ * @author Rob Elves
+ */
+public abstract class AbstractRepositoryTasksAction extends Action {
+
+	protected List<ITaskListElement> selectedElements;
+	
+	@Override
+	public void run() {
+		for (ITaskListElement element : selectedElements) {			
+			if (element instanceof AbstractRepositoryTask) {
+				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) element;
+				performActionOnTask(repositoryTask);
+			} else if (element instanceof AbstractQueryHit) {
+				AbstractQueryHit queryHit = (AbstractQueryHit) element;
+				AbstractRepositoryTask repositoryTask = queryHit.getOrCreateCorrespondingTask();
+				if (repositoryTask != null) {
+					performActionOnTask(repositoryTask);
+				}
+			} else if (element instanceof AbstractTaskContainer) {
+				AbstractTaskContainer container = (AbstractTaskContainer) element;
+				for (ITask iTask : container.getChildren()) {
+					if (iTask instanceof AbstractRepositoryTask) {
+						AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) iTask;
+						performActionOnTask(repositoryTask);
+					}
+				}
+			} else if (element instanceof AbstractRepositoryQuery) {
+				AbstractRepositoryQuery repositoryQuery = (AbstractRepositoryQuery) element;
+				for (AbstractQueryHit queryHit : repositoryQuery.getHits()) {
+					AbstractRepositoryTask repositoryTask = queryHit.getOrCreateCorrespondingTask();
+					if (repositoryTask != null) {
+						performActionOnTask(repositoryTask);
+					}
+				}
+			}
+		}
+	}	
+	
+	protected abstract void performActionOnTask(AbstractRepositoryTask repositoryTask);
+	
+}

@@ -23,6 +23,8 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.internal.tasks.ui.planner.DateSelectionDialog;
 import org.eclipse.mylar.internal.tasks.ui.views.DatePicker;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -50,9 +52,11 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 
 	@SuppressWarnings("deprecation")
 	public MenuManager getSubMenuManager(final List<ITaskListElement> selectedElements) {
-//		final TaskListView taskListView = view;
-		final MenuManager subMenuManager = new MenuManager(LABEL_REMINDER);
 
+		final MenuManager subMenuManager = new MenuManager(LABEL_REMINDER);
+		
+		subMenuManager.setVisible(selectedElements.size() > 0 && !(selectedElements.get(0) instanceof AbstractTaskContainer || selectedElements.get(0) instanceof AbstractRepositoryQuery));
+		
 		ITask selectedTask = null;
 		if (selectedElements.size() == 1) {
 			ITaskListElement selectedElement = selectedElements.get(0);

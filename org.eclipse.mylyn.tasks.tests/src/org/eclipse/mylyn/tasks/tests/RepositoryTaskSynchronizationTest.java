@@ -277,7 +277,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 				RepositoryTaskSyncState.SYNCHRONIZED);
 		task.setLastSyncDateStamp(null);
 		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
-		TasksUiPlugin.getSynchronizationManager().markRead(task);
+		TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
 		assertEquals(DATE_STAMP_1, task.getLastSyncDateStamp());
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());		
 	}
@@ -287,7 +287,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 				RepositoryTaskSyncState.SYNCHRONIZED);
 		task.setLastSyncDateStamp(null);
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
-		TasksUiPlugin.getSynchronizationManager().markUnRead(task);		
+		TasksUiPlugin.getSynchronizationManager().setTaskRead(task, false);		
 		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());		
 	}
 	

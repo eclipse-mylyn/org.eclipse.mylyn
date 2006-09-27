@@ -179,7 +179,7 @@ public class TaskUiUtil {
 				if (connector != null)
 					if (repositoryTask.getTaskData() != null) {
 						TaskUiUtil.openEditor(task, false, false);
-						TasksUiPlugin.getSynchronizationManager().markRead(repositoryTask);
+						TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 						TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, false, null);
 					} else {						
 						Job refreshJob = TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, true,

@@ -13,9 +13,7 @@ package org.eclipse.mylar.internal.tasks.ui.actions;
 
 import java.util.List;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.Task;
@@ -24,42 +22,29 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 /**
  * @author Rob Elves
  */
-public class MarkTaskUnreadAction extends Action {
+public class MarkTaskUnreadAction extends AbstractRepositoryTasksAction {
 
 	private static final String ACTION_NAME = "Unread";
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.mark.unread";
 
-	private List<ITaskListElement> selectedElements;
-	
 	public MarkTaskUnreadAction(List<ITaskListElement> selectedElements) {
 		this.selectedElements = selectedElements;
 		setText(ACTION_NAME);
 		setToolTipText(ACTION_NAME);
-		setToolTipText("Mark "+ACTION_NAME);
+		setToolTipText("Mark " + ACTION_NAME);
 		setId(ID);
 		setImageDescriptor(TaskListImages.STATUS_NORMAL_INCOMING);
-		if(selectedElements.size() == 1 && (selectedElements.get(0) instanceof Task)) {
-			Task task = (Task)selectedElements.get(0);
+		if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof Task)) {
+			Task task = (Task) selectedElements.get(0);
 			setEnabled(!task.isLocal());
 		} else {
 			setEnabled(true);
 		}
 	}
 
-	@Override
-	public void run() {
-		for (ITaskListElement element : selectedElements) {
-			if (element instanceof AbstractRepositoryTask) {
-				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) element;
-				TasksUiPlugin.getSynchronizationManager().markUnRead(repositoryTask);
-			} else if (element instanceof AbstractQueryHit) {
-				AbstractQueryHit queryHit = (AbstractQueryHit) element;
-				AbstractRepositoryTask repositoryTask = queryHit.getOrCreateCorrespondingTask();
-				if (repositoryTask != null) {
-					TasksUiPlugin.getSynchronizationManager().markUnRead(repositoryTask);
-				}
-			}
-		}
+	protected void performActionOnTask(AbstractRepositoryTask repositoryTask) {
+		TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, false);
 	}
+
 }

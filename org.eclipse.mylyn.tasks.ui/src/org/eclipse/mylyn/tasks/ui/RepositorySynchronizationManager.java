@@ -421,25 +421,18 @@ public class RepositorySynchronizationManager {
 		TasksUiPlugin.getDefault().getOfflineReportsFile().remove(bugList);
 	}
 
-	/**
-	 * If task is in INCOMING state it is changed to OUTGOING. If the task data
-	 * isn't null the last sync timestamp is updated.
+	/** 
+	 * @param repositoryTask - repository task to mark as read or unread
+	 * @param read - true to mark as read, false to mark as unread
 	 */
-	public void markRead(AbstractRepositoryTask repositoryTask) {
-		if (repositoryTask.getSyncState().equals(RepositoryTaskSyncState.INCOMING)) {
+	public void setTaskRead(AbstractRepositoryTask repositoryTask, boolean read) {
+		if (read && repositoryTask.getSyncState().equals(RepositoryTaskSyncState.INCOMING)) {
 			if (repositoryTask.getTaskData() != null && repositoryTask.getTaskData().getLastModified() != null) {
 				repositoryTask.setLastSyncDateStamp(repositoryTask.getTaskData().getLastModified());
 			}
 			repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
-		}
-	}
-
-	/**
-	 * If task in SYNCHRONIZED state it is changed to INCOMING.
-	 */
-	public void markUnRead(AbstractRepositoryTask repositoryTask) {
-		if (repositoryTask.getSyncState().equals(RepositoryTaskSyncState.SYNCHRONIZED)) {
+		} else if (!read && repositoryTask.getSyncState().equals(RepositoryTaskSyncState.SYNCHRONIZED)) {
 			repositoryTask.setSyncState(RepositoryTaskSyncState.INCOMING);
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 		}

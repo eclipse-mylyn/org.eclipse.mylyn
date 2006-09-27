@@ -13,6 +13,7 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
@@ -28,6 +29,8 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 	public MenuManager getSubMenuManager(final List<ITaskListElement> selectedElements) {
 		final MenuManager subMenuManager = new MenuManager(LABEL);
 
+		subMenuManager.setVisible(selectedElements.size() > 0 && !(selectedElements.get(0) instanceof AbstractTaskContainer || selectedElements.get(0) instanceof AbstractRepositoryQuery));
+		
 		for (final AbstractTaskContainer category : TasksUiPlugin.getTaskListManager().getTaskList()
 				.getCategories()) {
 			if (!category.equals(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer())) {

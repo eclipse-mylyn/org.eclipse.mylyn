@@ -1093,7 +1093,7 @@ public class TaskListView extends ViewPart {
 		} else if (element instanceof AbstractTaskContainer || element instanceof AbstractRepositoryQuery) {
 			addAction(openWithBrowser, manager, element);
 			addAction(copyDetailsAction, manager, element);
-			addAction(deleteAction, manager, element);
+			addAction(deleteAction, manager, element);			
 		}
 
 		if (element instanceof AbstractTaskContainer) {
@@ -1122,7 +1122,7 @@ public class TaskListView extends ViewPart {
 	}
 
 	private void addMenuManager(IMenuManager menuToAdd, IMenuManager manager, ITaskListElement element) {
-		if (element instanceof ITask || element instanceof AbstractQueryHit) {
+		if ((element instanceof ITask || element instanceof AbstractQueryHit) || (element instanceof AbstractTaskContainer || element instanceof AbstractRepositoryQuery)) {
 			manager.add(menuToAdd);
 		}
 	}
