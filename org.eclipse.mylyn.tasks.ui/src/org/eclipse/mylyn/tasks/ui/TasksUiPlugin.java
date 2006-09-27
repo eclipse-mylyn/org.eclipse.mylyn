@@ -832,7 +832,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			taskRepository = getRepositoryManager().getRepository(kind, urlString);
 			if (taskRepository == null && !silent) {
 				MessageDialog.openInformation(null, "No Repository Found",
-						"No repository was found. Associate a repository with this project via the project's property page.");				
+						"No repository was found. Associate a Task Repository with this project via the project's property page.");				
 			}
 		}
 		return taskRepository;
