@@ -184,7 +184,7 @@ public class BugzillaServerFacade {
 							&& ((HtmlTag) token.getValue()).getTagType() == HtmlTag.Type.TITLE
 							&& ((HtmlTag) token.getValue()).isEndTag()) {
 
-						if (title.indexOf("login") != -1
+						if (title.indexOf("login") != -1 || title.indexOf("log in") != -1
 								|| (title.indexOf("invalid") != -1 && title.indexOf("password") != -1)
 								|| title.indexOf("check e-mail") != -1) {
 							throw new LoginException(IBugzillaConstants.ERROR_INVALID_USERNAME_OR_PASSWORD);
@@ -470,16 +470,16 @@ public class BugzillaServerFacade {
 		}
 	}
 
-	public static String getBugUrl(String repositoryUrl, int id, String userName, String password) {
-
-		String url = repositoryUrl + IBugzillaConstants.POST_ARGS_SHOW_BUG + id;
-		try {
-			url = addCredentials(url, userName, password);
-		} catch (UnsupportedEncodingException e) {
-			return "";
-		}
-		return url;
-	}
+//	public static String getBugUrl(String repositoryUrl, int id, String userName, String password) {
+//
+//		String url = repositoryUrl + IBugzillaConstants.POST_ARGS_SHOW_BUG + id;
+//		try {
+//			url = addCredentials(url, userName, password);
+//		} catch (UnsupportedEncodingException e) {
+//			return "";
+//		}
+//		return url;
+//	}
 
 	public static String getBugUrlWithoutLogin(String repositoryUrl, int id) {
 		String url = repositoryUrl + IBugzillaConstants.POST_ARGS_SHOW_BUG + id;
