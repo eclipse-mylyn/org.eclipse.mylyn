@@ -17,8 +17,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -45,8 +48,6 @@ import org.eclipse.ui.PlatformUI;
 public class RepositorySynchronizationManager {
 
 	private static final int RETRY_DELAY = 3000;
-
-	private static final int MAX_QUERY_ATTEMPTS = 3;
 
 	private boolean updateLocalCopy = false;
 
@@ -144,99 +145,124 @@ public class RepositorySynchronizationManager {
 
 	/**
 	 * Synchronizes only those tasks that have changed since the last time the
-	 * given repository was synchronized. Calls to this method set
-	 * TaskRepository.syncTime to now if sync was successful for all tasks.
+	 * given repository was synchronized. Calls to this method update
+	 * TaskRepository.syncTime.
 	 */
 	public final void synchronizeChanged(final AbstractRepositoryConnector connector, final TaskRepository repository) {
-
-		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-		Set<AbstractRepositoryTask> repositoryTasks = Collections.unmodifiableSet(taskList
-				.getRepositoryTasks(repository.getUrl()));
-
-		final Set<AbstractRepositoryTask> tasksToSync = new HashSet<AbstractRepositoryTask>();
-		Set<AbstractRepositoryTask> changedTasks = null;
-		int attempts = 0;
-
 		if (connector.getOfflineTaskHandler() != null) {
-			while (attempts < MAX_QUERY_ATTEMPTS && changedTasks == null) {
-				attempts++;
-				try {
-					changedTasks = connector.getOfflineTaskHandler().getChangedSinceLastSync(repository,
-							repositoryTasks, TasksUiPlugin.getDefault().getProxySettings());
-				} catch (Exception e) {
-					if (attempts == MAX_QUERY_ATTEMPTS) {
-						if ((e instanceof CoreException && !(((CoreException) e).getStatus().getException() instanceof IOException))) {
-							MylarStatusHandler.log(e, "Could not determine modified tasks for " + repository.getUrl()
-									+ ".");
-						} else if (e instanceof UnsupportedEncodingException) {
-							MylarStatusHandler.log(e, "Could not determine modified tasks for " + repository.getUrl()
-									+ ".");
-						} else {
-							// ignore, indicates working offline
-						}
-						return;
+			final GetChangedTasksJob getChangedTasksJob = new GetChangedTasksJob(connector, repository);
+			getChangedTasksJob.setSystem(true);
+			getChangedTasksJob.setRule(new RepositoryMutexRule(repository));
+			if (!forceSyncExecForTesting) {
+				getChangedTasksJob.schedule();
+			} else {
+				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+					public void run() {
+						getChangedTasksJob.run(new NullProgressMonitor());
 					}
-					try {
-						Thread.sleep(RETRY_DELAY);
-					} catch (InterruptedException e1) {
-						return;
-					}
-				}
+				});
 			}
 		}
-		if (changedTasks != null) {
-			for (AbstractRepositoryTask task : changedTasks) {
-				if (task.getSyncState() == RepositoryTaskSyncState.SYNCHRONIZED
-						|| task.getSyncState() == RepositoryTaskSyncState.INCOMING) {
-					tasksToSync.add(task);
-				}
-			}
-		}
-
-		if (tasksToSync.size() == 0) {
-			return;
-		}
-
-		synchronize(connector, tasksToSync, false, new JobChangeAdapter() {
-
-			@Override
-			public void done(IJobChangeEvent event) {
-				if (!Platform.isRunning() || TasksUiPlugin.getRepositoryManager() == null) {
-					return;
-				}
-				Date mostRecent = new Date(0);
-				String mostRecentTimeStamp = repository.getSyncTimeStamp();
-				for (AbstractRepositoryTask task : tasksToSync) {
-					Date taskModifiedDate;
-
-					if (connector.getOfflineTaskHandler() != null && task.getTaskData() != null
-							&& task.getTaskData().getLastModified() != null) {
-						taskModifiedDate = connector.getOfflineTaskHandler().getDateForAttributeType(
-								RepositoryTaskAttribute.DATE_MODIFIED, task.getTaskData().getLastModified());
-					} else {
-						continue;
-					}
-
-					if (taskModifiedDate != null && taskModifiedDate.after(mostRecent)) {
-						mostRecent = taskModifiedDate;
-						mostRecentTimeStamp = task.getTaskData().getLastModified();
-					}
-				}
-				// TODO: Get actual time stamp of query from repository rather
-				// than above hack
-				TasksUiPlugin.getRepositoryManager().setSyncTime(repository, mostRecentTimeStamp,
-						TasksUiPlugin.getDefault().getRepositoriesFilePath());
-			}
-		});
 	}
+
+	private class GetChangedTasksJob extends Job {
+
+		private AbstractRepositoryConnector connector;
+
+		private TaskRepository repository;
+
+		public GetChangedTasksJob(AbstractRepositoryConnector connector, TaskRepository repository) {
+			super("Get Changed Tasks");
+			this.connector = connector;
+			this.repository = repository;
+		}
+
+		@Override
+		public IStatus run(IProgressMonitor monitor) {
+			TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+			Set<AbstractRepositoryTask> repositoryTasks = Collections.unmodifiableSet(taskList
+					.getRepositoryTasks(repository.getUrl()));
+			final Set<AbstractRepositoryTask> tasksToSync = new HashSet<AbstractRepositoryTask>();
+
+			Set<AbstractRepositoryTask> changedTasks = null;
+			try {
+				changedTasks = connector.getOfflineTaskHandler().getChangedSinceLastSync(repository, repositoryTasks,
+						TasksUiPlugin.getDefault().getProxySettings());
+
+				if (changedTasks != null) {
+					for (AbstractRepositoryTask task : changedTasks) {
+						if (task.getSyncState() == RepositoryTaskSyncState.SYNCHRONIZED
+								|| task.getSyncState() == RepositoryTaskSyncState.INCOMING) {
+							tasksToSync.add(task);
+						}
+					}
+				}
+
+				if (tasksToSync.size() == 0) {
+					return Status.OK_STATUS;
+				}
+
+				synchronize(connector, tasksToSync, false, new JobChangeAdapter() {
+
+					@Override
+					public void done(IJobChangeEvent event) {
+						if (!Platform.isRunning() || TasksUiPlugin.getRepositoryManager() == null) {
+							return;
+						}
+						Date mostRecent = new Date(0);
+						String mostRecentTimeStamp = repository.getSyncTimeStamp();
+						for (AbstractRepositoryTask task : tasksToSync) {
+							Date taskModifiedDate;
+
+							if (connector.getOfflineTaskHandler() != null && task.getTaskData() != null
+									&& task.getTaskData().getLastModified() != null) {
+								taskModifiedDate = connector.getOfflineTaskHandler().getDateForAttributeType(
+										RepositoryTaskAttribute.DATE_MODIFIED, task.getTaskData().getLastModified());
+							} else {
+								continue;
+							}
+
+							if (taskModifiedDate != null && taskModifiedDate.after(mostRecent)) {
+								mostRecent = taskModifiedDate;
+								mostRecentTimeStamp = task.getTaskData().getLastModified();
+							}
+						}
+						// TODO: Get actual time stamp of query from
+						// repository rather
+						// than above hack
+						TasksUiPlugin.getRepositoryManager().setSyncTime(repository, mostRecentTimeStamp,
+								TasksUiPlugin.getDefault().getRepositoriesFilePath());
+					}
+				});
+
+			} catch (Exception e) {
+				if ((e instanceof CoreException && !(((CoreException) e).getStatus().getException() instanceof IOException))) {
+					MylarStatusHandler.log(e, "Could not determine modified tasks for " + repository.getUrl() + ".");
+				} else if (e instanceof UnsupportedEncodingException) {
+					MylarStatusHandler.log(e, "Could not determine modified tasks for " + repository.getUrl() + ".");
+				} else {
+					// ignore, indicates working offline
+				}
+				return Status.OK_STATUS;
+			}
+			try {
+				Thread.sleep(RETRY_DELAY);
+			} catch (InterruptedException e1) {
+				return Status.OK_STATUS;
+			}
+
+			return Status.OK_STATUS;
+		};
+	};
 
 	/**
 	 * Precondition: offline file is removed upon submit to repository resulting
-	 * in a synchronized state.
+	 * in a synchronized state
 	 * 
 	 * @return true if call results in change of syc state
 	 */
-	public synchronized boolean updateOfflineState(final AbstractRepositoryTask repositoryTask, final RepositoryTaskData newTaskData, boolean forceSync) {
+	public synchronized boolean updateOfflineState(final AbstractRepositoryTask repositoryTask,
+			final RepositoryTaskData newTaskData, boolean forceSync) {
 		RepositoryTaskSyncState startState = repositoryTask.getSyncState();
 		RepositoryTaskSyncState status = repositoryTask.getSyncState();
 
@@ -335,16 +361,16 @@ public class RepositorySynchronizationManager {
 			RepositoryTaskData oldTaskData = repositoryTask.getTaskData();
 			if (oldTaskData != null) {
 				lastModified = oldTaskData.getLastModified();
-			} else if(lastModified == null && repositoryTask.getSyncState() != RepositoryTaskSyncState.INCOMING) {
+			} else if (lastModified == null && repositoryTask.getSyncState() != RepositoryTaskSyncState.INCOMING) {
 				// both lastModified and oldTaskData is null!
 				// (don't have a sync time or any offline data)
-				// HACK: Assume this is a query hit. 
+				// HACK: Assume this is a query hit.
 				// We can't get proper date stamp from query hits
 				// so mark read doesn't set proper date stamp.
 				// Once we have this data this should be fixed.
 				return false;
 			}
-		} 
+		}
 
 		RepositoryTaskAttribute modifiedDateAttribute = newData.getAttribute(RepositoryTaskAttribute.DATE_MODIFIED);
 		if (lastModified != null && modifiedDateAttribute != null && modifiedDateAttribute.getValue() != null) {
@@ -436,4 +462,28 @@ public class RepositorySynchronizationManager {
 		}
 	}
 
+	private static class RepositoryMutexRule implements ISchedulingRule {
+
+		private TaskRepository repository = null;
+
+		public RepositoryMutexRule(TaskRepository repository) {
+			this.repository = repository;
+		}
+
+		public boolean isConflicting(ISchedulingRule rule) {
+			if (rule instanceof RepositoryMutexRule) {
+				return repository.equals(((RepositoryMutexRule) rule).getRepository());
+			} else {
+				return false;
+			}
+		}
+
+		public boolean contains(ISchedulingRule rule) {
+			return rule == this;
+		}
+
+		public TaskRepository getRepository() {
+			return repository;
+		}
+	}
 }

@@ -375,6 +375,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				"7") == -1);
 
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task7.getSyncState());
+		assertNotNull(task7.getLastSyncDateStamp());
 		// Task no longer stored offline
 		// make an external change
 		assertNotNull(repository.getUserName());
