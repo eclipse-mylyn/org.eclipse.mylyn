@@ -38,7 +38,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 
-	private static final String LABEL_REMINDER = "Schedule for";
+	private static final String LABEL_REMINDER = "Schedule";
 
 	private static final String LABEL_TODAY = "Today";
 

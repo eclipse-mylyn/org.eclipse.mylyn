@@ -74,6 +74,7 @@ import org.eclipse.mylar.internal.tasks.ui.actions.RemoveFromCategoryAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.RenameAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskDeactivateAction;
+import org.eclipse.mylar.internal.tasks.ui.actions.TaskListElementPropertiesAction;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -175,8 +176,10 @@ public class TaskListView extends ViewPart {
 
 	private CopyDetailsAction copyDetailsAction;
 
-	private OpenTaskListElementAction openTaskEditor;
+	private OpenTaskListElementAction openAction;
 
+	private TaskListElementPropertiesAction propertiesAction;
+	
 	private OpenWithBrowserAction openWithBrowser;
 
 	private NewLocalTaskAction newLocalTaskAction;
@@ -1057,7 +1060,9 @@ public class TaskListView extends ViewPart {
 		}
 		openWithBrowser.selectionChanged((StructuredSelection) getViewer().getSelection());
 
-		addAction(openTaskEditor, manager, element);
+		if (!(element instanceof AbstractRepositoryQuery || element instanceof TaskCategory)) {
+			addAction(openAction, manager, element);
+		}
 		ITask task = null;
 		if ((element instanceof ITask) || (element instanceof AbstractQueryHit)) {
 			if (element instanceof AbstractQueryHit) {
@@ -1118,6 +1123,11 @@ public class TaskListView extends ViewPart {
 
 		manager.add(new Separator(SEPARATOR_CONTEXT));
 
+		if (element instanceof AbstractRepositoryQuery || element instanceof TaskCategory) {
+			manager.add(new Separator());
+			addAction(propertiesAction, manager, element);
+		}
+		
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
@@ -1221,7 +1231,8 @@ public class TaskListView extends ViewPart {
 		// autoClose = new ManageEditorsAction();
 		// markIncompleteAction = new MarkTaskCompleteAction(this);
 		// markCompleteAction = new MarkTaskIncompleteAction(this);
-		openTaskEditor = new OpenTaskListElementAction(this.getViewer());
+		openAction = new OpenTaskListElementAction(this.getViewer());
+		propertiesAction = new TaskListElementPropertiesAction(this.getViewer());
 		openWithBrowser = new OpenWithBrowserAction();
 		filterCompleteTask = new FilterCompletedTasksAction(this);
 		filterArchiveCategory = new FilterArchiveContainerAction(this);
@@ -1291,7 +1302,7 @@ public class TaskListView extends ViewPart {
 						previousTaskAction.setButtonStatus();
 					}
 				}
-				openTaskEditor.run();
+				openAction.run();
 			}
 		});
 	}

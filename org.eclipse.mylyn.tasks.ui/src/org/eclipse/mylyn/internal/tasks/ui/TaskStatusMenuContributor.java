@@ -24,7 +24,7 @@ import org.eclipse.mylar.tasks.core.ITaskListElement;
  */
 public class TaskStatusMenuContributor implements IDynamicSubMenuContributor {
 
-	private static final String LABEL = "Change Status";
+	private static final String LABEL = "Mark";
 
 	public MenuManager getSubMenuManager(final List<ITaskListElement> selectedElements) {
 		final MenuManager subMenuManager = new MenuManager(LABEL);

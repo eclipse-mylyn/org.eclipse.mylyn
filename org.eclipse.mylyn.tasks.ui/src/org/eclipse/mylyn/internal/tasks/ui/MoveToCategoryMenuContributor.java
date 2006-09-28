@@ -24,7 +24,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
  */
 public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor {
 
-	private static final String LABEL = "Move to Category";
+	private static final String LABEL = "Move to";
 
 	public MenuManager getSubMenuManager(final List<ITaskListElement> selectedElements) {
 		final MenuManager subMenuManager = new MenuManager(LABEL);
