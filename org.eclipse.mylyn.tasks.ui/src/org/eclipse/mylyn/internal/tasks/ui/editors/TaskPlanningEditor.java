@@ -16,6 +16,7 @@ import java.text.DateFormat;
 import java.util.Calendar;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
@@ -915,9 +916,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 		if (contextFile != null) {
 			pathText = toolkit.createText(container, contextFile.getAbsolutePath(), SWT.NONE);
 			pathText.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-			pathText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			GridDataFactory.fillDefaults().hint(400, SWT.DEFAULT).applyTo(pathText);
 			pathText.setEditable(false);
-			pathText.setEnabled(false);
+			pathText.setEnabled(true);
 		}
 		toolkit.paintBordersFor(container);
 
