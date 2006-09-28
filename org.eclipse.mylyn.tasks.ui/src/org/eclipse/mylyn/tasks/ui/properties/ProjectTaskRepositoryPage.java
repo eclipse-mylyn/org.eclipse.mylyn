@@ -12,12 +12,11 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
+import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.actions.AddRepositoryAction;
@@ -52,7 +51,7 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 
 	private boolean modified = false;
 
-	private TableViewer listViewer;
+	private CheckboxTableViewer listViewer;
 
 	public ProjectTaskRepositoryPage() {
 		// Do nothing on creation
@@ -73,8 +72,8 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 		Label description = createDescriptionLabel(composite);
 		description.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
-		listViewer = new TableViewer(composite, SWT.TOP | SWT.BORDER | SWT.SINGLE);
-		listViewer.getTable().setFont(font);
+		listViewer = CheckboxTableViewer.newCheckList(composite, SWT.TOP | SWT.BORDER);
+		listViewer.getTable().setFont(font);		
 		GridData data = new GridData(GridData.FILL_BOTH);
 		data.grabExcessHorizontalSpace = true;
 
@@ -104,19 +103,21 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 		listViewer.setInput(project.getWorkspace());
 
 		TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(project, true);
+
 		if (repository != null) {
-			Object[] repositories = new Object[] { repository };
-			listViewer.setSelection(new StructuredSelection(repositories));
+			listViewer.setCheckedElements(new Object[] { repository });
 		}
-
-		listViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-			public void selectionChanged(SelectionChangedEvent event) {
+		listViewer.addCheckStateListener(new ICheckStateListener() {
+			public void checkStateChanged(CheckStateChangedEvent event) {
+				if (event.getChecked()) {
+					// only allow single selection
+					listViewer.setAllChecked(false);
+					listViewer.setChecked(event.getElement(), event.getChecked());
+				}
 				modified = true;
 			}
 		});
-		
-		
+
 		final AddRepositoryAction action = new AddRepositoryAction();
 
 		Button button = new Button(composite, SWT.NONE);
@@ -124,12 +125,10 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 		button.setText(AddRepositoryAction.TITLE);
 		button.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				action.run();				
+				action.run();
 				listViewer.setInput(project.getWorkspace());
 			}
 		});
-		
-		
 
 		return composite;
 	}
@@ -162,17 +161,13 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 		if (!modified) {
 			return true;
 		}
-		if (!listViewer.getSelection().isEmpty()) {
-			StructuredSelection selection = (StructuredSelection) listViewer.getSelection();
-			if (selection.size() > 0) {
-				TaskRepository selectedRepository = (TaskRepository) selection.getFirstElement();
-				try {
-					TasksUiPlugin.getDefault().setRepositoryForResource(project, selectedRepository);
-				} catch (CoreException e) {
-					MylarStatusHandler.fail(e, "Unable to associate project with task repository", true);
-				}
+		if (listViewer.getCheckedElements().length > 0) {
+			TaskRepository selectedRepository = (TaskRepository) listViewer.getCheckedElements()[0];
+			try {
+				TasksUiPlugin.getDefault().setRepositoryForResource(project, selectedRepository);
+			} catch (CoreException e) {
+				MylarStatusHandler.fail(e, "Unable to associate project with task repository", true);
 			}
-
 		}
 		return true;
 	}
