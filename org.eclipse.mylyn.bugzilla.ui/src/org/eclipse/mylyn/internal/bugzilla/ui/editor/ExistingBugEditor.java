@@ -62,6 +62,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
@@ -85,6 +86,8 @@ import org.eclipse.ui.forms.widgets.Section;
  * @authos Jeff Pound (Attachment work)
  */
 public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
+
+	private static final String SECTION_TITLE_PEOPLE = "People";
 
 	private static final String LABEL_TIME_TRACKING = "Bugzilla Time Tracking";
 
@@ -246,11 +249,46 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	@Override
-	protected void createCollaboratorsLayout(Composite composite) {
-		composite.setLayout(new GridLayout(2, false));
-		GridDataFactory.fillDefaults().align(SWT.DEFAULT, SWT.TOP).applyTo(composite);
-		addCCList("", composite);
-		getManagedForm().getToolkit().paintBordersFor(composite);
+	protected void createPeopleLayout(Composite composite) {
+		FormToolkit toolkit = getManagedForm().getToolkit();
+		Section peopleSection = createSection(composite, SECTION_TITLE_PEOPLE);
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(peopleSection);
+		Composite peopleComposite = toolkit.createComposite(peopleSection);
+		GridLayout layout = new GridLayout(2, false);
+		peopleComposite.setLayout(layout);
+		addSelfToCC(peopleComposite);
+		Label label = toolkit.createLabel(peopleComposite, BugzillaReportElement.ASSIGNED_TO.toString());
+		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
+		Composite textFieldComposite = toolkit.createComposite(peopleComposite);
+		GridLayout textLayout = new GridLayout();
+		textLayout.marginWidth = 1;
+		textLayout.verticalSpacing = 0;
+		textLayout.marginHeight = 0;
+		textFieldComposite.setLayout(textLayout);
+		GridData textData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		textData.horizontalSpan = 1;
+		textData.widthHint = 135;
+		String assignedToString = getRepositoryTaskData().getAttributeValue(
+				BugzillaReportElement.ASSIGNED_TO.getKeyString());
+		toolkit.createText(textFieldComposite, assignedToString, SWT.FLAT | SWT.READ_ONLY);
+
+		label = toolkit.createLabel(peopleComposite, BugzillaReportElement.REPORTER.toString());
+		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
+		textFieldComposite = toolkit.createComposite(peopleComposite);
+		textLayout = new GridLayout();
+		textLayout.marginWidth = 1;
+		textLayout.verticalSpacing = 0;
+		textLayout.marginHeight = 0;
+		textFieldComposite.setLayout(textLayout);
+		textData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		textData.horizontalSpan = 1;
+		textData.widthHint = 135;
+		String reporterString = getRepositoryTaskData()
+				.getAttributeValue(BugzillaReportElement.REPORTER.getKeyString());
+		toolkit.createText(textFieldComposite, reporterString, SWT.FLAT | SWT.READ_ONLY);		
+		addCCList("", peopleComposite);		
+		getManagedForm().getToolkit().paintBordersFor(peopleComposite);
+		peopleSection.setClient(peopleComposite);		
 	}
 
 	@Override
@@ -339,7 +377,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		textData.horizontalSpan = 1;
 		textData.widthHint = 135;
 		attribute = this.getRepositoryTaskData().getAttribute(BugzillaReportElement.BLOCKED.getKeyString());
-		if(!expand) {
+		if (!expand) {
 			expand = attribute.getValue() != null && attribute.getValue().length() > 0;
 		}
 		if (!attribute.isReadOnly()) {
@@ -363,7 +401,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		addBugHyperlinks(sectionComposite, BugzillaReportElement.BLOCKED.getKeyString());
 
 		section.setExpanded(expand);
-		
+
 		// String dependson =
 		// getRepositoryTaskData().getAttributeValue(BugzillaReportElement.DEPENDSON.getKeyString());
 		// String blocked =
@@ -410,7 +448,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		// addBugHyperlinks(sectionComposite,
 		// BugzillaReportElement.BLOCKED.getKeyString());
 		// }
-		
+
 	}
 
 	private void addBugHyperlinks(Composite composite, String key) {
@@ -552,7 +590,9 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	protected void addKeywordsList(String keywords, Composite attributesComposite) throws IOException {
 		// newLayout(attributesComposite, 1, "Keywords:", PROPERTY);
 		FormToolkit toolkit = getManagedForm().getToolkit();
-		toolkit.createLabel(attributesComposite, "Keywords:");
+		Label label = toolkit.createLabel(attributesComposite, "Keywords:");
+		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
+		
 		keywordsText = toolkit.createText(attributesComposite, keywords);
 		keywordsText.setFont(TEXT_FONT);
 		keywordsText.setEditable(false);
@@ -615,7 +655,8 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 
 	protected void addVoting(Composite attributesComposite) {
 		FormToolkit toolkit = getManagedForm().getToolkit();
-		toolkit.createLabel(attributesComposite, "Votes:");
+		Label label  = toolkit.createLabel(attributesComposite, "Votes:");
+		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 		Composite votingComposite = toolkit.createComposite(attributesComposite);
 		GridLayout layout = new GridLayout(3, false);
 		layout.marginHeight = 0;
@@ -654,7 +695,8 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	protected void addCCList(String ccValue, Composite attributesComposite) {
 		// newLayout(attributesComposite, 1, "Add CC:", PROPERTY);
 		FormToolkit toolkit = getManagedForm().getToolkit();
-		toolkit.createLabel(attributesComposite, "Add CC:");
+		Label label = toolkit.createLabel(attributesComposite, "Add CC:");
+		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
 		ccText = toolkit.createText(attributesComposite, ccValue);
 		ccText.setFont(TEXT_FONT);
 		ccText.setEditable(true);
@@ -677,21 +719,22 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 
 		// newLayout(attributesComposite, 1, "CC: (Select to remove)",
 		// PROPERTY);
-		toolkit.createLabel(attributesComposite, "CC: (Select to remove)");
+		Label ccListLabel = toolkit.createLabel(attributesComposite, "CC:");
+		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.TOP).applyTo(ccListLabel);
 		ccList = new List(attributesComposite, SWT.MULTI | SWT.V_SCROLL);// SWT.BORDER
 		ccList.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		ccList.setFont(TEXT_FONT);
 		GridData ccListData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		ccListData.horizontalSpan = 1;
 		ccListData.widthHint = 125;
-		ccListData.heightHint = 40;
+		ccListData.heightHint = 95;
 		ccList.setLayoutData(ccListData);
 
 		java.util.List<String> ccs = taskData.getCC();
 		if (ccs != null) {
 			for (Iterator<String> it = ccs.iterator(); it.hasNext();) {
 				String cc = it.next();
-				ccList.add(cc);// HtmlStreamTokenizer.unescape(cc));
+				ccList.add(cc);
 			}
 		}
 
@@ -714,6 +757,10 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 			}
 		});
 		ccList.addListener(SWT.FocusIn, new GenericListener());
+		toolkit.createLabel(attributesComposite, "");
+		label = toolkit.createLabel(attributesComposite, "(Select to remove)");
+		GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.DEFAULT).applyTo(label);
+		
 	}
 
 	@Override

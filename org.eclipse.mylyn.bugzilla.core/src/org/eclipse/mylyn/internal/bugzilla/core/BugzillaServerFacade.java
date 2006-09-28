@@ -55,21 +55,21 @@ public class BugzillaServerFacade {
 
 	private static final String OPERATION_OPTION_RESOLUTION = "resolution";
 
-	private static final String OPERATION_LABEL_CLOSE = "Mark bug as CLOSED";
+	private static final String OPERATION_LABEL_CLOSE = "Mark as CLOSED";
 
-	private static final String OPERATION_LABEL_VERIFY = "Mark bug as VERIFIED";
+	private static final String OPERATION_LABEL_VERIFY = "Mark as VERIFIED";
 
 	private static final String OPERATION_LABEL_REOPEN = "Reopen bug";
 
-	private static final String OPERATION_LABEL_REASSIGN_DEFAULT = "Reassign bug to default assignee of selected component";
+	private static final String OPERATION_LABEL_REASSIGN_DEFAULT = "Reassign to default assignee";
 
-	private static final String OPERATION_LABEL_REASSIGN = "Reassign bug to";
+	private static final String OPERATION_LABEL_REASSIGN = "Reassign to";
 
-	private static final String OPERATION_LABEL_DUPLICATE = "Resolve bug, mark it as duplicate of bug #";
+	private static final String OPERATION_LABEL_DUPLICATE = "Mark as duplicate of #";
 
-	private static final String OPERATION_LABEL_RESOLVE = "Resolve bug, changing resolution to";
+	private static final String OPERATION_LABEL_RESOLVE = "Resolve as";
 
-	private static final String OPERATION_LABEL_ACCEPT = "Accept bug (change status to ASSIGNED)";
+	private static final String OPERATION_LABEL_ACCEPT = "Accept (change status to ASSIGNED)";
 
 	private static final BugzillaAttributeFactory attributeFactory = new BugzillaAttributeFactory();
 

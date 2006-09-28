@@ -22,7 +22,7 @@ public enum BugzillaReportElement {
 	// Hidden elements are not automatically displayed in ui	
 	ACTUAL_TIME ("Hours Worked:", "actual_time", true),
 	ADD_COMMENT ("Additional Comments:", "comment", true, false),
-	ASSIGNED_TO ("Assigned to:", "assigned_to", false, true),
+	ASSIGNED_TO ("Assigned to:", "assigned_to", true, true),
 	ATTACHID ("attachid", "attachid"),
 	ATTACHMENT ("attachment", "attachment"),
 	BLOCKED ("Bug blocks:", "blocked", true, false),
@@ -59,7 +59,7 @@ public enum BugzillaReportElement {
 	PRIORITY ("Priority:", "priority", true, false), 
 	PRODUCT ("Product:", "product", false), 
 	REP_PLATFORM ("Platform:", "rep_platform", false),
-	REPORTER ("Reporter:", "reporter", false, true),
+	REPORTER ("Reporter:", "reporter", true, true),
 	REPORTER_ACCESSIBLE ("reporter_accessible", "reporter_accessible", true),
 	RESOLUTION ("Resolution:", "resolution", false, true), // Exiting bug field, new cc
 	REMAINING_TIME( "Hours Left:", "remaining_time", true),
