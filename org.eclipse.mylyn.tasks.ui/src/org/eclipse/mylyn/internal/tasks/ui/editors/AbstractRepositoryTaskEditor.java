@@ -584,7 +584,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		Composite attributesComposite = toolkit.createComposite(section);
 		GridLayout attributesLayout = new GridLayout();
 		attributesLayout.numColumns = 4;
-		attributesLayout.horizontalSpacing = 13;
+		attributesLayout.horizontalSpacing = 5;
 		attributesLayout.verticalSpacing = 4;
 		attributesComposite.setLayout(attributesLayout);
 		GridData attributesData = new GridData(GridData.FILL_BOTH);
