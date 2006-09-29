@@ -343,9 +343,6 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 							+ "\n\nError reported: " + e.getMessage());
 		}
 
-		if (getRepositoryTaskData().getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()) != null)
-			addBugzillaTimeTracker(toolkit, composite);
-
 		addVoting(composite);
 
 		Hyperlink viewActivity = toolkit.createHyperlink(composite, "Show Bug Activity", SWT.NONE);
@@ -358,6 +355,9 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 				}
 			}
 		});
+		
+		if (getRepositoryTaskData().getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()) != null)
+			addBugzillaTimeTracker(toolkit, composite);
 
 	}
 
