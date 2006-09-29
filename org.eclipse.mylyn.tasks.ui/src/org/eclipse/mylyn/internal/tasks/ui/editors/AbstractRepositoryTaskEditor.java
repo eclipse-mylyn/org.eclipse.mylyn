@@ -142,7 +142,11 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  */
 public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
-	private static final String HEADER_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";//"EEE d MMM yyyy HH:mm:ss";
+	private static final String HEADER_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";// "EEE
+																			// d
+																			// MMM
+																			// yyyy
+																			// HH:mm:ss";
 
 	private static final String ATTACHMENT_DEFAULT_NAME = "attachment";
 
@@ -498,11 +502,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		createDescriptionLayout(editorComposite);
 		createCommentLayout(editorComposite);
 		createNewCommentLayout(editorComposite);
-		Composite bottomComposite = toolkit.createComposite(editorComposite);		
+		Composite bottomComposite = toolkit.createComposite(editorComposite);
 		bottomComposite.setLayout(new GridLayout(2, false));
-		//GridDataFactory.fillDefaults().grab(true, false).applyTo(bottomComposite);
+		// GridDataFactory.fillDefaults().grab(true,
+		// false).applyTo(bottomComposite);
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.DEFAULT).applyTo(bottomComposite);
-		
+
 		createActionsLayout(bottomComposite);
 		createPeopleLayout(bottomComposite);
 
@@ -513,7 +518,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			registerDropListener(this.addCommentsTextBox);
 		}
 	}
-
 
 	protected void createReportHeaderLayout(Composite composite) {
 		addSummaryText(composite);
@@ -641,7 +645,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				textFieldComposite.setLayout(textLayout);
 				GridData textData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 				textData.horizontalSpan = 1;
-				textData.widthHint = 135;				
+				textData.widthHint = 135;
 
 				if (attribute.isReadOnly()) {
 					final Text text = toolkit.createText(textFieldComposite, value, SWT.FLAT | SWT.READ_ONLY);
@@ -766,7 +770,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			attachmentsTable.setLayout(new GridLayout());
 			GridData tableGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
 			// tableGridData.heightHint = 100;
-			//tableGridData.widthHint = DESCRIPTION_WIDTH;
+			// tableGridData.widthHint = DESCRIPTION_WIDTH;
 			attachmentsTable.setLayoutData(tableGridData);
 
 			for (int i = 0; i < attachmentsColumns.length; i++) {
@@ -1310,16 +1314,18 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				Date lastModDate = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED,
 						repositoryTask.getLastSyncDateStamp());
 
-				// reduce granularity to minutes
-				Calendar calLastMod = Calendar.getInstance();
-				calLastMod.setTime(lastModDate);
-				calLastMod.set(Calendar.SECOND, 0);
+				if (lastModDate != null) {
+					// reduce granularity to minutes
+					Calendar calLastMod = Calendar.getInstance();
+					calLastMod.setTime(lastModDate);
+					calLastMod.set(Calendar.SECOND, 0);
 
-				Date commentDate = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.COMMENT_DATE,
-						taskComment.getCreated());
-				if (commentDate != null && lastModDate != null
-						&& (commentDate.after(calLastMod.getTime()) || commentDate.equals(calLastMod.getTime()))) {
-					expandableComposite.setExpanded(true);
+					Date commentDate = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.COMMENT_DATE,
+							taskComment.getCreated());
+					if (commentDate != null
+							&& (commentDate.after(calLastMod.getTime()) || commentDate.equals(calLastMod.getTime()))) {
+						expandableComposite.setExpanded(true);
+					}
 				}
 			} else if (repositoryTask != null && repositoryTask.getLastSyncDateStamp() == null && !it.hasNext()) {
 				// no task data (query hit?) so expand last comment
@@ -1407,12 +1413,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 */
 	protected void createActionsLayout(Composite composite) {
 		Section section = createSection(composite, LABEL_SECTION_ACTIONS);
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(section);		
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(section);
 		Composite buttonComposite = toolkit.createComposite(section);
 		GridLayout buttonLayout = new GridLayout();
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(buttonComposite);
 		buttonLayout.numColumns = 4;
-		buttonComposite.setLayout(buttonLayout);		
+		buttonComposite.setLayout(buttonLayout);
 		addRadioButtons(buttonComposite);
 		addActionButtons(buttonComposite);
 		section.setClient(buttonComposite);
@@ -1443,8 +1449,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * @param buttonComposite
 	 *            Composite to add the buttons to.
 	 */
-	protected void addActionButtons(Composite buttonComposite) {	
-		submitButton = toolkit.createButton(buttonComposite, LABEL_BUTTON_SUBMIT, SWT.NONE);		
+	protected void addActionButtons(Composite buttonComposite) {
+		submitButton = toolkit.createButton(buttonComposite, LABEL_BUTTON_SUBMIT, SWT.NONE);
 		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		submitButton.setLayoutData(submitButtonData);
 		submitButton.addListener(SWT.Selection, new Listener() {
@@ -1452,14 +1458,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				submitBug();
 			}
 		});
-		submitButton.addListener(SWT.FocusIn, new GenericListener());		
+		submitButton.addListener(SWT.FocusIn, new GenericListener());
 		RepositoryTaskData taskData = getRepositoryTaskData();
 		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 				AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
 		if (task != null) {
 			addAttachContextButton(buttonComposite, task);
 		}
-		
+
 	}
 
 	/**
@@ -1940,7 +1946,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		this.descriptionTextViewer.getDocument().set(text);
 	}
 
-	protected void addRadioButtons(Composite buttonComposite) {		
+	protected void addRadioButtons(Composite buttonComposite) {
 		RepositoryTaskData taskData = getRepositoryTaskData();
 		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
 		int i = 0;
@@ -2072,8 +2078,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			return;
 		}
 		toolkit.createLabel(composite, "");
-		final Button addSelfButton = toolkit.createButton(composite, "Add self to CC",
-				SWT.CHECK);
+		final Button addSelfButton = toolkit.createButton(composite, "Add self to CC", SWT.CHECK);
 		addSelfButton.setImage(TaskListImages.getImage(TaskListImages.PERSON));
 		addSelfButton.addSelectionListener(new SelectionAdapter() {
 
@@ -2087,7 +2092,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				markDirty(true);
 			}
 		});
-		//GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(addSelfButton);
+		// GridDataFactory.fillDefaults().span(2,
+		// SWT.DEFAULT).applyTo(addSelfButton);
 	}
 
 	// // The implementation of the attach context UI is connector dependant.
