@@ -64,10 +64,12 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		if (this.isDownloaded() || !super.getDescription().startsWith("<")) {
 			return super.getDescription();
 		} else {
-			if (!isSynchronizing()) {
-				return AbstractRepositoryTask.getTaskId(getHandleIdentifier()) + ": <synchronizing>";
+			if (isSynchronizing()) {
+				//return AbstractRepositoryTask.getTaskId(getHandleIdentifier()) + ": <synchronizing>";
+				return "<synchronizing>";
 			} else {
-				return AbstractRepositoryTask.getTaskId(getHandleIdentifier()) + ": ";
+				//return AbstractRepositoryTask.getTaskId(getHandleIdentifier()) + ": ";
+				return "";
 			}
 		}
 	}
