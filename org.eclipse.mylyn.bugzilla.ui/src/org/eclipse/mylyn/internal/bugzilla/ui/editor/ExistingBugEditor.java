@@ -255,7 +255,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(peopleSection);
 		Composite peopleComposite = toolkit.createComposite(peopleSection);
 		GridLayout layout = new GridLayout(2, false);	
-		layout.marginRight = 150;//  <---- this is FORCING layout to left
+		layout.marginRight = 5;
 		peopleComposite.setLayout(layout);
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(peopleComposite);
 		addSelfToCC(peopleComposite);
@@ -701,7 +701,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		// ccText.setBackground(background);
 		GridData ccData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		ccData.horizontalSpan = 1;
-		ccData.widthHint = 200;
+		ccData.widthHint = 150;
 		ccText.setLayoutData(ccData);
 		// ccText.setText(ccValue);
 		ccText.addListener(SWT.FocusIn, new GenericListener());
@@ -723,7 +723,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		ccList.setFont(TEXT_FONT);
 		GridData ccListData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		ccListData.horizontalSpan = 1;
-		ccListData.widthHint = 200;
+		ccListData.widthHint = 150;
 		ccListData.heightHint = 95;
 		ccList.setLayoutData(ccListData);
 

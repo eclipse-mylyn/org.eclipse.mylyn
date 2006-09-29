@@ -767,7 +767,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			attachmentsTable.setLayout(new GridLayout());
 			GridData tableGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
 			// tableGridData.heightHint = 100;
-			tableGridData.widthHint = DESCRIPTION_WIDTH;
+			//tableGridData.widthHint = DESCRIPTION_WIDTH;
 			attachmentsTable.setLayoutData(tableGridData);
 
 			for (int i = 0; i < attachmentsColumns.length; i++) {
