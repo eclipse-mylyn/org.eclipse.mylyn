@@ -252,11 +252,12 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	protected void createPeopleLayout(Composite composite) {
 		FormToolkit toolkit = getManagedForm().getToolkit();
 		Section peopleSection = createSection(composite, SECTION_TITLE_PEOPLE);
-		//GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(peopleSection);
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(peopleSection);
 		Composite peopleComposite = toolkit.createComposite(peopleSection);
-		GridLayout layout = new GridLayout(2, false);		
+		GridLayout layout = new GridLayout(2, false);	
+		layout.marginRight = 150;//  <---- this is FORCING layout to left
 		peopleComposite.setLayout(layout);
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(peopleComposite);
 		addSelfToCC(peopleComposite);
 		Label label = toolkit.createLabel(peopleComposite, BugzillaReportElement.ASSIGNED_TO.toString());
 		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
@@ -265,10 +266,8 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		textLayout.marginWidth = 1;
 		textLayout.verticalSpacing = 0;
 		textLayout.marginHeight = 0;
+		textLayout.marginRight = 5;
 		textFieldComposite.setLayout(textLayout);
-		GridData textData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		textData.horizontalSpan = 1;
-		textData.widthHint = 135;
 		String assignedToString = getRepositoryTaskData().getAttributeValue(
 				BugzillaReportElement.ASSIGNED_TO.getKeyString());
 		toolkit.createText(textFieldComposite, assignedToString, SWT.FLAT | SWT.READ_ONLY);
@@ -281,9 +280,6 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		textLayout.verticalSpacing = 0;
 		textLayout.marginHeight = 0;
 		textFieldComposite.setLayout(textLayout);
-		textData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		textData.horizontalSpan = 1;
-		textData.widthHint = 135;
 		String reporterString = getRepositoryTaskData()
 				.getAttributeValue(BugzillaReportElement.REPORTER.getKeyString());
 		toolkit.createText(textFieldComposite, reporterString, SWT.FLAT | SWT.READ_ONLY);		
@@ -705,7 +701,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		// ccText.setBackground(background);
 		GridData ccData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		ccData.horizontalSpan = 1;
-		ccData.widthHint = 100;
+		ccData.widthHint = 200;
 		ccText.setLayoutData(ccData);
 		// ccText.setText(ccValue);
 		ccText.addListener(SWT.FocusIn, new GenericListener());
@@ -727,7 +723,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		ccList.setFont(TEXT_FONT);
 		GridData ccListData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		ccListData.horizontalSpan = 1;
-		ccListData.widthHint = 125;
+		ccListData.widthHint = 200;
 		ccListData.heightHint = 95;
 		ccList.setLayoutData(ccListData);
 

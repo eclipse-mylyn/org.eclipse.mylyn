@@ -499,9 +499,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		createDescriptionLayout(editorComposite);
 		createCommentLayout(editorComposite);
 		createNewCommentLayout(editorComposite);
-		Composite bottomComposite = toolkit.createComposite(editorComposite);
-		bottomComposite.setLayout(new GridLayout(2, false));		
-		GridDataFactory.fillDefaults().grab(true, true).applyTo(bottomComposite);		
+		Composite bottomComposite = toolkit.createComposite(editorComposite);		
+		bottomComposite.setLayout(new GridLayout(2, false));
+		//GridDataFactory.fillDefaults().grab(true, false).applyTo(bottomComposite);
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.DEFAULT).applyTo(bottomComposite);
 		
 		createActionsLayout(bottomComposite);
 		createPeopleLayout(bottomComposite);
@@ -1411,18 +1412,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 */
 	protected void createActionsLayout(Composite composite) {
 		Section section = createSection(composite, LABEL_SECTION_ACTIONS);
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(section);
-		//GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(section);
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(section);		
 		Composite buttonComposite = toolkit.createComposite(section);
 		GridLayout buttonLayout = new GridLayout();
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(buttonComposite);
 		buttonLayout.numColumns = 4;
-		buttonComposite.setLayout(buttonLayout);
-		GridData buttonData = new GridData(GridData.FILL_BOTH);	
-		buttonData.grabExcessVerticalSpace = false;
-		buttonComposite.setLayoutData(buttonData);
-		section.setClient(buttonComposite);
+		buttonComposite.setLayout(buttonLayout);		
 		addRadioButtons(buttonComposite);
 		addActionButtons(buttonComposite);
+		section.setClient(buttonComposite);
 	}
 
 	protected Section createSection(Composite composite, String title) {
