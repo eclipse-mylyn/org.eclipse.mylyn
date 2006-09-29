@@ -12,6 +12,7 @@
       </toc>
    </extension>
    
+   <!--
     <extension point="org.eclipse.ui.actionSets">
 	<actionSet
             id="org.eclipse.mylar.doc.actionSet"
@@ -47,5 +48,6 @@
             schemeId ="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
    </extension> 
+  -->
   
 </plugin>
