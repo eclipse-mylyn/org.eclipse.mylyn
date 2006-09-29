@@ -794,7 +794,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						Date created2 = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.ATTACHMENT_DATE,
 								attachment2.getDateCreated());
 						if (created1 != null && created2 != null) {
-							return attachment1.getDateCreated().compareTo(attachment2.getDateCreated());
+							return created1.compareTo(created2);
+						} else if (created1 == null && created2 != null) {
+							return -1;
+						} else if (created1 != null && created2 == null) {
+							return 1;
 						} else {
 							return 0;
 						}

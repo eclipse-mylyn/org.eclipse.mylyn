@@ -11,12 +11,18 @@
 
 package org.eclipse.mylar.internal.tasks.ui.wizards;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
+import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
@@ -37,7 +43,7 @@ import org.eclipse.swt.widgets.TableItem;
 public class ContextRetrieveWizardPage extends WizardPage {
 
 	private static final String DESCRIPTION = "Loads context from repository task into the workspace";
-		
+
 	private static final String COLUMN_COMMENT = "Comment";
 
 	private static final String COLUMN_AUTHOR = "Author";
@@ -60,7 +66,7 @@ public class ContextRetrieveWizardPage extends WizardPage {
 	public void createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
-		
+
 		new Label(composite, SWT.NONE).setText("Task: " + task.getDescription());
 		new Label(composite, SWT.NONE).setText("Repository: " + repository.getUrl());
 		new Label(composite, SWT.NONE).setText("Select context below:");
@@ -71,8 +77,8 @@ public class ContextRetrieveWizardPage extends WizardPage {
 		contextTable.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				if (contextTable.getSelectionIndex() > -1) {
-					selectedContextAttachment = (RepositoryAttachment) contextTable.getItem(contextTable.getSelectionIndex())
-							.getData();
+					selectedContextAttachment = (RepositoryAttachment) contextTable.getItem(
+							contextTable.getSelectionIndex()).getData();
 					getWizard().getContainer().updateButtons();
 				}
 			}
@@ -81,7 +87,31 @@ public class ContextRetrieveWizardPage extends WizardPage {
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				repository.getKind());
 
-		Set<RepositoryAttachment> contextAttachments = connector.getContextAttachments(repository, task);
+		List<RepositoryAttachment> contextAttachments = new ArrayList<RepositoryAttachment>(connector
+				.getContextAttachments(repository, task));
+
+		final IOfflineTaskHandler offlineHandler = connector.getOfflineTaskHandler();
+		if (offlineHandler != null) {
+			Collections.sort(contextAttachments, new Comparator<RepositoryAttachment>() {
+
+				public int compare(RepositoryAttachment attachment1, RepositoryAttachment attachment2) {
+					Date created1 = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.ATTACHMENT_DATE,
+							attachment1.getDateCreated());
+					Date created2 = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.ATTACHMENT_DATE,
+							attachment2.getDateCreated());
+					if (created1 != null && created2 != null) {
+						return created1.compareTo(created2);
+					} else if (created1 == null && created2 != null) {
+						return -1;
+					} else if (created1 != null && created2 == null) {
+						return 1;
+					} else {
+						return 0;
+					}
+				}
+
+			});
+		}
 		TableColumn[] columns = new TableColumn[3];
 
 		columns[0] = new TableColumn(contextTable, SWT.LEFT);
@@ -101,12 +131,12 @@ public class ContextRetrieveWizardPage extends WizardPage {
 			item.setData(attachment);
 		}
 
-	    for (int i = 0, n = columns.length; i < n; i++) {
-	      columns[i].pack();
-	    }
-		
+		for (int i = 0, n = columns.length; i < n; i++) {
+			columns[i].pack();
+		}
+
 		contextTable.setLayoutData(new GridData(GridData.FILL_BOTH));
-		
+
 		setControl(composite);
 	}
 
@@ -116,7 +146,8 @@ public class ContextRetrieveWizardPage extends WizardPage {
 
 	@Override
 	public boolean isPageComplete() {
-		if(selectedContextAttachment == null) return false;
+		if (selectedContextAttachment == null)
+			return false;
 		return super.isPageComplete();
 	}
 
