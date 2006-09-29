@@ -252,9 +252,10 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	protected void createPeopleLayout(Composite composite) {
 		FormToolkit toolkit = getManagedForm().getToolkit();
 		Section peopleSection = createSection(composite, SECTION_TITLE_PEOPLE);
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(peopleSection);
+		//GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(peopleSection);
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(peopleSection);
 		Composite peopleComposite = toolkit.createComposite(peopleSection);
-		GridLayout layout = new GridLayout(2, false);
+		GridLayout layout = new GridLayout(2, false);		
 		peopleComposite.setLayout(layout);
 		addSelfToCC(peopleComposite);
 		Label label = toolkit.createLabel(peopleComposite, BugzillaReportElement.ASSIGNED_TO.toString());
