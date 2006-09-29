@@ -494,7 +494,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		createReportHeaderLayout(editorComposite);
 		Composite attribComp = createAttributeLayout(editorComposite);
 		createCustomAttributeLayout(attribComp);
-		createDependencyLayout(editorComposite);
 		createAttachmentLayout(editorComposite);
 		createDescriptionLayout(editorComposite);
 		createCommentLayout(editorComposite);
@@ -1247,10 +1246,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected void createPeopleLayout(Composite composite) {
-		// override
-	}
-
-	protected void createDependencyLayout(Composite composite) {
 		// override
 	}
 
