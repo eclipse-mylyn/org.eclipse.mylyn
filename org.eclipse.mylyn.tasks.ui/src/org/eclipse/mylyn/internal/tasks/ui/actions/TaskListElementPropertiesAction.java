@@ -36,7 +36,7 @@ public class TaskListElementPropertiesAction extends Action {
 		setText("Properties");
 		setToolTipText("Properties");
 		setId(ID);
-		setAccelerator(SWT.MOD1 + LegacyActionTools.findKeyCode("enter"));
+//		setAccelerator(SWT.MOD1 + LegacyActionTools.findKeyCode("enter"));
 	}
 
 	@Override

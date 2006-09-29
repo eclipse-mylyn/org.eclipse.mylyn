@@ -1060,9 +1060,9 @@ public class TaskListView extends ViewPart {
 		}
 		openWithBrowser.selectionChanged((StructuredSelection) getViewer().getSelection());
 
-		if (!(element instanceof AbstractRepositoryQuery || element instanceof TaskCategory)) {
+//		if (!(element instanceof AbstractRepositoryQuery || element instanceof TaskCategory)) {
 			addAction(openAction, manager, element);
-		}
+//		}
 		ITask task = null;
 		if ((element instanceof ITask) || (element instanceof AbstractQueryHit)) {
 			if (element instanceof AbstractQueryHit) {
