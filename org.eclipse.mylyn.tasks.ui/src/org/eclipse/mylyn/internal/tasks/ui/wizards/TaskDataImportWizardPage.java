@@ -49,11 +49,11 @@ import org.eclipse.swt.widgets.Text;
  */
 public class TaskDataImportWizardPage extends WizardPage {
 
-	private static final String LABEL_IMPORT_FOLDER = "Import from folder";
+	private static final String LABEL_IMPORT_FOLDER = "From 0.6.2 and older task data folder";
 
-	private static final String LABEL_IMPORT_ZIP = "Import from zip file";
+	private static final String LABEL_IMPORT_ZIP = "From zip file";
 
-	private static final String LABEL_IMPORT_BACKUP = "Import from auto backup";
+	private static final String LABEL_IMPORT_BACKUP = "From auto backup";
 
 	private final static String PAGE_TITLE = "Import Mylar Task Data";
 
