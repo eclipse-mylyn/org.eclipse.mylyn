@@ -292,6 +292,67 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	protected void createCustomAttributeLayout(Composite composite) {
 		FormToolkit toolkit = getManagedForm().getToolkit();
 
+		toolkit.createLabel(composite, BugzillaReportElement.DEPENDSON.toString());
+		Composite textFieldComposite = toolkit.createComposite(composite);
+		GridLayout textLayout = new GridLayout();
+		textLayout.marginWidth = 1;
+		textLayout.marginHeight = 3;
+		textLayout.verticalSpacing = 3;
+		textFieldComposite.setLayout(textLayout);
+		GridData textData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		textData.horizontalSpan = 1;
+		textData.widthHint = 135;
+		RepositoryTaskAttribute attribute = this.getRepositoryTaskData().getAttribute(
+				BugzillaReportElement.DEPENDSON.getKeyString());
+		if (!attribute.isReadOnly()) {
+			final Text text = toolkit.createText(textFieldComposite, attribute.getValue(), SWT.FLAT);
+			text.setLayoutData(textData);
+			toolkit.paintBordersFor(textFieldComposite);
+			text.setData(attribute);
+			text.addListener(SWT.KeyUp, new Listener() {
+				public void handleEvent(Event event) {
+					String sel = text.getText();
+					RepositoryTaskAttribute a = (RepositoryTaskAttribute) text.getData();
+					if (!(a.getValue().equals(sel))) {
+						a.setValue(sel);
+						markDirty(true);
+					}
+				}
+			});
+			text.addListener(SWT.FocusIn, new GenericListener());
+		}
+		
+		toolkit.createLabel(composite, BugzillaReportElement.BLOCKED.toString());
+		textFieldComposite = toolkit.createComposite(composite);
+		textLayout = new GridLayout();
+		textLayout.marginWidth = 1;
+		textLayout.marginHeight = 3;
+		textLayout.verticalSpacing = 3;
+		textFieldComposite.setLayout(textLayout);
+		textData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		textData.horizontalSpan = 1;
+		textData.widthHint = 135;
+		attribute = this.getRepositoryTaskData().getAttribute(BugzillaReportElement.BLOCKED.getKeyString());
+		if (!attribute.isReadOnly()) {
+			final Text text = toolkit.createText(textFieldComposite, attribute.getValue(), SWT.FLAT);
+			text.setLayoutData(textData);
+			toolkit.paintBordersFor(textFieldComposite);
+			text.setData(attribute);
+			text.addListener(SWT.KeyUp, new Listener() {
+				public void handleEvent(Event event) {
+					String sel = text.getText();
+					RepositoryTaskAttribute a = (RepositoryTaskAttribute) text.getData();
+					if (!(a.getValue().equals(sel))) {
+						a.setValue(sel);
+						markDirty(true);
+					}
+				}
+			});
+			text.addListener(SWT.FocusIn, new GenericListener());
+		}
+		
+		
+		
 		String dependson = getRepositoryTaskData().getAttributeValue(BugzillaReportElement.DEPENDSON.getKeyString());
 		String blocked = getRepositoryTaskData().getAttributeValue(BugzillaReportElement.BLOCKED.getKeyString());
 		boolean addHyperlinks = (dependson != null && dependson.length() > 0)

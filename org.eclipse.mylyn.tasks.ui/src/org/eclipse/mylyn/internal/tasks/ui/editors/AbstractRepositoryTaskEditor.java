@@ -533,27 +533,28 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		String statusValue = this.getRepositoryTaskData().getAttributeValue(RepositoryTaskAttribute.STATUS);
 		toolkit.createText(headerInfoComposite, statusValue, SWT.FLAT | SWT.READ_ONLY);
 		toolkit.createLabel(headerInfoComposite, " Priority: ").setFont(TITLE_FONT);
-		RepositoryTaskAttribute attribute = getRepositoryTaskData().getAttribute(RepositoryTaskAttribute.PRIORITY);
-		if (attribute != null) {
-			String value = attribute.getValue() != null ? attribute.getValue() : "";
-			attributeCombo = new CCombo(headerInfoComposite, SWT.FLAT | SWT.READ_ONLY);
-			toolkit.adapt(attributeCombo, true, true);
-			attributeCombo.setFont(TEXT_FONT);
-			if (attribute.getValues() != null) {
-
-				Set<String> s = attribute.getOptionValues().keySet();
-				String[] a = s.toArray(new String[s.size()]);
-				for (int i = 0; i < a.length; i++) {
-					attributeCombo.add(a[i]);
-				}
-				if (attributeCombo.indexOf(value) != -1) {
-					attributeCombo.select(attributeCombo.indexOf(value));
-				}
-			}
-			attributeCombo.addSelectionListener(new ComboSelectionListener(attributeCombo));
-			comboListenerMap.put(attributeCombo, attribute);
-			attributeCombo.addListener(SWT.FocusIn, new GenericListener());
-		}
+		toolkit.createText(headerInfoComposite,  getRepositoryTaskData().getAttributeValue(RepositoryTaskAttribute.PRIORITY), SWT.FLAT | SWT.READ_ONLY);
+//		RepositoryTaskAttribute attribute = getRepositoryTaskData().getAttribute(RepositoryTaskAttribute.PRIORITY);
+//		if (attribute != null) {
+//			String value = attribute.getValue() != null ? attribute.getValue() : "";
+//			attributeCombo = new CCombo(headerInfoComposite, SWT.FLAT | SWT.READ_ONLY);
+//			toolkit.adapt(attributeCombo, true, true);
+//			attributeCombo.setFont(TEXT_FONT);
+//			if (attribute.getValues() != null) {
+//
+//				Set<String> s = attribute.getOptionValues().keySet();
+//				String[] a = s.toArray(new String[s.size()]);
+//				for (int i = 0; i < a.length; i++) {
+//					attributeCombo.add(a[i]);
+//				}
+//				if (attributeCombo.indexOf(value) != -1) {
+//					attributeCombo.select(attributeCombo.indexOf(value));
+//				}
+//			}
+//			attributeCombo.addSelectionListener(new ComboSelectionListener(attributeCombo));
+//			comboListenerMap.put(attributeCombo, attribute);
+//			attributeCombo.addListener(SWT.FocusIn, new GenericListener());
+//		}
 
 		toolkit.createLabel(headerInfoComposite, "  ID: ").setFont(TITLE_FONT);
 		toolkit.createText(headerInfoComposite, "" + getRepositoryTaskData().getId(), SWT.FLAT | SWT.READ_ONLY);
