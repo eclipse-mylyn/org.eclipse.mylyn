@@ -95,24 +95,37 @@ class SynchronizeTaskJob extends Job {
 							if (repository == null) {
 								throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, 0,
 										"Associated repository could not be found. Ensure proper repository configuration of "
-												+ repositoryTask.getRepositoryUrl() + " in " + TaskRepositoriesView.NAME
-												+ ".", null));
+												+ repositoryTask.getRepositoryUrl() + " in "
+												+ TaskRepositoriesView.NAME + ".", null));
 							} else {
 								downloadedTaskData = offlineHandler.downloadTaskData(repositoryTask, repository,
 										TasksUiPlugin.getDefault().getProxySettings());
 							}
 						} catch (final LoginException e) {
-							throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, 0, "Report download failed. Ensure proper repository configuration of " + repositoryTask.getRepositoryUrl() + " in "
-									+ TaskRepositoriesView.NAME + ".", e ));
+							MylarStatusHandler.fail(e,
+									"Report download failed. Ensure proper repository configuration of "
+											+ repositoryTask.getRepositoryUrl() + " in " + TaskRepositoriesView.NAME
+											+ ".", true);
+							// throw new CoreException(new Status(IStatus.ERROR,
+							// TasksUiPlugin.PLUGIN_ID, 0, "Report download
+							// failed. Ensure proper repository configuration of
+							// " + repositoryTask.getRepositoryUrl() + " in "
+							// + TaskRepositoriesView.NAME + ".", e ));
 						} catch (final CoreException e) {
-							if (!(e.getStatus().getException() instanceof IOException)) {
+							if (e.getStatus().getException() instanceof LoginException) {
+								MylarStatusHandler.fail(e.getStatus().getException(),
+										"Report download failed. Ensure proper repository configuration of "
+												+ repositoryTask.getRepositoryUrl() + " in "
+												+ TaskRepositoriesView.NAME + ".", true);
+							} else if (!(e.getStatus().getException() instanceof IOException)) {
 								MylarStatusHandler.log(e.getStatus());
 							} else if (e.getStatus().getException() instanceof FileNotFoundException) {
-								// can be caused by empty urlbase parameter on bugzilla server
+								// can be caused by empty urlbase parameter on
+								// bugzilla server
 								MylarStatusHandler.log(e.getStatus());
 							} else {
 								// >>> bug 154729
-//								MylarStatusHandler.log(e.getStatus());
+								// MylarStatusHandler.log(e.getStatus());
 							}
 							continue;
 						}
