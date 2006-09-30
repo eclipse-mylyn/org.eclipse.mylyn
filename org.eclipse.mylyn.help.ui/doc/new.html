@@ -70,7 +70,7 @@
 	<li>If updating from 0.6.0: the <i>Preferences -&gt; Tasks</i> settings will be reset to their defaults 
 	due to plug-in name changes.&nbsp; If you use a non-default <i>Task 
 	Data</i> directory you will need to update this setting after restart.</li>
-	<li>If updating from 0.5.x or earlier: you must first update to 0.6.0: download.eclipse.org/technology/mylar/update-site-archive/0.6.0/e3.2.&nbsp; 
+	<li>If updating from 0.5 or earlier: you must first update to 0.6.0: download.eclipse.org/technology/mylar/update-site-archive/0.6.0/e3.2.&nbsp; 
 	<br>
 &nbsp;</li>
 </ul>
@@ -86,11 +86,13 @@
 			</td>
 			<td valign="top" width="70%">
 			All comments added since your last reading of a repository task will 
-			be automatically expanded when the task is opened.&nbsp; Incoming 
-			changes are retrieved with the background synchronization and 
-			available without the round-trip to the server (note that a 
-			background synchronization is still kicked off on open to ensure you 
-			are looking at the latest contents).&nbsp; Tasks can now be 
+			be automatically expanded when a task with incoming changes is 
+			opened.&nbsp; Incoming changes are retrieved with the background 
+			synchronization to avoid waiting for the server when opening.&nbsp; 
+			Note that a 
+			background synchronization is still kicked off upon opening in case 
+			changes came in since the last scheduled synchronization.&nbsp; 
+			Repository tasks can now be 
 			explicitly marked as read or unread.<p>
 			<img src="images/0.7.0/task-mark-unread.gif"></td>
 		</tr>
@@ -107,7 +109,10 @@
 			<p align="right"><b>Task Editor Improvements</b></p>
 			</td>
 			<td valign="top" width="70%">
-			All <p>
+			The layout of the repository task editor is continuing to improve.&nbsp; 
+			The most notable change with 0.7.0 is that attributes related to 
+			people are now next to Actions section in order to make it easier to 
+			see who will be notified of the changes.<p>
 			<img src="images/0.7.0/task-editor-improvements.gif"></td>
 		</tr>
 		<tr>
