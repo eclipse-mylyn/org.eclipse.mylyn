@@ -90,7 +90,7 @@ class SynchronizeTaskJob extends Job {
 					if (offlineHandler != null) {
 						RepositoryTaskData downloadedTaskData = null;
 						try {
-							TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+							final TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 									repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
 							if (repository == null) {
 								throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, 0,
@@ -101,7 +101,7 @@ class SynchronizeTaskJob extends Job {
 								downloadedTaskData = offlineHandler.downloadTaskData(repositoryTask, repository,
 										TasksUiPlugin.getDefault().getProxySettings());
 							}
-						} catch (final LoginException e) {
+						} catch (final LoginException e) {							
 							MylarStatusHandler.fail(e,
 									"Report download failed. Ensure proper repository configuration of "
 											+ repositoryTask.getRepositoryUrl() + " in " + TaskRepositoriesView.NAME
@@ -113,10 +113,7 @@ class SynchronizeTaskJob extends Job {
 							// + TaskRepositoriesView.NAME + ".", e ));
 						} catch (final CoreException e) {
 							if (e.getStatus().getException() instanceof LoginException) {
-								MylarStatusHandler.fail(e.getStatus().getException(),
-										"Report download failed. Ensure proper repository configuration of "
-												+ repositoryTask.getRepositoryUrl() + " in "
-												+ TaskRepositoriesView.NAME + ".", true);
+								MylarStatusHandler.log(e.getStatus().getException(), "Login credentials are invalid for "+repositoryTask.getRepositoryUrl());
 							} else if (!(e.getStatus().getException() instanceof IOException)) {
 								MylarStatusHandler.log(e.getStatus());
 							} else if (e.getStatus().getException() instanceof FileNotFoundException) {
