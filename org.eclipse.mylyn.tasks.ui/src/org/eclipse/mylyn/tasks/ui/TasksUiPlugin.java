@@ -598,7 +598,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		// store.setDefault(TaskListPreferenceConstants.PLANNING_STARTDAY, 2);
 		// store.setDefault(TaskListPreferenceConstants.PLANNING_ENDDAY, 6);
 		store.setDefault(TaskListPreferenceConstants.PLANNING_STARTHOUR, 9);
-		store.setDefault(TaskListPreferenceConstants.PLANNING_ENDHOUR, 17);
+		store.setDefault(TaskListPreferenceConstants.PLANNING_ENDHOUR, 18);
 
 		store.setDefault(TaskListPreferenceConstants.SAVE_TASKLIST_MODE, TaskListSaveMode.THREE_HOURS.toString());
 	}
