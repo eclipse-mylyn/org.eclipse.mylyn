@@ -28,7 +28,7 @@ public class ScalingFactors {
 
 	private ScalingFactor defaultPurge = new ScalingFactor("edit", -10f);
 
-	// thesholds, not factors
+	// thresholds, not factors
 	private float landmark = 30f;
 
 	private float interesting = 0f;
