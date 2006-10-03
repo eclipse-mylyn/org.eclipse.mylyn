@@ -39,7 +39,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 	private static final String FILE_SUFFIX_BACKUP = "-backup.xml";
 
 	private BackgroundSaveTimer saveTimer = null;
-	
+
 	private boolean initializationWarningDialogShow = false;
 
 	/**
@@ -57,8 +57,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 	 * Called periodically by the save timer
 	 */
 	public void saveRequested() {
-		if (TasksUiPlugin.getDefault() != null && TasksUiPlugin.getDefault().isShellActive()
-				|| forceBackgroundSave) {
+		if (TasksUiPlugin.getDefault() != null && TasksUiPlugin.getDefault().isShellActive() || forceBackgroundSave) {
 			try {
 				saveTaskList(true);
 			} catch (Exception e) {
@@ -67,7 +66,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 		}
 	}
 
-	public void saveTaskList(boolean saveContext) { 
+	public void saveTaskList(boolean saveContext) {
 		if (TasksUiPlugin.getDefault() != null && TasksUiPlugin.getDefault().isInitialized()) {
 			TasksUiPlugin.getTaskListManager().saveTaskList();
 			if (saveContext) {
@@ -83,19 +82,21 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						if (PlatformUI.getWorkbench() != null && PlatformUI.getWorkbench().getDisplay() != null) {
-							MessageDialog.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-									TasksUiPlugin.TITLE_DIALOG,
-									"If task list is blank, Mylar Task List may have failed to initialize.\n\n"
-											+ "First, try restarting to see if that corrects the problem.\n\n"
-											+ "Then, check the Error Log view for messages, and the FAQ for solutions.\n\n"
-											+ TasksUiPlugin.URL_HOMEPAGE);
+							MessageDialog
+									.openInformation(
+											PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+											TasksUiPlugin.TITLE_DIALOG,
+											"If task list is blank, Mylar Task List may have failed to initialize.\n\n"
+													+ "First, try restarting to see if that corrects the problem.\n\n"
+													+ "Then, check the Error Log view for messages, and the FAQ for solutions.\n\n"
+													+ TasksUiPlugin.URL_HOMEPAGE);
 						}
 					}
 				});
 			}
 		}
 	}
-   
+
 	/**
 	 * Copies all files in the current data directory to the specified folder.
 	 * Will overwrite.
@@ -107,6 +108,22 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 			if (currFile.isFile()) {
 				File destFile = new File(targetFolderPath + File.separator + currFile.getName());
 				copy(currFile, destFile);
+			} else if (currFile.isDirectory()) {
+				File destDir = new File(targetFolderPath + File.separator + currFile.getName());
+				if (!destDir.exists()) {
+					if (!destDir.mkdir()) {
+						MylarStatusHandler.log("Unable to create destination context folder: "
+								+ destDir.getAbsolutePath(), this);
+						continue;
+					}
+				}
+				for (File file : currFile.listFiles()) {
+					File destFile = new File(destDir, file.getName());
+					if (destFile.exists()) {
+						destFile.delete();
+					}
+					copy(file, destFile);
+				}
 			}
 		}
 	}
@@ -199,11 +216,11 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 	public void containerDeleted(AbstractTaskContainer container) {
 		saveTaskList(false);
 	}
-	
+
 	public void taskAdded(ITask task) {
 		saveTaskList(false);
 	}
-	
+
 	/** For testing only * */
 	public BackgroundSaveTimer getSaveTimer() {
 		return saveTimer;

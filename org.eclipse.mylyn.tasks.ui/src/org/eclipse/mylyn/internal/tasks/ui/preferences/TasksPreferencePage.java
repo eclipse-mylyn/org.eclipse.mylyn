@@ -582,7 +582,7 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 							null,
 							"Tasklist found at destination",
 							null,
-							"Overwrite existing tasklist with current data or load tasklist from new destination?",
+							"Overwrite existing task data with current data or load from new destination?",
 							MessageDialog.WARNING, new String[] { "Overwrite", "Load",
 									IDialogConstants.CANCEL_LABEL }, CANCEL);
 					taskDataDirectoryAction = dialogConfirm.open();
