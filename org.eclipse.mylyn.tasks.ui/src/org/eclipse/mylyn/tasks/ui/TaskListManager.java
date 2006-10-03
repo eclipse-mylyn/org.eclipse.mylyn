@@ -453,6 +453,15 @@ public class TaskListManager implements IPropertyChangeListener {
 		dateRangeContainers.add(activityPast);
 	}
 
+	public void snapToNextDay(Calendar cal) {
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		cal.getTime();
+	}
+	
 	private void snapToStartOfWeek(GregorianCalendar cal) {
 		cal.getTime();
 		cal.set(Calendar.DAY_OF_WEEK, startDay);
@@ -689,8 +698,7 @@ public class TaskListManager implements IPropertyChangeListener {
 			Date completionDate = task.getCompletionDate();
 			if (completionDate != null) {
 				Calendar tomorrow = Calendar.getInstance();
-				TasksUiPlugin.getTaskListManager().setSecheduledIn(tomorrow, 1);
-
+				snapToNextDay(tomorrow);
 				Calendar yesterday = Calendar.getInstance();
 				yesterday.set(Calendar.HOUR_OF_DAY, 0);
 				yesterday.set(Calendar.MINUTE, 0);
@@ -740,9 +748,9 @@ public class TaskListManager implements IPropertyChangeListener {
 			Date reminder = task.getReminderDate();
 			if (reminder != null) {
 				Date now = new Date();
-				Calendar tomorrow = GregorianCalendar.getInstance();
-				TasksUiPlugin.getTaskListManager().setSecheduledIn(tomorrow, 1);
-				return (reminder.compareTo(now) == 1 && reminder.compareTo(tomorrow.getTime()) == -1);
+				Calendar midnight = GregorianCalendar.getInstance();
+				snapToNextDay(midnight);				
+				return (reminder.compareTo(now) == 1 && reminder.compareTo(midnight.getTime()) == -1);
 			}
 		}
 		return false;
