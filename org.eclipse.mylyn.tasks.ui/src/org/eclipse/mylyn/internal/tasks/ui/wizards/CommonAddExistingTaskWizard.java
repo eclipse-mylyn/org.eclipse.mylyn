@@ -11,11 +11,14 @@
 
 package org.eclipse.mylar.internal.tasks.ui.wizards;
 
-import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -28,6 +31,9 @@ import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Brock Janiczak
@@ -39,8 +45,6 @@ public class CommonAddExistingTaskWizard extends Wizard {
 
 	private ExistingTaskWizardPage page;
 
-	private ITask newTask = null;
-
 	public CommonAddExistingTaskWizard(TaskRepository repository) {
 		this.repository = repository;
 		setNeedsProgressMonitor(true);
@@ -48,61 +52,98 @@ public class CommonAddExistingTaskWizard extends Wizard {
 		init();
 	}
 
+	/**
+	 * Retrieves an existing repository task and adds it to the tasklist
+	 * 
+	 * @author wmitsuda
+	 */
+	private class AddExistingTaskJob extends Job {
+
+		private String taskId;
+
+		public AddExistingTaskJob(String taskId) {
+			super(MessageFormat.format("Adding task: \"{0}\"...", taskId));
+			this.taskId = taskId;
+		}
+
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+			final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+					repository.getKind());
+			try {
+				monitor.beginTask("Retrieving task...", IProgressMonitor.UNKNOWN);
+				final ITask newTask = connector.createTaskFromExistingKey(repository, taskId, null);
+				if (newTask instanceof AbstractRepositoryTask) {
+					TasksUiPlugin.getSynchronizationManager().synchronize(connector, (AbstractRepositoryTask) newTask,
+							true, null);
+				}
+				if (newTask != null) {
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+
+						public void run() {
+							TaskListView taskListView = TaskListView.getFromActivePerspective();
+							Object selectedObject = ((IStructuredSelection) taskListView.getViewer().getSelection())
+									.getFirstElement();
+
+							if (selectedObject instanceof TaskCategory) {
+								TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(
+										((TaskCategory) selectedObject), newTask);
+							} else {
+								TasksUiPlugin.getTaskListManager().getTaskList().moveToRoot(newTask);
+							}
+							taskListView.getViewer().setSelection(new StructuredSelection(newTask));
+							TaskUiUtil.openEditor(newTask, false, false);
+						}
+
+					});
+				} else {
+					// TODO: createTaskFromExistingKey needs to throw exceptions
+					// so that we can provide the correct error handling in the
+					// try catch above.
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+
+						public void run() {
+							IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+							if (window != null) {
+								MessageDialog.openWarning(window.getShell(), "Add Existing Task Failed", MessageFormat
+										.format("Unable to retrieve task \"{0}\" from repository.", taskId));
+							}
+						}
+
+					});
+				}
+			} catch (final CoreException e) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+
+					public void run() {
+						IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+						if (window != null) {
+							MessageDialog.openError(window.getShell(), "Add Existing Task Failed", MessageFormat
+									.format("Unable to retrieve task \"{0}\" from repository: {1}", taskId, e
+											.getMessage()));
+						}
+					}
+
+				});
+			} finally {
+				monitor.done();
+			}
+			return Status.OK_STATUS;
+		}
+	}
+
 	@Override
 	public final boolean performFinish() {
-		final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-				this.repository.getKind());
+		final IProgressService svc = PlatformUI.getWorkbench().getProgressService();
+		final AddExistingTaskJob job = new AddExistingTaskJob(getTaskId());
+		job.schedule();
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
-		final String taskId = getTaskId();
-
-		try {
-			getContainer().run(true, false, new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					monitor.beginTask("Retrieving task...", IProgressMonitor.UNKNOWN);
-					try {
-						newTask = connector.createTaskFromExistingKey(repository, taskId, null);
-						if (newTask instanceof AbstractRepositoryTask) {
-							TasksUiPlugin.getSynchronizationManager().synchronize(connector, (AbstractRepositoryTask)newTask, true, null);
-						}
-					} catch (Exception e) {
-						throw new InvocationTargetException(e);
-					} finally {
-						monitor.done();
-					}
-				}
-			});
-		} catch (InvocationTargetException e) {
-			String message = e.getCause() != null ? e.getCause().getMessage() : "None provided";
-			MessageDialog.openWarning(this.getShell(), "Add Existing Task Failed",
-					"Unable to retrieve existing task from repository, error was: \n\n" + message);
-			return false;
-		} catch (InterruptedException e) {
-			// cancelled
-			return true;
-		}
-
-		if (newTask != null && TaskListView.getFromActivePerspective() != null) {
-			Object selectedObject = ((IStructuredSelection) TaskListView.getFromActivePerspective().getViewer()
-					.getSelection()).getFirstElement();
-
-			if (selectedObject instanceof TaskCategory) {
-				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(((TaskCategory) selectedObject),
-						newTask);
-			} else {
-				TasksUiPlugin.getTaskListManager().getTaskList().moveToRoot(newTask);
+			public void run() {
+				svc.showInDialog(getShell(), job);
 			}
-			if (TaskListView.getFromActivePerspective() != null) {
-				TaskListView.getFromActivePerspective().getViewer().setSelection(new StructuredSelection(newTask));
-			}
-			TaskUiUtil.openEditor(newTask, false);
-		} else {
-			// TODO: createTaskFromExistingKey needs to throw exceptions so that
-			// we can provide the correct error handling in
-			// the try catch above.
-			MessageDialog.openWarning(this.getShell(), "Add Existing Task Failed",
-					"Unable to retrieve task from repository.");
-		}
 
+		});
 		return true;
 	}
 
