@@ -123,7 +123,7 @@
             searchResultClass="org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchResult"
             id="org.eclipse.mylar.bugzilla.BugzillaSearchResultPage"/>
    </extension>-->
-   <extension
+<!--   <extension
          point="org.eclipse.mylar.tasks.ui.templates">
       <repository
             addAutomatically="true"
@@ -131,7 +131,7 @@
             repositoryKind="bugzilla"
             urlRepository="https://bugs.eclipse.org/bugs"           
             version="2.20"/>
-   </extension>
+   </extension>-->
 <!--   <extension
          id="org.eclipse.mylar.bugzilla.core.search.repositorySearchPage"
          name="Repository Search Page"

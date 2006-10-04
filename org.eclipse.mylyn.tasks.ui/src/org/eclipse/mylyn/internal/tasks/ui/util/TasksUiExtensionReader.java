@@ -41,7 +41,7 @@ public class TasksUiExtensionReader {
 
 	public static final String EXTENSION_REPOSITORIES = "org.eclipse.mylar.tasks.ui.repositories";
 
-	public static final String EXTENSION_TEMPLATES = "org.eclipse.mylar.tasks.ui.templates";
+	public static final String EXTENSION_TEMPLATES = "org.eclipse.mylar.tasks.core.templates";
 
 	public static final String EXTENSION_TMPL_REPOSITORY = "repository";
 

@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.mylar.tasks.ui">
+<schema targetNamespace="org.eclipse.mylar.tasks.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.mylar.tasks.ui" id="templates" name="templates"/>
+         <meta.schema plugin="org.eclipse.mylar.tasks.core" id="templates" name="templates"/>
       </appInfo>
       <documentation>
          Templates describing default parameters for new repository configurations.

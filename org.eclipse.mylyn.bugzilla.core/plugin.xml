@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.mylar.tasks.core.templates">
+      <repository
+            addAutomatically="true"
+            label="Eclipse.org"
+            repositoryKind="bugzilla"
+            urlRepository="https://bugs.eclipse.org/bugs"           
+            version="2.20"/>
+   </extension>
+</plugin>

@@ -21,7 +21,7 @@
             name="Trac Externalizer"/>
    </extension>
    <extension
-         point="org.eclipse.mylar.tasks.ui.templates">
+         point="org.eclipse.mylar.tasks.core.templates">
       <repository
             addAutomatically="false"
             anonymous="true"
