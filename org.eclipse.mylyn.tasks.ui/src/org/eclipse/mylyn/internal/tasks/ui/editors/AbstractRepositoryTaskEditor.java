@@ -1766,10 +1766,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				if (comp instanceof ExpandableComposite) {
 					ExpandableComposite ex = (ExpandableComposite) comp;
 					ex.setExpanded(true);
+					break;
 				}
 				comp = comp.getParent();
 			}
 		}
+		form.reflow(true);
 	}
 
 	/**
