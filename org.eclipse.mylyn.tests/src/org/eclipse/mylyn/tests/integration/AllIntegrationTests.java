@@ -27,6 +27,7 @@ public class AllIntegrationTests {
 		suite.addTestSuite(DefaultPreferenceConfigTest.class);
 		suite.addTestSuite(ExtensionPointInitializationTest.class);
 		suite.addTestSuite(ChangeDataDirTest.class);
+		suite.addTest(RepositoryConnectorsTest.suite());
 		// $JUnit-END$
 		return suite;
 	}
