@@ -28,15 +28,19 @@ import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.tasks.ui.ScheduledTaskListSynchJob;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskListSynchronizationScheduler;
+import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskReadAction;
+import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskUnreadAction;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.tasks.tests.connector.MockQueryHit;
 import org.eclipse.mylar.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylar.tasks.tests.connector.MockRepositoryQuery;
@@ -661,4 +665,91 @@ public class TaskListManagerTest extends TestCase {
 		assertTrue(taskList.getActiveTasks().isEmpty());
 	}
 
+	public void testMarkTaskRead() {
+		String repositoryUrl = "http://mylar.eclipse.org/bugs222";
+		MockRepositoryTask task1 = new MockRepositoryTask(repositoryUrl+"-1");
+		MockRepositoryTask task2 = new MockRepositoryTask(repositoryUrl+"-2");
+		task1.setSyncState(RepositoryTaskSyncState.INCOMING);
+		task2.setSyncState(RepositoryTaskSyncState.INCOMING);
+		List<ITaskListElement> elements = new ArrayList<ITaskListElement>();
+		elements.add(task1);
+		elements.add(task2);		
+		MarkTaskReadAction readAction = new MarkTaskReadAction(elements);
+		readAction.run();		
+		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task1.getSyncState());
+		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task2.getSyncState());
+		
+		manager.getTaskList().reset();
+		MockQueryHit hit1 = new MockQueryHit(repositoryUrl, "description", "1");
+		MockQueryHit hit2 = new MockQueryHit(repositoryUrl, "description", "2");
+		MockRepositoryQuery query = new MockRepositoryQuery("description", manager.getTaskList());
+		query.addHit(hit1, manager.getTaskList());
+		query.addHit(hit2, manager.getTaskList());
+		
+		manager.getTaskList().addQuery(query);
+		elements.clear();
+		elements.add(query);
+		readAction = new MarkTaskReadAction(elements);
+		readAction.run();
+		assertEquals(2, query.getChildren().size());
+		for (ITaskListElement element : query.getChildren()) {
+			if(element instanceof MockRepositoryTask) {
+				MockRepositoryTask mockTask = (MockRepositoryTask) element;
+				assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, mockTask.getSyncState());				
+			}
+		}
+		
+	}
+	
+	public void testMarkUnRead() {
+		String repositoryUrl = "http://mylar.eclipse.org/bugs222";
+		MockRepositoryTask task1 = new MockRepositoryTask(repositoryUrl+"-1");
+		MockRepositoryTask task2 = new MockRepositoryTask(repositoryUrl+"-2");
+		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task1.getSyncState());
+		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task2.getSyncState());	
+		List<ITaskListElement> elements = new ArrayList<ITaskListElement>();
+		elements.add(task1);
+		elements.add(task2);		
+		MarkTaskUnreadAction unreadAction = new MarkTaskUnreadAction(elements);
+		unreadAction.run();		
+		assertEquals(RepositoryTaskSyncState.INCOMING, task1.getSyncState());
+		assertEquals(RepositoryTaskSyncState.INCOMING, task2.getSyncState());
+		
+		manager.getTaskList().reset();
+		MockQueryHit hit1 = new MockQueryHit(repositoryUrl, "description", "1");
+		MockQueryHit hit2 = new MockQueryHit(repositoryUrl, "description", "2");
+		MockRepositoryQuery query = new MockRepositoryQuery("description", manager.getTaskList());
+		query.addHit(hit1, manager.getTaskList());
+		query.addHit(hit2, manager.getTaskList());
+		
+		manager.getTaskList().addQuery(query);
+		elements.clear();
+		elements.add(query);
+		MarkTaskReadAction readAction = new MarkTaskReadAction(elements);
+		readAction.run();
+		assertEquals(2, query.getChildren().size());
+		for (ITaskListElement element : query.getChildren()) {
+			if(element instanceof MockRepositoryTask) {
+				MockRepositoryTask mockTask = (MockRepositoryTask) element;
+				assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, mockTask.getSyncState());				
+			} else {
+				fail();
+			}
+		}
+		
+		unreadAction = new MarkTaskUnreadAction(elements);
+		unreadAction.run();
+		assertEquals(2, query.getChildren().size());
+		for (ITaskListElement element : query.getChildren()) {
+			if(element instanceof MockRepositoryTask) {
+				MockRepositoryTask mockTask = (MockRepositoryTask) element;
+				assertEquals(RepositoryTaskSyncState.INCOMING, mockTask.getSyncState());				
+			} else {
+				fail();
+			}
+		}
+		
+	}
+	
+	
 }

@@ -29,6 +29,9 @@ public class MockQueryHit extends AbstractQueryHit {
 
 	@Override
 	public AbstractRepositoryTask getOrCreateCorrespondingTask() {
+		if(task == null) {
+			task = new MockRepositoryTask(AbstractRepositoryTask.getHandle(repositoryUrl, id));
+		}
 		return task;
 	}
 

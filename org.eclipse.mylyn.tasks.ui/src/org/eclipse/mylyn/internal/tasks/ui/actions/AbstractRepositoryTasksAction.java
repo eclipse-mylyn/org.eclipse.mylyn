@@ -37,19 +37,19 @@ public abstract class AbstractRepositoryTasksAction extends Action {
 				if (repositoryTask != null) {
 					performActionOnTask(repositoryTask);
 				}
-			} else if (element instanceof AbstractTaskContainer) {
-				AbstractTaskContainer container = (AbstractTaskContainer) element;
-				for (ITask iTask : container.getChildren()) {
-					if (iTask instanceof AbstractRepositoryTask) {
-						AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) iTask;
-						performActionOnTask(repositoryTask);
-					}
-				}
 			} else if (element instanceof AbstractRepositoryQuery) {
 				AbstractRepositoryQuery repositoryQuery = (AbstractRepositoryQuery) element;
 				for (AbstractQueryHit queryHit : repositoryQuery.getHits()) {
 					AbstractRepositoryTask repositoryTask = queryHit.getOrCreateCorrespondingTask();
 					if (repositoryTask != null) {
+						performActionOnTask(repositoryTask);
+					}
+				}
+			} else if (element instanceof AbstractTaskContainer) {
+				AbstractTaskContainer container = (AbstractTaskContainer) element;
+				for (ITask iTask : container.getChildren()) {
+					if (iTask instanceof AbstractRepositoryTask) {
+						AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) iTask;
 						performActionOnTask(repositoryTask);
 					}
 				}
