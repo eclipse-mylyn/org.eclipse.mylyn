@@ -30,6 +30,7 @@ import java.util.List;
 import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESOLUTION;
@@ -187,6 +188,7 @@ public class BugzillaServerFacade {
 						if (title.indexOf("login") != -1 || title.indexOf("log in") != -1
 								|| (title.indexOf("invalid") != -1 && title.indexOf("password") != -1)
 								|| title.indexOf("check e-mail") != -1) {
+							MylarStatusHandler.log("Login Error: "+body, BugzillaServerFacade.class);
 							throw new LoginException(IBugzillaConstants.ERROR_INVALID_USERNAME_OR_PASSWORD);
 						} else if (title.indexOf(IBugzillaConstants.ERROR_MIDAIR_COLLISION) != -1) {
 							throw new BugzillaException(IBugzillaConstants.ERROR_MSG_MIDAIR_COLLISION);
