@@ -47,6 +47,8 @@ public class ContextCorePlugin extends Plugin {
 
 	private static AbstractContextStore contextStore;
 
+	private boolean extensionsLoaded = false;
+	
 	private static final IMylarStructureBridge DEFAULT_BRIDGE = new IMylarStructureBridge() {
 
 		public String getContentType() {
@@ -122,17 +124,8 @@ public class ContextCorePlugin extends Plugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		ContextStoreExtensionReader.initExtensions();
 		contextManager = new MylarContextManager();
-		HandlersExtensionPointReader.initExtensions();
-
-		for (IMylarStructureBridge bridge : bridges.values()) {
-			if (bridge.getRelationshipProviders() != null) {
-				for (AbstractRelationProvider provider : bridge.getRelationshipProviders()) {
-					getContextManager().addListener(provider);
-				}
-			}
-		}
+		lazyLoadExtensions();
 	}
 
 	@Override
@@ -158,6 +151,23 @@ public class ContextCorePlugin extends Plugin {
 		}
 	}
 
+	private void lazyLoadExtensions() {
+		if (!extensionsLoaded) {
+			ContextStoreExtensionReader.initExtensions();
+			HandlersExtensionPointReader.initExtensions();
+			
+			for (IMylarStructureBridge bridge : bridges.values()) {
+				if (bridge.getRelationshipProviders() != null) {
+					for (AbstractRelationProvider provider : bridge.getRelationshipProviders()) {
+						getContextManager().addListener(provider);
+					}
+				}
+			}
+			
+			extensionsLoaded = true;
+		}
+	}
+	
 	public static ContextCorePlugin getDefault() {
 		return INSTANCE;
 	}

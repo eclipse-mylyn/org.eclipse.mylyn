@@ -114,9 +114,16 @@ public class MylarContextManager {
 	private static ScalingFactors scalingFactors = new ScalingFactors();
 
 	public MylarContextManager() {
-		loadActivityMetaContext();
+		
 	}
 
+	public MylarContext getActivityHistoryMetaContext() {
+		if (activityMetaContext == null) {
+			loadActivityMetaContext();
+		}
+		return activityMetaContext;
+	}
+	
 	public void loadActivityMetaContext() {
 		File contextActivityFile = getFileForContext(CONTEXT_HISTORY_FILE_NAME);
 		activityMetaContext = externalizer.readContextFromXML(CONTEXT_HISTORY_FILE_NAME, contextActivityFile);
@@ -129,7 +136,7 @@ public class MylarContextManager {
 	}
 
 	public void handleActivityMetaContextEvent(InteractionEvent event) {
-		IMylarElement element = activityMetaContext.parseEvent(event);
+		IMylarElement element = getActivityHistoryMetaContext().parseEvent(event);
 		for (IMylarContextListener listener : activityMetaContextListeners) {
 			try {
 				List<IMylarElement> changed = new ArrayList<IMylarElement>();
@@ -139,6 +146,11 @@ public class MylarContextManager {
 				MylarStatusHandler.fail(t, "context listener failed", false);
 			}
 		}
+	}
+	
+	public void resetActivityHistory() {
+		activityMetaContext = new MylarContext(CONTEXT_HISTORY_FILE_NAME, MylarContextManager.getScalingFactors());
+		saveActivityHistoryContext();
 	}
 
 	public IMylarElement getActiveElement() {
@@ -544,7 +556,7 @@ public class MylarContextManager {
 			if (!wasPaused) {
 				setContextCapturePaused(true);
 			}
-			externalizer.writeContextToXml(activityMetaContext, getFileForContext(CONTEXT_HISTORY_FILE_NAME));
+			externalizer.writeContextToXml(getActivityHistoryMetaContext(), getFileForContext(CONTEXT_HISTORY_FILE_NAME));
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "could not save activity history", false);
 		} finally {
@@ -660,15 +672,6 @@ public class MylarContextManager {
 	 */
 	public List<IMylarElement> getInterestingDocuments() {
 		return getInterestingDocuments(currentContext);
-	}
-
-	public MylarContext getActivityHistoryMetaContext() {
-		return activityMetaContext;
-	}
-
-	public void resetActivityHistory() {
-		activityMetaContext = new MylarContext(CONTEXT_HISTORY_FILE_NAME, MylarContextManager.getScalingFactors());
-		saveActivityHistoryContext();
 	}
 
 	public boolean isActivationHistorySuppressed() {
