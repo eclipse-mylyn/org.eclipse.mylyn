@@ -51,7 +51,8 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 						}
 					}
 				};
-				action.setText(category.getDescription());
+				String text = handleAcceleratorKeys(category.getDescription());
+				action.setText(text);
 				action.setImageDescriptor(TaskListImages.CATEGORY);
 				if (selectedElements.size() == 1 && selectedElements.get(0) instanceof AbstractQueryHit) {
 					AbstractQueryHit hit = (AbstractQueryHit) selectedElements.get(0);
@@ -64,5 +65,32 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 		}
 		return subMenuManager;
 	}
+	
+	/**
+	 * public for testing
+	 * 
+	 * Deals with text where user has entered a '@' or tab character but which are not meant to be accelerators.
+	 * from: Action#setText: 
+	 * Note that if you want to insert a '@' character into the text (but no accelerator,
+	 * you can simply insert a '@' or a tab at the end of the text.
+	 * see Action#setText
+	 */
+	public String handleAcceleratorKeys(String text) {
+		if (text == null) {
+			return null;
+		}
+
+		int index = text.lastIndexOf('\t');
+		if (index == -1) {
+			index = text.lastIndexOf('@');
+		}
+		if (index >= 0) {
+			return text.concat("@");
+		}
+		return text;
+	}
+	
+	
+	
 
 }

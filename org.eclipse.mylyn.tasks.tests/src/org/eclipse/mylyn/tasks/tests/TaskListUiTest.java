@@ -18,6 +18,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.internal.tasks.core.WebTask;
+import org.eclipse.mylar.internal.tasks.ui.MoveToCategoryMenuContributor;
 import org.eclipse.mylar.internal.tasks.ui.TaskPriorityFilter;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskCompleteAction;
@@ -238,6 +239,24 @@ public class TaskListUiTest extends TestCase {
 		numListenersAfter = listeners.size();
 		assertEquals(numListenersBefore, numListenersAfter);
 
+	}
+	
+	public void testCategoryNameIsShownInMoveToCategoryAction() {
+		String catNameWithAtBefore = "@CatName";
+		String catNameWithAtExpected = "@CatName@";
+		String catNameWithAtActual = "";
+		
+		String catNameNoAtBefore = "CatName";
+		String catNameNoAtExpected = "CatName";
+		String catNameNoAtActual = "";
+		
+		MoveToCategoryMenuContributor menuContrib = new MoveToCategoryMenuContributor();
+		
+		catNameWithAtActual = menuContrib.handleAcceleratorKeys(catNameWithAtBefore);
+		catNameNoAtActual = menuContrib.handleAcceleratorKeys(catNameNoAtBefore);
+		
+		assertEquals(catNameWithAtExpected, catNameWithAtActual);
+		assertEquals(catNameNoAtExpected, catNameNoAtActual);
 	}
 
 	public boolean checkFilter(int type, TreeItem[] items) {
