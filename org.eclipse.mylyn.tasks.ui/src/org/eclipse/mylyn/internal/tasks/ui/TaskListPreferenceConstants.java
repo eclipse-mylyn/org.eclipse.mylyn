@@ -67,5 +67,7 @@ public class TaskListPreferenceConstants {
 	public static final String PLANNING_ENDHOUR = "org.eclipse.mylar.tasklist.planning.endhour";
 
 	public static final String ACTIVATE_ON_OPEN = "org.eclipse.mylar.tasks.ui.activate.onopen";
+
+	public static final String MIGRATED_FROM_06 = "org.eclipse.mylar.tasks.ui.migration.from.06";
 	
 }

@@ -13,10 +13,7 @@ package org.eclipse.mylar.internal.tasks.ui;
 
 import java.io.File;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.context.core.AbstractContextStore;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.tasks.ui.TaskListDataMigration;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
@@ -24,21 +21,8 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
  */
 public class WorkspaceAwareContextStore extends AbstractContextStore {
 
-	public WorkspaceAwareContextStore() {
-		migrateFrom06Format();
-	}
-	
 	public File getRootDirectory() {
 		return new File(TasksUiPlugin.getDefault().getDataDirectory());
-	}
-
-	private void migrateFrom06Format() {
-		File dataDir = new File(TasksUiPlugin.getDefault().getDataDirectory());
-		try {
-			new TaskListDataMigration(dataDir).run(new NullProgressMonitor());
-		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Error occurred while migrating mylar data", false);			
-		}
 	}
 
 }
