@@ -169,7 +169,14 @@ public class TaskListManagerTest extends TestCase {
 		cal = Calendar.getInstance();
 		manager.setScheduledToday(cal);
 		task.setReminderDate(cal.getTime());
-		assertTrue(manager.isReminderToday(task));		
+		int scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
+				TaskListPreferenceConstants.PLANNING_ENDHOUR);
+		// If past scheduledEndHour the setScheduledToday sets to following day endHour
+		if(Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= scheduledEndHour) {		
+			assertFalse(manager.isReminderToday(task));
+		} else {
+			assertTrue(manager.isReminderToday(task));
+		}
 	}
 	
 	public void testSchedulePastEndOfMonth() {
