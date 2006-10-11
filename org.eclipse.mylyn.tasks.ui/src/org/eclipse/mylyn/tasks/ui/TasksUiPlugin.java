@@ -443,18 +443,15 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		}
 	}
 
+	/**
+	 * Will run every time in case somebody copies over an old data directory.
+	 */
 	private void migrateContextStoreFrom06Format() {
-		if (getPreferenceStore().getBoolean(TaskListPreferenceConstants.MIGRATED_FROM_06)) {
-			return;
-		} else {
-			File dataDir = new File(getDataDirectory()); //TasksUiPlugin.getDefault().getDataDirectory());
-			try {
-				new TaskListDataMigration(dataDir).run(new NullProgressMonitor());
-				
-				getPreferenceStore().setDefault(TaskListPreferenceConstants.MIGRATED_FROM_06, true);	
-			} catch (Exception e) {
-				MylarStatusHandler.fail(e, "Error occurred while migrating mylar data", false);			
-			}
+		File dataDir = new File(getDataDirectory()); //TasksUiPlugin.getDefault().getDataDirectory());
+		try {
+			new TaskListDataMigration(dataDir).run(new NullProgressMonitor());
+		} catch (Exception e) {
+			MylarStatusHandler.fail(e, "Error occurred while migrating mylar data", false);			
 		}
 	}
 		
