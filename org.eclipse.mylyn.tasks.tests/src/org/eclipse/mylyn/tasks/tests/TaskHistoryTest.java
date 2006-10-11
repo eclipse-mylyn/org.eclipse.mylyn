@@ -26,7 +26,6 @@ import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.ui.TaskListManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.ui.PartInitException;
 
 /**
  * @author Wes Coelho
@@ -53,17 +52,7 @@ public class TaskHistoryTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		try {
-			TasksUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(
-					"org.eclipse.mylar.tasks.ui.views.TaskListView");
-		} catch (PartInitException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			fail("View not initialized");
-		}
-
-		assertNotNull(TaskListView.getFromActivePerspective());
-		taskView = TaskListView.getFromActivePerspective();
+		taskView = TaskListView.openInActivePerspective();
 
 		resetHistory();
 

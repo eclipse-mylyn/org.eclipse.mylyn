@@ -12,6 +12,9 @@ import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.mylar.internal.tasks.ui.actions.NewCategoryAction;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
@@ -21,6 +24,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
+ * @author Raphael Ackermann (bug 160315)
  */
 public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor {
 
@@ -37,18 +41,7 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 				Action action = new Action() {
 					@Override
 					public void run() {
-						for (ITaskListElement element : selectedElements) {
-							if (element instanceof ITask) {
-								TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(category,
-										(ITask) element);
-							} else if (element instanceof AbstractQueryHit) {
-								ITask task = ((AbstractQueryHit) element).getCorrespondingTask();
-								if (task != null) {
-									TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(category,
-											task);
-								}
-							}
-						}
+						moveToCategory(selectedElements, category);
 					}
 				};
 				String text = handleAcceleratorKeys(category.getDescription());
@@ -63,6 +56,18 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 				subMenuManager.add(action);
 			}
 		}
+		// add New Category action at the end of the Move to Category Submenu
+		// and move selected actions to this newly created category
+		TaskListView view = TaskListView.getFromActivePerspective();
+		Action action = new NewCategoryAction(view){
+			@Override
+			public void run() {
+				super.run();
+				moveToCategory(selectedElements, super.cat);
+			}
+		};
+		subMenuManager.add(new Separator());
+		subMenuManager.add(action);
 		return subMenuManager;
 	}
 	
@@ -88,6 +93,25 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 			return text.concat("@");
 		}
 		return text;
+	}
+
+	/** 
+	 * @param selectedElements
+	 * @param category 
+	 */
+	private void moveToCategory(final List<ITaskListElement> selectedElements, AbstractTaskContainer category) {
+		for (ITaskListElement element : selectedElements) {
+			if (element instanceof ITask) {
+				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(category,
+						(ITask) element);
+			} else if (element instanceof AbstractQueryHit) {
+				ITask task = ((AbstractQueryHit) element).getCorrespondingTask();
+				if (task != null) {
+					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(category,
+							task);
+				}
+			}
+		}
 	}
 	
 	

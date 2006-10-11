@@ -25,14 +25,16 @@ import org.eclipse.ui.PlatformUI;
  */
 public class NewCategoryAction extends Action {
 
-	public static final String ID = "org.eclipse.mylar.tasklist.actions.create.category";
+	public static final String ID = "org.eclipse.mylar.tasks.ui.actions.create.category";
 
 	private final TaskListView view;
 
+	protected TaskCategory cat = null;
+
 	public NewCategoryAction(TaskListView view) {
 		this.view = view;
-		setText("New Category");
-		setToolTipText("New Category");
+		setText("New Category...");
+		setToolTipText("New Category...");
 		setId(ID);
 		setImageDescriptor(TaskListImages.CATEGORY_NEW);
 	}
@@ -43,7 +45,7 @@ public class NewCategoryAction extends Action {
 				"Enter name", "Enter a name for the Category: ", "", null);
 		int dialogResult = dialog.open();
 		if (dialogResult == Window.OK) {
-			TaskCategory cat = new TaskCategory(dialog.getValue(), TasksUiPlugin.getTaskListManager().getTaskList());
+			this.cat = new TaskCategory(dialog.getValue(), TasksUiPlugin.getTaskListManager().getTaskList());
 			TasksUiPlugin.getTaskListManager().getTaskList().addCategory(cat);
 			this.view.getViewer().refresh();
 		}
