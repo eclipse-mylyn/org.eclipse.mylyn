@@ -55,13 +55,17 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 	}
 
 	public RepositoryTaskData downloadTaskData(final AbstractRepositoryTask task, TaskRepository repository, Proxy proxySettings) throws CoreException {
-		if (!connector.hasRichEditor(repository, task)) {
+		int id = Integer.parseInt(AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()));
+		return downloadTaskData(repository, id);
+	}
+
+	public RepositoryTaskData downloadTaskData(TaskRepository repository, int id) throws CoreException {
+		if (!connector.hasRichEditor(repository)) {
 			// offline mode is only supported for XML-RPC
 			return null;
 		}
 
 		try {
-			int id = Integer.parseInt(AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()));
 			RepositoryTaskData data = new RepositoryTaskData(attributeFactory, TracCorePlugin.REPOSITORY_KIND,
 					repository.getUrl(), id + "");
 			ITracClient client = connector.getClientManager().getRepository(repository);
@@ -72,7 +76,7 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 			return data;
 		} catch (Exception e) {
 			throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.PLUGIN_ID, 0, "Ticket download from "
-					+ task.getRepositoryUrl() + " failed, please see details.", e));
+					+ repository.getUrl() + " for task " + id + " failed, please see details.", e));
 		}
 	}
 

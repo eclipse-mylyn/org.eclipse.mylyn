@@ -84,9 +84,9 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 
 	public void testGetTicketUmlaute() throws Exception {
 		TracTicket ticket = repository.getTicket(data.htmlEntitiesTicketId);
-		assertEquals("test html entities: äöü", ticket.getValue(Key.SUMMARY));
+		assertEquals("test html entities: \u00E4\u00F6\u00FC", ticket.getValue(Key.SUMMARY));
 		if (version == Version.XML_RPC) {
-			assertEquals("ÄÖÜ\n\nmulti\nline\n\n'''bold'''\n", ticket.getValue(Key.DESCRIPTION));
+			assertEquals("\u00C4\u00D6\u00DC\n\nmulti\nline\n\n'''bold'''\n", ticket.getValue(Key.DESCRIPTION));
 		} else {
 			assertEquals(null, ticket.getValue(Key.DESCRIPTION));
 		}
