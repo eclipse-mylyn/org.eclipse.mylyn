@@ -117,6 +117,15 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private boolean restoreQueryOptions = true;
 
+	private SelectionAdapter updateActionSelectionAdapter = new SelectionAdapter() {
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			if (scontainer != null) {
+				scontainer.setPerformActionEnabled(canQuery());
+			}
+		}
+	};
+
 	// private TaskRepository selectedRepository = null;
 
 	private static class BugzillaSearchData {
@@ -412,16 +421,19 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.heightHint = HEIGHT_ATTRIBUTE_COMBO;
 		component.setLayoutData(gd);
+		component.addSelectionListener(updateActionSelectionAdapter);
 
 		version = new List(group, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.heightHint = HEIGHT_ATTRIBUTE_COMBO;
 		version.setLayoutData(gd);
+		version.addSelectionListener(updateActionSelectionAdapter);
 
 		target = new List(group, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.heightHint = HEIGHT_ATTRIBUTE_COMBO;
 		target.setLayoutData(gd);
+		target.addSelectionListener(updateActionSelectionAdapter);
 
 		return group;
 	}
@@ -466,31 +478,37 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.heightHint = 40;
 		status.setLayoutData(gd);
+		status.addSelectionListener(updateActionSelectionAdapter);
 
 		resolution = new List(group, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.heightHint = 40;
 		resolution.setLayoutData(gd);
+		resolution.addSelectionListener(updateActionSelectionAdapter);
 
 		severity = new List(group, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.heightHint = 40;
 		severity.setLayoutData(gd);
+		severity.addSelectionListener(updateActionSelectionAdapter);
 
 		priority = new List(group, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.heightHint = 40;
 		priority.setLayoutData(gd);
+		priority.addSelectionListener(updateActionSelectionAdapter);
 
 		hardware = new List(group, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.heightHint = 40;
 		hardware.setLayoutData(gd);
+		hardware.addSelectionListener(updateActionSelectionAdapter);
 
 		os = new List(group, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.heightHint = 40;
 		os.setLayoutData(gd);
+		os.addSelectionListener(updateActionSelectionAdapter);
 
 		return group;
 	}
