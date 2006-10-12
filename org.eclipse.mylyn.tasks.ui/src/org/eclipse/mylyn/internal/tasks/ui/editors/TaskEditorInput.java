@@ -14,14 +14,17 @@
 package org.eclipse.mylar.internal.tasks.ui.editors;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableElement;
 
 /**
  * @author Eric Booth
+ * @author Rob Elves
  */
-public class TaskEditorInput implements IEditorInput {
+public class TaskEditorInput implements IEditorInput, IPersistableElement {
 
 	private static final int MAX_LABEL_LENGTH = 60;
 
@@ -32,11 +35,11 @@ public class TaskEditorInput implements IEditorInput {
 	private String label;
 
 	private boolean newTask = false;
-	
+
 	public TaskEditorInput(ITask task, boolean newTask) {
 		this.task = task;
 		this.newTask = newTask;
-		id = task.getHandleIdentifier();
+		id = AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
 		label = truncateDescription(task.getDescription());
 	}
 
@@ -76,7 +79,7 @@ public class TaskEditorInput implements IEditorInput {
 	 * @see org.eclipse.ui.IEditorInput#getPersistable()
 	 */
 	public IPersistableElement getPersistable() {
-		return null;
+		return this;
 	}
 
 	/*
@@ -94,6 +97,9 @@ public class TaskEditorInput implements IEditorInput {
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
 	public Object getAdapter(Class adapter) {
+		if (adapter == IEditorInput.class) {
+			return this;
+		}
 		return null;
 	}
 
@@ -115,7 +121,11 @@ public class TaskEditorInput implements IEditorInput {
 	 * @return Returns the label.
 	 */
 	public String getLabel() {
-		label = truncateDescription(task.getDescription());
+		if (task instanceof AbstractRepositoryTask) {
+			label = getId() + ": " + truncateDescription(task.getDescription());
+		} else {
+			label = truncateDescription(task.getDescription());
+		}
 		return label;
 	}
 
@@ -146,5 +156,13 @@ public class TaskEditorInput implements IEditorInput {
 
 	public boolean isNewTask() {
 		return newTask;
+	}
+
+	public String getFactoryId() {
+		return TaskEditorInputFactory.ID_FACTORY;
+	}
+
+	public void saveState(IMemento memento) {
+		TaskEditorInputFactory.saveState(memento, this);
 	}
 }

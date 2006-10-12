@@ -34,7 +34,13 @@
       </toc>
     </extension>
     -->
-
+ <extension
+         point="org.eclipse.ui.elementFactories">
+      <factory
+            class="org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorInputFactory"
+            id="org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorInputFactory">
+      </factory>
+   </extension>
     <extension point="org.eclipse.ui.newWizards">
       <wizard
             canFinishEarly="true" 

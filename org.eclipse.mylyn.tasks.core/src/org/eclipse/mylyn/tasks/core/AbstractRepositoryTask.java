@@ -149,8 +149,7 @@ public abstract class AbstractRepositoryTask extends Task {
 		this.taskData = taskData;
 		// TODO: remove?
 		if (taskData != null) {
-			setDescription(HtmlStreamTokenizer.unescape(AbstractRepositoryTask.getTaskId(getHandleIdentifier())
-					+ ": " + taskData.getSummary()));
+			setDescription(HtmlStreamTokenizer.unescape(taskData.getSummary()));
 		}
 	}
 
