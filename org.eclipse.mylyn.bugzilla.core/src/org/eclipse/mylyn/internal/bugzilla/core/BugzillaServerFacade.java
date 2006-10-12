@@ -143,6 +143,9 @@ public class BugzillaServerFacade {
 				+ URLEncoder.encode(userid, BugzillaCorePlugin.ENCODING_UTF_8) + IBugzillaConstants.POST_ARGS_PASSWORD
 				+ URLEncoder.encode(password, BugzillaCorePlugin.ENCODING_UTF_8);
 
+		// For bug#160360
+		MylarStatusHandler.log("VALIDATING: "+url, BugzillaServerFacade.class);
+		
 		URL serverURL = new URL(url);
 		HttpURLConnection serverConnection = WebClientUtil.openUrlConnection(serverURL, proxySettings, false);
 		BufferedReader in = new BufferedReader(new InputStreamReader(serverConnection.getInputStream()));
