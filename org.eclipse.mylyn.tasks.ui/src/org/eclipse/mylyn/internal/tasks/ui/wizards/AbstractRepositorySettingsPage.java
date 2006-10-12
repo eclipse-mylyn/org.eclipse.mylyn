@@ -49,7 +49,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	protected static final String LABEL_SERVER = "Server: ";
 
-	protected static final String LABEL_USER = "User Name: ";
+	protected static final String LABEL_USER = "User ID: ";
 
 	protected static final String LABEL_PASSWORD = "Password: ";
 
