@@ -31,6 +31,8 @@ public class TaskList {
 
 	public static final String LABEL_ROOT = "Root (automatic)";
 
+	private int lastTaskNum = 0;
+
 	private List<ITaskListChangeListener> changeListeners = new ArrayList<ITaskListChangeListener>();
 
 	private Map<String, ITask> tasks;
@@ -59,7 +61,7 @@ public class TaskList {
 		categories = new HashSet<AbstractTaskContainer>();
 		queries = new HashSet<AbstractRepositoryQuery>();
 		activeTasks = new ArrayList<ITask>();
-
+		lastTaskNum = 0;
 		categories.add(archiveContainer);
 	}
 
@@ -274,7 +276,7 @@ public class TaskList {
 	// }
 	// }
 	// return false;
-	//	}
+	// }
 
 	public List<ITask> getActiveTasks() {
 		return activeTasks;
@@ -313,34 +315,6 @@ public class TaskList {
 
 	public Set<AbstractRepositoryQuery> getQueries() {
 		return queries;
-	}
-
-	public int findLargestTaskHandle() {
-		int max = 0;
-		max = Math.max(largestTaskHandleHelper(tasks.values()), max);
-		for (AbstractTaskContainer cat : getTaskContainers()) {
-			max = Math.max(largestTaskHandleHelper(cat.getChildren()), max);
-		}
-		return max;
-	}
-
-	private int largestTaskHandleHelper(Collection<ITask> tasks) {
-		int ihandle = 0;
-		int max = 0;
-		for (ITask task : tasks) {
-			if (!(task instanceof AbstractRepositoryTask)) {
-				String string = task.getHandleIdentifier().substring(task.getHandleIdentifier().lastIndexOf('-') + 1,
-						task.getHandleIdentifier().length());
-				try {
-					ihandle = Integer.parseInt(string);
-				} catch (NumberFormatException nfe) {
-				}
-			}
-			max = Math.max(ihandle, max);
-			ihandle = largestTaskHandleHelper(task.getChildren());
-			max = Math.max(ihandle, max);
-		}
-		return max;
 	}
 
 	public Set<ITaskListElement> getRootElements() {
@@ -388,7 +362,7 @@ public class TaskList {
 		if (handle != null) {
 			for (AbstractRepositoryQuery query : queries) {
 				AbstractQueryHit foundHit = query.findQueryHit(handle);
-				if (foundHit!= null) {
+				if (foundHit != null) {
 					return foundHit;
 				}
 			}
@@ -406,7 +380,7 @@ public class TaskList {
 	public ITask getTask(String handleIdentifier) {
 		return tasks.get(handleIdentifier);
 	}
-	
+
 	public AbstractTaskContainer getContainerForHandle(String categoryHandle) {
 		for (AbstractTaskContainer cat : categories) {
 			if (cat instanceof AbstractTaskContainer) {
@@ -528,5 +502,47 @@ public class TaskList {
 				MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
 			}
 		}
+	}
+
+	public int getNextTaskNum() {
+		return ++lastTaskNum;
+	}
+
+	public void setLastTaskNum(int lastTaskNum) {
+		this.lastTaskNum = lastTaskNum;
+	}
+
+	/** For tasklist persistence. Use getNextTaskNum for task construction */
+	public int getLastTaskNum() {
+		return lastTaskNum;
+	}
+
+	/** Note: use getNextTaskNum for new task construction */
+	public int findLargestTaskHandle() {
+		int max = 0;
+		max = Math.max(largestTaskHandleHelper(tasks.values()), max);
+		for (AbstractTaskContainer cat : getTaskContainers()) {
+			max = Math.max(largestTaskHandleHelper(cat.getChildren()), max);
+		}
+		return max;
+	}
+
+	private int largestTaskHandleHelper(Collection<ITask> tasks) {
+		int ihandle = 0;
+		int max = 0;
+		for (ITask task : tasks) {
+			if (!(task instanceof AbstractRepositoryTask)) {
+				String string = task.getHandleIdentifier().substring(task.getHandleIdentifier().lastIndexOf('-') + 1,
+						task.getHandleIdentifier().length());
+				try {
+					ihandle = Integer.parseInt(string);
+				} catch (NumberFormatException nfe) {
+				}
+			}
+			max = Math.max(ihandle, max);
+			ihandle = largestTaskHandleHelper(task.getChildren());
+			max = Math.max(ihandle, max);
+		}
+		return max;
 	}
 }

@@ -511,9 +511,12 @@ public class TaskListManager implements IPropertyChangeListener {
 		return dateRangeContainers.toArray();
 	}
 
-	public String genUniqueTaskHandle() {
-		int nextId = taskList.findLargestTaskHandle() + 1;
-		return TaskRepositoryManager.PREFIX_LOCAL + nextId;// nextLocalTaskId++;
+	/** 
+	 * Every call to this method generates a unique handle, subsequent calls
+	 * will have incremented task numbers
+	 */
+	public String genUniqueTaskHandle() {		
+		return TaskRepositoryManager.PREFIX_LOCAL + taskList.getNextTaskNum();
 	}
 
 	public void refactorRepositoryUrl(String oldUrl, String newUrl) {

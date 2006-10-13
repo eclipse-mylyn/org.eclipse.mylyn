@@ -82,6 +82,31 @@ public class TaskListManagerTest extends TestCase {
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
 
+	
+	public void testUniqueTaskID() {		
+		Task task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(),"label", true);
+		manager.getTaskList().addTask(task1);
+		Task task2 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(),"label", true);
+		manager.getTaskList().addTask(task2);
+		assertEquals(2, manager.getTaskList().getLastTaskNum());
+		manager.getTaskList().deleteTask(task2);
+		Task task3 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(),"label", true);
+		manager.getTaskList().addTask(task3);
+		assertTrue(task3.getHandleIdentifier()+" should end with 3", task3.getHandleIdentifier().endsWith("3"));
+		assertEquals(3, manager.getTaskList().getLastTaskNum());
+		
+		assertEquals(2, manager.getTaskList().getAllTasks().size());
+		manager.saveTaskList();
+		manager.resetTaskList();
+		assertEquals(0, manager.getTaskList().getAllTasks().size());
+		assertEquals(0, manager.getTaskList().getLastTaskNum());		
+		manager.readExistingOrCreateNewList();
+		assertEquals(2, manager.getTaskList().getAllTasks().size());
+		assertEquals(3, manager.getTaskList().getLastTaskNum());
+		Task task4 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(),"label", true);
+		assertTrue(task4.getHandleIdentifier()+" should end with 4", task4.getHandleIdentifier().endsWith("4"));
+	}
+	
 	public void testSingleTaskDeletion() {
 		MockRepositoryTask task = new MockRepositoryTask("mock-1");
 		manager.getTaskList().moveToRoot(task);

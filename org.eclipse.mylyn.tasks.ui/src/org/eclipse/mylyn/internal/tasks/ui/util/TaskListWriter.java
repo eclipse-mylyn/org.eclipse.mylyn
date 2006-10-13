@@ -56,6 +56,8 @@ import org.xml.sax.SAXException;
  * @author Ken Sueda
  */
 public class TaskListWriter {
+	// Last number given to new local task
+	public static final String ATTRIBUTE_LAST_NUM = "LastNum";
 
 	public static final String ATTRIBUTE_VERSION = "Version";
 
@@ -94,8 +96,9 @@ public class TaskListWriter {
 			MylarStatusHandler.log(e, "could not create document");
 		}
 
-		Element root = doc.createElement(ELEMENT_TASK_LIST);
+		Element root = doc.createElement(ELEMENT_TASK_LIST);		
 		root.setAttribute(ATTRIBUTE_VERSION, VALUE_VERSION);
+		root.setAttribute(ATTRIBUTE_LAST_NUM, "" + taskList.getLastTaskNum());
 
 		// create the categories
 		for (AbstractTaskContainer category : taskList.getCategories()) {
@@ -232,7 +235,10 @@ public class TaskListWriter {
 			}
 			Element root = doc.getDocumentElement();
 			readVersion = root.getAttribute(ATTRIBUTE_VERSION);
-
+			String lastNum = root.getAttribute(ATTRIBUTE_LAST_NUM);
+			if (lastNum != null && !lastNum.equals("")) {
+				taskList.setLastTaskNum(Integer.parseInt(lastNum));
+			}
 			if (readVersion.equals(VALUE_VERSION_1_0_0)) {
 				MylarStatusHandler.log("version: " + readVersion + " not supported", this);
 			} else {
@@ -303,6 +309,13 @@ public class TaskListWriter {
 					} catch (Exception e) {
 						handleException(inFile, child, e);
 					}
+				}
+
+				// Migration 0.7.0.1 -> 0.8.0
+				// last task number field wasn't in tasklist.xml
+				if (lastNum == null || lastNum.equals("")) {
+					int largest = taskList.findLargestTaskHandle();
+					taskList.setLastTaskNum(largest);
 				}
 			}
 		} catch (Exception e) {
@@ -578,7 +591,7 @@ public class TaskListWriter {
 	public void setDelegatingExternalizer(DelegatingTaskExternalizer delagatingExternalizer) {
 		this.delagatingExternalizer = delagatingExternalizer;
 	}
-	
+
 	public List<ITaskListExternalizer> getExternalizers() {
 		return externalizers;
 	}
