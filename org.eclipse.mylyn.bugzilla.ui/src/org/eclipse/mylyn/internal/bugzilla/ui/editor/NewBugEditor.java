@@ -25,10 +25,10 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
@@ -213,9 +213,16 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		datePicker = new DatePicker(sectionClient, SWT.NONE, DatePicker.LABEL_CHOOSE);
 		datePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		datePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		Calendar today = Calendar.getInstance();
-		TasksUiPlugin.getTaskListManager().setScheduledToday(today);
-		datePicker.setDate(today);
+		Calendar newTaskSchedule = Calendar.getInstance();
+		int scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
+				TaskListPreferenceConstants.PLANNING_ENDHOUR);
+		// If past scheduledEndHour set for following day
+		if(newTaskSchedule.get(Calendar.HOUR_OF_DAY) >= scheduledEndHour) {	
+			TasksUiPlugin.getTaskListManager().setSecheduledIn(newTaskSchedule, 1);
+		} else {
+			TasksUiPlugin.getTaskListManager().setScheduledToday(newTaskSchedule);
+		}
+		datePicker.setDate(newTaskSchedule);
 		Button removeReminder = toolkit.createButton(sectionClient, "Clear", SWT.PUSH | SWT.CENTER);
 		removeReminder.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -285,7 +292,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		String queryUrl = "";
 		try {
 			queryUrl = repository.getUrl() + "/buglist.cgi?long_desc_type=allwordssubstr&long_desc="
-					+ URLEncoder.encode(stackTrace, BugzillaCorePlugin.ENCODING_UTF_8);
+					+ URLEncoder.encode(stackTrace, repository.getCharacterEncoding());
 		} catch (UnsupportedEncodingException e) {
 			// This should never happen
 		}

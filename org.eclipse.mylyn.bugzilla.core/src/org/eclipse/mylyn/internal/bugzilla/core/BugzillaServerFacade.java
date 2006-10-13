@@ -30,12 +30,12 @@ import java.util.List;
 import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESOLUTION;
 import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer;
 import org.eclipse.mylar.internal.tasks.core.HtmlTag;
+import org.eclipse.mylar.internal.tasks.core.UnrecognizedReponseException;
 import org.eclipse.mylar.internal.tasks.core.WebClientUtil;
 import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer.Token;
 import org.eclipse.mylar.tasks.core.RepositoryOperation;
@@ -94,13 +94,14 @@ public class BugzillaServerFacade {
 		return bugReport;
 	}
 
-	public static String addCredentials(String url, String userName, String password)
+	public static String addCredentials(String url, String encoding, String userName, String password)
 			throws UnsupportedEncodingException {
 		if ((userName != null && userName.length() > 0) && (password != null && password.length() > 0)) {
-			url += "&" + IBugzillaConstants.POST_ARGS_LOGIN
-					+ URLEncoder.encode(userName, BugzillaCorePlugin.ENCODING_UTF_8)
-					+ IBugzillaConstants.POST_ARGS_PASSWORD
-					+ URLEncoder.encode(password, BugzillaCorePlugin.ENCODING_UTF_8);
+			if(encoding == null) {
+				encoding = IBugzillaConstants.ENCODING_UTF_8;
+			}
+			url += "&" + IBugzillaConstants.POST_ARGS_LOGIN + URLEncoder.encode(userName, encoding)
+					+ IBugzillaConstants.POST_ARGS_PASSWORD + URLEncoder.encode(password, encoding);
 		}
 		return url;
 	}
@@ -134,18 +135,18 @@ public class BugzillaServerFacade {
 	}
 
 	// TODO: improve and move to repository connector?
-	public static void validateCredentials(Proxy proxySettings, String repositoryUrl, String userid, String password)
-			throws IOException, BugzillaException, KeyManagementException, GeneralSecurityException {
+	public static void validateCredentials(Proxy proxySettings, String repositoryUrl, String encoding, String userid,
+			String password) throws IOException, BugzillaException, KeyManagementException, GeneralSecurityException {
 
 		proxySettings = proxySettings == null ? Proxy.NO_PROXY : proxySettings;
 
 		String url = repositoryUrl + "/index.cgi?" + IBugzillaConstants.POST_ARGS_LOGIN
-				+ URLEncoder.encode(userid, BugzillaCorePlugin.ENCODING_UTF_8) + IBugzillaConstants.POST_ARGS_PASSWORD
-				+ URLEncoder.encode(password, BugzillaCorePlugin.ENCODING_UTF_8);
+				+ URLEncoder.encode(userid, encoding) + IBugzillaConstants.POST_ARGS_PASSWORD
+				+ URLEncoder.encode(password, encoding);
 
 		// For bug#160360
-		//MylarStatusHandler.log("VALIDATING: "+url, BugzillaServerFacade.class);
-		
+		// MylarStatusHandler.log("VALIDATING: " + url, BugzillaServerFacade.class);
+
 		URL serverURL = new URL(url);
 		HttpURLConnection serverConnection = WebClientUtil.openUrlConnection(serverURL, proxySettings, false);
 		BufferedReader in = new BufferedReader(new InputStreamReader(serverConnection.getInputStream()));
@@ -191,7 +192,8 @@ public class BugzillaServerFacade {
 						if (title.indexOf("login") != -1 || title.indexOf("log in") != -1
 								|| (title.indexOf("invalid") != -1 && title.indexOf("password") != -1)
 								|| title.indexOf("check e-mail") != -1) {
-							MylarStatusHandler.log("Login Error: "+body, BugzillaServerFacade.class);
+							// MylarStatusHandler.log("Login Error: "+body,
+							// BugzillaServerFacade.class);
 							throw new LoginException(IBugzillaConstants.ERROR_INVALID_USERNAME_OR_PASSWORD);
 						} else if (title.indexOf(IBugzillaConstants.ERROR_MIDAIR_COLLISION) != -1) {
 							throw new BugzillaException(IBugzillaConstants.ERROR_MSG_MIDAIR_COLLISION);
@@ -475,16 +477,17 @@ public class BugzillaServerFacade {
 		}
 	}
 
-//	public static String getBugUrl(String repositoryUrl, int id, String userName, String password) {
-//
-//		String url = repositoryUrl + IBugzillaConstants.POST_ARGS_SHOW_BUG + id;
-//		try {
-//			url = addCredentials(url, userName, password);
-//		} catch (UnsupportedEncodingException e) {
-//			return "";
-//		}
-//		return url;
-//	}
+	// public static String getBugUrl(String repositoryUrl, int id, String
+	// userName, String password) {
+	//
+	// String url = repositoryUrl + IBugzillaConstants.POST_ARGS_SHOW_BUG + id;
+	// try {
+	// url = addCredentials(url, userName, password);
+	// } catch (UnsupportedEncodingException e) {
+	// return "";
+	// }
+	// return url;
+	// }
 
 	public static String getBugUrlWithoutLogin(String repositoryUrl, int id) {
 		String url = repositoryUrl + IBugzillaConstants.POST_ARGS_SHOW_BUG + id;

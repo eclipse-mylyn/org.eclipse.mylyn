@@ -24,6 +24,7 @@ import org.eclipse.mylar.internal.context.core.util.DateUtil;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
@@ -74,7 +75,11 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 			ITask task = activityDelegate.getCorrespondingTask();
 			switch (columnIndex) {			
 			case 2:
-				return task.getDescription();
+				if(task instanceof AbstractRepositoryTask) {
+					return AbstractRepositoryTask.getTaskId(task.getHandleIdentifier())+": "+task.getDescription();
+				} else {
+					return task.getDescription();
+				}
 			case 3:
 				return DateUtil.getFormattedDurationShort(activityDelegate.getDateRangeContainer().getElapsed(activityDelegate));
 			case 4:

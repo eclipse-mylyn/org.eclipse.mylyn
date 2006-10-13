@@ -461,8 +461,8 @@ public class TaskListManager implements IPropertyChangeListener {
 		cal.set(Calendar.MILLISECOND, 0);
 		cal.getTime();
 	}
-	
-	private void snapToStartOfWeek(GregorianCalendar cal) {
+
+	private void snapToStartOfWeek(Calendar cal) {
 		cal.getTime();
 		cal.set(Calendar.DAY_OF_WEEK, startDay);
 		cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -472,7 +472,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		cal.getTime();
 	}
 
-	private void snapToEndOfWeek(GregorianCalendar cal) {
+	private void snapToEndOfWeek(Calendar cal) {
 		cal.getTime();
 		cal.set(Calendar.DAY_OF_WEEK, endDay);
 		cal.set(Calendar.HOUR_OF_DAY, cal.getMaximum(Calendar.HOUR_OF_DAY));
@@ -495,10 +495,10 @@ public class TaskListManager implements IPropertyChangeListener {
 	 * Will schedule for today if past work-day's end.
 	 */
 	public Calendar setScheduledToday(Calendar calendar) {
-		Calendar now = Calendar.getInstance();
-		if (now.get(Calendar.HOUR_OF_DAY) >= scheduledEndHour) {
-			setSecheduledIn(calendar, 1);
-		} 
+		// Calendar now = Calendar.getInstance();
+		// if (now.get(Calendar.HOUR_OF_DAY) >= scheduledEndHour) {
+		// setSecheduledIn(calendar, 1);
+		// }
 		calendar.set(Calendar.HOUR_OF_DAY, scheduledEndHour);
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.SECOND, 0);
@@ -524,8 +524,8 @@ public class TaskListManager implements IPropertyChangeListener {
 		for (ITask task : new ArrayList<ITask>(activeTasks)) {
 			deactivateTask(task);
 		}
-		taskList.refactorRepositoryUrl(oldUrl, newUrl);		
-		
+		taskList.refactorRepositoryUrl(oldUrl, newUrl);
+
 		File dataDir = new File(TasksUiPlugin.getDefault().getDataDirectory(), MylarContextManager.CONTEXTS_DIRECTORY);
 		if (dataDir.exists() && dataDir.isDirectory()) {
 			for (File file : dataDir.listFiles()) {
@@ -735,9 +735,10 @@ public class TaskListManager implements IPropertyChangeListener {
 	public boolean isReminderThisWeek(ITask task) {
 		if (task != null) {
 			Date reminder = task.getReminderDate();
-			if (reminder != null) {
-				Date now = new Date();
-				return (reminder.compareTo(now) == 1 && reminder.compareTo(activityThisWeek.getEnd().getTime()) == -1);
+			if (reminder != null) {				
+				Calendar weekStart = Calendar.getInstance();
+				snapToStartOfWeek(weekStart);
+				return (reminder.compareTo(weekStart.getTime()) >= 0 && reminder.compareTo(activityThisWeek.getEnd().getTime()) <= 0);
 			}
 		}
 		return false;
@@ -747,10 +748,14 @@ public class TaskListManager implements IPropertyChangeListener {
 		if (task != null) {
 			Date reminder = task.getReminderDate();
 			if (reminder != null) {
-				Date now = new Date();
+				Calendar dayStart = Calendar.getInstance();
+				dayStart.set(Calendar.HOUR_OF_DAY, 0);
+				dayStart.set(Calendar.MINUTE, 0);
+				dayStart.set(Calendar.SECOND, 0);
+				dayStart.set(Calendar.MILLISECOND, 0);				
 				Calendar midnight = GregorianCalendar.getInstance();
-				snapToNextDay(midnight);				
-				return (reminder.compareTo(now) == 1 && reminder.compareTo(midnight.getTime()) == -1);
+				snapToNextDay(midnight);
+				return (reminder.compareTo(dayStart.getTime()) >= 0 && reminder.compareTo(midnight.getTime()) == -1);
 			}
 		}
 		return false;

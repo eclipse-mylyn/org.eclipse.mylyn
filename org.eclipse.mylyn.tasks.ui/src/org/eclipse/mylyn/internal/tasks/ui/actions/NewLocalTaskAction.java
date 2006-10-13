@@ -12,12 +12,12 @@
 package org.eclipse.mylar.internal.tasks.ui.actions;
 
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskInputDialog;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
@@ -96,9 +96,16 @@ public class NewLocalTaskAction extends Action {
 		}
 	}
 
-	public static void scheduleNewTask(ITask newTask) {
-		Calendar reminderCalendar = GregorianCalendar.getInstance();
-		TasksUiPlugin.getTaskListManager().setScheduledToday(reminderCalendar);
-		TasksUiPlugin.getTaskListManager().setReminder(newTask, reminderCalendar.getTime());
+	public static void scheduleNewTask(ITask newTask) {		
+		Calendar newTaskSchedule = Calendar.getInstance();
+		int scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
+				TaskListPreferenceConstants.PLANNING_ENDHOUR);
+		// If past scheduledEndHour set for following day
+		if(newTaskSchedule.get(Calendar.HOUR_OF_DAY) >= scheduledEndHour) {	
+			TasksUiPlugin.getTaskListManager().setSecheduledIn(newTaskSchedule, 1);
+		} else {
+			TasksUiPlugin.getTaskListManager().setScheduledToday(newTaskSchedule);
+		}		
+		TasksUiPlugin.getTaskListManager().setReminder(newTask, newTaskSchedule.getTime());
 	}
 }
