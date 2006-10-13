@@ -79,6 +79,9 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 					setUrl(template.repositoryUrl);
 					// setAnonymous(info.anonymous);
 					setBugzillaVersion(template.version);
+					if (template.characterEncoding != null) {
+						setEncoding(template.characterEncoding);
+					}
 					getContainer().updateButtons();
 					return;
 				}
@@ -177,13 +180,16 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 					monitor.beginTask("Validating server settings", IProgressMonitor.UNKNOWN);
 					try {
 
-						// Check that the server exists and we can connect (proxy or not)
-						Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();						
+						// Check that the server exists and we can connect
+						// (proxy or not)
+						Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
 						WebClientUtil.openUrlConnection(serverURL, proxySettings, false);
 
 						if (!isAnonymous) {
-							// Server exists, connect to service and validate credentials
-							BugzillaServerFacade.validateCredentials(proxySettings, serverUrl, newUserId, newPassword);
+							// Server exists, connect to service and validate
+							// credentials
+							BugzillaServerFacade.validateCredentials(proxySettings, serverUrl, newEncoding, newUserId,
+									newPassword);
 						}
 
 						if (checkVersion) {

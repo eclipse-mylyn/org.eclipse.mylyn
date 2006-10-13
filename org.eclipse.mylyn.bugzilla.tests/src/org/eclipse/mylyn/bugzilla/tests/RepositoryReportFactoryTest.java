@@ -21,6 +21,7 @@ import org.eclipse.mylar.context.tests.support.MylarTestUtils;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
@@ -47,7 +48,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 				repository.getUrl(), "" + bugid);
 		BugzillaServerFacade.setupExistingBugAttributes(repository.getUrl(), report);
 		factory.populateReport(report, repository.getUrl(), null, repository.getUserName(), repository.getPassword(),
-				null);
+				IBugzillaConstants.ENCODING_UTF_8);
 
 		return report;
 	}
@@ -71,10 +72,10 @@ public class RepositoryReportFactoryTest extends TestCase {
 					.getPassword(), null);
 		} catch (LoginException e) {
 			//
-		} catch (IOException e) {
+		} catch (BugzillaException e) {
 			errorMessage = e.getMessage();
 		}
-		assertEquals(IBugzillaConstants.ERROR_INVALID_BUG_ID, errorMessage);
+		assertEquals(IBugzillaConstants.ERROR_MSG_INVALID_BUG_ID, errorMessage);
 	}
 
 	public void testInvalidCredentials222() throws Exception {

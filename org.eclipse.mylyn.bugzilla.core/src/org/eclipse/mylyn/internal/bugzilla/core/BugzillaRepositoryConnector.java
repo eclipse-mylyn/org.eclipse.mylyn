@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.internal.bugzilla.core;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.Proxy;
@@ -23,6 +24,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
+import org.eclipse.mylar.internal.tasks.core.UnrecognizedReponseException;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -98,13 +100,22 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			try {
 				taskData = BugzillaServerFacade.getBug(repository.getUrl(), repository.getUserName(), repository
 						.getPassword(), proxySettings, repository.getCharacterEncoding(), bugId);
-			} catch (Throwable e) {
-				return null;
-			}
-			if (taskData != null) {
-				task = new BugzillaTask(handle, taskData.getId() + ": " + taskData.getDescription(), true);
-				((BugzillaTask) task).setTaskData(taskData);
-				taskList.addTask(task);
+
+				if (taskData != null) {
+					task = new BugzillaTask(handle, taskData.getId() + ": " + taskData.getDescription(), true);
+					((BugzillaTask) task).setTaskData(taskData);
+					taskList.addTask(task);
+				}				
+			} catch (final UnrecognizedReponseException e) {
+				throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0,
+						"Report retrieval failed. Unrecognized response from " + repository.getUrl() + ".", e));
+			} catch (final FileNotFoundException e) {
+				throw new CoreException(
+						new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "Report download from "
+								+ repository.getUrl() + " failed. File not found: " + e.getMessage(), e));
+			} catch (final Exception e) {
+				throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0,
+						"Report download from " + repository.getUrl() + " failed, please see details.", e));
 			}
 		}
 		return task;
@@ -141,25 +152,23 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			queryUrl = queryUrl.concat(IBugzillaConstants.CONTENT_TYPE_RDF);
 			if (repository.hasCredentials()) {
 				try {
-					queryUrl = BugzillaServerFacade.addCredentials(queryUrl, repository.getUserName(), repository
-							.getPassword());
+					queryUrl = BugzillaServerFacade.addCredentials(queryUrl, repository.getCharacterEncoding(),
+							repository.getUserName(), repository.getPassword());
 				} catch (UnsupportedEncodingException e) {
 					// ignore
 				}
 			}
 			queryFactory.performQuery(taskList, repository.getUrl(), resultCollector, queryUrl, proxySettings, query
 					.getMaxHits(), repository.getCharacterEncoding());
-		} catch (IOException e) {
+		} catch (UnrecognizedReponseException e) {
+			queryStatus = new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, Status.INFO,
+					"Unrecognized response from server", e);
+	    } catch (IOException e) {
 			queryStatus = new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
 					"Check repository credentials and connectivity.", e);
-		} catch (BugzillaException e) {
-			if (e instanceof UnrecognizedReponseException) {
-				queryStatus = new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, Status.INFO,
-						"Unrecognized response from server", e);
-			} else {
+		} catch (BugzillaException e) {			
 				queryStatus = new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK,
-						"Unable to perform query due to Bugzilla error", e);
-			}
+						"Unable to perform query due to Bugzilla error", e);			
 		} catch (GeneralSecurityException e) {
 			queryStatus = new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK,
 					"Unable to perform query due to repository configuration error", e);

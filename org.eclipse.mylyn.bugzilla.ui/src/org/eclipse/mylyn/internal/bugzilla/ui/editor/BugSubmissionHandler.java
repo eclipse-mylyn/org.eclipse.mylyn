@@ -27,8 +27,8 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
-import org.eclipse.mylar.internal.bugzilla.core.UnrecognizedReponseException;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
+import org.eclipse.mylar.internal.tasks.core.UnrecognizedReponseException;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
@@ -91,12 +91,12 @@ public class BugSubmissionHandler {
 								Status.ERROR,
 								"Bugzilla could not post your bug, probably because your credentials are incorrect. Ensure proper repository configuration in "
 										+ TaskRepositoriesView.NAME + ".", e);
-					} catch (IOException e) {					
-						return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.ERROR,
-								"Check repository credentials and connectivity.", e);
 					} catch (UnrecognizedReponseException e) {
 						return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.INFO,
 								"Unrecognized response from server", e);
+					} catch (IOException e) {					
+						return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.ERROR,
+								"Check repository credentials and connectivity.", e);
 					} catch (BugzillaException e) {
 						// MylarStatusHandler.fail(e, "Failed to submit",
 						// false);

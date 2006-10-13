@@ -24,12 +24,13 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylar.internal.tasks.core.UnrecognizedReponseException;
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -176,7 +177,7 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 		RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory();
 		QueryHitCollector collector = new QueryHitCollector(taskList);
 		if (repository.hasCredentials()) {
-			urlQueryString = BugzillaServerFacade.addCredentials(urlQueryString, repository.getUserName(), repository
+			urlQueryString = BugzillaServerFacade.addCredentials(urlQueryString, repository.getCharacterEncoding(), repository.getUserName(), repository
 					.getPassword());
 		}
 		try {

@@ -26,10 +26,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasks.core.UnrecognizedReponseException;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorInput;
+import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -105,14 +107,17 @@ class SynchronizeTaskJob extends Job {
 							MylarStatusHandler.fail(e,
 									"Report download failed. Ensure proper repository configuration of "
 											+ repositoryTask.getRepositoryUrl() + " in " + TaskRepositoriesView.NAME
-											+ ".", true);
-							// throw new CoreException(new Status(IStatus.ERROR,
-							// TasksUiPlugin.PLUGIN_ID, 0, "Report download
-							// failed. Ensure proper repository configuration of
-							// " + repositoryTask.getRepositoryUrl() + " in "
-							// + TaskRepositoriesView.NAME + ".", e ));
-						} catch (final CoreException e) {
-							if (e.getStatus().getException() instanceof LoginException) {
+											+ ".", true);							
+						} catch (final CoreException e) {							
+							if (e.getStatus().getException() instanceof UnrecognizedReponseException) {
+								PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+									public void run() {
+										WebBrowserDialog.openAcceptAgreement(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Unrecognized response from server", e.getStatus().getMessage(), e.getStatus().getException()
+												.getMessage());
+										MylarStatusHandler.log(e.getStatus());
+									}
+								});
+							} else if (e.getStatus().getException() instanceof LoginException) {
 								MylarStatusHandler.log(e.getStatus().getException(), "Login credentials are invalid for "+repositoryTask.getRepositoryUrl());
 							} else if (!(e.getStatus().getException() instanceof IOException)) {
 								MylarStatusHandler.log(e.getStatus());

@@ -23,8 +23,6 @@ public interface IBugzillaConstants {
 
 	static final String ERROR_MSG_COMMENT_REQUIRED = "You have to specify a new comment when making this change. Please comment on the reason for this change.";
 
-	static final String ERROR_INVALID_BUG_ID = "InvalidBugId";
-
 	static final String ERROR_INVALID_USERNAME_OR_PASSWORD = "Invalid Username or Password";
 
 	static final String MOST_RECENT_QUERY = "org.eclipse.mylar.bugzilla.query.last";
@@ -52,6 +50,16 @@ public interface IBugzillaConstants {
 	public static final String POST_ARGS_PASSWORD = "&Bugzilla_password=";
 
 	public static final String POST_ARGS_LOGIN = "GoAheadAndLogIn=1&Bugzilla_login=";
+	
+	public static final String XML_ERROR_INVALIDBUGID = "invalidbugid";
+
+	public static final String XML_ERROR_NOTFOUND = "notfound";
+	
+	public static final String XML_ERROR_NOTPERMITTED = "notpermitted"; 
+
+	public static final String SHOW_BUG_CGI_XML = "/show_bug.cgi?ctype=xml&id=";
+	
+	public static final String ENCODING_UTF_8 = "UTF-8";
 	
 	/** Supported bugzilla repository versions */
 	static public enum BugzillaServerVersion {
@@ -185,4 +193,9 @@ public interface IBugzillaConstants {
 	public static enum BUGZILLA_RESOLUTION {
 		FIXED, INVALID, WONTFIX, LATER, REMIND, WORKSFORME;
 	}
+
+	public static final String ERROR_MSG_OP_NOT_PERMITTED = "The requested operation is not permitted.";
+
+	public static final String ERROR_MSG_INVALID_BUG_ID = "Invalid Bug ID. The requested bug id does not exist.";
+
 }

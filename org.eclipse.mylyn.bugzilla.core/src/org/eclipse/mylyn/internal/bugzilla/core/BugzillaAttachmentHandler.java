@@ -41,6 +41,7 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylar.internal.tasks.core.UnrecognizedReponseException;
 import org.eclipse.mylar.internal.tasks.core.WebClientUtil;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
@@ -92,7 +93,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 			RepositoryAttachment attachment, File file, Proxy proxySettings) throws CoreException {
 		try {
 			downloadAttachment(repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings,
-					attachment.getId(), file, true);
+					repository.getCharacterEncoding(), attachment.getId(), file, true);
 		} catch (Exception e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "could not download", e));
 		}
@@ -177,15 +178,16 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 		} catch (LoginException e) {
 			throw new CoreException(new Status(Status.OK, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
 					"Your login name or password is incorrect. Ensure proper repository configuration.", e));
-		} catch (IOException e) {
-			throw new CoreException(new Status(Status.OK, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
-					"Check repository credentials and connectivity.", e));
 		} catch (UnrecognizedReponseException e) {
 			if (e.getMessage().indexOf(CHANGES_SUBMITTED) > -1) {
 				return true;
 			}
 			throw new CoreException(new Status(Status.OK, BugzillaCorePlugin.PLUGIN_ID, Status.INFO,
 					"Response from server", e));
+		} catch (IOException e) {
+			throw new CoreException(new Status(Status.OK, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
+					"Check repository credentials and connectivity.", e));
+		
 		} catch (BugzillaException e) {
 			String message = e.getMessage();
 			throw new CoreException(new Status(Status.OK, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
@@ -211,12 +213,13 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 	}
 
 	private boolean downloadAttachment(String repositoryUrl, String userName, String password, Proxy proxySettings,
-			int id, File destinationFile, boolean overwrite) throws IOException, GeneralSecurityException {
+			String encoding, int id, File destinationFile, boolean overwrite) throws IOException,
+			GeneralSecurityException {
 		BufferedInputStream in = null;
 		FileOutputStream outStream = null;
 		try {
 			String url = repositoryUrl + POST_ARGS_ATTACHMENT_DOWNLOAD + id;
-			url = BugzillaServerFacade.addCredentials(url, userName, password);
+			url = BugzillaServerFacade.addCredentials(url, encoding, userName, password);
 			URL downloadUrl = new URL(url);
 			URLConnection connection = WebClientUtil.openUrlConnection(downloadUrl, proxySettings, false);
 			if (connection != null) {
@@ -272,7 +275,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 		return true;
 	}
 
-	public boolean canDeprecate(TaskRepository repository, RepositoryAttachment attachment) {		
+	public boolean canDeprecate(TaskRepository repository, RepositoryAttachment attachment) {
 		return false;
 	}
 

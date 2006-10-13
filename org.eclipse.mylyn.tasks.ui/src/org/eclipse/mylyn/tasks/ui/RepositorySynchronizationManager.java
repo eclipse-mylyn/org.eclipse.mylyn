@@ -29,6 +29,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasks.core.UnrecognizedReponseException;
+import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -46,8 +48,6 @@ import org.eclipse.ui.PlatformUI;
  * @author Rob Elves
  */
 public class RepositorySynchronizationManager {
-
-	private static final int RETRY_DELAY = 3000;
 
 	private boolean updateLocalCopy = false;
 
@@ -235,22 +235,24 @@ public class RepositorySynchronizationManager {
 					}
 				});
 
-			} catch (Exception e) {
-				if ((e instanceof CoreException && !(((CoreException) e).getStatus().getException() instanceof IOException))) {
-					MylarStatusHandler.log(e, "Could not determine modified tasks for " + repository.getUrl() + ".");
-				} else if (e instanceof UnsupportedEncodingException) {
+			} catch (final CoreException e) {
+				if (e.getStatus().getException() instanceof UnrecognizedReponseException) {
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							WebBrowserDialog.openAcceptAgreement(null, "Unrecognized response from "
+									+ repository.getUrl(), e.getStatus().getMessage(), e.getStatus().getException()
+									.getMessage());
+						}
+					});
+				} else if (!(e.getStatus().getException() instanceof IOException)) {
 					MylarStatusHandler.log(e, "Could not determine modified tasks for " + repository.getUrl() + ".");
 				} else {
 					// ignore, indicates working offline
+					// TODO: need to log/deal with this somehow and not just ignore
 				}
-				return Status.OK_STATUS;
+			} catch (UnsupportedEncodingException e) {
+				MylarStatusHandler.log(e, "Could not determine modified tasks for " + repository.getUrl() + ".");
 			}
-			try {
-				Thread.sleep(RETRY_DELAY);
-			} catch (InterruptedException e1) {
-				return Status.OK_STATUS;
-			}
-
 			return Status.OK_STATUS;
 		};
 	};
@@ -421,9 +423,11 @@ public class RepositorySynchronizationManager {
 		TasksUiPlugin.getDefault().getOfflineReportsFile().remove(bugList);
 	}
 
-	/** 
-	 * @param repositoryTask - repository task to mark as read or unread
-	 * @param read - true to mark as read, false to mark as unread
+	/**
+	 * @param repositoryTask -
+	 *            repository task to mark as read or unread
+	 * @param read -
+	 *            true to mark as read, false to mark as unread
 	 */
 	public void setTaskRead(AbstractRepositoryTask repositoryTask, boolean read) {
 		if (read && repositoryTask.getSyncState().equals(RepositoryTaskSyncState.INCOMING)) {

@@ -9,14 +9,17 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.core;
+package org.eclipse.mylar.internal.tasks.core;
+
+import java.io.IOException;
 
 
 /**
  * @author Rob Elves
  */
-public class UnrecognizedReponseException extends BugzillaException {
-	private static final long serialVersionUID = 8419167415822022988L;
+public class UnrecognizedReponseException extends IOException {
+
+	private static final long serialVersionUID = 3937060773477757464L;
 
 	public UnrecognizedReponseException(String message) {
 		super(message);

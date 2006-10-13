@@ -22,6 +22,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
@@ -97,9 +98,6 @@ public class CommonAddExistingTaskWizard extends Wizard {
 
 					});
 				} else {
-					// TODO: createTaskFromExistingKey needs to throw exceptions
-					// so that we can provide the correct error handling in the
-					// try catch above.
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
 						public void run() {
@@ -113,18 +111,7 @@ public class CommonAddExistingTaskWizard extends Wizard {
 					});
 				}
 			} catch (final CoreException e) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
-					public void run() {
-						IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-						if (window != null) {
-							MessageDialog.openError(window.getShell(), "Add Existing Task Failed", MessageFormat
-									.format("Unable to retrieve task \"{0}\" from repository: {1}", taskId, e
-											.getMessage()));
-						}
-					}
-
-				});
+				MylarStatusHandler.fail(e.getStatus().getException(), e.getMessage(), true);
 			} finally {
 				monitor.done();
 			}

@@ -39,8 +39,6 @@ public class BugzillaCorePlugin extends Plugin {
 
 	public static final String REPOSITORY_KIND = "bugzilla";
 
-	public static final String ENCODING_UTF_8 = "UTF-8";
-
 	public static final String PLUGIN_ID = "org.eclipse.mylar.bugzilla";
 
 	private static BugzillaCorePlugin INSTANCE;

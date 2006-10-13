@@ -29,23 +29,25 @@ public class RepositoryReportFactory extends AbstractReportFactory {
 
 	private static BugzillaAttributeFactory bugzillaAttributeFactory = new BugzillaAttributeFactory();
 
-	private static final String SHOW_BUG_CGI_XML = "/show_bug.cgi?ctype=xml&id=";
-
 	public void populateReport(RepositoryTaskData bugReport, String repositoryUrl, Proxy proxySettings,
-			String userName, String password, String characterEncoding) throws GeneralSecurityException, KeyManagementException,
-			NoSuchAlgorithmException, IOException, BugzillaException {
+			String userName, String password, String characterEncoding) throws GeneralSecurityException,
+			KeyManagementException, NoSuchAlgorithmException, IOException, BugzillaException {
 
 		SaxBugReportContentHandler contentHandler = new SaxBugReportContentHandler(bugzillaAttributeFactory, bugReport);
 
-		String xmlBugReportUrl = repositoryUrl + SHOW_BUG_CGI_XML + bugReport.getId();
-		xmlBugReportUrl = BugzillaServerFacade.addCredentials(xmlBugReportUrl, userName, password);
+		String xmlBugReportUrl = repositoryUrl + IBugzillaConstants.SHOW_BUG_CGI_XML + bugReport.getId();
+		xmlBugReportUrl = BugzillaServerFacade.addCredentials(xmlBugReportUrl, characterEncoding, userName, password);
 		URL serverURL = new URL(xmlBugReportUrl);
 
-		collectResults(serverURL, proxySettings, characterEncoding, contentHandler, false);
+		collectResults(serverURL, proxySettings, IBugzillaConstants.ENCODING_UTF_8, contentHandler, false);
 
 		if (contentHandler.errorOccurred()) {
-			throw new IOException(contentHandler.getErrorMessage());
+			String errorResponse = contentHandler.getErrorMessage().toLowerCase();
+			if (errorResponse.equals(IBugzillaConstants.XML_ERROR_NOTFOUND) || errorResponse.equals(IBugzillaConstants.XML_ERROR_INVALIDBUGID)) {
+				throw new BugzillaException(IBugzillaConstants.ERROR_MSG_INVALID_BUG_ID);
+			}if (errorResponse.equals(IBugzillaConstants.XML_ERROR_NOTPERMITTED)) {
+				throw new BugzillaException(IBugzillaConstants.ERROR_MSG_OP_NOT_PERMITTED);
+			}
 		}
-
 	}
 }
