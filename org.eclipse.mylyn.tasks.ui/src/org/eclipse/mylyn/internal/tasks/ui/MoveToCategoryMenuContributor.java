@@ -63,7 +63,9 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 			@Override
 			public void run() {
 				super.run();
-				moveToCategory(selectedElements, super.cat);
+				if (super.cat != null) {
+					moveToCategory(selectedElements, super.cat);
+				}
 			}
 		};
 		subMenuManager.add(new Separator());

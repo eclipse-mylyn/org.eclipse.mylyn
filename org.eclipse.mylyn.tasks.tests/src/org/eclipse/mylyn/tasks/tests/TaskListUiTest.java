@@ -247,23 +247,6 @@ public class TaskListUiTest extends TestCase {
 
 	}
 	
-	public void testGetSubMenuManagerContainsNewCategoryAction() {
-		// setup
-		MoveToCategoryMenuContributor moveToMenuContrib = new MoveToCategoryMenuContributor();
-		List<ITaskListElement> selectedElements = new Vector<ITaskListElement>();
-		selectedElements.add(cat1task1);
-		selectedElements.add(cat1task2);
-		selectedElements.add(cat2task1);
-		
-		
-		// execute sytem under test
-		moveToMenuContrib.getSubMenuManager(selectedElements);
-		
-		// assert
-		
-		
-		// teardown
-	}
 	
 	/**
 	 * Tests whether an additional NewCategory action is added to the category
@@ -274,7 +257,9 @@ public class TaskListUiTest extends TestCase {
 		List<ITaskListElement> selectedElements = new Vector<ITaskListElement>();
 		selectedElements.add(cat1task1);
 		int nrOfCategoriesMinusArchiveContainer = manager.getTaskList().getCategories().size() - 1;
-		int expectedNrOfSubMenuEntries = nrOfCategoriesMinusArchiveContainer + 1;
+		int nrOfSeparators = 1;
+		// adding a separator and the New Category... action
+		int expectedNrOfSubMenuEntries = nrOfCategoriesMinusArchiveContainer + nrOfSeparators + 1;
 		NewCategoryAction newCatActon = new NewCategoryAction(null);
 
 		// execute sytem under test
