@@ -5,9 +5,10 @@
          point="org.eclipse.mylar.tasks.core.templates">
       <repository
             addAutomatically="true"
+            characterEncoding="ISO-8859-1"
             label="Eclipse.org"
             repositoryKind="bugzilla"
-            urlRepository="https://bugs.eclipse.org/bugs"           
+            urlRepository="https://bugs.eclipse.org/bugs"
             version="2.20"/>
    </extension>
 </plugin>

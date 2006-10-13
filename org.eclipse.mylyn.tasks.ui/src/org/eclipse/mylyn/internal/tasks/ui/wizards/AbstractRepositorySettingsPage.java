@@ -67,8 +67,6 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	protected StringFieldEditor userNameEditor;
 
-	protected StringFieldEditor characterEncodingEditor;
-
 	private String serverVersion = TaskRepository.NO_VERSION_SPECIFIED;
 
 	protected StringFieldEditor passwordEditor;
@@ -100,6 +98,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	private Set<String> repositoryUrls;
 
 	private String originalUrl;
+
+	private Button otherEncoding;
 
 	public AbstractRepositorySettingsPage(String title, String description, AbstractRepositoryConnectorUi repositoryUi) {
 		super(title);
@@ -258,7 +258,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			defaultEncoding.setText("Default (" + TaskRepository.DEFAULT_CHARACTER_ENCODING + ")");
 			defaultEncoding.setSelection(true);
 
-			final Button otherEncoding = new Button(encodingContainer, SWT.RADIO);
+			otherEncoding = new Button(encodingContainer, SWT.RADIO);
 			otherEncoding.setText("Other:");
 			otherEncodingCombo = new Combo(encodingContainer, SWT.READ_ONLY);
 			for (String encoding : Charset.availableCharsets().keySet()) {
@@ -318,8 +318,24 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		setControl(container);
 	}
 
+	protected void setEncoding(String encoding) {
+		if (encoding.equals(TaskRepository.DEFAULT_CHARACTER_ENCODING)) {
+			setDefaultEncoding();
+		} else {
+			if (otherEncodingCombo.indexOf(encoding) != -1) {
+				defaultEncoding.setSelection(false);
+				otherEncodingCombo.setEnabled(true);
+				otherEncoding.setSelection(true);
+				otherEncodingCombo.select(otherEncodingCombo.indexOf(encoding));
+			} else {
+				setDefaultEncoding();
+			}
+		}
+	}
+
 	private void setDefaultEncoding() {
 		defaultEncoding.setSelection(true);
+		otherEncoding.setSelection(false);
 		otherEncodingCombo.setEnabled(false);
 		if (otherEncodingCombo.getItemCount() > 0) {
 			otherEncodingCombo.select(0);

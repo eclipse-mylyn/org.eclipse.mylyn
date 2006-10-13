@@ -39,8 +39,10 @@ public class RepositoryTemplate {
 	public final String version;
 
 	public final boolean addAutomatically;
+	
+	public final String characterEncoding;
 
-	public RepositoryTemplate(String label, String repositoryUrl, String version, String newTaskUrl, String taskPrefix,
+	public RepositoryTemplate(String label, String repositoryUrl, String characterEncoding, String version, String newTaskUrl, String taskPrefix,
 			String taskQuery, String newAccountUrl, boolean anonymous, boolean addAutomatically) {
 		this.label = label;
 		this.repositoryUrl = repositoryUrl;
@@ -50,6 +52,7 @@ public class RepositoryTemplate {
 		this.newAccountUrl = newAccountUrl;
 		this.version = version;
 		this.anonymous = anonymous;
+		this.characterEncoding = characterEncoding;
 		this.addAutomatically = addAutomatically;
 	}
 	

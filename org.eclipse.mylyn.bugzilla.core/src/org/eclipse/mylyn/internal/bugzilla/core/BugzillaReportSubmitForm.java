@@ -136,7 +136,7 @@ public class BugzillaReportSubmitForm {
 		if (characterEncoding != null) {
 			form = new BugzillaReportSubmitForm(characterEncoding);
 		} else {
-			form = new BugzillaReportSubmitForm(BugzillaCorePlugin.ENCODING_UTF_8);
+			form = new BugzillaReportSubmitForm(IBugzillaConstants.ENCODING_UTF_8);
 		}
 
 		form.setTaskData(model);
@@ -204,7 +204,7 @@ public class BugzillaReportSubmitForm {
 		if (characterEncoding != null) {
 			form = new BugzillaReportSubmitForm(characterEncoding);
 		} else {
-			form = new BugzillaReportSubmitForm(BugzillaCorePlugin.ENCODING_UTF_8);
+			form = new BugzillaReportSubmitForm(IBugzillaConstants.ENCODING_UTF_8);
 		}
 
 		form.setTaskData(model);

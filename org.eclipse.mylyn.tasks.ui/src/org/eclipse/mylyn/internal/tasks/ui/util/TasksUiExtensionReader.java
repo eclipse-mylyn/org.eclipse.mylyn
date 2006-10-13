@@ -50,6 +50,8 @@ public class TasksUiExtensionReader {
 	public static final String ELMNT_TMPL_URLREPOSITORY = "urlRepository";
 
 	public static final String ELMNT_TMPL_REPOSITORYKIND = "repositoryKind";
+	
+	public static final String ELMNT_TMPL_CHARACTERENCODING = "characterEncoding";
 
 	public static final String ELMNT_TMPL_ANONYMOUS = "anonymous";
 
@@ -249,6 +251,7 @@ public class TasksUiExtensionReader {
 		String taskPrefix = element.getAttribute(ELMNT_TMPL_URLTASK);
 		String taskQueryUrl = element.getAttribute(ELMNT_TMPL_URLTASKQUERY);
 		String newAccountUrl = element.getAttribute(ELMNT_TMPL_NEWACCOUNTURL);
+		String encoding = element.getAttribute(ELMNT_TMPL_CHARACTERENCODING);
 		addAuto = Boolean.parseBoolean(element.getAttribute(ELMNT_TMPL_ADDAUTO));
 		anonymous = Boolean.parseBoolean(element.getAttribute(ELMNT_TMPL_ANONYMOUS));
 
@@ -256,7 +259,7 @@ public class TasksUiExtensionReader {
 				&& TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repKind) != null) {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 					.getRepositoryConnector(repKind);
-			RepositoryTemplate template = new RepositoryTemplate(label, serverUrl, version, newTaskUrl, taskPrefix,
+			RepositoryTemplate template = new RepositoryTemplate(label, serverUrl, encoding, version, newTaskUrl, taskPrefix,
 					taskQueryUrl, newAccountUrl, anonymous, addAuto);
 			connector.addTemplate(template);
 			

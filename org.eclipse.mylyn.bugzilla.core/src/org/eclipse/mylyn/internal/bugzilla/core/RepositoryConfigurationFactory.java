@@ -32,10 +32,10 @@ public class RepositoryConfigurationFactory extends AbstractReportFactory {
 	public RepositoryConfiguration getConfiguration(String repositoryUrl, Proxy proxySettings, String userName,
 			String password, String encoding) throws IOException, BugzillaException, GeneralSecurityException {
 		String configUrlStr = repositoryUrl + CONFIG_RDF_URL;
-		configUrlStr = BugzillaServerFacade.addCredentials(configUrlStr, userName, password);
+		configUrlStr = BugzillaServerFacade.addCredentials(configUrlStr, encoding, userName, password);
 		URL url = new URL(configUrlStr);
 		SaxConfigurationContentHandler contentHandler = new SaxConfigurationContentHandler();
-		collectResults(url, proxySettings, encoding, contentHandler, true);
+		collectResults(url, proxySettings, IBugzillaConstants.ENCODING_UTF_8, contentHandler, true);
 		RepositoryConfiguration config = contentHandler.getConfiguration();
 		if (config != null) {
 			config.setRepositoryUrl(repositoryUrl);
