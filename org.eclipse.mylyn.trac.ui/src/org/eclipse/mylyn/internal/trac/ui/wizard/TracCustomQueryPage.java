@@ -363,6 +363,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 			}
 		} catch (InvocationTargetException e) {
 			TracUiPlugin.handleTracException(e.getCause());
+			return;
 		} catch (InterruptedException e) {
 			return;
 		}
