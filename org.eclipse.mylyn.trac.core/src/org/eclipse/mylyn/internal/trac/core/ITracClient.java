@@ -115,6 +115,15 @@ public interface ITracClient {
 	void validate() throws TracException;
 
 	/**
+	 * Returns true, if the repository details are cached. If this method
+	 * returns true, invoking <tt>updateAttributes(monitor, false)</tt> will
+	 * return without opening a connection.
+	 * 
+	 * @see #updateAttributes(IProgressMonitor, boolean) 
+	 */
+	boolean hasAttributes();
+
+	/**
 	 * Updates cached repository details: milestones, versions etc.
 	 * 
 	 * @throws TracException

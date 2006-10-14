@@ -63,11 +63,13 @@ import org.eclipse.ui.progress.IProgressService;
  */
 public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
-	private static final String TITLE = "New Trac Query";
+	private static final String TITLE = "Enter query parameters";
 
-	private static final String DESCRIPTION = "Add search filters to define query.";
+	private static final String DESCRIPTION = "If attributes are blank or stale press the Update button.";
 
 	private static final String TITLE_QUERY_TITLE = "Query Title:";
+
+	private static final String[] DEFAULT_STATUS_SELECTION = new String[] { "new", "assigned", "reopened", };
 
 	private TaskRepository repository;
 
@@ -314,25 +316,47 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 	@Override
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
-		
+
 		if (scontainer != null) {
 			scontainer.setPerformActionEnabled(true);
 		}
-		
+
 		if (visible && firstTime) {
 			firstTime = false;
-			// delay the execution so the dialog's progress bar is visible when
-			// the attributes are updated
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					if (getControl() != null && !getControl().isDisposed()) {
-						updateAttributesFromRepository(false);
+			if (!hasAttributes()) {
+				// delay the execution so the dialog's progress bar is visible
+				// when the attributes are updated
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						if (getControl() != null && !getControl().isDisposed()) {
+							updateAttributesFromRepository(false);
+						}
 					}
-				}
-			});
+				});
+			} else {
+				// no remote connection is needed to get attributes therefore do
+				// not use delayed execution to avoid flickering
+				updateAttributesFromRepository(false);
+			}
+			
+			// initialize with default values
+			if (query == null) {
+				statusField.selectItems(DEFAULT_STATUS_SELECTION);
+			}
 		}
 	}
-	
+
+	private boolean hasAttributes() {
+		TracRepositoryConnector connector = (TracRepositoryConnector) TasksUiPlugin.getRepositoryManager()
+				.getRepositoryConnector(TracCorePlugin.REPOSITORY_KIND);
+		try {
+			ITracClient client = connector.getClientManager().getRepository(repository);
+			return client.hasAttributes();
+		} catch (MalformedURLException e) {
+			return false;
+		}
+	}
+
 	private void updateAttributesFromRepository(final boolean force) {
 		TracRepositoryConnector connector = (TracRepositoryConnector) TasksUiPlugin.getRepositoryManager()
 				.getRepositoryConnector(TracCorePlugin.REPOSITORY_KIND);
@@ -344,28 +368,30 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 			return;
 		}
 
-		try {
-			IRunnableWithProgress runnable = new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					try {
-						client.updateAttributes(monitor, force);
-					} catch (TracException e) {
-						throw new InvocationTargetException(e);
+		if (!client.hasAttributes() || force) {
+			try {
+				IRunnableWithProgress runnable = new IRunnableWithProgress() {
+					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+						try {
+							client.updateAttributes(monitor, force);
+						} catch (TracException e) {
+							throw new InvocationTargetException(e);
+						}
 					}
-				}
-			};
+				};
 
-			if (getContainer() != null) {
-				getContainer().run(true, true, runnable);
-			} else {
-				IProgressService service = PlatformUI.getWorkbench().getProgressService();
-				service.run(true, true, runnable);
+				if (getContainer() != null) {
+					getContainer().run(true, true, runnable);
+				} else {
+					IProgressService service = PlatformUI.getWorkbench().getProgressService();
+					service.run(true, true, runnable);
+				}
+			} catch (InvocationTargetException e) {
+				TracUiPlugin.handleTracException(e.getCause());
+				return;
+			} catch (InterruptedException e) {
+				return;
 			}
-		} catch (InvocationTargetException e) {
-			TracUiPlugin.handleTracException(e.getCause());
-			return;
-		} catch (InterruptedException e) {
-			return;
 		}
 
 		statusField.setValues(client.getTicketStatus());
@@ -425,10 +451,10 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 					TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
 			return false;
 		}
-	
+
 		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
-		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager()
-				.getTaskList(), repository, getQuery(), proxySettings);
+		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
+				repository, getQuery(), proxySettings);
 		NewSearchUI.runQueryInBackground(collector);
 
 		return true;
@@ -591,6 +617,16 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 				} else {
 					list.add(item, 0);
 					list.select(0);
+				}
+			}
+		}
+
+		public void selectItems(String[] items) {
+			list.deselectAll();
+			for (String item : items) {
+				int i = list.indexOf(item);
+				if (i != -1) {
+					list.select(i);
 				}
 			}
 		}

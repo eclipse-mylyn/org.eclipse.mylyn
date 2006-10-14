@@ -91,8 +91,12 @@ public abstract class AbstractTracClient implements ITracClient {
 		return (data.versions != null) ? data.versions.toArray(new TracVersion[0]) : null;
 	}
 
+	public boolean hasAttributes() {
+		return (data.lastUpdate != 0);
+	}
+	
 	public void updateAttributes(IProgressMonitor monitor, boolean force) throws TracException {
-		if (data.lastUpdate == 0 || force) {
+		if (!hasAttributes() || force) {
 			updateAttributes(monitor);
 			data.lastUpdate = System.currentTimeMillis();
 		}
