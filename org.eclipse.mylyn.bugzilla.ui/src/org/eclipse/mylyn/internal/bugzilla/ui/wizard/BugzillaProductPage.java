@@ -72,6 +72,8 @@ import org.eclipse.ui.PlatformUI;
  */
 public class BugzillaProductPage extends WizardPage implements Listener {
 
+	private static final String OPTION_ALL = "All";
+
 	// A Map from Java's OS and Platform to Buzilla's
 	private Map<String, String> java2buzillaOSMap = new HashMap<String, String>();
 
@@ -177,19 +179,19 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 
 		listBox.setSelection(getSelectedProducts());
 		listBox.showSelection();
-//		listBox.addSelectionListener(new SelectionListener() {
-//
-//			public void widgetDefaultSelected(SelectionEvent e) {
-//				// ignore
-//			}
-//
-//			public void widgetSelected(SelectionEvent e) {
-//				getWizard().performFinish();
-//				getWizard().dispose();
-//				// TODO: is this the wrong way of doing the close?
-//				getContainer().getShell().close();
-//			}
-//		});
+		// listBox.addSelectionListener(new SelectionListener() {
+		//
+		// public void widgetDefaultSelected(SelectionEvent e) {
+		// // ignore
+		// }
+		//
+		// public void widgetSelected(SelectionEvent e) {
+		// getWizard().performFinish();
+		// getWizard().dispose();
+		// // TODO: is this the wrong way of doing the close?
+		// getContainer().getShell().close();
+		// }
+		// });
 
 		Button updateButton = new Button(composite, SWT.LEFT | SWT.PUSH);
 		updateButton.setText(LABEL_UPDATE);
@@ -485,10 +487,17 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 			}
 
 			// Set the OS and the Platform in the model
-			if (bugzillaOS != null && opSysAttribute != null)
+			if (bugzillaOS != null && opSysAttribute != null) {
 				opSysAttribute.setValue(bugzillaOS);
-			if (bugzillaPlatform != null && platformAttribute != null)
+			} else if (opSysAttribute != null && opSysAttribute.getOptionValues().values().contains(OPTION_ALL)) {
+				opSysAttribute.setValue(OPTION_ALL);
+			}
+
+			if (bugzillaPlatform != null && platformAttribute != null) {
 				platformAttribute.setValue(bugzillaPlatform);
+			} else if (platformAttribute != null && platformAttribute.getOptionValues().values().contains(OPTION_ALL)) {
+				opSysAttribute.setValue(OPTION_ALL);
+			}
 
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "could not set platform options", false);
