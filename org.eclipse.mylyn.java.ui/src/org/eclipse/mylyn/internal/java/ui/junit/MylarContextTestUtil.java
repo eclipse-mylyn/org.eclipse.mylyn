@@ -15,10 +15,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jdt.core.Flags;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeHierarchy;
@@ -26,6 +29,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.junit.launcher.ITestKind;
 import org.eclipse.jdt.internal.junit.launcher.TestKindRegistry;
 import org.eclipse.jdt.internal.junit.launcher.TestSearchResult;
+import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarRelation;
@@ -39,30 +43,42 @@ import org.eclipse.mylar.internal.java.search.JUnitReferencesProvider;
  */
 public class MylarContextTestUtil {
 
-	public static TestSearchResult findTestTypes(ILaunchConfiguration configuration, IProgressMonitor pm) throws CoreException {
+	public static TestSearchResult findTestTypes(ILaunchConfiguration configuration, IProgressMonitor pm)
+			throws CoreException {
 		Set<IType> contextTestCases = MylarContextTestUtil.getTestCasesInContext();
-//		ITestKind testKind = TestKindRegistry.getDefault().getKind(configuration);
+		// ITestKind testKind =
+		// TestKindRegistry.getDefault().getKind(configuration);
 		ITestKind testKind = TestKindRegistry.getDefault().getKind(TestKindRegistry.JUNIT3_TEST_KIND_ID);
-	
-//		ILaunchConfigurationWorkingCopy workingCopy = configuration.getWorkingCopy();
-//		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, ""); //$NON-NLS-1$
-////workaround for bug 65399
-//workingCopy.setAttribute(JUnitBaseLaunchConfiguration.TESTNAME_ATTR, ""); //$NON-NLS-1$
-//workingCopy.setAttribute(JUnitBaseLaunchConfiguration.ATTR_KEEPRUNNING, false);
-//workingCopy.setAttribute(JUnitBaseLaunchConfiguration.TEST_KIND_ATTR, TestKindRegistry.JUNIT3_TEST_KIND_ID);
-//workingCopy.doSave();
-		
+
+		IJavaProject javaProject = null;
+		for (IType type : contextTestCases) {
+			IProjectNature nature = type.getJavaProject().getProject().getNature("org.eclipse.pde.PluginNature");
+			if (nature != null) {
+				// HACK: might want another project
+				javaProject = type.getJavaProject(); 
+			}
+		}
+
+		ILaunchConfigurationWorkingCopy workingCopy = configuration.getWorkingCopy();
+		if (javaProject != null) {
+			workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME, javaProject.getElementName()); //$NON-NLS-1$
+		}
+//		workingCopy.setAttribute(JUnitBaseLaunchConfiguration.ATTR_KEEPRUNNING, false);
+//		workingCopy.setAttribute(JUnitBaseLaunchConfiguration.TEST_KIND_ATTR, TestKindRegistry.JUNIT3_TEST_KIND_ID);
+		workingCopy.doSave();
+
 		// HACK: only checks first type
 		if (contextTestCases.size() > 0) {
-			testKind = TestKindRegistry.getDefault().getKind(configuration);//contextTestCases.iterator().next());
+			testKind = TestKindRegistry.getDefault().getKind(configuration);// contextTestCases.iterator().next());
 		}
 		return new TestSearchResult(contextTestCases.toArray(new IType[contextTestCases.size()]), testKind);
 	}
-	
+
 	public static Set<IType> getTestCasesInContext() {
 		Set<IType> testTypes = new HashSet<IType>();
 		List<IMylarElement> interesting = ContextCorePlugin.getContextManager().getActiveContext().getInteresting();
-		IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(JavaStructureBridge.CONTENT_TYPE);
+		IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+				JavaStructureBridge.CONTENT_TYPE);
 		try {
 			for (IMylarElement element : interesting) {
 				if (element.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)) {

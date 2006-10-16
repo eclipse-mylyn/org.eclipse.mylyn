@@ -72,9 +72,11 @@ public abstract class JUnitLaunchConfigurationDelegateCOPY extends JUnitBaseLaun
 	// Changed to protected
 	protected abstract TestSearchResult customFindTestTypes(ILaunchConfiguration configuration, IProgressMonitor pm)
 			throws CoreException;
-
-	// Changed to protected
-	protected String getTestPluginId(ILaunchConfiguration configuration) throws CoreException {
+	
+	/*
+	 * ---------------
+	 */
+	private String getTestPluginId(ILaunchConfiguration configuration) throws CoreException {
 		IJavaProject javaProject = getJavaProject(configuration);
 		IPluginModelBase model = PDECore.getDefault().getModelManager().findModel(javaProject.getProject());
 		if (model == null)
@@ -86,10 +88,6 @@ public abstract class JUnitLaunchConfigurationDelegateCOPY extends JUnitBaseLaun
 		return model.getPluginBase().getId();
 	}
 	
-	/*
-	 * ---------------
-	 */
-
 	public static final String CORE_APPLICATION = "org.eclipse.pde.junit.runtime.coretestapplication"; //$NON-NLS-1$
 
 	public static final String UI_APPLICATION = "org.eclipse.pde.junit.runtime.uitestapplication"; //$NON-NLS-1$

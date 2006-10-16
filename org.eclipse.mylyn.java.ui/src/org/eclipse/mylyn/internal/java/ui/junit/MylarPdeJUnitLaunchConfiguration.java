@@ -11,24 +11,12 @@
 
 package org.eclipse.mylar.internal.java.ui.junit;
 
-import java.util.Set;
-
-import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.junit.launcher.TestSearchResult;
 import org.eclipse.jdt.internal.junit.ui.JUnitMessages;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
-import org.eclipse.pde.core.plugin.IFragmentModel;
-import org.eclipse.pde.core.plugin.IPluginModelBase;
-import org.eclipse.pde.internal.core.PDECore;
-import org.eclipse.pde.internal.ui.IPDEUIConstants;
-import org.eclipse.pde.internal.ui.PDEUIMessages;
 
 /**
  * @author Mik Kersten
@@ -46,26 +34,27 @@ public class MylarPdeJUnitLaunchConfiguration extends JUnitLaunchConfigurationDe
 		return testSearchResult;
 	}
 
-	protected String getTestPluginId(ILaunchConfiguration configuration) throws CoreException {
-		Set<IType> contextTestCases = MylarContextTestUtil.getTestCasesInContext();
-		IJavaProject javaProject = null;
-		for (IType type : contextTestCases) {
-			IProjectNature nature = type.getJavaProject().getProject().getNature("org.eclipse.pde.PluginNature");
-			if (nature != null) {
-				javaProject = type.getJavaProject(); // HACK: might want
-				// another project
-			}
-		}
-		
-		IPluginModelBase model = PDECore.getDefault().getModelManager().findModel(javaProject.getProject());
-		if (model == null)
-			throw new CoreException(new Status(IStatus.ERROR, IPDEUIConstants.PLUGIN_ID, IStatus.ERROR,
-					PDEUIMessages.JUnitLaunchConfiguration_error_notaplugin, null));
-		if (model instanceof IFragmentModel)
-			return ((IFragmentModel) model).getFragment().getPluginId();
+//	protected String getTestPluginId(ILaunchConfiguration configuration) throws CoreException {
+//		Set<IType> contextTestCases = MylarContextTestUtil.getTestCasesInContext();
+//		IJavaProject javaProject = null;
+//		for (IType type : contextTestCases) {
+//			IProjectNature nature = type.getJavaProject().getProject().getNature("org.eclipse.pde.PluginNature");
+//			if (nature != null) {
+//				javaProject = type.getJavaProject(); // HACK: might want
+//				// another project
+//			}
+//		}
+//		
+//		IPluginModelBase model = PDECore.getDefault().getModelManager().findModel(javaProject.getProject());
+//		if (model == null)
+//			throw new CoreException(new Status(IStatus.ERROR, IPDEUIConstants.PLUGIN_ID, IStatus.ERROR,
+//					PDEUIMessages.JUnitLaunchConfiguration_error_notaplugin, null));
+//		if (model instanceof IFragmentModel)
+//			return ((IFragmentModel) model).getFragment().getPluginId();
+//
+//		return model.getPluginBase().getId();
+//	}
 
-		return model.getPluginBase().getId();
-	}
 	
 //	protected String getTestPluginId(ILaunchConfiguration configuration) throws CoreException {
 //		Set<IType> contextTestCases = MylarContextTestUtil.getTestCasesInContext();
