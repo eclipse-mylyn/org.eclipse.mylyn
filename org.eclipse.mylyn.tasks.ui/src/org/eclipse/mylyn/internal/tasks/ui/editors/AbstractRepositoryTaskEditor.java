@@ -142,11 +142,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  */
 public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
-	private static final String HEADER_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";// "EEE
-																			// d
-																			// MMM
-																			// yyyy
-																			// HH:mm:ss";
+	private static final String HEADER_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
 	private static final String ATTACHMENT_DEFAULT_NAME = "attachment";
 
@@ -212,6 +208,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected RepositoryTaskOutlineNode taskOutlineModel = null;
 
+	protected boolean expandedStateAttributes = false;
+	
 	/**
 	 * Style option for function <code>newLayout</code>. This will create a
 	 * plain-styled, selectable text label.
@@ -586,7 +584,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		String title = getTitleString();
 
 		Section section = createSection(composite, LABEL_SECTION_ATTRIBUTES);
-		section.setExpanded(false);
+		section.setExpanded(expandedStateAttributes);
 		// Attributes Composite- this holds all the combo fields and text fields
 		Composite attributesComposite = toolkit.createComposite(section);
 		GridLayout attributesLayout = new GridLayout();
@@ -609,7 +607,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			value = checkText(attribute.getValue());
 			if (attribute.isHidden())
 				continue;
+
 			Map<String, String> values = attribute.getOptionValues();
+			
 			if (values == null)
 				values = new HashMap<String, String>();
 

@@ -102,6 +102,7 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) {
+		expandedStateAttributes = true;
 		NewBugEditorInput ei = (NewBugEditorInput) input;
 		setSite(site);
 		setInput(input);
