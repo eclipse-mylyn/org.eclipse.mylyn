@@ -67,7 +67,7 @@ public abstract class CommitTemplateVariable implements ICommitTemplateVariable 
 			if (task instanceof AbstractRepositoryTask) {
 				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector((AbstractRepositoryTask)task);
 				if (connector != null) {
-					return connector.getTaskPrefix();
+					return connector.getTaskIdPrefix();
 				}
 			}
 			return null;
