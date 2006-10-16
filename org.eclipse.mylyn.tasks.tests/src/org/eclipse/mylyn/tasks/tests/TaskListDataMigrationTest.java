@@ -100,7 +100,7 @@ public class TaskListDataMigrationTest extends TestCase {
 			if(file.isDirectory()) {				
 				deleteAllFiles(file);
 				file.delete();
-			} else {
+			} else if(!file.getName().equals("empty.txt")) {
 				file.delete();
 			}
 		}
