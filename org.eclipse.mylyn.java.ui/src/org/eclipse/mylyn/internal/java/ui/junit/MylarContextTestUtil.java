@@ -26,10 +26,10 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.junit.launcher.ITestKind;
 import org.eclipse.jdt.internal.junit.launcher.TestKindRegistry;
 import org.eclipse.jdt.internal.junit.launcher.TestSearchResult;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarRelation;
 import org.eclipse.mylar.context.core.IMylarStructureBridge;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
 import org.eclipse.mylar.internal.java.search.JUnitReferencesProvider;
@@ -41,7 +41,17 @@ public class MylarContextTestUtil {
 
 	public static TestSearchResult findTestTypes(ILaunchConfiguration configuration, IProgressMonitor pm) throws CoreException {
 		Set<IType> contextTestCases = MylarContextTestUtil.getTestCasesInContext();
-		ITestKind testKind = TestKindRegistry.getDefault().getKind(configuration);
+//		ITestKind testKind = TestKindRegistry.getDefault().getKind(configuration);
+		ITestKind testKind = TestKindRegistry.getDefault().getKind(TestKindRegistry.JUNIT3_TEST_KIND_ID);
+	
+//		ILaunchConfigurationWorkingCopy workingCopy = configuration.getWorkingCopy();
+//		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, ""); //$NON-NLS-1$
+////workaround for bug 65399
+//workingCopy.setAttribute(JUnitBaseLaunchConfiguration.TESTNAME_ATTR, ""); //$NON-NLS-1$
+//workingCopy.setAttribute(JUnitBaseLaunchConfiguration.ATTR_KEEPRUNNING, false);
+//workingCopy.setAttribute(JUnitBaseLaunchConfiguration.TEST_KIND_ATTR, TestKindRegistry.JUNIT3_TEST_KIND_ID);
+//workingCopy.doSave();
+		
 		// HACK: only checks first type
 		if (contextTestCases.size() > 0) {
 			testKind = TestKindRegistry.getDefault().getKind(configuration);//contextTestCases.iterator().next());
