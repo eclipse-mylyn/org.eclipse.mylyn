@@ -222,7 +222,7 @@ public abstract class AbstractRepositoryConnector {
 		return null;
 	}
 
-	public String getTaskPrefix() {
+	public String getTaskIdPrefix() {
 		return "task";
 	}
 

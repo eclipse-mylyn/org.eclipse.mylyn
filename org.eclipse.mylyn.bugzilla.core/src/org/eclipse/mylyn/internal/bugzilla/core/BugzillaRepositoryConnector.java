@@ -212,7 +212,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 	
 	@Override
-	public String getTaskPrefix() {
+	public String getTaskIdPrefix() {
 		return "bug";
 	}
 }
