@@ -268,7 +268,7 @@ public class TaskListUiTest extends TestCase {
 		IContributionItem item = items[menuManager.getItems().length-1];
 
 		// +1 for separator
-		assertEquals(expectedNrOfSubMenuEntries+1, menuManager.getItems().length);
+		assertEquals(expectedNrOfSubMenuEntries, menuManager.getItems().length);
 
 		if (item instanceof NewCategoryAction) {
 			NewCategoryAction action = (NewCategoryAction) item;

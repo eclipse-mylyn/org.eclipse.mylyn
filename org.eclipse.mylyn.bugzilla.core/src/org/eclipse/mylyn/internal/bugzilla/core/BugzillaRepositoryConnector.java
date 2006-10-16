@@ -207,20 +207,12 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		// TODO: implement once this is consistent with offline task data
 	}
 
-	// @Override
-	// public boolean validate(TaskRepository repository) {
-	// return repository != null;
-	// if (!repository.hasCredentials()) {
-	// MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-	// TasksUiPlugin.TITLE_DIALOG, "Repository missing or does not have
-	// credentials set, verify via "
-	// + TaskRepositoriesView.NAME + ".");
-	// return false;
-	// }
-	// return true;
-	// }
-
 	public void setForceSynchExecForTesting(boolean forceSynchExecForTesting) {
 		this.forceSynchExecForTesting = forceSynchExecForTesting;
+	}
+	
+	@Override
+	public String getTaskPrefix() {
+		return "bug";
 	}
 }
