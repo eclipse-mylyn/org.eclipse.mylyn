@@ -22,18 +22,18 @@ import org.eclipse.ui.navigator.ICommonMenuConstants;
 public class TaskResourceMappingActionProvider extends CommonActionProvider {
 
 	private OpenCorrespondingTaskAction openCorrespondingAction = new OpenCorrespondingTaskAction();
-	
+
 	public void fillContextMenu(IMenuManager menuManager) {
 		IStructuredSelection selection = (IStructuredSelection) getContext().getSelection();
 		openCorrespondingAction.selectionChanged(openCorrespondingAction, selection);
-		
+
 		menuManager.insertAfter(ICommonMenuConstants.GROUP_ADDITIONS, openCorrespondingAction);
-		
-//		openCorrespondingAction.selectionChanged(selection);
-//		if (openCorrespondingAction.isEnabled()) {
-//			menuManager.insertAfter(ICommonMenuConstants.GROUP_OPEN, openAction);
-//		}
-//		menuManager.add(new Separator(ICommonMenuConstants.GROUP_ADDITIONS));
+
+		// openCorrespondingAction.selectionChanged(selection);
+		// if (openCorrespondingAction.isEnabled()) {
+		// menuManager.insertAfter(ICommonMenuConstants.GROUP_OPEN, openAction);
+		// }
+		// menuManager.add(new Separator(ICommonMenuConstants.GROUP_ADDITIONS));
 	}
-	
+
 }

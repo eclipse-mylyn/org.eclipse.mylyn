@@ -7,11 +7,17 @@
  *
  * Contributors:
  *     University Of British Columbia - initial API and implementation
+ *     Eike tepper - commit comment template preferences
  *******************************************************************************/
 
 package org.eclipse.mylar.internal.team.ui.preferences;
 
+import org.eclipse.jface.fieldassist.IContentProposalProvider;
+import org.eclipse.jface.fieldassist.IControlContentAdapter;
+import org.eclipse.jface.fieldassist.IControlCreator;
+import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.mylar.internal.team.template.TemplateHandlerContentProposalProvider;
 import org.eclipse.mylar.team.MylarTeamPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -24,17 +30,24 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.fieldassist.ContentAssistField;
 
 /**
  * @author Mik Kersten
  */
 public class MylarTeamPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+	
+	private Button manageChangeSets;
 
-	private Button changeSetsManage;
+	private Text commitTemplate = null;
 
-	private Text commitPrefixCompleted = null;
+//	private Text commitTemplateProgress = null;
 
-	private Text commitPrefixProgress = null;
+//	private Text regexText;
+
+//	private Button guessButton;
+
+//	private Button autoGuessButton;
 
 	public MylarTeamPreferencePage() {
 		super();
@@ -58,11 +71,13 @@ public class MylarTeamPreferencePage extends PreferencePage implements IWorkbenc
 
 	@Override
 	public boolean performOk() {
-		getPreferenceStore().setValue(MylarTeamPlugin.COMMIT_PREFIX_COMPLETED, commitPrefixCompleted.getText());
-		getPreferenceStore().setValue(MylarTeamPlugin.COMMIT_PREFIX_PROGRESS, commitPrefixProgress.getText());
-		getPreferenceStore().setValue(MylarTeamPlugin.CHANGE_SET_MANAGE, changeSetsManage.getSelection());
+		getPreferenceStore().setValue(MylarTeamPlugin.COMMIT_TEMPLATE, commitTemplate.getText());
+//		getPreferenceStore().setValue(MylarTeamPlugin.COMMIT_TEMPLATE_PROGRESS, commitTemplateProgress.getText());
+//		getPreferenceStore().setValue(MylarTeamPlugin.COMMIT_REGEX_TASK_ID, regexText.getText());
+//		getPreferenceStore().setValue(MylarTeamPlugin.COMMIT_REGEX_AUTO_GUESS, autoGuessButton.getSelection());
+		getPreferenceStore().setValue(MylarTeamPlugin.CHANGE_SET_MANAGE, manageChangeSets.getSelection());
 
-		if (changeSetsManage.getSelection()) {
+		if (manageChangeSets.getSelection()) {
 			MylarTeamPlugin.getDefault().getChangeSetManager().enable();
 		} else {
 			MylarTeamPlugin.getDefault().getChangeSetManager().disable();
@@ -77,9 +92,10 @@ public class MylarTeamPreferencePage extends PreferencePage implements IWorkbenc
 
 	public void performDefaults() {
 		super.performDefaults();
-		commitPrefixCompleted.setText(getPreferenceStore().getDefaultString(MylarTeamPlugin.COMMIT_PREFIX_COMPLETED));
-		commitPrefixProgress.setText(getPreferenceStore().getDefaultString(MylarTeamPlugin.COMMIT_PREFIX_PROGRESS));
-		changeSetsManage.setSelection(getPreferenceStore().getDefaultBoolean(MylarTeamPlugin.CHANGE_SET_MANAGE));
+		commitTemplate.setText(getPreferenceStore()
+				.getDefaultString(MylarTeamPlugin.COMMIT_TEMPLATE));
+//		commitTemplateProgress.setText(getPreferenceStore().getDefaultString(MylarTeamPlugin.COMMIT_TEMPLATE_PROGRESS));
+		manageChangeSets.setSelection(getPreferenceStore().getDefaultBoolean(MylarTeamPlugin.CHANGE_SET_MANAGE));
 	}
 
 	private Label createLabel(Composite parent, String text) {
@@ -94,13 +110,13 @@ public class MylarTeamPreferencePage extends PreferencePage implements IWorkbenc
 
 	private void createChangeSetGroup(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		group.setText("Change Sets");
+		group.setText("Change Set Management");
 		group.setLayout(new GridLayout(1, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		changeSetsManage = new Button(group, SWT.CHECK);
-		changeSetsManage.setText("Automatically create and manage with task context");
-		changeSetsManage.setSelection(getPreferenceStore().getBoolean(MylarTeamPlugin.CHANGE_SET_MANAGE));
+		manageChangeSets = new Button(group, SWT.CHECK);
+		manageChangeSets.setText("Automatically create and manage with task context");
+		manageChangeSets.setSelection(getPreferenceStore().getBoolean(MylarTeamPlugin.CHANGE_SET_MANAGE));
 	}
 
 	private void createCommitGroup(Composite parent) {
@@ -109,20 +125,99 @@ public class MylarTeamPreferencePage extends PreferencePage implements IWorkbenc
 		group.setLayout(new GridLayout(2, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		Label completedLabel = createLabel(group, "Completed task prefix: ");
+		Label completedLabel = createLabel(group, "Template: ");
 		completedLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
 
-		String completedPrefix = getPreferenceStore().getString(MylarTeamPlugin.COMMIT_PREFIX_COMPLETED);
-		commitPrefixCompleted = new Text(group, SWT.BORDER);
-		commitPrefixCompleted.setText(completedPrefix);
-		commitPrefixCompleted.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		String completedTemplate = getPreferenceStore().getString(MylarTeamPlugin.COMMIT_TEMPLATE);
+//		commitTemplate = addTemplateField(group, completedTemplate,
+//				new TemplateHandlerContentProposalProvider());
+//
+//		Label progressLabel = createLabel(group, "In progress task template: ");
+//		progressLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
+//
+//		String progressTemplate = getPreferenceStore().getString(MylarTeamPlugin.COMMIT_TEMPLATE);
+		commitTemplate = addTemplateField(group, completedTemplate, new TemplateHandlerContentProposalProvider());
+//		commitTemplate.addModifyListener(new ModifyListener() {
+//			public void modifyText(ModifyEvent e) {
+//				if (autoGuessButton.getSelection()) {
+//					guessRegex();
+//				}
+//			}
+//		});
 
-		Label progressLabel = createLabel(group, "In progress task prefix: ");
-		progressLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
+//		Label regexLabel = createLabel(group, "Regex to parse task id: ");
+//		regexLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
+//
+//		GridLayout layout = new GridLayout(3, false);
+//		layout.marginHeight = 0;
+//		layout.marginWidth = 0;
+//
+//		Composite composite = new Composite(group, SWT.NONE);
+//		composite.setLayout(layout);
+//		composite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL));
 
-		String progressPrefix = getPreferenceStore().getString(MylarTeamPlugin.COMMIT_PREFIX_PROGRESS);
-		commitPrefixProgress = new Text(group, SWT.BORDER);
-		commitPrefixProgress.setText(progressPrefix);
-		commitPrefixProgress.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+//		boolean autoGuess = getPreferenceStore().getBoolean(MylarTeamPlugin.COMMIT_REGEX_AUTO_GUESS);
+//		String regex = getPreferenceStore().getString(MylarTeamPlugin.COMMIT_REGEX_TASK_ID);
+//		regexText = addTemplateField(composite, regex, new RegExContentProposalProvider(true));
+//
+//		guessButton = new Button(composite, SWT.PUSH);
+//		guessButton.setText("Guess");
+//		guessButton.setEnabled(!autoGuess);
+//		guessButton.addSelectionListener(new SelectionListener() {
+//			public void widgetDefaultSelected(SelectionEvent e) {
+//				widgetSelected(e);
+//			}
+//
+//			public void widgetSelected(SelectionEvent e) {
+//				guessRegex();
+//			}
+//		});
+
+//		autoGuessButton = new Button(composite, SWT.CHECK);
+//		autoGuessButton.setText("Auto");
+//		autoGuessButton.setSelection(autoGuess);
+//		autoGuessButton.addSelectionListener(new SelectionListener() {
+//			public void widgetDefaultSelected(SelectionEvent e) {
+//				widgetSelected(e);
+//			}
+//
+//			public void widgetSelected(SelectionEvent e) {
+//				if (autoGuessButton.getSelection()) {
+//					guessButton.setEnabled(false);
+//					guessRegex();
+//				} else {
+//					guessButton.setEnabled(true);
+//				}
+//			}
+//		});
 	}
+
+	private Text addTemplateField(final Composite parent, final String text, IContentProposalProvider provider) {
+		IControlContentAdapter adapter = new TextContentAdapter();
+		IControlCreator controlCreator = new IControlCreator() {
+			public Control createControl(Composite parent, int style) {
+				Text control = new Text(parent, style);
+				control.setText(text);
+				return control;
+			}
+		};
+
+		ContentAssistField field = new ContentAssistField(parent, SWT.BORDER, controlCreator, adapter, provider, null,
+				new char[] { '$' });
+
+		GridData gd = new GridData();
+		gd.horizontalAlignment = GridData.FILL;
+		gd.grabExcessHorizontalSpace = true;
+		gd.verticalAlignment = GridData.CENTER;
+		gd.grabExcessVerticalSpace = false;
+		field.getLayoutControl().setLayoutData(gd);
+
+		return (Text) field.getControl();
+	}
+
+//	protected void guessRegex() {
+//		String template = commitTemplate.getText();
+//		String regex = MylarTeamPlugin.getDefault().getCommitTemplateManager().getTaskIDRegEx(template);
+//		regexText.setText(regex);
+//	}
 }

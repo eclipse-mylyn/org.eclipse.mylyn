@@ -29,13 +29,12 @@ import org.eclipse.ui.PlatformUI;
  */
 public class CvsRepositoryProvider extends AbstractTeamRepositoryProvider {
 	private static final String WIZARD_LABEL = "Commit Resources in Task Context";
-	
+
 	@Override
 	public ActiveChangeSetManager getActiveChangeSetManager() {
-		return (CVSActiveChangeSetCollector) CVSUIPlugin.getPlugin()
-				.getChangeSetManager();
+		return (CVSActiveChangeSetCollector) CVSUIPlugin.getPlugin().getChangeSetManager();
 	}
-	
+
 	@Override
 	public boolean hasOutgoingChanges(IResource[] resources) {
 		try {
@@ -45,7 +44,7 @@ public class CvsRepositoryProvider extends AbstractTeamRepositoryProvider {
 			return false;
 		}
 	}
-	
+
 	@Override
 	public void commit(IResource[] resources) {
 		try {

@@ -76,11 +76,11 @@ public class ContextChangeSetManager implements IMylarContextListener {
 	private Map<String, ContextChangeSet> activeChangeSets = new HashMap<String, ContextChangeSet>();
 
 	private ITaskActivityListener TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
-		
+
 		public void taskListRead() {
 			initContextChangeSets();
 		}
-		
+
 		public void taskActivated(ITask task) {
 			// ignore
 		}
@@ -90,18 +90,18 @@ public class ContextChangeSetManager implements IMylarContextListener {
 		}
 
 		public void taskDeactivated(ITask task) {
-			// ignore			
+			// ignore
 		}
 
 		public void activityChanged(DateRangeContainer week) {
-			// ignore	
+			// ignore
 		}
 
 		public void calendarChanged() {
 			// ignore
 		}
 	};
-	
+
 	private ITaskListChangeListener TASK_CHANGE_LISTENER = new ITaskListChangeListener() {
 
 		public void localInfoChanged(ITask task) {
@@ -154,7 +154,7 @@ public class ContextChangeSetManager implements IMylarContextListener {
 		List<AbstractTeamRepositoryProvider> providerList = TeamRespositoriesManager.getInstance().getProviders();
 		for (AbstractTeamRepositoryProvider provider : providerList) {
 			ActiveChangeSetManager changeSetManager = provider.getActiveChangeSetManager();
-			if(null != changeSetManager)
+			if (null != changeSetManager)
 				collectors.add(changeSetManager);
 		}
 	}
@@ -239,16 +239,17 @@ public class ContextChangeSetManager implements IMylarContextListener {
 					ContextChangeSet contextChangeSet = new ContextChangeSet(task, collector);
 					List<IResource> interestingResources = MylarResourcesPlugin.getDefault().getInterestingResources();
 					contextChangeSet.add(interestingResources.toArray(new IResource[interestingResources.size()]));
-	
+
 					activeChangeSets.put(task.getHandleIdentifier(), contextChangeSet);
 
 					if (!collector.contains(contextChangeSet)) {
 						collector.add(contextChangeSet);
 					}
-//					collector.makeDefault(contextChangeSet);
-//					IdeUiUtil.forceSynchronizeViewUpdate();
-//					DiffChangeEvent event = new DiffChangeEvent(contextChangeSet.getDiffTree());
-//					collector.diffsChanged(event, new NullProgressMonitor());
+					// collector.makeDefault(contextChangeSet);
+					// IdeUiUtil.forceSynchronizeViewUpdate();
+					// DiffChangeEvent event = new
+					// DiffChangeEvent(contextChangeSet.getDiffTree());
+					// collector.diffsChanged(event, new NullProgressMonitor());
 				}
 			}
 		} catch (Exception e) {
@@ -320,14 +321,14 @@ public class ContextChangeSetManager implements IMylarContextListener {
 								}
 							}
 						}
-//						if (shouldRemove(element)) {
-//							ChangeSet[] sets = collector.getSets();
-//							for (int i = 0; i < sets.length; i++) {
-//								if (sets[i] instanceof MylarActiveChangeSet) {
-//									sets[i].remove(resource);
-//								}
-//							}
-//						}
+						// if (shouldRemove(element)) {
+						// ChangeSet[] sets = collector.getSets();
+						// for (int i = 0; i < sets.length; i++) {
+						// if (sets[i] instanceof MylarActiveChangeSet) {
+						// sets[i].remove(resource);
+						// }
+						// }
+						// }
 					}
 				}
 			} catch (Exception e) {

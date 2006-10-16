@@ -26,8 +26,8 @@ public class ContextChangeSetDecorator implements ILightweightLabelDecorator {
 	public void decorate(Object element, IDecoration decoration) {
 		if (element instanceof ContextChangeSet) {
 			decoration.addOverlay(ContextUiImages.MYLAR_OVERLAY, IDecoration.BOTTOM_RIGHT);
-			ContextChangeSet changeSet = (ContextChangeSet)element;
-			if (changeSet.getTask().isActive()) {    
+			ContextChangeSet changeSet = (ContextChangeSet) element;
+			if (changeSet.getTask().isActive()) {
 				decoration.setFont(TaskListColorsAndFonts.BOLD);
 			}
 		}
@@ -49,6 +49,5 @@ public class ContextChangeSetDecorator implements ILightweightLabelDecorator {
 	public void removeListener(ILabelProviderListener listener) {
 		// ignore
 	}
-
 
 }

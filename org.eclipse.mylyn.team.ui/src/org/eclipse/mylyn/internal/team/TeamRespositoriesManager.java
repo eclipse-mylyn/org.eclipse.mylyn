@@ -64,8 +64,8 @@ public class TeamRespositoriesManager {
 
 	private void readExtensions() {
 		ArrayList<AbstractTeamRepositoryProvider> providerList = new ArrayList<AbstractTeamRepositoryProvider>();
-		IExtensionPoint teamProvider = Platform.getExtensionRegistry().getExtensionPoint(
-				MylarTeamPlugin.PLUGIN_ID, EXT_POINT_TEAM_REPOSITORY_PROVIDER);
+		IExtensionPoint teamProvider = Platform.getExtensionRegistry().getExtensionPoint(MylarTeamPlugin.PLUGIN_ID,
+				EXT_POINT_TEAM_REPOSITORY_PROVIDER);
 		IExtension[] extensions = teamProvider.getExtensions();
 		for (int i = 0; i < extensions.length; i++) {
 			IExtension extension = extensions[i];
@@ -81,7 +81,7 @@ public class TeamRespositoriesManager {
 								.createExecutableExtension(ATTR_CLASS);
 						providerList.add(provider);
 					} catch (CoreException e) {
-						// ignore, we 
+						// ignore, we
 						MylarStatusHandler.log(e, MessageFormat.format(
 								"Error while initializing repository contribution {0} from plugin {1}.", element
 										.getAttribute(ATTR_CLASS), element.getContributor().getName()));

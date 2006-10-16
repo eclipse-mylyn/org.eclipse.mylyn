@@ -15,7 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylar.ide.tests.ChangeSetManagerTest;
-import org.eclipse.mylar.ide.tests.CommitMessageTest;
+import org.eclipse.mylar.ide.tests.CommitTemplateTest;
 import org.eclipse.mylar.java.tests.search.JUnitReferencesSearchPluginTest;
 import org.eclipse.mylar.java.tests.search.JavaImplementorsSearchPluginTest;
 import org.eclipse.mylar.java.tests.search.JavaReadAccessSearchPluginTest;
@@ -34,7 +34,7 @@ public class AllJavaTests {
 
 		// $JUnit-BEGIN$
 		suite.addTestSuite(ResourceStructureMappingTest.class);
-		suite.addTestSuite(CommitMessageTest.class);
+		suite.addTestSuite(CommitTemplateTest.class);
 		suite.addTestSuite(InterestManipulationTest.class);
 		suite.addTestSuite(ChangeSetManagerTest.class);
 		suite.addTestSuite(EditorManagerTest.class);

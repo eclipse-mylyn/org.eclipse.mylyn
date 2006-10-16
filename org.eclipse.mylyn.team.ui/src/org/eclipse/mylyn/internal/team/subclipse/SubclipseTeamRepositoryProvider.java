@@ -29,21 +29,15 @@ public class SubclipseTeamRepositoryProvider extends AbstractTeamRepositoryProvi
 	@Override
 	public ActiveChangeSetManager getActiveChangeSetManager() {
 		// collectors.add((CVSActiveChangeSetCollector)CVSUIPlugin.getPlugin().getChangeSetManager());
-		Bundle svnBundle = Platform
-				.getBundle("org.tigris.subversion.subclipse.core");
+		Bundle svnBundle = Platform.getBundle("org.tigris.subversion.subclipse.core");
 		if (svnBundle != null) {
 			Method getChangeSetManagerMethod;
 			try {
-				Class providerPlugin = svnBundle
-						.loadClass("org.tigris.subversion.subclipse.core.SVNProviderPlugin"); // Class.forName("org.tigris.subversion.subclipse.core.SVNProviderPlugin");
-				Method getPluginMethod = providerPlugin.getMethod("getPlugin",
-						new Class[0]);
-				Object pluginInstance = getPluginMethod.invoke(null,
-						new Object[0]);
-				getChangeSetManagerMethod = providerPlugin.getDeclaredMethod(
-						"getChangeSetManager", new Class[0]);
-				Object manager = getChangeSetManagerMethod.invoke(
-						pluginInstance, new Object[0]);
+				Class providerPlugin = svnBundle.loadClass("org.tigris.subversion.subclipse.core.SVNProviderPlugin"); // Class.forName("org.tigris.subversion.subclipse.core.SVNProviderPlugin");
+				Method getPluginMethod = providerPlugin.getMethod("getPlugin", new Class[0]);
+				Object pluginInstance = getPluginMethod.invoke(null, new Object[0]);
+				getChangeSetManagerMethod = providerPlugin.getDeclaredMethod("getChangeSetManager", new Class[0]);
+				Object manager = getChangeSetManagerMethod.invoke(pluginInstance, new Object[0]);
 				if (manager instanceof ActiveChangeSetManager) {
 					return (ActiveChangeSetManager) manager;
 				}
@@ -60,21 +54,15 @@ public class SubclipseTeamRepositoryProvider extends AbstractTeamRepositoryProvi
 			return false;
 
 		try {
-			Class commitActionClass = Class
-					.forName("org.tigris.subversion.subclipse.ui.actions.CommitAction");
-			Constructor commitActionConstructor = commitActionClass
-					.getConstructor(new Class[] { String.class });
-			Object commitAction = commitActionConstructor
-					.newInstance(new Object[] { "" });
-			Method setSelectedResourcesMethod = commitActionClass.getMethod(
-					"setSelectedResources", new Class[] { IResource[].class });
-			setSelectedResourcesMethod.invoke(commitAction,
-					new Object[] { resources });
+			Class commitActionClass = Class.forName("org.tigris.subversion.subclipse.ui.actions.CommitAction");
+			Constructor commitActionConstructor = commitActionClass.getConstructor(new Class[] { String.class });
+			Object commitAction = commitActionConstructor.newInstance(new Object[] { "" });
+			Method setSelectedResourcesMethod = commitActionClass.getMethod("setSelectedResources",
+					new Class[] { IResource[].class });
+			setSelectedResourcesMethod.invoke(commitAction, new Object[] { resources });
 
-			Method hasOutgoingChangesMethod = commitActionClass.getMethod(
-					"hasOutgoingChanges", new Class[0]);
-			Boolean hasOutgoingChanges = (Boolean) hasOutgoingChangesMethod
-					.invoke(commitAction, new Object[0]);
+			Method hasOutgoingChangesMethod = commitActionClass.getMethod("hasOutgoingChanges", new Class[0]);
+			Boolean hasOutgoingChanges = (Boolean) hasOutgoingChangesMethod.invoke(commitAction, new Object[0]);
 
 			return hasOutgoingChanges.booleanValue();
 		} catch (Throwable t) {
@@ -90,19 +78,14 @@ public class SubclipseTeamRepositoryProvider extends AbstractTeamRepositoryProvi
 			return;
 
 		try {
-			Class commitActionClass = Class
-					.forName("org.tigris.subversion.subclipse.ui.actions.CommitAction");
-			Constructor commitActionConstructor = commitActionClass
-					.getConstructor(new Class[] { String.class });
-			Object commitAction = commitActionConstructor
-					.newInstance(new Object[] { "" });
-			Method setSelectedResourcesMethod = commitActionClass.getMethod(
-					"setSelectedResources", new Class[] { IResource[].class });
-			setSelectedResourcesMethod.invoke(commitAction,
-					new Object[] { resources });
+			Class commitActionClass = Class.forName("org.tigris.subversion.subclipse.ui.actions.CommitAction");
+			Constructor commitActionConstructor = commitActionClass.getConstructor(new Class[] { String.class });
+			Object commitAction = commitActionConstructor.newInstance(new Object[] { "" });
+			Method setSelectedResourcesMethod = commitActionClass.getMethod("setSelectedResources",
+					new Class[] { IResource[].class });
+			setSelectedResourcesMethod.invoke(commitAction, new Object[] { resources });
 
-			Method executeMethod = commitActionClass.getMethod("execute",
-					new Class[] { IAction.class });
+			Method executeMethod = commitActionClass.getMethod("execute", new Class[] { IAction.class });
 			executeMethod.invoke(commitAction, new Object[] { null });
 		} catch (Throwable t) {
 			// nothing we can do

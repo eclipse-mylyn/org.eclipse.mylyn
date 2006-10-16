@@ -26,7 +26,7 @@ public class AllIdeTests {
 		suite.addTestSuite(IdeStartupTest.class);
 		suite.addTestSuite(IdePreferencesTest.class);
 		suite.addTestSuite(ChangeSetManagerTest.class);
-		suite.addTestSuite(CommitMessageTest.class);
+		suite.addTestSuite(CommitTemplateTest.class);
 		// $JUnit-END$
 
 		return suite;

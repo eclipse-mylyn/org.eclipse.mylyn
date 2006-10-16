@@ -30,6 +30,7 @@ import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.team.MylarTeamPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.team.core.history.IFileRevision;
 import org.eclipse.team.core.variants.IResourceVariant;
@@ -127,7 +128,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 
 			if (comment != null) {
 
-				String id = ContextChangeSet.getTaskIdFromCommentOrLabel(comment);
+				String id = MylarTeamPlugin.getDefault().getCommitTemplateManager().getTaskIdFromCommentOrLabel(comment);
 
 				if (project != null) {
 					TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(project, false);

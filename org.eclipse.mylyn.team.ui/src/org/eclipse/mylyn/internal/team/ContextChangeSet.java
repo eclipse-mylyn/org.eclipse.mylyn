@@ -7,8 +7,8 @@
  *
  * Contributors:
  *     University Of British Columbia - initial API and implementation
+ *     Eike Stepper - template based commit templates
  *******************************************************************************/
-
 package org.eclipse.mylar.internal.team;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class ContextChangeSet extends CVSActiveChangeSet implements IAdaptable {
 
 	private static final String PREFIX_HTTPS = "https://";
 
-	private static final String PREFIX_DELIM = ": ";
+//	private static final String PREFIX_DELIM = ": ";
 
 	// HACK: copied from super
 	private static final String CTX_TITLE = "title";
@@ -65,7 +65,7 @@ public class ContextChangeSet extends CVSActiveChangeSet implements IAdaptable {
 	public boolean isUserCreated() {
 		return true;
 	}
-	
+
 	public void initTitle() {
 		super.setName(task.getDescription());
 		super.setTitle(task.getDescription());
@@ -97,13 +97,11 @@ public class ContextChangeSet extends CVSActiveChangeSet implements IAdaptable {
 
 	@Override
 	public String getComment() {
-		String completedPrefix = MylarTeamPlugin.getDefault().getPreferenceStore().getString(
-				MylarTeamPlugin.COMMIT_PREFIX_COMPLETED);
-		String progressPrefix = MylarTeamPlugin.getDefault().getPreferenceStore().getString(
-				MylarTeamPlugin.COMMIT_PREFIX_PROGRESS);
-		String comment = "";
-		comment = generateComment(task, completedPrefix, progressPrefix);
-		return comment;
+		String template = MylarTeamPlugin.getDefault().getPreferenceStore().getString(
+				MylarTeamPlugin.COMMIT_TEMPLATE);
+//		String progressTemplate = MylarTeamPlugin.getDefault().getPreferenceStore().getString(
+//				MylarTeamPlugin.COMMIT_TEMPLATE_PROGRESS);
+		return MylarTeamPlugin.getDefault().getCommitTemplateManager().generateComment(task, template);
 	}
 
 	@Override
@@ -122,23 +120,24 @@ public class ContextChangeSet extends CVSActiveChangeSet implements IAdaptable {
 		IResource resource = getResourceFromDiff(diff);
 		if (!suppressInterestContribution && resource != null) {
 			Set<IResource> resources = new HashSet<IResource>();
-			resources.add(resource); 
+			resources.add(resource);
 			if (MylarResourcesPlugin.getDefault() != null) {
-				MylarResourcesPlugin.getDefault().getInterestUpdater().addResourceToContext(resources, InteractionEvent.Kind.SELECTION);
+				MylarResourcesPlugin.getDefault().getInterestUpdater().addResourceToContext(resources,
+						InteractionEvent.Kind.SELECTION);
 			}
 		}
 	}
 
 	private IResource getResourceFromDiff(IDiff diff) {
 		if (diff instanceof ResourceDiff) {
-			return ((ResourceDiff)diff).getResource();
+			return ((ResourceDiff) diff).getResource();
 		} else if (diff instanceof ThreeWayDiff) {
-			ThreeWayDiff threeWayDiff = (ThreeWayDiff)diff;
+			ThreeWayDiff threeWayDiff = (ThreeWayDiff) diff;
 			return ResourcesPlugin.getWorkspace().getRoot().findMember(threeWayDiff.getPath());
 		} else {
 			return null;
 		}
-	} 
+	}
 
 	@Override
 	public void add(IDiff[] diffs) {
@@ -172,7 +171,8 @@ public class ContextChangeSet extends CVSActiveChangeSet implements IAdaptable {
 		Set<IResource> allResources = new HashSet<IResource>();
 		allResources.addAll(Arrays.asList(super.getResources()));
 		if (MylarResourcesPlugin.getDefault() != null && task.isActive()) {
-			// TODO: if super is always managed correctly should remove following line
+			// TODO: if super is always managed correctly should remove
+			// following line
 			allResources.addAll(MylarResourcesPlugin.getDefault().getInterestingResources());
 		}
 		return new ArrayList<IResource>(allResources);
@@ -183,47 +183,6 @@ public class ContextChangeSet extends CVSActiveChangeSet implements IAdaptable {
 	 */
 	public boolean contains(IResource local) {
 		return getAllResourcesInChangeContext().contains(local);
-	}
-
-	public static String generateComment(ITask task, String completedPrefix, String progressPrefix) {
-		String comment;
-		completedPrefix = fixUpDelimIfPresent(completedPrefix);
-		progressPrefix = fixUpDelimIfPresent(progressPrefix);
-		if (task.isCompleted()) {
-			comment = completedPrefix + PREFIX_DELIM;
-		} else {
-			comment = progressPrefix + PREFIX_DELIM;
-		}
-		comment += task.getDescription();
-		String url = task.getUrl();
-		if (url != null && !url.equals("") && !url.endsWith("//")) {
-			comment += " \n" + url;
-		}
-		return comment;
-	}
-
-	private static String fixUpDelimIfPresent(String prefix) {
-		if (prefix.endsWith(":") || prefix.endsWith(PREFIX_DELIM)) {
-			prefix = prefix.substring(0, prefix.lastIndexOf(':'));
-		}
-		return prefix;
-	}
-
-	public static String getTaskIdFromCommentOrLabel(String comment) {
-		int firstDelimIndex = comment.indexOf(PREFIX_DELIM);
-		if (firstDelimIndex != -1) {
-			int idStart = firstDelimIndex + PREFIX_DELIM.length();
-			int idEnd = comment.indexOf(PREFIX_DELIM, firstDelimIndex + PREFIX_DELIM.length());// comment.indexOf(PREFIX_DELIM);
-			if (idEnd != -1 && idStart < idEnd) {
-				String id = comment.substring(idStart, idEnd);
-				if (id != null)
-					return id.trim();
-			} else {
-				// change set label
-				return comment.substring(0, firstDelimIndex);
-			}
-		}
-		return null;
 	}
 
 	public static String getUrlFromComment(String comment) {
