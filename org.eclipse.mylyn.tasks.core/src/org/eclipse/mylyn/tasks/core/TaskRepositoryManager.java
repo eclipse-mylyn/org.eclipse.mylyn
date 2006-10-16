@@ -64,6 +64,10 @@ public class TaskRepositoryManager {
 	public AbstractRepositoryConnector getRepositoryConnector(String kind) {
 		return repositoryConnectors.get(kind);
 	}
+	
+	public AbstractRepositoryConnector getRepositoryConnector(AbstractRepositoryTask task) {
+		return getRepositoryConnector(task.getRepositoryKind());
+	}
 
 	public void addRepositoryConnector(AbstractRepositoryConnector repositoryConnector) {
 		if (!repositoryConnectors.values().contains(repositoryConnector)) {
