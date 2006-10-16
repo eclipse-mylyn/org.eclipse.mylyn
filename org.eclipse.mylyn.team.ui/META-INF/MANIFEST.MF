@@ -27,9 +27,11 @@ Eclipse-LazyStart: true
 Export-Package: org.eclipse.mylar.internal.team,
  org.eclipse.mylar.internal.team.ccvs,
  org.eclipse.mylar.internal.team.subclipse,
+ org.eclipse.mylar.internal.team.template,
  org.eclipse.mylar.internal.team.ui,
  org.eclipse.mylar.internal.team.ui.actions,
  org.eclipse.mylar.internal.team.ui.preferences,
+ org.eclipse.mylar.internal.team.ui.preferences.workaround,
  org.eclipse.mylar.internal.team.ui.wizards,
  org.eclipse.mylar.team
 Bundle-ClassPath: .
