@@ -36,18 +36,7 @@ public class MylarTeamPlugin extends AbstractUIPlugin implements IStartup {
 
 	public static final String COMMIT_TEMPLATE = "org.eclipse.mylar.team.commit.template";
 
-//	public static final String COMMIT_TEMPLATE_PROGRESS = "org.eclipse.mylar.team.commit.template.progress";
-
-//	public static final String COMMIT_REGEX_TASK_ID = "org.eclipse.mylar.team.commit.regex";
-
-//	public static final String COMMIT_REGEX_AUTO_GUESS = "org.eclipse.mylar.team.commit.regex.auto.guess";
-
-//	public static final String DEFAULT_TEMPLATE_PROGRESS = "[${task.id}] ${task.summary} ${task.url}";
 	public static final String DEFAULT_COMMIT_TEMPLATE = "${task.status} - ${connector.task.prefix} ${task.id}: ${task.description}"; 
-
-//	public static final String DEFAULT_REGEX_TASK_ID = "\\[(\\d+)\\].*";
-
-//	public static final boolean DEFAULT_REGEX_AUTO_GUESS = true;
 
 	public MylarTeamPlugin() {
 		INSTANCE = this;

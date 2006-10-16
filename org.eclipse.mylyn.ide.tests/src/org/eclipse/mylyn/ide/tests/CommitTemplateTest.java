@@ -48,11 +48,5 @@ public class CommitTemplateTest extends TestCase {
 //		String url2 = ContextChangeSet.getUrlFromComment(comment2);
 //		assertEquals("http://eclipse.org/mylar", url2);
 //	}
-
-//	public void testChangeSetLabelParsing() {
-//		String label = "1: foo";
-//		String id = MylarTeamPlugin.getDefault().getCommitTemplateManager().getTaskIdFromCommentOrLabel(label);
-//		assertEquals("1", id);
-//	}
 	
 }

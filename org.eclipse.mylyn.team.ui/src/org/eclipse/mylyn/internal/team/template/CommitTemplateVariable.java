@@ -14,7 +14,7 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.team.ICommitTemplate;
+import org.eclipse.mylar.team.ICommitTemplateVariable;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ import java.util.List;
  * @author Eike Stepper
  * @author Mik Kersten
  */
-public abstract class CommitTemplate implements ICommitTemplate {
+public abstract class CommitTemplateVariable implements ICommitTemplateVariable {
 	
 	protected String description;
 
@@ -61,7 +61,7 @@ public abstract class CommitTemplate implements ICommitTemplate {
 		return builder.toString();
 	}
 	
-	public static class ConnectorTaskPrefix extends CommitTemplate {
+	public static class ConnectorTaskPrefix extends CommitTemplateVariable {
 
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
@@ -75,7 +75,7 @@ public abstract class CommitTemplate implements ICommitTemplate {
 		
 	}
 	
-	public static class RepositoryKind extends CommitTemplate {
+	public static class RepositoryKind extends CommitTemplateVariable {
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
 				return ((AbstractRepositoryTask) task).getRepositoryKind();
@@ -84,7 +84,7 @@ public abstract class CommitTemplate implements ICommitTemplate {
 		}
 	}
 
-	public static class RepositoryUrl extends CommitTemplate {
+	public static class RepositoryUrl extends CommitTemplateVariable {
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
 				return ((AbstractRepositoryTask) task).getRepositoryUrl();
@@ -94,7 +94,7 @@ public abstract class CommitTemplate implements ICommitTemplate {
 		}
 	}
 
-	public static class TaskProduct extends CommitTemplate {
+	public static class TaskProduct extends CommitTemplateVariable {
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
 				return ((AbstractRepositoryTask) task).getTaskData().getProduct();
@@ -104,7 +104,7 @@ public abstract class CommitTemplate implements ICommitTemplate {
 		}
 	}
 
-	public static class TaskAssignee extends CommitTemplate {
+	public static class TaskAssignee extends CommitTemplateVariable {
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
 				return ((AbstractRepositoryTask) task).getTaskData().getAssignedTo();
@@ -114,7 +114,7 @@ public abstract class CommitTemplate implements ICommitTemplate {
 		}
 	}
 
-	public static class TaskReporter extends CommitTemplate {
+	public static class TaskReporter extends CommitTemplateVariable {
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
 				return ((AbstractRepositoryTask) task).getTaskData().getReporter();
@@ -124,7 +124,7 @@ public abstract class CommitTemplate implements ICommitTemplate {
 		}
 	}
 
-	public static class TaskResolution extends CommitTemplate {
+	public static class TaskResolution extends CommitTemplateVariable {
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
 				return ((AbstractRepositoryTask) task).getTaskData().getResolution();
@@ -134,7 +134,7 @@ public abstract class CommitTemplate implements ICommitTemplate {
 		}
 	}
 
-	public static class TaskStatus extends CommitTemplate {
+	public static class TaskStatus extends CommitTemplateVariable {
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
 				return ((AbstractRepositoryTask) task).getTaskData().getStatus().toUpperCase();
@@ -144,7 +144,7 @@ public abstract class CommitTemplate implements ICommitTemplate {
 		}
 	}
 
-	public static class TaskCc extends CommitTemplate {
+	public static class TaskCc extends CommitTemplateVariable {
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
 				List<String> list = ((AbstractRepositoryTask) task).getTaskData().getCC();
@@ -155,7 +155,7 @@ public abstract class CommitTemplate implements ICommitTemplate {
 		}
 	}
 
-	public static class TaskKeywords extends CommitTemplate {
+	public static class TaskKeywords extends CommitTemplateVariable {
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
 				List<String> list = ((AbstractRepositoryTask) task).getTaskData().getKeywords();
@@ -166,7 +166,7 @@ public abstract class CommitTemplate implements ICommitTemplate {
 		}
 	}
 
-	public static class TaskLastModified extends CommitTemplate {
+	public static class TaskLastModified extends CommitTemplateVariable {
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
 				return ((AbstractRepositoryTask) task).getTaskData().getLastModified();
@@ -176,7 +176,7 @@ public abstract class CommitTemplate implements ICommitTemplate {
 		}
 	}
 
-	public static class TaskSummary extends CommitTemplate {
+	public static class TaskSummary extends CommitTemplateVariable {
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
 				return ((AbstractRepositoryTask) task).getTaskData().getSummary();
@@ -186,43 +186,43 @@ public abstract class CommitTemplate implements ICommitTemplate {
 		}
 	}
 
-	public static class TaskDescription extends CommitTemplate {
+	public static class TaskDescription extends CommitTemplateVariable {
 		public String getValue(ITask task) {
 			return task.getDescription();
 		}
 	}
 
-	public static class TaskHandle extends CommitTemplate {
+	public static class TaskHandle extends CommitTemplateVariable {
 		public String getValue(ITask task) {
 			return task.getHandleIdentifier();
 		}
 	}
 
-	public static class TaskID extends CommitTemplate {
+	public static class TaskID extends CommitTemplateVariable {
 		public String getValue(ITask task) {
 			return AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
 		}
 	}
 
-	public static class TaskNotes extends CommitTemplate {
+	public static class TaskNotes extends CommitTemplateVariable {
 		public String getValue(ITask task) {
 			return task.getNotes();
 		}
 	}
 
-	public static class TaskPriority extends CommitTemplate {
+	public static class TaskPriority extends CommitTemplateVariable {
 		public String getValue(ITask task) {
 			return task.getPriority();
 		}
 	}
 
-	public static class TaskType extends CommitTemplate {
+	public static class TaskType extends CommitTemplateVariable {
 		public String getValue(ITask task) {
 			return task.getTaskType();
 		}
 	}
 
-	public static class TaskURL extends CommitTemplate {
+	public static class TaskURL extends CommitTemplateVariable {
 		public String getValue(ITask task) {
 			return task.getUrl();
 		}
@@ -231,7 +231,7 @@ public abstract class CommitTemplate implements ICommitTemplate {
 	/**
 	 * @author Eike Stepper
 	 */
-	protected static abstract class CommitTemplateDate extends CommitTemplate {
+	protected static abstract class CommitTemplateDate extends CommitTemplateVariable {
 		public String getValue(ITask task) {
 			java.util.Date date = getDate(task);
 			return formatDate(date);

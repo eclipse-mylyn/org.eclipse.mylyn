@@ -15,7 +15,7 @@ import org.eclipse.mylar.tasks.core.ITask;
 /**
  * @author Eike Stepper
  */
-public interface ICommitTemplate {
+public interface ICommitTemplateVariable {
 	
 	public String getDescription();
 

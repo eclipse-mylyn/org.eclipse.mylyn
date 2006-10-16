@@ -52,6 +52,10 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 
 	private ISelection selection;
 
+	private static final String PREFIX_HTTP = "http://";
+
+	private static final String PREFIX_HTTPS = "https://";
+
 	public OpenCorrespondingTaskAction() {
 		setText(LABEL);
 		setToolTipText(LABEL);
@@ -123,12 +127,13 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 			} else if (element instanceof LogEntry) {
 				comment = ((LogEntry) element).getComment();
 			} else if (element instanceof IFileRevision) {
-				comment = ((IFileRevision) element).getComment();				
+				comment = ((IFileRevision) element).getComment();
 			}
 
 			if (comment != null) {
 
-				String id = MylarTeamPlugin.getDefault().getCommitTemplateManager().getTaskIdFromCommentOrLabel(comment);
+				String id = MylarTeamPlugin.getDefault().getCommitTemplateManager()
+						.getTaskIdFromCommentOrLabel(comment);
 
 				if (project != null) {
 					TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(project, false);
@@ -142,7 +147,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 
 				// Legacy:
 				if (!resolved) {
-					String fullUrl = ContextChangeSet.getUrlFromComment(comment);
+					String fullUrl = getUrlFromComment(comment);
 
 					String repositoryUrl = null;
 					if (fullUrl != null) {
@@ -173,6 +178,43 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Mylar Information",
 					"Could not resolve report corresponding to change set comment.");
 		}
+	}
+
+	public static String getUrlFromComment(String comment) {
+		int httpIndex = comment.indexOf(PREFIX_HTTP);
+		int httpsIndex = comment.indexOf(PREFIX_HTTPS);
+		int idStart = -1;
+		if (httpIndex != -1) {
+			idStart = httpIndex;
+		} else if (httpsIndex != -1) {
+			idStart = httpsIndex;
+		}
+		if (idStart != -1) {
+			int idEnd = comment.indexOf(' ', idStart);
+			if (idEnd == -1) {
+				return comment.substring(idStart);
+			} else if (idEnd != -1 && idStart < idEnd) {
+				return comment.substring(idStart, idEnd);
+			}
+		}
+		return null;
+	}
+
+	public static String getTaskIdFromLegacy07Label(String comment) {
+		String PREFIX_DELIM = ":";
+		int firstDelimIndex = comment.indexOf(PREFIX_DELIM);
+		if (firstDelimIndex != -1) {
+			int idStart = firstDelimIndex + PREFIX_DELIM.length();
+			int idEnd = comment.indexOf(PREFIX_DELIM, firstDelimIndex + PREFIX_DELIM.length());// comment.indexOf(PREFIX_DELIM);
+			if (idEnd != -1 && idStart < idEnd) {
+				String id = comment.substring(idStart, idEnd);
+				if (id != null)
+					return id.trim();
+			} else {
+				return comment.substring(0, firstDelimIndex);
+			}
+		}
+		return null;
 	}
 
 	private Object findParent(ISynchronizeModelElement element) {

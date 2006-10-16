@@ -40,12 +40,6 @@ import org.osgi.service.prefs.Preferences;
  */
 public class ContextChangeSet extends CVSActiveChangeSet implements IAdaptable {
 
-	private static final String PREFIX_HTTP = "http://";
-
-	private static final String PREFIX_HTTPS = "https://";
-
-//	private static final String PREFIX_DELIM = ": ";
-
 	// HACK: copied from super
 	private static final String CTX_TITLE = "title";
 
@@ -183,26 +177,6 @@ public class ContextChangeSet extends CVSActiveChangeSet implements IAdaptable {
 	 */
 	public boolean contains(IResource local) {
 		return getAllResourcesInChangeContext().contains(local);
-	}
-
-	public static String getUrlFromComment(String comment) {
-		int httpIndex = comment.indexOf(PREFIX_HTTP);
-		int httpsIndex = comment.indexOf(PREFIX_HTTPS);
-		int idStart = -1;
-		if (httpIndex != -1) {
-			idStart = httpIndex;
-		} else if (httpsIndex != -1) {
-			idStart = httpsIndex;
-		}
-		if (idStart != -1) {
-			int idEnd = comment.indexOf(' ', idStart);
-			if (idEnd == -1) {
-				return comment.substring(idStart);
-			} else if (idEnd != -1 && idStart < idEnd) {
-				return comment.substring(idStart, idEnd);
-			}
-		}
-		return null;
 	}
 
 	@Override

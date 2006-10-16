@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.team.ICommitTemplate;
+import org.eclipse.mylar.team.ICommitTemplateVariable;
 import org.eclipse.mylar.team.MylarTeamPlugin;
 
 /**
@@ -36,9 +36,9 @@ public class CommitTemplateManager {
 
 	private static final String ATTR_RECOGNIZED_KEYWORD = "recognizedKeyword";
 
-	private static final String ELEM_TEMPLATE_HANDLER = "templateHandler";
+	private static final String ELEM_TEMPLATE_HANDLER = "templateVariable";
 
-	private static final String EXT_POINT_TEMPLATE_HANDLERS = "templateHandlers";
+	private static final String EXT_POINT_TEMPLATE_HANDLERS = "commitTemplates";
 
 	public String generateComment(ITask task, String template) {
 		return processKeywords(task, template);
@@ -71,24 +71,6 @@ public class CommitTemplateManager {
 
 		return null;
 	}
-
-//	private String getTaskIdFromLabel(String label) {
-		// int firstDelimIndex = label.indexOf(PREFIX_DELIM);
-		// if (firstDelimIndex != -1) {
-		// int idStart = firstDelimIndex + PREFIX_DELIM.length();
-		// int idEnd = label.indexOf(PREFIX_DELIM, firstDelimIndex +
-		// PREFIX_DELIM.length());// comment.indexOf(PREFIX_DELIM);
-		// if (idEnd != -1 && idStart < idEnd) {
-		// String id = label.substring(idStart, idEnd);
-		// if (id != null)
-		// return id.trim();
-		// } else {
-		// // change set label
-		// return label.substring(0, firstDelimIndex);
-		// }
-		// }
-		// return null;
-//	}
 
 	public String getTaskIdRegEx(String template) {
 		final String META_CHARS = "$()*+.< [\\]^{|}";
@@ -147,16 +129,16 @@ public class CommitTemplateManager {
 		}.run();
 	}
 
-	public ICommitTemplate createHandler(final String keyword) {
-		return (ICommitTemplate) new ExtensionProcessor() {
+	public ICommitTemplateVariable createHandler(final String keyword) {
+		return (ICommitTemplateVariable) new ExtensionProcessor() {
 			@Override
 			protected Object processContribution(IConfigurationElement element, String foundKeyword,
 					String description, String className) throws Exception {
 				if (keyword.equals(foundKeyword)) {
-					ICommitTemplate handler = (ICommitTemplate) element.createExecutableExtension(ATTR_CLASS);
-					if (handler instanceof CommitTemplate) {
-						((CommitTemplate) handler).setDescription(description);
-						((CommitTemplate) handler).setRecognizedKeyword(foundKeyword);
+					ICommitTemplateVariable handler = (ICommitTemplateVariable) element.createExecutableExtension(ATTR_CLASS);
+					if (handler instanceof CommitTemplateVariable) {
+						((CommitTemplateVariable) handler).setDescription(description);
+						((CommitTemplateVariable) handler).setRecognizedKeyword(foundKeyword);
 					} else {
 						String recognizedKeyword = handler.getRecognizedKeyword();
 						if (recognizedKeyword == null || !recognizedKeyword.equals(foundKeyword)) {
@@ -199,7 +181,7 @@ public class CommitTemplateManager {
 
 	private String processKeyword(ITask task, String keyword) {
 		try {
-			ICommitTemplate handler = createHandler(keyword);
+			ICommitTemplateVariable handler = createHandler(keyword);
 			if (handler != null) {
 				return handler.getValue(task);
 			}
