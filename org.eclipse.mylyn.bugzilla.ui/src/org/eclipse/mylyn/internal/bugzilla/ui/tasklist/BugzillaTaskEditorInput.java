@@ -17,11 +17,14 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.tasks.ui.editors.ExistingBugEditorInput;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IPersistableElement;
 
 /**
@@ -39,9 +42,9 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 		super(repository, bugTask.getTaskData(), AbstractRepositoryTask.getTaskId(bugTask.getHandleIdentifier()));
 		this.bugTask = bugTask;
 		migrateDescToReadOnly(bugTask);
+		updateOptions(bugTask.getTaskData());
 		id = AbstractRepositoryTask.getTaskId(bugTask.getHandleIdentifier());
 		bugTitle = "";
-
 	}
 
 	protected void setBugTitle(String str) {
@@ -93,6 +96,19 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 			if (attrib != null) {
 				attrib.setReadOnly(true);
 			}
+		}
+	}
+
+	// TODO: repository configuration update (remove at some point)
+	private void updateOptions(RepositoryTaskData taskData) {
+		try {
+			if (taskData != null) {
+				BugzillaServerFacade.updateBugAttributeOptions(taskData.getRepositoryUrl(), TasksUiPlugin.getDefault()
+						.getProxySettings(), repository.getUserName(), repository.getPassword(), taskData, repository
+						.getCharacterEncoding());
+			}
+		} catch (Exception e) {
+			// ignore
 		}
 	}
 }

@@ -365,7 +365,7 @@ public class BugzillaServerFacade {
 		}
 	}
 
-	private static void updateBugAttributeOptions(String repositoryUrl, Proxy proxySettings, String userName,
+	public static void updateBugAttributeOptions(String repositoryUrl, Proxy proxySettings, String userName,
 			String password, RepositoryTaskData existingReport, String characterEncoding) throws IOException,
 			KeyManagementException, GeneralSecurityException, BugzillaException {
 		String product = existingReport.getAttributeValue(BugzillaReportElement.PRODUCT.getKeyString());

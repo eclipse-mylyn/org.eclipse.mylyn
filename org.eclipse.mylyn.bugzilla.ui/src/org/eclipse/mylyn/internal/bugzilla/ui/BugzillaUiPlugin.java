@@ -10,10 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui;
 
-import java.io.IOException;
 import java.net.Authenticator;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +22,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaResultEditorMatchAdapter;
@@ -225,13 +221,8 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Update all of the query options for the bugzilla search page
-	 * 
-	 * @param monitor
-	 *            A reference to a progress monitor
-	 * @throws IOException
-	 * @throws NoSuchAlgorithmException 
-	 * @throws KeyManagementException 
-	 * @throws BugzillaException 
+	 * TODO: unify update of search options with update of bug attributes 
+	 * (BugzillaServerFacade.updateBugAttributeOptions)
 	 */
 	public static void updateQueryOptions(TaskRepository repository, IProgressMonitor monitor) {
 		
