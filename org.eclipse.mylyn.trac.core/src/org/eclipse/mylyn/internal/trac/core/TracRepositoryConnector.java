@@ -260,4 +260,9 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		return repository.getUserName();
 	}
 
+	@Override
+	public String getTaskIdPrefix() {
+		return "#";
+	}
+	
 }
