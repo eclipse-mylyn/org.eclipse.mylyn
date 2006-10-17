@@ -156,7 +156,7 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 		java2buzillaOSMap.put("macosx", "MacOS X");
 		java2buzillaOSMap.put("qnx", "QNX-Photon");
 		java2buzillaOSMap.put("solaris", "Solaris");
-		java2buzillaOSMap.put("win32", "Windows");
+		java2buzillaOSMap.put("win32", "Windows XP");
 	}
 
 	public void createControl(Composite parent) {
