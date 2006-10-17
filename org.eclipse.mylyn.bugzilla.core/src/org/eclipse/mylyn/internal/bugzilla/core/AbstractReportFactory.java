@@ -52,8 +52,10 @@ public class AbstractReportFactory {
 	protected void collectResults(URL url, Proxy proxySettings, String characterEncoding,
 			DefaultHandler contentHandler, boolean clean) throws IOException, BugzillaException, GeneralSecurityException {
 		
-		HttpURLConnection connection = WebClientUtil.openUrlConnection(url, proxySettings, false);
+		HttpURLConnection connection = null;
 		try {
+			connection = WebClientUtil.openUrlConnection(url, proxySettings, false);
+			
 			int responseCode = connection.getResponseCode();
 			if (responseCode != HttpURLConnection.HTTP_OK) {
 				String msg;

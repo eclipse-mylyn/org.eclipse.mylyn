@@ -11,8 +11,6 @@
 
 package org.eclipse.mylar.tasks.ui;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -94,7 +92,7 @@ class SynchronizeTaskJob extends Job {
 						try {
 							final TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 									repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
-							if (repository == null) {
+							if (repository == null) {							
 								throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, 0,
 										"Associated repository could not be found. Ensure proper repository configuration of "
 												+ repositoryTask.getRepositoryUrl() + " in "
@@ -119,15 +117,8 @@ class SynchronizeTaskJob extends Job {
 								});
 							} else if (e.getStatus().getException() instanceof LoginException) {
 								MylarStatusHandler.log(e.getStatus().getException(), "Login credentials are invalid for "+repositoryTask.getRepositoryUrl());
-							} else if (!(e.getStatus().getException() instanceof IOException)) {
-								MylarStatusHandler.log(e.getStatus());
-							} else if (e.getStatus().getException() instanceof FileNotFoundException) {
-								// can be caused by empty urlbase parameter on
-								// bugzilla server
-								MylarStatusHandler.log(e.getStatus());
-							} else {
-								// >>> bug 154729
-								// MylarStatusHandler.log(e.getStatus());
+							} else if(forceSync) {
+								MylarStatusHandler.log(e.getStatus().getException(), "Unable to retrieve task#"+AbstractRepositoryTask.getTaskId(repositoryTask.getHandleIdentifier())+" from "+repositoryTask.getRepositoryUrl());
 							}
 							continue;
 						}
