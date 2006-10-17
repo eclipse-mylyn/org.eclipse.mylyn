@@ -79,8 +79,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		try {
 			if (id != null) {
 				bugId = Integer.parseInt(id);
-			} else {
-				throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, "invalid report id: null"));
+			} else {				
+				throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK,
+						"invalid report id: null", new Exception("Invalid report id: null")));
 			}
 		} catch (NumberFormatException nfe) {
 			if (!forceSynchExecForTesting) {
