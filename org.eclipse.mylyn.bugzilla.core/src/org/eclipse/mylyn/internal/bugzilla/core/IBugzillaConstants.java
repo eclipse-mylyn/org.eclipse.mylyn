@@ -57,6 +57,13 @@ public interface IBugzillaConstants {
 	
 	public static final String XML_ERROR_NOTPERMITTED = "notpermitted"; 
 
+	//For including fields in the xml (XML Summary mode as they like to call it) 
+	//use &field=fieldname for example to only reveal the product information append &field=product 
+	//to exclude from the xml use excludefield=fieldname. See bugzilla QuckSearch for a list of
+	//fields that can be used (repositoryurl/quicksearchhack.html). 
+	//If somebody knows where this is officially documented I'd appreciate it if they would post a link here
+	// and on bug#161321. Thanks -relves 
+	// (see also: https://bugzilla.mozilla.org/show_bug.cgi?id=136603https://bugzilla.mozilla.org/show_bug.cgi?id=136603)
 	public static final String SHOW_BUG_CGI_XML = "/show_bug.cgi?ctype=xml&excludefield=attachmentdata&id=";
 	
 	public static final String ENCODING_UTF_8 = "UTF-8";
