@@ -11,6 +11,8 @@
 
 package org.eclipse.mylar.internal.tasks.ui.views;
 
+import java.util.regex.Pattern;
+
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -39,7 +41,7 @@ import org.eclipse.ui.themes.IThemeManager;
 public class TaskElementLabelProvider extends LabelProvider implements IColorProvider, IFontProvider {
 
 	private IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
-
+	private static final Pattern pattern = Pattern.compile("\\d*: .*");	 
 	@Override
 	public Image getImage(Object element) {
 		if (element instanceof TaskArchive) {
@@ -103,15 +105,15 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	public String getText(Object object) {
 
 		if (object instanceof AbstractQueryHit) {
-			AbstractQueryHit hit = (AbstractQueryHit) object;
-			if (!hit.getDescription().matches("\\d*: ")) {
+			AbstractQueryHit hit = (AbstractQueryHit) object;			
+			if (!pattern.matcher(hit.getDescription()).matches()) {
 				return hit.getId() + ": " + hit.getDescription();
 			} else {
 				return hit.getDescription();
 			}
 		} else if (object instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask task = (AbstractRepositoryTask) object;
-			if (!task.getDescription().matches("\\d*: ")) {
+			if (!pattern.matcher(task.getDescription()).matches()) {
 				return AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()) + ": " + task.getDescription();
 			} else {
 				return task.getDescription();
