@@ -57,7 +57,7 @@ public interface IBugzillaConstants {
 	
 	public static final String XML_ERROR_NOTPERMITTED = "notpermitted"; 
 
-	public static final String SHOW_BUG_CGI_XML = "/show_bug.cgi?ctype=xml&id=";
+	public static final String SHOW_BUG_CGI_XML = "/show_bug.cgi?ctype=xml&excludefield=attachmentdata&id=";
 	
 	public static final String ENCODING_UTF_8 = "UTF-8";
 	
