@@ -83,7 +83,7 @@ public class TasksUiExtensionReader {
 
 	public static final String ELMNT_SETTINGS_PAGE = "settingsPage";
 
-	public static final String EXTENSION_TASK_CONTRIBUTOR = "org.eclipse.mylar.tasks.ui.providers";
+	public static final String EXTENSION_TASK_CONTRIBUTOR = "org.eclipse.mylar.tasks.ui.actions";
 
 	public static final String ATTR_ACTION_CONTRIBUTOR_CLASS = "taskHandlerClass";
 
@@ -91,6 +91,8 @@ public class TasksUiExtensionReader {
 
 	public static final String ATTR_CLASS = "class";
 
+	public static final String ATTR_MENU_PATH = "menuPath";
+	
 	public static final String EXTENSION_EDITORS = "org.eclipse.mylar.tasks.ui.editors";
 
 	public static final String ELMNT_EDITOR_FACTORY = "editorFactory";
@@ -280,11 +282,12 @@ public class TasksUiExtensionReader {
 	private static void readDynamicPopupContributor(IConfigurationElement element) {
 		try {
 			Object dynamicPopupContributor = element.createExecutableExtension(ATTR_CLASS);
+			String menuPath = element.getAttribute(ATTR_MENU_PATH);
 			if (dynamicPopupContributor instanceof IDynamicSubMenuContributor) {
-				TasksUiPlugin.getDefault().addDynamicPopupContributor(
+				TasksUiPlugin.getDefault().addDynamicPopupContributor(menuPath,
 						(IDynamicSubMenuContributor) dynamicPopupContributor);
 			} else {
-				MylarStatusHandler.log("Could not load dyanmic popup menu: "
+				MylarStatusHandler.log("Could not load dynamic popup menu: "
 						+ dynamicPopupContributor.getClass().getCanonicalName() + " must implement "
 						+ IDynamicSubMenuContributor.class.getCanonicalName(), null);
 			}

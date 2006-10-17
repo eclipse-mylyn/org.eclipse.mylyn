@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.jface.action.Action;
@@ -179,7 +180,7 @@ public class TaskListView extends ViewPart {
 	private OpenTaskListElementAction openAction;
 
 	private TaskListElementPropertiesAction propertiesAction;
-	
+
 	private OpenWithBrowserAction openWithBrowser;
 
 	private NewLocalTaskAction newLocalTaskAction;
@@ -1037,11 +1038,14 @@ public class TaskListView extends ViewPart {
 		manager.add(new Separator("navigation"));
 		// manager.add(new Separator(SEPARATOR_CONTEXT));
 		manager.add(previousTaskAction);
-		// manager.add(nextTaskAction);		
+		// manager.add(nextTaskAction);
 		manager.add(new Separator(SEPARATOR_CONTEXT));
 		// manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
+	/*
+	 * TODO: clean up
+	 */
 	private void fillContextMenu(IMenuManager manager) {
 		updateDrillDownActions();
 
@@ -1060,9 +1064,12 @@ public class TaskListView extends ViewPart {
 		}
 		openWithBrowser.selectionChanged((StructuredSelection) getViewer().getSelection());
 
-//		if (!(element instanceof AbstractRepositoryQuery || element instanceof TaskCategory)) {
-			addAction(openAction, manager, element);
-//		}
+		Map<String, List<IDynamicSubMenuContributor>> dynamicMenuMap = TasksUiPlugin.getDefault()
+				.getDynamicMenuMap();
+		// if (!(element instanceof AbstractRepositoryQuery || element
+		// instanceof TaskCategory)) {
+		addAction(openAction, manager, element);
+		// }
 		ITask task = null;
 		if ((element instanceof ITask) || (element instanceof AbstractQueryHit)) {
 			if (element instanceof AbstractQueryHit) {
@@ -1077,14 +1084,6 @@ public class TaskListView extends ViewPart {
 			addAction(copyDetailsAction, manager, element);
 
 			if (task != null) {
-				// if (!(task instanceof AbstractRepositoryTask) || task
-				// instanceof WebTask) {
-				// if (task.isCompleted()) {
-				// addAction(markCompleteAction, manager, element);
-				// } else {
-				// addAction(markIncompleteAction, manager, element);
-				// }
-				// }
 				addAction(removeFromCategoryAction, manager, element);
 				addAction(deleteAction, manager, element);
 				if (task.isActive()) {
@@ -1098,7 +1097,7 @@ public class TaskListView extends ViewPart {
 		} else if (element instanceof AbstractTaskContainer || element instanceof AbstractRepositoryQuery) {
 			addAction(openWithBrowser, manager, element);
 			addAction(copyDetailsAction, manager, element);
-			addAction(deleteAction, manager, element);			
+			addAction(deleteAction, manager, element);
 		}
 
 		if (element instanceof AbstractTaskContainer) {
@@ -1109,10 +1108,14 @@ public class TaskListView extends ViewPart {
 		}
 
 		manager.add(new Separator());
-		for (IDynamicSubMenuContributor contributor : TasksUiPlugin.getDefault().getDynamicMenuContributers()) {
-			MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
-			if (subMenuManager != null) {
-				addMenuManager(subMenuManager, manager, element);				
+		for (String menuPath : dynamicMenuMap.keySet()) {
+			if (!SEPARATOR_CONTEXT.equals(menuPath)) {
+				for (IDynamicSubMenuContributor contributor : dynamicMenuMap.get(menuPath)) {
+					MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
+					if (subMenuManager != null) {
+						addMenuManager(subMenuManager, manager, element);
+					}
+				}
 			}
 		}
 
@@ -1120,19 +1123,30 @@ public class TaskListView extends ViewPart {
 		manager.add(newCategoryAction);
 		manager.add(newLocalTaskAction);
 		manager.add(new Separator(SEPARATOR_REPORTS));
-
 		manager.add(new Separator(SEPARATOR_CONTEXT));
 
+		for (String menuPath : dynamicMenuMap.keySet()) {
+			if (SEPARATOR_CONTEXT.equals(menuPath)) {
+				for (IDynamicSubMenuContributor contributor : dynamicMenuMap.get(menuPath)) {
+					MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
+					if (subMenuManager != null) {
+						addMenuManager(subMenuManager, manager, element);
+					}
+				}
+			}
+		}
+		
 		if (element instanceof AbstractRepositoryQuery || element instanceof TaskCategory) {
 			manager.add(new Separator());
 			addAction(propertiesAction, manager, element);
 		}
-		
+
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
 	private void addMenuManager(IMenuManager menuToAdd, IMenuManager manager, ITaskListElement element) {
-		if ((element instanceof ITask || element instanceof AbstractQueryHit) || (element instanceof AbstractTaskContainer || element instanceof AbstractRepositoryQuery)) {
+		if ((element instanceof ITask || element instanceof AbstractQueryHit)
+				|| (element instanceof AbstractTaskContainer || element instanceof AbstractRepositoryQuery)) {
 			manager.add(menuToAdd);
 		}
 	}
@@ -1401,9 +1415,9 @@ public class TaskListView extends ViewPart {
 			if (element instanceof AbstractTaskContainer) {
 				drilledIntoCategory = (AbstractTaskContainer) element;
 				drillDownAdapter.goInto();
-				IActionBars bars = getViewSite().getActionBars();				
-				bars.getToolBarManager().add(goUpAction);				
-				bars.updateActionBars();				
+				IActionBars bars = getViewSite().getActionBars();
+				bars.getToolBarManager().add(goUpAction);
+				bars.updateActionBars();
 				updateDrillDownActions();
 			}
 		}
@@ -1412,8 +1426,8 @@ public class TaskListView extends ViewPart {
 	public void goUpToRoot() {
 		drilledIntoCategory = null;
 		drillDownAdapter.goBack();
-		IActionBars bars = getViewSite().getActionBars();				
-		bars.getToolBarManager().remove(GoUpAction.ID);		
+		IActionBars bars = getViewSite().getActionBars();
+		bars.getToolBarManager().remove(GoUpAction.ID);
 		bars.updateActionBars();
 		updateDrillDownActions();
 	}

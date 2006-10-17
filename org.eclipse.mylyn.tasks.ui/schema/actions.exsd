@@ -71,6 +71,13 @@
                </appInfo>
             </annotation>
          </attribute>
+         <attribute name="menuPath" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 

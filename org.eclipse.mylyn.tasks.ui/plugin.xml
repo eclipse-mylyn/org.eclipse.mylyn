@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-    <extension-point id="providers" name="Tasklist Providers" schema="schema/providers.exsd"/>
+    <extension-point id="actions" name="Tasklist Actions" schema="schema/actions.exsd"/>
     <extension-point id="repositories" name="Task Repositories" schema="schema/repositories.exsd"/>
     <extension-point id="editors" name="Task Editors" schema="schema/editors.exsd"/>
 
@@ -484,10 +484,16 @@
    </extension>
   
      
-   <extension point="org.eclipse.mylar.tasks.ui.providers">    
-      <dynamicPopupMenu class="org.eclipse.mylar.internal.tasks.ui.TaskReminderMenuContributor"/>
-      <dynamicPopupMenu class="org.eclipse.mylar.internal.tasks.ui.TaskStatusMenuContributor"/>
-      <dynamicPopupMenu class="org.eclipse.mylar.internal.tasks.ui.MoveToCategoryMenuContributor"/>
+   <extension point="org.eclipse.mylar.tasks.ui.actions">    
+      <dynamicPopupMenu
+            class="org.eclipse.mylar.internal.tasks.ui.TaskReminderMenuContributor"
+            menuPath="tasks"/>
+      <dynamicPopupMenu
+            class="org.eclipse.mylar.internal.tasks.ui.TaskStatusMenuContributor"
+            menuPath="tasks"/>
+      <dynamicPopupMenu
+            class="org.eclipse.mylar.internal.tasks.ui.MoveToCategoryMenuContributor"
+            menuPath="tasks"/>
    </extension>
    <extension
          point="org.eclipse.mylar.tasks.ui.editors">

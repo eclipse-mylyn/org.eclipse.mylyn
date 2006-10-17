@@ -173,12 +173,14 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 			manager.add(new Separator());
 
-			for (IDynamicSubMenuContributor contributor : TasksUiPlugin.getDefault().getDynamicMenuContributers()) {
-				List<ITaskListElement> selectedElements = new ArrayList<ITaskListElement>();
-				selectedElements.add(task);
-				MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
-				if (subMenuManager != null) {
-					manager.add(subMenuManager);
+			for (String menuPath : TasksUiPlugin.getDefault().getDynamicMenuMap().keySet()) {
+				for (IDynamicSubMenuContributor contributor : TasksUiPlugin.getDefault().getDynamicMenuMap().get(menuPath)) {
+					List<ITaskListElement> selectedElements = new ArrayList<ITaskListElement>();
+					selectedElements.add(task);
+					MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
+					if (subMenuManager != null) {
+						manager.add(subMenuManager);
+					}
 				}
 			}
 
@@ -232,7 +234,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	public void contributeToCoolBar(ICoolBarManager cbm) {
 	}
 
-	public void dispose() {		
+	public void dispose() {
 		sourceActionBars.dispose();
 		super.dispose();
 	}
@@ -245,7 +247,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	public void init(IActionBars bars, IWorkbenchPage page) {
 		super.init(bars, page);
 		registerGlobalHandlers(bars);
-		
+
 	}
 
 	public MylarTaskEditor getEditor() {
@@ -272,7 +274,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	public void selectionChanged(SelectionChangedEvent event) {
 		updateSelectableActions(event.getSelection());
 	}
-	
+
 	private class GlobalAction extends Action {
 
 		private String actionId;
@@ -297,7 +299,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			}
 		}
 	}
-	
+
 	public void registerGlobalHandlers(IActionBars bars) {
 		bars.setGlobalActionHandler(ActionFactory.CUT.getId(), cutAction);
 		bars.setGlobalActionHandler(ActionFactory.PASTE.getId(), pasteAction);
@@ -307,7 +309,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		bars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), selectAllAction);
 		bars.updateActionBars();
 	}
-	
+
 	public void unregisterGlobalHandlers(IActionBars bars) {
 		bars.setGlobalActionHandler(ActionFactory.CUT.getId(), null);
 		bars.setGlobalActionHandler(ActionFactory.PASTE.getId(), null);
@@ -317,14 +319,14 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		bars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), null);
 		bars.updateActionBars();
 	}
-	
+
 	public void forceActionsEnabled() {
 		cutAction.setEnabled(true);
 		copyAction.setEnabled(true);
 		pasteAction.setEnabled(true);
 		selectAllAction.setEnabled(true);
 		undoAction.setEnabled(false);
-		redoAction.setEnabled(false);		
+		redoAction.setEnabled(false);
 	}
-	
+
 }

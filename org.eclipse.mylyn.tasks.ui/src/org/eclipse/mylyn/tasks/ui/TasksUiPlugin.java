@@ -579,14 +579,19 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		}
 	}
 
-	private List<IDynamicSubMenuContributor> menuContributors = new ArrayList<IDynamicSubMenuContributor>();
+	private Map<String, List<IDynamicSubMenuContributor>> menuContributors = new HashMap<String, List<IDynamicSubMenuContributor>>();
 
-	public List<IDynamicSubMenuContributor> getDynamicMenuContributers() {
+	public Map<String, List<IDynamicSubMenuContributor>> getDynamicMenuMap() {
 		return menuContributors;
 	}
 
-	public void addDynamicPopupContributor(IDynamicSubMenuContributor contributor) {
-		menuContributors.add(contributor);
+	public void addDynamicPopupContributor(String menuPath, IDynamicSubMenuContributor contributor) {
+		List<IDynamicSubMenuContributor> contributors = menuContributors.get(menuPath);
+		if (contributors == null) {
+			contributors = new ArrayList<IDynamicSubMenuContributor>();
+			menuContributors.put(menuPath, contributors);
+		}
+		contributors.add(contributor);
 	}
 
 	public boolean isMultipleActiveTasksMode() {
