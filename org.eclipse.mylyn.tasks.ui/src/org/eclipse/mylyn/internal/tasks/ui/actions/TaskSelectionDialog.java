@@ -132,7 +132,7 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 
 		Label matches = new Label(area, SWT.NONE);
 		matches.setText("&Matching tasks:");
-		viewer = new TableViewer(area);
+		viewer = new TableViewer(area, SWT.SINGLE);
 		Control control = viewer.getControl();
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		control.setLayoutData(gd);
