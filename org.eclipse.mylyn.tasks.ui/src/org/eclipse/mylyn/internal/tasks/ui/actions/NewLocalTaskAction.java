@@ -14,7 +14,9 @@ package org.eclipse.mylar.internal.tasks.ui.actions;
 import java.util.Calendar;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
@@ -26,11 +28,13 @@ import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
 
 /**
  * @author Mik Kersten
  */
-public class NewLocalTaskAction extends Action {
+public class NewLocalTaskAction extends Action implements IViewActionDelegate {
 
 	public static final String DESCRIPTION_DEFAULT = "New Task";
 
@@ -47,6 +51,13 @@ public class NewLocalTaskAction extends Action {
 		setImageDescriptor(TaskListImages.TASK_NEW);
 	}
 
+	public void init(IViewPart view) {
+	}
+
+	public void run(IAction action) {
+		run();
+	}
+	
 	@Override
 	public void run() {
 		Task newTask = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), DESCRIPTION_DEFAULT, true);
@@ -105,5 +116,8 @@ public class NewLocalTaskAction extends Action {
 			TasksUiPlugin.getTaskListManager().setScheduledToday(newTaskSchedule);
 		}		
 		TasksUiPlugin.getTaskListManager().setReminder(newTask, newTaskSchedule.getTime());
+	}
+
+	public void selectionChanged(IAction action, ISelection selection) {
 	}
 }

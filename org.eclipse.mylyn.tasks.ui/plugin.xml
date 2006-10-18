@@ -275,7 +275,7 @@
                id="org.eclipse.mylar.tasklist.new.repositorytask"
                label="New Repository Task"
                style="push"
-               toolbarPath="reports"
+               toolbarPath="new"
                tooltip="New Repository Task"> 
   		</action>
   		
@@ -327,8 +327,8 @@
               enablesFor="*"
               icon="icons/etool16/task-repository.gif"
               id="org.eclipse.mylar.tasklist.actions.addQuery"
-              menubarPath="reports"
-              label="Add Existing Task"
+              menubarPath="org.eclipse.mylar.tasks.ui.menu.new/repository"
+              label="Add Existing Task..."
               style="push"
               tooltip="Add Existing Task"> 
   		</action>
@@ -338,7 +338,7 @@
 	        enablesFor="*"
 	        icon="icons/etool16/task-repository-new.gif"
 	        id="org.eclipse.mylar.tasklist.new.repositorytask"
-	        label="New Repository Task"
+	        label="Repository Task..."
 	        menubarPath="org.eclipse.mylar.tasks.ui.menu.new/repository"
 	        tooltip="New Repository Task"/>
 	              
@@ -348,7 +348,7 @@
               icon="icons/etool16/query-new.gif"
               id="org.eclipse.mylar.tasks.ui.actions.new.query"
               menubarPath="org.eclipse.mylar.tasks.ui.menu.new/repository"
-              label="New Query"
+              label="Query..."
               style="push"
               tooltip="New Query"> 
   		</action>
@@ -367,7 +367,7 @@
         class="org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction"
         icon="icons/etool16/task-new.gif"
         id="org.eclipse.mylar.tasks.ui.actions.new.task"
-        label="New Task"
+        label="Task"
         menubarPath="org.eclipse.mylar.tasks.ui.menu.new/local"
         style="push"
         tooltip="New Task">
@@ -376,7 +376,7 @@
         class="org.eclipse.mylar.internal.tasks.ui.actions.NewCategoryAction"
         icon="icons/etool16/category-new.gif"
         id="org.eclipse.mylar.tasks.ui.actions.new.category"
-        label="New Category"
+        label="Category"
         menubarPath="org.eclipse.mylar.tasks.ui.menu.new/local"
         tooltip="New Category">
   </action>

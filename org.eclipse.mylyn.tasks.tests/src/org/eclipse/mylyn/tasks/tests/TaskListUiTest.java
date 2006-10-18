@@ -260,7 +260,7 @@ public class TaskListUiTest extends TestCase {
 		int nrOfSeparators = 1;
 		// adding a separator and the New Category... action
 		int expectedNrOfSubMenuEntries = nrOfCategoriesMinusArchiveContainer + nrOfSeparators + 1;
-		NewCategoryAction newCatActon = new NewCategoryAction(null);
+		NewCategoryAction newCatActon = new NewCategoryAction();
 
 		// execute sytem under test
 		MenuManager menuManager = moveToMenuContrib.getSubMenuManager(selectedElements);

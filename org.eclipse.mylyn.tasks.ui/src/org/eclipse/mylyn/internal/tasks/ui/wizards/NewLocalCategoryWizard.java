@@ -11,7 +11,6 @@ package org.eclipse.mylar.internal.tasks.ui.wizards;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.tasks.ui.actions.NewCategoryAction;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
@@ -31,7 +30,7 @@ public class NewLocalCategoryWizard extends Wizard implements INewWizard {
 	
 	@Override
 	public boolean performFinish() {
-		new NewCategoryAction(TaskListView.openInActivePerspective()).run();
+		new NewCategoryAction().run();
 		return true;
 	}
 

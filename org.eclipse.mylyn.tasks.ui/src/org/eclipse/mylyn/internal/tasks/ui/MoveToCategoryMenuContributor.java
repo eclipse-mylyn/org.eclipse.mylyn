@@ -14,7 +14,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.mylar.internal.tasks.ui.actions.NewCategoryAction;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
@@ -58,8 +57,7 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 		}
 		// add New Category action at the end of the Move to Category Submenu
 		// and move selected actions to this newly created category
-		TaskListView view = TaskListView.getFromActivePerspective();
-		Action action = new NewCategoryAction(view){
+		Action action = new NewCategoryAction() {
 			@Override
 			public void run() {
 				super.run();

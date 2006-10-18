@@ -66,7 +66,6 @@ import org.eclipse.mylar.internal.tasks.ui.actions.GoIntoAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.GoUpAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskIncompleteAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.NewCategoryAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.OpenWithBrowserAction;
@@ -120,8 +119,6 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.ActionFactory;
-import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.themes.IThemeManager;
@@ -146,7 +143,7 @@ public class TaskListView extends ViewPart {
 
 	private static final String ID_SEPARATOR_NEW = "new";
 	
-	private static final String ID_SEPARATOR_LOCAL = "local";
+//	private static final String ID_SEPARATOR_LOCAL = "local";
 	
 	private static final String ID_SEPARATOR_CONTEXT = "context";
 
@@ -187,7 +184,7 @@ public class TaskListView extends ViewPart {
 
 	private NewLocalTaskAction newLocalTaskAction;
 
-	private NewCategoryAction newCategoryAction;
+//	private NewCategoryAction newCategoryAction;
 
 	private RenameAction renameAction;
 
@@ -1237,7 +1234,7 @@ public class TaskListView extends ViewPart {
 		goUpAction = new GoUpAction(drillDownAdapter);
 
 		newLocalTaskAction = new NewLocalTaskAction(this);
-		newCategoryAction = new NewCategoryAction(this);
+//		newCategoryAction = new NewCategoryAction(this);
 		removeFromCategoryAction = new RemoveFromCategoryAction(this);
 		renameAction = new RenameAction(this);
 
