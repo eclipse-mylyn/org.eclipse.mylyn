@@ -54,8 +54,8 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 		this.connector = connector;
 	}
 
-	public RepositoryTaskData downloadTaskData(final AbstractRepositoryTask task, TaskRepository repository, Proxy proxySettings) throws CoreException {
-		int id = Integer.parseInt(AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()));
+	public RepositoryTaskData downloadTaskData(TaskRepository repository, String taskId, Proxy proxySettings) throws CoreException {
+		int id = Integer.parseInt(taskId);
 		return downloadTaskData(repository, id);
 	}
 

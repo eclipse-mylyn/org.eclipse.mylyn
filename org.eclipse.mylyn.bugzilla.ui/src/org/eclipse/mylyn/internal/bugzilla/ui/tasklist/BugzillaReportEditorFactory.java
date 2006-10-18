@@ -54,14 +54,15 @@ public class BugzillaReportEditorFactory implements ITaskEditorFactory {
 					BugzillaCorePlugin.REPOSITORY_KIND, bugzillaTask.getRepositoryUrl());
 			try {
 				BugzillaTaskEditorInput input = new BugzillaTaskEditorInput(repository, bugzillaTask, true);
-				//input.setOfflineBug(bugzillaTask.getTaskData());
+				// input.setOfflineBug(bugzillaTask.getTaskData());
 				return input;
 			} catch (final LoginException e) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						MessageDialog.openError(Display.getDefault().getActiveShell(), "Report Download Failed",
 								"Ensure proper repository configuration in " + TaskRepositoriesView.NAME + ".\n"
-								+ "Repository set to: " + repository.getUrl() + ", username: " + repository.getUserName());
+										+ "Repository set to: " + repository.getUrl() + ", username: "
+										+ repository.getUserName());
 					}
 				});
 			} catch (Exception e) {
@@ -84,6 +85,10 @@ public class BugzillaReportEditorFactory implements ITaskEditorFactory {
 	}
 
 	public boolean canCreateEditorFor(IEditorInput input) {
-		return input instanceof ExistingBugEditorInput;
+		if (input instanceof ExistingBugEditorInput) {
+			return BugzillaCorePlugin.REPOSITORY_KIND
+					.equals(((ExistingBugEditorInput) input).getRepository().getKind());
+		}
+		return false;
 	}
 }

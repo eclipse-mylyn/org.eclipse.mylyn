@@ -443,7 +443,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected abstract void validateInput();
 
-	protected abstract String getTitleString();
+	protected String getTitleString() {
+		return getRepositoryTaskData().getLabel();// + ": " + checkText(summaryVal);
+	}
 
 	protected abstract void submitBug();
 

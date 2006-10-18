@@ -167,11 +167,6 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	@Override
-	protected String getTitleString() {
-		return taskData.getLabel();// + ": " + checkText(summaryVal);
-	}
-
-	@Override
 	public void submitBug() {
 		submitButton.setEnabled(false);
 		showBusy(true);

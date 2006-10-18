@@ -316,7 +316,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 			return null;
 		}
 
-		public RepositoryTaskData downloadTaskData(AbstractRepositoryTask repositoryTask, TaskRepository repository,
+		public RepositoryTaskData downloadTaskData(TaskRepository repository, String taskId,
 				Proxy proxySettings) throws CoreException, LoginException {
 			return null;
 		}

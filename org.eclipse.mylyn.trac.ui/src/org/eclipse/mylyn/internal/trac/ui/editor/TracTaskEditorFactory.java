@@ -9,6 +9,7 @@ package org.eclipse.mylar.internal.trac.ui.editor;
 
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.ITaskEditorFactory;
+import org.eclipse.mylar.internal.tasks.ui.editors.ExistingBugEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylar.internal.trac.core.TracRepositoryConnector;
@@ -26,18 +27,20 @@ public class TracTaskEditorFactory implements ITaskEditorFactory {
 
 	public boolean canCreateEditorFor(ITask task) {
 		if (task instanceof TracTask) {
-			TracRepositoryConnector connector = (TracRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-					TracCorePlugin.REPOSITORY_KIND);
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(TracCorePlugin.REPOSITORY_KIND,
-					((TracTask)task).getRepositoryUrl());
+			TracRepositoryConnector connector = (TracRepositoryConnector) TasksUiPlugin.getRepositoryManager()
+					.getRepositoryConnector(TracCorePlugin.REPOSITORY_KIND);
+			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+					TracCorePlugin.REPOSITORY_KIND, ((TracTask) task).getRepositoryUrl());
 			return connector.hasRichEditor(repository);
 		}
 		return task instanceof TracTask;
 	}
 
 	public boolean canCreateEditorFor(IEditorInput input) {
-		if (input instanceof TracTaskEditorInput) {
-			return ((TracTaskEditorInput) input).getRepositoryTaskData() != null;
+		if (input instanceof ExistingBugEditorInput) {
+			ExistingBugEditorInput existingInput = (ExistingBugEditorInput) input;
+			return existingInput.getRepositoryTaskData() != null
+					&& TracCorePlugin.REPOSITORY_KIND.equals(existingInput.getRepository().getKind());
 		}
 		return false;
 	}
@@ -48,8 +51,8 @@ public class TracTaskEditorFactory implements ITaskEditorFactory {
 
 	public IEditorInput createEditorInput(ITask task) {
 		TracTask tracTask = (TracTask) task;
-		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-				TracCorePlugin.REPOSITORY_KIND, tracTask.getRepositoryUrl());
+		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(TracCorePlugin.REPOSITORY_KIND,
+				tracTask.getRepositoryUrl());
 		try {
 			return new TracTaskEditorInput(repository, tracTask);
 		} catch (Exception e) {

@@ -430,7 +430,10 @@ public class MylarTaskEditor extends FormEditor {
 					selectedIndex = browserPageIndex;
 				}
 			}
-			setActivePage(selectedIndex);
+			
+			if (selectedIndex != -1) {
+				setActivePage(selectedIndex);
+			}
 
 			if (task instanceof AbstractRepositoryTask) {
 				setTitleImage(TaskListImages.getImage(TaskListImages.TASK_REPOSITORY));

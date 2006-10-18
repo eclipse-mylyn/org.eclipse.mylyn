@@ -72,12 +72,6 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 		return editorInput.getRepositoryTaskData();
 	}
 
-	@Override
-	protected String getTitleString() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public void init(IEditorSite site, IEditorInput input) {
 		if (!(input instanceof ExistingBugEditorInput))
 			return;
@@ -123,6 +117,7 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 					public void run() {
 						if (event.getJob().getResult().isOK()) {
 							if (attachContext) {
+								// TODO check for task == null
 								// TODO should be done as part of job
 								try {
 									connector.attachContext(repository, (AbstractRepositoryTask) task, "",
@@ -150,10 +145,11 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 				try {
 					ITracClient server = connector.getClientManager().getRepository(repository);
 					server.updateTicket(ticket, comment);
-					// XXX hack to avoid message about lost changes to local
-					// task
-					task.setTaskData(null);
-					TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+					if (task != null) {
+						// XXX hack to avoid message about lost changes to local task
+						task.setTaskData(null);
+						TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+					}
 					return Status.OK_STATUS;
 				} catch (Exception e) {
 					return TracCorePlugin.toStatus(e);

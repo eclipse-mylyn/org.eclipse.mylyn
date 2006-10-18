@@ -73,22 +73,22 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 		this.taskList = taskList;
 	}
 
-	public RepositoryTaskData downloadTaskData(final AbstractRepositoryTask bugzillaTask, TaskRepository repository,
+	public RepositoryTaskData downloadTaskData(TaskRepository repository, String taskId,
 			Proxy proxySettings) throws CoreException {
 		try {
-			int bugId = Integer.parseInt(AbstractRepositoryTask.getTaskId(bugzillaTask.getHandleIdentifier()));
+			int bugId = Integer.parseInt(taskId);
 
 			return BugzillaServerFacade.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(),
 					proxySettings, repository.getCharacterEncoding(), bugId);
 		} catch (final UnrecognizedReponseException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0,
-					"Report download failed. Unrecognized response from " + bugzillaTask.getRepositoryUrl() + ".", e));
+					"Report download failed. Unrecognized response from " + repository.getUrl() + ".", e));
 		} catch (final FileNotFoundException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "Report download from "
-					+ bugzillaTask.getRepositoryUrl() + " failed. File not found: " + e.getMessage(), e));
+					+ repository.getUrl() + " failed. File not found: " + e.getMessage(), e));
 		} catch (final Exception e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "Report download from "
-					+ bugzillaTask.getRepositoryUrl() + " failed, please see details.", e));
+					+ repository.getUrl() + " failed, please see details.", e));
 		}
 	}
 
@@ -197,7 +197,8 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 				// using the last modified stamp of the last task modified in the return hits.
 				// (or the changeddate field in the hit rdf becomes consistent, currently it doesn't return a proper modified date string)
 				if(repositoryTask.getTaskData() != null && repositoryTask.getTaskData().getLastModified().equals(repository.getSyncTimeStamp())) {
-					RepositoryTaskData taskData = downloadTaskData(repositoryTask, repository, proxySettings);
+					String taskId = AbstractRepositoryTask.getTaskId(repositoryTask.getHandleIdentifier());
+					RepositoryTaskData taskData = downloadTaskData(repository, taskId, proxySettings);
 					if(taskData != null && taskData.getLastModified().equals(repository.getSyncTimeStamp())) {
 						continue;
 					}

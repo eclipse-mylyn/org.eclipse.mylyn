@@ -33,7 +33,7 @@ public interface IOfflineTaskHandler {
 	
 	public AbstractAttributeFactory getAttributeFactory();
 	
-	public RepositoryTaskData downloadTaskData(AbstractRepositoryTask repositoryTask, TaskRepository repository, Proxy proxySettings) throws CoreException, LoginException;
+	public RepositoryTaskData downloadTaskData(TaskRepository repository, String taskId, Proxy proxySettings) throws CoreException, LoginException;
 		
 	/**
 	 * returns all tasks if date is null or an error occurs

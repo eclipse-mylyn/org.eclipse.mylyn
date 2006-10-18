@@ -98,7 +98,8 @@ class SynchronizeTaskJob extends Job {
 												+ repositoryTask.getRepositoryUrl() + " in "
 												+ TaskRepositoriesView.NAME + ".", null));
 							} else {
-								downloadedTaskData = offlineHandler.downloadTaskData(repositoryTask, repository,
+								String taskId = AbstractRepositoryTask.getTaskId(repositoryTask.getHandleIdentifier());
+								downloadedTaskData = offlineHandler.downloadTaskData(repository, taskId,
 										TasksUiPlugin.getDefault().getProxySettings());
 							}
 						} catch (final LoginException e) {							
