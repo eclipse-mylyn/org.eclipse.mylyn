@@ -34,5 +34,15 @@
          point="org.eclipse.mylar.tasks.ui.editors">
       <editorFactory class="org.eclipse.mylar.internal.trac.ui.editor.TracTaskEditorFactory"/>
    </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.eclipse.mylar.internal.trac.ui.editor.NewTracTaskEditor"
+            contributorClass="org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorActionContributor"
+            icon="icons/etool16/task-repository.gif"
+            id="org.eclipse.mylar.trac.ui.newBugEditor"
+            name="Trac viewer">
+      </editor>
+   </extension>
 
 </plugin>

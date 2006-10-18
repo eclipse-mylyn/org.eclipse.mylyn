@@ -160,7 +160,8 @@ public class TracXmlRpcClient extends AbstractTracClient {
 			}
 		}
 
-		throw new TracException("Required API calls are missing, please update your Trac XML-RPC Plugin to revision " + REQUIRED_REVISION + " or later");
+		throw new TracException("Required API calls are missing, please update your Trac XML-RPC Plugin to revision "
+				+ REQUIRED_REVISION + " or later");
 	}
 
 	public TracTicket getTicket(int id) throws TracException {
@@ -179,9 +180,9 @@ public class TracXmlRpcClient extends AbstractTracClient {
 
 		String[] actions = getActions(id);
 		ticket.setActions(actions);
-		
+
 		ticket.setResolutions(getDefaultTicketResolutions());
-		
+
 		return ticket;
 	}
 
@@ -412,14 +413,14 @@ public class TracXmlRpcClient extends AbstractTracClient {
 
 	}
 
-	public void createTicket(TracTicket ticket) throws TracException {
+	public int createTicket(TracTicket ticket) throws TracException {
 		Map<String, String> attributes = ticket.getValues();
 		String summary = attributes.remove(Key.SUMMARY.getKey());
 		String description = attributes.remove(Key.DESCRIPTION.getKey());
 		if (summary == null || description == null) {
 			throw new InvalidTicketException();
 		}
-		call("ticket.create", summary, description, attributes);
+		return (Integer) call("ticket.create", summary, description, attributes);
 	}
 
 	public void updateTicket(TracTicket ticket, String comment) throws TracException {

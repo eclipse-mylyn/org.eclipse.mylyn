@@ -339,19 +339,47 @@
 	        icon="icons/etool16/task-repository-new.gif"
 	        id="org.eclipse.mylar.tasklist.new.repositorytask"
 	        label="New Repository Task"
-	        menubarPath="reports"
+	        menubarPath="org.eclipse.mylar.tasks.ui.menu.new/repository"
 	        tooltip="New Repository Task"/>
 	              
 		<action
               class="org.eclipse.mylar.internal.tasks.ui.actions.NewQueryAction"
               enablesFor="*"
               icon="icons/etool16/query-new.gif"
-              id="org.eclipse.mylar.tasklist.actions.addQuery"
-              menubarPath="reports"
+              id="org.eclipse.mylar.tasks.ui.actions.new.query"
+              menubarPath="org.eclipse.mylar.tasks.ui.menu.new/repository"
               label="New Query"
               style="push"
               tooltip="New Query"> 
   		</action>
+  <menu
+        id="org.eclipse.mylar.tasks.ui.menu.new"
+        label="New"
+        path="new">
+     <separator
+           name="local">
+     </separator>
+     <separator
+           name="repository">
+     </separator>
+  </menu>
+  <action
+        class="org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction"
+        icon="icons/etool16/task-new.gif"
+        id="org.eclipse.mylar.tasks.ui.actions.new.task"
+        label="New Task"
+        menubarPath="org.eclipse.mylar.tasks.ui.menu.new/local"
+        style="push"
+        tooltip="New Task">
+  </action>
+  <action
+        class="org.eclipse.mylar.internal.tasks.ui.actions.NewCategoryAction"
+        icon="icons/etool16/category-new.gif"
+        id="org.eclipse.mylar.tasks.ui.actions.new.category"
+        label="New Category"
+        menubarPath="org.eclipse.mylar.tasks.ui.menu.new/local"
+        tooltip="New Category">
+  </action>
       </viewerContribution>
       
    </extension>

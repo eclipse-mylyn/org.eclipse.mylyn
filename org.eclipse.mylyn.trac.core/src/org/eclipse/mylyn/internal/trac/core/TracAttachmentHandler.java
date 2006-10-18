@@ -66,7 +66,7 @@ public class TracAttachmentHandler implements IAttachmentHandler {
 	}
 
 	public void uploadAttachment(TaskRepository repository, AbstractRepositoryTask task, String comment, String description, File file, String contentType, boolean isPatch, Proxy proxySettings) throws CoreException {
-		if (!connector.hasAttachmentSupport(repository, task)) {
+		if (!TracRepositoryConnector.hasAttachmentSupport(repository, task)) {
 			throw new CoreException(new Status(IStatus.INFO, TracCorePlugin.PLUGIN_ID, IStatus.OK, "Attachments are not supported by this repository access type.", null));
 		}
 
@@ -100,11 +100,11 @@ public class TracAttachmentHandler implements IAttachmentHandler {
 	}
 
 	public boolean canDownloadAttachment(TaskRepository repository, AbstractRepositoryTask task) {
-		return connector.hasAttachmentSupport(repository, task);
+		return TracRepositoryConnector.hasAttachmentSupport(repository, task);
 	}
 
 	public boolean canUploadAttachment(TaskRepository repository, AbstractRepositoryTask task) {
-		return connector.hasAttachmentSupport(repository, task);
+		return TracRepositoryConnector.hasAttachmentSupport(repository, task);
 	}
 
 	public boolean canDeprecate(TaskRepository repository, RepositoryAttachment attachment) {		

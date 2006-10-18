@@ -8,7 +8,6 @@
 
 package org.eclipse.mylar.internal.trac.ui.editor;
 
-import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -26,12 +25,9 @@ import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
 import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylar.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket;
-import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylar.internal.trac.ui.TracUiPlugin;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.RepositoryOperation;
-import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Composite;
@@ -56,6 +52,7 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 	@Override
 	protected void addAttachContextButton(Composite buttonComposite, ITask task) {
 		// disabled, see bug 155151
+		
 	}
 
 	@Override
@@ -101,7 +98,7 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 
 		final TracTicket ticket;
 		try {
-			ticket = getTracTicket();
+			ticket = TracRepositoryConnector.getTracTicket(repository, getRepositoryTaskData());
 		} catch (InvalidTicketException e) {
 			TracUiPlugin.handleTracException(e);
 			return;
@@ -170,46 +167,6 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 
 	@Override
 	protected void validateInput() {
-	}
-
-	TracTicket getTracTicket() throws InvalidTicketException {
-		RepositoryTaskData data = getRepositoryTaskData();
-
-		TracTicket ticket = new TracTicket(Integer.parseInt(data.getId()));
-
-		List<RepositoryTaskAttribute> attributes = data.getAttributes();
-		for (RepositoryTaskAttribute attribute : attributes) {
-			if (!attribute.isReadOnly()) {
-				ticket.putValue(attribute.getID(), attribute.getValue());
-			}
-		}
-		// TODO "1" should not be hard coded here
-		if ("1".equals(data.getAttributeValue(RepositoryTaskAttribute.ADD_SELF_CC))) {
-			String cc = data.getAttributeValue(RepositoryTaskAttribute.USER_CC);
-			ticket.putBuiltinValue(Key.CC, cc + "," + repository.getUserName());
-		}
-
-		RepositoryOperation operation = data.getSelectedOperation();
-		if (operation != null) {
-			String action = operation.getKnobName();
-			if (!"leave".equals(action)) {
-				if ("accept".equals(action)) {
-					ticket.putValue("status", "assigned");
-					ticket.putValue("owner", TracRepositoryConnector.getDisplayUsername(repository));
-				} else if ("resolve".equals(action)) {
-					ticket.putValue("status", "closed");
-					ticket.putValue("resolution", operation.getOptionSelection());
-				} else if ("reopen".equals(action)) {
-					ticket.putValue("status", "reopened");
-					ticket.putValue("resolution", "");
-				} else if ("reassign".equals(operation.getKnobName())) {
-					ticket.putValue("status", "new");
-					ticket.putValue("owner", operation.getInputValue());
-				}
-			}
-		}
-
-		return ticket;
 	}
 
 }

@@ -9,13 +9,12 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui.editor;
+package org.eclipse.mylar.internal.trac.ui.editor;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.NewBugEditorInput;
@@ -23,6 +22,8 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+
+// based on NewBugzillaTaskEditor
 
 /**
  * @author Rob Elves 
@@ -32,11 +33,11 @@ import org.eclipse.ui.PartInitException;
  * then all occurrences of BugzillaUiPlugin.NEW_BUG_EDITOR_ID can be replaced with TaskListPreferenceConstants.TASK_EDITOR_ID
  * so that MylarTaskEditor is opened rather than this.
  */
-public class NewBugzillaTaskEditor extends MylarTaskEditor {
+public class NewTracTaskEditor extends MylarTaskEditor {
 
 	private Menu contextMenu;
 	
-	private NewBugEditor newBugEditor;
+	private NewTracTaskEditorPage newBugEditor;
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
@@ -57,10 +58,10 @@ public class NewBugzillaTaskEditor extends MylarTaskEditor {
 		contextMenu = manager.createContextMenu(getContainer());
 		getContainer().setMenu(contextMenu);
 		try {
-			newBugEditor = new NewBugEditor(this);
+			newBugEditor = new NewTracTaskEditorPage(this);
 			int index = addPage(newBugEditor);
 			String label = "<unsubmitted> "+((NewBugEditorInput)getEditorInput()).getRepository().getUrl();
-			setPageText(index, "Bugzilla");			
+			setPageText(index, "Trac");			
 			setPartName(label);
 		} catch (PartInitException e) {
 			MylarStatusHandler.fail(e, "Could not add new bug form", true);
@@ -72,14 +73,14 @@ public class NewBugzillaTaskEditor extends MylarTaskEditor {
 		return newBugEditor.getAdapter(adapter);
 	}
 
-	public NewBugEditor getPage() {
+	public NewTracTaskEditorPage getPage() {
 		return newBugEditor;
 	}
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		MessageDialog.openWarning(this.newBugEditor.getSite().getShell(), "Operation not supported", "Save of un-submitted new tasks is not currently supported.\nPlease submit all new tasks.");
-		monitor.setCanceled(true);
+		// ignore
+
 	}
 
 	@Override

@@ -34,16 +34,13 @@ public class NewLocalTaskAction extends Action {
 
 	public static final String DESCRIPTION_DEFAULT = "New Task";
 
-	public static final String ID = "org.eclipse.mylar.tasklist.actions.create.task";
-
-	private final TaskListView view;
+	public static final String ID = "org.eclipse.mylar.tasks.ui.actions.create.task";
 
 	public NewLocalTaskAction() {
 		this(null);
 	}
 
 	public NewLocalTaskAction(TaskListView view) {
-		this.view = view;
 		setText(TaskInputDialog.LABEL_SHELL);
 		setToolTipText(TaskInputDialog.LABEL_SHELL);
 		setId(ID);
@@ -57,6 +54,7 @@ public class NewLocalTaskAction extends Action {
 		scheduleNewTask(newTask);
 
 		Object selectedObject = null;
+		TaskListView view = TaskListView.getFromActivePerspective();
 		if (view != null) {
 			selectedObject = ((IStructuredSelection) view.getViewer().getSelection()).getFirstElement();
 		}
@@ -66,7 +64,7 @@ public class NewLocalTaskAction extends Action {
 			ITask task = (ITask) selectedObject;
 			if (task.getContainer() instanceof TaskCategory) {
 				TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask, (TaskCategory) task.getContainer());
-			} else if (view.getDrilledIntoCategory() instanceof TaskCategory) {
+			} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
 				TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask,
 						(TaskCategory) view.getDrilledIntoCategory());
 			} else {

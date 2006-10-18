@@ -9,9 +9,8 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui.editor;
+package org.eclipse.mylar.internal.tasks.ui.editors;
 
-import org.eclipse.mylar.internal.tasks.ui.editors.AbstractBugEditorInput;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 
@@ -20,7 +19,6 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
  * @author Rob Elves (modifications)
  */
 public class NewBugEditorInput extends AbstractBugEditorInput {
-
 
 	public NewBugEditorInput(TaskRepository repository, RepositoryTaskData taskData) {
 		super(repository, taskData);		

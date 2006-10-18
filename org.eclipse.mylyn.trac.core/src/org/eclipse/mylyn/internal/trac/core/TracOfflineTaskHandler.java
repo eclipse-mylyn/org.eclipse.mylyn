@@ -60,7 +60,7 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 	}
 
 	public RepositoryTaskData downloadTaskData(TaskRepository repository, int id) throws CoreException {
-		if (!connector.hasRichEditor(repository)) {
+		if (!TracRepositoryConnector.hasRichEditor(repository)) {
 			// offline mode is only supported for XML-RPC
 			return null;
 		}
@@ -71,7 +71,7 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 			ITracClient client = connector.getClientManager().getRepository(repository);
 			client.updateAttributes(new NullProgressMonitor(), false);
 			TracTicket ticket = client.getTicket(id);
-			createDefaultAttributes(attributeFactory, data, client);
+			createDefaultAttributes(attributeFactory, data, client, true);
 			updateTaskData(repository, attributeFactory, data, ticket);
 			return data;
 		} catch (Exception e) {
@@ -192,22 +192,33 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 	}
 
 	public static void createDefaultAttributes(AbstractAttributeFactory factory, RepositoryTaskData data,
-			ITracClient client) {
-		createAttribute(factory, data, Attribute.STATUS, client.getTicketStatus());
-		createAttribute(factory, data, Attribute.RESOLUTION, client.getTicketResolutions());
-
+			ITracClient client, boolean existingTask) {
+		if (existingTask) {
+			createAttribute(factory, data, Attribute.STATUS, client.getTicketStatus());
+			createAttribute(factory, data, Attribute.RESOLUTION, client.getTicketResolutions());
+		}
+		
 		createAttribute(factory, data, Attribute.COMPONENT, client.getComponents());
 		createAttribute(factory, data, Attribute.VERSION, client.getVersions(), true);
 		createAttribute(factory, data, Attribute.PRIORITY, client.getPriorities());
 		createAttribute(factory, data, Attribute.SEVERITY, client.getSeverities());
 
 		createAttribute(factory, data, Attribute.TYPE, client.getTicketTypes());
-		createAttribute(factory, data, Attribute.OWNER);
+		if (existingTask) {
+			createAttribute(factory, data, Attribute.OWNER);
+		}
 		createAttribute(factory, data, Attribute.MILESTONE, client.getMilestones(), true);
-		createAttribute(factory, data, Attribute.REPORTER);
+		if (existingTask) {
+			createAttribute(factory, data, Attribute.REPORTER);
+		}
 
 		createAttribute(factory, data, Attribute.CC);
 		createAttribute(factory, data, Attribute.KEYWORDS);
+		
+		if (!existingTask) {
+			createAttribute(factory, data, Attribute.SUMMARY);
+			createAttribute(factory, data, Attribute.DESCRIPTION);
+		}
 	}
 
 	private static RepositoryTaskAttribute createAttribute(AbstractAttributeFactory factory, RepositoryTaskData data,
@@ -246,7 +257,7 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 			return tasks;
 		}
 
-		if (!connector.hasChangedSince(repository)) {
+		if (!TracRepositoryConnector.hasChangedSince(repository)) {
 			// return an empty list to avoid causing all tasks to synchronized
 			return Collections.emptySet();
 		}

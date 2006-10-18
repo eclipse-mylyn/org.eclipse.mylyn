@@ -463,7 +463,7 @@ public class Trac09Client extends AbstractTracClient {
 		throw new TracException("Unsupported operation");
 	}
 
-	public void createTicket(TracTicket ticket) throws TracException {
+	public int createTicket(TracTicket ticket) throws TracException {
 		throw new TracException("Unsupported operation");
 	}
 

@@ -151,7 +151,10 @@ public interface ITracClient {
 
 	void putAttachmentData(int id, String name, String description, byte[] data) throws TracException;
 
-	void createTicket(TracTicket ticket) throws TracException;
+	/**
+	 * @return the id of the created ticket
+	 */
+	int createTicket(TracTicket ticket) throws TracException;
 
 	void updateTicket(TracTicket ticket, String comment) throws TracException;
 

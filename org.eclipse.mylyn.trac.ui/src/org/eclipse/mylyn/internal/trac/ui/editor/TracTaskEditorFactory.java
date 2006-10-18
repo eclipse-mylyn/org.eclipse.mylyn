@@ -27,15 +27,13 @@ public class TracTaskEditorFactory implements ITaskEditorFactory {
 
 	public boolean canCreateEditorFor(ITask task) {
 		if (task instanceof TracTask) {
-			TracRepositoryConnector connector = (TracRepositoryConnector) TasksUiPlugin.getRepositoryManager()
-					.getRepositoryConnector(TracCorePlugin.REPOSITORY_KIND);
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 					TracCorePlugin.REPOSITORY_KIND, ((TracTask) task).getRepositoryUrl());
-			return connector.hasRichEditor(repository);
+			return TracRepositoryConnector.hasRichEditor(repository);
 		}
 		return task instanceof TracTask;
 	}
-
+	
 	public boolean canCreateEditorFor(IEditorInput input) {
 		if (input instanceof ExistingBugEditorInput) {
 			ExistingBugEditorInput existingInput = (ExistingBugEditorInput) input;

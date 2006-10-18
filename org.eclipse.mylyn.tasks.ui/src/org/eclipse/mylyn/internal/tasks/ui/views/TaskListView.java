@@ -120,6 +120,8 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.themes.IThemeManager;
@@ -142,13 +144,15 @@ public class TaskListView extends ViewPart {
 
 	private static final String MEMENTO_KEY_WIDTH = "width";
 
-	private static final String SEPARATOR_LOCAL = "local";
+	private static final String ID_SEPARATOR_NEW = "new";
+	
+	private static final String ID_SEPARATOR_LOCAL = "local";
+	
+	private static final String ID_SEPARATOR_CONTEXT = "context";
 
-	private static final String SEPARATOR_CONTEXT = "context";
+	private static final String ID_SEPARATOR_FILTERS = "filters";
 
-	private static final String SEPARATOR_FILTERS = "filters";
-
-	private static final String SEPARATOR_REPORTS = "reports";
+	private static final String ID_SEPARATOR_REPOSITORY = "repository";
 
 	private static final String LABEL_NO_TASKS = "no task active";
 
@@ -158,8 +162,6 @@ public class TaskListView extends ViewPart {
 	public static final String[] PRIORITY_LEVEL_DESCRIPTIONS = { Task.PriorityLevel.P1.getDescription(),
 			Task.PriorityLevel.P2.getDescription(), Task.PriorityLevel.P3.getDescription(),
 			Task.PriorityLevel.P4.getDescription(), Task.PriorityLevel.P5.getDescription() };
-
-	private static final String SEPARATOR_ID_REPORTS = SEPARATOR_REPORTS;
 
 	private static final String PART_NAME = "Mylar Tasks";
 
@@ -1023,32 +1025,32 @@ public class TaskListView extends ViewPart {
 		manager.add(goUpAction);
 		manager.add(collapseAll);
 		manager.add(expandAll);
-		manager.add(new Separator(SEPARATOR_FILTERS));
+		manager.add(new Separator(ID_SEPARATOR_FILTERS));
 		manager.add(filterCompleteTask);
 		manager.add(filterArchiveCategory);
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
 	private void fillLocalToolBar(IToolBarManager manager) {
-		manager.add(new Separator(SEPARATOR_ID_REPORTS));
-		manager.add(newLocalTaskAction);
+		manager.add(new Separator(ID_SEPARATOR_NEW));
+		
+//		manager.add(newLocalTaskAction);
 		// manager.add(newCategoryAction);
-		// manager.add(new Separator());
+		 manager.add(new Separator());
 		manager.add(filterOnPriority);
 		manager.add(new Separator("navigation"));
-		// manager.add(new Separator(SEPARATOR_CONTEXT));
+		// manager.add(new Separator(ID_SEPARATOR_CONTEXT));
 		manager.add(previousTaskAction);
 		// manager.add(nextTaskAction);
-		manager.add(new Separator(SEPARATOR_CONTEXT));
+		manager.add(new Separator(ID_SEPARATOR_CONTEXT));
 		// manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
 	/*
-	 * TODO: clean up
+	 * TODO: clean up, consider relying on extension points for groups
 	 */
 	private void fillContextMenu(IMenuManager manager) {
 		updateDrillDownActions();
-
 		ITaskListElement element = null;
 
 		final Object firstSelectedObject = ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
@@ -1061,15 +1063,15 @@ public class TaskListView extends ViewPart {
 			if (object instanceof ITaskListElement) {
 				selectedElements.add((ITaskListElement) object);
 			}
-		}
+		}	
 		openWithBrowser.selectionChanged((StructuredSelection) getViewer().getSelection());
 
+		manager.add(new Separator(ID_SEPARATOR_NEW));
+		manager.add(new Separator());
+        
 		Map<String, List<IDynamicSubMenuContributor>> dynamicMenuMap = TasksUiPlugin.getDefault()
 				.getDynamicMenuMap();
-		// if (!(element instanceof AbstractRepositoryQuery || element
-		// instanceof TaskCategory)) {
 		addAction(openAction, manager, element);
-		// }
 		ITask task = null;
 		if ((element instanceof ITask) || (element instanceof AbstractQueryHit)) {
 			if (element instanceof AbstractQueryHit) {
@@ -1109,7 +1111,7 @@ public class TaskListView extends ViewPart {
 
 		manager.add(new Separator());
 		for (String menuPath : dynamicMenuMap.keySet()) {
-			if (!SEPARATOR_CONTEXT.equals(menuPath)) {
+			if (!ID_SEPARATOR_CONTEXT.equals(menuPath)) {
 				for (IDynamicSubMenuContributor contributor : dynamicMenuMap.get(menuPath)) {
 					MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
 					if (subMenuManager != null) {
@@ -1119,14 +1121,14 @@ public class TaskListView extends ViewPart {
 			}
 		}
 
-		manager.add(new Separator(SEPARATOR_LOCAL));
-		manager.add(newCategoryAction);
-		manager.add(newLocalTaskAction);
-		manager.add(new Separator(SEPARATOR_REPORTS));
-		manager.add(new Separator(SEPARATOR_CONTEXT));
+//		manager.add(new Separator(ID_SEPARATOR_LOCAL));
+//		manager.add(newCategoryAction);
+//		manager.add(newLocalTaskAction);
+		manager.add(new Separator(ID_SEPARATOR_REPOSITORY));
+		manager.add(new Separator(ID_SEPARATOR_CONTEXT));
 
 		for (String menuPath : dynamicMenuMap.keySet()) {
-			if (SEPARATOR_CONTEXT.equals(menuPath)) {
+			if (ID_SEPARATOR_CONTEXT.equals(menuPath)) {
 				for (IDynamicSubMenuContributor contributor : dynamicMenuMap.get(menuPath)) {
 					MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
 					if (subMenuManager != null) {

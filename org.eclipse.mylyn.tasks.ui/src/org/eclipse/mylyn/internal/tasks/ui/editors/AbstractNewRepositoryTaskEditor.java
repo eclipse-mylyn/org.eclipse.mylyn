@@ -8,44 +8,18 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.bugzilla.ui.editor;
+package org.eclipse.mylar.internal.tasks.ui.editors;
 
-import java.io.UnsupportedEncodingException;
-import java.net.Proxy;
-import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
-import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
-import org.eclipse.mylar.internal.tasks.ui.editors.NewBugEditorInput;
-import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
-import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskSelection;
-import org.eclipse.mylar.internal.tasks.ui.search.SearchHitCollector;
-import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylar.internal.tasks.ui.views.DatePicker;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
-import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -73,50 +47,43 @@ import org.eclipse.ui.forms.widgets.Section;
  * 
  * @author Rob Elves (modifications)
  */
-public class NewBugEditor extends AbstractRepositoryTaskEditor {
+public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepositoryTaskEditor {
 
 	private static final int DEFAULT_ESTIMATED_TIME = 1;
 
-	private static final String LABEL_SEARCH_DUPS = "Search for Duplicates";
+//	private static final String LABEL_SEARCH_DUPS = "Search for Duplicates";
 
 	private static final String LABEL_CREATE = "Create New";
 
-	private static final String NO_STACK_MESSAGE = "Unable to locate a stack trace in the description text.\nDuplicate search currently only supports stack trace matching.";
+//	private static final String NO_STACK_MESSAGE = "Unable to locate a stack trace in the description text.\nDuplicate search currently only supports stack trace matching.";
 
 	private static final String ERROR_CREATING_BUG_REPORT = "Error creating bug report";
 
 	protected RepositoryTaskData taskData;
 
-	DatePicker datePicker;
+	protected DatePicker datePicker;
 
 	protected String newSummary = "";
 
-	private Button searchDuplicatesButton;
+//	private Button searchDuplicatesButton;
 
-	private BugSubmissionHandler submissionHandler;
+	protected Spinner estimated;
 
-	private Spinner estimated;
-
-	public NewBugEditor(FormEditor editor) {
+	public AbstractNewRepositoryTaskEditor(FormEditor editor) {
 		super(editor);
 	}
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) {
-		expandedStateAttributes = true;
 		NewBugEditorInput ei = (NewBugEditorInput) input;
 		setSite(site);
 		setInput(input);
 		editorInput = ei;
-		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(editorInput.getRepositoryTaskData(), false);
 		taskData = ei.getRepositoryTaskData();
+		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(taskData, false);
 		newSummary = taskData.getSummary();
 		repository = editorInput.getRepository();
 		isDirty = false;
-
-		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-				repository.getKind());
-		submissionHandler = new BugSubmissionHandler(connector);
 	}
 
 	@Override
@@ -215,16 +182,9 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		datePicker = new DatePicker(sectionClient, SWT.NONE, DatePicker.LABEL_CHOOSE);
 		datePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		datePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		Calendar newTaskSchedule = Calendar.getInstance();
-		int scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
-				TaskListPreferenceConstants.PLANNING_ENDHOUR);
-		// If past scheduledEndHour set for following day
-		if(newTaskSchedule.get(Calendar.HOUR_OF_DAY) >= scheduledEndHour) {	
-			TasksUiPlugin.getTaskListManager().setSecheduledIn(newTaskSchedule, 1);
-		} else {
-			TasksUiPlugin.getTaskListManager().setScheduledToday(newTaskSchedule);
-		}
-		datePicker.setDate(newTaskSchedule);
+		Calendar today = Calendar.getInstance();
+		TasksUiPlugin.getTaskListManager().setScheduledToday(today);
+		datePicker.setDate(today);
 		Button removeReminder = toolkit.createButton(sectionClient, "Clear", SWT.PUSH | SWT.CENTER);
 		removeReminder.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -283,33 +243,33 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		return taskData.getLabel();
 	}
 
-	public boolean searchForDuplicates() {
-
-		String stackTrace = getStackTraceFromDescription();
-		if (stackTrace == null) {
-			MessageDialog.openWarning(null, "No Stack Trace Found", NO_STACK_MESSAGE);
-			return false;
-		}
-
-		String queryUrl = "";
-		try {
-			queryUrl = repository.getUrl() + "/buglist.cgi?long_desc_type=allwordssubstr&long_desc="
-					+ URLEncoder.encode(stackTrace, repository.getCharacterEncoding());
-		} catch (UnsupportedEncodingException e) {
-			// This should never happen
-		}
-
-		queryUrl += "&product=" + getRepositoryTaskData().getProduct();
-
-		BugzillaRepositoryQuery bugzillaQuery = new BugzillaRepositoryQuery(repository.getUrl(), queryUrl, "search",
-				"100", TasksUiPlugin.getTaskListManager().getTaskList());
-		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
-		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
-				repository, bugzillaQuery, proxySettings);
-
-		NewSearchUI.runQueryInBackground(collector);
-		return true;
-	}
+//	public boolean searchForDuplicates() {
+//
+//		String stackTrace = getStackTraceFromDescription();
+//		if (stackTrace == null) {
+//			MessageDialog.openWarning(null, "No Stack Trace Found", NO_STACK_MESSAGE);
+//			return false;
+//		}
+//
+//		String queryUrl = "";
+//		try {
+//			queryUrl = repository.getUrl() + "/buglist.cgi?long_desc_type=allwordssubstr&long_desc="
+//					+ URLEncoder.encode(stackTrace, BugzillaCorePlugin.ENCODING_UTF_8);
+//		} catch (UnsupportedEncodingException e) {
+//			// This should never happen
+//		}
+//
+//		queryUrl += "&product=" + getRepositoryTaskData().getProduct();
+//
+//		BugzillaRepositoryQuery bugzillaQuery = new BugzillaRepositoryQuery(repository.getUrl(), queryUrl, "search",
+//				"100", TasksUiPlugin.getTaskListManager().getTaskList());
+//		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
+//		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
+//				repository, bugzillaQuery, proxySettings);
+//
+//		NewSearchUI.runQueryInBackground(collector);
+//		return true;
+//	}
 
 	public String getStackTraceFromDescription() {
 		String description = descriptionTextViewer.getTextWidget().getText().trim();
@@ -355,109 +315,6 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		}
 
 		return stackTrace;
-	}
-
-	@Override
-	protected void submitBug() {
-		submitButton.setEnabled(false);
-		showBusy(true);
-		if (summaryText != null && summaryText.getText().trim().equals("")) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					MessageDialog.openInformation(NewBugEditor.this.getSite().getShell(), ERROR_CREATING_BUG_REPORT,
-							"A summary must be provided with new bug reports.");
-					summaryText.setFocus();
-					submitButton.setEnabled(true);
-					showBusy(false);
-				}
-			});
-			return;
-		}
-		if (descriptionTextViewer != null && descriptionTextViewer.getTextWidget().getText().trim().equals("")) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					MessageDialog.openInformation(NewBugEditor.this.getSite().getShell(), ERROR_CREATING_BUG_REPORT,
-							"A description must be provided with new reports.");
-					descriptionTextViewer.getTextWidget().setFocus();
-					submitButton.setEnabled(true);
-					showBusy(false);
-				}
-			});
-			return;
-		}
-
-		updateBug();
-		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
-		boolean wrap = IBugzillaConstants.BugzillaServerVersion.SERVER_218.equals(repository.getVersion());
-
-		try {
-			final BugzillaReportSubmitForm bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeNewBugPost(
-					repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, repository
-							.getCharacterEncoding(), taskData, wrap);
-
-			JobChangeAdapter submitJobListener = new JobChangeAdapter() {
-
-				public void done(final IJobChangeEvent event) {
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							if (event.getJob().getResult().getCode() == Status.OK
-									&& event.getJob().getResult().getMessage() != null) {
-								close();
-								String newTaskHandle = AbstractRepositoryTask.getHandle(repository.getUrl(), event
-										.getJob().getResult().getMessage());
-								ITask newTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(newTaskHandle);								
-								if (newTask != null) {									
-									Calendar selectedDate = datePicker.getDate();
-									if(selectedDate != null) {
-										//NewLocalTaskAction.scheduleNewTask(newTask);									
-										TasksUiPlugin.getTaskListManager().setReminder(newTask, selectedDate.getTime());											
-									}
-									
-									newTask.setEstimatedTimeHours(estimated.getSelection());
-									
-									Object selectedObject = null;
-									if (TaskListView.getFromActivePerspective() != null)
-										selectedObject = ((IStructuredSelection) TaskListView
-												.getFromActivePerspective().getViewer().getSelection())
-												.getFirstElement();
-
-									if (selectedObject instanceof TaskCategory) {
-										TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(
-												((TaskCategory) selectedObject), newTask);
-									}
-									TaskUiUtil.refreshAndOpenTaskListElement(newTask);
-								}
-								return;
-							} else if (event.getJob().getResult().getCode() == Status.INFO) {
-								WebBrowserDialog.openAcceptAgreement(NewBugEditor.this.getSite().getShell(),
-										IBugzillaConstants.REPORT_SUBMIT_ERROR,
-										event.getJob().getResult().getMessage(), event.getJob().getResult()
-												.getException().getMessage());
-								submitButton.setEnabled(true);
-								NewBugEditor.this.showBusy(false);
-							} else if (event.getJob().getResult().getCode() == Status.ERROR) {
-								MessageDialog.openError(NewBugEditor.this.getSite().getShell(),
-										IBugzillaConstants.REPORT_SUBMIT_ERROR, event.getResult().getMessage());
-								submitButton.setEnabled(true);
-								NewBugEditor.this.showBusy(false);
-							}
-						}
-					});
-				}
-			};
-
-			submissionHandler.submitBugReport(bugzillaReportSubmitForm, submitJobListener, false, addToTaskListRoot
-					.getSelection());
-
-		} catch (UnsupportedEncodingException e) {
-			MessageDialog.openError(null, "Posting Error", "Ensure proper encoding selected in "
-					+ TaskRepositoriesView.NAME + ".");
-			return;
-		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Posting Error. Ensure proper configuration in "+ TaskRepositoriesView.NAME + ".", true);
-			return;
-		}
-
 	}
 
 	@Override
@@ -529,14 +386,15 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 
 	protected void addActionButtons(Composite buttonComposite) {
 		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
-		searchDuplicatesButton = toolkit.createButton(buttonComposite, LABEL_SEARCH_DUPS, SWT.NONE);
-		GridData searchDuplicatesButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		searchDuplicatesButton.setLayoutData(searchDuplicatesButtonData);
-		searchDuplicatesButton.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event e) {
-				searchForDuplicates();
-			}
-		});
+
+//		searchDuplicatesButton = toolkit.createButton(buttonComposite, LABEL_SEARCH_DUPS, SWT.NONE);
+//		GridData searchDuplicatesButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+//		searchDuplicatesButton.setLayoutData(searchDuplicatesButtonData);
+//		searchDuplicatesButton.addListener(SWT.Selection, new Listener() {
+//			public void handleEvent(Event e) {
+//				searchForDuplicates();
+//			}
+//		});
 
 		submitButton = toolkit.createButton(buttonComposite, LABEL_CREATE, SWT.NONE);
 		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
@@ -549,4 +407,36 @@ public class NewBugEditor extends AbstractRepositoryTaskEditor {
 		submitButton.addListener(SWT.FocusIn, new GenericListener());
 	}
 
+	protected boolean prepareSubmit() {
+		submitButton.setEnabled(false);
+		showBusy(true);
+		
+		if (summaryText != null && summaryText.getText().trim().equals("")) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					MessageDialog.openInformation(AbstractNewRepositoryTaskEditor.this.getSite().getShell(), ERROR_CREATING_BUG_REPORT,
+							"A summary must be provided with new bug reports.");
+					summaryText.setFocus();
+					submitButton.setEnabled(true);
+					showBusy(false);
+				}
+			});
+			return false;
+		}
+		
+		if (descriptionTextViewer != null && descriptionTextViewer.getTextWidget().getText().trim().equals("")) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					MessageDialog.openInformation(AbstractNewRepositoryTaskEditor.this.getSite().getShell(), ERROR_CREATING_BUG_REPORT,
+							"A description must be provided with new reports.");
+					descriptionTextViewer.getTextWidget().setFocus();
+					submitButton.setEnabled(true);
+					showBusy(false);
+				}
+			});
+			return false;
+		}
+
+		return true;
+	}
 }

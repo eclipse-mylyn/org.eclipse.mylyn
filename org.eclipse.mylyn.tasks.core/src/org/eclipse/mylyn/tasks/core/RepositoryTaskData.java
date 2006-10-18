@@ -181,10 +181,7 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 	}
 
 	public void setSummary(String summary) {
-		throw new NullPointerException("not impelmented");
-		// setAttributeValue(RepositoryTaskAttribute.SHORT_DESC, summary);
-		// setAttributeValue(BugzillaReportElement.SHORT_DESC.getKeyString(),
-		// summary);
+		setAttributeValue(RepositoryTaskAttribute.SUMMARY, summary);
 	}
 
 	public String getProduct() {

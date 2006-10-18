@@ -29,6 +29,8 @@ public class TracUiPlugin extends AbstractUIPlugin {
 
 	public final static String TITLE_MESSAGE_DIALOG = "Mylar Trac Client";
 
+	public static final String NEW_BUG_EDITOR_ID = PLUGIN_ID + ".newBugEditor";
+
 	private static TracUiPlugin plugin;
 
 	public TracUiPlugin() {
