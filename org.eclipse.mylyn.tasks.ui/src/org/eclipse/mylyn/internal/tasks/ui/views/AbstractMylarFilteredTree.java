@@ -67,15 +67,22 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 
 	@Override
 	protected Composite createFilterControls(Composite parent) {
+		
+		GridLayout statusLayout = new GridLayout(1, false);
+		statusLayout.marginWidth = 1;
+		statusLayout.marginHeight = 1;
+		parent.setLayout(statusLayout);
+		
+		Composite statusComposite = new Composite(parent, SWT.NULL);
 		GridLayout gridLayout = new GridLayout(4, false);
-		gridLayout.marginWidth = 2;
-		gridLayout.marginHeight = 2;
-		parent.setLayout(gridLayout);
+		gridLayout.marginWidth = 0;
+		gridLayout.marginHeight = 0;
+		statusComposite.setLayout(gridLayout);
 
-		Label label = new Label(parent, SWT.NONE);
+		Label label = new Label(statusComposite, SWT.NONE);
 		label.setText(LABEL_FIND);
 
-		super.createFilterControls(parent);
+		super.createFilterControls(statusComposite);
 
         GridData gd = new GridData(SWT.FILL, SWT.DEFAULT, true, false);
         gd.minimumWidth = filterWidth;
@@ -88,13 +95,15 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 					setFilterText("");
 				}
 			}
-
 		});
 
-		createStatusComposite(parent);
+		createStatusComposite(statusComposite);
+		createProgressComposite(parent);
 		return parent;
 	}
 
+	protected abstract Composite createProgressComposite(Composite container);
+	
 	protected abstract Composite createStatusComposite(Composite container);
 
 	protected void textChanged() {

@@ -78,7 +78,7 @@ public class BugzillaServerFacade {
 			Proxy proxySettings, String characterEncoding, int id) throws IOException, MalformedURLException,
 			LoginException, GeneralSecurityException, BugzillaException {
 
-		// >>> bug 154729
+		// bug 154729
 		// MylarStatusHandler.log("Retrieving task data from: " + repositoryUrl,
 		// BugzillaServerFacade.class);
 
