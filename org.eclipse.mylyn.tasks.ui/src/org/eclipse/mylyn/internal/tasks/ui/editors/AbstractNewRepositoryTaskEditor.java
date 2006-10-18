@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.views.DatePicker;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -51,11 +52,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 	private static final int DEFAULT_ESTIMATED_TIME = 1;
 
-//	private static final String LABEL_SEARCH_DUPS = "Search for Duplicates";
-
 	private static final String LABEL_CREATE = "Create New";
-
-//	private static final String NO_STACK_MESSAGE = "Unable to locate a stack trace in the description text.\nDuplicate search currently only supports stack trace matching.";
 
 	private static final String ERROR_CREATING_BUG_REPORT = "Error creating bug report";
 
@@ -63,11 +60,9 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 	protected DatePicker datePicker;
 
-	protected String newSummary = "";
-
-//	private Button searchDuplicatesButton;
-
 	protected Spinner estimated;
+
+	protected String newSummary = "";
 
 	public AbstractNewRepositoryTaskEditor(FormEditor editor) {
 		super(editor);
@@ -182,14 +177,21 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		datePicker = new DatePicker(sectionClient, SWT.NONE, DatePicker.LABEL_CHOOSE);
 		datePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		datePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		Calendar today = Calendar.getInstance();
-		TasksUiPlugin.getTaskListManager().setScheduledToday(today);
-		datePicker.setDate(today);
+		Calendar newTaskSchedule = Calendar.getInstance();
+		int scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
+				TaskListPreferenceConstants.PLANNING_ENDHOUR);
+		// If past scheduledEndHour set for following day
+		if (newTaskSchedule.get(Calendar.HOUR_OF_DAY) >= scheduledEndHour) {
+			TasksUiPlugin.getTaskListManager().setSecheduledIn(newTaskSchedule, 1);
+		} else {
+			TasksUiPlugin.getTaskListManager().setScheduledToday(newTaskSchedule);
+		}
+		datePicker.setDate(newTaskSchedule);
 		Button removeReminder = toolkit.createButton(sectionClient, "Clear", SWT.PUSH | SWT.CENTER);
 		removeReminder.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				datePicker.setDate(null);				
+				datePicker.setDate(null);
 			}
 		});
 
@@ -208,7 +210,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		estimated.setMaximum(100);
 		estimated.setMinimum(0);
 		estimated.setIncrement(1);
-		estimated.setSelection(DEFAULT_ESTIMATED_TIME);		
+		estimated.setSelection(DEFAULT_ESTIMATED_TIME);
 		estimated.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		GridData estimatedDataLayout = new GridData();
 		estimatedDataLayout.widthHint = 110;
@@ -243,33 +245,37 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		return taskData.getLabel();
 	}
 
-//	public boolean searchForDuplicates() {
-//
-//		String stackTrace = getStackTraceFromDescription();
-//		if (stackTrace == null) {
-//			MessageDialog.openWarning(null, "No Stack Trace Found", NO_STACK_MESSAGE);
-//			return false;
-//		}
-//
-//		String queryUrl = "";
-//		try {
-//			queryUrl = repository.getUrl() + "/buglist.cgi?long_desc_type=allwordssubstr&long_desc="
-//					+ URLEncoder.encode(stackTrace, BugzillaCorePlugin.ENCODING_UTF_8);
-//		} catch (UnsupportedEncodingException e) {
-//			// This should never happen
-//		}
-//
-//		queryUrl += "&product=" + getRepositoryTaskData().getProduct();
-//
-//		BugzillaRepositoryQuery bugzillaQuery = new BugzillaRepositoryQuery(repository.getUrl(), queryUrl, "search",
-//				"100", TasksUiPlugin.getTaskListManager().getTaskList());
-//		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
-//		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
-//				repository, bugzillaQuery, proxySettings);
-//
-//		NewSearchUI.runQueryInBackground(collector);
-//		return true;
-//	}
+	// public boolean searchForDuplicates() {
+	//
+	// String stackTrace = getStackTraceFromDescription();
+	// if (stackTrace == null) {
+	// MessageDialog.openWarning(null, "No Stack Trace Found",
+	// NO_STACK_MESSAGE);
+	// return false;
+	// }
+	//
+	// String queryUrl = "";
+	// try {
+	// queryUrl = repository.getUrl() +
+	// "/buglist.cgi?long_desc_type=allwordssubstr&long_desc="
+	// + URLEncoder.encode(stackTrace, BugzillaCorePlugin.ENCODING_UTF_8);
+	// } catch (UnsupportedEncodingException e) {
+	// // This should never happen
+	// }
+	//
+	// queryUrl += "&product=" + getRepositoryTaskData().getProduct();
+	//
+	// BugzillaRepositoryQuery bugzillaQuery = new
+	// BugzillaRepositoryQuery(repository.getUrl(), queryUrl, "search",
+	// "100", TasksUiPlugin.getTaskListManager().getTaskList());
+	// Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
+	// SearchHitCollector collector = new
+	// SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
+	// repository, bugzillaQuery, proxySettings);
+	//
+	// NewSearchUI.runQueryInBackground(collector);
+	// return true;
+	// }
 
 	public String getStackTraceFromDescription() {
 		String description = descriptionTextViewer.getTextWidget().getText().trim();
@@ -387,14 +393,16 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	protected void addActionButtons(Composite buttonComposite) {
 		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
 
-//		searchDuplicatesButton = toolkit.createButton(buttonComposite, LABEL_SEARCH_DUPS, SWT.NONE);
-//		GridData searchDuplicatesButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-//		searchDuplicatesButton.setLayoutData(searchDuplicatesButtonData);
-//		searchDuplicatesButton.addListener(SWT.Selection, new Listener() {
-//			public void handleEvent(Event e) {
-//				searchForDuplicates();
-//			}
-//		});
+		// searchDuplicatesButton = toolkit.createButton(buttonComposite,
+		// LABEL_SEARCH_DUPS, SWT.NONE);
+		// GridData searchDuplicatesButtonData = new
+		// GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		// searchDuplicatesButton.setLayoutData(searchDuplicatesButtonData);
+		// searchDuplicatesButton.addListener(SWT.Selection, new Listener() {
+		// public void handleEvent(Event e) {
+		// searchForDuplicates();
+		// }
+		// });
 
 		submitButton = toolkit.createButton(buttonComposite, LABEL_CREATE, SWT.NONE);
 		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
@@ -410,12 +418,12 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	protected boolean prepareSubmit() {
 		submitButton.setEnabled(false);
 		showBusy(true);
-		
+
 		if (summaryText != null && summaryText.getText().trim().equals("")) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					MessageDialog.openInformation(AbstractNewRepositoryTaskEditor.this.getSite().getShell(), ERROR_CREATING_BUG_REPORT,
-							"A summary must be provided with new bug reports.");
+					MessageDialog.openInformation(AbstractNewRepositoryTaskEditor.this.getSite().getShell(),
+							ERROR_CREATING_BUG_REPORT, "A summary must be provided with new bug reports.");
 					summaryText.setFocus();
 					submitButton.setEnabled(true);
 					showBusy(false);
@@ -423,12 +431,12 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 			});
 			return false;
 		}
-		
+
 		if (descriptionTextViewer != null && descriptionTextViewer.getTextWidget().getText().trim().equals("")) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					MessageDialog.openInformation(AbstractNewRepositoryTaskEditor.this.getSite().getShell(), ERROR_CREATING_BUG_REPORT,
-							"A description must be provided with new reports.");
+					MessageDialog.openInformation(AbstractNewRepositoryTaskEditor.this.getSite().getShell(),
+							ERROR_CREATING_BUG_REPORT, "A description must be provided with new reports.");
 					descriptionTextViewer.getTextWidget().setFocus();
 					submitButton.setEnabled(true);
 					showBusy(false);

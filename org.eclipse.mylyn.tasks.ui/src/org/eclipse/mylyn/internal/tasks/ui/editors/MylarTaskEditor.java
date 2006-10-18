@@ -453,7 +453,10 @@ public class MylarTaskEditor extends FormEditor {
 	}
 
 	public ISelection getSelection() {
-		return getSite().getSelectionProvider().getSelection();
+		if(getSite() != null && getSite().getSelectionProvider() != null) {
+			return getSite().getSelectionProvider().getSelection();
+		} else {			
+			return null;
+		}
 	}
-
 }
