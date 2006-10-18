@@ -143,8 +143,6 @@ public class TaskListView extends ViewPart {
 
 	private static final String ID_SEPARATOR_NEW = "new";
 	
-//	private static final String ID_SEPARATOR_LOCAL = "local";
-	
 	private static final String ID_SEPARATOR_CONTEXT = "context";
 
 	private static final String ID_SEPARATOR_FILTERS = "filters";
@@ -184,8 +182,6 @@ public class TaskListView extends ViewPart {
 
 	private NewLocalTaskAction newLocalTaskAction;
 
-//	private NewCategoryAction newCategoryAction;
-
 	private RenameAction renameAction;
 
 	private CollapseAllAction collapseAll;
@@ -200,10 +196,6 @@ public class TaskListView extends ViewPart {
 
 	private TaskDeactivateAction deactivateAction = new TaskDeactivateAction();
 
-	// private MarkTaskCompleteAction markIncompleteAction;
-
-	// private MarkTaskIncompleteAction markCompleteAction;
-
 	private FilterCompletedTasksAction filterCompleteTask;
 
 	private FilterArchiveContainerAction filterArchiveCategory;
@@ -212,8 +204,6 @@ public class TaskListView extends ViewPart {
 
 	private PreviousTaskDropDownAction previousTaskAction;
 
-	// private NextTaskDropDownAction nextTaskAction;
-
 	private static TaskPriorityFilter FILTER_PRIORITY = new TaskPriorityFilter();
 
 	private static TaskCompletionFilter FILTER_COMPLETE = new TaskCompletionFilter();
@@ -221,8 +211,6 @@ public class TaskListView extends ViewPart {
 	private static TaskArchiveFilter FILTER_ARCHIVE = new TaskArchiveFilter();
 
 	private Set<AbstractTaskListFilter> filters = new HashSet<AbstractTaskListFilter>();
-
-	static final String FILTER_LABEL = "<filter>";
 
 	protected String[] columnNames = new String[] { "", "", " !", "  ", "Description" };
 
@@ -1068,7 +1056,7 @@ public class TaskListView extends ViewPart {
         
 		Map<String, List<IDynamicSubMenuContributor>> dynamicMenuMap = TasksUiPlugin.getDefault()
 				.getDynamicMenuMap();
-		addAction(openAction, manager, element);
+		
 		ITask task = null;
 		if ((element instanceof ITask) || (element instanceof AbstractQueryHit)) {
 			if (element instanceof AbstractQueryHit) {
@@ -1076,37 +1064,12 @@ public class TaskListView extends ViewPart {
 			} else {
 				task = (ITask) element;
 			}
-			addAction(openWithBrowser, manager, element);
-			if (!(element instanceof AbstractRepositoryTask) || element instanceof AbstractTaskContainer) {
-				addAction(renameAction, manager, element);
-			}
-			addAction(copyDetailsAction, manager, element);
-
-			if (task != null) {
-				addAction(removeFromCategoryAction, manager, element);
-				addAction(deleteAction, manager, element);
-				if (task.isActive()) {
-					manager.add(deactivateAction);
-				} else {
-					manager.add(activateAction);
-				}
-			} else {
-				manager.add(activateAction);
-			}
-		} else if (element instanceof AbstractTaskContainer || element instanceof AbstractRepositoryQuery) {
-			addAction(openWithBrowser, manager, element);
-			addAction(copyDetailsAction, manager, element);
-			addAction(deleteAction, manager, element);
 		}
-
-		if (element instanceof AbstractTaskContainer) {
-			manager.add(goIntoAction);
-		}
-		if (drilledIntoCategory != null) {
-			manager.add(goUpAction);
-		}
-
-		manager.add(new Separator());
+		
+		addAction(openAction, manager, element);
+		addAction(openWithBrowser, manager, element);
+		manager.add(new Separator());	
+		
 		for (String menuPath : dynamicMenuMap.keySet()) {
 			if (!ID_SEPARATOR_CONTEXT.equals(menuPath)) {
 				for (IDynamicSubMenuContributor contributor : dynamicMenuMap.get(menuPath)) {
@@ -1117,19 +1080,44 @@ public class TaskListView extends ViewPart {
 				}
 			}
 		}
+		manager.add(new Separator());
+		
+		addAction(copyDetailsAction, manager, element);
+		if (task != null) {
+			addAction(removeFromCategoryAction, manager, element);
+		} 
+		addAction(deleteAction, manager, element);
+		if (!(element instanceof AbstractRepositoryTask) || element instanceof AbstractTaskContainer) {
+			addAction(renameAction, manager, element);
+		}
 
-//		manager.add(new Separator(ID_SEPARATOR_LOCAL));
-//		manager.add(newCategoryAction);
-//		manager.add(newLocalTaskAction);
+		if (element instanceof AbstractTaskContainer) {
+			manager.add(goIntoAction);
+		}
+		if (drilledIntoCategory != null) {
+			manager.add(goUpAction);
+		}
 		manager.add(new Separator(ID_SEPARATOR_REPOSITORY));
 		manager.add(new Separator(ID_SEPARATOR_CONTEXT));
-
-		for (String menuPath : dynamicMenuMap.keySet()) {
-			if (ID_SEPARATOR_CONTEXT.equals(menuPath)) {
-				for (IDynamicSubMenuContributor contributor : dynamicMenuMap.get(menuPath)) {
-					MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
-					if (subMenuManager != null) {
-						addMenuManager(subMenuManager, manager, element);
+		
+		if (task != null) {
+			if (task.isActive()) {
+				manager.add(deactivateAction);
+			} else {
+				manager.add(activateAction);
+			}
+		} else if (element instanceof AbstractQueryHit) {
+			manager.add(activateAction);
+		}
+		
+		if (element instanceof ITask || element instanceof AbstractQueryHit) {
+			for (String menuPath : dynamicMenuMap.keySet()) {
+				if (ID_SEPARATOR_CONTEXT.equals(menuPath)) {
+					for (IDynamicSubMenuContributor contributor : dynamicMenuMap.get(menuPath)) {
+						MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
+						if (subMenuManager != null) {
+							addMenuManager(subMenuManager, manager, element);
+						}
 					}
 				}
 			}

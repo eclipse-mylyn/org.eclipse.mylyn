@@ -189,8 +189,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 	}
 
 	private List<Object> getFilteredChildrenFor(Object parent) {
-		if (containsNoFilterText(((Text) this.view.getFilteredTree().getFilterControl()).getText())
-				|| ((Text) this.view.getFilteredTree().getFilterControl()).getText().startsWith(TaskListView.FILTER_LABEL)) {
+		if (containsNoFilterText(((Text) this.view.getFilteredTree().getFilterControl()).getText())) {
 			List<Object> children = new ArrayList<Object>();
 			if (parent instanceof AbstractTaskContainer && ((AbstractTaskContainer)parent).isLocal()) { 
 				if (filter(parent)) {
@@ -207,8 +206,8 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 						return children;
 					}
 				}
-				Set<? extends ITaskListElement> list = ((AbstractTaskContainer) parent).getChildren();
-				for (ITaskListElement element : list) {
+				Set<ITask> parentsTasks = ((AbstractTaskContainer) parent).getChildren();
+				for (ITaskListElement element : parentsTasks) {
 					if (!filter(element)) {
 						children.add(element);
 					}

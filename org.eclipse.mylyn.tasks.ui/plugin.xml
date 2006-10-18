@@ -269,17 +269,6 @@
 	   		targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
   		
   		<action
-               class="org.eclipse.mylar.internal.tasks.ui.actions.NewRepositoryTaskAction"
-               enablesFor="*"
-               icon="icons/etool16/task-repository-new.gif"
-               id="org.eclipse.mylar.tasklist.new.repositorytask"
-               label="New Repository Task"
-               style="push"
-               toolbarPath="new"
-               tooltip="New Repository Task"> 
-  		</action>
-  		
-  		<action
                class="org.eclipse.mylar.internal.tasks.ui.actions.SynchronizeAllAction"
                enablesFor="*"
                icon="icons/etool16/repository-synchronize.gif"
@@ -288,6 +277,26 @@
                menubarPath="additions"
                tooltip="Synchronize All Tasks and Queries">
          </action>
+  		
+  		<action
+               class="org.eclipse.mylar.internal.tasks.ui.actions.NewRepositoryTaskAction"
+               enablesFor="*"
+               icon="icons/etool16/task-repository-new.gif"
+               id="org.eclipse.mylar.tasks.ui.actions.new.repository.task"
+               label="New Repository Task"
+               style="push"
+               toolbarPath="new"
+               tooltip="New Repository Task"> 
+  		</action>
+    <action
+          class="org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction"
+          icon="icons/etool16/task-new.gif"
+          id="org.eclipse.mylar.tasks.ui.actions.newy.task"
+          label="Task"
+          style="push"
+          toolbarPath="new"
+          tooltip="New Task">
+    </action>
          <!--
     	<action
           class="org.eclipse.mylar.internal.tasklist.ui.actions.CopyDetailsAction"
@@ -308,9 +317,9 @@
                definitionId="org.eclipse.ui.file.refresh"
                enablesFor="*"
                icon="icons/etool16/repository-synchronize.gif"
-               id="org.eclipse.mylar.tasklist.synchronize.selected"
+               id="org.eclipse.mylar.tasks.ui.actions.synchronize.selection"
                label="Synchronize"
-               menubarPath="reports"
+               menubarPath="repository"
                tooltip="Synchronize with Repository">
             <enablement>
                <or>
@@ -326,7 +335,7 @@
               class="org.eclipse.mylar.internal.tasks.ui.actions.AddRepositoryTaskAction"
               enablesFor="*"
               icon="icons/etool16/task-repository.gif"
-              id="org.eclipse.mylar.tasklist.actions.addQuery"
+              id="org.eclipse.mylar.tasks.ui.actions.add.repository.task"
               menubarPath="org.eclipse.mylar.tasks.ui.menu.new/repository"
               label="Add Existing Task..."
               style="push"
@@ -337,7 +346,7 @@
 	        class="org.eclipse.mylar.internal.tasks.ui.actions.NewRepositoryTaskAction"
 	        enablesFor="*"
 	        icon="icons/etool16/task-repository-new.gif"
-	        id="org.eclipse.mylar.tasklist.new.repositorytask"
+	        id="org.eclipse.mylar.tasks.ui.actions.new.repository.task"
 	        label="Repository Task..."
 	        menubarPath="org.eclipse.mylar.tasks.ui.menu.new/repository"
 	        tooltip="New Repository Task"/>

@@ -153,11 +153,14 @@ public class TaskListImages {
 
 	public static final ImageDescriptor TASK_ACTIVE = createSize(create(T_TOOL, "task-active.gif"), SIZE);
 
+	public static final ImageDescriptor TASK_ACTIVE_CENTERED = createSize(create(T_TOOL, "task-active-centered.gif"), SIZE);
+	
 	public static final ImageDescriptor TASK_INACTIVE = createSize(create(T_TOOL, "task-inactive.gif"), SIZE);
 
 	public static final ImageDescriptor TASK_INACTIVE_CONTEXT = createSize(create(T_TOOL, "task-context.gif"),
 			SIZE);
 
+	
 	public static final ImageDescriptor TASK_COMPLETE = create(T_TOOL, "task-complete.gif");
 
 	public static final ImageDescriptor TASK_INCOMPLETE = create(T_TOOL, "task-incomplete.gif");
