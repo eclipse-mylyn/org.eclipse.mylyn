@@ -184,7 +184,6 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 					if (elements[0] instanceof SynchronizeModelElement) {
 						return ((SynchronizeModelElement)elements[0]).getResource().getProject();
 					}
-//					System.err.println(">>> " + );
 				}
 			}
 		} else if (element instanceof IAdaptable) {

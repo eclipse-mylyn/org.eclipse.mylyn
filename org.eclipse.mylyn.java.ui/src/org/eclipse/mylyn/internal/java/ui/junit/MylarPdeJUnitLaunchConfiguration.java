@@ -89,7 +89,6 @@ public class MylarPdeJUnitLaunchConfiguration extends JUnitLaunchConfigurationDe
 //	protected VMRunnerConfiguration createVMRunner(ILaunchConfiguration configuration, TestSearchResult testTypes,
 //			int port, String runMode) throws CoreException {
 //
-//		System.err.println(">>>> " + Arrays.asList(getProgramArgumentsArray(configuration, testTypes, port, runMode)));
 //		
 //		VMRunnerConfiguration runnerConfig = new VMRunnerConfiguration(
 //				"org.eclipse.core.launcher.Main", getClasspath(configuration)); //$NON-NLS-1$
