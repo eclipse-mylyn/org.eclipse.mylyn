@@ -16,14 +16,15 @@ import java.text.ParseException;
 
 import javax.security.auth.login.LoginException;
 
-import junit.framework.TestCase;
-
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
  */
-public class EncodingTest extends TestCase {
+public class EncodingTest extends AbstractBugzillaTest {
 
 	public void testEncodingSetting() throws LoginException, IOException, ParseException {
 
@@ -37,8 +38,30 @@ public class EncodingTest extends TestCase {
 				.getCharsetFromString("<<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-2\">>");
 		assertEquals("iso-8859-2", charset);
 
-		charset = BugzillaServerFacade.getCharsetFromString("<<meta http-equiv=\"Content-Type\" content=\"text/html\">>");
+		charset = BugzillaServerFacade
+				.getCharsetFromString("<<meta http-equiv=\"Content-Type\" content=\"text/html\">>");
 		assertEquals(null, charset);
+	}
+
+	/**
+	 * This test just shows that when the encoding is changed on the repository
+	 * synchronization does in fact return in a different encoding (though it
+	 * may not be legible)
+	 */
+	public void testDifferentReportEncoding() throws CoreException {
+		init222();
+		repository.setCharacterEncoding("UTF-8");
+		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "57", null);
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+		assertNotNull(task);
+		assertTrue(task.getDescription().getBytes().length == 1);
+		assertTrue(task.getDescription().getBytes()[0] == 63); // correct
+		taskList.deleteTask(task);
+		repository.setCharacterEncoding("ISO-8859-1");
+		task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "56", null);
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+		assertTrue(task.getDescription().getBytes().length == 2);
+		// iso-8859-1 'incorrect' interpretation
 	}
 
 }

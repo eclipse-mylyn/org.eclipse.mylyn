@@ -35,7 +35,7 @@ public class RepositoryConfigurationFactory extends AbstractReportFactory {
 		configUrlStr = BugzillaServerFacade.addCredentials(configUrlStr, encoding, userName, password);
 		URL url = new URL(configUrlStr);
 		SaxConfigurationContentHandler contentHandler = new SaxConfigurationContentHandler();
-		collectResults(url, proxySettings, IBugzillaConstants.ENCODING_UTF_8, contentHandler, true);
+		collectResults(url, proxySettings, encoding, contentHandler, true);
 		RepositoryConfiguration config = contentHandler.getConfiguration();
 		if (config != null) {
 			config.setRepositoryUrl(repositoryUrl);

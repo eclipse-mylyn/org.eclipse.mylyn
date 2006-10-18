@@ -39,7 +39,7 @@ public class RepositoryReportFactory extends AbstractReportFactory {
 		xmlBugReportUrl = BugzillaServerFacade.addCredentials(xmlBugReportUrl, characterEncoding, userName, password);
 		URL serverURL = new URL(xmlBugReportUrl);
 
-		collectResults(serverURL, proxySettings, IBugzillaConstants.ENCODING_UTF_8, contentHandler, false);
+		collectResults(serverURL, proxySettings, characterEncoding, contentHandler, false);
 
 		if (contentHandler.errorOccurred()) {
 			String errorResponse = contentHandler.getErrorMessage().toLowerCase();

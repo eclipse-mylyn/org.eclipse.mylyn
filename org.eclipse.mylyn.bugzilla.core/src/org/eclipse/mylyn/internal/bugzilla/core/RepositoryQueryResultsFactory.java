@@ -33,6 +33,6 @@ public class RepositoryQueryResultsFactory extends AbstractReportFactory {
 		SaxBugzillaQueryContentHandler contentHandler = new SaxBugzillaQueryContentHandler(taskList, repositoryUrl,
 				collector, maxHits);
 		URL url = new URL(queryUrlString);
-		collectResults(url, proxySettings, IBugzillaConstants.ENCODING_UTF_8, contentHandler, false);
+		collectResults(url, proxySettings, characterEncoding, contentHandler, false);
 	}
 }
