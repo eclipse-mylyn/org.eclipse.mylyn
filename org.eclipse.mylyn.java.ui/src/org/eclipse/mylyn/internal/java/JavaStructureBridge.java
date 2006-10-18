@@ -135,10 +135,9 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 	 * Uses resource-compatible path for projects
 	 */
 	public String getHandleIdentifier(Object object) {
-		if (object == null) {
-			return null;
-		} else if (!(object instanceof IJavaElement)) {
-			
+		if (object instanceof IJavaElement) {
+			return ((IJavaElement) object).getHandleIdentifier();
+		} else {
 			if (object instanceof IAdaptable) {
 				Object adapter = ((IAdaptable)object).getAdapter(IJavaElement.class);
 				if (adapter instanceof IJavaElement) {
@@ -146,11 +145,9 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 				}
 			} else if (isWtpClass(object)) {
 				return getWtpElementHandle(object);
-			}
-			return null;
-		} else {
-			return ((IJavaElement) object).getHandleIdentifier();
-		}
+			} 
+		} 
+		return null;
 	}
 
 	/**
@@ -216,9 +213,8 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 	public boolean canFilter(Object object) {
 		if (object instanceof ClassPathContainer.RequiredProjectWrapper) {
 			return true;
-		} else if (object instanceof ClassPathContainer) { // HACK: check if it
-			// has anything
-			// interesting
+		} else if (object instanceof ClassPathContainer) { 
+			// HACK: check if it has anything interesting
 			ClassPathContainer container = (ClassPathContainer) object;
 
 			Object[] children = container.getChildren(container);

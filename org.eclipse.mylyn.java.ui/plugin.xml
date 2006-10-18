@@ -275,16 +275,17 @@
 	
   <extension point="org.eclipse.ui.popupMenus"> 
      <objectContribution
-        id="org.eclipse.mylar.ui.interest"
-        objectClass="org.eclipse.jdt.core.IJavaElement">
-     	<action  
-  		  	label="Mylar: Mark Less Interesting" 
-	  		tooltip="Mark selected element as uninteresting"
-	  		menubarPath="mylar" 
-	  		id="org.eclipse.mylar.ui.actions.InterestDecrementAction" 
-	  		class="org.eclipse.mylar.internal.context.ui.actions.InterestDecrementAction"
-	  		icon="icons/elcl16/interest-decrease.gif"
-	  		enablesFor="*"/>
+           id="org.eclipse.mylar.java.ui.interest"
+           objectClass="org.eclipse.jdt.core.IJavaElement">
+     	<action
+            class="org.eclipse.mylar.internal.context.ui.actions.InterestDecrementAction"
+            enablesFor="*"
+            icon="icons/elcl16/interest-decrease.gif"
+            id="org.eclipse.mylar.java.ui.actions.interest.decrement"
+            label="Mylar: Mark Less Interesting"
+            menubarPath="mylar"
+            tooltip="Mark selected element as uninteresting">
+      </action>
 	    <action  
   		  	label="Mylar: Mark as Landmark" 
 	  		tooltip="Mark the selected element as a landmark"
@@ -294,6 +295,20 @@
 	  		icon="icons/elcl16/interest-increase.gif"
 	  		enablesFor="*"/>
 	 </objectContribution>
+     <objectContribution
+           adaptable="false"
+           id="org.eclipse.mylar.java.ui.interest.contribution.container"
+           objectClass="org.eclipse.jdt.internal.ui.packageview.ClassPathContainer">
+     	<action
+            class="org.eclipse.mylar.internal.context.ui.actions.InterestDecrementAction"
+            enablesFor="*"
+            icon="icons/elcl16/interest-decrease.gif"
+            id="org.eclipse.mylar.java.ui.actions.interest.decrement.container"
+            label="Mylar: Mark Less Interesting"
+            menubarPath="mylar"
+            tooltip="Mark selected element as uninteresting">
+      </action>
+     </objectContribution>
   </extension>   
 
   <extension point="org.eclipse.ui.actionSets">
