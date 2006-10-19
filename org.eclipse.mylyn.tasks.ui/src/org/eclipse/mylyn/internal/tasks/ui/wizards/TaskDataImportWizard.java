@@ -29,11 +29,9 @@ import java.util.zip.ZipFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.context.core.util.ZipFileUtil;
@@ -41,12 +39,9 @@ import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylar.tasks.ui.TaskListDataMigration;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -457,32 +452,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 	private void readTaskListData() {
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 			public void run() {
-				
-				TaskListDataMigration migrationOperation = new TaskListDataMigration(new File(TasksUiPlugin.getDefault().getDataDirectory()));
-				IWorkbench wb = PlatformUI.getWorkbench();
-				IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
-				Shell shell = win != null ? win.getShell() : null;
-				try {
-					new ProgressMonitorDialog(shell).run(true, false, migrationOperation);
-				} catch (Exception e) {
-					// ignore				
-				}
-				
-				TasksUiPlugin.getRepositoryManager().readRepositories(
-						TasksUiPlugin.getDefault().getRepositoriesFilePath());
-				ContextCorePlugin.getContextManager().loadActivityMetaContext();
-				TasksUiPlugin.getTaskListManager().resetTaskList();
-
-				String path = TasksUiPlugin.getDefault().getDataDirectory() + File.separator
-						+ TasksUiPlugin.OLD_TASK_LIST_FILE;
-				File taskListFile = new File(path);
-				if (!taskListFile.exists()) {
-					path = TasksUiPlugin.getDefault().getDataDirectory() + File.separator
-							+ TasksUiPlugin.DEFAULT_TASK_LIST_FILE;
-					taskListFile = new File(path);
-				}
-				TasksUiPlugin.getTaskListManager().setTaskListFile(taskListFile);
-				TasksUiPlugin.getTaskListManager().readExistingOrCreateNewList();
+				TasksUiPlugin.getDefault().reloadDataDirectory(true);
 			}
 		});
 	}

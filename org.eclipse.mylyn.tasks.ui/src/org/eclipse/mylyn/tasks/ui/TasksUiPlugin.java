@@ -36,6 +36,7 @@ import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
@@ -76,8 +77,10 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWindowListener;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -112,7 +115,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private static final String PROJECT_REPOSITORY_KIND = PROPERTY_PREFIX + ".kind";
 
-	private static final String PROJECT_REPOSITORY_URL = PROPERTY_PREFIX +".url";
+	private static final String PROJECT_REPOSITORY_URL = PROPERTY_PREFIX + ".url";
 
 	private static final String NAME_DATA_DIR = ".mylar";
 
@@ -348,9 +351,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			// TODO: do we ever get here?
 			if (event.getProperty().equals(MylarPreferenceContstants.PREF_DATA_DIR)) {
 				if (event.getOldValue() instanceof String) {
-					String newDirPath = getDefault().getDataDirectory();
-					String taskListFilePath = newDirPath + File.separator + DEFAULT_TASK_LIST_FILE;
-					reloadFromNewFolder(taskListFilePath);
+					reloadDataDirectory(true);
 				}
 			}
 		}
@@ -362,9 +363,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent event) {
 			if (event.getProperty().equals(MylarPreferenceContstants.PREF_DATA_DIR)) {
 				if (event.getOldValue() instanceof String) {
-					String newDirPath = getDefault().getDataDirectory();
-					String taskListFilePath = newDirPath + File.separator + DEFAULT_TASK_LIST_FILE;
-					reloadFromNewFolder(taskListFilePath);
+					reloadDataDirectory(true);
 				}
 			}
 		}
@@ -387,15 +386,16 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 			File dataDir = new File(getDataDirectory());
 			dataDir.mkdirs();
-			migrateContextStoreFrom06Format();
+			migrateContextStoreFrom06Format(false);
 			String path = getDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;
-			
+
 			File taskListFile = new File(path);
 			taskListManager = new TaskListManager(taskListWriter, taskListFile);
 			taskRepositoryManager = new TaskRepositoryManager(taskListManager.getTaskList());
 			synchronizationManager = new RepositorySynchronizationManager();
 
-			// NOTE: initializing extensions in start(..) has caused race conditions previously
+			// NOTE: initializing extensions in start(..) has caused race
+			// conditions previously
 			TasksUiExtensionReader.initExtensions(taskListWriter);
 			taskRepositoryManager.readRepositories(getRepositoriesFilePath());
 			readOfflineReportsFile();
@@ -403,7 +403,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			taskListManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
 			taskListManager.readExistingOrCreateNewList();
 			initialized = true;
-			
+
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					try {
@@ -443,17 +443,26 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	/**
-	 * Will run every time in case somebody copies over an old data directory.
+	 * Will run with every startup in case somebody copies over an old data
+	 * directory. Called upon import. Called upon change of task data directory
+	 * (from preference page).
 	 */
-	private void migrateContextStoreFrom06Format() {
-		File dataDir = new File(getDataDirectory()); //TasksUiPlugin.getDefault().getDataDirectory());
+	private void migrateContextStoreFrom06Format(boolean withProgress) {
+		TaskListDataMigration migrationOperation = new TaskListDataMigration(new File(getDataDirectory()));
 		try {
-			new TaskListDataMigration(dataDir).run(new NullProgressMonitor());
+			if (!withProgress) {
+				migrationOperation.run(new NullProgressMonitor());
+			} else {
+				IWorkbench wb = PlatformUI.getWorkbench();
+				IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
+				Shell shell = win != null ? win.getShell() : null;
+				new ProgressMonitorDialog(shell).run(false, false, migrationOperation);
+			}
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Error occurred while migrating mylar data", false);			
+			MylarStatusHandler.fail(e, "Error occurred while migrating mylar data", false);
 		}
 	}
-		
+
 	public void earlyStartup() {
 		// ignore
 	}
@@ -492,16 +501,21 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	public void setDataDirectory(String newPath) {
+		getTaskListSaveManager().saveTaskList(true);
+		ContextCorePlugin.getContextManager().saveActivityHistoryContext();
 		getPreferenceStore().setValue(MylarPreferenceContstants.PREF_DATA_DIR, newPath);
 		ContextCorePlugin.getDefault().getContextStore().notifyContextStoreMoved();
 	}
 
-	private void reloadFromNewFolder(String taskListFilePath) {
-		getTaskListSaveManager().saveTaskList(true);
+	public void reloadDataDirectory(boolean withProgress) {
+		// In case new data folder has hold style task data
+		migrateContextStoreFrom06Format(withProgress);
 		getTaskListManager().resetTaskList();
-		getTaskListManager().setTaskListFile(new File(taskListFilePath));
-		getTaskListManager().readExistingOrCreateNewList();
 		getTaskListManager().getTaskActivationHistory().clear();
+		getRepositoryManager().readRepositories(getRepositoriesFilePath());
+		ContextCorePlugin.getContextManager().loadActivityMetaContext();
+		getTaskListManager().setTaskListFile(new File(getDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE));
+		getTaskListManager().readExistingOrCreateNewList();
 	}
 
 	@Override
@@ -729,16 +743,21 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		return getDataDirectory() + File.separator + TaskRepositoryManager.DEFAULT_REPOSITORIES_FILE;
 	}
 
-	/** 
-	 * Associate a Task Repository with a workbench project 
-	 * @param resource project or resource belonging to a project
-	 * @param repository task repository to associate with given project
+	/**
+	 * Associate a Task Repository with a workbench project
+	 * 
+	 * @param resource
+	 *            project or resource belonging to a project
+	 * @param repository
+	 *            task repository to associate with given project
 	 * @throws CoreException
 	 */
 	public void setRepositoryForResource(IResource resource, TaskRepository repository) throws CoreException {
-		if(resource == null || repository == null) return;		
-		IProject project = resource.getProject();		
-		if(project == null) return;
+		if (resource == null || repository == null)
+			return;
+		IProject project = resource.getProject();
+		if (project == null)
+			return;
 		IScopeContext projectScope = new ProjectScope(project);
 		IEclipsePreferences projectNode = projectScope.getNode(PLUGIN_ID);
 		if (projectNode != null) {
@@ -751,15 +770,17 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			}
 		}
 	}
-	
+
 	/**
 	 * Retrieve the task repository that has been associated with the given
 	 * project (or resource belonging to a project)
 	 */
 	public TaskRepository getRepositoryForResource(IResource resource, boolean silent) {
-		if(resource == null) return null;		
-		IProject project = resource.getProject();		
-		if(project == null) return null;
+		if (resource == null)
+			return null;
+		IProject project = resource.getProject();
+		if (project == null)
+			return null;
 		TaskRepository taskRepository = null;
 		IScopeContext projectScope = new ProjectScope(project);
 		IEclipsePreferences projectNode = projectScope.getNode(PLUGIN_ID);
@@ -768,8 +789,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			String urlString = projectNode.get(PROJECT_REPOSITORY_URL, "");
 			taskRepository = getRepositoryManager().getRepository(kind, urlString);
 			if (taskRepository == null && !silent) {
-				MessageDialog.openInformation(null, "No Repository Found",
-						"No repository was found. Associate a Task Repository with this project via the project's property page.");				
+				MessageDialog
+						.openInformation(null, "No Repository Found",
+								"No repository was found. Associate a Task Repository with this project via the project's property page.");
 			}
 		}
 		return taskRepository;
