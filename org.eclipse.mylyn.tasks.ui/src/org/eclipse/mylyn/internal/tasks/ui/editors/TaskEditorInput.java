@@ -23,6 +23,7 @@ import org.eclipse.ui.IPersistableElement;
 /**
  * @author Eric Booth
  * @author Rob Elves
+ * @author Mik Kersten
  */
 public class TaskEditorInput implements IEditorInput, IPersistableElement {
 
@@ -37,8 +38,12 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 	private boolean newTask = false;
 
 	public TaskEditorInput(ITask task, boolean newTask) {
-		this.task = task;
 		this.newTask = newTask;
+		init(task);
+	}
+
+	private void init(ITask task) {
+		this.task = task;
 		id = AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
 		label = truncateDescription(task.getDescription());
 	}
@@ -123,9 +128,9 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 	public String getLabel() {
 		if (task instanceof AbstractRepositoryTask) {
 			label = getId() + ": " + truncateDescription(task.getDescription());
-		} else {
+		} else if (task != null){
 			label = truncateDescription(task.getDescription());
-		}
+		} 
 		return label;
 	}
 

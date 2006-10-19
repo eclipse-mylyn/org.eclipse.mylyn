@@ -395,19 +395,18 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			taskRepositoryManager = new TaskRepositoryManager(taskListManager.getTaskList());
 			synchronizationManager = new RepositorySynchronizationManager();
 
+			// NOTE: initializing extensions in start(..) has caused race conditions previously
+			TasksUiExtensionReader.initExtensions(taskListWriter);
+			taskRepositoryManager.readRepositories(getRepositoriesFilePath());
+			readOfflineReportsFile();
+			taskListManager.init();
+			taskListManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
+			taskListManager.readExistingOrCreateNewList();
+			initialized = true;
+			
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					try {
-						TasksUiExtensionReader.initExtensions(taskListWriter);
-						taskRepositoryManager.readRepositories(getRepositoriesFilePath());
-						// Must be called after repositories read
-						readOfflineReportsFile();
-
-						taskListManager.init();
-						taskListManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
-						taskListManager.readExistingOrCreateNewList();
-						initialized = true;
-
 						PlatformUI.getWorkbench().addWindowListener(WINDOW_LISTENER);
 
 						taskListNotificationManager = new TaskListNotificationManager();

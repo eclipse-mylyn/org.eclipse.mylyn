@@ -12,7 +12,6 @@
 package org.eclipse.mylar.internal.tasks.ui.editors;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IElementFactory;
 import org.eclipse.ui.IMemento;
@@ -26,19 +25,14 @@ public class TaskEditorInputFactory implements IElementFactory {
 
 	public static final String ID_FACTORY = "org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorInputFactory";
 
-	//private static final String ERROR_INPUTCONSTRUCTION = "Unable to open editor from history: ";
-
 	public IAdaptable createElement(IMemento memento) {
 		String handle = memento.getString(TAG_TASK_HANDLE);
-		if (handle != null && TasksUiPlugin.getTaskListManager().isTaskListInitialized()) {
-			ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
-			if (task != null) {
-				return new TaskEditorInput(task, false);
-			}		
+		if (handle != null) {
+			return new TaskEditorInput(TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle), false);
 		}
-		//MylarStatusHandler.log(ERROR_INPUTCONSTRUCTION+handle, this);
 		return null;
 	}
+	
 
 	public static void saveState(IMemento memento, TaskEditorInput input) {
 		memento.putString(TAG_TASK_HANDLE, input.getTask().getHandleIdentifier());

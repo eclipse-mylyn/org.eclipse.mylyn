@@ -238,18 +238,6 @@ public class MylarTaskEditor extends FormEditor {
 		return false;
 	}
 
-	// public boolean isDirty() {
-	// fLastDirtyState = computeDirtyState();
-	// return fLastDirtyState;
-	// }
-
-	// private boolean computeDirtyState() {
-	// IFormPage page = getActivePageInstance();
-	// if (page != null && page.isDirty())
-	// return true;
-	// return super.isDirty();
-	// }
-
 	@Override
 	public boolean isDirty() {
 		for (IFormPage page : getPages()) {
