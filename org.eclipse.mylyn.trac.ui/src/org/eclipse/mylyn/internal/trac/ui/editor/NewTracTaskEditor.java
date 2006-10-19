@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.NewBugEditorInput;
@@ -79,8 +80,8 @@ public class NewTracTaskEditor extends MylarTaskEditor {
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		// ignore
-
+		MessageDialog.openWarning(this.newBugEditor.getSite().getShell(), "Operation not supported", "Save of un-submitted new tasks is not currently supported.\nPlease submit all new tasks.");
+		monitor.setCanceled(true);
 	}
 
 	@Override

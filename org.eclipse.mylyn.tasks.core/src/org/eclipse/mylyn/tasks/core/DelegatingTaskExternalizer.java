@@ -552,7 +552,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			hit.setCorrespondingTask((AbstractRepositoryTask) correspondingTask);
 		}
 
-		query.addHit(hit, taskList);
+		query.addHit(hit);
 	}
 
 	public List<ITaskListExternalizer> getDelegateExternalizers() {

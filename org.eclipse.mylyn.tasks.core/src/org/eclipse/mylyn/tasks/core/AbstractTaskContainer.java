@@ -24,7 +24,7 @@ public abstract class AbstractTaskContainer implements ITaskListElement {
 	
 	private Set<String> childHandles = new HashSet<String>();
 
-	private TaskList taskList;
+	protected TaskList taskList;
 	
 	/**
 	 * Optional URL corresponding to the web resource associated with this container.

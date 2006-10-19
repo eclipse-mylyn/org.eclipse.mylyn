@@ -166,9 +166,8 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 	private boolean shouldAlwaysShow(AbstractTaskContainer container) {
 		for (ITask task : container.getChildren()) {
 			if (shouldAlwaysShow(task)) {
-				if (container instanceof TaskArchive) {
-					Set<AbstractQueryHit> existingHits = TasksUiPlugin.getTaskListManager().getTaskList().getQueryHitsForHandle(task.getHandleIdentifier());
-					if (existingHits.isEmpty()) {
+				if (container instanceof TaskArchive) {					
+					if (TasksUiPlugin.getTaskListManager().getTaskList().getQueryHit(task.getHandleIdentifier()) != null) {
 						return true;							
 					}
 				} else {
@@ -197,8 +196,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 						for (ITask task : ((AbstractTaskContainer) parent).getChildren()) { 
 							if (shouldAlwaysShow(task)) {
 								// TODO: archive logic?
-								Set<AbstractQueryHit> existingHits = TasksUiPlugin.getTaskListManager().getTaskList().getQueryHitsForHandle(task.getHandleIdentifier());
-								if (existingHits.isEmpty()) {
+								if (TasksUiPlugin.getTaskListManager().getTaskList().getQueryHit(task.getHandleIdentifier()) == null) {
 									children.add(task);								
 								} 
 							}

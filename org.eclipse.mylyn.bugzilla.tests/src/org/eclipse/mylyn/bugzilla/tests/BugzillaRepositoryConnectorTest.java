@@ -225,23 +225,35 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 	}
 
-//	public void testUniqueQueryHitObjects() {
-//		init222();
-//		BugzillaRepositoryQuery query1 = new BugzillaRepositoryQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL,
-//				"queryurl", "description1", "-1", taskList);
-//		BugzillaQueryHit query1Hit = new BugzillaQueryHit(taskList, "description1", "P1",
-//				IBugzillaConstants.TEST_BUGZILLA_222_URL, "1", null, "status");
-//		query1.addHit(query1Hit, taskList);
-//		taskList.addQuery(query1);
-//
-//		BugzillaRepositoryQuery query2 = new BugzillaRepositoryQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL,
-//				"queryurl2", "description2", "-1", taskList);
-//		BugzillaQueryHit query2Hit = new BugzillaQueryHit(taskList, "description2", "P1",
-//				IBugzillaConstants.TEST_BUGZILLA_222_URL, "1", null, "status");
-//		query2.addHit(query2Hit, taskList);
-//		taskList.addQuery(query2);
-//		assertEquals(2, taskList.getQueries().size());
-//
+	public void testUniqueQueryHitObjects() {
+		init222();
+		BugzillaRepositoryQuery query1 = new BugzillaRepositoryQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL,
+				"queryurl", "description1", "-1", taskList);
+		BugzillaQueryHit query1Hit = new BugzillaQueryHit(taskList, "description1", "P1",
+				IBugzillaConstants.TEST_BUGZILLA_222_URL, "1", null, "status");
+		query1.addHit(query1Hit);
+		taskList.addQuery(query1);
+
+		BugzillaRepositoryQuery query2 = new BugzillaRepositoryQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL,
+				"queryurl2", "description2", "-1", taskList);
+		BugzillaQueryHit query2Hit = new BugzillaQueryHit(taskList, "description2", "P1",
+				IBugzillaConstants.TEST_BUGZILLA_222_URL, "1", null, "status");
+		query2.addHit(query2Hit);
+		taskList.addQuery(query2);
+		assertEquals(2, taskList.getQueries().size());
+		assertEquals(1, taskList.getQueryHits().size());
+		for (AbstractQueryHit hit: query1.getHits()) {
+			for (AbstractQueryHit hit2: query2.getHits()) {
+				assertTrue(hit.getClass().equals(hit2.getClass()));
+			}
+		}
+		
+		taskList.deleteQuery(query1);
+		taskList.deleteQuery(query2);
+		assertEquals(1, taskList.getQueryHits().size());
+		taskList.removeOrphanedHits();
+		assertEquals(0, taskList.getQueryHits().size());
+
 //		List<AbstractQueryHit> hitsForHandle = new ArrayList<AbstractQueryHit>();
 //		for (AbstractRepositoryQuery query : taskList.getQueries()) {
 //			AbstractQueryHit foundHit = query.findQueryHit(AbstractRepositoryTask.getHandle(
@@ -252,19 +264,18 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 //		}
 //
 //		// IF two queries have the same hit there should only be one instance of
-//		// a hit for a given handle.
+//		// a hit with a given handle.
 //		assertEquals(1, hitsForHandle.size());
-//
-//		// IF two queries have the same hit there should only be one instance of
-//		// a hit for a given handle.
-//		// Note that getQueryHitsForHandle will always return a set of unique
-//		// elements (even if there are duplicates among queries because
-//		// it returns a set.
-//		// assertEquals(1,
-//		// taskList.getQueryHitsForHandle(AbstractRepositoryTask.getHandle(IBugzillaConstants.TEST_BUGZILLA_222_URL,
-//		// "1")).size());
-//
-//	}
+
+		// IF two queries have the same hit there should only be one instance of
+		// a hit for a given handle.
+		// Note that getQueryHitsForHandle will always return a set of unique
+		// elements (even if there are duplicates among queries because
+		// it returns a set.
+//		 assertEquals(1, taskList.getQueryHits(
+//				AbstractRepositoryTask.getHandle(IBugzillaConstants.TEST_BUGZILLA_222_URL, "1")).size());
+
+	}
 
 	public void testAttachToExistingReport() throws Exception {
 		init222();

@@ -37,6 +37,8 @@ public class TaskList {
 
 	private Map<String, ITask> tasks;
 
+	private Map<String, AbstractQueryHit> queryHits;
+
 	private TaskArchive archiveContainer;
 
 	private TaskCategory rootCategory;
@@ -56,6 +58,7 @@ public class TaskList {
 	 */
 	public void reset() {
 		tasks = new HashMap<String, ITask>();
+		queryHits = new HashMap<String, AbstractQueryHit>();
 		archiveContainer = new TaskArchive(this);
 		rootCategory = new TaskCategory(LABEL_ROOT, this);
 		categories = new HashSet<AbstractTaskContainer>();
@@ -209,7 +212,7 @@ public class TaskList {
 	}
 
 	public void deleteQuery(AbstractRepositoryQuery query) {
-		queries.remove(query);
+		queries.remove(query);		
 		for (ITaskListChangeListener listener : changeListeners) {
 			listener.containerDeleted(query);
 		}
@@ -354,22 +357,6 @@ public class TaskList {
 		return null;
 	}
 
-	/**
-	 * NOTE: will only return first occurrence of the hit in the first category
-	 * it is matched in.
-	 */
-	public AbstractQueryHit getQueryHitForHandle(String handle) {
-		if (handle != null) {
-			for (AbstractRepositoryQuery query : queries) {
-				AbstractQueryHit foundHit = query.findQueryHit(handle);
-				if (foundHit != null) {
-					return foundHit;
-				}
-			}
-		}
-		return null;
-	}
-
 	public boolean isEmpty() {
 		boolean archiveIsEmpty = getCategories().size() == 1
 				&& getCategories().iterator().next().equals(archiveContainer)
@@ -414,6 +401,38 @@ public class TaskList {
 		return queriesForHandle;
 	}
 
+	/** if handle == null or no query hits found an empty set is returned * */
+	public Set<AbstractQueryHit> getQueryHits(Set<String> handles) {
+		if (handles == null) {
+			return Collections.emptySet();
+		}
+		HashSet<AbstractQueryHit> result = new HashSet<AbstractQueryHit>();
+		for (String handle : handles) {
+			AbstractQueryHit hit = queryHits.get(handle);
+			if(hit != null) {
+				result.add(queryHits.get(handle));
+			}
+		}
+		return result;
+	}
+
+	public AbstractQueryHit getQueryHit(String handle) {
+		if (handle != null) {
+			return queryHits.get(handle);
+		}
+		return null;
+	}
+
+	/** for testing */
+	public Set<AbstractQueryHit> getQueryHits() {
+		return new HashSet<AbstractQueryHit>(queryHits.values());
+	}
+
+	/** called by AbstractRepositoryQuery */
+	public void addQueryHit(AbstractQueryHit hit) {
+		queryHits.put(hit.getHandleIdentifier(), hit);
+	}
+
 	/**
 	 * return all queries for the given repository url
 	 */
@@ -445,21 +464,6 @@ public class TaskList {
 			}
 		}
 		return repositoryTasks;
-	}
-
-	/** if handle == null or no query hits found an empty set is returned * */
-	public Set<AbstractQueryHit> getQueryHitsForHandle(String handle) {
-		if (handle == null) {
-			return Collections.emptySet();
-		}
-		Set<AbstractQueryHit> hitsForHandle = new HashSet<AbstractQueryHit>();
-		for (AbstractRepositoryQuery query : queries) {
-			AbstractQueryHit foundHit = query.findQueryHit(handle);
-			if (foundHit != null) {
-				hitsForHandle.add(foundHit);
-			}
-		}
-		return hitsForHandle;
 	}
 
 	/**
@@ -544,5 +548,20 @@ public class TaskList {
 			max = Math.max(ihandle, max);
 		}
 		return max;
+	}
+
+	/**
+	 * Orphaned hits arise when no query in the tasklist references a hit in the
+	 * master list maintained by the tasklist. Orphaned hits don't span workbench 
+	 * re-start but this just helps maintain the list in case of prolonged 
+	 * workbench uptime.
+	 */
+	public void removeOrphanedHits() {
+		for (String handle : new HashSet<String>(queryHits.keySet())) {
+			Set<AbstractRepositoryQuery> queries = getQueriesForHandle(handle);
+			if (queries == null || queries.isEmpty()) {
+				queryHits.remove(handle);				
+			}
+		}
 	}
 }

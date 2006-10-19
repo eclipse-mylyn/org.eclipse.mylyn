@@ -39,7 +39,7 @@ public class TracRepositoryQueryTest extends TestCase {
 
 		TracSearch search = new TracSearch();
 		String queryUrl = repository.getUrl() + ITracClient.QUERY_URL + search.toUrl();
-		TracRepositoryQuery query = new TracRepositoryQuery(repository.getUrl(), queryUrl, "description", null);
+		TracRepositoryQuery query = new TracRepositoryQuery(repository.getUrl(), queryUrl, "description", TasksUiPlugin.getTaskListManager().getTaskList());
 		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
 		
 		String oldUrl = repository.getUrl();
@@ -55,7 +55,7 @@ public class TracRepositoryQueryTest extends TestCase {
 		String repositoryUrl = "https://foo.bar/repo";
 		String parameterUrl = "&status=new&status=assigned&status=reopened&milestone=0.1";
 		String queryUrl = repositoryUrl + ITracClient.QUERY_URL + parameterUrl;
-		TracRepositoryQuery query = new TracRepositoryQuery(repositoryUrl, queryUrl, "description", null);
+		TracRepositoryQuery query = new TracRepositoryQuery(repositoryUrl, queryUrl, "description", TasksUiPlugin.getTaskListManager().getTaskList());
 
 		TracSearch filterList = query.getTracSearch();
 

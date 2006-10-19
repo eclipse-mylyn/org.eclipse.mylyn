@@ -24,7 +24,8 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 
 	protected int maxHits;
 
-	private Set<AbstractQueryHit> hits = new HashSet<AbstractQueryHit>();
+	//private Set<AbstractQueryHit> hits = new HashSet<AbstractQueryHit>();
+	private Set<String> hitHandles = new HashSet<String>(); 
 
 	protected String lastRefreshTimeStamp = "<never>";
 
@@ -32,6 +33,11 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 
 	public abstract String getRepositoryKind();
 
+	/**
+	 * Query must be added to tasklist or synchronization will result
+	 * in empty result set due to removeOrphanedHits(). All hits
+	 * that don't have a query in the tasklist are removed.
+	 */
 	public AbstractRepositoryQuery(String description, TaskList taskList) {
 		super(description, taskList);
 	}
@@ -57,52 +63,54 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 	}
 
 	public synchronized AbstractQueryHit findQueryHit(String handle) {
-		if (handle != null) {
-			for (AbstractQueryHit hit : hits) {
-				if (handle.equals(hit.getHandleIdentifier())) {
-					return hit;
-				}
-			}
+		if(hitHandles.contains(handle)) {
+			return taskList.getQueryHit(handle);
 		}
 		return null;
 	}
 	
 	public synchronized Set<AbstractQueryHit> getHits() {
-		return new HashSet<AbstractQueryHit>(hits);
+		return taskList.getQueryHits(hitHandles);		
 	}
 
 	public synchronized void updateHits(List<AbstractQueryHit> newHits, TaskList taskList) {
-		Set<AbstractQueryHit> oldHits = new HashSet<AbstractQueryHit>(hits);
-		hits.clear();
+		Set<AbstractQueryHit> oldHits = getHits();
+		hitHandles.clear();
 		for (AbstractQueryHit oldHit : oldHits) {
 			if (newHits.contains(oldHit)) {
 				newHits.get(newHits.indexOf(oldHit)).setNotified(oldHit.isNotified);
 			}
 		}
 		for (AbstractQueryHit hit : newHits) {
-			this.addHit(hit, taskList);
+			this.addHit(hit);
 		}
 	}
 
-	public synchronized void addHit(AbstractQueryHit hit, TaskList taskList) {
-		ITask correspondingTask = taskList.getTask(hit.getHandleIdentifier());
-		if (correspondingTask instanceof AbstractRepositoryTask) {
-			hit.setCorrespondingTask((AbstractRepositoryTask) correspondingTask);
-		}
+	public synchronized void addHit(AbstractQueryHit hit) {		
+		if(hit.getCorrespondingTask() == null) {
+			ITask correspondingTask = taskList.getTask(hit.getHandleIdentifier());
+			if (correspondingTask instanceof AbstractRepositoryTask) {
+				hit.setCorrespondingTask((AbstractRepositoryTask) correspondingTask);
+			}
+		}		
+		// Always replace even if exists (may have new description etc.) 
+		taskList.addQueryHit(hit);
+		
+		// TODO: this is meaningless since only one hit object exists now
 		hit.setParent(this);
-		hits.add(hit);
+		hitHandles.add(hit.getHandleIdentifier());
 	}
 
 	public synchronized void removeHit(AbstractQueryHit hit) {
-		hits.remove(hit);
+		hitHandles.remove(hit.getHandleIdentifier());
 	}
 
 	public synchronized String getPriority() {
-		if (hits.isEmpty()) {
+		if (hitHandles.isEmpty()) {
 			return Task.PriorityLevel.P1.toString();
 		}
 		String highestPriority = Task.PriorityLevel.P5.toString();
-		for (AbstractQueryHit hit : hits) {
+		for (AbstractQueryHit hit : getHits()) {
 			if (highestPriority.compareTo(hit.getPriority()) > 0) {
 				highestPriority = hit.getPriority();
 			}
