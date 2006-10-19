@@ -14,6 +14,7 @@ package org.eclipse.mylar.internal.tasks.ui.views;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -139,9 +140,10 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 					TaskListView.getFromActivePerspective().goUpToRoot();
 				}
 				TaskListFilteredTree.this.textChanged();
-				TaskListView.getFromActivePerspective().selectedAndFocusTask(
-						TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask()
-				);
+//				TaskListView.getFromActivePerspective().selectedAndFocusTask(
+//						TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask()
+//				);
+				TaskUiUtil.openEditor(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask(), false);
 			}
 
 		});
