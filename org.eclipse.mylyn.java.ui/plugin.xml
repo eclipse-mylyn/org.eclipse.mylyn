@@ -50,6 +50,13 @@
 		<proposalCategory
 			icon="icons/elcl16/proposals-type.gif"/>
 	</extension>
+		<extension
+		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
+		id="templateProposalCategory"
+		name="Template Proposals (Mylar)">
+		<proposalCategory
+			icon="/icons/elcl16/templateprop_co.gif"/>
+	</extension>
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="javaTypeCompletionProposalComputer">
@@ -68,6 +75,17 @@
 			categoryId="org.eclipse.mylar.java.javaNoTypeProposalCategory">
 			<partition type="__dftl_partition_content_type"/>
 			<partition type="__java_string"/>
+		</javaCompletionProposalComputer>
+	</extension>
+	<extension
+		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
+		id="TemplateProposalComputer">
+		<javaCompletionProposalComputer
+			class="org.eclipse.jdt.internal.ui.text.java.TemplateCompletionProposalComputer"
+			categoryId="org.eclipse.mylar.java.templateProposalCategory">
+			<partition type="__dftl_partition_content_type"/>
+			<partition type="__java_singleline_comment"/> <!-- to get NLS templates -->
+			<partition type="__java_javadoc"/>
 		</javaCompletionProposalComputer>
 	</extension>
 		<!-- javadoc completions -->   

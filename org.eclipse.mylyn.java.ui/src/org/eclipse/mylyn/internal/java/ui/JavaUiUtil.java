@@ -55,8 +55,12 @@ public class JavaUiUtil {
 	public static final String ASSIST_MYLAR_NOTYPE = "org.eclipse.mylar.java.javaNoTypeProposalCategory";
 
 	public static final String ASSIST_JDT_TYPE = "org.eclipse.jdt.ui.javaTypeProposalCategory";
-
+	
 	public static final String ASSIST_JDT_NOTYPE = "org.eclipse.jdt.ui.javaNoTypeProposalCategory";
+
+	public static final String ASSIST_JDT_TEMPLATE= "org.eclipse.jdt.ui.templateProposalCategory";
+
+	public static final String ASSIST_MYLAR_TEMPLATE = "org.eclipse.mylar.java.templateProposalCategory";
 
 	public static void installContentAssist(IPreferenceStore javaPrefs, boolean mylarContentAssist) {
 		String oldValue = javaPrefs.getString(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES);
@@ -68,13 +72,17 @@ public class JavaUiUtil {
 		if (!mylarContentAssist) {
 			disabledIds.remove(ASSIST_JDT_TYPE);
 			disabledIds.remove(ASSIST_JDT_NOTYPE);
+			disabledIds.remove(ASSIST_JDT_TEMPLATE);
 			disabledIds.add(ASSIST_MYLAR_NOTYPE);
 			disabledIds.add(ASSIST_MYLAR_TYPE);
+			disabledIds.add(ASSIST_MYLAR_TEMPLATE);
 		} else {
 			disabledIds.add(ASSIST_JDT_TYPE);
 			disabledIds.add(ASSIST_JDT_NOTYPE);
+			disabledIds.add(ASSIST_JDT_TEMPLATE);
 			disabledIds.remove(ASSIST_MYLAR_NOTYPE);
 			disabledIds.remove(ASSIST_MYLAR_TYPE);
+			disabledIds.remove(ASSIST_MYLAR_TEMPLATE);
 		}
 		String newValue = "";
 		for (String id : disabledIds) {
