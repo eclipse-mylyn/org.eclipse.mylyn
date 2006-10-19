@@ -48,6 +48,7 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 	protected Composite createProgressComposite(Composite container) {
 		taskProgressBar = new TaskProgressBar(container);
 		taskProgressBar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));		
+		updateTaskProgressBar(TasksUiPlugin.getTaskListManager().getActivityThisWeek());
 		
 		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(new ITaskListChangeListener() {
 
@@ -115,11 +116,8 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 				totalCompleted++;
 			}
 		}
-		
-		taskProgressBar.reset(totalCompleted, totalThisWeek);
-//		taskProgressBar.setMaximum(totalThisWeek);
-//		taskProgressBar.setCount(totalCompleted);
 		taskProgressBar.setToolTipText("Completed " + totalCompleted + " of " + totalThisWeek + " tasks scheduled for this week");
+		taskProgressBar.reset(totalCompleted, totalThisWeek);
 	}
 	
 	protected Composite createStatusComposite(Composite container) {
