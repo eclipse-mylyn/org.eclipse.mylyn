@@ -35,9 +35,9 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 	public static final String LABEL_FIND = "Find:";
 
 	private Job refreshJob;
-	
+
 	private AdaptiveRefreshPolicy refreshPolicy;
-	
+
 	/**
 	 * HACK: using reflection to gain access
 	 */
@@ -58,7 +58,7 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 	@Override
 	protected void createControl(Composite parent, int treeStyle) {
 		super.createControl(parent, treeStyle);
-		
+
 		// Override superclass layout settings...
 		GridLayout layout = (GridLayout) getLayout();
 		layout.verticalSpacing = 0;
@@ -67,25 +67,19 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 
 	@Override
 	protected Composite createFilterControls(Composite parent) {
-		
-		GridLayout statusLayout = new GridLayout(1, false);
-		statusLayout.marginWidth = 1;
-		statusLayout.marginHeight = 1;
-		parent.setLayout(statusLayout);
-		
-		Composite statusComposite = new Composite(parent, SWT.NULL);
 		GridLayout gridLayout = new GridLayout(4, false);
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 0;
-		statusComposite.setLayout(gridLayout);
+		gridLayout.marginWidth = 2;
+		gridLayout.marginHeight = 2;
+		gridLayout.verticalSpacing = 0;
+		parent.setLayout(gridLayout);
 
-		Label label = new Label(statusComposite, SWT.NONE);
+		Label label = new Label(parent, SWT.NONE);
 		label.setText(LABEL_FIND);
 
-		super.createFilterControls(statusComposite);
+		super.createFilterControls(parent);
 
-        GridData gd = new GridData(SWT.FILL, SWT.DEFAULT, true, false);
-        gd.minimumWidth = filterWidth;
+		GridData gd = new GridData(SWT.FILL, SWT.DEFAULT, true, false);
+		gd.minimumWidth = filterWidth;
 		filterText.setLayoutData(gd);
 		filterText.addKeyListener(new KeyAdapter() {
 
@@ -97,13 +91,21 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 			}
 		});
 
-		createStatusComposite(statusComposite);
-		createProgressComposite(parent);
+		createStatusComposite(parent);
+		Composite progressComposite = new Composite(parent, SWT.NONE);
+		GridLayout progressLayout = new GridLayout(1, false);
+		progressLayout.marginWidth = 0;
+		progressLayout.marginHeight = 0;
+		progressLayout.horizontalSpacing = 0;
+		progressLayout.verticalSpacing = 0;
+		progressComposite.setLayout(progressLayout);
+		progressComposite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 4, 1));
+		createProgressComposite(progressComposite);
 		return parent;
 	}
 
 	protected abstract Composite createProgressComposite(Composite container);
-	
+
 	protected abstract Composite createStatusComposite(Composite container);
 
 	protected void textChanged() {

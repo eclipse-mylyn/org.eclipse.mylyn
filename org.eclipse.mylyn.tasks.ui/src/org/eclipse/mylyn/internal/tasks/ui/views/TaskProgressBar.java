@@ -30,9 +30,7 @@ import org.eclipse.swt.widgets.Display;
  */
 public class TaskProgressBar extends Canvas {
 
-//	private static final int DEFAULT_WIDTH = 200;
-
-//	private static final int DEFAULT_HEIGHT = 5;
+	private static final int DEFAULT_HEIGHT = 6;
 
 	private int fCurrentTickCount = 0;
 
@@ -76,7 +74,9 @@ public class TaskProgressBar extends Canvas {
 		});
 		Display display = parent.getDisplay();
 		fFailureColor = new Color(display, 159, 63, 63);
-		fOKColor = new Color(display, 95, 191, 95);
+		fOKColor = new Color(display, 95, 191, 124); //95);
+//			themeManager.getCurrentTheme().getColorRegistry().get(
+//				TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_COMPLETED);
 		fStoppedColor = new Color(display, 120, 120, 120);
 	}
 
@@ -164,8 +164,7 @@ public class TaskProgressBar extends Canvas {
 
 	public Point computeSize(int wHint, int hHint, boolean changed) {
 		checkWidget();
-//		System.err.println(">>>>> " + parent.getSize().y);
-		Point size = new Point(parent.getSize().x, 5);//parent.getSize().y);
+		Point size = new Point(parent.getSize().x, DEFAULT_HEIGHT);//parent.getSize().y);
 		if (wHint != SWT.DEFAULT)
 			size.x = wHint;
 		if (hHint != SWT.DEFAULT)

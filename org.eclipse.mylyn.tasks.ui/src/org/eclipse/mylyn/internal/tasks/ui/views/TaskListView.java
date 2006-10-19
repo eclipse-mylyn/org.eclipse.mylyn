@@ -1511,8 +1511,7 @@ public class TaskListView extends ViewPart {
 		// if no task exists, select the query hit if exists
 		AbstractQueryHit hit = null;
 		if (getViewer().getSelection().isEmpty()
-				&& (hit = TasksUiPlugin.getTaskListManager().getTaskList().getQueryHitForHandle(
-						task.getHandleIdentifier())) != null) {
+				&& (hit = TasksUiPlugin.getTaskListManager().getTaskList().getQueryHit(task.getHandleIdentifier())) != null) {
 			AbstractRepositoryQuery query = TasksUiPlugin.getTaskListManager().getTaskList().getQueryForHandle(
 					task.getHandleIdentifier());
 			getViewer().expandToLevel(query, 1);
@@ -1537,9 +1536,8 @@ public class TaskListView extends ViewPart {
 			refresh(task.getContainer());
 		}
 
-		Set<AbstractQueryHit> hits = TasksUiPlugin.getTaskListManager().getTaskList().getQueryHitsForHandle(
-				task.getHandleIdentifier());
-		for (AbstractQueryHit hit : hits) {
+		AbstractQueryHit hit = TasksUiPlugin.getTaskListManager().getTaskList().getQueryHit(task.getHandleIdentifier());
+		if (hit != null) {
 			refresh(hit);
 		}
 	}
