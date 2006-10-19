@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.TaskList;
@@ -79,17 +80,16 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 						element);
 			}
 			if (element instanceof ITask) {
-				ITask task = (ITask) element;
-				String description = task.getDescription();
-				return pattern.matcher(description).find();
+				ITask task = (ITask)element;
+				String taskString = AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()) + ": " + task.getDescription();
+				return pattern.matcher(taskString).find();
 			} else if (element instanceof AbstractQueryHit) {
 				AbstractQueryHit hit = (AbstractQueryHit) element;
-				String description = hit.getDescription();
-				return pattern.matcher(description).find();
+				String taskString = AbstractRepositoryTask.getTaskId(hit.getHandleIdentifier()) + ": " + hit.getDescription();
+				return pattern.matcher(taskString).find();
 			}
 			return false;
 		}
-
 	}
 
 	private TableViewer viewer;
@@ -101,6 +101,7 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 	public boolean getOpenInBrowser() {
 		return openInBrowser;
 	}
+
 
 	public void setOpenInBrowser(boolean openInBrowser) {
 		this.openInBrowser = openInBrowser;
@@ -132,7 +133,7 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 
 		Label matches = new Label(area, SWT.NONE);
 		matches.setText("&Matching tasks:");
-		viewer = new TableViewer(area, SWT.SINGLE);
+		viewer = new TableViewer(area, SWT.SINGLE | SWT.BORDER);
 		Control control = viewer.getControl();
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		control.setLayoutData(gd);
