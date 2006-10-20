@@ -130,6 +130,8 @@ class SynchronizeTaskJob extends Job {
 							connector.updateTaskState(repositoryTask);
 							refreshEditors(repositoryTask);
 						}
+					} else {
+						connector.updateTaskState(repositoryTask);
 					}
 					repositoryTask.setCurrentlySynchronizing(false);
 					TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
@@ -140,7 +142,6 @@ class SynchronizeTaskJob extends Job {
 
 				monitor.worked(1);
 			}
-
 			// TasksUiPlugin.getDefault().getTaskListNotificationManager().startNotification(1);
 
 		} catch (Exception e) {

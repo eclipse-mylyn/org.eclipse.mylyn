@@ -48,19 +48,6 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 
 	private Map<AbstractRepositoryConnector, List<AbstractRepositoryTask>> tasksToSyncMap = new LinkedHashMap<AbstractRepositoryConnector, List<AbstractRepositoryTask>>();
 
-	// private void checkSyncResult(final IJobChangeEvent event, final
-	// AbstractRepositoryQuery problemQuery) {
-	// if (event.getResult().getException() != null) {
-	// PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-	// public void run() {
-	// MessageDialog.openError(Display.getDefault().getActiveShell(),
-	// TasksUiPlugin.TITLE_DIALOG, event
-	// .getResult().getMessage());
-	// }
-	// });
-	// }
-	// }
-
 	public void run(IAction action) {
 
 		if (TaskListView.getFromActivePerspective() != null) {
