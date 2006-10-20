@@ -170,8 +170,12 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	public void submitBug() {
 		submitButton.setEnabled(false);
 		showBusy(true);	
-		if(isDirty()) {
-			doSave(new NullProgressMonitor());
+		if(isDirty()) {						
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					doSave(new NullProgressMonitor());
+				}
+			});
 		}
 
 		BugzillaReportSubmitForm bugzillaReportSubmitForm;
