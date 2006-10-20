@@ -58,7 +58,7 @@ public abstract class AbstractTaskContainer implements ITaskListElement {
 		return handle;
 	}
 
-	void setDescription(String description) {
+	public void setDescription(String description) {
 		this.handle = description;
 	}
 
