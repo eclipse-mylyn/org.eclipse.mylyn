@@ -12,7 +12,6 @@
 package org.eclipse.mylar.java.tests;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.jdt.core.IMethod;
@@ -81,7 +80,6 @@ public class ContentOutlineRefreshTest extends AbstractJavaContextTest {
 //		action.run();
 		action.updateInterestFilter(true, viewer);
 		
-		System.err.println(">>> " + Arrays.asList(viewer.getFilters()));
 		assertEquals(0, UiTestUtil.countItemsInTree(viewer.getTree()));
 
 		StructuredSelection sm1 = new StructuredSelection(m1);
