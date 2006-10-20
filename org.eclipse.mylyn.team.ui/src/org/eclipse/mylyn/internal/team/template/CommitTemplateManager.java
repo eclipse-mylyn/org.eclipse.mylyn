@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.team.ICommitTemplateVariable;
+import org.eclipse.mylar.team.AbstractCommitTemplateVariable;
 import org.eclipse.mylar.team.MylarTeamPlugin;
 
 /**
@@ -39,23 +39,18 @@ public class CommitTemplateManager {
 	private static final String ELEM_TEMPLATE_HANDLER = "templateVariable";
 
 	private static final String EXT_POINT_TEMPLATE_HANDLERS = "commitTemplates";
-
+	
 	public String generateComment(ITask task, String template) {
 		return processKeywords(task, template);
 	}
 
 	public String getTaskIdFromCommentOrLabel(String commentOrLabel) {
 		String id = getTaskIdFromComment(commentOrLabel);
-//		if (id == null) {
-//			id = getTaskIdFromLabel(commentOrLabel);
-//		}
 		return id;
 	}
 
 	private String getTaskIdFromComment(String comment) {
 		try {
-//			String regex = MylarTeamPlugin.getDefault().getPreferenceStore().getString(
-//					MylarTeamPlugin.COMMIT_REGEX_TASK_ID);
 			String template = MylarTeamPlugin.getDefault().getPreferenceStore().getString(
 					MylarTeamPlugin.COMMIT_TEMPLATE);
 			String regex = getTaskIdRegEx(template);
@@ -129,16 +124,16 @@ public class CommitTemplateManager {
 		}.run();
 	}
 
-	public ICommitTemplateVariable createHandler(final String keyword) {
-		return (ICommitTemplateVariable) new ExtensionProcessor() {
+	public AbstractCommitTemplateVariable createHandler(final String keyword) {
+		return (AbstractCommitTemplateVariable) new ExtensionProcessor() {
 			@Override
 			protected Object processContribution(IConfigurationElement element, String foundKeyword,
 					String description, String className) throws Exception {
 				if (keyword.equals(foundKeyword)) {
-					ICommitTemplateVariable handler = (ICommitTemplateVariable) element.createExecutableExtension(ATTR_CLASS);
-					if (handler instanceof CommitTemplateVariable) {
-						((CommitTemplateVariable) handler).setDescription(description);
-						((CommitTemplateVariable) handler).setRecognizedKeyword(foundKeyword);
+					AbstractCommitTemplateVariable handler = (AbstractCommitTemplateVariable) element.createExecutableExtension(ATTR_CLASS);
+					if (handler instanceof AbstractCommitTemplateVariable) {
+						((AbstractCommitTemplateVariable) handler).setDescription(description);
+						((AbstractCommitTemplateVariable) handler).setRecognizedKeyword(foundKeyword);
 					} else {
 						String recognizedKeyword = handler.getRecognizedKeyword();
 						if (recognizedKeyword == null || !recognizedKeyword.equals(foundKeyword)) {
@@ -170,18 +165,18 @@ public class CommitTemplateManager {
 			if (value != null) {
 				buffer.append(value);
 				buffer.append(segment.substring(brace + 1));
-			} else {
-				buffer.append("${");
-				buffer.append(segment);
-			}
+			} 
+//			else {
+//				buffer.append("${");
+//				buffer.append(segment);
+//			}
 		}
-
 		return buffer.toString();
 	}
 
 	private String processKeyword(ITask task, String keyword) {
 		try {
-			ICommitTemplateVariable handler = createHandler(keyword);
+			AbstractCommitTemplateVariable handler = createHandler(keyword);
 			if (handler != null) {
 				return handler.getValue(task);
 			}
