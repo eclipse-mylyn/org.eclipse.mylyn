@@ -101,11 +101,11 @@ public class TasksUiExtensionReader {
 
 	public static final String ELMNT_HYPERLINK_DETECTOR = "hyperlinkDetector";
 
-	private static boolean extensionsRead = false;
+	private static boolean coreExtensionsRead = false;
 
 	public static void initExtensions(TaskListWriter writer) {
 		List<ITaskListExternalizer> externalizers = new ArrayList<ITaskListExternalizer>();
-		if (!extensionsRead) {
+		if (!coreExtensionsRead) {
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
 
 			// HACK: has to be read first
@@ -159,10 +159,25 @@ public class TasksUiExtensionReader {
 				}
 			}
 			writer.setDelegateExternalizers(externalizers);
-			extensionsRead = true;
+			coreExtensionsRead = true;
 		}
 	}
 
+	public static void initWorkbenchUiExtensions() {
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+		IExtensionPoint repositoriesExtensionPoint = registry.getExtensionPoint(EXTENSION_REPOSITORIES);
+		IExtension[] repositoryExtensions = repositoriesExtensionPoint.getExtensions();
+		for (int i = 0; i < repositoryExtensions.length; i++) {
+			IConfigurationElement[] elements = repositoryExtensions[i].getConfigurationElements();
+			for (int j = 0; j < elements.length; j++) {
+				if (elements[j].getName().equals(ELMNT_REPOSITORY_UI)) {
+					readRepositoryConnectorUi(elements[j]);
+				} 
+			}
+		}
+	}
+	
 	private static void readHyperlinkDetector(IConfigurationElement element) {
 		try {
 			Object hyperlinkDetector = element.createExecutableExtension(ATTR_CLASS);
@@ -208,7 +223,6 @@ public class TasksUiExtensionReader {
 
 	private static void readRepositoryConnectorUi(IConfigurationElement element) {
 		try {
-//			Object type = element.getAttribute(ELMNT_TYPE);
 			Object connectorUi = element.createExecutableExtension(ATTR_CLASS);
 			if (connectorUi instanceof AbstractRepositoryConnectorUi) {
 				TasksUiPlugin.addRepositoryConnectorUi((AbstractRepositoryConnectorUi) connectorUi);

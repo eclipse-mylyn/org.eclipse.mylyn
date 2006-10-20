@@ -407,6 +407,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					try {
+						TasksUiExtensionReader.initWorkbenchUiExtensions();
 						PlatformUI.getWorkbench().addWindowListener(WINDOW_LISTENER);
 
 						// Needs to happen asynchronously to avoid bug 159706
