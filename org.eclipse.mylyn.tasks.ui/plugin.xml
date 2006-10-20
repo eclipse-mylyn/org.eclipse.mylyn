@@ -557,7 +557,7 @@
                menubarPath="navigate/open.ext3"
                style="push"/>
 		<action
-               class="org.eclipse.mylar.internal.tasks.ui.actions.ActivateTaskAction"
+               class="org.eclipse.mylar.internal.tasks.ui.actions.ActivateTaskDialogAction"
                definitionId="org.eclipse.mylar.tasks.command.activateTask"
                id="org.eclipse.mylar.tasks.ui.switchTask"
                label="&amp;Activate Task..."

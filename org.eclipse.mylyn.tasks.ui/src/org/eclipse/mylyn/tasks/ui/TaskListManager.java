@@ -634,6 +634,7 @@ public class TaskListManager implements IPropertyChangeListener {
 			MylarStatusHandler.fail(t, "could not activate task", false);
 		}
 	}
+	
 
 	public void deactivateAllTasks() {
 		// Make a copy to avoid modification on list being traversed; can result

@@ -22,9 +22,10 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.actions.ActionDelegate;
 
 /**
- * @author wmitsuda
+ * @author Willian Mitsuda
+ * @author Mik Kersten
  */
-public class ActivateTaskAction extends ActionDelegate implements IWorkbenchWindowActionDelegate {
+public class ActivateTaskDialogAction extends ActionDelegate implements IWorkbenchWindowActionDelegate {
 
 	private IWorkbenchWindow window;
 
