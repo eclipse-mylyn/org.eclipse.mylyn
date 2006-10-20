@@ -58,7 +58,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 				&& ((task.isCompleted() 
 						&& !TasksUiPlugin.getTaskListManager().isCompletedToday(task)
 						&& !hasChanges(task)) 
-					|| (TasksUiPlugin.getTaskListManager().isReminderAfterThisWeek(task)) && !hasChanges(task));
+					|| (TasksUiPlugin.getTaskListManager().isScheduledAfterThisWeek(task)) && !hasChanges(task));
 	}
 
 	// TODO: make meta-context more explicit
@@ -76,8 +76,8 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	}
 
 	public static boolean isInterestingForThisWeek(ITask task) {
-		return TasksUiPlugin.getTaskListManager().isReminderThisWeek(task)
-			|| TasksUiPlugin.getTaskListManager().isReminderToday(task) 
+		return TasksUiPlugin.getTaskListManager().isScheduledForThisWeek(task)
+			|| TasksUiPlugin.getTaskListManager().isScheduledForToday(task) 
 			|| task.isPastReminder();
 	}
 
