@@ -12,6 +12,7 @@ package org.eclipse.mylar.internal.team.template;
 
 import java.util.List;
 
+import org.eclipse.mylar.internal.tasks.ui.editors.TaskPlanningEditor;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -112,10 +113,16 @@ public class CommitTemplateVariables {
 
 	public static class TaskStatus extends AbstractCommitTemplateVariable {
 		public String getValue(ITask task) {
-			if (task instanceof AbstractRepositoryTask) {
+			if (task instanceof AbstractRepositoryTask && ((AbstractRepositoryTask)task).getTaskData() != null) {
 				return ((AbstractRepositoryTask) task).getTaskData().getStatus().toUpperCase();
+			} else {
+				// TODO: refactor completion labels
+				if (task.isCompleted()) {
+					return TaskPlanningEditor.LABEL_COMPLETE;
+				} else {
+					return TaskPlanningEditor.LABEL_INCOMPLETE;
+				}
 			}
-			return null;
 		}
 	}
 

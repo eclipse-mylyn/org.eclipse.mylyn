@@ -11,6 +11,9 @@
 
 package org.eclipse.mylar.ide.tests;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import junit.framework.TestCase;
 
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -27,10 +30,22 @@ public class CommitTemplateTest extends TestCase {
 				MylarTeamPlugin.COMMIT_TEMPLATE);
 		
 		AbstractRepositoryTask task = new MockRepositoryTask("handle-123");
-		String comment = MylarTeamPlugin.getDefault().getCommitTemplateManager().generateComment(task, template);
-
+		String comment = MylarTeamPlugin.getDefault().getCommitTemplateManager().generateComment(task, template);		
 		String taskId = MylarTeamPlugin.getDefault().getCommitTemplateManager().getTaskIdFromCommentOrLabel(comment);
+
 		assertEquals("123", taskId);
+	}
+	
+	public void testRegex() {
+		String comment = "task 123: label for handle-123";
+		String regex = ".*\\ (\\d+):\\ .*";
+		
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(comment);
+		assertTrue(matcher.find());
+//		if (matcher.find()) {
+//			return matcher.group(1);
+//		}
 	}
 	
 //	public void testLocalTaskCommentParsing() {	

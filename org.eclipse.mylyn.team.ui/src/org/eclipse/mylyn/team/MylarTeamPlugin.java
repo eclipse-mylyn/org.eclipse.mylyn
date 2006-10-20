@@ -40,7 +40,7 @@ public class MylarTeamPlugin extends AbstractUIPlugin implements IStartup {
 
 	public MylarTeamPlugin() {
 		INSTANCE = this;
-	}
+	} 
 
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
