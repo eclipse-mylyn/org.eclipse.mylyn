@@ -117,8 +117,11 @@ public class TaskUiUtil {
 	 */
 	public static boolean openRepositoryTask(String repositoryUrl, String taskId, String fullUrl) {
 		boolean opened = false;
-		String handle = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
-		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
+		ITask task = null;
+		if (taskId != null) {
+			String handle = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
+			task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
+		}
 		if (task == null) {
 			// search for it
 			for (ITask currTask : TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks()) {
