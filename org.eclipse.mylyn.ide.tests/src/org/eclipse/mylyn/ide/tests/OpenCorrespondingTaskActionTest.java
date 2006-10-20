@@ -33,7 +33,7 @@ public class OpenCorrespondingTaskActionTest extends TestCase {
 	}
 
 	public void test07LegacyMatching() {
-		String label = "123: foo";
+		String label = "Progress on: 123: foo \nhttps://bugs.eclipse.org";
 		String id = OpenCorrespondingTaskAction.getTaskIdFromLegacy07Label(label);
 		assertEquals("123", id);
 	}

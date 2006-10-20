@@ -54,22 +54,22 @@ public class CommitTemplateManager {
 			String template = MylarTeamPlugin.getDefault().getPreferenceStore().getString(
 					MylarTeamPlugin.COMMIT_TEMPLATE);
 			int templateNewline = template.indexOf('\n');
-			String templateFirstLine = template;
+			String templateFirstLineIndex = template;
 			if (templateNewline != -1) {
-				templateFirstLine = template.substring(0, templateNewline-1);
+				templateFirstLineIndex = template.substring(0, templateNewline-1);
 			}
 			
-			String regex = getTaskIdRegEx(templateFirstLine);
+			String regex = getTaskIdRegEx(templateFirstLineIndex);
 
-			int commentNewline = comment.indexOf('\n');
+			int commentNewlineIndex = comment.indexOf('\n');
 			String commentFirstLine = comment;
-			if (commentNewline != -1) {
-				commentFirstLine = comment.substring(0, commentNewline-1);
+			if (commentNewlineIndex != -1) {
+				commentFirstLine = comment.substring(0, commentNewlineIndex);
 			}
 			
 			Pattern pattern = Pattern.compile(regex);
 			Matcher matcher = pattern.matcher(commentFirstLine);
-			
+						
 			if (matcher.find()) {
 				return matcher.group(1);
 			}

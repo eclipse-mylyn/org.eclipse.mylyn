@@ -35,6 +35,17 @@ public class CommitTemplateTest extends TestCase {
 		String taskId = MylarTeamPlugin.getDefault().getCommitTemplateManager().getTaskIdFromCommentOrLabel(comment);
 		assertEquals("12345", taskId);
 	}
+
+	public void testRepositoryTaskCommentParsingMultiline() {
+		String template = MylarTeamPlugin.getDefault().getPreferenceStore().getString(
+				MylarTeamPlugin.COMMIT_TEMPLATE);
+		
+		AbstractRepositoryTask task = new MockRepositoryTask("handle-12345");
+		String comment = MylarTeamPlugin.getDefault().getCommitTemplateManager().generateComment(task, template) + "\n";
+		
+		String taskId = MylarTeamPlugin.getDefault().getCommitTemplateManager().getTaskIdFromCommentOrLabel(comment);
+		assertEquals("12345", taskId);
+	}
 	
 	public void testRegex() {
 		String comment = "task 123: label for handle-123";
