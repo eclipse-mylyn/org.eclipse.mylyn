@@ -123,7 +123,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 					}
 				}
 
-				// try legacy approaches to openening (0.7 and earlier)
+				// try opening via URL if present
 				if (!opened) {
 					String fullUrl = getUrlFromComment(comment);
 
@@ -224,14 +224,22 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 
 	public static String getTaskIdFromLegacy07Label(String comment) {
 		String PREFIX_DELIM = ":";
-		int firstDelimIndex = comment.indexOf(PREFIX_DELIM);
+		String PREFIX_START_1 = "Progress on:";
+		String PREFIX_START_2 = "Completed:";
+		String usedPrefix = PREFIX_START_1;
+		int firstDelimIndex = comment.indexOf(PREFIX_START_1);
+		if (firstDelimIndex == -1) {
+			firstDelimIndex = comment.indexOf(PREFIX_START_2);
+			usedPrefix = PREFIX_START_2;
+		}
 		if (firstDelimIndex != -1) {
-			int idStart = firstDelimIndex + PREFIX_DELIM.length();
-			int idEnd = comment.indexOf(PREFIX_DELIM, firstDelimIndex + PREFIX_DELIM.length());// comment.indexOf(PREFIX_DELIM);
+			int idStart = firstDelimIndex + usedPrefix.length();
+			int idEnd = comment.indexOf(PREFIX_DELIM, firstDelimIndex + usedPrefix.length());// comment.indexOf(PREFIX_DELIM);
 			if (idEnd != -1 && idStart < idEnd) {
 				String id = comment.substring(idStart, idEnd);
-				if (id != null)
+				if (id != null) {
 					return id.trim();
+				}
 			} else {
 				return comment.substring(0, firstDelimIndex);
 			}

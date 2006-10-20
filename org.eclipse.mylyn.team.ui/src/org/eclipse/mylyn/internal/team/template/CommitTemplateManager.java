@@ -53,10 +53,22 @@ public class CommitTemplateManager {
 		try {
 			String template = MylarTeamPlugin.getDefault().getPreferenceStore().getString(
 					MylarTeamPlugin.COMMIT_TEMPLATE);
-			String regex = getTaskIdRegEx(template);
+			int templateNewline = template.indexOf('\n');
+			String templateFirstLine = template;
+			if (templateNewline != -1) {
+				templateFirstLine = template.substring(0, templateNewline-1);
+			}
+			
+			String regex = getTaskIdRegEx(templateFirstLine);
+
+			int commentNewline = comment.indexOf('\n');
+			String commentFirstLine = comment;
+			if (commentNewline != -1) {
+				commentFirstLine = comment.substring(0, commentNewline-1);
+			}
 			
 			Pattern pattern = Pattern.compile(regex);
-			Matcher matcher = pattern.matcher(comment);
+			Matcher matcher = pattern.matcher(commentFirstLine);
 			
 			if (matcher.find()) {
 				return matcher.group(1);
