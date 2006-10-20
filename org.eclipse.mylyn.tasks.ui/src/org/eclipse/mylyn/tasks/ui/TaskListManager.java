@@ -218,7 +218,8 @@ public class TaskListManager implements IPropertyChangeListener {
 		setupCalendarRanges();
 	}
 
-	private void parseTaskActivityInteractionHistory() {
+	// TODO: make private
+	public void parseTaskActivityInteractionHistory() {
 		if (!TasksUiPlugin.getTaskListManager().isTaskListInitialized()) {
 			return;
 		}
@@ -712,7 +713,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		return false;
 	}
 
-	public boolean isReminderAfterThisWeek(ITask task) {
+	public boolean isScheduledAfterThisWeek(ITask task) {
 		if (task != null) {
 			Date reminder = task.getReminderDate();
 			if (reminder != null) {
@@ -722,7 +723,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		return false;
 	}
 
-	public boolean isReminderLater(ITask task) {
+	public boolean isScheduledForLater(ITask task) {
 		if (task != null) {
 			Date reminder = task.getReminderDate();
 			if (reminder != null) {
@@ -732,7 +733,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		return false;
 	}
 
-	public boolean isReminderThisWeek(ITask task) {
+	public boolean isScheduledForThisWeek(ITask task) {
 		if (task != null) {
 			Date reminder = task.getReminderDate();
 			if (reminder != null) {
@@ -745,7 +746,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		return false;
 	}
 
-	public boolean isReminderToday(ITask task) {
+	public boolean isScheduledForToday(ITask task) {
 		if (task != null) {
 			Date reminder = task.getReminderDate();
 			if (reminder != null) {
@@ -765,7 +766,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * TODO: Need to migrate to use of this method for setting of reminders
 	 */
-	public void setReminder(ITask task, Date reminderDate) {
+	public void setScheduledFor(ITask task, Date reminderDate) {
 		task.setReminderDate(reminderDate);
 		task.setReminded(false);
 		if (reminderDate == null) {
@@ -827,4 +828,13 @@ public class TaskListManager implements IPropertyChangeListener {
 		return taskActivityHistory;
 	}
 
+	public Set<ITask> getScheduledForThisWeek() {
+		Set<ITask> tasksScheduled = new HashSet<ITask>();
+		for (ITask task : getActivityThisWeek().getChildren()) {
+			if (isScheduledForThisWeek(task)) {
+				tasksScheduled.add(task);
+			}
+		}
+		return tasksScheduled;
+	}
 }

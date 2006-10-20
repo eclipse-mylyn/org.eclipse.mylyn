@@ -513,6 +513,10 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		ContextCorePlugin.getDefault().getContextStore().notifyContextStoreMoved();
 	}
 
+	/**
+	 * 
+	 * @param withProgress
+	 */
 	public void reloadDataDirectory(boolean withProgress) {
 		// In case new data folder has hold style task data
 		migrateContextStoreFrom06Format(withProgress);
@@ -522,8 +526,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		ContextCorePlugin.getContextManager().loadActivityMetaContext();
 		getTaskListManager().setTaskListFile(new File(getDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE));
 		getTaskListManager().readExistingOrCreateNewList();
+		getTaskListManager().parseTaskActivityInteractionHistory();
 	}
-
+ 
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
 		store.setDefault(MylarPreferenceContstants.PREF_DATA_DIR, getDefaultDataDirectory());

@@ -58,7 +58,7 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 		
 		taskProgressBar = new TaskProgressBar(progressComposite);
 		taskProgressBar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));		
-		updateTaskProgressBar(TasksUiPlugin.getTaskListManager().getActivityThisWeek());
+		updateTaskProgressBar();
 		
 		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(new ITaskListChangeListener() {
 
@@ -72,7 +72,7 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 			}
 
 			public void localInfoChanged(ITask task) {
-				updateTaskProgressBar(TasksUiPlugin.getTaskListManager().getActivityThisWeek());
+				updateTaskProgressBar();
 			}
 
 			public void repositoryInfoChanged(ITask task) {
@@ -92,7 +92,7 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 		TasksUiPlugin.getTaskListManager().addActivityListener(new ITaskActivityListener() {
 
 			public void activityChanged(DateRangeContainer week) {
-				updateTaskProgressBar(week);
+				updateTaskProgressBar();
 			}
 
 			public void calendarChanged() {
@@ -114,11 +114,12 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 		return progressComposite;
 	}
 	
-	private void updateTaskProgressBar(DateRangeContainer week) {
+	private void updateTaskProgressBar() {
 		if (taskProgressBar.isDisposed()) {
 			return;
 		}
-		Set<ITask> tasksThisWeek = week.getChildren();
+		
+		Set<ITask> tasksThisWeek = TasksUiPlugin.getTaskListManager().getScheduledForThisWeek();
 		int totalThisWeek = tasksThisWeek.size();
 		int totalCompleted = 0;
 		for (ITask task : tasksThisWeek) {

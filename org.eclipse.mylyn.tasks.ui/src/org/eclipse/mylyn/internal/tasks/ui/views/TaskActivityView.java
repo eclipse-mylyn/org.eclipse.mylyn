@@ -350,7 +350,7 @@ public class TaskActivityView extends ViewPart {
 						task = ((AbstractQueryHit) selectedObject).getOrCreateCorrespondingTask();
 					}
 					if (task != null) {
-						TasksUiPlugin.getTaskListManager().setReminder(task, reminderCalendar.getTime());
+						TasksUiPlugin.getTaskListManager().setScheduledFor(task, reminderCalendar.getTime());
 					}
 				}
 				return true;
@@ -469,7 +469,7 @@ public class TaskActivityView extends ViewPart {
 					DateRangeActivityDelegate dateRangeActivityDelegate = (DateRangeActivityDelegate) selection;
 					Date newReminder = reminderEditor.getReminderDate();
 					if (newReminder != null) {
-						TasksUiPlugin.getTaskListManager().setReminder(
+						TasksUiPlugin.getTaskListManager().setScheduledFor(
 								dateRangeActivityDelegate.getCorrespondingTask(), newReminder);						
 					}
 				}

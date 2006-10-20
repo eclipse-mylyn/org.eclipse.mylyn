@@ -86,7 +86,7 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 				Calendar reminderCalendar = GregorianCalendar.getInstance();
 				TasksUiPlugin.getTaskListManager().setScheduledToday(reminderCalendar);
 				for (ITask task : tasks) {
-					TasksUiPlugin.getTaskListManager().setReminder(task, reminderCalendar.getTime());
+					TasksUiPlugin.getTaskListManager().setScheduledFor(task, reminderCalendar.getTime());
 				}
 			}
 		};
@@ -94,7 +94,7 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 		action.setEnabled(canSchedule(singleTask, tasks));
 		subMenuManager.add(action);
 		if (singleTask != null) {
-			if (TasksUiPlugin.getTaskListManager().isReminderToday(singleTask)) {
+			if (TasksUiPlugin.getTaskListManager().isScheduledForToday(singleTask)) {
 				action.setChecked(true);
 			}
 		}
@@ -111,7 +111,7 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 					int dueIn = day - today;
 					TasksUiPlugin.getTaskListManager().setSecheduledIn(reminderCalendar, dueIn);
 					for (ITask task : tasks) {
-						TasksUiPlugin.getTaskListManager().setReminder(task, reminderCalendar.getTime());
+						TasksUiPlugin.getTaskListManager().setScheduledFor(task, reminderCalendar.getTime());
 					}
 				}
 			};
@@ -119,7 +119,7 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 			if (singleTask != null) {
 				if (singleTask != null && singleTask.getReminderDate() != null) {
 					int tasksCheduledOn = singleTask.getReminderDate().getDay();
-					if (TasksUiPlugin.getTaskListManager().isReminderThisWeek(singleTask)) {
+					if (TasksUiPlugin.getTaskListManager().isScheduledForThisWeek(singleTask)) {
 						if (tasksCheduledOn + 1 == day) {
 							action.setChecked(true);
 						} else if (tasksCheduledOn == 0 && day == 8) {
@@ -138,7 +138,7 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 			@Override
 			public void run() {
 				for (ITask task : tasks) {
-					TasksUiPlugin.getTaskListManager().setReminder(task,
+					TasksUiPlugin.getTaskListManager().setScheduledFor(task,
 							TasksUiPlugin.getTaskListManager().getActivityNextWeek().getStart().getTime());
 				}
 			}
@@ -146,8 +146,8 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 		action.setText(LABEL_NEXT_WEEK);
 		action.setEnabled(canSchedule(singleTask, tasks));
 		if (singleTask != null) {
-			if (TasksUiPlugin.getTaskListManager().isReminderAfterThisWeek(singleTask)
-					&& !TasksUiPlugin.getTaskListManager().isReminderLater(singleTask)) {
+			if (TasksUiPlugin.getTaskListManager().isScheduledAfterThisWeek(singleTask)
+					&& !TasksUiPlugin.getTaskListManager().isScheduledForLater(singleTask)) {
 				action.setChecked(true);
 			}
 		}
@@ -157,7 +157,7 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 			@Override
 			public void run() {
 				for (ITask task : tasks) {
-					TasksUiPlugin.getTaskListManager().setReminder(task,
+					TasksUiPlugin.getTaskListManager().setScheduledFor(task,
 							TasksUiPlugin.getTaskListManager().getActivityFuture().getStart().getTime());
 				}
 			}
@@ -165,7 +165,7 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 		action.setText(LABEL_FUTURE);
 		action.setEnabled(canSchedule(singleTask, tasks));
 		if (singleTask != null) {
-			if (TasksUiPlugin.getTaskListManager().isReminderLater(singleTask)) {
+			if (TasksUiPlugin.getTaskListManager().isScheduledForLater(singleTask)) {
 				action.setChecked(true);
 			}
 		}
@@ -185,7 +185,7 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 				int result = reminderDialog.open();
 				if (result == Window.OK) {
 					for (ITask task : tasks) {
-						TasksUiPlugin.getTaskListManager().setReminder(task, reminderDialog.getDate());		
+						TasksUiPlugin.getTaskListManager().setScheduledFor(task, reminderDialog.getDate());		
 					}
 				}
 			}
@@ -198,7 +198,7 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 			@Override
 			public void run() {
 				for (ITask task : tasks) {
-					TasksUiPlugin.getTaskListManager().setReminder(task, null);		
+					TasksUiPlugin.getTaskListManager().setScheduledFor(task, null);		
 				}
 			}
 		};

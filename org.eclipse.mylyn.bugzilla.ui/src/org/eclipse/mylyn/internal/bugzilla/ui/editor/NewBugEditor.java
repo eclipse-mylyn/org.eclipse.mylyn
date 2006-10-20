@@ -160,7 +160,7 @@ public class NewBugEditor extends AbstractNewRepositoryTaskEditor {
 									Calendar selectedDate = datePicker.getDate();
 									if (selectedDate != null) {
 										// NewLocalTaskAction.scheduleNewTask(newTask);
-										TasksUiPlugin.getTaskListManager().setReminder(newTask, selectedDate.getTime());
+										TasksUiPlugin.getTaskListManager().setScheduledFor(newTask, selectedDate.getTime());
 									}
 
 									newTask.setEstimatedTimeHours(estimated.getSelection());

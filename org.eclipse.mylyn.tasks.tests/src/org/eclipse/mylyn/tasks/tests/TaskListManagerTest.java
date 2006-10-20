@@ -165,13 +165,13 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testIsActiveToday() {
 		ITask task = new Task("1", "task-1", true);
-		assertFalse(manager.isReminderToday(task));
+		assertFalse(manager.isScheduledForToday(task));
 
 		task.setReminderDate(new Date());
-		assertTrue(manager.isReminderToday(task));
+		assertTrue(manager.isScheduledForToday(task));
 
 		task.setReminded(true);
-		assertTrue(manager.isReminderToday(task));
+		assertTrue(manager.isScheduledForToday(task));
 		task.setReminded(true);
 
 		Calendar inAnHour = Calendar.getInstance();
@@ -182,7 +182,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.snapToNextDay(tomorrow);
 		assertEquals(-1, inAnHour.compareTo(tomorrow));
 
-		assertTrue(manager.isReminderToday(task));
+		assertTrue(manager.isScheduledForToday(task));
 	}
 
 	public void testScheduledForToday() {
@@ -190,14 +190,14 @@ public class TaskListManagerTest extends TestCase {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.MINUTE, 2);
 		task.setReminderDate(cal.getTime());
-		assertTrue(manager.isReminderToday(task));
+		assertTrue(manager.isScheduledForToday(task));
 		manager.setSecheduledIn(cal, 1);
 		task.setReminderDate(cal.getTime());
-		assertFalse(manager.isReminderToday(task));
+		assertFalse(manager.isScheduledForToday(task));
 		cal = Calendar.getInstance();
 		manager.setScheduledToday(cal);
 		task.setReminderDate(cal.getTime());
-		assertTrue(manager.isReminderToday(task));
+		assertTrue(manager.isScheduledForToday(task));
 	}
 
 	public void testSchedulePastEndOfMonth() {

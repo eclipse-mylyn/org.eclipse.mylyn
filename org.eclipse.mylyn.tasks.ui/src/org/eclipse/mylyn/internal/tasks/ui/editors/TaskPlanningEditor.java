@@ -248,11 +248,11 @@ public class TaskPlanningEditor extends TaskFormPage {
 		task.setNotes(note);
 		task.setEstimatedTimeHours(estimated.getSelection());
 		if (datePicker != null && datePicker.getDate() != null) {
-			TasksUiPlugin.getTaskListManager().setReminder(task, datePicker.getDate().getTime());
+			TasksUiPlugin.getTaskListManager().setScheduledFor(task, datePicker.getDate().getTime());
 			// task.setReminderDate(datePicker.getDate().getTime());
 		} else {
 			// task.setReminderDate(null);
-			TasksUiPlugin.getTaskListManager().setReminder(task, null);
+			TasksUiPlugin.getTaskListManager().setScheduledFor(task, null);
 		}
 
 		// MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);

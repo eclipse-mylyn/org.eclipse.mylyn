@@ -115,7 +115,7 @@ public class NewLocalTaskAction extends Action implements IViewActionDelegate {
 		} else {
 			TasksUiPlugin.getTaskListManager().setScheduledToday(newTaskSchedule);
 		}		
-		TasksUiPlugin.getTaskListManager().setReminder(newTask, newTaskSchedule.getTime());
+		TasksUiPlugin.getTaskListManager().setScheduledFor(newTask, newTaskSchedule.getTime());
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
