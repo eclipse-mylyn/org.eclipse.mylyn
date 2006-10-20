@@ -37,6 +37,9 @@
          	<filter
                class="org.eclipse.mylar.internal.java.ui.JavaDeclarationsFilter">
          	</filter>
+          <filter
+                class="org.eclipse.jdt.internal.ui.filters.ClosedProjectFilter">
+          </filter>
       </preservedFilters>
         <preservedFilters
               viewId="org.eclipse.ui.navigator.ProjectExplorer">
