@@ -396,7 +396,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 			// NOTE: initializing extensions in start(..) has caused race
 			// conditions previously
-			TasksUiExtensionReader.initExtensions(taskListWriter);
+			TasksUiExtensionReader.initStartupExtensions(taskListWriter);
 			taskRepositoryManager.readRepositories(getRepositoriesFilePath());
 			readOfflineReportsFile();
 			taskListManager.init();

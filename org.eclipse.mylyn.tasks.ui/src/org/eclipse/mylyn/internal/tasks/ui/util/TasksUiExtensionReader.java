@@ -103,7 +103,7 @@ public class TasksUiExtensionReader {
 
 	private static boolean coreExtensionsRead = false;
 
-	public static void initExtensions(TaskListWriter writer) {
+	public static void initStartupExtensions(TaskListWriter writer) {
 		List<ITaskListExternalizer> externalizers = new ArrayList<ITaskListExternalizer>();
 		if (!coreExtensionsRead) {
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -116,8 +116,6 @@ public class TasksUiExtensionReader {
 				for (int j = 0; j < elements.length; j++) {
 					if (elements[j].getName().equals(ELMNT_REPOSITORY_CONNECTOR)) {
 						readRepositoryConnectorCore(elements[j]);
-					} else if (elements[j].getName().equals(ELMNT_REPOSITORY_UI)) {
-						readRepositoryConnectorUi(elements[j]);
 					} else if (elements[j].getName().equals(ELMNT_EXTERNALIZER)) {
 						readExternalizer(elements[j], externalizers);
 					}
