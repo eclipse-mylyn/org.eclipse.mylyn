@@ -69,7 +69,7 @@ public class CommitTemplateManager {
 	}
 
 	public String getTaskIdRegEx(String template) {
-		final String META_CHARS = "$()*+.< [\\]^{|}";
+		final String META_CHARS = " $()*+.< [\\]^{|}";
 		final String TASK_ID_PLACEHOLDER = "\uffff";
 		final String KEYWORD_PLACEHOLDER = "\ufffe";
 

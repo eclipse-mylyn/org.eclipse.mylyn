@@ -29,11 +29,11 @@ public class CommitTemplateTest extends TestCase {
 		String template = MylarTeamPlugin.getDefault().getPreferenceStore().getString(
 				MylarTeamPlugin.COMMIT_TEMPLATE);
 		
-		AbstractRepositoryTask task = new MockRepositoryTask("handle-123");
-		String comment = MylarTeamPlugin.getDefault().getCommitTemplateManager().generateComment(task, template);		
+		AbstractRepositoryTask task = new MockRepositoryTask("handle-12345");
+		String comment = MylarTeamPlugin.getDefault().getCommitTemplateManager().generateComment(task, template);
+		
 		String taskId = MylarTeamPlugin.getDefault().getCommitTemplateManager().getTaskIdFromCommentOrLabel(comment);
-
-		assertEquals("123", taskId);
+		assertEquals("12345", taskId);
 	}
 	
 	public void testRegex() {
