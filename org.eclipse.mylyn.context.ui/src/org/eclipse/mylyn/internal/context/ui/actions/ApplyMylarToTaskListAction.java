@@ -12,12 +12,12 @@
 package org.eclipse.mylar.internal.context.ui.actions;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.context.ui.InterestFilter;
@@ -66,6 +66,15 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction impleme
 		IViewPart part = super.getPartForAction();
 		if (part instanceof TaskListView) {
 			((TaskListView) part).getFilteredTree().getRefreshPolicy().removeListener(this);
+		}
+	}
+	
+	@Override
+	public void run(IAction action) {
+		super.run(action);
+		IViewPart part = super.getPartForAction();
+		if (part instanceof TaskListView) {
+			((TaskListView) part).getFilteredTree().setShowProgress(super.isChecked());
 		}
 	}
 
@@ -119,10 +128,10 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction impleme
 		// ignore
 	}
 
-	@Override
-	public List<Class> getPreservedFilters() {
-		return Collections.emptyList();
-	}
+//	@Override
+//	public List<Class> getPreservedFilters() {
+//		return Collections.emptyList();
+//	}
 
 	public void filterTextChanged(final String text) {
 		if (isChecked() && (text == null || "".equals(text))) {
@@ -132,4 +141,6 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction impleme
 			}
 		}
 	}
+
+	
 }

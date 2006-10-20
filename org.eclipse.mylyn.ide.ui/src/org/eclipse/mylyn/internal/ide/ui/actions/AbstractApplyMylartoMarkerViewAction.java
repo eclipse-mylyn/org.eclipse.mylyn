@@ -11,9 +11,6 @@
 
 package org.eclipse.mylar.internal.ide.ui.actions;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
@@ -35,10 +32,10 @@ public abstract class AbstractApplyMylartoMarkerViewAction extends AbstractApply
 		super(new MarkerInterestFilter());
 	}
 	
-	@Override
-	public List<Class> getPreservedFilters() {
-		return Collections.emptyList();
-	}
+//	@Override
+//	public List<Class> getPreservedFilters() {
+//		return Collections.emptyList();
+//	}
 	
 	/**
 	 * HACK: should use platform decorating label provider

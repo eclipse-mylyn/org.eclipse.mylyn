@@ -16,8 +16,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.internal.ui.filters.ImportDeclarationFilter;
-import org.eclipse.jdt.internal.ui.filters.PackageDeclarationFilter;
 import org.eclipse.jdt.internal.ui.javaeditor.IClassFileEditorInput;
 import org.eclipse.jdt.internal.ui.javaeditor.JarEntryEditorInput;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
@@ -27,7 +25,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylar.context.ui.InterestFilter;
 import org.eclipse.mylar.internal.context.ui.actions.AbstractAutoApplyMylarAction;
-import org.eclipse.mylar.internal.java.ui.JavaDeclarationsFilter;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
@@ -105,12 +102,13 @@ public class ApplyMylarToPackageExplorerAction extends AbstractAutoApplyMylarAct
 		// ignore
 	}
 
-	@Override
-	public List<Class> getPreservedFilters() {
-		List<Class> preserved = new ArrayList<Class>();
-		preserved.add(ImportDeclarationFilter.class);
-		preserved.add(PackageDeclarationFilter.class);
-		preserved.add(JavaDeclarationsFilter.class);
-		return preserved;
-	}
+//	@Override
+//	public List<Class> getPreservedFilters() {
+//		List<Class> preserved = new ArrayList<Class>();
+//		preserved.add(ImportDeclarationFilter.class);
+//		preserved.add(PackageDeclarationFilter.class);
+//		preserved.add(JavaDeclarationsFilter.class);
+//		preserved.add(ClosedProjectFilter.class);
+//		return preserved;
+//	}
 }

@@ -15,6 +15,7 @@
          <sequence>
             <element ref="uiBridge" minOccurs="1" maxOccurs="unbounded"/>
             <element ref="labelProvider" minOccurs="1" maxOccurs="unbounded"/>
+            <element ref="preservedFilters" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -129,6 +130,43 @@
             </annotation>
          </attribute>
          <attribute name="contentType" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="preservedFilters">
+      <complexType>
+         <sequence>
+            <element ref="filter" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="viewId" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="filter">
+      <complexType>
+         <attribute name="class" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.jface.viewers.ViewerFilter"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
             <annotation>
                <documentation>
                   

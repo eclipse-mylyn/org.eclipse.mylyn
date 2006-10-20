@@ -14,10 +14,12 @@ package org.eclipse.mylar.context.ui;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -30,6 +32,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
@@ -41,10 +44,10 @@ import org.eclipse.mylar.internal.context.ui.ActiveSearchViewTracker;
 import org.eclipse.mylar.internal.context.ui.ColorMap;
 import org.eclipse.mylar.internal.context.ui.ContentOutlineManager;
 import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
+import org.eclipse.mylar.internal.context.ui.ContextViewerManager;
 import org.eclipse.mylar.internal.context.ui.Highlighter;
 import org.eclipse.mylar.internal.context.ui.HighlighterList;
 import org.eclipse.mylar.internal.context.ui.MylarPerspectiveManager;
-import org.eclipse.mylar.internal.context.ui.ContextViewerManager;
 import org.eclipse.mylar.internal.context.ui.MylarWorkingSetManager;
 import org.eclipse.mylar.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
@@ -87,17 +90,19 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	private ContextViewerManager viewerManager;
 
 	private MylarPerspectiveManager perspectiveManager = new MylarPerspectiveManager();
-	
+
 	private ContentOutlineManager contentOutlineManager = new ContentOutlineManager();
-	
+
 	private List<MylarWorkingSetManager> workingSetUpdaters = null;
-	
+
 	private ActiveSearchViewTracker activeSearchViewTracker = new ActiveSearchViewTracker();
-	
+
 	private Map<IMylarUiBridge, ImageDescriptor> activeSearchIcons = new HashMap<IMylarUiBridge, ImageDescriptor>();
 
 	private Map<IMylarUiBridge, String> activeSearchLabels = new HashMap<IMylarUiBridge, String>();
-	
+
+	private Map<String, Set<Class>> preservedFilters = new HashMap<String, Set<Class>>();
+
 	private final ITaskHighlighter DEFAULT_HIGHLIGHTER = new ITaskHighlighter() {
 		public Color getHighlightColor(ITask task) {
 			Highlighter highlighter = getHighlighterForContextId("" + task.getHandleIdentifier());
@@ -197,20 +202,20 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		initializeDefaultPreferences(getPreferenceStore());
 		initializeHighlighters();
 		initializeActions();
-		
+
 		viewerManager = new ContextViewerManager();
-		
+
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
 					ContextCorePlugin.getContextManager().addListener(viewerManager);
 					MylarMonitorPlugin.getDefault().addWindowPartListener(contentOutlineManager);
-					
+
 					// NOTE: task list must have finished initializing
 					TasksUiPlugin.getDefault().setHighlighter(DEFAULT_HIGHLIGHTER);
 					TasksUiPlugin.getTaskListManager().addActivityListener(perspectiveManager);
-				
+
 					workbench.addWindowListener(activeSearchViewTracker);
 					IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
 					for (int i = 0; i < windows.length; i++) {
@@ -236,7 +241,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			super.stop(context);
 			ContextCorePlugin.getContextManager().removeListener(viewerManager);
 			MylarMonitorPlugin.getDefault().removeWindowPartListener(contentOutlineManager);
-			
+
 			IWorkbench workbench = PlatformUI.getWorkbench();
 			if (workbench != null) {
 				workbench.removeWindowListener(activeSearchViewTracker);
@@ -249,7 +254,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 					}
 				}
 			}
-			
+
 			viewerManager.dispose();
 			colorMap.dispose();
 			highlighters.dispose();
@@ -271,14 +276,15 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			// mylar. load default colors
 			highlighters = new HighlighterList();
 			highlighters.setToDefaultList();
-			getPreferenceStore().setValue(ContextUiPrefContstants.HIGHLIGHTER_PREFIX, this.highlighters.externalizeToString());
+			getPreferenceStore().setValue(ContextUiPrefContstants.HIGHLIGHTER_PREFIX,
+					this.highlighters.externalizeToString());
 		}
 	}
 
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
 		store.setDefault(ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE, true);
-		
+
 		store.setDefault(ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES, false);
 		store.setDefault(ContextUiPrefContstants.AUTO_MANAGE_EDITORS, true);
 		store.setDefault(ContextUiPrefContstants.AUTO_MANAGE_EDITORS_OPEN_NUM, 8);
@@ -384,8 +390,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	}
 
 	public ILabelProvider getContextLabelProvider(String extension) {
-//		if (!UiExtensionPointReader.extensionsRead)
-//			UiExtensionPointReader.initExtensions();
+		// if (!UiExtensionPointReader.extensionsRead)
+		// UiExtensionPointReader.initExtensions();
 		ILabelProvider provider = contextLabelProviders.get(extension);
 		if (provider != null) {
 			return provider;
@@ -477,17 +483,22 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 		public static final String ELEMENT_UI_BRIDGE = "uiBridge";
 
-		public static final String ELEMENT_UI_CLASS = "class";
+		public static final String ELEMENT_PRESERVED_FILTERS = "preservedFilters";
+
+		public static final String ELEMENT_VIEW_ID = "viewId";
+
+		public static final String ELEMENT_FILTER = "filter";
+
+		public static final String ELEMENT_CLASS = "class";
 
 		public static final String ELEMENT_UI_CONTEXT_LABEL_PROVIDER = "labelProvider";
 
 		public static final String ELEMENT_UI_BRIDGE_CONTENT_TYPE = "contentType";
-		
+
 		public static final String ELEMENT_STRUCTURE_BRIDGE_SEARCH_ICON = "activeSearchIcon";
 
 		public static final String ELEMENT_STRUCTURE_BRIDGE_SEARCH_LABEL = "activeSearchLabel";
-		
-		// read the extensions and load the required plugins
+
 		public static void initExtensions() {
 			if (!extensionsRead) {
 				IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -497,11 +508,13 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 				for (int i = 0; i < extensions.length; i++) {
 					IConfigurationElement[] elements = extensions[i].getConfigurationElements();
 					for (int j = 0; j < elements.length; j++) {
-						if (elements[j].getName().compareTo(UiExtensionPointReader.ELEMENT_UI_BRIDGE) == 0) {
+						if (elements[j].getName().equals(UiExtensionPointReader.ELEMENT_UI_BRIDGE)) {
 							readBridge(elements[j]);
-						} else if (elements[j].getName().compareTo(
-								UiExtensionPointReader.ELEMENT_UI_CONTEXT_LABEL_PROVIDER) == 0) {
+						} else if (elements[j].getName().equals(
+								UiExtensionPointReader.ELEMENT_UI_CONTEXT_LABEL_PROVIDER)) {
 							readLabelProvider(elements[j]);
+						} else if (elements[j].getName().equals(UiExtensionPointReader.ELEMENT_PRESERVED_FILTERS)) {
+							readPreservedFilters(elements[j]);
 						}
 					}
 				}
@@ -511,7 +524,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 		private static void readLabelProvider(IConfigurationElement element) {
 			try {
-				Object provider = element.createExecutableExtension(UiExtensionPointReader.ELEMENT_UI_CLASS);
+				Object provider = element.createExecutableExtension(UiExtensionPointReader.ELEMENT_CLASS);
 				Object contentType = element.getAttribute(UiExtensionPointReader.ELEMENT_UI_BRIDGE_CONTENT_TYPE);
 				if (provider instanceof ILabelProvider && contentType != null) {
 					ContextUiPlugin.getDefault().internalAddContextLabelProvider((String) contentType,
@@ -525,26 +538,42 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			}
 		}
 
+		private static void readPreservedFilters(IConfigurationElement element) {
+			String viewId = element.getAttribute(UiExtensionPointReader.ELEMENT_VIEW_ID);
+			IConfigurationElement[] children = element.getChildren();
+			for (IConfigurationElement child : children) {
+				if (child.getName().equals(UiExtensionPointReader.ELEMENT_FILTER)) {
+					try {
+						Object filterClass = child.createExecutableExtension(UiExtensionPointReader.ELEMENT_CLASS);
+						ContextUiPlugin.getDefault().addPreservedFilterClass(viewId, (ViewerFilter)filterClass);
+					} catch (Exception e) {
+						MylarStatusHandler.log(e, "Could not load filter");
+					}
+				}
+			}
+		}
+
 		@SuppressWarnings("deprecation")
 		private static void readBridge(IConfigurationElement element) {
 			try {
-				Object bridge = element.createExecutableExtension(UiExtensionPointReader.ELEMENT_UI_CLASS);
+				Object bridge = element.createExecutableExtension(UiExtensionPointReader.ELEMENT_CLASS);
 				Object contentType = element.getAttribute(UiExtensionPointReader.ELEMENT_UI_BRIDGE_CONTENT_TYPE);
 				if (bridge instanceof IMylarUiBridge && contentType != null) {
 					ContextUiPlugin.getDefault().internalAddBridge((String) contentType, (IMylarUiBridge) bridge);
-				
+
 					String iconPath = element.getAttribute(ELEMENT_STRUCTURE_BRIDGE_SEARCH_ICON);
 					if (iconPath != null) {
-						ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(element.getDeclaringExtension().getNamespace(), iconPath);
+						ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(element
+								.getDeclaringExtension().getNamespace(), iconPath);
 						if (descriptor != null) {
-							ContextUiPlugin.getDefault().setActiveSearchIcon((IMylarUiBridge)bridge, descriptor);
+							ContextUiPlugin.getDefault().setActiveSearchIcon((IMylarUiBridge) bridge, descriptor);
 						}
 					}
 					String label = element.getAttribute(ELEMENT_STRUCTURE_BRIDGE_SEARCH_LABEL);
 					if (label != null) {
-						ContextUiPlugin.getDefault().setActiveSearchLabel((IMylarUiBridge)bridge, label);
+						ContextUiPlugin.getDefault().setActiveSearchLabel((IMylarUiBridge) bridge, label);
 					}
-				
+
 				} else {
 					MylarStatusHandler.log("Could not load bridge: " + bridge.getClass().getCanonicalName()
 							+ " must implement " + IMylarUiBridge.class.getCanonicalName(), thisReader);
@@ -554,16 +583,17 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			}
 		}
 	}
-	
 
 	public String getPerspectiveIdFor(ITask task) {
-		return getPreferenceStore().getString(ContextUiPrefContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier());
+		return getPreferenceStore().getString(
+				ContextUiPrefContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier());
 	}
 
 	public void setPerspectiveIdFor(ITask task, String perspectiveId) {
-		getPreferenceStore().setValue(ContextUiPrefContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier(), perspectiveId);
+		getPreferenceStore().setValue(ContextUiPrefContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier(),
+				perspectiveId);
 	}
-	
+
 	public void addWorkingSetManager(MylarWorkingSetManager updater) {
 		if (workingSetUpdaters == null) {
 			workingSetUpdaters = new ArrayList<MylarWorkingSetManager>();
@@ -602,7 +632,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			updateDegreeOfSeparation(provider, degreeOfSeparation);
 		}
 	}
-	
+
 	public void updateDegreeOfSeparation(AbstractRelationProvider provider, int degreeOfSeparation) {
 		ContextCorePlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
 		ContextUiPlugin.getDefault().getPreferenceStore().setValue(provider.getGenericId(), degreeOfSeparation);
@@ -611,9 +641,9 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			if (element.getInterest().isLandmark()) {
 				provider.landmarkAdded(element);
 			}
- 		}
+		}
 	}
-	
+
 	public void refreshRelatedElements() {
 		try {
 			for (IMylarStructureBridge bridge : ContextCorePlugin.getDefault().getStructureBridges().values()) {
@@ -629,5 +659,22 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			MylarStatusHandler.fail(t, "Could not refresn related elements", false);
 		}
 	}
+
+	public void addPreservedFilterClass(String viewId, ViewerFilter filter) {
+		Set<Class> preservedList = preservedFilters.get(viewId);
+		if (preservedList == null) {
+			preservedList = new HashSet<Class>();
+			preservedFilters.put(viewId, preservedList);
+		}
+		preservedList.add(filter.getClass());
+	}
 	
+	public Set<Class> getPreservedFilterClasses(String id) {
+		UiExtensionPointReader.initExtensions();
+		if (preservedFilters.containsKey(id)) {
+			return preservedFilters.get(id);
+		} else {
+			return Collections.emptySet();
+		}
+	}
 }

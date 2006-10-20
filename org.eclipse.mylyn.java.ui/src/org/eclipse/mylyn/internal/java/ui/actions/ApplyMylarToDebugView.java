@@ -12,7 +12,6 @@
 package org.eclipse.mylar.internal.java.ui.actions;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.debug.internal.ui.views.launch.LaunchView;
@@ -41,9 +40,9 @@ public class ApplyMylarToDebugView extends AbstractApplyMylarAction {
 		return viewers;
 	}
 	
-	@Override
-	public List<Class> getPreservedFilters() {
-		return Collections.emptyList();
-	}
+//	@Override
+//	public List<Class> getPreservedFilters() {
+//		return Collections.emptyList();
+//	}
 
 }

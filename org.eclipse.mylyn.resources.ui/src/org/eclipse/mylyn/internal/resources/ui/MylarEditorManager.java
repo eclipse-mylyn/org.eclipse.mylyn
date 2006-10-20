@@ -45,16 +45,18 @@ public class MylarEditorManager implements IMylarContextListener {
 	
 	public void contextActivated(IMylarContext context) {
 		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.AUTO_MANAGE_EDITORS)) {
-			previousCloseEditorsSetting = Workbench.getInstance().getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
-			Workbench.getInstance().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN, false);
-			
 			Workbench workbench = (Workbench) PlatformUI.getWorkbench();
+			previousCloseEditorsSetting = workbench.getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
+			workbench.getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN, false);
 			boolean wasPaused = ContextCorePlugin.getContextManager().isContextCapturePaused();
 			try {
+//				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().setRedraw(false);
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().setEnabled(false);
+				workbench.largeUpdateStart();
+				
 				if (!wasPaused) {
 					ContextCorePlugin.getContextManager().setContextCapturePaused(true);
 				}
-				workbench.largeUpdateStart();
 
 				List<IMylarElement> documents = ContextCorePlugin.getContextManager().getInterestingDocuments();
 				int opened = 0;
@@ -74,6 +76,8 @@ public class MylarEditorManager implements IMylarContextListener {
 			} finally {
 				ContextCorePlugin.getContextManager().setContextCapturePaused(false);
 				workbench.largeUpdateEnd();
+//				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().setRedraw(true);
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().setEnabled(true);
 			}
 		}
 	}

@@ -12,7 +12,6 @@
 package org.eclipse.mylar.internal.ide.ui.actions;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
@@ -40,6 +39,8 @@ public class ApplyMylarToProjectExplorerAction extends AbstractAutoApplyMylarAct
 
 	private CommonNavigator commonNavigator;
 
+	private boolean wasLinkingEnabled = false;
+
 	public ApplyMylarToProjectExplorerAction() {
 		super(new InterestFilter());
 	}
@@ -52,6 +53,24 @@ public class ApplyMylarToProjectExplorerAction extends AbstractAutoApplyMylarAct
 	@Override
 	public void run(IAction action) {
 		super.run(action);
+		updateSelection();
+		updateLinking();
+	}
+
+	private void updateLinking() {
+		IViewPart view = super.getPartForAction();
+		if (view instanceof CommonNavigator) {
+			CommonNavigator navigator = (CommonNavigator) view;
+			if (super.isChecked()) {
+				wasLinkingEnabled = navigator.isLinkingEnabled();
+				navigator.setLinkingEnabled(true);
+			} else {
+				navigator.setLinkingEnabled(wasLinkingEnabled);
+			}
+		}
+	}
+
+	private void updateSelection() {
 		if (commonNavigator == null) {
 			commonNavigator = (CommonNavigator) super.getPartForAction();
 		}
@@ -82,9 +101,7 @@ public class ApplyMylarToProjectExplorerAction extends AbstractAutoApplyMylarAct
 	}
 
 	/**
-	 * Copied from
-	 * 
-	 * @{link LinkEditorAction}
+	 * Copied from @{link LinkEditorAction}
 	 */
 	@SuppressWarnings("unchecked")
 	private IStructuredSelection mergeSelection(IStructuredSelection aBase, IStructuredSelection aSelectionToAppend) {
@@ -98,23 +115,6 @@ public class ApplyMylarToProjectExplorerAction extends AbstractAutoApplyMylarAct
 			return new StructuredSelection(newItems);
 		}
 	}
-
-	// private boolean wasLinkingEnabled = false;
-	//	
-	// @Override
-	// public void update(boolean on) {
-	// super.update(on);
-	// IViewPart view = super.getPartForAction();
-	// if (view instanceof CommonNavigator) {
-	// CommonNavigator navigator = (CommonNavigator)view;
-	// if (on) {
-	// wasLinkingEnabled = navigator.isLinkingEnabled();
-	// navigator.setLinkingEnabled(true);
-	// } else {
-	// navigator.setLinkingEnabled(wasLinkingEnabled);
-	// }
-	// }
-	// }
 
 	protected ApplyMylarToProjectExplorerAction(InterestFilter filter) {
 		super(filter);
@@ -136,8 +136,9 @@ public class ApplyMylarToProjectExplorerAction extends AbstractAutoApplyMylarAct
 		// TODO Auto-generated method stub
 	}
 
-	@Override
-	public List<Class> getPreservedFilters() {
-		return Collections.emptyList();
-	}
+//	@Override
+//	public List<Class> getPreservedFilters() {
+//		List<Class> preserved = new ArrayList<Class>();
+//		return preserved;
+//	}
 }

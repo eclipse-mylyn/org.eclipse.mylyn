@@ -26,7 +26,28 @@
 	    <labelProvider
 	          class="org.eclipse.mylar.internal.java.ui.JavaContextLabelProvider"
 	          contentType="java"/>
-	</extension>
+        <preservedFilters
+            viewId="org.eclipse.jdt.ui.PackageExplorer">
+       	 	<filter
+               class="org.eclipse.jdt.internal.ui.filters.ImportDeclarationFilter">
+         	</filter>
+         	<filter
+               class="org.eclipse.jdt.internal.ui.filters.PackageDeclarationFilter">
+         	</filter>
+         	<filter
+               class="org.eclipse.mylar.internal.java.ui.JavaDeclarationsFilter">
+         	</filter>
+      </preservedFilters>
+        <preservedFilters
+              viewId="org.eclipse.ui.navigator.ProjectExplorer">
+           <filter
+                 class="org.eclipse.jdt.internal.ui.filters.PackageDeclarationFilter">
+           </filter>
+           <filter
+                 class="org.eclipse.jdt.internal.ui.filters.ImportDeclarationFilter">
+           </filter>
+        </preservedFilters>
+   </extension>
 	
 	<extension
           point="org.eclipse.mylar.tasks.ui.editors">

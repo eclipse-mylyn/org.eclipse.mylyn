@@ -14,6 +14,7 @@ package org.eclipse.mylar.internal.context.ui.actions;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 
 import org.eclipse.core.runtime.Platform;
@@ -25,8 +26,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.context.ui.InterestFilter;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
+import org.eclipse.mylar.context.ui.InterestFilter;
 import org.eclipse.mylar.internal.context.ui.ContextUiImages;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IActionDelegate2;
@@ -171,7 +172,9 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 	 * @return filters that should not be removed when the interest filter is
 	 *         installed
 	 */
-	public abstract List<Class> getPreservedFilters();
+	private Set<Class> getPreservedFilters() {
+		return ContextUiPlugin.getDefault().getPreservedFilterClasses(viewPart.getSite().getId());
+	}
 
 	protected boolean installInterestFilter(StructuredViewer viewer) {
 		if (viewer == null) {
@@ -186,7 +189,8 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 		try {
 			viewer.getControl().setRedraw(false);
 			previousFilters.put(viewer, Arrays.asList(viewer.getFilters()));
-			List<Class> excludedFilters = getPreservedFilters();
+			Set<Class> excludedFilters = getPreservedFilters();
+			
 			for (ViewerFilter filter : previousFilters.get(viewer)) {
 				if (!excludedFilters.contains(filter.getClass())) {
 					try {
@@ -194,7 +198,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 					} catch (Throwable t) {
 						MylarStatusHandler.fail(t, "Failed to remove filter: " + filter, false);
 					}
-				}
+				} 
 			}
 			viewer.addFilter(interestFilter);
 			if (viewer instanceof TreeViewer) {
@@ -219,7 +223,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 		}
 
 		viewer.getControl().setRedraw(false);
-		List<Class> excludedFilters = getPreservedFilters();
+		Set<Class> excludedFilters = getPreservedFilters();
 		if (previousFilters.containsKey(viewer)) {
 			for (ViewerFilter filter : previousFilters.get(viewer)) {
 				if (!excludedFilters.contains(filter.getClass())) {

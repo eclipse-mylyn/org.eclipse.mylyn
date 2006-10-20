@@ -12,7 +12,6 @@
 package org.eclipse.mylar.internal.context.ui.actions;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
@@ -20,9 +19,9 @@ import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.context.ui.IMylarUiBridge;
 import org.eclipse.mylar.context.ui.InterestFilter;
-import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -102,10 +101,10 @@ public class ApplyMylarToOutlineAction extends AbstractApplyMylarAction {
 		// ignore
 	}
 
-	@Override
-	public List<Class> getPreservedFilters() {
-		return Collections.emptyList();
-	}
+//	@Override
+//	public List<Class> getPreservedFilters() {
+//		return Collections.emptyList();
+//	}
 
 	public static ApplyMylarToOutlineAction getOutlineActionForEditor(IEditorPart part) {
 		IViewPart outlineView = part.getSite().getPage().findView(ID_CONTENT_OUTLINE);
