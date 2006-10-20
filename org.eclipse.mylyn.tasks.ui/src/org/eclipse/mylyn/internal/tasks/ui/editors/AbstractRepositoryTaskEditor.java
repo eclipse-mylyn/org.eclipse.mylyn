@@ -2117,10 +2117,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	// }
 
 	public boolean getAttachContext() {
-		if (attachContextButton == null) {
+		if (attachContextButton == null || attachContextButton.isDisposed()) {
 			return false;
+		} else {
+			return attachContextButton.getSelection();
 		}
-		return attachContextButton.getSelection();
 	}
 
 	public void setAttachContext(boolean attachContext) {

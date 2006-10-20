@@ -130,7 +130,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	// TODO: guard against overwriting the single instance?
 	private TaskList taskList = new TaskList();
 
-	private TaskActivationHistory taskActivationHistory = new TaskActivationHistory();
+	private TaskActivationHistory taskActivityHistory = new TaskActivationHistory();
 
 	private boolean taskListInitialized = false;
 
@@ -511,11 +511,11 @@ public class TaskListManager implements IPropertyChangeListener {
 		return dateRangeContainers.toArray();
 	}
 
-	/** 
+	/**
 	 * Every call to this method generates a unique handle, subsequent calls
 	 * will have incremented task numbers
 	 */
-	public String genUniqueTaskHandle() {		
+	public String genUniqueTaskHandle() {
 		return TaskRepositoryManager.PREFIX_LOCAL + taskList.getNextTaskNum();
 	}
 
@@ -576,19 +576,16 @@ public class TaskListManager implements IPropertyChangeListener {
 			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
 				listener.taskListRead();
 			}
-
-			// only activate the first task to avoid confusion of mutliple
-			// active tasks on startup
-			if (taskList.getActiveTask() != null) {
-				activateTask(taskList.getActiveTask());
-			}
-			parseTaskActivityInteractionHistory();
-			taskActivationHistory.loadPersistentHistory();
 		} catch (Exception e) {
 			MylarStatusHandler.log(e, "Could not read task list");
 			return false;
 		}
 		return true;
+	}
+
+	public void initActivityHistory() {
+		parseTaskActivityInteractionHistory();
+		taskActivityHistory.loadPersistentHistory();
 	}
 
 	/**
@@ -634,7 +631,6 @@ public class TaskListManager implements IPropertyChangeListener {
 			MylarStatusHandler.fail(t, "could not activate task", false);
 		}
 	}
-	
 
 	public void deactivateAllTasks() {
 		// Make a copy to avoid modification on list being traversed; can result
@@ -739,10 +735,11 @@ public class TaskListManager implements IPropertyChangeListener {
 	public boolean isReminderThisWeek(ITask task) {
 		if (task != null) {
 			Date reminder = task.getReminderDate();
-			if (reminder != null) {				
+			if (reminder != null) {
 				Calendar weekStart = Calendar.getInstance();
 				snapToStartOfWeek(weekStart);
-				return (reminder.compareTo(weekStart.getTime()) >= 0 && reminder.compareTo(activityThisWeek.getEnd().getTime()) <= 0);
+				return (reminder.compareTo(weekStart.getTime()) >= 0 && reminder.compareTo(activityThisWeek.getEnd()
+						.getTime()) <= 0);
 			}
 		}
 		return false;
@@ -756,7 +753,7 @@ public class TaskListManager implements IPropertyChangeListener {
 				dayStart.set(Calendar.HOUR_OF_DAY, 0);
 				dayStart.set(Calendar.MINUTE, 0);
 				dayStart.set(Calendar.SECOND, 0);
-				dayStart.set(Calendar.MILLISECOND, 0);				
+				dayStart.set(Calendar.MILLISECOND, 0);
 				Calendar midnight = GregorianCalendar.getInstance();
 				snapToNextDay(midnight);
 				return (reminder.compareTo(dayStart.getTime()) >= 0 && reminder.compareTo(midnight.getTime()) == -1);
@@ -827,7 +824,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	}
 
 	public TaskActivationHistory getTaskActivationHistory() {
-		return taskActivationHistory;
+		return taskActivityHistory;
 	}
 
 }

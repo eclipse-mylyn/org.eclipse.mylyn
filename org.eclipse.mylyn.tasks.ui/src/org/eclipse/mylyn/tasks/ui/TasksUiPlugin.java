@@ -409,6 +409,12 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 					try {
 						PlatformUI.getWorkbench().addWindowListener(WINDOW_LISTENER);
 
+						// Needs to happen asynchronously to avoid bug 159706
+						if (taskListManager.getTaskList().getActiveTask() != null) {
+							taskListManager.activateTask(taskListManager.getTaskList().getActiveTask());
+						}
+						taskListManager.initActivityHistory();
+						
 						taskListNotificationManager = new TaskListNotificationManager();
 						taskListNotificationManager.addNotificationProvider(REMINDER_NOTIFICATION_PROVIDER);
 						taskListNotificationManager.addNotificationProvider(INCOMING_NOTIFICATION_PROVIDER);
