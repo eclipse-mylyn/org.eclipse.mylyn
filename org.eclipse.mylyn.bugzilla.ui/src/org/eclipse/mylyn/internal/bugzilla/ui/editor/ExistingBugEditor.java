@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
@@ -50,7 +51,6 @@ import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskComment;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -169,14 +169,9 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	@Override
 	public void submitBug() {
 		submitButton.setEnabled(false);
-		showBusy(true);
-		updateBug();
-
-		final AbstractRepositoryTask modifiedTask = (AbstractRepositoryTask) TasksUiPlugin.getTaskListManager()
-				.getTaskList().getTask(AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
-
-		if (modifiedTask != null) {
-			modifiedTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
+		showBusy(true);	
+		if(isDirty()) {
+			doSave(new NullProgressMonitor());
 		}
 
 		BugzillaReportSubmitForm bugzillaReportSubmitForm;
@@ -210,11 +205,11 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 						if (event.getJob().getResult().getCode() == Status.OK
 								&& event.getJob().getResult().getMessage() != null) {//
 							// Attach context
-							if (getAttachContext()) {
-								// ITask task =
-								// TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-								// AbstractRepositoryTask.getHandle(repository.getUrl(),
-								// taskData.getId()));
+							if (getAttachContext()) {							
+								
+								AbstractRepositoryTask modifiedTask = (AbstractRepositoryTask) TasksUiPlugin.getTaskListManager()
+								.getTaskList().getTask(AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
+								
 								try {
 									bugzillaRepositoryClient.attachContext(repository, modifiedTask, "", TasksUiPlugin
 											.getDefault().getProxySettings());
