@@ -272,8 +272,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		if (hlist != null && hlist.length() != 0) {
 			highlighters = new HighlighterList(hlist);
 		} else {
-			// Only get here if it is the first time running
-			// mylar. load default colors
 			highlighters = new HighlighterList();
 			highlighters.setToDefaultList();
 			getPreferenceStore().setValue(ContextUiPrefContstants.HIGHLIGHTER_PREFIX,

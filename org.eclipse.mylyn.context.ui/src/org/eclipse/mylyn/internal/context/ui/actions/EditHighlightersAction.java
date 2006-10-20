@@ -33,6 +33,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class EditHighlightersAction extends Action implements IViewActionDelegate {
 
+	private static final String ID_PREFS_HIGHLIGHTERS = "org.eclipse.mylar.sandbox.ui.preferences";
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.context.highlighters.edit";
 
 	public EditHighlightersAction() {
@@ -45,7 +46,7 @@ public class EditHighlightersAction extends Action implements IViewActionDelegat
 	@Override
 	public void run() {
 		IPreferencePage page = new ContextUiPreferencePage();
-		showPreferencePage("org.eclipse.mylar.internal.ui.preferences", page);
+		showPreferencePage(ID_PREFS_HIGHLIGHTERS, page);
 	}
 
 	protected void showPreferencePage(String id, IPreferencePage page) {

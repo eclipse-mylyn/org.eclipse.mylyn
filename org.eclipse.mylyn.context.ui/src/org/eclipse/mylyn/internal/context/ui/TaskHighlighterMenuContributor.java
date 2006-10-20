@@ -29,7 +29,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 /**
  * @author Mik Kersten
  */
-public class TaskListHighlighterMenuContributor implements IDynamicSubMenuContributor {
+public class TaskHighlighterMenuContributor implements IDynamicSubMenuContributor {
 
 	private static final String CHOOSE_HIGHLIGHTER = "Highlighter";
 
