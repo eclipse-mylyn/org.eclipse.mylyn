@@ -32,7 +32,7 @@ import org.osgi.framework.BundleContext;
  * @author Mik Kersten
  */
 public class ContextCorePlugin extends Plugin {
- 
+  
 	public static final String PLUGIN_ID = "org.eclipse.mylar.core";
 
 	public static final String CONTENT_TYPE_ANY = "*";

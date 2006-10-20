@@ -36,7 +36,7 @@ public class MylarTeamPlugin extends AbstractUIPlugin implements IStartup {
 
 	public static final String COMMIT_TEMPLATE = "org.eclipse.mylar.team.commit.template";
 
-	public static final String DEFAULT_COMMIT_TEMPLATE = "${task.status} - ${connector.task.prefix}${task.id}: ${task.description}\n${task.url}"; 
+	public static final String DEFAULT_COMMIT_TEMPLATE = "${task.status} - ${connector.task.prefix} ${task.id}: ${task.description}\n${task.url}"; 
 
 	public MylarTeamPlugin() {
 		INSTANCE = this;

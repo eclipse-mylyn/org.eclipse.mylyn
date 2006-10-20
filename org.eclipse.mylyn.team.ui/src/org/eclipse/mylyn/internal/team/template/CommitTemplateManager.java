@@ -54,7 +54,6 @@ public class CommitTemplateManager {
 			String template = MylarTeamPlugin.getDefault().getPreferenceStore().getString(
 					MylarTeamPlugin.COMMIT_TEMPLATE);
 			String regex = getTaskIdRegEx(template);
-			System.err.println(">>>>> " + regex);
 			
 			Pattern pattern = Pattern.compile(regex);
 			Matcher matcher = pattern.matcher(comment);
@@ -68,7 +67,7 @@ public class CommitTemplateManager {
 		return null;
 	}
 
-	public String getTaskIdRegEx(String template) {
+	public String getTaskIdRegEx(String template) { 
 		final String META_CHARS = " $()*+.< [\\]^{|}";
 		final String TASK_ID_PLACEHOLDER = "\uffff";
 		final String KEYWORD_PLACEHOLDER = "\ufffe";
