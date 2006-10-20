@@ -25,6 +25,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.forms.widgets.Hyperlink;
@@ -46,7 +47,16 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 	
 	@Override
 	protected Composite createProgressComposite(Composite container) {
-		taskProgressBar = new TaskProgressBar(container);
+		Composite progressComposite = new Composite(container, SWT.NONE);
+		GridLayout progressLayout = new GridLayout(1, false);
+		progressLayout.marginWidth = 0;
+		progressLayout.marginHeight = 0;
+		progressLayout.horizontalSpacing = 0;
+		progressLayout.verticalSpacing = 0;
+		progressComposite.setLayout(progressLayout);
+		progressComposite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 4, 1));
+		
+		taskProgressBar = new TaskProgressBar(progressComposite);
 		taskProgressBar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));		
 		updateTaskProgressBar(TasksUiPlugin.getTaskListManager().getActivityThisWeek());
 		
@@ -101,7 +111,7 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 			}
 			
 		});
-		return container;
+		return progressComposite;
 	}
 	
 	private void updateTaskProgressBar(DateRangeContainer week) {

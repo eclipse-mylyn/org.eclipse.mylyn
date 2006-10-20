@@ -32,21 +32,13 @@ public class TaskProgressBar extends Canvas {
 
 	private static final int DEFAULT_HEIGHT = 6;
 
-	private int fCurrentTickCount = 0;
+	private int currentTickCount = 0;
 
-	private int fMaxTickCount = 0;
+	private int maxTickCount = 0;
 
-	private int fColorBarWidth = 0;
+	private int colorBarWidth = 0;
 
-	private Color fOKColor;
-
-	private Color fFailureColor;
-
-	private Color fStoppedColor;
-
-	private boolean fError;
-
-	private boolean fStopped = false;
+	private Color completedColor;
 	
 	private Composite parent;
 
@@ -56,7 +48,7 @@ public class TaskProgressBar extends Canvas {
 
 		parent.addControlListener(new ControlAdapter() {
 			public void controlResized(ControlEvent e) {
-				fColorBarWidth = scale(fCurrentTickCount);
+				colorBarWidth = scale(currentTickCount);
 				redraw();
 			} 
 		});
@@ -67,40 +59,34 @@ public class TaskProgressBar extends Canvas {
 		});
 		addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
-				fFailureColor.dispose();
-				fOKColor.dispose();
-				fStoppedColor.dispose();
+				completedColor.dispose();
 			}
 		});
 		Display display = parent.getDisplay();
-		fFailureColor = new Color(display, 159, 63, 63);
-		fOKColor = new Color(display, 95, 191, 124); //95);
+		completedColor = new Color(display, 95, 191, 124); //95);
 //			themeManager.getCurrentTheme().getColorRegistry().get(
 //				TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_COMPLETED);
-		fStoppedColor = new Color(display, 120, 120, 120);
 	}
 
 	public void setMaximum(int max) {
-		fMaxTickCount = max;
+		maxTickCount = max;
 	}
 
 	public void reset() {
-		fError = false;
-		fStopped = false;
-		fCurrentTickCount = 0;
-		fMaxTickCount = 0;
-		fColorBarWidth = 0;
+		currentTickCount = 0;
+		maxTickCount = 0;
+		colorBarWidth = 0;
 		redraw();
 	}
 
 	public void reset(int ticksDone, int maximum) {
-//		boolean noChange = fError == hasErrors && fStopped == stopped && fCurrentTickCount == ticksDone
-//				&& fMaxTickCount == maximum;
+//		boolean noChange = fError == hasErrors && fStopped == stopped && currentTickCount == ticksDone
+//				&& maxTickCount == maximum;
 //		fError = hasErrors;
 //		fStopped = stopped;
-		fCurrentTickCount = ticksDone;
-		fMaxTickCount = maximum;
-		fColorBarWidth = scale(ticksDone);
+		currentTickCount = ticksDone;
+		maxTickCount = maximum;
+		colorBarWidth = scale(ticksDone);
 		computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
 		redraw();
 	}
@@ -115,25 +101,15 @@ public class TaskProgressBar extends Canvas {
 	}
 
 	private void setStatusColor(GC gc) {
-		if (fStopped)
-			gc.setBackground(fStoppedColor);
-		else if (fError)
-			gc.setBackground(fFailureColor);
-		else
-			gc.setBackground(fOKColor);
-	}
-
-	public void stopped() {
-		fStopped = true;
-		redraw();
+		gc.setBackground(completedColor);
 	}
 
 	private int scale(int value) {
-		if (fMaxTickCount > 0) {
+		if (maxTickCount > 0) {
 			// TODO: should probably get own client area, not parent's
 			Rectangle r = parent.getClientArea();
 			if (r.width != 0)
-				return Math.max(0, value * (r.width - 2) / fMaxTickCount);
+				return Math.max(0, value * (r.width - 2) / maxTickCount);
 		}
 		return value;
 	}
@@ -158,8 +134,8 @@ public class TaskProgressBar extends Canvas {
 				.getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW), disp.getSystemColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
 
 		setStatusColor(gc);
-		fColorBarWidth = Math.min(rect.width - 2, fColorBarWidth);
-		gc.fillRectangle(1, 1, fColorBarWidth, rect.height - 2);
+		colorBarWidth = Math.min(rect.width - 2, colorBarWidth);
+		gc.fillRectangle(1, 1, colorBarWidth, rect.height - 2);
 	}
 
 	public Point computeSize(int wHint, int hHint, boolean changed) {
@@ -173,34 +149,24 @@ public class TaskProgressBar extends Canvas {
 	}
 
 	public void setCount(int count) {
-		fCurrentTickCount++;
-		int x = fColorBarWidth;
+		currentTickCount++;
+		int x = colorBarWidth;
 		
-		fColorBarWidth = scale(fCurrentTickCount);
+		colorBarWidth = scale(currentTickCount);
 
-		if (fCurrentTickCount == fMaxTickCount)
-			fColorBarWidth = getClientArea().width - 1;
-		paintStep(x, fColorBarWidth);
+		if (currentTickCount == maxTickCount)
+			colorBarWidth = getClientArea().width - 1;
+		paintStep(x, colorBarWidth);
 	}
 	
 	public void step(int failures) {
-		fCurrentTickCount++;
-		int x = fColorBarWidth;
+		currentTickCount++;
+		int x = colorBarWidth;
 
-		fColorBarWidth = scale(fCurrentTickCount);
-
-		if (!fError && failures > 0) {
-			fError = true;
-			x = 1;
-		}
-		if (fCurrentTickCount == fMaxTickCount)
-			fColorBarWidth = getClientArea().width - 1;
-		paintStep(x, fColorBarWidth);
-	}
-
-	public void refresh(boolean hasErrors) {
-		fError = hasErrors;
-		redraw();
+		colorBarWidth = scale(currentTickCount);
+		if (currentTickCount == maxTickCount)
+			colorBarWidth = getClientArea().width - 1;
+		paintStep(x, colorBarWidth);
 	}
 
 }

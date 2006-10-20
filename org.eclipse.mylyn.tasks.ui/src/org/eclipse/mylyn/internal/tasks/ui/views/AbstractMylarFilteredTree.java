@@ -37,6 +37,12 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 	private Job refreshJob;
 
 	private AdaptiveRefreshPolicy refreshPolicy;
+	
+	private Composite progressComposite;
+	
+	private Composite parent;
+	
+	private boolean showProgress = false;
 
 	/**
 	 * HACK: using reflection to gain access
@@ -67,6 +73,8 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 
 	@Override
 	protected Composite createFilterControls(Composite parent) {
+		this.parent = parent;
+		
 		GridLayout gridLayout = new GridLayout(4, false);
 		gridLayout.marginWidth = 2;
 		gridLayout.marginHeight = 2;
@@ -92,15 +100,7 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 		});
 
 		createStatusComposite(parent);
-		Composite progressComposite = new Composite(parent, SWT.NONE);
-		GridLayout progressLayout = new GridLayout(1, false);
-		progressLayout.marginWidth = 0;
-		progressLayout.marginHeight = 0;
-		progressLayout.horizontalSpacing = 0;
-		progressLayout.verticalSpacing = 0;
-		progressComposite.setLayout(progressLayout);
-		progressComposite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 4, 1));
-		createProgressComposite(progressComposite);
+//		createProgressComposite(parent);
 		return parent;
 	}
 
@@ -120,5 +120,23 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 
 	public AdaptiveRefreshPolicy getRefreshPolicy() {
 		return refreshPolicy;
+	}
+
+	public boolean isShowProgress() {
+		return showProgress;
+	}
+
+	public void setShowProgress(boolean showProgress) {
+		this.showProgress = showProgress;
+//		filterComposite
+		if (!showProgress && progressComposite != null) {
+			progressComposite.dispose();
+		} else {
+			progressComposite = createProgressComposite(parent);
+		}
+		layout();
+//		progressComposite.setVisible(showProgress);
+//		filterComposite.layout();
+//		filterComposite.pack();
 	}
 }
