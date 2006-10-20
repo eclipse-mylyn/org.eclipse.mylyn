@@ -51,7 +51,7 @@ public class BugzillaConfigurationTest extends TestCase {
 		RepositoryConfiguration config = factory.getConfiguration(repository.getUrl(), null, repository.getUserName(),
 				repository.getPassword(), null);
 		assertNotNull(config);
-		assertEquals("2.22", config.getInstallVersion());
+		assertEquals("2.22.1", config.getInstallVersion());
 		assertEquals(7, config.getStatusValues().size());
 		assertEquals(8, config.getResolutions().size());
 		assertEquals(4, config.getPlatforms().size());
@@ -93,7 +93,7 @@ public class BugzillaConfigurationTest extends TestCase {
 		RepositoryConfiguration config = factory.getConfiguration(repository.getUrl(), null, repository.getUserName(),
 				repository.getPassword(), null);
 		assertNotNull(config);
-		assertEquals("2.20", config.getInstallVersion());
+		assertEquals("2.20.3", config.getInstallVersion());
 		assertEquals(7, config.getStatusValues().size());
 		assertEquals(8, config.getResolutions().size());
 		assertEquals(4, config.getPlatforms().size());
@@ -114,7 +114,7 @@ public class BugzillaConfigurationTest extends TestCase {
 		RepositoryConfiguration config = factory.getConfiguration(repository.getUrl(), null, repository.getUserName(),
 				repository.getPassword(), null);
 		assertNotNull(config);
-		assertEquals("2.18.5", config.getInstallVersion());
+		assertEquals("2.18.6", config.getInstallVersion());
 		assertEquals(7, config.getStatusValues().size());
 		assertEquals(8, config.getResolutions().size());
 		assertEquals(8, config.getPlatforms().size());
