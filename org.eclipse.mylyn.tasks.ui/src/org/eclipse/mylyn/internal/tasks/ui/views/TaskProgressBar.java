@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Display;
  */
 public class TaskProgressBar extends Canvas {
 
-	private static final int DEFAULT_HEIGHT = 6;
+	private static final int DEFAULT_HEIGHT = 5;
 
 	private int currentTickCount = 0;
 
