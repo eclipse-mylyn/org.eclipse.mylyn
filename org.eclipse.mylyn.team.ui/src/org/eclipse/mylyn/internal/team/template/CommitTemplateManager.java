@@ -57,6 +57,7 @@ public class CommitTemplateManager {
 			
 			Pattern pattern = Pattern.compile(regex);
 			Matcher matcher = pattern.matcher(comment);
+			
 			if (matcher.find()) {
 				return matcher.group(1);
 			}
