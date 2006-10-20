@@ -36,8 +36,6 @@ public abstract class AbstractRepositoryConnectorUi {
 		
 	public abstract AbstractRepositorySettingsPage getSettingsPage();
 
-//	public abstract IWizard getNewQueryWizard(TaskRepository repository);
-
 	/**
 	 * @param repository
 	 * @param queryToEdit can be null
