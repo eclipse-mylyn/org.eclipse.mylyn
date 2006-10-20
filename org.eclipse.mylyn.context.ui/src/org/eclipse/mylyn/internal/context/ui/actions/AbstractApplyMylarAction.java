@@ -189,16 +189,17 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 		try {
 			viewer.getControl().setRedraw(false);
 			previousFilters.put(viewer, Arrays.asList(viewer.getFilters()));
-			Set<Class> excludedFilters = getPreservedFilters();
-			
-			for (ViewerFilter filter : previousFilters.get(viewer)) {
-				if (!excludedFilters.contains(filter.getClass())) {
-					try {
-						viewer.removeFilter(filter);
-					} catch (Throwable t) {
-						MylarStatusHandler.fail(t, "Failed to remove filter: " + filter, false);
-					}
-				} 
+			if (viewPart != null) {
+				Set<Class> excludedFilters = getPreservedFilters();
+				for (ViewerFilter filter : previousFilters.get(viewer)) {
+					if (!excludedFilters.contains(filter.getClass())) {
+						try {
+							viewer.removeFilter(filter);
+						} catch (Throwable t) {
+							MylarStatusHandler.fail(t, "Failed to remove filter: " + filter, false);
+						}
+					} 
+				}
 			}
 			viewer.addFilter(interestFilter);
 			if (viewer instanceof TreeViewer) {
@@ -207,6 +208,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 			viewer.getControl().setRedraw(true);
 			return true;
 		} catch (Throwable t) {
+			t.printStackTrace();
 			MylarStatusHandler.fail(t, "Could not install viewer filter on: " + globalPrefId, false);
 		}
 		return false;
@@ -223,20 +225,21 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 		}
 
 		viewer.getControl().setRedraw(false);
-		Set<Class> excludedFilters = getPreservedFilters();
-		if (previousFilters.containsKey(viewer)) {
-			for (ViewerFilter filter : previousFilters.get(viewer)) {
-				if (!excludedFilters.contains(filter.getClass())) {
-					try {
-						viewer.addFilter(filter);
-					} catch (Throwable t) {
-						MylarStatusHandler.fail(t, "Failed to remove filter: " + filter, false);
+		if (viewPart != null) {
+			Set<Class> excludedFilters = getPreservedFilters();
+			if (previousFilters.containsKey(viewer)) {
+				for (ViewerFilter filter : previousFilters.get(viewer)) {
+					if (!excludedFilters.contains(filter.getClass())) {
+						try {
+							viewer.addFilter(filter);
+						} catch (Throwable t) {
+							MylarStatusHandler.fail(t, "Failed to remove filter: " + filter, false);
+						}
 					}
 				}
+				previousFilters.remove(viewer);
 			}
-			previousFilters.remove(viewer);
 		}
-//		previousFilters.remove(key)();
 		for (ViewerFilter filter : Arrays.asList(viewer.getFilters())) {
 			if (filter instanceof InterestFilter) {
 				viewer.removeFilter(interestFilter);

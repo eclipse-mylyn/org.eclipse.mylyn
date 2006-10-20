@@ -139,7 +139,6 @@ public abstract class CommitTemplateVariable implements ICommitTemplateVariable 
 			if (task instanceof AbstractRepositoryTask) {
 				return ((AbstractRepositoryTask) task).getTaskData().getStatus().toUpperCase();
 			}
-
 			return null;
 		}
 	}
