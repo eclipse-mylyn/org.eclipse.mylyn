@@ -47,7 +47,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
 
 /**
- * @author wmitsuda
+ * @author Willian Mitsuda
+ * @author Mik Kersten
  */
 public class TaskSelectionDialog extends SelectionStatusDialog {
 
@@ -80,12 +81,14 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 						element);
 			}
 			if (element instanceof ITask) {
-				ITask task = (ITask)element;
-				String taskString = AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()) + ": " + task.getDescription();
+				ITask task = (ITask) element;
+				String taskString = AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()) + ": "
+						+ task.getDescription();
 				return pattern.matcher(taskString).find();
 			} else if (element instanceof AbstractQueryHit) {
 				AbstractQueryHit hit = (AbstractQueryHit) element;
-				String taskString = AbstractRepositoryTask.getTaskId(hit.getHandleIdentifier()) + ": " + hit.getDescription();
+				String taskString = AbstractRepositoryTask.getTaskId(hit.getHandleIdentifier()) + ": "
+						+ hit.getDescription();
 				return pattern.matcher(taskString).find();
 			}
 			return false;
@@ -101,7 +104,6 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 	public boolean getOpenInBrowser() {
 		return openInBrowser;
 	}
-
 
 	public void setOpenInBrowser(boolean openInBrowser) {
 		this.openInBrowser = openInBrowser;
@@ -157,6 +159,7 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 		allTasks.addAll(taskList.getAllTasks());
 		for (AbstractRepositoryQuery query : taskList.getQueries()) {
 			allTasks.addAll(query.getChildren());
+			allTasks.addAll(query.getHits());
 		}
 
 		// Compute the task navigation history (in recent-to-older order)
