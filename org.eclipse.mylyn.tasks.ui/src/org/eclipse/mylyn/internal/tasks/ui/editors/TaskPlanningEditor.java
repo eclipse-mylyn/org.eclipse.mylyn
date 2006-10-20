@@ -77,9 +77,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 	private static final String DESCRIPTION_ESTIMATED = "Time that the task has been actively worked on.\n Inactivity timeout is "
 			+ MylarMonitorPlugin.getDefault().getInactivityTimeout() + " seconds.";
 
-	private static final String LABEL_INCOMPLETE = "Incomplete";
+	public static final String LABEL_INCOMPLETE = "Incomplete";
 
-	private static final String LABEL_COMPLETE = "Complete";
+	public static final String LABEL_COMPLETE = "Complete";
 
 	private static final String LABEL_PLAN = "Personal Planning";
 
