@@ -26,7 +26,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -86,15 +85,15 @@ public class MylarTeamPreferencePage extends PreferencePage implements IWorkbenc
 		manageChangeSets.setSelection(getPreferenceStore().getDefaultBoolean(MylarTeamPlugin.CHANGE_SET_MANAGE));
 	}
 
-	private Label createLabel(Composite parent, String text) {
-		Label label = new Label(parent, SWT.LEFT);
-		label.setText(text);
-		GridData data = new GridData();
-		data.horizontalSpan = 2;
-		data.horizontalAlignment = GridData.BEGINNING;
-		label.setLayoutData(data);
-		return label;
-	}
+//	private Label createLabel(Composite parent, String text) {
+//		Label label = new Label(parent, SWT.LEFT);
+//		label.setText(text);
+//		GridData data = new GridData();
+//		data.horizontalSpan = 2;
+//		data.horizontalAlignment = GridData.BEGINNING;
+//		label.setLayoutData(data);
+//		return label;
+//	}
 
 	private void createChangeSetGroup(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
@@ -109,12 +108,12 @@ public class MylarTeamPreferencePage extends PreferencePage implements IWorkbenc
 
 	private void createCommitGroup(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		group.setText("Automatic Commit Messages");
+		group.setText("Commit Comment Template");
 		group.setLayout(new GridLayout(2, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		Label completedLabel = createLabel(group, "Template: ");
-		completedLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
+//		Label completedLabel = createLabel(group, "Template: ");
+//		completedLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
 
 		String completedTemplate = getPreferenceStore().getString(MylarTeamPlugin.COMMIT_TEMPLATE);
 		commitTemplate = addTemplateField(group, completedTemplate, new TemplateHandlerContentProposalProvider());
