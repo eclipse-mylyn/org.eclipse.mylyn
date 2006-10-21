@@ -9,7 +9,6 @@
 package org.eclipse.mylar.internal.tasks.ui.actions;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -154,12 +153,17 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 
 		// Compute all existing tasks or query hits (if corresponding task does
 		// not exist yet...)
-		Collection<ITaskListElement> allTasks = new HashSet<ITaskListElement>();
+		Set<ITaskListElement> allTasks = new HashSet<ITaskListElement>();
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		allTasks.addAll(taskList.getAllTasks());
 		for (AbstractRepositoryQuery query : taskList.getQueries()) {
 			allTasks.addAll(query.getChildren());
-			allTasks.addAll(query.getHits());
+			// TODO: should not need to do this
+			for (AbstractQueryHit hit : query.getHits()) {
+				if (hit.getCorrespondingTask() == null) {
+					allTasks.add(hit);
+				}
+			}
 		}
 
 		// Compute the task navigation history (in recent-to-older order)

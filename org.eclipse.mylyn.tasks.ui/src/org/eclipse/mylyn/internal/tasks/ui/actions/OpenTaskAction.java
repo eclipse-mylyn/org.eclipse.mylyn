@@ -21,7 +21,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.actions.ActionDelegate;
 
 /**
- * @author wmitsuda
+ * @author Willian Mitsuda
  */
 public class OpenTaskAction extends ActionDelegate implements IWorkbenchWindowActionDelegate {
 
