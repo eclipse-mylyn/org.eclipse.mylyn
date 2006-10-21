@@ -91,7 +91,8 @@ public class WebClientUtil {
 			proxy = Proxy.NO_PROXY;
 		}
 		
-		URLConnection connection = url.openConnection(proxy);		
+		URLConnection connection = url.openConnection(proxy);
+		
 		if (connection == null || !(connection instanceof HttpURLConnection)) {
 			throw new MalformedURLException();
 		}		
