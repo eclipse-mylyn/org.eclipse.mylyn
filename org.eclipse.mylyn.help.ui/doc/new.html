@@ -14,19 +14,23 @@
 	</tr>
 	<tr>
 		<td bgcolor="#E0D0E6"><font size="1">0.8.0<br>
-		<i>Oct 20</i></font></td>
+		<i>Oct 21</i></font></td>
 		<td bgcolor="#E0D0E6" align="center">
 		<a href="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&product=Mylar&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&bug_status=RESOLVED&bug_status=VERIFIED&bug_status=CLOSED&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=2006-09-29&chfieldto=2006-10-21&chfield=resolution&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=">
-		<font size="1">92</font><br><font size="1">reports</font></a></td>
-		<td bgcolor="#E0D0E6"><font size="1">Eu...</font></td>
+		<font size="1">60</font><br><font size="1">reports</font></a></td>
+		<td bgcolor="#E0D0E6"><font size="1">Eike Stepper contributed commit 
+		comment templates. Willian Mitsuda provided several improvements for 
+		Task List layout and progress bar presentation.&nbsp; Raphael Ackermann 
+		provided several interaction improvements for task and category 
+		creation. </font></td>
 	</tr>
 	<tr>
-		<td bgcolor="#E0D0E6"><font size="1">0.7.0<br>
+		<td bgcolor="#FAF7FB"><font size="1">0.7.0<br>
 		<i>Sep 29</i></font></td>
-		<td bgcolor="#E0D0E6" align="center">
+		<td bgcolor="#FAF7FB" align="center">
 		<a href="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&product=Mylar&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&bug_status=RESOLVED&bug_status=VERIFIED&bug_status=CLOSED&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=2006-08-28&chfieldto=2006-09-30&chfield=resolution&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=">
-		<font size="1">92</font><br><font size="1">reports</a></font></td>
-		<td bgcolor="#E0D0E6"><font size="1">Eugene Kuleshov streamlined adding 
+		<font size="1">92</font><br><font size="1">reports</font></a></td>
+		<td bgcolor="#FAF7FB"><font size="1">Eugene Kuleshov streamlined adding 
 		new repositories, improved the generic web connector, and JIRA query 
 		dialog.&nbsp; Willian Mitsuda provided several layout UI layout and 
 		presentation improvements.&nbsp; Yuri V. Baburov improved task activity 
@@ -73,7 +77,7 @@
 <a href="new-0.4.html">Mylar 0.4</a>, <a href="new-0.3.html">Mylar 0.3</a></b></p>
 <p><b>Update notes</b>: </p>
 <ul>
-	<li>When updating to 0.7.0: If you have a lot of contexts the restart will 
+	<li>When updating to 0.7.0 or later: If you have a lot of contexts the restart will 
 	take slightly longer as they are migrated to a compressed format.</li>
 	<li>If updating from 0.6.0: the <i>Preferences -&gt; Tasks</i> settings will be reset to their defaults 
 	due to plug-in name changes.&nbsp; If you use a non-default <i>Task 
@@ -83,22 +87,71 @@
 &nbsp;</li>
 </ul>
 
-<p>New for 0.8.0</p>
-<ul>
-	<li>Automatic commit templates</li>
-	<li>New trac editor</li>
-	<li>Menu reorganization</li>
-	<li>Weekly progress bar (appears only in focus on workweek)</li>
-	<li>Better editor integration (back history, restore on startup)</li>
-</ul>
-
 <hr>
 
 <h2>Tasks</h2>
 
-<table cellpadding="10" cellspacing="0" http://www.eclipse.org/mylar/doc/images/dev/ id="table281">
+<table cellpadding="10" cellspacing="0" http://www.eclipse.org/mylar/doc/images/dev/ id="table287">
 		<tr>
 			<td align="left" valign="top" width="15%" bgcolor=#E0D0E6>
+			<p align="right"><b>Commit Template Configuration</b></p>
+			</td>
+			<td valign="top" width="70%">
+			The template used for automatically creating the commit message from 
+			the corresponding task are now 
+			configurable.&nbsp; Use Ctrl+Space to invoke content assist for 
+			choosing commit template variables.<p>
+			<img src="images/0.8.0/commit-templates.gif"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" http://www.eclipse.org/mylar/doc/images/dev/ id="table283">
+		<tr>
+			<td align="left" valign="top" width="15%" bgcolor=#E0D0E6>
+			<p align="right"><b>Weekly Progress</b></p>
+			</td>
+			<td valign="top" width="70%">
+			When in <i>Focus on Workweek</i> mode (right-most toolbar button), 
+			the <i>Task List</i> shows a 
+			JUnit-style progress bar which indicates how many of the tasks 
+			scheduled for the current week have been completed.&nbsp; Completing 
+			a task or deferring to a future week will cause the progress bar to 
+			move forward.&nbsp; The tooltip for the progress bar will indicate 
+			the total.<p>
+			<img src="images/0.8.0/tasks-weekly-progress.gif"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" http://www.eclipse.org/mylar/doc/images/dev/ id="table284">
+		<tr>
+			<td align="left" valign="top" width="15%" bgcolor=#E0D0E6>
+			<p align="right"><b>Editor Integration Improvements</b></p>
+			</td>
+			<td valign="top" width="70%">
+			Task editors are now restored on workbench start and present in the 
+			editor history.<p>
+			<img src="images/0.8.0/task-editor-history.gif"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" http://www.eclipse.org/mylar/doc/images/dev/ id="table281">
+		<tr>
+			<td align="left" valign="top" width="15%" bgcolor=#FAF7FB>
 			<p align="right"><b>Incoming Changes</b></p>
 			</td>
 			<td valign="top" width="70%">
@@ -122,7 +175,7 @@
 
 <table cellpadding="10" cellspacing="0" http://www.eclipse.org/mylar/doc/images/dev/ id="table277">
 		<tr>
-			<td align="left" valign="top" width="15%" bgcolor=#E0D0E6>
+			<td align="left" valign="top" width="15%" bgcolor=#FAF7FB>
 			<p align="right"><b>Task Editor Improvements</b></p>
 			</td>
 			<td valign="top" width="70%">
@@ -141,7 +194,7 @@
 
 <table cellpadding="10" cellspacing="0" http://www.eclipse.org/mylar/doc/images/dev/ id="table278">
 		<tr>
-			<td align="left" valign="top" width="15%" bgcolor=#E0D0E6>
+			<td align="left" valign="top" width="15%" bgcolor=#FAF7FB>
 			<p align="right"><b>Task Repository Integration</b></p>
 			</td>
 			<td valign="top" width="70%">
@@ -305,7 +358,7 @@
 		</tr>
 		</table>
 
-<h2>&nbsp; </h2>
+<h2>&nbsp;</h2>
 <h2>Task Context</h2>
 
 <table cellpadding="10" cellspacing="0" http://www.eclipse.org/mylar/doc/images/dev/ id="table274">
@@ -365,7 +418,7 @@
 
 <table cellpadding="10" cellspacing="0" http://www.eclipse.org/mylar/doc/images/dev/ id="table282">
 		<tr>
-			<td align="left" valign="top" width="15%" bgcolor=#E0D0E6>
+			<td align="left" valign="top" width="15%" bgcolor=#FAF7FB>
 			<p align="right"><b>Votes and Links</b></p>
 			</td>
 			<td valign="top" width="70%">
@@ -385,6 +438,25 @@
 
 <h2>&nbsp; </h2>
 <h2>Trac Connector</h2>
+
+<table cellpadding="10" cellspacing="0" http://www.eclipse.org/mylar/doc/images/dev/ id="table286">
+		<tr>
+			<td align="left" valign="top" width="15%" bgcolor=#E0D0E6>
+			<p align="right"><b>New Task Editor</b></p>
+			</td>
+			<td valign="top" width="70%">
+			A rich editor for creating new Trac tasks is now available for 
+			repositories that use XML-RPC (see the
+			<a href="http://wiki.eclipse.org/index.php/Mylar_FAQ#Trac_Connector_troubleshooting">
+			FAQ</a> for XML-RPC configuration instructions).<p>
+			<img src="images/0.8.0/trac-editor-new.gif"></td> 
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
 
 <table cellpadding="10" cellspacing="0" http://www.eclipse.org/mylar/doc/images/dev/ id="table270">
 		<tr>
