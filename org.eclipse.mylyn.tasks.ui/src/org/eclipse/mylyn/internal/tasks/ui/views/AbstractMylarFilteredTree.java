@@ -14,7 +14,6 @@ package org.eclipse.mylar.internal.tasks.ui.views;
 import java.lang.reflect.Field;
 
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -22,6 +21,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
@@ -71,11 +71,11 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 	}
 
 	@Override
-	protected TreeViewer doCreateTreeViewer(Composite parent, int style) {
+	protected Control createTreeControl(Composite parent, int style) {
 		progressComposite = createProgressComposite(parent);
 		progressComposite.setVisible(false);
 		((GridData) progressComposite.getLayoutData()).exclude = true;
-		return super.doCreateTreeViewer(parent, style);
+		return super.createTreeControl(parent, style);
 	}
 	
 	@Override
