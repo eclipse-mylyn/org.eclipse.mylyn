@@ -62,6 +62,7 @@ import org.eclipse.mylar.internal.tasks.ui.util.TaskListSaveManager;
 import org.eclipse.mylar.internal.tasks.ui.util.TaskListWriter;
 import org.eclipse.mylar.internal.tasks.ui.util.TasksUiExtensionReader;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
@@ -437,6 +438,12 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 						getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
 						getPreferenceStore().addPropertyChangeListener(synchronizationScheduler);
 						getPreferenceStore().addPropertyChangeListener(taskListManager);
+					
+						// TODO: get rid of this, hack to make decorators show up on startup
+						TaskRepositoriesView repositoriesView = TaskRepositoriesView.getFromActivePerspective();
+						if (repositoriesView != null) {
+							repositoriesView.getViewer().refresh();
+						}
 					} catch (Exception e) {
 						MylarStatusHandler.fail(e, "Mylar Tasks UI start failed", false);
 					}
