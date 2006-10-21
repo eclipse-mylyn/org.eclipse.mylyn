@@ -34,7 +34,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -49,7 +48,7 @@ import org.eclipse.swt.widgets.Text;
  */
 public class TaskDataImportWizardPage extends WizardPage {
 
-	private static final String LABEL_IMPORT_FOLDER = "From 0.6.2 and older task data folder";
+	private static final String LABEL_IMPORT_FOLDER = "From 0.6.2 and older data folder";
 
 	private static final String LABEL_IMPORT_ZIP = "From zip file";
 
@@ -125,9 +124,9 @@ public class TaskDataImportWizardPage extends WizardPage {
 			container.setLayout(layout);
 
 			createContentSelectionControl(container);
-			createImportDirectoryControl(container);
 			createImportFromZipControl(container);
 			createImportBackupControl(container);
+			createImportDirectoryControl(container);
 
 			addRadioListeners();
 
@@ -252,15 +251,13 @@ public class TaskDataImportWizardPage extends WizardPage {
 
 		importViaBackupButton = new Button(container, SWT.RADIO);
 		importViaBackupButton.setText(LABEL_IMPORT_BACKUP);
-		GridDataFactory.fillDefaults().span(3, SWT.DEFAULT).applyTo(importViaBackupButton);
-
 		addBackupFileView(container);
 	}
 
 	private void addBackupFileView(Composite composite) {
-		new Label(composite, SWT.NONE);
 		backupFilesTable = new Table(composite, SWT.BORDER);
-		GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).grab(true, false).applyTo(backupFilesTable);
+		GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(backupFilesTable);
+	
 		TableColumn filenameColumn = new TableColumn(backupFilesTable, SWT.LEFT);
 		filenameColumn.setWidth(200);
 
@@ -316,11 +313,11 @@ public class TaskDataImportWizardPage extends WizardPage {
 			taskContextsCheckBox.setSelection(true);
 			sourceFolderText.setText("");
 			overwriteCheckBox.setSelection(true);
-			// importFromFolderGroup.setEnabled(true);
-			importViaFolderButton.setSelection(true);
-			sourceFolderText.setEnabled(true);
-			sourceZipText.setEnabled(false);
+			importViaZipButton.setSelection(true);
+			sourceFolderText.setEnabled(false);
+			sourceZipText.setEnabled(true);
 			backupFilesTable.setEnabled(false);
+			browseButtonFolder.setEnabled(false);
 
 		} else {
 			// Retrieve previous values from the dialog settings
