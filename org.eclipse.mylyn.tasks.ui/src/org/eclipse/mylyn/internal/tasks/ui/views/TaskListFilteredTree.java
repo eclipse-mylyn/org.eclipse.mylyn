@@ -49,8 +49,9 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 	protected Composite createProgressComposite(Composite container) {
 		Composite progressComposite = new Composite(container, SWT.NONE);
 		GridLayout progressLayout = new GridLayout(1, false);
-		progressLayout.marginWidth = 0;
+		progressLayout.marginWidth = 2;
 		progressLayout.marginHeight = 0;
+		progressLayout.marginBottom = 2;
 		progressLayout.horizontalSpacing = 0;
 		progressLayout.verticalSpacing = 0;
 		progressComposite.setLayout(progressLayout);

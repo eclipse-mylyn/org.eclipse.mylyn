@@ -14,6 +14,7 @@ package org.eclipse.mylar.internal.tasks.ui.views;
 import java.lang.reflect.Field;
 
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -39,8 +40,6 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 	private AdaptiveRefreshPolicy refreshPolicy;
 	
 	private Composite progressComposite;
-	
-	private Composite parent;
 	
 	private boolean showProgress = false;
 
@@ -72,9 +71,15 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 	}
 
 	@Override
+	protected TreeViewer doCreateTreeViewer(Composite parent, int style) {
+		progressComposite = createProgressComposite(parent);
+		progressComposite.setVisible(false);
+		((GridData) progressComposite.getLayoutData()).exclude = true;
+		return super.doCreateTreeViewer(parent, style);
+	}
+	
+	@Override
 	protected Composite createFilterControls(Composite parent) {
-		this.parent = parent;
-		
 		GridLayout gridLayout = new GridLayout(4, false);
 		gridLayout.marginWidth = 2;
 		gridLayout.marginHeight = 2;
@@ -100,10 +105,9 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 		});
 
 		createStatusComposite(parent);
-//		createProgressComposite(parent);
 		return parent;
 	}
-
+	
 	protected abstract Composite createProgressComposite(Composite container);
 
 	protected abstract Composite createStatusComposite(Composite container);
@@ -128,15 +132,8 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 
 	public void setShowProgress(boolean showProgress) {
 		this.showProgress = showProgress;
-//		filterComposite
-		if (!showProgress && progressComposite != null) {
-			progressComposite.dispose();
-		} else {
-			progressComposite = createProgressComposite(parent);
-		}
+		progressComposite.setVisible(showProgress);
+		((GridData) progressComposite.getLayoutData()).exclude = !showProgress;
 		layout();
-//		progressComposite.setVisible(showProgress);
-//		filterComposite.layout();
-//		filterComposite.pack();
 	}
 }
