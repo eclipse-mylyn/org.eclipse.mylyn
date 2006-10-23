@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.internal.tasks.ui.wizards.NewRepositoryTaskWizard;
@@ -22,13 +23,15 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
  * @author Eugene Kuleshov
  */
-public class NewRepositoryTaskAction extends Action {
+public class NewRepositoryTaskAction extends Action implements IViewActionDelegate {
 
 	public static final String ID = "org.eclipse.mylar.tasklist.ui.repositories.actions.create";
 			
@@ -61,6 +64,12 @@ public class NewRepositoryTaskAction extends Action {
 
 	public void run(IAction action) {
 		run();
+	}
+
+	public void init(IViewPart view) {
+	}
+
+	public void selectionChanged(IAction action, ISelection selection) {
 	}
 
 }
