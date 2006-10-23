@@ -14,17 +14,20 @@ package org.eclipse.mylar.internal.tasks.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.wizards.AddExistingTaskWizard;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
  * @author Eugene Kuleshov
  */
-public class AddRepositoryTaskAction extends Action {
+public class AddRepositoryTaskAction extends Action implements IViewActionDelegate {
 
 	private static final String WIZARD_LABEL = "Add an existing repository task/issue";
 	
@@ -45,6 +48,12 @@ public class AddRepositoryTaskAction extends Action {
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, e.getMessage(), true);
 		}
+	}
+
+	public void init(IViewPart view) {
+	}
+
+	public void selectionChanged(IAction action, ISelection selection) {
 	}
 
 }

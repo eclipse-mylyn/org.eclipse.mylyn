@@ -14,17 +14,20 @@ package org.eclipse.mylar.internal.tasks.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.wizards.NewQueryWizard;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
  * @author Eugene Kuleshov
  */
-public class NewQueryAction extends Action {
+public class NewQueryAction extends Action implements IViewActionDelegate {
 
 	private static final String WIZARD_LABEL = "Add or modify repository query";
 
@@ -45,6 +48,12 @@ public class NewQueryAction extends Action {
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, e.getMessage(), true);
 		}
+	}
+
+	public void init(IViewPart view) {
+	}
+
+	public void selectionChanged(IAction action, ISelection selection) {
 	}
 
 }
