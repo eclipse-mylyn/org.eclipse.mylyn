@@ -90,6 +90,7 @@ import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.ui.TaskTransfer;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.RTFTransfer;
@@ -142,7 +143,7 @@ public class TaskListView extends ViewPart {
 	private static final String MEMENTO_KEY_WIDTH = "width";
 
 	private static final String ID_SEPARATOR_NEW = "new";
-	
+
 	private static final String ID_SEPARATOR_CONTEXT = "context";
 
 	private static final String ID_SEPARATOR_FILTERS = "filters";
@@ -1018,10 +1019,10 @@ public class TaskListView extends ViewPart {
 
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(new Separator(ID_SEPARATOR_NEW));
-		
-//		manager.add(newLocalTaskAction);
+
+		// manager.add(newLocalTaskAction);
 		// manager.add(newCategoryAction);
-		 manager.add(new Separator());
+		manager.add(new Separator());
 		manager.add(filterOnPriority);
 		manager.add(new Separator("navigation"));
 		// manager.add(new Separator(ID_SEPARATOR_CONTEXT));
@@ -1048,15 +1049,14 @@ public class TaskListView extends ViewPart {
 			if (object instanceof ITaskListElement) {
 				selectedElements.add((ITaskListElement) object);
 			}
-		}	
+		}
 		openWithBrowser.selectionChanged((StructuredSelection) getViewer().getSelection());
 
 		manager.add(new Separator(ID_SEPARATOR_NEW));
 		manager.add(new Separator());
-        
-		Map<String, List<IDynamicSubMenuContributor>> dynamicMenuMap = TasksUiPlugin.getDefault()
-				.getDynamicMenuMap();
-		
+
+		Map<String, List<IDynamicSubMenuContributor>> dynamicMenuMap = TasksUiPlugin.getDefault().getDynamicMenuMap();
+
 		ITask task = null;
 		if ((element instanceof ITask) || (element instanceof AbstractQueryHit)) {
 			if (element instanceof AbstractQueryHit) {
@@ -1065,11 +1065,11 @@ public class TaskListView extends ViewPart {
 				task = (ITask) element;
 			}
 		}
-		
+
 		addAction(openAction, manager, element);
 		addAction(openWithBrowser, manager, element);
-		manager.add(new Separator());	
-		
+		manager.add(new Separator());
+
 		for (String menuPath : dynamicMenuMap.keySet()) {
 			if (!ID_SEPARATOR_CONTEXT.equals(menuPath)) {
 				for (IDynamicSubMenuContributor contributor : dynamicMenuMap.get(menuPath)) {
@@ -1081,11 +1081,11 @@ public class TaskListView extends ViewPart {
 			}
 		}
 		manager.add(new Separator());
-		
+
 		addAction(copyDetailsAction, manager, element);
 		if (task != null) {
 			addAction(removeFromCategoryAction, manager, element);
-		} 
+		}
 		addAction(deleteAction, manager, element);
 		if (!(element instanceof AbstractRepositoryTask) || element instanceof AbstractTaskContainer) {
 			addAction(renameAction, manager, element);
@@ -1099,7 +1099,7 @@ public class TaskListView extends ViewPart {
 		}
 		manager.add(new Separator(ID_SEPARATOR_REPOSITORY));
 		manager.add(new Separator(ID_SEPARATOR_CONTEXT));
-		
+
 		if (task != null) {
 			if (task.isActive()) {
 				manager.add(deactivateAction);
@@ -1109,7 +1109,7 @@ public class TaskListView extends ViewPart {
 		} else if (element instanceof AbstractQueryHit) {
 			manager.add(activateAction);
 		}
-		
+
 		if (element instanceof ITask || element instanceof AbstractQueryHit) {
 			for (String menuPath : dynamicMenuMap.keySet()) {
 				if (ID_SEPARATOR_CONTEXT.equals(menuPath)) {
@@ -1122,7 +1122,7 @@ public class TaskListView extends ViewPart {
 				}
 			}
 		}
-		
+
 		if (element instanceof AbstractRepositoryQuery || element instanceof TaskCategory) {
 			manager.add(new Separator());
 			addAction(propertiesAction, manager, element);
@@ -1222,7 +1222,7 @@ public class TaskListView extends ViewPart {
 		goUpAction = new GoUpAction(drillDownAdapter);
 
 		newLocalTaskAction = new NewLocalTaskAction(this);
-//		newCategoryAction = new NewCategoryAction(this);
+		// newCategoryAction = new NewCategoryAction(this);
 		removeFromCategoryAction = new RemoveFromCategoryAction(this);
 		renameAction = new RenameAction(this);
 
@@ -1496,33 +1496,20 @@ public class TaskListView extends ViewPart {
 		if (task == null || getViewer().getControl().isDisposed()) {
 			return;
 		}
-		// StructuredSelection currentSelection = (StructuredSelection)
-		// getViewer().getSelection();
-		// ITask selectedTask = null;
-		// if (currentSelection.getFirstElement() instanceof ITask) {
-		// selectedTask = (ITask) currentSelection.getFirstElement();
-		// } else if (currentSelection.getFirstElement() instanceof
-		// AbstractQueryHit) {
-		// selectedTask = ((AbstractQueryHit)
-		// currentSelection.getFirstElement()).getCorrespondingTask();
-		// }
-		// if (!task.equals(selectedTask)) {
 		getViewer().setSelection(new StructuredSelection(task), true);
 		// if no task exists, select the query hit if exists
 		AbstractQueryHit hit = null;
 		if (getViewer().getSelection().isEmpty()
 				&& (hit = TasksUiPlugin.getTaskListManager().getTaskList().getQueryHit(task.getHandleIdentifier())) != null) {
+			try {
 			AbstractRepositoryQuery query = TasksUiPlugin.getTaskListManager().getTaskList().getQueryForHandle(
 					task.getHandleIdentifier());
 			getViewer().expandToLevel(query, 1);
 			getViewer().setSelection(new StructuredSelection(hit), true);
-		} else {
-			// if (task.getc() != null) {
-			// getViewer().expandToLevel(task.getContainer(), 1);
-			// }
-			// getViewer().setSelection(new StructuredSelection(hit), true);
-		}
-		// }
+			} catch (SWTException e) {
+				MylarStatusHandler.log(e, "Failed to expand Task List");
+			}
+		} 
 	}
 
 	protected void refreshTask(ITask task) {
@@ -1551,14 +1538,18 @@ public class TaskListView extends ViewPart {
 							// getViewer().refresh();
 							filteredTree.textChanged();
 						} else {
-							getViewer().refresh(element, true);
-							if (element instanceof AbstractTaskContainer
-									&& !((AbstractTaskContainer) element).equals(TasksUiPlugin.getTaskListManager()
-											.getTaskList().getArchiveContainer())) {
-								List visibleElements = Arrays.asList(getViewer().getVisibleExpandedElements());
-								if (!visibleElements.contains(element)) {
-									getViewer().refresh();
+							try {
+								getViewer().refresh(element, true);
+								if (element instanceof AbstractTaskContainer
+										&& !((AbstractTaskContainer) element).equals(TasksUiPlugin.getTaskListManager()
+												.getTaskList().getArchiveContainer())) {
+									List visibleElements = Arrays.asList(getViewer().getVisibleExpandedElements());
+									if (!visibleElements.contains(element)) {
+										getViewer().refresh();
+									}
 								}
+							} catch (SWTException e) {
+								MylarStatusHandler.log(e, "Failed to refresh Task List");
 							}
 						}
 					}

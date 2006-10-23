@@ -133,6 +133,7 @@ public class RepositorySynchronizationManager {
 		job.setSynchTasks(syncTasks);
 		for (AbstractRepositoryQuery repositoryQuery : repositoryQueries) {
 			repositoryQuery.setCurrentlySynchronizing(true);
+			TasksUiPlugin.getTaskListManager().getTaskList().notifyContainerUpdated(repositoryQuery);
 		}
 		if (listener != null) {
 			job.addJobChangeListener(listener);

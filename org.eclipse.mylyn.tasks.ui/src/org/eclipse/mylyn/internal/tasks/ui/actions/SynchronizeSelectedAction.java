@@ -118,7 +118,6 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 					for (TaskRepository taskRepository : repositoriesToSync.get(connector.getRepositoryType())) {
 						TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, taskRepository);
 					}
-					
 				}				
 			}
 			if (!tasksToSyncMap.isEmpty()) {
@@ -135,10 +134,11 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 		queriesToSyncMap.clear();
 		tasksToSyncMap.clear();
 		
-		if (TaskListView.getFromActivePerspective() != null) {
-			TaskListView.getFromActivePerspective().getViewer().refresh();
-		}		
-
+//		TasksUiPlugin.getTaskListManager().getTaskList().notifyContainerUpdated(null);
+		
+//		if (TaskListView.getFromActivePerspective() != null) {
+//			TaskListView.getFromActivePerspective().getViewer().refresh();
+//		}		
 	}
 
 	private void addTaskToSync(AbstractRepositoryConnector client, AbstractRepositoryTask repositoryTask) {
