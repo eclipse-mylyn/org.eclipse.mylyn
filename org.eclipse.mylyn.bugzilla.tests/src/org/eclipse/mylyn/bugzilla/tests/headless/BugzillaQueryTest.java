@@ -83,10 +83,10 @@ public class BugzillaQueryTest extends TestCase {
 	public void testCredentialsEncoding() throws IOException, BugzillaException, KeyManagementException,
 			GeneralSecurityException {
 		String poundSignUTF8 = BugzillaServerFacade.addCredentials(IBugzillaConstants.TEST_BUGZILLA_222_URL, "UTF-8",
-				"testUser", "£");
+				"testUser", "\u00A3");
 		assertTrue(poundSignUTF8.endsWith("password=%C2%A3"));
 		String poundSignISO = BugzillaServerFacade.addCredentials(IBugzillaConstants.TEST_BUGZILLA_222_URL,
-				"ISO-8859-1", "testUser", "£");
+				"ISO-8859-1", "testUser", "\u00A3");
 		assertFalse(poundSignISO.contains("%C2%A3"));
 		assertTrue(poundSignISO.endsWith("password=%A3"));
 	}

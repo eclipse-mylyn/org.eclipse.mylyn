@@ -52,16 +52,17 @@ public class EncodingTest extends AbstractBugzillaTest {
 		init222();
 		repository.setCharacterEncoding("UTF-8");
 		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "57", null);
-		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		assertNotNull(task);
-		assertTrue(task.getDescription().getBytes().length == 1);
-		assertTrue(task.getDescription().getBytes()[0] == 63); // correct
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+		assertTrue(task.getDescription().equals("\u05D0"));
 		taskList.deleteTask(task);
 		repository.setCharacterEncoding("ISO-8859-1");
-		task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "56", null);
+		task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "57", null);
+		assertNotNull(task);
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		assertTrue(task.getDescription().getBytes().length == 2);
 		// iso-8859-1 'incorrect' interpretation
+		assertFalse(task.getDescription().equals("\u05D0"));
 	}
 
 }
