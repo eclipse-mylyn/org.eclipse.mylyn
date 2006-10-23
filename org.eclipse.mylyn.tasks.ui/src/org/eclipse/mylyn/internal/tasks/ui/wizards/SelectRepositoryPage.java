@@ -15,8 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.IOpenListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -48,6 +51,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -68,8 +72,6 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 	protected MultiRepositoryAwareWizard wizard;
 
 	private List<TaskRepository> repositories = new ArrayList<TaskRepository>();
-
-	private IStructuredSelection selection;
 
 	private final TaskRepositoryFilter taskRepositoryFilter;
 
@@ -109,15 +111,6 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 			}
 		}
 		return repositories;
-	}
-
-	public SelectRepositoryPage setSelection(IStructuredSelection selection) {
-		this.selection = selection;
-		return this;
-	}
-
-	public IStructuredSelection getSelection() {
-		return this.selection;
 	}
 
 	public void createControl(Composite parent) {
@@ -179,6 +172,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 	}
 
 	protected TaskRepository getSelectedRepository() {
+		IStructuredSelection selection = getSelection();
 		if (selection == null) {
 			return (TaskRepository) viewer.getElementAt(0);
 		}
@@ -198,11 +192,27 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		} else if (element instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask task = (AbstractRepositoryTask) element;
 			return getRepository(task.getRepositoryUrl(), task.getRepositoryKind());
+		} else if (element instanceof IResource) {
+			IResource resource = (IResource) element;
+			return TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
+		} else if( element instanceof IAdaptable) {
+			IResource resource = (IResource) ((IAdaptable) element).getAdapter(IResource.class);
+			return TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
 		}
+		
+		// TODO mapping between LogEntry.pliginId and repositories
 
-		// TODO handle project (when link from projects to repositories is
-		// implemented)
+		// TODO handle other selection types
+		
+		return null;
+	}
 
+	private IStructuredSelection getSelection() {
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		ISelection selection = window.getSelectionService().getSelection();
+		if(selection instanceof IStructuredSelection) {
+			return (IStructuredSelection) selection;
+		}		
 		return null;
 	}
 

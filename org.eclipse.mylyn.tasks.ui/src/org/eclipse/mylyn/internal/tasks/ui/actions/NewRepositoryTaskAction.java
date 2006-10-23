@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.tasks.ui.actions;
 
 import java.util.List;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -27,7 +28,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @author Eugene Kuleshov
  */
-public class NewRepositoryTaskAction extends AbstractRepositoryAction {
+public class NewRepositoryTaskAction extends Action {
 
 	public static final String ID = "org.eclipse.mylar.tasklist.ui.repositories.actions.create";
 			
@@ -41,9 +42,9 @@ public class NewRepositoryTaskAction extends AbstractRepositoryAction {
 			TaskRepository taskRepository = repositories.get(0);
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(taskRepository.getKind());
 			
-			wizard = connectorUi.getNewTaskWizard(taskRepository, getSelection());
+			wizard = connectorUi.getNewTaskWizard(taskRepository);
 		} else {
-			wizard = new NewRepositoryTaskWizard(getSelection());
+			wizard = new NewRepositoryTaskWizard();
 		}
 		
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();

@@ -42,7 +42,8 @@ public abstract class AbstractRepositoryConnectorUi {
 	 */
 	public abstract IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery queryToEdit);
 	
-	public abstract IWizard getNewTaskWizard(TaskRepository taskRepository, IStructuredSelection selection);
+	// XXX remove unused selection parameter
+	public abstract IWizard getNewTaskWizard(TaskRepository taskRepository);
 		
 	public abstract boolean hasRichEditor();
 			

@@ -34,6 +34,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
@@ -42,6 +43,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
@@ -61,12 +63,14 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Shawn Minto
  * @author Rob Elves
  * @author Mik Kersten
+ * @author Eugene Kuleshov
  * 
  * Product selection page of new bug wizard
  */
@@ -114,7 +118,6 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 
 	protected IPreferenceStore prefs = BugzillaUiPlugin.getDefault().getPreferenceStore();
 
-	private final IStructuredSelection selection;
 
 	/**
 	 * Constructor for BugzillaProductPage
@@ -127,10 +130,8 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 	 *            The repository the data is coming from
 	 * @param selection
 	 */
-	public BugzillaProductPage(IWorkbench workbench, NewBugzillaTaskWizard bugWiz, TaskRepository repository,
-			IStructuredSelection selection) {
+	public BugzillaProductPage(IWorkbench workbench, NewBugzillaTaskWizard bugWiz, TaskRepository repository) {
 		super("Page1");
-		this.selection = selection;
 		setTitle(IBugzillaConstants.TITLE_NEW_BUG);
 		setDescription(DESCRIPTION);
 		this.workbench = workbench;
@@ -308,45 +309,61 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 	}
 
 	private String[] getSelectedProducts() {
-		ArrayList<String> products = new ArrayList<String>();
+		IStructuredSelection selection = getSelection();
 		if (selection == null) {
-			return products.toArray(new String[0]);
+			return new String[0];
 		}
 
-		BugzillaRepositoryQuery query = null;
+		ArrayList<String> products = new ArrayList<String>();
+
 		Object element = selection.getFirstElement();
-		if (element instanceof BugzillaRepositoryQuery) {
-			query = (BugzillaRepositoryQuery) element;
-
-		} else if (element instanceof BugzillaQueryHit) {
-			BugzillaQueryHit hit = (BugzillaQueryHit) element;
-			if (hit.getParent() != null && hit.getParent() instanceof BugzillaRepositoryQuery) {
-				query = (BugzillaRepositoryQuery) hit.getParent();
+		if (element instanceof BugzillaTask) {
+			BugzillaTask task = (BugzillaTask) element;
+			products.add(task.getTaskData().getProduct());
+		} else {
+			BugzillaRepositoryQuery query = null;
+			if (element instanceof BugzillaRepositoryQuery) {
+				query = (BugzillaRepositoryQuery) element;
+	
+			} else if (element instanceof BugzillaQueryHit) {
+				BugzillaQueryHit hit = (BugzillaQueryHit) element;
+				if (hit.getParent() != null && hit.getParent() instanceof BugzillaRepositoryQuery) {
+					query = (BugzillaRepositoryQuery) hit.getParent();
+				}
 			}
-		}
-
-		if (query != null) {
-			String queryUrl = query.getUrl();
-			queryUrl = queryUrl.substring(queryUrl.indexOf("?") + 1);
-			String[] options = queryUrl.split("&");
-
-			for (String option : options) {
-				String key = option.substring(0, option.indexOf("="));
-				if ("product".equals(key)) {
-					try {
-						products.add(URLDecoder.decode(option.substring(option.indexOf("=") + 1), repository
-								.getCharacterEncoding()));
-						// TODO: list box only accepts a single selection so we
-						// break on first found
-						break;
-					} catch (UnsupportedEncodingException ex) {
-						// ignore
+			
+			if (query != null) {
+				String queryUrl = query.getUrl();
+				queryUrl = queryUrl.substring(queryUrl.indexOf("?") + 1);
+				String[] options = queryUrl.split("&");
+	
+				for (String option : options) {
+					String key = option.substring(0, option.indexOf("="));
+					if ("product".equals(key)) {
+						try {
+							products.add(URLDecoder.decode(option.substring(option.indexOf("=") + 1), repository
+									.getCharacterEncoding()));
+							// TODO: list box only accepts a single selection so we
+							// break on first found
+							break;
+						} catch (UnsupportedEncodingException ex) {
+							// ignore
+						}
 					}
 				}
 			}
 		}
 
 		return products.toArray(new String[products.size()]);
+	}
+
+	private IStructuredSelection getSelection() {
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		ISelection selection = window.getSelectionService().getSelection();
+		if(selection instanceof IStructuredSelection) {
+			return (IStructuredSelection) selection;
+		}		
+		return null;
 	}
 
 	public void handleEvent(Event event) {

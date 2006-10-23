@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.internal.tasks.ui.wizards;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryFilter;
@@ -28,8 +27,8 @@ public class AddExistingTaskWizard extends MultiRepositoryAwareWizard {
 
 	public static final String TITLE = "Add Existing Repository Task";
 
-	public AddExistingTaskWizard(IStructuredSelection selection) {
-		super(new SelectRepositoryPageForAddExistingTask(TaskRepositoryFilter.CAN_CREATE_TASK_FROM_KEY).setSelection(selection), TITLE);
+	public AddExistingTaskWizard() {
+		super(new SelectRepositoryPageForAddExistingTask(TaskRepositoryFilter.CAN_CREATE_TASK_FROM_KEY), TITLE);
 	}
 
 	private static final class SelectRepositoryPageForAddExistingTask extends SelectRepositoryPage {

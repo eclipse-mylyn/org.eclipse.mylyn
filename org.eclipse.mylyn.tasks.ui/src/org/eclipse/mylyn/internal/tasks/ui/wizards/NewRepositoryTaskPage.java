@@ -19,7 +19,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
- * @author Euegene Kuleshov
+ * @author Eugene Kuleshov
  */
 public class NewRepositoryTaskPage extends SelectRepositoryPage {
 
@@ -31,7 +31,7 @@ public class NewRepositoryTaskPage extends SelectRepositoryPage {
 	protected IWizard createWizard(TaskRepository taskRepository) {
 		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(
 				taskRepository.getKind());
-		return connectorUi.getNewTaskWizard(taskRepository, getSelection());
+		return connectorUi.getNewTaskWizard(taskRepository);  // TODO remove unused parameter
 	}
 
 }

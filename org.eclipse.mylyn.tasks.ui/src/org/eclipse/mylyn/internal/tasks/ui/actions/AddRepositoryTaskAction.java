@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.internal.tasks.ui.actions;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -23,13 +24,13 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @author Eugene Kuleshov
  */
-public class AddRepositoryTaskAction extends AbstractRepositoryAction {
+public class AddRepositoryTaskAction extends Action {
 
 	private static final String WIZARD_LABEL = "Add an existing repository task/issue";
 	
 	public void run(IAction action) {
 		try {
-			AddExistingTaskWizard wizard = new AddExistingTaskWizard(getSelection());
+			AddExistingTaskWizard wizard = new AddExistingTaskWizard();
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			if (shell != null && !shell.isDisposed()) {
 				WizardDialog dialog = new WizardDialog(shell, wizard);

@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.internal.tasks.ui.wizards;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryFilter;
@@ -29,10 +28,7 @@ public class NewQueryWizard extends MultiRepositoryAwareWizard {
 	public NewQueryWizard() {
 		super(new SelectRepositoryPageForNewQuery(), TITLE);
 	}
-	
-	public NewQueryWizard(IStructuredSelection selection) {
-		super(new SelectRepositoryPageForNewQuery().setSelection(selection), TITLE);
-	}
+
 	
 	private static final class SelectRepositoryPageForNewQuery extends SelectRepositoryPage {
 		public SelectRepositoryPageForNewQuery() {

@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.internal.tasks.ui.actions;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -23,13 +24,13 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @author Eugene Kuleshov
  */
-public class NewQueryAction extends AbstractRepositoryAction {
+public class NewQueryAction extends Action {
 
 	private static final String WIZARD_LABEL = "Add or modify repository query";
 
 	public void run(IAction action) {
 		try {
-			NewQueryWizard wizard = new NewQueryWizard(getSelection());
+			NewQueryWizard wizard = new NewQueryWizard();
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			if (shell != null && !shell.isDisposed()) {
 				WizardDialog dialog = new WizardDialog(shell, wizard);

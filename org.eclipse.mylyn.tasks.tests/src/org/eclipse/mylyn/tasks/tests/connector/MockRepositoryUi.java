@@ -8,7 +8,6 @@
 
 package org.eclipse.mylar.tasks.tests.connector;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
@@ -21,7 +20,7 @@ import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 public class MockRepositoryUi extends AbstractRepositoryConnectorUi {
 
 	@Override
-	public IWizard getNewTaskWizard(TaskRepository taskRepository, IStructuredSelection selection) {
+	public IWizard getNewTaskWizard(TaskRepository taskRepository) {
 		// ignore
 		return null;
 	}

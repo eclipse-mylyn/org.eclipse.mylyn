@@ -56,7 +56,7 @@ public class TracRepositoryUi extends AbstractRepositoryConnectorUi {
 	}
 	
 	@Override
-	public IWizard getNewTaskWizard(TaskRepository repository, IStructuredSelection selection) {
+	public IWizard getNewTaskWizard(TaskRepository repository) {
 		if (TracRepositoryConnector.hasRichEditor(repository)) {
 			return new NewTracTaskWizard(repository);
 		} else {

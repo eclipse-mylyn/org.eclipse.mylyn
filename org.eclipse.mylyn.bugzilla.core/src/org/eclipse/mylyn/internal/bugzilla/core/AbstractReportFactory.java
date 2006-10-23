@@ -19,6 +19,8 @@ import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
 import java.security.GeneralSecurityException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 import javax.security.auth.login.LoginException;
@@ -38,13 +40,19 @@ import org.xml.sax.helpers.XMLReaderFactory;
 public class AbstractReportFactory {
 
 	private static final String CONTENT_TYPE_TEXT_HTML = "text/html";
-
+	
 	private static final String CONTENT_TYPE_APP_RDF_XML = "application/rdf+xml";
 
 	private static final String CONTENT_TYPE_APP_XML = "application/xml";
+	
+	private static final String CONTENT_TYPE_APP_XCGI = "application/x-cgi";
 
 	private static final String CONTENT_TYPE_TEXT_XML = "text/xml";
 
+	private static final String[] VALID_CONFIG_CONTENT_TYPES = {CONTENT_TYPE_APP_RDF_XML, CONTENT_TYPE_APP_XML, CONTENT_TYPE_TEXT_XML};
+	
+	private static final List<String> VALID_TYPES = Arrays.asList(VALID_CONFIG_CONTENT_TYPES);
+	
 	public static final int RETURN_ALL_HITS = -1;
 
 	/** expects rdf returned from repository (ctype=rdf in url) 
@@ -57,6 +65,7 @@ public class AbstractReportFactory {
 			connection = WebClientUtil.openUrlConnection(url, proxySettings, false);
 			
 			int responseCode = connection.getResponseCode();
+			
 			if (responseCode != HttpURLConnection.HTTP_OK) {
 				String msg;
 				if (responseCode == -1 || responseCode == HttpURLConnection.HTTP_FORBIDDEN)
@@ -93,10 +102,7 @@ public class AbstractReportFactory {
 				in = new BufferedReader(strReader);
 			}
 
-			if (connection.getContentType().contains(CONTENT_TYPE_APP_RDF_XML)
-					|| connection.getContentType().contains(CONTENT_TYPE_APP_XML)
-					|| connection.getContentType().contains(CONTENT_TYPE_TEXT_XML)) {
-
+			if (VALID_TYPES.contains(connection.getContentType().toLowerCase())) {				
 				try {
 					final XMLReader reader = XMLReaderFactory.createXMLReader();
 					reader.setContentHandler(contentHandler);
@@ -124,6 +130,8 @@ public class AbstractReportFactory {
 				}
 			} else if (connection.getContentType().contains(CONTENT_TYPE_TEXT_HTML)) {
 				BugzillaServerFacade.parseHtmlError(in);
+			} else if (connection.getContentType().toLowerCase().contains(CONTENT_TYPE_APP_XCGI)) {
+				// ignore 
 			} else {
 				throw new IOException("Unrecognized content type: " + connection.getContentType());
 			}

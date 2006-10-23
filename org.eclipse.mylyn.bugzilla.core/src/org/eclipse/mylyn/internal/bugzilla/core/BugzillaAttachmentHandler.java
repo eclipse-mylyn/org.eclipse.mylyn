@@ -159,7 +159,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 			}
 
 			postMethod.setRequestEntity(new MultipartRequestEntity(parts.toArray(new Part[1]), postMethod.getParams()));
-
+			postMethod.setDoAuthentication(true);
 			client.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
 			int status = client.executeMethod(postMethod);
 			if (status == HttpStatus.SC_OK) {

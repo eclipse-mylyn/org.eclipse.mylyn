@@ -42,8 +42,8 @@ public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public IWizard getNewTaskWizard(TaskRepository taskRepository, IStructuredSelection selection) {
-		return new NewBugzillaTaskWizard(taskRepository, selection);
+	public IWizard getNewTaskWizard(TaskRepository taskRepository) {
+		return new NewBugzillaTaskWizard(taskRepository);
 	}
 
 	public IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery query) {

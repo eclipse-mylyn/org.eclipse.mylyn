@@ -35,7 +35,7 @@ public class NewBugWizardTest extends TestCase {
 		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_220_URL);
 		BugzillaServerFacade.setupNewBugAttributes(repository.getUrl(), null, repository.getUserName(), repository.getPassword(), newReport, null);
-		BugzillaProductPage page = new BugzillaProductPage(PlatformUI.getWorkbench(), null, repository, null);
+		BugzillaProductPage page = new BugzillaProductPage(PlatformUI.getWorkbench(), null, repository);
 		page.setPlatformOptions(newReport);
 
 		String os = Platform.getOS();

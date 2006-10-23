@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.internal.tasks.ui.wizards;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.tasks.core.TaskRepositoryFilter;
 
 /**
@@ -25,11 +24,6 @@ public class NewRepositoryTaskWizard extends MultiRepositoryAwareWizard {
 
 	public NewRepositoryTaskWizard() {
 		super(new NewRepositoryTaskPage(TaskRepositoryFilter.CAN_CREATE_NEW_TASK), TITLE);
-		setNeedsProgressMonitor(true);
-	}
-
-	public NewRepositoryTaskWizard(IStructuredSelection selection) {
-		super(new NewRepositoryTaskPage(TaskRepositoryFilter.CAN_CREATE_NEW_TASK).setSelection(selection), TITLE);
 		setNeedsProgressMonitor(true);
 	}
 
