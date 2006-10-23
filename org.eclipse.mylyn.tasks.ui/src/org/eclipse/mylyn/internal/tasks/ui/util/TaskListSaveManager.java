@@ -36,7 +36,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 
 	private final static int DEFAULT_SAVE_INTERVAL = 5 * 60 * 1000;
 
-	private static final String FILE_SUFFIX_BACKUP = "-backup.xml";
+	private static final String FILE_SUFFIX_BACKUP = "-backup.xml.zip";
 
 	private BackgroundSaveTimer saveTimer = null;
 
@@ -132,21 +132,21 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 		String path = TasksUiPlugin.getDefault().getDataDirectory() + File.separator
 				+ TasksUiPlugin.DEFAULT_TASK_LIST_FILE;
 		File taskListFile = new File(path);
-		String backup = path.substring(0, path.lastIndexOf('.')) + FILE_SUFFIX_BACKUP;
+		String backup = path.substring(0, path.indexOf('.')) + FILE_SUFFIX_BACKUP;
 		copy(taskListFile, new File(backup));
 	}
 
 	public String getBackupFilePath() {
 		String path = TasksUiPlugin.getDefault().getDataDirectory() + File.separator
 				+ TasksUiPlugin.DEFAULT_TASK_LIST_FILE;
-		return path.substring(0, path.lastIndexOf('.')) + FILE_SUFFIX_BACKUP;
+		return path.substring(0, path.indexOf('.')) + FILE_SUFFIX_BACKUP;
 	}
 
 	public void reverseBackup() {
 		String path = TasksUiPlugin.getDefault().getDataDirectory() + File.separator
 				+ TasksUiPlugin.DEFAULT_TASK_LIST_FILE;
 		File taskListFile = new File(path);
-		String backup = path.substring(0, path.lastIndexOf('.')) + FILE_SUFFIX_BACKUP;
+		String backup = path.substring(0, path.indexOf('.')) + FILE_SUFFIX_BACKUP;
 		copy(new File(backup), taskListFile);
 	}
 
