@@ -1,104 +1,146 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2006 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 Mylar committers and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylar.internal.trac.ui.editor;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
-import org.eclipse.mylar.internal.tasks.ui.editors.NewBugEditorInput;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.PartInitException;
+import java.util.ArrayList;
+import java.util.Calendar;
 
-// based on NewBugzillaTaskEditor
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.editors.AbstractNewRepositoryTaskEditor;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylar.internal.trac.core.ITracClient;
+import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
+import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
+import org.eclipse.mylar.internal.trac.core.TracRepositoryConnector;
+import org.eclipse.mylar.internal.trac.core.TracTask;
+import org.eclipse.mylar.internal.trac.core.model.TracTicket;
+import org.eclipse.mylar.internal.trac.ui.TracUiPlugin;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.TaskCategory;
+import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.editor.FormEditor;
 
 /**
- * @author Rob Elves 
- * 
- * TODO: Get rid of this wrapper.
- * Before this can be done a factory must be added to handle new bug editor input in MylarTaskEditor.addPages()
- * then all occurrences of BugzillaUiPlugin.NEW_BUG_EDITOR_ID can be replaced with TaskListPreferenceConstants.TASK_EDITOR_ID
- * so that MylarTaskEditor is opened rather than this.
+ * @author Steffen Pingel
  */
-public class NewTracTaskEditor extends MylarTaskEditor {
+public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 
-	private Menu contextMenu;
-	
-	private NewTracTaskEditorPage newBugEditor;
+	private static final String SUBMIT_JOB_LABEL = "Submitting to Trac repository";
 
-	@Override
-	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		setSite(site);
-		setInput(input);		
+	public NewTracTaskEditor(FormEditor editor) {
+		super(editor);
 	}
 
 	@Override
-	protected void addPages() {
-		MenuManager manager = new MenuManager();
-		IMenuListener listener = new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				contextMenuAboutToShow(manager);
+	protected void submitBug() {
+		if (!prepareSubmit()) {
+			return;
+		}
+		
+		final TracRepositoryConnector connector = (TracRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				repository.getKind());
+		
+		updateBug();
+
+		JobChangeAdapter listener = new JobChangeAdapter() {
+			public void done(final IJobChangeEvent event) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						if (event.getJob().getResult().getCode() == Status.OK
+								&& event.getJob().getResult().getMessage() != null) {
+							close();
+							String newTaskHandle = AbstractRepositoryTask.getHandle(repository.getUrl(), event
+									.getJob().getResult().getMessage());
+							ITask newTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(newTaskHandle);								
+							if (newTask != null) {									
+								Calendar selectedDate = datePicker.getDate();
+								if(selectedDate != null) {
+									//NewLocalTaskAction.scheduleNewTask(newTask);									
+									TasksUiPlugin.getTaskListManager().setScheduledFor(newTask, selectedDate.getTime());											
+								}
+								
+								newTask.setEstimatedTimeHours(estimated.getSelection());
+								
+								Object selectedObject = null;
+								if (TaskListView.getFromActivePerspective() != null)
+									selectedObject = ((IStructuredSelection) TaskListView
+											.getFromActivePerspective().getViewer().getSelection())
+											.getFirstElement();
+
+								if (selectedObject instanceof TaskCategory) {
+									TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(
+											((TaskCategory) selectedObject), newTask);
+								}
+								TaskUiUtil.refreshAndOpenTaskListElement(newTask);
+							}
+							return;
+						} else if (event.getJob().getResult().getCode() == Status.ERROR) {
+							TracUiPlugin.handleTracException(event.getJob().getResult());
+							submitButton.setEnabled(true);
+							showBusy(false);
+						}
+					}
+				});
 			}
 		};
-		manager.setRemoveAllWhenShown(true);
-		manager.addMenuListener(listener);
-		contextMenu = manager.createContextMenu(getContainer());
-		getContainer().setMenu(contextMenu);
+
+		final TracTicket ticket;
 		try {
-			newBugEditor = new NewTracTaskEditorPage(this);
-			int index = addPage(newBugEditor);
-			String label = "<unsubmitted> "+((NewBugEditorInput)getEditorInput()).getRepository().getUrl();
-			setPageText(index, "Trac");			
-			setPartName(label);
-		} catch (PartInitException e) {
-			MylarStatusHandler.fail(e, "Could not add new bug form", true);
+			ticket = TracRepositoryConnector.getTracTicket(repository, getRepositoryTaskData());
+		} catch (InvalidTicketException e) {
+			TracUiPlugin.handleTracException(e);
+			submitButton.setEnabled(true);
+			showBusy(false);
+			return;
 		}
-	}
-	
-	@Override
-	public Object getAdapter(Class adapter) {
-		return newBugEditor.getAdapter(adapter);
-	}
+		
+		final boolean addToRoot = addToTaskListRoot.getSelection();
 
-	public NewTracTaskEditorPage getPage() {
-		return newBugEditor;
-	}
+		Job submitJob = new Job(SUBMIT_JOB_LABEL) {
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				try {
+					ITracClient server = connector.getClientManager().getRepository(repository);
+					int id = server.createTicket(ticket);
 
-	@Override
-	public void doSave(IProgressMonitor monitor) {
-		MessageDialog.openWarning(this.newBugEditor.getSite().getShell(), "Operation not supported", "Save of un-submitted new tasks is not currently supported.\nPlease submit all new tasks.");
-		monitor.setCanceled(true);
-	}
+					TracTask newTask = new TracTask(AbstractRepositoryTask.getHandle(repository.getUrl(), id),
+							TracRepositoryConnector.getTicketDescription(ticket), true);
+					if (addToRoot) {
+						TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask,
+								TasksUiPlugin.getTaskListManager().getTaskList().getRootCategory());
+					} else {
+						TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask);
+					}
 
-	@Override
-	public void doSaveAs() {
-		// ignore
+					java.util.List<TaskRepository> repositoriesToSync = new ArrayList<TaskRepository>();
+					repositoriesToSync.add(repository);
+					TasksUiPlugin.getSynchronizationScheduler().synchNow(0, repositoriesToSync);
 
-	}
+					return Status.OK_STATUS;
+				} catch (Exception e) {
+					return TracCorePlugin.toStatus(e);
+				}
+			}
+		};
 
-	@Override
-	public boolean isSaveAsAllowed() {
-		// ignore
-		return false;
-	}
-
-	@Override
-	public boolean isDirty() {
-		return true;
+		submitJob.addJobChangeListener(listener);
+		submitJob.schedule();
 	}
 
 }

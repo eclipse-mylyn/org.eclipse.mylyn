@@ -40,11 +40,6 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylar.bugzilla.ui";
 
-	// The id's of other bugzilla packages
-	public static final String EXISTING_BUG_EDITOR_ID = BugzillaUiPlugin.PLUGIN_ID + ".existingBugEditor";
-
-	public static final String NEW_BUG_EDITOR_ID = BugzillaUiPlugin.PLUGIN_ID + ".newBugEditor";
-
 	public static final String SEARCH_PAGE_ID = BugzillaUiPlugin.PLUGIN_ID + ".search.bugzillaSearchPage";
 
 	public static final String SEARCH_PAGE_CONTEXT = BugzillaUiPlugin.PLUGIN_ID + ".bugzillaSearchContext";

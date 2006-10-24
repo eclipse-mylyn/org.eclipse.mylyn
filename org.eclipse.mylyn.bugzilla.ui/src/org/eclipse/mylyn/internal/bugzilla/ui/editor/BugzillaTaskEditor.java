@@ -85,7 +85,7 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author Rob Elves (adaption to Eclipse Forms)
  * @authos Jeff Pound (Attachment work)
  */
-public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
+public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 	private static final String SECTION_TITLE_PEOPLE = "People";
 
@@ -130,7 +130,7 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 	/**
 	 * Creates a new <code>ExistingBugEditor</code>.
 	 */
-	public ExistingBugEditor(FormEditor editor) {
+	public BugzillaTaskEditor(FormEditor editor) {
 		super(editor);
 
 		// Set up the input for comparing the bug report to the server
@@ -228,12 +228,12 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 									.getJob().getResult().getMessage(), event.getJob().getResult().getException()
 									.getMessage());
 							submitButton.setEnabled(true);
-							ExistingBugEditor.this.showBusy(false);
+							BugzillaTaskEditor.this.showBusy(false);
 						} else if (event.getJob().getResult().getCode() == Status.ERROR) {
 							MessageDialog.openError(null, IBugzillaConstants.REPORT_SUBMIT_ERROR, event.getResult()
 									.getMessage());
 							submitButton.setEnabled(true);
-							ExistingBugEditor.this.showBusy(false);
+							BugzillaTaskEditor.this.showBusy(false);
 						}
 					}
 				});
@@ -403,8 +403,8 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		Hyperlink viewActivity = toolkit.createHyperlink(composite, "Show Bug Activity", SWT.NONE);
 		viewActivity.addHyperlinkListener(new HyperlinkAdapter() {
 			public void linkActivated(HyperlinkEvent e) {
-				if (ExistingBugEditor.this.getEditor() instanceof MylarTaskEditor) {
-					MylarTaskEditor mylarTaskEditor = (MylarTaskEditor) ExistingBugEditor.this.getEditor();
+				if (BugzillaTaskEditor.this.getEditor() instanceof MylarTaskEditor) {
+					MylarTaskEditor mylarTaskEditor = (MylarTaskEditor) BugzillaTaskEditor.this.getEditor();
 					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.BUG_ACTIVITY_URL
 							+ getRepositoryTaskData().getId());
 				}
@@ -720,8 +720,8 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		Hyperlink showVotesHyperlink = toolkit.createHyperlink(votingComposite, "Show votes for this bug", SWT.NONE);
 		showVotesHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 			public void linkActivated(HyperlinkEvent e) {
-				if (ExistingBugEditor.this.getEditor() instanceof MylarTaskEditor) {
-					MylarTaskEditor mylarTaskEditor = (MylarTaskEditor) ExistingBugEditor.this.getEditor();
+				if (BugzillaTaskEditor.this.getEditor() instanceof MylarTaskEditor) {
+					MylarTaskEditor mylarTaskEditor = (MylarTaskEditor) BugzillaTaskEditor.this.getEditor();
 					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.SHOW_VOTES_URL
 							+ getRepositoryTaskData().getId());
 				}
@@ -731,8 +731,8 @@ public class ExistingBugEditor extends AbstractRepositoryTaskEditor {
 		Hyperlink voteHyperlink = toolkit.createHyperlink(votingComposite, "Vote for this bug", SWT.NONE);
 		voteHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 			public void linkActivated(HyperlinkEvent e) {
-				if (ExistingBugEditor.this.getEditor() instanceof MylarTaskEditor) {
-					MylarTaskEditor mylarTaskEditor = (MylarTaskEditor) ExistingBugEditor.this.getEditor();
+				if (BugzillaTaskEditor.this.getEditor() instanceof MylarTaskEditor) {
+					MylarTaskEditor mylarTaskEditor = (MylarTaskEditor) BugzillaTaskEditor.this.getEditor();
 					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.VOTE_URL
 							+ getRepositoryTaskData().getId());
 				}

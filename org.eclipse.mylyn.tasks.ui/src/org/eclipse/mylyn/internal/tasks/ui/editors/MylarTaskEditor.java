@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.ITaskEditorFactory;
@@ -112,8 +113,8 @@ public class MylarTaskEditor extends FormEditor {
 				webBrowser = new Browser(getContainer(), SWT.NONE);
 				int index = addPage(webBrowser);
 				setPageText(index, ISSUE_WEB_PAGE_LABEL);
-				webBrowser.setUrl(url);	
-				
+				webBrowser.setUrl(url);
+
 				boolean openWithBrowser = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 						TaskListPreferenceConstants.REPORT_OPEN_INTERNAL);
 				// if (!(task instanceof AbstractRepositoryTask) ||
@@ -133,8 +134,12 @@ public class MylarTaskEditor extends FormEditor {
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		// commitFormPages(true);
-		// editorDirtyStateChanged();
+		if (this.getEditorInput() instanceof NewBugEditorInput) {
+			MessageDialog.openWarning(this.getSite().getShell(), "Operation not supported",
+					"Save of un-submitted new tasks is not currently supported.\nPlease submit all new tasks.");
+			monitor.setCanceled(true);
+			return;
+		}
 
 		for (IFormPage page : getPages()) {
 			if (page.isDirty()) {
@@ -143,17 +148,6 @@ public class MylarTaskEditor extends FormEditor {
 		}
 
 		editorDirtyStateChanged();
-
-		// for (IEditorPart editor : editors) {
-		// if (editor.isDirty())
-		// editor.doSave(monitor);
-		// }
-		//
-		// if (webBrowser != null) {
-		// webBrowser.setUrl(task.getUrl());
-		// } else if (hasValidUrl()) {
-		// createBrowserPage();
-		// }
 	}
 
 	// see PDEFormEditor
@@ -173,9 +167,9 @@ public class MylarTaskEditor extends FormEditor {
 	 */
 	private String getUrl() {
 		String url = null;
-		if(getEditorInput() instanceof ExistingBugEditorInput) {
-			url  = ((ExistingBugEditorInput)getEditorInput()).getUrl();			
-		} else if(task != null && task.getUrl().length() > 9){
+		if (getEditorInput() instanceof ExistingBugEditorInput) {
+			url = ((ExistingBugEditorInput) getEditorInput()).getUrl();
+		} else if (task != null && task.getUrl().length() > 9) {
 			url = task.getUrl();
 		}
 		return url;
@@ -200,33 +194,10 @@ public class MylarTaskEditor extends FormEditor {
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-
 		partListener = new TaskEditorListener();
 		site.getPage().addPartListener(partListener);
 		super.init(site, input);
-
-		// taskEditorInput = (TaskEditorInput) input;
 		setSite(site);
-		// // selectionProvider = new TaskEditorSelectionProvider(this);
-		// // site.setSelectionProvider(selectionProvider);
-		//
-		// /*
-		// * The task data is saved only once, at the initialization of the
-		// * editor. This is then passed to each of the child editors. This way,
-		// * only one instance of the task data is stored for each editor
-		// opened.
-		// */
-		// task = taskEditorInput.getTask();
-		//
-		// try {
-		// // taskPlanningEditor.init(this.getEditorSite(),
-		// // this.getEditorInput());
-		// // taskPlanningEditor.setTask(task);
-		// // Set the title on the editor's tab
-		// this.setPartName(taskEditorInput.getLabel());
-		// } catch (Exception e) {
-		// throw new PartInitException(e.getMessage());
-		// }
 	}
 
 	public void notifyTaskChanged() {
@@ -310,11 +281,11 @@ public class MylarTaskEditor extends FormEditor {
 	public Browser getWebBrowser() {
 		return webBrowser;
 	}
-	
+
 	public void revealBrowser() {
-		setActivePage(browserPageIndex);	
+		setActivePage(browserPageIndex);
 	}
-	
+
 	public void displayInBrowser(String url) {
 		webBrowser.setUrl(url);
 		revealBrowser();
@@ -375,31 +346,34 @@ public class MylarTaskEditor extends FormEditor {
 				index++;
 				taskEditorInput = (TaskEditorInput) getEditorInput();
 				task = taskEditorInput.getTask();
-				setPartName(taskEditorInput.getLabel());					
+				setPartName(taskEditorInput.getLabel());
 			}
-			
+
 			int selectedIndex = index;
 			for (ITaskEditorFactory factory : TasksUiPlugin.getDefault().getTaskEditorFactories()) {
-				if ((task != null && factory.canCreateEditorFor(task)) || factory.canCreateEditorFor(getEditorInput())) {
+				if (factory.canCreateEditorFor(task) || factory.canCreateEditorFor(getEditorInput())) {
 					try {
-						IEditorPart editor = factory.createEditor(this);
+						IEditorPart editor = factory.createEditor(this, getEditorInput());
 						IEditorInput input = task != null ? factory.createEditorInput(task) : getEditorInput();
 						if (editor != null && input != null) {
 							if (editor instanceof AbstractRepositoryTaskEditor) {
 								TaskFormPage repositoryTaskEditor = (TaskFormPage) editor;
-								// repositoryTaskEditor.setParentEditor(this);								
+								// repositoryTaskEditor.setParentEditor(this);
 								editor.init(getEditorSite(), input);
 								repositoryTaskEditor.createPartControl(getContainer());
 								index = addPage(repositoryTaskEditor);
-								if(getEditorInput() instanceof ExistingBugEditorInput) {
-									ExistingBugEditorInput existingInput = (ExistingBugEditorInput)getEditorInput();
-									setPartName(existingInput.getId()+": "+existingInput.getName());
+								if (getEditorInput() instanceof ExistingBugEditorInput) {
+									ExistingBugEditorInput existingInput = (ExistingBugEditorInput) getEditorInput();
+									setPartName(existingInput.getId() + ": " + existingInput.getName());
+								} else if(getEditorInput() instanceof NewBugEditorInput) {
+									String label = "<unsubmitted> "+((NewBugEditorInput)getEditorInput()).getRepository().getUrl();
+									setPartName(label);
 								}
 							} else {
 								index = addPage(editor, input);
 							}
 							selectedIndex = index;
-							setPageText(index++, factory.getTitle());
+							setPageText(index++, factory.getTitle());							
 						}
 
 						// HACK: overwrites if multiple present
@@ -418,14 +392,14 @@ public class MylarTaskEditor extends FormEditor {
 					selectedIndex = browserPageIndex;
 				}
 			}
-			
+
 			if (selectedIndex != -1) {
 				setActivePage(selectedIndex);
 			}
 
 			if (task instanceof AbstractRepositoryTask) {
 				setTitleImage(TaskListImages.getImage(TaskListImages.TASK_REPOSITORY));
-			} else if(getEditorInput() instanceof AbstractBugEditorInput) {
+			} else if (getEditorInput() instanceof AbstractBugEditorInput) {
 				this.setTitleImage(TaskListImages.getImage(TaskListImages.TASK_REMOTE));
 			} else if (getUrl() != null) {
 				setTitleImage(TaskListImages.getImage(TaskListImages.TASK_WEB));
@@ -441,9 +415,9 @@ public class MylarTaskEditor extends FormEditor {
 	}
 
 	public ISelection getSelection() {
-		if(getSite() != null && getSite().getSelectionProvider() != null) {
+		if (getSite() != null && getSite().getSelectionProvider() != null) {
 			return getSite().getSelectionProvider().getSelection();
-		} else {			
+		} else {
 			return null;
 		}
 	}

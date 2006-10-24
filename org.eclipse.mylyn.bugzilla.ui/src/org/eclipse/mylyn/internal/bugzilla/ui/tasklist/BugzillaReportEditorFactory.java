@@ -17,10 +17,14 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
-import org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditor;
+import org.eclipse.mylar.internal.bugzilla.ui.editor.BugzillaTaskEditor;
+import org.eclipse.mylar.internal.bugzilla.ui.editor.NewBugzillaTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.ITaskEditorFactory;
+import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.ExistingBugEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
+import org.eclipse.mylar.internal.tasks.ui.editors.NewBugEditorInput;
+import org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -33,6 +37,7 @@ import org.eclipse.ui.part.EditorPart;
 
 /**
  * @author Mik Kersten
+ * @author Rob Elves
  */
 public class BugzillaReportEditorFactory implements ITaskEditorFactory {
 
@@ -42,8 +47,13 @@ public class BugzillaReportEditorFactory implements ITaskEditorFactory {
 		// ignore
 	}
 
-	public EditorPart createEditor(MylarTaskEditor parentEditor) {
-		ExistingBugEditor editor = new ExistingBugEditor(parentEditor);
+	public EditorPart createEditor(MylarTaskEditor parentEditor, IEditorInput editorInput) {
+		AbstractRepositoryTaskEditor editor = null;
+		if (editorInput instanceof ExistingBugEditorInput || editorInput instanceof TaskEditorInput) {
+			editor = new BugzillaTaskEditor(parentEditor);
+		} else if (editorInput instanceof NewBugEditorInput) {
+			editor = new NewBugzillaTaskEditor(parentEditor);
+		} 
 		return editor;
 	}
 
@@ -88,6 +98,8 @@ public class BugzillaReportEditorFactory implements ITaskEditorFactory {
 		if (input instanceof ExistingBugEditorInput) {
 			return BugzillaCorePlugin.REPOSITORY_KIND
 					.equals(((ExistingBugEditorInput) input).getRepository().getKind());
+		} else if (input instanceof NewBugEditorInput) {
+			return BugzillaCorePlugin.REPOSITORY_KIND.equals(((NewBugEditorInput) input).getRepository().getKind());
 		}
 		return false;
 	}

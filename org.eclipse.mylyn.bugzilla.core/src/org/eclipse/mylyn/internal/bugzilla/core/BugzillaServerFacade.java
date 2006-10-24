@@ -121,7 +121,7 @@ public class BugzillaServerFacade {
 	public static List<String> getProductList(String repositoryUrl, Proxy proxySettings, String userName,
 			String password, String encoding) throws IOException, LoginException, Exception {
 
-		return BugzillaCorePlugin.getRepositoryConfiguration(true, repositoryUrl, proxySettings, userName, password,
+		return BugzillaCorePlugin.getRepositoryConfiguration(false, repositoryUrl, proxySettings, userName, password,
 				encoding).getProducts();
 
 		// BugzillaQueryPageParser parser = new

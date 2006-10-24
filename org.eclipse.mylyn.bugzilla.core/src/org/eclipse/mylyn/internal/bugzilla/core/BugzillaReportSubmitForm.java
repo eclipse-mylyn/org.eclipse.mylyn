@@ -240,8 +240,6 @@ public class BugzillaReportSubmitForm {
 			}
 		}
 
-		form.add("cc", "somewhere@nowhere.com");
-
 		// when posting the bug id is encoded in a hidden field named 'id'
 		form.add(KEY_ID, model.getAttributeValue(BugzillaReportElement.BUG_ID.getKeyString()));
 

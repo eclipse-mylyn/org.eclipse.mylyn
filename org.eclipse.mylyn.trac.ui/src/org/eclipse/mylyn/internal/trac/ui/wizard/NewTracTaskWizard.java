@@ -14,6 +14,7 @@ package org.eclipse.mylar.internal.trac.ui.wizard;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.NewBugEditorInput;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -61,7 +62,7 @@ public class NewTracTaskWizard extends Wizard implements INewWizard {
 	public boolean performFinish() {
 		NewBugEditorInput editorInput = new NewBugEditorInput(taskRepository, newTaskPage.getRepositoryTaskData());
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		TaskUiUtil.openEditor(editorInput, "org.eclipse.mylar.trac.ui.newBugEditor", page);
+		TaskUiUtil.openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 		return true;
 	}
 

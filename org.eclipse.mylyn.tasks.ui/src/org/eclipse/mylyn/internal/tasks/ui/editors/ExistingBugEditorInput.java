@@ -29,7 +29,9 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 public class ExistingBugEditorInput extends AbstractBugEditorInput {
 
 	protected String id;
+
 	protected String url;
+
 	protected AbstractRepositoryTask repositoryTask = null;
 
 	// Called for existing report without a local task
@@ -43,9 +45,6 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 			throws IOException, GeneralSecurityException {
 		super(repository, taskData);
 		this.id = bugId;
-		// this.repository = repository;
-		// this.repositoryTaskData = getOfflineTaskData(repository,
-		// proxySettings, bugId);
 
 		String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), bugId);
 		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
@@ -58,31 +57,10 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 		return repositoryTask;
 	}
 
-	// // TODO: move?
-	// private RepositoryTaskData getOfflineTaskData(final TaskRepository
-	// repository, Proxy proxySettings, final int id)
-	// throws IOException, GeneralSecurityException {
-	// RepositoryTaskData result = null;
-	// // Look among the offline reports for a bug with the given id.
-	// OfflineTaskManager reportsFile =
-	// MylarTaskListPlugin.getDefault().getOfflineReportsFile();
-	// if (reportsFile != null) {
-	// int offlineId = reportsFile.find(repository.getUrl(), id);
-	// // If an offline bug was found, return it if possible.
-	// if (offlineId != -1) {
-	// RepositoryTaskData bug = reportsFile.elements().get(offlineId);
-	// if (bug instanceof RepositoryTaskData) {
-	// result = (RepositoryTaskData) bug;
-	// }
-	// }
-	// }
-	// return result;
-	// }
-
 	public String getName() {
-		if(repositoryTaskData != null && repositoryTaskData.getLabel() != null) {
+		if (repositoryTaskData != null && repositoryTaskData.getLabel() != null) {
 			return repositoryTaskData.getLabel();
-		} else if(id != null){
+		} else if (id != null) {
 			return id;
 		} else {
 			return "<unknown>";
@@ -96,7 +74,6 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 		return id;
 	}
 
-	
 	@Override
 	public int hashCode() {
 		final int PRIME = 31;
@@ -104,7 +81,6 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 		result = PRIME * result + ((repositoryTask == null) ? 0 : repositoryTask.hashCode());
 		return result;
 	}
-	
 
 	@Override
 	public boolean equals(Object obj) {
@@ -118,7 +94,7 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 		if (repositoryTask == null) {
 			if (other.repositoryTask != null) {
 				return false;
-			} else if(other.getId() != this.getId()) {
+			} else if (other.getId() != this.getId()) {
 				return false;
 			}
 		} else if (!repositoryTask.equals(other.repositoryTask))
@@ -126,9 +102,9 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 		return true;
 	}
 
-	
 	/**
-	 * @return url for the repositoryTask/hit. Used by MylarTaskEditor when opening browser
+	 * @return url for the repositoryTask/hit. Used by MylarTaskEditor when
+	 *         opening browser
 	 */
 	public String getUrl() {
 		return url;

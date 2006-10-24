@@ -2,26 +2,7 @@
 <?eclipse version="3.0"?>
 <?eclipse version="3.0"?>
 <plugin>
-   
-   <!-- TODO: remove? -->
-   <extension
-         id="searchHit"
-         name="Bugzilla Search Match"
-         point="org.eclipse.core.resources.markers">
-      <super type="org.eclipse.search.searchmarker"/>
-      <attribute name="id"/>
-      <attribute name="href"/>
-      <attribute name="description"/>
-      <attribute name="label"/>
-      <attribute name="severity"/>
-      <attribute name="priority"/>
-      <attribute name="platform"/>
-      <attribute name="status"/>
-      <attribute name="result"/>
-      <attribute name="owner"/>
-      <attribute name="query"/>
-   </extension> 
-   
+      
    <extension
          id="org.eclipse.mylar.bugzilla.repository" 
          name="Bugzilla Repository"
@@ -74,27 +55,6 @@
       </decorator>
    </extension>
    
-   <extension
-         point="org.eclipse.ui.editors">
-      <editor
-            name="Bugzilla viewer"
-            icon="icons/etool16/task-remote.gif"
-            class="org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditor"
-            id="org.eclipse.mylar.bugzilla.ui.existingBugEditor">
-      </editor>
-     <editor
-      		name="Bugzilla viewer"
-      		icon="icons/etool16/task-remote.gif"
-      		class="org.eclipse.mylar.internal.bugzilla.ui.editor.NewBugzillaTaskEditor"
-    		contributorClass="org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorActionContributor"
-      		id="org.eclipse.mylar.bugzilla.ui.newBugEditor">
-      </editor>
-           <editor
-           icon="icons/etool16/task-repository.gif" 
-           name="Bugzilla task viewer"
-           class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskEditor"
-           id="org.eclipse.mylar.bugzilla.ui.tasklist.bugzillaTaskEditor"/>
-   </extension>   
    <extension
          id="org.eclipse.mylar.bugzilla.help.context"
          name="Bugzilla Context-sensitive Help"

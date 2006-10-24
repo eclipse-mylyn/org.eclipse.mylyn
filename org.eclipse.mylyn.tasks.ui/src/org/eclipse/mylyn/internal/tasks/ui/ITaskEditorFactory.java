@@ -21,7 +21,7 @@ import org.eclipse.ui.IEditorPart;
  */
 public interface ITaskEditorFactory {
 
-	public IEditorPart createEditor(MylarTaskEditor parentEditor);
+	public IEditorPart createEditor(MylarTaskEditor parentEditor, IEditorInput editorInput);
 
 	public IEditorInput createEditorInput(ITask task);
 	
