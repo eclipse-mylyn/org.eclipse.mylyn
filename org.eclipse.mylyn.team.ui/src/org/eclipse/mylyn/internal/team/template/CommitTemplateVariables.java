@@ -255,7 +255,7 @@ public class CommitTemplateVariables {
 		public static class TaskReminder extends CommitTemplateDate {
 			@Override
 			protected java.util.Date getDate(ITask task) {
-				return task.getReminderDate();
+				return task.getScheduledForDate();
 			}
 		}
 	}
