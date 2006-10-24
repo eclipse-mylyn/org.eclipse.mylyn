@@ -41,11 +41,13 @@ import org.eclipse.mylar.internal.tasks.core.WebTask;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.util.TaskListWriter;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskActivationHistory;
+import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskActivityListener;
+import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
@@ -767,6 +769,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	 * TODO: Need to migrate to use of this method for setting of reminders
 	 */
 	public void setScheduledFor(ITask task, Date reminderDate) {
+		if(task == null) return;
 		task.setReminderDate(reminderDate);
 		task.setReminded(false);
 		if (reminderDate == null) {
@@ -836,5 +839,26 @@ public class TaskListManager implements IPropertyChangeListener {
 			}
 		}
 		return tasksScheduled;
+	}
+	
+	/** 
+	 * @param element tasklist element to retrieve a task for 
+	 * currently will work for (ITask, AbstractQueryHit)
+	 * @param force - if a query hit is passed you can either force construction
+	 * of the task or not (if not and no task, null is returned)
+	 * TODO: Move into TaskList? 
+	 */
+	public ITask getTaskForElement(ITaskListElement element, boolean force) {
+		ITask task = null;
+		if (element instanceof AbstractQueryHit) {
+			if (force) {
+				task = ((AbstractQueryHit) element).getOrCreateCorrespondingTask();
+			} else {
+				task = ((AbstractQueryHit) element).getCorrespondingTask();
+			}
+		} else if (element instanceof ITask) {
+			task = (ITask) element;
+		}
+		return task;
 	}
 }

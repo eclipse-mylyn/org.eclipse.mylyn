@@ -258,9 +258,9 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			return ((!((ITask) singleSelection).isCompleted()) || elements.size() > 0);
 		} else if (singleSelection instanceof AbstractQueryHit) {
 			return ((!((AbstractQueryHit) singleSelection).isCompleted()) || elements.size() > 0);
-		}
-		return false;
-
+		} else {
+			return elements.size() > 0;
+		}		
 		// return (singleSelection != null && !singleSelection.isCompleted())
 		// || elements.size() > 0;
 	}
