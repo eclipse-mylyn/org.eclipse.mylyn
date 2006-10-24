@@ -46,12 +46,12 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 				String text = handleAcceleratorKeys(category.getDescription());
 				action.setText(text);
 				action.setImageDescriptor(TaskListImages.CATEGORY);
-				if (selectedElements.size() == 1 && selectedElements.get(0) instanceof AbstractQueryHit) {
-					AbstractQueryHit hit = (AbstractQueryHit) selectedElements.get(0);
-					if (hit.getCorrespondingTask() == null) {
-						action.setEnabled(false);
-					}
-				}
+//				if (selectedElements.size() == 1 && selectedElements.get(0) instanceof AbstractQueryHit) {
+//					AbstractQueryHit hit = (AbstractQueryHit) selectedElements.get(0);
+//					if (hit.getCorrespondingTask() == null) {
+//						action.setEnabled(false);
+//					}
+//				}
 				subMenuManager.add(action);
 			}
 		}
@@ -105,7 +105,7 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(category,
 						(ITask) element);
 			} else if (element instanceof AbstractQueryHit) {
-				ITask task = ((AbstractQueryHit) element).getCorrespondingTask();
+				ITask task = ((AbstractQueryHit) element).getOrCreateCorrespondingTask();
 				if (task != null) {
 					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(category,
 							task);
