@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.internal.tasks.ui.views;
 
-
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
@@ -28,15 +28,18 @@ public class TaskListTableSorter extends ViewerSorter {
 	private final TaskListView view;
 
 	private String column;
-	
+
+	private LabelProvider labelProvider;
+
 	private TaskKeyComparator taskKeyComparator = new TaskKeyComparator();
 
-	public TaskListTableSorter(TaskListView view, String column) {
-		super();  
+	public TaskListTableSorter(TaskListView view, String column, LabelProvider labelProvider) {
+		super();
 		this.view = view;
 		this.column = column;
+		this.labelProvider = labelProvider;
 	}
-	
+
 	public void setColumn(String column) {
 		this.column = column;
 	}
@@ -84,8 +87,8 @@ public class TaskListTableSorter extends ViewerSorter {
 		} else if (column == this.view.columnNames[2]) {
 			return this.view.sortDirection * element1.getPriority().compareTo(element2.getPriority());
 		} else if (column == this.view.columnNames[4]) {
-			String c1 = element1.getDescription();
-			String c2 = element2.getDescription();
+			String c1 = labelProvider.getText(element1);
+			String c2 = labelProvider.getText(element2);
 			return this.view.sortDirection * taskKeyComparator.compare(c1, c2);
 		} else {
 			return 0;

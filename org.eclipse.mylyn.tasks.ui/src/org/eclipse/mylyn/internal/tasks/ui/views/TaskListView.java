@@ -228,6 +228,10 @@ public class TaskListView extends ViewPart {
 	private static final int DEFAULT_SORT_DIRECTION = -1;
 
 	private int sortIndex = 2;
+	
+	private TaskListTableLabelProvider taskListTableLabelProvider;
+
+	private TaskListTableSorter tableSorter;
 
 	int sortDirection = DEFAULT_SORT_DIRECTION;
 
@@ -352,10 +356,6 @@ public class TaskListView extends ViewPart {
 			}
 		}
 	};
-
-	private TaskListTableLabelProvider taskListTableLabelProvider;
-
-	private TaskListTableSorter tableSorter;
 
 	private final class PriorityDropDownAction extends Action implements IMenuCreator {
 		private Menu dropDownMenu = null;
@@ -895,7 +895,7 @@ public class TaskListView extends ViewPart {
 		editors[4] = textEditor;
 		getViewer().setCellEditors(editors);
 		getViewer().setCellModifier(new TaskListCellModifier());
-		tableSorter = new TaskListTableSorter(this, columnNames[sortIndex]);
+		tableSorter = new TaskListTableSorter(this, columnNames[sortIndex], taskListTableLabelProvider);
 		getViewer().setSorter(tableSorter);
 
 		drillDownAdapter = new DrillDownAdapter(getViewer());
