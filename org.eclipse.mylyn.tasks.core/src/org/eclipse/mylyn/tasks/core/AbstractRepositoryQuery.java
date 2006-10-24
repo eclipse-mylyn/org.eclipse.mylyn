@@ -158,7 +158,7 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 	final void add(ITask task) {
 		// ignore, can not add tasks to a query
 	}
-
+	
 	public String getLastRefreshTimeStamp() {
 		return lastRefreshTimeStamp;
 	}

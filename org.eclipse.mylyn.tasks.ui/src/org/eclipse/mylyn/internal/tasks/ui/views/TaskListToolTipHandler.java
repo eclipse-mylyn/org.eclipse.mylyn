@@ -119,7 +119,7 @@ public class TaskListToolTipHandler {
 	}
 
 	private String updateContainerProgressBar(TaskProgressBar taskProgressBar, Object object) {
-		if (object instanceof AbstractTaskContainer) {
+		if (!taskProgressBar.isDisposed() && object instanceof AbstractTaskContainer) {
 			AbstractTaskContainer container = (AbstractTaskContainer) object;
 			int total = container.getChildren().size();
 			int completed = 0;
@@ -141,7 +141,6 @@ public class TaskListToolTipHandler {
 				}
 				suffix = "  (query max: " + query.getMaxHits() + ")";
 			}
-
 			taskProgressBar.reset(completed, total);
 			return "Completed " + completed + " of " + total + suffix;
 		} else {
@@ -177,10 +176,9 @@ public class TaskListToolTipHandler {
 			}
 
 			String syncStamp = query.getLastRefreshTimeStamp();
-			if (syncStamp == null) {
-				syncStamp = "<never>";
+			if (syncStamp != null) {
+				tooltip += " (synched: " + syncStamp + ")\n";
 			}
-			tooltip += "Last Sync: " + syncStamp + "\n";
 
 //			Set<AbstractQueryHit> hits = query.getHits(); // FIXME provide
 			// getHitsSize()

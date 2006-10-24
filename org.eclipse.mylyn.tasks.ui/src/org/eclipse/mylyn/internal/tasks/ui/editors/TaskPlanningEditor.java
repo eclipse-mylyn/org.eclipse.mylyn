@@ -317,7 +317,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		}
 		createPlanningSection(editorComposite);
 		createNotesSection(editorComposite);
-		createResourcesSection(editorComposite);
+//		createResourcesSection(editorComposite);
 		// } catch (SWTException e) {
 		// MylarStatusHandler.log(e, "content failed");
 		// }
@@ -884,7 +884,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 		return completionDateString;
 	}
 
-	private void createResourcesSection(Composite parent) {
+	// TODO: unused, delete?
+	void createResourcesSection(Composite parent) {
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText("Resources");
 		section.setLayout(new GridLayout());
@@ -909,10 +910,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 		Label l2 = toolkit.createLabel(container, "Task context file:");
 		l2.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		File contextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
-		// String contextPath =
-		// ContextCorePlugin.getDefault().getDataDirectory()
-		// + '/' + task.getContextPath() +
-		// MylarContextManager.CONTEXT_FILE_EXTENSION;
 		if (contextFile != null) {
 			pathText = toolkit.createText(container, contextFile.getAbsolutePath(), SWT.NONE);
 			pathText.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
@@ -921,46 +918,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 			pathText.setEnabled(true);
 		}
 		toolkit.paintBordersFor(container);
-
-		// browse = toolkit.createButton(container, "Change", SWT.PUSH |
-		// SWT.CENTER);
-		// if (task.isActive()) {
-		// browse.setEnabled(false);
-		// } else {
-		// browse.setEnabled(true);
-		// }
-		// browse.addSelectionListener(new SelectionAdapter() {
-		// @Override
-		// public void widgetSelected(SelectionEvent e) {
-		//
-		// if (task.isActive()) {
-		// MessageDialog.openInformation(Display.getDefault().getActiveShell(),
-		// "Task Message",
-		// "Task can not be active when changing taskscape");
-		// } else {
-		// FileDialog dialog = new
-		// FileDialog(Display.getDefault().getActiveShell(), SWT.OPEN);
-		// String[] ext = { "*.xml" };
-		// dialog.setFilterExtensions(ext);
-		//
-		// String mylarDir = ContextCorePlugin.getDefault().getDataDirectory() +
-		// "/";
-		// mylarDir = mylarDir.replaceAll("\\\\", "/");
-		// dialog.setFilterPath(mylarDir);
-		//
-		// String res = dialog.open();
-		// if (res != null) {
-		// res = res.replaceAll("\\\\", "/");
-		// pathText.setText("<MylarDir>/" + res + ".xml");
-		// markDirty(true);
-		// }
-		// }
-		// }
-		// });
-		// toolkit.createLabel(container, "");
-		// l = toolkit.createLabel(container, "Go to Task List Preferences to
-		// change task context directory");
-		// l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 	}
 
 	public void setParentEditor(MylarTaskEditor parentEditor) {
