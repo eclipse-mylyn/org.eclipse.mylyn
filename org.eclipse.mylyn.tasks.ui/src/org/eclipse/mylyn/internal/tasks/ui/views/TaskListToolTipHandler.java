@@ -15,6 +15,8 @@
 package org.eclipse.mylar.internal.tasks.ui.views;
 
 import java.net.URL;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IAdaptable;
@@ -22,6 +24,7 @@ import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
@@ -49,6 +52,8 @@ import org.eclipse.ui.PlatformUI;
  * @author Eric Booth
  */
 public class TaskListToolTipHandler {
+
+	private static final String SEPARATOR = "\n---------------\n";
 
 	private Shell tipShell;
 
@@ -114,12 +119,9 @@ public class TaskListToolTipHandler {
 		String priority = "";
 		if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
-			// TaskRepository repository =
-			// TasksUiPlugin.getRepositoryManager().getRepository(
-			// query.getRepositoryKind(), query.getRepositoryUrl());
 			try {
 				tooltip += new URL(query.getRepositoryUrl()).getHost();
-				tooltip += "\n---------------\n";
+				tooltip += SEPARATOR;
 			} catch (Exception e) {
 				// ignore
 			}
@@ -130,7 +132,9 @@ public class TaskListToolTipHandler {
 			}
 			tooltip += "Last Sync: " + syncStamp + "\n";
 
-			Set<AbstractQueryHit> hits = query.getHits();  // FIXME provide getHitsSize() method
+			Set<AbstractQueryHit> hits = query.getHits(); // FIXME provide
+															// getHitsSize()
+															// method
 			if (hits.size() == 1) {
 				tooltip += "1 hit";
 			} else {
@@ -141,19 +145,6 @@ public class TaskListToolTipHandler {
 			}
 			return tooltip;
 		}
-		// if (element instanceof ITask || element instanceof AbstractQueryHit)
-		// {
-		// ITask task = null;
-		// if (element instanceof ITask) {
-		// task = (ITask) element;
-		// } else {
-		// task = ((AbstractQueryHit) element).getCorrespondingTask();
-		// }
-		// if (task != null) {
-		// priority += "\nPriority: " +
-		// Task.PriorityLevel.fromString(task.getPriority()).getDescription();
-		// }
-		// }
 
 		if (element instanceof AbstractRepositoryTask || element instanceof AbstractQueryHit) {
 			AbstractRepositoryTask repositoryTask;
@@ -164,24 +155,26 @@ public class TaskListToolTipHandler {
 			}
 			tooltip += ((ITaskListElement) element).getDescription();
 			if (repositoryTask != null) {
-				tooltip += "\n" + repositoryTask.getRepositoryUrl();
+				tooltip += "\n" + repositoryTask.getRepositoryUrl() + formatScheduledFor(repositoryTask);
 			}
-			// tooltip += priority;
-			// if (repositoryTask != null) {
-			// Date lastRefresh = repositoryTask.getLastOpened();
-			// if (lastRefresh != null) {
-			// tooltip += "\n" +
-			// formatLastRefreshTime(repositoryTask.getLastOpened());
-			// }
-			// }
 			return tooltip;
 		} else if (element != null) {
-			tooltip += ((ITaskListElement) element).getDescription();
+			tooltip += ((ITaskListElement) element).getDescription() + formatScheduledFor(element);
 			return tooltip + priority;
 		} else if (object instanceof Control) {
 			return (String) ((Control) object).getData("TIP_TEXT");
 		}
 		return null;
+	}
+
+	private String formatScheduledFor(ITaskListElement element) {
+		if (element instanceof ITask) {
+			Date date = ((ITask)element).getScheduledForDate();
+			if (date != null) {
+				return SEPARATOR + "Scheduled for: " + DateFormat.getDateInstance(DateFormat.MEDIUM).format(date) + ", " + DateFormat.getTimeInstance(DateFormat.SHORT).format(date);
+			}
+		}
+		return "";
 	}
 
 	// private String formatLastRefreshTime(Date lastRefresh) {

@@ -61,13 +61,13 @@ public class TaskPlanSorter extends TaskActivitySorter {
 	}
 
 	private int compareReminder(ITask task1, ITask task2) {
-		if (task2.getReminderDate() == null)
+		if (task2.getScheduledForDate() == null)
 			return -1;
-		if (task1.getReminderDate() == null)
+		if (task1.getScheduledForDate() == null)
 			return 1;
-		if (task1.getReminderDate() == null && task2.getReminderDate() == null)
+		if (task1.getScheduledForDate() == null && task2.getScheduledForDate() == null)
 			return 0;
-		return task2.getReminderDate().compareTo(task1.getReminderDate());
+		return task2.getScheduledForDate().compareTo(task1.getScheduledForDate());
 	}
 
 	// protected int compareEstimated(ITask task1, ITask task2) {

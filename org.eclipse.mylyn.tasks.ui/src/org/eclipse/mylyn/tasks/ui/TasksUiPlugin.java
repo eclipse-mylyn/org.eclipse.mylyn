@@ -272,8 +272,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			Collection<ITask> allTasks = TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks();
 			Set<ITaskListNotification> reminders = new HashSet<ITaskListNotification>();
 			for (ITask task : allTasks) {
-				if (!task.isCompleted() && task.getReminderDate() != null && !task.hasBeenReminded()
-						&& task.getReminderDate().compareTo(currentDate) < 0) {
+				if (!task.isCompleted() && task.getScheduledForDate() != null && !task.hasBeenReminded()
+						&& task.getScheduledForDate().compareTo(currentDate) < 0) {
 					reminders.add(new TaskListNotificationReminder(task));
 					task.setReminded(true);
 				}
@@ -772,8 +772,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	 * @throws CoreException
 	 */
 	public void setRepositoryForResource(IResource resource, TaskRepository repository) throws CoreException {
-		if (resource == null || repository == null)
+		if (resource == null || repository == null || !resource.getProject().isOpen()) {
 			return;
+		}
 		IProject project = resource.getProject();
 		if (project == null)
 			return;

@@ -735,7 +735,7 @@ public class TaskActivityEditorPart extends EditorPart {
 				if (elapsedTimeString.equals(""))
 					elapsedTimeString = BLANK_CELL;
 
-				Date reminderDate = currentTask.getReminderDate();
+				Date reminderDate = currentTask.getScheduledForDate();
 				String reminderDateString = BLANK_CELL;
 				if (reminderDate != null) {
 					reminderDateString = format.format(reminderDate);

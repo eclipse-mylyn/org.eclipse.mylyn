@@ -83,7 +83,7 @@ public interface ITask extends ITaskListElement {
 
 	public abstract void setReminderDate(Date date);
 
-	public abstract Date getReminderDate();
+	public abstract Date getScheduledForDate();
 
 	/**
 	 * TODO: move

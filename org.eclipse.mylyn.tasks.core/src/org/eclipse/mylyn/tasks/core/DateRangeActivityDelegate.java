@@ -157,8 +157,8 @@ public class DateRangeActivityDelegate implements ITask {
 		return task.getPriority();
 	}
 
-	public Date getReminderDate() {
-		return task.getReminderDate();
+	public Date getScheduledForDate() {
+		return task.getScheduledForDate();
 	}
 
 	public String getUrl() {

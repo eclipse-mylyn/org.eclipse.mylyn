@@ -300,7 +300,7 @@ public class Task implements ITask {
 		reminderDate = date;
 	}
 
-	public Date getReminderDate() {
+	public Date getScheduledForDate() {
 		return reminderDate;
 	}
 

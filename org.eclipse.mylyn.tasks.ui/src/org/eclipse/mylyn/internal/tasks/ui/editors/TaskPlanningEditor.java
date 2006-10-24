@@ -178,9 +178,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 	/** public for testing */
 	public void updateTaskData(final ITask updateTask) {
 		if (datePicker != null && !datePicker.isDisposed()) {
-			if (updateTask.getReminderDate() != null) {
+			if (updateTask.getScheduledForDate() != null) {
 				Calendar cal = Calendar.getInstance();
-				cal.setTime(updateTask.getReminderDate());
+				cal.setTime(updateTask.getScheduledForDate());
 				datePicker.setDate(cal);
 			} else {
 				datePicker.setDate(null);
@@ -659,8 +659,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 		datePicker = new DatePicker(sectionClient, SWT.NONE, DatePicker.LABEL_CHOOSE);
 
 		Calendar calendar = Calendar.getInstance();
-		if (task.getReminderDate() != null) {
-			calendar.setTime(task.getReminderDate());
+		if (task.getScheduledForDate() != null) {
+			calendar.setTime(task.getScheduledForDate());
 			datePicker.setDate(calendar);
 		}
 

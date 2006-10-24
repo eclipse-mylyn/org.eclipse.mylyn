@@ -169,7 +169,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		node.setAttribute(KEY_TIME_ESTIMATED, "" + task.getEstimateTimeHours());
 		node.setAttribute(KEY_DATE_END, formatExternDate(task.getCompletionDate()));
 		node.setAttribute(KEY_DATE_CREATION, formatExternDate(task.getCreationDate()));
-		node.setAttribute(KEY_DATE_REMINDER, formatExternDate(task.getReminderDate()));
+		node.setAttribute(KEY_DATE_REMINDER, formatExternDate(task.getScheduledForDate()));
 		if (task.hasBeenReminded()) {
 			node.setAttribute(KEY_REMINDED, VAL_TRUE);
 		} else {

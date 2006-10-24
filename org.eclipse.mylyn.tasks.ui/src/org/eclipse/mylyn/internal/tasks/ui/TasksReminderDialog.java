@@ -212,7 +212,7 @@ public class TasksReminderDialog extends Dialog {
 				case 1:
 					return task.getPriority();
 				case 2:
-					return DateFormat.getDateInstance(DateFormat.MEDIUM).format(task.getReminderDate());
+					return DateFormat.getDateInstance(DateFormat.MEDIUM).format(task.getScheduledForDate());
 				}
 			}
 			return null;
@@ -261,7 +261,7 @@ public class TasksReminderDialog extends Dialog {
 		}
 
 		private int compareDate(ITask task1, ITask task2) {
-			return task2.getReminderDate().compareTo(task1.getReminderDate());
+			return task2.getScheduledForDate().compareTo(task1.getScheduledForDate());
 		}
 	}
 }

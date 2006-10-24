@@ -85,8 +85,8 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 			case 4:
 				return task.getEstimateTimeHours() + UNITS_HOURS;
 			case 5:
-				if (task.getReminderDate() != null) {
-					return DateFormat.getDateInstance(DateFormat.MEDIUM).format(task.getReminderDate());
+				if (task.getScheduledForDate() != null) {
+					return DateFormat.getDateInstance(DateFormat.MEDIUM).format(task.getScheduledForDate());
 				} else {
 					return "";
 				}

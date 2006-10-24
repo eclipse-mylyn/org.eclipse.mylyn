@@ -117,8 +117,8 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 			};
 			getDayLabel(i, action);
 			if (singleTask != null) {
-				if (singleTask != null && singleTask.getReminderDate() != null) {
-					int tasksCheduledOn = singleTask.getReminderDate().getDay();
+				if (singleTask != null && singleTask.getScheduledForDate() != null) {
+					int tasksCheduledOn = singleTask.getScheduledForDate().getDay();
 					if (TasksUiPlugin.getTaskListManager().isScheduledForThisWeek(singleTask)) {
 						if (tasksCheduledOn + 1 == day) {
 							action.setChecked(true);
@@ -177,8 +177,8 @@ public class TaskReminderMenuContributor implements IDynamicSubMenuContributor {
 			@Override
 			public void run() {
 				Calendar theCalendar = GregorianCalendar.getInstance();
-				if (singleTask != null && singleTask.getReminderDate() != null) {
-					theCalendar.setTime(singleTask.getReminderDate());
+				if (singleTask != null && singleTask.getScheduledForDate() != null) {
+					theCalendar.setTime(singleTask.getScheduledForDate());
 				}
 				DateSelectionDialog reminderDialog = new DateSelectionDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 						theCalendar, DatePicker.TITLE_DIALOG);

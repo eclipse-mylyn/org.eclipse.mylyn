@@ -82,7 +82,7 @@ public class TaskListStandaloneTest extends TestCase {
 		assertDatesCloseEnough(task.getCompletionDate(), start);
 
 		task.setReminderDate(start);
-		assertDatesCloseEnough(task.getReminderDate(), start);
+		assertDatesCloseEnough(task.getScheduledForDate(), start);
 
 		assertEquals(2, manager.getTaskList().getRootElements().size());
 		manager.saveTaskList();
@@ -101,7 +101,7 @@ public class TaskListStandaloneTest extends TestCase {
 
 		assertEquals("should be: " + creation, task.getCreationDate(), readTask.getCreationDate());
 		assertEquals(task.getCompletionDate(), readTask.getCompletionDate());
-		assertEquals(task.getReminderDate(), readTask.getReminderDate());
+		assertEquals(task.getScheduledForDate(), readTask.getScheduledForDate());
 	}
 
 	public void testTaskRetentionWhenConnectorMissing() {

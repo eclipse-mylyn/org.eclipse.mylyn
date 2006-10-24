@@ -239,8 +239,8 @@ public class TaskListManager implements IPropertyChangeListener {
 		for (ITask activity : toRemove) {
 			DateRangeActivityDelegate delegate = (DateRangeActivityDelegate) activity;
 			Calendar calendar = GregorianCalendar.getInstance();
-			if (delegate.getReminderDate() != null) {
-				calendar.setTime(delegate.getReminderDate());
+			if (delegate.getScheduledForDate() != null) {
+				calendar.setTime(delegate.getScheduledForDate());
 				if (!activityThisWeek.includes(calendar) && activityThisWeek.getElapsed(delegate) == 0) {
 					activityThisWeek.remove(delegate);
 				}
@@ -253,8 +253,8 @@ public class TaskListManager implements IPropertyChangeListener {
 		GregorianCalendar tempCalendar = new GregorianCalendar();
 		tempCalendar.setFirstDayOfWeek(startDay);
 		for (ITask task : tasksWithReminders) {
-			if (task.getReminderDate() != null) {
-				tempCalendar.setTime(task.getReminderDate());
+			if (task.getScheduledForDate() != null) {
+				tempCalendar.setTime(task.getScheduledForDate());
 				if (activityNextWeek.includes(tempCalendar)) {
 					activityNextWeek.addTask(new DateRangeActivityDelegate(activityNextWeek, task, tempCalendar,
 							tempCalendar));
@@ -567,7 +567,7 @@ public class TaskListManager implements IPropertyChangeListener {
 			}
 
 			for (ITask task : taskList.getAllTasks()) {
-				if (task.getReminderDate() != null)// && task.hasBeenReminded()
+				if (task.getScheduledForDate() != null)// && task.hasBeenReminded()
 					// != true
 					tasksWithReminders.add(task);
 			}
@@ -715,7 +715,7 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	public boolean isScheduledAfterThisWeek(ITask task) {
 		if (task != null) {
-			Date reminder = task.getReminderDate();
+			Date reminder = task.getScheduledForDate();
 			if (reminder != null) {
 				return reminder.compareTo(activityNextWeek.getStart().getTime()) > -1;
 			}
@@ -725,7 +725,7 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	public boolean isScheduledForLater(ITask task) {
 		if (task != null) {
-			Date reminder = task.getReminderDate();
+			Date reminder = task.getScheduledForDate();
 			if (reminder != null) {
 				return reminder.compareTo(activityFuture.getStart().getTime()) > -1;
 			}
@@ -735,7 +735,7 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	public boolean isScheduledForThisWeek(ITask task) {
 		if (task != null) {
-			Date reminder = task.getReminderDate();
+			Date reminder = task.getScheduledForDate();
 			if (reminder != null) {
 				Calendar weekStart = Calendar.getInstance();
 				snapToStartOfWeek(weekStart);
@@ -748,7 +748,7 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	public boolean isScheduledForToday(ITask task) {
 		if (task != null) {
-			Date reminder = task.getReminderDate();
+			Date reminder = task.getScheduledForDate();
 			if (reminder != null) {
 				Calendar dayStart = Calendar.getInstance();
 				dayStart.set(Calendar.HOUR_OF_DAY, 0);
@@ -795,7 +795,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		taskActivityHistoryInitialized = false;
 		tasksWithReminders.clear();
 		for (ITask task : taskList.getAllTasks()) {
-			if (task.getReminderDate() != null) {
+			if (task.getScheduledForDate() != null) {
 				tasksWithReminders.add(task);
 			}
 		}

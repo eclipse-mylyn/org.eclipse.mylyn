@@ -118,13 +118,13 @@ public class TaskActivityViewSorter extends ViewerSorter {
 		}
 		case REMINDER: {
 			int result = 0;
-			if (task1.getReminderDate() != null && task2.getReminderDate() != null) {
-				long reminder1 = task1.getReminderDate().getTime();
-				long reminder2 = task2.getReminderDate().getTime();
+			if (task1.getScheduledForDate() != null && task2.getScheduledForDate() != null) {
+				long reminder1 = task1.getScheduledForDate().getTime();
+				long reminder2 = task2.getScheduledForDate().getTime();
 				result = new Long(reminder1).compareTo(new Long(reminder2));				
-			} else if (task1.getReminderDate() != null) {
+			} else if (task1.getScheduledForDate() != null) {
 				result = 1;
-			} else if (task2.getReminderDate() != null) {
+			} else if (task2.getScheduledForDate() != null) {
 				result = -1;
 			}			
 			return result * directions[sortColumn];
