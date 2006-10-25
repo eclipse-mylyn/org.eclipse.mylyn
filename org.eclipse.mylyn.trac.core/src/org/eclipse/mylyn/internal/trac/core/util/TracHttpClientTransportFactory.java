@@ -119,7 +119,7 @@ public class TracHttpClientTransportFactory extends XmlRpcTransportFactoryImpl {
 			XmlRpcHttpClientConfig config = (XmlRpcHttpClientConfig) pRequest.getConfig();
 			
 			String url = config.getServerURL().toString();
-			WebClientUtil.setupHttpClient(getHttpClient(), proxy, url);
+			WebClientUtil.setupHttpClient(getHttpClient(), proxy, url, null, null);
 			
 			PostMethod method = new PostMethod(WebClientUtil.getRequestPath(url));
 	        

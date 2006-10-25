@@ -132,7 +132,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 		// Protocol.registerProtocol("https", new Protocol("https", new
 		// TrustAllSslProtocolSocketFactory(), 443));
 		HttpClient client = new HttpClient();
-		WebClientUtil.setupHttpClient(client, proxySettings, repositoryUrl);
+		WebClientUtil.setupHttpClient(client, proxySettings, repositoryUrl, userName, password);
 		PostMethod postMethod = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl)
 				+ POST_ARGS_ATTACHMENT_UPLOAD);
 

@@ -26,6 +26,8 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.protocol.Protocol;
 
 /**
@@ -167,10 +169,15 @@ public class WebClientUtil {
 			return repositoryUrl.substring(requestPath);
 	}
 
-	public static void setupHttpClient(HttpClient client, Proxy proxySettings, String repositoryUrl) {
+	public static void setupHttpClient(HttpClient client, Proxy proxySettings, String repositoryUrl, String user, String password) {
 		if (proxySettings != null && proxySettings.address() instanceof InetSocketAddress) {
 			InetSocketAddress address = (InetSocketAddress) proxySettings.address();
 			client.getHostConfiguration().setProxy(address.getHostName(), address.getPort());
+		}
+		
+		if(user!=null && password!=null) {
+			AuthScope authScope = new AuthScope(WebClientUtil.getDomain(repositoryUrl), WebClientUtil.getPort(repositoryUrl), AuthScope.ANY_REALM);
+			client.getState().setCredentials(authScope, new UsernamePasswordCredentials(user, password));
 		}
 
 		if (WebClientUtil.repositoryUsesHttps(repositoryUrl)) {

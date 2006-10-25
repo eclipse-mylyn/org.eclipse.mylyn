@@ -82,7 +82,7 @@ public class Trac09Client extends AbstractTracClient {
 	}
 
 	private GetMethod connectInternal(String serverURL) throws TracLoginException, IOException, TracHttpException {
-		WebClientUtil.setupHttpClient(httpClient, proxy, serverURL);
+		WebClientUtil.setupHttpClient(httpClient, proxy, serverURL, null, null);
 
 		for (int attempt = 0; attempt < 2; attempt++) {
 			// force authentication
