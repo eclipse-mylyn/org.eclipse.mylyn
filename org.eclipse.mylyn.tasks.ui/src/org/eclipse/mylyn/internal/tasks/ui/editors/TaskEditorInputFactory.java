@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.tasks.ui.editors;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IElementFactory;
 import org.eclipse.ui.IMemento;
@@ -27,14 +28,17 @@ public class TaskEditorInputFactory implements IElementFactory {
 
 	public IAdaptable createElement(IMemento memento) {
 		String handle = memento.getString(TAG_TASK_HANDLE);
-		if (handle != null) {
-			return new TaskEditorInput(TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle), false);
+		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
+		if (task != null) {
+			return new TaskEditorInput(task, false);
 		}
 		return null;
 	}
 	
 
 	public static void saveState(IMemento memento, TaskEditorInput input) {
-		memento.putString(TAG_TASK_HANDLE, input.getTask().getHandleIdentifier());
+		if(memento != null && input != null && input.getTask() != null) {
+			memento.putString(TAG_TASK_HANDLE, input.getTask().getHandleIdentifier());
+		}
 	}
 }
