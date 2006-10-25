@@ -18,9 +18,11 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylar.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylar.internal.tasks.ui.views.DatePicker;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -54,9 +56,15 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 	private static final String LABEL_CREATE = "Create New";
 
+	private static final String LABEL_SEARCH_DUPS = "Search for Duplicates";
+
 	private static final String ERROR_CREATING_BUG_REPORT = "Error creating bug report";
 
+	private static final String NO_STACK_MESSAGE = "Unable to locate a stack trace in the description text.\nDuplicate search currently only supports stack trace matching.";
+
 	protected RepositoryTaskData taskData;
+
+	protected Button searchDuplicatesButton;
 
 	protected DatePicker datePicker;
 
@@ -393,16 +401,14 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	protected void addActionButtons(Composite buttonComposite) {
 		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
 
-		// searchDuplicatesButton = toolkit.createButton(buttonComposite,
-		// LABEL_SEARCH_DUPS, SWT.NONE);
-		// GridData searchDuplicatesButtonData = new
-		// GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		// searchDuplicatesButton.setLayoutData(searchDuplicatesButtonData);
-		// searchDuplicatesButton.addListener(SWT.Selection, new Listener() {
-		// public void handleEvent(Event e) {
-		// searchForDuplicates();
-		// }
-		// });
+		searchDuplicatesButton = toolkit.createButton(buttonComposite, LABEL_SEARCH_DUPS, SWT.NONE);
+		GridData searchDuplicatesButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		searchDuplicatesButton.setLayoutData(searchDuplicatesButtonData);
+		searchDuplicatesButton.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				searchForDuplicates();
+			}
+		});
 
 		submitButton = toolkit.createButton(buttonComposite, LABEL_CREATE, SWT.NONE);
 		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
@@ -447,4 +453,23 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 		return true;
 	}
+
+	public boolean searchForDuplicates() {
+
+		String stackTrace = getStackTraceFromDescription();
+		if (stackTrace == null) {
+			MessageDialog.openWarning(null, "No Stack Trace Found", NO_STACK_MESSAGE);
+			return false;
+		}
+		SearchHitCollector collector = getDuplicateSearchCollector(stackTrace);
+		if (collector != null) {
+			NewSearchUI.runQueryInBackground(collector);
+			return true;
+		}
+
+		return false;
+	}
+
+	public abstract SearchHitCollector getDuplicateSearchCollector(String description);
+
 }

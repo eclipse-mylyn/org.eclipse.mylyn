@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractNewRepositoryTaskEditor;
+import org.eclipse.mylar.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
@@ -141,6 +142,12 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 
 		submitJob.addJobChangeListener(listener);
 		submitJob.schedule();
+	}
+
+	@Override
+	public SearchHitCollector getDuplicateSearchCollector(String searchString) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

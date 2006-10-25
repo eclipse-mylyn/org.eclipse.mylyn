@@ -35,18 +35,10 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.search.ui.NewSearchUI;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.editor.FormEditor;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * An editor used to view a locally created bug that does not yet exist on a
@@ -56,13 +48,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 
-	private static final String LABEL_SEARCH_DUPS = "Search for Duplicates";
-
-	private static final String NO_STACK_MESSAGE = "Unable to locate a stack trace in the description text.\nDuplicate search currently only supports stack trace matching.";
-
 	private static final String ERROR_CREATING_BUG_REPORT = "Error creating bug report";
-
-	private Button searchDuplicatesButton;
 
 	private BugSubmissionHandler submissionHandler;
 
@@ -79,34 +65,6 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 		submissionHandler = new BugSubmissionHandler(connector);
 	}
 
-	public boolean searchForDuplicates() {
-
-		String stackTrace = getStackTraceFromDescription();
-		if (stackTrace == null) {
-			MessageDialog.openWarning(null, "No Stack Trace Found", NO_STACK_MESSAGE);
-			return false;
-		}
-
-		String queryUrl = "";
-		try {
-			queryUrl = repository.getUrl() + "/buglist.cgi?long_desc_type=allwordssubstr&long_desc="
-					+ URLEncoder.encode(stackTrace, repository.getCharacterEncoding());
-		} catch (UnsupportedEncodingException e) {
-			// This should never happen
-		}
-
-		queryUrl += "&product=" + getRepositoryTaskData().getProduct();
-
-		BugzillaRepositoryQuery bugzillaQuery = new BugzillaRepositoryQuery(repository.getUrl(), queryUrl, "search",
-				"100", TasksUiPlugin.getTaskListManager().getTaskList());
-		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
-		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
-				repository, bugzillaQuery, proxySettings);
-
-		NewSearchUI.runQueryInBackground(collector);
-		return true;
-	}
-
 	@Override
 	protected void submitBug() {
 		submitButton.setEnabled(false);
@@ -114,8 +72,8 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 		if (summaryText != null && summaryText.getText().trim().equals("")) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					MessageDialog.openInformation(NewBugzillaTaskEditor.this.getSite().getShell(), ERROR_CREATING_BUG_REPORT,
-							"A summary must be provided with new bug reports.");
+					MessageDialog.openInformation(NewBugzillaTaskEditor.this.getSite().getShell(),
+							ERROR_CREATING_BUG_REPORT, "A summary must be provided with new bug reports.");
 					summaryText.setFocus();
 					submitButton.setEnabled(true);
 					showBusy(false);
@@ -126,8 +84,8 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 		if (descriptionTextViewer != null && descriptionTextViewer.getTextWidget().getText().trim().equals("")) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					MessageDialog.openInformation(NewBugzillaTaskEditor.this.getSite().getShell(), ERROR_CREATING_BUG_REPORT,
-							"A description must be provided with new reports.");
+					MessageDialog.openInformation(NewBugzillaTaskEditor.this.getSite().getShell(),
+							ERROR_CREATING_BUG_REPORT, "A description must be provided with new reports.");
 					descriptionTextViewer.getTextWidget().setFocus();
 					submitButton.setEnabled(true);
 					showBusy(false);
@@ -160,7 +118,8 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 									Calendar selectedDate = datePicker.getDate();
 									if (selectedDate != null) {
 										// NewLocalTaskAction.scheduleNewTask(newTask);
-										TasksUiPlugin.getTaskListManager().setScheduledFor(newTask, selectedDate.getTime());
+										TasksUiPlugin.getTaskListManager().setScheduledFor(newTask,
+												selectedDate.getTime());
 									}
 
 									newTask.setEstimatedTimeHours(estimated.getSelection());
@@ -211,19 +170,40 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 
 	}
 
-	protected void addActionButtons(Composite buttonComposite) {
+//	protected void addActionButtons(Composite buttonComposite) {
+//
+//		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
+//		searchDuplicatesButton = toolkit.createButton(buttonComposite, LABEL_SEARCH_DUPS, SWT.NONE);
+//		GridData searchDuplicatesButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+//		searchDuplicatesButton.setLayoutData(searchDuplicatesButtonData);
+//		searchDuplicatesButton.addListener(SWT.Selection, new Listener() {
+//			public void handleEvent(Event e) {
+//				searchForDuplicates();
+//			}
+//		});
+//
+//		super.addActionButtons(buttonComposite);
+//	}
 
-		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
-		searchDuplicatesButton = toolkit.createButton(buttonComposite, LABEL_SEARCH_DUPS, SWT.NONE);
-		GridData searchDuplicatesButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		searchDuplicatesButton.setLayoutData(searchDuplicatesButtonData);
-		searchDuplicatesButton.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event e) {
-				searchForDuplicates();
-			}
-		});
+	@Override
+	public SearchHitCollector getDuplicateSearchCollector(String searchString) {
+		String queryUrl = "";
+		try {
+			queryUrl = repository.getUrl() + "/buglist.cgi?long_desc_type=allwordssubstr&long_desc="
+					+ URLEncoder.encode(searchString, repository.getCharacterEncoding());
+		} catch (UnsupportedEncodingException e) {
+			MylarStatusHandler.log(e, "Error during duplicate detection");
+			return null;
+		}
 
-		super.addActionButtons(buttonComposite);
+		queryUrl += "&product=" + getRepositoryTaskData().getProduct();
+
+		BugzillaRepositoryQuery bugzillaQuery = new BugzillaRepositoryQuery(repository.getUrl(), queryUrl, "search",
+				"100", TasksUiPlugin.getTaskListManager().getTaskList());
+		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
+		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
+				repository, bugzillaQuery, proxySettings);
+		return collector;
 	}
 
 }
