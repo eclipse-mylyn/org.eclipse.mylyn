@@ -8,6 +8,7 @@
 
 package org.eclipse.mylar.internal.trac.ui.editor;
 
+import java.net.Proxy;
 import java.util.ArrayList;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -21,8 +22,12 @@ import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
 import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylar.internal.trac.core.TracRepositoryConnector;
+import org.eclipse.mylar.internal.trac.core.TracRepositoryQuery;
 import org.eclipse.mylar.internal.trac.core.TracTask;
+import org.eclipse.mylar.internal.trac.core.model.TracSearch;
+import org.eclipse.mylar.internal.trac.core.model.TracSearchFilter;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket;
+import org.eclipse.mylar.internal.trac.core.model.TracSearchFilter.CompareOperator;
 import org.eclipse.mylar.internal.trac.ui.TracUiPlugin;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -45,10 +50,10 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 		if (!prepareSubmit()) {
 			return;
 		}
-		
-		final TracRepositoryConnector connector = (TracRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-				repository.getKind());
-		
+
+		final TracRepositoryConnector connector = (TracRepositoryConnector) TasksUiPlugin.getRepositoryManager()
+				.getRepositoryConnector(repository.getKind());
+
 		updateBug();
 
 		final TracTicket ticket;
@@ -60,7 +65,7 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 			showBusy(false);
 			return;
 		}
-		
+
 		final boolean addToRoot = addToTaskListRoot.getSelection();
 
 		Job submitJob = new Job(SUBMIT_JOB_LABEL) {
@@ -96,14 +101,32 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 
 	@Override
 	public SearchHitCollector getDuplicateSearchCollector(String searchString) {
-		// TODO Auto-generated method stub
-		return null;
+		TracSearchFilter filter = new TracSearchFilter("description");
+		filter.setOperator(CompareOperator.CONTAINS);
+		filter.addValue(searchString);
+
+		TracSearch search = new TracSearch();
+		search.addFilter(filter);
+
+		// TODO copied from TracCustomQueryPage.getQueryUrl()
+		StringBuilder sb = new StringBuilder();
+		sb.append(repository.getUrl());
+		sb.append(ITracClient.QUERY_URL);
+		sb.append(search.toUrl());
+
+		TracRepositoryQuery query = new TracRepositoryQuery(repository.getUrl(), sb.toString(), "<Duplicate Search>",
+				TasksUiPlugin.getTaskListManager().getTaskList());
+
+		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
+		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
+				repository, query, proxySettings);
+		return collector;
 	}
-	
 
 	@Override
 	protected void handleErrorStatus(final IJobChangeEvent event) {
 		super.handleErrorStatus(event);
-		TracUiPlugin.handleTracException(event.getJob().getResult());		
+		TracUiPlugin.handleTracException(event.getJob().getResult());
 	}
+
 }
