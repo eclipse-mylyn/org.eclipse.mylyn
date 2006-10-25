@@ -9,19 +9,14 @@
 package org.eclipse.mylar.internal.trac.ui.editor;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractNewRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.search.SearchHitCollector;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
 import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
@@ -30,11 +25,8 @@ import org.eclipse.mylar.internal.trac.core.TracTask;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket;
 import org.eclipse.mylar.internal.trac.ui.TracUiPlugin;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.editor.FormEditor;
 
 /**
@@ -58,48 +50,6 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 				repository.getKind());
 		
 		updateBug();
-
-		JobChangeAdapter listener = new JobChangeAdapter() {
-			public void done(final IJobChangeEvent event) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (event.getJob().getResult().getCode() == Status.OK
-								&& event.getJob().getResult().getMessage() != null) {
-							close();
-							String newTaskHandle = AbstractRepositoryTask.getHandle(repository.getUrl(), event
-									.getJob().getResult().getMessage());
-							ITask newTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(newTaskHandle);								
-							if (newTask != null) {									
-								Calendar selectedDate = datePicker.getDate();
-								if(selectedDate != null) {
-									//NewLocalTaskAction.scheduleNewTask(newTask);									
-									TasksUiPlugin.getTaskListManager().setScheduledFor(newTask, selectedDate.getTime());											
-								}
-								
-								newTask.setEstimatedTimeHours(estimated.getSelection());
-								
-								Object selectedObject = null;
-								if (TaskListView.getFromActivePerspective() != null)
-									selectedObject = ((IStructuredSelection) TaskListView
-											.getFromActivePerspective().getViewer().getSelection())
-											.getFirstElement();
-
-								if (selectedObject instanceof TaskCategory) {
-									TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(
-											((TaskCategory) selectedObject), newTask);
-								}
-								TaskUiUtil.refreshAndOpenTaskListElement(newTask);
-							}
-							return;
-						} else if (event.getJob().getResult().getCode() == Status.ERROR) {
-							TracUiPlugin.handleTracException(event.getJob().getResult());
-							submitButton.setEnabled(true);
-							showBusy(false);
-						}
-					}
-				});
-			}
-		};
 
 		final TracTicket ticket;
 		try {
@@ -140,7 +90,7 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 			}
 		};
 
-		submitJob.addJobChangeListener(listener);
+		submitJob.addJobChangeListener(submitJobListener);
 		submitJob.schedule();
 	}
 
@@ -149,5 +99,11 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
 
+	@Override
+	protected void handleErrorStatus(final IJobChangeEvent event) {
+		super.handleErrorStatus(event);
+		TracUiPlugin.handleTracException(event.getJob().getResult());		
+	}
 }

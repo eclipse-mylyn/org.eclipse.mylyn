@@ -14,13 +14,22 @@ import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylar.internal.tasks.ui.views.DatePicker;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
@@ -71,6 +80,20 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	protected Spinner estimated;
 
 	protected String newSummary = "";
+
+	protected JobChangeAdapter submitJobListener = new JobChangeAdapter() {
+		public void done(final IJobChangeEvent event) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					if (event.getJob().getResult().getCode() == Status.OK && event.getJob().getResult().getMessage() != null) {						
+						handleOkayStatus(event);						
+					} else {// if (event.getJob().getResult().getCode() == Status.ERROR) {
+						handleErrorStatus(event);
+					}
+				}
+			});
+		}
+	};
 
 	public AbstractNewRepositoryTaskEditor(FormEditor editor) {
 		super(editor);
@@ -470,6 +493,38 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		return false;
 	}
 
-	public abstract SearchHitCollector getDuplicateSearchCollector(String description);
+	protected void handleOkayStatus(final IJobChangeEvent event) {		
+		close();
+		String newTaskHandle = AbstractRepositoryTask.getHandle(repository.getUrl(), event.getJob().getResult()
+				.getMessage());
+		ITask newTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(newTaskHandle);
+		if (newTask != null) {
+			Calendar selectedDate = datePicker.getDate();
+			if (selectedDate != null) {
+				// NewLocalTaskAction.scheduleNewTask(newTask);
+				TasksUiPlugin.getTaskListManager().setScheduledFor(newTask, selectedDate.getTime());
+			}
+
+			newTask.setEstimatedTimeHours(estimated.getSelection());
+
+			Object selectedObject = null;
+			if (TaskListView.getFromActivePerspective() != null)
+				selectedObject = ((IStructuredSelection) TaskListView.getFromActivePerspective().getViewer()
+						.getSelection()).getFirstElement();
+
+			if (selectedObject instanceof TaskCategory) {
+				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(((TaskCategory) selectedObject),
+						newTask);
+			}
+			TaskUiUtil.refreshAndOpenTaskListElement(newTask);
+		}
+	}
+
+	protected void handleErrorStatus(final IJobChangeEvent event) {
+		submitButton.setEnabled(true);
+		showBusy(false);
+	}
+
+	protected abstract SearchHitCollector getDuplicateSearchCollector(String description);
 
 }
