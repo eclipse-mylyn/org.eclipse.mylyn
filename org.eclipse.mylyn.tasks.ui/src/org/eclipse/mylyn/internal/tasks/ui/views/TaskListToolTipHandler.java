@@ -119,7 +119,7 @@ public class TaskListToolTipHandler {
 	}
 
 	private String updateContainerProgressBar(TaskProgressBar taskProgressBar, Object object) {
-		if (!taskProgressBar.isDisposed() && object instanceof AbstractTaskContainer) {
+		if (taskProgressBar != null && !taskProgressBar.isDisposed() && object instanceof AbstractTaskContainer) {
 			AbstractTaskContainer container = (AbstractTaskContainer) object;
 			int total = container.getChildren().size();
 			int completed = 0;
