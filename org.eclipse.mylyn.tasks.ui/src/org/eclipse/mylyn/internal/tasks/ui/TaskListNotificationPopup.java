@@ -170,9 +170,12 @@ public class TaskListNotificationPopup extends PopupDialog {
 	private Rectangle restoreBounds() {
 		bounds = form.getBounds();
 		Rectangle maxBounds = null;
-		if (getShell() != null && !getShell().isDisposed())
+//		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+//		if (window != null) {
+//			maxBounds = window.getShell().getBounds();
+		if (getShell() != null && !getShell().isDisposed()) {
 			maxBounds = getShell().getDisplay().getClientArea();
-		else {
+		} else {
 			// fallback
 			Display display = Display.getCurrent();
 			if (display == null)
@@ -181,7 +184,7 @@ public class TaskListNotificationPopup extends PopupDialog {
 				maxBounds = display.getBounds();
 		}
 
-		if (bounds.width > -1 && bounds.height > -1) {
+ 		if (bounds.width > -1 && bounds.height > -1) {
 			if (maxBounds != null) {
 				bounds.width = Math.min(bounds.width, maxBounds.width);
 				bounds.height = Math.min(bounds.height, maxBounds.height);
