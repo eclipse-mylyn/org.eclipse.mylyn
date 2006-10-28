@@ -12,7 +12,6 @@ package org.eclipse.mylar.internal.trac.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
-import java.net.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,7 +20,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositoryQueryPage;
-import org.eclipse.mylar.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylar.internal.trac.core.TracException;
@@ -35,7 +33,6 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -70,8 +67,6 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 	private static final String TITLE_QUERY_TITLE = "Query Title:";
 
 	private static final String[] DEFAULT_STATUS_SELECTION = new String[] { "new", "assigned", "reopened", };
-
-	private TaskRepository repository;
 
 	private TracRepositoryQuery query;
 
@@ -445,20 +440,15 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		return (titleText != null) ? titleText.getText() : "<search>";
 	}
 
-	public boolean performAction() {
-		if (repository == null) {
-			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), TracUiPlugin.TITLE_MESSAGE_DIALOG,
-					TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
-			return false;
-		}
-
-		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
-		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
-				repository, getQuery(), proxySettings);
-		NewSearchUI.runQueryInBackground(collector);
-
-		return true;
-	}
+//	public boolean performAction() {
+//
+//		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
+//		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
+//				repository, getQuery(), proxySettings);
+//		NewSearchUI.runQueryInBackground(collector);
+//
+//		return true;
+//	}
 
 	private abstract class SearchField {
 

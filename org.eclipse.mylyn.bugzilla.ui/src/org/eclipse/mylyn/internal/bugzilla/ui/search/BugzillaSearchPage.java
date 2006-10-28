@@ -13,7 +13,6 @@ package org.eclipse.mylar.internal.bugzilla.ui.search;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.Proxy;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
@@ -32,13 +31,11 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositoryQueryPage;
-import org.eclipse.mylar.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -77,8 +74,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private static final String MAX_HITS = "100";
 
 	private static final int HEIGHT_ATTRIBUTE_COMBO = 60;
-
-	private TaskRepository repository = null;
 
 	protected Combo summaryPattern = null;
 
@@ -892,13 +887,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		operation.setText(operation.getItem(patternData.operation));
 	}
 
+	// TODO: avoid overriding?
 	public boolean performAction() {
-		if (repository == null) {
-			MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
-					IBugzillaConstants.TITLE_MESSAGE_DIALOG, TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
-			return false;
-		}
-
 		if (restoreQueryOptions) {
 			saveWidgetValues();
 		}
@@ -906,29 +896,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		getPatternData(summaryPattern, summaryOperation, previousSummaryPatterns);
 		getPatternData(commentPattern, commentOperation, previousCommentPatterns);
 		getPatternData(this.emailPattern, emailOperation, previousEmailPatterns);
-
-		// try {
-		// // if the summary contains a single bug id, open the bug directly
-		// int id = Integer.parseInt(summaryText);
-		// return BugzillaUITools.show(repository.getUrl(), id);
-		// } catch (NumberFormatException ignored) {
-		// // ignore this since this means that the text is not a bug id
-		// }
-
-		// Don't activate the search result view until it is known that the
-		// user is not opening a bug directly -- there is no need to open
-		// the view if no searching is going to take place.
-		NewSearchUI.activateSearchResultView();
-
+		
 		String summaryText = summaryPattern.getText();
 		BugzillaUiPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.MOST_RECENT_QUERY, summaryText);
 
-		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
-		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
-				repository, getQuery(), proxySettings);
-		NewSearchUI.runQueryInBackground(collector);
-
-		return true;
+		return super.performAction();
 	}
 
 	@Override
@@ -1718,11 +1690,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		}
 		return originalQuery;
 	}
-
-	// @Override
-	// public boolean isPageComplete() {
-	// return super.canFlipToNextPage();
-	// }
 
 	private String[] nonNullArray(IDialogSettings settings, String id) {
 		String[] value = settings.getArray(id);

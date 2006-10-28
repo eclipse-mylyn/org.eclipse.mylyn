@@ -144,6 +144,9 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 		if (queryPages[pageIndex] != null) {
 			GridData data = (GridData) queryPages[pageIndex].getControl().getLayoutData();
+			if (data == null) {
+				data = new GridData();
+			}
 			data.exclude = false;
 			queryPages[pageIndex].getControl().setLayoutData(data);
 			queryPages[pageIndex].setVisible(true);
