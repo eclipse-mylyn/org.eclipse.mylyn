@@ -28,9 +28,6 @@ import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.internal.core.JavaModel;
 import org.eclipse.jdt.internal.core.search.HierarchyScope;
 import org.eclipse.jdt.internal.core.search.indexing.IIndexConstants;
-import org.eclipse.jdt.internal.corext.util.OpenTypeHistory;
-import org.eclipse.jdt.internal.corext.util.TypeInfo;
-import org.eclipse.jdt.internal.corext.util.TypeInfoFactory;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
@@ -41,7 +38,7 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
  */
 public class TypeHistoryManager implements IMylarContextListener {
 
-	private TypeInfoFactory factory = new TypeInfoFactory();
+//	private TypeInfoFactory factory = new TypeInfoFactory();
 
 	public void contextActivated(IMylarContext context) {
 		clearTypeHistory();
@@ -56,20 +53,20 @@ public class TypeHistoryManager implements IMylarContextListener {
 		IJavaElement element = JavaCore.create(node.getHandleIdentifier());
 		if (element instanceof IType) {
 			IType type = (IType) element;
-			try {
-				if (type != null && type.exists() && !type.isAnonymous() && !isAspectjType(type)) {
-					TypeInfo info = factory.create(type.getPackageFragment().getElementName().toCharArray(), type
-							.getElementName().toCharArray(), enclosingTypeNames(type), type.getFlags(), getPath(type));
-
-					if (add && !OpenTypeHistory.getInstance().contains(info)) {
-						OpenTypeHistory.getInstance().accessed(info);
-					} else {
-						OpenTypeHistory.getInstance().remove(info);
-					}
-				}
-			} catch (JavaModelException e) {
-				MylarStatusHandler.log(e, "failed to update history for a type");
-			}
+//			try {
+//				if (type != null && type.exists() && !type.isAnonymous() && !isAspectjType(type)) {
+//					TypeInfo info = factory.create(type.getPackageFragment().getElementName().toCharArray(), type
+//							.getElementName().toCharArray(), enclosingTypeNames(type), type.getFlags(), getPath(type));
+//
+//					if (add && !OpenTypeHistory.getInstance().contains(info)) {
+//						OpenTypeHistory.getInstance().accessed(info);
+//					} else {
+//						OpenTypeHistory.getInstance().remove(info);
+//					}
+//				}
+//			} catch (JavaModelException e) {
+//				MylarStatusHandler.log(e, "failed to update history for a type");
+//			}
 		}
 	}
 
@@ -94,10 +91,10 @@ public class TypeHistoryManager implements IMylarContextListener {
 	 * Public for testing
 	 */
 	public void clearTypeHistory() {
-		TypeInfo[] typeInfos = OpenTypeHistory.getInstance().getTypeInfos();
-		for (int i = 0; i < typeInfos.length; i++) {
-			OpenTypeHistory.getInstance().remove(typeInfos[i]);
-		} 
+//		TypeInfo[] typeInfos = OpenTypeHistory.getInstance().getTypeInfos();
+//		for (int i = 0; i < typeInfos.length; i++) {
+//			OpenTypeHistory.getInstance().remove(typeInfos[i]);
+//		} 
 	}
 
 	public void interestChanged(List<IMylarElement> nodes) {
