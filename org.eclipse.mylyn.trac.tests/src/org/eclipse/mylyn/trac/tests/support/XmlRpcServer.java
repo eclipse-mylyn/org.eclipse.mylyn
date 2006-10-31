@@ -88,6 +88,7 @@ public class XmlRpcServer {
 			return create(params);
 		}
 
+		@SuppressWarnings("unchecked")
 		public Object[] get() throws Exception {
 			Hashtable values = (Hashtable) call(module + ".get", id);
 			Object[] result = new Object[values.size()];
@@ -157,7 +158,7 @@ public class XmlRpcServer {
 		}
 
 		public Ticket create(String summary, String description) throws Exception {
-			this.id = (Integer) call("ticket.create", summary, description, new Hashtable());
+			this.id = (Integer) call("ticket.create", summary, description, new Hashtable<String, Object>());
 			if (id == null) {
 				throw new RuntimeException("Could not create ticket: " + summary);
 			}
@@ -181,7 +182,7 @@ public class XmlRpcServer {
 			return getValues().get(key);
 		}
 
-		public Map getValues() throws Exception {
+		public Map<?, ?> getValues() throws Exception {
 			return (Map) ((Object[]) call("ticket.get", id))[3];
 		}
 

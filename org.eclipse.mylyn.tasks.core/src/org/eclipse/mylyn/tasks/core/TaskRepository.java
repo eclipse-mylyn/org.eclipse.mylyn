@@ -167,7 +167,8 @@ public class TaskRepository {
 		}
 	}
 
-	private Map getAuthInfo() {
+	@SuppressWarnings("unchecked")
+	private Map<String, String> getAuthInfo() {
 		try {
 			return Platform.getAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME);
 		} catch (MalformedURLException ex) {

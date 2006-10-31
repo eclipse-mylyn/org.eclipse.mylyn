@@ -93,7 +93,7 @@ public class TracXmlRpcTest extends TestCase {
 		// this.password = password;
 	}
 
-	private int createTicket(String summary, String description, Map attributes) throws XmlRpcException, IOException {
+	private int createTicket(String summary, String description, Map<String, Object> attributes) throws XmlRpcException, IOException {
 		int id = (Integer) call("ticket.create", summary, description, attributes);
 		tickets.add(id);
 		return id;
@@ -164,7 +164,7 @@ public class TracXmlRpcTest extends TestCase {
 
 		try {
 			assertHasValue((Object[]) call(module + ".getAll"), "foo");
-			Map values = (Map) call(module + ".get", "foo");
+			Map<?, ?> values = (Map) call(module + ".get", "foo");
 			for (String attribute : attributes.keySet()) {
 				assertEquals(attributes.get(attribute), values.get(attribute));
 			}
@@ -199,7 +199,7 @@ public class TracXmlRpcTest extends TestCase {
 
 		call("ticket.milestone.create", "foo", attributes);
 
-		Map values = (Map) call("ticket.milestone.get", "foo");
+		Map<?, ?> values = (Map) call("ticket.milestone.get", "foo");
 		assertEquals(new Integer(due), (Integer) values.get("due"));
 		assertEquals(new Integer(completed), (Integer) values.get("completed"));
 
@@ -228,7 +228,7 @@ public class TracXmlRpcTest extends TestCase {
 		} else {
 			assertTrue((Integer) ticket[2] >= (Integer) ticket[1]);
 		}
-		Map values = (Map) ticket[3];
+		Map<?, ?> values = (Map) ticket[3];
 		for (String attribute : attributes.keySet()) {
 			assertEquals(attributes.get(attribute), values.get(attribute));
 		}
@@ -255,7 +255,7 @@ public class TracXmlRpcTest extends TestCase {
 		}
 
 		try {
-			List ticket = (List) call("ticket.get", Integer.MAX_VALUE);
+			List<?> ticket = (List) call("ticket.get", Integer.MAX_VALUE);
 			fail("Expected XmlRpcException, got ticket instead: " + ticket);
 		} catch (XmlRpcException e) {
 			// ignore
@@ -274,7 +274,7 @@ public class TracXmlRpcTest extends TestCase {
 	}
 
 	public void testUpdateTicket() throws XmlRpcException, IOException {
-		int id = createTicket("summary", "description", new Hashtable());
+		int id = createTicket("summary", "description", new Hashtable<String, Object>());
 
 		Map<String, Object> attributes = new Hashtable<String, Object>();
 		attributes.put("summary", "changed");
@@ -283,7 +283,7 @@ public class TracXmlRpcTest extends TestCase {
 		attributes.put("description", "description");
 
 		Object[] ticket = (Object[]) call("ticket.get", id);
-		Map values = (Map) ticket[3];
+		Map<?, ?> values = (Map) ticket[3];
 		for (String attribute : attributes.keySet()) {
 			assertEquals(attributes.get(attribute), values.get(attribute));
 		}
@@ -316,7 +316,7 @@ public class TracXmlRpcTest extends TestCase {
 	}
 
 	public void testGetChangeLog() throws XmlRpcException, IOException {
-		int id = createTicket("summary", "description", new Hashtable());
+		int id = createTicket("summary", "description", new Hashtable<String, Object>());
 
 		Map<String, Object> attributes = new Hashtable<String, Object>();
 		attributes.put("summary", "changed");
@@ -332,10 +332,10 @@ public class TracXmlRpcTest extends TestCase {
 	}
 
 	public void testMultiGetTicket() throws XmlRpcException, IOException {
-		int id1 = createTicket("summary1", "description1", new Hashtable());
-		int id2 = createTicket("summary2", "description2", new Hashtable());
+		int id1 = createTicket("summary1", "description1", new Hashtable<String, Object>());
+		int id2 = createTicket("summary2", "description2", new Hashtable<String, Object>());
 
-		List<Map> calls = new ArrayList<Map>();
+		List<Map<?, ?>> calls = new ArrayList<Map<?, ?>>();
 		calls.add(createMultiCall("ticket.get", id1));
 		calls.add(createMultiCall("ticket.get", id2));
 		Object[] ret = (Object[]) call("system.multicall", calls);
@@ -354,7 +354,7 @@ public class TracXmlRpcTest extends TestCase {
 	}
 
 	public void testAttachment() throws XmlRpcException, IOException {
-		int id = createTicket("summary", "description", new Hashtable());
+		int id = createTicket("summary", "description", new Hashtable<String, Object>());
 
 		String filename = (String) call("ticket.putAttachment", id, "attach.txt", "description", "data".getBytes(), true);
 		// the returned filename may differ, since another ticket may have an
@@ -398,7 +398,7 @@ public class TracXmlRpcTest extends TestCase {
 	}
 
 	public void testDeleteAttachment() throws XmlRpcException, IOException {
-		int id = createTicket("summary", "description", new Hashtable());
+		int id = createTicket("summary", "description", new Hashtable<String, Object>());
 
 		String filename = (String) call("ticket.putAttachment", id, "attach.txt", "description", "data".getBytes(), true);
 
@@ -412,8 +412,8 @@ public class TracXmlRpcTest extends TestCase {
 	}
 
 	public void testDuplicateAttachment() throws XmlRpcException, IOException {
-		int id1 = createTicket("summary", "description", new Hashtable());
-		int id2 = createTicket("summary", "description", new Hashtable());
+		int id1 = createTicket("summary", "description", new Hashtable<String, Object>());
+		int id2 = createTicket("summary", "description", new Hashtable<String, Object>());
 
 		String filename1 = (String) call("ticket.putAttachment", id1, "attach.txt", "description", "data".getBytes(), true);
 		String filename2 = (String) call("ticket.putAttachment", id2, "attach.txt", "description", "data2".getBytes(), true);
@@ -435,9 +435,9 @@ public class TracXmlRpcTest extends TestCase {
 			call("ticket.delete", (Integer) id);
 		}
 
-		int id1 = createTicket("foobarsum1", "description", new Hashtable());
-		int id2 = createTicket("foobaz sum2", "description", new Hashtable());
-		int id3 = createTicket("foobarbaz3", "foobarbaz description3", new Hashtable());
+		int id1 = createTicket("foobarsum1", "description", new Hashtable<String, Object>());
+		int id2 = createTicket("foobaz sum2", "description", new Hashtable<String, Object>());
+		int id3 = createTicket("foobarbaz3", "foobarbaz description3", new Hashtable<String, Object>());
 
 		ret = (Object[]) call("ticket.query", "summary=foobarsum1|foobaz sum2");
 		assertEquals(2, ret.length);
@@ -458,7 +458,7 @@ public class TracXmlRpcTest extends TestCase {
 	}
 
 	public void testQueryAll() throws XmlRpcException, IOException {
-		int id = createTicket("foo", "description", new Hashtable());
+		int id = createTicket("foo", "description", new Hashtable<String, Object>());
 
 		Object[] ret = (Object[]) call("ticket.query", "order=id");
 		assertTrue(ret.length > 0);

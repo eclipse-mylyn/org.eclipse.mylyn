@@ -122,7 +122,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 				return false;
 			}
 
-			Enumeration entries;
+			Enumeration<? extends ZipEntry> entries;
 			ZipFile zipFile;
 
 			try {

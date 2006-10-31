@@ -1865,8 +1865,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private RepositoryTaskOutlinePage outlinePage = null;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object getAdapter(Class adapter) {
+		return getAdapterDelgate(adapter);
+	}
+
+	public Object getAdapterDelgate(Class<?> adapter) {
 		if (IContentOutlinePage.class.equals(adapter)) {
 			if (outlinePage == null && editorInput != null) {
 				outlinePage = new RepositoryTaskOutlinePage(taskOutlineModel);

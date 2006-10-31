@@ -7,13 +7,13 @@ import java.util.regex.Pattern;
 /**
  * @author Eugene Kuleshov (https://bugs.eclipse.org/bugs/show_bug.cgi?id=129511)
  */
-public class TaskKeyComparator implements Comparator {
+public class TaskKeyComparator implements Comparator<String> {
 
 	public static final Pattern PATTERN = Pattern.compile("(?:([A-Za-z]*[:_\\-]?)(\\d+))?(.*)");
 
-	public int compare(Object o1, Object o2) {
-		String[] a1 = split((String) o1);
-		String[] a2 = split((String) o2);
+	public int compare(String o1, String o2) {
+		String[] a1 = split(o1);
+		String[] a2 = split(o2);
 
 		String s1 = a1[0];
 		String s2 = a2[0];

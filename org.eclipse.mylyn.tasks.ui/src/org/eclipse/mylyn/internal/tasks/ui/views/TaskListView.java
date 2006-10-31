@@ -1044,7 +1044,7 @@ public class TaskListView extends ViewPart {
 			element = (ITaskListElement) firstSelectedObject;
 		}
 		List<ITaskListElement> selectedElements = new ArrayList<ITaskListElement>();
-		for (Iterator i = ((IStructuredSelection) getViewer().getSelection()).iterator(); i.hasNext();) {
+		for (Iterator<?> i = ((IStructuredSelection) getViewer().getSelection()).iterator(); i.hasNext();) {
 			Object object = i.next();
 			if (object instanceof ITaskListElement) {
 				selectedElements.add((ITaskListElement) object);
@@ -1543,7 +1543,7 @@ public class TaskListView extends ViewPart {
 								if (element instanceof AbstractTaskContainer
 										&& !((AbstractTaskContainer) element).equals(TasksUiPlugin.getTaskListManager()
 												.getTaskList().getArchiveContainer())) {
-									List visibleElements = Arrays.asList(getViewer().getVisibleExpandedElements());
+									List<?> visibleElements = Arrays.asList(getViewer().getVisibleExpandedElements());
 									if (!visibleElements.contains(element)) {
 										getViewer().refresh();
 									}

@@ -77,6 +77,7 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 		return bugTitle;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object getAdapter(Class adapter) {
 		return null;

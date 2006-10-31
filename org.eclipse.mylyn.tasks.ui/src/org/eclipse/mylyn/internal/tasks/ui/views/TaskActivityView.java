@@ -341,7 +341,7 @@ public class TaskActivityView extends ViewPart {
 					return false;
 				}
 
-				for (Iterator iter = selection.iterator(); iter.hasNext();) {
+				for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
 					Object selectedObject = iter.next();
 					ITask task = null;
 					if (selectedObject instanceof ITask) {

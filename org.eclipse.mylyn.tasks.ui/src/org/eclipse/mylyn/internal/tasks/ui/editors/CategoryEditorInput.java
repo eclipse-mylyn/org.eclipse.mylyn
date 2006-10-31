@@ -48,6 +48,7 @@ public class CategoryEditorInput implements IEditorInput {
 		return "Category Editor";
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter) {
 		return null;
 	}

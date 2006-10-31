@@ -61,11 +61,11 @@ public class TaskListColorsAndFonts {
 			FontData data = new FontData(defaultData[0].getName(), defaultData[0].getHeight(), defaultData[0]
 					.getStyle());
 
-			// NOTE: Windowx XP only, for: data.data.lfStrikeOut = 1;
+			// NOTE: Windows XP only, for: data.data.lfStrikeOut = 1;
 			try {
 				Field dataField = data.getClass().getDeclaredField("data");
 				Object dataObject = dataField.get(data);
-				Class clazz = dataObject.getClass().getSuperclass();
+				Class<?> clazz = dataObject.getClass().getSuperclass();
 				Field strikeOutFiled = clazz.getDeclaredField("lfStrikeOut");
 				strikeOutFiled.set(dataObject, (byte) 1);
 				STRIKETHROUGH = new Font(Display.getCurrent(), data);

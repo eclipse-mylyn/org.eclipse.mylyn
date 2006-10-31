@@ -59,7 +59,7 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 	protected void assertTicketEquals(Ticket ticket, TracTicket tracTicket) throws Exception {
 		assertTrue(tracTicket.isValid());
 
-		Map expectedValues = ticket.getValues();
+		Map<?, ?> expectedValues = ticket.getValues();
 		Map<String, String> values = tracTicket.getValues();
 		for (String key : values.keySet()) {
 			assertEquals("Values for key '" + key + "' did not match", expectedValues.get(key), values.get(key));

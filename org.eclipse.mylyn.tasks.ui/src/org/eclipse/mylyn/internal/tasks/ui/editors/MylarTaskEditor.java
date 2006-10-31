@@ -92,8 +92,13 @@ public class MylarTaskEditor extends FormEditor {
 		return (TaskEditorActionContributor) getEditorSite().getActionBarContributor();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object getAdapter(Class adapter) {
+		return getAdapterDelgate(adapter);
+	}
+	
+	public Object getAdapterDelgate(Class<?> adapter) {
 		// TODO: consider adding: IContentOutlinePage.class.equals(adapter) &&
 		if (contentOutlineProvider != null) {
 			return contentOutlineProvider.getAdapter(adapter);

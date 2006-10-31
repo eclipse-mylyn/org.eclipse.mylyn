@@ -149,10 +149,10 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 		urlQueryString = new String(urlQueryBase + BUG_ID);
 
 		int queryCounter = -1;
-		Iterator itr = tasks.iterator();
+		Iterator<AbstractRepositoryTask> itr = tasks.iterator();
 		while (itr.hasNext()) {
 			queryCounter++;
-			ITask task = (ITask) itr.next();
+			ITask task = itr.next();
 			String newurlQueryString = URLEncoder.encode(AbstractRepositoryTask.getTaskId(task.getHandleIdentifier())
 					+ ",", repository.getCharacterEncoding());
 			if ((urlQueryString.length() + newurlQueryString.length() + IBugzillaConstants.CONTENT_TYPE_RDF.length()) > MAX_URL_LENGTH) {

@@ -192,9 +192,9 @@ public class TaskRepositoryManager {
 				return repository;
 			}
 		} else {
-			Collection values = repositoryMap.values();
+			Collection<Set<TaskRepository>> values = repositoryMap.values();
 			if (!values.isEmpty()) {
-				HashSet repoistorySet = (HashSet) values.iterator().next();
+				Set<TaskRepository> repoistorySet = values.iterator().next();
 				return (TaskRepository) repoistorySet.iterator().next();
 			}
 		}

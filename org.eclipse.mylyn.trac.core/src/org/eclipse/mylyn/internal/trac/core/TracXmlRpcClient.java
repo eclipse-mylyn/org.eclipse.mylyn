@@ -121,7 +121,7 @@ public class TracXmlRpcClient extends AbstractTracClient {
 
 	private void checkForException(Object result) throws NumberFormatException, XmlRpcException {
 		if (result instanceof Map) {
-			Map exceptionData = (Map) result;
+			Map<?, ?> exceptionData = (Map<?, ?>) result;
 			if (exceptionData.containsKey("faultCode") && exceptionData.containsKey("faultString")) {
 				throw new XmlRpcException(Integer.parseInt(exceptionData.get("faultCode").toString()),
 						(String) exceptionData.get("faultString"));
@@ -246,7 +246,7 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		TracTicket ticket = new TracTicket((Integer) ticketResult[0]);
 		ticket.setCreated((Integer) ticketResult[1]);
 		ticket.setLastChanged((Integer) ticketResult[2]);
-		Map attributes = (Map) ticketResult[3];
+		Map<?, ?> attributes = (Map<?, ?>) ticketResult[3];
 		for (Object key : attributes.keySet()) {
 			ticket.putValue(key.toString(), attributes.get(key).toString());
 		}
@@ -334,14 +334,14 @@ public class TracXmlRpcClient extends AbstractTracClient {
 			throw new OperationCanceledException();
 	}
 
-	private TracComponent parseComponent(Map result) {
+	private TracComponent parseComponent(Map<?, ?> result) {
 		TracComponent component = new TracComponent((String) result.get("name"));
 		component.setOwner((String) result.get("owner"));
 		component.setDescription((String) result.get("description"));
 		return component;
 	}
 
-	private TracMilestone parseMilestone(Map result) {
+	private TracMilestone parseMilestone(Map<?, ?> result) {
 		TracMilestone milestone = new TracMilestone((String) result.get("name"));
 		milestone.setCompleted(TracUtils.parseDate((Integer) result.get("completed")));
 		milestone.setDue(TracUtils.parseDate((Integer) result.get("due")));
@@ -349,7 +349,7 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		return milestone;
 	}
 
-	private TracVersion parseVersion(Map result) {
+	private TracVersion parseVersion(Map<?, ?> result) {
 		TracVersion version = new TracVersion((String) result.get("name"));
 		version.setTime(TracUtils.parseDate((Integer) result.get("time")));
 		version.setDescription((String) result.get("description"));

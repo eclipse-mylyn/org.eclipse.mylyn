@@ -525,6 +525,7 @@ public class TaskFormPage extends FormPage {
 			this.fAnnotationModel = model;
 		}
 
+		@SuppressWarnings("unchecked")
 		public String getHoverInfo(ISourceViewer sourceViewer, int lineNumber) {
 			Iterator ite = fAnnotationModel.getAnnotationIterator();
 
@@ -616,6 +617,7 @@ public class TaskFormPage extends FormPage {
 	// From org.eclipse.ui.internal.editors.text.SharedTextColors
 	static class SharedTextColors implements ISharedTextColors {
 		/** The display table. */
+		@SuppressWarnings("unchecked")
 		private Map fDisplayTable;
 
 		/** Creates an returns a shared color manager. */
@@ -654,6 +656,7 @@ public class TaskFormPage extends FormPage {
 		/*
 		 * @see ISharedTextColors#dispose()
 		 */
+		@SuppressWarnings("unchecked")
 		public void dispose() {
 			if (fDisplayTable != null) {
 				Iterator j = fDisplayTable.values().iterator();

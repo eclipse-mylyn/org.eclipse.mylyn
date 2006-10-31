@@ -60,7 +60,7 @@ class TaskListDragSourceListener implements DragSourceListener {
 		}
 		if (TaskTransfer.getInstance().isSupportedType(event.dataType)) {
 			List<ITask> tasks = new ArrayList<ITask>();
-			for (Iterator iter = selection.iterator(); iter.hasNext();) {
+			for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
 				ITaskListElement element = (ITaskListElement) iter.next();
 				if (element instanceof ITask) {
 					tasks.add((ITask)element);
@@ -74,10 +74,7 @@ class TaskListDragSourceListener implements DragSourceListener {
 			}
 		} else if (TextTransfer.getInstance().isSupportedType(event.dataType)) {
 			event.data = CopyDetailsAction.getTextForTask(selectedElement);
-		} 
-//		else {
-//			event.data = ID_DATA_TASK_DRAG;
-//		}
+		}
 	}
 
 	public void dragFinished(DragSourceEvent event) {

@@ -98,6 +98,7 @@ public class TaskActivityEditorInput implements IEditorInput {
 		return "Task Planner";
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter) {
 		return null;
 	}

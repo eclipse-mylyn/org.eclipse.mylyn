@@ -47,7 +47,7 @@ public class ResetRepositoryConfigurationAction extends Action {
 	public void run() {
 		try {
 			IStructuredSelection selection = (IStructuredSelection) repositoriesView.getViewer().getSelection();
-			for (Iterator iter = selection.iterator(); iter.hasNext();) {
+			for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
 				Object selectedObject = iter.next();
 				if (selectedObject instanceof TaskRepository) {
 					final TaskRepository repository = (TaskRepository) selectedObject;

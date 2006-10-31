@@ -89,6 +89,7 @@ public class TaskSpellingReconcileStrategy implements IReconcilerExtension, IRec
 		/*
 		 * @see org.eclipse.ui.texteditor.spelling.ISpellingProblemCollector#endCollecting()
 		 */
+		@SuppressWarnings("unchecked")
 		public void endCollecting() {
 
 			List<Annotation> removeAnnotations = new ArrayList<Annotation>();

@@ -101,6 +101,7 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 	 * 
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter) {
 		if (adapter == IEditorInput.class) {
 			return this;

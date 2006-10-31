@@ -72,6 +72,7 @@ public abstract class AbstractBugEditorInput implements IEditorInput {
 		return toolTipText;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter) {
 		return null;
 	}
