@@ -160,6 +160,7 @@ public class TestJavaProject {
 		return new Path(localJarURL.getPath());
 	}
 
+	@SuppressWarnings("deprecation")
 	public void waitForIndexer() throws JavaModelException {
 		new SearchEngine().searchAllTypeNames(null, null, SearchPattern.R_EXACT_MATCH, IJavaSearchConstants.CLASS,
 				SearchEngine.createJavaSearchScope(new IJavaElement[0]), new TypeNameRequestor() {

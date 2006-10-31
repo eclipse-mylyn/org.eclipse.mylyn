@@ -22,7 +22,6 @@ import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.compiler.CharOperation;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.internal.core.JavaModel;
@@ -31,7 +30,6 @@ import org.eclipse.jdt.internal.core.search.indexing.IIndexConstants;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
 
 /**
  * @author Mik Kersten
@@ -52,7 +50,7 @@ public class TypeHistoryManager implements IMylarContextListener {
 	private void updateTypeHistory(IMylarElement node, boolean add) {
 		IJavaElement element = JavaCore.create(node.getHandleIdentifier());
 		if (element instanceof IType) {
-			IType type = (IType) element;
+//			IType type = (IType) element;
 //			try {
 //				if (type != null && type.exists() && !type.isAnonymous() && !isAspectjType(type)) {
 //					TypeInfo info = factory.create(type.getPackageFragment().getElementName().toCharArray(), type
