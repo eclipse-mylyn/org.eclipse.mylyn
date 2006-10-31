@@ -325,13 +325,13 @@
             icon="icons/elcl16/interest-decrease.gif"
             id="org.eclipse.mylar.java.ui.actions.interest.decrement"
             label="Mylar: Mark Less Interesting"
-            menubarPath="mylar"
+            menubarPath="additions"
             tooltip="Mark selected element as uninteresting">
       </action>
 	    <action  
   		  	label="Mylar: Mark as Landmark" 
 	  		tooltip="Mark the selected element as a landmark"
-	  		menubarPath="mylar" 
+	  		menubarPath="additions" 
 	  		id="org.eclipse.mylar.ui.actions.InterestIncrementAction" 
 	  		class="org.eclipse.mylar.internal.context.ui.actions.InterestIncrementAction"
 	  		icon="icons/elcl16/interest-increase.gif"
@@ -347,7 +347,7 @@
             icon="icons/elcl16/interest-decrease.gif"
             id="org.eclipse.mylar.java.ui.actions.interest.decrement.container"
             label="Mylar: Mark Less Interesting"
-            menubarPath="mylar"
+            menubarPath="additions"
             tooltip="Mark selected element as uninteresting">
       </action>
      </objectContribution>
