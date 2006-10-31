@@ -142,7 +142,7 @@
             label="mylar team"
             id="org.eclipse.mylar.team.keywords"/>
    </extension>
-   
+  
    	<extension point="org.eclipse.ui.navigator.viewer">
 	   <viewerActionBinding
 	      viewerId="org.eclipse.team.cvs.ui.workspaceSynchronization">
@@ -151,6 +151,10 @@
 			       pattern="org.eclipse.mylar.ide.ui.actions.TaskResourceMappingActionProvider"/>
 	        </includes>
 	   </viewerActionBinding>
+    <dragAssistant
+          class="org.eclipse.ui.navigator.resources.ResourceDragAdapterAssistant"
+          viewerId="org.eclipse.mylar.team.cvs.ui.dragAssistant">
+    </dragAssistant>
 	</extension>
 	
     <extension

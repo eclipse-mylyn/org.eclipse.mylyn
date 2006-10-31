@@ -22,7 +22,8 @@ Require-Bundle: org.eclipse.team.core,
  org.eclipse.mylar.tasks.core,
  org.eclipse.mylar.tasks.ui,
  org.eclipse.mylar.resources,
- org.eclipse.compare
+ org.eclipse.compare,
+ org.eclipse.ui.navigator.resources
 Eclipse-LazyStart: true
 Export-Package: org.eclipse.mylar.internal.team,
  org.eclipse.mylar.internal.team.ccvs,

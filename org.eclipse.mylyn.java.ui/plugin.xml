@@ -5,7 +5,7 @@
    <extension-point id="javaEditorContributor" 
    		name="Mylar Java Editor Contributor" 
    		schema="schema/javaEditorContributor.exsd"/>
-   		
+	
 	<extension
 	       point="org.eclipse.mylar.context.core.bridges">
 	    <structureBridge
@@ -51,7 +51,7 @@
            </filter>
         </preservedFilters>
    </extension>
-	
+
 	<extension
           point="org.eclipse.mylar.tasks.ui.editors">
        <hyperlinkDetector

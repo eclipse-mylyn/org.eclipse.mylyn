@@ -13,8 +13,8 @@
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="structureBridge" minOccurs="1" maxOccurs="unbounded"/>
-            <element ref="contextStore"/>
+            <element ref="structureBridge" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="contextStore" minOccurs="0" maxOccurs="1"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
