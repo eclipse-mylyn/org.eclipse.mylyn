@@ -20,7 +20,7 @@
          <sequence>
             <element ref="connectorCore"/>
             <element ref="externalizer"/>
-            <element ref="connectorUi"/>
+            <element ref="connectorUi" minOccurs="0" maxOccurs="1"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>

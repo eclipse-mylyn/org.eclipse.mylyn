@@ -532,6 +532,7 @@
             class="org.eclipse.mylar.internal.tasks.ui.MoveToCategoryMenuContributor"
             menuPath="tasks"/>
    </extension>
+   
    <extension
          point="org.eclipse.mylar.tasks.ui.editors">
       <hyperlinkDetector

@@ -13,8 +13,8 @@
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="editorFactory" minOccurs="1" maxOccurs="unbounded"/>
-            <element ref="hyperlinkDetector"/>
+            <element ref="editorFactory" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="hyperlinkDetector" minOccurs="0" maxOccurs="1"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>

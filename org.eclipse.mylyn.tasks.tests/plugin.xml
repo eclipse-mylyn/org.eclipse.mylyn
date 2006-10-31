@@ -12,6 +12,7 @@
             id="org.eclipse.mylar.tasklist.tests.repositories"
             name="Mock Repository Client"
             type="mock"/>
+      
       <externalizer 
             class="org.eclipse.mylar.tasks.tests.connector.MockRepositoryExternalizer"
             id="org.eclipse.mylar.tasklist.tests.externalizer"/>
