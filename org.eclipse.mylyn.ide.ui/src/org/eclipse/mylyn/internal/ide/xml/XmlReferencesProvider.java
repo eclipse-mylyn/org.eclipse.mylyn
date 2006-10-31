@@ -298,7 +298,7 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
 		public ISearchResult getSearchResult() {
 			try {
 				// get the current page of the outline
-				Class clazz = FileSearchQuery.class;
+				Class<?> clazz = FileSearchQuery.class;
 				Field field = clazz.getDeclaredField("fResult");
 				field.setAccessible(true);
 				FileSearchResult fResult = (FileSearchResult) field.get(this);

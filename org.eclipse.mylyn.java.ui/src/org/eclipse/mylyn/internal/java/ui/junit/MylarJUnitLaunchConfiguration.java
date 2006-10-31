@@ -33,6 +33,7 @@ import org.eclipse.jdt.launching.VMRunnerConfiguration;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("unchecked")
 public class MylarJUnitLaunchConfiguration extends JUnitLaunchConfiguration {
 	
 	protected TestSearchResult customFindTestTypes(ILaunchConfiguration configuration, IProgressMonitor pm) throws CoreException {

@@ -190,7 +190,7 @@ public class PdeUiBridge implements IMylarUiBridge {
 					try {
 						if (p != null && p instanceof SourceOutlinePage) {
 							// get the tree viewer for the outline
-							Class clazz2 = p.getClass();
+							Class<?> clazz2 = p.getClass();
 							Field field2 = clazz2.getDeclaredField("viewer");
 							field2.setAccessible(true);
 							Object f2 = field2.get(p);
@@ -207,7 +207,7 @@ public class PdeUiBridge implements IMylarUiBridge {
 
 			try {
 				// get the current page of the outline
-				Class clazz = PDEFormEditor.class;
+				Class<?> clazz = PDEFormEditor.class;
 				Field field = null;
 				try {
 					field = clazz.getDeclaredField("formOutline");
@@ -218,7 +218,7 @@ public class PdeUiBridge implements IMylarUiBridge {
 				Object f = field.get(editor);
 				if (f != null && f instanceof FormOutlinePage) {
 					// get the tree viewer for the outline
-					Class clazz2 = FormOutlinePage.class;
+					Class<?> clazz2 = FormOutlinePage.class;
 					Field field2 = null;
 					try {
 						field2 = clazz2.getDeclaredField("treeViewer");

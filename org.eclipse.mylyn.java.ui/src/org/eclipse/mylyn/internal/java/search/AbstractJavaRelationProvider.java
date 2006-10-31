@@ -229,6 +229,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 				return gathered;
 			}
 
+			@SuppressWarnings("unchecked")
 			public void searchCompleted(List l) {
 				if (l == null)
 					return;

@@ -38,7 +38,7 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylartoMarkerVi
 			try {
 				IViewPart viewPart = super.getPartForAction();
 				if (viewPart != null) {
-					Class infoClass = TableView.class;// problemView.getClass();
+					Class<?> infoClass = TableView.class;// problemView.getClass();
 					Method method = infoClass.getDeclaredMethod("getViewer", new Class[] {});
 					method.setAccessible(true);
 					cachedViewer = (StructuredViewer) method.invoke(viewPart, new Object[] {});

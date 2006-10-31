@@ -172,7 +172,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 	 * @return filters that should not be removed when the interest filter is
 	 *         installed
 	 */
-	private Set<Class> getPreservedFilters() {
+	private Set<Class<?>> getPreservedFilters() {
 		return ContextUiPlugin.getDefault().getPreservedFilterClasses(viewPart.getSite().getId());
 	}
 
@@ -190,7 +190,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 			viewer.getControl().setRedraw(false);
 			previousFilters.put(viewer, Arrays.asList(viewer.getFilters()));
 			if (viewPart != null) {
-				Set<Class> excludedFilters = getPreservedFilters();
+				Set<Class<?>> excludedFilters = getPreservedFilters();
 				for (ViewerFilter filter : previousFilters.get(viewer)) {
 					if (!excludedFilters.contains(filter.getClass())) {
 						try {
@@ -226,7 +226,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 
 		viewer.getControl().setRedraw(false);
 		if (viewPart != null) {
-			Set<Class> excludedFilters = getPreservedFilters();
+			Set<Class<?>> excludedFilters = getPreservedFilters();
 			if (previousFilters.containsKey(viewer)) {
 				for (ViewerFilter filter : previousFilters.get(viewer)) {
 					if (!excludedFilters.contains(filter.getClass())) {

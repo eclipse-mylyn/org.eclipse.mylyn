@@ -52,14 +52,14 @@ public class InterestFilterTest extends AbstractJavaContextTest {
 	}
 
 	public void testPreservedFilterRemovalExclusion() throws JavaModelException {
-		List<Class> filterClasses = new ArrayList<Class>();
+		List<Class<?>> filterClasses = new ArrayList<Class<?>>();
 		for (ViewerFilter filter : Arrays.asList(explorer.getTreeViewer().getFilters())) {
 			filterClasses.add(filter.getClass());
 		}
 		assertTrue(filterClasses.contains(ImportDeclarationFilter.class));
 
 		applyAction.update(true);
-		filterClasses = new ArrayList<Class>();
+		filterClasses = new ArrayList<Class<?>>();
 		for (ViewerFilter filter : Arrays.asList(explorer.getTreeViewer().getFilters())) {
 			filterClasses.add(filter.getClass());
 		} 

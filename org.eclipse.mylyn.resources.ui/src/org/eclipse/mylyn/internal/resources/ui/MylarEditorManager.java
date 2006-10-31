@@ -61,7 +61,7 @@ public class MylarEditorManager implements IMylarContextListener {
 				List<IMylarElement> documents = ContextCorePlugin.getContextManager().getInterestingDocuments();
 				int opened = 0;
 				int threshold = ContextUiPlugin.getDefault().getPreferenceStore().getInt(ContextUiPrefContstants.AUTO_MANAGE_EDITORS_OPEN_NUM);
-				for (Iterator iter = documents.iterator(); iter.hasNext() && opened < threshold - 1; opened++) {
+				for (Iterator<IMylarElement> iter = documents.iterator(); iter.hasNext() && opened < threshold - 1; opened++) {
 					IMylarElement document = (IMylarElement) iter.next();
 					IMylarUiBridge bridge = ContextUiPlugin.getDefault().getUiBridge(document.getContentType());
 					bridge.restoreEditor(document);

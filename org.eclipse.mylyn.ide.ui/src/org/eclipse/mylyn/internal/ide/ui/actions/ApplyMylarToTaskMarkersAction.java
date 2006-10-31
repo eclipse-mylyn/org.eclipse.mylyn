@@ -36,7 +36,7 @@ public class ApplyMylarToTaskMarkersAction extends AbstractApplyMylartoMarkerVie
 			try {
 				IViewPart viewPart = super.getPartForAction();
 				if (viewPart instanceof TaskView) {
-					Class infoClass = TableView.class;
+					Class<?> infoClass = TableView.class;
 					Method method = infoClass.getDeclaredMethod("getViewer", new Class[] {});
 					method.setAccessible(true);
 					cachedViewer = (StructuredViewer) method.invoke(viewPart, new Object[] {});

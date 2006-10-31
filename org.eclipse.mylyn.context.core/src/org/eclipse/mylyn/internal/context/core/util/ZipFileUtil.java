@@ -48,7 +48,7 @@ public class ZipFileUtil {
 	public static List<File> unzipFiles(File zippedfile, String destPath) throws FileNotFoundException, IOException {
 		ZipFile zipFile = new ZipFile(zippedfile);
 
-		Enumeration entries = zipFile.entries();
+		Enumeration<? extends ZipEntry> entries = zipFile.entries();
 		List<File> outputFiles = new ArrayList<File>();
 
 		while (entries.hasMoreElements()) {

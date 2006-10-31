@@ -165,7 +165,7 @@ public class AntUiBridge implements IMylarUiBridge {
 				AntEditor ae = (AntEditor) editor;
 				AntEditorContentOutlinePage outline = (AntEditorContentOutlinePage) ae
 						.getAdapter(IContentOutlinePage.class);
-				Class clazz = ContentOutlinePage.class;
+				Class<?> clazz = ContentOutlinePage.class;
 				Method method = clazz.getDeclaredMethod("getTreeViewer", new Class[] {});
 				method.setAccessible(true);
 				viewers.add((TreeViewer) method.invoke(outline, new Object[] {}));

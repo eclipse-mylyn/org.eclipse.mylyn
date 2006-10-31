@@ -154,7 +154,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 	 * TODO: remove after WTP 1.5.1 is generally available
 	 */
 	private String getWtpElementHandle(Object object) {
-		Class objectClass = object.getClass();
+		Class<?> objectClass = object.getClass();
 		try {
 			Method getProjectMethod = objectClass.getMethod("getProject", new Class[0]);
 			Object javaProject = getProjectMethod.invoke(object, new Object[0]);

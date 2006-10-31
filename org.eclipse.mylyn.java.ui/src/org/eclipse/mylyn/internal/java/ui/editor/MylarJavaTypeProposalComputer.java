@@ -26,6 +26,7 @@ public class MylarJavaTypeProposalComputer extends JavaTypeCompletionProposalCom
 		MylarJavaProposalProcessor.getDefault().addMonitoredComputer(this);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List computeCompletionProposals(ContentAssistInvocationContext context, IProgressMonitor monitor) {
 		List proposals = super.computeCompletionProposals(context, monitor);

@@ -32,6 +32,7 @@ public class MylarJavaNoTypeProposalComputer extends JavaNoTypeCompletionProposa
 		return super.createCollector(context);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List computeCompletionProposals(ContentAssistInvocationContext context, IProgressMonitor monitor) {
 		List proposals = super.computeCompletionProposals(context, monitor);

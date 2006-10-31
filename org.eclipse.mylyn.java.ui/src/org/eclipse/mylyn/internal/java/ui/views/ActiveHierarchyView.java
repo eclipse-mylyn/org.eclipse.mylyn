@@ -362,9 +362,9 @@ class TreeParent implements IAdaptable {
 		return parent;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class key) {
 		return element;
-		// return null;
 	}
 
 	public IJavaElement getElement() {

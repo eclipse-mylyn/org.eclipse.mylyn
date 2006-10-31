@@ -101,7 +101,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private Map<IMylarUiBridge, String> activeSearchLabels = new HashMap<IMylarUiBridge, String>();
 
-	private Map<String, Set<Class>> preservedFilters = new HashMap<String, Set<Class>>();
+	private Map<String, Set<Class<?>>> preservedFilters = new HashMap<String, Set<Class<?>>>();
 
 	private final ITaskHighlighter DEFAULT_HIGHLIGHTER = new ITaskHighlighter() {
 		public Color getHighlightColor(ITask task) {
@@ -659,15 +659,15 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	}
 
 	public void addPreservedFilterClass(String viewId, ViewerFilter filter) {
-		Set<Class> preservedList = preservedFilters.get(viewId);
+		Set<Class<?>> preservedList = preservedFilters.get(viewId);
 		if (preservedList == null) {
-			preservedList = new HashSet<Class>();
+			preservedList = new HashSet<Class<?>>();
 			preservedFilters.put(viewId, preservedList);
 		}
 		preservedList.add(filter.getClass());
 	}
 	
-	public Set<Class> getPreservedFilterClasses(String id) {
+	public Set<Class<?>> getPreservedFilterClasses(String id) {
 		UiExtensionPointReader.initExtensions();
 		if (preservedFilters.containsKey(id)) {
 			return preservedFilters.get(id);

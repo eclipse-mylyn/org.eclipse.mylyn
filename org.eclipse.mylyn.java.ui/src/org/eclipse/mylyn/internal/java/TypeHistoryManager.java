@@ -11,22 +11,11 @@
 
 package org.eclipse.mylar.internal.java;
 
-import java.io.File;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IMember;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.compiler.CharOperation;
-import org.eclipse.jdt.core.search.IJavaSearchScope;
-import org.eclipse.jdt.internal.core.JavaModel;
-import org.eclipse.jdt.internal.core.search.HierarchyScope;
-import org.eclipse.jdt.internal.core.search.indexing.IIndexConstants;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
@@ -68,18 +57,18 @@ public class TypeHistoryManager implements IMylarContextListener {
 		}
 	}
 
-	/**
-	 * HACK: to avoid adding AspectJ types, for example:
-	 * 
-	 * class: =TJP Example/src<tjp{Demo.java[Demo aspect: =TJP Example/src<tjp*GetInfo.aj}GetInfo
-	 */
-	private boolean isAspectjType(IType type) {
-		if (type.getHandleIdentifier().indexOf('}') != -1) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+//	/**
+//	 * HACK: to avoid adding AspectJ types, for example:
+//	 * 
+//	 * class: =TJP Example/src<tjp{Demo.java[Demo aspect: =TJP Example/src<tjp*GetInfo.aj}GetInfo
+//	 */
+//	private boolean isAspectjType(IType type) {
+//		if (type.getHandleIdentifier().indexOf('}') != -1) {
+//			return true;
+//		} else {
+//			return false;
+//		}
+//	}
 
 	public void contextDeactivated(IMylarContext context) {
 //		clearTypeHistory();
@@ -125,60 +114,60 @@ public class TypeHistoryManager implements IMylarContextListener {
 		// ignore
 	}
 
-	/**
-	 * Coped from: HierarchyScope constructor
-	 */
-	private String getPath(IType type) {
-		String focusPath = null;
-		IPackageFragmentRoot root = (IPackageFragmentRoot) type.getPackageFragment().getParent();
-		if (root.isArchive()) {
-			IPath jarPath = root.getPath();
-			Object target = JavaModel.getTarget(ResourcesPlugin.getWorkspace().getRoot(), jarPath, true);
-			String zipFileName;
-			if (target instanceof IFile) {
-				// internal jar
-				zipFileName = jarPath.toString();
-			} else if (target instanceof File) {
-				// external jar
-				zipFileName = ((File) target).getPath();
-			} else {
-				return null; // unknown target
-			}
-			focusPath = zipFileName + IJavaSearchScope.JAR_FILE_ENTRY_SEPARATOR
-					+ type.getFullyQualifiedName().replace('.', '/') + HierarchyScope.SUFFIX_STRING_class;
-		} else {
-			focusPath = type.getPath().toString();
-		}
-		return focusPath;
-	}
+//	/**
+//	 * Coped from: HierarchyScope constructor
+//	 */
+//	private String getPath(IType type) {
+//		String focusPath = null;
+//		IPackageFragmentRoot root = (IPackageFragmentRoot) type.getPackageFragment().getParent();
+//		if (root.isArchive()) {
+//			IPath jarPath = root.getPath();
+//			Object target = JavaModel.getTarget(ResourcesPlugin.getWorkspace().getRoot(), jarPath, true);
+//			String zipFileName;
+//			if (target instanceof IFile) {
+//				// internal jar
+//				zipFileName = jarPath.toString();
+//			} else if (target instanceof File) {
+//				// external jar
+//				zipFileName = ((File) target).getPath();
+//			} else {
+//				return null; // unknown target
+//			}
+//			focusPath = zipFileName + IJavaSearchScope.JAR_FILE_ENTRY_SEPARATOR
+//					+ type.getFullyQualifiedName().replace('.', '/') + HierarchyScope.SUFFIX_STRING_class;
+//		} else {
+//			focusPath = type.getPath().toString();
+//		}
+//		return focusPath;
+//	}
 
-	/**
-	 * Copied from: org.eclipse.java.search.SearchPattern
-	 */
-	private char[][] enclosingTypeNames(IType type) {
-		IJavaElement parent = type.getParent();
-		switch (parent.getElementType()) {
-		case IJavaElement.CLASS_FILE:
-			// For a binary type, the parent is not the enclosing type, but the
-			// declaring type is.
-			// (see bug 20532 Declaration of member binary type not found)
-			IType declaringType = type.getDeclaringType();
-			if (declaringType == null)
-				return CharOperation.NO_CHAR_CHAR;
-			return CharOperation.arrayConcat(enclosingTypeNames(declaringType), declaringType.getElementName()
-					.toCharArray());
-		case IJavaElement.COMPILATION_UNIT:
-			return CharOperation.NO_CHAR_CHAR;
-		case IJavaElement.FIELD:
-		case IJavaElement.INITIALIZER:
-		case IJavaElement.METHOD:
-			IType declaringClass = ((IMember) parent).getDeclaringType();
-			return CharOperation.arrayConcat(enclosingTypeNames(declaringClass), new char[][] {
-					declaringClass.getElementName().toCharArray(), IIndexConstants.ONE_STAR });
-		case IJavaElement.TYPE:
-			return CharOperation.arrayConcat(enclosingTypeNames((IType) parent), parent.getElementName().toCharArray());
-		default:
-			return null;
-		}
-	}
+//	/**
+//	 * Copied from: org.eclipse.java.search.SearchPattern
+//	 */
+//	private char[][] enclosingTypeNames(IType type) {
+//		IJavaElement parent = type.getParent();
+//		switch (parent.getElementType()) {
+//		case IJavaElement.CLASS_FILE:
+//			// For a binary type, the parent is not the enclosing type, but the
+//			// declaring type is.
+//			// (see bug 20532 Declaration of member binary type not found)
+//			IType declaringType = type.getDeclaringType();
+//			if (declaringType == null)
+//				return CharOperation.NO_CHAR_CHAR;
+//			return CharOperation.arrayConcat(enclosingTypeNames(declaringType), declaringType.getElementName()
+//					.toCharArray());
+//		case IJavaElement.COMPILATION_UNIT:
+//			return CharOperation.NO_CHAR_CHAR;
+//		case IJavaElement.FIELD:
+//		case IJavaElement.INITIALIZER:
+//		case IJavaElement.METHOD:
+//			IType declaringClass = ((IMember) parent).getDeclaringType();
+//			return CharOperation.arrayConcat(enclosingTypeNames(declaringClass), new char[][] {
+//					declaringClass.getElementName().toCharArray(), IIndexConstants.ONE_STAR });
+//		case IJavaElement.TYPE:
+//			return CharOperation.arrayConcat(enclosingTypeNames((IType) parent), parent.getElementName().toCharArray());
+//		default:
+//			return null;
+//		}
+//	}
 }

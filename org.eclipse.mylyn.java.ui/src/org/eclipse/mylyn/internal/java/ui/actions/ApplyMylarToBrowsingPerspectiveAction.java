@@ -68,13 +68,13 @@ public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAct
 			return null;
 		try {
 			IViewPart viewPart = activePage.findView(id);
-			Class sub = Class.forName(className);
+			Class<?> sub = Class.forName(className);
 
 			if (sub.isInstance(viewPart)) {
 				IViewPart view = viewPart;
 				if (view != null) {
 					try {
-						Class clazz = sub.getSuperclass();
+						Class<?> clazz = sub.getSuperclass();
 						Method method = clazz.getDeclaredMethod("getViewer", new Class[] {});
 						method.setAccessible(true);
 

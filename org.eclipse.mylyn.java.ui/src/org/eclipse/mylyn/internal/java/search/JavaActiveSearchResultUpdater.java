@@ -32,8 +32,8 @@ import org.eclipse.search.ui.text.Match;
  * COPIED FROM: org.eclipse.jdt.internal.ui.search.SearchResultUpdater
  * 
  * @author Shawn Minto
- * 
  */
+@SuppressWarnings("unchecked")
 public class JavaActiveSearchResultUpdater implements IElementChangedListener, IQueryListener {
 
 	private JavaSearchResult fResult;
@@ -58,8 +58,6 @@ public class JavaActiveSearchResultUpdater implements IElementChangedListener, I
 			handleRemoved(removedElements);
 		if (potentiallyRemovedElements.size() > 0)
 			handleRemoved(potentiallyRemovedElements);
-		// System.out.println(this+"handled delta in:
-		// "+(System.currentTimeMillis()-t0));
 	}
 
 	private void handleRemoved(Set removedElements) {
@@ -69,28 +67,19 @@ public class JavaActiveSearchResultUpdater implements IElementChangedListener, I
 				if (elements[i] instanceof IJavaElement) {
 					IJavaElement je = (IJavaElement) elements[i];
 					if (!je.exists()) {
-						// System.out.println("removing: "+je+" in
-						// "+fResult.getgetUserData());
 						Match[] matches = fResult.getMatches(elements[i]);
 						for (int j = 0; j < matches.length; j++) {
 							fResult.removeMatch(matches[j]);
 						}
-						// System.out.println("REMOVE JE: " +
-						// je.getHandleIdentifier());
-
 						// XXX remove edge and element
 					}
 				} else if (elements[i] instanceof IResource) {
 					IResource resource = (IResource) elements[i];
 					if (!resource.exists()) {
-						// System.out.println("removing: "+resource+" in
-						// "+fResult.getUserData());
 						Match[] matches = fResult.getMatches(elements[i]);
 						for (int j = 0; j < matches.length; j++) {
 							fResult.removeMatch(matches[j]);
 						}
-						// System.out.println("REMOVE RES: " +
-						// resource.getFullPath().toPortableString());
 						// XXX remove edge and element
 					}
 
