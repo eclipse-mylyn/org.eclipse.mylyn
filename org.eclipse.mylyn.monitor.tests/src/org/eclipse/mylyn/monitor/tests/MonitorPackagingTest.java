@@ -61,7 +61,7 @@ public class MonitorPackagingTest extends AbstractContextTest {
 		int numEntries = 0;
 
 		// Enumerate each entry
-		for (Enumeration entries = zf.entries(); entries.hasMoreElements();) {
+		for (Enumeration<? extends ZipEntry> entries = zf.entries(); entries.hasMoreElements();) {
 			numEntries++;
 			String zipEntryName = ((ZipEntry) entries.nextElement()).getName();
 			assertTrue("Unknown Entry: " + zipEntryName, zipEntryName.compareTo(monitorFile.getName()) == 0);// ||

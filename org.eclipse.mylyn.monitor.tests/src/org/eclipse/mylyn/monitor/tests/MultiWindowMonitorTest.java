@@ -96,8 +96,8 @@ public class MultiWindowMonitorTest extends TestCase {
 				new Object[] { memento });
 	}
 
-	protected Object invokeMethod(Object instance, String methodName, Class argTypes[], Object arguments[]) {
-		Class clas = instance.getClass();
+	protected Object invokeMethod(Object instance, String methodName, Class<?> argTypes[], Object arguments[]) {
+		Class<?> clas = instance.getClass();
 		try {
 			Method method = clas.getDeclaredMethod(methodName, argTypes);
 			method.setAccessible(true);

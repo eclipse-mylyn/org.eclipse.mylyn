@@ -90,7 +90,7 @@ public class MonitorTest extends TestCase implements IMylarMonitorLifecycleListe
 		assertEquals(0, browserMonitor.getAcceptedUrls().size());
 	}
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({ "deprecation", "unchecked" })
 	public void testLogging() throws InterruptedException {
 		MylarUsageMonitorPlugin.getDefault().startMonitoring();
 		logger.stopMonitoring();
