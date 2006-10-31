@@ -87,6 +87,7 @@ public class TaskActivityViewSorter extends ViewerSorter {
 		System.arraycopy(DEFAULT_DIRECTIONS, 0, directions, 0, directions.length);
 	}
 
+	@SuppressWarnings("unchecked")
 	private int compare(DateRangeActivityDelegate task1, DateRangeActivityDelegate task2) {
 		if (sortColumn >= directions.length)
 			return 0;
@@ -101,7 +102,7 @@ public class TaskActivityViewSorter extends ViewerSorter {
 		case DESCRIPTION: {
 			String description1 = task1.getDescription();
 			String description2 = task2.getDescription();
-			int result = collator.compare(description1, description2);
+			int result = getComparator().compare(description1, description2);
 			return result * directions[sortColumn];
 		}
 		case ELAPSED: {

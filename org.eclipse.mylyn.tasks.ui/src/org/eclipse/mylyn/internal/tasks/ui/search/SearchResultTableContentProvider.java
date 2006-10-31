@@ -14,7 +14,6 @@ package org.eclipse.mylar.internal.tasks.ui.search;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.search.internal.ui.SearchPreferencePage;
 
 /**
  * This implementation of <code>SearchResultContentProvider</code> is used for the
