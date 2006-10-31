@@ -116,16 +116,16 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		// Favorite", this);
 		openInEditorAction = new OpenSearchResultAction("Open in Editor", this);
 
-		bugPropertyChangeListener = new IPropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent event) {
-				if (SearchPreferencePage.LIMIT_TABLE.equals(event.getProperty())
-						|| SearchPreferencePage.LIMIT_TABLE_TO.equals(event.getProperty()))
-					if (getViewer() instanceof TableViewer) {
-						getViewPart().updateLabel();
-						getViewer().refresh();
-					}
-			}
-		};
+//		bugPropertyChangeListener = new IPropertyChangeListener() {
+//			public void propertyChange(PropertyChangeEvent event) {
+//				if (SearchPreferencePage.LIMIT_TABLE.equals(event.getProperty())
+//						|| SearchPreferencePage.LIMIT_TABLE_TO.equals(event.getProperty()))
+//					if (getViewer() instanceof TableViewer) {
+//						getViewPart().updateLabel();
+//						getViewer().refresh();
+//					}
+//			}
+//		};
 		SearchPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(bugPropertyChangeListener);
 	}
 

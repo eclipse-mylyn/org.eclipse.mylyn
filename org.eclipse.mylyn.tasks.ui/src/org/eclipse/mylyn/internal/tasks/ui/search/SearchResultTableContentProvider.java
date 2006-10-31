@@ -47,13 +47,13 @@ public class SearchResultTableContentProvider extends SearchResultContentProvide
 	@Override
 	public void elementsChanged(Object[] updatedElements) {
 		TableViewer viewer = getViewer();
-		boolean tableLimited = SearchPreferencePage.isTableLimited();
+//		boolean tableLimited = SearchPreferencePage.isTableLimited();
 		for (int i = 0; i < updatedElements.length; i++) {
 			if (searchResult.getMatchCount(updatedElements[i]) > 0) {
 				if (viewer.testFindItem(updatedElements[i]) != null)
 					viewer.update(updatedElements[i], null);
 				else {
-					if (!tableLimited || viewer.getTable().getItemCount() < SearchPreferencePage.getTableLimit())
+//					if (!tableLimited || viewer.getTable().getItemCount() < SearchPreferencePage.getTableLimit())
 						viewer.add(updatedElements[i]);
 				}
 			} else
@@ -79,12 +79,12 @@ public class SearchResultTableContentProvider extends SearchResultContentProvide
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof RepositorySearchResult) {
 			Object[] elements = ((RepositorySearchResult) inputElement).getElements();
-			int tableLimit = SearchPreferencePage.getTableLimit();
-			if (SearchPreferencePage.isTableLimited() && elements.length > tableLimit) {
-				Object[] shownElements = new Object[tableLimit];
-				System.arraycopy(elements, 0, shownElements, 0, tableLimit);
-				return shownElements;
-			}
+//			int tableLimit = SearchPreferencePage.getTableLimit();
+//			if (SearchPreferencePage.isTableLimited() && elements.length > tableLimit) {
+//				Object[] shownElements = new Object[tableLimit];
+//				System.arraycopy(elements, 0, shownElements, 0, tableLimit);
+//				return shownElements;
+//			}
 			return elements;
 		}
 		return EMPTY_ARR;
