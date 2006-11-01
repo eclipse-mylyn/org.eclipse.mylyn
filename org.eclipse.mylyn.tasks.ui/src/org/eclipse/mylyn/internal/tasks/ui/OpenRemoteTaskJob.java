@@ -87,12 +87,7 @@ public class OpenRemoteTaskJob extends Job {
 					RepositoryTaskData downloadedTaskData = null;
 					try {
 						downloadedTaskData = offlineHandler.downloadTaskData(repository, taskId, TasksUiPlugin.getDefault().getProxySettings());
-						openEditor(repository, downloadedTaskData);
-					} catch (final LoginException e) {							
-						MylarStatusHandler.fail(e,
-								"Report download failed. Ensure proper repository configuration of "
-										+ repository.getUrl() + " in " + TaskRepositoriesView.NAME
-										+ ".", true);							
+						openEditor(repository, downloadedTaskData);										
 					} catch (final CoreException e) {
 						// TODO generalize exception handling
 						if (e.getStatus().getException() instanceof UnrecognizedReponseException) {

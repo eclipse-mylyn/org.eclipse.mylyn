@@ -34,7 +34,7 @@ public class TaskRepositoryManager {
 	public static final String OLD_REPOSITORIES_FILE = "repositories.xml";
 
 	public static final String DEFAULT_REPOSITORIES_FILE = "repositories.xml.zip";
-	
+
 	public static final String PREF_REPOSITORIES = "org.eclipse.mylar.tasklist.repositories.";
 
 	private Map<String, AbstractRepositoryConnector> repositoryConnectors = new HashMap<String, AbstractRepositoryConnector>();
@@ -52,7 +52,7 @@ public class TaskRepositoryManager {
 	private TaskRepositoriesExternalizer externalizer = new TaskRepositoriesExternalizer();
 
 	private TaskList taskList;
-	
+
 	public TaskRepositoryManager(TaskList taskList) {
 		this.taskList = taskList;
 	}
@@ -64,7 +64,7 @@ public class TaskRepositoryManager {
 	public AbstractRepositoryConnector getRepositoryConnector(String kind) {
 		return repositoryConnectors.get(kind);
 	}
-	
+
 	public AbstractRepositoryConnector getRepositoryConnector(AbstractRepositoryTask task) {
 		return getRepositoryConnector(task.getRepositoryKind());
 	}
@@ -121,18 +121,18 @@ public class TaskRepositoryManager {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * @return first repository that matches the given url
 	 */
 	public TaskRepository getRepository(String urlString) {
-		for (String kind: repositoryMap.keySet()) {
+		for (String kind : repositoryMap.keySet()) {
 			for (TaskRepository repository : repositoryMap.get(kind)) {
 				if (repository.getUrl().equals(urlString)) {
 					return repository;
 				}
 			}
-		}		
+		}
 		return null;
 	}
 
@@ -215,7 +215,8 @@ public class TaskRepositoryManager {
 
 	private void loadRepositories(String repositoriesFilePath) {
 		try {
-//			String dataDirectory = TasksUiPlugin.getDefault().getDataDirectory();
+			// String dataDirectory =
+			// TasksUiPlugin.getDefault().getDataDirectory();
 			File repositoriesFile = new File(repositoriesFilePath);
 
 			// Will only load repositories for which a connector exists
@@ -289,8 +290,10 @@ public class TaskRepositoryManager {
 		}
 
 		try {
-//			String dataDirectory = TasksUiPlugin.getDefault().getDataDirectory();
-//			File repositoriesFile = new File(dataDirectory + File.separator + TasksUiPlugin.DEFAULT_REPOSITORIES_FILE);
+			// String dataDirectory =
+			// TasksUiPlugin.getDefault().getDataDirectory();
+			// File repositoriesFile = new File(dataDirectory + File.separator +
+			// TasksUiPlugin.DEFAULT_REPOSITORIES_FILE);
 			File repositoriesFile = new File(destinationPath);
 			externalizer.writeRepositoriesToXML(repositoriesToWrite, repositoriesFile);
 		} catch (Throwable t) {
@@ -320,4 +323,5 @@ public class TaskRepositoryManager {
 			listener.repositorySettingsChanged(repository);
 		}
 	}
+
 }

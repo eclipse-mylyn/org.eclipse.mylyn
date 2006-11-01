@@ -10,13 +10,10 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasks.ui.editors;
 
-import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -27,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
@@ -66,6 +64,7 @@ import org.eclipse.mylar.internal.tasks.ui.wizards.NewAttachmentWizard;
 import org.eclipse.mylar.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
@@ -209,7 +208,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected RepositoryTaskOutlineNode taskOutlineModel = null;
 
 	protected boolean expandedStateAttributes = false;
-	
+
 	/**
 	 * Style option for function <code>newLayout</code>. This will create a
 	 * plain-styled, selectable text label.
@@ -444,7 +443,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected abstract void validateInput();
 
 	protected String getTitleString() {
-		return getRepositoryTaskData().getLabel();// + ": " + checkText(summaryVal);
+		return getRepositoryTaskData().getLabel();// + ": " +
+													// checkText(summaryVal);
 	}
 
 	protected abstract void submitBug();
@@ -533,28 +533,33 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		String statusValue = this.getRepositoryTaskData().getAttributeValue(RepositoryTaskAttribute.STATUS);
 		toolkit.createText(headerInfoComposite, statusValue, SWT.FLAT | SWT.READ_ONLY);
 		toolkit.createLabel(headerInfoComposite, " Priority: ").setFont(TITLE_FONT);
-		toolkit.createText(headerInfoComposite,  getRepositoryTaskData().getAttributeValue(RepositoryTaskAttribute.PRIORITY), SWT.FLAT | SWT.READ_ONLY);
-//		RepositoryTaskAttribute attribute = getRepositoryTaskData().getAttribute(RepositoryTaskAttribute.PRIORITY);
-//		if (attribute != null) {
-//			String value = attribute.getValue() != null ? attribute.getValue() : "";
-//			attributeCombo = new CCombo(headerInfoComposite, SWT.FLAT | SWT.READ_ONLY);
-//			toolkit.adapt(attributeCombo, true, true);
-//			attributeCombo.setFont(TEXT_FONT);
-//			if (attribute.getValues() != null) {
-//
-//				Set<String> s = attribute.getOptionValues().keySet();
-//				String[] a = s.toArray(new String[s.size()]);
-//				for (int i = 0; i < a.length; i++) {
-//					attributeCombo.add(a[i]);
-//				}
-//				if (attributeCombo.indexOf(value) != -1) {
-//					attributeCombo.select(attributeCombo.indexOf(value));
-//				}
-//			}
-//			attributeCombo.addSelectionListener(new ComboSelectionListener(attributeCombo));
-//			comboListenerMap.put(attributeCombo, attribute);
-//			attributeCombo.addListener(SWT.FocusIn, new GenericListener());
-//		}
+		toolkit.createText(headerInfoComposite, getRepositoryTaskData().getAttributeValue(
+				RepositoryTaskAttribute.PRIORITY), SWT.FLAT | SWT.READ_ONLY);
+		// RepositoryTaskAttribute attribute =
+		// getRepositoryTaskData().getAttribute(RepositoryTaskAttribute.PRIORITY);
+		// if (attribute != null) {
+		// String value = attribute.getValue() != null ? attribute.getValue() :
+		// "";
+		// attributeCombo = new CCombo(headerInfoComposite, SWT.FLAT |
+		// SWT.READ_ONLY);
+		// toolkit.adapt(attributeCombo, true, true);
+		// attributeCombo.setFont(TEXT_FONT);
+		// if (attribute.getValues() != null) {
+		//
+		// Set<String> s = attribute.getOptionValues().keySet();
+		// String[] a = s.toArray(new String[s.size()]);
+		// for (int i = 0; i < a.length; i++) {
+		// attributeCombo.add(a[i]);
+		// }
+		// if (attributeCombo.indexOf(value) != -1) {
+		// attributeCombo.select(attributeCombo.indexOf(value));
+		// }
+		// }
+		// attributeCombo.addSelectionListener(new
+		// ComboSelectionListener(attributeCombo));
+		// comboListenerMap.put(attributeCombo, attribute);
+		// attributeCombo.addListener(SWT.FocusIn, new GenericListener());
+		// }
 
 		toolkit.createLabel(headerInfoComposite, "  ID: ").setFont(TITLE_FONT);
 		toolkit.createText(headerInfoComposite, "" + getRepositoryTaskData().getId(), SWT.FLAT | SWT.READ_ONLY);
@@ -611,7 +616,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				continue;
 
 			Map<String, String> values = attribute.getOptionValues();
-			
+
 			if (values == null)
 				values = new HashMap<String, String>();
 
@@ -868,7 +873,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						return;
 					}
 
-					IStorageEditorInput input = new RepositoryAttachmentEditorInput(attachment);
+					IStorageEditorInput input = new RepositoryAttachmentEditorInput(repository, attachment);
 					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 					if (page == null) {
 						return;
@@ -887,7 +892,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				public void run() {
 					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
 							.getSelection()).getFirstElement());
-					IStorageEditorInput input = new RepositoryAttachmentEditorInput(attachment);
+					IStorageEditorInput input = new RepositoryAttachmentEditorInput(repository, attachment);
 					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 					if (page == null) {
 						return;
@@ -932,10 +937,19 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					}
 
 					// TODO: Use IAttachmentHandler instead
+
+					AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+							.getRepositoryConnector(repository.getKind());
+					IAttachmentHandler handler = connector.getAttachmentHandler();
+
 					SaveRemoteFileAction save = new SaveRemoteFileAction();
-					save.setDestinationFilePath(filePath);
-					save.setInputStream(getAttachmentInputStream(attachment.getUrl()));
-					save.run();
+					try {
+						save.setInputStream(new ByteArrayInputStream(handler.getAttachmentData(repository, "" + attachment.getId())));
+						save.setDestinationFilePath(filePath);
+						save.run();
+					} catch (CoreException e) {
+						MylarStatusHandler.fail(e.getStatus().getException(), "Attachment save failed", false);
+					}
 				}
 			};
 
@@ -944,7 +958,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
 							.getSelection()).getFirstElement());
 					CopyToClipboardAction copyToClip = new CopyToClipboardAction();
-					copyToClip.setContents(getAttachmentContents(attachment.getUrl()));
+					copyToClip.setContents(getAttachmentContents(attachment));
 					copyToClip.setControl(attachmentsTable.getParent());
 					copyToClip.run();
 				}
@@ -970,7 +984,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					popupMenu.add(openMenu);
 					openMenu.removeAll();
 
-					IStorageEditorInput input = new RepositoryAttachmentEditorInput(att);
+					IStorageEditorInput input = new RepositoryAttachmentEditorInput(repository, att);
 					IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(
 							input.getName());
 					if (desc != null) {
@@ -1152,39 +1166,43 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		});
 	}
 
-	public static InputStream getAttachmentInputStream(String url) {
-		URLConnection urlConnect;
-		InputStream stream = null;
-		try {
-			urlConnect = (new URL(url)).openConnection();
-			urlConnect.connect();
-			stream = urlConnect.getInputStream();
+	// public static InputStream getAttachmentInputStream(String url) {
+	// URLConnection urlConnect;
+	// InputStream stream = null;
+	// try {
+	// urlConnect = (new URL(url)).openConnection();
+	// urlConnect.connect();
+	// stream = urlConnect.getInputStream();
+	//
+	// } catch (MalformedURLException e) {
+	// MylarStatusHandler.fail(e, "Attachment url was malformed.", false);
+	// } catch (IOException e) {
+	// MylarStatusHandler.fail(e, "I/O Error occurred reading attachment.",
+	// false);
+	// }
+	// return stream;
+	// }
 
-		} catch (MalformedURLException e) {
-			MylarStatusHandler.fail(e, "Attachment url was malformed.", false);
-		} catch (IOException e) {
-			MylarStatusHandler.fail(e, "I/O Error occurred reading attachment.", false);
-		}
-		return stream;
-	}
-
-	public static String getAttachmentContents(String url) {
-		URLConnection urlConnect;
+	public String getAttachmentContents(RepositoryAttachment attachment) {
 		StringBuffer contents = new StringBuffer();
 		try {
-			urlConnect = (new URL(url)).openConnection();
-			urlConnect.connect();
-			BufferedInputStream stream = new BufferedInputStream(urlConnect.getInputStream());
+			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+					repository.getKind());
+			IAttachmentHandler handler = connector.getAttachmentHandler();
+			InputStream stream;
+
+			stream = new ByteArrayInputStream(handler.getAttachmentData(repository, "" + attachment.getId()));
+
 			int c;
 			while ((c = stream.read()) != -1) {
 				/* TODO jpound - handle non-text */
 				contents.append((char) c);
 			}
 			stream.close();
-		} catch (MalformedURLException e) {
-			MylarStatusHandler.fail(e, "Attachment url was malformed.", false);
+		} catch (CoreException e) {
+			MylarStatusHandler.fail(e.getStatus().getException(), "Retrieval of attachment data failed.", false);
 		} catch (IOException e) {
-			MylarStatusHandler.fail(e, "I/O Error occurred reading attachment.", false);
+			MylarStatusHandler.fail(e, "Retrieval of attachment data failed.", false);
 		}
 		return contents.toString();
 	}

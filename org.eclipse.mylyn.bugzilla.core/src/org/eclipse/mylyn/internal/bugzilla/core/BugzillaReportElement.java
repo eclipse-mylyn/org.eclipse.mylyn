@@ -69,6 +69,7 @@ public enum BugzillaReportElement {
 	TYPE ("type", "type"),
 	UNKNOWN ("UNKNOWN", "UNKNOWN"),
 	VERSION ("Version:", "version", false),
+	INSTALL_VERSION ("version of bugzilla installed", "install_version", true),
 	VOTES ("Votes:", "votes", true, true),
 	WORK_TIME("Add Time:", "work_time", true, false),
 	WHO ("who", "who"),
@@ -82,7 +83,8 @@ public enum BugzillaReportElement {
 	RESULT ("used by search engine", "result", false),
 	RDF ("used by search engine", "rdf", false),
 	INSTALLATION ("used by search engine", "installation", false),
-	BUGS ("used by search engine", "bugs", false);
+	BUGS ("used by search engine", "bugs", false),
+	STATUS_OPEN ("open status values", "status_open", true, true);
 	
 	private final boolean isHidden;
 	

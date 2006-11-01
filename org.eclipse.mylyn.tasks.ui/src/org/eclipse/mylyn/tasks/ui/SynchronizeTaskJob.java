@@ -102,11 +102,6 @@ class SynchronizeTaskJob extends Job {
 								downloadedTaskData = offlineHandler.downloadTaskData(repository, taskId,
 										TasksUiPlugin.getDefault().getProxySettings());
 							}
-						} catch (final LoginException e) {							
-							MylarStatusHandler.fail(e,
-									"Report download failed. Ensure proper repository configuration of "
-											+ repositoryTask.getRepositoryUrl() + " in " + TaskRepositoriesView.NAME
-											+ ".", true);							
 						} catch (final CoreException e) {							
 							if (e.getStatus().getException() instanceof UnrecognizedReponseException) {
 								PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

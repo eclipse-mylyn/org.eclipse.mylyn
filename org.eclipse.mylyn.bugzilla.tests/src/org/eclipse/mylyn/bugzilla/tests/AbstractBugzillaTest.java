@@ -21,6 +21,7 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
@@ -133,12 +134,12 @@ public abstract class AbstractBugzillaTest extends TestCase {
 
 	class MockBugzillaReportSubmitForm extends BugzillaReportSubmitForm {
 
-		public MockBugzillaReportSubmitForm(String encoding_utf_8) {
-			super(encoding_utf_8);
+		public MockBugzillaReportSubmitForm() {
+			super();
 		}
 
 		@Override
-		public String submitReportToRepository() throws BugzillaException, LoginException,
+		public String submitReportToRepository(BugzillaClient client) throws BugzillaException, LoginException,
 				PossibleBugzillaFailureException {
 			return "test-submit";
 		}

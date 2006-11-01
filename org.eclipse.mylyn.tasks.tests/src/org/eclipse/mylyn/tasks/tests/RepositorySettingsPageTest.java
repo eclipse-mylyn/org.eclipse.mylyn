@@ -158,7 +158,7 @@ public class RepositorySettingsPageTest extends TestCase {
 		}
 
 		StringFieldEditor getPasswordEditor() {
-			return passwordEditor;
+			return repositoryPasswordEditor;
 		}
 
 		Composite getParent() {

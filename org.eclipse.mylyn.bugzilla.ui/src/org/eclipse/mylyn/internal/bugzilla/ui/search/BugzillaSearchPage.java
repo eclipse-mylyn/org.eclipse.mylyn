@@ -24,7 +24,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
@@ -102,7 +101,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private static final String[] emailRoleValues = { "emailassigned_to1", "emailreporter1", "emailcc1",
 			"emaillongdesc1" };
 
-	protected IPreferenceStore prefs = BugzillaUiPlugin.getDefault().getPreferenceStore();
+	//protected IPreferenceStore prefs = BugzillaUiPlugin.getDefault().getPreferenceStore();
 
 	protected String maxHits;
 
@@ -1359,7 +1358,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					monitor.beginTask("Updating search options...", IProgressMonitor.UNKNOWN);
 
 					try {
-						connector.updateAttributes(repository, TasksUiPlugin.getDefault().getProxySettings(), monitor);
+						connector.updateAttributes(repository, monitor);
 					} catch (CoreException ce) {
 						if (ce.getStatus().getException() instanceof GeneralSecurityException) {
 							MylarStatusHandler.fail(ce,

@@ -18,7 +18,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Rob Elves
  */
-public interface ITaskListNotification {
+public interface ITaskListNotification extends Comparable<ITaskListNotification> {
 
 	public void openTask();
 

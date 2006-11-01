@@ -15,7 +15,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylar.internal.bugzilla.ui.wizard.NewBugzillaTaskWizard;
 import org.eclipse.mylar.internal.tasks.ui.OpenRemoteTaskJob;
@@ -77,7 +77,7 @@ public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 		} catch (NumberFormatException e) {
 			return;
 		}
-		String bugUrl = BugzillaServerFacade.getBugUrlWithoutLogin(repositoryUrl, id);
+		String bugUrl = BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, id);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		OpenRemoteTaskJob job = new OpenRemoteTaskJob(BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl, idString,
 				bugUrl, page);

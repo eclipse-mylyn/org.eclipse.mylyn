@@ -11,12 +11,7 @@
 
 package org.eclipse.mylar.bugzilla.tests.headless;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.security.GeneralSecurityException;
-import java.security.KeyManagementException;
-import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -24,17 +19,17 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * 
@@ -47,13 +42,23 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
 public class BugzillaQueryTest extends TestCase {
 
 	private TaskRepository repository;
-
+	private BugzillaRepositoryConnector connector;
+	private IOfflineTaskHandler handler;
+	private Proxy proxy = Proxy.NO_PROXY;
+	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		
+		connector = (BugzillaRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				BugzillaCorePlugin.REPOSITORY_KIND);
+		handler = connector.getOfflineTaskHandler();
 		repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
+		Credentials credentials = MylarTestUtils.readCredentials();
+		repository.setAuthenticationCredentials(credentials.username, credentials.password);
 	}
-
+	
+	
 	/**
 	 * This is the first test so that the repository credentials are correctly
 	 * set for the other tests
@@ -67,33 +72,32 @@ public class BugzillaQueryTest extends TestCase {
 		}
 	}
 
-	public void testValidateCredentials() throws IOException, BugzillaException, KeyManagementException,
-			GeneralSecurityException {
-		BugzillaServerFacade.validateCredentials(null, repository.getUrl(), repository.getCharacterEncoding(),
-				repository.getUserName(), repository.getPassword());
-	}
+//	public void testValidateCredentials() throws IOException, BugzillaException, KeyManagementException,
+//			GeneralSecurityException {
+//		BugzillaClient.validateCredentials(null, repository.getUrl(), repository.getCharacterEncoding(),
+//				repository.getUserName(), repository.getPassword());
+//	}
+//
+//	public void testValidateCredentialsInvalidProxy() throws IOException, BugzillaException, KeyManagementException,
+//			GeneralSecurityException {
+//		BugzillaClient.validateCredentials(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("localhost", 12356)),
+//				repository.getUrl(), repository.getCharacterEncoding(), repository.getUserName(), repository
+//						.getPassword());
+//	}
 
-	public void testValidateCredentialsInvalidProxy() throws IOException, BugzillaException, KeyManagementException,
-			GeneralSecurityException {
-		BugzillaServerFacade.validateCredentials(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("localhost", 12356)),
-				repository.getUrl(), repository.getCharacterEncoding(), repository.getUserName(), repository
-						.getPassword());
-	}
-
-	public void testCredentialsEncoding() throws IOException, BugzillaException, KeyManagementException,
-			GeneralSecurityException {
-		String poundSignUTF8 = BugzillaServerFacade.addCredentials(IBugzillaConstants.TEST_BUGZILLA_222_URL, "UTF-8",
-				"testUser", "\u00A3");
-		assertTrue(poundSignUTF8.endsWith("password=%C2%A3"));
-		String poundSignISO = BugzillaServerFacade.addCredentials(IBugzillaConstants.TEST_BUGZILLA_222_URL,
-				"ISO-8859-1", "testUser", "\u00A3");
-		assertFalse(poundSignISO.contains("%C2%A3"));
-		assertTrue(poundSignISO.endsWith("password=%A3"));
-	}
+//	public void testCredentialsEncoding() throws IOException, BugzillaException, KeyManagementException,
+//			GeneralSecurityException {
+//		String poundSignUTF8 = BugzillaClient.addCredentials(IBugzillaConstants.TEST_BUGZILLA_222_URL, "UTF-8",
+//				"testUser", "\u00A3");
+//		assertTrue(poundSignUTF8.endsWith("password=%C2%A3"));
+//		String poundSignISO = BugzillaClient.addCredentials(IBugzillaConstants.TEST_BUGZILLA_222_URL,
+//				"ISO-8859-1", "testUser", "\u00A3");
+//		assertFalse(poundSignISO.contains("%C2%A3"));
+//		assertTrue(poundSignISO.endsWith("password=%A3"));
+//	}
 
 	public void testGetBug() throws Exception {
-		RepositoryTaskData taskData = BugzillaServerFacade.getBug(repository.getUrl(), repository.getUserName(),
-				repository.getPassword(), null, repository.getCharacterEncoding(), 1);
+		RepositoryTaskData taskData = handler.downloadTaskData(repository, "1", proxy);
 		assertNotNull(taskData);
 		assertEquals("user@mylar.eclipse.org", taskData.getAssignedTo());
 
@@ -106,19 +110,9 @@ public class BugzillaQueryTest extends TestCase {
 		assertEquals("P1", taskData.getAttributeValue(BugzillaReportElement.PRIORITY.getKeyString()));
 	}
 
-	public void testGetProductList() throws Exception {
-		List<String> products = BugzillaServerFacade.getProductList(repository.getUrl(), null,
-				repository.getUserName(), repository.getPassword(), repository.getCharacterEncoding());
-
-		assertEquals(3, products.size());
-		assertTrue(products.contains("Read Only Test Cases"));
-		assertTrue(products.contains("Read Write Test Cases"));
-		assertTrue(products.contains("TestProduct"));
-	}
-
 	public void testQueryViaConnector() throws Exception {
 		String queryUrlString = repository.getUrl()
-				+ "/buglist.cgi?ctype=rdf&query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
+				+ "/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
 
 		// holds onto actual hit objects
 		TaskList taskList = new TaskList();
@@ -134,25 +128,3 @@ public class BugzillaQueryTest extends TestCase {
 		}
 	}
 }
-
-// public void testQueryBugs() throws Exception {
-//
-// QueryHitCollector collector = new QueryHitCollector(new TaskList());
-//
-// // Note need for ctype=rdf in query url
-// String urlString =
-// "http://mylar.eclipse.org/bugs222/buglist.cgi?ctype=rdf&query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
-// RepositoryQueryResultsFactory queryFactory = new
-// RepositoryQueryResultsFactory();
-//		
-// // Tasklist can be null but calls to hit.getOrCreateCorrespondingTask() will
-// return null.
-// queryFactory.performQuery(null, repository.getUrl(), collector, urlString,
-// null, -1, repository
-// .getCharacterEncoding());
-//
-// assertEquals(2, collector.getHits().size());
-// for (AbstractQueryHit hit : collector.getHits()) {
-// assertTrue(hit.getDescription().contains("search-match-test"));
-// }
-// }

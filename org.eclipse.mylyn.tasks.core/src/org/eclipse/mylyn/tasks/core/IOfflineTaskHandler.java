@@ -16,8 +16,6 @@ import java.net.Proxy;
 import java.util.Date;
 import java.util.Set;
 
-import javax.security.auth.login.LoginException;
-
 import org.eclipse.core.runtime.CoreException;
 
 /**
@@ -33,7 +31,8 @@ public interface IOfflineTaskHandler {
 	
 	public AbstractAttributeFactory getAttributeFactory();
 	
-	public RepositoryTaskData downloadTaskData(TaskRepository repository, String taskId, Proxy proxySettings) throws CoreException, LoginException;
+	// TODO: remove proxy parameter
+	public RepositoryTaskData downloadTaskData(TaskRepository repository, String taskId, Proxy proxySettings) throws CoreException;
 		
 	/**
 	 * returns all tasks if date is null or an error occurs

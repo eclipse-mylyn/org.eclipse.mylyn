@@ -25,7 +25,7 @@ import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 
 /**
- * Encapsulates synchronization policy.
+ * Operations on a task repository
  * 
  * @author Mik Kersten
  * @author Rob Elves
@@ -45,7 +45,7 @@ public abstract class AbstractRepositoryConnector {
 	protected TaskList taskList;
 
 	public void init(TaskList taskList) {
-		this.taskList = taskList;
+		this.taskList = taskList;		
 	}
 
 	/**
@@ -63,18 +63,6 @@ public abstract class AbstractRepositoryConnector {
 	public abstract boolean canCreateTaskFromKey(TaskRepository repository);
 
 	public abstract boolean canCreateNewTask(TaskRepository repository);
-
-	/**
-	 * Reset and update the repository attributes from the server (e.g.
-	 * products, components)
-	 * 
-	 * @param proxySettings
-	 *            TODO
-	 * @throws CoreException
-	 *             TODO
-	 */
-	public abstract void updateAttributes(TaskRepository repository, Proxy proxySettings, IProgressMonitor monitor)
-			throws CoreException;
 
 	/**
 	 * @param id
@@ -193,14 +181,14 @@ public abstract class AbstractRepositoryConnector {
 
 		File destinationContextFile = ContextCorePlugin.getContextManager().getFileForContext(
 				task.getHandleIdentifier());
-		
+
 		// TODO: add functionality for not overwriting previous context
-		if(destinationContextFile.exists()) {
-			if(!destinationContextFile.delete()) {
+		if (destinationContextFile.exists()) {
+			if (!destinationContextFile.delete()) {
 				return false;
 			}
 		}
-		attachmentHandler.downloadAttachment(repository, task, attachment, destinationContextFile, proxySettings);
+		attachmentHandler.downloadAttachment(repository, AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()), attachment, destinationContextFile);
 		return true;
 	}
 
@@ -225,5 +213,13 @@ public abstract class AbstractRepositoryConnector {
 	public String getTaskIdPrefix() {
 		return "task";
 	}
+
+	/**
+	 * Reset and update the repository attributes from the server (e.g.
+	 * products, components)
+	 * 
+	 * TODO: remove?
+	 */
+	public abstract void updateAttributes(TaskRepository repository, IProgressMonitor monitor) throws CoreException;
 
 }

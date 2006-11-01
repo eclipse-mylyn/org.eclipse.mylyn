@@ -69,7 +69,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 									if (currentlyNotifying.size() > 0) {
 										popup = new TaskListNotificationPopup(new Shell(PlatformUI.getWorkbench()
 												.getDisplay()));
-										ArrayList toDisplay = new ArrayList<ITaskListNotification>(currentlyNotifying);
+										List<ITaskListNotification> toDisplay = new ArrayList<ITaskListNotification>(currentlyNotifying);
 										Collections.sort(toDisplay);
 										popup.setContents(toDisplay);
 										cleanNotified();

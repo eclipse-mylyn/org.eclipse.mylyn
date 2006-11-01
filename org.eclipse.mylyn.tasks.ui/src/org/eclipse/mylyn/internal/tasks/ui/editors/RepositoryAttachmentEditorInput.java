@@ -8,18 +8,19 @@
 
 package org.eclipse.mylar.internal.tasks.ui.editors;
 
-import java.io.IOException;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
+import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.IStorageEditorInput;
 
@@ -30,10 +31,12 @@ public class RepositoryAttachmentEditorInput extends PlatformObject implements I
 
 	private RepositoryAttachment attachment;
 	private RepositoryAttachmentStorage storage;
+	private TaskRepository repository;
 
-	public RepositoryAttachmentEditorInput(RepositoryAttachment att) {
+	public RepositoryAttachmentEditorInput(TaskRepository repository, RepositoryAttachment att) {
 		this.attachment = att;
 		this.storage = new RepositoryAttachmentStorage();
+		this.repository = repository;
 	}
 	
 	public IStorage getStorage() throws CoreException {
@@ -77,21 +80,25 @@ public class RepositoryAttachmentEditorInput extends PlatformObject implements I
 
 
 		public InputStream getContents() throws CoreException {
-			URLConnection urlConnect;
-			InputStream stream = null;
-			try {
-				urlConnect = (new URL(attachment.getUrl())).openConnection();
-				urlConnect.connect();
-				stream = urlConnect.getInputStream();
+//			URLConnection urlConnect;
+//			InputStream stream = null;
+//			try {
+				
+				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
+				IAttachmentHandler handler = connector.getAttachmentHandler();
+				return new ByteArrayInputStream(handler.getAttachmentData(repository, ""+attachment.getId()));
+//				urlConnect = (new URL(attachment.getUrl())).openConnection();
+//				urlConnect.connect();
+//				stream = urlConnect.getInputStream();
 
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return stream;
+//			} catch (MalformedURLException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			return stream;
 		}
 
 		public IPath getFullPath() {

@@ -258,7 +258,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 	}
 
 	protected void updateAttributes() throws Exception {
-		connector.updateAttributes(repository, null, new NullProgressMonitor());
+		connector.updateAttributes(repository, new NullProgressMonitor());
 
 		ITracClient server = connector.getClientManager().getRepository(repository);
 		TracVersion[] versions = server.getVersions();

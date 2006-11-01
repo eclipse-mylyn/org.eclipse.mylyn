@@ -12,8 +12,7 @@
 package org.eclipse.mylar.internal.bugzilla.core;
 
 import java.io.IOException;
-import java.net.Proxy;
-import java.net.URL;
+import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -27,19 +26,24 @@ import org.eclipse.mylar.tasks.core.RepositoryTaskData;
  */
 public class RepositoryReportFactory extends AbstractReportFactory {
 
+	public RepositoryReportFactory(InputStream inStream, String encoding) {
+		super(inStream, encoding);		
+	}
+
 	private static BugzillaAttributeFactory bugzillaAttributeFactory = new BugzillaAttributeFactory();
 
-	public void populateReport(RepositoryTaskData bugReport, String repositoryUrl, Proxy proxySettings,
-			String userName, String password, String characterEncoding) throws GeneralSecurityException,
+	public void populateReport(RepositoryTaskData bugReport) throws GeneralSecurityException,
 			KeyManagementException, NoSuchAlgorithmException, IOException, BugzillaException {
 
 		SaxBugReportContentHandler contentHandler = new SaxBugReportContentHandler(bugzillaAttributeFactory, bugReport);
 
-		String xmlBugReportUrl = repositoryUrl + IBugzillaConstants.SHOW_BUG_CGI_XML + bugReport.getId();
-		xmlBugReportUrl = BugzillaServerFacade.addCredentials(xmlBugReportUrl, characterEncoding, userName, password);
-		URL serverURL = new URL(xmlBugReportUrl);
+//		String xmlBugReportUrl = repositoryUrl + IBugzillaConstants.SHOW_BUG_CGI_XML + bugReport.getId();
+//		xmlBugReportUrl = BugzillaClient.addCredentials(xmlBugReportUrl, characterEncoding, userName, password);
+//		URL serverURL = new URL(xmlBugReportUrl);
 
-		collectResults(serverURL, proxySettings, characterEncoding, contentHandler, false);
+		
+		
+		collectResults(contentHandler, false);
 
 		if (contentHandler.errorOccurred()) {
 			String errorResponse = contentHandler.getErrorMessage().toLowerCase();

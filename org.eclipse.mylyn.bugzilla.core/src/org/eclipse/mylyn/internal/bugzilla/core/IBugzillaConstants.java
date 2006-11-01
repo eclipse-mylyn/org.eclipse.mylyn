@@ -24,6 +24,8 @@ public interface IBugzillaConstants {
 	static final String ERROR_MSG_COMMENT_REQUIRED = "You have to specify a new comment when making this change. Please comment on the reason for this change.";
 
 	static final String ERROR_INVALID_USERNAME_OR_PASSWORD = "Invalid Username or Password";
+	
+	static final String LOGGED_OUT = "logged out";
 
 	static final String MOST_RECENT_QUERY = "org.eclipse.mylar.bugzilla.query.last";
 
@@ -50,6 +52,8 @@ public interface IBugzillaConstants {
 	public static final String POST_ARGS_PASSWORD = "&Bugzilla_password=";
 
 	public static final String POST_ARGS_LOGIN = "GoAheadAndLogIn=1&Bugzilla_login=";
+	
+	public static final String POST_CONFIG_RDF_URL = "/config.cgi?ctype=rdf";
 	
 	public static final String XML_ERROR_INVALIDBUGID = "invalidbugid";
 

@@ -8,6 +8,7 @@ Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.mylar.context.core
+ org.eclipse.mylar.context.core,
+ org.eclipse.update.core
 Export-Package: org.eclipse.mylar.internal.tasks.core,
  org.eclipse.mylar.tasks.core

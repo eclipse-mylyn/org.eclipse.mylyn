@@ -19,12 +19,14 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaOfflineTaskHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.TaskList;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
@@ -38,7 +40,7 @@ public class BugzillaTaskTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		offlineHandler = new BugzillaOfflineTaskHandler(new TaskList());
+		offlineHandler = new BugzillaOfflineTaskHandler((BugzillaRepositoryConnector)TasksUiPlugin.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND), new TaskList());
 	}
 
 	@Override

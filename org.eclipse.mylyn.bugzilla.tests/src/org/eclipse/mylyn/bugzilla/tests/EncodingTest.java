@@ -17,7 +17,7 @@ import java.text.ParseException;
 import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
@@ -28,17 +28,17 @@ public class EncodingTest extends AbstractBugzillaTest {
 
 	public void testEncodingSetting() throws LoginException, IOException, ParseException {
 
-		String charset = BugzillaServerFacade.getCharsetFromString("text/html; charset=UTF-8");
+		String charset = BugzillaClient.getCharsetFromString("text/html; charset=UTF-8");
 		assertEquals("UTF-8", charset);
 
-		charset = BugzillaServerFacade.getCharsetFromString("text/html");
+		charset = BugzillaClient.getCharsetFromString("text/html");
 		assertEquals(null, charset);
 
-		charset = BugzillaServerFacade
+		charset = BugzillaClient
 				.getCharsetFromString("<<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-2\">>");
 		assertEquals("iso-8859-2", charset);
 
-		charset = BugzillaServerFacade
+		charset = BugzillaClient
 				.getCharsetFromString("<<meta http-equiv=\"Content-Type\" content=\"text/html\">>");
 		assertEquals(null, charset);
 	}
@@ -56,6 +56,7 @@ public class EncodingTest extends AbstractBugzillaTest {
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		assertTrue(task.getDescription().equals("\u05D0"));
 		taskList.deleteTask(task);
+		connector.getClientManager().repositoryRemoved(repository);
 		repository.setCharacterEncoding("ISO-8859-1");
 		task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "57", null);
 		assertNotNull(task);

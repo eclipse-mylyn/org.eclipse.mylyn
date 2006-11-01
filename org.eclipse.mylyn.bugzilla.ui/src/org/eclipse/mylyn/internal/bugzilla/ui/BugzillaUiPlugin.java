@@ -105,6 +105,8 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 			authenticator = new BugzillaAuthenticator();
 		}
 		Authenticator.setDefault(authenticator);
+		
+		TasksUiPlugin.getRepositoryManager().addListener(BugzillaCorePlugin.getDefault().getConnector().getClientManager());
 
 		// migrateOldAuthenticationData();
 	}
@@ -126,6 +128,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	 * This method is called when the plug-in is stopped
 	 */
 	public void stop(BundleContext context) throws Exception {
+		TasksUiPlugin.getRepositoryManager().removeListener(BugzillaCorePlugin.getDefault().getConnector().getClientManager());
 		super.stop(context);
 		plugin = null;
 	}
@@ -229,7 +232,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		// TODO: pass monitor along since it is this call that does the work and can hang due to network IO
 		RepositoryConfiguration config = null;
 		try {
-			config = BugzillaCorePlugin.getRepositoryConfiguration(false, repository.getUrl(), TasksUiPlugin.getDefault().getProxySettings(), repository.getUserName(), repository.getPassword(), repository.getCharacterEncoding());
+			config = BugzillaCorePlugin.getDefault().getRepositoryConfiguration(repository, false);
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Could not retrieve repository configuration for: " + repository, true);
 			return;

@@ -46,6 +46,10 @@ public class TaskRepository {
 
 	public static final String AUTH_USERNAME = "org.eclipse.mylar.tasklist.repositories.username"; //$NON-NLS-1$ 
 
+	public static final String AUTH_HTTP_PASSWORD = "org.eclipse.mylar.tasklist.repositories.httpauth.password"; //$NON-NLS-1$ 
+
+	public static final String AUTH_HTTP_USERNAME = "org.eclipse.mylar.tasklist.repositories.httpauth.username"; //$NON-NLS-1$ 
+
 	public static final String NO_VERSION_SPECIFIED = "unknown";
 
 	private static final String AUTH_SCHEME = "Basic";
@@ -270,5 +274,4 @@ public class TaskRepository {
 		String value = getProperty(name);
 		return value != null && value.trim().length() > 0;
 	}
-
 }

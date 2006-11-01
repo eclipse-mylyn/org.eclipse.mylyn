@@ -59,8 +59,12 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 			repository.setUrl(newUrl);
 			repository.setVersion(abstractRepositorySettingsPage.getVersion());
 			repository.setCharacterEncoding(abstractRepositorySettingsPage.getCharacterEncoding());
-			repository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(), abstractRepositorySettingsPage.getPassword());
+			repository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(), abstractRepositorySettingsPage.getPassword());			
 			repository.setRepositoryLabel(abstractRepositorySettingsPage.getRepositoryLabel());
+			
+			repository.setProperty(TaskRepository.AUTH_HTTP_USERNAME, abstractRepositorySettingsPage.getHttpAuthUserId());
+			repository.setProperty(TaskRepository.AUTH_HTTP_PASSWORD, abstractRepositorySettingsPage.getHttpAuthPassword());
+			
 			abstractRepositorySettingsPage.updateProperties(repository);
 			TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChagned(repository);
 			TasksUiPlugin.getRepositoryManager().saveRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());

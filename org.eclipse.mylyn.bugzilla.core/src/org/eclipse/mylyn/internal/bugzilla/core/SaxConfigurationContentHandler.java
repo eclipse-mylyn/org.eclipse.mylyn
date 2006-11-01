@@ -143,54 +143,67 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 
 		case IN_PRODUCTS | IN_LI | IN_NAME:
 			configuration.addProduct(String.copyValueOf(ch, start, length));
+			//configuration.addAttributeValue(BugzillaReportElement.PRODUCT.getKeyString(), String.copyValueOf(ch, start, length));
 			currentProduct = String.copyValueOf(ch, start, length);
 			break;
 		case IN_COMPONENTS | IN_LI | IN_COMPONENT | IN_NAME:
+			String comp = String.copyValueOf(ch, start, length);
 			if (about != null) {
-				String name = String.copyValueOf(ch, start, length);
-				componentNames.put(about, name);
+				componentNames.put(about, comp);
 				// System.err.println("Component: "+about+" ---> "+name);
-			}
+			}			
+			//configuration.addAttributeValue(BugzillaReportElement.COMPONENT.getKeyString(), comp);
 			break;
 		case IN_VERSIONS | IN_LI | IN_VERSION | IN_NAME:
-			if (about != null) {
-				String name = String.copyValueOf(ch, start, length);
-				versionNames.put(about, name);
+			String ver = String.copyValueOf(ch, start, length);
+			if (about != null) {				
+				versionNames.put(about, ver);
 				// System.err.println("Version: "+about+" ---> "+name);
 			}
+			//configuration.addAttributeValue(BugzillaReportElement.VERSION.getKeyString(), ver);
 			break;
 		case IN_TARGET_MILESTONES | IN_LI | IN_TARGET_MILESTONE | IN_NAME:
+			String target = String.copyValueOf(ch, start, length);
 			if (about != null) {
-				String name = String.copyValueOf(ch, start, length);
-				milestoneNames.put(about, name);
+				milestoneNames.put(about, target);
 				// System.err.println("Version: "+about+" ---> "+name);
 			}
+			//configuration.addAttributeValue(BugzillaReportElement.TARGET_MILESTONE.getKeyString(), target);
 			break;
 		case IN_PLATFORM | IN_LI:
 			configuration.addPlatform(String.copyValueOf(ch, start, length));
+			//configuration.addAttributeValue(BugzillaReportElement.REP_PLATFORM.getKeyString(), String.copyValueOf(ch, start, length));
 			break;
 		case IN_OP_SYS | IN_LI:
 			configuration.addOS(String.copyValueOf(ch, start, length));
+			//configuration.addAttributeValue(BugzillaReportElement.OP_SYS.getKeyString(), String.copyValueOf(ch, start, length));			
 			break;
 		case IN_PRIORITY | IN_LI:
+			//configuration.addAttributeValue(BugzillaReportElement.PRIORITY.getKeyString(), String.copyValueOf(ch, start, length));
 			configuration.addPriority(String.copyValueOf(ch, start, length));
 			break;
 		case IN_SEVERITY | IN_LI:
+			//configuration.addAttributeValue(BugzillaReportElement.BUG_SEVERITY.getKeyString(), String.copyValueOf(ch, start, length));
 			configuration.addSeverity(String.copyValueOf(ch, start, length));
 			break;
 		case IN_INSTALL_VERSION:
+			//configuration.addAttributeValue(BugzillaReportElement.INSTALL_VERSION.getKeyString(), String.copyValueOf(ch, start, length));
 			configuration.setInstallVersion(String.copyValueOf(ch, start, length));
 			break;
 		case IN_STATUS | IN_LI:
+			//configuration.addAttributeValue(BugzillaReportElement.BUG_STATUS.getKeyString(), String.copyValueOf(ch, start, length));
 			configuration.addStatus(String.copyValueOf(ch, start, length));
 			break;
 		case IN_RESOLUTION | IN_LI:
+			//configuration.addAttributeValue(BugzillaReportElement.RESOLUTION.getKeyString(), String.copyValueOf(ch, start, length));
 			configuration.addResolution(String.copyValueOf(ch, start, length));
 			break;
 		case IN_KEYWORD | IN_LI:
+			//configuration.addAttributeValue(BugzillaReportElement.KEYWORDS.getKeyString(), String.copyValueOf(ch, start, length));
 			configuration.addKeyword(String.copyValueOf(ch, start, length));
 			break;
 		case IN_STATUS_OPEN | IN_LI:
+			//configuration.addAttributeValue(BugzillaReportElement.STATUS_OPEN.getKeyString(), String.copyValueOf(ch, start, length));
 			configuration.addOpenStatusValue(String.copyValueOf(ch, start, length));
 			break;
 		}
@@ -368,6 +381,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			for (String uri : componentURIs) {
 				String realName = componentNames.get(uri);
 				if (realName != null) {
+					//configuration.addAttributeValue(product+"."+BugzillaReportElement.COMPONENT.getKeyString(), realName);
 					configuration.addComponent(product, realName);
 				}
 			} 
@@ -378,6 +392,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			for (String uri : versionURIs) {
 				String realName = versionNames.get(uri);
 				if (realName != null) {
+					//configuration.addAttributeValue(product+"."+BugzillaReportElement.VERSION.getKeyString(), realName);
 					configuration.addVersion(product, realName);
 				}
 			}
@@ -389,6 +404,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			for (String uri : milestoneURIs) {
 				String realName = milestoneNames.get(uri);
 				if (realName != null) {
+					//configuration.addAttributeValue(product+"."+BugzillaReportElement.TARGET_MILESTONE.getKeyString(), realName);
 					configuration.addTargetMilestone(product, realName);
 				}
 			}

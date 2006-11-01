@@ -66,7 +66,7 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 
 	public String getUrl() {
 		Integer idInt = new Integer(id);
-		return BugzillaServerFacade.getBugUrlWithoutLogin(repositoryUrl, idInt);
+		return BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, idInt);
 	}
 
 	public AbstractRepositoryTask getOrCreateCorrespondingTask() {

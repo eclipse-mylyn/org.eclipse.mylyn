@@ -12,8 +12,7 @@
 package org.eclipse.mylar.internal.bugzilla.core;
 
 import java.io.IOException;
-import java.net.Proxy;
-import java.net.URL;
+import java.io.InputStream;
 import java.security.GeneralSecurityException;
 
 import org.xml.sax.ErrorHandler;
@@ -27,19 +26,14 @@ import org.xml.sax.SAXParseException;
  */
 public class RepositoryConfigurationFactory extends AbstractReportFactory {
 
-	private static final String CONFIG_RDF_URL = "/config.cgi?ctype=rdf";
+	public RepositoryConfigurationFactory(InputStream inStream, String encoding) {
+		super(inStream, encoding);		
+	}
 
-	public RepositoryConfiguration getConfiguration(String repositoryUrl, Proxy proxySettings, String userName,
-			String password, String encoding) throws IOException, BugzillaException, GeneralSecurityException {
-		String configUrlStr = repositoryUrl + CONFIG_RDF_URL;
-		configUrlStr = BugzillaServerFacade.addCredentials(configUrlStr, encoding, userName, password);
-		URL url = new URL(configUrlStr);
+	public RepositoryConfiguration getConfiguration() throws IOException, BugzillaException, GeneralSecurityException {		
 		SaxConfigurationContentHandler contentHandler = new SaxConfigurationContentHandler();
-		collectResults(url, proxySettings, encoding, contentHandler, true);
+		collectResults(contentHandler, true);
 		RepositoryConfiguration config = contentHandler.getConfiguration();
-		if (config != null) {
-			config.setRepositoryUrl(repositoryUrl);
-		}
 		return config;
 	}
 

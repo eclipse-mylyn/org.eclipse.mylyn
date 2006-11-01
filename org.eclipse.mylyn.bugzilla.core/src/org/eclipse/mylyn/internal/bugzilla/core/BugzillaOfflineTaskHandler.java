@@ -24,6 +24,9 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
+import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
+import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESOLUTION;
 import org.eclipse.mylar.internal.tasks.core.UnrecognizedReponseException;
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
@@ -31,6 +34,7 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
+import org.eclipse.mylar.tasks.core.RepositoryOperation;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -40,6 +44,28 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
  * @author Rob Elves
  */
 public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
+
+	private static final String OPERATION_INPUT_ASSIGNED_TO = "assigned_to";
+
+	private static final String OPERATION_INPUT_DUP_ID = "dup_id";
+
+	private static final String OPERATION_OPTION_RESOLUTION = "resolution";
+
+	private static final String OPERATION_LABEL_CLOSE = "Mark as CLOSED";
+
+	private static final String OPERATION_LABEL_VERIFY = "Mark as VERIFIED";
+
+	private static final String OPERATION_LABEL_REOPEN = "Reopen bug";
+
+	private static final String OPERATION_LABEL_REASSIGN_DEFAULT = "Reassign to default assignee";
+
+	private static final String OPERATION_LABEL_REASSIGN = "Reassign to";
+
+	private static final String OPERATION_LABEL_DUPLICATE = "Mark as duplicate of #";
+
+	private static final String OPERATION_LABEL_RESOLVE = "Resolve as";
+
+	private static final String OPERATION_LABEL_ACCEPT = "Accept (change status to ASSIGNED)";
 
 	private static final String BUG_ID = "&bug_id=";
 
@@ -69,17 +95,28 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 
 	private TaskList taskList;
 
-	public BugzillaOfflineTaskHandler(TaskList taskList) {
+	private BugzillaRepositoryConnector connector;
+
+	public BugzillaOfflineTaskHandler(BugzillaRepositoryConnector connector, TaskList taskList) {
 		this.taskList = taskList;
+		this.connector = connector;
 	}
 
-	public RepositoryTaskData downloadTaskData(TaskRepository repository, String taskId,
-			Proxy proxySettings) throws CoreException {
+	public RepositoryTaskData downloadTaskData(TaskRepository repository, String taskId, Proxy proxySettings)
+			throws CoreException {
 		try {
-			int bugId = Integer.parseInt(taskId);
 
-			return BugzillaServerFacade.getBug(repository.getUrl(), repository.getUserName(), repository.getPassword(),
-					proxySettings, repository.getCharacterEncoding(), bugId);
+			BugzillaClient client = connector.getClientManager().getClient(repository);
+			client.setProxy(proxySettings);
+			int bugId = Integer.parseInt(taskId);
+			RepositoryTaskData taskData = client.getTaskData(bugId);
+			if (taskData != null) {
+				connector.updateAttributeOptions(repository, taskData);
+				addValidOperations(taskData, repository.getUserName());
+				return taskData;
+			}
+			return null;
+
 		} catch (final UnrecognizedReponseException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0,
 					"Report download failed. Unrecognized response from " + repository.getUrl() + ".", e));
@@ -130,7 +167,7 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 			return tasks;
 		}
 
-		String dateString = repository.getSyncTimeStamp();		
+		String dateString = repository.getSyncTimeStamp();
 		if (dateString == null) {
 			dateString = "";
 		}
@@ -156,55 +193,200 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 			String newurlQueryString = URLEncoder.encode(AbstractRepositoryTask.getTaskId(task.getHandleIdentifier())
 					+ ",", repository.getCharacterEncoding());
 			if ((urlQueryString.length() + newurlQueryString.length() + IBugzillaConstants.CONTENT_TYPE_RDF.length()) > MAX_URL_LENGTH) {
-				urlQueryString += IBugzillaConstants.CONTENT_TYPE_RDF;
 				queryForChanged(repository, changedTasks, urlQueryString, proxySettings);
 				queryCounter = 0;
 				urlQueryString = new String(urlQueryBase + BUG_ID);
 				urlQueryString += newurlQueryString;
 			} else if (!itr.hasNext()) {
-				urlQueryString += newurlQueryString;
-				urlQueryString += IBugzillaConstants.CONTENT_TYPE_RDF;
+				urlQueryString += newurlQueryString;				
 				queryForChanged(repository, changedTasks, urlQueryString, proxySettings);
 			} else {
 				urlQueryString += newurlQueryString;
 			}
-		}
+		}		
 		return changedTasks;
 	}
 
 	private void queryForChanged(TaskRepository repository, Set<AbstractRepositoryTask> changedTasks,
 			String urlQueryString, Proxy proxySettings) throws UnsupportedEncodingException, CoreException {
-		RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory();
+
 		QueryHitCollector collector = new QueryHitCollector(taskList);
-		if (repository.hasCredentials()) {
-			urlQueryString = BugzillaServerFacade.addCredentials(urlQueryString, repository.getCharacterEncoding(), repository.getUserName(), repository
-					.getPassword());
-		}
+		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), urlQueryString, "", "-1",
+				taskList);
 		try {
-			queryFactory.performQuery(taskList, repository.getUrl(), collector, urlQueryString, proxySettings,
-					AbstractReportFactory.RETURN_ALL_HITS, repository.getCharacterEncoding());
+			BugzillaClient client = connector.getClientManager().getClient(repository);
+			client.search(query, collector, taskList);
 		} catch (Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK, "failed to perform query", e));
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK,
+					"failed to perform query", e));
 		}
+
+		// if (repository.hasCredentials()) {
+		// urlQueryString = BugzillaClient.addCredentials(urlQueryString,
+		// repository.getCharacterEncoding(),
+		// repository.getUserName(), repository.getPassword());
+		// }
+		// try {
+		// queryFactory.performQuery(taskList, repository.getUrl(), collector,
+		// AbstractReportFactory.RETURN_ALL_HITS);
+		// } catch (Exception e) {
+		// throw new CoreException(new Status(IStatus.ERROR,
+		// BugzillaCorePlugin.PLUGIN_ID, IStatus.OK,
+		// "failed to perform query", e));
+		// }
 
 		for (AbstractQueryHit hit : collector.getHits()) {
 			String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), hit.getId());
 			ITask correspondingTask = taskList.getTask(handle);
 			if (correspondingTask != null && correspondingTask instanceof AbstractRepositoryTask) {
-				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)correspondingTask;
-				// Hack to avoid re-syncing last task from previous synchronization
-				// This can be removed once we are getting a query timestamp from the repository rather than
-				// using the last modified stamp of the last task modified in the return hits.
-				// (or the changeddate field in the hit rdf becomes consistent, currently it doesn't return a proper modified date string)
-				if(repositoryTask.getTaskData() != null && repositoryTask.getTaskData().getLastModified().equals(repository.getSyncTimeStamp())) {
+				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) correspondingTask;
+				// Hack to avoid re-syncing last task from previous
+				// synchronization
+				// This can be removed once we are getting a query timestamp
+				// from the repository rather than
+				// using the last modified stamp of the last task modified in
+				// the return hits.
+				// (or the changeddate field in the hit rdf becomes consistent,
+				// currently it doesn't return a proper modified date string)
+				if (repositoryTask.getTaskData() != null
+						&& repositoryTask.getTaskData().getLastModified().equals(repository.getSyncTimeStamp())) {
 					String taskId = AbstractRepositoryTask.getTaskId(repositoryTask.getHandleIdentifier());
 					RepositoryTaskData taskData = downloadTaskData(repository, taskId, proxySettings);
-					if(taskData != null && taskData.getLastModified().equals(repository.getSyncTimeStamp())) {
+					if (taskData != null && taskData.getLastModified().equals(repository.getSyncTimeStamp())) {
 						continue;
 					}
-				}				
+				}
 				changedTasks.add(repositoryTask);
 			}
 		}
 	}
+
+	public static void addValidOperations(RepositoryTaskData bugReport, String userName) {
+		BUGZILLA_REPORT_STATUS status = BUGZILLA_REPORT_STATUS.valueOf(bugReport.getStatus());
+		switch (status) {
+		case UNCONFIRMED:
+		case REOPENED:
+		case NEW:
+			addOperation(bugReport, BUGZILLA_OPERATION.none, userName);
+			addOperation(bugReport, BUGZILLA_OPERATION.accept, userName);
+			addOperation(bugReport, BUGZILLA_OPERATION.resolve, userName);
+			addOperation(bugReport, BUGZILLA_OPERATION.duplicate, userName);
+			addOperation(bugReport, BUGZILLA_OPERATION.reassign, userName);
+			addOperation(bugReport, BUGZILLA_OPERATION.reassignbycomponent, userName);
+			break;
+		case ASSIGNED:
+			addOperation(bugReport, BUGZILLA_OPERATION.none, userName);
+			addOperation(bugReport, BUGZILLA_OPERATION.resolve, userName);
+			addOperation(bugReport, BUGZILLA_OPERATION.duplicate, userName);
+			addOperation(bugReport, BUGZILLA_OPERATION.reassign, userName);
+			addOperation(bugReport, BUGZILLA_OPERATION.reassignbycomponent, userName);
+			break;
+		case RESOLVED:
+			addOperation(bugReport, BUGZILLA_OPERATION.none, userName);
+			addOperation(bugReport, BUGZILLA_OPERATION.reopen, userName);
+			addOperation(bugReport, BUGZILLA_OPERATION.verify, userName);
+			addOperation(bugReport, BUGZILLA_OPERATION.close, userName);
+			break;
+		case CLOSED:
+			addOperation(bugReport, BUGZILLA_OPERATION.none, userName);
+			addOperation(bugReport, BUGZILLA_OPERATION.reopen, userName);
+			break;
+		case VERIFIED:
+			addOperation(bugReport, BUGZILLA_OPERATION.none, userName);
+			addOperation(bugReport, BUGZILLA_OPERATION.reopen, userName);
+			addOperation(bugReport, BUGZILLA_OPERATION.close, userName);
+		}
+	}
+
+	public static void addOperation(RepositoryTaskData bugReport, BUGZILLA_OPERATION opcode, String userName) {
+		RepositoryOperation newOperation = null;
+		switch (opcode) {
+		case none:
+			newOperation = new RepositoryOperation(opcode.toString(), "Leave as " + bugReport.getStatus() + " "
+					+ bugReport.getResolution());
+			newOperation.setChecked(true);
+			break;
+		case accept:
+			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_ACCEPT);
+			break;
+		case resolve:
+			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_RESOLVE);
+			newOperation.setUpOptions(OPERATION_OPTION_RESOLUTION);
+			for (BUGZILLA_RESOLUTION resolution : BUGZILLA_RESOLUTION.values()) {
+				newOperation.addOption(resolution.toString(), resolution.toString());
+			}
+			break;
+		case duplicate:
+			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_DUPLICATE);
+			newOperation.setInputName(OPERATION_INPUT_DUP_ID);
+			newOperation.setInputValue("");
+			break;
+		case reassign:
+			String localUser = userName;
+			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_REASSIGN);
+			newOperation.setInputName(OPERATION_INPUT_ASSIGNED_TO);
+			newOperation.setInputValue(localUser);
+			break;
+		case reassignbycomponent:
+			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_REASSIGN_DEFAULT);
+			break;
+		case reopen:
+			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_REOPEN);
+			break;
+		case verify:
+			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_VERIFY);
+			break;
+		case close:
+			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_CLOSE);
+			break;
+		default:
+			break;
+		// MylarStatusHandler.log("Unknown bugzilla operation code recieved",
+		// BugzillaRepositoryUtil.class);
+		}
+		if (newOperation != null) {
+			bugReport.addOperation(newOperation);
+		}
+	}
+
+	
+//	// TODO: getAttributeOptions()
+//	public void updateAttributeOptions(TaskRepository taskRepository, RepositoryTaskData existingReport)
+//			throws IOException, KeyManagementException, GeneralSecurityException, BugzillaException, CoreException {
+//
+//		RepositoryConfiguration configuration = BugzillaCorePlugin.getDefault().getRepositoryConfiguration(taskRepository, false);
+//		if (configuration == null)
+//			return;
+//		String product = existingReport.getAttributeValue(BugzillaReportElement.PRODUCT.getKeyString());
+//		for (RepositoryTaskAttribute attribute : existingReport.getAttributes()) {
+//			BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getID().trim().toUpperCase());
+//			attribute.clearOptions();
+//			String key = attribute.getID();
+//			if (!product.equals("")) {
+//				switch (element) {
+//				case TARGET_MILESTONE:
+//				case VERSION:
+//				case COMPONENT:
+//					key = product + "." + key;
+//				}
+//			}
+//
+//			List<String> optionValues = configuration.getAttributeValues(key);
+//			if(optionValues.size() == 0) {
+//				optionValues = configuration.getAttributeValues(attribute.getID());
+//			}
+//
+//			if (element != BugzillaReportElement.OP_SYS && element != BugzillaReportElement.BUG_SEVERITY
+//					&& element != BugzillaReportElement.PRIORITY && element != BugzillaReportElement.BUG_STATUS) {
+//				Collections.sort(optionValues);
+//			}
+//			if (element == BugzillaReportElement.TARGET_MILESTONE && optionValues.isEmpty()) {
+//				existingReport.removeAttribute(BugzillaReportElement.TARGET_MILESTONE);
+//				continue;
+//			}
+//			for (String option : optionValues) {
+//				attribute.addOptionValue(option, option);
+//			}
+//		}
+//	}
 }

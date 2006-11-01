@@ -30,6 +30,7 @@ import org.eclipse.mylar.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylar.internal.trac.core.TracTask;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
@@ -95,7 +96,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 		assertTrue(task.getTaskData().getAttachments().size() > 0);
 		File file = File.createTempFile("attachment", null);
 		file.deleteOnExit();
-		attachmentHandler.downloadAttachment(repository, task, task.getTaskData().getAttachments().get(0), file, proxySettings);
+		attachmentHandler.downloadAttachment(repository, AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()), task.getTaskData().getAttachments().get(0), file);
 
 		byte[] result = new byte[6];
 		InputStream in = new FileInputStream(file);

@@ -49,7 +49,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		String id = AbstractRepositoryTask.getTaskId(getHandleIdentifier());
 		String repositoryUrl = getRepositoryUrl();
 		try {
-			String url = BugzillaServerFacade.getBugUrlWithoutLogin(repositoryUrl, Integer.parseInt(id));
+			String url = BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, Integer.parseInt(id));
 			if (url != null) {
 				super.setUrl(url);
 			}
@@ -92,7 +92,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		// fix for bug 103537 - should login automatically, but dont want to
 		// show the login info in the query string
 		try {
-			return BugzillaServerFacade.getBugUrlWithoutLogin(getRepositoryUrl(), Integer
+			return BugzillaClient.getBugUrlWithoutLogin(getRepositoryUrl(), Integer
 					.parseInt(AbstractRepositoryTask.getTaskId(handle)));
 		} catch (NumberFormatException nfe) {
 			return super.getUrl();

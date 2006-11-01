@@ -38,11 +38,12 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
@@ -115,7 +116,7 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 	private String prevProduct;
 
 	private final TaskRepository repository;
-
+	
 	protected IPreferenceStore prefs = BugzillaUiPlugin.getDefault().getPreferenceStore();
 
 
@@ -211,8 +212,7 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 								InterruptedException {
 							monitor.beginTask("Updating repository report options...", IProgressMonitor.UNKNOWN);
 							try {
-								connector.updateAttributes(repository, TasksUiPlugin.getDefault().getProxySettings(),
-										monitor);
+								connector.updateAttributes(repository, monitor);
 							} catch (CoreException ce) {
 								if (ce.getStatus().getException() instanceof GeneralSecurityException) {
 									MylarStatusHandler.fail(ce,
@@ -265,9 +265,7 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 				if (storedProducts.length > 0) {
 					products = Arrays.asList(storedProducts);
 				} else {
-					products = BugzillaServerFacade.getProductList(repository.getUrl(), TasksUiPlugin.getDefault()
-							.getProxySettings(), repository.getUserName(), repository.getPassword(), repository
-							.getCharacterEncoding());
+					products = BugzillaCorePlugin.getDefault().getRepositoryConfiguration(repository, false).getProducts();
 				}
 				bugWizard.model.setConnected(true);
 				bugWizard.model.setParsedProductsStatus(true);
@@ -435,16 +433,13 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 	 * @throws KeyManagementException
 	 * @throws BugzillaException
 	 */
-	public void saveDataToModel() throws KeyManagementException, GeneralSecurityException, IOException,
-			BugzillaException {
+	public void saveDataToModel() throws CoreException {
 		NewBugzillaReport model = bugWizard.model;
 		prevProduct = model.getProduct();
 		model.setProduct((listBox.getSelection())[0]);
 
 		if (!model.hasParsedAttributes() || !model.getProduct().equals(prevProduct)) {
-			BugzillaServerFacade.setupNewBugAttributes(repository.getUrl(), TasksUiPlugin.getDefault()
-					.getProxySettings(), repository.getUserName(), repository.getPassword(), model, repository
-					.getCharacterEncoding());
+			BugzillaRepositoryConnector.setupNewBugAttributes(repository, model);
 			model.setParsedAttributesStatus(true);
 		}
 

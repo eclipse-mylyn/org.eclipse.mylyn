@@ -69,7 +69,11 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	private String serverVersion = TaskRepository.NO_VERSION_SPECIFIED;
 
-	protected StringFieldEditor passwordEditor;
+	protected StringFieldEditor repositoryPasswordEditor;
+
+	protected StringFieldEditor httpAuthUserNameEditor;
+
+	protected StringFieldEditor httpAuthPasswordEditor;
 
 	protected TaskRepository repository;
 
@@ -87,11 +91,17 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	private String oldPassword;
 
+	private String oldHttpAuthUserId;
+
+	private String oldHttpAuthPassword;
+
 	private boolean needsAnonymousLogin;
 
 	private boolean needsTimeZone;
 
 	private boolean needsEncoding;
+
+	private boolean needsHttpAuth;
 
 	private Composite container;
 
@@ -100,6 +110,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	private String originalUrl;
 
 	private Button otherEncoding;
+
+	private Button httpAuthButton;
 
 	public AbstractRepositorySettingsPage(String title, String description, AbstractRepositoryConnectorUi repositoryUi) {
 		super(title);
@@ -186,11 +198,20 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		}
 
 		userNameEditor = new StringFieldEditor("", LABEL_USER, StringFieldEditor.UNLIMITED, container);
-		passwordEditor = new RepositoryStringFieldEditor("", LABEL_PASSWORD, StringFieldEditor.UNLIMITED, container);
+		repositoryPasswordEditor = new RepositoryStringFieldEditor("", LABEL_PASSWORD, StringFieldEditor.UNLIMITED,
+				container);
 		if (repository != null) {
 			originalUrl = repository.getUrl();
 			oldUsername = repository.getUserName();
 			oldPassword = repository.getPassword();
+			if (repository.hasProperty(TaskRepository.AUTH_HTTP_USERNAME)
+					&& repository.hasProperty(TaskRepository.AUTH_HTTP_PASSWORD)) {
+				oldHttpAuthUserId = repository.getProperty(TaskRepository.AUTH_HTTP_USERNAME);
+				oldHttpAuthPassword = repository.getProperty(TaskRepository.AUTH_HTTP_PASSWORD);
+			} else {
+				oldHttpAuthPassword = "";
+				oldHttpAuthUserId = "";
+			}
 			try {
 				String repositoryLabel = repository.getRepositoryLabel();
 				if (repositoryLabel != null && repositoryLabel.length() > 0) {
@@ -200,16 +221,18 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				}
 				serverUrlCombo.setText(repository.getUrl());
 				userNameEditor.setStringValue(repository.getUserName());
-				passwordEditor.setStringValue(repository.getPassword());
+				repositoryPasswordEditor.setStringValue(repository.getPassword());
 			} catch (Throwable t) {
 				MylarStatusHandler.fail(t, "could not set field value for: " + repository, false);
 			}
 		} else {
 			oldUsername = "";
 			oldPassword = "";
+			oldHttpAuthPassword = "";
+			oldHttpAuthUserId = "";
 		}
 		// bug 131656: must set echo char after setting value on Mac
-		((RepositoryStringFieldEditor) passwordEditor).getTextControl().setEchoChar('*');
+		((RepositoryStringFieldEditor) repositoryPasswordEditor).getTextControl().setEchoChar('*');
 
 		if (needsAnonymousLogin()) {
 			// do this after username and password widgets have been intialized
@@ -304,6 +327,49 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			}
 		}
 
+		if (needsHttpAuth()) {
+			httpAuthButton = new Button(container, SWT.CHECK);
+			GridDataFactory.fillDefaults().align(SWT.TOP, SWT.DEFAULT).span(2, SWT.DEFAULT).applyTo(httpAuthButton);
+
+			httpAuthButton.setText("Http Authentication");
+			httpAuthButton.addSelectionListener(new SelectionListener() {
+				public void widgetSelected(SelectionEvent e) {
+					setHttpAuth(httpAuthButton.getSelection());
+				}
+
+				public void widgetDefaultSelected(SelectionEvent e) {
+					// ignore
+				}
+			});
+
+			httpAuthUserNameEditor = new StringFieldEditor("", "User ID: ", StringFieldEditor.UNLIMITED, container) {
+
+				@Override
+				protected boolean doCheckState() {
+					return true;
+				}
+
+				@Override
+				protected void valueChanged() {
+					super.valueChanged();
+					if (getWizard() != null) {
+						getWizard().getContainer().updateButtons();
+					}
+				}
+			};
+			httpAuthPasswordEditor = new RepositoryStringFieldEditor("", "Password: ", StringFieldEditor.UNLIMITED,
+					container);
+			((RepositoryStringFieldEditor) httpAuthPasswordEditor).getTextControl().setEchoChar('*');
+
+			// httpAuthGroup.setEnabled(httpAuthButton.getSelection());
+			httpAuthUserNameEditor.setEnabled(httpAuthButton.getSelection(), container);
+			((StringFieldEditor) httpAuthPasswordEditor).setEnabled(httpAuthButton.getSelection(), container);
+
+			setHttpAuth(oldHttpAuthPassword != null && oldHttpAuthUserId != null && !oldHttpAuthPassword.equals("")
+					&& !oldHttpAuthUserId.equals(""));
+
+		}
+
 		validateServerButton = new Button(container, SWT.PUSH);
 		GridDataFactory.swtDefaults().span(2, SWT.DEFAULT).grab(false, false).applyTo(validateServerButton);
 		validateServerButton.setText("Validate Settings");
@@ -351,16 +417,34 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 		if (selected) {
 			oldUsername = userNameEditor.getStringValue();
-			oldPassword = ((StringFieldEditor) passwordEditor).getStringValue();
+			oldPassword = ((StringFieldEditor) repositoryPasswordEditor).getStringValue();
 			userNameEditor.setStringValue(null);
-			((StringFieldEditor) passwordEditor).setStringValue(null);
+			((StringFieldEditor) repositoryPasswordEditor).setStringValue(null);
 		} else {
 			userNameEditor.setStringValue(oldUsername);
-			((StringFieldEditor) passwordEditor).setStringValue(oldPassword);
+			((StringFieldEditor) repositoryPasswordEditor).setStringValue(oldPassword);
 		}
 
 		userNameEditor.setEnabled(!selected, container);
-		((StringFieldEditor) passwordEditor).setEnabled(!selected, container);
+		((StringFieldEditor) repositoryPasswordEditor).setEnabled(!selected, container);
+	}
+
+	public void setHttpAuth(boolean selected) {
+		if (!needsHttpAuth) {
+			return;
+		}
+		httpAuthButton.setSelection(selected);
+		if (!selected) {
+			oldHttpAuthUserId = httpAuthUserNameEditor.getStringValue();
+			oldHttpAuthPassword = ((StringFieldEditor) httpAuthPasswordEditor).getStringValue();
+			httpAuthUserNameEditor.setStringValue(null);
+			((StringFieldEditor) httpAuthPasswordEditor).setStringValue(null);
+		} else {
+			httpAuthUserNameEditor.setStringValue(oldHttpAuthUserId);
+			((StringFieldEditor) httpAuthPasswordEditor).setStringValue(oldHttpAuthPassword);
+		}
+		httpAuthUserNameEditor.setEnabled(selected, container);
+		((StringFieldEditor) httpAuthPasswordEditor).setEnabled(selected, container);
 	}
 
 	protected abstract void createAdditionalControls(Composite parent);
@@ -391,7 +475,23 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	}
 
 	public String getPassword() {
-		return passwordEditor.getStringValue();
+		return repositoryPasswordEditor.getStringValue();
+	}
+
+	public String getHttpAuthUserId() {
+		if (needsHttpAuth()) {
+			return httpAuthUserNameEditor.getStringValue();
+		} else {
+			return "";
+		}
+	}
+
+	public String getHttpAuthPassword() {
+		if (needsHttpAuth()) {
+			return httpAuthPasswordEditor.getStringValue();
+		} else {
+			return "";
+		}
 	}
 
 	public void init(IWorkbench workbench) {
@@ -504,6 +604,10 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				getCharacterEncoding(), "");
 		repository.setRepositoryLabel(getRepositoryLabel());
 		repository.setAuthenticationCredentials(getUserName(), getPassword());
+
+		repository.setProperty(TaskRepository.AUTH_HTTP_USERNAME, getHttpAuthUserId());
+		repository.setProperty(TaskRepository.AUTH_HTTP_PASSWORD, getHttpAuthPassword());
+
 		updateProperties(repository);
 		return repository;
 	}
@@ -532,6 +636,14 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		this.needsTimeZone = needsTimeZone;
 	}
 
+	public boolean needsHttpAuth() {
+		return this.needsHttpAuth;
+	}
+
+	public void setNeedsHttpAuth(boolean needsHttpAuth) {
+		this.needsHttpAuth = needsHttpAuth;
+	}
+
 	public void setNeedsAnonymousLogin(boolean needsAnonymousLogin) {
 		this.needsAnonymousLogin = needsAnonymousLogin;
 	}
@@ -552,7 +664,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	/** for testing */
 	public void setPassword(String pass) {
-		passwordEditor.setStringValue(pass);
+		repositoryPasswordEditor.setStringValue(pass);
 	}
 
 }

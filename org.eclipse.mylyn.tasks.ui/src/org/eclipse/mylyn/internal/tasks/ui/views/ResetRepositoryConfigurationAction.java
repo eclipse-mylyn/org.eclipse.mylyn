@@ -61,7 +61,7 @@ public class ResetRepositoryConfigurationAction extends Action {
 								monitor.beginTask(jobName,
 										IProgressMonitor.UNKNOWN);
 								try {
-									connector.updateAttributes(repository, TasksUiPlugin.getDefault().getProxySettings(), monitor);
+									connector.updateAttributes(repository, monitor);
 								} catch (CoreException ce) {
 									MylarStatusHandler.fail(ce, ce.getStatus().getMessage(), true);
 								}

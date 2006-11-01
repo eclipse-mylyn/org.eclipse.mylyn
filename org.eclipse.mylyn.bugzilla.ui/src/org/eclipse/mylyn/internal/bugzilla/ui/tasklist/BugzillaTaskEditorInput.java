@@ -17,14 +17,13 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaServerFacade;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.tasks.ui.editors.ExistingBugEditorInput;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IPersistableElement;
 
 /**
@@ -104,9 +103,7 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 	private void updateOptions(RepositoryTaskData taskData) {
 		try {
 			if (taskData != null) {
-				BugzillaServerFacade.updateBugAttributeOptions(taskData.getRepositoryUrl(), TasksUiPlugin.getDefault()
-						.getProxySettings(), repository.getUserName(), repository.getPassword(), taskData, repository
-						.getCharacterEncoding());
+				BugzillaCorePlugin.getDefault().getConnector().updateAttributeOptions(repository, taskData);
 			}
 		} catch (Exception e) {
 			// ignore

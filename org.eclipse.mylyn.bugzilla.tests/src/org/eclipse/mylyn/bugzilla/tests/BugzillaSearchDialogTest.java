@@ -67,6 +67,6 @@ public class BugzillaSearchDialogTest extends TestCase {
 		 * not retrieved properly, throw an exception if the page is not
 		 * initialized properly, or pass otherwise.
 		 */
-		assertFalse(page.getProductCount() == 0);
+		assertFalse(page.getProductCount() == 0);		
 	}
 }

@@ -25,9 +25,12 @@ public interface IAttachmentHandler {
 	public void uploadAttachment(TaskRepository repository, AbstractRepositoryTask task, String comment,
 			String description, File file, String contentType, boolean isPatch, Proxy proxySettings) throws CoreException;
 
-	public void downloadAttachment(TaskRepository taskRepository, AbstractRepositoryTask task,
-			RepositoryAttachment attachment, File file, Proxy proxySettings) throws CoreException;
+	public void downloadAttachment(TaskRepository taskRepository, String taskId, RepositoryAttachment attachment, File file) throws CoreException;
 
+	public byte[] getAttachmentData(TaskRepository repository, String taskId) throws CoreException;
+	
+	//public InputStream getAttachmentInputStream(TaskRepository repository, String taskId) throws CoreException;
+	
 	public boolean canUploadAttachment(TaskRepository repository, AbstractRepositoryTask task);
 	
 	public boolean canDownloadAttachment(TaskRepository repository, AbstractRepositoryTask task);

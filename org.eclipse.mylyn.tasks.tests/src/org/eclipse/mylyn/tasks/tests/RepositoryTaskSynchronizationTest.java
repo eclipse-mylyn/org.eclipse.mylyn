@@ -15,8 +15,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
 
-import javax.security.auth.login.LoginException;
-
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
@@ -317,7 +315,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		}
 
 		public RepositoryTaskData downloadTaskData(TaskRepository repository, String taskId,
-				Proxy proxySettings) throws CoreException, LoginException {
+				Proxy proxySettings) throws CoreException {
 			return null;
 		}
 

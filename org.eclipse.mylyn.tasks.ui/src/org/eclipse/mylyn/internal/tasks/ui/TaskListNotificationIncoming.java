@@ -100,7 +100,7 @@ public class TaskListNotificationIncoming implements ITaskListNotification {
 		this.date = date;
 	}
 	
-	public int compareTo(Object anotherNotification) throws ClassCastException {
+	public int compareTo(ITaskListNotification anotherNotification) throws ClassCastException {
 	    if (!(anotherNotification instanceof ITaskListNotification))
 	      throw new ClassCastException("A ITaskListNotification object expected.");
 	    Date anotherDate = ((ITaskListNotification) anotherNotification).getDate();

@@ -40,19 +40,19 @@ public class TracAttachmentHandler implements IAttachmentHandler {
 		this.connector = connector;
 	}
 
-	public void downloadAttachment(TaskRepository repository, AbstractRepositoryTask task, RepositoryAttachment attachment, File file, Proxy proxySettings) throws CoreException {
+	public void downloadAttachment(TaskRepository repository, String taskId, RepositoryAttachment attachment, File file) throws CoreException {
 		String filename = attachment.getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_FILENAME);
 		if (filename == null) {
-			throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.PLUGIN_ID, IStatus.OK, "Attachment download from " + task.getRepositoryUrl() + " failed, missing attachment filename.", null));
+			throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.PLUGIN_ID, IStatus.OK, "Attachment download from " + repository.getUrl() + " failed, missing attachment filename.", null));
 		}
 		
 		try {
 			ITracClient client = connector.getClientManager().getRepository(repository);
-			int id = Integer.parseInt(AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()));
+			int id = Integer.parseInt(taskId);
 			byte[] data = client.getAttachmentData(id, filename);
 			writeData(file, data);
 		} catch (Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.PLUGIN_ID, 0, "Attachment download from " + task.getRepositoryUrl() + " failed, please see details.", e ));
+			throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.PLUGIN_ID, 0, "Attachment download from " +repository.getUrl() + " failed, please see details.", e ));
 		}
 	}
 
@@ -113,6 +113,11 @@ public class TracAttachmentHandler implements IAttachmentHandler {
 
 	public void updateAttachment(TaskRepository repository, RepositoryAttachment attachment) throws CoreException {
 		// ignore
+	}
+
+	public byte[] getAttachmentData(TaskRepository repository, String taskId) throws CoreException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

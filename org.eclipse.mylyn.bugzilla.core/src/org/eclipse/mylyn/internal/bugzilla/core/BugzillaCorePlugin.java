@@ -16,16 +16,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.Proxy;
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -46,6 +47,8 @@ public class BugzillaCorePlugin extends Plugin {
 	private static boolean cacheFileRead = false;
 
 	private static File repositoryConfigurationFile = null;
+	
+	private BugzillaRepositoryConnector connector;
 
 	/** Product configuration for the current server */
 	private static Map<String, RepositoryConfiguration> repositoryConfigurations = new HashMap<String, RepositoryConfiguration>();
@@ -73,37 +76,62 @@ public class BugzillaCorePlugin extends Plugin {
 		super.stop(context);
 	}
 
-	/**
-	 * for testing purposes
-	 */
-	public static RepositoryConfiguration getRepositoryConfiguration(String repositoryUrl) {
-		return repositoryConfigurations.get(repositoryUrl);
+	public BugzillaRepositoryConnector getConnector() {
+		return connector;
 	}
+	
+	void setConnector(BugzillaRepositoryConnector connector) {
+		this.connector = connector;
+	}
+	
+	public static Map<String, RepositoryConfiguration> getConfigurations() {
+		if (!cacheFileRead) {
+			readRepositoryConfigurationFile();
+			cacheFileRead = true;
+		}
+		return repositoryConfigurations;
+	}
+
 
 	public static void setConfigurationCacheFile(File file) {
 		repositoryConfigurationFile = file;
 	}
 
 	/**
+	 * for testing purposes
+	 */
+	public static RepositoryConfiguration getRepositoryConfiguration(String repositoryUrl) {
+		return repositoryConfigurations.get(repositoryUrl);
+	}
+	
+	/**
 	 * Retrieves the latest repository configuration from the server
-	 * 
+	 * @throws CoreException 
+	 * @throws GeneralSecurityException 
+	 * @throws BugzillaException 
+	 * @throws IOException 
 	 * @throws BugzillaException
 	 * @throws GeneralSecurityException
 	 * @throws
 	 */
-	public static RepositoryConfiguration getRepositoryConfiguration(boolean forceRefresh, String repositoryUrl,
-			Proxy proxySettings, String userName, String password, String encoding) throws IOException,
-			BugzillaException, GeneralSecurityException {
+	public RepositoryConfiguration getRepositoryConfiguration(TaskRepository repository, boolean forceRefresh) throws CoreException {
+		try {
 		if (!cacheFileRead) {
 			readRepositoryConfigurationFile();
 			cacheFileRead = true;
 		}
-		if (repositoryConfigurations.get(repositoryUrl) == null || forceRefresh) {
-			RepositoryConfigurationFactory configFactory = new RepositoryConfigurationFactory();
-			addRepositoryConfiguration(configFactory.getConfiguration(repositoryUrl, proxySettings, userName, password,
-					encoding));
+		if (repositoryConfigurations.get(repository.getUrl()) == null || forceRefresh) {
+			BugzillaClient client = connector.getClientManager().getClient(repository);
+			RepositoryConfiguration config = client.getRepositoryConfiguration();
+			if(config != null) {
+				addRepositoryConfiguration(config);
+			}
+					
 		}
-		return repositoryConfigurations.get(repositoryUrl);
+		return repositoryConfigurations.get(repository.getUrl());
+		} catch (Exception e){
+			throw new CoreException(new Status(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID, 1, "Error updating attributes.\n\n"+e.getMessage(), e));
+		}
 	}
 
 	/** public for testing */

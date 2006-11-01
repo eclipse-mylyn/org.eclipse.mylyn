@@ -254,7 +254,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateAttributes(TaskRepository repository, Proxy proxySettings, IProgressMonitor monitor) throws CoreException {
+	public void updateAttributes(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
 		try {
 			ITracClient client = getClientManager().getRepository(repository);
 			client.updateAttributes(monitor, true);

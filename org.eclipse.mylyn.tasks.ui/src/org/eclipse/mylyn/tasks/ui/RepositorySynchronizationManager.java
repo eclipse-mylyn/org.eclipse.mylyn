@@ -42,6 +42,7 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncSta
 import org.eclipse.ui.PlatformUI;
 
 /**
+ * Encapsulates synchronization policy
  * TODO: move into core?
  * 
  * @author Mik Kersten
