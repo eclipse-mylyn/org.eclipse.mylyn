@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Text;
  * @author Ken Sueda (original prototype)
  * @author Rob Elves (categories)
  */
-public class TaskActicityWizardPage extends WizardPage {
+public class TaskActivityWizardPage extends WizardPage {
 
 	private static final int DEFAULT_DAYS = 1;
 
@@ -75,7 +75,7 @@ public class TaskActicityWizardPage extends WizardPage {
 	
 	private TaskElementLabelProvider labelProvider = new TaskElementLabelProvider();
 
-	public TaskActicityWizardPage() {
+	public TaskActivityWizardPage() {
 		super(TITLE);
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);

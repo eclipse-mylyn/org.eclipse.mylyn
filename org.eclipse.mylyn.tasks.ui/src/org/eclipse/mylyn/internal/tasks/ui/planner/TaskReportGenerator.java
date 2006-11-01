@@ -75,10 +75,10 @@ public class TaskReportGenerator implements IRunnableWithProgress {
 		Set<ITaskListElement> rootElements;
 		if (filterCategories.size() == 0) {
 			rootElements = tasklist.getRootElements();
-		} else if(filterCategories.contains(TaskActicityWizardPage.ROOT_CATEGORY_HACK)) {
+		} else if(filterCategories.contains(TaskActivityWizardPage.ROOT_CATEGORY_HACK)) {
 			// TODO: Remove when root category issues fixed
 			rootElements = new HashSet<ITaskListElement>(tasklist.getRootTasks());
-			filterCategories.remove(TaskActicityWizardPage.ROOT_CATEGORY_HACK);
+			filterCategories.remove(TaskActivityWizardPage.ROOT_CATEGORY_HACK);
 			rootElements.addAll(filterCategories);
 		} else {
 			rootElements = filterCategories;

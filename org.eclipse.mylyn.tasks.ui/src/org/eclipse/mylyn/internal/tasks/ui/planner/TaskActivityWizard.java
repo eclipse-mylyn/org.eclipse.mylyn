@@ -30,7 +30,7 @@ public class TaskActivityWizard extends Wizard implements INewWizard {
 
 	private static final String TITLE = "New Task Activity Report";
 	
-	private TaskActicityWizardPage planningGamePage;
+	private TaskActivityWizardPage planningGamePage;
 
 	public TaskActivityWizard() {
 		super();
@@ -58,7 +58,7 @@ public class TaskActivityWizard extends Wizard implements INewWizard {
 	}
 
 	private void init() {
-		planningGamePage = new TaskActicityWizardPage();
+		planningGamePage = new TaskActivityWizardPage();
 		super.setForcePreviousAndNextButtons(true);
 	}
 
