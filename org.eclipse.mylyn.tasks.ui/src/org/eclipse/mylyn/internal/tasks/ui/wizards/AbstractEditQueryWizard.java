@@ -29,9 +29,9 @@ public abstract class AbstractEditQueryWizard extends Wizard {
 	protected final TaskRepository repository;
 
 	protected AbstractRepositoryQuery query;
-	
+
 	protected AbstractRepositoryQueryPage page;
-	
+
 	public AbstractEditQueryWizard(TaskRepository repository, AbstractRepositoryQuery query) {
 		this.repository = repository;
 		this.query = query;
@@ -42,17 +42,23 @@ public abstract class AbstractEditQueryWizard extends Wizard {
 
 	@Override
 	public boolean performFinish() {
-		AbstractRepositoryQuery query = page.getQuery();
-		if (query != null) {
-			
-			TasksUiPlugin.getTaskListManager().getTaskList().deleteQuery(query);
-			TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
-			
-			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
+		AbstractRepositoryQuery queryToRun = null;
+		if (page != null) {
+			// TODO: get rid of this?
+			queryToRun = page.getQuery();
+		} else {
+			queryToRun = this.query;
+		}
+		if (queryToRun != null) {
+			TasksUiPlugin.getTaskListManager().getTaskList().deleteQuery(queryToRun);
+			TasksUiPlugin.getTaskListManager().getTaskList().addQuery(queryToRun);
+
+			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+					repository.getKind());
 			if (connector != null) {
-				TasksUiPlugin.getSynchronizationManager().synchronize(connector, query, null);
+				TasksUiPlugin.getSynchronizationManager().synchronize(connector, queryToRun, null);
 			}
-		} 
+		}
 
 		return true;
 	}
