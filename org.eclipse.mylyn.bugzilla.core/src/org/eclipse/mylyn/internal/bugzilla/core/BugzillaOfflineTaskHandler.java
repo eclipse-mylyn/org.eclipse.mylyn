@@ -215,7 +215,7 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 				taskList);
 		try {
 			BugzillaClient client = connector.getClientManager().getClient(repository);
-			client.search(query, collector, taskList);
+			client.getSearchHits(query, collector, taskList);
 		} catch (Exception e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK,
 					"failed to perform query", e));

@@ -106,9 +106,9 @@ public class BugSubmissionHandler {
 					} catch (UnrecognizedReponseException e) {
 						return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.INFO,
 								"Unrecognized response from server", e);
-					} catch (IOException e) {
+					} catch (IOException e) {						
 						return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.ERROR,
-								"Check repository credentials and connectivity.", e);
+								"IO Error: \n\n"+e.getMessage(), e);
 					} catch (BugzillaException e) {
 						// MylarStatusHandler.fail(e, "Failed to submit",
 						// false);

@@ -160,7 +160,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		IStatus queryStatus = Status.OK_STATUS;
 		try {
 			BugzillaClient client = getClientManager().getClient(repository);
-			client.search(query, resultCollector, taskList);
+			client.getSearchHits(query, resultCollector, taskList);
 		} catch (UnrecognizedReponseException e) {
 			queryStatus = new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, Status.INFO,
 					"Unrecognized response from server", e);

@@ -306,7 +306,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		//IAttachmentHandler attachmentHandler = connector.getAttachmentHandler();
 		BugzillaClient client = connector.getClientManager().getClient(repository);
 		try {
-			client.uploadAttachment(attachment.getReport().getId(), attachment.getComment(), attachment.getDescription(), new File(attachment.getFilePath()), attachment.getContentType(), attachment.isPatch());
+			client.postAttachment(attachment.getReport().getId(), attachment.getComment(), attachment.getDescription(), new File(attachment.getFilePath()), attachment.getContentType(), attachment.isPatch());
 			fail();
 		} catch (Exception e) {			
 		}
@@ -326,7 +326,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 //		assertFalse(attachmentHandler.uploadAttachment(attachment, repository.getUserName(), repository.getPassword(),
 //				Proxy.NO_PROXY));
 		try {
-			client.uploadAttachment(attachment.getReport().getId(), attachment.getComment(), attachment.getDescription(), new File(attachment.getFilePath()), attachment.getContentType(), attachment.isPatch());
+			client.postAttachment(attachment.getReport().getId(), attachment.getComment(), attachment.getDescription(), new File(attachment.getFilePath()), attachment.getContentType(), attachment.isPatch());
 			fail();
 		} catch (Exception e) {			
 		}
@@ -342,7 +342,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 //		assertTrue(attachmentHandler.uploadAttachment(attachment, repository.getUserName(), repository.getPassword(),
 //				Proxy.NO_PROXY));
 		try {
-			client.uploadAttachment(attachment.getReport().getId(), attachment.getComment(), attachment.getDescription(), new File(attachment.getFilePath()), attachment.getContentType(), attachment.isPatch());
+			client.postAttachment(attachment.getReport().getId(), attachment.getComment(), attachment.getDescription(), new File(attachment.getFilePath()), attachment.getContentType(), attachment.isPatch());
 		} catch (Exception e) {
 			fail();
 		}

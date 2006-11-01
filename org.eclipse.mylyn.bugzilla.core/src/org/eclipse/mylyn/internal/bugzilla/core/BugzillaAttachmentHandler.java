@@ -132,7 +132,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 		try {
 			String bugId = AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
 			BugzillaClient client = connector.getClientManager().getClient(repository);
-			client.uploadAttachment(bugId, comment, description, file, contentType, isPatch);
+			client.postAttachment(bugId, comment, description, file, contentType, isPatch);
 		} catch (LoginException e) {
 			throw new CoreException(new Status(Status.OK, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
 					"Your login name or password is incorrect. Ensure proper repository configuration.", e));

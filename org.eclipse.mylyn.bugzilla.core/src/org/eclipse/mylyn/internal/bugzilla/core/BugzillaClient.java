@@ -366,63 +366,7 @@ public class BugzillaClient {
 		return url;
 	}
 
-	/**
-	 * Utility method for determining what potential error has occurred from a
-	 * bugzilla html reponse page
-	 * 
-	 * @throws CoreException
-	 */
-	public static void parseHtmlError(BufferedReader in) throws IOException, LoginException, BugzillaException {
-		HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
-
-		boolean isTitle = false;
-		String title = "";
-		String body = "";
-
-		try {
-
-			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-				body += token.toString();
-				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == HtmlTag.Type.TITLE
-						&& !((HtmlTag) (token.getValue())).isEndTag()) {
-					isTitle = true;
-					continue;
-				}
-
-				if (isTitle) {
-					// get all of the data in the title tag
-					if (token.getType() != Token.TAG) {
-						title += ((StringBuffer) token.getValue()).toString().toLowerCase() + " ";
-						continue;
-					} else if (token.getType() == Token.TAG
-							&& ((HtmlTag) token.getValue()).getTagType() == HtmlTag.Type.TITLE
-							&& ((HtmlTag) token.getValue()).isEndTag()) {
-
-						if (title.indexOf("login") != -1 || title.indexOf("log in") != -1
-								|| (title.indexOf("invalid") != -1 && title.indexOf("password") != -1)
-								|| title.indexOf("check e-mail") != -1) {
-							// MylarStatusHandler.log("Login Error: "+body,
-							// BugzillaServerFacade.class);
-							throw new LoginException(IBugzillaConstants.ERROR_INVALID_USERNAME_OR_PASSWORD);
-						} else if (title.indexOf(IBugzillaConstants.ERROR_MIDAIR_COLLISION) != -1) {
-							throw new BugzillaException(IBugzillaConstants.ERROR_MSG_MIDAIR_COLLISION);
-						} else if (title.indexOf(IBugzillaConstants.ERROR_COMMENT_REQUIRED) != -1) {
-							throw new BugzillaException(IBugzillaConstants.ERROR_MSG_COMMENT_REQUIRED);
-						} else if (title.indexOf(IBugzillaConstants.LOGGED_OUT) != -1) {
-							throw new BugzillaException(IBugzillaConstants.LOGGED_OUT);
-						}
-					}
-				}
-			}
-
-			throw new UnrecognizedReponseException(body);
-
-		} catch (ParseException e) {
-			throw new IOException("Unable to parse result from repository:\n" + e.getMessage());
-		}
-	}
-
-	public void search(AbstractRepositoryQuery query, QueryHitCollector collector, TaskList taskList)
+	public void getSearchHits(AbstractRepositoryQuery query, QueryHitCollector collector, TaskList taskList)
 			throws IOException, BugzillaException, GeneralSecurityException {
 		String queryUrl = query.getUrl();
 		// Test that we don't specify content type twice.
@@ -551,8 +495,12 @@ public class BugzillaClient {
 		}
 	}
 
-	public void uploadAttachment(String bugReportID, String comment, String description, File sourceFile,
+	public void postAttachment(String bugReportID, String comment, String description, File sourceFile,
 			String contentType, boolean isPatch) throws HttpException, IOException, LoginException, BugzillaException {
+		WebClientUtil.setupHttpClient(httpClient, proxy, repositoryUrl.toString(), htAuthUser, htAuthPass);
+		if (!authenticated && hasAuthenticationCredentials()) {
+			authenticate();
+		}
 		PostMethod postMethod = null;
 		// Note: The following debug code requires http commons-logging and
 		// commons-logging-api jars
@@ -635,7 +583,65 @@ public class BugzillaClient {
 		if (status == HttpStatus.SC_OK) {
 			return postMethod.getResponseBodyAsStream();
 		} else {
+			MylarStatusHandler.log("Post failed: "+HttpStatus.getStatusText(status), this);
 			throw new IOException("Communication error occurred during upload. \n\n" + HttpStatus.getStatusText(status));
+		}
+	}
+	
+	
+	/**
+	 * Utility method for determining what potential error has occurred from a
+	 * bugzilla html reponse page
+	 * 
+	 * @throws CoreException
+	 */
+	public static void parseHtmlError(BufferedReader in) throws IOException, LoginException, BugzillaException {
+		HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
+
+		boolean isTitle = false;
+		String title = "";
+		String body = "";
+
+		try {
+
+			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+				body += token.toString();
+				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == HtmlTag.Type.TITLE
+						&& !((HtmlTag) (token.getValue())).isEndTag()) {
+					isTitle = true;
+					continue;
+				}
+
+				if (isTitle) {
+					// get all of the data in the title tag
+					if (token.getType() != Token.TAG) {
+						title += ((StringBuffer) token.getValue()).toString().toLowerCase() + " ";
+						continue;
+					} else if (token.getType() == Token.TAG
+							&& ((HtmlTag) token.getValue()).getTagType() == HtmlTag.Type.TITLE
+							&& ((HtmlTag) token.getValue()).isEndTag()) {
+
+						if (title.indexOf("login") != -1 || title.indexOf("log in") != -1
+								|| (title.indexOf("invalid") != -1 && title.indexOf("password") != -1)
+								|| title.indexOf("check e-mail") != -1) {
+							// MylarStatusHandler.log("Login Error: "+body,
+							// BugzillaServerFacade.class);
+							throw new LoginException(IBugzillaConstants.ERROR_INVALID_USERNAME_OR_PASSWORD);
+						} else if (title.indexOf(IBugzillaConstants.ERROR_MIDAIR_COLLISION) != -1) {
+							throw new BugzillaException(IBugzillaConstants.ERROR_MSG_MIDAIR_COLLISION);
+						} else if (title.indexOf(IBugzillaConstants.ERROR_COMMENT_REQUIRED) != -1) {
+							throw new BugzillaException(IBugzillaConstants.ERROR_MSG_COMMENT_REQUIRED);
+						} else if (title.indexOf(IBugzillaConstants.LOGGED_OUT) != -1) {
+							throw new BugzillaException(IBugzillaConstants.LOGGED_OUT);
+						}
+					}
+				}
+			}
+
+			throw new UnrecognizedReponseException(body);
+
+		} catch (ParseException e) {
+			throw new IOException("Unable to parse result from repository:\n" + e.getMessage());
 		}
 	}
 

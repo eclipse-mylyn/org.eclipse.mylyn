@@ -70,7 +70,7 @@ public class BugzillaReportSubmitForm {
 	// private Proxy proxySettings = Proxy.NO_PROXY;
 	// private String charset;
 
-	private static final String POST_BUG_CGI = "post_bug.cgi";
+	private static final String POST_BUG_CGI = "/post_bug.cgi";
 
 	private static final String PROCESS_BUG_CGI = "/process_bug.cgi";
 
