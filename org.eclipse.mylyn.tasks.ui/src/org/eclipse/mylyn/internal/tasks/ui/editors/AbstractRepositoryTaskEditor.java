@@ -519,7 +519,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 	}
 
-	protected void createReportHeaderLayout(Composite composite) {
+	protected void createReportHeaderLayout(Composite composite) {	
 		addSummaryText(composite);
 
 		Composite headerInfoComposite = toolkit.createComposite(composite);
@@ -1446,6 +1446,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		buttonComposite.setLayout(buttonLayout);
 		addRadioButtons(buttonComposite);
 		addActionButtons(buttonComposite);
+		Label repLabel = toolkit.createLabel(buttonComposite, " "+this.getRepositoryTaskData().getRepositoryUrl());
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).span(2,1).applyTo(repLabel);
 		section.setClient(buttonComposite);
 	}
 
@@ -1490,7 +1492,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (task != null) {
 			addAttachContextButton(buttonComposite, task);
 		}
-
 	}
 
 	/**
