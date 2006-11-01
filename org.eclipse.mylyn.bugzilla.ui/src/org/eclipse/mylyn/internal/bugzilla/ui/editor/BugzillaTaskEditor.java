@@ -21,9 +21,12 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -198,7 +201,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			return;
 		}
 
-		final BugzillaRepositoryConnector bugzillaRepositoryClient = (BugzillaRepositoryConnector) TasksUiPlugin
+		final BugzillaRepositoryConnector bugzillaRepositoryConnector = (BugzillaRepositoryConnector) TasksUiPlugin
 				.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 
 		JobChangeAdapter submitJobListener = new JobChangeAdapter() {
@@ -211,15 +214,23 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 							// Attach context
 							if (getAttachContext()) {							
 								
-								AbstractRepositoryTask modifiedTask = (AbstractRepositoryTask) TasksUiPlugin.getTaskListManager()
+								final AbstractRepositoryTask modifiedTask = (AbstractRepositoryTask) TasksUiPlugin.getTaskListManager()
 								.getTaskList().getTask(AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
 								
-								try {
-									bugzillaRepositoryClient.attachContext(repository, modifiedTask, "", TasksUiPlugin
-											.getDefault().getProxySettings());
-								} catch (Exception e) {
-									MylarStatusHandler.fail(e, "Failed to attach task context.", true);
-								}
+								Job uploadContext = new Job("Uploading Context") {
+
+									@Override
+									protected IStatus run(IProgressMonitor monitor) {
+										try {
+											bugzillaRepositoryConnector.attachContext(repository, modifiedTask, "", TasksUiPlugin
+													.getDefault().getProxySettings());
+										} catch (Exception e) {
+											MylarStatusHandler.fail(e, "Failed to attach task context.\n\n"+e.getMessage(), true);											
+										}
+										return Status.OK_STATUS;
+									}
+								};	
+								uploadContext.schedule();
 							}
 							close();
 							return;
