@@ -19,9 +19,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.Proxy;
 import java.security.GeneralSecurityException;
 import java.text.ParseException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.httpclient.NameValuePair;
@@ -98,7 +98,8 @@ public class BugzillaReportSubmitForm {
 	public static final String FORM_PREFIX_BUG_220 = "Issue ";
 
 	/** The fields that are to be changed/maintained */
-	private List<NameValuePair> fields = new ArrayList<NameValuePair>();
+//	private List<NameValuePair> fields = new ArrayList<NameValuePair>();
+	private Map<String, NameValuePair> fields = new HashMap<String, NameValuePair>();
 
 	/** The prefix for how to find the bug number from the return */
 	private String prefix;
@@ -309,7 +310,7 @@ public class BugzillaReportSubmitForm {
 		// try {
 		// fields.add(new NameValuePair(key, URLEncoder.encode(value == null ?
 		// "" : value, charset)));
-		fields.add(new NameValuePair(key, value));
+		fields.put(key, new NameValuePair(key, value));
 		// BugzillaPlugin.ENCODING_UTF_8
 		// } catch (UnsupportedEncodingException e) {
 		// // ignore
@@ -321,7 +322,7 @@ public class BugzillaReportSubmitForm {
 	 */
 	public String submitReportToRepository(BugzillaClient client) throws IOException, BugzillaException,
 			PossibleBugzillaFailureException, GeneralSecurityException {
-		NameValuePair[] formData = fields.toArray(new NameValuePair[fields.size()]);
+		NameValuePair[] formData = fields.values().toArray(new NameValuePair[fields.size()]);
 		InputStream inputStream = null;
 		String result = null;
 		try {
