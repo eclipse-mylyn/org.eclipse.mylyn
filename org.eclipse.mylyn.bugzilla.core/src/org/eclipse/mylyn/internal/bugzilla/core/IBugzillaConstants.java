@@ -53,6 +53,10 @@ public interface IBugzillaConstants {
 	public static final String POST_INPUT_DATA = "data";
 	
 	public static final String URL_POST_LOGIN = "/index.cgi";
+
+	public static final String URL_POST_ATTACHMENT_UPLOAD = "/attachment.cgi";
+
+	public static final String URL_GET_ATTACHMENT_DOWNLOAD = "/attachment.cgi?id=";
 	
 	public static final String URL_GET_ATTACHMENT_SUFFIX = "/attachment.cgi?id=";
 	

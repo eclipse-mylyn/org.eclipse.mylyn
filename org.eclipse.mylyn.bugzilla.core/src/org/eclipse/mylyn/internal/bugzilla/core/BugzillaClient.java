@@ -77,10 +77,6 @@ public class BugzillaClient {
 
 	private static final String ATTRIBUTE_ISPATCH = "ispatch";
 
-	public static final String POST_ARGS_ATTACHMENT_DOWNLOAD = "/attachment.cgi?id=";
-
-	public static final String POST_ARGS_ATTACHMENT_UPLOAD = "/attachment.cgi";// ?action=insert";//&bugid=";
-
 	// private static final String CONTENT_TYPE_TEXT_HTML = "text/html";
 
 	// private static final String CONTENT_TYPE_APP_XCGI = "application/x-cgi";
@@ -128,14 +124,14 @@ public class BugzillaClient {
 
 	public void validate() throws IOException, LoginException, BugzillaException {
 		logout();
-		connect(repositoryUrl + "/");
+		getConnect(repositoryUrl + "/");
 	}
 
 	protected boolean hasAuthenticationCredentials() {
 		return username != null && username.length() > 0;
 	}
 
-	private GetMethod connect(String serverURL) throws LoginException, IOException, BugzillaException {
+	private GetMethod getConnect(String serverURL) throws LoginException, IOException, BugzillaException {
 
 		return connectInternal(serverURL);
 
@@ -185,7 +181,7 @@ public class BugzillaClient {
 	public void logout() throws LoginException, IOException, BugzillaException {
 		authenticated = true;
 		String loginUrl = repositoryUrl + "/relogin.cgi";
-		GetMethod method = connect(loginUrl);
+		GetMethod method = getConnect(loginUrl);
 		method.setFollowRedirects(false);
 		try {
 			// httpClient.getParams().setAuthenticationPreemptive(true);
@@ -235,7 +231,8 @@ public class BugzillaClient {
 		formData[0] = new NameValuePair(IBugzillaConstants.POST_INPUT_BUGZILLA_LOGIN, username);
 		formData[1] = new NameValuePair(IBugzillaConstants.POST_INPUT_BUGZILLA_PASSWORD, password);
 
-		PostMethod method = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl.toString() + IBugzillaConstants.URL_POST_LOGIN));
+		PostMethod method = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl.toString()
+				+ IBugzillaConstants.URL_POST_LOGIN));
 
 		method.setRequestBody(formData);
 		method.setDoAuthentication(true);
@@ -309,7 +306,7 @@ public class BugzillaClient {
 		try {
 			// System.err.println("Retrieving: "+repositoryUrl +
 			// IBugzillaConstants.SHOW_BUG_CGI_XML + id);
-			method = connect(repositoryUrl + IBugzillaConstants.URL_GET_SHOW_BUG_XML + id);
+			method = getConnect(repositoryUrl + IBugzillaConstants.URL_GET_SHOW_BUG_XML + id);
 			// method.addRequestHeader("Content-Type", characterEncoding);
 			RepositoryTaskData taskData = null;
 			if (method.getResponseHeader("Content-Type") != null) {
@@ -339,17 +336,21 @@ public class BugzillaClient {
 		}
 	}
 
-//	public static String addCredentials(String url, String encoding, String userName, String password)
-//			throws UnsupportedEncodingException {
-//		if ((userName != null && userName.length() > 0) && (password != null && password.length() > 0)) {
-//			if (encoding == null) {
-//				encoding = IBugzillaConstants.ENCODING_UTF_8;
-//			}
-//			url += "&" + IBugzillaConstants.POST_ARGS_LOGIN + URLEncoder.encode(userName, encoding)
-//					+ IBugzillaConstants.POST_ARGS_PASSWORD + URLEncoder.encode(password, encoding);
-//		}
-//		return url;
-//	}
+	// public static String addCredentials(String url, String encoding, String
+	// userName, String password)
+	// throws UnsupportedEncodingException {
+	// if ((userName != null && userName.length() > 0) && (password != null &&
+	// password.length() > 0)) {
+	// if (encoding == null) {
+	// encoding = IBugzillaConstants.ENCODING_UTF_8;
+	// }
+	// url += "&" + IBugzillaConstants.POST_ARGS_LOGIN +
+	// URLEncoder.encode(userName, encoding)
+	// + IBugzillaConstants.POST_ARGS_PASSWORD + URLEncoder.encode(password,
+	// encoding);
+	// }
+	// return url;
+	// }
 
 	public void getSearchHits(AbstractRepositoryQuery query, QueryHitCollector collector, TaskList taskList)
 			throws IOException, BugzillaException, GeneralSecurityException {
@@ -359,7 +360,7 @@ public class BugzillaClient {
 		if (!queryUrl.contains("ctype=rdf")) {
 			queryUrl = queryUrl.concat(IBugzillaConstants.CONTENT_TYPE_RDF);
 		}
-		GetMethod method = connect(queryUrl);
+		GetMethod method = getConnect(queryUrl);
 
 		if (method.getResponseHeader("Content-Type") != null) {
 			Header responseTypeHeader = method.getResponseHeader("Content-Type");
@@ -434,7 +435,7 @@ public class BugzillaClient {
 			GeneralSecurityException {
 		GetMethod method = null;
 		try {
-			method = connect(repositoryUrl + IBugzillaConstants.URL_GET_CONFIG_RDF);
+			method = getConnect(repositoryUrl + IBugzillaConstants.URL_GET_CONFIG_RDF);
 			RepositoryConfigurationFactory configFactory = new RepositoryConfigurationFactory(method
 					.getResponseBodyAsStream(), characterEncoding);
 			RepositoryConfiguration configuration = configFactory.getConfiguration();
@@ -453,8 +454,8 @@ public class BugzillaClient {
 	public byte[] getAttachmentData(String id) throws LoginException, IOException, BugzillaException {
 		GetMethod method = null;
 		try {
-			String url = repositoryUrl + POST_ARGS_ATTACHMENT_DOWNLOAD + id;
-			method = connect(url);
+			String url = repositoryUrl + IBugzillaConstants.URL_GET_ATTACHMENT_DOWNLOAD + id;
+			method = getConnect(url);
 			return method.getResponseBody();
 
 		} finally {
@@ -467,8 +468,8 @@ public class BugzillaClient {
 	public InputStream getAttachmentInputStream(String id) throws LoginException, IOException, BugzillaException {
 		GetMethod method = null;
 		try {
-			String url = repositoryUrl + POST_ARGS_ATTACHMENT_DOWNLOAD + id;
-			method = connect(url);
+			String url = repositoryUrl + IBugzillaConstants.URL_GET_ATTACHMENT_DOWNLOAD + id;
+			method = getConnect(url);
 			return method.getResponseBodyAsStream();
 
 		} finally {
@@ -501,7 +502,7 @@ public class BugzillaClient {
 
 		try {
 			postMethod = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl.toString())
-					+ POST_ARGS_ATTACHMENT_UPLOAD);
+					+ IBugzillaConstants.URL_POST_ATTACHMENT_UPLOAD);
 			// My understanding is that this option causes the client to first
 			// check
 			// with the server to see if it will in fact receive the post before
