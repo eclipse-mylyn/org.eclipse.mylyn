@@ -1379,7 +1379,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			expandableComposite.setClient(ecComposite);
 
 			TextViewer viewer = addTextViewer(repository, ecComposite, taskComment.getText(), SWT.MULTI | SWT.WRAP);
-			viewer.getControl().setBackground(new Color(expandableComposite.getDisplay(), 123, 34, 155));
+//			viewer.getControl().setBackground(new Color(expandableComposite.getDisplay(), 123, 34, 155));
 			styledText = viewer.getTextWidget();
 			GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(styledText);
 			// GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH,
