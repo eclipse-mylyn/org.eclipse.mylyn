@@ -15,12 +15,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
 import java.text.ParseException;
@@ -78,20 +76,6 @@ public class BugzillaClient {
 	private static final String ATTRIBUTE_CONTENTTYPEMETHOD = "contenttypemethod";
 
 	private static final String ATTRIBUTE_ISPATCH = "ispatch";
-
-	private static final String ATTRIBUTE_DATA = "data";
-
-	private static final String ATTRIBUTE_COMMENT = "comment";
-
-	private static final String ATTRIBUTE_DESCRIPTION = "description";
-
-	private static final String ATTRIBUTE_BUGID = "bugid";
-
-	private static final String ATTRIBUTE_BUGZILLA_PASSWORD = "Bugzilla_password";
-
-	private static final String ATTRIBUTE_BUGZILLA_LOGIN = "Bugzilla_login";
-
-	private static final String ATTRIBUTE_ACTION = "action";
 
 	public static final String POST_ARGS_ATTACHMENT_DOWNLOAD = "/attachment.cgi?id=";
 
@@ -159,7 +143,8 @@ public class BugzillaClient {
 
 	private GetMethod connectInternal(String serverURL) throws LoginException, IOException, BugzillaException {
 		WebClientUtil.setupHttpClient(httpClient, proxy, serverURL, htAuthUser, htAuthPass);
-		//httpClient.getParams().setParameter("http.socket.timeout", new Integer(CONNECT_TIMEOUT));
+		// httpClient.getParams().setParameter("http.socket.timeout", new
+		// Integer(CONNECT_TIMEOUT));
 		for (int attempt = 0; attempt < 2; attempt++) {
 			// force authentication
 			if (!authenticated && hasAuthenticationCredentials()) {
@@ -244,17 +229,17 @@ public class BugzillaClient {
 		if (!hasAuthenticationCredentials()) {
 			throw new LoginException();
 		}
+		WebClientUtil.setupHttpClient(httpClient, proxy, repositoryUrl.toString(), htAuthUser, htAuthPass);
 
-		String loginUrl = repositoryUrl.toString();
-		if (hasAuthenticationCredentials()) {
-			loginUrl = repositoryUrl + "/query.cgi?" + IBugzillaConstants.POST_ARGS_LOGIN
-					+ URLEncoder.encode(username, characterEncoding) + IBugzillaConstants.POST_ARGS_PASSWORD
-					+ URLEncoder.encode(password, characterEncoding);
-		} else {
-			loginUrl = repositoryUrl + "/index.cgi";
-		}
+		NameValuePair[] formData = new NameValuePair[2];
+		formData[0] = new NameValuePair(IBugzillaConstants.POST_INPUT_BUGZILLA_LOGIN, username);
+		formData[1] = new NameValuePair(IBugzillaConstants.POST_INPUT_BUGZILLA_PASSWORD, password);
 
-		GetMethod method = new GetMethod(WebClientUtil.getRequestPath(loginUrl));
+		PostMethod method = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl.toString() + IBugzillaConstants.URL_POST_LOGIN));
+
+		method.setRequestBody(formData);
+		method.setDoAuthentication(true);
+		// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
 		method.setFollowRedirects(false);
 
 		try {
@@ -324,7 +309,7 @@ public class BugzillaClient {
 		try {
 			// System.err.println("Retrieving: "+repositoryUrl +
 			// IBugzillaConstants.SHOW_BUG_CGI_XML + id);
-			method = connect(repositoryUrl + IBugzillaConstants.SHOW_BUG_CGI_XML + id);
+			method = connect(repositoryUrl + IBugzillaConstants.URL_GET_SHOW_BUG_XML + id);
 			// method.addRequestHeader("Content-Type", characterEncoding);
 			RepositoryTaskData taskData = null;
 			if (method.getResponseHeader("Content-Type") != null) {
@@ -354,42 +339,40 @@ public class BugzillaClient {
 		}
 	}
 
-	public static String addCredentials(String url, String encoding, String userName, String password)
-			throws UnsupportedEncodingException {
-		if ((userName != null && userName.length() > 0) && (password != null && password.length() > 0)) {
-			if (encoding == null) {
-				encoding = IBugzillaConstants.ENCODING_UTF_8;
-			}
-			url += "&" + IBugzillaConstants.POST_ARGS_LOGIN + URLEncoder.encode(userName, encoding)
-					+ IBugzillaConstants.POST_ARGS_PASSWORD + URLEncoder.encode(password, encoding);
-		}
-		return url;
-	}
+//	public static String addCredentials(String url, String encoding, String userName, String password)
+//			throws UnsupportedEncodingException {
+//		if ((userName != null && userName.length() > 0) && (password != null && password.length() > 0)) {
+//			if (encoding == null) {
+//				encoding = IBugzillaConstants.ENCODING_UTF_8;
+//			}
+//			url += "&" + IBugzillaConstants.POST_ARGS_LOGIN + URLEncoder.encode(userName, encoding)
+//					+ IBugzillaConstants.POST_ARGS_PASSWORD + URLEncoder.encode(password, encoding);
+//		}
+//		return url;
+//	}
 
 	public void getSearchHits(AbstractRepositoryQuery query, QueryHitCollector collector, TaskList taskList)
 			throws IOException, BugzillaException, GeneralSecurityException {
 		String queryUrl = query.getUrl();
 		// Test that we don't specify content type twice.
 		// Should only be specified here (not in passed in url if possible
-		if(!queryUrl.contains("ctype=rdf")) {
+		if (!queryUrl.contains("ctype=rdf")) {
 			queryUrl = queryUrl.concat(IBugzillaConstants.CONTENT_TYPE_RDF);
 		}
 		GetMethod method = connect(queryUrl);
-		
-		
+
 		if (method.getResponseHeader("Content-Type") != null) {
 			Header responseTypeHeader = method.getResponseHeader("Content-Type");
 			for (String type : VALID_CONFIG_CONTENT_TYPES) {
 				if (responseTypeHeader.getValue().toLowerCase().contains(type)) {
-					RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(
-							method.getResponseBodyAsStream(), characterEncoding);
+					RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(method
+							.getResponseBodyAsStream(), characterEncoding);
 					queryFactory.performQuery(taskList, repositoryUrl.toString(), collector, query.getMaxHits());
 					return;
 				}
 			}
 		}
-		parseHtmlError(new BufferedReader(
-				new InputStreamReader(method.getResponseBodyAsStream(), characterEncoding)));
+		parseHtmlError(new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(), characterEncoding)));
 	}
 
 	public static void setupExistingBugAttributes(String serverUrl, RepositoryTaskData existingReport) {
@@ -411,7 +394,7 @@ public class BugzillaClient {
 	}
 
 	public static String getBugUrlWithoutLogin(String repositoryUrl, int id) {
-		String url = repositoryUrl + IBugzillaConstants.POST_ARGS_SHOW_BUG + id;
+		String url = repositoryUrl + IBugzillaConstants.URL_GET_SHOW_BUG + id;
 		return url;
 	}
 
@@ -451,7 +434,7 @@ public class BugzillaClient {
 			GeneralSecurityException {
 		GetMethod method = null;
 		try {
-			method = connect(repositoryUrl + IBugzillaConstants.POST_CONFIG_RDF_URL);
+			method = connect(repositoryUrl + IBugzillaConstants.URL_GET_CONFIG_RDF);
 			RepositoryConfigurationFactory configFactory = new RepositoryConfigurationFactory(method
 					.getResponseBodyAsStream(), characterEncoding);
 			RepositoryConfiguration configuration = configFactory.getConfiguration();
@@ -480,7 +463,7 @@ public class BugzillaClient {
 			}
 		}
 	}
-	
+
 	public InputStream getAttachmentInputStream(String id) throws LoginException, IOException, BugzillaException {
 		GetMethod method = null;
 		try {
@@ -525,13 +508,13 @@ public class BugzillaClient {
 			// actually sending the contents.
 			postMethod.getParams().setBooleanParameter(HttpMethodParams.USE_EXPECT_CONTINUE, true);
 			List<PartBase> parts = new ArrayList<PartBase>();
-			parts.add(new StringPart(ATTRIBUTE_ACTION, VALUE_ACTION_INSERT));
-			parts.add(new StringPart(ATTRIBUTE_BUGZILLA_LOGIN, username));
-			parts.add(new StringPart(ATTRIBUTE_BUGZILLA_PASSWORD, password));
-			parts.add(new StringPart(ATTRIBUTE_BUGID, bugReportID));
-			parts.add(new StringPart(ATTRIBUTE_DESCRIPTION, description));
-			parts.add(new StringPart(ATTRIBUTE_COMMENT, comment));
-			parts.add(new FilePart(ATTRIBUTE_DATA, sourceFile));
+			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_ACTION, VALUE_ACTION_INSERT));
+			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGZILLA_LOGIN, username));
+			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGZILLA_PASSWORD, password));
+			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGID, bugReportID));
+			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_DESCRIPTION, description));
+			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_COMMENT, comment));
+			parts.add(new FilePart(IBugzillaConstants.POST_INPUT_DATA, sourceFile));
 
 			if (isPatch) {
 				parts.add(new StringPart(ATTRIBUTE_ISPATCH, VALUE_ISPATCH));
@@ -583,12 +566,11 @@ public class BugzillaClient {
 		if (status == HttpStatus.SC_OK) {
 			return postMethod.getResponseBodyAsStream();
 		} else {
-			MylarStatusHandler.log("Post failed: "+HttpStatus.getStatusText(status), this);
+			MylarStatusHandler.log("Post failed: " + HttpStatus.getStatusText(status), this);
 			throw new IOException("Communication error occurred during upload. \n\n" + HttpStatus.getStatusText(status));
 		}
 	}
-	
-	
+
 	/**
 	 * Utility method for determining what potential error has occurred from a
 	 * bugzilla html reponse page

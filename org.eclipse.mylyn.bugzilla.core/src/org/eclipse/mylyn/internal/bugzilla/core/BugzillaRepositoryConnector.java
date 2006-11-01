@@ -182,7 +182,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		if (url == null) {
 			return null;
 		} else {
-			int index = url.indexOf(IBugzillaConstants.POST_ARGS_SHOW_BUG);
+			int index = url.indexOf(IBugzillaConstants.URL_GET_SHOW_BUG);
 			if (index != -1) {
 				return url.substring(0, index);
 			} else {

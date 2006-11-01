@@ -54,7 +54,7 @@ public class BugzillaHyperLink implements IHyperlink {
 		// MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
 		// BugzillaPlugin.REPOSITORY_KIND);
 		if (repositoryUrl != null) {
-			TaskUiUtil.openRepositoryTask(repositoryUrl, id, repositoryUrl + IBugzillaConstants.POST_ARGS_SHOW_BUG
+			TaskUiUtil.openRepositoryTask(repositoryUrl, id, repositoryUrl + IBugzillaConstants.URL_GET_SHOW_BUG
 					+ id);
 			// OpenBugzillaReportJob job = new
 			// OpenBugzillaReportJob(repository.getUrl(), id);

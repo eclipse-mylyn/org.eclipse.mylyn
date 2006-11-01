@@ -416,7 +416,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			public void linkActivated(HyperlinkEvent e) {
 				if (BugzillaTaskEditor.this.getEditor() instanceof MylarTaskEditor) {
 					MylarTaskEditor mylarTaskEditor = (MylarTaskEditor) BugzillaTaskEditor.this.getEditor();
-					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.BUG_ACTIVITY_URL
+					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.URL_BUG_ACTIVITY
 							+ getRepositoryTaskData().getId());
 				}
 			}
@@ -537,7 +537,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 							TaskUiUtil.refreshAndOpenTaskListElement(task);
 						} else {
 							TaskUiUtil.openRepositoryTask(repository.getUrl(), bugId, repository.getUrl()
-									+ IBugzillaConstants.POST_ARGS_SHOW_BUG + bugId);
+									+ IBugzillaConstants.URL_GET_SHOW_BUG + bugId);
 						}
 					}
 				});
@@ -731,7 +731,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			public void linkActivated(HyperlinkEvent e) {
 				if (BugzillaTaskEditor.this.getEditor() instanceof MylarTaskEditor) {
 					MylarTaskEditor mylarTaskEditor = (MylarTaskEditor) BugzillaTaskEditor.this.getEditor();
-					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.SHOW_VOTES_URL
+					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.URL_SHOW_VOTES
 							+ getRepositoryTaskData().getId());
 				}
 			}
@@ -742,7 +742,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			public void linkActivated(HyperlinkEvent e) {
 				if (BugzillaTaskEditor.this.getEditor() instanceof MylarTaskEditor) {
 					MylarTaskEditor mylarTaskEditor = (MylarTaskEditor) BugzillaTaskEditor.this.getEditor();
-					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.VOTE_URL
+					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.URL_VOTE
 							+ getRepositoryTaskData().getId());
 				}
 			}
