@@ -34,14 +34,6 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 	protected AbstractRepositoryTask createTask() {
 		return new BugzillaTask(this, true);
 	}
-	
-	public String getPriority() {
-		if (task != null) {
-			return task.getPriority();
-		} else {
-			return priority;
-		}
-	}
 
 	public String getUrl() {
 		Integer idInt = new Integer(id);

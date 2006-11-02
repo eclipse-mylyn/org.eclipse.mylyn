@@ -128,8 +128,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 				TracQueryHit hit = new TracQueryHit(taskList, query.getRepositoryUrl(), getTicketDescription(ticket), ticket
 						.getId()
 						+ "");
-				hit.setCompleted(TracTask.isCompleted(ticket.getValue(Key.STATUS)));
 				hit.setPriority(TracTask.getMylarPriority(ticket.getValue(Key.PRIORITY)));
+				hit.setCompleted(TracTask.isCompleted(ticket.getValue(Key.STATUS)));
 				resultCollector.accept(hit);
 			}
 		} catch (Throwable e) {			

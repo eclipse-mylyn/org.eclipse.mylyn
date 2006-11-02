@@ -20,34 +20,22 @@ import org.eclipse.mylar.tasks.core.TaskList;
  */
 public class TracQueryHit extends AbstractQueryHit {
 
-	private boolean completed;
-
 	public TracQueryHit(TaskList taskList, String repositoryUrl, String description, String id) {
 		super(taskList, repositoryUrl, description, id);
 	}
 
 	public TracQueryHit(TaskList taskList, String handle) {
 		super(taskList, AbstractRepositoryTask.getRepositoryUrl(handle), "", AbstractRepositoryTask.getTaskId(handle));
-	}
+	} 
 
 	protected AbstractRepositoryTask createTask() {
 		TracTask newTask = new TracTask(getHandleIdentifier(), getDescription(), true);
-		newTask.setCompleted(completed);
 		newTask.setPriority(priority);
 		return newTask;
 	}
 
-	@Override
-	public boolean isCompleted() {
-		return (task != null) ? task.isCompleted() : completed;
-	}
-
 	public String getUrl() {
 		return getRepositoryUrl() + ITracClient.TICKET_URL + getId();
-	}
-
-	public void setCompleted(boolean completed) {
-		this.completed = completed;
 	}
 
 }

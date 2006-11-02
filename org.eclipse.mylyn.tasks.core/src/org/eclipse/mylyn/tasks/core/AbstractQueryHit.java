@@ -27,6 +27,8 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 	protected String priority;
 
 	protected String id;
+	
+	private boolean completed = false;
 
 	protected boolean isNotified = false;
 
@@ -92,8 +94,18 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 		this.task = task;
 	}
 
-	public abstract boolean isCompleted();
-
+	public boolean isCompleted() {
+		if (task != null) {
+			return task.isCompleted();
+		} else {
+			return completed;
+		}
+	}
+	
+	public void setCompleted(boolean completed) {
+		this.completed = completed;
+	}
+	
 	public String getHandleIdentifier() {
 		return AbstractRepositoryTask.getHandle(repositoryUrl, id);
 	}
@@ -130,7 +142,7 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 		AbstractQueryHit hit = (AbstractQueryHit) obj;
 		return hit.getHandleIdentifier().equals(this.getHandleIdentifier());
 	}
-
+	
 	@Override
 	public int hashCode() {
 		return this.getHandleIdentifier().hashCode();
@@ -144,14 +156,13 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 	}
 
 	public String getPriority() {
-		AbstractRepositoryTask task = getCorrespondingTask();
 		if (task != null) {
 			return task.getPriority();
 		} else {
 			return priority;
 		}
 	}
-
+	
 	public void setPriority(String priority) {
 		this.priority = priority;
 	}

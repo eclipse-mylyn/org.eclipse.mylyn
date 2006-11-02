@@ -141,11 +141,13 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 			try {
 				Element element = null;
 				for (ITaskListExternalizer externalizer : super.getDelegateExternalizers()) {
-					if (externalizer.canCreateElementFor(hit))
+					if (externalizer.canCreateElementFor(hit)) {
 						element = externalizer.createQueryHitElement(hit, doc, node);
+					}
 				}
-				if (element == null)
+				if (element == null) {
 					createQueryHitElement(hit, doc, node);
+				}
 			} catch (Exception e) {
 				MylarStatusHandler.log(e, e.getMessage());
 			}

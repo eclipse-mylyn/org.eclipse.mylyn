@@ -41,7 +41,9 @@ import org.eclipse.ui.themes.IThemeManager;
 public class TaskElementLabelProvider extends LabelProvider implements IColorProvider, IFontProvider {
 
 	private IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
-	private static final Pattern pattern = Pattern.compile("\\d*: .*");	 
+
+	private static final Pattern pattern = Pattern.compile("\\d*: .*");
+
 	@Override
 	public Image getImage(Object element) {
 		if (element instanceof TaskArchive) {
@@ -105,8 +107,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	public String getText(Object object) {
 
 		if (object instanceof AbstractQueryHit) {
-			AbstractQueryHit hit = (AbstractQueryHit) object;			
-			if (!pattern.matcher(hit.getDescription()).matches() && hit.getIdLabel() != null) {
+			AbstractQueryHit hit = (AbstractQueryHit) object;
+			if (!pattern.matcher(hit.getDescription()).matches() && hit.getIdLabel() != null && !hit.getIdLabel().equals("")) {
 				return hit.getIdLabel() + ": " + hit.getDescription();
 			} else {
 				return hit.getDescription();

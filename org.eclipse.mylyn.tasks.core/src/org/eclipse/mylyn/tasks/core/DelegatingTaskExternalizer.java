@@ -522,7 +522,8 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			node.setAttribute(KEY_NOTIFIED_INCOMING, VAL_FALSE);
 		}
 		parent.appendChild(node);
-		return null;
+		return node;
+//		return null;
 	}
 
 	public boolean canReadQueryHit(Node node) {

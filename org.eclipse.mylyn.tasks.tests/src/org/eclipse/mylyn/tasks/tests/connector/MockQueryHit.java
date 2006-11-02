@@ -26,9 +26,4 @@ public class MockQueryHit extends AbstractQueryHit {
 		return new MockRepositoryTask(AbstractRepositoryTask.getHandle(repositoryUrl, id));
 	}
 
-	@Override
-	public boolean isCompleted() {
-		return task.isCompleted();
-	}
-
 }
