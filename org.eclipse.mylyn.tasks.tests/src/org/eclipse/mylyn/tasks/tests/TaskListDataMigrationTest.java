@@ -23,16 +23,18 @@ import org.eclipse.mylar.tasks.ui.TaskListDataMigration;
 public class TaskListDataMigrationTest extends TestCase {
 
 	private String sourceDir = "testdata/tasklistdatamigrationtest";
+
 	private File sourceDirFile;
+
 	private TaskListDataMigration migrator;
-	
+
 	protected void setUp() throws Exception {
-		super.setUp();		
+		super.setUp();
 		sourceDirFile = TaskTestUtil.getLocalFile(sourceDir);
 		assertNotNull(sourceDirFile);
 		deleteAllFiles(sourceDirFile);
 		migrator = new TaskListDataMigration(sourceDirFile);
-		assertTrue(sourceDirFile.exists());		
+		assertTrue(sourceDirFile.exists());
 	}
 
 	protected void tearDown() throws Exception {
@@ -47,9 +49,8 @@ public class TaskListDataMigrationTest extends TestCase {
 		assertTrue(!new File(sourceDirFile, "tasklist.xml.zip").exists());
 		assertTrue(migrator.migrateTaskList(new NullProgressMonitor()));
 		assertFalse(new File(sourceDirFile, "tasklist.xml").exists());
-		assertFalse(!new File(sourceDirFile, "tasklist.xml.zip").exists());		
+		assertFalse(!new File(sourceDirFile, "tasklist.xml.zip").exists());
 	}
-	
 
 	public void testOldRepositoriesMigration() throws Exception {
 		File oldRepositoriesFile = new File(sourceDirFile, "repositories.xml");
@@ -58,12 +59,14 @@ public class TaskListDataMigrationTest extends TestCase {
 		assertTrue(!new File(sourceDirFile, "repositories.xml.zip").exists());
 		assertTrue(migrator.migrateRepositoriesData(new NullProgressMonitor()));
 		assertFalse(new File(sourceDirFile, "repositories.xml").exists());
-		assertTrue(new File(sourceDirFile, "repositories.xml.zip").exists());		
+		assertTrue(new File(sourceDirFile, "repositories.xml.zip").exists());
 	}
-	
+
 	public void testOldContextMigration() throws Exception {
-		String contextFileName1 = URLEncoder.encode("http://oldcontext1.xml", MylarContextManager.CONTEXT_FILENAME_ENCODING);
-		String contextFileName2 = URLEncoder.encode("http://oldcontext2.xml", MylarContextManager.CONTEXT_FILENAME_ENCODING);
+		String contextFileName1 = URLEncoder.encode("http://oldcontext1.xml",
+				MylarContextManager.CONTEXT_FILENAME_ENCODING);
+		String contextFileName2 = URLEncoder.encode("http://oldcontext2.xml",
+				MylarContextManager.CONTEXT_FILENAME_ENCODING);
 		String contextFileName3 = "task-1.xml";
 		File oldContextFile1 = new File(sourceDirFile, contextFileName1);
 		oldContextFile1.createNewFile();
@@ -72,35 +75,38 @@ public class TaskListDataMigrationTest extends TestCase {
 		File oldContextFile3 = new File(sourceDirFile, contextFileName3);
 		oldContextFile3.createNewFile();
 		File contextFolder = new File(sourceDirFile, MylarContextManager.CONTEXTS_DIRECTORY);
-		assertTrue(!contextFolder.exists());		
+		assertTrue(!contextFolder.exists());
 		assertTrue(migrator.migrateTaskContextData(new NullProgressMonitor()));
 		assertFalse(oldContextFile1.exists());
 		assertFalse(oldContextFile2.exists());
 		assertFalse(oldContextFile3.exists());
 		assertTrue(contextFolder.exists());
-		assertTrue(new File(contextFolder, contextFileName1+".zip").exists());
-		assertTrue(new File(contextFolder, contextFileName2+".zip").exists());
-		assertTrue(new File(contextFolder, contextFileName3+".zip").exists());
+		assertTrue(new File(contextFolder, contextFileName1 + ".zip").exists());
+		assertTrue(new File(contextFolder, contextFileName2 + ".zip").exists());
+		assertTrue(new File(contextFolder, contextFileName3 + ".zip").exists());
 	}
-	
+
 	public void testOldActivityMigration() throws Exception {
-		File oldActivityFile = new File(sourceDirFile, MylarContextManager.OLD_CONTEXT_HISTORY_FILE_NAME+MylarContextManager.OLD_CONTEXT_FILE_EXTENSION);
+		File oldActivityFile = new File(sourceDirFile, MylarContextManager.OLD_CONTEXT_HISTORY_FILE_NAME
+				+ MylarContextManager.OLD_CONTEXT_FILE_EXTENSION);
 		oldActivityFile.createNewFile();
 		File contextFolder = new File(sourceDirFile, MylarContextManager.CONTEXTS_DIRECTORY);
-		assertTrue(!contextFolder.exists());		
+		assertTrue(!contextFolder.exists());
 		assertTrue(migrator.migrateActivityData(new NullProgressMonitor()));
 		assertFalse(oldActivityFile.exists());
 		assertTrue(contextFolder.exists());
-		assertTrue(new File(contextFolder, MylarContextManager.CONTEXT_HISTORY_FILE_NAME+MylarContextManager.CONTEXT_FILE_EXTENSION).exists());	
+		assertTrue(new File(contextFolder, MylarContextManager.CONTEXT_HISTORY_FILE_NAME
+				+ MylarContextManager.CONTEXT_FILE_EXTENSION).exists());
 	}
-	
-	
+
 	private void deleteAllFiles(File folder) {
-		for (File file: folder.listFiles()) {
-			if(file.isDirectory()) {				
-				deleteAllFiles(file);
-				file.delete();
-			} else if(!file.getName().equals("empty.txt")) {
+		for (File file : folder.listFiles()) {
+			if (file.isDirectory()) {
+				if (!file.getName().equals("CVS")) {
+					deleteAllFiles(file);
+					file.delete();
+				}
+			} else if (!file.getName().equals("empty.txt")) {
 				file.delete();
 			}
 		}
