@@ -24,7 +24,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * Quick config rdf parser.
  * 
  * <pre>
- *  config.cgi?ctype=rdf
+ *     config.cgi?ctype=rdf
  * </pre>
  * 
  * Populates a <link>ProductConfiguration</link> data structure.
@@ -62,7 +62,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 	private static final String ELEMENT_SEVERITY = "severity";
 
 	private static final String ELEMENT_PRIORITY = "priority";
-	
+
 	private static final String ELEMENT_KEYWORD = "keyword";
 
 	private static final String ELEMENT_OP_SYS = "op_sys";
@@ -108,14 +108,18 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 	private static final int IN_TARGET_MILESTONE = 1 << 16;
 
 	private static final int IN_STATUS_OPEN = 1 << 17;
-	
+
 	private static final int IN_RESOLUTION = 1 << 18;
-	
+
 	private static final int IN_KEYWORD = 1 << 19;
+
+	private static final int IN_STATUS_CLOSED = 1 << 20;
 
 	private int state = EXPECTING_ROOT;
 
-	private String currentProduct;
+	private StringBuffer currentProduct = new StringBuffer();
+
+	private StringBuffer parsedValue = new StringBuffer();
 
 	private String about;
 
@@ -127,11 +131,11 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 
 	private Map<String, List<String>> milestones = new HashMap<String, List<String>>();
 
-	private Map<String, String> componentNames = new HashMap<String, String>();
+	private Map<String, StringBuffer> componentNames = new HashMap<String, StringBuffer>();
 
-	private Map<String, String> versionNames = new HashMap<String, String>();
+	private Map<String, StringBuffer> versionNames = new HashMap<String, StringBuffer>();
 
-	private Map<String, String> milestoneNames = new HashMap<String, String>();
+	private Map<String, StringBuffer> milestoneNames = new HashMap<String, StringBuffer>();
 
 	public RepositoryConfiguration getConfiguration() {
 		return configuration;
@@ -142,69 +146,67 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 		switch (state) {
 
 		case IN_PRODUCTS | IN_LI | IN_NAME:
-			configuration.addProduct(String.copyValueOf(ch, start, length));
-			//configuration.addAttributeValue(BugzillaReportElement.PRODUCT.getKeyString(), String.copyValueOf(ch, start, length));
-			currentProduct = String.copyValueOf(ch, start, length);
+			currentProduct.append(String.copyValueOf(ch, start, length));
 			break;
 		case IN_COMPONENTS | IN_LI | IN_COMPONENT | IN_NAME:
 			String comp = String.copyValueOf(ch, start, length);
 			if (about != null) {
-				componentNames.put(about, comp);
-				// System.err.println("Component: "+about+" ---> "+name);
-			}			
-			//configuration.addAttributeValue(BugzillaReportElement.COMPONENT.getKeyString(), comp);
+				StringBuffer name = componentNames.get(about);
+				if (name == null) {
+					name = new StringBuffer();
+					componentNames.put(about, name);
+				}
+				name.append(comp);
+			}
 			break;
 		case IN_VERSIONS | IN_LI | IN_VERSION | IN_NAME:
 			String ver = String.copyValueOf(ch, start, length);
-			if (about != null) {				
-				versionNames.put(about, ver);
-				// System.err.println("Version: "+about+" ---> "+name);
+			if (about != null) {
+				StringBuffer name = versionNames.get(about);
+				if (name == null) {
+					name = new StringBuffer();
+					versionNames.put(about, name);
+				}
+				name.append(ver);
 			}
-			//configuration.addAttributeValue(BugzillaReportElement.VERSION.getKeyString(), ver);
 			break;
 		case IN_TARGET_MILESTONES | IN_LI | IN_TARGET_MILESTONE | IN_NAME:
 			String target = String.copyValueOf(ch, start, length);
 			if (about != null) {
-				milestoneNames.put(about, target);
-				// System.err.println("Version: "+about+" ---> "+name);
+				StringBuffer name = milestoneNames.get(about);
+				if (name == null) {
+					name = new StringBuffer();
+					milestoneNames.put(about, name);
+				}
+				name.append(target);
 			}
-			//configuration.addAttributeValue(BugzillaReportElement.TARGET_MILESTONE.getKeyString(), target);
 			break;
 		case IN_PLATFORM | IN_LI:
-			configuration.addPlatform(String.copyValueOf(ch, start, length));
-			//configuration.addAttributeValue(BugzillaReportElement.REP_PLATFORM.getKeyString(), String.copyValueOf(ch, start, length));
+			parsedValue.append(String.copyValueOf(ch, start, length));
 			break;
 		case IN_OP_SYS | IN_LI:
-			configuration.addOS(String.copyValueOf(ch, start, length));
-			//configuration.addAttributeValue(BugzillaReportElement.OP_SYS.getKeyString(), String.copyValueOf(ch, start, length));			
+			parsedValue.append(String.copyValueOf(ch, start, length));
 			break;
 		case IN_PRIORITY | IN_LI:
-			//configuration.addAttributeValue(BugzillaReportElement.PRIORITY.getKeyString(), String.copyValueOf(ch, start, length));
-			configuration.addPriority(String.copyValueOf(ch, start, length));
+			parsedValue.append(String.copyValueOf(ch, start, length));
 			break;
 		case IN_SEVERITY | IN_LI:
-			//configuration.addAttributeValue(BugzillaReportElement.BUG_SEVERITY.getKeyString(), String.copyValueOf(ch, start, length));
-			configuration.addSeverity(String.copyValueOf(ch, start, length));
+			parsedValue.append(String.copyValueOf(ch, start, length));
 			break;
 		case IN_INSTALL_VERSION:
-			//configuration.addAttributeValue(BugzillaReportElement.INSTALL_VERSION.getKeyString(), String.copyValueOf(ch, start, length));
-			configuration.setInstallVersion(String.copyValueOf(ch, start, length));
+			parsedValue.append(String.copyValueOf(ch, start, length));
 			break;
 		case IN_STATUS | IN_LI:
-			//configuration.addAttributeValue(BugzillaReportElement.BUG_STATUS.getKeyString(), String.copyValueOf(ch, start, length));
-			configuration.addStatus(String.copyValueOf(ch, start, length));
+			parsedValue.append(String.copyValueOf(ch, start, length));
 			break;
 		case IN_RESOLUTION | IN_LI:
-			//configuration.addAttributeValue(BugzillaReportElement.RESOLUTION.getKeyString(), String.copyValueOf(ch, start, length));
-			configuration.addResolution(String.copyValueOf(ch, start, length));
+			parsedValue.append(String.copyValueOf(ch, start, length));
 			break;
 		case IN_KEYWORD | IN_LI:
-			//configuration.addAttributeValue(BugzillaReportElement.KEYWORDS.getKeyString(), String.copyValueOf(ch, start, length));
-			configuration.addKeyword(String.copyValueOf(ch, start, length));
+			parsedValue.append(String.copyValueOf(ch, start, length));
 			break;
 		case IN_STATUS_OPEN | IN_LI:
-			//configuration.addAttributeValue(BugzillaReportElement.STATUS_OPEN.getKeyString(), String.copyValueOf(ch, start, length));
-			configuration.addOpenStatusValue(String.copyValueOf(ch, start, length));
+			parsedValue.append(String.copyValueOf(ch, start, length));
 			break;
 		}
 	}
@@ -233,6 +235,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			state = state | IN_OP_SYS;
 		} else if (localName.equals(ELEMENT_NAME)) {
 			state = state | IN_NAME;
+			currentProduct = new StringBuffer();
 		} else if (localName.equals(ELEMENT_COMPONENTS)) {
 			state = state | IN_COMPONENTS;
 		} else if (localName.equals(ELEMENT_COMPONENT)) {
@@ -257,7 +260,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 		} else if (localName.equals(ELEMENT_KEYWORD)) {
 			state = state | IN_KEYWORD;
 		}
-
+		parsedValue = new StringBuffer();
 	}
 
 	private void parseResource(Attributes attributes) {
@@ -266,26 +269,24 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 		case IN_PRODUCTS | IN_LI | IN_COMPONENTS | IN_LI_LI:
 			if (attributes != null) {
 				String compURI = attributes.getValue(ATTRIBUTE_RESOURCE);
-				if (compURI != null) {
-
-					List<String> compURIs = components.get(currentProduct);
+				if (compURI != null && currentProduct.length() > 0) {
+					List<String> compURIs = components.get(currentProduct.toString());
 					if (compURIs == null) {
 						compURIs = new ArrayList<String>();
-						components.put(currentProduct, compURIs);
+						components.put(currentProduct.toString(), compURIs);
 					}
 					compURIs.add(compURI);
-
 				}
 			}
 			break;
 		case IN_PRODUCTS | IN_LI | IN_VERSIONS | IN_LI_LI:
 			if (attributes != null) {
 				String resourceURI = attributes.getValue(ATTRIBUTE_RESOURCE);
-				if (resourceURI != null) {
-					List<String> versionUris = versions.get(currentProduct);
+				if (resourceURI != null && currentProduct.length() > 0) {
+					List<String> versionUris = versions.get(currentProduct.toString());
 					if (versionUris == null) {
 						versionUris = new ArrayList<String>();
-						versions.put(currentProduct, versionUris);
+						versions.put(currentProduct.toString(), versionUris);
 					}
 					versionUris.add(resourceURI);
 				}
@@ -295,10 +296,10 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			if (attributes != null) {
 				String resourceURI = attributes.getValue(ATTRIBUTE_RESOURCE);
 				if (resourceURI != null) {
-					List<String> milestoneUris = milestones.get(currentProduct);
+					List<String> milestoneUris = milestones.get(currentProduct.toString());
 					if (milestoneUris == null) {
 						milestoneUris = new ArrayList<String>();
-						milestones.put(currentProduct, milestoneUris);
+						milestones.put(currentProduct.toString(), milestoneUris);
 					}
 					milestoneUris.add(resourceURI);
 				}
@@ -335,6 +336,27 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			state = state & ~IN_LI_LI;
 		} else if (localName.equals(ELEMENT_LI) && ((state & IN_LI_LI) != IN_LI_LI)) {
 			state = state & ~IN_LI;
+			if (parsedValue.length() == 0)
+				return;
+			if (state == (IN_STATUS)) {
+				configuration.addStatus(parsedValue.toString());
+			} else if (state == (IN_STATUS_OPEN)) {
+				configuration.addOpenStatusValue(parsedValue.toString());
+			} else if (state == (IN_STATUS_CLOSED)) {
+				// TODO: Add closed status values to configuration
+			} else if (state == (IN_RESOLUTION)) {
+				configuration.addResolution(parsedValue.toString());
+			} else if (state == (IN_KEYWORD)) {
+				configuration.addKeyword(parsedValue.toString());
+			} else if (state == (IN_PLATFORM)) {
+				configuration.addPlatform(parsedValue.toString());
+			} else if (state == (IN_OP_SYS)) {
+				configuration.addOS(parsedValue.toString());
+			} else if (state == (IN_PRIORITY)) {
+				configuration.addPriority(parsedValue.toString());
+			} else if (state == (IN_SEVERITY)) {
+				configuration.addSeverity(parsedValue.toString());
+			}
 		} else if (localName.equals(ELEMENT_PLATFORM)) {
 			state = state & ~IN_PLATFORM;
 		} else if (localName.equals(ELEMENT_OP_SYS)) {
@@ -349,6 +371,9 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			state = state & ~IN_OP_SYS;
 		} else if (localName.equals(ELEMENT_NAME)) {
 			state = state & ~IN_NAME;
+			if (state == (IN_PRODUCTS | IN_LI) && currentProduct.length() > 0) {
+				configuration.addProduct(currentProduct.toString());
+			}
 		} else if (localName.equals(ELEMENT_COMPONENTS)) {
 			state = state & ~IN_COMPONENTS;
 		} else if (localName.equals(ELEMENT_COMPONENT)) {
@@ -359,6 +384,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			state = state & ~IN_VERSIONS;
 		} else if (localName.equals(ELEMENT_INSTALL_VERSION)) {
 			state = state & ~IN_INSTALL_VERSION;
+			configuration.setInstallVersion(parsedValue.toString());
 		} else if (localName.equals(ELEMENT_TARGET_MILESTONE)) {
 			state = state & ~IN_TARGET_MILESTONE;
 		} else if (localName.equals(ELEMENT_TARGET_MILESTONES)) {
@@ -370,30 +396,27 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 		} else if (localName.equals(ELEMENT_KEYWORD)) {
 			state = state & ~IN_KEYWORD;
 		}
-
 	}
 
 	@Override
 	public void endDocument() throws SAXException {
-  
+
 		for (String product : components.keySet()) {
 			List<String> componentURIs = components.get(product);
 			for (String uri : componentURIs) {
-				String realName = componentNames.get(uri);
-				if (realName != null) {
-					//configuration.addAttributeValue(product+"."+BugzillaReportElement.COMPONENT.getKeyString(), realName);
-					configuration.addComponent(product, realName);
+				StringBuffer realName = componentNames.get(uri);
+				if (realName != null && product.length() > 0) {
+					configuration.addComponent(product, realName.toString());
 				}
-			} 
-		} 
+			}
+		}
 
 		for (String product : versions.keySet()) {
 			List<String> versionURIs = versions.get(product);
 			for (String uri : versionURIs) {
-				String realName = versionNames.get(uri);
+				StringBuffer realName = versionNames.get(uri);
 				if (realName != null) {
-					//configuration.addAttributeValue(product+"."+BugzillaReportElement.VERSION.getKeyString(), realName);
-					configuration.addVersion(product, realName);
+					configuration.addVersion(product, realName.toString());
 				}
 			}
 
@@ -402,10 +425,9 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 		for (String product : milestones.keySet()) {
 			List<String> milestoneURIs = milestones.get(product);
 			for (String uri : milestoneURIs) {
-				String realName = milestoneNames.get(uri);
+				StringBuffer realName = milestoneNames.get(uri);
 				if (realName != null) {
-					//configuration.addAttributeValue(product+"."+BugzillaReportElement.TARGET_MILESTONE.getKeyString(), realName);
-					configuration.addTargetMilestone(product, realName);
+					configuration.addTargetMilestone(product, realName.toString());
 				}
 			}
 

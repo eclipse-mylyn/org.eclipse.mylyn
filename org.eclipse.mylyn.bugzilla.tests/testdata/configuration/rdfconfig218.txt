@@ -157,6 +157,25 @@
 
           </bz:product>
         </li>
+        <li>
+          <bz:product rdf:about="http://mylar.eclipse.org/bugs218/product.cgi?name=Test-Long-Named-Product-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+            <bz:name>Test-Long-Named-Product-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bz:name>
+
+            <bz:components>
+              <Seq>
+                  <li resource="http://mylar.eclipse.org/bugs218/component.cgi?name=TestComponent"/>
+              </Seq>
+            </bz:components>
+
+            <bz:versions>
+              <Seq>
+                  <li resource="http://mylar.eclipse.org/bugs218/version.cgi?name=other"/>
+              </Seq>
+            </bz:versions>
+
+
+          </bz:product>
+        </li>
     </Seq>
   </bz:products>
 

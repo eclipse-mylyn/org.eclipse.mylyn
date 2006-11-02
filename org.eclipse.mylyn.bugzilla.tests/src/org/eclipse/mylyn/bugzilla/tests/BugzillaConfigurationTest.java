@@ -161,6 +161,23 @@ public class BugzillaConfigurationTest extends TestCase {
 		assertEquals(configuration1.getProducts().get(0), testLoadedConfig.getProducts().get(0));
 	}
 
+	
+//	@SuppressWarnings("deprecation")
+//	public void testHtmlCleaner() throws IOException, BugzillaException, GeneralSecurityException {
+//		StringBuffer incoming = new StringBuffer();
+//		incoming.append("<RDF xmlns=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+//		incoming.append("xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+//		incoming.append("xmlns:bz=\"http://www.bugzilla.org/rdf#\">");
+//		incoming.append("<li>");
+//        incoming.append("<bz:product 
+//        incoming.append("</bz:product>");
+//        incoming.append("</li>");
+//        incoming.append("</RDF>");
+//        
+//        StringBuffer result = XmlCleaner.clean(new StringReader(incoming.toString()));
+//        System.err.println(result);      
+//	}
+	
 	/**
 	 * Can use this to test config data submitted by users. Be sure not to commit user's config file though.
 	 * The file included (rdfconfig218.txt) is from mylar.eclipse.org/bugs218
@@ -201,8 +218,11 @@ public class BugzillaConfigurationTest extends TestCase {
 		
 		RepositoryConfiguration config = contentHandler.getConfiguration();
 		assertNotNull(config);
-		
+
+		assertTrue(config.getProducts().contains("Test-Long-Named-Product-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+
 		// Add your additional checking for valid data here if necessary
+
 	}
 
 }
