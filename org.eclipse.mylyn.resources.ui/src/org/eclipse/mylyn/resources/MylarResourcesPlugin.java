@@ -151,7 +151,7 @@ public class MylarResourcesPlugin extends AbstractUIPlugin {
 		Set<String> ignored = new HashSet<String>();
 		String read = getPreferenceStore().getString(PREF_RESOURCES_IGNORED);
 		if (read != null) {
-			StringTokenizer st = new StringTokenizer(read, PREF_STORE_DELIM);
+ 			StringTokenizer st = new StringTokenizer(read, PREF_STORE_DELIM);
 			while (st.hasMoreTokens()) {
 				ignored.add(st.nextToken());
 			}

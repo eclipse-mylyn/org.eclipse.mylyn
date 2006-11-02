@@ -34,7 +34,7 @@ public class ResourceInterestUpdater {
 	private boolean syncExec = false;
 
 	public void addResourceToContext(final Set<IResource> resources, final InteractionEvent.Kind interactionKind) {
-		try {
+		try { 
 			if (!resources.isEmpty()) {
 				if (syncExec) {
 					internalAddResourceToContext(resources, interactionKind);

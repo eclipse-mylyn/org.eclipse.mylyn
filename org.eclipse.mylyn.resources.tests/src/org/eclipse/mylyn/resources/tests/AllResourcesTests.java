@@ -22,6 +22,7 @@ public class AllResourcesTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tests.xml");
 		// $JUnit-BEGIN$
+		suite.addTestSuite(ResourceChangeMonitorTest.class);
 		suite.addTestSuite(ResourceContextTest.class);
 		// suite.addTestSuite(ResultUpdaterTest.class);
 		// $JUnit-END$
