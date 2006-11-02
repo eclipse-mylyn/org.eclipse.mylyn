@@ -13,7 +13,6 @@ package org.eclipse.mylar.internal.tasks.ui.search;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -26,7 +25,6 @@ import org.eclipse.mylar.internal.tasks.ui.views.TaskListTableLabelProvider;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.search.internal.ui.SearchMessages;
-import org.eclipse.search.internal.ui.SearchPlugin;
 import org.eclipse.search.ui.IContextMenuConstants;
 import org.eclipse.search.ui.text.AbstractTextSearchViewPage;
 import org.eclipse.search.ui.text.Match;
@@ -43,8 +41,10 @@ import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * Displays the results of a Repository search.
- * 
  * @see org.eclipse.search.ui.text.AbstractTextSearchViewPage
+ * 
+ * @author Rob Elves
+ * @author Mik Kersten 
  */
 public class RepositorySearchResultView extends AbstractTextSearchViewPage implements IAdaptable {
 
@@ -64,21 +64,13 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 	private static final String KEY_SORTING = TasksUiPlugin.PLUGIN_ID + ".search.resultpage.sorting"; //$NON-NLS-1$
 
-	private SearchResultContentProvider bugContentProvider;
+	private SearchResultContentProvider taskContentProvider;
 
-	private int bugCurrentSortOrder;
+	private int currentSortOrder;
 
-	// private SearchResultSortAction bugSortByIDAction;
+	private SearchResultSortAction sortByPriorityAction;
 
-	// private SearchResultSortAction bugSortBySeverityAction;
-
-	private SearchResultSortAction bugSortByPriorityAction;
-
-	private SearchResultSortAction bugSortByDescriptionAction;
-
-	// private SearchResultSortAction bugSortByStatusAction;
-
-	// private AddFavoriteAction addToFavoritesAction;
+	private SearchResultSortAction sortByDescriptionAction;
 
 	private OpenSearchResultAction openInEditorAction;
 
@@ -90,8 +82,6 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		}
 	};
 
-	private IPropertyChangeListener bugPropertyChangeListener;
-
 	/**
 	 * Constructor
 	 */
@@ -99,45 +89,24 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		// Only use the table layout.
 		super(FLAG_LAYOUT_FLAT);
 
-		bugSortByPriorityAction = new SearchResultSortAction("Bug priority", this, ORDER_PRIORITY);
-		bugSortByDescriptionAction = new SearchResultSortAction("Bug Description", this, ORDER_DESCRIPTION);
-		// bugSortByIDAction = new SearchResultSortAction("Bug ID", this,
-		// ORDER_ID);
-		// bugSortBySeverityAction = new SearchResultSortAction("Bug severity",
-		// this, ORDER_SEVERITY);
-		// bugSortByStatusAction = new SearchResultSortAction("Bug status",
-		// this,
-		// ORDER_STATUS);
-		bugCurrentSortOrder = ORDER_DEFAULT;
+		sortByPriorityAction = new SearchResultSortAction("Task Priority", this, ORDER_PRIORITY);
+		sortByDescriptionAction = new SearchResultSortAction("Task Description", this, ORDER_DESCRIPTION);
+		currentSortOrder = ORDER_DEFAULT;
 
-		// addToFavoritesAction = new AddFavoriteAction("Mark Result as
-		// Favorite", this);
 		openInEditorAction = new OpenSearchResultAction("Open in Editor", this);
-
-//		bugPropertyChangeListener = new IPropertyChangeListener() {
-//			public void propertyChange(PropertyChangeEvent event) {
-//				if (SearchPreferencePage.LIMIT_TABLE.equals(event.getProperty())
-//						|| SearchPreferencePage.LIMIT_TABLE_TO.equals(event.getProperty()))
-//					if (getViewer() instanceof TableViewer) {
-//						getViewPart().updateLabel();
-//						getViewer().refresh();
-//					}
-//			}
-//		};
-		SearchPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(bugPropertyChangeListener);
 	}
 
 	@Override
 	protected void elementsChanged(Object[] objects) {
-		if (bugContentProvider != null) {
-			bugContentProvider.elementsChanged(objects);
+		if (taskContentProvider != null) {
+			taskContentProvider.elementsChanged(objects);
 		}
 	}
 
 	@Override
 	protected void clear() {
-		if (bugContentProvider != null) {
-			bugContentProvider.clear();
+		if (taskContentProvider != null) {
+			taskContentProvider.clear();
 		}
 	}
 
@@ -179,7 +148,6 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 			});
 		}
 
-		// TaskElementLabelProvider BugzillaLabelProvider
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
@@ -193,16 +161,16 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 		// Set the order when the search view is loading so that the items are
 		// sorted right away
-		setSortOrder(bugCurrentSortOrder);
+		setSortOrder(currentSortOrder);
 
-		bugContentProvider = (SearchResultContentProvider) viewer.getContentProvider();
+		taskContentProvider = (SearchResultContentProvider) viewer.getContentProvider();
 	}
 
 	/**
-	 * Sets the new sorting category, and reorders all of the bug reports.
+	 * Sets the new sorting category, and reorders all of the tasks.
 	 * 
 	 * @param sortOrder
-	 *            The new category to sort bug reports by
+	 *            The new category to sort by
 	 */
 	public void setSortOrder(int sortOrder) {
 		StructuredViewer viewer = getViewer();
@@ -217,12 +185,6 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		case ORDER_PRIORITY:
 			viewer.setSorter(new SearchResultSorterPriority());
 			break;
-		// case ORDER_SEVERITY:
-		// viewer.setSorter(new BugzillaSeveritySearchSorter());
-		// break;
-		// case ORDER_STATUS:
-		// viewer.setSorter(new BugzillaStateSearchSorter());
-		// break;
 		default:
 			// If the setting is not one of the four valid ones,
 			// use the default order setting.
@@ -230,8 +192,8 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 			viewer.setSorter(new SearchResultSorterPriority());
 			break;
 		}
-		bugCurrentSortOrder = sortOrder;
-		getSettings().put(KEY_SORTING, bugCurrentSortOrder);
+		currentSortOrder = sortOrder;
+		getSettings().put(KEY_SORTING, currentSortOrder);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -252,18 +214,6 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		AbstractQueryHit repositoryHit = (AbstractQueryHit) match.getElement();
 		
 		TaskUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), repositoryHit.getId(), repositoryHit.getUrl());
-
-		// try {
-		// int id = Integer.parseInt(repositoryHit.getId());
-		// String bugUrl =
-		// BugzillaServerFacade.getBugUrlWithoutLogin(repositoryHit.getRepositoryUrl(),
-		// id);
-		// TaskUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(),
-		// repositoryHit.getId(), bugUrl);
-		// } catch (NumberFormatException e) {
-		// MylarStatusHandler.fail(e, "Could not open, malformed id: " +
-		// repositoryHit.getId(), true);
-		// }
 	}
 
 	@Override
@@ -272,27 +222,14 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 		// Create the submenu for sorting
 		MenuManager sortMenu = new MenuManager(SearchMessages.SortDropDownAction_label); //$NON-NLS-1$
-		sortMenu.add(bugSortByPriorityAction);
-		sortMenu.add(bugSortByDescriptionAction);
-		// sortMenu.add(bugSortByIDAction);
-		// sortMenu.add(bugSortBySeverityAction);
-		// sortMenu.add(bugSortByStatusAction);
+		sortMenu.add(sortByPriorityAction);
+		sortMenu.add(sortByDescriptionAction);
 
-		// Check the right sort option
-
-		bugSortByPriorityAction.setChecked(bugCurrentSortOrder == bugSortByPriorityAction.getSortOrder());
-		bugSortByDescriptionAction.setChecked(bugCurrentSortOrder == bugSortByDescriptionAction.getSortOrder());
-		// bugSortByIDAction.setChecked(bugCurrentSortOrder ==
-		// bugSortByIDAction.getSortOrder());
-		// bugSortBySeverityAction.setChecked(bugCurrentSortOrder ==
-		// bugSortBySeverityAction.getSortOrder());
-		// bugSortByStatusAction.setChecked(bugCurrentSortOrder ==
-		// bugSortByStatusAction.getSortOrder());
+		sortByPriorityAction.setChecked(currentSortOrder == sortByPriorityAction.getSortOrder());
+		sortByDescriptionAction.setChecked(currentSortOrder == sortByDescriptionAction.getSortOrder());
 
 		// Add the new context menu items
 		mgr.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, sortMenu);
-		// mgr.appendToGroup(IContextMenuConstants.GROUP_ADDITIONS,
-		// addToFavoritesAction);
 		mgr.appendToGroup(IContextMenuConstants.GROUP_OPEN, openInEditorAction);
 	}
 

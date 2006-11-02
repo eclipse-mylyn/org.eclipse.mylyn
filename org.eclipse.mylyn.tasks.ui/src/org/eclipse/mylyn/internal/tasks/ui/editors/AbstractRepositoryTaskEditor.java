@@ -2111,7 +2111,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			return;
 		}
 		toolkit.createLabel(composite, "");
-		final Button addSelfButton = toolkit.createButton(composite, "Add self to CC", SWT.CHECK);
+		final Button addSelfButton = toolkit.createButton(composite, "Add me to CC", SWT.CHECK);
 		addSelfButton.setImage(TaskListImages.getImage(TaskListImages.PERSON));
 		addSelfButton.addSelectionListener(new SelectionAdapter() {
 

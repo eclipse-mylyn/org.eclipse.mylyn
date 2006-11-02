@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.Group;
 
 /**
  * @author Rob Elves
+ * @author Mik Kersten
  */
 public class TaskSearchPage extends DialogPage implements ISearchPage {
 
@@ -193,20 +194,13 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 						repositoryCombo.select(repositoryCombo.indexOf(selectRepo));
 						repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryCombo.getText());
 						if (repository == null) {
-
 							// TODO: Display no repository error
-
-							// repository =
-							// TasksUiPlugin.getRepositoryManager().getDefaultRepository(
-							// BugzillaCorePlugin.REPOSITORY_KIND);
 						}
 					} else {
 						repositoryCombo.select(indexToSelect);
 					}
 
-					// TODO: Create one page per connector and repopulate based
-					// on
-					// repository
+					// TODO: Create one page per connector and repopulate based on repository
 					queryPages = new AbstractRepositoryQueryPage[repositoryUrls.length];
 					displayQueryPage(repositoryCombo.getSelectionIndex());
 					// updateAttributesFromRepository(repositoryCombo.getText(),

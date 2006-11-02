@@ -106,8 +106,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 		if (object instanceof AbstractQueryHit) {
 			AbstractQueryHit hit = (AbstractQueryHit) object;			
-			if (!pattern.matcher(hit.getDescription()).matches()) {
-				return hit.getId() + ": " + hit.getDescription();
+			if (!pattern.matcher(hit.getDescription()).matches() && hit.getIdLabel() != null) {
+				return hit.getIdLabel() + ": " + hit.getDescription();
 			} else {
 				return hit.getDescription();
 			}

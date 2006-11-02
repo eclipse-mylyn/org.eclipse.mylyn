@@ -152,7 +152,7 @@ public class TaskListWriter {
 					break;
 				}
 			}
-			if (element == null && delagatingExternalizer.canCreateElementFor(task)) {
+			if (element == null) {// && delagatingExternalizer.canCreateElementFor(task)) {
 				delagatingExternalizer.createTaskElement(task, doc, root);
 			} else if (element == null) {
 				MylarStatusHandler.log("Did not externalize: " + task, this);
