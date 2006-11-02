@@ -16,24 +16,29 @@ package org.eclipse.mylar.tasks.core;
  */
 public abstract class AbstractQueryHit implements ITaskListElement {
 
+	protected TaskList taskList;
+
+	protected AbstractRepositoryTask task;
+
 	protected String repositoryUrl;
-	
+
 	protected String description;
 
 	protected String priority;
-	
+
 	protected String id;
 
 	protected boolean isNotified = false;
 
 	private AbstractRepositoryQuery parent;
-	
-	protected AbstractQueryHit(String repositoryUrl, String description, String id) {
+
+	protected AbstractQueryHit(TaskList taskList, String repositoryUrl, String description, String id) {
+		this.taskList = taskList;
 		this.repositoryUrl = repositoryUrl;
 		this.description = description;
 		this.id = id;
 	}
-	
+
 	public AbstractRepositoryQuery getParent() {
 		return parent;
 	}
@@ -41,7 +46,7 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 	public void setParent(AbstractRepositoryQuery parent) {
 		this.parent = parent;
 	}
-	
+
 	public String getRepositoryUrl() {
 		return repositoryUrl;
 	}
@@ -50,69 +55,100 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 		this.repositoryUrl = repositoryUrl;
 	}
 
-	public abstract AbstractRepositoryTask getOrCreateCorrespondingTask();
- 
+	public String getDescription() {
+		if (task != null) {
+			return task.getDescription();
+		} else {
+			return description;
+		}
+	}
+	
+	public AbstractRepositoryTask getOrCreateCorrespondingTask() {
+		if (taskList == null) {
+			return null;
+		}
+
+		ITask existingTask = taskList.getTask(getHandleIdentifier());
+
+		if (existingTask instanceof AbstractRepositoryTask) {
+			this.task = (AbstractRepositoryTask) existingTask;
+		} else {
+			task = createTask();
+			taskList.addTask(task);
+		}
+		return task;
+	}
+	
+	protected abstract AbstractRepositoryTask createTask();
+	
 	/**
-	 * @return null if there is no corresponding report
+	 * @return null if there is no corresponding task
 	 */
-	public abstract AbstractRepositoryTask getCorrespondingTask();
+	public AbstractRepositoryTask getCorrespondingTask() {
+		return task;
+	}
+
+	public void setCorrespondingTask(AbstractRepositoryTask task) {
+		this.task = task;
+	}
 
 	public abstract boolean isCompleted();
-	
-	public abstract void setCorrespondingTask(AbstractRepositoryTask task);
 
 	public String getHandleIdentifier() {
 		return AbstractRepositoryTask.getHandle(repositoryUrl, id);
 	}
 
+	/**
+	 * @return Unique identifier for this task on the corresponding server, must
+	 *         be robust to changing attributes on the task.
+	 */
 	public String getId() {
 		return id;
 	}
-	
+
+	/**
+	 * @return An ID that can be presented to the user for identifying the task,
+	 *         override to return null if no such ID exists.
+	 */
+	public String getIdLabel() {
+		return getId();
+	}
+
 	public boolean isNotified() {
 		return isNotified;
 	}
-	
+
 	public void setNotified(boolean notified) {
 		isNotified = notified;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if(!(obj instanceof AbstractQueryHit)) {
+		if (!(obj instanceof AbstractQueryHit)) {
 			return false;
 		}
-		AbstractQueryHit hit = (AbstractQueryHit)obj;
-		return hit.getHandleIdentifier().equals(this.getHandleIdentifier());		
+		AbstractQueryHit hit = (AbstractQueryHit) obj;
+		return hit.getHandleIdentifier().equals(this.getHandleIdentifier());
 	}
 
 	@Override
 	public int hashCode() {
 		return this.getHandleIdentifier().hashCode();
 	}
-	
+
 	/**
 	 * @return the url of the hit without any additional login information etc.
 	 */
 	public String getUrl() {
 		return "";
 	}
-	
+
 	public String getPriority() {
 		AbstractRepositoryTask task = getCorrespondingTask();
 		if (task != null) {
 			return task.getPriority();
 		} else {
 			return priority;
-		}
-	}
-
-	public String getDescription() {
-		AbstractRepositoryTask task = getCorrespondingTask();
-		if (task != null) {
-			return task.getDescription();
-		} else {
-			return description;
 		}
 	}
 
@@ -125,7 +161,7 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 	}
 
 	public void setHandleIdentifier(String id) {
-		//ignore
+		// ignore
 	}
-	
+
 }

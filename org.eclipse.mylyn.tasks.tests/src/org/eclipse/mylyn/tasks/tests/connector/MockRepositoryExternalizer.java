@@ -34,7 +34,7 @@ public class MockRepositoryExternalizer extends DelegatingTaskExternalizer {
 
 	@Override
 	public boolean canCreateElementFor(AbstractQueryHit queryHit) {
-		return false;
+		return queryHit instanceof AbstractQueryHit;
 	}
 	
 	@Override

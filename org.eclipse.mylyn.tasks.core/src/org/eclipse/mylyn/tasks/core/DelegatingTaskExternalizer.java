@@ -129,8 +129,11 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		}
 	}
 
+	/**
+	 * Override to create specific elements
+	 */
 	public boolean canCreateElementFor(ITask task) {
-		return true;
+		return false;
 	}
 
 	public Element createTaskElement(ITask task, Document doc, Element parent) {
@@ -452,7 +455,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	}
 
 	public boolean canCreateElementFor(AbstractRepositoryQuery query) {
-		return true;
+		return false;
 	}
 
 	public Element createQueryElement(AbstractRepositoryQuery query, Document doc, Element parent) {
@@ -500,7 +503,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	}
 
 	public boolean canCreateElementFor(AbstractQueryHit queryHit) {
-		return true;
+		return false;
 	}
 
 	public Element createQueryHitElement(AbstractQueryHit queryHit, Document doc, Element parent) {

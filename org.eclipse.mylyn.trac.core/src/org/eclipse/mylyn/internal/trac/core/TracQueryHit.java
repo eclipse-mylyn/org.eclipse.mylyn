@@ -13,7 +13,6 @@ package org.eclipse.mylar.internal.trac.core;
 
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskList;
 
 /**
@@ -21,53 +20,26 @@ import org.eclipse.mylar.tasks.core.TaskList;
  */
 public class TracQueryHit extends AbstractQueryHit {
 
-	private TracTask task;
-
 	private boolean completed;
 
-	private TaskList taskList;
-
 	public TracQueryHit(TaskList taskList, String repositoryUrl, String description, String id) {
-		super(repositoryUrl, description, id);
-
-		this.taskList = taskList;
+		super(taskList, repositoryUrl, description, id);
 	}
 
 	public TracQueryHit(TaskList taskList, String handle) {
-		super(AbstractRepositoryTask.getRepositoryUrl(handle), "", AbstractRepositoryTask.getTaskId(handle));
-
-		this.taskList = taskList;
+		super(taskList, AbstractRepositoryTask.getRepositoryUrl(handle), "", AbstractRepositoryTask.getTaskId(handle));
 	}
 
-	@Override
-	public AbstractRepositoryTask getCorrespondingTask() {
-		return task;
-	}
-
-	@Override
-	public AbstractRepositoryTask getOrCreateCorrespondingTask() {
-		ITask existingTask = taskList.getTask(getHandleIdentifier());
-		if (existingTask instanceof TracTask) {
-			this.task = (TracTask) existingTask;
-		} else {
-			this.task = new TracTask(getHandleIdentifier(), getDescription(), true);
-			task.setCompleted(completed);
-			task.setPriority(priority);
-			taskList.addTask(task);
-		}
-		return task;
+	protected AbstractRepositoryTask createTask() {
+		TracTask newTask = new TracTask(getHandleIdentifier(), getDescription(), true);
+		newTask.setCompleted(completed);
+		newTask.setPriority(priority);
+		return newTask;
 	}
 
 	@Override
 	public boolean isCompleted() {
 		return (task != null) ? task.isCompleted() : completed;
-	}
-
-	@Override
-	public void setCorrespondingTask(AbstractRepositoryTask task) {
-		if (task instanceof TracTask) {
-			this.task = (TracTask) task;
-		}
 	}
 
 	public String getUrl() {

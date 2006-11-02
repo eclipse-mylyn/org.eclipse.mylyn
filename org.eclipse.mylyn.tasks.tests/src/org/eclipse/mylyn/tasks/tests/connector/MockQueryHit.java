@@ -10,39 +10,25 @@ package org.eclipse.mylar.tasks.tests.connector;
 
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.TaskList;
 
 /**
  * @author Rob Elves
+ * 
  */
 public class MockQueryHit extends AbstractQueryHit {
 
-	AbstractRepositoryTask task = null;
-	
-	public MockQueryHit(String repositoryUrl, String description, String id) {
-		super(repositoryUrl, description, id);		
+	public MockQueryHit(TaskList taskList, String repositoryUrl, String description, String id) {
+		super(taskList, repositoryUrl, description, id);		
 	}
 
-	@Override
-	public AbstractRepositoryTask getCorrespondingTask() {
-		return task;
-	}
-
-	@Override
-	public AbstractRepositoryTask getOrCreateCorrespondingTask() {
-		if(task == null) {
-			task = new MockRepositoryTask(AbstractRepositoryTask.getHandle(repositoryUrl, id));
-		}
-		return task;
+	protected AbstractRepositoryTask createTask() {
+		return new MockRepositoryTask(AbstractRepositoryTask.getHandle(repositoryUrl, id));
 	}
 
 	@Override
 	public boolean isCompleted() {
 		return task.isCompleted();
-	}
-
-	@Override
-	public void setCorrespondingTask(AbstractRepositoryTask task) {
-		this.task = task;
 	}
 
 }
