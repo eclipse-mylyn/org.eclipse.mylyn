@@ -71,11 +71,11 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 		}
 
 		ITask existingTask = taskList.getTask(getHandleIdentifier());
-
 		if (existingTask instanceof AbstractRepositoryTask) {
 			this.task = (AbstractRepositoryTask) existingTask;
 		} else {
 			task = createTask();
+			task.setCompleted(completed);
 			taskList.addTask(task);
 		}
 		return task;

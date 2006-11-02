@@ -95,23 +95,23 @@ public class TaskUiUtil {
 		}
 	}
 
-	
 	public static boolean openRepositoryTask(TaskRepository repository, String taskId) {
 		boolean opened = false;
-		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(AbstractRepositoryTask.getHandle(repository.getUrl(), taskId));
-		if(task != null) {
+		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+				AbstractRepositoryTask.getHandle(repository.getUrl(), taskId));
+		if (task != null) {
 			TaskUiUtil.refreshAndOpenTaskListElement(task);
-			opened = true; 
-		} else {						
+			opened = true;
+		} else {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getKind());
-			if(connectorUi != null) {				
+			if (connectorUi != null) {
 				connectorUi.openRemoteTask(repository.getUrl(), taskId);
 				opened = true;
 			}
 		}
 		return opened;
 	}
-	
+
 	/**
 	 * Either pass in a repository and id, or fullUrl, or all of them
 	 */
@@ -122,27 +122,28 @@ public class TaskUiUtil {
 			String handle = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
 			task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
 		}
+		System.err.println(">>> " + fullUrl);
 		if (task == null) {
 			// search for it
 			for (ITask currTask : TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks()) {
 				if (currTask instanceof AbstractRepositoryTask) {
 					String currUrl = ((AbstractRepositoryTask) currTask).getUrl();
-					if (currUrl != null && currUrl.equals(fullUrl)) {
+					if (currUrl != null && !currUrl.equals("") && currUrl.equals(fullUrl)) {
 						task = currTask;
 						break;
 					}
 				}
 			}
 		}
+		System.err.println(">>>>>> " + task);
 		if (task != null) {
 			TaskUiUtil.refreshAndOpenTaskListElement(task);
 			opened = true;
 		} else {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryForTaskUrl(
 					fullUrl);
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(
-					connector.getRepositoryType());
-			
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(connector.getRepositoryType());
+
 			if (connector != null) {
 				connectorUi.openRemoteTask(repositoryUrl, taskId);
 				opened = true;
@@ -175,7 +176,9 @@ public class TaskUiUtil {
 
 				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryKind,
 						repositoryTask.getRepositoryUrl());
-				if (repository == null) { // || !connector.validate(repository)) {
+				if (repository == null) { // ||
+											// !connector.validate(repository))
+											// {
 					return;
 				}
 
@@ -184,9 +187,9 @@ public class TaskUiUtil {
 						TaskUiUtil.openEditor(task, false, false);
 						TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 						TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, false, null);
-					} else {						
-						Job refreshJob = TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, true,
-								new JobChangeAdapter() {
+					} else {
+						Job refreshJob = TasksUiPlugin.getSynchronizationManager().synchronize(connector,
+								repositoryTask, true, new JobChangeAdapter() {
 									public void done(IJobChangeEvent event) {
 										TaskUiUtil.openEditor(task, false);
 									}
@@ -202,8 +205,7 @@ public class TaskUiUtil {
 			TaskUiUtil.openEditor((AbstractTaskContainer) element);
 		} else if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(
-					query.getRepositoryKind());
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(query.getRepositoryKind());
 			connectorUi.openEditQueryDialog(query);
 		}
 	}
@@ -211,7 +213,7 @@ public class TaskUiUtil {
 	public static void openEditor(final ITask task, boolean newTask) {
 		openEditor(task, true, newTask);
 	}
-	
+
 	/**
 	 * Set asyncExec false for testing purposes.
 	 */
@@ -272,8 +274,8 @@ public class TaskUiUtil {
 							| WorkbenchBrowserSupport.NAVIGATION_BAR;
 				}
 				String title = "Browser";
-				browser = WorkbenchBrowserSupport.getInstance().createBrowser(flags,
-						TasksUiPlugin.PLUGIN_ID + title, null, null);
+				browser = WorkbenchBrowserSupport.getInstance().createBrowser(flags, TasksUiPlugin.PLUGIN_ID + title,
+						null, null);
 				browser.openURL(new URL(url));
 			}
 		} catch (PartInitException e) {
