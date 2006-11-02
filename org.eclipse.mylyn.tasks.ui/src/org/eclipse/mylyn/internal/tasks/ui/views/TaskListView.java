@@ -1535,8 +1535,8 @@ public class TaskListView extends ViewPart {
 				public void run() {
 					if (getViewer().getControl() != null && !getViewer().getControl().isDisposed()) {
 						if (element == null) {
-							// getViewer().refresh();
-							filteredTree.textChanged();
+							getViewer().refresh();
+//							filteredTree.textChanged();
 						} else {
 							try {
 								getViewer().refresh(element, true);
