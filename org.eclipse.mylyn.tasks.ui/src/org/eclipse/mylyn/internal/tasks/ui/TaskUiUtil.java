@@ -122,7 +122,6 @@ public class TaskUiUtil {
 			String handle = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
 			task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
 		}
-		System.err.println(">>> " + fullUrl);
 		if (task == null) {
 			// search for it
 			for (ITask currTask : TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks()) {
@@ -135,7 +134,6 @@ public class TaskUiUtil {
 				}
 			}
 		}
-		System.err.println(">>>>>> " + task);
 		if (task != null) {
 			TaskUiUtil.refreshAndOpenTaskListElement(task);
 			opened = true;
@@ -145,9 +143,8 @@ public class TaskUiUtil {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(connector.getRepositoryType());
 
 			if (connector != null) {
-				connectorUi.openRemoteTask(repositoryUrl, taskId);
-				opened = true;
-			}
+				opened = connectorUi.openRemoteTask(repositoryUrl, taskId);
+			} 
 		}
 		if (!opened) {
 			TaskUiUtil.openUrl(fullUrl);

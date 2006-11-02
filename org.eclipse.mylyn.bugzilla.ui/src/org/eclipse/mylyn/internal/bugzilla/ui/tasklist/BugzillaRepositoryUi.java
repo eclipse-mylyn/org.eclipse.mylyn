@@ -70,18 +70,19 @@ public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public void openRemoteTask(String repositoryUrl, String idString) {
+	public boolean openRemoteTask(String repositoryUrl, String idString) {
 		int id = -1;
 		try {
 			id = Integer.parseInt(idString);
 		} catch (NumberFormatException e) {
-			return;
+			return false;
 		}
 		String bugUrl = BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, id);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		OpenRemoteTaskJob job = new OpenRemoteTaskJob(BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl, idString,
 				bugUrl, page);
 		job.schedule();
+		return true;
 	}
 
 }

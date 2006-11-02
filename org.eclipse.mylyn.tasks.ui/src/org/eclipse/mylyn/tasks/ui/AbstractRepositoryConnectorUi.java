@@ -9,7 +9,6 @@
 package org.eclipse.mylar.tasks.ui;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -81,8 +80,15 @@ public abstract class AbstractRepositoryConnectorUi {
 		return null;
 	}
 
-	public void openRemoteTask(String repositoryUrl, String idString) {
-		MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-				TasksUiPlugin.TITLE_DIALOG, "Not supported by connector: " + this.getClass().getSimpleName());
+	/**
+	 * Only override if task should be opened by a custom editor, default
+	 * beahvior is to open with browser.
+	 * 
+	 * @return	true if the task was successfully opened
+	 */
+	public boolean openRemoteTask(String repositoryUrl, String idString) {
+		return false;
+//		MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+//				TasksUiPlugin.TITLE_DIALOG, "Not supported by connector: " + this.getClass().getSimpleName());
 	}
 }

@@ -78,11 +78,12 @@ public class TracRepositoryUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public void openRemoteTask(String repositoryUrl, String idString) {
+	public boolean openRemoteTask(String repositoryUrl, String idString) {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		String ticketUrl = repositoryUrl + ITracClient.TICKET_URL + idString;
 		OpenRemoteTaskJob job = new OpenRemoteTaskJob(TracCorePlugin.REPOSITORY_KIND, repositoryUrl, idString, ticketUrl, page);
 		job.schedule();
+		return true;
 	}
 	
 }
