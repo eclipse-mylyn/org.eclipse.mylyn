@@ -38,7 +38,7 @@ public class TypeHistoryManagerTest extends AbstractJavaContextTest {
 		super.tearDown();
 	}
 
-	public void testPredictedElementPopulation() throws JavaModelException {
+	public void testPredictedElementPopulationOfTypeHistory() throws JavaModelException {
 		manager.clearTypeHistory();
 		assertEquals(0, OpenTypeHistory.getInstance().getTypeInfos().length);
  
