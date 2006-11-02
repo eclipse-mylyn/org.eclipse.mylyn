@@ -1180,25 +1180,25 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		selected = status.getSelectionIndices();
 		for (int i = 0; i < selected.length; i++) {
 			sb.append("&bug_status=");
-			sb.append(status.getItem(selected[i]));
+			sb.append(URLEncoder.encode(status.getItem(selected[i]), repository.getCharacterEncoding()));
 		}
 
 		selected = resolution.getSelectionIndices();
 		for (int i = 0; i < selected.length; i++) {
 			sb.append("&resolution=");
-			sb.append(resolution.getItem(selected[i]));
+			sb.append(URLEncoder.encode(resolution.getItem(selected[i]), repository.getCharacterEncoding()));
 		}
 
 		selected = severity.getSelectionIndices();
 		for (int i = 0; i < selected.length; i++) {
-			sb.append("&bug_severity=");
-			sb.append(severity.getItem(selected[i]));
+			sb.append("&bug_severity=");			
+			sb.append(URLEncoder.encode(severity.getItem(selected[i]), repository.getCharacterEncoding()));
 		}
 
 		selected = priority.getSelectionIndices();
 		for (int i = 0; i < selected.length; i++) {
 			sb.append("&priority=");
-			sb.append(priority.getItem(selected[i]));
+			sb.append(URLEncoder.encode(priority.getItem(selected[i]), repository.getCharacterEncoding()));
 		}
 
 		selected = hardware.getSelectionIndices();

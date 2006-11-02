@@ -149,6 +149,7 @@ public class BugzillaClient {
 
 			GetMethod method = new GetMethod(WebClientUtil.getRequestPath(serverURL));
 			method.getParams().setSoTimeout(CONNECT_TIMEOUT);
+			method.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset="+characterEncoding);
 			// NOTE! Setting browser compatability breaks Bugzilla
 			// authentication
 			// method.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
@@ -234,6 +235,7 @@ public class BugzillaClient {
 		PostMethod method = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl.toString()
 				+ IBugzillaConstants.URL_POST_LOGIN));
 
+		method.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset="+characterEncoding);
 		method.setRequestBody(formData);
 		method.setDoAuthentication(true);
 		// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
@@ -309,7 +311,7 @@ public class BugzillaClient {
 			method = getConnect(repositoryUrl + IBugzillaConstants.URL_GET_SHOW_BUG_XML + id);
 			// method.addRequestHeader("Content-Type", characterEncoding);
 			RepositoryTaskData taskData = null;
-			if (method.getResponseHeader("Content-Type") != null) {
+			if (method.getResponseHeader("Content-Type") != null) {				
 				Header responseTypeHeader = method.getResponseHeader("Content-Type");
 				for (String type : VALID_CONFIG_CONTENT_TYPES) {
 					if (responseTypeHeader.getValue().toLowerCase().contains(type)) {
@@ -354,9 +356,9 @@ public class BugzillaClient {
 
 	public void getSearchHits(AbstractRepositoryQuery query, QueryHitCollector collector, TaskList taskList)
 			throws IOException, BugzillaException, GeneralSecurityException {
-		String queryUrl = query.getUrl();
+		String queryUrl = query.getUrl();		
 		// Test that we don't specify content type twice.
-		// Should only be specified here (not in passed in url if possible
+		// Should only be specified here (not in passed in url if possible)
 		if (!queryUrl.contains("ctype=rdf")) {
 			queryUrl = queryUrl.concat(IBugzillaConstants.CONTENT_TYPE_RDF);
 		}
@@ -562,6 +564,7 @@ public class BugzillaClient {
 
 		postMethod.setRequestBody(formData);
 		postMethod.setDoAuthentication(true);
+		postMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset="+characterEncoding);
 		// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
 		int status = httpClient.executeMethod(postMethod);
 		if (status == HttpStatus.SC_OK) {
