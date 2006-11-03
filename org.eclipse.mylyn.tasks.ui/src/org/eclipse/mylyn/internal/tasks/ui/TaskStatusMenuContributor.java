@@ -35,13 +35,13 @@ public class TaskStatusMenuContributor implements IDynamicSubMenuContributor {
 		}
 		
 		Action action = new MarkTaskCompleteAction(selectedElements);
-		if (singleTask.isCompleted()) {
+		if (singleTask != null && singleTask.isCompleted()) {
 			action.setEnabled(false);
 		}
 		subMenuManager.add(action);
 		action = new MarkTaskIncompleteAction(selectedElements);
 		subMenuManager.add(action);
-		if (!singleTask.isCompleted()) {
+		if (singleTask != null && !singleTask.isCompleted()) {
 			action.setEnabled(false);
 		}
 		subMenuManager.add(new Separator());
