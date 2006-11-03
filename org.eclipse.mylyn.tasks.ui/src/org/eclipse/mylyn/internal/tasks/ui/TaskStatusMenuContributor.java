@@ -17,6 +17,7 @@ import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskIncompleteAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskReadAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskUnreadAction;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 
 /**
@@ -28,10 +29,21 @@ public class TaskStatusMenuContributor implements IDynamicSubMenuContributor {
 
 	public MenuManager getSubMenuManager(final List<ITaskListElement> selectedElements) {
 		final MenuManager subMenuManager = new MenuManager(LABEL);
+		ITask singleTask = null;
+		if (selectedElements.size() == 1 && selectedElements.get(0) instanceof ITask) {
+			singleTask = (ITask)selectedElements.get(0);
+		}
+		
 		Action action = new MarkTaskCompleteAction(selectedElements);
+		if (singleTask.isCompleted()) {
+			action.setEnabled(false);
+		}
 		subMenuManager.add(action);
 		action = new MarkTaskIncompleteAction(selectedElements);
 		subMenuManager.add(action);
+		if (!singleTask.isCompleted()) {
+			action.setEnabled(false);
+		}
 		subMenuManager.add(new Separator());
 		action = new MarkTaskReadAction(selectedElements);
 		subMenuManager.add(action);
