@@ -1052,11 +1052,6 @@ public class TaskListView extends ViewPart {
 		}
 		openWithBrowser.selectionChanged((StructuredSelection) getViewer().getSelection());
 
-		manager.add(new Separator(ID_SEPARATOR_NEW));
-		manager.add(new Separator());
-
-		Map<String, List<IDynamicSubMenuContributor>> dynamicMenuMap = TasksUiPlugin.getDefault().getDynamicMenuMap();
-
 		ITask task = null;
 		if ((element instanceof ITask) || (element instanceof AbstractQueryHit)) {
 			if (element instanceof AbstractQueryHit) {
@@ -1065,9 +1060,24 @@ public class TaskListView extends ViewPart {
 				task = (ITask) element;
 			}
 		}
+		
+		manager.add(new Separator(ID_SEPARATOR_NEW));
+		manager.add(new Separator());
+
+		Map<String, List<IDynamicSubMenuContributor>> dynamicMenuMap = TasksUiPlugin.getDefault().getDynamicMenuMap();
 
 		addAction(openAction, manager, element);
 		addAction(openWithBrowser, manager, element);
+		if (task != null) {
+			if (task.isActive()) {
+				manager.add(deactivateAction);
+			} else {
+				manager.add(activateAction);
+			}
+		} else if (element instanceof AbstractQueryHit) {
+			manager.add(activateAction);
+		}
+		
 		manager.add(new Separator());
 
 		for (String menuPath : dynamicMenuMap.keySet()) {
@@ -1099,16 +1109,6 @@ public class TaskListView extends ViewPart {
 		}
 		manager.add(new Separator(ID_SEPARATOR_REPOSITORY));
 		manager.add(new Separator(ID_SEPARATOR_CONTEXT));
-
-		if (task != null) {
-			if (task.isActive()) {
-				manager.add(deactivateAction);
-			} else {
-				manager.add(activateAction);
-			}
-		} else if (element instanceof AbstractQueryHit) {
-			manager.add(activateAction);
-		}
 
 		if (element instanceof ITask || element instanceof AbstractQueryHit) {
 			for (String menuPath : dynamicMenuMap.keySet()) {
