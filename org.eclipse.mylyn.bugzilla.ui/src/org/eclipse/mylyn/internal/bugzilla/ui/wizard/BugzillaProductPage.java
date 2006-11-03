@@ -27,6 +27,7 @@ import java.util.Map;
 import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -50,6 +51,7 @@ import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -349,6 +351,15 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 						}
 					}
 				}
+			} else {
+				if(element instanceof IAdaptable) {
+					IAdaptable adaptable = (IAdaptable) element;
+					ITask task = (ITask) adaptable.getAdapter(ITask.class);
+					if(task instanceof BugzillaTask) {
+						BugzillaTask bugzillaTask = (BugzillaTask) task;
+						products.add(bugzillaTask.getTaskData().getProduct());
+					}
+				}				
 			}
 		}
 

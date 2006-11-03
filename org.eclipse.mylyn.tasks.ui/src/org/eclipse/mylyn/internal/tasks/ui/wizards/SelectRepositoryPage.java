@@ -38,6 +38,7 @@ import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryFilter;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
@@ -196,8 +197,17 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 			IResource resource = (IResource) element;
 			return TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
 		} else if( element instanceof IAdaptable) {
-			IResource resource = (IResource) ((IAdaptable) element).getAdapter(IResource.class);
-			return TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
+			IAdaptable adaptable = (IAdaptable) element;
+			IResource resource = (IResource) adaptable.getAdapter(IResource.class);
+			if(resource!=null) {
+				return TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
+			} else {
+				ITask task = (ITask) adaptable.getAdapter(ITask.class);
+				if(task instanceof AbstractRepositoryTask) {
+					AbstractRepositoryTask rtask = (AbstractRepositoryTask) task;
+					return getRepository(rtask.getRepositoryUrl(), rtask.getRepositoryKind());
+				}
+			}
 		}
 		
 		// TODO mapping between LogEntry.pliginId and repositories
