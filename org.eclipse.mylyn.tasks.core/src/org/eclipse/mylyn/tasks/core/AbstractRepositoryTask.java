@@ -101,6 +101,14 @@ public abstract class AbstractRepositoryTask extends Task {
 		this.currentlySynchronizing = currentlySychronizing;
 	}
 
+	/**
+	 * Human readable identifier for this task.  Override if different than ID, can return
+	 * null if no such label exists.
+	 */
+	public String getIdLabel() {
+		return getTaskId(handle);
+	}
+	
 	public static String getTaskId(String taskHandle) {
 		int index = taskHandle.lastIndexOf(AbstractRepositoryTask.HANDLE_DELIM);
 		if (index != -1) {

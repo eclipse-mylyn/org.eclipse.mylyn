@@ -128,7 +128,14 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 	 */
 	public String getLabel() {
 		if (task instanceof AbstractRepositoryTask) {
-			label = getId() + ": " + truncateDescription(task.getDescription());
+			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)task;
+			String idLabel = repositoryTask.getIdLabel();
+			
+			label = "";
+			if (idLabel != null) {
+				label += idLabel + ": ";
+			}
+			label += truncateDescription(task.getDescription());
 		} else if (task != null){
 			label = truncateDescription(task.getDescription());
 		} 
