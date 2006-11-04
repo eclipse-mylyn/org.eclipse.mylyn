@@ -24,13 +24,13 @@ import org.eclipse.search.ui.ISearchPage;
 import org.eclipse.search.ui.ISearchPageContainer;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 /**
@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Text;
  */
 public abstract class AbstractRepositoryQueryPage extends WizardPage implements ISearchPage {
 
-	private static final String TITLE_QUERY_TITLE = "Query Title";
+	private static final String TITLE_QUERY_TITLE = "Query &Title:";
 
 	private static final String TITLE = "Enter query parameters";
 
@@ -46,14 +46,14 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 
 	private Text title;
 
-	private String titleString = "";
+	private String titleString;
 
 	protected ISearchPageContainer scontainer = null;
 
 	protected TaskRepository repository;
 	
 	public AbstractRepositoryQueryPage(String wizardTitle) {
-		this(wizardTitle, "");
+		this(wizardTitle, null);
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);
 		setImageDescriptor(TaskListImages.BANNER_REPOSITORY);
@@ -62,7 +62,7 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 
 	public AbstractRepositoryQueryPage(String wizardTitle, String queryTitle) {
 		super(wizardTitle);
-		titleString = queryTitle;
+		titleString = queryTitle==null ? "" : queryTitle;
 	}
 
 	public void createControl(Composite parent) {
@@ -72,46 +72,44 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 		}
 	}
 
-	private void createTitleGroup(Composite composite) {
-		if(scontainer != null) return;
-		Group group = new Group(composite, SWT.NONE);
-		group.setText(TITLE_QUERY_TITLE);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;
+	private void createTitleGroup(Composite parent) {
+		Composite group = new Composite(parent, SWT.NONE);
+		
+		GridLayout layout = new GridLayout(2, false);
 		group.setLayout(layout);
+
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 1;
 		group.setLayoutData(gd);
 
+		Label label = new Label(group, SWT.NONE);
+		label.setText(TITLE_QUERY_TITLE);
+
 		title = new Text(group, SWT.BORDER);
-		gd = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
-		title.setLayoutData(gd);
+		title.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
 		title.setText(titleString);
 
-		title.addKeyListener(new KeyListener() {
-
-			public void keyPressed(KeyEvent e) {
-				// ignore
-			}
-
-			public void keyReleased(KeyEvent e) {
-				setPageComplete(canFlipToNextPage());
+		title.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				setPageComplete(isPageComplete());
 			}
 		});
 	}
 
-	public boolean canFlipToNextPage() {
-		if (getErrorMessage() != null || !isPageComplete())
-			return false;
-
-		return true;
-	}
+//	public boolean canFlipToNextPage() {
+//		if (getErrorMessage() != null || !isPageComplete()) {
+//			return false;
+//		}
+//		return true;
+//	}
 
 	@Override
 	public boolean isPageComplete() {
 		if (title != null && !title.getText().equals("")) {
+			setErrorMessage(null);
 			return true;
 		}
+		setErrorMessage("Name is mandatory");
 		return false;
 	}
 

@@ -24,9 +24,9 @@ import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer;
 public abstract class AbstractRepositoryTask extends Task {
 
 	private static final String CONTEXT_HANDLE_DELIM = "-";
-	
+
 	private static final String MISSING_REPOSITORY_HANDLE = "norepository" + CONTEXT_HANDLE_DELIM;
-	
+
 	/** The last time this task's bug report was in a synchronized (read?) state. */
 	protected String lastSynchronizedDateStamp;
 
@@ -123,7 +123,8 @@ public abstract class AbstractRepositoryTask extends Task {
 		if (repositoryUrl == null) {
 			return MISSING_REPOSITORY_HANDLE + taskId;
 		} else if (taskId.contains(CONTEXT_HANDLE_DELIM)) {
-			throw new RuntimeException("invalid handle for task, can not contain: " + CONTEXT_HANDLE_DELIM + ", was: " + taskId);
+			throw new RuntimeException("invalid handle for task, can not contain: " + CONTEXT_HANDLE_DELIM + ", was: "
+					+ taskId);
 		} else {
 			return repositoryUrl + CONTEXT_HANDLE_DELIM + taskId;
 		}
@@ -161,7 +162,6 @@ public abstract class AbstractRepositoryTask extends Task {
 		isNotifiedIncoming = notified;
 	}
 
-	
 	public String getOwner() {
 		return "<unknown>";
 	}

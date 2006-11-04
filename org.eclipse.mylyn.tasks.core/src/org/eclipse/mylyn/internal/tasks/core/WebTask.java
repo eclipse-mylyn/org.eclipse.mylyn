@@ -37,18 +37,18 @@ public class WebTask extends AbstractRepositoryTask {
 		setUrl(taskPrefix + id);
 	}
 
-	public String getRepositoryKind() {
-		return repsitoryType;
+	public String getId() {
+		return this.id;
 	}
-
+	
 	public String getTaskPrefix() {
 		return this.taskPrefix;
 	}
 
-	public String getId() {
-		return this.id;
+	public String getRepositoryKind() {
+		return repsitoryType;
 	}
-
+	
 	@Override
 	public String getRepositoryUrl() {
 		return repositoryUrl;

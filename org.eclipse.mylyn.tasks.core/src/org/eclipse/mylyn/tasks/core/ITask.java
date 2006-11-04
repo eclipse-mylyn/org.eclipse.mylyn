@@ -31,8 +31,6 @@ public interface ITask extends ITaskListElement {
 
 	public abstract void setActive(boolean active);
 
-//	abstract void setDescription(String description);
-	  
 	public String getTaskType();
 
 	public void setKind(String kind);

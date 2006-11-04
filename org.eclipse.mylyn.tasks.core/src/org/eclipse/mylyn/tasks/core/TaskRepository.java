@@ -13,7 +13,7 @@ package org.eclipse.mylar.tasks.core;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -37,6 +37,7 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
  * 
  * @author Mik Kersten
  * @author Rob Elves
+ * @author Eugene Kuleshov
  */
 public class TaskRepository {
 
@@ -68,7 +69,7 @@ public class TaskRepository {
 		DEFAULT_URL = u;
 	}
 
-	private Map<String, String> properties = new HashMap<String, String>();
+	private Map<String, String> properties = new LinkedHashMap<String, String>();
 
 	/**
 	 * for testing purposes
@@ -259,7 +260,7 @@ public class TaskRepository {
 	}
 
 	public Map<String, String> getProperties() {
-		return this.properties;
+		return new LinkedHashMap<String, String>(this.properties);
 	}
 
 	public String getProperty(String name) {
@@ -273,5 +274,9 @@ public class TaskRepository {
 	public boolean hasProperty(String name) {
 		String value = getProperty(name);
 		return value != null && value.trim().length() > 0;
+	}
+
+	public void removeProperty(String key) {
+		this.properties.remove(key);
 	}
 }

@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.tasks.core;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class RepositoryTemplate {
 
-	public final Map<String, String> genericAttributes = new HashMap<String, String>();
+	public final Map<String, String> genericAttributes = new LinkedHashMap<String, String>();
 	
 	public final String label;
 
@@ -63,4 +63,9 @@ public class RepositoryTemplate {
 	public String getAttribute(String name) {
 		return genericAttributes.get(name);
 	}
+	
+	public Map<String, String> getAttributes() {
+		return this.genericAttributes;
+	}
 }
+

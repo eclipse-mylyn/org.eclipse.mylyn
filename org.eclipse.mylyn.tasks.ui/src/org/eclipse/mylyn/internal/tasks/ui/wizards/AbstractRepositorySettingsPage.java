@@ -157,7 +157,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			}
 		});
 
-		GridDataFactory.swtDefaults().hint(200, SWT.DEFAULT).grab(true, false).applyTo(serverUrlCombo);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(serverUrlCombo);
 
 		repositoryLabelEditor = new StringFieldEditor("", LABEL_REPOSITORY_LABEL, StringFieldEditor.UNLIMITED,
 				container) {
@@ -330,7 +330,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		if (needsHttpAuth()) {
 			httpAuthButton = new Button(container, SWT.CHECK);
 			GridDataFactory.fillDefaults().align(SWT.TOP, SWT.DEFAULT).span(2, SWT.DEFAULT).applyTo(httpAuthButton);
-
+		
 			httpAuthButton.setText("Http Authentication");
 			httpAuthButton.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent e) {
