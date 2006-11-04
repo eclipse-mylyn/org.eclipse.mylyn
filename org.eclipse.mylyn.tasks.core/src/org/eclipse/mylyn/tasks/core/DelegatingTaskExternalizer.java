@@ -97,7 +97,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 
 	public static final String KEY_REMINDED = "Reminded";
 
-	public static final String LABEL_AUTOMATIC = "<automatic>";
+//	public static final String LABEL_AUTOMATIC = "<automatic>";
 
 	/** 
 	 * This element holds the date stamp recorded upon last 

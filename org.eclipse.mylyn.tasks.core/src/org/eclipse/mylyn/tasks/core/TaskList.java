@@ -309,7 +309,7 @@ public class TaskList {
 	public List<AbstractTaskContainer> getUserCategories() {
 		List<AbstractTaskContainer> included = new ArrayList<AbstractTaskContainer>();
 		for (AbstractTaskContainer category : categories) {
-			if (!category.getDescription().endsWith(DelegatingTaskExternalizer.LABEL_AUTOMATIC)) {
+			if (!(category instanceof TaskArchive)) {
 				included.add(category);
 			}
 		}
