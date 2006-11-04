@@ -139,7 +139,7 @@ public class TaskRepositoryManager {
 	/**
 	 * @return the first connector to accept the URL
 	 */
-	public AbstractRepositoryConnector getRepositoryForTaskUrl(String url) {
+	public AbstractRepositoryConnector getConnectorForRepositoryTaskUrl(String url) {
 		for (AbstractRepositoryConnector connector : getRepositoryConnectors()) {
 			if (connector.getRepositoryUrlFromTaskUrl(url) != null) {
 				return connector;
