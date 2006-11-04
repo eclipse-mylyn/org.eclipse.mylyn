@@ -16,7 +16,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -43,19 +45,20 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
 
 /**
  * @author Willian Mitsuda
  * @author Mik Kersten
+ * @author Eugene Kuleshov
  */
 public class TaskSelectionDialog extends SelectionStatusDialog {
 
 	/**
 	 * Implements a {@link ViewFilter} based on content typed in the filter
 	 * field
-	 * 
-	 * @author wmitsuda
 	 */
 	private static class TaskFilter extends ViewerFilter {
 
@@ -86,8 +89,7 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 				return pattern.matcher(taskString).find();
 			} else if (element instanceof AbstractQueryHit) {
 				AbstractQueryHit hit = (AbstractQueryHit) element;
-				String taskString = AbstractRepositoryTask.getTaskId(hit.getHandleIdentifier()) + ": "
-						+ hit.getDescription();
+				String taskString = hit.getIdLabel() + ": " + hit.getDescription();
 				return pattern.matcher(taskString).find();
 			}
 			return false;
@@ -242,6 +244,17 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 			}
 
 		});
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		ISelection selection = window.getSelectionService().getSelection();
+		if (selection instanceof ITextSelection) {
+			String text = ((ITextSelection) selection).getText();
+			int n = text.indexOf('\n');
+			if(n>-1) {
+				text.substring(0, n);
+			}
+			filterText.setText(text);
+			filterText.setSelection(0, text.length());
+		}
 
 		return area;
 	}
