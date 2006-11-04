@@ -116,7 +116,12 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		} else if (object instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask task = (AbstractRepositoryTask) object;
 			if (!pattern.matcher(task.getDescription()).matches()) {
-				return AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()) + ": " + task.getDescription();
+				if (task.getIdLabel() != null) {
+					return task.getIdLabel() + ": " + task.getDescription();
+				} else {
+					return task.getDescription();
+				}
+//				return AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()) + ": " + task.getDescription();
 			} else {
 				return task.getDescription();
 			}

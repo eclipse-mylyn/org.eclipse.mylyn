@@ -53,7 +53,6 @@ public class WebTask extends AbstractRepositoryTask {
 	public String getRepositoryUrl() {
 		return repositoryUrl;
 	}
-
 	
 	@Override
 	public String getIdLabel() {
