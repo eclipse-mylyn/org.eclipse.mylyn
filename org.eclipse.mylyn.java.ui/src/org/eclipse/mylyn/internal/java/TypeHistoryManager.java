@@ -16,9 +16,14 @@ import java.util.List;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.search.TypeNameMatch;
+import org.eclipse.jdt.internal.core.search.JavaSearchTypeNameMatch;
+import org.eclipse.jdt.internal.corext.util.OpenTypeHistory;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 
 /**
  * @author Mik Kersten
@@ -39,49 +44,51 @@ public class TypeHistoryManager implements IMylarContextListener {
 	private void updateTypeHistory(IMylarElement node, boolean add) {
 		IJavaElement element = JavaCore.create(node.getHandleIdentifier());
 		if (element instanceof IType) {
-//			IType type = (IType) element;
-//			try {
-//				if (type != null && type.exists() && !type.isAnonymous() && !isAspectjType(type)) {
+			IType type = (IType) element;
+			try {
+				if (type != null && type.exists() && !type.isAnonymous() && !isAspectjType(type)) {
 //					TypeInfo info = factory.create(type.getPackageFragment().getElementName().toCharArray(), type
 //							.getElementName().toCharArray(), enclosingTypeNames(type), type.getFlags(), getPath(type));
-//
-//					if (add && !OpenTypeHistory.getInstance().contains(info)) {
-//						OpenTypeHistory.getInstance().accessed(info);
-//					} else {
-//						OpenTypeHistory.getInstance().remove(info);
-//					}
-//				}
-//			} catch (JavaModelException e) {
-//				MylarStatusHandler.log(e, "failed to update history for a type");
-//			}
+
+					JavaSearchTypeNameMatch typeNameMatch = new JavaSearchTypeNameMatch(type, type.getFlags());
+					
+					if (add && !OpenTypeHistory.getInstance().contains(typeNameMatch)) {
+						OpenTypeHistory.getInstance().accessed(typeNameMatch);
+					} else {
+						OpenTypeHistory.getInstance().remove(typeNameMatch);
+					}
+				}
+			} catch (JavaModelException e) {
+				MylarStatusHandler.log(e, "failed to update history for a type");
+			}
 		}
 	}
 
-//	/**
-//	 * HACK: to avoid adding AspectJ types, for example:
-//	 * 
-//	 * class: =TJP Example/src<tjp{Demo.java[Demo aspect: =TJP Example/src<tjp*GetInfo.aj}GetInfo
-//	 */
-//	private boolean isAspectjType(IType type) {
-//		if (type.getHandleIdentifier().indexOf('}') != -1) {
-//			return true;
-//		} else {
-//			return false;
-//		}
-//	}
+	/**
+	 * HACK: to avoid adding AspectJ types, for example:
+	 * 
+	 * class: =TJP Example/src<tjp{Demo.java[Demo aspect: =TJP Example/src<tjp*GetInfo.aj}GetInfo
+	 */
+	private boolean isAspectjType(IType type) {
+		if (type.getHandleIdentifier().indexOf('}') != -1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	public void contextDeactivated(IMylarContext context) {
-//		clearTypeHistory();
+		clearTypeHistory();
 	}
 
 	/**
 	 * Public for testing
 	 */
 	public void clearTypeHistory() {
-//		TypeInfo[] typeInfos = OpenTypeHistory.getInstance().getTypeInfos();
-//		for (int i = 0; i < typeInfos.length; i++) {
-//			OpenTypeHistory.getInstance().remove(typeInfos[i]);
-//		} 
+		TypeNameMatch[] typeInfos = OpenTypeHistory.getInstance().getTypeInfos();
+		for (int i = 0; i < typeInfos.length; i++) {
+			OpenTypeHistory.getInstance().remove(typeInfos[i]);
+		} 
 	}
 
 	public void interestChanged(List<IMylarElement> nodes) {
@@ -113,61 +120,4 @@ public class TypeHistoryManager implements IMylarContextListener {
 	public void edgesChanged(IMylarElement node) {
 		// ignore
 	}
-
-//	/**
-//	 * Coped from: HierarchyScope constructor
-//	 */
-//	private String getPath(IType type) {
-//		String focusPath = null;
-//		IPackageFragmentRoot root = (IPackageFragmentRoot) type.getPackageFragment().getParent();
-//		if (root.isArchive()) {
-//			IPath jarPath = root.getPath();
-//			Object target = JavaModel.getTarget(ResourcesPlugin.getWorkspace().getRoot(), jarPath, true);
-//			String zipFileName;
-//			if (target instanceof IFile) {
-//				// internal jar
-//				zipFileName = jarPath.toString();
-//			} else if (target instanceof File) {
-//				// external jar
-//				zipFileName = ((File) target).getPath();
-//			} else {
-//				return null; // unknown target
-//			}
-//			focusPath = zipFileName + IJavaSearchScope.JAR_FILE_ENTRY_SEPARATOR
-//					+ type.getFullyQualifiedName().replace('.', '/') + HierarchyScope.SUFFIX_STRING_class;
-//		} else {
-//			focusPath = type.getPath().toString();
-//		}
-//		return focusPath;
-//	}
-
-//	/**
-//	 * Copied from: org.eclipse.java.search.SearchPattern
-//	 */
-//	private char[][] enclosingTypeNames(IType type) {
-//		IJavaElement parent = type.getParent();
-//		switch (parent.getElementType()) {
-//		case IJavaElement.CLASS_FILE:
-//			// For a binary type, the parent is not the enclosing type, but the
-//			// declaring type is.
-//			// (see bug 20532 Declaration of member binary type not found)
-//			IType declaringType = type.getDeclaringType();
-//			if (declaringType == null)
-//				return CharOperation.NO_CHAR_CHAR;
-//			return CharOperation.arrayConcat(enclosingTypeNames(declaringType), declaringType.getElementName()
-//					.toCharArray());
-//		case IJavaElement.COMPILATION_UNIT:
-//			return CharOperation.NO_CHAR_CHAR;
-//		case IJavaElement.FIELD:
-//		case IJavaElement.INITIALIZER:
-//		case IJavaElement.METHOD:
-//			IType declaringClass = ((IMember) parent).getDeclaringType();
-//			return CharOperation.arrayConcat(enclosingTypeNames(declaringClass), new char[][] {
-//					declaringClass.getElementName().toCharArray(), IIndexConstants.ONE_STAR });
-//		case IJavaElement.TYPE:
-//			return CharOperation.arrayConcat(enclosingTypeNames((IType) parent), parent.getElementName().toCharArray());
-//		default:
-//			return null;
-//		}
-//	}
 }
