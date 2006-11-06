@@ -317,7 +317,7 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 				TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL));
 
 		activateOnOpen = new Button(container, SWT.CHECK);
-		activateOnOpen.setText("Active on open (Experimental)");
+		activateOnOpen.setText("Active on double-click");
 		activateOnOpen.setEnabled(!reportInternal.getSelection());
 		activateOnOpen.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.ACTIVATE_ON_OPEN));
 
