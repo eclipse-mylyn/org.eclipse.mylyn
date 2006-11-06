@@ -86,7 +86,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 						typeHistoryManager = new TypeHistoryManager();
 						ContextCorePlugin.getContextManager().addListener(typeHistoryManager);
 					} catch (Throwable t) {
-						MylarStatusHandler.log(t, "Could not install type history manager, incompatible Eclipse vercion");
+						MylarStatusHandler.log(t, "Could not install type history manager, incompatible Eclipse version.");
 					}					
 				
 					if (getPreferenceStore().getBoolean(MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS)) {

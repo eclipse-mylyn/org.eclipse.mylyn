@@ -17,7 +17,6 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.corext.util.OpenTypeHistory;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.java.TypeHistoryManager;
 
 /**
@@ -31,13 +30,13 @@ public class TypeHistoryManagerTest extends AbstractJavaContextTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		manager = new TypeHistoryManager();
-		ContextCorePlugin.getContextManager().addListener(manager);
+//		ContextCorePlugin.getContextManager().addListener(manager);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		ContextCorePlugin.getContextManager().addListener(manager);
+//		ContextCorePlugin.getContextManager().removeListener(manager);
 	}
 
 	public void testPredictedElementPopulationOfTypeHistory() throws JavaModelException {
