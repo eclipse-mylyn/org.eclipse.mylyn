@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -33,6 +33,7 @@ import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -51,8 +52,14 @@ public class BugSubmissionHandler {
 		this.connector = connector;
 	}
 
+	public void submitBugReport(BugzillaReportSubmitForm form, IJobChangeListener listener, boolean synchExec,
+			boolean addToTaskListRoot) {
+		submitBugReport(form, listener, synchExec, addToTaskListRoot ? TasksUiPlugin.getTaskListManager().getTaskList()
+				.getRootCategory() : null);
+	}
+
 	public void submitBugReport(final BugzillaReportSubmitForm form, IJobChangeListener listener, boolean synchExec,
-			final boolean addToTaskListRoot) {
+			final AbstractTaskContainer container) {
 		if (synchExec) {
 			try {
 				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
@@ -62,7 +69,7 @@ public class BugSubmissionHandler {
 							repository);
 					String submittedBugId = form.submitReportToRepository(client);
 					if (form.isNewBugPost()) {
-						handleNewBugPost(form.getTaskData(), submittedBugId, addToTaskListRoot);
+						handleNewBugPost(form.getTaskData(), submittedBugId, container);
 					} else {
 						handleExistingBugPost(form.getTaskData(), submittedBugId);
 					}
@@ -90,7 +97,7 @@ public class BugSubmissionHandler {
 						// }
 
 						if (form.isNewBugPost()) {
-							handleNewBugPost(form.getTaskData(), submittedBugId, addToTaskListRoot);
+							handleNewBugPost(form.getTaskData(), submittedBugId, container);
 							return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.OK, submittedBugId, null);
 						} else {
 							handleExistingBugPost(form.getTaskData(), submittedBugId);
@@ -106,9 +113,9 @@ public class BugSubmissionHandler {
 					} catch (UnrecognizedReponseException e) {
 						return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.INFO,
 								"Unrecognized response from server", e);
-					} catch (IOException e) {						
-						return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.ERROR,
-								"IO Error: \n\n"+e.getMessage(), e);
+					} catch (IOException e) {
+						return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.ERROR, "IO Error: \n\n"
+								+ e.getMessage(), e);
 					} catch (BugzillaException e) {
 						// MylarStatusHandler.fail(e, "Failed to submit",
 						// false);
@@ -127,7 +134,7 @@ public class BugSubmissionHandler {
 		}
 	}
 
-	private void handleNewBugPost(RepositoryTaskData taskData, String resultId, boolean addToRoot)
+	private void handleNewBugPost(RepositoryTaskData taskData, String resultId, AbstractTaskContainer category)
 			throws BugzillaException {
 		int bugId = -1;
 		try {
@@ -142,16 +149,12 @@ public class BugSubmissionHandler {
 		BugzillaTask newTask = new BugzillaTask(AbstractRepositoryTask.getHandle(repository.getUrl(), bugId),
 				"<bugzilla info>", true);
 
-		if (addToRoot) {
-			TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask,
-					TasksUiPlugin.getTaskListManager().getTaskList().getRootCategory());
+		if (category != null) {
+			TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask, category);
 		} else {
 			TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask);
 		}
-
-		java.util.List<TaskRepository> repositoriesToSync = new ArrayList<TaskRepository>();
-		repositoriesToSync.add(repository);
-		TasksUiPlugin.getSynchronizationScheduler().synchNow(0, repositoriesToSync);
+		TasksUiPlugin.getSynchronizationScheduler().synchNow(0, Collections.singletonList(repository));
 
 	}
 

@@ -9,7 +9,7 @@
 package org.eclipse.mylar.internal.trac.ui.editor;
 
 import java.net.Proxy;
-import java.util.ArrayList;
+import java.util.Collections;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -30,7 +30,7 @@ import org.eclipse.mylar.internal.trac.core.model.TracTicket;
 import org.eclipse.mylar.internal.trac.core.model.TracSearchFilter.CompareOperator;
 import org.eclipse.mylar.internal.trac.ui.TracUiPlugin;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.forms.editor.FormEditor;
 
@@ -66,8 +66,6 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 			return;
 		}
 
-		final boolean addToRoot = addToTaskListRoot.getSelection();
-
 		Job submitJob = new Job(SUBMIT_JOB_LABEL) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
@@ -77,16 +75,15 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 
 					TracTask newTask = new TracTask(AbstractRepositoryTask.getHandle(repository.getUrl(), id),
 							TracRepositoryConnector.getTicketDescription(ticket), true);
-					if (addToRoot) {
-						TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask,
-								TasksUiPlugin.getTaskListManager().getTaskList().getRootCategory());
+
+					AbstractTaskContainer category = getCategory();
+					if (category != null) {
+						TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask, category);
 					} else {
 						TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask);
 					}
 
-					java.util.List<TaskRepository> repositoriesToSync = new ArrayList<TaskRepository>();
-					repositoriesToSync.add(repository);
-					TasksUiPlugin.getSynchronizationScheduler().synchNow(0, repositoriesToSync);
+					TasksUiPlugin.getSynchronizationScheduler().synchNow(0, Collections.singletonList(repository));
 
 					return Status.OK_STATUS;
 				} catch (Exception e) {

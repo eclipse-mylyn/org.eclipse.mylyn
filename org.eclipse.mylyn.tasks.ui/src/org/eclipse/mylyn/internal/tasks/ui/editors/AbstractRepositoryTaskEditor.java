@@ -238,8 +238,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected Button submitButton;
 
-	protected Button addToTaskListRoot;
-
 	protected Table attachmentsTable;
 
 	protected TableViewer attachmentTableViewer;
@@ -444,7 +442,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected String getTitleString() {
 		return getRepositoryTaskData().getLabel();// + ": " +
-													// checkText(summaryVal);
+		// checkText(summaryVal);
 	}
 
 	protected abstract void submitBug();
@@ -519,7 +517,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 	}
 
-	protected void createReportHeaderLayout(Composite composite) {	
+	protected void createReportHeaderLayout(Composite composite) {
 		addSummaryText(composite);
 
 		Composite headerInfoComposite = toolkit.createComposite(composite);
@@ -944,7 +942,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 					SaveRemoteFileAction save = new SaveRemoteFileAction();
 					try {
-						save.setInputStream(new ByteArrayInputStream(handler.getAttachmentData(repository, "" + attachment.getId())));
+						save.setInputStream(new ByteArrayInputStream(handler.getAttachmentData(repository, ""
+								+ attachment.getId())));
 						save.setDestinationFilePath(filePath);
 						save.run();
 					} catch (CoreException e) {
@@ -1379,7 +1378,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			expandableComposite.setClient(ecComposite);
 
 			TextViewer viewer = addTextViewer(repository, ecComposite, taskComment.getText(), SWT.MULTI | SWT.WRAP);
-//			viewer.getControl().setBackground(new Color(expandableComposite.getDisplay(), 123, 34, 155));
+			// viewer.getControl().setBackground(new
+			// Color(expandableComposite.getDisplay(), 123, 34, 155));
 			styledText = viewer.getTextWidget();
 			GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(styledText);
 			// GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH,
@@ -1446,8 +1446,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		buttonComposite.setLayout(buttonLayout);
 		addRadioButtons(buttonComposite);
 		addActionButtons(buttonComposite);
-		Label repLabel = toolkit.createLabel(buttonComposite, " "+this.getRepositoryTaskData().getRepositoryUrl());
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).span(2,1).applyTo(repLabel);
+		Label repLabel = toolkit.createLabel(buttonComposite, " " + this.getRepositoryTaskData().getRepositoryUrl());
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).span(2, 1).applyTo(repLabel);
 		section.setClient(buttonComposite);
 	}
 

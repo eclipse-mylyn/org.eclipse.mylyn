@@ -11,6 +11,9 @@
 package org.eclipse.mylar.internal.tasks.ui.editors;
 
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,6 +21,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -27,12 +31,15 @@ import org.eclipse.mylar.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylar.internal.tasks.ui.views.DatePicker;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskCategory;
+import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -81,13 +88,19 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 	protected String newSummary = "";
 
+	protected Button addToCategory;
+
+	protected CCombo categoryCombo;
+
 	protected JobChangeAdapter submitJobListener = new JobChangeAdapter() {
 		public void done(final IJobChangeEvent event) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					if (event.getJob().getResult().getCode() == Status.OK && event.getJob().getResult().getMessage() != null) {						
-						handleOkayStatus(event);						
-					} else {// if (event.getJob().getResult().getCode() == Status.ERROR) {
+					if (event.getJob().getResult().getCode() == Status.OK
+							&& event.getJob().getResult().getMessage() != null) {
+						handleOkayStatus(event);
+					} else {// if (event.getJob().getResult().getCode() ==
+						// Status.ERROR) {
 						handleErrorStatus(event);
 					}
 				}
@@ -408,17 +421,61 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		Composite buttonComposite = toolkit.createComposite(section);
-		GridLayout buttonLayout = new GridLayout();
-		buttonLayout.numColumns = 3;
-		buttonComposite.setLayout(buttonLayout);
-		GridData buttonData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		buttonData.horizontalSpan = 1;
-		buttonData.grabExcessVerticalSpace = false;
-		buttonComposite.setLayoutData(buttonData);
+		buttonComposite.setLayout(new GridLayout(4, false));
+		buttonComposite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		section.setClient(buttonComposite);
+		addActionButtons(buttonComposite);		
+		
+		addToCategory = toolkit.createButton(buttonComposite, "Add to Category", SWT.CHECK);
+		categoryCombo = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY);
+		categoryCombo.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
+		toolkit.adapt(categoryCombo, true, true);
+		categoryCombo.setFont(TEXT_FONT);
+		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		List<AbstractTaskContainer> categories = taskList.getUserCategories();
+		Collections.sort(categories, new Comparator<AbstractTaskContainer>() {
 
-		addActionButtons(buttonComposite);
-		addToTaskListRoot = toolkit.createButton(buttonComposite, "Add to Task List root", SWT.CHECK);
+			public int compare(AbstractTaskContainer c1, AbstractTaskContainer c2) {
+				return c1.getDescription().compareTo(c2.getDescription());
+			}
+
+		});
+		categoryCombo.add("<root>");
+		for (AbstractTaskContainer category : categories) {
+			categoryCombo.add(category.getDescription());
+		}
+		categoryCombo.select(0);
+		categoryCombo.setEnabled(false);
+		categoryCombo.setData(categories);
+		addToCategory.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				categoryCombo.setEnabled(addToCategory.getSelection());
+			}
+
+		});
+
+		toolkit.paintBordersFor(buttonComposite);
+	}
+
+	/**
+	 * Returns the {@link AbstractTaskContainer category} the new task belongs
+	 * to
+	 * 
+	 * @return {@link AbstractTaskContainer category} where the new task must be
+	 *         added to, or null if it must not be added to the task list
+	 */
+	@SuppressWarnings("unchecked")
+	protected AbstractTaskContainer getCategory() {
+		int index = categoryCombo.getSelectionIndex();
+		if (addToCategory.getSelection() && index != -1) {
+			if (index == 0) {
+				return TasksUiPlugin.getTaskListManager().getTaskList().getRootCategory();
+			}
+			return ((List<AbstractTaskContainer>) categoryCombo.getData()).get(index - 1);
+		}
+		return null;
 	}
 
 	protected void addActionButtons(Composite buttonComposite) {
@@ -493,7 +550,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		return false;
 	}
 
-	protected void handleOkayStatus(final IJobChangeEvent event) {		
+	protected void handleOkayStatus(final IJobChangeEvent event) {
 		close();
 		String newTaskHandle = AbstractRepositoryTask.getHandle(repository.getUrl(), event.getJob().getResult()
 				.getMessage());

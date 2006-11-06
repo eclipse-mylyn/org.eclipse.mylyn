@@ -68,8 +68,7 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 					repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, repository
 							.getCharacterEncoding(), taskData, wrap);
 
-			submissionHandler.submitBugReport(bugzillaReportSubmitForm, submitJobListener, false, addToTaskListRoot
-					.getSelection());
+			submissionHandler.submitBugReport(bugzillaReportSubmitForm, submitJobListener, false, getCategory());
 
 		} catch (UnsupportedEncodingException e) {
 			MessageDialog.openError(null, "Posting Error", "Ensure proper encoding selected in "
