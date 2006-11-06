@@ -310,7 +310,8 @@ public class TaskFormPage extends FormPage {
 			}
 
 			public void focusLost(FocusEvent e) {
-				commentViewer.setSelectedRange(0, 0);
+				StyledText st = (StyledText) e.widget;
+				st.setSelectionRange(st.getCaretOffset(), 0);
 				actionContributor.forceActionsEnabled();
 			}
 		});
@@ -402,7 +403,8 @@ public class TaskFormPage extends FormPage {
 			}
 
 			public void focusLost(FocusEvent e) {
-				commentViewer.setSelectedRange(0, 0);
+				StyledText st = (StyledText) e.widget;
+				st.setSelectionRange(st.getCaretOffset(), 0);
 				actionContributor.forceActionsEnabled();
 			}
 		});
