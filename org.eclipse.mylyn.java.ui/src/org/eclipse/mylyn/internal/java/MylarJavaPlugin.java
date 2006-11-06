@@ -52,7 +52,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 	private PackageExplorerManager packageExplorerManager = new PackageExplorerManager();
 
-	private TypeHistoryManager typeHistoryManager = new TypeHistoryManager();
+	private TypeHistoryManager typeHistoryManager = null;
 
 	private LandmarkMarkerManager landmarkMarkerManager = new LandmarkMarkerManager();
 
@@ -80,8 +80,14 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 			public void run() {
 				try {
 					ContextCorePlugin.getContextManager().addListener(packageExplorerManager);
-					ContextCorePlugin.getContextManager().addListener(typeHistoryManager);
 					ContextCorePlugin.getContextManager().addListener(landmarkMarkerManager);
+					
+					try {
+						typeHistoryManager = new TypeHistoryManager();
+						ContextCorePlugin.getContextManager().addListener(typeHistoryManager);
+					} catch (Throwable t) {
+						MylarStatusHandler.log(t, "Could not install type history manager, incompatible Eclipse vercion");
+					}					
 				
 					if (getPreferenceStore().getBoolean(MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS)) {
 						problemListener.enable();
@@ -274,9 +280,9 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 	// }
 	// }
 
-	public TypeHistoryManager getTypeHistoryManager() {
-		return typeHistoryManager;
-	}
+//	public TypeHistoryManager getTypeHistoryManager() {
+//		return typeHistoryManager;
+//	}
 
 	/**
 	 * For testing.
