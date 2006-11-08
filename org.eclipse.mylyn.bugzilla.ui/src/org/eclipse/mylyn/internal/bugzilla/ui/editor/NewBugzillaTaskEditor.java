@@ -55,11 +55,11 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 	}
 
 	@Override
-	protected void submitBug() {
+	protected void submitToRepository() {
 		if (!prepareSubmit()) {
 			return;
 		}
-		updateBug();
+		updateTask();
 		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
 		boolean wrap = IBugzillaConstants.BugzillaServerVersion.SERVER_218.equals(repository.getVersion());
 

@@ -368,7 +368,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	}
 
 	@Override
-	protected void updateBug() {
+	protected void updateTask() { 
 		taskData.setSummary(newSummary);
 		taskData.setDescription(descriptionTextViewer.getTextWidget().getText());
 	}
@@ -495,7 +495,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		submitButton.setLayoutData(submitButtonData);
 		submitButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
-				submitBug();
+				submitToRepository();
 			}
 		});
 		submitButton.addListener(SWT.FocusIn, new GenericListener());

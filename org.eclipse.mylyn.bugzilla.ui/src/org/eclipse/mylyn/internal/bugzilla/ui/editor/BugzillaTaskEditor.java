@@ -170,7 +170,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	@Override
-	public void submitBug() {
+	public void submitToRepository() {
 		submitButton.setEnabled(false);
 		showBusy(true);	
 		if(isDirty()) {						
@@ -821,28 +821,8 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	@Override
-	protected void updateBug() {
+	protected void updateTask() {
 		taskData.setHasLocalChanges(true);
-		// go through all of the attributes and update the main values to the
-		// new ones
-		// for (Iterator<RepositoryTaskAttribute> it =
-		// bug.getAttributes().iterator(); it.hasNext();) {
-		// RepositoryTaskAttribute a = it.next();
-		// if (a.getNewValue() != null &&
-		// a.getNewValue().compareTo(a.getValue()) != 0) {
-		// bug.setHasChanged(true);
-		// }
-		// a.setValue(a.getNewValue());
-		//
-		// }
-		// if (bug.getNewComment().compareTo(bug.getNewNewComment()) != 0) {
-		// // TODO: Ask offline reports if this is true?
-		// bug.setHasChanged(true);
-		// }
-
-		// Update some other fields as well.
-		// bug.setNewComment(bug.getNewNewComment());
-
 	}
 
 	// @Override
@@ -1030,11 +1010,6 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			}
 		});
 		urlText.addListener(SWT.FocusIn, new GenericListener());
-	}
-
-	@Override
-	public RepositoryTaskData getRepositoryTaskData() {
-		return editorInput.getRepositoryTaskData();
 	}
 
 	// protected void createDescriptionLayout(Composite composite) {

@@ -46,7 +46,7 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 	}
 
 	@Override
-	protected void submitBug() {
+	protected void submitToRepository() {
 		if (!prepareSubmit()) {
 			return;
 		}
@@ -54,7 +54,7 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 		final TracRepositoryConnector connector = (TracRepositoryConnector) TasksUiPlugin.getRepositoryManager()
 				.getRepositoryConnector(repository.getKind());
 
-		updateBug();
+		updateTask();
 
 		final TracTicket ticket;
 		try {

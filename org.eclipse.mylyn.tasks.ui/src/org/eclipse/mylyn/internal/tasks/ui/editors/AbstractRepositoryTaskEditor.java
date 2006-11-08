@@ -437,8 +437,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 	}
 
-	public abstract RepositoryTaskData getRepositoryTaskData();
+	protected RepositoryTaskData getRepositoryTaskData() {
+		return editorInput.getRepositoryTaskData();
+	}
 
+	protected void updateTask() {
+		getRepositoryTaskData().setHasLocalChanges(true);
+	}
+	
 	protected abstract void validateInput();
 
 	protected String getTitleString() {
@@ -446,9 +452,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		// checkText(summaryVal);
 	}
 
-	protected abstract void submitBug();
-
-	protected abstract void updateBug();
+	protected abstract void submitToRepository();
 
 	/**
 	 * Creates a new <code>AbstractRepositoryTaskEditor</code>. Sets up the
@@ -469,13 +473,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	public String getNewCommentText() {
 		return addCommentsTextBox.getText();
 	}
-
-	// /**
-	// * @return Any currently selected text.
-	// */
-	// protected StyledText getCurrentText() {
-	// return currentSelectedText;
-	// }
 
 	protected void createFormContent(final IManagedForm managedForm) {
 		super.createFormContent(managedForm);
@@ -1472,7 +1469,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		submitButton.setLayoutData(submitButtonData);
 		submitButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
-				submitBug();
+				submitToRepository();
 			}
 		});
 		submitButton.addListener(SWT.FocusIn, new GenericListener());
@@ -1563,7 +1560,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 */
 	public void saveBug() {
 		try {
-			updateBug();
+			updateTask();
 
 			IEditorInput input = this.getEditorInput();
 			if (input instanceof ExistingBugEditorInput) {

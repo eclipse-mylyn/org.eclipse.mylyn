@@ -28,7 +28,6 @@ import org.eclipse.mylar.internal.trac.core.model.TracTicket;
 import org.eclipse.mylar.internal.trac.ui.TracUiPlugin;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
@@ -52,7 +51,6 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 	@Override
 	protected void addAttachContextButton(Composite buttonComposite, ITask task) {
 		// disabled, see bug 155151
-		
 	}
 
 	@Override
@@ -62,11 +60,6 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 
 	@Override
 	protected void createCustomAttributeLayout(Composite composite) {
-	}
-
-	@Override
-	public RepositoryTaskData getRepositoryTaskData() {
-		return editorInput.getRepositoryTaskData();
 	}
 
 	public void init(IEditorSite site, IEditorInput input) {
@@ -88,11 +81,11 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	@Override
-	protected void submitBug() {
+	protected void submitToRepository() {
 		if (isDirty()) {
 			this.doSave(new NullProgressMonitor());
 		}
-		updateBug();
+		updateTask();
 		submitButton.setEnabled(false);
 		showBusy(true);
 
@@ -158,11 +151,6 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 		submitJob.addJobChangeListener(listener);
 		submitJob.schedule();
 
-	}
-
-	@Override
-	protected void updateBug() {
-		getRepositoryTaskData().setHasLocalChanges(true);
 	}
 
 	@Override
