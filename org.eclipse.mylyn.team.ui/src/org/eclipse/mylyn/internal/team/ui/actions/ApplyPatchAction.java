@@ -65,7 +65,6 @@ public class ApplyPatchAction implements IViewActionDelegate {
 						try {
 							BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
 							writer.write(contents);
-							// System.err.println(">>> " + contents);
 							writer.close();
 						} catch (Exception e) {
 							MylarStatusHandler.fail(e, "could not write patch file", true);

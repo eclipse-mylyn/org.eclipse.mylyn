@@ -20,7 +20,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
-import org.eclipse.mylar.internal.tasks.ui.editors.ExistingBugEditorInput;
+import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.wizards.NewRepositoryTaskWizard;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -90,7 +90,7 @@ public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionCh
 				return;
 			}
 
-			if (selection == null || editor.getEditorInput() instanceof ExistingBugEditorInput) {
+			if (selection == null || editor.getEditorInput() instanceof RepositoryTaskEditorInput) {
 				return;
 			}
 
