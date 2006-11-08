@@ -59,7 +59,7 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskPriorityFilter;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.actions.CollapseAllAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.CopyDetailsAction;
+import org.eclipse.mylar.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.DeleteAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.ExpandAllAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.FilterArchiveContainerAction;
@@ -175,7 +175,7 @@ public class TaskListView extends ViewPart {
 
 	private GoUpAction goUpAction;
 
-	private CopyDetailsAction copyDetailsAction;
+	private CopyTaskDetailsAction copyDetailsAction;
 
 	private OpenTaskListElementAction openAction;
 
@@ -1170,7 +1170,7 @@ public class TaskListView extends ViewPart {
 				action.setEnabled(false);
 			} else if (action instanceof OpenTaskListElementAction) {
 				action.setEnabled(true);
-			} else if (action instanceof CopyDetailsAction) {
+			} else if (action instanceof CopyTaskDetailsAction) {
 				action.setEnabled(true);
 			} else if (action instanceof RenameAction) {
 				action.setEnabled(true);
@@ -1199,7 +1199,7 @@ public class TaskListView extends ViewPart {
 				}
 			} else if (action instanceof OpenTaskListElementAction) {
 				action.setEnabled(true);
-			} else if (action instanceof CopyDetailsAction) {
+			} else if (action instanceof CopyTaskDetailsAction) {
 				action.setEnabled(true);
 			} else if (action instanceof RenameAction) {
 				if (element instanceof TaskArchive)
@@ -1217,7 +1217,7 @@ public class TaskListView extends ViewPart {
 
 	private void makeActions() {
 
-		copyDetailsAction = new CopyDetailsAction(this);
+		copyDetailsAction = new CopyTaskDetailsAction(this);
 		// workOffline = new WorkOfflineAction();
 
 		goIntoAction = new GoIntoAction();

@@ -19,7 +19,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.internal.tasks.ui.actions.CopyDetailsAction;
+import org.eclipse.mylar.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.ui.TaskTransfer;
@@ -73,7 +73,7 @@ class TaskListDragSourceListener implements DragSourceListener {
 				event.data = new String[] { file.getAbsolutePath() };
 			}
 		} else if (TextTransfer.getInstance().isSupportedType(event.dataType)) {
-			event.data = CopyDetailsAction.getTextForTask(selectedElement);
+			event.data = CopyTaskDetailsAction.getTextForTask(selectedElement);
 		}
 	}
 

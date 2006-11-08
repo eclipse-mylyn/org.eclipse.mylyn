@@ -17,6 +17,7 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.swt.SWT;
@@ -25,7 +26,7 @@ import org.eclipse.swt.custom.StyledText;
 /**
  * @author Mik Kersten
  */
-public class CopyDetailsAction extends Action {
+public class CopyTaskDetailsAction extends Action {
 
 	private static final String LABEL = "Copy Details";
 
@@ -33,7 +34,7 @@ public class CopyDetailsAction extends Action {
 
 	private TaskListView view;
 
-	public CopyDetailsAction(TaskListView view) {
+	public CopyTaskDetailsAction(TaskListView view) {
 		this.view = view;
 		setText(LABEL);
 		setToolTipText(LABEL);
@@ -66,7 +67,11 @@ public class CopyDetailsAction extends Action {
 				task = (ITask)object;
 			}
 			if (task != null) {
-				text = task.getDescription();
+				if (task instanceof AbstractRepositoryTask) {
+					text += ((AbstractRepositoryTask)task).getIdLabel() + ": ";
+				}
+				
+				text += task.getDescription();
 				if (task.hasValidUrl()) {
 					text += "\n" + task.getUrl();
 				} 
