@@ -814,8 +814,17 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			}
 
 			attachmentsTableViewer.setContentProvider(new IStructuredContentProvider() {
+				
 				public Object[] getElements(Object inputElement) {
-					return getRepositoryTaskData().getAttachments().toArray();
+					List<RepositoryAttachment> attachments = getRepositoryTaskData().getAttachments();
+					// TODO: should not need to do this, but attachments may not be persisted
+					for (RepositoryAttachment repositoryAttachment : attachments) {
+						if (repositoryAttachment.getRepository() == null) {
+							repositoryAttachment.setRepository(repository);
+						}
+					}
+					
+					return attachments.toArray();
 				}
 
 				public void dispose() {

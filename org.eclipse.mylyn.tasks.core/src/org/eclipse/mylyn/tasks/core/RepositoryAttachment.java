@@ -16,10 +16,11 @@ import java.io.Serializable;
 
 /**
  * @author Rob Elves
+ * @author Mik Kersten
  */
 public class RepositoryAttachment extends AttributeContainer implements Serializable {
 
-	private TaskRepository repository;
+	private transient TaskRepository repository;
 	
 	public RepositoryAttachment(TaskRepository repository, AbstractAttributeFactory attributeFactory) {
 		super(attributeFactory);
@@ -34,8 +35,6 @@ public class RepositoryAttachment extends AttributeContainer implements Serializ
 	// SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	private boolean isObsolete = false;
-
-	// private Date created;
 
 	private String creator = "";
 
@@ -101,5 +100,9 @@ public class RepositoryAttachment extends AttributeContainer implements Serializ
 
 	public TaskRepository getRepository() {
 		return repository;
+	}
+
+	public void setRepository(TaskRepository repository) {
+		this.repository = repository;
 	}
 }

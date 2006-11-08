@@ -60,13 +60,13 @@ public class TaskRepository {
 	private static final URL DEFAULT_URL;
 
 	static {
-		URL u = null;
+		URL url = null;
 		try {
-			u = new URL("http://eclipse.org/mylar");
+			url = new URL("http://eclipse.org/mylar");
 		} catch (Exception ex) {
 			// TODO ?
 		}
-		DEFAULT_URL = u;
+		DEFAULT_URL = url;
 	}
 
 	private Map<String, String> properties = new LinkedHashMap<String, String>();
