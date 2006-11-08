@@ -16,10 +16,11 @@ import java.util.Map;
 
 import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer;
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
-import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylar.tasks.core.TaskComment;
+import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -48,10 +49,13 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 	private String errorMessage = null;
 
 	private AbstractAttributeFactory attributeFactory;
+	
+	private TaskRepository repository;
 
-	public SaxBugReportContentHandler(AbstractAttributeFactory factory, RepositoryTaskData rpt) {
+	public SaxBugReportContentHandler(AbstractAttributeFactory factory, RepositoryTaskData rpt, TaskRepository repository) {
 		this.attributeFactory = factory;
 		this.report = rpt;
+		this.repository = repository;
 	}
 
 	public boolean errorOccurred() {
@@ -100,7 +104,7 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			taskComment = new TaskComment(attributeFactory, report, commentNum++);
 			break;
 		case ATTACHMENT:
-			attachment = new RepositoryAttachment(attributeFactory);
+			attachment = new RepositoryAttachment(repository, attributeFactory);
 			if (attributes != null) {
 				if ("1".equals(attributes.getValue(BugzillaReportElement.IS_OBSOLETE.getKeyString()))) {
 					attachment.addAttribute(BugzillaReportElement.IS_OBSOLETE.getKeyString(), attributeFactory

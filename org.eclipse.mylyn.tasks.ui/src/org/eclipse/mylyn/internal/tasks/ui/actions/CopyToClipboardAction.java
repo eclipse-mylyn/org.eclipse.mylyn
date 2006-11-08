@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Control;
  * @author Jeff Pound
  */
 public class CopyToClipboardAction extends Action {
+	
 	public static final String TITLE = "Copy to Clipboard";
 
 	private String contents = null;

@@ -12,8 +12,6 @@ package org.eclipse.mylar.internal.tasks.ui.editors;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -27,6 +25,8 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -129,6 +129,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.internal.ObjectActionContributorManager;
 import org.eclipse.ui.themes.IThemeManager;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -847,9 +848,20 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			attachmentsTableViewer.setInput(getRepositoryTaskData());
 
 			final MenuManager popupMenu = new MenuManager();
-			Menu menu = popupMenu.createContextMenu(attachmentsTable);
+			final Menu menu = popupMenu.createContextMenu(attachmentsTable);
 			attachmentsTable.setMenu(menu);
-
+			
+			final RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
+					.getSelection()).getFirstElement());
+			
+			popupMenu.addMenuListener(new IMenuListener() {
+				public void menuAboutToShow(IMenuManager manager) {
+					// TODO: use workbench mechanism for this?
+					ObjectActionContributorManager.getManager().contributeObjectActions(AbstractRepositoryTaskEditor.this,
+						popupMenu, attachmentsTableViewer);
+				}
+			});
+			
 			final MenuManager openMenu = new MenuManager("Open With");
 
 			final Action openWithBrowserAction = new Action(LABEL_BROWSER) {
@@ -862,9 +874,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			final Action openWithDefaultAction = new Action(LABEL_DEFAULT_EDITOR) {
 				public void run() {
-					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
-							.getSelection()).getFirstElement());
-
 					// browser shortcut
 					if (attachment.getContentType().endsWith(CTYPE_HTML)) {
 						TaskUiUtil.openUrl(attachment.getUrl());
@@ -957,20 +966,16 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
 							.getSelection()).getFirstElement());
 					CopyToClipboardAction copyToClip = new CopyToClipboardAction();
-					copyToClip.setContents(getAttachmentContents(attachment));
+					copyToClip.setContents(TasksUiPlugin.getRepositoryManager().getAttachmentContents(attachment));
 					copyToClip.setControl(attachmentsTable.getParent());
 					copyToClip.run();
 				}
 			};
 
-			final Action applyPatchAction = new Action("Apply Patch...") {
-				public void run() {
-					// RepositoryAttachment att =
-					// (RepositoryAttachment)(((StructuredSelection)attachmentsTableViewer.getSelection()).getFirstElement());
-					// implementation pending bug 98707
-				}
-			};
-			applyPatchAction.setEnabled(false); // pending bug 98707
+//			final Action applyPatchAction = new ApplyPatchAction() {
+//
+//			};
+//			applyPatchAction.setEnabled(true); // pending bug 98707
 
 			/*
 			 * Rebuild menu with the appropriate items for the selection
@@ -998,9 +1003,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					if (att.getContentType().startsWith(CTYPE_TEXT) || att.getContentType().endsWith("xml")) {
 						popupMenu.add(copyToClipAction);
 					}
-					if (att.isPatch()) {
-						popupMenu.add(applyPatchAction);
-					}
+//					if (att.isPatch()) {
+//						popupMenu.add(applyPatchAction);
+//					}
 				}
 			});
 
@@ -1181,30 +1186,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	// }
 	// return stream;
 	// }
-
-	public String getAttachmentContents(RepositoryAttachment attachment) {
-		StringBuffer contents = new StringBuffer();
-		try {
-			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-					repository.getKind());
-			IAttachmentHandler handler = connector.getAttachmentHandler();
-			InputStream stream;
-
-			stream = new ByteArrayInputStream(handler.getAttachmentData(repository, "" + attachment.getId()));
-
-			int c;
-			while ((c = stream.read()) != -1) {
-				/* TODO jpound - handle non-text */
-				contents.append((char) c);
-			}
-			stream.close();
-		} catch (CoreException e) {
-			MylarStatusHandler.fail(e.getStatus().getException(), "Retrieval of attachment data failed.", false);
-		} catch (IOException e) {
-			MylarStatusHandler.fail(e, "Retrieval of attachment data failed.", false);
-		}
-		return contents.toString();
-	}
 
 	protected void createDescriptionLayout(Composite composite) {
 		final Section section = createSection(composite, LABEL_SECTION_DESCRIPTION);

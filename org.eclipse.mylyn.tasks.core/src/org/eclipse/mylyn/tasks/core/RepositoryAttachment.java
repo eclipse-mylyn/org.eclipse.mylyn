@@ -19,8 +19,11 @@ import java.io.Serializable;
  */
 public class RepositoryAttachment extends AttributeContainer implements Serializable {
 
-	public RepositoryAttachment(AbstractAttributeFactory attributeFactory) {
+	private TaskRepository repository;
+	
+	public RepositoryAttachment(TaskRepository repository, AbstractAttributeFactory attributeFactory) {
 		super(attributeFactory);
+		this.repository = repository;
 	}
 
 	private static final long serialVersionUID = -9123545810321250785L;
@@ -53,15 +56,6 @@ public class RepositoryAttachment extends AttributeContainer implements Serializ
 	 */
 	public String getDateCreated() {
 		return getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_DATE);
-		// if (created == null) {
-		// // created = Calendar.getInstance().getTime();
-		// try {
-		// created =
-		// creation_ts_date_format.parse(getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_DATE));
-		// } catch (Exception e) {
-		// }
-		// }
-		// return created;
 	}
 
 	public String getCreator() {
@@ -103,5 +97,9 @@ public class RepositoryAttachment extends AttributeContainer implements Serializ
 
 	public void setPatch(boolean b) {
 		isPatch = b;
+	}
+
+	public TaskRepository getRepository() {
+		return repository;
 	}
 }

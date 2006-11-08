@@ -109,7 +109,7 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 			BugzillaClient client = connector.getClientManager().getClient(repository);
 			client.setProxy(proxySettings);
 			int bugId = Integer.parseInt(taskId);
-			RepositoryTaskData taskData = client.getTaskData(bugId);
+			RepositoryTaskData taskData = client.getTaskData(repository, bugId);
 			if (taskData != null) {
 				connector.updateAttributeOptions(repository, taskData);
 				addValidOperations(taskData, repository.getUserName());

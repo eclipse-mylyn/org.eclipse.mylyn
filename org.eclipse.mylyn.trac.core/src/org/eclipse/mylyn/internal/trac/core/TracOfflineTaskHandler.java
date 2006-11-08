@@ -132,7 +132,7 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 		TracAttachment[] attachments = ticket.getAttachments();
 		if (attachments != null) {
 			for (int i = 0; i < attachments.length; i++) {
-				RepositoryAttachment taskAttachment = new RepositoryAttachment(factory);
+				RepositoryAttachment taskAttachment = new RepositoryAttachment(repository, factory);
 				taskAttachment.setCreator(attachments[i].getAuthor());
 				taskAttachment.setAttributeValue(Attribute.DESCRIPTION.getTracKey(), attachments[i].getDescription());
 				taskAttachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_FILENAME, attachments[i]

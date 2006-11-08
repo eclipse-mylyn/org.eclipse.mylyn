@@ -53,6 +53,7 @@ import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskList;
+import org.eclipse.mylar.tasks.core.TaskRepository;
 
 /**
  * @author Mik Kersten
@@ -302,7 +303,7 @@ public class BugzillaClient {
 		}
 	}
 
-	public RepositoryTaskData getTaskData(int id) throws IOException, MalformedURLException, LoginException,
+	public RepositoryTaskData getTaskData(TaskRepository repository, int id) throws IOException, MalformedURLException, LoginException,
 			GeneralSecurityException, BugzillaException {
 		GetMethod method = null;
 		try {
@@ -321,7 +322,7 @@ public class BugzillaClient {
 						RepositoryReportFactory reportFactory = new RepositoryReportFactory(method
 								.getResponseBodyAsStream(), characterEncoding);
 						method.getResponseCharSet();
-						reportFactory.populateReport(taskData);
+						reportFactory.populateReport(taskData, repository);
 						return taskData;
 					}
 				}

@@ -18,6 +18,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylar.tasks.core.TaskRepository;
 
 /**
  * Reads bug reports from repository.
@@ -32,10 +33,10 @@ public class RepositoryReportFactory extends AbstractReportFactory {
 
 	private static BugzillaAttributeFactory bugzillaAttributeFactory = new BugzillaAttributeFactory();
 
-	public void populateReport(RepositoryTaskData bugReport) throws GeneralSecurityException,
+	public void populateReport(RepositoryTaskData bugReport, TaskRepository repository) throws GeneralSecurityException,
 			KeyManagementException, NoSuchAlgorithmException, IOException, BugzillaException {
 
-		SaxBugReportContentHandler contentHandler = new SaxBugReportContentHandler(bugzillaAttributeFactory, bugReport);
+		SaxBugReportContentHandler contentHandler = new SaxBugReportContentHandler(bugzillaAttributeFactory, bugReport, repository);
 
 //		String xmlBugReportUrl = repositoryUrl + IBugzillaConstants.SHOW_BUG_CGI_XML + bugReport.getId();
 //		xmlBugReportUrl = BugzillaClient.addCredentials(xmlBugReportUrl, characterEncoding, userName, password);
