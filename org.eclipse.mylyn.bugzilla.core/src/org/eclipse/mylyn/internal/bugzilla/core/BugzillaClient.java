@@ -307,8 +307,6 @@ public class BugzillaClient {
 			GeneralSecurityException, BugzillaException {
 		GetMethod method = null;
 		try {
-			// System.err.println("Retrieving: "+repositoryUrl +
-			// IBugzillaConstants.SHOW_BUG_CGI_XML + id);
 			method = getConnect(repositoryUrl + IBugzillaConstants.URL_GET_SHOW_BUG_XML + id);
 			// method.addRequestHeader("Content-Type", characterEncoding);
 			RepositoryTaskData taskData = null;

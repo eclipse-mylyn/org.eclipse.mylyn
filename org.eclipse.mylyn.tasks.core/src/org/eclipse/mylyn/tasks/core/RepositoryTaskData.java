@@ -27,19 +27,18 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 	private static final long serialVersionUID = 2746931358107812373L;
 
 	public static final String VAL_STATUS_NEW = "NEW";
-	
+
 	private String reportID;
 
 	private boolean hasChanges = false;
-	
+
 	private String repositoryURL;
 
 	protected String newComment = "";
-		
+
 	private List<TaskComment> taskComments = new ArrayList<TaskComment>();
 
 	private List<RepositoryAttachment> attachments = new ArrayList<RepositoryAttachment>();
-
 
 	/** The operation that was selected to do to the bug */
 	protected RepositoryOperation selectedOperation = null;
@@ -82,18 +81,6 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 		this.repositoryKind = repositoryKind;
 		this.repositoryURL = repositoryURL;
 	}
-
-//	/**
-//	 * TODO: move?
-//	 */
-//	public static boolean isResolvedStatus(String status) {
-//		if (status != null) {
-//			return status.equals(VAL_STATUS_RESOLVED) || status.equals(VAL_STATUS_CLOSED)
-//					|| status.equals(VAL_STATUS_VERIFIED);
-//		} else {
-//			return false;
-//		}
-//	}
 
 	public String getLabel() {
 		return getSummary();
@@ -194,9 +181,9 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 		return false;
 	}
 
-//	public boolean isResolved() {
-//		return isResolvedStatus(getStatus());
-//	}
+	// public boolean isResolved() {
+	// return isResolvedStatus(getStatus());
+	// }
 
 	/**
 	 * Get the date that the bug was created
@@ -204,7 +191,7 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 	 * @return The bugs creation date
 	 */
 	public String getCreated() {
-		return getAttributeValue(RepositoryTaskAttribute.DATE_CREATION);		
+		return getAttributeValue(RepositoryTaskAttribute.DATE_CREATION);
 	}
 
 	/**
@@ -279,10 +266,10 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 	public List<TaskComment> getComments() {
 		return taskComments;
 	}
-	
+
 	public void setDescription(String description) {
 		RepositoryTaskAttribute attribute = getDescriptionAttribute();
-		if(attribute != null) {
+		if (attribute != null) {
 			attribute.setValue(description);
 		}
 	}
@@ -304,7 +291,7 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 		}
 		return null;
 	}
-	
+
 	public void addAttachment(RepositoryAttachment attachment) {
 		attachments.add(attachment);
 	}

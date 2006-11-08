@@ -103,8 +103,7 @@ public class OpenRemoteTaskJob extends Job {
 						} else if (!(e.getStatus().getException() instanceof IOException)) {
 							MylarStatusHandler.log(e.getStatus());
 						} else if (e.getStatus().getException() instanceof FileNotFoundException) {
-							// can be caused by empty urlbase parameter on
-							// bugzilla server
+							// can be caused by empty urlbase parameter on bugzilla server
 							MylarStatusHandler.log(e.getStatus());
 						} else {
 							// >>> bug 154729

@@ -54,7 +54,8 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 		this.connector = connector;
 	}
 
-	public RepositoryTaskData downloadTaskData(TaskRepository repository, String taskId, Proxy proxySettings) throws CoreException {
+	public RepositoryTaskData downloadTaskData(TaskRepository repository, String taskId, Proxy proxySettings)
+			throws CoreException {
 		int id = Integer.parseInt(taskId);
 		return downloadTaskData(repository, id);
 	}
@@ -197,7 +198,7 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 			createAttribute(factory, data, Attribute.STATUS, client.getTicketStatus());
 			createAttribute(factory, data, Attribute.RESOLUTION, client.getTicketResolutions());
 		}
-		
+
 		createAttribute(factory, data, Attribute.COMPONENT, client.getComponents());
 		createAttribute(factory, data, Attribute.VERSION, client.getVersions(), true);
 		createAttribute(factory, data, Attribute.PRIORITY, client.getPriorities());
@@ -214,7 +215,7 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 
 		createAttribute(factory, data, Attribute.CC);
 		createAttribute(factory, data, Attribute.KEYWORDS);
-		
+
 		if (!existingTask) {
 			createAttribute(factory, data, Attribute.SUMMARY);
 			createAttribute(factory, data, Attribute.DESCRIPTION);
@@ -284,7 +285,8 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 			}
 			return result;
 		} catch (Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.PLUGIN_ID, IStatus.OK, "could not determine changed tasks", e));
+			throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.PLUGIN_ID, IStatus.OK,
+					"could not determine changed tasks", e));
 		}
 	}
 }
