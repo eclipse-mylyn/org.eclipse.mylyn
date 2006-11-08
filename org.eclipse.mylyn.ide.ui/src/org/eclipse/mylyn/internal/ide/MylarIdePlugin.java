@@ -88,6 +88,6 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.internal.ide", path);
+		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.ide", path);
 	}
 }

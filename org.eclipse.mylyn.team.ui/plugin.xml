@@ -98,7 +98,7 @@
 	<extension point = "org.eclipse.ui.popupMenus">
 	    <objectContribution
 	           adaptable="false"
-	           id="org.eclipse.mylar.ide.team.ui.objectContribution"
+	           id="org.eclipse.mylar.team.ui.contribution.commit.query"
 	           objectClass="org.eclipse.mylar.tasks.core.AbstractQueryHit">
 			<action
 	              class="org.eclipse.mylar.internal.team.ui.actions.CommitContextAction"
@@ -112,7 +112,7 @@
 		</objectContribution>
 	     <objectContribution
 	           adaptable="false"
-	           id="org.eclipse.mylar.ide.team.ui.objectContribution"
+	           id="org.eclipse.mylar.team.ui.contribution.commit.task"
 	           objectClass="org.eclipse.mylar.tasks.core.ITask">
 			<action
 	              class="org.eclipse.mylar.internal.team.ui.actions.CommitContextAction"
@@ -124,6 +124,17 @@
 	              tooltip="Commit Context...">
 	        </action>
 		</objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="org.eclipse.mylar.ide.team.ui.contribution.attachment.patch"
+            objectClass="org.eclipse.mylar.tasks.core.RepositoryAttachment">
+         <action
+               class="org.eclipse.mylar.internal.team.ui.actions.ApplyPatchAction"
+               icon="icons/elcl16/apply-patch.gif"
+               id="org.eclipse.mylar.team.ui.patch.apply"
+               label="Apply Patch...">
+         </action>
+      </objectContribution>
    </extension>
 	
   <extension point="org.eclipse.ui.preferencePages">
