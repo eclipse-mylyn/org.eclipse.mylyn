@@ -96,13 +96,6 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 		});
 	}
 
-//	public boolean canFlipToNextPage() {
-//		if (getErrorMessage() != null || !isPageComplete()) {
-//			return false;
-//		}
-//		return true;
-//	}
-
 	@Override
 	public boolean isPageComplete() {
 		if (title != null && !title.getText().equals("")) {
