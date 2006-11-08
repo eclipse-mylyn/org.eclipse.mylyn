@@ -33,6 +33,10 @@ public class RepositoryTaskAttribute implements Serializable {
 	public static final String COMMENT_TEXT = "task.common.comment.text";
 	
 	public static final String COMMENT_DATE = "task.common.comment.date";
+	
+	// THIS IS NOT BEING USED BUT RATHER "USER_OWNER" for comments
+	// TODO: use this id instead
+	public static final String COMMENT_AUTHOR = "task.common.comment.author";
 
 	public static final String DESCRIPTION = "task.common.description";
 

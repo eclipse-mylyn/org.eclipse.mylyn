@@ -641,7 +641,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				currentCol += 2;
 			} else {
 				Label label = toolkit.createLabel(attributesComposite, name);
-				GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
+				GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 				Composite textFieldComposite = toolkit.createComposite(attributesComposite);
 				GridLayout textLayout = new GridLayout();
 				textLayout.marginWidth = 1;
