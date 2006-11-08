@@ -347,8 +347,10 @@ public class TaskRepositoryManager {
 			stream.close();
 		} catch (CoreException e) {
 			MylarStatusHandler.fail(e.getStatus().getException(), "Retrieval of attachment data failed.", false);
+			return null;
 		} catch (IOException e) {
 			MylarStatusHandler.fail(e, "Retrieval of attachment data failed.", false);
+			return null;
 		}
 		return contents.toString();
 	}	
