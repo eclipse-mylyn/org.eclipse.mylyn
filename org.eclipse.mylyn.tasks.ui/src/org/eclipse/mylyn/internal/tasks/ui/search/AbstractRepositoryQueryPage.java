@@ -44,10 +44,10 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 
 	private static final String DESCRIPTION = "If attributes are blank or stale press the Update button.";
 
-	private Text title;
-
 	private String titleString;
 
+	protected Text title;
+	
 	protected ISearchPageContainer scontainer = null;
 
 	protected TaskRepository repository;
