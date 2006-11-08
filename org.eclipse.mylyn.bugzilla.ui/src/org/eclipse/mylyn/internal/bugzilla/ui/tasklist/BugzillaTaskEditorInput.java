@@ -19,7 +19,7 @@ import java.security.GeneralSecurityException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
-import org.eclipse.mylar.internal.tasks.ui.editors.ExistingBugEditorInput;
+import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
@@ -30,7 +30,7 @@ import org.eclipse.ui.IPersistableElement;
  * @author Eric Booth
  * @author Mik Kersten
  */
-public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
+public class BugzillaTaskEditorInput extends RepositoryTaskEditorInput {
 
 	private String bugTitle;
 
@@ -61,10 +61,10 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 		return null;
 	}
 
-	@Override
-	public String getName() {
-		return bugTask.getDescription();
-	}
+//	@Override
+//	public String getName() {
+//		return bugTask.getDescription();
+//	}
 
 	@Override
 	public IPersistableElement getPersistable() {

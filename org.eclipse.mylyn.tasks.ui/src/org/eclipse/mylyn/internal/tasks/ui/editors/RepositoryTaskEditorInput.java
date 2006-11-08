@@ -19,14 +19,11 @@ import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
-/**
- * The <code>IEditorInput</code> implementation for
- * <code>ExistingBugEditor</code>.
- * 
+/** 
  * @author Mik Kersten
  * @author Rob Elves
  */
-public class ExistingBugEditorInput extends AbstractBugEditorInput {
+public class RepositoryTaskEditorInput extends AbstractTaskEditorInput {
 
 	protected String id;
 
@@ -35,13 +32,13 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 	protected AbstractRepositoryTask repositoryTask = null;
 
 	// Called for existing report without a local task
-	public ExistingBugEditorInput(String url, TaskRepository repository, RepositoryTaskData taskData) {
+	public RepositoryTaskEditorInput(String url, TaskRepository repository, RepositoryTaskData taskData) {
 		super(repository, taskData);
 		this.id = taskData.getId();
 		this.url = url;
 	}
 
-	public ExistingBugEditorInput(TaskRepository repository, RepositoryTaskData taskData, String bugId)
+	public RepositoryTaskEditorInput(TaskRepository repository, RepositoryTaskData taskData, String bugId)
 			throws IOException, GeneralSecurityException {
 		super(repository, taskData);
 		this.id = bugId;
@@ -56,15 +53,16 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 	public AbstractRepositoryTask getRepositoryTask() {
 		return repositoryTask;
 	}
-
+	
 	public String getName() {
-		if (repositoryTaskData != null && repositoryTaskData.getLabel() != null) {
-			return repositoryTaskData.getLabel();
-		} else if (id != null) {
-			return id;
-		} else {
-			return "<unknown>";
-		}
+		return repositoryTask.getDescription();
+//		if (repositoryTaskData != null && repositoryTaskData.getLabel() != null) {
+//			return repositoryTaskData.getLabel();
+//		} else if (id != null) {
+//			return id;
+//		} else {
+//			return "<unknown>";
+//		}
 	}
 
 	/**
@@ -90,7 +88,7 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final ExistingBugEditorInput other = (ExistingBugEditorInput) obj;
+		final RepositoryTaskEditorInput other = (RepositoryTaskEditorInput) obj;
 		if (repositoryTask == null) {
 			if (other.repositoryTask != null) {
 				return false;

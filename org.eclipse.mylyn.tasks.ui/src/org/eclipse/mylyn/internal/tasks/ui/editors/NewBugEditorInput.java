@@ -18,7 +18,7 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
  * The <code>IEditorInput</code> implementation for <code>NewBugEditor</code>.
  * @author Rob Elves (modifications)
  */
-public class NewBugEditorInput extends AbstractBugEditorInput {
+public class NewBugEditorInput extends AbstractTaskEditorInput {
 
 	public NewBugEditorInput(TaskRepository repository, RepositoryTaskData taskData) {
 		super(repository, taskData);		

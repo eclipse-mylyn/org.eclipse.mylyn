@@ -202,7 +202,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private static final String REASSIGN_BUG_TO = "Reassign  bug to";
 
-	protected AbstractBugEditorInput editorInput;
+	protected AbstractTaskEditorInput editorInput;
 
 	private MylarTaskEditor parentEditor = null;
 
@@ -1301,8 +1301,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		AbstractRepositoryTask repositoryTask = null;
 		IOfflineTaskHandler offlineHandler = null;
 		IEditorInput input = this.getEditorInput();
-		if (input instanceof ExistingBugEditorInput) {
-			ExistingBugEditorInput existingInput = (ExistingBugEditorInput) input;
+		if (input instanceof RepositoryTaskEditorInput) {
+			RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) input;
 			repositoryTask = existingInput.getRepositoryTask();
 
 			AbstractRepositoryConnector connector = (AbstractRepositoryConnector) TasksUiPlugin.getRepositoryManager()
@@ -1563,8 +1563,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			updateTask();
 
 			IEditorInput input = this.getEditorInput();
-			if (input instanceof ExistingBugEditorInput) {
-				ExistingBugEditorInput existingInput = (ExistingBugEditorInput) input;
+			if (input instanceof RepositoryTaskEditorInput) {
+				RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) input;
 				AbstractRepositoryTask repositoryTask = existingInput.getRepositoryTask();
 				if (repositoryTask != null) {
 

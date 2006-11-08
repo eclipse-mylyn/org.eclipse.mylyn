@@ -25,7 +25,7 @@ import org.eclipse.ui.IPersistableElement;
  * of <code>AbstractRepositoryTaskEditor</code>.
  * @author Rob Elves (modifications)
  */
-public abstract class AbstractBugEditorInput implements IEditorInput {
+public abstract class AbstractTaskEditorInput implements IEditorInput {
 
 	protected String toolTipText = "";
 
@@ -35,7 +35,7 @@ public abstract class AbstractBugEditorInput implements IEditorInput {
 
 	protected RepositoryTaskData repositoryTaskData;
 	
-	protected AbstractBugEditorInput(TaskRepository repository, RepositoryTaskData taskData) {
+	protected AbstractTaskEditorInput(TaskRepository repository, RepositoryTaskData taskData) {
 		this.repositoryTaskData = taskData;		
 		this.repository = repository;
 		this.proxySettings = TasksUiPlugin.getDefault().getProxySettings();

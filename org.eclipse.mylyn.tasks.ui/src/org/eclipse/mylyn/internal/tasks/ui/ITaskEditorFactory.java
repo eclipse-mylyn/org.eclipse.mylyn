@@ -29,8 +29,6 @@ public interface ITaskEditorFactory {
 
 	public String getTitle();
 
-	public void notifyEditorActivationChange(IEditorPart editor);
-
 	public boolean canCreateEditorFor(ITask task);
 	
 	public boolean canCreateEditorFor(IEditorInput input);

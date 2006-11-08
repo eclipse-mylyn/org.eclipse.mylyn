@@ -16,9 +16,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.mylar.internal.tasks.ui.editors.AbstractBugEditorInput;
+import org.eclipse.mylar.internal.tasks.ui.editors.AbstractTaskEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
-import org.eclipse.mylar.internal.tasks.ui.editors.ExistingBugEditorInput;
+import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
@@ -63,10 +63,10 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	public void init(IEditorSite site, IEditorInput input) {
-		if (!(input instanceof ExistingBugEditorInput))
+		if (!(input instanceof RepositoryTaskEditorInput))
 			return;
 
-		editorInput = (AbstractBugEditorInput) input;
+		editorInput = (AbstractTaskEditorInput) input;
 		repository = editorInput.getRepository();
 		connector = (TracRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				repository.getKind());

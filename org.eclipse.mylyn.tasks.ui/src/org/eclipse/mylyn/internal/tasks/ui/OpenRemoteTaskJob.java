@@ -24,8 +24,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.core.UnrecognizedReponseException;
-import org.eclipse.mylar.internal.tasks.ui.editors.AbstractBugEditorInput;
-import org.eclipse.mylar.internal.tasks.ui.editors.ExistingBugEditorInput;
+import org.eclipse.mylar.internal.tasks.ui.editors.AbstractTaskEditorInput;
+import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
@@ -106,7 +106,7 @@ public class OpenRemoteTaskJob extends Job {
 							// can be caused by empty urlbase parameter on bugzilla server
 							MylarStatusHandler.log(e.getStatus());
 						} else {
-							// >>> bug 154729
+							// bug 154729
 							// MylarStatusHandler.log(e.getStatus());
 						}
 					}
@@ -129,7 +129,7 @@ public class OpenRemoteTaskJob extends Job {
 				if (taskData == null) {
 					TaskUiUtil.openUrl(taskUrl);
 				} else {
-					AbstractBugEditorInput editorInput = new ExistingBugEditorInput(taskUrl, repository, taskData);
+					AbstractTaskEditorInput editorInput = new RepositoryTaskEditorInput(taskUrl, repository, taskData);
 					TaskUiUtil.openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 				}
 			}

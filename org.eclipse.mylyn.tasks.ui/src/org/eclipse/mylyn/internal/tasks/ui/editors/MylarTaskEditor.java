@@ -172,8 +172,8 @@ public class MylarTaskEditor extends FormEditor {
 	 */
 	private String getUrl() {
 		String url = null;
-		if (getEditorInput() instanceof ExistingBugEditorInput) {
-			url = ((ExistingBugEditorInput) getEditorInput()).getUrl();
+		if (getEditorInput() instanceof RepositoryTaskEditorInput) {
+			url = ((RepositoryTaskEditorInput) getEditorInput()).getUrl();
 		} else if (task != null && task.getUrl().length() > 9) {
 			url = task.getUrl();
 		}
@@ -298,11 +298,11 @@ public class MylarTaskEditor extends FormEditor {
 
 	@Override
 	protected void pageChange(int newPageIndex) {
-		for (ITaskEditorFactory factory : TasksUiPlugin.getDefault().getTaskEditorFactories()) {
-			for (IEditorPart editor : editors) {
-				factory.notifyEditorActivationChange(editor);
-			}
-		}
+//		for (ITaskEditorFactory factory : TasksUiPlugin.getDefault().getTaskEditorFactories()) {
+//			for (IEditorPart editor : editors) {
+//				factory.notifyEditorActivationChange(editor);
+//			}
+//		}
 		super.pageChange(newPageIndex);
 	}
 
@@ -367,8 +367,8 @@ public class MylarTaskEditor extends FormEditor {
 								editor.init(getEditorSite(), input);
 								repositoryTaskEditor.createPartControl(getContainer());
 								index = addPage(repositoryTaskEditor);
-								if (getEditorInput() instanceof ExistingBugEditorInput) {
-									ExistingBugEditorInput existingInput = (ExistingBugEditorInput) getEditorInput();
+								if (getEditorInput() instanceof RepositoryTaskEditorInput) {
+									RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) getEditorInput();
 									setPartName(existingInput.getId() + ": " + existingInput.getName());
 								} else if(getEditorInput() instanceof NewBugEditorInput) {
 									String label = "<unsubmitted> "+((NewBugEditorInput)getEditorInput()).getRepository().getUrl();
@@ -404,7 +404,7 @@ public class MylarTaskEditor extends FormEditor {
 
 			if (task instanceof AbstractRepositoryTask) {
 				setTitleImage(TaskListImages.getImage(TaskListImages.TASK_REPOSITORY));
-			} else if (getEditorInput() instanceof AbstractBugEditorInput) {
+			} else if (getEditorInput() instanceof AbstractTaskEditorInput) {
 				this.setTitleImage(TaskListImages.getImage(TaskListImages.TASK_REMOTE));
 			} else if (getUrl() != null) {
 				setTitleImage(TaskListImages.getImage(TaskListImages.TASK_WEB));
