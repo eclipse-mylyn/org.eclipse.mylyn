@@ -24,9 +24,7 @@ public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 
 	@Override
 	public String mapCommonAttributeKey(String key) {
-		if (key == null) {
-			return key;
-		} else if (key.equals(RepositoryTaskAttribute.COMMENT_DATE)) {
+		if (key.equals(RepositoryTaskAttribute.COMMENT_DATE)) {
 			return BugzillaReportElement.BUG_WHEN.getKeyString();
 		} else if (key.equals(RepositoryTaskAttribute.USER_OWNER)) {
 			return BugzillaReportElement.WHO.getKeyString();
@@ -68,8 +66,9 @@ public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 			return BugzillaReportElement.ADDSELFCC.getKeyString();
 		} else if (key.equals(RepositoryTaskAttribute.PRIORITY)) {
 			return BugzillaReportElement.PRIORITY.getKeyString();
+		} else {
+			return key;
 		}
-		return key;
 	}
 	
 	@Override

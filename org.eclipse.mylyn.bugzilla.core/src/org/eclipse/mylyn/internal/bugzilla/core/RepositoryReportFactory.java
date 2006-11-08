@@ -40,9 +40,7 @@ public class RepositoryReportFactory extends AbstractReportFactory {
 
 //		String xmlBugReportUrl = repositoryUrl + IBugzillaConstants.SHOW_BUG_CGI_XML + bugReport.getId();
 //		xmlBugReportUrl = BugzillaClient.addCredentials(xmlBugReportUrl, characterEncoding, userName, password);
-//		URL serverURL = new URL(xmlBugReportUrl);
-
-		
+//		URL serverURL = new URL(xmlBugReportUrl);		
 		
 		collectResults(contentHandler, false);
 

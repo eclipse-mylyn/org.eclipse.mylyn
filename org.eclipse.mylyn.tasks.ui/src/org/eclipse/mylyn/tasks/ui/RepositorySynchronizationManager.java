@@ -355,7 +355,6 @@ public class RepositorySynchronizationManager {
 			repositoryTask.setNotified(false);
 		}
 		return startState != repositoryTask.getSyncState();
-
 	}
 
 	/** public for testing purposes */

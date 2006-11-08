@@ -100,7 +100,7 @@ public abstract class AbstractRepositoryConnector {
 
 	public abstract List<String> getSupportedVersions();
 
-	public abstract void updateTaskState(AbstractRepositoryTask repositoryTask);
+//	public abstract void updateTaskState(AbstractRepositoryTask repositoryTask);
 
 	public String[] repositoryPropertyNames() {
 		return new String[] { IRepositoryConstants.PROPERTY_VERSION, IRepositoryConstants.PROPERTY_TIMEZONE,
