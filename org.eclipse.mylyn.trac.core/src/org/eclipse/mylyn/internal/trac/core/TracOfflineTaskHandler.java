@@ -174,13 +174,13 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 		} else if ("accept".equals(action)) {
 			operation = new RepositoryOperation(action, "Accept");
 		} else if ("resolve".equals(action)) {
-			operation = new RepositoryOperation(action, "Resolve bug, changing resolution to");
+			operation = new RepositoryOperation(action, "Resolve as");
 			operation.setUpOptions("resolution");
 			for (String resolution : ticket.getResolutions()) {
 				operation.addOption(resolution, resolution);
 			}
 		} else if ("reassign".equals(action)) {
-			operation = new RepositoryOperation(action, "Reassing bug to");
+			operation = new RepositoryOperation(action, "Reassign to");
 			operation.setInputName("owner");
 			operation.setInputValue(TracRepositoryConnector.getDisplayUsername(repository));
 		} else if ("reopen".equals(action)) {
