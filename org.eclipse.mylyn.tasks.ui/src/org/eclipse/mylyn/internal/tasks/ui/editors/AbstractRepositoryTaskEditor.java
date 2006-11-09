@@ -1439,8 +1439,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		buttonComposite.setLayout(buttonLayout);
 		addRadioButtons(buttonComposite);
 		addActionButtons(buttonComposite);
-		Label repLabel = toolkit.createLabel(buttonComposite, " " + this.getRepositoryTaskData().getRepositoryUrl());
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).span(2, 1).applyTo(repLabel);
 		section.setClient(buttonComposite);
 	}
 
@@ -1479,6 +1477,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			}
 		});
 		submitButton.addListener(SWT.FocusIn, new GenericListener());
+		submitButton.setToolTipText("Submit to: "+this.repository.getUrl());
 		RepositoryTaskData taskData = getRepositoryTaskData();
 		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 				AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));

@@ -55,14 +55,15 @@ public class RepositoryTaskEditorInput extends AbstractTaskEditorInput {
 	}
 	
 	public String getName() {
-		return repositoryTask.getDescription();
-//		if (repositoryTaskData != null && repositoryTaskData.getLabel() != null) {
-//			return repositoryTaskData.getLabel();
-//		} else if (id != null) {
-//			return id;
-//		} else {
-//			return "<unknown>";
-//		}
+		if(repositoryTask != null) {
+			return repositoryTask.getDescription();
+		} else if (repositoryTaskData != null && repositoryTaskData.getLabel() != null) {
+			return repositoryTaskData.getLabel();
+		} else if (id != null) {
+			return id;
+		} else {
+			return "<unknown>";
+		}
 	}
 
 	/**

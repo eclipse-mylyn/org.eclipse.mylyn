@@ -75,7 +75,7 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 	 * @see org.eclipse.ui.IEditorInput#getName()
 	 */
 	public String getName() {
-		return "Task #" + id;
+		return this.getLabel();
 	}
 
 	/*

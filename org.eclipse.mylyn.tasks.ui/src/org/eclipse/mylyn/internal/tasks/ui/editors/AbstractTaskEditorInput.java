@@ -39,6 +39,7 @@ public abstract class AbstractTaskEditorInput implements IEditorInput {
 		this.repositoryTaskData = taskData;		
 		this.repository = repository;
 		this.proxySettings = TasksUiPlugin.getDefault().getProxySettings();
+		this.toolTipText = taskData.getLabel();
 	}
 	
 	/**

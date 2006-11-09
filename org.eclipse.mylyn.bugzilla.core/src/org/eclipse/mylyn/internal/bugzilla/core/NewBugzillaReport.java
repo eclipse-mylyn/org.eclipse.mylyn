@@ -60,7 +60,7 @@ public class NewBugzillaReport extends RepositoryTaskData implements Serializabl
 	}
 
 	public String getLabel() {
-		return "New Bug #" + getId();
+		return "<unsubmitted> "+ this.getRepositoryUrl();
 	}
 
 	public String getDescription() {

@@ -127,10 +127,10 @@ public class RepositorySynchronizationManager {
 	}
 
 	public final Job synchronize(AbstractRepositoryConnector connector,
-			final Set<AbstractRepositoryQuery> repositoryQueries, IJobChangeListener listener, int priority,
+			final Set<AbstractRepositoryQuery> repositoryQueries, final IJobChangeListener listener, int priority,
 			long delay, boolean syncTasks) {
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-		SynchronizeQueryJob job = new SynchronizeQueryJob(this, connector, repositoryQueries, taskList);
+		final SynchronizeQueryJob job = new SynchronizeQueryJob(this, connector, repositoryQueries, taskList);
 		job.setSynchTasks(syncTasks);
 		for (AbstractRepositoryQuery repositoryQuery : repositoryQueries) {
 			repositoryQuery.setCurrentlySynchronizing(true);
@@ -141,7 +141,18 @@ public class RepositorySynchronizationManager {
 		}
 		job.setRule(rule);
 		job.setPriority(priority);
-		job.schedule(delay);
+		if(!forceSyncExecForTesting) { 
+			job.schedule(delay);		
+		} else {
+			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+				public void run() {
+					job.run(new NullProgressMonitor());
+					if (listener != null) {
+						listener.done(null);
+					}
+				}
+			});
+		}
 		return job;
 	}
 

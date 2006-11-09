@@ -25,7 +25,7 @@ public class NewBugEditorInput extends AbstractTaskEditorInput {
 	}
 
 	public String getName() {
-		return "NEW ["+repository.getUrl()+"]";
+		return this.toolTipText;
 	}
 
 	@Override

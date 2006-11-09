@@ -352,6 +352,7 @@ public class MylarTaskEditor extends FormEditor {
 				taskEditorInput = (TaskEditorInput) getEditorInput();
 				task = taskEditorInput.getTask();
 				setPartName(taskEditorInput.getLabel());
+				setTitleToolTip(taskEditorInput.getLabel());
 			}
 
 			int selectedIndex = index;
@@ -369,13 +370,16 @@ public class MylarTaskEditor extends FormEditor {
 								index = addPage(repositoryTaskEditor);
 								if (getEditorInput() instanceof RepositoryTaskEditorInput) {
 									RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) getEditorInput();
+									System.err.println(existingInput.getToolTipText());
 									setPartName(existingInput.getId() + ": " + existingInput.getName());
 								} else if(getEditorInput() instanceof NewBugEditorInput) {
-									String label = "<unsubmitted> "+((NewBugEditorInput)getEditorInput()).getRepository().getUrl();
+									//String label = "<unsubmitted> "+((NewBugEditorInput)getEditorInput()).getRepository().getUrl();
+									String label = ((NewBugEditorInput)getEditorInput()).getToolTipText();
 									setPartName(label);
+									setTitleToolTip(label);
 								}
 							} else {
-								index = addPage(editor, input);
+								index = addPage(editor, input);								
 							}
 							selectedIndex = index;
 							setPageText(index++, factory.getTitle());							
