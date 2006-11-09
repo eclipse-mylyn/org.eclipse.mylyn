@@ -166,9 +166,11 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 	private boolean shouldAlwaysShow(AbstractTaskContainer container) {
 		for (ITask task : container.getChildren()) {
 			if (shouldAlwaysShow(task)) {
-				if (container instanceof TaskArchive) {					
-					if (TasksUiPlugin.getTaskListManager().getTaskList().getQueryHit(task.getHandleIdentifier()) != null) {
-						return true;							
+				if (container instanceof TaskArchive) {	
+					if (TasksUiPlugin.getTaskListManager().getTaskList().getContainerForHandle(task.getHandleIdentifier()) == null
+							&& TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(task.getHandleIdentifier()).isEmpty()) {
+//					if (TasksUiPlugin.getTaskListManager().getTaskList().getQueryHit(task.getHandleIdentifier()) != null) {
+						return true;  			
 					}
 				} else {
 					return true;

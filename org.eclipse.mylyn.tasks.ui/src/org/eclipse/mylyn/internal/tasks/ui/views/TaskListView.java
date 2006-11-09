@@ -230,7 +230,7 @@ public class TaskListView extends ViewPart {
 	private static final int DEFAULT_SORT_DIRECTION = -1;
 
 	private int sortIndex = 2;
-	
+
 	private TaskListTableLabelProvider taskListTableLabelProvider;
 
 	private TaskListTableSorter tableSorter;
@@ -1062,7 +1062,7 @@ public class TaskListView extends ViewPart {
 				task = (ITask) element;
 			}
 		}
-		
+
 		manager.add(new Separator(ID_SEPARATOR_NEW));
 		manager.add(new Separator());
 
@@ -1079,7 +1079,7 @@ public class TaskListView extends ViewPart {
 		} else if (element instanceof AbstractQueryHit) {
 			manager.add(activateAction);
 		}
-		
+
 		manager.add(new Separator());
 
 		for (String menuPath : dynamicMenuMap.keySet()) {
@@ -1294,13 +1294,13 @@ public class TaskListView extends ViewPart {
 	}
 
 	private void hookOpenAction() {
-		
+
 		getViewer().addOpenListener(new IOpenListener() {
 			public void open(OpenEvent event) {
 				openAction.run();
 			}
 		});
-		
+
 		getViewer().addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
@@ -1510,21 +1510,21 @@ public class TaskListView extends ViewPart {
 		if (getViewer().getSelection().isEmpty()
 				&& (hit = TasksUiPlugin.getTaskListManager().getTaskList().getQueryHit(task.getHandleIdentifier())) != null) {
 			try {
-			AbstractRepositoryQuery query = TasksUiPlugin.getTaskListManager().getTaskList().getQueryForHandle(
-					task.getHandleIdentifier());
-			getViewer().expandToLevel(query, 1);
-			getViewer().setSelection(new StructuredSelection(hit), true);
+				AbstractRepositoryQuery query = TasksUiPlugin.getTaskListManager().getTaskList().getQueryForHandle(
+						task.getHandleIdentifier());
+				getViewer().expandToLevel(query, 1);
+				getViewer().setSelection(new StructuredSelection(hit), true);
 			} catch (SWTException e) {
 				MylarStatusHandler.log(e, "Failed to expand Task List");
 			}
-		} 
+		}
 	}
 
 	protected void refreshTask(ITask task) {
 		refresh(task);
 		AbstractTaskContainer rootCategory = TasksUiPlugin.getTaskListManager().getTaskList().getRootCategory();
-		if (task.getContainer() == null // || task.getContainer() instanceof
-				// TaskArchive
+		if (task.getContainer() == null
+		// || task.getContainer() instanceof TaskArchive
 				|| task.getContainer().equals(rootCategory)) {
 			refresh(null);
 		} else {
@@ -1543,17 +1543,29 @@ public class TaskListView extends ViewPart {
 				public void run() {
 					if (getViewer().getControl() != null && !getViewer().getControl().isDisposed()) {
 						if (element == null) {
-							getViewer().refresh();
-//							filteredTree.textChanged();
+							try {
+								getViewer().getControl().setRedraw(false);
+								getViewer().refresh();
+							} finally {
+								getViewer().getControl().setRedraw(true);
+							}
+							// filteredTree.textChanged();
 						} else {
 							try {
-								getViewer().refresh(element, true);
-								if (element instanceof AbstractTaskContainer
-										&& !((AbstractTaskContainer) element).equals(TasksUiPlugin.getTaskListManager()
-												.getTaskList().getArchiveContainer())) {
-									List<?> visibleElements = Arrays.asList(getViewer().getVisibleExpandedElements());
-									if (!visibleElements.contains(element)) {
-										getViewer().refresh();
+								if (element instanceof ITask && ((ITask) element).getContainer() instanceof TaskArchive) {
+									refresh(null);
+								} else {
+									getViewer().refresh(
+											TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
+									getViewer().refresh(element, true);
+									if (element instanceof AbstractTaskContainer
+											&& !((AbstractTaskContainer) element).equals(TasksUiPlugin
+													.getTaskListManager().getTaskList().getArchiveContainer())) {
+										List<?> visibleElements = Arrays.asList(getViewer()
+												.getVisibleExpandedElements());
+										if (!visibleElements.contains(element)) {
+											getViewer().refresh();
+										}
 									}
 								}
 							} catch (SWTException e) {

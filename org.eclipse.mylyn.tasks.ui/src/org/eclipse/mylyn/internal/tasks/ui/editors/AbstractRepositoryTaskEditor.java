@@ -190,6 +190,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected Display display;
 
+	protected boolean htmlComments = false;
+	
 	public static final Font TITLE_FONT = JFaceResources.getBannerFont();
 
 	public static final Font TEXT_FONT = JFaceResources.getDefaultFont();
@@ -467,7 +469,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		scrollIncrement = fd[0].getHeight() + cushion;
 		scrollVertPageIncrement = 0;
 		scrollHorzPageIncrement = 0;
-
+	}
+	
+	public AbstractRepositoryTaskEditor(FormEditor editor, boolean htmlComments) {
+		this(editor);
+		this.htmlComments = htmlComments;
 	}
 
 	public String getNewCommentText() {
