@@ -100,6 +100,7 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction impleme
 			if (!taskListView.getFilters().contains(taskListInterestFilter)) {
 				taskListView.addFilter(taskListInterestFilter);
 			}
+			taskListView.setFocusedMode(true);
 			taskListView.setPriorityButtonEnabled(false);
 			taskListView.refreshAndFocus(true);
 			return true;
@@ -119,6 +120,7 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction impleme
 			for (AbstractTaskListFilter filter : previousFilters) {
 				TaskListView.getFromActivePerspective().addFilter(filter);
 			}
+			taskListView.setFocusedMode(false);
 			taskListView.getViewer().collapseAll();
 			taskListView.refreshAndFocus(false);
 		}
@@ -127,11 +129,6 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction impleme
 	public void propertyChange(PropertyChangeEvent event) {
 		// ignore
 	}
-
-//	@Override
-//	public List<Class> getPreservedFilters() {
-//		return Collections.emptyList();
-//	}
 
 	public void filterTextChanged(final String text) {
 		if (isChecked() && (text == null || "".equals(text))) {
