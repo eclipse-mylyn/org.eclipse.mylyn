@@ -106,10 +106,10 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		return offlineTaskHandler;
 	}
 
-//	@Override
-//	public void updateTaskState(AbstractRepositoryTask repositoryTask) {
-//		// TODO Auto-generated method stub
-//	}
+	@Override
+	public void updateTaskState(AbstractRepositoryTask repositoryTask) {
+		// TODO Auto-generated method stub
+	}
 
 	@Override
 	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository,

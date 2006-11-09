@@ -126,8 +126,7 @@ class SynchronizeTaskJob extends Job {
 							refreshEditors(repositoryTask);
 						}
 					} else {
-						// XXX: put back for tasks with no offline handler??
-//						connector.updateTaskState(repositoryTask);
+						connector.updateTaskState(repositoryTask);
 					}
 					repositoryTask.setCurrentlySynchronizing(false);
 					TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);

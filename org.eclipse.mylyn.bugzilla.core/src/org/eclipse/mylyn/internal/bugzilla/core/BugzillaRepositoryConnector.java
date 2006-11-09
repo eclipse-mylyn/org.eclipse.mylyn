@@ -243,10 +243,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	//
 	// }
 
-//	@Override
-//	public void updateTaskState(AbstractRepositoryTask repositoryTask) {
-//		// TODO: implement once this is consistent with offline task data
-//	}
+	@Override
+	public void updateTaskState(AbstractRepositoryTask repositoryTask) {
+		// ignore
+	}
 
 	public void setForceSynchExecForTesting(boolean forceSynchExecForTesting) {
 		this.forceSynchExecForTesting = forceSynchExecForTesting;
