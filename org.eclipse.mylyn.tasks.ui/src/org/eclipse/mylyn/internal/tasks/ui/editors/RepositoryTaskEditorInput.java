@@ -54,11 +54,37 @@ public class RepositoryTaskEditorInput extends AbstractTaskEditorInput {
 		return repositoryTask;
 	}
 	
+//	/**
+//	 * @return Returns the label.
+//	 */
+//	public String getLabel() {
+//		if (repositoryTask != null) {			
+//			String idLabel = repositoryTask.getIdLabel();
+//			
+//			label = "";
+//			if (idLabel != null) {
+//				label += idLabel + ": ";
+//			}
+//			label += truncateDescription(task.getDescription());
+//		} else if (task != null){
+//			label = truncateDescription(task.getDescription());
+//		} 
+//		return label;
+//	}
+	
 	public String getName() {
 		if(repositoryTask != null) {
-			return repositoryTask.getDescription();
+			String idLabel = repositoryTask.getIdLabel();
+			
+			String label = "";
+			if (idLabel != null) {
+				label += idLabel + ": ";
+			}
+			label += repositoryTask.getDescription();
+			return label;
+			//return repositoryTask.getIdLabel();//getDescription();
 		} else if (repositoryTaskData != null && repositoryTaskData.getLabel() != null) {
-			return repositoryTaskData.getLabel();
+			return repositoryTaskData.getId()+": "+repositoryTaskData.getLabel();
 		} else if (id != null) {
 			return id;
 		} else {

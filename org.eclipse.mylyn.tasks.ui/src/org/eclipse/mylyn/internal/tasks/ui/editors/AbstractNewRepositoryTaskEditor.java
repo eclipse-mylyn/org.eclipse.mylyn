@@ -114,7 +114,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) {
-		NewBugEditorInput ei = (NewBugEditorInput) input;
+		NewTaskEditorInput ei = (NewTaskEditorInput) input;
 		setSite(site);
 		setInput(input);
 		editorInput = ei;

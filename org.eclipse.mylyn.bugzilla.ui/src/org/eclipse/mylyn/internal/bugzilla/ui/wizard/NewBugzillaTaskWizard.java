@@ -18,7 +18,7 @@ import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
-import org.eclipse.mylar.internal.tasks.ui.editors.NewBugEditorInput;
+import org.eclipse.mylar.internal.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.INewWizard;
@@ -87,7 +87,7 @@ public class NewBugzillaTaskWizard extends Wizard implements INewWizard {
 
 		try {
 			productPage.saveDataToModel();
-			NewBugEditorInput editorInput = new NewBugEditorInput(repository, model);
+			NewTaskEditorInput editorInput = new NewTaskEditorInput(repository, model);
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			TaskUiUtil.openEditor(editorInput,  TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 			return true;

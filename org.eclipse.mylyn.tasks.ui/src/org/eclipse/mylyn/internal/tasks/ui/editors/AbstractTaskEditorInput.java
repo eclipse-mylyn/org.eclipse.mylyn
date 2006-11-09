@@ -38,8 +38,7 @@ public abstract class AbstractTaskEditorInput implements IEditorInput {
 	protected AbstractTaskEditorInput(TaskRepository repository, RepositoryTaskData taskData) {
 		this.repositoryTaskData = taskData;		
 		this.repository = repository;
-		this.proxySettings = TasksUiPlugin.getDefault().getProxySettings();
-		this.toolTipText = taskData.getLabel();
+		this.proxySettings = TasksUiPlugin.getDefault().getProxySettings();		
 	}
 	
 	/**
@@ -70,7 +69,7 @@ public abstract class AbstractTaskEditorInput implements IEditorInput {
 	}
 
 	public String getToolTipText() {
-		return toolTipText;
+		return getName();
 	}
 
 	@SuppressWarnings("unchecked")

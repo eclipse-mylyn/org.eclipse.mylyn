@@ -22,7 +22,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.editor.NewBugzillaTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.ITaskEditorFactory;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
-import org.eclipse.mylar.internal.tasks.ui.editors.NewBugEditorInput;
+import org.eclipse.mylar.internal.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
@@ -46,7 +46,7 @@ public class BugzillaTaskEditorFactory implements ITaskEditorFactory {
 		AbstractRepositoryTaskEditor editor = null;
 		if (editorInput instanceof RepositoryTaskEditorInput || editorInput instanceof TaskEditorInput) {
 			editor = new BugzillaTaskEditor(parentEditor);
-		} else if (editorInput instanceof NewBugEditorInput) {
+		} else if (editorInput instanceof NewTaskEditorInput) {
 			editor = new NewBugzillaTaskEditor(parentEditor);
 		} 
 		return editor;
@@ -93,8 +93,8 @@ public class BugzillaTaskEditorFactory implements ITaskEditorFactory {
 		if (input instanceof RepositoryTaskEditorInput) {
 			return BugzillaCorePlugin.REPOSITORY_KIND
 					.equals(((RepositoryTaskEditorInput) input).getRepository().getKind());
-		} else if (input instanceof NewBugEditorInput) {
-			return BugzillaCorePlugin.REPOSITORY_KIND.equals(((NewBugEditorInput) input).getRepository().getKind());
+		} else if (input instanceof NewTaskEditorInput) {
+			return BugzillaCorePlugin.REPOSITORY_KIND.equals(((NewTaskEditorInput) input).getRepository().getKind());
 		}
 		return false;
 	}

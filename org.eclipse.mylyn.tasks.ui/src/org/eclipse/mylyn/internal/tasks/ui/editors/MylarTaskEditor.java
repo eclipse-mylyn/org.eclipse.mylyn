@@ -139,7 +139,7 @@ public class MylarTaskEditor extends FormEditor {
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		if (this.getEditorInput() instanceof NewBugEditorInput) {
+		if (this.getEditorInput() instanceof NewTaskEditorInput) {
 			MessageDialog.openWarning(this.getSite().getShell(), "Operation not supported",
 					"Save of un-submitted new tasks is not currently supported.\nPlease submit all new tasks.");
 			monitor.setCanceled(true);
@@ -267,7 +267,7 @@ public class MylarTaskEditor extends FormEditor {
 	}
 
 	/**
-	 * Updates the tab titile
+	 * Updates the tab title
 	 */
 	public void changeTitle() {
 		this.setPartName(taskEditorInput.getLabel());
@@ -352,7 +352,6 @@ public class MylarTaskEditor extends FormEditor {
 				taskEditorInput = (TaskEditorInput) getEditorInput();
 				task = taskEditorInput.getTask();
 				setPartName(taskEditorInput.getLabel());
-				setTitleToolTip(taskEditorInput.getLabel());
 			}
 
 			int selectedIndex = index;
@@ -369,14 +368,11 @@ public class MylarTaskEditor extends FormEditor {
 								repositoryTaskEditor.createPartControl(getContainer());
 								index = addPage(repositoryTaskEditor);
 								if (getEditorInput() instanceof RepositoryTaskEditorInput) {
-									RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) getEditorInput();
-									System.err.println(existingInput.getToolTipText());
-									setPartName(existingInput.getId() + ": " + existingInput.getName());
-								} else if(getEditorInput() instanceof NewBugEditorInput) {
-									//String label = "<unsubmitted> "+((NewBugEditorInput)getEditorInput()).getRepository().getUrl();
-									String label = ((NewBugEditorInput)getEditorInput()).getToolTipText();
+									RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) getEditorInput();									
+									setPartName(existingInput.getName());									
+								} else if(getEditorInput() instanceof NewTaskEditorInput) {									
+									String label = ((NewTaskEditorInput)getEditorInput()).getName();
 									setPartName(label);
-									setTitleToolTip(label);
 								}
 							} else {
 								index = addPage(editor, input);								

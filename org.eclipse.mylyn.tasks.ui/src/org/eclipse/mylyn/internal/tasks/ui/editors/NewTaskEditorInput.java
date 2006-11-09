@@ -18,9 +18,9 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
  * The <code>IEditorInput</code> implementation for <code>NewBugEditor</code>.
  * @author Rob Elves (modifications)
  */
-public class NewBugEditorInput extends AbstractTaskEditorInput {
+public class NewTaskEditorInput extends AbstractTaskEditorInput {
 
-	public NewBugEditorInput(TaskRepository repository, RepositoryTaskData taskData) {
+	public NewTaskEditorInput(TaskRepository repository, RepositoryTaskData taskData) {
 		super(repository, taskData);		
 	}
 
@@ -30,8 +30,8 @@ public class NewBugEditorInput extends AbstractTaskEditorInput {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof NewBugEditorInput) {
-			NewBugEditorInput input = (NewBugEditorInput) o;
+		if (o instanceof NewTaskEditorInput) {
+			NewTaskEditorInput input = (NewTaskEditorInput) o;
 			return input.getRepositoryTaskData().equals(this.getRepositoryTaskData());
 		}
 		return false;
