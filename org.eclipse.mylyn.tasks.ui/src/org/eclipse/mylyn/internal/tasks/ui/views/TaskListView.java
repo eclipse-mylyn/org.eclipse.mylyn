@@ -163,6 +163,8 @@ public class TaskListView extends ViewPart {
 
 	private static final String PART_NAME = "Mylar Tasks";
 
+	private boolean focusedMode = false;
+	
 	private IThemeManager themeManager;
 
 	private TaskListFilteredTree filteredTree;
@@ -1068,7 +1070,9 @@ public class TaskListView extends ViewPart {
 
 		Map<String, List<IDynamicSubMenuContributor>> dynamicMenuMap = TasksUiPlugin.getDefault().getDynamicMenuMap();
 
-		addAction(openAction, manager, element);
+		if (!(element instanceof AbstractTaskContainer)) {
+			addAction(openAction, manager, element);
+		}
 		addAction(openWithBrowser, manager, element);
 		if (task != null) {
 			if (task.isActive()) {
@@ -1605,5 +1609,13 @@ public class TaskListView extends ViewPart {
 
 	public void setPriorityButtonEnabled(boolean enabled) {
 		filterOnPriority.setEnabled(enabled);
+	}
+
+	public boolean isFocusedMode() {
+		return focusedMode;
+	}
+
+	public void setFocusedMode(boolean focusedMode) {
+		this.focusedMode = focusedMode;
 	}
 }
