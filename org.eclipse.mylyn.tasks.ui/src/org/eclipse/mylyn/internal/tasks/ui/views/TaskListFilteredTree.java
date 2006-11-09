@@ -121,15 +121,29 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 		}
 		
 		Set<ITask> tasksThisWeek = TasksUiPlugin.getTaskListManager().getScheduledForThisWeek();
-		int totalThisWeek = tasksThisWeek.size();
-		int totalCompleted = 0;
+		int totalTasks = tasksThisWeek.size();
+		int completeTime = 0;
+		int completeTasks = 0;
+		int incompleteTime = 0;
 		for (ITask task : tasksThisWeek) {
 			if (task.isCompleted()) {
-				totalCompleted++;
+				completeTasks++;
+				if (task.getEstimateTimeHours() > 0) {
+					completeTime += task.getEstimateTimeHours();
+				} else {
+					completeTime++;
+				}
+			} else {
+				if (task.getEstimateTimeHours() > 0) {
+					incompleteTime += task.getEstimateTimeHours();
+				} else {
+					incompleteTime++;
+				}
 			}
 		}
-		taskProgressBar.setToolTipText("Completed " + totalCompleted + " of " + totalThisWeek + " tasks scheduled for this week");
-		taskProgressBar.reset(totalCompleted, totalThisWeek);
+		taskProgressBar.reset(completeTime, (completeTime+incompleteTime));
+		taskProgressBar.setToolTipText("Completed " + completeTime + " of " + (completeTime+incompleteTime) + " hours estimated for this week"
+				+ "\n(" + completeTasks + " tasks of " + totalTasks + " scheduled)");
 	}
 	
 	protected Composite createStatusComposite(Composite container) {

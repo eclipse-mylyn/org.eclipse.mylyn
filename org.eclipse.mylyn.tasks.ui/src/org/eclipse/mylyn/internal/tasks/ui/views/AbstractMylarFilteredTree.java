@@ -134,6 +134,6 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 		this.showProgress = showProgress;
 		progressComposite.setVisible(showProgress);
 		((GridData) progressComposite.getLayoutData()).exclude = !showProgress;
-		layout();
+		layout();	
 	}
 }
