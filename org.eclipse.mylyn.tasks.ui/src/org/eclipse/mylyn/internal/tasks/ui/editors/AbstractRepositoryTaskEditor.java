@@ -622,7 +622,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			if (attribute.hasOptions() && !attribute.isReadOnly()) {
 				Label label = toolkit.createLabel(attributesComposite, name);
-				GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
+				GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 				attributeCombo = new CCombo(attributesComposite, SWT.FLAT | SWT.READ_ONLY);
 				toolkit.adapt(attributeCombo, true, true);
 				attributeCombo.setFont(TEXT_FONT);
