@@ -187,7 +187,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected TaskRepository repository;
 
 	public static final int WRAP_LENGTH = 90;
-
+	
 	protected Display display;
 
 	protected boolean htmlComments = false;
@@ -1252,7 +1252,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			StyledText styledText = descriptionTextViewer.getTextWidget();
 			GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(
 					descriptionTextViewer.getControl());
-
+			
 			textHash.put(text, styledText);
 		}
 
