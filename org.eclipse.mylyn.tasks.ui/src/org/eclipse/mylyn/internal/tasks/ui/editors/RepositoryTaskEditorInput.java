@@ -38,12 +38,13 @@ public class RepositoryTaskEditorInput extends AbstractTaskEditorInput {
 		this.url = url;
 	}
 
-	public RepositoryTaskEditorInput(TaskRepository repository, RepositoryTaskData taskData, String bugId)
+	public RepositoryTaskEditorInput(TaskRepository repository, RepositoryTaskData taskData, String taskId, String taskUrl)
 			throws IOException, GeneralSecurityException {
 		super(repository, taskData);
-		this.id = bugId;
-
-		String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), bugId);
+		this.id = taskId;
+		this.url = taskUrl;
+		
+		String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), taskId);
 		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
 		if (task != null && task instanceof AbstractRepositoryTask) {
 			this.repositoryTask = (AbstractRepositoryTask) task;

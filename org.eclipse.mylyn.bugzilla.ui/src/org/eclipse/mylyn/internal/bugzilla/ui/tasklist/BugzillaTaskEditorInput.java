@@ -38,7 +38,7 @@ public class BugzillaTaskEditorInput extends RepositoryTaskEditorInput {
 
 	public BugzillaTaskEditorInput(TaskRepository repository, BugzillaTask bugTask, boolean offline)
 			throws IOException, GeneralSecurityException {
-		super(repository, bugTask.getTaskData(), AbstractRepositoryTask.getTaskId(bugTask.getHandleIdentifier()));
+		super(repository, bugTask.getTaskData(), AbstractRepositoryTask.getTaskId(bugTask.getHandleIdentifier()), bugTask.getUrl());
 		this.bugTask = bugTask;
 		migrateDescToReadOnly(bugTask);
 		updateOptions(bugTask.getTaskData());
