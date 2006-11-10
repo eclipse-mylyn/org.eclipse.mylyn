@@ -217,7 +217,7 @@ public class TaskListView extends ViewPart {
 
 	private Set<AbstractTaskListFilter> filters = new HashSet<AbstractTaskListFilter>();
 
-	protected String[] columnNames = new String[] { "", "", " !", "  ", "Description" };
+	protected String[] columnNames = new String[] { "", "", " !", "  ", "Summary" };
 
 	protected int[] columnWidths = new int[] { 53, 20, 12, 12, 160 };
 
