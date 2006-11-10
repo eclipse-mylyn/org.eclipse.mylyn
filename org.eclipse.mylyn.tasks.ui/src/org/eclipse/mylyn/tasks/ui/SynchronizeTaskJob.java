@@ -111,10 +111,10 @@ class SynchronizeTaskJob extends Job {
 										MylarStatusHandler.log(e.getStatus());
 									}
 								});
-							} else if (e.getStatus().getException() instanceof LoginException) {
+							} else if (!forceSync && e.getStatus().getException() instanceof LoginException) {
 								MylarStatusHandler.log(e.getStatus().getException(), "Login credentials are invalid for "+repositoryTask.getRepositoryUrl());
 							} else if(forceSync) {
-								MylarStatusHandler.log(e.getStatus().getException(), "Unable to retrieve task#"+AbstractRepositoryTask.getTaskId(repositoryTask.getHandleIdentifier())+" from "+repositoryTask.getRepositoryUrl());
+								MylarStatusHandler.fail(e.getStatus().getException(), "Unable to retrieve task#"+AbstractRepositoryTask.getTaskId(repositoryTask.getHandleIdentifier())+" from "+repositoryTask.getRepositoryUrl(), true, e.getStatus().getSeverity());
 							}
 							continue;
 						}

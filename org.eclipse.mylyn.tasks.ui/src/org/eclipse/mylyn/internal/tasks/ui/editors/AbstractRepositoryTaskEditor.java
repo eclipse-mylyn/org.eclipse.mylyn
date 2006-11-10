@@ -1477,7 +1477,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			}
 		});
 		submitButton.addListener(SWT.FocusIn, new GenericListener());
-		submitButton.setToolTipText("Submit to: "+this.repository.getUrl());
+		submitButton.setToolTipText("Submit to "+this.repository.getUrl());
 		RepositoryTaskData taskData = getRepositoryTaskData();
 		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 				AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
