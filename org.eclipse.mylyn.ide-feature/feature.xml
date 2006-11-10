@@ -297,7 +297,7 @@ litigation.
          id="org.eclipse.mylar.tasks.web"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="0.8.0.v20061110-1330"
          unpack="false"/>
 
 </feature>
