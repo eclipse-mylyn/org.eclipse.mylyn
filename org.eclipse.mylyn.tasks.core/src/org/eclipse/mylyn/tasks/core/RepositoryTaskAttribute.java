@@ -146,8 +146,8 @@ public class RepositoryTaskAttribute implements Serializable {
 	}
 
 	public void setValues(List<String> values) {
-		values.clear();
-		values.addAll(values);
+		this.values.clear();
+		this.values.addAll(values);
 	}
 
 	public void addValue(String value) {
