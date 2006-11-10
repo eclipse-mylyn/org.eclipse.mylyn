@@ -169,7 +169,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 	}
 
 	private boolean isWtpClass(Object object) {
-		return object.getClass().getSimpleName().equals("CompressedJavaProject");
+		return object != null && object.getClass().getSimpleName().equals("CompressedJavaProject");
 	}
 
 	public String getName(Object object) {
