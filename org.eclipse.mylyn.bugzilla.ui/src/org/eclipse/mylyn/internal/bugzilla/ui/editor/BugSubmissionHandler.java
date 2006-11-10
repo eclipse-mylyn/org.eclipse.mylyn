@@ -163,7 +163,14 @@ public class BugSubmissionHandler {
 			String handle = AbstractRepositoryTask.getHandle(repositoryTaskData.getRepositoryUrl(), repositoryTaskData
 					.getId());
 			ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
-			if (task != null) {
+			if (task != null) {				
+				Set<AbstractRepositoryQuery> queriesWithHandle = TasksUiPlugin.getTaskListManager().getTaskList()
+						.getQueriesForHandle(task.getHandleIdentifier());
+				TasksUiPlugin.getSynchronizationManager().synchronize(connector, queriesWithHandle, null, Job.SHORT, 0,
+						false);
+				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+						repositoryTaskData.getRepositoryKind(), repositoryTaskData.getRepositoryUrl());
+				TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
 				if (task instanceof AbstractRepositoryTask) {
 					AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
 					// TODO: This is set to null in order for update to bypass
@@ -172,13 +179,6 @@ public class BugSubmissionHandler {
 					repositoryTask.setTaskData(null);
 					TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, true, null);
 				}
-				Set<AbstractRepositoryQuery> queriesWithHandle = TasksUiPlugin.getTaskListManager().getTaskList()
-						.getQueriesForHandle(task.getHandleIdentifier());
-				TasksUiPlugin.getSynchronizationManager().synchronize(connector, queriesWithHandle, null, Job.SHORT, 0,
-						false);
-				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-						repositoryTaskData.getRepositoryKind(), repositoryTaskData.getRepositoryUrl());
-				TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
 			}
 
 		} catch (Exception e) {
