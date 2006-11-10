@@ -161,6 +161,12 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		try {
 			BugzillaClient client = getClientManager().getClient(repository);
 			client.getSearchHits(query, resultCollector, taskList);
+			// XXX: HACK in case of ip change bugzilla can return 0 hits
+			// due to invalid authorization token, forcing relogin fixes
+			if(resultCollector.getHits().size() == 0) {
+				client.logout();
+				client.getSearchHits(query, resultCollector, taskList);
+			}
 		} catch (UnrecognizedReponseException e) {
 			queryStatus = new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, Status.INFO,
 					"Unrecognized response from server", e);

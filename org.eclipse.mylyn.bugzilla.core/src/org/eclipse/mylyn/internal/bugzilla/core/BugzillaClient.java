@@ -330,6 +330,9 @@ public class BugzillaClient {
 					new InputStreamReader(method.getResponseBodyAsStream(), characterEncoding)));
 
 			return null;
+		} catch (LoginException e) {
+			authenticated = false;
+			throw e;
 		} finally {
 			if (method != null) {
 				method.releaseConnection();
@@ -374,7 +377,12 @@ public class BugzillaClient {
 				}
 			}
 		}
-		parseHtmlError(new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(), characterEncoding)));
+		try {
+			parseHtmlError(new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(), characterEncoding)));
+		} catch (LoginException e) {
+			authenticated = false;
+			throw e;
+		}
 	}
 
 	public static void setupExistingBugAttributes(String serverUrl, RepositoryTaskData existingReport) {
@@ -545,6 +553,9 @@ public class BugzillaClient {
 				return;
 			}
 			throw e;
+		} catch (LoginException e) {
+			authenticated = false;
+			throw e;		
 		} finally {
 			if (postMethod != null) {
 				postMethod.releaseConnection();
