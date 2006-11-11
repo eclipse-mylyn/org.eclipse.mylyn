@@ -19,6 +19,7 @@ import java.net.URL;
 import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
@@ -176,13 +177,16 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			final String[] version = new String[1];
 			getWizard().getContainer().run(true, false, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					monitor.beginTask("Validating server settings", IProgressMonitor.UNKNOWN);
+					if (monitor == null) {
+						monitor = new NullProgressMonitor();
+					}
 					try {
+						monitor.beginTask("Validating server settings", IProgressMonitor.UNKNOWN);
 						BugzillaClient client = null;
 						if (!isAnonymous && version != null) {
 							client = BugzillaClientFactory.createClient(serverUrl, newUserId, newPassword,
 									httpAuthUser, httpAuthPass, newEncoding);
-							client.validate();
+							client.validate();							
 						}
 						if (checkVersion && client != null) {
 							RepositoryConfiguration config = client.getRepositoryConfiguration();
@@ -190,7 +194,6 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 								version[0] = config.getInstallVersion();
 							}
 						}
-
 					} catch (Exception e) {
 						throw new InvocationTargetException(e);
 					} finally {

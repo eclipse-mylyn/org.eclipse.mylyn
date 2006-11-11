@@ -90,7 +90,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		super(FLAG_LAYOUT_FLAT);
 
 		sortByPriorityAction = new SearchResultSortAction("Task Priority", this, ORDER_PRIORITY);
-		sortByDescriptionAction = new SearchResultSortAction("Task Description", this, ORDER_DESCRIPTION);
+		sortByDescriptionAction = new SearchResultSortAction("Task Summary", this, ORDER_DESCRIPTION);
 		currentSortOrder = ORDER_DEFAULT;
 
 		openInEditorAction = new OpenSearchResultAction("Open in Editor", this);
@@ -126,7 +126,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 	@Override
 	protected void configureTableViewer(TableViewer viewer) {
 		viewer.setUseHashlookup(true);
-		String[] columnNames = new String[] { "", "!", "Description" };
+		String[] columnNames = new String[] { "", "!", "Summary" };
 		TableColumn[] columns = new TableColumn[columnNames.length];
 		int[] columnWidths = new int[] { 20, 20, 500 };
 		viewer.setColumnProperties(columnNames);

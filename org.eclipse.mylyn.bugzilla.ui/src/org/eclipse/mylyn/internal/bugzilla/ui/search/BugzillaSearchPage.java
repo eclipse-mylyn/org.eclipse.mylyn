@@ -21,6 +21,7 @@ import java.util.Arrays;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -1354,11 +1355,14 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					repository.getKind());
 
 			IRunnableWithProgress updateRunnable = new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					monitor.beginTask("Updating search options...", IProgressMonitor.UNKNOWN);
-
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {			
+					if(monitor == null) {
+						monitor = new NullProgressMonitor();
+					}
 					try {
-						connector.updateAttributes(repository, monitor);
+						monitor.beginTask("Updating search options...", IProgressMonitor.UNKNOWN);
+						connector.updateAttributes(repository, monitor);					
+						BugzillaUiPlugin.updateQueryOptions(repository, monitor);
 					} catch (CoreException ce) {
 						if (ce.getStatus().getException() instanceof GeneralSecurityException) {
 							MylarStatusHandler.fail(ce,
@@ -1371,10 +1375,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 						} else {
 							MylarStatusHandler.fail(ce, "Error updating repository attributes for "
 									+ repository.getUrl(), true);
-						}
-						return;
+						}						
+					} finally {
+						monitor.done();
 					}
-					BugzillaUiPlugin.updateQueryOptions(repository, monitor);
 				}
 			};
 

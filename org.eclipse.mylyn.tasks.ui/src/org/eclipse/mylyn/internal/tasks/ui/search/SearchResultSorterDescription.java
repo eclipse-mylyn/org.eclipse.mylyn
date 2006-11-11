@@ -40,7 +40,11 @@ public class SearchResultSorterDescription extends ViewerSorter {
 
 			AbstractQueryHit entry1 = (AbstractQueryHit) e1;
 			AbstractQueryHit entry2 = (AbstractQueryHit) e2;
-			return taskKeyComparator.compare(entry1.getDescription(), entry2.getDescription());
+			// NOTE we just comparing ids here, once summary and id separated
+			// they should have their own column/sorter.
+			return taskKeyComparator.compare(entry1.getId(), entry2.getId());
+			// return taskKeyComparator.compare(entry1.getDescription(),
+			// entry2.getDescription());
 		} catch (Exception ignored) {
 			// do nothing
 		}
@@ -64,7 +68,7 @@ public class SearchResultSorterDescription extends ViewerSorter {
 			AbstractQueryHit hit = (AbstractQueryHit) element;
 			return Integer.parseInt(hit.getId());
 		} catch (Exception ignored) {
-			// ignore if 
+			// ignore if
 		}
 		// if that didn't work, use the default category method
 		return super.category(element);
