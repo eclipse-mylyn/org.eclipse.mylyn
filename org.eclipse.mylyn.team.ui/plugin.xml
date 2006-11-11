@@ -124,6 +124,7 @@
 	              tooltip="Commit Context...">
 	        </action>
 		</objectContribution>
+	  <!--
       <objectContribution
             adaptable="false"
             id="org.eclipse.mylar.ide.team.ui.contribution.attachment.patch"
@@ -135,6 +136,7 @@
                label="Apply Patch...">
          </action>
       </objectContribution>
+      -->
    </extension>
 	
   <extension point="org.eclipse.ui.preferencePages">
