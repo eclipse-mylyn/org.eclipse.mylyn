@@ -20,6 +20,9 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
  */
 public class WebTask extends AbstractRepositoryTask {
 
+	// TODO: move
+	public static final String REPOSITORY_TYPE = "web";
+	
 	private final String id;
 
 	private final String taskPrefix;

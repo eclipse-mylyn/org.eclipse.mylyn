@@ -14,6 +14,7 @@ package org.eclipse.mylar.internal.tasks.ui.actions;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.mylar.internal.tasks.core.WebQueryHit;
 import org.eclipse.mylar.internal.tasks.core.WebTask;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
@@ -41,6 +42,8 @@ public class MarkTaskIncompleteAction extends Action {
 		if(selectedElements.size() == 1 && (selectedElements.get(0) instanceof Task)) {
 			Task task = (Task)selectedElements.get(0);
 			setEnabled(task.isLocal());
+		} else if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof WebQueryHit)) {
+			setEnabled(true);
 		} else {
 			setEnabled(false);
 		}

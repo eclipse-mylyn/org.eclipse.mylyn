@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylar.internal.tasks.core.WebTask;
 import org.eclipse.mylar.internal.tasks.web.WebRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
@@ -64,7 +65,7 @@ public class WebRepositoryConnectorTest extends TestCase {
 	        }
 	    }
 	  
-        TaskRepository repository = new TaskRepository(WebRepositoryConnector.REPOSITORY_TYPE, template.repositoryUrl, params);
+        TaskRepository repository = new TaskRepository(WebTask.REPOSITORY_TYPE, template.repositoryUrl, params);
         repository.setAuthenticationCredentials("user", "pwd");
 
         String taskQueryUrl = WebRepositoryConnector.evaluateParams(template.taskQueryUrl, repository);
@@ -82,7 +83,7 @@ public class WebRepositoryConnectorTest extends TestCase {
 	public static TestSuite suite() {
 		TestSuite suite = new ActiveTestSuite(WebRepositoryConnectorTest.class.getName());
 		
-		AbstractRepositoryConnector repositoryConnector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(WebRepositoryConnector.REPOSITORY_TYPE);
+		AbstractRepositoryConnector repositoryConnector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(WebTask.REPOSITORY_TYPE);
 		for (RepositoryTemplate template : repositoryConnector.getTemplates()) {
 			suite.addTest(new WebRepositoryConnectorTest(template));
 		}
