@@ -174,6 +174,9 @@ public class MylarTaskEditor extends FormEditor {
 		String url = null;
 		if (getEditorInput() instanceof RepositoryTaskEditorInput) {
 			url = ((RepositoryTaskEditorInput) getEditorInput()).getUrl();
+			if (url == null) {
+				url = task.getUrl(); 
+			}
 		} else if (task != null && task.getUrl().length() > 9) {
 			url = task.getUrl();
 		}
