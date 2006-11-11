@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasks.ui;
+package org.eclipse.mylar.internal.tasks.ui.util;
 
 import java.io.IOException;
 import java.io.PushbackReader;
@@ -18,20 +18,18 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.jface.internal.text.html.SubstitutionTextReader;
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
-
-/** 
- * COPY OF: org.eclipse.jface.internal.text.html.HTML2TextReader
- */
 
 /**
  * Reads the text contents from a reader of HTML contents and translates
  * the tags or cut them out.
  * <p>
  * Moved into this package from <code>org.eclipse.jface.internal.text.revisions</code>.</p>
+ */
+/** 
+ * COPY OF: org.eclipse.jface.internal.text.html.HTML2TextReader
  */
 @SuppressWarnings("unchecked")
 public class HTML2TextReader extends SubstitutionTextReader {
