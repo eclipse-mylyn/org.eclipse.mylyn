@@ -134,6 +134,7 @@ public class TaskUiUtil {
 				}
 			}
 		}
+		
 		if (task != null) {
 			TaskUiUtil.refreshAndOpenTaskListElement(task);
 			opened = true;
