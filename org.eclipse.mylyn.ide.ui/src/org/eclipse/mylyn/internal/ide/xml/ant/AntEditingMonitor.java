@@ -56,11 +56,9 @@ public class AntEditingMonitor extends AbstractUserInteractionMonitor {
 			in = editor.getEditorInput();
 
 			// check if we have a text selection
-			if (textSelection != null) {
+			if (textSelection != null && editor != null) {
 				try {
-
 					AntElementNode node = editor.getAntModel().getNode(textSelection.getOffset(), false);
-
 					if (node == null) {
 						return;
 					}
