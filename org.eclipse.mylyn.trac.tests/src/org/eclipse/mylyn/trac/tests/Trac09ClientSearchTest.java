@@ -11,7 +11,12 @@
 
 package org.eclipse.mylar.trac.tests;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylar.internal.trac.core.model.TracSearch;
+import org.eclipse.mylar.internal.trac.core.model.TracTicket;
 
 /**
  * @author Steffen Pingel
@@ -20,6 +25,17 @@ public class Trac09ClientSearchTest extends AbstractTracClientSearchTest {
 
 	public Trac09ClientSearchTest() {
 		super(Version.TRAC_0_9);
+	}
+
+	// TODO move this test to AbstracTracClientTest when bug 162094 is resolved
+	public void testSearchMilestoneAmpersand() throws Exception {
+		TracSearch search = new TracSearch();
+		search.addFilter("milestone", "mile&stone");
+		search.setOrderBy("id");
+		List<TracTicket> result = new ArrayList<TracTicket>();
+		repository.search(search, result);
+		assertEquals(1, result.size());
+		assertTicketEquals(tickets.get(7), result.get(0));
 	}
 
 }

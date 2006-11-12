@@ -36,6 +36,7 @@ public class TestFixture {
 		server.ticketMilestone("milestone2").itemCreated();
 		server.ticketMilestone("milestone3").itemCreated();
 		server.ticketMilestone("milestone4").itemCreated();
+		server.ticketMilestone("mile&stone").itemCreated();
 
 		server.ticketVersion("1.0").itemCreated();
 		server.ticketVersion("2.0").itemCreated();
@@ -47,6 +48,7 @@ public class TestFixture {
 		server.ticket(5).itemCreated();
 		server.ticket(6).itemCreated();
 		server.ticket(7).itemCreated();
+		server.ticket(8).itemCreated();
 	}
 
 //	private static void initializeRepository(XmlRpcServer server) throws Exception {
@@ -71,7 +73,7 @@ public class TestFixture {
 //	
 //	    ticket = server.ticket().create("attachment test", "");
 //	    // create attachment named attachment.txt that contains the text "Mylar"
-//	    ticket = server.ticket().create("test html entities: äöü", "ÄÖÜ\n\nmulti\nline\n\n'''bold'''\n");
+//	    ticket = server.ticket().create("test html entities: ï¿½ï¿½ï¿½", "ï¿½ï¿½ï¿½\n\nmulti\nline\n\n'''bold'''\n");
 // 	    ticket = server.ticket().create("offline handler test", "");
 //	}
 
