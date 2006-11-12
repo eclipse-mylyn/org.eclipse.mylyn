@@ -377,6 +377,8 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 				if (getContainer() != null) {
 					getContainer().run(true, true, runnable);
+				} else if (scontainer != null) {
+					scontainer.getRunnableContext().run(true, true, runnable);
 				} else {
 					IProgressService service = PlatformUI.getWorkbench().getProgressService();
 					service.run(true, true, runnable);
