@@ -19,8 +19,8 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -33,10 +33,18 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
@@ -63,21 +71,22 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.FilteredTree;
+import org.eclipse.ui.dialogs.PatternFilter;
 
 /**
  * @author Shawn Minto
  * @author Rob Elves
  * @author Mik Kersten
  * @author Eugene Kuleshov
+ * @author Willian Mitsuda
  * 
  * Product selection page of new bug wizard
  */
-public class BugzillaProductPage extends WizardPage implements Listener {
+public class BugzillaProductPage extends WizardPage {
 
 	private static final String OPTION_ALL = "All";
 
@@ -105,11 +114,10 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 	/** The instance of the workbench */
 	protected IWorkbench workbench;
 
-	/** The list box for the list of items to choose from */
-	protected org.eclipse.swt.widgets.List listBox;
-
-	/** Status variable for the possible errors on this page */
-	protected IStatus listStatus;
+	/**
+	 * Handle product selection
+	 */
+	private FilteredTree productList;
 
 	/**
 	 * String to hold previous product; determines if attribute option values
@@ -118,9 +126,8 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 	private String prevProduct;
 
 	private final TaskRepository repository;
-	
-	protected IPreferenceStore prefs = BugzillaUiPlugin.getDefault().getPreferenceStore();
 
+	protected IPreferenceStore prefs = BugzillaUiPlugin.getDefault().getPreferenceStore();
 
 	/**
 	 * Constructor for BugzillaProductPage
@@ -138,10 +145,6 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 		setTitle(IBugzillaConstants.TITLE_NEW_BUG);
 		setDescription(DESCRIPTION);
 		this.workbench = workbench;
-
-		// set the status for the page
-		listStatus = new Status(IStatus.OK, "not_used", 0, "", null);
-
 		this.bugWizard = bugWiz;
 		this.repository = repository;
 		setImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.bugzilla.ui",
@@ -168,34 +171,61 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 		Composite composite = new Composite(parent, SWT.NULL);
 
 		// create the desired layout for this wizard page
-		composite.setLayout(new GridLayout(1, true));
+		composite.setLayout(new GridLayout());
 
 		// create the list of bug reports
-		listBox = new org.eclipse.swt.widgets.List(composite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL);
-		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-		gd.heightHint = 200;
-		listBox.setLayoutData(gd);
+		productList = new FilteredTree(composite, SWT.SINGLE | SWT.BORDER, new PatternFilter());
+		productList.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).hint(
+				SWT.DEFAULT, 200).create());
+		final TreeViewer productViewer = productList.getViewer();
+		productViewer.setLabelProvider(new LabelProvider());
+		productViewer.setContentProvider(new ITreeContentProvider() {
 
-		// Each wizard has different types of items to add to the list
-		populateList(true);
+			public Object[] getChildren(Object parentElement) {
+				if (parentElement instanceof Collection) {
+					return ((Collection) parentElement).toArray();
+				}
+				return null;
+			}
 
-		listBox.addListener(SWT.Selection, this);
+			public Object getParent(Object element) {
+				return null;
+			}
 
-		listBox.setSelection(getSelectedProducts());
-		listBox.showSelection();
-		// listBox.addSelectionListener(new SelectionListener() {
-		//
-		// public void widgetDefaultSelected(SelectionEvent e) {
-		// // ignore
-		// }
-		//
-		// public void widgetSelected(SelectionEvent e) {
-		// getWizard().performFinish();
-		// getWizard().dispose();
-		// // TODO: is this the wrong way of doing the close?
-		// getContainer().getShell().close();
-		// }
-		// });
+			public boolean hasChildren(Object element) {
+				return false;
+			}
+
+			public Object[] getElements(Object inputElement) {
+				return getChildren(inputElement);
+			}
+
+			public void dispose() {
+			}
+
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+			}
+		});
+		initProducts();
+		productViewer.setInput(products);
+		productViewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
+
+			public void selectionChanged(SelectionChangedEvent event) {
+				// Initialize a variable with the no error status
+				Status status = new Status(IStatus.OK, BugzillaUiPlugin.PLUGIN_ID, 0, "", null);
+				if (productViewer.getSelection().isEmpty()) {
+					status = new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, 0, "You must select a product", null);
+				}
+
+				// Show the most serious error
+				applyToStatusLine(status);
+				isPageComplete();
+				getWizard().getContainer().updateButtons();
+			}
+
+		});
+		productViewer.setSelection(new StructuredSelection(getSelectedProducts()));
+		productList.setFocus();
 
 		Button updateButton = new Button(composite, SWT.LEFT | SWT.PUSH);
 		updateButton.setText(LABEL_UPDATE);
@@ -240,7 +270,7 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 							}
 						}
 					});
-					populateList(false);
+					productViewer.setInput(products);
 				} catch (InvocationTargetException ex) {
 					MessageDialog.openError(null, "Error updating product list", "Error reported:\n"
 							+ ex.getCause().getMessage());
@@ -267,7 +297,8 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 				if (storedProducts.length > 0) {
 					products = Arrays.asList(storedProducts);
 				} else {
-					products = BugzillaCorePlugin.getDefault().getRepositoryConfiguration(repository, false).getProducts();
+					products = BugzillaCorePlugin.getDefault().getRepositoryConfiguration(repository, false)
+							.getProducts();
 				}
 				bugWizard.model.setConnected(true);
 				bugWizard.model.setParsedProductsStatus(true);
@@ -286,28 +317,6 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 		}
 	}
 
-	/**
-	 * Populates the listBox with all available products.
-	 * 
-	 * @param read
-	 */
-	protected void populateList(boolean init) {
-		if (init) {
-			initProducts();
-		}
-
-		if (products != null) {
-			listBox.removeAll();
-			Iterator<String> itr = products.iterator();
-
-			while (itr.hasNext()) {
-				String prod = itr.next();
-				listBox.add(prod);
-			}
-		}
-		listBox.setFocus();
-	}
-
 	private String[] getSelectedProducts() {
 		IStructuredSelection selection = getSelection();
 		if (selection == null) {
@@ -324,27 +333,27 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 			BugzillaRepositoryQuery query = null;
 			if (element instanceof BugzillaRepositoryQuery) {
 				query = (BugzillaRepositoryQuery) element;
-	
+
 			} else if (element instanceof BugzillaQueryHit) {
 				BugzillaQueryHit hit = (BugzillaQueryHit) element;
 				if (hit.getParent() != null && hit.getParent() instanceof BugzillaRepositoryQuery) {
 					query = (BugzillaRepositoryQuery) hit.getParent();
 				}
 			}
-			
+
 			if (query != null) {
 				String queryUrl = query.getUrl();
 				queryUrl = queryUrl.substring(queryUrl.indexOf("?") + 1);
 				String[] options = queryUrl.split("&");
-	
+
 				for (String option : options) {
 					String key = option.substring(0, option.indexOf("="));
 					if ("product".equals(key)) {
 						try {
 							products.add(URLDecoder.decode(option.substring(option.indexOf("=") + 1), repository
 									.getCharacterEncoding()));
-							// TODO: list box only accepts a single selection so we
-							// break on first found
+							// TODO: list box only accepts a single selection so
+							// we break on first found
 							break;
 						} catch (UnsupportedEncodingException ex) {
 							// ignore
@@ -352,14 +361,14 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 					}
 				}
 			} else {
-				if(element instanceof IAdaptable) {
+				if (element instanceof IAdaptable) {
 					IAdaptable adaptable = (IAdaptable) element;
 					ITask task = (ITask) adaptable.getAdapter(ITask.class);
-					if(task instanceof BugzillaTask) {
+					if (task instanceof BugzillaTask) {
 						BugzillaTask bugzillaTask = (BugzillaTask) task;
 						products.add(bugzillaTask.getTaskData().getProduct());
 					}
-				}				
+				}
 			}
 		}
 
@@ -369,40 +378,10 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 	private IStructuredSelection getSelection() {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		ISelection selection = window.getSelectionService().getSelection();
-		if(selection instanceof IStructuredSelection) {
+		if (selection instanceof IStructuredSelection) {
 			return (IStructuredSelection) selection;
-		}		
-		return null;
-	}
-
-	public void handleEvent(Event event) {
-		handleEventHelper(event, "You must select a product");
-	}
-
-	/**
-	 * A helper function for "handleEvent"
-	 * 
-	 * @param event
-	 *            the event which occurred
-	 * @param errorMessage
-	 *            the error message unique to the wizard calling this function
-	 */
-	protected void handleEventHelper(Event event, String errorMessage) {
-		// Initialize a variable with the no error status
-		Status status = new Status(IStatus.OK, "not_used", 0, "", null);
-
-		// If the event is triggered by the list of items, respond with the
-		// corresponding status
-		if (event.widget == listBox) {
-			if (listBox.getSelectionIndex() == -1)
-				status = new Status(IStatus.ERROR, "not_used", 0, errorMessage, null);
-			listStatus = status;
 		}
-
-		// Show the most serious error
-		applyToStatusLine(listStatus);
-		isPageComplete();
-		getWizard().getContainer().updateButtons();
+		return null;
 	}
 
 	/**
@@ -447,7 +426,7 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 	public void saveDataToModel() throws CoreException {
 		NewBugzillaReport model = bugWizard.model;
 		prevProduct = model.getProduct();
-		model.setProduct((listBox.getSelection())[0]);
+		model.setProduct((String) ((IStructuredSelection) productList.getViewer().getSelection()).getFirstElement());
 
 		if (!model.hasParsedAttributes() || !model.getProduct().equals(prevProduct)) {
 			BugzillaRepositoryConnector.setupNewBugAttributes(repository, model);
@@ -459,7 +438,7 @@ public class BugzillaProductPage extends WizardPage implements Listener {
 
 	@Override
 	public boolean isPageComplete() {
-		bugWizard.completed = listBox.getSelectionIndex() != -1;
+		bugWizard.completed = !productList.getViewer().getSelection().isEmpty();
 		return bugWizard.completed;
 	}
 
