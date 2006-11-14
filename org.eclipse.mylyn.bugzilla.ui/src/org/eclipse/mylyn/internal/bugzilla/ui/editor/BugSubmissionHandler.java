@@ -88,19 +88,15 @@ public class BugSubmissionHandler {
 								form.getTaskData().getRepositoryKind(), form.getTaskData().getRepositoryUrl());
 						BugzillaClient client = ((BugzillaRepositoryConnector) connector).getClientManager().getClient(
 								repository);
-						// try {
-						submittedBugId = form.submitReportToRepository(client);
-						// } catch (ConnectException e) {
-						// form.setProxySettings(Proxy.NO_PROXY);
-						// submittedBugId =
-						// form.submitReportToRepository(client);
-						// }
+						
+						submittedBugId = form.submitReportToRepository(client);						
 
 						if (form.isNewBugPost()) {
 							handleNewBugPost(form.getTaskData(), submittedBugId, container);
 							return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.OK, submittedBugId, null);
 						} else {
-							handleExistingBugPost(form.getTaskData(), submittedBugId);
+							// NOTE: sync now handled by editor
+							//handleExistingBugPost(form.getTaskData(), submittedBugId);
 							return Status.OK_STATUS;
 						}
 					} catch (GeneralSecurityException e) {
@@ -158,11 +154,12 @@ public class BugSubmissionHandler {
 
 	}
 
+	// Used when run in forced sync mode for testing
 	private void handleExistingBugPost(RepositoryTaskData repositoryTaskData, String resultId) {
 		try {
 			String handle = AbstractRepositoryTask.getHandle(repositoryTaskData.getRepositoryUrl(), repositoryTaskData
 					.getId());
-			ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
+			final ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
 			if (task != null) {				
 				Set<AbstractRepositoryQuery> queriesWithHandle = TasksUiPlugin.getTaskListManager().getTaskList()
 						.getQueriesForHandle(task.getHandleIdentifier());

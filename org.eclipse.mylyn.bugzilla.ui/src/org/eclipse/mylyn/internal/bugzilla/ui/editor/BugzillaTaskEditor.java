@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -49,6 +50,7 @@ import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylar.internal.tasks.ui.views.DatePicker;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
@@ -206,6 +208,9 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		final BugzillaRepositoryConnector bugzillaRepositoryConnector = (BugzillaRepositoryConnector) TasksUiPlugin
 				.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 
+		final AbstractRepositoryTask modifiedTask = (AbstractRepositoryTask) TasksUiPlugin.getTaskListManager()
+				.getTaskList().getTask(AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
+
 		JobChangeAdapter submitJobListener = new JobChangeAdapter() {
 
 			public void done(final IJobChangeEvent event) {
@@ -216,19 +221,12 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 								&& event.getJob().getResult().getMessage() != null) {//
 							// Attach context
 							if (getAttachContext()) {
-
-								final AbstractRepositoryTask modifiedTask = (AbstractRepositoryTask) TasksUiPlugin
-										.getTaskListManager()
-										.getTaskList()
-										.getTask(
-												AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
-
 								IWorkbench wb = PlatformUI.getWorkbench();
 								IProgressService ps = wb.getProgressService();
 								try {
 									ps.busyCursorWhile(new IRunnableWithProgress() {
 										public void run(IProgressMonitor pm) {
-											try {												
+											try {
 												bugzillaRepositoryConnector.attachContext(repository, modifiedTask, "",
 														TasksUiPlugin.getDefault().getProxySettings());
 											} catch (Exception e) {
@@ -243,31 +241,37 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 								} catch (InterruptedException e1) {
 									// ignore
 								}
+							}
+							
+							
+							if (modifiedTask != null) {
+								
+								// TODO: This is set to null in order for update to bypass
+								// ui override check with user
+								// Need to change how this is achieved.
+								modifiedTask.setTaskData(null);
+								TasksUiPlugin.getSynchronizationManager().synchronize(connector, modifiedTask, true,
+										new JobChangeAdapter() {
 
-								// IWorkbenchSite site =
-								// BugzillaTaskEditor.this.getEditor().getSite();
-								// if (site instanceof IEditorSite) {
-								// IStatusLineManager statusLineManager =
-								// ((IEditorSite)site).getActionBars().getStatusLineManager();
-								// IProgressMonitor pm =
-								// statusLineManager.getProgressMonitor();
-								// pm.beginTask("Attaching context",
-								// IProgressMonitor.UNKNOWN);
-								// pm.worked(1);
-								// try {
-								// bugzillaRepositoryConnector.attachContext(repository,
-								// modifiedTask, "", TasksUiPlugin
-								// .getDefault().getProxySettings());
-								// } catch (Exception e) {
-								// MylarStatusHandler.fail(e, "Failed to attach
-								// task context.\n\n"+e.getMessage(), true);
-								// }
-								// pm.done();
-								//									
-								// }
+											@Override
+											public void done(IJobChangeEvent event) {
+												close();
+												TaskUiUtil.openEditor(modifiedTask, false);
+											}
+										});
+								
+								
+								Set<AbstractRepositoryQuery> queriesWithHandle = TasksUiPlugin.getTaskListManager().getTaskList()
+										.getQueriesForHandle(modifiedTask.getHandleIdentifier());
+								
+								// Sync Queries
+								TasksUiPlugin.getSynchronizationManager().synchronize(connector, queriesWithHandle, null, Job.SHORT, 0,
+										false);
+								
+								// Sync any tasks that might have changed as a result of this action
+								TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
 
 							}
-							close();
 							return;
 						} else if (event.getJob().getResult().getCode() == Status.INFO) {
 							WebBrowserDialog.openAcceptAgreement(null, IBugzillaConstants.REPORT_SUBMIT_ERROR, event
