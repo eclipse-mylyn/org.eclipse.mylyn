@@ -405,7 +405,7 @@ public class TaskListWriter {
 			inFile.renameTo(new File(name));
 		}
 		if (child == null) {
-			MylarStatusHandler.log(e, "Could not read task list");
+			MylarStatusHandler.log(e, TasksUiPlugin.MESSAGE_RESTORE);
 		} else {
 			MylarStatusHandler.log(e, "Tasks may have been lost from " + child.getNodeName());
 		}

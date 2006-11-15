@@ -173,7 +173,7 @@ class SynchronizeTaskJob extends Job {
 						public void run() {
 							if ((repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING && MessageDialog
 									.openConfirm(null, "Stale Editor",
-											"Remote copy of report has changes. Refresh and open report?"))
+											"Remote copy of taks has changes. Refresh and open report?"))
 									|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
 								TaskUiUtil.closeEditorInActivePage(input.getTask());
 								TaskUiUtil.refreshAndOpenTaskListElement(input.getTask());

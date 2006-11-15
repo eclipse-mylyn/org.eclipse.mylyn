@@ -124,6 +124,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private static final int NOTIFICATION_DELAY = 5000;
 
+	public static final String MESSAGE_RESTORE = "Could not read task list.  Consider restoring via File -> Import -> Mylar Task Data";
+
 	private static TasksUiPlugin INSTANCE;
 
 	private static TaskListManager taskListManager;
