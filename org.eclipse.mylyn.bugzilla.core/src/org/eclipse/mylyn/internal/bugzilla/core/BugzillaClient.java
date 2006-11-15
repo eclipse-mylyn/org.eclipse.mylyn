@@ -138,7 +138,7 @@ public class BugzillaClient {
 
 	}
 
-	private GetMethod connectInternal(String serverURL) throws LoginException, IOException, BugzillaException {
+	private GetMethod connectInternal(String serverURL) throws LoginException, IOException {
 		WebClientUtil.setupHttpClient(httpClient, proxy, serverURL, htAuthUser, htAuthPass);
 		// httpClient.getParams().setParameter("http.socket.timeout", new
 		// Integer(CONNECT_TIMEOUT));
@@ -171,8 +171,7 @@ public class BugzillaClient {
 				authenticated = false;
 				authenticate();
 			} else {
-				MylarStatusHandler.log("Connection http code returned: " + code, this);
-				throw new BugzillaException();
+				throw new IOException("HttpClient connection error response code: "+code);				
 			}
 		}
 
@@ -223,7 +222,7 @@ public class BugzillaClient {
 		}
 	}
 
-	private void authenticate() throws LoginException, IOException, BugzillaException {
+	private void authenticate() throws LoginException, IOException {
 		if (!hasAuthenticationCredentials()) {
 			throw new LoginException();
 		}
@@ -292,11 +291,9 @@ public class BugzillaClient {
 			// authenticated = true;
 			// } catch (UnrecognizedReponseException e) {
 			//
-			// }
-		} catch (IOException e) {
-			throw new BugzillaException(e);
+			// }		
 		} catch (ParseException e) {
-			throw new BugzillaException(e);
+			throw new LoginException("Unable to read response from server (ParseException).");
 		} finally {
 			method.releaseConnection();
 			httpClient.getParams().setAuthenticationPreemptive(false);

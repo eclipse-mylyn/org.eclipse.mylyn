@@ -54,7 +54,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TaskListToolTipHandler {
 
-	//private static final String SEPARATOR = "\n---------------\n";
+	// private static final String SEPARATOR = "\n---------------\n";
 	private static final String SEPARATOR = "\n\n";
 
 	private Shell tipShell;
@@ -131,7 +131,7 @@ public class TaskListToolTipHandler {
 			}
 			String suffix = "";
 			if (container instanceof AbstractRepositoryQuery) {
-				AbstractRepositoryQuery query = ((AbstractRepositoryQuery)container);
+				AbstractRepositoryQuery query = ((AbstractRepositoryQuery) container);
 				total = 0;
 				completed = 0;
 				total += query.getHits().size();
@@ -180,18 +180,21 @@ public class TaskListToolTipHandler {
 			if (syncStamp != null) {
 				tooltip += " (synched: " + syncStamp + ")\n";
 			}
+			if (query.getStatus() != null) {
+				tooltip += "\n" + "Last Error: " + query.getStatus().getMessage()+"\n";
+			}
 
-//			Set<AbstractQueryHit> hits = query.getHits(); // FIXME provide
+			// Set<AbstractQueryHit> hits = query.getHits(); // FIXME provide
 			// getHitsSize()
 			// method
-//			if (hits.size() == 1) {
-//				tooltip += "1 hit";
-//			} else {
-//				tooltip += hits.size() + " hits";
-//			}
-//			if (query.getMaxHits() != -1) {
-//				tooltip += " (max set to: " + query.getMaxHits() + ")";
-//			}
+			// if (hits.size() == 1) {
+			// tooltip += "1 hit";
+			// } else {
+			// tooltip += hits.size() + " hits";
+			// }
+			// if (query.getMaxHits() != -1) {
+			// tooltip += " (max set to: " + query.getMaxHits() + ")";
+			// }
 			return tooltip;
 		}
 
@@ -205,7 +208,7 @@ public class TaskListToolTipHandler {
 			tooltip += ((ITaskListElement) element).getDescription();
 			if (repositoryTask != null) {
 				tooltip += "\n" + repositoryTask.getRepositoryUrl() + formatScheduledFor(repositoryTask);
-				
+
 				if (repositoryTask.getStatus() != null) {
 					tooltip += SEPARATOR + "Last Error: " + repositoryTask.getStatus().getMessage();
 				}
@@ -383,10 +386,10 @@ public class TaskListToolTipHandler {
 				}
 
 				String progressText = updateContainerProgressBar(taskProgressBar, getTaskListElement(widget));
-				
+
 				tipLabelText.setText(text + progressText);
 				tipLabelImage.setImage(image); // accepts null
-				
+
 				tipShell.pack();
 				setHoverLocation(tipShell, tipPosition);
 				tipShell.setVisible(true);

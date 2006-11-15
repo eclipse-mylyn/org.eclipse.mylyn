@@ -11,8 +11,6 @@
 
 package org.eclipse.mylar.tasks.ui;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Date;
 import java.util.Set;
 
@@ -20,8 +18,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.util.DateUtil;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
@@ -29,8 +25,6 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressConstants;
 
 /**
@@ -63,49 +57,40 @@ class SynchronizeQueryJob extends Job {
 		for (AbstractRepositoryQuery repositoryQuery : queries) {
 			// if (repositoryQuery.isSynchronizing())
 			// continue;
+
+			repositoryQuery.setStatus(null);
+
 			monitor.setTaskName("Synchronizing: " + repositoryQuery.getDescription());
 			setProperty(IProgressConstants.ICON_PROPERTY, TaskListImages.REPOSITORY_SYNCHRONIZE);
 			// repositoryQuery.setCurrentlySynchronizing(true);
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 					repositoryQuery.getRepositoryKind(), repositoryQuery.getRepositoryUrl());
 			if (repository == null) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						MessageDialog
-								.openInformation(Display.getDefault().getActiveShell(), TasksUiPlugin.TITLE_DIALOG,
-										"No task repository associated with this query. Open the query to associate it with a repository.");
-					}
-				});
-			}
-
-			QueryHitCollector collector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList());
-			IStatus resultingStatus = connector.performQuery(repositoryQuery, repository, TasksUiPlugin.getDefault()
-					.getProxySettings(), monitor, collector);
-
-			if (resultingStatus.getException() == null) {
-				repositoryQuery.updateHits(collector.getHits(), taskList);
-				if (synchTasks) {
-					// TODO: Should sync changed per repository not per
-					// query
-					TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
-				}
-			} else if (!(resultingStatus.getException() instanceof IOException)) {
-				MylarStatusHandler.log(resultingStatus);
-				repositoryQuery.setCurrentlySynchronizing(false);
-				return Status.OK_STATUS;
-			} else if (resultingStatus.getException() instanceof FileNotFoundException) {
-				// can be caused by empty urlbase parameter on bugzilla
-				// server
-				MylarStatusHandler.log(resultingStatus);
-				repositoryQuery.setCurrentlySynchronizing(false);
-				return Status.OK_STATUS;
+				repositoryQuery.setStatus(new Status(Status.ERROR, TasksUiPlugin.PLUGIN_ID,
+						"No task repository found: " + repositoryQuery.getRepositoryUrl()));			
 			} else {
-				// assume working offline
-				return Status.OK_STATUS;
+
+				QueryHitCollector collector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList());
+				IStatus resultingStatus = connector.performQuery(repositoryQuery, repository, TasksUiPlugin
+						.getDefault().getProxySettings(), monitor, collector);
+
+				if (resultingStatus.getException() == null) {
+					repositoryQuery.updateHits(collector.getHits(), taskList);
+					if (synchTasks) {
+						// TODO: Should sync changed per repository not per
+						// query
+						TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
+					}				
+				} else {
+					// MylarStatusHandler.log(resultingStatus);
+					repositoryQuery.setStatus(resultingStatus);					
+				}
 			}
 
 			repositoryQuery.setCurrentlySynchronizing(false);
-			repositoryQuery.setLastRefreshTimeStamp(DateUtil.getFormattedDate(new Date(), "MMM d, H:mm:ss"));
+			if (repositoryQuery.getStatus() == null) {
+				repositoryQuery.setLastRefreshTimeStamp(DateUtil.getFormattedDate(new Date(), "MMM d, H:mm:ss"));
+			}
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyContainerUpdated(repositoryQuery);
 			monitor.worked(1);
 		}

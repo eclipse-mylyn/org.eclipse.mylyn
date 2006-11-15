@@ -8,7 +8,6 @@
 
 package org.eclipse.mylar.tasks.ui;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -257,11 +256,9 @@ public class RepositorySynchronizationManager {
 									.getMessage());
 						}
 					});
-				} else if (!(e.getStatus().getException() instanceof IOException)) {
-					MylarStatusHandler.log(e, "Could not determine modified tasks for " + repository.getUrl() + ".");
 				} else {
 					// ignore, indicates working offline
-					// TODO: need to log/deal with this somehow and not just ignore
+					// error reported in ui (tooltip and warning icon)
 				}
 			} catch (UnsupportedEncodingException e) {
 				MylarStatusHandler.log(e, "Could not determine modified tasks for " + repository.getUrl() + ".");

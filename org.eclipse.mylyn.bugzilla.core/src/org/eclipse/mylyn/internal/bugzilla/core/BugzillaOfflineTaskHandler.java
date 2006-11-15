@@ -125,7 +125,7 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 					+ repository.getUrl() + " failed. File not found: " + e.getMessage(), e));
 		} catch (final Exception e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "Report download from "
-					+ repository.getUrl() + " failed, please see details.", e));
+					+ repository.getUrl() + " failed: "+e.getMessage(), e));
 		}
 	}
 

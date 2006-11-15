@@ -14,6 +14,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IStatus;
+
 /**
  * @author Mik Kersten
  * @author Eugene Kuleshov
@@ -30,6 +32,8 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 	protected String lastRefreshTimeStamp = "<never>";
 
 	private boolean currentlySynchronizing = false;
+
+	protected IStatus status = null;
 
 	public abstract String getRepositoryKind();
 
@@ -165,5 +169,13 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 
 	public void setLastRefreshTimeStamp(String lastRefreshTimeStamp) {
 		this.lastRefreshTimeStamp = lastRefreshTimeStamp;
+	}
+	
+	public IStatus getStatus() {
+		return status ;
+	}
+	
+	public void setStatus(IStatus status) {
+		this.status = status;
 	}
 }

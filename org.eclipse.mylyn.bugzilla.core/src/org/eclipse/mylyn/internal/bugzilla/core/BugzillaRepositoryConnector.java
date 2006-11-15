@@ -172,13 +172,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					"Unrecognized response from server", e);
 		} catch (IOException e) {
 			queryStatus = new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
-					"Check repository credentials and connectivity.", e);
+					"Check repository configuration: "+e.getMessage(), e);
 		} catch (BugzillaException e) {
 			queryStatus = new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK,
-					"Unable to perform query due to Bugzilla error", e);
+					"Bugzilla error: "+e.getMessage(), e);
 		} catch (GeneralSecurityException e) {
 			queryStatus = new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK,
-					"Unable to perform query due to repository configuration error", e);
+					"Check repository configuration: "+e.getMessage(), e);
 		}
 		return queryStatus;
 
