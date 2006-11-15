@@ -189,6 +189,9 @@ public class TaskUiUtil {
 						Job refreshJob = TasksUiPlugin.getSynchronizationManager().synchronize(connector,
 								repositoryTask, true, new JobChangeAdapter() {
 									public void done(IJobChangeEvent event) {
+										// Mark read here too so that hits get marked as read upon opening
+										// TODO: if synch job failed, don't mark read
+										TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);										
 										TaskUiUtil.openEditor(task, false);
 									}
 								});
