@@ -183,7 +183,8 @@ public class CommitTemplateVariables {
 	public static class TaskId extends AbstractCommitTemplateVariable {
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
-				return AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
+				return ((AbstractRepositoryTask)task).getIdLabel();
+//				return AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
 			} else {
 				return null;
 			}
