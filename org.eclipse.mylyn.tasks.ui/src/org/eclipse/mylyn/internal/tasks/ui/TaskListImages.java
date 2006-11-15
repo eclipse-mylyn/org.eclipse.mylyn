@@ -37,6 +37,8 @@ public class TaskListImages {
 
 	private static final String T_WIZBAN = "wizban";
 	
+	private static final String T_OVR = "ovr16";
+	
 	public static final Point SIZE = new Point(16, 16);
 
 	private static final URL baseURL = TasksUiPlugin.getDefault().getBundle().getEntry("/icons/");
@@ -107,6 +109,8 @@ public class TaskListImages {
 	
 	public static final ImageDescriptor OVERLAY_REPOSITORY_CONTEXT = create(T_EVIEW, "overlay-repository-context.gif");
 		
+	public static final ImageDescriptor OVERLAY_WARNING = create(T_OVR, "overlay-warning.gif");
+	
 	public static final ImageDescriptor STATUS_NORMAL = create(T_EVIEW, "status-normal.gif");
 	
 	public static final ImageDescriptor STATUS_CONTEXT = create(T_EVIEW, "status-server-context.gif");
@@ -134,7 +138,7 @@ public class TaskListImages {
 	public static final ImageDescriptor STATUS_CONTEXT_CONFLICT = createWithOverlay(
 			STATUS_CONTEXT,
 			OVERLAY_CONFLICT, true, true);  	
-   
+
 	public static final ImageDescriptor QUERY = createSize(create(T_TOOL, "query.gif"), SIZE);
 
 	public static final ImageDescriptor QUERY_NEW = create(T_TOOL, "query-new.gif");
@@ -159,7 +163,6 @@ public class TaskListImages {
 
 	public static final ImageDescriptor TASK_INACTIVE_CONTEXT = createSize(create(T_TOOL, "task-context.gif"),
 			SIZE);
-
 	
 	public static final ImageDescriptor TASK_COMPLETE = create(T_TOOL, "task-complete.gif");
 
@@ -199,7 +202,7 @@ public class TaskListImages {
 		return new TaskListImageDescriptor(base, size);
 	}
 
-	private static ImageDescriptor createWithOverlay(ImageDescriptor base, ImageDescriptor overlay, boolean top,
+	public static ImageDescriptor createWithOverlay(ImageDescriptor base, ImageDescriptor overlay, boolean top,
 			boolean left) {
 		return new TaskListImageDescriptor(base, overlay, top, left);
 	}

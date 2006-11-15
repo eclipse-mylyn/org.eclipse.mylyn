@@ -13,6 +13,7 @@ package org.eclipse.mylar.tasks.core;
 
 import java.util.Date;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer;
 
 /**
@@ -50,6 +51,8 @@ public abstract class AbstractRepositoryTask extends Task {
 
 	public static final String HANDLE_DELIM = "-";
 
+	protected IStatus status = null;
+	
 	public AbstractRepositoryTask(String handle, String label, boolean newTask) {
 		super(handle, label, newTask);
 	}
@@ -173,4 +176,13 @@ public abstract class AbstractRepositoryTask extends Task {
 	public String getOwner() {
 		return "<unknown>";
 	}
+	
+	public IStatus getStatus() {
+		return status;
+	}
+	
+	public void setStatus(IStatus status) {
+		this.status = status;
+	}
+	
 }

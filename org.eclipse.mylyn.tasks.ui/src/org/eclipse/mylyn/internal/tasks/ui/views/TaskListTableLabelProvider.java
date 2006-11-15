@@ -15,6 +15,7 @@ package org.eclipse.mylar.internal.tasks.ui.views;
 
 import java.util.Arrays;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -116,12 +117,22 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 				repositoryTask = (AbstractRepositoryTask)element;
 			}
 			if (repositoryTask != null) {
+				ImageDescriptor image = null;
 				if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
-					return TaskListImages.getImage(TaskListImages.STATUS_NORMAL_OUTGOING);
+					image = TaskListImages.STATUS_NORMAL_OUTGOING;
 				} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
-					return TaskListImages.getImage(TaskListImages.STATUS_NORMAL_INCOMING);
+					image = TaskListImages.STATUS_NORMAL_INCOMING;
 				} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
-					return TaskListImages.getImage(TaskListImages.STATUS_NORMAL_CONFLICT);
+					image = TaskListImages.STATUS_NORMAL_CONFLICT;
+				}
+				if (repositoryTask.getStatus() != null) {
+					if (image == null) {
+						image = TaskListImages.STATUS_NORMAL;
+					}
+					return TaskListImages.getImage(TaskListImages.createWithOverlay(image,
+							TaskListImages.OVERLAY_WARNING, false, true));
+				} else if (image != null) {
+					return TaskListImages.getImage(image);
 				}
 			} else if (element instanceof AbstractQueryHit){
 				return TaskListImages.getImage(TaskListImages.STATUS_NORMAL_INCOMING);

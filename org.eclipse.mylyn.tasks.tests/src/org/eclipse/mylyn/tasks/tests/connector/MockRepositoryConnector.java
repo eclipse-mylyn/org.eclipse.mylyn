@@ -92,7 +92,7 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateTaskState(AbstractRepositoryTask repositoryTask) {
+	public void updateTask(TaskRepository repository, AbstractRepositoryTask repositoryTask) {
 		// ignore
 	}
 

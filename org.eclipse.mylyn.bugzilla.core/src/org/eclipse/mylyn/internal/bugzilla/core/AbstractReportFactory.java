@@ -53,6 +53,10 @@ public class AbstractReportFactory {
 	protected void collectResults(DefaultHandler contentHandler, boolean clean) throws IOException, BugzillaException,
 			GeneralSecurityException {
 
+		if(inStream == null) {
+			return;
+		}
+		
 		BufferedReader in;
 		if (characterEncoding != null) {
 			in = new BufferedReader(new InputStreamReader(inStream, characterEncoding));

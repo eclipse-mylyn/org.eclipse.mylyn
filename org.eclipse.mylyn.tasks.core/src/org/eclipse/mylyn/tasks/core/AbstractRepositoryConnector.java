@@ -100,7 +100,26 @@ public abstract class AbstractRepositoryConnector {
 
 	public abstract List<String> getSupportedVersions();
 
-	public abstract void updateTaskState(AbstractRepositoryTask repositoryTask);
+	/**
+	 * Updates the properties of <code>repositoryTask</code>. Invoked when on
+	 * task synchronization if {@link #getOfflineTaskHandler()} returns
+	 * <code>null</code> or
+	 * {@link IOfflineTaskHandler#downloadTaskData(TaskRepository, String, Proxy)}
+	 * returns <code>null</code>.
+	 * 
+	 * <p>
+	 * Connectors that provide {@link RepositoryTaskData} objects for all tasks
+	 * do not need to implement this method.
+	 * 
+	 * @param repository
+	 *            the repository
+	 * @param repositoryTask
+	 *            the task that is synchronized
+	 * @throws CoreException
+	 *             thrown in case of error while synchronizing
+	 * @see {@link #getOfflineTaskHandler()}
+	 */
+	public abstract void updateTask(TaskRepository repository, AbstractRepositoryTask repositoryTask) throws CoreException;
 
 	public String[] repositoryPropertyNames() {
 		return new String[] { IRepositoryConstants.PROPERTY_VERSION, IRepositoryConstants.PROPERTY_TIMEZONE,

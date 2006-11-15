@@ -107,8 +107,17 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateTaskState(AbstractRepositoryTask repositoryTask) {
-		// TODO Auto-generated method stub
+	public void updateTask(TaskRepository repository, AbstractRepositoryTask repositoryTask) throws CoreException {
+		if (repositoryTask instanceof TracTask) {
+			String id = AbstractRepositoryTask.getTaskId(repositoryTask.getHandleIdentifier());
+			try {
+				ITracClient connection = getClientManager().getRepository(repository);
+				TracTicket ticket = connection.getTicket(Integer.parseInt(id));
+				updateTaskDetails((TracTask) repositoryTask, ticket, false);
+			} catch (Exception e) {
+				throw new CoreException(TracCorePlugin.toStatus(e));
+			}
+		}
 	}
 
 	@Override

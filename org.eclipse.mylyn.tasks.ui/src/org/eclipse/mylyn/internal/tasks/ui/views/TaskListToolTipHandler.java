@@ -54,7 +54,8 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TaskListToolTipHandler {
 
-	private static final String SEPARATOR = "\n---------------\n";
+	//private static final String SEPARATOR = "\n---------------\n";
+	private static final String SEPARATOR = "\n\n";
 
 	private Shell tipShell;
 
@@ -204,6 +205,10 @@ public class TaskListToolTipHandler {
 			tooltip += ((ITaskListElement) element).getDescription();
 			if (repositoryTask != null) {
 				tooltip += "\n" + repositoryTask.getRepositoryUrl() + formatScheduledFor(repositoryTask);
+				
+				if (repositoryTask.getStatus() != null) {
+					tooltip += SEPARATOR + "Last Error: " + repositoryTask.getStatus().getMessage();
+				}
 			}
 			return tooltip;
 		} else if (element != null) {
@@ -381,7 +386,7 @@ public class TaskListToolTipHandler {
 				
 				tipLabelText.setText(text + progressText);
 				tipLabelImage.setImage(image); // accepts null
-
+				
 				tipShell.pack();
 				setHoverLocation(tipShell, tipPosition);
 				tipShell.setVisible(true);
