@@ -68,8 +68,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "1", null);
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		assertNotNull(task);
-		// assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
-		// connector.synchronize(task, true, null);
+		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
+		TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);		
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
 
 		BugzillaTask retrievedTask = (BugzillaTask) taskList.getTask(task.getHandleIdentifier());
@@ -151,9 +151,10 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		TasksUiPlugin.getTaskListManager().getTaskList().moveToRoot(task);
 		assertTrue(task.isDownloaded());
 		// (The initial local copy from server)
-		// assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
-		// connector.synchronize(task, true, null);
+		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
+		TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
+		
 		// Modify it
 		String newCommentText = "BugzillaRepositoryClientTest.testSynchronize(): " + (new Date()).toString();
 		task.getTaskData().setNewComment(newCommentText);
@@ -283,6 +284,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 		assertNotNull(task);
 		assertTrue(task.isDownloaded());
+		TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
 		assertEquals(bugId, Integer.parseInt(task.getTaskData().getId()));
 		int numAttached = task.getTaskData().getAttachments().size();
@@ -359,10 +361,12 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		init222();
 		BugzillaTask task4 = generateLocalTaskAndDownload("4");
 		assertNotNull(task4.getTaskData());
+		TasksUiPlugin.getSynchronizationManager().setTaskRead(task4, true);
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task4.getSyncState());
 		assertEquals(4, Integer.parseInt(task4.getTaskData().getId()));
 
 		BugzillaTask task5 = generateLocalTaskAndDownload("5");
+		TasksUiPlugin.getSynchronizationManager().setTaskRead(task5, true);
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task5.getSyncState());
 		assertEquals(5, Integer.parseInt(task5.getTaskData().getId()));
 
@@ -424,6 +428,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 		init222();
 		BugzillaTask task7 = generateLocalTaskAndDownload("7");
+		TasksUiPlugin.getSynchronizationManager().setTaskRead(task7, true);
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task7.getSyncState());
 		assertEquals(7, Integer.parseInt(task7.getTaskData().getId()));
 
@@ -495,6 +500,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	 */
 	protected void timeTracker(int taskid, boolean enableDeadline) throws Exception {
 		BugzillaTask bugtask = generateLocalTaskAndDownload("" + taskid);
+		TasksUiPlugin.getSynchronizationManager().setTaskRead(bugtask, true);
 		assertEquals(taskid, Integer.parseInt(bugtask.getTaskData().getId()));
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, bugtask.getSyncState());
 

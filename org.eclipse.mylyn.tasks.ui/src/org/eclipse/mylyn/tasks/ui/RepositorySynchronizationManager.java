@@ -342,7 +342,8 @@ public class RepositorySynchronizationManager {
 				if (!forceSync && checkHasIncoming(repositoryTask, newTaskData)) {
 					status = RepositoryTaskSyncState.INCOMING;
 				} else {
-					status = RepositoryTaskSyncState.SYNCHRONIZED;
+					// bug#163850 -Make sync retrieve new data but not mark as read
+					//status = RepositoryTaskSyncState.SYNCHRONIZED;
 				}
 				break;
 			case SYNCHRONIZED:
