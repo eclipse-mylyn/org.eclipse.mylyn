@@ -8,6 +8,7 @@
 
 package org.eclipse.mylar.internal.trac.ui.editor;
 
+import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -16,8 +17,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.mylar.internal.tasks.ui.editors.AbstractTaskEditorInput;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylar.internal.tasks.ui.editors.AbstractTaskEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
@@ -34,6 +37,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Steffen Pingel
@@ -99,7 +103,7 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 		final String comment = getNewCommentText();
 		final AbstractRepositoryTask task = (AbstractRepositoryTask) TasksUiPlugin.getTaskListManager().getTaskList()
 				.getTask(AbstractRepositoryTask.getHandle(repository.getUrl(), getRepositoryTaskData().getId()));
-		final boolean attachContext = false; // getAttachContext();
+		final boolean attachContext = getAttachContext();
 
 		JobChangeAdapter listener = new JobChangeAdapter() {
 			public void done(final IJobChangeEvent event) {
@@ -107,15 +111,7 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 					public void run() {
 						if (event.getJob().getResult().isOK()) {
 							if (attachContext) {
-								// TODO check for task == null
-								// TODO should be done as part of job
-								try {
-									connector.attachContext(repository, (AbstractRepositoryTask) task, "",
-											TasksUiPlugin.getDefault().getProxySettings());
-								} catch (Exception e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
+								attachContext();
 							}
 							close();
 						} else {
@@ -136,7 +132,8 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 					ITracClient server = connector.getClientManager().getRepository(repository);
 					server.updateTicket(ticket, comment);
 					if (task != null) {
-						// XXX hack to avoid message about lost changes to local task
+						// XXX hack to avoid message about lost changes to local
+						// task
 						task.setTaskData(null);
 						TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 					}
@@ -155,6 +152,29 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 
 	@Override
 	protected void validateInput() {
+	}
+
+	private void attachContext() {
+		String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), getRepositoryTaskData().getId());
+		final AbstractRepositoryTask modifiedTask = (AbstractRepositoryTask) TasksUiPlugin.getTaskListManager()
+				.getTaskList().getTask(handle);
+
+		IProgressService ps = PlatformUI.getWorkbench().getProgressService();
+		try {
+			ps.busyCursorWhile(new IRunnableWithProgress() {
+				public void run(IProgressMonitor pm) {
+					try {
+						connector.attachContext(repository, modifiedTask, "", TasksUiPlugin.getDefault()
+								.getProxySettings());
+					} catch (Exception e) {
+						MylarStatusHandler.fail(e, "Failed to attach task context.\n\n" + e.getMessage(), true);
+					}
+				}
+			});
+		} catch (InvocationTargetException e) {
+			MylarStatusHandler.fail(e.getCause(), "Failed to attach task context.\n\n" + e.getMessage(), true);
+		} catch (InterruptedException ignore) {
+		}
 	}
 
 }
