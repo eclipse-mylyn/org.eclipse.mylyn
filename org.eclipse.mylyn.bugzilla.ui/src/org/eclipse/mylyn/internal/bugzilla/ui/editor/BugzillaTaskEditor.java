@@ -242,11 +242,11 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 									// ignore
 								}
 							}
-							
-							
+
 							if (modifiedTask != null) {
-								
-								// TODO: This is set to null in order for update to bypass
+
+								// TODO: This is set to null in order for update
+								// to bypass
 								// ui override check with user
 								// Need to change how this is achieved.
 								modifiedTask.setTaskData(null);
@@ -259,18 +259,24 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 												TaskUiUtil.openEditor(modifiedTask, false);
 											}
 										});
-								
-								
-								Set<AbstractRepositoryQuery> queriesWithHandle = TasksUiPlugin.getTaskListManager().getTaskList()
-										.getQueriesForHandle(modifiedTask.getHandleIdentifier());
-								
+
+								Set<AbstractRepositoryQuery> queriesWithHandle = TasksUiPlugin.getTaskListManager()
+										.getTaskList().getQueriesForHandle(modifiedTask.getHandleIdentifier());
+
 								// Sync Queries
-								TasksUiPlugin.getSynchronizationManager().synchronize(connector, queriesWithHandle, null, Job.SHORT, 0,
-										false);
-								
-								// Sync any tasks that might have changed as a result of this action
+								TasksUiPlugin.getSynchronizationManager().synchronize(connector, queriesWithHandle,
+										null, Job.SHORT, 0, false);
+
+								// Sync any tasks that might have changed as a
+								// result of this action
 								TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
 
+							} else {
+								TaskUiUtil.openRepositoryTask(repository.getUrl(), BugzillaTaskEditor.this
+										.getRepositoryTaskData().getId(), repository.getUrl()
+										+ IBugzillaConstants.URL_GET_SHOW_BUG
+										+ BugzillaTaskEditor.this.getRepositoryTaskData().getId());
+								close();
 							}
 							return;
 						} else if (event.getJob().getResult().getCode() == Status.INFO) {

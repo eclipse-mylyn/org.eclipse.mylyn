@@ -15,14 +15,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskList;
@@ -34,6 +37,8 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
  * @author Rob Elves
  */
 public class ScheduledTaskListSynchJob extends Job {
+
+	private static final int UPDATE_ATTRIBUTES_FREQUENCY = 3;
 
 	private static final String LABEL_TASK = "Task Repository Synchronization";
 
@@ -88,6 +93,16 @@ public class ScheduledTaskListSynchJob extends Job {
 					continue;
 				}
 
+				// Occasionally update repository attributes
+				if(count >= UPDATE_ATTRIBUTES_FREQUENCY) {
+					try {
+						connector.updateAttributes(repository, new SubProgressMonitor(monitor, 1));
+						count = 0;
+					} catch (CoreException e) {
+						MylarStatusHandler.fail(e, e.getMessage(), false);
+					}
+				}
+				
 				Set<AbstractRepositoryQuery> queries = Collections.unmodifiableSet(taskList
 						.getRepositoryQueries(repository.getUrl()));
 				if (queries.size() > 0) {
