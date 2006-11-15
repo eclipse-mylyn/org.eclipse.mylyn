@@ -34,12 +34,12 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
- * @author Eugene Kuleshov 
+ * @author Eugene Kuleshov
  */
 public class WebRepositoryConnectorTest extends TestCase {
 
 	private final RepositoryTemplate template;
-	
+
 	public WebRepositoryConnectorTest(RepositoryTemplate template) {
 		super("testRepositoryTemplate");
 		this.template = template;
@@ -55,7 +55,7 @@ public class WebRepositoryConnectorTest extends TestCase {
   	          hits.add(hit);
   	        }
   	    };
-	  
+
 	    Map<String, String> params = new HashMap<String, String>();
 	    Map<String, String> attributes = new HashMap<String, String>(template.getAttributes());
 	    for(Map.Entry<String, String> e : attributes.entrySet()) {
@@ -64,30 +64,32 @@ public class WebRepositoryConnectorTest extends TestCase {
 	            params.put(key, e.getValue());
 	        }
 	    }
-	  
+
         TaskRepository repository = new TaskRepository(WebTask.REPOSITORY_TYPE, template.repositoryUrl, params);
         repository.setAuthenticationCredentials("user", "pwd");
 
         String taskQueryUrl = WebRepositoryConnector.evaluateParams(template.taskQueryUrl, repository);
-        String regexp = WebRepositoryConnector.evaluateParams(template.getAttribute(WebRepositoryConnector.PROPERTY_QUERY_REGEXP), repository);
         String buffer = WebRepositoryConnector.fetchResource(taskQueryUrl, null, null);
-        IStatus resultingStatus = WebRepositoryConnector.performQuery(buffer, regexp, null, null, monitor, collector);		
-		assertTrue("Query failed\n"+taskQueryUrl+"\n"+regexp+"\n"+resultingStatus.toString(), queryStatus.isOK());
-		assertTrue("Expected non-empty query result\n"+taskQueryUrl+"\n"+regexp, hits.size()>0);
+
+        String regexp = WebRepositoryConnector.evaluateParams(template.getAttribute(WebRepositoryConnector.PROPERTY_QUERY_REGEXP), repository);
+        IStatus resultingStatus = WebRepositoryConnector.performQuery(buffer, regexp, null, monitor, collector, repository);
+
+        assertTrue("Query failed\n"+taskQueryUrl+"\n"+regexp+"\n"+resultingStatus.toString(), queryStatus.isOK());
+        assertTrue("Expected non-empty query result\n"+taskQueryUrl+"\n"+regexp, hits.size()>0);
 	}
 
 	public String getName() {
 		return template.label;
 	}
-	
+
 	public static TestSuite suite() {
 		TestSuite suite = new ActiveTestSuite(WebRepositoryConnectorTest.class.getName());
-		
+
 		AbstractRepositoryConnector repositoryConnector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(WebTask.REPOSITORY_TYPE);
 		for (RepositoryTemplate template : repositoryConnector.getTemplates()) {
 			suite.addTest(new WebRepositoryConnectorTest(template));
 		}
-		
+
 		return suite;
 	}
 
