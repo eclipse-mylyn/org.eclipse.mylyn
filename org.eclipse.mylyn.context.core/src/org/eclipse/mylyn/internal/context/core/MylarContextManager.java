@@ -85,7 +85,7 @@ public class MylarContextManager {
 
 	public static final String CONTEXT_FILE_EXTENSION = ".xml.zip";
 
-	public static final String OLD_CONTEXT_FILE_EXTENSION = ".xml";
+	public static final String CONTEXT_FILE_EXTENSION_OLD = ".xml";
 
 	private static final int MAX_PROPAGATION = 17; // TODO: parametrize this
 
@@ -114,7 +114,7 @@ public class MylarContextManager {
 	private static ScalingFactors scalingFactors = new ScalingFactors();
 
 	public MylarContextManager() {
-		
+
 	}
 
 	public MylarContext getActivityHistoryMetaContext() {
@@ -123,15 +123,20 @@ public class MylarContextManager {
 		}
 		return activityMetaContext;
 	}
-	
+
 	public void loadActivityMetaContext() {
-		File contextActivityFile = getFileForContext(CONTEXT_HISTORY_FILE_NAME);
-		activityMetaContext = externalizer.readContextFromXML(CONTEXT_HISTORY_FILE_NAME, contextActivityFile);
-		if (activityMetaContext == null) {
+		if (ContextCorePlugin.getDefault().getContextStore() != null) {
+			File contextActivityFile = getFileForContext(CONTEXT_HISTORY_FILE_NAME);
+			activityMetaContext = externalizer.readContextFromXML(CONTEXT_HISTORY_FILE_NAME, contextActivityFile);
+			if (activityMetaContext == null) {
+				resetActivityHistory();
+			}
+			for (IMylarContextListener listener : activityMetaContextListeners) {
+				listener.contextActivated(activityMetaContext);
+			}
+		} else {
 			resetActivityHistory();
-		}
-		for (IMylarContextListener listener : activityMetaContextListeners) {
-			listener.contextActivated(activityMetaContext);
+			MylarStatusHandler.log("No context store installed, not restoring activity context.", this);
 		}
 	}
 
@@ -147,7 +152,7 @@ public class MylarContextManager {
 			}
 		}
 	}
-	
+
 	public void resetActivityHistory() {
 		activityMetaContext = new MylarContext(CONTEXT_HISTORY_FILE_NAME, MylarContextManager.getScalingFactors());
 		saveActivityHistoryContext();
@@ -551,12 +556,16 @@ public class MylarContextManager {
 	}
 
 	public void saveActivityHistoryContext() {
+		if (ContextCorePlugin.getDefault().getContextStore() == null) {
+			return;
+		}
 		boolean wasPaused = contextCapturePaused;
 		try {
 			if (!wasPaused) {
 				setContextCapturePaused(true);
 			}
-			externalizer.writeContextToXml(getActivityHistoryMetaContext(), getFileForContext(CONTEXT_HISTORY_FILE_NAME));
+			externalizer.writeContextToXml(getActivityHistoryMetaContext(),
+					getFileForContext(CONTEXT_HISTORY_FILE_NAME));
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "could not save activity history", false);
 		} finally {

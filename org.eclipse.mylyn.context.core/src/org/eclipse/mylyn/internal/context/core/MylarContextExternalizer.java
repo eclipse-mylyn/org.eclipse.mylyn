@@ -76,7 +76,7 @@ public class MylarContextExternalizer {
 			String handleIdentifier = context.getHandleIdentifier();
 			String encoded = URLEncoder.encode(handleIdentifier, MylarContextManager.CONTEXT_FILENAME_ENCODING);		
 			ZipOutputStream outputStream = new ZipOutputStream(new FileOutputStream(file));
-			ZipEntry zipEntry = new ZipEntry(encoded + MylarContextManager.OLD_CONTEXT_FILE_EXTENSION);
+			ZipEntry zipEntry = new ZipEntry(encoded + MylarContextManager.CONTEXT_FILE_EXTENSION_OLD);
 			outputStream.putNextEntry(zipEntry);
 			outputStream.setMethod(ZipOutputStream.DEFLATED);
 
