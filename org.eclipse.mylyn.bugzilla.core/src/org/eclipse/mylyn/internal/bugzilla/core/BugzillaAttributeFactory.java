@@ -23,8 +23,10 @@ public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 	private static final long serialVersionUID = 5087501781682994759L;
 
 	@Override
-	public String mapCommonAttributeKey(String key) {
-		if (key.equals(RepositoryTaskAttribute.COMMENT_DATE)) {
+	public String mapCommonAttributeKey(String key) {		
+		if (key.equals(RepositoryTaskAttribute.NEW_CC)) {
+			return BugzillaReportElement.NEWCC.getKeyString();
+		} else if (key.equals(RepositoryTaskAttribute.COMMENT_DATE)) {
 			return BugzillaReportElement.BUG_WHEN.getKeyString();
 		} else if (key.equals(RepositoryTaskAttribute.USER_OWNER)) {
 			return BugzillaReportElement.WHO.getKeyString();

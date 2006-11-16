@@ -21,8 +21,8 @@ import java.security.GeneralSecurityException;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.httpclient.NameValuePair;
 import org.eclipse.core.runtime.IStatus;
@@ -193,7 +193,7 @@ public class BugzillaReportSubmitForm {
 	 * @throws UnsupportedEncodingException
 	 */
 	public static BugzillaReportSubmitForm makeExistingBugPost(RepositoryTaskData model, String repositoryUrl,
-			String userName, String password, Proxy proxySettings, Set<String> removeCC, String characterEncoding)
+			String userName, String password, Proxy proxySettings, List<String> removeCC, String characterEncoding)
 			throws UnsupportedEncodingException {
 
 		BugzillaReportSubmitForm form = new BugzillaReportSubmitForm();

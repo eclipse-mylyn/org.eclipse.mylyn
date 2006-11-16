@@ -17,7 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -89,18 +88,14 @@ import org.eclipse.ui.progress.IProgressService;
  * <code>BugReport</code> object to store the data.
  * 
  * @author Mik Kersten (hardening of prototype)
- * @author Rob Elves (adaption to Eclipse Forms)
+ * @author Rob Elves
  * @author Jeff Pound (Attachment work)
  */
 public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
-	private static final String SECTION_TITLE_PEOPLE = "People";
-
 	private static final String LABEL_TIME_TRACKING = "Bugzilla Time Tracking";
 
 	private BugSubmissionHandler submissionHandler;
-
-	protected Set<String> removeCC = new HashSet<String>();
 
 	// protected BugzillaCompareInput compareInput;
 
@@ -109,10 +104,6 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 	protected List keyWordsList;
 
 	protected Text keywordsText;
-
-	protected List ccList;
-
-	protected Text ccText;
 
 	protected Text urlText;
 
@@ -195,8 +186,9 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 						.getCharacterEncoding(), taskData, wrap);
 			} else {
 				bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeExistingBugPost(taskData, repository.getUrl(),
-						repository.getUserName(), repository.getPassword(), editorInput.getProxySettings(), removeCC,
-						repository.getCharacterEncoding());
+						repository.getUserName(), repository.getPassword(), editorInput.getProxySettings(), taskData
+								.getAttributeValues(RepositoryTaskAttribute.REMOVE_CC), repository
+								.getCharacterEncoding());
 			}
 		} catch (UnsupportedEncodingException e) {
 			// should never get here but just in case...
@@ -296,46 +288,6 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			}
 		};
 		submissionHandler.submitBugReport(bugzillaReportSubmitForm, submitJobListener, false, false);
-	}
-
-	@Override
-	protected void createPeopleLayout(Composite composite) {
-		FormToolkit toolkit = getManagedForm().getToolkit();
-		Section peopleSection = createSection(composite, SECTION_TITLE_PEOPLE);
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(peopleSection);
-		Composite peopleComposite = toolkit.createComposite(peopleSection);
-		GridLayout layout = new GridLayout(2, false);
-		layout.marginRight = 5;
-		peopleComposite.setLayout(layout);
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(peopleComposite);
-		addSelfToCC(peopleComposite);
-		Label label = toolkit.createLabel(peopleComposite, BugzillaReportElement.ASSIGNED_TO.toString());
-		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
-		Composite textFieldComposite = toolkit.createComposite(peopleComposite);
-		GridLayout textLayout = new GridLayout();
-		textLayout.marginWidth = 1;
-		textLayout.verticalSpacing = 0;
-		textLayout.marginHeight = 0;
-		textLayout.marginRight = 5;
-		textFieldComposite.setLayout(textLayout);
-		String assignedToString = getRepositoryTaskData().getAttributeValue(
-				BugzillaReportElement.ASSIGNED_TO.getKeyString());
-		toolkit.createText(textFieldComposite, assignedToString, SWT.FLAT | SWT.READ_ONLY);
-
-		label = toolkit.createLabel(peopleComposite, BugzillaReportElement.REPORTER.toString());
-		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
-		textFieldComposite = toolkit.createComposite(peopleComposite);
-		textLayout = new GridLayout();
-		textLayout.marginWidth = 1;
-		textLayout.verticalSpacing = 0;
-		textLayout.marginHeight = 0;
-		textFieldComposite.setLayout(textLayout);
-		String reporterString = getRepositoryTaskData()
-				.getAttributeValue(BugzillaReportElement.REPORTER.getKeyString());
-		toolkit.createText(textFieldComposite, reporterString, SWT.FLAT | SWT.READ_ONLY);
-		addCCList("", peopleComposite);
-		getManagedForm().getToolkit().paintBordersFor(peopleComposite);
-		peopleSection.setClient(peopleComposite);
 	}
 
 	@Override
@@ -801,77 +753,6 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 				}
 			}
 		});
-	}
-
-	protected void addCCList(String ccValue, Composite attributesComposite) {
-		// newLayout(attributesComposite, 1, "Add CC:", PROPERTY);
-		FormToolkit toolkit = getManagedForm().getToolkit();
-		Label label = toolkit.createLabel(attributesComposite, "Add CC:");
-		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
-		ccText = toolkit.createText(attributesComposite, ccValue);
-		ccText.setFont(TEXT_FONT);
-		ccText.setEditable(true);
-		// ccText.setForeground(foreground);
-		// ccText.setBackground(background);
-		GridData ccData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		ccData.horizontalSpan = 1;
-		ccData.widthHint = 150;
-		ccText.setLayoutData(ccData);
-		// ccText.setText(ccValue);
-		ccText.addListener(SWT.FocusIn, new GenericListener());
-		ccText.addModifyListener(new ModifyListener() {
-
-			public void modifyText(ModifyEvent e) {
-				markDirty(true);
-				taskData.setAttributeValue(BugzillaReportElement.NEWCC.getKeyString(), ccText.getText());
-			}
-
-		});
-
-		// newLayout(attributesComposite, 1, "CC: (Select to remove)",
-		// PROPERTY);
-		Label ccListLabel = toolkit.createLabel(attributesComposite, "CC:");
-		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.TOP).applyTo(ccListLabel);
-		ccList = new List(attributesComposite, SWT.MULTI | SWT.V_SCROLL);// SWT.BORDER
-		ccList.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		ccList.setFont(TEXT_FONT);
-		GridData ccListData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		ccListData.horizontalSpan = 1;
-		ccListData.widthHint = 150;
-		ccListData.heightHint = 95;
-		ccList.setLayoutData(ccListData);
-
-		java.util.List<String> ccs = taskData.getCC();
-		if (ccs != null) {
-			for (Iterator<String> it = ccs.iterator(); it.hasNext();) {
-				String cc = it.next();
-				ccList.add(cc);
-			}
-		}
-
-		ccList.addSelectionListener(new SelectionListener() {
-
-			public void widgetSelected(SelectionEvent e) {
-				markDirty(true);
-
-				for (String cc : ccList.getItems()) {
-					int index = ccList.indexOf(cc);
-					if (ccList.isSelected(index)) {
-						removeCC.add(cc);
-					} else {
-						removeCC.remove(cc);
-					}
-				}
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
-		ccList.addListener(SWT.FocusIn, new GenericListener());
-		toolkit.createLabel(attributesComposite, "");
-		label = toolkit.createLabel(attributesComposite, "(Select to remove)");
-		GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.DEFAULT).applyTo(label);
-
 	}
 
 	@Override

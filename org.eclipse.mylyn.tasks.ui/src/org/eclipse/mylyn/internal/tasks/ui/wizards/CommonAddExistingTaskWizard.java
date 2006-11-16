@@ -75,8 +75,10 @@ public class CommonAddExistingTaskWizard extends Wizard {
 				monitor.beginTask("Retrieving task...", IProgressMonitor.UNKNOWN);
 				final ITask newTask = connector.createTaskFromExistingKey(repository, taskId, null);
 				if (newTask instanceof AbstractRepositoryTask) {
-					TasksUiPlugin.getSynchronizationManager().synchronize(connector, (AbstractRepositoryTask) newTask,
+					AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)newTask;
+					TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask,
 							true, null);
+					TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 				}
 				if (newTask != null) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
