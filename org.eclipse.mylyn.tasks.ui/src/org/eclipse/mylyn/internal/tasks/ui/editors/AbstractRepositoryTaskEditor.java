@@ -1439,10 +1439,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		for (Iterator<TaskComment> it = getRepositoryTaskData().getComments().iterator(); it.hasNext();) {
 			final TaskComment taskComment = it.next();
 
-			// skip comment 0 as it is the description
-			if (taskComment.getNumber() == 0)
-				continue;
-
 			ExpandableComposite expandableComposite = toolkit.createExpandableComposite(addCommentsComposite,
 					ExpandableComposite.TREE_NODE);
 

@@ -570,6 +570,12 @@ public class BugzillaClient {
 		}
 		PostMethod postMethod = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl.toString() + formUrl));
 
+		//DEBUG
+		// for (NameValuePair nameValuePair : formData) {
+		// System.err.println(nameValuePair.getName()+",
+		// "+nameValuePair.getValue());
+		//		}
+		
 		postMethod.setRequestBody(formData);
 		postMethod.setDoAuthentication(true);
 		postMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset="+characterEncoding);

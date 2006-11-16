@@ -280,16 +280,15 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 	}
 
 	public RepositoryTaskAttribute getDescriptionAttribute() {
-		RepositoryTaskAttribute attribute = getAttribute(RepositoryTaskAttribute.DESCRIPTION);
-		if (attribute != null) {
-			return attribute;
-		} else {
+		RepositoryTaskAttribute attribute = getAttribute(RepositoryTaskAttribute.DESCRIPTION);		
+		// TODO: Remove the following after 1.0 release as we now just have a description attribute
+		if (attribute == null) {
 			List<TaskComment> coms = this.getComments();
 			if (coms != null && coms.size() > 0) {
 				return coms.get(0).getAttribute(RepositoryTaskAttribute.COMMENT_TEXT);
 			}
 		}
-		return null;
+		return attribute;
 	}
 
 	public void addAttachment(RepositoryAttachment attachment) {

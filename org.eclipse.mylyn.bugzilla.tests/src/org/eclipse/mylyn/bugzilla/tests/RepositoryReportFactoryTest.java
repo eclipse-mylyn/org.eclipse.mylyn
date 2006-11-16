@@ -161,14 +161,17 @@ public class RepositoryReportFactoryTest extends TestCase {
 		assertEquals("relves@cs.ubc.ca", report.getAttribute(BugzillaReportElement.REPORTER.getKeyString()).getValue());
 		assertEquals("nhapke@cs.ubc.ca", report.getAttribute(BugzillaReportElement.ASSIGNED_TO.getKeyString())
 				.getValue());
-		assertEquals(3, report.getComments().size());
-		assertEquals("relves@cs.ubc.ca", report.getComments().get(0).getAttribute(
-				BugzillaReportElement.WHO.getKeyString()).getValue());
-		assertEquals("2006-05-23 17:46:24", report.getComments().get(0).getAttribute(
-				BugzillaReportElement.BUG_WHEN.getKeyString()).getValue());
-		assertEquals("search-match-test 1", report.getComments().get(0).getAttribute(
-				BugzillaReportElement.THETEXT.getKeyString()).getValue());
-		assertEquals(0, report.getAttachments().size());
+		assertEquals(2, report.getComments().size());
+		// assertEquals("relves@cs.ubc.ca",
+		// report.getComments().get(0).getAttribute(
+		// BugzillaReportElement.WHO.getKeyString()).getValue());
+		// assertEquals("2006-05-23 17:46:24",
+		// report.getComments().get(0).getAttribute(
+		// BugzillaReportElement.BUG_WHEN.getKeyString()).getValue());
+		// assertEquals("search-match-test 1",
+		// report.getComments().get(0).getAttribute(
+		// BugzillaReportElement.THETEXT.getKeyString()).getValue());
+		// assertEquals(0, report.getAttachments().size());
 	}
 
 	public void testReadingReport2201() throws Exception {
@@ -202,14 +205,6 @@ public class RepositoryReportFactoryTest extends TestCase {
 		assertEquals("relves@cs.ubc.ca", report.getAttribute(BugzillaReportElement.REPORTER.getKeyString()).getValue());
 		assertEquals("relves@cs.ubc.ca", report.getAttribute(BugzillaReportElement.ASSIGNED_TO.getKeyString())
 				.getValue());
-		assertEquals(1, report.getComments().size());
-		assertEquals("relves@cs.ubc.ca", report.getComments().get(0).getAttribute(
-				BugzillaReportElement.WHO.getKeyString()).getValue());
-		assertEquals("2006-03-02 18:13", report.getComments().get(0).getAttribute(
-				BugzillaReportElement.BUG_WHEN.getKeyString()).getValue());
-		assertEquals("search-match-test 1", report.getComments().get(0).getAttribute(
-				BugzillaReportElement.THETEXT.getKeyString()).getValue());
-		assertEquals(0, report.getAttachments().size());
 	}
 
 	// public void testReadingReport2201Eclipse() throws Exception {
@@ -373,13 +368,6 @@ public class RepositoryReportFactoryTest extends TestCase {
 		assertEquals("relves@cs.ubc.ca", report.getAttribute(BugzillaReportElement.REPORTER.getKeyString()).getValue());
 		assertEquals("relves@cs.ubc.ca", report.getAttribute(BugzillaReportElement.ASSIGNED_TO.getKeyString())
 				.getValue());
-		assertEquals(1, report.getComments().size());
-		assertEquals("relves@cs.ubc.ca", report.getComments().get(0).getAttribute(
-				BugzillaReportElement.WHO.getKeyString()).getValue());
-		assertEquals("2006-03-02 18:09", report.getComments().get(0).getAttribute(
-				BugzillaReportElement.BUG_WHEN.getKeyString()).getValue());
-		assertEquals("search-match-test 1", report.getComments().get(0).getAttribute(
-				BugzillaReportElement.THETEXT.getKeyString()).getValue());
 		assertEquals(0, report.getAttachments().size());
 	}
 
@@ -449,14 +437,6 @@ public class RepositoryReportFactoryTest extends TestCase {
 		assertEquals("search-match-test 2", bugReport.getDescription());
 		assertEquals("TestProduct", bugReport.getProduct());
 		assertEquals("nhapke@cs.ubc.ca", bugReport.getAssignedTo());
-		// assertEquals("Other",
-		// report.getAttribute(BugzillaReportElement.OP_SYS.getKeyString()).getValue());
-		// assertEquals(37, report.getComments().size());
-		// assertEquals("Testing new 2.22 version capability",
-		// report.getComments().get(0).getAttribute(BugzillaReportElement.THETEXT.getKeyString()).getValue());
-		// assertEquals(15, report.getAttachments().size());
-		// assertEquals("1",
-		// report.getAttachments().get(0).getAttribute(BugzillaReportElement.ATTACHID.getKeyString()).getValue());
 	}
 
 	public void testDeltaTsTruncation() {

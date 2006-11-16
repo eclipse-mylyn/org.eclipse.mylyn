@@ -101,9 +101,7 @@ public class BugzillaQueryTest extends TestCase {
 		assertNotNull(taskData);
 		assertEquals("user@mylar.eclipse.org", taskData.getAssignedTo());
 
-		// Notice that comment 0 is the Bug Description
-		assertEquals("foo", taskData.getComments().get(0).getText());
-		assertEquals("nhapke@cs.ubc.ca", taskData.getComments().get(0).getAuthor());
+		assertEquals("foo", taskData.getDescription());
 
 		// You can use the getAttributeValue to pull up the information on any
 		// part of the bug

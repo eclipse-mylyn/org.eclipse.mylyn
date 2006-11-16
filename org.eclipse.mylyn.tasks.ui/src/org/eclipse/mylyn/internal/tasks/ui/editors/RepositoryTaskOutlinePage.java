@@ -103,9 +103,9 @@ public class RepositoryTaskOutlinePage extends ContentOutlinePage {
 						return node.getName();
 					}
 					int n = comment.getNumber();
-					if (n == 0) {
-						return comment.getAuthorName() + " (" + node.getName() + ")";
-					}
+//					if (n == 0) {
+//						return comment.getAuthorName() + " (" + node.getName() + ")";
+//					}
 					return n + ": " + comment.getAuthorName() + " (" + node.getName() + ")";
 				}
 				return super.getText(element);

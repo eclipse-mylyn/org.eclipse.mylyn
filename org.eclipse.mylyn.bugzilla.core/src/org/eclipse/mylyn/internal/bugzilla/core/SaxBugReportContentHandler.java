@@ -175,6 +175,10 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			break;
 		case LONG_DESC:
 			if (taskComment != null) {
+				if(taskComment.getNumber() == 0) {					
+				    report.setAttributeValue(RepositoryTaskAttribute.DESCRIPTION, taskComment.getText());
+					break;
+				}
 				report.addComment(taskComment);
 			}
 			break;
