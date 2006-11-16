@@ -550,6 +550,11 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		return false;
 	}
 
+	@Override
+	protected void createPeopleLayout(Composite composite) {
+		// ignore, new editor doesn't have people section
+	}
+
 	protected void handleOkayStatus(final IJobChangeEvent event) {
 		close();
 		String newTaskHandle = AbstractRepositoryTask.getHandle(repository.getUrl(), event.getJob().getResult()
