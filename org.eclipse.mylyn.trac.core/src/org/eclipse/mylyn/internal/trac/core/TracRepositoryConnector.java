@@ -289,16 +289,40 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	
 		List<RepositoryTaskAttribute> attributes = data.getAttributes();
 		for (RepositoryTaskAttribute attribute : attributes) {
-			if (!attribute.isReadOnly()) {
+			if (isInternalAttribute(attribute.getID())) {
+				// ignore
+			} else if (!attribute.isReadOnly()) {
 				ticket.putValue(attribute.getID(), attribute.getValue());
 			}
 		}
+
+		// set cc value
+		StringBuilder sb = new StringBuilder();
+		List<String> removeValues = data.getAttributeValues(RepositoryTaskAttribute.REMOVE_CC);
+		List<String> values = data.getAttributeValues(RepositoryTaskAttribute.USER_CC);
+		for (String user : values) {
+			if (!removeValues.contains(user)) {
+				if (sb.length() > 0) {
+					sb.append(",");
+				}
+				sb.append(user);
+			}
+		}
+		if (data.getAttributeValue(RepositoryTaskAttribute.NEW_CC).length() > 0) {
+			if (sb.length() > 0) {
+				sb.append(",");
+			}
+			sb.append(data.getAttributeValue(RepositoryTaskAttribute.NEW_CC));
+		}
 		// TODO "1" should not be hard coded here
 		if ("1".equals(data.getAttributeValue(RepositoryTaskAttribute.ADD_SELF_CC))) {
-			String cc = data.getAttributeValue(RepositoryTaskAttribute.USER_CC);
-			ticket.putBuiltinValue(Key.CC, cc + "," + repository.getUserName());
+			if (sb.length() > 0) {
+				sb.append(",");
+			}
+			sb.append(repository.getUserName());
 		}
-	
+		ticket.putBuiltinValue(Key.CC, sb.toString());
+		
 		RepositoryOperation operation = data.getSelectedOperation();
 		if (operation != null) {
 			String action = operation.getKnobName();
@@ -320,6 +344,10 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	
 		return ticket;
+	}
+
+	private static boolean isInternalAttribute(String id) {
+		return RepositoryTaskAttribute.REMOVE_CC.equals(id) || RepositoryTaskAttribute.NEW_CC.equals(id);
 	}
 	
 }

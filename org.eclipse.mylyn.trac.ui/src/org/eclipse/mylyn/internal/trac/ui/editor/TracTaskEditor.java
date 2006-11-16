@@ -58,11 +58,6 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	@Override
-	protected void addSelfToCC(Composite composite) {
-		// disabled, see bug 155151
-	}
-
-	@Override
 	protected void createCustomAttributeLayout(Composite composite) {
 	}
 

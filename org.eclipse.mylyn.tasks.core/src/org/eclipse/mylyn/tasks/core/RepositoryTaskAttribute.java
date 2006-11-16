@@ -26,6 +26,12 @@ public class RepositoryTaskAttribute implements Serializable {
 	
 	private static final long serialVersionUID = 6959987055086133307L;
 
+	/**
+	 * Key for the author of a comment.
+	 * 
+	 * TODO remove this key: Trac uses owner to denote the assignee of a ticket
+	 * and AbstractRepository has a getOwner() method which is confusing
+	 */ 
 	public static final String USER_OWNER = "task.common.user.owner";
 
 	public static final String USER_CC = "task.common.user.cc";
@@ -73,6 +79,10 @@ public class RepositoryTaskAttribute implements Serializable {
 	public static final String KEYWORDS = "task.common.keywords";
 	
 	public static final String ADD_SELF_CC = "task.common.addselfcc";
+	
+	public static final String NEW_CC = "task.common.newcc";
+ 
+	public static final String REMOVE_CC = "task.common.removecc";
 	
 	private boolean hidden = false;
 	

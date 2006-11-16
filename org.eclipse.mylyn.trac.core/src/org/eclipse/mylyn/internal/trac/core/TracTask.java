@@ -157,8 +157,8 @@ public class TracTask extends AbstractRepositoryTask {
 
 	@Override
 	public String getOwner() {
-		if (taskData != null && taskData.getAttribute(RepositoryTaskAttribute.USER_OWNER) != null) {
-			return taskData.getAttributeValue(RepositoryTaskAttribute.USER_OWNER);
+		if (taskData != null && taskData.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED) != null) {
+			return taskData.getAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED);
 		} else {
 			return super.getOwner();
 		}

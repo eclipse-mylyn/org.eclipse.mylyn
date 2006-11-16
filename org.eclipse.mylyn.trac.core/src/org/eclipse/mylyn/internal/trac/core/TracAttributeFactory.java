@@ -32,16 +32,16 @@ public class TracAttributeFactory extends AbstractAttributeFactory {
 	private static Map<String, String> tracKeyByTaskKey = new HashMap<String, String>();
 	
 	public enum Attribute {
-		CC(Key.CC, "CC:", RepositoryTaskAttribute.USER_CC), 
+		CC(Key.CC, "CC:", RepositoryTaskAttribute.USER_CC, true, false), 
 		CHANGE_TIME(Key.CHANGE_TIME, "Last Modification:", RepositoryTaskAttribute.DATE_MODIFIED, true, true),
 		COMPONENT(Key.COMPONENT, "Component:", null),
 		DESCRIPTION(Key.DESCRIPTION, "Description:", RepositoryTaskAttribute.DESCRIPTION, true, false),
 		ID(Key.ID, "<used by search engine>", null, true),
 		KEYWORDS(Key.KEYWORDS, "Keywords:", RepositoryTaskAttribute.KEYWORDS),
 		MILESTONE(Key.MILESTONE, "Milestone:", null),
-		OWNER(Key.OWNER, "Owner:", RepositoryTaskAttribute.USER_OWNER, false, true),
+		OWNER(Key.OWNER, "Assigned to:", RepositoryTaskAttribute.USER_ASSIGNED, true, true),
 		PRIORITY(Key.PRIORITY, "Priority:", null),
-		REPORTER(Key.REPORTER, "Reporter:", RepositoryTaskAttribute.USER_REPORTER, false, true),
+		REPORTER(Key.REPORTER, "Reporter:", RepositoryTaskAttribute.USER_REPORTER, true, true),
 		RESOLUTION(Key.RESOLUTION, "Resolution:", RepositoryTaskAttribute.RESOLUTION, false, true),
 		SEVERITY(Key.SEVERITY, "Severity:", null),
 		STATUS(Key.STATUS, "Status:", RepositoryTaskAttribute.STATUS, false, true),

@@ -90,7 +90,7 @@ import org.eclipse.ui.progress.IProgressService;
  * 
  * @author Mik Kersten (hardening of prototype)
  * @author Rob Elves (adaption to Eclipse Forms)
- * @authos Jeff Pound (Attachment work)
+ * @author Jeff Pound (Attachment work)
  */
 public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 

@@ -180,6 +180,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected static final String LABEL_SECTION_NEW_COMMENT = "New Comment";
 
+	private static final String SECTION_TITLE_PEOPLE = "People";
+
 	private FormToolkit toolkit;
 
 	private ScrolledForm form;
@@ -187,11 +189,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected TaskRepository repository;
 
 	public static final int WRAP_LENGTH = 90;
-	
+
 	protected Display display;
 
 	protected boolean htmlComments = false;
-	
+
 	public static final Font TITLE_FONT = JFaceResources.getBannerFont();
 
 	public static final Font TEXT_FONT = JFaceResources.getDefaultFont();
@@ -262,6 +264,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected RetargetAction pasteAction;
 
 	protected Composite editorComposite;
+
+	protected org.eclipse.swt.widgets.List ccList;
+
+	protected Text ccText;
 
 	private List<IRepositoryTaskAttributeListener> attributesListeners = new ArrayList<IRepositoryTaskAttributeListener>();
 
@@ -446,7 +452,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected void updateTask() {
 		getRepositoryTaskData().setHasLocalChanges(true);
 	}
-	
+
 	protected abstract void validateInput();
 
 	protected String getTitleString() {
@@ -470,7 +476,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		scrollVertPageIncrement = 0;
 		scrollHorzPageIncrement = 0;
 	}
-	
+
 	public AbstractRepositoryTaskEditor(FormEditor editor, boolean htmlComments) {
 		this(editor);
 		this.htmlComments = htmlComments;
@@ -817,16 +823,17 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			}
 
 			attachmentsTableViewer.setContentProvider(new IStructuredContentProvider() {
-				
+
 				public Object[] getElements(Object inputElement) {
 					List<RepositoryAttachment> attachments = getRepositoryTaskData().getAttachments();
-					// TODO: should not need to do this, but attachments may not be persisted
+					// TODO: should not need to do this, but attachments may not
+					// be persisted
 					for (RepositoryAttachment repositoryAttachment : attachments) {
 						if (repositoryAttachment.getRepository() == null) {
 							repositoryAttachment.setRepository(repository);
 						}
 					}
-					
+
 					return attachments.toArray();
 				}
 
@@ -862,18 +869,18 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			final MenuManager popupMenu = new MenuManager();
 			final Menu menu = popupMenu.createContextMenu(attachmentsTable);
 			attachmentsTable.setMenu(menu);
-			
+
 			final RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
 					.getSelection()).getFirstElement());
-			
+
 			popupMenu.addMenuListener(new IMenuListener() {
 				public void menuAboutToShow(IMenuManager manager) {
 					// TODO: use workbench mechanism for this?
-					ObjectActionContributorManager.getManager().contributeObjectActions(AbstractRepositoryTaskEditor.this,
-						popupMenu, attachmentsTableViewer);
+					ObjectActionContributorManager.getManager().contributeObjectActions(
+							AbstractRepositoryTaskEditor.this, popupMenu, attachmentsTableViewer);
 				}
 			});
-			
+
 			final MenuManager openMenu = new MenuManager("Open With");
 
 			final Action openWithBrowserAction = new Action(LABEL_BROWSER) {
@@ -984,10 +991,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				}
 			};
 
-//			final Action applyPatchAction = new ApplyPatchAction() {
-//
-//			};
-//			applyPatchAction.setEnabled(true); // pending bug 98707
+			// final Action applyPatchAction = new ApplyPatchAction() {
+			//
+			// };
+			// applyPatchAction.setEnabled(true); // pending bug 98707
 
 			/*
 			 * Rebuild menu with the appropriate items for the selection
@@ -1015,9 +1022,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					if (att.getContentType().startsWith(CTYPE_TEXT) || att.getContentType().endsWith("xml")) {
 						popupMenu.add(copyToClipAction);
 					}
-//					if (att.isPatch()) {
-//						popupMenu.add(applyPatchAction);
-//					}
+					// if (att.isPatch()) {
+					// popupMenu.add(applyPatchAction);
+					// }
 				}
 			});
 
@@ -1252,7 +1259,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			StyledText styledText = descriptionTextViewer.getTextWidget();
 			GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(
 					descriptionTextViewer.getControl());
-			
+
 			textHash.put(text, styledText);
 		}
 
@@ -1267,7 +1274,117 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected void createPeopleLayout(Composite composite) {
-		// override
+		FormToolkit toolkit = getManagedForm().getToolkit();
+		Section peopleSection = createSection(composite, SECTION_TITLE_PEOPLE);
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(peopleSection);
+		Composite peopleComposite = toolkit.createComposite(peopleSection);
+		GridLayout layout = new GridLayout(2, false);
+		layout.marginRight = 5;
+		peopleComposite.setLayout(layout);
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(peopleComposite);
+		addSelfToCC(peopleComposite);
+		Label label = toolkit.createLabel(peopleComposite, "Assigned to:");
+		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
+		Composite textFieldComposite = toolkit.createComposite(peopleComposite);
+		GridLayout textLayout = new GridLayout();
+		textLayout.marginWidth = 1;
+		textLayout.verticalSpacing = 0;
+		textLayout.marginHeight = 0;
+		textLayout.marginRight = 5;
+		textFieldComposite.setLayout(textLayout);
+		String assignedToString = getRepositoryTaskData().getAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED);
+		toolkit.createText(textFieldComposite, assignedToString, SWT.FLAT | SWT.READ_ONLY);
+
+		label = toolkit.createLabel(peopleComposite, "Reporter:");
+		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
+		textFieldComposite = toolkit.createComposite(peopleComposite);
+		textLayout = new GridLayout();
+		textLayout.marginWidth = 1;
+		textLayout.verticalSpacing = 0;
+		textLayout.marginHeight = 0;
+		textFieldComposite.setLayout(textLayout);
+		String reporterString = getRepositoryTaskData().getAttributeValue(RepositoryTaskAttribute.USER_REPORTER);
+		toolkit.createText(textFieldComposite, reporterString, SWT.FLAT | SWT.READ_ONLY);
+		addCCList(peopleComposite);
+		getManagedForm().getToolkit().paintBordersFor(peopleComposite);
+		peopleSection.setClient(peopleComposite);
+	}
+
+	protected void addCCList(Composite attributesComposite) {
+		// newLayout(attributesComposite, 1, "Add CC:", PROPERTY);
+		FormToolkit toolkit = getManagedForm().getToolkit();
+		Label label = toolkit.createLabel(attributesComposite, "Add CC:");
+		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
+		ccText = toolkit.createText(attributesComposite, getRepositoryTaskData().getAttributeValue(RepositoryTaskAttribute.NEW_CC));
+		ccText.setFont(TEXT_FONT);
+		ccText.setEditable(true);
+		// ccText.setForeground(foreground);
+		// ccText.setBackground(background);
+		GridData ccData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		ccData.horizontalSpan = 1;
+		ccData.widthHint = 150;
+		ccText.setLayoutData(ccData);
+		// ccText.setText(ccValue);
+		ccText.addListener(SWT.FocusIn, new GenericListener());
+		ccText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				markDirty(true);
+				getRepositoryTaskData().setAttributeValue(RepositoryTaskAttribute.NEW_CC, ccText.getText());
+			}
+		});
+
+		// newLayout(attributesComposite, 1, "CC: (Select to remove)",
+		// PROPERTY);
+		Label ccListLabel = toolkit.createLabel(attributesComposite, "CC:");
+		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.TOP).applyTo(ccListLabel);
+		ccList = new org.eclipse.swt.widgets.List(attributesComposite, SWT.MULTI | SWT.V_SCROLL);// SWT.BORDER
+		ccList.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		ccList.setFont(TEXT_FONT);
+		GridData ccListData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		ccListData.horizontalSpan = 1;
+		ccListData.widthHint = 150;
+		ccListData.heightHint = 95;
+		ccList.setLayoutData(ccListData);
+
+		java.util.List<String> ccs = getRepositoryTaskData().getCC();
+		if (ccs != null) {
+			for (Iterator<String> it = ccs.iterator(); it.hasNext();) {
+				String cc = it.next();
+				ccList.add(cc);
+			}
+		}
+		java.util.List<String> removedCCs = getRepositoryTaskData().getAttributeValues(RepositoryTaskAttribute.REMOVE_CC);
+		if (removedCCs != null) {
+			for (String item : removedCCs) {
+				int i = ccList.indexOf(item);
+				if (i != -1) {
+					ccList.select(i);
+				}
+			}
+		}
+		ccList.addSelectionListener(new SelectionListener() {
+
+			public void widgetSelected(SelectionEvent e) {
+				markDirty(true);
+
+				for (String cc : ccList.getItems()) {
+					int index = ccList.indexOf(cc);
+					if (ccList.isSelected(index)) {
+						getRepositoryTaskData().addAttributeValue(RepositoryTaskAttribute.REMOVE_CC, cc);
+					} else {
+						getRepositoryTaskData().removeAttributeValue(RepositoryTaskAttribute.REMOVE_CC, cc);
+					}
+				}
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+		ccList.addListener(SWT.FocusIn, new GenericListener());
+		toolkit.createLabel(attributesComposite, "");
+		label = toolkit.createLabel(attributesComposite, "(Select to remove)");
+		GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.DEFAULT).applyTo(label);
+
 	}
 
 	/**
@@ -1477,7 +1594,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			}
 		});
 		submitButton.addListener(SWT.FocusIn, new GenericListener());
-		submitButton.setToolTipText("Submit to "+this.repository.getUrl());
+		submitButton.setToolTipText("Submit to " + this.repository.getUrl());
 		RepositoryTaskData taskData = getRepositoryTaskData();
 		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 				AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));

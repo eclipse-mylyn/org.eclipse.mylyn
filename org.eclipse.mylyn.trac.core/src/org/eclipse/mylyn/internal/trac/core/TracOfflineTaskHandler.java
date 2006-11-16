@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -30,6 +31,7 @@ import org.eclipse.mylar.internal.trac.core.TracAttributeFactory.Attribute;
 import org.eclipse.mylar.internal.trac.core.model.TracAttachment;
 import org.eclipse.mylar.internal.trac.core.model.TracComment;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket;
+import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylar.internal.trac.core.util.TracUtils;
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -45,6 +47,8 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
  * @author Steffen Pingel
  */
 public class TracOfflineTaskHandler implements IOfflineTaskHandler {
+
+	private static final String CC_DELIMETER = ", ";
 
 	private AbstractAttributeFactory attributeFactory = new TracAttributeFactory();
 
@@ -111,7 +115,14 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 		}
 		Map<String, String> valueByKey = ticket.getValues();
 		for (String key : valueByKey.keySet()) {
-			data.setAttributeValue(key, valueByKey.get(key));
+			if (Key.CC.getKey().equals(key)) {
+				StringTokenizer t = new StringTokenizer(valueByKey.get(key), CC_DELIMETER);
+				while (t.hasMoreTokens()) {
+					data.addAttributeValue(key, t.nextToken());
+				}
+			} else {
+				data.setAttributeValue(key, valueByKey.get(key));
+			}
 		}
 
 		TracComment[] comments = ticket.getComments();
