@@ -23,7 +23,7 @@ public class AllMonitorUsageTests {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.monitor.usage.tests");
 
 		// $JUnit-BEGIN$
-//		suite.addTestSuite(FileDisplayDialogTest.class);
+		suite.addTestSuite(FileDisplayDialogTest.class);
 		// $JUnit-END$
 
 		return suite;

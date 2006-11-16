@@ -26,10 +26,10 @@ public class AllMonitorTests {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.monitor.tests");
 
 		// $JUnit-BEGIN$
+		suite.addTest(AllMonitorUsageTests.suite());
+		suite.addTest(AllMonitorReportTests.suite());
 		// suite.addTestSuite(TaskTimerTest.class);
-
 		suite.addTestSuite(StatisticsReportingTest.class); 
-		// HACK: needs to be last due to loading race condition
 		suite.addTestSuite(InteractionLoggerTest.class);
 		suite.addTestSuite(ActiveTimerTest.class);
 		suite.addTestSuite(StatisticsLoggingTest.class);
@@ -37,9 +37,6 @@ public class AllMonitorTests {
 		suite.addTestSuite(InteractionEventExternalizationTest.class);
 		suite.addTestSuite(MonitorPackagingTest.class);
 		suite.addTestSuite(MultiWindowMonitorTest.class);
-		
-		suite.addTest(AllMonitorUsageTests.suite());
-		suite.addTest(AllMonitorReportTests.suite());
 		// $JUnit-END$
 
 		return suite;
