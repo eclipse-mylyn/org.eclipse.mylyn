@@ -96,10 +96,9 @@ public class ScheduledTaskListSynchJob extends Job {
 				// Occasionally update repository attributes
 				if(count >= UPDATE_ATTRIBUTES_FREQUENCY) {
 					try {
-						connector.updateAttributes(repository, new SubProgressMonitor(monitor, 1));
-						count = 0;
+						connector.updateAttributes(repository, new SubProgressMonitor(monitor, 1));						
 					} catch (CoreException e) {
-						MylarStatusHandler.fail(e, e.getMessage(), false);
+						MylarStatusHandler.fail(e, "Unable to update attributes for "+repository.getUrl()+"  "+e.getMessage(), false);
 					}
 				}
 				
@@ -119,11 +118,9 @@ public class ScheduledTaskListSynchJob extends Job {
 					TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
 				}
 				monitor.worked(1);
-			}
+			}			
 		} finally {
-			count++;
-			if (count == Long.MAX_VALUE)
-				count = 0;
+			count = count >= UPDATE_ATTRIBUTES_FREQUENCY ? 0 : count + 1;			
 			if (monitor != null) {
 				monitor.done();
 			}
