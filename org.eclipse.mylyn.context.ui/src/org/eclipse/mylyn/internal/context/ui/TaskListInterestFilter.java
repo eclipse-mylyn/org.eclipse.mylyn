@@ -55,10 +55,9 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	protected boolean isUninteresting(ITask task) {
 		return !task.isActive()
-				&& ((task.isCompleted() 
-						&& !TasksUiPlugin.getTaskListManager().isCompletedToday(task)
-						&& !hasChanges(task)) 
-					|| (TasksUiPlugin.getTaskListManager().isScheduledAfterThisWeek(task)) && !hasChanges(task));
+				&& ((task.isCompleted() && !TasksUiPlugin.getTaskListManager().isCompletedToday(task) && !hasChanges(task)) || (TasksUiPlugin
+						.getTaskListManager().isScheduledAfterThisWeek(task))
+						&& !hasChanges(task));
 	}
 
 	// TODO: make meta-context more explicit
@@ -68,17 +67,29 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	@Override
 	public boolean shouldAlwaysShow(ITask task) {
-		return super.shouldAlwaysShow(task) 
-			|| hasChanges(task) 
-			|| (TasksUiPlugin.getTaskListManager().isCompletedToday(task))
-			|| (isInterestingForThisWeek(task) && !task.isCompleted())
-			|| NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(task.getDescription());
+		return super.shouldAlwaysShow(task) || hasChanges(task)
+				|| (TasksUiPlugin.getTaskListManager().isCompletedToday(task))
+				|| (isInterestingForThisWeek(task) && !task.isCompleted())
+				|| NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(task.getDescription());
+//				|| isCurrentlySelectedInEditor(task);
 	}
+
+//	private boolean isCurrentlySelectedInEditor(ITask task) {
+//		try {
+//			IEditorInput input = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor()
+//					.getEditorInput();
+//			if (input instanceof TaskEditorInput && task != null) {
+//				return task.equals(((TaskEditorInput) input).getTask());
+//			}
+//		} catch (NullPointerException npe) {
+//			// ingore, active part can be null
+//		}
+//		return false;
+//	}
 
 	public static boolean isInterestingForThisWeek(ITask task) {
 		return TasksUiPlugin.getTaskListManager().isScheduledForThisWeek(task)
-			|| TasksUiPlugin.getTaskListManager().isScheduledForToday(task) 
-			|| task.isPastReminder();
+				|| TasksUiPlugin.getTaskListManager().isScheduledForToday(task) || task.isPastReminder();
 	}
 
 	public static boolean hasChanges(ITask task) {
