@@ -38,7 +38,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
  */
 public class ScheduledTaskListSynchJob extends Job {
 
-	private static final int UPDATE_ATTRIBUTES_FREQUENCY = 3;
+	private static final int UPDATE_ATTRIBUTES_FREQUENCY = 10;
 
 	private static final String LABEL_TASK = "Task Repository Synchronization";
 
