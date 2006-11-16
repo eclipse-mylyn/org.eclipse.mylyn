@@ -142,12 +142,12 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 					if (!importPage.importActivationHistory()
 							&& entry.getName().endsWith(
 									MylarContextManager.CONTEXT_HISTORY_FILE_NAME
-											+ MylarContextManager.OLD_CONTEXT_FILE_EXTENSION)) {
+											+ MylarContextManager.CONTEXT_FILE_EXTENSION_OLD)) {
 						continue;
 					}
 					if (!importPage.importTaskContexts()
 							&& entry.getName()
-									.matches(".*-\\d*" + MylarContextManager.OLD_CONTEXT_FILE_EXTENSION + "$")) {
+									.matches(".*-\\d*" + MylarContextManager.CONTEXT_FILE_EXTENSION_OLD + "$")) {
 						continue;
 					}
 
@@ -185,12 +185,12 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 			sourceTaskListFile = new File(sourceDir + File.separator + TasksUiPlugin.OLD_TASK_LIST_FILE);
 			sourceRepositoriesFile = new File(sourceDir + File.separator + TaskRepositoryManager.OLD_REPOSITORIES_FILE);
 			sourceActivationHistoryFile = new File(sourceDir + File.separator
-					+ MylarContextManager.OLD_CONTEXT_HISTORY_FILE_NAME + MylarContextManager.OLD_CONTEXT_FILE_EXTENSION);
+					+ MylarContextManager.OLD_CONTEXT_HISTORY_FILE_NAME + MylarContextManager.CONTEXT_FILE_EXTENSION_OLD);
 
 			File[] children = sourceDirFile.listFiles();
 			for (int i = 0; i < children.length; i++) {
 				if (children[i].getAbsolutePath().matches(
-						".*-\\d*" + MylarContextManager.OLD_CONTEXT_FILE_EXTENSION + "$")) {
+						".*-\\d*" + MylarContextManager.CONTEXT_FILE_EXTENSION_OLD + "$")) {
 
 					File destContextFile = new File(TasksUiPlugin.getDefault().getDataDirectory() + File.separator
 							+ children[i].getName());
@@ -365,7 +365,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 				try {
 					File destActivationHistoryFile = new File(TasksUiPlugin.getDefault().getDataDirectory()
 							+ File.separator + MylarContextManager.OLD_CONTEXT_HISTORY_FILE_NAME
-							+ MylarContextManager.OLD_CONTEXT_FILE_EXTENSION);
+							+ MylarContextManager.CONTEXT_FILE_EXTENSION_OLD);
 
 					if (destActivationHistoryFile.exists()) {
 						destActivationHistoryFile.delete();

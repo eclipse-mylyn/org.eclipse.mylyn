@@ -234,7 +234,10 @@ public class MylarTaskEditor extends FormEditor {
 				if (taskEditorInput != null) {
 					ITask task = taskEditorInput.getTask();
 					if (TaskListView.getFromActivePerspective() != null) {
-						TaskListView.getFromActivePerspective().selectedAndFocusTask(task);
+						ITask selected = TaskListView.getFromActivePerspective().getSelectedTask();
+						if (selected == null || !selected.equals(task)) {
+							TaskListView.getFromActivePerspective().selectedAndFocusTask(task);
+						}
 					}
 				}
 			}

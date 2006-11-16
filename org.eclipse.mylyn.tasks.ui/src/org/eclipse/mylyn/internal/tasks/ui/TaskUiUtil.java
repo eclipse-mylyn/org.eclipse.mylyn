@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.internal.tasks.ui.editors.CategoryEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorInput;
@@ -159,7 +160,12 @@ public class TaskUiUtil {
 				|| element instanceof DateRangeActivityDelegate) {
 			final ITask task;
 			if (element instanceof AbstractQueryHit) {
-				task = ((AbstractQueryHit) element).getOrCreateCorrespondingTask();
+				if (((AbstractQueryHit) element).getCorrespondingTask() != null) {
+					task = ((AbstractQueryHit) element).getCorrespondingTask();
+				} else {
+					task = ((AbstractQueryHit) element).getOrCreateCorrespondingTask();
+					NewLocalTaskAction.scheduleNewTask(task);
+				}
 			} else if (element instanceof DateRangeActivityDelegate) {
 				task = ((DateRangeActivityDelegate) element).getCorrespondingTask();
 			} else {
@@ -174,9 +180,7 @@ public class TaskUiUtil {
 
 				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryKind,
 						repositoryTask.getRepositoryUrl());
-				if (repository == null) { // ||
-											// !connector.validate(repository))
-											// {
+				if (repository == null) { 
 					return;
 				}
 

@@ -88,7 +88,7 @@ public class TaskListDataMigrationTest extends TestCase {
 
 	public void testOldActivityMigration() throws Exception {
 		File oldActivityFile = new File(sourceDirFile, MylarContextManager.OLD_CONTEXT_HISTORY_FILE_NAME
-				+ MylarContextManager.OLD_CONTEXT_FILE_EXTENSION);
+				+ MylarContextManager.CONTEXT_FILE_EXTENSION_OLD);
 		oldActivityFile.createNewFile();
 		File contextFolder = new File(sourceDirFile, MylarContextManager.CONTEXTS_DIRECTORY);
 		assertTrue(!contextFolder.exists());

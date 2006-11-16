@@ -175,7 +175,7 @@ public class TaskListDataMigration implements IRunnableWithProgress {
 	}
 		
 	public boolean migrateActivityData(IProgressMonitor monitor) {
-		File oldActivityFile = new File(dataDirectory, MylarContextManager.OLD_CONTEXT_HISTORY_FILE_NAME+MylarContextManager.OLD_CONTEXT_FILE_EXTENSION);
+		File oldActivityFile = new File(dataDirectory, MylarContextManager.OLD_CONTEXT_HISTORY_FILE_NAME+MylarContextManager.CONTEXT_FILE_EXTENSION_OLD);
 		if (!oldActivityFile.exists())
 			return false;
 		
@@ -223,7 +223,7 @@ public class TaskListDataMigration implements IRunnableWithProgress {
 }
 
 //public boolean migrateActivityData(IProgressMonitor monitor) {
-//File oldActivityFile = new File(dataDirectory, MylarContextManager.OLD_CONTEXT_HISTORY_FILE_NAME+MylarContextManager.OLD_CONTEXT_FILE_EXTENSION);
+//File oldActivityFile = new File(dataDirectory, MylarContextManager.OLD_CONTEXT_HISTORY_FILE_NAME+MylarContextManager.CONTEXT_FILE_EXTENSION_OLD);
 //if (!oldActivityFile.exists())
 //	return false;
 //		

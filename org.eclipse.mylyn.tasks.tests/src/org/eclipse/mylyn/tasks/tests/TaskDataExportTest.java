@@ -137,7 +137,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 	// // Check that the activity history file was exported
 	// File destActivationHistoryFile = new File(destinationDir + File.separator
 	// + MylarContextManager.CONTEXT_HISTORY_FILE_NAME +
-	// MylarContextManager.OLD_CONTEXT_FILE_EXTENSION);
+	// MylarContextManager.CONTEXT_FILE_EXTENSION_OLD);
 	// assertTrue(destActivationHistoryFile.exists());
 	//
 	// // Check that the task context file created in setUp() was exported
