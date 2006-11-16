@@ -215,6 +215,7 @@ public class BugzillaReportSubmitForm {
 		for (Iterator<RepositoryTaskAttribute> it = model.getAttributes().iterator(); it.hasNext();) {
 			RepositoryTaskAttribute a = it.next();
 			if (a.getID().equals(BugzillaReportElement.CC.getKeyString())
+					|| a.getID().equals(RepositoryTaskAttribute.REMOVE_CC)
 					|| a.getID().equals(BugzillaReportElement.REPORTER.getKeyString())
 					|| a.getID().equals(BugzillaReportElement.ASSIGNED_TO.getKeyString())
 					|| a.getID().equals(BugzillaReportElement.CREATION_TS.getKeyString())) {
