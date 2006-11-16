@@ -99,7 +99,7 @@ public class ContextViewerManager implements IMylarContextListener { //, IProper
 			viewer.getControl().addMouseListener(listener);
 			viewer.getControl().addKeyListener(listener);
 		}
-	}
+	} 
 
 	public void removeManagedViewer(StructuredViewer viewer, IViewPart viewPart) {
 		managedViewers.remove(viewer);

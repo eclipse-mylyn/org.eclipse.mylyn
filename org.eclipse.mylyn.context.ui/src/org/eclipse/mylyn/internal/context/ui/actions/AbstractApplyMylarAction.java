@@ -58,6 +58,8 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 
 	protected Map<StructuredViewer, List<ViewerFilter>> previousFilters = new WeakHashMap<StructuredViewer, List<ViewerFilter>>();
 
+	protected boolean manageViewer = true;
+
 	private static Map<IViewPart, AbstractApplyMylarAction> partMap = new WeakHashMap<IViewPart, AbstractApplyMylarAction>();
 
 	public static AbstractApplyMylarAction getActionForPart(IViewPart part) {
@@ -134,7 +136,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 			}
 
 			for (StructuredViewer viewer : getViewers()) {
-				if (viewPart != null && !viewer.getControl().isDisposed()) {
+				if (viewPart != null && !viewer.getControl().isDisposed() && manageViewer) {
 					ContextUiPlugin.getDefault().getViewerManager().addManagedViewer(viewer, viewPart);
 				}
 				updateInterestFilter(on, viewer);
@@ -180,7 +182,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 		if (viewer == null) {
 			MylarStatusHandler.log("The viewer to install InterestFilter is null", this);
 			return false;
-		} else if (viewer.getControl().isDisposed()) {
+		} else if (viewer.getControl().isDisposed() && manageViewer) {
 			// TODO: do this with part listener, not lazily?
 			ContextUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer, viewPart);
 			return false;
