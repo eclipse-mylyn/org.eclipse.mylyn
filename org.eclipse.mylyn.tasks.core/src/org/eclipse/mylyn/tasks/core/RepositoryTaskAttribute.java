@@ -78,11 +78,25 @@ public class RepositoryTaskAttribute implements Serializable {
 
 	public static final String KEYWORDS = "task.common.keywords";
 	
+	/**
+	 * Boolean attribute. If true, repository user needs to be added to the cc
+	 * list.
+	 */
 	public static final String ADD_SELF_CC = "task.common.addselfcc";
 	
 	public static final String NEW_CC = "task.common.newcc";
  
 	public static final String REMOVE_CC = "task.common.removecc";
+
+	/**
+	 * String constant used to represent true for boolean attributes. 
+	 */
+	public static final String TRUE = "1";
+	
+	/**
+	 * String constant used to represent false for boolean attributes. 
+	 */
+	public static final String FALSE = "0";
 	
 	private boolean hidden = false;
 	

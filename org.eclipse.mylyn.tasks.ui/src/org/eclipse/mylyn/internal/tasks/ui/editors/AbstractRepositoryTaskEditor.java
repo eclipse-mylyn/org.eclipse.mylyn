@@ -1282,7 +1282,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		layout.marginRight = 5;
 		peopleComposite.setLayout(layout);
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(peopleComposite);
-		addSelfToCC(peopleComposite);
+
 		Label label = toolkit.createLabel(peopleComposite, "Assigned to:");
 		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
 		Composite textFieldComposite = toolkit.createComposite(peopleComposite);
@@ -1305,6 +1305,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		textFieldComposite.setLayout(textLayout);
 		String reporterString = getRepositoryTaskData().getAttributeValue(RepositoryTaskAttribute.USER_REPORTER);
 		toolkit.createText(textFieldComposite, reporterString, SWT.FLAT | SWT.READ_ONLY);
+
+		addSelfToCC(peopleComposite);
+		
 		addCCList(peopleComposite);
 		getManagedForm().getToolkit().paintBordersFor(peopleComposite);
 		peopleSection.setClient(peopleComposite);
@@ -2196,16 +2199,18 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		// (contextFile.exists() || task.isActive()));
 	}
 
+	/**
+	 * Creates a check box for adding the repository user to the cc list. Does
+	 * nothing if the repository does not have a valid username, the repository
+	 * user is the assignee, reporter or already on the the cc list. 
+	 */
 	protected void addSelfToCC(Composite composite) {
-		// if they aren't already on the cc list create an add self check box
-		FormToolkit toolkit = getManagedForm().getToolkit();
-		final RepositoryTaskData taskData = getRepositoryTaskData();
-		RepositoryTaskAttribute owner = taskData.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED);
-
 		if (repository.getUserName() == null) {
 			return;
 		}
 
+		final RepositoryTaskData taskData = getRepositoryTaskData();
+		RepositoryTaskAttribute owner = taskData.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED);
 		if (owner != null && owner.getValue().indexOf(repository.getUserName()) != -1) {
 			return;
 		}
@@ -2214,22 +2219,24 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (reporter != null && reporter.getValue().indexOf(repository.getUserName()) != -1) {
 			return;
 		}
-		// Don't add addselfcc if already there
+
 		RepositoryTaskAttribute ccAttribute = taskData.getAttribute(RepositoryTaskAttribute.USER_CC);
 		if (ccAttribute != null && ccAttribute.getValues().contains(repository.getUserName())) {
 			return;
 		}
+		
+		FormToolkit toolkit = getManagedForm().getToolkit();
 		toolkit.createLabel(composite, "");
 		final Button addSelfButton = toolkit.createButton(composite, "Add me to CC", SWT.CHECK);
+		addSelfButton.setSelection(RepositoryTaskAttribute.TRUE.equals(taskData.getAttributeValue(RepositoryTaskAttribute.ADD_SELF_CC)));
 		addSelfButton.setImage(TaskListImages.getImage(TaskListImages.PERSON));
 		addSelfButton.addSelectionListener(new SelectionAdapter() {
-
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (addSelfButton.getSelection()) {
-					taskData.setAttributeValue(RepositoryTaskAttribute.ADD_SELF_CC, "1");
+					taskData.setAttributeValue(RepositoryTaskAttribute.ADD_SELF_CC, RepositoryTaskAttribute.TRUE);
 				} else {
-					taskData.setAttributeValue(RepositoryTaskAttribute.ADD_SELF_CC, "0");
+					taskData.setAttributeValue(RepositoryTaskAttribute.ADD_SELF_CC, RepositoryTaskAttribute.FALSE);
 				}
 				markDirty(true);
 			}

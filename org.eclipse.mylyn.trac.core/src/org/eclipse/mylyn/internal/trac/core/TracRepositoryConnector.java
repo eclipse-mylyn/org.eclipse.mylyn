@@ -314,8 +314,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			}
 			sb.append(data.getAttributeValue(RepositoryTaskAttribute.NEW_CC));
 		}
-		// TODO "1" should not be hard coded here
-		if ("1".equals(data.getAttributeValue(RepositoryTaskAttribute.ADD_SELF_CC))) {
+		if (RepositoryTaskAttribute.TRUE.equals(data.getAttributeValue(RepositoryTaskAttribute.ADD_SELF_CC))) {
 			if (sb.length() > 0) {
 				sb.append(",");
 			}
