@@ -122,7 +122,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 	protected BugzillaReportSubmitForm makeExistingBugPost(RepositoryTaskData taskData)
 			throws UnsupportedEncodingException {
 		return BugzillaReportSubmitForm.makeExistingBugPost(taskData, repository.getUrl(), repository.getUserName(),
-				repository.getPassword(), null, null, repository.getCharacterEncoding());
+				repository.getPassword(), null, repository.getCharacterEncoding());
 	}
 
 	protected void synchAndAssertState(Set<AbstractRepositoryTask> tasks, RepositoryTaskSyncState state) {

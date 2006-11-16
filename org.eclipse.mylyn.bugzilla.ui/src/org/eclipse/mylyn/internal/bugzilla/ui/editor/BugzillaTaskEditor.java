@@ -186,9 +186,8 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 						.getCharacterEncoding(), taskData, wrap);
 			} else {
 				bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeExistingBugPost(taskData, repository.getUrl(),
-						repository.getUserName(), repository.getPassword(), editorInput.getProxySettings(), taskData
-								.getAttributeValues(RepositoryTaskAttribute.REMOVE_CC), repository
-								.getCharacterEncoding());
+						repository.getUserName(), repository.getPassword(), editorInput.getProxySettings(), repository
+						.getCharacterEncoding());
 			}
 		} catch (UnsupportedEncodingException e) {
 			// should never get here but just in case...

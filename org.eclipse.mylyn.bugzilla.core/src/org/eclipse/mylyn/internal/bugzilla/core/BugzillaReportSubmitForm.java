@@ -185,15 +185,13 @@ public class BugzillaReportSubmitForm {
 
 	/**
 	 * TODO: refactor common stuff with new bug post
-	 * 
-	 * @param removeCC
 	 * @param characterEncoding
 	 *            TODO
 	 * 
 	 * @throws UnsupportedEncodingException
 	 */
 	public static BugzillaReportSubmitForm makeExistingBugPost(RepositoryTaskData model, String repositoryUrl,
-			String userName, String password, Proxy proxySettings, List<String> removeCC, String characterEncoding)
+			String userName, String password, Proxy proxySettings, String characterEncoding)
 			throws UnsupportedEncodingException {
 
 		BugzillaReportSubmitForm form = new BugzillaReportSubmitForm();
@@ -266,7 +264,8 @@ public class BugzillaReportSubmitForm {
 		if (model.getNewComment().length() != 0) {
 			form.add(KEY_COMMENT, model.getNewComment());
 		}
-
+		
+		List<String> removeCC = model.getAttributeValues(RepositoryTaskAttribute.REMOVE_CC);
 		if (removeCC != null && removeCC.size() > 0) {
 			String[] s = new String[removeCC.size()];
 			form.add(KEY_CC, toCommaSeparatedList(removeCC.toArray(s)));
