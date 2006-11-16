@@ -164,7 +164,7 @@ public class TaskListView extends ViewPart {
 	private static final String PART_NAME = "Mylar Tasks";
 
 	private boolean focusedMode = false;
-	
+
 	private IThemeManager themeManager;
 
 	private TaskListFilteredTree filteredTree;
@@ -1307,14 +1307,20 @@ public class TaskListView extends ViewPart {
 
 		getViewer().addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
+				StructuredSelection selection = (StructuredSelection) getViewer().getSelection();
+				Object object = selection.getFirstElement();
 				if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 						TaskListPreferenceConstants.ACTIVATE_ON_OPEN)) {
 					ITask selectedTask = TaskListView.getFromActivePerspective().getSelectedTask();
-					if (selectedTask != null) {
+					if (selectedTask != null) { 
+						// TODO: move history stuff
 						activateAction.run(selectedTask);
 						addTaskToHistory(selectedTask);
 						previousTaskAction.setButtonStatus();
 					}
+				}
+				if (object instanceof TaskCategory || object instanceof AbstractRepositoryQuery) {
+					TaskUiUtil.refreshAndOpenTaskListElement((ITaskListElement) object);
 				}
 			}
 		});
