@@ -297,6 +297,15 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			for (String option : optionValues) {
 				attribute.addOptionValue(option, option);
 			}
+			
+			// TODO: bug#162428, bug#150680 - something along the lines of...
+			// but must think about the case of multiple values selected etc.
+			// if(attribute.hasOptions()) {
+			// if(!attribute.getOptionValues().containsKey(attribute.getValue()))
+			// {
+			// // updateAttributes()
+			// }
+			//}
 		}
 
 	}
