@@ -110,7 +110,7 @@ public class TracAttributeFactory extends AbstractAttributeFactory {
 	@Override
 	public boolean getIsHidden(String key) {
 		Attribute attribute = attributeByTracKey.get(key);
-		return (attribute != null) ? attribute.isHidden() : false;
+		return (attribute != null) ? attribute.isHidden() : isInternalAttribute(key);
 	}
 
 	@Override
@@ -131,6 +131,10 @@ public class TracAttributeFactory extends AbstractAttributeFactory {
 	public String mapCommonAttributeKey(String key) {
 		String tracKey = tracKeyByTaskKey.get(key);
 		return (tracKey != null) ? tracKey : key;
+	}
+
+	static boolean isInternalAttribute(String id) {
+		return RepositoryTaskAttribute.REMOVE_CC.equals(id) || RepositoryTaskAttribute.NEW_CC.equals(id) || RepositoryTaskAttribute.ADD_SELF_CC.equals(id);
 	}
 
 }

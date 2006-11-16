@@ -289,7 +289,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	
 		List<RepositoryTaskAttribute> attributes = data.getAttributes();
 		for (RepositoryTaskAttribute attribute : attributes) {
-			if (isInternalAttribute(attribute.getID())) {
+			if (TracAttributeFactory.isInternalAttribute(attribute.getID())) {
 				// ignore
 			} else if (!attribute.isReadOnly()) {
 				ticket.putValue(attribute.getID(), attribute.getValue());
@@ -344,10 +344,6 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	
 		return ticket;
-	}
-
-	private static boolean isInternalAttribute(String id) {
-		return RepositoryTaskAttribute.REMOVE_CC.equals(id) || RepositoryTaskAttribute.NEW_CC.equals(id);
 	}
 	
 }
