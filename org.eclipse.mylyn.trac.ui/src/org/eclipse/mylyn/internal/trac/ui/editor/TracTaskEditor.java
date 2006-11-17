@@ -127,9 +127,6 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 					ITracClient server = connector.getClientManager().getRepository(repository);
 					server.updateTicket(ticket, comment);
 					if (task != null) {
-						// XXX hack to avoid message about lost changes to local
-						// task
-						task.setTaskData(null);
 						TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 					}
 					return Status.OK_STATUS;

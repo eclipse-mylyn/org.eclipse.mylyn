@@ -169,11 +169,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		submitButton.setEnabled(false);
 		showBusy(true);
 		if (isDirty()) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					doSave(new NullProgressMonitor());
-				}
-			});
+			doSave(new NullProgressMonitor());
 		}
 
 		BugzillaReportSubmitForm bugzillaReportSubmitForm;
@@ -240,7 +236,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 								// to bypass
 								// ui override check with user
 								// Need to change how this is achieved.
-								modifiedTask.setTaskData(null);
+								//modifiedTask.setTaskData(null);
 								TasksUiPlugin.getSynchronizationManager().synchronize(connector, modifiedTask, true,
 										new JobChangeAdapter() {
 
@@ -254,14 +250,15 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 								Set<AbstractRepositoryQuery> queriesWithHandle = TasksUiPlugin.getTaskListManager()
 										.getTaskList().getQueriesForHandle(modifiedTask.getHandleIdentifier());
 
-								// Sync Queries
+								// Sync Queries that have this task
 								TasksUiPlugin.getSynchronizationManager().synchronize(connector, queriesWithHandle,
 										null, Job.SHORT, 0, false);
 
 								// Sync any tasks that might have changed as a
 								// result of this action
-								TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
-
+								// TODO: removed since we don't have a way to exclude currently submitted task
+								// and others will be synched later by background sync anyway (or manual sync)
+								//TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
 							} else {
 								TaskUiUtil.openRepositoryTask(repository.getUrl(), BugzillaTaskEditor.this
 										.getRepositoryTaskData().getId(), repository.getUrl()

@@ -41,8 +41,7 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncSta
 import org.eclipse.ui.PlatformUI;
 
 /**
- * Encapsulates synchronization policy
- * TODO: move into core?
+ * Encapsulates synchronization policy TODO: move into core?
  * 
  * @author Mik Kersten
  * @author Rob Elves
@@ -51,7 +50,9 @@ public class RepositorySynchronizationManager {
 
 	private boolean updateLocalCopy = false;
 
-	private final MutexRule rule = new MutexRule();
+	private final MutexRule taskRule = new MutexRule();
+
+	private final MutexRule queryRule = new MutexRule();
 
 	protected boolean forceSyncExecForTesting = false;
 
@@ -91,7 +92,7 @@ public class RepositorySynchronizationManager {
 		final SynchronizeTaskJob synchronizeJob = new SynchronizeTaskJob(connector, repositoryTasks);
 		synchronizeJob.setForceSynch(forceSynch);
 		synchronizeJob.setPriority(Job.DECORATE);
-		synchronizeJob.setRule(rule);
+		synchronizeJob.setRule(taskRule);
 		if (listener != null) {
 			synchronizeJob.addJobChangeListener(listener);
 		}
@@ -138,10 +139,10 @@ public class RepositorySynchronizationManager {
 		if (listener != null) {
 			job.addJobChangeListener(listener);
 		}
-		job.setRule(rule);
+		job.setRule(queryRule);
 		job.setPriority(priority);
-		if(!forceSyncExecForTesting) { 
-			job.schedule(delay);		
+		if (!forceSyncExecForTesting) {
+			job.schedule(delay);
 		} else {
 			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 				public void run() {
@@ -296,6 +297,10 @@ public class RepositorySynchronizationManager {
 				if (!forceSync) {
 					// Never overwrite local task data unless forced
 					return false;
+				} else if(offlineTaskData != null && offlineTaskData.hasLocalChanges() && newTaskData != null) {
+					// a submit has just happened and have received newTaskData
+					status = RepositoryTaskSyncState.SYNCHRONIZED;
+					break;
 				}
 			case CONFLICT:
 				// use a parameter rather than this null check
@@ -339,8 +344,9 @@ public class RepositorySynchronizationManager {
 				if (!forceSync && checkHasIncoming(repositoryTask, newTaskData)) {
 					status = RepositoryTaskSyncState.INCOMING;
 				} else {
-					// bug#163850 -Make sync retrieve new data but not mark as read
-					//status = RepositoryTaskSyncState.SYNCHRONIZED;
+					// bug#163850 -Make sync retrieve new data but not mark as
+					// read
+					// status = RepositoryTaskSyncState.SYNCHRONIZED;
 				}
 				break;
 			case SYNCHRONIZED:

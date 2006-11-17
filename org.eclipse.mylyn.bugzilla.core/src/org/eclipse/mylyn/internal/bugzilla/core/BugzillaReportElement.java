@@ -45,7 +45,7 @@ public enum BugzillaReportElement {
 	DEADLINE ("Deadline:", "deadline", true, true),
 	DELTA_TS ("Last Modification", "delta_ts", true), 
 	DEPENDSON ("Bug depends on:", "dependson", true, false), 
-	DESC ("desc", "desc", false, true), 
+	DESC ("desc", "desc", true, true), 
 	EVERCONFIRMED ("everconfirmed", "everconfirmed", true),
 	ESTIMATED_TIME ("Estimated Time:", "estimated_time", true),
 	FILENAME ("filename", "filename"),
