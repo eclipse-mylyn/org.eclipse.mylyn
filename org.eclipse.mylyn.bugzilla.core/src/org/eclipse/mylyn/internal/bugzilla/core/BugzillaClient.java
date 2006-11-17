@@ -18,6 +18,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.Proxy;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
@@ -27,12 +28,16 @@ import java.util.List;
 
 import javax.security.auth.login.LoginException;
 
+import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.NoHttpResponseException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.multipart.FilePart;
@@ -61,6 +66,8 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
  * @author Steffen Pingel
  */
 public class BugzillaClient {
+
+	private static final int MAX_RETRY = 4;
 
 	private static final int CONNECT_TIMEOUT = 30000;
 
@@ -140,38 +147,75 @@ public class BugzillaClient {
 
 	private GetMethod connectInternal(String serverURL) throws LoginException, IOException {
 		WebClientUtil.setupHttpClient(httpClient, proxy, serverURL, htAuthUser, htAuthPass);
-		// httpClient.getParams().setParameter("http.socket.timeout", new
-		// Integer(CONNECT_TIMEOUT));
 		for (int attempt = 0; attempt < 2; attempt++) {
 			// force authentication
 			if (!authenticated && hasAuthenticationCredentials()) {
 				authenticate();
 			}
 
-			GetMethod method = new GetMethod(WebClientUtil.getRequestPath(serverURL));
-			method.getParams().setSoTimeout(CONNECT_TIMEOUT);
-			method.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset="+characterEncoding);
-			// NOTE! Setting browser compatability breaks Bugzilla
+			GetMethod getMethod = new GetMethod(WebClientUtil.getRequestPath(serverURL));
+			//getMethod.getParams().setSoTimeout(CONNECT_TIMEOUT);
+			httpClient.getHttpConnectionManager().getParams().setSoTimeout(CONNECT_TIMEOUT);
+			httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
+			getMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset="
+					+ characterEncoding);
+			
+			// WARNING! Setting browser compatability breaks Bugzilla
 			// authentication
 			// method.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 
+			// Adapted from
+			// http://jakarta.apache.org/commons/httpclient/exception-handling.html
+			HttpMethodRetryHandler retryHandler = new HttpMethodRetryHandler() {
+				public boolean retryMethod(final HttpMethod method, final IOException exception, int executionCount) {
+					if (executionCount >= MAX_RETRY) {
+						// Do not retry if over max retry count
+						return false;
+					}
+					int currentTimeout = httpClient.getHttpConnectionManager().getParams().getSoTimeout();
+					if (exception instanceof ConnectTimeoutException) {
+						httpClient.getHttpConnectionManager().getParams().setSoTimeout(currentTimeout * 2);
+						httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(currentTimeout * 2);
+						return true;
+					}
+					if (exception instanceof SocketTimeoutException) {						
+						httpClient.getHttpConnectionManager().getParams().setSoTimeout(currentTimeout * 2);
+						httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(currentTimeout * 2);
+						return true;
+					}
+					if (exception instanceof NoHttpResponseException) {
+						// Retry if the server dropped connection on us
+						return true;
+					}
+					if (!method.isRequestSent()) {
+						// Retry if the request has not been sent fully or
+						// if it's OK to retry methods that have been sent
+						return true;
+					}
+					// otherwise do not retry
+					return false;
+				}
+			};
+
+			getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, retryHandler);
+
 			int code;
 			try {
-				code = httpClient.executeMethod(method);
+				code = httpClient.executeMethod(getMethod);
 			} catch (IOException e) {
-				method.releaseConnection();
+				getMethod.releaseConnection();
 				throw e;
 			}
 
 			if (code == HttpURLConnection.HTTP_OK) {
-				return method;
+				return getMethod;
 			} else if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
 				// login or reauthenticate due to an expired session
-				method.releaseConnection();
+				getMethod.releaseConnection();
 				authenticated = false;
 				authenticate();
 			} else {
-				throw new IOException("HttpClient connection error response code: "+code);				
+				throw new IOException("HttpClient connection error response code: " + code);
 			}
 		}
 
@@ -235,7 +279,7 @@ public class BugzillaClient {
 		PostMethod method = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl.toString()
 				+ IBugzillaConstants.URL_POST_LOGIN));
 
-		method.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset="+characterEncoding);
+		method.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=" + characterEncoding);
 		method.setRequestBody(formData);
 		method.setDoAuthentication(true);
 		// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
@@ -291,7 +335,7 @@ public class BugzillaClient {
 			// authenticated = true;
 			// } catch (UnrecognizedReponseException e) {
 			//
-			// }		
+			// }
 		} catch (ParseException e) {
 			throw new LoginException("Unable to read response from server (ParseException).");
 		} finally {
@@ -300,15 +344,15 @@ public class BugzillaClient {
 		}
 	}
 
-	public RepositoryTaskData getTaskData(TaskRepository repository, int id) throws IOException, MalformedURLException, LoginException,
-			GeneralSecurityException, BugzillaException {
+	public RepositoryTaskData getTaskData(TaskRepository repository, int id) throws IOException, MalformedURLException,
+			LoginException, GeneralSecurityException, BugzillaException {
 		GetMethod method = null;
 		try {
-			method = getConnect(repositoryUrl + IBugzillaConstants.URL_GET_SHOW_BUG_XML + id);			
-			//System.err.println(method.getResponseCharSet());  
-			//System.err.println(method.getResponseBodyAsString());
+			method = getConnect(repositoryUrl + IBugzillaConstants.URL_GET_SHOW_BUG_XML + id);
+			// System.err.println(method.getResponseCharSet());
+			// System.err.println(method.getResponseBodyAsString());
 			RepositoryTaskData taskData = null;
-			if (method.getResponseHeader("Content-Type") != null) {				
+			if (method.getResponseHeader("Content-Type") != null) {
 				Header responseTypeHeader = method.getResponseHeader("Content-Type");
 				for (String type : VALID_CONFIG_CONTENT_TYPES) {
 					if (responseTypeHeader.getValue().toLowerCase().contains(type)) {
@@ -356,7 +400,7 @@ public class BugzillaClient {
 
 	public void getSearchHits(AbstractRepositoryQuery query, QueryHitCollector collector, TaskList taskList)
 			throws IOException, BugzillaException, GeneralSecurityException {
-		String queryUrl = query.getUrl();		
+		String queryUrl = query.getUrl();
 		// Test that we don't specify content type twice.
 		// Should only be specified here (not in passed in url if possible)
 		if (!queryUrl.contains("ctype=rdf")) {
@@ -376,7 +420,8 @@ public class BugzillaClient {
 			}
 		}
 		try {
-			parseHtmlError(new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(), characterEncoding)));
+			parseHtmlError(new BufferedReader(
+					new InputStreamReader(method.getResponseBodyAsStream(), characterEncoding)));
 		} catch (LoginException e) {
 			authenticated = false;
 			throw e;
@@ -553,7 +598,7 @@ public class BugzillaClient {
 			throw e;
 		} catch (LoginException e) {
 			authenticated = false;
-			throw e;		
+			throw e;
 		} finally {
 			if (postMethod != null) {
 				postMethod.releaseConnection();
@@ -570,15 +615,15 @@ public class BugzillaClient {
 		}
 		PostMethod postMethod = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl.toString() + formUrl));
 
-		//DEBUG
+		// DEBUG
 		// for (NameValuePair nameValuePair : formData) {
 		// System.err.println(nameValuePair.getName()+",
 		// "+nameValuePair.getValue());
-		//		}
-		
+		// }
+
 		postMethod.setRequestBody(formData);
 		postMethod.setDoAuthentication(true);
-		postMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset="+characterEncoding);
+		postMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=" + characterEncoding);
 		// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
 		int status = httpClient.executeMethod(postMethod);
 		if (status == HttpStatus.SC_OK) {
