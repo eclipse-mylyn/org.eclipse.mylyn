@@ -233,7 +233,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 								// to bypass
 								// ui override check with user
 								// Need to change how this is achieved.
-								// modifiedTask.setTaskData(null);
+								modifiedTask.setTaskData(null);
 								TasksUiPlugin.getSynchronizationManager().synchronize(connector, modifiedTask, true,
 										new JobChangeAdapter() {
 

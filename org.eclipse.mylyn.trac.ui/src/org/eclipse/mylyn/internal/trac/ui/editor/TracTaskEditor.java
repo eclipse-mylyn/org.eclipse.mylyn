@@ -127,6 +127,8 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 					ITracClient server = connector.getClientManager().getRepository(repository);
 					server.updateTicket(ticket, comment);
 					if (task != null) {
+						// XXX: HACK TO AVOID OVERWRITE WARNING
+						task.setTaskData(null);
 						TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 					}
 					return Status.OK_STATUS;

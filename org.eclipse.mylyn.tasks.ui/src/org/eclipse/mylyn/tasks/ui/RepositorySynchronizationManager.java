@@ -296,11 +296,7 @@ public class RepositorySynchronizationManager {
 				if (!forceSync) {
 					// Never overwrite local task data unless forced
 					return false;
-				} else if(offlineTaskData != null && offlineTaskData.hasLocalChanges() && newTaskData != null) {
-					// a submit has just happened and have received newTaskData
-					status = RepositoryTaskSyncState.SYNCHRONIZED;
-					break;
-				}
+				} 
 			case CONFLICT:
 				// use a parameter rather than this null check
 				if (offlineTaskData != null) {
