@@ -887,10 +887,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			final MenuManager openMenu = new MenuManager("Open With");
 
 			final Action openWithBrowserAction = new Action(LABEL_BROWSER) {
-				public void run() {
+				public void run() {					
 					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
 							.getSelection()).getFirstElement());
-					TaskUiUtil.openUrl(attachment.getUrl());
+					if(attachment != null) {
+						TaskUiUtil.openUrl(attachment.getUrl());
+					}
 				}
 			};
 
